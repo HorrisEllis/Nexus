@@ -555,6 +555,7 @@ async function runViaAgent(agent, dispatchToAgent, userPrompt, opts = {}) {
     // 0.39.258 — the caller's prompt is the whole prompt; nothing of copilot's own is added.
     return agentTools.runToolLoop(callModel, '', fillToolPlaceholders(userPrompt, opts.toolScope), {
       maxIterations: opts.maxIterations || 6, allowedTools: opts.toolScope || undefined, context: opts.context || null,
+      maxToolErrors: opts.maxToolErrors || 0, onToolCall: opts.onToolCall || null,   // §CT6/CT8
     });
   }
   // 0.39.257 — opts.identity: who this run is (a repo's project agent says so, instead of "the NEXUS co-pilot");
@@ -573,6 +574,7 @@ async function runViaAgent(agent, dispatchToAgent, userPrompt, opts = {}) {
     maxIterations: opts.maxIterations || 6,
     allowedTools: opts.toolScope || undefined,
     context: opts.context || null,
+    maxToolErrors: opts.maxToolErrors || 0, onToolCall: opts.onToolCall || null,   // §CT6/CT8
   });
 }
 
@@ -599,6 +601,7 @@ async function run(o = {}) {
     // 0.39.258 — as runViaAgent: the caller's prompt is the whole prompt.
     const loop = await agentTools.runToolLoop(callModel, '', fillToolPlaceholders(o.userPrompt, o.toolScope), {
       maxIterations: o.maxIterations || 6, allowedTools: o.toolScope || undefined, context: o.context || null,
+      maxToolErrors: o.maxToolErrors || 0, onToolCall: o.onToolCall || null,   // §CT6/CT8
     });
     const w = callModel.workset();
     return w ? { ...loop, workset: w } : loop;
@@ -620,7 +623,26 @@ async function run(o = {}) {
     maxIterations: o.maxIterations || 6,
     allowedTools: o.toolScope || undefined,   // 0.39.257 — enforced, as runViaAgent already was
     context: o.context || null,
+    maxToolErrors: o.maxToolErrors || 0, onToolCall: o.onToolCall || null,   // §CT6/CT8
   });
 }
 
-module.exports = { run, runViaAgent, makeOllamaCallModel, makeNcpCallModel, fillToolPlaceholders, formatToolResult, _extractToolCalls, _parseToolBlocks, _findToolCalls, toolCount: () => agentTools.TOOLS.size };
+// §CT8 0.39.352 — James: "i want to see the agents activity in the code tab, in real time". The caller names a sink
+// (body.tools.progressUrl); each tool call is POSTed there as it starts and ends. Loopback only — a prompt cannot make
+// copilot post to another host — and fire and forget: a sink that is down never slows or stops the run.
+function toolEventSink(url, extra = {}, post = null) {
+  if (!url || typeof url !== 'string') return null;
+  let u; try { u = new URL(url); } catch (_) { return null; }
+  if (u.protocol !== 'http:' || !['127.0.0.1', 'localhost', '::1', '[::1]'].includes(u.hostname)) return null;
+  return (ev) => {
+    let args = null; try { args = JSON.stringify(ev.arguments || {}).slice(0, 300); } catch (_) {}
+    const data = JSON.stringify({ ...extra, state: ev.state, name: ev.name, args, iteration: ev.iteration, error: ev.error || null, at: ev.at || Date.now() });
+    if (post) return post(u, data);   // tests
+    const req = require('http').request({ hostname: u.hostname.replace(/^\[|\]$/g, ''), port: u.port || 80, path: u.pathname + u.search, method: 'POST',
+      headers: { 'content-type': 'application/json', 'content-length': Buffer.byteLength(data) }, timeout: 2000 }, (r) => r.resume());
+    req.on('error', () => {}); req.on('timeout', () => req.destroy());
+    req.end(data);
+  };
+}
+
+module.exports = { toolEventSink, run, runViaAgent, makeOllamaCallModel, makeNcpCallModel, fillToolPlaceholders, formatToolResult, _extractToolCalls, _parseToolBlocks, _findToolCalls, toolCount: () => agentTools.TOOLS.size };

@@ -40,8 +40,14 @@ const FILES = [
   ]],
   ['idearium/ui/js/file-manage.js', I('idearium/ui/js/file-manage.js'), [I('idearium/api/index.js')]],        // HTTP files/state, manage, code/search
   ['idearium/ui/js/repo-environment.js', I('idearium/ui/js/repo-environment.js'), [I('idearium/api/index.js')]], // HTTP environment[/setup]
-  ['idearium/ui/js/plan-panel.js', I('idearium/ui/js/plan-panel.js'), [I('idearium/api/index.js')]],          // HTTP plan, phases/runs, spec/plan
+  ['idearium/ui/js/plan-panel.js', I('idearium/ui/js/plan-panel.js'), [I('idearium/api/index.js'), I('idearium/ui/js/work-surface.js')]],   // + §CT5 wsLoad/wsPaint, wsOpenInCode          // HTTP plan, phases/runs, spec/plan
   ['idearium/ui/js/window-chrome.js', I('idearium/ui/js/window-chrome.js'), [I('clear-glass/src/preload/compartment-window.js')]],   // window.nexusWindow
+  // §0.39.349 CT3 — the Code tab as the work surface: HTTP code/*, worksurface, files/state, agent/route, agent/prompt;
+  // file-manage.js's file states (loadFileStates, fileStateMark, pendingOnlyFiles); work-surface.js's cards (_wsCard, WSURF)
+  // §0.39.350 CT4 — Settings → Models: HTTP ollama/check, ollama/check/ask; idearium/api runs lib/ollama-check.js
+  ['lib/ollama-check.js', I('lib/ollama-check.js'), []],
+  ['idearium/ui/js/ollama-check.js', I('idearium/ui/js/ollama-check.js'), [I('idearium/api/index.js')]],
+  ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/plan-panel.js')]],   // §CT5 openPlanPanel, _gateBar
 ];
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
@@ -53,6 +59,8 @@ const CONSUMERS = [
   [I('guardian/userscript-chat-stream.js'), I('guardian/server.js'), 'watchLogin → HTTP POST :7820/api/provider/login'],
   [I('idearium/api/index.js'), I('idearium/api/build-surface.js'), '11 build-surface routes, _deviationAfter'],
   [I('idearium/ui/js/living-spec.js'), I('idearium/api/index.js'), 'HTTP spec/plan, spec/build, deviation'],
+  [I('idearium/api/index.js'), I('lib/ollama-check.js'), '§CT4 ollama.check, ollama.check.ask (_require)'],
+  [I('idearium/ui/js/app.js'), I('idearium/ui/js/code-surface.js'), '§CT5 the SSE handler → codeSurfaceOnEvent; renderRepoCode for the Code subtab'],
 ];
 
 function mapBuildSurface(driver) {
@@ -84,6 +92,14 @@ function mapBuildSurface(driver) {
     n++;
     const r = driver.declare('wire', { id: `build-surface.wire.${n}.${dep}--${consumer}`, from_hook_id: `${dep}.export`, to_hook_id: `${consumer}.import`, uuid: `nexus-loom-map-build-surface-wire-${n}-v1-0000-2026-0929-001`, external: true });
     (r.ok ? results.wires : results.failures).push({ from: dep, to: consumer, r });
+  }
+  // §0.39.349 CT3 — a UI script another UI script uses (work-surface.js under code-surface.js) has no export hook from
+  // the scan; declare it, as the consumers' import hooks are above. One that already exists is refused as a duplicate.
+  for (const dep of new Set(FILES.flatMap(f => f[2]))) {
+    if (own.has(dep)) continue;
+    const r = driver.declare('hook', { id: `${dep}.export`, component_id: dep, name: 'export', type: 'direct', direction: 'out', uuid: `nexus-loom-map-${dep}-export-v1-0000-2026-1005-349` });
+    if (r.ok) results.hooks.push({ id: `${dep}.export`, r });
+    else if (!(r.failures || []).every(f => f.axiomId === 'loom.unique-id')) results.failures.push({ id: `${dep}.export`, r });
   }
   for (const [, id, req] of FILES) {
     for (const dep of req) {

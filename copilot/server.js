@@ -2296,6 +2296,22 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // §CT1 0.39.346 — James: "i feel like it should use copilot regardless, have copilot figure it, and learn from it.
+  // failure modes, dynamically switch models, if its not equipped for the task". The one door for "which model":
+  // POST /api/route { kind, preferAgent, policy } → the route to try, in order — each hop a provider, its backend, its
+  // agent and its model — from lib/pipeline-routing.js (the build's policy: learned per kind of job, breakers, the
+  // chain), not a fourth router. POST /api/route/outcome { provider, kind, ok, class, ms, error } → recorded in the
+  // economy ledger (what the learned mode learns from) and the breaker. The caller still sends its own prompt (0.39.258).
+  if (method === 'POST' && p === '/api/route') {
+    try { json(res, 200, require('../lib/model-door.js').route(await readBody(req), { defaultProvider: config.DEFAULT_PROVIDER, resolve: resolveDefaultBackend })); }
+    catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+  if (method === 'POST' && p === '/api/route/outcome') {
+    try { const r = require('../lib/model-door.js').outcome(await readBody(req)); json(res, r.ok ? 200 : 400, r); }
+    catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
   if (method === 'GET' && p === '/api/prompt/resolve') {
     json(res, 200, { ok: true, ...resolveDefaultBackend(config.DEFAULT_PROVIDER) });
     return;
@@ -2502,6 +2518,11 @@ const server = http.createServer(async (req, res) => {
           const context = (T.repoDir || T.repoUuid) ? { repoDir: T.repoDir ? String(T.repoDir) : null, agentId: body.agentId || null, repoUuid: T.repoUuid ? String(T.repoUuid) : null } : null;   // 0.39.266 — repoUuid: the harness tools know their repo without the model passing it
           const identity = typeof T.identity === 'string' && T.identity.trim() ? T.identity.trim() : null;
           const maxIterations = Math.min(Math.max(parseInt(T.maxIterations, 10) || 6, 1), 12);
+          // §CT6 0.39.352 — failed tool calls in a row that end the run (the caller climbs to a stronger model); 0 = no cap
+          const maxToolErrors = Math.min(Math.max(parseInt(T.maxToolErrors, 10) || 0, 0), 20);
+          // §CT8 — each tool call reported as it starts and ends to the caller's sink (idearium's tool-event route), so the
+          // Code tab shows the agent working; loopback only, fire and forget, never in the way of the run
+          const onToolCall = toolRuntime.toolEventSink(T.progressUrl, { session: sessionId || null, repoUuid: T.repoUuid ? String(T.repoUuid) : null });
           // 0.39.258 — composed: the caller (idearium's repo agent) built the whole prompt from blocks the person
           // edits; the loop adds no system prompt, identity or turn labels (copilot/tool-runtime.js composed mode).
           const composed = T.composed === true;
@@ -2514,11 +2535,11 @@ const server = http.createServer(async (req, res) => {
             let _canon = typeof body.canonical === 'string' ? body.canonical : undefined;
             const dispatchToAgent = (fullPrompt, o = {}) => { const c = _canon; _canon = undefined; return _lifeline.dispatchToNcpAgent(fullPrompt, { ...o, provider: body.agent || undefined,
               agentId: body.agentId || undefined, timeoutMs: body.timeoutMs || undefined, requestId, sessionId, canonical: c }); };
-            loop = await toolRuntime.runViaAgent(agent, dispatchToAgent, prompt, { toolScope: scope, identity: composed ? null : identity, context, maxIterations, composed, resultTemplate });
+            loop = await toolRuntime.runViaAgent(agent, dispatchToAgent, prompt, { toolScope: scope, identity: composed ? null : identity, context, maxIterations, composed, resultTemplate, maxToolErrors, onToolCall });
           } else {
             // §0.39.337 SB37 — the working set: the caller's 'workset' template and the question its signal is picked by
             const worksetTemplate = composed && typeof T.worksetTemplate === 'string' ? T.worksetTemplate : null;
-            loop = await toolRuntime.run({ userPrompt: prompt, identity: composed ? null : identity, context, toolScope: scope, maxIterations, composed, resultTemplate,
+            loop = await toolRuntime.run({ userPrompt: prompt, identity: composed ? null : identity, context, toolScope: scope, maxIterations, composed, resultTemplate, maxToolErrors, onToolCall,
               worksetTemplate, question: typeof T.question === 'string' ? T.question : null, sessionId,
               checklist: Array.isArray(T.checklist) ? T.checklist.slice(0, 20) : null,   // §0.39.339 SB39
               dispatch: (convo, sysContext, o) => _dispatchToOllama(convo, sysContext, { ...o, intent: 'tool-loop', requestId, sessionId, model: olModel, raw: composed }),
@@ -2527,7 +2548,7 @@ const server = http.createServer(async (req, res) => {
           const toolCallLog = (loop.toolCallLog || []).map(t => ({ name: t.name, arguments: t.arguments, iteration: t.iteration, scopeRejected: !!t.scopeRejected,
             ok: !(t.result && t.result.error), error: t.result && t.result.error ? String(t.result.error).slice(0, 300) : null }));
           const toolsInfo = { scope: scope ? scope.length : 'all', iterations: loop.iterations, calls: toolCallLog.length };
-          if (loop.failed) { json(res, 502, { ok: false, error: loop.error, jobId: loop.jobId || null, toolCallLog, tools: toolsInfo, requestId }); return; }
+          if (loop.failed) { json(res, 502, { ok: false, error: loop.error, ...(loop.toolErrors ? { toolErrors: true } : {}), jobId: loop.jobId || null, toolCallLog, tools: toolsInfo, requestId }); return; }
           json(res, 200, { ok: true, text: loop.text, ...(loop.workset ? { workset: loop.workset } : {}), provider_used: body.backend === 'guardian' ? (body.agent || 'guardian') : 'ollama',
             model_used: body.backend === 'ollama' ? (olModel || null) : undefined, toolCallLog, tools: toolsInfo, requestId });
           return;

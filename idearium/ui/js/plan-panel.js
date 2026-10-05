@@ -16,8 +16,14 @@
 //   start card    the repo's Home tab: "Start building" — its specs, each with Plan / Build next, and the plan.
 // ════════════════════════════════════════════════════════════════════════════
 
-const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), focus: null, wide: false };
-const _PLAN_GATE_LABEL = { mapped: 'mapped', snapshot: 'snapshot', dispatched: 'sent', replied: 'replied', blocked: 'blocked', incomplete: 'incomplete', reviewing: 'reviewing', reviewed: 'reviewed', skipped: 'skipped', landed: 'landed', closed: 'closed' };
+const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), focus: null, wide: false, showDone: _ppShowDoneSaved() };
+// §CT7 0.39.352 — James: "the plan needs to only show current work." · "completely either need to clear or need a clear
+// complete button." Complete steps and complete sections fold into one line with their count (hidden, never deleted);
+// one click shows them; the choice is remembered in this browser.
+function _ppShowDoneSaved() { try { return localStorage.getItem('idearium.plan.showDone') === '1'; } catch (_) { return false; } }
+function planToggleDone() { PLANP.showDone = !PLANP.showDone; try { localStorage.setItem('idearium.plan.showDone', PLANP.showDone ? '1' : '0'); } catch (_) { /* a per-browser convenience */ } _planPaint(); }
+function _ppDoneLine(n, what) { return n ? `<button class="pp-donefold" onclick="planToggleDone()" title="${PLANP.showDone ? 'hide' : 'show'} what is complete">✓ ${n} ${what} complete — ${PLANP.showDone ? 'hide' : 'show'}</button>` : ''; }
+const _PLAN_GATE_LABEL = { escalating: 'escalating', retrying: 'retrying', mapped: 'mapped', snapshot: 'snapshot', dispatched: 'sent', replied: 'replied', blocked: 'blocked', incomplete: 'incomplete', reviewing: 'reviewing', reviewed: 'reviewed', skipped: 'skipped', landed: 'landed', closed: 'closed' };
 
 function _planEl() {
   let el = document.getElementById('plan-panel');
@@ -47,9 +53,29 @@ function openPlanPanel({ map = undefined, focus = null } = {}) {
   if (map !== undefined) PLANP.map = map;
   if (focus) PLANP.focus = focus;
   _planEl().classList.add('open');
+  planTabSync();
   loadPlanPanel();
 }
-function closePlanPanel() { const el = document.getElementById('plan-panel'); if (el) el.classList.remove('open'); }
+function closePlanPanel() { const el = document.getElementById('plan-panel'); if (el) el.classList.remove('open'); planTabSync(); }
+
+// §CT9 0.39.353 — James: "need a little pull tab on the very right for when i close the plan." While a repo is open and the
+// panel is closed: a tab on the right edge — "Plan", the done count, a blinking dot while a step builds; a click opens it.
+// It follows the repo view (app.js setView / setRepoSubtab call planTabSync): gone on the repos grid and other pages.
+function planTabSync() {
+  let t = document.getElementById('plan-tab');
+  const panel = document.getElementById('plan-panel');
+  const inRepo = typeof CURRENT_API_REPO !== 'undefined' && !!CURRENT_API_REPO && [...document.querySelectorAll('.repo-subtab-btn')].some(b => b.offsetParent !== null);
+  const show = inRepo && !(panel && panel.classList.contains('open'));
+  if (!show) { if (t) t.hidden = true; return; }
+  if (!t) {
+    t = document.createElement('button'); t.id = 'plan-tab'; t.type = 'button'; t.title = 'open the Plan';
+    t.onclick = () => openPlanPanel();
+    document.body.appendChild(t);
+  }
+  const sm = PLANP.data && PLANP.uuid === CURRENT_API_REPO.uuid ? (PLANP.data.summary || {}) : null;
+  t.innerHTML = `${sm && sm.building ? '<span class="pp-tab-dot"></span>' : ''}<span class="pp-tab-label">Plan</span>${sm && sm.total ? `<span class="pp-tab-n">${sm.complete || 0}/${sm.total}</span>` : ''}`;
+  t.hidden = false;
+}
 function togglePlanPanel() { const el = document.getElementById('plan-panel'); if (el && el.classList.contains('open')) closePlanPanel(); else openPlanPanel(); }
 
 async function loadPlanPanel() {
@@ -84,7 +110,7 @@ function _gateBar(s) {
 function _ledgerHtml(rows) {
   if (!rows.length) return '<div class="pp-led-empty">no runs yet — ▶ builds it (a snapshot first, then the repo\'s agent)</div>';
   return rows.map(l => `<div class="pp-led"><span class="pp-led-t">${new Date(l.ts).toLocaleTimeString()}</span><span class="pp-led-s pp-${escapeHtml(l.state)}">${escapeHtml(l.state)}</span>
-    <span class="pp-led-d">${l.snapshot ? `snapshot ${escapeHtml(String(l.snapshot).slice(0, 12))} · ` : ''}${l.provider ? `${escapeHtml(l.provider)} · ` : ''}${(l.injected || []).length ? `files ${escapeHtml(l.injected.slice(0, 6).join(', '))}${l.injected.length > 6 ? ` +${l.injected.length - 6}` : ''} · ` : ''}${l.error ? `<span style="color:var(--coral)">${escapeHtml(l.error)}</span>` : ''}</span>
+    <span class="pp-led-d">${l.snapshot ? `snapshot ${escapeHtml(String(l.snapshot).slice(0, 12))} · ` : ''}${l.provider ? `${escapeHtml(l.provider)}${l.rung ? ` (rung ${l.rung}/${l.rungs}${l.attempt > 1 ? `, try ${l.attempt}` : ''})` : ''} · ` : ''}${l.toolErrors ? '<span style="color:var(--coral)">stopped: failed tool calls in a row</span> · ' : ''}${(l.injected || []).length ? `files ${l.injected.slice(0, 6).map(f => typeof wsOpenInCode === 'function' ? `<a href="#" class="pp-file" title="open in the Code tab" onclick="wsOpenInCode('${escapeHtml(String(f).replace(/'/g, "\\'"))}');return false">${escapeHtml(f)}</a>` : escapeHtml(f)).join(', ')}${l.injected.length > 6 ? ` +${l.injected.length - 6}` : ''} · ` : ''}${l.error ? `<span style="color:var(--coral)">${escapeHtml(l.error)}</span>` : ''}</span>
     ${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
 }
 
@@ -119,11 +145,18 @@ function _planPaint() {
     ${_planProof()}
     ${sm.total ? `<div class="pp-progress"><div style="width:${Math.round((sm.progress || 0) * 100)}%"></div></div>` : ''}
     <div class="pp-sec">tasks</div>
-    ${steps.length ? steps.map(task).join('') : '<div class="pp-empty">no phases yet — plan a spec (Spec tab → ▶ Build this spec)</div>'}
+    ${(() => {   // §CT7 — current work: what is building, next, stopped or waiting; the complete fold into one line
+      if (!steps.length) return '<div class="pp-empty">no phases yet — plan a spec (Spec tab → ▶ Build this spec)</div>';
+      const isDone = (s) => s.status === 'complete' || s.status === 'done';
+      const open = steps.filter(s => !isDone(s)), done = steps.filter(isDone);
+      return (open.length ? open.map(task).join('') : '<div class="pp-empty">nothing left to build here — every step is complete</div>')
+        + _ppDoneLine(done.length, `step${done.length === 1 ? '' : 's'}`) + (PLANP.showDone ? done.map(task).join('') : '');
+    })()}
     ${other.length ? `<div class="pp-sec">plans and file jobs</div>${other.map(r => `<div class="pp-act"><span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.title || `${r.phase} ${r.map}`)} <span class="pp-led-t">${new Date(r.ts).toLocaleTimeString()}</span>${r.error ? `<div style="color:var(--coral);font-size:10px">${escapeHtml(r.error)}</div>` : ''}</div>`).join('')}` : ''}
     <details class="pp-actwrap"><summary class="pp-sec">activity · ${activity.length}</summary>${activity.map(r => `<div class="pp-act"><span class="pp-led-t">${new Date(r.ts).toLocaleString()}</span> <span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.phase || '')} <span style="opacity:.6">${escapeHtml(String(r.map || '').split('/').pop())}</span></div>`).join('')}</details>
     <div id="pp-ws" class="pp-ws"></div>`;
   PLANP.focus = null;
+  planTabSync();   // §CT9 — the tab's count follows the plan
   // §0.39.284 W3 — the work surface, below the plan: every file the agent changed, as diffs, and its tools
   if (typeof wsLoad === 'function') { const w = document.getElementById('pp-ws'); if (WSURF.data && WSURF.uuid === PLANP.uuid) wsPaint(w); wsLoad(w); }
 }
@@ -189,7 +222,8 @@ function _planCodeBuild() {
   const done = live.filter(c => c.status === 'complete').length;
   const bad = live.filter(c => c.status === 'failed' || c.status === 'stalled');
   const busy = live.some(c => ['building', 'dispatched', 'generating'].includes(c.status));
-  const rows = live.map(c => {
+  const isDone = (c) => c.status === 'complete';
+  const rows = live.filter(c => PLANP.showDone || !isDone(c)).map(c => {
     const name = (c.file && c.file.path) || c.title || c.sectionId;
     const err = c.failureMode || c.error || c.lastError || c.failReason || (c.dispatch && c.dispatch.error) || '';
     return `<div class="pp-task ${c.status === 'complete' ? 'done' : ''} ${['building', 'dispatched', 'generating'].includes(c.status) ? 'cur' : ''}"><div class="pp-row">
@@ -201,6 +235,7 @@ function _planCodeBuild() {
   return `<div class="pp-sec">building ${escapeHtml(m.name || 'the spec')} — ${done}/${live.length} ${m.fileTree ? 'files' : 'sections'}${bad.length ? ` · <span style="color:var(--coral)">${bad.length} stopped</span>` : ''}</div>
     <div class="pp-progress"><div style="width:${live.length ? Math.round(done / live.length * 100) : 0}%"></div></div>
     ${done < live.length ? `<button class="pp-go" ${busy ? 'disabled' : ''} onclick="planCodeBuild('${escapeHtml(m.uuid)}')">${busy ? '◌ building…' : bad.length ? '▶ retry the stopped and build the rest' : '▶ build the rest'}</button>` : ''}
+    ${_ppDoneLine(done, m.fileTree ? `file${done === 1 ? '' : 's'}` : `section${done === 1 ? '' : 's'}`)}
     ${rows}`;
 }
 // §0.39.291 PV4 — James: "gate, verify, check, if failed, send back and fix it, then back through." Does the code work:

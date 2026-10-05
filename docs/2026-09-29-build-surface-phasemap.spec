@@ -380,3 +380,16 @@ spec:
       does: >-
         Versions bumped everywhere they persist (§5.4), the changelog, every touched atlas and spec addendum, tests
         registered, regression against 0.39.279, a Versionium record of the release, this map's phases closed with proof.
+#
+# ADDENDUM 2026-10-05 (0.39.351, CT5 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "i like it but, can we have this hooked into the plan and work surface panel"
+# BS11's Plan panel stays the one plan; the Code tab follows it (the current step, the runs on the open file, each opening
+# the panel focused) and repaints on the same events. A run's ledger lists its files as links into the Code tab. BS8's
+# Manage takes the hop picked in the Code tab (backend, agent, model) and passes it to the agent's dispatch.
+#
+# ADDENDUM 2026-10-05 (0.39.352, CT7 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "the plan needs to only show current work." ·
+# "completely either need to clear or need a clear complete button." BS11's Plan panel folds complete steps and complete
+# sections into one line with their count (show / hide, remembered); nothing is deleted.
+#
+# ADDENDUM 2026-10-05 (0.39.353, CT9 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "need a little pull tab on the very right for when i close the plan."
+# BS11's panel, closed, leaves a pull tab on the right edge (planTabSync); a click opens it. The current gate's pulse
+# (animation: pulse) named keyframes that never existed — they are defined now, so it pulses as BS11 said.

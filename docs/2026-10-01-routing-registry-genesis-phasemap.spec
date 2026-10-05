@@ -187,3 +187,14 @@ spec:
 # skipped), the route ordered by Beta-posterior success per chunk type once learn_min_records exist (deterministic;
 # untried 0.5), learned() + GET /api/routing/learned + `idearium routing learned` + the settings table.
 # The hop's model rides to the agent (dispatchOpts.model wins over the hat's). tests: test-pipeline-routing PR-31…34, PR-26.
+#
+# ADDENDUM 2026-10-05 (0.39.348, CT2 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "and learn from it. failure modes, dynamically switch models, if its not equipped for the task".
+# VERDICTS = test-failed · dismissed · constraint: a later judgment on a model's work. recordHop records it as a failed
+# hop for that job type (the learned order counts it); breaker.failure ignores it, as it ignores truncated and refused.
+# Copilot's door (lib/model-door outcome, verdict:true) never moves a breaker for one. Idearium sends them from the
+# prove loop and the workshop. tests: test-model-door MD-07, MD-08.
+#
+# ADDENDUM 2026-10-05 (0.39.352, CT6 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "needs escalating retry logic and fallback routing. like if the 3b fails, switch to the 7b, then the 16b deepseek, then the agents. have all of this configurable."
+# The escalation ladder: routing.escalate · escalation · escalate_on · retries_per_rung · max_tool_errors. ladder(policy,
+# {installed}) — written, or the Ollama models smallest first by the size in the name (sizeOf), then the chain's agents;
+# climb() walks it; tool-errors is a class that never opens a breaker. Phase builds climb when no agent is named.

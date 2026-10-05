@@ -18,7 +18,7 @@ const page = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</st
 <script>
 const API_BASE = '';
 let CURRENT_API_REPO = { uuid: '${U}', name: 'lock', files: [{ path: 'src/a.js', bytes: 10 }, { path: 'src/b.js', bytes: 5 }] };
-let ACTIVE_API_FILE = 'src/a.js', CURRENT_REPO_SUBTAB = 'spec', _codeState = { uuid: '${U}', q: 'lock', hits: [{ file: 'src/c.js', line: 3, name: 'useLock' }] };
+let ACTIVE_API_FILE = 'src/a.js', CURRENT_REPO_SUBTAB = 'spec', CS = { uuid: '${U}', q: 'lock', hits: [{ file: 'src/c.js', line: 3, name: 'useLock' }] };
 window.__toasts = [];
 function toast(m, t) { window.__toasts.push([m, t]); }
 async function api(p, o = {}) { const r = await fetch(p, { headers: { 'Content-Type': 'application/json' }, ...o }); const d = await r.json(); if (!r.ok || d.ok === false) throw new Error(d.error || 'failed'); return d; }
@@ -78,8 +78,8 @@ srv.listen(0, '127.0.0.1', async () => {
   P.case('BS9: the spec\'s build bar: Build next names the next phase and its layer; phases bottom-up; the deviation line', /Build next · LK1 \(library\)/.test(bar.go) && bar.rows === 2 && /from baseline 25\.0%/.test(bar.dev) && /since last version 5\.0%/.test(bar.dev), bar);
   await pg.evaluate(() => specBuildPhase(null));
   await pg.waitForTimeout(300);
-  const pp = await pg.evaluate(() => ({ open: document.getElementById('plan-panel').classList.contains('open'), tasks: document.querySelectorAll('.pp-task').length, cur: document.querySelectorAll('.pp-g.cur').length, sub: document.getElementById('pp-sub').textContent, led: document.querySelectorAll('.pp-led').length }));
-  P.case('BS9→BS11: building opens the plan panel: tasks with gates as progress, the current gate pulsing, its ledger expanded (focused run)', pp.open && pp.tasks === 2 && pp.cur === 1 && /1\/2 done/.test(pp.sub) && pp.led === 1, pp);
+  const pp = await pg.evaluate(() => ({ open: document.getElementById('plan-panel').classList.contains('open'), tasks: document.querySelectorAll('.pp-task').length, fold: ((document.querySelector('.pp-donefold') || {}).textContent || ''), cur: document.querySelectorAll('.pp-g.cur').length, sub: document.getElementById('pp-sub').textContent, led: document.querySelectorAll('.pp-led').length }));
+  P.case('BS9→BS11: building opens the plan panel: tasks with gates as progress, the current gate pulsing, its ledger expanded (focused run)', pp.open && pp.tasks === 1 && /1 step complete/.test(pp.fold) && pp.cur === 1   /* §CT7 0.39.352 — the complete step folds into one line */ && /1\/2 done/.test(pp.sub) && pp.led === 1, pp);
   await pg.evaluate(() => renderBuildStart(CURRENT_API_REPO)); await pg.waitForTimeout(300);
   P.case('BS11: the build-start card lists the spec with its progress', await pg.evaluate(() => /1\/2 phases · next LK1/.test(document.getElementById('repo-build-start').textContent)));
   // BS10

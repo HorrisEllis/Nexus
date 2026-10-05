@@ -26,6 +26,8 @@ const _require = createRequire(import.meta.url);
 // §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
+// §CT1 0.39.347 — the repo agent asks copilot's door with idearium's routing policy (routing.* config)
+try { _require('../../lib/repo-agent.js').setRoutingPolicySource(() => _routingPolicy()); } catch (_) {}
 
 // §AX-010 2026-07-10 — idearium hardcoded 127.0.0.1:9000 in four places
 // (ledger x2, register, heartbeat). Resolve the orchestrator from
@@ -547,6 +549,8 @@ async function _reconcileSpecRepos() {
 
 // ── §0.39.271 P2/P3 — Phases manager helpers ───────────────────────────────
 // §0.39.284 W3 — a reply's tool calls, small enough to keep on its run row (same shape as work-surface.js toolsBrief)
+// §CT8 — the last tool calls per repo, as copilot reported them live (memory only: the run row keeps the record)
+const _toolEvents = new Map();
 function _toolsBrief(r) {
   const T = r && Array.isArray(r.toolCalls) ? r.toolCalls : null;
   if (!T) return null;
@@ -652,44 +656,79 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
+  const PRt = _require('../../lib/pipeline-routing.js');
   // §0.39.282 N22 — the phase's shadow: every file the phase names must come back (written, staged or proposed). An
   // absence is a gap + a liminal item (lib/shadow.js) and the run reads 'incomplete', naming what never arrived.
   const SH = _require('../../lib/shadow.js');
   const expectFiles = [...new Set((node.files || []).map(f => String(f).split(/[\s(]/)[0]).filter(f => f && /[\w-]\.[\w]+$/.test(f)))];
-  const shadow = expectFiles.length ? SH.declare({ step: 'phase.build', expects: { files: expectFiles }, subject: { repoUuid: target.uuid, map, phase, runId }, causedBy: `idearium.phases.build:${runId}` }) : null;
-  // §0.39.282 N23 — each phase is its own chunk in its own FRESH chat (session = runId), so a small local model gets its
-  // whole window for this phase, not the running history of every phase before it.
-  Promise.resolve().then(async () => RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message, backend, agent, provider, layer: getRepoLayer(), session: runId }))
-    .then((r) => {
-      const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
-      // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
-      let state = r && r.ok ? (r.injects && r.injects.blocked ? 'blocked' : 'replied') : 'failed';
-      let absent = null;
-      if (shadow) {
-        if (state !== 'replied') SH.drop(shadow);
-        else { const got = SH.settle(shadow, { files: ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
-      }
-      const row = { uuid: `${runId}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}),
-        error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : null)),
-        provider: r && (r.providerUsed || r.provider) || null,
-        reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
-      // §0.39.284 W3 — the tool calls of this run are kept on it, so the work surface can show what the agent used
-      try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
-      appendRow('idearium_phase_runs', row);
-      getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: row.state, snapshot: commitId });
+  // §CT6 0.39.352 — James: "needs escalating retry logic and fallback routing. like if the 3b fails, switch to the 7b,
+  // then the 16b deepseek, then the agents. have all of this configurable." With no agent named by the call, the build
+  // climbs the ladder (routing.escalation, or derived — lib/pipeline-routing ladder): each rung gets retries_per_rung
+  // attempts; an outcome in escalate_on (failed · blocked · incomplete · tool-errors) moves to the next rung in a fresh
+  // chat, a row on the Plan saying from what, to what and why. max_tool_errors failed tool calls in a row end an attempt.
+  const policy = _routingPolicy();
+  let rungs = [], ladderFrom = null;
+  if (!backend && !agent && !provider && policy.escalate) {
+    let installed = [];
+    if (!policy.ollamaModels.length && !policy.escalation.length) { const om = await _ollamaModels(); if (om.ok) installed = om.models; }
+    const L = PRt.ladder(policy, { installed });
+    rungs = L.rungs; ladderFrom = L.from;
+  }
+  const paramsOf = (rg) => (!rg ? { backend, agent, provider } : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
+  // one attempt on one rung (rg null = no ladder: the call's own agent): dispatch, the shadow settled, the row built
+  const attempt = async (rg, ri, tryNo) => {
+    const session = ri <= 0 && tryNo === 1 ? runId : `${runId}-r${ri + 1}t${tryNo}`;
+    // §0.39.282 N23 — each phase is its own chunk in its own FRESH chat (session), so a small local model gets its whole
+    // window for this phase, not the running history of every phase before it.
+    const shadow = expectFiles.length ? SH.declare({ step: 'phase.build', expects: { files: expectFiles }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
+    const dp = paramsOf(rg);
+    let r;
+    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0 }); }
+    catch (e) { if (shadow) SH.drop(shadow); throw e; }
+    const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
+    // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
+    let state = r && r.ok ? (r.injects && r.injects.blocked ? 'blocked' : 'replied') : 'failed';
+    let absent = null;
+    if (shadow) {
+      if (state !== 'replied') SH.drop(shadow);
+      else { const got = SH.settle(shadow, { files: ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
+    }
+    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}),
+      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : null)),
+      provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || null,
+      ...(rg ? { rung: ri + 1, rungs: rungs.length, attempt: tryNo, ...(r && r.toolErrors ? { toolErrors: true } : {}) } : {}),
+      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
+    // §0.39.284 W3 — the tool calls of this run are kept on it, so the work surface can show what the agent used
+    try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
+    return { r, state, absent, dp, row, trigger: r && r.toolErrors ? 'tool-errors' : state };
+  };
+  // each attempt recorded on the Plan; a climb says from what, to what, and why
+  const onOutcome = async (out, { rung, index, tryNo, next, exhausted }) => {
+    const row = exhausted ? { ...out.row, ladderExhausted: true, error: `${out.row.error || out.trigger} — every rung of the ladder tried (${rungs.map(x => x.provider).join(' → ')})` } : out.row;
+    appendRow('idearium_phase_runs', row);
+    getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: row.state, snapshot: commitId, ...(rung ? { rung: index + 1, provider: rung.provider } : {}) });
+    if (!next) return;
+    const why = `${out.trigger}${out.row.error ? ` — ${String(out.row.error).slice(0, 200)}` : ''}`;
+    const sess = `${runId}-r${next.index + 1}t${next.tryNo}`;
+    appendRow('idearium_phase_runs', { uuid: `${sess}-${next.how}`, ...base, state: next.how, snapshot: commitId, provider: next.rung.provider, rung: next.index + 1, rungs: rungs.length, attempt: next.tryNo,
+      from: rung.provider, to: next.rung.provider, error: next.how === 'escalating' ? `${rung.provider} ${why} → climbing to ${next.rung.provider} (rung ${next.index + 1} of ${rungs.length}; ${ladderFrom})` : `${rung.provider} ${why} → attempt ${next.tryNo} of ${policy.retriesPerRung} on the same rung`, ts: Date.now() });
+    getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: next.how, snapshot: commitId, from: rung.provider, to: next.rung.provider });
+  };
+  Promise.resolve().then(() => PRt.climb({ rungs, policy, attempt, onOutcome }))
+    .then(({ r, state, absent, dp }) => {
       _reviewDraft({ r, state, absent, target, base, commitId, req, note, message })
         .catch(e => { console.warn(`[idearium] draft review for ${runId} failed: ${e.message}`); return null; })
         // §0.39.303 PH1 — then the judge: the phase's own conditions, run; unmet ones feed the next attempt
-        .then(() => (['replied', 'incomplete'].includes(state) ? _provePhase({ target, base, commitId, mapText, phase, message, dispatch: { backend, agent, provider } }) : null))
+        .then(() => (['replied', 'incomplete'].includes(state) ? _provePhase({ target, base, commitId, mapText, phase, message, dispatch: { backend: dp.backend || null, agent: dp.agent || null, provider: dp.provider || null, ...(dp.model ? { model: dp.model } : {}) } }) : null))
         .catch(e => console.warn(`[idearium] proof of ${runId} failed: ${e.message}`));
     })
     .catch((e) => {
-      if (shadow) SH.drop(shadow);
       appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, ...base, state: 'failed', snapshot: commitId, error: e.message, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'failed', snapshot: commitId });
     });
+  const shadow = expectFiles.length ? { expects: { files: expectFiles } } : null;
   return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length,
-    ...(shadow ? { shadow: { id: shadow.id, expects: shadow.expects } } : {}) } };
+    ...(shadow ? { shadow: { expects: shadow.expects } } : {}), ...(rungs.length ? { ladder: { rungs: rungs.map(x => x.provider), from: ladderFrom } } : {}) } };
 }
 
 // §0.39.303 PH1 — James: "It can build it. Piece by piece look at idearium." A phase run ends in a proof run of the
@@ -973,6 +1012,8 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
       rr.endedAt = Date.now();
       run.state = 'done'; run.verdict = v.verdict;
       run.why = v.verdict === 'proven' ? `proven in ${round} round(s) — ${v.why}` : `every file parses and resolves (round ${round}), not proven: ${v.checks.tests ? v.checks.tests.why : 'no tests'}`;
+      // §CT2 — proven: every model that built a file of it did the job
+      if (v.verdict === 'proven') { try { const PRx = _require('../../lib/pipeline-routing.js'); const m2 = se.loadSpec(run.specUuid); for (const c of (m2.chunks || [])) { const by = _builtBy(c); if (by && c.realPath) _verdict(by, PRx.jobTypeOf(c), true); } } catch (_) {} }
       return;
     }
     if (round === run.maxRounds) {
@@ -984,6 +1025,8 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
     // 3 — send each failing file back with its exact failures; the version that failed is never reused
     const manifest = se.loadSpec(run.specUuid);
     const items = Object.entries(v.byFile).filter(([f]) => f !== '(project)').map(([f, list]) => ({ realPath: f, failures: BV.repairText(list), round: round + 1 }));
+    // §CT2 — whoever built a failing file was not up to it: the verdict goes to the door before the file goes back
+    try { const PRx = _require('../../lib/pipeline-routing.js'); for (const it of items) { const c = manifest.chunks.find(x => x.realPath === it.realPath); const by = _builtBy(c); if (by) _verdict(by, PRx.jobTypeOf(c), false, 'test-failed', String(it.failures || '').slice(0, 300)); } } catch (_) {}
     const mr = se.markForRepair(run.specUuid, items);
     rr.repaired = mr.marked; rr.notBuiltBySpec = mr.unknown;
     try {
@@ -1195,18 +1238,53 @@ async function _specEngineReady(ms = 5000) {
  *  provider (lib/repo-agent.js defaultProvider / routeFor), the same route a repo agent uses. Tests swap it (_setAgentAsk). */
 let _agentAskOverride = null;
 export function _setAgentAsk(fn) { _agentAskOverride = typeof fn === 'function' ? fn : null; }
-async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium' } = {}) {
+export function _agentAskForTest(prompt, opts) { return _agentAsk(prompt, opts); }   // §CT1 — its test drives the real route walk
+export function _verdictForTest(chunk, kind, ok, cls, why) { const by = _builtBy(chunk); _verdict(by, kind, ok, cls, why); return by; }   // §CT2
+async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium', kind = null } = {}) {
   if (_agentAskOverride) { try { return await _agentAskOverride(prompt, { channel, sessionId }); } catch (e) { return { ok: false, error: e.message }; } }
+  // §CT1 0.39.346 — James: "it should use copilot regardless, have copilot figure it, and learn from it". The pages
+  // (workshop, architect, void, deliver) ask copilot's door which model answers this kind of job (POST /api/route,
+  // lib/pipeline-routing's learned policy); each hop's outcome goes back (POST /api/route/outcome) so it learns; a hop
+  // that fails in a class the policy falls back on moves to the next model. Before, they followed the global default
+  // provider and never passed a model — an Ollama page got the bridge's default model, or no Ollama at all.
   const RA = _require('../../lib/repo-agent.js');
-  const provider = RA.defaultProvider();
-  const { backend, agent } = RA.routeFor(provider);
-  const payload = { prompt, channel, sessionId, ...(backend ? { backend } : {}), ...(agent ? { agent } : {}) };
-  if (backend === 'guardian') payload.timeoutMs = 300000;
-  const r = await _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 310000);
-  const j = r.json || {};
-  if (r.status >= 400 || j.ok === false || typeof j.text !== 'string') return { ok: false, error: j.error || (r.status ? `copilot answered ${r.status}` : 'no answer') };
-  return { ok: true, text: j.text, by: provider };
+  const PR = _require('../../lib/pipeline-routing.js');
+  const jobType = kind || `page:${String(channel).replace(/^idearium-/, '')}`;
+  const policy = _routingPolicy();
+  let route = null, routeNote = null;
+  const rr = await _postJson(`${RA.COPILOT_URL}/api/route`, { kind: jobType, preferAgent: RA.defaultProvider(), policy }, 5000);
+  if (rr.status === 200 && rr.json && rr.json.ok && Array.isArray(rr.json.route) && rr.json.route.length) route = rr.json.route;
+  else {
+    const prov = RA.defaultProvider(), r = RA.routeFor(prov);
+    route = [{ provider: prov, backend: r.backend, agent: r.agent || null, model: null, why: 'the default provider' }];
+    routeNote = `copilot could not route (${(rr.json && rr.json.error) || `status ${rr.status}`}) — sent to the default provider`;
+  }
+  const tried = [];
+  for (const h of route) {
+    const payload = { prompt, channel, sessionId, ...(h.backend ? { backend: h.backend } : {}), ...(h.agent ? { agent: h.agent } : {}), ...(h.model ? { model: h.model } : {}) };
+    if (h.backend === 'guardian') payload.timeoutMs = 300000;
+    const t0 = Date.now();
+    const r = await _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 310000);
+    const j = r.json || {};
+    const ok = !(r.status >= 400 || r.status === 0 || j.ok === false || typeof j.text !== 'string' || !j.text.trim());
+    const error = ok ? null : (j.error || (r.status ? `copilot answered ${r.status}` : 'no answer'));
+    const cls = ok ? null : PR.classify({ ok: false, error, text: j.text });
+    tried.push({ provider: h.provider, model: h.model || null, ok, class: cls, ms: Date.now() - t0 });
+    _postJson(`${RA.COPILOT_URL}/api/route/outcome`, { provider: h.provider, kind: jobType, ok, class: cls, ms: Date.now() - t0, error, policy }, 5000).catch(() => {});
+    if (ok) return { ok: true, text: j.text, by: h.provider, model: h.model || null, route: tried, why: h.why, ...(routeNote ? { note: routeNote } : {}) };
+    if (!PR.shouldFallback(cls, policy)) break;
+  }
+  const last = tried[tried.length - 1];
+  return { ok: false, error: `no model answered (${tried.map(t => `${t.provider}${t.class ? `: ${t.class}` : ''}`).join(' → ')})`, route: tried, ...(routeNote ? { note: routeNote } : {}), lastClass: last && last.class };
 }
+/** §CT2 0.39.348 — a later verdict on a model's work (its test failed or passed, its draft dismissed or accepted) goes to
+ *  copilot's door, so the learned order learns what a model is up to, not only when it crashes. Fire and forget. */
+function _verdict(provider, kind, ok, cls = null, why = null) {
+  if (!provider || !kind) return;
+  try { const RAx = _require('../../lib/repo-agent.js'); _postJson(`${RAx.COPILOT_URL}/api/route/outcome`, { provider, kind, ok: !!ok, class: ok ? null : cls, error: why, verdict: true, policy: _routingPolicy() }, 5000).catch(() => {}); } catch (_) {}
+}
+/** _builtBy(chunk) — the provider (with its model) whose answer built this chunk: the last ok hop of its route */
+function _builtBy(c) { if (!c) return null; const ok = (c.route || []).filter(h => h.outcome === 'ok').pop(); return (ok && ok.provider) || null; }
 function _workshopGet(WS, id) { return loadTable(WS.TABLE).find(r => r.uuid === id) || null; }
 
 // §0.39.298 AR2 — ARCHITECT's helpers (idearium/lib/architect.js holds the model; these hold loom, the store and repos)
@@ -1427,7 +1505,7 @@ async function readBody(req) {
 async function _ollamaModels() {
   try {
     const d = await _nexusClient.get('ollama', '/api/models', { timeout: 4000 });
-    if (!d || d.ok === false || !Array.isArray(d.models)) return { ok: false, error: 'Ollama did not answer (the bridge reached it and got nothing)', models: [], active: d && d.active || null };
+    if (!d || d.ok === false || !Array.isArray(d.models)) return { ok: false, error: (d && d.error) || 'Ollama did not answer (the bridge reached it and got nothing)', models: [], active: d && d.active || null };
     return { ok: true, models: d.models, active: d.active || null };
   } catch (e) { return { ok: false, error: `ollama bridge unreachable: ${e.message}`, models: [], active: null }; }
 }
@@ -1683,6 +1761,9 @@ const ROUTE_CAP = {
   'routing.show':     CAPS.READ_IDEAS,
   'routing.plan':     CAPS.READ_IDEAS,
   'routing.learned':  CAPS.READ_IDEAS,
+  'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
+  'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
+  'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -1721,6 +1802,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','routing'],         'routing.show'],
     ['GET',    ['api','routing','plan'],  'routing.plan'],
     ['GET',    ['api','routing','learned'], 'routing.learned'],   // §0.39.287 what each model/provider has done per chunk type
+    ['GET',    ['api','ollama','check'], 'ollama.check'],          // §CT4 0.39.350 — installed models, each caller's route
+    ['POST',   ['api','ollama','check','ask'], 'ollama.check.ask'], // §CT4 — one model asked a one-line question through copilot
     ['POST',   ['api','routing','breaker','reset'], 'routing.breaker.reset'],
     // §0.39.279 — the settings console (ui/settings.html): every idearium, compartment and agent setting in one read.
     // Writes go to the routes that already own each setting (config, agent/settings, agent/blocks, desktop).
@@ -1988,6 +2071,9 @@ function matchRoute(method, url) {
     // See that file's header for the capability-vs-behaviour limit.
     ['GET',    ['api','repos',    ':uuid','agent'],           'repo.agent.status'],
     ['POST',   ['api','repos',    ':uuid','agent','prompt'],  'repo.agent.prompt'],
+    ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
+    ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
+    ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
     ['GET',    ['api','repos',    ':uuid','agent','history'], 'repo.agent.history'],
@@ -2318,12 +2404,36 @@ async function handle(req, res, route, query, body) {
         if (query.block && !block) return err(res, 404, `no block '${query.block}' — one of: ${se.SPEC_SECTIONS.map(b => b.id).join(', ')}`);
         return ok(res, { policy, ...PR.plan({ preferAgent: query.agent || null, block, policy }) });
       }
-      return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(),
+      // §CT6 0.39.352 — the escalation ladder a phase build climbs, as it reads now (the installed models when none are listed)
+      let installed = []; if (!policy.ollamaModels.length && !policy.escalation.length) { const om = await _ollamaModels(); if (om.ok) installed = om.models; }
+      const ladder = PR.ladder(policy, { installed });
+      return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(), ladder: { rungs: ladder.rungs.map(r => r.provider), from: ladder.from }, escalateOn: PR.ESCALATE_ON,
         blocks: se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title, agent: b.agent, fallback: b.fallback || [], ...PR.plan({ block: b, policy }) })) });
     }
     case 'routing.learned': {
       const PR = _require('../../lib/pipeline-routing.js');
       return ok(res, { policy: _routingPolicy(), learned: PR.learned({ jobType: query.jobType || null }) });
+    }
+    // §CT4 0.39.350 — James: "make sure ollama is all wired into idearium." (lib/ollama-check.js) The bridge's list of
+    // installed models, and every caller's route as copilot's door gives it; a missing bridge or copilot is said.
+    case 'ollama.check': {
+      const OC = _require('../../lib/ollama-check.js');
+      const RA = _require('../../lib/repo-agent.js');
+      const policy = _routingPolicy();
+      const m = await _ollamaModels();
+      const route = async (kind, preferAgent) => {
+        const r = await _postJson(`${RA.COPILOT_URL}/api/route`, { kind, preferAgent, policy }, 5000);
+        return r.status === 200 && r.json && r.json.ok ? r.json : { ok: false, error: (r.json && r.json.error) || (r.status ? `copilot answered ${r.status}` : `copilot unreachable at ${RA.COPILOT_URL}`) };
+      };
+      const callers = await OC.routes({ route, installed: m.ok ? m.models : null, defaultProvider: RA.defaultProvider() });
+      return ok(res, { bridge: { ok: m.ok, error: m.error || null, active: m.active || null }, models: m.models || [], callers, probe: OC.PROBE,
+        copilot: callers.every(c => !c.ok) ? { ok: false, error: callers[0] && callers[0].error } : { ok: true, url: RA.COPILOT_URL } });
+    }
+    case 'ollama.check.ask': {
+      if (!body || !body.model) return err(res, 400, 'model is required');
+      const OC = _require('../../lib/ollama-check.js');
+      const RA = _require('../../lib/repo-agent.js');
+      return ok(res, await OC.ask({ model: String(body.model), post: (payload) => _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 130000) }));
     }
     case 'routing.breaker.reset': {
       const PR = _require('../../lib/pipeline-routing.js');
@@ -4440,6 +4550,8 @@ async function handle(req, res, route, query, body) {
       const r = WS.decide(w, params.pid, body || {});
       if (r.error) return err(res, 400, r.error);
       syncTable(WS.TABLE, [w]);
+      // §CT2 — his accept or dismiss is the verdict on the model that drafted it
+      if (r.proposal && r.proposal.by && ['accepted', 'dismissed'].includes(r.proposal.status)) _verdict(r.proposal.by, 'page:workshop', r.proposal.status === 'accepted', 'dismissed', r.proposal.status === 'dismissed' ? 'dismissed by James' : null);
       return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w });
     }
     case 'workshop.save': {
@@ -5196,6 +5308,7 @@ async function handle(req, res, route, query, body) {
         backend: body.backend || null,
         agent: body.agent || null,
         provider: body.provider || null,   // §PROVIDER — else this compartment's stored choice
+        model: body.model || null,   // §CT3 0.39.349 — a hop he picked in the Code tab (backend, agent and model together)
         noContext: body.noContext === true,
         layer: getRepoLayer(),   // §INJECT — addressed code blocks land in this repo through the one real write path
       });
@@ -5203,6 +5316,37 @@ async function handle(req, res, route, query, body) {
       // error — 200 with ok:false so the CLI can print it in the transcript
       // instead of api() throwing and losing the text.
       return ok(res, r);
+    }
+
+    // §CT3 0.39.349 — James: "the code tab the agent tab, work surface". The docked agent shows the model copilot's door
+    // would choose for this repo's agent (or that Settings pins a provider, so the door is not asked), and the other hops.
+    case 'repo.agent.route': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RA = _require('../../lib/repo-agent.js');
+      const kind = query.kind === 'agent:build' ? 'agent:build' : 'agent:chat';
+      const pinned = RA.getProvider(params.uuid);
+      const d = await RA.doorRoute(kind, null);
+      return ok(res, { ok: !!d.route, kind, route: d.route || [], error: d.route ? null : (d.error || 'copilot gave no route'), pinned: pinned && pinned !== 'auto' ? pinned : null });
+    }
+
+    // §CT8 0.39.352 — James: "i want to see the agents activity in the code tab, in real time. like maybe have a little dot
+    // blinking next to it". copilot's tool loop posts each call as it starts (running) and ends (ok / failed); it is
+    // broadcast (idearium.repo.agent.tool) and the last calls are kept per repo for a page that opens mid-run.
+    case 'repo.agent.tool.event': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body || !body.name || !['running', 'ok', 'failed'].includes(body.state)) return err(res, 400, 'name and state (running | ok | failed) are required');
+      const ev = { repoUuid: params.uuid, session: body.session ? String(body.session).slice(0, 120) : null, name: String(body.name).slice(0, 120), state: body.state,
+        args: body.args ? String(body.args).slice(0, 300) : null, iteration: Number(body.iteration) || null, error: body.error ? String(body.error).slice(0, 300) : null, at: Number(body.at) || Date.now() };
+      const ring = _toolEvents.get(params.uuid) || [];
+      ring.push(ev); if (ring.length > 80) ring.splice(0, ring.length - 80);
+      _toolEvents.set(params.uuid, ring);
+      getIdeaOS().emit('idearium.repo.agent.tool', ev);
+      return ok(res, { ok: true });
+    }
+    case 'repo.agent.tool.events': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      return ok(res, { events: (_toolEvents.get(params.uuid) || []).slice(-60) });
     }
 
     // §LATE 0.39.241 — the Agent tab asks for a reply copilot's wait missed.
@@ -6421,9 +6565,18 @@ async function handle(req, res, route, query, body) {
         // the chosen agent, this block's own fallback, the global chain (or local-first / economy / fixed), providers
         // whose breaker is open skipped. A call may still name its own: body.route (a list) or body.fallbackAgent.
         const routingPolicy = _routingPolicy(body.routing || {});
-        const routePlan = Array.isArray(body.route) && body.route.length
-          ? { mode: 'given', route: body.route.map(p => ({ provider: p, why: 'given by the call' })), skipped: [] }
-          : _require('../../lib/pipeline-routing.js').plan({ preferAgent, block: (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null, chunk, policy: routingPolicy });
+        // §CT1 0.39.347 — the route from copilot's door (one place decides, its breakers, what it has learned); the local
+        // plan only when copilot cannot be reached, and then it says so (routeVia)
+        const _blk = (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null;
+        const _PR = _require('../../lib/pipeline-routing.js');
+        let routePlan;
+        if (Array.isArray(body.route) && body.route.length) routePlan = { mode: 'given', route: body.route.map(p => ({ provider: p, why: 'given by the call' })), skipped: [], routeVia: 'the call' };
+        else {
+          const RAx = _require('../../lib/repo-agent.js');
+          const d = await _postJson(`${RAx.COPILOT_URL}/api/route`, { kind: _PR.jobTypeOf(chunk), preferAgent, block: _blk ? { id: _blk.id, agent: _blk.agent, fallback: _blk.fallback || [] } : null, policy: routingPolicy }, 5000);
+          if (d.status === 200 && d.json && d.json.ok && Array.isArray(d.json.route) && d.json.route.length) routePlan = { mode: d.json.mode, route: d.json.route.map(h => ({ provider: h.provider, why: h.why })), skipped: d.json.skipped || [], routeVia: 'copilot' };
+          else routePlan = { ..._PR.plan({ preferAgent, block: _blk, chunk, policy: routingPolicy }), routeVia: `local — copilot could not route (${(d.json && d.json.error) || `status ${d.status}`})` };
+        }
         if (body.fallbackAgent && !routePlan.route.some(r => r.provider === body.fallbackAgent)) routePlan.route.splice(1, 0, { provider: body.fallbackAgent, why: 'given by the call' });
         const fallbackAgent = null;   // the route carries the fallbacks now (0.39.286); kept so nothing below changes shape
 
@@ -6555,6 +6708,8 @@ async function handle(req, res, route, query, body) {
             preferAgent,
             fallbackAgent,
             route: routePlan.route.map(r => r.provider), policy: routingPolicy,   // §0.39.286 RG3
+            // §CT1 0.39.347 — each hop's outcome goes to copilot's door (its breakers, its learning), not a second set here
+            ...(routePlan.routeVia === 'copilot' ? { report: (h) => { const RAx = _require('../../lib/repo-agent.js'); _postJson(`${RAx.COPILOT_URL}/api/route/outcome`, { provider: h.provider, kind: h.jobType, ok: h.ok, class: h.class || null, ms: h.ms, error: h.error || null, policy: routingPolicy }, 5000).catch(() => {}); } } : {}),
             // §BUILT 2026-09-03 — fires the instant a queued job is
             // confirmed on guardian's side, before the (up to 5-minute)
             // poll for a browser-automated NCP provider — see
@@ -6626,7 +6781,7 @@ async function handle(req, res, route, query, body) {
         return ok(res, {
           chunkUuid: chunk.uuid, sectionId: chunk.sectionId, sectionTitle: chunk.sectionTitle,
           agent: preferAgent, status: 'building',
-          route: routePlan.route, routeSkipped: routePlan.skipped, routeMode: routePlan.mode,   // §0.39.286 — what it will try, in order, and why
+          route: routePlan.route, routeSkipped: routePlan.skipped, routeMode: routePlan.mode, routeVia: routePlan.routeVia || null,   // §0.39.286 — what it will try, in order, and why; §CT1 — who decided
           hat: who.hat ? who.hat.name : null, hatSource: who.hatSource, repoUuid: who.repoUuid,   // §0.39.267 — who's wearing what, visible
           agentId: who.agentId, memory: memoryInfo,                                                // §0.39.269 — and what it remembered
         });
@@ -7218,6 +7373,8 @@ export function startAPI() {
   server.listen(PORT, BINDING, async () => {
     // ESM: use createRequire for CJS modules
     const _require = createRequire(import.meta.url);
+    // §CT8 0.39.352 — copilot reports each tool call of a repo agent here, as it happens (the Code tab's live activity)
+    try { _require('../../lib/repo-agent.js').setToolEventSink(`http://127.0.0.1:${PORT}`); } catch (e) { console.warn(`[idearium/api] live tool events not wired: ${e.message}`); }
 
     const { BootSequence } = _require('../../lib/boot-sequence');
 

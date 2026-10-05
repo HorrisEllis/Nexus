@@ -207,6 +207,15 @@ const SCHEMA = {
     breaker_threshold:   { default: 3, min: 1, max: 50, copilot_writable: true, type: 'number' },
     breaker_cooldown_ms: { default: 600000, min: 1000, max: 86400000, copilot_writable: true, type: 'number' },
     skip_open:           { default: true, copilot_writable: true, type: 'boolean' },
+    // §CT6 0.39.352 — James: "needs escalating retry logic and fallback routing. like if the 3b fails, switch to the 7b,
+    // then the 16b deepseek, then the agents. have all of this configurable." A phase build climbs this ladder
+    // (lib/pipeline-routing.js ladder): written here as "ollama:qwen2.5-coder:3b > ollama:qwen2.5-coder:7b > claude", or
+    // empty = derived (ollama_models smallest first by the size in the name, then the chain's agents).
+    escalate:            { default: true, copilot_writable: true, type: 'boolean' },
+    escalation:          { default: '', copilot_writable: true, type: 'string' },
+    escalate_on:         { default: 'failed,blocked,incomplete,tool-errors', copilot_writable: true, type: 'string' },
+    retries_per_rung:    { default: 1, min: 1, max: 5, copilot_writable: true, type: 'number' },
+    max_tool_errors:     { default: 3, min: 0, max: 20, copilot_writable: true, type: 'number' },
   },
 
   cicd: {

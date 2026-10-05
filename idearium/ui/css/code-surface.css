@@ -1,0 +1,76 @@
+/* idearium/ui/css/code-surface.css — §0.39.349 CT3: the Code tab as the work surface (idearium/ui/js/code-surface.js).
+   Files left (uncommitted greyed, as in the Files tab) · the file with its chunks and the agent's diffs · the chunk's card
+   and the agent docked · activity folded along the bottom. The same tokens as the rest of idearium. */
+.cs{display:flex;flex-direction:column;gap:8px;min-height:0;height:100%}
+.cs-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10.5px}
+.cs-search{flex:1;min-width:200px;max-width:520px}.cs-mode{width:auto}
+.cs-grow{flex:1}
+.cs-dim{color:var(--text3);font-size:10px}.cs-warn{color:var(--amber)}.cs-bad{color:var(--coral)}
+.cs-grid{display:grid;grid-template-columns:230px minmax(0,1fr) 330px;gap:8px;min-height:0;flex:1}
+.cs-left,.cs-mid,.cs-right{border:1px solid rgba(255,255,255,.08);border-radius:8px;background:var(--nx-void,var(--bg1));min-height:420px;max-height:calc(100vh - 230px);overflow:auto}
+.cs-right{display:flex;flex-direction:column;overflow:hidden}
+.cs-pane-head,.cs-sec{display:flex;align-items:center;gap:6px;padding:6px 9px;font:600 10px var(--mono);color:var(--text2);text-transform:lowercase;border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;background:var(--nx-card2,var(--bg2));z-index:1}
+.cs-sec{text-transform:none;font-weight:400;font-size:10.5px}
+.cs-chip-btn{background:none;border:1px solid rgba(255,255,255,.12);color:var(--text3);font:10px var(--mono);border-radius:5px;padding:1px 7px;cursor:pointer}
+.cs-chip-btn:hover{color:var(--text)}.cs-chip-btn.on{color:#04121c;background:var(--sky);border-color:var(--sky)}
+.cs-summary{font-size:9.5px;color:var(--text3);padding:4px 9px}
+.cs-empty{font-size:10.5px;color:var(--text3);padding:10px}
+.cs-tree{padding:3px 0}
+.cs-node{display:flex;align-items:center;gap:3px;padding:2px 8px;font:11px/1.6 var(--mono);color:var(--text2);cursor:pointer;white-space:nowrap}
+.cs-node:hover{background:rgba(255,255,255,.04)}.cs-node.on{background:rgba(56,139,253,.14);color:var(--text)}
+.cs-indent{display:inline-block;flex:none}.cs-caret{width:10px;color:var(--text3)}
+.cs-dir{color:var(--text3)}
+.cs-fname{overflow:hidden;text-overflow:ellipsis}
+.cs-file.fs-row-pending,.cs-file.cs-pending{opacity:.45;font-style:italic}
+.cs-file.fs-row-deleted{opacity:.45;text-decoration:line-through}
+.cs-file.fs-row-modified .cs-fname,.cs-file.fs-row-new .cs-fname{color:var(--amber)}
+.cs-diffdot{color:var(--amber);font-size:8px;margin-left:3px}
+.cs-diffs{padding:8px}
+.cs-code{font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:4px 0 10px}
+.cs-ln{display:flex;white-space:pre;min-width:max-content}
+.cs-ln.pick{background:rgba(56,139,253,.08)}.cs-ln.sel{background:rgba(230,180,80,.13)}
+.cs-g{width:42px;flex:none;text-align:right;padding-right:10px;color:#6e7681;user-select:none;cursor:pointer}
+.cs-g:hover{color:var(--text)}.cs-t{padding-right:14px;color:var(--nx-text,var(--text))}
+.cs-chunk{display:flex;align-items:center;gap:6px;margin:6px 8px 1px 42px;padding:1px 8px;border-left:2px solid var(--violet);font:10px var(--mono);color:var(--text2);cursor:pointer;background:rgba(167,139,250,.06);border-radius:0 4px 4px 0;max-width:640px}
+.cs-chunk:hover{background:rgba(167,139,250,.14);color:var(--text)}
+.cs-ck{color:var(--violet);font:600 9px var(--mono)}.cs-cl{color:var(--text3)}
+.cs-hit{padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.05);font:11px var(--mono);cursor:pointer}
+.cs-hit:hover{background:rgba(255,255,255,.04)}.cs-hf{color:var(--sky2)}.cs-hs{color:var(--text3);font-size:10px;margin-top:2px;white-space:pre-wrap}
+.cs-card{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08);max-height:45%;overflow:auto;font-size:11px}
+.cs-card a{color:var(--sky2);text-decoration:none}.cs-card a:hover{text-decoration:underline}
+.cs-card-head b{color:var(--nx-bright,var(--text))}.cs-card-sum{margin:6px 0;color:var(--text2)}
+.cs-dl{display:grid;grid-template-columns:62px 1fr;gap:3px 8px;margin:6px 0 0;font-size:10.5px}
+.cs-dl dt{color:var(--text3);font-family:var(--mono)}.cs-dl dd{margin:0;color:var(--text2);word-break:break-word}
+.mono{font-family:var(--mono)}
+.cs-note{margin-top:6px;font-size:10px;color:var(--amber)}
+.cs-agent{display:flex;flex-direction:column;flex:1;min-height:0}
+.cs-who{padding:6px 10px;font-size:11px;color:var(--text2)}.cs-who b{color:var(--mint)}
+.cs-pickrow{display:flex;align-items:center;gap:6px;padding:0 10px 6px;font:10px var(--mono);color:var(--text3)}
+.cs-pickrow select{flex:1;background:var(--bg2);color:var(--text);border:1px solid rgba(255,255,255,.12);border-radius:5px;font:10.5px var(--mono);padding:2px 4px}
+.cs-talk{flex:1;overflow:auto;padding:4px 10px;border-top:1px solid rgba(255,255,255,.05);min-height:80px}
+.cs-msg{margin:6px 0;font-size:11px}.cs-msg-text{white-space:pre-wrap;word-break:break-word}
+.cs-m-you .cs-msg-text{color:var(--sky2)}.cs-m-agent .cs-msg-text{color:var(--text)}.cs-m-failed .cs-msg-text{color:var(--coral)}
+.cs-ctx{padding:4px 10px;font-size:10px;color:var(--text3);border-top:1px solid rgba(255,255,255,.05)}.cs-ctx b{color:var(--text2)}
+.cs-ask{margin:0 10px;resize:vertical;background:var(--bg2);color:var(--text);border:1px solid rgba(255,255,255,.12);border-radius:6px;font:11px var(--sans);padding:6px}
+.cs-send{margin:6px 10px 10px;align-self:flex-end;background:var(--sky);color:#04121c;border:0;border-radius:6px;font:600 11px var(--sans);padding:4px 14px;cursor:pointer}
+.cs-send[disabled]{opacity:.5;cursor:default}
+.cs-activity{border:1px solid rgba(255,255,255,.08);border-radius:8px;background:var(--nx-void,var(--bg1))}
+.cs-act-head{display:flex;align-items:center;gap:10px;padding:5px 10px;font:10px var(--mono);color:var(--text2);cursor:pointer;user-select:none}
+.cs-act-body{max-height:200px;overflow:auto;border-top:1px solid rgba(255,255,255,.05);padding:4px 10px}
+.cs-call{font:10px/1.7 var(--mono);color:var(--text2);cursor:default}.cs-call.bad{color:var(--coral)}.cs-call[onclick]{cursor:pointer}
+@media (max-width:1180px){.cs-grid{grid-template-columns:200px minmax(0,1fr)}.cs-right{grid-column:1 / -1;max-height:none}}
+@media (max-width:760px){.cs-grid{grid-template-columns:1fr}.cs-left{max-height:240px;min-height:0}}
+/* §0.39.351 CT5 — hooked into the Plan: the plan strip, "change it", a card's "open in Code" */
+.cs-plan{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:5px 10px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:var(--nx-void,var(--bg1));font:10.5px var(--mono)}
+.cs-cur{color:var(--sky);cursor:pointer}.cs-cur:hover{text-decoration:underline}
+.cs-run{border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:0 7px;font-size:9.5px;cursor:pointer}.cs-run:hover{border-color:rgba(255,255,255,.3)}
+.cs-sends{display:flex;gap:6px;justify-content:flex-end;margin:6px 10px 10px}.cs-sends .cs-send{margin:0}
+.cs-send-change{background:none;border:1px solid var(--mint);color:var(--mint)}
+.ws-act-code{color:var(--sky2)}
+.pp-file{color:var(--sky2);text-decoration:none}.pp-file:hover{text-decoration:underline}
+/* §0.39.352 CT8 — the agent working, live: a blinking dot on the call running and on the file it is on */
+@keyframes cs-blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(56,189,248,.6)}50%{opacity:.25;box-shadow:0 0 0 3px rgba(56,189,248,0)}}
+.cs-livedot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--sky);margin:0 3px;animation:cs-blink 1s ease-in-out infinite;vertical-align:middle;flex:none}
+.cs-now{display:inline-flex;align-items:center;gap:4px;color:var(--text);max-width:55%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.cs-call.running{color:var(--text)}
+.cs-act-sec{font:600 9px var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:6px 0 2px}

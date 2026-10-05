@@ -210,6 +210,7 @@ function refreshOnEvent(ev) {
   const t = ev.type.startsWith('idearium.') ? ev.type.slice('idearium.'.length) : ev.type;
   if (typeof fileStatesOnEvent === 'function') fileStatesOnEvent(ev);   // §0.39.280 BS8
   if (typeof planPanelOnEvent === 'function') planPanelOnEvent(ev);     // §0.39.280 BS11
+  if (typeof codeSurfaceOnEvent === 'function') codeSurfaceOnEvent(ev); // §0.39.351 CT5 — the Code tab follows the Plan
   if (t.startsWith('idea.'))   { loadIdeas(); }
   if (t.startsWith('workbench.') && typeof loadCompartment === 'function') { loadCompartment(); }
   if (t.startsWith('gap.'))    { loadGaps(); }
@@ -484,6 +485,7 @@ function setView(v) {
     g.classList.remove('open');
   });
   _dismissTabGroups();
+  if (typeof planTabSync === 'function') setTimeout(planTabSync, 0);   // §0.39.353 CT9 — no Plan tab off the repo view
   // Clicking the Repos tab itself always lands on the landing grid, even if
   // a repo was left open last visit — openRepoFor() (idea/spec → repo) is
   // the only path that should skip straight to detail mode.
@@ -2007,6 +2009,7 @@ function setRepoSubtab(name) {
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));
   renderCurrentRepoSubtab();
+  if (typeof planTabSync === 'function') planTabSync();   // §0.39.353 CT9 — the Plan's pull tab follows the repo view
 }
 
 function renderCurrentRepoSubtab() {
@@ -2280,67 +2283,8 @@ agent errors         ${bad(d.agentErrors.length)}</div>
 }
 let _debugLast = null;
 
-// ── CODE — §0.39.273 CB4/CB5. The same surface the agents use (/api/repos/:uuid/code/*, idearium/repo/code-api.js):
-// search by meaning or exact text, and any chunk's card — kind, signature, doc, what it uses and what uses it (each
-// with how that was found), its tests and runtime proof, and its code. Read-only here; agents write through code_edit.
-let _codeState = { uuid: null, q: '', mode: 'search', hits: null, card: null };
-async function renderRepoCode(repo) {
-  const el = document.getElementById('repo-subtab-code');
-  if (!el || !repo) return;
-  if (_codeState.uuid !== repo.uuid) _codeState = { uuid: repo.uuid, q: '', mode: 'search', hits: null, card: null, overview: null };
-  if (!_codeState.overview) {
-    el.innerHTML = '<div class="detail-empty">reading the index…</div>';
-    try { _codeState.overview = await api(`/api/repos/${repo.uuid}/code/overview`, {}, 120000); }
-    catch (e) { el.innerHTML = `<div class="detail-empty">${escapeHtml(e.message)}</div>`; return; }
-    if (CURRENT_API_REPO?.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'code') return;
-  }
-  const o = _codeState.overview;
-  const st = _codeState;
-  const hitRow = (h) => `<div class="ds-mono code-hit" style="border-bottom:1px solid var(--b0);padding:5px 0;cursor:pointer" onclick="codeOpenChunk('${escapeHtml(h.id || h.chunkId || '')}')">`
-    + `<span style="color:var(--sky2)">${escapeHtml(h.file)}:${h.range ? `${h.range.start_line}-${h.range.end_line}` : h.line}</span> ${h.kind ? `<span style="opacity:.6">${escapeHtml(h.kind)}</span> ` : ''}${escapeHtml(h.name || '')}`
-    + `${h.summary ? `\n  ${escapeHtml(h.summary)}` : ''}${(h.snippet || []).map(x => `\n  <span style="opacity:.7">${x.line}: ${escapeHtml(x.text)}</span>`).join('')}${h.text != null ? `\n  <span style="opacity:.8">${escapeHtml(h.text)}</span>` : ''}</div>`;
-  const c = st.card;
-  const link = (id, label) => `<a href="#" style="color:var(--sky2);text-decoration:none" onclick="codeOpenChunk('${escapeHtml(id)}');return false">${escapeHtml(label)}</a>`;
-  const cardHtml = !c ? '' : `<div class="ds"><div class="ds-label">${escapeHtml(c.card.kind)} · ${escapeHtml(c.card.qualifiedName || c.card.name || c.card.file)} · ${escapeHtml(c.card.file)}:${escapeHtml(c.card.lines)}${c.stale ? ' · <span style="color:var(--coral)">stale</span>' : ''}</div><div class="ds-mono">${escapeHtml(c.card.summary || '')}
-${c.card.signature ? `signature  ${escapeHtml(c.card.signature)}\n` : ''}${c.card.doc ? `doc        ${escapeHtml(c.card.doc)}\n` : ''}${c.card.exported ? 'exported\n' : ''}uses       ${(c.card.uses || []).map(u => `${link(u.chunkId, u.name)} <span style="opacity:.5">(${escapeHtml(u.basis)})</span>`).join(', ') || '—'}${c.card.usesTotal > (c.card.uses || []).length ? ` +${c.card.usesTotal - c.card.uses.length}` : ''}
-used by    ${(c.card.usedBy || []).map(u => `${link(u.chunkId, u.name || u.file)} <span style="opacity:.5">(${escapeHtml(u.basis)})</span>`).join(', ') || '—'}${c.card.usedByTotal > (c.card.usedBy || []).length ? ` +${c.card.usedByTotal - c.card.usedBy.length}` : ''}
-tests      ${(c.card.tests || []).map(t => link(t, t)).join(', ') || '—'}${c.proof ? `   runtime proof: ${escapeHtml(c.proof.proof)}${c.proof.stale ? ' (stale)' : ''}` : ''}
-around     ${['parent', 'prev', 'next'].map(k => c.around && c.around[k] ? `${k} ${link(c.around[k].id, c.around[k].name || c.around[k].kind)}` : null).filter(Boolean).join(' · ') || '—'}</div>
-      <pre style="margin:6px 0 0;font-size:11px;line-height:1.5;background:var(--b0);padding:6px 8px;border-radius:4px;overflow:auto;max-height:520px">${escapeHtml(c.text || '')}</pre>${c.more ? `<div class="ds-mono" style="opacity:.6">${escapeHtml(c.more)}</div>` : ''}</div>`;
-  el.innerHTML = `
-    <div class="ds"><div class="ds-label">${o.files} files · ${o.chunks} chunks · ${o.lines} lines · writes: ${escapeHtml(o.repo.writeMode)}${o.repo.pendingProposals ? ` · <span style="color:var(--amber, #e6b450)">${o.repo.pendingProposals} pending proposal(s)</span>` : ''}</div>
-      <div class="ds-mono">${escapeHtml((o.languages || []).join(' · '))}
-${(o.mostUsed || []).slice(0, 5).map(m => `${escapeHtml(m.file)}  used from ${m.usedFrom}`).join('\n')}</div>
-      <div class="action-row" style="gap:6px">
-        <input id="code-q" class="field-input" style="flex:1;min-width:220px" placeholder="what the code does, a name, or exact text" value="${escapeHtml(st.q)}" onkeydown="if(event.key==='Enter')codeRunSearch()">
-        <select id="code-mode" class="field-input" style="width:auto" onchange="_codeState.mode=this.value"><option value="search"${st.mode === 'search' ? ' selected' : ''}>by meaning</option><option value="grep"${st.mode === 'grep' ? ' selected' : ''}>exact text</option></select>
-        <button class="action-btn" onclick="codeRunSearch()">search</button>
-      </div></div>
-    ${cardHtml}
-    ${st.hits ? `<div class="ds"><div class="ds-label">${st.hits.length} result(s)${st.more ? ` · ${escapeHtml(st.more)}` : ''}</div>${st.hits.map(hitRow).join('') || '<div class="ds-mono" style="opacity:.5">nothing matched</div>'}</div>` : ''}`;
-}
-async function codeRunSearch() {
-  const repo = CURRENT_API_REPO; if (!repo) return;
-  const q = (document.getElementById('code-q') || {}).value || '';
-  _codeState.q = q.trim(); _codeState.mode = (document.getElementById('code-mode') || {}).value || 'search';
-  if (!_codeState.q) return;
-  try {
-    if (_codeState.mode === 'grep') {
-      const r = await api(`/api/repos/${repo.uuid}/code/grep?pattern=${encodeURIComponent(_codeState.q)}&limit=60`, {}, 60000);
-      _codeState.hits = (r.matches || []).map(m => ({ ...m, id: m.chunkId })); _codeState.more = r.more || null;
-    } else {
-      const r = await api(`/api/repos/${repo.uuid}/code/search?q=${encodeURIComponent(_codeState.q)}&limit=20`, {}, 60000);
-      _codeState.hits = r.hits || []; _codeState.more = r.more || null;
-    }
-  } catch (e) { toast(e.message, 'err'); return; }
-  renderRepoCode(repo);
-}
-async function codeOpenChunk(id) {
-  const repo = CURRENT_API_REPO; if (!repo || !id) return;
-  try { _codeState.card = await api(`/api/repos/${repo.uuid}/code/chunk?id=${encodeURIComponent(id)}`, {}, 60000); }
-  catch (e) { toast(e.message, 'err'); return; }
-  renderRepoCode(repo);
-}
+// ── CODE — §0.39.273 CB4/CB5 search and chunk cards; since 0.39.349 (CT3) the whole tab is the work surface:
+// idearium/ui/js/code-surface.js (renderRepoCode, its search, its cards, the agent's diffs, the docked agent).
 // §0.39.271 T3 — one failure's debug report (lib/cos-debug-report.js): the error, the frames
 // that land in the repo with their source lines, and what the failure usually means
 function debugReportHtml(dbg, file) {

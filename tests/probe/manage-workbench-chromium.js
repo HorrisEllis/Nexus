@@ -18,7 +18,7 @@ const page = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</st
 <textarea id="ide-editor" style="position:absolute;left:-9999px;top:0;width:10px;height:10px"></textarea>
 <script>
 let CURRENT_API_REPO = { uuid: '${U}', name: 'lock-service', files: [{ path: 'src/lock.js', bytes: 900 }] };
-let ACTIVE_API_FILE = 'src/lock.js', _codeState = { uuid: '${U}', q: 'lock ttl', hits: [{ file: 'src/store.js', line: 8, name: 'set', summary: 'writes a key with an expiry' }, { file: 'src/lock.js', line: 12, name: 'acquire' }] };
+let ACTIVE_API_FILE = 'src/lock.js', CS = { uuid: '${U}', q: 'lock ttl', hits: [{ file: 'src/store.js', line: 8, name: 'set', summary: 'writes a key with an expiry' }, { file: 'src/lock.js', line: 12, name: 'acquire' }] };
 window.__toasts = [];
 function toast(m, t) { window.__toasts.push([m, t]); }
 async function api(p, o = {}) { const r = await fetch(p, { headers: { 'Content-Type': 'application/json' }, ...o }); const d = await r.json(); if (!r.ok || d.ok === false) throw new Error(d.error || 'failed'); return d; }

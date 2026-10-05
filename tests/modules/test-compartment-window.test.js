@@ -82,5 +82,16 @@ t('CW-10', 'both pages carry the compartment title bar and are NEXUS-dark whatev
   assert.match(c, /window\.nexusWindow/);
 });
 
+// §0.39.345 — James: "can you make the windows borderless like comportmant desktop for cos."
+t('CW-11', 'every pop-out page with its own title bar opens frameless — the workshop, the void, the architect, the library', () => {
+  for (const [file, kind] of [['workshop.html', 'workshop'], ['void.html', 'void'], ['architect.html', 'architect'], ['spec-library.html', 'spec-library']]) {
+    assert.strictEqual(CW.isCompartmentPage(`http://127.0.0.1:9000/${file}`), kind, file);
+    const o = CW.windowOptions(kind, '', '/p.js');
+    assert.strictEqual(o.frame, false); assert.strictEqual(o.title, CW.TITLES[kind]);
+    const src = fs.readFileSync(path.join(ROOT, 'idearium/ui', file), 'utf8');
+    assert.ok(src.includes(`js/window-chrome.js" data-kind="${kind}"`), `${file} draws its own title bar`);
+  }
+});
+
 console.log(`\n  ${passed} passed, ${failed} failed\n`);
 process.exit(failed ? 1 : 0);

@@ -43,6 +43,9 @@ function _wsDiffHtml(diff) {
 function _wsCard(f, i) {
   const open = WSURF.open.has(f.path) || (!WSURF.open.has(`!${f.path}`) && i < 2 && f.added + f.removed <= 400);
   const [dir, base] = _wsSplitPath(f.path);
+  // §CT5 0.39.351 — a card opens its file in the Code tab (not shown when that file is already open there)
+  const inCode = typeof CS !== 'undefined' && typeof CURRENT_REPO_SUBTAB !== 'undefined' && CURRENT_REPO_SUBTAB === 'code' && CS.open === f.path;
+  const toCode = typeof csOpen === 'function' && f.op !== 'delete' && !inCode ? `<button class="ws-act ws-act-code" title="open this file in the Code tab" onclick="event.stopPropagation();wsOpenInCode('${escapeHtml(f.path.replace(/'/g, "\\'"))}')">open in Code</button>` : '';
   const acts = (f.actions || []).map(a => `<button class="ws-act ws-act-${a}" onclick="event.stopPropagation();wsAct('${escapeHtml(f.id)}','${a}')">${({ apply: 'Apply', reject: 'Reject', revert: 'Revert', promote: 'Promote' })[a] || a}</button>`).join('');
   return `<div class="ws-card ${open ? 'open' : ''}" data-path="${escapeHtml(f.path)}">
     <div class="ws-head" onclick="wsToggle('${escapeHtml(f.path)}', ${open})">
@@ -51,7 +54,7 @@ function _wsCard(f, i) {
       <span class="ws-grow"></span>
       ${f.creates ? '<span class="ws-chip ws-new">new</span>' : ''}${f.op === 'delete' ? '<span class="ws-chip ws-delchip">delete</span>' : ''}
       <span class="ws-chip ws-st-${escapeHtml(f.status)}">${escapeHtml(f.status)}</span>
-      <span class="ws-plus">+${f.added}</span><span class="ws-minus">−${f.removed}</span>${acts}
+      <span class="ws-plus">+${f.added}</span><span class="ws-minus">−${f.removed}</span>${toCode}${acts}
     </div>
     ${open ? `<div class="ws-meta">${f.by ? `${escapeHtml(f.by)} · ` : ''}${f.at ? new Date(f.at).toLocaleString() : ''}${f.run ? ` · ${escapeHtml(f.run.phase || '')} run ${escapeHtml(String(f.run.runId).slice(-8))} (${escapeHtml(f.run.state || '')})` : ''}${f.history ? ` · ${f.history} earlier change${f.history === 1 ? '' : 's'}` : ''}${f.lines ? ` · ${f.lines} lines` : ''}</div>
       <div class="ws-diff" onclick="wsPickLine(event,'${escapeHtml(f.path)}')">${_wsDiffHtml(f.diff)}</div>
@@ -94,6 +97,7 @@ function wsPaint(el) {
 function wsToggle(p, wasOpen) {
   if (wasOpen) { WSURF.open.delete(p); WSURF.open.add(`!${p}`); } else { WSURF.open.add(p); WSURF.open.delete(`!${p}`); }
   wsPaint();
+  if (typeof csRepaint === 'function') csRepaint();   // §CT3 — the same cards in the Code tab
 }
 
 async function wsAct(id, action) {
@@ -104,6 +108,7 @@ async function wsAct(id, action) {
     toast(`${action}: done`, 'ok');
   } catch (e) { toast(`${action} failed: ${e.message}`, 'err'); }
   wsLoad(document.getElementById('pp-ws'));
+  if (typeof csAfterChange === 'function') csAfterChange();   // §CT3 — the Code tab's tree, diffs and file follow
 }
 
 // §0.39.284 — James: "hook the agents into the worksurface, to edit or modify small amounts of code at a time". Click a
@@ -127,4 +132,11 @@ async function wsAsk(id, p) {
     toast(`the agent is editing ${p}${from ? ` lines ${from}–${to || from}` : ''} (run ${String(r.runId || '').slice(-8)}) — its change lands here`, 'ok');
     if (q) q.value = '';
   } catch (e) { toast(`not sent: ${e.message}`, 'err'); }
+}
+
+// §CT5 0.39.351 — James: "can we have this hooked into the plan and work surface panel". A card (or a file a run wrote) opens
+// in the Code tab: the file, its chunks, this change above it.
+async function wsOpenInCode(p) {
+  if (typeof setRepoSubtab === 'function' && CURRENT_REPO_SUBTAB !== 'code') setRepoSubtab('code');
+  if (typeof csOpen === 'function') await csOpen(p);
 }

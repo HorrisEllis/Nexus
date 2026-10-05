@@ -346,7 +346,9 @@ export async function manage(deps, uuid, body = {}) {
   deps.appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: snap.data.commitId, promptChars: message.length, ts: Date.now() });
   deps.emit('idearium.repo.file.manage', { ...base, state: 'building' });
   const RA = deps.require('../../lib/repo-agent.js');
-  Promise.resolve().then(() => RA.dispatch({ repo: r.repo, repoDir: r.dir, message, provider: body.provider || null, layer: deps.getRepoLayer() }))
+  Promise.resolve().then(() => RA.dispatch({ repo: r.repo, repoDir: r.dir, message, provider: body.provider || null, layer: deps.getRepoLayer(),
+    // §CT5 0.39.351 — the Code tab's docked agent sends the hop he picked (backend, agent and model together)
+    backend: body.backend || null, agent: body.agent || null, model: body.model || null }))
     .then((res) => {
       // §0.39.282 N21 — a reply blocked at its gate (a refusal) is 'blocked', never 'replied'
       let state = res && res.ok ? (res.injects && res.injects.blocked ? 'blocked' : 'replied') : 'failed';

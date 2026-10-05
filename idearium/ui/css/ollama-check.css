@@ -1,0 +1,8 @@
+/* idearium/ui/css/ollama-check.css — §0.39.350 CT4: Settings → Models, the Ollama check (idearium/ui/js/ollama-check.js) */
+.oc-ok{color:var(--mint)}.oc-bad{color:var(--coral)}.oc-warn{color:var(--amber)}.oc-dim{color:var(--text3);font-size:10px}
+.oc-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:4px}
+.oc-table th{text-align:left;font:600 9.5px var(--mono);color:var(--text3);padding:4px 6px;border-bottom:1px solid rgba(255,255,255,.08)}
+.oc-table td{padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top;color:var(--text2)}
+.oc-m{font-family:var(--mono);color:var(--text);white-space:nowrap}.oc-st{width:100%}
+.oc-row-warn td:first-child{border-left:2px solid var(--amber)}
+@media (max-width:760px){.oc-callers thead{display:none}.oc-callers td{display:block;border:0;padding:2px 6px}.oc-callers tr{display:block;border-bottom:1px solid rgba(255,255,255,.08);padding:4px 0}}
