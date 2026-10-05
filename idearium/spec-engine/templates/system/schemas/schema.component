@@ -41,7 +41,7 @@ payload:
     status:
       type: string
       required: true
-      description: "built | unproven | open"
+      description: "built | stub | unproven | open"
     capabilities:
       type: array
       required: true

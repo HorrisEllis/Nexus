@@ -63,7 +63,7 @@ registry: |
         file:   'lib/<component>.js',
         intent: '<what it is for, one line>',
         version: '<semver>',
-        status: 'built | unproven | open',
+        status: 'built | stub | unproven | open',
         capabilities: ['<capability-id>'],      // at least one
         hooks:        ['<hook-id>'],            // its end points
         consumers:    ['<component-id>'],       // who uses it — read from the wires into its hooks
