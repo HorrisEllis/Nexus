@@ -96,13 +96,33 @@ function _fetchGuardianResponse(jobId, timeoutMs = 4000) {
  * pollJob(jobRef) — resolves a job to its final { text, toolCalls?, model } (injected; copilot owns the poll)
  */
 function makeOllamaCallModel(dispatch, pollJob, opts = {}) {
-  return async function callModel(messages, toolSchemas) {
+  // §0.39.337 SB37 — the working set: James, "Find the context one by one, put it in an index, and then synthesize it
+  // into, into just what it needs. Signal to noise." With the caller's 'workset' template (composed runs), each tool
+  // result goes into a JSON file (copilot/lib/workset.js) and later rounds send the prompt + the synthesis, never the
+  // raw transcript — which grew past the window every round and lost the question first.
+  const WS = opts.composed && opts.worksetTemplate ? require('./lib/workset.js') : null;
+  let ws = null, _taken = 0;
+  const _pending = [];
+  const _feed = (messages) => {
+    for (; _taken < messages.length; _taken++) {
+      const m = messages[_taken];
+      if (m.role === 'assistant' && Array.isArray(m.tool_calls)) for (const c of m.tool_calls) _pending.push(c.arguments || {});
+      else if (m.role === 'tool') { let r = m.content; try { r = JSON.parse(m.content); } catch (_) { /* text */ } WS.add(ws, m.name, _pending.shift() || {}, r); }
+    }
+  };
+  const callModel = async function callModel(messages, toolSchemas) {
     // Flatten the running message list: system+user+prior tool results become
     // the context; the latest user/tool content is the live prompt.
     const system = opts.composed ? '' : (messages.find(m => m.role === 'system')?.content || '');
+    const firstUser = String((messages.find(m => m.role === 'user') || {}).content || '');
+    if (WS && !ws) ws = WS.create({ question: opts.question || firstUser.slice(-600), checklist: opts.checklist || null, meta: { agentId: opts.agentId || null, sessionId: opts.sessionId || null } });
+    if (WS) _feed(messages);
     // 0.39.258 composed: ollama keeps no conversation, so every turn is re-sent — but unlabeled, as composed, with
-    // tool results framed by the caller's 'tool-result' template.
-    const convo = opts.composed
+    // tool results framed by the caller's 'tool-result' template. §SB37: with a working set, the synthesis instead —
+    // §SB39: only once a real read is in it (the seeded checklist is already in the first message; never sent twice).
+    const convo = WS
+      ? [firstUser, ws.reads.some(r => r.tool !== 'checklist') ? opts.worksetTemplate.split('{reads}').join(String(ws.reads.length)).split('{workset}').join(WS.synthesize(ws, { budget: opts.worksetBudget || undefined })) : ''].filter(Boolean).join('\n\n')
+      : opts.composed
       ? messages.filter(m => m.role !== 'system').map(m => m.role === 'tool' ? formatToolResult(opts.resultTemplate, m.name, m.content) : String(m.content || '')).filter(Boolean).join('\n\n')
       : messages
       .filter(m => m.role !== 'system')
@@ -131,8 +151,11 @@ function makeOllamaCallModel(dispatch, pollJob, opts = {}) {
     // read by the same parser. Before this an Ollama agent had no way to call any tool.
     const known = (toolSchemas || []).map(t => t && t.function && t.function.name).filter(Boolean);
     const found = _findToolCalls(text, known.length ? known : null);
+    if (WS && !found.calls.length) WS.answer(ws, text);   // §SB37 — the answer, in the file with what it was drawn from
     return { text: found.calls.length ? found.text : text, toolCalls: found.calls.length ? found.calls : null };
   };
+  callModel.workset = () => (ws ? WS.summary(ws) : null);
+  return callModel;
 }
 
 /** Pull OpenAI/ollama-shaped tool_calls out of a job result, normalized to runToolLoop's shape. */
@@ -568,12 +591,17 @@ async function runViaAgent(agent, dispatchToAgent, userPrompt, opts = {}) {
 async function run(o = {}) {
   if (!o.dispatch || !o.pollJob) throw new Error('[tool-runtime] dispatch and pollJob are required');
   const callModel = makeOllamaCallModel(o.dispatch, o.pollJob, { ...(o.modelOpts || {}), toolScope: o.toolScope || undefined,
-    composed: !!o.composed, resultTemplate: o.resultTemplate || null });
+    composed: !!o.composed, resultTemplate: o.resultTemplate || null,
+    worksetTemplate: o.worksetTemplate || null, worksetBudget: o.worksetBudget || null, question: o.question || null,   // §0.39.337 SB37
+    checklist: o.checklist || null,   // §0.39.339 SB39 — the checklist seeds the working set
+    agentId: o.context && o.context.agentId || null, sessionId: o.sessionId || null });
   if (o.composed) {
     // 0.39.258 — as runViaAgent: the caller's prompt is the whole prompt.
-    return agentTools.runToolLoop(callModel, '', fillToolPlaceholders(o.userPrompt, o.toolScope), {
+    const loop = await agentTools.runToolLoop(callModel, '', fillToolPlaceholders(o.userPrompt, o.toolScope), {
       maxIterations: o.maxIterations || 6, allowedTools: o.toolScope || undefined, context: o.context || null,
     });
+    const w = callModel.workset();
+    return w ? { ...loop, workset: w } : loop;
   }
 
   // The system prompt carries co-pilot's identity + persistent memory (P2) +

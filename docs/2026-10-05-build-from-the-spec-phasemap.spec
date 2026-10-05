@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.16.0   # 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.19.0   # 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -997,3 +997,80 @@ spec:
       proof: "every tool-loop prompt says where the tools run and how to call one; an Ollama reply that writes a call runs the real code search on the real server and the next round carries its result; a browser reply's rendered call runs the same way; the code tools read an index made on demand"
       conditions:
         - { says: "every agent can use the tools", check: { kind: tests, run: "node tests/modules/test-agent-tools-every-backend.test.js" } }
+
+    SB37_the_working_set_signal_to_noise:
+      layer: library
+      status: "DONE (0.39.337) — mapped before code. copilot/lib/workset.js; makeOllamaCallModel feeds each read in and sends prompt + synthesis; the 'workset' block (editable); a small read (≤ 1,500 chars) kept whole; COPILOT_WORKSET_DIR sandboxed; copilot/data/worksets/ git-ignored. Five ~20 KB reads: last round 119,260 → 1,601 chars, whole run 358,032 → 5,331. test-copilot-workset 4/4."
+      james: '"what if it builds a temporary, index of context, copies the relevant context to it, one by one until it synthesize it into it into only what it needs." · "I know it''s a fucking problem. This is a real problem when I push it. So, so, uh, as I said, uh, in index, but we do JAA or uh, JSON. Probably just a JSON file. So it''s synthesizing. Find the context one by one, put it in an index, and then synthesize it into, into just what it needs. Signal to noise."'
+      found: >-
+        copilot/tool-runtime.js makeOllamaCallModel (composed) re-sends the whole run every round — the prompt, every
+        reply, every tool result in full, nothing capped — into num_ctx 6144, and Ollama truncates from the front: the
+        more context an agent finds, the sooner the persona and the question fall out. No working set exists anywhere
+        (searched lib/, copilot/: no working set, no result cap). What is there to build on: the chunk cards (already a
+        compressed form of a chunk), the tool-result block (editable), lib/test-sandbox.js's per-store variables.
+      depends_on: [SB36_every_agent_can_use_the_tools]
+      files: [copilot/lib/workset.js, copilot/tool-runtime.js, copilot/server.js, lib/repo-prompt-blocks.js, lib/repo-agent.js, lib/test-sandbox.js]
+      does: >-
+        One JSON file per tool-loop run, owned by copilot (copilot/data/worksets/<id>.json; COPILOT_WORKSET_DIR, the
+        sandbox redirects it): the question, then each tool read, one by one — the raw result kept in the file, and its
+        signal: the lines that carry the question's terms, the chunk ids, signatures, what uses what — the rest dropped
+        from the prompt (kept on disk). Each round the model is sent its prompt and the working set synthesized to a
+        budget (the most relevant first, deduplicated by chunk id), never the raw transcript; a chunk is re-opened by its
+        id. The synthesis is framed by a new editable block ('workset'). The answer is written to the file — its
+        provenance. Ollama only: a browser tab keeps its own conversation and is sent each result once (unchanged).
+      proof: "a run whose tool results add up to far more than the window sends a prompt that never grows past the budget, still carries the question and the persona, and keeps the line that answers it; the JSON file holds every raw result and the answer"
+      conditions:
+        - { says: "the working set keeps the signal", check: { kind: tests, run: "node tests/modules/test-copilot-workset.test.js" } }
+
+    SB38_prerequisites_the_questions_first:
+      layer: library
+      status: "DONE (0.39.338) — mapped before code. lib/context-prereqs.js check(); repo-agent prereqsFor() in dispatch (recorded as gaps) and the preview (not recorded); the editable 'prereqs' block before the question. Past conversations: this repo's agent, then copilot — never another project's (found while testing: the first cut searched every agent, and one project's conversation answered another's question). test-context-prereqs 7/7."
+      james: '"What if instead of just a tool, it''s a compartment, like the work surface is in COS. Right? It would be like ask a question or or a intent or whatever. And then predetermine what context is needed. So make like prerequisites. Then uh, use those as a checklist for context. And then then use that to build the the uh, the work set index." · "Yeah, the, the prerequisites, the questions, right? That way, then if it can''t, if it can''t find context, then it''ll, it''ll just ask me the rest, or reference the past conversations"'
+      decided: >-
+        The coder's input, given before this was mapped: not a COS compartment per question (gathering context only reads;
+        a compartment is for a task that writes and runs — a build, an order); the checklist is made by Nexus from the
+        index, not by the 3B model; every item is checkable against chunk ids. James answered on the prerequisites and
+        what happens to the ones not found; the compartment question was not answered — left as the coder proposed.
+      found: >-
+        lib/shadow.js already declares what a step must produce and reads each absence as a gap (gap-field) — the
+        checklist's settle is that. lib/code-intel answers what a chunk uses, what uses it and its tests (cards);
+        lib/build-context.js finds the spec's MUST/NEVER lines; lib/agent-memory.js search() reads past conversations
+        (every agent's exchanges in the download manager). Nothing turned a question into what it needs before searching.
+      depends_on: [SB37_the_working_set_signal_to_noise]
+      files: [lib/context-prereqs.js, lib/repo-agent.js, lib/repo-prompt-blocks.js]
+      does: >-
+        Before each send: (1) the question's intent — explain, change, debug, build — by its words, no model; (2) its
+        target, from the Code tab's search; (3) the prerequisites that intent needs of that target — explain: the chunk,
+        what it uses, what uses it; change: + its tests and what it must be (the acceptance, from the question); debug:
+        + the error as it appeared; build: where it goes and what exists like it. (4) Each is looked for in order: the
+        index (Nexus reads it, no model), then past conversations (agent-memory search); (5) what is still missing is
+        not guessed: it is asked — the prompt's editable 'prereqs' block lists the checklist and tells the agent to ask
+        James those questions; a gap is recorded (lib/shadow.js). His answer is the next exchange, so the next time the
+        same question is asked it is found in past conversations. The checklist travels with the run (ctx.prereqs).
+      proof: "an explain question gets its chunk, uses and users checked off from the index; a change question that does not say what it should do asks for it; an item found only in an earlier conversation is checked off from there; what is not found is asked, never guessed, and recorded as a gap"
+      conditions:
+        - { says: "the questions first", check: { kind: tests, run: "node tests/modules/test-context-prereqs.test.js" } }
+
+    SB39_the_checklist_builds_the_working_set:
+      layer: library
+      status: "DONE (0.39.339) — mapped before code, then cut (his \"no noise\"): the DOM and debug domains were mapped as SB40/SB41 and removed again before any code; registerDomain() takes them when he wants them. test-checklist-workset 6/6."
+      james: '"do it. we could use that for more than coding. coudl use it for debugging, dom in clearglass, or any data fed into a pipeline" · "im saying for anything it wants to learn. agnostic tool for context" · "don''t just agree. im not looking to add noise. can i build from inside nexus now?"'
+      found: >-
+        SB38's checklist and SB37's working set ran side by side: the checklist went into the first message, the working set
+        started empty and knew nothing of what the question needed. lib/context-prereqs.js was written for code only.
+      depends_on: [SB38_prerequisites_the_questions_first]
+      files: [lib/context-prereqs.js, lib/agent-tools/tools/query/learn.js, lib/agent-tools/index.js, lib/agent-tools/tool-guide.js, lib/agent-tools/tool-catalog.js, copilot/lib/workset.js, copilot/tool-runtime.js, copilot/server.js, lib/repo-agent.js, lib/repo-prompt-blocks.js]
+      does: >-
+        (1) One agnostic engine: a DOMAIN gives the intents, the checklist and where an item is found; the engine does the
+        rest the same for all — the domain's source, then past conversations, then ask James — and records the gaps. Domains:
+        code (SB38), data (a record fed into a pipeline; its needs are fields with a path and a question), topic (anything
+        else — what it is, where it lives, what it connects to, what was said before — from every store Nexus keeps, through
+        context-atlas, and the code index when there is a repo). learn() picks the domain from what it is given.
+        (2) nexus.learn.tool: any agent's handle on it — the checklist, the context found for each item, the questions.
+        The context-tools block names it in one line. (3) The checklist is the Ollama working set's index: found items seed
+        it, a code read ticks a missing target, the synthesis opens with the checklist — complete, or what is left to ask;
+        the first round's prompt already carries the checklist, so the seeded set is sent only once a real read is in it.
+      proof: "the working set opens with the checklist and the found context; a code read ticks the target; a pipeline record's missing field is asked; learn() finds a topic in Nexus's own specs; nexus.learn.tool answers; a new domain runs through the same engine"
+      conditions:
+        - { says: "the checklist builds the working set; the engine takes any domain", check: { kind: tests, run: "node tests/modules/test-checklist-workset.test.js" } }
+

@@ -5113,7 +5113,8 @@ async function handle(req, res, route, query, body) {
           // 0.39.279 — recalled only when the 'memory' block is on, exactly as the dispatch does (off by default)
           if (_blocks.some(b => b.id === 'memory' && b.enabled)) { try { _mem = await _require('../../lib/agent-memory.js').recall({ agentId: RA.agentIdFor(params.uuid), query: message }); } catch (_) { /* preview without memory */ } }
           const mem = await RA.atlasFor({ repo, repoDir, message, blocks: _blocks, backend });
-          let text = RA.fillListedTools(RA.compose({ hat, message, context, repoUuid: params.uuid, backend, memory: _mem.text, atlas: mem.atlas, directory: mem.directory }), params.uuid);
+          const _pre = RA.prereqsFor({ repo, repoDir, message });   // §SB38 — the checklist the dispatch sends (not recorded: a preview is not a run)
+          let text = RA.fillListedTools(RA.compose({ hat, message, context, repoUuid: params.uuid, backend, memory: _mem.text, atlas: mem.atlas, directory: mem.directory, prereqs: _pre && _pre.text }), params.uuid);
           let toolsFilled = false;
           if (/\{tools\}|\{tool_guide\}/.test(text)) {
             try { const TR = _require('../../copilot/tool-runtime.js'); text = TR.fillToolPlaceholders(text, RA.scopeFor(params.uuid, hat)); toolsFilled = true; } catch (_) { toolsFilled = false; }
