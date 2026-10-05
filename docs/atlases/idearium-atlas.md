@@ -645,7 +645,7 @@ The file prompt sends the three lower files the new file is most about in full, 
 - **Agent:** Agent, Prompt, Hat & tools.
 - **Environment:** Environment, Desktop.
 
-The environment's option list and the desktop's VM settings stay hidden until a button is clicked. A view that lives in the settings console opens alone (`idearium/ui/settings.html`, one view, no tab strip), and only when asked. The test is `tests/modules/test-repo-settings-ui.test.js` (Playwright).
+The environment's option list and the desktop's VM settings stay hidden until a button is clicked. A view that lives in the settings console opens alone (`idearium/ui/settings.html`, one view, no tab strip), and only when asked. The test is `tests/modules/test-repo-settings-ui.test.js`, driven by Clear Glass (`clear-glass/src/driver/glass.js`) — no Playwright.
 
 **Verified primitives — mapped, not built** (`docs/2026-10-05-verified-primitives-phasemap.spec`). James: "each passing test, verified component, gets fed into the primitive field … Like I want provinance." The loop, bottom-up, each step on what already exists:
 - **Confidence from evidence (VP1):** the build verdict (`lib/build-verify.js`), the proof conditions (`idearium/repo/proof-run.js`), Clear Glass on the page, adversarial findings that reproduced, and the agent's record (`lib/agent-build-learning.js`). It never uses how a reply is worded.
@@ -659,3 +659,10 @@ The environment's option list and the desktop's VM settings stay hidden until a 
 - **A built file:** its chunk in the spec manifest (agent, route, attempts), its stored component's manifest (component.json in the component store, `lib/component-store.js`: builtBy, contracts, prompts, dependencies), and the build response's record of what it was sent (chars, blocks used, sections).
 - **A decision:** the phasemap that mapped it, the version line (`lib/version.js`) and the CHANGELOG that shipped it (each opening with James's words), and the spec registry (`docs/SPEC-REGISTRY.spec`).
 - **A connection:** loom's registry (`loom/bootstrap.js` writes it), regenerated from the code, with the hand maps for the edges a scanner cannot see (`loom/maps/build-context-map.js`, `loom/maps/verified-primitives-map.js`).
+
+**Mapped next** (`docs/2026-10-05-cli-data-code-phasemap.spec`). James: "I want the agent cli tab to be the end point for all cli commands" · "Each system needs to be in charge of its own data" · "the code tab in idearium should probably be for new code in the repo".
+- **The Agent tab as every system's CLI:** verbs each system declares, sent to that system's route through RAID, never a shell.
+- **Each system owns its data:** cortex becomes the catalog and the associative lattice, not the store.
+- **The Code tab as the one review surface for new code:** one path, proposed → staged → applied → committed.
+
+UI checks run in Clear Glass (`clear-glass/src/driver/glass.js`), never Playwright.

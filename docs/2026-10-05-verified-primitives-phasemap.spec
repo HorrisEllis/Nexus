@@ -170,7 +170,7 @@ spec:
         and only when its button is clicked. The environment's option list and the desktop's settings are behind a
         button. The chosen category is remembered per browser. Nothing is removed: the settings console page keeps all
         of it.
-      proof: "Playwright: one pane at a time, no iframe until a button asks for it, the desktop settings hidden until clicked"
+      proof: "in Clear Glass (its driver, no Playwright): one pane at a time, no iframe until a button asks for it, the desktop settings hidden until clicked"
       conditions:
         - { says: "one pane at a time, no iframe until a button asks for it, desktop settings hidden until clicked", check: { kind: tests, run: "node tests/modules/test-repo-settings-ui.test.js" } }
 

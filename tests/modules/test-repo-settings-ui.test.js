@@ -4,13 +4,15 @@
 // need to be hidden or show when you clikc the button. Also the iframes. Needs to be rebuilt cleaner and more
 // organized. With catagories of options like github. Not in a long list. In tabs."
 //
-// §4.1 — the UI in a real browser (Playwright/Chromium): the REAL repo-settings.js, repo-environment.js and
+// James: "No playwright. ClearGlass only." — driven by Clear Glass's own driver (clear-glass/src/driver/glass.js:
+// Clear Glass's Electron engine, or its documented Chromium-over-DevTools engine where the Electron binary is absent).
+// The UI in a real browser: the REAL repo-settings.js, repo-environment.js and
 // agent-blocks.js, against a stubbed api() that answers like idearium's routes. Pins: categories on the left, one
 // pane at a time; no iframe in any pane until a button asks (Hat & tools is itself the click); the desktop settings
 // hidden until clicked and hidden again on a second click; the environment's option list behind a button; the prompt
 // blocks rendered once; the category remembered. Plus source checks: app.js no longer renders the whole console in an
 // iframe nor the blocks twice; settings.html opens on ?tab= and hides its strip in &single=1.
-// Playwright is not a project dependency: without it the browser part is SKIPPED, said, never passed.
+// No engine on the machine: the browser part is SKIPPED, said, never passed.
 require('../../lib/test-sandbox.js').ensure();
 const fs = require('fs');
 const os = require('os');
@@ -70,12 +72,13 @@ async function main() {
     assert.ok(/html\.single #tabs/.test(SET) && /get\('single'\) === '1'/.test(SET) && /get\('tab'\)/.test(SET), 'settings.html: ?tab= and &single=1');
   });
 
-  let chromium = null;
-  try { ({ chromium } = require('playwright')); } catch (_) { /* not a project dependency */ }
-  if (!chromium) { console.log('  - RS-02…RS-07 SKIPPED: playwright is not installed here (not a project dependency) — the browser checks did not run'); skipped += 6; return; }
+  const glass = require('../../clear-glass/src/driver/glass.js');
+  const eng = glass.engine();
+  if (!eng) { console.log('  - RS-02…RS-07 SKIPPED: Clear Glass has no engine here (no Electron binary, no Chromium) — the browser checks did not run'); skipped += 6; return; }
   let browser;
-  try { browser = await chromium.launch(); }   // PLAYWRIGHT_BROWSERS_PATH, when set, says where chromium is
-  catch (e) { console.log(`  - RS-02…RS-07 SKIPPED: chromium could not start (${e.message.split('\n')[0]})`); skipped += 6; return; }
+  try { browser = await glass.chromium.launch(); }
+  catch (e) { console.log(`  - RS-02…RS-07 SKIPPED: Clear Glass's engine (${eng.kind}) could not start (${e.message.split('\n')[0]})`); skipped += 6; return; }
+  console.log(`  · driven by Clear Glass (clear-glass/src/driver/glass.js), engine: ${eng.kind}`);
   try {
     const page = await browser.newPage();
     const errors = [];
@@ -107,13 +110,13 @@ async function main() {
 
     await test('RS-04', 'the desktop settings are hidden until clicked, and hidden again on a second click', async () => {
       await page.click('.rs-item[data-rs="desktop"]');
-      assert.strictEqual(await page.isHidden('#rs-desktop-settings'), true);
+      assert.strictEqual(await page.locator('#rs-desktop-settings').isHidden(), true);
       assert.strictEqual(await page.$$eval('iframe', e => e.length), 0);
       await page.click('button:has-text("show desktop settings")');
-      assert.strictEqual(await page.isVisible('#rs-desktop-settings'), true);
+      assert.strictEqual(await page.locator('#rs-desktop-settings').isVisible(), true);
       assert.ok(/tab=env&embed=1&single=1/.test(await page.getAttribute('#rs-desktop-settings iframe', 'src')));
       await page.click('button:has-text("hide desktop settings")');
-      assert.strictEqual(await page.isHidden('#rs-desktop-settings'), true);
+      assert.strictEqual(await page.locator('#rs-desktop-settings').isHidden(), true);
       assert.strictEqual(await page.$$eval('iframe', e => e.length), 0, 'hidden means unloaded');
     });
 
@@ -129,7 +132,7 @@ async function main() {
 
     await test('RS-06', 'the prompt blocks render once, in the Prompt category only; the agent section has none', async () => {
       await page.click('.rs-item[data-rs="agent"]');
-      assert.ok(await page.isVisible('.agent-ok'));
+      assert.ok(await page.locator('.agent-ok').isVisible());
       assert.strictEqual(await page.$$eval('#agent-blocks-section', e => e.length), 0);
       await page.click('.rs-item[data-rs="prompt"]');
       await page.waitForSelector('#ab-persona');
