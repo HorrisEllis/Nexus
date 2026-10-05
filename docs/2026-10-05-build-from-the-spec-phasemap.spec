@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.8.0
+    version:  1.9.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25. 1.9.0: an imported project shows its progress; expanding a repo keeps its spec and phases current — SB26, SB27"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim — spelling and all.
       `does:` is the coder's reading of it, his to correct. A phase whose `james:` says none came from the coder, and says
@@ -137,6 +137,24 @@ spec:
     James, 2026-10-05: "yes add it the spec for genesis. like genesis is the exact architecture for a new system
     template. like look at the directory. loom, like it needs to build a new system. and click into it. like look at the
     atlas template"
+
+  origin_1_9_0: >
+    James, 2026-10-05: "like i was thinking that expanding and repo needs to either update or build and specs, then add
+    phases to the phasemap. map any existing phases from the code into the phases tab. same with the specs. need to know
+    the progress of projects i import."
+
+  found_1_9_0:
+    - >-
+      An imported project shows no progress: the Phases tab reads only the repo's own *phasemap*.spec files
+      (idearium/repo/phases.js → roadmap.collectPhasemaps) and the Spec tab only its own .spec files
+      (idearium/repo/living-spec.js) — an import has neither, so both are empty. Yet the import already understands the
+      code: atlas, chunks, graph, a card per chunk (lib/code-intel), and the registry derived from the real code
+      (idearium/repo/architecture.js: one component per file, layers, consumers, orphans). That understanding never
+      becomes a spec or a phase. spec-plan.js derivePlan makes phases from a SPEC's sections, never from code.
+    - >-
+      Nothing keeps a repo's spec and phases current as it grows: a file the agent writes, an applied inject, a codegen
+      build — none touch the spec or the phasemap. roadmap.addPhase and setPhaseStatus exist to do it; the proof run
+      (idearium/repo/proof-run.js, PH1) can re-check a phase's conditions.
 
   found_1_8_0:
     - >-
@@ -646,3 +664,41 @@ spec:
       proof: "an atlas made from the template for a fixture spec lists each component with its capabilities, commands, routes, events and nodes"
       conditions:
         - { says: "an atlas made from the template for a fixture spec lists each component with its capabilities, commands, routes, events and nodes", check: { kind: tests, run: "node tests/modules/test-atlas-template.test.js" } }
+
+    SB26_an_imported_project_shows_its_progress:
+      layer: api
+      status: OPEN
+      james: '"map any existing phases from the code into the phases tab. same with the specs. need to know the progress of projects i import."'
+      overlaps: "DT4b_registry_chunk_in_repo_chunking (agent-ready master: every imported repo carries its registry); idearium/repo/architecture.js; spec-plan.js derivePlan; PH1 proof runs"
+      depends_on: [SB17_the_system_template_is_complete, SB12_the_registry_is_the_component_list]
+      files: [idearium/repo/import-pipeline.js, idearium/repo/architecture.js, idearium/repo/spec-plan.js, idearium/repo/proof-run.js, idearium/repo/phases.js, idearium/repo/living-spec.js]
+      does: >-
+        The coder's reading: after an import (and on demand for any repo), what the code already shows becomes the repo's
+        spec and phases. The SPEC: written in the system template's shape from the registry architecture.js derives
+        (modules, components, their routes, commands and events found in the code, the node types it keeps), saved as
+        spec/<name>.spec and marked derived-from-code, so the Spec tab shows it and he edits it like any other. The PHASES:
+        a phasemap of what exists, one phase per module bottom-up by layer, each with conditions (its files exist, parse,
+        and its tests pass) — run once through the proof run, so each reads proven, unproven (what fails, said) or open
+        (orphans, untested files, TODO markers, a component missing its capability, command or events). The Phases tab
+        shows the project's progress as proven of total, per phase and overall. Nothing is invented: what the code does
+        not show is listed as open, never filled in.
+      proof: "a fixture project imported with no spec or phasemap gets a derived spec and a phasemap whose phases read proven / unproven / open from its real files and tests"
+      conditions:
+        - { says: "a fixture project imported with no spec or phasemap gets a derived spec and a phasemap whose phases read proven / unproven / open from its real files and tests", check: { kind: tests, run: "node tests/modules/test-import-progress.test.js" } }
+
+    SB27_expanding_a_repo_keeps_its_spec_and_phases_current:
+      layer: automation
+      status: OPEN
+      james: '"like i was thinking that expanding and repo needs to either update or build and specs, then add phases to the phasemap."'
+      overlaps: "roadmap.addPhase / setPhaseStatus (exist); BK2_phase_build_writes_code; the living spec's addenda"
+      depends_on: [SB26_an_imported_project_shows_its_progress]
+      files: [idearium/repo/roadmap.js, idearium/repo/living-spec.js, lib/repo-inject.js, idearium/api/index.js]
+      does: >-
+        The coder's reading: when a repo grows — a file the agent writes, an applied inject, a codegen build, a new
+        component — its spec is updated (the new component added to its module, a dated addendum saying what changed and
+        why) or, with no spec yet, built (SB26); then the phasemap gains a phase for the new work (roadmap.addPhase) with its
+        conditions, and the phases it touched are re-proven. He sees each update before it is written when the repo is in
+        review mode, as with code injects.
+      proof: "adding a component to a fixture repo adds it to the spec with an addendum and appends a phase with conditions; review mode waits for his yes"
+      conditions:
+        - { says: "adding a component to a fixture repo adds it to the spec with an addendum and appends a phase with conditions; review mode waits for his yes", check: { kind: tests, run: "node tests/modules/test-expand-updates-spec.test.js" } }
