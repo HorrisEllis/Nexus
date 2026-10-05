@@ -321,6 +321,7 @@ const SUITES = [
   'test-alk-lattice-live.js',
   'test-ledger-schema.js',
   'test-health-authority.js',
+  'test-pulse-watch.test.js',   // 0.39.342 PR1/PR3 — systems known from their first beat; a missed heartbeat is negative space (WARP 2 expectations)
   'test-intelligence-causal.js',
   'test-sentinel-cli.js',
   'test-adversarial-sim.js',

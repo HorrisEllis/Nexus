@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     announce-pulse-repair
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-05
     release:  0.39.327 (base)
     uuid:     nexus-announce-pulse-repair-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    orchestrator · diagnostic · nexus/autopilot · warp · lib
-    status:   "MAPPED 2026-10-05, before building"
+    status:   "MAPPED 2026-10-05; PR1–PR3 built (0.39.342); PR4, PR5 open"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading of it, his to correct. `found:` is what the coder read in the code. `pushback:` is where the coder thinks
@@ -62,7 +62,7 @@ spec:
   phases:
     PR1_the_announced_registry_is_the_list:
       layer: library
-      status: OPEN
+      status: "DONE (0.39.342) — lib/pulse-watch.js announce/expect; the diagnostic adopts a system that announces itself (SYSTEMS gains it and a baseline monitor, no file edited). Expected: the diagnostic's declared non-optional systems — autopilot's kernel list (lib/nexus-self/systems.js) is the better source, not yet read."
       james: '"need the systems to anounce themselves. that way i can add new systems automatically."'
       depends_on: []
       files: [orchestrator/orchestrator.js, nexus/autopilot.js, lib/expected-systems.js]
@@ -74,7 +74,7 @@ spec:
 
     PR2_the_diagnostic_listens_not_polls:
       layer: library
-      status: OPEN
+      status: "DONE (0.39.342) — the diagnostic listens to orchestrator's /sse and reads the registry once (start, and after a lost stream); the /health probe and the per-system registry checks are gone; /pulse shows what it sees. clear-glass pulses as nexus-wire (pulseAs), forge-shell as orchestrator. End to end: the real diagnostic against a stand-in orchestrator — a new system adopted from its first beat, a silent one a gap 14 s after its window, zero requests to the silent system's port."
       james: '"remove the polling then." · "also optimizes performance."'
       depends_on: [PR1_the_announced_registry_is_the_list]
       files: [diagnostic/nexus-diagnostic.js, lib/pulse-listener.js]
@@ -87,7 +87,7 @@ spec:
 
     PR3_negative_space_for_missed_heartbeats:
       layer: library
-      status: OPEN
+      status: "DONE (0.39.342) — each beat a WARP 2 link expecting the next within interval × 1.5; a broken expectation is a gap naming the system and its last beat; a late beat recovers it; never-announced after a 60 s boot grace; the ledger rotated past 20000 entries. Found end to end and fixed: what broke during another system's beat was dropped."
       james: '"have the diagnostic system. use negative space reasoning for missed heartbeats."'
       depends_on: [PR2_the_diagnostic_listens_not_polls]
       files: [lib/pulse-listener.js, warp/core/Engine.js]
