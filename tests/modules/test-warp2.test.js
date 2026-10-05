@@ -28,47 +28,47 @@ function test(id, desc, fn) {
 
 test('W2-01', 'every link has its cause or is a marked root', () => {
   const e = new W.Engine();
-  e.on('order.placed', (l, ctx) => ctx.emit('order.billed', { for: l.data.n }));
-  e.emit('order.placed', { n: 1 }, { root: true, rootReason: 'a customer' });
+  e.on('cause', (l, ctx) => ctx.emit('effect', { for: l.data.n }));
+  e.emit('cause', { n: 1 }, { root: true, rootReason: 'outside' });
   for (const l of e.ledger.links()) assert.ok(l.causedBy || l.root === true, JSON.stringify(l));
-  const billed = e.ledger.links().find(l => l.type === 'order.billed');
-  assert.deepStrictEqual(e.ledger.chain(billed.id).map(l => l.type), ['order.billed', 'order.placed']);
+  const effect = e.ledger.links().find(l => l.type === 'effect');
+  assert.deepStrictEqual(e.ledger.chain(effect.id).map(l => l.type), ['effect', 'cause']);
   assert.throws(() => e.emit('orphan', {}), /cause/);
   assert.throws(() => e.emit('x', {}, { causedBy: 'l-999' }), /not in the ledger/);
 });
 
 test('W2-02', 'unmet in its window → a gap naming both ends; met through a middle link → fulfilled', () => {
   const e = new W.Engine();
-  const a = e.emit('order.placed', {}, { root: true });
-  e.expect({ cause: a.link.id, effect: 'order.shipped', within: 2, step: 'ship' });
+  const a = e.emit('cause', {}, { root: true });
+  e.expect({ cause: a.link.id, effect: 'effect', within: 2, step: 'effect' });
   e.advance(1); assert.deepStrictEqual(e.residue().gaps, []);
   const gaps = e.advance(2);
   assert.strictEqual(gaps.length, 1);
-  assert.strictEqual(gaps[0].cause, a.link.id); assert.strictEqual(gaps[0].missingEffect, 'order.shipped'); assert.strictEqual(gaps[0].step, 'ship');
+  assert.strictEqual(gaps[0].cause, a.link.id); assert.strictEqual(gaps[0].missingEffect, 'effect'); assert.strictEqual(gaps[0].step, 'effect');
   const f = new W.Engine();
-  f.on('order.placed', (l, c) => c.emit('order.packed', {}));
-  f.on('order.packed', (l, c) => c.emit('order.shipped', {}));
-  f.expect({ cause: 'order.placed', effect: 'order.shipped', within: 1 });
-  f.emit('order.placed', {}, { root: true });
+  f.on('cause', (l, c) => c.emit('middle', {}));
+  f.on('middle', (l, c) => c.emit('effect', {}));
+  f.expect({ cause: 'cause', effect: 'effect', within: 1 });
+  f.emit('cause', {}, { root: true });
   f.advance(5);
   assert.deepStrictEqual(f.residue(), { open: [], gaps: [] });
 });
 
 test('W2-03', 'Emerge\'s constraints first: rejected by id, or a gap', () => {
-  const max = E.defineConstraint({ id: 'qty.at-most-10', needs: ['qty'], check: s => s.qty <= 10 });
+  const max = E.defineConstraint({ id: 'n.at-most-10', needs: ['n'], check: s => s.n <= 10 });
   const e = new W.Engine({ admit: admitFrom([max]) });
-  assert.ok(e.emit('order.placed', { qty: 3 }, { root: true }).ok);
-  const r = e.emit('order.placed', { qty: 99 }, { root: true });
-  assert.strictEqual(r.rejected.constraint, 'qty.at-most-10');
-  const g = e.emit('order.placed', {}, { root: true });
-  assert.strictEqual(g.gap.missingVariable, 'qty');
+  assert.ok(e.emit('cause', { n: 3 }, { root: true }).ok);
+  const r = e.emit('cause', { n: 99 }, { root: true });
+  assert.strictEqual(r.rejected.constraint, 'n.at-most-10');
+  const g = e.emit('cause', {}, { root: true });
+  assert.strictEqual(g.gap.missingVariable, 'n');
   assert.strictEqual(e.ledger.links().length, 1, 'only the admitted link is in the ledger');
 });
 
 test('W2-04', 'WARP\'s Axiom stays', () => {
-  const ax = new W.Axiom('no.negative', { check: (l) => !(l.data.qty < 0) });
+  const ax = new W.Axiom('no.negative', { check: (l) => !(l.data.n < 0) });
   const e = new W.Engine({ axioms: [ax] });
-  assert.strictEqual(e.emit('order.placed', { qty: -1 }, { root: true }).rejected.axiom, 'no.negative');
+  assert.strictEqual(e.emit('cause', { n: -1 }, { root: true }).rejected.axiom, 'no.negative');
 });
 
 test('W2-05', '1.x through the adapter: unchanged, and every event a link', () => {
@@ -101,10 +101,10 @@ test('W2-06', 'WARP 2\'s core files: no SISO shape, nothing from outside warp/, 
 
 test('W2-07', 'emit(..., { expect }) — declared before the handlers run', () => {
   const e = new W.Engine();
-  e.on('order.placed', (l, c) => { if (l.data.i !== 2) c.emit('order.billed', {}); });
-  for (let i = 0; i < 4; i++) e.emit('order.placed', { i }, { root: true, expect: [{ effect: 'order.billed', within: 1 }] });
+  e.on('cause', (l, c) => { if (l.data.i !== 2) c.emit('effect', {}); });
+  for (let i = 0; i < 4; i++) e.emit('cause', { i }, { root: true, expect: [{ effect: 'effect', within: 1 }] });
   const gaps = e.advance(2);
-  assert.strictEqual(gaps.length, 1, 'only the order never billed');
+  assert.strictEqual(gaps.length, 1, 'only the cause that never got its effect');
   assert.strictEqual(e.ledger.link(gaps[0].cause).data.i, 2);
 });
 

@@ -5,7 +5,7 @@
 James: "can you benchmark it?"
 
 - The benchmark found two bugs, now fixed.
-  - **Wrong answer:** an expectation on a link could only be declared after its emit returned. By then a synchronous handler had already produced the effect, so every expectation broke. It reported 20000 of 20000 orders unbilled instead of 2000. Now `emit(type, data, { expect: [{ effect, within }] })` declares the expectation with the link, before any handler runs.
+  - **Wrong answer:** an expectation on a link could only be declared after its emit returned. By then a synchronous handler had already produced the effect, so every expectation broke. It reported 20000 of 20000 causes without their effect instead of 2000. Now `emit(type, data, { expect: [{ effect, within }] })` declares the expectation with the link, before any handler runs.
   - **Slow:** every emit scanned every open expectation, which was quadratic. Open expectations are now indexed by effect, and by the cause link when the cause is a link.
 - `scripts/bench-warp2-vs-siso.mjs` in Nexus measures SISO, WARP 1.x and WARP 2 on one workload.
 
