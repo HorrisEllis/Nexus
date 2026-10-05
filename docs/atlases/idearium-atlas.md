@@ -627,3 +627,35 @@ The code is `idearium/repo/proof-run.js`. The API is /api/repos/:uuid/deliver/ch
 - **No conditions:** the run reads no-proof, and says so.
 
 The code is the proof step in `idearium/api/index.js`, using `idearium/repo/proof-run.js`. The test is `tests/modules/test-phase-proof.test.js`.
+
+## Building with all the context, under the axioms (v0.39.308–310)
+
+James: "They need context. All of it. From the hat/repo" · "Parse rhe axioms in the docs folder. Do not deviate They are law"
+
+**What a build agent is sent** (0.39.309). The agent that builds a file wears the repo's hat: the persona prompt block as edited, filled with the hat's generated persona. It also gets four **build blocks** (`lib/repo-prompt-blocks.js`, scoped to file builds), on by default and editable in Settings → Prompt:
+- **build-memory:** its own past work, and the files beside it.
+- **build-context:** the file's relations (`lib/build-context.js`): its registry card, who will use it, proven primitives from other projects (interface only), and the spec's invariants.
+- **build-atlas:** everything else NEXUS remembers that matches the file.
+- **build-code:** this repo's own matching code.
+
+The file prompt sends the three lower files the new file is most about in full, and every other one by interface (`idearium/spec-engine/index.js`). The spec is `docs/build-context.spec`; the benchmark is `scripts/bench-file-prompt.js`.
+
+**The Settings tab, in categories** (0.39.310). Categories on the left, one pane at a time (`idearium/ui/js/repo-settings.js`):
+- **Repository:** General, Files & danger zone.
+- **Agent:** Agent, Prompt, Hat & tools.
+- **Environment:** Environment, Desktop.
+
+The environment's option list and the desktop's VM settings stay hidden until a button is clicked. A view that lives in the settings console opens alone (`idearium/ui/settings.html`, one view, no tab strip), and only when asked. The test is `tests/modules/test-repo-settings-ui.test.js` (Playwright).
+
+**Verified primitives — mapped, not built** (`docs/2026-10-05-verified-primitives-phasemap.spec`). James: "each passing test, verified component, gets fed into the primitive field … Like I want provinance." The loop, bottom-up, each step on what already exists:
+- **Confidence from evidence (VP1):** the build verdict (`lib/build-verify.js`), the proof conditions (`idearium/repo/proof-run.js`), Clear Glass on the page, adversarial findings that reproduced, and the agent's record (`lib/agent-build-learning.js`). It never uses how a reply is worded.
+- **Adversarial review (VP2):** other agents through `copilot/lifeline.js`, each independent as in `lib/agent-council.js`. A finding counts only when it reproduces as a check.
+- **The repo's model of the user (VP3):** one model of James (`copilot/lib/person-model/index.js`, `copilot/lib/user-model.js`) seen through a repo lens. Communication gaps come from `intelligence/gap/hunter.js`, past context from the person model's session ledger, and corrections from `lib/repo-hat-memory.js`.
+- **The primitive field (VP4):** `lib/component-store.js` tiered draft → proven → crystal. This is the entry gate of the emerge map's CX0, CL1 and MR8 (`docs/2026-10-02-emerge-field-memory-build-phasemap.spec`), not a second store. Any component in loom is offered by its card; one is copied into a repo only from the store, with its pinned closure.
+- **Provenance (VP5):** every primitive answers who built it, from what, when, against which spec and version, what proved it, and every reuse since.
+- **Debug and intelligence in the desktop (VP6):** the Debian VM for every test environment it can run (`cos/testenv/provision.js`). Failures go to the debug report (`lib/cos-debug-report.js`) and the gap field (`lib/gap-field.js`), and show beside the desktop (`idearium/ui/desktop.html`).
+
+**Where provenance lives today:**
+- **A built file:** its chunk in the spec manifest (agent, route, attempts), its stored component's manifest (component.json in the component store, `lib/component-store.js`: builtBy, contracts, prompts, dependencies), and the build response's record of what it was sent (chars, blocks used, sections).
+- **A decision:** the phasemap that mapped it, the version line (`lib/version.js`) and the CHANGELOG that shipped it (each opening with James's words), and the spec registry (`docs/SPEC-REGISTRY.spec`).
+- **A connection:** loom's registry (`loom/bootstrap.js` writes it), regenerated from the code, with the hand maps for the edges a scanner cannot see (`loom/maps/build-context-map.js`, `loom/maps/verified-primitives-map.js`).

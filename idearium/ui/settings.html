@@ -99,10 +99,13 @@
   // §0.39.280 BS10 — ?embed=1: this console's repo view inside the repo's own Settings tab (an iframe): no nav, no
   // window title bar; everything else — the tabs, the save bar, every route — is the same page.
   if (new URLSearchParams(location.search).get('embed') === '1') document.documentElement.classList.add('embed');
+  if (new URLSearchParams(location.search).get('single') === '1') document.documentElement.classList.add('single');
 </script>
 <style>
   html.embed .app { grid-template-columns: 1fr; height: 100vh; margin-top: 0; }
   html.embed nav { display: none; }
+  /* §0.39.310 VP7 — &single=1: ONE view of the repo (the repo Settings tab's Hat / advanced / desktop buttons), no tab strip */
+  html.single #tabs, html.single #sub { display: none; }
   html.embed .head { padding-top: 8px; }
 </style>
 <script>if (!document.documentElement.classList.contains('embed')) document.write('<script src="js/window-chrome.js" data-kind="settings" data-title="Settings console"><\/script>');</script>
@@ -523,7 +526,8 @@ const wire = {
   if (window.IdeariumTheme) IdeariumTheme.load('').then(() => { if (CUR.kind === 'appearance') renderAppearance(); });
   const repo = new URLSearchParams(location.search).get('repo');
   if (new URLSearchParams(location.search).get('view') === 'appearance') CUR = { kind: 'appearance', uuid: null, tab: 'agent' };
-  if (repo) CUR = { kind: 'repo', uuid: repo, tab: 'agent' };
+  const _tab = new URLSearchParams(location.search).get('tab');   // §0.39.310 VP7 — open on one view
+  if (repo) CUR = { kind: 'repo', uuid: repo, tab: TABS.some(t => t[0] === _tab) ? _tab : 'agent' };
   load(repo);
 })();
 </script>

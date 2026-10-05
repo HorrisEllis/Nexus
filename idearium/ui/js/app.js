@@ -3278,9 +3278,8 @@ toolScope  ${st.toolScopeEnforced ? 'enforced' : 'NOT enforced on this path'}</d
       ((inj.injects || []).length ? `<div style="font-size:10px;line-height:1.9">` + inj.injects.slice(0, 30).map(n => `<div><span style="opacity:.55">${escapeHtml(n.uuid.slice(0, 8))}</span> <span class="inj-st inj-${escapeHtml(n.status)}">${escapeHtml(n.status)}</span> <span style="cursor:pointer;text-decoration:underline" onclick="openInjectEditor('${n.uuid}')">${escapeHtml(n.path)}</span> <span style="opacity:.55">by ${escapeHtml(n.hatName || 'you')}</span>` +
         (n.status === 'proposed' ? ` <span class="inj-act" onclick="agentInjectAction('${n.uuid}','apply')">apply</span> <span class="inj-act" onclick="agentInjectAction('${n.uuid}','reject')">reject</span>` : n.status === 'applied' ? ` <span class="inj-act" onclick="agentInjectAction('${n.uuid}','revert')">revert</span>` : '') + `</div>`).join('') + `</div>`
         : `<div style="opacity:.5;font-size:10px">no injects yet — code the agent writes for this project lands here</div>`) + `</div>` : ''}
-    <div id="agent-blocks-section"></div>`;
-  // 0.39.258 — the prompt's blocks, all editable (idearium/ui/js/agent-blocks.js)
-  if (typeof renderAgentBlocks === 'function') renderAgentBlocks(repo);
+`;
+  // §0.39.310 VP7 — the prompt blocks are the Settings tab's own Prompt category (repo-settings.js), not shown twice here
 }
 
 // ── §GIT TAB — §0.39.265 ─────────────────────────────────────────────────
@@ -3731,36 +3730,7 @@ function openSettingsConsole(repoUuid) {
   if (!w) toast('the settings window was blocked — allow pop-ups for idearium', 'err');
 }
 
-function renderRepoSettings(repo) {
-  const el = document.getElementById('repo-subtab-settings');
-  if (!el) return;
-  const compartmentLine = repo.compartmentId
-    ? `compartment ${repo.compartmentId}`
-    : `compartment — none attached`;
-  // §0.39.279 — the repo's environment: its VM as a desktop (cos/workspace), and whether it is a branch of another repo
-  const branchLine = repo.branchOf ? `branch ${repo.branch || '—'} of repo ${repo.branchOf}\nfiles: a git worktree of the original (shared history); VM disk: an overlay of the original's` : 'its own files and compartment';
-  el.innerHTML = `
-    <div class="ds"><div class="ds-label">compartment</div><div class="ds-mono">${escapeHtml(compartmentLine)}</div></div>
-    <div class="ds"><div class="ds-label">environment</div><div class="ds-mono">${escapeHtml(branchLine)}</div>
-      <div class="action-row">
-        ${repo.compartmentId ? `<button class="action-btn primary" onclick="openRepoDesktop('${repo.uuid}')" title="Boot this repo's VM and open it as a desktop (Clear Glass window)">▣ open desktop</button>` : ''}
-        <button class="action-btn" onclick="openSettingsConsole('${repo.uuid}')" title="Every compartment and agent setting in one place">⚙ settings console</button>
-      </div></div>
-    <div class="ds"><div class="ds-label">agent / provenance</div><div class="ds-mono">source ${escapeHtml(repo.source || 'unknown')}\nspec ${repo.specUuid || '—'}\nidea ${repo.ideaUuid || '—'}\npromoted from ${repo.promotedFromSpec || '—'}</div></div>
-    <div class="ds"><div class="ds-label">repository</div>
-      <div class="action-row">
-        ${repo.immutable ? '' : `<button class="action-btn" onclick="addApiRepoFile('${repo.uuid}')">+ add file</button>
-        <button class="action-btn" onclick="forkApiRepo('${repo.uuid}')">⑂ fork</button>`}
-        <button class="action-btn" onclick="exportApiRepo()">⇩ export .zip</button>
-        ${repo.immutable ? '<span class="ds-mono" title="0.39.266 — its lifecycle belongs to the nexus-self sync">immutable — edit on a COS branch, apply through the gate</span>' : '<button class="action-btn danger" onclick="openDeleteRepoModal()">✕ delete</button>'}
-      </div>
-    </div>
-    <div id="repo-env-section"></div>
-    ${typeof repoSettingsConsoleEmbed === 'function' ? repoSettingsConsoleEmbed(repo) : ''}
-    <div id="repo-agents-section"></div>`;
-  renderRepoAgentSettings(repo);
-  if (typeof renderRepoEnvironment === 'function') renderRepoEnvironment(repo);   // §0.39.280 BS10
-}
+// §0.39.310 VP7 — renderRepoSettings moved to idearium/ui/js/repo-settings.js: categories, one pane at a time.
 
 // Renders the selected repo as a real, nested, expanded-by-default file
 // tree (same path-splitting the server's own RepoLayer.checklist() uses

@@ -386,6 +386,7 @@ const SUITES = [
   'test-one-idearium-phases-nodes.test.js',  // 0.39.271 — /idearium/ redirect, versionium newest-first per repo, one bar, Phases manager, living spec, COS suite + every test + debug reports, copilot contract, per-system nodes + guardian .hat/.agent
   'test-agent-memory.test.js',        // 0.39.269 — agent memory over the Clear Glass download manager: record on every backend, recall before every call; loom map
   'test-build-context.test.js',       // 0.39.308 — a build agent's context: dependencies' interfaces, users, relations, primitives, invariants
+  'test-repo-settings-ui.test.js',     // 0.39.310 — the repo Settings tab in categories, one pane at a time (Playwright; skipped and said without it)
   'test-chat-per-agent.test.js',  // 0.39.266 — each repo agent gets its own chat (they all shared one)
   'test-versionium-repo-history.test.js', // 0.39.263 — every repo's history in versionium (staged big versions, files/versions), nexus repos committed on sync, loom reads versionium not git
   'brainos-float-cg.test.js', // 0.39.262 — BrainOS Float Clear Glass tabs + pre-mount registration fix
