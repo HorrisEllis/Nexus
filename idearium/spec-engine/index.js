@@ -306,15 +306,9 @@ function _seedSectionsFromTemplate(templateId, specName) {
   }
 
   const validIds = new Set(SPEC_SECTIONS.map(s => s.id));
-  const markers = [...seed.matchAll(SECTION_MARKER_RE)];
-  if (markers.length) {
-    for (let i = 0; i < markers.length; i++) {
-      const id = markers[i][1];
-      if (!validIds.has(id)) continue; // §1.2 — unknown marker ignored, not silently misfiled
-      const start = markers[i].index + markers[i][0].length;
-      const end   = i + 1 < markers.length ? markers[i + 1].index : seed.length;
-      const body  = seed.slice(start, end).trim();
-      if (!body) continue;
+  const marked = _markedSections(seed);
+  if (marked) {
+    for (const [id, body] of Object.entries(marked)) {
       out[id] = `Seeded deterministically from template \`${templateId}\` — no agent dispatched.\n\n${body}\n\n` +
                 `> Source: idearium/spec-engine/templates/${templateId}.spec § ${id}`;
     }
@@ -336,6 +330,61 @@ function _seedSectionsFromTemplate(templateId, specName) {
     out[seedSection] = lines.join('\n');
   }
   return out;
+}
+
+// A seed file's `## SECTION: <id>` blocks as { sectionId: body } (spec sections only, empty ones dropped), or null when
+// the file has no markers. One parser for the verbatim seed above and the frames below.
+function _markedSections(seed) {
+  const validIds = new Set(SPEC_SECTIONS.map(s => s.id));
+  const markers = [...String(seed || '').matchAll(SECTION_MARKER_RE)];
+  if (!markers.length) return null;
+  const out = {};
+  for (let i = 0; i < markers.length; i++) {
+    const id = markers[i][1];
+    if (!validIds.has(id)) continue; // §1.2 — unknown marker ignored, not silently misfiled
+    const start = markers[i].index + markers[i][0].length;
+    const end   = i + 1 < markers.length ? markers[i + 1].index : seed.length;
+    const body  = seed.slice(start, end).trim();
+    if (body) out[id] = body;
+  }
+  return out;
+}
+
+// §0.39.305 SB1 (docs/2026-10-05-build-from-the-spec-phasemap.spec) — James: "like it needs to use the templates as
+// default." The standing templates are shapes ("state the evidence in THIS spec", "for each compartment this idea
+// needs, declare:"), so by default they FRAME a section rather than fill it: the section stays the agent's, and the
+// agent is given the template's text as the shape to fill for this one project. Seeded verbatim, every spec would
+// carry the same unfilled text. meta and purpose are never framed — a template's meta describes the template, and the
+// purpose is the author's. Ids come from idearium.config specs.default_templates.
+const FRAME_SKIP = new Set(['meta', 'purpose']);
+const DEFAULT_FRAME_IDS = Object.freeze(['axioms', 'architecture', 'schemas', 'checklists']);
+function _defaultFrameIds() {
+  try {
+    const v = getConfigValue('specs.default_templates');
+    if (Array.isArray(v)) return v.map(String);
+  } catch (_) { /* config unreadable (a bare test root) — the schema default below, the same list */ }
+  return [...DEFAULT_FRAME_IDS];
+}
+function _framesFor({ templateIds, sections }) {
+  const none = { ids: [], frames: {}, missing: [] };
+  if (sections !== SPEC_SECTIONS) return none;                          // file-tree and imported specs have their own shape
+  if (Array.isArray(templateIds) && !templateIds.length) return none;   // templateIds: [] means none, as before
+  const frames = {}, ids = [], missing = [];
+  for (const id of _defaultFrameIds()) {
+    const t = getTemplate(id);
+    if (!t || !t.seedFile) { missing.push(id); continue; }
+    const marked = _markedSections(readSeed(id));
+    const bodies = marked || (t.seedSection ? { [t.seedSection]: String(readSeed(id) || '').trim() } : {});
+    let used = false;
+    for (const [sectionId, text] of Object.entries(bodies)) {
+      if (FRAME_SKIP.has(sectionId) || frames[sectionId] || !text) continue;   // first listed wins, as seeds do
+      frames[sectionId] = { templateId: id, text };
+      used = true;
+    }
+    if (used) ids.push(id);
+  }
+  if (missing.length) console.warn(`[${MODULE_ID}] specs.default_templates names templates with no seed: ${missing.join(', ')} — skipped`);
+  return { ids, frames, missing };
 }
 
 function _seedMetaFromGenesis(seed, specName, templateId) {
@@ -503,6 +552,11 @@ function _buildManifest({ name, type = 'component', description = '', agent = nu
     };
   });
 
+  // §0.39.305 SB1 — every pending section carries its frame (see _framesFor). A section a named template seeds below
+  // is completed by that seed; its frame is then simply never read.
+  const framing = _framesFor({ templateIds, sections });
+  for (const c of chunks) { if (framing.frames[c.sectionId]) c.frame = framing.frames[c.sectionId]; }
+
   const manifest = {
     uuid:        specUuid,
     dedupKey,
@@ -540,6 +594,8 @@ function _buildManifest({ name, type = 'component', description = '', agent = nu
     templateId:     template ? template.id : null,   // primary (back-compat single-field readers)
     templateIds:    templates.map(t => t.id),          // §MERGED — full composed set
     templateSeeded: [],
+    templateFrames:        framing.ids,       // §0.39.305 SB1 — the standing templates framing this spec's sections
+    templateFramesMissing: framing.missing,   // names in specs.default_templates that are not real templates — said, not hidden
     // §PHASE 6 — non-null when a spec with the same name+type already existed.
     // The caller can offer reuse; this spec is still created (deliberate rebuild
     // is valid), but the redundancy is now visible instead of silent.
@@ -1447,6 +1503,45 @@ export function repairBlock(chunk) {
  * pending with `repair` set; one save. -> { marked: [realPath], unknown: [realPath] }. A file the spec does not build
  * (a test the agent did not write, a file by hand) is returned in `unknown` — never silently dropped.
  */
+/**
+ * setAuthorWords(specUuid, sections) — §0.39.305 SB2 (docs/2026-10-05-build-from-the-spec-phasemap.spec). James, with
+ * the DAW spec whose agents never saw "i want to make a edm song for my girl": the author's own sections become the
+ * spec's. sections: [{ id, title, body }] as the workshop keeps them. They are kept on the manifest (authorWords, which
+ * every section's prompt carries), and the matching sections are written with his text, verbatim, by 'author':
+ * purpose ← his idea + purpose; any section whose id is a spec section (schema, api, …) ← his. A section an agent or a
+ * template wrote is never overwritten (kept); one he wrote is updated when his words change; one being built is left.
+ * -> { written: [sectionId], kept: [sectionId], words: n }
+ */
+export function setAuthorWords(specUuid, sections = []) {
+  const manifest = loadSpec(specUuid);
+  const words = (Array.isArray(sections) ? sections : [])
+    .filter(s => s && typeof s.body === 'string' && s.body.trim())
+    .map(s => ({ id: String(s.id || ''), title: String(s.title || s.id || ''), body: s.body.trim().slice(0, 20000) }));
+  const valid = new Set(SPEC_SECTIONS.map(s => s.id));
+  const target = (id) => (/^(idea|purpose)(-\d+)?$/.test(id) ? 'purpose' : (valid.has(id) && id !== 'meta' ? id : null));
+  const bySection = {};
+  for (const w of words) { const t = target(w.id); if (t) (bySection[t] = bySection[t] || []).push(w); }
+  manifest.authorWords = { sections: words, at: Date.now() };
+  manifest.updatedAt = Date.now();
+  saveSpec(manifest);
+  const written = [], kept = [];
+  for (const [sectionId, ws] of Object.entries(bySection)) {
+    const c = manifest.chunks.find(x => x.sectionId === sectionId);
+    if (!c) continue;
+    const his = c.status === CHUNK_STATES.COMPLETE && c.agent === 'author';
+    if (c.status !== CHUNK_STATES.PENDING && !his) { kept.push(sectionId); continue; }
+    const text = ws.length === 1 && ws[0].id === sectionId ? ws[0].body : ws.map(w => `### ${w.title}\n\n${w.body}`).join('\n\n');
+    if (his && String(c.content || '').trim() === text) continue;
+    const fresh = loadSpec(specUuid);
+    const fc = fresh.chunks.find(x => x.uuid === c.uuid);
+    fc.agent = 'author'; fc.agentModel = 'author';
+    saveSpec(fresh);
+    completeChunk(specUuid, c.uuid, text);
+    written.push(sectionId);
+  }
+  return { written, kept, words: words.length };
+}
+
 export function markForRepair(specUuid, items = []) {
   const manifest = loadSpec(specUuid);
   const byPath = new Map(manifest.chunks.filter(c => c.realPath).map(c => [c.realPath, c]));
@@ -1475,38 +1570,36 @@ export function markForRepair(specUuid, items = []) {
 function _buildChunkPromptBase(manifest, chunk, systemContext = '') {
   if (chunk.manifestEntry) return _buildManifestEntryPrompt(manifest, chunk, systemContext);
   if (chunk.file && chunk.realPath) return _buildFilePrompt(manifest, chunk, systemContext);
-  const completedChunks = manifest.chunks
-    .filter(c => c.status === CHUNK_STATES.COMPLETE && c.chunkIdx < chunk.chunkIdx)
-    .map(c => `### ${c.sectionTitle}\n${c.content || ''}`)
-    .join('\n\n');
+  // §0.39.305 SB3 (docs/2026-10-05-build-from-the-spec-phasemap.spec) — domain agnostic. The prompt this replaces told
+  // the model it was writing "a NEXUS component spec", listed comp_id/seam_id/contract_id, cited "AXIOMS-v1.0 / §1.2 /
+  // §2.1", and pasted every earlier section in full. A small model echoed all of it: every section of James's DAW spec
+  // opened with the meta block's "1.2 Failure Modes / 2.1 JAA Writes / comp_id: idearium.spec-engine", nested a level
+  // deeper per section, until the registry section was 64 KB of repeats. Now: what is being specified, in its
+  // author's words; the frame (its standing template) as the shape; the earlier sections as short, bounded excerpts
+  // (lib/spec-digest.js, meta left out) never to be copied; the axioms by meaning. The ids stay on the chunk.
+  const { specDigest } = _require('../../lib/spec-digest.js');
+  const words = (manifest.authorWords && Array.isArray(manifest.authorWords.sections)) ? manifest.authorWords.sections : [];
+  const wordsText = words.map(w => (w.title && w.title !== w.id ? `${w.title}: ` : '') + w.body).join('\n\n').slice(0, 4000);
+  const earlier = specDigest({ chunks: manifest.chunks.filter(c => c.chunkIdx < chunk.chunkIdx && c.sectionId !== 'meta' && c.agent !== 'author') }, 3000);
+  const frame = chunk.frame && chunk.frame.text ? chunk.frame : null;
+  const about = wordsText || (manifest.description && manifest.description !== manifest.name ? manifest.description : '');
 
   return [
-    `You are building the "${chunk.sectionTitle}" section of a NEXUS component spec.`,
+    `You are writing one section of the specification for "${manifest.name}".`,
     ``,
-    `SPEC CONTEXT:`,
-    `  Name: ${manifest.name}`,
-    `  Type: ${manifest.type}`,
-    `  Description: ${manifest.description || '(none provided)'}`,
-    `  UUID: ${manifest.uuid}`,
-    `  Chunk: ${chunk.chunkIdx + 1}/${manifest.totalChunks}`,
-    `  Section: ${chunk.sectionId}`,
-    `  comp_id: ${chunk.comp_id}`,
-    `  seam_id: ${chunk.seam_id}`,
-    `  contract_id: ${chunk.contract_id}`,
-    ``,
+    about ? `WHAT IT IS, IN ITS AUTHOR'S OWN WORDS (the source of truth — build on it, never contradict it):\n${about}\n` : '',
     systemContext ? `SYSTEM STATE:\n${systemContext}\n` : '',
-    completedChunks ? `PREVIOUSLY COMPLETED SECTIONS:\n${completedChunks}\n` : '',
+    earlier ? `WHAT THE SPEC SAYS SO FAR (short excerpts, for consistency only — do not repeat or copy them):\n${earlier}\n` : '',
+    frame ? `THE SHAPE THIS SECTION FOLLOWS (the "${frame.templateId}" template — keep its structure, and replace its guidance with what is true for "${manifest.name}"):\n${frame.text}\n` : '',
     `YOUR TASK:`,
-    `Write the "${chunk.sectionTitle}" section for this spec.`,
-    `${chunk.sectionDesc}`,
+    `Write the "${chunk.sectionTitle}" section. ${chunk.sectionDesc || ''}`.trim(),
     ``,
-    `Requirements:`,
-    `- Be specific to "${manifest.name}" — not generic`,
-    `- Reference AXIOMS-v1.0 where relevant`,
-    `- Every UUID/seam_id/comp_id should follow the NEXUS naming convention`,
-    `- §1.2: declare all failure modes explicitly`,
-    `- §2.1: declare all JAA writes that must happen before behavior`,
-    `- Output ONLY the section content — no preamble, no "here is the section:"`,
+    `Rules:`,
+    `- Be specific to "${manifest.name}": its own domain, its own data, its own users. Not generic, and not about the system that is building it.`,
+    `- Say how each thing can fail and what happens then — loudly, never silently.`,
+    `- Anything that must be kept is written down before anything acts on it.`,
+    `- Nothing is claimed done without a way to check it.`,
+    `- Output ONLY this section's content — no preamble, no restating other sections, no ids or metadata.`,
   ].filter(Boolean).join('\n');
 }
 
@@ -1521,6 +1614,7 @@ export default {
   nextPendingChunk, markChunkBuilding, completeChunk, failChunk, setChunkAgent, recordDispatchJob, recordChunkRoute, setWarpPrimitives,
   recoverOrphanedChunks,
   buildChunkPrompt, archiveSpec, expandSpec, deleteSpec, restoreSpec, purgeSpec,   // purgeSpec: 0.39.266 (D2)
+  setAuthorWords,   // 0.39.305 SB2
   computeRootHash, findByRootHash, ingestFilesAsSpec, addChunk, removeChunk,
   ingestFilesAsSpecAsync, updateIngestedSpecAsync,
   markForRepair, repairBlock,   // 0.39.291 PV2   // 0.39.288 PF2/PF5 — nexus-self reaches them through this default export

@@ -4380,7 +4380,9 @@ async function handle(req, res, route, query, body) {
           if (!p.ok) return err(res, 502, `could not make its repo: ${p.error}`);
           w.repoUuid = p.repoUuid; w.specPath = w.specPath || p.specFile; made = 'library';
         } else {
-          const r = RL.ingest({ name: w.title, bare: true, source: 'workshop', ideaUuid: w.ideaUuid || null,
+          // §0.39.305 SB2 — the new repo's spec is described by his own first words, not "bare repo: <title>"
+          const firstWords = ((w.sections || []).find(x => x && /^(idea|purpose)/.test(x.id || '') && String(x.body || '').trim()) || {}).body || '';
+          const r = RL.ingest({ name: w.title, bare: true, source: 'workshop', ideaUuid: w.ideaUuid || null, description: String(firstWords).trim().slice(0, 500) || null,
             compartmentId: _ensureCompartment(`idearium-repo-${String(w.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24)}`, w.title) });
           if (r.error) return err(res, 502, `could not make its repo: ${r.error}`);
           w.repoUuid = r.repo.uuid; made = 'new';
@@ -4391,11 +4393,19 @@ async function handle(req, res, route, query, body) {
       w.specPath = w.specPath || `spec/${LI.slugOf(w.title)}.spec`;
       const wr = RL.writeFile(w.repoUuid, w.specPath, WS.specText(w, yaml), { preserveWhitespace: true });
       if (wr.error) return err(res, 502, `the spec was not written: ${wr.error}`, { repoUuid: w.repoUuid });
+      // §0.39.305 SB2 (docs/2026-10-05-build-from-the-spec-phasemap.spec) — his sections become the spec's: kept on the
+      // manifest for every section's agent, and written into the sections they name (purpose ← idea + purpose). A
+      // section an agent already wrote is kept. Every save, so his later words reach it too.
+      let authored = null;
+      try {
+        const se = await _specEngineReady();
+        if (se && repo && repo.specUuid && typeof se.setAuthorWords === 'function') authored = se.setAuthorWords(repo.specUuid, w.sections || []);
+      } catch (e) { authored = { error: e.message }; console.warn(`[workshop.save] his words did not reach the spec (the file is saved): ${e.message}`); }
       w.savedAt = Date.now(); w.updatedAt = w.savedAt;
       w.history.push({ at: w.savedAt, what: `saved to ${w.specPath}${made ? ` (${made === 'new' ? 'a new repo' : 'its library document\'s repo'})` : ''}` });
       syncTable(WS.TABLE, [w]);
       os.emit('idearium.workshop.saved', { uuid: w.uuid, repoUuid: w.repoUuid, specPath: w.specPath, madeRepo: made });
-      return ok(res, { repoUuid: w.repoUuid, specPath: w.specPath, madeRepo: made, created: !!wr.created, workshop: w });
+      return ok(res, { repoUuid: w.repoUuid, specPath: w.specPath, madeRepo: made, created: !!wr.created, authored, workshop: w });
     }
     // ── §0.39.298 AR2 — ARCHITECT ─────────────────────────────────────────────────────────────────────────────────
     // James: "with architect for archiecture using the component registry, components store with dependancies". One

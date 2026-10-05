@@ -454,7 +454,7 @@ export class RepoLayer {
   // idearium/data/projects/<repoUuid> — persisted on the repo record so
   // every later materialize() (including quiet ones after an edit) keeps
   // using it. null for every existing caller — purely additive.
-  ingest({ name, specUuid = null, files = [], source = 'drop', parent = null, promotedFromSpec = null, compartmentId = null, materializeBaseDir = null, materializeDir = null, branchOf = null, branch = null, bare = false, ideaUuid: fromIdea = null, noIdea = false } = {}) {
+  ingest({ name, specUuid = null, files = [], source = 'drop', parent = null, promotedFromSpec = null, compartmentId = null, materializeBaseDir = null, materializeDir = null, branchOf = null, branch = null, bare = false, description = null, ideaUuid: fromIdea = null, noIdea = false } = {}) {
     if (!name) return { error: 'repo name required' };
     if (!this.se) return { error: 'repo layer has no spec-engine — cannot store content' };
 
@@ -485,7 +485,9 @@ export class RepoLayer {
         // uses; a bare repo IS just a spec with nothing built yet — every
         // chunk starts PENDING, same as any brand-new spec, nothing special
         // faked here to make it look populated.
-        manifest = this.se.createSpec({ name, type: 'component', description: `bare repo: ${name}`, author: source || 'create' });
+        // §0.39.305 SB2 — described by the author's words when the caller has them (the workshop does), else by
+        // its name. "bare repo: <name>" was the only thing its section agents were told about the DAW.
+        manifest = this.se.createSpec({ name, type: 'component', description: (description && String(description).trim()) || name, author: source || 'create' });
       } else {
         return { error: 'ingest requires specUuid (existing manifest), files (to create one), or bare:true (to start empty)' };
       }

@@ -182,6 +182,15 @@ const SCHEMA = {
     motion: { default: 'full', enum: ['full', 'reduced'], copilot_writable: true, type: 'string' },
   },
 
+  // §0.39.305 SB1 (docs/2026-10-05-build-from-the-spec-phasemap.spec) — James: "like it needs to use the templates as
+  // default." · "i havce hundreds of specs i want built. that why i had the resuable architecture". The standing
+  // templates every new document spec is framed by (spec-engine/templates.js ids): each pending section is given its
+  // template's text as the shape to fill for that project. A template named at creation still seeds verbatim; an
+  // empty list means no frames.
+  specs: {
+    default_templates: { default: ['axioms', 'architecture', 'schemas', 'checklists'], copilot_writable: true, type: 'array' },
+  },
+
   // §0.39.286 RG2 (docs/2026-10-01-routing-registry-genesis-phasemap.spec) — James: "full options for fallback logic,
   // routing". Read by lib/pipeline-routing.js policyFrom(); used by every spec chunk build (speceng.build).
   routing: {
