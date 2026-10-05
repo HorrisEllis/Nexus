@@ -12,6 +12,7 @@
  *   idearium/ui/js/repo-settings.js → idearium/ui/js/repo-environment.js   renderRepoEnvironment (the Environment category)
  *   idearium/ui/js/repo-settings.js → idearium/api/index.js            HTTP settings.html?tab=…&single=1 (one console view)
  *   idearium/ui/js/app.js → idearium/ui/js/repo-settings.js            renderRepoSettings (the repo's Settings subtab)
+ *   idearium/ui/js/desktop-setup.js → app.js (page globals) · idearium/api (HTTP); repo-environment.js and repo-settings.js open it (DK2)
  */
 const { idFor } = require('../scanners/source-map');
 const I = (rel) => idFor(rel);
@@ -24,11 +25,18 @@ const FILES = [
     I('idearium/ui/js/repo-environment.js'),    // renderRepoEnvironment — the Environment category
     I('idearium/api/index.js'),                 // HTTP: settings.html?repo=…&tab=…&embed=1&single=1 (served by idearium)
   ]],
+  // §0.39.340 DK2 (docs/2026-10-01-idearium-agent-ready-master-phasemap.spec) — the desktop setup popup
+  ['idearium/ui/js/desktop-setup.js', I('idearium/ui/js/desktop-setup.js'), [
+    I('idearium/ui/js/app.js'),                 // api, escapeHtml, openRepoDesktop (page globals)
+    I('idearium/api/index.js'),                 // HTTP: /api/config, /api/repos/:uuid/environment[/setup], /api/cos/testenv
+  ]],
 ];
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
   [I('idearium/ui/js/app.js'), I('idearium/ui/js/repo-settings.js'), 'renderRepoSubtab → renderRepoSettings(CURRENT_API_REPO)'],
+  [I('idearium/ui/js/repo-environment.js'), I('idearium/ui/js/desktop-setup.js'), 'envSetup → openDesktopSetup(repo) (§0.39.340 DK2)'],
+  [I('idearium/ui/js/repo-settings.js'), I('idearium/ui/js/desktop-setup.js'), 'the Desktop category\'s ⚙ set up desktop → openDesktopSetup (§0.39.340 DK2)'],
 ];
 
 // idearium's page scripts are scanned components with no static require edges, so the scanner gives app.js and
