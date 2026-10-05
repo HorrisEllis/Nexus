@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791189508794,
+ "generatedAt": 1791190321875,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -1818,6 +1818,15 @@
     "input:injected",
     "input:rate_limited",
     "input:rejected"
+   ]
+  },
+  "nexus.scripts.bench-warp2-vs-siso": {
+   "emits": [
+    "order.billed",
+    "order.placed"
+   ],
+   "listens": [
+    "order.placed"
    ]
   },
   "nexus.tests.brutal.test": {
@@ -7175,6 +7184,23 @@
    ],
    "listeners": []
   },
+  "order.billed": {
+   "emitters": [
+    "nexus.scripts.bench-warp2-vs-siso",
+    "nexus.tests.modules.test-warp2.test"
+   ],
+   "listeners": []
+  },
+  "order.placed": {
+   "emitters": [
+    "nexus.scripts.bench-warp2-vs-siso",
+    "nexus.tests.modules.test-warp2.test"
+   ],
+   "listeners": [
+    "nexus.scripts.bench-warp2-vs-siso",
+    "nexus.tests.modules.test-warp2.test"
+   ]
+  },
   "guardian.ncp.pong": {
    "emitters": [
     "nexus.tests.dispatcher-ping-gate.test",
@@ -7463,21 +7489,7 @@
     "nexus.tests.modules.test-step-gate.test"
    ]
   },
-  "order.billed": {
-   "emitters": [
-    "nexus.tests.modules.test-warp2.test"
-   ],
-   "listeners": []
-  },
   "order.packed": {
-   "emitters": [
-    "nexus.tests.modules.test-warp2.test"
-   ],
-   "listeners": [
-    "nexus.tests.modules.test-warp2.test"
-   ]
-  },
-  "order.placed": {
    "emitters": [
     "nexus.tests.modules.test-warp2.test"
    ],
