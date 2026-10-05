@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     cos-machines
-    version:  1.0.1   # 1.0.1: a COS phasemap — each phase systems: [cos]; linked from the COS testenv map and cos.spec
+    version:  1.1.0   # 1.1.0: SU1 the setup asks the OS and its version, SU2 every language and the repo's own dependencies (mapped, with pushback). 1.0.1: a COS phasemap — each phase systems: [cos]; linked from the COS testenv map and cos.spec
     date:     2026-10-05
     release:  0.39.340 (base) → each phase its own patch
     uuid:     nexus-cos-machines-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -148,3 +148,42 @@ spec:
         macOS builds need a Mac — Apple's licence does not allow macOS in a VM on other hardware; said, not attempted.
         Windows installers built under wine are fragile; a real Windows compartment is the honest path.
       proof: "an Electron app packages to an AppImage that starts in a clean Debian compartment"
+    SU1_the_setup_asks_the_os_and_its_version:
+      layer: api
+      systems: [cos]
+      status: OPEN
+      depends_on: [OS2_images_downloaded_and_kept_current]
+      files: [idearium/ui/js/desktop-setup.js, cos/testenv/provision.js, cos/testenv/images.js]
+      james: '"the setup desktop envirement. the cos test env. the setup needs, select operating system. with the offocial downloads for each versions"'
+      does: >-
+        The setup popup's VM step asks which operating system and which version, from a catalogue of official releases:
+        each entry its vendor's own download URL and published checksum (OS2's catalogue). Chosen → downloaded, verified,
+        kept beside the others; a compartment records which OS and version it was made from.
+      pushback: >-
+        Not every OS can take the same path. Linux distributions that publish an official cloud image (Debian 11/12/13,
+        Ubuntu 22.04/24.04, Fedora, AlmaLinux/Rocky) boot the way Debian does today — cloud-init sets the account and
+        packages — so they cost little. Windows publishes no cloud image: its official download is an installer ISO, its
+        install is long and its licence is the person's (OS1 says so); Android-x86 is OS1's. The coder's proposal: the
+        cloud-image Linux distributions first, the others listed and marked "needs OS1" until it is built — never a list
+        that offers what cannot boot.
+      proof: "the popup lists each OS with its versions from the catalogue; choosing Ubuntu 24.04 downloads Ubuntu's own image, verifies its published checksum, and the first boot sets the account as Debian's does"
+    SU2_every_language_and_the_repos_own_dependencies:
+      layer: api
+      systems: [cos]
+      status: OPEN
+      depends_on: [SU1_the_setup_asks_the_os_and_its_version]
+      files: [idearium/ui/js/desktop-setup.js, cos/testenv/provision.js, cos/testenv/needs.js]
+      james: '"all the languages, dependancies from the the repos dependancies, every coding language, etc."'
+      does: >-
+        Every language with a toolchain the chosen OS packages is offered (C/C++, C#/.NET, Dart, Elixir, Go, Haskell,
+        Java/Kotlin, Lua, Node, Perl, PHP, Python, R, Ruby, Rust, Scala, Swift, Zig …), each with the versions that OS has.
+        What the repo needs is read from its own manifests (package.json, requirements.txt / pyproject.toml, go.mod,
+        Cargo.toml, Gemfile, composer.json, pom.xml / build.gradle, *.csproj, pubspec.yaml, mix.exs …) and ticked, with
+        the file that says so; its dependencies are installed by its own package manager (npm ci, pip install -r, cargo
+        fetch, …) in the compartment.
+      pushback: >-
+        All of it in one image is slow and large — the first boot in his screenshot was already past seven minutes for
+        Debian, the desktop and four languages. The coder's proposal: every language offered, only what the repo needs
+        ticked by default; toolchains in the base image, the repo's own dependencies installed in the repo's compartment
+        (they change with the repo; a base image that held them would be rebuilt on every commit).
+      proof: "a fixture repo with package.json and go.mod gets node and go ticked, each naming its file; after setup, npm ci and go mod download have run in its compartment; an unticked language is not installed"

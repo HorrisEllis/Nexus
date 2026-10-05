@@ -167,10 +167,10 @@ const SYSTEMS = {
   // entirely and trusts orchestrator's real registry first, exactly as
   // asked — the probe is a fallback only if the registry itself has
   // nothing recent.
-  'clear-glass':{ port: 7704, dataDir: 'data/clear-glass', healthPath: '/status',  label: 'Clear Glass', optional: true, preferHeartbeat: true },
+  'clear-glass':{ port: 7704, dataDir: 'data/clear-glass', healthPath: '/status',  label: 'Clear Glass', optional: true, preferHeartbeat: true, pulseAs: 'nexus-wire' },
   // §MONITOR-03: UI surfaces — probed as virtual systems, no dataDir
   'forge-shell':{ port: 9000, dataDir: 'data/orchestrator', healthPath: '/ui/forge-shell/forge-shell.html',
-    label: 'Forge Shell', virtual: true, optional: true,
+    label: 'Forge Shell', virtual: true, optional: true, pulseAs: 'orchestrator',
     // Forge shell is served by orchestrator — it's healthy when orch is healthy
     // We track it separately to surface in the diagnostic tile
   },
@@ -335,8 +335,8 @@ function startService() {
   }
 
   const monitors = {};
-  for (const [name, cfg] of Object.entries(SYSTEMS)) {
-    monitors[name] = createBaseline({
+  function _monitorFor(name, cfg) {
+    return createBaseline({
       name,
       ledgerDir:    path.join(ROOT, cfg.dataDir),   // §LEDGER-FIX: dataDir is now the source
       failuresDir:  path.join(ROOT, cfg.dataDir, 'failures'),
@@ -355,6 +355,80 @@ function startService() {
       },
     });
   }
+  for (const [name, cfg] of Object.entries(SYSTEMS)) monitors[name] = _monitorFor(name, cfg);
+
+  // ── §PR1/PR2/PR3 0.39.328 — systems announce themselves; the diagnostic listens, never polls ─────────────────────
+  // James: "remove the polling then. need the systems to anounce themselves. that way i can add new systems
+  // automatically. also optimizes performance." · "use negative space reasoning for missed heartbeats."
+  // docs/2026-10-05-announce-pulse-repair-phasemap.spec. Every system's createPulse beats to orchestrator, which
+  // broadcasts each beat on /sse. The diagnostic reads the registry once (at start, and again after a lost stream)
+  // and then only listens: each beat is a WARP 2 link expecting the next (lib/pulse-watch.js); a broken expectation
+  // is a gap naming the system and its last beat. A system that announces itself and is not in SYSTEMS is adopted —
+  // watched from its first beat, with no file edited. SYSTEMS keeps only what the registry cannot say (a data dir
+  // that is not data/<id>, a name that pulses under another: pulseAs).
+  const PW = require('../lib/pulse-watch.js');
+  const _pulseAs = (name) => (SYSTEMS[name] && SYSTEMS[name].pulseAs) || name;
+  const _aliasOf = new Map(Object.entries(SYSTEMS).filter(([, c]) => c.pulseAs).map(([n, c]) => [c.pulseAs, n]));
+  function _adopt(id, port) {
+    if (SYSTEMS[id] || _aliasOf.has(id)) return;
+    SYSTEMS[id] = { port: port || null, dataDir: `data/${id}`, healthPath: null, label: id, optional: true, announced: true };
+    monitors[id] = _monitorFor(id, SYSTEMS[id]);
+    console.log(`[diagnostic] '${id}' announced itself — watched from its first beat`);
+    broadcast({ type: 'system.adopted', system: id, port: port || null, ts: Date.now() });
+  }
+  const PULSE = PW.createPulseWatch({
+    onAnnounce: (s) => _adopt(s.id, s.port),
+    onGap: (g) => {
+      const who = _aliasOf.get(g.system) || g.system;
+      console.warn(g.kind === 'never-announced'
+        ? `[diagnostic] '${who}' was expected and has never announced itself — negative space: no first beat`
+        : `[diagnostic] '${who}' missed its heartbeat — silent ${Math.round(g.silentForMs / 1000)}s, expected every ${Math.round((g.expectedEveryMs || 10000) / 1000)}s — negative space, not a probe`);
+      broadcast({ type: 'pulse.gap', system: who, gap: g, ts: Date.now() });
+      ico.ledger.append('pulse', { type: 'pulse.gap', system: who, gap: g, ts: Date.now() });
+    },
+    onRecover: (r) => {
+      const who = _aliasOf.get(r.system) || r.system;
+      console.log(`[diagnostic] '${who}' is beating again after ${Math.round(r.silentForMs / 1000)}s of silence`);
+      broadcast({ type: 'pulse.recovered', system: who, silentForMs: r.silentForMs, ts: Date.now() });
+    },
+  });
+  PULSE.expect(Object.entries(SYSTEMS).filter(([, c]) => !c.optional).map(([n]) => _pulseAs(n)));
+  function _readRegistryOnce() {
+    const rq = http.get('http://127.0.0.1:9000/api/registry', { timeout: 3000 }, r => {
+      let b = ''; r.on('data', d => b += d);
+      r.on('end', () => {
+        let reg = null; try { reg = JSON.parse(b); } catch (_) {}
+        for (const [id, e] of Object.entries((reg && reg.registry) || {})) {
+          PULSE.announce(id, { port: e.port, intervalMs: e.intervalMs || 10000 });
+          const seen = e.lastSeen || e.ts;
+          if (seen && Date.now() - seen < 15000) PULSE.beat(id, { ts: seen });
+        }
+      });
+    });
+    rq.on('error', () => {}); rq.on('timeout', () => rq.destroy());
+  }
+  let _listenDelay = 1000;
+  function _listen() {
+    _readRegistryOnce();
+    const again = () => { setTimeout(_listen, _listenDelay).unref?.(); _listenDelay = Math.min(_listenDelay * 2, 30000); };
+    const req = http.get('http://127.0.0.1:9000/sse', { headers: { Accept: 'text/event-stream' } }, res => {
+      _listenDelay = 1000;
+      let carry = '';
+      res.on('data', (c) => {
+        const r = PW.parseSse(String(c), carry); carry = r.carry;
+        for (const ev of r.events) {
+          if (ev.type === 'orchestrator.pulse' && ev.systemId) {
+            const snap = ev.systems && ev.systems[ev.systemId];
+            PULSE.beat(ev.systemId, { port: snap && snap.port });
+          }
+        }
+      });
+      res.on('end', () => { console.warn('[diagnostic] lost orchestrator\'s pulse stream — reconnecting'); again(); });
+    });
+    req.on('error', again);
+  }
+  _listen();
+  setInterval(() => PULSE.tick(), 2000).unref?.();
 
   // In-memory gap store (backed by ledger)
   const openGaps = new Map();
@@ -569,139 +643,11 @@ function startService() {
   async function pollSystem(name, cfg) {
     const state = systemState[name] || { online: false, uptime: 0, friction: 0, gaps: [] };
 
-    // §FIX 2026-09-02 — James: "should all be using the heartbeat system
-    // anyways." For a system flagged preferHeartbeat (clear-glass, see
-    // that config entry's own header for the real root cause), the
-    // orchestrator registry — fed by that system's own real, already-
-    // running createPulse() heartbeat — IS the primary source of truth,
-    // not a fallback consulted only after a failed direct probe. The
-    // direct HTTP probe below still exists as a real, honest last
-    // resort if the registry itself has nothing recent (e.g.
-    // orchestrator itself is down), not removed — just no longer tried
-    // first for a system where "first" was the actual source of drift.
-    async function _checkRegistry(timeoutMs) {
-      try {
-        const reg = await new Promise((resolve) => {
-          const rq = http.get(`http://127.0.0.1:9000/api/registry`, { timeout: timeoutMs }, r => {
-            let b = ''; r.on('data', d => b += d);
-            r.on('end', () => { try { resolve(JSON.parse(b)); } catch { resolve(null); } });
-          });
-          rq.on('error', () => resolve(null));
-          rq.on('timeout', () => { rq.destroy(); resolve(null); });
-        });
-        const entry = reg && reg.registry && reg.registry[name];
-        const lastSeen = entry && (entry.lastSeen || entry.ts);
-        return lastSeen && (Date.now() - lastSeen) < 15000 ? lastSeen : null;
-      } catch (_) { return null; }
-    }
-
-    let online = false, uptime = 0, jobs = 0, onlineSource = 'probe';
-
-    // §0.39.327 — James: "i though we switched to heartbeat and pulse system". Every system pulses to orchestrator
-    // (createPulse → POST /api/heartbeat every 10 s; orchestrator watches for missed pulses). Only clear-glass read the
-    // pulse first; every other system was HTTP-probed first, so a system still booting "missed its /health probe" and
-    // was rescued by the registry a moment later — the log he pasted. The pulse is now first for every system; the
-    // probe stays as the fallback for a system orchestrator has not heard from (no pulse yet, or orchestrator down).
-    // preferHeartbeat:false opts a system out.
-    if (cfg.preferHeartbeat !== false) {
-      const lastSeen = await _checkRegistry(1500);
-      if (lastSeen) { online = true; onlineSource = 'heartbeat'; }
-    }
-
-    // 1. Probe health endpoint — skipped entirely for a preferHeartbeat
-    // system that the registry already confirmed online, tried as the
-    // real primary path for everyone else, and as a real last resort
-    // for a preferHeartbeat system the registry couldn't confirm.
-    if (!online) {
-      try {
-        await new Promise((resolve) => {
-          const req = http.get(`http://127.0.0.1:${cfg.port}${cfg.healthPath}`, { timeout: 2000 }, res => {
-            let b = '';
-            res.on('data', d => b += d);
-            res.on('end', () => {
-              online = res.statusCode === 200; // status code is ground truth regardless of body shape
-              try {
-                const d = JSON.parse(b);
-                uptime = d.uptime || 0;
-                jobs   = d.jobs   || 0;
-              } catch {}
-              resolve();
-            });
-          });
-          req.on('error', () => resolve());
-          req.on('timeout', () => { req.destroy(); resolve(); });
-        });
-      } catch {}
-    }
-
-    // ── §COMPETING TRUTH FIXED 2026-07-24 ─────────────────────────────────
-    // Until now this probe alone decided `online`, with a 2s timeout and NO
-    // registry fallback — while orchestrator/allHealth() decides the same
-    // question with a 3s probe OR a registry lastSeen within 15s. So a system
-    // that was alive but briefly slow to answer was ONLINE TO ORCHESTRATOR AND
-    // OFFLINE TO DIAGNOSTIC AT THE SAME MOMENT (§10.3 competing truth).
-    //
-    // That was not a cosmetic disagreement. Diagnostic acts on its answer: it
-    // raises a `system_offline` gap and fires HEAL_REQUESTED. So the divergence
-    // was a SPURIOUS-HEAL GENERATOR, and it fired hardest exactly when the
-    // system was under load and slow — i.e. when a stampede of heal attempts
-    // is the last thing wanted.
-    //
-    // Orchestrator is the registration authority (every system registers and
-    // heartbeats there), so it OWNS liveness. Diagnostic now defers to it
-    // rather than maintaining a private opinion: a system this probe missed is
-    // only declared offline if orchestrator has not heard from it either.
-    // Consulted over HTTP, never by require (decoupling law) — and a failure
-    // to reach orchestrator leaves the local probe's answer standing, with the
-    // degradation NAMED rather than silently trusted.
-    if (!online) {
-      try {
-        const reg = await new Promise((resolve) => {
-          const rq = http.get(`http://127.0.0.1:9000/api/registry`, { timeout: 1500 }, r => {
-            let b = ''; r.on('data', d => b += d);
-            r.on('end', () => { try { resolve(JSON.parse(b)); } catch { resolve(null); } });
-          });
-          rq.on('error', () => resolve(null));
-          rq.on('timeout', () => { rq.destroy(); resolve(null); });
-        });
-        // Shape verified against orchestrator.js's registryAll(), not guessed:
-        // { ok, registry: { <systemId>: { ...entry, lastSeen, online } }, ts }.
-        // My first pass assumed a `systems` array and would have silently
-        // found nothing — the fallback would have looked wired and never
-        // fired, which is the failure mode this whole session keeps finding.
-        const entry = reg && reg.registry && reg.registry[name];
-        const lastSeen = entry && (entry.lastSeen || entry.ts);
-        if (lastSeen && (Date.now() - lastSeen) < 15000) {
-          online = true;
-          onlineSource = 'registry-fallback';
-          // §FIX 2026-09-02 — James, live: pasted this exact log line
-          // ("registered 1s ago") and asked to fix it. Traced, not
-          // silently suppressed: this specific case — a probe missed
-          // within a few seconds of the system's OWN registration — is
-          // the exact boundary case this 2026-07-24 fallback was built
-          // to handle gracefully, and it IS handling it correctly (no
-          // gap raised, online correctly reported). The real annoyance
-          // is the WARNING LOG for a benign, expected startup race, not
-          // a functional bug — the underlying online=true fallback
-          // logic above is unchanged. A miss this close to registration
-          // (<5s) is downgraded to a one-time, quiet console.log; a miss
-          // further from registration (a system that's been up a while
-          // and is still getting missed) keeps the real console.warn,
-          // since THAT pattern is the one actually worth a human's
-          // attention.
-          const sinceRegMs = Date.now() - lastSeen;
-          const logKey = `${name}:${Math.floor(Date.now() / 60000)}`; // one per minute per system, matching _remediatedGaps' own real granularity
-          if (!_registryFallbackLogged.has(logKey)) {
-            _registryFallbackLogged.add(logKey);
-            const msg = `[diagnostic] '${name}' missed its ${cfg.healthPath} probe but registered ${Math.round(sinceRegMs / 1000)}s ago — treating as ONLINE, matching orchestrator. No gap raised.`;
-            if (sinceRegMs < 5000) console.log(msg);
-            else console.warn(msg);
-          }
-        }
-      } catch (_) {
-        onlineSource = 'probe-only(registry unreachable)';
-      }
-    }
+    // §PR2 0.39.328 — no probe: online is the pulse (lib/pulse-watch.js, fed by orchestrator's /sse). uptime and jobs
+    // came only from the probe's body; they are left at 0 rather than invented.
+    let uptime = 0, jobs = 0;
+    const online = PULSE.isOnline(_pulseAs(name));
+    const onlineSource = 'heartbeat';
     state.onlineSource = onlineSource;
 
     // Feed to baseline
@@ -877,24 +823,14 @@ function startService() {
           // hiccup can raise this gap alone; a real pulseMissed count says
           // orchestrator waited multiple full intervals and heard nothing.
           let pulseNote = '';
-          try {
-            const reg = await new Promise((resolve) => {
-              const rq = http.get(`http://127.0.0.1:9000/api/registry`, { timeout: 1000 }, r => {
-                let b = ''; r.on('data', d => b += d);
-                r.on('end', () => { try { resolve(JSON.parse(b)); } catch { resolve(null); } });
-              });
-              rq.on('error', () => resolve(null));
-              rq.on('timeout', () => { rq.destroy(); resolve(null); });
-            });
-            const missed = reg && reg.registry && reg.registry[name] && reg.registry[name].pulseMissed;
-            if (missed) pulseNote = ` — orchestrator's own pulse watchdog also missed ${missed} consecutive heartbeat(s) from ${name}`;
-          } catch (_) { /* registry unreachable — gap still stands on the probe alone */ }
+          const _pst = PULSE.state().find(x => x.id === _pulseAs(name));
+          if (_pst && _pst.gap) pulseNote = _pst.gap.kind === 'never-announced' ? ' — it has never announced itself' : ` — no heartbeat for ${Math.round(_pst.gap.silentForMs / 1000)}s (expected every ${Math.round((_pst.gap.expectedEveryMs || 10000) / 1000)}s)`;
 
           const gap = {
             type: 'system_offline', system: name, port: cfg.port,
             severity: 'high', offlineMs,
             fix: `Start ${name}: node ${name}/boot.js or node service/${name}-service.js`,
-            body: `${name} offline for ${Math.round(offlineMs/1000)}s — :${cfg.port} not responding${pulseNote}`,
+            body: `${name} offline for ${Math.round(offlineMs/1000)}s${pulseNote}`,
           };
           issues.push(gap);
 
@@ -1830,6 +1766,13 @@ function startService() {
         openGaps: openGaps.size,
         ts: Date.now(),
       }));
+      return;
+    }
+
+    // §PR2 0.39.328 — what the pulse watch sees: every system that announced, its last beat, its open gap
+    if (url.pathname === '/pulse') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, systems: PULSE.state(), rotations: PULSE.rotations, ts: Date.now() }));
       return;
     }
 

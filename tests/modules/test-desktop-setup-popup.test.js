@@ -151,6 +151,20 @@ async function main() {
       assert.match(await page.textContent('.dsu-log'), /downloading https/);
     });
 
+    // §0.39.343 — James: "the log keeps pulling to the top, can you pull it down to the current outputs of the log"
+    await test('DS-09', 'the log follows the newest line; scrolled up, it stays put; back at the bottom, it follows again', async () => {
+      const at = () => page.evaluate(() => { const l = document.querySelector('.dsu-log'); return { top: l.scrollTop, max: l.scrollHeight - l.clientHeight }; });
+      const more = (n) => page.evaluate((n) => { for (let i = 0; i < n; i++) STATUS.log.push({ msg: `console: line ${STATUS.log.length}` }); return _dsuPoll(); }, n);
+      await more(60);
+      let p = await at(); assert.ok(p.max > 0, 'the log overflows'); assert.ok(p.max - p.top < 2, `follows the newest line: ${JSON.stringify(p)}`);
+      await page.evaluate(() => { document.querySelector('.dsu-log').scrollTop = 0; });
+      await more(10);
+      p = await at(); assert.strictEqual(p.top, 0, 'scrolled up to read: it stays put');
+      await page.evaluate(() => { const l = document.querySelector('.dsu-log'); l.scrollTop = l.scrollHeight; });
+      await more(10);
+      p = await at(); assert.ok(p.max - p.top < 2, 'back at the bottom: it follows again');
+    });
+
     await test('DS-07', 'open again while it runs: straight to the progress; closing never stops it', async () => {
       await page.click('.dsu-foot button');
       assert.strictEqual(await page.$$eval('#dsu-modal', e => e.length), 0);

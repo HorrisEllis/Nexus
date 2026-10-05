@@ -96,3 +96,14 @@ spec:
     - "friction computation matches failed_events / total_events over the configured window"
     - "/cfr/health falls back to local diagnostic field when Guardian unreachable, never errors"
     - "registry-components.js (once written) registers all components listed above at boot"
+
+## ADDENDUM 2026-10-05 — 0.39.342, the diagnostic listens to the pulse; no polling (announce-pulse-repair PR1–PR3)
+# James: "remove the polling then. need the systems to anounce themselves. that way i can add new systems
+# automatically. also optimizes performance." · "use negative space reasoning for missed heartbeats."
+# Liveness is the pulse, not a probe: the diagnostic listens to orchestrator's /sse (every createPulse beat) and reads
+# /api/registry once — at start and after a lost stream. The 15 s /health probe of every system and the per-system
+# registry checks are gone. lib/pulse-watch.js: each beat a WARP 2 link expecting the next within interval × 1.5; a
+# broken expectation is a gap naming the system and its last beat; an expected system that never announces is a gap
+# after 60 s. A system that announces itself is adopted (SYSTEMS gains it; a baseline monitor; no file edited).
+# SYSTEMS keeps only what the registry cannot say: a data dir not at data/<id>, pulseAs (clear-glass → nexus-wire,
+# forge-shell → orchestrator), optional. GET /pulse shows the watch. Open: PR4 deviation quickens the pulse; PR5 repair.

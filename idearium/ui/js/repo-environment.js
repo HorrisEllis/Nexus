@@ -62,7 +62,7 @@ test     ${(pl.suite || []).map(i => escapeHtml(i.command)).join(' ; ') || `${pl
       <div class="action-row">
         <button class="action-btn primary" onclick="envSetup()" title="set up the VM: the desktop account, memory and CPUs, what this codebase needs — with its progress">⚙ set up environment</button>
         <button class="action-btn" onclick="renderRepoEnvironment(CURRENT_API_REPO)">↻ check again</button>
-        ${d.setup ? `<span class="ds-mono" style="opacity:.7">setup job: ${escapeHtml(d.setup.state)}${d.setup.last && d.setup.last.length ? ` — ${escapeHtml(String((d.setup.last[d.setup.last.length - 1] || {}).text || d.setup.last[d.setup.last.length - 1] || '').slice(0, 90))}` : ''}</span>` : ''}
+        ${d.setup ? `<span class="ds-mono" style="opacity:.7">setup job: ${escapeHtml(d.setup.state)}${d.setup.last && d.setup.last.length ? ` — ${escapeHtml(((e) => typeof e === 'string' ? e : (e && (e.msg || e.text)) || '')(d.setup.last[d.setup.last.length - 1]).slice(0, 90))}` : ''}</span>` : ''}
       </div></div>
     <div class="ds"><div class="ds-label">environment options — ${(d.catalogue || []).length}${dirty ? ` · <span style="color:var(--amber)">${dirty} unsaved</span>` : ''}</div>
       <div class="action-row"><button class="action-btn" onclick="REPOENV.showOptions=!REPOENV.showOptions;_envPaint()">${REPOENV.showOptions || dirty ? 'hide options' : `show options (${(d.catalogue || []).length})`}</button></div>

@@ -89,7 +89,7 @@ export function getValue(keyPath) {
  * A human write and a copilot write differ ONLY in the actor field.
  */
 export function setConfig(keyPath, value, { actor = 'user' } = {}) {
-  const { parts, real } = core.resolve(keyPath);
+  const { parts, real, def } = core.resolve(keyPath);
   const coerced = core.validate(keyPath, value, actor);
 
   const state = _load();
@@ -99,8 +99,10 @@ export function setConfig(keyPath, value, { actor = 'user' } = {}) {
   state.updatedBy = actor;
   _save(state);
 
-  console.log(`[idearium/config] ${real} -> ${JSON.stringify(coerced)} (actor: ${actor})`);
-  return { type: 'idearium.config.set', key: real, value: coerced, actor, at: state.updatedAt };
+  // a secret's value is never logged or put in the event — only that it was set
+  const shown = def && def.secret ? '(secret — set, not shown)' : coerced;
+  console.log(`[idearium/config] ${real} -> ${def && def.secret ? shown : JSON.stringify(coerced)} (actor: ${actor})`);
+  return { type: 'idearium.config.set', key: real, value: shown, actor, at: state.updatedAt };
 }
 
 /**
@@ -120,8 +122,9 @@ export function resetConfig(keyPath, { actor = 'user' } = {}) {
   state.updatedBy = actor;
   _save(state);
   const effective = core.getAt(_load().values, parts);
-  console.log(`[idearium/config] reset ${real} -> ${JSON.stringify(effective)} (actor: ${actor})`);
-  return { type: 'idearium.config.reset', key: real, value: effective, actor, at: state.updatedAt };
+  const shownReset = def && def.secret ? '(secret — reset, not shown)' : effective;
+  console.log(`[idearium/config] reset ${real} -> ${def && def.secret ? shownReset : JSON.stringify(effective)} (actor: ${actor})`);
+  return { type: 'idearium.config.reset', key: real, value: shownReset, actor, at: state.updatedAt };
 }
 
 /**

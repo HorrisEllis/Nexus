@@ -119,8 +119,16 @@ function _dsuPaint() {
       : state === 'failed' ? '<button class="action-btn" onclick="_dsuClose()">Close</button><button class="action-btn primary" onclick="_dsu.step=1;_dsu.error=null;_dsuPaint()">Try again</button>'
       : `<button class="action-btn" onclick="_dsuClose()">Close</button>${typeof openRepoDesktop === 'function' ? '<button class="action-btn primary" onclick="const u=_dsu.repo.uuid;_dsuClose();openRepoDesktop(u)">Open desktop</button>' : ''}`;
   }
+  // §0.39.343 — James: "the log keeps pulling to the top, can you pull it down to the current outputs of the log". Each
+  // repaint rebuilt the log at the top. It now follows the newest line — unless he has scrolled up to read, then it
+  // stays where he is until he scrolls back to the bottom.
+  const prevLog = el.querySelector('.dsu-log');
+  const follow = !prevLog || (prevLog.scrollHeight - prevLog.scrollTop - prevLog.clientHeight) < 24;
+  const keepTop = prevLog ? prevLog.scrollTop : 0;
   el.querySelector('.dsu-box').innerHTML = `<div class="dsu-head"><h3>Set up the desktop</h3><button class="dsu-x" aria-label="close" onclick="_dsuClose()">×</button></div>
     <div class="dsu-steps">${steps}</div>${err}<div class="dsu-body">${body}</div><div class="dsu-foot">${foot}</div>`;
+  const logEl = el.querySelector('.dsu-log');
+  if (logEl) logEl.scrollTop = follow ? logEl.scrollHeight : keepTop;
 }
 
 function _dsuRead() {
