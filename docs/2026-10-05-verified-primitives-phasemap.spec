@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     verified-primitives
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-05
     release:  0.39.309 (base) → 0.39.310
     uuid:     nexus-verified-primitives-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -66,6 +66,8 @@ spec:
   phases:
     VP0_map_and_atlas:
       layer: foundation
+      systems: [idearium]
+      value: { score: 3, cost: S, for: [foundation], why: "the loop written down before any of it is built; provenance named" }
       status: DONE (0.39.310)
       depends_on: []
       files: [docs/2026-10-05-verified-primitives-phasemap.spec, docs/atlases/idearium-atlas.md, docs/SPEC-REGISTRY.spec]
@@ -77,6 +79,8 @@ spec:
 
     VP1_confidence_from_evidence:
       layer: library
+      systems: [lib, idearium, clear-glass]
+      value: { score: 5, cost: M, for: [quality, safety, foundation], why: "every later step trusts this number; it must be evidence, not wording" }
       status: OPEN
       depends_on: [VP0_map_and_atlas]
       files: [lib/confidence.js]
@@ -90,6 +94,8 @@ spec:
 
     VP2_adversarial_review:
       layer: service
+      systems: [copilot, lib, raid]
+      value: { score: 4, cost: M, for: [quality, safety], why: "another agent breaks it before he relies on it; only reproduced findings count" }
       status: OPEN
       depends_on: [VP1_confidence_from_evidence]
       files: [lib/agent-council.js, copilot/lifeline.js, meta/adversary-suite.js]
@@ -102,6 +108,8 @@ spec:
 
     VP3_the_repo_model_of_the_user:
       layer: service
+      systems: [copilot, intelligence, lib, idearium]
+      value: { score: 4, cost: L, for: [daily-use, quality], why: "agents stop guessing what he meant; one model, a lens per repo" }
       status: OPEN
       depends_on: [VP0_map_and_atlas]
       files: [copilot/lib/person-model/index.js, copilot/lib/user-model.js, lib/repo-hat-memory.js, intelligence/gap/hunter.js]
@@ -117,6 +125,8 @@ spec:
 
     VP4_the_primitive_field:
       layer: library
+      systems: [lib, idearium, loom]
+      value: { score: 5, cost: L, for: [compounding, foundation], why: "proven parts are reused; every build after it costs less" }
       status: OPEN
       depends_on: [VP1_confidence_from_evidence, VP2_adversarial_review]
       files: [lib/component-store.js]
@@ -133,6 +143,8 @@ spec:
 
     VP5_provenance:
       layer: library
+      systems: [lib, idearium]
+      value: { score: 4, cost: M, for: [ownership, safety], why: "every primitive can say where it came from and what proved it" }
       status: OPEN
       depends_on: [VP4_the_primitive_field]
       files: [lib/component-store.js, lib/node-export.js, docs/atlases/idearium-atlas.md]
@@ -145,6 +157,8 @@ spec:
 
     VP6_debug_and_intelligence_in_the_desktop:
       layer: runtime
+      systems: [cos, idearium, intelligence, lib]
+      value: { score: 3, cost: L, for: [quality, daily-use], why: "a failure in the VM is a gap with its cause, beside the screen he is looking at" }
       status: OPEN
       depends_on: [VP1_confidence_from_evidence]
       files: [cos/testenv/index.js, lib/cos-debug-report.js, lib/gap-field.js, idearium/ui/desktop.html]
@@ -158,7 +172,9 @@ spec:
 
     VP7_the_settings_tab_in_categories:
       layer: ui
-      status: BUILT (0.39.310)
+      systems: [idearium]
+      value: { score: 3, cost: S, for: [daily-use], why: "settings he can find; nothing shown twice; the desktop settings out of the way" }
+      status: DONE (0.39.310; its test moved onto Clear Glass in 0.39.311)
       depends_on: [VP0_map_and_atlas]
       files: [idearium/ui/js/repo-settings.js, idearium/ui/js/app.js, idearium/ui/js/repo-environment.js, idearium/ui/settings.html, idearium/ui/index.html]
       does: >-

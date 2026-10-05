@@ -666,3 +666,5 @@ The environment's option list and the desktop's VM settings stay hidden until a 
 - **The Code tab as the one review surface for new code:** one path, proposed → staged → applied → committed.
 
 UI checks run in Clear Glass (`clear-glass/src/driver/glass.js`), never Playwright.
+
+**Everything asked on 2026-10-05, and where it is mapped:** the session inventory in `docs/2026-10-05-cli-data-code-phasemap.spec` lists each request, quoted, beside the phase that holds it. The defects found along the way are mapped there too, as HG1–HG7.

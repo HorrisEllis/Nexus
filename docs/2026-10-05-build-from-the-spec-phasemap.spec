@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.2.0
+    version:  1.3.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; SB1–SB3 built (0.39.305), the author-reuse fix (0.39.306); SB4–SB14 open. 1.1.0: the whole pipeline, idea → .spec → blocks → registry → components, reuse first. 1.2.0: BC1 (0.39.308, built BEFORE it was mapped — drift, recorded below) and BC2 (0.39.309) — the build agent gets all of the hat/repo context, through the editable prompt blocks"
+    status:   "MAPPED 2026-10-05; SB1–SB3 built (0.39.305), the author-reuse fix (0.39.306); SB4–SB14 open. 1.1.0: the whole pipeline, idea → .spec → blocks → registry → components, reuse first. 1.2.0: BC1 (0.39.308, built BEFORE it was mapped — drift, recorded below) and BC2 (0.39.309) — the build agent gets all of the hat/repo context, through the editable prompt blocks. 1.3.0: BC3 (.node record), BC4 (relational-context wired or archived); systems: and value: on BC phases"
     axioms:   docs/AXIOMS-v3.1.md — §17.4 every build is reproducible (from an empty machine, the repo + its specs
               recreate the system), §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost, §1.2 nothing
               silently fails, §5.6 structural self-similarity, §16.4 simple things stay simple.
@@ -104,6 +104,7 @@ spec:
   phases:
     SB0_map:
       layer: foundation
+      systems: [idearium]   # 0.39.312 — declared; it read on no system's Phasemap tab
       status: DONE
       depends_on: []
       files: [docs/2026-10-05-build-from-the-spec-phasemap.spec, docs/SPEC-REGISTRY.spec]
@@ -332,7 +333,9 @@ spec:
     # deviate They are law" · "They need context. All of it. From the hat/repo"
     BC1_build_context:
       layer: library
-      status: BUILT (0.39.308) — DRIFT
+      systems: [idearium, lib, loom]
+      value: { score: 4, cost: M, for: [compounding, quality], why: "a build agent sees what its file relates to; fewer tokens, every lower file seen" }
+      status: DONE (0.39.308) — built before it was mapped; the drift is recorded below
       depends_on: []
       files: [lib/build-context.js, idearium/spec-engine/index.js, idearium/api/index.js, tests/modules/test-build-context.test.js]
       does: >-
@@ -356,7 +359,9 @@ spec:
 
     BC2_the_build_agent_gets_all_of_the_hat_and_repo_context:
       layer: api
-      status: BUILT (0.39.309)
+      systems: [idearium, lib, loom]
+      value: { score: 5, cost: M, for: [quality, ownership], why: "all of the hat/repo context reaches the builder, and only through blocks he can edit" }
+      status: DONE (0.39.309)
       depends_on: [BC1_build_context]
       files: [lib/repo-prompt-blocks.js, idearium/api/index.js, lib/build-context.js, idearium/event-taxonomy.cjs,
               loom/maps/build-context-map.js, loom/bootstrap.js, docs/build-context.spec, scripts/bench-file-prompt.js]
@@ -376,3 +381,35 @@ spec:
         - { says: "a file build's prompt carries every enabled build block, a disabled one sends nothing", check: { kind: tests, run: "node tests/modules/test-build-context.test.js" } }
         - { says: "the real server's model receives it", check: { kind: tests, run: "node tests/modules/test-prove-loop.test.js" } }
         - { says: "build-context is in loom with its real wires", check: { kind: tests, run: "node tests/modules/test-build-context.test.js" } }
+
+    BC3_what_a_build_was_sent_as_a_node:
+      layer: library
+      systems: [idearium, lib, copilot]
+      value: { score: 3, cost: S, for: [ownership, safety], why: "every dispatch can be replayed and explained from a node, not only from a response field" }
+      status: OPEN — James's call (which node type)
+      depends_on: [BC2_the_build_agent_gets_all_of_the_hat_and_repo_context]
+      files: [lib/node-schemas/schema.injection, lib/node-export.js, idearium/api/index.js]
+      does: >-
+        "Also what about the .node types." What a build agent was sent (persona as edited, the build blocks used, their
+        chars, the sources and what failed) is today only in the build response and the chunk.complete event. It becomes
+        a node. NODE-TAXONOMY.md's `.injection` exists for exactly this ("every time something gets prepended to a
+        dispatch, there'd be a real node recording what and why") but its schema is copilot's call-model shape
+        (provider, primed, injectedToolGuide…). Either the schema widens to any dispatch (source: copilot | build) or a
+        new type is added — his call. The chunk's `.chunk` node then links to it.
+      proof: "a file build writes one node naming the blocks it sent, their sizes and its chunk; a failed source is on it"
+
+    BC4_relational_context_wired_or_archived:
+      layer: library
+      systems: [lib, loom]
+      value: { score: 2, cost: S, for: [quality], why: "a module with no caller is debt; one upstream walk, not two" }
+      status: OPEN
+      depends_on: [BC1_build_context]
+      files: [lib/relational-context.js, lib/build-context.js, lib/registry-harness.js]
+      does: >-
+        Found: lib/relational-context.js (R10, "everything exists in relation to something") is required only by its
+        own test. BC1 walks the same upstream wires through lib/registry-harness.js's index (no second LoomDriver). Two
+        implementations of one walk is §16.5 debt. Either build-context calls relational-context's upstreamDependencies
+        (and its token comparison becomes the build context's measured saving), or relational-context is archived with
+        a pointer to build-context — not deleted (§0.3). Proposed: wire its token-count gate into BC1's measurement and
+        archive the rest.
+      proof: "exactly one upstream walk is called in the build path; the other is archived with a pointer, or wired and tested"

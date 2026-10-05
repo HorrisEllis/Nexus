@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     cli-data-code
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-05
     release:  0.39.310 (base) → 0.39.311
     uuid:     nexus-cli-data-code-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.ui · idearium.api · cli · cortex · every system's own store
-    status:   "MAPPED 2026-10-05; nothing built here yet. 0.39.311 also moved the Settings test off Playwright onto Clear Glass's driver (VP7's proof)."
+    status:   "MAPPED 2026-10-05; nothing built here yet. 0.39.311 moved the Settings test onto Clear Glass's driver. 1.1.0 (0.39.312): HG1–HG7 (defects found on the way), the session inventory, systems: and value: on every phase"
     axioms:   docs/AXIOMS-v3.1.md — §3.3 map before build, §8.6 reuse before build, §5.9 every system is sovereign,
               §10.1 one write authority per data type, §10.2 projections are derived, §10.3 competing truths are a
               failure, §9.1 RAID is the write authority for cross-system requests, §4.3 security, §0.3 nothing lost.
@@ -72,6 +72,8 @@ spec:
   phases:
     CL1_commands_declared_by_their_system:
       layer: foundation
+      systems: [lib, cli, guardian, idearium, cos, copilot, cortex, ollama]
+      value: { score: 4, cost: M, for: [foundation, daily-use], why: "a verb exists once, owned by its system; terminal and Agent tab cannot drift" }
       status: OPEN
       depends_on: []
       files: [lib/command-registry.js, guardian/commands, idearium/cli/index.js, cos/cli/index.js, copilot/cli.js, cli/nexus.js]
@@ -82,6 +84,8 @@ spec:
       proof: "every verb cli/nexus.js and the Agent tab list comes from a .command node; one with no route is reported"
     CL2_the_agent_tab_is_the_endpoint:
       layer: ui
+      systems: [idearium, raid]
+      value: { score: 4, cost: M, for: [daily-use, safety], why: "every command from one place, through RAID, never a shell" }
       status: OPEN
       depends_on: [CL1_commands_declared_by_their_system]
       files: [idearium/ui/js/app.js, idearium/api/index.js]
@@ -92,6 +96,8 @@ spec:
       proof: "a verb from each system runs from the Agent tab; a writing verb asks; nothing spawns a shell; each call is in the ledger"
     DS1_cortex_the_catalog:
       layer: foundation
+      systems: [cortex, intelligence, lib]
+      value: { score: 5, cost: M, for: [foundation, safety], why: "nothing can move home safely until every table has a named owner" }
       status: OPEN
       depends_on: []
       files: [cortex/memory/jaa-db.js, lib/context-atlas.js, intelligence/lattice/associative-lattice.js]
@@ -102,6 +108,8 @@ spec:
       proof: "the catalog names an owner for every table in the shared store; an unowned table is a gap"
     DS2_one_system_moves_home:
       layer: foundation
+      systems: [cortex]
+      value: { score: 4, cost: XL, for: [foundation, ownership], why: "each system owns its data; repeated once per system" }
       status: OPEN
       depends_on: [DS1_cortex_the_catalog]
       files: [cortex/memory/jaa-db.js, "<system>/data/"]
@@ -112,6 +120,8 @@ spec:
       proof: "after a move, no module reads the old path (the shim's warnings are zero over a full test run), the catalog points at the new home"
     CT1_one_pending_change_path:
       layer: service
+      systems: [idearium, lib]
+      value: { score: 5, cost: M, for: [quality, safety], why: "one truth for code not yet in the repo; no change shown pending and applied at once" }
       status: OPEN
       depends_on: []
       files: [lib/repo-inject.js, lib/code-edit.js, idearium/repo/work-surface.js, lib/repo-git.js]
@@ -122,6 +132,8 @@ spec:
       proof: "a change cannot be shown pending in one view and applied in another; each move is recorded"
     CT2_the_code_tab:
       layer: ui
+      systems: [idearium, clear-glass]
+      value: { score: 4, cost: M, for: [daily-use], why: "one place to review, apply and follow the agents' code" }
       status: OPEN
       depends_on: [CT1_one_pending_change_path]
       files: [idearium/ui/js/code-tab.js, idearium/ui/js/work-surface.js]
@@ -130,6 +142,114 @@ spec:
         apply / reject / revert / stage / commit, from CT1), Generation (what each agent is writing now, the build context
         it was sent, attempts, verdict), Search (today's tab). Provenance on every file. Verified in Clear Glass.
       proof: "in Clear Glass: a proposed change appears under Changes, applying it moves it to applied, the Generation pane shows the running build"
+
+
+    # ── Found during this session, pre-existing, not caused by it — mapped so none is lost (§1.2, §4.2) ─────────
+    HG1_components_store_map_parses:
+      layer: foundation
+      systems: [idearium, loom, docs]
+      value: { score: 2, cost: S, for: [quality], why: "a phasemap that does not parse is invisible to every tool that reads maps" }
+      status: OPEN
+      depends_on: []
+      files: [docs/2026-09-27-components-store-and-atlases-phasemap.spec]
+      does: "It fails YAML at line 24 (\"expected ':' after a mapping key\"), unchanged since before 0.39.308. Fix the line; the content stays."
+      proof: "the file parses as YAML"
+      conditions:
+        - { says: "the file parses as YAML", check: { kind: command, run: "node -e \"require('js-yaml').load(require('fs').readFileSync('docs/2026-09-27-components-store-and-atlases-phasemap.spec','utf8'))\"" } }
+    HG2_loom_bootstrap_rejections:
+      layer: foundation
+      systems: [loom]
+      value: { score: 3, cost: L, for: [quality, foundation], why: "460 rejected declarations are 460 places the self-model is wrong" }
+      status: OPEN
+      depends_on: []
+      files: [loom/bootstrap.js, loom/maps/]
+      does: >-
+        A from-scratch bootstrap exits 1 with 460 rejections on 0.39.309's base (mostly loom.wire-endpoints-exist:
+        page scripts and hand-mapped files with no hooks). 0.39.309–310 fixed the ones their maps touched (spec-engine
+        and app.js / agent-blocks.js boundary hooks). The rest are classified by cause and fixed per map.
+      proof: "a from-scratch bootstrap reports 0 rejections"
+    HG3_bv09_the_detector_and_files:
+      layer: library
+      systems: [lib, idearium]
+      value: { score: 3, cost: S, for: [quality], why: "a failing test that everyone learns to ignore hides the next real failure" }
+      status: OPEN
+      depends_on: []
+      files: [tests/modules/test-build-verify.test.js, lib/seam/detector.js]
+      does: "test-build-verify BV-09 (\"the detector judges a file chunk as a file\") fails on 0.39.307's base and since. Root-cause it: the test or the detector, said which."
+      proof: "test-build-verify passes 11/11"
+      conditions:
+        - { says: "test-build-verify passes", check: { kind: tests, run: "node tests/modules/test-build-verify.test.js" } }
+    HG4_scripts_inside_the_sandbox:
+      layer: foundation
+      systems: [cortex, idearium, lib, scripts]
+      value: { score: 3, cost: S, for: [safety], why: "a benchmark or probe script wrote a spec into data/cortex twice this session" }
+      status: OPEN
+      depends_on: []
+      files: [lib/test-sandbox.js, scripts/]
+      does: >-
+        lib/test-sandbox.js arms only for test processes (tests/, *.test.js, a marker). A script under scripts/ that
+        loads a store writes the real tree unless it sets NEXUS_TEST_SANDBOX itself (scripts/bench-file-prompt.js does,
+        since 0.39.311). Decide per script — benchmarks and probes sandboxed by default, maintenance scripts not — and
+        make the default structural, not remembered.
+      proof: "running every scripts/bench-* and probe-* leaves data/ and idearium/data unchanged"
+    HG5_bootstrap_keeps_registration_times:
+      layer: foundation
+      systems: [loom]
+      value: { score: 2, cost: S, for: [quality], why: "a registry diff should show what changed, not 8,700 timestamps" }
+      status: OPEN
+      depends_on: []
+      files: [loom/bootstrap.js, loom/schema/index.js]
+      does: >-
+        Every bootstrap rewrites registeredAt on every entry, and the scanner numbers wires (source.wire.N) so a new file
+        renumbers the rest. 0.39.309–310 kept unchanged entries' registeredAt by hand. Make it the bootstrap's own rule:
+        an entry identical but for its timestamp keeps the old one; wire ids from their endpoints, not a counter.
+      proof: "bootstrapping twice with no code change leaves registry.json byte-identical"
+    HG6_scanner_status_vocabulary:
+      layer: foundation
+      systems: [loom]
+      value: { score: 2, cost: S, for: [quality], why: "a phase marked BUILT read as pending — finished work looks unstarted" }
+      status: OPEN
+      depends_on: []
+      files: [loom/scanners/phasemap-map.js]
+      does: >-
+        The scanner counts a phase done only when its status starts with DONE (or ✓ / ← DONE / COMPLETE). BC1, BC2, VP7
+        said "BUILT (…)" and read as pending until 0.39.312 rewrote them. Either BUILT joins the vocabulary (counted
+        across every map first, as the scanner's own header did for DONE) or the maps' convention is written down.
+      proof: "every phase whose status says it is built reads done"
+    HG7_the_law_and_clear_glass:
+      layer: foundation
+      systems: [clear-glass, docs]
+      value: { score: 3, cost: S, for: [ownership], why: "the law says Playwright; James and the code say Clear Glass" }
+      status: OPEN — James's word (Q1)
+      depends_on: []
+      files: [docs/AXIOMS-v3.1.md]
+      does: "AXIOMS §4.1 \"UI is tested via Playwright\" → \"UI is tested in Clear Glass (clear-glass/src/driver/glass.js)\". A law changes only on his word; proposed, not edited."
+      proof: "§4.1 names Clear Glass, with a dated addendum quoting him"
+
+
+  # ── Session inventory, 2026-10-05 — every request, where it is mapped (James: "make sure this is all mapped.") ──
+  session_inventory:
+    - { said: "Tell me about nexus. Tell me about idearium. How it chunks, reduces tokens.", where: "answered, no build asked — docs/atlases/idearium-atlas.md" }
+    - { said: "What about the graphs? Agents. Memory.", where: "answered; the open graph/memory work is docs/2026-10-02-emerge-field-memory-build-phasemap.spec MR1–MR11, RF1" }
+    - { said: "traversal of chunks, primitives, … the relationship between words … The boundaries. Learning to code from that", where: "docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec FG1–FG6 (containment tree, token budgets, summaries, contextFor, recursive build, calls/emits/tested_by); emerge map MR7 recipes, MR8 crystallization; BC1 (built)" }
+    - { said: "We need the agents to use it.", where: "build-from-the-spec BC1 (0.39.308), BC2 (0.39.309) — built" }
+    - { said: "Also what about the .node types.", where: "build-from-the-spec BC3 — open, his call" }
+    - { said: "combining primitives or invariants to build higher leverage code for less tokens", where: "BC1 (built: interfaces, invariants, primitives); VP4 the primitive field; emerge CX0/CL1/MR8" }
+    - { said: "Parse rhe axioms in the docs folder. Do not deviate They are law", where: "BC1's drift (the 0.39.308 audit), closed in BC2; HG7 the §4.1 text" }
+    - { said: "They need context. All of it. From the hat/repo", where: "BC2 — built" }
+    - { said: "Clearglass can be used to verify, lifeline can ask other agents. Adversarial agents. Use the confidence score.", where: "verified-primitives VP1, VP2" }
+    - { said: "Can reuse any component in nexus, from loom or the component registery.", where: "VP4" }
+    - { said: "each repo has a model of the user … gaps in communication, ledger for past context", where: "VP3" }
+    - { said: "each passing test, verified component, gets fed into the primitive field", where: "VP4 (the gate into CX0/CL1/MR8)" }
+    - { said: "add this to the idearium atlas. Like I want provinance.", where: "VP0 (built), VP5" }
+    - { said: "Integrating the debug and intelligence system with the desktop envirement … debian for each test envirement", where: "VP6" }
+    - { said: "the settings tab needs to be cleaned up … catagories of options like github … In tabs.", where: "VP7 — built" }
+    - { said: "Don't just agree. Give input", where: "this map's input: section, and each map's found: section" }
+    - { said: "No playwright. ClearGlass only.", where: "VP7's test on clear-glass/src/driver/glass.js (0.39.311); HG7 the law's text" }
+    - { said: "I want the agent cli tab to be the end point for all cli commands.", where: "CL1, CL2" }
+    - { said: "Each system needs to be in charge of its own data. … Cortex is the book keeper, with the associative lattice.", where: "DS1, DS2 (children of sovereign-node P5)" }
+    - { said: "the code tab in idearium should probably be for new code in the repo … code generation, and uncommited change, the work surface", where: "CT1, CT2" }
+    - { said: "make sure this is all mapped.", where: "this inventory; HG1–HG6 (defects found on the way); every phase declares systems: and value:" }
 
   open_questions:
     - "Q1: amend docs/AXIOMS-v3.1.md §4.1 from 'UI is tested via Playwright' to 'UI is tested in Clear Glass (clear-glass/src/driver/glass.js)'? A law changes only on your word."
