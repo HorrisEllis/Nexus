@@ -373,6 +373,7 @@ const SUITES = [
   'test-nexstore-census.test.js',  // 0.39.300 N0 — every data shape in the tree classified into the seven kinds; the type catalogue
   'test-nexstore-log.test.js',     // 0.39.300 N1 — the record frame and the log: 25 SIGKILLs mid-append, every ack survives, the chain verifies, the torn tail reported
   'test-warp2.test.js',   // 0.39.323 EM2 — WARP 2: links with causes, expectations as gaps, constraints first, 1.x through the adapter
+  'test-agent-context-always.test.js',   // 0.39.325 SB32/SB33 — context on every send; the persona on the live index; the agent runs the pipeline
   'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree
   'test-emerge-core.test.js',   // 0.39.321 EM1 — Emerge core: rejected by id, a gap names its input, a lens cannot write, one seed one history
   'test-route-contracts.test.js',   // 0.39.320 EV0 (2)(3) — every served route in its system's contract, and nothing more

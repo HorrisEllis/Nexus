@@ -597,7 +597,13 @@ function startService() {
 
     let online = false, uptime = 0, jobs = 0, onlineSource = 'probe';
 
-    if (cfg.preferHeartbeat) {
+    // §0.39.327 — James: "i though we switched to heartbeat and pulse system". Every system pulses to orchestrator
+    // (createPulse → POST /api/heartbeat every 10 s; orchestrator watches for missed pulses). Only clear-glass read the
+    // pulse first; every other system was HTTP-probed first, so a system still booting "missed its /health probe" and
+    // was rescued by the registry a moment later — the log he pasted. The pulse is now first for every system; the
+    // probe stays as the fallback for a system orchestrator has not heard from (no pulse yet, or orchestrator down).
+    // preferHeartbeat:false opts a system out.
+    if (cfg.preferHeartbeat !== false) {
       const lastSeen = await _checkRegistry(1500);
       if (lastSeen) { online = true; onlineSource = 'heartbeat'; }
     }
