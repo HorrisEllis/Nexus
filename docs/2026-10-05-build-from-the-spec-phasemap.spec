@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.5.0
+    version:  1.6.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim — spelling and all.
       `does:` is the coder's reading of it, his to correct. A phase whose `james:` says none came from the coder, and says
@@ -123,6 +123,18 @@ spec:
     James, 2026-10-05: "like does it reflect the systems in nexus? like each component has to have at least one
     capability, with at least one command, and events, each a node each. like i want this in my words. i don't want
     anyone to think your doing all the thinking for me"
+
+  origin_1_6_0: >
+    James, 2026-10-05: "okay but i want that to be the default. then each new system can slot into nexus automatically.
+    right?"
+
+  found_1_6_0:
+    - >-
+      Not yet automatic: Nexus keeps four hand-written lists of its systems — lib/nexus-self/systems.js (15 systems),
+      nexus/autopilot.js (the kernels it starts), orchestrator/orchestrator.config.json (ports) and
+      loom/scanners/spec-map.js SPEC_DIRS (6 folders — it already misses most systems' specs). A new system is invisible
+      until someone edits all four. lib/system-nodes.js writes a .system node per system, but into data/, which is state
+      and never ships, so nothing can discover a system from it.
 
   found_1_5_0:
     - >-
@@ -538,7 +550,7 @@ spec:
       layer: foundation
       status: OPEN
       james: '"like each component has to have at least one capability, with at least one command, and events, each a node each."'
-      overlaps: "lib/system-nodes.js (capability + command nodes, 0.39.271); SB20, SB21"
+      overlaps: "lib/system-nodes.js (capability + command nodes, 0.39.271); loom/templates/system-scaffold.js (1.6.0: the default); SB20, SB21"
       depends_on: [SB20_each_system_owns_its_own]
       files: [lib/system-nodes.js, lib/node-schemas.js, loom/data/events.json]
       does: >-
@@ -546,7 +558,28 @@ spec:
         that exercises it, and the events it emits and hears — and each of those is a node of its own (.capability,
         .command, .event) in its system's data folder, with its schema, indexed in that system's JAA tables. A component
         missing any of the three is named as a gap in its system's contract node, not passed. orchestrator, diagnostic and
-        cos get component registries so they can be measured at all.
+        cos get component registries so they can be measured at all. 1.6.0, his "i want that to be the default": the
+        system scaffold (loom/templates/system-scaffold.js) and genesis generate every new component in this shape — a
+        component cannot be scaffolded without its capability, command and events.
       proof: "every component in every system has ≥1 capability, ≥1 command and its events as nodes; one missing any is named"
       conditions:
         - { says: "every component in every system has ≥1 capability, ≥1 command and its events as nodes; one missing any is named", check: { kind: tests, run: "node tests/modules/test-component-shape.test.js" } }
+
+    SB23_a_new_system_slots_in:
+      layer: automation
+      status: OPEN
+      james: '"okay but i want that to be the default. then each new system can slot into nexus automatically. right?"'
+      overlaps: "SB20 (each system owns its own), SB21 (derived parts generated), lib/system-nodes.js (.system nodes)"
+      depends_on: [SB22_every_component_capability_command_events_as_nodes, SB21_deterministic_parts_grow_with_the_system]
+      files: [lib/nexus-self/systems.js, nexus/autopilot.js, orchestrator/orchestrator.config.json, loom/scanners/spec-map.js, loom/templates/system-scaffold.js]
+      does: >-
+        The coder's reading: each system declares itself in its own folder — a shipped system declaration (name, entry,
+        port, boot phase, spec, components, node types, heartbeat), its .system node made from the source, not from
+        data/ — and Nexus discovers systems from those declarations instead of the four hand-kept lists (nexus-self's
+        systems, autopilot's kernels, the orchestrator's ports, loom's spec folders), which become readers of the
+        declarations. A new system made by the scaffold is started, registered, scanned, owned, given its repo in
+        Idearium and its atlas, with no other file edited. A declaration that is incomplete, or two systems claiming a
+        port, is refused with the reason.
+      proof: "a fixture system made by the scaffold is discovered by every reader (autopilot, orchestrator, loom, nexus-self) with no list edited"
+      conditions:
+        - { says: "a fixture system made by the scaffold is discovered by every reader (autopilot, orchestrator, loom, nexus-self) with no list edited", check: { kind: tests, run: "node tests/modules/test-system-slots-in.test.js" } }
