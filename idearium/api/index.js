@@ -688,13 +688,17 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
     let state = r && r.ok ? (r.injects && r.injects.blocked ? 'blocked' : 'replied') : 'failed';
-    let absent = null;
+    let absent = null, unchanged = false;
     if (shadow) {
       if (state !== 'replied') SH.drop(shadow);
       else { const got = SH.settle(shadow, { files: ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
     }
-    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}),
-      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : null)),
+    // §0.39.355 PB2 — James: "it needs to actually build it". A build whose reply changed no file (nothing written,
+    // staged or proposed, by a fenced block or a code_edit / code_write / code_batch call) did not build: incomplete,
+    // so the ladder climbs instead of ending on prose.
+    if (state === 'replied' && !PRt.changedAnything(r)) { state = 'incomplete'; unchanged = true; }
+    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}),
+      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : null)),
       provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || null,
       ...(rg ? { rung: ri + 1, rungs: rungs.length, attempt: tryNo, ...(r && r.toolErrors ? { toolErrors: true } : {}) } : {}),
       reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
@@ -936,9 +940,11 @@ async function _callRoute(action, params = {}, body = {}, query = {}) {
   return { status, ...(out || { ok: false, error: 'no response' }) };
 }
 
-function _startProof(repo, { rounds = 3, maxBuildsPerRound = 400 } = {}) {
+function _startProof(repo, { rounds = 3, maxBuildsPerRound = 400, debt = null } = {}) {
+  // §0.39.355 PB3 — debt: 'baseline' judges each round on what this run broke (older failures are known debt, never sent
+  // back); 'repair' sends every failure back. A Nexus system repo is the live tree: its debt is not a run's to rewrite.
   const run = { uuid: `proof-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, repoUuid: repo.uuid, repoName: repo.name, specUuid: repo.specUuid,
-    state: 'running', verdict: null, why: null, maxRounds: rounds, rounds: [], startedAt: Date.now(), endedAt: null, cancel: false };
+    debt: debt || (repo.nexusSelf ? 'baseline' : 'repair'), state: 'running', verdict: null, why: null, maxRounds: rounds, rounds: [], startedAt: Date.now(), endedAt: null, cancel: false };
   _proofs.set(repo.uuid, run);
   _buildingSpecs.add(repo.specUuid);   // the queue never builds a spec a proof run is building (one writer)
   _saveProof(run);
@@ -975,6 +981,13 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
   const se = getSpecEngine();
   const os = getIdeaOS();
   const BV = _require('../../lib/build-verify.js');
+  // §0.39.355 PB3 — what was already failing before this run built anything
+  let baseline = null;
+  const builtFiles = new Set();
+  if (run.debt === 'baseline') {
+    try { const b0 = await _verifyRepo(getRepoLayer().get(run.repoUuid)); baseline = BV.baselineOf(b0); run.baseline = { failures: b0.failures.length, verdict: b0.verdict }; _saveProof(run); }
+    catch (e) { run.baseline = { error: e.message }; console.warn(`[idearium/prove] no baseline (every failure counts): ${e.message}`); }
+  }
   for (let round = 1; round <= run.maxRounds; round++) {
     const rr = { round, startedAt: Date.now(), built: 0, reused: 0, stalled: null, verdict: null, why: null, failures: [], repaired: [], notBuiltBySpec: [] };
     run.rounds.push(rr);
@@ -992,6 +1005,7 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
       if (w.cancelled) { run.state = 'cancelled'; run.why = `cancelled in round ${round} while ${rr.current} was building`; rr.endedAt = Date.now(); return; }
       if (w.timedOut) { rr.stalled = `${rr.current} was still building after ${Math.round(PROOF_CHUNK_WAIT_MS / 60000)} min — its agent did not answer`; break; }
       rr.built++;
+      try { const bc = (se.loadSpecMeta(run.specUuid).chunks || []).find(x => x.uuid === r.chunkUuid); if (bc && bc.realPath) builtFiles.add(bc.realPath); } catch (_) {}
       if (w.status !== 'complete') (rr.buildFailures = rr.buildFailures || []).push({ file: rr.current, status: w.status, why: w.failureMode || null });
     }
     rr.current = null;
@@ -1003,7 +1017,8 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
     }
     // 2 — verify the files as built
     const repo = getRepoLayer().get(run.repoUuid);
-    const v = await _verifyRepo(repo);
+    const v = BV.against(await _verifyRepo(repo), baseline, { built: [...builtFiles] });
+    if (v.known && v.known.length) { rr.known = v.known.length; rr.knownFiles = [...new Set(v.known.map(f => f.file))].slice(0, 50); }
     rr.verdict = v.verdict; rr.why = v.why; rr.checks = v.checks; rr.ms = v.ms;
     rr.failures = v.failures.slice(0, 50).map(_compactFailure);
     _recordVerify(repo, v, 'prove', { proofRun: run.uuid, round });
@@ -5023,7 +5038,7 @@ async function handle(req, res, route, query, body) {
       if (cur && cur.state === 'running') return ok(res, { started: false, alreadyRunning: true, run: _proofView(cur) });
       if (_buildingSpecs.has(repo.specUuid)) return err(res, 409, 'this spec is being built right now — try again when that build returns');
       const rounds = Math.max(1, Math.min(parseInt(body.rounds, 10) || 3, 10));
-      const run = _startProof(repo, { rounds, maxBuildsPerRound: Math.max(1, Math.min(parseInt(body.maxBuilds, 10) || 400, 2000)) });
+      const run = _startProof(repo, { rounds, maxBuildsPerRound: Math.max(1, Math.min(parseInt(body.maxBuilds, 10) || 400, 2000)), debt: ['baseline', 'repair'].includes(body.debt) ? body.debt : null });
       return ok(res, { started: true, run: _proofView(run) });
     }
     case 'repo.prove.status': {

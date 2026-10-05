@@ -250,6 +250,7 @@ function _planProof() {
       <span class="pp-mark">${rr.round}</span><span class="pp-name">round ${rr.round} · ${rr.built} built${rr.reused ? ` · ${rr.reused} reused` : ''}${rr.current ? ` · building ${escapeHtml(rr.current)}` : ''}</span>
       <span class="pp-led-s">${_ppVerdict(rr.verdict)}</span></div>
       ${(rr.failures || []).slice(0, 8).map(f => `<div class="pp-detail" style="color:var(--coral)">${escapeHtml(f.kind)} · ${escapeHtml(f.file || '(project)')}${f.line ? `:${f.line}` : ''} — ${escapeHtml(String(f.error).slice(0, 220))}</div>`).join('')}
+      ${rr.known ? `<div class="pp-detail" title="${escapeHtml((rr.knownFiles || []).join('\n'))}">known debt: ${rr.known} older failure(s) in files this run did not touch — not this run's, not sent back</div>` : ''}
       ${(rr.repaired || []).length ? `<div class="pp-detail">sent back with the failure: ${escapeHtml(rr.repaired.join(', '))}</div>` : ''}
       ${(rr.notBuiltBySpec || []).length ? `<div class="pp-detail" style="color:var(--coral)">not built by this spec (cannot be sent back): ${escapeHtml(rr.notBuiltBySpec.join(', '))}</div>` : ''}
       ${rr.stalled ? `<div class="pp-detail" style="color:var(--coral)">${escapeHtml(rr.stalled)}</div>` : ''}</div>`).join('') : '';

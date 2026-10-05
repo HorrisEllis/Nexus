@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     cli-data-code
-    version:  1.4.0   # 1.4.0: SY2 cos is its own system (0.39.341) · was 1.3.0
+    version:  1.5.0   # 1.5.0: PB1–PB5 a clicked phase actually builds (0.39.355) · 1.4.0: SY2 cos is its own system (0.39.341) · was 1.3.0
     date:     2026-10-05
     release:  0.39.310 (base) → 0.39.311
     uuid:     nexus-cli-data-code-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -292,6 +292,76 @@ spec:
         - { says: "cos is its own system", check: { kind: tests, run: "node tests/modules/test-loom-phasemap.js" } }
 
   # ── Session inventory, 2026-10-05 — every request, where it is mapped (James: "make sure this is all mapped.") ──
+    # ── 2026-10-05: James — "okay. i clicked on a phase in the phases tab in nexus core to have it built. it needs to
+    #    actually build it". Read from his log and screenshot, not assumed: BL8 went to huihui_ai/qwen3-abliterated:0.6b
+    #    (the derived ladder's lowest rung), the Plan's round 1 failed on 71 imports that were broken before anything was
+    #    built, and the repair sent those unrelated files to the 3b model to rewrite (33k chars, 220 s each).
+    PB1_no_build_below_a_floor:
+      layer: library
+      systems: [core]
+      value: { score: 5, cost: S, for: [daily-use], why: "a 0.6b model cannot build a phase; it was the first rung" }
+      status: "DONE (0.39.355) — routing.min_build_b (default 3) in config-core and Settings → Routing; the ladder says what it left off. test-phase-actually-builds PB-01."
+      depends_on: []
+      files: [lib/pipeline-routing.js, idearium/lib/config.js]
+      does: >-
+        The derived ladder drops Ollama models smaller than routing.min_build_b (default 3, his words: "if the 3b fails,
+        switch to the 7b, then the 16b deepseek, then the agents"). Unsized models stay. A written routing.escalation is
+        taken exactly as written.
+      proof: "installed 0.6b, 3b, 7b, 16b → the ladder starts at 3b; min_build_b 0 keeps 0.6b; a written escalation is untouched"
+    PB2_a_reply_that_changed_nothing_is_incomplete:
+      layer: api
+      systems: [idearium]
+      value: { score: 5, cost: S, for: [daily-use], why: "a build that wrote no file read as 'replied' and the climb stopped" }
+      status: "DONE (0.39.355) — PRt.changedAnything: an inject or a write tool that succeeded; otherwise incomplete, and the ladder climbs. PB-02, PB-06."
+      depends_on: []
+      files: [idearium/api/index.js]
+      does: >-
+        A phase attempt whose reply brought back no file (nothing written, staged or proposed) is 'incomplete' with
+        "the reply changed no file" — so the ladder climbs instead of ending on the smallest model's prose.
+      proof: "an attempt with zero injects is recorded incomplete and the next rung is tried"
+    PB3_verify_counts_what_this_run_broke:
+      layer: library
+      systems: [core, idearium]
+      value: { score: 5, cost: M, for: [daily-use], why: "every round failed on debt older than the run, and unrelated files were sent to be rewritten" }
+      status: "DONE (0.39.355) — BV.baselineOf / against; the Nexus repos take a baseline (run.debt), any repo by { debt: baseline }; the Plan shows known debt per round. PB-03, PB-06."
+      depends_on: []
+      files: [lib/build-verify.js, idearium/api/index.js]
+      does: >-
+        The prove loop verifies once before it builds; what already failed is the baseline. Each round fails only on
+        failures not in the baseline; the older ones are reported as known debt (counted, listed) and never sent back
+        to an agent. lib/build-verify.js against(v, baseline).
+      proof: "a repo with an old broken import and a new one: the round fails on the new one only, sends back only its file, and lists the old as known"
+    PB4_imports_inside_text_are_not_imports:
+      layer: library
+      systems: [cos]
+      value: { score: 3, cost: S, for: [quality], why: "67 of 71 'broken imports' were code inside a test's strings" }
+      status: "DONE (0.39.355) — cos/runtime/run.js _stripTextStrings; _archive/ paths not checked. 71 broken imports in the Nexus tree → 17. PB-04."
+      depends_on: []
+      files: [cos/runtime/run.js]
+      does: >-
+        resolveDeps reads only the string that is require()'s / import's own argument; a require written inside another
+        string (a test's fixture project) is text.
+      proof: "the Nexus tree's broken relative imports fall from 71 to the real ones; a fixture string with require('./x') is not counted"
+    PB5_the_real_broken_imports:
+      layer: foundation
+      systems: [core, clear-glass]
+      value: { score: 2, cost: S, for: [quality], why: "a handful of real stale paths and tests of files that are gone" }
+      status: "DONE (0.39.355) — cli/run-supervised.js → orchestrator/orchestrator.js; erosmancer-os/tests/run.js archived (superseded by tests/suite.ts). 13 left, all tests of modules that are gone — listed below, his call. PB-05."
+      depends_on: [PB4_imports_inside_text_are_not_imports]
+      files: [cli/run-supervised.js, erosmancer/erosmancer-os/tests/run.js, tests/_archive/]
+      does: >-
+        Fix the paths that moved (cli/run-supervised.js → orchestrator/orchestrator.js); erosmancer-os's old runner is
+        archived (§0.3) — tests/suite.ts replaced it and its paths moved to src/registry, src/behavior, src/dispatcher.
+        Left as they are, his call (archive, or rebuild what they tested): 13 imports in 8 test suites whose subjects are
+        gone, each already crashing in run-all — admin-server-routes (cortex/foundation/admin-server), brainos-panel and
+        brainos-panel-canvas-integration (nexus/ui/brainos), copilot.test (guardian/agents/co-pilot), flush-redundancy
+        (cortex/flush-redundancy), test-intelligence-bridge (cortex/core/raid/intelligence-bridge), tests/pipeline.test.js
+        (cortex/heartbeat, gate/gap-finder, healer, replay, agent-tools), tests/hooks-side-effect-parser.test.js
+        (/tmp/real_strings.json). With PB3 they are known debt in a round, not sent to an agent.
+      proof: "resolveDeps over the Nexus tree: run-supervised resolves, nothing in erosmancer, only those test suites left"
+      not_in_this_phase: "BL8 itself — it names no files, and moving every spec out of docs/ breaks the tests that read them by path; it needs its file list (his call) before any agent can build it"
+
+
   session_inventory:
     - { said: "Tell me about nexus. Tell me about idearium. How it chunks, reduces tokens.", where: "answered, no build asked — docs/atlases/idearium-atlas.md" }
     - { said: "What about the graphs? Agents. Memory.", where: "answered; the open graph/memory work is docs/2026-10-02-emerge-field-memory-build-phasemap.spec MR1–MR11, RF1" }
@@ -325,6 +395,7 @@ spec:
     - { said: "I feel like copilot needs to be the agents for the repos … lifeline to figure out how to fulfill the contract. Runs it in the cos envirenment.", where: "FV0 input (B)" }
     - { said: "Okay I'm just saying it figures it out through the context and agent tools.", where: "FV0 input_b — copilot decides how; the goal and the stop are fixed; deliver_check becomes a tool" }
 
+    - { said: "okay. i clicked on a phase in the phases tab in nexus core to have it built. it needs to actually build it", where: "PB1–PB5 (0.39.355)" }
   open_questions:
     - "Q1: amend docs/AXIOMS-v3.1.md §4.1 from 'UI is tested via Playwright' to 'UI is tested in Clear Glass (clear-glass/src/driver/glass.js)'? A law changes only on your word."
     - "Q2 (CL2): may a writing verb run from the Agent tab after one confirmation, or only read verbs there and writing verbs from the terminal?"
