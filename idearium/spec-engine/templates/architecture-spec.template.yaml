@@ -8,6 +8,8 @@
 #   "each system is responsible for its data, schemas, contracts, configurations, heartbeat and pulse"
 #   "then bundle each capability node, in relation to any other relevant node."
 #   "hardcoded has to earn its place."
+#   "Maybe add, if applicant, data dir with the directory for the data, consumers, intent, data type/system like node,
+#    vector, database or table, etc." · "maybe create a template or schema from that."
 
 tree: |
   <system>/
@@ -47,6 +49,32 @@ tree: |
   │   ├── <system>.spec
   │   └── <system>.node-taxonomy.md
   └── ui/                          floats on top — each element gated by a listener on its command
+
+registry: |
+  // registry-components.js — the spine. Every component connects only to this.
+  // Each id points at a node in its own folder; the node schemas are in templates/system/schemas/.
+  module.exports = {
+    system: '<system>',
+    components: [
+      {
+        type:   'component',
+        id:     '<system>.<component>',
+        uuid:   '<uuid>',
+        file:   'lib/<component>.js',
+        intent: '<what it is for, one line>',
+        version: '<semver>',
+        status: 'built | unproven | open',
+        capabilities: ['<capability-id>'],      // at least one
+        hooks:        ['<hook-id>'],            // its end points
+        consumers:    ['<component-id>'],       // who uses it — read from the wires into its hooks
+        data: {                                 // if applicable
+          dir:   'data/<dir>',
+          store: 'node | vector | database | table | file',
+          types: ['<node-type>'],               // what it keeps — each with its schema
+        },
+      },
+    ],
+  };
 
 rules:
   - "every component connects only to the registry — never to another component"
