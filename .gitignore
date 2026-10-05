@@ -17,3 +17,6 @@ idearium/repo/repos/
 
 # stray duplicate of the tree written by a mis-configured trial script (NEXUS_SELF_DIR=undefined/self) — safe to delete
 /undefined/
+
+# 0.39.337 SB37 — one working set per tool-loop run (copilot/lib/workset.js): state, never committed
+copilot/data/worksets/

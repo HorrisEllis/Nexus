@@ -2516,7 +2516,10 @@ const server = http.createServer(async (req, res) => {
               agentId: body.agentId || undefined, timeoutMs: body.timeoutMs || undefined, requestId, sessionId, canonical: c }); };
             loop = await toolRuntime.runViaAgent(agent, dispatchToAgent, prompt, { toolScope: scope, identity: composed ? null : identity, context, maxIterations, composed, resultTemplate });
           } else {
+            // §0.39.337 SB37 — the working set: the caller's 'workset' template and the question its signal is picked by
+            const worksetTemplate = composed && typeof T.worksetTemplate === 'string' ? T.worksetTemplate : null;
             loop = await toolRuntime.run({ userPrompt: prompt, identity: composed ? null : identity, context, toolScope: scope, maxIterations, composed, resultTemplate,
+              worksetTemplate, question: typeof T.question === 'string' ? T.question : null, sessionId,
               dispatch: (convo, sysContext, o) => _dispatchToOllama(convo, sysContext, { ...o, intent: 'tool-loop', requestId, sessionId, model: olModel, raw: composed }),
               pollJob: _pollOllamaJobHeadless });
           }
@@ -2524,7 +2527,7 @@ const server = http.createServer(async (req, res) => {
             ok: !(t.result && t.result.error), error: t.result && t.result.error ? String(t.result.error).slice(0, 300) : null }));
           const toolsInfo = { scope: scope ? scope.length : 'all', iterations: loop.iterations, calls: toolCallLog.length };
           if (loop.failed) { json(res, 502, { ok: false, error: loop.error, jobId: loop.jobId || null, toolCallLog, tools: toolsInfo, requestId }); return; }
-          json(res, 200, { ok: true, text: loop.text, provider_used: body.backend === 'guardian' ? (body.agent || 'guardian') : 'ollama',
+          json(res, 200, { ok: true, text: loop.text, ...(loop.workset ? { workset: loop.workset } : {}), provider_used: body.backend === 'guardian' ? (body.agent || 'guardian') : 'ollama',
             model_used: body.backend === 'ollama' ? (olModel || null) : undefined, toolCallLog, tools: toolsInfo, requestId });
           return;
         }

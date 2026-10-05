@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        copilot
-    version:     3.7.2   # 0.39.336 PATCH — an Ollama tool-loop reply's written tool call is read (_findToolCalls), as a browser agent's. Previous 3.7.1: 0.39.282 PATCH — a self-reported failure floors confidence; duplicate component id context.get → context.session; module-builder resolves on the full token intersection. Previous 3.7.0: 0.39.258 MINOR — body.tools.composed, raw Ollama prompt, GET /api/prompt/resolve. Previous 3.6.0: 0.39.257 MINOR — /api/prompt body.tools runs the real tool loop (scope enforced, identity, repoDir) for ollama and browser agents; GET /api/tools/list, POST /api/tools/run; a failed round ends a tool loop as a failure with its jobId. Previous 3.5.2: 0.39.253 PATCH — /api/prompt passes body.model to Ollama (was dropped). Previous 3.5.1: 0.39.244 PATCH — _tryGuardian says why it failed (error, jobId) instead of null; no shared-tab pre-check for a repo (agentId) job
+    version:     3.8.0   # 0.39.337 MINOR — copilot/lib/workset.js: an Ollama tool loop's working set (JSON per run), rounds send its synthesis. Previous 3.7.2: 0.39.336 PATCH — an Ollama tool-loop reply's written tool call is read (_findToolCalls), as a browser agent's. Previous 3.7.1: 0.39.282 PATCH — a self-reported failure floors confidence; duplicate component id context.get → context.session; module-builder resolves on the full token intersection. Previous 3.7.0: 0.39.258 MINOR — body.tools.composed, raw Ollama prompt, GET /api/prompt/resolve. Previous 3.6.0: 0.39.257 MINOR — /api/prompt body.tools runs the real tool loop (scope enforced, identity, repoDir) for ollama and browser agents; GET /api/tools/list, POST /api/tools/run; a failed round ends a tool loop as a failure with its jobId. Previous 3.5.2: 0.39.253 PATCH — /api/prompt passes body.model to Ollama (was dropped). Previous 3.5.1: 0.39.244 PATCH — _tryGuardian says why it failed (error, jobId) instead of null; no shared-tab pre-check for a repo (agentId) job
     foundation:  nexus-system-foundation@1.0.0
     port:        3750
     uuid:        nexus-copilot-v2-0000-2026-0627-jamesbrooks-001
@@ -364,3 +364,16 @@ spec:
 # the model WRITES is now read with _findToolCalls — the parser runViaAgent already used for browser agents (a ```tool
 # block, or a known tool's bare {"name": …} object) — and the call is stripped from the text. A native tool_calls
 # answer still wins when one comes. The schemas are not forwarded: 126 tools are ~138K characters of JSON.
+
+# ── ADDENDUM 2026-10-05 (0.39.337) — copilot 3.8.0 · build-from-the-spec phasemap SB37 ──
+# James: "Find the context one by one, put it in an index, and then synthesize it into, into just what it needs. Signal
+#   to noise." · "Probably just a JSON file."
+# copilot/lib/workset.js (new, nexus.copilot.lib.workset): create / add / synthesize / answer / summary. One JSON file per
+# composed Ollama tool-loop run — copilot/data/worksets/<id>.json (COPILOT_WORKSET_DIR; the test sandbox redirects it;
+# git-ignored): the question and its terms, every read (tool, args, the raw result whole, its signal, chunk ids, files,
+# score), the answer. Signal is chosen without a model: what identifies a read, plus the lines carrying the question's
+# terms (at most 14); a read of ≤ 1,500 chars (COPILOT_WORKSET_SMALL_READ) is kept whole.
+# tool-runtime.js makeOllamaCallModel: with opts.worksetTemplate (composed), each round sends the first user message plus
+# the template filled with {reads} and {workset} = synthesize(budget COPILOT_WORKSET_BUDGET, 6,000 chars) — not the
+# transcript. run() returns workset (summary). /api/prompt body.tools.worksetTemplate, body.tools.question; the answer
+# carries workset { id, file, reads, ids, files }. runViaAgent (browser tabs) is unchanged: a tab keeps its conversation.

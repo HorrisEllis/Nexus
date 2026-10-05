@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.16.0   # 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.17.0   # 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -997,3 +997,27 @@ spec:
       proof: "every tool-loop prompt says where the tools run and how to call one; an Ollama reply that writes a call runs the real code search on the real server and the next round carries its result; a browser reply's rendered call runs the same way; the code tools read an index made on demand"
       conditions:
         - { says: "every agent can use the tools", check: { kind: tests, run: "node tests/modules/test-agent-tools-every-backend.test.js" } }
+
+    SB37_the_working_set_signal_to_noise:
+      layer: library
+      status: "DONE (0.39.337) — mapped before code. copilot/lib/workset.js; makeOllamaCallModel feeds each read in and sends prompt + synthesis; the 'workset' block (editable); a small read (≤ 1,500 chars) kept whole; COPILOT_WORKSET_DIR sandboxed; copilot/data/worksets/ git-ignored. Five ~20 KB reads: last round 119,260 → 1,601 chars, whole run 358,032 → 5,331. test-copilot-workset 4/4."
+      james: '"what if it builds a temporary, index of context, copies the relevant context to it, one by one until it synthesize it into it into only what it needs." · "I know it''s a fucking problem. This is a real problem when I push it. So, so, uh, as I said, uh, in index, but we do JAA or uh, JSON. Probably just a JSON file. So it''s synthesizing. Find the context one by one, put it in an index, and then synthesize it into, into just what it needs. Signal to noise."'
+      found: >-
+        copilot/tool-runtime.js makeOllamaCallModel (composed) re-sends the whole run every round — the prompt, every
+        reply, every tool result in full, nothing capped — into num_ctx 6144, and Ollama truncates from the front: the
+        more context an agent finds, the sooner the persona and the question fall out. No working set exists anywhere
+        (searched lib/, copilot/: no working set, no result cap). What is there to build on: the chunk cards (already a
+        compressed form of a chunk), the tool-result block (editable), lib/test-sandbox.js's per-store variables.
+      depends_on: [SB36_every_agent_can_use_the_tools]
+      files: [copilot/lib/workset.js, copilot/tool-runtime.js, copilot/server.js, lib/repo-prompt-blocks.js, lib/repo-agent.js, lib/test-sandbox.js]
+      does: >-
+        One JSON file per tool-loop run, owned by copilot (copilot/data/worksets/<id>.json; COPILOT_WORKSET_DIR, the
+        sandbox redirects it): the question, then each tool read, one by one — the raw result kept in the file, and its
+        signal: the lines that carry the question's terms, the chunk ids, signatures, what uses what — the rest dropped
+        from the prompt (kept on disk). Each round the model is sent its prompt and the working set synthesized to a
+        budget (the most relevant first, deduplicated by chunk id), never the raw transcript; a chunk is re-opened by its
+        id. The synthesis is framed by a new editable block ('workset'). The answer is written to the file — its
+        provenance. Ollama only: a browser tab keeps its own conversation and is sent each result once (unchanged).
+      proof: "a run whose tool results add up to far more than the window sends a prompt that never grows past the budget, still carries the question and the persona, and keeps the line that answers it; the JSON file holds every raw result and the answer"
+      conditions:
+        - { says: "the working set keeps the signal", check: { kind: tests, run: "node tests/modules/test-copilot-workset.test.js" } }

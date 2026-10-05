@@ -157,7 +157,12 @@ const FILES = [
     []],   // §2026-08-12 — added 5 console contracts (claude/chatgpt/gemini/mistral/perplexity), closing the RAID-denial root cause behind "dispatch failed: unknown"
 
   ['copilot/tool-runtime.js',                        'nexus.copilot.tool-runtime',
-    ['nexus.lib.agent-tools', 'nexus.copilot.lifeline']],   // §2026-08-13 — new makeNcpCallModel/runViaAgent give NCP-driven agents (claude/chatgpt/gemini/mistral/perplexity) the same tool loop ollama already had
+    ['nexus.lib.agent-tools', 'nexus.copilot.lifeline', 'nexus.copilot.lib.workset']],   // §2026-08-13 — new makeNcpCallModel/runViaAgent give NCP-driven agents (claude/chatgpt/gemini/mistral/perplexity) the same tool loop ollama already had · §0.39.337 SB37 — makeOllamaCallModel requires the working set when the caller sends a 'workset' template (a conditional require the scanner does not see)
+
+  // §0.39.337 SB37 — James: "Find the context one by one, put it in an index, and then synthesize it into, into just what it
+  // needs. Signal to noise." One JSON working set per Ollama tool-loop run; its store resolves through the test sandbox.
+  ['copilot/lib/workset.js',                         'nexus.copilot.lib.workset',
+    ['nexus.lib.test-sandbox']],
 
   ['lib/hat-forge.js',                                'nexus.lib.hat-forge',
     ['nexus.lib.agent-tools']],   // §2026-08-13 (P8) — named, reusable hats: base agent + scoped tools + persona, verified-composition philosophy mirrored from lib/tool-forge.js
