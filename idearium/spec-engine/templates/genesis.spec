@@ -1,10 +1,16 @@
-// GENESIS CANONICAL SPEC v1.2.0
+// GENESIS CANONICAL SPEC v1.3.0
 // UUID: genesis-devkit-v1-0000-2026-0710-jamesbrooks-001
 // This file IS the schema-engine's definition of a valid sovereign system.
 // Edit this file → every new compartment scaffolded from it inherits the change.
 // Status: proposed. Foundation domains freeze at v1.0.0 per COS-5 pattern.
 
-version 1.2.0
+version 1.3.0
+// 1.3.0 (2026-10-05, NEXUS 0.39.313): genesis is the architecture of the system template, section by section (Domain 0a
+// "shape"); every component carries at least one capability and one command, and its events, each a node (capability_node
+// added to Domain 2c); a system owns its own data, schemas, contract, config, heartbeat and pulse. James: "yes add it the
+// spec for genesis. like genesis is the exact architecture for a new system template." · "each component has to have at
+// least one capability, with at least one command, and events, each a node each." · "each system is responsible for its
+// data, schemas, contracts, configurations, heartbeat and pulse".
 // 1.2.0 (2026-10-05, NEXUS 0.39.311): Domain 2d nodes — the node-based data structure with JAA tables as the node index
 // (Guardian's real model: lib/node-index.js, guardian/lib/node-registry.js), one file (registry/node-index.js), the
 // node.change binding, axiom NODE_INDEX_IS_JAA; the pulse carries the index's counts. James: "like with the genasis spec,
@@ -76,8 +82,31 @@ axiom CONFIG_OUTSIDE_CODE      // anything adjustable lives in config, never har
 axiom LEDGER_IS_TRUTH          // every runtime writes its event stream to an append-only ledger
 axiom GATE_BEFORE_CROSS        // no compartment reaches another without passing its gate
 axiom REGISTRY_IS_THE_DOORWAY   // every crossing between modules is a declared node in the registry; modules are isolated and know only the registry
+axiom COMPONENT_SHAPE           // every component has at least one capability, at least one command invoking it, and its events — each a node (James)
+axiom SYSTEM_OWNS_ITS_OWN       // a system holds its own data, schemas, contract, config, heartbeat and pulse, in its own folder; no other system keeps them for it (James)
 axiom NODE_INDEX_IS_JAA       // the node file is canonical; each node type's JAA table (nodes_<type>) is its index and nodes_<type>_ledger its append-only history, in the system's own data folder
 axiom ALL_DATA_ARE_NODES       // the registry, its contract and its config persist as nodes/<type>/<id>.<type> in one envelope — Guardian's layout
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Domain 0a — Shape (genesis is the architecture of the system template)
+// ══════════════════════════════════════════════════════════════════════════════
+// James, 2026-10-05: "yes add it the spec for genesis. like genesis is the exact architecture for a new system
+// template." The system template (idearium/spec-engine/templates/architecture-spec.template.yaml, in his structure:
+// identity → context → file_structure → modules → components) is what a new system's spec is written in; this domain
+// says which part of genesis each section IS, so a spec in that template is a genesis system, nothing left over.
+domain "shape"
+template          = idearium_spec_engine_templates_architecture_spec_template_yaml
+identity          = domain_identity_plus_the_system_node_2c_plus_its_data_folder_2d_plus_its_config_6_plus_its_heartbeat_10
+context           = domain_schema_axioms_0_plus_the_spine_plus_sovereignty_3_plus_config_layers_6_plus_pulse_10_plus_phases
+file_structure    = the_manifest_2b_every_file_declared_with_its_uuid_layer_and_depends
+modules           = compartments_each_with_its_seam_3_its_config_6_and_the_node_types_it_owns_2d
+components        = component_nodes_2c_each_with_capability_nodes_command_nodes_and_event_nodes_and_the_node_types_it_reads_and_writes
+generated         = the_contract_the_event_taxonomy_the_node_index_the_registry_and_the_atlas_derived_from_the_components_never_hand_written_2b
+ownership         = a_system_holds_its_data_schemas_contract_config_heartbeat_and_pulse_in_its_own_folder
+// Rules:
+//   - a section of the template with no domain here is a gap in genesis; a domain no section names is a gap in the template.
+//   - a component without a capability, a command or its events is refused by the registry (2c), said, not passed.
+//   - what `generated` names is regenerated from the components when they change; a hand edit to it is lost.
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Domain 0 — Schema Baseline (the expectation every other domain is graded against)
@@ -251,7 +280,8 @@ component_node  = one_per_file_id_by_loom_rule_path_to_dotted_id_with_chunk_type
 hook_node       = one_per_crossing_point_export_import_emit_on_route_cli
 wire_node       = one_per_relation_from_hook_to_hook_requires_or_event
 event_node      = one_per_event_emitted_by_consumed_by_payload
-command_node    = one_per_http_route_and_per_cli_verb_with_the_component_that_serves_it
+capability_node = one_per_capability_of_a_component_at_least_one_per_component_what_it_can_do
+command_node    = one_per_http_route_and_per_cli_verb_with_the_component_that_serves_it_invoking_one_of_its_capabilities
 contract_node   = the_interaction_contract_rules_crossings_breaches_orphans_unhandled_events
 system_node     = entry_points_ports_data_dirs_node_types_counts
 archive         = a_node_no_longer_produced_moves_to_nodes_slash_archive_never_deleted

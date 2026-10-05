@@ -7,6 +7,9 @@
 # Map: docs/2026-10-05-build-from-the-spec-phasemap.spec SB17. The previous template is kept whole in
 # _archive/architecture-spec.template.pre-0.39.312.yaml; every field it had has a place below.
 #
+# Its architecture is genesis (idearium/spec-engine/templates/genesis.spec 1.3.0, Domain 0a says which part of genesis each
+# section is); docs/architecture-spec/architecture-spec.spec is the seam between genesis, loom's schema and guardian's nodes.
+#
 # How to read it: every value is its TYPE, not example content — a real spec replaces each <type> with real data.
 # Only what belongs to the whole system sits above `modules`. Everything about a module or a component is listed ON
 # that module or component. The cross-cutting lists (every event, every node type, the taxonomy, the contract) are

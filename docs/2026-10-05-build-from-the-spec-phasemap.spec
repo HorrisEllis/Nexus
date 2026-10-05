@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.7.0
+    version:  1.8.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim — spelling and all.
       `does:` is the coder's reading of it, his to correct. A phase whose `james:` says none came from the coder, and says
@@ -132,6 +132,24 @@ spec:
     James, 2026-10-05, shown the template: "why not identity context file_structure modules -> components summary, with
     routes and commands, anything else relevant. then everything relevant to the modules, is listed each module and
     component. not in seperate sections"
+
+  origin_1_8_0: >
+    James, 2026-10-05: "yes add it the spec for genesis. like genesis is the exact architecture for a new system
+    template. like look at the directory. loom, like it needs to build a new system. and click into it. like look at the
+    atlas template"
+
+  found_1_8_0:
+    - >-
+      loom/templates/system-scaffold.js (Phase 145) already builds a new system from one operations list — CLI, API,
+      registry-components.js, interaction-contract.json and more — but nothing calls it except its own test: no route,
+      no CLI, no button. Its output is not genesis-shaped (no node types, schemas, JAA index, heartbeat, capabilities),
+      and it puts the system's data in a sibling outDir/data/<name>, not the system's own data folder.
+    - >-
+      idearium/spec-engine/templates/atlas-template.md is already close to his structure: per module, its commands
+      (each with the node and directory it acts on), routes, connections and events. But it keeps the old separate
+      sections (spine, axioms, boundaries, seams, sovereignty, pulse … each its own heading), has no capabilities or node
+      types per component, and names nodes .architecture/nodes/<kind>/<id>.json, not data/nodes/<type>/<id>.<type>. Its
+      filler, architecture-spec/registry/create-atlas.js, is in the unwired list.
 
   found_1_6_0:
     - >-
@@ -468,7 +486,7 @@ spec:
     SB17_the_system_template_is_complete:
       james: '"like can you make sure this is all added to the system template. like look at the architecture spec. this needs to be mapped first" · "why not identity context file_structure modules -> components summary, with routes and commands, anything else relevant. then everything relevant to the modules, is listed each module and component. not in seperate sections"'
       layer: foundation
-      status: "PARTIAL (0.39.312) — the template is rewritten in his structure; architecture-spec.spec and genesis still to be made to agree with it"
+      status: "DONE (0.39.313) — the template in his structure (0.39.312); genesis 1.3.0 is its architecture (Domain 0a), with capability nodes and his axioms; architecture-spec.spec 0.9.0 agrees"
       overlaps: "architecture-spec.spec's own gaps; TP1 (promote with templates)"
       depends_on: [SB16_genesis_nodes_domain]
       files: [idearium/spec-engine/templates/architecture-spec.template.yaml, docs/architecture-spec/architecture-spec.spec, idearium/spec-engine/templates/genesis.spec]
@@ -592,3 +610,39 @@ spec:
       proof: "a fixture system made by the scaffold is discovered by every reader (autopilot, orchestrator, loom, nexus-self) with no list edited"
       conditions:
         - { says: "a fixture system made by the scaffold is discovered by every reader (autopilot, orchestrator, loom, nexus-self) with no list edited", check: { kind: tests, run: "node tests/modules/test-system-slots-in.test.js" } }
+
+    SB24_loom_builds_a_new_system:
+      layer: ui
+      status: OPEN
+      james: '"like look at the directory. loom, like it needs to build a new system. and click into it."'
+      overlaps: "loom/templates/system-scaffold.js (built, never called); SB23 (a new system slots in); SB21 (generated parts)"
+      depends_on: [SB23_a_new_system_slots_in, SB25_atlas_template_in_his_structure]
+      files: [loom/templates/system-scaffold.js, loom/server.js, loom/registry-components.js, idearium/ui/js/app.js]
+      does: >-
+        The coder's reading: Loom builds a whole new system from a filled system template (genesis's architecture): the
+        folder in the template's shape — its system declaration, registry-components with each component's capabilities,
+        commands and events, the interaction contract, event taxonomy, node types with schemas and their JAA index and
+        ledger tables in its own data folder, the heartbeat route, its spec file and its atlas — through system-scaffold.js,
+        which already writes the CLI, API and contract. A route and a CLI first (POST /api/systems, `loom system new`),
+        then a New system button in Idearium; the new system is discovered (SB23), shows as its own repo, and clicking it
+        opens its atlas as Home.
+      proof: "a fixture system built through the route has every template part, is discovered, and opens as its own repo"
+      conditions:
+        - { says: "a fixture system built through the route has every template part, is discovered, and opens as its own repo", check: { kind: tests, run: "node tests/modules/test-loom-builds-a-system.test.js" } }
+
+    SB25_atlas_template_in_his_structure:
+      layer: library
+      status: OPEN
+      james: '"like look at the atlas template"'
+      overlaps: "SB19 (atlases per component); lib/atlas-generate.js; architecture-spec/registry/create-atlas.js (unwired)"
+      depends_on: [SB17_the_system_template_is_complete]
+      files: [idearium/spec-engine/templates/atlas-template.md, architecture-spec/registry/create-atlas.js, lib/atlas-generate.js]
+      does: >-
+        The coder's reading: the atlas template follows the system template's structure — identity, context, file
+        structure, then each module and, under it, each component with its capabilities, commands (the node and
+        directory each acts on), routes, events emitted and heard, and the node types it reads and writes, with their
+        schemas — instead of separate sections. Node paths are data/nodes/<type>/<id>.<type>. The generated half
+        (atlas-generate's markers) fills what can be derived; create-atlas.js is wired to fill the rest from a spec.
+      proof: "an atlas made from the template for a fixture spec lists each component with its capabilities, commands, routes, events and nodes"
+      conditions:
+        - { says: "an atlas made from the template for a fixture spec lists each component with its capabilities, commands, routes, events and nodes", check: { kind: tests, run: "node tests/modules/test-atlas-template.test.js" } }

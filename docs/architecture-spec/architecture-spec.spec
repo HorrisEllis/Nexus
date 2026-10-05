@@ -1,8 +1,8 @@
 spec:
   meta:
     name:        architecture-spec
-    version:     0.8.1
-    extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.1.0 — the default template of a system spec since 0.39.286
+    version:     0.9.0
+    extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.3.0 — the default template of a system spec since 0.39.286; since 1.3.0 the architecture of the system template, section by section (Domain 0a)
     foundation:  TBD — no runtime exists yet, unassigned until first real implementation
     port:        TBD — no runtime process exists yet
     uuid:        TBD — assign on first real implementation, convention nexus-architecture-spec-v1-0000-<date>-jamesbrooks-001
@@ -446,3 +446,19 @@ spec:
 # source goes, and readable at the orchestrator's GET /api/nodes/:type (the route this spec plans at /nodes/:type).
 # Guardian hosts .hat and .agent and boots its per-type registry (watcher + ledger + JAA index). AS1 (a registry
 # watcher for every system) stays open: only Guardian's watcher runs.
+
+# ── ADDENDUM 2026-10-05 (0.39.313) — docs/2026-10-05-build-from-the-spec-phasemap.spec SB17 ──
+# James: "like can you make sure this is all added to the system template. like look at the architecture spec." · "why not
+#   identity context file_structure modules -> components summary, with routes and commands, anything else relevant. then
+#   everything relevant to the modules, is listed each module and component. not in seperate sections" · "yes add it the
+#   spec for genesis. like genesis is the exact architecture for a new system template."
+# 0.9.0: this spec, the system template (idearium/spec-engine/templates/architecture-spec.template.yaml, rewritten in his
+#   structure in 0.39.312) and genesis.spec 1.3.0 now say the same thing. genesis is the architecture (Domain 0a maps each
+#   template section to its domains); the template is the shape a system's spec is written in; this spec is the seam
+#   between genesis, loom's schema and guardian's node registry, as before. What this spec lacked and now defers to them:
+#   pulse and the heartbeat (genesis Domain 10; the template's identity.heartbeat, whose snapshot carries each node type's
+#   count), the event taxonomy (derived from the components — the template's generated.event_taxonomy), each component's
+#   capabilities, commands and events as nodes (genesis axiom COMPONENT_SHAPE, capability_node in Domain 2c), and a system
+#   owning its own data, schemas, contract, config, heartbeat and pulse (axiom SYSTEM_OWNS_ITS_OWN). The JAA node index it
+#   already described (registry-watcher) is genesis Domain 2d.
+

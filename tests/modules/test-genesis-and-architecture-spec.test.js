@@ -31,7 +31,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       if (b) for (const x of b[2].split(',')) paths.push(`${b[1]}${x}${b[3]}`); else paths.push(m.path);
     }
     const missing = paths.filter(p => !fs.existsSync(path.join(ROOT, p)));
-    check('GA-01 every module path the architecture spec names exists', /^0\.8\.\d+$/.test(spec.meta.version) && paths.length >= 14 && !missing.length, JSON.stringify(missing));
+    check('GA-01 every module path the architecture spec names exists', /^0\.(8|9)\.\d+$/.test(spec.meta.version) /* 0.39.313 SB17: 0.9.0 agrees with genesis 1.3.0 and the system template */ && paths.length >= 14 && !missing.length, JSON.stringify(missing));
     const idx = read('idearium/api/index.js');
     const orch = read('orchestrator/orchestrator.js');
     const emitted = (spec.events.emits || []).every(e => idx.includes(`'${e}'`));
@@ -49,7 +49,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const { dispatch } = await import(path.join(ROOT, 'idearium/spec-engine/manifest/commands.js'));
     const mc = dispatch(['check', path.join(ROOT, 'idearium/spec-engine/templates/genesis.spec')], {});
     // §0.39.311 SB16 — genesis 1.2.0 adds Domain 2d (nodes, JAA tables as the node index); 1.1.0's checks all still hold
-    check('GA-04 genesis 1.2.0: registry (the doorway, nodes), routing and nodes (JAA as the node index) domains, their files, the wiring still clean', /^version 1\.2\.0$/m.test(g) && /^domain "registry"$/m.test(g) && /^domain "routing"$/m.test(g)
+    check('GA-04 genesis 1.3.0: shape (the template\'s architecture), registry (the doorway, nodes, capability nodes), routing and nodes (JAA as the node index) domains, his axioms, the wiring still clean', /^version 1\.3\.0$/m.test(g) && /^domain "shape"$/m.test(g) && /^capability_node /m.test(g) && /axiom COMPONENT_SHAPE/.test(g) && /axiom SYSTEM_OWNS_ITS_OWN/.test(g) && /^domain "registry"$/m.test(g) && /^domain "routing"$/m.test(g)
       && /^domain "nodes"$/m.test(g) && /file "registry\/node-index\.js"/.test(g) && /axiom NODE_INDEX_IS_JAA/.test(g) && /bind node\.change\s+-> Event/.test(g)
       && /file "registry\/node-registry\.js"/.test(g) && /file "spine\/route-policy\.js"/.test(g) && /axiom REGISTRY_IS_THE_DOORWAY/.test(g) && !mc.code && /wiring is clean/.test((mc.out || []).join(' ')), JSON.stringify(mc.out));
     process.env.NEXUS_VERSIONIUM_URL = 'http://127.0.0.1:9';
