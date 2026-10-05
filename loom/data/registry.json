@@ -14517,6 +14517,15 @@
       "schemaVersion": "1.2.0",
       "registeredAt": 1791237085593
     },
+    "nexus.tests.modules.test-template-picker.test": {
+      "id": "nexus.tests.modules.test-template-picker.test",
+      "namespace": "nexus.tests",
+      "name": "tests/modules/test-template-picker.test.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.tests.modules.test-template-picker.test-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791244674638
+    },
     "nexus.tests.modules.test-test-sandbox.test": {
       "id": "nexus.tests.modules.test-test-sandbox.test",
       "namespace": "nexus.tests",
@@ -20040,6 +20049,15 @@
       "schemaVersion": "1.2.0",
       "registeredAt": 1791240887492
     },
+    "nexus.idearium.ui.js.template-picker": {
+      "id": "nexus.idearium.ui.js.template-picker",
+      "namespace": "nexus.idearium",
+      "name": "idearium/ui/js/template-picker.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-map-nexus.idearium.ui.js.template-picker-v1-0000-2026-1005-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791244725499
+    },
     "nexus.lib.economy.policy": {
       "id": "nexus.lib.economy.policy",
       "namespace": "nexus.lib",
@@ -21492,6 +21510,57 @@
       "declared_in": "idearium/registry-components.js",
       "schemaVersion": "1.2.0",
       "registeredAt": 1791243133665
+    },
+    "idearium.workshop.templates": {
+      "id": "idearium.workshop.templates",
+      "namespace": "idearium",
+      "name": "workshop.templates",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-cap-idearium.workshop.templates-v1-0000-2026-0804-001",
+      "route": "GET /api/workshop/templates",
+      "description": "Every template the workshop's picker offers — the spec-document templates (genesis first), the COS archetypes and blueprints, the saved ones — each with its 11 parts previewed (RS5)",
+      "tags": [
+        "idearium",
+        "workshop"
+      ],
+      "served": true,
+      "declared_in": "idearium/registry-components.js",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791244729150
+    },
+    "idearium.workshop.template.save": {
+      "id": "idearium.workshop.template.save",
+      "namespace": "idearium",
+      "name": "workshop.template.save",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-cap-idearium.workshop.template.save-v1-0000-2026-0804-001",
+      "route": "POST /api/workshop/templates",
+      "description": "A workshop's sections saved as a template — a new version when it came from that template; the old kept (RS5)",
+      "tags": [
+        "idearium",
+        "workshop"
+      ],
+      "served": true,
+      "declared_in": "idearium/registry-components.js",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791244729169
+    },
+    "idearium.workshop.template.remove": {
+      "id": "idearium.workshop.template.remove",
+      "namespace": "idearium",
+      "name": "workshop.template.remove",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-cap-idearium.workshop.template.remove-v1-0000-2026-0804-001",
+      "route": "POST /api/workshop/templates/:tid/remove",
+      "description": "Archives a saved template — kept, no longer offered; a built-in one is refused (RS5)",
+      "tags": [
+        "idearium",
+        "workshop"
+      ],
+      "served": true,
+      "declared_in": "idearium/registry-components.js",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791244729189
     },
     "idearium.ollama.check": {
       "id": "idearium.ollama.check",
@@ -23954,7 +24023,7 @@
       "id": "cg.health",
       "namespace": "cg",
       "name": "health",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.health-v1-0000-2026-0804-001",
       "route": "GET /health",
       "description": "Clear Glass health, context count, bus stats",
@@ -23970,7 +24039,7 @@
       "id": "cg.status",
       "namespace": "cg",
       "name": "status",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.status-v1-0000-2026-0804-001",
       "route": "GET /status",
       "description": "Full system status — bus sample, agents, listeners, TLS",
@@ -23986,7 +24055,7 @@
       "id": "cg.contract",
       "namespace": "cg",
       "name": "contract",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.contract-v1-0000-2026-0804-001",
       "route": "GET /contract",
       "description": "Clear Glass interaction contract",
@@ -24002,7 +24071,7 @@
       "id": "cg.events",
       "namespace": "cg",
       "name": "events",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.events-v1-0000-2026-0804-001",
       "route": "GET /events",
       "description": "SSE — all SISO bus events",
@@ -24019,7 +24088,7 @@
       "id": "cg.driver.exec",
       "namespace": "cg",
       "name": "driver.exec",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.driver.exec-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Execute ClearDriver browser action",
@@ -24037,7 +24106,7 @@
       "id": "cg.dom.query",
       "namespace": "cg",
       "name": "dom.query",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.dom.query-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Query live DOM tree",
@@ -24054,7 +24123,7 @@
       "id": "cg.dom.mutate",
       "namespace": "cg",
       "name": "dom.mutate",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.dom.mutate-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Mutate DOM node",
@@ -24071,7 +24140,7 @@
       "id": "cg.dom.pick",
       "namespace": "cg",
       "name": "dom.pick",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.dom.pick-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Register element picker result",
@@ -24089,7 +24158,7 @@
       "id": "cg.dom.tokens",
       "namespace": "cg",
       "name": "dom.tokens",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.dom.tokens-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Token archaeology — detect LLM API patterns",
@@ -24107,7 +24176,7 @@
       "id": "cg.context.create",
       "namespace": "cg",
       "name": "context.create",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.context.create-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Create isolated Chromium partition",
@@ -24124,7 +24193,7 @@
       "id": "cg.context.switch",
       "namespace": "cg",
       "name": "context.switch",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.context.switch-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Switch active agent context",
@@ -24141,7 +24210,7 @@
       "id": "cg.context.list",
       "namespace": "cg",
       "name": "context.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.context.list-v1-0000-2026-0804-001",
       "route": "GET /contexts",
       "description": "List agent contexts",
@@ -24158,7 +24227,7 @@
       "id": "cg.context.fp.switch",
       "namespace": "cg",
       "name": "context.fp.switch",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.context.fp.switch-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Switch fingerprint mode",
@@ -24176,7 +24245,7 @@
       "id": "cg.cookie.save",
       "namespace": "cg",
       "name": "cookie.save",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.cookie.save-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Save per-account cookies",
@@ -24193,7 +24262,7 @@
       "id": "cg.cookie.restore",
       "namespace": "cg",
       "name": "cookie.restore",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.cookie.restore-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Restore cookies from vault",
@@ -24210,7 +24279,7 @@
       "id": "cg.copilot.message",
       "namespace": "cg",
       "name": "copilot.message",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.copilot.message-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Route to Clear Glass co-pilot",
@@ -24227,7 +24296,7 @@
       "id": "cg.mesh.spawn",
       "namespace": "cg",
       "name": "mesh.spawn",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.mesh.spawn-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Spawn free AI agent",
@@ -24244,7 +24313,7 @@
       "id": "cg.mesh.send",
       "namespace": "cg",
       "name": "mesh.send",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.mesh.send-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Send prompt to mesh agent",
@@ -24261,7 +24330,7 @@
       "id": "cg.mesh.route",
       "namespace": "cg",
       "name": "mesh.route",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.mesh.route-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "RAID-route to healthiest agent",
@@ -24279,7 +24348,7 @@
       "id": "cg.mesh.list",
       "namespace": "cg",
       "name": "mesh.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.mesh.list-v1-0000-2026-0804-001",
       "route": "GET /agents",
       "description": "List mesh agents",
@@ -24296,7 +24365,7 @@
       "id": "cg.url.listen",
       "namespace": "cg",
       "name": "url.listen",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.url.listen-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Add URL pattern listener",
@@ -24313,7 +24382,7 @@
       "id": "cg.url.listen.list",
       "namespace": "cg",
       "name": "url.listen.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.url.listen.list-v1-0000-2026-0804-001",
       "route": "GET /listeners",
       "description": "List active listeners",
@@ -24330,7 +24399,7 @@
       "id": "cg.diag.run",
       "namespace": "cg",
       "name": "diag.run",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.diag.run-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Run diagnostic suite",
@@ -24347,7 +24416,7 @@
       "id": "cg.diag.nexus",
       "namespace": "cg",
       "name": "diag.nexus",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.diag.nexus-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "NEXUS home UI audit",
@@ -24364,7 +24433,7 @@
       "id": "cg.window.open",
       "namespace": "cg",
       "name": "window.open",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.window.open-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Open agent browser window",
@@ -24381,7 +24450,7 @@
       "id": "cg.window.close",
       "namespace": "cg",
       "name": "window.close",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.window.close-v1-0000-2026-0804-001",
       "route": "POST /cmd",
       "description": "Close agent window to tray",
@@ -24398,7 +24467,7 @@
       "id": "cg.wire.health",
       "namespace": "cg",
       "name": "wire.health",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.wire.health-v1-0000-2026-0804-001",
       "route": "GET /wire/health",
       "description": "Wire bridge health",
@@ -24415,7 +24484,7 @@
       "id": "cg.wire.eros.proxy",
       "namespace": "cg",
       "name": "wire.eros.proxy",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.wire.eros.proxy-v1-0000-2026-0804-001",
       "route": "POST /eros/*",
       "description": "Proxy command to ErosmancerOS",
@@ -24433,7 +24502,7 @@
       "id": "cg.wire.driver.bridge",
       "namespace": "cg",
       "name": "wire.driver.bridge",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.wire.driver.bridge-v1-0000-2026-0804-001",
       "route": "POST /bridge/driver",
       "description": "ClearDriver → ErosmancerOS actions",
@@ -24451,7 +24520,7 @@
       "id": "cg.wire.hostile",
       "namespace": "cg",
       "name": "wire.hostile",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.wire.hostile-v1-0000-2026-0804-001",
       "route": "POST /hook/hostile",
       "description": "Hostile detection → fp switch",
@@ -24469,7 +24538,7 @@
       "id": "cg.wire.behavior",
       "namespace": "cg",
       "name": "wire.behavior",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.wire.behavior-v1-0000-2026-0804-001",
       "route": "POST /hook/behavior",
       "description": "Behavior plan → Cortex intelligence",
@@ -24487,7 +24556,7 @@
       "id": "cg.calltos.list",
       "namespace": "cg",
       "name": "calltos.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.calltos.list-v1-0000-2026-0804-001",
       "route": "IPC calltos:list",
       "description": "List every registered callto",
@@ -24505,7 +24574,7 @@
       "id": "cg.calltos.forUrl",
       "namespace": "cg",
       "name": "calltos.forUrl",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.calltos.forUrl-v1-0000-2026-0804-001",
       "route": "IPC calltos:forUrl",
       "description": "Find calltos registered for a given origin",
@@ -24523,7 +24592,7 @@
       "id": "cg.calltos.remove",
       "namespace": "cg",
       "name": "calltos.remove",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.calltos.remove-v1-0000-2026-0804-001",
       "route": "IPC calltos:remove",
       "description": "Remove a registered callto",
@@ -24541,7 +24610,7 @@
       "id": "cg.downloads.listListeners",
       "namespace": "cg",
       "name": "downloads.listListeners",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.downloads.listListeners-v1-0000-2026-0804-001",
       "route": "IPC downloads:listListeners",
       "description": "List configured download listeners",
@@ -24559,7 +24628,7 @@
       "id": "cg.downloads.registerListener",
       "namespace": "cg",
       "name": "downloads.registerListener",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.downloads.registerListener-v1-0000-2026-0804-001",
       "route": "IPC downloads:registerListener",
       "description": "Register a real download listener",
@@ -24577,7 +24646,7 @@
       "id": "cg.downloads.updateListener",
       "namespace": "cg",
       "name": "downloads.updateListener",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.downloads.updateListener-v1-0000-2026-0804-001",
       "route": "IPC downloads:updateListener",
       "description": "Update a download listener",
@@ -24595,7 +24664,7 @@
       "id": "cg.downloads.removeListener",
       "namespace": "cg",
       "name": "downloads.removeListener",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.downloads.removeListener-v1-0000-2026-0804-001",
       "route": "IPC downloads:removeListener",
       "description": "Remove a download listener",
@@ -24613,7 +24682,7 @@
       "id": "cg.siteSettings.get",
       "namespace": "cg",
       "name": "siteSettings.get",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.siteSettings.get-v1-0000-2026-0804-001",
       "route": "IPC site-settings:get",
       "description": "Get one real per-origin setting",
@@ -24630,7 +24699,7 @@
       "id": "cg.siteSettings.getAll",
       "namespace": "cg",
       "name": "siteSettings.getAll",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.siteSettings.getAll-v1-0000-2026-0804-001",
       "route": "IPC site-settings:getAll",
       "description": "Get all real settings for an origin",
@@ -24647,7 +24716,7 @@
       "id": "cg.siteSettings.set",
       "namespace": "cg",
       "name": "siteSettings.set",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.siteSettings.set-v1-0000-2026-0804-001",
       "route": "IPC site-settings:set",
       "description": "Set a real per-origin setting",
@@ -24664,7 +24733,7 @@
       "id": "cg.siteSettings.deleteKey",
       "namespace": "cg",
       "name": "siteSettings.deleteKey",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.siteSettings.deleteKey-v1-0000-2026-0804-001",
       "route": "IPC site-settings:deleteKey",
       "description": "Delete one real setting key",
@@ -24681,7 +24750,7 @@
       "id": "cg.siteSettings.clear",
       "namespace": "cg",
       "name": "siteSettings.clear",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.siteSettings.clear-v1-0000-2026-0804-001",
       "route": "IPC site-settings:clear",
       "description": "Clear all real settings for an origin",
@@ -24698,7 +24767,7 @@
       "id": "cg.siteSettings.listOrigins",
       "namespace": "cg",
       "name": "siteSettings.listOrigins",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.siteSettings.listOrigins-v1-0000-2026-0804-001",
       "route": "IPC site-settings:listOrigins",
       "description": "List every real origin with settings",
@@ -24715,7 +24784,7 @@
       "id": "cg.history.list",
       "namespace": "cg",
       "name": "history.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.history.list-v1-0000-2026-0804-001",
       "route": "IPC history:list",
       "description": "Real browsing history search/list",
@@ -24732,7 +24801,7 @@
       "id": "cg.history.delete",
       "namespace": "cg",
       "name": "history.delete",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.history.delete-v1-0000-2026-0804-001",
       "route": "IPC history:delete",
       "description": "Delete a real history entry",
@@ -24749,7 +24818,7 @@
       "id": "cg.history.clear",
       "namespace": "cg",
       "name": "history.clear",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.history.clear-v1-0000-2026-0804-001",
       "route": "IPC history:clear",
       "description": "Clear real history",
@@ -24766,7 +24835,7 @@
       "id": "cg.extensions.list",
       "namespace": "cg",
       "name": "extensions.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.extensions.list-v1-0000-2026-0804-001",
       "route": "IPC extensions:list",
       "description": "List real loaded Chrome extensions",
@@ -24783,7 +24852,7 @@
       "id": "cg.extensions.load",
       "namespace": "cg",
       "name": "extensions.load",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.extensions.load-v1-0000-2026-0804-001",
       "route": "IPC extensions:load",
       "description": "Load a real unpacked extension",
@@ -24800,7 +24869,7 @@
       "id": "cg.extensions.unload",
       "namespace": "cg",
       "name": "extensions.unload",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.extensions.unload-v1-0000-2026-0804-001",
       "route": "IPC extensions:unload",
       "description": "Unload a real extension",
@@ -24817,7 +24886,7 @@
       "id": "cg.extensions.pickDirectory",
       "namespace": "cg",
       "name": "extensions.pickDirectory",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.extensions.pickDirectory-v1-0000-2026-0804-001",
       "route": "IPC extensions:pickDirectory",
       "description": "Real OS directory picker for extensions",
@@ -24834,7 +24903,7 @@
       "id": "cg.bookmarks.addWithState",
       "namespace": "cg",
       "name": "bookmarks.addWithState",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.bookmarks.addWithState-v1-0000-2026-0804-001",
       "route": "IPC bookmarks:addWithState",
       "description": "Bookmark + save real full page state",
@@ -24852,7 +24921,7 @@
       "id": "cg.bookmarks.openWithState",
       "namespace": "cg",
       "name": "bookmarks.openWithState",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.bookmarks.openWithState-v1-0000-2026-0804-001",
       "route": "IPC bookmarks:openWithState",
       "description": "Open a bookmark and restore its real saved state",
@@ -24870,7 +24939,7 @@
       "id": "cg.rewind.list",
       "namespace": "cg",
       "name": "rewind.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.rewind.list-v1-0000-2026-0804-001",
       "route": "IPC rewind:list",
       "description": "List real rewind snapshots",
@@ -24887,7 +24956,7 @@
       "id": "cg.rewind.snapshot",
       "namespace": "cg",
       "name": "rewind.snapshot",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.rewind.snapshot-v1-0000-2026-0804-001",
       "route": "IPC rewind:snapshot",
       "description": "Take a real rewind snapshot",
@@ -24904,7 +24973,7 @@
       "id": "cg.rewind.restore",
       "namespace": "cg",
       "name": "rewind.restore",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.rewind.restore-v1-0000-2026-0804-001",
       "route": "IPC rewind:restore",
       "description": "Restore a real rewind snapshot",
@@ -24921,7 +24990,7 @@
       "id": "cg.rewind.clear",
       "namespace": "cg",
       "name": "rewind.clear",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.rewind.clear-v1-0000-2026-0804-001",
       "route": "IPC rewind:clear",
       "description": "Clear real rewind snapshots",
@@ -24938,7 +25007,7 @@
       "id": "cg.passwords.list",
       "namespace": "cg",
       "name": "passwords.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.passwords.list-v1-0000-2026-0804-001",
       "route": "IPC passwords:list",
       "description": "List real saved passwords (metadata only)",
@@ -24956,7 +25025,7 @@
       "id": "cg.passwords.delete",
       "namespace": "cg",
       "name": "passwords.delete",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.passwords.delete-v1-0000-2026-0804-001",
       "route": "IPC passwords:delete",
       "description": "Delete a real saved password",
@@ -24974,7 +25043,7 @@
       "id": "cg.speech.available",
       "namespace": "cg",
       "name": "speech.available",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.speech.available-v1-0000-2026-0804-001",
       "route": "IPC speech:available",
       "description": "Real offline speech engine availability",
@@ -24991,7 +25060,7 @@
       "id": "cg.speech.transcribeBuffer",
       "namespace": "cg",
       "name": "speech.transcribeBuffer",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.speech.transcribeBuffer-v1-0000-2026-0804-001",
       "route": "IPC speech:transcribeBuffer",
       "description": "Real offline audio-buffer transcription",
@@ -25008,7 +25077,7 @@
       "id": "cg.macros.list",
       "namespace": "cg",
       "name": "macros.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.macros.list-v1-0000-2026-0804-001",
       "route": "IPC macros:list",
       "description": "List real stored macros (real erosmancer integration where used)",
@@ -25025,7 +25094,7 @@
       "id": "cg.macros.get",
       "namespace": "cg",
       "name": "macros.get",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.macros.get-v1-0000-2026-0804-001",
       "route": "IPC macros:get",
       "description": "Get one real macro",
@@ -25042,7 +25111,7 @@
       "id": "cg.macros.run",
       "namespace": "cg",
       "name": "macros.run",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.macros.run-v1-0000-2026-0804-001",
       "route": "IPC macros:run",
       "description": "Run a real macro against a real agent",
@@ -25059,7 +25128,7 @@
       "id": "cg.bgtab.open",
       "namespace": "cg",
       "name": "bgtab.open",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.bgtab.open-v1-0000-2026-0804-001",
       "route": "IPC bgtab:open",
       "description": "Open a real background service tab",
@@ -25076,7 +25145,7 @@
       "id": "cg.bgtab.close",
       "namespace": "cg",
       "name": "bgtab.close",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.bgtab.close-v1-0000-2026-0804-001",
       "route": "IPC bgtab:close",
       "description": "Close a real background tab",
@@ -25093,7 +25162,7 @@
       "id": "cg.bgtab.list",
       "namespace": "cg",
       "name": "bgtab.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.bgtab.list-v1-0000-2026-0804-001",
       "route": "IPC bgtab:list",
       "description": "List real open background tabs",
@@ -25110,7 +25179,7 @@
       "id": "cg.autofill.listProfiles",
       "namespace": "cg",
       "name": "autofill.listProfiles",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.listProfiles-v1-0000-2026-0804-001",
       "route": "IPC autofill:profile:list",
       "description": "List real AutofillProfile records",
@@ -25127,7 +25196,7 @@
       "id": "cg.autofill.getProfile",
       "namespace": "cg",
       "name": "autofill.getProfile",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.getProfile-v1-0000-2026-0804-001",
       "route": "IPC autofill:profile:get",
       "description": "Get one real autofill profile",
@@ -25144,7 +25213,7 @@
       "id": "cg.autofill.createProfile",
       "namespace": "cg",
       "name": "autofill.createProfile",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.createProfile-v1-0000-2026-0804-001",
       "route": "IPC autofill:profile:create",
       "description": "Create a real autofill profile",
@@ -25161,7 +25230,7 @@
       "id": "cg.autofill.updateProfile",
       "namespace": "cg",
       "name": "autofill.updateProfile",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.updateProfile-v1-0000-2026-0804-001",
       "route": "IPC autofill:profile:update",
       "description": "Update a real autofill profile",
@@ -25178,7 +25247,7 @@
       "id": "cg.autofill.deleteProfile",
       "namespace": "cg",
       "name": "autofill.deleteProfile",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.deleteProfile-v1-0000-2026-0804-001",
       "route": "IPC autofill:profile:delete",
       "description": "Delete a real autofill profile",
@@ -25195,7 +25264,7 @@
       "id": "cg.autofill.detect",
       "namespace": "cg",
       "name": "autofill.detect",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.detect-v1-0000-2026-0804-001",
       "route": "IPC autofill:detect",
       "description": "Detect real form fields an autofill profile would confidently fill",
@@ -25212,7 +25281,7 @@
       "id": "cg.autofill.fill",
       "namespace": "cg",
       "name": "autofill.fill",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.fill-v1-0000-2026-0804-001",
       "route": "IPC autofill:fill",
       "description": "Fill real form fields from an autofill profile",
@@ -25229,7 +25298,7 @@
       "id": "cg.autofill.proposal",
       "namespace": "cg",
       "name": "autofill.proposal",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.proposal-v1-0000-2026-0804-001",
       "route": "IPC autofill:proposal",
       "description": "Draft an Upwork proposal, a Fiverr offer or a cover letter from a profile (a draft only, never sent)",
@@ -25247,7 +25316,7 @@
       "id": "cg.autofill.readPage",
       "namespace": "cg",
       "name": "autofill.readPage",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.readPage-v1-0000-2026-0804-001",
       "route": "IPC autofill:readPage",
       "description": "The text and url of the page open in a tab (the job post the proposal answers)",
@@ -25265,7 +25334,7 @@
       "id": "cg.autofill.gig",
       "namespace": "cg",
       "name": "autofill.gig",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.gig-v1-0000-2026-0804-001",
       "route": "IPC autofill:gig",
       "description": "Write a Fiverr gig from a profile and one line of what it offers — title, tags, description, three packages, FAQ, buyer questions, held to Fiverr's limits",
@@ -25284,7 +25353,7 @@
       "id": "cg.autofill.gigDetect",
       "namespace": "cg",
       "name": "autofill.gigDetect",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.gigDetect-v1-0000-2026-0804-001",
       "route": "IPC autofill:gig:detect",
       "description": "Preview which field of the gig editor open in a tab takes which part of the gig (nothing typed)",
@@ -25303,7 +25372,7 @@
       "id": "cg.autofill.gigFill",
       "namespace": "cg",
       "name": "autofill.gigFill",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.autofill.gigFill-v1-0000-2026-0804-001",
       "route": "IPC autofill:gig:fill",
       "description": "Type the gig into the gig editor open in a tab — never saves or publishes",
@@ -25322,7 +25391,7 @@
       "id": "cg.screenQa.detect",
       "namespace": "cg",
       "name": "screenQa.detect",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.screenQa.detect-v1-0000-2026-0804-001",
       "route": "IPC screen-qa:detect",
       "description": "Detect real open-ended questions on the page, excluding whatever autofill would already confidently fill",
@@ -25339,7 +25408,7 @@
       "id": "cg.screenQa.answer",
       "namespace": "cg",
       "name": "screenQa.answer",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.screenQa.answer-v1-0000-2026-0804-001",
       "route": "IPC screen-qa:answer",
       "description": "Answer a real question through the real copilot bridge (text only — never writes to the page)",
@@ -25356,7 +25425,7 @@
       "id": "cg.screenQa.inject",
       "namespace": "cg",
       "name": "screenQa.inject",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.screenQa.inject-v1-0000-2026-0804-001",
       "route": "IPC screen-qa:inject",
       "description": "Write a chosen answer into one real field",
@@ -25373,7 +25442,7 @@
       "id": "cg.screenQa.elementAt",
       "namespace": "cg",
       "name": "screenQa.elementAt",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.screenQa.elementAt-v1-0000-2026-0804-001",
       "route": "IPC screen-qa:element-at",
       "description": "The real field at a window-relative point — the right-click path's own target",
@@ -25390,7 +25459,7 @@
       "id": "cg.screenQa.deriveQuestion",
       "namespace": "cg",
       "name": "screenQa.deriveQuestion",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.screenQa.deriveQuestion-v1-0000-2026-0804-001",
       "route": "IPC screen-qa:derive-question",
       "description": "Derive a question from one real field's metadata (label/aria-label/placeholder/name)",
@@ -25407,7 +25476,7 @@
       "id": "cg.accounts.setDefault",
       "namespace": "cg",
       "name": "accounts.setDefault",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.setDefault-v1-0000-2026-0804-001",
       "route": "IPC accounts:setDefault",
       "description": "Set/clear the per-provider default account (Clear Glass is the account authority guardian resolves against)",
@@ -25424,7 +25493,7 @@
       "id": "cg.accounts.defaults",
       "namespace": "cg",
       "name": "accounts.defaults",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.defaults-v1-0000-2026-0804-001",
       "route": "IPC accounts:defaults",
       "description": "Per-provider default account map",
@@ -25441,7 +25510,7 @@
       "id": "cg.accounts.resolve",
       "namespace": "cg",
       "name": "accounts.resolve",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.resolve-v1-0000-2026-0804-001",
       "route": "IPC accounts:resolve",
       "description": "Resolve the account a dispatch to this provider would use (never auto-creates)",
@@ -25458,7 +25527,7 @@
       "id": "cg.accounts.portal.providers",
       "namespace": "cg",
       "name": "accounts.portal.providers",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.portal.providers-v1-0000-2026-0804-001",
       "route": "IPC accounts:portal:providers",
       "description": "Providers a login portal can open, with their sign-in urls",
@@ -25476,7 +25545,7 @@
       "id": "cg.accounts.portal.open",
       "namespace": "cg",
       "name": "accounts.portal.open",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.portal.open-v1-0000-2026-0804-001",
       "route": "IPC accounts:portal:open",
       "description": "Open a provider sign-in window in the account's own mesh partition",
@@ -25494,7 +25563,7 @@
       "id": "cg.accounts.portal.capture",
       "namespace": "cg",
       "name": "accounts.portal.capture",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.portal.capture-v1-0000-2026-0804-001",
       "route": "IPC accounts:portal:capture",
       "description": "Capture the signed-in session into the cookie vault + link the provider identity",
@@ -25513,7 +25582,7 @@
       "id": "cg.accounts.portal.status",
       "namespace": "cg",
       "name": "accounts.portal.status",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.portal.status-v1-0000-2026-0804-001",
       "route": "IPC accounts:portal:status",
       "description": "Live cookies, vault copy, identity and portal state for one account/provider",
@@ -25532,7 +25601,7 @@
       "id": "cg.accounts.portal.close",
       "namespace": "cg",
       "name": "accounts.portal.close",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.portal.close-v1-0000-2026-0804-001",
       "route": "IPC accounts:portal:close",
       "description": "Close an open sign-in window",
@@ -25550,7 +25619,7 @@
       "id": "cg.accounts.portal.signOut",
       "namespace": "cg",
       "name": "accounts.portal.signOut",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.portal.signOut-v1-0000-2026-0804-001",
       "route": "IPC accounts:portal:signOut",
       "description": "Clear the account's partition and delete its vault copy",
@@ -25569,7 +25638,7 @@
       "id": "cg.accounts.portal.credentials",
       "namespace": "cg",
       "name": "accounts.portal.credentials",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.portal.credentials-v1-0000-2026-0804-001",
       "route": "IPC accounts:portal:credentials",
       "description": "Seal optional sign-in credentials in the password vault for pre-fill",
@@ -25589,7 +25658,7 @@
       "id": "cg.accounts.portal.list",
       "namespace": "cg",
       "name": "accounts.portal.list",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.accounts.portal.list-v1-0000-2026-0804-001",
       "route": "IPC accounts:portal:list",
       "description": "List open sign-in windows",
@@ -25607,7 +25676,7 @@
       "id": "cg.vault.status",
       "namespace": "cg",
       "name": "vault.status",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.vault.status-v1-0000-2026-0804-001",
       "route": "IPC vault:status",
       "description": "Which key protects each vault — OS-sealed (safeStorage) or legacy",
@@ -25625,7 +25694,7 @@
       "id": "cg.macros.create",
       "namespace": "cg",
       "name": "macros.create",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.macros.create-v1-0000-2026-0804-001",
       "route": "IPC macros:create",
       "description": "Create a macro through macro.js's own validation (step builder)",
@@ -25642,7 +25711,7 @@
       "id": "cg.macros.delete",
       "namespace": "cg",
       "name": "macros.delete",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.macros.delete-v1-0000-2026-0804-001",
       "route": "IPC macros:delete",
       "description": "Delete a macro (soft-delete, audit trail kept)",
@@ -25659,7 +25728,7 @@
       "id": "cg.macros.schema",
       "namespace": "cg",
       "name": "macros.schema",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.macros.schema-v1-0000-2026-0804-001",
       "route": "IPC macros:schema",
       "description": "Real browser_action enum + erosmancer actions + behavior profiles for the step builder",
@@ -25677,7 +25746,7 @@
       "id": "cg.mesh.jobSend",
       "namespace": "cg",
       "name": "mesh.jobSend",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.mesh.jobSend-v1-0000-2026-0804-001",
       "route": "POST /agent-mesh/send",
       "description": "Guardian hands Clear Glass a job it CLAIMED on its .job; the intake verifies the claim via guardian /jobs?id= before queueing (idempotent by jobId)",
@@ -25696,7 +25765,7 @@
       "id": "cg.mesh.jobStatus",
       "namespace": "cg",
       "name": "mesh.jobStatus",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.mesh.jobStatus-v1-0000-2026-0804-001",
       "route": "GET /agent-mesh/job?jobId={jobId}",
       "description": "Status of a mesh job; survives a Clear Glass restart as clear_glass_restarted (sent:null, never resend)",
@@ -25715,7 +25784,7 @@
       "id": "cg.mesh.jobIntake",
       "namespace": "cg",
       "name": "mesh.jobIntake",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.mesh.jobIntake-v1-0000-2026-0804-001",
       "route": "GET /agent-mesh/intake",
       "description": "Jobs Clear Glass has taken in from guardian (only jobs guardian claimed for it on their .job), with each <jobId>.intake record",
@@ -25734,7 +25803,7 @@
       "id": "cg.downloads.responses",
       "namespace": "cg",
       "name": "downloads.responses",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.downloads.responses-v1-0000-2026-0804-001",
       "route": "GET /cli/downloads/responses",
       "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
@@ -25753,7 +25822,7 @@
       "id": "cg.downloads.responseItem",
       "namespace": "cg",
       "name": "downloads.responseItem",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.downloads.responseItem-v1-0000-2026-0804-001",
       "route": "GET /cli/downloads/responses/:id",
       "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record",
@@ -25772,7 +25841,7 @@
       "id": "cg.window.openLibrary",
       "namespace": "cg",
       "name": "window.openLibrary",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.window.openLibrary-v1-0000-2026-0804-001",
       "route": "IPC window:openLibrary",
       "description": "Open (or focus) the Library window at an area — downloads, responses, bookmarks, history, accounts, passwords, autofill, macros",
@@ -25790,7 +25859,7 @@
       "id": "cg.window.closeLibrary",
       "namespace": "cg",
       "name": "window.closeLibrary",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.window.closeLibrary-v1-0000-2026-0804-001",
       "route": "IPC window:closeLibrary",
       "description": "Close the Library window",
@@ -25808,7 +25877,7 @@
       "id": "cg.downloads.openFile",
       "namespace": "cg",
       "name": "downloads.openFile",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.downloads.openFile-v1-0000-2026-0804-001",
       "route": "IPC downloads:openFile",
       "description": "Open a completed download with the OS default app (Library → Downloads, click the name)",
@@ -25826,7 +25895,7 @@
       "id": "cg.selectors.providerFor",
       "namespace": "cg",
       "name": "selectors.providerFor",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.selectors.providerFor-v1-0000-2026-0804-001",
       "route": "IPC selectors:provider-for-url",
       "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector",
@@ -25845,7 +25914,7 @@
       "id": "cg.selectors.assign",
       "namespace": "cg",
       "name": "selectors.assign",
-      "version": "3.23.0",
+      "version": "3.24.0",
       "uuid": "nexus-loom-cap-cg.selectors.assign-v1-0000-2026-0804-001",
       "route": "IPC selectors:assign",
       "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page",
@@ -28652,7 +28721,7 @@
       "id": "spec.docs.2026-10-05-spec-workshop-rebuild-phasemap",
       "namespace": "spec",
       "name": "docs/2026-10-05-spec-workshop-rebuild-phasemap.spec",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "uuid": "nexus-loom-spec-spec.docs.2026-10-05-spec-workshop-rebuild-phasemap-v1-0000-2026-0804-001",
       "spec_uuid": "nexus-spec-workshop-rebuild-phasemap-v1-0000-2026-1005-jamesbrooks-001",
       "route_count": 0,
@@ -30788,7 +30857,7 @@
       "id": "spec.idearium.spec.idearium",
       "namespace": "spec",
       "name": "idearium/spec/idearium.spec",
-      "version": "4.32.0",
+      "version": "4.33.0",
       "uuid": "nexus-loom-spec-spec.idearium.spec.idearium-v1-0000-2026-0804-001",
       "spec_uuid": "nexus-idearium-v3-0000-2026-0615-jamesbrooks-001",
       "route_count": 4,
@@ -45173,6 +45242,16 @@
       "novelType": false,
       "registeredAt": 1791237092404
     },
+    "nexus.tests.modules.test-template-picker.test.import": {
+      "id": "nexus.tests.modules.test-template-picker.test.import",
+      "component_id": "nexus.tests.modules.test-template-picker.test",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.tests.modules.test-template-picker.test-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791244681024
+    },
     "nexus.tests.modules.test-three-graphs.test.import": {
       "id": "nexus.tests.modules.test-three-graphs.test.import",
       "component_id": "nexus.tests.modules.test-three-graphs.test",
@@ -55093,6 +55172,26 @@
       "novelType": false,
       "registeredAt": 1791240887590
     },
+    "nexus.idearium.ui.js.template-picker.export": {
+      "id": "nexus.idearium.ui.js.template-picker.export",
+      "component_id": "nexus.idearium.ui.js.template-picker",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-map-nexus.idearium.ui.js.template-picker-export-v1-0000-2026-1005-001",
+      "novelType": false,
+      "registeredAt": 1791244725579
+    },
+    "nexus.idearium.ui.js.template-picker.import": {
+      "id": "nexus.idearium.ui.js.template-picker.import",
+      "component_id": "nexus.idearium.ui.js.template-picker",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-map-nexus.idearium.ui.js.template-picker-import-v1-0000-2026-1005-001",
+      "novelType": false,
+      "registeredAt": 1791244725593
+    },
     "nexus.idearium.ui.js.app.export": {
       "id": "nexus.idearium.ui.js.app.export",
       "component_id": "nexus.idearium.ui.js.app",
@@ -56062,6 +56161,36 @@
       "uuid": "nexus-loom-cap-idearium.repo.agent.stream-in-v1-0000-2026-0804-001",
       "novelType": false,
       "registeredAt": 1791243143360
+    },
+    "idearium.workshop.templates.in": {
+      "id": "idearium.workshop.templates.in",
+      "component_id": "idearium.workshop.templates",
+      "name": "route",
+      "type": "api",
+      "direction": "in",
+      "uuid": "nexus-loom-cap-idearium.workshop.templates-in-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791244738283
+    },
+    "idearium.workshop.template.save.in": {
+      "id": "idearium.workshop.template.save.in",
+      "component_id": "idearium.workshop.template.save",
+      "name": "route",
+      "type": "api",
+      "direction": "in",
+      "uuid": "nexus-loom-cap-idearium.workshop.template.save-in-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791244738302
+    },
+    "idearium.workshop.template.remove.in": {
+      "id": "idearium.workshop.template.remove.in",
+      "component_id": "idearium.workshop.template.remove",
+      "name": "route",
+      "type": "api",
+      "direction": "in",
+      "uuid": "nexus-loom-cap-idearium.workshop.template.remove-in-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791244738320
     },
     "idearium.ollama.check.in": {
       "id": "idearium.ollama.check.in",
@@ -76485,1125 +76614,1145 @@
       "schemaVersion": "1.2.0",
       "registeredAt": 1791243088827
     },
-    "source.wire.2030.nexus.lib.agent-tools.naming--nexus.tests.modules.test-tool-naming-convention": {
-      "id": "source.wire.2030.nexus.lib.agent-tools.naming--nexus.tests.modules.test-tool-naming-convention",
+    "source.wire.2029.nexus.clear-glass.src.driver.glass--nexus.tests.modules.test-template-picker.test": {
+      "id": "source.wire.2029.nexus.clear-glass.src.driver.glass--nexus.tests.modules.test-template-picker.test",
+      "from_hook_id": "nexus.clear-glass.src.driver.glass.export",
+      "to_hook_id": "nexus.tests.modules.test-template-picker.test.import",
+      "intent": "nexus.tests.modules.test-template-picker.test requires nexus.clear-glass.src.driver.glass",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-2029-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791244692279
+    },
+    "source.wire.2030.nexus.lib.test-sandbox--nexus.tests.modules.test-template-picker.test": {
+      "id": "source.wire.2030.nexus.lib.test-sandbox--nexus.tests.modules.test-template-picker.test",
+      "from_hook_id": "nexus.lib.test-sandbox.export",
+      "to_hook_id": "nexus.tests.modules.test-template-picker.test.import",
+      "intent": "nexus.tests.modules.test-template-picker.test requires nexus.lib.test-sandbox",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-2030-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791244692287
+    },
+    "source.wire.2032.nexus.lib.agent-tools.naming--nexus.tests.modules.test-tool-naming-convention": {
+      "id": "source.wire.2032.nexus.lib.agent-tools.naming--nexus.tests.modules.test-tool-naming-convention",
       "from_hook_id": "nexus.lib.agent-tools.naming.export",
       "to_hook_id": "nexus.tests.modules.test-tool-naming-convention.import",
       "intent": "nexus.tests.modules.test-tool-naming-convention requires nexus.lib.agent-tools.naming",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2030-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2032-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088836
+      "registeredAt": 1791244692295
     },
-    "source.wire.2031.nexus.lib.agent-tools.tools.system-tools.cortex-restep--nexus.tests.modules.test-tool-naming-convention": {
-      "id": "source.wire.2031.nexus.lib.agent-tools.tools.system-tools.cortex-restep--nexus.tests.modules.test-tool-naming-convention",
+    "source.wire.2033.nexus.lib.agent-tools.tools.system-tools.cortex-restep--nexus.tests.modules.test-tool-naming-convention": {
+      "id": "source.wire.2033.nexus.lib.agent-tools.tools.system-tools.cortex-restep--nexus.tests.modules.test-tool-naming-convention",
       "from_hook_id": "nexus.lib.agent-tools.tools.system-tools.cortex-restep.export",
       "to_hook_id": "nexus.tests.modules.test-tool-naming-convention.import",
       "intent": "nexus.tests.modules.test-tool-naming-convention requires nexus.lib.agent-tools.tools.system-tools.cortex-restep",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2031-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2033-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088845
+      "registeredAt": 1791244692303
     },
-    "source.wire.2032.nexus.orchestrator.lib.ui-registry--nexus.tests.modules.test-ui-registry": {
-      "id": "source.wire.2032.nexus.orchestrator.lib.ui-registry--nexus.tests.modules.test-ui-registry",
+    "source.wire.2034.nexus.orchestrator.lib.ui-registry--nexus.tests.modules.test-ui-registry": {
+      "id": "source.wire.2034.nexus.orchestrator.lib.ui-registry--nexus.tests.modules.test-ui-registry",
       "from_hook_id": "nexus.orchestrator.lib.ui-registry.export",
       "to_hook_id": "nexus.tests.modules.test-ui-registry.import",
       "intent": "nexus.tests.modules.test-ui-registry requires nexus.orchestrator.lib.ui-registry",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2032-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2034-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088855
+      "registeredAt": 1791244692311
     },
-    "source.wire.2033.nexus.copilot.lib.user-model--nexus.tests.modules.test-user-model-radiate": {
-      "id": "source.wire.2033.nexus.copilot.lib.user-model--nexus.tests.modules.test-user-model-radiate",
+    "source.wire.2035.nexus.copilot.lib.user-model--nexus.tests.modules.test-user-model-radiate": {
+      "id": "source.wire.2035.nexus.copilot.lib.user-model--nexus.tests.modules.test-user-model-radiate",
       "from_hook_id": "nexus.copilot.lib.user-model.export",
       "to_hook_id": "nexus.tests.modules.test-user-model-radiate.import",
       "intent": "nexus.tests.modules.test-user-model-radiate requires nexus.copilot.lib.user-model",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2033-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2035-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088865
+      "registeredAt": 1791244692319
     },
-    "source.wire.2035.nexus.lib.test-sandbox--nexus.tests.modules.test-versionium-repo-history.test": {
-      "id": "source.wire.2035.nexus.lib.test-sandbox--nexus.tests.modules.test-versionium-repo-history.test",
+    "source.wire.2037.nexus.lib.test-sandbox--nexus.tests.modules.test-versionium-repo-history.test": {
+      "id": "source.wire.2037.nexus.lib.test-sandbox--nexus.tests.modules.test-versionium-repo-history.test",
       "from_hook_id": "nexus.lib.test-sandbox.export",
       "to_hook_id": "nexus.tests.modules.test-versionium-repo-history.test.import",
       "intent": "nexus.tests.modules.test-versionium-repo-history.test requires nexus.lib.test-sandbox",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2035-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2037-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088874
+      "registeredAt": 1791244692328
     },
-    "source.wire.2037.nexus.versionium.lib.files--nexus.tests.modules.test-versionium-repo-history.test": {
-      "id": "source.wire.2037.nexus.versionium.lib.files--nexus.tests.modules.test-versionium-repo-history.test",
+    "source.wire.2039.nexus.versionium.lib.files--nexus.tests.modules.test-versionium-repo-history.test": {
+      "id": "source.wire.2039.nexus.versionium.lib.files--nexus.tests.modules.test-versionium-repo-history.test",
       "from_hook_id": "nexus.versionium.lib.files.export",
       "to_hook_id": "nexus.tests.modules.test-versionium-repo-history.test.import",
       "intent": "nexus.tests.modules.test-versionium-repo-history.test requires nexus.versionium.lib.files",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2037-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2039-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088883
+      "registeredAt": 1791244692335
     },
-    "source.wire.2039.nexus.versionium.lib.snapshot--nexus.tests.modules.test-versionium-snapshot-migration": {
-      "id": "source.wire.2039.nexus.versionium.lib.snapshot--nexus.tests.modules.test-versionium-snapshot-migration",
+    "source.wire.2041.nexus.versionium.lib.snapshot--nexus.tests.modules.test-versionium-snapshot-migration": {
+      "id": "source.wire.2041.nexus.versionium.lib.snapshot--nexus.tests.modules.test-versionium-snapshot-migration",
       "from_hook_id": "nexus.versionium.lib.snapshot.export",
       "to_hook_id": "nexus.tests.modules.test-versionium-snapshot-migration.import",
       "intent": "nexus.tests.modules.test-versionium-snapshot-migration requires nexus.versionium.lib.snapshot",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2039-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2041-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088893
+      "registeredAt": 1791244692343
     },
-    "source.wire.2041.nexus.lib.seam.adapters.warp-cascade--nexus.tests.modules.test-warp-cascade-provider-fallback": {
-      "id": "source.wire.2041.nexus.lib.seam.adapters.warp-cascade--nexus.tests.modules.test-warp-cascade-provider-fallback",
+    "source.wire.2043.nexus.lib.seam.adapters.warp-cascade--nexus.tests.modules.test-warp-cascade-provider-fallback": {
+      "id": "source.wire.2043.nexus.lib.seam.adapters.warp-cascade--nexus.tests.modules.test-warp-cascade-provider-fallback",
       "from_hook_id": "nexus.lib.seam.adapters.warp-cascade.export",
       "to_hook_id": "nexus.tests.modules.test-warp-cascade-provider-fallback.import",
       "intent": "nexus.tests.modules.test-warp-cascade-provider-fallback requires nexus.lib.seam.adapters.warp-cascade",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2041-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2043-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088904
+      "registeredAt": 1791244692351
     },
-    "source.wire.2042.nexus.warp.dispatch.cascade--nexus.tests.modules.test-warp-cascade-provider-fallback": {
-      "id": "source.wire.2042.nexus.warp.dispatch.cascade--nexus.tests.modules.test-warp-cascade-provider-fallback",
+    "source.wire.2044.nexus.warp.dispatch.cascade--nexus.tests.modules.test-warp-cascade-provider-fallback": {
+      "id": "source.wire.2044.nexus.warp.dispatch.cascade--nexus.tests.modules.test-warp-cascade-provider-fallback",
       "from_hook_id": "nexus.warp.dispatch.cascade.export",
       "to_hook_id": "nexus.tests.modules.test-warp-cascade-provider-fallback.import",
       "intent": "nexus.tests.modules.test-warp-cascade-provider-fallback requires nexus.warp.dispatch.cascade",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2042-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2044-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088913
+      "registeredAt": 1791244692359
     },
-    "source.wire.2043.nexus.lib.test-sandbox--nexus.tests.modules.test-work-surface.test": {
-      "id": "source.wire.2043.nexus.lib.test-sandbox--nexus.tests.modules.test-work-surface.test",
+    "source.wire.2045.nexus.lib.test-sandbox--nexus.tests.modules.test-work-surface.test": {
+      "id": "source.wire.2045.nexus.lib.test-sandbox--nexus.tests.modules.test-work-surface.test",
       "from_hook_id": "nexus.lib.test-sandbox.export",
       "to_hook_id": "nexus.tests.modules.test-work-surface.test.import",
       "intent": "nexus.tests.modules.test-work-surface.test requires nexus.lib.test-sandbox",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2043-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2045-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088924
+      "registeredAt": 1791244692368
     },
-    "source.wire.2044.nexus.clear-glass.src.driver.glass--nexus.tests.modules.test-workshop-full.test": {
-      "id": "source.wire.2044.nexus.clear-glass.src.driver.glass--nexus.tests.modules.test-workshop-full.test",
+    "source.wire.2046.nexus.clear-glass.src.driver.glass--nexus.tests.modules.test-workshop-full.test": {
+      "id": "source.wire.2046.nexus.clear-glass.src.driver.glass--nexus.tests.modules.test-workshop-full.test",
       "from_hook_id": "nexus.clear-glass.src.driver.glass.export",
       "to_hook_id": "nexus.tests.modules.test-workshop-full.test.import",
       "intent": "nexus.tests.modules.test-workshop-full.test requires nexus.clear-glass.src.driver.glass",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2044-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2046-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088934
+      "registeredAt": 1791244692376
     },
-    "source.wire.2045.nexus.lib.test-sandbox--nexus.tests.modules.test-workshop-full.test": {
-      "id": "source.wire.2045.nexus.lib.test-sandbox--nexus.tests.modules.test-workshop-full.test",
+    "source.wire.2047.nexus.lib.test-sandbox--nexus.tests.modules.test-workshop-full.test": {
+      "id": "source.wire.2047.nexus.lib.test-sandbox--nexus.tests.modules.test-workshop-full.test",
       "from_hook_id": "nexus.lib.test-sandbox.export",
       "to_hook_id": "nexus.tests.modules.test-workshop-full.test.import",
       "intent": "nexus.tests.modules.test-workshop-full.test requires nexus.lib.test-sandbox",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2045-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2047-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088945
+      "registeredAt": 1791244692385
     },
-    "source.wire.2048.nexus.lib.agent-tools.tool-call-listener--nexus.tests.modules.tool-call-listener.test": {
-      "id": "source.wire.2048.nexus.lib.agent-tools.tool-call-listener--nexus.tests.modules.tool-call-listener.test",
+    "source.wire.2050.nexus.lib.agent-tools.tool-call-listener--nexus.tests.modules.tool-call-listener.test": {
+      "id": "source.wire.2050.nexus.lib.agent-tools.tool-call-listener--nexus.tests.modules.tool-call-listener.test",
       "from_hook_id": "nexus.lib.agent-tools.tool-call-listener.export",
       "to_hook_id": "nexus.tests.modules.tool-call-listener.test.import",
       "intent": "nexus.tests.modules.tool-call-listener.test requires nexus.lib.agent-tools.tool-call-listener",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2048-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2050-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088956
+      "registeredAt": 1791244692393
     },
-    "source.wire.2049.nexus.ui.tv-shell.tutorial.tutorial--nexus.tests.modules.tutorial-engine.test": {
-      "id": "source.wire.2049.nexus.ui.tv-shell.tutorial.tutorial--nexus.tests.modules.tutorial-engine.test",
+    "source.wire.2051.nexus.ui.tv-shell.tutorial.tutorial--nexus.tests.modules.tutorial-engine.test": {
+      "id": "source.wire.2051.nexus.ui.tv-shell.tutorial.tutorial--nexus.tests.modules.tutorial-engine.test",
       "from_hook_id": "nexus.ui.tv-shell.tutorial.tutorial.export",
       "to_hook_id": "nexus.tests.modules.tutorial-engine.test.import",
       "intent": "nexus.tests.modules.tutorial-engine.test requires nexus.ui.tv-shell.tutorial.tutorial",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2049-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2051-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088968
+      "registeredAt": 1791244692401
     },
-    "source.wire.2050.nexus.copilot.lib.expectation-watcher--nexus.tests.modules.ui-self-diagnosis.test": {
-      "id": "source.wire.2050.nexus.copilot.lib.expectation-watcher--nexus.tests.modules.ui-self-diagnosis.test",
+    "source.wire.2052.nexus.copilot.lib.expectation-watcher--nexus.tests.modules.ui-self-diagnosis.test": {
+      "id": "source.wire.2052.nexus.copilot.lib.expectation-watcher--nexus.tests.modules.ui-self-diagnosis.test",
       "from_hook_id": "nexus.copilot.lib.expectation-watcher.export",
       "to_hook_id": "nexus.tests.modules.ui-self-diagnosis.test.import",
       "intent": "nexus.tests.modules.ui-self-diagnosis.test requires nexus.copilot.lib.expectation-watcher",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2050-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2052-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088978
+      "registeredAt": 1791244692409
     },
-    "source.wire.2051.nexus.nexus.nexus-bus--nexus.tests.modules.ui-self-diagnosis.test": {
-      "id": "source.wire.2051.nexus.nexus.nexus-bus--nexus.tests.modules.ui-self-diagnosis.test",
+    "source.wire.2053.nexus.nexus.nexus-bus--nexus.tests.modules.ui-self-diagnosis.test": {
+      "id": "source.wire.2053.nexus.nexus.nexus-bus--nexus.tests.modules.ui-self-diagnosis.test",
       "from_hook_id": "nexus.nexus.nexus-bus.export",
       "to_hook_id": "nexus.tests.modules.ui-self-diagnosis.test.import",
       "intent": "nexus.tests.modules.ui-self-diagnosis.test requires nexus.nexus.nexus-bus",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2051-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2053-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243088988
+      "registeredAt": 1791244692417
     },
-    "source.wire.2052.nexus.copilot.lib.user-model--nexus.tests.modules.user-model.test": {
-      "id": "source.wire.2052.nexus.copilot.lib.user-model--nexus.tests.modules.user-model.test",
+    "source.wire.2054.nexus.copilot.lib.user-model--nexus.tests.modules.user-model.test": {
+      "id": "source.wire.2054.nexus.copilot.lib.user-model--nexus.tests.modules.user-model.test",
       "from_hook_id": "nexus.copilot.lib.user-model.export",
       "to_hook_id": "nexus.tests.modules.user-model.test.import",
       "intent": "nexus.tests.modules.user-model.test requires nexus.copilot.lib.user-model",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2052-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2054-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089006
+      "registeredAt": 1791244692425
     },
-    "source.wire.2055.nexus.lib.test-sandbox--nexus.tests.nexus-full-audit": {
-      "id": "source.wire.2055.nexus.lib.test-sandbox--nexus.tests.nexus-full-audit",
+    "source.wire.2057.nexus.lib.test-sandbox--nexus.tests.nexus-full-audit": {
+      "id": "source.wire.2057.nexus.lib.test-sandbox--nexus.tests.nexus-full-audit",
       "from_hook_id": "nexus.lib.test-sandbox.export",
       "to_hook_id": "nexus.tests.nexus-full-audit.import",
       "intent": "nexus.tests.nexus-full-audit requires nexus.lib.test-sandbox",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2055-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2057-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089020
+      "registeredAt": 1791244692433
     },
-    "source.wire.2056.nexus.orchestrator.lib.mcp-server--nexus.tests.nexus-full-audit": {
-      "id": "source.wire.2056.nexus.orchestrator.lib.mcp-server--nexus.tests.nexus-full-audit",
+    "source.wire.2058.nexus.orchestrator.lib.mcp-server--nexus.tests.nexus-full-audit": {
+      "id": "source.wire.2058.nexus.orchestrator.lib.mcp-server--nexus.tests.nexus-full-audit",
       "from_hook_id": "nexus.orchestrator.lib.mcp-server.export",
       "to_hook_id": "nexus.tests.nexus-full-audit.import",
       "intent": "nexus.tests.nexus-full-audit requires nexus.orchestrator.lib.mcp-server",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2056-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2058-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089036
+      "registeredAt": 1791244692441
     },
-    "source.wire.2057.nexus.tests.helpers.home-page-source--nexus.tests.nexus-full-audit": {
-      "id": "source.wire.2057.nexus.tests.helpers.home-page-source--nexus.tests.nexus-full-audit",
+    "source.wire.2059.nexus.tests.helpers.home-page-source--nexus.tests.nexus-full-audit": {
+      "id": "source.wire.2059.nexus.tests.helpers.home-page-source--nexus.tests.nexus-full-audit",
       "from_hook_id": "nexus.tests.helpers.home-page-source.export",
       "to_hook_id": "nexus.tests.nexus-full-audit.import",
       "intent": "nexus.tests.nexus-full-audit requires nexus.tests.helpers.home-page-source",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2057-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2059-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089054
+      "registeredAt": 1791244692449
     },
-    "source.wire.2062.nexus.loom.schema.definitions--nexus.tests.node-schemas-split.test": {
-      "id": "source.wire.2062.nexus.loom.schema.definitions--nexus.tests.node-schemas-split.test",
+    "source.wire.2064.nexus.loom.schema.definitions--nexus.tests.node-schemas-split.test": {
+      "id": "source.wire.2064.nexus.loom.schema.definitions--nexus.tests.node-schemas-split.test",
       "from_hook_id": "nexus.loom.schema.definitions.export",
       "to_hook_id": "nexus.tests.node-schemas-split.test.import",
       "intent": "nexus.tests.node-schemas-split.test requires nexus.loom.schema.definitions",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2062-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2064-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089064
+      "registeredAt": 1791244692456
     },
-    "source.wire.2067.nexus.lib.test-sandbox--nexus.tests.probe.archive-import-chromium": {
-      "id": "source.wire.2067.nexus.lib.test-sandbox--nexus.tests.probe.archive-import-chromium",
+    "source.wire.2069.nexus.lib.test-sandbox--nexus.tests.probe.archive-import-chromium": {
+      "id": "source.wire.2069.nexus.lib.test-sandbox--nexus.tests.probe.archive-import-chromium",
       "from_hook_id": "nexus.lib.test-sandbox.export",
       "to_hook_id": "nexus.tests.probe.archive-import-chromium.import",
       "intent": "nexus.tests.probe.archive-import-chromium requires nexus.lib.test-sandbox",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2067-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2069-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089074
+      "registeredAt": 1791244692465
     },
-    "source.wire.2068.nexus.tests.probe._glass-probe--nexus.tests.probe.archive-import-chromium": {
-      "id": "source.wire.2068.nexus.tests.probe._glass-probe--nexus.tests.probe.archive-import-chromium",
+    "source.wire.2070.nexus.tests.probe._glass-probe--nexus.tests.probe.archive-import-chromium": {
+      "id": "source.wire.2070.nexus.tests.probe._glass-probe--nexus.tests.probe.archive-import-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.archive-import-chromium.import",
       "intent": "nexus.tests.probe.archive-import-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2068-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2070-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089085
+      "registeredAt": 1791244692473
     },
-    "source.wire.2069.nexus.tests.probe._glass-probe--nexus.tests.probe.build-surface-ui-chromium": {
-      "id": "source.wire.2069.nexus.tests.probe._glass-probe--nexus.tests.probe.build-surface-ui-chromium",
+    "source.wire.2071.nexus.tests.probe._glass-probe--nexus.tests.probe.build-surface-ui-chromium": {
+      "id": "source.wire.2071.nexus.tests.probe._glass-probe--nexus.tests.probe.build-surface-ui-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.build-surface-ui-chromium.import",
       "intent": "nexus.tests.probe.build-surface-ui-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2069-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2071-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089095
+      "registeredAt": 1791244692480
     },
-    "source.wire.2070.nexus.tests.probe._glass-probe--nexus.tests.probe.chat-stream-chromium": {
-      "id": "source.wire.2070.nexus.tests.probe._glass-probe--nexus.tests.probe.chat-stream-chromium",
+    "source.wire.2072.nexus.tests.probe._glass-probe--nexus.tests.probe.chat-stream-chromium": {
+      "id": "source.wire.2072.nexus.tests.probe._glass-probe--nexus.tests.probe.chat-stream-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.chat-stream-chromium.import",
       "intent": "nexus.tests.probe.chat-stream-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2070-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2072-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089104
+      "registeredAt": 1791244692488
     },
-    "source.wire.2071.nexus.tests.probe._glass-probe--nexus.tests.probe.clearglass-menu-library": {
-      "id": "source.wire.2071.nexus.tests.probe._glass-probe--nexus.tests.probe.clearglass-menu-library",
+    "source.wire.2073.nexus.tests.probe._glass-probe--nexus.tests.probe.clearglass-menu-library": {
+      "id": "source.wire.2073.nexus.tests.probe._glass-probe--nexus.tests.probe.clearglass-menu-library",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.clearglass-menu-library.import",
       "intent": "nexus.tests.probe.clearglass-menu-library requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2071-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2073-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089113
+      "registeredAt": 1791244692498
     },
-    "source.wire.2072.nexus.tests.probe._glass-probe--nexus.tests.probe.economy-console-chromium": {
-      "id": "source.wire.2072.nexus.tests.probe._glass-probe--nexus.tests.probe.economy-console-chromium",
+    "source.wire.2074.nexus.tests.probe._glass-probe--nexus.tests.probe.economy-console-chromium": {
+      "id": "source.wire.2074.nexus.tests.probe._glass-probe--nexus.tests.probe.economy-console-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.economy-console-chromium.import",
       "intent": "nexus.tests.probe.economy-console-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2072-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2074-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089125
+      "registeredAt": 1791244692511
     },
-    "source.wire.2073.nexus.tests.probe._glass-probe--nexus.tests.probe.field-chromium": {
-      "id": "source.wire.2073.nexus.tests.probe._glass-probe--nexus.tests.probe.field-chromium",
+    "source.wire.2075.nexus.tests.probe._glass-probe--nexus.tests.probe.field-chromium": {
+      "id": "source.wire.2075.nexus.tests.probe._glass-probe--nexus.tests.probe.field-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.field-chromium.import",
       "intent": "nexus.tests.probe.field-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2073-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2075-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089134
+      "registeredAt": 1791244692521
     },
-    "source.wire.2074.nexus.tests.probe._glass-probe--nexus.tests.probe.gemini-deepseek-reader-chromium": {
-      "id": "source.wire.2074.nexus.tests.probe._glass-probe--nexus.tests.probe.gemini-deepseek-reader-chromium",
+    "source.wire.2076.nexus.tests.probe._glass-probe--nexus.tests.probe.gemini-deepseek-reader-chromium": {
+      "id": "source.wire.2076.nexus.tests.probe._glass-probe--nexus.tests.probe.gemini-deepseek-reader-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.gemini-deepseek-reader-chromium.import",
       "intent": "nexus.tests.probe.gemini-deepseek-reader-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2074-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2076-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089148
+      "registeredAt": 1791244692530
     },
-    "source.wire.2075.nexus.tests.probe._glass-probe--nexus.tests.probe.home-split-equivalence": {
-      "id": "source.wire.2075.nexus.tests.probe._glass-probe--nexus.tests.probe.home-split-equivalence",
+    "source.wire.2077.nexus.tests.probe._glass-probe--nexus.tests.probe.home-split-equivalence": {
+      "id": "source.wire.2077.nexus.tests.probe._glass-probe--nexus.tests.probe.home-split-equivalence",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.home-split-equivalence.import",
       "intent": "nexus.tests.probe.home-split-equivalence requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2075-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2077-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089157
+      "registeredAt": 1791244692538
     },
-    "source.wire.2076.nexus.lib.test-sandbox--nexus.tests.probe.idearium-coding-flow-chromium": {
-      "id": "source.wire.2076.nexus.lib.test-sandbox--nexus.tests.probe.idearium-coding-flow-chromium",
+    "source.wire.2078.nexus.lib.test-sandbox--nexus.tests.probe.idearium-coding-flow-chromium": {
+      "id": "source.wire.2078.nexus.lib.test-sandbox--nexus.tests.probe.idearium-coding-flow-chromium",
       "from_hook_id": "nexus.lib.test-sandbox.export",
       "to_hook_id": "nexus.tests.probe.idearium-coding-flow-chromium.import",
       "intent": "nexus.tests.probe.idearium-coding-flow-chromium requires nexus.lib.test-sandbox",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2076-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2078-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089168
+      "registeredAt": 1791244692546
     },
-    "source.wire.2077.nexus.tests.probe._glass-probe--nexus.tests.probe.idearium-coding-flow-chromium": {
-      "id": "source.wire.2077.nexus.tests.probe._glass-probe--nexus.tests.probe.idearium-coding-flow-chromium",
+    "source.wire.2079.nexus.tests.probe._glass-probe--nexus.tests.probe.idearium-coding-flow-chromium": {
+      "id": "source.wire.2079.nexus.tests.probe._glass-probe--nexus.tests.probe.idearium-coding-flow-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.idearium-coding-flow-chromium.import",
       "intent": "nexus.tests.probe.idearium-coding-flow-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2077-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2079-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089177
+      "registeredAt": 1791244692554
     },
-    "source.wire.2078.nexus.tests.probe._glass-probe--nexus.tests.probe.live-stream-chromium": {
-      "id": "source.wire.2078.nexus.tests.probe._glass-probe--nexus.tests.probe.live-stream-chromium",
+    "source.wire.2080.nexus.tests.probe._glass-probe--nexus.tests.probe.live-stream-chromium": {
+      "id": "source.wire.2080.nexus.tests.probe._glass-probe--nexus.tests.probe.live-stream-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.live-stream-chromium.import",
       "intent": "nexus.tests.probe.live-stream-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2078-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2080-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089188
+      "registeredAt": 1791244692564
     },
-    "source.wire.2079.nexus.tests.probe._glass-probe--nexus.tests.probe.login-wall-chromium": {
-      "id": "source.wire.2079.nexus.tests.probe._glass-probe--nexus.tests.probe.login-wall-chromium",
+    "source.wire.2081.nexus.tests.probe._glass-probe--nexus.tests.probe.login-wall-chromium": {
+      "id": "source.wire.2081.nexus.tests.probe._glass-probe--nexus.tests.probe.login-wall-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.login-wall-chromium.import",
       "intent": "nexus.tests.probe.login-wall-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2079-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2081-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089197
+      "registeredAt": 1791244692572
     },
-    "source.wire.2080.nexus.tests.probe._glass-probe--nexus.tests.probe.manage-workbench-chromium": {
-      "id": "source.wire.2080.nexus.tests.probe._glass-probe--nexus.tests.probe.manage-workbench-chromium",
+    "source.wire.2082.nexus.tests.probe._glass-probe--nexus.tests.probe.manage-workbench-chromium": {
+      "id": "source.wire.2082.nexus.tests.probe._glass-probe--nexus.tests.probe.manage-workbench-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.manage-workbench-chromium.import",
       "intent": "nexus.tests.probe.manage-workbench-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2080-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2082-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089207
+      "registeredAt": 1791244692580
     },
-    "source.wire.2081.nexus.tests.probe._glass-probe--nexus.tests.probe.menu-overlay-hit-chromium": {
-      "id": "source.wire.2081.nexus.tests.probe._glass-probe--nexus.tests.probe.menu-overlay-hit-chromium",
+    "source.wire.2083.nexus.tests.probe._glass-probe--nexus.tests.probe.menu-overlay-hit-chromium": {
+      "id": "source.wire.2083.nexus.tests.probe._glass-probe--nexus.tests.probe.menu-overlay-hit-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.menu-overlay-hit-chromium.import",
       "intent": "nexus.tests.probe.menu-overlay-hit-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2081-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2083-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089218
+      "registeredAt": 1791244692588
     },
-    "source.wire.2082.nexus.lib.test-sandbox--nexus.tests.probe.nexus-atlas-home": {
-      "id": "source.wire.2082.nexus.lib.test-sandbox--nexus.tests.probe.nexus-atlas-home",
+    "source.wire.2084.nexus.lib.test-sandbox--nexus.tests.probe.nexus-atlas-home": {
+      "id": "source.wire.2084.nexus.lib.test-sandbox--nexus.tests.probe.nexus-atlas-home",
       "from_hook_id": "nexus.lib.test-sandbox.export",
       "to_hook_id": "nexus.tests.probe.nexus-atlas-home.import",
       "intent": "nexus.tests.probe.nexus-atlas-home requires nexus.lib.test-sandbox",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2082-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2084-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089228
+      "registeredAt": 1791244692596
     },
-    "source.wire.2083.nexus.tests.probe._glass-probe--nexus.tests.probe.nexus-atlas-home": {
-      "id": "source.wire.2083.nexus.tests.probe._glass-probe--nexus.tests.probe.nexus-atlas-home",
+    "source.wire.2085.nexus.tests.probe._glass-probe--nexus.tests.probe.nexus-atlas-home": {
+      "id": "source.wire.2085.nexus.tests.probe._glass-probe--nexus.tests.probe.nexus-atlas-home",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.nexus-atlas-home.import",
       "intent": "nexus.tests.probe.nexus-atlas-home requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2083-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2085-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089239
+      "registeredAt": 1791244692605
     },
-    "source.wire.2084.nexus.tests.probe._glass-probe--nexus.tests.probe.selector-assign-ui-chromium": {
-      "id": "source.wire.2084.nexus.tests.probe._glass-probe--nexus.tests.probe.selector-assign-ui-chromium",
+    "source.wire.2086.nexus.tests.probe._glass-probe--nexus.tests.probe.selector-assign-ui-chromium": {
+      "id": "source.wire.2086.nexus.tests.probe._glass-probe--nexus.tests.probe.selector-assign-ui-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.selector-assign-ui-chromium.import",
       "intent": "nexus.tests.probe.selector-assign-ui-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2084-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2086-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089249
+      "registeredAt": 1791244692613
     },
-    "source.wire.2085.nexus.tests.probe._glass-probe--nexus.tests.probe.selector-check-chromium": {
-      "id": "source.wire.2085.nexus.tests.probe._glass-probe--nexus.tests.probe.selector-check-chromium",
+    "source.wire.2087.nexus.tests.probe._glass-probe--nexus.tests.probe.selector-check-chromium": {
+      "id": "source.wire.2087.nexus.tests.probe._glass-probe--nexus.tests.probe.selector-check-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.selector-check-chromium.import",
       "intent": "nexus.tests.probe.selector-check-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2085-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2087-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089259
+      "registeredAt": 1791244692622
     },
-    "source.wire.2086.nexus.tests.probe._glass-probe--nexus.tests.probe.settings-console-chromium": {
-      "id": "source.wire.2086.nexus.tests.probe._glass-probe--nexus.tests.probe.settings-console-chromium",
+    "source.wire.2088.nexus.tests.probe._glass-probe--nexus.tests.probe.settings-console-chromium": {
+      "id": "source.wire.2088.nexus.tests.probe._glass-probe--nexus.tests.probe.settings-console-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.settings-console-chromium.import",
       "intent": "nexus.tests.probe.settings-console-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2086-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2088-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089272
+      "registeredAt": 1791244692630
     },
-    "source.wire.2087.nexus.tests.probe._glass-probe--nexus.tests.probe.transcript-push-chromium": {
-      "id": "source.wire.2087.nexus.tests.probe._glass-probe--nexus.tests.probe.transcript-push-chromium",
+    "source.wire.2089.nexus.tests.probe._glass-probe--nexus.tests.probe.transcript-push-chromium": {
+      "id": "source.wire.2089.nexus.tests.probe._glass-probe--nexus.tests.probe.transcript-push-chromium",
       "from_hook_id": "nexus.tests.probe._glass-probe.export",
       "to_hook_id": "nexus.tests.probe.transcript-push-chromium.import",
       "intent": "nexus.tests.probe.transcript-push-chromium requires nexus.tests.probe._glass-probe",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2087-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2089-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089284
+      "registeredAt": 1791244692638
     },
-    "source.wire.2088.nexus.guardian.clear-glass-bridge--nexus.tests.spawn-provider-tab.test": {
-      "id": "source.wire.2088.nexus.guardian.clear-glass-bridge--nexus.tests.spawn-provider-tab.test",
+    "source.wire.2090.nexus.guardian.clear-glass-bridge--nexus.tests.spawn-provider-tab.test": {
+      "id": "source.wire.2090.nexus.guardian.clear-glass-bridge--nexus.tests.spawn-provider-tab.test",
       "from_hook_id": "nexus.guardian.clear-glass-bridge.export",
       "to_hook_id": "nexus.tests.spawn-provider-tab.test.import",
       "intent": "nexus.tests.spawn-provider-tab.test requires nexus.guardian.clear-glass-bridge",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2088-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2090-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089293
+      "registeredAt": 1791244692645
     },
-    "source.wire.2090.nexus.ui.contracts--nexus.ui.api": {
-      "id": "source.wire.2090.nexus.ui.contracts--nexus.ui.api",
+    "source.wire.2092.nexus.ui.contracts--nexus.ui.api": {
+      "id": "source.wire.2092.nexus.ui.contracts--nexus.ui.api",
       "from_hook_id": "nexus.ui.contracts.export",
       "to_hook_id": "nexus.ui.api.import",
       "intent": "nexus.ui.api requires nexus.ui.contracts",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2090-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2092-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089304
+      "registeredAt": 1791244692653
     },
-    "source.wire.2091.nexus.ui.api--nexus.ui.store": {
-      "id": "source.wire.2091.nexus.ui.api--nexus.ui.store",
+    "source.wire.2093.nexus.ui.api--nexus.ui.store": {
+      "id": "source.wire.2093.nexus.ui.api--nexus.ui.store",
       "from_hook_id": "nexus.ui.api.export",
       "to_hook_id": "nexus.ui.store.import",
       "intent": "nexus.ui.store requires nexus.ui.api",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2091-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2093-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089317
+      "registeredAt": 1791244692661
     },
-    "source.wire.2092.nexus.ui.contracts--nexus.ui.store": {
-      "id": "source.wire.2092.nexus.ui.contracts--nexus.ui.store",
+    "source.wire.2094.nexus.ui.contracts--nexus.ui.store": {
+      "id": "source.wire.2094.nexus.ui.contracts--nexus.ui.store",
       "from_hook_id": "nexus.ui.contracts.export",
       "to_hook_id": "nexus.ui.store.import",
       "intent": "nexus.ui.store requires nexus.ui.contracts",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2092-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2094-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089328
+      "registeredAt": 1791244692669
     },
-    "source.wire.2093.nexus.ui.contracts--nexus.ui.ui-pulse": {
-      "id": "source.wire.2093.nexus.ui.contracts--nexus.ui.ui-pulse",
+    "source.wire.2095.nexus.ui.contracts--nexus.ui.ui-pulse": {
+      "id": "source.wire.2095.nexus.ui.contracts--nexus.ui.ui-pulse",
       "from_hook_id": "nexus.ui.contracts.export",
       "to_hook_id": "nexus.ui.ui-pulse.import",
       "intent": "nexus.ui.ui-pulse requires nexus.ui.contracts",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2093-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2095-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089342
+      "registeredAt": 1791244692680
     },
-    "source.wire.2096.nexus.versionium.lib.text-diff--nexus.versionium.lib.files": {
-      "id": "source.wire.2096.nexus.versionium.lib.text-diff--nexus.versionium.lib.files",
+    "source.wire.2098.nexus.versionium.lib.text-diff--nexus.versionium.lib.files": {
+      "id": "source.wire.2098.nexus.versionium.lib.text-diff--nexus.versionium.lib.files",
       "from_hook_id": "nexus.versionium.lib.text-diff.export",
       "to_hook_id": "nexus.versionium.lib.files.import",
       "intent": "nexus.versionium.lib.files requires nexus.versionium.lib.text-diff",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2096-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2098-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089355
+      "registeredAt": 1791244692688
     },
-    "source.wire.2103.nexus.versionium.lib.files--nexus.versionium.routes.files": {
-      "id": "source.wire.2103.nexus.versionium.lib.files--nexus.versionium.routes.files",
+    "source.wire.2105.nexus.versionium.lib.files--nexus.versionium.routes.files": {
+      "id": "source.wire.2105.nexus.versionium.lib.files--nexus.versionium.routes.files",
       "from_hook_id": "nexus.versionium.lib.files.export",
       "to_hook_id": "nexus.versionium.routes.files.import",
       "intent": "nexus.versionium.routes.files requires nexus.versionium.lib.files",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2103-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2105-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089370
+      "registeredAt": 1791244692696
     },
-    "source.wire.2106.nexus.emerge.core--nexus.warp.adapters.emerge-field": {
-      "id": "source.wire.2106.nexus.emerge.core--nexus.warp.adapters.emerge-field",
+    "source.wire.2108.nexus.emerge.core--nexus.warp.adapters.emerge-field": {
+      "id": "source.wire.2108.nexus.emerge.core--nexus.warp.adapters.emerge-field",
       "from_hook_id": "nexus.emerge.core.export",
       "to_hook_id": "nexus.warp.adapters.emerge-field.import",
       "intent": "nexus.warp.adapters.emerge-field requires nexus.emerge.core",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2106-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2108-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089383
+      "registeredAt": 1791244692704
     },
-    "source.wire.2107.nexus.warp.core.Expectation--nexus.warp.core.Engine": {
-      "id": "source.wire.2107.nexus.warp.core.Expectation--nexus.warp.core.Engine",
+    "source.wire.2109.nexus.warp.core.Expectation--nexus.warp.core.Engine": {
+      "id": "source.wire.2109.nexus.warp.core.Expectation--nexus.warp.core.Engine",
       "from_hook_id": "nexus.warp.core.Expectation.export",
       "to_hook_id": "nexus.warp.core.Engine.import",
       "intent": "nexus.warp.core.Engine requires nexus.warp.core.Expectation",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2107-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2109-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089395
+      "registeredAt": 1791244692713
     },
-    "source.wire.2108.nexus.warp.core.Ledger--nexus.warp.core.Engine": {
-      "id": "source.wire.2108.nexus.warp.core.Ledger--nexus.warp.core.Engine",
+    "source.wire.2110.nexus.warp.core.Ledger--nexus.warp.core.Engine": {
+      "id": "source.wire.2110.nexus.warp.core.Ledger--nexus.warp.core.Engine",
       "from_hook_id": "nexus.warp.core.Ledger.export",
       "to_hook_id": "nexus.warp.core.Engine.import",
       "intent": "nexus.warp.core.Engine requires nexus.warp.core.Ledger",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2108-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2110-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089407
+      "registeredAt": 1791244692721
     },
-    "source.wire.2109.nexus.warp.core.Link--nexus.warp.core.Engine": {
-      "id": "source.wire.2109.nexus.warp.core.Link--nexus.warp.core.Engine",
+    "source.wire.2111.nexus.warp.core.Link--nexus.warp.core.Engine": {
+      "id": "source.wire.2111.nexus.warp.core.Link--nexus.warp.core.Engine",
       "from_hook_id": "nexus.warp.core.Link.export",
       "to_hook_id": "nexus.warp.core.Engine.import",
       "intent": "nexus.warp.core.Engine requires nexus.warp.core.Link",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2109-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2111-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089417
+      "registeredAt": 1791244692729
     },
-    "source.wire.2110.nexus.warp.core.Event--nexus.warp.core.GateFusion": {
-      "id": "source.wire.2110.nexus.warp.core.Event--nexus.warp.core.GateFusion",
+    "source.wire.2112.nexus.warp.core.Event--nexus.warp.core.GateFusion": {
+      "id": "source.wire.2112.nexus.warp.core.Event--nexus.warp.core.GateFusion",
       "from_hook_id": "nexus.warp.core.Event.export",
       "to_hook_id": "nexus.warp.core.GateFusion.import",
       "intent": "nexus.warp.core.GateFusion requires nexus.warp.core.Event",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2110-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2112-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089427
+      "registeredAt": 1791244692738
     },
-    "source.wire.2111.nexus.warp.core.Gate--nexus.warp.core.GateFusion": {
-      "id": "source.wire.2111.nexus.warp.core.Gate--nexus.warp.core.GateFusion",
+    "source.wire.2113.nexus.warp.core.Gate--nexus.warp.core.GateFusion": {
+      "id": "source.wire.2113.nexus.warp.core.Gate--nexus.warp.core.GateFusion",
       "from_hook_id": "nexus.warp.core.Gate.export",
       "to_hook_id": "nexus.warp.core.GateFusion.import",
       "intent": "nexus.warp.core.GateFusion requires nexus.warp.core.Gate",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2111-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2113-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089442
+      "registeredAt": 1791244692746
     },
-    "source.wire.2112.nexus.warp.core.Axiom--nexus.warp.core": {
-      "id": "source.wire.2112.nexus.warp.core.Axiom--nexus.warp.core",
+    "source.wire.2114.nexus.warp.core.Axiom--nexus.warp.core": {
+      "id": "source.wire.2114.nexus.warp.core.Axiom--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.Axiom.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.Axiom",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2112-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2114-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089455
+      "registeredAt": 1791244692754
     },
-    "source.wire.2113.nexus.warp.core.Engine--nexus.warp.core": {
-      "id": "source.wire.2113.nexus.warp.core.Engine--nexus.warp.core",
+    "source.wire.2115.nexus.warp.core.Engine--nexus.warp.core": {
+      "id": "source.wire.2115.nexus.warp.core.Engine--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.Engine.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.Engine",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2113-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2115-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089468
+      "registeredAt": 1791244692763
     },
-    "source.wire.2114.nexus.warp.core.Event--nexus.warp.core": {
-      "id": "source.wire.2114.nexus.warp.core.Event--nexus.warp.core",
+    "source.wire.2116.nexus.warp.core.Event--nexus.warp.core": {
+      "id": "source.wire.2116.nexus.warp.core.Event--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.Event.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.Event",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2114-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2116-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089482
+      "registeredAt": 1791244692772
     },
-    "source.wire.2115.nexus.warp.core.Expectation--nexus.warp.core": {
-      "id": "source.wire.2115.nexus.warp.core.Expectation--nexus.warp.core",
+    "source.wire.2117.nexus.warp.core.Expectation--nexus.warp.core": {
+      "id": "source.wire.2117.nexus.warp.core.Expectation--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.Expectation.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.Expectation",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2115-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2117-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089500
+      "registeredAt": 1791244692780
     },
-    "source.wire.2116.nexus.warp.core.Gate--nexus.warp.core": {
-      "id": "source.wire.2116.nexus.warp.core.Gate--nexus.warp.core",
+    "source.wire.2118.nexus.warp.core.Gate--nexus.warp.core": {
+      "id": "source.wire.2118.nexus.warp.core.Gate--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.Gate.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.Gate",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2116-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2118-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089512
+      "registeredAt": 1791244692788
     },
-    "source.wire.2117.nexus.warp.core.GateFusion--nexus.warp.core": {
-      "id": "source.wire.2117.nexus.warp.core.GateFusion--nexus.warp.core",
+    "source.wire.2119.nexus.warp.core.GateFusion--nexus.warp.core": {
+      "id": "source.wire.2119.nexus.warp.core.GateFusion--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.GateFusion.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.GateFusion",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2117-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2119-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089526
+      "registeredAt": 1791244692798
     },
-    "source.wire.2118.nexus.warp.core.Ledger--nexus.warp.core": {
-      "id": "source.wire.2118.nexus.warp.core.Ledger--nexus.warp.core",
+    "source.wire.2120.nexus.warp.core.Ledger--nexus.warp.core": {
+      "id": "source.wire.2120.nexus.warp.core.Ledger--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.Ledger.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.Ledger",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2118-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2120-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089540
+      "registeredAt": 1791244692805
     },
-    "source.wire.2119.nexus.warp.core.Link--nexus.warp.core": {
-      "id": "source.wire.2119.nexus.warp.core.Link--nexus.warp.core",
+    "source.wire.2121.nexus.warp.core.Link--nexus.warp.core": {
+      "id": "source.wire.2121.nexus.warp.core.Link--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.Link.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.Link",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2119-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2121-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089552
+      "registeredAt": 1791244692815
     },
-    "source.wire.2120.nexus.warp.core.Stream--nexus.warp.core": {
-      "id": "source.wire.2120.nexus.warp.core.Stream--nexus.warp.core",
+    "source.wire.2122.nexus.warp.core.Stream--nexus.warp.core": {
+      "id": "source.wire.2122.nexus.warp.core.Stream--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.Stream.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.Stream",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2120-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2122-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089565
+      "registeredAt": 1791244692823
     },
-    "source.wire.2121.nexus.warp.core.StreamLog--nexus.warp.core": {
-      "id": "source.wire.2121.nexus.warp.core.StreamLog--nexus.warp.core",
+    "source.wire.2123.nexus.warp.core.StreamLog--nexus.warp.core": {
+      "id": "source.wire.2123.nexus.warp.core.StreamLog--nexus.warp.core",
       "from_hook_id": "nexus.warp.core.StreamLog.export",
       "to_hook_id": "nexus.warp.core.import",
       "intent": "nexus.warp.core requires nexus.warp.core.StreamLog",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2121-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2123-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089577
+      "registeredAt": 1791244692832
     },
-    "source.wire.2122.nexus.warp.core--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2122.nexus.warp.core--nexus.warp.dispatch.benchmark",
+    "source.wire.2124.nexus.warp.core--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2124.nexus.warp.core--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.core.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.core",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2122-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2124-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089593
+      "registeredAt": 1791244692840
     },
-    "source.wire.2123.nexus.warp.core.GateFusion--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2123.nexus.warp.core.GateFusion--nexus.warp.dispatch.benchmark",
+    "source.wire.2125.nexus.warp.core.GateFusion--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2125.nexus.warp.core.GateFusion--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.core.GateFusion.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.core.GateFusion",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2123-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2125-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089607
+      "registeredAt": 1791244692849
     },
-    "source.wire.2124.nexus.warp.dispatch--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2124.nexus.warp.dispatch--nexus.warp.dispatch.benchmark",
+    "source.wire.2126.nexus.warp.dispatch--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2126.nexus.warp.dispatch--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.dispatch.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.dispatch",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2124-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2126-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089619
+      "registeredAt": 1791244692858
     },
-    "source.wire.2125.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2125.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.benchmark",
+    "source.wire.2127.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2127.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.dispatch.canonicalize.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.dispatch.canonicalize",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2125-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2127-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089629
+      "registeredAt": 1791244692867
     },
-    "source.wire.2126.nexus.warp.dispatch.cascade--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2126.nexus.warp.dispatch.cascade--nexus.warp.dispatch.benchmark",
+    "source.wire.2128.nexus.warp.dispatch.cascade--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2128.nexus.warp.dispatch.cascade--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.dispatch.cascade.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.dispatch.cascade",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2126-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2128-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089639
+      "registeredAt": 1791244692876
     },
-    "source.wire.2127.nexus.warp.dispatch.deltaCache--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2127.nexus.warp.dispatch.deltaCache--nexus.warp.dispatch.benchmark",
+    "source.wire.2129.nexus.warp.dispatch.deltaCache--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2129.nexus.warp.dispatch.deltaCache--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.dispatch.deltaCache.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.dispatch.deltaCache",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2127-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2129-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089648
+      "registeredAt": 1791244692884
     },
-    "source.wire.2128.nexus.warp.dispatch.digest--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2128.nexus.warp.dispatch.digest--nexus.warp.dispatch.benchmark",
+    "source.wire.2130.nexus.warp.dispatch.digest--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2130.nexus.warp.dispatch.digest--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.dispatch.digest.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.dispatch.digest",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2128-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2130-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089658
+      "registeredAt": 1791244692892
     },
-    "source.wire.2129.nexus.warp.dispatch.population--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2129.nexus.warp.dispatch.population--nexus.warp.dispatch.benchmark",
+    "source.wire.2131.nexus.warp.dispatch.population--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2131.nexus.warp.dispatch.population--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.dispatch.population.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.dispatch.population",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2129-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2131-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089668
+      "registeredAt": 1791244692906
     },
-    "source.wire.2130.nexus.warp.dispatch.pregen--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2130.nexus.warp.dispatch.pregen--nexus.warp.dispatch.benchmark",
+    "source.wire.2132.nexus.warp.dispatch.pregen--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2132.nexus.warp.dispatch.pregen--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.dispatch.pregen.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.dispatch.pregen",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2130-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2132-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089677
+      "registeredAt": 1791244692914
     },
-    "source.wire.2131.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2131.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.dispatch.benchmark",
+    "source.wire.2133.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2133.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.plugins.crystallizer-flatfile.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.plugins.crystallizer-flatfile",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2131-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2133-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089685
+      "registeredAt": 1791244692923
     },
-    "source.wire.2132.nexus.warp.plugins.scorer-default--nexus.warp.dispatch.benchmark": {
-      "id": "source.wire.2132.nexus.warp.plugins.scorer-default--nexus.warp.dispatch.benchmark",
+    "source.wire.2134.nexus.warp.plugins.scorer-default--nexus.warp.dispatch.benchmark": {
+      "id": "source.wire.2134.nexus.warp.plugins.scorer-default--nexus.warp.dispatch.benchmark",
       "from_hook_id": "nexus.warp.plugins.scorer-default.export",
       "to_hook_id": "nexus.warp.dispatch.benchmark.import",
       "intent": "nexus.warp.dispatch.benchmark requires nexus.warp.plugins.scorer-default",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2132-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2134-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089694
+      "registeredAt": 1791244692931
     },
-    "source.wire.2133.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.deltaCache": {
-      "id": "source.wire.2133.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.deltaCache",
+    "source.wire.2135.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.deltaCache": {
+      "id": "source.wire.2135.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.deltaCache",
       "from_hook_id": "nexus.warp.dispatch.canonicalize.export",
       "to_hook_id": "nexus.warp.dispatch.deltaCache.import",
       "intent": "nexus.warp.dispatch.deltaCache requires nexus.warp.dispatch.canonicalize",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2133-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2135-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089703
+      "registeredAt": 1791244692939
     },
-    "source.wire.2134.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.digest": {
-      "id": "source.wire.2134.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.digest",
+    "source.wire.2136.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.digest": {
+      "id": "source.wire.2136.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.digest",
       "from_hook_id": "nexus.warp.dispatch.canonicalize.export",
       "to_hook_id": "nexus.warp.dispatch.digest.import",
       "intent": "nexus.warp.dispatch.digest requires nexus.warp.dispatch.canonicalize",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2134-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2136-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089712
+      "registeredAt": 1791244692947
     },
-    "source.wire.2135.nexus.warp.dispatch.digest--nexus.warp.dispatch": {
-      "id": "source.wire.2135.nexus.warp.dispatch.digest--nexus.warp.dispatch",
+    "source.wire.2137.nexus.warp.dispatch.digest--nexus.warp.dispatch": {
+      "id": "source.wire.2137.nexus.warp.dispatch.digest--nexus.warp.dispatch",
       "from_hook_id": "nexus.warp.dispatch.digest.export",
       "to_hook_id": "nexus.warp.dispatch.import",
       "intent": "nexus.warp.dispatch requires nexus.warp.dispatch.digest",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2135-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2137-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089721
+      "registeredAt": 1791244692954
     },
-    "source.wire.2136.nexus.warp.dispatch.population--nexus.warp.dispatch": {
-      "id": "source.wire.2136.nexus.warp.dispatch.population--nexus.warp.dispatch",
+    "source.wire.2138.nexus.warp.dispatch.population--nexus.warp.dispatch": {
+      "id": "source.wire.2138.nexus.warp.dispatch.population--nexus.warp.dispatch",
       "from_hook_id": "nexus.warp.dispatch.population.export",
       "to_hook_id": "nexus.warp.dispatch.import",
       "intent": "nexus.warp.dispatch requires nexus.warp.dispatch.population",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2136-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2138-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089731
+      "registeredAt": 1791244692963
     },
-    "source.wire.2137.nexus.warp.dispatch.pregen--nexus.warp.dispatch": {
-      "id": "source.wire.2137.nexus.warp.dispatch.pregen--nexus.warp.dispatch",
+    "source.wire.2139.nexus.warp.dispatch.pregen--nexus.warp.dispatch": {
+      "id": "source.wire.2139.nexus.warp.dispatch.pregen--nexus.warp.dispatch",
       "from_hook_id": "nexus.warp.dispatch.pregen.export",
       "to_hook_id": "nexus.warp.dispatch.import",
       "intent": "nexus.warp.dispatch requires nexus.warp.dispatch.pregen",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2137-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2139-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089739
+      "registeredAt": 1791244692971
     },
-    "source.wire.2138.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.population": {
-      "id": "source.wire.2138.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.population",
+    "source.wire.2140.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.population": {
+      "id": "source.wire.2140.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.population",
       "from_hook_id": "nexus.warp.dispatch.canonicalize.export",
       "to_hook_id": "nexus.warp.dispatch.population.import",
       "intent": "nexus.warp.dispatch.population requires nexus.warp.dispatch.canonicalize",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2138-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2140-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089747
+      "registeredAt": 1791244692985
     },
-    "source.wire.2139.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.pregen": {
-      "id": "source.wire.2139.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.pregen",
+    "source.wire.2141.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.pregen": {
+      "id": "source.wire.2141.nexus.warp.dispatch.canonicalize--nexus.warp.dispatch.pregen",
       "from_hook_id": "nexus.warp.dispatch.canonicalize.export",
       "to_hook_id": "nexus.warp.dispatch.pregen.import",
       "intent": "nexus.warp.dispatch.pregen requires nexus.warp.dispatch.canonicalize",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2139-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2141-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089757
+      "registeredAt": 1791244692993
     },
-    "source.wire.2140.nexus.warp.core--nexus.warp": {
-      "id": "source.wire.2140.nexus.warp.core--nexus.warp",
+    "source.wire.2142.nexus.warp.core--nexus.warp": {
+      "id": "source.wire.2142.nexus.warp.core--nexus.warp",
       "from_hook_id": "nexus.warp.core.export",
       "to_hook_id": "nexus.warp.import",
       "intent": "nexus.warp requires nexus.warp.core",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2140-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2142-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089766
+      "registeredAt": 1791244693001
     },
-    "source.wire.2141.nexus.warp.dispatch--nexus.warp": {
-      "id": "source.wire.2141.nexus.warp.dispatch--nexus.warp",
+    "source.wire.2143.nexus.warp.dispatch--nexus.warp": {
+      "id": "source.wire.2143.nexus.warp.dispatch--nexus.warp",
       "from_hook_id": "nexus.warp.dispatch.export",
       "to_hook_id": "nexus.warp.import",
       "intent": "nexus.warp requires nexus.warp.dispatch",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2141-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2143-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089775
+      "registeredAt": 1791244693009
     },
-    "source.wire.2142.nexus.warp.dispatch.population--nexus.warp": {
-      "id": "source.wire.2142.nexus.warp.dispatch.population--nexus.warp",
+    "source.wire.2144.nexus.warp.dispatch.population--nexus.warp": {
+      "id": "source.wire.2144.nexus.warp.dispatch.population--nexus.warp",
       "from_hook_id": "nexus.warp.dispatch.population.export",
       "to_hook_id": "nexus.warp.import",
       "intent": "nexus.warp requires nexus.warp.dispatch.population",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2142-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2144-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089784
+      "registeredAt": 1791244693017
     },
-    "source.wire.2143.nexus.warp.plugins.crystallizer-flatfile--nexus.warp": {
-      "id": "source.wire.2143.nexus.warp.plugins.crystallizer-flatfile--nexus.warp",
+    "source.wire.2145.nexus.warp.plugins.crystallizer-flatfile--nexus.warp": {
+      "id": "source.wire.2145.nexus.warp.plugins.crystallizer-flatfile--nexus.warp",
       "from_hook_id": "nexus.warp.plugins.crystallizer-flatfile.export",
       "to_hook_id": "nexus.warp.import",
       "intent": "nexus.warp requires nexus.warp.plugins.crystallizer-flatfile",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2143-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2145-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089795
+      "registeredAt": 1791244693026
     },
-    "source.wire.2144.nexus.warp.plugins.scorer-default--nexus.warp": {
-      "id": "source.wire.2144.nexus.warp.plugins.scorer-default--nexus.warp",
+    "source.wire.2146.nexus.warp.plugins.scorer-default--nexus.warp": {
+      "id": "source.wire.2146.nexus.warp.plugins.scorer-default--nexus.warp",
       "from_hook_id": "nexus.warp.plugins.scorer-default.export",
       "to_hook_id": "nexus.warp.import",
       "intent": "nexus.warp requires nexus.warp.plugins.scorer-default",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2144-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2146-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089804
+      "registeredAt": 1791244693034
     },
-    "source.wire.2145.nexus.warp.core--nexus.warp.test.core.test": {
-      "id": "source.wire.2145.nexus.warp.core--nexus.warp.test.core.test",
+    "source.wire.2147.nexus.warp.core--nexus.warp.test.core.test": {
+      "id": "source.wire.2147.nexus.warp.core--nexus.warp.test.core.test",
       "from_hook_id": "nexus.warp.core.export",
       "to_hook_id": "nexus.warp.test.core.test.import",
       "intent": "nexus.warp.test.core.test requires nexus.warp.core",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2145-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2147-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089813
+      "registeredAt": 1791244693043
     },
-    "source.wire.2146.nexus.warp.core--nexus.warp.test.digest-regression.test": {
-      "id": "source.wire.2146.nexus.warp.core--nexus.warp.test.digest-regression.test",
+    "source.wire.2148.nexus.warp.core--nexus.warp.test.digest-regression.test": {
+      "id": "source.wire.2148.nexus.warp.core--nexus.warp.test.digest-regression.test",
       "from_hook_id": "nexus.warp.core.export",
       "to_hook_id": "nexus.warp.test.digest-regression.test.import",
       "intent": "nexus.warp.test.digest-regression.test requires nexus.warp.core",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2146-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2148-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089821
+      "registeredAt": 1791244693051
     },
-    "source.wire.2147.nexus.warp.dispatch.digest--nexus.warp.test.digest-regression.test": {
-      "id": "source.wire.2147.nexus.warp.dispatch.digest--nexus.warp.test.digest-regression.test",
+    "source.wire.2149.nexus.warp.dispatch.digest--nexus.warp.test.digest-regression.test": {
+      "id": "source.wire.2149.nexus.warp.dispatch.digest--nexus.warp.test.digest-regression.test",
       "from_hook_id": "nexus.warp.dispatch.digest.export",
       "to_hook_id": "nexus.warp.test.digest-regression.test.import",
       "intent": "nexus.warp.test.digest-regression.test requires nexus.warp.dispatch.digest",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2147-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2149-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089830
+      "registeredAt": 1791244693059
     },
-    "source.wire.2148.nexus.warp.core--nexus.warp.test.dispatch.test": {
-      "id": "source.wire.2148.nexus.warp.core--nexus.warp.test.dispatch.test",
+    "source.wire.2150.nexus.warp.core--nexus.warp.test.dispatch.test": {
+      "id": "source.wire.2150.nexus.warp.core--nexus.warp.test.dispatch.test",
       "from_hook_id": "nexus.warp.core.export",
       "to_hook_id": "nexus.warp.test.dispatch.test.import",
       "intent": "nexus.warp.test.dispatch.test requires nexus.warp.core",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2148-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2150-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089838
+      "registeredAt": 1791244693067
     },
-    "source.wire.2149.nexus.warp.dispatch--nexus.warp.test.dispatch.test": {
-      "id": "source.wire.2149.nexus.warp.dispatch--nexus.warp.test.dispatch.test",
+    "source.wire.2151.nexus.warp.dispatch--nexus.warp.test.dispatch.test": {
+      "id": "source.wire.2151.nexus.warp.dispatch--nexus.warp.test.dispatch.test",
       "from_hook_id": "nexus.warp.dispatch.export",
       "to_hook_id": "nexus.warp.test.dispatch.test.import",
       "intent": "nexus.warp.test.dispatch.test requires nexus.warp.dispatch",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2149-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2151-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089848
+      "registeredAt": 1791244693075
     },
-    "source.wire.2150.nexus.warp.dispatch.cascade--nexus.warp.test.dispatch.test": {
-      "id": "source.wire.2150.nexus.warp.dispatch.cascade--nexus.warp.test.dispatch.test",
+    "source.wire.2152.nexus.warp.dispatch.cascade--nexus.warp.test.dispatch.test": {
+      "id": "source.wire.2152.nexus.warp.dispatch.cascade--nexus.warp.test.dispatch.test",
       "from_hook_id": "nexus.warp.dispatch.cascade.export",
       "to_hook_id": "nexus.warp.test.dispatch.test.import",
       "intent": "nexus.warp.test.dispatch.test requires nexus.warp.dispatch.cascade",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2150-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2152-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089859
+      "registeredAt": 1791244693083
     },
-    "source.wire.2151.nexus.warp.dispatch.population--nexus.warp.test.dispatch.test": {
-      "id": "source.wire.2151.nexus.warp.dispatch.population--nexus.warp.test.dispatch.test",
+    "source.wire.2153.nexus.warp.dispatch.population--nexus.warp.test.dispatch.test": {
+      "id": "source.wire.2153.nexus.warp.dispatch.population--nexus.warp.test.dispatch.test",
       "from_hook_id": "nexus.warp.dispatch.population.export",
       "to_hook_id": "nexus.warp.test.dispatch.test.import",
       "intent": "nexus.warp.test.dispatch.test requires nexus.warp.dispatch.population",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2151-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2153-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089868
+      "registeredAt": 1791244693091
     },
-    "source.wire.2152.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.dispatch.test": {
-      "id": "source.wire.2152.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.dispatch.test",
+    "source.wire.2154.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.dispatch.test": {
+      "id": "source.wire.2154.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.dispatch.test",
       "from_hook_id": "nexus.warp.plugins.crystallizer-flatfile.export",
       "to_hook_id": "nexus.warp.test.dispatch.test.import",
       "intent": "nexus.warp.test.dispatch.test requires nexus.warp.plugins.crystallizer-flatfile",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2152-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2154-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089876
+      "registeredAt": 1791244693100
     },
-    "source.wire.2153.nexus.warp.plugins.scorer-default--nexus.warp.test.dispatch.test": {
-      "id": "source.wire.2153.nexus.warp.plugins.scorer-default--nexus.warp.test.dispatch.test",
+    "source.wire.2155.nexus.warp.plugins.scorer-default--nexus.warp.test.dispatch.test": {
+      "id": "source.wire.2155.nexus.warp.plugins.scorer-default--nexus.warp.test.dispatch.test",
       "from_hook_id": "nexus.warp.plugins.scorer-default.export",
       "to_hook_id": "nexus.warp.test.dispatch.test.import",
       "intent": "nexus.warp.test.dispatch.test requires nexus.warp.plugins.scorer-default",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2153-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2155-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089885
+      "registeredAt": 1791244693108
     },
-    "source.wire.2154.nexus.warp.core--nexus.warp.test.v1.1.0-additions.test": {
-      "id": "source.wire.2154.nexus.warp.core--nexus.warp.test.v1.1.0-additions.test",
+    "source.wire.2156.nexus.warp.core--nexus.warp.test.v1.1.0-additions.test": {
+      "id": "source.wire.2156.nexus.warp.core--nexus.warp.test.v1.1.0-additions.test",
       "from_hook_id": "nexus.warp.core.export",
       "to_hook_id": "nexus.warp.test.v1.1.0-additions.test.import",
       "intent": "nexus.warp.test.v1.1.0-additions.test requires nexus.warp.core",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2154-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2156-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089894
+      "registeredAt": 1791244693116
     },
-    "source.wire.2155.nexus.warp.dispatch--nexus.warp.test.v1.1.0-additions.test": {
-      "id": "source.wire.2155.nexus.warp.dispatch--nexus.warp.test.v1.1.0-additions.test",
+    "source.wire.2157.nexus.warp.dispatch--nexus.warp.test.v1.1.0-additions.test": {
+      "id": "source.wire.2157.nexus.warp.dispatch--nexus.warp.test.v1.1.0-additions.test",
       "from_hook_id": "nexus.warp.dispatch.export",
       "to_hook_id": "nexus.warp.test.v1.1.0-additions.test.import",
       "intent": "nexus.warp.test.v1.1.0-additions.test requires nexus.warp.dispatch",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2155-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2157-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089903
+      "registeredAt": 1791244693124
     },
-    "source.wire.2156.nexus.warp.dispatch.cascade--nexus.warp.test.v1.1.0-additions.test": {
-      "id": "source.wire.2156.nexus.warp.dispatch.cascade--nexus.warp.test.v1.1.0-additions.test",
+    "source.wire.2158.nexus.warp.dispatch.cascade--nexus.warp.test.v1.1.0-additions.test": {
+      "id": "source.wire.2158.nexus.warp.dispatch.cascade--nexus.warp.test.v1.1.0-additions.test",
       "from_hook_id": "nexus.warp.dispatch.cascade.export",
       "to_hook_id": "nexus.warp.test.v1.1.0-additions.test.import",
       "intent": "nexus.warp.test.v1.1.0-additions.test requires nexus.warp.dispatch.cascade",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2156-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2158-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089912
+      "registeredAt": 1791244693131
     },
-    "source.wire.2157.nexus.warp.dispatch.population--nexus.warp.test.v1.1.0-additions.test": {
-      "id": "source.wire.2157.nexus.warp.dispatch.population--nexus.warp.test.v1.1.0-additions.test",
+    "source.wire.2159.nexus.warp.dispatch.population--nexus.warp.test.v1.1.0-additions.test": {
+      "id": "source.wire.2159.nexus.warp.dispatch.population--nexus.warp.test.v1.1.0-additions.test",
       "from_hook_id": "nexus.warp.dispatch.population.export",
       "to_hook_id": "nexus.warp.test.v1.1.0-additions.test.import",
       "intent": "nexus.warp.test.v1.1.0-additions.test requires nexus.warp.dispatch.population",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2157-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2159-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089922
+      "registeredAt": 1791244693139
     },
-    "source.wire.2158.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.v1.1.0-additions.test": {
-      "id": "source.wire.2158.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.v1.1.0-additions.test",
+    "source.wire.2160.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.v1.1.0-additions.test": {
+      "id": "source.wire.2160.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.v1.1.0-additions.test",
       "from_hook_id": "nexus.warp.plugins.crystallizer-flatfile.export",
       "to_hook_id": "nexus.warp.test.v1.1.0-additions.test.import",
       "intent": "nexus.warp.test.v1.1.0-additions.test requires nexus.warp.plugins.crystallizer-flatfile",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2158-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2160-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089930
+      "registeredAt": 1791244693147
     },
-    "source.wire.2159.nexus.warp.plugins.scorer-default--nexus.warp.test.v1.1.0-additions.test": {
-      "id": "source.wire.2159.nexus.warp.plugins.scorer-default--nexus.warp.test.v1.1.0-additions.test",
+    "source.wire.2161.nexus.warp.plugins.scorer-default--nexus.warp.test.v1.1.0-additions.test": {
+      "id": "source.wire.2161.nexus.warp.plugins.scorer-default--nexus.warp.test.v1.1.0-additions.test",
       "from_hook_id": "nexus.warp.plugins.scorer-default.export",
       "to_hook_id": "nexus.warp.test.v1.1.0-additions.test.import",
       "intent": "nexus.warp.test.v1.1.0-additions.test requires nexus.warp.plugins.scorer-default",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2159-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2161-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089939
+      "registeredAt": 1791244693156
     },
-    "source.wire.2160.nexus.warp.core--nexus.warp.test.v1.4-additions.test": {
-      "id": "source.wire.2160.nexus.warp.core--nexus.warp.test.v1.4-additions.test",
+    "source.wire.2162.nexus.warp.core--nexus.warp.test.v1.4-additions.test": {
+      "id": "source.wire.2162.nexus.warp.core--nexus.warp.test.v1.4-additions.test",
       "from_hook_id": "nexus.warp.core.export",
       "to_hook_id": "nexus.warp.test.v1.4-additions.test.import",
       "intent": "nexus.warp.test.v1.4-additions.test requires nexus.warp.core",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2160-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2162-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089949
+      "registeredAt": 1791244693164
     },
-    "source.wire.2161.nexus.warp.dispatch--nexus.warp.test.v1.4-additions.test": {
-      "id": "source.wire.2161.nexus.warp.dispatch--nexus.warp.test.v1.4-additions.test",
+    "source.wire.2163.nexus.warp.dispatch--nexus.warp.test.v1.4-additions.test": {
+      "id": "source.wire.2163.nexus.warp.dispatch--nexus.warp.test.v1.4-additions.test",
       "from_hook_id": "nexus.warp.dispatch.export",
       "to_hook_id": "nexus.warp.test.v1.4-additions.test.import",
       "intent": "nexus.warp.test.v1.4-additions.test requires nexus.warp.dispatch",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2161-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2163-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089959
+      "registeredAt": 1791244693174
     },
-    "source.wire.2162.nexus.warp.dispatch.canonicalize--nexus.warp.test.v1.4-additions.test": {
-      "id": "source.wire.2162.nexus.warp.dispatch.canonicalize--nexus.warp.test.v1.4-additions.test",
+    "source.wire.2164.nexus.warp.dispatch.canonicalize--nexus.warp.test.v1.4-additions.test": {
+      "id": "source.wire.2164.nexus.warp.dispatch.canonicalize--nexus.warp.test.v1.4-additions.test",
       "from_hook_id": "nexus.warp.dispatch.canonicalize.export",
       "to_hook_id": "nexus.warp.test.v1.4-additions.test.import",
       "intent": "nexus.warp.test.v1.4-additions.test requires nexus.warp.dispatch.canonicalize",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2162-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2164-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089969
+      "registeredAt": 1791244693182
     },
-    "source.wire.2163.nexus.warp.dispatch.cascade--nexus.warp.test.v1.4-additions.test": {
-      "id": "source.wire.2163.nexus.warp.dispatch.cascade--nexus.warp.test.v1.4-additions.test",
+    "source.wire.2165.nexus.warp.dispatch.cascade--nexus.warp.test.v1.4-additions.test": {
+      "id": "source.wire.2165.nexus.warp.dispatch.cascade--nexus.warp.test.v1.4-additions.test",
       "from_hook_id": "nexus.warp.dispatch.cascade.export",
       "to_hook_id": "nexus.warp.test.v1.4-additions.test.import",
       "intent": "nexus.warp.test.v1.4-additions.test requires nexus.warp.dispatch.cascade",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2163-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2165-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089978
+      "registeredAt": 1791244693190
     },
-    "source.wire.2164.nexus.warp.dispatch.deltaCache--nexus.warp.test.v1.4-additions.test": {
-      "id": "source.wire.2164.nexus.warp.dispatch.deltaCache--nexus.warp.test.v1.4-additions.test",
+    "source.wire.2166.nexus.warp.dispatch.deltaCache--nexus.warp.test.v1.4-additions.test": {
+      "id": "source.wire.2166.nexus.warp.dispatch.deltaCache--nexus.warp.test.v1.4-additions.test",
       "from_hook_id": "nexus.warp.dispatch.deltaCache.export",
       "to_hook_id": "nexus.warp.test.v1.4-additions.test.import",
       "intent": "nexus.warp.test.v1.4-additions.test requires nexus.warp.dispatch.deltaCache",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2164-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2166-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089990
+      "registeredAt": 1791244693198
     },
-    "source.wire.2165.nexus.warp.dispatch.population--nexus.warp.test.v1.4-additions.test": {
-      "id": "source.wire.2165.nexus.warp.dispatch.population--nexus.warp.test.v1.4-additions.test",
+    "source.wire.2167.nexus.warp.dispatch.population--nexus.warp.test.v1.4-additions.test": {
+      "id": "source.wire.2167.nexus.warp.dispatch.population--nexus.warp.test.v1.4-additions.test",
       "from_hook_id": "nexus.warp.dispatch.population.export",
       "to_hook_id": "nexus.warp.test.v1.4-additions.test.import",
       "intent": "nexus.warp.test.v1.4-additions.test requires nexus.warp.dispatch.population",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2165-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2167-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243089999
+      "registeredAt": 1791244693206
     },
-    "source.wire.2166.nexus.warp.dispatch.pregen--nexus.warp.test.v1.4-additions.test": {
-      "id": "source.wire.2166.nexus.warp.dispatch.pregen--nexus.warp.test.v1.4-additions.test",
+    "source.wire.2168.nexus.warp.dispatch.pregen--nexus.warp.test.v1.4-additions.test": {
+      "id": "source.wire.2168.nexus.warp.dispatch.pregen--nexus.warp.test.v1.4-additions.test",
       "from_hook_id": "nexus.warp.dispatch.pregen.export",
       "to_hook_id": "nexus.warp.test.v1.4-additions.test.import",
       "intent": "nexus.warp.test.v1.4-additions.test requires nexus.warp.dispatch.pregen",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2166-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2168-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243090009
+      "registeredAt": 1791244693215
     },
-    "source.wire.2167.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.v1.4-additions.test": {
-      "id": "source.wire.2167.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.v1.4-additions.test",
+    "source.wire.2169.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.v1.4-additions.test": {
+      "id": "source.wire.2169.nexus.warp.plugins.crystallizer-flatfile--nexus.warp.test.v1.4-additions.test",
       "from_hook_id": "nexus.warp.plugins.crystallizer-flatfile.export",
       "to_hook_id": "nexus.warp.test.v1.4-additions.test.import",
       "intent": "nexus.warp.test.v1.4-additions.test requires nexus.warp.plugins.crystallizer-flatfile",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2167-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2169-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243090018
+      "registeredAt": 1791244693225
     },
-    "source.wire.2168.nexus.warp.plugins.scorer-default--nexus.warp.test.v1.4-additions.test": {
-      "id": "source.wire.2168.nexus.warp.plugins.scorer-default--nexus.warp.test.v1.4-additions.test",
+    "source.wire.2170.nexus.warp.plugins.scorer-default--nexus.warp.test.v1.4-additions.test": {
+      "id": "source.wire.2170.nexus.warp.plugins.scorer-default--nexus.warp.test.v1.4-additions.test",
       "from_hook_id": "nexus.warp.plugins.scorer-default.export",
       "to_hook_id": "nexus.warp.test.v1.4-additions.test.import",
       "intent": "nexus.warp.test.v1.4-additions.test requires nexus.warp.plugins.scorer-default",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2168-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2170-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243090030
+      "registeredAt": 1791244693236
     },
     "source.event.architect.snr.flagged.nexus.architect.src.spec.Blueprint--nexus.nexus.nexus-bus": {
       "id": "source.event.architect.snr.flagged.nexus.architect.src.spec.Blueprint--nexus.nexus.nexus-bus",
@@ -86940,77 +87089,95 @@
       "schemaVersion": "1.2.0",
       "registeredAt": 1791237135995
     },
-    "verified-primitives.wire.5.nexus.idearium.ui.js.app--nexus.idearium.ui.js.repo-settings": {
-      "id": "verified-primitives.wire.5.nexus.idearium.ui.js.app--nexus.idearium.ui.js.repo-settings",
-      "from_hook_id": "nexus.idearium.ui.js.app.export",
-      "to_hook_id": "nexus.idearium.ui.js.repo-settings.import",
+    "verified-primitives.wire.5.nexus.idearium.ui.js.template-picker--nexus.idearium.ui.js.workshop": {
+      "id": "verified-primitives.wire.5.nexus.idearium.ui.js.template-picker--nexus.idearium.ui.js.workshop",
+      "from_hook_id": "nexus.idearium.ui.js.template-picker.export",
+      "to_hook_id": "nexus.idearium.ui.js.workshop.import",
       "uuid": "nexus-loom-map-verified-primitives-wire-5-v1-0000-2026-1005-001",
-      "external": true,
+      "external": false,
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136009
+      "registeredAt": 1791244725688
     },
-    "verified-primitives.wire.6.nexus.idearium.ui.js.agent-blocks--nexus.idearium.ui.js.repo-settings": {
-      "id": "verified-primitives.wire.6.nexus.idearium.ui.js.agent-blocks--nexus.idearium.ui.js.repo-settings",
-      "from_hook_id": "nexus.idearium.ui.js.agent-blocks.export",
+    "verified-primitives.wire.6.nexus.idearium.ui.js.app--nexus.idearium.ui.js.repo-settings": {
+      "id": "verified-primitives.wire.6.nexus.idearium.ui.js.app--nexus.idearium.ui.js.repo-settings",
+      "from_hook_id": "nexus.idearium.ui.js.app.export",
       "to_hook_id": "nexus.idearium.ui.js.repo-settings.import",
       "uuid": "nexus-loom-map-verified-primitives-wire-6-v1-0000-2026-1005-001",
       "external": true,
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136022
+      "registeredAt": 1791244725703
     },
-    "verified-primitives.wire.7.nexus.idearium.ui.js.repo-environment--nexus.idearium.ui.js.repo-settings": {
-      "id": "verified-primitives.wire.7.nexus.idearium.ui.js.repo-environment--nexus.idearium.ui.js.repo-settings",
-      "from_hook_id": "nexus.idearium.ui.js.repo-environment.export",
+    "verified-primitives.wire.7.nexus.idearium.ui.js.agent-blocks--nexus.idearium.ui.js.repo-settings": {
+      "id": "verified-primitives.wire.7.nexus.idearium.ui.js.agent-blocks--nexus.idearium.ui.js.repo-settings",
+      "from_hook_id": "nexus.idearium.ui.js.agent-blocks.export",
       "to_hook_id": "nexus.idearium.ui.js.repo-settings.import",
       "uuid": "nexus-loom-map-verified-primitives-wire-7-v1-0000-2026-1005-001",
       "external": true,
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136035
+      "registeredAt": 1791244725717
     },
-    "verified-primitives.wire.8.nexus.idearium.api--nexus.idearium.ui.js.repo-settings": {
-      "id": "verified-primitives.wire.8.nexus.idearium.api--nexus.idearium.ui.js.repo-settings",
-      "from_hook_id": "nexus.idearium.api.export",
+    "verified-primitives.wire.8.nexus.idearium.ui.js.repo-environment--nexus.idearium.ui.js.repo-settings": {
+      "id": "verified-primitives.wire.8.nexus.idearium.ui.js.repo-environment--nexus.idearium.ui.js.repo-settings",
+      "from_hook_id": "nexus.idearium.ui.js.repo-environment.export",
       "to_hook_id": "nexus.idearium.ui.js.repo-settings.import",
       "uuid": "nexus-loom-map-verified-primitives-wire-8-v1-0000-2026-1005-001",
       "external": true,
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136049
+      "registeredAt": 1791244725730
     },
-    "verified-primitives.wire.9.nexus.idearium.ui.js.app--nexus.idearium.ui.js.desktop-setup": {
-      "id": "verified-primitives.wire.9.nexus.idearium.ui.js.app--nexus.idearium.ui.js.desktop-setup",
-      "from_hook_id": "nexus.idearium.ui.js.app.export",
-      "to_hook_id": "nexus.idearium.ui.js.desktop-setup.import",
+    "verified-primitives.wire.9.nexus.idearium.api--nexus.idearium.ui.js.repo-settings": {
+      "id": "verified-primitives.wire.9.nexus.idearium.api--nexus.idearium.ui.js.repo-settings",
+      "from_hook_id": "nexus.idearium.api.export",
+      "to_hook_id": "nexus.idearium.ui.js.repo-settings.import",
       "uuid": "nexus-loom-map-verified-primitives-wire-9-v1-0000-2026-1005-001",
       "external": true,
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136062
+      "registeredAt": 1791244725744
     },
-    "verified-primitives.wire.10.nexus.idearium.api--nexus.idearium.ui.js.desktop-setup": {
-      "id": "verified-primitives.wire.10.nexus.idearium.api--nexus.idearium.ui.js.desktop-setup",
-      "from_hook_id": "nexus.idearium.api.export",
+    "verified-primitives.wire.10.nexus.idearium.ui.js.app--nexus.idearium.ui.js.desktop-setup": {
+      "id": "verified-primitives.wire.10.nexus.idearium.ui.js.app--nexus.idearium.ui.js.desktop-setup",
+      "from_hook_id": "nexus.idearium.ui.js.app.export",
       "to_hook_id": "nexus.idearium.ui.js.desktop-setup.import",
       "uuid": "nexus-loom-map-verified-primitives-wire-10-v1-0000-2026-1005-001",
       "external": true,
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136075
+      "registeredAt": 1791244725759
     },
-    "verified-primitives.wire.11.nexus.idearium.api--nexus.idearium.ui.js.workshop": {
-      "id": "verified-primitives.wire.11.nexus.idearium.api--nexus.idearium.ui.js.workshop",
+    "verified-primitives.wire.11.nexus.idearium.api--nexus.idearium.ui.js.desktop-setup": {
+      "id": "verified-primitives.wire.11.nexus.idearium.api--nexus.idearium.ui.js.desktop-setup",
       "from_hook_id": "nexus.idearium.api.export",
-      "to_hook_id": "nexus.idearium.ui.js.workshop.import",
+      "to_hook_id": "nexus.idearium.ui.js.desktop-setup.import",
       "uuid": "nexus-loom-map-verified-primitives-wire-11-v1-0000-2026-1005-001",
       "external": true,
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791240887872
+      "registeredAt": 1791244725772
     },
-    "verified-primitives.wire.12.nexus.idearium.ui.js.app--nexus.idearium.ui.js.workshop": {
-      "id": "verified-primitives.wire.12.nexus.idearium.ui.js.app--nexus.idearium.ui.js.workshop",
-      "from_hook_id": "nexus.idearium.ui.js.app.export",
+    "verified-primitives.wire.12.nexus.idearium.api--nexus.idearium.ui.js.workshop": {
+      "id": "verified-primitives.wire.12.nexus.idearium.api--nexus.idearium.ui.js.workshop",
+      "from_hook_id": "nexus.idearium.api.export",
       "to_hook_id": "nexus.idearium.ui.js.workshop.import",
       "uuid": "nexus-loom-map-verified-primitives-wire-12-v1-0000-2026-1005-001",
       "external": true,
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791240887895
+      "registeredAt": 1791244725785
+    },
+    "verified-primitives.wire.13.nexus.idearium.ui.js.app--nexus.idearium.ui.js.workshop": {
+      "id": "verified-primitives.wire.13.nexus.idearium.ui.js.app--nexus.idearium.ui.js.workshop",
+      "from_hook_id": "nexus.idearium.ui.js.app.export",
+      "to_hook_id": "nexus.idearium.ui.js.workshop.import",
+      "uuid": "nexus-loom-map-verified-primitives-wire-13-v1-0000-2026-1005-001",
+      "external": true,
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791244725799
+    },
+    "verified-primitives.wire.14.nexus.idearium.api--nexus.idearium.ui.js.template-picker": {
+      "id": "verified-primitives.wire.14.nexus.idearium.api--nexus.idearium.ui.js.template-picker",
+      "from_hook_id": "nexus.idearium.api.export",
+      "to_hook_id": "nexus.idearium.ui.js.template-picker.import",
+      "uuid": "nexus-loom-map-verified-primitives-wire-14-v1-0000-2026-1005-001",
+      "external": true,
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791244725815
     },
     "economy.wire.1.nexus.guardian.lib.economy-guard--nexus.guardian.server": {
       "id": "economy.wire.1.nexus.guardian.lib.economy-guard--nexus.guardian.server",
@@ -91652,275 +91819,275 @@
       "schemaVersion": "1.2.0",
       "registeredAt": 1791243177273
     },
-    "source.wire.2029.nexus.lib.work-queue--nexus.tests.modules.test-three-graphs.test": {
-      "id": "source.wire.2029.nexus.lib.work-queue--nexus.tests.modules.test-three-graphs.test",
+    "source.wire.2031.nexus.lib.work-queue--nexus.tests.modules.test-three-graphs.test": {
+      "id": "source.wire.2031.nexus.lib.work-queue--nexus.tests.modules.test-three-graphs.test",
       "from_hook_id": "nexus.lib.work-queue.export",
       "to_hook_id": "nexus.tests.modules.test-three-graphs.test.import",
       "intent": "nexus.tests.modules.test-three-graphs.test requires nexus.lib.work-queue",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2029-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2031-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177318
+      "registeredAt": 1791244766757
     },
-    "source.wire.2034.nexus.versionium.lib.engine--nexus.tests.modules.test-versionium-migration": {
-      "id": "source.wire.2034.nexus.versionium.lib.engine--nexus.tests.modules.test-versionium-migration",
+    "source.wire.2036.nexus.versionium.lib.engine--nexus.tests.modules.test-versionium-migration": {
+      "id": "source.wire.2036.nexus.versionium.lib.engine--nexus.tests.modules.test-versionium-migration",
       "from_hook_id": "nexus.versionium.lib.engine.export",
       "to_hook_id": "nexus.tests.modules.test-versionium-migration.import",
       "intent": "nexus.tests.modules.test-versionium-migration requires nexus.versionium.lib.engine",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2034-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2036-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177363
+      "registeredAt": 1791244766789
     },
-    "source.wire.2036.nexus.versionium.lib.engine--nexus.tests.modules.test-versionium-repo-history.test": {
-      "id": "source.wire.2036.nexus.versionium.lib.engine--nexus.tests.modules.test-versionium-repo-history.test",
+    "source.wire.2038.nexus.versionium.lib.engine--nexus.tests.modules.test-versionium-repo-history.test": {
+      "id": "source.wire.2038.nexus.versionium.lib.engine--nexus.tests.modules.test-versionium-repo-history.test",
       "from_hook_id": "nexus.versionium.lib.engine.export",
       "to_hook_id": "nexus.tests.modules.test-versionium-repo-history.test.import",
       "intent": "nexus.tests.modules.test-versionium-repo-history.test requires nexus.versionium.lib.engine",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2036-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2038-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177406
+      "registeredAt": 1791244766822
     },
-    "source.wire.2038.nexus.cortex.snapshot--nexus.tests.modules.test-versionium-snapshot-migration": {
-      "id": "source.wire.2038.nexus.cortex.snapshot--nexus.tests.modules.test-versionium-snapshot-migration",
+    "source.wire.2040.nexus.cortex.snapshot--nexus.tests.modules.test-versionium-snapshot-migration": {
+      "id": "source.wire.2040.nexus.cortex.snapshot--nexus.tests.modules.test-versionium-snapshot-migration",
       "from_hook_id": "nexus.cortex.snapshot.export",
       "to_hook_id": "nexus.tests.modules.test-versionium-snapshot-migration.import",
       "intent": "nexus.tests.modules.test-versionium-snapshot-migration requires nexus.cortex.snapshot",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2038-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2040-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177449
+      "registeredAt": 1791244766854
     },
-    "source.wire.2040.nexus.versionium.lib.store--nexus.tests.modules.test-versionium-snapshot-migration": {
-      "id": "source.wire.2040.nexus.versionium.lib.store--nexus.tests.modules.test-versionium-snapshot-migration",
+    "source.wire.2042.nexus.versionium.lib.store--nexus.tests.modules.test-versionium-snapshot-migration": {
+      "id": "source.wire.2042.nexus.versionium.lib.store--nexus.tests.modules.test-versionium-snapshot-migration",
       "from_hook_id": "nexus.versionium.lib.store.export",
       "to_hook_id": "nexus.tests.modules.test-versionium-snapshot-migration.import",
       "intent": "nexus.tests.modules.test-versionium-snapshot-migration requires nexus.versionium.lib.store",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2040-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2042-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177496
+      "registeredAt": 1791244766887
     },
-    "source.wire.2046.nexus.cortex.jaa-db--nexus.tests.modules.tool-call-listener.test": {
-      "id": "source.wire.2046.nexus.cortex.jaa-db--nexus.tests.modules.tool-call-listener.test",
+    "source.wire.2048.nexus.cortex.jaa-db--nexus.tests.modules.tool-call-listener.test": {
+      "id": "source.wire.2048.nexus.cortex.jaa-db--nexus.tests.modules.tool-call-listener.test",
       "from_hook_id": "nexus.cortex.jaa-db.export",
       "to_hook_id": "nexus.tests.modules.tool-call-listener.test.import",
       "intent": "nexus.tests.modules.tool-call-listener.test requires nexus.cortex.jaa-db",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2046-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2048-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177538
+      "registeredAt": 1791244766920
     },
-    "source.wire.2053.nexus.guardian.lib.ncp--nexus.tests.ncp-dual-live-flap.test": {
-      "id": "source.wire.2053.nexus.guardian.lib.ncp--nexus.tests.ncp-dual-live-flap.test",
+    "source.wire.2055.nexus.guardian.lib.ncp--nexus.tests.ncp-dual-live-flap.test": {
+      "id": "source.wire.2055.nexus.guardian.lib.ncp--nexus.tests.ncp-dual-live-flap.test",
       "from_hook_id": "nexus.guardian.lib.ncp.export",
       "to_hook_id": "nexus.tests.ncp-dual-live-flap.test.import",
       "intent": "nexus.tests.ncp-dual-live-flap.test requires nexus.guardian.lib.ncp",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2053-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2055-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177578
+      "registeredAt": 1791244766960
     },
-    "source.wire.2054.nexus.guardian.lib.ncp--nexus.tests.ncp-race.test": {
-      "id": "source.wire.2054.nexus.guardian.lib.ncp--nexus.tests.ncp-race.test",
+    "source.wire.2056.nexus.guardian.lib.ncp--nexus.tests.ncp-race.test": {
+      "id": "source.wire.2056.nexus.guardian.lib.ncp--nexus.tests.ncp-race.test",
       "from_hook_id": "nexus.guardian.lib.ncp.export",
       "to_hook_id": "nexus.tests.ncp-race.test.import",
       "intent": "nexus.tests.ncp-race.test requires nexus.guardian.lib.ncp",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2054-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2056-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177619
+      "registeredAt": 1791244767000
     },
-    "source.wire.2058.nexus.lib.node-export--nexus.tests.node-export-idea-tagged-query.test": {
-      "id": "source.wire.2058.nexus.lib.node-export--nexus.tests.node-export-idea-tagged-query.test",
+    "source.wire.2060.nexus.lib.node-export--nexus.tests.node-export-idea-tagged-query.test": {
+      "id": "source.wire.2060.nexus.lib.node-export--nexus.tests.node-export-idea-tagged-query.test",
       "from_hook_id": "nexus.lib.node-export.export",
       "to_hook_id": "nexus.tests.node-export-idea-tagged-query.test.import",
       "intent": "nexus.tests.node-export-idea-tagged-query.test requires nexus.lib.node-export",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2058-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2060-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177662
+      "registeredAt": 1791244767038
     },
-    "source.wire.2059.nexus.lib.node-schemas--nexus.tests.node-export-idea-tagged-query.test": {
-      "id": "source.wire.2059.nexus.lib.node-schemas--nexus.tests.node-export-idea-tagged-query.test",
+    "source.wire.2061.nexus.lib.node-schemas--nexus.tests.node-export-idea-tagged-query.test": {
+      "id": "source.wire.2061.nexus.lib.node-schemas--nexus.tests.node-export-idea-tagged-query.test",
       "from_hook_id": "nexus.lib.node-schemas.export",
       "to_hook_id": "nexus.tests.node-export-idea-tagged-query.test.import",
       "intent": "nexus.tests.node-export-idea-tagged-query.test requires nexus.lib.node-schemas",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2059-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2061-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177708
+      "registeredAt": 1791244767072
     },
-    "source.wire.2060.nexus.lib.hat-forge--nexus.tests.node-schemas-split.test": {
-      "id": "source.wire.2060.nexus.lib.hat-forge--nexus.tests.node-schemas-split.test",
+    "source.wire.2062.nexus.lib.hat-forge--nexus.tests.node-schemas-split.test": {
+      "id": "source.wire.2062.nexus.lib.hat-forge--nexus.tests.node-schemas-split.test",
       "from_hook_id": "nexus.lib.hat-forge.export",
       "to_hook_id": "nexus.tests.node-schemas-split.test.import",
       "intent": "nexus.tests.node-schemas-split.test requires nexus.lib.hat-forge",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2060-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2062-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177755
+      "registeredAt": 1791244767107
     },
-    "source.wire.2061.nexus.lib.node-schemas--nexus.tests.node-schemas-split.test": {
-      "id": "source.wire.2061.nexus.lib.node-schemas--nexus.tests.node-schemas-split.test",
+    "source.wire.2063.nexus.lib.node-schemas--nexus.tests.node-schemas-split.test": {
+      "id": "source.wire.2063.nexus.lib.node-schemas--nexus.tests.node-schemas-split.test",
       "from_hook_id": "nexus.lib.node-schemas.export",
       "to_hook_id": "nexus.tests.node-schemas-split.test.import",
       "intent": "nexus.tests.node-schemas-split.test requires nexus.lib.node-schemas",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2061-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2063-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177800
+      "registeredAt": 1791244767144
     },
-    "source.wire.2063.nexus.cortex.contract--nexus.tests.pipeline.test": {
-      "id": "source.wire.2063.nexus.cortex.contract--nexus.tests.pipeline.test",
+    "source.wire.2065.nexus.cortex.contract--nexus.tests.pipeline.test": {
+      "id": "source.wire.2065.nexus.cortex.contract--nexus.tests.pipeline.test",
       "from_hook_id": "nexus.cortex.contract.export",
       "to_hook_id": "nexus.tests.pipeline.test.import",
       "intent": "nexus.tests.pipeline.test requires nexus.cortex.contract",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2063-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2065-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177846
+      "registeredAt": 1791244767181
     },
-    "source.wire.2064.nexus.cortex.jaa-db--nexus.tests.pipeline.test": {
-      "id": "source.wire.2064.nexus.cortex.jaa-db--nexus.tests.pipeline.test",
+    "source.wire.2066.nexus.cortex.jaa-db--nexus.tests.pipeline.test": {
+      "id": "source.wire.2066.nexus.cortex.jaa-db--nexus.tests.pipeline.test",
       "from_hook_id": "nexus.cortex.jaa-db.export",
       "to_hook_id": "nexus.tests.pipeline.test.import",
       "intent": "nexus.tests.pipeline.test requires nexus.cortex.jaa-db",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2064-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2066-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177895
+      "registeredAt": 1791244767219
     },
-    "source.wire.2065.nexus.cortex.self-heal--nexus.tests.pipeline.test": {
-      "id": "source.wire.2065.nexus.cortex.self-heal--nexus.tests.pipeline.test",
+    "source.wire.2067.nexus.cortex.self-heal--nexus.tests.pipeline.test": {
+      "id": "source.wire.2067.nexus.cortex.self-heal--nexus.tests.pipeline.test",
       "from_hook_id": "nexus.cortex.self-heal.export",
       "to_hook_id": "nexus.tests.pipeline.test.import",
       "intent": "nexus.tests.pipeline.test requires nexus.cortex.self-heal",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2065-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2067-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177945
+      "registeredAt": 1791244767262
     },
-    "source.wire.2066.nexus.cortex.snapshot--nexus.tests.pipeline.test": {
-      "id": "source.wire.2066.nexus.cortex.snapshot--nexus.tests.pipeline.test",
+    "source.wire.2068.nexus.cortex.snapshot--nexus.tests.pipeline.test": {
+      "id": "source.wire.2068.nexus.cortex.snapshot--nexus.tests.pipeline.test",
       "from_hook_id": "nexus.cortex.snapshot.export",
       "to_hook_id": "nexus.tests.pipeline.test.import",
       "intent": "nexus.tests.pipeline.test requires nexus.cortex.snapshot",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2066-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2068-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243177993
+      "registeredAt": 1791244767303
     },
-    "source.wire.2089.nexus.guardian.lib.ncp--nexus.tests.stale-sweep-socket-close.test": {
-      "id": "source.wire.2089.nexus.guardian.lib.ncp--nexus.tests.stale-sweep-socket-close.test",
+    "source.wire.2091.nexus.guardian.lib.ncp--nexus.tests.stale-sweep-socket-close.test": {
+      "id": "source.wire.2091.nexus.guardian.lib.ncp--nexus.tests.stale-sweep-socket-close.test",
       "from_hook_id": "nexus.guardian.lib.ncp.export",
       "to_hook_id": "nexus.tests.stale-sweep-socket-close.test.import",
       "intent": "nexus.tests.stale-sweep-socket-close.test requires nexus.guardian.lib.ncp",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2089-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2091-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178042
+      "registeredAt": 1791244767341
     },
-    "source.wire.2094.nexus.versionium.config--nexus.versionium.lib.files": {
-      "id": "source.wire.2094.nexus.versionium.config--nexus.versionium.lib.files",
+    "source.wire.2096.nexus.versionium.config--nexus.versionium.lib.files": {
+      "id": "source.wire.2096.nexus.versionium.config--nexus.versionium.lib.files",
       "from_hook_id": "nexus.versionium.config.export",
       "to_hook_id": "nexus.versionium.lib.files.import",
       "intent": "nexus.versionium.lib.files requires nexus.versionium.config",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2094-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2096-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178084
+      "registeredAt": 1791244767376
     },
-    "source.wire.2095.nexus.versionium.lib.store--nexus.versionium.lib.files": {
-      "id": "source.wire.2095.nexus.versionium.lib.store--nexus.versionium.lib.files",
+    "source.wire.2097.nexus.versionium.lib.store--nexus.versionium.lib.files": {
+      "id": "source.wire.2097.nexus.versionium.lib.store--nexus.versionium.lib.files",
       "from_hook_id": "nexus.versionium.lib.store.export",
       "to_hook_id": "nexus.versionium.lib.files.import",
       "intent": "nexus.versionium.lib.files requires nexus.versionium.lib.store",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2095-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2097-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178125
+      "registeredAt": 1791244767410
     },
-    "source.wire.2097.nexus.versionium.lib.store--nexus.versionium.lib.migrate-cortex-snapshots": {
-      "id": "source.wire.2097.nexus.versionium.lib.store--nexus.versionium.lib.migrate-cortex-snapshots",
+    "source.wire.2099.nexus.versionium.lib.store--nexus.versionium.lib.migrate-cortex-snapshots": {
+      "id": "source.wire.2099.nexus.versionium.lib.store--nexus.versionium.lib.migrate-cortex-snapshots",
       "from_hook_id": "nexus.versionium.lib.store.export",
       "to_hook_id": "nexus.versionium.lib.migrate-cortex-snapshots.import",
       "intent": "nexus.versionium.lib.migrate-cortex-snapshots requires nexus.versionium.lib.store",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2097-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2099-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178165
+      "registeredAt": 1791244767445
     },
-    "source.wire.2098.nexus.cortex.jaa-db--nexus.versionium.lib.migrate-idearium-snapshots": {
-      "id": "source.wire.2098.nexus.cortex.jaa-db--nexus.versionium.lib.migrate-idearium-snapshots",
+    "source.wire.2100.nexus.cortex.jaa-db--nexus.versionium.lib.migrate-idearium-snapshots": {
+      "id": "source.wire.2100.nexus.cortex.jaa-db--nexus.versionium.lib.migrate-idearium-snapshots",
       "from_hook_id": "nexus.cortex.jaa-db.export",
       "to_hook_id": "nexus.versionium.lib.migrate-idearium-snapshots.import",
       "intent": "nexus.versionium.lib.migrate-idearium-snapshots requires nexus.cortex.jaa-db",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2098-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2100-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178206
+      "registeredAt": 1791244767478
     },
-    "source.wire.2099.nexus.versionium.lib.store--nexus.versionium.lib.migrate-idearium-snapshots": {
-      "id": "source.wire.2099.nexus.versionium.lib.store--nexus.versionium.lib.migrate-idearium-snapshots",
+    "source.wire.2101.nexus.versionium.lib.store--nexus.versionium.lib.migrate-idearium-snapshots": {
+      "id": "source.wire.2101.nexus.versionium.lib.store--nexus.versionium.lib.migrate-idearium-snapshots",
       "from_hook_id": "nexus.versionium.lib.store.export",
       "to_hook_id": "nexus.versionium.lib.migrate-idearium-snapshots.import",
       "intent": "nexus.versionium.lib.migrate-idearium-snapshots requires nexus.versionium.lib.store",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2099-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2101-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178245
+      "registeredAt": 1791244767512
     },
-    "source.wire.2100.nexus.cortex.jaa-db--nexus.versionium.lib.snapshot": {
-      "id": "source.wire.2100.nexus.cortex.jaa-db--nexus.versionium.lib.snapshot",
+    "source.wire.2102.nexus.cortex.jaa-db--nexus.versionium.lib.snapshot": {
+      "id": "source.wire.2102.nexus.cortex.jaa-db--nexus.versionium.lib.snapshot",
       "from_hook_id": "nexus.cortex.jaa-db.export",
       "to_hook_id": "nexus.versionium.lib.snapshot.import",
       "intent": "nexus.versionium.lib.snapshot requires nexus.cortex.jaa-db",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2100-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2102-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178287
+      "registeredAt": 1791244767545
     },
-    "source.wire.2101.nexus.versionium.lib.store--nexus.versionium.lib.snapshot": {
-      "id": "source.wire.2101.nexus.versionium.lib.store--nexus.versionium.lib.snapshot",
+    "source.wire.2103.nexus.versionium.lib.store--nexus.versionium.lib.snapshot": {
+      "id": "source.wire.2103.nexus.versionium.lib.store--nexus.versionium.lib.snapshot",
       "from_hook_id": "nexus.versionium.lib.store.export",
       "to_hook_id": "nexus.versionium.lib.snapshot.import",
       "intent": "nexus.versionium.lib.snapshot requires nexus.versionium.lib.store",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2101-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2103-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178328
+      "registeredAt": 1791244767578
     },
-    "source.wire.2102.nexus.versionium.config--nexus.versionium.routes.files": {
-      "id": "source.wire.2102.nexus.versionium.config--nexus.versionium.routes.files",
+    "source.wire.2104.nexus.versionium.config--nexus.versionium.routes.files": {
+      "id": "source.wire.2104.nexus.versionium.config--nexus.versionium.routes.files",
       "from_hook_id": "nexus.versionium.config.export",
       "to_hook_id": "nexus.versionium.routes.files.import",
       "intent": "nexus.versionium.routes.files requires nexus.versionium.config",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2102-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2104-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178372
+      "registeredAt": 1791244767611
     },
-    "source.wire.2104.nexus.versionium.lib.http-utils--nexus.versionium.routes.files": {
-      "id": "source.wire.2104.nexus.versionium.lib.http-utils--nexus.versionium.routes.files",
+    "source.wire.2106.nexus.versionium.lib.http-utils--nexus.versionium.routes.files": {
+      "id": "source.wire.2106.nexus.versionium.lib.http-utils--nexus.versionium.routes.files",
       "from_hook_id": "nexus.versionium.lib.http-utils.export",
       "to_hook_id": "nexus.versionium.routes.files.import",
       "intent": "nexus.versionium.routes.files requires nexus.versionium.lib.http-utils",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2104-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2106-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178415
+      "registeredAt": 1791244767647
     },
-    "source.wire.2105.nexus.lib.node-export--nexus.versionium.schemas": {
-      "id": "source.wire.2105.nexus.lib.node-export--nexus.versionium.schemas",
+    "source.wire.2107.nexus.lib.node-export--nexus.versionium.schemas": {
+      "id": "source.wire.2107.nexus.lib.node-export--nexus.versionium.schemas",
       "from_hook_id": "nexus.lib.node-export.export",
       "to_hook_id": "nexus.versionium.schemas.import",
       "intent": "nexus.versionium.schemas requires nexus.lib.node-export",
       "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-2105-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-wire-2107-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791243178455
+      "registeredAt": 1791244767687
     },
     "observability.wire.4.nexus.cortex.jaa-db--nexus.copilot.diagnostics": {
       "id": "observability.wire.4.nexus.cortex.jaa-db--nexus.copilot.diagnostics",

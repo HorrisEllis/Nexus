@@ -8,7 +8,8 @@
   Void (what are you speccing? — or an idea, a library document, a repo's spec); the writer is one document with an
   outline, the spec's PARTS in tiers (MINIMUM · MODS · COMPONENTS, WS6), the agent in three MODES (manual · assisted ·
   stretched) whose proposals never enter without his yes, and SEND TO THE PIPELINE: save → plan → phases → build.
-  Supersedes the WS4 work surface (kept: _archive/workshop-0.39.300-ws4.html). The page is css/workshop.css and
+  Supersedes the WS4 work surface (kept: _archive/workshop-0.39.300-ws4.html). 0.39.357 RS5: the start is the template
+  picker (js/template-picker.js; docs/2026-10-05-spec-workshop-rebuild-phasemap.spec RS5) — James: "yes with a custom or manual." The page is css/workshop.css and
   js/workshop.js; the server is /api/workshop (idearium/lib/workshop.js) and the repo's /spec/plan, /spec/build, /plan.
   ?id=<workshop> opens one; ?from=idea:<uuid>|library:<sha>|repo:<uuid> starts one.
 -->
@@ -46,24 +47,44 @@
         <div class="title">THE SPEC WORKSHOP</div>
         <div class="sub">AN IDEA BECOMES A SPEC · THE SPEC BECOMES PHASES · THE PHASES BECOME THE BUILD</div>
       </div>
-      <div class="begin emerge" style="--i:2">
-        <input id="beginTitle" maxlength="160" placeholder="WHAT ARE YOU SPECCING?" aria-label="what are you speccing" autocomplete="off">
-        <button class="btn" id="beginBtn" title="START A NEW SPEC WITH THIS TITLE">BEGIN →</button>
-        <div class="hint">ENTER TO BEGIN A BLANK SPEC — OR START FROM SOMETHING YOU ALREADY HAVE</div>
-      </div>
-      <div class="sources">
-        <div class="src glass emerge" style="--i:4" id="srcIdea" tabindex="0" data-k="idea" title="START FROM AN IDEA IN THE VOID">
-          <div class="ico">✦</div><div class="n" id="nIdea">·</div>
-          <div class="t">FROM THE VOID</div><div class="d">AN IDEA YOU CAUGHT, WITH ITS DIALS. IT BECOMES THE SPEC'S FIRST SECTION.</div>
+      <!-- §0.39.357 RS5 — James: "opens a pick template screen like photoshop does when you first open it. with a custom or
+           manual option with a plus sign. then you pick a template from the list, including all the quick spec options" ·
+           "yes with a custom or manual." The new-spec picker (js/template-picker.js): the templates in tabs, + CUSTOM /
+           MANUAL first; the details on the right — the parts it fills, the title, what it starts from, the mode, CREATE. -->
+      <div class="np glass emerge" style="--i:2" id="np" aria-label="new spec">
+        <nav class="np-tabs" id="npTabs" role="tablist" aria-label="template groups"></nav>
+        <div class="np-main">
+          <div class="np-top"><div class="lbl" style="margin:0">START A NEW SPEC <span class="n" id="npCount"></span></div>
+            <input class="field np-q" id="npQ" placeholder="FILTER TEMPLATES…" aria-label="filter templates" autocomplete="off"></div>
+          <div class="np-grid" id="npGrid" role="listbox" aria-label="templates"><div class="empty">READING THE TEMPLATES…</div></div>
         </div>
-        <div class="src glass m emerge" style="--i:5" id="srcLibrary" tabindex="0" data-k="library" title="START FROM A DOCUMENT IN THE SPEC LIBRARY">
-          <div class="ico">❖</div><div class="n" id="nLibrary">·</div>
-          <div class="t">SPEC LIBRARY</div><div class="d">A DOCUMENT YOU IMPORTED. ITS SECTIONS COME WITH IT.</div>
-        </div>
-        <div class="src glass g emerge" style="--i:6" id="srcRepo" tabindex="0" data-k="repo" title="OPEN A REPO'S OWN SPEC AND WORK ON IT">
-          <div class="ico">◈</div><div class="n" id="nRepo">·</div>
-          <div class="t">A REPO'S SPEC</div><div class="d">A REPO'S SPEC FILE, READ INTO SECTIONS. SAVING WRITES IT BACK.</div>
-        </div>
+        <aside class="np-side" aria-label="the template's details">
+          <div class="lbl">DETAILS</div>
+          <input class="np-title" id="beginTitle" maxlength="160" placeholder="WHAT ARE YOU SPECCING?" aria-label="what are you speccing" autocomplete="off">
+          <div class="np-name" id="npName"></div>
+          <div class="np-desc" id="npDesc"></div>
+          <div class="np-sub">PARTS <span id="npFill"></span></div>
+          <div class="np-parts" id="npParts"></div>
+          <div class="np-files hidden" id="npFiles"></div>
+          <div class="np-sub">START FROM</div>
+          <div class="sources">
+            <div class="src" tabindex="0" data-k="none" id="srcNone" title="NOTHING — ONLY THE TEMPLATE"><div class="ico">○</div><div class="t">NOTHING</div></div>
+            <div class="src" tabindex="0" data-k="idea" id="srcIdea" title="AN IDEA FROM THE VOID — IT BECOMES THE SPEC'S FIRST SECTION"><div class="ico">✦</div><div class="t">AN IDEA</div><div class="n" id="nIdea">·</div></div>
+            <div class="src m" tabindex="0" data-k="library" id="srcLibrary" title="A DOCUMENT FROM THE SPEC LIBRARY — ITS SECTIONS COME WITH IT"><div class="ico">❖</div><div class="t">LIBRARY</div><div class="n" id="nLibrary">·</div></div>
+            <div class="src g" tabindex="0" data-k="repo" id="srcRepo" title="A REPO'S OWN SPEC — SAVING WRITES IT BACK"><div class="ico">◈</div><div class="t">A REPO</div><div class="n" id="nRepo">·</div></div>
+          </div>
+          <div class="np-from" id="npFrom"></div>
+          <div class="np-sub">MODE</div>
+          <div class="np-modes" id="npModes" role="radiogroup" aria-label="mode">
+            <button class="np-mode" role="radio" data-mode="manual" title="YOU WRITE. THE AGENT ONLY CHECKS WHAT IS MISSING">MANUAL</button>
+            <button class="np-mode" role="radio" data-mode="assisted" title="THE AGENT PROPOSES, PART BY PART">ASSISTED</button>
+            <button class="np-mode" role="radio" data-mode="stretched" title="THE AGENT CARRIES YOUR IDEA THROUGH EVERY PART">STRETCHED</button>
+          </div>
+          <div class="np-acts">
+            <button class="btn small ghost hidden" id="npRemove" title="ARCHIVE THIS SAVED TEMPLATE — KEPT, NO LONGER OFFERED">REMOVE</button>
+            <button class="btn" id="beginBtn" title="OPEN THE WORKSHOP ON IT (ENTER)">CREATE <span class="arr">→</span></button>
+          </div>
+        </aside>
       </div>
       <div class="yours glass emerge" style="--i:8">
         <div class="lbl">YOUR WORKSHOPS <span class="n" id="wsCount"></span>
@@ -86,6 +107,7 @@
       <div class="gauge" id="minGauge"><i></i></div>
       <div id="parts"></div>
 
+      <button class="btn small ghost wide" id="tplSave" style="margin-top:20px" title="SAVE THIS SPEC'S SECTIONS AS A TEMPLATE — OPENED FROM A SAVED TEMPLATE, IT IS THAT TEMPLATE'S NEXT VERSION">⊞ SAVE AS TEMPLATE</button>
       <details style="margin-top:20px"><summary><div class="lbl">HISTORY</div></summary><div class="hist" id="hist"></div></details>
     </aside>
 
@@ -138,6 +160,7 @@
   </section>
 </main>
 <div id="toasts" role="status"></div>
+<script src="js/template-picker.js"></script>
 <script src="js/workshop.js"></script>
 </body>
 </html>

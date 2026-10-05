@@ -457,6 +457,7 @@ spec:
     - { said: "okay. i clicked on a phase in the phases tab in nexus core to have it built. it needs to actually build it", where: "PB1–PB5 (0.39.355)" }
     - { said: "you're building the capability, not the spec right? need to be able to build phases. i need to be able to add features, capabilites, expand, etc, by mapping to specs.", where: "answered — PB1–PB5 are the capability; the backlog's phases are built by it, each with its files" }
     - { said: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel and code tab.", where: "LS1–LS4 (0.39.356)" }
+    - { said: "Should the workshop's start page become the RS5 \"photoshop style\" template picker? yes with a custom or manual.", where: "docs/2026-10-05-spec-workshop-rebuild-phasemap.spec RS5 — built (0.39.357)" }
   open_questions:
     - "Q1: amend docs/AXIOMS-v3.1.md §4.1 from 'UI is tested via Playwright' to 'UI is tested in Clear Glass (clear-glass/src/driver/glass.js)'? A law changes only on your word."
     - "Q2 (CL2): may a writing verb run from the Agent tab after one confirmation, or only read verbs there and writing verbs from the terminal?"

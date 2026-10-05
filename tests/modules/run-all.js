@@ -389,6 +389,7 @@ const SUITES = [
   'test-workshop-full.test.js',   // 0.39.354 WS7 — the full workshop: the writer, parts, modes, SEND TO THE PIPELINE (Clear Glass)
   'test-phase-actually-builds.test.js',   // 0.39.355 PB1–PB5 — the ladder's floor, no-change is incomplete, a round fails only on what the run broke, strings are not imports
   'test-agent-live.test.js',   // 0.39.356 LS1–LS4 — the agent writing, live: bridge partial → copilot → agent/stream → the Code tab and the Plan (Clear Glass)
+  'test-template-picker.test.js',   // 0.39.357 RS5 — the workshop's start is the template picker: + CUSTOM / MANUAL, every quick-spec template, saved ones versioned (Clear Glass)
   'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree
   'test-emerge-core.test.js',   // 0.39.321 EM1 — Emerge core: rejected by id, a gap names its input, a lens cannot write, one seed one history
   'test-route-contracts.test.js',   // 0.39.320 EV0 (2)(3) — every served route in its system's contract, and nothing more

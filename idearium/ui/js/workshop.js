@@ -5,8 +5,9 @@
  * void, like not a small little ui,fully featured," · "needs to be enterprise grade. feed the pipeline".
  *
  * Three surfaces, one script:
- *   the start   — what are you speccing (a blank spec, titled), or from an idea / a library document / a repo's spec;
- *                 his workshops as cards.
+ *   the start   — the template picker (0.39.357 RS5, js/template-picker.js): + CUSTOM / MANUAL, every template the quick
+ *                 spec offers and his saved ones, previewed; titled, started from nothing / an idea / a library
+ *                 document / a repo's spec, in a mode. His workshops as cards.
  *   the writer  — one document: every section a heading and its text, kept as he types (debounced, per section);
  *                 the outline (jump, move, remove, restore); the PARTS (WS6: MINIMUM · MODS · COMPONENTS, from the spec
  *                 engine's blocks) — a missing part is one click to add, and drafted unless the mode is manual;
@@ -100,17 +101,23 @@ function stations() {
 }
 
 // ── the start ─────────────────────────────────────────────────────────────────────────────────────────────────────
-async function showStart() {
+// §0.39.357 RS5 — the start is the template picker; a source picked in the sheet becomes its START FROM
+let TP = null;
+async function showStart(fromParam = null) {
   W = null; PARTS = []; history.replaceState(null, '', location.pathname); document.title = 'THE SPEC WORKSHOP';
   document.body.classList.remove('focus');
   $('start').classList.remove('hidden'); $('writer').classList.add('hidden');
   ['saveBtn', 'sendBtn'].forEach(id => $(id).classList.add('hidden')); $('saved').textContent = '';
   stations();
+  if (!TP) TP = window.TemplatePicker({ api, esc, toast, dialog, onCreate: ({ from, title, template, mode }) => create(from, title, { template, mode }), onSource: pickSource });
+  TP.load();
   try { const d = await api('/api/workshop'); ALL = d.workshops || []; $('wsCount').textContent = ALL.length || ''; paintWorkshops(); setState(null); }
   catch (e) { setState('bad', e.message); return; }
   setTimeout(() => $('beginTitle').focus(), 300);
   try { SRC = await api('/api/workshop/sources'); } catch (e) { SRC = { ideas: [], library: [], repos: [] }; toast(`SOURCES DID NOT LOAD: ${e.message}`, true); }
   $('nIdea').textContent = SRC.ideas.length; $('nLibrary').textContent = SRC.library.length; $('nRepo').textContent = SRC.repos.length;
+  // a promoted idea (?from=idea:<uuid>) opens the picker with the idea as its START FROM (RS5: the picker first)
+  if (fromParam) { const i = SRC.ideas.find(x => x.uuid === fromParam.id); TP.setFrom({ kind: 'idea', id: fromParam.id, label: i ? String(i.text).slice(0, 80) : fromParam.id }); }
 }
 function paintWorkshops() {
   const q = $('wsFilter').value.trim().toLowerCase();
@@ -124,18 +131,13 @@ function paintWorkshops() {
   $('wsGrid').querySelectorAll('.wscard').forEach(el => { el.onclick = () => open(el.dataset.id); el.onkeydown = (e) => { if (e.key === 'Enter') open(el.dataset.id); }; });
 }
 $('wsFilter').oninput = paintWorkshops;
-async function create(from, title) {
-  try { const d = await api('/api/workshop', { from, title: title || null }); await open(d.workshop.uuid); }
+async function create(from, title, { template = null, mode = null } = {}) {
+  // a blank spec with no template needs a title; a template or a source names it when he does not
+  if (!title && (!from || from.kind === 'blank') && (!template || template === 'custom')) { $('beginTitle').focus(); toast('SAY WHAT YOU ARE SPECCING FIRST'); return; }
+  try { const d = await api('/api/workshop', { from, title: title || null, ...(template ? { template } : {}), ...(mode ? { mode } : {}) }); await open(d.workshop.uuid); }
   catch (e) { toast(`NOT OPENED: ${e.message}`, true); }
 }
-$('beginBtn').onclick = () => { const t = $('beginTitle').value.trim(); if (!t) { $('beginTitle').focus(); toast('SAY WHAT YOU ARE SPECCING FIRST'); return; } create({ kind: 'blank' }, t); };
-$('beginTitle').onkeydown = (e) => { if (e.key === 'Enter') $('beginBtn').click(); };
-document.querySelectorAll('.src').forEach(el => {
-  el.onclick = () => pickSource(el.dataset.k);
-  el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickSource(el.dataset.k); } };
-  el.onmousemove = (e) => { const r = el.getBoundingClientRect(); el.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`); el.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`); };
-});
-/** the picker: a sheet over the start, with a filter */
+/** a source: a sheet over the start, with a filter — the pick becomes the new spec's START FROM */
 function pickSource(kind) {
   if (!SRC) { toast('STILL READING WHAT YOU HAVE…'); return; }
   const C = ['NORMAL', 'CREATIVE', 'OUTSIDE THE BOX', 'NOVEL', 'OUTLIER'], S = ['STABLE', 'SHAKY', 'RISKY', 'DANGEROUS', 'UNSTABLE'];
@@ -148,7 +150,7 @@ function pickSource(kind) {
   const back = document.createElement('div'); back.className = 'sheet-back'; back.id = 'picker';
   back.innerHTML = `<div class="sheet glass" role="dialog" aria-modal="true" aria-label="${Q2}"><div class="q">${Q2} <span class="lbl" style="margin:0"><span class="n">${items.length}</span></span><button class="btn small ghost x" data-no title="CLOSE">CLOSE</button></div>
     ${items.length ? `<input class="field" id="pickQ" placeholder="FILTER…" aria-label="filter"><div class="pick" id="pickList" role="listbox"></div>
-    <div class="row" style="justify-content:flex-end"><input class="field" id="pickTitle" maxlength="160" placeholder="TITLE — OPTIONAL" style="flex:1" aria-label="title"><button class="btn" id="pickGo" disabled title="OPEN THE WORKSHOP ON IT">OPEN →</button></div>` : `<div class="empty" style="padding:30px 0">${EMPTY}</div>`}</div>`;
+    <div class="row" style="justify-content:flex-end"><button class="btn" id="pickGo" disabled title="START THE NEW SPEC FROM IT">USE IT →</button></div>` : `<div class="empty" style="padding:30px 0">${EMPTY}</div>`}</div>`;
   document.body.appendChild(back);
   const close = () => back.remove();
   back.querySelector('[data-no]').onclick = close;
@@ -164,7 +166,7 @@ function pickSource(kind) {
       it.onkeydown = (e) => { if (e.key === 'Enter') { choose(); go(); } else if (e.key === ' ') { e.preventDefault(); choose(); } };
     });
   };
-  const go = () => { if (!pick) return; close(); create({ kind, id: pick }, $('pickTitle') ? $('pickTitle').value.trim() : null); };
+  const go = () => { if (!pick) return; const x = items.find(i => i.id === pick); close(); TP.setFrom({ kind, id: pick, label: x ? String(x.t).slice(0, 80) : pick }); $('beginBtn').focus(); };
   $('pickQ').oninput = paint; $('pickGo').onclick = go; paint(); $('pickQ').focus();
 }
 
@@ -237,7 +239,7 @@ function paintParts() {
 function paintDoc() {
   const ti = $('docTitle'); if (document.activeElement !== ti) ti.value = W.title;
   const src = W.source || {}, FROM = { idea: 'FROM THE VOID', library: 'FROM THE LIBRARY', repo: "FROM A REPO'S SPEC", blank: 'BLANK' };
-  $('docMeta').innerHTML = `<span>${FROM[src.kind] || 'BLANK'}${src.title ? ` · <b>${esc(src.title)}</b>` : ''}</span><span>${W.specPath ? `SPEC · <b>${esc(W.specPath)}</b>` : 'NOT IN A REPO YET'}</span><span>STARTED ${new Date(W.createdAt || W.updatedAt).toLocaleDateString()}</span>`;
+  $('docMeta').innerHTML = `<span>${FROM[src.kind] || 'BLANK'}${src.title ? ` · <b>${esc(src.title)}</b>` : ''}</span>${W.template && W.template.id !== 'custom' ? `<span>TEMPLATE · <b>${esc(W.template.label || W.template.id)}</b>${W.template.version ? ` V${W.template.version}` : ''}</span>` : ''}<span>${W.specPath ? `SPEC · <b>${esc(W.specPath)}</b>` : 'NOT IN A REPO YET'}</span><span>STARTED ${new Date(W.createdAt || W.updatedAt).toLocaleDateString()}</span>`;
   const key = W.sections.map(s => s.id).join('|');
   if (key !== BLOCK_KEY) {
     BLOCK_KEY = key;
@@ -590,6 +592,19 @@ function paintCaps() { document.body.classList.toggle('as-typed', !CAPS); $('cap
 $('capsBtn').onclick = () => { CAPS = !CAPS; try { localStorage.setItem('workshop.caps', CAPS ? 'caps' : 'typed'); } catch (_) {} paintCaps(); };
 $('focusBtn').onclick = () => { document.body.classList.toggle('focus'); $('focusBtn').classList.toggle('on', document.body.classList.contains('focus')); };
 const home = async () => { await flush(); closePipe(); showStart(); };
+// §0.39.357 RS5 — this spec's sections as a template: opened from a saved template, its next version (the old kept)
+$('tplSave').onclick = async () => {
+  if (!W) return;
+  await flush();
+  const fromSaved = W.template && String(W.template.id).startsWith('saved:');
+  const label = await dialog({ q: 'SAVE AS TEMPLATE', note: fromSaved ? `KEEP THE NAME TO SAVE THE NEXT VERSION OF ${String(W.template.label || '').toUpperCase()} — THE OLD ONE IS KEPT. A NEW NAME MAKES A NEW TEMPLATE.` : 'ITS SECTIONS, AS THEY ARE NOW, BECOME A TEMPLATE IN THE PICKER (SAVED)', value: fromSaved ? (W.template.label || '') : W.title, ok: 'SAVE' });
+  if (!label) return;
+  try {
+    const same = fromSaved && label === W.template.label;
+    const d = await api('/api/workshop/templates', { workshop: W.uuid, ...(same ? {} : { label }) });
+    toast(`SAVED AS A TEMPLATE — ${d.template.label} V${d.version}`);
+  } catch (e) { toast(`NOT SAVED: ${e.message}`, true); }
+};
 $('home').onclick = home; $('home').onkeydown = (e) => { if (e.key === 'Enter') home(); };
 document.addEventListener('keydown', (e) => {
   if (!W) return;
@@ -603,7 +618,8 @@ async function boot() {
   setState('loading'); paintCaps();
   if (Q.get('id')) return open(Q.get('id'));
   const f = Q.get('from');
-  if (f && /^(idea|library|repo):.+/.test(f)) {
+  if (f && /^idea:.+/.test(f)) return showStart({ kind: 'idea', id: f.slice(5) });   // §0.39.357 RS5 — a promoted idea: the picker first
+  if (f && /^(library|repo):.+/.test(f)) {
     const [kind, ...rest] = f.split(':');
     try { const d = await api('/api/workshop', { from: { kind, id: rest.join(':') } }); return open(d.workshop.uuid); }
     catch (e) { toast(`COULD NOT START FROM THAT ${kind.toUpperCase()}: ${e.message}`, true); }

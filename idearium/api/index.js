@@ -1312,6 +1312,46 @@ async function _architect() {
   return AR;
 }
 // §0.39.354 WS7 — the spec template's blocks as the workshop's parts (lib/workshop.js partsOf), from the spec engine
+// §0.39.357 RS5 — every template the picker offers, previewed: { blocks, list, picked }. only: the one id wanted (create).
+async function _workshopTemplates(WS, { only = null, name = null } = {}) {
+  const se = await _specEngineReady();
+  if (!se) throw new Error('the spec engine is still loading');
+  const blocks = se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title }));
+  const label = name || 'your spec';
+  const list = [];
+  if (!only || only === WS.CUSTOM.id) list.push({ ...WS.CUSTOM, builtin: true, preview: WS.previewOf({ template: WS.CUSTOM, blocks }) });
+  const docs = se.listTemplates().filter(t => t.id !== 'custom');   // spec-engine's 'custom' is the + card
+  docs.sort((a, b) => (b.id === 'genesis') - (a.id === 'genesis'));
+  for (const t of docs) {
+    if (only && only !== t.id) continue;
+    let seeds = {}; try { seeds = se.templateSeedSections(t.id, label) || {}; } catch (e) { console.warn(`[workshop.templates] ${t.id}: ${e.message}`); }
+    const tpl = { id: t.id, label: t.label, description: t.description, group: 'document', builtin: true, default: t.id === 'genesis', seeded: !!Object.keys(seeds).length, kind: t.kind, _seeds: seeds };
+    tpl.preview = WS.previewOf({ template: tpl, seeds, blocks });
+    list.push(tpl);
+  }
+  if (!only || /^cos-/.test(only)) {
+    try {
+      const FTP = _require('../../lib/file-tree-plan.js');
+      for (const t of FTP.listCosTemplates()) {
+        if (only && only !== t.id) continue;
+        const f = FTP.fromCosTemplate(t.id, { name: label });
+        const files = f.ok ? f.files.map(x => ({ path: x.path, layer: x.layer })) : [];
+        const tpl = { id: t.id, label: t.label, description: t.description, group: t.source, builtin: true, files, roles: f.ok && f.template.roles ? f.template.roles : null,
+          note: 'its starting files are written into the spec\'s Build Order; the build does not yet start from the files themselves (the New Spec modal\'s file tree does)' };
+        tpl.preview = WS.previewOf({ template: tpl, cosFiles: files, blocks });
+        list.push(tpl);
+      }
+    } catch (e) { console.warn(`[workshop.templates] COS templates unavailable: ${e.message}`); }
+  }
+  if (!only || only.startsWith('saved:')) {
+    for (const t of WS.savedTemplates(loadTable(WS.TEMPLATE_TABLE))) {
+      if (only && only !== t.id) continue;
+      list.push({ ...t, builtin: false, preview: WS.previewOf({ template: t, saved: t.sections, blocks }) });
+    }
+  }
+  return { blocks, list, picked: only ? list[0] || null : null };
+}
+
 async function _workshopParts(WS, w) {
   try { const se = await _specEngineReady(); return se ? WS.partsOf(w, se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title }))) : []; }
   catch (e) { console.warn(`[idearium/api] workshop parts unreadable: ${e.message}`); return []; }
@@ -1717,6 +1757,9 @@ const ROUTE_CAP = {
   'workshop.feed':    CAPS.WRITE_IDEAS,   // asks the agent; stores proposals, never section text
   'workshop.decide':  CAPS.WRITE_IDEAS,
   'workshop.save':    CAPS.WRITE_IDEAS,   // writes spec/<name>.spec into a repo (makes the repo when there is none)
+  'workshop.templates':       CAPS.READ_IDEAS,    // §0.39.357 RS5 — the template picker
+  'workshop.template.save':   CAPS.WRITE_IDEAS,   // a workshop's sections as a saved template (a new version; the old kept)
+  'workshop.template.remove': CAPS.WRITE_IDEAS,   // archives a saved template (kept, hidden)
   'architect.list':     CAPS.READ_IDEAS,   // §0.39.298 AR2
   'architect.registry': CAPS.READ_IDEAS,
   'architect.show':     CAPS.READ_IDEAS,
@@ -2191,6 +2234,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','workshop'],                               'workshop.list'],
     ['POST',   ['api','workshop'],                               'workshop.create'],
     ['GET',    ['api','workshop','sources'],                     'workshop.sources'],
+    ['GET',    ['api','workshop','templates'],                   'workshop.templates'],        // §0.39.357 RS5 — before :id
+    ['POST',   ['api','workshop','templates'],                   'workshop.template.save'],
+    ['POST',   ['api','workshop','templates',':tid','remove'],   'workshop.template.remove'],
     ['GET',    ['api','workshop',':id'],                         'workshop.show'],
     ['POST',   ['api','workshop',':id'],                         'workshop.update'],
     ['POST',   ['api','workshop',':id','feed'],                  'workshop.feed'],
@@ -4524,11 +4570,51 @@ async function handle(req, res, route, query, body) {
           sections = WS.sectionsFromSpecText(f.content, _require('js-yaml'));
         }
       } else if (from.kind !== 'blank') return err(res, 400, `from.kind must be idea, library, repo or blank`);
-      const made = WS.makeSession({ title: title || 'Untitled spec', source, sections, ambition: body.ambition, repoUuid, specPath, ideaUuid });
+      // §0.39.357 RS5 — the picked template: its sections after the source's, never over a part the source already lays out
+      let template = null, mode = WS.MODES.includes(body.mode) ? body.mode : null;
+      if (body.template) {
+        const T = await _workshopTemplates(WS, { only: String(body.template), name: title || body.title || null });
+        const t = T.picked; if (!t) return err(res, 404, `template not found: ${body.template}`);
+        const blocks = T.blocks;
+        const have = WS.partsOf({ sections: sections.map(x => ({ ...x, body: x.body || '' })) }, blocks).filter(x => x.sectionId).map(x => x.id);
+        sections = [...sections, ...WS.templateSections({ template: t, seeds: t._seeds || {}, cosFiles: t.files || null, saved: t.group === 'saved' ? t.sections : null, blocks, have })];
+        template = { id: t.id, label: t.label, group: t.group, ...(t.version ? { version: t.version } : {}) };
+        title = title || (t.id === WS.CUSTOM.id ? null : t.label);
+        if (!mode) mode = t.mode || (t.id === WS.CUSTOM.id ? 'manual' : null);
+      }
+      const made = WS.makeSession({ title: title || 'Untitled spec', source, sections, ambition: body.ambition, repoUuid, specPath, ideaUuid, mode: mode || 'assisted', template });
       if (made.error) return err(res, 400, made.error);
       appendRow(WS.TABLE, made.session);
       os.emit('idearium.workshop.created', { uuid: made.session.uuid, source: source.kind, title: made.session.title });
       return ok(res, { workshop: made.session });
+    }
+    // §0.39.357 RS5 — James: "opens a pick template screen like photoshop does when you first open it. with a custom or
+    // manual option with a plus sign. then you pick a template from the list, including all the quick spec options" ·
+    // "yes with a custom or manual." Every template the quick spec offers (the spec-document templates, genesis first;
+    // the COS archetypes and blueprints) and the saved ones, each with the 11 parts previewed.
+    case 'workshop.templates': {
+      const WS = await _workshop();
+      const T = await _workshopTemplates(WS);
+      return ok(res, { custom: WS.CUSTOM, blocks: T.blocks, templates: T.list.map(({ _seeds, sections, ...t }) => t) });
+    }
+    case 'workshop.template.save': {
+      const WS = await _workshop();
+      const w = _workshopGet(WS, body.workshop); if (!w) return err(res, 404, `workshop not found: ${body.workshop}`);
+      const r = WS.templateRow(w, { label: body.label, description: body.description, rows: loadTable(WS.TEMPLATE_TABLE) });
+      if (r.error) return err(res, 400, r.error);
+      appendRow(WS.TEMPLATE_TABLE, r.row);
+      os.emit('idearium.workshop.template.saved', { slug: r.row.slug, version: r.row.version, label: r.row.label, fromWorkshop: w.uuid });
+      return ok(res, { template: WS.savedTemplates(loadTable(WS.TEMPLATE_TABLE)).find(t => t.slug === r.row.slug), version: r.row.version });
+    }
+    case 'workshop.template.remove': {
+      const WS = await _workshop();
+      let id = String(params.tid || ''); try { id = decodeURIComponent(id); } catch (_) {}   // the page encodes saved:<slug>
+      if (!id.startsWith('saved:')) return err(res, 400, `"${id}" is a built-in template — a file in the codebase (idearium/spec-engine/templates.js, cos/), not removable from here`);
+      const r = WS.archiveRow(loadTable(WS.TEMPLATE_TABLE), id.slice(6));
+      if (r.error) return err(res, 404, r.error);
+      appendRow(WS.TEMPLATE_TABLE, r.row);
+      os.emit('idearium.workshop.template.removed', { slug: r.row.slug, version: r.row.version });
+      return ok(res, { archived: id, kept: true });
     }
     case 'workshop.show': {
       const WS = await _workshop();

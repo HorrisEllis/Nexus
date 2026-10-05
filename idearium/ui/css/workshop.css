@@ -6,6 +6,7 @@
  * The Void's world (css/void-theme.css + its star field, js/void-sky.js) with the writer floating in it: glass panels
  * that rise in, a pipeline line that flows, the agent's work in magenta, his in cyan. Capitals by his rule; the
  * document can be read AS TYPED (a per-viewer toggle) — what he types is always stored exactly as typed.
+ * 0.39.357 RS5: the start is the new-spec picker (.np-*) — tabs, a grid of templates as pages, the details beside them.
  */
 :root { --bar-h: 58px; --glass: rgba(5,8,15,.78); --glass2: rgba(8,13,23,.86); --glow: 0 0 40px rgba(0,212,255,.06); }
 
@@ -84,6 +85,82 @@
 .wscard .f { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
 .tag { font: 400 9.5px/1 var(--mono); letter-spacing: .12em; padding: 4px 7px; border: 1px solid var(--line); border-radius: 2px; color: var(--text2); }
 .tag.c { color: var(--c); border-color: rgba(0,212,255,.3); } .tag.m { color: var(--m); border-color: rgba(204,68,255,.3); } .tag.g { color: var(--g); border-color: rgba(0,255,136,.28); } .tag.y { color: var(--y); border-color: rgba(255,204,0,.3); }
+
+/* ── §0.39.357 RS5 the new-spec picker (js/template-picker.js) — James: "opens a pick template screen like photoshop does
+   when you first open it. with a custom or manual option with a plus sign" · "yes with a custom or manual." ─────────── */
+.start .inner { max-width: 1480px; }
+.hero { margin-bottom: 26px; }
+.np { display: grid; grid-template-columns: 178px minmax(0, 1fr) 360px; min-height: min(68vh, 760px); margin-bottom: 26px; overflow: hidden; }
+.np-tabs { border-right: 1px solid var(--line2); padding: 16px 0; display: flex; flex-direction: column; gap: 2px; background: rgba(3,5,8,.35); }
+.np-tab { position: relative; text-align: left; background: none; border: 0; color: var(--text2); font: 400 13px/1 var(--display); letter-spacing: .18em; padding: 12px 18px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: color .2s, background .2s; }
+.np-tab .n { margin-left: auto; font: 400 9.5px/1 var(--mono); color: var(--text3); letter-spacing: .06em; }
+.np-tab:hover { color: var(--text); background: rgba(0,212,255,.04); }
+.np-tab.on { color: var(--c); background: rgba(0,212,255,.08); }
+.np-tab.on::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px; background: var(--c); box-shadow: 0 0 10px var(--c); }
+.np-main { min-width: 0; display: flex; flex-direction: column; padding: 16px 18px; }
+.np-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.np-q { margin-left: auto; width: 260px; padding: 8px 11px; font-size: 11px; }
+.np-grid { flex: 1; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; align-content: start; padding: 2px 4px 10px 2px; }
+.np-card { display: flex; flex-direction: column; gap: 8px; padding: 10px; border: 1px solid transparent; border-radius: 3px; cursor: pointer; transition: border-color .2s, background .2s, transform .25s; outline: none; }
+.np-card:hover, .np-card:focus-visible { background: rgba(0,212,255,.04); transform: translateY(-2px); }
+.np-card.on { border-color: rgba(0,212,255,.5); background: rgba(0,212,255,.08); box-shadow: 0 0 30px rgba(0,212,255,.1); }
+.np-l { font: 400 14px/1.15 var(--display); letter-spacing: .12em; color: var(--text); }
+.np-card.on .np-l { color: var(--c); }
+.np-m { font: 400 9px/1.4 var(--mono); letter-spacing: .1em; color: var(--text3); }
+.np-m .def { color: var(--g); }
+/* the thumbnail: a page — the parts as lines (lit where it fills them), files as a tree, CUSTOM as a plus */
+.np-th { height: 128px; border: 1px solid var(--line2); border-radius: 2px; background: linear-gradient(180deg, rgba(11,17,32,.85), rgba(5,8,15,.85)); position: relative; overflow: hidden; transition: border-color .2s, box-shadow .2s; }
+.np-card.on .np-th { border-color: rgba(0,212,255,.45); box-shadow: inset 0 0 24px rgba(0,212,255,.08); }
+.np-th.doc { display: flex; flex-direction: column; gap: 5px; padding: 14px 16px; }
+.np-th.doc b { display: block; height: 4px; border-radius: 2px; background: rgba(255,255,255,.07); width: 62%; }
+.np-th.doc b:nth-child(3n+1) { width: 84% } .np-th.doc b:nth-child(4n+2) { width: 48% }
+.np-th.doc b.laid { background: rgba(0,212,255,.16); }
+.np-th.doc b.on { background: var(--c); box-shadow: 0 0 8px rgba(0,212,255,.55); }
+.np-th.files { padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; font: 400 9px/1.25 var(--mono); color: rgba(0,255,136,.75); }
+.np-th.files i { font-style: normal; padding-left: calc(var(--d, 0) * 10px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-th.files i::before { content: '▸ '; color: var(--text3); } .np-th.files i.more { color: var(--text3); } .np-th.files i.more::before { content: ''; }
+.np-th.plus { display: flex; align-items: center; justify-content: center; border-style: dashed; border-color: rgba(204,68,255,.4); background: radial-gradient(circle, rgba(204,68,255,.1), transparent 70%); }
+.np-th.plus span { font: 300 64px/1 var(--display); color: var(--m); text-shadow: 0 0 24px rgba(204,68,255,.6); transition: transform .3s; }
+.np-card.custom:hover .np-th.plus span, .np-card.custom.on .np-th.plus span { transform: rotate(90deg) scale(1.08); }
+.np-card.custom.on { border-color: rgba(204,68,255,.5); background: rgba(204,68,255,.07); box-shadow: 0 0 30px rgba(204,68,255,.12); }
+.np-card.custom.on .np-l { color: var(--m); }
+.np-err { grid-column: 1 / -1; font: 400 10.5px/1.6 var(--mono); letter-spacing: .08em; color: var(--y); padding: 6px 2px; }
+/* the details */
+.np-side { border-left: 1px solid var(--line2); padding: 16px 18px; overflow: auto; display: flex; flex-direction: column; background: rgba(3,5,8,.35); }
+.np-title { width: 100%; background: rgba(3,5,8,.7); border: 1px solid rgba(0,212,255,.25); border-radius: 2px; color: var(--c); font: 400 17px/1 var(--display); letter-spacing: .16em; padding: 13px 14px; outline: none; transition: border-color .3s, box-shadow .3s; }
+.np-title:focus { border-color: rgba(0,212,255,.6); box-shadow: 0 0 40px rgba(0,212,255,.12); }
+.np-title::placeholder { color: rgba(0,212,255,.3); }
+.np-name { font: 400 20px/1.15 var(--display); letter-spacing: .14em; color: var(--text); margin: 16px 0 6px; }
+.np-desc { font: 400 10.5px/1.6 var(--mono); letter-spacing: .04em; color: var(--text2); }
+.np-sub { font: 400 10px/1 var(--mono); letter-spacing: .2em; color: var(--text3); margin: 18px 0 8px; }
+.np-sub span { color: var(--text2); letter-spacing: .1em; }
+.np-parts { display: flex; flex-direction: column; gap: 1px; }
+.np-part { display: flex; align-items: center; gap: 9px; padding: 4px 6px; border-radius: 2px; font: 400 12px/1.2 var(--display); letter-spacing: .1em; color: var(--text3); cursor: default; }
+.np-part .d { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.12); flex: none; }
+.np-part .tier { margin-left: auto; font: 400 8.5px/1 var(--mono); letter-spacing: .12em; color: var(--text3); opacity: .7; }
+.np-part.laid { color: var(--text2); } .np-part.laid .d { background: none; border: 1px solid rgba(0,212,255,.55); }
+.np-part.on { color: var(--c); } .np-part.on .d { background: var(--c); box-shadow: 0 0 8px var(--c); }
+.np-part:hover { background: rgba(0,212,255,.05); }
+.np-files .np-layer { font: 400 10px/1.6 var(--mono); color: rgba(0,255,136,.8); word-break: break-word; }
+.np-files .np-layer b { color: var(--text2); font-weight: 400; letter-spacing: .14em; margin-right: 6px; }
+.np-side .sources { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; }
+.np-side .src { padding: 10px 6px 9px; text-align: center; }
+.np-side .src .ico { font-size: 18px; }
+.np-side .src .t { font-size: 11px; letter-spacing: .14em; margin: 7px 0 0; }
+.np-side .src .n { position: static; font: 400 9.5px/1 var(--mono); margin-top: 5px; color: var(--text3); }
+.np-side .src.on { border-color: rgba(0,212,255,.55); background: rgba(0,212,255,.08); }
+.np-side .src.m.on { border-color: rgba(204,68,255,.55); background: rgba(204,68,255,.08); } .np-side .src.g.on { border-color: rgba(0,255,136,.5); background: rgba(0,255,136,.06); }
+.np-from { margin-top: 8px; min-height: 0; }
+.np-chip { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; font: 400 10px/1.4 var(--mono); letter-spacing: .06em; color: var(--c); border: 1px solid rgba(0,212,255,.35); border-radius: 2px; padding: 5px 4px 5px 9px; }
+.np-chip .x { background: none; border: 0; color: var(--text2); cursor: pointer; font-size: 14px; line-height: 1; padding: 0 4px; } .np-chip .x:hover { color: var(--r, #ff4466); }
+.np-modes { display: flex; gap: 4px; }
+.np-mode { flex: 1; background: rgba(3,5,8,.5); border: 1px solid var(--line2); color: var(--text2); font: 400 11.5px/1 var(--display); letter-spacing: .16em; padding: 9px 4px; border-radius: 2px; cursor: pointer; transition: all .2s; }
+.np-mode:hover { color: var(--text); border-color: var(--line3); }
+.np-mode.on { color: var(--m); border-color: rgba(204,68,255,.5); background: rgba(204,68,255,.08); }
+.np-acts { margin-top: auto; padding-top: 20px; display: flex; gap: 8px; justify-content: flex-end; align-items: center; }
+.np-acts #beginBtn { font-size: 15px; padding: 12px 24px; }
+.np-acts #beginBtn .arr { display: inline-block; animation: nudge 1.8s ease-in-out infinite; }
+@media (max-width: 1100px) { .np { grid-template-columns: 1fr; } .np-tabs { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line2); padding: 0 8px; } .np-tab.on::before { left: 8px; right: 8px; top: auto; bottom: 0; width: auto; height: 2px; } .np-side { border-left: 0; border-top: 1px solid var(--line2); } .np-grid { max-height: 60vh; } }
 
 /* the picker: a sheet that rises over the start */
 .sheet-back { position: fixed; inset: 0; z-index: 20; background: rgba(3,5,8,.72); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; animation: fade .25s ease; }
