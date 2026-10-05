@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.13   # 1.7.13 (2026-10-05): FV0 fulfil a taken order — FV1's first slice on what is built
+    version:  1.7.14   # 1.7.14: FV0 + the buyer's conditions as the end state, copilot as the repo agent escalating on proof · 1.7.13 (2026-10-05): FV0 fulfil a taken order — FV1's first slice on what is built
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -714,6 +714,21 @@ spec:
         packaged as a delivery. He reviews it and delivers on Fiverr himself; talking to the buyer stays his. (6)
         REVISION: a new contract on the same repo and history. Code gigs first (websites, scripts, scrapers, APIs,
         bots) — where a check can prove the work. Left to FV1: quotes (EC6), kits (MR8), parallel teams (BT1).
+      input_2026_10_05: >-
+        James: "Yes like the end state for the repo. Maybe I ask customers the conditions for an acceptable output." ·
+        "I feel like copilot needs to be the agents for the repos. Then he uses all the context, and possibly, lifeline
+        to figure out how to fulfill the contract. Runs it in the cos envirenment." (A) THE BUYER'S CONDITIONS ARE THE
+        END STATE: the gig's buyer requirements (src/autofill/gig.js already writes them) carry one question — what must
+        the finished work do to be accepted — and each answer becomes a delivery condition (PR1's shape: a promise and a
+        check). Loose words ("looks nice") are made checkable or marked unchecked (a question back, or a check he does
+        by hand) — never silently dropped; he confirms the list, ideally with the buyer, before the build. (B) COPILOT
+        IS THE REPO'S AGENT: one agent per repo wearing the repo's hat with every build block (BC2), copilot choosing
+        who answers. Lifeline's escalation is OFF for repo jobs today (copilot/server.js — it would inject context he
+        cannot edit, his 0.39.258 rule) and judges a reply by its wording. For orders it escalates on the PROOF instead:
+        a condition fails in COS → back to the same agent with the failure (PH1) → still failing after its attempts →
+        lifeline hands the same composed contract and the exact failure to the next agent (ollama → guardian's), in a
+        fresh COS branch, every hop recorded (§9.4), nothing unedited injected. copilot/module-builder.js's lifeline
+        chain (map → spec → qc-architecture → qc-adversarial → fix) is the pattern to reuse; VP2 is its adversarial half.
       proof: "a fixture order: contract drafted and held for a yes; after yes, a repo in its own compartment; every acceptance line a condition; the package holds the code, README and a READY report citing a passing check per line; a fixture order that cannot pass produces NOT READY and no package; nothing runs before the order is handed over"
 
     ST1_settings:
