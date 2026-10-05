@@ -94,6 +94,10 @@ async function main() {
     assert.strictEqual(chunkOf(s, 'purpose').content, 'an edm song, and the daw to make it in');
     const r3 = await quiet(() => se.setAuthorWords(m.uuid, [{ id: 'purpose', title: 'Purpose', body: 'an edm song, and the daw to make it in' }]));
     assert.deepStrictEqual(r3.written, [], 'unchanged words write nothing');
+    // his words are his spec's — never handed to another spec as a reused section
+    const other = await quiet(() => se.createSpec({ name: 'Some other idea' }));
+    const prior = se.findPriorSection('purpose', chunkOf(other, 'purpose').sectionDesc, other.uuid);
+    assert.ok(!prior || !/daw to make it in/.test(prior.content), 'an author section is never reused across specs');
   });
 
   await test('BS-03', 'SB3 the DAW case: the section prompt is about the DAW, in his words', async () => {

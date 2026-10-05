@@ -2040,7 +2040,7 @@ export function findPriorSection(sectionId, sectionDesc = '', excludeSpecUuid = 
         c.sectionId === sectionId &&
         c.status === 'complete' &&
         (!sectionDesc || c.sectionDesc === sectionDesc) &&
-        c.content && c.agent !== 'template');   // template seeds are spec-specific, not reusable content
+        c.content && c.agent !== 'template' && c.agent !== 'author');   // template seeds and the author's own words (0.39.305 SB2) are spec-specific, not reusable content
       if (chunk && (!best || (chunk.completedAt || 0) > (best.completedAt || 0))) {
         best = { specUuid: m.uuid, specName: m.name, sectionId,
           content: chunk.content, completedAt: chunk.completedAt, agent: chunk.agent };
