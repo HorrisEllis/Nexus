@@ -1,0 +1,52 @@
+{
+  "id": "cos-v1",
+  "version": "1.0.0",
+  "namespace": "cos",
+  "_built_2026_10_05": "EV0 (2), docs/2026-10-02-emerge-field-memory-build-phasemap.spec — projected from the server source, not hand-reconciled; lib/route-contract-check.js holds it to the code (served and declared must match). cos/kernel.js keeps http out of cos core; vaultd is its one server. The /api/cos/* routes are served by idearium and live in idearium's contract.",
+  "ports": {
+    "vaultd": 3760
+  },
+  "uuid": "cos-contract-v1-0000-2026-1005-jamesbrooks-001",
+  "role": "Compartment OS — vaultd, the secrets daemon, is the only part that serves http",
+  "health": {
+    "method": "GET",
+    "path": "/status"
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/status",
+      "server": "cos/vaultd/server.js"
+    },
+    {
+      "method": "POST",
+      "path": "/secrets",
+      "server": "cos/vaultd/server.js"
+    },
+    {
+      "method": "GET",
+      "path": "/secrets/:compartmentName/:key",
+      "server": "cos/vaultd/server.js"
+    },
+    {
+      "method": "GET",
+      "path": "/secrets/:compartmentName",
+      "server": "cos/vaultd/server.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/secrets/:compartmentName/:key",
+      "server": "cos/vaultd/server.js"
+    },
+    {
+      "method": "POST",
+      "path": "/grant",
+      "server": "cos/vaultd/server.js"
+    },
+    {
+      "method": "POST",
+      "path": "/revoke",
+      "server": "cos/vaultd/server.js"
+    }
+  ]
+}

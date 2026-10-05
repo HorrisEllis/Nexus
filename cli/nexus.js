@@ -447,7 +447,19 @@ Flags: ${C.muted}--json${C.reset} (raw JSON output on any command)
       for (const c of r.missing || []) console.log(`      ${C.red}emits undefined:${C.reset} ${c.constant} — that table has no such key  ${C.muted}${c.site}${C.reset}`);
       if (args.includes('--all')) { for (const u of r.undeclared) console.log(`      ${C.muted}${u.event}  ${u.sites.join(', ')}${C.reset}`); }
     }
-    if (JSON_) out({ ok: !bad, systems: rows });
+    // EV0 (2)(3) — the route half: every served route in the system's interaction-contract.json, and nothing more
+    const RC = require('../lib/route-contract-check.js');
+    const routeRows = [];
+    for (const s of Object.keys(RC.SERVERS).filter(s => !only || s === only)) {
+      const r = RC.checkSystem(ROOT, s);
+      routeRows.push({ system: s, served: (r.served || []).length, undeclared: r.undeclared || [], unserved: r.unserved || [], error: r.error || null, ok: r.ok });
+      if (!r.ok) bad++;
+      if (JSON_) continue;
+      console.log(`  ${r.ok ? `${C.green}✓${C.reset}` : `${C.red}✗${C.reset}`} ${C.bold}${s.padEnd(13)}${C.reset} ${String((r.served || []).length).padStart(3)} routes served · ${r.ok ? `${C.green}all in its contract${C.reset}` : `${C.red}${r.error || `${r.undeclared.length} undeclared, ${r.unserved.length} declared but not served`}${C.reset}`}`);
+      for (const x of r.undeclared || []) console.log(`      ${C.red}served, not in the contract:${C.reset} ${x.method} ${x.path}  ${C.muted}${x.file}:${x.line}${C.reset}`);
+      for (const x of r.unserved || []) console.log(`      ${C.red}in the contract, not served:${C.reset} ${x.method} ${x.path}`);
+    }
+    if (JSON_) out({ ok: !bad, systems: rows, routes: routeRows });
     else console.log(bad ? `\n  ${C.red}${bad} system(s) drifted${C.reset}\n` : `\n  ${C.green}no new drift${C.reset}\n`);
     if (bad) process.exitCode = 1;
   },

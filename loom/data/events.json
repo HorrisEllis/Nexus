@@ -1,5 +1,5 @@
 {
- "generatedAt": 1790971908389,
+ "generatedAt": 1791187689687,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -760,6 +760,129 @@
     "kernel.booted",
     "signal.noise",
     "signal.passed"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.components.feedback-loop-buffer.core.wire": {
+   "emits": [
+    "ring:push"
+   ],
+   "listens": [
+    "ring:pushed"
+   ]
+  },
+  "nexus.emergence.components.feedback-loop-buffer.persist.EvictionLedger": {
+   "emits": [],
+   "listens": [
+    "ring:evicted"
+   ]
+  },
+  "nexus.emergence.components.idea-store": {
+   "emits": [
+    "idea:add",
+    "idea:link"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.components.pattern-engine": {
+   "emits": [
+    "pattern:observe"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.components.rfr2-observer": {
+   "emits": [
+    "alk.session.capture.start",
+    "alk.session.capture.stop",
+    "alk.verbal.analysis.sentiment",
+    "alk.verbal.chunk.transcribed"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.components.rfr2-observer.test.affective-field.test": {
+   "emits": [
+    "rfr2:observe"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.components.rfr2-observer.test.oscillatory.test": {
+   "emits": [
+    "rfr2:observe"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.components.rfr2-observer.test.relational-gaps.test": {
+   "emits": [
+    "rfr2:observe"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.components.rfr2-observer.test.reversal-negspace.test": {
+   "emits": [
+    "rfr2:observe"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.components.rfr2-observer.test.shadow-etc.test": {
+   "emits": [
+    "rfr2:observe"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.loop": {
+   "emits": [
+    "causal:record",
+    "cfr:create",
+    "lattice:record",
+    "ledger:commit",
+    "rfr2:observe"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.test.loop.test": {
+   "emits": [
+    "causal:record",
+    "lattice:record"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.vendor.rfr2.field.relational": {
+   "emits": [
+    "alk.rel.bid.detected",
+    "alk.rel.bid.response",
+    "alk.rel.decay.detected",
+    "alk.rel.decay.threshold",
+    "alk.rel.meaning.created",
+    "alk.rel.meaning.deflated",
+    "alk.rel.ready",
+    "alk.rel.repair.attempt",
+    "alk.rel.rupture.detected",
+    "alk.rel.rupture.severity",
+    "alk.rel.session.start",
+    "alk.rel.session.stop",
+    "alk.rel.summary",
+    "alk.rel.trajectory.update"
+   ],
+   "listens": []
+  },
+  "nexus.emergence.vendor.rfr2.lattice.lattice": {
+   "emits": [
+    "spatial.lattice.cluster.updated",
+    "spatial.lattice.edge.connected",
+    "spatial.lattice.graph.ready",
+    "spatial.lattice.node.added"
+   ],
+   "listens": [
+    "spatial.kernel.landscape.updated",
+    "spatial.resonance.scored"
+   ]
+  },
+  "nexus.emergence.vendor.rfr2.ledger": {
+   "emits": [
+    "idea:closed",
+    "idea:promoted",
+    "idea:recorded",
+    "upgrade:committed"
    ],
    "listens": []
   },
@@ -4524,6 +4647,247 @@
   "signal.passed": {
    "emitters": [
     "nexus.emerge.emerge-kernel"
+   ],
+   "listeners": []
+  },
+  "ring:push": {
+   "emitters": [
+    "nexus.emergence.components.feedback-loop-buffer.core.wire"
+   ],
+   "listeners": []
+  },
+  "ring:pushed": {
+   "emitters": [],
+   "listeners": [
+    "nexus.emergence.components.feedback-loop-buffer.core.wire"
+   ]
+  },
+  "ring:evicted": {
+   "emitters": [],
+   "listeners": [
+    "nexus.emergence.components.feedback-loop-buffer.persist.EvictionLedger"
+   ]
+  },
+  "idea:add": {
+   "emitters": [
+    "nexus.emergence.components.idea-store"
+   ],
+   "listeners": []
+  },
+  "idea:link": {
+   "emitters": [
+    "nexus.emergence.components.idea-store"
+   ],
+   "listeners": []
+  },
+  "pattern:observe": {
+   "emitters": [
+    "nexus.emergence.components.pattern-engine"
+   ],
+   "listeners": []
+  },
+  "alk.session.capture.start": {
+   "emitters": [
+    "nexus.emergence.components.rfr2-observer"
+   ],
+   "listeners": []
+  },
+  "alk.session.capture.stop": {
+   "emitters": [
+    "nexus.emergence.components.rfr2-observer"
+   ],
+   "listeners": []
+  },
+  "alk.verbal.analysis.sentiment": {
+   "emitters": [
+    "nexus.emergence.components.rfr2-observer"
+   ],
+   "listeners": []
+  },
+  "alk.verbal.chunk.transcribed": {
+   "emitters": [
+    "nexus.emergence.components.rfr2-observer"
+   ],
+   "listeners": []
+  },
+  "rfr2:observe": {
+   "emitters": [
+    "nexus.emergence.components.rfr2-observer.test.affective-field.test",
+    "nexus.emergence.components.rfr2-observer.test.oscillatory.test",
+    "nexus.emergence.components.rfr2-observer.test.relational-gaps.test",
+    "nexus.emergence.components.rfr2-observer.test.reversal-negspace.test",
+    "nexus.emergence.components.rfr2-observer.test.shadow-etc.test",
+    "nexus.emergence.loop"
+   ],
+   "listeners": []
+  },
+  "causal:record": {
+   "emitters": [
+    "nexus.emergence.loop",
+    "nexus.emergence.test.loop.test"
+   ],
+   "listeners": []
+  },
+  "cfr:create": {
+   "emitters": [
+    "nexus.emergence.loop"
+   ],
+   "listeners": []
+  },
+  "lattice:record": {
+   "emitters": [
+    "nexus.emergence.loop",
+    "nexus.emergence.test.loop.test"
+   ],
+   "listeners": []
+  },
+  "ledger:commit": {
+   "emitters": [
+    "nexus.emergence.loop"
+   ],
+   "listeners": []
+  },
+  "alk.rel.bid.detected": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.bid.response": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.decay.detected": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.decay.threshold": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.meaning.created": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.meaning.deflated": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.ready": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.repair.attempt": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.rupture.detected": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.rupture.severity": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.session.start": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.session.stop": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.summary": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "alk.rel.trajectory.update": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.field.relational"
+   ],
+   "listeners": []
+  },
+  "spatial.lattice.cluster.updated": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.lattice.lattice"
+   ],
+   "listeners": []
+  },
+  "spatial.lattice.edge.connected": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.lattice.lattice"
+   ],
+   "listeners": []
+  },
+  "spatial.lattice.graph.ready": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.lattice.lattice"
+   ],
+   "listeners": []
+  },
+  "spatial.lattice.node.added": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.lattice.lattice"
+   ],
+   "listeners": []
+  },
+  "spatial.kernel.landscape.updated": {
+   "emitters": [],
+   "listeners": [
+    "nexus.emergence.vendor.rfr2.lattice.lattice"
+   ]
+  },
+  "spatial.resonance.scored": {
+   "emitters": [],
+   "listeners": [
+    "nexus.emergence.vendor.rfr2.lattice.lattice"
+   ]
+  },
+  "idea:closed": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.ledger"
+   ],
+   "listeners": []
+  },
+  "idea:promoted": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.ledger"
+   ],
+   "listeners": []
+  },
+  "idea:recorded": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.ledger"
+   ],
+   "listeners": []
+  },
+  "upgrade:committed": {
+   "emitters": [
+    "nexus.emergence.vendor.rfr2.ledger"
    ],
    "listeners": []
   },

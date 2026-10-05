@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.14
+    version:  1.7.15
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -223,7 +223,7 @@ spec:
       layer: foundation
       systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
-      status: "PARTIAL (1.7.11) — (1) done but warp, (3) the check, (4) declared systems, (5) declared value; (2) route contracts for cos, warp, emerge open"
+      status: "DONE (1.7.15, 0.39.320) — (1) warp has no taxonomy: it emits no event of its own (its Streams carry their callers' events) and ET1 refuses an empty one; said in warp/interaction-contract.json. (2) cos, emerge and warp interaction-contract.json, projected from their servers (cos: vaultd only; warp: none). (3) lib/route-contract-check.js — served and declared must match — in `nexus contracts check` and loom. Found, not fixed: emerge-ide's POST /api/codegen is unreachable (the POST block answers first; `method` undefined), marked reachable:false. Emergence now in loom (70 components, 0 edges lost) and the atlas."
       depends_on: [EM0_ground]
       files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
