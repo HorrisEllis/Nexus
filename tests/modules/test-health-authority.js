@@ -43,29 +43,27 @@ const ORCH = fs.readFileSync(path.join(ROOT, 'orchestrator', 'orchestrator.js'),
 const AP   = fs.readFileSync(path.join(ROOT, 'nexus', 'autopilot.js'), 'utf8');
 
 (async () => {
-  await test('HA-001', 'diagnostic now consults the registry before declaring a system offline', () => {
-    assert.ok(/COMPETING TRUTH FIXED/.test(DIAG), 'the fix must be documented where it happens');
-    assert.ok(/api\/registry/.test(DIAG), 'must consult orchestrator\'s registry');
-    assert.ok(/registry-fallback/.test(DIAG), 'and record WHICH source decided the answer');
+  // §PR2 0.39.328 — James: "remove the polling then. need the systems to anounce themselves." The probe-then-registry
+  // design these four held (0.39.258–0.39.327) is replaced: the pulse decides, and no system's health path is probed.
+  await test('HA-001', 'the diagnostic takes liveness from the pulse (lib/pulse-watch.js, fed by orchestrator\'s /sse)', () => {
+    assert.ok(/require\('\.\.\/lib\/pulse-watch\.js'\)/.test(DIAG), 'the pulse watch');
+    assert.ok(/http\.get\('http:\/\/127\.0\.0\.1:9000\/sse'/.test(DIAG), 'listens to the beats');
+    assert.ok(/const online = PULSE\.isOnline\(_pulseAs\(name\)\)/.test(DIAG), 'online is the pulse');
   });
 
-  await test('HA-002', 'the fallback threshold MATCHES orchestrator\'s — the two can no longer disagree by construction', () => {
-    // orchestrator: regOnline = lastSeen && (now - lastSeen) < 15000
+  await test('HA-002', 'the registry\'s 15s window is the one orchestrator uses — read once, not polled', () => {
     assert.ok(/< 15000/.test(ORCH), 'orchestrator uses a 15s registry window');
-    assert.ok(/< 15000/.test(DIAG), 'diagnostic must use the SAME window — a different number would just move the disagreement');
+    assert.ok(/Date\.now\(\) - seen < 15000/.test(DIAG), 'the diagnostic reads it with the same window');
+    assert.ok(/function _readRegistryOnce/.test(DIAG), 'once (at start and after a lost stream), not on a timer');
   });
 
-  await test('HA-003', 'it consults over HTTP, never by require — the decoupling law', () => {
+  await test('HA-003', 'it listens over HTTP, never by require — the decoupling law', () => {
     assert.ok(!/require\(['"]\.\.\/orchestrator/.test(DIAG), 'must not import orchestrator internals');
-    const block = DIAG.slice(DIAG.indexOf('COMPETING TRUTH FIXED'), DIAG.indexOf('Feed to baseline'));
-    assert.ok(/http\.get/.test(block), 'must reach it over HTTP');
   });
 
-  await test('HA-004', 'a registry that cannot be reached leaves the local probe standing, with the degradation NAMED', () => {
-    const block = DIAG.slice(DIAG.indexOf('COMPETING TRUTH FIXED'), DIAG.indexOf('Feed to baseline'));
-    assert.ok(/probe-only\(registry unreachable\)/.test(block),
-      'an unreachable authority must be recorded as a degraded answer, not silently trusted as authoritative');
-    assert.ok(/onlineSource/.test(block), 'every answer must carry its provenance');
+  await test('HA-004', 'a lost stream is said and reconnected; every answer carries its provenance', () => {
+    assert.ok(/lost orchestrator\\'s pulse stream — reconnecting/.test(DIAG), 'losing the stream is named');
+    assert.ok(/const onlineSource = 'heartbeat'/.test(DIAG), 'provenance: the heartbeat');
   });
 
   await test('HA-005', 'REAL: the parser matches orchestrator\'s ACTUAL registry shape, not an assumed one', async () => {
@@ -73,7 +71,7 @@ const AP   = fs.readFileSync(path.join(ROOT, 'nexus', 'autopilot.js'), 'utf8');
     // { ok, registry: { <id>: {...} } }. A wrong parser would have found
     // nothing forever — the fallback would look wired and never fire, which
     // is the exact failure class this session keeps surfacing.
-    assert.ok(/reg\.registry && reg\.registry\[name\]/.test(DIAG), 'must read reg.registry[name]');
+    assert.ok(/\(reg && reg\.registry\) \|\| \{\}/.test(DIAG), 'must read reg.registry');
     assert.ok(/registryAll\(\)/.test(ORCH), 'and orchestrator must still serve that shape');
 
     // Prove it against a live server returning the genuine shape.
@@ -116,9 +114,11 @@ const AP   = fs.readFileSync(path.join(ROOT, 'nexus', 'autopilot.js'), 'utf8');
   });
 
   // §0.39.327 — James: "i though we switched to heartbeat and pulse system"
-  await test('HA-009', 'the pulse is read first for EVERY system; the /health probe only when orchestrator has not heard one', () => {
-    assert.ok(/if \(cfg\.preferHeartbeat !== false\) \{\s*const lastSeen = await _checkRegistry/.test(DIAG), 'heartbeat-first is the default, not a per-system opt-in');
-    assert.ok(/if \(!online\) \{\s*try \{\s*await new Promise\(\(resolve\) => \{\s*const req = http\.get\(`http:\/\/127\.0\.0\.1:\$\{cfg\.port\}\$\{cfg\.healthPath\}`/.test(DIAG), 'the probe runs only when the pulse did not confirm');
+  // §PR2 0.39.328 — James: "remove the polling then."
+  await test('HA-009', 'no system is probed: no request to a system\'s health path, no per-system registry check', () => {
+    assert.ok(!/cfg\.port\}\$\{cfg\.healthPath\}/.test(DIAG), 'the /health probe is gone');
+    assert.ok(!/_checkRegistry\(/.test(DIAG), 'the per-system registry check is gone');
+    assert.ok(!/setInterval\(_readRegistryOnce/.test(DIAG), 'the registry is read once, never on a timer');
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);
