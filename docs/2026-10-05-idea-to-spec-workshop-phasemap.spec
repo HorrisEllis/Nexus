@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idea-to-spec-workshop
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-05
     release:  0.39.345 (base)
     uuid:     nexus-idea-to-spec-workshop-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -70,7 +70,7 @@ spec:
 
     WK1_the_workshop_is_blocks_from_the_templates:
       layer: api
-      status: OPEN
+      status: "SUPERSEDED (1.1.0) — folded into docs/2026-10-05-spec-workshop-rebuild-phasemap.spec (RS3, RS5, RS6); kept here as the record"
       james: '"the spec workshop was supposed to use blocks." · "like its meant to use genesis spec." · "the spec workshop needs the templates from the quick spec menu."'
       depends_on: []
       closes: [UI0 (REACH out), part of WS5]
@@ -83,7 +83,7 @@ spec:
 
     WK2_templates_edited_saved_removed:
       layer: api
-      status: OPEN
+      status: "SUPERSEDED (1.1.0) — folded into docs/2026-10-05-spec-workshop-rebuild-phasemap.spec (RS3, RS5, RS6); kept here as the record"
       james: '"with the ability to edit, save, and remove spec templates."'
       depends_on: [WK1_the_workshop_is_blocks_from_the_templates]
       files: [idearium/spec-engine/templates/, idearium/api/index.js, idearium/ui/workshop.html]
@@ -94,7 +94,7 @@ spec:
 
     WK3_the_agent_drafts_every_block:
       layer: api
-      status: OPEN
+      status: "SUPERSEDED (1.1.0) — folded into docs/2026-10-05-spec-workshop-rebuild-phasemap.spec (RS3, RS5, RS6); kept here as the record"
       james: '"what about having ai generate the spec from the idea, like it feeds all the text input fields for each part of the spec."'
       depends_on: [WK1_the_workshop_is_blocks_from_the_templates]
       closes: [WS6 STRETCHED]
