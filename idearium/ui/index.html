@@ -708,7 +708,24 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .bs-spec{display:grid;grid-template-columns:1fr 150px 120px auto;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--b0)}
 .bs-spec-name{font:12px var(--mono);color:var(--text)}.bs-spec-name small{display:block;color:var(--text3);font-size:9.5px}.bs-spec-state{font:10.5px var(--mono);color:var(--text2)}
 .bs-bar{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}.bs-bar div{height:100%;background:var(--mint)}
-.repo-settings-embed{width:100%;height:720px;border:1px solid var(--b0);border-radius:8px;background:#0a0b10;margin-top:6px}
+/* §0.39.310 VP7 — the repo Settings tab: categories on the left, one pane at a time (idearium/ui/js/repo-settings.js) */
+.rs{display:grid;grid-template-columns:190px minmax(0,1fr);gap:22px;align-items:start}
+.rs-nav{position:sticky;top:0;display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--b0);padding-right:12px}
+.rs-group{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin:12px 0 4px 8px}
+.rs-group:first-child{margin-top:0}
+.rs-item{text-align:left;font-size:12px;padding:6px 10px;border-radius:6px;border:0;background:none;color:var(--text2);cursor:pointer;border-left:2px solid transparent}
+.rs-item:hover{background:var(--b0);color:var(--text)}
+.rs-item.on{background:var(--b0);color:var(--text);border-left-color:var(--sky2);font-weight:600}
+.rs-console{margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--text3)}
+.rs-pane{min-width:0}
+.rs-head{border-bottom:1px solid var(--b0);padding-bottom:10px;margin-bottom:16px}
+.rs-head h3{margin:0;font-size:16px;font-weight:600;color:var(--text)}
+.rs-note{font-size:11px;color:var(--text3);margin-top:4px}
+.rs-reveal{margin-top:8px}
+.rs-embed{width:100%;height:640px;border:1px solid var(--b0);border-radius:8px;background:#0a0b10;margin-top:6px}
+.rs-danger{border:1px solid var(--coral,#f87171);border-radius:8px;padding:12px;margin-top:8px}
+.rs-danger-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+@media (max-width:760px){.rs{grid-template-columns:1fr}.rs-nav{position:static;flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--b0);padding:0 0 8px}.rs-group{display:none}}
 .env-group{margin:8px 0}.env-gname{font:600 9.5px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:4px}
 .env-row{display:grid;grid-template-columns:minmax(200px,1fr) minmax(200px,1.2fr);gap:12px;align-items:center;padding:5px 0;border-bottom:1px solid var(--b0)}
 .env-k{font:11px var(--mono);color:var(--text)}.env-d{font-size:10px;color:var(--text3)}
@@ -2444,6 +2461,7 @@ async function saveToIdearium(){
 <link rel="stylesheet" href="css/file-manage.css">
 <link rel="stylesheet" href="css/work-surface.css">
 <link rel="stylesheet" href="css/arch-canvas.css">   <!-- §0.39.299 AR5 — the Architect's canvas, scoped (.ax / .ac) -->
+<link rel="stylesheet" href="css/desktop-setup.css">   <!-- §0.39.340 DK2 — the desktop setup popup, scoped (.dsu-*) -->
 <script src="js/arch-canvas.js"></script>   <!-- §0.39.299 AR3 — the one canvas both Architects use -->
 <script src="js/app.js"></script>
 <script src="js/compartment.js"></script>
@@ -2453,6 +2471,8 @@ async function saveToIdearium(){
 <script src="js/living-spec.js"></script>
 <script src="js/file-manage.js"></script>
 <script src="js/repo-environment.js"></script>
+<script src="js/repo-settings.js"></script>
+<script src="js/desktop-setup.js"></script>   <!-- §0.39.340 DK2 — openDesktopSetup(repo) -->
 <script src="js/plan-panel.js"></script>
 <script src="js/work-surface.js"></script>
 <script src="js/file-versions.js"></script>

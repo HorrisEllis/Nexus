@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.9.0
+    version:  1.10.0   # 1.10.0 (2026-10-05): DK2 the setup popup, DK3 VM engines, DK4 the screen through remote-desktop
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -309,6 +309,71 @@ spec:
         createdAt + user-data hash), archives a stale one as desktop.stale-<time>.qcow2 (§0.3), and branches from an
         original only when it was made over the same base. test-cos-workspace 17/17 (WS-15),
         test-cos-testenv-any-repo 63/63.
+    DK2_desktop_setup_popup:
+      layer: ui
+      status: "DONE (0.39.340) — mapped before code. Found while building: POST /api/config refuses desktop.user / desktop.password from any actor but 'user' (not copilot_writable) — the popup's first draft sent actor 'desktop-setup' and would have failed on his machine; it sends 'user' (his click), pinned by DS-03 and DS-08. test-desktop-setup-popup 8/8 in Clear Glass."
+      depends_on: [DK1_desktop_image_and_login]
+      files: [idearium/ui/js/desktop-setup.js, idearium/ui/index.html, idearium/ui/js/repo-environment.js, idearium/api/build-surface.js, idearium/api/index.js]
+      james: '"when clicking on setup desktop, i want to have a popup with the progress. like show me what its doing. like when you run setup in the run menu in idearium. like I want a setup screen, asking for the username and password. and i want options for the vm, like vmware. like compartment destkop. also the vnc, what about replacing it with the remote desktop project in the remote desktop."'
+      found: >-
+        Read, not assumed: the repo's "⚙ set up environment" (repo-environment.js envSetup) shows a toast and one status
+        line; the step-by-step wizard with live progress lives only inline in the run menu (app.js _vmWizardHtml). Neither
+        asks for the account: it comes silently from Settings desktop.user / desktop.password (default nexus / nexus).
+        DEFECT: the repo's setup route (build-surface.js environmentSetup) starts setup-job WITHOUT the login — only the run
+        menu passes it — so after the password is changed in Settings, an image built from the repo's button has the old
+        account and the viewer shows a login that does not work. provision.js --json already reports every step ({ msg,
+        phase, pct }: QEMU, download %, disk, first boot, guest/console lines, verify, ready) through setup-job's log.
+      does: >-
+        "set up environment" opens a popup in three steps. (1) Account: username, password, confirm — the desktop.user /
+        desktop.password settings, prefilled; saved before the setup starts. (2) VM: RAM, CPUs, network (desktop.ram_mb /
+        cpus / network), the desktop and the languages this repo needs (ticked from its check), the engine and what this
+        computer has for it (QEMU, the accelerator, the base image). (3) Progress: the setup job's own stages ticked as
+        they pass, the download bar, the current line, elapsed time, the full log behind a button; done or failed with the
+        reason and Try again. Closing the popup leaves the setup running; the button reopens it on the same job. The
+        repo's setup route passes the login (the defect above).
+      proof: "in Clear Glass: the popup's three steps, the account saved to settings before the start, progress stages ticked from a setup job's log, the download bar, failed shows the reason; the repo's setup route passes the login to setup-job"
+      conditions:
+        - { says: "the setup popup", check: { kind: tests, run: "node tests/modules/test-desktop-setup-popup.test.js" } }
+    DK3_vm_engines:
+      layer: library
+      status: OPEN — mapped 2026-10-05; not built — needs James's call (below)
+      depends_on: [DK2_desktop_setup_popup]
+      files: [cos/compartment/, cos/workspace/index.js, cos/testenv/provision.js]
+      james: '"when clicking on setup desktop, i want to have a popup with the progress. like show me what its doing. like when you run setup in the run menu in idearium. like I want a setup screen, asking for the username and password. and i want options for the vm, like vmware. like compartment destkop. also the vnc, what about replacing it with the remote desktop project in the remote desktop."'
+      found: >-
+        Only QEMU exists (cos/compartment/qemu-runtime.js; the desktop is QEMU's own VNC screen over a websocket). Nothing
+        in the tree drives VMware, VirtualBox or Hyper-V.
+      does: >-
+        An engine behind one interface (start, stop, status, screen) chosen in DK2's VM step, offered only when found on the
+        computer. VMware Workstation (free for personal use): vmrun drives it; the same Debian image converted once
+        (qemu-img convert → vmdk); its .vmx turns on VMware's own VNC (RemoteDisplay.vnc), so the viewer is unchanged.
+      decided: >-
+        The coder's input: VMware would be a second engine for the same VM, not a better one — QEMU already runs it with
+        hardware acceleration (WHPX/KVM). Worth it if James already uses VMware on this machine (shared snapshots, its
+        tools); otherwise it is a second thing to keep working. And it cannot be tested here (no VMware in the build
+        container) — only against a fake vmrun until it runs on his machine.
+    DK4_the_screen_through_remote_desktop:
+      layer: library
+      status: "PINNED — James, 2026-10-05: \"Put a pin in the Remote Desktop.\" Mapped, not built; the decision below stays open."
+      depends_on: [DK2_desktop_setup_popup]
+      files: [remote-desktop/, idearium/ui/desktop.html, cos/testenv/provision.js]
+      james: '"when clicking on setup desktop, i want to have a popup with the progress. like show me what its doing. like when you run setup in the run menu in idearium. like I want a setup screen, asking for the username and password. and i want options for the vm, like vmware. like compartment destkop. also the vnc, what about replacing it with the remote desktop project in the remote desktop."'
+      found: >-
+        remote-desktop/ is James's WebRTC screen share: signal.js (signalling + token gate), host.html (getDisplayMedia),
+        viewer.html, input-auth.js (HMAC per input frame), input-injector.js (needs @nut-tree/nut-js for real input),
+        bridge-electron (the only place input lands on an OS). The desktop viewer today is noVNC loaded from a CDN
+        (desktop.html) onto QEMU's own VNC screen.
+      does: >-
+        The coder's proposal: remote-desktop as the main screen once the guest is up — its host installed in the Debian
+        image (provision --with desktop) and started at the desktop login; the viewer is its viewer.html in Clear Glass —
+        and QEMU's VNC kept as the boot and recovery screen (and noVNC served from the tree, not a CDN).
+      decided: >-
+        The coder's input, not agreement: VNC here is the VM's own screen, from QEMU — it shows the boot, a broken
+        cloud-init, the login screen, with nothing installed in the guest. remote-desktop is a program INSIDE the guest: no
+        screen until the OS is up and its host is running, and it needs Electron and nut-js in the Debian image (a bigger
+        image, a native build). It is the better screen once running (video codec, his own token-gated protocol); it
+        cannot replace VNC for setup and recovery. Replace, or add beside — James's call.
+
     CP1_copilot_drives_idearium_and_talks_to_its_agents:
       layer: interface
       status: OPEN — mapped 2026-10-02

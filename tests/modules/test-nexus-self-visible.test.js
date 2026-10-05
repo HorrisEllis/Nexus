@@ -77,7 +77,9 @@ async function main() {
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
     const fn = app.slice(app.indexOf('function refreshOnEvent('), app.indexOf("if (t.startsWith('queue.'))"));
     assert.match(fn, /t\.startsWith\('nexus-self\.'\)[^\n]*loadApiRepos/);
-    assert.match(app, /repo\.immutable \? '<span[^']*'[^:]*: '<button class="action-btn danger" onclick="openDeleteRepoModal\(\)"/, 'no Delete button on an immutable repo');
+    // 0.39.330 (VP7) — the repo's Settings renderer moved from app.js to repo-settings.js; the guard moved with it
+    const rs = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/repo-settings.js'), 'utf8');
+    assert.match(rs, /repo\.immutable \? '<div[^']*'[^:]*: '<div class="rs-danger-row">[\s\S]*?<button class="action-btn danger" onclick="openDeleteRepoModal\(\)"/, 'no Delete button on an immutable repo');
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

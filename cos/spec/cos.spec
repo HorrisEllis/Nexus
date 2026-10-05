@@ -408,3 +408,16 @@ spec:
 # runnable test, 4 at a time, inside a time budget, and continues from where the budget stopped; every failure
 # carries a debug report (lib/cos-debug-report.js: the error, the repo frames, their source lines). nexus/core
 # offers Nexus's root package.json scripts; systems with no process say so instead of "no entry to boot".
+
+# ── ADDENDUM 2026-10-05 — the COS phasemaps ──
+# James: "like that needs to be add to the cos phasemaps"
+# COS's maps: docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec (the test VM, built 0.39.264) and its
+# continuation docs/2026-10-05-cos-machines-phasemap.spec (mapped, nothing built): VM1 pause / live snapshots / checkpoints
+# / rewind over QMP; OS1 compartments as operating systems (debian, android via Android-x86 + adb, bring-your-own ISO);
+# OS2 images downloaded, verified and kept current; AP1–AP3 a native Android build, test and release compartment; EL1
+# an Electron compiler. Every phase there is systems: [cos].
+
+# ── ADDENDUM 2026-10-05 (0.39.341) — COS is its own system ──
+# James: "cos needs to be a nested compartment" · asked where: "Its own system (16th)". lib/nexus-self/systems.js lists cos
+# (dirs [cos], no process); in Idearium it is the nested repo nexus/cos in its own compartment under nexus. Its atlas is
+# docs/atlases/cos-atlas.md. The glue that reaches COS stays core's: lib/cos-bridge.js, lib/cos-run.js, lib/repo-run.js.

@@ -1,0 +1,45 @@
+/* idearium/ui/css/desktop-setup.css — §0.39.340 DK2: the desktop setup popup (js/desktop-setup.js). Scoped .dsu-*;
+   the theme's own variables (css/nexus-theme.css), with fallbacks so the popup reads the same on any page. */
+.dsu-overlay { position: fixed; inset: 0; z-index: 9000; display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 10, .62); backdrop-filter: blur(3px); }
+.dsu-box { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 48px); overflow: auto; border-radius: 10px;
+  background: var(--nx-panel, #111128); border: 1px solid var(--ac-border, #1e3a4a); color: var(--nx-text, #d0d4f0);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, .55); font-size: 13px; }
+.dsu-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 6px; }
+.dsu-head h3 { margin: 0; font-size: 15px; color: var(--nx-bright, #eef); font-weight: 600; }
+.dsu-x { background: none; border: 0; color: var(--nx-dim, #7070a0); font-size: 20px; cursor: pointer; line-height: 1; }
+.dsu-steps { display: flex; gap: 6px; padding: 0 18px 10px; border-bottom: 1px solid var(--nx-edge, #1e1e3a); }
+.dsu-step { font-size: 11px; padding: 3px 9px; border-radius: 999px; color: var(--nx-dim, #7070a0); border: 1px solid var(--nx-edge, #1e1e3a); }
+.dsu-step.on { color: var(--nx-bright, #eef); border-color: var(--ac-border-hi, #2a6a8a); background: var(--ac-ghost, rgba(0, 200, 255, .07)); }
+.dsu-step.past { color: var(--nx-ok, #00ff88); }
+.dsu-body { padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.dsu-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 10px 18px 14px; border-top: 1px solid var(--nx-edge, #1e1e3a); }
+.dsu-note { margin: 0; color: var(--nx-dim, #7070a0); font-size: 12px; line-height: 1.5; }
+.dsu-field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--nx-dim, #7070a0); }
+.dsu-field input, .dsu-field select { background: var(--nx-ink, #080814); color: var(--nx-text, #d0d4f0); border: 1px solid var(--nx-rim, #2a2a4a);
+  border-radius: 6px; padding: 7px 9px; font-size: 13px; }
+.dsu-field input:focus, .dsu-field select:focus { outline: none; border-color: var(--ac, #22d3ee); }
+.dsu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 520px) { .dsu-grid { grid-template-columns: 1fr; } }
+.dsu-check { display: inline-flex; align-items: center; gap: 6px; margin-right: 12px; }
+.dsu-check em { color: var(--nx-warn, #ffaa00); font-style: normal; font-size: 11px; }
+.dsu-engine { font-size: 12px; padding: 8px 10px; border-radius: 6px; background: var(--nx-ink, #080814); border: 1px solid var(--nx-edge, #1e1e3a); }
+.dsu-err { margin: 10px 18px 0; padding: 8px 10px; border-radius: 6px; color: var(--nx-err, #ff3355); border: 1px solid rgba(255, 51, 85, .35); background: rgba(255, 51, 85, .07); }
+.dsu-body .dsu-err { margin: 0; }
+.dsu-ok { padding: 8px 10px; border-radius: 6px; color: var(--nx-ok, #00ff88); border: 1px solid rgba(0, 255, 136, .3); background: rgba(0, 255, 136, .06); }
+.dsu-state { font-size: 12px; color: var(--nx-dim, #7070a0); text-transform: uppercase; letter-spacing: .06em; }
+.dsu-stages { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.dsu-stage { display: flex; align-items: center; gap: 8px; color: var(--nx-muted, #4a4a7a); }
+.dsu-stage.done { color: var(--nx-text, #d0d4f0); }
+.dsu-stage.done .dsu-mark { color: var(--nx-ok, #00ff88); }
+.dsu-stage.now { color: var(--nx-bright, #eef); }
+.dsu-stage.now .dsu-mark { color: var(--ac, #22d3ee); }
+.dsu-stage.failed, .dsu-stage.failed .dsu-mark { color: var(--nx-err, #ff3355); }
+.dsu-mark { width: 14px; text-align: center; }
+.dsu-bar { flex: 1; max-width: 180px; height: 6px; border-radius: 3px; background: var(--nx-edge, #1e1e3a); overflow: hidden; }
+.dsu-bar span { display: block; height: 100%; background: var(--ac, #22d3ee); }
+.dsu-pct { font-size: 11px; color: var(--nx-dim, #7070a0); }
+.dsu-line { font-family: ui-monospace, monospace; font-size: 11px; color: var(--nx-dim, #7070a0); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dsu-logbtn { align-self: flex-start; }
+.dsu-pre { margin: 6px 0 0; padding: 8px; max-height: 220px; overflow: auto; background: var(--nx-ink, #080814); border-radius: 6px;
+  font-size: 11px; white-space: pre-wrap; color: var(--nx-dim, #7070a0); }

@@ -90,5 +90,13 @@ spec:
   open_items:
     - WARP's population seed is still dropped by warp-cascade (see exists). Giving a model a near match should stay
       a tool call (C-D6), so this is recorded, not changed.
+    - >-
+      ADDENDUM 2026-10-05 (0.39.308–309) — C-D6 for BUILD prompts. 0.39.308 injected near matches' interfaces into a
+      file build's context without James's yes (drift: docs/2026-10-05-build-from-the-spec-phasemap.spec BC1). James,
+      2026-10-05: "They need context. All of it. From the hat/repo." Settled: a file build is given other projects'
+      stored components that share its subject — interface and glyph only, never bytes, never a version marked failed
+      (§17.10) — through the editable build-context block (lib/repo-prompt-blocks.js); a build agent has no tool loop to
+      find them with. Chat agents keep C-D6 unchanged (found with loom.find.tool kind "stored"). Alternatives and
+      rejections: docs/build-context.spec decisions.C-D6_for_build_prompts.
     - Existing warp-crystals.json entries are not back-filled into the store: they carry no file path.
     - Atlases regenerate when scripts/generate-atlases.js runs (and after a loom bootstrap); not on every sync.

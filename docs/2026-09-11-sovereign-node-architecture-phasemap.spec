@@ -115,6 +115,11 @@ spec:
         Explicitly the largest, highest-risk phase — real data, real
         consumers, needs its own careful, dedicated pass per system, not
         attempted in one sweep.
+        ADDENDUM 2026-10-05 (0.39.311) — James: "Each system needs to be in charge of its own data. Not the data
+        folder in the root or cortex. Cortex is the book keeper, with the associative lattice." Carried forward, not
+        duplicated, as DS1 (cortex the catalog: owner, location, count, hash, lineage + the lattice — never a copy) and
+        DS2 (one system moves home at a time, behind a warning read shim) in
+        docs/2026-10-05-cli-data-code-phasemap.spec. This phase stays the parent; its status moves with theirs.
       blocks: []
 
     P6_per_system_contract_schemas:

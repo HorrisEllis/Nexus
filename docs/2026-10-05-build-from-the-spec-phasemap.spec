@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.14.0
+    version:  1.19.0   # 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25. 1.9.0: an imported project shows its progress; expanding a repo keeps its spec and phases current — SB26, SB27. 1.10.0: genesis in the shape Nexus systems really have; the build flow in his order, in a compartment until committed — SB28, SB29. 1.11.0: the template is a skeleton, the spec a living model, the atlas detailed — SB30; SB25 widened. 1.12.0: every new repo is the skeleton, the idea slots in — SB31"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25. 1.9.0: an imported project shows its progress; expanding a repo keeps its spec and phases current — SB26, SB27. 1.10.0: genesis in the shape Nexus systems really have; the build flow in his order, in a compartment until committed — SB28, SB29. 1.11.0: the template is a skeleton, the spec a living model, the atlas detailed — SB30; SB25 widened. 1.12.0: every new repo is the skeleton, the idea slots in — SB31 · from branch claude/nexus-idearium-overview-yoguem: MAPPED 2026-10-05; SB1–SB3 built (0.39.305), the author-reuse fix (0.39.306); SB4–SB14 open. 1.1.0: the whole pipeline, idea → .spec → blocks → registry → components, reuse first. 1.2.0: BC1 (0.39.328, built BEFORE it was mapped — drift, recorded below) and BC2 (0.39.329) — the build agent gets all of the hat/repo context, through the editable prompt blocks. 1.3.0: BC3 (.node record), BC4 (relational-context wired or archived); systems: and value: on BC phases"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim — spelling and all.
       `does:` is the coder's reading of it, his to correct. A phase whose `james:` says none came from the coder, and says
@@ -261,6 +261,7 @@ spec:
     SB0_map:
       james: '"I just need to get this all mapped."'
       layer: foundation
+      systems: [idearium]   # 0.39.312 — declared; it read on no system's Phasemap tab
       status: DONE
       depends_on: []
       files: [docs/2026-10-05-build-from-the-spec-phasemap.spec, docs/SPEC-REGISTRY.spec]
@@ -504,6 +505,94 @@ spec:
       conditions:
         - { says: "a second spec with a matching component builds it from the store at 0 tokens", check: { kind: tests, run: "node tests/modules/test-reuse-compounds.test.js" } }
 
+    # ── 1.2.0 (2026-10-05) ────────────────────────────────────────────────────────────────────────────────────────
+    # James: "Should be more than that. Like using the traversal of chunks, primitives, like the relationship between
+    # words when generating code. The boundaries. Learning to code from that" · "And the agents use it for context
+    # right?" · "Yes. We need the agents to use it. Also what about the .node types. Also combining primitives or
+    # invariants to build higher leverage code for less tokens." · "Parse rhe axioms in the docs folder. Do not
+    # deviate They are law" · "They need context. All of it. From the hat/repo"
+    BC1_build_context:
+      layer: library
+      systems: [idearium, core, loom]
+      value: { score: 4, cost: M, for: [compounding, quality], why: "a build agent sees what its file relates to; fewer tokens, every lower file seen" }
+      status: DONE (0.39.328) — built before it was mapped; the drift is recorded below
+      depends_on: []
+      files: [lib/build-context.js, idearium/spec-engine/index.js, idearium/api/index.js, tests/modules/test-build-context.test.js]
+      does: >-
+        Each file chunk's build agent is told its relations, deterministically and in one budget: BUILDS ON (its
+        dependencies' interfaces and glyphs, through every layer), USED BY, RELATIONS (its registry card when the file
+        exists), PROVEN PRIMITIVES (other projects' stored components by interface), INVARIANTS (the spec's
+        MUST/NEVER sentences naming its subject). The file prompt sends the 3 lower files it is most about in full and
+        every other one by interface.
+      drift: >-
+        Audited against docs/AXIOMS-v3.1.md and docs/CLAUDE.md on James's word ("They are law"). 0.39.328 broke:
+        §3.3/rule 1 (built before this map); rule 3/§5.1 (not in loom, no UUID); §8.5 (no spec); rule 4/§12.5 (no
+        addendum); E14 (the chunk.complete event gained buildContext undeclared); the Leverage Principles and §16.6
+        (C-D6 changed without his yes); §17.11 (the size claim's benchmark was a scratch script, the unfavourable case
+        unreported); the test sandbox and §12.1 (no hostile inputs); §1.2 (a failed pack was recorded but not said);
+        and a benchmark run wrote a throwaway spec into data/cortex (removed). Each is closed in BC2. Its block was
+        also injected outside the editable prompt blocks — James's 0.39.258 rule ("not to inject anything into it that
+        i cant edit in the agent settings") — closed in BC2.
+      proof: "the build context is packed and the file prompt splits full / by interface"
+      conditions:
+        - { says: "the build context is packed and the file prompt splits full / by interface", check: { kind: tests, run: "node tests/modules/test-build-context.test.js" } }
+
+    BC2_the_build_agent_gets_all_of_the_hat_and_repo_context:
+      layer: api
+      systems: [idearium, core, loom]
+      value: { score: 5, cost: M, for: [quality, ownership], why: "all of the hat/repo context reaches the builder, and only through blocks he can edit" }
+      status: DONE (0.39.329)
+      depends_on: [BC1_build_context]
+      files: [lib/repo-prompt-blocks.js, idearium/api/index.js, lib/build-context.js, idearium/event-taxonomy.cjs,
+              loom/maps/build-context-map.js, loom/bootstrap.js, docs/build-context.spec, scripts/bench-file-prompt.js]
+      does: >-
+        "They need context. All of it. From the hat/repo." A file chunk's build agent wears the repo's hat (its
+        persona: the atlas facts and what it has learned, his corrections first — as before) and gets every context
+        source the Agent tab has, through the repo's prompt blocks: four BUILD blocks (when: build), ON by default
+        because a build agent has no tool loop to fetch them with — build-memory (its own past work and this
+        project's same-layer files: agent-memory recall), build-context (lib/build-context.js), build-atlas (everything
+        else NEXUS remembers that matches the file: context-atlas), build-code (this repo's own code that matches the
+        file: repo-context, with glyphs); the file's registry card is build-context's RELATIONS. Each is editable
+        and switchable in Settings → Agents like every other block; nothing reaches the prompt that he cannot edit.
+        C-D6 for build prompts: settled by James ("All of it") — proven primitives by interface, never bytes, never a
+        failed version.
+      proof: "a file build's prompt carries the hat and every enabled build block, and a disabled block sends nothing"
+      conditions:
+        - { says: "a file build's prompt carries every enabled build block, a disabled one sends nothing", check: { kind: tests, run: "node tests/modules/test-build-context.test.js" } }
+        - { says: "the real server's model receives it", check: { kind: tests, run: "node tests/modules/test-prove-loop.test.js" } }
+        - { says: "build-context is in loom with its real wires", check: { kind: tests, run: "node tests/modules/test-build-context.test.js" } }
+
+    BC3_what_a_build_was_sent_as_a_node:
+      layer: library
+      systems: [idearium, core, copilot]
+      value: { score: 3, cost: S, for: [ownership, safety], why: "every dispatch can be replayed and explained from a node, not only from a response field" }
+      status: OPEN — James's call (which node type)
+      depends_on: [BC2_the_build_agent_gets_all_of_the_hat_and_repo_context]
+      files: [lib/node-schemas/schema.injection, lib/node-export.js, idearium/api/index.js]
+      does: >-
+        "Also what about the .node types." What a build agent was sent (persona as edited, the build blocks used, their
+        chars, the sources and what failed) is today only in the build response and the chunk.complete event. It becomes
+        a node. NODE-TAXONOMY.md's `.injection` exists for exactly this ("every time something gets prepended to a
+        dispatch, there'd be a real node recording what and why") but its schema is copilot's call-model shape
+        (provider, primed, injectedToolGuide…). Either the schema widens to any dispatch (source: copilot | build) or a
+        new type is added — his call. The chunk's `.chunk` node then links to it.
+      proof: "a file build writes one node naming the blocks it sent, their sizes and its chunk; a failed source is on it"
+
+    BC4_relational_context_wired_or_archived:
+      layer: library
+      systems: [core, loom]
+      value: { score: 2, cost: S, for: [quality], why: "a module with no caller is debt; one upstream walk, not two" }
+      status: OPEN
+      depends_on: [BC1_build_context]
+      files: [lib/relational-context.js, lib/build-context.js, lib/registry-harness.js]
+      does: >-
+        Found: lib/relational-context.js (R10, "everything exists in relation to something") is required only by its
+        own test. BC1 walks the same upstream wires through lib/registry-harness.js's index (no second LoomDriver). Two
+        implementations of one walk is §16.5 debt. Either build-context calls relational-context's upstreamDependencies
+        (and its token comparison becomes the build context's measured saving), or relational-context is archived with
+        a pointer to build-context — not deleted (§0.3). Proposed: wire its token-count gate into BC1's measurement and
+        archive the rest.
+      proof: "exactly one upstream walk is called in the build path; the other is archived with a pointer, or wired and tested"
     SB15_empty_is_not_built:
       james: 'none — a bug the coder found while wiring SB12; recorded so it is not lost.'
       layer: library
@@ -823,7 +912,7 @@ spec:
 
     SB33_the_agent_runs_the_pipeline:
       layer: api
-      status: "DONE (1.13.0, 0.39.325) — idearium.repo_chunks.tool action:"reindex" → POST /api/repos/:uuid/reindex; the route refreshes the persona after the pipeline; an unindexed persona tells the agent to run it. test-agent-context-always CA-04, test-repo-chunks-tool 11/11."
+      status: "DONE (1.13.0, 0.39.325) — idearium.repo_chunks.tool action:\"reindex\" → POST /api/repos/:uuid/reindex; the route refreshes the persona after the pipeline; an unindexed persona tells the agent to run it. test-agent-context-always CA-04, test-repo-chunks-tool 11/11."
       james: '"also running the pipeline the agent should be able to do."'
       depends_on: [SB32_context_is_never_optional]
       files: [lib/agent-tools/tools/idearium/repo-chunks.js, lib/repo-hat.js, idearium/api/index.js]
@@ -850,3 +939,138 @@ spec:
       proof: "a question naming no file gets the chunk whose code answers it, with its card and code; the memory search runs with its block off; an unmatched question gets the overview"
       conditions:
         - { says: "context from the code tab, the graphs and memory", check: { kind: tests, run: "node tests/modules/test-agent-context-always.test.js" } }
+
+    SB35_the_index_is_there_when_the_agent_asks:
+      layer: api
+      status: "DONE (0.39.335) — mapped from his boot log before code. guardian/jaa-store.js maxWait (5 s); nexus-self flushTables() per system, name fallback, syncing(uuid); idearium/api _ensureIndexed + _agentDir at all seven agent entry points. test-agent-index-ready 4/4; IA-01 and IA-02 fail on the code before it."
+      james: '"why are the agents still not using the context. fix it. actualy fix it. do not hand it back until you. wasting my fucking tokens"'
+      found: >-
+        SB32–SB34 made the retrieval right, but it reads an index that was not there. His log of 12:23–12:26: (a) idearium
+        never flushed on Ctrl+C (every other service printed "[jaa] SIGINT received — flushing"; idearium was inside the
+        nexus-self sync). guardian/jaa-store.js debounces a table's flush by 1.5 s and RESTARTS the timer on every
+        write; the sync writes idearium_repos about every second for its whole run, so the table is never flushed while a
+        sync runs — a stop mid-sync loses every repo row it wrote. (b) Next boot: "Loaded 4 rows — idearium_repos"; every
+        system found no repo marked nexusSelf and logged "created" again; core was re-ingested from nothing. (c) His
+        question reached the agent at ~12:26:07, while core's 2,235 sources were being written (12:26:08) and before its
+        pipeline (READY 12:26:25): contextFor found no indexes/cards.json and sent "context: none — no index to read",
+        telling a 3b model to run the pipeline itself. (d) A repo row that lost materializeDir resolves to
+        data/projects/<uuid> (the log wrote architect, diagnostic, eravos, intelligence there) while its index may sit in
+        nexus-self/repos/<uuid>.
+      depends_on: [SB34_context_is_the_code_tab_the_graphs_and_memory]
+      files: [guardian/jaa-store.js, idearium/lib/db.js, idearium/repo/nexus-self.js, idearium/api/index.js, lib/repo-agent.js]
+      does: >-
+        (1) The store flushes a table at most 5 s after it first became dirty, however often it is written (maxWait);
+        the debounce still coalesces bursts. (2) nexus-self flushes the repo rows after each system and finds its repo
+        by name when the nexusSelf mark was lost, so a stopped sync is never a full re-ingest. (3) One
+        _ensureIndexed(repoUuid) before every agent send: waits for the nexus-self sync of that repo when one is running,
+        takes the directory that actually holds indexes/cards.json, and when none does but the sources are on disk runs
+        the import pipeline there (the same runImportPipeline as POST /reindex) and re-grounds the persona; concurrent
+        sends share one run. The agent is never told to index its own repo.
+      proof: "a table written every 200 ms is on disk within 5 s; a repo row stripped of its nexusSelf mark is updated, not created; an agent send on a repo with sources and no index gets the code search's chunks in its prompt; a send during the sync waits for it"
+      conditions:
+        - { says: "the index is there when the agent asks", check: { kind: tests, run: "node tests/modules/test-agent-index-ready.test.js" } }
+
+    SB36_every_agent_can_use_the_tools:
+      layer: api
+      status: "DONE (0.39.336) — built before it was mapped (drift, recorded here): the cause was traced live from his two screenshots and fixed in the same pass. tool-syntax when 'tools' (guardian and ollama), its words say where the tools run; copilot makeOllamaCallModel reads a written call with _findToolCalls; repo.code reads use _agentDir; PREVIOUS_DEFAULTS upgrade a stored old default. test-agent-tools-every-backend 4/4 (AT-01, AT-02 fail on the code before)."
+      james: '"like its not working. the tool. the agents job is to find context. ollama, copilot, guardian agents need to be able to use the agent tools." · "like they need the tools, all of them."'
+      found: >-
+        His screenshots: the Ollama agent (qwen2.5-coder 3b) answered from nothing and its "reindex" went into @learn and an
+        empty code block — it never called a tool; the guardian agent (ChatGPT) said the idearium.* tools "are not actually
+        exposed in this session. I checked the available tool registry". In the code: copilot's tool loop for Ollama posts
+        to the bridge's /api/jobs without the tool schemas (his log: "tool-loop · generate"), so no native tool call can
+        come back; the prompt's call syntax (tool-syntax) was sent to guardian only; makeOllamaCallModel read only native
+        tool_calls, never a written one. Native schemas would not have helped a 3b model either: 126 tools, 138,542
+        characters of JSON against num_ctx 6144. For a browser agent the loop worked (it reads the rendered ```tool block),
+        but the block said "You have real tools available" — a model with its own function tools looks there first.
+        The code tools themselves read /api/repos/:uuid/code/*, which resolved its directory the old way (SB35's bug).
+      depends_on: [SB35_the_index_is_there_when_the_agent_asks]
+      files: [lib/repo-prompt-blocks.js, copilot/tool-runtime.js, idearium/api/index.js]
+      does: >-
+        One call protocol for every backend that runs the tool loop — ollama, guardian, and the copilot position (it
+        resolves to one of them); claude-code keeps its own tools. The tool-syntax block (editable, default) says: find the
+        context first; the tools run in Nexus, not in your built-in tool list, never call them unavailable; write a call as
+        a ```tool block; Nexus sends back the result. Copilot reads a written call out of an Ollama reply with the same
+        parser as a browser reply (the fenced block, or a known tool's bare {"name": …}). The code tools' reads take the
+        directory that holds the index, built on demand. A row that stored an earlier default text follows the new
+        default; a text James wrote stays. The first message stays under 3,000 characters (RH-006).
+      proof: "every tool-loop prompt says where the tools run and how to call one; an Ollama reply that writes a call runs the real code search on the real server and the next round carries its result; a browser reply's rendered call runs the same way; the code tools read an index made on demand"
+      conditions:
+        - { says: "every agent can use the tools", check: { kind: tests, run: "node tests/modules/test-agent-tools-every-backend.test.js" } }
+
+    SB37_the_working_set_signal_to_noise:
+      layer: library
+      status: "DONE (0.39.337) — mapped before code. copilot/lib/workset.js; makeOllamaCallModel feeds each read in and sends prompt + synthesis; the 'workset' block (editable); a small read (≤ 1,500 chars) kept whole; COPILOT_WORKSET_DIR sandboxed; copilot/data/worksets/ git-ignored. Five ~20 KB reads: last round 119,260 → 1,601 chars, whole run 358,032 → 5,331. test-copilot-workset 4/4."
+      james: '"what if it builds a temporary, index of context, copies the relevant context to it, one by one until it synthesize it into it into only what it needs." · "I know it''s a fucking problem. This is a real problem when I push it. So, so, uh, as I said, uh, in index, but we do JAA or uh, JSON. Probably just a JSON file. So it''s synthesizing. Find the context one by one, put it in an index, and then synthesize it into, into just what it needs. Signal to noise."'
+      found: >-
+        copilot/tool-runtime.js makeOllamaCallModel (composed) re-sends the whole run every round — the prompt, every
+        reply, every tool result in full, nothing capped — into num_ctx 6144, and Ollama truncates from the front: the
+        more context an agent finds, the sooner the persona and the question fall out. No working set exists anywhere
+        (searched lib/, copilot/: no working set, no result cap). What is there to build on: the chunk cards (already a
+        compressed form of a chunk), the tool-result block (editable), lib/test-sandbox.js's per-store variables.
+      depends_on: [SB36_every_agent_can_use_the_tools]
+      files: [copilot/lib/workset.js, copilot/tool-runtime.js, copilot/server.js, lib/repo-prompt-blocks.js, lib/repo-agent.js, lib/test-sandbox.js]
+      does: >-
+        One JSON file per tool-loop run, owned by copilot (copilot/data/worksets/<id>.json; COPILOT_WORKSET_DIR, the
+        sandbox redirects it): the question, then each tool read, one by one — the raw result kept in the file, and its
+        signal: the lines that carry the question's terms, the chunk ids, signatures, what uses what — the rest dropped
+        from the prompt (kept on disk). Each round the model is sent its prompt and the working set synthesized to a
+        budget (the most relevant first, deduplicated by chunk id), never the raw transcript; a chunk is re-opened by its
+        id. The synthesis is framed by a new editable block ('workset'). The answer is written to the file — its
+        provenance. Ollama only: a browser tab keeps its own conversation and is sent each result once (unchanged).
+      proof: "a run whose tool results add up to far more than the window sends a prompt that never grows past the budget, still carries the question and the persona, and keeps the line that answers it; the JSON file holds every raw result and the answer"
+      conditions:
+        - { says: "the working set keeps the signal", check: { kind: tests, run: "node tests/modules/test-copilot-workset.test.js" } }
+
+    SB38_prerequisites_the_questions_first:
+      layer: library
+      status: "DONE (0.39.338) — mapped before code. lib/context-prereqs.js check(); repo-agent prereqsFor() in dispatch (recorded as gaps) and the preview (not recorded); the editable 'prereqs' block before the question. Past conversations: this repo's agent, then copilot — never another project's (found while testing: the first cut searched every agent, and one project's conversation answered another's question). test-context-prereqs 7/7."
+      james: '"What if instead of just a tool, it''s a compartment, like the work surface is in COS. Right? It would be like ask a question or or a intent or whatever. And then predetermine what context is needed. So make like prerequisites. Then uh, use those as a checklist for context. And then then use that to build the the uh, the work set index." · "Yeah, the, the prerequisites, the questions, right? That way, then if it can''t, if it can''t find context, then it''ll, it''ll just ask me the rest, or reference the past conversations"'
+      decided: >-
+        The coder's input, given before this was mapped: not a COS compartment per question (gathering context only reads;
+        a compartment is for a task that writes and runs — a build, an order); the checklist is made by Nexus from the
+        index, not by the 3B model; every item is checkable against chunk ids. James answered on the prerequisites and
+        what happens to the ones not found; the compartment question was not answered — left as the coder proposed.
+      found: >-
+        lib/shadow.js already declares what a step must produce and reads each absence as a gap (gap-field) — the
+        checklist's settle is that. lib/code-intel answers what a chunk uses, what uses it and its tests (cards);
+        lib/build-context.js finds the spec's MUST/NEVER lines; lib/agent-memory.js search() reads past conversations
+        (every agent's exchanges in the download manager). Nothing turned a question into what it needs before searching.
+      depends_on: [SB37_the_working_set_signal_to_noise]
+      files: [lib/context-prereqs.js, lib/repo-agent.js, lib/repo-prompt-blocks.js]
+      does: >-
+        Before each send: (1) the question's intent — explain, change, debug, build — by its words, no model; (2) its
+        target, from the Code tab's search; (3) the prerequisites that intent needs of that target — explain: the chunk,
+        what it uses, what uses it; change: + its tests and what it must be (the acceptance, from the question); debug:
+        + the error as it appeared; build: where it goes and what exists like it. (4) Each is looked for in order: the
+        index (Nexus reads it, no model), then past conversations (agent-memory search); (5) what is still missing is
+        not guessed: it is asked — the prompt's editable 'prereqs' block lists the checklist and tells the agent to ask
+        James those questions; a gap is recorded (lib/shadow.js). His answer is the next exchange, so the next time the
+        same question is asked it is found in past conversations. The checklist travels with the run (ctx.prereqs).
+      proof: "an explain question gets its chunk, uses and users checked off from the index; a change question that does not say what it should do asks for it; an item found only in an earlier conversation is checked off from there; what is not found is asked, never guessed, and recorded as a gap"
+      conditions:
+        - { says: "the questions first", check: { kind: tests, run: "node tests/modules/test-context-prereqs.test.js" } }
+
+    SB39_the_checklist_builds_the_working_set:
+      layer: library
+      status: "DONE (0.39.339) — mapped before code, then cut (his \"no noise\"): the DOM and debug domains were mapped as SB40/SB41 and removed again before any code; registerDomain() takes them when he wants them. test-checklist-workset 6/6."
+      james: '"do it. we could use that for more than coding. coudl use it for debugging, dom in clearglass, or any data fed into a pipeline" · "im saying for anything it wants to learn. agnostic tool for context" · "don''t just agree. im not looking to add noise. can i build from inside nexus now?"'
+      found: >-
+        SB38's checklist and SB37's working set ran side by side: the checklist went into the first message, the working set
+        started empty and knew nothing of what the question needed. lib/context-prereqs.js was written for code only.
+      depends_on: [SB38_prerequisites_the_questions_first]
+      files: [lib/context-prereqs.js, lib/agent-tools/tools/query/learn.js, lib/agent-tools/index.js, lib/agent-tools/tool-guide.js, lib/agent-tools/tool-catalog.js, copilot/lib/workset.js, copilot/tool-runtime.js, copilot/server.js, lib/repo-agent.js, lib/repo-prompt-blocks.js]
+      does: >-
+        (1) One agnostic engine: a DOMAIN gives the intents, the checklist and where an item is found; the engine does the
+        rest the same for all — the domain's source, then past conversations, then ask James — and records the gaps. Domains:
+        code (SB38), data (a record fed into a pipeline; its needs are fields with a path and a question), topic (anything
+        else — what it is, where it lives, what it connects to, what was said before — from every store Nexus keeps, through
+        context-atlas, and the code index when there is a repo). learn() picks the domain from what it is given.
+        (2) nexus.learn.tool: any agent's handle on it — the checklist, the context found for each item, the questions.
+        The context-tools block names it in one line. (3) The checklist is the Ollama working set's index: found items seed
+        it, a code read ticks a missing target, the synthesis opens with the checklist — complete, or what is left to ask;
+        the first round's prompt already carries the checklist, so the seeded set is sent only once a real read is in it.
+      proof: "the working set opens with the checklist and the found context; a code read ticks the target; a pipeline record's missing field is asked; learn() finds a topic in Nexus's own specs; nexus.learn.tool answers; a new domain runs through the same engine"
+      conditions:
+        - { says: "the checklist builds the working set; the engine takes any domain", check: { kind: tests, run: "node tests/modules/test-checklist-workset.test.js" } }
+

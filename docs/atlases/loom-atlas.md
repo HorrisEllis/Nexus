@@ -357,6 +357,13 @@ Real phasemap aggregation scanner. `loadAll()` / `forSystem(system)` are, per `l
 
 A phase's `depends_on` is read by the file's `_list()` helper, which accepts three forms: a flow list `[A, B]`, a comma list `A, B` and a dash list `- A - B`. The rule for the end of a list changed in 0.39.275: a flow list ends at its own `]`, and whatever follows is a YAML comment. Before that, `depends_on: [S3, C1]  # why` was read as the items `S3` and `C1] # why`, so the edge to `C1` was lost and a phase could show as ready while `C1` was still open. A block or bare list has no `]`, so only a trailing ` # …` is cut there. Resolving a name to a phase (including a phase in another phasemap) is not done here; that belongs to `idearium/repo/roadmap.js`.
 
+**Which system a phase belongs to** (0.39.314). James: "There is only 15 systems. Not 27. Any system that's in idearium is a system, nothing more." The scanner keeps no system list of its own. Every tag a phase carries, whether declared in its `systems:` line or guessed from its prose, resolves to one of Idearium's 15 systems in `lib/nexus-self/systems.js` (`systemFor`):
+- **A system's own name** is itself.
+- **A known alias** goes to its owner: raid, chunk, replay and snapshot to cortex; agent to guardian; gemini to copilot.
+- **Any other tag** goes to the system that owns that directory. lib, cos, warp, emerge and docs all go to core.
+
+The tag as written is kept on the phase as `tags`. `forSystem` answers a tag for its system, and a name that is neither a system nor a tag answers empty. A phase that names nothing is core's.
+
 **HTTP routes**
 
 ```

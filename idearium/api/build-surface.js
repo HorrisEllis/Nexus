@@ -143,7 +143,12 @@ export async function environmentSetup(deps, uuid) {
   const options = (r.repo.environment && r.repo.environment.options) || {};
   const c = ENV.check(r.dir, { files: null, options });
   const extras = [...new Set([...(c.vm.extras || []), ...(options.extras || []), ...(options.desktop ? ['desktop'] : [])])];
-  const job = deps.require('../../cos/testenv/setup-job.js').start({ extras, node: options.node && options.node !== 'lts' ? options.node : null });
+  // §0.39.340 DK2 — the desktop account from Settings (desktop.user / desktop.password), as the run menu's setup passes it.
+  // Without it an image built from this button kept provision's default account, and the viewer showed a login that
+  // did not work once the password had been changed in Settings.
+  const cfg = typeof deps.config === 'function' ? deps.config : () => undefined;
+  const login = { user: cfg('desktop.user'), password: cfg('desktop.password') };
+  const job = deps.require('../../cos/testenv/setup-job.js').start({ extras, node: options.node && options.node !== 'lts' ? options.node : null, login });
   deps.emit('idearium.repo.environment.setup', { repoUuid: uuid, extras, state: job.state });
   return ok({ repoUuid: uuid, extras, install: c.plan.install, job: { state: job.state, startedAt: job.startedAt } });
 }

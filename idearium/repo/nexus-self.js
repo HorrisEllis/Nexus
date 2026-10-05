@@ -27,6 +27,7 @@ import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
 import { runImportPipeline } from './import-pipeline.js';
+import { flushTables } from '../lib/db.js';
 
 const require = createRequire(import.meta.url);
 const store = require('../../lib/nexus-self/store.js');
@@ -103,10 +104,25 @@ function _parentReadme(snap, repoBySystem) {
  * syncSystem(rl, se, { system, snap, compartment, parentRepoUuid, force })
  * -> { system, status:'unchanged'|'created'|'updated'|'failed', repoUuid, … }
  */
-export async function syncSystem(rl, se, { system, snap, compartment = null, parentRepoUuid = null, force = false, onEvent = null } = {}) {
+// §0.39.335 SB35 — a repo whose sync is running: repoUuid → promise settled when its pipeline has run. An agent
+// send on that repo waits for it (idearium/api _ensureIndexed) instead of reading a half-written tree with no index.
+const _syncing = new Map();
+export function syncing(repoUuid) { return _syncing.get(repoUuid) || null; }
+
+export async function syncSystem(rl, se, opts = {}) {
+  let done = () => {};
+  const mark = (uuid) => { if (!uuid || _syncing.has(uuid)) return; const p = new Promise(r => { done = () => { _syncing.delete(uuid); r(); }; }); _syncing.set(uuid, p); };
+  try { return await _syncSystem(rl, se, opts, mark); }
+  finally { done(); }
+}
+
+async function _syncSystem(rl, se, { system, snap, compartment = null, parentRepoUuid = null, force = false, onEvent = null } = {}, mark = () => {}) {
   const sysSnap = snap.systems[system];
-  const existing = _findRepo(rl, r => r.nexusSelf && r.nexusSelf.system === system && r.nexusSelf.role === 'system');
-  if (existing && !force && existing.nexusSelf.hash === sysSnap.hash) {
+  // §0.39.335 SB35 — found by its name when its nexusSelf mark was lost (a sync stopped before the repo rows were on
+  // disk): updated in place, never ingested a second time from nothing.
+  const existing = _findRepo(rl, r => r.nexusSelf && r.nexusSelf.system === system && r.nexusSelf.role === 'system')
+    || _findRepo(rl, r => !r.nexusSelf && r.source === 'nexus-self' && r.name === repoName(system));
+  if (existing && !force && existing.nexusSelf && existing.nexusSelf.hash === sysSnap.hash) {
     return { system, status: 'unchanged', repoUuid: existing.uuid, hash: sysSnap.hash };
   }
   // §0.39.288 PF1 — each step of a changed system is timed (steps.*), so the sync log names which one holds the loop
@@ -133,8 +149,10 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
     const r = rl.ingest({ name: repoName(system), files: textFiles, source: 'nexus-self', parent: null, compartmentId: compartment ? compartment.id : null, materializeBaseDir: baseDir, noIdea: true });
     if (r.error) return { system, status: 'failed', error: r.error };
     repoUuid = r.repo.uuid; status = 'created';
+    mark(repoUuid);
   } else {
     repoUuid = existing.uuid; status = 'updated';
+    mark(repoUuid);
     // §0.39.288 PF5 — same file set: only the changed chunks are rewritten, in the spec the repo already has
     let inPlace = null;
     if (existing.specUuid && typeof se.updateIngestedSpecAsync === 'function' && typeof rl.specUpdatedInPlace === 'function') {
@@ -195,6 +213,8 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
       versions: [...prevVersions, { hash: sysSnap.hash, snapshot: snap.hash, at: Date.now() }].slice(-100),
     },
   });
+  // §0.39.335 SB35 — on disk now: a stop before the next debounce no longer loses this repo's row
+  flushTables();
   step('annotate');
   return { system, status, repoUuid, hash: sysSnap.hash, files: entries.length, pipeline: pipeline ? pipeline.state : null, pipelineError: pipeline && pipeline.error, steps };
 }

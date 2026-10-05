@@ -128,6 +128,10 @@ spec:
       name: ErosmancerOS starts with Clear Glass (clear-glass/src/eros/supervisor.js)
       origin: 'James: "hook it in to run with clearglass" / "just need erosmanceros to start with clearglass"'
       status: built — addenda in erosmancer/spec/erosmancer.spec and clear-glass/spec/clear-glass.spec
+  # ── 2026-10-05 — continues in the next COS phasemap ───────────────────────
+  continued_in:
+    map: docs/2026-10-05-cos-machines-phasemap.spec
+    why: 'James: "like that needs to be add to the cos phasemaps" — VM1 VMware-style control, OS1/OS2 compartments as operating systems, AP1–AP3 the Android builder, EL1 the Electron compiler'
   open_items:
     - provision.js has not run against a real Debian cloud image download here (no internet on the build
       machine); the seed and cloud-init path is tested with a real HTTP seed and an emulated first boot.

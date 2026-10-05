@@ -374,6 +374,12 @@ const SUITES = [
   'test-nexstore-log.test.js',     // 0.39.300 N1 — the record frame and the log: 25 SIGKILLs mid-append, every ack survives, the chain verifies, the torn tail reported
   'test-warp2.test.js',   // 0.39.323 EM2 — WARP 2: links with causes, expectations as gaps, constraints first, 1.x through the adapter
   'test-agent-context-always.test.js',   // 0.39.325 SB32/SB33 — context on every send; the persona on the live index; the agent runs the pipeline
+  'test-agent-index-ready.test.js',   // 0.39.335 SB35 — the store flushes under constant writes; a lost nexus mark is updated in place; every agent send reads an indexed directory
+  'test-agent-tools-every-backend.test.js',   // 0.39.336 SB36 — one tool-call protocol for ollama and guardian; a written call is run; the code tools read the indexed directory
+  'test-copilot-workset.test.js',   // 0.39.337 SB37 — the working set: reads into a JSON file, rounds send its synthesis within a budget
+  'test-context-prereqs.test.js',   // 0.39.338 SB38 — the questions first: a checklist per question, found in the index or past conversations, else asked
+  'test-checklist-workset.test.js',   // 0.39.339 SB39 — one agnostic context tool (code · data · topic, nexus.learn.tool); the checklist seeds the working set
+  'test-desktop-setup-popup.test.js',   // 0.39.340 DK2 — the desktop setup popup in Clear Glass; the repo's setup passes the account
   'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree
   'test-emerge-core.test.js',   // 0.39.321 EM1 — Emerge core: rejected by id, a gap names its input, a lens cannot write, one seed one history
   'test-route-contracts.test.js',   // 0.39.320 EV0 (2)(3) — every served route in its system's contract, and nothing more
@@ -393,6 +399,8 @@ const SUITES = [
   'test-agent-hat-agnostic.test.js',  // 0.39.267–268 — one provider list; a build wears its hat on copilot/ollama/guardian; RAID reads the worn hat; activity recall; code captured with fences
   'test-one-idearium-phases-nodes.test.js',  // 0.39.271 — /idearium/ redirect, versionium newest-first per repo, one bar, Phases manager, living spec, COS suite + every test + debug reports, copilot contract, per-system nodes + guardian .hat/.agent
   'test-agent-memory.test.js',        // 0.39.269 — agent memory over the Clear Glass download manager: record on every backend, recall before every call; loom map
+  'test-build-context.test.js',       // 0.39.308 — a build agent's context: dependencies' interfaces, users, relations, primitives, invariants
+  'test-repo-settings-ui.test.js',     // 0.39.310 — the repo Settings tab in categories, one pane at a time (Clear Glass's driver; skipped and said without an engine)
   'test-chat-per-agent.test.js',  // 0.39.266 — each repo agent gets its own chat (they all shared one)
   'test-versionium-repo-history.test.js', // 0.39.263 — every repo's history in versionium (staged big versions, files/versions), nexus repos committed on sync, loom reads versionium not git
   'brainos-float-cg.test.js', // 0.39.262 — BrainOS Float Clear Glass tabs + pre-mount registration fix

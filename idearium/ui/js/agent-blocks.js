@@ -7,7 +7,7 @@
 
 const _AB = { repo: null, blocks: [], placeholders: {} };
 
-const _AB_WHEN = { always: 'every dispatch', tools: 'guardian + ollama (tool loop)', guardian: 'guardian (browser agents) only' };
+const _AB_WHEN = { always: 'every dispatch', tools: 'guardian + ollama (tool loop)', guardian: 'guardian (browser agents) only', build: 'file builds (spec chunks) only' };
 
 async function renderAgentBlocks(repo) {
   const el = document.getElementById('agent-blocks-section');

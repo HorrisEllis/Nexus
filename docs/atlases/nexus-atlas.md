@@ -1,6 +1,6 @@
 # NEXUS — Sovereign Multi-System Kernel
 
-> **status: full map (0.39.264)** · 14 systems (13 kernels + core), every top-level directory placed, every system with an atlas of its own · each system is a module of NEXUS, and each module is its own modular system with components: the same shape, one zoom level further out.
+> **status: full map (0.39.264)** · 16 systems (13 kernels + components + cos + core; cos since 0.39.341), every top-level directory placed, every system with an atlas of its own · each system is a module of NEXUS, and each module is its own modular system with components: the same shape, one zoom level further out.
 
 **Author:** James Brooks (Erosmancer) · rheon.world
 
@@ -23,7 +23,7 @@ Under each system heading below, the page adds that system's live numbers from t
 
 NEXUS is a personal AI operating system built as one Node.js monorepo. It does not call AI providers through API keys. It drives real provider chats in browser tabs (ChatGPT, Claude, Gemini, Perplexity, DeepSeek) and local models through Ollama, and it wraps that dispatch in everything an operating system would give a program: a registry of what exists, a memory of what happened, version control of every change, a diagnostic layer that watches every system, a sandboxed place to run code, and a design surface where new systems are specified before they are built.
 
-The top zoom level is this repo. One level in are fourteen systems. Thirteen are kernels: each is a process with its own port, its own entry file, its own data folder and its own spec, started by [autopilot](nexus/autopilot.js) in dependency order. The fourteenth, `core`, is everything no kernel owns: the shared libraries in `lib/`, the event fabric (`warp/`, `siso/`, `nexus/nexus-bus.js`), the Compartment OS in `cos/`, the command line in `cli/`, the tests, the docs, and the UI shells. Who owns which file is decided in exactly one place, `lib/nexus-self/systems.js`, and everything that splits NEXUS into systems (the snapshot, the per-system repos in Idearium, the apply gate) goes through its ownerOf().
+The top zoom level is this repo. One level in are sixteen systems. Thirteen are kernels: each is a process with its own port, its own entry file, its own data folder and its own spec, started by [autopilot](nexus/autopilot.js) in dependency order. Two are nested repos with no process: `components`, the store of everything WARP builds, and `cos`, the Compartment OS (its own system since 0.39.341). The sixteenth, `core`, is everything no other system owns: the shared libraries in `lib/`, the event fabric (`warp/`, `siso/`, `nexus/nexus-bus.js`), the command line in `cli/`, the tests, the docs, and the UI shells. Who owns which file is decided in exactly one place, `lib/nexus-self/systems.js`, and everything that splits NEXUS into systems (the snapshot, the per-system repos in Idearium, the apply gate) goes through its ownerOf().
 
 The systems never import each other's internals. They talk over HTTP, over the event bus, and through declared contracts: every system ships a `registry-components.js` listing its routes as components, an `interaction-contract.json` generated from it, and a .spec describing what it is supposed to be. Loom keeps the combined registry of components, hooks and wires, which is how NEXUS stays aware of its own shape. The rules that govern all of it are written down in `docs/AXIOMS-v3.1.md`, distilled for daily work in `docs/CLAUDE.md`, and every session starts by reading `docs/SESSION-PROTOCOL.md`.
 
@@ -76,7 +76,7 @@ nexus/
   loom/                  loom — component/hook/wire registry :3752
   clear-glass/           clear-glass — the sovereign browser :7704
   lib/                   core — shared libraries (375 files)
-  cos/                   core — Compartment OS: compartments, branches, runtimes, test VM
+  cos/                   cos — Compartment OS: compartments, branches, runtimes, test VM
   cli/                   core — the nexus command line
   nexus/                 core — autopilot, the bus, query and connect layers
   warp/                  core — the five-primitive event spine
@@ -220,6 +220,10 @@ The sovereign browser: Electron and Chromium, with its own fingerprint control, 
 
 The component store: every file WARP builds through Idearium, kept in `components/` as one folder per component version with its dependencies pinned by id and version, and asked before any new build spends a token. `lib/component-store.js` is the store; `idearium/api/index.js` writes to it and reads from it in the build path; agents find stored components with the registry harness in `lib/registry-harness.js`. It has no port and no process of its own, and loom never scans it because it is built output rather than Nexus source. The next zoom level is `components-atlas.md`.
 
+### cos
+
+The Compartment OS: isolated sandboxes with their own process, network and runtime boundary, persistent state on disk and real snapshots, and the virtual machines the test environment and the repo desktops run in. `cos/kernel.js` and `cos/manager.js` run compartments, `cos/compartment/qemu-runtime.js` gives one a hardware-virtualized guest, and `cos/testenv/` builds a test environment for any repo. Its spec is `cos/spec/cos.spec`. Like components it has no process of its own; until 0.39.341 it was part of core (James: "cos needs to be a nested compartment"). The next zoom level is `cos-atlas.md`.
+
 ### core
 
 Everything no kernel owns. Core has no port and no entry: its code runs inside whichever kernel requires it, and its documents and tests describe and check every system. It is by far the largest system by file count, because `lib/` alone is 375 files, `tests/` is 470, and `docs/` is 280. The directories below are its components, one zoom level down; the full map of each is in `core-atlas.md`.
@@ -232,9 +236,9 @@ Everything no kernel owns. Core has no port and no entry: its code runs inside w
 
 The code more than one kernel needs. The groups that matter most: the agent layer (`lib/agent-router.js`, `lib/agent-tools/`, `lib/agent-system/`, `lib/repo-agent.js`, `lib/repo-hat.js`, `lib/repo-prompt-blocks.js`, `lib/repo-inject.js`, `lib/repo-context.js`); ledgers and events (`lib/ledger-writer.js`, `lib/ledger-fanin/`, `lib/event-types.js`, `lib/warp-bus.js`); the registries (`lib/component-registry.js`, `lib/capability-registry.js`, `lib/hook-registry.js`, `lib/schema-registry.js`, `lib/tool-index.js`); diagnosis (`lib/diagnostic-engines.js`, `lib/diag-engines/`, `lib/fault-log.js`, `lib/gap-field.js`); COS glue (`lib/cos-bridge.js`, `lib/cos-run.js`, `lib/repo-run.js`, `lib/compartment-engine.js`); NEXUS as a repo (`lib/nexus-self/`); and the rules every test lives under (`lib/test-sandbox.js`, `lib/version.js`).
 
-#### `cos/` — the Compartment OS
+#### `cos/` — now its own system
 
-Isolated sandboxes with their own process, network and runtime boundary, persistent state on disk, and real snapshots. `cos/kernel.js` and `cos/manager.js` run compartments; `cos/archetype/registry.js` holds the sixteen archetypes a compartment can be (web server, test runner, sandbox browser, AI agent, and the rest) and `cos/blueprint/registry.js` the multi-role blueprints; `cos/playground/branch.js` forks a compartment's files into branches that are run and compared; `cos/runtime/run.js` runs JavaScript in a clean environment with ports shifted and network isolated; `cos/compartment/qemu-runtime.js` gives a compartment a hardware-virtualized guest; `cos/vault/` is its encrypted store with `cos/vaultd/server.js` as an optional daemon. `cos/testenv/` is the test environment for any repo: `cos/testenv/index.js` runs it, `cos/testenv/detect.js` plans it, `cos/testenv/provision.js` makes the VM's base image, and `cos/testenv/setup-vm.bat` and `cos/testenv/setup-vm.sh` set the VM up in one command. Its spec is `cos/spec/cos.spec`, beside the design document `cos/spec/cos-design-v1.7.0.md`.
+Since 0.39.341 `cos/` is the system `cos` (above, and `cos-atlas.md`), no longer one of core's directories.
 
 #### `cli/` — the command line
 

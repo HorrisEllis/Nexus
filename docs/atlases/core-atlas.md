@@ -8,7 +8,7 @@
 
 ## What It Is
 
-`core` is the fourteenth system, defined by exclusion in `lib/nexus-self/systems.js`: every file whose top-level directory is not one of the thirteen kernels belongs to core. That makes it the largest system by far, and also the least like the others. It has no process of its own. Its libraries run inside whichever kernel requires them, its documents describe every system, and its tests check every system. When Idearium shows NEXUS as a repo with nested system repos, `core` is the one holding `lib/`, `cos/`, `cli/`, `warp/`, `siso/`, `docs/`, `tests/` and the rest.
+`core` is the fourteenth system, defined by exclusion in `lib/nexus-self/systems.js`: every file whose top-level directory is not one of the thirteen kernels belongs to core. That makes it the largest system by far, and also the least like the others. It has no process of its own. Its libraries run inside whichever kernel requires them, its documents describe every system, and its tests check every system. When Idearium shows NEXUS as a repo with nested system repos, `core` is the one holding `lib/`, `cli/`, `warp/`, `siso/`, `docs/`, `tests/` and the rest.
 
 Because core has no port, "running core" means running something that uses it: `lib/cos-run.js` runs a core change in a full-tree workspace, and its tests are found by what they require, not by where they sit.
 
@@ -19,7 +19,7 @@ Because core has no port, "running core" means running something that uses it: `
 ```
 nexus/
   lib/                shared libraries — agents, ledgers, registries, diagnosis, COS glue, NEXUS-as-a-repo
-  cos/                the Compartment OS — compartments, archetypes, branches, runtimes, vault, test VM
+  cos/                (since 0.39.341 its own system — cos-atlas.md)
   cli/                the nexus command line and maintenance tools
   nexus/              autopilot, the event bus, query and connect layers
   warp/               the five-primitive event spine
@@ -84,25 +84,9 @@ Every system writes its own ledger through `lib/ledger-writer.js`; `lib/ledger-f
 
 ---
 
-## cos/ — the Compartment OS
+## cos/ — now its own system
 
-Isolated sandboxes with their own process, network and runtime boundary, persistent state on disk and real snapshots. Its spec is `cos/spec/cos.spec`, beside the design document `cos/spec/cos-design-v1.7.0.md`, which describes COS in Rust terms while the code is Node; the spec records that boundary rather than hiding it.
-
-### Compartments and archetypes
-
-`cos/kernel.js` and `cos/manager.js` run compartments. What a compartment can be is an archetype: `cos/archetype/registry.js` holds all sixteen (web server, API server, worker, scheduler, sandbox browser, compiler, test runner, database, job queue, file processor, containment, exe runner, AI agent, reverse proxy, scratch, blank), and `cos/archetype/detector.js` guesses one from a folder. A blueprint is several roles at once (`cos/blueprint/registry.js`). The foundation in `cos/foundation/` defines the enums, types, axioms, file-system layer and snapshot engine (`cos/foundation/snapshot.js`) everything else is built on, and `cos/host/` runs the host side with its event bus and state store.
-
-### Branches, playgrounds and runtimes
-
-`cos/playground/branch.js` forks a compartment's files into a branch that can be run and compared (`cos/playground/compare.js`), and `cos/playground/sandbox.js` runs a command in one with a clean environment and a watchdog. `cos/playgrounds/` adds copy-on-write file systems and a simulated network. `cos/runtime/run.js` runs JavaScript with ports shifted and network isolated, and checks syntax and dependencies without running anything. `cos/watchdog/` watches resource use.
-
-### Virtual machines and the test environment
-
-`cos/compartment/qemu-runtime.js` gives a compartment a hardware-virtualized guest: an ephemeral overlay of a golden base image or a persistent disk, network off by default, QMP control, and a guest-agent channel (`cos/compartment/guest-agent.js`). `cos/testenv/` builds a test environment for any repo on it. `cos/testenv/detect.js` reads a repo's manifests and decides how it is installed and tested (npm test, pytest, go test, cargo test, rspec, phpunit, make test, or its test files by every common name). `cos/testenv/index.js` runs that plan in the VM: the repo goes in as a read-only tar disk written by `cos/testenv/tar.js`, the install runs online, then the network is cut over QMP and the cut is proven from inside the guest before any test runs. `cos/testenv/host.js` finds QEMU even when a fresh install is not on the PATH, and `cos/testenv/provision.js` makes the base image in JavaScript from a Debian cloud image; `cos/testenv/setup-vm.bat` and `cos/testenv/setup-vm.sh` do the whole setup in one command, and `cos/testenv/setup-job.js` runs it from Idearium's Run menu.
-
-### The vault
-
-`cos/vault/` is COS's encrypted store with an audit log (`cos/vault/audit-log.js`), and `cos/vaultd/server.js` is an optional daemon for it. `cos/plugin/` installs and runs COS plugins, and `cos/cli/` is COS's own command line.
+Since 0.39.341 (SY2 — James: "cos needs to be a nested compartment", then "Its own system (16th)") `cos/` is no longer core's: it is the system `cos`, with its own nested repo and compartment in Idearium. Everything this section said about it moved, unchanged, to `cos-atlas.md`. What stays core's is the glue in `lib/` that reaches COS: `lib/cos-bridge.js`, `lib/cos-run.js`, `lib/repo-run.js`, `lib/compartment-engine.js`.
 
 ---
 
@@ -193,7 +177,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 > Generated by `scripts/generate-atlases.js` from loom's registry and events (loom/data/registry.json, loom/data/events.json — data, outside the snapshot, so written plain) and the tree itself, 2026-10-05. Everything between the markers is rewritten on the next run — write narrative above them. The same facts, one component at a time, are what `lib/registry-harness.js` hands a repo agent (loom.card.tool).
 
-**2093** files · **1422** code files · **14** registry components declared here · **350** events emitted · **125** heard · **14** routes · **156** code files with a covering test
+**2123** files · **1390** code files · **14** registry components declared here · **324** events emitted · **118** heard · **14** routes · **147** code files with a covering test
 
 ### Routes (14)
 
@@ -212,7 +196,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - POST /proposals/:id/evaluate — Generate a real patch via forge (RAID-routed) for the given targetFile, run against the isolated evaluation pipeline. · declared in `nexus-healer/registry-components.js`
 - POST /proposals/:id/merge — Deliberate, explicit commit. · declared in `nexus-healer/registry-components.js`
 
-### Events it emits (350) — and who hears them
+### Events it emits (324) — and who hears them
 
 - **pad:trigger** — from `ui/eravos/organisms/pads/pads.engine.js` → `eravos/ui/mods/acid-synth/acid-synth.engine.js` (eravos), `eravos/ui/mods/reese-bass/reese-bass.engine.js` (eravos), `eravos/ui/mods/sequencer/sequencer.engine.js` (eravos), `eravos/ui/mods/serial-bridge/serial-bridge.engine.js` (eravos) +8
 - **intake:file** — from `ui/eravos/kernel/intake.js`, `ui/eravos/organisms/timeline/timeline.engine.js` +1 → `eravos/ui/mods/bass-drop-builder/bass-drop-builder.engine.js` (eravos), `eravos/ui/mods/contrast-analyser/contrast-analyser.engine.js` (eravos), `eravos/ui/mods/sample-player/sample-player.engine.js` (eravos), `eravos/ui/mods/timeline/timeline.engine.js` (eravos) +4
@@ -269,14 +253,11 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - **bus:sig.check** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
 - **bus:ts** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
 - **bus:unsub** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **comp:spawn:failed** — from `cos/test/test.js` → `cos/test/test.js`
 - **cortex.orion.classified** — from `tests/modules/test-raid-orion-wiring.js` → `tests/modules/test-orion.js`
 - **enrich:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **err:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **guardian.job.timeout** — from `tests/modules/test-economy-guardian.test.js` → `tests/modules/test-back-and-forth.test.js`
 - **guardian.tool.called** — from `tests/modules/tool-call-listener.test.js` → `lib/agent-tools/tool-call-listener.js`
-- **host:map:updated** — from `cos/host/system-map.js` → `cos/test/test.js`
-- **host:test:ping** — from `cos/test/test.js` → `cos/test/test.js`
 - **ico:crystal:formed** — from `lib/ico.js` → `tests/full.test.js`
 - **ico:drop** — from `lib/ico.js` → `tests/full.test.js`
 - **ico:failure** — from `lib/ico.js` → `tests/full.test.js`
@@ -290,17 +271,20 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - **test:event** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **unsub:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **a.thing.done** — from `tests/modules/test-event-contracts.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **architect.hook.deprecated** — from `lib/hook-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **architect.hook.registered** — from `lib/hook-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **architect.hook.removed** — from `lib/hook-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **architect.hook.unwired** — from `lib/hook-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- … 270 more — loom.find.tool kind "event"
+- **alk.rel.bid.detected** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **alk.rel.bid.response** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **alk.rel.decay.detected** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **alk.rel.decay.threshold** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **alk.rel.meaning.created** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **alk.rel.meaning.deflated** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **alk.rel.ready** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- … 244 more — loom.find.tool kind "event"
 
-### Events it hears from elsewhere (55)
+### Events it hears from elsewhere (51)
 
-**archetype:assigned** · **architect.snr.flagged** (architect) · **comp:process:stdout** · **compartment.bus.create** · **compartment.create.request** · **compartment.gate.run** · **compartment.status.request** · **copilot.error.detected** (copilot) · **cortex.gap.found** (orchestrator) · **cortex.raid.decided** · **cortex.self-heal.deep_scan_findings** · **cortex.self-heal.failure_mode** · **cortex.self-heal.fix_proposed** · **cortex.self-heal.fix_staged** · **cortex.self-heal.remediation_requested** · **cortex.self-heal.skipped** · **dom:pick-result** · **escalation.failure_mode** · **escalation.friction.increased** · **gap.found** · **guardian.chat.transcript.recorded** (guardian) · **guardian.economy.fallback** · **guardian.economy.wait** · **guardian:job:complete** · **host:compartment:destroyed** · **host:test:fired** · **job.done** · **midi:note** · **net.ddns.add_entry** · **net.ddns.force_check** · **net.ddns.update** · **net.dns.allow_domain** · **net.dns.block_domain** · **net.fw.add_rule** · **net.fw.import_json** · **net.fw.remove_rule** · **net.fw.set_vars** · **net.proxy.add_route** · **net.proxy.remove_route** · **nexus.self-build.housekeeping-complete** · **nexus:cookie-request** · **raid.route.decided** (cortex) · **raid.route.fulfilled** · **raid.route.no_route** (cortex) · **real.evt** · **shortcut:action** · **sql.plan** · **step.blocked** · **step.passed** · **test:build** · **ui:config_change** · **ui:transport-bpm** · **ui:transport-play** · **ui:transport-record** · **ui:transport-stop**
+**architect.snr.flagged** (architect) · **copilot.error.detected** (copilot) · **cortex.gap.found** (orchestrator) · **cortex.raid.decided** · **cortex.self-heal.deep_scan_findings** · **cortex.self-heal.failure_mode** · **cortex.self-heal.fix_proposed** · **cortex.self-heal.fix_staged** · **cortex.self-heal.remediation_requested** · **cortex.self-heal.skipped** · **dom:pick-result** · **escalation.failure_mode** · **escalation.friction.increased** · **gap.found** · **guardian.chat.transcript.recorded** (guardian) · **guardian.economy.fallback** · **guardian.economy.wait** · **guardian:job:complete** · **job.done** · **midi:note** · **net.ddns.add_entry** · **net.ddns.force_check** · **net.ddns.update** · **net.dns.allow_domain** · **net.dns.block_domain** · **net.fw.add_rule** · **net.fw.import_json** · **net.fw.remove_rule** · **net.fw.set_vars** · **net.proxy.add_route** · **net.proxy.remove_route** · **nexus.self-build.housekeeping-complete** · **nexus:cookie-request** · **raid.route.decided** (cortex) · **raid.route.fulfilled** · **raid.route.no_route** (cortex) · **real.evt** · **ring:evicted** · **ring:pushed** · **shortcut:action** · **spatial.kernel.landscape.updated** · **spatial.resonance.scored** · **sql.plan** · **step.blocked** · **step.passed** · **test:build** · **ui:config_change** · **ui:transport-bpm** · **ui:transport-play** · **ui:transport-record** · **ui:transport-stop**
 
-### Files, directory by directory (253 directories)
+### Files, directory by directory (264 directories)
 
 #### `.gitignore`
 
@@ -309,7 +293,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   requires 3 · required by 0
 - `test-node-index.js` (106 lines)  
   requires 3 · required by 0
-- other: 113 files (.gitignore, .json, .npmrc, .md, .jsonl)
+- other: 144 files (.gitignore, .json, .npmrc, .md, .jsonl)
 
 #### `architecture-spec/registry/`
 
@@ -393,8 +377,8 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports DESCRIPTORS, registerAll, MODULE_ID, VERSION · requires 0 · required by 1 · tested by `tests/modules/nexus-repl-descriptors.test.js`
 - `cli/nexus-repl.js` (1234 lines) — NEXUS Interactive CLI REPL Status: pre-release  
   requires 4 · required by 0
-- `cli/nexus.js` (736 lines) — // ════════════════════════════════════════════════════════════════════════════ // nexus — Unified CLI v2.0  
-  requires 4 · required by 0
+- `cli/nexus.js` (748 lines) — // ════════════════════════════════════════════════════════════════════════════ // nexus — Unified CLI v2.0  
+  requires 5 · required by 0
 - `cli/nodes.js` (52 lines) — every system's nodes from the command line (0.39.271 X1). node cli/nodes.js sync [--dry] [--only guardian,idearium] regenerate (lib/system-nodes.js)  
   requires 1 · required by 0
 - `cli/opportunity.js` (148 lines)  
@@ -471,390 +455,11 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `contracts/nodes/verification-contracts.node.js` (92 lines) — extracted from contracts/SYSTEM-CONTRACTS.js Real node id: contracts.verification-contracts.node  
   requires 0 · required by 1
 
-#### `cos/`
-
-3 code · 1 other file(s).
-
-- `cos/event-taxonomy.js` (184 lines) — // cos/event-taxonomy.js — every event COS emits, in the ET1 shape (lib/event-taxonomy-pattern.js). // component_id: cos.event-taxonomy  
-  requires 1 · required by 0
-- `cos/kernel.js` (471 lines) — @param {object} opts @param {string} opts.id Unique compartment ID  
-  exports Compartment, STATE, BIRTH_GATES · requires 0 · required by 1
-- `cos/manager.js` (413 lines) — // ───────────────────────────────────────────────────────────────────────────── // Compartment Manager  
-  exports CompartmentManager · requires 3 · required by 0 · hears compartment.bus.create, compartment.create.request, compartment.gate.run, compartment.status.request
-- other: `cos/package.json`
-
-#### `cos/archetype/`
-
-4 code file(s).
-
-- `cos/archetype/detector.js` (170 lines) — archetype/detector.js COMPARTMENT OS — Archetype Auto-Detector (spec §43/§60, ArchetypeDetectionConfidence)  
-  exports buildDetectionCorpus, hintMatches, detectArchetype, confidenceForScore · requires 2 · required by 1
-- `cos/archetype/index.js` (125 lines) — archetype/index.js COMPARTMENT OS — Archetype Public API  
-  exports listArchetypes, getArchetype, importArchetype, detectForProject, applyArchetypeToCompartment, ArchetypeSchemaError · requires 4 · required by 2
-- `cos/archetype/registry.js` (747 lines) — archetype/registry.js COMPARTMENT OS — Built-in Archetype Registry (spec §60.2)  
-  exports enqueue, dequeue, ARCHETYPES, ARCHETYPE_MAP, ARCHETYPE_NAME_MAP, ARCHETYPE_IDS +2 · requires 1 · required by 5
-- `cos/archetype/schema.js` (188 lines) — archetype/schema.js COMPARTMENT OS — Archetype Contract Validator  
-  exports ArchetypeSchemaError, validateArchetype · requires 3 · required by 2
-
-#### `cos/blueprint/`
-
-3 code file(s).
-
-- `cos/blueprint/index.js` (244 lines) — blueprint/index.js COMPARTMENT OS — Blueprint Public API (Phase 22, spec §44/§61)  
-  exports listBlueprints, getBlueprint, importBlueprint, launchBlueprint, destroyBlueprintInstance, substituteTemplate +1 · requires 7 · required by 3 · emits host:archetype:assign · hears archetype:assigned
-- `cos/blueprint/registry.js` (499 lines) — blueprint/registry.js COMPARTMENT OS — Built-in Blueprint Registry (spec §61.3)  
-  exports BLUEPRINTS, BLUEPRINT_MAP, BLUEPRINT_NAME_MAP, BLUEPRINT_IDS, BLUEPRINT_NAMES, getBuiltInBlueprint · requires 2 · required by 1
-- `cos/blueprint/schema.js` (160 lines) — blueprint/schema.js COMPARTMENT OS — Blueprint Contract Validator  
-  exports BlueprintSchemaError, validateBlueprint · requires 1 · required by 2
-
-#### `cos/ci/`
-
-4 code file(s).
-
-- `cos/ci/ci-keys.smoke.cjs` (85 lines)  
-  requires 3 · required by 0
-- `cos/ci/ci.smoke.cjs` (74 lines) — // 1. validation refuses what it cannot run // 2. a real passing pipeline  
-  requires 1 · required by 0
-- `cos/ci/index.js` (425 lines)  
-  exports MODULE_ID, VERSION, CONFIG_FILENAME, STAGE_KINDS, DEFAULTS, defaultConfig +10 · requires 2 · required by 3 · emits ci:run:finished, ci:run:started, ci:stage:failed, ci:stage:started +1
-- `cos/ci/keys.js` (270 lines)  
-  exports MODULE_ID, VERSION, SSH_PREFIX, SECRET_PREFIX, ALIAS_RE, validateAlias +11 · requires 3 · required by 2
-
-#### `cos/cli/`
-
-1 code file(s).
-
-- `cos/cli/index.js` (152 lines) — cli/index.js COMPARTMENT OS — cos CLI entry point  
-  exports main, parseArgs · requires 3 · required by 0 · tested by `cos/test/test.js`
-
-#### `cos/cli/commands/`
-
-22 code file(s).
-
-- `cos/cli/commands/advance-work-phase.js` (63 lines) — cli/commands/advance-work-phase.js COMPARTMENT OS — cos advance-work-phase <name> <phase>  
-  exports advanceWorkPhase · requires 2 · required by 1 · emits host:compartment:advance-work-phase · tested by `tests/lib/mco04-cos-work-phase.test.js`
-- `cos/cli/commands/archetype.js` (323 lines) — cli/commands/archetype.js COMPARTMENT OS — cos archetype list | show | assign | detect | create  
-  exports runArchetypeCommand, listArchetypesCommand, showArchetype, assignArchetype, detectArchetypeCommand, createArchetype · requires 2 · required by 3 · emits host:archetype:assign, host:archetype:detect, host:archetype:import
-- `cos/cli/commands/blueprint.js` (312 lines) — cli/commands/blueprint.js COMPARTMENT OS — cos blueprint list | show | create | destroy | status | import  
-  exports runBlueprintCommand, listBlueprintsCommand, showBlueprint, createBlueprintInstance, destroyBlueprintInstanceCommand, showBlueprintStatus +1 · requires 3 · required by 2 · emits host:blueprint:create, host:blueprint:destroy, host:blueprint:import
-- `cos/cli/commands/branch.js` (330 lines) — cli/commands/branch.js — cos branch <subcommand> cos branch fork <compartment> [--label <name>] [--from <branchId>]  
-  exports run · requires 2 · required by 1
-- `cos/cli/commands/compare.js` (310 lines) — cli/commands/compare.js — cos compare <subcommand> cos compare run <compartment> <branchA> <branchB> [--cmd <file>] [--label <name>]  
-  exports run · requires 1 · required by 1
-- `cos/cli/commands/create.js` (163 lines) — cli/commands/create.js COMPARTMENT OS — cos create <name>  
-  exports createCompartment, runCreateWizard, toSlug · requires 4 · required by 8 · emits host:compartment:create · tested by `cos/test/test.js`, `tests/lib/mco04-cos-work-phase.test.js`
-- `cos/cli/commands/destroy.js` (82 lines) — cli/commands/destroy.js COMPARTMENT OS — cos destroy <name>  
-  exports destroyCompartment, runDestroyWizard · requires 1 · required by 6 · emits host:compartment:destroy · tested by `cos/test/test.js`
-- `cos/cli/commands/events.js` (121 lines) — cli/commands/events.js COMPARTMENT OS — cos events stream | tail [--n <count>]  
-  exports runEventsCommand, tailEvents, streamEvents, formatEvent · requires 1 · required by 1 · tested by `cos/test/test.js`
-- `cos/cli/commands/hooks.js` (223 lines) — cli/commands/hooks.js COMPARTMENT OS — cos hooks list | show <id> | fire <id>  
-  exports runHooksCommand, listHooks, showHook, fireHook · requires 2 · required by 1 · tested by `cos/test/test.js`
-- `cos/cli/commands/list.js` (129 lines) — cli/commands/list.js COMPARTMENT OS — cos list  
-  exports listCompartments, renderTable · requires 1 · required by 1 · tested by `cos/test/test.js`
-- `cos/cli/commands/map.js` (161 lines) — cli/commands/map.js COMPARTMENT OS — cos map [--json] [--watch]  
-  exports renderMap, renderTree · requires 2 · required by 1 · tested by `cos/test/test.js`
-- `cos/cli/commands/playground.js` (199 lines) — cli/commands/playground.js COMPARTMENT OS — cos playground create | list | status | destroy | promote  
-  exports runPlaygroundCommand, createPlaygroundCommand, listPlaygroundsCommand, playgroundStatusCommand, destroyPlaygroundCommand, promoteCommand · requires 2 · required by 2 · emits host:playgrounds:create, host:playgrounds:destroy, host:playgrounds:promote, host:playgrounds:status
-- `cos/cli/commands/plugin.js` (318 lines) — cli/commands/plugin.js COMPARTMENT OS — cos plugins list | show | add | enable | disable | remove | validate | new  
-  exports runPluginCommand, listPluginsCommand, showPlugin, addPlugin, enablePluginCommand, disablePluginCommand +3 · requires 3 · required by 2 · emits host:plugin:disable, host:plugin:enable, host:plugin:install, host:plugin:remove
-- `cos/cli/commands/run.js` (141 lines) — cli/commands/run.js COMPARTMENT OS — cos run <name> <command>  
-  exports runCommand, attachCompartment · requires 2 · required by 2 · emits comp:process:stdin
-- `cos/cli/commands/schema.js` (126 lines) — cli/commands/schema.js COMPARTMENT OS — cos schema validate  
-  exports validateSchema, validateCommandNodes · requires 3 · required by 1 · tested by `cos/test/test.js`
-- `cos/cli/commands/snapshot.js` (115 lines) — cli/commands/snapshot.js COMPARTMENT OS — cos snapshot take | list | restore | delete  
-  exports runSnapshotCommand, takeCommand, listCommand, restoreCommand, deleteCommand · requires 1 · required by 2
-- `cos/cli/commands/start.js` (59 lines) — cli/commands/start.js COMPARTMENT OS — cos start <name>  
-  exports startCompartment · requires 1 · required by 1 · emits host:compartment:start · tested by `cos/test/test.js`
-- `cos/cli/commands/status.js` (120 lines) — cli/commands/status.js COMPARTMENT OS — cos status <name>  
-  exports showStatus · requires 2 · required by 1 · tested by `cos/test/test.js`
-- `cos/cli/commands/stop.js` (58 lines) — cli/commands/stop.js COMPARTMENT OS — cos stop <name>  
-  exports stopCompartment · requires 1 · required by 1 · emits host:compartment:stop · tested by `cos/test/test.js`
-- `cos/cli/commands/vault.js` (269 lines) — cli/commands/vault.js COMPARTMENT OS — cos vault set | get | list | delete | grant | revoke | audit | export | import  
-  exports runVaultCommand, setCommand, getCommand, listCommand, deleteCommand, grantCommand +4 · requires 3 · required by 2 · emits host:vault:delete, host:vault:export, host:vault:get, host:vault:grant +3
-- `cos/cli/commands/vaultd.js` (167 lines) — cli/commands/vaultd.js COMPARTMENT OS — cos vaultd install | start | stop | status | migrate | config | backup | restore  
-  exports runVaultdCommand, installCommand, startCommand, stopCommand, statusCommand, migrateCommand +3 · requires 3 · required by 1
-- `cos/cli/commands/vm.js` (363 lines) — cli/commands/vm.js COMPARTMENT OS — cos vm status | reset | snapshot | base-image | cleanup  
-  exports runVmCommand, statusCommand, resetCommand, stopCommand, snapshotCommand, baseImageCommand +1 · requires 2 · required by 1
-
-#### `cos/compartment/`
-
-3 code file(s).
-
-- `cos/compartment/guest-agent.js` (117 lines) — qemu-guest-agent (QGA) client. Status: pre-release · §2026-09-21 for cos/testenv's vm backend.  
-  exports GuestAgentClient, GuestAgentError, connectWhenReady · requires 0 · required by 3
-- `cos/compartment/process-runner.js` (389 lines) — compartment/process-runner.js COMPARTMENT OS — Compartment Process Runner  
-  exports spawnProcess, killProcess, getProcess, writeStdin, resolveRuntime · requires 3 · required by 6 · tested by `cos/test/test.js`
-- `cos/compartment/qemu-runtime.js` (679 lines)  
-  exports QEMU_BIN, QEMU_IMG_BIN, qemuSystemBin, qemuImgBin, derivePort, desktopPorts +16 · requires 1 · required by 6 · tested by `tests/helpers/cos-mini-guest.js`
-
-#### `cos/foundation/`
-
-13 code file(s).
-
-- `cos/foundation/axioms.js` (248 lines) — foundation/axioms.js COMPARTMENT OS — Enforced Axioms  
-  exports CosAxiomError, AXIOMS, AXIOM_MAP, enforce, getAxiomDefs · requires 0 · required by 14 · tested by `cos/test/test.js`
-- `cos/foundation/cli-detector.js` (462 lines)  
-  exports detectProject, detectCliCommands · requires 0 · required by 1
-- `cos/foundation/command-schema.js` (111 lines) — foundation/command-schema.js COMPARTMENT OS — Command Node Contract Validator  
-  exports CommandSchemaError, validateCommandNode, isKebab, isSemver · requires 1 · required by 1
-- `cos/foundation/compiler-enum.js` (37 lines) — foundation/compiler-enum.js COMPARTMENT OS — Supported Compiler/Bundler Definitions  
-  requires 0 · required by 2 · tested by `cos/test/test.js`
-- `cos/foundation/constants.js` (144 lines) — foundation/constants.js COMPARTMENT OS — System Constants  
-  requires 1 · required by 20 · tested by `cos/test/test.js`
-- `cos/foundation/enums.js` (93 lines) — foundation/enums.js COMPARTMENT OS — Foundation Enums (spec §59.1)  
-  requires 0 · required by 2
-- `cos/foundation/event-contracts.js` (363 lines) — foundation/event-contracts.js COMPARTMENT OS — Kernel Event Type Registry  
-  exports HOST, COMP, WATCHDOG, REPLAY, PIPE, GIT +15 · requires 0 · required by 35 · tested by `cos/test/test.js`
-- `cos/foundation/file-browser.js` (341 lines) — compartment/file-browser.js COMPARTMENT OS — Compartment File Browser  
-  exports FileBrowser · requires 4 · required by 0 · emits comp:file:written
-- `cos/foundation/fs-layer.js` (390 lines)  
-  exports FsLayer · requires 2 · required by 1
-- `cos/foundation/hook-schema.js` (170 lines) — foundation/hook-schema.js COMPARTMENT OS — Hook Contract Validator  
-  exports HookSchemaError, validateHook, validateEventType, isUUID, isSemver, isEventType +1 · requires 1 · required by 8 · tested by `cos/test/test.js`
-- `cos/foundation/runtime-enum.js` (58 lines) — foundation/runtime-enum.js COMPARTMENT OS — Supported Runtime Definitions  
-  requires 0 · required by 3 · tested by `cos/test/test.js`
-- `cos/foundation/snapshot.js` (356 lines) — compartment/snapshot.js COMPARTMENT OS — Compartment Snapshot Engine  
-  exports SnapshotEngine, SNAP_SCHEMA_VERSION · requires 4 · required by 2 · emits host:snapshot:restored, nexus:snapshot:written
-- `cos/foundation/types.js` (333 lines) — foundation/types.js COMPARTMENT OS — Base Type Definitions  
-  exports DEFAULT_FS_CONFIG, DEFAULT_COMPILER_CONFIG, DEFAULT_WATCHDOG_CONFIG, DEFAULT_COMPARTMENT, DEFAULT_HOOK, DEFAULT_SYSTEM_MAP +10 · requires 0 · required by 4 · tested by `cos/test/test.js`
-
-#### `cos/host/`
-
-4 code file(s).
-
-- `cos/host/event-bus.js` (161 lines) — host/event-bus.js COMPARTMENT OS — Host Event Bus  
-  exports EventBus, createEventBus · requires 4 · required by 2 · tested by `cos/test/test.js`
-- `cos/host/index.js` (220 lines) — host/index.js COMPARTMENT OS — Host Shell Bootstrap  
-  exports createHost · requires 14 · required by 11 · emits comp:process:kill, comp:process:spawn · tested by `cos/test/test.js`, `tests/lib/mco04-cos-work-phase.test.js` +2
-- `cos/host/state-store.js` (218 lines) — host/state-store.js COMPARTMENT OS — State Store  
-  exports StateStore · requires 1 · required by 2 · tested by `cos/test/test.js`
-- `cos/host/system-map.js` (329 lines) — host/system-map.js COMPARTMENT OS — Live System Map  
-  exports SystemMap · requires 5 · required by 2 · emits host:map:updated · tested by `cos/test/test.js`
-
-#### `cos/host/gates/`
-
-7 code file(s).
-
-- `cos/host/gates/archetype.js` (163 lines) — host/gates/archetype.js COMPARTMENT OS — Host Archetype Gates (Phase 21, spec §43/§60)  
-  exports ArchetypeAssignGate, ArchetypeImportGate, ArchetypeDetectGate · requires 5 · required by 2
-- `cos/host/gates/blueprint.js` (152 lines) — host/gates/blueprint.js COMPARTMENT OS — Host Blueprint Gates (Phase 22, spec §44/§61)  
-  exports BlueprintCreateGate, BlueprintImportGate, BlueprintDestroyGate · requires 5 · required by 2
-- `cos/host/gates/compartment.js` (394 lines) — host/gates/compartment.js COMPARTMENT OS — Host Compartment Lifecycle Gates  
-  exports CreateCompartmentGate, StartCompartmentGate, StopCompartmentGate, DestroyCompartmentGate, AdvanceWorkPhaseGate, toSlug · requires 6 · required by 3
-- `cos/host/gates/playgrounds.js` (123 lines) — host/gates/playgrounds.js COMPARTMENT OS — Host Playground Gates (Phase 30, spec §67)  
-  exports PlaygroundCreateGate, PlaygroundDestroyGate, PlaygroundPromoteGate, PlaygroundStatusGate · requires 5 · required by 1
-- `cos/host/gates/plugin.js` (130 lines) — host/gates/plugin.js COMPARTMENT OS — Host Plugin Gates (Phase 29, spec §62-64)  
-  exports PluginInstallGate, PluginEnableGate, PluginDisableGate, PluginRemoveGate · requires 5 · required by 1
-- `cos/host/gates/process.js` (152 lines) — host/gates/process.js COMPARTMENT OS — Process Lifecycle Gates  
-  exports ProcessSpawnGate, ProcessKillGate, ProcessStdinGate · requires 4 · required by 2 · tested by `cos/test/test.js`
-- `cos/host/gates/vault.js` (140 lines) — host/gates/vault.js COMPARTMENT OS — Host Vault Gates (Phase 28, spec §52)  
-  exports VaultSetGate, VaultGetGate, VaultDeleteGate, VaultGrantGate, VaultRevokeGate, VaultExportGate +1 · requires 5 · required by 1
-
-#### `cos/nodes/`
-
-24 code file(s).
-
-- `cos/nodes/archetype.js` (20 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/attach.js` (18 lines)  
-  exports name, version, summary, usage, flags · requires 1 · required by 0
-- `cos/nodes/blueprint.js` (20 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/branch.js` (18 lines) — // branch.js does its own --flag parsing internally, so it needs the // raw, unsplit args (not ctx.args, which has had --flags stripped out).  
-  exports name, version, summary, usage, flags · requires 1 · required by 0
-- `cos/nodes/compare.js` (18 lines) — // compare.js does its own --flag parsing internally, so it needs the // raw, unsplit args (not ctx.args, which has had --flags stripped out).  
-  exports name, version, summary, usage, flags · requires 1 · required by 0
-- `cos/nodes/create.js` (18 lines)  
-  exports name, version, summary, usage, flags · requires 1 · required by 0
-- `cos/nodes/destroy.js` (20 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/events.js` (21 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/hooks.js` (20 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/index.js` (88 lines) — nodes/index.js COMPARTMENT OS — Command Node Listener  
-  exports loadNodes, loadNodesOrThrow, NODES_DIR · requires 1 · required by 3
-- `cos/nodes/list.js` (18 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/map.js` (19 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/nodes.js` (46 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/playground.js` (20 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/plugin.js` (20 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/run.js` (22 lines)  
-  exports name, version, summary, usage, flags · requires 1 · required by 0
-- `cos/nodes/schema.js` (39 lines) — // Default: validate both. --hooks or --commands narrows to one.  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/snapshot.js` (20 lines)  
-  exports name, version, summary, list, restore, usage +3 · requires 1 · required by 0
-- `cos/nodes/start.js` (22 lines)  
-  exports name, version, summary, usage, flags · requires 1 · required by 0
-- `cos/nodes/status.js` (19 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/stop.js` (22 lines)  
-  exports name, version, summary, usage, flags · requires 1 · required by 0
-- `cos/nodes/vault.js` (20 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/vaultd.js` (20 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-- `cos/nodes/vm.js` (21 lines)  
-  exports name, version, summary, usage, flags, type +1 · requires 1 · required by 0
-
-#### `cos/playground/`
-
-5 code file(s).
-
-- `cos/playground/branch.js` (447 lines) — Compartment Branch Engine Status: pre-release  
-  exports BranchEngine · requires 2 · required by 6
-- `cos/playground/compare.js` (325 lines) — Iteration Comparison Engine Status: pre-release  
-  exports CompareEngine · requires 3 · required by 2 · emits comp:compare:done, comp:compare:started
-- `cos/playground/index.js` (13 lines) — Playground barrel  
-  exports BranchEngine, SandboxRunner, CompareEngine · requires 3 · required by 1
-- `cos/playground/llm-lab.js` (509 lines) — NEXUS Lab Status: pre-release  
-  exports LabManager, LabSession, CONDITION_OPS, LAB_TEMPLATES, LAB_STATUS · emits lab.session.created
-- `cos/playground/sandbox.js` (247 lines) — Compartment Sandbox Runner Status: pre-release  
-  exports SandboxRunner · requires 3 · required by 5 · emits comp:sandbox:error, comp:sandbox:exited, comp:sandbox:output-limit, comp:sandbox:started +3
-
-#### `cos/playgrounds/`
-
-5 code file(s).
-
-- `cos/playgrounds/cow-fs.js` (137 lines) — playgrounds/cow-fs.js COMPARTMENT OS — Copy-on-Write Filesystem Layer (spec §67)  
-  exports FS_MODES, copyTree, setupPlaygroundFs, diffAgainstSource · requires 0 · required by 1
-- `cos/playgrounds/factory.js` (248 lines) — playgrounds/factory.js COMPARTMENT OS — Playground Factory (Phase 30, spec §67)  
-  exports PlaygroundError, PLAYGROUND_MODES, createPlayground, destroyPlayground, promoteCompartment, playgroundStatus · requires 6 · required by 2
-- `cos/playgrounds/index.js` (48 lines) — playgrounds/index.js COMPARTMENT OS — Playgrounds Public API (Phase 30, spec §67)  
-  exports PlaygroundError, PLAYGROUND_MODES, createPlayground, destroyPlayground, promoteCompartment, playgroundStatus +2 · requires 1 · required by 1
-- `cos/playgrounds/kernel.js` (93 lines) — playgrounds/kernel.js COMPARTMENT OS — Scoped Nexus Kernel for a Playground (spec §67)  
-  exports createScopedHost · requires 7 · required by 1 · emits comp:process:kill, comp:process:spawn
-- `cos/playgrounds/network-sim.js` (86 lines) — playgrounds/network-sim.js COMPARTMENT OS — Simulated Network for Playgrounds (spec §67)  
-  exports startEchoServer, getEchoServerLog, stopEchoServer · requires 0 · required by 1
-
-#### `cos/plugin/`
-
-5 code file(s).
-
-- `cos/plugin/host-api.js` (193 lines)  
-  exports PluginRuntimeError, createPluginHost, executePluginCode · requires 0 · required by 1
-- `cos/plugin/index.js` (142 lines) — plugin/index.js COMPARTMENT OS — Plugin Public API (Phase 29, spec §62-64)  
-  exports builtInPluginRecords, listPlugins, getPlugin, enablePlugin, disablePlugin, removePlugin +3 · requires 4 · required by 2
-- `cos/plugin/installer.js` (212 lines) — plugin/installer.js COMPARTMENT OS — Plugin Installer (spec §63 Plugin Manager)  
-  exports PluginInstallError, installPlugin, verifyContributionsDeclared, sha256 · requires 4 · required by 1
-- `cos/plugin/registry.js` (447 lines) — plugin/registry.js COMPARTMENT OS — Built-in Plugin Manifest Registry (spec §62.2 / §62.3)  
-  exports RUNTIME_MANIFESTS, COMPILER_MANIFESTS, ALL_BUILTIN_MANIFESTS, BUILTIN_MANIFEST_MAP, BUILTIN_MANIFEST_NAME_MAP, getBuiltInManifest · requires 1 · required by 1
-- `cos/plugin/schema.js` (145 lines) — plugin/schema.js COMPARTMENT OS — Plugin Manifest Validator (spec §62.1)  
-  exports PluginSchemaError, validateManifest, isCompatibleVersion, PLUGIN_TYPE · requires 2 · required by 4
-
-#### `cos/runtime/`
-
-5 code file(s).
-
-- `cos/runtime/preload.cjs` (93 lines)
-- `cos/runtime/register.mjs` (7 lines) — // cos/runtime/register.mjs — installs resolve-hook.mjs (node --import). // module.register exists from Node 20.6; on an older Node the run proceeds
-- `cos/runtime/resolve-hook.mjs` (26 lines) — // cos/runtime/resolve-hook.mjs — ESM resolution fallback for COS runs. // UUID: cos-runtime-resolve-hook-v1-0000-2026-0926-001  
-  exports resolve
-- `cos/runtime/run.js` (302 lines) — COS's JS runtime: run node code from a branch or a workspace with dependency resolution, isolation and port shifting, without  
-  exports capabilities, runNode, runEnv, nodeArgsFor, syntaxCheck, resolveDeps +7 · requires 1 · required by 1 · tested by `tests/modules/test-nexus-self-and-cos-run.test.js`
-- `cos/runtime/syntax-check.cjs` (71 lines) — parse every file given on stdin (JSON array of absolute paths) WITHOUT running any of it, and print one JSON result.
-
-#### `cos/siso/`
-
-5 code file(s).
-
-- `cos/siso/Event.js` (39 lines) — §SUPERSEDED 2026-07-11 — cos/siso/index.js now imports Event from warp/core/Event.js instead of this file. Nothing in the tree requires  
-  exports Event · requires 0 · required by 11 · tested by `cos/test/test.js`
-- `cos/siso/Gate.js` (48 lines) — siso/Gate.js COMPARTMENT OS — SISO Core: Gate  
-  exports Gate · requires 0 · required by 8
-- `cos/siso/Stream.js` (227 lines) — §SUPERSEDED 2026-07-11 — cos/siso/index.js now imports Stream from warp/core/Stream.js instead of this file. Nothing in the tree requires  
-  exports Stream · requires 1 · required by 1 · tested by `cos/test/test.js`
-- `cos/siso/StreamLog.js` (123 lines) — §SUPERSEDED 2026-07-11 — cos/siso/index.js now imports StreamLog from warp/core/StreamLog.js instead of this file. Nothing in the tree requires  
-  exports StreamLog · requires 0 · required by 1
-- `cos/siso/index.js` (44 lines)  
-  exports Event, Gate, Stream, StreamLog · requires 4 · required by 0 · tested by `cos/test/test.js`
-
-#### `cos/spec/`
-
-2 other file(s).
-
-- other: `cos/spec/cos-design-v1.7.0.md`, `cos/spec/cos.spec`
-
-#### `cos/test/`
-
-1 test file(s).
-
-
-#### `cos/testenv/`
-
-8 code · 2 other file(s).
-
-- `cos/testenv/detect.js` (195 lines) — what a repo needs to be tested, for ANY repo. Status: pre-release · §0.39.264  
-  exports plan, testFiles, describe, TEST_FILE_RULES, NOT_A_TEST · requires 0 · required by 2
-- `cos/testenv/environment.js` (150 lines)  
-  exports check, options, normalize, OPTIONS, STACK_PACKAGES · requires 1 · required by 1
-- `cos/testenv/host.js` (101 lines) — where the test VM's pieces live on this machine. Status: pre-release · §0.39.264  
-  exports home, qemu, base, readManifest, writeManifest, installHint +1 · requires 0 · required by 6
-- `cos/testenv/index.js` (260 lines)  
-  exports capabilities, run, runVm, runProcess, missingRuntimes, GUEST_MOUNT +1 · requires 5 · required by 4
-- `cos/testenv/installer.js` (173 lines) — what a run needs, whether this host has it, and installing it on request. Status: pre-release · §0.39.265  
-  exports TOOLS, find, plan, install, status, needsFor +1 · requires 1 · required by 4
-- `cos/testenv/provision.js` (403 lines)  
-  exports provision, userData, provisionScript, desktopLogin, seedServer, download +3 · requires 4 · required by 1
-- `cos/testenv/setup-job.js` (77 lines) — the VM setup as a background job, for the run menu. Status: pre-release · §0.39.264  
-  exports start, status, hostInfo, PROVISION · requires 5 · required by 0
-- `cos/testenv/tar.js` (158 lines) — a directory as a tar archive, in plain JavaScript. Status: pre-release · §0.39.264  
-  exports packDir, DEFAULT_SKIP, TarWriter, _split, _paxRecord · requires 0 · required by 2
-- other: `cos/testenv/setup-vm.bat`, `cos/testenv/setup-vm.sh`
-
-#### `cos/vault/`
-
-4 code file(s).
-
-- `cos/vault/audit-log.js` (60 lines) — vault/audit-log.js COMPARTMENT OS — Persisted Vault Audit Log (spec §52, hk-va-007)  
-  exports DEFAULT_AUDIT_LOG_FILE, appendAuditEntry, readAuditLog · requires 1 · required by 1
-- `cos/vault/crypto.js` (118 lines) — vault/crypto.js COMPARTMENT OS — Vault Encryption (Phase 28, spec §52)  
-  exports getOrCreateMasterKey, encrypt, decrypt, _resetKeyCacheForTests · requires 1 · required by 1
-- `cos/vault/index.js` (251 lines) — vault/index.js COMPARTMENT OS — Vault Public API (Phase 28, spec §52)  
-  exports VaultError, canAccess, setSecret, getSecret, listSecrets, deleteSecret +5 · requires 1 · required by 5
-- `cos/vault/store.js` (87 lines) — vault/store.js COMPARTMENT OS — Encrypted Vault Store (Phase 28, spec §52)  
-  exports readStore, writeStore, putEncryptedValue, getDecryptedValue, deleteEncryptedValue · requires 2 · required by 1
-
-#### `cos/vaultd/`
-
-3 code file(s).
-
-- `cos/vaultd/config.js` (53 lines) — vaultd/config.js COMPARTMENT OS — vaultd Configuration (spec §66)  
-  exports DEFAULT_VAULTD_PORT, VAULTD_PID_FILE, VAULTD_LOG_FILE, VAULTD_CONFIG_FILE, DEFAULT_VAULTD_CONFIG · requires 1 · required by 2
-- `cos/vaultd/daemon.js` (205 lines) — vaultd/daemon.js COMPARTMENT OS — vaultd Daemon Lifecycle (spec §66)  
-  exports VaultdError, startVaultd, stopVaultd, statusVaultd, backupVaultd, restoreVaultd +2 · requires 2 · required by 1
-- `cos/vaultd/server.js` (187 lines) — vaultd/server.js COMPARTMENT OS — vaultd HTTP Server (spec §66)  
-  exports createVaultdServer · requires 3 · required by 0
-
-#### `cos/watchdog/`
-
-3 code file(s).
-
-- `cos/watchdog/actions.js` (60 lines) — watchdog/actions.js COMPARTMENT OS — Watchdog Anomaly Dispatch  
-  exports dispatchAnomaly · requires 2 · required by 1 · emits comp:process:kill, host:compartment:start, host:compartment:stop, watchdog:snapshot:failed
-- `cos/watchdog/monitor.js` (155 lines) — watchdog/monitor.js COMPARTMENT OS — Watchdog Resource Monitor  
-  exports WatchdogMonitor, startMonitoring, stopMonitoring, getMonitor, POLL_INTERVAL_MS · requires 4 · required by 0
-- `cos/watchdog/proc-stats.js` (102 lines) — watchdog/proc-stats.js COMPARTMENT OS — Process Resource Reader (Phase: Watchdog Monitor)  
-  exports readProcStats, readLinuxProcStats, readWin32ProcStats · requires 0 · required by 1
-
-#### `cos/workspace/`
-
-1 code file(s).
-
-- `cos/workspace/index.js` (395 lines)  
-  exports gitWhy, branchWorkspaceAsync, ownRepoAsync, listBranchesAsync, gitAvailableAsync, MODULE_ID +16 · requires 4 · required by 1
-
 #### `docs/`
 
-286 other file(s).
+292 other file(s).
 
-- other: 286 files (.spec, .md, .json, .htm, .yaml, .html)
+- other: 292 files (.spec, .md, .json, .htm, .yaml, .html)
 
 #### `docs/architecture-spec/`
 
@@ -864,9 +469,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `docs/atlases/`
 
-17 other file(s).
+18 other file(s).
 
-- other: 17 files (.md)
+- other: 18 files (.md)
 
 #### `docs/contracts/`
 
@@ -894,7 +499,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `emerge/`
 
-8 code · 4 other file(s).
+8 code · 5 other file(s).
 
 - `emerge/config.js` (19 lines) — real, distinct config for emerge's static defaults. Matches the pattern established by guardian/config.js,  
   exports DEFAULT_PORT, BUS_LOG_MAX · requires 0 · required by 1
@@ -910,7 +515,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   requires 4 · required by 0
 - `emerge/version.js` (37 lines) — single source of truth for spec-compiler version strings. Every module that needs to report its version reads from here.  
   requires 0 · required by 6
-- other: `emerge/SPEC_COMPILER.spec`, `emerge/emerge.spec`, `emerge/package.json`, `emerge/writeback-failures.jsonl`
+- other: `emerge/SPEC_COMPILER.spec`, `emerge/emerge.spec`, `emerge/interaction-contract.json`, `emerge/package.json`, `emerge/writeback-failures.jsonl`
 
 #### `emerge/chunk/`
 
@@ -945,6 +550,33 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports run, dispatch, buildNodePrompt, MODULE_ID, VERSION · requires 1 · required by 1
 - `emerge/compiler/tier-contract.js` (286 lines) — compiler/tier-contract.js THE EXECUTION SEMANTICS OF THE COMPILER.  
   exports TIER_CONTRACT, BOUNDARIES, decideTier, decideTierForSpec, shouldEmitT0, shouldEmitT1 +4 · requires 0 · required by 4 · tested by `emerge/test/reply-engine.test.js`, `emerge/test/tier-contract.test.js`
+
+#### `emerge/core/`
+
+11 code file(s).
+
+- `emerge/core/budget.js` (23 lines) — budgetConstraint(limit) — refuses a transition whose cost would take the run past the limit.  
+  exports createBudget, budgetConstraint · requires 1 · required by 2
+- `emerge/core/constraint.js` (31 lines) — // emerge/core/constraint.js — CONSTRAINT: reduces valid future states (ARCHITECT-SPEC §4.1). // component_id: emerge.core.constraint  
+  exports defineConstraint, evaluate, TYPES · requires 0 · required by 3
+- `emerge/core/field.js` (91 lines) — // emerge/core/field.js — FIELD: the collection of possible states, and the one place a transition becomes real. // component_id: emerge.core.field  
+  exports createField · requires 8 · required by 1
+- `emerge/core/gap.js` (13 lines) — // emerge/core/gap.js — GAP: missing information required to evaluate a constraint (ARCHITECT-SPEC §4.2). // component_id: emerge.core.gap  
+  exports createGap · requires 0 · required by 2
+- `emerge/core/history.js` (40 lines) — verify() -> { ok, brokenAt } — every link and every hash recomputed.  
+  exports createHistory · requires 2 · required by 2
+- `emerge/core/index.js` (20 lines) — // emerge/core/index.js — EMERGE's core: James's Rheon primitives as code (docs/2026-10-02-emerge-field-memory-build-phasemap.spec EM1). // component_id: emerge.core  
+  requires 10 · required by 1
+- `emerge/core/lens.js` (19 lines) — // emerge/core/lens.js — LENS: a projection of the field. Read-only by construction: it is handed a deep-frozen copy. // component_id: emerge.core.lens  
+  exports createLens, snapshot, deepFreeze · requires 0 · required by 2
+- `emerge/core/level.js` (36 lines) — // emerge/core/level.js — LEVEL: every node sits at a level, with its parent and children; its hash is its summary plus // its children's hashes, so a change anywhere below shows at every level above.  
+  exports createLevels · requires 1 · required by 1
+- `emerge/core/observation.js` (19 lines) — // emerge/core/observation.js — OBSERVATION: evidence about states or transitions, with confidence, source and cost. // component_id: emerge.core.observation  
+  exports createObservation · requires 0 · required by 2
+- `emerge/core/seed.js` (29 lines) — id(prefix) — an id drawn from the seed, so ids replay too.  
+  exports createSeed · requires 0 · required by 2
+- `emerge/core/transition.js` (14 lines) — // emerge/core/transition.js — TRANSITION: movement between states. A proposal until the constraints let it through. // component_id: emerge.core.transition  
+  exports createTransition · requires 0 · required by 2
 
 #### `emerge/cortex-query/`
 
@@ -999,14 +631,274 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `emerge/spec/`
 
-2 other file(s).
+3 other file(s).
 
-- other: `emerge/spec/emerge.node-taxonomy.md`, `emerge/spec/emerge.spec`
+- other: `emerge/spec/emerge-core.spec`, `emerge/spec/emerge.node-taxonomy.md`, `emerge/spec/emerge.spec`
 
 #### `emerge/test/`
 
 6 test file(s).
 
+
+#### `emergence/`
+
+3 code · 6 other file(s).
+
+- `emergence/cli.js` (176 lines) — the missing way in. Until now the only way to run text through the loop was 'require('./loop.js')' from another script.  
+  requires 1 · required by 0
+- `emergence/loop.js` (249 lines)  
+  exports createEmergenceLoop · requires 9 · required by 2 · emits causal:record, cfr:create, lattice:record, ledger:commit +1 · tested by `emergence/schemas/test/schemas.test.js`, `emergence/test/loop.test.js`
+- `emergence/server.js` (173 lines) — HTTP + SSE interface to the main Emergence loop. Genuinely additive, not a port: the loop had a CLI (cli.js) but no  
+  exports createServer · requires 1 · required by 0 · tested by `emergence/test/server.test.js`
+- other: `emergence/ARCHITECTURE.md`, `emergence/MANIFEST.json`, `emergence/README.md`, `emergence/emerge-language.spec`, `emergence/emergence.spec`, `emergence/package.json`
+
+#### `emergence/components/associative-lattice/`
+
+1 code · 1 other file(s).
+
+- `emergence/components/associative-lattice/index.js` (220 lines) — associative-lattice -- REBUILT (v0.2), PERSISTED (v0.3), FULLY REHYDRATED (v0.4), SIGMA-SNAPSHOTTED (v0.5).  
+  exports buildLatticeGate, extractInvariants, jaccard · requires 3 · required by 1 · tested by `emergence/test/loop.test.js`
+- other: `emergence/components/associative-lattice/component.spec`
+
+#### `emergence/components/causal-graph/`
+
+1 code · 1 other file(s).
+
+- `emergence/components/causal-graph/index.js` (183 lines) — causal-graph -- REBUILT (v0.2), PERSISTED (v0.3), FULLY REHYDRATED (v0.4), SIGMA-SNAPSHOTTED (v0.5).  
+  exports buildCausalGraphGate · requires 3 · required by 1 · tested by `emergence/test/loop.test.js`
+- other: `emergence/components/causal-graph/component.spec`
+
+#### `emergence/components/cfr-creator/`
+
+1 code · 1 other file(s).
+
+- `emergence/components/cfr-creator/index.js` (94 lines) — cfr-creator — REBUILT. The first version injected stress using a made-up formula (rupture*2000 + decay*800) and called that "creation" — it  
+  exports buildCreatorGate · requires 1 · required by 1
+- other: `emergence/components/cfr-creator/component.spec`
+
+#### `emergence/components/event-ledger/`
+
+1 code · 1 other file(s).
+
+- `emergence/components/event-ledger/index.js` (94 lines) — event-ledger -- WARP wiring around the real, unmodified vendor/rfr2/ledger/index.js FOR VALIDATION, and the real, ported  
+  exports buildLedgerGate · requires 3 · required by 1
+- other: `emergence/components/event-ledger/component.spec`
+
+#### `emergence/components/feedback-loop-buffer/`
+
+1 code · 3 other file(s).
+
+- `emergence/components/feedback-loop-buffer/index.js` (84 lines) — ring-buffer — top-level facade. §3.4 raw execution before interfaces: this is the "library" layer, callable directly with zero API/CLI  
+  exports RingBuffer, RingBufferCore, createRingStream · requires 5 · required by 2 · tested by `emergence/components/feedback-loop-buffer/test/ringbuffer.test.js`
+- other: `emergence/components/feedback-loop-buffer/README.md`, `emergence/components/feedback-loop-buffer/component.spec`, `emergence/components/feedback-loop-buffer/package.json`
+
+#### `emergence/components/feedback-loop-buffer/api/`
+
+1 code file(s).
+
+- `emergence/components/feedback-loop-buffer/api/server.js` (96 lines) — api/server.js — thin HTTP wrapper over the RingBuffer facade. §3.4: raw execution before interfaces — this exists because index.js  
+  exports createServer · requires 1 · required by 0
+
+#### `emergence/components/feedback-loop-buffer/cli/`
+
+1 code file(s).
+
+- `emergence/components/feedback-loop-buffer/cli/ring-cli.js` (95 lines) — ring-cli — talks to a running api/server.js instance over HTTP. §3.4: the last layer built, on top of an already-proven API.
+
+#### `emergence/components/feedback-loop-buffer/core/`
+
+2 code file(s).
+
+- `emergence/components/feedback-loop-buffer/core/RingBufferCore.js` (104 lines) — RingBufferCore — the actual circular buffer. Pure data structure. No I/O, no WARP, no globals. Testable with zero other modules involved,  
+  exports RingBufferCore · requires 0 · required by 2 · tested by `emergence/components/feedback-loop-buffer/test/ringbuffer.test.js`
+- `emergence/components/feedback-loop-buffer/core/wire.js` (123 lines) — connects RingBufferCore to WARP's Event/Gate/Axiom/Stream. Signal shape:  
+  exports buildRingAxioms, buildRingGate, createRingStream, DEFAULT_SIZE_BUDGET_BYTES · requires 2 · required by 1 · emits ring:push · hears ring:pushed · tested by `emergence/components/feedback-loop-buffer/test/ringbuffer.test.js`
+
+#### `emergence/components/feedback-loop-buffer/diagnostics/`
+
+1 code file(s).
+
+- `emergence/components/feedback-loop-buffer/diagnostics/health.js` (39 lines) — §12.6: "a diagnostic engine answers 'is this healthy right now' continuously, in production." A passing test suite proves this  
+  exports computeHealth · requires 0 · required by 1
+
+#### `emergence/components/feedback-loop-buffer/persist/`
+
+2 code file(s).
+
+- `emergence/components/feedback-loop-buffer/persist/EvictionLedger.js` (56 lines) — EvictionLedger — append-only NDJSON record of every eviction. WARP's own StreamLog already records every dispatch step (gate claimed,  
+  exports EvictionLedger · requires 0 · required by 1 · hears ring:evicted · tested by `emergence/components/feedback-loop-buffer/test/ringbuffer.test.js`
+- `emergence/components/feedback-loop-buffer/persist/FilePersistence.js` (59 lines) — FilePersistence — JSON snapshot to disk. Zero dependencies (fs/path only), per §5.5: no database import for something this small earns its  
+  exports FilePersistence · requires 0 · required by 1 · tested by `emergence/components/feedback-loop-buffer/test/ringbuffer.test.js`
+
+#### `emergence/components/feedback-loop-buffer/test/`
+
+2 test file(s).
+
+
+#### `emergence/components/idea-store/`
+
+1 code · 1 other file(s).
+
+- `emergence/components/idea-store/index.js` (205 lines) — idea-store -- refactored, not vendored, from build-tools/rheon-idea-os/storage/IdeaStore.js.  
+  exports buildIdeaStore, EDGE_TYPES · requires 3 · required by 1 · emits idea:add, idea:link · tested by `emergence/components/idea-store/test/idea-store.test.js`, `emergence/schemas/test/schemas.test.js`
+- other: `emergence/components/idea-store/component.spec`
+
+#### `emergence/components/idea-store/test/`
+
+1 test file(s).
+
+
+#### `emergence/components/pattern-engine/`
+
+1 code · 1 other file(s).
+
+- `emergence/components/pattern-engine/index.js` (184 lines)  
+  exports buildPatternEngine, signature · requires 3 · required by 1 · emits pattern:observe · tested by `emergence/components/pattern-engine/test/pattern-engine.test.js`
+- other: `emergence/components/pattern-engine/component.spec`
+
+#### `emergence/components/pattern-engine/test/`
+
+1 test file(s).
+
+
+#### `emergence/components/rfr2-observer/`
+
+3 code · 1 other file(s).
+
+- `emergence/components/rfr2-observer/index.js` (203 lines)  
+  exports buildObserverGate · requires 2 · required by 1 · emits alk.session.capture.start, alk.session.capture.stop, alk.verbal.analysis.sentiment, alk.verbal.chunk.transcribed · tested by `emergence/components/rfr2-observer/test/affective-field.test.js`, `emergence/components/rfr2-observer/test/oscillatory.test.js` +3
+- `emergence/components/rfr2-observer/kernel-adapter.mjs` (43 lines) — the minimal kernel RelationalModule (via ALKModule) actually requires: emit(type, payload, meta) and subscribe(pattern,  
+  exports createMinimalKernel
+- `emergence/components/rfr2-observer/sentiment-scorer.js` (94 lines) — NEW code, not vendored from rfr2. Nothing in the codebase emits 'alk.verbal.analysis.sentiment' (checked — only  
+  exports createSentimentScorer, scoreText, LEXICON · requires 0 · required by 1 · tested by `emergence/components/rfr2-observer/test/sentiment-scorer.test.js`
+- other: `emergence/components/rfr2-observer/component.spec`
+
+#### `emergence/components/rfr2-observer/test/`
+
+6 test file(s).
+
+
+#### `emergence/contracts/`
+
+1 code file(s).
+
+- `emergence/contracts/LLM_CONTRACT.js` (128 lines) — SEAM: LLM_CONTRACT status: draft  
+  exports LLM_CONTRACT
+
+#### `emergence/contracts/test/`
+
+1 test file(s).
+
+
+#### `emergence/schemas/`
+
+7 other file(s).
+
+- other: `emergence/schemas/created.schema.json`, `emergence/schemas/idea-edge.schema.json`, `emergence/schemas/idea.schema.json`, `emergence/schemas/ledger-record.schema.json`, `emergence/schemas/observation.schema.json`, `emergence/schemas/target.schema.json`, `emergence/schemas/tick-result.schema.json`
+
+#### `emergence/schemas/test/`
+
+1 test file(s).
+
+
+#### `emergence/test/`
+
+2 test file(s).
+
+
+#### `emergence/vendor/jaa/`
+
+4 code file(s).
+
+- `emergence/vendor/jaa/FileRefs.js` (99 lines) — ported from Jaa/src/Persistence/FileRefs.php. Mutable name -> hash pointers (git-refs style), atomic write, prefix listing,  
+  exports FileRefs · requires 0 · required by 5 · tested by `emergence/vendor/jaa/test/jaa-port.test.js`
+- `emergence/vendor/jaa/FileStore.js` (56 lines) — ported from Jaa/src/Persistence/FileStore.php. Same scheme exactly: SHA-256(canonical(content)) is the address, content  
+  exports FileStore · requires 1 · required by 5 · tested by `emergence/vendor/jaa/test/jaa-port.test.js`
+- `emergence/vendor/jaa/Recovery.js` (65 lines) — ported from Jaa/src/Persistence/Recovery.php. Write- ahead log: begin() records an intended batch before it's applied,  
+  exports Recovery · tested by `emergence/vendor/jaa/test/jaa-port.test.js`
+- `emergence/vendor/jaa/canonicalize.js` (39 lines) — ported from Jaa/src/Persistence/Canonicalize.php. Not a reimplementation from scratch: same algorithm, translated line  
+  exports canonicalize · requires 0 · required by 1 · tested by `emergence/vendor/jaa/test/jaa-port.test.js`
+
+#### `emergence/vendor/jaa/test/`
+
+1 test file(s).
+
+
+#### `emergence/vendor/resonance-v5.1/`
+
+1 code file(s).
+
+- `emergence/vendor/resonance-v5.1/relational-physics.js` (1293 lines)  
+  exports Theta, EMOTION_SIGNATURES, FrictionDetector, RelationalPhysicsEngine, EmotionEngine, AffectiveFieldSystem +6
+
+#### `emergence/vendor/rfr2/causality/`
+
+1 code file(s).
+
+- `emergence/vendor/rfr2/causality/index.js` (266 lines) — @module causality @uuid 32a3f387-655c-4531-87a5-1b98641a8895  
+  exports EDGE_CAUSAL_EXPLICIT, EDGE_CAUSAL_RULE, EDGE_CAUSAL_ADAPTER, EDGE_OBSERVATIONAL, CAUSAL_EDGE_TYPES, isCausalEdge +3
+
+#### `emergence/vendor/rfr2/cfr-kernel/`
+
+4 code file(s).
+
+- `emergence/vendor/rfr2/cfr-kernel/index.js` (18 lines) — cfr-kernel v1.0.0 Constraint Field Runtime — standalone, decoupled physics kernel.
+- `emergence/vendor/rfr2/cfr-kernel/physics.js` (246 lines) — @module cfr/physics @uuid a1f2e3d4-b5c6-4789-8abc-def012345678  
+  exports DEFAULT_CONFIG, createWorld, stepWorld, injectStress, upsertAttractor, removeAttractor
+- `emergence/vendor/rfr2/cfr-kernel/render.js` (162 lines) — @module cfr/render @uuid c3f4a5b6-d7e8-4901-abcd-f01234567890  
+  exports createCamera, buildMVP, project, drawParticles2D, drawAttractors2D
+- `emergence/vendor/rfr2/cfr-kernel/rewind.js` (166 lines) — @module cfr/rewind @uuid b2e3f4a5-c6d7-4890-9bcd-ef0123456789  
+  exports createTimeline, takeSnapshot, applySnapshot, seekTo, step, goStart +7
+
+#### `emergence/vendor/rfr2/field/`
+
+2 code file(s).
+
+- `emergence/vendor/rfr2/field/ALKModule.js` (63 lines) — // ── Protected helpers ───────────────────────────────────────────────────── // ── Lifecycle ─────────────────────────────────────────────────────────────  
+  exports ALKModule · requires 0 · required by 1
+- `emergence/vendor/rfr2/field/relational.js` (1018 lines)  
+  exports RELATIONAL_VERSION, RELATIONAL_UUID, REL_TRAJECTORY, RUPTURE_TYPE, REPAIR_TYPE, MeaningTracker +5 · requires 1 · required by 0 · emits alk.rel.bid.detected, alk.rel.bid.response, alk.rel.decay.detected, alk.rel.decay.threshold +10
+
+#### `emergence/vendor/rfr2/lattice/`
+
+1 code file(s).
+
+- `emergence/vendor/rfr2/lattice/lattice.js` (233 lines) — @spatial/lattice — lattice.js Associative memory. Resonance-weighted graph.  
+  exports LATTICE_VERSION, DEFAULT_THRESHOLD, LatticeGraph, LatticeEngine · emits spatial.lattice.cluster.updated, spatial.lattice.edge.connected, spatial.lattice.graph.ready, spatial.lattice.node.added · hears spatial.kernel.landscape.updated, spatial.resonance.scored
+
+#### `emergence/vendor/rfr2/ledger/`
+
+1 code file(s).
+
+- `emergence/vendor/rfr2/ledger/index.js` (609 lines)  
+  exports VERSION, IDEA_STATUS, UPGRADE_TYPE, LedgerError, createUpgradeLedger, createIdeaLedger +3 · emits idea:closed, idea:promoted, idea:recorded, upgrade:committed
+
+#### `emergence/vendor/rfr2/liminal/`
+
+11 code file(s).
+
+- `emergence/vendor/rfr2/liminal/assumption.js` (198 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ ASSUMPTION MODULE · modules/assumption/index.js · v1.0.0 ║  
+  exports MODULE_ID, MODULE_VERSION, MODULE_UUID, AssumptionModule · requires 2 · required by 0
+- `emergence/vendor/rfr2/liminal/bus.js` (234 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ LIMINAL BUS · bus/index.js · v1.0.0 ║  
+  exports BUS_VERSION, BUS_UUID, LIM, MODULE, LiminalBus, createBus · requires 0 · required by 9
+- `emergence/vendor/rfr2/liminal/contrastive.js` (95 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ CONTRASTIVE MODULE · modules/contrastive/index.js · v1.0.0 ║  
+  exports MODULE_ID, MODULE_VERSION, MODULE_UUID, ContrastiveModule · requires 2 · required by 0
+- `emergence/vendor/rfr2/liminal/core.js` (353 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ LIMINAL CORE · core/index.js · v1.0.0 ║  
+  exports GAP_TYPE, GAP_TYPE_CRITICALITY, GAP_REASON, GAP_REASON_DESCRIPTION, DOMAIN, FIELD_GAP_SUBTYPE +10 · requires 0 · required by 9
+- `emergence/vendor/rfr2/liminal/existential.js` (165 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ EXISTENTIAL MODULE · modules/existential/index.js · v1.0.0 ║  
+  exports MODULE_ID, MODULE_VERSION, MODULE_UUID, ExistentialModule · requires 2 · required by 0
+- `emergence/vendor/rfr2/liminal/negative-space.js` (195 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ NEGATIVE SPACE MODULE · modules/negative-space/index.js · v1.0.0 ║  
+  exports MODULE_ID, MODULE_VERSION, MODULE_UUID, NegativeSpaceModule · requires 2 · required by 0
+- `emergence/vendor/rfr2/liminal/oscillatory.js` (226 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ OSCILLATORY MODULE · modules/oscillatory/index.js · v1.0.0 ║  
+  exports MODULE_ID, MODULE_VERSION, MODULE_UUID, OscillatoryModule · requires 2 · required by 0
+- `emergence/vendor/rfr2/liminal/relational-gaps.js` (245 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ RELATIONAL MODULE · modules/relational/index.js · v1.0.0 ║  
+  exports MODULE_ID, MODULE_VERSION, MODULE_UUID, RelationalModule · requires 2 · required by 0
+- `emergence/vendor/rfr2/liminal/reversal.js` (114 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ REVERSAL MODULE · modules/reversal/index.js · v1.0.0 ║  
+  exports MODULE_ID, MODULE_VERSION, MODULE_UUID, ReversalModule · requires 2 · required by 0
+- `emergence/vendor/rfr2/liminal/shadow.js` (185 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ SHADOW FIELD MODULE · modules/shadow/index.js · v1.0.0 ║  
+  exports MODULE_ID, MODULE_VERSION, MODULE_UUID, ShadowFieldModule · requires 2 · required by 0
+- `emergence/vendor/rfr2/liminal/structural.js` (96 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ STRUCTURAL MODULE · modules/structural/index.js · v1.0.0 ║  
+  exports MODULE_ID, MODULE_VERSION, MODULE_UUID, StructuralAssumptionModule · requires 2 · required by 0
 
 #### `erosmancer/erosmancer-os/`
 
@@ -1160,7 +1052,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `lib/`
 
-200 code file(s).
+204 code file(s).
 
 - `lib/account-identity-index.js` (61 lines) — a real, stable UUID per (agent, account), not per session. James: "having a uuid for accounts in the cookie  
   exports resolve, touch, forAgent, TABLE, MODULE_ID, VERSION · requires 1 · required by 0
@@ -1185,13 +1077,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `lib/agent-intent-contract.js` (114 lines) — AM1: real, RAID-checkable per-agent intent contracts.  
   exports checkAgentIntentContract, MODULE_ID, VERSION · tested by `tests/modules/test-agent-hat-agnostic.test.js`
 - `lib/agent-memory.js` (259 lines)  
-  exports record, recall, search, agentIdFor, _signature, _summarise +2 · requires 6 · required by 7 · tested by `tests/modules/test-agent-memory.test.js`
+  exports record, recall, search, agentIdFor, _signature, _summarise +2 · requires 6 · required by 8 · tested by `tests/modules/test-agent-memory.test.js`
 - `lib/agent-model.js` (252 lines) — // copilot/lib/agent-model.js — §NEW 2026-09-17 //  
   exports init, stop, observe, observeExclusive, getHypotheses, deriveFromFaultLog +5 · requires 3 · required by 1
 - `lib/agent-notes.js` (92 lines) — the editable per-agent constraint log James asked for directly, distinct from lib/agent-capability-profile.js's passive,  
   exports note, notesFor, allAgents, TABLE, MODULE_ID, VERSION · requires 1 · required by 1
 - `lib/agent-providers.js` (108 lines) — who can wear a hat: one list, one resolver. §0.39.267 — James: "the agent hat is meant to be agnostic, ollama/guardian/copilot."  
-  exports headless, HEADLESS, all, guardianProviders, normalize, isKnown +7 · requires 1 · required by 7 · tested by `tests/modules/test-agent-hat-agnostic.test.js`
+  exports headless, HEADLESS, all, guardianProviders, normalize, isKnown +7 · requires 1 · required by 8 · tested by `tests/modules/test-agent-hat-agnostic.test.js`
 - `lib/agent-pull.js` (99 lines) — the agent PULL toolbox (agnostic; §AP1 agent-intelligence) James: "inject what's needed into agents, and give them the tools to interact  
   exports pull, listPullTools, MODULE_ID, VERSION · requires 4 · required by 3
 - `lib/agent-reach.js` (160 lines) — is this agent ACTUALLY reachable right now? WHY (James, 2026-08-19): "the change agents tool needs to connect to the  
@@ -1214,6 +1106,8 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports init, compile, load, sigma, MODULE_ID, VERSION +2 · requires 7 · required by 0 · emits blueprint.loaded
 - `lib/boot-sequence.js` (211 lines) — lib/boot-sequence.js Gated boot engine. Used by every system.  
   exports BootSequence
+- `lib/build-context.js` (292 lines)  
+  exports pack, rankFiles, interfaceOf, MODULE_ID, VERSION, DEFAULT_BUDGET +6 · requires 3 · required by 2 · tested by `tests/modules/test-build-context.test.js`
 - `lib/build-pipeline.js` (141 lines) — HTTP/SSE front door for the closed build loop §GAP CLOSED 2026-07-07 — the closed loop this wraps already exists and  
   exports startBuild, getBuild, listBuilds · requires 1 · required by 1
 - `lib/build-verify.js` (224 lines) — does the code a spec produced actually work? One verification, graded, every failure attributed to one file with the exact error.  
@@ -1235,7 +1129,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `lib/chunk-build-orchestrator.js` (122 lines)  
   exports buildWithFallback, _isInfraFailure, MODULE_ID, VERSION · requires 4 · required by 0
 - `lib/chunk-glyph.js` (198 lines)  
-  exports VERSION, glyph, glyphCode, glyphProse, glyphData, documentFrequencies · requires 0 · required by 1 · tested by `tests/modules/test-nexus-self-and-cos-run.test.js`
+  exports VERSION, glyph, glyphCode, glyphProse, glyphData, documentFrequencies · requires 0 · required by 2 · tested by `tests/modules/test-nexus-self-and-cos-run.test.js`
 - `lib/chunk-service.js` (94 lines) — chunking consolidated through the RAID engine (James) James: "RAID engine consolidate chunking." Chunking was scattered across FOUR  
   exports chunk, chunkGoverned, CAPABILITY, MODULE_ID, VERSION · requires 1 · required by 2
 - `lib/claude-code-backend.js` (181 lines) — // lib/claude-code-backend.js — Claude Code as an Idearium agent backend (IN2a). // component_id: lib.claude-code-backend  
@@ -1263,7 +1157,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `lib/component-registry.js` (661 lines) — NEXUS Component Registry The self-describing kernel of the NEXUS UI architecture.  
   exports getSchema, register, registerBatch, get, list, update +7 · requires 2 · required by 7 · emits component.deprecated, component.hard_deleted, component.updated, registry.grammar.rebuilt · tested by `tests/modules/nexus-repl-descriptors.test.js`, `tests/modules/test-component-registry.js` +2
 - `lib/component-store.js` (314 lines)  
-  exports markFailed, storeDir, idFor, contractDigest, promptDigest, specsOf +11 · requires 1 · required by 3 · tested by `tests/modules/test-build-verify.test.js`, `tests/modules/test-component-store.test.js`
+  exports markFailed, storeDir, idFor, contractDigest, promptDigest, specsOf +11 · requires 1 · required by 4 · tested by `tests/modules/test-build-context.test.js`, `tests/modules/test-build-verify.test.js` +1
 - `lib/config-governance.js` (223 lines)  
   exports recordConfigChange, MODULE_ID, VERSION, ANOMALY_SIGMA, ANOMALY_SEVERITY · requires 1 · required by 0 · emits anomaly.detected · tested by `tests/modules/test-adversarial-sim.js`, `tests/modules/test-config-governance.js`
 - `lib/connections.js` (169 lines)  
@@ -1277,12 +1171,10 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `lib/consumer-registry.js` (186 lines)  
   exports MODULE_ID, VERSION, init, producers, consumers, consumersDetailed +3 · requires 1 · required by 0 · tested by `tests/modules/test-bus-subscriptions.js`, `tests/modules/test-consumer-registry.js`
 - `lib/context-atlas.js` (381 lines)  
-  exports MODULE_ID, VERSION, DESCRIBED, NOISY, tables, directory +6 · requires 5 · required by 3
+  exports MODULE_ID, VERSION, DESCRIBED, NOISY, tables, directory +6 · requires 5 · required by 5
 - `lib/context-builder.js` (276 lines) — NEXUS System Context Builder Status: pre-release  
   exports buildContext, buildSemanticContext, compressHistory, checkArtifactCache, estimateTokens, MODULE_ID · requires 2 · required by 1
-- `lib/contract-queue.js` (354 lines) — lib/contract-queue.js  
-  exports create, dispatch, accept, complete, fail, pending +11 · requires 1 · required by 2 · tested by `tests/modules/test-adversarial-sim.js`, `tests/modules/test-contract-queue-hardening.js`
-- … 140 more code files — loom.find.tool
+- … 144 more code files — loom.find.tool
 
 #### `lib/activity-log/`
 
@@ -1308,15 +1200,15 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports generate, checkDrift, startDriftListener, NODES_DIR · requires 1 · required by 0
 - `lib/agent-tools/generate-tool-nodes.js` (111 lines) — // lib/agent-tools/generate-tool-nodes.js — real generator + real listener. // James: "in the nodes folder in lib. they all need to be a real yaml  
   exports generate, checkDrift, startDriftListener, NODES_DIR, REAL_AGENTS · requires 1 · required by 0
-- `lib/agent-tools/index.js` (632 lines) — Sovereign agent tool-calling core §ARCHITECTURE — sovereign, not a monolith bolted onto copilot. This  
+- `lib/agent-tools/index.js` (634 lines) — Sovereign agent tool-calling core §ARCHITECTURE — sovereign, not a monolith bolted onto copilot. This  
   exports registerTool, getToolSchemas, executeTool, runToolLoop, TOOLS
 - `lib/agent-tools/naming.js` (97 lines) — the real naming convention James specified: System.toolname.tool — e.g. guardian.build.tool  
-  exports VALID_SYSTEMS, VALID_PROVIDERS, toolName, commandName, agentToolName, parseName · requires 0 · required by 14 · tested by `tests/modules/test-gap-tools.js`, `tests/modules/test-tool-naming-convention.js`
+  exports VALID_SYSTEMS, VALID_PROVIDERS, toolName, commandName, agentToolName, parseName · requires 0 · required by 15 · tested by `tests/modules/test-gap-tools.js`, `tests/modules/test-tool-naming-convention.js`
 - `lib/agent-tools/tool-call-listener.js` (118 lines) — lib/agent-tools/tool-call-listener.js §BUILT 2026-09-08 — James: "the listener for the tools. like when an  
   exports install, recordCall, recordResult, findRecentResult, TABLE, REUSE_WINDOW_MS · hears guardian.tool.called · tested by `tests/modules/tool-call-listener.test.js`
 - `lib/agent-tools/tool-catalog.js` (131 lines) — every registered tool, in plain language. §BUILT 0.39.257 — James: "need the full capabilities, with the /help and tool  
   exports GROUPS, OTHER, groupOf, catalog, search, firstSentence +3 · requires 0 · required by 3
-- `lib/agent-tools/tool-guide.js` (236 lines) — CA2 of the awareness/routing phasemap §PHASEMAP CA2 (docs/copilot-awareness-routing-phasemap.spec). Tool schemas  
+- `lib/agent-tools/tool-guide.js` (237 lines) — CA2 of the awareness/routing phasemap §PHASEMAP CA2 (docs/copilot-awareness-routing-phasemap.spec). Tool schemas  
   exports toolGuide, noteFor, GUIDE_VERSION, NOTES, allNoteNames, _forgedNote
 - `lib/agent-tools/tool-root.js` (41 lines) — which tree a file tool works in. §BUILT 0.39.257 — James: "the toolscope for the agents tab. need the full  
   exports NEXUS_ROOT, rootFor, safeResolve, WHERE_PARAM · requires 0 · required by 2
@@ -1519,8 +1411,8 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 - `lib/agent-tools/tools/idearium/code.js` (283 lines)  
   exports ALL, CODE_TOOLS, READ_ONLY, LISTED, code_map, code_search +10 · requires 2 · required by 1
-- `lib/agent-tools/tools/idearium/repo-chunks.js` (104 lines) — idearium.repo_chunks.tool The compartment agent's way to read a repo's CHUNK NODES for context, when it  
-  exports name, description, parameters, properties · requires 1 · required by 0
+- `lib/agent-tools/tools/idearium/repo-chunks.js` (129 lines) — idearium.repo_chunks.tool The compartment agent's way to read a repo's CHUNK NODES for context, when it  
+  exports name, description, chunk, parameters, properties · requires 1 · required by 0
 
 #### `lib/agent-tools/tools/identity/`
 
@@ -1579,7 +1471,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `lib/agent-tools/tools/query/`
 
-17 code file(s).
+18 code file(s).
 
 - `lib/agent-tools/tools/query/agent-chat-search.js` (120 lines) — lib/agent-tools/tools/agent-chat-search.js — "do you remember when we talked about X" / "do you remember when I talked to Y about X".  
   exports name, description, parameters, properties, enum
@@ -1593,6 +1485,8 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports name, description, parameters, properties, enum
 - `lib/agent-tools/tools/query/file-tree.js` (97 lines) — file_tree tool §WIRED 2026-08-14 — James: "give you a tool to check loom, cortex and  
   exports name, description, parameters, properties · requires 1 · required by 0
+- `lib/agent-tools/tools/query/learn.js` (48 lines) — nexus.learn.tool: learn anything, as a checklist. §0.39.339 SB39. James: "im saying for anything it wants to learn. agnostic tool for context". lib/context-prereqs.js  
+  exports name, description, code, need, path, ask · requires 2 · required by 0
 - `lib/agent-tools/tools/query/meta-query.js` (137 lines)  
   exports name, description, parameters, properties, enum
 - `lib/agent-tools/tools/query/nexus-help.js` (86 lines) — lib/agent-tools/tools/nexus-help.js — "ask co-pilot anything about NEXUS." §WIRED 2026-08-12 (P11 of docs/copilot-full-capability-phasemap.spec).  
@@ -1636,7 +1530,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports name, description, key, toCompartmentName, parameters, properties +1 · requires 2 · required by 0
 - `lib/agent-tools/tools/sandbox/rewind-replay.js` (95 lines) — lib/agent-tools/tools/rewind-replay.js — copilot's access to Clear Glass's RewindEngine.  
   exports name, description, parameters, properties, enum
-- `lib/agent-tools/tools/sandbox/self-repair.js` (231 lines)  
+- `lib/agent-tools/tools/sandbox/self-repair.js` (238 lines)  
   exports name, description, targetFile, parameters, properties, enum
 
 #### `lib/agent-tools/tools/site-settings/`
@@ -1682,7 +1576,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `lib/code-intel/decls.js` (216 lines) — what a statement-start line declares, per language. §0.39.273 CB1. Applied ONLY to lines ./structure.js marks as a statement start at the level being chunked, so a  
   exports matchDecl, signatureOf, KEYWORDS · requires 0 · required by 1
 - `lib/code-intel/index.js` (315 lines) — code intelligence for any repo idearium holds: structural chunks, a card per chunk, ranked search, grep, outlines, and the repo overview. The one module both the import pipeline (writes) and the  
-  exports INTEL_VERSION, CHUNKER_VERSION, LIMITS, planChunks, buildIntel, load +15 · requires 5 · required by 3
+  exports INTEL_VERSION, CHUNKER_VERSION, LIMITS, planChunks, buildIntel, load +15 · requires 5 · required by 5
 - `lib/code-intel/search.js` (245 lines) — ranked search over every chunk of a repo, and exact grep over its files. §0.39.273 CB3. The 0.39.272 repo search matched query tokens against symbol NAMES and file PATHS only — the body of  
   exports buildIndex, query, grep, snippet, pathMatcher, chunkAt +2 · requires 1 · required by 1
 - `lib/code-intel/structure.js` (251 lines)  
@@ -1770,8 +1664,8 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports MODULE_ID, TARGET, isNexus, current, target, preview +3 · requires 3 · required by 1
 - `lib/nexus-self/store.js` (213 lines) — the immutable base: content-addressed blobs and append-only snapshots of the live Nexus tree.  
   exports MODULE_ID, VERSION, storeRoot, sha256, blobPath, putBlob +8 · requires 2 · required by 7 · tested by `tests/modules/test-nexus-atlas-and-glass.test.js`, `tests/modules/test-nexus-inject-approval.test.js` +1
-- `lib/nexus-self/systems.js` (89 lines) — which files of the live tree belong to which system. §0.39.261 — James: "i want a nexus repo in idearium, that immutable with nested  
-  exports ROOT, SYSTEMS, ownerOf, get, names, skipped +3 · requires 0 · required by 11 · tested by `tests/modules/test-component-store.test.js`, `tests/modules/test-nexus-atlas-and-glass.test.js` +1
+- `lib/nexus-self/systems.js` (103 lines) — which files of the live tree belong to which system. §0.39.261 — James: "i want a nexus repo in idearium, that immutable with nested  
+  exports ROOT, SYSTEMS, ownerOf, get, names, skipped +4 · requires 0 · required by 11 · tested by `tests/modules/test-component-store.test.js`, `tests/modules/test-loom-phasemap.js` +2
 
 #### `lib/node-schemas/`
 
@@ -2144,10 +2038,14 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `scripts/`
 
-12 code · 1 other file(s).
+14 code · 1 other file(s).
 
 - `scripts/_register-session-hooks.js` (75 lines) — // One-shot: register the six endpoints built this session that had no // hook declaration (§5.1). Inserts at each array head, matching the
 - `scripts/analyze-methodless-routes.js` (96 lines) — scripts/analyze-methodless-routes.js §WHY — scripts/generate-hooks.js declared 38 of 65 orphaned routes and
+- `scripts/bench-file-prompt.js` (53 lines) — the benchmark behind the file prompt's size claim (§17.11: every performance claim names its benchmark, and reports the unfavourable case beside the favourable one).  
+  requires 1 · required by 0
+- `scripts/bench-warp2-vs-siso.mjs` (82 lines) — // scripts/bench-warp2-vs-siso.mjs — SISO vs WARP 1.x vs WARP 2, one workload, measured here. // James: "can you benchmark it?" · Run: node --expose-gc scripts/bench-warp2-vs-siso.mjs  
+  requires 1 · required by 0
 - `scripts/confirm-build.mjs` (60 lines) — // scripts/confirm-build.mjs — one command that proves the idearium loop works // end to end against a freshly-spawned service. Run: node scripts/confirm-build.mjs
 - `scripts/fix-phasemap-yaml.js` (121 lines) — make a phasemap machine-readable without changing a word of it (0.39.300 LV1). Map: docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec (LV1) — the synthesis's fill order put these first:  
   exports repair, foldAt, foldItem, sameWords
@@ -2273,7 +2171,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `tests/modules/`
 
-511 test file(s).
+526 test file(s).
 
 
 #### `tests/probe/`
@@ -2417,7 +2315,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 2 code · 1 other file(s).
 
 - `ui/eravos/catalog/catalog-ui.js` (441 lines) — ERAVOS CATALOG UI v1.0.0 catalog/catalog-ui.js  
-  requires 1 · required by 0
+  requires 2 · required by 0
 - `ui/eravos/catalog/catalog.js` (122 lines) — ERAVOS CATALOG REGISTRY v1.0.0 catalog/catalog.js  
   emits catalog:removed
 - other: `ui/eravos/catalog/catalog.css`
@@ -2877,28 +2775,47 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `warp/`
 
-3 other file(s).
+1 code · 7 other file(s).
 
-- other: `warp/LICENSE`, `warp/MANIFEST.json`, `warp/plugins.zip`
+- `warp/index.js` (53 lines) — warp — pure functional event-driven devkit, decoupled. Event -> Gate -> Stream -> StreamLog, Axiom as an enforced primitive,  
+  exports Gate, Axiom, Stream, StreamLog, fuseChain, canFuse +11 · requires 5 · required by 10 · tested by `emergence/components/feedback-loop-buffer/test/ringbuffer.test.js`, `emergence/components/rfr2-observer/test/affective-field.test.js` +5
+- other: `warp/CHANGELOG.md`, `warp/LICENSE`, `warp/MANIFEST.json`, `warp/README.md`, `warp/interaction-contract.json`, `warp/package.json`, `warp/plugins.zip`
+
+#### `warp/adapters/`
+
+2 code file(s).
+
+- `warp/adapters/emerge-field.js` (20 lines) — // warp/adapters/emerge-field.js — Emerge's constraints as WARP 2's admit(). EM2: "Every link passes the constraints first (EM1)". // Outside warp/core on purpose: warp/core imports nothing…  
+  exports admitFrom · requires 1 · required by 0
+- `warp/adapters/siso-gates.js` (26 lines) — // warp/adapters/siso-gates.js — WARP 1.x runs unchanged; this records it in WARP 2's ledger. // EM2 (docs/2026-10-02-emerge-field-memory-build-phasemap.spec): "WARP 1.x gates (cos's 30+, loom's…  
+  exports attach
 
 #### `warp/core/`
 
-7 code file(s).
+11 code file(s).
 
 - `warp/core/Axiom.js` (46 lines) — Axiom — an enforced invariant, same standing as Gate. This is the primitive the SISO paper doesn't have. Its constraints  
   exports Axiom, DEFAULT_WEIGHTS · requires 0 · required by 4
+- `warp/core/Engine.js` (111 lines) — // warp/core/Engine.js — WARP 2's engine. James: "still i want to make warp mine" · "no. i want warp 2" // EM2 (docs/2026-10-02-emerge-field-memory-build-phasemap.spec).  
+  exports Engine · requires 3 · required by 1
 - `warp/core/Event.js` (28 lines) — Event — immutable data packet. { type, data, uuid, ts }. Never mutated after creation. Matches SISO's Event shape exactly —  
   exports Event · requires 0 · required by 4
+- `warp/core/Expectation.js` (20 lines) — gapOf(expectation) — a broken expectation as a gap: both ends named.  
+  exports createExpectation, gapOf · requires 0 · required by 2
 - `warp/core/Gate.js` (59 lines) — Gate — pure transform. matches(event) -> bool, transform(event) -> Event[]. v1.0.1 change: transform now RETURNS the events it produces instead of  
   exports Gate · requires 0 · required by 2
 - `warp/core/GateFusion.js` (89 lines) — GateFusion — v1.4 "gate fusion system." Merges an adjacent chain of pure Gates into a single Gate, so Stream.emit()'s recursive dispatch  
   exports fuseChain, canFuse · requires 2 · required by 2
+- `warp/core/Ledger.js` (46 lines) — // warp/core/Ledger.js — the causal ledger: append-only, hash-chained, causal by construction — each link's parent is // recorded at the moment it is known. Zero dependencies (FNV-1a here, like…  
+  exports Ledger, canonical, fnv · requires 0 · required by 2
+- `warp/core/Link.js` (17 lines) — // warp/core/Link.js — WARP 2's atom: a LINK, cause → effect, carrying its field values. Not a message. // EM2 (docs/2026-10-02-emerge-field-memory-build-phasemap.spec). James: "still i want to…  
+  exports createLink · requires 0 · required by 2
 - `warp/core/Stream.js` (299 lines) — Stream — the dispatch loop. Same O(1) signature-lookup discipline as SISO's Stream. The addition: every transform runs through registered  
   exports Stream · requires 0 · required by 3
 - `warp/core/StreamLog.js` (112 lines) — StreamLog — append-only audit trail. Observes, never consumes. Same shape as SISO's log, plus axiom-check entries WARP's Stream writes.  
   exports StreamLog · requires 0 · required by 3
-- `warp/core/index.js` (10 lines)  
-  exports Event, Gate, Axiom, Stream, StreamLog, fuseChain +1 · requires 6 · required by 7 · tested by `warp/test/core.test.js`, `warp/test/digest-regression.test.js` +3
+- `warp/core/index.js` (15 lines) — // WARP 2 (EM2) — the link, the expectation, the causal ledger and the engine. 1.x stays beside it, unchanged.  
+  exports Event, Gate, Axiom, Stream, StreamLog, fuseChain +6 · requires 10 · required by 8 · tested by `warp/test/core.test.js`, `warp/test/digest-regression.test.js` +3
 
 #### `warp/dispatch/`
 
@@ -2915,9 +2832,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `warp/dispatch/digest.js` (42 lines) — content-addressable cache key. Bazel/Buck2's exact pattern: hash(gate signature + versioned axiom set + canonicalized event content)  
   exports computeDigest, _canonicalize · requires 1 · required by 2 · tested by `warp/test/digest-regression.test.js`
 - `warp/dispatch/index.js` (236 lines) — opts in (exactCacheOnFirstSuccess). See docs/warp-devkit-addendum-v1.4.1.spec. Default behaviour unchanged.  
-  exports unifiedDispatch · requires 3 · required by 2 · tested by `warp/test/dispatch.test.js`, `warp/test/v1.1.0-additions.test.js` +1
-- `warp/dispatch/population.js` (182 lines) — scored archive per gate-class. AlphaEvolve/FunSearch pattern, scaled down: keep variants, not just one "best" attempt. Next  
-  exports PopulationStore, DEFAULT_PROMOTE_THRESHOLD, DEFAULT_FITNESS_MIN, defaultPromotionPolicy, reuseCountPromotionPolicy · requires 1 · required by 4 · tested by `warp/test/dispatch.test.js`, `warp/test/v1.1.0-additions.test.js` +1
+  exports unifiedDispatch · requires 3 · required by 3 · tested by `warp/test/dispatch.test.js`, `warp/test/v1.1.0-additions.test.js` +1
+- `warp/dispatch/population.js` (196 lines) — scored archive per gate-class. AlphaEvolve/FunSearch pattern, scaled down: keep variants, not just one "best" attempt. Next  
+  exports PopulationStore, DEFAULT_PROMOTE_THRESHOLD, DEFAULT_FITNESS_MIN, defaultPromotionPolicy, reuseCountPromotionPolicy, firstSuccessPromotionPolicy · requires 1 · required by 5 · tested by `warp/test/dispatch.test.js`, `warp/test/v1.1.0-additions.test.js` +1
 - `warp/dispatch/pregen.js` (53 lines) — v1.4 "pre-generation filter layer." Placement matters: this runs AFTER the exact-cache miss (step 1) and  
   exports preGenerationCheck, DEFAULT_THRESHOLD · requires 1 · required by 2 · tested by `warp/test/v1.4-additions.test.js`
 
@@ -2926,9 +2843,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 2 code file(s).
 
 - `warp/plugins/crystallizer-flatfile.js` (59 lines) — default storage adapter for the exact-cache. Trivial in-memory + optional flat-file persistence. A consuming project  
-  exports FlatFileCrystallizer · requires 0 · required by 3 · tested by `warp/test/dispatch.test.js`, `warp/test/v1.1.0-additions.test.js` +1
+  exports FlatFileCrystallizer · requires 0 · required by 4 · tested by `warp/test/dispatch.test.js`, `warp/test/v1.1.0-additions.test.js` +1
 - `warp/plugins/scorer-default.js` (40 lines) — five-axis fitness (coherence/friction/resonance/ entropy pattern + tokenEfficiency). Independently written — not  
-  exports scoreDefault, estimateTokens · requires 0 · required by 1 · tested by `warp/test/dispatch.test.js`, `warp/test/v1.1.0-additions.test.js` +1
+  exports scoreDefault, estimateTokens · requires 0 · required by 2 · tested by `warp/test/dispatch.test.js`, `warp/test/v1.1.0-additions.test.js` +1
 
 #### `warp/spec/`
 

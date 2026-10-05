@@ -14,6 +14,7 @@
 //   PL-04  round 2 is proven; the run's verdict is proven in 2 rounds; the rounds are recorded (idearium_proof_runs)
 //   PL-05  the chunk keeps its repair in repairHistory; the failed version is never reused (component store)
 //   PL-06  POST /api/repos/:uuid/verify on the fixed repo → proven; on a repo whose spec builds documents → refused
+//   PL-07  (0.39.308) the model receives each file's build context (lib/build-context.js): BUILDS ON, USED BY
 require('../../lib/test-sandbox.js').ensure();
 
 const assert = require('assert');
@@ -175,6 +176,17 @@ async function main() {
       assert.strictEqual(v.verdict, 'proven', JSON.stringify(v).slice(0, 1500));
       const bad = await req('POST', `/api/repos/${docRepo.repo.uuid}/prove`, {});
       assert.strictEqual(bad.ok, false); assert.match(bad.error, /builds documents, not files/);
+    });
+    // §0.39.308 — James: "We need the agents to use it." The model really receives each file's build context.
+    await test('PL-07', 'the model is told each file\'s relations: lib/sum.js who will use it; the test sees lib/sum.js first, in full', () => {
+      const forFile = (f) => PROMPTS.filter(p => (String(p).match(/^Write the complete file `([^`]+)`/m) || [])[1] === f);
+      const sumP = forFile('lib/sum.js').find(p => /\[BUILD CONTEXT/.test(p));
+      assert.ok(sumP, 'lib/sum.js\'s prompt carried a build context');
+      assert.match(sumP, /USED BY[\s\S]*test\/sum\.test\.js — proves sum/);
+      assert.ok(sumP.indexOf('[BUILD CONTEXT') < sumP.search(/^Write the complete file/m), 'beside the task, before it');
+      const testP = forFile('test/sum.test.js')[0];
+      const below = testP.slice(testP.indexOf('FILES ALREADY BUILT BELOW THIS LAYER'));
+      assert.ok(below.indexOf('--- lib/sum.js') >= 0 && below.indexOf('--- lib/sum.js') < below.indexOf('--- package.json'), 'the file the test is about comes first');
     });
   } finally { stop(); }
   console.log(`\n  ${passed} passed, ${failed} failed`);
