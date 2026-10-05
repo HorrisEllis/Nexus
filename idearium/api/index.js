@@ -2029,6 +2029,7 @@ function matchRoute(method, url) {
     // See that file's header for the capability-vs-behaviour limit.
     ['GET',    ['api','repos',    ':uuid','agent'],           'repo.agent.status'],
     ['POST',   ['api','repos',    ':uuid','agent','prompt'],  'repo.agent.prompt'],
+    ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
     ['GET',    ['api','repos',    ':uuid','agent','history'], 'repo.agent.history'],
@@ -5239,6 +5240,7 @@ async function handle(req, res, route, query, body) {
         backend: body.backend || null,
         agent: body.agent || null,
         provider: body.provider || null,   // §PROVIDER — else this compartment's stored choice
+        model: body.model || null,   // §CT3 0.39.349 — a hop he picked in the Code tab (backend, agent and model together)
         noContext: body.noContext === true,
         layer: getRepoLayer(),   // §INJECT — addressed code blocks land in this repo through the one real write path
       });
@@ -5246,6 +5248,18 @@ async function handle(req, res, route, query, body) {
       // error — 200 with ok:false so the CLI can print it in the transcript
       // instead of api() throwing and losing the text.
       return ok(res, r);
+    }
+
+    // §CT3 0.39.349 — James: "the code tab the agent tab, work surface". The docked agent shows the model copilot's door
+    // would choose for this repo's agent (or that Settings pins a provider, so the door is not asked), and the other hops.
+    case 'repo.agent.route': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RA = _require('../../lib/repo-agent.js');
+      const kind = query.kind === 'agent:build' ? 'agent:build' : 'agent:chat';
+      const pinned = RA.getProvider(params.uuid);
+      const d = await RA.doorRoute(kind, null);
+      return ok(res, { ok: !!d.route, kind, route: d.route || [], error: d.route ? null : (d.error || 'copilot gave no route'), pinned: pinned && pinned !== 'auto' ? pinned : null });
     }
 
     // §LATE 0.39.241 — the Agent tab asks for a reply copilot's wait missed.

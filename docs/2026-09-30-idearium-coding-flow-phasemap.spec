@@ -180,3 +180,8 @@ spec:
 # lib/seam/detector.js (code ends in } ; ] or a fence, not punctuation), so each was retried until the cap. Fixed; the cap
 # error names the last check. The Plan panel now shows that build (per file, build the rest / retry) and codegen opens it;
 # an unbuilt file in the Files tab says its chunk's state instead of opening blank.
+#
+# ADDENDUM 2026-10-05 (0.39.349, CT3 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "the code tab the agent tab, work surface, like full activity, enterprise grade?" ·
+# "its just the code tab is meaningless. what about uncommited changes?" W3's cards now also live in the Code tab (idearium/ui/js/code-surface.js): the open file's change above its
+# lines, or every change with no file open. work-surface.js tells the Code tab after Apply / Reject / Revert / Promote
+# (csAfterChange) and when a card opens or closes (csRepaint). The Plan panel's work surface is unchanged.

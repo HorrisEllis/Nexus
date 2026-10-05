@@ -538,6 +538,11 @@
     },
     {
       "method": "GET",
+      "path": "/api/repos/:uuid/agent/route",
+      "_action": "repo.agent.route"
+    },
+    {
+      "method": "GET",
       "path": "/api/repos/:uuid/agent/history",
       "_action": "repo.agent.history"
     },

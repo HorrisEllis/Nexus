@@ -6,7 +6,7 @@ spec:
     release:  0.39.345 (base)
     uuid:     nexus-code-tab-and-one-router-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the Code tab, every model call) · copilot (who answers) · lib/pipeline-routing (the policy, the breakers) · ollama
-    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348)"
+    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348); CT3 done (0.39.349)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -85,7 +85,11 @@ spec:
 
     CT3_the_code_tab_is_the_work_surface:
       layer: ui
-      status: OPEN
+      status: "DONE (0.39.349) — idearium/ui/js/code-surface.js, built from what existed: the files with file-manage's states (modified · new marked, pending greyed, a waiting diff dotted, 'changed only'); the open file with each chunk (code-api outline) marked where it starts, a chunk's card (code-api chunk) on the right; work-surface's diff cards with Apply / Reject for the open file, or all of them with none open; the agent docked — the model copilot's door would choose (new GET /api/repos/:uuid/agent/route; a provider set in Settings is said as pinned, the door not asked), any other hop picked is sent with its backend and model (agent/prompt now passes model), the open file and picked lines as context, the reply naming who answered; activity (tool calls, changes) folds along the bottom. test-code-tab 8/8, six of them driven in Clear Glass. Not here: editing the text by hand stays in the Files tab; the docked agent keeps no history of its own (the Agent tab's history is the record)."
+      pushback_built: >-
+        He said "the code tab the agent tab". The Agent tab stays: its history, late replies, approvals and settings are a
+        whole surface, and folding it in would make the Code tab the clutter he did not want. The Code tab docks a lean
+        agent that asks the same agent through the same route; the Agent tab keeps the record.
       james: '"the code tab the agent tab, work surface, like full activity, enterprise grade?" · "its just the code tab is meaningless. what about uncommited changes?"'
       depends_on: [CT2_it_learns_and_switches]
       files: [idearium/ui/js/app.js, idearium/ui/js/work-surface.js, idearium/repo/work-surface.js]
