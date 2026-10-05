@@ -6,7 +6,7 @@ spec:
     release:  0.39.345 (base)
     uuid:     nexus-code-tab-and-one-router-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the Code tab, every model call) · copilot (who answers) · lib/pipeline-routing (the policy, the breakers) · ollama
-    status:   "MAPPED 2026-10-05; CT1 partial (0.39.346)"
+    status:   "MAPPED 2026-10-05; CT1 done (0.39.347)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -58,7 +58,7 @@ spec:
   phases:
     CT1_one_door_for_models:
       layer: library
-      status: "PARTIAL (0.39.346) — the door: lib/model-door.js (pipeline-routing's policy, not a fourth router), copilot POST /api/route and /api/route/outcome; the four pages (workshop, architect, void, deliver) ask through it, walk its route, fall back on the policy's classes, and send every outcome back — an Ollama model by name, not the bridge's default. test-model-door 4/4. Next: the repo agent and the spec engine through the same door."
+      status: "DONE (0.39.346–0.39.347) — lib/model-door.js serves lib/pipeline-routing's learned policy at copilot (POST /api/route, /api/route/outcome). Every caller goes through it: the pages (_agentAsk), the repo agent (the copilot position takes provider and model from the door; Ollama with no repo model gets the door's; a copilot-routed answer that fails in a fallback class moves to the next hop, switchedFrom), and the spec build (the route from the door, the local plan only when copilot cannot be reached — routeVia says which; each hop reported to the door, no second breaker). test-model-door 6/6, test-pipeline-routing 19/19 (PR-24 updated to the door)."
       james: '"i feel like it should use copilot regardless, have copilot figure it"'
       depends_on: []
       files: [copilot/server.js, lib/pipeline-routing.js, lib/repo-agent.js, idearium/api/index.js]

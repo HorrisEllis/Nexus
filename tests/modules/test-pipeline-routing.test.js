@@ -105,7 +105,8 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
     await api._route('POST', '/api/config', { key: 'routing.mode', value: 'learned' });
     check('PR-23 an unknown block is a 404 naming the blocks', (await api._route('GET', '/api/routing/plan?block=nope')).status === 404);
     const idx = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
-    check('PR-24 speceng.build plans the route and keeps it on the chunk (no hard-coded chatgpt → gemini hop)', /lib\/pipeline-routing\.js'\)\.plan\(\{ preferAgent, block:/.test(idx) && /se\.recordChunkRoute\(params\.uuid, chunk\.uuid, result\.route\)/.test(idx)
+    // §CT1 0.39.347 — the route is planned at copilot's door (/api/route); the local plan() stays as the fallback when copilot is down
+    check('PR-24 speceng.build plans the route (copilot\'s door, the local plan as its fallback) and keeps it on the chunk (no hard-coded chatgpt → gemini hop)', /COPILOT_URL\}\/api\/route`, \{ kind: _PR\.jobTypeOf\(chunk\), preferAgent, block:/.test(idx) && /_PR\.plan\(\{ preferAgent, block: _blk, chunk, policy: routingPolicy \}\)/.test(idx) && /se\.recordChunkRoute\(params\.uuid, chunk\.uuid, result\.route\)/.test(idx)
       && !/fallbackAgent = body\.fallbackAgent \|\| \(preferAgent === 'chatgpt' \? 'gemini' : null\)/.test(idx));
     const lr = await api._route('GET', '/api/routing/learned');
     check('PR-26 GET /api/routing/learned: what each provider:model has done per chunk type', lr.status === 200 && (lr.json.data || lr.json).learned && (lr.json.data || lr.json).learned['build:integration'], JSON.stringify(lr.json).slice(0, 200));

@@ -26,6 +26,8 @@ const _require = createRequire(import.meta.url);
 // §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
+// §CT1 0.39.347 — the repo agent asks copilot's door with idearium's routing policy (routing.* config)
+try { _require('../../lib/repo-agent.js').setRoutingPolicySource(() => _routingPolicy()); } catch (_) {}
 
 // §AX-010 2026-07-10 — idearium hardcoded 127.0.0.1:9000 in four places
 // (ledger x2, register, heartbeat). Resolve the orchestrator from
@@ -6447,9 +6449,18 @@ async function handle(req, res, route, query, body) {
         // the chosen agent, this block's own fallback, the global chain (or local-first / economy / fixed), providers
         // whose breaker is open skipped. A call may still name its own: body.route (a list) or body.fallbackAgent.
         const routingPolicy = _routingPolicy(body.routing || {});
-        const routePlan = Array.isArray(body.route) && body.route.length
-          ? { mode: 'given', route: body.route.map(p => ({ provider: p, why: 'given by the call' })), skipped: [] }
-          : _require('../../lib/pipeline-routing.js').plan({ preferAgent, block: (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null, chunk, policy: routingPolicy });
+        // §CT1 0.39.347 — the route from copilot's door (one place decides, its breakers, what it has learned); the local
+        // plan only when copilot cannot be reached, and then it says so (routeVia)
+        const _blk = (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null;
+        const _PR = _require('../../lib/pipeline-routing.js');
+        let routePlan;
+        if (Array.isArray(body.route) && body.route.length) routePlan = { mode: 'given', route: body.route.map(p => ({ provider: p, why: 'given by the call' })), skipped: [], routeVia: 'the call' };
+        else {
+          const RAx = _require('../../lib/repo-agent.js');
+          const d = await _postJson(`${RAx.COPILOT_URL}/api/route`, { kind: _PR.jobTypeOf(chunk), preferAgent, block: _blk ? { id: _blk.id, agent: _blk.agent, fallback: _blk.fallback || [] } : null, policy: routingPolicy }, 5000);
+          if (d.status === 200 && d.json && d.json.ok && Array.isArray(d.json.route) && d.json.route.length) routePlan = { mode: d.json.mode, route: d.json.route.map(h => ({ provider: h.provider, why: h.why })), skipped: d.json.skipped || [], routeVia: 'copilot' };
+          else routePlan = { ..._PR.plan({ preferAgent, block: _blk, chunk, policy: routingPolicy }), routeVia: `local — copilot could not route (${(d.json && d.json.error) || `status ${d.status}`})` };
+        }
         if (body.fallbackAgent && !routePlan.route.some(r => r.provider === body.fallbackAgent)) routePlan.route.splice(1, 0, { provider: body.fallbackAgent, why: 'given by the call' });
         const fallbackAgent = null;   // the route carries the fallbacks now (0.39.286); kept so nothing below changes shape
 
@@ -6581,6 +6592,8 @@ async function handle(req, res, route, query, body) {
             preferAgent,
             fallbackAgent,
             route: routePlan.route.map(r => r.provider), policy: routingPolicy,   // §0.39.286 RG3
+            // §CT1 0.39.347 — each hop's outcome goes to copilot's door (its breakers, its learning), not a second set here
+            ...(routePlan.routeVia === 'copilot' ? { report: (h) => { const RAx = _require('../../lib/repo-agent.js'); _postJson(`${RAx.COPILOT_URL}/api/route/outcome`, { provider: h.provider, kind: h.jobType, ok: h.ok, class: h.class || null, ms: h.ms, error: h.error || null, policy: routingPolicy }, 5000).catch(() => {}); } } : {}),
             // §BUILT 2026-09-03 — fires the instant a queued job is
             // confirmed on guardian's side, before the (up to 5-minute)
             // poll for a browser-automated NCP provider — see
@@ -6652,7 +6665,7 @@ async function handle(req, res, route, query, body) {
         return ok(res, {
           chunkUuid: chunk.uuid, sectionId: chunk.sectionId, sectionTitle: chunk.sectionTitle,
           agent: preferAgent, status: 'building',
-          route: routePlan.route, routeSkipped: routePlan.skipped, routeMode: routePlan.mode,   // §0.39.286 — what it will try, in order, and why
+          route: routePlan.route, routeSkipped: routePlan.skipped, routeMode: routePlan.mode, routeVia: routePlan.routeVia || null,   // §0.39.286 — what it will try, in order, and why; §CT1 — who decided
           hat: who.hat ? who.hat.name : null, hatSource: who.hatSource, repoUuid: who.repoUuid,   // §0.39.267 — who's wearing what, visible
           agentId: who.agentId, memory: memoryInfo,                                                // §0.39.269 — and what it remembered
         });

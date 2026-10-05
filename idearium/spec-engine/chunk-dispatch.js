@@ -318,16 +318,21 @@ async function _walkRoute(chunkPrompt, chunk, dispatchFn, opts) {
     const jobType = opts.jobType || PR.jobTypeOf(chunk);
     if (r.queued) { hops.push({ provider, outcome: 'queued', ms, jobId: r.jobId || null }); return { ...r, route: hops }; }
     if (r.ok) {
-      PR.breaker.success(provider);
       hops.push({ provider, outcome: 'ok', ms, attempts: r.attempts });
-      if (!r.cacheHit) PR.recordHop({ jobType, provider, outcome: 'ok', ms });   // §0.39.287 — every real hop teaches the learned mode (a cache hit is not the model's work)
+      // §CT1 0.39.347 — routed by copilot's door: the outcome goes there (opts.report); otherwise the local breaker/ledger
+      if (opts.report) { if (!r.cacheHit) opts.report({ provider, jobType, ok: true, ms }); }
+      else {
+        PR.breaker.success(provider);
+        if (!r.cacheHit) PR.recordHop({ jobType, provider, outcome: 'ok', ms });   // §0.39.287 — every real hop teaches the learned mode (a cache hit is not the model's work)
+      }
       return { ...r, agent: r.agent || provider, route: hops, primaryAgent: hops.length > 1 ? hops[0].provider : undefined, primaryError: hops.length > 1 ? hops[0].error : undefined };
     }
     const cls = PR.classify(r);
-    PR.breaker.failure(provider, cls, policy);
+    if (!opts.report) PR.breaker.failure(provider, cls, policy);
     const go = i < opts.route.length - 1 && PR.shouldFallback(cls, policy);
     hops.push({ provider, outcome: 'failed', class: cls, error: r.error || (r.detection && r.detection.summary) || null, ms, attempts: r.attempts, next: go ? 'fallback' : 'stop' });
-    PR.recordHop({ jobType, provider, outcome: 'failed', class: cls, ms, error: hops[hops.length - 1].error });
+    if (opts.report) opts.report({ provider, jobType, ok: false, class: cls, ms, error: hops[hops.length - 1].error });
+    else PR.recordHop({ jobType, provider, outcome: 'failed', class: cls, ms, error: hops[hops.length - 1].error });
     last = r;
     if (go) console.warn(`[chunk-dispatch] ${provider} failed '${chunk.sectionId || chunk.title}' (${cls}) — next: ${typeof opts.route[i + 1] === 'string' ? opts.route[i + 1] : opts.route[i + 1].provider}`);
     if (!go) break;
