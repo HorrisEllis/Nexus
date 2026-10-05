@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.12
+    version:  1.7.13   # 1.7.13 (2026-10-05): FV0 fulfil a taken order — FV1's first slice on what is built
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -693,6 +693,28 @@ spec:
         with its own budget and its own regime. Nothing here touches the Fiverr site or account — intake and delivery
         are by James's hand; Fiverr's own rules on AI-assisted work are his to follow.
       proof: "two fixture jobs in parallel: neither can read the other's files, memory or secrets; each delivers a repo whose proof report cites a passing test for every acceptance line; the second job of a kit costs fewer tokens than the first"
+
+    FV0_fulfil_a_taken_order:
+      layer: service
+      systems: [idearium, cos, clear-glass]
+      value: { score: 5, cost: M, for: [income], why: "a Fiverr order he has taken goes to a proven delivery with what is built today" }
+      status: OPEN
+      depends_on: [PR1_proof_run_the_delivery_checker, PH1_phase_runs_end_in_proof]
+      files: [idearium/lib/orders.js, idearium/api/index.js, idearium/ui/js/orders.js, idearium/repo/proof-run.js]
+      does: >-
+        James, 2026-10-05: "I want idearoum to be able to fulfill fiverr orders." · "No automatically but from taking
+        orders." The first slice of FV1, on what is built: the trigger is James TAKING an order — nothing watches Fiverr,
+        accepts an order or starts on its own. (1) ORDER IN: he hands Idearium the taken order (pastes the buyer's
+        requirements; or, on his click, Clear Glass reads the order page — autofill readPage). (2) CONTRACT: scope,
+        acceptance lines, out of scope — drafted, his yes before anything is built. (3) REPO: the contract becomes a spec
+        and a repo in its own COS compartment (no file crosses between orders). (4) PROOF: each acceptance line is a
+        delivery condition (PR1's checker); the build runs with the build context (BC1/BC2) and the proof loop (PH1:
+        build, verify, the failure back to its agent) until every line has evidence or the attempts run out. (5)
+        DELIVERY: a zip, a README and the proof report (READY / NOT READY, evidence per line) — NOT READY is never
+        packaged as a delivery. He reviews it and delivers on Fiverr himself; talking to the buyer stays his. (6)
+        REVISION: a new contract on the same repo and history. Code gigs first (websites, scripts, scrapers, APIs,
+        bots) — where a check can prove the work. Left to FV1: quotes (EC6), kits (MR8), parallel teams (BT1).
+      proof: "a fixture order: contract drafted and held for a yes; after yes, a repo in its own compartment; every acceptance line a condition; the package holds the code, README and a READY report citing a passing check per line; a fixture order that cannot pass produces NOT READY and no package; nothing runs before the order is handed over"
 
     ST1_settings:
       layer: interface

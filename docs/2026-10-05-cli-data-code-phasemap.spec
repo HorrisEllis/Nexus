@@ -301,6 +301,9 @@ spec:
     - { said: "Yes. No playwright. That's literally what clearglass was born from.", where: "HG7 (AXIOMS §4.1 amended), HG8 (raid → cortex) — done" }
     - { said: "I feel like we don't need loom for phasemaps … what if we hook the node anchor into clear driver … Guardian just works beautifully now.", where: "answered; three phases offered (ClearDriver reads a Guardian anchor, the parser moves to Idearium, the five _nexusAnchor copies) — not mapped until he says" }
     - { said: "There is only 15 systems. Not 27. Any system that's in idearium is a system, nothing more.", where: "SY1 — done" }
+    - { said: "Can you have like a small enterprise grade tutorial built for fiverr … walk me through it.", where: "docs/2026-10-05-fiverr-guide-phasemap.spec FR1, FR2 — paused" }
+    - { said: "I want idearoum to be able to fulfill fiverr orders.", where: "emerge map FV1_client_jobs (already mapped); its first slice FV0_fulfil_a_taken_order" }
+    - { said: "No automatically but from taking orders.", where: "FV0 — the trigger is his taking an order; nothing watches Fiverr or starts on its own" }
 
   open_questions:
     - "Q1: amend docs/AXIOMS-v3.1.md §4.1 from 'UI is tested via Playwright' to 'UI is tested in Clear Glass (clear-glass/src/driver/glass.js)'? A law changes only on your word."
