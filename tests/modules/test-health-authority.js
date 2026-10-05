@@ -115,6 +115,12 @@ const AP   = fs.readFileSync(path.join(ROOT, 'nexus', 'autopilot.js'), 'utf8');
     assert.ok(/is NOT a competing truth/.test(map), 'and exonerate autopilot explicitly');
   });
 
+  // §0.39.327 — James: "i though we switched to heartbeat and pulse system"
+  await test('HA-009', 'the pulse is read first for EVERY system; the /health probe only when orchestrator has not heard one', () => {
+    assert.ok(/if \(cfg\.preferHeartbeat !== false\) \{\s*const lastSeen = await _checkRegistry/.test(DIAG), 'heartbeat-first is the default, not a per-system opt-in');
+    assert.ok(/if \(!online\) \{\s*try \{\s*await new Promise\(\(resolve\) => \{\s*const req = http\.get\(`http:\/\/127\.0\.0\.1:\$\{cfg\.port\}\$\{cfg\.healthPath\}`/.test(DIAG), 'the probe runs only when the pulse did not confirm');
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();
