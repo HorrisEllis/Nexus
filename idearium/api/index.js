@@ -6387,14 +6387,31 @@ async function handle(req, res, route, query, body) {
         // §0.39.269 — memory: what this agent built before (the download manager) and the files already finished in
         // this spec (their exports/requires, so the new file wires to them instead of reinventing them). Beside the
         // prompt, not in it: WARP's cache key stays the chunk's own contract.
-        let memory = '', memoryInfo = null;
+        // §0.39.308 — James: "We need the agents to use it." A file chunk also carries its BUILD CONTEXT
+        // (lib/build-context.js): the interfaces and glyphs of what it builds on, who will use it, its registry
+        // relations when it already exists, proven primitives from other projects, the spec's invariants. Same channel.
+        let memory = '', memoryInfo = null, buildCtx = null;
+        if (chunk.realPath) {
+          try {
+            const L = getRepoLayer();
+            const repo = who.repoUuid ? L.get(who.repoUuid) : null;
+            const repoDir = repo ? (repo.materializeDir || path.join(L.dataDir, 'projects', repo.uuid)) : null;   // same derivation as the Agent tab
+            // buildsOn:false — the file prompt itself carries every lower file (the most relevant in full, the rest by interface)
+            buildCtx = _require('../../lib/build-context.js').pack({ manifest, chunk, repo, repoDir, buildsOn: !chunk.file });
+          } catch (e) { buildCtx = { text: '', chars: 0, sections: {}, sources: { error: e.message }, left: [] }; }
+        }
         try {
-          const siblings = (manifest.chunks || []).filter(c => c.uuid !== chunk.uuid && c.status === 'complete' && c.realPath && typeof c.content === 'string' && c.content.trim())
+          // a file the prompt already carries (every layer below this one) is not listed again as a sibling
+          const LAYER = { kernel: 0, engine: 1, runtime: 2, test: 3 };
+          const below = (c) => !!(chunk.file && c.file && (LAYER[c.file.layer] ?? 9) < (LAYER[chunk.file.layer] ?? 2));
+          const siblings = (manifest.chunks || []).filter(c => c.uuid !== chunk.uuid && c.status === 'complete' && c.realPath && typeof c.content === 'string' && c.content.trim() && !below(c))
             .map(c => ({ path: c.realPath, content: c.content }));
           const m = await _require('../../lib/agent-memory.js').recall({ agentId: who.agentId, siblings,
             query: [chunk.realPath, chunk.title || chunk.sectionId, chunk.sectionDesc].filter(Boolean).join(' ') });
           memory = m.text; memoryInfo = { chars: m.chars, sources: m.sources };
         } catch (e) { memoryInfo = { error: e.message }; }
+        if (buildCtx && buildCtx.text) memory = [buildCtx.text, memory].filter(Boolean).join('\n\n');
+        if (memoryInfo && buildCtx) memoryInfo.buildContext = { chars: buildCtx.chars, sections: buildCtx.sections, sources: buildCtx.sources, left: buildCtx.left.length };
         const route = { hat: who.hat, model: who.model, memory, agentId: who.agentId, compartmentId: who.compartmentId, repoUuid: who.repoUuid, fileName: chunk.realPath || null };
         const dispatchFn = warpFn
           ? (prompt, dispatchOpts) => warpFn(prompt, { ...dispatchOpts, chunkTitle: chunk.title || chunk.sectionId, expectCode, ...route, ...(dispatchOpts && dispatchOpts.model ? { model: dispatchOpts.model } : {}) })
@@ -6461,6 +6478,7 @@ async function handle(req, res, route, query, body) {
               cost: result.cost ?? null,
               component: stored ? `${stored.id}@${stored.version}` : null,
               verifiedAttempts: result.attempts, detectionComposite: result.detection?.composite,
+              buildContext: buildCtx ? { chars: buildCtx.chars, sections: buildCtx.sections } : null,   // §0.39.308 — what it was told about its relations
             });
           } else if (result.queued) {
             // ChatGPT/Claude — chunk will complete via guardian job callback
