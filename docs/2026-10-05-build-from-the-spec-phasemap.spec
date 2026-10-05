@@ -160,8 +160,7 @@ spec:
   found_1_12_0:
     - >-
       Today a new repo starts as a bare spec (workshop, Create repo) or a file tree the agent plans freehand (codegen),
-      or one from a COS archetype or an Eravos mod — never the system template. The skeleton would make every repo the
-      same shape whatever the idea, and leave the agents only the components' own files to write.
+      or one from a COS archetype or an Eravos mod — never the system template.
 
   found_1_10_0:
     - >-
@@ -798,16 +797,10 @@ spec:
       status: OPEN
       james: '"This should be what each new repo builds and slots the idea into like a slot. Agnostic."'
       overlaps: "SB18 (the template used), SB30 (the skeleton), SB24 (loom builds a system), SB29 (the build flow), SB12 (the registry drives the build)"
-      depends_on: [SB30_the_template_is_a_skeleton, SB12_the_registry_is_the_component_list]
+      depends_on: [SB30_the_template_is_a_skeleton]
       files: [idearium/repo/index.js, idearium/api/index.js, lib/file-tree-plan.js, lib/registry-plan.js, idearium/spec-engine/templates/architecture-spec.template.yaml]
       does: >-
-        The coder's reading: every new repo — from the workshop, Create repo, an idea, the spec library — is built as the
-        skeleton first, written without a model; the idea fills its slots: its components, their capabilities, commands
-        and events, its node types and their schemas, all in the registry. Agents then write only each component's own
-        file, one at a time, from its registry entry — the skeleton is never a model's job. Agnostic: the skeleton is the
-        same for every idea, whatever its domain. Parts that do not apply (a server for a library, a UI for a CLI tool)
-        are left out, said in the spec, and added when the idea needs them; the registry, nodes, schemas, spec, atlas and
-        ledger are always there.
-      proof: "two unrelated fixture ideas each get the same skeleton, written without a model, with only their own registry, nodes and component files different"
+        Every new repo builds the skeleton (the template), and the idea slots into it.
+      proof: "two unrelated fixture ideas each get the skeleton, with their own idea slotted in"
       conditions:
-        - { says: "two unrelated fixture ideas each get the same skeleton, written without a model, with only their own registry, nodes and component files different", check: { kind: tests, run: "node tests/modules/test-repo-is-the-skeleton.test.js" } }
+        - { says: "two unrelated fixture ideas each get the skeleton, with their own idea slotted in", check: { kind: tests, run: "node tests/modules/test-repo-is-the-skeleton.test.js" } }

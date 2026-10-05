@@ -24,9 +24,6 @@ spec:
       hook/wire schema), and guardian/lib/node-registry.js (the real
       JAA-backed per-type index + folder watcher + ledger). This spec
       is the seam between them, not a fourth competing description.
-      Since 0.10.0 (James's template): a system starts as a skeleton — the tree, the registry, the schemas and only the
-      minimal code that makes them live — and expands by adding nodes; every component connects only to the registry;
-      its .spec is the living model; its atlas is written in the atlas template, each part detailed and referenced.
     written_from: >
       idearium/spec-engine/templates/genesis.spec, loom/schema/
       {component,hook,wire}.js, guardian/lib/node-registry.js,
@@ -99,10 +96,6 @@ spec:
       - AX-002  no silent failures — bus event on error (shared, applies unchanged)
       - AX-004  self-describing — a repo's registry is served at GET /api/repos/:uuid/architecture and written as nodes/
       - AX-010  sovereign transport — no cross-system require() into another system's data/ or ledger/
-      - 'SKELETON_FIRST  a system is built as a skeleton — the template''s tree, registry and schemas, and only the minimal code that makes them live — then expands by adding nodes, not by rewiring code (James: "a skeleton, only using the minimal code. Then expands from there.")'
-      - 'REGISTRY_IS_THE_SPINE  every component connects only to the registry, never to another component; the registry is asked for the entries a component needs, never handed over whole (James: "each component only needs to connect to the registry.")'
-      - 'COMPONENT_SHAPE  each component has at least one capability, each capability at least one command, each command its events — each a node; each capability''s bundle references its related nodes, never copies them (genesis axiom COMPONENT_SHAPE)'
-      - 'ATLAS_IS_DETAILED  a system''s atlas is written in the atlas template, each component, capability, command, route, event and node type detailed and referenced — never a bare list (James: "not a list, each detailed, and referenced. All expanded.")'
       - SMALLEST_UNIT  one component = one file = one intent, nothing bundled into a single file (genesis.spec, restated here as load-bearing, not just inherited)
       - SPEC_IS_LIVING_MODEL  a .spec is edited as the real system changes, in place, with version_history as the audit trail — not a one-time snapshot (already the real behavior of clear-glass.spec, warp.spec, etc.; stated explicitly here so it's a rule, not an inferred convention)
       - "HARDLINE_AS_LITTLE_AS_POSSIBLE  code contains the smallest possible set of deterministic, unchanging lines — anything that can plausibly change (a value, a route, a rule, a threshold) is a node, not a literal in a file. This is CONFIG_OUTSIDE_CODE (genesis.spec) generalized past config: not just adjustable settings, ANY dynamic or changeable fact belongs in a node so it can be declared, watched, indexed, and ledgered like every other node — never buried in source where changing it means editing and redeploying code instead of dropping or editing a node file."
@@ -355,9 +348,9 @@ spec:
       date: 2026-10-05
       summary: >-
         James's system template (0.39.314–0.39.316): the spec points at the template (tree, registry, rules) and its
-        schemas instead of restating them; axioms SKELETON_FIRST, REGISTRY_IS_THE_SPINE, COMPONENT_SHAPE and
-        ATLAS_IS_DETAILED; NODE_STATUSES are the template's (open, stub, unproven, built); NODE_KINDS gain capability,
-        command, event, route, toast and contract. His words in meta.james.
+        schemas instead of restating them; NODE_STATUSES are the template's (open, stub, unproven, built); NODE_KINDS
+        gain capability, command, event, route, toast and contract. His words in meta.james. (Four axioms added in
+        0.39.316 were the coder's framing of his explanation, not his — removed in 0.39.317.)
     - version: 0.9.0
       date: 2026-10-05
       summary: >-
