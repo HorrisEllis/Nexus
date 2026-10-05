@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.13.0
+    version:  1.14.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -833,3 +833,20 @@ spec:
       proof: "the tool's reindex action posts to the route; an unindexed persona tells the agent to run it, not to ask"
       conditions:
         - { says: "the agent can run the pipeline", check: { kind: tests, run: "node tests/modules/test-agent-context-always.test.js" } }
+
+    SB34_context_is_the_code_tab_the_graphs_and_memory:
+      layer: api
+      status: "DONE (1.14.0, 0.39.326) — lib/repo-agent.js contextFor: named file → registry card; the Code tab's search (lib/code-intel query) → the best chunks with their cards and the top chunk's code; the graph around the top file; nothing → the code-intel overview. _withMemory: context-atlas searched every send (not only with its block on). The 'all'/'project' scopes keep lib/repo-context.js first. Found and fixed: (a) the prompt rendered context only of kind 'card' — code and map went to blocks off by default, so SB32's map never reached the model; now every kind reaches it; (b) lib/registry-harness.js read the graph's inverse edges (depended_on_by) as requires, so every dependency looked required both ways. test-agent-context-always 5/5 on a pipeline-built index."
+      james: '"im not saying the atlas. im saying the graphs, chunking, the code tab, all of it, actually look at the context retrival."'
+      found: "the default (harness) scope's context was the registry card of a file the question NAMES, nothing else: it never used the chunk index, the Code tab's search (lib/code-intel: BM25 over every chunk's name, doc, path and body), the chunk cards (uses, used by, tests), the graph, or memory (lib/context-atlas — off unless its block is switched on). SB32's fix searched file names; that is replaced here."
+      depends_on: [SB33_the_agent_runs_the_pipeline]
+      files: [lib/repo-agent.js, lib/code-intel/index.js, lib/context-atlas.js, lib/registry-harness.js]
+      does: >-
+        One retrieval, every send, every scope: (1) a file the question names → its registry card; (2) the Code tab's
+        search over the chunk index → the best chunks, each with its card (what it uses, what uses it, its tests) and the
+        lines that matched, the top chunk's code; (3) the graph: what the top file requires and what requires it; (4)
+        memory and graphs (context-atlas), always, not only when its block is on; (5) nothing found → the code-intel
+        overview (folders, most-used files, entry points). Within a budget a small model can hold.
+      proof: "a question naming no file gets the chunk whose code answers it, with its card and code; the memory search runs with its block off; an unmatched question gets the overview"
+      conditions:
+        - { says: "context from the code tab, the graphs and memory", check: { kind: tests, run: "node tests/modules/test-agent-context-always.test.js" } }
