@@ -377,6 +377,7 @@ const SUITES = [
   'test-agent-index-ready.test.js',   // 0.39.335 SB35 — the store flushes under constant writes; a lost nexus mark is updated in place; every agent send reads an indexed directory
   'test-agent-tools-every-backend.test.js',   // 0.39.336 SB36 — one tool-call protocol for ollama and guardian; a written call is run; the code tools read the indexed directory
   'test-copilot-workset.test.js',   // 0.39.337 SB37 — the working set: reads into a JSON file, rounds send its synthesis within a budget
+  'test-context-prereqs.test.js',   // 0.39.338 SB38 — the questions first: a checklist per question, found in the index or past conversations, else asked
   'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree
   'test-emerge-core.test.js',   // 0.39.321 EM1 — Emerge core: rejected by id, a gap names its input, a lens cannot write, one seed one history
   'test-route-contracts.test.js',   // 0.39.320 EV0 (2)(3) — every served route in its system's contract, and nothing more

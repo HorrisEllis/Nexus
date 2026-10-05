@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.17.0   # 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.18.0   # 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -1021,3 +1021,32 @@ spec:
       proof: "a run whose tool results add up to far more than the window sends a prompt that never grows past the budget, still carries the question and the persona, and keeps the line that answers it; the JSON file holds every raw result and the answer"
       conditions:
         - { says: "the working set keeps the signal", check: { kind: tests, run: "node tests/modules/test-copilot-workset.test.js" } }
+
+    SB38_prerequisites_the_questions_first:
+      layer: library
+      status: "DONE (0.39.338) — mapped before code. lib/context-prereqs.js check(); repo-agent prereqsFor() in dispatch (recorded as gaps) and the preview (not recorded); the editable 'prereqs' block before the question. Past conversations: this repo's agent, then copilot — never another project's (found while testing: the first cut searched every agent, and one project's conversation answered another's question). test-context-prereqs 7/7."
+      james: '"What if instead of just a tool, it''s a compartment, like the work surface is in COS. Right? It would be like ask a question or or a intent or whatever. And then predetermine what context is needed. So make like prerequisites. Then uh, use those as a checklist for context. And then then use that to build the the uh, the work set index." · "Yeah, the, the prerequisites, the questions, right? That way, then if it can''t, if it can''t find context, then it''ll, it''ll just ask me the rest, or reference the past conversations"'
+      decided: >-
+        The coder's input, given before this was mapped: not a COS compartment per question (gathering context only reads;
+        a compartment is for a task that writes and runs — a build, an order); the checklist is made by Nexus from the
+        index, not by the 3B model; every item is checkable against chunk ids. James answered on the prerequisites and
+        what happens to the ones not found; the compartment question was not answered — left as the coder proposed.
+      found: >-
+        lib/shadow.js already declares what a step must produce and reads each absence as a gap (gap-field) — the
+        checklist's settle is that. lib/code-intel answers what a chunk uses, what uses it and its tests (cards);
+        lib/build-context.js finds the spec's MUST/NEVER lines; lib/agent-memory.js search() reads past conversations
+        (every agent's exchanges in the download manager). Nothing turned a question into what it needs before searching.
+      depends_on: [SB37_the_working_set_signal_to_noise]
+      files: [lib/context-prereqs.js, lib/repo-agent.js, lib/repo-prompt-blocks.js]
+      does: >-
+        Before each send: (1) the question's intent — explain, change, debug, build — by its words, no model; (2) its
+        target, from the Code tab's search; (3) the prerequisites that intent needs of that target — explain: the chunk,
+        what it uses, what uses it; change: + its tests and what it must be (the acceptance, from the question); debug:
+        + the error as it appeared; build: where it goes and what exists like it. (4) Each is looked for in order: the
+        index (Nexus reads it, no model), then past conversations (agent-memory search); (5) what is still missing is
+        not guessed: it is asked — the prompt's editable 'prereqs' block lists the checklist and tells the agent to ask
+        James those questions; a gap is recorded (lib/shadow.js). His answer is the next exchange, so the next time the
+        same question is asked it is found in past conversations. The checklist travels with the run (ctx.prereqs).
+      proof: "an explain question gets its chunk, uses and users checked off from the index; a change question that does not say what it should do asks for it; an item found only in an earlier conversation is checked off from there; what is not found is asked, never guessed, and recorded as a gap"
+      conditions:
+        - { says: "the questions first", check: { kind: tests, run: "node tests/modules/test-context-prereqs.test.js" } }
