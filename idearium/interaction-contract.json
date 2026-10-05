@@ -552,6 +552,11 @@
       "_action": "repo.agent.tool.events"
     },
     {
+      "method": "POST",
+      "path": "/api/repos/:uuid/agent/stream",
+      "_action": "repo.agent.stream"
+    },
+    {
       "method": "GET",
       "path": "/api/ollama/check",
       "_action": "ollama.check"

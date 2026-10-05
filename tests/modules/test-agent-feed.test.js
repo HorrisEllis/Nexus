@@ -137,7 +137,7 @@ const until = async (fn, ms = 3000) => { const t = Date.now() + ms; while (!fn()
   const ua = APP.indexOf('const AGENT_FEED = new Map();'), ub = APP.indexOf('function _agentTranscript(uuid) {');
   let painted = 0;
   const uctx = { CURRENT_API_REPO: { uuid: 'abc' }, escapeHtml: (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])),
-    document: { getElementById: () => ({ dataset: { repo: 'abc' }, set innerHTML(v) { painted++; this._h = v; }, get innerHTML() { return this._h; }, querySelector: () => null }) } };
+    document: { getElementById: () => ({ dataset: { repo: 'abc' }, set innerHTML(v) { painted++; this._h = v; }, get innerHTML() { return this._h; }, querySelector: () => null }), querySelectorAll: () => [] } };   // 0.39.356 LS4 — the live slots (none here)
   vm.createContext(uctx);
   vm.runInContext(APP.slice(ua, ub) + '\nthis._agentFeedIn = _agentFeedIn; this._agentFeedHtml = _agentFeedHtml; this.AGENT_FEED = AGENT_FEED;', uctx);
   await test('AF-12', 'the tab keeps the anchor and mutation count from dom pulses without a log row per pulse', () => {

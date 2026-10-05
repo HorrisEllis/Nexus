@@ -4242,7 +4242,10 @@ function _agentFeedIn(p) {
   // transcript streamer, then the reply watch, which restarted from 0 and sent the whole reply as a
   // "delta"). A chunk that IS the whole reply (its length is fullLen), or that restates what is shown
   // and continues it, replaces; a chunk the shown text already ends with is a repeat and is dropped.
-  if (p.event === 'chunk' && typeof p.text === 'string') {
+  if (p.event === 'chunk' && typeof p.text === 'string' && p.source === 'ollama') {
+    // §0.39.356 LS3 — copilot's deltas are exact (cut from the bridge job's own text by its length): appended as they come
+    st.text = (st.text + p.text).slice(-20000); st.textLen = p.fullLen || st.text.length;
+  } else if (p.event === 'chunk' && typeof p.text === 'string') {
     const t = p.text;
     if (p.reset || (p.fullLen && t.length === p.fullLen) || (st.text && t.startsWith(st.text))) st.text = t;
     else if (st.text && st.text.endsWith(t)) { /* repeat of the tail — already shown */ }
@@ -4260,11 +4263,12 @@ function _agentFeedIn(p) {
       p.event === 'complete' && p.chars ? `${p.chars}ch` : null].filter(Boolean).join(' · ');
   // A 'dom' pulse updates the live header; it is not worth a log row each second. Streamed chunks every 500 ms
   // show in the live text below, not as a row each.
-  if (!(p.event === 'progress' && p.stage === 'dom') && !(p.event === 'chunk' && p.source === 'transcript')) {
+  if (!(p.event === 'progress' && p.stage === 'dom') && !(p.event === 'chunk' && (p.source === 'transcript' || p.source === 'ollama'))) {
     st.rows.push({ ts: p.guardianTs || Date.now(), ev, detail, bad: p.event === 'error' || p.event === 'timeout' || (p.event === 'gate' && p.state === 'failed') });
     if (st.rows.length > AGENT_FEED_MAX) st.rows.splice(0, st.rows.length - AGENT_FEED_MAX);
   }
   if (CURRENT_API_REPO && CURRENT_API_REPO.uuid === p.repoUuid) _agentFeedPaint(p.repoUuid);
+  if (typeof agentLivePaint === 'function') agentLivePaint(p.repoUuid);   // §0.39.356 LS4 — the Code tab and the work surface
 }
 function _agentFeedHtml(uuid) {
   const st = _agentFeedState(uuid);
@@ -4294,6 +4298,34 @@ function _agentFeedPaint(uuid) {
   if (panel && panel.open === false) return;   // collapsed: the summary line is all that shows — no repaint of the body
   el.innerHTML = _agentFeedHtml(uuid);
   const rows = el.querySelector('[data-feed-rows]'); if (rows) rows.scrollTop = rows.scrollHeight;
+}
+
+// ── §0.39.356 LS4 — the agent writing, live, in the Code tab and the Plan's work surface ──────────────────
+// James: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel and code tab."
+// The same feed state as the Agent tab (one state, AGENT_FEED): a browser agent through guardian (its DOM mutations, the
+// node it reads the reply from, the reply), an Ollama model through copilot (LS1–LS3, its text as it writes). Any
+// element with data-al="<repo uuid>" is a slot; every frame repaints the slots in place. A slot scrolled up stays put.
+function agentLiveHtml(uuid) {
+  const st = _agentFeedState(uuid);
+  if (!st.jobId) return '<div class="al-head"><span class="al-dot"></span><span class="al-dim">the agent is not writing — when it builds, what it writes streams here</span></div>';
+  const a = st.anchor, last = st.rows[st.rows.length - 1];
+  const attrs = a && a.attrs ? Object.entries(a.attrs).map(([k, v]) => `${k}=${v}`).join(' ') : '';
+  return `<div class="al-head"><span class="al-dot${st.generating ? ' on' : ''}"></span><b>${st.generating ? 'writing' : 'idle'}</b>
+      ${st.provider ? `<span>${escapeHtml(st.provider)}</span>` : ''}<span class="al-dim">job ${escapeHtml(String(st.jobId).slice(0, 8))}</span>
+      ${st.mutations != null ? `<span class="al-dim">mutations ${st.mutations}</span>` : ''}
+      ${a ? `<span class="al-anchor" title="${escapeHtml(attrs)}">⌖ ${escapeHtml(a.path || a.tag || '')}</span>` : ''}
+      <span class="al-dim">${st.textLen || st.text.length}ch</span>
+      ${last ? `<span class="al-grow"></span><span class="al-dim${last.bad ? ' al-bad' : ''}">${escapeHtml(last.ev)}${last.detail ? ` · ${escapeHtml(last.detail)}` : ''}</span>` : ''}</div>
+    ${st.text ? `<pre class="al-text">${escapeHtml(st.text.slice(-6000))}</pre>` : ''}`;
+}
+function agentLivePaint(uuid) {
+  for (const el of document.querySelectorAll(`[data-al="${uuid}"]`)) {
+    const old = el.querySelector('.al-text');
+    const follow = !old || old.scrollTop + old.clientHeight >= old.scrollHeight - 24;   // at the bottom: follow the newest line
+    const keep = old ? old.scrollTop : 0;
+    el.innerHTML = agentLiveHtml(uuid);
+    const t = el.querySelector('.al-text'); if (t) t.scrollTop = follow ? t.scrollHeight : keep;
+  }
 }
 
 function _agentTranscript(uuid) {

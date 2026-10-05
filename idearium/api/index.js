@@ -1784,6 +1784,7 @@ const ROUTE_CAP = {
   'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
+  'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -2094,6 +2095,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
+    ['POST',   ['api','repos',    ':uuid','agent','stream'],  'repo.agent.stream'],      // §0.39.356 LS3 — copilot sends what the model writes, as it writes it
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
     ['GET',    ['api','repos',    ':uuid','agent','history'], 'repo.agent.history'],
@@ -5363,6 +5365,25 @@ async function handle(req, res, route, query, body) {
       ring.push(ev); if (ring.length > 80) ring.splice(0, ring.length - 80);
       _toolEvents.set(params.uuid, ring);
       getIdeaOS().emit('idearium.repo.agent.tool', ev);
+      return ok(res, { ok: true });
+    }
+    // §0.39.356 LS3 — James: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel
+    // and code tab." What an Ollama model writes in copilot's tool loop arrives here (copilot streamSink, LS2) and goes out
+    // as idearium.repo.agent.feed — the guardian feed's event and its shape (0.39.244) — so the Agent tab, the Code tab and
+    // the work surface read one feed whatever the model. SSE only: several a second, observations, not state.
+    case 'repo.agent.stream': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const EVENTS = ['dispatched', 'chunk', 'complete', 'error', 'timeout'];
+      if (!body || !EVENTS.includes(body.event) || !body.jobId) return err(res, 400, `event (${EVENTS.join(' | ')}) and jobId are required`);
+      const model = body.model ? String(body.model).slice(0, 120) : null;
+      getIdeaOS().broadcast('idearium.repo.agent.feed', {
+        repoUuid: params.uuid, event: body.event, jobId: String(body.jobId).slice(0, 120), source: 'ollama',
+        provider: model ? `ollama · ${model}` : 'ollama', model, session: body.session ? String(body.session).slice(0, 120) : null,
+        ...(typeof body.text === 'string' ? { text: body.text.slice(-20000) } : {}),
+        ...(Number(body.fullLen) > 0 ? { fullLen: Number(body.fullLen) } : {}),
+        ...(Number(body.chars) > 0 ? { chars: Number(body.chars) } : {}),
+        ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}),
+      });
       return ok(res, { ok: true });
     }
     case 'repo.agent.tool.events': {

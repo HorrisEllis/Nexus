@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     cli-data-code
-    version:  1.5.0   # 1.5.0: PB1–PB5 a clicked phase actually builds (0.39.355) · 1.4.0: SY2 cos is its own system (0.39.341) · was 1.3.0
+    version:  1.6.0   # 1.6.0: LS1–LS4 the agent's writing live in the Code tab and the work surface (0.39.356) · 1.5.0: PB1–PB5 a clicked phase actually builds (0.39.355) · 1.4.0: SY2 cos is its own system (0.39.341) · was 1.3.0
     date:     2026-10-05
     release:  0.39.310 (base) → 0.39.311
     uuid:     nexus-cli-data-code-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -362,6 +362,65 @@ spec:
       not_in_this_phase: "BL8 itself — it names no files, and moving every spec out of docs/ breaks the tests that read them by path; it needs its file list (his call) before any agent can build it"
 
 
+    # ── 2026-10-05: James — "you're building the capability, not the spec right? need to be able to build phases. i need
+    #    to be able to add features, capabilites, expand, etc, by mapping to specs." · "also the dom mutator/node anchor,
+    #    or ollama or cpilot stream live into the worksurface panel and code tab."
+    #    Read before mapping: the guardian feed (0.39.244 — DOM mutations, the reply's node anchor, the reply text) already
+    #    reaches idearium as idearium.repo.agent.feed, and only the Agent tab draws it. Ollama's tokens already arrive
+    #    streamed inside the bridge (ollama-client _generateOnce, 0.39.289) and are held until the reply is done; copilot
+    #    polls the bridge job each second and reads job.result, which is empty until then. So a phase built by Ollama shows
+    #    nothing until it is finished, and a guardian one shows only on the Agent tab.
+    LS1_the_bridge_job_holds_what_is_written_so_far:
+      layer: library
+      systems: [ollama]
+      value: { score: 4, cost: S, for: [daily-use], why: "the tokens are already streamed in; they are thrown away until the end" }
+      status: "DONE (0.39.356) — callOllamaRaw onDelta (every round); dispatch _grow keeps job.partial / partialThinking (200k cap, partialDropped counted). test-agent-live LS-01."
+      depends_on: []
+      files: [ollama/lib/ollama-client.js, ollama/lib/dispatch.js]
+      does: >-
+        callOllamaRaw takes onDelta; each streamed token (answer or thinking, every round: the think:false retry and each
+        continuation) goes to it. A bridge job keeps job.partial and job.partialThinking as they grow (capped), so
+        GET /api/jobs/:id answers what is written so far while the job runs.
+      proof: "a stub Ollama streaming three tokens: the job's partial grows token by token before it completes"
+    LS2_copilot_sends_the_text_as_it_comes:
+      layer: library
+      systems: [copilot]
+      value: { score: 4, cost: S, for: [daily-use], why: "the caller sees the model write, not a wait" }
+      status: "DONE (0.39.356) — _pollOllamaJobHeadless onPartial (every 500 ms while it writes); _streamingPoll → tool-runtime streamSink (loopback only); repo-agent sends streamUrl. LS-02."
+      depends_on: [LS1_the_bridge_job_holds_what_is_written_so_far]
+      files: [copilot/server.js, copilot/tool-runtime.js, lib/repo-agent.js]
+      does: >-
+        The tool loop's poll passes each new part of job.partial (and the start and end of each model turn) to the caller's
+        stream sink — tools.streamUrl, loopback only, fire and forget, the CT8 sink's rules. The repo agent sends
+        streamUrl beside progressUrl.
+      proof: "a poll over a job whose partial grows sends the deltas in order, then the end; a non-loopback url is refused"
+    LS3_one_feed_for_every_agent:
+      layer: api
+      systems: [idearium]
+      value: { score: 4, cost: S, for: [daily-use], why: "Ollama, copilot and guardian arrive on the one feed the Agent tab already draws" }
+      status: "DONE (0.39.356) — POST /api/repos/:uuid/agent/stream → idearium.repo.agent.feed, source ollama, SSE only; in the contract and registry-components. LS-03."
+      depends_on: [LS2_copilot_sends_the_text_as_it_comes]
+      files: [idearium/api/index.js]
+      does: >-
+        POST /api/repos/:uuid/agent/stream broadcasts idearium.repo.agent.feed (SSE only, like the guardian feed) with the
+        guardian feed's shape — event dispatched | chunk | complete, jobId, provider ollama:<model>, text, fullLen,
+        generating — so every consumer of the feed reads one shape whatever the model.
+      proof: "a posted delta is broadcast as idearium.repo.agent.feed with the guardian shape; nothing is ledgered"
+    LS4_live_in_the_code_tab_and_the_work_surface:
+      layer: ui
+      systems: [idearium]
+      value: { score: 5, cost: M, for: [daily-use], why: "his words: stream live into the worksurface panel and code tab" }
+      status: "DONE (0.39.356) — app.js agentLiveHtml / agentLivePaint over the Agent tab's feed state; slots in the Code tab (above activity) and the Plan (above the work surface). Clear Glass LS-04."
+      depends_on: [LS3_one_feed_for_every_agent]
+      files: [idearium/ui/js/app.js, idearium/ui/js/code-surface.js, idearium/ui/js/plan-panel.js]
+      does: >-
+        The Agent tab's feed state (app.js AGENT_FEED, _agentFeedIn) is the one state; each frame also paints a live
+        strip in the Code tab (above the agent's changes) and in the Plan panel's work surface: generating or idle, the
+        provider and model, the job, for a browser agent the node anchor and the mutation count, and the text as it is
+        written (the tail, following the newest line). Painted in place, never a re-render of the tab.
+      proof: "Clear Glass: feed frames (an Ollama chunk, a guardian dom pulse with its anchor) show in both places as they arrive"
+      not_in_this_phase: "BL8 and the other backlog phases themselves — this is the capability that builds them; each still needs its own files"
+
   session_inventory:
     - { said: "Tell me about nexus. Tell me about idearium. How it chunks, reduces tokens.", where: "answered, no build asked — docs/atlases/idearium-atlas.md" }
     - { said: "What about the graphs? Agents. Memory.", where: "answered; the open graph/memory work is docs/2026-10-02-emerge-field-memory-build-phasemap.spec MR1–MR11, RF1" }
@@ -396,6 +455,8 @@ spec:
     - { said: "Okay I'm just saying it figures it out through the context and agent tools.", where: "FV0 input_b — copilot decides how; the goal and the stop are fixed; deliver_check becomes a tool" }
 
     - { said: "okay. i clicked on a phase in the phases tab in nexus core to have it built. it needs to actually build it", where: "PB1–PB5 (0.39.355)" }
+    - { said: "you're building the capability, not the spec right? need to be able to build phases. i need to be able to add features, capabilites, expand, etc, by mapping to specs.", where: "answered — PB1–PB5 are the capability; the backlog's phases are built by it, each with its files" }
+    - { said: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel and code tab.", where: "LS1–LS4 (0.39.356)" }
   open_questions:
     - "Q1: amend docs/AXIOMS-v3.1.md §4.1 from 'UI is tested via Playwright' to 'UI is tested in Clear Glass (clear-glass/src/driver/glass.js)'? A law changes only on your word."
     - "Q2 (CL2): may a writing verb run from the Agent tab after one confirmation, or only read verbs there and writing verbs from the terminal?"

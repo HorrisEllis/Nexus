@@ -74,3 +74,14 @@
 .cs-now{display:inline-flex;align-items:center;gap:4px;color:var(--text);max-width:55%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .cs-call.running{color:var(--text)}
 .cs-act-sec{font:600 9px var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:6px 0 2px}
+/* §0.39.356 LS4 — the agent writing, live (app.js agentLiveHtml): the Code tab above activity, the Plan above the work surface */
+.al{border:1px solid rgba(255,255,255,.08);border-radius:8px;background:var(--nx-void,var(--bg1));font:10.5px var(--mono);color:var(--text2)}
+.al-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:5px 10px}
+.al-head b{color:var(--text);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:9.5px}
+.al-dim{color:var(--text3)}.al-bad{color:var(--coral)}.al-grow{flex:1}
+.al-anchor{color:var(--sky2);max-width:46ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.al-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);flex:none}
+.al-dot.on{background:var(--mint);box-shadow:0 0 8px var(--mint);animation:al-blink 1s ease-in-out infinite}
+@keyframes al-blink{50%{opacity:.25}}
+.al-text{margin:0;max-height:180px;overflow:auto;padding:6px 10px 8px;border-top:1px solid rgba(255,255,255,.05);white-space:pre-wrap;word-break:break-word;color:var(--text);font:10.5px/1.55 var(--mono);border-left:2px solid var(--mint)}
+.pp-live{margin:10px 0 6px}
