@@ -126,7 +126,7 @@ const runNode = (dir, args) => spawnSync(process.execPath, args, { cwd: dir, enc
       && p6.rejected.filter(r => /outside the slot/.test(r.reason)).length === 2, JSON.stringify(p6.rejected));
 
     // SK-07
-    const AW = path.join(ROOT, 'cos/archetype/components/atomic-write/lib/atomic-write.js');
+    const AW = path.join(ROOT, 'cos/archetype/nexus-system/lib/atomic-write.js');
     const { atomicWrite } = require(AW);
     const d7 = tmp('sk-aw-'), f7 = path.join(d7, 't.json');
     const real = fs.renameSync;

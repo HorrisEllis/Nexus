@@ -7,8 +7,9 @@
  * Using the .spec as a living model." · "then we can have it a cos template with reusable components."
  *
  * Assembled, never copied, from three real sources every time it is read:
- *   1. cos/archetype/nexus-system/   the skeleton's own files (server, CLI, boot, registry, contract, seed nodes, spec)
- *   2. cos/archetype/components/     the reusable parts skeleton.json names, with what they require
+ *   1. cos/archetype/nexus-system/   one tree, laid out as a system: the skeleton's own files (server, CLI, boot,
+ *      registry, contract, seed nodes, spec) and the files of its reusable components, so every require resolves here
+ *   2. cos/archetype/components/     which of those files each reusable component owns, and what it requires
  *   3. idearium/spec-engine/templates/system/schemas/   the system template's node schemas, written as JSON (which is
  *      also YAML) so the system reads them with no dependency; the system owns its copies from then on
  * Placeholders: {{name}} {{slug}} {{SLUG}} {{uuid8}} {{description}} — filled by whoever lays the files out
@@ -48,8 +49,11 @@ function schemaFiles() {
 /** files() -> [{ path, content, binary, from }] — the whole skeleton, components included. */
 function files() {
   const sk = skeleton();
-  const own = _walk(DIR).filter(p => p !== 'skeleton.json').map(p => ({ path: p, content: fs.readFileSync(path.join(DIR, p), 'utf8'), from: 'skeleton' }));
+  const mine = components.owned();
+  const own = _walk(DIR).filter(p => p !== 'skeleton.json' && p !== '.template-tree' && !mine.has(p)).map(p => ({ path: p, content: fs.readFileSync(path.join(DIR, p), 'utf8'), from: 'skeleton' }));
   const parts = components.files(sk.components).map(f => ({ path: f.path, content: f.content, from: `component:${f.component}` }));
+  const stray = [...mine].filter(p => !parts.some(f => f.path === p));
+  if (stray.length) throw new Error(`nexus-system: ${stray.join(', ')} belong to components skeleton.json does not name`);
   const seen = new Set(), out = [];
   for (const f of [...own, ...parts, ...schemaFiles()]) {
     if (seen.has(f.path)) throw new Error(`nexus-system: ${f.path} comes from two places`);

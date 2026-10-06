@@ -1,0 +1,3 @@
+This folder is a template: the COS archetype nexus-system, laid out as the system it builds (cos/archetype/nexus-system.js).
+Its code runs in the systems made from it, not in Nexus. Checks that census Nexus's own code (event contracts, writers)
+skip a folder holding this file.

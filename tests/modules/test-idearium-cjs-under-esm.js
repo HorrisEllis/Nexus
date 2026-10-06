@@ -85,7 +85,11 @@ test('ICU-007', 'REGRESSION GUARD: no other file under idearium/ has the same bu
       if (!entry.name.endsWith('.js')) continue;
       const src = fs.readFileSync(full, 'utf8');
       const hasEsm = /^export |^import /m.test(src);
-      const hasCjs = /module\.exports|require\(/.test(src);
+      // §0.39.359 — a browser script that exports only when a `module` exists (`typeof module === 'object' && …`) is
+      // loaded by the page, not by Node's ESM loader; its guarded export is for tests that read it into a vm.
+      // ui/js/arch-canvas.js (0.39.299) is one; it tripped this scan from the day it landed.
+      const browserGuarded = /typeof module === 'object'/.test(src) && !/require\(/.test(src);
+      const hasCjs = !browserGuarded && /module\.exports|require\(/.test(src);
       if (!hasEsm && hasCjs) offenders.push(full);
     }
   }

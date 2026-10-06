@@ -498,7 +498,7 @@ axiom ROUTE_IS_PROVENANCE       // every hop a chunk took is kept on the chunk: 
 //             build order). Here they are the file's real require()s plus the files it reads at run time.
 //   related = associated files that are NOT dependencies (generates nothing)
 //   source  = where the file comes from in the COS archetype nexus-system: skeleton (cos/archetype/nexus-system/),
-//             component:<id> (cos/archetype/components/<id>/, reusable), template-schemas (templates/system/schemas/)
+//             component:<id> (reusable, cos/archetype/components), template-schemas (templates/system/schemas/)
 // <system> is the system's slug. Checked by `idearium manifest check <spec>`; tests/modules/test-system-skeleton
 // fails if this list and the archetype's files ever differ.
 //

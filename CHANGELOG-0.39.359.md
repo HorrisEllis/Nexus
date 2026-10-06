@@ -20,7 +20,7 @@ The skeleton is a new COS archetype, **`nexus-system`** (`cos/archetype/nexus-sy
 - `spec/<system>.spec`, in the architecture template's sections, and its node taxonomy.
 - `tests/skeleton.test.js`.
 
-**2. Ten reusable components, in `cos/archetype/components/`.** Each is a folder of files laid out where they go in a system. Each is also offered on its own as `cos-component:<id>`, and brings the components it requires.
+**2. Ten reusable components.** Their files live in the same tree, `cos/archetype/nexus-system/`, at the paths they have in a system, so every `require` between them resolves inside Nexus too. `cos/archetype/components/index.js` names which files each component owns and what it requires. Each is also offered on its own as `cos-component:<id>`, and brings the components it requires.
 
 | Component | What it does |
 |---|---|
@@ -85,7 +85,18 @@ Only the component's own code is left to build. Its purpose line names the funct
   - `test-registry-drives-build` **5/5**. RD-05 now expects the skeleton plus the registry; only the registry's 5 files are left to build.
 - **Unchanged and passing:** `test-file-tree-plan` 63/63, `test-idearium-codegen` 6/6, `test-system-template` 5/5.
 
+## Follow-up fixes in the same release (from the full run: 5503 passed, 36 known gaps, 6 new)
+- **The skeleton is marked as a template.** `cos/archetype/nexus-system/.template-tree` tells Nexus's own censuses to skip it:
+  - the event-contract check: its events belong to the systems built from it;
+  - the writer census: a `docs/nexstore-writers.yaml` rule, like `loom/templates/`.
+- **Undeclared events and writers from earlier releases are now declared:**
+  - three idearium events in `idearium/event-taxonomy.cjs`: `workshop.template.saved` and `.removed` (0.39.357), and `repo.agent.tool`;
+  - the writers added since the census was last run.
+- **ICU-007 no longer flags a browser script.** `ui/js/arch-canvas.js` exports only when a `module` exists, and Node never loads it. It had failed this check since 0.39.299.
+- **Versionium's `versions()` no longer flakes.** Commits made in the same millisecond tied, and are now ordered by how far down their chain they are (VH-002).
+- **Loom regenerated** from an empty registry, keeping existing ids and stamps: 23 components and 27 wires for the new files.
+
 ## Not done
 - **The workshop's bare repo is unchanged.** It is a document, not code; its code repo comes from codegen.
-- **The DAW repo isn't re-planned.** Run codegen on its spec again (`again: true`) to get the skeleton with the DAW slotted in.
+- **The DAW test project isn't re-planned.** It is a from-scratch project; nothing ties it to Eravos. Run codegen on its spec again (`again: true`) to get the skeleton with the DAW's own components slotted in.
 - **`ui/` isn't generated.**
