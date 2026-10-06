@@ -17,6 +17,7 @@
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
 const http = require('http');
+const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '../..');
 
@@ -30,6 +31,11 @@ const listen = (fn, port = 0) => new Promise((res, rej) => {
   s.on('error', rej);
   s.listen(port, '127.0.0.1', () => res(s));
 });
+// a front for the in-process API, so the agent's tool reaches it over HTTP as it does in production
+const listen0 = (fn) => new Promise((res) => { const sv = http.createServer((q, r) => { let b = ''; q.on('data', d => { b += d; }); q.on('end', async () => {
+  let body = {}; try { body = b ? JSON.parse(b) : {}; } catch (_) {}
+  const o = await quiet(() => fn(q, body)); r.statusCode = o.status || 200; r.setHeader('content-type', 'application/json'); r.end(JSON.stringify(o.json || {})); }); });
+  sv.listen(0, '127.0.0.1', () => res(sv)); });
 const quiet = async (fn) => { const l = console.log, w = console.warn; console.log = () => {}; console.warn = () => {}; try { return await fn(); } finally { console.log = l; console.warn = w; } };
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -219,6 +225,38 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     const byHand = await R('POST', `/api/repos/${repoUuid}/charter/check`, { withProposals: false });
     assert.strictEqual((byHand.json.data || byHand.json).met, 0, 'on the files alone (nothing applied) nothing is met yet');
   });
+
+  // ── §0.39.362 WS1 — the agent uses the work surface: the real tool, over HTTP, into the real API ──
+  const front = await listen0((q, b) => api._route(q.method, q.url, b));
+  process.env.IDEARIUM_PORT = String(front.address().port); process.env.IDEARIUM_HOST = '127.0.0.1';
+  const WS = require(path.join(ROOT, 'lib/agent-tools/tools/idearium/code.js')).work_surface;
+  const ctx = { context: { repoUuid } };
+  await test('CB-20', 'view: the agent sees the cards the person sees — status, +/−, diff, the run — and the charter', async () => {
+    const v = await WS.execute({}, ctx);
+    assert.ok(!v.error, v.error);
+    const f = v.files.find(x => x.path === ph.files[0]);
+    assert.ok(f && f.status === 'proposed' && f.added > 0 && /^\+/m.test(f.diff) && f.inject, JSON.stringify(f).slice(0, 300));
+    assert.ok(v.charter && /least amount of code/.test(v.charter.axioms[0]), JSON.stringify(v.charter).slice(0, 200));
+  });
+  await test('CB-21', 'prove: the pending proposals, as proposed, against the charter and the phase — unmet said with evidence', async () => {
+    const p = await WS.execute({ action: 'prove', map, phase: ph.key }, ctx);
+    assert.ok(!p.error, p.error);
+    assert.strictEqual(p.against, 'proposed');
+    assert.ok(p.total >= 4, `phase + charter condition + 2 end-state checks: ${p.total}`);
+    assert.deepStrictEqual(p.unmet.map(u => u.says), ['[end state] notes can be exported'], JSON.stringify(p.unmet));
+    assert.ok(p.unmet[0].evidence.length > 0, 'with its evidence');
+  });
+  await test('CB-22', 'withdraw: the agent takes back its own proposal; it never approves', async () => {
+    const v = await WS.execute({}, ctx);
+    const f = v.files.find(x => x.path === ph.files[1] && x.status === 'proposed');
+    const w = await WS.execute({ action: 'withdraw', inject: f.inject }, ctx);
+    assert.ok(!w.error, w.error);
+    assert.strictEqual(RI.get(f.inject).status, 'rejected');
+    assert.ok(!/apply/.test(JSON.stringify(WS.parameters.properties.action.enum)), 'there is no apply');
+    const listed = require(path.join(ROOT, 'lib/agent-tools/tools/idearium/code.js')).LISTED;
+    assert.ok(listed.includes('idearium.work_surface.tool') && fs.readFileSync(path.join(ROOT, 'lib/repo-hat.js'), 'utf8').includes("'idearium.work_surface.tool'"), 'every repo agent is given it');
+  });
+  await new Promise(x => front.close(x));
 
   RA.dispatch = realDispatch;
   await new Promise(x => vers.close(x));

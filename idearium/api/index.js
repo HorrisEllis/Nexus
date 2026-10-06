@@ -1860,7 +1860,7 @@ const ROUTE_CAP = {
   'health':           null,              // public — no auth required
   'cos.testenv.status': CAPS.READ_IDEAS,
   'history.import.status': CAPS.READ_IDEAS,
-  'repo.worksurface': CAPS.READ_IDEAS,
+  'repo.worksurface': CAPS.READ_IDEAS, 'repo.worksurface.prove': CAPS.WRITE_IDEAS,
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
@@ -2285,6 +2285,7 @@ function matchRoute(method, url) {
     ['DELETE', ['api','repos',    ':uuid','agent','memory',':obs'], 'repo.agent.memory.forget'],
     // §INJECT 2026-09-21 — .inject nodes: agent code into this compartment (lib/repo-inject.js)
     ['GET',    ['api','repos',    ':uuid','worksurface'],           'repo.worksurface'],
+    ['POST',   ['api','repos',    ':uuid','worksurface','prove'],   'repo.worksurface.prove'],   // §0.39.362 WS1 an agent proves its proposals
     ['GET',    ['api','repos',    ':uuid','architecture'],          'repo.architecture'],         // §0.39.284 W7 — the repo's component registry + wiring map
     ['POST',   ['api','repos',    ':uuid','architecture'],          'repo.architecture.write'],   // §0.39.284 W3 — changed files as diffs + tools
     ['GET',    ['api','repos',    ':uuid','injects'],               'repo.inject.list'],
@@ -6317,6 +6318,32 @@ async function handle(req, res, route, query, body) {
       getIdeaOS().emit('idearium.repo.charter.set', { repoUuid: params.uuid, axioms: ch.axioms.length, conditions: ch.conditions.length, endState: ch.endState.length });
       return ok(res, { repoUuid: params.uuid, ...CH.load(_repoDiskDir(params.uuid)) });
     }
+    // §0.39.362 WS1 — the pending proposals, proved as proposed (a scratch copy; nothing written): the charter's
+    // conditions and end state, and a phase's conditions when map + phase are given. What an agent calls before "done".
+    case 'repo.worksurface.prove': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      const CH = _require('../../lib/charter.js'); const ch = CH.load(dir);
+      const PR = await import('../repo/proof-run.js');
+      let conds = [...CH.proofConditions(ch), ...CH.endStateConditions(ch).map(c => ({ ...c, says: `[end state] ${c.says}` }))];
+      if (body && body.map && body.phase) {
+        const PHm = await import('../repo/phases.js');
+        const mt = (PHm.mapsFor({ repo, repoDir: dir }).maps.find(m => m.path === body.map) || {}).text || '';
+        let pc = PR.conditionsFromPhase(mt, body.phase).conditions;
+        if (!pc.length) pc = PR.derivedConditionsFromPhase(mt, body.phase).conditions;
+        conds = [...pc, ...conds];
+      }
+      if (!conds.length) return ok(res, { repoUuid: params.uuid, nothing: true, note: 'nothing to prove: the charter has no conditions or end state, and no phase was named' });
+      const POV = _require('../../lib/proof-overlay.js');
+      const ov = POV.prepare({ repoDir: dir, overlays: POV.overlaysOf(_require('../../lib/repo-inject.js').list(params.uuid, { limit: 500 })) });
+      let r; try { r = await PR.runProof({ repoDir: ov.dir, conditions: conds, subject: `work surface of ${repo.name || params.uuid}`, write: false }); } finally { ov.cleanup(); }
+      if (!r.ok) return err(res, 422, `could not prove: ${r.error}`);
+      return ok(res, { repoUuid: params.uuid, against: ov.against, overlaid: ov.overlaid, ...(ov.note ? { note: ov.note } : {}), met: r.run.met, total: r.run.total,
+        unmet: (r.run.results || []).filter(x => !x.met).map(x => ({ says: x.says, evidence: String(x.evidence || '').slice(0, 400), cause: x.cause || null })),
+        metChecks: (r.run.results || []).filter(x => x.met).map(x => x.says) });
+    }
+
     case 'repo.charter.check': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
       const r = await _charterCheck(params.uuid, { withProposals: !(body && body.withProposals === false), cause: 'by hand' });
