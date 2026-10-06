@@ -272,7 +272,15 @@ function _storedFor(chunk, { prompt = null } = {}) {
 import { COMPONENTS as IDEARIUM_COMPONENTS } from '../registry-components.js';
 import path from 'path';
 import fs from 'fs';
-import { loadTable, appendRow, deleteRow, syncTable } from '../lib/db.js';
+import { loadTable, appendRow as _appendRowRaw, deleteRow, syncTable } from '../lib/db.js';
+// §0.39.361 AR2 — James: "Failure modes and faults are still first class data." Every phase-run row that is a fault
+// (no snapshot, failed and why, wrote nothing, missed files, blocked, tool errors, unproven, every rung tried) is also
+// its own fault_log record (lib/phase-faults.js → lib/fault-log.js logFault), here where every such row is written.
+function appendRow(table, row) {
+  const out = _appendRowRaw(table, row);
+  if (table === 'idearium_phase_runs') { try { _require('../../lib/phase-faults.js').log(row); } catch (_) { /* a fault that cannot be logged never fails the build */ } }
+  return out;
+}
 import * as WB from '../lib/idea-workbench.js';
 import { runImportPipeline } from '../repo/import-pipeline.js';
 import { makeBusForwarder } from '../repo/pipeline-events.js';
@@ -650,7 +658,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   }
   const depsDone = view.phases.filter(p => node.depends_on.includes(p.uuid) && p.status === 'complete').map(p => p.phase_key);
   const req = PH.buildRequest({ phase: node, mapText, repo: target, depsDone });
-  const message = note ? `${req.message}\n\nFROM JAMES: ${note}` : req.message;
+  // §0.39.361 AR2 — before acting, what went wrong on this phase before (fault_log): the agent is told, the Plan shows it
+  let precedent = { faults: [], text: '' };
+  try { precedent = _require('../../lib/phase-faults.js').precedent(phase); } catch (_) {}
+  const message = [req.message, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
@@ -689,6 +700,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   }
   // the run starts here, its route on it: the ladder's order and, per agent, why it sits where it does
   appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length,
+    ...(precedent.faults.length ? { precedent: precedent.faults.map(f => ({ uuid: f.uuid, ts: f.ts, agent: f.agent, mode: f.mode, promptChars: f.meta.promptChars || null })) } : {}),
     ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom } } : {}), ts: Date.now() });
   getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
   const paramsOf = (rg) => (!rg ? { backend, agent, provider } : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
@@ -2504,7 +2516,8 @@ async function handle(req, res, route, query, body) {
     case 'routing.agents': {
       const AR = _require('../../lib/agent-record.js');
       const undone = _require('../../lib/repo-inject.js').list(null, { limit: 5000 }).filter(n => n.status === 'reverted' || n.status === 'rejected');
-      return ok(res, { learn: _routingPolicy().ladderLearn !== false, ...AR.record(loadTable('idearium_phase_runs'), { injects: undone }) });
+      const faults = _require('../../lib/phase-faults.js').list({ limit: 2000 });
+      return ok(res, { learn: _routingPolicy().ladderLearn !== false, ...AR.record(loadTable('idearium_phase_runs'), { injects: undone, faults }) });
     }
     case 'routing.learned': {
       const PR = _require('../../lib/pipeline-routing.js');

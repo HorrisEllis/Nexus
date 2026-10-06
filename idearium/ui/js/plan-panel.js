@@ -132,6 +132,11 @@ function _ppTimes(s) {
   return bits.length ? `<div class="pp-times">${bits.join('<span class="pp-dot">·</span>')}</div>` : '';
 }
 
+// §0.39.361 AR2 — what went wrong on this phase before (fault_log), read before the run and handed to the agent
+function _ppPrecedent(p) {
+  if (!p || !p.length) return '';
+  return `<div class="pp-prec"><span class="pp-route-h">failed before — the agent was told</span>${p.map(f => `<span class="pp-pf" title="fault ${escapeHtml(f.uuid || '')}">${escapeHtml(_ppWhen(f.ts))} · ${escapeHtml(f.agent || 'the build')} · <b>${escapeHtml(f.mode)}</b>${f.promptChars ? ` · ${f.promptChars} chars` : ''}</span>`).join('')}</div>`;
+}
 // §0.39.361 AR1 — the route a build took and why: each agent in ladder order, what Nexus has learned of it
 function _ppRoute(r) {
   if (!r || !(r.order || []).length) return '';
@@ -144,7 +149,7 @@ function _ledgerHtml(rows) {
   if (!rows.length) return '<div class="pp-led-empty">no runs yet — ▶ builds it (a snapshot first, then the repo\'s agent)</div>';
   return rows.map(l => `<div class="pp-led"><span class="pp-led-t" title="${escapeHtml(new Date(l.ts).toLocaleString())}${l.startedAt ? ` · run started ${escapeHtml(new Date(l.startedAt).toLocaleString())}` : ''}">${escapeHtml(_ppWhen(l.ts))}${l.startedAt && l.ts > l.startedAt ? ` <small>+${escapeHtml(_ppSpan(l.ts - l.startedAt))}</small>` : ''}</span>${l.chunk ? `<span class="pp-led-c" title="${escapeHtml(l.file || '')}">chunk ${l.chunk}/${l.chunks}</span>` : ''}<span class="pp-led-s pp-${escapeHtml(l.state)}">${escapeHtml(l.state)}</span>
     <span class="pp-led-d">${l.snapshot ? `snapshot ${escapeHtml(String(l.snapshot).slice(0, 12))} · ` : ''}${l.provider ? `${escapeHtml(l.provider)}${l.rung ? ` (rung ${l.rung}/${l.rungs}${l.attempt > 1 ? `, try ${l.attempt}` : ''})` : ''} · ` : ''}${l.toolErrors ? '<span style="color:var(--coral)">stopped: failed tool calls in a row</span> · ' : ''}${(l.injected || []).length ? `files ${l.injected.slice(0, 6).map(f => typeof wsOpenInCode === 'function' ? `<a href="#" class="pp-file" title="open in the Code tab" onclick="wsOpenInCode('${escapeHtml(String(f).replace(/'/g, "\\'"))}');return false">${escapeHtml(f)}</a>` : escapeHtml(f)).join(', ')}${l.injected.length > 6 ? ` +${l.injected.length - 6}` : ''} · ` : ''}${l.error ? `<span style="color:var(--coral)">${escapeHtml(l.error)}</span>` : ''}</span>
-    ${_ppRoute(l.route)}${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
+    ${_ppPrecedent(l.precedent)}${_ppRoute(l.route)}${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
 }
 
 function _planPaint() {
@@ -197,6 +202,9 @@ function _planPaint() {
   if (typeof wsLoad === 'function') { const w = document.getElementById('pp-ws'); if (WSURF.data && WSURF.uuid === PLANP.uuid) wsPaint(w); wsLoad(w); }
 }
 // §0.39.361 AR1 — each agent's record building phases (GET /api/routing/agents): the table the ladder is ordered by
+function _ppFaultRow(f) {
+  return `<div class="pp-fault"><span class="pp-led-t" title="${escapeHtml(new Date(f.ts).toLocaleString())}">${escapeHtml(_ppWhen(f.ts))}</span><b>${escapeHtml(f.mode)}</b> ${escapeHtml(f.phase || f.path || '')}${f.promptChars ? ` <span style="opacity:.6">${f.promptChars} chars</span>` : ''}${f.error ? `<div class="pp-fault-e">${escapeHtml(f.error)}</div>` : ''}</div>`;
+}
 async function ppAgentsLoad(el) {
   const body = el.querySelector('.pp-agents-body'); if (!body) return;
   try {
@@ -207,7 +215,8 @@ async function ppAgentsLoad(el) {
       <table><tr><th>agent</th><th>landed</th><th>proven</th><th>undone</th><th>failed</th><th>limit</th><th>score</th></tr>${ps.map(p => `<tr title="${escapeHtml(p.last ? `last: ${p.last.cls} on ${p.last.phase || '?'}${p.last.error ? ` — ${p.last.error}` : ''}` : '')}">
         <td>${escapeHtml(p.provider)}</td><td class="${p.landed ? 'ok' : ''}">${p.landed}/${p.attempts}</td><td>${p.proven || ''}</td><td class="${p.undone ? 'bad' : ''}">${p.undone || ''}</td>
         <td class="${p.failed ? 'bad' : ''}" title="${escapeHtml(Object.entries(p.byClass || {}).map(([c, n]) => `${c} ${n}`).join(' · '))}">${p.failed ? `${p.failed} <span style="opacity:.6">${escapeHtml(Object.entries(p.byClass || {}).filter(([c]) => c !== 'undone').sort((a, b) => b[1] - a[1]).slice(0, 2).map(([c, n]) => `${c} ${n}`).join(', '))}</span>` : ''}</td>
-        <td class="${p.limit ? 'bad' : ''}" title="${escapeHtml(p.limit ? p.limit.why : p.maxLanded ? `landed up to ${p.maxLanded} chars` : '')}">${p.limit ? `≥${k(p.limit.from)} chars` : ''}</td><td>${Math.round(p.score * 100)}%</td></tr>`).join('')}</table>
+        <td class="${p.limit ? 'bad' : ''}" title="${escapeHtml(p.limit ? p.limit.why : p.maxLanded ? `landed up to ${p.maxLanded} chars` : '')}">${p.limit ? `≥${k(p.limit.from)} chars` : ''}</td><td>${Math.round(p.score * 100)}%</td></tr>${(p.faults || []).length ? `<tr><td colspan="7"><details class="pp-faults"><summary>${p.faults.length} fault${p.faults.length === 1 ? '' : 's'} · ${escapeHtml(Object.entries(p.modes || {}).sort((a, b) => b[1] - a[1]).map(([m, n]) => `${m} ${n}`).join(' · '))}</summary>${p.faults.map(_ppFaultRow).join('')}</details></td></tr>` : ''}`).join('')}</table>
+      ${(d.unassigned || []).length ? `<details class="pp-faults"><summary>${d.unassigned.length} fault${d.unassigned.length === 1 ? '' : 's'} of no one agent (every rung tried, no snapshot…)</summary>${d.unassigned.map(_ppFaultRow).join('')}</details>` : ''}
       <div style="opacity:.6;margin-top:4px">${d.learn ? 'the ladder is ordered by this: higher score first, an agent past its size limit last — routing.ladder_learn: false keeps the configured order' : 'learning is off (routing.ladder_learn: false) — the ladder keeps its configured order'}</div>`;
   } catch (e) { PLANP.agentsHtml = `could not read: ${escapeHtml(e.message)}`; }
   body.innerHTML = PLANP.agentsHtml;

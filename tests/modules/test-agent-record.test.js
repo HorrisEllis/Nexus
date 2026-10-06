@@ -5,6 +5,7 @@
  * James: "like needs to learn from this: routing and adapting" — BL15: chatgpt replied a bare path (James reverted it);
  * then every rung timed out, 3b → 7b → 16b → gemini → chatgpt → claude → deepseek.
  */
+require('../../lib/test-sandbox.js').ensure();
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..');
@@ -66,11 +67,46 @@ check('AR-12 routing.ladder_learn reads from config, on by default', PR.policyFr
 // wiring
 const idx = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
 check('AR-20 a phase build orders its ladder by the record and keeps the route on its building row',
-  /AR\.orderLadder\(rungs, AR\.record\(loadTable\('idearium_phase_runs'\)/.test(idx) && /state: 'building'[^\n]*promptChars: message\.length,\s*\n\s*\.\.\.\(rungs\.length \? \{ route:/.test(idx));
+  /AR\.orderLadder\(rungs, AR\.record\(loadTable\('idearium_phase_runs'\)/.test(idx) && /state: 'building'[^\n]*promptChars: message\.length,[\s\S]{0,400}\.\.\.\(rungs\.length \? \{ route:/.test(idx));
 check('AR-21 every attempt row carries its request size', /elapsedMs: r && r\.elapsedMs \|\| null, promptChars: message\.length/.test(idx));
 check('AR-22 GET /api/routing/agents serves the record', /\['api','routing','agents'\], 'routing\.agents'/.test(idx) && /case 'routing\.agents'/.test(idx));
 const pp = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8');
 check('AR-23 the Plan shows each run\'s route and the agents table', /function _ppRoute\(r\)/.test(pp) && /\$\{_ppRoute\(l\.route\)\}/.test(pp) && /async function ppAgentsLoad/.test(pp));
+
+
+// ── AR2: failure modes and faults are first-class data (lib/phase-faults.js → lib/fault-log.js) ──
+const PF = require(path.join(ROOT, 'lib', 'phase-faults.js'));
+check('AR-30 each fault row has its failure mode', PF.modeOf({ state: 'failed', error: TO }) === 'timeout' && PF.modeOf({ state: 'incomplete', unchanged: true }) === 'wrote-nothing'
+  && PF.modeOf({ state: 'incomplete', absent: ['a.js'] }) === 'missed-files' && PF.modeOf({ state: 'refused', error: 'no snapshot: down' }) === 'no-snapshot'
+  && PF.modeOf({ state: 'failed', toolErrors: true }) === 'tool-errors' && PF.modeOf({ state: 'unproven' }) === 'unproven');
+check('AR-31 a row that is not a fault logs nothing (building, replied, escalating, proven)', ['building', 'replied', 'escalating', 'retrying', 'proven'].every(st => PF.faultsOf({ state: st }).length === 0));
+const ex = PF.faultsOf({ uuid: 'phrun-x-r7t1-failed', runId: 'phrun-x', state: 'failed', provider: 'deepseek', phase: 'BL15', map: 'docs/m.spec', error: TO, promptChars: 16613, rung: 7, rungs: 7, ladderExhausted: true });
+check('AR-32 a fault carries the agent, the phase, the request size, the error and what caused it', ex[0].agent === 'deepseek' && ex[0].faultClass === 'timeout' && ex[0].intent === 'BL15'
+  && ex[0].meta.promptChars === 16613 && /90000ms/.test(ex[0].meta.error) && ex[0].causedBy === 'phrun-x-r7t1-failed' && ex[0].component === 'idearium.phase.build');
+check('AR-33 every rung tried is also its own fault, of no one agent', ex.length === 2 && ex[1].faultClass === 'ladder-exhausted' && ex[1].agent === null);
+
+const written = PF.log({ uuid: 'phrun-t-failed', runId: 'phrun-t', state: 'failed', provider: 'gemini', phase: 'AR_TEST_PHASE', error: TO, promptChars: 12000 });
+const back = PF.list({ phase: 'AR_TEST_PHASE' });
+check('AR-34 logged into fault_log and read back whole', written.length === 1 && back.some(f => f.uuid === written[0].uuid && f.mode === 'timeout' && f.agent === 'gemini' && f.meta.promptChars === 12000), `${written.length} written, ${back.length} back`);
+PF.logInject({ mode: 'undone', node: { uuid: 'inj-1', path: 'lib/agent-tools/index.js', repoUuid: 'R', hatName: 'chatgpt' }, reason: 'reverted by the person' });
+check('AR-35 an undone agent change is its own fault record', PF.list({ agent: 'chatgpt' }).some(f => f.mode === 'undone' && f.meta.path === 'lib/agent-tools/index.js'));
+
+const prec = PF.precedent('BL15', [
+  { uuid: 'f1', ts: t0, agent: 'chatgpt', mode: 'reply-collapse', phase: 'BL15', meta: { phase: 'BL15' } },
+  { uuid: 'f2', ts: t0 + 1, agent: 'deepseek', mode: 'timeout', phase: 'BL15', meta: { phase: 'BL15', promptChars: 16613 } },
+  { uuid: 'f3', ts: t0 + 2, agent: 'claude', mode: 'timeout', phase: 'BL9', meta: { phase: 'BL9' } }]);
+check('AR-36 before acting: this phase\'s faults, in words the next agent can use, under 600 chars', prec.faults.length === 2 && /only a path/.test(prec.text) && /deepseek timed out \(request 16613 chars\)/.test(prec.text) && !/claude/.test(prec.text) && prec.text.length <= 600, prec.text);
+check('AR-37 a phase that never failed adds nothing to the request', PF.precedent('NEVER', []).text === '');
+
+const recF = AR.record(rows, { injects, faults: [{ uuid: 'f2', ts: t0, agent: 'deepseek', mode: 'timeout', phase: 'BL15', meta: { promptChars: 16613, error: TO } }, { uuid: 'f9', ts: t0, agent: null, mode: 'ladder-exhausted', phase: 'BL15', meta: {} }] });
+check('AR-38 an agent\'s record carries its faults whole, and its modes', recF.providers.deepseek.faults[0].uuid === 'f2' && recF.providers.deepseek.faults[0].promptChars === 16613 && recF.providers.deepseek.modes.timeout === 1);
+check('AR-39 a fault of no one agent is kept, not dropped', recF.unassigned.length === 1 && recF.unassigned[0].mode === 'ladder-exhausted');
+
+check('AR-40 every phase-run row written goes through the fault hook', /function appendRow\(table, row\) \{\s*const out = _appendRowRaw\(table, row\);\s*if \(table === 'idearium_phase_runs'\) \{ try \{ _require\('\.\.\/\.\.\/lib\/phase-faults\.js'\)\.log\(row\)/.test(idx));
+check('AR-41 a phase build reads its precedent before acting, hands it to the agent and keeps it on the building row', /precedent = _require\('\.\.\/\.\.\/lib\/phase-faults\.js'\)\.precedent\(phase\)/.test(idx) && /\[req\.message, precedent\.text/.test(idx) && /precedent: precedent\.faults\.map/.test(idx));
+const ri = fs.readFileSync(path.join(ROOT, 'lib/repo-inject.js'), 'utf8');
+check('AR-42 a collapsed reply and an undone agent change are logged from repo-inject', /mode: 'reply-collapse'/.test(ri) && (ri.match(/_undoneFault\(n, '(reverted|rejected)'/g) || []).length === 3);
+check('AR-43 the Plan shows a run\'s precedent and each agent\'s faults', /function _ppPrecedent\(p\)/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')) && /_ppFaultRow/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
 
 console.log(`\n  ${pass} passed, ${fail} failed\n`);
 process.exitCode = fail ? 1 : 0;
