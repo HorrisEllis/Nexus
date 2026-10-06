@@ -132,11 +132,19 @@ function _ppTimes(s) {
   return bits.length ? `<div class="pp-times">${bits.join('<span class="pp-dot">·</span>')}</div>` : '';
 }
 
+// §0.39.361 AR1 — the route a build took and why: each agent in ladder order, what Nexus has learned of it
+function _ppRoute(r) {
+  if (!r || !(r.order || []).length) return '';
+  const why = new Map((r.why || []).map(w => [w.provider, w]));
+  return `<div class="pp-route"><span class="pp-route-h">${r.learned ? 'route — learned from past builds' : 'route — as configured (nothing learned changes it yet)'}${r.bucket ? ` · ${escapeHtml(r.bucket)} request` : ''}</span>${r.order.map((p, i) => {
+    const w = why.get(p); return `<span class="pp-rt${w && w.limited ? ' lim' : ''}" title="${escapeHtml(w ? w.why : '')}">${i + 1}. ${escapeHtml(p)}${w ? ` <i>${escapeHtml(w.why)}</i>` : ''}</span>`; }).join('')}</div>`;
+}
+
 function _ledgerHtml(rows) {
   if (!rows.length) return '<div class="pp-led-empty">no runs yet — ▶ builds it (a snapshot first, then the repo\'s agent)</div>';
   return rows.map(l => `<div class="pp-led"><span class="pp-led-t" title="${escapeHtml(new Date(l.ts).toLocaleString())}${l.startedAt ? ` · run started ${escapeHtml(new Date(l.startedAt).toLocaleString())}` : ''}">${escapeHtml(_ppWhen(l.ts))}${l.startedAt && l.ts > l.startedAt ? ` <small>+${escapeHtml(_ppSpan(l.ts - l.startedAt))}</small>` : ''}</span>${l.chunk ? `<span class="pp-led-c" title="${escapeHtml(l.file || '')}">chunk ${l.chunk}/${l.chunks}</span>` : ''}<span class="pp-led-s pp-${escapeHtml(l.state)}">${escapeHtml(l.state)}</span>
     <span class="pp-led-d">${l.snapshot ? `snapshot ${escapeHtml(String(l.snapshot).slice(0, 12))} · ` : ''}${l.provider ? `${escapeHtml(l.provider)}${l.rung ? ` (rung ${l.rung}/${l.rungs}${l.attempt > 1 ? `, try ${l.attempt}` : ''})` : ''} · ` : ''}${l.toolErrors ? '<span style="color:var(--coral)">stopped: failed tool calls in a row</span> · ' : ''}${(l.injected || []).length ? `files ${l.injected.slice(0, 6).map(f => typeof wsOpenInCode === 'function' ? `<a href="#" class="pp-file" title="open in the Code tab" onclick="wsOpenInCode('${escapeHtml(String(f).replace(/'/g, "\\'"))}');return false">${escapeHtml(f)}</a>` : escapeHtml(f)).join(', ')}${l.injected.length > 6 ? ` +${l.injected.length - 6}` : ''} · ` : ''}${l.error ? `<span style="color:var(--coral)">${escapeHtml(l.error)}</span>` : ''}</span>
-    ${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
+    ${_ppRoute(l.route)}${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
 }
 
 function _planPaint() {
@@ -179,6 +187,7 @@ function _planPaint() {
         + _ppDoneLine(done.length, `step${done.length === 1 ? '' : 's'}`) + (PLANP.showDone ? done.map(task).join('') : '');
     })()}
     ${other.length ? `<div class="pp-sec">plans and file jobs</div>${other.map(r => `<div class="pp-act"><span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.title || `${r.phase} ${r.map}`)} <span class="pp-led-t">${new Date(r.ts).toLocaleTimeString()}</span>${r.error ? `<div style="color:var(--coral);font-size:10px">${escapeHtml(r.error)}</div>` : ''}</div>`).join('')}` : ''}
+    <details class="pp-actwrap pp-agents" ontoggle="if(this.open)ppAgentsLoad(this)"><summary class="pp-sec">agents · what Nexus has learned</summary><div class="pp-agents-body">${PLANP.agentsHtml || 'reading…'}</div></details>
     <details class="pp-actwrap"><summary class="pp-sec">activity · ${activity.length}</summary>${activity.map(r => `<div class="pp-act"><span class="pp-led-t">${new Date(r.ts).toLocaleString()}</span> <span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.phase || '')} <span style="opacity:.6">${escapeHtml(String(r.map || '').split('/').pop())}</span></div>`).join('')}</details>
     <div class="al pp-live" data-al="${escapeHtml(PLANP.uuid || '')}">${typeof agentLiveHtml === 'function' && PLANP.uuid ? agentLiveHtml(PLANP.uuid) : ''}</div>
     <div id="pp-ws" class="pp-ws"></div>`;   // §0.39.356 LS4 — the agent writing, live, above the work surface
@@ -186,6 +195,22 @@ function _planPaint() {
   planTabSync();   // §CT9 — the tab's count follows the plan
   // §0.39.284 W3 — the work surface, below the plan: every file the agent changed, as diffs, and its tools
   if (typeof wsLoad === 'function') { const w = document.getElementById('pp-ws'); if (WSURF.data && WSURF.uuid === PLANP.uuid) wsPaint(w); wsLoad(w); }
+}
+// §0.39.361 AR1 — each agent's record building phases (GET /api/routing/agents): the table the ladder is ordered by
+async function ppAgentsLoad(el) {
+  const body = el.querySelector('.pp-agents-body'); if (!body) return;
+  try {
+    const d = await api('/api/routing/agents', {}, 30000);
+    const ps = Object.values(d.providers || {}).sort((a, b) => b.score - a.score || b.attempts - a.attempts);
+    const k = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n || 0));
+    PLANP.agentsHtml = !ps.length ? 'nothing yet — every phase build records which agent did it and how it went; the ladder learns from that' : `
+      <table><tr><th>agent</th><th>landed</th><th>proven</th><th>undone</th><th>failed</th><th>limit</th><th>score</th></tr>${ps.map(p => `<tr title="${escapeHtml(p.last ? `last: ${p.last.cls} on ${p.last.phase || '?'}${p.last.error ? ` — ${p.last.error}` : ''}` : '')}">
+        <td>${escapeHtml(p.provider)}</td><td class="${p.landed ? 'ok' : ''}">${p.landed}/${p.attempts}</td><td>${p.proven || ''}</td><td class="${p.undone ? 'bad' : ''}">${p.undone || ''}</td>
+        <td class="${p.failed ? 'bad' : ''}" title="${escapeHtml(Object.entries(p.byClass || {}).map(([c, n]) => `${c} ${n}`).join(' · '))}">${p.failed ? `${p.failed} <span style="opacity:.6">${escapeHtml(Object.entries(p.byClass || {}).filter(([c]) => c !== 'undone').sort((a, b) => b[1] - a[1]).slice(0, 2).map(([c, n]) => `${c} ${n}`).join(', '))}</span>` : ''}</td>
+        <td class="${p.limit ? 'bad' : ''}" title="${escapeHtml(p.limit ? p.limit.why : p.maxLanded ? `landed up to ${p.maxLanded} chars` : '')}">${p.limit ? `≥${k(p.limit.from)} chars` : ''}</td><td>${Math.round(p.score * 100)}%</td></tr>`).join('')}</table>
+      <div style="opacity:.6;margin-top:4px">${d.learn ? 'the ladder is ordered by this: higher score first, an agent past its size limit last — routing.ladder_learn: false keeps the configured order' : 'learning is off (routing.ladder_learn: false) — the ladder keeps its configured order'}</div>`;
+  } catch (e) { PLANP.agentsHtml = `could not read: ${escapeHtml(e.message)}`; }
+  body.innerHTML = PLANP.agentsHtml;
 }
 function planToggle(key) { if (PLANP.open.has(key)) PLANP.open.delete(key); else PLANP.open.add(key); _planPaint(); }
 async function planBuild(map, phase) {

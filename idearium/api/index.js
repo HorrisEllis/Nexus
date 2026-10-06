@@ -651,8 +651,6 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const depsDone = view.phases.filter(p => node.depends_on.includes(p.uuid) && p.status === 'complete').map(p => p.phase_key);
   const req = PH.buildRequest({ phase: node, mapText, repo: target, depsDone });
   const message = note ? `${req.message}\n\nFROM JAMES: ${note}` : req.message;
-  appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length, ts: Date.now() });
-  getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
@@ -674,6 +672,25 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const L = PRt.ladder(policy, { installed });
     rungs = L.rungs; ladderFrom = L.from;
   }
+  // §0.39.361 AR1 — James: "needs to learn from this: routing and adapting". The ladder is ordered by what every phase
+  // build so far says about each agent (lib/agent-record.js — a projection of idearium_phase_runs and the injects):
+  // what lands, what is proven, what the person undid, and the request size each one keeps failing at. Nothing
+  // learned yet → the ladder exactly as configured. routing.ladder_learn: false turns it off.
+  let route = null;
+  if (rungs.length > 1 && policy.ladderLearn !== false) {
+    try {
+      const AR = _require('../../lib/agent-record.js');
+      const RIx = _require('../../lib/repo-inject.js');
+      const undone = RIx.list(null, { limit: 5000 }).filter(n => n.status === 'reverted' || n.status === 'rejected');
+      const o = AR.orderLadder(rungs, AR.record(loadTable('idearium_phase_runs'), { injects: undone }), { promptChars: message.length, minRecords: policy.learnMinRecords >= 1 ? Math.min(policy.learnMinRecords, 3) : 2 });
+      route = { learned: o.changed, bucket: o.bucket, why: o.why };
+      if (o.changed) { rungs = o.rungs; ladderFrom = `learned from past builds (${o.bucket} request) — ${ladderFrom}`; }
+    } catch (e) { route = { learned: false, error: e.message }; }
+  }
+  // the run starts here, its route on it: the ladder's order and, per agent, why it sits where it does
+  appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length,
+    ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom } } : {}), ts: Date.now() });
+  getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
   const paramsOf = (rg) => (!rg ? { backend, agent, provider } : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
   // one attempt on one rung (rg null = no ladder: the call's own agent): dispatch, the shadow settled, the row built
   const attempt = async (rg, ri, tryNo) => {
@@ -701,7 +718,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : null)),
       provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || null,
       ...(rg ? { rung: ri + 1, rungs: rungs.length, attempt: tryNo, ...(r && r.toolErrors ? { toolErrors: true } : {}) } : {}),
-      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
+      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, promptChars: message.length, ts: Date.now() };
     // §0.39.284 W3 — the tool calls of this run are kept on it, so the work surface can show what the agent used
     try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
     return { r, state, absent, dp, row, trigger: r && r.toolErrors ? 'tool-errors' : state };
@@ -1824,6 +1841,7 @@ const ROUTE_CAP = {
   'routing.show':     CAPS.READ_IDEAS,
   'routing.plan':     CAPS.READ_IDEAS,
   'routing.learned':  CAPS.READ_IDEAS,
+  'routing.agents':   CAPS.READ_IDEAS,
   'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
@@ -1866,7 +1884,8 @@ function matchRoute(method, url) {
     // §0.39.286 RG2 — the pipeline's routing and fallback policy (lib/pipeline-routing.js); set it through POST /api/config routing.*
     ['GET',    ['api','routing'],         'routing.show'],
     ['GET',    ['api','routing','plan'],  'routing.plan'],
-    ['GET',    ['api','routing','learned'], 'routing.learned'],   // §0.39.287 what each model/provider has done per chunk type
+    ['GET',    ['api','routing','learned'], 'routing.learned'],
+    ['GET',    ['api','routing','agents'], 'routing.agents'],    // §0.39.361 AR1 what each agent has done building phases   // §0.39.287 what each model/provider has done per chunk type
     ['GET',    ['api','ollama','check'], 'ollama.check'],          // §CT4 0.39.350 — installed models, each caller's route
     ['POST',   ['api','ollama','check','ask'], 'ollama.check.ask'], // §CT4 — one model asked a one-line question through copilot
     ['POST',   ['api','routing','breaker','reset'], 'routing.breaker.reset'],
@@ -2479,6 +2498,13 @@ async function handle(req, res, route, query, body) {
       const ladder = PR.ladder(policy, { installed });
       return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(), ladder: { rungs: ladder.rungs.map(r => r.provider), from: ladder.from }, escalateOn: PR.ESCALATE_ON,
         blocks: se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title, agent: b.agent, fallback: b.fallback || [], ...PR.plan({ block: b, policy }) })) });
+    }
+    // §0.39.361 AR1 — James: "needs to learn from this: routing and adapting". Each agent's phase-build record: landed,
+    // proven, undone by the person, failed and why, its size limit — the same projection that orders the ladder.
+    case 'routing.agents': {
+      const AR = _require('../../lib/agent-record.js');
+      const undone = _require('../../lib/repo-inject.js').list(null, { limit: 5000 }).filter(n => n.status === 'reverted' || n.status === 'rejected');
+      return ok(res, { learn: _routingPolicy().ladderLearn !== false, ...AR.record(loadTable('idearium_phase_runs'), { injects: undone }) });
     }
     case 'routing.learned': {
       const PR = _require('../../lib/pipeline-routing.js');
