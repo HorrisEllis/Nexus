@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.21.0   # 1.21.0: SB42–SB45 a repo expands from its spec, phased, chunked, coded; uncoded files grey (0.39.360) · 1.20.0: 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.22.0   # 1.22.0: SB46–SB49 mapped — every step by hand, built and run in COS, proof closes the phase, an idea runs through by itself · 1.21.0: 1.21.0: SB42–SB45 a repo expands from its spec, phased, chunked, coded; uncoded files grey (0.39.360) · 1.20.0: 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -1144,3 +1144,67 @@ spec:
       proof: "an uncoded file reads 'uncoded' (greyed) and turns 'new' once written; a skeleton with an empty slot is not complete and under 100%"
       conditions:
         - { says: "uncoded files grey; an empty slot keeps the spec open", check: { kind: tests, run: "node tests/modules/test-repo-expand.test.js" } }
+
+    # ── 1.22.0 (2026-10-06, MAPPED): ideas fed into an autonomous system — in COS, and every step by hand ──
+    # James: "Using cos also. This is supposed to be ideas fed into an autonomous system. Human friendly, to use by hand
+    # without ai."
+    # Read before mapping: each repo already has its own COS compartment (_ensureCompartment); COS's Run menu
+    # (lib/cos-run.js) already runs a skeleton by hand — run.entry (server.js), boot.probe, test.suite/all/file,
+    # check.syntax, check.deps — in a branch of that compartment; SB29 (build in the repo's compartment until committed)
+    # is OPEN. What no step has: a path with no agent (the expansion's form sends an ask), a proof that runs in COS and
+    # closes the phase, and anything that walks an idea through the steps by itself.
+    # The rule for all four: every step is a button and a CLI verb a person can run with no AI, and the autonomous run
+    # only presses the same buttons in order — never a second path.
+
+    SB46_every_step_by_hand:
+      layer: api
+      status: OPEN
+      james: '"Human friendly, to use by hand without ai."'
+      depends_on: [SB42_a_repo_expands_from_its_spec]
+      files: [cos/archetype/nexus-system/cli.js, cos/archetype/nexus-system/lib/scaffold.js, idearium/ui/js/phases.js, cli/idearium.js]
+      does: >-
+        (1) The system itself grows by hand: its own CLI (node cli.js add component <name> --capability "…" --commands
+        a,b --uses x) writes the registry entry, the nodes and a stub file that exports each command — no Nexus, no agent.
+        (2) In idearium the + expand form has a manual mode: the components typed in (name, capability, commands, uses),
+        sent as components — the same route, no agent. (3) The CLI verb for the expansion. Coding stays the Files/Code
+        editor (a written file codes its chunk); closing a phase stays the status edit.
+      proof: "a component added by the system's own CLI runs its command; the manual form expands a repo with no agent reachable"
+
+    SB47_built_and_run_in_cos:
+      layer: api
+      status: OPEN
+      james: '"Using cos also."'
+      depends_on: [SB29_the_build_flow_in_his_order, SB46_every_step_by_hand]
+      files: [lib/cos-run.js, idearium/api/index.js, lib/cos-bridge.js]
+      does: >-
+        A skeleton repo's phase builds and proofs happen in its own compartment (a COS branch of it), never on the repo
+        until committed (SB29's order). The Run menu knows a nexus-system repo: start the system (server.js on a shifted
+        port) and its CLI, run each component's test and the skeleton test, show /health. The same options the proof uses.
+      proof: "a phase of a skeleton repo is built and its tests run in the repo's compartment branch; the repo changes only on commit"
+
+    SB48_proof_in_cos_closes_the_phase:
+      layer: api
+      status: OPEN
+      james: '"then coded" — and known: the proof does not check the slot'
+      depends_on: [SB47_built_and_run_in_cos]
+      files: [lib/registry-plan.js, idearium/api/index.js, lib/repo-expand.js]
+      does: >-
+        Verify checks every registry component of a skeleton repo: its file exists, parses, and exports the handler of
+        each of its commands; the system's tests/skeleton.test.js and the phase's own test pass in COS. A phase whose
+        files are coded and whose proof passes is closed (the map edited, recorded); one that fails says what, and is
+        sent back to be built — by the agent, or shown to the person.
+      proof: "a phase whose component exports its handlers and whose test passes in COS closes itself; a missing export keeps it open with the reason"
+
+    SB49_an_idea_runs_through_by_itself:
+      layer: api
+      status: OPEN
+      james: '"This is supposed to be ideas fed into an autonomous system."'
+      depends_on: [SB46_every_step_by_hand, SB48_proof_in_cos_closes_the_phase]
+      files: [lib/idea-run.js, idearium/api/index.js, idearium/ui/js/app.js]
+      does: >-
+        An idea fed in walks the steps on its own, each one the same button a person presses: spec (the workshop's
+        template) → skeleton repo in its compartment → expand → each ready phase built → proven in COS → closed →
+        committed. One run record per idea: the step it is on, each step's gate and its evidence. It stops and asks on
+        what it cannot decide (ambiguity, a failure after the ladder, a commit), and a person can take any step over by
+        hand and hand it back.
+      proof: "a fixture idea walks from spec to a committed repo with stubbed agents; a failure stops it at that step with the question; a hand-done step is picked up"
