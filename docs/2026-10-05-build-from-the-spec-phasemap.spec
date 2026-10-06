@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.22.0   # 1.22.0: SB46–SB49 mapped — every step by hand, built and run in COS, proof closes the phase, an idea runs through by itself · 1.21.0: 1.21.0: SB42–SB45 a repo expands from its spec, phased, chunked, coded; uncoded files grey (0.39.360) · 1.20.0: 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.23.0   # 1.23.0: SB50 every task timestamped, SB51 a phase built in chunks a small model can hold (0.39.361) · 1.22.0: SB46–SB49 mapped — every step by hand, built and run in COS, proof closes the phase, an idea runs through by itself · 1.21.0: 1.21.0: SB42–SB45 a repo expands from its spec, phased, chunked, coded; uncoded files grey (0.39.360) · 1.20.0: 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -1208,3 +1208,37 @@ spec:
         what it cannot decide (ambiguity, a failure after the ladder, a commit), and a person can take any step over by
         hand and hand it back.
       proof: "a fixture idea walks from spec to a committed repo with stubbed agents; a failure stops it at that step with the question; a hand-done step is picked up"
+
+    # 1.23.0 — James, with two Plan screenshots (BL15 building, its runs showing a time of day only) and a boot log
+    # from his machine: "tasks need time stamped. phases need chunked i feel like. at least for small ollama models."
+    # Read before mapping: build-plan.js gates carry `at`, but the panel shows none of it and the ledger shows a time of
+    # day only. The log: llama3.2:3b's tool-loop prompt was 16613 chars at num_ctx 9216, seven rounds without progress;
+    # the 7b and 16b rungs returned nothing (free memory 0.8%). buildRequest hands the agent the whole phase — every
+    # file it names in one message, in one session (N23 made each PHASE its own chat; nothing makes each FILE one).
+
+    SB50_every_task_timestamped:
+      layer: ui
+      status: OPEN
+      james: '"tasks need time stamped."'
+      depends_on: []
+      files: [idearium/repo/build-plan.js, idearium/api/build-surface.js, idearium/repo/phases.js, idearium/ui/js/plan-panel.js]
+      does: >-
+        Each Plan step carries its times: mapped (its map's date), started (its first run), last run, closed (its proven
+        run, else the date its status was written), and how long its current run has gone. The task row shows them; each
+        ledger row shows date and time and how long into its run it came.
+      proof: "a step's times come from its map and its runs; the panel paints them on the row and on every ledger row"
+
+    SB51_a_phase_built_in_chunks:
+      layer: api
+      status: OPEN
+      james: '"phases need chunked i feel like. at least for small ollama models."'
+      depends_on: []
+      files: [idearium/repo/phases.js, idearium/api/index.js, lib/pipeline-routing.js]
+      does: >-
+        A phase whose ladder starts on Ollama (routing.chunk_phases auto; always / never configurable) is built one file
+        at a time: one chunk per file the phase names, each a short request (the phase in brief, this file, the files
+        already done with their exports, the invariants trimmed) in its own fresh session, each climbing the ladder on its
+        own with a shadow that expects only its file. A chunk that does not land stops the run, naming the chunk. Every
+        row says chunk i of n and its file; the proof runs once, on the whole phase.
+      proof: "a two-file phase on an Ollama ladder is sent as two requests, each naming one file and under the budget; the second sees the first's exports; a failed first chunk stops the run"
+

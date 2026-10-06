@@ -20,7 +20,15 @@
  * A run that failed or was refused stops at the gate it reached and says why.
  *
  * buildPlan({ phases, runs, order }) → { steps:[{ key, map, title, layer, status, gates:[{gate, passed, at}], gate,
- *                                         progress, current, ledger:[…] }], summary }
+ *                                         progress, current, times, ledger:[…] }], summary }
+ *
+ * §0.39.361 SB50 — James: "tasks need time stamped." Every step carries its times:
+ *   mapped     its map's date (phase.mappedOn, from the map's meta)
+ *   started    its first run began (ms)
+ *   lastRun    its newest run row (ms)
+ *   closed     complete: its last proven run (ms), else the date its status was written (phase.statusDate)
+ *   runningMs  how long its current run has gone, while it builds
+ * Each ledger row carries startedAt — when its run began — so the panel can say how far into the run it came.
  */
 export const GATES = ['mapped', 'snapshot', 'dispatched', 'replied', 'landed', 'closed'];
 
@@ -43,7 +51,24 @@ function _gatesFor(phase, runs) {
   return { gates, progress: +(n / GATES.length).toFixed(3), gate: n < GATES.length ? GATES[n] : null, failed, run: last };
 }
 
-export function buildPlan({ phases = [], runs = [], order = null } = {}) {
+/** the times of one step (SB50); a date-only value (YYYY-MM-DD from the map) is kept as that string */
+export function timesOf(phase, runs = [], now = Date.now()) {
+  const done = phase.status === 'complete' || phase.status === 'done';
+  const ms = (x) => (typeof x === 'number' && x > 0 ? x : null);
+  const starts = runs.map(r => ms(r.startedAt) || ms(r.ts)).filter(Boolean);
+  const lasts = runs.map(r => ms(r.ts)).filter(Boolean);
+  const proven = runs.filter(r => r.state === 'proven').map(r => ms(r.ts)).filter(Boolean);
+  const last = runs[0] || null;
+  return {
+    mapped: ms(phase.createdAt) || phase.mappedOn || null,
+    started: starts.length ? Math.min(...starts) : null,
+    lastRun: lasts.length ? Math.max(...lasts) : null,
+    closed: done ? (proven.length ? Math.max(...proven) : phase.statusDate || null) : null,
+    runningMs: last && last.state === 'building' && !done ? Math.max(0, now - (ms(last.startedAt) || ms(last.ts) || now)) : null,
+  };
+}
+
+export function buildPlan({ phases = [], runs = [], order = null, now = Date.now() } = {}) {
   const runsBy = new Map();
   for (const r of [...runs].sort((a, b) => (b.ts || 0) - (a.ts || 0))) {
     const k = `${r.map}::${r.phase}`;
@@ -54,10 +79,13 @@ export function buildPlan({ phases = [], runs = [], order = null } = {}) {
   const steps = list.map(p => {
     const rs = runsBy.get(`${p.map}::${p.phase_key}`) || [];
     const g = _gatesFor(p, rs);
+    const times = timesOf(p, rs, now);
+    if (g.gates[0] && !g.gates[0].at && typeof times.mapped === 'number') g.gates[0].at = times.mapped;
+    if (times.closed && typeof times.closed === 'number') { const c = g.gates.find(x => x.gate === 'closed'); if (c && !c.at) c.at = times.closed; }
     return {
       key: p.phase_key, uuid: p.uuid || null, map: p.map, title: p.title || p.name || p.phase_key, layer: p.layer || null, status: p.status,
-      ...g, runs: rs.length,
-      ledger: rs.slice().reverse().map(r => ({ ts: r.ts, runId: r.runId, state: r.state, snapshot: r.snapshot || null, provider: r.provider || null,
+      ...g, runs: rs.length, times,
+      ledger: rs.slice().reverse().map(r => ({ ts: r.ts, startedAt: r.startedAt || null, runId: r.runId, ...(r.chunk ? { chunk: r.chunk, chunks: r.chunks, file: r.file || null } : {}), state: r.state, snapshot: r.snapshot || null, provider: r.provider || null,
         error: r.error || null, injected: r.injects ? r.injects.injected || [] : [], reply: r.reply ? String(r.reply).slice(0, 600) : null })),
     };
   });

@@ -295,7 +295,9 @@ export async function plan(deps, uuid, { map = null } = {}) {
       phases = phases.slice().sort((a, b) => order.indexOf(a.phase_key) - order.indexOf(b.phase_key));
     }
   }
-  phases = phases.map(p => ({ ...p, layer: layered[p.phase_key] || p.layer || null }));
+  // §0.39.361 SB50 — the dates each map holds: when it was mapped, when a phase's status was written
+  const texts = new Map(); try { for (const m of PH.mapsFor({ repo: r.repo, repoDir: r.dir }).maps) texts.set(m.path, m.text); } catch (_) {}
+  phases = phases.map(p => ({ ...p, layer: layered[p.phase_key] || p.layer || null, ...(texts.has(p.map) ? (({ mapped, statusDate }) => ({ mappedOn: mapped, statusDate }))(PH.phaseDates(texts.get(p.map), p.phase_key)) : {}) }));
   const runs = deps.phaseRuns(uuid);
   const out = BP.buildPlan({ phases, runs });
   const planning = runs.filter(x => x.phase === 'PLAN' && (!map || x.map === map)).slice(0, 5);
