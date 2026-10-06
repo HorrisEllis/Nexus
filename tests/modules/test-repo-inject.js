@@ -166,6 +166,13 @@ async function run() {
   const fa = await RI.fromReply({ layer, repo, hat: hatX, text: '```js src/c.js\nconst c = 3;\n```', repoDir: DIR });
   check('auto mode: the block is written at once, exact bytes', fa.injects[0].status === 'applied' && read('src/c.js') === 'const c = 3;\n');
   check('auto-written code is still revertable', RI.revert(fa.injects[0].uuid, { layer }).ok && read('src/c.js') === null);
+  // §0.39.361 — BL15's reply: a block holding only the path became a -648 +1 proposal for lib/agent-tools/index.js
+  const bare = await RI.fromReply({ layer, repo, hat: hatX, text: '```js src/a.js\nsrc/a.js\n```', repoDir: DIR });
+  check('a block that is only a path is refused, nothing proposed', bare.injects.length === 0 && /only a path/.test((bare.refused[0] || {}).reason || ''), JSON.stringify(bare.refused));
+  const big = Array.from({ length: 648 }, (_, i) => `const v${i} = ${i};`).join('\n');
+  check('a block that would cut a 648-line file to 2 lines is refused', /648 lines to 2/.test(RI.collapses('lib/x.js', 'const a = 1;\nconst b = 2;', big) || ''));
+  check('a short rewrite of a short file is allowed', RI.collapses('src/a.js', 'const a = 2;', 'const a = 1;\n') === null);
+  check('a new file is allowed at any size', RI.collapses('src/new.js', 'export const x = 1;', null) === null);
   check('an unclosed fence injects nothing', (await RI.fromReply({ layer, repo, hat: null, text: '```js src/d.js\nconst d' })).injects.length === 0 && read('src/d.js') === null);
   RI.setMode(U, 'review');
   fs.rmSync(DIR, { recursive: true, force: true });
