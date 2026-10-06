@@ -85,7 +85,8 @@ export function workSurface({ injects = [], runs: rows = [], readCurrent = () =>
     // a final newline is not a line of its own (the chunk store trims it; an agent's block keeps it) — compared without it
     const _nl = (x) => (x == null ? null : String(x).replace(/\r?\n$/, ''));
     const diff = unifiedDiff(_nl(before), _nl(after), { path: p, context: 3, maxLines: maxDiffLines }) || '';
-    const c = counts(diff);
+    // §0.39.361 — counted from the whole diff: the shown one stops at maxDiffLines, and BL15's -648 read as -400
+    const c = counts(unifiedDiff(_nl(before), _nl(after), { path: p, context: 0, maxLines: Infinity }) || diff);
     const run = _runFor(n, runs);
     files.push({
       path: p, id: n.uuid, status: n.status, op: del ? 'delete' : 'write', creates: before == null && !del,
