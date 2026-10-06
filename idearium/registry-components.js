@@ -117,6 +117,10 @@ const COMPONENTS = [
   _comp('repo.agent.route',         'GET',   '/api/repos/:uuid/agent/route',        "Which model copilot's door would choose for this repo's agent, and the other hops (CT3)", { tags: ['agent'] }),
   _comp('repo.agent.tool.event',    'POST',  '/api/repos/:uuid/agent/tool-event',   "copilot reports one of this repo agent's tool calls as it starts and ends (CT8)", { tags: ['agent'] }),
   _comp('repo.agent.tool.events',   'GET',   '/api/repos/:uuid/agent/tool-events',  "This repo agent's last tool calls, as reported live (CT8)", { tags: ['agent'] }),
+  _comp('repo.agent.stream',        'POST',  '/api/repos/:uuid/agent/stream',       "copilot sends what this repo agent's Ollama model writes, as it writes it — broadcast as idearium.repo.agent.feed (LS3)", { tags: ['agent'] }),
+  _comp('workshop.templates',       'GET',   '/api/workshop/templates',              "Every template the workshop's picker offers — the spec-document templates (genesis first), the COS archetypes and blueprints, the saved ones — each with its 11 parts previewed (RS5)", { tags: ['workshop'] }),
+  _comp('workshop.template.save',   'POST',  '/api/workshop/templates',              "A workshop's sections saved as a template — a new version when it came from that template; the old kept (RS5)", { tags: ['workshop'] }),
+  _comp('workshop.template.remove', 'POST',  '/api/workshop/templates/:tid/remove',  "Archives a saved template — kept, no longer offered; a built-in one is refused (RS5)", { tags: ['workshop'] }),
   _comp('ollama.check',             'GET',   '/api/ollama/check',                   "Installed Ollama models and how every idearium caller would route through copilot's door (CT4)", { tags: ['agent', 'ollama'] }),
   _comp('ollama.check.ask',         'POST',  '/api/ollama/check/ask',               'Ask one Ollama model a one-line question through copilot (CT4)', { tags: ['agent', 'ollama'] }),
   // §LATE 0.39.241 — a reply that arrived after copilot stopped waiting, read back from Clear Glass's Responses index.

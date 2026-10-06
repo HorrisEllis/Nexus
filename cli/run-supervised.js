@@ -17,4 +17,4 @@
 // reads process.env.NEXUS_SUPERVISED synchronously during its own boot
 // sequence (see the §FIX comment near _bootSystems in orchestrator.js).
 process.env.NEXUS_SUPERVISED = '1';
-require('../orchestrator.js');
+require('../orchestrator/orchestrator.js');   // §0.39.355 PB5 — orchestrator.js lives in orchestrator/ (was ../orchestrator.js, which does not exist)

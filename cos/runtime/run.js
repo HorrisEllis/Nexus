@@ -206,6 +206,29 @@ function _stripComments(src) {
   }).join('\n');
 }
 
+/**
+ * _stripTextStrings(src) — §0.39.355 PB4. A quoted string is kept only when it is require()'s, import()'s or an
+ * import/export … from's own argument; every other string is emptied. A test's fixture project written as text
+ * ("const k = require('./kernel')") is not an import of the test — 67 of the Nexus tree's 71 "broken imports" were.
+ * Run after _stripComments (template literals are already emptied there).
+ */
+function _stripTextStrings(src) {
+  return src.split('\n').map((line) => {
+    let out = '';
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c !== '"' && c !== "'") { out += c; continue; }
+      let j = i + 1;
+      while (j < line.length && line[j] !== c) j += line[j] === '\\' ? 2 : 1;
+      const before = out.replace(/\s+$/, '');
+      const isArg = /(?:\brequire|\bimport)\s*\($/.test(before) || /(?:^|[\s;}])(?:from|import)$/.test(before);
+      out += isArg ? line.slice(i, j + 1) : c + c;
+      i = j;
+    }
+    return out;
+  }).join('\n');
+}
+
 /** pkgName('@scope/x/sub') -> '@scope/x'; 'lodash/fp' -> 'lodash' */
 function pkgName(spec) { const p = spec.split('/'); return spec.startsWith('@') ? p.slice(0, 2).join('/') : p[0]; }
 
@@ -216,13 +239,14 @@ function pkgName(spec) { const p = spec.split('/'); return spec.startsWith('@') 
  * fatal at run time as a missing package).
  */
 function resolveDeps(dir, { files: only = null } = {}) {
-  const files = (only || _walk(dir)).filter(f => JS_EXT.has(path.extname(f)) || TS_EXT.has(path.extname(f)));
+  // §0.39.355 PB5 — an archived file is kept for history and never loaded: its imports are not checked
+  const files = (only || _walk(dir)).filter(f => (JS_EXT.has(path.extname(f)) || TS_EXT.has(path.extname(f))) && !/(^|\/)_archive\//.test(f));
   const bare = new Map();         // name -> { name, via, files:Set }
   const brokenRelative = [];
   const builtins = new Set([...builtinModules, ...builtinModules.map(m => `node:${m}`)]);
   for (const f of files) {
     let src; try { src = fs.readFileSync(path.join(dir, f), 'utf8'); } catch (_) { continue; }
-    src = _stripComments(src);
+    src = _stripTextStrings(_stripComments(src));   // §0.39.355 PB4
     const specs = new Set();
     for (const rx of [RX_REQ, RX_IMP, RX_DYN]) { rx.lastIndex = 0; let m; while ((m = rx.exec(src))) specs.add(m[1]); }
     for (const s of specs) {

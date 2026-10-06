@@ -23,7 +23,7 @@
  *   pg.on('pageerror'|'console'|'response'|'requestfailed', fn)   pg.addInitScript(src)
  *   pg.goto(url)  pg.evaluate(fn, arg)  pg.waitForTimeout(ms)  pg.waitForSelector(sel, {timeout,state})
  *   pg.waitForFunction(fn, arg, {timeout})  pg.$(sel)  pg.$$(sel)  pg.$eval  pg.$$eval
- *   pg.click(sel)  pg.fill(sel, v)  pg.selectOption(sel, v|{index}|{value}|{label})  pg.keyboard.press(key)
+ *   pg.click(sel)  pg.dblclick(sel)  pg.fill(sel, v)  pg.selectOption(sel, v|{index}|{value}|{label})  pg.keyboard.press(key)
  *   pg.locator(sel).{count,isVisible,isHidden,textContent,innerText,click,fill,…}  pg.screenshot({path,fullPage})  pg.close()
  *   pg.route(glob|RegExp|fn, (route) => route.fulfill({status,contentType,body}) | route.continue())
  *   pg.exposeFunction(name, fn)  pg.waitForLoadState()  pg.innerText(sel)  pg.textContent(sel)
@@ -360,6 +360,14 @@ class Page extends EventEmitter {
     for (const type of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
       await this._send('Input.dispatchMouseEvent', { type, x: box.x, y: box.y, button: type === 'mouseMoved' ? 'none' : 'left', buttons: type === 'mousePressed' ? 1 : 0, clickCount: type === 'mouseMoved' ? 0 : 1 });
     }
+  }
+  // §0.39.357 — a double-click, as the input system makes it: two press/release pairs, the second with clickCount 2
+  // (the workshop's template picker creates on a double-click)
+  async dblclick(sel, { timeout = 30000 } = {}) {
+    await this.click(sel, { timeout });
+    const box = await this._q(`const el = G.all(sel).find(G.visible); const r = [...el.getClientRects()].find(b => b.width > 0 && b.height > 0) || el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };`, sel);
+    for (const type of ['mousePressed', 'mouseReleased']) await this._send('Input.dispatchMouseEvent', { type, x: box.x, y: box.y, button: 'left', buttons: type === 'mousePressed' ? 1 : 0, clickCount: 2 });
   }
   async fill(sel, value, { timeout = 30000 } = {}) {
     await this.waitForSelector(sel, { timeout });

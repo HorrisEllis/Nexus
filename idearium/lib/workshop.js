@@ -44,6 +44,53 @@ export const FEEDS = Object.freeze({
   'section':       { label: 'Draft this section', icon: '✎', ask: null },
 });
 export const FEED_IDS = Object.freeze(Object.keys(FEEDS));
+
+// §0.39.354 WS7 / WS6 — James: "the spec builder, is supposed to be a huge workshop for building specs" · WS6: the blocks
+// become PARTS in three tiers — MINIMUM (what can be built from with no model), MODS (added when needed), COMPONENTS
+// (the registry). The blocks themselves are the spec engine's (spec-engine/blocks.yaml SPEC_SECTIONS); only the tier is
+// said here.
+export const PART_TIERS = Object.freeze({
+  meta: 'minimum', purpose: 'minimum', schema: 'minimum', api: 'minimum', build_order: 'minimum',
+  axioms: 'mods', events: 'mods', integration: 'mods', failure_modes: 'mods', tests: 'mods',
+  registry: 'components',
+});
+export const TIER_ORDER = Object.freeze(['minimum', 'mods', 'components']);
+// §WS6 — MANUAL: he writes, the agent only checks what is missing; ASSISTED: proposals per part; STRETCHED: his idea
+// carried through every part. In every mode nothing enters the spec without his yes.
+export const MODES = Object.freeze(['manual', 'assisted', 'stretched']);
+export const MODE_GUIDE = Object.freeze({
+  manual: 'Mode MANUAL: James writes this spec himself. Do not write it for him: point only at what is missing, unclear or contradictory.',
+  assisted: 'Mode ASSISTED: propose for the part in front of him, plainly, so he can take it or leave it.',
+  stretched: 'Mode STRETCHED: carry his idea all the way through this part. Say what the idea becomes here, fully, not only what is missing.',
+});
+
+const _norm = (t) => String(t || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim();
+/** partOf(section, block) — does this section fill this block: its part, its id, or its title (the block's or its id) */
+function _fills(s, b) {
+  if (s.part) return s.part === b.id;
+  const id = _norm(s.id).replace(/ /g, '_'), t = _norm(s.title), bt = _norm(b.title), bid = b.id.replace(/_/g, ' ');
+  return id === b.id || t === bt || t === bid || (bt && t.startsWith(bt.split(' ')[0]) && bt.split(' ')[0].length > 4 && t.split(' ')[0] === bt.split(' ')[0]);
+}
+/**
+ * partsOf(session, blocks) -> [{ id, title, tier, sectionId, filled, words }] in tier order, then the blocks' order.
+ * blocks: the spec engine's SPEC_SECTIONS ({ id, title }). A block with no tier here is a mod (never hidden).
+ */
+export function partsOf(session, blocks = []) {
+  const out = (blocks || []).map((b, i) => {
+    const sec = (session.sections || []).find(x => _fills(x, b)) || null;
+    const words = sec ? String(sec.body || '').trim().split(/\s+/).filter(Boolean).length : 0;
+    return { id: b.id, title: b.title, tier: PART_TIERS[b.id] || 'mods', sectionId: sec ? sec.id : null, filled: words > 0, words, _i: i };
+  });
+  out.sort((x, y) => TIER_ORDER.indexOf(x.tier) - TIER_ORDER.indexOf(y.tier) || x._i - y._i);
+  return out.map(({ _i, ...p }) => p);
+}
+/** setMode(session, mode) */
+export function setMode(session, mode) {
+  const m = String(mode || '').toLowerCase();
+  if (!MODES.includes(m)) return { error: `mode must be one of ${MODES.join(', ')}` };
+  if (session.mode !== m) { session.mode = m; session.updatedAt = Date.now(); session.history.push({ at: session.updatedAt, what: `mode ${m}` }); }
+  return { session };
+}
 export const PROPOSAL_STATUS = Object.freeze(['open', 'accepted', 'dismissed']);
 
 // the d20: twenty fields, each with one mechanism worth stealing (James: "d20 cross domain dice for ideation")
@@ -91,21 +138,23 @@ export function sectionId(title, sections = []) {
 }
 
 /** makeSession({ title, source, sections, ambition }) -> session (not stored) */
-export function makeSession({ title, source = { kind: 'blank' }, sections = [], ambition = 3, repoUuid = null, specPath = null, ideaUuid = null } = {}) {
+export function makeSession({ title, source = { kind: 'blank' }, sections = [], ambition = 3, repoUuid = null, specPath = null, ideaUuid = null, mode = 'assisted', template = null } = {}) {
   const t = String(title || '').trim();
   if (!t) return { error: 'a workshop needs a title' };
   const now = Date.now();
   const secs = [];
   for (const s of sections) {
     const body = String(s.body == null ? '' : s.body).replace(IMPORT_TAG_RE, '');
-    secs.push({ id: sectionId(s.id || s.title, secs), title: String(s.title || s.id || 'section'), body, updatedAt: now, by: s.by || 'source' });
+    // §0.39.357 RS5 — a section a template made keeps the part it fills (it was dropped here before)
+    secs.push({ id: sectionId(s.id || s.title, secs), title: String(s.title || s.id || 'section'), body, updatedAt: now, by: s.by || 'source', ...(s.part && PART_TIERS[s.part] ? { part: s.part } : {}) });
   }
   if (!secs.length) secs.push({ id: 'purpose', title: 'Purpose', body: '', updatedAt: now, by: 'james' });
   return {
     session: {
-      uuid: _id('ws'), title: t, source, ambition: clampAmbition(ambition), sections: secs, removed: [], proposals: [],
+      uuid: _id('ws'), title: t, source, ambition: clampAmbition(ambition), mode: MODES.includes(mode) ? mode : 'assisted', sections: secs, removed: [], proposals: [],
       repoUuid, specPath, ideaUuid, station: 'workshop', savedAt: null, createdAt: now, updatedAt: now,
-      history: [{ at: now, what: `opened from ${source.kind}${source.title ? `: ${source.title}` : ''}` }],
+      ...(template ? { template } : {}),
+      history: [{ at: now, what: `opened from ${source.kind}${source.title ? `: ${source.title}` : ''}${template ? ` · template ${template.label || template.id}` : ''}` }],
     },
   };
 }
@@ -156,12 +205,12 @@ export const MAX_SECTION = 20000;
 export const MAX_TITLE = 160;
 
 /** editSection(session, { id, title?, body?, add?, remove? }) — James's own writing; removal archives (§0.3) */
-export function editSection(session, { id = null, title = null, body = null, add = false, remove = false, after = null } = {}) {
+export function editSection(session, { id = null, title = null, body = null, add = false, remove = false, after = null, part = null, move = null } = {}) {
   if (body != null && String(body).length > MAX_SECTION) return { error: `the section is ${String(body).length} characters — the limit is ${MAX_SECTION}` };
   if (title != null && String(title).trim().length > MAX_TITLE) return { error: `the title is ${String(title).trim().length} characters — the limit is ${MAX_TITLE}` };
   if (add) {
     const t = String(title || 'New section').trim();
-    const s = { id: sectionId(t, session.sections), title: t, body: String(body || ''), updatedAt: Date.now(), by: 'james' };
+    const s = { id: sectionId(t, session.sections), title: t, body: String(body || ''), updatedAt: Date.now(), by: 'james', ...(part ? { part: String(part) } : {}) };
     const at = after ? session.sections.findIndex(x => x.id === after) : -1;
     if (at >= 0) session.sections.splice(at + 1, 0, s); else session.sections.push(s);
     _touch(session, `added section ${s.title}`);
@@ -169,6 +218,13 @@ export function editSection(session, { id = null, title = null, body = null, add
   }
   const i = session.sections.findIndex(s => s.id === id);
   if (i < 0) return { error: `no section ${id}` };
+  // §0.39.354 WS7 — a document writer moves its sections: 'up', 'down', or a position (0-based)
+  if (move != null) {
+    const to = move === 'up' ? i - 1 : move === 'down' ? i + 1 : Number(move);
+    if (!Number.isInteger(to) || to < 0 || to >= session.sections.length) return { error: `cannot move ${session.sections[i].title} ${move}` };
+    if (to !== i) { const [m] = session.sections.splice(i, 1); session.sections.splice(to, 0, m); _touch(session, `moved ${m.title} to ${to + 1}`); }
+    return { session, section: session.sections[to] };
+  }
   if (remove) {
     const [gone] = session.sections.splice(i, 1);
     session.removed.push({ ...gone, removedAt: Date.now() });
@@ -215,6 +271,7 @@ export function feedPrompt(session, kind, { sectionId: sid = null, roll = null, 
     `You are helping James make a spec in his spec workshop. James is the idea generator; you only propose. He accepts or dismisses each line.`,
     `Ambition ${session.ambition} of 5 (${amb.label}): ${amb.guide}`,
     `Answer with one proposal per line. No preamble, no numbering, no closing remarks.`,
+    ...(MODE_GUIDE[session.mode] ? [MODE_GUIDE[session.mode]] : []),   // §0.39.354 WS7 / WS6
   ].join('\n');
   const spec = _specDigest(session, { focus: sid });
   let ask, meta = {};
@@ -289,8 +346,9 @@ export function decide(session, puid, { action, sectionId: sid = null, mode = 'a
 
 /** summary(session) — the listing row */
 export function summary(s) {
-  return { uuid: s.uuid, title: s.title, source: s.source, ambition: s.ambition, sections: s.sections.length,
-    open: s.proposals.filter(p => p.status === 'open').length, repoUuid: s.repoUuid, specPath: s.specPath, savedAt: s.savedAt, updatedAt: s.updatedAt };
+  return { uuid: s.uuid, title: s.title, source: s.source, ambition: s.ambition, mode: s.mode || 'assisted', sections: s.sections.length,
+    open: s.proposals.filter(p => p.status === 'open').length, repoUuid: s.repoUuid, specPath: s.specPath, savedAt: s.savedAt, updatedAt: s.updatedAt,
+    ...(s.template ? { template: { id: s.template.id, label: s.template.label || null } } : {}) };
 }
 
 // ── the agent ─────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -315,5 +373,97 @@ export async function feed(session, kind, opts = {}) {
   return { ...out, meta: fp.meta };
 }
 
+// ── §0.39.357 RS5 — the template picker ───────────────────────────────────────────────────────────────────────────
+// James: "opens a pick template screen like photoshop does when you first open it. with a custom or manual option with
+// a plus sign. then you pick a template from the list, including all the quick spec options" · asked whether the
+// workshop's start page becomes it: "yes with a custom or manual."
+// Pure: the API reads the templates (spec-engine/templates.js, the COS archetypes and blueprints, the saved ones) and
+// hands them in. Map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec RS5.
+export const TEMPLATE_TABLE = 'idearium_workshop_templates';
+export const CUSTOM = Object.freeze({ id: 'custom', label: 'CUSTOM / MANUAL', group: 'custom', mode: 'manual',
+  description: 'A blank document. You write it; the agent only points at what is missing.' });
+const _FILES_TITLE = 'Starting files';
+
+/**
+ * templateSections({ template, seeds, cosFiles, saved, blocks, have }) -> [{ title, body, part, by }]
+ *   seeds:    { partId: text } a document template fills (spec-engine's own seeding — nothing invented here)
+ *   cosFiles: a COS template's starting files [{ path, layer }] → the Build Order part
+ *   saved:    a saved template's sections, as they were saved
+ *   have:     part ids the workshop already fills (from its source) — a template never writes over them
+ * A template that is not CUSTOM also lays out the MINIMUM parts it does not fill, empty: its structure, nothing more.
+ */
+export function templateSections({ template, seeds = {}, cosFiles = null, saved = null, blocks = [], have = [] } = {}) {
+  if (!template || template.id === CUSTOM.id) return [];
+  if (saved) return saved.map(x => ({ title: x.title, body: x.body || '', part: x.part || null, by: 'template' }));
+  const title = (id) => (blocks.find(b => b.id === id) || {}).title || id;
+  const out = [], took = new Set(have);
+  for (const b of blocks) {
+    if (took.has(b.id)) continue;
+    let body = null;
+    if (seeds[b.id]) body = String(seeds[b.id]);
+    else if (b.id === 'build_order' && cosFiles && cosFiles.length) {
+      const by = {}; for (const f of cosFiles) (by[f.layer || 'runtime'] = by[f.layer || 'runtime'] || []).push(f.path);
+      body = `${_FILES_TITLE} from ${template.label || template.id} (the template's own files, by layer):\n` + Object.entries(by).map(([l, ps]) => `- ${l}: ${ps.join(', ')}`).join('\n');
+    } else if (PART_TIERS[b.id] === 'minimum') body = '';
+    if (body == null) continue;
+    took.add(b.id);
+    out.push({ title: title(b.id), body, part: b.id, by: 'template' });
+  }
+  return out;
+}
+
+/** previewOf(...) — what the details panel shows: each block, lit where the template fills it, with its first lines */
+export function previewOf(args = {}) {
+  const secs = templateSections(args);
+  return (args.blocks || []).map(b => {
+    const s = secs.find(x => x.part === b.id);
+    return { id: b.id, title: b.title, tier: PART_TIERS[b.id] || 'mods', filled: !!(s && s.body.trim()), laid: !!s, excerpt: s && s.body.trim() ? s.body.trim().slice(0, 240) : null };
+  });
+}
+
+/**
+ * savedTemplates(rows) -> the saved templates as the picker lists them: each slug's newest version (versions counted),
+ * an archived one left out (kept in the table — §0.3).
+ */
+export function savedTemplates(rows = []) {
+  const bySlug = new Map();
+  for (const r of rows) { const l = bySlug.get(r.slug) || []; l.push(r); bySlug.set(r.slug, l); }
+  const out = [];
+  for (const [slug, list] of bySlug) {
+    list.sort((a, b) => (a.version || 0) - (b.version || 0) || (a.at || 0) - (b.at || 0));
+    const last = list[list.length - 1];
+    if (last.archived) continue;
+    const versions = list.filter(x => !x.archived);
+    out.push({ id: `saved:${slug}`, slug, label: last.label, description: last.description || '', group: 'saved', version: last.version,
+      versions: versions.length, savedAt: last.at, basedOn: last.basedOn || null, sections: last.sections, mode: last.mode || null });
+  }
+  return out.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
+}
+
+/**
+ * templateRow(session, { label, description, rows }) -> { row } | { error }
+ * The workshop's sections as a saved template. Opened from a saved template and no new label → its next version
+ * (the old kept); otherwise a new template (version 1, or the next free version of a slug that already exists).
+ */
+export function templateRow(session, { label = null, description = '', rows = [] } = {}) {
+  if (!session || !session.sections || !session.sections.length) return { error: 'nothing to save — the workshop has no sections' };
+  const from = session.template && String(session.template.id || '').startsWith('saved:') ? session.template.id.slice(6) : null;
+  const name = String(label || '').trim() || (from ? (savedTemplates(rows).find(t => t.slug === from) || {}).label : '') || session.title;
+  const slug = !String(label || '').trim() && from ? from : (_slug(name) || 'template');
+  const version = rows.filter(r => r.slug === slug).reduce((m, r) => Math.max(m, r.version || 0), 0) + 1;
+  const at = Date.now();
+  return { row: { uuid: `tpl-${slug}-v${version}`, slug, version, label: String(name).slice(0, 120), description: String(description || '').slice(0, 400), at,
+    basedOn: session.template ? { id: session.template.id, label: session.template.label || null, version: session.template.version || null } : null,
+    mode: session.mode || null, fromWorkshop: session.uuid,
+    sections: session.sections.map(x => ({ title: x.title, body: x.body || '', part: x.part || null })) } };
+}
+/** archiveRow(rows, slug) -> the row that hides a saved template (the versions stay) | { error } */
+export function archiveRow(rows, slug) {
+  const live = savedTemplates(rows).find(t => t.slug === slug);
+  if (!live) return { error: `no saved template "${slug}"` };
+  return { row: { uuid: `tpl-${slug}-archived-${Date.now().toString(36)}`, slug, version: live.version, label: live.label, archived: true, at: Date.now(), sections: [] } };
+}
+
 export default { TABLE, AMBITION, FEEDS, FEED_IDS, DOMAINS, rollD20, makeSession, sectionsFromSpecText, specText, editSection, restoreSection,
-  feedPrompt, parseLines, addProposals, decide, summary, setAsk, ask, feed, clampAmbition, sectionId };
+  feedPrompt, parseLines, addProposals, decide, summary, setAsk, ask, feed, clampAmbition, sectionId,
+  TEMPLATE_TABLE, CUSTOM, templateSections, previewOf, savedTemplates, templateRow, archiveRow };

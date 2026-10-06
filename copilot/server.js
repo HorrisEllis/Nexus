@@ -833,17 +833,29 @@ function sseSend(res, event, data) {
 // continues a cut reply, so a long file took longer than this wait and was handed back half-written. The wait follows
 // the bridge's own cap (it fails the job itself on an idle model — this loop is not the timeout anymore).
 const OLLAMA_JOB_MAX_WAIT_S = parseInt(process.env.COPILOT_OLLAMA_MAX_WAIT_S || '660', 10);
-async function _pollOllamaJobHeadless(jobRef) {
+// §0.39.356 LS2 — opts.onPartial({ jobId, model, delta, fullLen, thinkingLen }): what the model wrote since the last poll
+// (the bridge's job.partial, LS1), every 500 ms while it writes — the caller shows the model writing. Without it, as before.
+async function _pollOllamaJobHeadless(jobRef, opts = {}) {
   const jobId = jobRef?.jobId || jobRef;
   if (!jobId) return { text: '', toolCalls: null };
   const MAX_WAIT = OLLAMA_JOB_MAX_WAIT_S;
-  let lastText = '';
-  for (let i = 0; i < MAX_WAIT; i++) {
-    await new Promise(r => setTimeout(r, 1000));
+  const onPartial = typeof opts.onPartial === 'function' ? opts.onPartial : null;
+  const step = onPartial ? 500 : 1000;
+  let lastText = '', sent = 0;
+  for (let i = 0; i < MAX_WAIT * 1000 / step; i++) {
+    await new Promise(r => setTimeout(r, step));
     try {
       const status = await _fetch(`${OL_URL}/api/jobs/${jobId}`, { timeout: 3000 });
       const job = status?.job;
       if (!job) continue;
+      if (onPartial && typeof job.partial === 'string') {
+        const full = (job.partialDropped || 0) + job.partial.length;
+        if (full > sent) {
+          const delta = job.partial.slice(Math.max(0, job.partial.length - (full - sent)));
+          sent = full;
+          try { onPartial({ jobId, model: job.model || null, delta, fullLen: full, thinkingLen: (job.partialThinking || '').length }); } catch (_) {}
+        }
+      }
       if (job.result && job.result.length > lastText.length) lastText = job.result;
       if (job.status === 'complete') {
         return { text: job.result || lastText, modelUsed: job.model || 'ollama',
@@ -853,6 +865,18 @@ async function _pollOllamaJobHeadless(jobRef) {
     } catch (_) {}
   }
   return { text: lastText, modelUsed: 'ollama', timedOut: true, toolCalls: null };
+}
+
+// §0.39.356 LS2 — a poll that tells the sink each turn's start, its text as it grows, and its end
+function _streamingPoll(sink) {
+  return async (jobRef) => {
+    const jobId = jobRef?.jobId || jobRef;
+    sink({ event: 'dispatched', jobId, generating: true });
+    let model = null;
+    const r = await _pollOllamaJobHeadless(jobRef, { onPartial: (p) => { model = p.model || model; sink({ event: 'chunk', jobId, model, text: p.delta, fullLen: p.fullLen, generating: true }); } });
+    sink({ event: r.failed ? 'error' : r.timedOut ? 'timeout' : 'complete', jobId, model: r.modelUsed && r.modelUsed !== 'ollama' ? r.modelUsed : model, chars: (r.text || '').length, generating: false });
+    return r;
+  };
 }
 
 async function _streamOllamaJob(jobId, res, sessionId) {
@@ -2523,6 +2547,10 @@ const server = http.createServer(async (req, res) => {
           // §CT8 — each tool call reported as it starts and ends to the caller's sink (idearium's tool-event route), so the
           // Code tab shows the agent working; loopback only, fire and forget, never in the way of the run
           const onToolCall = toolRuntime.toolEventSink(T.progressUrl, { session: sessionId || null, repoUuid: T.repoUuid ? String(T.repoUuid) : null });
+          // §0.39.356 LS2 — what the model writes, as it writes it, to the caller's stream sink (idearium's agent/stream
+          // route → the Code tab and the work surface). Ollama only: a browser agent's text reaches idearium through
+          // guardian's own feed (0.39.244), with its DOM mutations and node anchor.
+          const onStream = body.backend === 'guardian' ? null : toolRuntime.streamSink(T.streamUrl, { session: sessionId || null, repoUuid: T.repoUuid ? String(T.repoUuid) : null });
           // 0.39.258 — composed: the caller (idearium's repo agent) built the whole prompt from blocks the person
           // edits; the loop adds no system prompt, identity or turn labels (copilot/tool-runtime.js composed mode).
           const composed = T.composed === true;
@@ -2543,7 +2571,7 @@ const server = http.createServer(async (req, res) => {
               worksetTemplate, question: typeof T.question === 'string' ? T.question : null, sessionId,
               checklist: Array.isArray(T.checklist) ? T.checklist.slice(0, 20) : null,   // §0.39.339 SB39
               dispatch: (convo, sysContext, o) => _dispatchToOllama(convo, sysContext, { ...o, intent: 'tool-loop', requestId, sessionId, model: olModel, raw: composed }),
-              pollJob: _pollOllamaJobHeadless });
+              pollJob: onStream ? _streamingPoll(onStream) : _pollOllamaJobHeadless });
           }
           const toolCallLog = (loop.toolCallLog || []).map(t => ({ name: t.name, arguments: t.arguments, iteration: t.iteration, scopeRejected: !!t.scopeRejected,
             ok: !(t.result && t.result.error), error: t.result && t.result.error ? String(t.result.error).slice(0, 300) : null }));

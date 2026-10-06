@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     spec-workshop-rebuild
-    version:  1.0.0
+    version:  1.1.0   # 1.1.0: RS5 built on James's yes (0.39.357) — the workshop's start page is the template picker
     date:     2026-10-05
     release:  0.39.345 (base)
     uuid:     nexus-spec-workshop-rebuild-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -113,7 +113,29 @@ spec:
 
     RS5_the_template_picker:
       layer: ui
-      status: OPEN
+      status: "DONE (0.39.357) — on James's yes; see the addendum below"
+      james_2026_10_05: >-
+        asked "Should the workshop's start page become the RS5 "photoshop style" template picker?" — "yes with a custom or manual."
+      addendum_0_39_357: >-
+        Built as the WS7 workshop's start page (idearium/ui/js/template-picker.js, css in workshop.css), not a separate
+        screen: what WS7 started from (a title, the Void, the library, a repo) is kept and becomes the picker's START FROM.
+        The grid: + CUSTOM / MANUAL first (a blank document in manual mode — you write, the agent only points at what is
+        missing), then every template the quick spec offers — the spec-document templates (genesis first, marked the
+        default), the COS archetypes and COS blueprints — and his saved ones, in tabs with counts. The details panel
+        previews the 11 parts, each lit where the template fills it (with its first lines), a COS template's starting
+        files by layer; the title, START FROM, the mode, CREATE. A picked template seeds the workshop
+        (GET /api/workshop/templates, POST /api/workshop {template, mode}): its seeded parts as sections, the MINIMUM
+        parts it does not fill as empty sections; a COS template's files become the Build Order part. ?from=idea:<uuid>
+        (a promoted idea) opens the picker with the idea as START FROM, no longer straight into a blank document.
+        Templates: SAVE AS TEMPLATE in the writer saves the workshop's sections as a template — saving again from a
+        workshop opened from that template is its next version, the old kept; REMOVE archives a saved one (kept, hidden).
+        The built-in templates are files in the codebase: not removable from the page, said; editing one is opening it,
+        changing it and saving it as a template.
+      drift: >-
+        depends_on RS4 (the pipeline on WARP 2) is not needed by the picker and was not waited on. RS5's blocks preview is
+        the spec engine's 11 blocks (blocks.yaml) — RS3's id-keyed spec document is not built, so a block id cannot yet be
+        custom. A COS template seeds its starting files into the spec; the code the pipeline builds does not yet start
+        from those files (the New Spec modal's file-tree path does) — said on the card.
       james: '"opens a pick template screen like photoshop does when you first open it. with a custom or manual option with a plus sign. then you pick a template from the list, including all the quick spec options"'
       depends_on: [RS4_the_pipeline_on_warp2]
       files: [idearium/ui/workshop.html, idearium/ui/js/template-picker.js]

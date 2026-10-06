@@ -252,7 +252,7 @@ async function main() {
     assert.ok(!/\bprompt\(|\bconfirm\(/.test(code), 'no browser prompt()/confirm() — they speak lowercase');
     for (const st of ['OPENING THE ARCHITECT', 'THE ARCHITECT IS UNREACHABLE', 'REUSE', 'NEW', 'GAP']) assert.ok(page.includes(st), st);
     assert.match(page, /const AGENT_MS = 330000/);
-    const wpage = fs.readFileSync(path.join(ROOT, 'idearium/ui/workshop.html'), 'utf8');
+    const wpage = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/workshop.js'), 'utf8');   // 0.39.354 WS7 — the page's script is its own file
     assert.match(wpage, /architect\.html\?from=workshop:/, 'the workshop\'s ARCHITECT station opens the architect');
     const cli = fs.readFileSync(path.join(ROOT, 'idearium/cli/index.js'), 'utf8');
     for (const c of ['list', 'new', 'show', 'add', 'draft', 'accept', 'dismiss', 'save']) assert.match(cli, new RegExp(`async 'architect\\.${c}'`));

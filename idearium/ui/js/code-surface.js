@@ -27,6 +27,10 @@
 // blinking next to it". Each tool call the agent makes arrives as it starts and ends (idearium.repo.agent.tool, from
 // copilot's loop; GET …/agent/tool-events for a page opened mid-run): a blinking dot on the call that is running and on
 // the file it is reading or editing in the tree, ✓ / ✗ when it ends. Only the tree and the activity strip repaint.
+//
+// §0.39.356 LS4 — James: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel and
+// code tab." Above activity, the agent writing (app.js agentLiveHtml / agentLivePaint — the Agent tab's feed state): an
+// Ollama model's text as it writes, or a browser agent's DOM mutations, its node anchor and its reply.
 // ════════════════════════════════════════════════════════════════════════════
 
 const CS = { uuid: null, overview: null, overviewError: null, open: null, text: null, textError: null, outline: null, outlineError: null,
@@ -379,6 +383,7 @@ function csPaint() {
       <div class="cs-right"><div class="cs-card">${_csCardHtml()}</div><div class="cs-agent">${_csAgentHtml()}</div></div>
     </div>
     ${_csPlanStrip()}
+    <div class="al cs-live" data-al="${escapeHtml(repo.uuid)}">${typeof agentLiveHtml === 'function' ? agentLiveHtml(repo.uuid) : ''}</div>
     <div class="cs-activity" id="cs-activity">${_csActivity()}</div></div>`;
   const code = document.getElementById('cs-code'); if (code && scroll) code.scrollTop = scroll;
   const t2 = document.getElementById('cs-talk'); if (t2) t2.scrollTop = talk ? t2.scrollHeight : t2.scrollHeight;

@@ -89,5 +89,5 @@ module.exports = {
   // checking "what does this bridge think it is" has one place to look,
   // not two) ─────────────────────────────────────────────────────────────
   SYSTEM_ID: 'ollama',
-  VERSION:   '1.0.0',
+  VERSION:   '1.1.0',   // 0.39.356 LS1 — job.partial
 };

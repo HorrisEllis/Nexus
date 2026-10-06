@@ -552,6 +552,26 @@
       "_action": "repo.agent.tool.events"
     },
     {
+      "method": "POST",
+      "path": "/api/repos/:uuid/agent/stream",
+      "_action": "repo.agent.stream"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workshop/templates",
+      "_action": "workshop.templates"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workshop/templates",
+      "_action": "workshop.template.save"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workshop/templates/:tid/remove",
+      "_action": "workshop.template.remove"
+    },
+    {
       "method": "GET",
       "path": "/api/ollama/check",
       "_action": "ollama.check"

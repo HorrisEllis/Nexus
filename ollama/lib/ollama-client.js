@@ -83,6 +83,8 @@ function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
   const done = (ok, error) => OA.record({ caller, op: 'generate', model, promptChars: String(prompt || '').length, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
   return new Promise((resolve, reject) => {
     let text = '', thinking = '', buf = '', settled = false, idle = null;
+    // §0.39.356 LS1 — each token as it arrives, to whoever wants to show the model writing (never in the way of the reply)
+    const _tell = (d, kind) => { if (typeof extra.onDelta === 'function') { try { extra.onDelta(d, kind); } catch (_) {} } };
     const total = setTimeout(() => fail(`ollama generate exceeded ${Math.round(config.RAW_GENERATE_TOTAL_MS / 1000)} s in total`), config.RAW_GENERATE_TOTAL_MS);
     const fail = (msg) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); try { req.destroy(); } catch (_) {} done(false, msg); reject(new Error(msg)); };
     const ok = (o) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); done(true); resolve({ text, thinking, doneReason: o.done_reason || null, evalCount: o.eval_count || null }); };
@@ -106,8 +108,8 @@ function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
           if (!line.trim()) continue;
           let o; try { o = JSON.parse(line); } catch (_) { continue; }
           if (o.error) return fail(`ollama generation error for model "${model}": ${o.error}`);
-          if (o.response) text += o.response;
-          if (o.thinking) thinking += o.thinking;
+          if (o.response) { text += o.response; _tell(o.response, 'text'); }
+          if (o.thinking) { thinking += o.thinking; _tell(o.thinking, 'thinking'); }
           if (o.done) return ok(o);
         }
       });
@@ -116,8 +118,8 @@ function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
         if (buf.trim()) {
           let o = null; try { o = JSON.parse(buf); } catch (_) {}
           if (o && o.error) return fail(`ollama generation error for model "${model}": ${o.error}`);
-          if (o && o.response) text += o.response;
-          if (o && o.thinking) thinking += o.thinking;
+          if (o && o.response) { text += o.response; _tell(o.response, 'text'); }
+          if (o && o.thinking) { thinking += o.thinking; _tell(o.thinking, 'thinking'); }
           if (o && o.done) return ok(o);
         }
         if (!settled) ok({ done_reason: 'stream-ended' });
@@ -137,10 +139,11 @@ function _ollamaCut(text, { doneReason } = {}) {
   return { cut: false, reason: null };
 }
 
-// opts (0.39.291): { system, temperature } — so idearium's chunk builds (idearium/agent-suite generateWithOllama) use this
+// opts (0.39.291): { system, temperature } (0.39.356: onDelta) — so idearium's chunk builds (idearium/agent-suite generateWithOllama) use this
 // one hardened path too: streamed, idle timeout, thinking-only retry, a cut reply continued
 async function callOllamaRaw(model, prompt, maxTokens, timeoutMs, caller = 'ollama-bridge.job', opts = {}) {
-  const base = { ...(opts.system ? { system: opts.system } : {}), ...(opts.temperature != null ? { temperature: opts.temperature } : {}) };
+  // §0.39.356 LS1 — opts.onDelta(delta, 'text' | 'thinking'): every round's tokens (the think:false retry and each continuation too)
+  const base = { ...(opts.system ? { system: opts.system } : {}), ...(opts.temperature != null ? { temperature: opts.temperature } : {}), ...(typeof opts.onDelta === 'function' ? { onDelta: opts.onDelta } : {}) };
   let first = await _generateOnce(model, prompt, maxTokens, timeoutMs, caller, base);
   if (!first.text.trim() && first.thinking.trim()) {
     console.warn(`[ollama-bridge] ${model}: ${first.thinking.length} chars of thinking and no answer (${first.doneReason || 'done'}) — asking again with think:false`);

@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.18
+    version:  1.7.19
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -565,7 +565,7 @@ spec:
       layer: interface
       systems: [idearium]
       value: { score: 4, cost: M, for: [daily-use], why: "the workshop he asked for: parts, modes, his ideas only" }
-      status: OPEN
+      status: "OPEN — partly built by 0.39.354 WS7 (docs/2026-10-02-workshop-codex-rewind-phasemap.spec): no REACH on the page, the blocks as parts in the three tiers, the three modes (each said in the agent's prompt), STRETCHED's proposals never written on their own. Left here: templates as kits of parts, MINIMUM building through T0/T1 with zero model calls (needs CB3)"
       depends_on: [CB3_the_causal_spec_block]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec WS5]
       files: [idearium/ui/workshop.html, idearium/lib/workshop.js, idearium/spec-engine/blocks.yaml, idearium/spec-engine/templates/]

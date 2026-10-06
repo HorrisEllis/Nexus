@@ -1,4 +1,7 @@
 'use strict';
+// ARCHIVED 0.39.355 (docs/2026-10-05-cli-data-code-phasemap.spec PB5): the JavaScript runner of the layout before the
+// TypeScript rewrite — ../registry/NodeRegistry, ../behavior/BehaviorEngine and ../core/SignalDispatcher no longer exist
+// (now src/registry, src/behavior, src/dispatcher). The suite is tests/suite.ts (npm test). Kept, not deleted (§0.3).
 
 /**
  * ErosmancerOS — Integration + Unit Tests

@@ -216,6 +216,10 @@ const SCHEMA = {
     escalate_on:         { default: 'failed,blocked,incomplete,tool-errors', copilot_writable: true, type: 'string' },
     retries_per_rung:    { default: 1, min: 1, max: 5, copilot_writable: true, type: 'number' },
     max_tool_errors:     { default: 3, min: 0, max: 20, copilot_writable: true, type: 'number' },
+    // §0.39.355 PB1 — James: "i clicked on a phase … it needs to actually build it". The derived ladder started at a 0.6b
+    // model, which cannot build a phase. Ollama models smaller than this (by the size in their name) are left off a
+    // derived ladder; unsized ones stay; a written escalation is taken exactly as written. 0 = keep every model.
+    min_build_b:         { default: 3, min: 0, max: 1000, copilot_writable: true, type: 'number' },
   },
 
   cicd: {

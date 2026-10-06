@@ -645,4 +645,20 @@ function toolEventSink(url, extra = {}, post = null) {
   };
 }
 
-module.exports = { toolEventSink, run, runViaAgent, makeOllamaCallModel, makeNcpCallModel, fillToolPlaceholders, formatToolResult, _extractToolCalls, _parseToolBlocks, _findToolCalls, toolCount: () => agentTools.TOOLS.size };
+// §0.39.356 LS2 — the stream sink: the toolEventSink's rules (loopback only, fire and forget, 2 s), for what the model
+// writes. ev: { event: dispatched | chunk | complete | error | timeout, jobId, model, text, fullLen, generating, chars }
+function streamSink(url, extra = {}, post = null) {
+  if (!url || typeof url !== 'string') return null;
+  let u; try { u = new URL(url); } catch (_) { return null; }
+  if (u.protocol !== 'http:' || !['127.0.0.1', 'localhost', '::1', '[::1]'].includes(u.hostname)) return null;
+  return (ev) => {
+    const data = JSON.stringify({ ...extra, ...ev, text: typeof ev.text === 'string' ? ev.text.slice(-20000) : undefined, at: Date.now() });
+    if (post) return post(u, data);   // tests
+    const req = require('http').request({ hostname: u.hostname.replace(/^\[|\]$/g, ''), port: u.port || 80, path: u.pathname + u.search, method: 'POST',
+      headers: { 'content-type': 'application/json', 'content-length': Buffer.byteLength(data) }, timeout: 2000 }, (r) => r.resume());
+    req.on('error', () => {}); req.on('timeout', () => req.destroy());
+    req.end(data);
+  };
+}
+
+module.exports = { toolEventSink, streamSink, run, runViaAgent, makeOllamaCallModel, makeNcpCallModel, fillToolPlaceholders, formatToolResult, _extractToolCalls, _parseToolBlocks, _findToolCalls, toolCount: () => agentTools.TOOLS.size };

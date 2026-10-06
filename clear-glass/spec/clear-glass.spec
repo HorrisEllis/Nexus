@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        clear-glass
-    version:     3.23.0   # 0.39.301 MINOR — the Fiverr gig writer (src/autofill/gig.js); was 3.22.0, 0.39.281 MINOR — browser steps with ErosmancerOS input; the ErosmancerOS workbench. Previous: 3.21.0 0.39.280 MINOR — compartment windows, co-pilot verbs. 3.18.0–3.20.0 were in lib/version.js and the addenda only — synced here (§5.4). Previous 3.17.0:
+    version:     3.24.0   # 0.39.357 MINOR — the driver's page.dblclick(sel). Previous 3.23.0: 0.39.301 MINOR — the Fiverr gig writer (src/autofill/gig.js); was 3.22.0, 0.39.281 MINOR — browser steps with ErosmancerOS input; the ErosmancerOS workbench. Previous: 3.21.0 0.39.280 MINOR — compartment windows, co-pilot verbs. 3.18.0–3.20.0 were in lib/version.js and the addenda only — synced here (§5.4). Previous 3.17.0:
     foundation:  nexus-system-foundation@1.1.0
     port:        7702
     uuid:        nexus-clear-glass-v1-0000-2026-0901-jamesbrooks-001
@@ -682,3 +682,8 @@ spec:
   # (shipped 0.39.265, never in the registry). Nodes regenerated — they were stale at 3.17.0. 3.23.0.
   # Proven by tests/modules/clear-glass-gig.test.js (7/7). Not proven here: Fiverr's live editor — it is checked by the
   # preview against the real page on James's machine; anything it cannot match stays one click away to copy.
+
+# ── ADDENDUM 2026-10-05 (0.39.357) — 3.24.0 ──
+# src/driver/glass.js: page.dblclick(sel) — click(sel), then a second mousePressed/mouseReleased pair with clickCount 2 at the
+# element's centre, through Input.dispatchMouseEvent like click (real input, so dblclick listeners fire as for a person).
+# Needed by the workshop's template picker (a double-click on a template creates from it; tests/modules/test-template-picker).

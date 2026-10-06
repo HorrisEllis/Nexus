@@ -1623,6 +1623,7 @@ export default {
   // `se.listTemplates is not a function` at runtime. Caught by calling the
   // live endpoint, not by reading the file.
   listTemplates, getTemplate, readSeed,
+  templateSeedSections: _seedSectionsFromTemplate,   // §0.39.357 RS5 — the workshop's template picker seeds from the same parser
   findByDedupKey, findPriorSection, importSpec,
   createSpec, createFileTreeSpec, loadSpec, loadSpecMeta, saveSpec, listSpecs,
   nextPendingChunk, markChunkBuilding, completeChunk, failChunk, setChunkAgent, recordDispatchJob, recordChunkRoute, setWarpPrimitives,

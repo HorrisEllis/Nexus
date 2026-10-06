@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     workshop-codex-rewind
-    version:  1.6.0
+    version:  1.7.0
     date:     2026-10-02
     release:  0.39.294 (DP1 + RW1) → each later phase its own patch
     uuid:     nexus-workshop-codex-rewind-phasemap-v1-0000-2026-1002-jamesbrooks-001
     owner:    idearium · cos · guardian · architect · lib · docs
-    status:   "MAPPED 2026-10-02; SW1 built (0.39.294), SW2 (0.39.297), AR2 (0.39.298) — James chose the order: \"the workshop and maybe it hooks into the spec field\""
+    status:   "MAPPED 2026-10-02; SW1 built (0.39.294), SW2 (0.39.297), AR2 (0.39.298) — James chose the order: \"the workshop and maybe it hooks into the spec field\"; WS7 the full workshop (0.39.354)"
     axioms:   docs/AXIOMS-v3.1.md — §3.1 bottom-up, §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost,
               §1.2 nothing silently fails, §10.3 one source of truth, §10.1 one write authority per data type.
     origin: >
@@ -201,7 +201,7 @@ spec:
 
     PL1_one_entry_point:
       layer: service
-      status: OPEN
+      status: "OPEN — 0.39.354 WS7 walks Workshop → Repo from the page (SEND TO THE PIPELINE on the repo's own routes); the run node, its gates and the CLI are still this phase's"
       depends_on: [SW1_spec_workshop, AR2_architect_in_the_workshop, BP1_destroy_and_rebuild_blueprint]
       files: [idearium/lib/pipeline.js, idearium/api/index.js, idearium/cli/index.js]
       does: >-
@@ -240,7 +240,7 @@ spec:
 
     UI12_workshop_surface:
       layer: interface
-      status: OPEN
+      status: "OPEN — 0.39.354 WS7 built the workshop page itself (the stations true to state, sections, the agent; WS6 took the ambition dial out); left here: Welcome → Start, the Architect map and Blueprint diff, retiring the old builders"
       depends_on: [SW1_spec_workshop, AR2_architect_in_the_workshop, BP1_destroy_and_rebuild_blueprint, PL1_one_entry_point]
       files: [idearium/ui/workshop.html, idearium/ui/js/app.js, idearium/ui/index.html]
       does: >-
@@ -250,6 +250,63 @@ spec:
         layered map; the Blueprint diff. Welcome's first button and Create's first item are "Start" → the workshop.
         The two spec builders are retired from every surface and archived (§0.3).
       proof: "Welcome → Start opens the workshop at Idea; no surface links either old spec builder; both files are in archive/"
+
+    WS7_the_full_workshop:
+      layer: interface
+      systems: [idearium]
+      status: DONE (0.39.354) — mapped 2026-10-05 before code
+      depends_on: [SW1_spec_workshop, SW2_workshop_page_in_the_voids_style]
+      files: [idearium/ui/workshop.html, idearium/ui/css/workshop.css, idearium/ui/js/workshop.js, idearium/lib/workshop.js, idearium/api/index.js, idearium/ui/_archive/]
+      james: '"okay spec workshop looks like shit. needs to be enterprise grade. feed the pipeline" · (his screenshot of the start page beside the Void) "look at the first screenshot. you see now?" · "needs to be a full workshop. like a full document writter. emerge. like we talked about. animated, alive, like void, like not a small little ui,fully featured,"'
+      found: >-
+        Read, not assumed, from his screenshot and the page: two boxes on an empty black screen; every label, button,
+        empty state and input the same small dark capitals, nothing primary; "FROM THE VOID (0)" selected with nothing
+        in it; the REACH dial the largest control (WS6: "reach sectoin needs to be removed"); the six stations greyed and
+        inert; SAVE writes spec/<name>.spec and the trail stops — the routes after it exist and nothing calls them
+        (POST /api/repos/:uuid/spec/plan runs in the background, GET …/spec/plan reads the phasemap and the next ready
+        phase, POST …/spec/build builds it). The Void's sky (js/void-sky.js) is hidden on the workshop.
+      does: >-
+        The workshop as a full document writer, in the Void's world — its sky alive behind it, its palette, capitals in
+        every piece of chrome; his own writing shown exactly as he types it. START: centred like the Void — a title line
+        (start blank by typing what it is), then the three places to start from as cards with their counts and lists,
+        and his workshops as a grid of cards; no dead ends (an empty source says what fills it and links there). THE
+        WRITER: one continuous document — every section a heading and a growing text block in reading width, the outline
+        on the left (jump, fill state, move up/down, add, remove, restore), focus mode, words and reading time,
+        autosave with its state. PARTS (WS6): the spec template's 11 blocks as parts in three tiers — MINIMUM (meta,
+        purpose, schema, api, build_order), MODS (axioms, events, integration, failure_modes, tests), COMPONENTS
+        (registry) — each present or missing, a missing part one click to add (and, assisted, drafted). MODES (WS6):
+        MANUAL (the agent only checks what is missing to reach MINIMUM), ASSISTED (proposals per part), STRETCHED (the
+        idea carried through every missing part as proposals) — in every mode nothing enters without his yes. REACH
+        leaves the workshop (WS6). THE AGENT: every feed (draft, open loops, questions, what-ifs, d20, reverse chain,
+        inspiration) and its proposals (into the section, replace, as a new section, dismiss, reopen). THE PIPELINE:
+        the six stations animated and true to state; SEND TO THE PIPELINE = save → plan (the phasemap, in the
+        background) → the phases in build order → build the next ready phase, each step shown live in an overlay like
+        the desktop setup, the repo's plan opened in Idearium at the end.
+      not_in_this_phase: >-
+        The spec's own graph and gaps (WS5, needs the synthesis per spec), decomposition to any depth (FG5), per-section
+        version history beyond removed/restore, the Blueprint station (BP1 — shown as not built yet), PL1's pipeline run
+        node and CLI.
+      proof: "in Clear Glass: the start page's three sources and cards, a workshop opened as one document with its outline, a missing MINIMUM part added from the parts panel, a section moved, the mode switched, a proposal accepted, and SEND TO THE PIPELINE walking save → plan → phases → build against the real API in a sandbox"
+      conditions:
+        - { says: "the full workshop", check: { kind: tests, run: "node tests/modules/test-workshop-full.test.js" } }
+      built: >-
+        0.39.354. ui/workshop.html + css/workshop.css + js/workshop.js (the WS4 page kept at ui/_archive/workshop-0.39.300-ws4.html).
+        The start emerges in the Void's sky: WHAT ARE YOU SPECCING (Enter begins a blank spec with that title), three
+        source cards with counts opening a picker sheet (an empty source links to the Void or the library), his
+        workshops as cards. The writer: one document (title, source, every section a heading + growing text), kept per
+        section 0.8 s after typing (an edit that fails to send is kept and sent again), the outline (jump, move up/down,
+        remove → REMOVED → restore), PARTS by tier with the MINIMUM gauge (from the spec engine's blocks.yaml — the API's
+        show/update/feed/decide answer parts; a section added for a part carries `part`), MODES (POST {mode}; each
+        mode is said in the agent's prompt, lib MODE_GUIDE), STRETCHED's CARRY IT THROUGH EVERY PART (stoppable, one
+        part at a time, each a proposal), proposals into their own part's section, CAPS / AS TYPED (per viewer),
+        FOCUS, CTRL+S, CTRL+ENTER. SEND TO THE PIPELINE: save → GET spec/plan → POST spec/plan, the run watched on
+        GET /plan?map= to its end (failed → PLAN FROM THE SPEC NOW, derive) → the phases in build order → BUILD NEXT
+        (POST spec/build) → OPEN IN IDEARIUM on the repo's Phases (app.js takes subtab 'phases').
+        Drift from `does`, said: (1) the feeds stay draft · open loops · questions — what-ifs, d20, reverse chain and
+        inspiration were taken out in WS4 ("remove the noise") and test-spec-workshop holds them to the Void; adding them
+        back is his call, not this phase's. (2) The proof runs the real page and the real lib/workshop.js against a
+        server in the test that answers like idearium — not idearium's own server; the API's parts/modes wiring is
+        checked in its source (WF-02). test-workshop-full 10/10 in Clear Glass.
 
     NX1_nexus_in_a_vm:
       layer: later

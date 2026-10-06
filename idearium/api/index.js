@@ -688,13 +688,17 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
     let state = r && r.ok ? (r.injects && r.injects.blocked ? 'blocked' : 'replied') : 'failed';
-    let absent = null;
+    let absent = null, unchanged = false;
     if (shadow) {
       if (state !== 'replied') SH.drop(shadow);
       else { const got = SH.settle(shadow, { files: ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
     }
-    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}),
-      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : null)),
+    // §0.39.355 PB2 — James: "it needs to actually build it". A build whose reply changed no file (nothing written,
+    // staged or proposed, by a fenced block or a code_edit / code_write / code_batch call) did not build: incomplete,
+    // so the ladder climbs instead of ending on prose.
+    if (state === 'replied' && !PRt.changedAnything(r)) { state = 'incomplete'; unchanged = true; }
+    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}),
+      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : null)),
       provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || null,
       ...(rg ? { rung: ri + 1, rungs: rungs.length, attempt: tryNo, ...(r && r.toolErrors ? { toolErrors: true } : {}) } : {}),
       reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
@@ -936,9 +940,11 @@ async function _callRoute(action, params = {}, body = {}, query = {}) {
   return { status, ...(out || { ok: false, error: 'no response' }) };
 }
 
-function _startProof(repo, { rounds = 3, maxBuildsPerRound = 400 } = {}) {
+function _startProof(repo, { rounds = 3, maxBuildsPerRound = 400, debt = null } = {}) {
+  // §0.39.355 PB3 — debt: 'baseline' judges each round on what this run broke (older failures are known debt, never sent
+  // back); 'repair' sends every failure back. A Nexus system repo is the live tree: its debt is not a run's to rewrite.
   const run = { uuid: `proof-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, repoUuid: repo.uuid, repoName: repo.name, specUuid: repo.specUuid,
-    state: 'running', verdict: null, why: null, maxRounds: rounds, rounds: [], startedAt: Date.now(), endedAt: null, cancel: false };
+    debt: debt || (repo.nexusSelf ? 'baseline' : 'repair'), state: 'running', verdict: null, why: null, maxRounds: rounds, rounds: [], startedAt: Date.now(), endedAt: null, cancel: false };
   _proofs.set(repo.uuid, run);
   _buildingSpecs.add(repo.specUuid);   // the queue never builds a spec a proof run is building (one writer)
   _saveProof(run);
@@ -975,6 +981,13 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
   const se = getSpecEngine();
   const os = getIdeaOS();
   const BV = _require('../../lib/build-verify.js');
+  // §0.39.355 PB3 — what was already failing before this run built anything
+  let baseline = null;
+  const builtFiles = new Set();
+  if (run.debt === 'baseline') {
+    try { const b0 = await _verifyRepo(getRepoLayer().get(run.repoUuid)); baseline = BV.baselineOf(b0); run.baseline = { failures: b0.failures.length, verdict: b0.verdict }; _saveProof(run); }
+    catch (e) { run.baseline = { error: e.message }; console.warn(`[idearium/prove] no baseline (every failure counts): ${e.message}`); }
+  }
   for (let round = 1; round <= run.maxRounds; round++) {
     const rr = { round, startedAt: Date.now(), built: 0, reused: 0, stalled: null, verdict: null, why: null, failures: [], repaired: [], notBuiltBySpec: [] };
     run.rounds.push(rr);
@@ -992,6 +1005,7 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
       if (w.cancelled) { run.state = 'cancelled'; run.why = `cancelled in round ${round} while ${rr.current} was building`; rr.endedAt = Date.now(); return; }
       if (w.timedOut) { rr.stalled = `${rr.current} was still building after ${Math.round(PROOF_CHUNK_WAIT_MS / 60000)} min — its agent did not answer`; break; }
       rr.built++;
+      try { const bc = (se.loadSpecMeta(run.specUuid).chunks || []).find(x => x.uuid === r.chunkUuid); if (bc && bc.realPath) builtFiles.add(bc.realPath); } catch (_) {}
       if (w.status !== 'complete') (rr.buildFailures = rr.buildFailures || []).push({ file: rr.current, status: w.status, why: w.failureMode || null });
     }
     rr.current = null;
@@ -1003,7 +1017,8 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
     }
     // 2 — verify the files as built
     const repo = getRepoLayer().get(run.repoUuid);
-    const v = await _verifyRepo(repo);
+    const v = BV.against(await _verifyRepo(repo), baseline, { built: [...builtFiles] });
+    if (v.known && v.known.length) { rr.known = v.known.length; rr.knownFiles = [...new Set(v.known.map(f => f.file))].slice(0, 50); }
     rr.verdict = v.verdict; rr.why = v.why; rr.checks = v.checks; rr.ms = v.ms;
     rr.failures = v.failures.slice(0, 50).map(_compactFailure);
     _recordVerify(repo, v, 'prove', { proofRun: run.uuid, round });
@@ -1295,6 +1310,51 @@ async function _architect() {
   AR.setAsk((prompt, { sessionUuid } = {}) => _agentAsk(prompt, { channel: 'idearium-architect', sessionId: `architect-${sessionUuid || 'x'}` }));
   _arMod = AR;
   return AR;
+}
+// §0.39.354 WS7 — the spec template's blocks as the workshop's parts (lib/workshop.js partsOf), from the spec engine
+// §0.39.357 RS5 — every template the picker offers, previewed: { blocks, list, picked }. only: the one id wanted (create).
+async function _workshopTemplates(WS, { only = null, name = null } = {}) {
+  const se = await _specEngineReady();
+  if (!se) throw new Error('the spec engine is still loading');
+  const blocks = se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title }));
+  const label = name || 'your spec';
+  const list = [];
+  if (!only || only === WS.CUSTOM.id) list.push({ ...WS.CUSTOM, builtin: true, preview: WS.previewOf({ template: WS.CUSTOM, blocks }) });
+  const docs = se.listTemplates().filter(t => t.id !== 'custom');   // spec-engine's 'custom' is the + card
+  docs.sort((a, b) => (b.id === 'genesis') - (a.id === 'genesis'));
+  for (const t of docs) {
+    if (only && only !== t.id) continue;
+    let seeds = {}; try { seeds = se.templateSeedSections(t.id, label) || {}; } catch (e) { console.warn(`[workshop.templates] ${t.id}: ${e.message}`); }
+    const tpl = { id: t.id, label: t.label, description: t.description, group: 'document', builtin: true, default: t.id === 'genesis', seeded: !!Object.keys(seeds).length, kind: t.kind, _seeds: seeds };
+    tpl.preview = WS.previewOf({ template: tpl, seeds, blocks });
+    list.push(tpl);
+  }
+  if (!only || /^cos-/.test(only)) {
+    try {
+      const FTP = _require('../../lib/file-tree-plan.js');
+      for (const t of FTP.listCosTemplates()) {
+        if (only && only !== t.id) continue;
+        const f = FTP.fromCosTemplate(t.id, { name: label });
+        const files = f.ok ? f.files.map(x => ({ path: x.path, layer: x.layer })) : [];
+        const tpl = { id: t.id, label: t.label, description: t.description, group: t.source, builtin: true, files, roles: f.ok && f.template.roles ? f.template.roles : null,
+          note: 'its starting files are written into the spec\'s Build Order; the build does not yet start from the files themselves (the New Spec modal\'s file tree does)' };
+        tpl.preview = WS.previewOf({ template: tpl, cosFiles: files, blocks });
+        list.push(tpl);
+      }
+    } catch (e) { console.warn(`[workshop.templates] COS templates unavailable: ${e.message}`); }
+  }
+  if (!only || only.startsWith('saved:')) {
+    for (const t of WS.savedTemplates(loadTable(WS.TEMPLATE_TABLE))) {
+      if (only && only !== t.id) continue;
+      list.push({ ...t, builtin: false, preview: WS.previewOf({ template: t, saved: t.sections, blocks }) });
+    }
+  }
+  return { blocks, list, picked: only ? list[0] || null : null };
+}
+
+async function _workshopParts(WS, w) {
+  try { const se = await _specEngineReady(); return se ? WS.partsOf(w, se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title }))) : []; }
+  catch (e) { console.warn(`[idearium/api] workshop parts unreadable: ${e.message}`); return []; }
 }
 /** loom's registry + the component store as one index, rebuilt only when either file changes (the registry is 6 MB) */
 let _arIdx = null, _arIdxKey = null;
@@ -1697,6 +1757,9 @@ const ROUTE_CAP = {
   'workshop.feed':    CAPS.WRITE_IDEAS,   // asks the agent; stores proposals, never section text
   'workshop.decide':  CAPS.WRITE_IDEAS,
   'workshop.save':    CAPS.WRITE_IDEAS,   // writes spec/<name>.spec into a repo (makes the repo when there is none)
+  'workshop.templates':       CAPS.READ_IDEAS,    // §0.39.357 RS5 — the template picker
+  'workshop.template.save':   CAPS.WRITE_IDEAS,   // a workshop's sections as a saved template (a new version; the old kept)
+  'workshop.template.remove': CAPS.WRITE_IDEAS,   // archives a saved template (kept, hidden)
   'architect.list':     CAPS.READ_IDEAS,   // §0.39.298 AR2
   'architect.registry': CAPS.READ_IDEAS,
   'architect.show':     CAPS.READ_IDEAS,
@@ -1764,6 +1827,7 @@ const ROUTE_CAP = {
   'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
+  'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -2074,6 +2138,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
+    ['POST',   ['api','repos',    ':uuid','agent','stream'],  'repo.agent.stream'],      // §0.39.356 LS3 — copilot sends what the model writes, as it writes it
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
     ['GET',    ['api','repos',    ':uuid','agent','history'], 'repo.agent.history'],
@@ -2169,6 +2234,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','workshop'],                               'workshop.list'],
     ['POST',   ['api','workshop'],                               'workshop.create'],
     ['GET',    ['api','workshop','sources'],                     'workshop.sources'],
+    ['GET',    ['api','workshop','templates'],                   'workshop.templates'],        // §0.39.357 RS5 — before :id
+    ['POST',   ['api','workshop','templates'],                   'workshop.template.save'],
+    ['POST',   ['api','workshop','templates',':tid','remove'],   'workshop.template.remove'],
     ['GET',    ['api','workshop',':id'],                         'workshop.show'],
     ['POST',   ['api','workshop',':id'],                         'workshop.update'],
     ['POST',   ['api','workshop',':id','feed'],                  'workshop.feed'],
@@ -4502,16 +4570,56 @@ async function handle(req, res, route, query, body) {
           sections = WS.sectionsFromSpecText(f.content, _require('js-yaml'));
         }
       } else if (from.kind !== 'blank') return err(res, 400, `from.kind must be idea, library, repo or blank`);
-      const made = WS.makeSession({ title: title || 'Untitled spec', source, sections, ambition: body.ambition, repoUuid, specPath, ideaUuid });
+      // §0.39.357 RS5 — the picked template: its sections after the source's, never over a part the source already lays out
+      let template = null, mode = WS.MODES.includes(body.mode) ? body.mode : null;
+      if (body.template) {
+        const T = await _workshopTemplates(WS, { only: String(body.template), name: title || body.title || null });
+        const t = T.picked; if (!t) return err(res, 404, `template not found: ${body.template}`);
+        const blocks = T.blocks;
+        const have = WS.partsOf({ sections: sections.map(x => ({ ...x, body: x.body || '' })) }, blocks).filter(x => x.sectionId).map(x => x.id);
+        sections = [...sections, ...WS.templateSections({ template: t, seeds: t._seeds || {}, cosFiles: t.files || null, saved: t.group === 'saved' ? t.sections : null, blocks, have })];
+        template = { id: t.id, label: t.label, group: t.group, ...(t.version ? { version: t.version } : {}) };
+        title = title || (t.id === WS.CUSTOM.id ? null : t.label);
+        if (!mode) mode = t.mode || (t.id === WS.CUSTOM.id ? 'manual' : null);
+      }
+      const made = WS.makeSession({ title: title || 'Untitled spec', source, sections, ambition: body.ambition, repoUuid, specPath, ideaUuid, mode: mode || 'assisted', template });
       if (made.error) return err(res, 400, made.error);
       appendRow(WS.TABLE, made.session);
       os.emit('idearium.workshop.created', { uuid: made.session.uuid, source: source.kind, title: made.session.title });
       return ok(res, { workshop: made.session });
     }
+    // §0.39.357 RS5 — James: "opens a pick template screen like photoshop does when you first open it. with a custom or
+    // manual option with a plus sign. then you pick a template from the list, including all the quick spec options" ·
+    // "yes with a custom or manual." Every template the quick spec offers (the spec-document templates, genesis first;
+    // the COS archetypes and blueprints) and the saved ones, each with the 11 parts previewed.
+    case 'workshop.templates': {
+      const WS = await _workshop();
+      const T = await _workshopTemplates(WS);
+      return ok(res, { custom: WS.CUSTOM, blocks: T.blocks, templates: T.list.map(({ _seeds, sections, ...t }) => t) });
+    }
+    case 'workshop.template.save': {
+      const WS = await _workshop();
+      const w = _workshopGet(WS, body.workshop); if (!w) return err(res, 404, `workshop not found: ${body.workshop}`);
+      const r = WS.templateRow(w, { label: body.label, description: body.description, rows: loadTable(WS.TEMPLATE_TABLE) });
+      if (r.error) return err(res, 400, r.error);
+      appendRow(WS.TEMPLATE_TABLE, r.row);
+      os.emit('idearium.workshop.template.saved', { slug: r.row.slug, version: r.row.version, label: r.row.label, fromWorkshop: w.uuid });
+      return ok(res, { template: WS.savedTemplates(loadTable(WS.TEMPLATE_TABLE)).find(t => t.slug === r.row.slug), version: r.row.version });
+    }
+    case 'workshop.template.remove': {
+      const WS = await _workshop();
+      let id = String(params.tid || ''); try { id = decodeURIComponent(id); } catch (_) {}   // the page encodes saved:<slug>
+      if (!id.startsWith('saved:')) return err(res, 400, `"${id}" is a built-in template — a file in the codebase (idearium/spec-engine/templates.js, cos/), not removable from here`);
+      const r = WS.archiveRow(loadTable(WS.TEMPLATE_TABLE), id.slice(6));
+      if (r.error) return err(res, 404, r.error);
+      appendRow(WS.TEMPLATE_TABLE, r.row);
+      os.emit('idearium.workshop.template.removed', { slug: r.row.slug, version: r.row.version });
+      return ok(res, { archived: id, kept: true });
+    }
     case 'workshop.show': {
       const WS = await _workshop();
       const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
-      return ok(res, { workshop: w, ambition: WS.AMBITION, feeds: WS.FEEDS });
+      return ok(res, { workshop: w, ambition: WS.AMBITION, feeds: WS.FEEDS, parts: await _workshopParts(WS, w), modes: WS.MODES });   // §0.39.354 WS7 — parts and modes
     }
     case 'workshop.update': {
       const WS = await _workshop();
@@ -4521,12 +4629,13 @@ async function handle(req, res, route, query, body) {
         w.title = String(body.title).trim(); w.updatedAt = Date.now();
       }
       if (body.ambition != null) { const a = WS.clampAmbition(body.ambition); if (a !== w.ambition) { w.ambition = a; w.updatedAt = Date.now(); w.history.push({ at: w.updatedAt, what: `ambition ${a} — ${WS.AMBITION[a].label}` }); } }
+      if (body.mode != null) { const m = WS.setMode(w, body.mode); if (m.error) return err(res, 400, m.error); }   // §0.39.354 WS7 / WS6
       for (const e of Array.isArray(body.sections) ? body.sections : (body.section ? [body.section] : [])) {
         const r = e.restore ? WS.restoreSection(w, e.restore) : WS.editSection(w, e);
         if (r.error) return err(res, 400, r.error);
       }
       syncTable(WS.TABLE, [w]);
-      return ok(res, { workshop: w });
+      return ok(res, { workshop: w, parts: await _workshopParts(WS, w) });
     }
     case 'workshop.feed': {
       const WS = await _workshop();
@@ -4542,7 +4651,7 @@ async function handle(req, res, route, query, body) {
       if (r.error) { syncTable(WS.TABLE, [w]); return err(res, r.meta ? 502 : 400, r.error, { meta: r.meta || null, raw: r.raw || null }); }
       syncTable(WS.TABLE, [w]);
       os.emit('idearium.workshop.feed', { uuid: w.uuid, kind: body.kind, proposals: r.added.length, ...(r.meta && r.meta.domain ? { domain: r.meta.domain } : {}) });
-      return ok(res, { added: r.added, meta: r.meta, workshop: w });
+      return ok(res, { added: r.added, meta: r.meta, workshop: w, parts: await _workshopParts(WS, w) });
     }
     case 'workshop.decide': {
       const WS = await _workshop();
@@ -4552,7 +4661,7 @@ async function handle(req, res, route, query, body) {
       syncTable(WS.TABLE, [w]);
       // §CT2 — his accept or dismiss is the verdict on the model that drafted it
       if (r.proposal && r.proposal.by && ['accepted', 'dismissed'].includes(r.proposal.status)) _verdict(r.proposal.by, 'page:workshop', r.proposal.status === 'accepted', 'dismissed', r.proposal.status === 'dismissed' ? 'dismissed by James' : null);
-      return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w });
+      return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w, parts: await _workshopParts(WS, w) });
     }
     case 'workshop.save': {
       // the hook into the Spec field: the session becomes the repo's spec/<name>.spec — the Spec tab's living model.
@@ -5017,7 +5126,7 @@ async function handle(req, res, route, query, body) {
       if (cur && cur.state === 'running') return ok(res, { started: false, alreadyRunning: true, run: _proofView(cur) });
       if (_buildingSpecs.has(repo.specUuid)) return err(res, 409, 'this spec is being built right now — try again when that build returns');
       const rounds = Math.max(1, Math.min(parseInt(body.rounds, 10) || 3, 10));
-      const run = _startProof(repo, { rounds, maxBuildsPerRound: Math.max(1, Math.min(parseInt(body.maxBuilds, 10) || 400, 2000)) });
+      const run = _startProof(repo, { rounds, maxBuildsPerRound: Math.max(1, Math.min(parseInt(body.maxBuilds, 10) || 400, 2000)), debt: ['baseline', 'repair'].includes(body.debt) ? body.debt : null });
       return ok(res, { started: true, run: _proofView(run) });
     }
     case 'repo.prove.status': {
@@ -5342,6 +5451,25 @@ async function handle(req, res, route, query, body) {
       ring.push(ev); if (ring.length > 80) ring.splice(0, ring.length - 80);
       _toolEvents.set(params.uuid, ring);
       getIdeaOS().emit('idearium.repo.agent.tool', ev);
+      return ok(res, { ok: true });
+    }
+    // §0.39.356 LS3 — James: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel
+    // and code tab." What an Ollama model writes in copilot's tool loop arrives here (copilot streamSink, LS2) and goes out
+    // as idearium.repo.agent.feed — the guardian feed's event and its shape (0.39.244) — so the Agent tab, the Code tab and
+    // the work surface read one feed whatever the model. SSE only: several a second, observations, not state.
+    case 'repo.agent.stream': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const EVENTS = ['dispatched', 'chunk', 'complete', 'error', 'timeout'];
+      if (!body || !EVENTS.includes(body.event) || !body.jobId) return err(res, 400, `event (${EVENTS.join(' | ')}) and jobId are required`);
+      const model = body.model ? String(body.model).slice(0, 120) : null;
+      getIdeaOS().broadcast('idearium.repo.agent.feed', {
+        repoUuid: params.uuid, event: body.event, jobId: String(body.jobId).slice(0, 120), source: 'ollama',
+        provider: model ? `ollama · ${model}` : 'ollama', model, session: body.session ? String(body.session).slice(0, 120) : null,
+        ...(typeof body.text === 'string' ? { text: body.text.slice(-20000) } : {}),
+        ...(Number(body.fullLen) > 0 ? { fullLen: Number(body.fullLen) } : {}),
+        ...(Number(body.chars) > 0 ? { chars: Number(body.chars) } : {}),
+        ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}),
+      });
       return ok(res, { ok: true });
     }
     case 'repo.agent.tool.events': {
