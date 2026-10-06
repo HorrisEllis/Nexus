@@ -1,0 +1,13 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-rout-0000-0000-000000000008",
+  "type": "route",
+  "id": "{{slug}}.nodes",
+  "system": "{{slug}}",
+  "summary": "GET /list/:type",
+  "payload": {
+    "method": "GET",
+    "path": "/list/:type",
+    "command": "{{slug}}.nodes"
+  }
+}

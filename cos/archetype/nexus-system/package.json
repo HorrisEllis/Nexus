@@ -1,0 +1,8 @@
+{
+  "name": "{{slug}}",
+  "version": "0.1.0",
+  "private": true,
+  "description": "{{description}}",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "cli": "node cli.js", "test": "node tests/skeleton.test.js" }
+}

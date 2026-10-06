@@ -1,0 +1,16 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-capa-0000-0000-000000000002",
+  "type": "capability",
+  "id": "{{slug}}.core.observe",
+  "system": "{{slug}}",
+  "summary": "observe the system",
+  "payload": {
+    "component": "{{slug}}.core",
+    "summary": "report the system state: heartbeat, node counts, shape problems, the nodes themselves",
+    "commands": [
+      "{{slug}}.status",
+      "{{slug}}.nodes"
+    ]
+  }
+}

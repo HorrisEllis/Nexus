@@ -695,7 +695,7 @@ export function createSpec({ name, type = 'component', description = '', agent =
 // runtime file on all engine files, tests on runtime. A layer with no files
 // is skipped over, not waited on. Every file a
 // COS template supplied are completed at creation — they cost no dispatch.
-export function createFileTreeSpec({ name, description = '', plan, agent = null, author = 'nexus', ideaUuid = null, templateId = null } = {}) {
+export function createFileTreeSpec({ name, description = '', plan, agent = null, author = 'nexus', ideaUuid = null, templateId = null, templateIds = null } = {}) {
   if (!plan || !Array.isArray(plan.files) || !plan.files.length) throw new Error('createFileTreeSpec: plan.files is required and non-empty');
   const order = ['kernel', 'engine', 'runtime', 'test'];
   const files = [...plan.files];
@@ -717,6 +717,9 @@ export function createFileTreeSpec({ name, description = '', plan, agent = null,
     for (let j = li - 1; j >= 0; j--) { if (byLayer[order[j]] && byLayer[order[j]].length) { dependsOn[sct.id] = [...byLayer[order[j]]]; break; } }
   }
   const manifest = _buildManifest({ name, type: 'filetree', description, agent, sectionAgents: {}, warpPrimitives: [], author, templateId: null, templateIds: null, sections, buildEngine: 'auto', ideaUuid, dependsOn });
+  // §0.39.359 SB31 — the templates it was made from (genesis with the skeleton), recorded; _buildManifest is not given
+  // them because its seeding is for document sections, and these sections are files
+  if (Array.isArray(templateIds) && templateIds.length) manifest.templateIds = [...templateIds];
   // dependsOn stays as SECTION ids — _chunkDependenciesSatisfied() resolves
   // edges by sectionId, the same key every other spec's edges use.
   const fileBySid = new Map(sections.map(x => [x.id, x._file]));

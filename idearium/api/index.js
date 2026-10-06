@@ -6354,17 +6354,24 @@ async function handle(req, res, route, query, body) {
       const regChunk = (doc.chunks || []).find(c => c.sectionId === 'registry' && c.status === 'complete');
       const registry = regChunk ? RP.parseRegistry(regChunk.content) : { components: [], problems: ['the spec has no registry section'] };
       let planned;
-      if (registry.components.length && !body.freePlan) planned = RP.toPlan(registry.components);
-      else {
-        try { planned = await FTP.plan({ name: doc.name, description, ask }); }
-        catch (e) { return err(res, 502, `planning the files failed: ${e.message}`); }
-      }
+      // §0.39.359 SB31 — James: "This should be what each new repo builds and slots the idea into like a slot." The
+      // code repo is the nexus-system skeleton (genesis 1.4.0), with the spec's registry — or, without one, the agent's
+      // components — slotted in. An agent that slots nothing in is refused, never a skeleton passed off as the project.
+      // body.skeleton === false keeps the plan without it.
+      const useSkeleton = body.skeleton !== false;
+      const fromRegistry = registry.components.length && !body.freePlan;
+      try {
+        if (useSkeleton && fromRegistry) { const s = FTP.slotFromRegistry(registry.components); planned = await FTP.plan({ name: doc.name, description: doc.description || doc.name, templateIds: [FTP.SKELETON_ID], slot: s.slot, slotFiles: s.files }); }
+        else if (fromRegistry) planned = RP.toPlan(registry.components);
+        else if (useSkeleton) planned = await FTP.plan({ name: doc.name, description, templateIds: [FTP.SKELETON_ID], ask, requireSlot: true });
+        else planned = await FTP.plan({ name: doc.name, description, ask });
+      } catch (e) { return err(res, 502, `planning the files failed: ${e.message}`); }
       if (!planned.ok) return err(res, 422, (planned.errors || ['the files could not be planned']).join('; '), { agentError: planned.agentError || null, registry: { used: false, problems: registry.problems } });
       let manifest;
       try {
         manifest = se.createFileTreeSpec({ name: `${doc.name} · code`, description, plan: planned, agent: body.agent || null, ideaUuid: doc.ideaUuid || null });
         manifest.codeFor = doc.uuid;
-        if (planned.planSource === 'registry') manifest.registry = registry.components;   // the checklist verify reads
+        if (fromRegistry) manifest.registry = registry.components;   // the checklist verify reads
         se.saveSpec(manifest);
         const freshDoc = se.loadSpec(doc.uuid);
         freshDoc.codeSpecUuid = manifest.uuid;
@@ -6414,8 +6421,8 @@ async function handle(req, res, route, query, body) {
       console.log(`[speceng.codegen] "${doc.name}" → ${planned.files.length} file(s) planned (${planned.planSource}) · code spec ${manifest.uuid.slice(0, 8)}`);
       return ok(res, { manifest: se.loadSpec(manifest.uuid), repoUuid,
         branch: branchInfo ? (branchInfo.ok ? { of: branchInfo.originUuid, branch: branchInfo.branch, dir: branchInfo.dir } : { made: false, reason: branchInfo.error }) : null,
-        plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers },
-        registry: { used: planned.planSource === 'registry', components: registry.components.length, problems: registry.problems } });
+        plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers, slot: planned.slot || null },
+        registry: { used: !!fromRegistry, components: registry.components.length, problems: registry.problems } });
     }
 
     case 'speceng.create': {
@@ -6458,6 +6465,10 @@ async function handle(req, res, route, query, body) {
         // (COS archetypes/blueprints and eravos mods); an id from either
         // takes the file-tree path below, same as a COS-only id always did.
         const fileTreeIds = allIds.filter(id => FTP.isFileTreeTemplate(id));
+        // §0.39.359 SB31 — genesis IS the skeleton's architecture (1.4.0's catalog is the nexus-system archetype): a spec
+        // that starts from genesis gets the skeleton as its file tree, with the idea slotted in. body.fileTree === false
+        // keeps the document-only spec.
+        if (allIds.includes('genesis') && body.fileTree !== false && !fileTreeIds.includes(FTP.SKELETON_ID)) fileTreeIds.unshift(FTP.SKELETON_ID);
         const docIds = allIds.filter(id => !FTP.isFileTreeTemplate(id));
         let manifest, planInfo = null;
         if (body.fileTree === true || fileTreeIds.length) {
@@ -6468,13 +6479,17 @@ async function handle(req, res, route, query, body) {
             if (!r || !r.ok) throw new Error((r && r.error) || 'plan dispatch failed');
             return r.text;
           } : null;
+          // a spec is made even when the agent slots nothing in — the skeleton, and plan.slot says it is empty and why
+          // (codegen, which makes the code repo, refuses instead)
           const planned = await FTP.plan({ name, description, templateIds: fileTreeIds, ask });
           if (!planned.ok) return err(res, 422, (planned.errors || ['file tree could not be planned']).join('; '), { agentError: planned.agentError || null });
-          manifest = se.createFileTreeSpec({ name, description, plan: planned, agent: agent || null, ideaUuid: ideaUuid || null, templateId: fileTreeIds.join(',') || null });
+          manifest = se.createFileTreeSpec({ name, description, plan: planned, agent: agent || null, ideaUuid: ideaUuid || null, templateId: fileTreeIds.join(',') || null, templateIds: allIds.length ? allIds : null });
           // The plan as a node type (.filetree), not a markdown file.
           try { FTP.writeTreeNode(manifest); }
           catch (e) { console.warn(`[speceng.create] .filetree node write failed (spec still created): ${e.message}`); }
-          planInfo = { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers };
+          planInfo = { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers, slot: planned.slot || null,
+            warning: planned.slot && planned.slot.empty ? `the skeleton was made, but the idea is not slotted in yet: ${planned.slot.reason}` : null };
+          if (planInfo.warning) console.warn(`[speceng.create] "${name}": ${planInfo.warning}`);
         } else {
           manifest = se.createSpec({ name, type, description, agent, sectionAgents: sectionAgents || {}, warpPrimitives: warpPrimitives || [], templateId, templateIds: docIds.length ? docIds : templateIds, buildEngine: buildEngine || 'auto', ideaUuid: ideaUuid || null });
         }

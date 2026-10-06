@@ -1,0 +1,7 @@
+{
+  "system": "{{slug}}",
+  "port": 4900,
+  "heartbeatMs": 30000,
+  "listener": { "pollMs": 2000 },
+  "versionium": { "url": null }
+}

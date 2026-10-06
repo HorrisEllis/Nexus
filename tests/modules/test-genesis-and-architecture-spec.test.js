@@ -51,11 +51,16 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       && !/architecture-spec\.node\.declared/.test(read('docs/architecture-spec/architecture-spec.spec')));
     const g = read('idearium/spec-engine/templates/genesis.spec');
     const { dispatch } = await import(path.join(ROOT, 'idearium/spec-engine/manifest/commands.js'));
-    const mc = dispatch(['check', path.join(ROOT, 'idearium/spec-engine/templates/genesis.spec')], {});
+    const mc = dispatch(['check', path.join(ROOT, 'idearium/spec-engine/templates/_archive/genesis-1.3.0.spec')], {});
     // §0.39.311 SB16 — genesis 1.2.0 adds Domain 2d (nodes, JAA tables as the node index); 1.1.0's checks all still hold
-    check('GA-04 genesis 1.3.0: shape (the template\'s architecture), registry (the doorway, nodes, capability nodes), routing and nodes (JAA as the node index) domains, his axioms, the wiring still clean', /^version 1\.3\.0$/m.test(g) && /^domain "shape"$/m.test(g) && /^capability_node /m.test(g) && /axiom COMPONENT_SHAPE/.test(g) && /axiom SYSTEM_OWNS_ITS_OWN/.test(g) && /^domain "registry"$/m.test(g) && /^domain "routing"$/m.test(g)
-      && /^domain "nodes"$/m.test(g) && /file "registry\/node-index\.js"/.test(g) && /axiom NODE_INDEX_IS_JAA/.test(g) && /bind node\.change\s+-> Event/.test(g)
-      && /file "registry\/node-registry\.js"/.test(g) && /file "spine\/route-policy\.js"/.test(g) && /axiom REGISTRY_IS_THE_DOORWAY/.test(g) && !mc.code && /wiring is clean/.test((mc.out || []).join(' ')), JSON.stringify(mc.out));
+    // §0.39.359 SB28 — 1.4.0: the catalog is the skeleton (Guardian's shape); 1.3.0 is archived whole
+    const g0 = read('idearium/spec-engine/templates/_archive/genesis-1.3.0.spec');
+    check('GA-04b genesis 1.4.0: the catalog is the shape Nexus systems have; 1.3.0 archived whole', /^version 1\.4\.0$/m.test(g)
+      && ['server.js', 'cli.js', 'registry-components.js', 'interaction-contract.json', 'event-taxonomy.js', 'jaa-store.js', 'lib/node-index.js', 'lib/heartbeat.js', 'lib/listener.js', 'contracts/handshake.js', 'schemas/index.js', 'compartment.json'].every(f => g.includes(`file "${f}"`))
+      && !/file "kernel\/boot\.js"/.test(g) && /^\/\/ ARCHIVED 2026-10-06/.test(g0) && /^version 1\.3\.0$/m.test(g0) && /file "kernel\/boot\.js"/.test(g0) && /file "nerve\/listener-grid\.js"/.test(g0));
+    check('GA-04 genesis 1.3.0 (archived): shape (the template\'s architecture), registry (the doorway, nodes, capability nodes), routing and nodes (JAA as the node index) domains, his axioms, the wiring still clean', /^version 1\.3\.0$/m.test(g0) && /^version 1\.4\.0$/m.test(g) && /^domain "shape"$/m.test(g) && /^capability_node /m.test(g) && /axiom COMPONENT_SHAPE/.test(g) && /axiom SYSTEM_OWNS_ITS_OWN/.test(g) && /^domain "registry"$/m.test(g) && /^domain "routing"$/m.test(g)
+      && /^domain "nodes"$/m.test(g) && /file "registry\/node-index\.js"/.test(g0) && /axiom NODE_INDEX_IS_JAA/.test(g) && /bind node\.change\s+-> Event/.test(g)
+      && /file "registry\/node-registry\.js"/.test(g0) && /file "spine\/route-policy\.js"/.test(g0) && /axiom REGISTRY_IS_THE_DOORWAY/.test(g) && !mc.code && /wiring is clean/.test((mc.out || []).join(' ')), JSON.stringify(mc.out));
     process.env.NEXUS_VERSIONIUM_URL = 'http://127.0.0.1:9';
     const api = await import(path.join(ROOT, 'idearium', 'api', 'index.js'));
     let r = null;
@@ -64,7 +69,10 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const man = m.manifest || m.spec || m;
     const tids = man.templateIds || (man.templateId ? [man.templateId] : []);
     const app = read('idearium/ui/js/app.js');
-    check('GA-05 genesis is the default: a system spec with no template starts from it; the New spec form checks it', r.status < 300 && tids.includes('genesis')
+    // §0.39.359 SB31 — and starting from genesis means the skeleton: the spec's files are the nexus-system tree
+    const ftPaths = ((man.fileTree && man.fileTree.files) || []).map(f => f.path);
+    check('GA-05 genesis is the default: a system spec with no template starts from it — the skeleton is its file tree; the New spec form checks it', r.status < 300 && tids.includes('genesis')
+      && ['server.js', 'registry-components.js', 'lib/node-index.js'].every(p => ftPaths.includes(p)) && (m.plan && m.plan.slot)
       && /\$\{t\.id === 'genesis' \? 'checked' : ''\}/.test(app), JSON.stringify({ status: r.status, tids, keys: Object.keys(man).slice(0, 20) }));
   } catch (e) { fail++; console.log(`  ✗ crashed: ${e.stack}`); }
   console.log(`\n  ${pass} passed, ${fail} failed\n`);
