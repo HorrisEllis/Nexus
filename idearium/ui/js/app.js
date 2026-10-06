@@ -4269,6 +4269,7 @@ function _agentFeedIn(p) {
   }
   if (CURRENT_API_REPO && CURRENT_API_REPO.uuid === p.repoUuid) _agentFeedPaint(p.repoUuid);
   if (typeof agentLivePaint === 'function') agentLivePaint(p.repoUuid);   // §0.39.356 LS4 — the Code tab and the work surface
+  if (typeof wsLivePaint === 'function') wsLivePaint(p.repoUuid);   // §0.39.362 WS2 — each file it is writing, a card
 }
 function _agentFeedHtml(uuid) {
   const st = _agentFeedState(uuid);

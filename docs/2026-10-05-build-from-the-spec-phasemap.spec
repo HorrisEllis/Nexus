@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.24.0   # 1.24.0: SB50, SB51 DONE; SB52 a phase is proven on the code it proposed (0.39.361) · 1.23.0: SB50 every task timestamped, SB51 a phase built in chunks a small model can hold · 1.22.0: SB46–SB49 mapped — every step by hand, built and run in COS, proof closes the phase, an idea runs through by itself · 1.21.0: 1.21.0: SB42–SB45 a repo expands from its spec, phased, chunked, coded; uncoded files grey (0.39.360) · 1.20.0: 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.25.0   # 1.25.0: CH1 each compartment's charter (axioms, conditions, end state), WS1 agents use the work surface, WS2 it streams the writing (0.39.362) · 1.24.0: SB50, SB51 DONE; SB52 a phase is proven on the code it proposed (0.39.361) · 1.23.0: SB50 every task timestamped, SB51 a phase built in chunks a small model can hold · 1.22.0: SB46–SB49 mapped — every step by hand, built and run in COS, proof closes the phase, an idea runs through by itself · 1.21.0: 1.21.0: SB42–SB45 a repo expands from its spec, phased, chunked, coded; uncoded files grey (0.39.360) · 1.20.0: 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -1260,3 +1260,43 @@ spec:
       proof: "a chunked build's proof row is against: proposed, overlaying both files, the files on disk unchanged; a proposal whose test throws is unproven"
       conditions:
         - { says: "the chunked build passes end to end", check: { kind: tests, run: "node tests/modules/test-chunked-phase-build.test.js" } }
+
+    # 1.25.0 — James: "we could have each compartment in idearium support axioms, conditions, or end state. like for
+    # example, use the least amount of code with the highest levarage that achieves the end state" · "good? also agents
+    # need to use the work surface. the work surface could also stream the dom mutator,"
+    CH1_compartment_charter:
+      layer: api
+      status: DONE (0.39.362)
+      james: '"use the least amount of code with the highest levarage that achieves the end state"'
+      depends_on: [SB52_proven_on_the_proposed_code]
+      files: [lib/charter.js, idearium/api/index.js, idearium/ui/js/plan-panel.js]
+      does: >-
+        charter.spec at the repo root: axioms (in every request), conditions (in every phase's proof, on the proposed
+        code), end_state (checked after each proven phase and by hand; the Plan's main progress, phases under it). A
+        proven run records its leverage: lines added per check passed.
+      proof: "a charter's axiom is in every chunk request, its condition in the proof, the leverage on the proven row, the end state 1/2 with the proposals and 0/2 without"
+      conditions:
+        - { says: "the charter passes end to end", check: { kind: tests, run: "node tests/modules/test-chunked-phase-build.test.js" } }
+
+    WS1_agents_use_the_work_surface:
+      layer: api
+      status: DONE (0.39.362)
+      james: '"also agents need to use the work surface."'
+      depends_on: [CH1_compartment_charter]
+      files: [lib/agent-tools/tools/idearium/code.js, idearium/api/index.js, lib/repo-hat.js, lib/agent-tools/tool-guide.js, lib/agent-tools/tool-catalog.js]
+      does: >-
+        idearium.work_surface (view · prove · withdraw; never apply), given to every repo agent: the cards the person
+        sees, and its pending proposals proved as proposed against the charter and a phase's conditions, the unmet with
+        evidence.
+      proof: "the tool, over HTTP into the real API: view shows the proposed card and the charter; prove names the one unmet end-state check; withdraw rejects"
+
+    WS2_the_work_surface_streams_the_writing:
+      layer: ui
+      status: DONE (0.39.362)
+      james: '"the work surface could also stream the dom mutator,"'
+      depends_on: []
+      files: [idearium/ui/js/work-surface.js, idearium/ui/js/app.js, idearium/ui/css/work-surface.css]
+      does: >-
+        Each file the agent is writing is a card while it writes (from the DOM-mutator / Ollama feed): its lines as they
+        come, writing while its fence is open, written — landing once closed, gone when its real card lands.
+      proof: "a reply fed mid-stream paints one writing card; closed, written; landed, gone"

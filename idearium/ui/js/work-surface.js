@@ -101,8 +101,52 @@ function wsPaint(el) {
       <span class="ws-sum" title="changes in effect or waiting — reverted and rejected ones are not counted">${t.files || 0} file${t.files === 1 ? '' : 's'} <span class="ws-plus">+${t.added || 0}</span> <span class="ws-minus">−${t.removed || 0}</span>${t.pending ? ` · <span style="color:var(--amber)">${t.pending} waiting</span>` : ''}${t.undone ? ` · <span class="ws-undone">${t.undone} undone</span>` : ''}</span>
       <span class="ws-grow"></span>${filt}<button class="ws-f" title="reload" onclick="wsLoad(document.getElementById('pp-ws'))">↻</button></div>
     ${_wsTools(d.tools)}
+    <div id="ws-forming" class="ws-forming-wrap">${_wsFormingHtml(WSURF.uuid)}</div>
     ${files.length ? `<div class="ws-note">${files.length > 2 ? 'Large diffs start collapsed — click a file to open it.' : ''}</div>${files.map(_wsCard).join('')}`
       : `<div class="ws-empty">${(d.files || []).length ? 'nothing in this filter' : 'no changes yet — when the agent builds a phase, every file it writes shows here with its diff.'}</div>`}`;
+}
+
+// ── §0.39.362 WS2 — the agent writing, as cards ──────────────────────────────────────────────────────────────────────
+// James: "the work surface could also stream the dom mutator". The live feed (app.js AGENT_FEED: a browser agent's DOM
+// mutations and node anchor through guardian, or an Ollama model's text through copilot) was a strip of raw text above
+// the cards. Now each file the agent is writing is a card of its own while it writes: its path, its lines so far (the
+// newest at the bottom), 'writing' while its fence is open, 'written — landing' once closed, until the real card lands.
+/** wsFormingBlocks(text) -> [{ path, lang, lines, code, open }] — every fenced block in a reply that names a file */
+function wsFormingBlocks(text) {
+  const out = []; const t = String(text || '');
+  const re = /```([^\n`]*)\n/g; let m;
+  while ((m = re.exec(t))) {
+    const info = m[1].trim();
+    const start = m.index + m[0].length;
+    const end = t.indexOf('\n```', start - 1);
+    const close = end === -1 ? -1 : end;
+    const code = close === -1 ? t.slice(start) : t.slice(start, close);
+    const pathTok = info.split(/\s+/).reverse().find(x => /[\w-]\.[A-Za-z0-9]+$/.test(x) && !/^\.\./.test(x) && !x.startsWith('/'));
+    if (pathTok) out.push({ path: pathTok.replace(/^[`'"]|[`'"]$/g, ''), lang: info.split(/\s+/)[0] || '', code, lines: code ? code.replace(/\n$/, '').split('\n').length : 0, open: close === -1 });
+    if (close === -1) break;
+    re.lastIndex = close + 4;
+  }
+  return out;
+}
+function _wsFormingHtml(uuid) {
+  const st = typeof AGENT_FEED !== 'undefined' ? AGENT_FEED.get(uuid) : null;
+  if (!st || !st.jobId || !st.text) return '';
+  const landed = new Set(((WSURF.data && WSURF.data.files) || []).filter(f => f.at && f.at >= (st.updated || 0) - 120000).map(f => f.path));
+  const blocks = wsFormingBlocks(st.text).filter(b => b.open || !landed.has(b.path));
+  if (!blocks.length) return '';
+  const a = st.anchor;
+  return `<div class="ws-forming-h"><span class="al-dot${st.generating ? ' on' : ''}"></span>${escapeHtml(st.provider || 'the agent')} is ${st.generating ? 'writing' : 'done writing'}${st.mutations != null ? ` · ${st.mutations} mutations` : ''}${a ? ` · ⌖ ${escapeHtml(a.path || a.tag || '')}` : ''}</div>`
+    + blocks.map(b => { const [dir, base] = _wsSplitPath(b.path); const tail = b.code.replace(/\n$/, '').split('\n').slice(-14);
+      return `<div class="ws-card ws-forming${b.open ? ' open' : ''}"><div class="ws-head"><span class="ws-chev">${b.open ? '✎' : '✓'}</span><span class="ws-ico">${_wsIcon(b.path)}</span>
+        <span class="ws-name">${escapeHtml(base)}</span><span class="ws-dir">${escapeHtml(dir.replace(/\/$/, ''))}</span><span class="ws-grow"></span>
+        <span class="ws-chip ${b.open ? 'ws-st-writing' : 'ws-st-proposed'}">${b.open ? 'writing' : 'written — landing'}</span><span class="ws-plus">${b.lines} line${b.lines === 1 ? '' : 's'}</span></div>
+        ${b.open ? `<div class="ws-diff">${tail.map((l, i) => `<div class="ws-ln ws-add"><span class="ws-g"></span><span class="ws-g">${b.lines - tail.length + i + 1}</span><span class="ws-s">+</span><span class="ws-t">${escapeHtml(l) || ' '}</span></div>`).join('')}</div>` : ''}</div>`; }).join('');
+}
+/** repaint only the forming cards — every frame of the feed, never the whole surface */
+function wsLivePaint(uuid) {
+  const el = document.getElementById('ws-forming');
+  if (!el || WSURF.uuid !== uuid) return;
+  el.innerHTML = _wsFormingHtml(uuid);
 }
 
 function wsToggle(p, wasOpen) {

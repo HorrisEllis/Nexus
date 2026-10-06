@@ -100,6 +100,34 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
     const wsui = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/work-surface.js'), 'utf8');
     check('WS-20 the card paints what the file is now, undone cards start closed', /function _wsNow\(f\)/.test(wsui) && /\$\{_wsNow\(f\)\}/.test(wsui) && /!f\.undone && i < 2/.test(wsui));
 
+    // §0.39.362 WS2 — "the work surface could also stream the dom mutator": each file being written is a card as it streams
+    {
+      const vm = require('vm');
+      const els = {};
+      const sb = { console, escapeHtml: (x) => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]), AGENT_FEED: new Map(),
+        document: { getElementById: (id) => els[id] || null, querySelectorAll: () => [] }, CURRENT_API_REPO: null };
+      vm.createContext(sb);
+      vm.runInContext(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/work-surface.js'), 'utf8') + '\nthis.WSURF = WSURF; this.wsFormingBlocks = wsFormingBlocks; this.wsLivePaint = wsLivePaint;', sb);
+      const half = 'Here.\n\n```js lib/notes.js\nconst a = 1;\nconst b = 2;\n';
+      let b = sb.wsFormingBlocks(half);
+      check('WS-30 a reply mid-stream: the open fence is a file being written, its path and lines so far', b.length === 1 && b[0].path === 'lib/notes.js' && b[0].open && b[0].lines === 2, JSON.stringify(b));
+      const full = half + 'module.exports = { a, b };\n```\n\n```js tests/notes.test.js\nrequire(\'../lib/notes.js\');\n';
+      b = sb.wsFormingBlocks(full);
+      check('WS-31 a closed fence is written; the next one opens; prose and unaddressed blocks are not files', b.length === 2 && !b[0].open && b[0].lines === 3 && b[1].open && b[1].path === 'tests/notes.test.js'
+        && sb.wsFormingBlocks('```js\nx()\n```\n```bash\nnpm test\n```').length === 0);
+      sb.WSURF.uuid = 'R1'; sb.WSURF.data = { files: [] };
+      els['ws-forming'] = { innerHTML: '' };
+      sb.AGENT_FEED.set('R1', { jobId: 'j1', text: full, generating: true, provider: 'chatgpt', mutations: 41, anchor: { path: 'div.markdown' }, updated: Date.now() });
+      sb.wsLivePaint('R1');
+      const h = els['ws-forming'].innerHTML;
+      check('WS-32 each frame paints the forming cards: who is writing, the mutations, the anchor, each file writing / written', /chatgpt is writing/.test(h) && /41 mutations/.test(h) && /div\.markdown/.test(h)
+        && /written — landing/.test(h) && />writing</.test(h) && /notes\.test\.js/.test(h), h.slice(0, 300));
+      sb.WSURF.data = { files: [{ path: 'lib/notes.js', at: Date.now() }] };
+      sb.wsLivePaint('R1');
+      check('WS-33 once its real card lands, the forming card for that file goes', !/>notes\.js</.test(els['ws-forming'].innerHTML) && /notes\.test\.js/.test(els['ws-forming'].innerHTML));
+      check('WS-34 wired: every feed frame repaints the forming cards', /wsLivePaint\(p\.repoUuid\)/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8')));
+    }
+
     // ── WS-2x wiring ──
     const idx = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     check('WS-21 a phase run keeps its tool calls (tools on the row) — and a plan run too', /try \{ const tb = _toolsBrief\(r\); if \(tb\) row\.tools = tb; \} catch/.test(idx)
