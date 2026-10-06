@@ -41,7 +41,8 @@ function _wsDiffHtml(diff) {
 }
 
 function _wsCard(f, i) {
-  const open = WSURF.open.has(f.path) || (!WSURF.open.has(`!${f.path}`) && i < 2 && f.added + f.removed <= 400);
+  // §0.39.361 — an undone change (reverted, rejected) starts closed: it is history, not something to act on
+  const open = WSURF.open.has(f.path) || (!WSURF.open.has(`!${f.path}`) && !f.undone && i < 2 && f.added + f.removed <= 400);
   const [dir, base] = _wsSplitPath(f.path);
   // §CT5 0.39.351 — a card opens its file in the Code tab (not shown when that file is already open there)
   const inCode = typeof CS !== 'undefined' && typeof CURRENT_REPO_SUBTAB !== 'undefined' && CURRENT_REPO_SUBTAB === 'code' && CS.open === f.path;
@@ -54,14 +55,24 @@ function _wsCard(f, i) {
       <span class="ws-grow"></span>
       ${f.creates ? '<span class="ws-chip ws-new">new</span>' : ''}${f.op === 'delete' ? '<span class="ws-chip ws-delchip">delete</span>' : ''}
       <span class="ws-chip ws-st-${escapeHtml(f.status)}">${escapeHtml(f.status)}</span>
-      <span class="ws-plus">+${f.added}</span><span class="ws-minus">−${f.removed}</span>${toCode}${acts}
+      <span class="ws-plus${f.undone ? ' ws-undone' : ''}">+${f.added}</span><span class="ws-minus${f.undone ? ' ws-undone' : ''}">−${f.removed}</span>${toCode}${acts}
     </div>
-    ${open ? `<div class="ws-meta">${f.by ? `${escapeHtml(f.by)} · ` : ''}${f.at ? new Date(f.at).toLocaleString() : ''}${f.run ? ` · ${escapeHtml(f.run.phase || '')} run ${escapeHtml(String(f.run.runId).slice(-8))} (${escapeHtml(f.run.state || '')})` : ''}${f.history ? ` · ${f.history} earlier change${f.history === 1 ? '' : 's'}` : ''}${f.lines ? ` · ${f.lines} lines` : ''}</div>
-      <div class="ws-diff" onclick="wsPickLine(event,'${escapeHtml(f.path)}')">${_wsDiffHtml(f.diff)}</div>
-      ${f.op === 'delete' ? '' : `<div class="ws-ask"><span>lines</span><input class="ws-n" id="ws-from-${escapeHtml(f.id)}" placeholder="from"><input class="ws-n" id="ws-to-${escapeHtml(f.id)}" placeholder="to">
+    ${_wsNow(f)}
+    ${open ? `<div class="ws-meta">${f.run && f.run.provider ? `by <b>${escapeHtml(f.run.provider)}</b> · ` : ''}${f.by ? `${escapeHtml(f.by)} · ` : ''}${f.at ? new Date(f.at).toLocaleString() : ''}${f.run ? ` · ${escapeHtml(f.run.phase || '')} run ${escapeHtml(String(f.run.runId).slice(-8))} (${escapeHtml(f.run.state || '')})` : ''}${f.history ? ` · ${f.history} earlier change${f.history === 1 ? '' : 's'}` : ''}${f.lines ? ` · ${f.lines} lines` : ''}</div>
+      ${f.undone ? `<div class="ws-undone-cap">${f.status === 'reverted' ? 'what was undone — none of this is in the file now' : 'what was proposed — it was never written'}</div>` : ''}
+      <div class="ws-diff${f.undone ? ' ws-diff-undone' : ''}" onclick="wsPickLine(event,'${escapeHtml(f.path)}')">${_wsDiffHtml(f.diff)}</div>
+      ${f.op === 'delete' || f.undone ? '' : `<div class="ws-ask"><span>lines</span><input class="ws-n" id="ws-from-${escapeHtml(f.id)}" placeholder="from"><input class="ws-n" id="ws-to-${escapeHtml(f.id)}" placeholder="to">
         <input class="ws-q" id="ws-q-${escapeHtml(f.id)}" placeholder="ask the agent for a small change here — click a line number to pick it" onkeydown="if(event.key==='Enter')wsAsk('${escapeHtml(f.id)}','${escapeHtml(f.path)}')">
         <button class="ws-act ws-act-apply" onclick="wsAsk('${escapeHtml(f.id)}','${escapeHtml(f.path)}')">✎ edit</button></div>`}` : ''}
   </div>`;
+}
+
+// §0.39.361 — James: "i dont use git." What the file is now, said on the card itself — no git status to check.
+function _wsNow(f) {
+  const n = f.now; if (!n) return '';
+  if (n.untouched) return '<div class="ws-now ok">rejected — the file was never changed</div>';
+  if (n.restored) return `<div class="ws-now ok">✓ reverted — the file is back exactly as it was${n.lines ? ` (${n.lines} lines)` : ' (removed again — it was new)'}</div>`;
+  return `<div class="ws-now bad">⚠ reverted, but the file is not as it was before: it has ${n.lines} lines, it had ${n.wasLines}${n.lines ? ' — something changed it since' : ' — it is missing'}. Open it in Code, or restore a snapshot in Versionium.</div>`;
 }
 
 function _wsTools(t) {
@@ -87,7 +98,7 @@ function wsPaint(el) {
   const t = d.totals || {};
   const filt = ['all', 'pending', 'applied', 'reverted'].map(k => `<button class="ws-f ${WSURF.filter === k ? 'on' : ''}" onclick="WSURF.filter='${k}';wsPaint()">${k}</button>`).join('');
   el.innerHTML = `<div class="ws-top"><span class="pp-sec" style="margin:0">work surface</span>
-      <span class="ws-sum">${t.files || 0} file${t.files === 1 ? '' : 's'} <span class="ws-plus">+${t.added || 0}</span> <span class="ws-minus">−${t.removed || 0}</span>${t.pending ? ` · <span style="color:var(--amber)">${t.pending} waiting</span>` : ''}</span>
+      <span class="ws-sum" title="changes in effect or waiting — reverted and rejected ones are not counted">${t.files || 0} file${t.files === 1 ? '' : 's'} <span class="ws-plus">+${t.added || 0}</span> <span class="ws-minus">−${t.removed || 0}</span>${t.pending ? ` · <span style="color:var(--amber)">${t.pending} waiting</span>` : ''}${t.undone ? ` · <span class="ws-undone">${t.undone} undone</span>` : ''}</span>
       <span class="ws-grow"></span>${filt}<button class="ws-f" title="reload" onclick="wsLoad(document.getElementById('pp-ws'))">↻</button></div>
     ${_wsTools(d.tools)}
     ${files.length ? `<div class="ws-note">${files.length > 2 ? 'Large diffs start collapsed — click a file to open it.' : ''}</div>${files.map(_wsCard).join('')}`

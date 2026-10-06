@@ -181,7 +181,7 @@ function _csTree(repo) {
   return `<div class="cs-pane-head"><span>files</span><span class="cs-grow"></span>
       <button class="cs-chip-btn${CS.changedOnly ? ' on' : ''}" onclick="CS.changedOnly=!CS.changedOnly;csPaint()" title="only files that differ from the last version or have a change waiting">changed only</button></div>
     ${summary ? `<div class="cs-summary">${escapeHtml(summary)}</div>` : ''}
-    <div class="cs-tree">${walk(root, 0) || `<div class="cs-empty">${CS.changedOnly ? 'nothing uncommitted — everything is as in the last version' : 'no files'}</div>`}</div>`;
+    <div class="cs-tree">${walk(root, 0) || `<div class="cs-empty">${CS.changedOnly ? 'no changes — every file is as in the last snapshot' : 'no files'}</div>`}</div>`;
 }
 function csToggleDir(p) { if (CS.collapsed.has(p)) CS.collapsed.delete(p); else CS.collapsed.add(p); csPaint(); }
 

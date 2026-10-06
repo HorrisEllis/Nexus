@@ -88,18 +88,28 @@ export function workSurface({ injects = [], runs: rows = [], readCurrent = () =>
     // §0.39.361 — counted from the whole diff: the shown one stops at maxDiffLines, and BL15's -648 read as -400
     const c = counts(unifiedDiff(_nl(before), _nl(after), { path: p, context: 0, maxLines: Infinity }) || diff);
     const run = _runFor(n, runs);
+    // §0.39.361 — James hit Revert on BL15's -648 and had no way to see the file was back ("i dont use git"). An undone
+    // change says what the file is now: reverted → is it byte-for-byte what it was before; rejected → never written.
+    let now = null;
+    if (n.status === 'reverted') {
+      const cur = readCurrent(p);
+      const back = n.creates ? cur == null : cur != null && _nl(cur) === _nl(n.before);
+      now = { restored: back, lines: cur == null ? 0 : _lines(_nl(cur)), wasLines: n.creates ? 0 : _lines(_nl(n.before)) };
+    } else if (n.status === 'rejected') now = { untouched: true };
     files.push({
       path: p, id: n.uuid, status: n.status, op: del ? 'delete' : 'write', creates: before == null && !del,
       added: c.added, removed: c.removed, lines: _lines(after), diff,
       unchanged: !diff, by: n.hatName || (n.source && n.source.kind) || null,
       at: n.appliedAt || n.createdAt || null, staged: !!(n.source && n.source.staged) || n.status === 'staged',
-      run: run ? { runId: run.runId, phase: run.phase, state: run.state } : null,
+      run: run ? { runId: run.runId, phase: run.phase, state: run.state, provider: run.provider || null } : null,
+      undone: n.status === 'reverted' || n.status === 'rejected', now,
       history: earlier.length,
       actions: n.status === 'proposed' ? ['apply', 'reject'] : n.status === 'applied' ? ['revert'] : n.status === 'staged' ? ['promote', 'reject'] : [],
     });
   }
-  const totals = files.reduce((t, f) => ({ files: t.files + 1, added: t.added + f.added, removed: t.removed + f.removed,
-    pending: t.pending + (f.status === 'proposed' || f.status === 'staged' ? 1 : 0) }), { files: 0, added: 0, removed: 0, pending: 0 });
+  // the totals are what is in effect or waiting — an undone change (reverted, rejected) is history, not counted in +/−
+  const totals = files.reduce((t, f) => (f.undone ? { ...t, undone: t.undone + 1 } : { ...t, files: t.files + 1, added: t.added + f.added, removed: t.removed + f.removed,
+    pending: t.pending + (f.status === 'proposed' || f.status === 'staged' ? 1 : 0) }), { files: 0, added: 0, removed: 0, pending: 0, undone: 0 });
   const calls = [];
   for (const r of runs) for (const t of r.tools || []) calls.push({ runId: r.runId, phase: r.phase, name: t.name, ok: t.ok !== false, error: t.error || null, args: t.args || null });
   return {

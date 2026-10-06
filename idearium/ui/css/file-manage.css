@@ -120,3 +120,4 @@
 .mg-shell ::-webkit-scrollbar-thumb { background: var(--b1); border-radius: 8px; }
 .mg-shell ::-webkit-scrollbar-thumb:hover { background: var(--b2); }
 .mg-shell ::-webkit-scrollbar-track { background: transparent; }
+.mg-chip.st-saved { color: var(--mint); border-color: rgba(52,211,153,.3); }
