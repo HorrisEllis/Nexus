@@ -67,7 +67,14 @@ export async function filesState(deps, uuid) {
   const version = last ? await _tree(deps, uuid, last.commitId) : null;
   let injects = [];
   try { injects = deps.RI().list(uuid, { limit: 1000 }); } catch (_) {}
-  const out = fileStates({ disk: man.entries, version: version && version.entries ? version : null, injects });
+  // §0.39.360 SB45 — the files whose chunk has no code yet (planned by an expansion or the skeleton's slot): greyed
+  let uncoded = [];
+  try {
+    const L = deps.getRepoLayer();
+    const spec = r.repo.specUuid && L.se ? L.se.loadSpec(r.repo.specUuid) : null;
+    if (spec && spec.fileTree) uncoded = (spec.chunks || []).filter(c => c.status !== 'removed' && c.status !== 'complete' && c.realPath).map(c => c.realPath);
+  } catch (_) { /* no spec: nothing is planned */ }
+  const out = fileStates({ disk: man.entries, version: version && version.entries ? version : null, injects, uncoded });
   return ok({ repoUuid: uuid, ...out, versionNote: snaps.error ? `versionium: ${snaps.error} — every file shows as new` : !last ? 'no version yet — every file is new until the first snapshot' : version && !version.entries ? `version ${last.commitId} has no file layer (${version.error})` : null,
     skipped: man.skipped.slice(0, 20) });
 }

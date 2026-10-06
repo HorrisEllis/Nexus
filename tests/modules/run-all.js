@@ -389,6 +389,7 @@ const SUITES = [
   'test-workshop-full.test.js',   // 0.39.354 WS7 — the full workshop: the writer, parts, modes, SEND TO THE PIPELINE (Clear Glass)
   'test-phase-actually-builds.test.js',   // 0.39.355 PB1–PB5 — the ladder's floor, no-change is incomplete, a round fails only on what the run broke, strings are not imports
   'test-agent-live.test.js',   // 0.39.356 LS1–LS4 — the agent writing, live: bridge partial → copilot → agent/stream → the Code tab and the Plan (Clear Glass)
+  'test-repo-expand.test.js',   // 0.39.360 SB42–SB45 — a repo expands from its spec: phased, chunked, coded; uncoded files grey; an empty slot is never complete
   'test-system-skeleton.test.js',   // 0.39.359 SB28/SB30/SB31 — genesis 1.4.0 is the nexus-system archetype; reusable components; every new repo is the skeleton, the idea slotted in
   'test-template-picker.test.js',   // 0.39.357 RS5 — the workshop's start is the template picker: + CUSTOM / MANUAL, every quick-spec template, saved ones versioned (Clear Glass)
   'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree

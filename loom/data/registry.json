@@ -28637,7 +28637,7 @@
       "id": "spec.docs.2026-10-05-build-from-the-spec-phasemap",
       "namespace": "spec",
       "name": "docs/2026-10-05-build-from-the-spec-phasemap.spec",
-      "version": "1.20.0",
+      "version": "1.21.0",
       "uuid": "nexus-loom-spec-spec.docs.2026-10-05-build-from-the-spec-phasemap-v1-0000-2026-0804-001",
       "spec_uuid": "nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001",
       "route_count": 0,
@@ -30857,7 +30857,7 @@
       "id": "spec.idearium.spec.idearium",
       "namespace": "spec",
       "name": "idearium/spec/idearium.spec",
-      "version": "4.34.0",
+      "version": "4.35.0",
       "uuid": "nexus-loom-spec-spec.idearium.spec.idearium-v1-0000-2026-0804-001",
       "spec_uuid": "nexus-idearium-v3-0000-2026-0615-jamesbrooks-001",
       "route_count": 4,
@@ -31095,6 +31095,24 @@
       "uuid": "nexus-loom-scan-nexus.tests.modules.test-system-skeleton.test-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
       "registeredAt": 1791260165858
+    },
+    "nexus.lib.repo-expand": {
+      "id": "nexus.lib.repo-expand",
+      "namespace": "nexus.lib",
+      "name": "lib/repo-expand.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.lib.repo-expand-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791264560557
+    },
+    "nexus.tests.modules.test-repo-expand.test": {
+      "id": "nexus.tests.modules.test-repo-expand.test",
+      "namespace": "nexus.tests",
+      "name": "tests/modules/test-repo-expand.test.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.tests.modules.test-repo-expand.test-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791264562232
     }
   },
   "seam": {},
@@ -61178,6 +61196,36 @@
       "uuid": "nexus-loom-scan-nexus.tests.modules.test-system-skeleton.test-import-v1-0000-2026-0804-001",
       "novelType": false,
       "registeredAt": 1791260173094
+    },
+    "nexus.lib.file-tree-plan.export": {
+      "id": "nexus.lib.file-tree-plan.export",
+      "component_id": "nexus.lib.file-tree-plan",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.lib.file-tree-plan-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791264566407
+    },
+    "nexus.lib.repo-expand.import": {
+      "id": "nexus.lib.repo-expand.import",
+      "component_id": "nexus.lib.repo-expand",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.lib.repo-expand-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791264566771
+    },
+    "nexus.tests.modules.test-repo-expand.test.import": {
+      "id": "nexus.tests.modules.test-repo-expand.test.import",
+      "component_id": "nexus.tests.modules.test-repo-expand.test",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.tests.modules.test-repo-expand.test-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791264569364
     }
   },
   "wire": {
@@ -93179,6 +93227,26 @@
       "uuid": "nexus-loom-scan-wire-2044-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
       "registeredAt": 1791260184638
+    },
+    "source.wire.1261.nexus.lib.file-tree-plan--nexus.lib.repo-expand": {
+      "id": "source.wire.1261.nexus.lib.file-tree-plan--nexus.lib.repo-expand",
+      "from_hook_id": "nexus.lib.file-tree-plan.export",
+      "to_hook_id": "nexus.lib.repo-expand.import",
+      "intent": "nexus.lib.repo-expand requires nexus.lib.file-tree-plan",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-1261-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791264576604
+    },
+    "source.wire.1999.nexus.lib.test-sandbox--nexus.tests.modules.test-repo-expand.test": {
+      "id": "source.wire.1999.nexus.lib.test-sandbox--nexus.tests.modules.test-repo-expand.test",
+      "from_hook_id": "nexus.lib.test-sandbox.export",
+      "to_hook_id": "nexus.tests.modules.test-repo-expand.test.import",
+      "intent": "nexus.tests.modules.test-repo-expand.test requires nexus.lib.test-sandbox",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-1999-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791264580988
     }
   },
   "concern": {}

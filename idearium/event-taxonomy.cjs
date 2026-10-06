@@ -117,6 +117,7 @@ module.exports = Object.freeze({
   IDEARIUM_REPO_HAT_REFRESHED: { description: "A repo's hat was refreshed with its current chunks.", payloadShape: ["repoUuid", "chunkCount"], severity: 'info' },
   IDEARIUM_REPO_HAT_REVOKED: { description: "A repo's hat was revoked.", payloadShape: ["repoUuid", "name"], severity: 'notable' },
   IDEARIUM_REPO_AGENT_FEED: { description: "An event from Guardian was fed to a repo's agent.", payloadShape: ["repoUuid", "event", "guardianTs"], severity: 'info' },
+  IDEARIUM_REPO_EXPANDED: { description: "A skeleton repo grew from its spec: components slotted in, a phasemap written, their code files planned as pending chunks.", payloadShape: ["repoUuid", "feature", "components", "phasemap", "phases", "snapshot"], severity: 'notable' },   // 0.39.360 SB42
   IDEARIUM_REPO_AGENT_TOOL: { description: "A repo agent's tool call changed state (started, done, failed) — one row on the Agent tab's tool list.", payloadShape: ["repoUuid", "session", "name", "state", "args", "iteration", "error", "at"], severity: 'info' },
   IDEARIUM_REPO_AGENT_BLOCKS_CHANGED: { description: "A repo agent's prompt blocks changed.", payloadShape: ["repoUuid"], severity: 'info' },
   IDEARIUM_REPO_AGENT_EXPORTED: { description: "A repo agent's memory was exported.", payloadShape: ["repoUuid", "observations"], severity: 'info' },

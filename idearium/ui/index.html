@@ -670,12 +670,12 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .tree-status-dot.building,.tree-status-dot.pending,.tree-status-dot.verifying{background:var(--amber)}
 .tree-status-dot.failed,.tree-status-dot.escalated{background:var(--coral)}
 .tree-file-name{flex:1;overflow:hidden;text-overflow:ellipsis}
-.tree-node.file.fs-row-pending{opacity:.45;font-style:italic}
+.tree-node.file.fs-row-pending,.tree-node.file.fs-row-uncoded{opacity:.45;font-style:italic}   /* §0.39.360 SB45 — uncoded: planned, not coded yet */
 .tree-node.file.fs-row-deleted{opacity:.45;text-decoration:line-through}
 .tree-node.file.fs-row-modified .tree-file-name,.tree-node.file.fs-row-new .tree-file-name{color:var(--amber)}
 .fs-tag{font:600 8.5px/1.5 var(--mono);padding:0 4px;border-radius:3px;margin-left:4px;border:1px solid var(--b1,rgba(255,255,255,.12));color:var(--text3);flex-shrink:0}
 .fs-tag.fs-modified,.fs-tag.fs-new{color:var(--amber);border-color:rgba(230,180,80,.4)}
-.fs-tag.fs-pending{color:var(--text3);border-style:dashed}
+.fs-tag.fs-pending,.fs-tag.fs-uncoded{color:var(--text3);border-style:dashed}
 .fs-tag.fs-staged{color:var(--violet);border-color:rgba(167,139,250,.4)}
 .fs-tag.fs-deleted{color:var(--coral)}
 .fs-summary{color:var(--amber)}

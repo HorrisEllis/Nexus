@@ -1835,6 +1835,7 @@ const ROUTE_CAP = {
   'settings.console.repo': CAPS.READ_IDEAS,
   'economy.get': CAPS.READ_IDEAS, 'economy.set': CAPS.WRITE_IDEAS, 'economy.view': CAPS.READ_IDEAS,   // §0.39.281 EC8
   // §0.39.280 — build surface
+  'repo.expand': CAPS.WRITE_IDEAS,   // §0.39.360 SB42
   'repo.files.state': CAPS.READ_IDEAS, 'repo.deviation.get': CAPS.READ_IDEAS, 'repo.deviation.recalc': CAPS.WRITE_IDEAS,
   'repo.environment.get': CAPS.READ_IDEAS, 'repo.environment.set': CAPS.WRITE_IDEAS, 'repo.environment.setup': CAPS.ADMIN,
   'repo.spec.plan.get': CAPS.READ_IDEAS, 'repo.spec.plan': CAPS.WRITE_IDEAS, 'repo.spec.build': CAPS.WRITE_IDEAS,
@@ -2105,6 +2106,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
+    ['POST',   ['api','repos',    ':uuid','expand'],                'repo.expand'],   // §0.39.360 SB42–SB44
     // §0.39.280 — the build surface (docs/2026-09-29-build-surface-phasemap.spec BS7; logic in api/build-surface.js)
     ['GET',    ['api','repos',    ':uuid','files','state'],         'repo.files.state'],
     ['GET',    ['api','repos',    ':uuid','deviation'],             'repo.deviation.get'],
@@ -6093,6 +6095,60 @@ async function handle(req, res, route, query, body) {
       if (!r.json.ok) { const { ok: _o, error, ...detail } = r.json; return err(res, r.status, error, Object.keys(detail).length ? detail : null); }
       return ok(res, r.json.data);
     }
+    // §0.39.360 SB42–SB44 (build-from-the-spec 1.21.0) — James: "expanding using the specs, then phased, then chunked,
+    // then coded. look at the nexus repo." A skeleton repo grows: a snapshot first (as a phase build takes one); the new
+    // components (body.components, or the agent's plan from body.ask, shown the system's own components); slotted into
+    // the registry, the living spec and the nodes; a phasemap in docs/ (one phase per component, in build order — the
+    // Phases tab builds them); and each code file a pending chunk, coded when its phase writes it. Nothing is written
+    // when the repo is not a skeleton, nothing new slots in, or there is no snapshot.
+    case 'repo.expand': {
+      const layer = getRepoLayer();
+      const repo = layer.get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RX = _require('../../lib/repo-expand.js');
+      const FTP = _require('../../lib/file-tree-plan.js');
+      const read = (p) => { const r = layer.readFile(repo.uuid, p); return r && !r.error ? r.content : undefined; };
+      const sk = RX.skeletonOf(read);
+      if (!sk) return err(res, 409, 'not a skeleton repo — expansion slots components into a repo made from the nexus-system template (its registry-components.js has the slot)', { code: 'NOT_SKELETON' });
+      const feature = String((body && (body.feature || body.ask)) || '').trim().slice(0, 80);
+      const ask = String((body && body.ask) || feature).trim();
+      if (!feature) return err(res, 400, 'feature or ask is required — what the system should gain');
+      let comps = [], rejected = [], agentError = null;
+      if (Array.isArray(body.components)) { const p = FTP.parseSlot(JSON.stringify(body.components)); comps = p.components; rejected = p.rejected; }
+      else {
+        const warpFn = await getWarpChunkDispatch();
+        if (!warpFn) return err(res, 503, 'no agent to plan the expansion — give components, or start an agent');
+        try {
+          const who = _buildIdentity(repo.specUuid || null);
+          const r = await warpFn(RX.expandPrompt({ system: sk.system, ask, ids: sk.ids, files: (repo.files || []).map(f => f.path) }),
+            { chunkTitle: `expand: ${sk.system} — ${feature}`, expectCode: false, preferAgent: body.agent || who.provider || null, hat: who.hat, model: who.model, repoUuid: repo.uuid });
+          if (!r || !r.ok) throw new Error((r && r.error) || 'the expansion plan dispatch failed');
+          const p = FTP.parseSlot(r.text); comps = p.components; rejected = p.rejected;
+          if (!comps.length) agentError = rejected[0] ? rejected[0].reason : 'the agent planned no components';
+        } catch (e) { agentError = e.message; }
+      }
+      if (!comps.length) return err(res, 422, `nothing was slotted in: ${agentError || 'no components given'} — nothing written`, { rejected });
+      let takenKeys = [];
+      try {
+        const PH = await import('../repo/phases.js');
+        const loom = _require('../../loom/scanners/phasemap-map.js');
+        for (const m of PH.mapsFor({ repo, repoDir: _repoDiskDir(repo.uuid) }).maps) takenKeys.push(...loom.parsePhasemapText(m.text, m.path).map(x => String(x.id).split('_')[0]));
+      } catch (_) { /* no maps yet */ }
+      const plan = RX.expansion({ read, components: comps, feature, ask, takenKeys });
+      if (!plan.ok) return err(res, 422, `${plan.error} — nothing written`, { rejected: [...rejected, ...(plan.rejected || [])] });
+      const snap = await _commitRepoSnapshotFor(repo.uuid, { message: `before expanding: ${feature}`, causedBy: 'idearium.repo.expand' });
+      if (!snap.ok) return err(res, snap.status === 409 ? 409 : 502, `not expanded: the Versionium snapshot before it failed — ${snap.error}`, { code: 'NO_SNAPSHOT' });
+      const se = getSpecEngine();
+      const written = [], failed = [];
+      for (const w of plan.writes) { const r = layer.writeFile(repo.uuid, w.path, w.content, { defer: true, preserveWhitespace: true }); (r && r.ok ? written : failed).push(r && r.ok ? w.path : { path: w.path, error: r && r.error }); }
+      const planned = [];
+      for (const c of plan.code) { try { const r = se.planChunk(repo.specUuid, c); planned.push({ path: c.path, created: r.created }); } catch (e) { failed.push({ path: c.path, error: e.message }); } }
+      try { layer.refresh(repo.uuid); } catch (_) { /* the files are written; the disk projection catches up on the next write */ }
+      getIdeaOS().emit('idearium.repo.expanded', { repoUuid: repo.uuid, feature, components: plan.ids, phasemap: plan.phasemap.path, phases: plan.phasemap.phases.length, snapshot: snap.data.commitId });
+      return ok(res, { repoUuid: repo.uuid, system: plan.system, feature, components: plan.ids, phasemap: { path: plan.phasemap.path, phases: plan.phasemap.phases },
+        written, planned, failed, rejected: [...rejected, ...plan.rejected], snapshot: snap.data.commitId });
+    }
+
     case 'repo.phases.build': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);

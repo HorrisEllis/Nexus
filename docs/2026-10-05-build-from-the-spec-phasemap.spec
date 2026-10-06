@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.20.0   # 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.21.0   # 1.21.0: SB42–SB45 a repo expands from its spec, phased, chunked, coded; uncoded files grey (0.39.360) · 1.20.0: 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -1074,3 +1074,73 @@ spec:
       conditions:
         - { says: "the checklist builds the working set; the engine takes any domain", check: { kind: tests, run: "node tests/modules/test-checklist-workset.test.js" } }
 
+
+    # ── 1.21.0 (2026-10-06): the capability to grow a system — expand from the spec, phased, chunked, coded ──
+    # James: "the daw is a test. fuck the daw. were building capacity to build the daw, not the daw" · "yeah we need to
+    # fix all o that. expanding using the specs, then phased, then chunked, then coded. look at the nexus repo. skeletons
+    # need to be greyed out until they're coded."
+    # The nexus repo already grows this way: a phasemap .spec in docs/ whose phases name their files, built by the phases
+    # manager (snapshot first, the escalation ladder, the shadow of every file the phase names), the changes landing greyed
+    # until committed. A skeleton repo (SB31) had none of it after it was made: slotting happened once, at creation.
+    # (SB40/SB41 were the DOM/debug domains, mapped and cut in 0.39.339 — not reused.)
+
+    SB42_a_repo_expands_from_its_spec:
+      layer: api
+      status: "DONE (1.21.0, 0.39.360) — lib/repo-expand.js (skeletonOf, expandPrompt, expansion) + POST /api/repos/:uuid/expand and the Phases tab's + expand. A snapshot first; the agent is shown the system's components and plans the new ones (file-tree-plan parseSlot, now with uses); slotIn appends to the registry and the spec's components and writes the nodes. Refused, nothing written: not a skeleton 409, nothing new 422, no snapshot 502. test-repo-expand EX-01, EX-03, EX-05."
+      james: '"expanding using the specs"'
+      depends_on: [SB31_every_new_repo_is_the_skeleton_the_idea_slots_in]
+      files: [lib/repo-expand.js, lib/file-tree-plan.js, idearium/api/index.js]
+      does: >-
+        POST /api/repos/:uuid/expand { ask, feature } on a skeleton repo (its registry-components.js has the slot): a
+        Versionium snapshot first; the agent is shown the system's own components and asked only for the new ones (the
+        same slot rules as SB31: lib/, tests/, ui/; a capability and commands each; what each uses); slotting them in
+        writes into the repo the registry entries, the living spec's components, and every component, capability,
+        command, event, route and hook node — the spec grows before any code. A repo that is not a skeleton, or an ask
+        that slots nothing in, is refused and said; nothing written.
+      proof: "a skeleton repo asked for two features gains their registry entries, spec components and nodes, the old ones untouched; a non-skeleton repo is refused"
+      conditions:
+        - { says: "a skeleton repo grows from its spec; a non-skeleton repo is refused", check: { kind: tests, run: "node tests/modules/test-repo-expand.test.js" } }
+
+    SB43_the_expansion_is_phased:
+      layer: api
+      status: "DONE (1.21.0, 0.39.360) — repo-expand phasemap(): docs/<date>-<feature>-phasemap.spec, one phase per component numbered in build order (after the components it uses), files [component, its test], invariants, proof and conditions; keys never reuse the repo's. Read by roadmap.buildRoadmap and the phases manager unchanged. test-repo-expand EX-02, EX-03."
+      james: '"then phased" · "look at the nexus repo"'
+      depends_on: [SB42_a_repo_expands_from_its_spec]
+      files: [lib/repo-expand.js]
+      does: >-
+        The expansion writes a phasemap into the repo (docs/<date>-<feature>-phasemap.spec), in Nexus's own shape: one
+        phase per component, its files (the component and its test), its depends_on (the components it uses), what it
+        does (its commands as the functions it exports, ctx only — never another component), its proof. The repo's
+        Phases tab reads it with no new code (roadmap.collectPhasemaps, loom's parser); the build plan shows each phase's gates.
+      proof: "the phasemap the expansion writes is read by the phases manager: every component a phase, in dependency order"
+      conditions:
+        - { says: "the expansion's phasemap is read by the phases manager in dependency order", check: { kind: tests, run: "node tests/modules/test-repo-expand.test.js" } }
+
+    SB44_phases_are_chunked_then_coded:
+      layer: api
+      status: "DONE (1.21.0, 0.39.360) — spec-engine planChunk: each planned code file is a pending chunk with its file (path, layer, purpose) and a fileTree row; the existing phase build codes them (its shadow expects the files the phase names); repo writeFile completes the chunk. test-repo-expand EX-03, EX-04b."
+      james: '"then chunked, then coded"'
+      depends_on: [SB43_the_expansion_is_phased]
+      files: [lib/repo-expand.js, idearium/api/index.js, idearium/spec-engine/index.js]
+      does: >-
+        Each component's code is a chunk of the repo's spec from the moment it is planned (pending, no content); building
+        its phase (the existing phase build: snapshot, ladder, shadow) codes exactly those chunks, and a written file
+        completes its chunk (repo writeFile → completeChunk). Nothing is coded outside a phase; nothing new is invented
+        for the build.
+      proof: "an expansion's code files are pending chunks; writing one completes it; the phase's shadow expects exactly its files"
+      conditions:
+        - { says: "code files are pending chunks until written; the phase expects exactly them", check: { kind: tests, run: "node tests/modules/test-repo-expand.test.js" } }
+
+    SB45_skeletons_grey_until_coded:
+      layer: ui
+      status: "DONE (1.21.0, 0.39.360) — file-state.js 'uncoded' (build-surface filesState passes the spec's chunks with no code); the Files tree and the Code tab grey it, tagged U; the summary counts 'not coded'. spec-engine _progressOf/_isComplete: slotOpen (a skeleton with nothing slotted in) is one more unit of progress and never complete; planChunk reopens a finished spec. test-repo-expand EX-04a, EX-04b, EX-06."
+      james: '"skeletons need to be greyed out until they''re coded"'
+      depends_on: [SB44_phases_are_chunked_then_coded]
+      files: [idearium/repo/file-state.js, idearium/api/build-surface.js, idearium/ui/js/file-manage.js, idearium/ui/index.html, idearium/ui/css/code-surface.css, idearium/spec-engine/index.js]
+      does: >-
+        A file whose chunk is not coded is 'uncoded': greyed in the Files tab and the Code tab like a pending proposal,
+        labelled U, until its code is written. A skeleton spec whose slot is empty is never 'complete' and never 100%:
+        the slot is one more unit of its progress, open until a component is slotted in.
+      proof: "an uncoded file reads 'uncoded' (greyed) and turns 'new' once written; a skeleton with an empty slot is not complete and under 100%"
+      conditions:
+        - { says: "uncoded files grey; an empty slot keeps the spec open", check: { kind: tests, run: "node tests/modules/test-repo-expand.test.js" } }
