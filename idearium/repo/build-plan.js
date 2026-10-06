@@ -85,7 +85,7 @@ export function buildPlan({ phases = [], runs = [], order = null, now = Date.now
     return {
       key: p.phase_key, uuid: p.uuid || null, map: p.map, title: p.title || p.name || p.phase_key, layer: p.layer || null, status: p.status,
       ...g, runs: rs.length, times,
-      ledger: rs.slice().reverse().map(r => ({ ts: r.ts, startedAt: r.startedAt || null, runId: r.runId, ...(r.chunk ? { chunk: r.chunk, chunks: r.chunks, file: r.file || null } : {}), state: r.state, snapshot: r.snapshot || null, provider: r.provider || null, ...(r.route ? { route: r.route } : {}), ...(r.precedent ? { precedent: r.precedent } : {}), ...(r.rung ? { rung: r.rung, rungs: r.rungs, attempt: r.attempt } : {}),
+      ledger: rs.slice().reverse().map(r => ({ ts: r.ts, startedAt: r.startedAt || null, runId: r.runId, ...(r.chunk ? { chunk: r.chunk, chunks: r.chunks, file: r.file || null } : {}), state: r.state, snapshot: r.snapshot || null, provider: r.provider || null, ...(r.route ? { route: r.route } : {}), ...(r.precedent ? { precedent: r.precedent } : {}), ...(r.against ? { against: r.against, overlaid: r.overlaid || [], againstNote: r.againstNote || null } : {}), ...(r.rung ? { rung: r.rung, rungs: r.rungs, attempt: r.attempt } : {}),
         error: r.error || null, injected: r.injects ? r.injects.injected || [] : [], reply: r.reply ? String(r.reply).slice(0, 600) : null })),
     };
   });

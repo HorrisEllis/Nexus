@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.23.0   # 1.23.0: SB50 every task timestamped, SB51 a phase built in chunks a small model can hold (0.39.361) · 1.22.0: SB46–SB49 mapped — every step by hand, built and run in COS, proof closes the phase, an idea runs through by itself · 1.21.0: 1.21.0: SB42–SB45 a repo expands from its spec, phased, chunked, coded; uncoded files grey (0.39.360) · 1.20.0: 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.24.0   # 1.24.0: SB50, SB51 DONE; SB52 a phase is proven on the code it proposed (0.39.361) · 1.23.0: SB50 every task timestamped, SB51 a phase built in chunks a small model can hold · 1.22.0: SB46–SB49 mapped — every step by hand, built and run in COS, proof closes the phase, an idea runs through by itself · 1.21.0: 1.21.0: SB42–SB45 a repo expands from its spec, phased, chunked, coded; uncoded files grey (0.39.360) · 1.20.0: 1.20.0: SB28 genesis in the shape Nexus systems have, SB30 the skeleton (a COS template with reusable components), SB31 every new repo is the skeleton, the idea slotted in — DONE (0.39.359) · 1.19.0: 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -1218,7 +1218,7 @@ spec:
 
     SB50_every_task_timestamped:
       layer: ui
-      status: OPEN
+      status: DONE (0.39.361)
       james: '"tasks need time stamped."'
       depends_on: []
       files: [idearium/repo/build-plan.js, idearium/api/build-surface.js, idearium/repo/phases.js, idearium/ui/js/plan-panel.js]
@@ -1230,7 +1230,7 @@ spec:
 
     SB51_a_phase_built_in_chunks:
       layer: api
-      status: OPEN
+      status: DONE (0.39.361)
       james: '"phases need chunked i feel like. at least for small ollama models."'
       depends_on: []
       files: [idearium/repo/phases.js, idearium/api/index.js, lib/pipeline-routing.js]
@@ -1242,3 +1242,21 @@ spec:
         row says chunk i of n and its file; the proof runs once, on the whole phase.
       proof: "a two-file phase on an Ollama ladder is sent as two requests, each naming one file and under the budget; the second sees the first's exports; a failed first chunk stops the run"
 
+    # 1.24.0 — James: "I want to get that pipeline working. Idearium." Driving SB51 end to end (a real skeleton repo, a
+    # real phasemap, the real route, only the model stubbed) showed a two-file phase 'proven' while both files on disk
+    # were the skeleton's empty placeholders: in review mode the code is a proposal, and `node tests/x.test.js` on an
+    # empty file passes. The proof that gates Apply proved nothing.
+    SB52_proven_on_the_proposed_code:
+      layer: api
+      status: DONE (0.39.361)
+      james: '"I want to get that pipeline working. Idearium."'
+      depends_on: [SB51_a_phase_built_in_chunks]
+      files: [lib/proof-overlay.js, idearium/api/index.js, idearium/repo/build-plan.js, idearium/ui/js/plan-panel.js]
+      does: >-
+        The proof runs in a scratch copy of the repo with this run's proposals laid over it (the newest per path, made
+        since the run began), never on the person's files. The proof row says against: proposed and which files; the
+        Plan says "proven on the proposed code — nothing is in your files until you Apply". A repo too big to copy is
+        proved on disk and says so.
+      proof: "a chunked build's proof row is against: proposed, overlaying both files, the files on disk unchanged; a proposal whose test throws is unproven"
+      conditions:
+        - { says: "the chunked build passes end to end", check: { kind: tests, run: "node tests/modules/test-chunked-phase-build.test.js" } }

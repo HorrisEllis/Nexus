@@ -64,7 +64,7 @@ async function run() {
   const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
   const pb = api.slice(api.indexOf('async function _phaseBuild('), api.indexOf('async function _reviewDraft('));
   const rv = api.slice(api.indexOf('async function _reviewDraft('), api.indexOf('// §0.39.271 — one repo snapshot'));
-  check('DR-20 a phase build asks in a fresh chat (session = its runId) and hands its result to the review', /const session = ri <= 0 && tryNo === 1 \? runId : `\$\{runId\}-r\$\{ri \+ 1\}t\$\{tryNo\}`/.test(pb) && /RA\.dispatch\(\{[^}]*session,/.test(pb)   /* §CT6 — the first attempt's chat is the runId; each later rung or retry its own fresh chat */ && /_reviewDraft\(\{ r, state, absent,/.test(pb));
+  check('DR-20 a phase build asks in a fresh chat (session = its runId) and hands its result to the review', /const session = ri <= 0 && tryNo === 1 \? `\$\{runId\}\$\{tag\}` : `\$\{runId\}\$\{tag\}-r\$\{ri \+ 1\}t\$\{tryNo\}`/.test(pb)   /* §0.39.361 SB51 — tag is '' for a whole phase, -c<i> for a chunk */ && /RA\.dispatch\(\{[^}]*session,/.test(pb)   /* §CT6 — the first attempt's chat is the runId; each later rung or retry its own fresh chat */ && /_reviewDraft\(\{ r, state, absent,/.test(pb));
   check('DR-21 the review runs only when enabled, only for a local draft that came back, by a guardian agent, in its own chat, with its own shadow',
     /repos\.draft_then_review'\) === false\) return null/.test(rv) && /DR\.wasDraftedLocally\(r\)/.test(rv) && /DR\.reviewerFor\(v\('repos\.review_provider'\)/.test(rv)
     && /session: reviewRunId/.test(rv) && /step: 'phase\.review'/.test(rv) && /draftRunId: base\.runId/.test(rv));

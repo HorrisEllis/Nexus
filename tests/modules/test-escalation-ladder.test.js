@@ -175,7 +175,7 @@ const listen = (fn) => new Promise((res) => { const s = http.createServer((q, r)
   await test('EL-08', 'the phase build climbs through climb(), records each attempt and climb, and passes the cap', () => {
     const src = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     const pb = src.slice(src.indexOf('async function _phaseBuild('), src.indexOf('async function _provePhase('));
-    assert.ok(/PRt\.climb\(\{ rungs, policy, attempt, onOutcome \}\)/.test(pb), 'climb() walks the ladder');
+    assert.ok(/PRt\.climb\(\{ rungs, policy, attempt: makeAttempt\(\{ msg: message, files: expectFiles \}\), onOutcome: makeOnOutcome\(\) \}\)/.test(pb) && /PRt\.climb\(\{ rungs, policy, attempt: makeAttempt\(\{ msg, files: \[file\], ck \}\), onOutcome: makeOnOutcome\(ck\) \}\)/.test(pb), 'climb() walks the ladder — for the whole phase, or each chunk (§0.39.361 SB51)');
     assert.ok(/PRt\.ladder\(policy, \{ installed \}\)/.test(pb) && /if \(!backend && !agent && !provider && policy\.escalate\)/.test(pb), 'the ladder only when the call names no agent');
     assert.ok(/maxToolErrors: policy\.maxToolErrors/.test(pb), 'the cap reaches the agent');
     assert.ok(/state: next\.how, [^]*from: rung\.provider, to: next\.rung\.provider/.test(pb), 'a climb is a row: from, to');

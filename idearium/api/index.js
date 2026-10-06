@@ -622,6 +622,9 @@ async function _phaseSetStatus(repo, { map, phase, status, force = false, reason
 // Build one phase: (1) a Versionium snapshot of every repo the build can touch —
 // refused without one (map invariant I2); (2) the phase goes active; (3) the repo's
 // agent gets the phase as its task, in the background; the run is recorded at each step.
+// the call's own backend when there is no ladder ('ollama' when it names one), for shouldChunk
+function paramsOfBackend(backend, rungs) { return rungs.length ? null : backend || null; }
+
 async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '' }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
@@ -639,7 +642,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     target = getRepoLayer().list({}).find(r => r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system === owner) || null;
     if (!target) return { ok: false, status: 409, error: `nexus/${owner} has no repo yet — sync the nexus repo first` };
   }
-  const runId = `phrun-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+  const runStartTs = Date.now();
+  const runId = `phrun-${runStartTs.toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title };
 
   // (1) snapshot first — never write without one
@@ -687,13 +691,15 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // build so far says about each agent (lib/agent-record.js — a projection of idearium_phase_runs and the injects):
   // what lands, what is proven, what the person undid, and the request size each one keeps failing at. Nothing
   // learned yet → the ladder exactly as configured. routing.ladder_learn: false turns it off.
+  // §0.39.361 SB51 — one request per file when the build starts on a small local model (routing.chunk_phases)
+  const chunking = PRt.shouldChunk(policy, { rungs, files: expectFiles, backend: paramsOfBackend(backend, rungs) });
   let route = null;
   if (rungs.length > 1 && policy.ladderLearn !== false) {
     try {
       const AR = _require('../../lib/agent-record.js');
       const RIx = _require('../../lib/repo-inject.js');
       const undone = RIx.list(null, { limit: 5000 }).filter(n => n.status === 'reverted' || n.status === 'rejected');
-      const o = AR.orderLadder(rungs, AR.record(loadTable('idearium_phase_runs'), { injects: undone }), { promptChars: message.length, minRecords: policy.learnMinRecords >= 1 ? Math.min(policy.learnMinRecords, 3) : 2 });
+      const o = AR.orderLadder(rungs, AR.record(loadTable('idearium_phase_runs'), { injects: undone }), { promptChars: chunking.chunk ? 2400 : message.length, minRecords: policy.learnMinRecords >= 1 ? Math.min(policy.learnMinRecords, 3) : 2 });
       route = { learned: o.changed, bucket: o.bucket, why: o.why };
       if (o.changed) { rungs = o.rungs; ladderFrom = `learned from past builds (${o.bucket} request) — ${ladderFrom}`; }
     } catch (e) { route = { learned: false, error: e.message }; }
@@ -701,18 +707,22 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // the run starts here, its route on it: the ladder's order and, per agent, why it sits where it does
   appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length,
     ...(precedent.faults.length ? { precedent: precedent.faults.map(f => ({ uuid: f.uuid, ts: f.ts, agent: f.agent, mode: f.mode, promptChars: f.meta.promptChars || null })) } : {}),
-    ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom } } : {}), ts: Date.now() });
+    ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom } } : {}),
+    chunking: { chunk: chunking.chunk, why: chunking.why, ...(chunking.chunk ? { files: expectFiles } : {}) }, ts: Date.now() });
   getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
   const paramsOf = (rg) => (!rg ? { backend, agent, provider } : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
   // one attempt on one rung (rg null = no ladder: the call's own agent): dispatch, the shadow settled, the row built
-  const attempt = async (rg, ri, tryNo) => {
-    const session = ri <= 0 && tryNo === 1 ? runId : `${runId}-r${ri + 1}t${tryNo}`;
+  // §0.39.361 SB51 — the attempt is made for one request: the whole phase (msg = message, files = every file it names),
+  // or one chunk (one file, its own short request, its own sessions; ck = { chunk, chunks, file } on every row)
+  const makeAttempt = ({ msg, files, ck = null }) => async (rg, ri, tryNo) => {
+    const tag = ck ? `-c${ck.chunk}` : '';
+    const session = ri <= 0 && tryNo === 1 ? `${runId}${tag}` : `${runId}${tag}-r${ri + 1}t${tryNo}`;
     // §0.39.282 N23 — each phase is its own chunk in its own FRESH chat (session), so a small local model gets its whole
     // window for this phase, not the running history of every phase before it.
-    const shadow = expectFiles.length ? SH.declare({ step: 'phase.build', expects: { files: expectFiles }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
+    const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
-    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0 }); }
+    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0 }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -726,33 +736,61 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     // staged or proposed, by a fenced block or a code_edit / code_write / code_batch call) did not build: incomplete,
     // so the ladder climbs instead of ending on prose.
     if (state === 'replied' && !PRt.changedAnything(r)) { state = 'incomplete'; unchanged = true; }
-    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}),
+    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}),
       error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : null)),
       provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || null,
       ...(rg ? { rung: ri + 1, rungs: rungs.length, attempt: tryNo, ...(r && r.toolErrors ? { toolErrors: true } : {}) } : {}),
-      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, promptChars: message.length, ts: Date.now() };
+      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, promptChars: msg.length, ts: Date.now() };
     // §0.39.284 W3 — the tool calls of this run are kept on it, so the work surface can show what the agent used
     try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
     return { r, state, absent, dp, row, trigger: r && r.toolErrors ? 'tool-errors' : state };
   };
   // each attempt recorded on the Plan; a climb says from what, to what, and why
-  const onOutcome = async (out, { rung, index, tryNo, next, exhausted }) => {
+  const makeOnOutcome = (ck = null) => async (out, { rung, index, tryNo, next, exhausted }) => {
+    const tag = ck ? `-c${ck.chunk}` : '';
     const row = exhausted ? { ...out.row, ladderExhausted: true, error: `${out.row.error || out.trigger} — every rung of the ladder tried (${rungs.map(x => x.provider).join(' → ')})` } : out.row;
     appendRow('idearium_phase_runs', row);
     getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: row.state, snapshot: commitId, ...(rung ? { rung: index + 1, provider: rung.provider } : {}) });
     if (!next) return;
     const why = `${out.trigger}${out.row.error ? ` — ${String(out.row.error).slice(0, 200)}` : ''}`;
-    const sess = `${runId}-r${next.index + 1}t${next.tryNo}`;
-    appendRow('idearium_phase_runs', { uuid: `${sess}-${next.how}`, ...base, state: next.how, snapshot: commitId, provider: next.rung.provider, rung: next.index + 1, rungs: rungs.length, attempt: next.tryNo,
+    const sess = `${runId}${tag}-r${next.index + 1}t${next.tryNo}`;
+    appendRow('idearium_phase_runs', { uuid: `${sess}-${next.how}`, ...base, ...(ck || {}), state: next.how, snapshot: commitId, provider: next.rung.provider, rung: next.index + 1, rungs: rungs.length, attempt: next.tryNo,
       from: rung.provider, to: next.rung.provider, error: next.how === 'escalating' ? `${rung.provider} ${why} → climbing to ${next.rung.provider} (rung ${next.index + 1} of ${rungs.length}; ${ladderFrom})` : `${rung.provider} ${why} → attempt ${next.tryNo} of ${policy.retriesPerRung} on the same rung`, ts: Date.now() });
     getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: next.how, snapshot: commitId, from: rung.provider, to: next.rung.provider });
   };
-  Promise.resolve().then(() => PRt.climb({ rungs, policy, attempt, onOutcome }))
-    .then(({ r, state, absent, dp }) => {
-      _reviewDraft({ r, state, absent, target, base, commitId, req, note, message })
+  // the whole phase in one request, or — chunked — one climb per file, in order, each seeing what the earlier ones wrote
+  const runWhole = () => PRt.climb({ rungs, policy, attempt: makeAttempt({ msg: message, files: expectFiles }), onOutcome: makeOnOutcome() });
+  const runChunked = async () => {
+    const done = []; let last = null;
+    const RIc = _require('../../lib/repo-inject.js');
+    for (let i = 0; i < expectFiles.length; i++) {
+      const file = expectFiles[i];
+      const ck = { chunk: i + 1, chunks: expectFiles.length, file };
+      const cr = PH.chunkRequest({ phase: node, mapText, repo: target, file, index: i, files: expectFiles, done, depsDone });
+      const msg = [cr.message, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+      last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg, files: [file], ck }), onOutcome: makeOnOutcome(ck) });
+      if (last.state !== 'replied') {
+        appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-stopped`, ...base, ...ck, state: 'failed', chunkStopped: true, snapshot: commitId,
+          error: `chunk ${ck.chunk} of ${ck.chunks} (${file}) did not land — the run stops here; ${done.length ? `${done.map(d => d.path).join(', ')} came back` : 'nothing came back'}`, ts: Date.now() });
+        getIdeaOS().emit('idearium.repo.phase.run', { ...base, ...ck, state: 'failed', snapshot: commitId });
+        return { ...last, stopped: true };
+      }
+      // what it wrote: its exports, for the next chunk (the proposal's content — in review mode nothing is on disk yet)
+      let code = '';
+      try { const it = ((last.r.injects && last.r.injects.injects) || []).find(x => (x.path || x.file) === file); const n = it && it.uuid ? RIc.get(it.uuid) : null; code = (n && n.content) || ''; } catch (_) {}
+      if (!code) { try { const t = getRepoLayer().readTextFile(target.uuid, file); code = t && !t.error ? String(t.content || '') : ''; } catch (_) {} }
+      done.push({ path: file, exports: PH.exportsOf(code) });
+    }
+    return last;
+  };
+  Promise.resolve().then(() => (chunking.chunk ? runChunked() : runWhole()))
+    .then(({ r, state, absent, dp, stopped }) => {
+      if (stopped) return;
+      // a chunked run's replies were each one file: the draft review reads a whole reply, so it is for whole-phase runs
+      (chunking.chunk ? Promise.resolve(null) : _reviewDraft({ r, state, absent, target, base, commitId, req, note, message }))
         .catch(e => { console.warn(`[idearium] draft review for ${runId} failed: ${e.message}`); return null; })
-        // §0.39.303 PH1 — then the judge: the phase's own conditions, run; unmet ones feed the next attempt
-        .then(() => (['replied', 'incomplete'].includes(state) ? _provePhase({ target, base, commitId, mapText, phase, message, dispatch: { backend: dp.backend || null, agent: dp.agent || null, provider: dp.provider || null, ...(dp.model ? { model: dp.model } : {}) } }) : null))
+        // §0.39.303 PH1 — then the judge: the phase's own conditions, run once on the whole phase; unmet ones feed the next attempt
+        .then(() => (['replied', 'incomplete'].includes(state) ? _provePhase({ target, base, commitId, mapText, phase, message, dispatch: { backend: dp.backend || null, agent: dp.agent || null, provider: dp.provider || null, ...(dp.model ? { model: dp.model } : {}) } , since: runStartTs }) : null))
         .catch(e => console.warn(`[idearium] proof of ${runId} failed: ${e.message}`));
     })
     .catch((e) => {
@@ -761,6 +799,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     });
   const shadow = expectFiles.length ? { expects: { files: expectFiles } } : null;
   return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length,
+    chunking: { chunk: chunking.chunk, why: chunking.why, ...(chunking.chunk ? { chunks: expectFiles.length } : {}) },
     ...(shadow ? { shadow: { expects: shadow.expects } } : {}), ...(rungs.length ? { ladder: { rungs: rungs.map(x => x.provider), from: ladderFrom } } : {}) } };
 }
 
@@ -768,7 +807,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
 // phase's own conditions (its map's `conditions:`, idearium/repo/proof-run.js). Met → 'proven'. Unmet → the unmet
 // promises, their evidence and causes go back to the same agent as the next attempt, up to repos.proof_attempts
 // (default 2), then 'unproven' with what is still missing. No conditions declared → 'no-proof', said, never assumed.
-async function _provePhase({ target, base, commitId, mapText, phase, message, dispatch }) {
+async function _provePhase({ target, base, commitId, mapText, phase, message, dispatch, since = 0 }) {
   const PR = await import('../repo/proof-run.js');
   let { conditions, source } = PR.conditionsFromPhase(mapText, phase);
   // no declared conditions → the phase's own files: each exists, each JS file parses (never invented from prose)
@@ -800,22 +839,29 @@ ${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}`
       }
     }
     const dir = _repoDiskDir(target.uuid);
-    const r = dir ? await PR.runProof({ repoDir: dir, conditions, subject: `${target.name || target.uuid} — ${base.title || phase}`, writer }) : { ok: false, error: 'could not resolve the repo directory' };
+    // §0.39.361 SB52 — proved against the code this run proposed (a scratch copy with the proposals laid over it), not
+    // the files on disk: in review mode the code waits for Apply, and a proof of the empty placeholders proved nothing
+    const POV = _require('../../lib/proof-overlay.js');
+    const ov = dir ? POV.prepare({ repoDir: dir, overlays: POV.overlaysOf(_require('../../lib/repo-inject.js').list(target.uuid, { limit: 500 }), { since }) }) : null;
+    let r;
+    try { r = dir ? await PR.runProof({ repoDir: ov.dir, conditions, subject: `${target.name || target.uuid} — ${base.title || phase}`, writer }) : { ok: false, error: 'could not resolve the repo directory' }; }
+    finally { if (ov) ov.cleanup(); }
+    const against = ov ? { against: ov.against, ...(ov.overlaid.length ? { overlaid: ov.overlaid } : {}), ...(ov.note ? { againstNote: ov.note } : {}) } : {};
     if (!r.ok) {
       appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt, snapshot: commitId, error: `the proof could not run: ${r.error}`, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'unproven' });
       return { state: 'unproven' };
     }
-    run = r.run;
+    run = { ...r.run, against };
     if (run.verdict === 'ready') {
-      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
+      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...against, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.proven', { ...pbase, attempt, met: run.met, total: run.total, report: run.files && run.files.report });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'proven' });
       return { state: 'proven', attempt, run };
     }
   }
   const still = run.results.filter(x => !x.met).map(x => x.says);
-  appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt: max, snapshot: commitId, error: `after ${max} attempt(s), still not met: ${still.join(' · ').slice(0, 400)}`, proof: { met: run.met, total: run.total, modes: run.modes, report: run.files && run.files.report }, ts: Date.now() });
+  appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt: max, snapshot: commitId, ...(run.against || {}), error: `after ${max} attempt(s), still not met: ${still.join(' · ').slice(0, 400)}`, proof: { met: run.met, total: run.total, modes: run.modes, report: run.files && run.files.report }, ts: Date.now() });
   getIdeaOS().emit('idearium.phase.attempt.unmet', { ...pbase, attempt: max, met: run.met, total: run.total, modes: run.modes });
   getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'unproven' });
   return { state: 'unproven', run };
