@@ -665,7 +665,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // §0.39.361 AR2 — before acting, what went wrong on this phase before (fault_log): the agent is told, the Plan shows it
   let precedent = { faults: [], text: '' };
   try { precedent = _require('../../lib/phase-faults.js').precedent(phase); } catch (_) {}
-  const message = [req.message, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+  // §0.39.362 CH2 — the compartment's charter (charter.spec at the repo root): its axioms, what must stay true, its end state
+  let charterText = '';
+  try { const CHr = _require('../../lib/charter.js'); charterText = CHr.requestText(CHr.load(_repoDiskDir(target.uuid))); } catch (_) {}
+  const message = [req.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
@@ -767,7 +770,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const file = expectFiles[i];
       const ck = { chunk: i + 1, chunks: expectFiles.length, file };
       const cr = PH.chunkRequest({ phase: node, mapText, repo: target, file, index: i, files: expectFiles, done, depsDone });
-      const msg = [cr.message, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+      const msg = [cr.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
       last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg, files: [file], ck }), onOutcome: makeOnOutcome(ck) });
       if (last.state !== 'replied') {
         appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-stopped`, ...base, ...ck, state: 'failed', chunkStopped: true, snapshot: commitId,
@@ -807,11 +810,55 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
 // phase's own conditions (its map's `conditions:`, idearium/repo/proof-run.js). Met → 'proven'. Unmet → the unmet
 // promises, their evidence and causes go back to the same agent as the next attempt, up to repos.proof_attempts
 // (default 2), then 'unproven' with what is still missing. No conditions declared → 'no-proof', said, never assumed.
+// §0.39.362 CH4 — +added −removed of proposals against the files on disk (the whole change, not a shown diff)
+function _proposedSize(dir, overlays) {
+  const CE = _require('../../lib/code-edit.js');
+  let added = 0, removed = 0;
+  for (const o of overlays) {
+    let before = null; try { before = fs.readFileSync(path.join(dir, o.path), 'utf8'); } catch (_) { before = null; }
+    const after = o.op === 'delete' ? null : o.content;
+    const nl = (x) => (x == null ? null : String(x).replace(/\r?\n$/, ''));
+    const d = CE.unifiedDiff(nl(before), nl(after), { path: o.path, context: 0, maxLines: Infinity }) || '';
+    for (const l of d.split('\n')) { if (l.startsWith('+++') || l.startsWith('---')) continue; if (l.startsWith('+')) added++; else if (l.startsWith('-')) removed++; }
+  }
+  return { added, removed, files: overlays.length };
+}
+
+// §0.39.362 CH5 — the compartment's end state, checked: on its files, with what is proposed laid over them (a scratch copy;
+// nothing written), each run a row of idearium_charter_runs — the compartment's progress on the Plan.
+async function _charterCheck(repoUuid, { withProposals = true, cause = null } = {}) {
+  const dir = _repoDiskDir(repoUuid);
+  if (!dir) return { ok: false, status: 500, error: 'could not resolve the repo directory' };
+  const CH = _require('../../lib/charter.js');
+  const ch = CH.load(dir);
+  const conds = CH.endStateConditions(ch);
+  if (!conds.length) return { ok: true, data: { repoUuid, empty: true, errors: ch.errors, note: ch.exists ? 'the charter names no end state' : 'this compartment has no charter.spec yet' } };
+  const POV = _require('../../lib/proof-overlay.js');
+  const ov = withProposals ? POV.prepare({ repoDir: dir, overlays: POV.overlaysOf(_require('../../lib/repo-inject.js').list(repoUuid, { limit: 500 })) }) : { dir, against: 'disk', overlaid: [], cleanup: () => {}, note: null };
+  const PR = await import('../repo/proof-run.js');
+  let r; try { r = await PR.runProof({ repoDir: ov.dir, conditions: conds, subject: `end state of ${repoUuid}`, write: false }); } finally { ov.cleanup(); }
+  if (!r.ok) return { ok: false, status: 422, error: `the end state could not be checked: ${r.error}` };
+  const row = { uuid: `charter-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, repoUuid, met: r.run.met, total: r.run.total, against: ov.against, overlaid: ov.overlaid || [], ...(ov.note ? { againstNote: ov.note } : {}),
+    results: (r.run.results || []).map(x => ({ says: x.says, met: !!x.met, evidence: String(x.evidence || '').slice(0, 300) })), cause, ts: Date.now() };
+  appendRow('idearium_charter_runs', row);
+  getIdeaOS().emit('idearium.repo.charter.checked', { repoUuid, met: row.met, total: row.total, against: row.against });
+  return { ok: true, data: row };
+}
+function _charterLatest(repoUuid) {
+  let best = null; for (const r of loadTable('idearium_charter_runs')) if (r.repoUuid === repoUuid && (!best || (r.ts || 0) > (best.ts || 0))) best = r;
+  return best;
+}
+
 async function _provePhase({ target, base, commitId, mapText, phase, message, dispatch, since = 0 }) {
   const PR = await import('../repo/proof-run.js');
   let { conditions, source } = PR.conditionsFromPhase(mapText, phase);
   // no declared conditions → the phase's own files: each exists, each JS file parses (never invented from prose)
   if (!conditions.length) { const d = PR.derivedConditionsFromPhase(mapText, phase); if (d.conditions.length) ({ conditions, source } = d); else source = d.source; }
+  // §0.39.362 CH3 — the compartment's charter conditions hold for every phase: checked in its proof, on the proposed code
+  const CH = _require('../../lib/charter.js');
+  const charter = CH.load(_repoDiskDir(target.uuid));
+  const charterConds = CH.proofConditions(charter);
+  if (charterConds.length) { conditions = [...conditions, ...charterConds]; source = `${source} + the charter's ${charterConds.length} condition${charterConds.length === 1 ? '' : 's'}`; }
   const pbase = { ...base, runId: `${base.runId}-proof`, buildRunId: base.runId };
   if (!conditions.length) {
     appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-no-proof`, ...pbase, state: 'no-proof', snapshot: commitId, error: `not proven: ${source} — add conditions: [{ says, check }] to the phase`, ts: Date.now() });
@@ -847,16 +894,20 @@ ${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}`
     try { r = dir ? await PR.runProof({ repoDir: ov.dir, conditions, subject: `${target.name || target.uuid} — ${base.title || phase}`, writer }) : { ok: false, error: 'could not resolve the repo directory' }; }
     finally { if (ov) ov.cleanup(); }
     const against = ov ? { against: ov.against, ...(ov.overlaid.length ? { overlaid: ov.overlaid } : {}), ...(ov.note ? { againstNote: ov.note } : {}) } : {};
+    // §0.39.362 CH4 — the least-code axiom, measured: the lines this run's proposals add, per check that passed
+    const size = dir ? _proposedSize(dir, POV.overlaysOf(_require('../../lib/repo-inject.js').list(target.uuid, { limit: 500 }), { since })) : null;
     if (!r.ok) {
       appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt, snapshot: commitId, error: `the proof could not run: ${r.error}`, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'unproven' });
       return { state: 'unproven' };
     }
-    run = { ...r.run, against };
+    run = { ...r.run, against: { ...against, ...(size ? { leverage: CH.leverage({ ...size, met: r.run.met }) } : {}) } };
     if (run.verdict === 'ready') {
-      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...against, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
+      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...run.against, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.proven', { ...pbase, attempt, met: run.met, total: run.total, report: run.files && run.files.report });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'proven' });
+      // §0.39.362 CH5 — a proven phase moves the compartment: its end state is checked again (with what is proposed)
+      if (charter.endState.length) _charterCheck(target.uuid, { cause: base.runId }).catch(e => console.warn(`[idearium] end-state check after ${base.runId}: ${e.message}`));
       return { state: 'proven', attempt, run };
     }
   }
@@ -1915,7 +1966,7 @@ const ROUTE_CAP = {
   'repo.files.state': CAPS.READ_IDEAS, 'repo.deviation.get': CAPS.READ_IDEAS, 'repo.deviation.recalc': CAPS.WRITE_IDEAS,
   'repo.environment.get': CAPS.READ_IDEAS, 'repo.environment.set': CAPS.WRITE_IDEAS, 'repo.environment.setup': CAPS.ADMIN,
   'repo.spec.plan.get': CAPS.READ_IDEAS, 'repo.spec.plan': CAPS.WRITE_IDEAS, 'repo.spec.build': CAPS.WRITE_IDEAS,
-  'repo.plan': CAPS.READ_IDEAS, 'repo.file.manage': CAPS.WRITE_IDEAS,
+  'repo.plan': CAPS.READ_IDEAS, 'repo.charter.get': CAPS.READ_IDEAS, 'repo.charter.set': CAPS.WRITE_IDEAS, 'repo.charter.check': CAPS.WRITE_IDEAS, 'repo.file.manage': CAPS.WRITE_IDEAS,
   // §0.39.302 PR1 — the delivery checker. A check RUNS the repo's own commands and app, so it is ADMIN, as environment setup is.
   'repo.deliver.check': CAPS.ADMIN, 'repo.deliver.last': CAPS.READ_IDEAS, 'repo.deliver.conditions': CAPS.WRITE_IDEAS,
 };
@@ -2195,6 +2246,9 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','spec','plan'],           'repo.spec.plan'],
     ['POST',   ['api','repos',    ':uuid','spec','build'],          'repo.spec.build'],
     ['GET',    ['api','repos',    ':uuid','plan'],                  'repo.plan'],
+    ['GET',    ['api','repos',    ':uuid','charter'],               'repo.charter.get'],     // §0.39.362 CH1 axioms · conditions · end state
+    ['PUT',    ['api','repos',    ':uuid','charter'],               'repo.charter.set'],
+    ['POST',   ['api','repos',    ':uuid','charter','check'],       'repo.charter.check'],
     ['POST',   ['api','repos',    ':uuid','manage'],                'repo.file.manage'],
     // §CI 2026-09-20 — CI/CD per compartment. cos/ci/index.js owns the
     // pipeline; these are idearium's surface onto it, scoped to a repo
@@ -6175,7 +6229,14 @@ async function handle(req, res, route, query, body) {
         : action === 'repo.spec.plan.get' ? await BS.specPlanGet(d, u, query.path)
         : action === 'repo.spec.plan' ? await BS.specPlan(d, u, body || {})
         : action === 'repo.spec.build' ? await BS.specBuild(d, u, body || {})
-        : action === 'repo.plan' ? await BS.plan(d, u, { map: query.map || null })
+        : action === 'repo.plan' ? await (async () => {
+            const pr = await BS.plan(d, u, { map: query.map || null });
+            // §0.39.362 CH5 — the compartment's end state: its progress, when its charter names one
+            if (pr.json && pr.json.ok && pr.json.data) {
+              try { const ch = _require('../../lib/charter.js').load(_repoDiskDir(u)); pr.json.data.charter = { exists: ch.exists, axioms: ch.axioms, conditions: ch.conditions.length, endState: ch.endState.map(e => e.says), errors: ch.errors, latest: ch.endState.length ? _charterLatest(u) : null }; } catch (_) {}
+            }
+            return pr;
+          })()
         : await BS.manage(d, u, body || {});
       if (!r.json.ok) { const { ok: _o, error, ...detail } = r.json; return err(res, r.status, error, Object.keys(detail).length ? detail : null); }
       return ok(res, r.json.data);
@@ -6232,6 +6293,35 @@ async function handle(req, res, route, query, body) {
       getIdeaOS().emit('idearium.repo.expanded', { repoUuid: repo.uuid, feature, components: plan.ids, phasemap: plan.phasemap.path, phases: plan.phasemap.phases.length, snapshot: snap.data.commitId });
       return ok(res, { repoUuid: repo.uuid, system: plan.system, feature, components: plan.ids, phasemap: { path: plan.phasemap.path, phases: plan.phasemap.phases },
         written, planned, failed, rejected: [...rejected, ...plan.rejected], snapshot: snap.data.commitId });
+    }
+
+    // §0.39.362 CH1 — James: "each compartment in idearium support axioms, conditions, or end state". The charter is
+    // charter.spec at the repo's root (lib/charter.js): read, written (parsed first — a charter that does not parse, or
+    // a condition with no check, is refused with why), and its end state checked (_charterCheck).
+    case 'repo.charter.get': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const CH = _require('../../lib/charter.js');
+      const ch = CH.load(_repoDiskDir(params.uuid));
+      return ok(res, { repoUuid: params.uuid, ...ch, template: ch.exists ? null : CH.template(repo.name), endState: _charterLatest(params.uuid) });
+    }
+    case 'repo.charter.set': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const CH = _require('../../lib/charter.js');
+      const text = String((body && body.text) || '');
+      const ch = CH.parse(text);
+      if (ch.errors.length) return err(res, 422, `the charter was not saved: ${ch.errors.join('; ')}`, { errors: ch.errors });
+      const w = getRepoLayer().writeTextFile(params.uuid, CH.FILE, text.endsWith('\n') ? text : `${text}\n`, { preserveWhitespace: true });
+      if (!w || w.error) return err(res, 409, `the charter could not be written: ${(w && w.error) || 'unknown'}${repo.nexusSelf ? ' — a Nexus repo is written through the approval gate: propose charter.spec from the Agent tab' : ''}`);
+      getIdeaOS().emit('idearium.repo.charter.set', { repoUuid: params.uuid, axioms: ch.axioms.length, conditions: ch.conditions.length, endState: ch.endState.length });
+      return ok(res, { repoUuid: params.uuid, ...CH.load(_repoDiskDir(params.uuid)) });
+    }
+    case 'repo.charter.check': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const r = await _charterCheck(params.uuid, { withProposals: !(body && body.withProposals === false), cause: 'by hand' });
+      if (!r.ok) return err(res, r.status, r.error);
+      return ok(res, r.data);
     }
 
     case 'repo.phases.build': {

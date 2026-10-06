@@ -132,6 +132,42 @@ function _ppTimes(s) {
   return bits.length ? `<div class="pp-times">${bits.join('<span class="pp-dot">·</span>')}</div>` : '';
 }
 
+// §0.39.362 CH5 — James: "use the least amount of code with the highest levarage that achieves the end state". When the
+// compartment's charter names an end state, that is its progress — the main bar; the phase count sits under it.
+function _ppEndState(c) {
+  if (!c || !(c.endState || []).length) return '';
+  const l = c.latest;
+  if (!l) return `<div class="pp-end"><div class="pp-end-h"><b>end state</b> <span class="pp-dim">not checked yet — ${c.endState.length} check${c.endState.length === 1 ? '' : 's'}</span><button class="pp-mini" onclick="ppCharterCheck()">check</button></div></div>`;
+  const pct = l.total ? Math.round((l.met / l.total) * 100) : 0;
+  return `<div class="pp-end"><div class="pp-end-h"><b>end state ${l.met}/${l.total}</b> <span class="pp-dim">${escapeHtml(_ppWhen(l.ts))}${l.against === 'proposed' && (l.overlaid || []).length ? ` · with ${l.overlaid.length} proposed file${l.overlaid.length === 1 ? '' : 's'}` : ''}</span><button class="pp-mini" onclick="ppCharterCheck()">check</button></div>
+    <div class="pp-progress pp-progress-end"><div style="width:${pct}%"></div></div>
+    <div class="pp-end-list">${(l.results || []).map(r => `<div class="${r.met ? 'ok' : 'bad'}" title="${escapeHtml(r.evidence || '')}">${r.met ? '✓' : '✗'} ${escapeHtml(r.says)}</div>`).join('')}</div></div>`;
+}
+// the charter itself: its axioms, conditions and end state — read, edited, saved (PUT /api/repos/:uuid/charter)
+function _ppCharter(c) {
+  const sum = !c || !c.exists ? 'none yet — axioms, conditions and an end state for this compartment' : `${(c.axioms || []).length} axiom${(c.axioms || []).length === 1 ? '' : 's'} · ${c.conditions || 0} condition${c.conditions === 1 ? '' : 's'} · ${(c.endState || []).length} end-state check${(c.endState || []).length === 1 ? '' : 's'}${(c.errors || []).length ? ` · <span style="color:var(--coral)">${c.errors.length} problem${c.errors.length === 1 ? '' : 's'}</span>` : ''}`;
+  return `<details class="pp-actwrap pp-charter" ontoggle="if(this.open)ppCharterLoad()"><summary class="pp-sec">charter · ${sum}</summary>
+    ${c && (c.axioms || []).length ? `<div class="pp-ax">${c.axioms.map(a => `<div>◆ ${escapeHtml(a)}</div>`).join('')}</div>` : ''}
+    <textarea id="pp-charter-text" class="pp-charter-text" spellcheck="false" placeholder="reading charter.spec…"></textarea>
+    <div class="pp-charter-bar"><button class="pp-mini" onclick="ppCharterSave()">save</button><button class="pp-mini" onclick="ppCharterCheck()">check the end state</button><span id="pp-charter-msg" class="pp-dim"></span></div></details>`;
+}
+async function ppCharterLoad() {
+  const ta = document.getElementById('pp-charter-text'); if (!ta || !PLANP.uuid) return;
+  try { const c = await api(`/api/repos/${PLANP.uuid}/charter`, {}, 20000); if (!ta.dataset.dirty) ta.value = c.exists ? c.text : (c.template || ''); }
+  catch (e) { ta.placeholder = `could not read: ${e.message}`; }
+  ta.oninput = () => { ta.dataset.dirty = '1'; };
+}
+async function ppCharterSave() {
+  const ta = document.getElementById('pp-charter-text'), msg = document.getElementById('pp-charter-msg'); if (!ta) return;
+  try { await api(`/api/repos/${PLANP.uuid}/charter`, { method: 'PUT', body: JSON.stringify({ text: ta.value }) }, 30000); delete ta.dataset.dirty; if (msg) msg.textContent = 'saved'; toast('charter saved', 'ok'); loadPlanPanel(); }
+  catch (e) { if (msg) msg.textContent = e.message; toast(`charter not saved: ${e.message}`, 'err'); }
+}
+async function ppCharterCheck() {
+  const msg = document.getElementById('pp-charter-msg'); if (msg) msg.textContent = 'checking the end state…';
+  try { const r = await api(`/api/repos/${PLANP.uuid}/charter/check`, { method: 'POST', body: '{}' }, 300000); toast(r.empty ? r.note : `end state ${r.met}/${r.total}`, r.empty ? 'err' : 'ok'); loadPlanPanel(); }
+  catch (e) { toast(`end state not checked: ${e.message}`, 'err'); if (msg) msg.textContent = e.message; }
+}
+
 // §0.39.361 AR2 — what went wrong on this phase before (fault_log), read before the run and handed to the agent
 function _ppPrecedent(p) {
   if (!p || !p.length) return '';
@@ -149,7 +185,7 @@ function _ledgerHtml(rows) {
   if (!rows.length) return '<div class="pp-led-empty">no runs yet — ▶ builds it (a snapshot first, then the repo\'s agent)</div>';
   return rows.map(l => `<div class="pp-led"><span class="pp-led-t" title="${escapeHtml(new Date(l.ts).toLocaleString())}${l.startedAt ? ` · run started ${escapeHtml(new Date(l.startedAt).toLocaleString())}` : ''}">${escapeHtml(_ppWhen(l.ts))}${l.startedAt && l.ts > l.startedAt ? ` <small>+${escapeHtml(_ppSpan(l.ts - l.startedAt))}</small>` : ''}</span>${l.chunk ? `<span class="pp-led-c" title="${escapeHtml(l.file || '')}">chunk ${l.chunk}/${l.chunks}</span>` : ''}<span class="pp-led-s pp-${escapeHtml(l.state)}">${escapeHtml(l.state)}</span>
     <span class="pp-led-d">${l.snapshot ? `snapshot ${escapeHtml(String(l.snapshot).slice(0, 12))} · ` : ''}${l.provider ? `${escapeHtml(l.provider)}${l.rung ? ` (rung ${l.rung}/${l.rungs}${l.attempt > 1 ? `, try ${l.attempt}` : ''})` : ''} · ` : ''}${l.toolErrors ? '<span style="color:var(--coral)">stopped: failed tool calls in a row</span> · ' : ''}${(l.injected || []).length ? `files ${l.injected.slice(0, 6).map(f => typeof wsOpenInCode === 'function' ? `<a href="#" class="pp-file" title="open in the Code tab" onclick="wsOpenInCode('${escapeHtml(String(f).replace(/'/g, "\\'"))}');return false">${escapeHtml(f)}</a>` : escapeHtml(f)).join(', ')}${l.injected.length > 6 ? ` +${l.injected.length - 6}` : ''} · ` : ''}${l.error ? `<span style="color:var(--coral)">${escapeHtml(l.error)}</span>` : ''}</span>
-    ${l.against === 'proposed' ? `<div class="pp-against">${l.state === 'proven' ? '✓ proven on the proposed code' : 'checked on the proposed code'} (${(l.overlaid || []).length} file${(l.overlaid || []).length === 1 ? '' : 's'}) — nothing is in your files until you Apply</div>` : l.againstNote ? `<div class="pp-against warn">${escapeHtml(l.againstNote)}</div>` : ''}${_ppPrecedent(l.precedent)}${_ppRoute(l.route)}${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
+    ${l.against === 'proposed' ? `<div class="pp-against">${l.state === 'proven' ? '✓ proven on the proposed code' : 'checked on the proposed code'} (${(l.overlaid || []).length} file${(l.overlaid || []).length === 1 ? '' : 's'}) — nothing is in your files until you Apply${l.leverage ? ` · <span title="the least-code axiom, measured">${escapeHtml(l.leverage.says)}</span>` : ''}</div>` : l.againstNote ? `<div class="pp-against warn">${escapeHtml(l.againstNote)}</div>` : ''}${_ppPrecedent(l.precedent)}${_ppRoute(l.route)}${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
 }
 
 function _planPaint() {
@@ -182,7 +218,9 @@ function _planPaint() {
   body.innerHTML = `
     ${_planCodeBuild()}
     ${_planProof()}
-    ${sm.total ? `<div class="pp-progress"><div style="width:${Math.round((sm.progress || 0) * 100)}%"></div></div>` : ''}
+    ${_ppEndState(d.charter)}
+    ${sm.total ? `<div class="pp-progress${d.charter && d.charter.latest ? ' pp-progress-2' : ''}" title="phases: ${sm.complete || 0}/${sm.total} done"><div style="width:${Math.round((sm.progress || 0) * 100)}%"></div></div>` : ''}
+    ${_ppCharter(d.charter)}
     <div class="pp-sec">tasks</div>
     ${(() => {   // §CT7 — current work: what is building, next, stopped or waiting; the complete fold into one line
       if (!steps.length) return '<div class="pp-empty">no phases yet — plan a spec (Spec tab → ▶ Build this spec)</div>';

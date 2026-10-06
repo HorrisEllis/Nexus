@@ -103,7 +103,7 @@ check('AR-38 an agent\'s record carries its faults whole, and its modes', recF.p
 check('AR-39 a fault of no one agent is kept, not dropped', recF.unassigned.length === 1 && recF.unassigned[0].mode === 'ladder-exhausted');
 
 check('AR-40 every phase-run row written goes through the fault hook', /function appendRow\(table, row\) \{\s*const out = _appendRowRaw\(table, row\);\s*if \(table === 'idearium_phase_runs'\) \{ try \{ _require\('\.\.\/\.\.\/lib\/phase-faults\.js'\)\.log\(row\)/.test(idx));
-check('AR-41 a phase build reads its precedent before acting, hands it to the agent and keeps it on the building row', /precedent = _require\('\.\.\/\.\.\/lib\/phase-faults\.js'\)\.precedent\(phase\)/.test(idx) && /\[req\.message, precedent\.text/.test(idx) && /precedent: precedent\.faults\.map/.test(idx));
+check('AR-41 a phase build reads its precedent before acting, hands it to the agent and keeps it on the building row', /precedent = _require\('\.\.\/\.\.\/lib\/phase-faults\.js'\)\.precedent\(phase\)/.test(idx) && /\[req\.message, charterText, precedent\.text/.test(idx) && /precedent: precedent\.faults\.map/.test(idx));
 const ri = fs.readFileSync(path.join(ROOT, 'lib/repo-inject.js'), 'utf8');
 check('AR-42 a collapsed reply and an undone agent change are logged from repo-inject', /mode: 'reply-collapse'/.test(ri) && (ri.match(/_undoneFault\(n, '(reverted|rejected)'/g) || []).length === 3);
 check('AR-43 the Plan shows a run\'s precedent and each agent\'s faults', /function _ppPrecedent\(p\)/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')) && /_ppFaultRow/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));

@@ -73,6 +73,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   const plan = await R('GET', `/api/repos/${repoUuid}/plan?map=${encodeURIComponent(map || '')}`);
   const step = ((plan.json.data || plan.json).steps || []).find(s => s.map === map && ph0 && (s.key === ph0.key || String(s.key).startsWith(`${ph0.key}_`)));
   const ph = ph0 && step ? { ...ph0, key: step.key } : null;
+  if (!ph) console.log("  (setup: the expanded phase was not found on the Plan — plan", plan.status, JSON.stringify(plan.json).slice(0, 600), JSON.stringify(ex.json).slice(0, 300));
 
   // the model: answers each request with the one file it names, as a small model would; the reply goes through the
   // real inject path. failFirst: the first request fails (provider down) to prove a chunk that does not land stops it
@@ -167,6 +168,56 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(!rs.some(r => ['proven', 'unproven', 'no-proof'].includes(r.state)), 'no proof of a stopped run');
     const PF = require(path.join(ROOT, 'lib/phase-faults.js'));
     assert.ok(PF.list({ phase: ph.key }).some(f => f.mode === 'chunk-stopped'), 'logged as a chunk-stopped fault');
+  });
+
+  // ── §0.39.362 CH1–CH5 — the compartment's charter: axioms, conditions, end state ──
+  await test('CB-10', 'a charter that does not parse, or a condition with no check, is refused with why — nothing written', async () => {
+    const bad = await R('PUT', `/api/repos/${repoUuid}/charter`, { text: 'charter:\n  conditions:\n    - "the notes work"\n' });
+    assert.strictEqual(bad.status, 422, JSON.stringify(bad.json).slice(0, 300));
+    assert.match(bad.json.error, /has no check/);
+    const g = await R('GET', `/api/repos/${repoUuid}/charter`);
+    assert.strictEqual((g.json.data || g.json).exists, false);
+    assert.match((g.json.data || g.json).template, /least amount of code with the highest leverage/, 'a new charter starts from the least-code axiom');
+  });
+
+  let charterRun = null;
+  await test('CB-11', 'with a charter: its axiom is in every request, its condition in the proof, the leverage measured, the end state checked', async () => {
+    failFirst = false; brokenTest = false; sent.length = 0;
+    const text = [
+      'charter:',
+      '  axioms:',
+      '    - "use the least amount of code with the highest leverage that achieves the end state"',
+      '  conditions:',
+      `    - { says: "the notes test passes", check: { kind: tests, run: "node ${ph.files[1]}" } }`,
+      '  end_state:',
+      `    - { says: "a note can be added", check: { kind: command, run: "node -e \\"const n=require('./${ph.files[0]}'); if(!n.add({text:'x'}).ok) process.exit(1)\\"" } }`,
+      '    - { says: "notes can be exported", check: { kind: file, path: "lib/export.js" } }',
+      '',
+    ].join('\n');
+    const put = await R('PUT', `/api/repos/${repoUuid}/charter`, { text });
+    assert.strictEqual(put.status, 200, JSON.stringify(put.json).slice(0, 400));
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama' });
+    const id = (b.json.data || b.json).runId;
+    const rs = await settle(id, x => x.some(r => ['proven', 'unproven', 'no-proof'].includes(r.state)));
+    assert.ok(sent.length === 2 && sent.every(m => /axiom: use the least amount of code/.test(m.message)), 'the axiom is in every chunk\'s request');
+    const p = rs.find(r => r.state === 'proven');
+    assert.ok(p, rs.map(r => `${r.state}${r.error ? `(${r.error})` : ''}`).join(', '));
+    assert.ok(p.proof.total >= 2, `the charter's condition is checked with the phase's own: ${p.proof.total}`);
+    assert.ok(p.leverage && p.leverage.added > 0 && p.leverage.linesPerCheck > 0 && /lines per check/.test(p.leverage.says), JSON.stringify(p.leverage));
+    for (let i = 0; i < 60 && !charterRun; i++) { const g = await R('GET', `/api/repos/${repoUuid}/charter`); charterRun = (g.json.data || g.json).endState; if (!charterRun || charterRun.cause !== id) charterRun = null; if (!charterRun) await wait(150); }
+    assert.ok(charterRun, 'a proven phase checks the end state again');
+  });
+
+  await test('CB-12', 'the end state is the compartment\'s progress: checked with what is proposed, each check said, the Plan carries it', async () => {
+    assert.strictEqual(charterRun.total, 2);
+    assert.strictEqual(charterRun.met, 1, JSON.stringify(charterRun.results));
+    assert.deepStrictEqual(charterRun.results.map(r => r.met), [true, false]);
+    assert.strictEqual(charterRun.against, 'proposed');
+    const pl = await R('GET', `/api/repos/${repoUuid}/plan`);
+    const c = (pl.json.data || pl.json).charter;
+    assert.ok(c && c.exists && c.latest && c.latest.met === 1 && c.endState.length === 2, JSON.stringify(c).slice(0, 300));
+    const byHand = await R('POST', `/api/repos/${repoUuid}/charter/check`, { withProposals: false });
+    assert.strictEqual((byHand.json.data || byHand.json).met, 0, 'on the files alone (nothing applied) nothing is met yet');
   });
 
   RA.dispatch = realDispatch;
