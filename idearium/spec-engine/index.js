@@ -695,7 +695,7 @@ export function createSpec({ name, type = 'component', description = '', agent =
 // runtime file on all engine files, tests on runtime. A layer with no files
 // is skipped over, not waited on. Every file a
 // COS template supplied are completed at creation — they cost no dispatch.
-export function createFileTreeSpec({ name, description = '', plan, agent = null, author = 'nexus', ideaUuid = null, templateId = null } = {}) {
+export function createFileTreeSpec({ name, description = '', plan, agent = null, author = 'nexus', ideaUuid = null, templateId = null, templateIds = null } = {}) {
   if (!plan || !Array.isArray(plan.files) || !plan.files.length) throw new Error('createFileTreeSpec: plan.files is required and non-empty');
   const order = ['kernel', 'engine', 'runtime', 'test'];
   const files = [...plan.files];
@@ -717,6 +717,9 @@ export function createFileTreeSpec({ name, description = '', plan, agent = null,
     for (let j = li - 1; j >= 0; j--) { if (byLayer[order[j]] && byLayer[order[j]].length) { dependsOn[sct.id] = [...byLayer[order[j]]]; break; } }
   }
   const manifest = _buildManifest({ name, type: 'filetree', description, agent, sectionAgents: {}, warpPrimitives: [], author, templateId: null, templateIds: null, sections, buildEngine: 'auto', ideaUuid, dependsOn });
+  // §0.39.359 SB31 — the templates it was made from (genesis with the skeleton), recorded; _buildManifest is not given
+  // them because its seeding is for document sections, and these sections are files
+  if (Array.isArray(templateIds) && templateIds.length) manifest.templateIds = [...templateIds];
   // dependsOn stays as SECTION ids — _chunkDependenciesSatisfied() resolves
   // edges by sectionId, the same key every other spec's edges use.
   const fileBySid = new Map(sections.map(x => [x.id, x._file]));
@@ -727,6 +730,8 @@ export function createFileTreeSpec({ name, description = '', plan, agent = null,
   }
   // The plan is data on the manifest (and a .filetree node, written by the
   // caller) — never a markdown file in the project.
+  // §0.39.360 SB45 — the skeleton with nothing slotted in stays open (see _progressOf)
+  manifest.slotOpen = !!(plan.slot && plan.slot.empty);
   manifest.fileTree = { planSource: plan.planSource || null, template: plan.template || null, templateId, layers: Object.fromEntries(order.map(l => [l, (byLayer[l] || []).length])),
     files: files.map(f => ({ path: f.path, layer: f.layer, purpose: f.purpose || null, source: f.source || null, ...(Array.isArray(f.dependsOn) ? { dependsOn: [...f.dependsOn] } : {}) })), rejected: (plan.rejected || []).length };
   saveSpec(manifest);
@@ -1175,11 +1180,11 @@ export function completeChunk(specUuid, chunkUuid, content, { preserveWhitespace
   // Update spec progress
   manifest.doneChunks  = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
   manifest.failedChunks= manifest.chunks.filter(c => c.status === CHUNK_STATES.FAILED || c.status === CHUNK_STATES.ESCALATED).length;
-  manifest.progress    = Math.round((manifest.doneChunks / manifest.totalChunks) * 100);
+  manifest.progress    = _progressOf(manifest);
   manifest.updatedAt   = Date.now();
   manifest.rootHash     = computeRootHash(manifest);
 
-  if (manifest.doneChunks === manifest.totalChunks) {
+  if (_isComplete(manifest)) {
     manifest.status      = 'complete';
     manifest.completedAt = Date.now();
     _assembleFullSpec(manifest);
@@ -1630,7 +1635,7 @@ export default {
   recoverOrphanedChunks,
   buildChunkPrompt, archiveSpec, expandSpec, deleteSpec, restoreSpec, purgeSpec,   // purgeSpec: 0.39.266 (D2)
   setAuthorWords,   // 0.39.305 SB2
-  computeRootHash, findByRootHash, ingestFilesAsSpec, addChunk, removeChunk,
+  computeRootHash, findByRootHash, ingestFilesAsSpec, addChunk, planChunk, removeChunk,
   ingestFilesAsSpecAsync, updateIngestedSpecAsync,
   markForRepair, repairBlock,   // 0.39.291 PV2   // 0.39.288 PF2/PF5 — nexus-self reaches them through this default export
   reconstructSpecText,
@@ -1732,6 +1737,42 @@ export function findByRootHash(rootHash) {
 // content store of its own to add a file TO except through spec-engine.
 // Same disk-write/rootHash-recompute path as every other chunk — this is
 // not a second mechanism, just a chunk list that can grow after creation.
+// §0.39.360 SB45 — a skeleton whose slot is empty (manifest.slotOpen: nothing of the idea slotted in yet) is not
+// finished however many of its files are written: the slot is one more unit of its progress, and it is never complete.
+function _progressOf(m) { const total = (m.totalChunks || 0) + (m.slotOpen ? 1 : 0); return total ? Math.round(((m.doneChunks || 0) / total) * 100) : 0; }
+function _isComplete(m) { return !m.slotOpen && (m.doneChunks || 0) === (m.totalChunks || 0); }
+
+/**
+ * planChunk(specUuid, { path, layer, purpose }) — a file planned and not coded yet: a PENDING chunk with no content, its
+ * file (path, layer, purpose) on the chunk and in the spec's fileTree. §0.39.360 SB44 (build-from-the-spec 1.21.0):
+ * an expansion's code files are chunks from the moment they are planned; writing the file (repo writeFile →
+ * completeChunk) codes it. A path already planned or written is left alone. Returns { manifest, chunk, created }.
+ */
+export function planChunk(specUuid, { path: relPath, layer = 'engine', purpose = null } = {}) {
+  if (!relPath) throw new Error('planChunk: path required');
+  const sectionId = String(relPath).replace(/\.[a-zA-Z0-9]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase();
+  let manifest = loadSpec(specUuid);
+  let chunk = manifest.chunks.find(c => c.status !== 'removed' && (c.realPath === relPath || c.sectionId === sectionId));
+  if (chunk) return { manifest, chunk, created: false };
+  manifest = addChunk(specUuid, { sectionId, title: relPath, content: '', realPath: relPath });
+  chunk = manifest.chunks.find(c => c.sectionId === sectionId && c.status !== 'removed');
+  chunk.realPath = relPath;
+  chunk.file = { path: relPath, layer, purpose, source: 'expansion' };
+  if (manifest.fileTree && Array.isArray(manifest.fileTree.files) && !manifest.fileTree.files.some(f => f.path === relPath)) {
+    manifest.fileTree.files.push({ path: relPath, layer, purpose, source: 'expansion' });
+    manifest.fileTree.layers = manifest.fileTree.layers || {};
+    manifest.fileTree.layers[layer] = (manifest.fileTree.layers[layer] || 0) + 1;
+  }
+  // a planned file reopens the spec: something of the idea is slotted in (the slot is no longer empty) and not coded
+  manifest.slotOpen = false;
+  manifest.totalChunks = manifest.chunks.filter(c => c.status !== 'removed').length;
+  manifest.doneChunks = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
+  manifest.progress = _progressOf(manifest);
+  if (manifest.status === 'complete') { manifest.status = 'building'; manifest.completedAt = null; }
+  saveSpec(manifest);
+  return { manifest: loadSpec(specUuid), chunk, created: true };
+}
+
 export function addChunk(specUuid, { sectionId, title = null, content = '', realPath = null, repoUuid = null, dependsOn = [], preserveWhitespace = false } = {}) {
   if (!sectionId) throw new Error('addChunk: sectionId required');
   const manifest = loadSpec(specUuid);
@@ -2006,9 +2047,9 @@ function _ingestFileInto(manifest, specDir, f, i, { preserveWhitespace = false, 
 function _ingestFinish(manifest, { repoUuid = null, now0 = Date.now(), onlyChunks = null, label = 'ingested' } = {}) {
   manifest.doneChunks   = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
   manifest.failedChunks = manifest.chunks.filter(c => c.status === CHUNK_STATES.FAILED || c.status === CHUNK_STATES.ESCALATED).length;
-  manifest.progress     = manifest.totalChunks ? Math.round((manifest.doneChunks / manifest.totalChunks) * 100) : 0;
+  manifest.progress     = _progressOf(manifest);
   manifest.rootHash     = computeRootHash(manifest);
-  if (manifest.doneChunks === manifest.totalChunks) {
+  if (_isComplete(manifest)) {
     manifest.status      = 'complete';
     manifest.completedAt = Date.now();
     _assembleFullSpec(manifest);

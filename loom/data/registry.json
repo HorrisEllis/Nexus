@@ -28637,7 +28637,7 @@
       "id": "spec.docs.2026-10-05-build-from-the-spec-phasemap",
       "namespace": "spec",
       "name": "docs/2026-10-05-build-from-the-spec-phasemap.spec",
-      "version": "1.19.0",
+      "version": "1.21.0",
       "uuid": "nexus-loom-spec-spec.docs.2026-10-05-build-from-the-spec-phasemap-v1-0000-2026-0804-001",
       "spec_uuid": "nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001",
       "route_count": 0,
@@ -30857,7 +30857,7 @@
       "id": "spec.idearium.spec.idearium",
       "namespace": "spec",
       "name": "idearium/spec/idearium.spec",
-      "version": "4.33.0",
+      "version": "4.35.0",
       "uuid": "nexus-loom-spec-spec.idearium.spec.idearium-v1-0000-2026-0804-001",
       "spec_uuid": "nexus-idearium-v3-0000-2026-0615-jamesbrooks-001",
       "route_count": 4,
@@ -30888,6 +30888,231 @@
       "tracked_in_spec_registry": true,
       "schemaVersion": "1.2.0",
       "registeredAt": 1791240925909
+    },
+    "nexus.cos.archetype.components": {
+      "id": "nexus.cos.archetype.components",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/components/index.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.components-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163004
+    },
+    "nexus.cos.archetype.genesis-catalog": {
+      "id": "nexus.cos.archetype.genesis-catalog",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/genesis-catalog.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.genesis-catalog-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163006
+    },
+    "nexus.cos.archetype.nexus-system.cli": {
+      "id": "nexus.cos.archetype.nexus-system.cli",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/cli.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.cli-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163008
+    },
+    "nexus.cos.archetype.nexus-system.config": {
+      "id": "nexus.cos.archetype.nexus-system.config",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/config.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.config-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163009
+    },
+    "nexus.cos.archetype.nexus-system.contracts.handshake": {
+      "id": "nexus.cos.archetype.nexus-system.contracts.handshake",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/contracts/handshake.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.contracts.handshake-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163010
+    },
+    "nexus.cos.archetype.nexus-system.event-taxonomy": {
+      "id": "nexus.cos.archetype.nexus-system.event-taxonomy",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/event-taxonomy.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.event-taxonomy-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163011
+    },
+    "nexus.cos.archetype.nexus-system.jaa-store": {
+      "id": "nexus.cos.archetype.nexus-system.jaa-store",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/jaa-store.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.jaa-store-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163012
+    },
+    "nexus.cos.archetype.nexus-system.lib.atomic-write": {
+      "id": "nexus.cos.archetype.nexus-system.lib.atomic-write",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/atomic-write.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.atomic-write-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163014
+    },
+    "nexus.cos.archetype.nexus-system.lib.bus": {
+      "id": "nexus.cos.archetype.nexus-system.lib.bus",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/bus.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.bus-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163015
+    },
+    "nexus.cos.archetype.nexus-system.lib.commands": {
+      "id": "nexus.cos.archetype.nexus-system.lib.commands",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/commands.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.commands-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163016
+    },
+    "nexus.cos.archetype.nexus-system.lib.core": {
+      "id": "nexus.cos.archetype.nexus-system.lib.core",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/core.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.core-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163017
+    },
+    "nexus.cos.archetype.nexus-system.lib.envelope": {
+      "id": "nexus.cos.archetype.nexus-system.lib.envelope",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/envelope.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.envelope-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163018
+    },
+    "nexus.cos.archetype.nexus-system.lib.heartbeat": {
+      "id": "nexus.cos.archetype.nexus-system.lib.heartbeat",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/heartbeat.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.heartbeat-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163019
+    },
+    "nexus.cos.archetype.nexus-system.lib.ledger": {
+      "id": "nexus.cos.archetype.nexus-system.lib.ledger",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/ledger.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.ledger-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163020
+    },
+    "nexus.cos.archetype.nexus-system.lib.listener": {
+      "id": "nexus.cos.archetype.nexus-system.lib.listener",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/listener.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.listener-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163021
+    },
+    "nexus.cos.archetype.nexus-system.lib.node-index": {
+      "id": "nexus.cos.archetype.nexus-system.lib.node-index",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/node-index.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.node-index-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163023
+    },
+    "nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "nexus.cos.archetype.nexus-system.lib.system",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/lib/system.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.system-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163024
+    },
+    "nexus.cos.archetype.nexus-system.registry-components": {
+      "id": "nexus.cos.archetype.nexus-system.registry-components",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/registry-components.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.registry-components-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163025
+    },
+    "nexus.cos.archetype.nexus-system.schemas": {
+      "id": "nexus.cos.archetype.nexus-system.schemas",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/schemas/index.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.schemas-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163026
+    },
+    "nexus.cos.archetype.nexus-system.server": {
+      "id": "nexus.cos.archetype.nexus-system.server",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/server.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.server-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163028
+    },
+    "nexus.cos.archetype.nexus-system.tests.skeleton.test": {
+      "id": "nexus.cos.archetype.nexus-system.tests.skeleton.test",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system/tests/skeleton.test.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.tests.skeleton.test-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163029
+    },
+    "nexus.cos.archetype.nexus-system": {
+      "id": "nexus.cos.archetype.nexus-system",
+      "namespace": "nexus.cos",
+      "name": "cos/archetype/nexus-system.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260163030
+    },
+    "nexus.tests.modules.test-system-skeleton.test": {
+      "id": "nexus.tests.modules.test-system-skeleton.test",
+      "namespace": "nexus.tests",
+      "name": "tests/modules/test-system-skeleton.test.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.tests.modules.test-system-skeleton.test-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260165858
+    },
+    "nexus.lib.repo-expand": {
+      "id": "nexus.lib.repo-expand",
+      "namespace": "nexus.lib",
+      "name": "lib/repo-expand.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.lib.repo-expand-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791264560557
+    },
+    "nexus.tests.modules.test-repo-expand.test": {
+      "id": "nexus.tests.modules.test-repo-expand.test",
+      "namespace": "nexus.tests",
+      "name": "tests/modules/test-repo-expand.test.js",
+      "version": "1.0.0",
+      "uuid": "nexus-loom-scan-nexus.tests.modules.test-repo-expand.test-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791264562232
     }
   },
   "seam": {},
@@ -60691,6 +60916,316 @@
       "uuid": "nexus-loom-boundary-nexus.lib.agent-tools.tools.idearium.code-export-v1-0000-2026-0808-001",
       "novelType": false,
       "registeredAt": 1791240928815
+    },
+    "nexus.cos.archetype.components.export": {
+      "id": "nexus.cos.archetype.components.export",
+      "component_id": "nexus.cos.archetype.components",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.components-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167237
+    },
+    "nexus.cos.archetype.genesis-catalog.import": {
+      "id": "nexus.cos.archetype.genesis-catalog.import",
+      "component_id": "nexus.cos.archetype.genesis-catalog",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.genesis-catalog-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167247
+    },
+    "nexus.cos.archetype.nexus-system.cli.import": {
+      "id": "nexus.cos.archetype.nexus-system.cli.import",
+      "component_id": "nexus.cos.archetype.nexus-system.cli",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.cli-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167256
+    },
+    "nexus.cos.archetype.nexus-system.config.export": {
+      "id": "nexus.cos.archetype.nexus-system.config.export",
+      "component_id": "nexus.cos.archetype.nexus-system.config",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.config-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167259
+    },
+    "nexus.cos.archetype.nexus-system.event-taxonomy.export": {
+      "id": "nexus.cos.archetype.nexus-system.event-taxonomy.export",
+      "component_id": "nexus.cos.archetype.nexus-system.event-taxonomy",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.event-taxonomy-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167263
+    },
+    "nexus.cos.archetype.nexus-system.jaa-store.export": {
+      "id": "nexus.cos.archetype.nexus-system.jaa-store.export",
+      "component_id": "nexus.cos.archetype.nexus-system.jaa-store",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.jaa-store-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167266
+    },
+    "nexus.cos.archetype.nexus-system.jaa-store.import": {
+      "id": "nexus.cos.archetype.nexus-system.jaa-store.import",
+      "component_id": "nexus.cos.archetype.nexus-system.jaa-store",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.jaa-store-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167269
+    },
+    "nexus.cos.archetype.nexus-system.lib.atomic-write.export": {
+      "id": "nexus.cos.archetype.nexus-system.lib.atomic-write.export",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.atomic-write",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.atomic-write-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167272
+    },
+    "nexus.cos.archetype.nexus-system.lib.bus.export": {
+      "id": "nexus.cos.archetype.nexus-system.lib.bus.export",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.bus",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.bus-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167277
+    },
+    "nexus.cos.archetype.nexus-system.lib.commands.export": {
+      "id": "nexus.cos.archetype.nexus-system.lib.commands.export",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.commands",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.commands-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167281
+    },
+    "nexus.cos.archetype.nexus-system.lib.core.import": {
+      "id": "nexus.cos.archetype.nexus-system.lib.core.import",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.core",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.core-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167285
+    },
+    "nexus.cos.archetype.nexus-system.lib.envelope.export": {
+      "id": "nexus.cos.archetype.nexus-system.lib.envelope.export",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.envelope",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.envelope-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167289
+    },
+    "nexus.cos.archetype.nexus-system.lib.envelope.import": {
+      "id": "nexus.cos.archetype.nexus-system.lib.envelope.import",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.envelope",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.envelope-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167292
+    },
+    "nexus.cos.archetype.nexus-system.lib.heartbeat.export": {
+      "id": "nexus.cos.archetype.nexus-system.lib.heartbeat.export",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.heartbeat",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.heartbeat-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167295
+    },
+    "nexus.cos.archetype.nexus-system.lib.ledger.export": {
+      "id": "nexus.cos.archetype.nexus-system.lib.ledger.export",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.ledger",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.ledger-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167298
+    },
+    "nexus.cos.archetype.nexus-system.lib.listener.export": {
+      "id": "nexus.cos.archetype.nexus-system.lib.listener.export",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.listener",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.listener-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167302
+    },
+    "nexus.cos.archetype.nexus-system.lib.listener.import": {
+      "id": "nexus.cos.archetype.nexus-system.lib.listener.import",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.listener",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.listener-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167305
+    },
+    "nexus.cos.archetype.nexus-system.lib.node-index.export": {
+      "id": "nexus.cos.archetype.nexus-system.lib.node-index.export",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.node-index",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.node-index-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167308
+    },
+    "nexus.cos.archetype.nexus-system.lib.node-index.import": {
+      "id": "nexus.cos.archetype.nexus-system.lib.node-index.import",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.node-index",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.node-index-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167311
+    },
+    "nexus.cos.archetype.nexus-system.lib.system.export": {
+      "id": "nexus.cos.archetype.nexus-system.lib.system.export",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.system",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.system-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167314
+    },
+    "nexus.cos.archetype.nexus-system.lib.system.import": {
+      "id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "component_id": "nexus.cos.archetype.nexus-system.lib.system",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.lib.system-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167318
+    },
+    "nexus.cos.archetype.nexus-system.schemas.export": {
+      "id": "nexus.cos.archetype.nexus-system.schemas.export",
+      "component_id": "nexus.cos.archetype.nexus-system.schemas",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.schemas-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167321
+    },
+    "nexus.cos.archetype.nexus-system.server.export": {
+      "id": "nexus.cos.archetype.nexus-system.server.export",
+      "component_id": "nexus.cos.archetype.nexus-system.server",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.server-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167324
+    },
+    "nexus.cos.archetype.nexus-system.server.import": {
+      "id": "nexus.cos.archetype.nexus-system.server.import",
+      "component_id": "nexus.cos.archetype.nexus-system.server",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.server-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167328
+    },
+    "nexus.cos.archetype.nexus-system.tests.skeleton.test.import": {
+      "id": "nexus.cos.archetype.nexus-system.tests.skeleton.test.import",
+      "component_id": "nexus.cos.archetype.nexus-system.tests.skeleton.test",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system.tests.skeleton.test-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167331
+    },
+    "nexus.cos.archetype.nexus-system.export": {
+      "id": "nexus.cos.archetype.nexus-system.export",
+      "component_id": "nexus.cos.archetype.nexus-system",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167335
+    },
+    "nexus.cos.archetype.nexus-system.import": {
+      "id": "nexus.cos.archetype.nexus-system.import",
+      "component_id": "nexus.cos.archetype.nexus-system",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.cos.archetype.nexus-system-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260167338
+    },
+    "nexus.tests.modules.test-system-skeleton.test.import": {
+      "id": "nexus.tests.modules.test-system-skeleton.test.import",
+      "component_id": "nexus.tests.modules.test-system-skeleton.test",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.tests.modules.test-system-skeleton.test-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791260173094
+    },
+    "nexus.lib.file-tree-plan.export": {
+      "id": "nexus.lib.file-tree-plan.export",
+      "component_id": "nexus.lib.file-tree-plan",
+      "name": "export",
+      "type": "direct",
+      "direction": "out",
+      "uuid": "nexus-loom-scan-nexus.lib.file-tree-plan-export-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791264566407
+    },
+    "nexus.lib.repo-expand.import": {
+      "id": "nexus.lib.repo-expand.import",
+      "component_id": "nexus.lib.repo-expand",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.lib.repo-expand-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791264566771
+    },
+    "nexus.tests.modules.test-repo-expand.test.import": {
+      "id": "nexus.tests.modules.test-repo-expand.test.import",
+      "component_id": "nexus.tests.modules.test-repo-expand.test",
+      "name": "import",
+      "type": "direct",
+      "direction": "in",
+      "uuid": "nexus-loom-scan-nexus.tests.modules.test-repo-expand.test-import-v1-0000-2026-0804-001",
+      "novelType": false,
+      "registeredAt": 1791264569364
     }
   },
   "wire": {
@@ -67813,16 +68348,6 @@
       "uuid": "nexus-loom-scan-wire-842-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
       "registeredAt": 1791242204499
-    },
-    "source.wire.843.nexus.lib.spec-library--nexus.idearium.lib.spec-library-import": {
-      "id": "source.wire.843.nexus.lib.spec-library--nexus.idearium.lib.spec-library-import",
-      "from_hook_id": "nexus.lib.spec-library.export",
-      "to_hook_id": "nexus.idearium.lib.spec-library-import.import",
-      "intent": "nexus.idearium.lib.spec-library-import requires nexus.lib.spec-library",
-      "type": "direct-call",
-      "uuid": "nexus-loom-scan-wire-843-v1-0000-2026-0804-001",
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791242204507
     },
     "source.wire.844.nexus.idearium.lib.workshop--nexus.idearium.lib.void": {
       "id": "source.wire.844.nexus.idearium.lib.workshop--nexus.idearium.lib.void",
@@ -86216,15 +86741,6 @@
       "schemaVersion": "1.2.0",
       "registeredAt": 1791237133350
     },
-    "one-idearium.wire.15.nexus.ollama.lib.ollama-client--nexus.idearium.agent-suite": {
-      "id": "one-idearium.wire.15.nexus.ollama.lib.ollama-client--nexus.idearium.agent-suite",
-      "from_hook_id": "nexus.ollama.lib.ollama-client.export",
-      "to_hook_id": "nexus.idearium.agent-suite.import",
-      "uuid": "nexus-loom-map-one-idearium-wire-15-v1-0000-2026-0927-271",
-      "external": true,
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791237133365
-    },
     "one-idearium.wire.16.nexus.idearium.lib.spec-library-import--nexus.idearium.api": {
       "id": "one-idearium.wire.16.nexus.idearium.lib.spec-library-import--nexus.idearium.api",
       "from_hook_id": "nexus.idearium.lib.spec-library-import.export",
@@ -86692,24 +87208,6 @@
       "external": true,
       "schemaVersion": "1.2.0",
       "registeredAt": 1791237134562
-    },
-    "build-surface.wire.1.nexus.clear-glass.src.main.compartment-window--nexus.clear-glass.src.main": {
-      "id": "build-surface.wire.1.nexus.clear-glass.src.main.compartment-window--nexus.clear-glass.src.main",
-      "from_hook_id": "nexus.clear-glass.src.main.compartment-window.export",
-      "to_hook_id": "nexus.clear-glass.src.main.import",
-      "uuid": "nexus-loom-map-build-surface-wire-1-v1-0000-2026-0929-001",
-      "external": true,
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791237135207
-    },
-    "build-surface.wire.2.nexus.clear-glass.src.copilot.verbs--nexus.clear-glass.src.copilot.bridge": {
-      "id": "build-surface.wire.2.nexus.clear-glass.src.copilot.verbs--nexus.clear-glass.src.copilot.bridge",
-      "from_hook_id": "nexus.clear-glass.src.copilot.verbs.export",
-      "to_hook_id": "nexus.clear-glass.src.copilot.bridge.import",
-      "uuid": "nexus-loom-map-build-surface-wire-2-v1-0000-2026-0929-001",
-      "external": true,
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791237135220
     },
     "build-surface.wire.3.nexus.guardian.lib.provider-login--nexus.guardian.server": {
       "id": "build-surface.wire.3.nexus.guardian.lib.provider-login--nexus.guardian.server",
@@ -87251,15 +87749,6 @@
       "schemaVersion": "1.2.0",
       "registeredAt": 1791237136576
     },
-    "economy.wire.9.nexus.lib.economy.store--nexus.lib.repo-agent": {
-      "id": "economy.wire.9.nexus.lib.economy.store--nexus.lib.repo-agent",
-      "from_hook_id": "nexus.lib.economy.store.export",
-      "to_hook_id": "nexus.lib.repo-agent.import",
-      "uuid": "nexus-loom-map-economy-wire-9-v1-0000-2026-0929-001",
-      "external": true,
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136589
-    },
     "economy.wire.10.nexus.lib.repo-agent--nexus.lib.repo-inject": {
       "id": "economy.wire.10.nexus.lib.repo-agent--nexus.lib.repo-inject",
       "from_hook_id": "nexus.lib.repo-agent.export",
@@ -87268,42 +87757,6 @@
       "external": true,
       "schemaVersion": "1.2.0",
       "registeredAt": 1791237136601
-    },
-    "economy.wire.11.nexus.lib.economy.store--nexus.lib.seam.adapters.warp-cascade": {
-      "id": "economy.wire.11.nexus.lib.economy.store--nexus.lib.seam.adapters.warp-cascade",
-      "from_hook_id": "nexus.lib.economy.store.export",
-      "to_hook_id": "nexus.lib.seam.adapters.warp-cascade.import",
-      "uuid": "nexus-loom-map-economy-wire-11-v1-0000-2026-0929-001",
-      "external": true,
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136612
-    },
-    "economy.wire.12.nexus.lib.economy.ledger--nexus.lib.seam.adapters.warp-cascade": {
-      "id": "economy.wire.12.nexus.lib.economy.ledger--nexus.lib.seam.adapters.warp-cascade",
-      "from_hook_id": "nexus.lib.economy.ledger.export",
-      "to_hook_id": "nexus.lib.seam.adapters.warp-cascade.import",
-      "uuid": "nexus-loom-map-economy-wire-12-v1-0000-2026-0929-001",
-      "external": true,
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136622
-    },
-    "economy.wire.13.nexus.lib.economy.gate--nexus.lib.seam.adapters.warp-cascade": {
-      "id": "economy.wire.13.nexus.lib.economy.gate--nexus.lib.seam.adapters.warp-cascade",
-      "from_hook_id": "nexus.lib.economy.gate.export",
-      "to_hook_id": "nexus.lib.seam.adapters.warp-cascade.import",
-      "uuid": "nexus-loom-map-economy-wire-13-v1-0000-2026-0929-001",
-      "external": true,
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136633
-    },
-    "economy.wire.14.nexus.lib.economy.router--nexus.lib.seam.adapters.warp-cascade": {
-      "id": "economy.wire.14.nexus.lib.economy.router--nexus.lib.seam.adapters.warp-cascade",
-      "from_hook_id": "nexus.lib.economy.router.export",
-      "to_hook_id": "nexus.lib.seam.adapters.warp-cascade.import",
-      "uuid": "nexus-loom-map-economy-wire-14-v1-0000-2026-0929-001",
-      "external": true,
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791237136643
     },
     "economy.wire.16.nexus.clear-glass.src.driver--nexus.clear-glass.src.mesh.automation-engine": {
       "id": "economy.wire.16.nexus.clear-glass.src.driver--nexus.clear-glass.src.mesh.automation-engine",
@@ -87466,15 +87919,6 @@
       "uuid": "nexus-loom-cap-wire-6-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
       "registeredAt": 1791237155534
-    },
-    "capability.wire.7.copilot.person_model.node.stated--cortex.memory.insert.in": {
-      "id": "capability.wire.7.copilot.person_model.node.stated--cortex.memory.insert.in",
-      "from_hook_id": "copilot.person_model.node.stated",
-      "to_hook_id": "cortex.memory.insert.in",
-      "intent": "component-id",
-      "uuid": "nexus-loom-cap-wire-7-v1-0000-2026-0804-001",
-      "schemaVersion": "1.2.0",
-      "registeredAt": 1791237155574
     },
     "capability.wire.8.copilot.person_model.node.stated--cortex.memory.insert.in": {
       "id": "capability.wire.8.copilot.person_model.node.stated--cortex.memory.insert.in",
@@ -92513,6 +92957,296 @@
       "external": true,
       "schemaVersion": "1.2.0",
       "registeredAt": 1791240947441
+    },
+    "source.wire.307.nexus.cos.archetype.nexus-system--nexus.cos.archetype.genesis-catalog": {
+      "id": "source.wire.307.nexus.cos.archetype.nexus-system--nexus.cos.archetype.genesis-catalog",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.export",
+      "to_hook_id": "nexus.cos.archetype.genesis-catalog.import",
+      "intent": "nexus.cos.archetype.genesis-catalog requires nexus.cos.archetype.nexus-system",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-307-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260174987
+    },
+    "source.wire.312.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.cli": {
+      "id": "source.wire.312.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.cli",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.commands.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.cli.import",
+      "intent": "nexus.cos.archetype.nexus-system.cli requires nexus.cos.archetype.nexus-system.lib.commands",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-312-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175035
+    },
+    "source.wire.313.nexus.cos.archetype.nexus-system.lib.system--nexus.cos.archetype.nexus-system.cli": {
+      "id": "source.wire.313.nexus.cos.archetype.nexus-system.lib.system--nexus.cos.archetype.nexus-system.cli",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.system.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.cli.import",
+      "intent": "nexus.cos.archetype.nexus-system.cli requires nexus.cos.archetype.nexus-system.lib.system",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-313-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175041
+    },
+    "source.wire.314.nexus.cos.archetype.nexus-system.lib.atomic-write--nexus.cos.archetype.nexus-system.jaa-store": {
+      "id": "source.wire.314.nexus.cos.archetype.nexus-system.lib.atomic-write--nexus.cos.archetype.nexus-system.jaa-store",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.atomic-write.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.jaa-store.import",
+      "intent": "nexus.cos.archetype.nexus-system.jaa-store requires nexus.cos.archetype.nexus-system.lib.atomic-write",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-314-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175047
+    },
+    "source.wire.315.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.lib.core": {
+      "id": "source.wire.315.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.lib.core",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.commands.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.core.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.core requires nexus.cos.archetype.nexus-system.lib.commands",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-315-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175052
+    },
+    "source.wire.316.nexus.cos.archetype.nexus-system.lib.atomic-write--nexus.cos.archetype.nexus-system.lib.envelope": {
+      "id": "source.wire.316.nexus.cos.archetype.nexus-system.lib.atomic-write--nexus.cos.archetype.nexus-system.lib.envelope",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.atomic-write.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.envelope.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.envelope requires nexus.cos.archetype.nexus-system.lib.atomic-write",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-316-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175060
+    },
+    "source.wire.317.nexus.cos.archetype.nexus-system.lib.envelope--nexus.cos.archetype.nexus-system.lib.listener": {
+      "id": "source.wire.317.nexus.cos.archetype.nexus-system.lib.envelope--nexus.cos.archetype.nexus-system.lib.listener",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.envelope.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.listener.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.listener requires nexus.cos.archetype.nexus-system.lib.envelope",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-317-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175066
+    },
+    "source.wire.318.nexus.cos.archetype.nexus-system.lib.envelope--nexus.cos.archetype.nexus-system.lib.node-index": {
+      "id": "source.wire.318.nexus.cos.archetype.nexus-system.lib.envelope--nexus.cos.archetype.nexus-system.lib.node-index",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.envelope.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.node-index.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.node-index requires nexus.cos.archetype.nexus-system.lib.envelope",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-318-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175072
+    },
+    "source.wire.319.nexus.cos.archetype.nexus-system.config--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.319.nexus.cos.archetype.nexus-system.config--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.config.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.config",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-319-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175077
+    },
+    "source.wire.320.nexus.cos.archetype.nexus-system.event-taxonomy--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.320.nexus.cos.archetype.nexus-system.event-taxonomy--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.event-taxonomy.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.event-taxonomy",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-320-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175083
+    },
+    "source.wire.321.nexus.cos.archetype.nexus-system.jaa-store--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.321.nexus.cos.archetype.nexus-system.jaa-store--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.jaa-store.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.jaa-store",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-321-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175090
+    },
+    "source.wire.322.nexus.cos.archetype.nexus-system.lib.bus--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.322.nexus.cos.archetype.nexus-system.lib.bus--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.bus.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.lib.bus",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-322-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175096
+    },
+    "source.wire.323.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.323.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.commands.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.lib.commands",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-323-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175101
+    },
+    "source.wire.324.nexus.cos.archetype.nexus-system.lib.heartbeat--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.324.nexus.cos.archetype.nexus-system.lib.heartbeat--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.heartbeat.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.lib.heartbeat",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-324-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175107
+    },
+    "source.wire.325.nexus.cos.archetype.nexus-system.lib.ledger--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.325.nexus.cos.archetype.nexus-system.lib.ledger--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.ledger.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.lib.ledger",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-325-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175112
+    },
+    "source.wire.326.nexus.cos.archetype.nexus-system.lib.listener--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.326.nexus.cos.archetype.nexus-system.lib.listener--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.listener.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.lib.listener",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-326-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175118
+    },
+    "source.wire.327.nexus.cos.archetype.nexus-system.lib.node-index--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.327.nexus.cos.archetype.nexus-system.lib.node-index--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.node-index.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.lib.node-index",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-327-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175125
+    },
+    "source.wire.328.nexus.cos.archetype.nexus-system.schemas--nexus.cos.archetype.nexus-system.lib.system": {
+      "id": "source.wire.328.nexus.cos.archetype.nexus-system.schemas--nexus.cos.archetype.nexus-system.lib.system",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.schemas.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.lib.system.import",
+      "intent": "nexus.cos.archetype.nexus-system.lib.system requires nexus.cos.archetype.nexus-system.schemas",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-328-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175131
+    },
+    "source.wire.329.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.server": {
+      "id": "source.wire.329.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.server",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.commands.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.server.import",
+      "intent": "nexus.cos.archetype.nexus-system.server requires nexus.cos.archetype.nexus-system.lib.commands",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-329-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175139
+    },
+    "source.wire.330.nexus.cos.archetype.nexus-system.lib.system--nexus.cos.archetype.nexus-system.server": {
+      "id": "source.wire.330.nexus.cos.archetype.nexus-system.lib.system--nexus.cos.archetype.nexus-system.server",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.system.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.server.import",
+      "intent": "nexus.cos.archetype.nexus-system.server requires nexus.cos.archetype.nexus-system.lib.system",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-330-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175145
+    },
+    "source.wire.331.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.tests.skeleton.test": {
+      "id": "source.wire.331.nexus.cos.archetype.nexus-system.lib.commands--nexus.cos.archetype.nexus-system.tests.skeleton.test",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.commands.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.tests.skeleton.test.import",
+      "intent": "nexus.cos.archetype.nexus-system.tests.skeleton.test requires nexus.cos.archetype.nexus-system.lib.commands",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-331-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175151
+    },
+    "source.wire.332.nexus.cos.archetype.nexus-system.lib.envelope--nexus.cos.archetype.nexus-system.tests.skeleton.test": {
+      "id": "source.wire.332.nexus.cos.archetype.nexus-system.lib.envelope--nexus.cos.archetype.nexus-system.tests.skeleton.test",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.envelope.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.tests.skeleton.test.import",
+      "intent": "nexus.cos.archetype.nexus-system.tests.skeleton.test requires nexus.cos.archetype.nexus-system.lib.envelope",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-332-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175157
+    },
+    "source.wire.333.nexus.cos.archetype.nexus-system.lib.system--nexus.cos.archetype.nexus-system.tests.skeleton.test": {
+      "id": "source.wire.333.nexus.cos.archetype.nexus-system.lib.system--nexus.cos.archetype.nexus-system.tests.skeleton.test",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.lib.system.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.tests.skeleton.test.import",
+      "intent": "nexus.cos.archetype.nexus-system.tests.skeleton.test requires nexus.cos.archetype.nexus-system.lib.system",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-333-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175163
+    },
+    "source.wire.334.nexus.cos.archetype.nexus-system.server--nexus.cos.archetype.nexus-system.tests.skeleton.test": {
+      "id": "source.wire.334.nexus.cos.archetype.nexus-system.server--nexus.cos.archetype.nexus-system.tests.skeleton.test",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.server.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.tests.skeleton.test.import",
+      "intent": "nexus.cos.archetype.nexus-system.tests.skeleton.test requires nexus.cos.archetype.nexus-system.server",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-334-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175169
+    },
+    "source.wire.335.nexus.cos.archetype.components--nexus.cos.archetype.nexus-system": {
+      "id": "source.wire.335.nexus.cos.archetype.components--nexus.cos.archetype.nexus-system",
+      "from_hook_id": "nexus.cos.archetype.components.export",
+      "to_hook_id": "nexus.cos.archetype.nexus-system.import",
+      "intent": "nexus.cos.archetype.nexus-system requires nexus.cos.archetype.components",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-335-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175175
+    },
+    "source.wire.336.nexus.cos.archetype.nexus-system--nexus.cos.archetype.registry": {
+      "id": "source.wire.336.nexus.cos.archetype.nexus-system--nexus.cos.archetype.registry",
+      "from_hook_id": "nexus.cos.archetype.nexus-system.export",
+      "to_hook_id": "nexus.cos.archetype.registry.import",
+      "intent": "nexus.cos.archetype.registry requires nexus.cos.archetype.nexus-system",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-336-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260175181
+    },
+    "source.wire.2044.nexus.lib.test-sandbox--nexus.tests.modules.test-system-skeleton.test": {
+      "id": "source.wire.2044.nexus.lib.test-sandbox--nexus.tests.modules.test-system-skeleton.test",
+      "from_hook_id": "nexus.lib.test-sandbox.export",
+      "to_hook_id": "nexus.tests.modules.test-system-skeleton.test.import",
+      "intent": "nexus.tests.modules.test-system-skeleton.test requires nexus.lib.test-sandbox",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-2044-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791260184638
+    },
+    "source.wire.1261.nexus.lib.file-tree-plan--nexus.lib.repo-expand": {
+      "id": "source.wire.1261.nexus.lib.file-tree-plan--nexus.lib.repo-expand",
+      "from_hook_id": "nexus.lib.file-tree-plan.export",
+      "to_hook_id": "nexus.lib.repo-expand.import",
+      "intent": "nexus.lib.repo-expand requires nexus.lib.file-tree-plan",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-1261-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791264576604
+    },
+    "source.wire.1999.nexus.lib.test-sandbox--nexus.tests.modules.test-repo-expand.test": {
+      "id": "source.wire.1999.nexus.lib.test-sandbox--nexus.tests.modules.test-repo-expand.test",
+      "from_hook_id": "nexus.lib.test-sandbox.export",
+      "to_hook_id": "nexus.tests.modules.test-repo-expand.test.import",
+      "intent": "nexus.tests.modules.test-repo-expand.test requires nexus.lib.test-sandbox",
+      "type": "direct-call",
+      "uuid": "nexus-loom-scan-wire-1999-v1-0000-2026-0804-001",
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791264580988
     }
   },
   "concern": {}

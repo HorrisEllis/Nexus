@@ -4,7 +4,14 @@
 // Edit this file → every new compartment scaffolded from it inherits the change.
 // Status: proposed. Foundation domains freeze at v1.0.0 per COS-5 pattern.
 
-version 1.3.0
+version 1.4.0
+// 1.4.0 (2026-10-06, NEXUS 0.39.359 — build-from-the-spec SB28): the file catalog is the shape Nexus systems really have —
+// Guardian's and Versionium's: server.js, cli.js, config, compartment.json, registry-components.js, the interaction
+// contract, event-taxonomy.js, jaa-store.js, schemas/, data/nodes, lib/, spec/, tests/. It is the COS archetype
+// nexus-system (cos/archetype/nexus-system.js), file for file, and each file's depends are its real require()s. The
+// kernel/spine/compartments/lattice/nerve/tv-shell catalog is archived whole (templates/_archive/genesis-1.3.0.spec);
+// what a real system needs from it keeps its place (the heartbeat, the node index, the registry as the door, the
+// handshake gate). James: "compartments? no system in nexus looks like this".
 // 1.3.0 (2026-10-05, NEXUS 0.39.313): genesis is the architecture of the system template, section by section (Domain 0a
 // "shape"); every component carries at least one capability and one command, and its events, each a node (capability_node
 // added to Domain 2c); a system owns its own data, schemas, contract, config, heartbeat and pulse. James: "yes add it the
@@ -485,391 +492,371 @@ axiom NO_SILENT_SKIP            // a provider left out of a route (unknown, brea
 axiom ROUTE_IS_PROVENANCE       // every hop a chunk took is kept on the chunk: who failed first, why, who built it
 
 // ══════════════════════════════════════════════════════════════════════════════
-// GENESIS FILE TREE — one catalog entry per file. Each file is a chunk:
-// minimal code to execute its one stated intent. uuid + depends[] are literal:
-//   depends = uuids of files this file calls or needs first (directional —
-//             generates the registry, the graph and the build order)
+// GENESIS FILE TREE — 1.4.0: the shape Nexus systems have. One catalog entry per file; each file is a chunk: minimal
+// code to execute its one stated intent. uuid + depends[] are literal:
+//   depends = uuids of files this file calls or needs first (directional — generates the registry, the graph and the
+//             build order). Here they are the file's real require()s plus the files it reads at run time.
 //   related = associated files that are NOT dependencies (generates nothing)
-// Generated and checked by `idearium manifest check|generate <spec>`
-// (spec-engine/manifest/) — the list is the source, the wiring is derived.
+//   source  = where the file comes from in the COS archetype nexus-system: skeleton (cos/archetype/nexus-system/),
+//             component:<id> (reusable, cos/archetype/components), template-schemas (templates/system/schemas/)
+// <system> is the system's slug. Checked by `idearium manifest check <spec>`; tests/modules/test-system-skeleton
+// fails if this list and the archetype's files ever differ.
+//
+// Where each domain above lives in this tree (the 1.3.0 file names in the domains' prose are in the archive):
+//   shape 0a ........ the whole tree; spec/<system>.spec is the template's sections, filled
+//   schema 0 ........ schemas/schema.<type>; the shape check in lib/system.js; tests/
+//   core 1 .......... lib/system.js (boot), server.js and cli.js (runtime), lib/<component>.js (the engine, slotted in)
+//   contract 2 ...... interaction-contract.json + GET /contract (route nodes added); contracts/handshake.js (the gate)
+//   manifest 2b ..... registry-components.js and this catalog; the contract and taxonomy are derived, never hand-written
+//   registry 2c ..... registry-components.js (the spine); lib/commands.js (the door every command goes through)
+//   nodes 2d ........ data/nodes/<type>/<id>.<type>, lib/envelope.js, lib/node-index.js, jaa-store.js (data/node-index/)
+//   seam 3 .......... compartment.json — existence and boundary only
+//   wire 3b ......... hook and wire nodes; lib/bus.js
+//   ledger 4 ........ lib/ledger.js — data/ledger/<session>/events.jsonl
+//   identity 5 ...... a uuid on every node and every registry entry
+//   config 6 ........ <system>.config.json, config.js (environment over file)
+//   lattice 7 ....... capability bundles (lib/listener.js) — references to every related node, never copies
+//   nerve 8 ......... lib/listener.js — a node dropped into its folder goes live
+//   tv-ui 9 ......... ui/ — not generated; floats on top of the contract, each element gated on its command
+//   pulse 10 ........ lib/heartbeat.js — <system>.heartbeat with node counts and refused nodes
+//   routing 11 ...... route nodes, served by server.js (which agent builds a chunk stays Nexus's lib/pipeline-routing.js)
 // ══════════════════════════════════════════════════════════════════════════════
 
 catalog GENESIS_FILE_TREE {
 
-  file "genesis.spec" {
-    uuid      = ge0000-spec-4000-8000-000000000000
-    intent    = this_document
-    summary   = "Immutable grammar + file catalog. Compiler and scaffolder both read this before anything is generated."
-    depends   = []
+  // ── identity and configuration
+  file "compartment.json" {
+    uuid    = gs0002-skele-4000-8000-000000000002
+    intent  = declare_the_cos_seam
+    summary = "The COS compartment: archetype nexus-system, runtime node, entry server.js, health check /health. Existence and boundary only."
+    source  = skeleton
+    depends = []
+  }
+  file "config.js" {
+    uuid    = gs0003-skele-4000-8000-000000000003
+    intent  = load_the_configuration
+    summary = "Reads <system>.config.json, then the environment (<SYSTEM>_PORT, <SYSTEM>_HEARTBEAT_MS) over it."
+    source  = skeleton
+    depends = [ "gs0027" ]
+  }
+  file "package.json" {
+    uuid    = gs0020-skele-4000-8000-000000000020
+    intent  = declare_the_system_package
+    summary = "Name, version, scripts: start (server.js), cli (cli.js), test (tests/skeleton.test.js). No dependencies — the system stands alone."
+    source  = skeleton
+    depends = []
+  }
+  file "<system>.config.json" {
+    uuid    = gs0027-skele-4000-8000-000000000027
+    intent  = system_wide_adjustable_values
+    summary = "Port, heartbeat interval, listener poll, the Versionium slot. Anything adjustable lives here, not in code."
+    source  = skeleton
+    depends = []
   }
 
-  file "MANIFEST.json" {
-    uuid      = ge0001-mnfst-4000-8000-000000000001
-    intent    = declare_system_identity_and_spine_dependency
-    summary   = "core_uuid, version, spine: 'warp' + pinned version, decoupling_rule copied from warp's own MANIFEST."
-    depends   = []
-    related   = [ "ge0000" ]
+  // ── registry, contract and taxonomy
+  file "event-taxonomy.js" {
+    uuid    = gs0014-skele-4000-8000-000000000014
+    intent  = the_events_generated_from_event_nodes
+    summary = "The system events the skeleton emits, plus every event node — generated, never hand-written; the bus asks it whether an event is declared."
+    source  = skeleton
+    depends = []
+  }
+  file "interaction-contract.json" {
+    uuid    = gs0016-skele-4000-8000-000000000016
+    intent  = the_fixed_part_of_the_interaction_contract
+    summary = "id, version, namespace, transport and the fixed resources; GET /contract adds every route node, so the contract grows with the system."
+    source  = skeleton
+    depends = []
+  }
+  file "registry-components.js" {
+    uuid    = gs0021-skele-4000-8000-000000000021
+    intent  = the_component_registry_the_spine
+    summary = "Every component: type, id, uuid, file, intent, version, status, capabilities (at least one), hooks, consumers, data. Every component connects only to this."
+    source  = skeleton
+    depends = []
+  }
+  file "contracts/handshake.js" {
+    uuid    = gs0036-compo-4000-8000-000000000036
+    intent  = verify_another_systems_contract
+    summary = "Same id, compatible version, the resources needed, the hash last seen — before one system calls another."
+    source  = component:handshake
+    depends = []
   }
 
-  domain "kernel/" {
-
-    file "kernel/boot.js" {
-      uuid    = ge1000-boot0-4000-8000-000000000010
-      intent  = cold_start_sequence
-      summary = "Loads MANIFEST, instantiates the root warp Stream as the kernel itself, registers every SCHEMA_BASELINE entry as an Axiom, enforces FOUNDATION_IMMUTABLE, then mounts one runtime per configured engine as a Stream.hook."
-      depends = [ "ge0001", "ge1001", "ge1002", "ge2000", "ge2002", "geB000" ]
-    }
-
-    file "kernel/axioms.js" {
-      uuid    = ge1001-axiom-4000-8000-000000000011
-      intent  = enforce_genesis_axioms_listed_above
-      summary = "Same shape as cos/foundation/axioms.js: id, description, enforce(ctx). Throws GenesisAxiomError on violation."
-      depends = []
-    }
-
-    file "kernel/runtime-enum.js" {
-      uuid    = ge1002-rtenm-4000-8000-000000000012
-      intent  = enumerate_valid_runtime_states
-      summary = "booting, mounted, degraded, unmounting, halted — nothing else is a legal runtime state."
-      depends = []
-    }
+  // ── schemas
+  file "schemas/index.js" {
+    uuid    = gs0022-skele-4000-8000-000000000022
+    intent  = load_the_systems_own_schemas
+    summary = "Reads schemas/schema.<type>; the node index refuses a node whose type has no schema."
+    source  = skeleton
+    depends = []
+  }
+  file "schemas/schema.bundle" {
+    uuid    = gs0038-templ-4000-8000-000000000038
+    intent  = schema_for_bundle_nodes
+    summary = "The bundle node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
+  }
+  file "schemas/schema.capability" {
+    uuid    = gs0039-templ-4000-8000-000000000039
+    intent  = schema_for_capability_nodes
+    summary = "The capability node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
+  }
+  file "schemas/schema.command" {
+    uuid    = gs0040-templ-4000-8000-000000000040
+    intent  = schema_for_command_nodes
+    summary = "The command node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
+  }
+  file "schemas/schema.component" {
+    uuid    = gs0041-templ-4000-8000-000000000041
+    intent  = schema_for_component_nodes
+    summary = "The component node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
+  }
+  file "schemas/schema.event" {
+    uuid    = gs0042-templ-4000-8000-000000000042
+    intent  = schema_for_event_nodes
+    summary = "The event node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
+  }
+  file "schemas/schema.hook" {
+    uuid    = gs0043-templ-4000-8000-000000000043
+    intent  = schema_for_hook_nodes
+    summary = "The hook node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
+  }
+  file "schemas/schema.route" {
+    uuid    = gs0044-templ-4000-8000-000000000044
+    intent  = schema_for_route_nodes
+    summary = "The route node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
+  }
+  file "schemas/schema.wire" {
+    uuid    = gs0045-templ-4000-8000-000000000045
+    intent  = schema_for_wire_nodes
+    summary = "The wire node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
   }
 
-  domain "spine/" {
-
-    file "spine/warp-bridge.js" {
-      uuid    = ge2000-wrpbr-4000-8000-000000000020
-      intent  = single_seam_between_genesis_and_warp
-      summary = "require('warp/core') + require('warp/dispatch'); re-exports Event/Gate/Stream/StreamLog/Axiom under genesis's naming. Only file in genesis allowed to import warp directly."
-      depends = []
-      related = [ "ge1000" ]
-    }
-
-    file "spine/scorer-fidelity.js" {
-      uuid    = ge2001-scfid-4000-8000-000000000021
-      intent  = warp_scorer_plugin_for_pulse_fidelity
-      summary = "Registered via Stream.hook('scorer', ...); computes health_score and fidelity_score using warp's four-axis pattern."
-      depends = [ "ge2000" ]
-    }
-
-    file "spine/route-policy.js" {
-      uuid    = ge2003-rtpol-4000-8000-000000000023
-      intent  = which_provider_builds_a_chunk_and_where_it_falls_back
-      summary = "Domain 11: plan(chosen, block, policy) -> ordered route with reasons; classify(failure) -> class; breaker per provider; reads config/genesis.config.json's routing keys. Same shape as NEXUS lib/pipeline-routing.js."
-      depends = [ "ge2000" ]
-    }
-
-    file "spine/axiom-baseline.js" {
-      uuid    = ge2002-axbl0-4000-8000-000000000022
-      intent  = register_every_SCHEMA_BASELINE_entry_as_a_hard_warp_axiom
-      summary = "Reads the SCHEMA_BASELINE catalog from this spec, calls Axiom.register() per entry at kernel boot — the only file that turns spec text into an enforced rule."
-      depends = [ "ge2000", "ge0000" ]
-    }
+  // ── data: nodes, index, ledger, baseline
+  file "data/baseline/.gitkeep" {
+    uuid    = gs0004-skele-4000-8000-000000000004
+    intent  = keep_data_baseline
+    summary = "Keeps data/baseline/ in version control."
+    source  = skeleton
+    depends = []
+  }
+  file "data/nodes/capability/<system>.core.observe.capability" {
+    uuid    = gs0005-skele-4000-8000-000000000005
+    intent  = seed_capability_node
+    summary = "A seed capability node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0039" ]
+  }
+  file "data/nodes/command/<system>.nodes.command" {
+    uuid    = gs0006-skele-4000-8000-000000000006
+    intent  = seed_command_node
+    summary = "A seed command node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0040" ]
+  }
+  file "data/nodes/command/<system>.status.command" {
+    uuid    = gs0007-skele-4000-8000-000000000007
+    intent  = seed_command_node
+    summary = "A seed command node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0040" ]
+  }
+  file "data/nodes/component/<system>.core.component" {
+    uuid    = gs0008-skele-4000-8000-000000000008
+    intent  = seed_component_node
+    summary = "A seed component node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0041" ]
+  }
+  file "data/nodes/event/<system>.nodes.listed.event" {
+    uuid    = gs0009-skele-4000-8000-000000000009
+    intent  = seed_event_node
+    summary = "A seed event node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0042" ]
+  }
+  file "data/nodes/event/<system>.status.reported.event" {
+    uuid    = gs0010-skele-4000-8000-000000000010
+    intent  = seed_event_node
+    summary = "A seed event node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0042" ]
+  }
+  file "data/nodes/hook/<system>.core.http.hook" {
+    uuid    = gs0011-skele-4000-8000-000000000011
+    intent  = seed_hook_node
+    summary = "A seed hook node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0043" ]
+  }
+  file "data/nodes/route/<system>.nodes.route" {
+    uuid    = gs0012-skele-4000-8000-000000000012
+    intent  = seed_route_node
+    summary = "A seed route node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0044" ]
+  }
+  file "data/nodes/route/<system>.status.route" {
+    uuid    = gs0013-skele-4000-8000-000000000013
+    intent  = seed_route_node
+    summary = "A seed route node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0044" ]
+  }
+  file "jaa-store.js" {
+    uuid    = gs0030-compo-4000-8000-000000000030
+    intent  = the_jaa_database
+    summary = "A table per name, rows upserted by id, soft deletes, an append-only <table>.jsonl beside each. The node index lives in it."
+    source  = component:jaa-store
+    depends = [ "gs0028" ]
   }
 
-  domain "ledger/" {
-
-    file "ledger/event-ledger.js" {
-      uuid    = ge3000-ldgr0-4000-8000-000000000030
-      intent  = per_runtime_append_only_ledger
-      summary = "Thin wrapper configuring a warp StreamLog instance per mounted runtime; exposes append(), replay(), audit()."
-      depends = [ "ge2000" ]
-    }
+  // ── lib: the code the nodes point at
+  file "lib/core.js" {
+    uuid    = gs0017-skele-4000-8000-000000000017
+    intent  = the_core_component
+    summary = "Component <system>.core, capability <system>.core.observe: status and nodes — the system reporting on itself."
+    source  = skeleton
+    depends = [ "gs0037" ]
+  }
+  file "lib/system.js" {
+    uuid    = gs0018-skele-4000-8000-000000000018
+    intent  = boot
+    summary = "Config, schemas, store, ledger, bus, node index, listener, heartbeat, and the component-shape check. server.js and cli.js both start here."
+    source  = skeleton
+    depends = [ "gs0003", "gs0022", "gs0014", "gs0030", "gs0032", "gs0033", "gs0031", "gs0034", "gs0035", "gs0037", "gs0021" ]
+  }
+  file "lib/atomic-write.js" {
+    uuid    = gs0028-compo-4000-8000-000000000028
+    intent  = write_a_file_whole_or_not_at_all
+    summary = "Temp file then rename; retries the Windows EPERM/EBUSY rename before it is an error."
+    source  = component:atomic-write
+    depends = []
+  }
+  file "lib/envelope.js" {
+    uuid    = gs0029-compo-4000-8000-000000000029
+    intent  = read_write_and_check_node_files
+    summary = "data/nodes/<type>/<id>.<type> in the node envelope (JSON, which is also YAML); fingerprint; validate against a schema."
+    source  = component:envelope
+    depends = [ "gs0028" ]
+  }
+  file "lib/node-index.js" {
+    uuid    = gs0031-compo-4000-8000-000000000031
+    intent  = index_the_nodes_in_jaa_tables
+    summary = "Domain 2d: nodes_<type> per type, nodes_<type>_ledger history; refuses a node that fails its schema; rebuildable from the files alone."
+    source  = component:node-index
+    depends = [ "gs0029" ]
+  }
+  file "lib/ledger.js" {
+    uuid    = gs0032-compo-4000-8000-000000000032
+    intent  = the_event_ledger
+    summary = "Every event, per session, timestamped: data/ledger/<session>/events.jsonl."
+    source  = component:ledger
+    depends = []
+  }
+  file "lib/bus.js" {
+    uuid    = gs0033-compo-4000-8000-000000000033
+    intent  = the_one_way_an_event_moves
+    summary = "Ledger first, then listeners; an event no node declares is still delivered and marked undeclared."
+    source  = component:bus
+    depends = []
+  }
+  file "lib/listener.js" {
+    uuid    = gs0034-compo-4000-8000-000000000034
+    intent  = a_dropped_node_goes_live
+    summary = "Watches data/nodes, reindexes, emits <system>.node.changed, rewrites each capability bundle (references, never copies)."
+    source  = component:listener
+    depends = [ "gs0029" ]
+  }
+  file "lib/heartbeat.js" {
+    uuid    = gs0035-compo-4000-8000-000000000035
+    intent  = the_pulse
+    summary = "Domain 10: <system>.heartbeat on an interval with uptime, node counts and refused nodes — an index behind its files shows as drift."
+    source  = component:heartbeat
+    depends = []
+  }
+  file "lib/commands.js" {
+    uuid    = gs0037-compo-4000-8000-000000000037
+    intent  = run_command_nodes_through_the_registry
+    summary = "A command names its capability; the registry names the component and file; the command's events are emitted after it runs."
+    source  = component:commands
+    depends = []
   }
 
-  domain "contracts/" {
-
-    file "contracts/interaction-contract.schema.json" {
-      uuid    = ge4000-icsch-4000-8000-000000000040
-      intent  = json_schema_every_component_i_contract_must_pass
-      summary = "Mirrors nexus's interaction-contract.json shape: id, version, namespace, ports, uuid, role, health, routes[], axioms[]."
-      depends = []
-    }
-
-    file "contracts/hook-schema.js" {
-      uuid    = ge4001-hksch-4000-8000-000000000041
-      intent  = validate_hook_objects_before_registration
-      summary = "Direct port of cos/foundation/hook-schema.js validators (isUUID, isSemver, isEventType, isKebab); the actual gate is GEN-S2 from spine/axiom-baseline.js — this file only supplies the predicate functions the axiom calls."
-      depends = [ "ge1001" ]
-      related = [ "ge2002" ]
-    }
+  // ── entry points
+  file "cli.js" {
+    uuid    = gs0001-skele-4000-8000-000000000001
+    intent  = run_the_command_nodes
+    summary = "node cli.js <command> [--flag value] — the same command nodes the routes run."
+    source  = skeleton
+    depends = [ "gs0018", "gs0037" ]
+  }
+  file "server.js" {
+    uuid    = gs0023-skele-4000-8000-000000000023
+    intent  = serve_the_route_nodes
+    summary = "/health, /contract, /nodes/:type[/:id], and every route node — a new route is a node, this file does not change."
+    source  = skeleton
+    depends = [ "gs0018", "gs0037", "gs0016" ]
   }
 
-  domain "registry/" {
-
-    file "registry/wire-registry.js" {
-      uuid    = ge5000-wreg0-4000-8000-000000000050
-      intent  = living_index_of_every_hook_across_every_compartment
-      summary = "allHooks(), bySystem(), byId(), withSEAM(), summary() — same query surface as hooks/index.js, auto-discovers new compartments' hooks files."
-      depends = [ "ge4001" ]
-    }
-
-    file "registry/component-registry.js" {
-      uuid    = ge5001-creg0-4000-8000-000000000051
-      intent  = living_index_of_every_component_and_its_uuid
-      summary = "One entry per component file; used by the lattice to seed level.software nodes automatically. Generated from registry/manifest-registry.js at P5 ASSEMBLE — never hand-edited (MANIFEST_BEFORE_CHUNK)."
-      depends = [ "ge5002" ]
-      related = [ "ge5000" ]
-    }
-
-    file "registry/manifest-registry.js" {
-      uuid    = ge5002-mreg0-4000-8000-000000000052
-      intent  = one_source_of_truth_manifest_entry_per_component_written_before_any_chunk_dispatches
-      summary = "P1 MANIFEST's real output: { id, intent, file, consumes[], emits[], data:{reads,writes}, cli, depends[], tests[] } per component, generated in a single whole-spec-context job — the only step in the pipeline allowed that much context. component-registry.js and interaction-contract.json are both derived from this at P5, never hand-declared (I1)."
-      depends = [ "ge0000" ]
-    }
-
-    file "registry/wire-check.js" {
-      uuid    = ge5003-wchk0-4000-8000-000000000053
-      intent  = static_no_llm_gate_that_a_manifest_must_clear_before_any_component_is_chunked
-      summary = "P2 WIRE-CHECK: ONE_PRODUCER_PER_SIGNAL (a signature with 2+ producers is a hard error, not a merge conflict found later), NO_UNDECLARED_RESIDUE (every emit has a consumer or is marked residue:true), producer<->consumer schema compatibility, depends[] acyclic. FAIL returns the violation list to registry/manifest-registry.js's own generation job for retry — never surfaces as a runtime bug the way 0.39.244's three seam bugs did."
-      depends = [ "ge5002" ]
-    }
-
-    file "registry/node-registry.js" {
-      uuid    = ge5005-nreg0-4000-8000-000000000055
-      intent  = the_registry_as_nodes_the_doorway_every_module_and_the_ui_reads
-      summary = "Domain 2c: writes component/hook/wire/event/command/contract/system nodes to nodes/<type>/<id>.<type> in the node-export envelope (Guardian's layout), leaves an unchanged node alone by fingerprint, moves a node no longer produced to nodes/_archive/. Generated from manifest-registry.js; the UI and every module read it, never each other."
-      depends = [ "ge5002" ]
-      related = [ "ge5001", "ge5000" ]
-    }
-
-    file "registry/node-index.js" {
-      uuid    = ge5006-nidx0-4000-8000-000000000056
-      intent  = jaa_tables_as_the_node_index_one_per_node_type_with_its_ledger
-      summary = "Domain 2d: indexes every node node-registry.js writes into a JAA table per type (nodes_<type>, upserted by id) and appends each add/change/delete to nodes_<type>_ledger; a delete is a soft-delete row. Rebuildable from the node files alone; queried by modules and the UI instead of reading another system's files. Lives in this system's own data folder."
-      depends = [ "ge5005", "ge3000" ]
-      related = [ "ge5002" ]
-    }
-
-    file "registry/component-router.js" {
-      uuid    = ge5004-crtr0-4000-8000-000000000054
-      intent  = route_every_cli_verb_and_every_cross_component_signal_by_id_never_by_import
-      summary = "Reads manifest-registry.js's cli field per entry; a CLI call is `verb noun [flags]` resolved to a component_id and dispatched through here, non-linearly — no compartment or component ever imports another to reach it. Doubles as the event bus registry/wire-registry.js's hooks route through, so 'CLI door' and 'event door' are the same underlying map (Domain 2's i_contract rule), not two mechanisms."
-      depends = [ "ge5002", "ge5000" ]
-    }
+  // ── spec, input/output, tests
+  file "input/.gitkeep" {
+    uuid    = gs0015-skele-4000-8000-000000000015
+    intent  = keep_input
+    summary = "Keeps input/ in version control."
+    source  = skeleton
+    depends = []
   }
-
-  domain "gates/" {
-
-    file "gates/gate-cross-compartment.js" {
-      uuid    = ge6000-gcc00-4000-8000-000000000060
-      intent  = sole_authorized_path_between_two_compartments
-      summary = "Every cross-compartment call passes through here; enforces GATE_BEFORE_CROSS and NOTHING_INLINE, emits a warp Event either way (pass or reject)."
-      depends = [ "ge2000", "ge5000" ]
-    }
+  file "output/.gitkeep" {
+    uuid    = gs0019-skele-4000-8000-000000000019
+    intent  = keep_output
+    summary = "Keeps output/ in version control."
+    source  = skeleton
+    depends = []
   }
-
-  domain "compartments/<name>/" {
-    // Scaffolded once per new compartment; <name> is replaced at generation time.
-
-    file "compartments/<name>/seam.json" {
-      uuid    = ge6500-seam0-4000-8000-000000000065
-      intent  = declare_this_compartments_isolation_boundary_only
-      summary = "{ uuid, isolated: true }. No ports, no methods, no event names — SEAM_IS_DUMB. Existence and boundary only; interaction-contract.json (below) is the only file allowed to describe communication."
-      depends = []
-    }
-
-    file "compartments/<name>/manifest.json" {
-      uuid    = ge6900-mnfNN-4000-8000-000000000069
-      intent  = this_compartments_slice_of_registry_manifest_registry_js_one_entry_per_component_it_owns
-      summary = "Written at P1 MANIFEST, before component/<file>.js below exists. interaction-contract.json and component-registry.js entries for this compartment are both generated FROM this file at P5 ASSEMBLE (MANIFEST_BEFORE_CHUNK) — editing either by hand without updating this file first is a wire-check violation, not a style issue."
-      depends = [ "ge5002" ]
-    }
-
-    file "compartments/<name>/interaction-contract.json" {
-      uuid    = ge7000-icNNN-4000-8000-000000000070
-      intent  = declare_this_compartments_full_surface
-      summary = "Must validate against contracts/interaction-contract.schema.json. This is the map referenced by both api.js and cli.js below. Generated from manifest.json's consumes/emits/cli fields, not authored independently."
-      depends = [ "ge4000", "ge6900" ]
-    }
-
-    file "compartments/<name>/api.js" {
-      uuid    = ge7001-apiNN-4000-8000-000000000071
-      intent  = http_or_rpc_door_into_the_compartment
-      summary = "Routes declared in interaction-contract.json only; no route exists here that isn't declared there first."
-      depends = [ "ge7000", "ge6000" ]
-    }
-
-    file "compartments/<name>/cli.js" {
-      uuid    = ge7002-cliNN-4000-8000-000000000072
-      intent  = command_door_into_the_same_map_as_api
-      summary = "Per COS-2 (CLI first) — every capability api.js exposes must also exist here."
-      depends = [ "ge7000", "ge6000" ]
-    }
-
-    file "compartments/<name>/sse.js" {
-      uuid    = ge7003-sseNN-4000-8000-000000000073
-      intent  = live_state_channel_for_this_compartment
-      summary = "Streams warp Events scoped to this compartment's uuid out over SSE; read-only, no mutation path."
-      depends = [ "ge7000", "ge2000" ]
-    }
-
-    file "compartments/<name>/hooks.js" {
-      uuid    = ge7004-hkNNN-4000-8000-000000000074
-      intent  = this_compartments_hook_declarations
-      summary = "Loaded by wire-registry.js on discovery; every export validated against hook-schema.js at load time."
-      depends = [ "ge4001", "ge5000" ]
-    }
-
-    file "compartments/<name>/config.json" {
-      uuid    = ge7005-cfgNN-4000-8000-000000000075
-      intent  = everything_adjustable_for_this_compartment
-      summary = "Ports, timeouts, feature toggles, copy strings — nothing in the other files here is hardcoded if it's in this file's schema."
-      depends = []
-    }
-
-    file "compartments/<name>/component/<file>.js" {
-      uuid    = ge7100-cmpNN-4000-8000-000000000080
-      intent  = smallest_measurable_unit_of_behavior
-      summary = "One component, one file, one intent — the file this compartment's manifest.json already declared at P1, not a new decision made while chunking. Registered in component-registry.js on load. Hot-swappable independently of its siblings. Built at P4 CHUNKS with CONTEXT_IS_NEIGHBOURS_ONLY: the agent sees this component's own manifest_entry plus the consumes/emits SCHEMAS (not source) of the ids in its own depends[] — never another component's file, never the rest of the compartment."
-      depends = [ "ge5001", "ge6900" ]
-    }
+  file "spec/<system>.node-taxonomy.md" {
+    uuid    = gs0024-skele-4000-8000-000000000024
+    intent  = the_node_types
+    summary = "Each node type, what it is and its required fields."
+    source  = skeleton
+    depends = []
   }
-
-  domain "nerve/" {
-
-    file "nerve/listener-grid.js" {
-      uuid    = ge8000-lgrid-4000-8000-000000000090
-      intent  = mount_micro_listeners_across_every_registered_ui_surface
-      summary = "Reads component-registry.js to find surfaces automatically; each listener emits a warp Event on interaction, no polling."
-      depends = [ "ge5001", "ge2000" ]
-    }
-
-    file "nerve/shadow-space.js" {
-      uuid    = ge8001-shdw0-4000-8000-000000000091
-      intent  = infer_unobserved_attention_from_observed_gaps
-      summary = "Consumes the ledger's replay stream; flags regions with activity-adjacent signal but no direct listener hit."
-      depends = [ "ge3000", "ge8000" ]
-    }
-
-    file "nerve/attention-map.js" {
-      uuid    = ge8002-attnm-4000-8000-000000000092
-      intent  = live_composite_of_listener_grid_plus_shadow_space
-      summary = "Consumed by tv-ui/spotlight.js to decide what to surface next; never mutates state, read-only projection."
-      depends = [ "ge8000", "ge8001" ]
-    }
+  file "spec/<system>.spec" {
+    uuid    = gs0025-skele-4000-8000-000000000025
+    intent  = the_living_spec
+    summary = "identity, context, file_structure, modules, components, generated — the architecture template's sections; grows with the system."
+    source  = skeleton
+    depends = []
   }
-
-  domain "ui/tv-shell/" {
-
-    file "ui/tv-shell/floating-nav.js" {
-      uuid    = ge9000-fnav0-4000-8000-000000000100
-      intent  = remote_style_directional_menu
-      summary = "Reads wire-registry.js for available destinations; renders nothing it can't resolve to a live route."
-      depends = [ "ge5000" ]
-    }
-
-    file "ui/tv-shell/spotlight.js" {
-      uuid    = ge9001-splgt-4000-8000-000000000101
-      intent  = surface_interactable_ui_for_ai_or_collaboration
-      summary = "Driven by nerve/attention-map.js; opens the highest-friction or highest-focus surface first."
-      depends = [ "ge8002", "ge9000" ]
-    }
-
-    file "ui/tv-shell/stylesheet/theme.css" {
-      uuid    = ge9002-thm00-4000-8000-000000000102
-      intent  = all_visual_tokens_for_tv_shell
-      summary = "Colors, radii, motion durations, accent tokens — the only place tv-shell visuals are declared."
-      depends = []
-    }
-  }
-
-  domain "lattice/" {
-
-    file "lattice/node.js" {
-      uuid    = ge9500-node0-4000-8000-000000000110
-      intent  = define_the_node_shape_for_all_four_levels
-      summary = "{ uuid, level: data|network|software|application, ref, meta }. Same UUID_PER_FILE rule applies to lattice nodes."
-      depends = []
-    }
-
-    file "lattice/edge.js" {
-      uuid    = ge9501-edge0-4000-8000-000000000111
-      intent  = define_weighted_association_between_two_nodes
-      summary = "{ from, to, weight, kind }. No implicit hierarchy between levels — an edge can cross any two levels directly."
-      depends = [ "ge9500" ]
-    }
-
-    file "lattice/associative-index.js" {
-      uuid    = ge9502-aidx0-4000-8000-000000000112
-      intent  = maintain_and_query_the_full_graph
-      summary = "associate(), traverse(); seeded automatically from component-registry.js and pulse/self-identify events."
-      depends = [ "ge9500", "ge9501", "ge5001" ]
-    }
-  }
-
-  domain "pulse/" {
-
-    file "pulse/heartbeat.js" {
-      uuid    = geA000-hbeat-4000-8000-000000000120
-      intent  = emit_periodic_liveness_pulse_per_runtime
-      summary = "Every pulse is a warp Event scored by spine/scorer-fidelity.js; interval is a config.json key, never hardcoded. Its snapshot carries each node type's count from registry/node-index.js (Domain 2d), so an index behind its files shows as drift."
-      depends = [ "ge2000", "ge2001", "geB000" ]
-    }
-
-    file "pulse/peer-webrtc.js" {
-      uuid    = geA001-pwrtc-4000-8000-000000000121
-      intent  = togglable_direct_node_connection
-      summary = "Off by default per COS-11 (network isolation default-on). remote_toggle flips connectivity; self_identify runs on every new peer link."
-      depends = [ "geA000", "ge9502" ]
-    }
-
-    file "pulse/fidelity-score.js" {
-      uuid    = geA002-fidsc-4000-8000-000000000122
-      intent  = expose_health_and_fidelity_as_queryable_values
-      summary = "Reads scorer output from spine/scorer-fidelity.js; surfaced on interaction-contract's /health route for every compartment."
-      depends = [ "ge2001" ]
-    }
-  }
-
-  domain "config/" {
-
-    file "config/genesis.config.json" {
-      uuid    = geB000-gcfg0-4000-8000-000000000130
-      intent  = system_wide_adjustable_values
-      summary = "Single source of truth for ports, ledger retention, pulse interval defaults, nerve sampling rate. Compartment config.json files override per-compartment only."
-      depends = []
-    }
+  file "tests/skeleton.test.js" {
+    uuid    = gs0026-skele-4000-8000-000000000026
+    intent  = prove_the_skeleton_is_alive
+    summary = "Boots, indexes, checks the shape, serves routes, runs the CLI, and serves a route node dropped in without a restart."
+    source  = skeleton
+    depends = [ "gs0018", "gs0023", "gs0037", "gs0029" ]
   }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// Boot order — GENERATED from the depends[] graph above by
-// `idearium manifest generate templates/genesis.spec`; never hand-edited.
-// (The hand-written list that stood here had config/ last, after pulse/,
-// though kernel/boot.js and pulse/heartbeat.js both read config. Generating
-// it removed that class of error.) Layers — every file in a layer depends
-// only on earlier layers, so each layer's chunks can build in parallel:
-//   L0 genesis.spec, MANIFEST.json, kernel/axioms, kernel/runtime-enum,
-//      spine/warp-bridge, contracts/interaction-contract.schema,
-//      compartments/<n>/seam, compartments/<n>/config, tv-shell theme,
-//      lattice/node, config/genesis.config
-//   L1 spine/scorer-fidelity, spine/axiom-baseline, ledger/event-ledger,
-//      contracts/hook-schema, registry/manifest-registry, lattice/edge
-//   L2 kernel/boot, registry/wire-registry, registry/component-registry,
-//      registry/wire-check, compartments/<n>/manifest, pulse/heartbeat,
-//      pulse/fidelity-score
-//   L3 registry/component-router, gates/gate-cross-compartment,
-//      compartments/<n>/interaction-contract, compartments/<n>/hooks,
-//      compartments/<n>/component/<file>, nerve/listener-grid,
-//      tv-shell/floating-nav, lattice/associative-index
-//   L4 compartments/<n>/api, cli, sse, nerve/shadow-space, pulse/peer-webrtc
-//   L5 nerve/attention-map
-//   L6 tv-shell/spotlight
-//
-// Nothing after "spine/axiom-baseline" can mount without clearing whichever
-// GEN-S* axiom applies to it — the baseline is live before the first
-// compartment exists, not bolted on after the system is already running.
-//
-// BUILD order for a new project scaffolded from this spec is a distinct
-// sequence from the above (Domain "manifest"'s P0-P6): registry/
-// manifest-registry.js and every compartment's manifest.json exist and
-// clear registry/wire-check.js BEFORE kernel/engine/runtime are even
-// generated, let alone before any compartments/<name>/component/<file>.js
-// chunk is dispatched. Boot order is what a FINISHED system does at
-// startup; build order is how genesis gets a system to that finished state
-// with I5-minimal context per chunk. Conflating the two is exactly the
-// silent-orphan failure class registry/wire-check.js exists to catch loudly
-// instead of leaving a chunk PENDING forever with nothing surfaced.
+// Build order — GENERATED from the depends[] graph above by `idearium manifest generate templates/genesis.spec`;
+// never hand-edited. Boot order is lib/system.js: config → schemas → store → ledger → bus → node index → listener →
+// heartbeat. A new system is this tree laid out (COS archetype nexus-system) with the idea slotted in as components:
+// lib/<component>.js, its entry in registry-components.js, and its component, capability, command and event nodes.
 // ══════════════════════════════════════════════════════════════════════════════

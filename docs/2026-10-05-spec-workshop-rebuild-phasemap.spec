@@ -131,6 +131,10 @@ spec:
         workshop opened from that template is its next version, the old kept; REMOVE archives a saved one (kept, hidden).
         The built-in templates are files in the codebase: not removable from the page, said; editing one is opening it,
         changing it and saving it as a template.
+      addendum_0_39_358: >-
+        James, "where are the quick spec templates and the photoshop template start screen" — he opened the workshop from
+        nexus/core (no .spec) and got a blank Purpose: 0.39.357 sent only a promoted idea through the picker. Now a repo
+        with no .spec opens the picker with the repo as START FROM, and + NEW SPEC in the bar opens it from the writer.
       drift: >-
         depends_on RS4 (the pipeline on WARP 2) is not needed by the picker and was not waited on. RS5's blocks preview is
         the spec engine's 11 blocks (blocks.yaml) — RS3's id-keyed spec document is not built, so a block id cannot yet be

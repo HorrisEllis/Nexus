@@ -129,11 +129,17 @@ async function main() {
     for (const c of doc.chunks) await quiet(() => se.completeChunk(doc.uuid, c.uuid, c.sectionId === 'registry' ? REGISTRY : `The ${c.sectionTitle} of the song maker, written out in full for the test.`));
     const g = await R('POST', `/api/spec-engine/specs/${doc.uuid}/codegen`, {});
     assert.strictEqual(g.status, 200, JSON.stringify(g.json).slice(0, 400));
-    assert.strictEqual(g.json.plan.planSource, 'registry', 'planned from the registry, no agent asked');
+    // §0.39.359 SB31 — the code repo is the skeleton with the registry slotted in, still with no agent asked
+    assert.strictEqual(g.json.plan.planSource, 'skeleton + registry', 'planned from the registry into the skeleton, no agent asked');
+    assert.deepStrictEqual(g.json.plan.slot.components.length, 4, 'every non-test component slotted in');
     assert.deepStrictEqual(g.json.registry, { used: true, components: 5, problems: [] });
     const code = se.loadSpec(g.json.manifest.uuid);
     assert.strictEqual(code.registry.length, 5, 'the registry rides on the code spec — the checklist');
-    assert.deepStrictEqual(code.chunks.map(c => c.realPath).sort(), ['src/app.js', 'src/engine/sequencer.js', 'src/kernel/clock.js', 'src/kernel/pattern.js', 'test/sequencer.test.js']);
+    const paths = code.chunks.map(c => c.realPath);
+    for (const f of ['src/app.js', 'src/engine/sequencer.js', 'src/kernel/clock.js', 'src/kernel/pattern.js', 'test/sequencer.test.js', 'server.js', 'registry-components.js', 'lib/node-index.js']) assert.ok(paths.includes(f), f);
+    const pending = code.chunks.filter(c => c.status !== 'complete').map(c => c.realPath).sort();
+    assert.deepStrictEqual(pending, ['src/app.js', 'src/engine/sequencer.js', 'src/kernel/clock.js', 'src/kernel/pattern.js', 'test/sequencer.test.js'], 'only the registry\'s files are left to build — the skeleton and the slot\'s nodes are written');
+    assert.strictEqual(code.chunks.find(c => c.realPath === 'src/app.js').file.layer, 'runtime', 'a slotted file keeps its registry layer');
     assert.ok(g.json.repoUuid, 'its repo');
     const v = await R('POST', `/api/repos/${g.json.repoUuid}/verify`, {});
     const body = v.json.verify || v.json;

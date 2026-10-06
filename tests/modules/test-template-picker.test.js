@@ -232,6 +232,20 @@ const BLOCKS = require('js-yaml').load(fs.readFileSync(path.join(ROOT, 'idearium
       await page.dblclick(`#picker .it[data-id="${iu}"]`); await page.waitForSelector('#picker', { state: 'detached' });
       assert.match(await page.textContent('#npFrom'), /IDEA ·/);
       await page.click('#npFrom .x'); assert.strictEqual((await page.textContent('#npFrom')).trim(), ''); assert.ok(await page.$('#srcNone.on'));
+      // §0.39.358 — a repo with no .spec opens the picker, the repo as START FROM (not a blank Purpose); + NEW SPEC → the picker
+      const L = api.getRepoLayer(); let made = null;
+      for (let i = 0; i < 20; i++) { made = await quiet(async () => L.ingest({ name: `tp-${Date.now()}`, source: 'test', compartmentId: 'c-tp', files: [{ path: 'src/a.js', content: 'module.exports = 1;\n' }] })); if (!(made && made.error && /no spec-engine/.test(made.error))) break; await new Promise(x => setTimeout(x, 250)); }
+      const ru = made.repo.uuid;
+      await page.goto(`${url}/workshop.html?from=repo:${ru}`);
+      await page.waitForSelector('#npFrom .np-chip');
+      assert.match(await page.textContent('#npFrom'), /REPO · tp-/); assert.ok(await page.$('#srcRepo.on'));
+      assert.ok(await page.$('#start:not(.hidden)') && await page.$('#writer.hidden'), 'the picker, not a blank document');
+      await page.click('#npGrid .np-card[data-id="genesis"]'); await page.click('#beginBtn');
+      await page.waitForSelector('#writer:not(.hidden) .doc-title');
+      w = await W(); assert.deepStrictEqual([w.source.kind, w.repoUuid, w.template.id], ['repo', ru, 'genesis']);
+      assert.match(await page.textContent('#docMeta'), /NO \.SPEC IN ITS REPO YET — SAVE WRITES ONE/);
+      assert.ok(await page.locator('#newBtn').isVisible(), '+ NEW SPEC in the bar');
+      await page.click('#newBtn'); await page.waitForSelector('#start:not(.hidden) #np[data-ready] .np-card[data-id="custom"]');
       const src = fs.readFileSync(path.join(UI, 'js', 'template-picker.js'), 'utf8');
       assert.deepStrictEqual([...src.matchAll(/title="([^"$]*)"/g)].map(m => m[1]).filter(t => /[a-z]/.test(t)), [], 'no lowercase tooltip');
       assert.deepStrictEqual(errors, [], 'nothing threw');

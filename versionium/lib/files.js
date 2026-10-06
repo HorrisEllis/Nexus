@@ -368,7 +368,11 @@ function versions(file, { repository = null, limit = 200 } = {}) {
   for (const r of jaaDB.query(T_FULL, match, ALL)) out.push({ repository: r.repository, commitId: r.commit_ref, sha256: r.sha256 || null, kind: r.kind === 'deleted' ? 'deleted' : 'full', ts: r.ts });
   for (const r of jaaDB.query(T_DELTA, match, ALL)) out.push({ repository: r.repository, commitId: r.commit_ref, sha256: r.result_sha256, kind: 'delta', ts: r.ts });
   for (const v of out) { const c = getCommit(v.commitId); v.wall = c ? c.wall : v.ts; v.message = c ? c.message : null; delete v.ts; }
-  return out.sort((a, b) => (b.wall || 0) - (a.wall || 0)).slice(0, limit);
+  // §0.39.359 — commits made in the same millisecond tie on wall; the later one is the one further down its chain
+  // (VH-002 failed under load with three commits in one ms)
+  const depth = new Map();
+  const d = (id) => { if (!depth.has(id)) { let n = 0; try { n = chainTo(id).length; } catch (_) { n = 0; } depth.set(id, n); } return depth.get(id); };
+  return out.sort((a, b) => ((b.wall || 0) - (a.wall || 0)) || (d(b.commitId) - d(a.commitId))).slice(0, limit);
 }
 
 module.exports = { plan, record, stage, tree, content, limits, versions, treeHash, sha256, validPath, FilesError, T_FULL, T_DELTA, REPO_SYSTEM };

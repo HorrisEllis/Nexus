@@ -21,7 +21,7 @@
 .cs-indent{display:inline-block;flex:none}.cs-caret{width:10px;color:var(--text3)}
 .cs-dir{color:var(--text3)}
 .cs-fname{overflow:hidden;text-overflow:ellipsis}
-.cs-file.fs-row-pending,.cs-file.cs-pending{opacity:.45;font-style:italic}
+.cs-file.fs-row-pending,.cs-file.cs-pending,.cs-file.fs-row-uncoded{opacity:.45;font-style:italic}
 .cs-file.fs-row-deleted{opacity:.45;text-decoration:line-through}
 .cs-file.fs-row-modified .cs-fname,.cs-file.fs-row-new .cs-fname{color:var(--amber)}
 .cs-diffdot{color:var(--amber);font-size:8px;margin-left:3px}

@@ -84,6 +84,22 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
     check('WS-15 the card asks the agent: picked lines + one instruction → POST …/manage action edit', /action: 'edit', from: from \|\| undefined/.test(wsjs) && /function wsPickLine/.test(wsjs));
     check('WS-13 an unknown repo is a 404', (await api._route('GET', '/api/repos/nexus-id-repo-nope/worksurface')).status === 404);
 
+    // §0.39.361 — BL15: a -648 +1 proposal read -400 because the counts came from the diff shown, cut at 400 lines
+    const big = Array.from({ length: 648 }, (_, i) => `const v${i} = ${i};`).join('\n') + '\n';
+    const wb = WS.workSurface({ injects: [{ uuid: 'b1', path: 'lib/big.js', op: 'write', status: 'proposed', content: 'lib/big.js\n', createdAt: t0 }], runs: [], readCurrent: () => big, unifiedDiff });
+    check('WS-23 +added -removed count the whole change, not the diff lines shown', wb.files[0].removed === 648 && wb.files[0].added === 1, `${wb.files[0].added} ${wb.files[0].removed}`);
+
+    // §0.39.361 — James: "i dont use git." A reverted change says whether the file is back; it is not counted in +/−
+    const wr = WS.workSurface({ injects: [{ uuid: 'r1', path: 'lib/big.js', op: 'write', status: 'reverted', before: big, content: 'lib/big.js\n', createdAt: t0, appliedAt: t0 + 1 }],
+      runs: [{ runId: 'phase-9', phase: 'BL15', map: 'm', state: 'replied', ts: t0 + 2, provider: 'chatgpt', injects: { injected: ['lib/big.js'] } }], readCurrent: () => big, unifiedDiff });
+    check('WS-16 a reverted change whose file is back as it was says so (restored, its line count)', wr.files[0].undone && wr.files[0].now.restored === true && wr.files[0].now.lines === 648, JSON.stringify(wr.files[0].now));
+    check('WS-17 an undone change is not in the totals — counted as undone', wr.totals.files === 0 && wr.totals.removed === 0 && wr.totals.undone === 1, JSON.stringify(wr.totals));
+    check('WS-18 a card names the agent of the run that wrote it', wr.files[0].run && wr.files[0].run.provider === 'chatgpt');
+    const wx = WS.workSurface({ injects: [{ uuid: 'r2', path: 'lib/big.js', op: 'write', status: 'reverted', before: big, content: 'x\n', createdAt: t0 }], runs: [], readCurrent: () => 'lib/big.js\n', unifiedDiff });
+    check('WS-19 a reverted change whose file is NOT back is flagged, with the counts', wx.files[0].now.restored === false && wx.files[0].now.lines === 1 && wx.files[0].now.wasLines === 648);
+    const wsui = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/work-surface.js'), 'utf8');
+    check('WS-20 the card paints what the file is now, undone cards start closed', /function _wsNow\(f\)/.test(wsui) && /\$\{_wsNow\(f\)\}/.test(wsui) && /!f\.undone && i < 2/.test(wsui));
+
     // ── WS-2x wiring ──
     const idx = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     check('WS-21 a phase run keeps its tool calls (tools on the row) — and a plan run too', /try \{ const tb = _toolsBrief\(r\); if \(tb\) row\.tools = tb; \} catch/.test(idx)

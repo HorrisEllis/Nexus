@@ -272,7 +272,15 @@ function _storedFor(chunk, { prompt = null } = {}) {
 import { COMPONENTS as IDEARIUM_COMPONENTS } from '../registry-components.js';
 import path from 'path';
 import fs from 'fs';
-import { loadTable, appendRow, deleteRow, syncTable } from '../lib/db.js';
+import { loadTable, appendRow as _appendRowRaw, deleteRow, syncTable } from '../lib/db.js';
+// §0.39.361 AR2 — James: "Failure modes and faults are still first class data." Every phase-run row that is a fault
+// (no snapshot, failed and why, wrote nothing, missed files, blocked, tool errors, unproven, every rung tried) is also
+// its own fault_log record (lib/phase-faults.js → lib/fault-log.js logFault), here where every such row is written.
+function appendRow(table, row) {
+  const out = _appendRowRaw(table, row);
+  if (table === 'idearium_phase_runs') { try { _require('../../lib/phase-faults.js').log(row); } catch (_) { /* a fault that cannot be logged never fails the build */ } }
+  return out;
+}
 import * as WB from '../lib/idea-workbench.js';
 import { runImportPipeline } from '../repo/import-pipeline.js';
 import { makeBusForwarder } from '../repo/pipeline-events.js';
@@ -650,9 +658,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   }
   const depsDone = view.phases.filter(p => node.depends_on.includes(p.uuid) && p.status === 'complete').map(p => p.phase_key);
   const req = PH.buildRequest({ phase: node, mapText, repo: target, depsDone });
-  const message = note ? `${req.message}\n\nFROM JAMES: ${note}` : req.message;
-  appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length, ts: Date.now() });
-  getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
+  // §0.39.361 AR2 — before acting, what went wrong on this phase before (fault_log): the agent is told, the Plan shows it
+  let precedent = { faults: [], text: '' };
+  try { precedent = _require('../../lib/phase-faults.js').precedent(phase); } catch (_) {}
+  const message = [req.message, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
@@ -674,6 +683,26 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const L = PRt.ladder(policy, { installed });
     rungs = L.rungs; ladderFrom = L.from;
   }
+  // §0.39.361 AR1 — James: "needs to learn from this: routing and adapting". The ladder is ordered by what every phase
+  // build so far says about each agent (lib/agent-record.js — a projection of idearium_phase_runs and the injects):
+  // what lands, what is proven, what the person undid, and the request size each one keeps failing at. Nothing
+  // learned yet → the ladder exactly as configured. routing.ladder_learn: false turns it off.
+  let route = null;
+  if (rungs.length > 1 && policy.ladderLearn !== false) {
+    try {
+      const AR = _require('../../lib/agent-record.js');
+      const RIx = _require('../../lib/repo-inject.js');
+      const undone = RIx.list(null, { limit: 5000 }).filter(n => n.status === 'reverted' || n.status === 'rejected');
+      const o = AR.orderLadder(rungs, AR.record(loadTable('idearium_phase_runs'), { injects: undone }), { promptChars: message.length, minRecords: policy.learnMinRecords >= 1 ? Math.min(policy.learnMinRecords, 3) : 2 });
+      route = { learned: o.changed, bucket: o.bucket, why: o.why };
+      if (o.changed) { rungs = o.rungs; ladderFrom = `learned from past builds (${o.bucket} request) — ${ladderFrom}`; }
+    } catch (e) { route = { learned: false, error: e.message }; }
+  }
+  // the run starts here, its route on it: the ladder's order and, per agent, why it sits where it does
+  appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length,
+    ...(precedent.faults.length ? { precedent: precedent.faults.map(f => ({ uuid: f.uuid, ts: f.ts, agent: f.agent, mode: f.mode, promptChars: f.meta.promptChars || null })) } : {}),
+    ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom } } : {}), ts: Date.now() });
+  getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
   const paramsOf = (rg) => (!rg ? { backend, agent, provider } : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
   // one attempt on one rung (rg null = no ladder: the call's own agent): dispatch, the shadow settled, the row built
   const attempt = async (rg, ri, tryNo) => {
@@ -701,7 +730,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : null)),
       provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || null,
       ...(rg ? { rung: ri + 1, rungs: rungs.length, attempt: tryNo, ...(r && r.toolErrors ? { toolErrors: true } : {}) } : {}),
-      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
+      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, promptChars: message.length, ts: Date.now() };
     // §0.39.284 W3 — the tool calls of this run are kept on it, so the work surface can show what the agent used
     try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
     return { r, state, absent, dp, row, trigger: r && r.toolErrors ? 'tool-errors' : state };
@@ -1824,6 +1853,7 @@ const ROUTE_CAP = {
   'routing.show':     CAPS.READ_IDEAS,
   'routing.plan':     CAPS.READ_IDEAS,
   'routing.learned':  CAPS.READ_IDEAS,
+  'routing.agents':   CAPS.READ_IDEAS,
   'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
@@ -1835,6 +1865,7 @@ const ROUTE_CAP = {
   'settings.console.repo': CAPS.READ_IDEAS,
   'economy.get': CAPS.READ_IDEAS, 'economy.set': CAPS.WRITE_IDEAS, 'economy.view': CAPS.READ_IDEAS,   // §0.39.281 EC8
   // §0.39.280 — build surface
+  'repo.expand': CAPS.WRITE_IDEAS,   // §0.39.360 SB42
   'repo.files.state': CAPS.READ_IDEAS, 'repo.deviation.get': CAPS.READ_IDEAS, 'repo.deviation.recalc': CAPS.WRITE_IDEAS,
   'repo.environment.get': CAPS.READ_IDEAS, 'repo.environment.set': CAPS.WRITE_IDEAS, 'repo.environment.setup': CAPS.ADMIN,
   'repo.spec.plan.get': CAPS.READ_IDEAS, 'repo.spec.plan': CAPS.WRITE_IDEAS, 'repo.spec.build': CAPS.WRITE_IDEAS,
@@ -1865,7 +1896,8 @@ function matchRoute(method, url) {
     // §0.39.286 RG2 — the pipeline's routing and fallback policy (lib/pipeline-routing.js); set it through POST /api/config routing.*
     ['GET',    ['api','routing'],         'routing.show'],
     ['GET',    ['api','routing','plan'],  'routing.plan'],
-    ['GET',    ['api','routing','learned'], 'routing.learned'],   // §0.39.287 what each model/provider has done per chunk type
+    ['GET',    ['api','routing','learned'], 'routing.learned'],
+    ['GET',    ['api','routing','agents'], 'routing.agents'],    // §0.39.361 AR1 what each agent has done building phases   // §0.39.287 what each model/provider has done per chunk type
     ['GET',    ['api','ollama','check'], 'ollama.check'],          // §CT4 0.39.350 — installed models, each caller's route
     ['POST',   ['api','ollama','check','ask'], 'ollama.check.ask'], // §CT4 — one model asked a one-line question through copilot
     ['POST',   ['api','routing','breaker','reset'], 'routing.breaker.reset'],
@@ -2105,6 +2137,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
+    ['POST',   ['api','repos',    ':uuid','expand'],                'repo.expand'],   // §0.39.360 SB42–SB44
     // §0.39.280 — the build surface (docs/2026-09-29-build-surface-phasemap.spec BS7; logic in api/build-surface.js)
     ['GET',    ['api','repos',    ':uuid','files','state'],         'repo.files.state'],
     ['GET',    ['api','repos',    ':uuid','deviation'],             'repo.deviation.get'],
@@ -2477,6 +2510,14 @@ async function handle(req, res, route, query, body) {
       const ladder = PR.ladder(policy, { installed });
       return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(), ladder: { rungs: ladder.rungs.map(r => r.provider), from: ladder.from }, escalateOn: PR.ESCALATE_ON,
         blocks: se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title, agent: b.agent, fallback: b.fallback || [], ...PR.plan({ block: b, policy }) })) });
+    }
+    // §0.39.361 AR1 — James: "needs to learn from this: routing and adapting". Each agent's phase-build record: landed,
+    // proven, undone by the person, failed and why, its size limit — the same projection that orders the ladder.
+    case 'routing.agents': {
+      const AR = _require('../../lib/agent-record.js');
+      const undone = _require('../../lib/repo-inject.js').list(null, { limit: 5000 }).filter(n => n.status === 'reverted' || n.status === 'rejected');
+      const faults = _require('../../lib/phase-faults.js').list({ limit: 2000 });
+      return ok(res, { learn: _routingPolicy().ladderLearn !== false, ...AR.record(loadTable('idearium_phase_runs'), { injects: undone, faults }) });
     }
     case 'routing.learned': {
       const PR = _require('../../lib/pipeline-routing.js');
@@ -6093,6 +6134,60 @@ async function handle(req, res, route, query, body) {
       if (!r.json.ok) { const { ok: _o, error, ...detail } = r.json; return err(res, r.status, error, Object.keys(detail).length ? detail : null); }
       return ok(res, r.json.data);
     }
+    // §0.39.360 SB42–SB44 (build-from-the-spec 1.21.0) — James: "expanding using the specs, then phased, then chunked,
+    // then coded. look at the nexus repo." A skeleton repo grows: a snapshot first (as a phase build takes one); the new
+    // components (body.components, or the agent's plan from body.ask, shown the system's own components); slotted into
+    // the registry, the living spec and the nodes; a phasemap in docs/ (one phase per component, in build order — the
+    // Phases tab builds them); and each code file a pending chunk, coded when its phase writes it. Nothing is written
+    // when the repo is not a skeleton, nothing new slots in, or there is no snapshot.
+    case 'repo.expand': {
+      const layer = getRepoLayer();
+      const repo = layer.get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RX = _require('../../lib/repo-expand.js');
+      const FTP = _require('../../lib/file-tree-plan.js');
+      const read = (p) => { const r = layer.readFile(repo.uuid, p); return r && !r.error ? r.content : undefined; };
+      const sk = RX.skeletonOf(read);
+      if (!sk) return err(res, 409, 'not a skeleton repo — expansion slots components into a repo made from the nexus-system template (its registry-components.js has the slot)', { code: 'NOT_SKELETON' });
+      const feature = String((body && (body.feature || body.ask)) || '').trim().slice(0, 80);
+      const ask = String((body && body.ask) || feature).trim();
+      if (!feature) return err(res, 400, 'feature or ask is required — what the system should gain');
+      let comps = [], rejected = [], agentError = null;
+      if (Array.isArray(body.components)) { const p = FTP.parseSlot(JSON.stringify(body.components)); comps = p.components; rejected = p.rejected; }
+      else {
+        const warpFn = await getWarpChunkDispatch();
+        if (!warpFn) return err(res, 503, 'no agent to plan the expansion — give components, or start an agent');
+        try {
+          const who = _buildIdentity(repo.specUuid || null);
+          const r = await warpFn(RX.expandPrompt({ system: sk.system, ask, ids: sk.ids, files: (repo.files || []).map(f => f.path) }),
+            { chunkTitle: `expand: ${sk.system} — ${feature}`, expectCode: false, preferAgent: body.agent || who.provider || null, hat: who.hat, model: who.model, repoUuid: repo.uuid });
+          if (!r || !r.ok) throw new Error((r && r.error) || 'the expansion plan dispatch failed');
+          const p = FTP.parseSlot(r.text); comps = p.components; rejected = p.rejected;
+          if (!comps.length) agentError = rejected[0] ? rejected[0].reason : 'the agent planned no components';
+        } catch (e) { agentError = e.message; }
+      }
+      if (!comps.length) return err(res, 422, `nothing was slotted in: ${agentError || 'no components given'} — nothing written`, { rejected });
+      let takenKeys = [];
+      try {
+        const PH = await import('../repo/phases.js');
+        const loom = _require('../../loom/scanners/phasemap-map.js');
+        for (const m of PH.mapsFor({ repo, repoDir: _repoDiskDir(repo.uuid) }).maps) takenKeys.push(...loom.parsePhasemapText(m.text, m.path).map(x => String(x.id).split('_')[0]));
+      } catch (_) { /* no maps yet */ }
+      const plan = RX.expansion({ read, components: comps, feature, ask, takenKeys });
+      if (!plan.ok) return err(res, 422, `${plan.error} — nothing written`, { rejected: [...rejected, ...(plan.rejected || [])] });
+      const snap = await _commitRepoSnapshotFor(repo.uuid, { message: `before expanding: ${feature}`, causedBy: 'idearium.repo.expand' });
+      if (!snap.ok) return err(res, snap.status === 409 ? 409 : 502, `not expanded: the Versionium snapshot before it failed — ${snap.error}`, { code: 'NO_SNAPSHOT' });
+      const se = getSpecEngine();
+      const written = [], failed = [];
+      for (const w of plan.writes) { const r = layer.writeFile(repo.uuid, w.path, w.content, { defer: true, preserveWhitespace: true }); (r && r.ok ? written : failed).push(r && r.ok ? w.path : { path: w.path, error: r && r.error }); }
+      const planned = [];
+      for (const c of plan.code) { try { const r = se.planChunk(repo.specUuid, c); planned.push({ path: c.path, created: r.created }); } catch (e) { failed.push({ path: c.path, error: e.message }); } }
+      try { layer.refresh(repo.uuid); } catch (_) { /* the files are written; the disk projection catches up on the next write */ }
+      getIdeaOS().emit('idearium.repo.expanded', { repoUuid: repo.uuid, feature, components: plan.ids, phasemap: plan.phasemap.path, phases: plan.phasemap.phases.length, snapshot: snap.data.commitId });
+      return ok(res, { repoUuid: repo.uuid, system: plan.system, feature, components: plan.ids, phasemap: { path: plan.phasemap.path, phases: plan.phasemap.phases },
+        written, planned, failed, rejected: [...rejected, ...plan.rejected], snapshot: snap.data.commitId });
+    }
+
     case 'repo.phases.build': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -6354,17 +6449,24 @@ async function handle(req, res, route, query, body) {
       const regChunk = (doc.chunks || []).find(c => c.sectionId === 'registry' && c.status === 'complete');
       const registry = regChunk ? RP.parseRegistry(regChunk.content) : { components: [], problems: ['the spec has no registry section'] };
       let planned;
-      if (registry.components.length && !body.freePlan) planned = RP.toPlan(registry.components);
-      else {
-        try { planned = await FTP.plan({ name: doc.name, description, ask }); }
-        catch (e) { return err(res, 502, `planning the files failed: ${e.message}`); }
-      }
+      // §0.39.359 SB31 — James: "This should be what each new repo builds and slots the idea into like a slot." The
+      // code repo is the nexus-system skeleton (genesis 1.4.0), with the spec's registry — or, without one, the agent's
+      // components — slotted in. An agent that slots nothing in is refused, never a skeleton passed off as the project.
+      // body.skeleton === false keeps the plan without it.
+      const useSkeleton = body.skeleton !== false;
+      const fromRegistry = registry.components.length && !body.freePlan;
+      try {
+        if (useSkeleton && fromRegistry) { const s = FTP.slotFromRegistry(registry.components); planned = await FTP.plan({ name: doc.name, description: doc.description || doc.name, templateIds: [FTP.SKELETON_ID], slot: s.slot, slotFiles: s.files }); }
+        else if (fromRegistry) planned = RP.toPlan(registry.components);
+        else if (useSkeleton) planned = await FTP.plan({ name: doc.name, description, templateIds: [FTP.SKELETON_ID], ask, requireSlot: true });
+        else planned = await FTP.plan({ name: doc.name, description, ask });
+      } catch (e) { return err(res, 502, `planning the files failed: ${e.message}`); }
       if (!planned.ok) return err(res, 422, (planned.errors || ['the files could not be planned']).join('; '), { agentError: planned.agentError || null, registry: { used: false, problems: registry.problems } });
       let manifest;
       try {
         manifest = se.createFileTreeSpec({ name: `${doc.name} · code`, description, plan: planned, agent: body.agent || null, ideaUuid: doc.ideaUuid || null });
         manifest.codeFor = doc.uuid;
-        if (planned.planSource === 'registry') manifest.registry = registry.components;   // the checklist verify reads
+        if (fromRegistry) manifest.registry = registry.components;   // the checklist verify reads
         se.saveSpec(manifest);
         const freshDoc = se.loadSpec(doc.uuid);
         freshDoc.codeSpecUuid = manifest.uuid;
@@ -6414,8 +6516,8 @@ async function handle(req, res, route, query, body) {
       console.log(`[speceng.codegen] "${doc.name}" → ${planned.files.length} file(s) planned (${planned.planSource}) · code spec ${manifest.uuid.slice(0, 8)}`);
       return ok(res, { manifest: se.loadSpec(manifest.uuid), repoUuid,
         branch: branchInfo ? (branchInfo.ok ? { of: branchInfo.originUuid, branch: branchInfo.branch, dir: branchInfo.dir } : { made: false, reason: branchInfo.error }) : null,
-        plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers },
-        registry: { used: planned.planSource === 'registry', components: registry.components.length, problems: registry.problems } });
+        plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers, slot: planned.slot || null },
+        registry: { used: !!fromRegistry, components: registry.components.length, problems: registry.problems } });
     }
 
     case 'speceng.create': {
@@ -6458,6 +6560,10 @@ async function handle(req, res, route, query, body) {
         // (COS archetypes/blueprints and eravos mods); an id from either
         // takes the file-tree path below, same as a COS-only id always did.
         const fileTreeIds = allIds.filter(id => FTP.isFileTreeTemplate(id));
+        // §0.39.359 SB31 — genesis IS the skeleton's architecture (1.4.0's catalog is the nexus-system archetype): a spec
+        // that starts from genesis gets the skeleton as its file tree, with the idea slotted in. body.fileTree === false
+        // keeps the document-only spec.
+        if (allIds.includes('genesis') && body.fileTree !== false && !fileTreeIds.includes(FTP.SKELETON_ID)) fileTreeIds.unshift(FTP.SKELETON_ID);
         const docIds = allIds.filter(id => !FTP.isFileTreeTemplate(id));
         let manifest, planInfo = null;
         if (body.fileTree === true || fileTreeIds.length) {
@@ -6468,13 +6574,17 @@ async function handle(req, res, route, query, body) {
             if (!r || !r.ok) throw new Error((r && r.error) || 'plan dispatch failed');
             return r.text;
           } : null;
+          // a spec is made even when the agent slots nothing in — the skeleton, and plan.slot says it is empty and why
+          // (codegen, which makes the code repo, refuses instead)
           const planned = await FTP.plan({ name, description, templateIds: fileTreeIds, ask });
           if (!planned.ok) return err(res, 422, (planned.errors || ['file tree could not be planned']).join('; '), { agentError: planned.agentError || null });
-          manifest = se.createFileTreeSpec({ name, description, plan: planned, agent: agent || null, ideaUuid: ideaUuid || null, templateId: fileTreeIds.join(',') || null });
+          manifest = se.createFileTreeSpec({ name, description, plan: planned, agent: agent || null, ideaUuid: ideaUuid || null, templateId: fileTreeIds.join(',') || null, templateIds: allIds.length ? allIds : null });
           // The plan as a node type (.filetree), not a markdown file.
           try { FTP.writeTreeNode(manifest); }
           catch (e) { console.warn(`[speceng.create] .filetree node write failed (spec still created): ${e.message}`); }
-          planInfo = { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers };
+          planInfo = { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers, slot: planned.slot || null,
+            warning: planned.slot && planned.slot.empty ? `the skeleton was made, but the idea is not slotted in yet: ${planned.slot.reason}` : null };
+          if (planInfo.warning) console.warn(`[speceng.create] "${name}": ${planInfo.warning}`);
         } else {
           manifest = se.createSpec({ name, type, description, agent, sectionAgents: sectionAgents || {}, warpPrimitives: warpPrimitives || [], templateId, templateIds: docIds.length ? docIds : templateIds, buildEngine: buildEngine || 'auto', ideaUuid: ideaUuid || null });
         }

@@ -107,7 +107,7 @@ async function showStart(fromParam = null) {
   W = null; PARTS = []; history.replaceState(null, '', location.pathname); document.title = 'THE SPEC WORKSHOP';
   document.body.classList.remove('focus');
   $('start').classList.remove('hidden'); $('writer').classList.add('hidden');
-  ['saveBtn', 'sendBtn'].forEach(id => $(id).classList.add('hidden')); $('saved').textContent = '';
+  ['newBtn', 'saveBtn', 'sendBtn'].forEach(id => $(id).classList.add('hidden')); $('saved').textContent = '';
   stations();
   if (!TP) TP = window.TemplatePicker({ api, esc, toast, dialog, onCreate: ({ from, title, template, mode }) => create(from, title, { template, mode }), onSource: pickSource });
   TP.load();
@@ -117,7 +117,11 @@ async function showStart(fromParam = null) {
   try { SRC = await api('/api/workshop/sources'); } catch (e) { SRC = { ideas: [], library: [], repos: [] }; toast(`SOURCES DID NOT LOAD: ${e.message}`, true); }
   $('nIdea').textContent = SRC.ideas.length; $('nLibrary').textContent = SRC.library.length; $('nRepo').textContent = SRC.repos.length;
   // a promoted idea (?from=idea:<uuid>) opens the picker with the idea as its START FROM (RS5: the picker first)
-  if (fromParam) { const i = SRC.ideas.find(x => x.uuid === fromParam.id); TP.setFrom({ kind: 'idea', id: fromParam.id, label: i ? String(i.text).slice(0, 80) : fromParam.id }); }
+  // what it opened on (?from=idea:… — a promoted idea; ?from=repo:… — a repo with no .spec yet) is the picker's START FROM
+  if (fromParam) {
+    const x = fromParam.kind === 'idea' ? SRC.ideas.find(i => i.uuid === fromParam.id) : SRC.repos.find(r => r.uuid === fromParam.id);
+    TP.setFrom({ kind: fromParam.kind, id: fromParam.id, label: x ? String(x.text || x.name).slice(0, 80) : fromParam.id });
+  }
 }
 function paintWorkshops() {
   const q = $('wsFilter').value.trim().toLowerCase();
@@ -179,7 +183,7 @@ async function open(id) {
   setState(null); PEND.clear(); W = d.workshop; PARTS = d.parts || []; BLOCK_KEY = '';
   history.replaceState(null, '', `?id=${enc(W.uuid)}`);
   $('start').classList.add('hidden'); $('writer').classList.remove('hidden');
-  ['saveBtn', 'sendBtn'].forEach(x => $(x).classList.remove('hidden'));
+  ['newBtn', 'saveBtn', 'sendBtn'].forEach(x => $(x).classList.remove('hidden'));
   if (!SEL || !sec(SEL)) SEL = (W.sections[0] || {}).id || null;
   W.proposals.forEach(p => SEEN.add(p.uuid));
   paint();
@@ -239,7 +243,7 @@ function paintParts() {
 function paintDoc() {
   const ti = $('docTitle'); if (document.activeElement !== ti) ti.value = W.title;
   const src = W.source || {}, FROM = { idea: 'FROM THE VOID', library: 'FROM THE LIBRARY', repo: "FROM A REPO'S SPEC", blank: 'BLANK' };
-  $('docMeta').innerHTML = `<span>${FROM[src.kind] || 'BLANK'}${src.title ? ` · <b>${esc(src.title)}</b>` : ''}</span>${W.template && W.template.id !== 'custom' ? `<span>TEMPLATE · <b>${esc(W.template.label || W.template.id)}</b>${W.template.version ? ` V${W.template.version}` : ''}</span>` : ''}<span>${W.specPath ? `SPEC · <b>${esc(W.specPath)}</b>` : 'NOT IN A REPO YET'}</span><span>STARTED ${new Date(W.createdAt || W.updatedAt).toLocaleDateString()}</span>`;
+  $('docMeta').innerHTML = `<span>${FROM[src.kind] || 'BLANK'}${src.title ? ` · <b>${esc(src.title)}</b>` : ''}</span>${W.template && W.template.id !== 'custom' ? `<span>TEMPLATE · <b>${esc(W.template.label || W.template.id)}</b>${W.template.version ? ` V${W.template.version}` : ''}</span>` : ''}<span>${W.specPath ? `SPEC · <b>${esc(W.specPath)}</b>` : W.repoUuid ? 'NO .SPEC IN ITS REPO YET — SAVE WRITES ONE' : 'NOT IN A REPO YET'}</span><span>STARTED ${new Date(W.createdAt || W.updatedAt).toLocaleDateString()}</span>`;
   const key = W.sections.map(s => s.id).join('|');
   if (key !== BLOCK_KEY) {
     BLOCK_KEY = key;
@@ -592,6 +596,7 @@ function paintCaps() { document.body.classList.toggle('as-typed', !CAPS); $('cap
 $('capsBtn').onclick = () => { CAPS = !CAPS; try { localStorage.setItem('workshop.caps', CAPS ? 'caps' : 'typed'); } catch (_) {} paintCaps(); };
 $('focusBtn').onclick = () => { document.body.classList.toggle('focus'); $('focusBtn').classList.toggle('on', document.body.classList.contains('focus')); };
 const home = async () => { await flush(); closePipe(); showStart(); };
+$('newBtn').onclick = home;   // §0.39.358 — the picker, one click from the writer
 // §0.39.357 RS5 — this spec's sections as a template: opened from a saved template, its next version (the old kept)
 $('tplSave').onclick = async () => {
   if (!W) return;
@@ -619,6 +624,12 @@ async function boot() {
   if (Q.get('id')) return open(Q.get('id'));
   const f = Q.get('from');
   if (f && /^idea:.+/.test(f)) return showStart({ kind: 'idea', id: f.slice(5) });   // §0.39.357 RS5 — a promoted idea: the picker first
+  // §0.39.358 — a repo with no .spec has nothing to open: the picker first, the repo as START FROM (James: "where are the
+  // quick spec templates and the photoshop template start screen" — he opened nexus/core and got a blank Purpose)
+  if (f && /^repo:.+/.test(f)) {
+    try { const S0 = await api('/api/workshop/sources'); const r = (S0.repos || []).find(x => x.uuid === f.slice(5)); if (r && !(r.specFiles || []).length) return showStart({ kind: 'repo', id: r.uuid }); }
+    catch (_) { /* the sources did not load — open it as before */ }
+  }
   if (f && /^(library|repo):.+/.test(f)) {
     const [kind, ...rest] = f.split(':');
     try { const d = await api('/api/workshop', { from: { kind, id: rest.join(':') } }); return open(d.workshop.uuid); }

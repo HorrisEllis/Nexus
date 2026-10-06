@@ -101,6 +101,7 @@ function _phPaint() {
       <label><input type="checkbox" ${f.ready ? 'checked' : ''} onchange="phasesFilter('ready',this.checked)"> ready only</label>
       <span class="ph-views">${views}</span>
       <button class="action-btn" onclick="phasesAddOpen()">+ phase</button>
+      ${d.scope.source === 'nexus' ? '' : '<button class="action-btn" title="grow the system from its spec: new components slotted into the registry and the nodes, a phasemap of them here, their code planned (greyed until coded)" onclick="phasesExpandOpen()">+ expand</button>'}
     </div>`;
 
   let body;
@@ -120,6 +121,7 @@ function _phPaint() {
 
   el.innerHTML = `<div class="ph-wrap">${header}${toolbar}
       ${PHASES.adding ? _phAddForm(d) : ''}
+      ${PHASES.expanding ? _phExpandForm() : ''}
       <div class="ph-main ${PHASES.open ? 'with-detail' : ''}">
         <div class="ph-list">${body}<div class="ph-count">${list.length} of ${d.phases.length} shown</div>${notes}</div>
         ${PHASES.open ? `<aside class="ph-detail" id="ph-detail">${_phDetail(d, PHASES.open)}</aside>` : ''}
@@ -239,6 +241,33 @@ function phasesView(v) { PHASES.view = v; _phPaint(); }
 function phasesSort(k) { PHASES.sort = { k, dir: PHASES.sort.k === k ? -PHASES.sort.dir : 1 }; _phPaint(); }
 function phasesOpen(uuid) { PHASES.open = uuid; _phPaint(); }
 function phasesAddOpen(on = true) { PHASES.adding = !!on; _phPaint(); }
+
+// §0.39.360 SB42–SB44 — James: "expanding using the specs, then phased, then chunked, then coded." The system grows from
+// its spec: the agent plans the new components (POST /api/repos/:uuid/expand), which land as a phasemap here — one
+// phase per component, in build order — with their code planned and greyed (Files, Code) until a phase codes it.
+function _phExpandForm() {
+  return `<div class="ds ph-add"><div class="ds-label">expand the system from its spec</div>
+    <input id="ph-exp-feature" placeholder="the feature, capability or expansion — a few words (it names the phasemap)" style="width:100%">
+    <textarea id="ph-exp-ask" rows="3" placeholder="what it should do — the agent plans the components, each with its capability and commands" style="width:100%"></textarea>
+    <div class="ph-empty">a snapshot is taken first · the registry, the living spec and the nodes grow · each component becomes a phase · its code stays greyed until its phase writes it</div>
+    <div class="action-row"><button class="action-btn" onclick="phasesExpand()">expand</button><button class="action-btn" onclick="phasesExpandOpen(false)">cancel</button></div></div>`;
+}
+function phasesExpandOpen(on = true) { PHASES.expanding = !!on; _phPaint(); }
+async function phasesExpand() {
+  const uuid = PHASES.uuid;
+  const feature = ((document.getElementById('ph-exp-feature') || {}).value || '').trim();
+  const ask = ((document.getElementById('ph-exp-ask') || {}).value || '').trim();
+  if (!feature && !ask) return toast('say what the system should gain', 'err');
+  PHASES.busy = true; _phPaint();
+  try {
+    const r = await api(`/api/repos/${uuid}/expand`, { method: 'POST', body: JSON.stringify({ feature: feature || ask.slice(0, 80), ask: ask || feature }) }, 300000);
+    toast(`expanded: ${r.components.length} component(s) slotted in · ${r.phasemap.phases.length} phase(s) in ${_phShortMap(r.phasemap.path)} · snapshot ${r.snapshot}`, 'ok');
+    PHASES.expanding = false;
+    if (typeof loadFileStates === 'function') loadFileStates(CURRENT_API_REPO, { force: true });
+  } catch (e) { toast(`not expanded: ${e.message}`, 'err'); }
+  PHASES.busy = false;
+  if (CURRENT_API_REPO?.uuid === uuid && CURRENT_REPO_SUBTAB === 'phases') renderRepoPhases(CURRENT_API_REPO, { keepScroll: true });
+}
 function phasesFilter(k, v) {
   if (k === 'status' && PHASES.filter.status === v) v = 'all';
   PHASES.filter[k] = v;

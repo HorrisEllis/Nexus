@@ -670,12 +670,12 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .tree-status-dot.building,.tree-status-dot.pending,.tree-status-dot.verifying{background:var(--amber)}
 .tree-status-dot.failed,.tree-status-dot.escalated{background:var(--coral)}
 .tree-file-name{flex:1;overflow:hidden;text-overflow:ellipsis}
-.tree-node.file.fs-row-pending{opacity:.45;font-style:italic}
+.tree-node.file.fs-row-pending,.tree-node.file.fs-row-uncoded{opacity:.45;font-style:italic}   /* §0.39.360 SB45 — uncoded: planned, not coded yet */
 .tree-node.file.fs-row-deleted{opacity:.45;text-decoration:line-through}
 .tree-node.file.fs-row-modified .tree-file-name,.tree-node.file.fs-row-new .tree-file-name{color:var(--amber)}
 .fs-tag{font:600 8.5px/1.5 var(--mono);padding:0 4px;border-radius:3px;margin-left:4px;border:1px solid var(--b1,rgba(255,255,255,.12));color:var(--text3);flex-shrink:0}
 .fs-tag.fs-modified,.fs-tag.fs-new{color:var(--amber);border-color:rgba(230,180,80,.4)}
-.fs-tag.fs-pending{color:var(--text3);border-style:dashed}
+.fs-tag.fs-pending,.fs-tag.fs-uncoded{color:var(--text3);border-style:dashed}
 .fs-tag.fs-staged{color:var(--violet);border-color:rgba(167,139,250,.4)}
 .fs-tag.fs-deleted{color:var(--coral)}
 .fs-summary{color:var(--amber)}
@@ -707,6 +707,10 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .pp-detail{margin:2px 0 8px 26px;padding:6px 8px;border-left:2px solid rgba(56,189,248,.35);font-size:10.5px;color:var(--text2)}
 .pp-meta{color:var(--text3);margin-bottom:6px}.pp-go{background:var(--sky);color:#04121c;border:0;border-radius:6px;font:700 10px var(--mono);padding:4px 10px;cursor:pointer;margin-bottom:6px}
 .pp-led{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)}.pp-led-t{color:var(--text3);font-size:9.5px;margin-right:6px}
+.pp-route{display:flex;flex-direction:column;gap:1px;margin:3px 0 2px;font-size:9.5px;color:var(--text3)}.pp-route-h{color:var(--violet);margin-bottom:1px}.pp-rt i{font-style:normal;opacity:.7;margin-left:4px}.pp-rt.lim{color:var(--coral);opacity:.8}
+.pp-agents{margin:8px 0;font-size:10px}.pp-agents table{width:100%;border-collapse:collapse}.pp-agents td,.pp-agents th{padding:2px 4px;text-align:left;border-bottom:1px solid rgba(255,255,255,.05)}.pp-agents th{color:var(--text3);font-weight:400}.pp-agents .bad{color:var(--coral)}.pp-agents .ok{color:var(--mint)}
+.pp-prec{display:flex;flex-direction:column;gap:1px;margin:3px 0;font-size:9.5px;color:var(--coral)}.pp-prec .pp-route-h{color:var(--coral)}.pp-faults summary{cursor:pointer;color:var(--coral);font-size:9.5px}.pp-fault{padding:2px 0 2px 8px;border-left:2px solid rgba(248,113,113,.3);margin:2px 0;font-size:9.5px}.pp-fault-e{color:var(--text3);white-space:pre-wrap}
+.pp-times{display:flex;flex-wrap:wrap;gap:2px 0;padding:0 0 4px 22px;font-size:9.5px;color:var(--text3)}.pp-times .pp-dot{margin:0 5px;opacity:.5}.pp-running{color:var(--amber,#fbbf24)}.pp-led-t small{opacity:.7}.pp-led-c{font-size:9px;color:var(--violet);margin-right:6px}
 .pp-led-s{font-size:9.5px;padding:0 5px;border-radius:3px;border:1px solid rgba(255,255,255,.12);margin-right:6px}
 .pp-building{color:var(--sky)}.pp-replied{color:var(--mint)}.pp-failed,.pp-refused{color:var(--coral)}
 /* §0.39.352 CT6/CT7 — a climb up the escalation ladder; complete work folded into one line */
