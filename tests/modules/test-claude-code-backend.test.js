@@ -142,6 +142,17 @@ function fixtureRepo() {
     layer.writeFile(repoUuid, 'notes/keep.md', 'k\n', { preserveWhitespace: true });
     process.env.STANDIN_MODE = 'edit';
     const repo = layer.get(repoUuid);
+    // §0.39.367 CC1 — review (the default): Claude Code's diff lands as proposals through repo-inject; nothing is written
+    const RI = require(path.join(ROOT, 'lib/repo-inject.js'));
+    RI.setMode(repoUuid, 'review');
+    const rv = await RA.dispatch({ repo, repoDir: diskDir(), message: 'make the change', layer, session: 'cc4r' });
+    assert.ok(rv.ok, rv.error);
+    assert.deepStrictEqual(rv.injects.injects.map(i => [i.path, i.op, i.status]).sort(), [['a.js', 'write', 'proposed'], ['gone.txt', 'delete', 'proposed'], ['notes/new.md', 'write', 'proposed']]);
+    assert.strictEqual(layer.readFile(repoUuid, 'a.js').content, 'module.exports = 1;\n', 'review: nothing written until applied');
+    assert.ok(RI.get(rv.injects.injects.find(i => i.path === 'a.js').uuid), 'a proposal on the work surface');
+    for (const i of rv.injects.injects) RI.reject(i.uuid, { reason: 'test' });
+    // auto: written through the same path
+    RI.setMode(repoUuid, 'auto');
     const r = await RA.dispatch({ repo, repoDir: diskDir(), message: 'make the change', layer, session: 'cc4' });
     assert.ok(r.ok, r.error);
     assert.strictEqual(r.providerUsed, 'claude-code');

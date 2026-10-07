@@ -129,6 +129,27 @@ async function main() {
     RI.setMode(guardian.uuid, 'review');
   });
 
+  // §0.39.367 CC1 — James: "i want to be able to begin using you inside of the nexus repo." A coding agent's diff (Claude
+  // Code works in a copy and hands back what changed) lands through the same land() as a reply: proposals through the gate.
+  await test('IG-009', "a coding agent's diff on a nexus repo: proposals through the gate, nothing written, a collapse refused", async () => {
+    RI.setMode(guardian.uuid, 'auto');
+    const live0 = r('guardian/server.js');
+    const out = await RI.fromChanges({ layer: rl, repo: guardian, hat: null, ...opt, changes: [
+      { path: 'guardian/server.js', op: 'write', content: 'module.exports = 7;\n' },
+      { path: 'guardian/new-part.js', op: 'write', content: 'module.exports = { part: true };\n' },
+      { path: 'lib/util.js', op: 'write', content: 'lib/util.js' },          // a bare path over a real file: the collapse guard
+      { path: 'logo.png', op: 'binary', note: 'a binary file' },
+    ] });
+    assert.strictEqual(out.mode, 'review'); assert.strictEqual(out.approval, true);
+    assert.deepStrictEqual(out.injects.map(i => [i.path, i.status, i.system]).sort(), [['guardian/new-part.js', 'proposed', 'guardian'], ['guardian/server.js', 'proposed', 'guardian']]);
+    assert.ok(out.refused.some(x => x.path === 'lib/util.js' && /refused lib\/util\.js/.test(x.reason)), JSON.stringify(out.refused));
+    assert.ok(out.refused.some(x => x.path === 'logo.png'));
+    assert.strictEqual(r('guardian/server.js'), live0, 'nothing written to the live tree before approval');
+    assert.strictEqual(r('guardian/new-part.js'), null);
+    for (const i of out.injects) RI.reject(i.uuid, { reason: 'test' });
+    RI.setMode(guardian.uuid, 'review');
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 }

@@ -532,6 +532,15 @@ const SUITES = [
   // §2026-09-25 (0.39.236) — tests never write real data
   'test-test-sandbox.test.js',
   'test-clear-idearium.test.js',
+
+  // §2026-10-07 (0.39.361–0.39.367) — the learned ladder, chunked phases, the resource monitor driving what runs,
+  // provider tabs that do not load, a repo's background tasks
+  'test-agent-record.test.js',   // 0.39.361 AR1 — the ladder ordered by what past builds say of each agent
+  'test-chunked-phase-build.test.js',   // 0.39.361 SB51 — a phase built one file at a time on a small local model
+  'test-resource-adaptive.test.js',   // 0.39.364 — hysteresis, heap vs its limit, a model that will not fit is skipped, background gives way
+  'test-provider-host-load.test.js',   // 0.39.365 — a provider tab that does not load is retried, said why, its queued jobs fail
+  'test-repo-activity.test.js',   // 0.39.366 — a repo's background tasks: every agent call wearing its hat
+  'test-compartment-activity-log.test.js',   // 0.39.368 AL1 — a repo's durable activity log: tasks, phase rows, proposals (who applied, who undid), faults
 ];
 
 let totalPassed = 0;

@@ -290,6 +290,8 @@ function _repoActivity() {
   const RAct = _require('../../lib/repo-activity.js');
   RAct.onChange((task) => { try { getIdeaOS().broadcast('idearium.repo.task', { repoUuid: task.repoUuid, task }); } catch (_) {} });
   RAct.setHistorySource((uuid) => { try { return _require('../../lib/repo-agent.js').history(uuid, 60); } catch (_) { return []; } });
+  // §0.39.368 AL1 — every activity row, as it is written, to an open Log view (SSE only)
+  try { _require('../../lib/activity-log/compartment.js').onRecord((row) => { try { getIdeaOS().broadcast('idearium.repo.activity', { repoUuid: row.compartment, row }); } catch (_) {} }); } catch (_) {}
   _repoActivityMod = RAct;
   return RAct;
 }
@@ -1982,6 +1984,7 @@ const ROUTE_CAP = {
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
+  'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -2299,6 +2302,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
     ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
+    ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
     ['POST',   ['api','repos',    ':uuid','agent','stream'],  'repo.agent.stream'],      // §0.39.356 LS3 — copilot sends what the model writes, as it writes it
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
@@ -5242,7 +5246,7 @@ async function handle(req, res, route, query, body) {
         const p = RI.propose({ layer: getRepoLayer(), repo, hat, path: target, content: body.content, source: { kind: 'agent', via: 'loom.write.tool' } });
         if (!p.ok) return err(res, 400, (p.errors || ['propose failed']).join('; '));
         let applied = null;
-        if (RI.modeFor(repo) === 'auto') { applied = RI.apply(p.inject.uuid, { layer: getRepoLayer() }); }
+        if (RI.modeFor(repo) === 'auto') { applied = RI.apply(p.inject.uuid, { layer: getRepoLayer(), approvedBy: 'auto' }); }
         const n = applied && applied.ok ? applied.inject : p.inject;
         os.emit('idearium.repo.inject.proposed', { repoUuid: params.uuid, inject: n.uuid, path: n.path, status: n.status, approval: !!repo.nexusSelf });
         return ok(res, { inject: n.uuid, path: n.path, status: n.status, creates: n.creates,
@@ -5629,6 +5633,15 @@ async function handle(req, res, route, query, body) {
     // as idearium.repo.agent.feed — the guardian feed's event and its shape (0.39.244) — so the Agent tab, the Code tab and
     // the work surface read one feed whatever the model. SSE only: several a second, observations, not state.
     // §0.39.366 — James: "the background tasks, i want that for each repo. any activity from an agent wearing the hat."
+    // §0.39.368 AL1 — James: "I also want to have a full extensive activity log in each repo."
+    case 'repo.activity': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      _repoActivity();   // wires the live broadcast on first use
+      const AL = _require('../../lib/activity-log/compartment.js');
+      const q = query || {};
+      const page = AL.list(params.uuid, { kind: q.kind || null, actor: q.actor || null, status: q.status || null, q: q.q || null, before: Number(q.before) || null, limit: Number(q.limit) || 100 });
+      return ok(res, { ok: true, repoUuid: params.uuid, ...page, ...(q.facets ? { facets: AL.facets(params.uuid) } : {}) });
+    }
     case 'repo.tasks': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
       const lim = Math.max(1, Math.min(200, Number(query && query.limit) || 80));

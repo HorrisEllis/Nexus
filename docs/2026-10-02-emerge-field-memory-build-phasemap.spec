@@ -1350,3 +1350,12 @@ spec:
 # Clear Glass after its refresh (in the live table other modules imported); a hand-edited cache is a gap on the next
 # boot and the next refresh replaces it; Guardian down → the stamped cache runs, said. Plus agent-mesh coverage 7/7,
 # nexus-options-autoboot 18/18, clear-glass phase2, and 17 other suites over the registry, nodes and schemas.
+
+# ## ADDENDUM 2026-10-07 (0.39.367 CC1, docs/2026-10-07-compartment-control-and-activity-phasemap.spec) — IN2a
+# James: "i want to be able to begin using you inside of the nexus repo."
+# Drift found: IN2a's run worked in a copy (as specced) but its diff was written back with
+# lib/claude-code-backend.js applyChanges() — straight through the repo layer, past the repo's inject mode and past a
+# Nexus repo's approval gate (lib/nexus-self/inject-gate.js). Now the repo agent lands the diff through
+# lib/repo-inject.js fromChanges() → land(), the path a reply's fenced blocks take: code.write gate, collapse guard,
+# staged / proposed / applied by mode, a Nexus repo always proposed. applyChanges() is kept for other callers.
+# Proof: test-claude-code-backend CC-04 (review → proposals, nothing written; auto → written), test-nexus-inject-approval IG-009.
