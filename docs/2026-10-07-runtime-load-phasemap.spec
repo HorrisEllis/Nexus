@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     runtime-load
-    version:  1.3.0
+    version:  1.4.0
     date:     2026-10-07
     release:  "PF1 0.40.1 (a fix: patch). PF2–PF5 each a phase."
     uuid:     nexus-runtime-load-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "guardian/jaa-store.js + cortex/memory + intelligence/liminal-space + lib/resource-monitor.js + nexus/autopilot.js"
-    status:   "PF1 BUILT (0.40.1). PF3 BUILT (0.41.0). PF4 BUILT (0.42.0). The rest MAPPED — ordering with EX/HL in docs/2026-10-07-system-expectations-phasemap.spec."
+    status:   "PF1 BUILT (0.40.1). PF3 BUILT (0.41.0). PF4 BUILT (0.42.0). PF5 BUILT (0.43.0). The rest MAPPED — ordering with EX/HL in docs/2026-10-07-system-expectations-phasemap.spec."
     origin: >
       James, 2026-10-07, with his Windows run log: "whats up with the optimization? it seems almost worst? also
       liminal space with the velocity, like use that also?"
@@ -60,6 +60,9 @@ spec:
         event_log and ledgers rolled into archives past a cap (nothing lost: archived, not deleted); compaction sized to
         inflow, not a fixed 2000. The decay sweep walks a cursor slice per tick (bounded), and expiry is read-time
         (cortex/memory/decay.js isExpired, already built) — the sweep only reclaims space.
+      status: "DONE 0.43.0 (caps + archive; the decay cursor slice is unnecessary once tables are capped)"
+      built: "cortex/memory/table-compactor.js CAPS/capFor/capRows/archiveRows/readArchive; compactTable archives before it deletes; start() caps each sweep. Archive: <store>/archive/<table>/<day>.jsonl.gz, one gzip member per batch."
+      proof: "tests/modules/test-pf5-bounded-tables.test.js 4/4 — 1200 rows capped to the newest 1000 and the 200 read back; two passes one readable archive; an unwritable archive deletes nothing; caps and the env override"
     PF6_slow_ticks_name_themselves:
       idea: >-
         One wrapper, lib/tick.js every(name, ms, fn): times each run of every background ticker and keeps an event-loop

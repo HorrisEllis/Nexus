@@ -302,3 +302,10 @@ spec:
 # subscribers. cortex/core/raid/officiator.js picks its synthesizer with RAID decideForContract (or opts.forAgent)
 # instead of five literal 'claude' defaults. contract-intake resolves <system>/input|output under RAID_SYSTEMS_ROOT
 # (the test sandbox sets it) and its CFR ledger under NEXUS_DATA_ROOT.
+
+# ── ADDENDUM 2026-10-07 (0.43.0) — runtime-load PF5: bounded tables, nothing lost ──
+# James: "do it. tell me what that would do"
+# cortex/memory/table-compactor.js caps the hot tables at their newest N rows (event_log 50k, component_ledger 50k,
+# cfr_tension_history 20k; NEXUS_TABLE_CAP_<TABLE>, 0 = none). Rows leaving by cap or by age are archived first —
+# one gzip member per batch appended to <store>/archive/<table>/<day>.jsonl.gz — and deleted only when the archive was
+# written. readArchive(jaa, table, day?) reads them back; compaction_log keeps a summary row per batch.
