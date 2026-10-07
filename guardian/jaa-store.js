@@ -215,6 +215,15 @@ class JaaStore {
   /** UPDATE rows matching where with values object. Returns changed count. */
   update(table, where, values) {
     const tbl = this._table(table);
+    // §0.40.1 PF1 — by id: the row is the map's key, so one get, not a scan of every row. The decay sweep updates
+    // thousands of rows by id per cycle; scanning event_log (300k+) for each one stalled cortex 90-120 s every 5 min.
+    const keys = where && typeof where === 'object' ? Object.keys(where) : [];
+    if (keys.length === 1 && keys[0] === 'id') {
+      const row = tbl.get(where.id);
+      if (!row || row.id !== where.id) return 0;
+      tbl.set(where.id, { ...row, ...values }); this._markDirty(table, where.id); this._schedule(table);
+      return 1;
+    }
     let   n   = 0;
     for (const [id, row] of tbl) {
       if (_matches(row, where)) {

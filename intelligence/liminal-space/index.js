@@ -408,9 +408,11 @@ function _forwardInference(focalPoint, type, crystal) {
 function _updateVelocity(focalPoint, delta) {
   const space = FOCAL_POINTS[focalPoint];
   if (!space) return;
-  space.velocity = Math.max(0, Math.min(1, (space.velocity || 0) + delta));
+  const was = space.velocity || 0;
+  space.velocity = Math.max(0, Math.min(1, was + delta));
 
-  if (focalPoint === 'L2/L4' && space.velocity >= VELOCITY_RUNAWAY) {
+  // §0.40.1 PF1 — said when it CROSSES into runaway, not on every event while it stays there (the log was a wall of it)
+  if (focalPoint === 'L2/L4' && space.velocity >= VELOCITY_RUNAWAY && was < VELOCITY_RUNAWAY) {
     if (_bus) _bus.emit('liminal.velocity.runaway', {
       focalPoint, velocity: space.velocity,
       message: 'Processing faster than synthesis can integrate — runaway state',

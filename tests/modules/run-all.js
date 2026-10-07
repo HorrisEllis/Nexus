@@ -543,6 +543,7 @@ const SUITES = [
   'test-cli-route-commands.test.js',   // 0.39.374 CM1 — every capability a command: the real CLI against the real API
   'test-nexus-command-tool.test.js',   // 0.39.376 CM2 — every command for copilot and every agent (and Claude Code over MCP)
   'test-repo-versions.test.js',   // 0.40.0 VR1 — every change to a repo's files a versionium commit (settled, attributed, nothing lost)
+  'test-pf1-stalls.test.js',      // 0.40.1 PF1 — the 5-minute cortex stall (update by id) and the liminal runaway wall
   'test-system-control.test.js',   // 0.39.372 NC2 — a Nexus system's controls through its supervisor; one intent, inherited
   'test-vm-control.test.js',   // 0.39.371 VM1 + CK1 — pause, live checkpoints, rewind over QMP; a checkpoint before every task's work
   'test-desktop-activity.test.js',   // 0.39.370 DT1 — runs in the repo's compartment and the desktop setup are its tasks and log rows
