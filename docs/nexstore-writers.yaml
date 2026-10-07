@@ -322,6 +322,12 @@ writers:
     reason: OWED — a node type or a stated reason
   lib/node-ledger.js · writeFileSync · INDEX_FILE:
     reason: OWED — a node type or a stated reason
+  cortex/memory/table-compactor.js · appendFileSync · path.join(dir, `${day}.jsonl.gz`):
+    reason: "0.43.0 PF5 — the archive of rows leaving a capped table (gzip members, one per batch); rows already recorded as JAA rows, kept compressed so nothing is lost — not a node of its own"
+  lib/ollama-tape.js · writeFileSync · f:
+    reason: "0.44.0 OR2 — content-addressed blobs (prompt/answer text by sha256), written once; the frame that names them is the record"
+  lib/ollama-tape.js · appendFileSync · path.join(dir, `${new Date(frame.at).toISOString().slice(0, 10)}.${process.pid}.jsonl`):
+    reason: "0.44.0 OR2 — model-call frames, one writer per file (PF3's shape); OWED a node type (.frame) when the tape becomes a node store reader (OR4)"
   lib/ollama-activity.js · appendFileSync · f:
     reason: OWED — a node type or a stated reason
   lib/project-container.js · writeFileSync · p:
