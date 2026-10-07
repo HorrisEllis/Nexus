@@ -88,7 +88,15 @@ function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
     const total = setTimeout(() => fail(`ollama generate exceeded ${Math.round(config.RAW_GENERATE_TOTAL_MS / 1000)} s in total`), config.RAW_GENERATE_TOTAL_MS);
     const fail = (msg) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); try { req.destroy(); } catch (_) {} done(false, msg); reject(new Error(msg)); };
     const ok = (o) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); done(true); resolve({ text, thinking, doneReason: o.done_reason || null, evalCount: o.eval_count || null }); };
-    const arm = () => { clearTimeout(idle); idle = setTimeout(() => fail(`ollama sent nothing for ${idleMs || config.RAW_GENERATE_TIMEOUT_MS} ms (idle timeout) — ${text.length} chars received`), idleMs || config.RAW_GENERATE_TIMEOUT_MS); };
+    // §0.39.364 — before the first byte Ollama is loading the model and reading the prompt, not stalling: a 16b on CPU
+    // with a 10k-char prompt can take longer than the 45 s allowed between tokens. The first wait is RAW_FIRST_TOKEN_MS.
+    let first = true;
+    const arm = () => {
+      clearTimeout(idle);
+      const ms = first ? Math.max(idleMs || config.RAW_GENERATE_TIMEOUT_MS, config.RAW_FIRST_TOKEN_MS || 0) : (idleMs || config.RAW_GENERATE_TIMEOUT_MS);
+      const why = first ? 'before its first token (loading the model and reading the prompt)' : '(idle timeout)';
+      idle = setTimeout(() => fail(`ollama sent nothing for ${ms} ms ${why} — ${text.length} chars received`), ms);
+    };
     const u   = new URL(`${OLLAMA_HOST}/api/generate`);
     const req = http.request({
       hostname: u.hostname, port: u.port || 11434,
@@ -101,6 +109,7 @@ function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
         return;
       }
       r.on('data', c => {
+        first = false;
         arm();
         buf += c.toString();
         const lines = buf.split('\n'); buf = lines.pop();

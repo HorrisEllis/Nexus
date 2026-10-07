@@ -722,6 +722,20 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const session = ri <= 0 && tryNo === 1 ? `${runId}${tag}` : `${runId}${tag}-r${ri + 1}t${tryNo}`;
     // §0.39.282 N23 — each phase is its own chunk in its own FRESH chat (session), so a small local model gets its whole
     // window for this phase, not the running history of every phase before it.
+    // §0.39.364 — James: "can we start using it with the resource monitor to optimize performance dynamically". A local
+    // model that will not fit in memory now is not tried: his 7b and 16b rungs each sat 45 s loading into swap with
+    // 1–7% free and failed. Skipped, said why, and the climb goes straight to the next rung (no retry on this one).
+    if (rg && rg.base === 'ollama' && rg.model) {
+      try {
+        const om = await _ollamaModels();
+        const fit = _require('../../lib/resource-monitor.js').fitsModel({ model: rg.model, bytes: om.sizes ? om.sizes[rg.model] : null, loaded: om.loaded || [] });
+        if (!fit.fits) {
+          const row = { uuid: `${session}-skipped`, ...base, state: 'skipped', memorySkip: true, snapshot: commitId, ...(ck || {}), provider: rg.provider,
+            rung: ri + 1, rungs: rungs.length, attempt: tryNo, error: `not enough memory to load it now — ${fit.why}`, needBytes: fit.needBytes, availableBytes: fit.availableBytes, promptChars: msg.length, ts: Date.now() };
+          return { r: null, state: 'skipped', absent: null, dp: paramsOf(rg), row, trigger: 'no-memory' };
+        }
+      } catch (_) { /* the check could not run: the rung is tried, as before */ }
+    }
     const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
@@ -1692,7 +1706,7 @@ async function _ollamaModels() {
   try {
     const d = await _nexusClient.get('ollama', '/api/models', { timeout: 4000 });
     if (!d || d.ok === false || !Array.isArray(d.models)) return { ok: false, error: (d && d.error) || 'Ollama did not answer (the bridge reached it and got nothing)', models: [], active: d && d.active || null };
-    return { ok: true, models: d.models, active: d.active || null };
+    return { ok: true, models: d.models, active: d.active || null, sizes: d.sizes || null, loaded: d.loaded || [] };
   } catch (e) { return { ok: false, error: `ollama bridge unreachable: ${e.message}`, models: [], active: null }; }
 }
 

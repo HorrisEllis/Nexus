@@ -82,6 +82,8 @@ module.exports = {
   HEALTH_CHECK_TIMEOUT_MS: parseInt(process.env.OLLAMA_HEALTH_TIMEOUT_MS      || '3000', 10),
   DEFAULT_MAX_TOKENS:      parseInt(process.env.OLLAMA_DEFAULT_MAX_TOKENS     || '4096', 10),   // §0.39.289 was 2048: a file longer than ~2k tokens was cut every time; past this, the reply is continued
   // §0.39.289 — RAW_GENERATE_TIMEOUT_MS is now an IDLE timeout (no token for that long); this caps the whole generation
+  // §0.39.364 — the wait for the FIRST token: the model loading and the prompt being read are not idleness
+  RAW_FIRST_TOKEN_MS:      parseInt(process.env.OLLAMA_RAW_FIRST_TOKEN_MS     || '120000', 10),
   RAW_GENERATE_TOTAL_MS:   parseInt(process.env.OLLAMA_RAW_GENERATE_TOTAL_MS  || '600000', 10),
   CONTINUE_MAX_ROUNDS:     parseInt(process.env.OLLAMA_CONTINUE_MAX_ROUNDS    || '3', 10),
 
