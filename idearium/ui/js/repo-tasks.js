@@ -11,6 +11,11 @@ const RT_TASKS = new Map();        // repoUuid -> Map(taskId -> task)
 const RT_OPEN_ROWS = new Set();    // task ids opened by the person
 let RT_FILTER = 'all';             // all | running | failed
 let RT_TICK = null;
+// §0.39.369 AL2 — James: "I also want to have a full extensive activity log in each repo." The same drawer, a second
+// view of the repo's durable log (GET /api/repos/:uuid/activity): every task, phase row, proposal event (who applied,
+// who undid) and fault, newest first, filtered, paged back, live (SSE idearium.repo.activity). One drawer, two views.
+let RT_VIEW = 'tasks';             // tasks | log
+const RT_LOG = { uuid: null, rows: [], more: false, facets: null, kind: '', actor: '', failed: false, q: '', open: new Set(), loading: false };
 
 function _rtState(uuid) { if (!RT_TASKS.has(uuid)) RT_TASKS.set(uuid, new Map()); return RT_TASKS.get(uuid); }
 function _rtCurrent() { return (typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO) ? CURRENT_API_REPO.uuid : null; }
@@ -47,6 +52,7 @@ function rtRepoShown(repo) {
   const name = document.getElementById('rt-repo'); if (name) name.textContent = repo.name || repo.uuid;
   if (_rtDrawerOpen()) rtPaint();
   rtLoad(repo.uuid);
+  if (RT_VIEW === 'log' && _rtDrawerOpen()) rtLogLoad();
 }
 
 function _rtTree(uuid) {
@@ -105,6 +111,8 @@ function _rtRow(t, depth = 0) {
 function _rtDrawerOpen() { const d = document.getElementById('rt-drawer'); return !!(d && d.classList.contains('open')); }
 
 function rtPaint() {
+  _rtViews();
+  if (RT_VIEW === 'log') return rtLogPaint();
   const uuid = _rtCurrent();
   const body = document.getElementById('rt-list');
   if (!body || !uuid) return;
@@ -150,7 +158,7 @@ function rtToggleDrawer(force) {
   if (!d) {
     d = document.createElement('aside');
     d.id = 'rt-drawer'; d.className = 'rt-drawer';
-    d.innerHTML = `<div class="rt-top"><b>Background tasks</b><span class="rt-dim" id="rt-repo"></span><span class="rt-grow"></span>
+    d.innerHTML = `<div class="rt-top"><span class="rt-views" id="rt-views"></span><span class="rt-dim" id="rt-repo"></span><span class="rt-grow"></span>
       <button class="rt-x" onclick="rtToggleDrawer(false)" title="close">✕</button></div>
       <div class="rt-filters" id="rt-filters"></div><div class="rt-list" id="rt-list"></div>`;
     document.body.appendChild(d);
@@ -162,9 +170,99 @@ function rtToggleDrawer(force) {
   if (open) {
     const r = typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO;
     const name = document.getElementById('rt-repo'); if (name) name.textContent = r ? (r.name || r.uuid) : '';
-    rtPaint(); rtLoad(_rtCurrent());
+    rtPaint(); rtLoad(_rtCurrent()); if (RT_VIEW === 'log') rtLogLoad();
     if (!RT_TICK) RT_TICK = setInterval(_rtTick, 1000);
   } else if (RT_TICK) { clearInterval(RT_TICK); RT_TICK = null; }
+}
+
+function _rtViews() {
+  const v = document.getElementById('rt-views');
+  if (v) v.innerHTML = [['tasks', 'Background tasks'], ['log', 'Activity log']].map(([k, l]) => `<button class="rt-view${RT_VIEW === k ? ' on' : ''}" onclick="rtView('${k}')">${l}</button>`).join('');
+}
+function rtView(k) {
+  RT_VIEW = k === 'log' ? 'log' : 'tasks';
+  try { localStorage.setItem('idearium.rt.view', RT_VIEW); } catch (_) {}
+  rtPaint();
+  if (RT_VIEW === 'log') rtLogLoad();
+}
+
+function _rtLogQuery(before) {
+  const q = new URLSearchParams({ limit: '80' });
+  if (RT_LOG.kind) q.set('kind', RT_LOG.kind);
+  if (RT_LOG.actor) q.set('actor', RT_LOG.actor);
+  if (RT_LOG.failed) q.set('status', 'failed');
+  if (RT_LOG.q) q.set('q', RT_LOG.q);
+  if (before) q.set('before', String(before)); else q.set('facets', '1');
+  return q.toString();
+}
+/** rtLogLoad(more) — the log as the server has it; more: the next page back */
+async function rtLogLoad(more = false) {
+  const uuid = _rtCurrent();
+  if (!uuid || typeof api !== 'function' || RT_LOG.loading) return;
+  if (RT_LOG.uuid !== uuid) Object.assign(RT_LOG, { uuid, rows: [], more: false, facets: null, open: new Set() });
+  RT_LOG.loading = true;
+  try {
+    const last = more && RT_LOG.rows.length ? RT_LOG.rows[RT_LOG.rows.length - 1].ts : null;
+    const d = await api(`/api/repos/${uuid}/activity?${_rtLogQuery(last)}`);
+    RT_LOG.rows = more ? RT_LOG.rows.concat(d.rows || []) : (d.rows || []);
+    RT_LOG.more = !!d.more;
+    if (d.facets) RT_LOG.facets = d.facets;
+  } catch (e) { RT_LOG.error = e.message; }
+  RT_LOG.loading = false;
+  if (RT_VIEW === 'log' && _rtDrawerOpen()) rtLogPaint();
+}
+function _rtLogMatches(r) {
+  return (!RT_LOG.kind || r.kind === RT_LOG.kind || String(r.kind || '').startsWith(`${RT_LOG.kind}.`)) && (!RT_LOG.actor || r.actor === RT_LOG.actor)
+    && (!RT_LOG.failed || r.status === 'failed') && (!RT_LOG.q || RT_LOG.q.toLowerCase().split(/\s+/).every(w => `${r.title || ''} ${r.actor || ''} ${r.kind || ''}`.toLowerCase().includes(w)));
+}
+/** rtLogIn(payload) — a row just written (SSE idearium.repo.activity): to the top of an open log it matches */
+function rtLogIn(p) {
+  if (!p || !p.row || p.repoUuid !== RT_LOG.uuid) return;
+  if (RT_LOG.facets) { const k = String(p.row.kind || '').split('.')[0]; RT_LOG.facets.kinds[k] = (RT_LOG.facets.kinds[k] || 0) + 1; RT_LOG.facets.total++; }
+  if (!_rtLogMatches(p.row) || RT_LOG.rows.some(x => x.uuid === p.row.uuid)) return;
+  RT_LOG.rows.unshift(p.row);
+  if (RT_VIEW === 'log' && _rtDrawerOpen() && p.repoUuid === _rtCurrent()) rtLogPaint();
+}
+function rtLogSet(k, v) { RT_LOG[k] = v; rtLogLoad(); }
+function rtLogToggle(id) { if (RT_LOG.open.has(id)) RT_LOG.open.delete(id); else RT_LOG.open.add(id); rtLogPaint(); }
+
+const _RT_STATUS = { ok: '<span class="rt-ok">✓</span>', failed: '<span class="rt-bad">✗</span>', running: '<span class="rt-dim" title="started">▸</span>', proposed: '<span class="rt-prop">◇</span>', applied: '<span class="rt-ok">◆</span>', rejected: '<span class="rt-dim">⊘</span>', reverted: '<span class="rt-stale">↶</span>', staged: '<span class="rt-prop">◈</span>', skipped: '<span class="rt-stale">↷</span>' };
+function _rtDetail(d) {
+  if (d == null) return '';
+  if (typeof d === 'string') return `<div class="rt-step">${_rtEsc(d)}</div>`;
+  return Object.entries(d).filter(([, v]) => v != null && !(Array.isArray(v) && !v.length)).map(([k, v]) =>
+    `<div class="rt-step"><span class="rt-dim">${_rtEsc(k)}</span> ${_rtEsc(Array.isArray(v) ? v.map(x => typeof x === 'object' ? (x.name || JSON.stringify(x)) + (x.ok === false ? ' ✗' : '') : x).join(', ') : typeof v === 'object' ? JSON.stringify(v) : v)}</div>`).join('');
+}
+function rtLogPaint() {
+  const body = document.getElementById('rt-list');
+  const f = document.getElementById('rt-filters');
+  if (!body) return;
+  const fc = RT_LOG.facets || { kinds: {}, actors: {}, total: 0 };
+  if (f) f.innerHTML = [['', `all ${fc.total || 0}`], ...Object.entries(fc.kinds).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, `${k} ${n}`])]
+      .map(([k, l]) => `<button class="rt-f${RT_LOG.kind === k ? ' on' : ''}" onclick="rtLogSet('kind','${_rtEsc(k)}')">${_rtEsc(l)}</button>`).join('')
+    + `<button class="rt-f${RT_LOG.failed ? ' on' : ''}" onclick="rtLogSet('failed',${!RT_LOG.failed})" title="only what failed">failed</button>`
+    + `<select class="rt-sel" onchange="rtLogSet('actor',this.value)"><option value="">everyone</option>${Object.entries(fc.actors).sort((a, b) => b[1] - a[1]).map(([a, n]) => `<option value="${_rtEsc(a)}"${RT_LOG.actor === a ? ' selected' : ''}>${_rtEsc(a)} (${n})</option>`).join('')}</select>`
+    + `<input class="rt-q" placeholder="search…" value="${_rtEsc(RT_LOG.q)}" onkeydown="if(event.key==='Enter')rtLogSet('q',this.value)">`;
+  let day = '';
+  const rows = RT_LOG.rows.map(r => {
+    const d = new Date(r.ts);
+    const dk = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    const head = dk !== day ? `<div class="rt-day">${_rtEsc(dk)}</div>` : '';
+    day = dk;
+    const open = RT_LOG.open.has(r.uuid);
+    return `${head}<div class="rt-lrow rt-${_rtEsc(r.status)}" onclick="rtLogToggle('${_rtEsc(r.uuid)}')">
+      <span class="rt-dim rt-time">${d.toLocaleTimeString('en-GB', { hour12: false })}</span>
+      <span class="rt-ico">${_RT_STATUS[r.status] || '·'}</span>
+      <span class="rt-kind rt-k-${_rtEsc(String(r.kind || '').split('.')[0])}">${_rtEsc(r.kind)}</span>
+      <span class="rt-ltitle${r.status === 'failed' ? ' rt-sub-bad' : ''}" title="${_rtEsc(r.title)}">${_rtEsc(r.title)}</span>
+      ${r.actor ? `<span class="rt-prov">${_rtEsc(r.actor)}</span>` : ''}
+      ${open ? `<div class="rt-body">${_rtDetail(r.detail)}<div class="rt-dim rt-meta">${_rtEsc([r.hat && `hat ${r.hat}`, r.ref && `ref ${r.ref}`, r.ms != null && `${Math.round(r.ms / 1000)}s`].filter(Boolean).join(' · '))}</div></div>` : ''}
+    </div>`;
+  }).join('');
+  const keep = body.scrollTop;
+  body.innerHTML = (rows || `<div class="rt-empty">${RT_LOG.loading ? 'reading the log…' : RT_LOG.error ? _rtEsc(RT_LOG.error) : 'nothing logged yet — every agent call, phase step, proposal (and who applied or undid it) and fault in this repo is written here'}</div>`)
+    + (RT_LOG.more ? `<button class="rt-more" onclick="rtLogLoad(true)">older…</button>` : '');
+  body.scrollTop = keep;
 }
 
 // a running task's time counts up without repainting the list
@@ -178,6 +276,6 @@ function _rtTick() {
 
 document.addEventListener('DOMContentLoaded', () => {
   rtEnsureButton();
-  let wasOpen = false; try { wasOpen = localStorage.getItem('idearium.rt.open') === '1'; } catch (_) {}
+  let wasOpen = false; try { wasOpen = localStorage.getItem('idearium.rt.open') === '1'; RT_VIEW = localStorage.getItem('idearium.rt.view') === 'log' ? 'log' : 'tasks'; } catch (_) {}
   if (wasOpen && _rtCurrent()) rtToggleDrawer(true);
 });

@@ -19,7 +19,7 @@
 .rt-row.rt-running{border-color:rgba(125,211,252,.35)}.rt-row.rt-failed{border-color:rgba(248,81,73,.3)}
 .rt-child{margin:6px 0 0;background:rgba(255,255,255,.02)}
 .rt-head{display:flex;align-items:center;gap:7px;padding:7px 9px;cursor:pointer;user-select:none;min-width:0}
-.rt-ico{width:14px;flex:none;text-align:center}
+.rt-ico{width:14px;flex:none;text-align:center;white-space:nowrap}
 .rt-ok{color:#3fb950}.rt-bad{color:#f85149}.rt-stale{color:var(--amber)}
 .rt-spin{display:inline-block;width:9px;height:9px;border:2px solid rgba(125,211,252,.25);border-top-color:var(--sky);border-radius:50%;animation:rtspin .8s linear infinite;vertical-align:-1px}
 @keyframes rtspin{to{transform:rotate(360deg)}}
@@ -38,3 +38,20 @@
 .rt-step{padding:1px 0;line-height:1.45;word-break:break-word}
 .rt-res{margin-top:6px;color:var(--text2);word-break:break-word}
 .rt-kids{margin-top:6px}
+/* §0.39.369 AL2 — the drawer's second view: the repo's activity log */
+.rt-views{display:flex;gap:4px}
+.rt-view{background:none;border:1px solid transparent;color:var(--text3);font:600 11.5px var(--mono);border-radius:5px;padding:2px 8px;cursor:pointer}
+.rt-view:hover{color:var(--text)}.rt-view.on{color:var(--nx-bright,var(--text));background:var(--b0);border-color:var(--b1)}
+.rt-filters{flex-wrap:wrap;align-items:center}
+.rt-sel,.rt-q{background:var(--bg2,rgba(0,0,0,.25));border:1px solid rgba(255,255,255,.1);color:var(--text);font:10px var(--mono);border-radius:5px;padding:1px 6px;outline:none;color-scheme:dark}
+.rt-q{flex:1;min-width:90px}.rt-q:focus,.rt-sel:focus{border-color:var(--sky)}
+.rt-day{position:sticky;top:0;background:var(--bg1,#0e1117);color:var(--text3);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:8px 2px 4px;z-index:1}
+.rt-lrow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:5px 7px;border-radius:6px;cursor:pointer;min-width:0}
+.rt-lrow:hover{background:rgba(255,255,255,.035)}
+.rt-lrow .rt-body{flex-basis:100%;border-top:none;padding:2px 0 4px 58px}
+.rt-time{min-width:50px;flex:none}
+.rt-ltitle{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--nx-text,var(--text))}
+.rt-prop{color:var(--amber)}
+.rt-k-task{color:var(--sky2)}.rt-k-inject{color:var(--amber)}.rt-k-fault{color:#f85149;border-color:rgba(248,81,73,.35)}
+.rt-more{display:block;margin:10px auto;background:none;border:1px solid rgba(255,255,255,.12);color:var(--text2);font:10.5px var(--mono);border-radius:5px;padding:3px 12px;cursor:pointer}
+.rt-more:hover{color:var(--text)}

@@ -186,6 +186,7 @@ function openSSE() {
         if (ev && ev.type === 'idearium.repo.agent.feed') { _agentFeedIn(ev.payload || {}); return; }
         // §0.39.366 — a repo's background task changed: to its Tasks panel only (several a second while an agent runs)
         if (ev && ev.type === 'idearium.repo.task') { if (typeof rtIn === 'function') rtIn(ev.payload || {}); return; }
+        if (ev && ev.type === 'idearium.repo.activity') { if (typeof rtLogIn === 'function') rtLogIn(ev.payload || {}); return; }   // §0.39.369 AL2
         appendEventLog(ev); refreshOnEvent(ev);
       }
       catch(_) {}
