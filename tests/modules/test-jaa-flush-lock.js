@@ -18,6 +18,9 @@
  * hook freezing the exact losing interleaving. Instrumentation of a test,
  * not a mock of production code (§1.3 concerns shipped paths).
  */
+// §0.41.0 PF3 — these pin the whole-table flush (read-merge-write under the lock), which is now the JAA_APPEND=0 path;
+// the default appends per process (tests/modules/test-pf3-append-store.test.js). The legacy path stays proven here.
+process.env.JAA_APPEND = '0';
 const assert = require('assert');
 const fs = require('fs');
 const os = require('os');

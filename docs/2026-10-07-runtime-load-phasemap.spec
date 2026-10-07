@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     runtime-load
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-07
     release:  "PF1 0.40.1 (a fix: patch). PF2–PF5 each a phase."
     uuid:     nexus-runtime-load-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "guardian/jaa-store.js + cortex/memory + intelligence/liminal-space + lib/resource-monitor.js + nexus/autopilot.js"
-    status:   "PF1 BUILT (0.40.1). PF2–PF5 MAPPED."
+    status:   "PF1 BUILT (0.40.1). PF3 BUILT (0.41.0). The rest MAPPED — ordering with EX/HL in docs/2026-10-07-system-expectations-phasemap.spec."
     origin: >
       James, 2026-10-07, with his Windows run log: "whats up with the optimization? it seems almost worst? also
       liminal space with the velocity, like use that also?"
@@ -46,7 +46,9 @@ spec:
         (<table>.<pid>.jsonl — one writer per file, so no lock and no EPERM, O(row) per write). A reader folds base +
         segments (last write per id wins, causedBy kept). ONE owner (cortex) folds segments into the base on its quiet
         tick. Reuse: cortex/memory/jaa-db.js already has an _append JSONL path — one store shape, not a third.
-      proof: "12 child processes × 1,000 inserts: no EPERM, every row present once, write cost flat as the table grows"
+      status: "DONE 0.41.0"
+      built: "guardian/jaa-store.js _append/_tailRead/_rotate/_fold + the <table>.json.fold watermark; JAA_APPEND=0 the old flush (guardian.spec ADDENDUM 2026-10-07)."
+      proof: "tests/modules/test-pf3-append-store.test.js 4/4 — six processes × 300 rows with segments folding mid-run (all 1800 once, no EPERM); a later write survives a fold under an older open line (fails without the watermark); another process's insert+delete reach a running store by tail; one row into 100k rows costs the row"
     PF4_hold_only_what_you_read:
       idea: "after PF3 a process loads a table lazily and only its tail (a window by ts) unless it asks for history — the heap stops scaling with the table. Ends the 12× copies."
     PF5_bounded_tables:

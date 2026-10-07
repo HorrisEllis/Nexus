@@ -58,6 +58,14 @@ const DEFAULT_SETTINGS = {
 // second listener.
 // §0.39.335 SB35 — the longest a dirty table waits for its flush, however often it is written.
 const JAA_FLUSH_MAX_WAIT_MS = parseInt(process.env.JAA_FLUSH_MAX_WAIT_MS || '5000', 10);
+// §0.41.0 PF3 — append, never rewrite (docs/2026-10-07-runtime-load-phasemap.spec). A process's writes go to its OWN
+// segment <table>.<pid>.jsonl (one writer per file: no lock, no EPERM rename, O(rows written) not O(table)). A reader
+// folds base + segments. A segment past SEGMENT_MAX is closed (renamed .<ts>.closed.jsonl) and folded into the base
+// under the flush lock — the only O(table) write left, once per SEGMENT_MAX of writes instead of once per write.
+// JAA_APPEND=0 restores the old whole-table flush.
+const JAA_APPEND = process.env.JAA_APPEND !== '0';
+const SEGMENT_MAX = parseInt(process.env.JAA_SEGMENT_MAX_BYTES || String(4 * 1024 * 1024), 10);
+const DEAD_SEGMENT_MS = 60000;   // an open segment whose process is gone, untouched this long, is folded too
 const _liveStores = new Set();
 let _exitHandlerInstalled = false;
 
@@ -112,6 +120,8 @@ class JaaStore {
     // (compaction, a delete elsewhere) and is dropped, not resurrected. See _flush.
     this._dirtyIds = new Map();
     this._closed  = false;
+    this._seq     = 0;           // §PF3 — order of this process's lines (t ties)
+    this._tail    = new Map();   // §PF3 — table → { base: 'mtime:size', offsets: Map(file → bytes read) }
     // §2026-07-24 — optional selective-load allowlist. See _loadAll(). Omitted
     // = load everything (unchanged behavior). Declared = preload only these;
     // anything else lazily loads on first access with a warning.
@@ -342,7 +352,9 @@ class JaaStore {
 
   /** Force flush all dirty tables to disk. */
   flushAll() {
-    for (const table of this._dirty) this._flush(table);
+    for (const table of [...this._dirty]) this._flush(table);
+    // §PF3 — an explicit flush leaves the base file whole: this process's segments are closed and folded in
+    if (JAA_APPEND) for (const table of this._tables.keys()) if (fs.existsSync(this._segFile(table))) { this._rotate(table); this._fold(table); }
   }
 
   /** Graceful shutdown — flush all and stop timers. */
@@ -369,7 +381,7 @@ class JaaStore {
       // Worst case is a slower first read; never a wrong answer.
       if ((this._only && !this._only.has(name)) || (this._skip && this._skip.has(name))) {
         try {
-          if (fs.existsSync(this._file(name))) {
+          if (fs.existsSync(this._file(name)) || (JAA_APPEND && this._segments(name).length)) {
             // Warn ONCE per table, not per access. Without this guard the
             // message fires on every _table() call — thousands of lines in a
             // single run, which would drown the boot log it's meant to inform.
@@ -429,9 +441,13 @@ class JaaStore {
     let files;
     try { files = fs.readdirSync(this.dir); }
     catch (_) { return; }
+    // §PF3 — a table may so far exist only as segments (<table>.<pid>[.<ts>.closed].jsonl): its name is the stem too
+    const stems = new Set();
     for (const f of files) {
-      if (!f.endsWith('.json')) continue;
-      const stem = f.slice(0, -5);
+      if (f.endsWith('.json')) stems.add(f.slice(0, -5));
+      else if (JAA_APPEND && f.endsWith('.jsonl')) { const m = /^(.+?)\.\d+(\.\d+\.closed)?\.jsonl$/.exec(f); if (m) stems.add(m[1]); }
+    }
+    for (const stem of stems) {
       if (this.tablePrefix) {
         if (!stem.startsWith(this.tablePrefix)) continue;
         const name = stem.slice(this.tablePrefix.length);
@@ -515,14 +531,29 @@ class JaaStore {
     // refresh, not a boot; _loadTable()'s cold-load callers (_loadAll(),
     // _table()'s on-demand branch) still log, since that IS worth knowing
     // once per process.
+    if (JAA_APPEND && this._tables.has(name) && this._tailRead(name)) return;   // §PF3 — only the new lines
     this._loadTable(name, { silent: true, prune: true });
   }
 
   _loadTable(name, { silent = false, prune = false } = {}) {
     const file = this._file(name);
-    if (!fs.existsSync(file)) return;
+    const segs = JAA_APPEND ? this._segments(name) : [];   // §PF3 — listed BEFORE the base is read (see _fold)
+    if (!fs.existsSync(file) && !segs.length) return;
     try {
-      const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
+      const sig = this._sig(file);
+      const rows = sig ? JSON.parse(fs.readFileSync(file, 'utf8')) : [];
+      if (JAA_APPEND) {
+        const offsets = new Map(), lines = [];
+        for (const f of segs) { const r = this._readSegment(f, 0); if (r) { offsets.set(f, r.bytes); lines.push(...r.lines); } }
+        this._tail.set(name, { base: sig, offsets });
+        if (lines.length) {
+          const byId = new Map(); for (const row of rows) byId.set(row.id || row.key, row);
+          const W = this._watermark(name);
+          lines.sort((a, b) => (a.t - b.t) || (a.s - b.s));
+          for (const l of lines) { if (W[l.id] > l.t) continue; if (l.d) byId.delete(l.id); else byId.set(l.id, l.r); }
+          rows.length = 0; for (const [id, row] of byId) rows.push(id === row.id ? row : { ...row, id });
+        }
+      }
       const tbl  = this._table(name);
       if (Array.isArray(rows)) {
         const mine = this._dirtyIds.get(name);
@@ -562,6 +593,7 @@ class JaaStore {
     this._dirtySince.delete(table);
     const tbl  = this._tables.get(table);
     if (!tbl) return;
+    if (JAA_APPEND) return this._append(table);
 
     // §MP-001 ROOT-CAUSE FIX 2026-07-24 — cross-process lock around the
     // whole read-merge-write cycle. Third occurrence of this bug class
@@ -664,6 +696,131 @@ class JaaStore {
       this._releaseFlushLock(table);
     }
   }
+
+  // ── §0.41.0 PF3 — append-only segments ─────────────────────────────────────
+
+  _segFile(table, pid = process.pid) { return path.join(this.dir, `${this.tablePrefix}${table}.${pid}.jsonl`); }
+
+  /** this table's segments: <prefix><table>.<pid>.jsonl (open) and <prefix><table>.<pid>.<ts>.closed.jsonl */
+  _segments(table) {
+    const head = `${this.tablePrefix}${table}.`;
+    let files; try { files = fs.readdirSync(this.dir); } catch (_) { return []; }
+    return files.filter(f => f.startsWith(head) && /^\d+(\.\d+\.closed)?\.jsonl$/.test(f.slice(head.length))).map(f => path.join(this.dir, f));
+  }
+
+  _sig(file) { try { const st = fs.statSync(file); return `${st.mtimeMs}:${st.size}`; } catch (_) { return null; } }
+
+  /** _readSegment(file, from) → { lines, bytes } — complete lines only (a line being appended right now waits) */
+  _readSegment(file, from) {
+    let fd; try { fd = fs.openSync(file, 'r'); } catch (_) { return null; }   // folded away meanwhile: its rows are in the base
+    try {
+      const size = fs.fstatSync(fd).size;
+      if (size <= from) return { lines: [], bytes: from };
+      const buf = Buffer.alloc(size - from); fs.readSync(fd, buf, 0, buf.length, from);
+      const end = buf.lastIndexOf(10);
+      if (end < 0) return { lines: [], bytes: from };
+      const lines = [];
+      for (const ln of buf.toString('utf8', 0, end).split('\n')) { if (!ln) continue; try { lines.push(JSON.parse(ln)); } catch (_) { /* a torn line from a crash: skipped, said */ console.error(`[jaa] skipped an unreadable line in ${path.basename(file)}`); } }
+      return { lines, bytes: from + end + 1 };
+    } finally { fs.closeSync(fd); }
+  }
+
+  /** _append(table) — this process's writes since its last flush, as lines on its own segment */
+  _append(table) {
+    const tbl = this._tables.get(table);
+    const mine = this._dirtyIds.get(table), dels = this._pendingDeletes.get(table);
+    const t = Date.now(); let out = '';
+    if (mine) for (const id of mine) { const r = tbl.get(id); if (r) out += JSON.stringify({ t, s: ++this._seq, id, r }) + '\n'; }
+    if (dels) for (const id of dels) if (!tbl.has(id)) out += JSON.stringify({ t, s: ++this._seq, id, d: 1 }) + '\n';
+    if (out) {
+      const seg = this._segFile(table);
+      try { fs.appendFileSync(seg, out, 'utf8'); }
+      catch (e) {
+        if (e.code === 'ENOENT' && !fs.existsSync(this.dir)) { console.error(`[jaa] ${table}: store directory is gone — dropping this flush`); return; }
+        console.error(`[jaa] append error (${table}): ${e.code || ''} ${e.message} — kept, retried`); this._schedule(table, 1000); return;
+      }
+      const tail = this._tail.get(table); if (tail) tail.offsets.set(seg, this._sizeOf(seg));   // my own lines: already in memory
+    }
+    this._dirtyIds.delete(table); this._pendingDeletes.delete(table);
+    this._tailRead(table);                                                   // others' writes since (cheap: new bytes only)
+    if (this._sizeOf(this._segFile(table)) > SEGMENT_MAX) { this._rotate(table); this._fold(table); }
+  }
+
+  _sizeOf(f) { try { return fs.statSync(f).size; } catch (_) { return 0; } }
+
+  /** _tailRead(table) → false when the base changed (a fold happened): the caller reloads whole */
+  _tailRead(table) {
+    const tail = this._tail.get(table);
+    if (!tail || this._sig(this._file(table)) !== tail.base) { if (tail || fs.existsSync(this._file(table))) this._loadTable(table, { silent: true, prune: true }); return false; }
+    const tbl = this._table(table), mine = this._dirtyIds.get(table), own = this._segFile(table), lines = [];
+    for (const f of this._segments(table)) {
+      if (f === own) continue;
+      const r = this._readSegment(f, tail.offsets.get(f) || 0);
+      if (r) { tail.offsets.set(f, r.bytes); lines.push(...r.lines); }
+    }
+    const W = lines.length ? this._watermark(table) : {};
+    lines.sort((a, b) => (a.t - b.t) || (a.s - b.s));
+    for (const l of lines) { if ((mine && mine.has(l.id)) || W[l.id] > l.t) continue; if (l.d) tbl.delete(l.id); else tbl.set(l.id, l.r); }
+    return true;
+  }
+
+  /** _rotate(table) — close this process's segment so it can be folded (renamed, never rewritten) */
+  _rotate(table) {
+    const seg = this._segFile(table);
+    if (!fs.existsSync(seg)) return;
+    const closed = path.join(this.dir, `${this.tablePrefix}${table}.${process.pid}.${Date.now()}.closed.jsonl`);
+    try { fs.renameSync(seg, closed); const tail = this._tail.get(table); if (tail) { tail.offsets.set(closed, tail.offsets.get(seg) || 0); tail.offsets.delete(seg); } }
+    catch (e) { /* a reader has it open (Windows): rotated on a later flush */ }
+  }
+
+  /** _fold(table) — closed segments (and the open ones of processes that are gone) folded into the base, then removed.
+   *  The new base is renamed in BEFORE a folded segment is removed, and readers list segments before reading the
+   *  base — so a reader sees each row either in the base or in its segment, never in neither. */
+  _fold(table) {
+    const lock = this._acquireFlushLock(table);
+    if (!lock || lock === 'gone') return false;   // someone else is folding — it is picked up next time
+    try {
+      const now = Date.now();
+      const fold = this._segments(table).filter(f => {
+        if (/\.closed\.jsonl$/.test(f)) return true;
+        const pid = parseInt(path.basename(f).slice(`${this.tablePrefix}${table}.`.length), 10);
+        if (pid === process.pid) return false;
+        let alive = true; try { process.kill(pid, 0); } catch (e) { alive = e.code === 'EPERM'; }
+        return !alive && now - (fs.statSync(f).mtimeMs || 0) > DEAD_SEGMENT_MS;
+      });
+      if (!fold.length) return true;
+      const file = this._file(table);
+      const byId = new Map();
+      if (fs.existsSync(file)) for (const row of JSON.parse(fs.readFileSync(file, 'utf8'))) byId.set(row.id || row.key, row);
+      const lines = [];
+      for (const f of fold) { const r = this._readSegment(f, 0); if (r) lines.push(...r.lines); }
+      const W = this._watermark(table);
+      lines.sort((a, b) => (a.t - b.t) || (a.s - b.s));
+      for (const l of lines) {
+        if (W[l.id] > l.t) continue;                 // an older line than one already folded
+        if (l.d) byId.delete(l.id); else byId.set(l.id, l.r);
+        W[l.id] = l.t;
+      }
+      // the watermark: the newest folded write per id, kept only while an unfolded segment could hold an older line
+      // for it (a live process's open segment) — so a reader never lets that older line override the base
+      let oldest = Infinity;
+      for (const f of this._segments(table)) if (!fold.includes(f)) { const r = this._readSegment(f, 0); if (r && r.lines.length) oldest = Math.min(oldest, r.lines[0].t); }
+      for (const id of Object.keys(W)) if (W[id] < oldest) delete W[id];
+      const tmp = `${file}.${process.pid}.${now}.tmp`;
+      try {
+        fs.writeFileSync(tmp, JSON.stringify([...byId.values()], null, 0), 'utf8'); fs.renameSync(tmp, file);
+        const wf = `${file}.fold`;
+        if (Object.keys(W).length) { fs.writeFileSync(`${wf}.${process.pid}.tmp`, JSON.stringify(W), 'utf8'); fs.renameSync(`${wf}.${process.pid}.tmp`, wf); }
+        else { try { fs.unlinkSync(wf); } catch (_) {} }
+      }
+      catch (e) { console.error(`[jaa] fold error (${table}): ${e.message} — segments kept`); try { fs.unlinkSync(tmp); } catch (_) {} return false; }
+      for (const f of fold) { try { fs.unlinkSync(f); } catch (_) { /* gone already, or open by a reader: folded again next time (idempotent) */ } }
+      return true;
+    } catch (e) { console.error(`[jaa] fold error (${table}): ${e.message}`); return false; }
+    finally { this._releaseFlushLock(table); if (this._tail.has(table)) this._loadTable(table, { silent: true, prune: true }); }
+  }
+
+  _watermark(table) { try { return JSON.parse(fs.readFileSync(`${this._file(table)}.fold`, 'utf8')) || {}; } catch (_) { return {}; } }
 
   // ── §MP-001 cross-process flush lock ────────────────────────────────────────
   // O_EXCL ('wx') create is the atomic primitive; everything else is policy:
