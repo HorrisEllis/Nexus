@@ -18,7 +18,7 @@ async function wsLoad(el) {
   try { WSURF.data = await api(`/api/repos/${repo.uuid}/worksurface`, {}, 30000); WSURF.error = null; }
   catch (e) { WSURF.error = e.message; }
   WSURF.loading = false;
-  if (WSURF.uuid === repo.uuid) wsPaint(el);
+  if (WSURF.uuid === repo.uuid) { wsPaint(el); for (const h of _wsHosts()) if (h !== el) wsPaint(h); }   // §0.47.0 OS7 — every place it shows
 }
 
 function _wsSplitPath(p) { const i = p.lastIndexOf('/'); return i === -1 ? ['', p] : [p.slice(0, i + 1), p.slice(i + 1)]; }
@@ -82,7 +82,7 @@ function _wsTools(t) {
   const chip = (n) => `<span class="ws-tool ${used[n] ? 'used' : ''}" title="${used[n] ? `used ${used[n]}×` : 'not used yet'}">${escapeHtml(n.replace(/\.tool$/, ''))}${used[n] ? `<b>${used[n]}</b>` : ''}</span>`;
   const extra = Object.keys(used).filter(n => !(t.listed || []).includes(n));
   return `<div class="ws-tools">
-    <div class="ws-tools-head" onclick="WSURF.showTools=!WSURF.showTools;wsPaint(document.getElementById('pp-ws'))">
+    <div class="ws-tools-head" onclick="WSURF.showTools=!WSURF.showTools;wsPaint()">
       <span class="ws-chev">${WSURF.showTools ? '▾' : '▸'}</span> tools · scope <b>${escapeHtml(t.scope || '?')}</b> · ${(t.listed || []).length} given · ${Object.keys(used).length} used in ${(t.calls || []).length} call${(t.calls || []).length === 1 ? '' : 's'}${failed.length ? ` · <span style="color:var(--coral)">${failed.length} failed</span>` : ''}</div>
     ${WSURF.showTools ? `<div class="ws-tool-row">${(t.listed || []).map(chip).join('')}${extra.map(chip).join('')}</div>
       <div class="ws-tool-note">every other NEXUS tool is one <code>nexus.tools</code> → <code>nexus.tools_expand</code> call away (or <code>loom.find</code>); the Agent tab's <code>/tools</code> lists them all.</div>
@@ -90,8 +90,10 @@ function _wsTools(t) {
   </div>`;
 }
 
+// §0.47.0 OS7 — one proposal surface, shown in the Plan panel (#pp-ws) and the Agent tab (#ao-ws); a repaint reaches both
+function _wsHosts() { return [...document.querySelectorAll('#pp-ws, #ao-ws')]; }
 function wsPaint(el) {
-  el = el || document.getElementById('pp-ws'); if (!el) return;
+  if (!el) { for (const h of _wsHosts()) wsPaint(h); return; }
   if (WSURF.error) { el.innerHTML = `<div class="pp-sec">work surface</div><div class="ws-empty">could not read the changes: ${escapeHtml(WSURF.error)}</div>`; return; }
   const d = WSURF.data; if (!d) return;
   const files = (d.files || []).filter(f => WSURF.filter === 'all' || (WSURF.filter === 'pending' ? (f.status === 'proposed' || f.status === 'staged') : f.status === WSURF.filter));
@@ -99,7 +101,7 @@ function wsPaint(el) {
   const filt = ['all', 'pending', 'applied', 'reverted'].map(k => `<button class="ws-f ${WSURF.filter === k ? 'on' : ''}" onclick="WSURF.filter='${k}';wsPaint()">${k}</button>`).join('');
   el.innerHTML = `<div class="ws-top"><span class="pp-sec" style="margin:0">work surface</span>
       <span class="ws-sum" title="changes in effect or waiting — reverted and rejected ones are not counted">${t.files || 0} file${t.files === 1 ? '' : 's'} <span class="ws-plus">+${t.added || 0}</span> <span class="ws-minus">−${t.removed || 0}</span>${t.pending ? ` · <span style="color:var(--amber)">${t.pending} waiting</span>` : ''}${t.undone ? ` · <span class="ws-undone">${t.undone} undone</span>` : ''}</span>
-      <span class="ws-grow"></span>${filt}<button class="ws-f" title="reload" onclick="wsLoad(document.getElementById('pp-ws'))">↻</button></div>
+      <span class="ws-grow"></span>${filt}<button class="ws-f" title="reload" onclick="wsLoad(_wsHosts()[0])">↻</button></div>
     ${_wsTools(d.tools)}
     <div id="ws-forming" class="ws-forming-wrap">${_wsFormingHtml(WSURF.uuid)}</div>
     ${files.length ? `<div class="ws-note">${files.length > 2 ? 'Large diffs start collapsed — click a file to open it.' : ''}</div>${files.map(_wsCard).join('')}`
@@ -162,7 +164,7 @@ async function wsAct(id, action) {
     else await api(`/api/repos/${repo.uuid}/injects/${encodeURIComponent(id)}/${action}`, { method: 'POST', body: '{}' }, 60000);
     toast(`${action}: done`, 'ok');
   } catch (e) { toast(`${action} failed: ${e.message}`, 'err'); }
-  wsLoad(document.getElementById('pp-ws'));
+  wsLoad(_wsHosts()[0]);
   if (typeof csAfterChange === 'function') csAfterChange();   // §CT3 — the Code tab's tree, diffs and file follow
 }
 

@@ -4373,7 +4373,7 @@ learned    ${mem.total} observation${mem.total === 1 ? '' : 's'}${kindCounts ? `
 exchanges  ${st.exchanges || 0}</div>
     </div>
     ${_sharedAgentNote(st)}
-    <div style="margin:6px 0;font-size:10px;opacity:.6">hat, teaching, export/import and inject mode live in <span style="cursor:pointer;text-decoration:underline" onclick="setRepoSubtab('settings')">Settings → Agents</span>${st.exists ? '' : ' — no hat forged yet'}</div>
+    ${typeof agentOptionsHtml === 'function' ? agentOptionsHtml(repo, AGENT_SETTINGS.get(repo.uuid)) : ''}
 `;
 
   const memHtml = '';
@@ -4408,6 +4408,7 @@ exchanges  ${st.exchanges || 0}</div>
       </div>
     </div>`;
 
+  if (typeof agentOptionsMounted === 'function') agentOptionsMounted();   // §0.47.0 OS4 — every agent option here
   const ta = document.getElementById('agent-input');
   if (ta) ta.addEventListener('keydown', e => {
     // Enter sends, Shift+Enter newlines — same convention as the idea composer.

@@ -18,7 +18,9 @@
 
 const RS_CATEGORIES = [
   { group: 'Repository', items: [['general', 'General'], ['repository', 'Files & danger zone']] },
-  { group: 'Agent', items: [['agent', 'Agent'], ['prompt', 'Prompt'], ['hat', 'Hat & tools'], ['models', 'Models']] },   // §CT4 0.39.350 models: the Ollama check
+  // §0.47.0 OS4 — James: "all agent options go into the agents tab". The Agent group is the Agent tab now (proposals,
+  // behaviour, prompt, hat & tools, models); this one line takes you there.
+  { group: 'Agent', items: [['agent', 'Agent tab ↗']] },
   { group: 'Environment', items: [['environment', 'Environment'], ['desktop', 'Desktop']] },
 ];
 const RS_IDS = RS_CATEGORIES.flatMap(g => g.items.map(i => i[0]));
@@ -34,7 +36,7 @@ function renderRepoSettings(repo) {
   const el = document.getElementById('repo-subtab-settings');
   if (!el || !repo) return;
   if (RS.uuid !== repo.uuid) RS.uuid = repo.uuid;
-  if (!RS.cat) RS.cat = _rsSavedCategory() || 'general';
+  if (!RS.cat || RS.cat === 'agent') RS.cat = (_rsSavedCategory() !== 'agent' && _rsSavedCategory()) || 'general';
   el.innerHTML = `<div class="rs">
     <nav class="rs-nav" aria-label="settings categories">
       ${RS_CATEGORIES.map(g => `<div class="rs-group">${escapeHtml(g.group)}</div>` + g.items.map(([id, name]) =>
@@ -48,25 +50,33 @@ function renderRepoSettings(repo) {
 
 function repoSettingsShow(id) {
   if (!RS_IDS.includes(id)) return;
+  if (id === 'agent' && typeof setRepoSubtab === 'function') { setRepoSubtab('agent'); return; }   // §0.47.0 OS4
   RS.cat = id; _rsSaveCategory(id);
   for (const b of document.querySelectorAll('.rs-item[data-rs]')) b.classList.toggle('on', b.dataset.rs === id);
   _rsPaint(CURRENT_API_REPO);
 }
 
-/** one console view, only when asked: settings.html in single-view embed (no console nav, no tab strip) */
-function _rsConsoleView(repo, tab, title) {
-  if (!API_BASE || !repo) return '<div class="ds-mono">the settings console is not reachable from here</div>';
-  return `<iframe class="rs-embed" src="${API_BASE}/settings.html?repo=${encodeURIComponent(repo.uuid)}&tab=${encodeURIComponent(tab)}&embed=1&single=1" title="${escapeHtml(title)}"></iframe>`;
+/** §0.47.0 OS5 — James: "the idearium settings still have iframes". The desktop's compartment, branching and VM, drawn
+ *  here from the console's own detail (GET /api/settings/console/:uuid) — the same data settings.html shows, no frame. */
+async function _rsDesktopDetail(repo) {
+  const el = document.getElementById('rs-desktop-detail'); if (!el) return;
+  let d;
+  try { d = await api(`/api/settings/console/${encodeURIComponent(repo.uuid)}`, {}, 15000); }
+  catch (e) { el.innerHTML = `<div class="ds-mono">the compartment could not be read: ${escapeHtml(e.message)}</div>`; return; }
+  if (!document.getElementById('rs-desktop-detail') || CURRENT_API_REPO !== repo) return;
+  const c = d.compartment, dk = d.desktop, r = d.repo || repo, st = dk && dk.ok !== false ? dk.state : null;
+  const kv = (label, text) => `<div class="ds"><div class="ds-label">${escapeHtml(label)}</div><div class="ds-mono">${escapeHtml(text)}</div></div>`;
+  el.innerHTML = kv(`compartment${c ? ` · ${c.state}` : ''}`, c ? `name    ${c.name}\nid      ${c.id}\nroot    ${c.root || '—'}\nparent  ${c.parentId || '—'}${c.purpose ? `\npurpose ${c.purpose}` : ''}` : 'no compartment attached to this repo')
+    + kv('branching', r.branchOf ? `branch ${r.branch || '?'} of ${r.branchOf}\nfiles: a git worktree of the original (one history) · VM disk: an overlay of the original's`
+      : `original repo${(d.branches || []).length ? `\nbranches: ${d.branches.map(b => `${b.name} (${b.branch || '?'})`).join(', ')}` : '\nno branches yet'}`)
+    + kv(`virtual machine${st ? ` · ${st}` : ''}`, dk && dk.ports ? `VNC ${dk.ports.vncPort} · websocket ${dk.ports.wsPort}${dk.branchedFrom ? ` · disk: branch of the ${dk.branchedFrom}` : ''}${dk.repoIn && dk.repoIn !== 'none' ? ` · files: ${dk.repoIn}` : ''}${dk.error ? `\nlast exit: ${dk.error}` : ''}`
+      : 'not running — RAM, CPUs and network: Global → desktop.* · needs QEMU and a base image')
+    + (st === 'running' || st === 'booting' ? `<div class="action-row"><button class="action-btn" onclick="_rsDesktopStop('${repo.uuid}')">■ stop the VM</button><span class="ds-mono" style="opacity:.6">its disk is kept</span></div>` : '');
 }
-function repoSettingsReveal(btn, targetId, tab, title) {
-  const t = document.getElementById(targetId); if (!t) return;
-  const open = !t.hidden;
-  if (open) { t.hidden = true; t.innerHTML = ''; btn.textContent = btn.dataset.show; return; }
-  t.innerHTML = _rsConsoleView(CURRENT_API_REPO, tab, title); t.hidden = false; btn.textContent = btn.dataset.hide;
-}
-function _rsRevealButton(label, targetId, tab, title) {
-  return `<button class="action-btn" data-show="${escapeHtml(label)}" data-hide="hide ${escapeHtml(label.replace(/^show\s+/, ''))}" onclick="repoSettingsReveal(this,'${targetId}','${tab}','${escapeHtml(title)}')">${escapeHtml(label)}</button>
-    <div class="rs-reveal" id="${targetId}" hidden></div>`;
+async function _rsDesktopStop(uuid) {
+  try { await api(`/api/repos/${encodeURIComponent(uuid)}/desktop`, { method: 'DELETE', body: '{}' }); if (typeof toast === 'function') toast('VM stopping — its disk is kept', 'ok'); }
+  catch (e) { if (typeof toast === 'function') toast(e.message, 'err'); }
+  if (CURRENT_API_REPO) _rsDesktopDetail(CURRENT_API_REPO);
 }
 
 function _rsPaint(repo) {
@@ -94,32 +104,6 @@ function _rsPaint(repo) {
       </div>`;
     return;
   }
-  if (id === 'agent') {
-    pane.innerHTML = head('Agent', 'The agent this compartment wears its hat on: who answers, what it learned, the code it wrote.')
-      + `<div id="repo-agents-section"><div class="ds-mono">loading…</div></div>
-      <div class="ds"><div class="ds-label">advanced</div><div class="rs-note">Tool scope and what happens to code the agent writes.</div>
-        ${_rsRevealButton('show advanced settings', 'rs-agent-adv', 'agent', 'agent settings')}</div>`;
-    renderRepoAgentSettings(repo);
-    return;
-  }
-  if (id === 'prompt') {
-    pane.innerHTML = head('Prompt', 'Everything the agent is sent, block by block — edit, switch off, preview.')
-      + '<div id="agent-blocks-section"><div class="ds-mono">loading…</div></div>';
-    if (typeof renderAgentBlocks === 'function') renderAgentBlocks(repo);
-    return;
-  }
-  if (id === 'hat') {
-    pane.innerHTML = head('Hat & tools', 'The persona this repo\'s agent wears and the tools it carries.')
-      + _rsConsoleView(repo, 'hat', 'hat and tools');
-    return;
-  }
-  if (id === 'models') {   // §CT4 0.39.350 — James: "make sure ollama is all wired into idearium." (ollama-check.js)
-    pane.innerHTML = head('Models', 'Whether Ollama is wired in: every installed model asked through copilot, and the route every caller gets.')
-      + '<div id="ollama-check"></div>';
-    if (typeof renderOllamaCheck === 'function') renderOllamaCheck(document.getElementById('ollama-check'));
-    else document.getElementById('ollama-check').innerHTML = '<div class="ds-mono">the Ollama check did not load (js/ollama-check.js)</div>';
-    return;
-  }
   if (id === 'environment') {
     pane.innerHTML = head('Environment', 'Whether the code is downloaded and configured, and what this codebase needs installed.')
       + '<div id="repo-env-section"></div>';
@@ -131,7 +115,8 @@ function _rsPaint(repo) {
       + `<div class="ds"><div class="action-row">
         ${repo.compartmentId ? `<button class="action-btn primary" onclick="openRepoDesktop('${repo.uuid}')" title="Boot this repo's VM and open it as a desktop (Clear Glass window)">▣ open desktop</button> <button class="action-btn" onclick="openDesktopSetup(CURRENT_API_REPO)" title="§0.39.340 DK2 — the account, the VM's memory and CPUs, and the setup's progress">⚙ set up desktop</button>` : '<span class="ds-mono">no compartment attached — no desktop</span>'}
       </div></div>
-      <div class="ds"><div class="ds-label">desktop settings</div><div class="rs-note">The VM's state, ports, branch and stop — hidden until you ask.</div>
-        ${_rsRevealButton('show desktop settings', 'rs-desktop-settings', 'env', 'desktop settings')}</div>`;
+      <div id="rs-desktop-detail"><div class="ds-mono">reading the compartment…</div></div>`;
+    _rsDesktopDetail(repo);   // §0.47.0 OS5 — native, no iframe
   }
+
 }
