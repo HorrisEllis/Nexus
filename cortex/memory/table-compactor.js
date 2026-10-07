@@ -318,4 +318,23 @@ function stopCaps() {
   if (_capTimer) { clearInterval(_capTimer); _capTimer = null; }
 }
 
-module.exports = { CAPS, capFor, capRows, archiveRows, readArchive, MODULE_ID, compactTable, capTable, start, stop, startCaps, stopCaps };
+/** storeReport(dir) — every table in a store directory by its files alone (no row is parsed): the base, its append
+ *  segments (PF3), its cap (PF5) and its archive. What `idearium store` prints (cortex GET /api/store). */
+function storeReport(dir) {
+  let files = []; try { files = fs.readdirSync(dir); } catch (_) { return { dir, tables: [] }; }
+  const T = new Map(), t = (n) => { if (!T.has(n)) T.set(n, { table: n, baseBytes: 0, segments: 0, segmentBytes: 0, cap: capFor(n) || null, archiveDays: 0, archiveBytes: 0 }); return T.get(n); };
+  const size = (f) => { try { return fs.statSync(path.join(dir, f)).size; } catch (_) { return 0; } };
+  for (const f of files) {
+    if (f.endsWith('.json')) t(f.slice(0, -5)).baseBytes = size(f);
+    else { const m = /^(.+?)\.\d+(\.\d+\.closed)?\.jsonl$/.exec(f); if (m) { const r = t(m[1]); r.segments++; r.segmentBytes += size(f); } }
+  }
+  let arch = []; try { arch = fs.readdirSync(path.join(dir, 'archive')); } catch (_) {}
+  for (const name of arch) {
+    let days = []; try { days = fs.readdirSync(path.join(dir, 'archive', name)); } catch (_) { continue; }
+    const r = t(name); r.archiveDays = days.length; r.archiveBytes = days.reduce((n, d) => n + size(path.join('archive', name, d)), 0);
+  }
+  const tables = [...T.values()].sort((a, b) => (b.baseBytes + b.segmentBytes) - (a.baseBytes + a.segmentBytes));
+  return { dir, tables, totals: { bytes: tables.reduce((n, x) => n + x.baseBytes + x.segmentBytes, 0), archiveBytes: tables.reduce((n, x) => n + x.archiveBytes, 0) } };
+}
+
+module.exports = { storeReport, CAPS, capFor, capRows, archiveRows, readArchive, MODULE_ID, compactTable, capTable, start, stop, startCaps, stopCaps };

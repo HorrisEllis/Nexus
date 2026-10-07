@@ -43,6 +43,7 @@ const routes = [
   require('./routes/jobs.js'),
   require('./routes/queue.js'),
   require('./routes/models.js'),
+  require('./routes/tape.js'),     // §0.45.0 CM3 — the Ollama tape: runs and their macros
 ];
 
 const server = http.createServer(async (req, res) => {

@@ -113,6 +113,19 @@ spec:
         person does it, read from the words alone, so it is refused before anything is looked up. Every act is
         attributed to the caller in the activity log. Answers are trimmed for a small model, and say how to narrow them.
 
+    CM3_this_sessions_work_as_commands:
+      systems: [idearium, cortex, ollama, copilot]
+      status: "DONE (0.45.0) — test-cm3-commands 4/4, test-chunked-phase-build CB-09"
+      james: '"where is any of this? like i dont see any changes. like what have you been adding? also next make sure these are all commands first, api routes if applicaple. also where is the background tasks? it hasnt built any phase yet."'
+      files: [idearium/cli/route-commands.js, idearium/api/index.js, cortex/boot.js, cortex/memory/table-compactor.js, ollama/routes/tape.js, lib/ollama-tape.js]
+      does: >-
+        Rows in CM1's table (so CLI + copilot + Claude Code's MCP at once): `repo phasemap <repo>` (every phase: done,
+        ready, blocked, last run), `repo phase <repo> <phase> [build]` (its runs and why one stopped; or build it now
+        as a background task — POST phases/build now finds the map from the phase), `repo versions <repo>` (VR1's
+        commits), `store` (cortex GET /api/store: each table's base, segments, cap, archive), `ollama tape [<run>]`
+        (ollama GET /api/tape, /api/tape/:run: the runs and a run's macro). `repo phases`/`repo build` stay the spec
+        chunk commands they were.
+
   # ── NEXT — mapped 2026-10-07, NOT built ──────────────────────────────────────────────────────────────────────────
   # James: "Like look at nexus nerve and tv ui and the interaction field. Like I want it to be able to navigate the ui,
   # check when something didn't work when I click it and run diagnostics. But worry about that after." · "Oh and

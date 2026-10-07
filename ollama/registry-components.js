@@ -21,6 +21,8 @@ const components=[
     }
   }),
   _c('jobs.list','GET','/api/jobs','List recent jobs',{grammar:['ollama jobs','oj']}),
+  _c('tape.runs','GET','/api/tape','Every run on the Ollama tape: calls, callers, models, time, failures (0.45.0 CM3)',{grammar:['ollama tape']}),
+  _c('tape.run','GET','/api/tape/:run','A run\'s macro: each model call in order, asked and answered (0.45.0 CM3)'),
   _c('jobs.get','GET','/api/jobs/:id','Get single job by id'),
   _c('jobs.cancel','DELETE','/api/jobs/:id','Cancel a queued job'),
   _c('queue.status','GET','/api/queue','Queue depth and running count',{grammar:['ollama queue','oq']}),

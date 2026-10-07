@@ -93,6 +93,49 @@ export const SPEC = [
     req: (a) => ({ method: 'GET', path: `/api/activity${qs(a.flags, LOG_FLAGS)}` }),
     print: (d, a, h) => printLog(d, h, d.names || {}) },
 
+  // ── its phases and its versions (0.45.0 CM3) — James: "next make sure these are all commands first, api routes if applicaple.
+  //    also where is the background tasks? it hasnt built any phase yet." ─────────────────────────────────────────────
+  { key: 'repo.phasemap', repo: true, usage: 'repo phasemap <repo> [--ready] [--map name]', about: 'every phase of the repo\'s phasemaps: done, ready to build, blocked — and its last run',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases`, timeoutMs: 30000 }),
+    print: (d, a, h) => {
+      let ph = d.phases || [];
+      if (a.flags.map) ph = ph.filter(p => String(p.map).includes(a.flags.map));
+      if (a.flags.ready) ph = ph.filter(p => p.ready && p.status !== 'complete');
+      const s = d.summary || {};
+      console.log(h.c.dim(`  ${s.complete ?? '?'} of ${s.total ?? ph.length} complete · ${(d.maps || []).length} phasemap(s) · ${s.runs || 0} run(s)`));
+      let map = '';
+      for (const p of ph) {
+        if (p.map !== map) { map = p.map; console.log(`\n  ${h.c.bold(String(map).split('/').pop())}`); }
+        const icon = p.status === 'complete' ? h.c.mint('✓') : p.ready ? h.c.sky('▸') : (p.blocked_by || []).length ? h.c.coral('⊘') : h.c.gray('·');
+        console.log(`  ${icon} ${String(p.phase_key).padEnd(10)} ${String(p.title || p.name || '').slice(0, 80)}${p.ready && p.status !== 'complete' ? h.c.sky('  ready') : ''}${(p.blocked_by || []).length && p.status !== 'complete' ? h.c.dim(`  after ${p.blocked_by.join(', ')}`) : ''}${p.lastRun ? h.c.dim(`  · last ${p.lastRun.state || ''}`) : ''}`);
+      }
+      console.log(h.c.dim('\n  build one: idearium repo phase <repo> <phase> build'));
+    } },
+  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task',
+    need: (a) => (a.args[0] ? null : '<phase>'),
+    req: (a) => (a.args[1] === 'build'
+      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}) }, timeoutMs: 120000 }
+      : { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/runs?phase=${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => {
+      if (a.args[1] === 'build') {
+        console.log(`${h.c.mint('▸')} building ${h.c.bold(a.args[0])} in ${d.targetName || a.repo.name} — run ${String(d.runId || '').slice(0, 12)} · snapshot ${String(d.snapshot || '—').slice(0, 10)}${d.ladder ? h.c.dim(` · ladder ${d.ladder.rungs.join(' → ')}`) : ''}`);
+        if (d.statusNote) console.log(h.c.dim(`  ${d.statusNote}`));
+        console.log(h.c.dim(`  watch it: idearium repo tasks ${a.repo.name} --running · idearium repo phase ${a.repo.name} ${a.args[0]}`));
+        return;
+      }
+      const runs = (d.runs || []).slice().sort((x, y) => (x.ts || 0) - (y.ts || 0));
+      if (!runs.length) { console.log(h.c.gray(`  ${a.args[0]} has never run — idearium repo phase ${a.repo.name} ${a.args[0]} build`)); return; }
+      for (const r of runs) console.log(`  ${h.c.dim(when(r.ts))} ${r.state === 'failed' || r.state === 'blocked' ? h.c.coral(r.state) : r.state === 'complete' || r.state === 'proved' ? h.c.mint(r.state) : h.c.sky(r.state || '?')}  ${h.c.dim(r.provider || '')}${r.error ? `  ${String(r.error).slice(0, 140)}` : ''}`);
+    } },
+  { key: 'repo.versions', repo: true, usage: 'repo versions <repo> [--limit n]', about: 'its versionium history: every change a commit (VR1) — message, who, files, tests',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/snapshots`, timeoutMs: 30000 }),
+    print: (d, a, h) => {
+      const l = (d.snapshots || []).slice(0, parseInt(a.flags.limit || '25', 10) || 25);
+      if (!l.length) { console.log(h.c.gray('  no commits yet')); return; }
+      for (const c of l) console.log(`  ${h.c.amber(String(c.commitId).slice(0, 10))} ${h.c.dim(when(c.ts))}  ${String(c.message || '').slice(0, 100)}${c.files ? h.c.dim(`  · ${c.files.count} files`) : ''}${c.tests ? h.c.dim(`  · tests ${c.tests}`) : ''}`);
+      console.log(h.c.dim(`\n  ${(d.snapshots || []).length} commit(s)`));
+    } },
+
   // ── its desktop, like VMware ──────────────────────────────────────────────────────────────────────────────────────
   { key: 'repo.desktop', repo: true, usage: 'repo desktop <repo> [status | start | stop | pause | resume | checkpoint [--label "…"] | checkpoints | rewind <tag>]', about: 'the repo\'s desktop VM: power, pause, live checkpoints, rewind',
     req: (a) => { const v = a.args[0] || 'status', base = `/api/repos/${a.repo.uuid}/desktop`;
@@ -135,6 +178,30 @@ export const SPEC = [
       if (s.cpuPct != null) console.log(`  cpu     ${(s.cpuPct * 100).toFixed(0)}%`);
       const p = r.current && r.current.process; if (p && p.heapLimitPct != null) console.log(`  heap    ${(p.heapLimitPct * 100).toFixed(1)}% of its limit`);
       if (r.transitions != null) console.log(h.c.dim(`  ${r.transitions} level change(s) reported · ${r.samples} sample(s)`));
+    } },
+  { key: 'store', repo: false, usage: 'store', about: 'the shared memory store by its files: each table\'s size, append segments, cap and archive (cortex)',
+    req: () => ({ system: 'cortex', method: 'GET', path: '/api/store' }),
+    print: (d, a, h) => {
+      const mb = (b) => `${(b / 1048576).toFixed(1)}MB`;
+      for (const t of (d.tables || []).slice(0, parseInt(a.flags.limit || '25', 10) || 25)) console.log(`  ${String(t.table).padEnd(34)} ${mb(t.baseBytes + t.segmentBytes).padStart(8)}${t.segments ? h.c.dim(`  ${t.segments} segment(s)`) : ''}${t.cap ? h.c.sky(`  cap ${t.cap}`) : ''}${t.archiveDays ? h.c.dim(`  archive ${t.archiveDays} day(s) ${mb(t.archiveBytes)}`) : ''}`);
+      if (d.totals) console.log(h.c.dim(`\n  ${mb(d.totals.bytes)} live · ${mb(d.totals.archiveBytes)} archived · ${d.dir}`));
+    } },
+  { key: 'ollama.tape', repo: false, usage: 'ollama tape [<run>] [--chars n]', about: 'every Ollama call recorded: the runs, or one run\'s macro — each call asked and answered, in order',
+    req: (a) => ({ system: 'ollama', method: 'GET', path: a.args[0] ? `/api/tape/${encodeURIComponent(a.args[0])}${a.flags.chars ? `?chars=${a.flags.chars}` : ''}` : '/api/tape' }),
+    print: (d, a, h) => {
+      if (!a.args[0]) {
+        if (d.replaying) console.log(h.c.amber(`  replaying from the tape: ${d.replaying}`));
+        if (!(d.runs || []).length) { console.log(h.c.gray('  nothing recorded yet')); return; }
+        for (const r of d.runs) console.log(`  ${h.c.amber(String(r.run).slice(0, 14).padEnd(14))} ${h.c.dim(when(r.last))}  ${String(r.calls).padStart(3)} call(s)${r.failed ? h.c.coral(` ${r.failed} failed`) : ''}  ${h.c.dim(`${(r.ms / 1000).toFixed(1)}s · ${r.models.join(', ')} · ${r.hat || r.callers.join(', ')}`)}`);
+        console.log(h.c.dim(`\n  one run: idearium ollama tape <run> · replay it without Ollama: NEXUS_OLLAMA_REPLAY=<run>`));
+        return;
+      }
+      (d.steps || []).forEach((s, i) => {
+        console.log(`\n  ${h.c.bold(`${i + 1}.`)} ${h.c.dim(when(s.at))} ${s.op} ${h.c.sky(s.model)} ${h.c.dim(`seed ${s.seed} · ${s.caller}`)}${s.timings && s.timings.tokensPerSec ? h.c.dim(` · ${s.timings.tokensPerSec} tok/s`) : ''}${s.ok ? '' : h.c.coral(` ✗ ${s.error}`)}`);
+        if (s.prompt) console.log(`     ${h.c.dim('asked')}  ${String(s.prompt).replace(/\s+/g, ' ').slice(0, 300)}`);
+        if (s.answer) console.log(`     ${h.c.dim('answer')} ${String(s.answer).replace(/\s+/g, ' ').slice(0, 300)}`);
+        if (s.toolCalls) console.log(`     ${h.c.dim('tools')}  ${s.toolCalls.map(t => t.name).join(', ')}`);
+      });
     } },
   { key: 'models', repo: false, usage: 'models', about: 'the Ollama models installed, their sizes, what is loaded — and which fit in memory now',
     req: () => ({ system: 'ollama', method: 'GET', path: '/api/models' }),

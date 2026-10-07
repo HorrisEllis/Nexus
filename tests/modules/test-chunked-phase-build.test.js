@@ -257,6 +257,16 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   });
   await new Promise(x => front.close(x));
 
+  await test('CB-09', '0.45.0 CM3 — a build names only its phase (`idearium repo phase <repo> <phase> build`): the map is found; an unknown phase is said', async () => {
+    sent.length = 0;
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { phase: ph.key, backend: 'ollama' });
+    assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 300));
+    const id = (b.json.data || b.json).runId;
+    await settle(id, x => x.some(r => ['proven', 'unproven', 'no-proof'].includes(r.state)) || x.some(r => r.chunkStopped));
+    const none = await R('POST', `/api/repos/${repoUuid}/phases/build`, { phase: 'ZZ99' });
+    assert.strictEqual(none.status, 404); assert.ok(/no phase ZZ99/.test(JSON.stringify(none.json)));
+  });
+
   RA.dispatch = realDispatch;
   await new Promise(x => vers.close(x));
   console.log(`\n  ${passed} passed, ${failed} failed\n`);

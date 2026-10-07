@@ -6514,8 +6514,14 @@ async function handle(req, res, route, query, body) {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
       const dir = _repoDiskDir(params.uuid);
-      const { map, phase } = body || {};
-      if (!map || !phase) return err(res, 400, 'map and phase are required');
+      let { map, phase } = body || {};
+      if (!phase) return err(res, 400, 'phase is required (and map, when two phasemaps have a phase of that name)');
+      if (!map) {   // §0.45.0 CM3 — `idearium repo phase <repo> <phase> build`: the map is found when the phase names one
+        const PH = await import('../repo/phases.js');
+        const hits = PH.managerView({ repo, repoDir: dir, runs: [] }).phases.filter(p => p.phase_key === phase);
+        if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
+        map = hits[0].map;
+      }
       const r = await _phaseBuild(repo, dir, { map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '' });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
