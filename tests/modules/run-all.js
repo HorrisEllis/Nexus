@@ -543,7 +543,7 @@ const SUITES = [
   'test-system-control.test.js',   // 0.39.372 NC2 — a Nexus system's controls through its supervisor; one intent, inherited
   'test-vm-control.test.js',   // 0.39.371 VM1 + CK1 — pause, live checkpoints, rewind over QMP; a checkpoint before every task's work
   'test-desktop-activity.test.js',   // 0.39.370 DT1 — runs in the repo's compartment and the desktop setup are its tasks and log rows
-  'test-compartment-activity-log.test.js',   // 0.39.368 AL1 — a repo's durable activity log: tasks, phase rows, proposals (who applied, who undid), faults
+  'test-compartment-activity-log.test.js',   // 0.39.368 AL1 + 0.39.373 BO1 (GET /api/activity, BrainOS ACTIVITY) — a repo's durable activity log: tasks, phase rows, proposals (who applied, who undid), faults
 ];
 
 let totalPassed = 0;

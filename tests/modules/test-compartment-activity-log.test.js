@@ -112,6 +112,20 @@ process.on('exit', () => { try { fs.rmSync(tmp, { recursive: true, force: true }
     assert.ok(Number(n.trim().split('\n').pop()) >= 9, n);
   });
 
+  await test('AL-07', 'BO1: GET /api/activity — every compartment at once, each row named by its repo; BrainOS reads it live', async () => {
+    AL.record({ compartment: 'other-compartment-xyz', kind: 'system.restart', status: 'ok', actor: 'person', title: 'restart guardian — restarting' });
+    const all = (await R('GET', '/api/activity?limit=200')).json;
+    const comps = new Set(all.rows.map(x => x.compartment));
+    assert.ok(comps.has(repoUuid) && comps.has('other-compartment-xyz'), 'rows from more than one compartment');
+    assert.strictEqual(all.names[repoUuid], 'Ledger Lane', JSON.stringify(all.names));
+    assert.strictEqual(all.names['other-compartment-xyz'], null, 'an unknown compartment is said, not guessed');
+    assert.ok((await R('GET', '/api/activity?status=failed')).json.rows.every(x => x.status === 'failed'));
+    const app = fs.readFileSync(path.join(ROOT, 'ui/brainos/brainos-app.js'), 'utf8');
+    const html = fs.readFileSync(path.join(ROOT, 'ui/brainos/index.html'), 'utf8');
+    assert.ok(/data-rtab="activity"/.test(html) && /id="rt-activity"/.test(html));
+    assert.ok(/IDEARIUM_URL \+ '\/api\/activity\?limit=100'/.test(app) && /new EventSource\(IDEARIUM_URL \+ '\/sse'\)/.test(app) && /ev\.type !== 'idearium\.repo\.activity'/.test(app));
+  });
+
   console.log(`\n  ${passed} passed · ${failed} failed\n`);
   process.exit(failed ? 1 : 0);
 })();

@@ -35,8 +35,9 @@ function run() {
   test('BV2-002', 'the real, mapped right-panel tabs exist — each with its own panel, none a dead tab', () => {
     // §0.39.282 — pipeline, automation and tool-calls were added after the v2 rebuild, each on a real source
     // (automation: clear-glass/src/mesh/automation-engine.js). The invariant kept: node + chatlog, every tab has a body.
+    // §0.39.373 BO1 — activity: every compartment's activity log (idearium GET /api/activity, live over its SSE).
     const tabs = [...html.matchAll(/data-rtab="([a-z]+)"/g)].map((m) => m[1]);
-    assert.deepStrictEqual(tabs.slice().sort(), ['automation', 'chatlog', 'node', 'pipeline', 'toolcalls']);
+    assert.deepStrictEqual(tabs.slice().sort(), ['activity', 'automation', 'chatlog', 'node', 'pipeline', 'toolcalls']);
     for (const t of tabs) assert.ok(html.includes(`id="rt-${t}"`), `tab ${t} has no rt-${t} panel`);
   });
 

@@ -2008,6 +2008,7 @@ const ROUTE_CAP = {
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
+  'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,   // §0.39.371 VM1
   'repo.system': CAPS.READ_IDEAS, 'repo.system.control': CAPS.ADMIN,   // §0.39.372 NC2 — stopping a system is an admin act
   'config.set':       CAPS.WRITE_IDEAS,
@@ -2331,7 +2332,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
     ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
-    ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
+    ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],
+    ['GET',    ['api','activity'],  'activity.all'],      // §0.39.373 BO1 — every compartment's activity log at once, each row with its repo's name (BrainOS)      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
     ['POST',   ['api','repos',    ':uuid','agent','stream'],  'repo.agent.stream'],      // §0.39.356 LS3 — copilot sends what the model writes, as it writes it
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
@@ -5713,6 +5715,15 @@ async function handle(req, res, route, query, body) {
     // as idearium.repo.agent.feed — the guardian feed's event and its shape (0.39.244) — so the Agent tab, the Code tab and
     // the work surface read one feed whatever the model. SSE only: several a second, observations, not state.
     // §0.39.366 — James: "the background tasks, i want that for each repo. any activity from an agent wearing the hat."
+    // §0.39.373 BO1 — one stream, two views: BrainOS reads every compartment's log here (a repo's Log view reads its own)
+    case 'activity.all': {
+      _repoActivity();
+      const q = query || {};
+      const page = _require('../../lib/activity-log/compartment.js').list('*', { kind: q.kind || null, actor: q.actor || null, status: q.status || null, q: q.q || null, before: Number(q.before) || null, limit: Number(q.limit) || 100 });
+      const names = {};
+      for (const r of page.rows) if (!(r.compartment in names)) { const rp = getRepoLayer().get(r.compartment); names[r.compartment] = rp ? rp.name : null; }
+      return ok(res, { ok: true, ...page, names });
+    }
     // §0.39.368 AL1 — James: "I also want to have a full extensive activity log in each repo."
     case 'repo.activity': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
