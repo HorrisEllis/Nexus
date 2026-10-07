@@ -279,7 +279,19 @@ import { loadTable, appendRow as _appendRowRaw, deleteRow, syncTable } from '../
 function appendRow(table, row) {
   const out = _appendRowRaw(table, row);
   if (table === 'idearium_phase_runs') { try { _require('../../lib/phase-faults.js').log(row); } catch (_) { /* a fault that cannot be logged never fails the build */ } }
+  if (table === 'idearium_phase_runs') { try { _repoActivity().phaseRow(row); } catch (_) { /* §0.39.366 — the background tasks panel never fails a build */ } }
   return out;
+}
+// §0.39.366 — a compartment's background tasks (lib/repo-activity.js): every change broadcast as idearium.repo.task; the
+// history before this process from the compartment's own exchange log
+let _repoActivityMod = null;
+function _repoActivity() {
+  if (_repoActivityMod) return _repoActivityMod;
+  const RAct = _require('../../lib/repo-activity.js');
+  RAct.onChange((task) => { try { getIdeaOS().broadcast('idearium.repo.task', { repoUuid: task.repoUuid, task }); } catch (_) {} });
+  RAct.setHistorySource((uuid) => { try { return _require('../../lib/repo-agent.js').history(uuid, 60); } catch (_) { return []; } });
+  _repoActivityMod = RAct;
+  return RAct;
 }
 import * as WB from '../lib/idea-workbench.js';
 import { runImportPipeline } from '../repo/import-pipeline.js';
@@ -1969,6 +1981,7 @@ const ROUTE_CAP = {
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
+  'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -2285,6 +2298,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
+    ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
     ['POST',   ['api','repos',    ':uuid','agent','stream'],  'repo.agent.stream'],      // §0.39.356 LS3 — copilot sends what the model writes, as it writes it
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
@@ -5606,6 +5620,7 @@ async function handle(req, res, route, query, body) {
       const ring = _toolEvents.get(params.uuid) || [];
       ring.push(ev); if (ring.length > 80) ring.splice(0, ring.length - 80);
       _toolEvents.set(params.uuid, ring);
+      try { _repoActivity().tool(params.uuid, ev); } catch (_) {}
       getIdeaOS().emit('idearium.repo.agent.tool', ev);
       return ok(res, { ok: true });
     }
@@ -5613,11 +5628,18 @@ async function handle(req, res, route, query, body) {
     // and code tab." What an Ollama model writes in copilot's tool loop arrives here (copilot streamSink, LS2) and goes out
     // as idearium.repo.agent.feed — the guardian feed's event and its shape (0.39.244) — so the Agent tab, the Code tab and
     // the work surface read one feed whatever the model. SSE only: several a second, observations, not state.
+    // §0.39.366 — James: "the background tasks, i want that for each repo. any activity from an agent wearing the hat."
+    case 'repo.tasks': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const lim = Math.max(1, Math.min(200, Number(query && query.limit) || 80));
+      return ok(res, { ok: true, repoUuid: params.uuid, ..._repoActivity().list(params.uuid, { limit: lim }) });
+    }
     case 'repo.agent.stream': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
       const EVENTS = ['dispatched', 'chunk', 'complete', 'error', 'timeout'];
       if (!body || !EVENTS.includes(body.event) || !body.jobId) return err(res, 400, `event (${EVENTS.join(' | ')}) and jobId are required`);
       const model = body.model ? String(body.model).slice(0, 120) : null;
+      try { _repoActivity().feed({ repoUuid: params.uuid, event: body.event, jobId: String(body.jobId), provider: model ? `ollama · ${model}` : 'ollama', session: body.session || null, fullLen: Number(body.fullLen) || 0, chars: Number(body.chars) || 0, ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}) }); } catch (_) {}
       getIdeaOS().broadcast('idearium.repo.agent.feed', {
         repoUuid: params.uuid, event: body.event, jobId: String(body.jobId).slice(0, 120), source: 'ollama',
         provider: model ? `ollama · ${model}` : 'ollama', model, session: body.session ? String(body.session).slice(0, 120) : null,
@@ -7986,9 +8008,11 @@ export function startAPI() {
           const { reconcileInFlightChunks, connectGuardianStream } = _require('../lib/guardian-stream.cjs');
           await reconcileInFlightChunks(se);
           // §FEED 0.39.244 — a repo agent's guardian job, live, to the Agent tab (SSE only).
-          connectGuardianStream(se, { onFeed: (ev) => os.broadcast('idearium.repo.agent.feed', {
-            repoUuid: ev.data.agentId.slice('repo-'.length), event: ev.type.slice('guardian.job.'.length), guardianTs: ev.ts, ...ev.data,
-          }) });
+          connectGuardianStream(se, { onFeed: (ev) => {
+            const fp = { repoUuid: ev.data.agentId.slice('repo-'.length), event: ev.type.slice('guardian.job.'.length), guardianTs: ev.ts, ...ev.data };
+            try { _repoActivity().feed(fp); } catch (_) {}   // §0.39.366 — onto the background task it belongs to
+            os.broadcast('idearium.repo.agent.feed', fp);
+          } });
         }
         // §RECONCILE 2026-09-21 — adopt any spec with no repo into a
         // compartment (see _reconcileSpecRepos). Kept inside this phase, not

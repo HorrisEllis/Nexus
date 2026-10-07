@@ -184,6 +184,8 @@ function openSSE() {
         // §FEED 0.39.244 — a repo agent's live guardian feed: to the Agent tab only (several a second;
         // it would bury the event log and trigger refreshes for nothing).
         if (ev && ev.type === 'idearium.repo.agent.feed') { _agentFeedIn(ev.payload || {}); return; }
+        // §0.39.366 — a repo's background task changed: to its Tasks panel only (several a second while an agent runs)
+        if (ev && ev.type === 'idearium.repo.task') { if (typeof rtIn === 'function') rtIn(ev.payload || {}); return; }
         appendEventLog(ev); refreshOnEvent(ev);
       }
       catch(_) {}
@@ -3686,6 +3688,7 @@ function openSettingsConsole(repoUuid) {
 // the repo this was built against has 502 files); now a real tree.
 let REPO_TREE_COLLAPSED = new Set(); // dir paths the user closed (opt OUT, default open)
 function renderApiRepoPanel(repo) {
+  if (repo && typeof rtRepoShown === 'function') { try { rtRepoShown(repo); } catch (_) {} }   // §0.39.366 the repo's Tasks panel
   const tree = document.getElementById('file-tree');
   if (!ACTIVE_API_FILE) {
     document.getElementById('ide-tabs').textContent = 'no file open';
