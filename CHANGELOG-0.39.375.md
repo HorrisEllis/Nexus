@@ -24,3 +24,16 @@ James: "That was fantastic."
 - **`test-template-picker` TP-03** fails intermittently. A 30-second wait in Clear Glass times out at a different step each run.
 - **The bisect was inconsistent:** one of today's commits fails while a later commit that contains it passes.
 - **What happens next:** it is being run three times on this code and three times on the code from before this session, and the result is recorded in the next commit.
+
+## Measured: `test-template-picker` TP-03 is an intermittent failure in the page and its driver, not one of today's regressions
+**This session's code:** it failed 6 of 7 runs. That ratio needs reading against the evidence below.
+
+**The code from before this session (c237e05)** fails the same way: 1 of 2 runs here. It passed in the earlier sweep, and it passed in the bisect.
+
+**Ruled out:**
+- **The files the workshop page loads.** None changed today: `workshop.html`, `workshop.css`, `void-theme.css`, `window-chrome.js`, `void-sky.js`, `template-picker.js`, `workshop.js`.
+- **The server.** Every API request in a failing run, timed, answers in 0–30 ms, and creating a workshop takes the same time on both versions.
+
+**Where it fails:** on the flow's last pass, the double-click on a template card never sends its request, and the 30-second wait times out.
+
+**What is left:** the page and Clear Glass under load. The machine was running sweeps and bisects in parallel during these runs. Recorded here; not changed.
