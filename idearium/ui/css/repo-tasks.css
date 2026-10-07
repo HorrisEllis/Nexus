@@ -55,3 +55,7 @@
 .rt-k-task{color:var(--sky2)}.rt-k-inject{color:var(--amber)}.rt-k-fault{color:#f85149;border-color:rgba(248,81,73,.35)}
 .rt-more{display:block;margin:10px auto;background:none;border:1px solid rgba(255,255,255,.12);color:var(--text2);font:10.5px var(--mono);border-radius:5px;padding:3px 12px;cursor:pointer}
 .rt-more:hover{color:var(--text)}
+/* §0.39.371 CK1 — rewind the desktop to a checkpoint */
+.rt-rewind{display:inline-block;margin:4px 0 6px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.4);color:var(--amber);font:10.5px var(--mono);border-radius:5px;padding:2px 9px;cursor:pointer}
+.rt-rewind:hover{background:rgba(251,191,36,.16)}
+.rt-k-checkpoint{color:var(--amber);border-color:rgba(251,191,36,.35)}.rt-k-desktop{color:var(--sky2)}

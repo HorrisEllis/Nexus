@@ -102,7 +102,8 @@ function _rtRow(t, depth = 0) {
     const r = t.result;
     const res = r ? `<div class="rt-res">${r.files && r.files.length ? `<div>files: ${r.files.map(_rtEsc).join(', ')}</div>` : ''}${r.tools && r.tools.length ? `<div>tools: ${r.tools.map(x => `${_rtEsc(x.name)}${x.ok ? '' : ' ✗'}`).join(', ')}</div>` : ''}${r.error ? `<div class="rt-sub-bad">${_rtEsc(r.error)}</div>` : ''}</div>` : '';
     const meta = [t.hat ? `hat ${t.hat}` : null, t.session ? `session ${t.session}` : null, t.promptChars ? `${t.promptChars} chars sent` : null, t.fromLog ? 'from the exchange log' : null].filter(Boolean).join(' · ');
-    h += `<div class="rt-body">${meta ? `<div class="rt-dim rt-meta">${_rtEsc(meta)}</div>` : ''}${steps || '<div class="rt-dim">no steps yet</div>'}${res}
+    const rw = t.checkpoint ? `<button class="rt-rewind" onclick="event.stopPropagation();rtRewind('${_rtEsc(t.checkpoint)}')" title="the desktop as it was before this task">↶ rewind the desktop to before this</button>` : '';
+    h += `<div class="rt-body">${rw}${meta ? `<div class="rt-dim rt-meta">${_rtEsc(meta)}</div>` : ''}${steps || '<div class="rt-dim">no steps yet</div>'}${res}
       ${kids.length ? `<div class="rt-kids">${kids.map(k => _rtRow(k, depth + 1)).join('')}</div>` : ''}</div>`;
   }
   return h + '</div>';
@@ -175,6 +176,17 @@ function rtToggleDrawer(force) {
   } else if (RT_TICK) { clearInterval(RT_TICK); RT_TICK = null; }
 }
 
+// §0.39.371 CK1 — the log is the rewind: a checkpoint taken before a task (or by hand) puts the repo's desktop back
+async function rtRewind(tag) {
+  const uuid = _rtCurrent(); if (!uuid || !tag) return;
+  if (typeof confirm === 'function' && !confirm(`Rewind this repo's desktop to ${tag}? Its files, memory and running programs go back to that moment.`)) return;
+  try {
+    await api(`/api/repos/${uuid}/desktop/rewind`, { method: 'POST', body: JSON.stringify({ tag }) }, 120000);
+    if (typeof toast === 'function') toast(`desktop rewound to ${tag}`, 'ok');
+  } catch (e) { if (typeof toast === 'function') toast(`rewind refused: ${e.message}`, 'err'); else console.warn(e); }
+  if (RT_VIEW === 'log') rtLogLoad();
+}
+
 function _rtViews() {
   const v = document.getElementById('rt-views');
   if (v) v.innerHTML = [['tasks', 'Background tasks'], ['log', 'Activity log']].map(([k, l]) => `<button class="rt-view${RT_VIEW === k ? ' on' : ''}" onclick="rtView('${k}')">${l}</button>`).join('');
@@ -226,7 +238,7 @@ function rtLogIn(p) {
 function rtLogSet(k, v) { RT_LOG[k] = v; rtLogLoad(); }
 function rtLogToggle(id) { if (RT_LOG.open.has(id)) RT_LOG.open.delete(id); else RT_LOG.open.add(id); rtLogPaint(); }
 
-const _RT_STATUS = { ok: '<span class="rt-ok">✓</span>', failed: '<span class="rt-bad">✗</span>', running: '<span class="rt-dim" title="started">▸</span>', proposed: '<span class="rt-prop">◇</span>', applied: '<span class="rt-ok">◆</span>', rejected: '<span class="rt-dim">⊘</span>', reverted: '<span class="rt-stale">↶</span>', staged: '<span class="rt-prop">◈</span>', skipped: '<span class="rt-stale">↷</span>' };
+const _RT_STATUS = { restored: '<span class="rt-stale">↶</span>', ok: '<span class="rt-ok">✓</span>', failed: '<span class="rt-bad">✗</span>', running: '<span class="rt-dim" title="started">▸</span>', proposed: '<span class="rt-prop">◇</span>', applied: '<span class="rt-ok">◆</span>', rejected: '<span class="rt-dim">⊘</span>', reverted: '<span class="rt-stale">↶</span>', staged: '<span class="rt-prop">◈</span>', skipped: '<span class="rt-stale">↷</span>' };
 function _rtDetail(d) {
   if (d == null) return '';
   if (typeof d === 'string') return `<div class="rt-step">${_rtEsc(d)}</div>`;
@@ -256,7 +268,7 @@ function rtLogPaint() {
       <span class="rt-kind rt-k-${_rtEsc(String(r.kind || '').split('.')[0])}">${_rtEsc(r.kind)}</span>
       <span class="rt-ltitle${r.status === 'failed' ? ' rt-sub-bad' : ''}" title="${_rtEsc(r.title)}">${_rtEsc(r.title)}</span>
       ${r.actor ? `<span class="rt-prov">${_rtEsc(r.actor)}</span>` : ''}
-      ${open ? `<div class="rt-body">${_rtDetail(r.detail)}<div class="rt-dim rt-meta">${_rtEsc([r.hat && `hat ${r.hat}`, r.ref && `ref ${r.ref}`, r.ms != null && `${Math.round(r.ms / 1000)}s`].filter(Boolean).join(' · '))}</div></div>` : ''}
+      ${open ? `<div class="rt-body">${r.kind === 'checkpoint.saved' && r.detail && r.detail.tag ? `<button class="rt-rewind" onclick="event.stopPropagation();rtRewind('${_rtEsc(r.detail.tag)}')" title="the desktop goes back to this moment: its files, memory and running programs">↶ rewind the desktop to here</button>` : ''}${_rtDetail(r.detail)}<div class="rt-dim rt-meta">${_rtEsc([r.hat && `hat ${r.hat}`, r.ref && `ref ${r.ref}`, r.ms != null && `${Math.round(r.ms / 1000)}s`].filter(Boolean).join(' · '))}</div></div>` : ''}
     </div>`;
   }).join('');
   const keep = body.scrollTop;

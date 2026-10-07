@@ -290,6 +290,17 @@ function _repoActivity() {
   const RAct = _require('../../lib/repo-activity.js');
   RAct.onChange((task) => { try { getIdeaOS().broadcast('idearium.repo.task', { repoUuid: task.repoUuid, task }); } catch (_) {} });
   RAct.setHistorySource((uuid) => { try { return _require('../../lib/repo-agent.js').history(uuid, 60); } catch (_) { return []; } });
+  // §0.39.371 CK1 — before each task's work, the repo's desktop (when it is running) is checkpointed; the checkpoint is on
+  // the task and in the log, so "back to before this" is a click. Settings: desktop.checkpoint_before (default on).
+  RAct.setCheckpointer(async ({ repoUuid, label, causedBy }) => {
+    let on = true; try { on = getIdeariumValue('desktop.checkpoint_before') !== false; } catch (_) {}
+    const repo = on ? getRepoLayer().get(repoUuid) : null;
+    if (!repo || !repo.compartmentId) return null;
+    const cb = _require('../../lib/cos-bridge.js');
+    const st = cb.desktop(repo.compartmentId, { action: 'status' });
+    if (!st || st.state !== 'running') return null;
+    return cb.desktopControl(repo.compartmentId, 'checkpoint', { label, causedBy });
+  });
   // §0.39.368 AL1 — every activity row, as it is written, to an open Log view (SSE only)
   try { _require('../../lib/activity-log/compartment.js').onRecord((row) => { try { getIdeaOS().broadcast('idearium.repo.activity', { repoUuid: row.compartment, row }); } catch (_) {} }); } catch (_) {}
   _repoActivityMod = RAct;
@@ -1985,6 +1996,7 @@ const ROUTE_CAP = {
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
+  'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,   // §0.39.371 VM1
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -2229,6 +2241,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','desktop'],        'repo.desktop.status'],
     ['POST',   ['api','repos',    ':uuid','desktop'],        'repo.desktop.start'],
     ['DELETE', ['api','repos',    ':uuid','desktop'],        'repo.desktop.stop'],
+    ['GET',    ['api','repos',    ':uuid','desktop','checkpoints'], 'repo.desktop.checkpoints'],   // §0.39.371 VM1 — the desktop's checkpoints, newest first
+    ['POST',   ['api','repos',    ':uuid','desktop',':op'],  'repo.desktop.control'],   // §0.39.371 VM1 — pause | resume | checkpoint | rewind {tag}
     ['GET',    ['api','repos',    ':uuid','branches'],       'repo.branches'],
     ['GET',    ['api','repos',    ':uuid','graph','traverse'], 'repo.graph.traverse'],
     ['GET',    ['api','repos',    ':uuid','graph','cone'],   'repo.graph.cone'],
@@ -4028,6 +4042,27 @@ async function handle(req, res, route, query, body) {
     // §0.39.279 — James: "once its generated, you can open it like a desktop environment". The repo's compartment
     // boots its VM headless (a branch repo's disk is an overlay of its original's); the viewer (ui/desktop.html, noVNC
     // over QEMU's websocket) is opened in Clear Glass. A repo with no compartment, or no base image, is told why.
+    // §0.39.371 VM1 — James: "I want to use snapshots, pause, rewind, etc. like full VMware style. Not actual VMware."
+    case 'repo.desktop.checkpoints':
+    case 'repo.desktop.control': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!repo.compartmentId) return err(res, 409, 'this repo has no COS compartment — its desktop lives in one');
+      const cb = _require('../../lib/cos-bridge.js');
+      const op = action === 'repo.desktop.checkpoints' ? 'checkpoints' : params.op;
+      if (!['checkpoints', 'pause', 'resume', 'checkpoint', 'rewind', 'status'].includes(op)) return err(res, 404, `no desktop operation ${op}`);
+      const r = await cb.desktopControl(repo.compartmentId, op, { tag: body && body.tag, label: (body && body.label) || (op === 'checkpoint' ? 'by hand' : null), causedBy: null });
+      // the person's acts on the desktop are rows of the repo's log, like everything else that happens in it
+      if (['pause', 'resume', 'checkpoint', 'rewind'].includes(op)) {
+        const AL = _require('../../lib/activity-log/compartment.js');
+        const kind = op === 'checkpoint' ? 'checkpoint.saved' : op === 'rewind' ? 'checkpoint.restored' : `desktop.${op}d`;
+        AL.record({ compartment: repo.uuid, kind, status: r.ok ? 'ok' : 'failed', actor: 'person', ref: (r.checkpoint && r.checkpoint.tag) || null,
+          title: r.ok ? (op === 'rewind' ? `rewound the desktop to ${r.checkpoint.tag}${r.checkpoint.label ? ` — before ${r.checkpoint.label}` : ''}` : op === 'checkpoint' ? `checkpoint ${r.checkpoint.tag} by hand` : `desktop ${op}d`) : `desktop ${op} refused — ${r.error}`,
+          detail: r.checkpoint ? { tag: r.checkpoint.tag } : null });
+      }
+      if (!r.ok) return err(res, r.code === 'NO_LIVE_SNAPSHOT_SHARE' ? 409 : /not running|has stopped/.test(r.error || '') ? 409 : 502, r.error, r.code ? { code: r.code } : null);
+      return ok(res, { ...r, repoUuid: repo.uuid });
+    }
     case 'repo.desktop.status':
     case 'repo.desktop.start':
     case 'repo.desktop.stop': {

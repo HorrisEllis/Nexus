@@ -7,7 +7,7 @@ spec:
     uuid:     nexus-compartment-control-activity-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "idearium + cos — continues docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (HC1, AG1, UI2),
                docs/2026-10-05-cos-machines-phasemap.spec (VM1) and docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec (NC1, NC2)."
-    status:   "MAPPED 2026-10-07 — built one phase at a time, in the order below. CC1 built (0.39.367), AL1 built (0.39.368), AL2 built (0.39.369), DT1 built (0.39.370)."
+    status:   "MAPPED 2026-10-07 — built one phase at a time, in the order below. CC1 built (0.39.367), AL1 built (0.39.368), AL2 built (0.39.369), DT1 built (0.39.370), VM1 + CK1 built (0.39.371)."
     origin: >
       James, 2026-10-07: "the background tasks, i want that for each repo" · "I also want to have a full extensive activity
       log in each repo." · "Do you think we should have each repo a control panel for the system, and compartment for the
@@ -78,7 +78,7 @@ spec:
 
     VM1_checkpoints_on_the_log:
       systems: [cos]
-      status: OPEN — the COS machines map's VM1, with one addition
+      status: "DONE (0.39.371) — cos/workspace/vm-control.js (pause, resume, live checkpoints, rewind over QMP); repo-activity start() checkpoints the running desktop before each task; the drawer rewinds. test-vm-control 7/7."
       depends_on: [DT1_desktop_into_the_log]
       does: "VM1 as mapped (pause, live snapshots, checkpoints before every agent action); each checkpoint's id is written on the activity row it precedes, so the log is the rewind: 'back to before this row'."
 
