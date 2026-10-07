@@ -323,12 +323,13 @@ export function isRepoSnapshotState(state) {
  * leaves no snapshot behind. If the commit succeeds and only the file record
  * fails, the commit stays and the result says so (code FILES_RECORD_FAILED).
  */
-export async function commitRepoSnapshot({ repo, repoDir, commit, message = null, causedBy = null, now, fileLayer = null, snapshotMode = 'delta' } = {}) {
+export async function commitRepoSnapshot({ repo, repoDir, commit, message = null, causedBy = null, now, fileLayer = null, snapshotMode = 'delta', provenance = null } = {}) {
   if (typeof commit !== 'function') return { ok: false, code: 'NO_TRANSPORT', error: 'commit function is required' };
   const built = buildSnapshotRecord({ repo, repoDir, now });
   if (!built.ok) return built;
   const check = verifyMustRecord(built.record);
   if (!check.complete) return { ok: false, code: 'INCOMPLETE', error: `record is missing §33 fields: ${check.missing.join(', ')}` };
+  if (provenance) built.record.provenance = provenance;   // §0.40.0 VR1 — who, why, which files, the desktop checkpoint before it
 
   let kept = null; let contents = null;
   if (fileLayer) {

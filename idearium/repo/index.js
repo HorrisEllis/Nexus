@@ -50,6 +50,10 @@ import { runImportPipeline } from './import-pipeline.js';
 import * as sourceFiles from './source-files.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// §0.40.0 VR1 — every write/delete here is a versionium commit (settled: a burst is one) — lib/repo-versions.js
+const _versions = (() => { try { return createRequire(import.meta.url)('../../lib/repo-versions.js'); } catch (_) { return null; } })();
+const _touched = (repoUuid, rel, op) => { try { if (_versions) _versions.touched(repoUuid, rel, op); } catch (_) { /* versioning never fails a write */ } };
+
 const COMPONENT_ID = 'nexus-id';   // idearium, in the UID registry
 const REPOS_FILE_NAME = 'idearium-repos.json';  // legacy flat file — read once as a migration source, then left alone (§7.4)
 const REPOS_TABLE = 'idearium_repos';
@@ -951,6 +955,7 @@ export class RepoLayer {
         // other content write goes through (disk-verified, rootHash recomputed)
         this.se.completeChunk(manifest.uuid, chunk.uuid, content, { repoUuid, preserveWhitespace: !!opts.preserveWhitespace });
         if (!opts.defer) this._materializeQuiet(repoUuid); // §BUILT 2026-09-06 — keep the real, physical projection honestly in sync, never stale
+        _touched(repoUuid, chunk.realPath || chunk.fileName, 'write');
         return { ok: true, path: chunk.realPath || chunk.fileName, created: false };
       }
       // new file — no chunk for this path yet. sectionId must be a slug;
@@ -961,6 +966,7 @@ export class RepoLayer {
       const fresh = this.se.addChunk(manifest.uuid, { sectionId, title: clean, content, realPath: clean, repoUuid, preserveWhitespace: !!opts.preserveWhitespace });
       const newChunk = fresh.chunks.find(c => c.sectionId === sectionId && c.status !== 'removed');
       if (!opts.defer) this._materializeQuiet(repoUuid);
+      _touched(repoUuid, newChunk?.realPath || newChunk?.fileName || clean, 'write');
       return { ok: true, path: newChunk?.realPath || newChunk?.fileName || clean, created: true };
     } catch (e) { return { error: e.message }; }
   }
@@ -972,6 +978,7 @@ export class RepoLayer {
       if (!chunk) return { error: `file not found in repo: ${relPath}` };
       this.se.removeChunk(manifest.uuid, chunk.uuid);
       if (!opts.defer) this._materializeQuiet(repoUuid); // real, physical file must actually disappear too, not just the manifest's record of it
+      _touched(repoUuid, chunk.realPath || chunk.fileName, 'delete');
       return { ok: true, path: chunk.realPath || chunk.fileName };
     } catch (e) { return { error: e.message }; }
   }

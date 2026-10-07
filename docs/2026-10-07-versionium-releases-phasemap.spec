@@ -8,7 +8,7 @@ spec:
     owner:    "versionium + idearium + cortex — continues docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec,
                versionium/spec/versionium.file-versioning.spec (MCO-B), docs/2026-09-29-nex-node-store-phasemap.spec (N1)
                and docs/2026-10-07-compartment-control-and-activity-phasemap.spec (land(), AL1)."
-    status:   "MAPPED 2026-10-07 — nothing built. Goes before UN1/SP1/DC1/DX1 (the UI phases then get release notes of their own)."
+    status:   "VR1 BUILT (0.40.0). The rest MAPPED. Goes before UN1/SP1/DC1/DX1 (the UI phases then get release notes of their own)."
     origin: >
       James, 2026-10-07: "need a releast notes section for each projecy also which shows each version and whats been
       added with a clear versioning scheme, each minor improvement is 0.0.01. major changes 0.01 each iteration? what do
@@ -81,7 +81,7 @@ spec:
   phases:
     VR1_every_change_a_commit:
       systems: [idearium, versionium]
-      status: MAPPED
+      status: "DONE (0.40.0) — lib/repo-versions.js (touched / attribute / settle / flush); the hook in idearium/repo/index.js writeFile + deleteFile; provenance on the snapshot record (record.provenance); repo-inject attributes; repo-activity current(). test-repo-versions 5/5."
       files: [lib/repo-inject.js, idearium/api/index.js, idearium/repo/snapshot.js, versionium/lib/files.js]
       does: >-
         Every change that reaches a repo's files is a versionium commit on its branch: an accepted proposal, an agent's

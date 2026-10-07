@@ -19,6 +19,8 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('lib/activity-log/compartment.js'),    'idearium/api/index.js repo.activity — GET /api/repos/:uuid/activity, onRecord → SSE idearium.repo.activity (0.39.368)'],
   ['nexus.idearium.api', I('lib/cos-bridge.js'),      'idearium/api/index.js — desktopControl (VM1), setIntent / intentOf (NC2): the desktop and the compartment\'s intent'],
   ['nexus.idearium.api', I('lib/charter.js'),         'idearium/api/index.js _charterOf — the charter with what its compartment inherits (NC2)'],
+  ['nexus.idearium.api', I('lib/repo-versions.js'),   'idearium/api/index.js — setCommitter: a settled change → _commitRepoSnapshotFor (versionium), 0.40.0 VR1'],
+  [I('idearium/repo/index.js'), I('lib/repo-versions.js'), 'RepoLayer writeFile / deleteFile → touched() through createRequire — the one hook every write passes (0.40.0 VR1)'],
   ['nexus.idearium.api', I('lib/repo-inject.js'),      'idearium/api/index.js — every proposal, apply and revert of an agent\'s files (land(), 0.39.367)'],
 ];
 

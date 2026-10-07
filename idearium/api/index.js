@@ -282,6 +282,17 @@ function appendRow(table, row) {
   if (table === 'idearium_phase_runs') { try { _repoActivity().phaseRow(row); } catch (_) { /* §0.39.366 — the background tasks panel never fails a build */ } }
   return out;
 }
+// §0.40.0 VR1 — every change to a repo's files settles into one versionium commit (lib/repo-versions.js), through the
+// same repo snapshot a person takes; only the changed files are sent. Setting versions.every_change (default on).
+try {
+  const RV = _require('../../lib/repo-versions.js');
+  RV.setCommitter(async ({ repoUuid, message, causedBy, provenance }) => {
+    let on = true; try { on = getIdeariumValue('versions.every_change') !== false; } catch (_) {}
+    if (!on) return { ok: true, commitId: null, skipped: 'versions.every_change is off' };
+    const r = await _commitRepoSnapshotFor(repoUuid, { message, causedBy, provenance });
+    return r.ok ? { ok: true, commitId: r.data.commitId, changed: r.data.files ? r.data.files.counts : null } : { ok: false, error: r.error };
+  });
+} catch (_) {}
 // §0.39.366 — a compartment's background tasks (lib/repo-activity.js): every change broadcast as idearium.repo.task; the
 // history before this process from the compartment's own exchange log
 let _repoActivityMod = null;
@@ -1033,7 +1044,7 @@ async function _commitRepoSnapshotFor(uuid, body = {}) {
   if (!dir) return { ok: false, status: 500, error: 'could not resolve repo directory' };
   const { commitRepoSnapshot, verifyMustRecord } = await import('../repo/snapshot.js');
   const result = await commitRepoSnapshot({
-    repo, repoDir: dir, message: body.message || null, causedBy: body.causedBy || null,
+    repo, repoDir: dir, message: body.message || null, causedBy: body.causedBy || null, provenance: body.provenance || null,
     fileLayer: _fileLayers(uuid).fileLayer, snapshotMode: _snapshotMode(),
     commit: async (payload) => {
       const r = await _versionium('POST', '/api/versionium/commit', payload);
