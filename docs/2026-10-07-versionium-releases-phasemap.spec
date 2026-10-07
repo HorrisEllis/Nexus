@@ -41,6 +41,26 @@ spec:
       changelog → RN2 (written by cortex) · Actions / CI → the repo's tests + its desktop (DT1) · issues → gaps and faults
       (exist) · clone / push → GH1 (a git bridge, so nothing is trapped and GitHub can be left gradually).
 
+  # James: "remember to use as little tokens for as much leverage and power as possible. invent around contraints if it
+  # fits nexus better and i prefer novel if it's stable./" — so, where it fits Nexus better than copying GitHub:
+  inventions:
+    one_hook: >-
+      VR1 hooks land()/_write() and nothing else: every change already passes that one door, so commits cannot be
+      missed by a write path someone adds later. No per-site wiring.
+    semantic_diff: >-
+      Beside the line diff, a diff by unit (function / class / section) from idearium's structural chunker (exists):
+      "changed parseCharter(), added rewind()". Agents and release notes read that, not hunks: a fraction of the tokens
+      and closer to the meaning. Line diff stays for people and for proof.
+    derived_version: >-
+      The version is computed, never typed: patch +1 per landed commit batch, minor +1 when a phase closes (phasemap
+      status → DONE), major only by James. The release node is the derivation's proof (the commits that made it).
+    code_and_machine_together: >-
+      Each commit records the repo desktop's VM checkpoint taken before the task (CK1, exists). Rewinding a commit can
+      rewind the machine that ran it too — the code AND the running state, one step back. GitHub cannot do this.
+    notes_cannot_lie: >-
+      Release notes are a projection of commits + activity rows + test results, written by cortex. Nothing in them is
+      authored by an agent, so nothing in them can claim what did not happen.
+
   phases:
     VR1_every_change_a_commit:
       systems: [idearium, versionium]
