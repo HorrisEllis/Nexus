@@ -29,7 +29,24 @@ spec:
       changes to diff, nothing for a release to point at, and nothing Nexus could replace GitHub with. Versionium also has
       no tags (a named commit that never moves).
 
+  lattice_grounded:
+    exists: >-
+      Three associative lattices, each correct and each partial: meta/crystal-lattice.js (lattice_edges between
+      concepts/states/compartment types, weighted by outcome, decaying), intelligence/spatial/system-lattice.js (systems
+      and components, from CFR's causal edges, deliberately a separate instance), and idearium's LatticeEngine (ideas,
+      specs, gaps — in memory). cortex/cortex-v2.js already reads lattice_nodes / lattice_edges (`lattice status|search`).
+    none_holds: "the provenance nodes — commits, releases, activity rows, proposals, faults, tasks, phases — nor the edges between them"
+
   decided:
+    cortex_bookkeeper_is_the_lattice: >-
+      James: "cortex is the book keeper. the associative lattice to interconnect all the nodes". Cortex keeps the books by
+      linking, not by writing ledgers: every provenance node (nexstore record) becomes a lattice node, and its causedBy,
+      by, touches and released-in become typed edges. A release note, a file's history, "why did this change", "what
+      broke since 0.4.0" are each ONE walk of the lattice, not a log read. For agents that is the leverage: a walk
+      returns the few nodes that matter, not thousands of rows (fewest tokens).
+      Kept typed, not merged: provenance edges are their own type; they BRIDGE to the existing lattices by key (a
+      file → its comp_id in the system lattice; a commit's outcome → crystal-lattice weights), so the separation
+      system-lattice.js insists on holds and nothing is computed twice.
     numbering: >-
       VR0. Three whole numbers, each counting by 1, never decimals (0.0.99 + 0.0.01 has no answer): patch +1 = a minor
       improvement or fix; minor +1 = a major change (one phase of a phasemap); major +1 = a milestone, only when James
@@ -87,6 +104,20 @@ spec:
         table, so copilot and every agent get them through CM2 with nothing more).
       proof: "the drawer's History lists VR1's three commits; opening one shows its diff (Clear Glass); `idearium repo diff <repo> <a> <b>` prints it"
 
+    LT1_provenance_lattice:
+      systems: [cortex, nexstore]
+      status: MAPPED
+      depends_on: [VR1_every_change_a_commit]
+      files: [lib/nexstore/record.js, meta/crystal-lattice.js, intelligence/spatial/system-lattice.js, cortex/cortex-v2.js]
+      does: >-
+        Cortex subscribes to the node store's log (one tap, like VR1's one hook) and keeps a typed provenance lattice:
+        nodes = commits, proposals, activity rows, tasks, faults, phases, releases, files; edges = caused_by, by, touches,
+        fixes, released_in, supersedes. Edges to comp_ids bridge into the system lattice; a commit's tests passing or
+        failing feeds crystal-lattice's weights (so Nexus learns which kinds of change hold). Query: walk(from, edge
+        types, depth) → the few nodes, with a one-line projection each. `cortex lattice why <file|commit>` and a CM1
+        row `provenance` (so every agent has it through CM2).
+      proof: "after VR1's three commits: walk(file) → the commits that touched it → their proposals → who and why, in one call; the bridge reaches the file's component; a restart rebuilds the lattice from the log with nothing lost"
+
     RN1_release_is_a_node_and_a_tag:
       systems: [versionium, nexstore]
       status: MAPPED
@@ -101,10 +132,10 @@ spec:
     RN2_cortex_is_the_bookkeeper:
       systems: [cortex]
       status: MAPPED
-      depends_on: [RN1_release_is_a_node_and_a_tag]
+      depends_on: [RN1_release_is_a_node_and_a_tag, LT1_provenance_lattice]
       does: >-
-        Agents never write release notes. When a phase lands (its version bumped), cortex reads what happened — the
-        commits since the last tag, their activity rows, the phasemap entry, the tests — and writes the release node and
+        Agents never write release notes. When a phase lands (its version bumped), cortex walks the lattice from the
+        new tag back to the last one — the commits, their activity rows, the phasemap entry, the tests — and writes the release node and
         the tag. The notes are a projection of the commits, so they cannot claim what did not happen. Backfill: Nexus's
         own CHANGELOG-*.md (167) and lib/version.js lines read into release nodes; the files stay.
       proof: "a phase landed → one release node written by cortex, its notes listing that phase's commits; the backfill reads every CHANGELOG into a node and loses none"
@@ -130,4 +161,4 @@ spec:
         GitHub, nothing is lost and nothing depends on it.
       proof: "a git repo imported → the same commits in History; exported → `git log` shows them; round trip changes no hash of any file"
 
-  ordering: "VR1 → VR2 → RN1 → RN2 → RN3 → GH1. VR1 is the foundation: without a commit per change there is nothing to diff, release or replace GitHub with."
+  ordering: "VR1 → LT1 → VR2 → RN1 → RN2 → RN3 → GH1. VR1 is the foundation: without a commit per change there is nothing to diff, release or replace GitHub with."
