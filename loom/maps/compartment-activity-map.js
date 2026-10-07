@@ -13,6 +13,7 @@ const I = (rel) => idFor(rel);
 
 const FILES = [];   // nothing hand-mapped: every file here is scanned
 const CONSUMERS = [
+  [I('idearium/api/build-surface.js'), I('lib/repo-activity.js'), 'environmentSetup — deps.require: the desktop setup is a \'setup\' task on the repo that asked (0.39.370 DT1)'],
   ['nexus.idearium.api', I('lib/repo-activity.js'),    'idearium/api/index.js _repoActivity() — phase rows, the guardian feed, the Ollama stream, tool calls → tasks; GET /api/repos/:uuid/tasks'],
   ['nexus.idearium.api', I('lib/resource-monitor.js'), 'idearium/api/index.js makeAttempt — fitsModel() before an Ollama rung (0.39.364)'],
   ['nexus.idearium.api', I('lib/activity-log/compartment.js'),    'idearium/api/index.js repo.activity — GET /api/repos/:uuid/activity, onRecord → SSE idearium.repo.activity (0.39.368)'],

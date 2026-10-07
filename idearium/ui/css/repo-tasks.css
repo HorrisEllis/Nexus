@@ -25,7 +25,7 @@
 @keyframes rtspin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.rt-spin{animation:none;border-color:var(--sky)}}
 .rt-kind{font-size:9px;border-radius:3px;padding:0 4px;border:1px solid rgba(255,255,255,.14);color:var(--text2);flex:none}
-.rt-k-phase{color:var(--violet);border-color:rgba(167,139,250,.4)}.rt-k-build{color:var(--sky2)}.rt-k-review{color:var(--amber)}.rt-k-repair{color:#f0883e}
+.rt-k-phase{color:var(--violet);border-color:rgba(167,139,250,.4)}.rt-k-run{color:var(--mint,#3fb950);border-color:rgba(63,185,80,.35)}.rt-k-setup{color:var(--sky2);border-color:rgba(125,211,252,.35)}.rt-k-build{color:var(--sky2)}.rt-k-review{color:var(--amber)}.rt-k-repair{color:#f0883e}
 .rt-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;color:var(--nx-bright,var(--text))}
 .rt-grow{flex:1}
 .rt-prov{font-size:9.5px;color:var(--text3);white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;flex:none}

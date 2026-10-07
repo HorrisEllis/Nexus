@@ -35,8 +35,11 @@ function hostInfo() {
   return out;
 }
 
-function start({ installQemu = false, extras = [], node = null, login = null, _spawn = spawn, _script = PROVISION, _lingerMs = 20000 } = {}) {
+// §0.39.370 DT1 — onEvent({ kind: 'step', msg, stderr } | { kind: 'end', result }): whoever started the setup hears each
+// step and the end as they happen (Idearium makes it a task on the repo that asked) — this file stays Idearium-agnostic.
+function start({ installQemu = false, extras = [], node = null, login = null, onEvent = null, _spawn = spawn, _script = PROVISION, _lingerMs = 20000 } = {}) {
   if (job.state === 'running') return status();
+  const tell = (e) => { if (typeof onEvent === 'function') { try { onEvent(e); } catch (_) {} } };
   const args = [_script, '--json'];
   if (installQemu) args.push('--install-qemu');
   // §0.39.293 DK1 — 'desktop' was filtered out here, so an image built from idearium's setup never had xfce or the
@@ -46,12 +49,12 @@ function start({ installQemu = false, extras = [], node = null, login = null, _s
   if (node && /^(lts|\d{2})$/.test(String(node))) args.push('--node', String(node));
   job = { state: 'running', startedAt: Date.now(), endedAt: null, log: [], result: null, pid: null, args: args.slice(1) };
   const me = job;
-  const push = (e) => { me.log.push(e); if (me.log.length > MAX_LOG) me.log.splice(0, me.log.length - MAX_LOG); };
+  const push = (e) => { me.log.push(e); if (me.log.length > MAX_LOG) me.log.splice(0, me.log.length - MAX_LOG); tell({ kind: 'step', msg: e.msg || e.step || JSON.stringify(e), stderr: !!e.stderr }); };
   let child;
   // §0.39.282 N20 — the desktop account (settings desktop.user/password) reaches provision.js through its env, never argv
   const env = { ...process.env, ...(login && login.user ? { COS_DESKTOP_USER: String(login.user) } : {}), ...(login && login.password ? { COS_DESKTOP_PASSWORD: String(login.password) } : {}) };
   try { child = _spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true, env }); }
-  catch (e) { me.state = 'failed'; me.endedAt = Date.now(); me.result = { ok: false, error: `could not start the setup: ${e.message}` }; return status(); }
+  catch (e) { me.state = 'failed'; me.endedAt = Date.now(); me.result = { ok: false, error: `could not start the setup: ${e.message}` }; tell({ kind: 'end', result: me.result }); return status(); }
   me.pid = child.pid || null;
   // §0.39.344 — James: "okay its stuck." The setup said "ready" and wrote its result, but its process did not exit (on
   // his machine something kept it alive), and the job only settled on exit — so it read "running" forever. The result
@@ -61,6 +64,7 @@ function start({ installQemu = false, extras = [], node = null, login = null, _s
     if (settled) return; settled = true;
     me.endedAt = Date.now();
     me.state = me.result && me.result.ok ? 'done' : 'failed';
+    tell({ kind: 'end', result: me.result });
     const t = setTimeout(() => {
       if (child.exitCode !== null || child.signalCode) return;
       push({ at: Date.now(), msg: 'the setup reported its result but its process did not exit — stopped it' });
@@ -79,7 +83,7 @@ function start({ installQemu = false, extras = [], node = null, login = null, _s
     }
   });
   child.stderr.on('data', (d) => { for (const l of String(d).split('\n').map(x => x.trim()).filter(Boolean)) push({ at: Date.now(), msg: l, stderr: true }); });
-  child.on('error', (e) => { me.state = 'failed'; me.endedAt = Date.now(); me.result = me.result || { ok: false, error: e.message }; });
+  child.on('error', (e) => { if (settled) return; me.result = me.result || { ok: false, error: e.message }; _settle(); });
   child.on('exit', (code) => {
     if (settled) return;   // already settled on its result line
     if (!me.result) me.result = { ok: code === 0, error: code === 0 ? null : `setup exited ${code}` };

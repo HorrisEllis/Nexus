@@ -7,7 +7,7 @@ spec:
     uuid:     nexus-compartment-control-activity-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "idearium + cos — continues docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (HC1, AG1, UI2),
                docs/2026-10-05-cos-machines-phasemap.spec (VM1) and docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec (NC1, NC2)."
-    status:   "MAPPED 2026-10-07 — built one phase at a time, in the order below. CC1 built (0.39.367), AL1 built (0.39.368), AL2 built (0.39.369)."
+    status:   "MAPPED 2026-10-07 — built one phase at a time, in the order below. CC1 built (0.39.367), AL1 built (0.39.368), AL2 built (0.39.369), DT1 built (0.39.370)."
     origin: >
       James, 2026-10-07: "the background tasks, i want that for each repo" · "I also want to have a full extensive activity
       log in each repo." · "Do you think we should have each repo a control panel for the system, and compartment for the
@@ -70,7 +70,7 @@ spec:
 
     DT1_desktop_into_the_log:
       systems: [cos, idearium]
-      status: OPEN
+      status: "DONE (0.39.370) — lib/cos-run.js run() is a 'run' task; the repo setup route makes setup-job a 'setup' task (onEvent). test-desktop-activity 5/5."
       depends_on: [AL1_activity_log]
       files: [lib/cos-bridge.js, cos/testenv/setup-job.js, lib/cos-run.js]
       does: "The repo's desktop (COS) is a source: setup steps, boot, each run in it, snapshots — record() with the repo's compartment."

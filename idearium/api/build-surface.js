@@ -155,7 +155,18 @@ export async function environmentSetup(deps, uuid) {
   // did not work once the password had been changed in Settings.
   const cfg = typeof deps.config === 'function' ? deps.config : () => undefined;
   const login = { user: cfg('desktop.user'), password: cfg('desktop.password') };
-  const job = deps.require('../../cos/testenv/setup-job.js').start({ extras, node: options.node && options.node !== 'lts' ? options.node : null, login });
+  // §0.39.370 DT1 — the setup is one of this repo's background tasks (kind 'setup'): each provision step a step on it,
+  // its start and end in the repo's activity log
+  let RAct = null, task = null;
+  try { RAct = deps.require('../../lib/repo-activity.js'); } catch (_) {}
+  const onEvent = (e) => {
+    if (!RAct) return;
+    if (!task) task = RAct.begin({ repoUuid: uuid, kind: 'setup', message: `set up the desktop${extras.length ? ` — ${extras.join(', ')}` : ''}`, provider: 'cos · testenv' });
+    if (e.kind === 'step') RAct.note(task, e.msg, e.stderr);
+    else if (e.kind === 'end') RAct.end(task, { ok: !!(e.result && e.result.ok), text: e.result && e.result.ok ? 'the desktop is ready' : '', error: e.result && !e.result.ok ? e.result.error || 'the setup failed' : null });
+  };
+  const job = deps.require('../../cos/testenv/setup-job.js').start({ extras, node: options.node && options.node !== 'lts' ? options.node : null, login, onEvent });
+  if (job.state === 'running') onEvent({ kind: 'step', msg: `started${extras.length ? ` with ${extras.join(', ')}` : ''}` });
   deps.emit('idearium.repo.environment.setup', { repoUuid: uuid, extras, state: job.state });
   return ok({ repoUuid: uuid, extras, install: c.plan.install, job: { state: job.state, startedAt: job.startedAt } });
 }

@@ -71,7 +71,7 @@ function _rtDur(t) {
   return s < 60 ? `${s}s` : s < 3600 ? `${Math.floor(s / 60)}m ${s % 60}s` : `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
 }
 const _RT_ICON = { running: '<span class="rt-spin"></span>', done: '<span class="rt-ok">✓</span>', failed: '<span class="rt-bad">✗</span>', stale: '<span class="rt-stale" title="said running, but nothing for 15 min">◌</span>' };
-const _RT_KIND = { phase: 'phase', build: 'build', review: 'review', repair: 'repair', chat: 'chat' };
+const _RT_KIND = { phase: 'phase', build: 'build', review: 'review', repair: 'repair', chat: 'chat', run: 'run', setup: 'setup' };
 function _rtEsc(s) { return typeof escapeHtml === 'function' ? escapeHtml(String(s == null ? '' : s)) : String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 
 function _rtRow(t, depth = 0) {
