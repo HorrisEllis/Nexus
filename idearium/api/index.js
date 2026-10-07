@@ -692,7 +692,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   try { precedent = _require('../../lib/phase-faults.js').precedent(phase); } catch (_) {}
   // §0.39.362 CH2 — the compartment's charter (charter.spec at the repo root): its axioms, what must stay true, its end state
   let charterText = '';
-  try { const CHr = _require('../../lib/charter.js'); charterText = CHr.requestText(CHr.load(_repoDiskDir(target.uuid))); } catch (_) {}
+  try { charterText = _require('../../lib/charter.js').requestText(_charterOf(target.uuid)); } catch (_) {}
   const message = [req.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
 
   // (3) the agent, in the background — its reply can take minutes
@@ -863,6 +863,18 @@ function _proposedSize(dir, overlays) {
   return { added, removed, files: overlays.length };
 }
 
+// §0.39.372 NC2 — a repo's charter as it applies: its own (charter.spec), with every condition and axiom its compartment
+// inherits from its parents (a Nexus system: Nexus's). Where the charter is read for a request or a proof, this is read.
+function _charterOf(repoUuid) {
+  const CH = _require('../../lib/charter.js');
+  const ch = CH.load(_repoDiskDir(repoUuid));
+  try {
+    const repo = getRepoLayer().get(repoUuid);
+    if (repo && repo.compartmentId) return CH.withInherited(ch, _require('../../lib/cos-bridge.js').intentOf(repo.compartmentId));
+  } catch (_) { /* COS unreadable: the charter alone */ }
+  return ch;
+}
+
 // §0.39.362 CH5 — the compartment's end state, checked: on its files, with what is proposed laid over them (a scratch copy;
 // nothing written), each run a row of idearium_charter_runs — the compartment's progress on the Plan.
 async function _charterCheck(repoUuid, { withProposals = true, cause = null } = {}) {
@@ -895,7 +907,7 @@ async function _provePhase({ target, base, commitId, mapText, phase, message, di
   if (!conditions.length) { const d = PR.derivedConditionsFromPhase(mapText, phase); if (d.conditions.length) ({ conditions, source } = d); else source = d.source; }
   // §0.39.362 CH3 — the compartment's charter conditions hold for every phase: checked in its proof, on the proposed code
   const CH = _require('../../lib/charter.js');
-  const charter = CH.load(_repoDiskDir(target.uuid));
+  const charter = _charterOf(target.uuid);
   const charterConds = CH.proofConditions(charter);
   if (charterConds.length) { conditions = [...conditions, ...charterConds]; source = `${source} + the charter's ${charterConds.length} condition${charterConds.length === 1 ? '' : 's'}`; }
   const pbase = { ...base, runId: `${base.runId}-proof`, buildRunId: base.runId };
@@ -1997,6 +2009,7 @@ const ROUTE_CAP = {
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,   // §0.39.371 VM1
+  'repo.system': CAPS.READ_IDEAS, 'repo.system.control': CAPS.ADMIN,   // §0.39.372 NC2 — stopping a system is an admin act
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -2241,6 +2254,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','desktop'],        'repo.desktop.status'],
     ['POST',   ['api','repos',    ':uuid','desktop'],        'repo.desktop.start'],
     ['DELETE', ['api','repos',    ':uuid','desktop'],        'repo.desktop.stop'],
+    ['GET',    ['api','repos',    ':uuid','system'],  'repo.system'],      // §0.39.372 NC2 — a Nexus system repo's live system: its processes as its supervisor sees them
+    ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
     ['GET',    ['api','repos',    ':uuid','desktop','checkpoints'], 'repo.desktop.checkpoints'],   // §0.39.371 VM1 — the desktop's checkpoints, newest first
     ['POST',   ['api','repos',    ':uuid','desktop',':op'],  'repo.desktop.control'],   // §0.39.371 VM1 — pause | resume | checkpoint | rewind {tag}
     ['GET',    ['api','repos',    ':uuid','branches'],       'repo.branches'],
@@ -4042,6 +4057,36 @@ async function handle(req, res, route, query, body) {
     // §0.39.279 — James: "once its generated, you can open it like a desktop environment". The repo's compartment
     // boots its VM headless (a branch repo's disk is an overlay of its original's); the viewer (ui/desktop.html, noVNC
     // over QEMU's websocket) is opened in Clear Glass. A repo with no compartment, or no base image, is told why.
+    // §0.39.372 NC2 — James: "Do you think we should have each repo a control panel for the system, and compartment for
+    // the nexus repos?" A Nexus system's repo is its compartment (idearium/repo/nexus-self.js: Nexus → one child per
+    // system) and now its control panel: its processes as the supervisor (nexus/autopilot.js) sees them — status, pid,
+    // restarts, crashes, health — and restart / stop / start, asked of the supervisor, never of the system itself. The
+    // shared code (core, cos, components) has no process: said. Each act is a row of the repo's log.
+    case 'repo.system':
+    case 'repo.system.control': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const sys = repo.nexusSelf && repo.nexusSelf.role === 'system' ? repo.nexusSelf.system : null;
+      if (!sys) return err(res, 409, 'not a Nexus system repo — only a Nexus system has processes to control');
+      let st = null;
+      try { st = await _nexusClient.get('autopilot', '/status', { timeout: 4000 }); } catch (e) { st = { ok: false, error: `the supervisor (autopilot) is not answering: ${e.message}` }; }
+      const kernels = st && st.kernels ? Object.entries(st.kernels).filter(([k]) => k === sys || k.startsWith(`${sys}-`)).map(([name, k]) => ({ name, ...k })) : [];
+      if (action === 'repo.system') {
+        return ok(res, { repoUuid: repo.uuid, system: sys, compartmentId: repo.compartmentId || null, supervisor: st && st.kernels ? 'autopilot' : null,
+          ...(st && st.kernels ? {} : { error: (st && st.error) || 'the supervisor did not answer' }),
+          processes: kernels, note: kernels.length ? null : (st && st.kernels ? `${sys} has no process of its own — it is code the other systems load` : null) });
+      }
+      const op = params.op;
+      if (!['restart', 'stop', 'start'].includes(op)) return err(res, 404, `no system operation ${op}`);
+      const kernel = (body && body.process) || (kernels[0] && kernels[0].name) || sys;
+      if (!kernels.some(k => k.name === kernel)) return err(res, 409, `${kernel} is not a process the supervisor runs for ${sys}`);
+      let r;
+      try { r = await _nexusClient.post('autopilot', `/control/${encodeURIComponent(kernel)}/${op}`, {}, { timeout: 8000 }); } catch (e) { r = { ok: false, error: e.message }; }
+      _require('../../lib/activity-log/compartment.js').record({ compartment: repo.uuid, kind: `system.${op}`, status: r && r.ok ? 'ok' : 'failed', actor: 'person',
+        title: r && r.ok ? `${op} ${kernel} — ${r.status || 'asked'}${r.note ? ` (${r.note})` : ''}` : `${op} ${kernel} refused — ${(r && r.error) || 'no answer'}`, ref: kernel });
+      if (!r || !r.ok) return err(res, 502, (r && r.error) || 'the supervisor did not answer');
+      return ok(res, { repoUuid: repo.uuid, system: sys, process: kernel, op, ...r });
+    }
     // §0.39.371 VM1 — James: "I want to use snapshots, pause, rewind, etc. like full VMware style. Not actual VMware."
     case 'repo.desktop.checkpoints':
     case 'repo.desktop.control': {
@@ -6387,7 +6432,7 @@ async function handle(req, res, route, query, body) {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
       const CH = _require('../../lib/charter.js');
-      const ch = CH.load(_repoDiskDir(params.uuid));
+      const ch = _charterOf(params.uuid);
       return ok(res, { repoUuid: params.uuid, ...ch, template: ch.exists ? null : CH.template(repo.name), endState: _charterLatest(params.uuid) });
     }
     case 'repo.charter.set': {
@@ -6400,7 +6445,15 @@ async function handle(req, res, route, query, body) {
       const w = getRepoLayer().writeTextFile(params.uuid, CH.FILE, text.endsWith('\n') ? text : `${text}\n`, { preserveWhitespace: true });
       if (!w || w.error) return err(res, 409, `the charter could not be written: ${(w && w.error) || 'unknown'}${repo.nexusSelf ? ' — a Nexus repo is written through the approval gate: propose charter.spec from the Agent tab' : ''}`);
       getIdeaOS().emit('idearium.repo.charter.set', { repoUuid: params.uuid, axioms: ch.axioms.length, conditions: ch.conditions.length, endState: ch.endState.length });
-      return ok(res, { repoUuid: params.uuid, ...CH.load(_repoDiskDir(params.uuid)) });
+      // §0.39.372 NC2 — one intent, not two copies: the charter (the file, versioned with the repo) IS its COS compartment's
+      // intent; saved, it is set on the compartment through COS's gate, where nesting applies (a Nexus system's
+      // compartment holds Nexus's conditions and axioms too). What COS cannot check (a page check) is named, not lost.
+      let compartment = null;
+      if (repo.compartmentId) {
+        const cr = _require('../../lib/cos-bridge.js').setIntent(repo.compartmentId, { endState: ch.endState, conditions: ch.conditions, axioms: ch.axioms });
+        compartment = cr.ok ? { id: repo.compartmentId, set: true, dropped: cr.dropped, inherited: (cr.effective.conditions || []).filter(c => c.inherited).length } : { id: repo.compartmentId, set: false, error: cr.error };
+      }
+      return ok(res, { repoUuid: params.uuid, ...CH.load(_repoDiskDir(params.uuid)), compartment });
     }
     // §0.39.362 WS1 — the pending proposals, proved as proposed (a scratch copy; nothing written): the charter's
     // conditions and end state, and a phase's conditions when map + phase are given. What an agent calls before "done".
@@ -6408,7 +6461,7 @@ async function handle(req, res, route, query, body) {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
       const dir = _repoDiskDir(params.uuid);
-      const CH = _require('../../lib/charter.js'); const ch = CH.load(dir);
+      const CH = _require('../../lib/charter.js'); const ch = _charterOf(params.uuid);
       const PR = await import('../repo/proof-run.js');
       let conds = [...CH.proofConditions(ch), ...CH.endStateConditions(ch).map(c => ({ ...c, says: `[end state] ${c.says}` }))];
       if (body && body.map && body.phase) {

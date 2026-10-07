@@ -17,6 +17,8 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('lib/repo-activity.js'),    'idearium/api/index.js _repoActivity() — phase rows, the guardian feed, the Ollama stream, tool calls → tasks; GET /api/repos/:uuid/tasks'],
   ['nexus.idearium.api', I('lib/resource-monitor.js'), 'idearium/api/index.js makeAttempt — fitsModel() before an Ollama rung (0.39.364)'],
   ['nexus.idearium.api', I('lib/activity-log/compartment.js'),    'idearium/api/index.js repo.activity — GET /api/repos/:uuid/activity, onRecord → SSE idearium.repo.activity (0.39.368)'],
+  ['nexus.idearium.api', I('lib/cos-bridge.js'),      'idearium/api/index.js — desktopControl (VM1), setIntent / intentOf (NC2): the desktop and the compartment\'s intent'],
+  ['nexus.idearium.api', I('lib/charter.js'),         'idearium/api/index.js _charterOf — the charter with what its compartment inherits (NC2)'],
   ['nexus.idearium.api', I('lib/repo-inject.js'),      'idearium/api/index.js — every proposal, apply and revert of an agent\'s files (land(), 0.39.367)'],
 ];
 

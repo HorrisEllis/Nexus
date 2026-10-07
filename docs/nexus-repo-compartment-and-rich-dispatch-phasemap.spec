@@ -179,3 +179,15 @@ spec:
   honest_risks:
     - "RD1/RD2 are the least-precedented phases in this whole thread — nothing in the real codebase does this today, unlike TR1 which is a real, located gap in existing machinery."
     - "NC1's answer could make NC2 much larger or much smaller than currently scoped — this phasemap does not guess which."
+
+# ## ADDENDUM 2026-10-07 (0.39.372) — NC1 answered, NC2 built (docs/2026-10-07-compartment-control-and-activity-phasemap.spec)
+# James: "Do you think we should have each repo a control panel for the system, and compartment for the nexus repos?"
+# NC1 — the written answer its gate asks for: Idearium never modifies the files the running Nexus is made of except
+# through the approval gate that already exists (lib/nexus-self/inject-gate.js): every agent's change to a Nexus repo —
+# a reply's block or a coding agent's diff (0.39.367 land()) — is a proposal, applied to the live tree only on approval.
+# A Nexus system's desktop (COS) runs a copy, where agents build and run freely.
+# NC2 — the nesting already existed (idearium/repo/nexus-self.js: the Nexus compartment, one child per system, each
+# system repo linked by compartmentId). Built on it: a system repo is a control panel (its processes through the
+# supervisor, nexus/autopilot.js /control/:name/:op — never through the system itself), and its charter IS its
+# compartment's intent (set through COS's SetIntentGate; read with Nexus's inherited conditions and axioms).
+# Proof: tests/modules/test-system-control.test.js 7/7.

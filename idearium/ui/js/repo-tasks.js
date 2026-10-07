@@ -14,7 +14,8 @@ let RT_TICK = null;
 // §0.39.369 AL2 — James: "I also want to have a full extensive activity log in each repo." The same drawer, a second
 // view of the repo's durable log (GET /api/repos/:uuid/activity): every task, phase row, proposal event (who applied,
 // who undid) and fault, newest first, filtered, paged back, live (SSE idearium.repo.activity). One drawer, two views.
-let RT_VIEW = 'tasks';             // tasks | log
+let RT_VIEW = 'tasks';             // tasks | log | control
+const RT_CTL = { uuid: null, system: null, desktop: null, checkpoints: null, busy: null, error: null };
 const RT_LOG = { uuid: null, rows: [], more: false, facets: null, kind: '', actor: '', failed: false, q: '', open: new Set(), loading: false };
 
 function _rtState(uuid) { if (!RT_TASKS.has(uuid)) RT_TASKS.set(uuid, new Map()); return RT_TASKS.get(uuid); }
@@ -53,6 +54,7 @@ function rtRepoShown(repo) {
   if (_rtDrawerOpen()) rtPaint();
   rtLoad(repo.uuid);
   if (RT_VIEW === 'log' && _rtDrawerOpen()) rtLogLoad();
+  if (RT_VIEW === 'control' && _rtDrawerOpen()) rtCtlLoad();
 }
 
 function _rtTree(uuid) {
@@ -114,6 +116,7 @@ function _rtDrawerOpen() { const d = document.getElementById('rt-drawer'); retur
 function rtPaint() {
   _rtViews();
   if (RT_VIEW === 'log') return rtLogPaint();
+  if (RT_VIEW === 'control') return rtCtlPaint();
   const uuid = _rtCurrent();
   const body = document.getElementById('rt-list');
   if (!body || !uuid) return;
@@ -171,9 +174,59 @@ function rtToggleDrawer(force) {
   if (open) {
     const r = typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO;
     const name = document.getElementById('rt-repo'); if (name) name.textContent = r ? (r.name || r.uuid) : '';
-    rtPaint(); rtLoad(_rtCurrent()); if (RT_VIEW === 'log') rtLogLoad();
+    rtPaint(); rtLoad(_rtCurrent()); if (RT_VIEW === 'log') rtLogLoad(); if (RT_VIEW === 'control') rtCtlLoad();
     if (!RT_TICK) RT_TICK = setInterval(_rtTick, 1000);
   } else if (RT_TICK) { clearInterval(RT_TICK); RT_TICK = null; }
+}
+
+// §0.39.372 NC2 — James: "Do you think we should have each repo a control panel for the system, and compartment for the
+// nexus repos?" The drawer's third view: the repo's compartment as a control panel. A Nexus system's repo shows its
+// processes as the supervisor sees them (status, pid, restarts, crashes) with restart / stop / start — asked of the
+// supervisor, never of the system itself; every repo shows its desktop VM (pause, resume, a checkpoint by hand, its
+// checkpoints with rewind). Each act is a row of the log.
+async function rtCtlLoad() {
+  const uuid = _rtCurrent(); if (!uuid || typeof api !== 'function') return;
+  if (RT_CTL.uuid !== uuid) Object.assign(RT_CTL, { uuid, system: null, desktop: null, checkpoints: null, error: null });
+  const [sys, desk, cps] = await Promise.all([
+    api(`/api/repos/${uuid}/system`).catch(e => ({ none: e.message })),
+    api(`/api/repos/${uuid}/desktop`).catch(e => ({ error: e.message })),
+    api(`/api/repos/${uuid}/desktop/checkpoints`).catch(e => ({ error: e.message })),
+  ]);
+  Object.assign(RT_CTL, { system: sys, desktop: desk, checkpoints: cps });
+  if (RT_VIEW === 'control' && _rtDrawerOpen()) rtCtlPaint();
+}
+async function rtCtl(path, body, what) {
+  const uuid = _rtCurrent(); if (!uuid) return;
+  if (/stop|restart/.test(path) && typeof confirm === 'function' && !confirm(`${what}?`)) return;
+  RT_CTL.busy = what; rtCtlPaint();
+  try { await api(`/api/repos/${uuid}/${path}`, { method: 'POST', body: JSON.stringify(body || {}) }, 120000); if (typeof toast === 'function') toast(`${what} — done`, 'ok'); }
+  catch (e) { if (typeof toast === 'function') toast(`${what} refused: ${e.message}`, 'err'); RT_CTL.error = e.message; }
+  RT_CTL.busy = null;
+  await rtCtlLoad();
+}
+const _RT_PSTAT = { stable: 'rt-ok', running: 'rt-ok', online: 'rt-ok', starting: 'rt-prop', restarting: 'rt-prop', held: 'rt-stale', stopped: 'rt-stale', dormant: 'rt-dim', down: 'rt-bad', circuit_open: 'rt-bad' };
+function rtCtlPaint() {
+  const body = document.getElementById('rt-list'), f = document.getElementById('rt-filters');
+  if (!body) return;
+  if (f) f.innerHTML = `<button class="rt-f" onclick="rtCtlLoad()">↻ refresh</button>${RT_CTL.busy ? `<span class="rt-dim"><span class="rt-spin"></span> ${_rtEsc(RT_CTL.busy)}…</span>` : ''}`;
+  const sys = RT_CTL.system || {}, d = RT_CTL.desktop || {}, cps = (RT_CTL.checkpoints && RT_CTL.checkpoints.checkpoints) || [];
+  const btn = (path, label, what, body2) => `<button class="rt-act" ${RT_CTL.busy ? 'disabled' : ''} onclick='rtCtl(${JSON.stringify(path)}, ${JSON.stringify(body2 || {})}, ${JSON.stringify(what)})'>${label}</button>`;
+  let h = '';
+  if (sys.system) {
+    h += `<div class="rt-sec">System · ${_rtEsc(sys.system)} <span class="rt-dim">through ${_rtEsc(sys.supervisor || 'its supervisor')}</span></div>`;
+    if (sys.error) h += `<div class="rt-sub-bad rt-pad">${_rtEsc(sys.error)}</div>`;
+    if (sys.note) h += `<div class="rt-dim rt-pad">${_rtEsc(sys.note)}</div>`;
+    for (const p of sys.processes || []) {
+      h += `<div class="rt-proc"><span class="${_RT_PSTAT[p.status] || 'rt-dim'}">●</span> <b>${_rtEsc(p.name)}</b> <span class="rt-dim">${_rtEsc(p.status)}${p.pid ? ` · pid ${p.pid}` : ''}${p.port ? ` · :${p.port}` : ''} · ${p.restarts || 0} restart(s)${p.crashesInWindow ? ` · <span class="rt-sub-bad">${p.crashesInWindow} crash(es)</span>` : ''}</span><span class="rt-grow"></span>
+        <span class="rt-acts">${btn(`system/restart`, '↻ restart', `restart ${p.name}`, { process: p.name })}${p.status === 'held' || p.status === 'stopped' || p.status === 'circuit_open' || p.status === 'down' ? btn(`system/start`, '▶ start', `start ${p.name}`, { process: p.name }) : btn(`system/stop`, '■ stop', `stop ${p.name}`, { process: p.name })}</span></div>`;
+    }
+  }
+  h += `<div class="rt-sec">Desktop <span class="rt-dim">${_rtEsc(d.state || (d.error ? 'unavailable' : '…'))}</span></div>`;
+  if (d.error) h += `<div class="rt-dim rt-pad">${_rtEsc(d.error)}</div>`;
+  if (d.state === 'running') h += `<div class="rt-pad">${btn('desktop/pause', '⏸ pause', 'pause the desktop')}${btn('desktop/resume', '▶ resume', 'resume the desktop')}${btn('desktop/checkpoint', '◉ checkpoint now', 'checkpoint the desktop', { label: 'by hand' })}</div>`;
+  if (cps.length) h += cps.map(c => `<div class="rt-proc"><span class="rt-dim">${new Date(c.ts).toLocaleString('en-GB', { hour12: false })}</span> <span title="${_rtEsc(c.tag)}">${_rtEsc(c.label || c.tag)}</span>${c.present === false ? ' <span class="rt-sub-bad">(gone from the VM)</span>' : ''}<span class="rt-grow"></span>${c.present === false ? '' : `<button class="rt-rewind" onclick="rtRewind('${_rtEsc(c.tag)}').then(rtCtlLoad)">↶ rewind</button>`}</div>`).join('');
+  else if (d.state === 'running') h += `<div class="rt-dim rt-pad">no checkpoints yet — one is taken before every task while the desktop runs</div>`;
+  body.innerHTML = h || '<div class="rt-empty">reading the compartment…</div>';
 }
 
 // §0.39.371 CK1 — the log is the rewind: a checkpoint taken before a task (or by hand) puts the repo's desktop back
@@ -189,13 +242,14 @@ async function rtRewind(tag) {
 
 function _rtViews() {
   const v = document.getElementById('rt-views');
-  if (v) v.innerHTML = [['tasks', 'Background tasks'], ['log', 'Activity log']].map(([k, l]) => `<button class="rt-view${RT_VIEW === k ? ' on' : ''}" onclick="rtView('${k}')">${l}</button>`).join('');
+  if (v) v.innerHTML = [['tasks', 'Background tasks'], ['log', 'Activity log'], ['control', 'Control']].map(([k, l]) => `<button class="rt-view${RT_VIEW === k ? ' on' : ''}" onclick="rtView('${k}')">${l}</button>`).join('');
 }
 function rtView(k) {
-  RT_VIEW = k === 'log' ? 'log' : 'tasks';
+  RT_VIEW = ['log', 'control'].includes(k) ? k : 'tasks';
   try { localStorage.setItem('idearium.rt.view', RT_VIEW); } catch (_) {}
   rtPaint();
   if (RT_VIEW === 'log') rtLogLoad();
+  if (RT_VIEW === 'control') rtCtlLoad();
 }
 
 function _rtLogQuery(before) {
@@ -288,6 +342,6 @@ function _rtTick() {
 
 document.addEventListener('DOMContentLoaded', () => {
   rtEnsureButton();
-  let wasOpen = false; try { wasOpen = localStorage.getItem('idearium.rt.open') === '1'; RT_VIEW = localStorage.getItem('idearium.rt.view') === 'log' ? 'log' : 'tasks'; } catch (_) {}
+  let wasOpen = false; try { wasOpen = localStorage.getItem('idearium.rt.open') === '1'; RT_VIEW = ['log', 'control'].includes(localStorage.getItem('idearium.rt.view')) ? localStorage.getItem('idearium.rt.view') : 'tasks'; } catch (_) {}
   if (wasOpen && _rtCurrent()) rtToggleDrawer(true);
 });

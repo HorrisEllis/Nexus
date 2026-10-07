@@ -59,3 +59,10 @@
 .rt-rewind{display:inline-block;margin:4px 0 6px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.4);color:var(--amber);font:10.5px var(--mono);border-radius:5px;padding:2px 9px;cursor:pointer}
 .rt-rewind:hover{background:rgba(251,191,36,.16)}
 .rt-k-checkpoint{color:var(--amber);border-color:rgba(251,191,36,.35)}.rt-k-desktop{color:var(--sky2)}
+/* §0.39.372 NC2 — the Control view: the compartment as a control panel */
+.rt-sec{margin:12px 2px 6px;font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}
+.rt-pad{padding:2px 4px 6px}
+.rt-proc{display:flex;align-items:center;gap:7px;padding:6px 7px;border:1px solid rgba(255,255,255,.07);border-radius:6px;margin:0 0 5px;flex-wrap:wrap}
+.rt-act{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);color:var(--text);font:10.5px var(--mono);border-radius:5px;padding:2px 8px;cursor:pointer;margin-left:4px}
+.rt-act:hover{background:rgba(255,255,255,.1)}.rt-act:disabled{opacity:.4;cursor:default}
+.rt-acts{display:inline-flex;gap:0;flex:none}

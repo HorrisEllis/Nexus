@@ -540,6 +540,7 @@ const SUITES = [
   'test-resource-adaptive.test.js',   // 0.39.364 — hysteresis, heap vs its limit, a model that will not fit is skipped, background gives way
   'test-provider-host-load.test.js',   // 0.39.365 — a provider tab that does not load is retried, said why, its queued jobs fail
   'test-repo-activity.test.js',   // 0.39.366 — a repo's background tasks: every agent call wearing its hat
+  'test-system-control.test.js',   // 0.39.372 NC2 — a Nexus system's controls through its supervisor; one intent, inherited
   'test-vm-control.test.js',   // 0.39.371 VM1 + CK1 — pause, live checkpoints, rewind over QMP; a checkpoint before every task's work
   'test-desktop-activity.test.js',   // 0.39.370 DT1 — runs in the repo's compartment and the desktop setup are its tasks and log rows
   'test-compartment-activity-log.test.js',   // 0.39.368 AL1 — a repo's durable activity log: tasks, phase rows, proposals (who applied, who undid), faults
