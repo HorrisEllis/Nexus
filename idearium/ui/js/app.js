@@ -2008,6 +2008,7 @@ let CURRENT_REPO_SUBTAB = null;
 
 function setRepoSubtab(name) {
   if (name === 'roadmap' || name === 'phasemap') name = 'phases';   // §0.39.271 P4 — one tab now
+  if (name === 'agent') name = 'code';   // §0.48.0 OS9 — the agent lives in the Code tab; its settings in Settings → Agents
   CURRENT_REPO_SUBTAB = name;
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));

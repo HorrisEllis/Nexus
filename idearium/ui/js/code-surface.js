@@ -41,7 +41,10 @@ function _csq(s) { return escapeHtml(String(s).replace(/\\/g, '\\\\').replace(/'
 
 function _csReset(repo) {
   Object.assign(CS, { uuid: repo.uuid, overview: null, overviewError: null, open: null, text: null, textError: null, outline: null, outlineError: null,
-    card: null, hits: null, more: null, q: '', sel: null, collapsed: new Set(), plan: null, live: [], agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' } });
+    card: null, hits: null, more: null, q: '', sel: null, collapsed: new Set(), plan: null, live: [], ident: null,
+    // §0.48.0 OS9 — James: "the agents tab should maybe merge with the code tab". One conversation per repo: the docked
+    // agent's lines ARE the repo agent's transcript (app.js _agentTranscript) — kept when the tab is left and come back to
+    agent: { route: null, error: null, pinned: null, pick: '', lines: typeof _agentTranscript === 'function' ? _agentTranscript(repo.uuid) : [], busy: false, draft: '' } });
 }
 
 async function renderRepoCode(repo) {
@@ -57,6 +60,8 @@ async function renderRepoCode(repo) {
     if (typeof loadFileStates === 'function') loadFileStates(repo, { force: true }).then(() => here() && csPaint());
     csLoadRoute(repo).then(() => here() && csPaint());
     csLoadPlan(repo).then(() => here() && csPaint());
+    // §0.48.0 OS9 — who the agent is, in one line (the Agent tab's head, now the dock's)
+    api(`/api/repos/${repo.uuid}/agent`, {}, 15000).then(st => { CS.ident = st; }, e => { CS.ident = { error: e.message }; }).finally(() => here() && csPaint());
     api(`/api/repos/${repo.uuid}/agent/tool-events`, {}, 10000).then(r => { for (const e of r.events || []) csOnTool(e, { paint: false }); }, () => {}).finally(() => here() && csPaint());
     return;
   }
@@ -299,18 +304,26 @@ function _csAgentHtml() {
   const opts = [`<option value="">${a.pinned ? `as Settings says (${escapeHtml(a.pinned)})` : 'copilot decides'}</option>`]
     .concat((a.route || []).map((h, i) => `<option value="${i}"${String(a.pick) === String(i) ? ' selected' : ''}>${escapeHtml(_csHopLabel(h))}</option>`)).join('');
   const ctx = CS.open ? `${CS.open}${CS.sel ? `:${CS.sel.from}${CS.sel.to && CS.sel.to !== CS.sel.from ? `-${CS.sel.to}` : ''}` : ''}` : null;
-  return `<div class="cs-pane-head"><span>agent</span><span class="cs-grow"></span><button class="cs-chip-btn" title="ask copilot again" onclick="csLoadRoute().then(csPaint)">↻</button></div>
+  const id = CS.ident, ix = id && id.index || {}, mem = id && id.memory || {};
+  const ident = !id ? '' : id.error ? `<div class="cs-ident cs-bad">${escapeHtml(id.error)}</div>`
+    : !id.compartmentId ? '<div class="cs-ident">no compartment — no agent. Import through the project-import flow, or attach one.</div>'
+    : `<div class="cs-ident"><b>${escapeHtml(id.exists && id.hat ? id.hat.name : 'no hat yet')}</b><span>${ix.indexed ? `${ix.fileCount ?? '?'} files indexed` : 'not indexed'}</span><span>${mem.total || 0} learned</span><button class="cs-ident-opt" title="every agent setting: Settings → Agents" onclick="setRepoSubtab('settings');repoSettingsShow('agent-behaviour')">options ↗</button></div>`;
+  return `<div class="cs-pane-head"><span>agent</span><span class="cs-grow"></span><button class="cs-chip-btn" title="ask copilot again" onclick="csLoadRoute().then(csPaint)">↻</button></div>${ident}
     <div class="cs-who">${who}${first && !a.pinned && first.why ? `<div class="cs-dim">${escapeHtml(first.why)}</div>` : ''}</div>
     <label class="cs-pickrow">model <select id="cs-pick" onchange="CS.agent.pick=this.value">${opts}</select></label>
-    <div class="cs-talk" id="cs-talk">${a.lines.map(l => `<div class="cs-msg cs-m-${l.role}"><div class="cs-msg-text">${escapeHtml(l.text)}</div>${l.meta ? `<div class="cs-dim">${escapeHtml(l.meta)}</div>` : ''}</div>`).join('') || '<div class="cs-empty">ask about the open file or the picked lines — its changes land in the diffs, waiting for Apply</div>'}</div>
+    <div class="cs-talk" id="cs-talk">${a.lines.map(l => `<div class="cs-msg cs-m-${escapeHtml(String(l.role).split(/[\s—]/)[0])}"><div class="cs-msg-text">${escapeHtml(l.text)}</div>${l.meta ? `<div class="cs-dim">${escapeHtml(l.meta)}</div>` : ''}</div>`).join('') || '<div class="cs-empty">ask about the open file or the picked lines — its changes land in the diffs, waiting for Apply</div>'}</div>
     <div class="cs-ctx">${ctx ? `context: <b>${escapeHtml(ctx)}</b>${CS.card && CS.card.card ? ` · ${escapeHtml(CS.card.card.qualifiedName || CS.card.card.name || '')}` : ''}` : 'no file open — the agent gets the repo'}</div>
-    <textarea id="cs-ask" class="cs-ask" rows="3" placeholder="what to do — Ctrl+Enter asks" oninput="CS.agent.draft=this.value" onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))csAsk()">${escapeHtml(a.draft)}</textarea>
+    <textarea id="cs-ask" class="cs-ask" rows="3" placeholder="what to do — Ctrl+Enter asks · /help for commands" oninput="CS.agent.draft=this.value" onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))csAsk()">${escapeHtml(a.draft)}</textarea>
     <div class="cs-sends"><button class="cs-send cs-send-ask" ${a.busy ? 'disabled' : ''} onclick="csAsk()" title="an answer — nothing is written, nothing is snapshotted">${a.busy ? 'working…' : 'ask'}</button>
       <button class="cs-send cs-send-change" ${a.busy || !CS.open ? 'disabled' : ''} onclick="csChange()" title="${CS.open ? 'a run on the Plan: a snapshot first, then the agent edits this file (the picked lines); its change lands as a diff here and in the Plan panel' : 'open a file to change it'}">change it</button></div>`;
 }
 async function csAsk() {
   const repo = CURRENT_API_REPO; if (!repo || CS.agent.busy) return;
   const text = (CS.agent.draft || '').trim(); if (!text) { toast('say what to do', 'err'); return; }
+  if (text.startsWith('/') && typeof agentCommand === 'function') {   // §0.48.0 OS9 — /help /tools /debug … as on the Agent tab
+    CS.agent.draft = ''; try { await agentCommand(text); } catch (e) { CS.agent.lines.push({ role: 'failed', text: e.message }); }
+    csPaint(); return;
+  }
   const ctx = CS.open ? `[Code tab — about ${CS.open}${CS.sel ? ` lines ${CS.sel.from}-${CS.sel.to || CS.sel.from}` : ''}${CS.card && CS.card.card && CS.card.card.file === CS.open ? ` (chunk ${CS.card.card.qualifiedName || CS.card.card.name || CS.card.card.id})` : ''}]\n` : '';
   const body = { message: ctx + text };
   const h = CS.agent.pick !== '' && CS.agent.route ? CS.agent.route[+CS.agent.pick] : null;

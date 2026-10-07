@@ -90,3 +90,8 @@
 .cs-hist b{font-weight:500;color:var(--text2)}
 .cs-hist-n{background:none;border:0;padding:0;color:var(--sky);font:inherit;cursor:pointer;flex:none}.cs-hist-n:hover{text-decoration:underline}
 .cs-hist-m{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.8}
+/* §0.48.0 OS9 — the docked agent's identity (the Agent tab's head, now one line here) */
+.cs-ident{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:4px 10px 6px;font-size:10px;color:var(--text3);border-bottom:1px solid rgba(255,255,255,.05)}
+.cs-ident b{font-weight:600;color:var(--text2)}
+.cs-ident-opt{margin-left:auto;background:none;border:0;padding:0;color:var(--sky);font:inherit;cursor:pointer}.cs-ident-opt:hover{text-decoration:underline}
+.cs-m-cli .cs-msg-text{color:var(--text2);white-space:pre-wrap;font:10px/1.5 var(--mono)}

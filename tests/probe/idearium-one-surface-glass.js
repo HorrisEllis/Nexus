@@ -92,21 +92,30 @@ const freePort = () => new Promise(res => { const s = net.createServer(); s.list
     check('… and opens the Plan on that file\'s versions only', fv.on === 'versions' && fv.f === 'src/trees.js' && (fv.text.match(/vtm-/g) || []).length === 2, JSON.stringify(fv).slice(0, 300));
     await pg.evaluate(() => closePlanPanel());
 
-    // the Agent tab: every agent option, folded; its proposals are the work surface's cards
-    await pg.evaluate(() => { localStorage.setItem('idearium.ao.open', JSON.stringify(['proposals', 'behaviour'])); AO.open = new Set(['proposals', 'behaviour']); setRepoSubtab('agent'); }); await pg.waitForTimeout(1500);
-    const secs = await pg.evaluate(() => [...document.querySelectorAll('#repo-subtab-agent .ao-sec > summary')].map(s => s.firstChild.textContent.trim()));
-    check('Agent tab: proposals · behaviour · prompt · hat & tools · models', JSON.stringify(secs) === JSON.stringify(['proposals', 'behaviour', 'prompt', 'hat & tools', 'models']), JSON.stringify(secs));
-    const ag = await pg.evaluate(() => document.querySelector('#repo-subtab-agent .ao').innerText);
-    check('Agent tab: the waiting proposal is a work-surface card (src/rows.js)', /rows\.js/.test(ag), ag.slice(0, 300));
-    check('Agent tab: tool scope and what happens to its code are controls here', await pg.evaluate(() => document.querySelectorAll('#repo-subtab-agent .ao-select').length === 2));
-    if (process.env.PROBE_SHOT !== '0') await pg.screenshot({ path: path.join(SHOT, 'idearium-agent.png') });
+    // §0.48.0 OS9 — no Agent tab: the agent is the Code tab's (one conversation, its commands, who it is)
+    check('no Agent tab in the repo\'s tabs', await pg.evaluate(() => !document.querySelector('.repo-subtab-btn[data-subtab="agent"]')));
+    await pg.evaluate(() => setRepoSubtab('agent')); await pg.waitForTimeout(1200);
+    check('asking for the Agent tab opens Code', await pg.evaluate(() => CURRENT_REPO_SUBTAB === 'code'));
+    const ident = await pg.evaluate(() => (document.querySelector('#repo-subtab-code .cs-ident') || {}).innerText || '');
+    check('Code tab: the agent says who it is in one line, with options ↗', /indexed|not indexed/.test(ident) && /options/.test(ident), ident);
+    await pg.evaluate(() => { CS.agent.draft = '/help'; csAsk(); }); await pg.waitForTimeout(800);
+    const talk = await pg.evaluate(() => (document.getElementById('cs-talk') || {}).innerText || '');
+    check('Code tab: its commands work here (/help)', /\/help|\/tools|commands/i.test(talk) && talk.length > 60, talk.slice(0, 200));
+    if (process.env.PROBE_SHOT !== '0') await pg.screenshot({ path: path.join(SHOT, 'idearium-code-agent.png') });
 
-    // Settings: no iframe anywhere; the Agent item takes you to the Agent tab; Desktop is native
+    // §0.48.0 OS8 — every agent setting under Settings → Agents, native; no iframe anywhere
     await pg.evaluate(() => { setRepoSubtab('settings'); }); await pg.waitForTimeout(500);
+    const groups = await pg.evaluate(() => [...document.querySelectorAll('#repo-subtab-settings .rs-group')].map(g => g.textContent.trim()));
+    const items = await pg.evaluate(() => [...document.querySelectorAll('#repo-subtab-settings .rs-item[data-rs^="agent-"]')].map(b => b.textContent.trim()));
+    check('Settings → Agents: behaviour · prompt · hat & tools · models', groups.includes('Agents') && JSON.stringify(items) === JSON.stringify(['Behaviour', 'Prompt', 'Hat & tools', 'Models']), JSON.stringify({ groups, items }));
+    await pg.evaluate(() => repoSettingsShow('agent-behaviour')); await pg.waitForTimeout(1500);
+    const beh = await pg.evaluate(() => ({ n: document.querySelectorAll('#ao-behaviour .ao-select').length, t: document.getElementById('ao-behaviour').innerText }));
+    check('Behaviour: who answers, its model, tools, the code it writes — controls', beh.n === 4 && /who answers/.test(beh.t) && /code it writes/.test(beh.t), JSON.stringify(beh).slice(0, 200));
+    if (process.env.PROBE_SHOT !== '0') await pg.screenshot({ path: path.join(SHOT, 'idearium-settings-agents.png') });
+    await pg.evaluate(() => repoSettingsShow('agent-hat')); await pg.waitForTimeout(1500);
+    check('Hat & tools: the hat, drawn here', /hat|forge/i.test(await pg.evaluate(() => document.getElementById('ao-hat').innerText)));
     await pg.evaluate(() => repoSettingsShow('desktop')); await pg.waitForTimeout(900);
     check('Settings: no iframe (desktop drawn natively)', await pg.evaluate(() => document.querySelectorAll('#repo-subtab-settings iframe').length === 0 && /compartment|virtual machine/i.test(document.getElementById('rs-desktop-detail').innerText)));
-    await pg.evaluate(() => repoSettingsShow('agent')); await pg.waitForTimeout(800);
-    check('Settings → Agent opens the Agent tab', await pg.evaluate(() => CURRENT_REPO_SUBTAB === 'agent'));
 
     // the Spec tab: what is blank, and ✦ draft them
     await pg.evaluate(() => setRepoSubtab('spec')); await pg.waitForTimeout(2000);

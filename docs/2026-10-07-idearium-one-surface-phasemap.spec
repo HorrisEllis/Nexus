@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     idearium-one-surface
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-07
     release:  "0.47.0 (one phase: OS1–OS6 land together)"
     uuid:     nexus-idearium-one-surface-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "idearium ui (plan-panel.js, repo-tasks.js, code-surface.js, app.js renderRepoAgent, repo-settings.js) + idearium api (snapshot summaries)"
-    status:   "BUILT 0.47.0 — OS1–OS7, SP1–SP3; proved on the real page (tests/probe/idearium-one-surface-glass.js 15/15). Not done: a proposal card does not yet link to the task that wrote it (an inject carries no task id)."
+    status:   "BUILT 0.47.0 — OS1–OS7, SP1–SP3; 0.48.0 — OS8, OS9 (OS4 reversed: options in Settings → Agents, the agent in the Code tab); proved on the real page (tests/probe/idearium-one-surface-glass.js 18/18). Not done: a proposal card does not yet link to the task that wrote it (an inject carries no task id)."
     origin: >
       James, 2026-10-07, shown the 0.46.0 drawer: "what is that? thats supposed to be a idearium feature. also needs to
       look like the rest of it like the plan panel. also hooked into the code tab, same with the rest of what should be
@@ -69,4 +69,13 @@ spec:
       layer: library
       does: "a spec without a file tree gets one generated from its sections by layer (the archetype's shape: lib/, api, cli, ui, tests/), each file a pending chunk, slotted into registry-components.js and its nodes through lib/repo-expand's slot path — the registry is the spine the phases build into"
 
-  ordering: "OS1 → OS2 → OS3 → OS4 → OS7 → OS5 → SP1 → SP2 → SP3 → OS6"
+    OS8_settings_agents_holds_every_agent_option:
+      layer: ui
+      james: '"no. all agent settings and options in the options tab under agents."'
+      does: "Settings gains an Agents group — behaviour (who answers by default, its Ollama model, tool scope, what happens to the code it writes), prompt, hat & tools (persona, tools, what it learned, teach / export / import / forge), models — drawn natively (agent-options.js's section bodies). The Agent tab's option sections go."
+    OS9_the_agent_is_in_the_code_tab:
+      layer: ui
+      james: '"the agents tab should maybe merge with the code tab."'
+      does: "No Agent tab: the Code tab's docked agent IS the repo's agent — one conversation (the Agent tab's transcript, shared), its slash commands (/help /tools /debug …), a one-line identity (hat · indexed · learned) with options ↗ to Settings → Agents; its proposals are the Code tab's diffs; the live provider feed is the Code tab's live strip. setRepoSubtab('agent') opens Code."
+
+  ordering: "OS1 → OS2 → OS3 → OS4 → OS7 → OS5 → SP1 → SP2 → SP3 → OS6 → OS8 → OS9 (0.48.0: OS4 reversed by James — options live in Settings → Agents, the agent in the Code tab)"

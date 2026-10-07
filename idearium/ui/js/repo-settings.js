@@ -18,9 +18,9 @@
 
 const RS_CATEGORIES = [
   { group: 'Repository', items: [['general', 'General'], ['repository', 'Files & danger zone']] },
-  // §0.47.0 OS4 — James: "all agent options go into the agents tab". The Agent group is the Agent tab now (proposals,
-  // behaviour, prompt, hat & tools, models); this one line takes you there.
-  { group: 'Agent', items: [['agent', 'Agent tab ↗']] },
+  // §0.48.0 OS8 — James: "all agent settings and options in the options tab under agents". Every agent setting is
+  // here, drawn natively (js/agent-options.js); the agent itself — talking to it, its proposals — is the Code tab.
+  { group: 'Agents', items: [['agent-behaviour', 'Behaviour'], ['agent-prompt', 'Prompt'], ['agent-hat', 'Hat & tools'], ['agent-models', 'Models']] },
   { group: 'Environment', items: [['environment', 'Environment'], ['desktop', 'Desktop']] },
 ];
 const RS_IDS = RS_CATEGORIES.flatMap(g => g.items.map(i => i[0]));
@@ -36,7 +36,7 @@ function renderRepoSettings(repo) {
   const el = document.getElementById('repo-subtab-settings');
   if (!el || !repo) return;
   if (RS.uuid !== repo.uuid) RS.uuid = repo.uuid;
-  if (!RS.cat || RS.cat === 'agent') RS.cat = (_rsSavedCategory() !== 'agent' && _rsSavedCategory()) || 'general';
+  if (!RS.cat || !RS_IDS.includes(RS.cat)) RS.cat = _rsSavedCategory() || 'general';
   el.innerHTML = `<div class="rs">
     <nav class="rs-nav" aria-label="settings categories">
       ${RS_CATEGORIES.map(g => `<div class="rs-group">${escapeHtml(g.group)}</div>` + g.items.map(([id, name]) =>
@@ -50,7 +50,6 @@ function renderRepoSettings(repo) {
 
 function repoSettingsShow(id) {
   if (!RS_IDS.includes(id)) return;
-  if (id === 'agent' && typeof setRepoSubtab === 'function') { setRepoSubtab('agent'); return; }   // §0.47.0 OS4
   RS.cat = id; _rsSaveCategory(id);
   for (const b of document.querySelectorAll('.rs-item[data-rs]')) b.classList.toggle('on', b.dataset.rs === id);
   _rsPaint(CURRENT_API_REPO);
@@ -102,6 +101,16 @@ function _rsPaint(repo) {
         ${repo.immutable ? '<div class="ds-mono" title="0.39.266 — its lifecycle belongs to the nexus-self sync">immutable — edit on a COS branch, apply through the gate</div>'
           : '<div class="rs-danger-row"><div><b>Delete this repo</b><div class="rs-note">It is archived, not erased — see the delete dialog.</div></div><button class="action-btn danger" onclick="openDeleteRepoModal()">✕ delete repo</button></div>'}
       </div>`;
+    return;
+  }
+  // §0.48.0 OS8 — the Agents group
+  const AGENT_PANES = { 'agent-behaviour': ['Behaviour', 'Who answers, which model, the tools it may use and what happens to the code it writes.'],
+    'agent-prompt': ['Prompt', 'Everything the agent is sent, block by block — edit, switch off, preview.'],
+    'agent-hat': ['Hat & tools', 'The persona this repo\'s agent wears, the tools it carries and what it has learned.'],
+    'agent-models': ['Models', 'Whether Ollama is wired in: every installed model asked through copilot, and the route every caller gets.'] };
+  if (AGENT_PANES[id] && typeof agentSettingsPane === 'function') {
+    pane.innerHTML = head(...AGENT_PANES[id]) + agentSettingsPane(id, repo);
+    agentSettingsFill(id);
     return;
   }
   if (id === 'environment') {
