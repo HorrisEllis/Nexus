@@ -423,6 +423,9 @@ export function summarizeRepoSnapshots(rows, repoUuid) {
         // MCO-B: has a file layer (a restore may be possible), and how big. Whether
         // the layer was actually recorded is checked by restore, not assumed here.
         files: r.state.files ? { count: r.state.files.fileCount, bytes: r.state.files.totalBytes } : null,
+        // §0.47.0 OS1 — what the commit touched and who stands behind it (VR1's provenance), so a file's history and the
+        // Code tab can be read from the list (null for baselines and records from before 0.40.0)
+        provenance: r.state.provenance ? { by: r.state.provenance.by || [], refs: r.state.provenance.refs || [], files: r.state.provenance.files || [], checkpoint: r.state.provenance.checkpoint || null } : null,
       };
     });
 }

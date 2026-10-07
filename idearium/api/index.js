@@ -2290,6 +2290,7 @@ function matchRoute(method, url) {
     // system ('idearium.repo'), never 'idearium' — see idearium.repo-snapshot.spec.
     ['POST',   ['api','repos',    ':uuid','snapshot'],      'repo.snapshot.commit'],
     ['GET',    ['api','repos',    ':uuid','snapshots'],     'repo.snapshot.list'],
+    ['GET',    ['api','repos',    ':uuid','history'],       'repo.history'],          // §0.47.0 OS1 — ?path= the commits that touched one file
     ['GET',    ['api','repos',    ':uuid','snapshots',':commitId'], 'repo.snapshot.show'],
     ['POST',   ['api','repos',    ':uuid','snapshots',':commitId','restore'], 'repo.snapshot.restore'],
     // §MCO-E 2026-09-20 — the repo's roadmap, from the phasemaps inside it
@@ -6291,6 +6292,22 @@ async function handle(req, res, route, query, body) {
       const hist = await _versionium('GET', `/api/versionium/history?system=${encodeURIComponent(SNAPSHOT_SYSTEM)}&branch=${encodeURIComponent(snapshotBranch(params.uuid))}&n=1000`);
       if (!hist.ok) return err(res, 502, hist.error);
       return ok(res, { repoUuid: params.uuid, snapshots: summarizeRepoSnapshots(hist.data.commits || [], params.uuid) });
+    }
+
+    // §0.47.0 OS1 — James: "also hooked into the code tab". The commits that touched one file, newest first, each with
+    // who and why (VR1 provenance); a commit from before 0.40.0 (no provenance) is not guessed into it.
+    case 'repo.history': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const want = String(query.path || '').replace(/^\/+/, '');
+      if (!want) return err(res, 400, 'path is required (?path=src/file.js)');
+      const { SNAPSHOT_SYSTEM, summarizeRepoSnapshots, snapshotBranch } = await import('../repo/snapshot.js');
+      const hist = await _versionium('GET', `/api/versionium/history?system=${encodeURIComponent(SNAPSHOT_SYSTEM)}&branch=${encodeURIComponent(snapshotBranch(params.uuid))}&n=1000`);
+      if (!hist.ok) return err(res, 502, hist.error);
+      const all = summarizeRepoSnapshots(hist.data.commits || [], params.uuid);
+      const touched = all.filter(c => c.provenance && c.provenance.files.some(f => f.path === want))
+        .map(c => ({ ...c, op: c.provenance.files.find(f => f.path === want).op }));
+      return ok(res, { repoUuid: params.uuid, path: want, commits: touched, total: all.length, untracked: all.filter(c => !c.provenance).length });
     }
 
     case 'repo.snapshot.show': {

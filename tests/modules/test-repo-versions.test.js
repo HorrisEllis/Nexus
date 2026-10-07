@@ -119,6 +119,17 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.strictEqual((src.match(/_touched\(repoUuid/g) || []).length, 3);
   });
 
+  await test('VR-06', '0.47.0 OS1 — a file\'s history: the commits that touched it, each with who and why; the list carries provenance', async () => {
+    const h = (await R('GET', `/api/repos/${repoUuid}/history?path=src/f1.js`)).json;
+    assert.ok(h && h.ok, JSON.stringify(h).slice(0, 200));
+    assert.ok(h.commits.length >= 2, `src/f1.js: ${h.commits.length} commit(s)`);   // written by the agent (VR-02), then the accepted proposal (VR-03)
+    assert.ok(h.commits.every(c => c.op === 'write' && c.provenance.files.some(f => f.path === 'src/f1.js')));
+    assert.ok(h.commits.some(c => c.provenance.by.includes('grove-agent')) && h.commits.some(c => c.provenance.refs.some(r => r.startsWith('inject:'))));
+    const del = (await R('GET', `/api/repos/${repoUuid}/history?path=notes.md`)).json.commits;
+    assert.strictEqual(del[0].op, 'delete', 'newest first: the delete (VR-05)');
+    assert.strictEqual((await R('GET', `/api/repos/${repoUuid}/history`)).status, 400);
+  });
+
   if (up) await stopV();
   console.log(`\n  ${passed} passed · ${failed} failed\n`);
   process.exit(failed ? 1 : 0);

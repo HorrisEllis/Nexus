@@ -1,15 +1,7 @@
 /* idearium/ui/css/repo-tasks.css — §0.39.366: a repo's background tasks (idearium/ui/js/repo-tasks.js), in the manner of
    Claude Code's Background tasks panel James pointed at: one row per task, its state, what it is, how long. */
-.rt-btn{display:inline-flex;align-items:center;gap:5px;margin-left:auto}
 .rt-count{font-size:9.5px;min-width:0;border-radius:9px;padding:0 5px;line-height:15px}
 .rt-count.on{background:var(--sky);color:#04121c;font-weight:700}
-.rt-drawer{position:fixed;top:38px;right:0;bottom:0;width:min(460px,100vw);background:var(--bg1,#0e1117);border-left:1px solid var(--b1,rgba(255,255,255,.12));
-  box-shadow:-12px 0 32px rgba(0,0,0,.35);transform:translateX(102%);transition:transform .22s cubic-bezier(.2,.8,.2,1);z-index:60;display:flex;flex-direction:column;font-family:var(--mono);font-size:11px;color:var(--text)}
-.rt-drawer.open{transform:none}
-@media (prefers-reduced-motion:reduce){.rt-drawer{transition:none}}
-.rt-top{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--b0,rgba(255,255,255,.07))}
-.rt-top b{font-size:12px;color:var(--nx-bright,var(--text))}
-.rt-x{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px}.rt-x:hover{color:var(--text)}
 .rt-filters{display:flex;gap:6px;padding:8px 12px}
 .rt-f{background:none;border:1px solid rgba(255,255,255,.1);color:var(--text3);font:10px var(--mono);border-radius:5px;padding:1px 8px;cursor:pointer}
 .rt-f:hover{color:var(--text)}.rt-f.on{color:#04121c;background:var(--sky);border-color:var(--sky)}
@@ -70,3 +62,29 @@
 .rt-run{color:#7dd3fc}
 .rt-pre{white-space:pre-wrap;max-height:220px;overflow:auto;font-size:11px;margin:4px 0 6px;padding:6px 8px;border-left:2px solid rgba(125,211,252,.35);background:rgba(255,255,255,.02)}
 #rt-list .rt-pad,#rt-list .rt-proc{overflow-wrap:anywhere;min-width:0}#rt-list{overflow-x:hidden}#rt-list div.rt-pad.rt-dim,#rt-list .rt-pad>div.rt-dim{white-space:normal}
+
+/* §0.47.0 OS2 — James: "needs to look like the rest of it like the plan panel" · "not be overwhelming, clean and
+   beautiful". Inside the Plan panel's ACTIVITY section the views take the plan's look: no boxes, hairline rows, the
+   plan's type, small lowercase view switches. */
+#plan-panel .pp-log-n{color:var(--sky);letter-spacing:0;text-transform:none;margin-left:4px}
+#plan-panel .pp-log .rt-views{display:flex;gap:2px;margin:2px 0 8px;flex-wrap:wrap}
+#plan-panel .pp-log .rt-view{font:10px var(--mono);color:var(--text3);background:none;border:0;border-radius:5px;padding:2px 7px}
+#plan-panel .pp-log .rt-view:hover{color:var(--text)}
+#plan-panel .pp-log .rt-view.on{color:var(--nx-bright,var(--text));background:rgba(255,255,255,.06)}
+#plan-panel .pp-log .rt-filters{padding:0 0 6px;gap:4px}
+#plan-panel .pp-log .rt-f{border-color:rgba(255,255,255,.08);font-size:9.5px;padding:0 7px}
+#plan-panel .pp-log .rt-list{padding:0;overflow:visible}
+#plan-panel .pp-log .rt-empty{padding:6px 0;font-size:10.5px}
+#plan-panel .pp-log .rt-row{border:0;border-bottom:1px solid rgba(255,255,255,.05);border-radius:0;background:none;margin:0}
+#plan-panel .pp-log .rt-row.rt-running .rt-title{color:var(--sky)}#plan-panel .pp-log .rt-row.rt-failed .rt-title{color:var(--coral)}
+#plan-panel .pp-log .rt-head{padding:5px 2px}
+#plan-panel .pp-log .rt-title,#plan-panel .pp-log .rt-ltitle{font:12px/1.35 system-ui,sans-serif;color:var(--nx-text,var(--text))}
+#plan-panel .pp-log .rt-sub,#plan-panel .pp-log .rt-body{padding-left:24px}
+#plan-panel .pp-log .rt-lrow{padding:4px 2px;border-radius:0;border-bottom:1px solid rgba(255,255,255,.04)}
+#plan-panel .pp-log .rt-day{background:var(--nx-card);padding:8px 0 3px}
+#plan-panel .pp-log .rt-sec{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:10px 0 4px}
+#plan-panel .pp-log .rt-proc{display:flex;align-items:center;gap:6px;padding:4px 2px;margin:0;border:0;border-radius:0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10.5px;color:var(--text2)}
+#plan-panel .pp-log .rt-act{background:none;border:1px solid rgba(255,255,255,.12);color:var(--text2);border-radius:5px;font:9.5px var(--mono);padding:1px 7px;cursor:pointer}
+#plan-panel .pp-log .rt-act:hover{color:var(--text)}
+.pp-why{padding:0 0 4px 22px;font-size:9.5px;color:var(--coral);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#plan-panel .pp-log .rt-vmsg{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}

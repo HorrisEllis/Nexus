@@ -112,7 +112,10 @@ function _rtRow(t, depth = 0) {
   return h + '</div>';
 }
 
-function _rtDrawerOpen() { const d = document.getElementById('rt-drawer'); return !!(d && d.classList.contains('open')); }
+// §0.47.0 OS2 — James: "thats supposed to be a idearium feature. also needs to look like the rest of it like the plan
+// panel." No drawer of its own: these views live in the Plan panel's folded ACTIVITY section (plan-panel.js mounts
+// #rt-views / #rt-filters / #rt-list there), styled as the plan.
+function _rtDrawerOpen() { const d = document.getElementById('pp-log'), p = document.getElementById('plan-panel'); return !!(d && d.open && p && p.classList.contains('open')); }
 
 function rtPaint() {
   _rtViews();
@@ -140,16 +143,19 @@ function rtFilter(k) { RT_FILTER = k; rtPaint(); }
 
 /** rtBadge() — the button's count: tasks running now for this repo */
 function rtBadge() {
-  const b = document.getElementById('rt-btn-count');
+  const b = document.getElementById('pp-log-n');
   const uuid = _rtCurrent();
   if (!b) return;
   // what the panel's "running" filter counts: top-level tasks (a phase with its running attempt is one)
   const running = uuid ? _rtTree(uuid).filter(t => t.status === 'running' || (t.children || []).some(k => k.status === 'running')).length : 0;
-  b.textContent = running ? String(running) : '';
+  b.textContent = running ? `· ${running} running` : '';
   b.classList.toggle('on', running > 0);
 }
 
 function rtEnsureButton() {
+  const old = document.getElementById('rt-btn'); if (old) old.remove();   // §0.47.0 OS2 — no button: the Plan panel holds it
+  return;
+  // eslint-disable-next-line no-unreachable
   const nav = document.getElementById('repo-subnav');
   if (!nav || document.getElementById('rt-btn')) return;
   const btn = document.createElement('button');
@@ -161,25 +167,29 @@ function rtEnsureButton() {
 }
 
 function rtToggleDrawer(force) {
-  let d = document.getElementById('rt-drawer');
-  if (!d) {
-    d = document.createElement('aside');
-    d.id = 'rt-drawer'; d.className = 'rt-drawer';
-    d.innerHTML = `<div class="rt-top"><span class="rt-views" id="rt-views"></span><span class="rt-dim" id="rt-repo"></span><span class="rt-grow"></span>
-      <button class="rt-x" onclick="rtToggleDrawer(false)" title="close">✕</button></div>
-      <div class="rt-filters" id="rt-filters"></div><div class="rt-list" id="rt-list"></div>`;
-    document.body.appendChild(d);
-  }
-  const open = force == null ? !d.classList.contains('open') : !!force;
-  d.classList.toggle('open', open);
-  const b = document.getElementById('rt-btn'); if (b) b.classList.toggle('active', open);
+  // §0.47.0 OS2 — opens (or folds) the Plan panel's activity section; the panel repaints and rtMounted() draws into it
+  const open = force == null ? !_rtDrawerOpen() : !!force;
+  if (typeof PLANP !== 'undefined') PLANP.logOpen = open;
   try { localStorage.setItem('idearium.rt.open', open ? '1' : '0'); } catch (_) {}
-  if (open) {
-    const r = typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO;
-    const name = document.getElementById('rt-repo'); if (name) name.textContent = r ? (r.name || r.uuid) : '';
-    rtPaint(); rtLoad(_rtCurrent()); if (RT_VIEW === 'log') rtLogLoad(); if (RT_VIEW === 'control') rtCtlLoad(); _rtMoreLoad();
+  if (open && typeof openPlanPanel === 'function' && !(document.getElementById('plan-panel') || { classList: { contains: () => false } }).classList.contains('open')) openPlanPanel();
+  const d = document.getElementById('pp-log'); if (d && d.open !== open) d.open = open;
+  rtMounted();
+}
+/** rtMounted() — the plan panel drew (or redrew) its activity section: put the views back in it */
+let RT_LOADED_FOR = null;   // the repo whose section was last read — a repaint of the same repo reads nothing again
+function rtMounted(load = true) {
+  _rtViews(); rtBadge();
+  if (_rtDrawerOpen()) {
+    rtPaint();
+    if (load || RT_LOADED_FOR !== _rtCurrent()) { RT_LOADED_FOR = _rtCurrent(); rtLoad(_rtCurrent()); if (RT_VIEW === 'log') rtLogLoad(); if (RT_VIEW === 'control') rtCtlLoad(); _rtMoreLoad(); }
     if (!RT_TICK) RT_TICK = setInterval(_rtTick, 1000);
   } else if (RT_TICK) { clearInterval(RT_TICK); RT_TICK = null; }
+}
+/** ppLogToggle(el) — the person folded or unfolded the section */
+function ppLogToggle(el) {
+  if (typeof PLANP !== 'undefined') PLANP.logOpen = el.open;
+  try { localStorage.setItem('idearium.rt.open', el.open ? '1' : '0'); } catch (_) {}
+  rtMounted();
 }
 
 // §0.39.372 NC2 — James: "Do you think we should have each repo a control panel for the system, and compartment for the
@@ -246,7 +256,7 @@ async function rtRewind(tag) {
 function _rtViews() {
   const v = document.getElementById('rt-views');
   const extra = typeof RT_MORE_VIEWS !== 'undefined' ? RT_MORE_VIEWS.map(x => [x[0], x[1]]) : [];
-  if (v) v.innerHTML = [['tasks', 'Background tasks'], ['log', 'Activity log'], ['control', 'Control'], ...extra].map(([k, l]) => `<button class="rt-view${RT_VIEW === k ? ' on' : ''}" onclick="rtView('${k}')">${l}</button>`).join('');
+  if (v) v.innerHTML = [['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ...extra].map(([k, l]) => `<button class="rt-view${RT_VIEW === k ? ' on' : ''}" onclick="rtView('${k}')">${l}</button>`).join('');
 }
 function _rtMoreLoad() { const m = typeof RT_MORE_VIEWS !== 'undefined' && RT_MORE_VIEWS.find(v => v[0] === RT_VIEW); if (m) m[2](); }
 function _rtViewOk(k) { return ['log', 'control'].includes(k) || (typeof RT_MORE_VIEWS !== 'undefined' && RT_MORE_VIEWS.some(v => v[0] === k)); }
@@ -351,5 +361,5 @@ function _rtTick() {
 document.addEventListener('DOMContentLoaded', () => {
   rtEnsureButton();
   let wasOpen = false; try { wasOpen = localStorage.getItem('idearium.rt.open') === '1'; RT_VIEW = _rtViewOk(localStorage.getItem('idearium.rt.view')) ? localStorage.getItem('idearium.rt.view') : 'tasks'; } catch (_) {}
-  if (wasOpen && _rtCurrent()) rtToggleDrawer(true);
+  if (typeof PLANP !== 'undefined') PLANP.logOpen = wasOpen;   // §0.47.0 OS2 — the panel's section opens as it was left
 });

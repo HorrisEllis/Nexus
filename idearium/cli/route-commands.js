@@ -179,6 +179,14 @@ export const SPEC = [
       const p = r.current && r.current.process; if (p && p.heapLimitPct != null) console.log(`  heap    ${(p.heapLimitPct * 100).toFixed(1)}% of its limit`);
       if (r.transitions != null) console.log(h.c.dim(`  ${r.transitions} level change(s) reported · ${r.samples} sample(s)`));
     } },
+  { key: 'repo.history', repo: true, usage: 'repo history <repo> <path>', about: 'the commits that touched one file — when, who, why (VR1), newest first',
+    need: (a) => (a.args[0] ? null : '<path>'),
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/history?path=${encodeURIComponent(a.args[0])}`, timeoutMs: 30000 }),
+    print: (d, a, h) => {
+      const l = d.commits || [];
+      if (!l.length) { console.log(h.c.gray(`  no commit names ${d.path}${d.untracked ? ` (${d.untracked} older commit(s) do not say what they touched)` : ''}`)); return; }
+      for (const c of l) console.log(`  ${h.c.amber(String(c.commitId).slice(0, 10))} ${h.c.dim(when(c.ts))} ${c.op === 'delete' ? h.c.coral('deleted') : 'changed'}  ${String(c.message || '').slice(0, 90)}${(c.provenance.refs || []).length ? h.c.dim(`  · ${c.provenance.refs.join(', ')}`) : ''}`);
+    } },
   { key: 'store', repo: false, usage: 'store', about: 'the shared memory store by its files: each table\'s size, append segments, cap and archive (cortex)',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/store' }),
     print: (d, a, h) => {

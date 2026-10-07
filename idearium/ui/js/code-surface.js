@@ -188,7 +188,7 @@ function csToggleDir(p) { if (CS.collapsed.has(p)) CS.collapsed.delete(p); else 
 // ── middle: search, the file, the changes ────────────────────────────────────────────────────────────
 async function csOpen(p, line = null) {
   const repo = CURRENT_API_REPO; if (!repo) return;
-  if (CS.open !== p) { CS.open = p; CS.text = null; CS.textError = null; CS.outline = null; CS.outlineError = null; CS.sel = null; }
+  if (CS.open !== p) { CS.open = p; CS.text = null; CS.textError = null; CS.outline = null; CS.outlineError = null; CS.sel = null; CS.hist = null; }
   if (line) CS.sel = { from: line, to: line };
   CS.hits = null;
   csPaint();
@@ -203,7 +203,26 @@ async function csReadOpen(repo) {
     pendingOnly ? Promise.resolve().then(() => { CS.text = null; CS.textError = 'this file exists only as a proposal — its diff is above; Apply writes it'; })
       : api(`/api/repos/${repo.uuid}/file?path=${encodeURIComponent(p)}`, {}, 20000).then(r => { if (CS.open === p) { CS.text = r.content || ''; CS.textError = null; } }, e => { if (CS.open === p) CS.textError = e.message; }),
     api(`/api/repos/${repo.uuid}/code/outline?path=${encodeURIComponent(p)}`, {}, 30000).then(r => { if (CS.open === p) { CS.outline = r; CS.outlineError = null; } }, e => { if (CS.open === p) { CS.outline = null; CS.outlineError = e.message; } }),
+    // §0.47.0 OS3 — James: "also hooked into the code tab". The commits that touched this file (VR1: who and why)
+    api(`/api/repos/${repo.uuid}/history?path=${encodeURIComponent(p)}`, {}, 20000).then(r => { if (CS.open === p) CS.hist = r; }, () => { if (CS.open === p) CS.hist = null; }),
   ]);
+}
+/** _csHistLine() — one quiet line under the open file: how many versions, the last change, by whom — opening the Plan
+ *  panel's versions view on this file */
+function _csHistLine() {
+  const h = CS.hist; if (!h || !CS.open) return '';
+  const l = h.commits || [];
+  if (!l.length) return `<div class="cs-hist">no recorded change to this file yet${h.untracked ? ' — older versions do not say what they touched' : ''}</div>`;
+  const c = l[0], by = (c.provenance.by || []).join(', ') || 'unattributed';
+  const when = new Date(c.ts).toLocaleString('en-GB', { hour12: false, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  return `<div class="cs-hist"><button class="cs-hist-n" title="every version of this file, in the Plan panel" onclick="csHistoryInPlan()">${l.length} version${l.length === 1 ? '' : 's'}</button>
+    <span>last ${c.op === 'delete' ? 'deleted' : 'changed'} ${escapeHtml(when)} by <b>${escapeHtml(by)}</b></span><span class="cs-hist-m" title="${escapeHtml(c.message || '')}">${escapeHtml(String(c.message || '').replace(/ — by .*$/, ''))}</span></div>`;
+}
+function csHistoryInPlan() {
+  if (typeof RT_MORE === 'undefined' || typeof rtToggleDrawer !== 'function') return;
+  RT_MORE.file = CS.open; RT_VIEW = 'versions';
+  try { localStorage.setItem('idearium.rt.view', 'versions'); } catch (_) {}
+  rtToggleDrawer(true);
 }
 function _csScrollTo(line) { const row = document.querySelector(`#cs-code [data-ln="${line}"]`); if (row) row.scrollIntoView({ block: 'center' }); }
 
@@ -367,6 +386,7 @@ function csPaint() {
     : CS.open ? `<div class="cs-sec"><b>${escapeHtml(CS.open)}</b>${(() => { const s = typeof fileStateOf === 'function' ? fileStateOf(CS.open) : null; return s && s.state !== 'committed' ? ` <span class="cs-warn">${escapeHtml(s.state)}</span>` : ''; })()}
           ${CS.outline ? `<span class="cs-dim"> · ${(CS.outline.chunks || []).length} chunk${(CS.outline.chunks || []).length === 1 ? '' : 's'}</span>` : CS.outlineError ? `<span class="cs-dim"> · no chunk cards: ${escapeHtml(CS.outlineError)}</span>` : ''}
           ${CS.sel ? `<span class="cs-dim"> · ${CS.sel.to !== CS.sel.from ? `lines ${CS.sel.from}–${CS.sel.to}` : `line ${CS.sel.from}`} picked (shift-click widens)</span>` : ''}<span class="cs-grow"></span><button class="cs-chip-btn" onclick="CS.open=null;CS.sel=null;csPaint()">close</button></div>
+        ${_csHistLine()}
         ${mine.length ? `<div class="cs-diffs">${mine.map((f, i) => _wsCard(f, i)).join('')}</div>` : ''}
         <div class="cs-code" id="cs-code">${_csCode()}</div>`
     : `<div class="cs-sec">the agent's changes<span class="cs-grow"></span><button class="cs-chip-btn" title="reload" onclick="csAfterChange()">↻</button></div>

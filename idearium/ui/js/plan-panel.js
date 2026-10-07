@@ -16,7 +16,7 @@
 //   start card    the repo's Home tab: "Start building" — its specs, each with Plan / Build next, and the plan.
 // ════════════════════════════════════════════════════════════════════════════
 
-const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), focus: null, wide: false, showDone: _ppShowDoneSaved() };
+const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), focus: null, wide: false, showDone: _ppShowDoneSaved(), logOpen: (() => { try { return localStorage.getItem('idearium.rt.open') === '1'; } catch (_) { return false; } })() };
 // §CT7 0.39.352 — James: "the plan needs to only show current work." · "completely either need to clear or need a clear
 // complete button." Complete steps and complete sections fold into one line with their count (hidden, never deleted);
 // one click shows them; the choice is remembered in this browser.
@@ -208,13 +208,13 @@ function _planPaint() {
         ${s.layer ? `<span class="pp-layer">${escapeHtml(s.layer)}</span>` : ''}${_gateBar(s)}
       </div>
       ${_ppTimes(s)}
+      ${s.failed && !done ? `<div class="pp-why" title="${escapeHtml(s.failed.error || s.failed.state)}">${escapeHtml(s.failed.state)}${s.failed.error ? ` — ${escapeHtml(String(s.failed.error).slice(0, 160))}` : ''}</div>` : ''}
       ${open ? `<div class="pp-detail"><div class="pp-meta">${escapeHtml(s.key)} · ${escapeHtml(String(s.map).split('/').pop())} · gate: ${escapeHtml(s.gate || 'all passed')}${s.failed ? ` · <span style="color:var(--coral)">${escapeHtml(s.failed.state)}: ${escapeHtml(s.failed.error || '')}</span>` : ''}</div>
         ${done ? '' : `<button class="pp-go" onclick="event.stopPropagation();planBuild('${escapeHtml(s.map)}','${escapeHtml(s.key)}')">▶ build</button>`}
         ${_ledgerHtml(s.ledger || [])}</div>` : ''}
     </div>`;
   };
   const other = (PLANP.runs || []).filter(r => r.phase === 'PLAN' || String(r.map || '').startsWith('file:')).slice(0, 12);
-  const activity = (PLANP.runs || []).slice(0, 25);
   body.innerHTML = `
     ${_planCodeBuild()}
     ${_planProof()}
@@ -231,10 +231,12 @@ function _planPaint() {
     })()}
     ${other.length ? `<div class="pp-sec">plans and file jobs</div>${other.map(r => `<div class="pp-act"><span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.title || `${r.phase} ${r.map}`)} <span class="pp-led-t">${new Date(r.ts).toLocaleTimeString()}</span>${r.error ? `<div style="color:var(--coral);font-size:10px">${escapeHtml(r.error)}</div>` : ''}</div>`).join('')}` : ''}
     <details class="pp-actwrap pp-agents" ontoggle="if(this.open)ppAgentsLoad(this)"><summary class="pp-sec">agents · what Nexus has learned</summary><div class="pp-agents-body">${PLANP.agentsHtml || 'reading…'}</div></details>
-    <details class="pp-actwrap"><summary class="pp-sec">activity · ${activity.length}</summary>${activity.map(r => `<div class="pp-act"><span class="pp-led-t">${new Date(r.ts).toLocaleString()}</span> <span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.phase || '')} <span style="opacity:.6">${escapeHtml(String(r.map || '').split('/').pop())}</span></div>`).join('')}</details>
+    <details class="pp-actwrap pp-log" id="pp-log" ${PLANP.logOpen ? 'open' : ''} ontoggle="if (typeof ppLogToggle === 'function') ppLogToggle(this)"><summary class="pp-sec">activity <span id="pp-log-n" class="pp-log-n"></span></summary>
+      <div class="rt-views" id="rt-views"></div><div class="rt-filters" id="rt-filters"></div><div class="rt-list" id="rt-list"></div></details>
     <div class="al pp-live" data-al="${escapeHtml(PLANP.uuid || '')}">${typeof agentLiveHtml === 'function' && PLANP.uuid ? agentLiveHtml(PLANP.uuid) : ''}</div>
     <div id="pp-ws" class="pp-ws"></div>`;   // §0.39.356 LS4 — the agent writing, live, above the work surface
   PLANP.focus = null;
+  if (typeof rtMounted === 'function') rtMounted(false);   // §0.47.0 OS2 (a repaint: drawn from what is held, nothing re-read) — tasks · log · control · versions · machine, in the activity section
   planTabSync();   // §CT9 — the tab's count follows the plan
   // §0.39.284 W3 — the work surface, below the plan: every file the agent changed, as diffs, and its tools
   if (typeof wsLoad === 'function') { const w = document.getElementById('pp-ws'); if (WSURF.data && WSURF.uuid === PLANP.uuid) wsPaint(w); wsLoad(w); }
