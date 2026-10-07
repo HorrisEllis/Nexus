@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     ollama-recorder
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-07
     release:  "each phase its own minor"
     uuid:     nexus-ollama-recorder-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "ollama (ollama/lib/ollama-client.js, ollama/ollama-runtime.js) + lib/ollama-activity.js + the failure macro (FM2)"
-    status:   "MAPPED. Nothing built."
+    status:   "OR1–OR3 BUILT (0.44.0). OR4, OR5 MAPPED."
     origin: >
       James, 2026-10-07: "yes. can we use the rewind engine on ollama? like record ollamas process as a macro?"
 
@@ -35,12 +35,16 @@ spec:
     OR1_one_door:
       does: "every server-side call to Ollama through ollama/lib/ollama-client.js (cortex/boot.js, idearium/agent-suite, loom/agent-suite, guardian/server.js moved onto it). One door is where recording costs nothing extra."
       proof: "no :11434 call outside the client (a test greps); every caller's calls still answer"
+      status: "DONE 0.44.0 — as three recorded doors, not one: ollama-runtime streamGenerate keeps its own tested wire (clear-glass copilot, emerge, orchestrator use it) with the same tape; loom/agent-suite goes through the client first; idearium/loom direct HTTP remains only for a package run standalone (test OR-05)"
     OR2_every_call_a_frame:
       does: "the door writes a frame per call (blobs content-addressed under data/ollama/blobs, frames appended — PF3's segment shape); the seed is always set and recorded (a random one when the caller gives none), so every call is replayable; timings read from Ollama's reply."
       proof: "a call → a frame with digest, seed, prompt and answer blobs, timings; the same prompt twice → one blob"
+      status: "DONE 0.44.0 — lib/ollama-tape.js (the model digest is not yet read: OR5 reads /api/show once per model); test-ollama-tape OR-01, OR-02"
+      open: "retention: frames per day per process and blobs are not yet capped — PF5's archive applies when they grow"
     OR3_the_cassette:
       does: "NEXUS_OLLAMA_REPLAY=<run id> (or per call): the door answers from recorded frames by (model, prompt hash, options) — no Ollama. A recorded run's code reruns exactly. The failure macro (FM2) carries its frames."
       proof: "a recorded agent run replays with Ollama stopped and produces the same files; a call not in the cassette is said, never invented"
+      status: "DONE 0.44.0 — NEXUS_OLLAMA_REPLAY=<run>|all on all three doors; test-ollama-tape OR-03 (Ollama stopped: same answers, zero calls out), OR-04 (an unrecorded call refused)"
     OR4_live_and_what_if:
       does: "`idearium ollama replay <run> [--live | --model m | --num-ctx n]` (a CM1 row — copilot has it): reruns the frames against the model, diffs each answer; a what-if run is a report, never applied."
       proof: "live replay at the recorded seed matches; --model swaps and shows the per-step diff"

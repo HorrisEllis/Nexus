@@ -545,6 +545,8 @@ const SUITES = [
   'test-repo-versions.test.js',   // 0.40.0 VR1 — every change to a repo's files a versionium commit (settled, attributed, nothing lost)
   'test-pf1-stalls.test.js',      // 0.40.1 PF1 — the 5-minute cortex stall (update by id) and the liminal runaway wall
   'test-pf3-append-store.test.js', // 0.41.0 PF3 — the store appends to one segment per process and folds; no whole-table rewrite per write
+  'test-pf5-bounded-tables.test.js', // 0.43.0 PF5 — hot tables capped; what leaves is archived (gzip) before it is deleted
+  'test-ollama-tape.test.js',      // 0.44.0 OR1–OR3 — every Ollama call a frame; a run's macro; the cassette replays without Ollama
   'test-system-control.test.js',   // 0.39.372 NC2 — a Nexus system's controls through its supervisor; one intent, inherited
   'test-vm-control.test.js',   // 0.39.371 VM1 + CK1 — pause, live checkpoints, rewind over QMP; a checkpoint before every task's work
   'test-desktop-activity.test.js',   // 0.39.370 DT1 — runs in the repo's compartment and the desktop setup are its tasks and log rows

@@ -156,7 +156,16 @@ class LoomAgentSuite {
   /** generateWithOllama — same shape as idearium's version, direct HTTP path only
    *  (idearium's guardian/ollama-runtime streaming path is NEXUS-repo-relative
    *  and out of scope for this standalone LOOM package — see Phase 142). */
-  generateWithOllama(system, prompt, { model = 'mistral:7b-instruct-q4_K_M', timeoutMs = 120000 } = {}) {
+  async generateWithOllama(system, prompt, { model = 'mistral:7b-instruct-q4_K_M', timeoutMs = 120000 } = {}) {
+    // §0.43.0 OR1 — the one door first (ollama/lib/ollama-client.js: streamed, continued when cut, recorded on the tape);
+    // the direct HTTP below stays only for this package run standalone, without the Nexus tree around it
+    let OC = null; try { OC = require('../../ollama/lib/ollama-client.js'); } catch (_) {}
+    if (OC) {
+      try {
+        const text = await OC.callOllamaRaw(model, prompt, null, Math.min(timeoutMs, 120000), 'loom/agent-suite', { system, temperature: 0.3 });
+        return String(text || '').trim() ? { ok: true, text: String(text) } : { ok: false, error: `${model} returned an empty reply` };
+      } catch (e) { return { ok: false, error: e.message, code: e.code }; }
+    }
     return new Promise((resolve) => {
       // §0.39.266 — num_ctx sized to the prompt; the call recorded (lib/ollama-activity.js)
       const OA = require('../../lib/ollama-activity.js');

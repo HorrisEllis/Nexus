@@ -115,6 +115,11 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('idearium/lib/void.js'), 'idearium/api/index.js void.* (await import) — echoPrompt, makeEcho, take, shapeVoid, glow'],
   // §0.39.289 CT1 — a cut reply is finished: chunk-dispatch reaches the continuation through createRequire (_req)
   [I('ollama/lib/ollama-client.js'), I('lib/reply-continuation.js'), 'ollama/lib/ollama-client.js callOllamaRaw — a reply stopped at num_predict (or in an open fence) is continued and stitched (require inside the function)'],
+  // §0.44.0 OR1–OR3 (docs/2026-10-07-ollama-recorder-phasemap.spec) — every Ollama call a frame on the tape; the cassette
+  [I('ollama/lib/ollama-client.js'), I('lib/ollama-tape.js'), 'ollama/lib/ollama-client.js _generateOnce + callOllamaChatWithTools — withSeed, replay() before the call, record() after (require inside the function)'],
+  [I('ollama/ollama-runtime.js'), I('lib/ollama-tape.js'), 'ollama/ollama-runtime.js streamGenerate — the same tape at the streaming door (require inside the function)'],
+  [I('loom/agent-suite/index.js'), I('ollama/lib/ollama-client.js'), 'loom/agent-suite/index.js generateWithOllama — callOllamaRaw first (OR1 the one door); direct HTTP only standalone'],
+  [I('lib/ollama-tape.js'), I('lib/repo-activity.js'), 'lib/ollama-tape.js _task — current(): the run, task and hat a frame belongs to'],
   [I('idearium/spec-engine/chunk-dispatch.js'), I('lib/reply-continuation.js'), 'idearium/spec-engine/chunk-dispatch.js _dispatchChunkOnce — looksCut/complete before the detector judges'],
   ['nexus.idearium.repo.nexus-self', I('idearium/repo/index.js'), 'idearium/repo/nexus-self.js syncSystem — rl.specUpdatedInPlace / replaceSpec / purgeSpecsOf on the injected repo layer'],
 ];
