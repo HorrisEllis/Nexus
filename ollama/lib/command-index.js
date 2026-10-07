@@ -27,6 +27,7 @@ const ROUTE_MODULES = [
   { file: 'jobs.js', mod: require('../routes/jobs.js') },
   { file: 'queue.js', mod: require('../routes/queue.js') },
   { file: 'models.js', mod: require('../routes/models.js') },
+  { file: 'tape.js', mod: require('../routes/tape.js') },   // §0.46.0 — the tape's routes (server.js routes[] has it too)
 ];
 
 /**

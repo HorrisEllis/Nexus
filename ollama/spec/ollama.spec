@@ -291,3 +291,7 @@ spec:
   # NEXUS_OLLAMA_REPLAY=<run>|all — the cassette: a recorded call is answered from its frame with no Ollama; one never
   # recorded is refused and said (NEXUS_OLLAMA_REPLAY_MISS=live lets it through). NEXUS_OLLAMA_RECORD=0 records nothing.
   # loom/agent-suite goes through the client first; direct HTTP remains only for a package run standalone.
+
+  # ADDENDUM 2026-10-07 (0.46.0) — James: "make sure the ollama additions stay with ollama". The tape is ollama's own:
+  # ollama/lib/tape.js (was lib/ollama-tape.js; data stays at <data>/ollama). routes/tape.js declares its commands
+  # (GET /api/tape, /api/tape/:run) in ollama/lib/command-index.js; ollama/commands/get-api-tape*.command are their nodes.

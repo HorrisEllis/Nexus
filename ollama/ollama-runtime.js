@@ -60,8 +60,8 @@ function streamGenerate(opts, onToken, onDone, onError) {
   const _chars = _system.length + String(opts.prompt || '').length;
   const _ctx = OA.withNumCtx({ temperature: opts.temperature??0.2, num_predict: opts.max_tokens??2048 }, _chars, opts.max_tokens??2048);
   const _t0 = Date.now();
-  // §0.43.0 OR2/OR3 — the tape (lib/ollama-tape.js): this door records every call as a frame and answers from the cassette
-  const Tape = require('../lib/ollama-tape.js');
+  // §0.43.0 OR2/OR3 — the tape (ollama/lib/tape.js): this door records every call as a frame and answers from the cassette
+  const Tape = require('./lib/tape.js');
   const _options = Tape.withSeed(_ctx.options);
   const _treq = { prompt: opts.prompt, system: _system };
   let _text = '';

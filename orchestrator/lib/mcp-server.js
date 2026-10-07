@@ -601,7 +601,7 @@ const TOOLS = [
   // (NEXUS_MCP_REPO, set by lib/claude-code-backend.js); the person's own acts stay theirs.
   {
     name: 'nexus_command',
-    description: 'Run any Nexus command — the same ones a person types as `idearium <command>`: "repo tasks", "repo activity", "activity", "repo desktop" (status|pause|resume|checkpoint|checkpoints|rewind <tag>), "repo system", "repo charter", "repo changes", "repo agent", "perf", "models". action "list" shows every command with its usage. repo: uuid or name (default: the repo this run works on). args: the words after the repo. flags: its --flags as an object. Approving proposals and stopping a system are the person\'s.',
+    description: 'Run any Nexus command — the same ones a person types as `idearium <command>`: "repo tasks", "repo activity", "activity", "repo desktop" (status|pause|resume|checkpoint|checkpoints|rewind <tag>), "repo system", "repo charter", "repo changes", "repo agent", "repo phasemap", "repo phase" (args [phase] or [phase,"build"]), "repo versions", "store", "ollama tape", "perf", "models". action "list" shows every command with its usage. repo: uuid or name (default: the repo this run works on). args: the words after the repo. flags: its --flags as an object. Approving proposals and stopping a system are the person\'s.',
     inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['run', 'list'] }, command: { type: 'string' }, repo: { type: 'string' }, args: { type: 'array', items: { type: 'string' } }, flags: { type: 'object' } } },
     handler: async (input = {}) => {
       const T = require('../../lib/agent-tools/tools/nexus/command.js').command;

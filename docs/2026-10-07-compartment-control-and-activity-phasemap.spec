@@ -126,6 +126,18 @@ spec:
         (ollama GET /api/tape, /api/tape/:run: the runs and a run's macro). `repo phases`/`repo build` stay the spec
         chunk commands they were.
 
+    UI1_the_screens_for_cm3:
+      systems: [idearium, cortex, ollama, copilot]
+      status: "DONE (0.46.0) — tests/probe/repo-drawer-views-glass.js 13/13 (Clear Glass)"
+      james: '"always add backend js first, then the ui. can you do that. make sure you build the ui. then make sure the ollama additions stay with ollama. then make sure the agents have accesss"'
+      files: [idearium/ui/js/repo-drawer-views.js, idearium/ui/js/repo-tasks.js, idearium/ui/css/repo-tasks.css, idearium/api/index.js, ollama/lib/tape.js, ollama/routes/tape.js, ollama/lib/command-index.js, lib/repo-agent.js]
+      does: >-
+        The drawer (Tasks) holds six views: Background tasks · Activity log · Control · Phases · Versions · Machine.
+        Phases: each phase done / ready / blocked, why its last run stopped (on the phase), its runs, ▶ build.
+        Versions: every commit. Machine: the store by table and the Ollama tape (runs → a run's macro). Idearium
+        reaches cortex and ollama for it at GET /api/nexus/store, /api/nexus/tape[/:run]. The tape is Ollama's own
+        (ollama/lib/tape.js, its routes in ollama's command index). nexus.command.tool is in every tool scope.
+
   # ── NEXT — mapped 2026-10-07, NOT built ──────────────────────────────────────────────────────────────────────────
   # James: "Like look at nexus nerve and tv ui and the interaction field. Like I want it to be able to navigate the ui,
   # check when something didn't work when I click it and run diagnostics. But worry about that after." · "Oh and

@@ -55,6 +55,7 @@ function rtRepoShown(repo) {
   rtLoad(repo.uuid);
   if (RT_VIEW === 'log' && _rtDrawerOpen()) rtLogLoad();
   if (RT_VIEW === 'control' && _rtDrawerOpen()) rtCtlLoad();
+  if (_rtDrawerOpen()) _rtMoreLoad();   // §0.46.0 — another repo: its phases / versions
 }
 
 function _rtTree(uuid) {
@@ -117,6 +118,8 @@ function rtPaint() {
   _rtViews();
   if (RT_VIEW === 'log') return rtLogPaint();
   if (RT_VIEW === 'control') return rtCtlPaint();
+  const more = typeof RT_MORE_VIEWS !== 'undefined' && RT_MORE_VIEWS.find(v => v[0] === RT_VIEW);   // §0.46.0 Phases · Versions · Machine
+  if (more) return more[3]();
   const uuid = _rtCurrent();
   const body = document.getElementById('rt-list');
   if (!body || !uuid) return;
@@ -174,7 +177,7 @@ function rtToggleDrawer(force) {
   if (open) {
     const r = typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO;
     const name = document.getElementById('rt-repo'); if (name) name.textContent = r ? (r.name || r.uuid) : '';
-    rtPaint(); rtLoad(_rtCurrent()); if (RT_VIEW === 'log') rtLogLoad(); if (RT_VIEW === 'control') rtCtlLoad();
+    rtPaint(); rtLoad(_rtCurrent()); if (RT_VIEW === 'log') rtLogLoad(); if (RT_VIEW === 'control') rtCtlLoad(); _rtMoreLoad();
     if (!RT_TICK) RT_TICK = setInterval(_rtTick, 1000);
   } else if (RT_TICK) { clearInterval(RT_TICK); RT_TICK = null; }
 }
@@ -242,14 +245,19 @@ async function rtRewind(tag) {
 
 function _rtViews() {
   const v = document.getElementById('rt-views');
-  if (v) v.innerHTML = [['tasks', 'Background tasks'], ['log', 'Activity log'], ['control', 'Control']].map(([k, l]) => `<button class="rt-view${RT_VIEW === k ? ' on' : ''}" onclick="rtView('${k}')">${l}</button>`).join('');
+  const extra = typeof RT_MORE_VIEWS !== 'undefined' ? RT_MORE_VIEWS.map(x => [x[0], x[1]]) : [];
+  if (v) v.innerHTML = [['tasks', 'Background tasks'], ['log', 'Activity log'], ['control', 'Control'], ...extra].map(([k, l]) => `<button class="rt-view${RT_VIEW === k ? ' on' : ''}" onclick="rtView('${k}')">${l}</button>`).join('');
 }
+function _rtMoreLoad() { const m = typeof RT_MORE_VIEWS !== 'undefined' && RT_MORE_VIEWS.find(v => v[0] === RT_VIEW); if (m) m[2](); }
+function _rtViewOk(k) { return ['log', 'control'].includes(k) || (typeof RT_MORE_VIEWS !== 'undefined' && RT_MORE_VIEWS.some(v => v[0] === k)); }
 function rtView(k) {
-  RT_VIEW = ['log', 'control'].includes(k) ? k : 'tasks';
+  RT_VIEW = _rtViewOk(k) ? k : 'tasks';
   try { localStorage.setItem('idearium.rt.view', RT_VIEW); } catch (_) {}
   rtPaint();
   if (RT_VIEW === 'log') rtLogLoad();
   if (RT_VIEW === 'control') rtCtlLoad();
+  const more = typeof RT_MORE_VIEWS !== 'undefined' && RT_MORE_VIEWS.find(v => v[0] === RT_VIEW);
+  if (more) more[2]();
 }
 
 function _rtLogQuery(before) {
@@ -342,6 +350,6 @@ function _rtTick() {
 
 document.addEventListener('DOMContentLoaded', () => {
   rtEnsureButton();
-  let wasOpen = false; try { wasOpen = localStorage.getItem('idearium.rt.open') === '1'; RT_VIEW = ['log', 'control'].includes(localStorage.getItem('idearium.rt.view')) ? localStorage.getItem('idearium.rt.view') : 'tasks'; } catch (_) {}
+  let wasOpen = false; try { wasOpen = localStorage.getItem('idearium.rt.open') === '1'; RT_VIEW = _rtViewOk(localStorage.getItem('idearium.rt.view')) ? localStorage.getItem('idearium.rt.view') : 'tasks'; } catch (_) {}
   if (wasOpen && _rtCurrent()) rtToggleDrawer(true);
 });

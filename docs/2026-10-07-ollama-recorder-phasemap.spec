@@ -6,7 +6,7 @@ spec:
     release:  "each phase its own minor"
     uuid:     nexus-ollama-recorder-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "ollama (ollama/lib/ollama-client.js, ollama/ollama-runtime.js) + lib/ollama-activity.js + the failure macro (FM2)"
-    status:   "OR1–OR3 BUILT (0.44.0). OR4, OR5 MAPPED."
+    status:   "OR1–OR3 BUILT (0.44.0; the tape moved to ollama/lib/tape.js in 0.46.0, its runs on screen in the drawer's Machine view). OR4, OR5 MAPPED."
     origin: >
       James, 2026-10-07: "yes. can we use the rewind engine on ollama? like record ollamas process as a macro?"
 

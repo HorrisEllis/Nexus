@@ -33,7 +33,7 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
   process.env.OLLAMA_HOST = `127.0.0.1:${srv.address().port}`;
   const OC = require(path.join(ROOT, 'ollama/lib/ollama-client.js'));
   const RT = require(path.join(ROOT, 'ollama/ollama-runtime.js'));
-  const Tape = require(path.join(ROOT, 'lib/ollama-tape.js'));
+  const Tape = require(path.join(ROOT, 'ollama/lib/tape.js'));
   const RAct = require(path.join(ROOT, 'lib/repo-activity.js'));
   const stream = (o) => new Promise((res, rej) => { let t = ''; RT.streamGenerate(o, (x) => { t += x; }, () => res(t), rej); });
 

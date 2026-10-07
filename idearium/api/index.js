@@ -2344,7 +2344,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
     ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
     ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
-    ['GET',    ['api','activity'],  'activity.all'],      // §0.39.373 BO1 — every compartment's activity log at once, each row with its repo's name (BrainOS)
+    ['GET',    ['api','activity'],  'activity.all'],
+    ['GET',    ['api','nexus','store'],         'nexus.store'],        // §0.46.0 — cortex's store report, for the UI (idearium store)
+    ['GET',    ['api','nexus','tape'],          'nexus.tape'],         // §0.46.0 — the Ollama tape's runs, for the UI (idearium ollama tape)
+    ['GET',    ['api','nexus','tape',':run'],   'nexus.tape.run'],     // §0.46.0 — one run's macro      // §0.39.373 BO1 — every compartment's activity log at once, each row with its repo's name (BrainOS)
     ['POST',   ['api','repos',    ':uuid','agent','stream'],  'repo.agent.stream'],      // §0.39.356 LS3 — copilot sends what the model writes, as it writes it
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
@@ -5727,6 +5730,18 @@ async function handle(req, res, route, query, body) {
     // the work surface read one feed whatever the model. SSE only: several a second, observations, not state.
     // §0.39.366 — James: "the background tasks, i want that for each repo. any activity from an agent wearing the hat."
     // §0.39.373 BO1 — one stream, two views: BrainOS reads every compartment's log here (a repo's Log view reads its own)
+    // §0.46.0 — James: "always add backend js first, then the ui". The store (cortex) and the tape (ollama) are other
+    // systems' routes; the UI reaches them through Idearium, as it reaches versionium and the ollama models.
+    case 'nexus.store':
+    case 'nexus.tape':
+    case 'nexus.tape.run': {
+      const [sys, p2] = action === 'nexus.store' ? ['cortex', '/api/store']
+        : action === 'nexus.tape' ? ['ollama', `/api/tape?limit=${encodeURIComponent(query.limit || '30')}`]
+        : ['ollama', `/api/tape/${encodeURIComponent(params.run)}?chars=${encodeURIComponent(query.chars || '2000')}`];
+      try { return ok(res, await _nexusClient.get(sys, p2, { timeout: 8000 })); }
+      catch (e) { return err(res, 502, `${sys} did not answer: ${e.message}`); }
+    }
+
     case 'activity.all': {
       _repoActivity();
       const q = query || {};

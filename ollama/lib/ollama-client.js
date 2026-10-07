@@ -32,8 +32,8 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
   const OA = require('../../lib/ollama-activity.js');
   const chars = JSON.stringify(messages || []).length + JSON.stringify(toolSchemas || []).length;
   const ctx = OA.withNumCtx({}, chars);
-  // §0.43.0 OR2/OR3 — the tape (lib/ollama-tape.js): a seed always set and recorded; the cassette answers first when replaying
-  const Tape = require('../../lib/ollama-tape.js');
+  // §0.43.0 OR2/OR3 — the tape (ollama/lib/tape.js): a seed always set and recorded; the cassette answers first when replaying
+  const Tape = require('./tape.js');
   const options = Tape.withSeed(ctx.options);
   const req = { messages, tools: toolSchemas };
   const body = JSON.stringify({ model, messages, tools: toolSchemas, stream: false, options });
@@ -89,8 +89,8 @@ function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
   const OA = require('../../lib/ollama-activity.js');
   const want = maxTokens || config.DEFAULT_MAX_TOKENS;
   const ctx = OA.withNumCtx({ num_predict: want, temperature: extra.temperature != null ? extra.temperature : 0.2 }, String(prompt || '').length + String(extra.system || '').length, want);
-  // §0.43.0 OR2/OR3 — the tape (lib/ollama-tape.js): a seed always set and recorded; the cassette answers first when replaying
-  const Tape = require('../../lib/ollama-tape.js');
+  // §0.43.0 OR2/OR3 — the tape (ollama/lib/tape.js): a seed always set and recorded; the cassette answers first when replaying
+  const Tape = require('./tape.js');
   const options = Tape.withSeed(ctx.options);
   const treq = { prompt, system: extra.system || null, think: extra.think === false ? false : null };
   const body = JSON.stringify({ model, prompt, stream: true, options, ...(extra.system ? { system: extra.system } : {}), ...(extra.think === false ? { think: false } : {}) });

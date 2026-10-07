@@ -1,6 +1,6 @@
 'use strict';
 /**
- * ollama/routes/tape.js — the Ollama tape (lib/ollama-tape.js). §0.45.0 CM3
+ * ollama/routes/tape.js — the Ollama tape (ollama/lib/tape.js). §0.45.0 CM3
  * GET /api/tape            — every run recorded: calls, callers, models, time, failures (newest first)
  * GET /api/tape/:run       — that run's macro: each call in order, what was asked and answered (texts cut to ?chars=)
  * James: "next make sure these are all commands first, api routes if applicaple."
@@ -9,7 +9,7 @@ const { json } = require('../lib/http-utils.js');
 
 async function handle(req, res, { method, url, pathname }) {
   if (method !== 'GET' || !/^\/api\/tape(\/|$)/.test(pathname)) return false;
-  const Tape = require('../../lib/ollama-tape.js');
+  const Tape = require('../lib/tape.js');
   const q = url && url.searchParams ? url.searchParams : new URLSearchParams();
   if (pathname === '/api/tape' || pathname === '/api/tape/') {
     const limit = Math.max(1, parseInt(q.get('limit') || '30', 10) || 30);
@@ -27,3 +27,7 @@ async function handle(req, res, { method, url, pathname }) {
 }
 
 module.exports = { handle };
+module.exports.commands = [
+  { method: 'GET', path: '/api/tape', description: 'every run on the Ollama tape — idearium ollama tape' },
+  { method: 'GET', path: '/api/tape/:run', description: "a run's macro: each model call in order, asked and answered — idearium ollama tape <run>" },
+];

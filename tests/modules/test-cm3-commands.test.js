@@ -36,7 +36,7 @@ function fakeRes() { const r = { code: 0, body: null, writeHead(c) { r.code = c;
   });
 
   await test('CM3-03', 'GET /api/tape lists the runs; GET /api/tape/:run is its macro; an unknown run is a 404 that says how to list them', async () => {
-    const Tape = require(path.join(ROOT, 'lib/ollama-tape.js'));
+    const Tape = require(path.join(ROOT, 'ollama/lib/tape.js'));
     process.env.NEXUS_OLLAMA_RUN = 'run-cm3';
     Tape.record({ caller: 'test', op: 'generate', model: 'm', req: { prompt: 'p1' }, options: { seed: 7 }, res: { text: 'a1' }, ms: 10 });
     Tape.record({ caller: 'test', op: 'generate', model: 'm', req: { prompt: 'p2' }, options: { seed: 8 }, res: { text: 'a2' }, ms: 20, ok: false, error: 'boom' });

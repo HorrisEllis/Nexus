@@ -1,7 +1,7 @@
 'use strict';
 /**
- * lib/ollama-tape.js — every model call a frame; a run's frames its macro; a recorded run replayed without Ollama.
- * comp_id: nexus.lib.ollama-tape
+ * ollama/lib/tape.js — every model call a frame; a run's frames its macro; a recorded run replayed without Ollama.
+ * comp_id: nexus.ollama.lib.tape   (§0.46.0 — moved from lib/ollama-tape.js: what is Ollama's lives with Ollama)
  * Map: docs/2026-10-07-ollama-recorder-phasemap.spec (OR2 every call a frame, OR3 the cassette)
  *
  * James: "can we use the rewind engine on ollama? like record ollamas process as a macro?" · "do it. tell me what that
@@ -27,12 +27,12 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const MODULE_ID = 'nexus.lib.ollama-tape';
+const MODULE_ID = 'nexus.ollama.lib.tape';
 const sha = (s) => crypto.createHash('sha256').update(String(s)).digest('hex');
 
-function _root() { return path.join(process.env.NEXUS_DATA_ROOT || path.resolve(__dirname, '..', 'data'), 'ollama'); }
+function _root() { return path.join(process.env.NEXUS_DATA_ROOT || path.resolve(__dirname, '..', '..', 'data'), 'ollama'); }
 function _blobFile(h) { return path.join(_root(), 'blobs', h.slice(0, 2), `${h}.txt`); }
-function _task() { try { return require('./repo-activity.js').current(); } catch (_) { return null; } }
+function _task() { try { return require('../../lib/repo-activity.js').current(); } catch (_) { return null; } }
 
 /** blob(text) → sha (written once) | null */
 function blob(text) {

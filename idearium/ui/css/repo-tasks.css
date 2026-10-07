@@ -66,3 +66,7 @@
 .rt-act{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);color:var(--text);font:10.5px var(--mono);border-radius:5px;padding:2px 8px;cursor:pointer;margin-left:4px}
 .rt-act:hover{background:rgba(255,255,255,.1)}.rt-act:disabled{opacity:.4;cursor:default}
 .rt-acts{display:inline-flex;gap:0;flex:none}
+/* §0.46.0 — Phases / Versions / Machine views (js/repo-drawer-views.js) */
+.rt-run{color:#7dd3fc}
+.rt-pre{white-space:pre-wrap;max-height:220px;overflow:auto;font-size:11px;margin:4px 0 6px;padding:6px 8px;border-left:2px solid rgba(125,211,252,.35);background:rgba(255,255,255,.02)}
+#rt-list .rt-pad,#rt-list .rt-proc{overflow-wrap:anywhere;min-width:0}#rt-list{overflow-x:hidden}#rt-list div.rt-pad.rt-dim,#rt-list .rt-pad>div.rt-dim{white-space:normal}
