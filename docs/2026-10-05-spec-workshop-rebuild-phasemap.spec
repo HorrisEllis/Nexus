@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     spec-workshop-rebuild
-    version:  1.1.0   # 1.1.0: RS5 built on James's yes (0.39.357) — the workshop's start page is the template picker
+    version:  1.2.0   # 1.1.0: RS5 built on James's yes (0.39.357) — the workshop's start page is the template picker · 1.2.0: RS9–RS11 (the phases, interconnected), recovered from branch claude/charming-lamport-mdzuau (d0e906f), never merged
     date:     2026-10-05
     release:  0.39.345 (base)
     uuid:     nexus-spec-workshop-rebuild-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the workshop, the template picker, the architect, the blueprint) · warp (WARP 2) · intelligence (rfr2 clip)
-    status:   "MAPPED 2026-10-05, before building"
+    status:   "MAPPED 2026-10-05, before building; RS9–RS11 (the phases, interconnected) and the build order added"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -24,7 +24,8 @@ spec:
       then the blueprint, which is the entire blueprint, maybe for building the entire project, and maybe as it goes on
       reconstructing it like look at the macros and blueprints in rfr2, or the rewind engine. clips" · "yes. im saying
       rebuild the spec workshop. im saying we could record the generation process from the agents and create a macro or
-      replayable file to rebuild or reconstruct data using events, snapshots etc."
+      replayable file to rebuild or reconstruct data using events, snapshots etc." · "okay now the phases with the
+      spec workshop. needs to be rebuilt, enterprise grade. interconnected"
     supersedes: >-
       docs/2026-10-05-idea-to-spec-workshop-phasemap.spec WK1–WK3 (blocks, templates, drafts) — folded in here; its WK4
       (the void feeds the workshop) and WK5 (lanes → gaps, phases) stand and build on RS6. Closes WS5, WS6 and UI0 when
@@ -59,6 +60,30 @@ spec:
     - >-
       Genesis as the default; its file list does not yet match the real systems (SB28). Fixed with RS3, or every new
       spec starts wrong.
+
+  # ── 1.1.0 (2026-10-05) — the phases, interconnected ────────────────────────────────────────────────────────────────
+  found_1_1:
+    - >-
+      The thread exists in the data and nothing reads it: a derived phasemap names its spec (meta.spec, spec_sha256) and
+      each phase its sections (sections: [keys]) — idearium/repo/spec-plan.js derivePlan. A phase planned by the agent
+      names no section. The Phases tab (idearium/ui/js/phases.js — Board · Layers · Table · Maps) shows phases with no
+      spec text beside them; the workshop shows blocks with no phases beside them; the Plan and the Code tab know runs
+      and files but not which block of which spec they serve.
+    - >-
+      For NEXUS itself the Phases tab is 913 phases across 62 maps on one board (his screenshot): no spec, no current
+      work first.
+  pushback_1_1:
+    - >-
+      One source of truth (§10.3): phases stay in the phasemap files, blocks in the .spec. The thread is read from both,
+      never copied into a third store. Rebuilt means the surface, not the data — the board's build, status and add are
+      kept, and the Table view stays.
+    - >-
+      Interconnection needs an address on both ends, so the order starts at the bottom: block ids (RS3), then the thread
+      (RS9), then the surfaces. Building the new screens first would mean linking by guessed titles.
+    - >-
+      A map planned before this has no block ids on its phases: it says "no link to its spec", it is not guessed. The
+      agent's plan prompt requires blocks: from RS9 on.
+  build_order_1_1: "RS3 → RS9 → RS10 → RS1 → RS2 → RS4 → RS5 → RS6 → RS11 → RS7 → RS8"
 
   phases:
     RS1_the_generation_recorder:
@@ -186,3 +211,45 @@ spec:
         A generation that converges N times independently (N stated, tunable) is promoted into the deterministic core — a
         template part, a component — so the same thing is never asked of a model twice. The boundary moves up.
       proof: "a block drafted the same way N times becomes a template part offered with no model call; a contradicting outcome re-opens it"
+
+    RS9_the_thread:
+      layer: library
+      status: OPEN
+      james: '"interconnected"'
+      depends_on: [RS3_the_spec_document]
+      files: [idearium/repo/thread.js, idearium/repo/spec-plan.js, idearium/repo/phases.js, idearium/api/index.js]
+      does: >-
+        One read over what exists: a spec's blocks (RS3, by id) ⇄ the phases planned from them (a phase's blocks:, the
+        derived map's sections:) ⇄ each phase's runs (idearium_phase_runs: rung, model, state) ⇄ the files they wrote and
+        the changes waiting (work surface). Each block carries its hash: a block edited after its phases were planned
+        marks them stale, naming the block. GET /api/repos/:uuid/thread?spec= — a projection, it stores nothing. The
+        plan prompt (spec-plan) requires blocks: on every phase; derivePlan writes them.
+      proof: "a fixture spec of three blocks planned into phases: each block lists its phases, each phase its blocks, runs and files; editing one block marks only its phases stale; a map with no blocks: says 'no link to its spec'"
+      note_0_47_0: "part of the ground is laid: derivePlan reads a workshop spec's sections and writes each phase's sections: and name: (docs/2026-10-07-idearium-one-surface-phasemap.spec SP1); the commits say which files they touched (OS1). The thread read itself is not built."
+
+    RS10_the_phases_tab_rebuilt:
+      layer: ui
+      status: OPEN
+      james: '"the phases with the spec workshop. needs to be rebuilt, enterprise grade."'
+      depends_on: [RS9_the_thread]
+      files: [idearium/ui/js/phases.js, idearium/ui/css/phases.css]
+      does: >-
+        The Phases tab opens on current work (complete folded, as the Plan) and per spec: left, the specs and their maps;
+        middle, the phases in build order, lanes by layer, each card with its status, its gates (the Plan's gate bar), its
+        blocks as chips, its last run's model and rung, a stale mark when its block moved; right, the phase: its block's
+        text from the spec, its runs (the Plan's ledger), its files (open in Code), its changes (work-surface cards), and
+        Build · status · open in the workshop · open in the Plan. Table view kept; the board becomes lanes.
+      proof: "driven in Clear Glass: a spec's phases in lanes; a phase shows its block's text, its runs and files; a stale phase is marked; Build starts it and the card follows live"
+
+    RS11_workshop_and_phases_one_surface:
+      layer: ui
+      status: OPEN
+      james: '"interconnected"'
+      depends_on: [RS6_the_workshop_as_the_editor, RS10_the_phases_tab_rebuilt]
+      files: [idearium/ui/workshop.html, idearium/ui/js/spec-editor.js, idearium/ui/js/phases.js]
+      does: >-
+        In the workshop each block shows its phases and their state (a dot per phase, live); "plan these blocks" plans the
+        picked blocks into phases (derived, or the agent); editing a planned block says which phases it makes stale and
+        offers to replan only those. Every link goes both ways: a phase opens its block in the workshop
+        (?id=…&block=…), a block opens its phases in the Phases tab, either opens the Plan on its run.
+      proof: "driven in Clear Glass: plan two blocks → their phases appear on them and in the Phases tab; edit one → its phases go stale in both; a phase's link opens the workshop on its block"
