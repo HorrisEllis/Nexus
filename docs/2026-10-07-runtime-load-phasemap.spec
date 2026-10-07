@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     runtime-load
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-07
     release:  "PF1 0.40.1 (a fix: patch). PF2–PF5 each a phase."
     uuid:     nexus-runtime-load-phasemap-v1-0000-2026-1007-jamesbrooks-001
@@ -34,11 +34,31 @@ spec:
         One signal, existing governor, no new loop. Velocity also falls when jobs complete — so throttling lets synthesis
         catch up, which lowers velocity: a closed loop, stable by construction (hysteresis 0.8 up / 0.5 down).
       proof:  "a burst of forge.patch.proposed → governor 'pressure' with reason 'velocity'; job completions → back to ok; no flapping."
-    PF3_one_owner_per_table:
-      idea: "a shared table (event_log, component_ledger, cfr_tension_history) is held in ONE process (cortex); the others append through it or read a bounded tail. Ends the 12× heap copies — the OOM."
-    PF4_one_writer_per_file:
-      idea: "follows PF3: the owner is the only flusher of its JSON, so no EPERM rename races on Windows."
+    PF3_append_not_rewrite:
+      found: >-
+        guardian/jaa-store.js _flush(table): to save ONE new row, a process takes the flush lock, reads and JSON.parses
+        the whole table from disk (event_log 333k rows), merges it into its own heap, then JSON.stringifies and rewrites
+        all of it (tmp + rename). Twelve processes doing that for every event = the CPU, the heap growth (every process
+        ends up holding every row — the OOM) and the EPERM rename races. The 0.39.266 multi-process fix made it correct
+        and O(table) per write: "the optimization seems worse" is mostly this.
+      idea: >-
+        Append, never rewrite: each process appends its writes as JSONL lines to its OWN segment
+        (<table>.<pid>.jsonl — one writer per file, so no lock and no EPERM, O(row) per write). A reader folds base +
+        segments (last write per id wins, causedBy kept). ONE owner (cortex) folds segments into the base on its quiet
+        tick. Reuse: cortex/memory/jaa-db.js already has an _append JSONL path — one store shape, not a third.
+      proof: "12 child processes × 1,000 inserts: no EPERM, every row present once, write cost flat as the table grows"
+    PF4_hold_only_what_you_read:
+      idea: "after PF3 a process loads a table lazily and only its tail (a window by ts) unless it asks for history — the heap stops scaling with the table. Ends the 12× copies."
     PF5_bounded_tables:
-      idea: "event_log and ledgers rolled into the node store / archives past a cap (nothing lost: archived, not deleted); compaction sized to inflow, not a fixed 2000."
+      idea: >-
+        event_log and ledgers rolled into archives past a cap (nothing lost: archived, not deleted); compaction sized to
+        inflow, not a fixed 2000. The decay sweep walks a cursor slice per tick (bounded), and expiry is read-time
+        (cortex/memory/decay.js isExpired, already built) — the sweep only reclaims space.
+    PF6_slow_ticks_name_themselves:
+      idea: >-
+        One wrapper, lib/tick.js every(name, ms, fn): times each run of every background ticker and keeps an event-loop
+        delay histogram (perf_hooks.monitorEventLoopDelay) per process. A run over budget is a row 'tick.slow' naming the
+        ticker, its ms and the loop delay — the decay stall would have named itself in one cycle instead of a log full of
+        "cortex offline". Feeds the heal ladder (heal-nodes map HL0) and PF2 (a slow tick = pressure).
 
-  ordering: "PF1 → PF2 → PF3 → PF4 → PF5 (PF3 is the big one: confirm with James before it)"
+  ordering: "PF1 → PF3 → PF4 → PF6 → PF2 → PF5 (PF3 is the biggest single win: the store itself)"
