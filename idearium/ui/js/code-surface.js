@@ -213,10 +213,10 @@ function _csHistLine() {
   const h = CS.hist; if (!h || !CS.open) return '';
   const l = h.commits || [];
   if (!l.length) return `<div class="cs-hist">no recorded change to this file yet${h.untracked ? ' — older versions do not say what they touched' : ''}</div>`;
-  const c = l[0], by = (c.provenance.by || []).join(', ') || 'unattributed';
+  const c = l[0], by = (c.provenance.by || []).join(', ') || 'hand';   // no agent task behind it: a person's own edit
   const when = new Date(c.ts).toLocaleString('en-GB', { hour12: false, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
   return `<div class="cs-hist"><button class="cs-hist-n" title="every version of this file, in the Plan panel" onclick="csHistoryInPlan()">${l.length} version${l.length === 1 ? '' : 's'}</button>
-    <span>last ${c.op === 'delete' ? 'deleted' : 'changed'} ${escapeHtml(when)} by <b>${escapeHtml(by)}</b></span><span class="cs-hist-m" title="${escapeHtml(c.message || '')}">${escapeHtml(String(c.message || '').replace(/ — by .*$/, ''))}</span></div>`;
+    <span>last ${c.op === 'delete' ? 'deleted' : 'changed'} ${escapeHtml(when)} by <b>${escapeHtml(by)}</b></span>${(() => { const m = String(c.message || '').replace(/ — by .*$/, ''); return /^\d+ files?: /.test(m) && m.replace(/^\d+ files?: /, '') === CS.open ? '' : `<span class="cs-hist-m" title="${escapeHtml(c.message || '')}">${escapeHtml(m)}</span>`; })()}</div>`;
 }
 function csHistoryInPlan() {
   if (typeof RT_MORE === 'undefined' || typeof rtToggleDrawer !== 'function') return;

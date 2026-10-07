@@ -6,7 +6,7 @@ spec:
     release:  "0.47.0 (one phase: OS1–OS6 land together)"
     uuid:     nexus-idearium-one-surface-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "idearium ui (plan-panel.js, repo-tasks.js, code-surface.js, app.js renderRepoAgent, repo-settings.js) + idearium api (snapshot summaries)"
-    status:   "MAPPED, building"
+    status:   "BUILT 0.47.0 — OS1–OS7, SP1–SP3; proved on the real page (tests/probe/idearium-one-surface-glass.js 15/15). Not done: a proposal card does not yet link to the task that wrote it (an inject carries no task id)."
     origin: >
       James, 2026-10-07, shown the 0.46.0 drawer: "what is that? thats supposed to be a idearium feature. also needs to
       look like the rest of it like the plan panel. also hooked into the code tab, same with the rest of what should be

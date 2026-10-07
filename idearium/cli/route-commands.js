@@ -179,6 +179,23 @@ export const SPEC = [
       const p = r.current && r.current.process; if (p && p.heapLimitPct != null) console.log(`  heap    ${(p.heapLimitPct * 100).toFixed(1)}% of its limit`);
       if (r.transitions != null) console.log(h.c.dim(`  ${r.transitions} level change(s) reported · ${r.samples} sample(s)`));
     } },
+  { key: 'repo.blanks', repo: true, usage: 'repo blanks <repo> [complete [--section id]] [--path spec/x.spec]', about: 'the spec\'s blank sections and empty files — complete drafts each one as a workshop proposal you accept',
+    req: (a) => (a.args[0] === 'complete'
+      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/spec/complete`, body: { ...(a.flags.section ? { section: a.flags.section } : {}), ...(a.flags.path ? { path: a.flags.path } : {}) }, timeoutMs: 600000 }
+      : { method: 'GET', path: `/api/repos/${a.repo.uuid}/spec/blanks${a.flags.path ? `?path=${encodeURIComponent(a.flags.path)}` : ''}` }),
+    print: (d, a, h) => {
+      if (a.args[0] === 'complete') {
+        if (!(d.results || []).length) { console.log(h.c.gray(`  ${d.note || 'nothing to complete'}`)); return; }
+        for (const r of d.results) console.log(`  ${r.ok ? h.c.mint('✓') : h.c.coral('✗')} ${r.section}  ${r.ok ? `${r.proposals} proposal(s)` : r.error}`);
+        console.log(h.c.dim(`\n  review and accept them in the workshop ${d.workshopId} (idearium workshop show ${d.workshopId}), then save`));
+        return;
+      }
+      console.log(h.c.dim(`  ${d.specPath} · ${d.sections} section(s)`));
+      if (!(d.blank || []).length && !(d.emptyFiles || []).length) { console.log(h.c.mint('  nothing is blank')); return; }
+      for (const b of d.blank || []) console.log(`  ${h.c.amber('○')} ${b.id}  ${h.c.dim(b.title || '')}`);
+      for (const f of d.emptyFiles || []) console.log(`  ${h.c.amber('○')} ${f}  ${h.c.dim('0 bytes')}`);
+      console.log(h.c.dim(`\n  draft them: idearium repo blanks ${a.repo.name} complete`));
+    } },
   { key: 'repo.history', repo: true, usage: 'repo history <repo> <path>', about: 'the commits that touched one file — when, who, why (VR1), newest first',
     need: (a) => (a.args[0] ? null : '<path>'),
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/history?path=${encodeURIComponent(a.args[0])}`, timeoutMs: 30000 }),

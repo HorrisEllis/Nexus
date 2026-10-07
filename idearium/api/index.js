@@ -1887,9 +1887,35 @@ function err(res, code, message, detail = null) {
 // as one real, shared helper instead of four separate copies (this file
 // has four real completeChunk() call sites) so the two paths can't drift
 // apart from each other again.
+// §0.47.0 SP3 — James: "generate the file tree automatically, which feed into the registry as a spine". A document spec
+// that has just become complete plans its file tree by itself — the same codegen the Code button runs
+// (speceng.codegen: its registry section, when it has one, is the file list and the dependency checklist; the files
+// are slotted into the nexus-system skeleton, whose registry-components.js is the spine the phases build into). Once
+// per spec (it has a code spec after), in the background, said in the activity log; specs.auto_file_tree: false
+// leaves it to the button.
+const _AUTO_TREE = new Set();
+function _autoFileTree(manifest) {
+  if (!manifest || manifest.type === 'filetree' || manifest.codeSpecUuid || manifest.codeFor || _AUTO_TREE.has(manifest.uuid)) return;
+  let on = true; try { on = getIdeariumValue('specs.auto_file_tree') !== false; } catch (_) { on = true; }
+  if (!on) return;
+  _AUTO_TREE.add(manifest.uuid);
+  setImmediate(async () => {
+    let r; try { r = await _route('POST', `/api/spec-engine/specs/${manifest.uuid}/codegen`, {}); } catch (e) { r = { status: 500, json: { error: e.message } }; }
+    const ok = r.status === 200, m = ok && r.json && (r.json.manifest || {});
+    const repoUuid = ok ? (r.json.repoUuid || null) : null;
+    try {
+      _require('../../lib/activity-log/compartment.js').record({ compartment: repoUuid || manifest.repoUuid || manifest.uuid, kind: ok ? 'spec.filetree' : 'fault.filetree', status: ok ? 'ok' : 'failed', actor: 'auto',
+        title: ok ? `file tree planned from ${manifest.name || 'the spec'} — ${((m.fileTree && m.fileTree.files) || []).length} file(s)${m.fileTree && m.fileTree.planSource ? ` · from ${m.fileTree.planSource}` : ''}` : `the file tree for ${manifest.name || 'the spec'} could not be planned: ${(r.json && r.json.error) || r.status}`,
+        ref: ok ? (m.uuid || null) : manifest.uuid, detail: { specUuid: manifest.uuid, codeSpecUuid: (m && m.uuid) || null, repoUuid } });
+    } catch (_) { /* the log never stops the plan */ }
+    if (!ok) _AUTO_TREE.delete(manifest.uuid);   // refused (e.g. no written sections yet): tried again when it next completes
+  });
+}
+
 function _syncPhaseFromManifest(os, manifest) {
   if (!manifest) return;
   if (manifest.status === 'complete') {
+    _autoFileTree(manifest);   // §0.47.0 SP3
     // §0.39.265 — a spec-engine manifest is only ALSO an IdeaOS spec when one was made
     // for it; emitting the update for one that was not logged
     // "[IdeaOS][ERROR] op=spec.update reason=spec not found" at the end of every build.
@@ -2290,7 +2316,9 @@ function matchRoute(method, url) {
     // system ('idearium.repo'), never 'idearium' — see idearium.repo-snapshot.spec.
     ['POST',   ['api','repos',    ':uuid','snapshot'],      'repo.snapshot.commit'],
     ['GET',    ['api','repos',    ':uuid','snapshots'],     'repo.snapshot.list'],
-    ['GET',    ['api','repos',    ':uuid','history'],       'repo.history'],          // §0.47.0 OS1 — ?path= the commits that touched one file
+    ['GET',    ['api','repos',    ':uuid','history'],       'repo.history'],
+    ['GET',    ['api','repos',    ':uuid','spec','blanks'],  'repo.spec.blanks'],      // §0.47.0 SP2 — the spec's blank sections and empty chunk files
+    ['POST',   ['api','repos',    ':uuid','spec','complete'],'repo.spec.complete'],    // §0.47.0 SP2 — draft them (workshop proposals)          // §0.47.0 OS1 — ?path= the commits that touched one file
     ['GET',    ['api','repos',    ':uuid','snapshots',':commitId'], 'repo.snapshot.show'],
     ['POST',   ['api','repos',    ':uuid','snapshots',':commitId','restore'], 'repo.snapshot.restore'],
     // §MCO-E 2026-09-20 — the repo's roadmap, from the phasemaps inside it
@@ -6296,6 +6324,42 @@ async function handle(req, res, route, query, body) {
 
     // §0.47.0 OS1 — James: "also hooked into the code tab". The commits that touched one file, newest first, each with
     // who and why (VR1 provenance); a commit from before 0.40.0 (no provenance) is not guessed into it.
+    // §0.47.0 SP2 — James: "the spec engine needs to have autocomplete for the areas that are blank". What is blank: each
+    // section of the repo's spec with no body, and each chunk file of it that is empty (0 bytes). Completing them is the
+    // workshop's own loop (idearium/lib/workshop.js): the repo's spec opened in a workshop (reused while one is open), a
+    // 'section' feed per blank part — PROPOSALS, accepted one by one, saved back to the repo (a VR1 commit). Nothing is
+    // written into the spec without the person (§7.2: an idea's draft never changes the build by itself).
+    case 'repo.spec.blanks':
+    case 'repo.spec.complete': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (repo.nexusSelf) return err(res, 400, 'a Nexus system\'s specs change through its own apply gate, not the workshop');
+      const WS = await _workshop();
+      const specPath = body.path || query.path || _workshopSpecFiles(repo)[0] || null;
+      if (!specPath) return err(res, 404, 'this repo has no spec file to complete');
+      const f = getRepoLayer().readFile(repo.uuid, specPath);
+      if (f.error) return err(res, 404, f.error);
+      const secs = WS.sectionsFromSpecText(f.content, _require('js-yaml'));
+      const blank = secs.filter(x => !String(x.body || '').trim()).map(x => ({ id: x.id, title: x.title }));
+      const emptyFiles = (repo.files || []).filter(x => (x.bytes === 0 || x.size === 0) && /\.(md|spec|ya?ml|json|js)$/.test(x.path)).map(x => x.path);
+      if (action === 'repo.spec.blanks') return ok(res, { repoUuid: repo.uuid, specPath, sections: secs.length, blank, emptyFiles });
+      let w = loadTable(WS.TABLE).filter(r => r.repoUuid === repo.uuid && r.specPath === specPath).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))[0] || null;
+      if (!w) {
+        const c = await _route('POST', '/api/workshop', { from: { kind: 'repo', id: repo.uuid, path: specPath }, mode: body.mode || 'assisted' });
+        if (c.status !== 200) return err(res, c.status, (c.json && c.json.error) || 'the workshop could not open this spec');
+        w = c.json.workshop;
+      }
+      const wsBlank = (w.sections || []).filter(x => !String(x.body || '').trim()).map(x => x.id);
+      const targets = body.section ? [String(body.section)] : wsBlank;
+      if (!targets.length) return ok(res, { repoUuid: repo.uuid, workshopId: w.uuid, specPath, blank: [], results: [], note: 'nothing is blank' });
+      const results = [];
+      for (const sid of targets) {
+        const r = await _route('POST', `/api/workshop/${w.uuid}/feed`, { kind: 'section', sectionId: sid });
+        results.push({ section: sid, ok: r.status === 200, proposals: ((r.json && r.json.added) || []).length, error: r.status === 200 ? null : (r.json && r.json.error) || 'no answer' });
+      }
+      return ok(res, { repoUuid: repo.uuid, workshopId: w.uuid, specPath, blank: wsBlank, results, open: `/workshop.html?id=${w.uuid}` });
+    }
+
     case 'repo.history': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
