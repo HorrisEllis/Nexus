@@ -7,7 +7,7 @@ spec:
     uuid:     nexus-compartment-control-activity-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "idearium + cos — continues docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (HC1, AG1, UI2),
                docs/2026-10-05-cos-machines-phasemap.spec (VM1) and docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec (NC1, NC2)."
-    status:   "BUILT 2026-10-07 — every phase, one at a time: CC1 (0.39.367), AL1 (0.39.368), AL2 (0.39.369), DT1 (0.39.370), VM1 + CK1 (0.39.371), NC2 (0.39.372), BO1 (0.39.373)."
+    status:   "BUILT 2026-10-07 — every phase, one at a time: CC1 (0.39.367), AL1 (0.39.368), AL2 (0.39.369), DT1 (0.39.370), VM1 + CK1 (0.39.371), NC2 (0.39.372), BO1 (0.39.373); CM1 (0.39.374) — every capability a command."
     origin: >
       James, 2026-10-07: "the background tasks, i want that for each repo" · "I also want to have a full extensive activity
       log in each repo." · "Do you think we should have each repo a control panel for the system, and compartment for the
@@ -93,5 +93,13 @@ spec:
       status: "DONE (0.39.373) — GET /api/activity (every compartment, named); BrainOS ACTIVITY tab, live over idearium SSE. AL-07."
       depends_on: [AL1_activity_log]
       does: "BrainOS's system-wide view reads activity_log for every compartment — one stream, two views."
+
+    CM1_every_capability_a_command:
+      systems: [idearium]
+      status: "DONE (0.39.374) — idearium/cli/route-commands.js: one table, one runner; idearium/cli/store-chatter.js keeps stdout the answer. test-cli-route-commands 8/8."
+      james: '"That was fantastic. Everything needs to be available as commands."'
+      files: [idearium/cli/route-commands.js, idearium/cli/store-chatter.js, idearium/cli/index.js, cli/nexus.js]
+      does: "Every capability above, and the repo agent, its proposals and its charter, as an idearium command (and through nexus /idearium): one row each in a table run by one runner, --json for scripts and agents."
+      proof: "the real CLI, as its own process, against the real API: help lists every row; agent, ask, changes, apply, activity, tasks, charter set/check; refusals exit 1 with the reason"
 
   ordering: "CC1 → AL1 → AL2 → DT1 → VM1 → NC2 → BO1. Each is usable on its own; each later one makes the earlier ones worth more."

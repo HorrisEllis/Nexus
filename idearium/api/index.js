@@ -2332,8 +2332,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
     ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
-    ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],
-    ['GET',    ['api','activity'],  'activity.all'],      // §0.39.373 BO1 — every compartment's activity log at once, each row with its repo's name (BrainOS)      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
+    ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
+    ['GET',    ['api','activity'],  'activity.all'],      // §0.39.373 BO1 — every compartment's activity log at once, each row with its repo's name (BrainOS)
     ['POST',   ['api','repos',    ':uuid','agent','stream'],  'repo.agent.stream'],      // §0.39.356 LS3 — copilot sends what the model writes, as it writes it
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
