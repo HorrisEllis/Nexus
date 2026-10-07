@@ -282,3 +282,16 @@ spec:
   # what the model has written so far — job.partial (answer) and job.partialThinking, appended token by token through
   # callOllamaRaw's opts.onDelta (every round: the think:false retry and each continuation), at most 200,000 chars each
   # (the oldest dropped, counted in partialDropped / partialThinkingDropped), job.partialAt. GET /api/jobs/:id answers them.
+
+  # ADDENDUM 2026-10-07 (0.44.0, OR1–OR3 of docs/2026-10-07-ollama-recorder-phasemap.spec) — James: "can we use the rewind
+  # engine on ollama? like record ollamas process as a macro?" · "do it. tell me what that would do"
+  # Every call at the three doors (ollama/lib/ollama-client.js _generateOnce + callOllamaChatWithTools,
+  # ollama/ollama-runtime.js streamGenerate) is a frame on the tape (lib/ollama-tape.js): a seed always set and recorded,
+  # prompt/system/messages/tools and the answer as content-addressed blobs, tool calls, Ollama's timings, the run/task/hat.
+  # NEXUS_OLLAMA_REPLAY=<run>|all — the cassette: a recorded call is answered from its frame with no Ollama; one never
+  # recorded is refused and said (NEXUS_OLLAMA_REPLAY_MISS=live lets it through). NEXUS_OLLAMA_RECORD=0 records nothing.
+  # loom/agent-suite goes through the client first; direct HTTP remains only for a package run standalone.
+
+  # ADDENDUM 2026-10-07 (0.46.0) — James: "make sure the ollama additions stay with ollama". The tape is ollama's own:
+  # ollama/lib/tape.js (was lib/ollama-tape.js; data stays at <data>/ollama). routes/tape.js declares its commands
+  # (GET /api/tape, /api/tape/:run) in ollama/lib/command-index.js; ollama/commands/get-api-tape*.command are their nodes.

@@ -532,6 +532,27 @@ const SUITES = [
   // §2026-09-25 (0.39.236) — tests never write real data
   'test-test-sandbox.test.js',
   'test-clear-idearium.test.js',
+
+  // §2026-10-07 (0.39.361–0.39.367) — the learned ladder, chunked phases, the resource monitor driving what runs,
+  // provider tabs that do not load, a repo's background tasks
+  'test-agent-record.test.js',   // 0.39.361 AR1 — the ladder ordered by what past builds say of each agent
+  'test-chunked-phase-build.test.js',   // 0.39.361 SB51 — a phase built one file at a time on a small local model
+  'test-resource-adaptive.test.js',   // 0.39.364 — hysteresis, heap vs its limit, a model that will not fit is skipped, background gives way
+  'test-provider-host-load.test.js',   // 0.39.365 — a provider tab that does not load is retried, said why, its queued jobs fail
+  'test-repo-activity.test.js',   // 0.39.366 — a repo's background tasks: every agent call wearing its hat
+  'test-cli-route-commands.test.js',   // 0.39.374 CM1 — every capability a command: the real CLI against the real API
+  'test-nexus-command-tool.test.js',   // 0.39.376 CM2 — every command for copilot and every agent (and Claude Code over MCP)
+  'test-repo-versions.test.js',   // 0.40.0 VR1 — every change to a repo's files a versionium commit (settled, attributed, nothing lost)
+  'test-pf1-stalls.test.js',      // 0.40.1 PF1 — the 5-minute cortex stall (update by id) and the liminal runaway wall
+  'test-pf3-append-store.test.js', // 0.41.0 PF3 — the store appends to one segment per process and folds; no whole-table rewrite per write
+  'test-pf5-bounded-tables.test.js', // 0.43.0 PF5 — hot tables capped; what leaves is archived (gzip) before it is deleted
+  'test-ollama-tape.test.js',      // 0.44.0 OR1–OR3 — every Ollama call a frame; a run's macro; the cassette replays without Ollama
+  'test-cm3-commands.test.js',     // 0.45.0 CM3 — repo phasemap / phase / versions, store, ollama tape: commands first, routes behind them
+  'test-spec-blanks.test.js',      // 0.47.0 SP2 — a repo spec's blank parts named, drafted as workshop proposals
+  'test-system-control.test.js',   // 0.39.372 NC2 — a Nexus system's controls through its supervisor; one intent, inherited
+  'test-vm-control.test.js',   // 0.39.371 VM1 + CK1 — pause, live checkpoints, rewind over QMP; a checkpoint before every task's work
+  'test-desktop-activity.test.js',   // 0.39.370 DT1 — runs in the repo's compartment and the desktop setup are its tasks and log rows
+  'test-compartment-activity-log.test.js',   // 0.39.368 AL1 + 0.39.373 BO1 (GET /api/activity, BrainOS ACTIVITY) — a repo's durable activity log: tasks, phase rows, proposals (who applied, who undid), faults
 ];
 
 let totalPassed = 0;

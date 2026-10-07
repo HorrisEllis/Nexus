@@ -30,6 +30,7 @@
 'use strict';
 
 const fs   = require('fs');
+const INTENT = require('../../foundation/intent.js');
 const { randomUUID } = require('crypto');
 
 const { Gate }              = require('../../siso/Gate.js');
@@ -62,7 +63,17 @@ class CreateCompartmentGate extends Gate {
   }
 
   transform(event, stream) {
-    const { name, purpose, runtimeId, networkIsolated = true, parentId = null, store, sysmap } = event.data;
+    const { name, purpose, runtimeId, networkIsolated = true, parentId = null, intent = null, store, sysmap } = event.data;
+    // §2026-10-07 — the intent, given at birth: refused whole when any part of it says nothing or cannot be checked
+    let given = null;
+    if (intent) {
+      const n = INTENT.normalize(intent);
+      if (n.errors.length) {
+        stream.emit(new Event(HOST.COMPARTMENT_ERROR, { operation: 'create', reason: `the intent was refused: ${n.errors.join('; ')}` }));
+        return;
+      }
+      given = INTENT.isEmpty(n.intent) ? null : n.intent;
+    }
 
     if (!name) {
       stream.emit(new Event(HOST.COMPARTMENT_ERROR, {
@@ -113,6 +124,7 @@ class CreateCompartmentGate extends Gate {
       name,
       slug,
       purpose:   purpose  || '',
+      intent:    given,
       runtimeId: runtimeId || null,
       state:     'created',
       parentId:  parent ? parent.id : null,
@@ -365,9 +377,12 @@ class AdvanceWorkPhaseGate extends Gate {
     }
 
     const now     = Date.now();
+    // §2026-10-07 — VERIFYING checks ACTING's result against the compartment's intent: its end state, its conditions
+    const status  = nextPhase === 'VERIFYING' ? _verify(comp, store) : null;
     const updated = Object.assign({}, comp, {
       workPhase: nextPhase,
       updatedAt: now,
+      ...(status ? { intentStatus: status } : {}),
     });
 
     store.setCompartment(updated);
@@ -383,7 +398,49 @@ class AdvanceWorkPhaseGate extends Gate {
   }
 }
 
+// ─── Intent ───────────────────────────────────────────────────────────────────
+// §2026-10-07 — James: "add that to cos. the conditions. like the intent of compartment is the end state."
+
+/** a compartment checked against its effective intent (its own end state; its ancestors' conditions and axioms too) */
+function _verify(comp, store) {
+  const eff = INTENT.effective(comp, store);
+  if (INTENT.isEmpty(eff)) return { none: true, ts: Date.now(), note: 'this compartment has no intent yet — set one (cos intent)' };
+  const root = (comp.fs && comp.fs.root) || process.cwd();
+  return { ...INTENT.verify(eff, root), inheritedConditions: eff.conditions.filter(c => c.inherited).length };
+}
+
+// Handles: 'host:compartment:set-intent' — Input: { name, intent, store, sysmap } — Emits: intent-set | error
+class SetIntentGate extends Gate {
+  constructor() { super('host:compartment:set-intent'); }
+  transform(event, stream) {
+    const { name, intent, store, sysmap } = event.data;
+    const comp = store.getCompartmentByName(name) || store.getCompartment(name);
+    if (!comp) { stream.emit(new Event(HOST.COMPARTMENT_ERROR, { operation: 'set-intent', reason: `compartment "${name}" not found` })); return; }
+    const n = INTENT.normalize(intent || {});
+    if (n.errors.length) { stream.emit(new Event(HOST.COMPARTMENT_ERROR, { operation: 'set-intent', reason: `the intent was refused: ${n.errors.join('; ')}` })); return; }
+    const updated = Object.assign({}, comp, { intent: INTENT.isEmpty(n.intent) ? null : n.intent, intentStatus: null, updatedAt: Date.now() });
+    store.setCompartment(updated); store.flushSync(); sysmap.upsertCompartment(updated);
+    stream.emit(new Event(HOST.COMPARTMENT_INTENT_SET, { compartmentId: updated.id, name: updated.name, intent: updated.intent, compartment: updated }));
+  }
+}
+
+// Handles: 'host:compartment:verify' — Input: { name, store, sysmap } — Emits: verified | error
+class VerifyCompartmentGate extends Gate {
+  constructor() { super('host:compartment:verify'); }
+  transform(event, stream) {
+    const { name, store, sysmap } = event.data;
+    const comp = store.getCompartmentByName(name) || store.getCompartment(name);
+    if (!comp) { stream.emit(new Event(HOST.COMPARTMENT_ERROR, { operation: 'verify', reason: `compartment "${name}" not found` })); return; }
+    const status  = _verify(comp, store);
+    const updated = Object.assign({}, comp, { intentStatus: status, updatedAt: Date.now() });
+    store.setCompartment(updated); store.flushSync(); sysmap.upsertCompartment(updated);
+    stream.emit(new Event(HOST.COMPARTMENT_VERIFIED, { compartmentId: updated.id, name: updated.name, status, compartment: updated }));
+  }
+}
+
 module.exports = {
+  SetIntentGate,
+  VerifyCompartmentGate,
   CreateCompartmentGate,
   StartCompartmentGate,
   StopCompartmentGate,

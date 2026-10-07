@@ -446,8 +446,8 @@ function viewAgent(d) {
   const ro = !!d.repo.settingsFrom;
   const opt = (list, cur) => list.map(o => `<option ${o === cur ? 'selected' : ''}>${esc(o)}</option>`).join('');
   return `<div class="card"><h3><span class="grow">Who answers</span><span class="tag">${esc(a.backend || '')}</span></h3>
-    <div class="note">The switch the Agent tab shows: copilot decides, Ollama only, or one Guardian browser agent. The hat is the same whichever answers.</div>
-    <div class="row"><div><div class="k">provider</div><div class="d">copilot · ollama · a guardian agent</div></div><div class="ctl"><select id="a-provider" ${ro ? 'disabled' : ''}>${opt(a.providers || [], a.provider)}</select></div><div></div></div>
+    <div class="note">The switch the Agent tab shows: copilot decides, Ollama only, Claude Code (headless, on this machine's own signed-in <code>claude</code>, in a copy of the repo — its changes land like any agent's: proposals here, Nexus repos always through approval), or one Guardian browser agent. The hat is the same whichever answers.</div>
+    <div class="row"><div><div class="k">provider</div><div class="d">copilot · ollama · claude-code · a guardian agent</div></div><div class="ctl"><select id="a-provider" ${ro ? 'disabled' : ''}>${opt(a.providers || [], a.provider)}</select></div><div></div></div>
     <div class="row"><div><div class="k">ollama model</div><div class="d">when Ollama answers; empty = the bridge's default</div></div><div class="ctl"><select id="a-model" ${ro ? 'disabled' : ''}><option value="">(default)</option></select></div><div></div></div></div>
   <div class="card"><h3><span class="grow">Tools</span></h3>
     <div class="note">harness: the code tools + the layers (nexus.tools.tool → tools_expand) in the first message, every tool allowed · all: every tool listed · project: only the hat's own list.</div>

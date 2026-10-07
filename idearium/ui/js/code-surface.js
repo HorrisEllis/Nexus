@@ -41,7 +41,10 @@ function _csq(s) { return escapeHtml(String(s).replace(/\\/g, '\\\\').replace(/'
 
 function _csReset(repo) {
   Object.assign(CS, { uuid: repo.uuid, overview: null, overviewError: null, open: null, text: null, textError: null, outline: null, outlineError: null,
-    card: null, hits: null, more: null, q: '', sel: null, collapsed: new Set(), plan: null, live: [], agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' } });
+    card: null, hits: null, more: null, q: '', sel: null, collapsed: new Set(), plan: null, live: [], ident: null,
+    // §0.48.0 OS9 — James: "the agents tab should maybe merge with the code tab". One conversation per repo: the docked
+    // agent's lines ARE the repo agent's transcript (app.js _agentTranscript) — kept when the tab is left and come back to
+    agent: { route: null, error: null, pinned: null, pick: '', lines: typeof _agentTranscript === 'function' ? _agentTranscript(repo.uuid) : [], busy: false, draft: '' } });
 }
 
 async function renderRepoCode(repo) {
@@ -57,6 +60,8 @@ async function renderRepoCode(repo) {
     if (typeof loadFileStates === 'function') loadFileStates(repo, { force: true }).then(() => here() && csPaint());
     csLoadRoute(repo).then(() => here() && csPaint());
     csLoadPlan(repo).then(() => here() && csPaint());
+    // §0.48.0 OS9 — who the agent is, in one line (the Agent tab's head, now the dock's)
+    api(`/api/repos/${repo.uuid}/agent`, {}, 15000).then(st => { CS.ident = st; }, e => { CS.ident = { error: e.message }; }).finally(() => here() && csPaint());
     api(`/api/repos/${repo.uuid}/agent/tool-events`, {}, 10000).then(r => { for (const e of r.events || []) csOnTool(e, { paint: false }); }, () => {}).finally(() => here() && csPaint());
     return;
   }
@@ -188,7 +193,7 @@ function csToggleDir(p) { if (CS.collapsed.has(p)) CS.collapsed.delete(p); else 
 // ── middle: search, the file, the changes ────────────────────────────────────────────────────────────
 async function csOpen(p, line = null) {
   const repo = CURRENT_API_REPO; if (!repo) return;
-  if (CS.open !== p) { CS.open = p; CS.text = null; CS.textError = null; CS.outline = null; CS.outlineError = null; CS.sel = null; }
+  if (CS.open !== p) { CS.open = p; CS.text = null; CS.textError = null; CS.outline = null; CS.outlineError = null; CS.sel = null; CS.hist = null; }
   if (line) CS.sel = { from: line, to: line };
   CS.hits = null;
   csPaint();
@@ -203,7 +208,26 @@ async function csReadOpen(repo) {
     pendingOnly ? Promise.resolve().then(() => { CS.text = null; CS.textError = 'this file exists only as a proposal — its diff is above; Apply writes it'; })
       : api(`/api/repos/${repo.uuid}/file?path=${encodeURIComponent(p)}`, {}, 20000).then(r => { if (CS.open === p) { CS.text = r.content || ''; CS.textError = null; } }, e => { if (CS.open === p) CS.textError = e.message; }),
     api(`/api/repos/${repo.uuid}/code/outline?path=${encodeURIComponent(p)}`, {}, 30000).then(r => { if (CS.open === p) { CS.outline = r; CS.outlineError = null; } }, e => { if (CS.open === p) { CS.outline = null; CS.outlineError = e.message; } }),
+    // §0.47.0 OS3 — James: "also hooked into the code tab". The commits that touched this file (VR1: who and why)
+    api(`/api/repos/${repo.uuid}/history?path=${encodeURIComponent(p)}`, {}, 20000).then(r => { if (CS.open === p) CS.hist = r; }, () => { if (CS.open === p) CS.hist = null; }),
   ]);
+}
+/** _csHistLine() — one quiet line under the open file: how many versions, the last change, by whom — opening the Plan
+ *  panel's versions view on this file */
+function _csHistLine() {
+  const h = CS.hist; if (!h || !CS.open) return '';
+  const l = h.commits || [];
+  if (!l.length) return `<div class="cs-hist">no recorded change to this file yet${h.untracked ? ' — older versions do not say what they touched' : ''}</div>`;
+  const c = l[0], by = (c.provenance.by || []).join(', ') || 'hand';   // no agent task behind it: a person's own edit
+  const when = new Date(c.ts).toLocaleString('en-GB', { hour12: false, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  return `<div class="cs-hist"><button class="cs-hist-n" title="every version of this file, in the Plan panel" onclick="csHistoryInPlan()">${l.length} version${l.length === 1 ? '' : 's'}</button>
+    <span>last ${c.op === 'delete' ? 'deleted' : 'changed'} ${escapeHtml(when)} by <b>${escapeHtml(by)}</b></span>${(() => { const m = String(c.message || '').replace(/ — by .*$/, ''); return /^\d+ files?: /.test(m) && m.replace(/^\d+ files?: /, '') === CS.open ? '' : `<span class="cs-hist-m" title="${escapeHtml(c.message || '')}">${escapeHtml(m)}</span>`; })()}</div>`;
+}
+function csHistoryInPlan() {
+  if (typeof RT_MORE === 'undefined' || typeof rtToggleDrawer !== 'function') return;
+  RT_MORE.file = CS.open; RT_VIEW = 'versions';
+  try { localStorage.setItem('idearium.rt.view', 'versions'); } catch (_) {}
+  rtToggleDrawer(true);
 }
 function _csScrollTo(line) { const row = document.querySelector(`#cs-code [data-ln="${line}"]`); if (row) row.scrollIntoView({ block: 'center' }); }
 
@@ -280,18 +304,26 @@ function _csAgentHtml() {
   const opts = [`<option value="">${a.pinned ? `as Settings says (${escapeHtml(a.pinned)})` : 'copilot decides'}</option>`]
     .concat((a.route || []).map((h, i) => `<option value="${i}"${String(a.pick) === String(i) ? ' selected' : ''}>${escapeHtml(_csHopLabel(h))}</option>`)).join('');
   const ctx = CS.open ? `${CS.open}${CS.sel ? `:${CS.sel.from}${CS.sel.to && CS.sel.to !== CS.sel.from ? `-${CS.sel.to}` : ''}` : ''}` : null;
-  return `<div class="cs-pane-head"><span>agent</span><span class="cs-grow"></span><button class="cs-chip-btn" title="ask copilot again" onclick="csLoadRoute().then(csPaint)">↻</button></div>
+  const id = CS.ident, ix = id && id.index || {}, mem = id && id.memory || {};
+  const ident = !id ? '' : id.error ? `<div class="cs-ident cs-bad">${escapeHtml(id.error)}</div>`
+    : !id.compartmentId ? '<div class="cs-ident">no compartment — no agent. Import through the project-import flow, or attach one.</div>'
+    : `<div class="cs-ident"><b>${escapeHtml(id.exists && id.hat ? id.hat.name : 'no hat yet')}</b><span>${ix.indexed ? `${ix.fileCount ?? '?'} files indexed` : 'not indexed'}</span><span>${mem.total || 0} learned</span><button class="cs-ident-opt" title="every agent setting: Settings → Agents" onclick="setRepoSubtab('settings');repoSettingsShow('agent-behaviour')">options ↗</button></div>`;
+  return `<div class="cs-pane-head"><span>agent</span><span class="cs-grow"></span><button class="cs-chip-btn" title="ask copilot again" onclick="csLoadRoute().then(csPaint)">↻</button></div>${ident}
     <div class="cs-who">${who}${first && !a.pinned && first.why ? `<div class="cs-dim">${escapeHtml(first.why)}</div>` : ''}</div>
     <label class="cs-pickrow">model <select id="cs-pick" onchange="CS.agent.pick=this.value">${opts}</select></label>
-    <div class="cs-talk" id="cs-talk">${a.lines.map(l => `<div class="cs-msg cs-m-${l.role}"><div class="cs-msg-text">${escapeHtml(l.text)}</div>${l.meta ? `<div class="cs-dim">${escapeHtml(l.meta)}</div>` : ''}</div>`).join('') || '<div class="cs-empty">ask about the open file or the picked lines — its changes land in the diffs, waiting for Apply</div>'}</div>
+    <div class="cs-talk" id="cs-talk">${a.lines.map(l => `<div class="cs-msg cs-m-${escapeHtml(String(l.role).split(/[\s—]/)[0])}"><div class="cs-msg-text">${escapeHtml(l.text)}</div>${l.meta ? `<div class="cs-dim">${escapeHtml(l.meta)}</div>` : ''}</div>`).join('') || '<div class="cs-empty">ask about the open file or the picked lines — its changes land in the diffs, waiting for Apply</div>'}</div>
     <div class="cs-ctx">${ctx ? `context: <b>${escapeHtml(ctx)}</b>${CS.card && CS.card.card ? ` · ${escapeHtml(CS.card.card.qualifiedName || CS.card.card.name || '')}` : ''}` : 'no file open — the agent gets the repo'}</div>
-    <textarea id="cs-ask" class="cs-ask" rows="3" placeholder="what to do — Ctrl+Enter asks" oninput="CS.agent.draft=this.value" onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))csAsk()">${escapeHtml(a.draft)}</textarea>
+    <textarea id="cs-ask" class="cs-ask" rows="3" placeholder="what to do — Ctrl+Enter asks · /help for commands" oninput="CS.agent.draft=this.value" onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))csAsk()">${escapeHtml(a.draft)}</textarea>
     <div class="cs-sends"><button class="cs-send cs-send-ask" ${a.busy ? 'disabled' : ''} onclick="csAsk()" title="an answer — nothing is written, nothing is snapshotted">${a.busy ? 'working…' : 'ask'}</button>
       <button class="cs-send cs-send-change" ${a.busy || !CS.open ? 'disabled' : ''} onclick="csChange()" title="${CS.open ? 'a run on the Plan: a snapshot first, then the agent edits this file (the picked lines); its change lands as a diff here and in the Plan panel' : 'open a file to change it'}">change it</button></div>`;
 }
 async function csAsk() {
   const repo = CURRENT_API_REPO; if (!repo || CS.agent.busy) return;
   const text = (CS.agent.draft || '').trim(); if (!text) { toast('say what to do', 'err'); return; }
+  if (text.startsWith('/') && typeof agentCommand === 'function') {   // §0.48.0 OS9 — /help /tools /debug … as on the Agent tab
+    CS.agent.draft = ''; try { await agentCommand(text); } catch (e) { CS.agent.lines.push({ role: 'failed', text: e.message }); }
+    csPaint(); return;
+  }
   const ctx = CS.open ? `[Code tab — about ${CS.open}${CS.sel ? ` lines ${CS.sel.from}-${CS.sel.to || CS.sel.from}` : ''}${CS.card && CS.card.card && CS.card.card.file === CS.open ? ` (chunk ${CS.card.card.qualifiedName || CS.card.card.name || CS.card.card.id})` : ''}]\n` : '';
   const body = { message: ctx + text };
   const h = CS.agent.pick !== '' && CS.agent.route ? CS.agent.route[+CS.agent.pick] : null;
@@ -367,6 +399,7 @@ function csPaint() {
     : CS.open ? `<div class="cs-sec"><b>${escapeHtml(CS.open)}</b>${(() => { const s = typeof fileStateOf === 'function' ? fileStateOf(CS.open) : null; return s && s.state !== 'committed' ? ` <span class="cs-warn">${escapeHtml(s.state)}</span>` : ''; })()}
           ${CS.outline ? `<span class="cs-dim"> · ${(CS.outline.chunks || []).length} chunk${(CS.outline.chunks || []).length === 1 ? '' : 's'}</span>` : CS.outlineError ? `<span class="cs-dim"> · no chunk cards: ${escapeHtml(CS.outlineError)}</span>` : ''}
           ${CS.sel ? `<span class="cs-dim"> · ${CS.sel.to !== CS.sel.from ? `lines ${CS.sel.from}–${CS.sel.to}` : `line ${CS.sel.from}`} picked (shift-click widens)</span>` : ''}<span class="cs-grow"></span><button class="cs-chip-btn" onclick="CS.open=null;CS.sel=null;csPaint()">close</button></div>
+        ${_csHistLine()}
         ${mine.length ? `<div class="cs-diffs">${mine.map((f, i) => _wsCard(f, i)).join('')}</div>` : ''}
         <div class="cs-code" id="cs-code">${_csCode()}</div>`
     : `<div class="cs-sec">the agent's changes<span class="cs-grow"></span><button class="cs-chip-btn" title="reload" onclick="csAfterChange()">↻</button></div>

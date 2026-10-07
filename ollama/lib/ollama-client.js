@@ -32,9 +32,19 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
   const OA = require('../../lib/ollama-activity.js');
   const chars = JSON.stringify(messages || []).length + JSON.stringify(toolSchemas || []).length;
   const ctx = OA.withNumCtx({}, chars);
-  const body = JSON.stringify({ model, messages, tools: toolSchemas, stream: false, options: ctx.options });
+  // §0.43.0 OR2/OR3 — the tape (ollama/lib/tape.js): a seed always set and recorded; the cassette answers first when replaying
+  const Tape = require('./tape.js');
+  const options = Tape.withSeed(ctx.options);
+  const req = { messages, tools: toolSchemas };
+  const body = JSON.stringify({ model, messages, tools: toolSchemas, stream: false, options });
   const t0 = Date.now();
-  const done = (ok, error) => OA.record({ caller, op: 'chat+tools', model, promptChars: chars, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
+  const done = (ok, error, res = {}, raw = null) => {
+    OA.record({ caller, op: 'chat+tools', model, promptChars: chars, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
+    Tape.record({ caller, op: 'chat+tools', model, req, options, res, raw, ms: Date.now() - t0, ok, error });
+  };
+  const rp = Tape.replay('chat+tools', model, req, options);
+  if (rp && rp.miss) return Promise.reject(new Error(rp.error));
+  if (rp && rp.hit) { OA.record({ caller: `${caller} (replayed)`, op: 'chat+tools', model, promptChars: chars, numCtx: ctx.numCtx, ms: 0, ok: true }); return Promise.resolve({ text: rp.res.text, toolCalls: rp.res.toolCalls || [] }); }
   return new Promise((resolve, reject) => {
     const u = new URL(`${OLLAMA_HOST}/api/chat`);
     const req = http.request({
@@ -48,13 +58,14 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
         try {
           const parsed = JSON.parse(d);
           const msg = parsed.message || {};
-          done(true);
-          resolve({
+          const out = {
             text: msg.content || '',
             toolCalls: (msg.tool_calls || []).map(tc => ({
               id: tc.id, name: tc.function?.name, arguments: tc.function?.arguments,
             })),
-          });
+          };
+          done(true, null, out, parsed);
+          resolve(out);
         } catch (e) { done(false, e.message); reject(e); }
       });
     });
@@ -78,17 +89,39 @@ function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
   const OA = require('../../lib/ollama-activity.js');
   const want = maxTokens || config.DEFAULT_MAX_TOKENS;
   const ctx = OA.withNumCtx({ num_predict: want, temperature: extra.temperature != null ? extra.temperature : 0.2 }, String(prompt || '').length + String(extra.system || '').length, want);
-  const body = JSON.stringify({ model, prompt, stream: true, options: ctx.options, ...(extra.system ? { system: extra.system } : {}), ...(extra.think === false ? { think: false } : {}) });
+  // §0.43.0 OR2/OR3 — the tape (ollama/lib/tape.js): a seed always set and recorded; the cassette answers first when replaying
+  const Tape = require('./tape.js');
+  const options = Tape.withSeed(ctx.options);
+  const treq = { prompt, system: extra.system || null, think: extra.think === false ? false : null };
+  const body = JSON.stringify({ model, prompt, stream: true, options, ...(extra.system ? { system: extra.system } : {}), ...(extra.think === false ? { think: false } : {}) });
   const t0 = Date.now();
-  const done = (ok, error) => OA.record({ caller, op: 'generate', model, promptChars: String(prompt || '').length, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
+  const done = (ok, error, res = {}, raw = null) => {
+    OA.record({ caller, op: 'generate', model, promptChars: String(prompt || '').length, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
+    Tape.record({ caller, op: 'generate', model, req: treq, options, res, raw, ms: Date.now() - t0, ok, error });
+  };
+  const rp = Tape.replay('generate', model, treq, options);
+  if (rp && rp.miss) return Promise.reject(new Error(rp.error));
+  if (rp && rp.hit) {
+    OA.record({ caller: `${caller} (replayed)`, op: 'generate', model, promptChars: String(prompt || '').length, numCtx: ctx.numCtx, ms: 0, ok: true });
+    if (typeof extra.onDelta === 'function') { try { if (rp.res.thinking) extra.onDelta(rp.res.thinking, 'thinking'); if (rp.res.text) extra.onDelta(rp.res.text, 'text'); } catch (_) {} }
+    return Promise.resolve({ text: rp.res.text, thinking: rp.res.thinking, doneReason: rp.res.doneReason, evalCount: rp.res.evalCount });
+  }
   return new Promise((resolve, reject) => {
     let text = '', thinking = '', buf = '', settled = false, idle = null;
     // §0.39.356 LS1 — each token as it arrives, to whoever wants to show the model writing (never in the way of the reply)
     const _tell = (d, kind) => { if (typeof extra.onDelta === 'function') { try { extra.onDelta(d, kind); } catch (_) {} } };
     const total = setTimeout(() => fail(`ollama generate exceeded ${Math.round(config.RAW_GENERATE_TOTAL_MS / 1000)} s in total`), config.RAW_GENERATE_TOTAL_MS);
-    const fail = (msg) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); try { req.destroy(); } catch (_) {} done(false, msg); reject(new Error(msg)); };
-    const ok = (o) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); done(true); resolve({ text, thinking, doneReason: o.done_reason || null, evalCount: o.eval_count || null }); };
-    const arm = () => { clearTimeout(idle); idle = setTimeout(() => fail(`ollama sent nothing for ${idleMs || config.RAW_GENERATE_TIMEOUT_MS} ms (idle timeout) — ${text.length} chars received`), idleMs || config.RAW_GENERATE_TIMEOUT_MS); };
+    const fail = (msg) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); try { req.destroy(); } catch (_) {} done(false, msg, { text, thinking }); reject(new Error(msg)); };
+    const ok = (o) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); const out = { text, thinking, doneReason: o.done_reason || null, evalCount: o.eval_count || null }; done(true, null, out, o); resolve(out); };
+    // §0.39.364 — before the first byte Ollama is loading the model and reading the prompt, not stalling: a 16b on CPU
+    // with a 10k-char prompt can take longer than the 45 s allowed between tokens. The first wait is RAW_FIRST_TOKEN_MS.
+    let first = true;
+    const arm = () => {
+      clearTimeout(idle);
+      const ms = first ? Math.max(idleMs || config.RAW_GENERATE_TIMEOUT_MS, config.RAW_FIRST_TOKEN_MS || 0) : (idleMs || config.RAW_GENERATE_TIMEOUT_MS);
+      const why = first ? 'before its first token (loading the model and reading the prompt)' : '(idle timeout)';
+      idle = setTimeout(() => fail(`ollama sent nothing for ${ms} ms ${why} — ${text.length} chars received`), ms);
+    };
     const u   = new URL(`${OLLAMA_HOST}/api/generate`);
     const req = http.request({
       hostname: u.hostname, port: u.port || 11434,
@@ -101,6 +134,7 @@ function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
         return;
       }
       r.on('data', c => {
+        first = false;
         arm();
         buf += c.toString();
         const lines = buf.split('\n'); buf = lines.pop();

@@ -79,17 +79,22 @@ function gapsFile() {
   // JaaDB class earlier in that same file, which is dead code for this
   // path): one <table>.json full-snapshot array, flushed on a 1500ms
   // debounce timer or synchronously on close() (§guardian/jaa-store.js
-  // _flush/_schedule). No .jsonl anywhere in this store.
+  // _flush/_schedule). §0.41.0 PF3 — the store now appends per process (<table>.<pid>.jsonl) and folds; the base
+  // file alone is not every row, so rows are read the way any reader reads them: through a store (_readGaps).
   return path.join(process.env.JAA_DATA_DIR, 'gaps.json');
+}
+function _readGaps() {
+  const { JaaStore } = require(path.join(REPO_ROOT, 'guardian/jaa-store.js'));
+  const l = console.log; console.log = () => {};
+  try { return new JaaStore(process.env.JAA_DATA_DIR, { settings: false, tables: ['gaps'] }).all('gaps'); } finally { console.log = l; }
 }
 
 async function waitForGapRow(pred, timeoutMs = 8000) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    const f = gapsFile();
-    if (fs.existsSync(f)) {
+    {
       let rows = [];
-      try { rows = JSON.parse(fs.readFileSync(f, 'utf8') || '[]'); } catch (_) { /* mid-write; retry */ }
+      try { rows = _readGaps(); } catch (_) { /* mid-write; retry */ }
       if (Array.isArray(rows)) {
         const found = rows.filter(pred);
         if (found.length) return { rows, found };
@@ -99,9 +104,8 @@ async function waitForGapRow(pred, timeoutMs = 8000) {
   }
   // Timed out — return whatever the last read had (possibly none) so
   // callers can report exact counts instead of a bare "not found".
-  const f = gapsFile();
   let rows = [];
-  if (fs.existsSync(f)) { try { rows = JSON.parse(fs.readFileSync(f, 'utf8') || '[]'); } catch (_) {} }
+  try { rows = _readGaps(); } catch (_) {}
   return { rows, found: rows.filter(pred) };
 }
 

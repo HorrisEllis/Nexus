@@ -42,6 +42,7 @@
     { "method": "POST", "path": "/api/snapshots" },
     { "method": "POST", "path": "/api/snapshots/create" },
     { "method": "POST", "path": "/api/table/insert" },
-    { "method": "GET", "path": "/api/tags" }
+    { "method": "GET", "path": "/api/tags" },
+    { "method": "GET", "path": "/api/store", "description": "0.45.0 CM3 — the store by its files: base, append segments, cap, archive" }
   ]
 }

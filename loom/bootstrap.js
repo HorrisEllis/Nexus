@@ -146,6 +146,7 @@ const handMapped = [
   ...require('./maps/economy-map').FILES.map(f => f[0]),         // §0.39.281
   ...require('./maps/build-context-map').FILES.map(f => f[0]),   // §0.39.309
   ...require('./maps/verified-primitives-map').FILES.map(f => f[0]),   // §0.39.310
+  ...require('./maps/compartment-activity-map').FILES.map(f => f[0]),   // §0.39.367
   'loom/agent-suite/index.js',
 ];
 console.log('\nscanning whole tree from source (real require/import edges only)...\n');
@@ -299,6 +300,11 @@ if (mappedOneIdearium.failures.length) { console.log(`  one-idearium FAILURES: $
 const mappedCodebase = require('./maps/idearium-codebase-map').mapIdeariumCodebase(driver);
 console.log(`  idearium-codebase: ${mappedCodebase.components.length} components, ${mappedCodebase.hooks.length} hooks, ${mappedCodebase.wires.length} wires`);
 if (mappedCodebase.failures.length) { console.log(`  idearium-codebase FAILURES: ${mappedCodebase.failures.length}`); for (const f of mappedCodebase.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedCodebase.failures.length; }
+// §0.39.367 — the compartment-control-and-activity edges the scanner cannot read (idearium's _require into repo-activity,
+// resource-monitor and repo-inject), declared through the shared loom/maps/declare-map.js
+const mappedCompartmentActivity = require('./maps/compartment-activity-map').mapCompartmentActivity(driver);
+console.log(`  compartment-activity: ${mappedCompartmentActivity.components.length} components, ${mappedCompartmentActivity.hooks.length} hooks, ${mappedCompartmentActivity.wires.length} wires`);
+if (mappedCompartmentActivity.failures.length) { console.log(`  compartment-activity FAILURES: ${mappedCompartmentActivity.failures.length}`); for (const f of mappedCompartmentActivity.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedCompartmentActivity.failures.length; }
 // §0.39.278 — the live chat ledger, the page-side stream that feeds it (HTTP), the pane's kept conversation
 const mappedChatLedger = require('./maps/chat-ledger-map').mapChatLedger(driver);
 console.log(`  chat-ledger: ${mappedChatLedger.components.length} components, ${mappedChatLedger.hooks.length} hooks, ${mappedChatLedger.wires.length} wires`);

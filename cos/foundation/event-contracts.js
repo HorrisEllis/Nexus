@@ -26,6 +26,9 @@ const HOST = Object.freeze({
   // §MCO04 2026-09-18 — real work-phase advance, same event-naming
   // convention as the lifecycle events above.
   COMPARTMENT_WORK_PHASE_ADVANCED: 'host:compartment:work-phase-advanced',
+  // §2026-10-07 — a compartment's intent (foundation/intent.js): set, and verified against its end state
+  COMPARTMENT_INTENT_SET: 'host:compartment:intent-set',
+  COMPARTMENT_VERIFIED:   'host:compartment:verified',
   COMPARTMENTS_LISTED:   'host:compartments:listed',
 
   // Snapshots

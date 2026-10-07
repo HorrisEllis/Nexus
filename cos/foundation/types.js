@@ -78,6 +78,11 @@ const DEFAULT_COMPARTMENT = Object.freeze({
   // starts using phases — a compartment created for something else
   // entirely (a plain dev sandbox) is never forced into this model.
   workPhase:   null,
+  // §2026-10-07 — James: "the intent of compartment is the end state." (foundation/intent.js) purpose says what it is;
+  // intent says how it is known to be achieved: { endState, conditions, axioms } — null until given. intentStatus is
+  // the last time it was checked against it (VERIFYING, or cos verify).
+  intent:       null,
+  intentStatus: null,
   // §NEST 0.39.261 — James: "a nexus repo in idearium … with nested
   // compartments per system." Compartments were flat. parentId names the
   // compartment this one lives inside (null = top level); childIds is the

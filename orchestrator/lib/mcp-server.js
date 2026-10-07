@@ -594,6 +594,22 @@ const TOOLS = [
         run.files && run.files.report ? `report: ${run.files.report}` : ''].filter(Boolean).join('\n');
     },
   },
+
+  // §0.39.376 CM2 — James: "Copilot is the entrance of nexus. Like I want it to be able to do anything, nexus can." The
+  // same tool copilot and every repo agent have (lib/agent-tools/tools/nexus/command.js over the command table): any
+  // `idearium <command>`, for Claude Code too. A Claude Code run started by a repo agent knows its repo
+  // (NEXUS_MCP_REPO, set by lib/claude-code-backend.js); the person's own acts stay theirs.
+  {
+    name: 'nexus_command',
+    description: 'Run any Nexus command — the same ones a person types as `idearium <command>`: "repo tasks", "repo activity", "activity", "repo desktop" (status|pause|resume|checkpoint|checkpoints|rewind <tag>), "repo system", "repo charter", "repo changes", "repo agent", "repo phasemap", "repo phase" (args [phase] or [phase,"build"]), "repo versions", "store", "ollama tape", "perf", "models". action "list" shows every command with its usage. repo: uuid or name (default: the repo this run works on). args: the words after the repo. flags: its --flags as an object. Approving proposals and stopping a system are the person\'s.',
+    inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['run', 'list'] }, command: { type: 'string' }, repo: { type: 'string' }, args: { type: 'array', items: { type: 'string' } }, flags: { type: 'object' } } },
+    handler: async (input = {}) => {
+      const T = require('../../lib/agent-tools/tools/nexus/command.js').command;
+      const r = await T.execute(input, { agent: 'claude-code', context: process.env.NEXUS_MCP_REPO ? { repoUuid: process.env.NEXUS_MCP_REPO } : {} });
+      if (r && r.error) throw new Error(r.error);
+      return JSON.stringify(r, null, 2);
+    },
+  },
 ];
 
 // §WIRED 2026-09-12 — orchestrator/lib/mcp-tools-tokensave.js's own header

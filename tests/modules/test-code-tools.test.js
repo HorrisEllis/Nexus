@@ -235,7 +235,7 @@ async function main() {
       assert.strictEqual(C.groupOf(n).id, 'code', `${n} group`);
       assert.ok(G.toolGuide([n]).includes(n), `${n} has no guide note`);
     }
-    assert.strictEqual(T.CODE_TOOLS.length, 11);
+    assert.strictEqual(T.CODE_TOOLS.length, 12);   // §0.39.362 WS1 — + idearium.work_surface
   });
   await t('CT-402', 'scope: every code tool in a new repo hat; the read-only ones always in scope; the harness scope lists them', () => {
     const RH = require(path.join(ROOT, 'lib/repo-hat.js'));

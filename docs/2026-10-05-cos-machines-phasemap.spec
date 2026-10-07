@@ -187,3 +187,13 @@ spec:
         ticked by default; toolchains in the base image, the repo's own dependencies installed in the repo's compartment
         (they change with the repo; a base image that held them would be rebuilt on every commit).
       proof: "a fixture repo with package.json and go.mod gets node and go ticked, each naming its file; after setup, npm ci and go mod download have run in its compartment; an unticked language is not installed"
+
+# ## ADDENDUM 2026-10-07 (0.39.371) — VM1 built in part, from docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+# James: "I want to use snapshots, pause, rewind, etc. like full VMware style. Not actual VMware."
+# Built: cos/workspace/vm-control.js — pause / resume (QMP stop / cont), live checkpoints (HMP savevm: disk + memory +
+# devices), the checkpoint list (an index beside the desktop disk, checked against info snapshots), rewind (loadvm).
+# "Automatic checkpoints before every agent action, build and run" — lib/repo-activity.js start(): before every task's
+# work on a repo whose desktop runs; the checkpoint's tag is on the task and its activity-log row, so rewind is a row.
+# API: POST /api/repos/:uuid/desktop/:op, GET …/desktop/checkpoints. As decided: a 9p (or vvfat) shared desktop refuses
+# live checkpoints, said. Open: the `cos vm pause|resume|snapshot` CLI verbs over the same module; the desktop window's
+# toolbar (UI2). Proof: tests/modules/test-vm-control.test.js 7/7 against a stand-in QEMU speaking QMP.

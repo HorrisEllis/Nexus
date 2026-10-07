@@ -18,7 +18,7 @@ async function wsLoad(el) {
   try { WSURF.data = await api(`/api/repos/${repo.uuid}/worksurface`, {}, 30000); WSURF.error = null; }
   catch (e) { WSURF.error = e.message; }
   WSURF.loading = false;
-  if (WSURF.uuid === repo.uuid) wsPaint(el);
+  if (WSURF.uuid === repo.uuid) { wsPaint(el); for (const h of _wsHosts()) if (h !== el) wsPaint(h); }   // §0.47.0 OS7 — every place it shows
 }
 
 function _wsSplitPath(p) { const i = p.lastIndexOf('/'); return i === -1 ? ['', p] : [p.slice(0, i + 1), p.slice(i + 1)]; }
@@ -82,7 +82,7 @@ function _wsTools(t) {
   const chip = (n) => `<span class="ws-tool ${used[n] ? 'used' : ''}" title="${used[n] ? `used ${used[n]}×` : 'not used yet'}">${escapeHtml(n.replace(/\.tool$/, ''))}${used[n] ? `<b>${used[n]}</b>` : ''}</span>`;
   const extra = Object.keys(used).filter(n => !(t.listed || []).includes(n));
   return `<div class="ws-tools">
-    <div class="ws-tools-head" onclick="WSURF.showTools=!WSURF.showTools;wsPaint(document.getElementById('pp-ws'))">
+    <div class="ws-tools-head" onclick="WSURF.showTools=!WSURF.showTools;wsPaint()">
       <span class="ws-chev">${WSURF.showTools ? '▾' : '▸'}</span> tools · scope <b>${escapeHtml(t.scope || '?')}</b> · ${(t.listed || []).length} given · ${Object.keys(used).length} used in ${(t.calls || []).length} call${(t.calls || []).length === 1 ? '' : 's'}${failed.length ? ` · <span style="color:var(--coral)">${failed.length} failed</span>` : ''}</div>
     ${WSURF.showTools ? `<div class="ws-tool-row">${(t.listed || []).map(chip).join('')}${extra.map(chip).join('')}</div>
       <div class="ws-tool-note">every other NEXUS tool is one <code>nexus.tools</code> → <code>nexus.tools_expand</code> call away (or <code>loom.find</code>); the Agent tab's <code>/tools</code> lists them all.</div>
@@ -90,8 +90,10 @@ function _wsTools(t) {
   </div>`;
 }
 
+// §0.47.0 OS7 — one proposal surface, shown in the Plan panel (#pp-ws) and the Agent tab (#ao-ws); a repaint reaches both
+function _wsHosts() { return [...document.querySelectorAll('#pp-ws, #ao-ws')]; }
 function wsPaint(el) {
-  el = el || document.getElementById('pp-ws'); if (!el) return;
+  if (!el) { for (const h of _wsHosts()) wsPaint(h); return; }
   if (WSURF.error) { el.innerHTML = `<div class="pp-sec">work surface</div><div class="ws-empty">could not read the changes: ${escapeHtml(WSURF.error)}</div>`; return; }
   const d = WSURF.data; if (!d) return;
   const files = (d.files || []).filter(f => WSURF.filter === 'all' || (WSURF.filter === 'pending' ? (f.status === 'proposed' || f.status === 'staged') : f.status === WSURF.filter));
@@ -99,10 +101,54 @@ function wsPaint(el) {
   const filt = ['all', 'pending', 'applied', 'reverted'].map(k => `<button class="ws-f ${WSURF.filter === k ? 'on' : ''}" onclick="WSURF.filter='${k}';wsPaint()">${k}</button>`).join('');
   el.innerHTML = `<div class="ws-top"><span class="pp-sec" style="margin:0">work surface</span>
       <span class="ws-sum" title="changes in effect or waiting — reverted and rejected ones are not counted">${t.files || 0} file${t.files === 1 ? '' : 's'} <span class="ws-plus">+${t.added || 0}</span> <span class="ws-minus">−${t.removed || 0}</span>${t.pending ? ` · <span style="color:var(--amber)">${t.pending} waiting</span>` : ''}${t.undone ? ` · <span class="ws-undone">${t.undone} undone</span>` : ''}</span>
-      <span class="ws-grow"></span>${filt}<button class="ws-f" title="reload" onclick="wsLoad(document.getElementById('pp-ws'))">↻</button></div>
+      <span class="ws-grow"></span>${filt}<button class="ws-f" title="reload" onclick="wsLoad(_wsHosts()[0])">↻</button></div>
     ${_wsTools(d.tools)}
+    <div id="ws-forming" class="ws-forming-wrap">${_wsFormingHtml(WSURF.uuid)}</div>
     ${files.length ? `<div class="ws-note">${files.length > 2 ? 'Large diffs start collapsed — click a file to open it.' : ''}</div>${files.map(_wsCard).join('')}`
       : `<div class="ws-empty">${(d.files || []).length ? 'nothing in this filter' : 'no changes yet — when the agent builds a phase, every file it writes shows here with its diff.'}</div>`}`;
+}
+
+// ── §0.39.362 WS2 — the agent writing, as cards ──────────────────────────────────────────────────────────────────────
+// James: "the work surface could also stream the dom mutator". The live feed (app.js AGENT_FEED: a browser agent's DOM
+// mutations and node anchor through guardian, or an Ollama model's text through copilot) was a strip of raw text above
+// the cards. Now each file the agent is writing is a card of its own while it writes: its path, its lines so far (the
+// newest at the bottom), 'writing' while its fence is open, 'written — landing' once closed, until the real card lands.
+/** wsFormingBlocks(text) -> [{ path, lang, lines, code, open }] — every fenced block in a reply that names a file */
+function wsFormingBlocks(text) {
+  const out = []; const t = String(text || '');
+  const re = /```([^\n`]*)\n/g; let m;
+  while ((m = re.exec(t))) {
+    const info = m[1].trim();
+    const start = m.index + m[0].length;
+    const end = t.indexOf('\n```', start - 1);
+    const close = end === -1 ? -1 : end;
+    const code = close === -1 ? t.slice(start) : t.slice(start, close);
+    const pathTok = info.split(/\s+/).reverse().find(x => /[\w-]\.[A-Za-z0-9]+$/.test(x) && !/^\.\./.test(x) && !x.startsWith('/'));
+    if (pathTok) out.push({ path: pathTok.replace(/^[`'"]|[`'"]$/g, ''), lang: info.split(/\s+/)[0] || '', code, lines: code ? code.replace(/\n$/, '').split('\n').length : 0, open: close === -1 });
+    if (close === -1) break;
+    re.lastIndex = close + 4;
+  }
+  return out;
+}
+function _wsFormingHtml(uuid) {
+  const st = typeof AGENT_FEED !== 'undefined' ? AGENT_FEED.get(uuid) : null;
+  if (!st || !st.jobId || !st.text) return '';
+  const landed = new Set(((WSURF.data && WSURF.data.files) || []).filter(f => f.at && f.at >= (st.updated || 0) - 120000).map(f => f.path));
+  const blocks = wsFormingBlocks(st.text).filter(b => b.open || !landed.has(b.path));
+  if (!blocks.length) return '';
+  const a = st.anchor;
+  return `<div class="ws-forming-h"><span class="al-dot${st.generating ? ' on' : ''}"></span>${escapeHtml(st.provider || 'the agent')} is ${st.generating ? 'writing' : 'done writing'}${st.mutations != null ? ` · ${st.mutations} mutations` : ''}${a ? ` · ⌖ ${escapeHtml(a.path || a.tag || '')}` : ''}</div>`
+    + blocks.map(b => { const [dir, base] = _wsSplitPath(b.path); const tail = b.code.replace(/\n$/, '').split('\n').slice(-14);
+      return `<div class="ws-card ws-forming${b.open ? ' open' : ''}"><div class="ws-head"><span class="ws-chev">${b.open ? '✎' : '✓'}</span><span class="ws-ico">${_wsIcon(b.path)}</span>
+        <span class="ws-name">${escapeHtml(base)}</span><span class="ws-dir">${escapeHtml(dir.replace(/\/$/, ''))}</span><span class="ws-grow"></span>
+        <span class="ws-chip ${b.open ? 'ws-st-writing' : 'ws-st-proposed'}">${b.open ? 'writing' : 'written — landing'}</span><span class="ws-plus">${b.lines} line${b.lines === 1 ? '' : 's'}</span></div>
+        ${b.open ? `<div class="ws-diff">${tail.map((l, i) => `<div class="ws-ln ws-add"><span class="ws-g"></span><span class="ws-g">${b.lines - tail.length + i + 1}</span><span class="ws-s">+</span><span class="ws-t">${escapeHtml(l) || ' '}</span></div>`).join('')}</div>` : ''}</div>`; }).join('');
+}
+/** repaint only the forming cards — every frame of the feed, never the whole surface */
+function wsLivePaint(uuid) {
+  const el = document.getElementById('ws-forming');
+  if (!el || WSURF.uuid !== uuid) return;
+  el.innerHTML = _wsFormingHtml(uuid);
 }
 
 function wsToggle(p, wasOpen) {
@@ -118,7 +164,7 @@ async function wsAct(id, action) {
     else await api(`/api/repos/${repo.uuid}/injects/${encodeURIComponent(id)}/${action}`, { method: 'POST', body: '{}' }, 60000);
     toast(`${action}: done`, 'ok');
   } catch (e) { toast(`${action} failed: ${e.message}`, 'err'); }
-  wsLoad(document.getElementById('pp-ws'));
+  wsLoad(_wsHosts()[0]);
   if (typeof csAfterChange === 'function') csAfterChange();   // §CT3 — the Code tab's tree, diffs and file follow
 }
 

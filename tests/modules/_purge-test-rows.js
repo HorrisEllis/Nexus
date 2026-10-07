@@ -102,6 +102,21 @@ function purgeTestRows(prefix) {
       fs.writeFileSync(tmp, JSON.stringify(keep), 'utf8');
       fs.renameSync(tmp, f);
     }
+    // §0.41.0 PF3 — rows can also sit in append segments (<t>.<pid>[.<ts>.closed].jsonl). A live process's open
+    // segment is its own (pass 1's delete lines cover it); closed ones and those of exited processes are filtered here.
+    let segs = []; try { segs = fs.readdirSync(STORE).filter(n => n.startsWith(`${t}.`) && /^\d+(\.\d+\.closed)?\.jsonl$/.test(n.slice(t.length + 1))); } catch (_) {}
+    for (const n of segs) {
+      const pid = parseInt(n.slice(t.length + 1), 10);
+      if (!/closed/.test(n)) { let alive = true; try { process.kill(pid, 0); } catch (e) { alive = e.code === 'EPERM'; } if (alive) continue; }
+      const sf = path.join(STORE, n);
+      let lines; try { lines = fs.readFileSync(sf, 'utf8').split('\n').filter(Boolean); } catch (_) { continue; }
+      const kept = lines.filter(l => { try { const o = JSON.parse(l); return !(o.r && String(o.r.system || o.r.source || o.r.systemId || o.r.component || '').startsWith(prefix)); } catch (_) { return true; } });
+      if (kept.length === lines.length) continue;
+      out[t] = (out[t] || 0) + lines.length - kept.length;
+      const tmp = `${sf}.${process.pid}.purge.tmp`;
+      fs.writeFileSync(tmp, kept.length ? kept.join('\n') + '\n' : '', 'utf8');
+      fs.renameSync(tmp, sf);
+    }
   }
   return out;
 }

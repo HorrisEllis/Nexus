@@ -68,7 +68,7 @@ check('AR-12 routing.ladder_learn reads from config, on by default', PR.policyFr
 const idx = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
 check('AR-20 a phase build orders its ladder by the record and keeps the route on its building row',
   /AR\.orderLadder\(rungs, AR\.record\(loadTable\('idearium_phase_runs'\)/.test(idx) && /state: 'building'[^\n]*promptChars: message\.length,[\s\S]{0,400}\.\.\.\(rungs\.length \? \{ route:/.test(idx));
-check('AR-21 every attempt row carries its request size', /elapsedMs: r && r\.elapsedMs \|\| null, promptChars: message\.length/.test(idx));
+check('AR-21 every attempt row carries its request size', /elapsedMs: r && r\.elapsedMs \|\| null, promptChars: msg\.length/.test(idx));   // §0.39.361 SB51 — the size of the request actually sent (a chunk or the whole phase)
 check('AR-22 GET /api/routing/agents serves the record', /\['api','routing','agents'\], 'routing\.agents'/.test(idx) && /case 'routing\.agents'/.test(idx));
 const pp = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8');
 check('AR-23 the Plan shows each run\'s route and the agents table', /function _ppRoute\(r\)/.test(pp) && /\$\{_ppRoute\(l\.route\)\}/.test(pp) && /async function ppAgentsLoad/.test(pp));
@@ -103,7 +103,7 @@ check('AR-38 an agent\'s record carries its faults whole, and its modes', recF.p
 check('AR-39 a fault of no one agent is kept, not dropped', recF.unassigned.length === 1 && recF.unassigned[0].mode === 'ladder-exhausted');
 
 check('AR-40 every phase-run row written goes through the fault hook', /function appendRow\(table, row\) \{\s*const out = _appendRowRaw\(table, row\);\s*if \(table === 'idearium_phase_runs'\) \{ try \{ _require\('\.\.\/\.\.\/lib\/phase-faults\.js'\)\.log\(row\)/.test(idx));
-check('AR-41 a phase build reads its precedent before acting, hands it to the agent and keeps it on the building row', /precedent = _require\('\.\.\/\.\.\/lib\/phase-faults\.js'\)\.precedent\(phase\)/.test(idx) && /\[req\.message, precedent\.text/.test(idx) && /precedent: precedent\.faults\.map/.test(idx));
+check('AR-41 a phase build reads its precedent before acting, hands it to the agent and keeps it on the building row', /precedent = _require\('\.\.\/\.\.\/lib\/phase-faults\.js'\)\.precedent\(phase\)/.test(idx) && /\[req\.message, charterText, precedent\.text/.test(idx) && /precedent: precedent\.faults\.map/.test(idx));
 const ri = fs.readFileSync(path.join(ROOT, 'lib/repo-inject.js'), 'utf8');
 check('AR-42 a collapsed reply and an undone agent change are logged from repo-inject', /mode: 'reply-collapse'/.test(ri) && (ri.match(/_undoneFault\(n, '(reverted|rejected)'/g) || []).length === 3);
 check('AR-43 the Plan shows a run\'s precedent and each agent\'s faults', /function _ppPrecedent\(p\)/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')) && /_ppFaultRow/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));

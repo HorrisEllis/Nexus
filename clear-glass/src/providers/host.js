@@ -604,15 +604,66 @@ class ProviderHost {
 
     this.postEvent('provider.host.starting', { providerId, url: def.url });
 
-    // Navigate to provider
-    await win.loadURL(def.url).catch(e => {
-      _logWarn(`[ProviderHost] ${providerId} loadURL failed:`, e.message);
-    });
+    // Navigate to provider — §0.39.364, from James's console 2026-10-06:
+    //   [ProviderHost] claude loadURL failed: ERR_FAILED (-2) loading 'https://claude.ai'
+    //   [ProviderHost] claude window spawned → https://claude.ai          ← it wasn't: nothing ever loaded
+    //   [guardian] queued … — waiting for claude userscript              ← and the job waited forever
+    // A failed load was logged and then reported as started, and the dead window stayed in the map, so every later
+    // start() said 'already-running'. Now: the failing URL and its reason are recorded (did-fail-load names the
+    // redirect target, not just the first URL); the load is retried twice, the second time after clearing the tab's
+    // service workers and cache storage (a stale service worker is the usual instant ERR_FAILED; cookies are kept, so
+    // the login survives); and a load that still fails closes the window and says so, so the next request starts clean.
+    const loaded = await this._load(providerId, win, def, ses, agentId);
+    if (!loaded.ok) {
+      _logWarn(`[ProviderHost] ${providerId} did not load after ${loaded.attempts} attempt(s): ${loaded.error}`);
+      if (!agentKey) this._status.set(providerId, { ...(this._status.get(providerId) || {}), status: 'failed', health: 0, error: loaded.error, failedAt: Date.now() });
+      this.sse.emit('provider.host.load_failed', { providerId, agentId, url: def.url, error: loaded.error, failures: loaded.failures, ts: Date.now() });
+      this.postEvent('provider.host.load_failed', { providerId, agentId, url: def.url, error: loaded.error, failures: loaded.failures });
+      try { win._nexusIntentionalStop = true; win.destroy(); } catch (_) {}
+      if (agentKey) this.agentTabs.delete(agentKey); else this.windows.delete(providerId);
+      return { ok: false, providerId, url: def.url, status: 'failed', error: loaded.error, failures: loaded.failures };
+    }
 
-    _log(`[ProviderHost] ${providerId} window spawned → ${def.url}`);
+    _log(`[ProviderHost] ${providerId} window spawned → ${def.url}${loaded.pending ? ' (still loading)' : ''}`);
     this.sse.emit('provider.host.started', { providerId, url: def.url, ts: Date.now() });
 
     return { ok: true, providerId, url: def.url, status: 'started' };
+  }
+
+  /**
+   * _load(providerId, win, def, ses) -> { ok, attempts, error?, failures, pending? } — §0.39.364. ERR_ABORTED (-3) is a
+   * redirect replacing the first navigation (claude.ai → /new), not a failure. A load still going after LOAD_WAIT_MS
+   * is left to finish (did-finish-load injects the userscript when it does) — said so, not awaited forever: Gemini's
+   * window in the same log never reported anything at all.
+   */
+  async _load(providerId, win, def, ses, agentId = null) {
+    const LOAD_WAIT_MS = 30000;
+    const failures = [];
+    const onFail = (e, code, desc, url, isMain) => { if (isMain && code !== -3) failures.push({ code, desc, url, ts: Date.now() }); };
+    win.webContents.on('did-fail-load', onFail);
+    try {
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        if (win.isDestroyed()) return { ok: false, attempts: attempt - 1, error: 'the window was closed while loading', failures };
+        if (attempt === 2) {
+          try { await ses.clearStorageData({ storages: ['serviceworkers', 'cachestorage'] }); _log(`[ProviderHost] ${providerId} — cleared service workers + cache storage before retrying (cookies kept)`); } catch (_) {}
+        }
+        if (attempt > 1) await new Promise(r => setTimeout(r, attempt === 2 ? 2000 : 6000));
+        let timer = null;
+        const r = await Promise.race([
+          win.loadURL(def.url).then(() => ({ ok: true }), (e) => ({ ok: false, error: e.message, aborted: /ERR_ABORTED|\(-3\)/.test(e.message) })),
+          new Promise(res => { timer = setTimeout(() => res({ ok: true, pending: true }), LOAD_WAIT_MS); }),
+        ]);
+        clearTimeout(timer);
+        if (r.ok || r.aborted) return { ok: true, attempts: attempt, failures, ...(r.pending ? { pending: true } : {}) };
+        const last = failures[failures.length - 1];
+        const why = last ? `${last.desc} (${last.code}) at ${last.url}` : r.error;
+        _logWarn(`[ProviderHost] ${providerId}${agentId ? ` (${agentId})` : ''} load attempt ${attempt} of 3 failed: ${why}`);
+        if (attempt === 3) return { ok: false, attempts: attempt, error: why, failures };
+      }
+      return { ok: false, attempts: 3, error: 'unreachable', failures };
+    } finally {
+      try { if (!win.isDestroyed()) win.webContents.removeListener('did-fail-load', onFail); } catch (_) {}
+    }
   }
 
   // ── Auto-boot providers (called from main/index.js after app ready,

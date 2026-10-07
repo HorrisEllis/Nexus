@@ -1,4 +1,7 @@
 'use strict';
+// §0.42.0 PF4 — these pin PRELOAD (default all / tables allowlist / skipTables), now the JAA_LAZY=0 path; the default
+// loads a table on its first read (tests/modules/test-pf3-append-store.test.js PF-08/PF-09). The preload path stays proven.
+process.env.JAA_LAZY = '0';
 const assert = require('assert');
 const fs = require('fs');
 const os = require('os');

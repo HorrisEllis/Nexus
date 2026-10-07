@@ -56,6 +56,27 @@ job, or portfolio. i want this as much me as possible. you're the coder."
   own words, quoted verbatim — his spelling, his phrasing, not cleaned up. Then what was built, and the proof.
 - The idea, the direction and the calls are his; say so. The code is the coder's job; the project is his work.
 
+## Leverage (2026-10-07)
+
+James: "remember to use as little tokens for as much leverage and power as possible. invent around contraints if it fits
+nexus better and i prefer novel if it's stable./"
+
+- Fewest tokens for the most power: one door, one table, one tool. Agents read compact projections, not raw dumps.
+- Where a constraint can be designed around in a way that fits Nexus better, do it. Prefer the novel design when it
+  is stable (built on primitives that already exist and are proven), not novel for its own sake.
+
+## Order of delivery (2026-10-07)
+
+James: "always add backend js first, then the ui. can you do that. make sure you build the ui. then make sure the ollama
+additions stay with ollama. then make sure the agents have accesss"
+
+- Every capability lands in this order, in the same phase: backend JS → API route → command (a row in
+  idearium/cli/route-commands.js SPEC, so copilot and every agent have it through nexus.command) → UI. A phase is not
+  done while it has no screen; say so if the UI is deferred.
+- Code belongs to the system it serves: what is Ollama's lives under ollama/ (not lib/), and so on for each system.
+- Agents get every capability a person gets, through the one command tool — check the repo agent's tool scope, not
+  just the table.
+
 ## Evidence discipline (§0.1, §1.1)
 
 - Evidence over memory. Verify against the actual file/behavior before asserting.

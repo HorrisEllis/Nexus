@@ -455,10 +455,28 @@ function createDispatcher(deps) {
         // spawn sooner, not the thing the job's delivery depends on.
         try {
           const http = require('http');
+          // §0.39.364 — the answer is read now. James's console: "claude loadURL failed: ERR_FAILED (-2)" and the job sat
+          // "waiting for claude userscript" with nothing left to wake it. When the tab did not load (clear-glass retries
+          // it first, ~70 s at most), every job queued for that provider fails with the reason, so its caller moves on
+          // (a phase build climbs to its next rung) instead of waiting out its own timeout.
           const req = http.request({
             host: '127.0.0.1', port: parseInt(process.env.CLEARGL_IPC_PORT || '7702', 10),
-            path: `/providers/${encodeURIComponent(job.provider)}/start`, method: 'POST', timeout: 2000,
-          }, (r) => { r.resume(); });
+            path: `/providers/${encodeURIComponent(job.provider)}/start`, method: 'POST', timeout: 90000,
+          }, (r) => {
+            let raw = ''; r.on('data', (c) => { raw += c; });
+            r.on('end', () => {
+              let d = null; try { d = JSON.parse(raw); } catch (_) { return; }
+              if (!d || d.status !== 'failed') return;
+              const waiting = (pendingQueue.get(job.provider) || []).splice(0);
+              const error = `the ${job.provider} tab did not load: ${d.error || 'unknown'}`;
+              console.warn(`[guardian] ${error} — failing ${waiting.length} queued job(s)`);
+              for (const j of waiting) {
+                updateJob(j.id, { status: 'error', error, failedAt: Date.now() });
+                bus.emit('guardian.job.error', { jobId: j.id, error, provider: j.provider, tabLoadFailed: true });
+              }
+            });
+          });
+          req.on('timeout', () => req.destroy(new Error('no answer in 90 s')));
           req.on('error', (e) => console.warn(`[guardian] on-demand provider-start request failed (non-fatal, job still queued): ${e.message}`));
           req.end();
         } catch (e) { console.warn(`[guardian] could not send on-demand provider-start request: ${e.message}`); }

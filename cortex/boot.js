@@ -750,6 +750,13 @@ const server = http.createServer(async (req, res) => {
   // this file — confirmed via repo-wide grep before writing this, not
   // assumed missing. Shape matches orchestrator.js's own documented
   // contract exactly: POST { entityId, entityType, system, tags[] }.
+  // §0.45.0 CM3 — the store by its files: base, append segments, cap, archive (cortex/memory/table-compactor storeReport)
+  if (p === '/api/store' && method === 'GET') {
+    try { json(res, 200, { ok: true, ...require('./memory/table-compactor').storeReport(jaaDB._store().dir) }); }
+    catch (e) { json(res, 500, { ok: false, error: `store report failed: ${e.message}` }); }
+    return;
+  }
+
   if (p === '/api/tags' && method === 'GET') {
     try {
       const entityId = url.searchParams.get('entityId');

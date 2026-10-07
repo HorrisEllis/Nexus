@@ -138,6 +138,10 @@ writers:
     reason: OWED — a node type or a stated reason
   guardian/server.js · writeFileSync · storeFile(name):
     reason: OWED — a node type or a stated reason
+  cos/workspace/vm-control.js · writeFileSync · tmp:
+    reason: a desktop's checkpoint index (<state>/.cos-desktop/checkpoints.json, 0.39.371 VM1) — the label, cause and time of each live snapshot kept inside the desktop's own qcow2; written atomically (tmp then rename) beside the disk it describes
+  idearium/api/index.js · appendRow · 'idearium_charter_runs':
+    reason: each check of a repo's end state against its charter (0.39.362 CH5) — one row per check, the compartment's progress on the Plan; a JAA table, typed by name
   idearium/api/index.js · appendRow · WS.TEMPLATE_TABLE:
     reason: the workshop's saved templates (idearium_workshop_templates, 0.39.357 RS5) — a JAA table of his saved spec templates, each version a row; the store engine types the table by name
   idearium/api/index.js · writeFileSync · pathMod.join(specDir, 'manifest.json'):
@@ -318,6 +322,12 @@ writers:
     reason: OWED — a node type or a stated reason
   lib/node-ledger.js · writeFileSync · INDEX_FILE:
     reason: OWED — a node type or a stated reason
+  cortex/memory/table-compactor.js · appendFileSync · path.join(dir, `${day}.jsonl.gz`):
+    reason: "0.43.0 PF5 — the archive of rows leaving a capped table (gzip members, one per batch); rows already recorded as JAA rows, kept compressed so nothing is lost — not a node of its own"
+  ollama/lib/tape.js · writeFileSync · f:
+    reason: "0.44.0 OR2 — content-addressed blobs (prompt/answer text by sha256), written once; the frame that names them is the record"
+  ollama/lib/tape.js · appendFileSync · path.join(dir, `${new Date(frame.at).toISOString().slice(0, 10)}.${process.pid}.jsonl`):
+    reason: "0.44.0 OR2 — model-call frames, one writer per file (PF3's shape); OWED a node type (.frame) when the tape becomes a node store reader (OR4)"
   lib/ollama-activity.js · appendFileSync · f:
     reason: OWED — a node type or a stated reason
   lib/project-container.js · writeFileSync · p:

@@ -191,6 +191,9 @@ const SCHEMA = {
   // empty list means no frames.
   specs: {
     default_templates: { default: ['axioms', 'architecture', 'schemas', 'checklists'], copilot_writable: true, type: 'array' },
+    // §0.47.0 SP3 — a document spec that becomes complete plans its file tree by itself (codegen: its registry is the
+    // file list; the files slotted into the skeleton's registry — the spine). false = only when Code is pressed.
+    auto_file_tree: { default: true, copilot_writable: true, type: 'boolean' },
   },
 
   // §0.39.286 RG2 (docs/2026-10-01-routing-registry-genesis-phasemap.spec) — James: "full options for fallback logic,

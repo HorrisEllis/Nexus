@@ -45,6 +45,16 @@
     },
     {
       "method": "GET",
+      "path": "/api/tape",
+      "_componentId": "ollama.tape.runs"
+    },
+    {
+      "method": "GET",
+      "path": "/api/tape/:run",
+      "_componentId": "ollama.tape.run"
+    },
+    {
+      "method": "GET",
       "path": "/health",
       "_componentId": "ollama.health"
     }

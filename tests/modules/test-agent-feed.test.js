@@ -125,7 +125,8 @@ const until = async (fn, ms = 3000) => { const t = Date.now() + ms; while (!fn()
   });
   await test('AF-11', 'idearium wires onFeed to os.broadcast (SSE only, not the ledger) as idearium.repo.agent.feed', () => {
     const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
-    assert.ok(/connectGuardianStream\(se, \{ onFeed: \(ev\) => os\.broadcast\('idearium\.repo\.agent\.feed'/.test(api));
+    // §0.39.366 — onFeed also hands the frame to the repo's background tasks (lib/repo-activity.js) before broadcasting it
+    assert.ok(/connectGuardianStream\(se, \{ onFeed: \(ev\) => \{[\s\S]{0,400}?os\.broadcast\('idearium\.repo\.agent\.feed', fp\)/.test(api));
     const core = fs.readFileSync(path.join(ROOT, 'idearium/index.js'), 'utf8');
     const b = core.slice(core.indexOf('  broadcast(type, payload = {}) {'), core.indexOf('  addSSEClient(res) {'));
     assert.ok(/this\._broadcast\(ev\)/.test(b) && !/_evLedger|this\.stream\.emit/.test(b));

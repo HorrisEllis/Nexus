@@ -184,6 +184,9 @@ function openSSE() {
         // §FEED 0.39.244 — a repo agent's live guardian feed: to the Agent tab only (several a second;
         // it would bury the event log and trigger refreshes for nothing).
         if (ev && ev.type === 'idearium.repo.agent.feed') { _agentFeedIn(ev.payload || {}); return; }
+        // §0.39.366 — a repo's background task changed: to its Tasks panel only (several a second while an agent runs)
+        if (ev && ev.type === 'idearium.repo.task') { if (typeof rtIn === 'function') rtIn(ev.payload || {}); return; }
+        if (ev && ev.type === 'idearium.repo.activity') { if (typeof rtLogIn === 'function') rtLogIn(ev.payload || {}); return; }   // §0.39.369 AL2
         appendEventLog(ev); refreshOnEvent(ev);
       }
       catch(_) {}
@@ -2005,6 +2008,7 @@ let CURRENT_REPO_SUBTAB = null;
 
 function setRepoSubtab(name) {
   if (name === 'roadmap' || name === 'phasemap') name = 'phases';   // §0.39.271 P4 — one tab now
+  if (name === 'agent') name = 'code';   // §0.48.0 OS9 — the agent lives in the Code tab; its settings in Settings → Agents
   CURRENT_REPO_SUBTAB = name;
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));
@@ -3686,6 +3690,7 @@ function openSettingsConsole(repoUuid) {
 // the repo this was built against has 502 files); now a real tree.
 let REPO_TREE_COLLAPSED = new Set(); // dir paths the user closed (opt OUT, default open)
 function renderApiRepoPanel(repo) {
+  if (repo && typeof rtRepoShown === 'function') { try { rtRepoShown(repo); } catch (_) {} }   // §0.39.366 the repo's Tasks panel
   const tree = document.getElementById('file-tree');
   if (!ACTIVE_API_FILE) {
     document.getElementById('ide-tabs').textContent = 'no file open';
@@ -4269,6 +4274,7 @@ function _agentFeedIn(p) {
   }
   if (CURRENT_API_REPO && CURRENT_API_REPO.uuid === p.repoUuid) _agentFeedPaint(p.repoUuid);
   if (typeof agentLivePaint === 'function') agentLivePaint(p.repoUuid);   // §0.39.356 LS4 — the Code tab and the work surface
+  if (typeof wsLivePaint === 'function') wsLivePaint(p.repoUuid);   // §0.39.362 WS2 — each file it is writing, a card
 }
 function _agentFeedHtml(uuid) {
   const st = _agentFeedState(uuid);
@@ -4368,7 +4374,7 @@ learned    ${mem.total} observation${mem.total === 1 ? '' : 's'}${kindCounts ? `
 exchanges  ${st.exchanges || 0}</div>
     </div>
     ${_sharedAgentNote(st)}
-    <div style="margin:6px 0;font-size:10px;opacity:.6">hat, teaching, export/import and inject mode live in <span style="cursor:pointer;text-decoration:underline" onclick="setRepoSubtab('settings')">Settings → Agents</span>${st.exists ? '' : ' — no hat forged yet'}</div>
+    ${typeof agentOptionsHtml === 'function' ? agentOptionsHtml(repo, AGENT_SETTINGS.get(repo.uuid)) : ''}
 `;
 
   const memHtml = '';
@@ -4403,6 +4409,7 @@ exchanges  ${st.exchanges || 0}</div>
       </div>
     </div>`;
 
+  if (typeof agentOptionsMounted === 'function') agentOptionsMounted();   // §0.47.0 OS4 — every agent option here
   const ta = document.getElementById('agent-input');
   if (ta) ta.addEventListener('keydown', e => {
     // Enter sends, Shift+Enter newlines — same convention as the idea composer.

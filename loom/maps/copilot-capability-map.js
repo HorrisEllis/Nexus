@@ -35,10 +35,14 @@ const FILES = [
      'nexus.lib.agent-tools.tools.diagnose', 'nexus.lib.agent-tools.tools.faculty-tools', 'nexus.lib.agent-tools.tools.forge-tool',
      'nexus.lib.agent-tools.tools.loom-scan', 'nexus.lib.agent-tools.tools.nexus-heal', 'nexus.lib.agent-tools.tools.nexus-status',
      'nexus.lib.agent-tools.tools.query-recall', 'nexus.lib.agent-tools.tools.raid-snr', 'nexus.lib.agent-tools.tools.register-trigger',
-     'nexus.lib.agent-tools.tools.rewind-replay', 'nexus.lib.agent-tools.tools.schedule-task', 'nexus.lib.agent-tools.tools.ui-tools']],
+     'nexus.lib.agent-tools.tools.rewind-replay', 'nexus.lib.agent-tools.tools.schedule-task', 'nexus.lib.agent-tools.tools.ui-tools',
+     'nexus.lib.agent-tools.tools.nexus.command']],   // §0.39.376 CM2
      // §2026-08-12 — registers 6 new tools this session (raid-snr, rewind-replay, schedule-task,
      // register-trigger, nexus-heal, loom-scan) alongside the pre-existing 22; edge list trimmed to
      // the load-bearing/new ones, not all 28 — matches observability-map's own non-exhaustive convention.
+
+  // §0.39.376 CM2 — nexus.command.tool: every command (idearium/cli/route-commands.js) for every agent; the MCP server's nexus_command is it
+  ['lib/agent-tools/tools/nexus/command.js',        'nexus.lib.agent-tools.tools.nexus.command', []],
 
   ['lib/agent-tools/tool-guide.js',                  'nexus.lib.agent-tools.tool-guide',
     ['nexus.lib.agent-tools']],   // requires ./index.js's TOOLS map for _forgedNote's coverage check
