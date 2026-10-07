@@ -138,6 +138,8 @@ writers:
     reason: OWED — a node type or a stated reason
   guardian/server.js · writeFileSync · storeFile(name):
     reason: OWED — a node type or a stated reason
+  cos/workspace/vm-control.js · writeFileSync · tmp:
+    reason: a desktop's checkpoint index (<state>/.cos-desktop/checkpoints.json, 0.39.371 VM1) — the label, cause and time of each live snapshot kept inside the desktop's own qcow2; written atomically (tmp then rename) beside the disk it describes
   idearium/api/index.js · appendRow · 'idearium_charter_runs':
     reason: each check of a repo's end state against its charter (0.39.362 CH5) — one row per check, the compartment's progress on the Plan; a JAA table, typed by name
   idearium/api/index.js · appendRow · WS.TEMPLATE_TABLE:
