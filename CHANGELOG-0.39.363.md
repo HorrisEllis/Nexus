@@ -45,6 +45,19 @@ A COS compartment had a **purpose**, in words, never checked. It also had work p
 | test-cos-workspace | 17/17 |
 | test-genesis-and-architecture-spec | 7/7 |
 
+## The full test sweep
+- **Method.** Every suite in `tests/modules` was run (539). Each one that failed was re-run on its own, both on this code and on the code from before this session (362dbdf).
+- **Fixed: two regressions this session caused.** Both passed before and failed after:
+  - `test-nexstore-writers`: the charter's table `idearium_charter_runs` wasn't declared in `docs/nexstore-writers.yaml`. Now declared.
+  - `test-registry-harness` RH-006: listing `work_surface` with its guide note pushed a repo agent's first message to 3,185 characters, over its 3,000 budget for small models. The tool is now named on the "Also:" line ("work_surface (see + prove your changes)"), in place of `code_changes`, which it mostly covers. It's still given to every repo agent, and the message is back under budget.
+- **33 suites fail the same way before and after this session.** They are pre-existing, and none is touched by this work. Among them:
+  - admin-server-routes, brainos-*, copilot, healer;
+  - spec-import, spec-promote;
+  - test-tablet-*, test-guardian-cfr-consolidation, test-node-schemas, ui-self-diagnosis.
+
+  A few of these were false alarms from my own filter: suites that pass but have "✗" in a test name.
+- **Clean-up.** Some suites write runtime data into the repo (ledger rows, a node index, a resonance crystal) and one deletes `data/vector-index/index.json`. Those were restored and never committed.
+
 ## Not yet
 - **Idearium repos aren't COS host compartments,** so a repo's charter and a `cos create` compartment are the same shape but stored separately. Linking a repo to its COS compartment is next.
 - **The kernel's cognitive compartments** (`cos/kernel.js`, C = (A, K, S, X)) still have axioms and sensed conditions but no end state. Their "conditions" are facts they observe, not rules that must hold. The naming overlap is noted, not resolved.

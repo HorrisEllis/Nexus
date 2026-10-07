@@ -253,8 +253,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(!w.error, w.error);
     assert.strictEqual(RI.get(f.inject).status, 'rejected');
     assert.ok(!/apply/.test(JSON.stringify(WS.parameters.properties.action.enum)), 'there is no apply');
-    const listed = require(path.join(ROOT, 'lib/agent-tools/tools/idearium/code.js')).LISTED;
-    assert.ok(listed.includes('idearium.work_surface.tool') && fs.readFileSync(path.join(ROOT, 'lib/repo-hat.js'), 'utf8').includes("'idearium.work_surface.tool'"), 'every repo agent is given it');
+    assert.ok(fs.readFileSync(path.join(ROOT, 'lib/repo-hat.js'), 'utf8').includes("'idearium.work_surface.tool'") && /work_surface \(see \+ prove your changes\)/.test(fs.readFileSync(path.join(ROOT, 'lib/repo-agent.js'), 'utf8')), 'every repo agent is given it, and told of it');
   });
   await new Promise(x => front.close(x));
 

@@ -112,6 +112,7 @@ async function main() {
     const text = RA.fillListedTools(RA.compose({ hat: null, message: 'add a retry limit to the flush lock in src/lock.js', context: ctx, repoUuid: U, backend: 'guardian' }), U);
     // 0.39.273 — the codebase tools replace loom.read / loom.write in the LIST (both still allowed); loom.find stays
     assert.match(text, /Available tools: idearium\.code_map\.tool, idearium\.code_search\.tool, idearium\.code_chunk\.tool, idearium\.code_read\.tool, idearium\.code_edit\.tool, idearium\.code_write\.tool, idearium\.code_check\.tool, loom\.find\.tool/);
+    assert.match(text, /work_surface \(see \+ prove your changes\)/, 'the work surface is named (0.39.362 WS1), within the budget');
     assert.match(text, /Also: idearium\.code_grep\.tool/);
     // 0.39.278 — the other tools are reached as layers (nexus.tools.tool lists the categories), or found with loom.find
     assert.match(text, /More tools: nexus\.tools\.tool → nexus\.tools_expand\.tool .*, or loom\.find\.tool kind "tool"/);

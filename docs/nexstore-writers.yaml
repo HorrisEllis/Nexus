@@ -138,6 +138,8 @@ writers:
     reason: OWED — a node type or a stated reason
   guardian/server.js · writeFileSync · storeFile(name):
     reason: OWED — a node type or a stated reason
+  idearium/api/index.js · appendRow · 'idearium_charter_runs':
+    reason: each check of a repo's end state against its charter (0.39.362 CH5) — one row per check, the compartment's progress on the Plan; a JAA table, typed by name
   idearium/api/index.js · appendRow · WS.TEMPLATE_TABLE:
     reason: the workshop's saved templates (idearium_workshop_templates, 0.39.357 RS5) — a JAA table of his saved spec templates, each version a row; the store engine types the table by name
   idearium/api/index.js · writeFileSync · pathMod.join(specDir, 'manifest.json'):
