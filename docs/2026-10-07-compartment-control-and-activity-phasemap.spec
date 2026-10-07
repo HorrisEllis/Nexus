@@ -7,7 +7,7 @@ spec:
     uuid:     nexus-compartment-control-activity-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "idearium + cos — continues docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (HC1, AG1, UI2),
                docs/2026-10-05-cos-machines-phasemap.spec (VM1) and docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec (NC1, NC2)."
-    status:   "BUILT 2026-10-07 — every phase, one at a time: CC1 (0.39.367), AL1 (0.39.368), AL2 (0.39.369), DT1 (0.39.370), VM1 + CK1 (0.39.371), NC2 (0.39.372), BO1 (0.39.373); CM1 (0.39.374) — every capability a command."
+    status:   "BUILT 2026-10-07 — every phase, one at a time: CC1 (0.39.367), AL1 (0.39.368), AL2 (0.39.369), DT1 (0.39.370), VM1 + CK1 (0.39.371), NC2 (0.39.372), BO1 (0.39.373); CM1 (0.39.374) — every capability a command; CM2 (0.39.376) — every command for copilot and every agent. MAPPED, not built: UN1, SP1, DC1, DX1 (copilot drives the UI)."
     origin: >
       James, 2026-10-07: "the background tasks, i want that for each repo" · "I also want to have a full extensive activity
       log in each repo." · "Do you think we should have each repo a control panel for the system, and compartment for the
@@ -101,5 +101,84 @@ spec:
       files: [idearium/cli/route-commands.js, idearium/cli/store-chatter.js, idearium/cli/index.js, cli/nexus.js]
       does: "Every capability above, and the repo agent, its proposals and its charter, as an idearium command (and through nexus /idearium): one row each in a table run by one runner, --json for scripts and agents."
       proof: "the real CLI, as its own process, against the real API: help lists every row; agent, ask, changes, apply, activity, tasks, charter set/check; refusals exit 1 with the reason"
+
+    CM2_every_command_for_every_agent:
+      systems: [idearium, copilot, orchestrator]
+      status: "DONE (0.39.376) — nexus.command.tool (lib/agent-tools/tools/nexus/command.js) over CM1's table; the MCP server's nexus_command (Claude Code, its repo passed as NEXUS_MCP_REPO); the repo agent's prompt names it. test-nexus-command-tool 7/7."
+      james: '"Yes. And copilot. Copilot is the entrance of nexus. Like I want it to be able to do anything, nexus can."'
+      files: [lib/agent-tools/tools/nexus/command.js, idearium/cli/route-commands.js, orchestrator/lib/mcp-server.js, lib/claude-code-backend.js, lib/repo-agent.js]
+      does: >-
+        ONE tool over CM1's ONE table: a new command row is a new agent capability with nothing else written. A row's
+        personOnly (approving a proposal; stopping, starting or restarting a Nexus system) is refused with how the
+        person does it, read from the words alone, so it is refused before anything is looked up. Every act is
+        attributed to the caller in the activity log. Answers are trimmed for a small model, and say how to narrow them.
+
+  # ── NEXT — mapped 2026-10-07, NOT built ──────────────────────────────────────────────────────────────────────────
+  # James: "Like look at nexus nerve and tv ui and the interaction field. Like I want it to be able to navigate the ui,
+  # check when something didn't work when I click it and run diagnostics. But worry about that after." · "Oh and
+  # spotlight, but you're almost out of tokens so don't forget to map."
+  # Substrate that already exists (reuse, do not rebuild):
+  #   clear-glass/src/page/field.js          — the interaction field: numbered targets, x/y/z, at(), spotlight(), describe()
+  #   clear-glass/src/copilot/tools.js       — field / pointer / at / spotlight / fieldOff / readPage (Clear Glass's copilot)
+  #   lib/agent-tools/tools/clear-glass/browser.js — clearglass.browser.tool: copilot → :7702 /cli/driver, one hop, sequence
+  #   ui/tv-shell/spotlight/spotlight.js     — the TV shell's spotlight: an element registry by NAME, steps, tension,
+  #                                            execute(ui{}), navigate(channel), _observeConfusion → /api/guardian/copilot/observe
+  #   ui/tv-shell/nerve/nerve.js + lib/nerve — attention: what is knowable now (read-only — never decides)
+  #   clear-glass/src/diagnostic/engine.js   — assertion runner; diagnostic/error-capture.js — every error, live over SSE
+  #   lib/activity-log/compartment.js        — AL1 record(): where a dead click and its diagnosis are written
+  # Gap: these are four ways of seeing/pointing that do not know about each other. Copilot can drive a WEB page in
+  # Clear Glass, but not Nexus's own surfaces by name; nothing notices that a click did nothing.
+
+    UN1_nexus_surfaces_in_the_field:
+      systems: [clear-glass, copilot, ui]
+      status: MAPPED
+      depends_on: [CM2_every_command_for_every_agent]
+      files: [clear-glass/src/page/field.js, lib/agent-tools/tools/clear-glass/browser.js, ui/tv-shell/spotlight/spotlight.js]
+      does: >-
+        Nexus's own pages (the TV shell and its channels, Idearium, BrainOS, nerve) are surfaces copilot opens and
+        reads through the field it already has. field() also names a target by spotlight.js's element registry (a
+        data-nx-name, which the shell already speaks in), so copilot says "the Apply button on the work surface", not a
+        selector. clearglass.browser.tool gains `surface` (open a Nexus page by name) and nothing else; acting is still
+        pointer. No second browser, no second registry.
+      proof: "Clear Glass: copilot opens the work surface by name, its field lists the named targets, and a pointer click on one lands"
+
+    SP1_one_spotlight:
+      systems: [ui, clear-glass, copilot]
+      status: MAPPED
+      depends_on: [UN1_nexus_surfaces_in_the_field]
+      files: [ui/tv-shell/spotlight/spotlight.js, clear-glass/src/page/field.js]
+      does: >-
+        One spotlight verb for copilot, whatever surface James is on: the TV shell's (by name, steps, POST
+        /api/ui/spotlight/*) and the field's (by number / x,y). The field's spotlight() is the page-side ring; the shell's
+        is the same call with its name resolved by its registry. Spotlight is how every later phase shows James where the
+        agent is about to act, and where a click failed.
+      proof: "the same spotlight call rings a named target on the TV shell and a numbered target on an Idearium page"
+
+    DC1_a_click_that_did_nothing:
+      systems: [clear-glass, ui, idearium]
+      status: MAPPED
+      depends_on: [UN1_nexus_surfaces_in_the_field]
+      files: [clear-glass/src/page/field.js, clear-glass/src/diagnostic/error-capture.js, lib/activity-log/compartment.js]
+      does: >-
+        Every click (copilot's pointer and James's own on a Nexus surface) is followed by one short look: did the
+        URL, the DOM under it, the field, or the network change, and did error-capture see an error or a failed request?
+        Nothing changed, or an error → a 'ui.deadclick' activity row (AL1 record: the target's name, the surface, what
+        was expected, the error), shown in the Log and in BrainOS. spotlight.js's _observeConfusion already watches for
+        repeated clicks: it reports into the same row, not a second log.
+      proof: "a button wired to a dead route: clicking it (copilot, then a synthetic person click) writes one ui.deadclick row with the failed request; a working button writes none"
+
+    DX1_diagnose_it:
+      systems: [clear-glass, copilot, idearium, nerve]
+      status: MAPPED
+      depends_on: [DC1_a_click_that_did_nothing, SP1_one_spotlight]
+      does: >-
+        A dead click (or copilot asked "why didn't that work?") runs a diagnosis made only of things that exist: the
+        failed request's route checked against the system that serves it (nexus.command: repo system status, perf),
+        error-capture's rows around the click, the nerve snapshot for the system it belongs to, and the diagnostic
+        engine re-running the click as an assertion. The answer is one diagnosis row on the dead-click row (cause, the
+        system, the file if known), spotlighted on the target, and offered to the repo agent as a task.
+      proof: "the dead route's dead click is diagnosed as 'route not served by <system>', the row says so, the target is ringed"
+
+  ordering_next: "UN1 → SP1 → DC1 → DX1. UN1 is copilot navigating; SP1 is it showing James; DC1 noticing; DX1 explaining."
 
   ordering: "CC1 → AL1 → AL2 → DT1 → VM1 → NC2 → BO1. Each is usable on its own; each later one makes the earlier ones worth more."

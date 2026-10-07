@@ -20,7 +20,8 @@ const LOG_FLAGS = ['kind', 'actor', 'status', 'q', 'before', 'limit'];
 /**
  * SPEC — the table. Each row: { key, usage, about, repo (needs <repo> first), req(a) → { method, path, body, timeoutMs }
  * | { system, method, path } (another Nexus system, through lib/nexus-client), print(d, a, h) }.
- * a = { repo, args (positional after the repo), flags }.
+ * a = { repo, args (positional after the repo), flags }. personOnly(a) → a reason: an agent calling the row through the
+ * nexus.command tool (lib/agent-tools/tools/nexus/command.js) is refused with it; a person at the CLI is not.
  */
 export const SPEC = [
   // ── the agent wearing the repo's hat ──────────────────────────────────────────────────────────────────────────────
@@ -48,6 +49,8 @@ export const SPEC = [
       for (const i of list) console.log(`  ${ICON[i.status] || '·'} ${(i.op === 'delete' ? 'delete ' : '') + i.path}  ${h.c.dim(`${i.status} · ${i.hatName || i.source && i.source.kind || ''} · ${when(i.createdAt)}`)}  ${h.c.gray(i.uuid)}`);
     } },
   ...['apply', 'reject', 'revert'].map(op => ({ key: `repo.${op}`, repo: true, usage: `repo ${op} <repo> <proposal-id>${op === 'reject' ? ' [--reason "…"]' : ''}`, about: `${op} one of the agent's proposals`,
+    // §0.39.376 — approving is the person's: an agent (a repo's, or copilot) never applies a proposal through the tool
+    ...(op === 'apply' ? { personOnly: () => 'approving a proposal is the person\'s — ask them to apply it (Apply on the work surface, or: idearium repo apply <repo> <id>)' } : {}),
     need: (a) => a.args[0] ? null : 'a proposal id (idearium repo changes <repo>)',
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/injects/${encodeURIComponent(a.args[0])}/${op}`, body: { ...(a.flags.reason ? { reason: a.flags.reason } : {}), ...(op === 'apply' ? { approvedBy: 'cli' } : {}) } }),
     print: (d, a, h) => { const i = d.inject || d; console.log(`${h.c.mint('✓')} ${i.path || a.args[0]} — ${i.status || op}`); } })),
@@ -110,6 +113,7 @@ export const SPEC = [
 
   // ── a Nexus system: its processes, through its supervisor ─────────────────────────────────────────────────────────
   { key: 'repo.system', repo: true, usage: 'repo system <repo> [status | restart | stop | start] [--process name]', about: 'a Nexus system repo\'s processes, controlled through autopilot (never the system itself)',
+    personOnly: (a) => ((a.args[0] || 'status') === 'status' ? null : 'stopping, starting or restarting a Nexus system is the person\'s — ask them (the Control view, or: idearium repo system <repo> restart)'),
     req: (a) => { const v = a.args[0] || 'status'; return v === 'status' ? { method: 'GET', path: `/api/repos/${a.repo.uuid}/system` }
       : ['restart', 'stop', 'start'].includes(v) ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/system/${v}`, body: a.flags.process ? { process: a.flags.process } : {} } : { error: `unknown system action: ${v}` }; },
     print: (d, a, h) => {
