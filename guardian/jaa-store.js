@@ -65,7 +65,12 @@ const JAA_FLUSH_MAX_WAIT_MS = parseInt(process.env.JAA_FLUSH_MAX_WAIT_MS || '500
 // JAA_APPEND=0 restores the old whole-table flush.
 const JAA_APPEND = process.env.JAA_APPEND !== '0';
 const SEGMENT_MAX = parseInt(process.env.JAA_SEGMENT_MAX_BYTES || String(4 * 1024 * 1024), 10);
-const DEAD_SEGMENT_MS = 60000;   // an open segment whose process is gone, untouched this long, is folded too
+const DEAD_SEGMENT_MS = 60000;
+// §0.42.0 PF4 — hold only what you read. With append, a write needs nothing from the table, so a table is loaded on
+// its first READ, never at boot and never for a write; a table only written stays a buffer of this process's unflushed
+// rows (emptied as they reach its segment). The event_log a process only appends to costs it nothing.
+// JAA_LAZY=0 (or JAA_APPEND=0) preloads as before.
+const JAA_LAZY = JAA_APPEND && process.env.JAA_LAZY !== '0';   // an open segment whose process is gone, untouched this long, is folded too
 const _liveStores = new Set();
 let _exitHandlerInstalled = false;
 
@@ -121,7 +126,9 @@ class JaaStore {
     this._dirtyIds = new Map();
     this._closed  = false;
     this._seq     = 0;           // §PF3 — order of this process's lines (t ties)
-    this._tail    = new Map();   // §PF3 — table → { base: 'mtime:size', offsets: Map(file → bytes read) }
+    this._tail    = new Map();
+    this._lazy    = JAA_LAZY && opts.lazy !== false;
+    this._loaded  = new Set();     // §PF4 — tables read from disk in this process   // §PF3 — table → { base: 'mtime:size', offsets: Map(file → bytes read) }
     // §2026-07-24 — optional selective-load allowlist. See _loadAll(). Omitted
     // = load everything (unchanged behavior). Declared = preload only these;
     // anything else lazily loads on first access with a warning.
@@ -163,7 +170,7 @@ class JaaStore {
 
   /** INSERT a row. row.id must exist (caller provides UUID). */
   insert(table, row) {
-    const tbl = this._table(table);
+    const tbl = this._lazy ? this._writable(table) : this._table(table);
     const id  = row.id || row.key || _uuid();
     const r   = { ...row, id };
     tbl.set(id, r);
@@ -369,7 +376,19 @@ class JaaStore {
   //  PRIVATE
   // ══════════════════════════════════════════════════════════════════════════
 
+  /** §PF4 — the table's Map for a write: no load (a write appends; it needs none of the rows) */
+  _writable(name) {
+    if (!this._tables.has(name)) this._tables.set(name, new Map());
+    return this._tables.get(name);
+  }
+
   _table(name) {
+    if (this._lazy && !this._loaded.has(name)) {
+      this._loaded.add(name);                                   // first: _loadTable re-enters _table
+      if (!this._tables.has(name)) this._tables.set(name, new Map());   // may already hold this process's writes
+      if (fs.existsSync(this._file(name)) || this._segments(name).length) this._loadTable(name, { silent: true });
+      return this._tables.get(name);
+    }
     if (!this._tables.has(name)) {
       // §FIX 2026-07-24 — SAFETY for the `tables` allowlist. Previously this
       // created an empty Map for any unknown table, which is correct when the
@@ -414,6 +433,7 @@ class JaaStore {
   }
 
   _loadAll() {
+    if (this._lazy) return;   // §PF4 — nothing at boot: each table on its first read
     // Load any existing JSON files in the store dir that belong to THIS
     // instance's namespace. Unprefixed instances (tablePrefix='') keep
     // exactly the old behavior — every .json file in the dir is theirs,
@@ -531,11 +551,13 @@ class JaaStore {
     // refresh, not a boot; _loadTable()'s cold-load callers (_loadAll(),
     // _table()'s on-demand branch) still log, since that IS worth knowing
     // once per process.
+    if (this._lazy && !this._loaded.has(name)) return;   // §PF4 — not read here yet: its first read loads it fresh
     if (JAA_APPEND && this._tables.has(name) && this._tailRead(name)) return;   // §PF3 — only the new lines
     this._loadTable(name, { silent: true, prune: true });
   }
 
   _loadTable(name, { silent = false, prune = false } = {}) {
+    this._loaded.add(name);
     const file = this._file(name);
     const segs = JAA_APPEND ? this._segments(name) : [];   // §PF3 — listed BEFORE the base is read (see _fold)
     if (!fs.existsSync(file) && !segs.length) return;
@@ -742,7 +764,8 @@ class JaaStore {
       const tail = this._tail.get(table); if (tail) tail.offsets.set(seg, this._sizeOf(seg));   // my own lines: already in memory
     }
     this._dirtyIds.delete(table); this._pendingDeletes.delete(table);
-    this._tailRead(table);                                                   // others' writes since (cheap: new bytes only)
+    if (this._lazy && !this._loaded.has(table)) tbl.clear();   // §PF4 — a write-only table: flushed rows leave memory
+    else this._tailRead(table);                                                   // others' writes since (cheap: new bytes only)
     if (this._sizeOf(this._segFile(table)) > SEGMENT_MAX) { this._rotate(table); this._fold(table); }
   }
 

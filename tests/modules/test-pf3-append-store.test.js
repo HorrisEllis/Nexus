@@ -1,6 +1,7 @@
 'use strict';
 /**
- * tests/modules/test-pf3-append-store.test.js — §0.41.0 PF3: append, never rewrite (guardian/jaa-store.js).
+ * tests/modules/test-pf3-append-store.test.js — §0.41.0 PF3: append, never rewrite; §0.42.0 PF4: hold only what you read
+ * (guardian/jaa-store.js).
  * James: "whats up with the optimization? it seems almost worst?" · "yes, lets improve the intelligence system."
  * Real child processes writing one shared table at once, on a tiny SEGMENT_MAX so segments close and fold mid-run.
  */
@@ -63,6 +64,32 @@ function child(dir, code, env = {}) {
     const perWriteMs = Number(process.hrtime.bigint() - t) / 1e6 / 50;
     assert.ok(perWriteMs < 20, `${perWriteMs.toFixed(1)} ms per write`);
     assert.strictEqual(open(dir).count('big'), 100050);
+  });
+
+  await test('PF-08', 'PF4: a process that only writes a 100,000-row table never loads it — its heap holds the rows it wrote, not the table', async () => {
+    const dir = tmp();
+    const s = open(dir);
+    for (let i = 0; i < 100000; i++) s.insert('event_log', { id: `r${i}`, ts: i, body: 'x'.repeat(80) });
+    s.flushAll();
+    const probe = `let n=0;for(let i=0;i<2000;i++){s.insert('event_log',{id:'w'+i,ts:i});}s._flush('event_log');`
+      + `process.stderr.write(JSON.stringify({held:s._tables.get('event_log').size,loaded:s._loaded?s._loaded.has('event_log'):true}));`;
+    const lazy = await child(dir, probe);
+    const eager = await child(dir, probe, { JAA_LAZY: '0' });
+    const L = JSON.parse(lazy.err.slice(lazy.err.lastIndexOf('{'))), E = JSON.parse(eager.err.slice(eager.err.lastIndexOf('{')));
+    assert.strictEqual(L.loaded, false); assert.strictEqual(L.held, 0, `lazy held ${L.held}`);
+    assert.ok(E.held >= 100000, `eager held ${E.held}`);
+    assert.strictEqual(open(dir).count('event_log'), 102000);
+  });
+
+  await test('PF-09', "PF4: the first read loads the table and keeps this process's unflushed writes", async () => {
+    const dir = tmp();
+    await child(dir, `for(let i=0;i<50;i++)s.insert('t',{id:'a'+i,v:1});s._flush('t');`);
+    const s = open(dir);
+    s.insert('t', { id: 'mine', v: 2 }); s.insert('t', { id: 'a1', v: 9 });                    // not flushed yet
+    assert.strictEqual(s.count('t'), 51);
+    assert.strictEqual(s.get('t', { id: 'a1' }).v, 9, 'the disk row overrode an unflushed local write');
+    s.update('t', { id: 'a2' }, { v: 3 }); s._flush('t');
+    assert.strictEqual(open(dir).get('t', { id: 'a2' }).v, 3);
   });
 
   console.log(`\n  ${passed} passed · ${failed} failed\n`);

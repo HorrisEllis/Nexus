@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     runtime-load
-    version:  1.2.0
+    version:  1.3.0
     date:     2026-10-07
     release:  "PF1 0.40.1 (a fix: patch). PF2–PF5 each a phase."
     uuid:     nexus-runtime-load-phasemap-v1-0000-2026-1007-jamesbrooks-001
     owner:    "guardian/jaa-store.js + cortex/memory + intelligence/liminal-space + lib/resource-monitor.js + nexus/autopilot.js"
-    status:   "PF1 BUILT (0.40.1). PF3 BUILT (0.41.0). The rest MAPPED — ordering with EX/HL in docs/2026-10-07-system-expectations-phasemap.spec."
+    status:   "PF1 BUILT (0.40.1). PF3 BUILT (0.41.0). PF4 BUILT (0.42.0). The rest MAPPED — ordering with EX/HL in docs/2026-10-07-system-expectations-phasemap.spec."
     origin: >
       James, 2026-10-07, with his Windows run log: "whats up with the optimization? it seems almost worst? also
       liminal space with the velocity, like use that also?"
@@ -51,6 +51,10 @@ spec:
       proof: "tests/modules/test-pf3-append-store.test.js 4/4 — six processes × 300 rows with segments folding mid-run (all 1800 once, no EPERM); a later write survives a fold under an older open line (fails without the watermark); another process's insert+delete reach a running store by tail; one row into 100k rows costs the row"
     PF4_hold_only_what_you_read:
       idea: "after PF3 a process loads a table lazily and only its tail (a window by ts) unless it asks for history — the heap stops scaling with the table. Ends the 12× copies."
+      status: "DONE 0.42.0 (load on first read; the tail window moves to PF5)"
+      built: "guardian/jaa-store.js _writable/_loaded: no load at boot or for a write; a write-only table's buffer empties as it flushes. JAA_LAZY=0 preloads."
+      proof: "test-pf3-append-store PF-08 (a writer of a 100k-row table holds 0 of its rows; JAA_LAZY=0 holds 100k+), PF-09 (first read keeps unflushed local writes)"
+      still_loading: "readers of event_log: copilot grammar-router (tail 5000), nexus/autopilot (tail), intelligence (5 modules), lib/movement (query 100000), lib/component-ledger (tail 99999) — tail(n) served from the newest segments without the base is PF5's, with the cap that makes the base small."
     PF5_bounded_tables:
       idea: >-
         event_log and ledgers rolled into archives past a cap (nothing lost: archived, not deleted); compaction sized to
