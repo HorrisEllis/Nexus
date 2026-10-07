@@ -640,6 +640,107 @@ test('createCompartment: appears in system map', () => {
   assert.ok(m.compartments.some(c => c.id === comp.id));
 });
 
+// ── §2026-10-07 — a compartment's intent is its end state (foundation/intent.js) ─────────────────────────────────
+// James: "im saying to add that to cos. the conditions. like the intent of compartment is the end state."
+{
+  const INTENT = require('../foundation/intent.js');
+  const { setIntent, verifyCompartment, intentLines } = require('../cli/commands/intent.js');
+  const { advanceWorkPhase } = require('../cli/commands/advance-work-phase.js');
+  const mk = (n) => createHost({ stateFile: tmpFile(`intent-${n}-state.json`), mapFile: tmpFile(`intent-${n}-map.json`) });
+  const notes = {
+    endState: [
+      { says: 'a note can be kept', check: { kind: 'file', path: 'notes.txt' } },
+      { says: 'the notes can be read back', check: { kind: 'command', run: 'node -e "process.exit(require(\'fs\').readFileSync(\'notes.txt\',\'utf8\').includes(\'hello\')?0:1)"' } },
+    ],
+    conditions: [{ says: 'nothing is written outside the compartment', check: { kind: 'command', run: 'node -e "process.exit(0)"' } }],
+    axioms: ['use the least amount of code with the highest leverage that achieves the end state'],
+  };
+
+  test('intent: a compartment is born with its intent — the end state, its conditions, its axioms', () => {
+    const host = mk(1);
+    const comp = createCompartment(host, { name: 'notes-a', purpose: 'keeps notes', intent: notes });
+    assert.strictEqual(comp.intent.endState.length, 2);
+    assert.strictEqual(comp.intent.conditions.length, 1);
+    assert.deepStrictEqual(comp.intent.axioms, notes.axioms);
+    assert.strictEqual(host.store.getCompartment(comp.id).intent.endState[0].says, 'a note can be kept', 'persisted');
+  });
+
+  test('intent: an end state that says nothing, or cannot be checked, is refused whole — nothing is created', () => {
+    const host = mk(2);
+    assert.throws(() => createCompartment(host, { name: 'notes-b', intent: { endState: ['it works'] } }), /has no check/);
+    assert.strictEqual(host.store.getCompartmentByName('notes-b'), null, 'not created');
+    assert.match(INTENT.normalize({ endState: [{ says: 'x', check: { kind: 'vibes' } }] }).errors[0], /not one of file, command, tests/);
+    assert.match(INTENT.normalize({ axioms: ['a', 'b', 'c', 'd', 'e', 'f'] }).errors[0], /at most 5/);
+  });
+
+  test('intent: verify — how much of the end state is reached, whether the conditions hold; an empty file proves nothing', () => {
+    const host = mk(3);
+    const comp = createCompartment(host, { name: 'notes-c', intent: notes });
+    fs.writeFileSync(path.join(comp.fs.root, 'notes.txt'), '');
+    let r = verifyCompartment(host, { name: 'notes-c' }).status;
+    assert.strictEqual(r.endState.met, 0, 'an empty notes.txt does not count as a kept note');
+    assert.strictEqual(r.ok, true, 'its condition holds');
+    fs.writeFileSync(path.join(comp.fs.root, 'notes.txt'), 'hello\n');
+    r = verifyCompartment(host, { name: 'notes-c' }).status;
+    assert.strictEqual(r.endState.met, 2); assert.strictEqual(r.reached, true);
+    assert.strictEqual(host.store.getCompartment(comp.id).intentStatus.endState.met, 2, 'the last check is kept on the compartment');
+  });
+
+  test('intent: VERIFYING checks ACTING\'s result against the end state', () => {
+    const host = mk(4);
+    const comp = createCompartment(host, { name: 'notes-d', intent: notes });
+    advanceWorkPhase(host, { name: 'notes-d', nextPhase: 'EXPLORING' });
+    advanceWorkPhase(host, { name: 'notes-d', nextPhase: 'ACTING' });
+    fs.writeFileSync(path.join(comp.fs.root, 'notes.txt'), 'hello\n');
+    const v = advanceWorkPhase(host, { name: 'notes-d', nextPhase: 'VERIFYING' });
+    assert.ok(v.intentStatus && v.intentStatus.reached, JSON.stringify(v.intentStatus));
+  });
+
+  test('intent: a broken condition is said — the end state can be reached and the compartment still not ok', () => {
+    const host = mk(5);
+    createCompartment(host, { name: 'notes-e', intent: { ...notes, conditions: [{ says: 'the tests pass', check: { kind: 'tests', run: 'node -e "process.exit(1)"' } }] } });
+    const r = verifyCompartment(host, { name: 'notes-e' }).status;
+    assert.strictEqual(r.ok, false); assert.strictEqual(r.reached, false);
+    assert.match(r.conditions.results[0].evidence, /exit 1/);
+  });
+
+  test('intent: nesting — a child holds its parent\'s conditions and axioms (marked), adds its own, keeps its own end state', () => {
+    const host = mk(6);
+    createCompartment(host, { name: 'nexus-p', intent: { endState: [{ says: 'nexus runs', check: { kind: 'command', run: 'node -e "0"' } }], conditions: notes.conditions, axioms: notes.axioms } });
+    const child = createCompartment(host, { name: 'notes-f', parentId: 'nexus-p', intent: { endState: notes.endState, conditions: [{ says: 'notes are plain text', check: { kind: 'command', run: 'node -e "0"' } }], axioms: ['reuse before writing'] } });
+    const eff = INTENT.effective(child, host.store);
+    assert.deepStrictEqual(eff.conditions.map(c => [c.says, c.inherited || null]), [['nothing is written outside the compartment', 'nexus-p'], ['notes are plain text', null]]);
+    assert.deepStrictEqual(eff.axioms, [notes.axioms[0], 'reuse before writing']);
+    assert.deepStrictEqual(eff.endState.map(e => e.says), ['a note can be kept', 'the notes can be read back'], 'its own end state, not the parent\'s');
+    const dropped = INTENT.inherit({ conditions: [] }, { conditions: notes.conditions, axioms: [] }, 'p');
+    assert.strictEqual(dropped.conditions.length, 1, 'a child cannot drop what its parent holds');
+    const r = verifyCompartment(host, { name: 'notes-f' }).status;
+    assert.strictEqual(r.conditions.total, 2); assert.strictEqual(r.inheritedConditions, 1);
+  });
+
+  test('intent: set later through its gate; cos intent and cos verify are commands; status and the brief say it', () => {
+    const host = mk(7);
+    createCompartment(host, { name: 'notes-g' });
+    assert.throws(() => setIntent(host, { name: 'notes-g', intent: 'intent:\n  end_state:\n    - "it works"\n' }), /has no check/);
+    const comp = setIntent(host, { name: 'notes-g', intent: 'intent:\n  end_state:\n    - { says: "a note can be kept", check: { kind: file, path: notes.txt } }\n' });
+    assert.strictEqual(comp.intent.endState[0].says, 'a note can be kept');
+    const { loadNodes } = require('../nodes/index.js');
+    const nodes = loadNodes();
+    assert.ok(nodes.nodes.has('intent') && nodes.nodes.has('verify'), JSON.stringify(nodes.errors));
+    assert.match(intentLines(comp, host.store).join('\n'), /end state:\s+not checked yet/);
+    assert.match(INTENT.brief(INTENT.effective(host.store.getCompartmentByName('notes-g'), host.store)), /the end state: a note can be kept/);
+    assert.ok(isKnownEvent(HOST.COMPARTMENT_VERIFIED) && isKnownEvent(HOST.COMPARTMENT_INTENT_SET));
+  });
+
+  test('intent: idearium\'s charter.spec is a repo\'s compartment intent — one definition (lib/charter.js parses through cos)', () => {
+    const CH = require('../../lib/charter.js');
+    const c = CH.parse('charter:\n  axioms: ["least code"]\n  end_state:\n    - { says: "it runs", check: { kind: command, run: "true" } }\n');
+    assert.deepStrictEqual(c.axioms, ['least code']); assert.strictEqual(c.endState[0].says, 'it runs');
+    assert.match(CH.parse('charter:\n  conditions:\n    - "no check"\n').errors[0], /has no check/);
+    assert.ok(/foundation\/intent\.js/.test(fs.readFileSync(path.join(__dirname, '../../lib/charter.js'), 'utf8')));
+  });
+}
+
 test('createCompartment: emits host:compartment:created', () => {
   const host = createHost({
     stateFile: tmpFile('cli-create4-state.json'),

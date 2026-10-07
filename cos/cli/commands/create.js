@@ -35,11 +35,12 @@ const { toSlug }      = require('../../host/gates/compartment.js');
  * and synchronous — the gate runs before emit() returns.
  *
  * @param {object} host   — { store, bus, sysmap }
- * @param {object} config — { name, purpose, runtimeId, networkIsolated }
+ * @param {object} config — { name, purpose, runtimeId, networkIsolated, parentId, intent }
+ *                          intent: { endState, conditions, axioms } (foundation/intent.js) — refused whole if any part cannot be checked
  * @returns {object} the created compartment
  */
 function createCompartment(host, config) {
-  const { name, purpose, runtimeId, networkIsolated = true, parentId = null } = config;
+  const { name, purpose, runtimeId, networkIsolated = true, parentId = null, intent = null } = config;
 
   // Validate early so we can throw synchronously for callers that expect it
   if (!name) throw new Error('create: name is required');
@@ -62,7 +63,7 @@ function createCompartment(host, config) {
 
   // Dispatch through the gate — depth-first sync, gate runs before this returns
   host.bus.emit('host:compartment:create', {
-    name, purpose, runtimeId, networkIsolated, parentId,
+    name, purpose, runtimeId, networkIsolated, parentId, intent,
     store:  host.store,
     sysmap: host.sysmap,
   });
@@ -132,11 +133,22 @@ async function runCreateWizard(host, nameArg = null, out = {}) {
     const netAns = await prompt(rl, '  Network isolated? [Y/n]: ');
     const networkIsolated = netAns.toLowerCase() !== 'n';
 
+    // §2026-10-07 — James: "the intent of compartment is the end state." Asked at birth: what is true when it is done,
+    // and how that is checked. Blank: set it later (cos intent <name> --file=…) — said, not assumed.
+    log('');
+    let intent = null;
+    const esSays = await prompt(rl, '  End state — what is true when this is done? (blank: set it later): ');
+    if (esSays) {
+      const esRun = await prompt(rl, '  How is that checked? A command that succeeds when it is true: ');
+      if (esRun) intent = { endState: [{ says: esSays, check: { kind: 'command', run: esRun } }] };
+      else log('  (no check given — an end state that cannot be checked is not set; add it with cos intent)');
+    }
+
     log('');
     log('  ── Creating compartment… ──');
 
     try {
-      const comp = createCompartment(host, { name, purpose, runtimeId, networkIsolated });
+      const comp = createCompartment(host, { name, purpose, runtimeId, networkIsolated, intent });
       log('');
       log(`  ✓  Created: ${comp.name}`);
       log(`     ID:      ${comp.id}`);
@@ -144,6 +156,7 @@ async function runCreateWizard(host, nameArg = null, out = {}) {
       if (comp.runtimeId) log(`     Runtime: ${comp.runtimeId}`);
       log(`     Network: ${networkIsolated ? 'isolated' : 'open'}`);
       log(`     Path:    ${comp.fs.root}`);
+      log(`     Intent:  ${comp.intent ? `${comp.intent.endState.length} end-state check${comp.intent.endState.length === 1 ? '' : 's'} — cos verify ${comp.name}` : 'none yet — cos intent ' + comp.name + ' --file=intent.spec'}`);
       log('');
       rl.close();
       return comp;
