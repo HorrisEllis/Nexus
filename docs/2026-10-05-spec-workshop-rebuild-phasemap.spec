@@ -6,7 +6,7 @@ spec:
     release:  0.39.345 (base)
     uuid:     nexus-spec-workshop-rebuild-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the workshop, the template picker, the architect, the blueprint) · warp (WARP 2) · intelligence (rfr2 clip)
-    status:   "MAPPED 2026-10-05, before building; RS9–RS11 (the phases, interconnected) and the build order added; RS5 done (0.39.357); RS3 and RS9 done (0.49.0)"
+    status:   "MAPPED 2026-10-05, before building; RS9–RS11 (the phases, interconnected) and the build order added; RS5 done (0.39.357); RS3 and RS9 done (0.49.0); RS10 done (0.50.0)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -229,7 +229,7 @@ spec:
 
     RS10_the_phases_tab_rebuilt:
       layer: ui
-      status: OPEN
+      status: "DONE (0.50.0) — idearium/ui/js/phases.js rebuilt on the thread (GET …/thread, GET …/plan): the rail (every phasemap · each spec with its maps, its blocks planned / unplanned / moved · specs not planned yet with ⚡ plan · maps not from a spec); lanes by dependency layer, active and ready first, complete folded (✓ N complete — show, remembered); cards with their blocks (↻ stale), the Plan's gate bar, the last run's state, model and rung; the detail with the block's own text from the spec (moved since planned, or not in the spec any more), files and changes waiting (open in Code), the Plan's ledger, status, build (the ladder by default), open in the Plan, its spec in the Spec tab. Table and Maps kept; Board and Layers became Lanes; every action kept (status, build, ▶, add, expand, plan from a spec, live events). roadmap.js passes each phase's blocks. test-phases-tab 4/4 in Clear Glass."
       james: '"the phases with the spec workshop. needs to be rebuilt, enterprise grade."'
       depends_on: [RS9_the_thread]
       files: [idearium/ui/js/phases.js, idearium/ui/css/phases.css]

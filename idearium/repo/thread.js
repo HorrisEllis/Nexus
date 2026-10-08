@@ -73,7 +73,7 @@ export function thread({ specPath, specText = '', maps = [], runs = [], pending 
   }
   const outBlocks = blocks.map(b => {
     const ps = phases.filter(p => p.blocks.includes(b.id));
-    return { id: b.id, label: b.label, kind: b.kind, line: b.line, hash: b.hash, marked: b.marked, bookkeeping: doc.isBookkeeping(b),
+    return { id: b.id, label: b.label, kind: b.kind, line: b.line, endLine: b.endLine, hash: b.hash, marked: b.marked, bookkeeping: doc.isBookkeeping(b), text: b.text,   // §RS10 — the block's own words, shown beside its phases
       phases: ps.map(p => p.key), planned: ps.length > 0, stale: ps.some(p => p.stale.includes(b.id)),
       done: ps.length > 0 && ps.every(p => p.status === 'done' || p.status === 'complete') };
   });

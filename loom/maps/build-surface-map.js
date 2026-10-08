@@ -48,6 +48,8 @@ const FILES = [
   // projection handed the document reader and the parser by idearium/api)
   ['lib/spec-document.js', I('lib/spec-document.js'), []],
   ['idearium/repo/thread.js', I('idearium/repo/thread.js'), []],
+  // §0.50.0 RS10 — the Phases tab on the thread: HTTP phases, thread, plan; plan-panel.js (_gateBar, _ledgerHtml, openPlanPanel); work-surface.js (wsOpenInCode)
+  ['idearium/ui/js/phases.js', I('idearium/ui/js/phases.js'), [I('idearium/api/index.js'), I('idearium/ui/js/plan-panel.js'), I('idearium/ui/js/work-surface.js')]],
   // §0.39.350 CT4 — Settings → Models: HTTP ollama/check, ollama/check/ask; idearium/api runs lib/ollama-check.js
   ['lib/ollama-check.js', I('lib/ollama-check.js'), []],
   ['idearium/ui/js/ollama-check.js', I('idearium/ui/js/ollama-check.js'), [I('idearium/api/index.js')]],

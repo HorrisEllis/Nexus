@@ -250,3 +250,8 @@ spec:
         one nexus.zip without data/**
       status: "DONE 2026-09-27 — built in 0.39.271."
       depends_on: [R1, V1, V2, N1, P4, S2, T3, C1, X3, X4]
+#
+# ADDENDUM 2026-10-08 (0.50.0, RS10 of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec) — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade. interconnected"
+# P4's Phases manager rebuilt on the thread: specs on the left, lanes by build order (Board and Layers became Lanes;
+# Table and Maps kept), each phase with its spec blocks, the Plan's gates and ledger, its files and waiting changes.
+# Every action kept. idearium/repo/roadmap.js passes each phase's blocks.

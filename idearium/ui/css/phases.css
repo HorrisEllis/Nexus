@@ -1,0 +1,40 @@
+/* idearium/ui/css/phases.css — §RS10 0.50.0: the Phases tab rebuilt on the thread (idearium/ui/js/phases.js).
+   Specs left · phases in lanes by build order middle · the phase with its spec blocks right. The page's tokens. */
+.ph2{display:grid;grid-template-columns:210px minmax(0,1fr);gap:10px;align-items:start}
+.ph2.with-detail{grid-template-columns:210px minmax(0,1fr) 380px}
+.ph2-rail{position:sticky;top:0;max-height:calc(100vh - 230px);overflow:auto;border:1px solid var(--b1,rgba(255,255,255,.1));border-radius:9px;background:var(--bg2);padding:6px 0}
+.ph2-rail-head{font:600 9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text3);padding:8px 10px 3px}
+.ph2-spec{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:5px 10px;font:11px var(--mono);color:var(--text2);cursor:pointer;border-left:2px solid transparent}
+.ph2-spec:hover{background:rgba(255,255,255,.04)}.ph2-spec.on{border-left-color:var(--sky);background:rgba(56,139,253,.1);color:var(--text)}
+.ph2-spec.dim{cursor:default;opacity:.75}
+.ph2-spec-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ph2-spec-sub{flex-basis:100%;font-size:9.5px;color:var(--text3)}
+.ph2-mini{flex-basis:100%;height:2px;background:rgba(255,255,255,.08);border-radius:1px}.ph2-mini i{display:block;height:100%;background:var(--mint);border-radius:1px}
+.ph2-mini-btn{background:none;border:1px solid rgba(255,255,255,.14);border-radius:5px;color:var(--text3);font:9.5px var(--mono);padding:0 6px;cursor:pointer}.ph2-mini-btn:hover{color:var(--text)}
+.ph2-dim{color:var(--text3);font-size:10px}.ph2-warn{color:var(--amber);font-size:10px}.ph2-pad{padding:4px 10px}
+.ph2-mid{min-width:0;max-height:calc(100vh - 230px);overflow:auto}
+.ph2-note{font:10.5px var(--mono);color:var(--text2);padding:5px 8px;margin:0 0 6px;border:1px dashed rgba(255,255,255,.12);border-radius:6px}
+.ph2-note.warn{color:var(--amber);border-color:rgba(230,180,80,.35)}.ph2-note.bad{color:var(--coral)}
+.ph2-fold{display:block;width:100%;text-align:left;margin:0 0 8px;padding:4px 8px;background:none;border:1px dashed rgba(255,255,255,.12);border-radius:6px;color:var(--text3);font:10px var(--mono);cursor:pointer}.ph2-fold:hover{color:var(--mint);border-color:rgba(52,211,153,.4)}
+.ph2-lanes{display:flex;gap:10px;align-items:flex-start;overflow-x:auto;padding-bottom:6px}
+.ph2-lane{flex:0 0 260px;display:flex;flex-direction:column;gap:7px;background:rgba(255,255,255,.015);border:1px solid var(--b1,rgba(255,255,255,.08));border-radius:9px;padding:7px}
+.ph2-lane-head{display:flex;justify-content:space-between;gap:6px;font:600 10px var(--mono);color:var(--text2);text-transform:uppercase;letter-spacing:.06em;padding:0 2px 3px}
+.ph2-card{border-left:3px solid var(--text3)}
+.ph2-card.st-active{border-left-color:var(--sky)}.ph2-card.st-complete{border-left-color:var(--mint);opacity:.7}.ph2-card.st-planned{border-left-color:rgba(255,255,255,.18)}
+.ph2-card.stale{box-shadow:inset 0 0 0 1px rgba(230,180,80,.45)}
+.ph2-blocks{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 2px}
+.ph2-block{display:inline-block;font:9.5px var(--mono);color:var(--violet);background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:4px;padding:0 5px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+.ph2-block.stale{color:var(--amber);background:rgba(230,180,80,.1);border-color:rgba(230,180,80,.4)}
+.ph2-gates{margin-top:5px}.ph2-gates.big{display:flex;align-items:center;gap:8px}
+.ph2-detail{max-height:calc(100vh - 230px)}
+.ph2-blocktext{border:1px solid rgba(167,139,250,.22);border-radius:6px;margin:4px 0;overflow:hidden}
+.ph2-blocktext.stale{border-color:rgba(230,180,80,.5)}.ph2-blocktext.broken{padding:5px 8px;border-color:rgba(248,113,113,.4)}
+.ph2-bt-head{display:flex;gap:8px;align-items:baseline;padding:4px 8px;background:rgba(167,139,250,.08);font:10.5px var(--mono)}
+.ph2-blocktext pre{margin:0;padding:6px 8px;max-height:220px;overflow:auto;font:10.5px/1.5 var(--mono);color:var(--text2);white-space:pre-wrap}
+.ph2-files{display:flex;flex-direction:column;gap:2px}
+.ph2-file{font:10.5px var(--mono);color:var(--sky2);text-decoration:none}.ph2-file:hover{text-decoration:underline}.ph2-file.warn{color:var(--amber)}
+.ph2-ledger{font-size:10.5px}
+@media (max-width:1200px){.ph2.with-detail{grid-template-columns:190px minmax(0,1fr)}.ph2-detail{grid-column:1 / -1;position:static;max-height:none}}
+@media (max-width:760px){.ph2,.ph2.with-detail{grid-template-columns:1fr}.ph2-rail{position:static;max-height:220px}.ph2-lane{flex-basis:220px}}
+/* the detail is a capped flex column: its sections keep their height and the pane scrolls (else the block text collapsed) */
+.ph2-detail > *{flex-shrink:0}
