@@ -226,7 +226,7 @@ function parsePhasemapText(text, name) {
         // header line, the `status:` key's line (-1 if it has none) and the
         // first line of the next phase. Not part of loadAll()'s output.
         line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
-        name: f.name || f.does || null, closes: _list(f.closes), files: _list(f.files), form: 'key',
+        name: f.name || f.does || null, closes: _list(f.closes), files: _list(f.files), blocks: _blocks(f), form: 'key',
       });
     }
   // §0.39.271 P1 — the LIST form. Since 0.39.260 phasemaps are also written as
@@ -284,7 +284,7 @@ function parsePhasemapText(text, name) {
       ...(() => { const sys = _systemsOf(f, phaseLines.join(' ')); return { systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom }; })(),
       dependsOn: deps.length ? deps.join(', ') : null,
       line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
-      name: f.name || null, closes: _list(f.closes), files: _list(f.files), form: 'list',
+      name: f.name || null, closes: _list(f.closes), files: _list(f.files), blocks: _blocks(f), form: 'list',
     });
     seen.add(id);
   }
@@ -312,6 +312,9 @@ function _fields(lines, at) {
   }
   return out;
 }
+// §RS9 0.39.354 — the spec blocks a phase was planned from (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec): its
+// `blocks:` (block ids, lib/spec-document.js), else the derived map's `sections:`. [] = no link to its spec.
+function _blocks(f) { return _list(f.blocks != null ? f.blocks : f.sections).map(x => String(x).replace(/^['"]|['"]$/g, '')).filter(Boolean); }
 /** _list("[A, B]" | "A, B" | "- A - B") -> ['A','B'] (empty for nothing). */
 function _list(v) {
   if (v == null) return [];

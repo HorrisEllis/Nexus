@@ -6,7 +6,7 @@ spec:
     release:  0.39.345 (base)
     uuid:     nexus-spec-workshop-rebuild-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the workshop, the template picker, the architect, the blueprint) · warp (WARP 2) · intelligence (rfr2 clip)
-    status:   "MAPPED 2026-10-05, before building; 1.1.0 adds RS9–RS11 (the phases, interconnected) and the build order"
+    status:   "MAPPED 2026-10-05, before building; 1.1.0 adds RS9–RS11 (the phases, interconnected) and the build order; RS3 and RS9 done (0.39.354)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -113,7 +113,7 @@ spec:
 
     RS3_the_spec_document:
       layer: library
-      status: OPEN
+      status: "DONE (0.39.354) — lib/spec-document.js: detect (emerge · yaml · markdown), parse into blocks that partition the file (emerge: domain \"…\" and // ── banners, with the comments directly above; yaml: top keys or, under one root, its keys; markdown: headings), ids natural or given as a marker line (// @block, # @block, <!-- @block -->), serialize byte-identical, replaceBlock (every other block byte for byte, the check run on the result, an id it would duplicate refused), setId (any id but empty or a line break; a taken id refused), renameRefs (that spec's maps' blocks: / sections:), check (yaml by js-yaml; emerge structural — the Emerge kernel's parser reads another dialect, compartment · invariant · signal, not genesis's domains — said), isBookkeeping. genesis.spec, a YAML phasemap and a markdown spec round-trip byte-identical. test-spec-document 6/6. SB28 (genesis's file list) stays its own phase in the build-from-the-spec map; the API routes for editing blocks come with RS6."
       james: '"I''m thinking like document editor but for the emerge and .spec files. each block has a block id, which can be completely custom, can be anything."'
       depends_on: []
       files: [lib/spec-document.js, emerge/emerge-kernel.js, idearium/spec-engine/templates/genesis.spec]
@@ -189,7 +189,7 @@ spec:
 
     RS9_the_thread:
       layer: library
-      status: OPEN
+      status: "DONE (0.39.354) — idearium/repo/thread.js (a projection) + GET /api/repos/:uuid/thread (?spec= the thread; none = the specs its maps came from). spec-plan derivePlan cuts by the document's blocks (genesis, which planned nothing before, plans 21 phases) and writes blocks: (exact ids) and meta.block_hashes; its prompt lists the spec's block ids and requires blocks: on every phase; the one phasemap parser (loom/scanners/phasemap-map.js) reads blocks: (else sections:). Staleness per block; an older map says the spec moved; no blocks: = 'no link', a missing id = 'broken'. Bookkeeping blocks (meta, history …) are edited, not built — one rule, in lib/spec-document.js. test-thread 4/4 (TH-04 through the real router: plan, edit one block, only its phases stale)."
       james: '"interconnected"'
       depends_on: [RS3_the_spec_document]
       files: [idearium/repo/thread.js, idearium/repo/spec-plan.js, idearium/repo/phases.js, idearium/api/index.js]
