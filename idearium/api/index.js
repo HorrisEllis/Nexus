@@ -6441,7 +6441,10 @@ async function handle(req, res, route, query, body) {
       const D = _require('../../lib/spec-document.js');
       const P = _require('../../loom/scanners/phasemap-map.js');
       let pending = []; try { pending = _require('../../lib/repo-inject.js').list(params.uuid, { status: 'proposed' }); } catch (_) {}
-      return ok(res, { repoUuid: params.uuid, ...TH.thread({ specPath, specText, maps, runs: _phaseRuns(params.uuid), pending, parsePhases: P.parsePhasemapText, doc: D, sha: D.sha }) });
+      // §RS11 0.51.0 — the workshop session that saved this spec (the newest), so a phase can open the workshop at its block
+      let workshop = null;
+      try { const WSm = await import('../lib/workshop.js'); const w = loadTable(WSm.TABLE).filter(r => r.repoUuid === params.uuid && r.specPath === specPath).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))[0]; if (w) workshop = { uuid: w.uuid, title: w.title || null }; } catch (_) {}
+      return ok(res, { repoUuid: params.uuid, workshop, ...TH.thread({ specPath, specText, maps, runs: _phaseRuns(params.uuid), pending, parsePhases: P.parsePhasemapText, doc: D, sha: D.sha }) });
     }
     case 'repo.phases.runs': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);

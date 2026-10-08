@@ -310,3 +310,22 @@ body.as-typed .blk .b, body.as-typed .blk .h, body.as-typed .doc-title, body.as-
 @media (prefers-reduced-motion: reduce) {
   .emerge, .prop, .ph, .sheet, .dlg, .bar::after, .flow::after, .st.now::after, .agent-live::after, .step.run .o, .btn.send .arr, .bar .name { animation: none !important; }
 }
+
+/* §RS11 0.51.0 — each section's phases (the thread of the saved spec): a strip under its header, dots in the outline */
+.thr { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 2px 0 6px; font: 400 10px/1.4 var(--mono); letter-spacing: .08em; }
+.thr:empty { display: none; }
+.thr-lbl { color: var(--text3); }
+.thr-none { color: var(--text3); }
+.thr-bad { color: var(--r); }
+.thr-ph { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border: 1px solid var(--line2); border-radius: 2px; background: none; color: var(--text2); font: 400 10px/1.4 var(--mono); letter-spacing: .08em; cursor: pointer; }
+.thr-ph i { font-style: normal; color: var(--text3); }
+.thr-ph:hover { border-color: var(--c); color: var(--text); }
+.thr-ph.done { border-color: rgba(0,255,136,.35); } .thr-ph.done i { color: var(--g); }
+.thr-ph.busy { border-color: rgba(0,212,255,.45); } .thr-ph.busy i { color: var(--c); }
+.thr-ph.bad { border-color: rgba(255,80,80,.45); } .thr-ph.bad i { color: var(--r); }
+.thr-stale { color: var(--y); }
+.thr-stale.act { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.ol .phd { display: inline-flex; gap: 3px; margin-left: 6px; }
+.ol .phd i { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); }
+.ol .phd i.done { background: var(--g); } .ol .phd i.busy { background: var(--c); } .ol .phd i.bad { background: var(--r); }
+.ol .phd i.stale { box-shadow: 0 0 0 2px rgba(255,214,0,.55); }

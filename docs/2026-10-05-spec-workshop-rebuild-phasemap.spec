@@ -6,7 +6,7 @@ spec:
     release:  0.39.345 (base)
     uuid:     nexus-spec-workshop-rebuild-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the workshop, the template picker, the architect, the blueprint) · warp (WARP 2) · intelligence (rfr2 clip)
-    status:   "MAPPED 2026-10-05, before building; RS9–RS11 (the phases, interconnected) and the build order added; RS5 done (0.39.357); RS3 and RS9 done (0.49.0); RS10 done (0.50.0)"
+    status:   "MAPPED 2026-10-05, before building; RS9–RS11 (the phases, interconnected) and the build order added; RS5 done (0.39.357); RS3 and RS9 done (0.49.0); RS10 done (0.50.0); RS11 done (0.51.0); RS6 re-mapped onto WS7"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -176,7 +176,7 @@ spec:
 
     RS6_the_workshop_as_the_editor:
       layer: ui
-      status: OPEN
+      status: "MOSTLY BUILT AS WS7 (0.39.354, docs/2026-10-02-workshop-codex-rewind-phasemap.spec) — the full writer: one document, the outline, the parts in tiers, the agent in three modes whose proposals need his yes, SEND TO THE PIPELINE; RS5's picker is its start. Not rebuilt here (two workshops would drift). What is left of RS6 is the macro's timeline along the bottom — scrub to rewind, replay, branch — which needs RS1 (the recorder) and RS2 (replay) first."
       james: '"rebuild the spec workshop."'
       depends_on: [RS5_the_template_picker, RS2_replay_rewind_branch]
       closes: [WS5, WS6, UI0]
@@ -243,7 +243,7 @@ spec:
 
     RS11_workshop_and_phases_one_surface:
       layer: ui
-      status: OPEN
+      status: "DONE on WS7's workshop (0.51.0) — idearium/ui/js/workshop.js: the saved spec's thread (GET …/thread, now naming the workshop that saved it) read on open, after save / plan / build and on focus (no polling); each section a strip of its phases (key, state — planned, active, the run's state, done, failed) that opens Idearium's Phases on that spec with that phase open; dots in the outline; ↻ CHANGED SINCE IT WAS PLANNED with REPLAN (the pipeline's replan); SAVING THIS CHANGES N PLANNED PHASES while a planned section is edited and not saved; ?block= opens at a section. The Phases tab: open in the workshop at the phase's block; a spec and phase handed from the workshop survive the switch to another repo. Not built: planning only the picked sections (the pipeline plans the whole spec; replanning keeps nothing of the old map's statuses — said, not hidden). test-workshop-thread 4/4, test-phases-tab PT-05."
       james: '"interconnected"'
       depends_on: [RS6_the_workshop_as_the_editor, RS10_the_phases_tab_rebuilt]
       files: [idearium/ui/workshop.html, idearium/ui/js/spec-editor.js, idearium/ui/js/phases.js]

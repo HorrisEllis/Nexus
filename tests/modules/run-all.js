@@ -325,7 +325,8 @@ const SUITES = [
   'test-setup-job-settles.test.js',
   'test-spec-document.test.js',   // 0.49.0 RS3 — a .spec / .eg as blocks with ids, byte-identical
   'test-thread.test.js',
-  'test-phases-tab.test.js',   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
+  'test-phases-tab.test.js',
+  'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls
   'test-ollama-check.test.js',   // 0.39.350 CT4 — Settings → Models: every Ollama model asked through copilot, every caller's route
   'test-code-tab.test.js',   // 0.39.349 CT3 — the Code tab is the work surface; 0.39.351 CT5 — hooked into the Plan (Clear Glass)

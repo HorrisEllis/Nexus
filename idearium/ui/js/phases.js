@@ -43,6 +43,8 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
     Object.assign(PHASES, { uuid: forUuid, data: null, open: null, adding: false, specs: null, spec: null, thread: null, threadErr: null, plan: null });
     PHASES.filter = { q: '', status: 'all', map: 'all', mine: true, ready: false };
   }
+  // §RS11 — handed a spec (and a phase) from a workshop section: applied after any reset for a new repo, not wiped by it
+  if (PHASES.wantSpec) { PHASES.spec = PHASES.wantSpec; PHASES.thread = null; PHASES.wantSpec = null; }
   if (PHASES.view === 'board' || PHASES.view === 'layers') PHASES.view = 'lanes';
   const sc = document.querySelector('#repo-subtab-phases .ph2-mid'); const scrollTop = keepScroll && sc ? sc.scrollTop : 0;
   if (!PHASES.data) el.innerHTML = `<div class="detail-empty">reading phasemaps…</div>`;
@@ -63,6 +65,8 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   PHASES.specs = sr.status === 'fulfilled' ? (sr.value.specs || []) : null;
   PHASES.plan = gr.status === 'fulfilled' ? gr.value : null;
   if (PHASES.spec) await _phLoadThread(PHASES.spec, { paint: false });
+  // §RS11 — opened from a workshop section: its phase opened
+  if (PHASES.wantKey) { const w = d.phases.find(p => p.phase_key === PHASES.wantKey); if (w) PHASES.open = w.uuid; PHASES.wantKey = null; }
   if (typeof loadAgentOptions === 'function') loadAgentOptions();
   _phPaint();
   const sc2 = document.querySelector('#repo-subtab-phases .ph2-mid'); if (sc2) sc2.scrollTop = scrollTop;
@@ -296,7 +300,8 @@ function _phDetail(d, uuid) {
     <div class="ph-d-row"><label>agent</label><select id="ph-build-provider"><option value="">the ladder (Settings → Routing)</option>${opts.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('')}</select></div>
     <textarea id="ph-build-note" rows="2" placeholder="anything to add for the agent (optional)"></textarea>
     <div class="action-row"><button class="action-btn" ${p.status === 'complete' || PHASES.busy ? 'disabled' : ''} onclick="phasesBuild('${_phq(p.map)}','${_phq(p.phase_key)}')">▶ snapshot + build</button>
-      ${typeof openPlanPanel === 'function' ? `<button class="action-btn" onclick="openPlanPanel({ map: '${_phq(p.map)}'${run && run.runId ? `, focus: '${_phq(run.runId)}'` : ''} })">open in the Plan</button>` : ''}</div>
+      ${typeof openPlanPanel === 'function' ? `<button class="action-btn" onclick="openPlanPanel({ map: '${_phq(p.map)}'${run && run.runId ? `, focus: '${_phq(run.runId)}'` : ''} })">open in the Plan</button>` : ''}
+      ${PHASES.thread && PHASES.spec === specOf && PHASES.thread.workshop && typeof openWorkshop === 'function' ? `<button class="action-btn" title="the spec workshop, at the section this phase was planned from" onclick="openWorkshop(null,'${_phq(PHASES.thread.workshop.uuid)}'${(p.blocks || [])[0] ? `,'${_phq(p.blocks[0])}'` : ''})">open in the workshop</button>` : ''}</div>
     <div class="ph-d-sec">builds · ${p.runs}</div>
     ${ledger ? `<div class="ph2-ledger">${ledger}</div>` : run ? `<div class="ph-run"><span style="color:${_PH_RUN_COLOR[run.state] || 'var(--text3)'}">${escapeHtml(run.state)}</span> · ${escapeHtml(new Date(run.ts).toLocaleString())}${run.snapshot ? ` · snapshot <code>${escapeHtml(run.snapshot)}</code>` : ''}${run.provider ? ` · ${escapeHtml(run.provider)}` : ''}${run.rung ? ` (rung ${run.rung}/${run.rungs})` : ''}${run.elapsedMs ? ` · ${Math.round(run.elapsedMs / 1000)}s` : ''}
       ${run.error ? `<div style="color:var(--coral)">${escapeHtml(run.error)}</div>` : ''}

@@ -12,6 +12,8 @@
  *   PT-03  a phase opened: its block's own words from the spec, moved since planned; its files and the change waiting; its
  *          runs as the Plan's ledger; "open in the Plan" opens it on that run
  *   PT-04  a file opens in the Code tab; ▶ builds (POST …/phases/build); the fold shows the complete ones; nothing threw
+ *   PT-05  §RS11 0.51.0 — "open in the workshop" opens the session that saved the spec, at the phase's block; opened from a
+ *          workshop section (spec + phase), the tab lands on that spec with that phase open
  * No engine on the machine: the browser part is SKIPPED, said, never passed.
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -45,6 +47,7 @@ function harness() {
   function toast() {}
   function setRepoSubtab(n) { OPENED.push(['subtab', n]); CURRENT_REPO_SUBTAB = n; }
   function csOpen(p) { OPENED.push(['code', p]); }
+  function openWorkshop(from, id, block) { OPENED.push(['workshop', from, id, block]); }
   const M = 'docs/shop-phasemap.spec', R = 'docs/roadmap-phasemap.spec';
   const ph = (o) => ({ map: M, line: 10, order: 0, layer: 0, depends_on: [], blocked_by: [], ready: false, runs: 0, lastRun: null, closes: [], files: [], systems: [], blocks: [], mine: true, ...o });
   const PHASES_DATA = { scope: { label: 'shop', source: 'repo' }, editVia: 'repo-layer', warnings: [],
@@ -57,7 +60,7 @@ function harness() {
       ph({ uuid: 'u3', phase_key: 'R0_later', title: 'R0 later', name: 'something later', status: 'planned', map: R, layer: 0, order: 0, ready: true }),
     ],
     summary: { total: 4, complete: 1, active: 1, planned: 2, ready: 1, blocked: 1, maps: 2, runs: 2 } };
-  const THREAD = { spec: { path: 'spec/shop.spec', format: 'yaml', blocks: [
+  const THREAD = { workshop: { uuid: 'ws-1', title: 'Shop' }, spec: { path: 'spec/shop.spec', format: 'yaml', blocks: [
       { id: 'meta', label: 'meta', line: 2, bookkeeping: true, planned: false, text: '  meta:\\n    name: shop\\n' },
       { id: 'schema', label: 'schema', line: 4, planned: true, stale: false, text: '  schema:\\n    record: an order\\n' },
       { id: 'storage', label: 'storage', line: 6, planned: true, stale: true, text: '  storage:\\n    store: orders in JAA, indexed by customer\\n' },
@@ -156,6 +159,21 @@ function harness() {
       await page.evaluate(() => { CURRENT_REPO_SUBTAB = 'phases'; closePlanPanel(); _phPaint(); });
       await page.click('.ph2-fold');
       assert.ok(await page.$$eval('.ph2-card[data-key="SH0_schema"]', e => e.length) === 1, 'the complete one shown');
+      assert.deepStrictEqual(errors, []);
+    });
+
+    await test('PT-05', 'open in the workshop at the block; from a workshop section: that spec, that phase open', async () => {
+      await page.evaluate(() => { PHASES.open = null; _phPaint(); });
+      await page.click('.ph2-card[data-key="SH1_storage"] .ph-card-title');
+      await page.waitForSelector('#ph-detail button');
+      await page.evaluate(() => [...document.querySelectorAll('#ph-detail button')].find(b => /open in the workshop/.test(b.textContent)).scrollIntoView());
+      await page.click('#ph-detail button:has-text("open in the workshop")');
+      assert.deepStrictEqual(await page.evaluate(() => OPENED.filter(o => o[0] === 'workshop').pop()), ['workshop', null, 'ws-1', 'storage']);
+      await page.evaluate(() => { PHASES.uuid = 'another-repo'; PHASES.spec = null; PHASES.wantSpec = 'spec/shop.spec'; PHASES.wantKey = 'SH2_routes'; });   // as app.js hands it over, from another repo
+      await page.evaluate(() => renderRepoPhases(REPO));
+      await page.waitForSelector('#ph-detail');
+      assert.ok(/SH2_routes/.test(await page.textContent('#ph-detail .ph-d-head')), 'that phase open');
+      assert.strictEqual(await page.evaluate(() => PHASES.spec), 'spec/shop.spec');
       assert.deepStrictEqual(errors, []);
     });
   } finally { await browser.close(); }
