@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.18
+    version:  1.7.19
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -565,7 +565,7 @@ spec:
       layer: interface
       systems: [idearium]
       value: { score: 4, cost: M, for: [daily-use], why: "the workshop he asked for: parts, modes, his ideas only" }
-      status: OPEN
+      status: "OPEN — partly built by 0.39.354 WS7 (docs/2026-10-02-workshop-codex-rewind-phasemap.spec): no REACH on the page, the blocks as parts in the three tiers, the three modes (each said in the agent's prompt), STRETCHED's proposals never written on their own. Left here: templates as kits of parts, MINIMUM building through T0/T1 with zero model calls (needs CB3)"
       depends_on: [CB3_the_causal_spec_block]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec WS5]
       files: [idearium/ui/workshop.html, idearium/lib/workshop.js, idearium/spec-engine/blocks.yaml, idearium/spec-engine/templates/]
@@ -1350,3 +1350,12 @@ spec:
 # Clear Glass after its refresh (in the live table other modules imported); a hand-edited cache is a gap on the next
 # boot and the next refresh replaces it; Guardian down → the stamped cache runs, said. Plus agent-mesh coverage 7/7,
 # nexus-options-autoboot 18/18, clear-glass phase2, and 17 other suites over the registry, nodes and schemas.
+
+# ## ADDENDUM 2026-10-07 (0.39.367 CC1, docs/2026-10-07-compartment-control-and-activity-phasemap.spec) — IN2a
+# James: "i want to be able to begin using you inside of the nexus repo."
+# Drift found: IN2a's run worked in a copy (as specced) but its diff was written back with
+# lib/claude-code-backend.js applyChanges() — straight through the repo layer, past the repo's inject mode and past a
+# Nexus repo's approval gate (lib/nexus-self/inject-gate.js). Now the repo agent lands the diff through
+# lib/repo-inject.js fromChanges() → land(), the path a reply's fenced blocks take: code.write gate, collapse guard,
+# staged / proposed / applied by mode, a Nexus repo always proposed. applyChanges() is kept for other callers.
+# Proof: test-claude-code-backend CC-04 (review → proposals, nothing written; auto → written), test-nexus-inject-approval IG-009.

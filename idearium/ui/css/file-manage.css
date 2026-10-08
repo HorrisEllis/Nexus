@@ -18,6 +18,7 @@
 .mg-chip.st-committed { color: var(--mint); border-color: rgba(52,211,153,.3); }
 .mg-chip.st-modified, .mg-chip.st-new { color: var(--amber); border-color: rgba(251,191,36,.3); }
 .mg-chip.st-pending, .mg-chip.st-staged { color: var(--violet); border-color: rgba(167,139,250,.3); }
+.mg-chip.st-uncoded { color: var(--text3, #8b91a5); border-style: dashed; }
 .mg-chip.st-deleted { color: var(--coral); border-color: rgba(248,113,113,.3); }
 .mg-head .mg-spacer { flex: 1; }
 .mg-x { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--b1); background: transparent; color: var(--text2); cursor: pointer; font-size: 15px; }
@@ -119,3 +120,4 @@
 .mg-shell ::-webkit-scrollbar-thumb { background: var(--b1); border-radius: 8px; }
 .mg-shell ::-webkit-scrollbar-thumb:hover { background: var(--b2); }
 .mg-shell ::-webkit-scrollbar-track { background: transparent; }
+.mg-chip.st-saved { color: var(--mint); border-color: rgba(52,211,153,.3); }

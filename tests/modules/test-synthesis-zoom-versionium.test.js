@@ -70,7 +70,7 @@ async function main() {
     assert.ok(!/setView\('spec-wizard'\)/.test(idx), 'no surface opens the retired builder');
     assert.match(app, /const nestViews = \['brainstorm', 'ideas', 'eravos', 'spec-wizard'\]/, 'the Architect is not a repo\'s view');
     assert.match(app, /function openArchitect\(from = null\)/);
-    for (const f of ['idearium/ui/architect.html', 'idearium/ui/workshop.html']) assert.match(read(f), /location\.href = 'void\.html'/, `${f} reaches the Void`);
+    for (const f of ['idearium/ui/architect.html', 'idearium/ui/js/workshop.js']) assert.match(read(f), /location\.href = 'void\.html'/, `${f} reaches the Void`);
   });
 
   await test('SZ-03', 'the increments: systems by level, components inside, wires summed', () => {

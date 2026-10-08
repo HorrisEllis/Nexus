@@ -22,7 +22,11 @@ async function handle(req, res, { method, pathname }) {
         r.on('end', () => {
           try {
             const t = JSON.parse(d);
-            json(res, 200, { ok: true, models: (t.models || []).map(m => m.name), active: state.defaultModel });
+            // §0.39.364 — sizes and what Ollama holds now, for the memory-aware ladder (lib/resource-monitor fitsModel)
+            const sizes = {}; for (const m of t.models || []) if (m && m.name) sizes[m.name] = Number(m.size) || null;
+            require('../lib/model-inventory.js').inventory().then(inv => {
+              json(res, 200, { ok: true, models: (t.models || []).map(m => m.name), active: state.defaultModel, sizes, loaded: inv.loaded });
+            }).catch(() => json(res, 200, { ok: true, models: (t.models || []).map(m => m.name), active: state.defaultModel, sizes, loaded: [] }));
           } catch (_) {
             // §CT4 0.39.350 — not a guessed list: [defaultModel] here claimed a model was installed when Ollama never said so
             json(res, 200, { ok: false, models: [], active: state.defaultModel, error: 'Ollama answered /api/tags with something that is not JSON' });

@@ -14,7 +14,10 @@ import { wireCheck } from '../../idearium/spec-engine/manifest/wire-check.js';
 import { generate, chunkContext } from '../../idearium/spec-engine/manifest/index.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const GENESIS = path.join(ROOT, 'idearium/spec-engine/templates/genesis.spec');
+const GENESIS_NOW = path.join(ROOT, 'idearium/spec-engine/templates/genesis.spec');
+// §0.39.359 SB28 — genesis 1.4.0's catalog is the nexus-system skeleton; the tooling tests below keep using 1.3.0's
+// catalog, archived whole, as their fixture (its ids and layers are what they were written against).
+const GENESIS = path.join(ROOT, 'idearium/spec-engine/templates/_archive/genesis-1.3.0.spec');
 let pass = 0, fail = 0;
 const t = (name, fn) => { try { fn(); pass++; console.log(`  ✓ ${name}`); } catch (e) { fail++; console.log(`  ✗ ${name}\n      ${e.message}`); } };
 const codes = r => r.violations.map(v => v.code);
@@ -32,6 +35,20 @@ t('MP-02 genesis.spec is clean: 42 files (0.39.286: + registry/node-registry.js,
   const r = generate(fs.readFileSync(GENESIS, 'utf8'), { source: 'genesis.spec' });
   assert.equal(r.ok, true, JSON.stringify(r.violations)); assert.equal(r.violations.length, 0);
   assert.equal(r.manifest.count, 42); assert.equal(r.manifest.layers.length, 7);
+});
+
+t('MP-02b genesis 1.4.0 is clean: the skeleton\'s files, no violations', () => {
+  const r = generate(fs.readFileSync(GENESIS_NOW, 'utf8'), { source: 'genesis.spec' });
+  assert.equal(r.ok, true, JSON.stringify(r.violations)); assert.equal(r.violations.length, 0);
+  assert.ok(r.manifest.count >= 40, String(r.manifest.count));
+});
+
+t('MP-03b genesis 1.4.0: config before what reads it; schemas before their nodes; boot after every part it wires, before the entry points', () => {
+  const m = generate(fs.readFileSync(GENESIS_NOW, 'utf8')).manifest, at = f => m.entries.find(e => e.file === f).buildIndex;
+  assert.ok(at('<system>.config.json') < at('config.js') && at('config.js') < at('lib/system.js'));
+  assert.ok(at('schemas/schema.command') < at('data/nodes/command/<system>.status.command'));
+  for (const f of ['lib/node-index.js', 'lib/heartbeat.js', 'lib/listener.js', 'jaa-store.js', 'lib/bus.js']) assert.ok(at(f) < at('lib/system.js'), f);
+  assert.ok(at('lib/system.js') < at('server.js') && at('lib/system.js') < at('cli.js') && at('server.js') < at('tests/skeleton.test.js'));
 });
 
 t('MP-03 genesis: config builds before the files that read it (boot, heartbeat)', () => {

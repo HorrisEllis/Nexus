@@ -1,0 +1,13 @@
+{
+  "id": "{{slug}}",
+  "version": "0.1.0",
+  "namespace": "{{slug}}",
+  "transport": "http",
+  "note": "the fixed part; GET /contract adds a resource for every route node, so the contract grows with the system",
+  "resources": [
+    { "method": "GET", "path": "/health", "intent": "the heartbeat snapshot" },
+    { "method": "GET", "path": "/contract", "intent": "this contract, with the route nodes" },
+    { "method": "GET", "path": "/nodes/:type", "intent": "the node index for one type" },
+    { "method": "GET", "path": "/nodes/:type/:id", "intent": "one node" }
+  ]
+}

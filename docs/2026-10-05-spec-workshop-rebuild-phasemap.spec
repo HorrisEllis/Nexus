@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     spec-workshop-rebuild
-    version:  1.1.0
+    version:  1.2.0   # 1.2.0+: RS3 and RS9 built (0.49.0) · 1.1.0: RS5 built on James's yes (0.39.357) — the workshop's start page is the template picker · 1.2.0: RS9–RS11 (the phases, interconnected), recovered from branch claude/charming-lamport-mdzuau (d0e906f), never merged
     date:     2026-10-05
     release:  0.39.345 (base)
     uuid:     nexus-spec-workshop-rebuild-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the workshop, the template picker, the architect, the blueprint) · warp (WARP 2) · intelligence (rfr2 clip)
-    status:   "MAPPED 2026-10-05, before building; 1.1.0 adds RS9–RS11 (the phases, interconnected) and the build order; RS3 and RS9 done (0.39.354)"
+    status:   "MAPPED 2026-10-05, before building; RS9–RS11 (the phases, interconnected) and the build order added; RS5 done (0.39.357); RS3 and RS9 done (0.49.0)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -24,7 +24,7 @@ spec:
       then the blueprint, which is the entire blueprint, maybe for building the entire project, and maybe as it goes on
       reconstructing it like look at the macros and blueprints in rfr2, or the rewind engine. clips" · "yes. im saying
       rebuild the spec workshop. im saying we could record the generation process from the agents and create a macro or
-      replayable file to rebuild or reconstruct data using events, snapshots etc." · 1.1.0: "okay now the phases with the
+      replayable file to rebuild or reconstruct data using events, snapshots etc." · "okay now the phases with the
       spec workshop. needs to be rebuilt, enterprise grade. interconnected"
     supersedes: >-
       docs/2026-10-05-idea-to-spec-workshop-phasemap.spec WK1–WK3 (blocks, templates, drafts) — folded in here; its WK4
@@ -60,7 +60,6 @@ spec:
     - >-
       Genesis as the default; its file list does not yet match the real systems (SB28). Fixed with RS3, or every new
       spec starts wrong.
-
 
   # ── 1.1.0 (2026-10-05) — the phases, interconnected ────────────────────────────────────────────────────────────────
   found_1_1:
@@ -113,7 +112,7 @@ spec:
 
     RS3_the_spec_document:
       layer: library
-      status: "DONE (0.39.354) — lib/spec-document.js: detect (emerge · yaml · markdown), parse into blocks that partition the file (emerge: domain \"…\" and // ── banners, with the comments directly above; yaml: top keys or, under one root, its keys; markdown: headings), ids natural or given as a marker line (// @block, # @block, <!-- @block -->), serialize byte-identical, replaceBlock (every other block byte for byte, the check run on the result, an id it would duplicate refused), setId (any id but empty or a line break; a taken id refused), renameRefs (that spec's maps' blocks: / sections:), check (yaml by js-yaml; emerge structural — the Emerge kernel's parser reads another dialect, compartment · invariant · signal, not genesis's domains — said), isBookkeeping. genesis.spec, a YAML phasemap and a markdown spec round-trip byte-identical. test-spec-document 6/6. SB28 (genesis's file list) stays its own phase in the build-from-the-spec map; the API routes for editing blocks come with RS6."
+      status: "DONE (0.49.0) — lib/spec-document.js: detect (emerge · yaml · markdown · the workshop's sections list), parse into blocks that partition the file (emerge: domain \"…\" and // ── banners, with the comments directly above; yaml: top keys or, under one root, its keys; markdown: headings; the workshop form: each sections: item, its id its id: field), ids natural or given (a marker line // @block, # @block, <!-- @block -->; in the workshop form the id: field itself), serialize byte-identical, replaceBlock (every other block byte for byte, the check run on the result, an id it would duplicate refused), setId (any id but empty or a line break; a taken id refused), renameRefs (that spec's maps' blocks: / sections:), check (yaml by js-yaml; emerge structural — the Emerge kernel's parser reads another dialect, compartment · invariant · signal, not genesis's domains — said), isBookkeeping (meta, history … and the idea's framing, one rule with main's SP1). genesis.spec, a YAML phasemap, a markdown spec and a workshop spec round-trip byte-identical. test-spec-document. SB28 (genesis's file list) stays its own phase; the routes for editing blocks come with RS6."
       james: '"I''m thinking like document editor but for the emerge and .spec files. each block has a block id, which can be completely custom, can be anything."'
       depends_on: []
       files: [lib/spec-document.js, emerge/emerge-kernel.js, idearium/spec-engine/templates/genesis.spec]
@@ -139,7 +138,33 @@ spec:
 
     RS5_the_template_picker:
       layer: ui
-      status: OPEN
+      status: "DONE (0.39.357) — on James's yes; see the addendum below"
+      james_2026_10_05: >-
+        asked "Should the workshop's start page become the RS5 "photoshop style" template picker?" — "yes with a custom or manual."
+      addendum_0_39_357: >-
+        Built as the WS7 workshop's start page (idearium/ui/js/template-picker.js, css in workshop.css), not a separate
+        screen: what WS7 started from (a title, the Void, the library, a repo) is kept and becomes the picker's START FROM.
+        The grid: + CUSTOM / MANUAL first (a blank document in manual mode — you write, the agent only points at what is
+        missing), then every template the quick spec offers — the spec-document templates (genesis first, marked the
+        default), the COS archetypes and COS blueprints — and his saved ones, in tabs with counts. The details panel
+        previews the 11 parts, each lit where the template fills it (with its first lines), a COS template's starting
+        files by layer; the title, START FROM, the mode, CREATE. A picked template seeds the workshop
+        (GET /api/workshop/templates, POST /api/workshop {template, mode}): its seeded parts as sections, the MINIMUM
+        parts it does not fill as empty sections; a COS template's files become the Build Order part. ?from=idea:<uuid>
+        (a promoted idea) opens the picker with the idea as START FROM, no longer straight into a blank document.
+        Templates: SAVE AS TEMPLATE in the writer saves the workshop's sections as a template — saving again from a
+        workshop opened from that template is its next version, the old kept; REMOVE archives a saved one (kept, hidden).
+        The built-in templates are files in the codebase: not removable from the page, said; editing one is opening it,
+        changing it and saving it as a template.
+      addendum_0_39_358: >-
+        James, "where are the quick spec templates and the photoshop template start screen" — he opened the workshop from
+        nexus/core (no .spec) and got a blank Purpose: 0.39.357 sent only a promoted idea through the picker. Now a repo
+        with no .spec opens the picker with the repo as START FROM, and + NEW SPEC in the bar opens it from the writer.
+      drift: >-
+        depends_on RS4 (the pipeline on WARP 2) is not needed by the picker and was not waited on. RS5's blocks preview is
+        the spec engine's 11 blocks (blocks.yaml) — RS3's id-keyed spec document is not built, so a block id cannot yet be
+        custom. A COS template seeds its starting files into the spec; the code the pipeline builds does not yet start
+        from those files (the New Spec modal's file-tree path does) — said on the card.
       james: '"opens a pick template screen like photoshop does when you first open it. with a custom or manual option with a plus sign. then you pick a template from the list, including all the quick spec options"'
       depends_on: [RS4_the_pipeline_on_warp2]
       files: [idearium/ui/workshop.html, idearium/ui/js/template-picker.js]
@@ -189,7 +214,7 @@ spec:
 
     RS9_the_thread:
       layer: library
-      status: "DONE (0.39.354) — idearium/repo/thread.js (a projection) + GET /api/repos/:uuid/thread (?spec= the thread; none = the specs its maps came from). spec-plan derivePlan cuts by the document's blocks (genesis, which planned nothing before, plans 21 phases) and writes blocks: (exact ids) and meta.block_hashes; its prompt lists the spec's block ids and requires blocks: on every phase; the one phasemap parser (loom/scanners/phasemap-map.js) reads blocks: (else sections:). Staleness per block; an older map says the spec moved; no blocks: = 'no link', a missing id = 'broken'. Bookkeeping blocks (meta, history …) are edited, not built — one rule, in lib/spec-document.js. test-thread 4/4 (TH-04 through the real router: plan, edit one block, only its phases stale)."
+      status: "DONE (0.49.0) — idearium/repo/thread.js (a projection) + GET /api/repos/:uuid/thread (?spec= the thread; none = the specs its maps came from). spec-plan derivePlan, merged with main's SP1 (the workshop form by its sections, blanks not planned): every other spec cut by the document's blocks (genesis, which planned nothing before, plans 21 phases); every section carries its block's hash; it writes blocks: (exact ids) and meta.block_hashes; its prompt lists the block ids and requires blocks: on every phase; the one phasemap parser reads blocks: (else sections:). Staleness per block; an older map says the spec moved; no blocks: = 'no link', a missing id = 'broken'. test-thread (TH-04 through the real router: plan, edit one block, only its phases stale)."
       james: '"interconnected"'
       depends_on: [RS3_the_spec_document]
       files: [idearium/repo/thread.js, idearium/repo/spec-plan.js, idearium/repo/phases.js, idearium/api/index.js]
@@ -200,6 +225,7 @@ spec:
         marks them stale, naming the block. GET /api/repos/:uuid/thread?spec= — a projection, it stores nothing. The
         plan prompt (spec-plan) requires blocks: on every phase; derivePlan writes them.
       proof: "a fixture spec of three blocks planned into phases: each block lists its phases, each phase its blocks, runs and files; editing one block marks only its phases stale; a map with no blocks: says 'no link to its spec'"
+      note_0_47_0: "part of the ground is laid: derivePlan reads a workshop spec's sections and writes each phase's sections: and name: (docs/2026-10-07-idearium-one-surface-phasemap.spec SP1); the commits say which files they touched (OS1). The thread read itself is not built."
 
     RS10_the_phases_tab_rebuilt:
       layer: ui

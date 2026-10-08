@@ -13,6 +13,36 @@
 
 const LSPEC = { uuid: null, path: null, view: 'model', data: null };
 
+// §0.47.0 SP2 — James: "the spec engine needs to have autocomplete for the areas that are blank". One quiet line above
+// the build bar: what is blank in this spec (sections with no body, empty files), and ✦ draft — each blank part drafted
+// as workshop proposals (POST …/spec/complete), reviewed and accepted in the workshop; the spec changes only then.
+const LSBLANK = { key: null, data: null, busy: false, done: null };
+async function lsBlanksLoad(p) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  LSBLANK.key = `${repo.uuid}::${p}`; LSBLANK.data = null; LSBLANK.done = null;
+  try { LSBLANK.data = await api(`/api/repos/${repo.uuid}/spec/blanks?path=${encodeURIComponent(p)}`, {}, 15000); } catch (_) { LSBLANK.data = null; }
+  const el = document.getElementById('ls-blanks'); if (el) el.innerHTML = _lsBlanksHtml(p);
+}
+function _lsBlanksHtml() {
+  const d = LSBLANK.data; if (!d) return '';
+  const parts = [...(d.blank || []).map(b => b.title || b.id), ...(d.emptyFiles || []).map(f => f.split('/').pop())];
+  if (LSBLANK.done) return `<div class="ls-blank-line"><span class="ls-blank-ok">✦ ${LSBLANK.done.n} draft${LSBLANK.done.n === 1 ? '' : 's'} ready</span><span>review and accept them in the workshop — the spec changes only when you do</span><button class="ls-blank-go" onclick="openWorkshop(null, '${escapeHtml(LSBLANK.done.id)}')">open the workshop ↗</button></div>`;
+  if (!parts.length) return '';
+  return `<div class="ls-blank-line"><span class="ls-blank-n">${parts.length} blank</span><span class="ls-blank-list" title="${escapeHtml(parts.join(', '))}">${escapeHtml(parts.join(' · '))}</span>
+    <button class="ls-blank-go" ${LSBLANK.busy ? 'disabled' : ''} onclick="lsBlanksDraft()">${LSBLANK.busy ? 'drafting…' : '✦ draft them'}</button></div>`;
+}
+async function lsBlanksDraft() {
+  const repo = CURRENT_API_REPO; if (!repo || !LSBLANK.data || LSBLANK.busy) return;
+  LSBLANK.busy = true; const el = () => document.getElementById('ls-blanks'); if (el()) el().innerHTML = _lsBlanksHtml();
+  try {
+    const r = await api(`/api/repos/${repo.uuid}/spec/complete`, { method: 'POST', body: JSON.stringify({ path: LSBLANK.data.specPath }) }, 600000);
+    const n = (r.results || []).reduce((k, x) => k + (x.proposals || 0), 0), bad = (r.results || []).filter(x => !x.ok);
+    LSBLANK.done = { id: r.workshopId, n };
+    if (bad.length && typeof toast === 'function') toast(`${bad.length} part(s) not drafted: ${bad.map(x => `${x.section} — ${x.error}`).join('; ').slice(0, 200)}`, 'err');
+  } catch (e) { if (typeof toast === 'function') toast(`drafting failed: ${e.message}`, 'err'); }
+  LSBLANK.busy = false; if (el()) el().innerHTML = _lsBlanksHtml();
+}
+
 async function renderLivingSpec(repo, specPath = null) {
   const el = document.getElementById('repo-living-spec');
   if (!el || !repo) return;
@@ -67,9 +97,10 @@ A living spec is the repo's model of itself, edited as the code changes (docs/ar
         <div class="ls-name">${escapeHtml(m.name || o.path.split('/').pop())}${m.version ? ` <span style="color:var(--mint);font-size:11px">v${escapeHtml(String(m.version))}</span>` : ''}</div>
         <div class="ls-kv">${metaKeys.filter(k => !['name', 'version'].includes(k)).map(k => `<div>${escapeHtml(k)}</div><div>${escapeHtml(String(m[k]).slice(0, 600))}</div>`).join('')}<div>file</div><div>${escapeHtml(o.path)}${o.system ? ` · nexus/${escapeHtml(o.system)} (immutable base)` : ''}</div></div>
         ${p.error ? `<div class="ls-err">not valid YAML at line ${p.error.line ?? '?'}: ${escapeHtml(p.error.message)} — shown from its text</div>` : ''}
-      </div><div id="ls-build" class="ls-build">${_lsBuildHtml()}</div><div class="ls-tabs">${tabs}</div>${body}`;
+      </div><div id="ls-blanks" class="ls-blanks">${_lsBlanksHtml(o.path)}</div><div id="ls-build" class="ls-build">${_lsBuildHtml()}</div><div class="ls-tabs">${tabs}</div>${body}`;
   }
   if (o && !o.error && LSBUILD.key !== `${LSPEC.uuid}::${o.path}`) specBuildLoad(o.path);
+  if (o && !o.error && LSBLANK.key !== `${LSPEC.uuid}::${o.path}`) lsBlanksLoad(o.path);
   el.innerHTML = `<div class="ds"><div class="ds-label">living spec — ${d.specs.length} file${d.specs.length === 1 ? '' : 's'} in the spec folder${d.scope === 'nexus-all' ? ' (each system\'s own)' : ''}</div>
     <div class="ls-wrap"><div class="ls-files">${files}</div><div>${main}</div></div></div>`;
 }

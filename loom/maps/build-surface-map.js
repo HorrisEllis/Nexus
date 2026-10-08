@@ -44,7 +44,7 @@ const FILES = [
   ['idearium/ui/js/window-chrome.js', I('idearium/ui/js/window-chrome.js'), [I('clear-glass/src/preload/compartment-window.js')]],   // window.nexusWindow
   // §0.39.349 CT3 — the Code tab as the work surface: HTTP code/*, worksurface, files/state, agent/route, agent/prompt;
   // file-manage.js's file states (loadFileStates, fileStateMark, pendingOnlyFiles); work-surface.js's cards (_wsCard, WSURF)
-  // §0.39.354 RS3/RS9 — the spec as blocks (lib/spec-document.js) and the thread (idearium/repo/thread.js, a pure
+  // §0.49.0 RS3/RS9 — the spec as blocks (lib/spec-document.js) and the thread (idearium/repo/thread.js, a pure
   // projection handed the document reader and the parser by idearium/api)
   ['lib/spec-document.js', I('lib/spec-document.js'), []],
   ['idearium/repo/thread.js', I('idearium/repo/thread.js'), []],

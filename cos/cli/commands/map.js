@@ -62,6 +62,8 @@ function renderTree(map) {
       if (c.slug)      lines.push(`  ${cont}  slug:    ${c.slug}`);
       if (c.runtimeId) lines.push(`  ${cont}  runtime: ${c.runtimeId}`);
       if (c.purpose)   lines.push(`  ${cont}  purpose: ${c.purpose}`);
+      // §2026-10-07 — its intent: how far toward its end state, as last checked
+      if (c.intent && (c.intent.endState || []).length) lines.push(`  ${cont}  intent:  ${c.intentStatus && !c.intentStatus.none ? `${c.intentStatus.endState.met}/${c.intentStatus.endState.total} of its end state${c.intentStatus.ok ? '' : ' · a condition is broken'}` : `${c.intent.endState.length} end-state check${c.intent.endState.length === 1 ? '' : 's'}, not checked yet`}`);
       lines.push(`  ${cont}  network: ${c.network?.isolated ? 'isolated' : 'open'}`);
       if (c.uiFile)    lines.push(`  ${cont}  ui:      ${c.uiFile}`);
     }

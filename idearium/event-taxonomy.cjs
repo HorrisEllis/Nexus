@@ -26,6 +26,11 @@ module.exports = Object.freeze({
     payloadShape: ['runId', 'buildRunId', 'repoUuid', 'targetRepo', 'map', 'phase', 'attempt', 'met', 'total', 'modes'],
     severity: 'notable',
   },
+  // ── §0.39.362 CH1 — a repo's charter (its compartment intent, cos/foundation/intent.js): set, and its end state checked
+  IDEARIUM_REPO_CHARTER_SET: { description: "A repo's charter was saved: its axioms, conditions and end state.", payloadShape: ['repoUuid', 'axioms', 'conditions', 'endState'], severity: 'notable' },
+  IDEARIUM_REPO_CHARTER_CHECKED: { description: "A repo's end state was checked (after a proven phase, or by hand): how many of its checks are met.", payloadShape: ['repoUuid', 'met', 'total', 'against'], severity: 'info' },
+  IDEARIUM_REPO_TASK: { description: "One of a repo's background tasks changed: an agent wearing its hat started, moved on (a feed event, a tool call, a rung) or ended (lib/repo-activity.js).", payloadShape: ['repoUuid', 'task'], severity: 'info' },
+  IDEARIUM_REPO_ACTIVITY: { description: "A row was written to a repo's activity log (lib/activity-log.js): a task, a phase-run row, a proposal's event, a fault.", payloadShape: ['repoUuid', 'row'], severity: 'info' },
   // ── EV0: every other event idearium emits ──────────────────────────────────────────────────────────────────────
   IDEARIUM_IDEA_CREATE: { description: "An idea was asked to be created (API, CLI or the Void).", payloadShape: ["text", "tags", "compartment", "source", "void"], severity: 'info' },
   IDEARIUM_IDEA_CREATED: { description: "The idea gate created an idea.", payloadShape: ["idea"], severity: 'info' },
@@ -74,6 +79,8 @@ module.exports = Object.freeze({
   IDEARIUM_VOID_ECHO: { description: "The agent echoed an idea in the Void (an echo, never the idea itself).", payloadShape: ["uuid", "kind", "voice"], severity: 'info' },
   IDEARIUM_WORKSHOP_CREATED: { description: "A spec workshop session was opened from a source.", payloadShape: ["uuid", "source", "title"], severity: 'info' },
   IDEARIUM_WORKSHOP_FEED: { description: "The workshop was fed: the agent proposed sections (proposals only).", payloadShape: ["uuid", "kind", "proposals"], severity: 'info' },
+  IDEARIUM_WORKSHOP_TEMPLATE_SAVED: { description: "A workshop document was saved as a template (a new one, or the next version of a saved one).", payloadShape: ["slug", "version", "label", "fromWorkshop"], severity: 'info' },   // 0.39.357 RS5
+  IDEARIUM_WORKSHOP_TEMPLATE_REMOVED: { description: "A saved workshop template was archived.", payloadShape: ["slug", "version"], severity: 'info' },   // 0.39.357 RS5
   IDEARIUM_WORKSHOP_SAVED: { description: "A workshop spec was saved into a repo's spec (making the repo if needed).", payloadShape: ["uuid", "repoUuid", "specPath", "madeRepo"], severity: 'notable' },
   IDEARIUM_ARCHITECT_CREATED: { description: "An architecture was opened for a spec.", payloadShape: ["uuid", "source", "title", "components"], severity: 'info' },
   IDEARIUM_ARCHITECT_DRAFT: { description: "The agent drafted components for an architecture (proposals only).", payloadShape: ["uuid", "proposals"], severity: 'info' },
@@ -115,6 +122,8 @@ module.exports = Object.freeze({
   IDEARIUM_REPO_HAT_REFRESHED: { description: "A repo's hat was refreshed with its current chunks.", payloadShape: ["repoUuid", "chunkCount"], severity: 'info' },
   IDEARIUM_REPO_HAT_REVOKED: { description: "A repo's hat was revoked.", payloadShape: ["repoUuid", "name"], severity: 'notable' },
   IDEARIUM_REPO_AGENT_FEED: { description: "An event from Guardian was fed to a repo's agent.", payloadShape: ["repoUuid", "event", "guardianTs"], severity: 'info' },
+  IDEARIUM_REPO_EXPANDED: { description: "A skeleton repo grew from its spec: components slotted in, a phasemap written, their code files planned as pending chunks.", payloadShape: ["repoUuid", "feature", "components", "phasemap", "phases", "snapshot"], severity: 'notable' },   // 0.39.360 SB42
+  IDEARIUM_REPO_AGENT_TOOL: { description: "A repo agent's tool call changed state (started, done, failed) — one row on the Agent tab's tool list.", payloadShape: ["repoUuid", "session", "name", "state", "args", "iteration", "error", "at"], severity: 'info' },
   IDEARIUM_REPO_AGENT_BLOCKS_CHANGED: { description: "A repo agent's prompt blocks changed.", payloadShape: ["repoUuid"], severity: 'info' },
   IDEARIUM_REPO_AGENT_EXPORTED: { description: "A repo agent's memory was exported.", payloadShape: ["repoUuid", "observations"], severity: 'info' },
   IDEARIUM_REPO_AGENT_IMPORTED: { description: "A repo agent's memory was imported (restored or merged).", payloadShape: ["repoUuid", "restored", "merged"], severity: 'info' },

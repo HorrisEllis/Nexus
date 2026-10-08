@@ -60,15 +60,31 @@ function streamGenerate(opts, onToken, onDone, onError) {
   const _chars = _system.length + String(opts.prompt || '').length;
   const _ctx = OA.withNumCtx({ temperature: opts.temperature??0.2, num_predict: opts.max_tokens??2048 }, _chars, opts.max_tokens??2048);
   const _t0 = Date.now();
+  // §0.43.0 OR2/OR3 — the tape (ollama/lib/tape.js): this door records every call as a frame and answers from the cassette
+  const Tape = require('./lib/tape.js');
+  const _options = Tape.withSeed(_ctx.options);
+  const _treq = { prompt: opts.prompt, system: _system };
+  let _text = '';
+  const _onToken = onToken; onToken = (t) => { _text += t; return _onToken(t); };
   let _recorded = false;
-  const _rec = (ok, error) => { if (_recorded) return; _recorded = true; OA.record({ caller: opts.caller || 'ollama-runtime.stream', op: 'stream', model: opts.model, promptChars: _chars, numCtx: _ctx.numCtx, ms: Date.now() - _t0, ok, error, warning: _ctx.warning }); };
-  const _onDone = onDone; onDone = (...a) => { _rec(true); if (_onDone) return _onDone(...a); };
+  const _rec = (ok, error, raw = null) => { if (_recorded) return; _recorded = true; OA.record({ caller: opts.caller || 'ollama-runtime.stream', op: 'stream', model: opts.model, promptChars: _chars, numCtx: _ctx.numCtx, ms: Date.now() - _t0, ok, error, warning: _ctx.warning });
+    Tape.record({ caller: opts.caller || 'ollama-runtime.stream', op: 'stream', model: opts.model, req: _treq, options: _options, res: { text: _text, doneReason: raw && raw.done_reason, evalCount: raw && raw.eval_count }, raw, ms: Date.now() - _t0, ok, error }); };
+  const _onDone = onDone; onDone = (...a) => { _rec(true, null, a[0] && a[0].done ? a[0] : null); if (_onDone) return _onDone(...a); };
   const fail = (msg) => { _rec(false, msg); if (onError) onError(new Error(msg)); else console.error(new Error(msg)); };
+
+  const _rp = Tape.replay('stream', opts.model, _treq, _options);
+  if (_rp) {
+    let stopped = false;
+    setImmediate(() => { if (stopped) return; if (_rp.miss) { if (onError) onError(new Error(_rp.error)); return; }
+      OA.record({ caller: `${opts.caller || 'ollama-runtime.stream'} (replayed)`, op: 'stream', model: opts.model, promptChars: _chars, numCtx: _ctx.numCtx, ms: 0, ok: true });
+      if (_rp.res.text) _onToken(_rp.res.text); if (_onDone) _onDone({ done: true, done_reason: _rp.res.doneReason, replayed: true }); });
+    return () => { stopped = true; };
+  }
 
   const body = JSON.stringify({
     model: opts.model, prompt: opts.prompt, stream: true,
     system: _system,
-    options: _ctx.options,
+    options: _options,
   });
   const url = new URL(`${ENDPOINT}/api/generate`);
   const req = http.request({

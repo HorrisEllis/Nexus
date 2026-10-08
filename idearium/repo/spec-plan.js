@@ -60,7 +60,7 @@ export function planPrompt({ repo, specPath, specText = '', mapPath = phasemapPa
       'Every phase carries the axioms that bind it. The axioms (docs/AXIOMS-v3.1.md):',
       ...AXIOMS.map(([n, t]) => `  ${n} ${t}`),
       '',
-      // §RS9 0.39.354 — every phase names the spec blocks it builds (blocks:), so the spec, its phases, their runs and
+      // §RS9 0.49.0 — every phase names the spec blocks it builds (blocks:), so the spec, its phases, their runs and
       // files are one thread; the ids are the spec's own (lib/spec-document.js), a custom id as written
       `The spec's blocks, by id — every phase names the ones it builds in blocks: (each block in at least one phase): ${(() => { const b = _docBlocks(specText, specPath); return b.length ? b.map(x => JSON.stringify(x.key)).join(', ') : '(none found — name the sections you build)'; })()}`,
       '',
@@ -189,6 +189,18 @@ const _q = (s) => JSON.stringify(String(s));
 export function sectionsOf(specText) {
   const src = String(specText || '');
   const lines = src.split('\n');
+  // §0.47.0 SP1 — the workshop / library form (spec: meta + sections: [{ id, title, body }]) is read as its sections, one
+  // each, by title — splitting it on its top-level keys made two phases, 'spec' and 'sections', of raw YAML. A blank
+  // section is kept, marked blank: there is nothing to build from it until it is completed (SP2).
+  if (/^sections:\s*$/m.test(src)) {
+    let list = null;
+    try { const y = require('js-yaml').load(src); if (y && Array.isArray(y.sections)) list = y.sections.filter(x => x && typeof x === 'object'); } catch (_) { list = null; }
+    if (list && list.length) return list.map(x => {
+      const id = String(x.id || x.title || 'section'), body = String(x.body == null ? '' : x.body);
+      const at = lines.findIndex(l => new RegExp(`^\\s*-?\\s*id:\\s*['"]?${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]?\\s*$`).test(l));
+      return { key: id, title: String(x.title || id), line: at + 1 || 1, text: body, blank: !body.trim() };
+    }).filter(s => !_SKIP.test(s.key) && !require('../../lib/spec-document.js').FRAMING.test(s.key));   // one rule (lib/spec-document.js)   // the idea's own framing: context for every phase, not one to build
+  }
   // the body's keys: under a single root (spec:, x:) they sit at 2 spaces; a flat file has them at 0
   const tops = lines.map((l, i) => ({ l, i })).filter(x => /^[A-Za-z_][\w.-]*:/.test(x.l));
   const rootOnly = tops.length === 1;
@@ -227,11 +239,17 @@ function _docBlocks(specText, specPath) {
 }
 export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(specPath), prefix = null, maxPhases = 24, reason = 'derived from the spec' } = {}) {
   const id = prefix || (path.posix.basename(specPath).replace(/\.spec$/i, '').replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase() || 'P');
-  // §RS9 0.39.354 — cut by the spec's own blocks (lib/spec-document.js: emerge domains, YAML keys, headings), each with
-  // its id and its hash at plan time, so a phase names exactly the blocks it serves and an edited block marks it stale
+  // §0.47.0 SP1 (main) — the workshop / library form is read as its sections (title, blank); a blank section is not a
+  // phase until it is completed. §RS9 0.49.0 / 0.49.0 — every other spec is cut by its own blocks (lib/spec-document.js:
+  // emerge domains, YAML keys, headings); either way each section carries its block's hash at plan time, so a phase names
+  // exactly the blocks it serves and an edited block marks it stale.
   const docBlocks = _docBlocks(specText, specPath);
-  const secs = (docBlocks.length ? docBlocks : sectionsOf(specText)).map((s, i) => ({ ...s, order: i, layer: _layerOf(s.key, s.text) }));
-  if (!secs.length) return { ok: false, problems: ['the spec has no sections to plan from'], sections: [] };
+  const hashOf = new Map(docBlocks.map(b => [b.key, b.hash]));
+  const listForm = /^sections:\s*$/m.test(String(specText || ''));
+  const all = (listForm || !docBlocks.length ? sectionsOf(specText) : docBlocks).map(x => ({ ...x, hash: x.hash || hashOf.get(x.key) || null }));
+  const blank = all.filter(s => s.blank).map(s => s.key);
+  const secs = all.filter(s => !s.blank).map((s, i) => ({ ...s, order: i, layer: _layerOf(s.key, `${s.title || ''}\n${s.text}`) }));
+  if (!secs.length) return { ok: false, problems: [blank.length ? `every section is blank (${blank.join(', ')}) — complete them first` : 'the spec has no sections to plan from'], sections: [], blank };
   // group: within a layer, merge neighbours until the phase count fits
   const byLayer = LAYERS.map(L => secs.filter(s => s.layer === L));
   let groups = byLayer.map(list => list.map(s => [s]));
@@ -252,8 +270,11 @@ export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(
       const pid = `${id}${n++}_${_snake(keys.length > 1 ? `${keys[0]}_and_${keys.length - 1}_more` : keys[0])}`;
       const deps = [prevInLayer, prevInLayer ? null : lastOfLower].filter(Boolean);
       const lines = grp.map(s => `§${s.key} (line ${s.line})`).join(', ');
-      const first = _oneLine(grp[0].text.split('\n').slice(1).join(' '), 200);
-      phases.push({ id: pid, layer: L, depends_on: deps, sections: keys, does: `Build what the spec states in ${lines}${first ? ` — ${first}` : ''}.`,
+      // §0.47.0 SP1 — a titled section says what it is in its own words: "<title>: <its first sentence>"
+      const titled = grp[0].title != null;
+      const first = titled ? _oneLine(String(grp[0].text).replace(/^#+\s.*$/m, '').split(/(?<=[.!?])\s/)[0], 200) : _oneLine(grp[0].text.split('\n').slice(1).join(' '), 200);
+      const does = titled ? `${grp.map(s => s.title).join(' · ')}${first ? ` — ${first}` : ''} (${lines})` : `Build what the spec states in ${lines}${first ? ` — ${first}` : ''}.`;
+      phases.push({ id: pid, layer: L, depends_on: deps, sections: keys, title: titled ? grp.map(s => s.title).join(' · ') : null, does,
         proof: `A test that proves ${keys.join(', ')} as the spec states it, against the real code (no mock): §1.1, §12.1.` });
       prevInLayer = pid;
     }
@@ -273,9 +294,11 @@ export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(
     `    planned_at: ${now}`,
     `    reason: ${_q(reason)}`,
     `    note: ${_q('One phase per section of the spec, its layer read from the section. Refine any phase, or ask the agent to plan again (replan) — this map is versioned.')}`,
+    ...(blank.length ? [`    blank: [${blank.map(_snake).join(', ')}]   # sections with nothing in them yet — not phases until they are completed`] : []),
     '  phases:',
     ...phases.flatMap(p => [
       `    ${p.id}:`,
+      ...(p.title ? [`      name: ${_q(p.title)}`] : []),
       `      layer: ${p.layer}`,
       '      status: OPEN',
       `      depends_on: [${p.depends_on.join(', ')}]`,
@@ -291,7 +314,7 @@ export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(
     ]),
   ].join('\n');
   const v = validatePlan(text, path.posix.basename(mapPath).replace(/\.spec$/, ''));
-  return { ok: v.ok, problems: v.problems, text, phases: v.phases, sections: secs.length };
+  return { ok: v.ok, problems: v.problems, text, phases: v.phases, sections: secs.length, blank };
 }
 
 /** planFromReply(reply, name) -> { ok, text } | null — a phasemap the agent wrote in its reply text (fenced or bare). */

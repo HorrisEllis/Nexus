@@ -48,7 +48,7 @@ async function main() {
   // array — re-checked directly against that file's own require list
   // as part of writing this test, not copied from command-index.js's
   // own (correct, but this test must not just trust it) file list.
-  const REAL_ROUTE_FILES = ['system.js', 'uploads.js', 'stream.js', 'jobs.js', 'queue.js', 'models.js'];
+  const REAL_ROUTE_FILES = ['system.js', 'uploads.js', 'stream.js', 'jobs.js', 'queue.js', 'models.js', 'tape.js'];   // 0.46.0: tape.js
   let expectedCount = 0;
   const perModule = {};
   for (const f of REAL_ROUTE_FILES) {

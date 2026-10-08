@@ -351,6 +351,6 @@ spec:
         genuinely different questions (what a system IS vs. what James
         wants from it).
 #
-# ADDENDUM 2026-10-06 (0.39.354, RS9 of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec) — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade. interconnected"
+# ADDENDUM 2026-10-08 (0.49.0, RS9 of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec) — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade. interconnected"
 # loom/scanners/phasemap-map.js parsePhasemapText returns each phase's blocks (its blocks:, else sections:) — the spec
 # blocks it was planned from. [] = no link to its spec.

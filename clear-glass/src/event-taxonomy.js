@@ -24,6 +24,12 @@
 
 module.exports = Object.freeze({
   // ── providers/host.js — 9 real event types, all confirmed via grep ────────
+  // §0.39.365 — a provider tab that did not load after its retries (the window is closed; guardian fails the jobs queued for it)
+  PROVIDER_HOST_LOAD_FAILED: {
+    description: "A provider tab did not load after three attempts (the second after clearing service workers and cache storage): each failure's code, reason and the URL it failed at.",
+    payloadShape: ['providerId', 'agentId', 'url', 'error', 'failures'],
+    severity: 'warning',
+  },
   PROVIDER_HOST_INJECTED: {
     description: 'A real userscript was successfully injected into a provider tab (both the CSP-bypassing insertCSS and the executeJavaScript call completed).',
     payloadShape: ['providerId', 'ts'],

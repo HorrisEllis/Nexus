@@ -44,7 +44,9 @@ Promise.all(procs.map(p => new Promise(resolve => p.on('exit', resolve))))
   .then(() => {
     // give the last debounced flush(es) time to land
     setTimeout(() => {
-      const rows = JSON.parse(fs.readFileSync(path.join(testDir, 'race_table.json'), 'utf8'));
+      // §0.41.0 PF3 — writes are appended to each process's own segment; a reader (a store) folds base + segments
+      const { JaaStore } = require(path.join(__dirname, '../../guardian/jaa-store.js'));
+      const rows = new JaaStore(testDir, { settings: false }).all('race_table');
       const byProc = {};
       for (const r of rows) {
         const proc = r.uuid.split('-')[0];

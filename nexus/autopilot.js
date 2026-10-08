@@ -670,6 +670,15 @@ function _spawnKernel(kernel, color) {
     // The whole clear-glass restart storm came from despawn being misread as
     // failure. (§1.2 — the log said "despawning (on-demand)" and then
     // "crashes in window: 1/6" one line later; the system was lying to itself.)
+    // §0.39.372 NC2 — a stop or restart the person asked for (POST /control/:name/:op) is intentional too: 'held' stays
+    // down until started; 'restarting' comes straight back. Neither is a crash, neither counts toward the breaker.
+    if (s.status === 'held' || s.status === 'restarting') {
+      const again = s.status === 'restarting';
+      _warpEmit(again ? 'autopilot.kernel.restart' : 'autopilot.kernel.held', { kernel: kernel.name, code, signal });
+      _log(`${color}[${kernel.name}]${RESET} ${again ? 'restarting (asked for)' : 'stopped (asked for) — held until started'}`);
+      if (again) { s.backoffMs = BACKOFF_BASE_MS; _spawnKernel(kernel, color); }
+      return;
+    }
     if (s.status === 'stopping' || s.status === 'dormant') {
       const wasIdleDespawn = s.status === 'dormant';
       _warpEmit(wasIdleDespawn ? 'autopilot.kernel.despawn' : 'autopilot.kernel.stop', { kernel: kernel.name, code, signal });
@@ -949,6 +958,15 @@ function _startStatusServer() {
         res.writeHead(result.ok ? 200 : 503, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(result));
       });
+      return;
+    }
+    // §0.39.372 NC2 — POST /control/:name/:op — restart | stop | start, asked for by a person (Idearium's system panel)
+    const controlMatch = req.url.match(/^\/control\/([a-zA-Z0-9-]+)\/(restart|stop|start)$/);
+    if (controlMatch && req.method === 'POST') {
+      const r = controlKernel(controlMatch[1], controlMatch[2]);
+      _warpEmit('autopilot.kernel.control', { kernel: controlMatch[1], op: controlMatch[2], ok: r.ok });
+      res.writeHead(r.ok ? 200 : (r.code || 400), { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(r));
       return;
     }
     const touchMatch = req.url.match(/^\/touch\/([a-zA-Z0-9-]+)$/);
@@ -1578,6 +1596,36 @@ function _pollHealth(url, timeoutMs) {
  * immediately once healthy, rather than double-spawning.
  * Returns { ok, alreadyRunning?, error? }.
  */
+/**
+ * controlKernel(name, op) — §0.39.372 NC2: the person's controls over one system, through its supervisor (never the
+ * system itself). op: 'restart' (stop, then straight back), 'stop' (held down until started), 'start' (from held,
+ * stopped, dormant, down — or a tripped breaker, which a person resetting is exactly what it waits for).
+ */
+function controlKernel(name, op) {
+  const kernel = KERNELS.find(k => k.name === name);
+  const s = _state[name];
+  if (!kernel || !s) return { ok: false, code: 404, error: `no such system: ${name}` };
+  const color = COLORS[KERNELS.indexOf(kernel) % COLORS.length];
+  const alive = !!(s.proc && s.proc.exitCode === null && !s.proc.killed);
+  if (op === 'stop' || op === 'restart') {
+    if (!alive) {
+      if (op === 'stop') { s.status = 'held'; return { ok: true, status: s.status, note: 'it was not running — held' }; }
+      s.crashes = []; s.backoffMs = BACKOFF_BASE_MS; _spawnKernel(kernel, color); s.status = 'starting';
+      return { ok: true, status: s.status, note: 'it was not running — started' };
+    }
+    s.status = op === 'stop' ? 'held' : 'restarting';
+    try { s.proc.kill('SIGTERM'); } catch (e) { return { ok: false, code: 500, error: e.message }; }
+    return { ok: true, status: s.status };
+  }
+  if (op === 'start') {
+    if (alive) return { ok: true, status: s.status, alreadyRunning: true };
+    if (!_resourceMonitor.spawnSafe()) return { ok: false, code: 503, error: 'not started — memory is critical; starting it now would schedule the crash' };
+    s.crashes = []; s.backoffMs = BACKOFF_BASE_MS; _spawnKernel(kernel, color); s.status = 'starting';
+    return { ok: true, status: s.status };
+  }
+  return { ok: false, code: 400, error: 'op must be restart, stop or start' };
+}
+
 async function requestSpawn(name) {
   const kernel = KERNELS.find(k => k.name === name);
   if (!kernel) return { ok: false, error: `no such kernel: ${name}` };
@@ -1891,4 +1939,4 @@ if (require.main === module && CLI_MODE && !statusArg) {
   }, 3000);
 }
 
-module.exports = { start, _statusSnapshot, KERNELS, requestSpawn, touchActivity, _state, _spawnKernel, _phasePlan, _pollHealth, ALL_KERNELS, _startStatusServer, _handleLedgerRead, _handleContractProxy, _handleTablesRead, _handleFilesRead, _handleRunTests, _handleGraphRead, _bootPhases, _runDiagnosticOnStall, _runVitalsCheck, _getBootResult: () => _bootResult, _logInstanceSnapshot };
+module.exports = { start, _statusSnapshot, KERNELS, requestSpawn, controlKernel, touchActivity, _state, _spawnKernel, _phasePlan, _pollHealth, ALL_KERNELS, _startStatusServer, _handleLedgerRead, _handleContractProxy, _handleTablesRead, _handleFilesRead, _handleRunTests, _handleGraphRead, _bootPhases, _runDiagnosticOnStall, _runVitalsCheck, _getBootResult: () => _bootResult, _logInstanceSnapshot };

@@ -1,6 +1,6 @@
 /**
  * idearium/repo/thread.js — the thread: a spec's blocks ⇄ the phases planned from them ⇄ their runs ⇄ files and
- * changes (RS9, 0.39.354). A projection: it reads the .spec, the phasemaps, the run rows and the pending changes, and
+ * changes (RS9, 0.49.0). A projection: it reads the .spec, the phasemaps, the run rows and the pending changes, and
  * stores nothing (§10.3 — the phases stay in their maps, the blocks in the spec).
  * UUID: nexus-idearium-repo-thread-v1-0000-2026-1005-jamesbrooks-001
  * Map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec (RS9_the_thread)

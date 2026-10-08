@@ -138,3 +138,13 @@ spec:
       without a reindex.
     says_plainly: 'as of MCO-B the tab also shows the file layer and restore; see versionium.file-versioning.spec'
     test: 'tests/modules/test-mco3-versionium-tab.js — jsdom, fed by the real snapshot library'
+
+## ADDENDUM 2026-10-07 — 0.40.0 VR1: every change is a snapshot
+James: "needs to snapshot every accept, every change, diff, write, only the changes. like github."
+A repo snapshot is no longer taken only at baseline (import, chunk run, restore) or by hand. Every write or delete through
+RepoLayer (idearium/repo/index.js) calls lib/repo-versions.js touched(); writes settle (NEXUS_VERSION_SETTLE_MS, default
+1500 ms) and one commitRepoSnapshot() follows, through the same file layer (only changed files sent, as deltas).
+commitRepoSnapshot() takes `provenance` and records it on the snapshot record as `record.provenance`:
+{ by: [...], refs: ['task-…', 'inject:…'], files: [{ path, op }], checkpoint, since, at }. It is optional; every existing
+caller passes nothing and is unchanged. A failed commit is kept pending and retried — never dropped.
+Setting: versions.every_change (default on).

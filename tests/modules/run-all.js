@@ -323,8 +323,8 @@ const SUITES = [
   'test-health-authority.js',
   'test-pulse-watch.test.js',
   'test-setup-job-settles.test.js',
-  'test-spec-document.test.js',   // 0.39.354 RS3 — a .spec / .eg as blocks with ids, byte-identical
-  'test-thread.test.js',   // 0.39.354 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
+  'test-spec-document.test.js',   // 0.49.0 RS3 — a .spec / .eg as blocks with ids, byte-identical
+  'test-thread.test.js',   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls
   'test-ollama-check.test.js',   // 0.39.350 CT4 — Settings → Models: every Ollama model asked through copilot, every caller's route
   'test-code-tab.test.js',   // 0.39.349 CT3 — the Code tab is the work surface; 0.39.351 CT5 — hooked into the Plan (Clear Glass)
@@ -388,6 +388,12 @@ const SUITES = [
   'test-context-prereqs.test.js',   // 0.39.338 SB38 — the questions first: a checklist per question, found in the index or past conversations, else asked
   'test-checklist-workset.test.js',   // 0.39.339 SB39 — one agnostic context tool (code · data · topic, nexus.learn.tool); the checklist seeds the working set
   'test-desktop-setup-popup.test.js',   // 0.39.340 DK2 — the desktop setup popup in Clear Glass; the repo's setup passes the account
+  'test-workshop-full.test.js',   // 0.39.354 WS7 — the full workshop: the writer, parts, modes, SEND TO THE PIPELINE (Clear Glass)
+  'test-phase-actually-builds.test.js',   // 0.39.355 PB1–PB5 — the ladder's floor, no-change is incomplete, a round fails only on what the run broke, strings are not imports
+  'test-agent-live.test.js',   // 0.39.356 LS1–LS4 — the agent writing, live: bridge partial → copilot → agent/stream → the Code tab and the Plan (Clear Glass)
+  'test-repo-expand.test.js',   // 0.39.360 SB42–SB45 — a repo expands from its spec: phased, chunked, coded; uncoded files grey; an empty slot is never complete
+  'test-system-skeleton.test.js',   // 0.39.359 SB28/SB30/SB31 — genesis 1.4.0 is the nexus-system archetype; reusable components; every new repo is the skeleton, the idea slotted in
+  'test-template-picker.test.js',   // 0.39.357 RS5 — the workshop's start is the template picker: + CUSTOM / MANUAL, every quick-spec template, saved ones versioned (Clear Glass)
   'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree
   'test-emerge-core.test.js',   // 0.39.321 EM1 — Emerge core: rejected by id, a gap names its input, a lens cannot write, one seed one history
   'test-route-contracts.test.js',   // 0.39.320 EV0 (2)(3) — every served route in its system's contract, and nothing more
@@ -528,6 +534,27 @@ const SUITES = [
   // §2026-09-25 (0.39.236) — tests never write real data
   'test-test-sandbox.test.js',
   'test-clear-idearium.test.js',
+
+  // §2026-10-07 (0.39.361–0.39.367) — the learned ladder, chunked phases, the resource monitor driving what runs,
+  // provider tabs that do not load, a repo's background tasks
+  'test-agent-record.test.js',   // 0.39.361 AR1 — the ladder ordered by what past builds say of each agent
+  'test-chunked-phase-build.test.js',   // 0.39.361 SB51 — a phase built one file at a time on a small local model
+  'test-resource-adaptive.test.js',   // 0.39.364 — hysteresis, heap vs its limit, a model that will not fit is skipped, background gives way
+  'test-provider-host-load.test.js',   // 0.39.365 — a provider tab that does not load is retried, said why, its queued jobs fail
+  'test-repo-activity.test.js',   // 0.39.366 — a repo's background tasks: every agent call wearing its hat
+  'test-cli-route-commands.test.js',   // 0.39.374 CM1 — every capability a command: the real CLI against the real API
+  'test-nexus-command-tool.test.js',   // 0.39.376 CM2 — every command for copilot and every agent (and Claude Code over MCP)
+  'test-repo-versions.test.js',   // 0.40.0 VR1 — every change to a repo's files a versionium commit (settled, attributed, nothing lost)
+  'test-pf1-stalls.test.js',      // 0.40.1 PF1 — the 5-minute cortex stall (update by id) and the liminal runaway wall
+  'test-pf3-append-store.test.js', // 0.41.0 PF3 — the store appends to one segment per process and folds; no whole-table rewrite per write
+  'test-pf5-bounded-tables.test.js', // 0.43.0 PF5 — hot tables capped; what leaves is archived (gzip) before it is deleted
+  'test-ollama-tape.test.js',      // 0.44.0 OR1–OR3 — every Ollama call a frame; a run's macro; the cassette replays without Ollama
+  'test-cm3-commands.test.js',     // 0.45.0 CM3 — repo phasemap / phase / versions, store, ollama tape: commands first, routes behind them
+  'test-spec-blanks.test.js',      // 0.47.0 SP2 — a repo spec's blank parts named, drafted as workshop proposals
+  'test-system-control.test.js',   // 0.39.372 NC2 — a Nexus system's controls through its supervisor; one intent, inherited
+  'test-vm-control.test.js',   // 0.39.371 VM1 + CK1 — pause, live checkpoints, rewind over QMP; a checkpoint before every task's work
+  'test-desktop-activity.test.js',   // 0.39.370 DT1 — runs in the repo's compartment and the desktop setup are its tasks and log rows
+  'test-compartment-activity-log.test.js',   // 0.39.368 AL1 + 0.39.373 BO1 (GET /api/activity, BrainOS ACTIVITY) — a repo's durable activity log: tasks, phase rows, proposals (who applied, who undid), faults
 ];
 
 let totalPassed = 0;

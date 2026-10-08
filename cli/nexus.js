@@ -188,7 +188,7 @@ ${C.bold}Module pass-through (slash prefix):${C.reset}
   nexus ${C.purple}/cockpit${C.reset}  [args]       cockpit/cli.js  — pipeline seam idea gap jaa bus
   nexus ${C.purple}/forge${C.reset}    [args]       alias for /cockpit
   nexus ${C.cyan}/cortex${C.reset}   [args]       cortex/cortex.js — ask status gaps tail
-  nexus ${C.blue}/idearium${C.reset} [args]       idearium/cli    — idea spec gap push snr
+  nexus ${C.blue}/idearium${C.reset} [args]       idearium/cli    — idea spec gap push snr · repo ask|agent|changes|apply|reject|revert|charter|tasks|activity|desktop|system · activity · perf · models
   nexus ${C.green}/ollama${C.reset}   [args]       ollama direct   — status models pull run
   nexus ${C.green}/macro${C.reset}    [args]       macro           — list get create delete run bookmark
   nexus ${C.purple}/cos${C.reset}     [args]       cos/cli/index.js — Compartment OS: create list map start stop destroy

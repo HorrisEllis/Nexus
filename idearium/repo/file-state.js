@@ -15,13 +15,16 @@
  *   new        on disk, in no version (or there is no version yet: then every file is 'new' — said, not hidden)
  *   deleted    in the last version, gone from disk
  *   pending    exists only as a proposal (a proposed inject that creates it) — the greyed file
+ *   uncoded    planned and not coded yet: its chunk in the repo's spec has no code (an expansion's or the skeleton's
+ *              slot file) — greyed, whatever is on disk (an unbuilt chunk materializes as an empty file). §0.39.360
+ *              SB45 — James: "skeletons need to be greyed out until they're coded." Given as `uncoded: [path]`.
  * A file ALSO carries pending: [inject ids] when a proposal would change it, and staged: [ids] when a staged batch
  * would. Pure; the caller reads the inputs.
  */
 
 const LIVE = new Set(['proposed', 'staged']);
 
-export function fileStates({ disk = [], version = null, injects = [] } = {}) {
+export function fileStates({ disk = [], version = null, injects = [], uncoded = [] } = {}) {
   const states = {};
   const was = new Map(((version && version.entries) || []).map(e => [e.path, e.sha256]));
   for (const f of disk) {
@@ -41,6 +44,10 @@ export function fileStates({ disk = [], version = null, injects = [] } = {}) {
     const s = states[n.path];
     (s[key] = s[key] || []).push(n.uuid);
     if (n.op === 'delete') s.deleteProposed = true;
+  }
+  for (const p of uncoded) {
+    if (!p) continue;
+    states[p] = { ...(states[p] || {}), state: 'uncoded' };
   }
   const counts = {};
   for (const s of Object.values(states)) counts[s.state] = (counts[s.state] || 0) + 1;

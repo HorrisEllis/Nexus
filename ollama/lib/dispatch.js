@@ -31,7 +31,34 @@ const population    = new PopulationStore({ maxPerClass: 8 });
 const MAX_CONCURRENT = config.MAX_CONCURRENT;
 const CX_URL         = config.CX_URL;
 
+// §0.39.356 LS1 — James: "ollama or cpilot stream live into the worksurface panel and code tab". What the model has
+// written so far, kept on the job while it runs, so GET /api/jobs/:id answers it (copilot's poll sends it on). Capped.
+const PARTIAL_MAX = 200000;
+function _grow(job, d, kind) {
+  const k = kind === 'thinking' ? 'partialThinking' : 'partial';
+  job[k] = (job[k] || '') + d;
+  if (job[k].length > PARTIAL_MAX) { job[`${k}Dropped`] = (job[`${k}Dropped`] || 0) + job[k].length - PARTIAL_MAX; job[k] = job[k].slice(-PARTIAL_MAX); }
+  job.partialAt = Date.now();
+}
+
+// §0.39.364 — background intents give way to foreground work: one Ollama, one model in memory at a time. A probe that
+// lands while a repo agent's tool loop runs swaps the agent's model out and back (James's log: a 3b probe at 23 s in
+// the middle of a phase build). Deferred, not queued: the probe's own schedule tries again.
+const BACKGROUND_INTENTS = new Set(['adversarial-probe']);
+
 async function dispatchJob(job) {
+  if (BACKGROUND_INTENTS.has(job.intent)) {
+    const busy = [...state.running.values()].filter(j => j && j.uuid !== job.uuid && !BACKGROUND_INTENTS.has(j.intent));
+    if (busy.length) {
+      job.status = 'failed';
+      job.deferred = true;
+      job.error = `deferred — background work gives way to ${busy.length} running job(s) (${busy.map(j => j.intent || 'job').join(', ')})`;
+      broadcast('ollama.job.failed', { uuid: job.uuid, error: job.error, deferred: true });
+      finishJob(job);
+      return job;
+    }
+  }
+  job.partial = ''; job.partialThinking = '';
   state.running.set(job.uuid, job);
   job.status = 'running';
   job.startedAt = Date.now();
@@ -42,7 +69,9 @@ async function dispatchJob(job) {
   let detector = null;
   try { detector = require('../../lib/seam/detector.js').Detector; } catch (_) {}
 
-  const model = job.model || state.defaultModel;
+  // §0.39.364 — a name without its tag ("deepseek-coder-v2") is resolved to the one installed tag it means
+  let model = job.model || state.defaultModel;
+  try { const MI = require('./model-inventory.js'); const m = await MI.resolve(model); if (m && m !== model) { job.modelAsked = model; model = m; job.model = m; } } catch (_) {}
   const { Axiom } = require('../../warp/core/Axiom');
   const axioms = (job.axioms || []).map(a =>
     a instanceof Axiom ? a : new Axiom(a.id || `job.axiom.${Math.random()}`, { severity: a.severity || 'soft', check: a.check || (() => true) }));
@@ -50,7 +79,8 @@ async function dispatchJob(job) {
   const cascade = ({ event }) => runCascade({
     providers: ['ollama'],
     maxAttempts: 1,
-    generate: () => callOllamaRaw(model, event.data.prompt, job.maxTokens, job.timeoutMs, `bridge job ${String(job.uuid).slice(0, 8)}${job.intent ? ` (${job.intent})` : ''}${job.sessionId ? ` for ${job.sessionId}` : ''}`),   // §0.39.266 — whose job it is, in the activity log
+    generate: () => callOllamaRaw(model, event.data.prompt, job.maxTokens, job.timeoutMs, `bridge job ${String(job.uuid).slice(0, 8)}${job.intent ? ` (${job.intent})` : ''}${job.sessionId ? ` for ${job.sessionId}` : ''}`,   // §0.39.266 — whose job it is, in the activity log
+      { onDelta: (d, kind) => _grow(job, d, kind) }),
     validate: (output) => ({ ok: true, output }), // hard-axiom filtering happens in unifiedDispatch itself
   }).then(r => ({ ok: r.ok, output: r.output, attempts: r.attempts }));
 
@@ -172,4 +202,4 @@ function writeToCortex(job) {
   } catch (_) {}
 }
 
-module.exports = { dispatchJob, pump, writeToCortex, _remember };
+module.exports = { dispatchJob, pump, writeToCortex, _remember, _grow };

@@ -76,7 +76,7 @@ async function run() {
   const api = require('fs').readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
   const pb = api.slice(api.indexOf('async function _phaseBuild('), api.indexOf('async function _reviewDraft('));   // _phaseBuild alone (the N23 review follows it)
   check('SH-20 a phase build declares its shadow from the files the phase names, before the agent is asked',
-    pb.indexOf("SH.declare({ step: 'phase.build', expects: { files: expectFiles }") > 0 && pb.indexOf('SH.declare(') < pb.indexOf('RA.dispatch(') && /\(node\.files \|\| \[\]\)\.map\(f => String\(f\)\.split/.test(pb));
+    pb.indexOf("SH.declare({ step: 'phase.build', expects: { files }") > 0 && /makeAttempt\(\{ msg: message, files: expectFiles \}\)/.test(pb)   /* §0.39.361 SB51 — the files of this request: all of them, or the chunk's one */ && pb.indexOf('SH.declare(') < pb.indexOf('RA.dispatch(') && /\(node\.files \|\| \[\]\)\.map\(f => String\(f\)\.split/.test(pb));
   check('SH-21 it settles on a reply, drops on a failure, and reads blocked / incomplete / replied',
     /SH\.settle\(shadow, \{ files:/.test(pb) && (pb.match(/SH\.drop\(shadow\)/g) || []).length === 2 && /state = 'incomplete'/.test(pb) && /r\.injects\.blocked \? 'blocked' : 'replied'/.test(pb));
 

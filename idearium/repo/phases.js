@@ -143,6 +143,27 @@ export function managerView({ repo, repoDir, runs = [] }) {
 }
 
 /**
+ * §0.39.361 SB50 — phaseDates(mapText, phaseKey) -> { mapped, statusDate } — the dates the map itself holds for a phase:
+ * the map's meta date (when it was mapped) and the first YYYY-MM-DD in the phase's status: value (DONE 2026-10-06., …).
+ */
+export function phaseDates(mapText, phaseKey) {
+  const text = String(mapText || '');
+  const meta = mapMeta(text);
+  const day = (s) => { const m = String(s || '').match(/\b(20\d\d-\d\d-\d\d)\b/); return m ? m[1] : null; };
+  let statusDate = null;
+  try {
+    const loom = require('../../loom/scanners/phasemap-map.js');
+    const raw = loom.parsePhasemapText(text, 'x').find(p => p.id === phaseKey);
+    if (raw) {
+      const lines = text.split('\n').slice(raw.line, raw.bodyEnd);
+      const i = lines.findIndex(l => /^\s+status:/.test(l));
+      if (i !== -1) statusDate = day([lines[i], lines[i + 1] || ''].join(' ').replace(/^\s+status:/, ''));
+    }
+  } catch (_) { /* a map loom cannot read has no dates */ }
+  return { mapped: day(meta.date), statusDate };
+}
+
+/**
  * buildRequest({ phase, mapText, repo }) -> { message, title }
  * The task a phase build hands the repo's agent. Everything in it is read from the
  * map (§1.1): the phase's own body, the missing items it closes, the invariants.
@@ -169,4 +190,84 @@ export function buildRequest({ phase, mapText, repo, depsDone = [] }) {
     'Work in this repo only. Reuse what exists before writing anything new. Write each changed file in full as an addressed code block so it can be applied. When it is done, say which files changed and how the phase was checked.',
   ].filter(x => x !== '').join('\n');
   return { message, title: `${phase.phase_key} · ${phase.name || phase.title}` };
+}
+
+/**
+ * §0.39.361 SB51 — James: "phases need chunked i feel like. at least for small ollama models."
+ * A phase is built one file at a time when its ladder starts on a small local model (lib/pipeline-routing shouldChunk):
+ * buildRequest hands over the whole phase, and llama3.2:3b's prompt ran 16613 chars at num_ctx 9216 — seven rounds,
+ * nothing written. A chunk is one file: the phase in brief, this file, what the earlier chunks already wrote (their
+ * exports), the invariants in brief. Each goes in its own fresh session; its shadow expects only its file.
+ */
+
+/** phaseFiles(phase) -> the files a phase names, as paths (the same rule the build's shadow uses) */
+export function phaseFiles(phase) {
+  return [...new Set((phase.files || []).map(f => String(f).split(/[\s(]/)[0]).filter(f => f && /[\w-]\.[\w]+$/.test(f)))];
+}
+
+/** exportsOf(code) -> the names a JS file exports (module.exports = { … }, exports.x =, export function/const/class) */
+export function exportsOf(code) {
+  const s = String(code || ''); const out = new Set();
+  for (const m of s.matchAll(/module\.exports\s*=\s*\{([^}]*)\}/g)) for (const part of m[1].split(',')) { const k = part.split(':')[0].trim().replace(/^\.\.\..*/, ''); if (/^[A-Za-z_$][\w$]*$/.test(k)) out.add(k); }
+  for (const m of s.matchAll(/(?:module\.)?exports\.([A-Za-z_$][\w$]*)\s*=/g)) out.add(m[1]);
+  for (const m of s.matchAll(/export\s+(?:default\s+)?(?:async\s+)?(?:function\*?|const|let|class)\s+([A-Za-z_$][\w$]*)/g)) out.add(m[1]);
+  for (const m of s.matchAll(/export\s*\{([^}]*)\}/g)) for (const part of m[1].split(',')) { const k = part.split(/\s+as\s+/).pop().trim(); if (/^[A-Za-z_$][\w$]*$/.test(k)) out.add(k); }
+  return [...out];
+}
+
+/** the value of one key of a phase body (`does: >-` and its indented lines, or `proof: "…"`) on one line */
+function fieldOf(body, key) {
+  const lines = String(body || '').split('\n');
+  const i = lines.findIndex(l => new RegExp(`^\\s+${key}:`).test(l));
+  if (i === -1) return '';
+  const ind = (lines[i].match(/^(\s*)/) || ['', ''])[1].length;
+  const out = [lines[i].replace(new RegExp(`^\\s+${key}:\\s*[>|]?-?\\s*`), '')];
+  for (let k = i + 1; k < lines.length; k++) {
+    const l = lines[k];
+    if (l.trim() && (l.match(/^(\s*)/) || ['', ''])[1].length <= ind) break;
+    out.push(l.trim());
+  }
+  return out.join(' ').replace(/\s+/g, ' ').trim().replace(/^["']|["']$/g, '');
+}
+const _cut = (s, n) => (s.length > n ? `${s.slice(0, Math.max(0, n - 1))}…` : s);
+
+/**
+ * chunkRequest({ phase, mapText, repo, file, index, files, done, depsDone, maxChars }) -> { message, title, file }
+ * One file of a phase, as a request a small model can hold: never more than maxChars (default 2400). done is
+ * [{ path, exports }] — what the earlier chunks of this run wrote.
+ */
+export function chunkRequest({ phase, mapText, repo, file, index = 0, files = [file], done = [], depsDone = [], maxChars = 2400 }) {
+  const lines = String(mapText || '').split('\n');
+  const loom = require('../../loom/scanners/phasemap-map.js');
+  const raw = loom.parsePhasemapText(mapText, phase.map).find(p => p.id === phase.phase_key);
+  const body = raw ? lines.slice(raw.line, raw.bodyEnd).join('\n') : '';
+  const does = fieldOf(body, 'does') || phase.name || phase.title || phase.phase_key;
+  const proof = fieldOf(body, 'proof');
+  const meta = mapMeta(mapText);
+  const inv = blockOf(mapText, 'invariants', 4000).split('\n').map(l => l.replace(/^\s*-\s*/, '').trim().replace(/^["']|["']$/g, '')).filter(Boolean);
+  const doneBy = new Map(done.map(d => [d.path, d]));
+  const others = files.filter(f => f !== file).map(f => doneBy.has(f)
+    ? `- ${f} — written${(doneBy.get(f).exports || []).length ? `, exports ${doneBy.get(f).exports.slice(0, 12).join(', ')}` : ''}`
+    : `- ${f} — a later chunk; do not write it`);
+  const head = `Build ONE file: ${file} — chunk ${index + 1} of ${files.length} of phase ${phase.phase_key}${meta.name ? ` (${meta.name})` : ''} in ${repo.name}.`;
+  const tail = `Write ${file} in full as one addressed code block so it can be applied. Write no other file. Reuse what exists in this repo before writing anything new.`;
+  const parts = (budget) => [
+    head, '',
+    `THE PHASE, in brief: ${_cut(does, budget.does)}`,
+    proof ? `ITS PROOF: ${_cut(proof, 300)}` : null,
+    others.length ? `\nTHE PHASE'S OTHER FILES:\n${others.join('\n')}` : null,
+    depsDone.length ? `\nALREADY COMPLETE (its dependencies): ${_cut(depsDone.join(', '), 300)}` : null,
+    inv.length && budget.inv > 0 ? `\nHOLD THESE: ${_cut(inv.join(' · '), budget.inv)}` : null,
+    '', tail,
+  ].filter(x => x != null).join('\n');
+  let budget = { does: 1100, inv: 500 };
+  let message = parts(budget);
+  for (let i = 0; message.length > maxChars && i < 8; i++) {
+    const over = message.length - maxChars;
+    if (budget.inv > 0) budget = { ...budget, inv: budget.inv - over > 120 ? budget.inv - over : 0 };
+    else budget = { ...budget, does: Math.max(200, budget.does - over) };
+    message = parts(budget);
+  }
+  if (message.length > maxChars) message = _cut(message.slice(0, maxChars - tail.length - 2), maxChars - tail.length - 2) + '\n\n' + tail;
+  return { message, title: `${phase.phase_key} · ${file}`, file };
 }

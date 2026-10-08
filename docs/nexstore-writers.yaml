@@ -7,11 +7,11 @@ register:
   map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (DT1)
   generatedBy: lib/nexstore/writers.js
   stats:
-    writers: 209
-    files: 135
+    writers: 218
+    files: 143
     typed: 27
-    reason: 33
-    owed: 149
+    reason: 36
+    owed: 155
 rules:
   - match: '^(guardian/jaa-store\.js|idearium/lib/db\.js|lib/nexstore/(log|record)\.js) · '
     reason: the store engine itself — it writes for every table or type; the type is its caller's, and the caller is censused
@@ -25,6 +25,10 @@ rules:
     reason: a command-line tool writing an output its user asked for (a report, an export, a config the user runs it to write) — outside the store
   - match: ^loom/templates/
     reason: scaffolding a new system's files (package.json, configs, code) — code being generated, not data being kept
+  - match: ^cos/archetype/nexus-system/
+    reason: >-
+      the nexus-system template (0.39.359) — another system's code kept as a template; its writes are that system's own store (its node files, JAA tables and
+      ledger), never Nexus's
 writers:
   architect/service.js · appendFileSync · fp:
     reason: OWED — a node type or a stated reason
@@ -60,9 +64,13 @@ writers:
     reason: OWED — a node type or a stated reason
   clear-glass/src/mesh/route-graph.js · writeFileSync · path.join(ROUTES_DIR, `${route.id}.route.json`):
     reason: OWED — a node type or a stated reason
+  clear-glass/src/providers/registry.js · writeFileSync · _cacheFile():
+    reason: a cache of the provider registry, rebuilt from the source when missing — not data being kept
   clear-glass/src/rewind/engine.js · writeFileSync · fp:
     reason: OWED — a node type or a stated reason
   copilot/axiom-manager.js · writeFileSync · RUNTIME_FILE:
+    reason: OWED — a node type or a stated reason
+  copilot/lib/workset.js · writeFileSync · file(ws):
     reason: OWED — a node type or a stated reason
   copilot/module-builder.js · writeFileSync · path.join(buildDir, 'architecture.json'):
     reason: OWED — a node type or a stated reason
@@ -108,6 +116,10 @@ writers:
     reason: OWED — a node type or a stated reason
   emerge/emerge-kernel.js · writeFileSync · outPath:
     reason: OWED — a node type or a stated reason
+  emergence/components/feedback-loop-buffer/persist/EvictionLedger.js · appendFileSync · this.filePath:
+    reason: OWED — a node type or a stated reason
+  emergence/components/feedback-loop-buffer/persist/FilePersistence.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
   guardian/dropzone.js · writeFileSync · CONFIG_PATH:
     reason: the drop zone's settings file (dropzone.config.json), edited from its settings — configuration, not kept data
   guardian/lib/agent-registry.js · writeFileSync · tmp:
@@ -126,6 +138,12 @@ writers:
     reason: OWED — a node type or a stated reason
   guardian/server.js · writeFileSync · storeFile(name):
     reason: OWED — a node type or a stated reason
+  cos/workspace/vm-control.js · writeFileSync · tmp:
+    reason: a desktop's checkpoint index (<state>/.cos-desktop/checkpoints.json, 0.39.371 VM1) — the label, cause and time of each live snapshot kept inside the desktop's own qcow2; written atomically (tmp then rename) beside the disk it describes
+  idearium/api/index.js · appendRow · 'idearium_charter_runs':
+    reason: each check of a repo's end state against its charter (0.39.362 CH5) — one row per check, the compartment's progress on the Plan; a JAA table, typed by name
+  idearium/api/index.js · appendRow · WS.TEMPLATE_TABLE:
+    reason: the workshop's saved templates (idearium_workshop_templates, 0.39.357 RS5) — a JAA table of his saved spec templates, each version a row; the store engine types the table by name
   idearium/api/index.js · writeFileSync · pathMod.join(specDir, 'manifest.json'):
     reason: OWED — a node type or a stated reason
   idearium/lib/event-ledger.cjs · writeFileSync · STATS_FILE:
@@ -169,6 +187,8 @@ writers:
   idearium/repo/nexus-self.js · appendFileSync · _understandingFile():
     reason: OWED — a node type or a stated reason
   idearium/repo/nexus-self.js · writeFileSync · path.join(store.storeRoot(), 'system-graph.json'):
+    reason: OWED — a node type or a stated reason
+  idearium/repo/proof-run.js · writeFileSync · abs:
     reason: OWED — a node type or a stated reason
   idearium/repo/runtime-proof.js · writeFileSync · path.join(repoDir, PROOF_FILE):
     reason: >-
@@ -302,6 +322,12 @@ writers:
     reason: OWED — a node type or a stated reason
   lib/node-ledger.js · writeFileSync · INDEX_FILE:
     reason: OWED — a node type or a stated reason
+  cortex/memory/table-compactor.js · appendFileSync · path.join(dir, `${day}.jsonl.gz`):
+    reason: "0.43.0 PF5 — the archive of rows leaving a capped table (gzip members, one per batch); rows already recorded as JAA rows, kept compressed so nothing is lost — not a node of its own"
+  ollama/lib/tape.js · writeFileSync · f:
+    reason: "0.44.0 OR2 — content-addressed blobs (prompt/answer text by sha256), written once; the frame that names them is the record"
+  ollama/lib/tape.js · appendFileSync · path.join(dir, `${new Date(frame.at).toISOString().slice(0, 10)}.${process.pid}.jsonl`):
+    reason: "0.44.0 OR2 — model-call frames, one writer per file (PF3's shape); OWED a node type (.frame) when the tape becomes a node store reader (OR4)"
   lib/ollama-activity.js · appendFileSync · f:
     reason: OWED — a node type or a stated reason
   lib/project-container.js · writeFileSync · p:

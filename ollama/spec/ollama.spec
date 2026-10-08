@@ -11,7 +11,7 @@ spec:
     # in either direction. Versions already agreed (1.0.0 == 1.0.0) before
     # this fix — this is a naming correction, not a content rewrite.
     name:        ollama-bridge
-    version:     1.0.0
+    version:     1.1.0   # 0.39.356 MINOR — a running job keeps job.partial (LS1); was 1.0.0
     foundation:  nexus-system-foundation@1.0.0
     port:        3749
     uuid:        nexus-ollama-v1-0000-2026-0627-jamesbrooks-001
@@ -276,3 +276,22 @@ spec:
   # GET /api/models no longer answers ok:true with [defaultModel] when Ollama's /api/tags reply is not JSON: that claimed a
   # model was installed when Ollama never said so. It answers ok:false, models [], with the reason. idearium's Settings →
   # Models check (lib/ollama-check.js) reads this list and passes the reason on.
+  #
+  # ADDENDUM 2026-10-05 (0.39.356, LS1 of docs/2026-10-05-cli-data-code-phasemap.spec) — James: "also the dom mutator/node
+  # anchor, or ollama or cpilot stream live into the worksurface panel and code tab." 1.1.0 (MINOR): a running job keeps
+  # what the model has written so far — job.partial (answer) and job.partialThinking, appended token by token through
+  # callOllamaRaw's opts.onDelta (every round: the think:false retry and each continuation), at most 200,000 chars each
+  # (the oldest dropped, counted in partialDropped / partialThinkingDropped), job.partialAt. GET /api/jobs/:id answers them.
+
+  # ADDENDUM 2026-10-07 (0.44.0, OR1–OR3 of docs/2026-10-07-ollama-recorder-phasemap.spec) — James: "can we use the rewind
+  # engine on ollama? like record ollamas process as a macro?" · "do it. tell me what that would do"
+  # Every call at the three doors (ollama/lib/ollama-client.js _generateOnce + callOllamaChatWithTools,
+  # ollama/ollama-runtime.js streamGenerate) is a frame on the tape (lib/ollama-tape.js): a seed always set and recorded,
+  # prompt/system/messages/tools and the answer as content-addressed blobs, tool calls, Ollama's timings, the run/task/hat.
+  # NEXUS_OLLAMA_REPLAY=<run>|all — the cassette: a recorded call is answered from its frame with no Ollama; one never
+  # recorded is refused and said (NEXUS_OLLAMA_REPLAY_MISS=live lets it through). NEXUS_OLLAMA_RECORD=0 records nothing.
+  # loom/agent-suite goes through the client first; direct HTTP remains only for a package run standalone.
+
+  # ADDENDUM 2026-10-07 (0.46.0) — James: "make sure the ollama additions stay with ollama". The tape is ollama's own:
+  # ollama/lib/tape.js (was lib/ollama-tape.js; data stays at <data>/ollama). routes/tape.js declares its commands
+  # (GET /api/tape, /api/tape/:run) in ollama/lib/command-index.js; ollama/commands/get-api-tape*.command are their nodes.

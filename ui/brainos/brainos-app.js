@@ -19,6 +19,7 @@
   const CLEARGLASS_SSE = 'http://127.0.0.1:7701';
   const CORTEX_URL     = 'http://127.0.0.1:3748';
   const DIAGNOSTIC_URL = 'http://127.0.0.1:7825';
+  const IDEARIUM_URL   = 'http://127.0.0.1:4800';   // §0.39.373 BO1 — the compartments' activity logs
 
   let _selectedNode = null;
   let _meshNodes = {}; // id -> real node data, mirrors brainos-canvas.js's own tracking for the sidebar list
@@ -76,6 +77,7 @@
     if (tab === 'pipeline') fetchPipeline();
     if (tab === 'automation') fetchAutomation();
     if (tab === 'toolcalls') fetchToolCalls();
+    if (tab === 'activity') fetchActivity();
   }
   document.querySelectorAll('.rptab').forEach((t) => t.addEventListener('click', () => setRTab(t.dataset.rtab)));
 
@@ -535,6 +537,44 @@
           </div>`).join('');
       })
       .catch((e) => { el.innerHTML = `<div class="empty-state">tool calls fetch failed: ${e.message}</div>`; });
+  }
+
+  // §0.39.373 BO1 — James: "Wait what about brainos instead?" One stream, two views: each Idearium repo's Log view reads
+  // its own compartment; this reads every compartment's (lib/activity-log/compartment.js through GET /api/activity) —
+  // agent calls, runs, phase steps, proposals (who applied, who undid), faults, checkpoints, a system's restarts. A row
+  // arrives the moment it is written (idearium SSE idearium.repo.activity); nothing moves without one (§NO_DECORATIVE_MOTION).
+  let _activity = [], _activityNames = {}, _activityEs = null;
+  const _ACT_BADGE = { ok: 'ok', applied: 'ok', failed: 'err', reverted: 'err', rejected: 'idle', proposed: 'idle', running: 'idle', skipped: 'idle', staged: 'idle' };
+  function _activityRow(r) {
+    return `<div class="list-row">
+      <div class="lr-head"><span class="lr-name">${_escapeHtml(_activityNames[r.compartment] || r.compartment.slice(0, 12))}</span><span class="badge ${_ACT_BADGE[r.status] || 'idle'}">${_escapeHtml(r.kind)}</span></div>
+      <div class="lr-meta">${_escapeHtml(r.title || '')}</div>
+      <div class="lr-meta">${_escapeHtml(r.actor || '—')} · ${_escapeHtml(new Date(r.ts || Date.now()).toLocaleTimeString('en-GB', { hour12: false }))}</div>
+    </div>`;
+  }
+  function _paintActivity() {
+    const el = document.getElementById('rt-activity');
+    el.innerHTML = _activity.length ? _activity.slice(0, 100).map(_activityRow).join('') : '<div class="empty-state">no activity logged in any compartment yet</div>';
+  }
+  function fetchActivity() {
+    fetch(IDEARIUM_URL + '/api/activity?limit=100')
+      .then((r) => r.json())
+      .then((d) => {
+        const data = d && d.data ? d.data : d;
+        _activity = (data && data.rows) || []; _activityNames = { ..._activityNames, ...((data && data.names) || {}) };
+        _paintActivity();
+      })
+      .catch((e) => { document.getElementById('rt-activity').innerHTML = `<div class="empty-state">activity fetch failed: ${_escapeHtml(e.message)}</div>`; });
+    if (_activityEs) return;
+    try {
+      _activityEs = new EventSource(IDEARIUM_URL + '/sse');
+      _activityEs.onmessage = (e) => {
+        let ev; try { ev = JSON.parse(e.data); } catch (_) { return; }
+        if (!ev || ev.type !== 'idearium.repo.activity' || !ev.payload || !ev.payload.row) return;
+        _activity.unshift(ev.payload.row); if (_activity.length > 300) _activity.length = 300;
+        if (document.getElementById('rt-activity').classList.contains('act')) _paintActivity();
+      };
+    } catch (e) { log(`activity stream unavailable: ${e.message}`); }
   }
 
   function fetchPipeline() {

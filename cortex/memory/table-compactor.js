@@ -60,6 +60,64 @@ const { tierFor, tierConfig } = require('./tiers.js');
 
 const MODULE_ID = 'cortex.memory.table-compactor';
 
+// ── §0.43.0 PF5 — bounded tables, nothing lost (docs/2026-10-07-runtime-load-phasemap.spec) ─────────────────────
+// James: "do it. tell me what that would do". event_log is tiered 'short' (24 h) and Nexus writes ~4 events/s: a full
+// day is ~333k rows, and age alone never takes the table under a day. A row cap keeps each hot table at its newest N
+// rows; what leaves (by cap or by age) is ARCHIVED first — one gzip member appended per batch to
+// <store>/archive/<table>/<day>.jsonl.gz (concatenated members are one valid gzip) — and deleted only once the archive
+// write succeeded. readArchive() gives it back. Caps: CAPS below, NEXUS_TABLE_CAP_<TABLE> overrides (0 = no cap).
+const zlib = require('zlib');
+const fs = require('fs');
+const path = require('path');
+const CAPS = { event_log: 50000, component_ledger: 50000, cfr_tension_history: 20000 };
+function capFor(table) {
+  const env = process.env[`NEXUS_TABLE_CAP_${String(table).toUpperCase()}`];
+  if (env != null && env !== '') return Math.max(0, parseInt(env, 10) || 0);
+  return CAPS[table] || 0;
+}
+function _archiveDir(jaa, table) {
+  const store = jaa && typeof jaa._store === 'function' ? jaa._store() : null;
+  const root = (store && store.dir) || process.env.JAA_DATA_DIR || path.join(__dirname, '../../data/cortex/memory');
+  return path.join(root, 'archive', table);
+}
+/** archiveRows(jaa, table, rows, reason) → number archived; throws if it could not be written (the caller keeps the rows) */
+function archiveRows(jaa, table, rows, reason, now = Date.now()) {
+  if (!rows.length) return 0;
+  const dir = _archiveDir(jaa, table);
+  fs.mkdirSync(dir, { recursive: true });
+  const day = new Date(now).toISOString().slice(0, 10);
+  const body = rows.map(r => JSON.stringify({ ...r, _archived: { at: now, reason } })).join('\n') + '\n';
+  fs.appendFileSync(path.join(dir, `${day}.jsonl.gz`), zlib.gzipSync(body));
+  return rows.length;
+}
+/** readArchive(jaa, table, day?) → archived rows (one day, or every day archived) — nothing lost is only true if it can be read */
+function readArchive(jaa, table, day = null) {
+  const dir = _archiveDir(jaa, table);
+  let files = [];
+  try { files = fs.readdirSync(dir).filter(f => f.endsWith('.jsonl.gz') && (!day || f.startsWith(day))).sort(); } catch (_) { return []; }
+  const out = [];
+  for (const f of files) {
+    for (const ln of zlib.gunzipSync(fs.readFileSync(path.join(dir, f))).toString('utf8').split('\n')) { if (ln) try { out.push(JSON.parse(ln)); } catch (_) {} }
+  }
+  return out;
+}
+/** capRows(jaa, table, max) — keep the newest max rows; the older ones archived, then deleted */
+function capRows(jaa, table, max = capFor(table), now = Date.now()) {
+  if (!(max > 0)) return { table, removed: 0, skipped: true, reason: 'no cap' };
+  const n = jaa.count(table) || 0;
+  if (n <= max) return { table, removed: 0, count: n, cap: max };
+  const ts = (r) => { const t = r.ts ?? r.crystallisedAt ?? r.createdAt; return typeof t === 'number' ? t : -Infinity; };
+  const rows = (jaa.query(table, () => true, 100000000) || []).sort((a, b) => ts(a) - ts(b));
+  const over = rows.slice(0, rows.length - max);
+  try { archiveRows(jaa, table, over, `cap ${max}`, now); }
+  catch (e) { console.warn(`[${MODULE_ID}] ${table}: archive failed (${e.message}) — nothing deleted`); return { table, removed: 0, skipped: true, reason: `archive failed: ${e.message}` }; }
+  const ids = new Set(over.map(r => r.id));
+  const removed = jaa.delete(table, (r) => ids.has(r.id)) || 0;
+  try { jaa.insert('compaction_log', { uuid: require('crypto').randomUUID(), table, deletedCount: removed, archived: over.length, cap: max, oldestTs: ts(over[0]), newestTs: ts(over[over.length - 1]), reason: 'cap', ts: now }); } catch (_) {}
+  console.log(`[${MODULE_ID}] ${table}: capped to its newest ${max} rows — ${removed} older row(s) archived to archive/${table}/`);
+  return { table, removed, archived: over.length, cap: max };
+}
+
 /**
  * compactTable(jaa, table, now) — one real pass over one real table.
  * Deliberately per-table (not a bulk loop hidden inside start()), so a
@@ -90,6 +148,9 @@ function compactTable(jaa, table, now = Date.now()) {
   try { expired = jaa.query(table, isExpiredRow, 1000000) || []; }
   catch (e) { return { table, deleted: 0, skipped: true, reason: `query failed: ${e.message}` }; }
   if (!expired.length) return { table, deleted: 0, cutoff };
+  // §PF5 — archived before deleted; a failed archive deletes nothing
+  try { archiveRows(jaa, table, expired, `age ${tier}`, now); }
+  catch (e) { console.warn(`[${MODULE_ID}] ${table}: archive failed (${e.message}) — nothing deleted`); return { table, deleted: 0, skipped: true, reason: `archive failed: ${e.message}` }; }
 
   let oldestTs = Infinity, newestTs = -Infinity;
   for (const r of expired) { const t = rowTs(r); if (t < oldestTs) oldestTs = t; if (t > newestTs) newestTs = t; }
@@ -214,6 +275,8 @@ function start(jaa, tables, intervalMs = 10 * 60 * 1000) {
     for (const table of tables) {
       try { compactTable(jaa, table); }
       catch (e) { console.warn(`[${MODULE_ID}] compaction tick failed for ${table}: ${e.message}`); }
+      try { if (capFor(table)) capRows(jaa, table); }   // §PF5 — then the cap
+      catch (e) { console.warn(`[${MODULE_ID}] cap tick failed for ${table}: ${e.message}`); }
     }
   }
   sweep(); // boot compaction clears the accumulated backlog immediately, same as sigma-compaction.js
@@ -255,4 +318,23 @@ function stopCaps() {
   if (_capTimer) { clearInterval(_capTimer); _capTimer = null; }
 }
 
-module.exports = { MODULE_ID, compactTable, capTable, start, stop, startCaps, stopCaps };
+/** storeReport(dir) — every table in a store directory by its files alone (no row is parsed): the base, its append
+ *  segments (PF3), its cap (PF5) and its archive. What `idearium store` prints (cortex GET /api/store). */
+function storeReport(dir) {
+  let files = []; try { files = fs.readdirSync(dir); } catch (_) { return { dir, tables: [] }; }
+  const T = new Map(), t = (n) => { if (!T.has(n)) T.set(n, { table: n, baseBytes: 0, segments: 0, segmentBytes: 0, cap: capFor(n) || null, archiveDays: 0, archiveBytes: 0 }); return T.get(n); };
+  const size = (f) => { try { return fs.statSync(path.join(dir, f)).size; } catch (_) { return 0; } };
+  for (const f of files) {
+    if (f.endsWith('.json')) t(f.slice(0, -5)).baseBytes = size(f);
+    else { const m = /^(.+?)\.\d+(\.\d+\.closed)?\.jsonl$/.exec(f); if (m) { const r = t(m[1]); r.segments++; r.segmentBytes += size(f); } }
+  }
+  let arch = []; try { arch = fs.readdirSync(path.join(dir, 'archive')); } catch (_) {}
+  for (const name of arch) {
+    let days = []; try { days = fs.readdirSync(path.join(dir, 'archive', name)); } catch (_) { continue; }
+    const r = t(name); r.archiveDays = days.length; r.archiveBytes = days.reduce((n, d) => n + size(path.join('archive', name, d)), 0);
+  }
+  const tables = [...T.values()].sort((a, b) => (b.baseBytes + b.segmentBytes) - (a.baseBytes + a.segmentBytes));
+  return { dir, tables, totals: { bytes: tables.reduce((n, x) => n + x.baseBytes + x.segmentBytes, 0), archiveBytes: tables.reduce((n, x) => n + x.archiveBytes, 0) } };
+}
+
+module.exports = { storeReport, CAPS, capFor, capRows, archiveRows, readArchive, MODULE_ID, compactTable, capTable, start, stop, startCaps, stopCaps };

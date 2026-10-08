@@ -1,0 +1,5 @@
+{
+  "name": "nexus-system",
+  "description": "A Nexus system skeleton in Guardian's shape: server, CLI, registry, contract, node schemas, a JAA node index, listener, heartbeat and ledger. The idea slots in as components under lib/.",
+  "components": ["listener", "heartbeat", "handshake", "commands"]
+}

@@ -57,6 +57,7 @@ module.exports = [
   _c('search',                'GET',  '/api/search',                   'Cross-table search'),
   _c('search.context',        'POST', '/api/search/context',           'Context assembly for search query'),
   // ── Tags ───────────────────────────────────────────────────────────────
+  _c('store.report',          'GET',  '/api/store',                    'The store by its files: base, append segments, cap, archive (0.45.0 CM3)'),
   _c('tags.list',             'GET',  '/api/tags',                     'All tags in memory'),
   _c('tags.add',              'POST', '/api/tags',                     'Add tag'),
 ];

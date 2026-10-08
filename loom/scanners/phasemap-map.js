@@ -312,7 +312,7 @@ function _fields(lines, at) {
   }
   return out;
 }
-// §RS9 0.39.354 — the spec blocks a phase was planned from (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec): its
+// §RS9 0.49.0 — the spec blocks a phase was planned from (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec): its
 // `blocks:` (block ids, lib/spec-document.js), else the derived map's `sections:`. [] = no link to its spec.
 function _blocks(f) { return _list(f.blocks != null ? f.blocks : f.sections).map(x => String(x).replace(/^['"]|['"]$/g, '')).filter(Boolean); }
 /** _list("[A, B]" | "A, B" | "- A - B") -> ['A','B'] (empty for nothing). */

@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-thread.test.js — RS9 (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec), 0.39.354.
+ * tests/modules/test-thread.test.js — RS9 (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec), 0.49.0.
  * James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade. interconnected"
  *
  *   TH-01  derivePlan writes each phase's blocks: (the spec's own block ids) and each block's hash; the one phasemap

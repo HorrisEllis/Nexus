@@ -16,7 +16,7 @@
 //   start card    the repo's Home tab: "Start building" — its specs, each with Plan / Build next, and the plan.
 // ════════════════════════════════════════════════════════════════════════════
 
-const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), focus: null, wide: false, showDone: _ppShowDoneSaved() };
+const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), focus: null, wide: false, showDone: _ppShowDoneSaved(), logOpen: (() => { try { return localStorage.getItem('idearium.rt.open') === '1'; } catch (_) { return false; } })() };
 // §CT7 0.39.352 — James: "the plan needs to only show current work." · "completely either need to clear or need a clear
 // complete button." Complete steps and complete sections fold into one line with their count (hidden, never deleted);
 // one click shows them; the choice is remembered in this browser.
@@ -107,11 +107,85 @@ async function loadPlanPanel() {
 function _gateBar(s) {
   return `<div class="pp-gates" title="${s.gates.map(g => `${_PLAN_GATE_LABEL[g.gate]} ${g.passed ? '✓' : '·'}`).join('  ')}">${s.gates.map(g => `<span class="pp-g ${g.passed ? 'on' : ''} ${s.gate === g.gate ? (s.failed ? 'bad' : 'cur') : ''}"></span>`).join('')}</div>`;
 }
+// §0.39.361 SB50 — James: "tasks need time stamped." A time: today → 14:02; another day → 6 Oct 14:02; another year with
+// it. A date-only value (a map's YYYY-MM-DD) stays a date. A span: 45s · 3m 10s · 2h 05m · 3d 4h.
+function _ppWhen(x) {
+  if (!x) return '';
+  if (typeof x === 'string' && /^\d{4}-\d\d-\d\d$/.test(x)) { const d = new Date(`${x}T00:00:00`); return isNaN(d) ? x : d.toLocaleDateString([], { day: 'numeric', month: 'short', ...(d.getFullYear() !== new Date().getFullYear() ? { year: 'numeric' } : {}) }); }
+  const d = new Date(x); if (isNaN(d)) return '';
+  const now = new Date(); const hm = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  if (d.toDateString() === now.toDateString()) return hm;
+  return `${d.toLocaleDateString([], { day: 'numeric', month: 'short', ...(d.getFullYear() !== now.getFullYear() ? { year: 'numeric' } : {}) })} ${hm}`;
+}
+function _ppSpan(ms) {
+  if (ms == null || !(ms >= 0)) return '';
+  const s = Math.round(ms / 1000); if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60); if (m < 60) return `${m}m ${String(s % 60).padStart(2, '0')}s`;
+  const h = Math.floor(m / 60); if (h < 48) return `${h}h ${String(m % 60).padStart(2, '0')}m`;
+  return `${Math.floor(h / 24)}d ${h % 24}h`;
+}
+function _ppTimes(s) {
+  const t = s.times || {}; const full = (x) => (x ? new Date(typeof x === 'string' && /^\d{4}-\d\d-\d\d$/.test(x) ? `${x}T00:00:00` : x).toLocaleString() : '');
+  const bits = [['mapped', t.mapped], ['started', t.started], ['last run', t.lastRun], ['closed', t.closed]].filter(([, v]) => v)
+    .map(([k, v]) => `<span title="${escapeHtml(`${k} ${full(v)}`)}">${k} ${escapeHtml(_ppWhen(v))}</span>`);
+  if (t.runningMs != null) bits.push(`<span class="pp-running">building ${escapeHtml(_ppSpan(t.runningMs))}</span>`);
+  return bits.length ? `<div class="pp-times">${bits.join('<span class="pp-dot">·</span>')}</div>` : '';
+}
+
+// §0.39.362 CH5 — James: "use the least amount of code with the highest levarage that achieves the end state". When the
+// compartment's charter names an end state, that is its progress — the main bar; the phase count sits under it.
+function _ppEndState(c) {
+  if (!c || !(c.endState || []).length) return '';
+  const l = c.latest;
+  if (!l) return `<div class="pp-end"><div class="pp-end-h"><b>end state</b> <span class="pp-dim">not checked yet — ${c.endState.length} check${c.endState.length === 1 ? '' : 's'}</span><button class="pp-mini" onclick="ppCharterCheck()">check</button></div></div>`;
+  const pct = l.total ? Math.round((l.met / l.total) * 100) : 0;
+  return `<div class="pp-end"><div class="pp-end-h"><b>end state ${l.met}/${l.total}</b> <span class="pp-dim">${escapeHtml(_ppWhen(l.ts))}${l.against === 'proposed' && (l.overlaid || []).length ? ` · with ${l.overlaid.length} proposed file${l.overlaid.length === 1 ? '' : 's'}` : ''}</span><button class="pp-mini" onclick="ppCharterCheck()">check</button></div>
+    <div class="pp-progress pp-progress-end"><div style="width:${pct}%"></div></div>
+    <div class="pp-end-list">${(l.results || []).map(r => `<div class="${r.met ? 'ok' : 'bad'}" title="${escapeHtml(r.evidence || '')}">${r.met ? '✓' : '✗'} ${escapeHtml(r.says)}</div>`).join('')}</div></div>`;
+}
+// the charter itself: its axioms, conditions and end state — read, edited, saved (PUT /api/repos/:uuid/charter)
+function _ppCharter(c) {
+  const sum = !c || !c.exists ? 'none yet — axioms, conditions and an end state for this compartment' : `${(c.axioms || []).length} axiom${(c.axioms || []).length === 1 ? '' : 's'} · ${c.conditions || 0} condition${c.conditions === 1 ? '' : 's'} · ${(c.endState || []).length} end-state check${(c.endState || []).length === 1 ? '' : 's'}${(c.errors || []).length ? ` · <span style="color:var(--coral)">${c.errors.length} problem${c.errors.length === 1 ? '' : 's'}</span>` : ''}`;
+  return `<details class="pp-actwrap pp-charter" ontoggle="if(this.open)ppCharterLoad()"><summary class="pp-sec">charter · ${sum}</summary>
+    ${c && (c.axioms || []).length ? `<div class="pp-ax">${c.axioms.map(a => `<div>◆ ${escapeHtml(a)}</div>`).join('')}</div>` : ''}
+    <textarea id="pp-charter-text" class="pp-charter-text" spellcheck="false" placeholder="reading charter.spec…"></textarea>
+    <div class="pp-charter-bar"><button class="pp-mini" onclick="ppCharterSave()">save</button><button class="pp-mini" onclick="ppCharterCheck()">check the end state</button><span id="pp-charter-msg" class="pp-dim"></span></div></details>`;
+}
+async function ppCharterLoad() {
+  const ta = document.getElementById('pp-charter-text'); if (!ta || !PLANP.uuid) return;
+  try { const c = await api(`/api/repos/${PLANP.uuid}/charter`, {}, 20000); if (!ta.dataset.dirty) ta.value = c.exists ? c.text : (c.template || ''); }
+  catch (e) { ta.placeholder = `could not read: ${e.message}`; }
+  ta.oninput = () => { ta.dataset.dirty = '1'; };
+}
+async function ppCharterSave() {
+  const ta = document.getElementById('pp-charter-text'), msg = document.getElementById('pp-charter-msg'); if (!ta) return;
+  try { await api(`/api/repos/${PLANP.uuid}/charter`, { method: 'PUT', body: JSON.stringify({ text: ta.value }) }, 30000); delete ta.dataset.dirty; if (msg) msg.textContent = 'saved'; toast('charter saved', 'ok'); loadPlanPanel(); }
+  catch (e) { if (msg) msg.textContent = e.message; toast(`charter not saved: ${e.message}`, 'err'); }
+}
+async function ppCharterCheck() {
+  const msg = document.getElementById('pp-charter-msg'); if (msg) msg.textContent = 'checking the end state…';
+  try { const r = await api(`/api/repos/${PLANP.uuid}/charter/check`, { method: 'POST', body: '{}' }, 300000); toast(r.empty ? r.note : `end state ${r.met}/${r.total}`, r.empty ? 'err' : 'ok'); loadPlanPanel(); }
+  catch (e) { toast(`end state not checked: ${e.message}`, 'err'); if (msg) msg.textContent = e.message; }
+}
+
+// §0.39.361 AR2 — what went wrong on this phase before (fault_log), read before the run and handed to the agent
+function _ppPrecedent(p) {
+  if (!p || !p.length) return '';
+  return `<div class="pp-prec"><span class="pp-route-h">failed before — the agent was told</span>${p.map(f => `<span class="pp-pf" title="fault ${escapeHtml(f.uuid || '')}">${escapeHtml(_ppWhen(f.ts))} · ${escapeHtml(f.agent || 'the build')} · <b>${escapeHtml(f.mode)}</b>${f.promptChars ? ` · ${f.promptChars} chars` : ''}</span>`).join('')}</div>`;
+}
+// §0.39.361 AR1 — the route a build took and why: each agent in ladder order, what Nexus has learned of it
+function _ppRoute(r) {
+  if (!r || !(r.order || []).length) return '';
+  const why = new Map((r.why || []).map(w => [w.provider, w]));
+  return `<div class="pp-route"><span class="pp-route-h">${r.learned ? 'route — learned from past builds' : 'route — as configured (nothing learned changes it yet)'}${r.bucket ? ` · ${escapeHtml(r.bucket)} request` : ''}</span>${r.order.map((p, i) => {
+    const w = why.get(p); return `<span class="pp-rt${w && w.limited ? ' lim' : ''}" title="${escapeHtml(w ? w.why : '')}">${i + 1}. ${escapeHtml(p)}${w ? ` <i>${escapeHtml(w.why)}</i>` : ''}</span>`; }).join('')}</div>`;
+}
+
 function _ledgerHtml(rows) {
   if (!rows.length) return '<div class="pp-led-empty">no runs yet — ▶ builds it (a snapshot first, then the repo\'s agent)</div>';
-  return rows.map(l => `<div class="pp-led"><span class="pp-led-t">${new Date(l.ts).toLocaleTimeString()}</span><span class="pp-led-s pp-${escapeHtml(l.state)}">${escapeHtml(l.state)}</span>
+  return rows.map(l => `<div class="pp-led"><span class="pp-led-t" title="${escapeHtml(new Date(l.ts).toLocaleString())}${l.startedAt ? ` · run started ${escapeHtml(new Date(l.startedAt).toLocaleString())}` : ''}">${escapeHtml(_ppWhen(l.ts))}${l.startedAt && l.ts > l.startedAt ? ` <small>+${escapeHtml(_ppSpan(l.ts - l.startedAt))}</small>` : ''}</span>${l.chunk ? `<span class="pp-led-c" title="${escapeHtml(l.file || '')}">chunk ${l.chunk}/${l.chunks}</span>` : ''}<span class="pp-led-s pp-${escapeHtml(l.state)}">${escapeHtml(l.state)}</span>
     <span class="pp-led-d">${l.snapshot ? `snapshot ${escapeHtml(String(l.snapshot).slice(0, 12))} · ` : ''}${l.provider ? `${escapeHtml(l.provider)}${l.rung ? ` (rung ${l.rung}/${l.rungs}${l.attempt > 1 ? `, try ${l.attempt}` : ''})` : ''} · ` : ''}${l.toolErrors ? '<span style="color:var(--coral)">stopped: failed tool calls in a row</span> · ' : ''}${(l.injected || []).length ? `files ${l.injected.slice(0, 6).map(f => typeof wsOpenInCode === 'function' ? `<a href="#" class="pp-file" title="open in the Code tab" onclick="wsOpenInCode('${escapeHtml(String(f).replace(/'/g, "\\'"))}');return false">${escapeHtml(f)}</a>` : escapeHtml(f)).join(', ')}${l.injected.length > 6 ? ` +${l.injected.length - 6}` : ''} · ` : ''}${l.error ? `<span style="color:var(--coral)">${escapeHtml(l.error)}</span>` : ''}</span>
-    ${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
+    ${l.against === 'proposed' ? `<div class="pp-against">${l.state === 'proven' ? '✓ proven on the proposed code' : 'checked on the proposed code'} (${(l.overlaid || []).length} file${(l.overlaid || []).length === 1 ? '' : 's'}) — nothing is in your files until you Apply${l.leverage ? ` · <span title="the least-code axiom, measured">${escapeHtml(l.leverage.says)}</span>` : ''}</div>` : l.againstNote ? `<div class="pp-against warn">${escapeHtml(l.againstNote)}</div>` : ''}${_ppPrecedent(l.precedent)}${_ppRoute(l.route)}${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
 }
 
 function _planPaint() {
@@ -133,17 +207,20 @@ function _planPaint() {
         <span class="pp-name">${escapeHtml(s.title)}</span>
         ${s.layer ? `<span class="pp-layer">${escapeHtml(s.layer)}</span>` : ''}${_gateBar(s)}
       </div>
+      ${_ppTimes(s)}
+      ${s.failed && !done ? `<div class="pp-why" title="${escapeHtml(s.failed.error || s.failed.state)}">${escapeHtml(s.failed.state)}${s.failed.error ? ` — ${escapeHtml(String(s.failed.error).slice(0, 160))}` : ''}</div>` : ''}
       ${open ? `<div class="pp-detail"><div class="pp-meta">${escapeHtml(s.key)} · ${escapeHtml(String(s.map).split('/').pop())} · gate: ${escapeHtml(s.gate || 'all passed')}${s.failed ? ` · <span style="color:var(--coral)">${escapeHtml(s.failed.state)}: ${escapeHtml(s.failed.error || '')}</span>` : ''}</div>
         ${done ? '' : `<button class="pp-go" onclick="event.stopPropagation();planBuild('${escapeHtml(s.map)}','${escapeHtml(s.key)}')">▶ build</button>`}
         ${_ledgerHtml(s.ledger || [])}</div>` : ''}
     </div>`;
   };
   const other = (PLANP.runs || []).filter(r => r.phase === 'PLAN' || String(r.map || '').startsWith('file:')).slice(0, 12);
-  const activity = (PLANP.runs || []).slice(0, 25);
   body.innerHTML = `
     ${_planCodeBuild()}
     ${_planProof()}
-    ${sm.total ? `<div class="pp-progress"><div style="width:${Math.round((sm.progress || 0) * 100)}%"></div></div>` : ''}
+    ${_ppEndState(d.charter)}
+    ${sm.total ? `<div class="pp-progress${d.charter && d.charter.latest ? ' pp-progress-2' : ''}" title="phases: ${sm.complete || 0}/${sm.total} done"><div style="width:${Math.round((sm.progress || 0) * 100)}%"></div></div>` : ''}
+    ${_ppCharter(d.charter)}
     <div class="pp-sec">tasks</div>
     ${(() => {   // §CT7 — current work: what is building, next, stopped or waiting; the complete fold into one line
       if (!steps.length) return '<div class="pp-empty">no phases yet — plan a spec (Spec tab → ▶ Build this spec)</div>';
@@ -153,12 +230,36 @@ function _planPaint() {
         + _ppDoneLine(done.length, `step${done.length === 1 ? '' : 's'}`) + (PLANP.showDone ? done.map(task).join('') : '');
     })()}
     ${other.length ? `<div class="pp-sec">plans and file jobs</div>${other.map(r => `<div class="pp-act"><span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.title || `${r.phase} ${r.map}`)} <span class="pp-led-t">${new Date(r.ts).toLocaleTimeString()}</span>${r.error ? `<div style="color:var(--coral);font-size:10px">${escapeHtml(r.error)}</div>` : ''}</div>`).join('')}` : ''}
-    <details class="pp-actwrap"><summary class="pp-sec">activity · ${activity.length}</summary>${activity.map(r => `<div class="pp-act"><span class="pp-led-t">${new Date(r.ts).toLocaleString()}</span> <span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.phase || '')} <span style="opacity:.6">${escapeHtml(String(r.map || '').split('/').pop())}</span></div>`).join('')}</details>
-    <div id="pp-ws" class="pp-ws"></div>`;
+    <details class="pp-actwrap pp-agents" ontoggle="if(this.open)ppAgentsLoad(this)"><summary class="pp-sec">agents · what Nexus has learned</summary><div class="pp-agents-body">${PLANP.agentsHtml || 'reading…'}</div></details>
+    <details class="pp-actwrap pp-log" id="pp-log" ${PLANP.logOpen ? 'open' : ''} ontoggle="if (typeof ppLogToggle === 'function') ppLogToggle(this)"><summary class="pp-sec">activity <span id="pp-log-n" class="pp-log-n"></span></summary>
+      <div class="rt-views" id="rt-views"></div><div class="rt-filters" id="rt-filters"></div><div class="rt-list" id="rt-list"></div></details>
+    <div class="al pp-live" data-al="${escapeHtml(PLANP.uuid || '')}">${typeof agentLiveHtml === 'function' && PLANP.uuid ? agentLiveHtml(PLANP.uuid) : ''}</div>
+    <div id="pp-ws" class="pp-ws"></div>`;   // §0.39.356 LS4 — the agent writing, live, above the work surface
   PLANP.focus = null;
+  if (typeof rtMounted === 'function') rtMounted(false);   // §0.47.0 OS2 (a repaint: drawn from what is held, nothing re-read) — tasks · log · control · versions · machine, in the activity section
   planTabSync();   // §CT9 — the tab's count follows the plan
   // §0.39.284 W3 — the work surface, below the plan: every file the agent changed, as diffs, and its tools
   if (typeof wsLoad === 'function') { const w = document.getElementById('pp-ws'); if (WSURF.data && WSURF.uuid === PLANP.uuid) wsPaint(w); wsLoad(w); }
+}
+// §0.39.361 AR1 — each agent's record building phases (GET /api/routing/agents): the table the ladder is ordered by
+function _ppFaultRow(f) {
+  return `<div class="pp-fault"><span class="pp-led-t" title="${escapeHtml(new Date(f.ts).toLocaleString())}">${escapeHtml(_ppWhen(f.ts))}</span><b>${escapeHtml(f.mode)}</b> ${escapeHtml(f.phase || f.path || '')}${f.promptChars ? ` <span style="opacity:.6">${f.promptChars} chars</span>` : ''}${f.error ? `<div class="pp-fault-e">${escapeHtml(f.error)}</div>` : ''}</div>`;
+}
+async function ppAgentsLoad(el) {
+  const body = el.querySelector('.pp-agents-body'); if (!body) return;
+  try {
+    const d = await api('/api/routing/agents', {}, 30000);
+    const ps = Object.values(d.providers || {}).sort((a, b) => b.score - a.score || b.attempts - a.attempts);
+    const k = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n || 0));
+    PLANP.agentsHtml = !ps.length ? 'nothing yet — every phase build records which agent did it and how it went; the ladder learns from that' : `
+      <table><tr><th>agent</th><th>landed</th><th>proven</th><th>undone</th><th>failed</th><th>limit</th><th>score</th></tr>${ps.map(p => `<tr title="${escapeHtml(p.last ? `last: ${p.last.cls} on ${p.last.phase || '?'}${p.last.error ? ` — ${p.last.error}` : ''}` : '')}">
+        <td>${escapeHtml(p.provider)}</td><td class="${p.landed ? 'ok' : ''}">${p.landed}/${p.attempts}</td><td>${p.proven || ''}</td><td class="${p.undone ? 'bad' : ''}">${p.undone || ''}</td>
+        <td class="${p.failed ? 'bad' : ''}" title="${escapeHtml(Object.entries(p.byClass || {}).map(([c, n]) => `${c} ${n}`).join(' · '))}">${p.failed ? `${p.failed} <span style="opacity:.6">${escapeHtml(Object.entries(p.byClass || {}).filter(([c]) => c !== 'undone').sort((a, b) => b[1] - a[1]).slice(0, 2).map(([c, n]) => `${c} ${n}`).join(', '))}</span>` : ''}</td>
+        <td class="${p.limit ? 'bad' : ''}" title="${escapeHtml(p.limit ? p.limit.why : p.maxLanded ? `landed up to ${p.maxLanded} chars` : '')}">${p.limit ? `≥${k(p.limit.from)} chars` : ''}</td><td>${Math.round(p.score * 100)}%</td></tr>${(p.faults || []).length ? `<tr><td colspan="7"><details class="pp-faults"><summary>${p.faults.length} fault${p.faults.length === 1 ? '' : 's'} · ${escapeHtml(Object.entries(p.modes || {}).sort((a, b) => b[1] - a[1]).map(([m, n]) => `${m} ${n}`).join(' · '))}</summary>${p.faults.map(_ppFaultRow).join('')}</details></td></tr>` : ''}`).join('')}</table>
+      ${(d.unassigned || []).length ? `<details class="pp-faults"><summary>${d.unassigned.length} fault${d.unassigned.length === 1 ? '' : 's'} of no one agent (every rung tried, no snapshot…)</summary>${d.unassigned.map(_ppFaultRow).join('')}</details>` : ''}
+      <div style="opacity:.6;margin-top:4px">${d.learn ? 'the ladder is ordered by this: higher score first, an agent past its size limit last — routing.ladder_learn: false keeps the configured order' : 'learning is off (routing.ladder_learn: false) — the ladder keeps its configured order'}</div>`;
+  } catch (e) { PLANP.agentsHtml = `could not read: ${escapeHtml(e.message)}`; }
+  body.innerHTML = PLANP.agentsHtml;
 }
 function planToggle(key) { if (PLANP.open.has(key)) PLANP.open.delete(key); else PLANP.open.add(key); _planPaint(); }
 async function planBuild(map, phase) {
@@ -250,6 +351,7 @@ function _planProof() {
       <span class="pp-mark">${rr.round}</span><span class="pp-name">round ${rr.round} · ${rr.built} built${rr.reused ? ` · ${rr.reused} reused` : ''}${rr.current ? ` · building ${escapeHtml(rr.current)}` : ''}</span>
       <span class="pp-led-s">${_ppVerdict(rr.verdict)}</span></div>
       ${(rr.failures || []).slice(0, 8).map(f => `<div class="pp-detail" style="color:var(--coral)">${escapeHtml(f.kind)} · ${escapeHtml(f.file || '(project)')}${f.line ? `:${f.line}` : ''} — ${escapeHtml(String(f.error).slice(0, 220))}</div>`).join('')}
+      ${rr.known ? `<div class="pp-detail" title="${escapeHtml((rr.knownFiles || []).join('\n'))}">known debt: ${rr.known} older failure(s) in files this run did not touch — not this run's, not sent back</div>` : ''}
       ${(rr.repaired || []).length ? `<div class="pp-detail">sent back with the failure: ${escapeHtml(rr.repaired.join(', '))}</div>` : ''}
       ${(rr.notBuiltBySpec || []).length ? `<div class="pp-detail" style="color:var(--coral)">not built by this spec (cannot be sent back): ${escapeHtml(rr.notBuiltBySpec.join(', '))}</div>` : ''}
       ${rr.stalled ? `<div class="pp-detail" style="color:var(--coral)">${escapeHtml(rr.stalled)}</div>` : ''}</div>`).join('') : '';

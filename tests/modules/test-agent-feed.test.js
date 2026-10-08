@@ -125,7 +125,8 @@ const until = async (fn, ms = 3000) => { const t = Date.now() + ms; while (!fn()
   });
   await test('AF-11', 'idearium wires onFeed to os.broadcast (SSE only, not the ledger) as idearium.repo.agent.feed', () => {
     const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
-    assert.ok(/connectGuardianStream\(se, \{ onFeed: \(ev\) => os\.broadcast\('idearium\.repo\.agent\.feed'/.test(api));
+    // §0.39.366 — onFeed also hands the frame to the repo's background tasks (lib/repo-activity.js) before broadcasting it
+    assert.ok(/connectGuardianStream\(se, \{ onFeed: \(ev\) => \{[\s\S]{0,400}?os\.broadcast\('idearium\.repo\.agent\.feed', fp\)/.test(api));
     const core = fs.readFileSync(path.join(ROOT, 'idearium/index.js'), 'utf8');
     const b = core.slice(core.indexOf('  broadcast(type, payload = {}) {'), core.indexOf('  addSSEClient(res) {'));
     assert.ok(/this\._broadcast\(ev\)/.test(b) && !/_evLedger|this\.stream\.emit/.test(b));
@@ -137,7 +138,7 @@ const until = async (fn, ms = 3000) => { const t = Date.now() + ms; while (!fn()
   const ua = APP.indexOf('const AGENT_FEED = new Map();'), ub = APP.indexOf('function _agentTranscript(uuid) {');
   let painted = 0;
   const uctx = { CURRENT_API_REPO: { uuid: 'abc' }, escapeHtml: (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])),
-    document: { getElementById: () => ({ dataset: { repo: 'abc' }, set innerHTML(v) { painted++; this._h = v; }, get innerHTML() { return this._h; }, querySelector: () => null }) } };
+    document: { getElementById: () => ({ dataset: { repo: 'abc' }, set innerHTML(v) { painted++; this._h = v; }, get innerHTML() { return this._h; }, querySelector: () => null }), querySelectorAll: () => [] } };   // 0.39.356 LS4 — the live slots (none here)
   vm.createContext(uctx);
   vm.runInContext(APP.slice(ua, ub) + '\nthis._agentFeedIn = _agentFeedIn; this._agentFeedHtml = _agentFeedHtml; this.AGENT_FEED = AGENT_FEED;', uctx);
   await test('AF-12', 'the tab keeps the anchor and mutation count from dom pulses without a log row per pulse', () => {

@@ -10,11 +10,11 @@ tags:
   - bep_patterns
   - co_occurrence
   - cortex/intelligence
-exported_at: 1790684773310
+exported_at: 1791334842357
 source: intelligence.domain-nodes
 occurrences: 1
-firstSeenAt: 1790684773310
-lastSeenAt: 1790684773310
+firstSeenAt: 1791334842357
+lastSeenAt: 1791334842357
 fingerprint: null
 payload:
   uuid: pat-31
@@ -32,4 +32,4 @@ payload:
   crystallised: true
   noiseTainted: false
   source: cortex/intelligence
-  ts: 1790684773307
+  ts: 1791334842355

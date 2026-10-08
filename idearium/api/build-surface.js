@@ -67,7 +67,14 @@ export async function filesState(deps, uuid) {
   const version = last ? await _tree(deps, uuid, last.commitId) : null;
   let injects = [];
   try { injects = deps.RI().list(uuid, { limit: 1000 }); } catch (_) {}
-  const out = fileStates({ disk: man.entries, version: version && version.entries ? version : null, injects });
+  // §0.39.360 SB45 — the files whose chunk has no code yet (planned by an expansion or the skeleton's slot): greyed
+  let uncoded = [];
+  try {
+    const L = deps.getRepoLayer();
+    const spec = r.repo.specUuid && L.se ? L.se.loadSpec(r.repo.specUuid) : null;
+    if (spec && spec.fileTree) uncoded = (spec.chunks || []).filter(c => c.status !== 'removed' && c.status !== 'complete' && c.realPath).map(c => c.realPath);
+  } catch (_) { /* no spec: nothing is planned */ }
+  const out = fileStates({ disk: man.entries, version: version && version.entries ? version : null, injects, uncoded });
   return ok({ repoUuid: uuid, ...out, versionNote: snaps.error ? `versionium: ${snaps.error} — every file shows as new` : !last ? 'no version yet — every file is new until the first snapshot' : version && !version.entries ? `version ${last.commitId} has no file layer (${version.error})` : null,
     skipped: man.skipped.slice(0, 20) });
 }
@@ -148,7 +155,18 @@ export async function environmentSetup(deps, uuid) {
   // did not work once the password had been changed in Settings.
   const cfg = typeof deps.config === 'function' ? deps.config : () => undefined;
   const login = { user: cfg('desktop.user'), password: cfg('desktop.password') };
-  const job = deps.require('../../cos/testenv/setup-job.js').start({ extras, node: options.node && options.node !== 'lts' ? options.node : null, login });
+  // §0.39.370 DT1 — the setup is one of this repo's background tasks (kind 'setup'): each provision step a step on it,
+  // its start and end in the repo's activity log
+  let RAct = null, task = null;
+  try { RAct = deps.require('../../lib/repo-activity.js'); } catch (_) {}
+  const onEvent = (e) => {
+    if (!RAct) return;
+    if (!task) task = RAct.begin({ repoUuid: uuid, kind: 'setup', message: `set up the desktop${extras.length ? ` — ${extras.join(', ')}` : ''}`, provider: 'cos · testenv' });
+    if (e.kind === 'step') RAct.note(task, e.msg, e.stderr);
+    else if (e.kind === 'end') RAct.end(task, { ok: !!(e.result && e.result.ok), text: e.result && e.result.ok ? 'the desktop is ready' : '', error: e.result && !e.result.ok ? e.result.error || 'the setup failed' : null });
+  };
+  const job = deps.require('../../cos/testenv/setup-job.js').start({ extras, node: options.node && options.node !== 'lts' ? options.node : null, login, onEvent });
+  if (job.state === 'running') onEvent({ kind: 'step', msg: `started${extras.length ? ` with ${extras.join(', ')}` : ''}` });
   deps.emit('idearium.repo.environment.setup', { repoUuid: uuid, extras, state: job.state });
   return ok({ repoUuid: uuid, extras, install: c.plan.install, job: { state: job.state, startedAt: job.startedAt } });
 }
@@ -288,7 +306,9 @@ export async function plan(deps, uuid, { map = null } = {}) {
       phases = phases.slice().sort((a, b) => order.indexOf(a.phase_key) - order.indexOf(b.phase_key));
     }
   }
-  phases = phases.map(p => ({ ...p, layer: layered[p.phase_key] || p.layer || null }));
+  // §0.39.361 SB50 — the dates each map holds: when it was mapped, when a phase's status was written
+  const texts = new Map(); try { for (const m of PH.mapsFor({ repo: r.repo, repoDir: r.dir }).maps) texts.set(m.path, m.text); } catch (_) {}
+  phases = phases.map(p => ({ ...p, layer: layered[p.phase_key] || p.layer || null, ...(texts.has(p.map) ? (({ mapped, statusDate }) => ({ mappedOn: mapped, statusDate }))(PH.phaseDates(texts.get(p.map), p.phase_key)) : {}) }));
   const runs = deps.phaseRuns(uuid);
   const out = BP.buildPlan({ phases, runs });
   const planning = runs.filter(x => x.phase === 'PLAN' && (!map || x.map === map)).slice(0, 5);

@@ -129,11 +129,17 @@ async function main() {
     for (const c of doc.chunks) await quiet(() => se.completeChunk(doc.uuid, c.uuid, c.sectionId === 'registry' ? REGISTRY : `The ${c.sectionTitle} of the song maker, written out in full for the test.`));
     const g = await R('POST', `/api/spec-engine/specs/${doc.uuid}/codegen`, {});
     assert.strictEqual(g.status, 200, JSON.stringify(g.json).slice(0, 400));
-    assert.strictEqual(g.json.plan.planSource, 'registry', 'planned from the registry, no agent asked');
+    // §0.39.359 SB31 — the code repo is the skeleton with the registry slotted in, still with no agent asked
+    assert.strictEqual(g.json.plan.planSource, 'skeleton + registry', 'planned from the registry into the skeleton, no agent asked');
+    assert.deepStrictEqual(g.json.plan.slot.components.length, 4, 'every non-test component slotted in');
     assert.deepStrictEqual(g.json.registry, { used: true, components: 5, problems: [] });
     const code = se.loadSpec(g.json.manifest.uuid);
     assert.strictEqual(code.registry.length, 5, 'the registry rides on the code spec — the checklist');
-    assert.deepStrictEqual(code.chunks.map(c => c.realPath).sort(), ['src/app.js', 'src/engine/sequencer.js', 'src/kernel/clock.js', 'src/kernel/pattern.js', 'test/sequencer.test.js']);
+    const paths = code.chunks.map(c => c.realPath);
+    for (const f of ['src/app.js', 'src/engine/sequencer.js', 'src/kernel/clock.js', 'src/kernel/pattern.js', 'test/sequencer.test.js', 'server.js', 'registry-components.js', 'lib/node-index.js']) assert.ok(paths.includes(f), f);
+    const pending = code.chunks.filter(c => c.status !== 'complete').map(c => c.realPath).sort();
+    assert.deepStrictEqual(pending, ['src/app.js', 'src/engine/sequencer.js', 'src/kernel/clock.js', 'src/kernel/pattern.js', 'test/sequencer.test.js'], 'only the registry\'s files are left to build — the skeleton and the slot\'s nodes are written');
+    assert.strictEqual(code.chunks.find(c => c.realPath === 'src/app.js').file.layer, 'runtime', 'a slotted file keeps its registry layer');
     assert.ok(g.json.repoUuid, 'its repo');
     const v = await R('POST', `/api/repos/${g.json.repoUuid}/verify`, {});
     const body = v.json.verify || v.json;
@@ -149,6 +155,25 @@ async function main() {
     const reg2 = g2.json.registry || (g2.json.detail && g2.json.detail.registry) || {};   // 200 when an agent planned; 422 (detail) when none could
     assert.strictEqual(reg2.used, false, JSON.stringify(g2.json).slice(0, 300));
     assert.match((reg2.problems || []).join(' '), /no `components:` list/);
+  });
+
+  await test('RD-06', '0.47.0 SP3 — a spec that becomes complete plans its file tree by itself, from its registry (the spine); said in the log', async () => {
+    const doc = await quiet(() => se.createSpec({ name: `auto tree ${Date.now()}`, description: 'a small song maker', templateIds: [] }));
+    for (const c of doc.chunks) {   // through the real route — the path a build lands on
+      const r = await R('POST', `/api/spec-engine/specs/${doc.uuid}/chunk/${c.uuid}/complete`, { content: c.sectionId === 'registry' ? REGISTRY : `The ${c.sectionTitle} of the song maker, written out in full for the test.` });
+      assert.strictEqual(r.status, 200, JSON.stringify(r.json).slice(0, 200));
+    }
+    let after = null;
+    for (let i = 0; i < 60 && !(after && after.codeSpecUuid); i++) { await new Promise(x => setTimeout(x, 250)); after = se.loadSpec(doc.uuid); }
+    assert.ok(after && after.codeSpecUuid, 'no code spec was planned on completion');
+    const code = se.loadSpec(after.codeSpecUuid);
+    const paths = code.fileTree.files.map(f => f.path);
+    for (const want of ['src/kernel/clock.js', 'src/kernel/pattern.js']) assert.ok(paths.includes(want), `${want} not in the planned tree`);
+    assert.ok(paths.some(p => /registry-components\.js$/.test(p)), 'the skeleton registry (the spine) is in the tree');
+    const AL = require(path.join(ROOT, 'lib/activity-log/compartment.js'));
+    const repoUuid = (await R('GET', '/api/repos')).json.repos.find(x => x.specUuid === after.codeSpecUuid);
+    const rows = AL.list(repoUuid ? repoUuid.uuid : doc.uuid, { kind: 'spec', limit: 10 });
+    assert.ok((rows.rows || rows).some(x => x.kind === 'spec.filetree'), 'the plan is said in the activity log');
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

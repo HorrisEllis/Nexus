@@ -184,6 +184,9 @@ function openSSE() {
         // §FEED 0.39.244 — a repo agent's live guardian feed: to the Agent tab only (several a second;
         // it would bury the event log and trigger refreshes for nothing).
         if (ev && ev.type === 'idearium.repo.agent.feed') { _agentFeedIn(ev.payload || {}); return; }
+        // §0.39.366 — a repo's background task changed: to its Tasks panel only (several a second while an agent runs)
+        if (ev && ev.type === 'idearium.repo.task') { if (typeof rtIn === 'function') rtIn(ev.payload || {}); return; }
+        if (ev && ev.type === 'idearium.repo.activity') { if (typeof rtLogIn === 'function') rtLogIn(ev.payload || {}); return; }   // §0.39.369 AL2
         appendEventLog(ev); refreshOnEvent(ev);
       }
       catch(_) {}
@@ -2005,6 +2008,7 @@ let CURRENT_REPO_SUBTAB = null;
 
 function setRepoSubtab(name) {
   if (name === 'roadmap' || name === 'phasemap') name = 'phases';   // §0.39.271 P4 — one tab now
+  if (name === 'agent') name = 'code';   // §0.48.0 OS9 — the agent lives in the Code tab; its settings in Settings → Agents
   CURRENT_REPO_SUBTAB = name;
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));
@@ -3662,8 +3666,9 @@ window.addEventListener('message', async (ev) => {
   const repo = API_REPOS.find(r => r.uuid === d.repoUuid);
   if (!repo) { toast(`the repo is not listed yet: ${d.repoUuid}`, 'err'); return; }
   openRepoFor(repo.ideaUuid, repo.specUuid, repo.name);
-  if ((d.subtab === 'spec' || d.subtab === 'architect') && typeof setRepoSubtab === 'function') setRepoSubtab(d.subtab);
-  toast(d.subtab === 'spec' ? `${repo.name}: its spec, from the workshop` : d.subtab === 'architect' ? `${repo.name}: its architecture` : `${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
+  // §0.39.354 WS7 — the workshop's pipeline opens the repo on its Phases (what it just planned and started building)
+  if ((d.subtab === 'spec' || d.subtab === 'architect' || d.subtab === 'phases') && typeof setRepoSubtab === 'function') setRepoSubtab(d.subtab);
+  toast(d.subtab === 'spec' ? `${repo.name}: its spec, from the workshop` : d.subtab === 'architect' ? `${repo.name}: its architecture` : d.subtab === 'phases' ? `${repo.name}: its phases, from the workshop's pipeline` : `${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
 });
 /** "import my archives", "load the nexus zips", "restore my archive zips" — the drop box, not a question for the model */
 const ARCHIVE_IMPORT_INTENT = /\b(import|bring in|load|restore)\b[^.\n]{0,40}\b(archives?|zips?|nexus history)\b/i;
@@ -3685,6 +3690,7 @@ function openSettingsConsole(repoUuid) {
 // the repo this was built against has 502 files); now a real tree.
 let REPO_TREE_COLLAPSED = new Set(); // dir paths the user closed (opt OUT, default open)
 function renderApiRepoPanel(repo) {
+  if (repo && typeof rtRepoShown === 'function') { try { rtRepoShown(repo); } catch (_) {} }   // §0.39.366 the repo's Tasks panel
   const tree = document.getElementById('file-tree');
   if (!ACTIVE_API_FILE) {
     document.getElementById('ide-tabs').textContent = 'no file open';
@@ -4241,7 +4247,10 @@ function _agentFeedIn(p) {
   // transcript streamer, then the reply watch, which restarted from 0 and sent the whole reply as a
   // "delta"). A chunk that IS the whole reply (its length is fullLen), or that restates what is shown
   // and continues it, replaces; a chunk the shown text already ends with is a repeat and is dropped.
-  if (p.event === 'chunk' && typeof p.text === 'string') {
+  if (p.event === 'chunk' && typeof p.text === 'string' && p.source === 'ollama') {
+    // §0.39.356 LS3 — copilot's deltas are exact (cut from the bridge job's own text by its length): appended as they come
+    st.text = (st.text + p.text).slice(-20000); st.textLen = p.fullLen || st.text.length;
+  } else if (p.event === 'chunk' && typeof p.text === 'string') {
     const t = p.text;
     if (p.reset || (p.fullLen && t.length === p.fullLen) || (st.text && t.startsWith(st.text))) st.text = t;
     else if (st.text && st.text.endsWith(t)) { /* repeat of the tail — already shown */ }
@@ -4259,11 +4268,13 @@ function _agentFeedIn(p) {
       p.event === 'complete' && p.chars ? `${p.chars}ch` : null].filter(Boolean).join(' · ');
   // A 'dom' pulse updates the live header; it is not worth a log row each second. Streamed chunks every 500 ms
   // show in the live text below, not as a row each.
-  if (!(p.event === 'progress' && p.stage === 'dom') && !(p.event === 'chunk' && p.source === 'transcript')) {
+  if (!(p.event === 'progress' && p.stage === 'dom') && !(p.event === 'chunk' && (p.source === 'transcript' || p.source === 'ollama'))) {
     st.rows.push({ ts: p.guardianTs || Date.now(), ev, detail, bad: p.event === 'error' || p.event === 'timeout' || (p.event === 'gate' && p.state === 'failed') });
     if (st.rows.length > AGENT_FEED_MAX) st.rows.splice(0, st.rows.length - AGENT_FEED_MAX);
   }
   if (CURRENT_API_REPO && CURRENT_API_REPO.uuid === p.repoUuid) _agentFeedPaint(p.repoUuid);
+  if (typeof agentLivePaint === 'function') agentLivePaint(p.repoUuid);   // §0.39.356 LS4 — the Code tab and the work surface
+  if (typeof wsLivePaint === 'function') wsLivePaint(p.repoUuid);   // §0.39.362 WS2 — each file it is writing, a card
 }
 function _agentFeedHtml(uuid) {
   const st = _agentFeedState(uuid);
@@ -4293,6 +4304,34 @@ function _agentFeedPaint(uuid) {
   if (panel && panel.open === false) return;   // collapsed: the summary line is all that shows — no repaint of the body
   el.innerHTML = _agentFeedHtml(uuid);
   const rows = el.querySelector('[data-feed-rows]'); if (rows) rows.scrollTop = rows.scrollHeight;
+}
+
+// ── §0.39.356 LS4 — the agent writing, live, in the Code tab and the Plan's work surface ──────────────────
+// James: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel and code tab."
+// The same feed state as the Agent tab (one state, AGENT_FEED): a browser agent through guardian (its DOM mutations, the
+// node it reads the reply from, the reply), an Ollama model through copilot (LS1–LS3, its text as it writes). Any
+// element with data-al="<repo uuid>" is a slot; every frame repaints the slots in place. A slot scrolled up stays put.
+function agentLiveHtml(uuid) {
+  const st = _agentFeedState(uuid);
+  if (!st.jobId) return '<div class="al-head"><span class="al-dot"></span><span class="al-dim">the agent is not writing — when it builds, what it writes streams here</span></div>';
+  const a = st.anchor, last = st.rows[st.rows.length - 1];
+  const attrs = a && a.attrs ? Object.entries(a.attrs).map(([k, v]) => `${k}=${v}`).join(' ') : '';
+  return `<div class="al-head"><span class="al-dot${st.generating ? ' on' : ''}"></span><b>${st.generating ? 'writing' : 'idle'}</b>
+      ${st.provider ? `<span>${escapeHtml(st.provider)}</span>` : ''}<span class="al-dim">job ${escapeHtml(String(st.jobId).slice(0, 8))}</span>
+      ${st.mutations != null ? `<span class="al-dim">mutations ${st.mutations}</span>` : ''}
+      ${a ? `<span class="al-anchor" title="${escapeHtml(attrs)}">⌖ ${escapeHtml(a.path || a.tag || '')}</span>` : ''}
+      <span class="al-dim">${st.textLen || st.text.length}ch</span>
+      ${last ? `<span class="al-grow"></span><span class="al-dim${last.bad ? ' al-bad' : ''}">${escapeHtml(last.ev)}${last.detail ? ` · ${escapeHtml(last.detail)}` : ''}</span>` : ''}</div>
+    ${st.text ? `<pre class="al-text">${escapeHtml(st.text.slice(-6000))}</pre>` : ''}`;
+}
+function agentLivePaint(uuid) {
+  for (const el of document.querySelectorAll(`[data-al="${uuid}"]`)) {
+    const old = el.querySelector('.al-text');
+    const follow = !old || old.scrollTop + old.clientHeight >= old.scrollHeight - 24;   // at the bottom: follow the newest line
+    const keep = old ? old.scrollTop : 0;
+    el.innerHTML = agentLiveHtml(uuid);
+    const t = el.querySelector('.al-text'); if (t) t.scrollTop = follow ? t.scrollHeight : keep;
+  }
 }
 
 function _agentTranscript(uuid) {
@@ -4335,7 +4374,7 @@ learned    ${mem.total} observation${mem.total === 1 ? '' : 's'}${kindCounts ? `
 exchanges  ${st.exchanges || 0}</div>
     </div>
     ${_sharedAgentNote(st)}
-    <div style="margin:6px 0;font-size:10px;opacity:.6">hat, teaching, export/import and inject mode live in <span style="cursor:pointer;text-decoration:underline" onclick="setRepoSubtab('settings')">Settings → Agents</span>${st.exists ? '' : ' — no hat forged yet'}</div>
+    ${typeof agentOptionsHtml === 'function' ? agentOptionsHtml(repo, AGENT_SETTINGS.get(repo.uuid)) : ''}
 `;
 
   const memHtml = '';
@@ -4370,6 +4409,7 @@ exchanges  ${st.exchanges || 0}</div>
       </div>
     </div>`;
 
+  if (typeof agentOptionsMounted === 'function') agentOptionsMounted();   // §0.47.0 OS4 — every agent option here
   const ta = document.getElementById('agent-input');
   if (ta) ta.addEventListener('keydown', e => {
     // Enter sends, Shift+Enter newlines — same convention as the idea composer.

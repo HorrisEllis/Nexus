@@ -171,3 +171,10 @@ spec:
     - "copilot's own event channel vs riding guardian's job.* events — not confirmed"
     - "ollama and bridge's event emission — not read this pass, blocked on command-index phases 2 and 4 anyway"
     - "route graph edge-glow-on-call requires a live call-trace per system, which command-index-per-system.spec does not produce (it's a static index) — a second mechanism, not yet specced"
+
+# ## ADDENDUM 2026-10-07 (0.39.373 BO1, docs/2026-10-07-compartment-control-and-activity-phasemap.spec)
+# James: "Wait what about brainos instead?"
+# A new real data source, held to this spec's axioms: the right panel's ACTIVITY tab reads every compartment's activity
+# log (lib/activity-log/compartment.js) through idearium GET /api/activity, then each row as it is written over idearium's
+# SSE (idearium.repo.activity) — §NO_DECORATIVE_MOTION: the list changes only when a row arrives. The per-SYSTEM log
+# (lib/activity-log/index.js → cortex event_log) is unchanged; the two are one family at two granularities.

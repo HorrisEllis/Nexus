@@ -41,3 +41,14 @@
 .ws-ask{display:flex;align-items:center;gap:6px;padding:6px 10px;border-top:1px solid rgba(255,255,255,.06);background:var(--nx-card2);font-size:10px;color:var(--text3)}
 .ws-ask input{background:var(--nx-void);border:1px solid var(--nx-rim);color:var(--text);font:10.5px var(--mono);border-radius:5px;padding:3px 6px}
 .ws-ask .ws-n{width:48px}.ws-ask .ws-q{flex:1;min-width:0}.ws-ask input:focus{outline:none;border-color:var(--ac)}
+/* §0.39.361 — an undone change: its counts struck, its diff dimmed, and what the file is now said in one line */
+.ws-undone{opacity:.45;text-decoration:line-through}
+.ws-now{padding:4px 10px 6px 34px;font-size:10px}.ws-now.ok{color:var(--mint)}.ws-now.bad{color:var(--coral)}
+.ws-undone-cap{padding:4px 10px;font-size:9.5px;color:var(--text3);border-top:1px solid rgba(255,255,255,.06)}
+.ws-diff-undone{opacity:.5;filter:saturate(.35)}
+
+/* §0.39.362 WS2 — the agent writing, as cards: a file forming while its fence is open */
+.ws-forming-h{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text3);margin:6px 0 3px}
+.ws-forming{border-style:dashed;opacity:.92}.ws-forming .ws-diff{max-height:220px;overflow:hidden}
+.ws-st-writing{color:var(--sky,#38bdf8);border-color:rgba(56,189,248,.4);animation:ws-pulse 1.2s ease-in-out infinite}
+@keyframes ws-pulse{50%{opacity:.45}}

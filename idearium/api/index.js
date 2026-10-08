@@ -272,7 +272,51 @@ function _storedFor(chunk, { prompt = null } = {}) {
 import { COMPONENTS as IDEARIUM_COMPONENTS } from '../registry-components.js';
 import path from 'path';
 import fs from 'fs';
-import { loadTable, appendRow, deleteRow, syncTable } from '../lib/db.js';
+import { loadTable, appendRow as _appendRowRaw, deleteRow, syncTable } from '../lib/db.js';
+// §0.39.361 AR2 — James: "Failure modes and faults are still first class data." Every phase-run row that is a fault
+// (no snapshot, failed and why, wrote nothing, missed files, blocked, tool errors, unproven, every rung tried) is also
+// its own fault_log record (lib/phase-faults.js → lib/fault-log.js logFault), here where every such row is written.
+function appendRow(table, row) {
+  const out = _appendRowRaw(table, row);
+  if (table === 'idearium_phase_runs') { try { _require('../../lib/phase-faults.js').log(row); } catch (_) { /* a fault that cannot be logged never fails the build */ } }
+  if (table === 'idearium_phase_runs') { try { _repoActivity().phaseRow(row); } catch (_) { /* §0.39.366 — the background tasks panel never fails a build */ } }
+  return out;
+}
+// §0.40.0 VR1 — every change to a repo's files settles into one versionium commit (lib/repo-versions.js), through the
+// same repo snapshot a person takes; only the changed files are sent. Setting versions.every_change (default on).
+try {
+  const RV = _require('../../lib/repo-versions.js');
+  RV.setCommitter(async ({ repoUuid, message, causedBy, provenance }) => {
+    let on = true; try { on = getIdeariumValue('versions.every_change') !== false; } catch (_) {}
+    if (!on) return { ok: true, commitId: null, skipped: 'versions.every_change is off' };
+    const r = await _commitRepoSnapshotFor(repoUuid, { message, causedBy, provenance });
+    return r.ok ? { ok: true, commitId: r.data.commitId, changed: r.data.files ? r.data.files.counts : null } : { ok: false, error: r.error };
+  });
+} catch (_) {}
+// §0.39.366 — a compartment's background tasks (lib/repo-activity.js): every change broadcast as idearium.repo.task; the
+// history before this process from the compartment's own exchange log
+let _repoActivityMod = null;
+function _repoActivity() {
+  if (_repoActivityMod) return _repoActivityMod;
+  const RAct = _require('../../lib/repo-activity.js');
+  RAct.onChange((task) => { try { getIdeaOS().broadcast('idearium.repo.task', { repoUuid: task.repoUuid, task }); } catch (_) {} });
+  RAct.setHistorySource((uuid) => { try { return _require('../../lib/repo-agent.js').history(uuid, 60); } catch (_) { return []; } });
+  // §0.39.371 CK1 — before each task's work, the repo's desktop (when it is running) is checkpointed; the checkpoint is on
+  // the task and in the log, so "back to before this" is a click. Settings: desktop.checkpoint_before (default on).
+  RAct.setCheckpointer(async ({ repoUuid, label, causedBy }) => {
+    let on = true; try { on = getIdeariumValue('desktop.checkpoint_before') !== false; } catch (_) {}
+    const repo = on ? getRepoLayer().get(repoUuid) : null;
+    if (!repo || !repo.compartmentId) return null;
+    const cb = _require('../../lib/cos-bridge.js');
+    const st = cb.desktop(repo.compartmentId, { action: 'status' });
+    if (!st || st.state !== 'running') return null;
+    return cb.desktopControl(repo.compartmentId, 'checkpoint', { label, causedBy });
+  });
+  // §0.39.368 AL1 — every activity row, as it is written, to an open Log view (SSE only)
+  try { _require('../../lib/activity-log/compartment.js').onRecord((row) => { try { getIdeaOS().broadcast('idearium.repo.activity', { repoUuid: row.compartment, row }); } catch (_) {} }); } catch (_) {}
+  _repoActivityMod = RAct;
+  return RAct;
+}
 import * as WB from '../lib/idea-workbench.js';
 import { runImportPipeline } from '../repo/import-pipeline.js';
 import { makeBusForwarder } from '../repo/pipeline-events.js';
@@ -614,6 +658,9 @@ async function _phaseSetStatus(repo, { map, phase, status, force = false, reason
 // Build one phase: (1) a Versionium snapshot of every repo the build can touch —
 // refused without one (map invariant I2); (2) the phase goes active; (3) the repo's
 // agent gets the phase as its task, in the background; the run is recorded at each step.
+// the call's own backend when there is no ladder ('ollama' when it names one), for shouldChunk
+function paramsOfBackend(backend, rungs) { return rungs.length ? null : backend || null; }
+
 async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '' }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
@@ -631,7 +678,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     target = getRepoLayer().list({}).find(r => r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system === owner) || null;
     if (!target) return { ok: false, status: 409, error: `nexus/${owner} has no repo yet — sync the nexus repo first` };
   }
-  const runId = `phrun-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+  const runStartTs = Date.now();
+  const runId = `phrun-${runStartTs.toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title };
 
   // (1) snapshot first — never write without one
@@ -650,9 +698,13 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   }
   const depsDone = view.phases.filter(p => node.depends_on.includes(p.uuid) && p.status === 'complete').map(p => p.phase_key);
   const req = PH.buildRequest({ phase: node, mapText, repo: target, depsDone });
-  const message = note ? `${req.message}\n\nFROM JAMES: ${note}` : req.message;
-  appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length, ts: Date.now() });
-  getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
+  // §0.39.361 AR2 — before acting, what went wrong on this phase before (fault_log): the agent is told, the Plan shows it
+  let precedent = { faults: [], text: '' };
+  try { precedent = _require('../../lib/phase-faults.js').precedent(phase); } catch (_) {}
+  // §0.39.362 CH2 — the compartment's charter (charter.spec at the repo root): its axioms, what must stay true, its end state
+  let charterText = '';
+  try { charterText = _require('../../lib/charter.js').requestText(_charterOf(target.uuid)); } catch (_) {}
+  const message = [req.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
@@ -674,52 +726,124 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const L = PRt.ladder(policy, { installed });
     rungs = L.rungs; ladderFrom = L.from;
   }
+  // §0.39.361 AR1 — James: "needs to learn from this: routing and adapting". The ladder is ordered by what every phase
+  // build so far says about each agent (lib/agent-record.js — a projection of idearium_phase_runs and the injects):
+  // what lands, what is proven, what the person undid, and the request size each one keeps failing at. Nothing
+  // learned yet → the ladder exactly as configured. routing.ladder_learn: false turns it off.
+  // §0.39.361 SB51 — one request per file when the build starts on a small local model (routing.chunk_phases)
+  const chunking = PRt.shouldChunk(policy, { rungs, files: expectFiles, backend: paramsOfBackend(backend, rungs) });
+  let route = null;
+  if (rungs.length > 1 && policy.ladderLearn !== false) {
+    try {
+      const AR = _require('../../lib/agent-record.js');
+      const RIx = _require('../../lib/repo-inject.js');
+      const undone = RIx.list(null, { limit: 5000 }).filter(n => n.status === 'reverted' || n.status === 'rejected');
+      const o = AR.orderLadder(rungs, AR.record(loadTable('idearium_phase_runs'), { injects: undone }), { promptChars: chunking.chunk ? 2400 : message.length, minRecords: policy.learnMinRecords >= 1 ? Math.min(policy.learnMinRecords, 3) : 2 });
+      route = { learned: o.changed, bucket: o.bucket, why: o.why };
+      if (o.changed) { rungs = o.rungs; ladderFrom = `learned from past builds (${o.bucket} request) — ${ladderFrom}`; }
+    } catch (e) { route = { learned: false, error: e.message }; }
+  }
+  // the run starts here, its route on it: the ladder's order and, per agent, why it sits where it does
+  appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length,
+    ...(precedent.faults.length ? { precedent: precedent.faults.map(f => ({ uuid: f.uuid, ts: f.ts, agent: f.agent, mode: f.mode, promptChars: f.meta.promptChars || null })) } : {}),
+    ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom } } : {}),
+    chunking: { chunk: chunking.chunk, why: chunking.why, ...(chunking.chunk ? { files: expectFiles } : {}) }, ts: Date.now() });
+  getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
   const paramsOf = (rg) => (!rg ? { backend, agent, provider } : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
   // one attempt on one rung (rg null = no ladder: the call's own agent): dispatch, the shadow settled, the row built
-  const attempt = async (rg, ri, tryNo) => {
-    const session = ri <= 0 && tryNo === 1 ? runId : `${runId}-r${ri + 1}t${tryNo}`;
+  // §0.39.361 SB51 — the attempt is made for one request: the whole phase (msg = message, files = every file it names),
+  // or one chunk (one file, its own short request, its own sessions; ck = { chunk, chunks, file } on every row)
+  const makeAttempt = ({ msg, files, ck = null }) => async (rg, ri, tryNo) => {
+    const tag = ck ? `-c${ck.chunk}` : '';
+    const session = ri <= 0 && tryNo === 1 ? `${runId}${tag}` : `${runId}${tag}-r${ri + 1}t${tryNo}`;
     // §0.39.282 N23 — each phase is its own chunk in its own FRESH chat (session), so a small local model gets its whole
     // window for this phase, not the running history of every phase before it.
-    const shadow = expectFiles.length ? SH.declare({ step: 'phase.build', expects: { files: expectFiles }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
+    // §0.39.364 — James: "can we start using it with the resource monitor to optimize performance dynamically". A local
+    // model that will not fit in memory now is not tried: his 7b and 16b rungs each sat 45 s loading into swap with
+    // 1–7% free and failed. Skipped, said why, and the climb goes straight to the next rung (no retry on this one).
+    if (rg && rg.base === 'ollama' && rg.model) {
+      try {
+        const om = await _ollamaModels();
+        const fit = _require('../../lib/resource-monitor.js').fitsModel({ model: rg.model, bytes: om.sizes ? om.sizes[rg.model] : null, loaded: om.loaded || [] });
+        if (!fit.fits) {
+          const row = { uuid: `${session}-skipped`, ...base, state: 'skipped', memorySkip: true, snapshot: commitId, ...(ck || {}), provider: rg.provider,
+            rung: ri + 1, rungs: rungs.length, attempt: tryNo, error: `not enough memory to load it now — ${fit.why}`, needBytes: fit.needBytes, availableBytes: fit.availableBytes, promptChars: msg.length, ts: Date.now() };
+          return { r: null, state: 'skipped', absent: null, dp: paramsOf(rg), row, trigger: 'no-memory' };
+        }
+      } catch (_) { /* the check could not run: the rung is tried, as before */ }
+    }
+    const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
-    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0 }); }
+    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0 }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
     let state = r && r.ok ? (r.injects && r.injects.blocked ? 'blocked' : 'replied') : 'failed';
-    let absent = null;
+    let absent = null, unchanged = false;
     if (shadow) {
       if (state !== 'replied') SH.drop(shadow);
       else { const got = SH.settle(shadow, { files: ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
     }
-    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}),
-      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : null)),
+    // §0.39.355 PB2 — James: "it needs to actually build it". A build whose reply changed no file (nothing written,
+    // staged or proposed, by a fenced block or a code_edit / code_write / code_batch call) did not build: incomplete,
+    // so the ladder climbs instead of ending on prose.
+    if (state === 'replied' && !PRt.changedAnything(r)) { state = 'incomplete'; unchanged = true; }
+    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}),
+      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : null)),
       provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || null,
       ...(rg ? { rung: ri + 1, rungs: rungs.length, attempt: tryNo, ...(r && r.toolErrors ? { toolErrors: true } : {}) } : {}),
-      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
+      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, promptChars: msg.length, ts: Date.now() };
     // §0.39.284 W3 — the tool calls of this run are kept on it, so the work surface can show what the agent used
     try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
     return { r, state, absent, dp, row, trigger: r && r.toolErrors ? 'tool-errors' : state };
   };
   // each attempt recorded on the Plan; a climb says from what, to what, and why
-  const onOutcome = async (out, { rung, index, tryNo, next, exhausted }) => {
+  const makeOnOutcome = (ck = null) => async (out, { rung, index, tryNo, next, exhausted }) => {
+    const tag = ck ? `-c${ck.chunk}` : '';
     const row = exhausted ? { ...out.row, ladderExhausted: true, error: `${out.row.error || out.trigger} — every rung of the ladder tried (${rungs.map(x => x.provider).join(' → ')})` } : out.row;
     appendRow('idearium_phase_runs', row);
     getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: row.state, snapshot: commitId, ...(rung ? { rung: index + 1, provider: rung.provider } : {}) });
     if (!next) return;
     const why = `${out.trigger}${out.row.error ? ` — ${String(out.row.error).slice(0, 200)}` : ''}`;
-    const sess = `${runId}-r${next.index + 1}t${next.tryNo}`;
-    appendRow('idearium_phase_runs', { uuid: `${sess}-${next.how}`, ...base, state: next.how, snapshot: commitId, provider: next.rung.provider, rung: next.index + 1, rungs: rungs.length, attempt: next.tryNo,
+    const sess = `${runId}${tag}-r${next.index + 1}t${next.tryNo}`;
+    appendRow('idearium_phase_runs', { uuid: `${sess}-${next.how}`, ...base, ...(ck || {}), state: next.how, snapshot: commitId, provider: next.rung.provider, rung: next.index + 1, rungs: rungs.length, attempt: next.tryNo,
       from: rung.provider, to: next.rung.provider, error: next.how === 'escalating' ? `${rung.provider} ${why} → climbing to ${next.rung.provider} (rung ${next.index + 1} of ${rungs.length}; ${ladderFrom})` : `${rung.provider} ${why} → attempt ${next.tryNo} of ${policy.retriesPerRung} on the same rung`, ts: Date.now() });
     getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: next.how, snapshot: commitId, from: rung.provider, to: next.rung.provider });
   };
-  Promise.resolve().then(() => PRt.climb({ rungs, policy, attempt, onOutcome }))
-    .then(({ r, state, absent, dp }) => {
-      _reviewDraft({ r, state, absent, target, base, commitId, req, note, message })
+  // the whole phase in one request, or — chunked — one climb per file, in order, each seeing what the earlier ones wrote
+  const runWhole = () => PRt.climb({ rungs, policy, attempt: makeAttempt({ msg: message, files: expectFiles }), onOutcome: makeOnOutcome() });
+  const runChunked = async () => {
+    const done = []; let last = null;
+    const RIc = _require('../../lib/repo-inject.js');
+    for (let i = 0; i < expectFiles.length; i++) {
+      const file = expectFiles[i];
+      const ck = { chunk: i + 1, chunks: expectFiles.length, file };
+      const cr = PH.chunkRequest({ phase: node, mapText, repo: target, file, index: i, files: expectFiles, done, depsDone });
+      const msg = [cr.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+      last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg, files: [file], ck }), onOutcome: makeOnOutcome(ck) });
+      if (last.state !== 'replied') {
+        appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-stopped`, ...base, ...ck, state: 'failed', chunkStopped: true, snapshot: commitId,
+          error: `chunk ${ck.chunk} of ${ck.chunks} (${file}) did not land — the run stops here; ${done.length ? `${done.map(d => d.path).join(', ')} came back` : 'nothing came back'}`, ts: Date.now() });
+        getIdeaOS().emit('idearium.repo.phase.run', { ...base, ...ck, state: 'failed', snapshot: commitId });
+        return { ...last, stopped: true };
+      }
+      // what it wrote: its exports, for the next chunk (the proposal's content — in review mode nothing is on disk yet)
+      let code = '';
+      try { const it = ((last.r.injects && last.r.injects.injects) || []).find(x => (x.path || x.file) === file); const n = it && it.uuid ? RIc.get(it.uuid) : null; code = (n && n.content) || ''; } catch (_) {}
+      if (!code) { try { const t = getRepoLayer().readTextFile(target.uuid, file); code = t && !t.error ? String(t.content || '') : ''; } catch (_) {} }
+      done.push({ path: file, exports: PH.exportsOf(code) });
+    }
+    return last;
+  };
+  Promise.resolve().then(() => (chunking.chunk ? runChunked() : runWhole()))
+    .then(({ r, state, absent, dp, stopped }) => {
+      if (stopped) return;
+      // a chunked run's replies were each one file: the draft review reads a whole reply, so it is for whole-phase runs
+      (chunking.chunk ? Promise.resolve(null) : _reviewDraft({ r, state, absent, target, base, commitId, req, note, message }))
         .catch(e => { console.warn(`[idearium] draft review for ${runId} failed: ${e.message}`); return null; })
-        // §0.39.303 PH1 — then the judge: the phase's own conditions, run; unmet ones feed the next attempt
-        .then(() => (['replied', 'incomplete'].includes(state) ? _provePhase({ target, base, commitId, mapText, phase, message, dispatch: { backend: dp.backend || null, agent: dp.agent || null, provider: dp.provider || null, ...(dp.model ? { model: dp.model } : {}) } }) : null))
+        // §0.39.303 PH1 — then the judge: the phase's own conditions, run once on the whole phase; unmet ones feed the next attempt
+        .then(() => (['replied', 'incomplete'].includes(state) ? _provePhase({ target, base, commitId, mapText, phase, message, dispatch: { backend: dp.backend || null, agent: dp.agent || null, provider: dp.provider || null, ...(dp.model ? { model: dp.model } : {}) } , since: runStartTs }) : null))
         .catch(e => console.warn(`[idearium] proof of ${runId} failed: ${e.message}`));
     })
     .catch((e) => {
@@ -728,6 +852,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     });
   const shadow = expectFiles.length ? { expects: { files: expectFiles } } : null;
   return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length,
+    chunking: { chunk: chunking.chunk, why: chunking.why, ...(chunking.chunk ? { chunks: expectFiles.length } : {}) },
     ...(shadow ? { shadow: { expects: shadow.expects } } : {}), ...(rungs.length ? { ladder: { rungs: rungs.map(x => x.provider), from: ladderFrom } } : {}) } };
 }
 
@@ -735,11 +860,67 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
 // phase's own conditions (its map's `conditions:`, idearium/repo/proof-run.js). Met → 'proven'. Unmet → the unmet
 // promises, their evidence and causes go back to the same agent as the next attempt, up to repos.proof_attempts
 // (default 2), then 'unproven' with what is still missing. No conditions declared → 'no-proof', said, never assumed.
-async function _provePhase({ target, base, commitId, mapText, phase, message, dispatch }) {
+// §0.39.362 CH4 — +added −removed of proposals against the files on disk (the whole change, not a shown diff)
+function _proposedSize(dir, overlays) {
+  const CE = _require('../../lib/code-edit.js');
+  let added = 0, removed = 0;
+  for (const o of overlays) {
+    let before = null; try { before = fs.readFileSync(path.join(dir, o.path), 'utf8'); } catch (_) { before = null; }
+    const after = o.op === 'delete' ? null : o.content;
+    const nl = (x) => (x == null ? null : String(x).replace(/\r?\n$/, ''));
+    const d = CE.unifiedDiff(nl(before), nl(after), { path: o.path, context: 0, maxLines: Infinity }) || '';
+    for (const l of d.split('\n')) { if (l.startsWith('+++') || l.startsWith('---')) continue; if (l.startsWith('+')) added++; else if (l.startsWith('-')) removed++; }
+  }
+  return { added, removed, files: overlays.length };
+}
+
+// §0.39.372 NC2 — a repo's charter as it applies: its own (charter.spec), with every condition and axiom its compartment
+// inherits from its parents (a Nexus system: Nexus's). Where the charter is read for a request or a proof, this is read.
+function _charterOf(repoUuid) {
+  const CH = _require('../../lib/charter.js');
+  const ch = CH.load(_repoDiskDir(repoUuid));
+  try {
+    const repo = getRepoLayer().get(repoUuid);
+    if (repo && repo.compartmentId) return CH.withInherited(ch, _require('../../lib/cos-bridge.js').intentOf(repo.compartmentId));
+  } catch (_) { /* COS unreadable: the charter alone */ }
+  return ch;
+}
+
+// §0.39.362 CH5 — the compartment's end state, checked: on its files, with what is proposed laid over them (a scratch copy;
+// nothing written), each run a row of idearium_charter_runs — the compartment's progress on the Plan.
+async function _charterCheck(repoUuid, { withProposals = true, cause = null } = {}) {
+  const dir = _repoDiskDir(repoUuid);
+  if (!dir) return { ok: false, status: 500, error: 'could not resolve the repo directory' };
+  const CH = _require('../../lib/charter.js');
+  const ch = CH.load(dir);
+  const conds = CH.endStateConditions(ch);
+  if (!conds.length) return { ok: true, data: { repoUuid, empty: true, errors: ch.errors, note: ch.exists ? 'the charter names no end state' : 'this compartment has no charter.spec yet' } };
+  const POV = _require('../../lib/proof-overlay.js');
+  const ov = withProposals ? POV.prepare({ repoDir: dir, overlays: POV.overlaysOf(_require('../../lib/repo-inject.js').list(repoUuid, { limit: 500 })) }) : { dir, against: 'disk', overlaid: [], cleanup: () => {}, note: null };
+  const PR = await import('../repo/proof-run.js');
+  let r; try { r = await PR.runProof({ repoDir: ov.dir, conditions: conds, subject: `end state of ${repoUuid}`, write: false }); } finally { ov.cleanup(); }
+  if (!r.ok) return { ok: false, status: 422, error: `the end state could not be checked: ${r.error}` };
+  const row = { uuid: `charter-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, repoUuid, met: r.run.met, total: r.run.total, against: ov.against, overlaid: ov.overlaid || [], ...(ov.note ? { againstNote: ov.note } : {}),
+    results: (r.run.results || []).map(x => ({ says: x.says, met: !!x.met, evidence: String(x.evidence || '').slice(0, 300) })), cause, ts: Date.now() };
+  appendRow('idearium_charter_runs', row);
+  getIdeaOS().emit('idearium.repo.charter.checked', { repoUuid, met: row.met, total: row.total, against: row.against });
+  return { ok: true, data: row };
+}
+function _charterLatest(repoUuid) {
+  let best = null; for (const r of loadTable('idearium_charter_runs')) if (r.repoUuid === repoUuid && (!best || (r.ts || 0) > (best.ts || 0))) best = r;
+  return best;
+}
+
+async function _provePhase({ target, base, commitId, mapText, phase, message, dispatch, since = 0 }) {
   const PR = await import('../repo/proof-run.js');
   let { conditions, source } = PR.conditionsFromPhase(mapText, phase);
   // no declared conditions → the phase's own files: each exists, each JS file parses (never invented from prose)
   if (!conditions.length) { const d = PR.derivedConditionsFromPhase(mapText, phase); if (d.conditions.length) ({ conditions, source } = d); else source = d.source; }
+  // §0.39.362 CH3 — the compartment's charter conditions hold for every phase: checked in its proof, on the proposed code
+  const CH = _require('../../lib/charter.js');
+  const charter = _charterOf(target.uuid);
+  const charterConds = CH.proofConditions(charter);
+  if (charterConds.length) { conditions = [...conditions, ...charterConds]; source = `${source} + the charter's ${charterConds.length} condition${charterConds.length === 1 ? '' : 's'}`; }
   const pbase = { ...base, runId: `${base.runId}-proof`, buildRunId: base.runId };
   if (!conditions.length) {
     appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-no-proof`, ...pbase, state: 'no-proof', snapshot: commitId, error: `not proven: ${source} — add conditions: [{ says, check }] to the phase`, ts: Date.now() });
@@ -767,22 +948,33 @@ ${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}`
       }
     }
     const dir = _repoDiskDir(target.uuid);
-    const r = dir ? await PR.runProof({ repoDir: dir, conditions, subject: `${target.name || target.uuid} — ${base.title || phase}`, writer }) : { ok: false, error: 'could not resolve the repo directory' };
+    // §0.39.361 SB52 — proved against the code this run proposed (a scratch copy with the proposals laid over it), not
+    // the files on disk: in review mode the code waits for Apply, and a proof of the empty placeholders proved nothing
+    const POV = _require('../../lib/proof-overlay.js');
+    const ov = dir ? POV.prepare({ repoDir: dir, overlays: POV.overlaysOf(_require('../../lib/repo-inject.js').list(target.uuid, { limit: 500 }), { since }) }) : null;
+    let r;
+    try { r = dir ? await PR.runProof({ repoDir: ov.dir, conditions, subject: `${target.name || target.uuid} — ${base.title || phase}`, writer }) : { ok: false, error: 'could not resolve the repo directory' }; }
+    finally { if (ov) ov.cleanup(); }
+    const against = ov ? { against: ov.against, ...(ov.overlaid.length ? { overlaid: ov.overlaid } : {}), ...(ov.note ? { againstNote: ov.note } : {}) } : {};
+    // §0.39.362 CH4 — the least-code axiom, measured: the lines this run's proposals add, per check that passed
+    const size = dir ? _proposedSize(dir, POV.overlaysOf(_require('../../lib/repo-inject.js').list(target.uuid, { limit: 500 }), { since })) : null;
     if (!r.ok) {
       appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt, snapshot: commitId, error: `the proof could not run: ${r.error}`, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'unproven' });
       return { state: 'unproven' };
     }
-    run = r.run;
+    run = { ...r.run, against: { ...against, ...(size ? { leverage: CH.leverage({ ...size, met: r.run.met }) } : {}) } };
     if (run.verdict === 'ready') {
-      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
+      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...run.against, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.proven', { ...pbase, attempt, met: run.met, total: run.total, report: run.files && run.files.report });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'proven' });
+      // §0.39.362 CH5 — a proven phase moves the compartment: its end state is checked again (with what is proposed)
+      if (charter.endState.length) _charterCheck(target.uuid, { cause: base.runId }).catch(e => console.warn(`[idearium] end-state check after ${base.runId}: ${e.message}`));
       return { state: 'proven', attempt, run };
     }
   }
   const still = run.results.filter(x => !x.met).map(x => x.says);
-  appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt: max, snapshot: commitId, error: `after ${max} attempt(s), still not met: ${still.join(' · ').slice(0, 400)}`, proof: { met: run.met, total: run.total, modes: run.modes, report: run.files && run.files.report }, ts: Date.now() });
+  appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt: max, snapshot: commitId, ...(run.against || {}), error: `after ${max} attempt(s), still not met: ${still.join(' · ').slice(0, 400)}`, proof: { met: run.met, total: run.total, modes: run.modes, report: run.files && run.files.report }, ts: Date.now() });
   getIdeaOS().emit('idearium.phase.attempt.unmet', { ...pbase, attempt: max, met: run.met, total: run.total, modes: run.modes });
   getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'unproven' });
   return { state: 'unproven', run };
@@ -852,7 +1044,7 @@ async function _commitRepoSnapshotFor(uuid, body = {}) {
   if (!dir) return { ok: false, status: 500, error: 'could not resolve repo directory' };
   const { commitRepoSnapshot, verifyMustRecord } = await import('../repo/snapshot.js');
   const result = await commitRepoSnapshot({
-    repo, repoDir: dir, message: body.message || null, causedBy: body.causedBy || null,
+    repo, repoDir: dir, message: body.message || null, causedBy: body.causedBy || null, provenance: body.provenance || null,
     fileLayer: _fileLayers(uuid).fileLayer, snapshotMode: _snapshotMode(),
     commit: async (payload) => {
       const r = await _versionium('POST', '/api/versionium/commit', payload);
@@ -936,9 +1128,11 @@ async function _callRoute(action, params = {}, body = {}, query = {}) {
   return { status, ...(out || { ok: false, error: 'no response' }) };
 }
 
-function _startProof(repo, { rounds = 3, maxBuildsPerRound = 400 } = {}) {
+function _startProof(repo, { rounds = 3, maxBuildsPerRound = 400, debt = null } = {}) {
+  // §0.39.355 PB3 — debt: 'baseline' judges each round on what this run broke (older failures are known debt, never sent
+  // back); 'repair' sends every failure back. A Nexus system repo is the live tree: its debt is not a run's to rewrite.
   const run = { uuid: `proof-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, repoUuid: repo.uuid, repoName: repo.name, specUuid: repo.specUuid,
-    state: 'running', verdict: null, why: null, maxRounds: rounds, rounds: [], startedAt: Date.now(), endedAt: null, cancel: false };
+    debt: debt || (repo.nexusSelf ? 'baseline' : 'repair'), state: 'running', verdict: null, why: null, maxRounds: rounds, rounds: [], startedAt: Date.now(), endedAt: null, cancel: false };
   _proofs.set(repo.uuid, run);
   _buildingSpecs.add(repo.specUuid);   // the queue never builds a spec a proof run is building (one writer)
   _saveProof(run);
@@ -975,6 +1169,13 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
   const se = getSpecEngine();
   const os = getIdeaOS();
   const BV = _require('../../lib/build-verify.js');
+  // §0.39.355 PB3 — what was already failing before this run built anything
+  let baseline = null;
+  const builtFiles = new Set();
+  if (run.debt === 'baseline') {
+    try { const b0 = await _verifyRepo(getRepoLayer().get(run.repoUuid)); baseline = BV.baselineOf(b0); run.baseline = { failures: b0.failures.length, verdict: b0.verdict }; _saveProof(run); }
+    catch (e) { run.baseline = { error: e.message }; console.warn(`[idearium/prove] no baseline (every failure counts): ${e.message}`); }
+  }
   for (let round = 1; round <= run.maxRounds; round++) {
     const rr = { round, startedAt: Date.now(), built: 0, reused: 0, stalled: null, verdict: null, why: null, failures: [], repaired: [], notBuiltBySpec: [] };
     run.rounds.push(rr);
@@ -992,6 +1193,7 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
       if (w.cancelled) { run.state = 'cancelled'; run.why = `cancelled in round ${round} while ${rr.current} was building`; rr.endedAt = Date.now(); return; }
       if (w.timedOut) { rr.stalled = `${rr.current} was still building after ${Math.round(PROOF_CHUNK_WAIT_MS / 60000)} min — its agent did not answer`; break; }
       rr.built++;
+      try { const bc = (se.loadSpecMeta(run.specUuid).chunks || []).find(x => x.uuid === r.chunkUuid); if (bc && bc.realPath) builtFiles.add(bc.realPath); } catch (_) {}
       if (w.status !== 'complete') (rr.buildFailures = rr.buildFailures || []).push({ file: rr.current, status: w.status, why: w.failureMode || null });
     }
     rr.current = null;
@@ -1003,7 +1205,8 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
     }
     // 2 — verify the files as built
     const repo = getRepoLayer().get(run.repoUuid);
-    const v = await _verifyRepo(repo);
+    const v = BV.against(await _verifyRepo(repo), baseline, { built: [...builtFiles] });
+    if (v.known && v.known.length) { rr.known = v.known.length; rr.knownFiles = [...new Set(v.known.map(f => f.file))].slice(0, 50); }
     rr.verdict = v.verdict; rr.why = v.why; rr.checks = v.checks; rr.ms = v.ms;
     rr.failures = v.failures.slice(0, 50).map(_compactFailure);
     _recordVerify(repo, v, 'prove', { proofRun: run.uuid, round });
@@ -1296,6 +1499,51 @@ async function _architect() {
   _arMod = AR;
   return AR;
 }
+// §0.39.354 WS7 — the spec template's blocks as the workshop's parts (lib/workshop.js partsOf), from the spec engine
+// §0.39.357 RS5 — every template the picker offers, previewed: { blocks, list, picked }. only: the one id wanted (create).
+async function _workshopTemplates(WS, { only = null, name = null } = {}) {
+  const se = await _specEngineReady();
+  if (!se) throw new Error('the spec engine is still loading');
+  const blocks = se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title }));
+  const label = name || 'your spec';
+  const list = [];
+  if (!only || only === WS.CUSTOM.id) list.push({ ...WS.CUSTOM, builtin: true, preview: WS.previewOf({ template: WS.CUSTOM, blocks }) });
+  const docs = se.listTemplates().filter(t => t.id !== 'custom');   // spec-engine's 'custom' is the + card
+  docs.sort((a, b) => (b.id === 'genesis') - (a.id === 'genesis'));
+  for (const t of docs) {
+    if (only && only !== t.id) continue;
+    let seeds = {}; try { seeds = se.templateSeedSections(t.id, label) || {}; } catch (e) { console.warn(`[workshop.templates] ${t.id}: ${e.message}`); }
+    const tpl = { id: t.id, label: t.label, description: t.description, group: 'document', builtin: true, default: t.id === 'genesis', seeded: !!Object.keys(seeds).length, kind: t.kind, _seeds: seeds };
+    tpl.preview = WS.previewOf({ template: tpl, seeds, blocks });
+    list.push(tpl);
+  }
+  if (!only || /^cos-/.test(only)) {
+    try {
+      const FTP = _require('../../lib/file-tree-plan.js');
+      for (const t of FTP.listCosTemplates()) {
+        if (only && only !== t.id) continue;
+        const f = FTP.fromCosTemplate(t.id, { name: label });
+        const files = f.ok ? f.files.map(x => ({ path: x.path, layer: x.layer })) : [];
+        const tpl = { id: t.id, label: t.label, description: t.description, group: t.source, builtin: true, files, roles: f.ok && f.template.roles ? f.template.roles : null,
+          note: 'its starting files are written into the spec\'s Build Order; the build does not yet start from the files themselves (the New Spec modal\'s file tree does)' };
+        tpl.preview = WS.previewOf({ template: tpl, cosFiles: files, blocks });
+        list.push(tpl);
+      }
+    } catch (e) { console.warn(`[workshop.templates] COS templates unavailable: ${e.message}`); }
+  }
+  if (!only || only.startsWith('saved:')) {
+    for (const t of WS.savedTemplates(loadTable(WS.TEMPLATE_TABLE))) {
+      if (only && only !== t.id) continue;
+      list.push({ ...t, builtin: false, preview: WS.previewOf({ template: t, saved: t.sections, blocks }) });
+    }
+  }
+  return { blocks, list, picked: only ? list[0] || null : null };
+}
+
+async function _workshopParts(WS, w) {
+  try { const se = await _specEngineReady(); return se ? WS.partsOf(w, se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title }))) : []; }
+  catch (e) { console.warn(`[idearium/api] workshop parts unreadable: ${e.message}`); return []; }
+}
 /** loom's registry + the component store as one index, rebuilt only when either file changes (the registry is 6 MB) */
 let _arIdx = null, _arIdxKey = null;
 function _architectIndex(AR) {
@@ -1506,7 +1754,7 @@ async function _ollamaModels() {
   try {
     const d = await _nexusClient.get('ollama', '/api/models', { timeout: 4000 });
     if (!d || d.ok === false || !Array.isArray(d.models)) return { ok: false, error: (d && d.error) || 'Ollama did not answer (the bridge reached it and got nothing)', models: [], active: d && d.active || null };
-    return { ok: true, models: d.models, active: d.active || null };
+    return { ok: true, models: d.models, active: d.active || null, sizes: d.sizes || null, loaded: d.loaded || [] };
   } catch (e) { return { ok: false, error: `ollama bridge unreachable: ${e.message}`, models: [], active: null }; }
 }
 
@@ -1639,9 +1887,35 @@ function err(res, code, message, detail = null) {
 // as one real, shared helper instead of four separate copies (this file
 // has four real completeChunk() call sites) so the two paths can't drift
 // apart from each other again.
+// §0.47.0 SP3 — James: "generate the file tree automatically, which feed into the registry as a spine". A document spec
+// that has just become complete plans its file tree by itself — the same codegen the Code button runs
+// (speceng.codegen: its registry section, when it has one, is the file list and the dependency checklist; the files
+// are slotted into the nexus-system skeleton, whose registry-components.js is the spine the phases build into). Once
+// per spec (it has a code spec after), in the background, said in the activity log; specs.auto_file_tree: false
+// leaves it to the button.
+const _AUTO_TREE = new Set();
+function _autoFileTree(manifest) {
+  if (!manifest || manifest.type === 'filetree' || manifest.codeSpecUuid || manifest.codeFor || _AUTO_TREE.has(manifest.uuid)) return;
+  let on = true; try { on = getIdeariumValue('specs.auto_file_tree') !== false; } catch (_) { on = true; }
+  if (!on) return;
+  _AUTO_TREE.add(manifest.uuid);
+  setImmediate(async () => {
+    let r; try { r = await _route('POST', `/api/spec-engine/specs/${manifest.uuid}/codegen`, {}); } catch (e) { r = { status: 500, json: { error: e.message } }; }
+    const ok = r.status === 200, m = ok && r.json && (r.json.manifest || {});
+    const repoUuid = ok ? (r.json.repoUuid || null) : null;
+    try {
+      _require('../../lib/activity-log/compartment.js').record({ compartment: repoUuid || manifest.repoUuid || manifest.uuid, kind: ok ? 'spec.filetree' : 'fault.filetree', status: ok ? 'ok' : 'failed', actor: 'auto',
+        title: ok ? `file tree planned from ${manifest.name || 'the spec'} — ${((m.fileTree && m.fileTree.files) || []).length} file(s)${m.fileTree && m.fileTree.planSource ? ` · from ${m.fileTree.planSource}` : ''}` : `the file tree for ${manifest.name || 'the spec'} could not be planned: ${(r.json && r.json.error) || r.status}`,
+        ref: ok ? (m.uuid || null) : manifest.uuid, detail: { specUuid: manifest.uuid, codeSpecUuid: (m && m.uuid) || null, repoUuid } });
+    } catch (_) { /* the log never stops the plan */ }
+    if (!ok) _AUTO_TREE.delete(manifest.uuid);   // refused (e.g. no written sections yet): tried again when it next completes
+  });
+}
+
 function _syncPhaseFromManifest(os, manifest) {
   if (!manifest) return;
   if (manifest.status === 'complete') {
+    _autoFileTree(manifest);   // §0.47.0 SP3
     // §0.39.265 — a spec-engine manifest is only ALSO an IdeaOS spec when one was made
     // for it; emitting the update for one that was not logged
     // "[IdeaOS][ERROR] op=spec.update reason=spec not found" at the end of every build.
@@ -1674,7 +1948,7 @@ const ROUTE_CAP = {
   'health':           null,              // public — no auth required
   'cos.testenv.status': CAPS.READ_IDEAS,
   'history.import.status': CAPS.READ_IDEAS,
-  'repo.worksurface': CAPS.READ_IDEAS,
+  'repo.worksurface': CAPS.READ_IDEAS, 'repo.worksurface.prove': CAPS.WRITE_IDEAS,
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
@@ -1697,6 +1971,9 @@ const ROUTE_CAP = {
   'workshop.feed':    CAPS.WRITE_IDEAS,   // asks the agent; stores proposals, never section text
   'workshop.decide':  CAPS.WRITE_IDEAS,
   'workshop.save':    CAPS.WRITE_IDEAS,   // writes spec/<name>.spec into a repo (makes the repo when there is none)
+  'workshop.templates':       CAPS.READ_IDEAS,    // §0.39.357 RS5 — the template picker
+  'workshop.template.save':   CAPS.WRITE_IDEAS,   // a workshop's sections as a saved template (a new version; the old kept)
+  'workshop.template.remove': CAPS.WRITE_IDEAS,   // archives a saved template (kept, hidden)
   'architect.list':     CAPS.READ_IDEAS,   // §0.39.298 AR2
   'architect.registry': CAPS.READ_IDEAS,
   'architect.show':     CAPS.READ_IDEAS,
@@ -1761,10 +2038,17 @@ const ROUTE_CAP = {
   'routing.show':     CAPS.READ_IDEAS,
   'routing.plan':     CAPS.READ_IDEAS,
   'routing.learned':  CAPS.READ_IDEAS,
+  'routing.agents':   CAPS.READ_IDEAS,
   'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
   'repo.thread': CAPS.READ_IDEAS,   // §RS9
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
+  'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
+  'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
+  'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
+  'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
+  'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,   // §0.39.371 VM1
+  'repo.system': CAPS.READ_IDEAS, 'repo.system.control': CAPS.ADMIN,   // §0.39.372 NC2 — stopping a system is an admin act
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -1772,10 +2056,11 @@ const ROUTE_CAP = {
   'settings.console.repo': CAPS.READ_IDEAS,
   'economy.get': CAPS.READ_IDEAS, 'economy.set': CAPS.WRITE_IDEAS, 'economy.view': CAPS.READ_IDEAS,   // §0.39.281 EC8
   // §0.39.280 — build surface
+  'repo.expand': CAPS.WRITE_IDEAS,   // §0.39.360 SB42
   'repo.files.state': CAPS.READ_IDEAS, 'repo.deviation.get': CAPS.READ_IDEAS, 'repo.deviation.recalc': CAPS.WRITE_IDEAS,
   'repo.environment.get': CAPS.READ_IDEAS, 'repo.environment.set': CAPS.WRITE_IDEAS, 'repo.environment.setup': CAPS.ADMIN,
   'repo.spec.plan.get': CAPS.READ_IDEAS, 'repo.spec.plan': CAPS.WRITE_IDEAS, 'repo.spec.build': CAPS.WRITE_IDEAS,
-  'repo.plan': CAPS.READ_IDEAS, 'repo.file.manage': CAPS.WRITE_IDEAS,
+  'repo.plan': CAPS.READ_IDEAS, 'repo.charter.get': CAPS.READ_IDEAS, 'repo.charter.set': CAPS.WRITE_IDEAS, 'repo.charter.check': CAPS.WRITE_IDEAS, 'repo.file.manage': CAPS.WRITE_IDEAS,
   // §0.39.302 PR1 — the delivery checker. A check RUNS the repo's own commands and app, so it is ADMIN, as environment setup is.
   'repo.deliver.check': CAPS.ADMIN, 'repo.deliver.last': CAPS.READ_IDEAS, 'repo.deliver.conditions': CAPS.WRITE_IDEAS,
 };
@@ -1802,7 +2087,8 @@ function matchRoute(method, url) {
     // §0.39.286 RG2 — the pipeline's routing and fallback policy (lib/pipeline-routing.js); set it through POST /api/config routing.*
     ['GET',    ['api','routing'],         'routing.show'],
     ['GET',    ['api','routing','plan'],  'routing.plan'],
-    ['GET',    ['api','routing','learned'], 'routing.learned'],   // §0.39.287 what each model/provider has done per chunk type
+    ['GET',    ['api','routing','learned'], 'routing.learned'],
+    ['GET',    ['api','routing','agents'], 'routing.agents'],    // §0.39.361 AR1 what each agent has done building phases   // §0.39.287 what each model/provider has done per chunk type
     ['GET',    ['api','ollama','check'], 'ollama.check'],          // §CT4 0.39.350 — installed models, each caller's route
     ['POST',   ['api','ollama','check','ask'], 'ollama.check.ask'], // §CT4 — one model asked a one-line question through copilot
     ['POST',   ['api','routing','breaker','reset'], 'routing.breaker.reset'],
@@ -2007,6 +2293,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','desktop'],        'repo.desktop.status'],
     ['POST',   ['api','repos',    ':uuid','desktop'],        'repo.desktop.start'],
     ['DELETE', ['api','repos',    ':uuid','desktop'],        'repo.desktop.stop'],
+    ['GET',    ['api','repos',    ':uuid','system'],  'repo.system'],      // §0.39.372 NC2 — a Nexus system repo's live system: its processes as its supervisor sees them
+    ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
+    ['GET',    ['api','repos',    ':uuid','desktop','checkpoints'], 'repo.desktop.checkpoints'],   // §0.39.371 VM1 — the desktop's checkpoints, newest first
+    ['POST',   ['api','repos',    ':uuid','desktop',':op'],  'repo.desktop.control'],   // §0.39.371 VM1 — pause | resume | checkpoint | rewind {tag}
     ['GET',    ['api','repos',    ':uuid','branches'],       'repo.branches'],
     ['GET',    ['api','repos',    ':uuid','graph','traverse'], 'repo.graph.traverse'],
     ['GET',    ['api','repos',    ':uuid','graph','cone'],   'repo.graph.cone'],
@@ -2027,6 +2317,9 @@ function matchRoute(method, url) {
     // system ('idearium.repo'), never 'idearium' — see idearium.repo-snapshot.spec.
     ['POST',   ['api','repos',    ':uuid','snapshot'],      'repo.snapshot.commit'],
     ['GET',    ['api','repos',    ':uuid','snapshots'],     'repo.snapshot.list'],
+    ['GET',    ['api','repos',    ':uuid','history'],       'repo.history'],
+    ['GET',    ['api','repos',    ':uuid','spec','blanks'],  'repo.spec.blanks'],      // §0.47.0 SP2 — the spec's blank sections and empty chunk files
+    ['POST',   ['api','repos',    ':uuid','spec','complete'],'repo.spec.complete'],    // §0.47.0 SP2 — draft them (workshop proposals)          // §0.47.0 OS1 — ?path= the commits that touched one file
     ['GET',    ['api','repos',    ':uuid','snapshots',':commitId'], 'repo.snapshot.show'],
     ['POST',   ['api','repos',    ':uuid','snapshots',':commitId','restore'], 'repo.snapshot.restore'],
     // §MCO-E 2026-09-20 — the repo's roadmap, from the phasemaps inside it
@@ -2043,6 +2336,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
+    ['POST',   ['api','repos',    ':uuid','expand'],                'repo.expand'],   // §0.39.360 SB42–SB44
     // §0.39.280 — the build surface (docs/2026-09-29-build-surface-phasemap.spec BS7; logic in api/build-surface.js)
     ['GET',    ['api','repos',    ':uuid','files','state'],         'repo.files.state'],
     ['GET',    ['api','repos',    ':uuid','deviation'],             'repo.deviation.get'],
@@ -2054,6 +2348,9 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','spec','plan'],           'repo.spec.plan'],
     ['POST',   ['api','repos',    ':uuid','spec','build'],          'repo.spec.build'],
     ['GET',    ['api','repos',    ':uuid','plan'],                  'repo.plan'],
+    ['GET',    ['api','repos',    ':uuid','charter'],               'repo.charter.get'],     // §0.39.362 CH1 axioms · conditions · end state
+    ['PUT',    ['api','repos',    ':uuid','charter'],               'repo.charter.set'],
+    ['POST',   ['api','repos',    ':uuid','charter','check'],       'repo.charter.check'],
     ['POST',   ['api','repos',    ':uuid','manage'],                'repo.file.manage'],
     // §CI 2026-09-20 — CI/CD per compartment. cos/ci/index.js owns the
     // pipeline; these are idearium's surface onto it, scoped to a repo
@@ -2076,6 +2373,13 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
+    ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
+    ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
+    ['GET',    ['api','activity'],  'activity.all'],
+    ['GET',    ['api','nexus','store'],         'nexus.store'],        // §0.46.0 — cortex's store report, for the UI (idearium store)
+    ['GET',    ['api','nexus','tape'],          'nexus.tape'],         // §0.46.0 — the Ollama tape's runs, for the UI (idearium ollama tape)
+    ['GET',    ['api','nexus','tape',':run'],   'nexus.tape.run'],     // §0.46.0 — one run's macro      // §0.39.373 BO1 — every compartment's activity log at once, each row with its repo's name (BrainOS)
+    ['POST',   ['api','repos',    ':uuid','agent','stream'],  'repo.agent.stream'],      // §0.39.356 LS3 — copilot sends what the model writes, as it writes it
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
     ['GET',    ['api','repos',    ':uuid','agent','history'], 'repo.agent.history'],
@@ -2089,6 +2393,7 @@ function matchRoute(method, url) {
     ['DELETE', ['api','repos',    ':uuid','agent','memory',':obs'], 'repo.agent.memory.forget'],
     // §INJECT 2026-09-21 — .inject nodes: agent code into this compartment (lib/repo-inject.js)
     ['GET',    ['api','repos',    ':uuid','worksurface'],           'repo.worksurface'],
+    ['POST',   ['api','repos',    ':uuid','worksurface','prove'],   'repo.worksurface.prove'],   // §0.39.362 WS1 an agent proves its proposals
     ['GET',    ['api','repos',    ':uuid','architecture'],          'repo.architecture'],         // §0.39.284 W7 — the repo's component registry + wiring map
     ['POST',   ['api','repos',    ':uuid','architecture'],          'repo.architecture.write'],   // §0.39.284 W3 — changed files as diffs + tools
     ['GET',    ['api','repos',    ':uuid','injects'],               'repo.inject.list'],
@@ -2171,6 +2476,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','workshop'],                               'workshop.list'],
     ['POST',   ['api','workshop'],                               'workshop.create'],
     ['GET',    ['api','workshop','sources'],                     'workshop.sources'],
+    ['GET',    ['api','workshop','templates'],                   'workshop.templates'],        // §0.39.357 RS5 — before :id
+    ['POST',   ['api','workshop','templates'],                   'workshop.template.save'],
+    ['POST',   ['api','workshop','templates',':tid','remove'],   'workshop.template.remove'],
     ['GET',    ['api','workshop',':id'],                         'workshop.show'],
     ['POST',   ['api','workshop',':id'],                         'workshop.update'],
     ['POST',   ['api','workshop',':id','feed'],                  'workshop.feed'],
@@ -2411,6 +2719,14 @@ async function handle(req, res, route, query, body) {
       const ladder = PR.ladder(policy, { installed });
       return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(), ladder: { rungs: ladder.rungs.map(r => r.provider), from: ladder.from }, escalateOn: PR.ESCALATE_ON,
         blocks: se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title, agent: b.agent, fallback: b.fallback || [], ...PR.plan({ block: b, policy }) })) });
+    }
+    // §0.39.361 AR1 — James: "needs to learn from this: routing and adapting". Each agent's phase-build record: landed,
+    // proven, undone by the person, failed and why, its size limit — the same projection that orders the ladder.
+    case 'routing.agents': {
+      const AR = _require('../../lib/agent-record.js');
+      const undone = _require('../../lib/repo-inject.js').list(null, { limit: 5000 }).filter(n => n.status === 'reverted' || n.status === 'rejected');
+      const faults = _require('../../lib/phase-faults.js').list({ limit: 2000 });
+      return ok(res, { learn: _routingPolicy().ladderLearn !== false, ...AR.record(loadTable('idearium_phase_runs'), { injects: undone, faults }) });
     }
     case 'routing.learned': {
       const PR = _require('../../lib/pipeline-routing.js');
@@ -3788,6 +4104,57 @@ async function handle(req, res, route, query, body) {
     // §0.39.279 — James: "once its generated, you can open it like a desktop environment". The repo's compartment
     // boots its VM headless (a branch repo's disk is an overlay of its original's); the viewer (ui/desktop.html, noVNC
     // over QEMU's websocket) is opened in Clear Glass. A repo with no compartment, or no base image, is told why.
+    // §0.39.372 NC2 — James: "Do you think we should have each repo a control panel for the system, and compartment for
+    // the nexus repos?" A Nexus system's repo is its compartment (idearium/repo/nexus-self.js: Nexus → one child per
+    // system) and now its control panel: its processes as the supervisor (nexus/autopilot.js) sees them — status, pid,
+    // restarts, crashes, health — and restart / stop / start, asked of the supervisor, never of the system itself. The
+    // shared code (core, cos, components) has no process: said. Each act is a row of the repo's log.
+    case 'repo.system':
+    case 'repo.system.control': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const sys = repo.nexusSelf && repo.nexusSelf.role === 'system' ? repo.nexusSelf.system : null;
+      if (!sys) return err(res, 409, 'not a Nexus system repo — only a Nexus system has processes to control');
+      let st = null;
+      try { st = await _nexusClient.get('autopilot', '/status', { timeout: 4000 }); } catch (e) { st = { ok: false, error: `the supervisor (autopilot) is not answering: ${e.message}` }; }
+      const kernels = st && st.kernels ? Object.entries(st.kernels).filter(([k]) => k === sys || k.startsWith(`${sys}-`)).map(([name, k]) => ({ name, ...k })) : [];
+      if (action === 'repo.system') {
+        return ok(res, { repoUuid: repo.uuid, system: sys, compartmentId: repo.compartmentId || null, supervisor: st && st.kernels ? 'autopilot' : null,
+          ...(st && st.kernels ? {} : { error: (st && st.error) || 'the supervisor did not answer' }),
+          processes: kernels, note: kernels.length ? null : (st && st.kernels ? `${sys} has no process of its own — it is code the other systems load` : null) });
+      }
+      const op = params.op;
+      if (!['restart', 'stop', 'start'].includes(op)) return err(res, 404, `no system operation ${op}`);
+      const kernel = (body && body.process) || (kernels[0] && kernels[0].name) || sys;
+      if (!kernels.some(k => k.name === kernel)) return err(res, 409, `${kernel} is not a process the supervisor runs for ${sys}`);
+      let r;
+      try { r = await _nexusClient.post('autopilot', `/control/${encodeURIComponent(kernel)}/${op}`, {}, { timeout: 8000 }); } catch (e) { r = { ok: false, error: e.message }; }
+      _require('../../lib/activity-log/compartment.js').record({ compartment: repo.uuid, kind: `system.${op}`, status: r && r.ok ? 'ok' : 'failed', actor: 'person',
+        title: r && r.ok ? `${op} ${kernel} — ${r.status || 'asked'}${r.note ? ` (${r.note})` : ''}` : `${op} ${kernel} refused — ${(r && r.error) || 'no answer'}`, ref: kernel });
+      if (!r || !r.ok) return err(res, 502, (r && r.error) || 'the supervisor did not answer');
+      return ok(res, { repoUuid: repo.uuid, system: sys, process: kernel, op, ...r });
+    }
+    // §0.39.371 VM1 — James: "I want to use snapshots, pause, rewind, etc. like full VMware style. Not actual VMware."
+    case 'repo.desktop.checkpoints':
+    case 'repo.desktop.control': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!repo.compartmentId) return err(res, 409, 'this repo has no COS compartment — its desktop lives in one');
+      const cb = _require('../../lib/cos-bridge.js');
+      const op = action === 'repo.desktop.checkpoints' ? 'checkpoints' : params.op;
+      if (!['checkpoints', 'pause', 'resume', 'checkpoint', 'rewind', 'status'].includes(op)) return err(res, 404, `no desktop operation ${op}`);
+      const r = await cb.desktopControl(repo.compartmentId, op, { tag: body && body.tag, label: (body && body.label) || (op === 'checkpoint' ? 'by hand' : null), causedBy: null });
+      // the person's acts on the desktop are rows of the repo's log, like everything else that happens in it
+      if (['pause', 'resume', 'checkpoint', 'rewind'].includes(op)) {
+        const AL = _require('../../lib/activity-log/compartment.js');
+        const kind = op === 'checkpoint' ? 'checkpoint.saved' : op === 'rewind' ? 'checkpoint.restored' : `desktop.${op}d`;
+        AL.record({ compartment: repo.uuid, kind, status: r.ok ? 'ok' : 'failed', actor: 'person', ref: (r.checkpoint && r.checkpoint.tag) || null,
+          title: r.ok ? (op === 'rewind' ? `rewound the desktop to ${r.checkpoint.tag}${r.checkpoint.label ? ` — before ${r.checkpoint.label}` : ''}` : op === 'checkpoint' ? `checkpoint ${r.checkpoint.tag} by hand` : `desktop ${op}d`) : `desktop ${op} refused — ${r.error}`,
+          detail: r.checkpoint ? { tag: r.checkpoint.tag } : null });
+      }
+      if (!r.ok) return err(res, r.code === 'NO_LIVE_SNAPSHOT_SHARE' ? 409 : /not running|has stopped/.test(r.error || '') ? 409 : 502, r.error, r.code ? { code: r.code } : null);
+      return ok(res, { ...r, repoUuid: repo.uuid });
+    }
     case 'repo.desktop.status':
     case 'repo.desktop.start':
     case 'repo.desktop.stop': {
@@ -4504,16 +4871,56 @@ async function handle(req, res, route, query, body) {
           sections = WS.sectionsFromSpecText(f.content, _require('js-yaml'));
         }
       } else if (from.kind !== 'blank') return err(res, 400, `from.kind must be idea, library, repo or blank`);
-      const made = WS.makeSession({ title: title || 'Untitled spec', source, sections, ambition: body.ambition, repoUuid, specPath, ideaUuid });
+      // §0.39.357 RS5 — the picked template: its sections after the source's, never over a part the source already lays out
+      let template = null, mode = WS.MODES.includes(body.mode) ? body.mode : null;
+      if (body.template) {
+        const T = await _workshopTemplates(WS, { only: String(body.template), name: title || body.title || null });
+        const t = T.picked; if (!t) return err(res, 404, `template not found: ${body.template}`);
+        const blocks = T.blocks;
+        const have = WS.partsOf({ sections: sections.map(x => ({ ...x, body: x.body || '' })) }, blocks).filter(x => x.sectionId).map(x => x.id);
+        sections = [...sections, ...WS.templateSections({ template: t, seeds: t._seeds || {}, cosFiles: t.files || null, saved: t.group === 'saved' ? t.sections : null, blocks, have })];
+        template = { id: t.id, label: t.label, group: t.group, ...(t.version ? { version: t.version } : {}) };
+        title = title || (t.id === WS.CUSTOM.id ? null : t.label);
+        if (!mode) mode = t.mode || (t.id === WS.CUSTOM.id ? 'manual' : null);
+      }
+      const made = WS.makeSession({ title: title || 'Untitled spec', source, sections, ambition: body.ambition, repoUuid, specPath, ideaUuid, mode: mode || 'assisted', template });
       if (made.error) return err(res, 400, made.error);
       appendRow(WS.TABLE, made.session);
       os.emit('idearium.workshop.created', { uuid: made.session.uuid, source: source.kind, title: made.session.title });
       return ok(res, { workshop: made.session });
     }
+    // §0.39.357 RS5 — James: "opens a pick template screen like photoshop does when you first open it. with a custom or
+    // manual option with a plus sign. then you pick a template from the list, including all the quick spec options" ·
+    // "yes with a custom or manual." Every template the quick spec offers (the spec-document templates, genesis first;
+    // the COS archetypes and blueprints) and the saved ones, each with the 11 parts previewed.
+    case 'workshop.templates': {
+      const WS = await _workshop();
+      const T = await _workshopTemplates(WS);
+      return ok(res, { custom: WS.CUSTOM, blocks: T.blocks, templates: T.list.map(({ _seeds, sections, ...t }) => t) });
+    }
+    case 'workshop.template.save': {
+      const WS = await _workshop();
+      const w = _workshopGet(WS, body.workshop); if (!w) return err(res, 404, `workshop not found: ${body.workshop}`);
+      const r = WS.templateRow(w, { label: body.label, description: body.description, rows: loadTable(WS.TEMPLATE_TABLE) });
+      if (r.error) return err(res, 400, r.error);
+      appendRow(WS.TEMPLATE_TABLE, r.row);
+      os.emit('idearium.workshop.template.saved', { slug: r.row.slug, version: r.row.version, label: r.row.label, fromWorkshop: w.uuid });
+      return ok(res, { template: WS.savedTemplates(loadTable(WS.TEMPLATE_TABLE)).find(t => t.slug === r.row.slug), version: r.row.version });
+    }
+    case 'workshop.template.remove': {
+      const WS = await _workshop();
+      let id = String(params.tid || ''); try { id = decodeURIComponent(id); } catch (_) {}   // the page encodes saved:<slug>
+      if (!id.startsWith('saved:')) return err(res, 400, `"${id}" is a built-in template — a file in the codebase (idearium/spec-engine/templates.js, cos/), not removable from here`);
+      const r = WS.archiveRow(loadTable(WS.TEMPLATE_TABLE), id.slice(6));
+      if (r.error) return err(res, 404, r.error);
+      appendRow(WS.TEMPLATE_TABLE, r.row);
+      os.emit('idearium.workshop.template.removed', { slug: r.row.slug, version: r.row.version });
+      return ok(res, { archived: id, kept: true });
+    }
     case 'workshop.show': {
       const WS = await _workshop();
       const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
-      return ok(res, { workshop: w, ambition: WS.AMBITION, feeds: WS.FEEDS });
+      return ok(res, { workshop: w, ambition: WS.AMBITION, feeds: WS.FEEDS, parts: await _workshopParts(WS, w), modes: WS.MODES });   // §0.39.354 WS7 — parts and modes
     }
     case 'workshop.update': {
       const WS = await _workshop();
@@ -4523,12 +4930,13 @@ async function handle(req, res, route, query, body) {
         w.title = String(body.title).trim(); w.updatedAt = Date.now();
       }
       if (body.ambition != null) { const a = WS.clampAmbition(body.ambition); if (a !== w.ambition) { w.ambition = a; w.updatedAt = Date.now(); w.history.push({ at: w.updatedAt, what: `ambition ${a} — ${WS.AMBITION[a].label}` }); } }
+      if (body.mode != null) { const m = WS.setMode(w, body.mode); if (m.error) return err(res, 400, m.error); }   // §0.39.354 WS7 / WS6
       for (const e of Array.isArray(body.sections) ? body.sections : (body.section ? [body.section] : [])) {
         const r = e.restore ? WS.restoreSection(w, e.restore) : WS.editSection(w, e);
         if (r.error) return err(res, 400, r.error);
       }
       syncTable(WS.TABLE, [w]);
-      return ok(res, { workshop: w });
+      return ok(res, { workshop: w, parts: await _workshopParts(WS, w) });
     }
     case 'workshop.feed': {
       const WS = await _workshop();
@@ -4544,7 +4952,7 @@ async function handle(req, res, route, query, body) {
       if (r.error) { syncTable(WS.TABLE, [w]); return err(res, r.meta ? 502 : 400, r.error, { meta: r.meta || null, raw: r.raw || null }); }
       syncTable(WS.TABLE, [w]);
       os.emit('idearium.workshop.feed', { uuid: w.uuid, kind: body.kind, proposals: r.added.length, ...(r.meta && r.meta.domain ? { domain: r.meta.domain } : {}) });
-      return ok(res, { added: r.added, meta: r.meta, workshop: w });
+      return ok(res, { added: r.added, meta: r.meta, workshop: w, parts: await _workshopParts(WS, w) });
     }
     case 'workshop.decide': {
       const WS = await _workshop();
@@ -4554,7 +4962,7 @@ async function handle(req, res, route, query, body) {
       syncTable(WS.TABLE, [w]);
       // §CT2 — his accept or dismiss is the verdict on the model that drafted it
       if (r.proposal && r.proposal.by && ['accepted', 'dismissed'].includes(r.proposal.status)) _verdict(r.proposal.by, 'page:workshop', r.proposal.status === 'accepted', 'dismissed', r.proposal.status === 'dismissed' ? 'dismissed by James' : null);
-      return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w });
+      return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w, parts: await _workshopParts(WS, w) });
     }
     case 'workshop.save': {
       // the hook into the Spec field: the session becomes the repo's spec/<name>.spec — the Spec tab's living model.
@@ -4965,7 +5373,7 @@ async function handle(req, res, route, query, body) {
         const p = RI.propose({ layer: getRepoLayer(), repo, hat, path: target, content: body.content, source: { kind: 'agent', via: 'loom.write.tool' } });
         if (!p.ok) return err(res, 400, (p.errors || ['propose failed']).join('; '));
         let applied = null;
-        if (RI.modeFor(repo) === 'auto') { applied = RI.apply(p.inject.uuid, { layer: getRepoLayer() }); }
+        if (RI.modeFor(repo) === 'auto') { applied = RI.apply(p.inject.uuid, { layer: getRepoLayer(), approvedBy: 'auto' }); }
         const n = applied && applied.ok ? applied.inject : p.inject;
         os.emit('idearium.repo.inject.proposed', { repoUuid: params.uuid, inject: n.uuid, path: n.path, status: n.status, approval: !!repo.nexusSelf });
         return ok(res, { inject: n.uuid, path: n.path, status: n.status, creates: n.creates,
@@ -5019,7 +5427,7 @@ async function handle(req, res, route, query, body) {
       if (cur && cur.state === 'running') return ok(res, { started: false, alreadyRunning: true, run: _proofView(cur) });
       if (_buildingSpecs.has(repo.specUuid)) return err(res, 409, 'this spec is being built right now — try again when that build returns');
       const rounds = Math.max(1, Math.min(parseInt(body.rounds, 10) || 3, 10));
-      const run = _startProof(repo, { rounds, maxBuildsPerRound: Math.max(1, Math.min(parseInt(body.maxBuilds, 10) || 400, 2000)) });
+      const run = _startProof(repo, { rounds, maxBuildsPerRound: Math.max(1, Math.min(parseInt(body.maxBuilds, 10) || 400, 2000)), debt: ['baseline', 'repair'].includes(body.debt) ? body.debt : null });
       return ok(res, { started: true, run: _proofView(run) });
     }
     case 'repo.prove.status': {
@@ -5343,7 +5751,64 @@ async function handle(req, res, route, query, body) {
       const ring = _toolEvents.get(params.uuid) || [];
       ring.push(ev); if (ring.length > 80) ring.splice(0, ring.length - 80);
       _toolEvents.set(params.uuid, ring);
+      try { _repoActivity().tool(params.uuid, ev); } catch (_) {}
       getIdeaOS().emit('idearium.repo.agent.tool', ev);
+      return ok(res, { ok: true });
+    }
+    // §0.39.356 LS3 — James: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel
+    // and code tab." What an Ollama model writes in copilot's tool loop arrives here (copilot streamSink, LS2) and goes out
+    // as idearium.repo.agent.feed — the guardian feed's event and its shape (0.39.244) — so the Agent tab, the Code tab and
+    // the work surface read one feed whatever the model. SSE only: several a second, observations, not state.
+    // §0.39.366 — James: "the background tasks, i want that for each repo. any activity from an agent wearing the hat."
+    // §0.39.373 BO1 — one stream, two views: BrainOS reads every compartment's log here (a repo's Log view reads its own)
+    // §0.46.0 — James: "always add backend js first, then the ui". The store (cortex) and the tape (ollama) are other
+    // systems' routes; the UI reaches them through Idearium, as it reaches versionium and the ollama models.
+    case 'nexus.store':
+    case 'nexus.tape':
+    case 'nexus.tape.run': {
+      const [sys, p2] = action === 'nexus.store' ? ['cortex', '/api/store']
+        : action === 'nexus.tape' ? ['ollama', `/api/tape?limit=${encodeURIComponent(query.limit || '30')}`]
+        : ['ollama', `/api/tape/${encodeURIComponent(params.run)}?chars=${encodeURIComponent(query.chars || '2000')}`];
+      try { return ok(res, await _nexusClient.get(sys, p2, { timeout: 8000 })); }
+      catch (e) { return err(res, 502, `${sys} did not answer: ${e.message}`); }
+    }
+
+    case 'activity.all': {
+      _repoActivity();
+      const q = query || {};
+      const page = _require('../../lib/activity-log/compartment.js').list('*', { kind: q.kind || null, actor: q.actor || null, status: q.status || null, q: q.q || null, before: Number(q.before) || null, limit: Number(q.limit) || 100 });
+      const names = {};
+      for (const r of page.rows) if (!(r.compartment in names)) { const rp = getRepoLayer().get(r.compartment); names[r.compartment] = rp ? rp.name : null; }
+      return ok(res, { ok: true, ...page, names });
+    }
+    // §0.39.368 AL1 — James: "I also want to have a full extensive activity log in each repo."
+    case 'repo.activity': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      _repoActivity();   // wires the live broadcast on first use
+      const AL = _require('../../lib/activity-log/compartment.js');
+      const q = query || {};
+      const page = AL.list(params.uuid, { kind: q.kind || null, actor: q.actor || null, status: q.status || null, q: q.q || null, before: Number(q.before) || null, limit: Number(q.limit) || 100 });
+      return ok(res, { ok: true, repoUuid: params.uuid, ...page, ...(q.facets ? { facets: AL.facets(params.uuid) } : {}) });
+    }
+    case 'repo.tasks': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const lim = Math.max(1, Math.min(200, Number(query && query.limit) || 80));
+      return ok(res, { ok: true, repoUuid: params.uuid, ..._repoActivity().list(params.uuid, { limit: lim }) });
+    }
+    case 'repo.agent.stream': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const EVENTS = ['dispatched', 'chunk', 'complete', 'error', 'timeout'];
+      if (!body || !EVENTS.includes(body.event) || !body.jobId) return err(res, 400, `event (${EVENTS.join(' | ')}) and jobId are required`);
+      const model = body.model ? String(body.model).slice(0, 120) : null;
+      try { _repoActivity().feed({ repoUuid: params.uuid, event: body.event, jobId: String(body.jobId), provider: model ? `ollama · ${model}` : 'ollama', session: body.session || null, fullLen: Number(body.fullLen) || 0, chars: Number(body.chars) || 0, ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}) }); } catch (_) {}
+      getIdeaOS().broadcast('idearium.repo.agent.feed', {
+        repoUuid: params.uuid, event: body.event, jobId: String(body.jobId).slice(0, 120), source: 'ollama',
+        provider: model ? `ollama · ${model}` : 'ollama', model, session: body.session ? String(body.session).slice(0, 120) : null,
+        ...(typeof body.text === 'string' ? { text: body.text.slice(-20000) } : {}),
+        ...(Number(body.fullLen) > 0 ? { fullLen: Number(body.fullLen) } : {}),
+        ...(Number(body.chars) > 0 ? { chars: Number(body.chars) } : {}),
+        ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}),
+      });
       return ok(res, { ok: true });
     }
     case 'repo.agent.tool.events': {
@@ -5859,6 +6324,58 @@ async function handle(req, res, route, query, body) {
       return ok(res, { repoUuid: params.uuid, snapshots: summarizeRepoSnapshots(hist.data.commits || [], params.uuid) });
     }
 
+    // §0.47.0 OS1 — James: "also hooked into the code tab". The commits that touched one file, newest first, each with
+    // who and why (VR1 provenance); a commit from before 0.40.0 (no provenance) is not guessed into it.
+    // §0.47.0 SP2 — James: "the spec engine needs to have autocomplete for the areas that are blank". What is blank: each
+    // section of the repo's spec with no body, and each chunk file of it that is empty (0 bytes). Completing them is the
+    // workshop's own loop (idearium/lib/workshop.js): the repo's spec opened in a workshop (reused while one is open), a
+    // 'section' feed per blank part — PROPOSALS, accepted one by one, saved back to the repo (a VR1 commit). Nothing is
+    // written into the spec without the person (§7.2: an idea's draft never changes the build by itself).
+    case 'repo.spec.blanks':
+    case 'repo.spec.complete': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (repo.nexusSelf) return err(res, 400, 'a Nexus system\'s specs change through its own apply gate, not the workshop');
+      const WS = await _workshop();
+      const specPath = body.path || query.path || _workshopSpecFiles(repo)[0] || null;
+      if (!specPath) return err(res, 404, 'this repo has no spec file to complete');
+      const f = getRepoLayer().readFile(repo.uuid, specPath);
+      if (f.error) return err(res, 404, f.error);
+      const secs = WS.sectionsFromSpecText(f.content, _require('js-yaml'));
+      const blank = secs.filter(x => !String(x.body || '').trim()).map(x => ({ id: x.id, title: x.title }));
+      const emptyFiles = (repo.files || []).filter(x => (x.bytes === 0 || x.size === 0) && /\.(md|spec|ya?ml|json|js)$/.test(x.path)).map(x => x.path);
+      if (action === 'repo.spec.blanks') return ok(res, { repoUuid: repo.uuid, specPath, sections: secs.length, blank, emptyFiles });
+      let w = loadTable(WS.TABLE).filter(r => r.repoUuid === repo.uuid && r.specPath === specPath).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))[0] || null;
+      if (!w) {
+        const c = await _route('POST', '/api/workshop', { from: { kind: 'repo', id: repo.uuid, path: specPath }, mode: body.mode || 'assisted' });
+        if (c.status !== 200) return err(res, c.status, (c.json && c.json.error) || 'the workshop could not open this spec');
+        w = c.json.workshop;
+      }
+      const wsBlank = (w.sections || []).filter(x => !String(x.body || '').trim()).map(x => x.id);
+      const targets = body.section ? [String(body.section)] : wsBlank;
+      if (!targets.length) return ok(res, { repoUuid: repo.uuid, workshopId: w.uuid, specPath, blank: [], results: [], note: 'nothing is blank' });
+      const results = [];
+      for (const sid of targets) {
+        const r = await _route('POST', `/api/workshop/${w.uuid}/feed`, { kind: 'section', sectionId: sid });
+        results.push({ section: sid, ok: r.status === 200, proposals: ((r.json && r.json.added) || []).length, error: r.status === 200 ? null : (r.json && r.json.error) || 'no answer' });
+      }
+      return ok(res, { repoUuid: repo.uuid, workshopId: w.uuid, specPath, blank: wsBlank, results, open: `/workshop.html?id=${w.uuid}` });
+    }
+
+    case 'repo.history': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const want = String(query.path || '').replace(/^\/+/, '');
+      if (!want) return err(res, 400, 'path is required (?path=src/file.js)');
+      const { SNAPSHOT_SYSTEM, summarizeRepoSnapshots, snapshotBranch } = await import('../repo/snapshot.js');
+      const hist = await _versionium('GET', `/api/versionium/history?system=${encodeURIComponent(SNAPSHOT_SYSTEM)}&branch=${encodeURIComponent(snapshotBranch(params.uuid))}&n=1000`);
+      if (!hist.ok) return err(res, 502, hist.error);
+      const all = summarizeRepoSnapshots(hist.data.commits || [], params.uuid);
+      const touched = all.filter(c => c.provenance && c.provenance.files.some(f => f.path === want))
+        .map(c => ({ ...c, op: c.provenance.files.find(f => f.path === want).op }));
+      return ok(res, { repoUuid: params.uuid, path: want, commits: touched, total: all.length, untracked: all.filter(c => !c.provenance).length });
+    }
+
     case 'repo.snapshot.show': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -5899,7 +6416,7 @@ async function handle(req, res, route, query, body) {
       const PH = await import('../repo/phases.js');
       return ok(res, PH.managerView({ repo, repoDir: dir, runs: _phaseRuns(params.uuid) }));
     }
-    // §RS9 0.39.354 — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade.
+    // §RS9 0.49.0 — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade.
     // interconnected". The thread (idearium/repo/thread.js): one spec's blocks ⇄ the phases planned from them ⇄ their runs
     // ⇄ files and waiting changes, staleness per block. No ?spec= → the specs this repo's maps were planned from.
     case 'repo.thread': {
@@ -5989,17 +6506,147 @@ async function handle(req, res, route, query, body) {
         : action === 'repo.spec.plan.get' ? await BS.specPlanGet(d, u, query.path)
         : action === 'repo.spec.plan' ? await BS.specPlan(d, u, body || {})
         : action === 'repo.spec.build' ? await BS.specBuild(d, u, body || {})
-        : action === 'repo.plan' ? await BS.plan(d, u, { map: query.map || null })
+        : action === 'repo.plan' ? await (async () => {
+            const pr = await BS.plan(d, u, { map: query.map || null });
+            // §0.39.362 CH5 — the compartment's end state: its progress, when its charter names one
+            if (pr.json && pr.json.ok && pr.json.data) {
+              try { const ch = _require('../../lib/charter.js').load(_repoDiskDir(u)); pr.json.data.charter = { exists: ch.exists, axioms: ch.axioms, conditions: ch.conditions.length, endState: ch.endState.map(e => e.says), errors: ch.errors, latest: ch.endState.length ? _charterLatest(u) : null }; } catch (_) {}
+            }
+            return pr;
+          })()
         : await BS.manage(d, u, body || {});
       if (!r.json.ok) { const { ok: _o, error, ...detail } = r.json; return err(res, r.status, error, Object.keys(detail).length ? detail : null); }
       return ok(res, r.json.data);
     }
+    // §0.39.360 SB42–SB44 (build-from-the-spec 1.21.0) — James: "expanding using the specs, then phased, then chunked,
+    // then coded. look at the nexus repo." A skeleton repo grows: a snapshot first (as a phase build takes one); the new
+    // components (body.components, or the agent's plan from body.ask, shown the system's own components); slotted into
+    // the registry, the living spec and the nodes; a phasemap in docs/ (one phase per component, in build order — the
+    // Phases tab builds them); and each code file a pending chunk, coded when its phase writes it. Nothing is written
+    // when the repo is not a skeleton, nothing new slots in, or there is no snapshot.
+    case 'repo.expand': {
+      const layer = getRepoLayer();
+      const repo = layer.get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RX = _require('../../lib/repo-expand.js');
+      const FTP = _require('../../lib/file-tree-plan.js');
+      const read = (p) => { const r = layer.readFile(repo.uuid, p); return r && !r.error ? r.content : undefined; };
+      const sk = RX.skeletonOf(read);
+      if (!sk) return err(res, 409, 'not a skeleton repo — expansion slots components into a repo made from the nexus-system template (its registry-components.js has the slot)', { code: 'NOT_SKELETON' });
+      const feature = String((body && (body.feature || body.ask)) || '').trim().slice(0, 80);
+      const ask = String((body && body.ask) || feature).trim();
+      if (!feature) return err(res, 400, 'feature or ask is required — what the system should gain');
+      let comps = [], rejected = [], agentError = null;
+      if (Array.isArray(body.components)) { const p = FTP.parseSlot(JSON.stringify(body.components)); comps = p.components; rejected = p.rejected; }
+      else {
+        const warpFn = await getWarpChunkDispatch();
+        if (!warpFn) return err(res, 503, 'no agent to plan the expansion — give components, or start an agent');
+        try {
+          const who = _buildIdentity(repo.specUuid || null);
+          const r = await warpFn(RX.expandPrompt({ system: sk.system, ask, ids: sk.ids, files: (repo.files || []).map(f => f.path) }),
+            { chunkTitle: `expand: ${sk.system} — ${feature}`, expectCode: false, preferAgent: body.agent || who.provider || null, hat: who.hat, model: who.model, repoUuid: repo.uuid });
+          if (!r || !r.ok) throw new Error((r && r.error) || 'the expansion plan dispatch failed');
+          const p = FTP.parseSlot(r.text); comps = p.components; rejected = p.rejected;
+          if (!comps.length) agentError = rejected[0] ? rejected[0].reason : 'the agent planned no components';
+        } catch (e) { agentError = e.message; }
+      }
+      if (!comps.length) return err(res, 422, `nothing was slotted in: ${agentError || 'no components given'} — nothing written`, { rejected });
+      let takenKeys = [];
+      try {
+        const PH = await import('../repo/phases.js');
+        const loom = _require('../../loom/scanners/phasemap-map.js');
+        for (const m of PH.mapsFor({ repo, repoDir: _repoDiskDir(repo.uuid) }).maps) takenKeys.push(...loom.parsePhasemapText(m.text, m.path).map(x => String(x.id).split('_')[0]));
+      } catch (_) { /* no maps yet */ }
+      const plan = RX.expansion({ read, components: comps, feature, ask, takenKeys });
+      if (!plan.ok) return err(res, 422, `${plan.error} — nothing written`, { rejected: [...rejected, ...(plan.rejected || [])] });
+      const snap = await _commitRepoSnapshotFor(repo.uuid, { message: `before expanding: ${feature}`, causedBy: 'idearium.repo.expand' });
+      if (!snap.ok) return err(res, snap.status === 409 ? 409 : 502, `not expanded: the Versionium snapshot before it failed — ${snap.error}`, { code: 'NO_SNAPSHOT' });
+      const se = getSpecEngine();
+      const written = [], failed = [];
+      for (const w of plan.writes) { const r = layer.writeFile(repo.uuid, w.path, w.content, { defer: true, preserveWhitespace: true }); (r && r.ok ? written : failed).push(r && r.ok ? w.path : { path: w.path, error: r && r.error }); }
+      const planned = [];
+      for (const c of plan.code) { try { const r = se.planChunk(repo.specUuid, c); planned.push({ path: c.path, created: r.created }); } catch (e) { failed.push({ path: c.path, error: e.message }); } }
+      try { layer.refresh(repo.uuid); } catch (_) { /* the files are written; the disk projection catches up on the next write */ }
+      getIdeaOS().emit('idearium.repo.expanded', { repoUuid: repo.uuid, feature, components: plan.ids, phasemap: plan.phasemap.path, phases: plan.phasemap.phases.length, snapshot: snap.data.commitId });
+      return ok(res, { repoUuid: repo.uuid, system: plan.system, feature, components: plan.ids, phasemap: { path: plan.phasemap.path, phases: plan.phasemap.phases },
+        written, planned, failed, rejected: [...rejected, ...plan.rejected], snapshot: snap.data.commitId });
+    }
+
+    // §0.39.362 CH1 — James: "each compartment in idearium support axioms, conditions, or end state". The charter is
+    // charter.spec at the repo's root (lib/charter.js): read, written (parsed first — a charter that does not parse, or
+    // a condition with no check, is refused with why), and its end state checked (_charterCheck).
+    case 'repo.charter.get': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const CH = _require('../../lib/charter.js');
+      const ch = _charterOf(params.uuid);
+      return ok(res, { repoUuid: params.uuid, ...ch, template: ch.exists ? null : CH.template(repo.name), endState: _charterLatest(params.uuid) });
+    }
+    case 'repo.charter.set': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const CH = _require('../../lib/charter.js');
+      const text = String((body && body.text) || '');
+      const ch = CH.parse(text);
+      if (ch.errors.length) return err(res, 422, `the charter was not saved: ${ch.errors.join('; ')}`, { errors: ch.errors });
+      const w = getRepoLayer().writeTextFile(params.uuid, CH.FILE, text.endsWith('\n') ? text : `${text}\n`, { preserveWhitespace: true });
+      if (!w || w.error) return err(res, 409, `the charter could not be written: ${(w && w.error) || 'unknown'}${repo.nexusSelf ? ' — a Nexus repo is written through the approval gate: propose charter.spec from the Agent tab' : ''}`);
+      getIdeaOS().emit('idearium.repo.charter.set', { repoUuid: params.uuid, axioms: ch.axioms.length, conditions: ch.conditions.length, endState: ch.endState.length });
+      // §0.39.372 NC2 — one intent, not two copies: the charter (the file, versioned with the repo) IS its COS compartment's
+      // intent; saved, it is set on the compartment through COS's gate, where nesting applies (a Nexus system's
+      // compartment holds Nexus's conditions and axioms too). What COS cannot check (a page check) is named, not lost.
+      let compartment = null;
+      if (repo.compartmentId) {
+        const cr = _require('../../lib/cos-bridge.js').setIntent(repo.compartmentId, { endState: ch.endState, conditions: ch.conditions, axioms: ch.axioms });
+        compartment = cr.ok ? { id: repo.compartmentId, set: true, dropped: cr.dropped, inherited: (cr.effective.conditions || []).filter(c => c.inherited).length } : { id: repo.compartmentId, set: false, error: cr.error };
+      }
+      return ok(res, { repoUuid: params.uuid, ...CH.load(_repoDiskDir(params.uuid)), compartment });
+    }
+    // §0.39.362 WS1 — the pending proposals, proved as proposed (a scratch copy; nothing written): the charter's
+    // conditions and end state, and a phase's conditions when map + phase are given. What an agent calls before "done".
+    case 'repo.worksurface.prove': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      const CH = _require('../../lib/charter.js'); const ch = _charterOf(params.uuid);
+      const PR = await import('../repo/proof-run.js');
+      let conds = [...CH.proofConditions(ch), ...CH.endStateConditions(ch).map(c => ({ ...c, says: `[end state] ${c.says}` }))];
+      if (body && body.map && body.phase) {
+        const PHm = await import('../repo/phases.js');
+        const mt = (PHm.mapsFor({ repo, repoDir: dir }).maps.find(m => m.path === body.map) || {}).text || '';
+        let pc = PR.conditionsFromPhase(mt, body.phase).conditions;
+        if (!pc.length) pc = PR.derivedConditionsFromPhase(mt, body.phase).conditions;
+        conds = [...pc, ...conds];
+      }
+      if (!conds.length) return ok(res, { repoUuid: params.uuid, nothing: true, note: 'nothing to prove: the charter has no conditions or end state, and no phase was named' });
+      const POV = _require('../../lib/proof-overlay.js');
+      const ov = POV.prepare({ repoDir: dir, overlays: POV.overlaysOf(_require('../../lib/repo-inject.js').list(params.uuid, { limit: 500 })) });
+      let r; try { r = await PR.runProof({ repoDir: ov.dir, conditions: conds, subject: `work surface of ${repo.name || params.uuid}`, write: false }); } finally { ov.cleanup(); }
+      if (!r.ok) return err(res, 422, `could not prove: ${r.error}`);
+      return ok(res, { repoUuid: params.uuid, against: ov.against, overlaid: ov.overlaid, ...(ov.note ? { note: ov.note } : {}), met: r.run.met, total: r.run.total,
+        unmet: (r.run.results || []).filter(x => !x.met).map(x => ({ says: x.says, evidence: String(x.evidence || '').slice(0, 400), cause: x.cause || null })),
+        metChecks: (r.run.results || []).filter(x => x.met).map(x => x.says) });
+    }
+
+    case 'repo.charter.check': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const r = await _charterCheck(params.uuid, { withProposals: !(body && body.withProposals === false), cause: 'by hand' });
+      if (!r.ok) return err(res, r.status, r.error);
+      return ok(res, r.data);
+    }
+
     case 'repo.phases.build': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
       const dir = _repoDiskDir(params.uuid);
-      const { map, phase } = body || {};
-      if (!map || !phase) return err(res, 400, 'map and phase are required');
+      let { map, phase } = body || {};
+      if (!phase) return err(res, 400, 'phase is required (and map, when two phasemaps have a phase of that name)');
+      if (!map) {   // §0.45.0 CM3 — `idearium repo phase <repo> <phase> build`: the map is found when the phase names one
+        const PH = await import('../repo/phases.js');
+        const hits = PH.managerView({ repo, repoDir: dir, runs: [] }).phases.filter(p => p.phase_key === phase);
+        if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
+        map = hits[0].map;
+      }
       const r = await _phaseBuild(repo, dir, { map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '' });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
@@ -6255,17 +6902,24 @@ async function handle(req, res, route, query, body) {
       const regChunk = (doc.chunks || []).find(c => c.sectionId === 'registry' && c.status === 'complete');
       const registry = regChunk ? RP.parseRegistry(regChunk.content) : { components: [], problems: ['the spec has no registry section'] };
       let planned;
-      if (registry.components.length && !body.freePlan) planned = RP.toPlan(registry.components);
-      else {
-        try { planned = await FTP.plan({ name: doc.name, description, ask }); }
-        catch (e) { return err(res, 502, `planning the files failed: ${e.message}`); }
-      }
+      // §0.39.359 SB31 — James: "This should be what each new repo builds and slots the idea into like a slot." The
+      // code repo is the nexus-system skeleton (genesis 1.4.0), with the spec's registry — or, without one, the agent's
+      // components — slotted in. An agent that slots nothing in is refused, never a skeleton passed off as the project.
+      // body.skeleton === false keeps the plan without it.
+      const useSkeleton = body.skeleton !== false;
+      const fromRegistry = registry.components.length && !body.freePlan;
+      try {
+        if (useSkeleton && fromRegistry) { const s = FTP.slotFromRegistry(registry.components); planned = await FTP.plan({ name: doc.name, description: doc.description || doc.name, templateIds: [FTP.SKELETON_ID], slot: s.slot, slotFiles: s.files }); }
+        else if (fromRegistry) planned = RP.toPlan(registry.components);
+        else if (useSkeleton) planned = await FTP.plan({ name: doc.name, description, templateIds: [FTP.SKELETON_ID], ask, requireSlot: true });
+        else planned = await FTP.plan({ name: doc.name, description, ask });
+      } catch (e) { return err(res, 502, `planning the files failed: ${e.message}`); }
       if (!planned.ok) return err(res, 422, (planned.errors || ['the files could not be planned']).join('; '), { agentError: planned.agentError || null, registry: { used: false, problems: registry.problems } });
       let manifest;
       try {
         manifest = se.createFileTreeSpec({ name: `${doc.name} · code`, description, plan: planned, agent: body.agent || null, ideaUuid: doc.ideaUuid || null });
         manifest.codeFor = doc.uuid;
-        if (planned.planSource === 'registry') manifest.registry = registry.components;   // the checklist verify reads
+        if (fromRegistry) manifest.registry = registry.components;   // the checklist verify reads
         se.saveSpec(manifest);
         const freshDoc = se.loadSpec(doc.uuid);
         freshDoc.codeSpecUuid = manifest.uuid;
@@ -6315,8 +6969,8 @@ async function handle(req, res, route, query, body) {
       console.log(`[speceng.codegen] "${doc.name}" → ${planned.files.length} file(s) planned (${planned.planSource}) · code spec ${manifest.uuid.slice(0, 8)}`);
       return ok(res, { manifest: se.loadSpec(manifest.uuid), repoUuid,
         branch: branchInfo ? (branchInfo.ok ? { of: branchInfo.originUuid, branch: branchInfo.branch, dir: branchInfo.dir } : { made: false, reason: branchInfo.error }) : null,
-        plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers },
-        registry: { used: planned.planSource === 'registry', components: registry.components.length, problems: registry.problems } });
+        plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers, slot: planned.slot || null },
+        registry: { used: !!fromRegistry, components: registry.components.length, problems: registry.problems } });
     }
 
     case 'speceng.create': {
@@ -6359,6 +7013,10 @@ async function handle(req, res, route, query, body) {
         // (COS archetypes/blueprints and eravos mods); an id from either
         // takes the file-tree path below, same as a COS-only id always did.
         const fileTreeIds = allIds.filter(id => FTP.isFileTreeTemplate(id));
+        // §0.39.359 SB31 — genesis IS the skeleton's architecture (1.4.0's catalog is the nexus-system archetype): a spec
+        // that starts from genesis gets the skeleton as its file tree, with the idea slotted in. body.fileTree === false
+        // keeps the document-only spec.
+        if (allIds.includes('genesis') && body.fileTree !== false && !fileTreeIds.includes(FTP.SKELETON_ID)) fileTreeIds.unshift(FTP.SKELETON_ID);
         const docIds = allIds.filter(id => !FTP.isFileTreeTemplate(id));
         let manifest, planInfo = null;
         if (body.fileTree === true || fileTreeIds.length) {
@@ -6369,13 +7027,17 @@ async function handle(req, res, route, query, body) {
             if (!r || !r.ok) throw new Error((r && r.error) || 'plan dispatch failed');
             return r.text;
           } : null;
+          // a spec is made even when the agent slots nothing in — the skeleton, and plan.slot says it is empty and why
+          // (codegen, which makes the code repo, refuses instead)
           const planned = await FTP.plan({ name, description, templateIds: fileTreeIds, ask });
           if (!planned.ok) return err(res, 422, (planned.errors || ['file tree could not be planned']).join('; '), { agentError: planned.agentError || null });
-          manifest = se.createFileTreeSpec({ name, description, plan: planned, agent: agent || null, ideaUuid: ideaUuid || null, templateId: fileTreeIds.join(',') || null });
+          manifest = se.createFileTreeSpec({ name, description, plan: planned, agent: agent || null, ideaUuid: ideaUuid || null, templateId: fileTreeIds.join(',') || null, templateIds: allIds.length ? allIds : null });
           // The plan as a node type (.filetree), not a markdown file.
           try { FTP.writeTreeNode(manifest); }
           catch (e) { console.warn(`[speceng.create] .filetree node write failed (spec still created): ${e.message}`); }
-          planInfo = { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers };
+          planInfo = { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers, slot: planned.slot || null,
+            warning: planned.slot && planned.slot.empty ? `the skeleton was made, but the idea is not slotted in yet: ${planned.slot.reason}` : null };
+          if (planInfo.warning) console.warn(`[speceng.create] "${name}": ${planInfo.warning}`);
         } else {
           manifest = se.createSpec({ name, type, description, agent, sectionAgents: sectionAgents || {}, warpPrimitives: warpPrimitives || [], templateId, templateIds: docIds.length ? docIds : templateIds, buildEngine: buildEngine || 'auto', ideaUuid: ideaUuid || null });
         }
@@ -7600,9 +8262,11 @@ export function startAPI() {
           const { reconcileInFlightChunks, connectGuardianStream } = _require('../lib/guardian-stream.cjs');
           await reconcileInFlightChunks(se);
           // §FEED 0.39.244 — a repo agent's guardian job, live, to the Agent tab (SSE only).
-          connectGuardianStream(se, { onFeed: (ev) => os.broadcast('idearium.repo.agent.feed', {
-            repoUuid: ev.data.agentId.slice('repo-'.length), event: ev.type.slice('guardian.job.'.length), guardianTs: ev.ts, ...ev.data,
-          }) });
+          connectGuardianStream(se, { onFeed: (ev) => {
+            const fp = { repoUuid: ev.data.agentId.slice('repo-'.length), event: ev.type.slice('guardian.job.'.length), guardianTs: ev.ts, ...ev.data };
+            try { _repoActivity().feed(fp); } catch (_) {}   // §0.39.366 — onto the background task it belongs to
+            os.broadcast('idearium.repo.agent.feed', fp);
+          } });
         }
         // §RECONCILE 2026-09-21 — adopt any spec with no repo into a
         // compartment (see _reconcileSpecRepos). Kept inside this phase, not

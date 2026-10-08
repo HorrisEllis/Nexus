@@ -14,6 +14,10 @@
  *   idearium/ui/js/app.js → idearium/ui/js/repo-settings.js            renderRepoSettings (the repo's Settings subtab)
  *   idearium/ui/js/repo-settings.js → idearium/ui/js/ollama-check.js   renderOllamaCheck (the Models category, CT4)
  *   idearium/ui/js/desktop-setup.js → app.js (page globals) · idearium/api (HTTP); repo-environment.js and repo-settings.js open it (DK2)
+ *   idearium/ui/js/workshop.js → idearium/api (HTTP: /api/workshop/*, the repo's /spec/plan, /spec/build, /plan) · app.js (postMessage
+ *     nexus:repo.open, its message listener opens the repo on its Phases) (WS7, docs/2026-10-02-workshop-codex-rewind-phasemap.spec)
+ *   idearium/ui/js/template-picker.js → idearium/api (HTTP: /api/workshop/templates, …/:tid/remove); workshop.js mounts it
+ *     (window.TemplatePicker — the start page's new-spec picker) (RS5, docs/2026-10-05-spec-workshop-rebuild-phasemap.spec)
  */
 const { idFor } = require('../scanners/source-map');
 const I = (rel) => idFor(rel);
@@ -31,6 +35,15 @@ const FILES = [
     I('idearium/ui/js/app.js'),                 // api, escapeHtml, openRepoDesktop (page globals)
     I('idearium/api/index.js'),                 // HTTP: /api/config, /api/repos/:uuid/environment[/setup], /api/cos/testenv
   ]],
+  // §0.39.354 WS7 (docs/2026-10-02-workshop-codex-rewind-phasemap.spec) — the full workshop's page script (ui/workshop.html)
+  ['idearium/ui/js/workshop.js', I('idearium/ui/js/workshop.js'), [
+    I('idearium/api/index.js'),                 // HTTP: /api/workshop[/sources|/:id[/feed|/save|/proposal/:pid]], /api/repos/:uuid/spec/plan, …/spec/build, …/plan
+    I('idearium/ui/js/app.js'),                 // window.opener.postMessage nexus:repo.open → app.js's message listener (subtab spec | phases)
+  ]],
+  // §0.39.357 RS5 (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec) — the workshop's new-spec picker
+  ['idearium/ui/js/template-picker.js', I('idearium/ui/js/template-picker.js'), [
+    I('idearium/api/index.js'),                 // HTTP: GET /api/workshop/templates, POST /api/workshop/templates/:tid/remove
+  ]],
 ];
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
@@ -39,6 +52,7 @@ const CONSUMERS = [
   [I('idearium/ui/js/repo-environment.js'), I('idearium/ui/js/desktop-setup.js'), 'envSetup → openDesktopSetup(repo) (§0.39.340 DK2)'],
   [I('idearium/ui/js/repo-settings.js'), I('idearium/ui/js/desktop-setup.js'), 'the Desktop category\'s ⚙ set up desktop → openDesktopSetup (§0.39.340 DK2)'],
   [I('idearium/ui/js/repo-settings.js'), I('idearium/ui/js/ollama-check.js'), 'the Models category → renderOllamaCheck (§0.39.350 CT4)'],
+  [I('idearium/ui/js/workshop.js'), I('idearium/ui/js/template-picker.js'), 'showStart → window.TemplatePicker({ api, onCreate, onSource }) (§0.39.357 RS5)'],
 ];
 
 // idearium's page scripts are scanned components with no static require edges, so the scanner gives app.js and

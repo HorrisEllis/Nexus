@@ -1,0 +1,22 @@
+/* idearium/ui/css/agent-options.css — §0.47.0 OS4/OS7: the Agent tab's sections (js/agent-options.js), the Plan panel's
+   look: folded uppercase heads, hairline rows, small controls. */
+.ao{margin:4px 0 14px;max-width:980px}
+.ao .ao-sec{border-top:1px solid rgba(255,255,255,.06);padding:2px 0}
+.ao .ao-sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;margin:8px 0}
+.ao .ao-sec>summary::-webkit-details-marker{display:none}
+.ao .ao-sec>summary::before{content:'▸';color:var(--text3);font-size:9px;transition:transform .15s}
+.ao .ao-sec[open]>summary::before{transform:rotate(90deg)}
+.ao .ao-sub{color:var(--sky);letter-spacing:0;text-transform:none}
+.ao-body{padding:0 0 10px 16px}
+.ao-row{display:flex;align-items:center;gap:16px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.ao-row>div:first-child{flex:1;min-width:0}
+.ao-k{font:12px/1.35 system-ui,sans-serif;color:var(--nx-text,var(--text))}
+.ao-k2{font-size:9px;color:var(--violet);text-transform:uppercase;margin-right:4px}
+.ao-d,.ao-note{font-size:10px;color:var(--text3);line-height:1.5}
+.ao-note{color:var(--amber);padding:4px 0}
+.ao-select{background:var(--nx-card2,rgba(0,0,0,.25));color:var(--text);border:1px solid rgba(255,255,255,.12);border-radius:6px;font:10.5px var(--mono);padding:3px 6px;color-scheme:dark}
+.ao-more{margin:6px 0}.ao-more>summary{cursor:pointer;font-size:10px;color:var(--text2)}
+.ao-pre{white-space:pre-wrap;max-height:260px;overflow:auto;font:10px/1.5 var(--mono);color:var(--text2);background:rgba(0,0,0,.2);border-left:2px solid rgba(56,189,248,.35);padding:6px 8px;margin:6px 0}
+.ao-obs{font-size:10.5px;color:var(--text2);padding:2px 0}
+.ao-acts{display:flex;gap:6px;margin-top:8px}
+.ao #ao-ws{margin:0}

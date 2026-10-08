@@ -715,6 +715,10 @@ const ARCHETYPES_RAW = [
   },
 ];
 
+// §0.39.359 SB30 — nexus-system: a Nexus system skeleton in Guardian's shape, assembled from its own folder and the
+// reusable components (cos/archetype/nexus-system.js). Validated below like every other built-in.
+ARCHETYPES_RAW.push(require('./nexus-system.js').archetype());
+
 // ─── Validate every built-in at load time — COS-1 ─────────────────────────────
 
 for (const a of ARCHETYPES_RAW) {

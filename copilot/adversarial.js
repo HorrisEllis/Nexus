@@ -136,6 +136,16 @@ async function pingBoth(prompt, stream = []) {
 // ── Run full adversarial pass ─────────────────────────────────────────────────
 async function run(stream = []) {
   if (_running) return { skipped: true, reason: 'already running' };
+  // §0.39.364 — background work gives way: a probe loads a model, and under memory pressure that load is what pushes a
+  // real build's model into swap. The settled level (hysteresis applied), so a machine on the line is not toggled.
+  try {
+    const mon = require('../lib/resource-monitor.js').shared('copilot');
+    if (!mon.backgroundAllowed()) {
+      _skipped = (_skipped || 0) + 1;
+      if (_skipped === 1 || _skipped % 6 === 0) console.log(`[copilot/adversarial] probe deferred — memory ${mon.level()} (${_skipped} deferred so far)`);
+      return { skipped: true, reason: `memory ${mon.level()}` };
+    }
+  } catch (_) { /* no monitor: run as before */ }
   _running = true;
 
   const runId    = crypto.randomUUID();
@@ -211,6 +221,8 @@ const INTERVAL_MS = (() => {
   const v = parseInt(process.env.NEXUS_ADVERSARIAL_INTERVAL_MS, 10);
   return Number.isFinite(v) && v >= 0 ? v : 600000;
 })();
+
+let _skipped = 0;
 
 function start(getStream) {
   if (_timer) return;

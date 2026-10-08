@@ -40,7 +40,9 @@ const listen = (fn) => new Promise((res) => { const s = http.createServer((q, r)
     const p = PR.policyFrom({ ollama_models: 'deepseek-coder-v2:16b,qwen2.5-coder:7b,qwen2.5-coder:3b,llama3.2:latest', chain: 'ollama,claude,chatgpt' });
     assert.deepStrictEqual(PR.ladder(p).rungs.map(r => r.provider), ['ollama:qwen2.5-coder:3b', 'ollama:qwen2.5-coder:7b', 'ollama:deepseek-coder-v2:16b', 'ollama:llama3.2:latest', 'claude', 'chatgpt']);
     assert.deepStrictEqual([PR.sizeOf('qwen2.5-coder:7b'), PR.sizeOf('deepseek-coder-v2:16b'), PR.sizeOf('llama3.2:latest'), PR.sizeOf('phi3:3.8b')], [7, 16, null, 3.8]);
-    assert.deepStrictEqual(PR.ladder(PR.policyFrom({ chain: 'ollama,gemini' }), { installed: ['big:13b', 'tiny:1b'] }).rungs.map(r => r.provider), ['ollama:tiny:1b', 'ollama:big:13b', 'gemini'], 'installed models when none are listed');
+    // 0.39.355 PB1: the derived ladder leaves off models under routing.min_build_b (3) — tiny:1b only with the floor at 0
+    assert.deepStrictEqual(PR.ladder(PR.policyFrom({ chain: 'ollama,gemini' }), { installed: ['big:13b', 'tiny:1b'] }).rungs.map(r => r.provider), ['ollama:big:13b', 'gemini'], 'installed models when none are listed, above the floor');
+    assert.deepStrictEqual(PR.ladder(PR.policyFrom({ chain: 'ollama,gemini', min_build_b: 0 }), { installed: ['big:13b', 'tiny:1b'] }).rungs.map(r => r.provider), ['ollama:tiny:1b', 'ollama:big:13b', 'gemini'], 'installed models when none are listed');
     const w = PR.ladder(PR.policyFrom({ escalation: 'ollama:a:7b > claude > ollama:b:1b', ollama_models: 'x:3b' }));
     assert.deepStrictEqual(w.rungs.map(r => r.provider), ['ollama:a:7b', 'claude', 'ollama:b:1b']); assert.strictEqual(w.from, 'routing.escalation');
     assert.deepStrictEqual(w.rungs[0], { provider: 'ollama:a:7b', base: 'ollama', model: 'a:7b' });
@@ -173,7 +175,7 @@ const listen = (fn) => new Promise((res) => { const s = http.createServer((q, r)
   await test('EL-08', 'the phase build climbs through climb(), records each attempt and climb, and passes the cap', () => {
     const src = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     const pb = src.slice(src.indexOf('async function _phaseBuild('), src.indexOf('async function _provePhase('));
-    assert.ok(/PRt\.climb\(\{ rungs, policy, attempt, onOutcome \}\)/.test(pb), 'climb() walks the ladder');
+    assert.ok(/PRt\.climb\(\{ rungs, policy, attempt: makeAttempt\(\{ msg: message, files: expectFiles \}\), onOutcome: makeOnOutcome\(\) \}\)/.test(pb) && /PRt\.climb\(\{ rungs, policy, attempt: makeAttempt\(\{ msg, files: \[file\], ck \}\), onOutcome: makeOnOutcome\(ck\) \}\)/.test(pb), 'climb() walks the ladder — for the whole phase, or each chunk (§0.39.361 SB51)');
     assert.ok(/PRt\.ladder\(policy, \{ installed \}\)/.test(pb) && /if \(!backend && !agent && !provider && policy\.escalate\)/.test(pb), 'the ladder only when the call names no agent');
     assert.ok(/maxToolErrors: policy\.maxToolErrors/.test(pb), 'the cap reaches the agent');
     assert.ok(/state: next\.how, [^]*from: rung\.provider, to: next\.rung\.provider/.test(pb), 'a climb is a row: from, to');

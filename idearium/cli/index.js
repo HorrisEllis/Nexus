@@ -58,6 +58,7 @@
  *   idearium start  — start HTTP API server
  */
 
+import './store-chatter.js';   // §0.39.374 — first: the store's chatter to stderr, so stdout is the answer
 import { getIdeaOS, VERSION, IDEA_PHASES } from '../core/index.js';
 // §BUILT 2026-09-03 — spec-engine/repo commands (below) call these
 // directly, no HTTP — matches this file's own §3.1 law for everything
@@ -65,6 +66,7 @@ import { getIdeaOS, VERSION, IDEA_PHASES } from '../core/index.js';
 import * as se from '../spec-engine/index.js';
 import { RepoLayer } from '../repo/index.js';
 import http from 'http';
+import { makeRouteCommands, helpLines } from './route-commands.js';   // §0.39.374 — every capability a command
 
 let _repoLayer = null;
 function repoLayer() {
@@ -1271,12 +1273,18 @@ async function main() {
     console.log(`  ${sky('status')}`);
     console.log(`  ${sky('snr')}`);
     console.log(`  ${sky('events')} [--n 50]`);
-    console.log(`  ${sky('start')}  — start HTTP API on :4800\n`);
+    console.log(`  ${sky('start')}  — start HTTP API on :4800`);
+    console.log(`\n  ${bold('the running repos')} ${dim('— add --json to any of these for the answer as it came')}`);
+    for (const [usage, about] of helpLines()) console.log(`  ${sky(usage.split(' ')[0])} ${usage.split(' ').slice(1).join(' ')}\n      ${dim(about)}`);
+    console.log('');
     process.exit(0);
   }
 
   // Build key: cmd alone or cmd.sub
   const key = sub ? `${cmd}.${sub}` : cmd;
+  // §0.39.374 — James: "Everything needs to be available as commands." The table of idearium/cli/route-commands.js, one
+  // runner for every row (resolve the repo, call the running Idearium or another Nexus system, print; --json raw)
+  Object.assign(COMMANDS, makeRouteCommands({ api: _localApi, findRepo: _findRepo, shortRepo, die, header, port: IDEARIUM_PORT, c: { sky, mint, amber, coral, violet, bold, dim, gray } }));
   const handler = COMMANDS[key];
 
   if (!handler) die(`unknown command: ${key}\nRun: idearium help`);

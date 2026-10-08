@@ -1,0 +1,411 @@
+<!doctype html>
+<!--
+  idearium/ui/_archive/workshop-0.39.300-ws4.html — ARCHIVED 0.39.354 (superseded by WS7, the full workshop: ui/workshop.html + css/workshop.css + js/workshop.js). Was: THE SPEC WORKSHOP (0.39.297 SW2). Map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec (SW2)
+  James: "I hate that ui you made. The spacial void is its own page. all of it needs to be isolated, in its own pages. i
+  was describing the pipeline when i told you that, from idearium." · "alright but no lowercase. and make sure its
+  enterprise grade".
+  The second station of the pipeline: an idea from the Void (or a library document, a repo's spec, or nothing) shaped
+  into a spec's sections. Its own page, in the Void's palette (css/void-theme.css) without its sky — a work surface (0.39.300 WS4), capitals everywhere.
+  His words in cyan; the agent's proposals in magenta, never written into the spec without his yes. Save writes the
+  repo's spec/<name>.spec — the Spec tab's living model. /api/workshop (idearium/lib/workshop.js).
+  ?id=<workshop> opens one; ?from=idea:<uuid>|library:<sha>|repo:<uuid> starts one.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE SPEC WORKSHOP</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/void-theme.css">
+<style>
+  /* §0.39.300 WS4 — James: "make this enterprise, remove the noise, this is for speccing remove everything else · idea ->
+     spec -> architecture -> idearium". One bar: the station, the steps, the save. No sky, no hero title. */
+  #sky { display: none; }
+  .bar { position: fixed; top: var(--chrome-h, 0px); left: 0; right: 0; height: 52px; z-index: 6; display: flex; align-items: center; gap: 18px; padding: 0 18px; background: rgba(5,8,15,.96); border-bottom: 1px solid var(--line2); }
+  .bar .name { font: 400 17px/1 var(--display); letter-spacing: .26em; color: var(--c); white-space: nowrap; }
+  .bar .sep { width: 1px; height: 22px; background: var(--line2); }
+  .stations { display: flex; gap: 4px; align-items: center; }
+  .st { font: 400 13px/1 var(--display); letter-spacing: .2em; padding: 7px 11px; border: 1px solid transparent; border-radius: 2px; color: var(--text3); }
+  .st .i { font: 400 10px/1 var(--mono); letter-spacing: .06em; margin-right: 7px; opacity: .7; }
+  .st.done { color: rgba(0,255,136,.75); } .st.now { color: var(--c); border-color: rgba(0,212,255,.4); background: rgba(0,212,255,.06); }
+  .st.link { cursor: pointer; color: var(--text2); } .st.link:hover { border-color: var(--line3); color: var(--text); }
+  .arrow { color: var(--text3); font: 400 11px/1 var(--mono); }
+  .bar .end { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .saved { font: 400 10px/1.3 var(--mono); letter-spacing: .1em; color: var(--text2); max-width: 320px; text-align: right; }
+  .saved.dirty { color: var(--y); }
+  /* toasts sit clear of the work: bottom centre (the Void keeps them top-left, over empty space) */
+  #toasts { top: auto; bottom: 18px; left: 50%; transform: translateX(-50%); align-items: center; }
+
+  .stage { position: fixed; left: 0; right: 0; bottom: 0; top: calc(var(--chrome-h, 0px) + 52px); z-index: 2; padding-top: 16px; }
+  .panel { background: #070b14; border: 1px solid var(--line2); border-radius: 2px; }
+  .lbl { font: 400 12px/1 var(--display); letter-spacing: .24em; color: var(--text2); display: flex; align-items: center; gap: 8px; margin: 0 0 10px; }
+  .lbl .n { font: 400 10px/1 var(--mono); letter-spacing: .1em; color: var(--text3); }
+
+  /* start */
+  .start { max-width: 1280px; margin: 0 auto; padding: 0 18px 24px; height: 100%; overflow: auto; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-content: start; }
+  .start .panel { padding: 16px; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .filter { width: 100%; background: rgba(11,17,32,.8); border: 1px solid var(--line2); border-radius: 2px; color: var(--c); font: 400 12px/1 var(--mono); padding: 9px 11px; outline: none; margin-bottom: 8px; }
+  .filter:focus { border-color: rgba(0,212,255,.4); }
+  .pick { max-height: 300px; overflow: auto; border: 1px solid var(--line); border-radius: 2px; }
+  .it { padding: 9px 11px; border-bottom: 1px solid var(--line); cursor: pointer; display: flex; gap: 10px; align-items: baseline; font: 400 12px/1.5 var(--mono); color: var(--text); }
+  .it:hover { background: rgba(0,212,255,.04); } .it.on { background: rgba(0,212,255,.09); color: var(--c); }
+  .it .m { margin-left: auto; font-size: 10px; letter-spacing: .08em; color: var(--text2); white-space: nowrap; }
+  .it .wild { color: rgba(204,68,255,.8); } .it .unsteady { color: rgba(255,107,53,.85); }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .field { flex: 1; min-width: 200px; background: rgba(11,17,32,.8); border: 1px solid var(--line2); border-radius: 2px; color: var(--c); font: 400 12.5px/1 var(--mono); padding: 10px 12px; outline: none; }
+  .field:focus { border-color: rgba(0,212,255,.4); }
+  .ws { padding: 10px 12px; border: 1px solid var(--line); border-radius: 2px; margin-bottom: 6px; cursor: pointer; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; }
+  .ws:hover { border-color: var(--line3); background: rgba(0,212,255,.03); }
+  .ws .t { font: 400 15px/1.2 var(--display); letter-spacing: .14em; color: var(--c); }
+  .ws .m { font: 400 10px/1.4 var(--mono); letter-spacing: .08em; color: var(--text2); }
+  .ws .r { grid-row: span 2; align-self: center; font: 400 10px/1.4 var(--mono); color: var(--text2); text-align: right; }
+
+  /* reach — the dial, in his words */
+  .reach { display: flex; gap: 4px; }
+  .reach button { flex: 1; padding: 8px 4px; border: 1px solid var(--line2); border-radius: 2px; background: rgba(255,255,255,.01); cursor: pointer; font: 400 12px/1.1 var(--display); letter-spacing: .14em; color: var(--text2); }
+  .reach button b { display: block; font: 400 15px/1 var(--display); margin-bottom: 3px; }
+  .reach button.on { color: var(--c); border-color: rgba(0,212,255,.45); background: rgba(0,212,255,.08); box-shadow: 0 0 14px rgba(0,212,255,.1); }
+  .reach-guide { font: 400 10.5px/1.5 var(--mono); letter-spacing: .06em; color: var(--text2); margin-top: 6px; min-height: 30px; }
+
+  /* the workshop */
+  .work { height: 100%; padding: 0 18px 18px; display: grid; grid-template-columns: 250px minmax(0, 1fr) 380px; gap: 12px; }
+  .col { min-height: 0; overflow: auto; padding: 14px; }
+  .sec { padding: 9px 10px; border: 1px solid transparent; border-radius: 2px; cursor: pointer; display: flex; gap: 8px; align-items: baseline; margin-bottom: 3px; font: 400 14px/1.2 var(--display); letter-spacing: .12em; color: var(--text); }
+  .sec:hover { background: rgba(0,212,255,.04); } .sec.on { border-color: rgba(0,212,255,.35); color: var(--c); background: rgba(0,212,255,.06); }
+  .sec .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; background: var(--text3); transform: translateY(-2px); }
+  .sec .dot.full { background: var(--c); box-shadow: 0 0 8px rgba(0,212,255,.6); }
+  .sec .t { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hist { font: 400 10px/1.6 var(--mono); letter-spacing: .04em; color: var(--text2); }
+  .editor { display: flex; flex-direction: column; gap: 10px; height: 100%; }
+  .sec-title { width: 100%; background: transparent; border: 1px solid transparent; border-radius: 2px; color: var(--c); font: 400 22px/1.2 var(--display); letter-spacing: .16em; padding: 6px 8px; outline: none; }
+  .sec-title:hover { border-color: var(--line2); } .sec-title:focus { border-color: rgba(0,212,255,.4); }
+  .body { flex: 1; min-height: 240px; resize: none; width: 100%; background: rgba(0,212,255,.03); border: 1px solid rgba(0,212,255,.14); border-radius: 2px; color: var(--c); font: 400 13px/1.75 var(--mono); padding: 16px 18px; outline: none; }
+  .body:focus { border-color: rgba(0,212,255,.38); box-shadow: 0 0 30px rgba(0,212,255,.05); }
+  .body::placeholder { color: rgba(0,212,255,.25); }
+  .meta { display: flex; justify-content: space-between; gap: 10px; font: 400 10px/1.3 var(--mono); letter-spacing: .08em; color: var(--text2); }
+  .asks { display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 14px; }
+  .asks .btn { text-align: left; }
+  .prop { border: 1px solid rgba(204,68,255,.16); background: rgba(204,68,255,.03); border-radius: 2px; padding: 10px 12px; margin-bottom: 8px; animation: rise .3s ease; }
+  .prop.seen { animation: none; } .prop.accepted { border-color: rgba(0,255,136,.2); opacity: .7; } .prop.dismissed { opacity: .4; }
+  .prop .k { font: 400 10px/1.3 var(--mono); letter-spacing: .12em; color: rgba(204,68,255,.75); display: flex; gap: 10px; flex-wrap: wrap; }
+  .prop .k .d { color: var(--text2); }
+  .prop .x { margin: 7px 0 9px; white-space: pre-wrap; font: 400 12.5px/1.6 var(--body); color: rgba(220,180,255,.9); }
+  .prop .a { display: flex; gap: 5px; flex-wrap: wrap; }
+  .toggle { font: 400 10px/1 var(--mono); letter-spacing: .1em; color: var(--text2); display: flex; gap: 6px; align-items: center; cursor: pointer; margin-left: auto; }
+
+  /* a dialog in the page's own look (the browser's prompt() and confirm() speak lowercase) */
+  .dlg-back { position: fixed; inset: 0; background: rgba(3,5,8,.72); z-index: 20; display: flex; align-items: center; justify-content: center; }
+  .dlg { width: min(460px, calc(100% - 32px)); padding: 18px; }
+  .dlg .q { font: 400 16px/1.3 var(--display); letter-spacing: .18em; color: var(--c); margin-bottom: 12px; }
+  .dlg .note { font: 400 11px/1.5 var(--mono); color: var(--text2); margin-bottom: 12px; letter-spacing: .04em; }
+
+  @media (max-width: 1100px) {
+    html, body { height: auto; overflow: auto; }
+    .stage { position: static; padding-top: 16px; }
+    .bar { position: relative; top: 0; height: auto; min-height: 52px; flex-wrap: wrap; padding: 8px 14px; gap: 10px; }
+    .bar .sep { display: none; } .saved { max-width: 46vw; }
+    .work, .start { grid-template-columns: 1fr; height: auto; }
+    .col { overflow: visible; } .body { min-height: 260px; }
+  }
+</style>
+</head>
+<body>
+<script src="js/window-chrome.js" data-kind="workshop" data-title="THE SPEC WORKSHOP"></script>
+<header class="bar">
+  <div class="name">SPEC WORKSHOP</div>
+  <div class="sep"></div>
+  <nav class="stations" id="stations" aria-label="the pipeline"></nav>
+  <div class="end">
+    <span class="saved" id="saved"></span>
+    <button class="btn small ghost hidden" id="backBtn" title="EVERY WORKSHOP">← ALL WORKSHOPS</button>
+    <button class="btn small g hidden" id="saveBtn" title="WRITE THIS SPEC INTO ITS REPO'S SPEC FOLDER — THE SPEC TAB'S LIVING MODEL (CTRL+S)">SAVE TO THE REPO'S SPEC</button>
+  </div>
+</header>
+
+<div class="state hidden" id="state" role="status" aria-live="polite"></div>
+
+<main class="stage">
+  <!-- start: resume one, or begin from an idea, a library document, a repo's spec, or nothing -->
+  <section class="start hidden" id="start" aria-label="start a spec">
+    <div class="panel">
+      <div class="lbl">START FROM</div>
+      <div class="tabs" id="fromTabs" role="tablist"></div>
+      <div id="fromPane"></div>
+      <div class="lbl" style="margin-top:16px">REACH</div>
+      <div class="reach" id="newReach" role="radiogroup" aria-label="reach"></div>
+      <div class="reach-guide" id="newReachGuide"></div>
+      <div class="row" style="margin-top:10px">
+        <input class="field" id="newTitle" maxlength="160" placeholder="TITLE — OPTIONAL, TAKEN FROM WHAT YOU START FROM" aria-label="title">
+        <button class="btn" id="createBtn" disabled title="OPEN THE WORKSHOP">OPEN</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="lbl">YOUR WORKSHOPS <span class="n" id="wsCount"></span></div>
+      <div id="wsList" class="empty">READING…</div>
+    </div>
+  </section>
+
+  <!-- the workshop -->
+  <section class="work hidden" id="work" aria-label="the spec">
+    <div class="col panel">
+      <div class="lbl">SECTIONS <span class="n" id="secCount"></span></div>
+      <div id="secList" role="listbox" aria-label="sections"></div>
+      <div class="row" style="margin-top:8px"><button class="btn small" id="addSec" title="ADD A SECTION AFTER THIS ONE">+ SECTION</button></div>
+      <div id="removedBox" style="margin-top:16px"></div>
+      <div class="lbl" style="margin-top:18px">HISTORY</div>
+      <div class="hist" id="hist"></div>
+    </div>
+    <div class="col panel">
+      <div class="editor">
+        <div class="row">
+          <input class="sec-title" id="secTitle" maxlength="160" aria-label="section title" style="flex:1">
+          <button class="btn small ghost" id="rmSec" title="REMOVE THIS SECTION — IT IS KEPT AND CAN BE RESTORED">REMOVE</button>
+        </div>
+        <textarea class="body" id="secBody" maxlength="20000" placeholder="WRITE THIS SECTION — OR ASK THE AGENT FOR A DRAFT, AND ACCEPT WHAT YOU WANT OF IT" aria-label="section text"></textarea>
+        <div class="meta"><span id="secBy"></span><span id="secLimit" class="limit"></span></div>
+      </div>
+    </div>
+    <div class="col panel">
+      <div class="lbl">REACH</div>
+      <div class="reach" id="reach" role="radiogroup" aria-label="reach"></div>
+      <div class="reach-guide" id="reachGuide"></div>
+      <div class="lbl" style="margin-top:14px">ASK THE AGENT</div>
+      <div class="asks">
+        <button class="btn small m" data-k="section" title="A DRAFT OF THE OPEN SECTION — IT COMES BACK AS A PROPOSAL">✎ DRAFT THIS SECTION</button>
+        <button class="btn small m" data-k="open-loops" title="WHAT THE SPEC LEAVES UNDECIDED">◌ OPEN LOOPS</button>
+        <button class="btn small m" data-k="questions" title="THE QUESTIONS NOBODY HAS ASKED ABOUT IT YET">? QUESTIONS</button>
+      </div>
+      <div id="thinking" class="thinking hidden" role="status" aria-live="polite">THE AGENT IS WORKING <span id="meter" class="meter"></span></div>
+      <div class="lbl" style="margin-top:6px">PROPOSALS <span class="n" id="propCount"></span>
+        <label class="toggle"><input type="checkbox" id="showDone"> DECIDED</label></div>
+      <div id="props"></div>
+    </div>
+  </section>
+</main>
+
+<div id="toasts" role="status"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const Q = new URLSearchParams(location.search);
+// the dial — his words, the Void's creativity scale (idearium/lib/workshop.js AMBITION)
+const REACH = { 1: ['NORMAL', 'STAY INSIDE WHAT THE SPEC SAYS AND WHAT EXISTS.'], 2: ['CREATIVE', 'CONSIDERED EXTENSIONS, BUILDABLE WITH WHAT IS HERE.'], 3: ['OUTSIDE THE BOX', 'PAST THE OBVIOUS, WITH A CLEAR PATH.'], 4: ['NOVEL', 'RETHINK PARTS OF IT; BORROW FROM OTHER FIELDS.'], 5: ['OUTLIER', 'ACROSS DOMAINS AND PAST WHAT EXISTS TODAY.'] };
+const KIND = { section: 'DRAFT', 'open-loops': 'OPEN LOOP', questions: 'QUESTION', 'what-ifs': 'WHAT IF', d20: 'D20', 'reverse-chain': 'REVERSE CHAIN', inspiration: 'INSPIRATION' };
+const AGENT_MS = 330000;
+let W = null, SEL = null, SRC = null, FROM = 'idea', PICK = null, NEW_REACH = 3, BUSY = false, timer = null, DIRTY = false;
+const SEEN = new Set();
+
+function toast(t, bad) { const d = document.createElement('div'); d.className = 'toast' + (bad ? ' bad' : ''); d.textContent = t; $('toasts').appendChild(d); while ($('toasts').children.length > 4) $('toasts').firstChild.remove(); setTimeout(() => d.remove(), bad ? 7000 : 3200); }
+async function api(path, body, ms = body === undefined ? 20000 : 30000) {
+  const ac = new AbortController(); const t = setTimeout(() => ac.abort(), ms);
+  let r;
+  try { r = await fetch(path, { signal: ac.signal, ...(body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) }); }
+  catch (e) { throw new Error(e.name === 'AbortError' ? `NO ANSWER IN ${Math.round(ms / 1000)}S` : 'IDEARIUM IS NOT ANSWERING — IS IT RUNNING?'); }
+  finally { clearTimeout(t); }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`);
+  return j;
+}
+function setState(kind, msg) {
+  const el = $('state');
+  if (!kind) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden'); el.classList.toggle('bad', kind === 'bad');
+  el.innerHTML = kind === 'bad' ? `<b>THE WORKSHOP IS UNREACHABLE</b>${esc(msg)}<br><button class="btn small" id="retry">TRY AGAIN</button>` : `<b>OPENING THE WORKSHOP</b>${esc(msg || 'READING…')}`;
+  const r = $('retry'); if (r) r.onclick = () => boot();
+}
+// a dialog in the page's own look — returns the text (ask) or true (confirm), null when cancelled
+function dialog({ q, note = '', value = null, ok = 'OK' }) {
+  return new Promise((done) => {
+    const back = document.createElement('div'); back.className = 'dlg-back';
+    back.innerHTML = `<div class="dlg panel" role="dialog" aria-modal="true" aria-label="${esc(q)}"><div class="q">${esc(q)}</div>${note ? `<div class="note">${esc(note)}</div>` : ''}${value !== null ? `<input class="field" style="width:100%;margin-bottom:12px" maxlength="160" value="${esc(value)}">` : ''}<div class="row" style="justify-content:flex-end"><button class="btn small ghost" data-no>CANCEL</button><button class="btn small" data-ok>${esc(ok)}</button></div></div>`;
+    document.body.appendChild(back);
+    const input = back.querySelector('input'); (input || back.querySelector('[data-ok]')).focus(); if (input) input.select();
+    const end = (v) => { back.remove(); done(v); };
+    back.querySelector('[data-no]').onclick = () => end(null);
+    back.querySelector('[data-ok]').onclick = () => end(input ? (input.value.trim() || null) : true);
+    back.addEventListener('keydown', (e) => { if (e.key === 'Escape') end(null); if (e.key === 'Enter' && input) end(input.value.trim() || null); });
+    back.addEventListener('click', (e) => { if (e.target === back) end(null); });
+  });
+}
+function reachDial(el, guide, value, onPick) {
+  el.innerHTML = [1, 2, 3, 4, 5].map(n => `<button role="radio" aria-checked="${n === value}" class="${n === value ? 'on' : ''}" data-n="${n}" title="${REACH[n][1]}"><b>${n}</b>${REACH[n][0]}</button>`).join('');
+  guide.textContent = `${REACH[value][0]} — ${REACH[value][1]}`;
+  el.querySelectorAll('button').forEach(b => b.onclick = () => onPick(+b.dataset.n));
+}
+function stations() {
+  // §0.39.300 WS4 — the pipeline in the bar, compact (James: "IDEA → SPEC → ARCHITECT → BLUEPRINT → REPO → COS — that is fine")
+  const s = [
+    ['IDEA', 'stIdea', (W && W.source && W.source.kind === 'idea' ? 'done ' : '') + 'link', 'THE VOID — WHERE THE IDEAS ARE'],
+    ['SPEC', null, 'now', null],
+    ['ARCHITECT', W ? 'stArch' : null, W ? 'link' : '', W ? 'NEXT: LAY THIS SPEC OUT AS COMPONENTS' : 'OPENS ONCE THE SPEC IS STARTED'],
+    ['BLUEPRINT', null, '', 'NEXT IN THE PIPELINE — MAPPED, COMING'],
+    ['REPO', W && W.repoUuid ? 'stRepo' : null, W && W.repoUuid ? 'done link' : '', W && W.repoUuid ? 'OPEN THE REPO IN IDEARIUM — ITS SPEC TAB' : 'THE REPO THIS SPEC IS SAVED INTO'],
+    ['COS', null, '', 'NEXT IN THE PIPELINE — MAPPED, COMING'],
+  ];
+  $('stations').innerHTML = s.map(([n, id, c, tip], i) => `${i ? '<span class="arrow">→</span>' : ''}<span class="st ${c}"${id ? ` id="${id}" tabindex="0"` : ''}${tip ? ` title="${tip}"` : ''}><span class="i">0${i + 1}</span>${n}</span>`).join('');
+  const bind = (id, go) => { const el = $(id); if (el) { el.onclick = go; el.onkeydown = (e) => { if (e.key === 'Enter') go(); }; } };
+  bind('stIdea', () => flush().then(() => { location.href = 'void.html'; }));   // §0.39.300 WS3
+  // §0.39.298 AR2 — the next station: the architect, on this spec (what is written so far is kept first)
+  bind('stArch', () => flush().then(() => { location.href = `architect.html?from=workshop:${encodeURIComponent(W.uuid)}`; }));
+  bind('stRepo', openRepo);
+}
+
+// ── start ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+async function showStart() {
+  W = null; history.replaceState(null, '', location.pathname); document.title = 'THE SPEC WORKSHOP';
+  $('start').classList.remove('hidden'); $('work').classList.add('hidden'); $('saveBtn').classList.add('hidden'); $('backBtn').classList.add('hidden'); $('saved').textContent = '';
+  stations(); reachDial($('newReach'), $('newReachGuide'), NEW_REACH, (n) => { NEW_REACH = n; showStartReach(); });
+  try {
+    const d = await api('/api/workshop'); $('wsCount').textContent = d.count || '';
+    $('wsList').className = '';
+    $('wsList').innerHTML = d.workshops.length ? d.workshops.map(w => `<div class="ws" tabindex="0" data-id="${esc(w.uuid)}"><span class="t">${esc(w.title)}</span><span class="r">${w.open ? `${w.open} OPEN` : ''}<br>${new Date(w.updatedAt).toLocaleDateString()}</span><span class="m">${esc((w.source && w.source.kind) || '')} · ${w.sections} SECTIONS · ${w.specPath ? esc(w.specPath) : 'NOT SAVED YET'}</span></div>`).join('')
+      : '<div class="empty">NONE YET — START ONE FROM AN IDEA IN THE VOID</div>';
+    $('wsList').querySelectorAll('.ws').forEach(el => { el.onclick = () => open(el.dataset.id); el.onkeydown = (e) => { if (e.key === 'Enter') open(el.dataset.id); }; });
+    setState(null);
+  } catch (e) { setState('bad', e.message); return; }
+  if (!SRC) try { SRC = await api('/api/workshop/sources'); } catch (e) { SRC = { ideas: [], library: [], repos: [] }; toast(`SOURCES DID NOT LOAD: ${e.message}`, true); }
+  fromTabs();
+}
+function showStartReach() { reachDial($('newReach'), $('newReachGuide'), NEW_REACH, (n) => { NEW_REACH = n; showStartReach(); }); }
+function fromTabs() {
+  const tabs = [['idea', `FROM THE VOID (${SRC.ideas.length})`], ['library', `SPEC LIBRARY (${SRC.library.length})`], ['repo', `A REPO'S SPEC (${SRC.repos.length})`], ['blank', 'BLANK']];
+  $('fromTabs').innerHTML = tabs.map(([k, l]) => `<button class="chip ${FROM === k ? 'on' : ''}" role="tab" aria-selected="${FROM === k}" data-k="${k}">${l}</button>`).join('');
+  $('fromTabs').querySelectorAll('.chip').forEach(b => b.onclick = () => { FROM = b.dataset.k; PICK = null; fromTabs(); });
+  const C = ['NORMAL', 'CREATIVE', 'OUTSIDE THE BOX', 'NOVEL', 'OUTLIER'], S = ['STABLE', 'SHAKY', 'RISKY', 'DANGEROUS', 'UNSTABLE'];
+  const items = FROM === 'idea' ? SRC.ideas.map(i => ({ id: i.uuid, t: i.text, m: i.void ? `${C[i.void.creativity]} · ${S[i.void.stability]}` : (i.phase || ''), cls: i.void && i.void.tension >= 2 ? 'wild' : i.void && i.void.tension <= -2 ? 'unsteady' : '' }))
+    : FROM === 'library' ? SRC.library.map(r => ({ id: r.sha, t: r.title, m: `${r.family} · ${r.sections} SECTIONS${r.repoUuid ? ' · HAS A REPO' : ''}` }))
+    : FROM === 'repo' ? SRC.repos.map(r => ({ id: r.uuid, t: r.name, m: r.specFiles.length ? r.specFiles.join(', ') : 'NO .SPEC YET — STARTS EMPTY' })) : [];
+  $('fromPane').innerHTML = FROM === 'blank' ? '<div class="empty">A BLANK SPEC WITH ONE SECTION, PURPOSE. GIVE IT A TITLE BELOW.</div>'
+    : `<input class="filter" id="pickQ" placeholder="FILTER…" aria-label="filter"><div class="pick" id="pickList" role="listbox"></div>`;
+  const paint = () => {
+    const q = (($('pickQ') && $('pickQ').value) || '').toLowerCase();
+    $('pickList').innerHTML = items.filter(x => !q || String(x.t).toLowerCase().includes(q)).slice(0, 400).map(x => `<div class="it ${PICK === x.id ? 'on' : ''}" role="option" aria-selected="${PICK === x.id}" tabindex="0" data-id="${esc(x.id)}"><span>${esc(x.t)}</span><span class="m ${x.cls || ''}">${esc(x.m || '')}</span></div>`).join('') || '<div class="it empty">NOTHING HERE</div>';
+    $('pickList').querySelectorAll('.it[data-id]').forEach(it => { const pick = () => { PICK = it.dataset.id; paint(); $('createBtn').disabled = false; }; it.onclick = pick; it.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } }; });
+  };
+  if (FROM !== 'blank') { paint(); $('pickQ').oninput = paint; }
+  $('createBtn').disabled = FROM !== 'blank' && !PICK;
+}
+$('createBtn').onclick = async () => {
+  $('createBtn').disabled = true;
+  try { const d = await api('/api/workshop', { from: FROM === 'blank' ? { kind: 'blank' } : { kind: FROM, id: PICK }, title: $('newTitle').value.trim() || (FROM === 'blank' ? 'UNTITLED SPEC' : null), ambition: NEW_REACH }); open(d.workshop.uuid, d.workshop); }
+  catch (e) { toast(`NOT OPENED: ${e.message}`, true); $('createBtn').disabled = false; }
+};
+
+// ── the workshop ───────────────────────────────────────────────────────────────────────────────────────────────────
+async function open(id, data) {
+  setState('loading');
+  try { W = data || (await api(`/api/workshop/${encodeURIComponent(id)}`)).workshop; }
+  catch (e) { setState(null); toast(`NOT OPENED: ${e.message}`, true); return showStart(); }
+  setState(null); history.replaceState(null, '', `?id=${encodeURIComponent(W.uuid)}`);
+  $('start').classList.add('hidden'); $('work').classList.remove('hidden'); $('saveBtn').classList.remove('hidden'); $('backBtn').classList.remove('hidden');
+  if (!SEL || !W.sections.find(s => s.id === SEL)) SEL = (W.sections[0] || {}).id || null;
+  W.proposals.forEach(p => SEEN.add(p.uuid));
+  paint();
+}
+function savedNote() {
+  DIRTY = !!(W && (!W.savedAt || W.updatedAt > W.savedAt + 1500));
+  $('saved').textContent = !W ? '' : W.savedAt ? `SAVED TO ${W.specPath} · ${new Date(W.savedAt).toLocaleTimeString()}${DIRTY ? ' · CHANGED SINCE' : ''}` : 'NOT SAVED TO A REPO YET';
+  $('saved').classList.toggle('dirty', DIRTY);
+}
+function paint() {
+  document.title = `${W.title.toUpperCase()} — THE SPEC WORKSHOP`;
+  stations(); savedNote();
+  $('secCount').textContent = W.sections.length;
+  $('secList').innerHTML = W.sections.map(s => `<div class="sec ${s.id === SEL ? 'on' : ''}" role="option" aria-selected="${s.id === SEL}" tabindex="0" data-id="${esc(s.id)}"><span class="dot ${String(s.body || '').trim() ? 'full' : ''}"></span><span class="t">${esc(s.title)}</span></div>`).join('');
+  $('secList').querySelectorAll('.sec').forEach(d => { const go = () => { flush(); SEL = d.dataset.id; paint(); }; d.onclick = go; d.onkeydown = (e) => { if (e.key === 'Enter') go(); }; });
+  $('removedBox').innerHTML = W.removed && W.removed.length ? `<div class="lbl">REMOVED <span class="n">${W.removed.length}</span></div>${W.removed.map(s => `<div class="sec"><span class="t" style="color:var(--text2)">${esc(s.title)}</span><button class="btn small ghost" data-r="${esc(s.id)}" title="BRING IT BACK">RESTORE</button></div>`).join('')}` : '';
+  $('removedBox').querySelectorAll('[data-r]').forEach(b => b.onclick = () => update({ sections: [{ restore: b.dataset.r }] }));
+  const s = W.sections.find(x => x.id === SEL);
+  $('secTitle').value = s ? s.title : ''; $('secBody').value = s ? s.body : ''; $('secTitle').disabled = $('secBody').disabled = !s;
+  $('secBy').textContent = s ? `${s.by ? `BY ${String(s.by).toUpperCase()} · ` : ''}${new Date(s.updatedAt).toLocaleString()}` : '';
+  paintLimit();
+  $('hist').innerHTML = (W.history || []).slice(-14).reverse().map(h => `<div>${new Date(h.at).toLocaleTimeString()} · ${esc(h.what)}</div>`).join('');
+  reachDial($('reach'), $('reachGuide'), W.ambition, (n) => update({ ambition: n }));
+  document.querySelectorAll('.asks .btn').forEach(b => b.disabled = BUSY || (b.dataset.k === 'section' && !s));
+  paintProposals();
+}
+function paintLimit() { const n = $('secBody').value.length, el = $('secLimit'); el.textContent = n > 15000 ? `${n} / 20000` : ''; el.className = 'limit' + (n >= 20000 ? ' over' : n > 18000 ? ' near' : ''); }
+function paintProposals() {
+  const showDone = $('showDone').checked;
+  const list = W.proposals.slice().reverse().filter(p => showDone || p.status === 'open');
+  $('propCount').textContent = `${W.proposals.filter(p => p.status === 'open').length} OPEN`;
+  const sec = W.sections.find(x => x.id === SEL);
+  $('props').innerHTML = list.length ? list.map(p => `<div class="prop ${p.status} ${SEEN.has(p.uuid) ? 'seen' : ''}">
+      <div class="k"><span>${KIND[p.kind] || esc(p.kind)}</span>${p.domain ? `<span class="d">ROLLED ${p.roll}: ${esc(p.domain)}</span>` : ''}<span class="d">REACH ${esc(REACH[p.ambition] ? REACH[p.ambition][0] : p.ambition)}</span>${p.status !== 'open' ? `<span class="d">${esc(p.status)}${p.into ? ` → ${esc((W.sections.find(x => x.id === p.into) || {}).title || p.into)}` : ''}</span>` : ''}</div>
+      <div class="x">${esc(p.text)}</div>
+      <div class="a">${p.status === 'open' ? `${sec ? `<button class="btn small" data-p="${p.uuid}" data-a="append" title="ADD IT TO THE END OF ${esc(sec.title).toUpperCase()}">INTO ${esc(sec.title.slice(0, 20))}</button>` : ''}${p.kind === 'section' && sec ? `<button class="btn small" data-p="${p.uuid}" data-a="replace" title="REPLACE THE SECTION'S TEXT — THE OLD TEXT IS KEPT">REPLACE</button>` : ''}<button class="btn small" data-p="${p.uuid}" data-a="new" title="MAKE IT A SECTION OF ITS OWN">AS NEW SECTION</button><button class="btn small ghost" data-p="${p.uuid}" data-a="dismiss" title="SET IT ASIDE">DISMISS</button>`
+        : `<button class="btn small ghost" data-p="${p.uuid}" data-a="reopen" title="OPEN IT AGAIN">REOPEN</button>`}</div></div>`).join('')
+    : `<div class="empty">${W.proposals.length ? 'NOTHING OPEN — TICK DECIDED TO SEE THE REST' : 'ASK THE AGENT ABOVE. ITS PROPOSALS LAND HERE, AND ONLY WHAT YOU ACCEPT GOES INTO THE SPEC.'}</div>`;
+  list.forEach(p => SEEN.add(p.uuid));
+  $('props').querySelectorAll('[data-p]').forEach(b => b.onclick = () => decide(b.dataset.p, b.dataset.a));
+}
+$('showDone').onchange = paintProposals;
+
+async function update(body) {
+  try { W = (await api(`/api/workshop/${W.uuid}`, body)).workshop; if (!W.sections.find(s => s.id === SEL)) SEL = (W.sections[W.sections.length - 1] || {}).id; paint(); return true; }
+  catch (e) { toast(`NOT SAVED: ${e.message}`, true); return false; }
+}
+function flush() {
+  if (!W || !SEL) return Promise.resolve(); clearTimeout(timer);
+  const s = W.sections.find(x => x.id === SEL); if (!s) return Promise.resolve();
+  const title = $('secTitle').value, body = $('secBody').value;
+  if (title === s.title && body === s.body) return Promise.resolve();
+  s.title = title; s.body = body;
+  return api(`/api/workshop/${W.uuid}`, { sections: [{ id: SEL, title, body }] }).then(d => { W = d.workshop; $('secBy').textContent = `KEPT · ${new Date().toLocaleTimeString()}`; savedNote(); })
+    .catch(e => toast(`SECTION NOT KEPT: ${e.message}`, true));
+}
+$('secBody').oninput = $('secTitle').oninput = () => { paintLimit(); $('secBy').textContent = 'EDITING…'; clearTimeout(timer); timer = setTimeout(flush, 900); };
+$('secTitle').onblur = $('secBody').onblur = () => flush().then(() => { const el = $('secList').querySelector('.sec.on .t'); if (el && W) el.textContent = (W.sections.find(x => x.id === SEL) || {}).title || ''; });
+$('addSec').onclick = async () => { await flush(); const t = await dialog({ q: 'NEW SECTION', value: '', ok: 'ADD' }); if (!t) return;
+  const at = W.sections.findIndex(s => s.id === SEL); if (await update({ sections: [{ add: true, title: t, after: SEL }] })) { SEL = (W.sections[at + 1] || W.sections[W.sections.length - 1]).id; paint(); $('secBody').focus(); } };
+$('rmSec').onclick = async () => { if (!SEL) return; const s = W.sections.find(x => x.id === SEL);
+  if (await dialog({ q: `REMOVE ${String(s.title).toUpperCase()}?`, note: 'IT IS KEPT UNDER REMOVED AND CAN BE RESTORED.', ok: 'REMOVE' })) update({ sections: [{ id: SEL, remove: true }] }); };
+let _meterT = null;
+function setThinking(on) { BUSY = on; $('thinking').classList.toggle('hidden', !on); document.querySelectorAll('.asks .btn').forEach(b => b.disabled = on);
+  clearInterval(_meterT); $('meter').textContent = ''; if (on) { const t0 = Date.now(); _meterT = setInterval(() => { $('meter').textContent = `${Math.round((Date.now() - t0) / 1000)}S`; }, 1000); } }
+document.querySelectorAll('.asks .btn').forEach(b => b.onclick = async () => {
+  if (BUSY || !W) return; await flush(); setThinking(true);
+  try { const d = await api(`/api/workshop/${W.uuid}/feed`, { kind: b.dataset.k, sectionId: SEL }, AGENT_MS); W = d.workshop; toast(`${d.added.length} PROPOSAL${d.added.length === 1 ? '' : 'S'}`); }
+  catch (e) { toast(e.message, true); } finally { setThinking(false); paint(); }
+});
+async function decide(pid, a) {
+  await flush();
+  const body = a === 'dismiss' || a === 'reopen' ? { action: a } : { action: 'accept', mode: a, sectionId: SEL };
+  if (a === 'new') { const p = W.proposals.find(x => x.uuid === pid); const t = await dialog({ q: 'TITLE FOR THE NEW SECTION', value: p && p.kind === 'section' ? 'SECTION' : (KIND[p.kind] || 'SECTION'), ok: 'ADD' }); if (!t) return; body.title = t; }
+  try { const d = await api(`/api/workshop/${W.uuid}/proposal/${pid}`, body); W = d.workshop; if (d.section) SEL = d.section.id; paint(); }
+  catch (e) { toast(e.message, true); }
+}
+async function save() {
+  if (!W) return; await flush(); $('saveBtn').disabled = true;
+  try { const d = await api(`/api/workshop/${W.uuid}/save`, {}, 120000); W = d.workshop; paint();
+    toast(`SAVED TO ${d.specPath}${d.madeRepo === 'new' ? ' — IN A NEW REPO' : d.madeRepo ? " — IN ITS LIBRARY DOCUMENT'S REPO" : ''}`); }
+  catch (e) { toast(`NOT SAVED: ${e.message}`, true); }
+  finally { $('saveBtn').disabled = false; }
+}
+$('saveBtn').onclick = save;
+document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && W) { e.preventDefault(); save(); } });
+function openRepo() {
+  if (!W || !W.repoUuid) return;
+  if (window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'nexus:repo.open', repoUuid: W.repoUuid, label: W.title, subtab: 'spec' }, '*'); toast('OPENED IN IDEARIUM — THE SPEC TAB'); }
+  else toast(`ITS REPO: ${W.repoUuid}`);
+}
+$('backBtn').onclick = async () => { await flush(); SRC = null; showStart(); };
+window.addEventListener('beforeunload', (e) => { flush(); });
+
+async function boot() {
+  setState('loading');
+  if (Q.get('id')) return open(Q.get('id'));
+  const f = Q.get('from');
+  if (f && /^(idea|library|repo):.+/.test(f)) {
+    const [kind, ...rest] = f.split(':');
+    try { const d = await api('/api/workshop', { from: { kind, id: rest.join(':') }, ambition: 3 }); return open(d.workshop.uuid, d.workshop); }
+    catch (e) { toast(`COULD NOT START FROM THAT ${kind.toUpperCase()}: ${e.message}`, true); }
+  }
+  showStart();
+}
+boot();
+</script>
+</body>
+</html>

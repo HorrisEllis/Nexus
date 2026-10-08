@@ -21,7 +21,7 @@
 .cs-indent{display:inline-block;flex:none}.cs-caret{width:10px;color:var(--text3)}
 .cs-dir{color:var(--text3)}
 .cs-fname{overflow:hidden;text-overflow:ellipsis}
-.cs-file.fs-row-pending,.cs-file.cs-pending{opacity:.45;font-style:italic}
+.cs-file.fs-row-pending,.cs-file.cs-pending,.cs-file.fs-row-uncoded{opacity:.45;font-style:italic}
 .cs-file.fs-row-deleted{opacity:.45;text-decoration:line-through}
 .cs-file.fs-row-modified .cs-fname,.cs-file.fs-row-new .cs-fname{color:var(--amber)}
 .cs-diffdot{color:var(--amber);font-size:8px;margin-left:3px}
@@ -74,3 +74,24 @@
 .cs-now{display:inline-flex;align-items:center;gap:4px;color:var(--text);max-width:55%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .cs-call.running{color:var(--text)}
 .cs-act-sec{font:600 9px var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:6px 0 2px}
+/* §0.39.356 LS4 — the agent writing, live (app.js agentLiveHtml): the Code tab above activity, the Plan above the work surface */
+.al{border:1px solid rgba(255,255,255,.08);border-radius:8px;background:var(--nx-void,var(--bg1));font:10.5px var(--mono);color:var(--text2)}
+.al-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:5px 10px}
+.al-head b{color:var(--text);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:9.5px}
+.al-dim{color:var(--text3)}.al-bad{color:var(--coral)}.al-grow{flex:1}
+.al-anchor{color:var(--sky2);max-width:46ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.al-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);flex:none}
+.al-dot.on{background:var(--mint);box-shadow:0 0 8px var(--mint);animation:al-blink 1s ease-in-out infinite}
+@keyframes al-blink{50%{opacity:.25}}
+.al-text{margin:0;max-height:180px;overflow:auto;padding:6px 10px 8px;border-top:1px solid rgba(255,255,255,.05);white-space:pre-wrap;word-break:break-word;color:var(--text);font:10.5px/1.55 var(--mono);border-left:2px solid var(--mint)}
+.pp-live{margin:10px 0 6px}
+/* §0.47.0 OS3 — the open file's history, one quiet line (VR1: every change a commit, who and why) */
+.cs-hist{display:flex;align-items:center;gap:8px;min-width:0;padding:2px 2px 8px;font-size:10px;color:var(--text3)}
+.cs-hist b{font-weight:500;color:var(--text2)}
+.cs-hist-n{background:none;border:0;padding:0;color:var(--sky);font:inherit;cursor:pointer;flex:none}.cs-hist-n:hover{text-decoration:underline}
+.cs-hist-m{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.8}
+/* §0.48.0 OS9 — the docked agent's identity (the Agent tab's head, now one line here) */
+.cs-ident{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:4px 10px 6px;font-size:10px;color:var(--text3);border-bottom:1px solid rgba(255,255,255,.05)}
+.cs-ident b{font-weight:600;color:var(--text2)}
+.cs-ident-opt{margin-left:auto;background:none;border:0;padding:0;color:var(--sky);font:inherit;cursor:pointer}.cs-ident-opt:hover{text-decoration:underline}
+.cs-m-cli .cs-msg-text{color:var(--text2);white-space:pre-wrap;font:10px/1.5 var(--mono)}

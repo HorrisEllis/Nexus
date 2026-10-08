@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        copilot
-    version:     3.8.1   # 0.39.339 PATCH — the working set starts from the checklist. Previous 3.8.0: 0.39.337 MINOR — copilot/lib/workset.js: an Ollama tool loop's working set (JSON per run), rounds send its synthesis. Previous 3.7.2: 0.39.336 PATCH — an Ollama tool-loop reply's written tool call is read (_findToolCalls), as a browser agent's. Previous 3.7.1: 0.39.282 PATCH — a self-reported failure floors confidence; duplicate component id context.get → context.session; module-builder resolves on the full token intersection. Previous 3.7.0: 0.39.258 MINOR — body.tools.composed, raw Ollama prompt, GET /api/prompt/resolve. Previous 3.6.0: 0.39.257 MINOR — /api/prompt body.tools runs the real tool loop (scope enforced, identity, repoDir) for ollama and browser agents; GET /api/tools/list, POST /api/tools/run; a failed round ends a tool loop as a failure with its jobId. Previous 3.5.2: 0.39.253 PATCH — /api/prompt passes body.model to Ollama (was dropped). Previous 3.5.1: 0.39.244 PATCH — _tryGuardian says why it failed (error, jobId) instead of null; no shared-tab pre-check for a repo (agentId) job
+    version:     3.9.0   # 0.39.356 MINOR — tools.streamUrl: an Ollama model's text, live, to the caller (LS2). Previous 3.8.1: 0.39.339 PATCH — the working set starts from the checklist. Previous 3.8.0: 0.39.337 MINOR — copilot/lib/workset.js: an Ollama tool loop's working set (JSON per run), rounds send its synthesis. Previous 3.7.2: 0.39.336 PATCH — an Ollama tool-loop reply's written tool call is read (_findToolCalls), as a browser agent's. Previous 3.7.1: 0.39.282 PATCH — a self-reported failure floors confidence; duplicate component id context.get → context.session; module-builder resolves on the full token intersection. Previous 3.7.0: 0.39.258 MINOR — body.tools.composed, raw Ollama prompt, GET /api/prompt/resolve. Previous 3.6.0: 0.39.257 MINOR — /api/prompt body.tools runs the real tool loop (scope enforced, identity, repoDir) for ollama and browser agents; GET /api/tools/list, POST /api/tools/run; a failed round ends a tool loop as a failure with its jobId. Previous 3.5.2: 0.39.253 PATCH — /api/prompt passes body.model to Ollama (was dropped). Previous 3.5.1: 0.39.244 PATCH — _tryGuardian says why it failed (error, jobId) instead of null; no shared-tab pre-check for a repo (agentId) job
     foundation:  nexus-system-foundation@1.0.0
     port:        3750
     uuid:        nexus-copilot-v2-0000-2026-0627-jamesbrooks-001
@@ -384,3 +384,11 @@ spec:
 # target / similar / where / what item; synthesize() opens with the checklist's state and "checklist complete" or "still
 # missing — ask James: …". /api/prompt body.tools.checklist (≤ 20 items). tool-runtime: the synthesis is sent only once a
 # real read is in the set — the first round's prompt already carries the checklist.
+
+# ── ADDENDUM 2026-10-05 (0.39.356) — copilot 3.9.0 · cli-data-code phasemap LS2 ──
+# James: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel and code tab."
+# /api/prompt body.tools.streamUrl (loopback http only — tool-runtime streamSink, the toolEventSink's rules): with it, an
+# Ollama tool loop polls each bridge job every 500 ms (_pollOllamaJobHeadless onPartial over the bridge's job.partial) and
+# posts { event: dispatched | chunk | complete | error | timeout, jobId, model, text (the new part), fullLen, generating,
+# chars, session, repoUuid } (_streamingPoll). Fire and forget, 2 s; never in the way of the run. A browser agent's text
+# is not sent here: it reaches the caller through guardian's own feed (0.39.244).

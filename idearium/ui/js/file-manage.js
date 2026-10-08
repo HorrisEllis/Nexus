@@ -17,9 +17,9 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 const FILESTATE = { uuid: null, states: {}, counts: null, note: null, loading: false, at: 0 };
-const FS_LABEL = { committed: '', modified: 'M', new: 'N', deleted: 'D', pending: 'P' };
-const FS_TITLE = { committed: 'committed — as in the last version', modified: 'modified since the last version (uncommitted)',
-  new: 'new — in no version yet (uncommitted)', deleted: 'deleted since the last version', pending: 'pending — exists only as a proposal (Agent tab to approve)' };
+const FS_LABEL = { committed: '', modified: 'M', new: 'N', deleted: 'D', pending: 'P', uncoded: 'U' };
+const FS_TITLE = { uncoded: 'planned, not coded yet — its phase writes it (Phases tab)', committed: 'saved — the same as in the last Versionium snapshot', modified: 'changed since the last snapshot',
+  new: 'new — in no snapshot yet', deleted: 'deleted since the last snapshot', pending: 'pending — exists only as a proposal (Agent tab to approve)' };
 
 async function loadFileStates(repo, { force = false } = {}) {
   if (!repo || !repo.uuid || FILESTATE.loading) return;
@@ -38,7 +38,7 @@ function fileStateOf(path) { return FILESTATE.uuid === (CURRENT_API_REPO && CURR
 function pendingOnlyFiles(repo) {
   if (!repo || FILESTATE.uuid !== repo.uuid) return [];
   const have = new Set((repo.files || []).map(f => f.path));
-  return Object.entries(FILESTATE.states).filter(([p, s]) => s.state === 'pending' && !have.has(p)).map(([p]) => ({ path: p, bytes: 0, __pendingOnly: true }));
+  return Object.entries(FILESTATE.states).filter(([p, s]) => (s.state === 'pending' || s.state === 'uncoded') && !have.has(p)).map(([p]) => ({ path: p, bytes: 0, __pendingOnly: true }));
 }
 function fileStateMark(path) {
   const s = fileStateOf(path);
@@ -51,8 +51,8 @@ function fileStateMark(path) {
 }
 function fileStatesSummary() {
   const c = FILESTATE.counts; if (!c) return '';
-  const bits = [['modified', c.modified], ['new', c.new], ['deleted', c.deleted], ['pending', c.pending], ['proposals', c.withProposals], ['staged', c.withStaged]].filter(([, n]) => n);
-  return `${bits.map(([k, n]) => `${n} ${k}`).join(' · ') || 'everything committed'}${FILESTATE.note ? ` — ${FILESTATE.note}` : ''}`;
+  const bits = [['not coded', c.uncoded], ['modified', c.modified], ['new', c.new], ['deleted', c.deleted], ['pending', c.pending], ['proposals', c.withProposals], ['staged', c.withStaged]].filter(([, n]) => n);
+  return `${bits.map(([k, n]) => `${n} ${k}`).join(' · ') || 'no changes since the last snapshot'}${FILESTATE.note ? ` — ${FILESTATE.note}` : ''}`;
 }
 
 // ── Manage ───────────────────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ function openManagePanel() {
   const st = fileStateOf(ACTIVE_API_FILE);
   const text = _editorText();
   const lines = text ? text.replace(/\n$/, '').split('\n').length : 0;
-  const state = st ? st.state : 'committed';
+  const state = st ? (st.state === 'committed' ? 'saved' : st.state) : 'saved';
   const esc = escapeHtml;
   ov.innerHTML = `<div class="mg-shell manage-modal" role="dialog" aria-label="Manage ${esc(ACTIVE_API_FILE)}">
     <div class="mg-head">

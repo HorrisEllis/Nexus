@@ -138,7 +138,7 @@ const MAP = `spec:
 
   await test('PP-06', 'wired: the build chain ends in the proof; its events are declared', async () => {
     const src = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
-    assert.ok(/_reviewDraft\(\{[^)]*\}\)\s*\n\s*\.catch[^\n]*\n[^\n]*\n\s*\.then\(\(\) => \(\['replied', 'incomplete'\]\.includes\(state\) \? _provePhase\(/.test(src), 'the draft → review → proof chain');
+    assert.ok(/_reviewDraft\(\{[^)]*\}\)\)?\s*\n\s*\.catch[^\n]*\n[^\n]*\n\s*\.then\(\(\) => \(\['replied', 'incomplete'\]\.includes\(state\) \? _provePhase\(/.test(src), 'the draft → review → proof chain');
     for (const e of ["'idearium.phase.proven'", "'idearium.phase.attempt.unmet'"]) assert.ok(src.includes(e), e);
     const tax = require(path.join(ROOT, 'idearium/event-taxonomy.cjs'));
     assert.ok(tax.IDEARIUM_PHASE_PROVEN && tax.IDEARIUM_PHASE_ATTEMPT_UNMET);

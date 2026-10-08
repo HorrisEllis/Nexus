@@ -1,47 +1,83 @@
-# 0.39.354 — 2026-10-06
+# 0.39.354 — 2026-10-05
 
-James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade. interconnected" · "I'm thinking like document editor but for the emerge and .spec files. each block has a block id, which can be completely custom, can be anything."
+James: "okay spec workshop looks like shit. needs to be enterprise grade. feed the pipeline"
+James (his screenshot of the workshop's start page beside the Void): "look at the first screenshot. you see now?"
+James: "needs to be a full workshop. like a full document writter. emerge. like we talked about. animated, alive, like void, like not a small little ui,fully featured,"
 
-RS3 and RS9 of `docs/2026-10-05-spec-workshop-rebuild-phasemap.spec` (1.1.0) are done. These are the bottom of the build order: the screens (RS10, RS11) link by these ids, never by guessed titles.
+WS7, the full workshop, is built. It was mapped first in `docs/2026-10-02-workshop-codex-rewind-phasemap.spec` (1.7.0). It also builds part of WS6 (parts and modes, in the emerge map).
 
-## RS3: the spec document, `lib/spec-document.js`
+## What was wrong (from your screenshot and the page)
+- Two boxes floated on an empty black screen, and every label, button and input was the same small grey caps.
+- "FROM THE VOID (0)" was selected with nothing in it.
+- The REACH dial was the biggest control, though WS6 had already said "reach sectoin needs to be removed".
+- The stations were greyed out and did nothing.
+- **SAVE was where it stopped.** The routes that plan and build a spec existed, and nothing in the workshop called them.
 
-- **Blocks.** A `.spec` or `.eg` file is read as blocks over its real text. Every byte belongs to one block, so an untouched file saves back byte-identical. Tested on `genesis.spec`, a YAML phasemap and a markdown spec.
-  - Emerge: each `domain "…"` and each `// ──` banner is a block, with the comments directly above it.
-  - YAML: each top-level key, or, under a single root like `spec:`, its keys.
-  - Markdown: each heading.
-- **Ids.** A block's id is its natural name until you give it one. "Can be anything": any text but a line break.
-  - A custom id is written as a marker line in the block: `// @block …`, `# @block …` or `<!-- @block … -->`.
-  - Ids are unique: a taken id is refused, never suffixed.
-  - A rename is carried into the `blocks:` / `sections:` lists of the maps planned from that spec, and nowhere else.
-- **Editing a block** keeps every comment and every other block byte for byte. The check runs on the result:
-  - YAML by its parser;
-  - Emerge structurally (quotes, brackets, `domain "name"`), because the Emerge kernel's own parser reads another dialect.
-- **Bookkeeping blocks** (meta, history, notes …) are edited like any block but never planned. This is one rule, kept here.
+## The workshop now (`ui/workshop.html`, `css/workshop.css`, `js/workshop.js`)
+- **In the Void's world.** The star field is alive behind it (WS4 had hidden it). Glass panels rise in, the pipeline line under the bar flows, and the current station glows. Your work shows in cyan, the agent's in magenta.
+- **The start.**
+  - **WHAT ARE YOU SPECCING?** Type and press Enter to start a blank spec with that title.
+  - Three cards to start from instead: **FROM THE VOID**, **SPEC LIBRARY** and **A REPO'S SPEC**, each with its count. Each opens a picker with a filter. An empty one links to where its content comes from.
+  - Your workshops are shown as cards: mode, open proposals, and saved path or NOT SAVED YET.
+- **The writer: one document.**
+  - **The title, then every section** as a heading and a text block that grows as you write.
+  - **Saving as you type.** Each section is kept 0.8 seconds after you stop typing. An edit that fails to send is kept and sent again.
+  - **The outline:** jump to a section, move it up or down, remove it (kept under REMOVED) and restore it.
+  - **The tools:** word count and reading time, FOCUS (only the document), and **CAPS / AS TYPED**. CAPS is the default, by your rule; AS TYPED lets you read your own writing. What you type is always stored as typed.
+  - **Keys:** Ctrl+S saves, Ctrl+Enter sends to the pipeline.
+- **PARTS (WS6).** The spec template's 11 blocks are grouped in three tiers:
+  - **MINIMUM:** meta, purpose, schema, api, build order.
+  - **MODS:** axioms, events, integration, failure modes, tests.
+  - **COMPONENTS:** the registry.
 
-## RS9: the thread, `idearium/repo/thread.js` and `GET /api/repos/:uuid/thread`
+  A gauge shows MINIMUM n OF 5. A missing part is one click to add, and the agent drafts it unless you're in manual mode. Each section says which part it fills.
+- **MODES (WS6).**
+  - **MANUAL:** you write. The agent only points at what's missing.
+  - **ASSISTED:** the agent proposes part by part.
+  - **STRETCHED:** **CARRY IT THROUGH EVERY PART** adds every missing part and drafts each one in turn, and you can stop it.
 
-- **The read.** A spec's blocks ⇄ the phases planned from them ⇄ each phase's latest run (state, model, rung) ⇄ its files ⇄ the changes waiting on them. With no `?spec=`, it lists the specs this repo's maps were planned from.
-- **Stale.** A map records each block's hash when it was planned (`meta.block_hashes`). Editing a block marks only its own phases stale.
-  - A map planned before this can only say "the spec moved".
-  - A phase naming no block says "no link".
-  - A phase naming a block that's gone says "broken".
-  - Nothing is guessed.
-- **The planner** (`spec-plan`):
-  - It cuts by the document's blocks, so an Emerge spec plans too. Genesis planned nothing before; now it plans 21 phases.
-  - It writes each phase's `blocks:` (exact ids) and the block hashes.
-  - The agent's plan prompt lists the block ids and requires `blocks:` on every phase.
-- **The parser.** The one phasemap parser (`loom/scanners/phasemap-map.js`) reads `blocks:`, else an older map's `sections:`.
+  The mode is written into the agent's prompt. In every mode, nothing enters the spec without your yes.
+- **SEND TO THE PIPELINE.** An overlay shows each step live:
+  1. **Save.**
+  2. **Plan:** the repo's agent splits the spec into phases, and the page waits until that run finishes. If it fails, or you don't want to wait, **PLAN FROM THE SPEC NOW** derives the plan from your sections.
+  3. **Phases:** the phases in build order, with the next one marked.
+  4. **BUILD NEXT:** a snapshot is taken, then the agent builds that phase.
+  5. **OPEN IN IDEARIUM:** opens the repo on its Phases tab.
 
-## Tests
+  If the spec changed since it was planned, it says so and offers PLAN AGAIN.
 
-- `test-spec-document` 6/6.
-- `test-thread` 4/4. TH-04 runs through the real router: plan a spec, edit one block, and only its phases go stale.
-- `test-plan-lands` 17/17. PL-05 now counts `blocks:`.
-- Unchanged and passing: build-surface 13/13, one-idearium-phases-nodes 21/21, moce-roadmap 43/43, moce-roadmap-ui 17/17, step-gate, draft-review.
+## Server side (kept small)
+- `lib/workshop.js`:
+  - New: `PART_TIERS`, `MODES`, `MODE_GUIDE`, `partsOf()` and `setMode()`.
+  - `editSection` now takes `part` and `move`.
+  - A new workshop starts in assisted mode.
+- `/api/workshop/:id` returns the parts and modes, and accepts `{ mode }`.
+- The pipeline uses the repo's existing routes (`/spec/plan`, `/spec/build`, `/plan`). Nothing new was added.
+- app.js opens a repo on its Phases tab when the workshop asks.
 
-## Not here
+## Where it differs from the map
+- **The agent's buttons are still DRAFT, OPEN LOOPS and QUESTIONS.** The map listed what-ifs, d20, reverse chain and inspiration too. WS4 removed those ("remove the noise"), and the tests keep them in the Void. Putting them back in the workshop is your call.
+- **The test doesn't run idearium's own server.** The browser test runs the real page and the real `lib/workshop.js` against a server inside the test that answers like idearium. The API's parts and modes wiring is checked in its source (WF-02).
+- The WS4 page is kept at `ui/_archive/workshop-0.39.300-ws4.html`.
 
-- SB28 (genesis's file list) stays its own phase.
-- The routes for editing blocks come with the workshop editor (RS6).
-- Next is RS10: the Phases tab rebuilt on the thread.
+## Proof
+- **`tests/modules/test-workshop-full.test.js`, 10/10, driven by Clear Glass** (never Playwright):
+  - **WF-01:** parts in tiers from the real `blocks.yaml`; a part is kept on add; sections move; each mode is said in the prompt.
+  - **WF-02:** the API returns parts and modes, and app.js opens Phases.
+  - **WF-03:** the sky is drawn, the sources are counted, and WHAT ARE YOU SPECCING plus Enter opens a blank spec.
+  - **WF-04:** manual adds a part with no agent call; assisted adds and drafts it; the draft stays a proposal until accepted, then fills the part and the gauge reaches 20%.
+  - **WF-05:** typing is kept as typed and the caret stays where you are; the word count is the document's; a section moves; remove, then restore.
+  - **WF-06:** STRETCHED drafts every missing part once, in tier order, with nothing accepted on its own.
+  - **WF-07:** save, then plan (the agent's run watched to its end), then the phases P1–P3 with P2 next, then BUILD NEXT posts `{path}`.
+  - **WF-08:** a failed plan, then PLAN FROM THE SPEC NOW (`derive`), then the phases.
+  - **WF-09:** CAPS / AS TYPED, remembered for you, and focus mode with Esc.
+  - **WF-10:** no lowercase tooltip, no browser prompt() or confirm(), and the old page archived.
+- **Updated to the new page:**
+  - `test-spec-workshop` 8/8. WS4's "no sky" and the REACH dial are retired, with the reason in the test.
+  - `test-architect` 8/8.
+  - `test-synthesis-zoom-versionium` 6/6.
+  - `version-sync-and-registry` 30/30.
+- **Loom:** `idearium/ui/js/workshop.js` is mapped with its real edges: idearium's HTTP API, and app.js through postMessage. The registry was regenerated from scratch.
+
+## Versions
+- idearium 4.30.0 (MINOR: the workshop's responses carry parts and modes, and it accepts a mode).

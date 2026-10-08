@@ -1,0 +1,13 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-hook-0000-0000-000000000009",
+  "type": "hook",
+  "id": "{{slug}}.core.http",
+  "system": "{{slug}}",
+  "summary": "the core component over HTTP",
+  "payload": {
+    "component": "{{slug}}.core",
+    "direction": "in",
+    "kind": "http"
+  }
+}

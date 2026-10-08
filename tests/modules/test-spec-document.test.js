@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-spec-document.test.js — RS3 (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec), 0.39.354.
+ * tests/modules/test-spec-document.test.js — RS3 (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec), 0.49.0.
  * James: "I'm thinking like document editor but for the emerge and .spec files. each block has a block id, which can be
  *        completely custom, can be anything." · "okay now the phases with the spec workshop. needs to be rebuilt,
  *        enterprise grade. interconnected"
@@ -14,6 +14,8 @@
  *   SD-05  the checks: YAML by its parser, emerge structurally (an unclosed quote or bracket, a domain without its
  *          quoted name), each with its line
  *   SD-06  two blocks of the same name: the second is said, not silently merged; a duplicate marker is a problem
+ *   SD-07  the workshop's own form (sections: [{ id, title, body }], main's SP1): each section a block, its id its id:
+ *          field (a rename edits it), the idea's framing bookkeeping; byte-identical
  */
 const assert = require('assert');
 const fs = require('fs');
@@ -135,6 +137,18 @@ test('SD-06', 'two blocks of one name: the second is said; a duplicate marker is
   assert.ok(D.parse(dupe, { path: 'y.eg' }).problems.some(p => /duplicate block id "same"/.test(p.message)));
   const r = D.replaceBlock(EG, 'core', '// @block spine\ndomain "core"\n', { path: 'x.eg' });
   assert.strictEqual(r.ok, false, 'an edit that would duplicate an id is refused'); assert.ok(/duplicate block id "spine"/.test(r.error));
+});
+
+test('SD-07', 'the workshop form: each section a block by its id: field; a rename edits it; the framing is bookkeeping', () => {
+  const W = 'spec:\n  meta:\n    name: shop\nsections:\n  - id: idea\n    title: The idea\n    body: a shop\n  # the record\n  - id: schema\n    title: Schema\n    body: |\n      an order with lines\n  - id: api\n    title: API\n    body: ""\n';
+  const d = D.parse(W);
+  assert.strictEqual(d.format, 'sections'); assert.strictEqual(D.serialize(d), W);
+  assert.deepStrictEqual(d.blocks.map(b => [b.id, D.isBookkeeping(b)]), [['_preamble', true], ['idea', true], ['schema', false], ['api', false]]);
+  assert.ok(d.blocks.find(b => b.id === 'schema').text.startsWith('  # the record\n'), 'its comment above belongs to it');
+  const r = D.setId(W, 'schema', 'record shape');
+  assert.ok(r.ok && r.text.includes('  - id: "record shape"') && D.parse(r.text).blocks.some(b => b.id === 'record shape'));
+  assert.ok(/taken/.test(D.setId(W, 'schema', 'api').error));
+  assert.strictEqual(D.check(W, 'sections').ok, true);
 });
 
 console.log(`\n  ${passed} passed, ${failed} failed`);
