@@ -273,6 +273,7 @@ import { COMPONENTS as IDEARIUM_COMPONENTS } from '../registry-components.js';
 import path from 'path';
 import fs from 'fs';
 import { loadTable, appendRow as _appendRowRaw, deleteRow, syncTable } from '../lib/db.js';
+import { interruptedRows as _interruptedRows } from '../repo/run-reconcile.js';   // §HP2 0.52.0
 // §0.39.361 AR2 — James: "Failure modes and faults are still first class data." Every phase-run row that is a fault
 // (no snapshot, failed and why, wrote nothing, missed files, blocked, tool errors, unproven, every rung tried) is also
 // its own fault_log record (lib/phase-faults.js → lib/fault-log.js logFault), here where every such row is written.
@@ -719,12 +720,28 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // attempts; an outcome in escalate_on (failed · blocked · incomplete · tool-errors) moves to the next rung in a fresh
   // chat, a row on the Plan saying from what, to what and why. max_tool_errors failed tool calls in a row end an attempt.
   const policy = _routingPolicy();
-  let rungs = [], ladderFrom = null;
+  let rungs = [], ladderFrom = null, rungsSkipped = [];
   if (!backend && !agent && !provider && policy.escalate) {
     let installed = [];
     if (!policy.ollamaModels.length && !policy.escalation.length) { const om = await _ollamaModels(); if (om.ok) installed = om.models; }
     const L = PRt.ladder(policy, { installed });
     rungs = L.rungs; ladderFrom = L.from;
+    // §HP3 0.52.0 — a rung whose Ollama model is not installed (or every Ollama rung, Ollama unreachable) is left off
+    // before the climb, said on the run's route; never tried, never counted as that model's failure
+    if (rungs.some(x => x.base === 'ollama')) {
+      const om = await _ollamaModels();
+      const pr = PRt.present(rungs, { reachable: om.ok, installed: om.models, error: om.error });
+      if (pr.skipped.length) {
+        rungsSkipped = pr.skipped; rungs = pr.rungs;
+        ladderFrom = `${ladderFrom} — left off: ${pr.skipped.map(s => `${s.provider} (${s.why})`).join('; ')}`;
+        if (!rungs.length) {
+          const why = `nothing on the ladder can run now — ${pr.skipped.map(s => `${s.provider}: ${s.why}`).join('; ')}`;
+          appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', snapshot: commitId, rungsSkipped, error: why, ts: Date.now() });
+          getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'refused', snapshot: commitId });
+          return { ok: false, status: 409, error: `not built: ${why}`, extra: { code: 'NO_RUNG', skipped: rungsSkipped } };
+        }
+      }
+    }
   }
   // §0.39.361 AR1 — James: "needs to learn from this: routing and adapting". The ladder is ordered by what every phase
   // build so far says about each agent (lib/agent-record.js — a projection of idearium_phase_runs and the injects):
@@ -746,7 +763,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // the run starts here, its route on it: the ladder's order and, per agent, why it sits where it does
   appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length,
     ...(precedent.faults.length ? { precedent: precedent.faults.map(f => ({ uuid: f.uuid, ts: f.ts, agent: f.agent, mode: f.mode, promptChars: f.meta.promptChars || null })) } : {}),
-    ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom } } : {}),
+    ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom, ...(rungsSkipped.length ? { skipped: rungsSkipped } : {}) } } : {}),
     chunking: { chunk: chunking.chunk, why: chunking.why, ...(chunking.chunk ? { files: expectFiles } : {}) }, ts: Date.now() });
   getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
   const paramsOf = (rg) => (!rg ? { backend, agent, provider } : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
@@ -853,7 +870,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const shadow = expectFiles.length ? { expects: { files: expectFiles } } : null;
   return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length,
     chunking: { chunk: chunking.chunk, why: chunking.why, ...(chunking.chunk ? { chunks: expectFiles.length } : {}) },
-    ...(shadow ? { shadow: { expects: shadow.expects } } : {}), ...(rungs.length ? { ladder: { rungs: rungs.map(x => x.provider), from: ladderFrom } } : {}) } };
+    ...(shadow ? { shadow: { expects: shadow.expects } } : {}), ...(rungs.length ? { ladder: { rungs: rungs.map(x => x.provider), from: ladderFrom, skipped: rungsSkipped } } : {}) } };
 }
 
 // §0.39.303 PH1 — James: "It can build it. Piece by piece look at idearium." A phase run ends in a proof run of the
@@ -1441,6 +1458,16 @@ async function _specEngineReady(ms = 5000) {
  *  provider (lib/repo-agent.js defaultProvider / routeFor), the same route a repo agent uses. Tests swap it (_setAgentAsk). */
 let _agentAskOverride = null;
 export function _setAgentAsk(fn) { _agentAskOverride = typeof fn === 'function' ? fn : null; }
+// §HP2 0.52.0 — James: "Do the hardening pass". A run whose latest row is still in flight and was written before this
+// process began lost the process that dispatched it: one 'interrupted' row says so (idearium/repo/run-reconcile.js).
+// Run once at boot; 'interrupted' is final, so a second pass adds nothing.
+const _BOOT_AT = Date.now();
+function _reconcileRuns({ bootAt = _BOOT_AT, now = Date.now() } = {}) {
+  const rows = _interruptedRows(loadTable('idearium_phase_runs'), { bootAt, now });
+  for (const row of rows) appendRow('idearium_phase_runs', row);
+  return rows;
+}
+export function _reconcileRunsForTest(opts) { return _reconcileRuns(opts); }
 export function _agentAskForTest(prompt, opts) { return _agentAsk(prompt, opts); }   // §CT1 — its test drives the real route walk
 export function _verdictForTest(chunk, kind, ok, cls, why) { const by = _builtBy(chunk); _verdict(by, kind, ok, cls, why); return by; }   // §CT2
 async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium', kind = null } = {}) {
@@ -2715,9 +2742,11 @@ async function handle(req, res, route, query, body) {
         return ok(res, { policy, ...PR.plan({ preferAgent: query.agent || null, block, policy }) });
       }
       // §CT6 0.39.352 — the escalation ladder a phase build climbs, as it reads now (the installed models when none are listed)
-      let installed = []; if (!policy.ollamaModels.length && !policy.escalation.length) { const om = await _ollamaModels(); if (om.ok) installed = om.models; }
-      const ladder = PR.ladder(policy, { installed });
-      return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(), ladder: { rungs: ladder.rungs.map(r => r.provider), from: ladder.from }, escalateOn: PR.ESCALATE_ON,
+      const om = await _ollamaModels();
+      const ladder = PR.ladder(policy, { installed: !policy.ollamaModels.length && !policy.escalation.length && om.ok ? om.models : [] });
+      // §HP3 0.52.0 — the rungs a build would leave off now, and why
+      const now = PR.present(ladder.rungs, { reachable: om.ok, installed: om.models, error: om.error });
+      return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(), ladder: { rungs: ladder.rungs.map(r => r.provider), from: ladder.from, runnable: now.rungs.map(r => r.provider), skipped: now.skipped }, escalateOn: PR.ESCALATE_ON,
         blocks: se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title, agent: b.agent, fallback: b.fallback || [], ...PR.plan({ block: b, policy }) })) });
     }
     // §0.39.361 AR1 — James: "needs to learn from this: routing and adapting". Each agent's phase-build record: landed,
@@ -2730,7 +2759,7 @@ async function handle(req, res, route, query, body) {
     }
     case 'routing.learned': {
       const PR = _require('../../lib/pipeline-routing.js');
-      return ok(res, { policy: _routingPolicy(), learned: PR.learned({ jobType: query.jobType || null }) });
+      return ok(res, { policy: _routingPolicy(), learned: PR.learned({ jobType: query.jobType || null, policy: _routingPolicy() }) });
     }
     // §CT4 0.39.350 — James: "make sure ollama is all wired into idearium." (lib/ollama-check.js) The bridge's list of
     // installed models, and every caller's route as copilot's door gives it; a missing bridge or copilot is said.
@@ -8069,6 +8098,7 @@ export function startAPI() {
     const _require = createRequire(import.meta.url);
     // §CT8 0.39.352 — copilot reports each tool call of a repo agent here, as it happens (the Code tab's live activity)
     try { _require('../../lib/repo-agent.js').setToolEventSink(`http://127.0.0.1:${PORT}`); } catch (e) { console.warn(`[idearium/api] live tool events not wired: ${e.message}`); }
+    try { const n = _reconcileRuns().length; if (n) console.log(`[idearium/api] ${n} run(s) left in flight by the last process — marked interrupted`); } catch (e) { console.warn(`[idearium/api] runs not reconciled: ${e.message}`); }
 
     const { BootSequence } = _require('../../lib/boot-sequence');
 

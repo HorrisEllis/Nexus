@@ -23,7 +23,7 @@ const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), fo
 function _ppShowDoneSaved() { try { return localStorage.getItem('idearium.plan.showDone') === '1'; } catch (_) { return false; } }
 function planToggleDone() { PLANP.showDone = !PLANP.showDone; try { localStorage.setItem('idearium.plan.showDone', PLANP.showDone ? '1' : '0'); } catch (_) { /* a per-browser convenience */ } _planPaint(); }
 function _ppDoneLine(n, what) { return n ? `<button class="pp-donefold" onclick="planToggleDone()" title="${PLANP.showDone ? 'hide' : 'show'} what is complete">✓ ${n} ${what} complete — ${PLANP.showDone ? 'hide' : 'show'}</button>` : ''; }
-const _PLAN_GATE_LABEL = { escalating: 'escalating', retrying: 'retrying', mapped: 'mapped', snapshot: 'snapshot', dispatched: 'sent', replied: 'replied', blocked: 'blocked', incomplete: 'incomplete', reviewing: 'reviewing', reviewed: 'reviewed', skipped: 'skipped', landed: 'landed', closed: 'closed' };
+const _PLAN_GATE_LABEL = { escalating: 'escalating', retrying: 'retrying', interrupted: 'interrupted', mapped: 'mapped', snapshot: 'snapshot', dispatched: 'sent', replied: 'replied', blocked: 'blocked', incomplete: 'incomplete', reviewing: 'reviewing', reviewed: 'reviewed', skipped: 'skipped', landed: 'landed', closed: 'closed' };
 
 function _planEl() {
   let el = document.getElementById('plan-panel');
@@ -178,7 +178,7 @@ function _ppRoute(r) {
   if (!r || !(r.order || []).length) return '';
   const why = new Map((r.why || []).map(w => [w.provider, w]));
   return `<div class="pp-route"><span class="pp-route-h">${r.learned ? 'route — learned from past builds' : 'route — as configured (nothing learned changes it yet)'}${r.bucket ? ` · ${escapeHtml(r.bucket)} request` : ''}</span>${r.order.map((p, i) => {
-    const w = why.get(p); return `<span class="pp-rt${w && w.limited ? ' lim' : ''}" title="${escapeHtml(w ? w.why : '')}">${i + 1}. ${escapeHtml(p)}${w ? ` <i>${escapeHtml(w.why)}</i>` : ''}</span>`; }).join('')}</div>`;
+    const w = why.get(p); return `<span class="pp-rt${w && w.limited ? ' lim' : ''}" title="${escapeHtml(w ? w.why : '')}">${i + 1}. ${escapeHtml(p)}${w ? ` <i>${escapeHtml(w.why)}</i>` : ''}</span>`; }).join('')}${(r.skipped || []).map(s => `<span class="pp-rt lim" title="never tried — not counted as its failure">left off: ${escapeHtml(s.provider)} <i>${escapeHtml(s.why)}</i></span>`).join('')}</div>`;   // §HP3
 }
 
 function _ledgerHtml(rows) {

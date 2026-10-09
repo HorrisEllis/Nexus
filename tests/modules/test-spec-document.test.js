@@ -14,6 +14,9 @@
  *   SD-05  the checks: YAML by its parser, emerge structurally (an unclosed quote or bracket, a domain without its
  *          quoted name), each with its line
  *   SD-06  two blocks of the same name: the second is said, not silently merged; a duplicate marker is a problem
+ *   SD-08  §HP5 0.52.0 odd files: CRLF, a byte-order mark, no final newline, tabs and trailing spaces, mixed line endings,
+ *          an emerge file in CRLF — each round-trips byte-identical and is read as its blocks (a BOM had hidden them all);
+ *          an edit to one block leaves every other block's bytes and hash unchanged
  *   SD-07  the workshop's own form (sections: [{ id, title, body }], main's SP1): each section a block, its id its id:
  *          field (a rename edits it), the idea's framing bookkeeping; byte-identical
  */
@@ -149,6 +152,32 @@ test('SD-07', 'the workshop form: each section a block by its id: field; a renam
   assert.ok(r.ok && r.text.includes('  - id: "record shape"') && D.parse(r.text).blocks.some(b => b.id === 'record shape'));
   assert.ok(/taken/.test(D.setId(W, 'schema', 'api').error));
   assert.strictEqual(D.check(W, 'sections').ok, true);
+});
+
+test('SD-08', 'odd files round-trip byte-identical, read as their blocks; an edit leaves the others byte for byte', () => {
+  const Y = (eol, pre = '', tail = eol) => `${pre}spec:${eol}  meta:${eol}    name: x${eol}  schema:${eol}    a: 1${eol}  api:${eol}    b: 2${tail}`;
+  const cases = {
+    crlf: Y('\r\n'), bom: Y('\n', '\ufeff'), 'bom+crlf': Y('\r\n', '\ufeff'), 'no final newline': Y('\n', '', ''),
+    'tabs and trailing spaces': 'spec:\n  meta:   \n    name:\tx\n  schema:  \n    a: 1\t\n  api:\n    b: 2\n',
+    mixed: 'spec:\r\n  meta:\n    name: x\r\n  schema:\n    a: 1\r\n  api:\n    b: 2\n',
+  };
+  for (const [k, t] of Object.entries(cases)) {
+    const d = D.parse(t);
+    assert.strictEqual(D.serialize(d), t, `${k}: byte-identical`);
+    assert.deepStrictEqual(d.blocks.map(b => b.id), ['_preamble', 'meta', 'schema', 'api'], `${k}: read as its blocks`);
+    const sch = d.blocks.find(b => b.id === 'schema');
+    const r = D.replaceBlock(t, 'schema', sch.text.replace('a: 1', 'a: 3'));
+    assert.ok(r.ok, `${k}: ${r.error}`);
+    const a = D.parse(r.text);
+    for (const b of d.blocks.filter(x => x.id !== 'schema')) {
+      const after = a.blocks.find(x => x.id === b.id);
+      assert.strictEqual(after.text, b.text, `${k}: ${b.id} untouched`); assert.strictEqual(after.hash, b.hash, `${k}: ${b.id}'s hash unmoved`);
+    }
+  }
+  const eg = '\ufeff// top\r\ndomain "core"\r\n  a = 1\r\n\r\n// ── Spine ──\r\nspine WARP\r\n';
+  const de = D.parse(eg, { path: 'x.eg' });
+  assert.strictEqual(D.serialize(de), eg); assert.deepStrictEqual(de.blocks.map(b => b.id), ['core', 'spine']);
+  assert.strictEqual(D.check(eg, 'emerge').ok, true, 'CRLF and a BOM are not errors');
 });
 
 console.log(`\n  ${passed} passed, ${failed} failed`);

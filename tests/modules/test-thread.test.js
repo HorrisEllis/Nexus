@@ -9,6 +9,8 @@
  *          changes waiting on them
  *   TH-03  an edited block marks only its own phases stale; a map planned before block hashes says the spec moved;
  *          a phase naming no block says "no link", one naming a missing block is "broken" — nothing guessed
+ *   TH-05  §HP1 0.52.0 stale spreads along depends_on: an edited block stales its phase and every phase downstream of it,
+ *          each naming the phase it came through; an unrelated phase stays clean; a dependency cycle does not loop
  *   TH-04  GET /api/repos/:uuid/thread through idearium's real router: the specs its maps came from; a spec planned
  *          (POST …/spec/plan derive) then one block edited — that block's phases stale, the others not; an unknown spec 404
  */
@@ -95,6 +97,27 @@ const SPEC = [
     assert.deepStrictEqual([t2.summary.unlinked, t2.summary.broken], [1, 1]);
     const other = TH.thread({ specPath: 'spec/other.spec', specText: SPEC, maps, runs: [], pending: [], parsePhases: P.parsePhasemapText, doc: D, sha: D.sha });
     assert.strictEqual(other.phases.length, 0, 'a map planned from another spec is not this one\'s');
+  });
+
+  await test('TH-05', 'stale spreads along depends_on, each naming its way; unrelated clean; a cycle does not loop', () => {
+    const doc = D.parse(SPEC, { path: 'spec/shop.spec' });
+    const h = (id) => doc.blocks.find(b => b.id === id).hash.slice(0, 16);
+    const map = ['spec:', '  meta:', '    spec: spec/shop.spec', '    block_hashes:', `      "schema": ${h('schema')}`, `      "storage": ${h('storage')}`, `      "api": ${h('api')}`, '  phases:',
+      '    CH0_a:', '      blocks: [schema]', '      depends_on: []',
+      '    CH1_b:', '      blocks: [storage]', '      depends_on: [CH0_a]',
+      '    CH2_c:', '      blocks: [api]', '      depends_on: [CH1]',
+      '    CH3_d:', '      blocks: [api]', '      depends_on: []',
+      '    CH4_e:', '      blocks: [storage]', '      depends_on: [CH5_f, CH0_a]',
+      '    CH5_f:', '      blocks: [storage]', '      depends_on: [CH4_e]', ''].join('\n');
+    const schema = doc.blocks.find(b => b.id === 'schema');
+    const edited = D.replaceBlock(SPEC, 'schema', schema.text.replace('an order with lines', 'an order with lines and a currency')).text;
+    const t = TH.thread({ specPath: 'spec/shop.spec', specText: edited, maps: [{ path: 'docs/chain-phasemap.spec', text: map }], runs: [], pending: [], parsePhases: P.parsePhasemapText, doc: D, sha: D.sha });
+    const by = Object.fromEntries(t.phases.map(p => [p.key, p]));
+    assert.deepStrictEqual(by.CH0_a.stale, ['schema']); assert.strictEqual(by.CH0_a.staleVia, null, 'stale itself');
+    assert.strictEqual(by.CH1_b.staleVia, 'CH0_a'); assert.strictEqual(by.CH2_c.staleVia, 'CH1_b', 'by its short key too');
+    assert.strictEqual(by.CH3_d.staleVia, null, 'an unrelated phase stays clean');
+    assert.strictEqual(by.CH4_e.staleVia, 'CH0_a'); assert.strictEqual(by.CH5_f.staleVia, 'CH4_e', 'through the cycle, once');
+    assert.deepStrictEqual([t.summary.stalePhases, t.summary.staleDownstream], [5, 4]);
   });
 
   await test('TH-04', 'GET …/thread through the real router: specs listed; plan, edit one block, only its phases stale', async () => {

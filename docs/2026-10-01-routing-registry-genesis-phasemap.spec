@@ -198,3 +198,14 @@ spec:
 # The escalation ladder: routing.escalate · escalation · escalate_on · retries_per_rung · max_tool_errors. ladder(policy,
 # {installed}) — written, or the Ollama models smallest first by the size in the name (sizeOf), then the chain's agents;
 # climb() walks it; tool-errors is a class that never opens a breaker. Phase builds climb when no agent is named.
+
+# ADDENDUM 2026-10-09 (0.52.0, HP3 + HP4 of docs/2026-10-09-hardening-pass-phasemap.spec) — James: "Do the hardening pass".
+# HP3: present(rungs, { reachable, installed, error }) → { rungs, skipped } — an Ollama rung whose model is not installed
+# is left off before the climb, every Ollama rung when Ollama cannot be reached (name ≡ name:latest; agents stay). The
+# phase build says it on its route (route.skipped; the Plan: "left off: …") and refuses NO_RUNG when nothing is left;
+# GET /api/routing gives ladder.runnable and ladder.skipped; Settings → Routing says what is left off now. A skip is
+# never an attempt row, never that model's failure.
+# HP4: lib/economy/router.js scores() weighs a failed record by its class — SIGNAL_WEIGHTS test-failed 1, constraint 1,
+# dismissed 0.5, any other 1 — routing.signal_weights ("class:weight,…") overrides; policyFrom reads it, plan() and
+# learned() pass it. failed stays the count, bad (learned: weighed) the weight. The ledger keeps class beside reason;
+# recordHop passes it. Held-out evaluation of the learning stays open. tests: test-hardening-pass HR-03 … HR-05.

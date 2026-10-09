@@ -253,3 +253,12 @@ spec:
         offers to replan only those. Every link goes both ways: a phase opens its block in the workshop
         (?id=…&block=…), a block opens its phases in the Phases tab, either opens the Plan on its run.
       proof: "driven in Clear Glass: plan two blocks → their phases appear on them and in the Phases tab; edit one → its phases go stale in both; a phase's link opens the workshop on its block"
+
+# ADDENDUM 2026-10-09 (0.52.0, HP1 + HP5 of docs/2026-10-09-hardening-pass-phasemap.spec) — James: "Do the hardening pass".
+# RS9's thread: stale now spreads along depends_on. A phase built on a stale phase is stale through it (staleVia, the
+# nearest stale dependency, within the map, by full id or short key; breadth-first, so a cycle cannot loop);
+# summary.stalePhases counts it, staleDownstream says how many came through a dependency; RS10's Phases tab says
+# "↻ via SH1". tests: test-thread TH-05.
+# RS3's spec document: a byte-order mark hid every block (the first head line never matched) — heads are read without
+# it, the bytes kept. CRLF, BOM, tabs, trailing spaces, no final newline and mixed endings round-trip byte-identical; an
+# edit to one block leaves every other block's bytes and hash unchanged. tests: test-spec-document SD-08.

@@ -222,6 +222,10 @@ const SCHEMA = {
     // §0.39.355 PB1 — James: "i clicked on a phase … it needs to actually build it". The derived ladder started at a 0.6b
     // model, which cannot build a phase. Ollama models smaller than this (by the size in their name) are left off a
     // derived ladder; unsized ones stay; a written escalation is taken exactly as written. 0 = keep every model.
+    // §HP4 0.52.0 — James: "Do the hardening pass". How much a failure of each class counts against a provider in the
+    // learned order (lib/economy/router.js scores): a dismissed draft says less than a failed test. A class not named
+    // counts 1. "class:weight" pairs, comma-separated.
+    signal_weights:      { default: 'test-failed:1,constraint:1,dismissed:0.5', copilot_writable: true, type: 'string' },
     min_build_b:         { default: 3, min: 0, max: 1000, copilot_writable: true, type: 'number' },
   },
 
