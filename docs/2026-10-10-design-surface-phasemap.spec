@@ -102,3 +102,24 @@ spec:
         And "the cos ui as a template": the COS desktop window is a viewer of the VM's screen, not a component model;
         the template to reuse is the compartment's contract, which is what DS6 makes one shape.
       proof: "a repo opens into its systems, a system into its modules, a module into its components — each the same contract; a change in a component is versioned at its level and seen at every level above"
+    DS7_tools_are_mods:
+      layer: library
+      status: "OPEN"
+      james: '"yes, thats an immensly good idea. eravos for the editing tools. that way we can have isolated tools that can make something bigger. imagine, gnu or image manipulation tools, that can be added with the gui, like its also agnostic."'
+      depends_on: [DS6_one_module_contract_nested]
+      files: [eravos/ui/runtime/mod-factory.js, eravos/ui/runtime/wire-system.js, eravos/ui/mods/photo-editor]
+      does: >-
+        Every editing tool is an Eravos mod: isolated, its own schema, wired to others (wire-system.js) — a toolbox
+        assembled, not one editor. A tool declares what it accepts and produces as types (image/png, image/svg+xml,
+        text/html, an html element, audio/wav …), so the wire system only joins tools that fit, and the same tool works
+        on any file whose type it accepts — that is the agnostic part. Native tools (ImageMagick, ffmpeg, Inkscape's or
+        GIMP's command line) are mods whose engine runs the binary inside a COS compartment — the one place a runtime is
+        worth its cost (isolation for a program Nexus did not write) — and hands the result back over the wire. Adding one
+        from the GUI writes its schema (name, accepts, produces, the command and its parameters) as a proposal the gate
+        (SD10) checks, then a trial run on a sample file. Every tool is also an agent tool (DS5).
+      pushback: >-
+        A browser mod cannot run a native binary; the run goes through a host side (cos, asked by idearium) and costs a
+        compartment start, so native tools are for batch work, not per-pixel live editing. A tool's schema written from
+        its --help is a draft, never trusted until the trial run proves accepts → produces. And the photo-editor mod
+        already exists: the first tools are browser ones, native ones after.
+      proof: "a crop mod wired to a filter mod wired to an export mod edits a PNG; an ImageMagick mod added from the GUI runs in a compartment on the same PNG and its output feeds the export mod"

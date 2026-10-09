@@ -241,6 +241,19 @@ spec:
         entities and rules. The primitives block names the kind of each primitive (data, rule, process, interface) and the
         schema block's shape follows the kind — not a fixed table form.
       proof: "a spec from one idea: primitives named with invariants; schema built from them; changing a primitive marks schema, api and tests stale; nothing below restates a primitive"
+      revised: >-
+        James, 2026-10-10: "trying to make the spec blocks as dumb as possible. what are primitives in the sense of
+        components? … maybe each primitive is listed then everything in relation to? like maybe blocks are primitives?"
+        Proposed (his to decide): a spec is two lists — nodes {id, kind, name, invariants, body} and relations {from,
+        verb, to} with a small fixed set of verbs (contains, uses, produces, constrains, exposes). Kinds: thing (data),
+        rule (an invariant or principle), action (a process), boundary (an interface or surface), module (a group —
+        "contains" is the nesting doll, DS6). The familiar sections become views computed from the graph — schema = the
+        things and their fields, api/events = the boundaries and actions, tests = the rules turned into checks,
+        build_order = the graph sorted — so a block is as dumb as possible: one shape, no section knows another. Purpose
+        stays prose; the views are what a person reads.
+      revised_pushback: >-
+        More than five or six verbs and the relations become noise; a view a person cannot read as a document is a
+        regression from today. And existing specs (block form) are read as-is and converted on request, never in place.
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"
