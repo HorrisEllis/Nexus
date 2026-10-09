@@ -1,15 +1,17 @@
 # The path
 
-James: "can you get us there." · "most amount of power, and highest leverage, least amount of tokens."
+James: "can you get us there." · "most amount of power, and highest leverage, least amount of tokens." · "Include any useful or important."
 
-The whole roadmap after the declutter: **51 phases**. Everything else (585 phases) is on the shelf, kept and visible, and can come back. "Check first" means part of it may already be built; it is checked against the code before anything is written.
+The whole roadmap after the declutter: **53 phases**. Everything else is on the shelf, kept and visible, and can come back; the shelf was combed for anything broken, failing, losing data or security-critical, and what mattered came back here (step 0). "Check first" means part of it may already be built; it is checked against the code before anything is written.
 
-## The clean-up (in progress)
+## Step 0 — health and the clean-up
 
 | phase | map | note |
 |---|---|---|
+| HG1_components_store_map_parses | 2026-10-05-cli-data-code | docs/2026-09-27-components-store-and-atlases-phasemap.spec is loose YAML throughout (lists and decisions with key: value text inside); the scanner reads it, js-yaml does not — rewrite its prose blocks as quoted text |
+| HG2_loom_bootstrap_rejections | 2026-10-05-cli-data-code | check first: bootstrap exits 0 on 0.54.1 with 114 unresolved; what is left of the 460 rejections |
+| HG9_persist_history_diff | 2026-10-05-cli-data-code | loom/test/phasemap-map.test.js still fails 'persistHistory() correctly diffs against a seeded prior state' (12/13 on 0.54.1) |
 | OR1_five_answers_for_an_open_phase | 2026-10-09-one-roadmap |  |
-| OR2_the_proposal | 2026-10-09-one-roadmap |  |
 | OR6_old_code_out | 2026-10-09-one-roadmap |  |
 | OR4_one_roadmap_in_idearium | 2026-10-09-one-roadmap |  |
 | OR5_it_stays_decluttered | 2026-10-09-one-roadmap |  |

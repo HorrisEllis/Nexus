@@ -260,6 +260,7 @@ spec:
       axioms: ["§10.3", "§1.2", "§8.6", "§0.3"]
 
     AM8_lifeline_as_general_channel_and_reasoning_upgrade:
+      status: 'FOLDED — into one-model-engine ME10 (lifeline''s confidence escalation, his decision) (declutter 2026-10-09)'
       priority: NEW — every claim below has an exact file:line citation, checked live this pass, per explicit instruction not to generalize.
       depends_on: [AM1, AM7]
       does: >

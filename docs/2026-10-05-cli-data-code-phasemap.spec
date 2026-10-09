@@ -155,8 +155,8 @@ spec:
       layer: foundation
       systems: [idearium, loom, core]
       value: { score: 2, cost: S, for: [quality], why: "a phasemap that does not parse is invisible to every tool that reads maps" }
-      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
-      status_before: OPEN
+      status: OPEN
+      path: 'step 0, health — docs/2026-09-27-components-store-and-atlases-phasemap.spec is loose YAML throughout (lists and decisions with key: value text inside); the scanner reads it, js-yaml does not — rewrite its prose blocks as quoted text (declutter 2026-10-09)'
       depends_on: []
       files: [docs/2026-09-27-components-store-and-atlases-phasemap.spec]
       does: "It fails YAML at line 24 (\"expected ':' after a mapping key\"), unchanged since before 0.39.308. Fix the line; the content stays."
@@ -167,8 +167,8 @@ spec:
       layer: foundation
       systems: [loom]
       value: { score: 3, cost: L, for: [quality, foundation], why: "460 rejected declarations are 460 places the self-model is wrong" }
-      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
-      status_before: OPEN
+      status: OPEN
+      path: 'step 0, health — check first: bootstrap exits 0 on 0.54.1 with 114 unresolved; what is left of the 460 rejections (declutter 2026-10-09)'
       depends_on: []
       files: [loom/bootstrap.js, loom/maps/]
       does: >-
@@ -180,7 +180,7 @@ spec:
       layer: library
       systems: [core, idearium]
       value: { score: 3, cost: S, for: [quality], why: "a failing test that everyone learns to ignore hides the next real failure" }
-      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status: 'DONE-ELSEWHERE — BV-09 passes on 0.54.1 (test-build-verify 11/11) — fixed along the way (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: []
       files: [tests/modules/test-build-verify.test.js, lib/seam/detector.js]
@@ -256,8 +256,8 @@ spec:
       layer: foundation
       systems: [loom]
       value: { score: 2, cost: S, for: [quality], why: "loom's phase history must catch a real status change, or the roadmap's past is wrong" }
-      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
-      status_before: OPEN
+      status: OPEN
+      path: 'step 0, health — loom/test/phasemap-map.test.js still fails ''persistHistory() correctly diffs against a seeded prior state'' (12/13 on 0.54.1) (declutter 2026-10-09)'
       depends_on: []
       files: [loom/scanners/phasemap-map.js, loom/test/phasemap-map.test.js]
       does: >-

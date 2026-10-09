@@ -124,6 +124,14 @@ spec:
         are retired by the phases that replace them: the rule from here is that a phase that replaces something
         archives the old in the same change, and says so.
       proof: "the three files in _archive with their reasons; atlas reference test 53/53; loom unchanged; the rule written into ME10, ME12 and the loop map"
+    OR7_the_shelf_combed:
+      layer: docs
+      status: "DONE (0.54.2) — the 585 shelved phases scanned for broken, failing, lossy, security or loop-critical words (42 flagged), each flagged one checked against the code: back on the path as step 0 (health) — HG9 (loom's persistHistory test still fails), HG1 (the components-store map is loose YAML js-yaml cannot read), HG2 (what is left of the bootstrap rejections); done elsewhere and marked — HG3 (BV-09 passes now), RD1 (repo-inject takes every addressed block in one reply); folded into the engine map — BR7 and IC11 (ME0/ME5), AM8 (ME10); checked and left shelved — N28 (its live bug fixed 0.39.282, its drift is ME15), guardian's ChatGPT reply break (jobs complete from the transcript since 0.39.255). Found on the way: the answer tool did not lift a shelved phase back — fixed (a re-answer replaces the shelf answer and restores the old status)."
+      james: '"Include any useful or important."'
+      depends_on: [OR3]
+      files: [docs/the-path.md]
+      does: "Nothing important stays on the shelf by accident: the shelf is combed and what matters comes back, said why."
+      proof: "docs/the-path.md step 0; the roadmap 52 open"
     OR4_one_roadmap_in_idearium:
       layer: ui
       status: OPEN

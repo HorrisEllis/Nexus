@@ -76,6 +76,7 @@ spec:
   phases:
 
     RD1_multi_file_response_parser:
+      status: 'DONE-ELSEWHERE — lib/repo-inject.js injects every fenced block that names its path in one reply (captureAll, §ADDRESSING); lib/extract-code.js allowMultiple (declutter 2026-10-09)'
       does: >-
         A real parser that takes one NCP response and extracts N
         (path, content) pairs from it — the shape a conversation like
