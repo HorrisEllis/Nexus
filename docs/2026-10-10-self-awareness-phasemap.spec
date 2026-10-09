@@ -5,7 +5,7 @@ spec:
     date:     2026-10-10
     release:  0.56.0 (base)
     uuid:     nexus-self-awareness-phasemap-v1-0000-2026-1010-jamesbrooks-001
-    owner:    intelligence (cfr graph, field, lattice) · guardian (its nodes, its ledger rows) · copilot (the door reads the lattice)
+    owner:    intelligence (the awareness — cfr graph, field, lattice, rfr2) · cortex (the memory and the catalog it keeps) · each system its own nodes (guardian first) · copilot (the door reads the lattice) — not idearium; builds on sovereign-node P19–P22, which stay the parents
     status:   "MAPPED 2026-10-10, nothing built — straight after the solid map (James asked what it would do; the shelved CF1 is folded in here, the rest of the field-memory map stays on the shelf)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
@@ -49,6 +49,7 @@ spec:
   phases:
     AW0_no_guessed_causes:
       layer: library
+      systems: [intelligence]
       status: "OPEN"
       james: '"look at the causal graph."'
       depends_on: []
@@ -57,6 +58,7 @@ spec:
       proof: "two unrelated guardian jobs 1 s apart are not each other's cause in traceToRoot; a job's error still walks to the prompt that made it"
     AW1_guardian_reflected_in_nodes:
       layer: guardian
+      systems: [guardian, core]
       status: "OPEN"
       james: '"also the data nodes arent a reflection of guardian. which means there is blind spots."'
       depends_on: [AW0_no_guessed_causes]
@@ -65,6 +67,7 @@ spec:
       proof: "with a job running, the node registry lists the job, its tab and its agent; a finished job's node carries its gate trail and outcome"
     AW2_every_call_says_who_asked:
       layer: library
+      systems: [core, copilot, guardian]
       status: "OPEN"
       james: '"also connecting it to the associative lattice"'
       depends_on: []
@@ -73,6 +76,7 @@ spec:
       proof: "after one repo-agent message, relationship_lattice has a copilot→guardian edge moved by that job, and the job node's causedBy names the Idearium run"
     AW3_the_field_hears_the_lifecycle:
       layer: library
+      systems: [intelligence, guardian]
       status: "OPEN"
       james: '"tell me how powerful that could be"'
       depends_on: [AW2_every_call_says_who_asked]
@@ -81,6 +85,7 @@ spec:
       proof: "a retried job raises resonance on its pair; a pickup failure raises friction; a clean answer lowers both; an event with no nudge fails the taxonomy check"
     AW4_the_door_reads_the_lattice:
       layer: library
+      systems: [core, intelligence]
       status: "OPEN"
       james: '"like awareness of itself"'
       depends_on: [AW3_the_field_hears_the_lifecycle]
@@ -89,6 +94,7 @@ spec:
       proof: "with chatgpt's pair driven turbulent by retried jobs, auto tries the next agent first and says why, naming the jobs"
     AW5_its_own_face:
       layer: ui
+      systems: [idearium]
       status: "OPEN"
       james: '"look at the phases about using cfr as a face or brain, of nodes"'
       depends_on: [AW1_guardian_reflected_in_nodes, AW4_the_door_reads_the_lattice]

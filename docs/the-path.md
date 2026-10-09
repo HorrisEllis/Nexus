@@ -25,6 +25,10 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 | SD13_the_machine_is_cos | 2026-10-10-idearium-solid | "the vm, i have no control over" — one COS surface: setup → start → screen → control |
 | SD11_the_desktop_inside_idearium | 2026-10-10-idearium-solid | the VM's screen in a pane, not a pop-up |
 
+## Straight after solid — every system a node system (docs/2026-09-11-sovereign-node-architecture-phasemap.spec, back from the shelf; docs/architecture-spec ADDENDUM 2026-10-10)
+
+James: "im saying all systems are supposed to be like guardian with the nodes … cortex data is clumped together instead of being decoupled". DS1 cortex the catalog → P3 node schemas → P33 every system runs its node registry (the store a node) → DS2/P5 one system moves home at a time → P8 component registry by module → P36 an event ledger per registry → P2/P13 contracts and handoffs → P34 nodes in the lattice → P35 copilot reads, edits, creates nodes → P37 the UI floats on the registry. Self-awareness (below) builds on it.
+
 ## Straight after solid — self-awareness (docs/2026-10-10-self-awareness-phasemap.spec)
 
 James: "the data nodes arent a reflection of guardian. which means there is blind spots … also connecting it to the associative lattice". AW0 no guessed causes (the 2 s edge never walked) → AW1 guardian's live state as nodes (jobs, tabs, agents) → AW2 every call says who asked (so the lattice gets idearium→guardian, copilot→guardian) → AW3 the field hears guardian's whole lifecycle → AW4 the door reads the lattice → AW5 a node's face.

@@ -40,6 +40,7 @@ spec:
   phases:
     SN0_one_branch:
       layer: library
+      systems: [cos, core]
       status: "OPEN"
       james: '"that can branch"'
       depends_on: []
@@ -48,6 +49,7 @@ spec:
       proof: "safe-apply, the workspace and nexus-self all branch through the one interface; the old paths are in _archive with a note"
     SN1_open_a_snapshot_as_a_compartment:
       layer: library
+      systems: [versionium, cos, idearium]
       status: "OPEN"
       james: '"what if a snapshot is a cos compartment?"'
       depends_on: [SN0_one_branch]
@@ -56,6 +58,7 @@ spec:
       proof: "a commit from last week opens as a compartment, its tests run in it, the working repo untouched; closing it leaves nothing behind"
     SN2_run_in_parallel:
       layer: library
+      systems: [core, cos]
       status: "OPEN"
       james: '"or run in parralel to for benchmarks"'
       depends_on: [SN1_open_a_snapshot_as_a_compartment]
@@ -64,6 +67,7 @@ spec:
       proof: "two snapshots × 5 repeats of the test suite: per-variant pass rates and durations with their spread"
     SN3_measured_by_rfr2:
       layer: library
+      systems: [intelligence]
       status: "OPEN"
       james: '"using deltas and sigmas? using rfr2?"'
       depends_on: [SN2_run_in_parallel]
@@ -72,6 +76,7 @@ spec:
       proof: "a deliberately slowed variant shows a different sigma trajectory and a delta gap; the same variant twice shows the same trajectory"
     SN4_benchmarks_teach:
       layer: library
+      systems: [core]
       status: "OPEN"
       james: '"for benchmarks"'
       depends_on: [SN3_measured_by_rfr2]

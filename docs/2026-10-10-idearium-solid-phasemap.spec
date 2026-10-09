@@ -38,6 +38,7 @@ spec:
   phases:
     SD0_versionium_down_is_said_and_restarted:
       layer: backend
+      systems: [core, versionium]
       status: "DONE (0.56.0) — found: versionium/lib/http-utils.js readRawBody destroyed the socket over its size limit, so the 413 never arrived and the sender read exactly \"read ECONNRESET\" (reproduced on 0.55.2; a clean 413 now). idearium/repo/snapshot.js _againWhileDown: limits/plan/stage tried again while versionium comes back (2·4·8·16·30 s), the refusal says how long it waited and what to start; commit and record are never repeated. Autopilot already restarts versionium with backoff. Whether his 12:46 reset was this or a crash is not known from here. test-idearium-solid SO-01..04."
       james: '"12:46:45 refused — no snapshot: the file layer was not available before commit — no snapshot was made: [nexus-client] versionium unreachable at 127.0.0.1:3754 — read ECONNRESET"'
       depends_on: []
@@ -51,6 +52,7 @@ spec:
       proof: "kill versionium mid-build: the build pauses, versionium comes back, the write lands with its snapshot"
     SD1_rewind_and_versions_on_the_repo_card:
       layer: ui
+      systems: [idearium]
       status: "DONE (0.56.0) — idearium/ui/js/repo-card-time.js: ⟲ versions on the repo's box in the Repos grid (and its row in the open repo's list) — the last three versions with ↶ (the real restore preview, inside the box), the desktop's pause/resume/checkpoint and its last checkpoints with ↶ rewind, all versions →; previewRepoRestore and rtRewind take a repo id. Clear Glass: tests/probe/idearium-one-surface-glass.js 21/21, real API and versionium."
       james: '"can you add the rewind engine controls and versioning to the repos box you click on to open it."'
       depends_on: []
@@ -66,6 +68,7 @@ spec:
       proof: "from the Repos list, one click rewinds a repo to its last checkpoint and shows the commit it came back to"
     SD2_copilot_never_answers_ok_with_nothing:
       layer: backend
+      systems: [copilot, orchestrator]
       status: "DONE (0.56.0) — copilot/server.js _noAnswer: both /api/prompt lifeline handlers answer ok:false with lifeline's own reason when there is no text (live: 'Both Ollama and Guardian are unavailable. Check system health.'); the overview says it. SO-05."
       james: '"[unstructured response — keys: ok, requestId, sessionId, text, modelUsed, intent, channel, contextLayers, fromStream] via none" (his screenshot, the overview co-pilot)'
       depends_on: []
@@ -77,6 +80,7 @@ spec:
       proof: "with Ollama down and no tab, /api/prompt says ok:false and lists what it tried"
     SD3_the_person_goes_first:
       layer: guardian
+      systems: [guardian]
       status: "DONE (0.56.0) — guardian/ask.js marks its job high (the autonomous loop passes normal); dispatcher: a background job steps back while the economy holds a high one for the same agent; the reconnect flush sends high first; the pool already sorted. SO-06, SO-07."
       james: '"i need to get this working and feel see the progress."'
       depends_on: []
@@ -88,6 +92,7 @@ spec:
       proof: "with six chunk jobs queued for chatgpt, a repo chat message is sent next"
     SD4_agents_live_in_guardian:
       layer: guardian
+      systems: [guardian, core]
       status: "OPEN"
       james: '"what about .hat files. and .agent files in guardian for each model?" · "like i want to make sure we arent using idearium for anything guardian should be doing."'
       depends_on: []
@@ -102,6 +107,7 @@ spec:
       proof: "guardian/data/nodes/agent/chatgpt.agent names its accounts, selector map, limits and health; GET /agents serves them"
     SD5_account_fallback:
       layer: guardian
+      systems: [core, guardian]
       status: "OPEN"
       james: '"like need account fallback for fallback routing and token limits." · "the economy as meant to measure the constraints of each agent to optimize and learn."'
       depends_on: [SD4_agents_live_in_guardian]
@@ -117,6 +123,7 @@ spec:
       proof: "chatgpt account A at 30/30 → the job goes to account B's tab; both at cap → the next agent, said"
     SD6_an_idea_logged_asked_expanded:
       layer: backend
+      systems: [idearium]
       status: "OPEN"
       james: '"like when i come to you with an idea i want to be able to log it, ask about it, and expand it." · "i need to be able to pump ideas into idearium."'
       depends_on: []
@@ -130,6 +137,7 @@ spec:
       proof: "log an idea, ask twice, expand once: the second answer quotes the first, all four turns are on disk"
     SD7_blocks_that_generate_themselves:
       layer: backend
+      systems: [core, idearium]
       status: "OPEN"
       after: SD12_a_spec_starts_from_its_primitives   # 2026-10-10 — generation follows the primitives' DAG
       james: '"the specs in the spec workshop maybe have like dynamic calltos or something like; [file tree] or something that uses the agents. like need to be able to generate file list. like i want to be able to use the agents to generate the rest of the spec from just the idea or void. but it needs a dag i feel like."'
@@ -154,6 +162,7 @@ spec:
       proof: "an idea with a components block → {file_tree} fills; the empty blocks after it fill in dependency order, each citing its source and carrying its gate verdict"
     SD8_an_agent_can_see_and_fix_a_tab:
       layer: backend
+      systems: [clear-glass, core]
       status: "OPEN"
       james: '"especially with clearglass, like i want it to feel that way. especially for instance, with you, you could take a screenshot, then use the interaction field to fix the agents if they go down, or debug"'
       depends_on: []
@@ -166,6 +175,7 @@ spec:
       proof: "a tab whose reply selector drifted is re-picked by an agent from a screenshot, and the next job reads its reply"
     SD9_claude_code_inside_idearium:
       layer: backend
+      systems: [core]
       status: "OPEN"
       james: '"we need to get you inside idearium then you could be coding and testing in the real system."'
       depends_on: []
@@ -178,6 +188,7 @@ spec:
       proof: "a repo set to claude-code builds a phase from the Plan; its changes land versioned; its run shows like any agent's"
     SD10_the_adversarial_gate:
       layer: library
+      systems: [core, copilot]
       status: "OPEN"
       james: '"for the confident, filler, maybe use confidence score and adversarial. like maybe the adversarial is a gate for each output. yes. this needs to be coding like you do. nexus is supposed to be nonlinear and domain agnostic. like with guardian, we can make ai assistance."'
       depends_on: []
@@ -203,6 +214,7 @@ spec:
       proof: "a block of filler (claims with no source) is flagged with its attacks and a low score; a grounded block passes; the verdicts appear in the learned order"
     SD11_the_desktop_inside_idearium:
       layer: ui
+      systems: [idearium, cos]
       status: "OPEN"
       james: '"tell me about the cos desktop envirement ui. like can we have in like the ui?"'
       depends_on: []
@@ -221,6 +233,7 @@ spec:
       proof: "a repo's desktop opens in a pane in Idearium, keyboard and mouse work, rewind from beside it"
     SD12_a_spec_starts_from_its_primitives:
       layer: backend
+      systems: [idearium, core]
       status: "OPEN"
       james: '"like i feel idearium, when speccing, needs top start with the idea, map the primitives or invariants or principles, then the dependancies are built from there, structure or of the data, schemas for the determinist primitives for each data or resuable aspect to keep consistency"'
       depends_on: [SD6_an_idea_logged_asked_expanded]
@@ -256,6 +269,7 @@ spec:
         regression from today. And existing specs (block form) are read as-is and converted on request, never in place.
     SD13_the_machine_is_cos:
       layer: backend
+      systems: [cos, idearium]
       status: "OPEN"
       james: '"also the vm, i have no control over, also the remote desktop, what about integrating it into cos?"'
       depends_on: []

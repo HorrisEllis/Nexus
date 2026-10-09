@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        architecture-spec
-    version:     0.10.0
+    version:     0.11.0
     extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.3.0 — the default template of a system spec since 0.39.286; since 1.3.0 the architecture of the system template, section by section (Domain 0a)
     foundation:  TBD — no runtime exists yet, unassigned until first real implementation
     port:        TBD — no runtime process exists yet
@@ -344,6 +344,13 @@ spec:
         opened: 2026-10-01
 
   version_history:
+    - version: 0.11.0
+      date: 2026-10-10
+      summary: >-
+        Additive (James: "can you add that to the architecture spec if its additive"): every system is a node system like
+        guardian — its own node registry over its own store, the store a node, every change timestamped, nodes in the
+        lattice, read/edited/created by copilot through the contract; and every system's stack, UI on top. See the
+        ADDENDUM 2026-10-10 at the end. Nothing removed or renamed.
     - version: 0.10.0
       date: 2026-10-05
       summary: >-
@@ -480,3 +487,49 @@ spec:
 #   owning its own data, schemas, contract, config, heartbeat and pulse (axiom SYSTEM_OWNS_ITS_OWN). The JAA node index it
 #   already described (registry-watcher) is genesis Domain 2d.
 
+
+# ── ADDENDUM 2026-10-10 (0.56.0) — every system is a node system, like guardian (additive) ────────────────────────────
+# James: "im saying all systems are supposed to be like guardian with the nodes. like look at the architecture spec. like
+#   the node taxonomy, also cortex data is clumped together instead of being decoupled. like all data is the relative
+#   systems job to create, read, manage, integrate into the index for each node as tables for each, then its a jaa database
+#   which is also a node, all timestamped and holds the history, connects to the lattice as nodes, that makes them dynamic,
+#   copilot can read them, edit and create them. so they can expand contract and grow with the system. can you add that to
+#   the architecture spec if its additive." · "routes and cli commands, and the component registry for each system, as an
+#   interaction contract, and event bus, each component uses the registry sorted by module, and then each system uses for
+#   ineraction and handoffs, the ui floats on top. then a event ledger for each registry?"
+#
+# Additive to SYSTEM_OWNS_ITS_OWN (genesis axiom, 0.9.0) and to AS1 above. Stated as the rule:
+#
+#   NODE_SYSTEM — every system owns its data as nodes. For each node type it owns: a schema (its own schemas/), the files
+#     (<system>/data/nodes/<type>/), an index (a JAA table per type in the system's OWN store) and a ledger (every create,
+#     edit, archive, timestamped — the history). guardian/lib/node-registry.js is the pattern; today only guardian runs it.
+#   STORE_IS_A_NODE — a system's JAA store is itself a node (.store: owner, tables, counts, hash, location). Cortex is the
+#     bookkeeper: its catalog is the list of store nodes and the associative lattice over them — never a second copy.
+#   NODES_IN_THE_LATTICE — a node is a lattice node; its relations carry a field, so nodes grow, shrink and connect with use.
+#   NODES_THROUGH_THE_CONTRACT — copilot and every agent list, read, create, edit and archive a system's nodes only through
+#     that system's contract; the owner validates, writes, indexes and ledgers. A new node type is proposed the same way.
+#   THE_STACK — the same for every system, top to bottom:
+#       UI (floats on top: drawn from the registry and its ledger, keeps no state of its own)
+#       interaction contract (routes + CLI commands — <system>/interaction-contract.json)
+#       component registry, sorted by module (core components first, then each module's components — <system>/registry-components.js)
+#       event bus (each component's events, named in <system>/event-taxonomy.js)
+#       event ledger, one per registry (every event a component emits or handles, timestamped)
+#       node registry (watcher + per-type index + per-type ledger)
+#       the system's own store (its JAA database — a node)
+#     Systems interact and hand off only through the contract, with a handshake (sovereign-node P13).
+#
+# Found 2026-10-10, against the tree (what exists of THE_STACK per system):
+#   interaction-contract.json  15 of 16 (eravos has none)
+#   event-taxonomy.js           8 of 16 (cortex, guardian, copilot, intelligence, versionium, cos, orchestrator, emerge)
+#   registry-components.js     12 of 16 (cos, orchestrator, diagnostic, warp have none)
+#   data/nodes/                14 of 16 — but static kinds (capability, command, component, system) almost everywhere;
+#                              live kinds only in guardian (provider, response), idearium (chunk, filetree, repository),
+#                              intelligence (bep_pattern, resonance_crystal), cortex (failure_mode), copilot (injection)
+#   node registry running       1 of 16 (guardian)
+#   the clump: cortex's one store holds other systems' tables — guardian_ledger, idearium_ideas, idearium_repos,
+#     idearium_spec_chunks, idearium_spec_manifests, repo_agent_log (idearium), chat_log (copilot), forged_hats, and the
+#     nodes_* / nodes_*_ledger tables of several systems.
+# Mapped (not built): docs/2026-09-11-sovereign-node-architecture-phasemap.spec — brought back from the shelf — P2–P6, P8,
+#   P13, P19–P22 and P33–P37 (node registry everywhere, nodes in the lattice, copilot through the contract, an event ledger
+#   per registry, the UI on the registry); docs/2026-10-05-cli-data-code-phasemap.spec DS1 (cortex the catalog) and DS2
+#   (one system moves home at a time, behind a warning shim).

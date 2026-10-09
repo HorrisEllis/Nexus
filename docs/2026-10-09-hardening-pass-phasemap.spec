@@ -176,6 +176,7 @@ spec:
     # cost the full 5-minute wait or worse. Each phase below is one of those, lowest layer first.
     HP13_the_failure_is_put_at_the_right_gate:
       layer: guardian
+      systems: [guardian]
       status: "DONE (0.55.2) — guardian/lib/gate-trail.js gateOfError: an unknown gate (the userscripts' 'handleJob') is read from its error text. test-guardian-stack-sim GS-01."
       james: '"the problem with copilot is i dont get an understanding of why a agent didnt work."'
       depends_on: []
@@ -189,6 +190,7 @@ spec:
       proof: "a 'handleJob: Input not found — no contenteditable' error stops at 'typed and sent' with the ◎ fix, not 'tab busy'"
     HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds:
       layer: guardian
+      systems: [guardian]
       status: "DONE (0.55.2) — guardian/lib/dispatcher.js pickup watch (GUARDIAN_PICKUP_MS 90 s, cleared by any word from the tab); 'accepted' sent by all five userscripts; gate-trail reads it. Stack run: a silent tab failed in 91 s (was 295 s). GS-02, GS-03, GS-11."
       james: '"timeout · no completion within 900000ms — real absence, not a guess" (his screenshot, chatgpt job 707917ec, 0 ch)'
       depends_on: []
@@ -205,6 +207,7 @@ spec:
       proof: "a tab that acks pings but never touches the job fails in ~90 s with 'the chatgpt tab was handed the job and did nothing with it', not 5 or 15 minutes"
     HP15_a_typed_prompt_is_never_sent_again:
       layer: guardian
+      systems: [guardian]
       status: "DONE (0.55.2) — dispatcher _requeueOrFail: a typed job (confirmed, a chunk, a submit) waits for the transcript (awaiting_transcript, the empty-reply grace) and fails saying it was not sent again. GS-04."
       james: '"look at the .response in clearglass."'
       depends_on: [HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds]
@@ -219,6 +222,7 @@ spec:
       proof: "idle-out or disconnect of a typed job → awaiting_transcript, never a second GUARDIAN_JOB for it; of an untyped job → requeued once"
     HP16_a_job_nobody_waits_for_is_not_sent_later:
       layer: guardian
+      systems: [guardian]
       status: "DONE (0.55.2) — dispatcher cancel() and the re-read before every send; askSync cancels an untyped job it stops waiting for (server.js wires cancelJob + the retry timer); repo-agent offers no late answer for it. Stack run: reconnecting the tab sent nothing. GS-05, GS-06."
       james: '"i want to make sure we arent using idearium for anything guardian should be doing."'
       depends_on: []
@@ -232,6 +236,7 @@ spec:
       proof: "askSync times out on an untyped job → status cancelled; reconnecting the tab sends nothing for it"
     HP17_no_tab_is_said_in_seconds:
       layer: guardian
+      systems: [guardian]
       status: "DONE (0.55.2) — guardian/ask.js GUARDIAN_NO_TAB_MS (45 s). Stack run: 46 s (was 295 s), job cancelled. GS-06."
       james: '"working for any size model llm, within reaso."'
       depends_on: [HP16_a_job_nobody_waits_for_is_not_sent_later]
@@ -245,6 +250,7 @@ spec:
       proof: "no tab open → the ask fails in ~45 s naming the agent and 'no tab open', and the job is cancelled"
     HP18_auto_tries_agents_with_a_tab_first:
       layer: library
+      systems: [core, copilot]
       status: "DONE (0.55.2) — lib/agent-providers.js guardianTabs (GET /providers, fail-open), pipeline-routing byTabs, model-door route({tabs}), copilot /api/route, Idearium's run ladder. Stack run: auto answered through chatgpt in 9 s (was 295 s at a gemini with no tab). GS-08."
       james: '"consolidated and interconnected and working for any size model llm"'
       depends_on: []
@@ -270,6 +276,7 @@ spec:
     # cascade. Moving every climb into one place is the one-model-engine map (ME5, RAID chooses), not a fifth patch here.
     HP20_a_routing_try_is_not_a_job:
       layer: library
+      systems: [core]
       status: "DONE (0.55.2) — ledger kind 'route' (recordHop), usage() skips it. Stack run: 0 s then the policy's 15 s gap (was 55 s). GS-09."
       james: '"we need to prioritize on getting it stable and working."'
       depends_on: []
@@ -284,6 +291,7 @@ spec:
       proof: "a route row for chatgpt does not move usage().lastAt; a job row does"
     HP21_the_economy_holding_a_job_is_said:
       layer: guardian
+      systems: [guardian]
       status: "DONE (0.55.2) — economyWaitUntil on the job, guardian.economy.wait on the gate trail, askSync stops past GUARDIAN_ECONOMY_WAIT_MS (30 s). Stack run: 8 s naming 30/30 (was 295 s, 'no gate reported yet'). GS-07."
       james: '"i dont get an understanding of why a agent didnt work."'
       depends_on: [HP16_a_job_nobody_waits_for_is_not_sent_later]
@@ -297,6 +305,7 @@ spec:
       proof: "a job held 300 s by the economy fails in ~1 s naming the limit and the time to the next slot"
     HP22_a_missing_tab_is_not_a_login_wall:
       layer: library
+      systems: [core, guardian]
       status: "DONE (0.55.2) — classify reads not connected / no <agent> tab open|connected|free as provider-down before login; the advice says 'signed in'. GS-10."
       james: '"i dont get an understanding of why a agent didnt work."'
       depends_on: [HP17_no_tab_is_said_in_seconds]

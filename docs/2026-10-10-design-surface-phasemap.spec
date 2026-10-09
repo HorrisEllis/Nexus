@@ -33,6 +33,7 @@ spec:
   phases:
     DS0_one_token_source:
       layer: library
+      systems: [idearium, orchestrator, eravos]
       status: "OPEN"
       james: '"a design system"'
       depends_on: []
@@ -49,6 +50,7 @@ spec:
       proof: "a colour changed in the panel shows on two open pages in under a second; the save is a commit"
     DS2_pick_and_edit_any_page:
       layer: ui
+      systems: [clear-glass, guardian]
       status: "OPEN"
       james: '"open any file and edit the ui in real time"'
       depends_on: [DS1_tokens_edited_live]
@@ -60,6 +62,7 @@ spec:
       proof: "an element in a repo's static page re-styled live and written back; one in Idearium proposed to the agent with its file"
     DS3_components_are_mods:
       layer: library
+      systems: [eravos]
       status: "OPEN"
       james: '"for creating and editing different types of graphical interfaces"'
       depends_on: [DS0_one_token_source]
@@ -76,6 +79,7 @@ spec:
       proof: "an SVG opened, an element picked and changed, written back"
     DS5_the_agents_design_too:
       layer: backend
+      systems: [core]
       status: "OPEN"
       james: '"like with guardian, we can make ai assistance."'
       depends_on: [DS2_pick_and_edit_any_page]
@@ -84,6 +88,7 @@ spec:
       proof: "an agent asked to restyle a panel proposes a change with a before/after screenshot and its gate verdict"
     DS6_one_module_contract_nested:
       layer: library
+      systems: [eravos, cos, core]
       status: "OPEN"
       james: '"yeah so a ui editor, which has a adapter parser. maybe using the cos ui as a template. like cos can be a reusable system for anything. like a factory. like each module is a compartment, then each module is a nestled compartment. like a russian nesting doll, like analysis."'
       depends_on: []
@@ -104,6 +109,7 @@ spec:
       proof: "a repo opens into its systems, a system into its modules, a module into its components — each the same contract; a change in a component is versioned at its level and seen at every level above"
     DS7_tools_are_mods:
       layer: library
+      systems: [eravos]
       status: "OPEN"
       james: '"yes, thats an immensly good idea. eravos for the editing tools. that way we can have isolated tools that can make something bigger. imagine, gnu or image manipulation tools, that can be added with the gui, like its also agnostic."'
       depends_on: [DS6_one_module_contract_nested]
@@ -131,6 +137,7 @@ spec:
         shape describes a spec, a module (DS6) and a tool. The split rule: any part another tool could use is its own tool.
     DS8_the_registry_routes_the_ui_reflects:
       layer: library
+      systems: [eravos, loom, core]
       status: "OPEN"
       james: '"what about changing to the component registry for the event bus instead of hooking into each other then the ui is a reflection of that instead?"'
       depends_on: [DS7_tools_are_mods]
