@@ -18,6 +18,7 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 | SD4_agents_live_in_guardian | 2026-10-10-idearium-solid | one .agent per model |
 | SD5_account_fallback | 2026-10-10-idearium-solid | after SD4 |
 | SD10_the_adversarial_gate | 2026-10-10-idearium-solid | "the adversarial is a gate for each output" — any domain |
+| SD12_a_spec_starts_from_its_primitives | 2026-10-10-idearium-solid | idea → primitives & invariants → schema → the rest, as a DAG |
 | SD7_blocks_that_generate_themselves | 2026-10-10-idearium-solid | the DAG; after SD6 and SD10 |
 | SD8_an_agent_can_see_and_fix_a_tab | 2026-10-10-idearium-solid | Clear Glass as agent tools |
 | SD9_claude_code_inside_idearium | 2026-10-10-idearium-solid | half real |
@@ -25,7 +26,7 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 
 ## After solid — the design surface (docs/2026-10-10-design-surface-phasemap.spec)
 
-James: "i want to make a design system for creating and editing different types of graphical interfaces. like open any file and edit the ui in real time". DS0 one token source → DS1 tokens edited live → DS2 pick and edit any page (Clear Glass ◎, written back) → DS3 components as Eravos mods → DS4 interface types by adapter → DS5 the agents design too.
+James: "i want to make a design system for creating and editing different types of graphical interfaces. like open any file and edit the ui in real time". DS0 one token source → DS1 tokens edited live → DS2 pick and edit any page (Clear Glass ◎, written back) → DS3 components as Eravos mods → DS4 interface types by adapter → DS5 the agents design too · DS6 one module contract, nested (compartments inside compartments — logical; a VM only where isolation is needed).
 
 ## Step 0 — health and the clean-up
 

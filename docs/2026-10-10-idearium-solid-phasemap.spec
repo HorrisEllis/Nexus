@@ -131,6 +131,7 @@ spec:
     SD7_blocks_that_generate_themselves:
       layer: backend
       status: "OPEN"
+      after: SD12_a_spec_starts_from_its_primitives   # 2026-10-10 — generation follows the primitives' DAG
       james: '"the specs in the spec workshop maybe have like dynamic calltos or something like; [file tree] or something that uses the agents. like need to be able to generate file list. like i want to be able to use the agents to generate the rest of the spec from just the idea or void. but it needs a dag i feel like."'
       depends_on: [SD6_an_idea_logged_asked_expanded]
       files: [lib/spec-document.js, idearium/spec-engine/index.js]
@@ -218,6 +219,28 @@ spec:
         verifiable in the cloud container (no VM image); proven on his machine in Clear Glass, and with a stubbed VNC
         stream in the probe.
       proof: "a repo's desktop opens in a pane in Idearium, keyboard and mouse work, rewind from beside it"
+    SD12_a_spec_starts_from_its_primitives:
+      layer: backend
+      status: "OPEN"
+      james: '"like i feel idearium, when speccing, needs top start with the idea, map the primitives or invariants or principles, then the dependancies are built from there, structure or of the data, schemas for the determinist primitives for each data or resuable aspect to keep consistency"'
+      depends_on: [SD6_an_idea_logged_asked_expanded]
+      files: [idearium/spec-engine/index.js, lib/spec-document.js]
+      does: >-
+        Found: the spec's blocks already run close to his order — meta → purpose → axioms → schema → api → events →
+        integration → failure_modes → build_order → tests → registry — but as a list. Only one dependency is declared
+        (registry ← build_order), so nothing below is built FROM what is above it. Two changes: a primitives block after
+        purpose (the nouns and reusable pieces of the idea, each with its invariants — what is always true of it), with
+        axioms as the principles over them; and every later block declares what it is built from (schema ← primitives +
+        axioms; api, events ← schema; integration ← api + events; failure_modes ← axioms + integration; build_order ←
+        everything; tests ← axioms + schema + api). Each primitive gets a schema (its fields and invariants, deterministic),
+        and later blocks refer to the primitive by name rather than restating it — that is what keeps them consistent.
+        The DAG then drives the rest: staleness already spreads along depends_on (HP1), generation (SD7) fills in its
+        order, and the gate (SD10) checks each block against the blocks it says it came from.
+      pushback: >-
+        Domain-agnostic means "schema" cannot assume a database: for a song it is its sections and keys, for a game its
+        entities and rules. The primitives block names the kind of each primitive (data, rule, process, interface) and the
+        schema block's shape follows the kind — not a fixed table form.
+      proof: "a spec from one idea: primitives named with invariants; schema built from them; changing a primitive marks schema, api and tests stale; nothing below restates a primitive"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"

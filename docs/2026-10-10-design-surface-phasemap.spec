@@ -82,3 +82,23 @@ spec:
       files: [lib/agent-tools/index.js]
       does: "Every action of DS1–DS4 is a command and a tool, so an agent can restyle, build a component or answer 'make this calmer' — and its result is seen (a screenshot) and gated (SD10) before it is offered."
       proof: "an agent asked to restyle a panel proposes a change with a before/after screenshot and its gate verdict"
+    DS6_one_module_contract_nested:
+      layer: library
+      status: "OPEN"
+      james: '"yeah so a ui editor, which has a adapter parser. maybe using the cos ui as a template. like cos can be a reusable system for anything. like a factory. like each module is a compartment, then each module is a nestled compartment. like a russian nesting doll, like analysis."'
+      depends_on: []
+      files: [eravos/ui/runtime/mod-factory.js, cos/compartment, lib/nexus-self/systems.js]
+      does: >-
+        Found: nesting exists one level deep — nexus → its 16 systems, each a repo compartment (cos as the 16th, SY2) —
+        and nowhere in cos/ is a compartment the parent of another. Eravos mods already carry a module contract (schema:
+        params, hooks, provides, requires, permissions). One contract for every module at every size — a UI component, a
+        code module, a system — with a parent and children, so a module opens into its parts, and the same analysis (its
+        primitives, its contract, its versions) runs at every level. The UI editor's adapter parses a file into this tree
+        of modules; editing one edits that module and only it.
+      pushback: >-
+        A COS compartment today is an isolation boundary that can carry a VM — the desktop is a whole machine. Every
+        module as a VM would cost a machine per button. The doll is logical (own state, schema, events, versions, a
+        parent); a runtime (a process, a VM) is attached only at the levels that need isolation — a repo, a system.
+        And "the cos ui as a template": the COS desktop window is a viewer of the VM's screen, not a component model;
+        the template to reuse is the compartment's contract, which is what DS6 makes one shape.
+      proof: "a repo opens into its systems, a system into its modules, a module into its components — each the same contract; a change in a component is versioned at its level and seen at every level above"
