@@ -723,9 +723,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   let rungs = [], ladderFrom = null, rungsSkipped = [];
   if (!backend && !agent && !provider && policy.escalate) {
     let installed = [];
-    if (!policy.ollamaModels.length && !policy.escalation.length) { const om = await _ollamaModels(); if (om.ok) installed = om.models; }
+    let omDerived = null;
+    if (!policy.ollamaModels.length && !policy.escalation.length) { omDerived = await _ollamaModels(); if (omDerived.ok) installed = omDerived.models; }
     const L = PRt.ladder(policy, { installed });
     rungs = L.rungs; ladderFrom = L.from;
+    // §HP8 0.55.0 — "no Ollama models listed or installed" read the same whether Ollama was empty or not answering;
+    // the route says which
+    if (omDerived && !omDerived.ok) ladderFrom = `${ladderFrom} — Ollama left off: ${omDerived.error || 'the bridge did not answer'}`;
+    else if (omDerived && omDerived.ok && !omDerived.models.length) ladderFrom = `${ladderFrom} — Ollama answered with no models installed`;
     // §HP3 0.52.0 — a rung whose Ollama model is not installed (or every Ollama rung, Ollama unreachable) is left off
     // before the climb, said on the run's route; never tried, never counted as that model's failure
     if (rungs.some(x => x.base === 'ollama')) {

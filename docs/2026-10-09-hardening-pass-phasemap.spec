@@ -6,7 +6,7 @@ spec:
     release:  0.51.0 (base)
     uuid:     nexus-hardening-pass-phasemap-v1-0000-2026-1009-jamesbrooks-001
     owner:    idearium (the thread, the runs, the ladder) · lib (spec-document, pipeline-routing, economy router)
-    status:   "MAPPED 2026-10-09, before building; HP1–HP5 done (0.52.0); the learning's held-out evaluation stays open (HP4 pushback)"
+    status:   "MAPPED 2026-10-09, before building; HP1–HP5 done (0.52.0); HP6–HP8 from his live run (0.55.0); the learning's held-out evaluation stays open (HP4 pushback)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -84,3 +84,38 @@ spec:
         byte-identical, an edited block keeps the rest byte for byte, and a block's hash does not move with another
         block's line endings.
       proof: "each odd file round-trips byte-identical; an edit to one block of a CRLF file leaves every other block's bytes and hash unchanged"
+    HP6_the_build_surface_opens:
+      layer: ui
+      status: "DONE (0.55.0) — idearium/ui/js/phases.js phasesBuild opens the Plan panel on the new run, after the build is accepted (test-hardening-pass HR-06). The coder's regression from RS10, said."
+      james: '"the build surface is supposed to be showing in idearium."'
+      depends_on: []
+      files: [idearium/ui/js/phases.js]
+      does: >-
+        Found: the Phases tab's detail-pane build button (phasesBuild, rebuilt in RS10 — the coder's regression) started
+        the build and only toasted; the card's build path opened the Plan panel, this one never did. A build started from
+        either place opens the Plan panel on that map with the new run in focus — the build surface, live.
+      proof: "driven in Clear Glass: build from the detail pane → the Plan panel is open on the run"
+    HP7_a_browser_agent_gets_its_wait:
+      layer: library
+      status: "DONE (0.55.0) — copilot/lifeline.js _tryGuardian sends timeoutMs to guardian (the caller's wait less 5 s above 10 s); guardian's askSync waits that long instead of its 90 s default. test-lifeline-guardian-timeout LT-006."
+      james: '"claude failed — timed out after 90000ms — waiting at gate 7/8 \"reply appears\" (claude): 114 mutations, no reply text read yet"'
+      depends_on: []
+      files: [copilot/lifeline.js]
+      does: >-
+        Found: lifeline's _tryGuardian used the caller's wait (repo-agent's 300 s for a browser agent) only as its own
+        HTTP wait and never sent it to guardian, so guardian's askSync fell to its 90 s default — every browser-agent job
+        through copilot was cut at 90 s, mid-reply, and the ladder climbed past an agent still writing. The wait is sent
+        on (a few seconds under the caller's, so guardian answers with its gate sentence before the caller gives up).
+      proof: "a stub guardian sees timeoutMs in the body equal to the caller's wait less the margin; no caller wait → the default as before"
+    HP8_the_ladder_says_why_ollama_is_missing:
+      layer: library
+      status: "DONE (0.55.0) — idearium/api _phaseBuild: a derived ladder whose bridge did not answer says 'Ollama left off: <the bridge's error>'; an Ollama with nothing installed says so (test-hardening-pass HR-07)."
+      james: '"removed deepseek coder v2." (his log: "derived: no Ollama models listed or installed — the chain''s agents")'
+      depends_on: []
+      files: [idearium/api/index.js]
+      does: >-
+        When the bridge does not answer (Ollama stopped, the bridge down), the derived ladder had no Ollama rungs and said
+        "no Ollama models listed or installed" — the same words as an empty Ollama. The route now says which: the bridge's
+        own error, or that Ollama answered with no models.
+      proof: "with the bridge unreachable the run's route names the bridge error; with an empty Ollama it says none are installed"
+

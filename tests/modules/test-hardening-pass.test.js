@@ -131,6 +131,21 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
     assert.match(fs.readFileSync(path.join(ROOT, 'lib/pipeline-routing.js'), 'utf8'), /reason: h\.error \|\| h\.class \|\| null, class: h\.class \|\| null/);
   });
 
+  // §HP6–HP8 0.55.0 — from James's live run: "claude failed — timed out after 90000ms …" · "the build surface is supposed
+  // to be showing in idearium." · "removed deepseek coder v2."
+  await test('HR-06', 'a build from the Phases detail pane opens the Plan panel on its run (the card always did)', () => {
+    const src = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/phases.js'), 'utf8');
+    const fn = src.slice(src.indexOf('async function phasesBuild('), src.indexOf('async function phasesAdd('));
+    assert.match(fn, /openPlanPanel\(\{ map, focus: r\.runId \}\)/);
+    assert.ok(fn.indexOf('openPlanPanel') > fn.indexOf('/phases/build'), 'opened after the build is accepted');
+  });
+  await test('HR-07', 'the derived ladder says why Ollama has no rungs: the bridge\'s error, or none installed', () => {
+    const src = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
+    const b = src.slice(src.indexOf('let omDerived = null;'), src.indexOf('// §HP3 0.52.0 — a rung whose Ollama model'));
+    assert.match(b, /Ollama left off: \$\{omDerived\.error \|\| 'the bridge did not answer'\}/);
+    assert.match(b, /Ollama answered with no models installed/);
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

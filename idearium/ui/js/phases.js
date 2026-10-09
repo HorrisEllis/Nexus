@@ -386,6 +386,9 @@ async function phasesBuild(map, phase) {
   try {
     const r = await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase, provider, note }) }, 120000);
     toast(`${phase}: snapshot ${r.snapshot} taken · ${r.targetName}'s agent is building it${r.statusNote ? ` (status not changed: ${r.statusNote})` : ''}`, 'ok');
+    // §HP6 0.55.0 — James: "the build surface is supposed to be showing in idearium." A build from the detail pane
+    // opens the Plan panel on its run, as the card's build always did (RS10 dropped it here).
+    if (typeof openPlanPanel === 'function') openPlanPanel({ map, focus: r.runId });
   } catch (e) { toast(`${phase} not built: ${e.message}`, 'err'); }
   PHASES.busy = false;
   if (CURRENT_API_REPO?.uuid === uuid && CURRENT_REPO_SUBTAB === 'phases') renderRepoPhases(CURRENT_API_REPO, { keepScroll: true });

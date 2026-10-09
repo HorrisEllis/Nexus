@@ -392,3 +392,10 @@ spec:
 # posts { event: dispatched | chunk | complete | error | timeout, jobId, model, text (the new part), fullLen, generating,
 # chars, session, repoUuid } (_streamingPoll). Fire and forget, 2 s; never in the way of the run. A browser agent's text
 # is not sent here: it reaches the caller through guardian's own feed (0.39.244).
+
+# ── ADDENDUM 2026-10-10 (0.55.0) — HP7 of docs/2026-10-09-hardening-pass-phasemap.spec ──
+# James's log: "claude failed — timed out after 90000ms — waiting at gate 7/8 \"reply appears\" (claude): 114 mutations".
+# lifeline _tryGuardian used the caller's wait (repo-agent's 300 s for a browser agent) only for its own HTTP call; guardian's
+# /api/copilot/prompt → askSync never received it and waited its 90 s default. timeoutMs is now in the body (less 5 s above 10 s,
+# so guardian answers with its gate sentence first). test-lifeline-guardian-timeout LT-006.
+
