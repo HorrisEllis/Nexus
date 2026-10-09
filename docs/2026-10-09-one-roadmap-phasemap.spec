@@ -69,7 +69,7 @@ spec:
       proof: "the census splits into roadmap, shelf and closed; a phase marked FOLDED or DONE-ELSEWHERE without a pointer is refused"
     OR2_the_proposal:
       layer: docs
-      status: OPEN
+      status: "PARTIAL 2026-10-09 — first pass by WHOLE MAP (James: \"most amount of power, and highest leverage, least amount of tokens.\"): docs/roadmap-triage.md — 69 decisions instead of 721 open phases; if accepted the roadmap is 205 open phases on the path (engine 22 · the loop 145 · Idearium holds the systems 38), 485 to the shelf, 31 folded. Phase-by-phase only for path maps, after his answer."
       james: '"can you get us there."'
       depends_on: [OR1]
       files: [docs/roadmap-triage.md]
