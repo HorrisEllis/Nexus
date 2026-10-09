@@ -144,7 +144,8 @@ spec:
       proof: NI-002, NI-003; test-nexus-specs-and-ideas-cleanup SC-002 (the change now adds a file)
     PF6_boot_sync_yields_to_the_person:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PF5]
       files: [idearium/api/index.js (the nexus-self scheduler), lib/resource-state (existing pressure reading)]
       does: >-
@@ -154,7 +155,8 @@ spec:
       proof: "a stub pressure reading defers the cycle with a reason; the first list is served before the sync starts"
     PF7_pipeline_scoped_to_changes:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PF5]
       files: [idearium/repo/import-pipeline.js]
       does: >-
@@ -163,7 +165,8 @@ spec:
       proof: "one changed file of a 2,000-file repo: intel rebuild touches that file only; same indexes as a full run"
     PF8_settings_console_one_cheap_read:
       layer: api
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [idearium/api/index.js settings.console, idearium/ui/settings.html]
       does: >-
         settings.console reads guardian's provider list once per request (not 2× per repo), returns timing in `blind`,
@@ -171,7 +174,8 @@ spec:
       proof: "17 repos: one provider read; the nav paints before the detail"
     PF9_boot_memory_census:
       layer: foundation
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [cortex/memory/jaa-db.js callers, lib/decay-*]
       does: >-
         cortex loads cfr_tension_history (12k rows) and event_log (27k rows) whole at boot, in three processes. Census
@@ -180,7 +184,8 @@ spec:
       proof: "boot RSS per process before/after; the readers' tests unchanged"
     PF10_clear_glass_err_aborted_9000:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [clear-glass/src/]
       does: "Clear Glass loads :9000 before orchestrator answers → ERR_ABORTED; wait on /health with a stated retry."
       proof: "a late orchestrator: the window loads after it answers, the wait is logged"
@@ -188,7 +193,8 @@ spec:
     # ── layer 1 — data: node types and databases ──────────────────────────────────────────────────────────────────
     DT1_persistence_census:
       layer: foundation
-      status: "PARTIAL 0.39.300 — the census and its gate are built: lib/nexstore/writers.js finds every writer that persists data (209 in 135 files: fs writes with data in reach, atomic helpers, syncTable/appendRow, names resolved through constants, imports and row literals); docs/nexstore-writers.yaml holds each one's type or reason; tests/modules/test-nexstore-writers.test.js 3/3 fails on any new writer and on owed growing. Every idearium table writer is typed (the tables written only in code now reach N0's catalogue, with their fields); guardian's jobs are node.job. Still owed: 149 writers listed OWED in the register — each needs its type or reason (the not-done part of this phase)."
+      status: 'LATER — off the path; partly done (declutter 2026-10-09)'
+      status_before: "PARTIAL 0.39.300 — the census and its gate are built: lib/nexstore/writers.js finds every writer that persists data (209 in 135 files: fs writes with data in reach, atomic helpers, syncTable/appendRow, names resolved through constants, imports and row literals); docs/nexstore-writers.yaml holds each one's type or reason; tests/modules/test-nexstore-writers.test.js 3/3 fails on any new writer and on owed growing. Every idearium table writer is typed (the tables written only in code now reach N0's catalogue, with their fields); guardian's jobs are node.job. Still owed: 149 writers listed OWED in the register — each needs its type or reason (the not-done part of this phase)."
       depends_on: [M0_map]
       files: [lib/node-schemas/, tests/modules/ (a census test)]
       does: >-
@@ -198,7 +204,8 @@ spec:
       proof: "the census lists every writer; each has a type or a reason; a planted new writer fails it"
     DT2_failure_mode_field:
       layer: library
-      status: OPEN
+      status: 'FOLDED — into one-model-engine ME1 (one failure list) (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [DT1_persistence_census]
       files: [lib/fault-log.js, lib/pipeline-routing.js, idearium/spec-engine/index.js, idearium/spec-engine/chunk-dispatch.js]
       does: >-
@@ -210,7 +217,8 @@ spec:
       proof: "a stub provider failing with a refusal: chunk.failureMode.class 'refused', one fault_log row tagged with it"
     DT3_failure_modes_routes_and_preflight:
       layer: api
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [DT2_failure_mode_field]
       files: [idearium/api/index.js, idearium/cli/index.js, lib/fault-log.js]
       does: >-
@@ -221,7 +229,8 @@ spec:
       proof: "routes over seeded fault_log rows; a build prompt for a jobType with a known refusal names it"
     DT4_registry_block_to_nodes:
       layer: library
-      status: "PARTIAL (0.39.309, via SB12 in docs/2026-10-05-build-from-the-spec-phasemap.spec) — the block is parsed (lib/registry-plan.js) and the built files are checked against it; node envelopes and node-for-node drift against the code projection still open"
+      status: 'LATER — off the path; partly done (declutter 2026-10-09)'
+      status_before: "PARTIAL (0.39.309, via SB12 in docs/2026-10-05-build-from-the-spec-phasemap.spec) — the block is parsed (lib/registry-plan.js) and the built files are checked against it; node envelopes and node-for-node drift against the code projection still open"
       depends_on: [DT1_persistence_census]
       files: [idearium/spec-engine/index.js, idearium/repo/architecture.js]
       does: >-
@@ -230,19 +239,22 @@ spec:
       proof: "a registry chunk with 3 components → 3 .component nodes; a drift report against the code projection"
     DT5_pipeline_routing_spec:
       layer: foundation
-      status: OPEN
+      status: 'FOLDED — into one-model-engine ME15 (the docs tell the truth) (declutter 2026-10-09)'
+      status_before: OPEN
       files: [lib/pipeline-routing.spec]
       does: "spec-drift lists 'pipeline-routing: no spec' — the module's own spec (modes, classes, breaker, learned)."
       proof: "spec-drift no longer lists it"
     DT6_node_store:
       layer: foundation
-      status: OPEN
+      status: 'FOLDED — into nex-node-store (it only points there) (declutter 2026-10-09)'
+      status_before: OPEN
       does: "N0–N18 of docs/2026-09-29-nex-node-store-phasemap.spec — the NEX node store; referenced, not duplicated."
 
     # ── layer 2 — library: how work compounds ─────────────────────────────────────────────────────────────────────
     CI1_compounding_iterate:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [DT2_failure_mode_field]
       files: [lib/file-states.js (BS2/BS3), lib/step-gate.js, idearium/api/index.js, lib/node-schemas/]
       does: >-
@@ -253,7 +265,8 @@ spec:
       proof: "additive diff passes; a rewrite with no reason is held as a draft; with reason + green test it applies"
     RM1_registry_driven_moves:
       layer: library
-      status: OPEN (PLANNED in docs/architecture-spec/architecture-spec.spec until built)
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN (PLANNED in docs/architecture-spec/architecture-spec.spec until built)
       depends_on: [DT4_registry_block_to_nodes]
       files: [lib/registry-move.js (new), idearium/repo/architecture.js, loom/scanners/source-map.js]
       does: >-
@@ -264,7 +277,8 @@ spec:
       proof: "a fixture repo: move lib/a.js → core/a.js, both consumers rewritten, tests green, nodes re-projected"
     HC1_hat_agent_to_cos_build:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [lib/repo-hat.js, lib/cos-bridge.js, idearium/api/index.js]
       does: >-
         The compartment's hat agent can run a build on the COS surface: its changes land in the compartment's VM
@@ -279,7 +293,8 @@ spec:
     # ── layer 3 — agent: using an outside coding agent inside idearium ─────────────────────────────────────────────
     AG1_coding_agent_provider:
       layer: library
-      status: OPEN — decision for James (which account the CLI runs on)
+      status: 'FOLDED — into emerge-field-memory-build IN2 (the same provider) (declutter 2026-10-09)'
+      status_before: OPEN — decision for James (which account the CLI runs on)
       depends_on: [DT2_failure_mode_field, CI1_compounding_iterate]
       files: [lib/agent-providers.js, guardian/lib/jobs.js, idearium/spec-engine/chunk-dispatch.js]
       does: >-
@@ -336,7 +351,8 @@ spec:
         - { says: "the setup popup", check: { kind: tests, run: "node tests/modules/test-desktop-setup-popup.test.js" } }
     DK3_vm_engines:
       layer: library
-      status: OPEN — mapped 2026-10-05; not built — needs James's call (below)
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN — mapped 2026-10-05; not built — needs James's call (below)
       depends_on: [DK2_desktop_setup_popup]
       files: [cos/compartment/, cos/workspace/index.js, cos/testenv/provision.js]
       james: '"when clicking on setup desktop, i want to have a popup with the progress. like show me what its doing. like when you run setup in the run menu in idearium. like I want a setup screen, asking for the username and password. and i want options for the vm, like vmware. like compartment destkop. also the vnc, what about replacing it with the remote desktop project in the remote desktop."'
@@ -354,7 +370,8 @@ spec:
         container) — only against a fake vmrun until it runs on his machine.
     DK4_the_screen_through_remote_desktop:
       layer: library
-      status: "PINNED — James, 2026-10-05: \"Put a pin in the Remote Desktop.\" Mapped, not built; the decision below stays open."
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: "PINNED — James, 2026-10-05: \"Put a pin in the Remote Desktop.\" Mapped, not built; the decision below stays open."
       depends_on: [DK2_desktop_setup_popup]
       files: [remote-desktop/, idearium/ui/desktop.html, cos/testenv/provision.js]
       james: '"when clicking on setup desktop, i want to have a popup with the progress. like show me what its doing. like when you run setup in the run menu in idearium. like I want a setup screen, asking for the username and password. and i want options for the vm, like vmware. like compartment destkop. also the vnc, what about replacing it with the remote desktop project in the remote desktop."'
@@ -376,7 +393,8 @@ spec:
 
     CP1_copilot_drives_idearium_and_talks_to_its_agents:
       layer: interface
-      status: OPEN — mapped 2026-10-02
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN — mapped 2026-10-02
       depends_on: [IL2_library_spec_into_the_pipeline, PV4_cli_and_ui, CX1_context_cascade]
       files: [lib/agent-tools/index.js, lib/agent-tools/tools/idearium/, lib/agent-tools/tool-guide.js, clear-glass/src/copilot/verbs.js, copilot/server.js, idearium/api/index.js, lib/repo-agent.js]
       does: >-
@@ -398,7 +416,8 @@ spec:
     # ── layer 4 — interface ────────────────────────────────────────────────────────────────────────────────────────
     UI1_history_and_save_in_manage:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [idearium/ui/js/app.js (the editor tabs), idearium/ui/js/file-versions.js, idearium/ui/js/file-manage.js]
       does: >-
         "history" leaves the editor tab row (no more MutationObserver injection): Version history is an item of the
@@ -406,13 +425,15 @@ spec:
       proof: "static check: no injected history tab; the manage menu lists Version history; save precedes manage"
     UI2_desktop_environment_menu:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [idearium/ui/js/repo-environment.js, idearium/ui/js/app.js, idearium/ui/css/]
       does: "The desktop environment options live in the 'Desktop environment' button's menu; the desktop window is borderless."
       proof: "static check + chromium probe: one menu, no frame"
     UI3_settings_tab_retheme_collapse:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PF8_settings_console_one_cheap_read]
       files: [idearium/ui/settings.html, idearium/ui/js/repo-environment.js, idearium/ui/js/app.js]
       does: >-
@@ -422,20 +443,23 @@ spec:
       proof: "chromium probe: cards collapse; agent cards render under Agents; every write reaches its route"
     UI4_w7_open_items:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       does: >-
         W7 items 1, 3, 4 of docs/2026-09-30-idearium-coding-flow-phasemap.spec: architect spec builder on
         css/nexus-theme.css; the Plan header names the map and groups by layer; Clear Glass Providers page with a
         guardian widget per provider.
     UI5_work_surface_from_contracts:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       does: "N26 of the node-store map — the work surface / TV UI rendered from interaction contracts."
 
     # ── release, and what waits on James ───────────────────────────────────────────────────────────────────────────
     R1_release_per_phase:
       layer: foundation
-      status: "OPEN — 0.39.288 released with PF1–PF5"
+      status: 'RETIRED — a standing rule (docs/CLAUDE.md), not a phase (declutter 2026-10-09)'
+      status_before: "OPEN — 0.39.288 released with PF1–PF5"
       does: "each phase: version bump, CHANGELOG, atlas, loom wires, SPEC-REGISTRY, tests registered, the full run."
 
     # ── 1.1.0 — James's later messages, 2026-10-01 ────────────────────────────────────────────────────────────────
@@ -454,6 +478,7 @@ spec:
     BK1_blocked_is_actionable:
       layer: interface
       status: OPEN
+      path: 'step 2, the loop — a blocked build says what you can do about it (declutter 2026-10-09)'
       depends_on: [CT1_cut_replies_are_finished, DT2_failure_mode_field]
       files: [idearium/ui/js/app.js (phases board), idearium/api/index.js (repo.phases.build)]
       does: >-
@@ -464,6 +489,7 @@ spec:
     BK2_phase_build_writes_code:
       layer: library
       status: OPEN
+      path: 'step 2, the loop — check first: phase builds already land files through repo-inject (0.39.282 N22, 0.39.355 PB2); close as DONE-ELSEWHERE if nothing is left (declutter 2026-10-09)'
       depends_on: [BK1_blocked_is_actionable, CI1_compounding_iterate]
       files: [idearium/api/index.js, idearium/repo/phases.js, lib/repo-inject.js]
       does: >-
@@ -474,6 +500,7 @@ spec:
     UI6_idea_and_phases_one_tab:
       layer: interface
       status: OPEN
+      path: 'step 2, the loop — the idea and its phases in one tab (declutter 2026-10-09)'
       files: [idearium/ui/js/app.js]
       does: >-
         "what about combining idea with phase tab. love the phase tab." One tab: the idea and its four lanes on top,
@@ -481,7 +508,8 @@ spec:
       proof: "chromium probe: one tab, both surfaces, a new lane entry can become a phase"
     UI7_phasemaps_out_of_files_and_tree_ops:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [RM1_registry_driven_moves]
       files: [idearium/ui/js/app.js (Files), idearium/repo/phases.js]
       does: >-
@@ -503,6 +531,7 @@ spec:
     UI8_code_tab_is_code:
       layer: interface
       status: OPEN
+      path: 'step 3 — Idearium holds the code plainly (declutter 2026-10-09)'
       files: [idearium/ui/js/app.js, idearium/ui/js/file-manage.js]
       does: >-
         "can you make the code tab more about the code? maybe migrate the search to the files tab … just getting
@@ -511,7 +540,8 @@ spec:
       proof: "static check: search lives in Files; the Code tab renders editor + symbols only"
     UI11_nav_and_look_restored:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [UI8_code_tab_is_code]
       files: [idearium/ui/index.html, idearium/ui/css/, idearium/ui/js/app.js]
       does: >-
@@ -527,6 +557,7 @@ spec:
     UI9_plan_and_work_surface_panels:
       layer: interface
       status: OPEN
+      path: 'step 3 — check first: CT5 and CT9 (0.39.351–353) gave the Plan and work surface their panels and pull tab (declutter 2026-10-09)'
       files: [idearium/ui/js/plan-panel.js, idearium/ui/js/work-surface.js, idearium/ui/css/]
       does: >-
         "i also want the panel and the work surface panel to be their own panels, have the pan always open when its
@@ -535,7 +566,8 @@ spec:
       proof: "chromium probe: a running build opens the panel; collapse leaves an edge tab that reopens it"
     CX1_context_cascade:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [DT3_failure_modes_routes_and_preflight]
       files: [lib/repo-context.js, lib/code-intel/, lib/agent-memory.js, lib/agent-tools/tools/clear-glass/search-engine.js, lib/agent-tools/tools/query/]
       does: >-
@@ -550,7 +582,8 @@ spec:
       proof: "a stub agent asks for a symbol → code-intel hit; an unknown term → memory, then a web search (stubbed)"
     DI1_chunking_for_data_ingestion:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [DT1_persistence_census]
       files: [idearium/repo/import-pipeline.js, lib/zip-ingest.js, lib/node-schemas/]
       does: >-
@@ -560,7 +593,8 @@ spec:
       proof: "a CSV and a chat export ingest into chunk nodes; CX1 finds a row by meaning"
     CG1_clear_glass_accounts_and_private:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [clear-glass/src/]
       does: >-
         "clearglass is supposed to support multiple accounts of the same website, maybe add private windows also." One
@@ -569,7 +603,8 @@ spec:
       proof: "two tabs of one site in two partitions keep separate cookies; a private window leaves nothing on disk"
     CG2_clear_glass_drag_wrapper_and_fluid_url_bar:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [clear-glass/src/ (the frameless window's chrome and its toolbar)]
       does: >-
         James (verbatim): "can you add a wrapper around clearglass so i can drag it around and also have the url search
@@ -579,7 +614,8 @@ spec:
       proof: "chromium probe at 3 window widths: the URL field's width follows; the drag region is present and buttons stay clickable"
     UI10_debug_and_intelligence_one_tab:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [idearium/ui/js/app.js]
       does: >-
         James (verbatim): "also what about consolidating the debug and intelligence tabs?" One tab: what the repo IS
@@ -651,7 +687,8 @@ spec:
       proof: "static checks: the commands and the buttons reach the routes"
     UM1_nexus_understands_james:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [DT1_persistence_census, CX1_context_cascade]
       files: [lib/agent-memory.js, clear-glass/src/downloads/chat-ledger.js, lib/node-schemas/]
       does: >-
@@ -731,7 +768,8 @@ spec:
       proof: "a spec opens in the workshop; ambition 1 vs 5 changes the prompt sent; a d20 roll names a domain and maps one mechanism; a taken suggestion lands as a lane entry"
     FT1_file_tools_merge_patch_drop:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [CI1_compounding_iterate]
       files: [lib/agent-tools/tools/, lib/zip-ingest.js, idearium/api/index.js, idearium/ui/js/app.js]
       does: >-
@@ -744,7 +782,8 @@ spec:
       proof: "a patch applies cleanly; a zip with one conflicting file is held with the conflict shown; undo restores"
     TP1_promote_to_spec_templates:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       files: [idearium/spec-engine/templates.js, idearium/spec-engine/templates/, idearium/ui/js/app.js]
       does: >-
         "rebuild the promote to spec menu. like use the systems architecture, the components registry and node
@@ -757,7 +796,8 @@ spec:
       proof: "each template seeds a spec whose build_order tree passes the template's own test"
     EN1_run_isolated_and_environments:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [HC1_hat_agent_to_cos_build]
       files: [lib/cos-bridge.js, lib/cos-run.js, versionium/, idearium/repo/]
       does: >-

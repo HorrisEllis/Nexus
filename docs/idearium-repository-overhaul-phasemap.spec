@@ -200,7 +200,8 @@ spec:
   # ── MCO4: hooks/wires/flows/tools as typed repository nodes ──────────
   MCO4_hooks_wires_flows_tools:
     depends_on: [MCO1]
-    status: "NOT STARTED — verified 2026-09-20: no repository:hook / repository:wire / .flow nodes and no .tool wrapping of agent-suite or the pipeline exist in code."
+    status: 'FOLDED — into nexus-repository-system-build MCO4 (the same phase, two maps) (declutter 2026-10-09)'
+    status_before: "NOT STARTED — verified 2026-09-20: no repository:hook / repository:wire / .flow nodes and no .tool wrapping of agent-suite or the pipeline exist in code."
     does: Wraps existing real functions (agent-suite, import-pipeline) as formal .tool nodes per §22; adds repository:hook/repository:wire (§18-19) and .flow (§21, distinct from clear-glass's .macro).
     gate: MET when every §22 .tool node either wraps a cited real function or is explicitly marked not-yet-implemented.
 
@@ -250,7 +251,8 @@ spec:
   # ── MCO-D: zoom / sub-repo model ─────────────────────────────────────
   MCO-D_zoom_subrepo:
     depends_on: [MCO-C]
-    status: "NOT STARTED — highest-risk, net-new. Verified 2026-09-20: no zoom or sub-repo route/capability exists; pipeline.zoom_levels is a declared config key with no reader. Read-only zoom first; write-through sub-repo creation deferred."
+    status: 'LATER — off the path — zoomed sub-repos come after Idearium holds the systems (declutter 2026-10-09)'
+    status_before: "NOT STARTED — highest-risk, net-new. Verified 2026-09-20: no zoom or sub-repo route/capability exists; pipeline.zoom_levels is a declared config key with no reader. Read-only zoom first; write-through sub-repo creation deferred."
     open_question: "Zoom level names still undecided — default count is 4 (MCO-F); candidate world->region->module->file, unconfirmed."
     adds: [idearium.repo.zoom.capability, idearium.repo.subrepo.create.capability]
     gate: MET (read-only phase) when a real multi-module project traverses cleanly at every configured depth.
@@ -299,7 +301,8 @@ spec:
   # ── MCO-G: git push/pull + SSH + credentials (was MCO-G AND MCO5 — same gate, merged) ─
   MCO-G_git_cicd_credentials:
     depends_on: [MCO-C, MCO-F, MCO3]
-    status: "NOT STARTED — deliberately last, only MCO with real
+    status: 'FOLDED — into nexus-repository-system-build MCO5 (the same git work) (declutter 2026-10-09)'
+    status_before: "NOT STARTED — deliberately last, only MCO with real
       external-network/credential surface. Verified 2026-09-20: no repo push/pull
       code exists. Groundwork only, not the gate: the cicd.* config keys (push_enabled,
       pull_enabled, ssh_key_path copilot_writable:false), a .git written into an

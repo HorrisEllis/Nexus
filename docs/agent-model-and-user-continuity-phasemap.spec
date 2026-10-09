@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        agent-model-and-user-continuity
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status:      PHASEMAP 2026-08-13. Mapped, not built. §3.3 — map before build.
     uuid:        nexus-agent-model-continuity-v0-0000-2026-0813-001
@@ -259,6 +260,7 @@ spec:
       axioms: ["§10.3", "§1.2", "§8.6", "§0.3"]
 
     AM8_lifeline_as_general_channel_and_reasoning_upgrade:
+      status: 'FOLDED — into one-model-engine ME10 (lifeline''s confidence escalation, his decision) (declutter 2026-10-09)'
       priority: NEW — every claim below has an exact file:line citation, checked live this pass, per explicit instruction not to generalize.
       depends_on: [AM1, AM7]
       does: >

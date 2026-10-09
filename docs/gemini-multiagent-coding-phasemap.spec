@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        gemini-multiagent-coding
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status:      PHASEMAP 2026-08-07. Mapped before build (§3.3), per James.
     uuid:        nexus-gemini-multiagent-v0-0000-2026-0807-001

@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-09-01-living-model-and-autonomous-pipeline-phasemap
+    roadmap: 'later — autonomy comes after the loop works by hand (declutter 2026-10-09, James: "okay")'
     version: 0.2.0-phasemap
     status: >
       PHASEMAP 2026-09-01. James, across two messages: the registry as a

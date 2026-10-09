@@ -29,7 +29,7 @@ const PHASES = { uuid: null, data: null, view: 'lanes', open: null, sort: { k: '
   filter: { q: '', status: 'all', map: 'all', mine: true, ready: false }, busy: false, adding: false,
   specs: null, spec: null, thread: null, threadErr: null, plan: null, showDone: _phShowDoneSaved() };
 const _PH_STATUS_COLOR = { complete: 'var(--mint)', active: 'var(--sky)', planned: 'var(--text2)' };
-const _PH_RUN_COLOR = { building: 'var(--sky)', replied: 'var(--mint)', failed: 'var(--coral)', refused: 'var(--coral)', escalating: 'var(--amber)', retrying: 'var(--amber)', proven: 'var(--mint)', unproven: 'var(--coral)' };
+const _PH_RUN_COLOR = { building: 'var(--sky)', replied: 'var(--mint)', failed: 'var(--coral)', refused: 'var(--coral)', escalating: 'var(--amber)', retrying: 'var(--amber)', proven: 'var(--mint)', unproven: 'var(--coral)', interrupted: 'var(--amber)' };   // §HP2 interrupted: idearium restarted mid-run
 const _phShortMap = (p) => String(p || '').split('/').pop().replace(/-phasemap\.spec$|\.spec$/, '');
 const _phKey = (p) => String(p.phase_key || '').split('_')[0];
 const _phq = (s) => escapeHtml(String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
@@ -177,7 +177,7 @@ function _phPaint() {
   const unplanned = t ? t.spec.blocks.filter(b => !b.bookkeeping && !b.planned) : [];
   const threadNote = PHASES.spec ? (PHASES.threadErr ? `<div class="ph2-note bad">the spec's thread could not be read: ${escapeHtml(PHASES.threadErr)}</div>`
     : !t ? '<div class="ph2-note">reading the spec\'s thread…</div>'
-    : `${unplanned.length ? `<div class="ph2-note">blocks with no phase yet: ${unplanned.map(b => `<span class="ph2-block">${escapeHtml(b.id)}</span>`).join(' ')}</div>` : ''}${t.summary.staleBlocks ? `<div class="ph2-note warn">${t.summary.staleBlocks} block${t.summary.staleBlocks === 1 ? '' : 's'} moved since planned — ${t.summary.stalePhases} phase${t.summary.stalePhases === 1 ? '' : 's'} stale (↻ on the card)</div>` : ''}`) : '';
+    : `${unplanned.length ? `<div class="ph2-note">blocks with no phase yet: ${unplanned.map(b => `<span class="ph2-block">${escapeHtml(b.id)}</span>`).join(' ')}</div>` : ''}${t.summary.staleBlocks ? `<div class="ph2-note warn">${t.summary.staleBlocks} block${t.summary.staleBlocks === 1 ? '' : 's'} moved since planned — ${t.summary.stalePhases} phase${t.summary.stalePhases === 1 ? '' : 's'} stale${t.summary.staleDownstream ? `, ${t.summary.staleDownstream} of them through a phase they depend on` : ''} (↻ on the card)</div>` : ''}`) : '';
 
   el.innerHTML = `<div class="ph-wrap">${header}${toolbar}
       ${PHASES.adding ? _phAddForm(d) : ''}
@@ -195,11 +195,12 @@ function _phCard(p) {
   const blocks = p.blocks || [];
   const chips = blocks.slice(0, 3).map(b => `<span class="ph2-block ${stale.includes(b) ? 'stale' : ''}" title="${stale.includes(b) ? 'this block moved since the phase was planned' : 'a block of its spec'}">${stale.includes(b) ? '↻ ' : ''}${escapeHtml(b)}</span>`).join('') + (blocks.length > 3 ? `<span class="ph2-dim">+${blocks.length - 3}</span>` : '');
   const gates = step && step.gates && typeof _gateBar === 'function' ? _gateBar(step) : '';
-  return `<div class="ph-card ph2-card st-${escapeHtml(p.status)} ${PHASES.open === p.uuid ? 'open' : ''} ${stale.length || (th && th.specMoved) ? 'stale' : ''}" onclick="phasesOpen('${escapeHtml(p.uuid)}')" data-key="${escapeHtml(p.phase_key)}" title="${escapeHtml(p.map)}:${p.line}">
+  return `<div class="ph-card ph2-card st-${escapeHtml(p.status)} ${PHASES.open === p.uuid ? 'open' : ''} ${stale.length || (th && (th.specMoved || th.staleVia)) ? 'stale' : ''}" onclick="phasesOpen('${escapeHtml(p.uuid)}')" data-key="${escapeHtml(p.phase_key)}" title="${escapeHtml(p.map)}:${p.line}">
     <div class="ph-card-top"><span class="ph-key" style="color:${_PH_STATUS_COLOR[p.status]}">${escapeHtml(_phKey(p))}</span>${PHASES.spec ? '' : `<span class="ph-map">${escapeHtml(_phShortMap(p.map))}</span>`}
       ${p.status !== 'complete' ? `<button class="ph-quick" title="snapshot, then the agent builds it (climbing the ladder)" ${PHASES.busy ? 'disabled' : ''} onclick="event.stopPropagation();phasesBuildQuick('${_phq(p.map)}','${_phq(p.phase_key)}')">▶</button>` : ''}</div>
     <div class="ph-card-title">${escapeHtml(p.name || p.title)}</div>
     ${blocks.length ? `<div class="ph2-blocks">${chips}</div>` : (PHASES.spec ? '<div class="ph2-dim">no link to its spec</div>' : '')}
+    ${th && th.staleVia ? `<div class="ph2-warn" title="it depends on a phase whose block moved since it was planned">↻ via ${escapeHtml(String(th.staleVia).split('_')[0])}</div>` : ''}
     <div class="ph-card-foot">
       ${p.status === 'complete' ? '<span style="color:var(--mint)">complete</span>' : p.status === 'active' ? '<span style="color:var(--sky)">active</span>' : p.blocked_by.length ? `<span style="color:var(--amber)">blocked by ${p.blocked_by.length}</span>` : p.ready ? '<span style="color:var(--mint)">ready</span>' : ''}
       ${run ? `<span style="color:${_PH_RUN_COLOR[run.state] || 'var(--text3)'}">${escapeHtml(run.state)}${run.provider ? ` · ${escapeHtml(run.provider)}` : ''}${run.rung ? ` (${run.rung}/${run.rungs})` : ''}</span>` : ''}
@@ -289,6 +290,7 @@ function _phDetail(d, uuid) {
       ${p.status !== 'complete' ? (p.blocked_by.length ? `<span style="color:var(--amber)">blocked by ${p.blocked_by.map(link).join(' ')}</span>` : '<span style="color:var(--mint)">ready</span>') : ''}</div>
     <div class="ph-d-sec">from the spec</div>
     ${blocksHtml}
+    ${th && th.staleVia ? `<div class="ph2-note warn">stale through ${escapeHtml(th.staleVia)} — it depends on a phase whose block moved since it was planned (§HP1)</div>` : ''}
     <div class="ph-d-row"><label>depends on</label><span>${p.depends_on.map(link).join(' ') || '—'}${(p.unresolved_deps || []).length ? ` <span style="color:var(--text3)">(not phases here: ${escapeHtml(p.unresolved_deps.join(', '))})</span>` : ''}</span></div>
     <div class="ph-d-row"><label>needed by</label><span>${dependents.map(x => link(x.uuid)).join(' ') || '—'}</span></div>
     <div class="ph-d-row"><label>closes</label><span>${escapeHtml((p.closes || []).join(' ') || '—')}</span></div>
@@ -384,6 +386,9 @@ async function phasesBuild(map, phase) {
   try {
     const r = await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase, provider, note }) }, 120000);
     toast(`${phase}: snapshot ${r.snapshot} taken · ${r.targetName}'s agent is building it${r.statusNote ? ` (status not changed: ${r.statusNote})` : ''}`, 'ok');
+    // §HP6 0.55.0 — James: "the build surface is supposed to be showing in idearium." A build from the detail pane
+    // opens the Plan panel on its run, as the card's build always did (RS10 dropped it here).
+    if (typeof openPlanPanel === 'function') openPlanPanel({ map, focus: r.runId });
   } catch (e) { toast(`${phase} not built: ${e.message}`, 'err'); }
   PHASES.busy = false;
   if (CURRENT_API_REPO?.uuid === uuid && CURRENT_REPO_SUBTAB === 'phases') renderRepoPhases(CURRENT_API_REPO, { keepScroll: true });

@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        snapshot-trigger-and-diagnostic
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status: >-
       PHASEMAP 2026-07-30. James: "the replay engine and snapshot

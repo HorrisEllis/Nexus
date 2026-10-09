@@ -52,9 +52,16 @@ const RETRYABLE = [
 const IN_FLIGHT = new Set(['pending', 'queued', 'pinging', 'dispatched', 'delivered', 'retry_wait', 'awaiting_transcript']);
 const DELAYS = { default: [4000, 12000, 30000], 'tab-busy': [15000, 30000, 60000] };
 
+// §HP11 0.55.1 (docs/2026-10-09-hardening-pass-phasemap.spec) — James: "look at the .response in clearglass." "no reply
+// element found … findResponseEl() matched nothing on this page" is the PAGE changing, not the agent failing: re-sending
+// typed his prompt into the same chat again, up to four times. After the transcript and the .response are read, it asks
+// for the one fix — pick the reply with ◎ (the selector map) — and never sends the prompt twice.
+const PICK = /no reply element|findResponseEl\(\)\s*matched nothing|reply (element|selector) (not found|drift)/i;
+
 function classify(gate, error) {
   const text = `${gate || ''} ${error || ''}`;
   if (FINAL.test(text)) return { retry: false, kind: 'needs-you' };
+  if (PICK.test(text)) return { retry: false, kind: 'pick-reply' };
   for (const r of RETRYABLE) {
     if (r.re.test(text) || (r.gates && r.gates.includes(gate))) return { retry: true, kind: r.kind };
   }
@@ -130,8 +137,19 @@ function createJobRetry({ jobs, updateJob, bus, pool, dispatchJob, complete, rea
     const c = classify(gate, error);
     const attempts = [...(job.attempts || []), { at: Date.now(), gate, error: String(error || '').slice(0, 400), kind: c.kind }];
     if (!c.retry) {
+      if (c.kind === 'pick-reply') {   // §HP11 — the answer may be on the page: read it from the transcript or the .response first
+        const got = answerFirst(job);
+        if (got) {
+          updateJob(job.id, { attempts });
+          stats[got.source === 'transcript' ? 'answeredFromTranscript' : 'answeredFromResponse']++;
+          complete(job, got.text, got.chatUrl || job.chatUrl || null, got.source);
+          return { handled: true, kind: c.kind, answered: got.source };
+        }
+        updateJob(job.id, { attempts, needsYou: 'pick the reply with ◎ — the page no longer matches the reply selector; the prompt is not sent again' });
+        _say(job, `${job.provider || 'the agent'}'s page changed: the reply could not be found on it — pick the reply with ◎ (it is saved for every job after), or wait for the chat transcript; the prompt is not sent again`, { stage: 'needs-you' });
+      }
       stats.final++;
-      updateJob(job.id, { attempts });
+      if (c.kind !== 'pick-reply') updateJob(job.id, { attempts });
       return { handled: false, kind: c.kind };
     }
     if (attempts.length >= maxAttempts) {

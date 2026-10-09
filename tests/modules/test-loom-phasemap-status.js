@@ -150,5 +150,44 @@ t('PS-012 no real phase in docs/ says NOT STARTED while reporting in-progress', 
     `${offenders.length} real phases say NOT STARTED but report in-progress: ${offenders.slice(0, 4).join(', ')}`);
 });
 
+// §OR1 0.52.1 — docs/2026-10-09-one-roadmap-phasemap.spec. James: "we also need to declutter the roadmap."
+t('PS-013 the value\'s first word: BUILT / CLOSED read done; the declutter\'s answers close or shelve; prose never counts', () => {
+  delete require.cache[require.resolve('../../loom/scanners/phasemap-map.js')];
+  const pm = require('../../loom/scanners/phasemap-map.js');
+  const doc = (st) => ['spec:', '  phases:', '    QX1_a_phase:', `      status: ${st}`, '      does: x'].join('\n');
+  const one = (st) => pm.parsePhasemapText(doc(st), 'm')[0];
+  assert.strictEqual(one('"BUILT 0.39.282 (first slice)"').status, 'done');
+  assert.strictEqual(one('"CLOSED 2026-09-05. Fixed"').status, 'done');
+  assert.strictEqual(one('"MET — by finding"').status, 'done');
+  const f = one('"FOLDED into one-model-engine ME5"'); assert.strictEqual(f.status, 'done'); assert.strictEqual(f.closedAs, 'folded');
+  assert.strictEqual(one('"SUPERSEDED by RS9"').closedAs, 'superseded');
+  assert.strictEqual(one('"DONE-ELSEWHERE build-from-the-spec SB10"').closedAs, 'done-elsewhere');
+  const l = one('"LATER — the shelf: after the loop"'); assert.strictEqual(l.status, 'pending'); assert.strictEqual(l.shelf, true);
+  assert.strictEqual(one('"PARTIAL 2026-08-29 — real correction"').status, 'in-progress');
+  assert.strictEqual(one('"NOT STARTED — built later"').status, 'pending');
+  assert.strictEqual(one('OPEN').status, 'pending');
+  assert.strictEqual(one('"OPEN — the old builder is built and closed elsewhere"').status, 'pending', 'a word in prose never counts');
+  const list = pm.parsePhasemapText(['phases:', '  - id: L1', '    status: later'].join('\n'), 'l')[0];
+  assert.strictEqual(list.shelf, true);
+  const s = pm.summary(); assert.ok('shelf' in s && 'closed' in s && 'roadmap' in s);
+});
+
+t('PS-014 a whole map answered in one line: roadmap: later shelves, roadmap: folded into X closes; done stays done; loadAll keeps the marks', () => {
+  delete require.cache[require.resolve('../../loom/scanners/phasemap-map.js')];
+  const pm = require('../../loom/scanners/phasemap-map.js');
+  const doc = (r) => ['spec:', '  meta:', '    name: x', ...(r ? [`    roadmap: ${r}`] : []), '  phases:', '    QA1_one:', '      status: OPEN', '    QA2_two:', '      status: "DONE 0.1"'].join('\n');
+  const l = pm.parsePhasemapText(doc('later — after the loop'), 'm');
+  assert.deepStrictEqual(l.map(p => [p.status, !!p.shelf]), [['pending', true], ['done', false]]);
+  const f = pm.parsePhasemapText(doc('folded into one-model-engine — same work'), 'm');
+  assert.deepStrictEqual(f.map(p => [p.status, p.closedAs || null, p.foldedInto || null]), [['done', 'folded', 'one-model-engine'], ['done', null, null]]);
+  assert.deepStrictEqual(pm.parsePhasemapText(doc(null), 'm').map(p => p.status), ['pending', 'done']);
+  const fs2 = require('fs'), os = require('os'), dir = fs2.mkdtempSync(path.join(os.tmpdir(), 'ps14-'));
+  fs2.writeFileSync(path.join(dir, 'a-phasemap.spec'), doc('later — x'));
+  process.env.NEXUS_PHASEMAP_DIR = dir; delete require.cache[require.resolve('../../loom/scanners/phasemap-map.js')];
+  const pm2 = require('../../loom/scanners/phasemap-map.js'); const sum = pm2.summary();
+  delete process.env.NEXUS_PHASEMAP_DIR;
+  assert.strictEqual(sum.shelf, 1, 'loadAll keeps shelf'); assert.strictEqual(sum.roadmap, 0);
+});
+
 console.log(`\n${fail === 0 ? '✓' : '✗'} phasemap status: ${pass} passed, ${fail} failed\n`);
 process.exit(fail === 0 ? 0 : 1);

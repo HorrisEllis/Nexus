@@ -36,9 +36,11 @@ spec:
         applied to atlas editing.
       reuse: "create-atlas.js's own text-manipulation approach, generalized from whole-file scaffolding to targeted section edits."
       gate: "editing one module's entry updates only that section's text, verified by diffing the file before/after and asserting every other line is byte-identical."
-      status: pending — this phasemap's own T1, see below.
+      status: 'DONE-ELSEWHERE — architecture-spec/registry/edit-atlas.js edits one atlas section by id (found by the 0.54.0 old-code scan; no command calls it yet) (declutter 2026-10-09)'
+      status_before: pending — this phasemap's own T1, see below.
 
     AT3_agent_queryable_atlas:
+      status: 'LATER — off the path — an agent-queryable atlas comes after Idearium holds the systems (declutter 2026-10-09)'
       does: >-
         Beyond human clicking: an agent should be able to ask "what's
         at id X" and get the atlas's own entry for it directly, not

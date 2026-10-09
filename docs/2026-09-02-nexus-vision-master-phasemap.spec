@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        2026-09-02-nexus-vision-master-phasemap
+    roadmap: 'later — his own words on it: ''some ideas to map to phasemaps. do not build.'' — the vision shelf (declutter 2026-10-09, James: "okay")'
     version:     1.0.0
     foundation:  nexus-system-foundation@1.1.0
     status:      mapped-not-built

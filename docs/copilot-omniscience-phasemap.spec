@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        copilot-omniscience
+    roadmap: 'later — one leftover (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status: >-
       ALL 7 PHASES DONE 2026-07-30. PHASEMAP — dependency-ordered, bottom-up. Each phase is a

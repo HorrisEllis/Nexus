@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-08-28-self-building-pipeline
+    roadmap: folded into nexus-self-build-pipeline — an earlier map of the same pipeline (declutter 2026-10-09, James: "okay")
     version: 0.1.0-phasemap
     status: >
       PHASEMAP 2026-08-28. James: "we need this system building itself...

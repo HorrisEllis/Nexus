@@ -141,7 +141,8 @@ spec:
 
     W7_next_mapped_2026_09_30:
       layer: ui
-      status: OPEN
+      status: 'LATER — off the path — theme and builder polish (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [W5_theme_and_css]
       files: [architect/src/ui/spec-builder.html, idearium/ui/js/app.js, lib/component-registry.js, loom/, clear-glass/src/]
       does: >-
@@ -167,7 +168,8 @@ spec:
 
     W6_release:
       layer: ui
-      status: OPEN
+      status: 'RETIRED — a standing rule (docs/CLAUDE.md), not a phase (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [W5_theme_and_css]
       files: [lib/version.js, package.json, CHANGELOG-0.39.284.md, docs/atlases/*, docs/2026-09-29-handoff.md]
       does: "versions, changelog, atlases, the handoff, loom wires, the full run"

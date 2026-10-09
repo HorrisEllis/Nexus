@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        cortex-schema-registry
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status: >-
       PHASEMAP 2026-07-30. Schemas-per-system as an expectation +

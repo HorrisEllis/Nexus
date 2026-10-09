@@ -180,3 +180,10 @@ spec:
 # read as ready while C1 was still open. A block or bare list has no `]`, so only a ` # …` tail is cut there.
 # parsePhasemapText's other output is unchanged. Proven by tests/modules/test-moce-roadmap.js DG-1 (loom's parser
 # and idearium's roadmap over the same text). loom 1.5.0 -> 1.5.1 (PATCH: no new route or component).
+
+# ADDENDUM 2026-10-09 (0.53.0, OR1 of docs/2026-10-09-one-roadmap-phasemap.spec) — James: "we also need to declutter the roadmap."
+# phasemap-map.js reads a status value's FIRST word the same way in its keyed and list readers (_answerOf): BUILT, CLOSED,
+# MET, SHIPPED, LANDED, FIXED, RESOLVED, COMPLETE read done — the keyed reader knew only DONE, so 31 finished phases were
+# counted open (HG6 of cli-data-code). The declutter's answers: SUPERSEDED · RETRACTED · RETIRED · FOLDED · DONE-ELSEWHERE
+# close a phase (status done, closedAs), LATER shelves it (status pending, shelf: true). NOT STARTED still wins (2026-09-19);
+# a word in prose never counts (2026-08-13). summary() adds roadmap, shelf and closed. test-loom-phasemap-status PS-013.

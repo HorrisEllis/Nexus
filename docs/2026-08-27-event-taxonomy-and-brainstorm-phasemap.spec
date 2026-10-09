@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-08-27-event-taxonomy-and-brainstorm
+    roadmap: 'later — event taxonomy per system — not on the path (declutter 2026-10-09, James: "okay")'
     version: 0.1.0-phasemap
     status: >-
       PHASEMAP 2026-08-27. Two things captured here: (1) a real,
@@ -297,7 +298,8 @@ spec:
         instead of solving it.
 
     BR7_guardian_dispatch_connectivity_sweep:
-      status: "OPEN — James: 'make sure the agent tools that connect to
+      status: 'FOLDED — into one-model-engine ME0 (every model call found and proved) (declutter 2026-10-09)'
+      status_before: "OPEN — James: 'make sure the agent tools that connect to
         guardian are actually connected and updated.' Real pattern found
         THREE independent times in this one session, not once:
         lib/agent-chat.js's listAgents(), and TWO separate checks inside

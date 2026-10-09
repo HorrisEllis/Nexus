@@ -38,42 +38,54 @@ spec:
 
   phases:
     OS1_commits_say_what_they_touched:
+      status: 'DONE — built 0.47.0 — commits carry provenance; GET /api/repos/:uuid/history?path= (lib/version.js 0.47.0); status found unmoved in the declutter (declutter 2026-10-09)'
       layer: api
       does: "summarizeRepoSnapshots carries provenance (by, refs, files); GET /api/repos/:uuid/history?path= — the commits that touched a file; `idearium repo history <repo> <path>` (CM1 row, so copilot has it)"
     OS2_the_plan_panel_holds_it:
+      status: 'DONE — built 0.47.0 — the Plan panel''s folded ACTIVITY section (declutter 2026-10-09)'
       layer: ui
       does: "plan-panel.js: a stopped step's reason under its row; one folded `activity` section mounting repo-tasks.js's views (tasks · log · control · versions · machine) styled as the plan; the drawer, its button and the duplicate Phases view removed"
     OS3_the_code_tab_knows_its_history:
+      status: 'DONE — built 0.47.0 — the open file''s versions line (declutter 2026-10-09)'
       layer: ui
       does: "code-surface.js: the open file's line — n versions · last by <who> <when> · <message> — opening the plan's versions view filtered to that file; a proposal links to the task that wrote it"
     OS4_every_agent_option_in_the_agent_tab:
+      status: 'SUPERSEDED — built 0.47.0, reversed 0.48.0 by OS8 (Settings → Agents) and OS9 (no Agent tab) (declutter 2026-10-09)'
       layer: ui
       does: "renderRepoAgent: folded sections (who answers · prompt · hat & tools · models), native, no iframe; Settings' Agent group removed with a one-line pointer"
     OS5_settings_without_iframes:
+      status: 'DONE — built 0.47.0 — no iframe in a repo''s Settings (declutter 2026-10-09)'
       layer: ui
       does: "repo-settings.js: Desktop settings native (compartment, branching, VM: ports, open, stop) from GET /api/settings/console/:uuid"
     OS6_proved_on_the_real_page:
+      status: 'DONE — built 0.47.0 — tests/probe/idearium-one-surface-glass.js on the real page (15/15, then 18/18 in 0.48.0) (declutter 2026-10-09)'
       layer: test
       does: "a Clear Glass probe on Idearium's REAL index.html served by the real Idearium API (startAPI) — the plan's activity section, the Code tab line, the Agent tab sections, no iframe on the Settings tab; screenshots of the real page"
 
     OS7_one_proposal_surface:
+      status: 'SUPERSEDED — built 0.47.0 in the Agent tab; the Agent tab became the Code tab''s agent in 0.48.0 (OS9) (declutter 2026-10-09)'
       layer: ui
       does: "the Agent tab's proposals are the work surface's cards (the same as the Plan and the Code tab): diff, Apply / Reject, open in Code, the run that wrote it — the raw inject list goes"
     SP1_phases_from_the_sections:
+      status: 'DONE — built 0.47.0 — a workshop spec plans by its sections (declutter 2026-10-09)'
       layer: library
       does: "derivePlan reads a workshop spec's sections list: one phase per section (grouped within a layer), named by its title, its does the section's first sentence, never raw YAML; the browser-engine spec replans to real phases"
     SP2_complete_the_blanks:
+      status: 'DONE — built 0.47.0 — the Spec tab names blanks; ✦ draft them (declutter 2026-10-09)'
       layer: api+ui
       does: "the Spec tab marks each blank section and empty chunk file; ✦ complete opens the repo's spec in a workshop (source repo) and feeds kind 'section' for that section — proposals, accepted one by one, saved back (a VR1 commit); `idearium repo spec <repo> complete [--section id]`"
     SP3_the_file_tree_is_the_spine:
+      status: 'DONE — built 0.47.0 — specs.auto_file_tree (declutter 2026-10-09)'
       layer: library
       does: "a spec without a file tree gets one generated from its sections by layer (the archetype's shape: lib/, api, cli, ui, tests/), each file a pending chunk, slotted into registry-components.js and its nodes through lib/repo-expand's slot path — the registry is the spine the phases build into"
 
     OS8_settings_agents_holds_every_agent_option:
+      status: 'DONE — built 0.48.0 — Settings → Agents (declutter 2026-10-09)'
       layer: ui
       james: '"no. all agent settings and options in the options tab under agents."'
       does: "Settings gains an Agents group — behaviour (who answers by default, its Ollama model, tool scope, what happens to the code it writes), prompt, hat & tools (persona, tools, what it learned, teach / export / import / forge), models — drawn natively (agent-options.js's section bodies). The Agent tab's option sections go."
     OS9_the_agent_is_in_the_code_tab:
+      status: 'DONE — built 0.48.0 — the Code tab''s docked agent is the repo''s agent (declutter 2026-10-09)'
       layer: ui
       james: '"the agents tab should maybe merge with the code tab."'
       does: "No Agent tab: the Code tab's docked agent IS the repo's agent — one conversation (the Agent tab's transcript, shared), its slash commands (/help /tools /debug …), a one-line identity (hat · indexed · learned) with options ↗ to Settings → Agents; its proposals are the Code tab's diffs; the live provider feed is the Code tab's live strip. setRepoSubtab('agent') opens Code."

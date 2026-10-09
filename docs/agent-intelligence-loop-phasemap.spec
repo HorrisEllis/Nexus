@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        agent-intelligence-loop
+    roadmap: folded into one-model-engine — AP4 is ME6 (one optimizer); AP2/AP3/AP5 later (declutter 2026-10-09, James: "okay")
     version:     0.1.0-phasemap
     status:      PHASEMAP 2026-08-07. Mapped before build (§3.3).
     uuid:        nexus-agent-intelligence-loop-v0-0000-2026-0807-001

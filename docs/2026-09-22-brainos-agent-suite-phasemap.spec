@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        brainos-agent-suite
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status: >-
       PHASEMAP 2026-09-22. James: "brainos was supposed to have a

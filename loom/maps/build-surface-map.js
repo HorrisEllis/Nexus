@@ -48,6 +48,8 @@ const FILES = [
   // projection handed the document reader and the parser by idearium/api)
   ['lib/spec-document.js', I('lib/spec-document.js'), []],
   ['idearium/repo/thread.js', I('idearium/repo/thread.js'), []],
+  // §0.52.0 HP2 — runs left in flight by a process that is gone are said interrupted (pure; idearium/api runs it at boot)
+  ['idearium/repo/run-reconcile.js', I('idearium/repo/run-reconcile.js'), []],
   // §0.50.0 RS10 — the Phases tab on the thread: HTTP phases, thread, plan; plan-panel.js (_gateBar, _ledgerHtml, openPlanPanel); work-surface.js (wsOpenInCode)
   ['idearium/ui/js/phases.js', I('idearium/ui/js/phases.js'), [I('idearium/api/index.js'), I('idearium/ui/js/plan-panel.js'), I('idearium/ui/js/work-surface.js')]],
   // §0.39.350 CT4 — Settings → Models: HTTP ollama/check, ollama/check/ask; idearium/api runs lib/ollama-check.js
@@ -70,6 +72,7 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/spec-document.js'), '§RS9 repo.thread — the document reader handed to thread()'],
   [I('idearium/repo/spec-plan.js'), I('lib/spec-document.js'), '§RS9 derivePlan / planPrompt cut by the blocks; BOOKKEEPING'],
   [I('idearium/ui/js/app.js'), I('idearium/ui/js/code-surface.js'), '§CT5 the SSE handler → codeSurfaceOnEvent; renderRepoCode for the Code subtab'],
+  [I('idearium/api/index.js'), I('idearium/repo/run-reconcile.js'), '§HP2 _reconcileRuns at boot (interruptedRows)'],
 ];
 
 function mapBuildSurface(driver) {

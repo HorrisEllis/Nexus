@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     fractal-graph-any-size-agent
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:  1.0.0
     date:     2026-10-02
     release:  0.39.300 (mapped; nothing built)

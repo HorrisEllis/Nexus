@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-08-28-definition-of-complete
+    roadmap: folded into one-roadmap — the path is now the finish line (declutter 2026-10-09, James: "okay")
     version: 0.1.0-phasemap
     status: >
       PHASEMAP 2026-08-28. James's own stated conditions for NEXUS to be

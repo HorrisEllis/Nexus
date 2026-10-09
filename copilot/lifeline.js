@@ -330,6 +330,11 @@ async function _tryGuardian(prompt, opts = {}) {
       channel:    'lifeline',
       channelName: 'Lifeline',
       tools:      opts.tools || ESCALATION_TOOLS,
+      // §HP7 0.55.0 — James's log: "claude failed — timed out after 90000ms — waiting at gate 7/8 \"reply appears\"
+      // … 114 mutations". The caller's wait was used for this HTTP call only; guardian's askSync never saw it and fell to
+      // its own 90 s default, so a browser agent was cut off mid-reply whatever the caller allowed. Sent on now, a few
+      // seconds under ours, so guardian answers with its gate sentence before we stop listening.
+      timeoutMs:  opts.timeoutMs ? (opts.timeoutMs > 10000 ? opts.timeoutMs - 5000 : opts.timeoutMs) : undefined,
     }, opts.timeoutMs || GUARDIAN_TIMEOUT_MS);
 
     if (!result?.text) {

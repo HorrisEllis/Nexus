@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        raid-routing-fidelity
+    roadmap: folded into one-model-engine — RR1/RR2/RR3/RR6 are ME5, ME6, ME10 (declutter 2026-10-09, James: "okay")
     version:     0.1.0-phasemap
     status:      PHASEMAP 2026-08-08. Mapped before build (§3.3). Build nothing yet.
     uuid:        nexus-raid-routing-fidelity-v0-0000-2026-0808-001

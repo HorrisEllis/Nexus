@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-09-11-sovereign-node-architecture-phasemap
+    roadmap: 'later — architecture — later (declutter 2026-10-09, James: "okay")'
     version: 0.1.0
     status: draft
     created: 2026-09-11

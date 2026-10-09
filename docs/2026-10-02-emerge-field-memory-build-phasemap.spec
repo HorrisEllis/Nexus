@@ -250,6 +250,7 @@ spec:
       systems: [idearium]
       value: { score: 4, cost: S, for: [daily-use, quality], why: "what James sees every day; four small, visible fixes" }
       status: OPEN
+      path: 'step 2, the loop — the stations it walks through must read right (declutter 2026-10-09)'
       depends_on: [EM0_ground]
       files: [idearium/ui/architect.html, idearium/ui/workshop.html, idearium/ui/spec-library.html, idearium/ui/settings.html, idearium/ui/index.html, idearium/ui/css/void-theme.css]
       does: >-
@@ -280,7 +281,8 @@ spec:
       layer: foundation
       systems: [warp, cos, loom]
       value: { score: 3, cost: XL, for: [ownership], why: "an engine that is his, not SISO; high to him, slow to pay back" }
-      status: "PARTIAL (1.7.18, 0.39.323, WARP 2.0.0) — Link, Expectation, Ledger, Engine in warp/core; warp/adapters/siso-gates.js and emerge-field.js; tests/modules/test-warp2.test.js 6/6. Proof: every link has causedBy or root:true — met; an unmet expectation is a gap naming both ends — met; 1.x tests pass unchanged and a 1.x Stream records through the adapter — met, but Nexus's consumers still run on 1.x directly, not yet through it; no file in warp/core carries SISO's shape — NOT met: 1.x's Event/Gate/Stream/StreamLog stay in core/ until the consumers move. Emerge's constraints come in through an adapter, not warp/core, because warp/core imports nothing outside warp/ (MANIFEST)."
+      status: 'LATER — off the path; partly built — warp/core Link, Expectation, Engine, Ledger exist (declutter 2026-10-09)'
+      status_before: "PARTIAL (1.7.18, 0.39.323, WARP 2.0.0) — Link, Expectation, Ledger, Engine in warp/core; warp/adapters/siso-gates.js and emerge-field.js; tests/modules/test-warp2.test.js 6/6. Proof: every link has causedBy or root:true — met; an unmet expectation is a gap naming both ends — met; 1.x tests pass unchanged and a 1.x Stream records through the adapter — met, but Nexus's consumers still run on 1.x directly, not yet through it; no file in warp/core carries SISO's shape — NOT met: 1.x's Event/Gate/Stream/StreamLog stay in core/ until the consumers move. Emerge's constraints come in through an adapter, not warp/core, because warp/core imports nothing outside warp/ (MANIFEST)."
       depends_on: [EM1_emerge_core, SH1_shadow_space]
       james: '"maybe fork it, for me." · "and had it back." · "okay but keep updating it. i dont need it until its been converted to cfr"'
       handback: the forked warp/ (1.5.0 at 0.39.318) is kept updated here and zipped back to James only once it has been converted to CFR — not before.
@@ -303,7 +305,8 @@ spec:
       layer: foundation
       systems: [intelligence, guardian, cortex, orchestrator, idearium]
       value: { score: 4, cost: L, for: [quality, compounding], why: "causes stop being guessed; every failure traces to its real source" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [EM1_emerge_core, EM2_warp_his_own]
       files: [intelligence/cfr/graph.js, intelligence/cfr/ledger.js, intelligence/cfr/field.js, intelligence/cfr/sigma.js, intelligence/cfr/delta.js, intelligence/cfr/contract-verifier.js, intelligence/rfr2/]
       does: >-
@@ -325,7 +328,8 @@ spec:
       layer: foundation
       systems: [nexstore, idearium, intelligence, emerge]
       value: { score: 3, cost: XL, for: [foundation, compounding], why: "one field instead of seven graphs; right, but the largest migration" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [EM1_emerge_core, CF1_cfr_improved_with_rfr2]
       files: [lib/nexstore/, emerge/core/relation.js, idearium/repo/graph.js, intelligence/cfr/graph.js]
       does: >-
@@ -343,7 +347,8 @@ spec:
       layer: library
       systems: [cortex, guardian, idearium, nexstore]
       value: { score: 3, cost: XL, for: [foundation], why: "every memory write checked; long payback" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [RF1_relational_field]
       files: [lib/context-atlas.js, cortex/memory/jaa-db.js, emerge/core/transition.js, docs/nexstore-writers.yaml]
       does: >-
@@ -357,7 +362,8 @@ spec:
       layer: library
       systems: [idearium, copilot, cortex]
       value: { score: 5, cost: M, for: [daily-use, quality], why: "every agent gets better context the day it lands" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [lib/repo-context.js, lib/vector-memory.js, lib/recall-triad.js, lib/context-table.js]
       does: >-
@@ -374,7 +380,8 @@ spec:
       layer: library
       systems: [cortex, intelligence]
       value: { score: 2, cost: M, for: [quality], why: "makes convergence mean something; useful, not urgent" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [MR1_recall_triad_and_context_table, CF1_cfr_improved_with_rfr2]
       files: [lib/vector-memory.js, intelligence/cfr/]
       does: >-
@@ -387,7 +394,8 @@ spec:
       layer: library
       systems: [intelligence, cortex]
       value: { score: 4, cost: M, for: [compounding], why: "search for what is missing, highest pressure first" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [MR1_recall_triad_and_context_table]
       files: [lib/gap-search.js, emergence/vendor/rfr2/liminal/negative-space.js, emergence/vendor/rfr2/liminal/relational-gaps.js]
       does: >-
@@ -401,7 +409,8 @@ spec:
       layer: library
       systems: [cortex]
       value: { score: 2, cost: M, for: [quality], why: "memory kept by importance; better, not urgent" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [OT1_one_write_path, CF1_cfr_improved_with_rfr2]
       files: [cortex/memory/relevance.js, cortex/memory/decay.js, cortex/memory/tiers.js]
       does: >-
@@ -414,7 +423,8 @@ spec:
       layer: library
       systems: [idearium]
       value: { score: 3, cost: L, for: [compounding], why: "any size of model can work at the right level; reuses main FG1–FG4" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [RF1_relational_field]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec FG1, FG2, FG3, FG4]
       does: >-
@@ -428,7 +438,8 @@ spec:
       layer: library
       systems: [cortex, idearium]
       value: { score: 3, cost: S, for: [quality], why: "disagreements shown to him, not averaged away" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [RF1_relational_field, MR1_recall_triad_and_context_table]
       does: >-
         E9. When recall returns memories or sources that disagree, both are kept, linked `contradicts`, and shown to
@@ -440,7 +451,8 @@ spec:
       layer: service
       systems: [cortex, emergence]
       value: { score: 4, cost: M, for: [compounding], why: "every success becomes a recipe for the next one" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic]
       files: [lib/case-library.js, emergence/components/pattern-engine/, lib/repo-hat-memory.js, meta/crystal-lattice.js]
       does: >-
@@ -453,7 +465,8 @@ spec:
       layer: service
       systems: [warp, emerge]
       value: { score: 5, cost: M, for: [compounding, income], why: "discoveries paid for once; Nexus gets cheaper as it learns" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [MR7_recipes, EM2_warp_his_own]
       files: [warp/dispatch/population.js, emerge/core/constraint.js]
       does: >-
@@ -467,7 +480,8 @@ spec:
       layer: service
       systems: [intelligence, guardian]
       value: { score: 3, cost: S, for: [quality, safety], why: "agent replies checked for unsupported claims and reversals" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2]
       files: [emergence/vendor/rfr2/liminal/, lib/agent-memory.js]
       does: >-
@@ -481,7 +495,8 @@ spec:
       layer: service
       systems: [intelligence, guardian]
       value: { score: 2, cost: M, for: [quality], why: "agents learn how he means things; interesting, last" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [MR9_liminal_on_the_agents]
       files: [emergence/vendor/rfr2/field/relational.js, lib/repo-hat-memory.js]
       does: >-
@@ -494,7 +509,8 @@ spec:
       layer: service
       systems: [intelligence, cos]
       value: { score: 3, cost: M, for: [safety], why: "rewind memory with the machine; pairs with RW1" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2, OT1_one_write_path]
       reuses: [docs/2026-10-02-workshop-codex-rewind-phasemap.spec RW1]
       does: >-
@@ -506,7 +522,8 @@ spec:
       layer: service
       systems: [idearium, warp, intelligence]
       value: { score: 4, cost: L, for: [quality], why: "the build steers itself and halts with a cause instead of looping" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2, MR1_recall_triad_and_context_table]
       files: [idearium/spec-engine/warp-build-dispatch.js, idearium/spec-engine/chunk-dispatch.js, lib/pipeline-routing.js]
       does: >-
@@ -521,7 +538,8 @@ spec:
       layer: service
       systems: [idearium]
       value: { score: 4, cost: L, for: [quality], why: "code built from synthesis with provenance, small enough for local models" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [MR1_recall_triad_and_context_table, MR5_fractal_levels_with_the_field, CB1_cfr_build_logic]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec FG5]
       does: >-
@@ -536,7 +554,8 @@ spec:
       layer: service
       systems: [idearium, emerge]
       value: { score: 3, cost: M, for: [quality], why: "the spec becomes a contract the running system is checked against" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2]
       files: [idearium/spec-engine/blocks.yaml, emerge/compiler/index.js, emerge/compiler/emit.js, intelligence/cfr/contract-verifier.js]
       does: >-
@@ -551,7 +570,8 @@ spec:
       layer: service
       systems: [emergence, idearium]
       value: { score: 2, cost: M, for: [compounding], why: "Emergence aimed at building; mostly covered by CB1 + CB2" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR2_vector_space_for_the_field]
       files: [emergence/loop.js]
       does: >-
@@ -566,6 +586,7 @@ spec:
       systems: [idearium]
       value: { score: 4, cost: M, for: [daily-use], why: "the workshop he asked for: parts, modes, his ideas only" }
       status: "OPEN — partly built by 0.39.354 WS7 (docs/2026-10-02-workshop-codex-rewind-phasemap.spec): no REACH on the page, the blocks as parts in the three tiers, the three modes (each said in the agent's prompt), STRETCHED's proposals never written on their own. Left here: templates as kits of parts, MINIMUM building through T0/T1 with zero model calls (needs CB3)"
+      path: 'step 2, the loop — the workshop; re-cut so it does not wait on CB3 (now on the shelf) (declutter 2026-10-09)'
       depends_on: [CB3_the_causal_spec_block]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec WS5]
       files: [idearium/ui/workshop.html, idearium/lib/workshop.js, idearium/spec-engine/blocks.yaml, idearium/spec-engine/templates/]
@@ -585,6 +606,7 @@ spec:
       systems: [idearium, guardian]
       value: { score: 5, cost: L, for: [daily-use, income], why: "the loop of this conversation, inside every repo" }
       status: OPEN
+      path: 'step 2, the loop — "i want the repos to be able to do what im doing right now"; re-cut so it does not wait on CB1/CB2/MR3 (now on the shelf) (declutter 2026-10-09)'
       depends_on: [CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search]
       files: [idearium/api/index.js, idearium/ui/js/app.js]
       does: >-
@@ -599,7 +621,8 @@ spec:
       layer: interface
       systems: [idearium]
       value: { score: 3, cost: M, for: [daily-use], why: "the field visible on the Architect canvas" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [RF1_relational_field, MR5_fractal_levels_with_the_field]
       files: [idearium/ui/js/arch-canvas.js, idearium/ui/architect.html]
       does: >-
@@ -611,7 +634,8 @@ spec:
       layer: library
       systems: [economy]
       value: { score: 4, cost: S, for: [income, quality], why: "exact local counts; quotes and budgets become real numbers" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [EM1_emerge_core, EV0_contracts_for_every_system]
       files: [lib/economy/tokens.js, lib/economy/tokenizer/gguf.js, lib/economy/tokenizer/bpe.js, lib/economy/router.js, lib/economy/ledger.js]
       does: >-
@@ -629,7 +653,8 @@ spec:
       layer: library
       systems: [cos, intelligence, idearium]
       value: { score: 5, cost: M, for: [safety], why: "models never write the real tree; the precondition for any client work" }
-      status: "PARTIAL (1.7.17, 0.39.322) — (2) done: lib/shadow-space.js — a change acts in a COS workspace branch with its shadow declared; commit() runs the test inside the space itself, settles the shadow, and merges fast-forward only on both passing; otherwise the space is discarded and the real tree untouched; an absent file is a gap with the step as cause. Found and fixed: self_repair's promote trusted a testResult the caller handed in — now only its own test()'s pass opens it. (1) one record with WARP 2's expectation is EM2's; (3) the shadow read is MR9's. Not yet: idearium's codegen writing through a shadow space."
+      status: 'LATER — off the path; partly built — lib/shadow.js is live in phase builds (N22) (declutter 2026-10-09)'
+      status_before: "PARTIAL (1.7.17, 0.39.322) — (2) done: lib/shadow-space.js — a change acts in a COS workspace branch with its shadow declared; commit() runs the test inside the space itself, settles the shadow, and merges fast-forward only on both passing; otherwise the space is discarded and the real tree untouched; an absent file is a gap with the step as cause. Found and fixed: self_repair's promote trusted a testResult the caller handed in — now only its own test()'s pass opens it. (1) one record with WARP 2's expectation is EM2's; (3) the shadow read is MR9's. Not yet: idearium's codegen writing through a shadow space."
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, emergence/vendor/rfr2/liminal/shadow.js]
       does: >-
@@ -662,7 +687,8 @@ spec:
       layer: service
       systems: [cos, idearium, guardian]
       value: { score: 4, cost: L, for: [income], why: "COS and Idearium working one queue, every hand-off traced" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [GA1_guardian_source_of_truth, CB1_cfr_build_logic, SH1_shadow_space]
       files: [cos/, lib/tool-forge.js, lib/hat-forge.js, lib/contract-queue.js, idearium/api/index.js]
       does: >-
@@ -678,7 +704,8 @@ spec:
       layer: service
       systems: [idearium, cos, economy, guardian]
       value: { score: 5, cost: L, for: [income], why: "brief to proven delivery: the direct path to earning" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [BT1_build_teams, RC1_the_repo_main_chat, EC6_economy_and_the_tokenizer, MR8_crystallization]
       files: [idearium/lib/jobs.js, idearium/ui/jobs.html, cos/workspace/, cos/vault/]
       does: >-
@@ -700,7 +727,8 @@ spec:
       layer: service
       systems: [idearium, cos, clear-glass]
       value: { score: 5, cost: M, for: [income], why: "a Fiverr order he has taken goes to a proven delivery with what is built today" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PR1_proof_run_the_delivery_checker, PH1_phase_runs_end_in_proof]
       files: [idearium/lib/orders.js, idearium/api/index.js, idearium/ui/js/orders.js, idearium/repo/proof-run.js]
       does: >-
@@ -748,7 +776,8 @@ spec:
       layer: interface
       systems: [idearium, guardian, clear-glass]
       value: { score: 3, cost: M, for: [daily-use], why: "every new behaviour can be seen and changed without code" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [EM1_emerge_core, EV0_contracts_for_every_system]
       files: [idearium/ui/settings.html, idearium/api/index.js]
       does: >-
@@ -764,7 +793,8 @@ spec:
       layer: service
       systems: [orchestrator, copilot, loom]
       value: { score: 5, cost: S, for: [compounding, daily-use], why: "Claude Code sees Nexus from inside; every later phase gets built faster and better" }
-      status: PARTIAL (1.7.10) — .mcp.json, honest degradation, loom impact / contracts / proof / introspect tools, on every claude-code run; recall (MR1), CFR trace, field, settings and the session's Observations open
+      status: 'LATER — off the path; partly built — .mcp.json and orchestrator''s MCP server exist (declutter 2026-10-09)'
+      status_before: PARTIAL (1.7.10) — .mcp.json, honest degradation, loom impact / contracts / proof / introspect tools, on every claude-code run; recall (MR1), CFR trace, field, settings and the session's Observations open
       depends_on: [EM0_ground, GA1_guardian_source_of_truth, EV0_contracts_for_every_system]
       files: [.mcp.json, orchestrator/lib/mcp-server.js, orchestrator/lib/mcp-stdio.js, lib/introspect.js, lib/reflection.js]
       does: >-
@@ -783,7 +813,8 @@ spec:
       layer: service
       systems: [guardian, economy, idearium, cos]
       value: { score: 5, cost: M, for: [income, daily-use], why: "the strongest coder available, working inside his pipeline on his account" }
-      status: "PARTIAL (1.7.9) — IN2a built (the 'claude-code' backend in Idearium); IN2b built (under the economy: gate + ledger); GA1/AC1/SH1 parts open"
+      status: 'LATER — off the path; partly built (declutter 2026-10-09)'
+      status_before: "PARTIAL (1.7.9) — IN2a built (the 'claude-code' backend in Idearium); IN2b built (under the economy: gate + ledger); GA1/AC1/SH1 parts open"
       depends_on: [GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space]
       files: [lib/providers/claude-code.js, lib/economy/policy.js, lib/repo-agent.js, idearium/repo/work-surface.js]
       does: >-
@@ -799,7 +830,8 @@ spec:
       layer: library
       systems: [clear-glass, guardian, economy, idearium]
       value: { score: 4, cost: M, for: [daily-use, income], why: "every account he has gets used, priced and learned separately" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [GA1_guardian_source_of_truth, EC6_economy_and_the_tokenizer, ST1_settings]
       files: [guardian/lib/cg-account-authority.js, lib/economy/policy.js, lib/economy/ledger.js, lib/economy/router.js, lib/economy/gate.js, lib/repo-agent.js, idearium/ui/settings.html]
       does: >-
@@ -835,7 +867,8 @@ spec:
       layer: service
       systems: [clear-glass, idearium]
       value: { score: 4, cost: S, for: [income, quality], why: "the client sees it working; strongest evidence a non-coder can hand over" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PR1_proof_run_the_delivery_checker, GA1_guardian_source_of_truth]
       files: [clear-glass/src/ipc/bridge.js, clear-glass/src/driver/index.js, idearium/repo/proof-run.js]
       does: >-
@@ -848,7 +881,8 @@ spec:
       layer: service
       systems: [cos, idearium, guardian, intelligence]
       value: { score: 5, cost: L, for: [compounding, income], why: "agents iterate in a sandbox until the end-state conditions are met — the self-building engine" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PR1_proof_run_the_delivery_checker, SH1_shadow_space, CB1_cfr_build_logic]
       files: [cos/playground/llm-lab.js, cos/playground/sandbox.js, idearium/repo/proof-run.js, copilot/capability-extend.js]
       does: >-
@@ -868,7 +902,8 @@ spec:
       layer: library
       systems: [cortex, intelligence, idearium]
       value: { score: 4, cost: M, for: [compounding, quality], why: "every failure teaches the next attempt; patterns become anti-recipes and fixes" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PR1_proof_run_the_delivery_checker, CF1_cfr_improved_with_rfr2]
       files: [cortex/self-heal/failure-mode-forensics.js, cortex/self-heal/fault-taxonomy.js, idearium/repo/proof-run.js]
       does: >-
@@ -882,7 +917,8 @@ spec:
       layer: library
       systems: [intelligence, cortex]
       value: { score: 3, cost: M, for: [quality, compounding], why: "try a strategy in imagination before spending real attempts" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [FM1_mining_failure_modes, LB1_the_end_state_lab]
       files: [docs/raid-simulation-engine.spec, intelligence/cfr/]
       does: >-
@@ -896,7 +932,8 @@ spec:
       layer: service
       systems: [copilot, cortex, idearium, cos]
       value: { score: 5, cost: M, for: [compounding], why: "the self-building front door: every request is either done or becomes a capability that is built, proven and registered" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PR1_proof_run_the_delivery_checker, LB1_the_end_state_lab]
       files: [copilot/capability-extend.js, cortex/core/raid/index.js, idearium/repo/proof-run.js]
       does: >-
@@ -911,7 +948,8 @@ spec:
       layer: library
       systems: [idearium, intelligence, clear-glass]
       value: { score: 5, cost: M, for: [compounding], why: "the same loop for research, problem solving and code" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PR1_proof_run_the_delivery_checker]
       files: [idearium/repo/proof-run.js]
       does: >-
@@ -927,7 +965,8 @@ spec:
       layer: library
       systems: [intelligence, cortex, idearium]
       value: { score: 4, cost: L, for: [compounding, ownership], why: "the graphs predict the next step — a learned model of his own beside the LLMs" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [RF1_relational_field, MR7_recipes, FM1_mining_failure_modes]
       does: >-
         James: "This is also technically an llm. The graphs." The relational field, its recipes and its mined failure
@@ -958,7 +997,8 @@ spec:
       layer: service
       systems: [idearium, emerge]
       value: { score: 5, cost: M, for: [compounding, income], why: "a growing share of every build written by the graphs with no LLM; the model writes only what is new" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PH1_phase_runs_end_in_proof, EV0_contracts_for_every_system]
       files: [emerge/compiler/index.js, emerge/compiler/emit.js, idearium/repo/graph.js, idearium/lib/wiring-gen.js]
       does: >-
@@ -975,7 +1015,8 @@ spec:
       layer: service
       systems: [idearium, cortex, cos]
       value: { score: 5, cost: M, for: [compounding, income], why: "Ollama builds components one at a time, the graphs keep them; the library grows and each new system is more assembly, less model" }
-      status: OPEN
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [PH1_phase_runs_end_in_proof, GG1_graphs_generate_code, CX0_codex_component_store]
       files: [lib/component-store.js, idearium/repo/proof-run.js, cos/playground/sandbox.js]
       does: >-
@@ -991,7 +1032,8 @@ spec:
       layer: library
       systems: [cortex, idearium]
       value: { score: 4, cost: M, for: [compounding], why: "the library the lab fills and the Architect and the graphs draw from" }
-      status: OPEN — carried from docs/2026-10-02-workshop-codex-rewind-phasemap.spec CX0
+      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status_before: OPEN — carried from docs/2026-10-02-workshop-codex-rewind-phasemap.spec CX0
       depends_on: [EM0_ground]
       files: [lib/component-store.js]
       does: >-

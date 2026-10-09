@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        repair-contract-and-loom-hub
+    roadmap: 'later — one leftover (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status:      PHASEMAP 2026-08-12. Mapped, not built. §3.3 — map before build.
     uuid:        nexus-repair-loom-hub-v0-0000-2026-0812-001

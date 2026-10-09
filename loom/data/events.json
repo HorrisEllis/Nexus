@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791486801161,
+ "generatedAt": 1791572900090,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -2018,7 +2018,9 @@
     "guardian.job.complete",
     "guardian.job.error"
    ],
-   "listens": []
+   "listens": [
+    "guardian.job.progress"
+   ]
   },
   "nexus.tests.modules.test-ico-ledger-writethrough": {
    "emits": [],
@@ -2446,12 +2448,6 @@
     "nexus.contract.loaded",
     "nexus.ledger.entry",
     "nexus.system.poll"
-   ],
-   "listens": []
-  },
-  "nexus.ui.ui-pulse": {
-   "emits": [
-    "health.changed"
    ],
    "listens": []
   }
@@ -5638,7 +5634,8 @@
    ],
    "listeners": [
     "nexus.guardian.lib.chat-transcripts",
-    "nexus.tests.modules.test-back-and-forth.test"
+    "nexus.tests.modules.test-back-and-forth.test",
+    "nexus.tests.modules.test-guardian-retry-novelty-installs"
    ]
   },
   "guardian.ncp.transcript": {
@@ -7564,8 +7561,7 @@
   },
   "health.changed": {
    "emitters": [
-    "nexus.ui.store",
-    "nexus.ui.ui-pulse"
+    "nexus.ui.store"
    ],
    "listeners": []
   },

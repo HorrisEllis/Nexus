@@ -126,6 +126,18 @@ async function main() {
   const rG = noDispatch.onError(G.id, { error: 'Please verify you are human' });
   check('a captcha / login / cap is final at once (retrying would not help)', rG.handled === false && rG.kind === 'needs-you');
 
+  // §HP11 0.55.1 — James: "look at the .response in clearglass." The page changed: never re-sent, the .response first, then ◎
+  const ERR = 'no reply element found after 180s — findResponseEl() matched nothing on this page, so the reply could not be read';
+  check('classify: a reply element the page no longer matches is not retried (pick-reply), a plain no-reply still is', C('reply appears', ERR) === 'pick-reply' && C('reply appears', 'no reply within 90s') === 'no-reply');
+  const P1 = createJob({ command: 'ask', provider: 'claude', prompt: 'eighth job: claude answered, the selector missed it' });
+  const sent = []; const withNode = R.createJobRetry({ jobs, updateJob, bus, pool, dispatchJob: (j) => sent.push(j.id), complete, readResponse: (id) => id === P1.id ? { status: 'complete', text: 'the answer, read from the .response' } : null, replyFor: () => null, log: { log() {}, warn() {} }, setTimer: () => null });
+  const rP1 = withNode.onError(P1.id, { gate: 'reply appears', error: ERR, provider: 'claude' });
+  check('pick-reply: the answer in the Clear Glass .response completes the job — not sent again', rP1.handled && rP1.answered && jobs.get(P1.id).status === 'complete' && sent.length === 0);
+  const P2 = createJob({ command: 'ask', provider: 'claude', prompt: 'ninth job: no record anywhere' });
+  const said = []; bus.on('guardian.job.progress', (e) => { if (e.jobId === P2.id) said.push(e); });
+  const rP2 = withNode.onError(P2.id, { gate: 'reply appears', error: ERR, provider: 'claude' });
+  check('pick-reply: nothing to read → not retried, the job asks for ◎, the prompt is never re-sent', rP2.handled === false && rP2.kind === 'pick-reply' && sent.length === 0 && /◎/.test(jobs.get(P2.id).needsYou || '') && said.some(e => e.stage === 'needs-you' && /◎/.test(e.how)));
+
   // ── ErosmancerOS as the fallback typist after two input failures ──
   const H = createJob({ command: 'ask', provider: 'chatgpt', prompt: 'seventh job: composer missing twice' });
   let timers = [];

@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-08-22-session-full
+    roadmap: 'later — one leftover phase from a past day (declutter 2026-10-09, James: "okay")'
     version: 0.1.0-phasemap
     status:  PHASEMAP 2026-08-22. Every phase below checked against the real,
              committed state of this checkout — commit hashes named directly,

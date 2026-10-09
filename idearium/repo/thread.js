@@ -65,11 +65,28 @@ export function thread({ specPath, specText = '', maps = [], runs = [], pending 
       const files = [...new Set([...(p.files || []).map(f => String(f).split(/[\s(]/)[0]).filter(f => /[\w-]\.[\w]+$/.test(f)), ...((run && run.injects && run.injects.injected) || [])])];
       const changes = pending.filter(c => files.includes(c.path)).map(c => ({ inject: c.uuid || c.inject, path: c.path, status: c.status, op: c.op || 'write' }));
       phases.push({ key: p.id, map: m.path, title: p.title, status: p.status, line: p.line, blocks: pb, unknownBlocks: unknown,
+        dependsOn: String(p.dependsOn || '').split(',').map(x => x.trim()).filter(Boolean),
         link: !pb.length ? 'none' : (known.length ? 'linked' : 'broken'), stale, specMoved: specMoved && !hasHashes,
         run: run ? { runId: run.runId, state: run.state, provider: run.provider || null, rung: run.rung || null, rungs: run.rungs || null, error: run.error || null, ts: run.ts || null } : null,
         files, changes });
     }
     mapsOut.push({ path: m.path, plannedAt: m.meta.plannedAt, phases: parsed.length, linked, specMoved, hashes: hasHashes });
+  }
+  // §HP1 0.52.0 — stale spreads along depends_on: a phase built on a stale phase is stale too, through it (staleVia: the
+  // nearest stale phase it depends on). Within one map (a dependency names a phase of its own map, by id or by its short
+  // key); breadth-first from the directly stale, so a cycle cannot loop and the nearest cause is the one named.
+  {
+    const byMap = new Map();
+    for (const p of phases) { if (!byMap.has(p.map)) byMap.set(p.map, new Map()); const m = byMap.get(p.map); m.set(p.key, p); m.set(String(p.key).split('_')[0], p); }
+    const dependents = new Map(phases.map(p => [p, []]));
+    for (const p of phases) for (const dk of p.dependsOn) { const d = byMap.get(p.map).get(dk) || byMap.get(p.map).get(String(dk).split('_')[0]); if (d && d !== p) dependents.get(d).push(p); }
+    const queue = phases.filter(p => p.stale.length);
+    const seen = new Set(queue);
+    for (const p of phases) p.staleVia = null;
+    while (queue.length) {
+      const cur = queue.shift();
+      for (const nxt of dependents.get(cur)) { if (seen.has(nxt)) continue; seen.add(nxt); nxt.staleVia = cur.key; queue.push(nxt); }
+    }
   }
   const outBlocks = blocks.map(b => {
     const ps = phases.filter(p => p.blocks.includes(b.id));
@@ -82,7 +99,8 @@ export function thread({ specPath, specText = '', maps = [], runs = [], pending 
     blocks: work.length, planned: work.filter(b => b.planned).length, unplanned: work.filter(b => !b.planned).length,
     staleBlocks: work.filter(b => b.stale).length, phases: phases.length,
     linked: phases.filter(p => p.link === 'linked').length, unlinked: phases.filter(p => p.link === 'none').length,
-    broken: phases.filter(p => p.link === 'broken').length, stalePhases: phases.filter(p => p.stale.length || p.specMoved).length,
+    broken: phases.filter(p => p.link === 'broken').length, stalePhases: phases.filter(p => p.stale.length || p.specMoved || p.staleVia).length,
+    staleDownstream: phases.filter(p => p.staleVia).length,
     maps: mapsOut.length,
   };
   return { spec: { path: specPath, format: d.format, blocks: outBlocks, problems: d.problems }, maps: mapsOut, phases, summary, problems };

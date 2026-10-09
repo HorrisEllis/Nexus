@@ -104,6 +104,22 @@ async function main() {
     assert.ok(/timeoutMs: body\.backend === 'guardian' \? \(body\.timeoutMs \|\| undefined\) : undefined/.test(COPILOT_SRC));
   });
 
+  // §HP7 0.55.0 — docs/2026-10-09-hardening-pass-phasemap.spec. James: "claude failed — timed out after 90000ms"
+  await test('LT-006', 'the caller\'s wait reaches guardian in the body (askSync waits as long, less a margin); no wait → none sent, guardian\'s default stands', async () => {
+    const seen = [];
+    const srv = http.createServer((req, res) => { let b = ''; req.on('data', d => b += d); req.on('end', () => { try { if (b) seen.push(JSON.parse(b)); } catch (_) {} res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ text: 'ok', jobId: 'j6' })); }); });
+    await new Promise(r => srv.listen(0, '127.0.0.1', r));
+    process.env.GUARDIAN_URL = `http://127.0.0.1:${srv.address().port}`;
+    delete require.cache[require.resolve(path.join(ROOT, 'copilot', 'lifeline.js'))];
+    const ll = require(path.join(ROOT, 'copilot', 'lifeline.js'));
+    await ll.dispatchToNcpAgent('p', { provider: 'claude', timeoutMs: 300000 });
+    await ll.dispatchToNcpAgent('p', { provider: 'claude', timeoutMs: 2000 });
+    await ll.dispatchToNcpAgent('p', { provider: 'claude' });
+    srv.close();
+    const bodies = seen.filter(b => b.prompt === 'p');
+    assert.deepStrictEqual(bodies.map(b => b.timeoutMs), [295000, 2000, undefined]);
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   process.env.GUARDIAN_URL = undefined;
   delete require.cache[require.resolve(path.join(ROOT, 'copilot', 'lifeline.js'))];

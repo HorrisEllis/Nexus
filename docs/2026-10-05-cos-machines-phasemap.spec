@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     cos-machines
+    roadmap: 'later — VM features — later (declutter 2026-10-09, James: "okay")'
     version:  1.1.0   # 1.1.0: SU1 the setup asks the OS and its version, SU2 every language and the repo's own dependencies (mapped, with pushback). 1.0.1: a COS phasemap — each phase systems: [cos]; linked from the COS testenv map and cos.spec
     date:     2026-10-05
     release:  0.39.340 (base) → each phase its own patch

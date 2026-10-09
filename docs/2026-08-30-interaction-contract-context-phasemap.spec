@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-08-30-interaction-contract-context-phasemap
+    roadmap: 'later — contracts and context — after the loop (declutter 2026-10-09, James: "okay")'
     version: 0.1.0-phasemap
     status: >
       PHASEMAP 2026-08-30. James: "Schemas. Frameworks... hooking UUIDs
@@ -206,7 +207,8 @@ spec:
         application of one proven pattern.
 
     IC11_agent_truth_fragmentation:
-      status: "OPEN, finding EXPANDED 2026-08-30 to something more
+      status: 'FOLDED — into one-model-engine ME0 + ME5 — the eight choosers and who owns the agent (declutter 2026-10-09)'
+      status_before: "OPEN, finding EXPANDED 2026-08-30 to something more
         severe than first mapped — traced agent-mesh.js's real spawn()
         through send() through driver._navigate() line by line, not
         stopped at the first disconnection found. spawn() (confirmed by

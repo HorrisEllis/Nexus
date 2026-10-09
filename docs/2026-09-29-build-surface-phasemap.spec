@@ -393,3 +393,10 @@ spec:
 # ADDENDUM 2026-10-05 (0.39.353, CT9 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "need a little pull tab on the very right for when i close the plan."
 # BS11's panel, closed, leaves a pull tab on the right edge (planTabSync); a click opens it. The current gate's pulse
 # (animation: pulse) named keyframes that never existed — they are defined now, so it pulses as BS11 said.
+
+# ADDENDUM 2026-10-09 (0.52.0, HP2 of docs/2026-10-09-hardening-pass-phasemap.spec) — James: "Do the hardening pass".
+# A phase run's dispatch lives in the idearium process that started it. At boot (the listen callback), every run whose
+# latest idearium_phase_runs row is still in flight (building · running · reviewing · retrying · escalating ·
+# dispatched · planning) and older than this process gets one 'interrupted' row (idearium/repo/run-reconcile.js):
+# interruptedFrom, lastAt, its provider and rung, "build it again". 'interrupted' is final — a second pass adds nothing;
+# it is never an attempt against an agent. The Plan and the Phases tab colour it amber. tests: test-hardening-pass HR-01, HR-02.

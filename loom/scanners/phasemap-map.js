@@ -175,7 +175,7 @@ function parsePhasemapText(text, name) {
       // markers rather than as words. That reasoning still holds and is why
       // the DONE case added above is anchored to the START of the status
       // VALUE rather than allowed to match DONE anywhere in prose.
-      const status =
+      let status =
         // "NOT STARTED" is pending, and must be tested before STARTED.
         /\bNOT STARTED\b/i.test(near) ? 'pending'
         : /←\s*DONE\b|✓\s*DONE\b|#\s*DONE\b|\bCOMPLETE\b/.test(near) ? 'done'
@@ -184,6 +184,8 @@ function parsePhasemapText(text, name) {
         : /status:\s*[>|]?-?\s*["']?\s*DONE\b/.test(near) ? 'done'
         : /IN PROGRESS|STARTED|\bpartial\b/i.test(near) ? 'in-progress'
         : 'pending';
+      const ans = sIdx === -1 ? null : _answerOf(near);   // §OR1 — the value's first word
+      if (ans && ((status === 'pending' && !/\bNOT STARTED\b/i.test(near)) || ans.closedAs || ans.shelf)) status = ans.status;   // NOT STARTED still wins (the 2026-09-19 rule)
 
       // gather the phase's REAL full body for system tagging + depends_on —
       // §BUGFIX 2026-08-23, found while asking "what's next" against a
@@ -219,7 +221,7 @@ function parsePhasemapText(text, name) {
       out.push({
         id, map: name,
         title: id.replace(/_/g, ' '),
-        status,
+        status, ...(ans && ans.closedAs ? { closedAs: ans.closedAs } : {}), ...(ans && ans.shelf ? { shelf: true } : {}),
         systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom,
         dependsOn: dep.trim().replace(/[\[\]]/g, '') || null,
         // location, for callers that EDIT a phase (idearium/repo/roadmap.js):
@@ -276,11 +278,13 @@ function parsePhasemapText(text, name) {
       : /^(built|done|complete|completed|shipped|closed)\b/.test(word) ? 'done'
       : /IN PROGRESS/.test(sv) || /^(active|building|in[- ]progress|partial|started|wip)\b/.test(word) ? 'in-progress'
       : 'pending';
+    const ans2 = sIdx === -1 ? null : _answerOf(sv);   // §OR1 — closed and shelf answers, same reader as the keyed form
+    const st2 = ans2 && ((status === 'pending' && !/\bNOT STARTED\b/i.test(sv)) || ans2.closedAs || ans2.shelf) ? ans2.status : status;
     const deps = _list(f.depends_on);
     out.push({
       id, map: name,
       title: f.name ? `${id} ${String(f.name).replace(/\s+/g, ' ').trim()}` : id,
-      status,
+      status: st2, ...(ans2 && ans2.closedAs ? { closedAs: ans2.closedAs } : {}), ...(ans2 && ans2.shelf ? { shelf: true } : {}),
       ...(() => { const sys = _systemsOf(f, phaseLines.join(' ')); return { systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom }; })(),
       dependsOn: deps.length ? deps.join(', ') : null,
       line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
@@ -288,11 +292,41 @@ function parsePhasemapText(text, name) {
     });
     seen.add(id);
   }
+  // §OR3 0.53.1 — a whole map answered at once (docs/2026-10-09-one-roadmap-phasemap.spec): a top-level
+  //   roadmap: later — reason          every phase not done goes on the shelf
+  //   roadmap: folded into <map> — why  every phase not done is closed, folded into that map
+  // in the map's meta. One line, reversible; the phases' own statuses are untouched.
+  const rm = String(text).match(/^\s{2,4}roadmap:\s*["']?(later|folded)\b(?:\s+into\s+([\w.-]+))?/im);
+  if (rm) for (const p of out) {
+    if (p.status === 'done') continue;
+    if (rm[1].toLowerCase() === 'later') { p.status = 'pending'; p.shelf = true; }
+    else { p.status = 'done'; p.closedAs = 'folded'; p.foldedInto = rm[2] || null; }
+  }
   return out;
 }
 
 // ── §0.39.271 P1 helpers ────────────────────────────────────────────────────
 const LIST_ID_RE = /^(\s*)-\s+id:\s*(\S+)\s*$/;
+// §OR1 0.52.1 (docs/2026-10-09-one-roadmap-phasemap.spec) — James: "we also need to declutter the roadmap." The status
+// VALUE's first word, read the same way by both readers. Measured 2026-10-09: 25 phases whose own map says BUILT,
+// CLOSED or DONE (0.x) at the start of the value were counted open (the keyed-form reader knew only DONE — HG6). The
+// declutter's answers: SUPERSEDED · RETRACTED · RETIRED · FOLDED · DONE-ELSEWHERE close a phase (status 'done',
+// closedAs says how); LATER puts it on the shelf (still 'pending', shelf:true, not the roadmap). Only the value's
+// FIRST word counts — never a word loose in prose (the 2026-08-13 rule).
+const _CLOSED_AS = /^(superseded|retracted|retired|folded|done-elsewhere)\b/i;
+const _DONE_AS = /^(done|built|built-before-mapped|shipped|closed|met|landed|fixed|resolved|complete|completed)\b/i;
+const _PROG_AS = /^(partial|partially|mostly|substantially|in-progress|started|active|building|wip)\b/i;
+function _answerOf(sv) {
+  const m = String(sv || '').match(/status:\s*[>|]?-?\s*["']?\s*([A-Za-z][A-Za-z-]*)/);
+  const w = m ? m[1] : '';
+  if (!w || /^not$/i.test(w)) return null;
+  if (_CLOSED_AS.test(w)) return { status: 'done', closedAs: w.toLowerCase() };
+  if (/^later$/i.test(w)) return { status: 'pending', shelf: true };
+  if (_DONE_AS.test(w)) return { status: 'done' };
+  if (_PROG_AS.test(w)) return { status: 'in-progress' };
+  return null;
+}
+
 function _indent(l) { return (/^(\s*)/.exec(l) || ['', ''])[1].length; }
 /** _fields(lines, at) — the `key: value` fields at exactly indent `at`; a value runs
  *  over the lines indented deeper than its key (block scalars and wrapped flow lists). */
@@ -344,7 +378,8 @@ function loadAll() {
     let text;
     try { text = fs.readFileSync(file, 'utf8'); } catch (_) { continue; }
     for (const p of parsePhasemapText(text, name)) {
-      phases.push({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, tags: p.tags, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn });
+      phases.push({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, tags: p.tags, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn,
+        ...(p.shelf ? { shelf: true } : {}), ...(p.closedAs ? { closedAs: p.closedAs } : {}), ...(p.foldedInto ? { foldedInto: p.foldedInto } : {}) });   // §OR1 — were dropped here
     }
   }
   // group by system (LP2 — split by system).
@@ -379,12 +414,13 @@ function summary() {
   const all = loadAll();
   const done = all.phases.filter(p => p.status === 'done').length;
   const inprog = all.phases.filter(p => p.status === 'in-progress').length;
+  const shelf = all.phases.filter(p => p.shelf).length, closed = all.phases.filter(p => p.closedAs).length;   // §OR1
   return {
     maps: all.maps.length,
     phases: all.total,
-    done, inProgress: inprog, pending: all.total - done - inprog,
+    done, inProgress: inprog, pending: all.total - done - inprog, shelf, closed, roadmap: all.total - done - inprog - shelf,
     systems: Object.keys(all.bySystem).length,
-    text: `${all.total} phases across ${all.maps.length} phasemaps, ${Object.keys(all.bySystem).length} systems: ${done} done, ${inprog} in progress, ${all.total - done - inprog} pending.`,
+    text: `${all.total} phases across ${all.maps.length} phasemaps, ${Object.keys(all.bySystem).length} systems: ${done} done${closed ? ` (${closed} closed by the declutter)` : ''}, ${inprog} in progress, ${all.total - done - inprog - shelf} on the roadmap${shelf ? `, ${shelf} on the shelf` : ''}.`,
   };
 }
 

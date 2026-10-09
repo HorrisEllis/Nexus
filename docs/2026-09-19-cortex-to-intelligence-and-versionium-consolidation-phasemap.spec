@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        cortex-to-intelligence-and-versionium-consolidation
+    roadmap: 'later — consolidation — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status:      "v0.39.151. P1-P6 BUILT 2026-09-19 (P6: versionium residue, cortex/versionium kept as archive by D6) (intelligence routes, sovereign field, RAID
       registration, liminal-space organ, caller repoint, contracts/hooks/registries,

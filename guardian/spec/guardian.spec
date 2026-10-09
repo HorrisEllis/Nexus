@@ -615,3 +615,10 @@ spec:
 # rows, emptied once they reach its segment. The first READ (get/all/count/update/delete/upsert …, through _table())
 # loads base + segments with this process's unflushed rows kept over the disk's. reloadTable on a table not yet read
 # here does nothing (its first read is fresh). JAA_LAZY=0 or opts.lazy:false preloads as before.
+
+# ## ADDENDUM 2026-10-10 (0.55.1) — HP11 of docs/2026-10-09-hardening-pass-phasemap.spec
+# James: "look at the .response in clearglass." lib/job-retry.js: an error saying the reply element could not be found
+# ("no reply element … findResponseEl() matched nothing") is the page changing, not the agent failing — classed pick-reply,
+# not no-reply. The transcript and the Clear Glass .response are read first and complete the job; otherwise the job carries
+# needsYou "pick the reply with ◎" (the selector map, 0.39.249) and the prompt is never typed into the chat again.
+

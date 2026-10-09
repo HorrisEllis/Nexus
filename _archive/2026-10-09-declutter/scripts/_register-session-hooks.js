@@ -1,3 +1,4 @@
+// ARCHIVED 0.54.0 (docs/2026-10-09-one-roadmap-phasemap.spec OR6) — a one-shot that registered six hook declarations; it has run. James: "make sure to clean up old code that isnt needed anymore". Was scripts/_register-session-hooks.js.
 'use strict';
 // One-shot: register the six endpoints built this session that had no
 // hook declaration (§5.1). Inserts at each array head, matching the

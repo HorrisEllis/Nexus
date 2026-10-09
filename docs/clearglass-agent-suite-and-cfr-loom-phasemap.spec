@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    clearglass-agent-suite-and-cfr-loom
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version: 0.1.0-phasemap
     status:  PHASEMAP 2026-08-17. Mapped, not all built. Compiled from a
              parallel live session's real transcript (working directly

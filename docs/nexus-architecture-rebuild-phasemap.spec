@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        nexus-architecture-rebuild
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status: >-
       DRAFT 2026-08-13 — written per §8.5 (map before build), bottom-up per direct

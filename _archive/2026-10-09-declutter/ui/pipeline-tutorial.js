@@ -1,3 +1,4 @@
+// ARCHIVED 0.54.0 (docs/2026-10-09-one-roadmap-phasemap.spec OR6) — the old shell's pipeline tutorial; nothing loads it. James: "make sure to clean up old code that isnt needed anymore". Was ui/pipeline-tutorial.js.
 /**
  * ui/pipeline-tutorial.js — NEXUS Full Pipeline Tutorial
  * UUID: nexus-pipeline-tut-v1-0000-5000-0000-000000000001

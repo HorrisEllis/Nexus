@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        nexus-repo-compartment-and-rich-dispatch
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status: >-
       PHASEMAP 2026-09-22. James: "it would be great to be able
@@ -75,6 +76,7 @@ spec:
   phases:
 
     RD1_multi_file_response_parser:
+      status: 'DONE-ELSEWHERE — lib/repo-inject.js injects every fenced block that names its path in one reply (captureAll, §ADDRESSING); lib/extract-code.js allowMultiple (declutter 2026-10-09)'
       does: >-
         A real parser that takes one NCP response and extracts N
         (path, content) pairs from it — the shape a conversation like

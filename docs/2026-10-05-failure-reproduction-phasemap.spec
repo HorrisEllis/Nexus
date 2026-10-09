@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     failure-reproduction
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:  1.0.0
     date:     2026-10-05
     release:  0.39.345 (base)

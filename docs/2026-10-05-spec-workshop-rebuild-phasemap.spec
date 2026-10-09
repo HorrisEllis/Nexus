@@ -88,7 +88,8 @@ spec:
   phases:
     RS1_the_generation_recorder:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"record the generation process from the agents and create a macro or replayable file"'
       depends_on: []
       files: [lib/generation-recorder.js, warp/core/Engine.js, intelligence/rfr2/clip/index.js]
@@ -101,7 +102,8 @@ spec:
 
     RS2_replay_rewind_branch:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"to rebuild or reconstruct data using events, snapshots etc."'
       depends_on: [RS1_the_generation_recorder]
       files: [lib/generation-recorder.js, emergence/vendor/rfr2/cfr-kernel/rewind.js]
@@ -125,7 +127,8 @@ spec:
 
     RS4_the_pipeline_on_warp2:
       layer: api
-      status: OPEN
+      status: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"i wanted it to use deterministic primitives, and then anything on top is probabilistic. like a constraint field, or emergence."'
       depends_on: [RS1_the_generation_recorder, RS3_the_spec_document]
       files: [idearium/lib/workshop.js, idearium/api/index.js, warp/adapters/emerge-field.js]
@@ -176,7 +179,8 @@ spec:
 
     RS6_the_workshop_as_the_editor:
       layer: ui
-      status: "MOSTLY BUILT AS WS7 (0.39.354, docs/2026-10-02-workshop-codex-rewind-phasemap.spec) — the full writer: one document, the outline, the parts in tiers, the agent in three modes whose proposals need his yes, SEND TO THE PIPELINE; RS5's picker is its start. Not rebuilt here (two workshops would drift). What is left of RS6 is the macro's timeline along the bottom — scrub to rewind, replay, branch — which needs RS1 (the recorder) and RS2 (replay) first."
+      status: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
+      status_before: "MOSTLY BUILT AS WS7 (0.39.354, docs/2026-10-02-workshop-codex-rewind-phasemap.spec) — the full writer: one document, the outline, the parts in tiers, the agent in three modes whose proposals need his yes, SEND TO THE PIPELINE; RS5's picker is its start. Not rebuilt here (two workshops would drift). What is left of RS6 is the macro's timeline along the bottom — scrub to rewind, replay, branch — which needs RS1 (the recorder) and RS2 (replay) first."
       james: '"rebuild the spec workshop."'
       depends_on: [RS5_the_template_picker, RS2_replay_rewind_branch]
       closes: [WS5, WS6, UI0]
@@ -190,7 +194,8 @@ spec:
 
     RS7_architect_and_blueprint_stations:
       layer: ui
-      status: OPEN
+      status: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"then the architecture or architect editor, which uses the component registry … then the blueprint, which is the entire blueprint, maybe for building the entire project, and maybe as it goes on reconstructing it"'
       depends_on: [RS6_the_workshop_as_the_editor]
       files: [idearium/lib/architect.js, lib/blueprint.js, idearium/ui/architect.html]
@@ -202,7 +207,8 @@ spec:
 
     RS8_what_converges_becomes_deterministic:
       layer: automation
-      status: OPEN
+      status: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"i wanted it to use deterministic primitives, and then anything on top is probabilistic."'
       depends_on: [RS4_the_pipeline_on_warp2]
       reuses: [docs/2026-10-02-emerge-field-memory-build-phasemap.spec — the crystallize phase (promote-after-N)]
@@ -253,3 +259,12 @@ spec:
         offers to replan only those. Every link goes both ways: a phase opens its block in the workshop
         (?id=…&block=…), a block opens its phases in the Phases tab, either opens the Plan on its run.
       proof: "driven in Clear Glass: plan two blocks → their phases appear on them and in the Phases tab; edit one → its phases go stale in both; a phase's link opens the workshop on its block"
+
+# ADDENDUM 2026-10-09 (0.52.0, HP1 + HP5 of docs/2026-10-09-hardening-pass-phasemap.spec) — James: "Do the hardening pass".
+# RS9's thread: stale now spreads along depends_on. A phase built on a stale phase is stale through it (staleVia, the
+# nearest stale dependency, within the map, by full id or short key; breadth-first, so a cycle cannot loop);
+# summary.stalePhases counts it, staleDownstream says how many came through a dependency; RS10's Phases tab says
+# "↻ via SH1". tests: test-thread TH-05.
+# RS3's spec document: a byte-order mark hid every block (the first head line never matched) — heads are read without
+# it, the bytes kept. CRLF, BOM, tabs, trailing spaces, no final newline and mixed endings round-trip byte-identical; an
+# edit to one block leaves every other block's bytes and hash unchanged. tests: test-spec-document SD-08.
