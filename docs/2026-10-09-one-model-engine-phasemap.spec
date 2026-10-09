@@ -1,80 +1,178 @@
 spec:
   meta:
     name:     one-model-engine
-    version:  1.0.0
+    version:  2.0.0
     date:     2026-10-09
     release:  0.52.0 (base)
     uuid:     nexus-one-model-engine-phasemap-v1-0000-2026-1009-jamesbrooks-001
-    owner:    lib/pipeline-routing (the engine and its policy) · copilot (the door) · cortex/core/raid (health, record, verify) · idearium (the callers)
-    status:   "MAPPED 2026-10-09, before building; supersedes the separate retry loops (phase ladder, page fallback, chunk hops); goes ahead of RS1"
+    owner:    lib/pipeline-routing (the engine and its policy) · copilot (the door) · cortex/core/raid (choice, health, record, verify, the drainer) · guardian (transport) · idearium and every other caller
+    status:   "MAPPED 2026-10-09, before building — 2.0.0 rewritten from a full scan of the codebase (1.0.0 was mapped from a partial look and missed RAID, the drainers and most ladders); nothing built; goes ahead of RS1"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
-    axioms:   docs/AXIOMS-v3.1.md — §1.1 nothing pretends, §1.2 nothing silently fails, §8.6 reuse before build, §10.3 one routing brain, §3.3 map before build
+    axioms:   docs/AXIOMS-v3.1.md — §1.1 nothing pretends, §1.2 nothing silently fails, §8.6 reuse before build, §10.3 one routing brain, §3.3 map before build, §0.3 nothing lost
     origin: >
       James, 2026-10-09: "Wait. I meant idearium needs escalating retry logic, and fallback routing. I wasn't talking the
       phasemap. Your aren't fragmenting everything are you?" — the CT6 ask ("needs escalating retry logic and fallback
       routing. like if the 3b fails, switch to the 7b, then the 16b deepseek, then the agents. have all of this
-      configurable.") was for every model call Idearium makes; it was built for phase builds only. Then, on a ChatGPT
-      review of the plan ("Unify the retry mechanism, not the definition of failure"): "Perfect. Add to map. What about
-      hooking in raid?"
-  found:
-    - "phase builds (idearium/api _phaseBuild) climb the ladder: PRt.climb, routing.escalation · escalate_on · retries_per_rung · max_tool_errors"
-    - "the pages — workshop, architect, void, deliver (idearium/api _agentAsk) — take copilot's route and fall to the next hop only on fallback_on classes; no retry, no climb on a bad answer"
-    - "spec-engine chunk builds (idearium/spec-engine/chunk-dispatch.js, speceng.build) walk their own hops: max_hops · attempts_per_hop; their default provider comes from RAID decideForContract"
-    - "the Code tab agent chat (repo.agent.prompt) is one dispatch, one try; the reviewer (_reviewDraft) one provider; proof retries (_provePhase) the same agent each time"
-    - "three settings groups overlap and mean different things: retries_per_rung counts tries before climbing, attempts_per_hop counts verified attempts on a provider, max_hops caps providers"
-    - "the loops nest and multiply: proof attempts × chunks × rungs × retries_per_rung — each bounded, the product unbounded by any one budget"
-    - "three things choose a model: copilot's door (lib/model-door → pipeline-routing plan, learning persisted in the economy ledger), RAID _decide / decideForContract (cortex/core/raid, its own weight table in memory, lost on restart), lib/agent-router.js (CA5 intent → agent, CA6 routing_config rows)"
-    - "RAID's spec and its code disagree: raid.spec LAW_I says Ollama always first, LAW_III Claude always last; _decide since 2026-09-02 puts ChatGPT first, Gemini its fallback (§DEFAULT-AGENT-CHANGE)"
-    - "RAID already has what the engine lacks: a health poll per agent (_pollHealth), a decision ledger persisted to cortex (raid_decisions), the verification spine (raid.verify: constitution gate → isolation → drift → contract compare), the tool approval gate"
-    - "guardian/lib/dispatch-ladder.js is a TRANSPORT ladder (mesh → repair selectors → userscript NCP → the person) for one browser agent — a layer below choosing the model"
-    - "RAID's drainer (cortex/core/raid/worker.js) ticks every 15 s: contract-intake processNext() takes the next queued contract whose dependsOn have passed, runs it, and on failure applies onFail — retry (default maxRetries 2, James 2026-09-03: \"we need all files in raids drainer with a retry logic if it fails\"), fallbackAgent (re-queue to another agent), or halt; persisted in JAA, so it survives a restart"
-    - "idearium has its own drainer (_startBuildQueuePoller, every 15 s, James 2026-09-06: \"it needs to start the queue each boot\"): it re-posts spec builds, which run chunk-dispatch's own verification retry ladder"
-    - "so retries nest a level further: drainer retries × chunk-dispatch's ladder × hops; and onFail fallbackAgent is a second, one-step model ladder beside the engine's"
-    - "attempts are recorded three ways: idearium_phase_runs rows, the economy ledger, _agentAsk's route list — no one shape"
+      configurable.") was for every model call; it was built for phase builds only. On a ChatGPT review ("Unify the
+      retry mechanism, not the definition of failure"): "Perfect. Add to map. What about hooking in raid?" — then
+      "Doesn't it have a drainer." — then "Okay. Map thoroughly before moving. That was supposed to be the point of the
+      map."
+    method: >
+      How this inventory was made, so it can be re-run and checked: (1) the bottom — every place a prompt leaves a
+      process (Ollama generate/chat, guardian browser agents and REST APIs, copilot's prompt routes); (2) every caller
+      of each, walked upward; (3) every file with a retry, ladder, cascade or fallback construct (46 files, each
+      classified model / not-model); (4) every learner, breaker and chooser; (5) every queue and drainer; (6) every
+      setting that moves any of it. Each entry was read in the source, not taken from its comments; what could not be
+      settled by reading is under `to_prove`, with how.
+
+  # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+  inventory:
+
+    transports:   # where a prompt leaves a process — the bottom of every stack
+      - "ollama bridge (ollama/, :3749): POST /api/jobs → its job queue (MAX_CONCURRENT) → ollama/lib/dispatch.js runs each job through WARP unifiedDispatch (crystal cache, axiom gate) with runCascade(providers ['ollama'], maxAttempts 1) → callOllamaRaw; POST /api/jobs/tools → callOllamaChatWithTools; model names resolved to installed tags (model-inventory)"
+      - "idearium agent-suite generateWithOllama: straight to Ollama, not the bridge (buildChunkWithAgent when the provider is ollama; the spec wizard)"
+      - "guardian browser agents (:7820): /command and /api/copilot/prompt (guardian/ask.js askSync) → createJob → dispatcher: chooseProvider (asks RAID), economy-guard (allow / wait / stop / fallback to the provider the person set onLimit), dispatch-pool (per-provider concurrency caps), dispatch-ladder (mesh tab → repair selectors once → userscript NCP → the person), job-retry (tab-busy, input, submit, no-reply, provider-error: up to 4 attempts with delays; login, captcha, rate limit, usage cap, refusal: to the person)"
+      - "guardian/api-dispatch.js: REST providers (OpenAI, Gemini, Perplexity, Claude API, Mistral) — called from orchestrator"
+      - "clear-glass providers/host.js (NCP auto-host: 3 attempts) and the agent mesh (asks RAID /api/raid/decide, then copilot/lifeline dispatchToNcpAgent)"
+
+    services:     # the doors other code calls
+      - "copilot POST /api/prompt — three paths: (a) body.backend guardian|ollama → lifeline dispatchToNcpAgent / dispatchToOllama directly, with the tool loop (maxToolErrors) — idearium's repo agent uses this; (b) copilot/intents.js (navigate, note, tool, action); (c) otherwise lifeline.route()'s cascade"
+      - "copilot POST /api/prompt/fulfill — adaptive-fulfillment: RAID picks an agent, try, reflection scores it, open-loop taxonomy classifies a failure, RAID recordOutcome, next agent (idearium copilot-adapter calls it with maxAttempts 2)"
+      - "copilot POST /api/prompt/tools — the Ollama tool loop; POST /api/prompt/stream; GET /api/prompt/resolve (resolveDefaultBackend: config.DEFAULT_PROVIDER → auto/copilot = ollama, a named agent = guardian); POST /api/route + /api/route/outcome (lib/model-door: pipeline-routing plan, breakers, learning) — CT1"
+      - "copilot's own Ollama path goes through _llmQueue (one at a time, priorities) then the bridge's /api/jobs"
+      - "copilot/lifeline.js route(): an agent named in the prompt goes first; provider:ollama never escalates; otherwise Ollama first and, when its estimated confidence is under LIFELINE_CONF (0.75), escalates to guardian (askBeforeEscalate returns the low answer instead)"
+
+    choosers:     # what decides which model answers — eight, not one
+      - "lib/model-door + lib/pipeline-routing plan(): modes learned · fixed · chain · local-first · economy; per-block fallbacks; breakers; the learned order from the economy ledger — the pages, the chunk builds' route, CT1"
+      - "lib/pipeline-routing ladder(): the phase-build escalation ladder (escalation, or Ollama smallest first then the chain), present() leaving off what is not installed (HP3), agent-record's learned order (AR1)"
+      - "cortex/core/raid _decide / decideForContract: cluster, SNR gate, explicit preference, LAW_I (in code since 2026-09-02: ChatGPT first, Gemini its fallback; raid.spec still says Ollama first), fitness — asked by chunk-dispatch (default provider), WARP providersFor, adaptive-fulfillment, officiator, guardian chooseProvider (HTTP /api/raid/decide), the clear-glass mesh (HTTP), routing-ir (lifeline)"
+      - "lib/agent-router.js (CA5): intent → agent by strength, DEFAULT_FALLBACK, AGENT_CONSTRAINTS (token limits, chunkForAgent); lib/routing-config.js (CA6) editable rows — read by RAID, copilot self-model, the mesh, spec-parser, agent-system contracts"
+      - "copilot lifeline: the agent named in the prompt text (extractExplicitAgent), else Ollama first"
+      - "copilot resolveDefaultBackend (config.DEFAULT_PROVIDER) and lib/agent-providers.js resolve() (asks /api/prompt/resolve) — used by idearium agent-suite and the repo agent"
+      - "lib/seam/adapters/warp-cascade.js providersFor(): a chosen provider alone; else RAID's pick then ollama, chatgpt, claude; or the economy's learned order once it has records"
+      - "idearium's own defaults: speceng.build preferAgent = body.agent || pinned chunk agent || the compartment's provider || chunk.agent || manifest.agent || 'chatgpt'"
+
+    ladders:      # every place that retries or moves to another model — by layer
+      phase_build:       "idearium _phaseBuild → climb(): rungs × retries_per_rung, escalate_on, tool-errors stop, memory skip, present() skip; then _provePhase: up to repos.proof_attempts on the SAME agent with the unmet conditions fed back"
+      pages:             "idearium _agentAsk (workshop, architect, void, deliver): copilot's route, next hop only on fallback_on classes"
+      chunk_build:       "idearium speceng.build → route from copilot's door (max_hops) → chunk-dispatch dispatchChunkWithVerification: QueueCompartment (lib/seam/queue.js) prompt strategies context → shorter → forensic, maxRetriesPerStrategy, watchdogRetry, an outer cap attempts_per_hop → warpFn: WARP cascade runCascade (providersFor, maxAttempts 3, the failure fed back as context) → agent-suite buildChunkWithAgent → Ollama or guardian (job-retry, dispatch-ladder)"
+      chunk_repair:      "lib/autonomous-repair.js → lib/chunk-build-orchestrator.js: try every agent (DEFAULT_FALLBACK order, agent-build-learning priors); a rate limit or timeout is a turn that never happened, not a failure"
+      copilot:           "lifeline confidence escalation (Ollama → guardian); adaptive-fulfillment (RAID-chosen agents in turn)"
+      guardian:          "economy-guard fallback (onLimit provider); dispatch-ladder (transport); job-retry (transport, up to 4)"
+      queued:            "RAID contract onFail (retry maxRetries 2 by default · fallbackAgent · halt); orchestrator contract-poller re-dispatch (retryCount < 3); idearium build-queue poller (STALL_RETRY 10 min)"
+      repair:            "diagnostic/nexus-heal-loop.js (maxAttempts 3, heal.* config) → Forge (intelligence/rfr2/forge) → guardian; cortex/self-heal (known fix → snapshot+forge propose → RAID contract)"
+      not_model:         "auth rate limit, boot-sequence phase retries, orchestrator boot, cortex-v2 display, intelligence/diagnostic analysis of retry counts, hooks and loom maps — classified and left out"
+
+    learners:     # what remembers how a model did — seven stores
+      - "the economy ledger (lib/economy/ledger.js, persisted) — pipeline-routing plan and learned(), WARP providersFor _learnedOrder, guardian economy; weighted by class since HP4"
+      - "RAID _weights and _health (in memory, lost on restart) — recordOutcome from adaptive-fulfillment and cortex /api/raid/feedback (guardian raid-feedback)"
+      - "lib/agent-record.js — a projection of idearium_phase_runs and the injects; orders the phase ladder (AR1)"
+      - "lib/agent-build-learning.js — Bayesian per agent (+0.10 / −0.15) for chunk-build-orchestrator"
+      - "guardian/lib/agent-registry.js — per agent health, selector repairs (the transport's, not the model's)"
+      - "lib/agent-capability-profile.js — measured token limits and outputs (a tool reads it; nothing routes on it)"
+      - "WARP population store (per gate class) — a cache of good outputs, not a model ranking"
+
+    breakers:
+      - "lib/pipeline-routing breaker (per provider, in process; verdicts and tool-errors never open it)"
+      - "guardian dispatch-ladder's infrastructure breaker (a dead mesh costs one attempt per window)"
+      - "RAID _agentAvailable (consecutiveFails ≥ 3, callCount ≥ 5 with successRate < 0.2 → excluded)"
+
+    drainers:     # queued work that runs later and survives a restart
+      - "RAID: cortex/core/raid/worker.js (started by orchestrator, every 15 s, RAID_WORKER_INTERVAL_MS) → contract-intake processNext: oldest QUEUED contract whose dependsOn passed → acknowledge (intent-contract gate) → executor (_realAgentExecutor: lifeline dispatchToNcpAgent to forAgent) → onFail; reconcileOnBoot resumes after a restart"
+      - "idearium: _startBuildQueuePoller (every 15 s) → re-posts spec builds; recoverOrphanedChunks for chunks left BUILDING"
+      - "orchestrator: lib/contract-poller.js scans every system's input/ folder, re-dispatches a stuck contract up to 3 times (lib/contract-queue.js)"
+      - "queues that are concurrency, not retry: ollama job queue, copilot _llmQueue, guardian dispatch-pool and its pending queue, lib/queue.js file queues — they stay as they are"
+
+    recorders:    # where an attempt is written — none shared
+      - "idearium_phase_runs rows (phase builds, proof, review)"
+      - "the economy ledger (recordHop; copilot door outcomes; guardian usage)"
+      - "RAID raid_decisions (tool decisions, verify) and raid_contract_queue rows; RAID ledger events"
+      - "spec-engine chunk route (recordChunkRoute) and dispatch job (recordDispatchJob)"
+      - "guardian .job files (attempts[]), chat-logger, agent-memory (download manager)"
+      - "lib/phase-faults → fault_log"
+
+    settings:     # everything that moves any of the above
+      - "idearium routing.* (config-core): mode, chain, ollama_models, learn_min_records, fallback_on, max_hops, attempts_per_hop, breaker_threshold, breaker_cooldown_ms, skip_open, escalate, escalation, escalate_on, retries_per_rung, max_tool_errors, min_build_b, chunk_phases, ladder_learn, signal_weights; repos.proof_attempts, repos.review_provider"
+      - "copilot: config.DEFAULT_PROVIDER, LIFELINE_CONF"
+      - "RAID: raid_tunables rows (thresholds), RAID_WORKER_INTERVAL_MS, contract onFail per submission"
+      - "agent-router / routing-config: routing_config rows (intent → agent, fallback order, token limits)"
+      - "guardian: economy policy (onLimit), dispatch-pool caps, job-retry delays, GUARDIAN_RAID_OFF"
+      - "diagnostic heal.maxAttempts; WARP maxAttempts per adapter (code)"
+
+    callers:      # who asks a model, by system (beyond the services above)
+      idearium:  "_phaseBuild, _provePhase, _reviewDraft, _agentAsk (workshop, architect, void, deliver), repo.agent.prompt (Code tab chat), ollama.check.ask, speceng.build, the skeleton expand and spec plan (warpFn), guardian-extract, the spec wizard (agent-suite)"
+      lib:       "repo-agent dispatch; opportunity/draft; hat-forge, hat-seed; agent-tools ambiguity-pull, ask-james, emergence, roundtable, parallel-dispatch, agent-council, agent-chat (all call lifeline.route or dispatchToNcpAgent directly)"
+      copilot:   "module-builder, recursive-diagnose, reword, /bridge/deliver, /api/introspect/retry, autonomous-repair"
+      cortex:    "RAID officiator, contract-intake executor, self-heal"
+      others:    "architect service (RAID contracts), orchestrator (copilot prompt proxy, api-dispatch, heal-loop), clear-glass (mesh, ipc bridge → lifeline), cli (nexus-cli, nexus-repl, clear-idearium), guardian userscripts and wake-loop (copilot /api/prompt/tools)"
+
+    dormant:
+      - "lib/routing-config.js is read only through agent-router's fallback path and account-registry — whether any live route reads its rows is to_prove"
+      - "lib/agent-capability-profile.js — measured, not routed on"
+
+  to_prove:       # what reading could not settle; each is proved (a test or a live trace) in ME0 before anything moves
+    - "DOUBLE DISPATCH: speceng.build submits each chunk to RAID as a QUEUED contract (content = the chunk prompt, forAgent = its agent) for observability and reports PASS/FAIL later; RAID's drainer takes the oldest QUEUED contract every 15 s and sends its content to forAgent. A chunk build slower than a tick may be sent twice. Same for architect/service.js's four observability contracts (content like 'blueprint.scan:<path>' sent to an agent as a prompt). Unless acknowledge()'s boundary gate stops them — read says it may not. Prove with a test against contract-intake: submit as idearium does, run processNext with a recording executor."
+    - "whether lifeline's confidence escalation fires on composed prompts from the agent tools (it says composed callers get the first tier only)"
+    - "whether chunk-dispatch's attempts_per_hop cap, QueueCompartment's strategies and WARP's maxAttempts multiply on one chunk, and the worst case in attempts"
+    - "whether cortex /api/raid/feedback now reaches RAID's weights (guardian raid-feedback says it never had)"
+    - "which choosers disagree today for the same job: run each on the same inputs"
+
+  # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
   pushback:
     - >-
       Unify the mechanism, not the meaning of failure (ChatGPT's line, agreed). One engine; each caller says what an
       acceptable output is and which failures it may retry or climb on.
     - >-
-      One brain, not a new one. The engine is the existing climb() in lib/pipeline-routing, run behind copilot's door
-      (CT1: "it should use copilot regardless, have copilot figure it, and learn from it"). An Idearium-side engine that
-      also picks models would be a fourth router.
+      One brain, not a new one. The engine is climb() in lib/pipeline-routing behind copilot's door (CT1: "it should use
+      copilot regardless, have copilot figure it, and learn from it"). Eight choosers become one answer; nothing new picks.
     - >-
-      RAID: hook in what it is good at, not its queue. Its health, its decision record and its verify spine join the
-      engine; its contract queue (contract-intake, "doesn't run instantly") is for queued work, never for a page or a
-      chat waiting on an answer. Its model choice (_decide) and the door's (plan) become one — see ME5's decide.
+      Three layers stay separate, by what they are: TRANSPORT (guardian dispatch-ladder, job-retry, clear-glass host —
+      getting a prompt into one agent), CONCURRENCY (job queues, dispatch-pool, _llmQueue — how many at once), CACHE
+      (WARP crystals — not asking at all). They report classified outcomes up; the engine decides the model.
     - >-
-      Guardian's dispatch ladder stays: it delivers a prompt to one browser agent. Its outcomes come back classified
-      (transport: login, captcha, mesh down) so the engine climbs on them; it is not merged into the model ladder.
+      Time axis vs model axis: the drainers decide WHEN (retry later — a provider down, rate-limited, logged out), the
+      engine decides WHICH model now (invalid output climbs). One budget across both.
     - >-
-      Legacy settings are translated with a stated precedence and an end date — keeping three behaviours forever under
-      one name would keep the fragmentation.
+      Prompt strategies are not model fallbacks. QueueCompartment's context → shorter → forensic and WARP's
+      failure-as-context retry change the PROMPT, not the model — worth keeping as the engine's "retry with feedback"
+      step, not as a separate ladder.
     - >-
-      Chat never quietly switches model on a weak answer: a hard failure falls back and the reply names who answered;
-      climbing on quality is opt-in per caller.
+      Silent quality escalation goes. Lifeline's confidence < 0.75 → guardian switches model on a guess about the
+      answer; under the caller policy that is opt-in, and a chat reply always names who answered.
     - >-
-      The drainer is the time axis, the engine the model axis. A did-not-run failure (provider down, rate-limited,
-      login) is often better retried LATER than climbed NOW: the drainer's re-queue is that. Invalid output climbs now.
-      So queued work runs each drain tick through the engine, and the drainer re-queues only what the engine marks
-      "retry later" — never a second model ladder (fallbackAgent becomes a climb), never outside the job's budget.
+      RAID: its health, record and verify spine join the engine; its system router (which SYSTEM fulfils a request) and
+      its contract queue stay its own. Its model choice and the door's become one.
     - >-
-      RS1's recorder stays in RS1: this map gives it one attempt record to read, nothing more.
+      Old settings are translated with a stated precedence and an end date; keeping every behaviour forever under one
+      name keeps the fragmentation.
+    - >-
+      RS1's recorder stays in RS1: this map gives it one attempt record to read.
+    - >-
+      Order of delivery (docs/CLAUDE.md): each phase backend → API → command row → screen; a phase is not done without
+      its screen.
+
+  decide:   # his calls, needed before the phases that name them
+    - "ME5 — the brain: the door's plan (pipeline-routing: configured, persisted, tested) with RAID's _decide delegating to it (the coder's recommendation), or RAID's _decide with the door asking it."
+    - "ME5 — LAW_I: Ollama first (raid.spec, the phase ladder today) or ChatGPT first (RAID's code since 2026-09-02, speceng.build's default)."
+    - "ME10 — lifeline's confidence escalation: keep as an opt-in policy, or retire."
+    - "ME8 — observability contracts: a status the drainer never runs ('external'), or stop submitting them and record through the one attempt record instead."
+
+  # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
   phases:
-    ME0_every_model_call_found:
+    ME0_the_inventory_proved:
       layer: library
       status: OPEN
-      james: '"Your aren''t fragmenting everything are you?"'
+      james: '"Okay. Map thoroughly before moving. That was supposed to be the point of the map."'
       depends_on: []
-      files: [docs/2026-10-09-one-model-engine-phasemap.spec]
+      files: [tests/modules/test-one-model-engine.test.js, docs/2026-10-09-one-model-engine-phasemap.spec]
       does: >-
-        The inventory, in this map, of every place that asks a model — direct and indirect: idearium (_phaseBuild,
-        _provePhase, _reviewDraft, _agentAsk and its pages, repo.agent.prompt, speceng.build / chunk-dispatch, warp
-        cascade), copilot (its own /api/prompt fallback, adaptive-fulfillment, assist-loop, repair-on-prompt,
-        autonomous-repair), guardian (dispatcher, dispatch-ladder), cortex (RAID decideForContract, officiator). Each
-        with: who chooses the model, what retries, what is recorded.
-      proof: "the list matches a scan for /api/prompt, RA.dispatch, raid decide calls and provider SDK calls; nothing found by the scan is missing from the list"
+        Every to_prove item settled by a test or a live trace and its answer written into this map (the double dispatch
+        first — a real bug fix if it holds, shipped on its own). A scan test lists every model call site, retry loop,
+        chooser, learner and drainer from the code and compares it to `inventory`: a site not in the map fails the test
+        until the map names it. This test is the seed of ME13.
+      proof: "each to_prove item has an answer and a test; the scan finds nothing the map does not name"
     ME1_one_failure_list:
       layer: library
       status: OPEN
@@ -82,11 +180,14 @@ spec:
       depends_on: [ME0]
       files: [lib/pipeline-routing.js]
       does: >-
-        One list of failure classes in four kinds — did not run (provider-down, timeout, login, rate-limit, empty,
-        truncated, tool-errors), invalid output (the caller's check failed: no file changed, unparseable, a missing
-        planned file, blocked at its gate), weak but valid (opt-in only), verdict (test-failed, dismissed, constraint,
-        a contract breach from raid.verify). classify(), VERDICTS and escalate_on read from it; every class names its kind.
-      proof: "every class the code emits today maps to exactly one kind; an unknown class is 'unknown', said, never dropped"
+        One list of failure classes in four kinds, read by every layer: did not run (provider-down, timeout, login,
+        captcha, rate-limit, usage-cap, empty, truncated, tool-errors, refused, no-memory), invalid output (the
+        caller's check failed: no file changed, unparseable, a planned file missing, blocked at its gate, axiom
+        rejection), weak but valid (opt-in only: lifeline's confidence, reflection's score), verdict (test-failed,
+        dismissed, constraint, contract breach from raid.verify). pipeline-routing classify, VERDICTS and escalate_on;
+        guardian job-retry classify; open-loop taxonomy; chunk-build-orchestrator's "turn that never happened"; WARP
+        axiom failures — each maps onto it.
+      proof: "every class any layer emits today maps to exactly one kind; an unknown class is 'unknown', said"
     ME2_caller_policy:
       layer: library
       status: OPEN
@@ -94,10 +195,11 @@ spec:
       depends_on: [ME1]
       files: [lib/pipeline-routing.js]
       does: >-
-        A caller policy: { kind (job type), accept(output) → ok | invalid with why, climbOn: classes, retryOn: classes,
-        stopOn, quality: off | on, budget }. Defaults per caller: a page accepts non-empty text; a build accepts a
-        changed file; chat accepts any answer and climbs only on did-not-run; the reviewer accepts a verdict.
-      proof: "the same failing model, under the chat policy and the build policy, falls back in one and climbs in the other, as each policy says"
+        A caller policy: { kind, accept(output) → ok | invalid with why, climbOn, retryOn, retryLater, stopOn,
+        feedback: none | context | shorter | forensic (the prompt strategies), quality: off | on, budget }. Defaults
+        per caller: page — non-empty text; build — a changed file; chunk — the Detector's verification; chat — any
+        answer, climbs only on did-not-run, names who answered; reviewer — a verdict; repair — a proposed patch.
+      proof: "the same failing model under the chat policy and the build policy falls back in one and climbs in the other, as each says"
     ME3_one_engine_one_budget:
       layer: library
       status: OPEN
@@ -105,10 +207,11 @@ spec:
       depends_on: [ME2]
       files: [lib/pipeline-routing.js, lib/model-door.js, copilot/server.js]
       does: >-
-        climb() is the engine: the rungs from copilot's route (the ladder, filtered by present()), the caller's policy
-        deciding retry, climb or stop. A job carries one total attempt budget through every nested call (proof attempts,
-        chunks, rungs); a nested climb spends from it and stops when it is gone, saying so.
-      proof: "a phase with proof retries, two chunks and a three-rung ladder never makes more attempts than its budget; exhaustion is a row naming the budget"
+        climb() is the engine, behind copilot's door: the rungs from the one chooser (ME5), filtered by present() and
+        RAID's health, each attempt optionally retried with feedback (the prompt strategies) before climbing, the
+        caller's policy deciding. One job carries one attempt budget through every nesting (proof, chunks, rungs,
+        strategies, drain ticks); a nested climb spends from it and stops when it is gone, saying so.
+      proof: "a phase with proof retries, two chunks and a three-rung ladder, and a chunk through every strategy, never exceed their budget; exhaustion is a record naming it"
     ME4_one_attempt_record:
       layer: library
       status: OPEN
@@ -116,88 +219,132 @@ spec:
       depends_on: [ME3]
       files: [lib/pipeline-routing.js, lib/economy/ledger.js]
       does: >-
-        Every attempt, from any caller, is one record shape: job and caller, the request's hash, the model, why it was
-        chosen (route reason), attempt and rung, the class and its kind, the check's verdict, ms, the final outcome.
-        Written by the engine (callers stop writing their own), into the economy ledger; idearium_phase_runs keeps its
-        rows and carries the record. RS1 reads it.
-      proof: "a page call, a chunk build and a phase build each leave records of the same shape; a did-not-run, an invalid output, a rejected valid output and an exhausted budget are told apart from the records alone"
-    ME5_raid_hooked_in:
+        One record per attempt, written by the engine: job and caller, the request's hash, the model, the route reason,
+        attempt and rung, the strategy, the class and its kind, the check's verdict, ms, the final outcome. Into the
+        economy ledger; idearium_phase_runs, chunk routes and RAID decisions carry it rather than each writing their
+        own. RS1 reads it.
+      proof: "a page call, a chunk build, a phase build and a drained contract leave records of one shape; the four failure kinds and an exhausted budget are told apart from the records alone"
+    ME5_one_chooser:
+      layer: library
+      status: OPEN
+      james: '"What about hooking in raid?"'
+      depends_on: [ME3]
+      files: [lib/pipeline-routing.js, lib/model-door.js, cortex/core/raid/index.js, cortex/core/raid/routing-ir.js, lib/agent-router.js, copilot/lifeline.js, copilot/server.js, lib/agent-providers.js, lib/seam/adapters/warp-cascade.js, guardian/lib/provider-routing.js, clear-glass/src/mesh/agent-mesh.js, idearium/spec-engine/chunk-dispatch.js]
+      does: >-
+        The eight choosers give one answer for one job: one function decides (per `decide`), the others ask it —
+        RAID _decide / decideForContract / routing-ir, guardian chooseProvider and the mesh (both via /api/raid/decide),
+        WARP providersFor, lifeline's ollama-first, resolveDefaultBackend and agent-providers, speceng.build's default.
+        agent-router's intent strengths become an input to it (a prior), not a second chooser; LAW_I stated once.
+      decide: "see decide: the brain; LAW_I"
+      proof: "for the same job every former chooser names the same model; changing the chain in Settings changes all of them"
+    ME6_one_learner:
+      layer: library
+      status: OPEN
+      james: '"and learn from it. failure modes, dynamically switch models, if its not equipped for the task" (CT2)'
+      depends_on: [ME4, ME5]
+      files: [lib/economy/router.js, cortex/core/raid/index.js, lib/agent-build-learning.js, lib/agent-record.js, guardian/lib/raid-feedback.js]
+      does: >-
+        The economy ledger is the one learning store (persisted, weighted per HP4). RAID's in-memory weights read from it
+        and recordOutcome writes to it; agent-build-learning's priors and agent-record's learned ladder order come from it
+        (agent-record keeps its undone-by-the-person signal as a verdict class); guardian's feedback lands in it.
+        Transport health (agent-registry) stays the transport's.
+      proof: "an outcome recorded anywhere moves the one order; a restart keeps what was learned"
+    ME7_raid_spine_joins:
       layer: library
       status: OPEN
       james: '"What about hooking in raid?"'
       depends_on: [ME3, ME4]
-      files: [cortex/core/raid/index.js, lib/pipeline-routing.js, lib/model-door.js, idearium/spec-engine/chunk-dispatch.js]
+      files: [cortex/core/raid/index.js, lib/pipeline-routing.js]
       does: >-
-        (a) RAID's health poll is an availability source for present(): an agent RAID sees down is left off, said.
-        (b) Every engine attempt is a RAID decision (recordDecision → raid_decisions), so RAID sees every model call.
-        (c) raid.verify is a check a caller's policy can name for a consequential output (a build applied to files):
-        its contract breach is a verdict class; chat and pages never pay for isolation.
-        (d) One learner: RAID's in-memory weight table and the economy ledger become one — RAID reads the ledger's
-        scores (persisted, weighted per HP4); recordOutcome writes the ledger.
-        (e) One chooser: RAID decideForContract and the door's plan give the same answer for the same job (chunk-dispatch
-        stops asking RAID separately).
-      decide: >-
-        Which is the brain — the door's plan (pipeline-routing: configured, persisted, tested) with RAID's _decide
-        delegating to it, or RAID's _decide with the door asking it? The coder recommends the first: James's CT1 call put
-        model choice behind copilot's door, and RAID's own spec calls it "the switchboard" for which SYSTEM fulfils a
-        request — that stays RAID's (router.js), untouched. And LAW_I: Ollama first (raid.spec) or ChatGPT first (_decide
-        since 2026-09-02)? The ladder today is Ollama smallest first, then the chain — his call which law stands.
-      proof: "a model RAID's health marks down is skipped and said; every attempt appears in raid_decisions; RAID and the door name the same model for the same job; a build whose isolated verify breaches its contract climbs"
-    ME10_the_drainers_run_the_engine:
+        RAID's health poll is an availability source for present() (an agent it sees down is left off, said); every
+        engine attempt is a RAID decision (raid_decisions); raid.verify is a check a caller policy can name for a
+        consequential output (a build applied to files) — its breach a verdict; chat and pages never pay for isolation.
+      proof: "a model RAID marks down is skipped and said; every attempt appears in raid_decisions; a build whose isolated verify breaches its contract climbs"
+    ME8_the_drainers_run_the_engine:
       layer: library
       status: OPEN
       james: '"Doesn''t it have a drainer."'
-      depends_on: [ME3, ME5]
-      files: [cortex/core/raid/contract-intake.js, cortex/core/raid/worker.js, idearium/api/index.js, idearium/spec-engine/chunk-dispatch.js]
+      depends_on: [ME0, ME3, ME5]
+      files: [cortex/core/raid/contract-intake.js, cortex/core/raid/worker.js, orchestrator/lib/contract-poller.js, idearium/api/index.js, architect/service.js]
       does: >-
-        RAID's drainer and idearium's build-queue drainer stay the way queued work runs (and survives a restart), and
-        each drained attempt goes through the engine. The engine says per outcome: done, climb now, or retry later
-        (did-not-run classes, with the time the provider says or a backoff); the drainer re-queues only "retry later".
-        onFail fallbackAgent becomes the engine's climb; onFail maxRetries spends from the job's one budget. A phase
-        build may be queued (run in the background, survives restart — HP2's interrupted runs become resumable) or
-        awaited, the same engine either way.
-      proof: "a contract whose provider is down is re-queued, not climbed, and runs on a later tick; one whose output is invalid climbs in the same tick; total attempts across drain ticks never exceed the budget; a restart mid-climb resumes from the queue"
-    ME6_old_settings_translated:
-      layer: library
-      status: OPEN
-      james: '"have all of this configurable."'
-      depends_on: [ME3]
-      files: [lib/pipeline-routing.js, idearium/lib/config-core.cjs, idearium/ui/settings.html]
-      does: >-
-        One settings group in Settings → Routing. fallback_on, max_hops and attempts_per_hop are read into the new
-        policy with a written precedence (a new key set wins; else the old key, translated by its old meaning); Settings
-        says which old key a value came from; the old keys carry an end date, after which they are only read, never shown. Backend, then GET/POST /api/routing, then the command row (idearium/cli/route-commands.js, so copilot and every agent have it), then the screen.
-      proof: "each existing config gives the same attempts and fallbacks per caller before and after; a new key overrides an old one; Settings names the source"
-    ME7_callers_moved:
-      layer: api
-      status: OPEN
-      james: '"Wait. I meant idearium needs escalating retry logic, and fallback routing."'
-      depends_on: [ME2, ME3, ME4, ME6]
-      files: [idearium/api/index.js, idearium/spec-engine/chunk-dispatch.js, lib/repo-agent.js, copilot/server.js]
-      does: >-
-        One caller at a time, each keeping its tests green: the pages (_agentAsk), spec-engine chunk builds, the Code tab
-        chat (repo.agent.prompt — hard failure falls back, the reply names who answered), the reviewer, proof retries
-        (a fresh rung after the budget on one model), then phase builds onto the shared policy. Copilot's own fallback
-        for /api/prompt becomes the engine's. Guardian's transport ladder reports its outcome classified.
-      proof: "each caller's old tests pass; each now climbs per its policy; the Plan, the Code tab and the pages show climbs the same way"
-    ME8_no_bypass:
+        The drainers stay how queued work runs and survives restart: RAID's worker, idearium's build-queue poller, the
+        orchestrator's contract poller. Each drained attempt goes through the engine; the engine answers done, climb
+        now, or retry later (did-not-run, with the provider's own wait or a backoff); the drainer re-queues only retry
+        later. onFail fallbackAgent becomes a climb; onFail maxRetries and the poller's 3 re-dispatches spend from the
+        job's budget. Observability contracts are resolved per `decide`. A phase build may be queued (resumable after a
+        restart — HP2's interrupted runs pick up) or awaited, one engine either way.
+      decide: "see decide: observability contracts"
+      proof: "a contract whose provider is down is re-queued and runs on a later tick; an invalid output climbs in the same tick; attempts across ticks stay in budget; no contract is dispatched twice"
+    ME9_the_layers_below_report:
       layer: library
       status: OPEN
       james: '"Your aren''t fragmenting everything are you?"'
-      depends_on: [ME7]
+      depends_on: [ME1, ME3]
+      files: [guardian/lib/dispatcher.js, guardian/lib/dispatch-ladder.js, guardian/lib/job-retry.js, guardian/lib/economy-guard.js, ollama/lib/dispatch.js, clear-glass/src/providers/host.js]
+      does: >-
+        Transport, concurrency and cache keep their own loops (they are not model choice) and report their final
+        outcome in ME1's classes. guardian economy-guard's fallback to the onLimit provider becomes a climb request to
+        the engine (its wait stays a retry later); chooseProvider stops choosing (ME5).
+      proof: "a login wall, a busy tab and a usage cap each reach the engine as their class; a usage cap climbs through the engine, not around it"
+    ME10_nested_ladders_folded:
+      layer: library
+      status: OPEN
+      james: '"needs escalating retry logic and fallback routing."'
+      depends_on: [ME3, ME5, ME9]
+      files: [idearium/spec-engine/chunk-dispatch.js, idearium/spec-engine/warp-build-dispatch.js, lib/seam/adapters/warp-cascade.js, lib/seam/queue.js, lib/chunk-build-orchestrator.js, copilot/lifeline.js, copilot/adaptive-fulfillment.js]
+      does: >-
+        The ladders inside ladders become the engine's steps: chunk-dispatch's hops and attempts_per_hop cap, WARP's
+        runCascade across providers (WARP keeps its cache and axiom gate, one provider per call), QueueCompartment's
+        strategies (the engine's feedback step), chunk-build-orchestrator (a policy: try every rung, did-not-run is not
+        a turn), adaptive-fulfillment (the engine with the reflection score as an opt-in quality check), lifeline's
+        confidence escalation (per `decide`).
+      decide: "see decide: lifeline"
+      proof: "a chunk build makes the attempts its policy says and no more; the same failure walks the same rungs whichever entry point it came through"
+    ME11_old_settings_translated:
+      layer: library
+      status: OPEN
+      james: '"have all of this configurable."'
+      depends_on: [ME3, ME5]
+      files: [lib/pipeline-routing.js, idearium/lib/config-core.cjs, idearium/ui/settings.html, idearium/cli/route-commands.js]
+      does: >-
+        One settings group (Settings → Routing): the ladder, the budget, the caller policies, the signal weights. Read
+        into it with a written precedence: fallback_on, max_hops, attempts_per_hop (idearium), LIFELINE_CONF and
+        DEFAULT_PROVIDER (copilot), contract onFail defaults (RAID), routing_config rows (agent-router), onLimit
+        (guardian economy) — each by its old meaning. Settings names which old key a value came from; old keys carry an
+        end date. Backend, then GET/POST /api/routing, then the command row, then the screen.
+      proof: "each existing config gives the same attempts and fallbacks per caller before and after; a new key wins; Settings names the source"
+    ME12_callers_moved:
+      layer: api
+      status: OPEN
+      james: '"Wait. I meant idearium needs escalating retry logic, and fallback routing."'
+      depends_on: [ME2, ME3, ME4, ME11]
+      files: [idearium/api/index.js, lib/repo-agent.js, copilot/server.js, lib/agent-tools/tools/coordination/parallel-dispatch.js]
+      does: >-
+        Every caller in `inventory.callers`, one at a time, each keeping its tests green: idearium first (pages, chunk
+        builds, Code tab chat — hard failure falls back and the reply names who answered — reviewer, proof retries,
+        phase builds), then lib (repo-agent, opportunity draft, hat-forge, the agent tools that call lifeline directly),
+        copilot (module-builder, recursive-diagnose, reword, the bridge routes), cortex (officiator, self-heal),
+        architect, orchestrator, clear-glass, cli.
+      proof: "each caller's old tests pass; each climbs per its policy; the Plan, the Code tab and the pages show a climb the same way"
+    ME13_no_bypass:
+      layer: library
+      status: OPEN
+      james: '"Your aren''t fragmenting everything are you?"'
+      depends_on: [ME12]
       files: [tests/modules/test-one-model-engine.test.js]
       does: >-
-        A test that fails when code outside the engine posts to copilot's /api/prompt, calls the repo agent's dispatch,
-        or calls RAID's decide — except the engine itself and a named, reasoned allow-list in this map.
-      proof: "adding a direct /api/prompt call anywhere fails the test, naming the file and line"
-    ME9_across_callers:
+        ME0's scan becomes a gate: code outside the engine that posts to copilot's prompt routes, calls lifeline's
+        dispatch, the repo agent's dispatch, RAID's decide, guardian's prompt routes or Ollama's generate fails the test
+        — except the engine and the transports, named with why in this map.
+      proof: "a direct call added anywhere fails the test, naming the file and line"
+    ME14_across_callers:
       layer: library
       status: OPEN
       james: '"Perfect. Add to map."'
-      depends_on: [ME7]
+      depends_on: [ME12]
       files: [tests/modules/test-one-model-engine.test.js]
       does: >-
-        One suite drives every caller through the same faults: a model not installed, a timeout, an empty answer, an
-        invalid output, a valid output rejected by a verdict, an exhausted budget. Each caller does what its policy says
-        and leaves the same record shape.
-      proof: "six faults × every caller, each outcome as its policy says, each recorded"
+        One suite drives every caller through the same faults: a model not installed, down (RAID health), timeout, empty,
+        rate-limited, invalid output, valid output rejected by a verdict, exhausted budget, a restart mid-climb. Each does
+        what its policy says and leaves the same record.
+      proof: "every fault × every caller, each outcome as its policy says, each recorded"
