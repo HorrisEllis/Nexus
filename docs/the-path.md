@@ -25,6 +25,10 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 | SD13_the_machine_is_cos | 2026-10-10-idearium-solid | "the vm, i have no control over" — one COS surface: setup → start → screen → control |
 | SD11_the_desktop_inside_idearium | 2026-10-10-idearium-solid | the VM's screen in a pane, not a pop-up |
 
+## After solid — a snapshot is a compartment (docs/2026-10-10-snapshot-compartments-phasemap.spec)
+
+James: "what if a snapshot is a cos compartment? that can branch, or run in parralel to for benchmarks, using deltas and sigmas? using rfr2?" SN0 one branch mechanism (three today) → SN1 open any snapshot as a compartment → SN2 one workload on N of them, repeated → SN3 measured by RFR2 delta and sigma → SN4 benchmarks teach the learned order.
+
 ## After solid — the design surface (docs/2026-10-10-design-surface-phasemap.spec)
 
 James: "i want to make a design system for creating and editing different types of graphical interfaces. like open any file and edit the ui in real time". DS0 one token source → DS1 tokens edited live → DS2 pick and edit any page (Clear Glass ◎, written back) → DS3 components as Eravos mods → DS4 interface types by adapter → DS5 the agents design too · DS6 one module contract, nested · DS7 every editing tool an Eravos mod, typed by what it accepts and produces (native GNU tools run in a compartment) · DS8 the registry routes, the UI reflects (compartments inside compartments — logical; a VM only where isolation is needed).
