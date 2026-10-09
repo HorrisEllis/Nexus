@@ -118,3 +118,14 @@ can name for consequential outputs (builds), never for chat or pages; RAID's in-
 become one learner; decideForContract and copilot's door give one answer per job. Open, his call: which is the brain, and
 LAW_I as written here (Ollama first) versus _decide since 2026-09-02 (ChatGPT first). The router (which SYSTEM fulfils a
 request) and the contract queue are untouched.
+
+---
+## ADDENDUM 2026-10-09 (later) — correction to the addendum above (docs/2026-10-09-one-model-engine-phasemap.spec 2.1.0)
+James: "Look at the raid engine atlas and spec". Read in full, with AXIOMS-v3.1 §5.2, §9.1–§9.4, §10.1, §15.1–§15.3 and
+raid-routing-fidelity: the brain is not an open question — his axioms make RAID the one routing authority and its weight
+table the cumulative learner. The addendum above wrongly left "which is the brain" to decide. The one model engine map now
+has RAID decide and learn, copilot as the door that asks it, and lib/pipeline-routing's parts (ladder, present, climb,
+breakers, HP4 weights) moving under RAID. It also names the drift found: guardian.spec's raid_routing nine cluster chains
+(retired in v6.1, still described there and in the guardian atlas); LAW_I here (Ollama first) vs _decide since 2026-09-02
+(ChatGPT first); the SNR/fidelity gate consulted only for fault calls (RR1 open); §9.4 MAX_ROUTE_DEPTH 3 vs a model ladder
+of four or more rungs (left to him). Still planned, nothing built.

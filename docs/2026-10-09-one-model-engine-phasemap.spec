@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     one-model-engine
-    version:  2.0.0
+    version:  2.1.0
     date:     2026-10-09
     release:  0.52.0 (base)
     uuid:     nexus-one-model-engine-phasemap-v1-0000-2026-1009-jamesbrooks-001
     owner:    lib/pipeline-routing (the engine and its policy) · copilot (the door) · cortex/core/raid (choice, health, record, verify, the drainer) · guardian (transport) · idearium and every other caller
-    status:   "MAPPED 2026-10-09, before building — 2.0.0 rewritten from a full scan of the codebase (1.0.0 was mapped from a partial look and missed RAID, the drainers and most ladders); nothing built; goes ahead of RS1"
+    status:   "MAPPED 2026-10-09, before building — 2.0.0 rewritten from a full scan of the codebase (1.0.0 was mapped from a partial look and missed RAID, the drainers and most ladders); 2.1.0 corrected against RAID's atlas, spec and the axioms: RAID is the brain, not copilot's door; nothing built; goes ahead of RS1"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -18,7 +18,7 @@ spec:
       configurable.") was for every model call; it was built for phase builds only. On a ChatGPT review ("Unify the
       retry mechanism, not the definition of failure"): "Perfect. Add to map. What about hooking in raid?" — then
       "Doesn't it have a drainer." — then "Okay. Map thoroughly before moving. That was supposed to be the point of the
-      map."
+      map." — then "Look at the raid engine atlas and spec".
     method: >
       How this inventory was made, so it can be re-run and checked: (1) the bottom — every place a prompt leaves a
       process (Ollama generate/chat, guardian browser agents and REST APIs, copilot's prompt routes); (2) every caller
@@ -26,6 +26,37 @@ spec:
       classified model / not-model); (4) every learner, breaker and chooser; (5) every queue and drainer; (6) every
       setting that moves any of it. Each entry was read in the source, not taken from its comments; what could not be
       settled by reading is under `to_prove`, with how.
+
+  # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+  governing_law:   # what James already decided, read 2.1.0 — this map serves it, it does not re-decide it
+    axioms:
+      - "§5.2 Everything routes through RAID — every system connects to RAID for cross-system dispatch; a module that does not is isolated."
+      - "§9.1 RAID is the only write authority for requests; a cross-system call that does not cross RAID is a rogue bypass (§FAULTS.CLASS.ROGUE_BYPASS)."
+      - "§9.2 ledger write before dispatch · §9.3 held requests never leave the queue (a target offline → held, never dropped) · §9.4 route depth bounded, MAX_ROUTE_DEPTH = 3, routeHistory written on every hop; a silent fallback chain is a bug."
+      - "§10.1 RAID owns requests; guardian owns execution state; idearium owns ideas/specs/gaps."
+      - "§15.1 iterate to fulfillment within a budget: classify the failure (open-loop-taxonomy), score it (reflection), re-route through RAID away from the agent that failed · §15.2 every iteration a traceable event · §15.3 learning is cumulative, in RAID's weight table."
+    james:
+      - 'raid.spec universal_router, 2026-07-21: "the request comes from co-pilot or one of the UIs, but goes to RAID — that way the start point doesn''t matter, as long as it goes to RAID."'
+      - 'raid-routing-fidelity, 2026-08-08: "RAID is the governing layer; everything goes through it to move to another system." · "the chunk size is crap — 3000 characters isn''t useful because it''s tokens … Each agent needs its own."'
+      - 'raid-verification-spine, reconciled: RAID is the decision LEDGER and verification DRIVER, not a blocker by default — it sees everything, blocks only when a real check fails.'
+    atlases:
+      - "nexus atlas: RAID, the routing authority every request passes through (§5.2, §9.1), writes the ledger entry before anything is dispatched."
+      - "copilot atlas: copilot receives intent, assembles context, routes to RAID, and answers — intelligence, kept separate from guardian's dispatch on purpose."
+      - "cortex atlas: the raid organ (order 5) hears cortex.orion.classified, emits cortex.raid.decided; guardian handles cortex.raid.decided → dispatch to the chosen provider."
+    what_this_means_for_the_map: >-
+      The engine this map describes is already law: §15 is adaptive fulfillment through RAID, §9.3 is the drainer's
+      retry later, §9.4 is the bounded, written route. It was built partly (adaptive-fulfillment, RAID's weights in
+      memory, the verify spine) and then built AGAIN beside RAID: CT1 put model choice behind copilot's door with
+      lib/pipeline-routing as its brain, and CT6 (the phase ladder) and HP3/HP4 extended that second brain. That is the
+      fragmentation he asked about, and this session added to it. 1.0.0 and 2.0.0 of this map recommended the door as
+      the brain — against his axioms. Corrected: RAID decides and learns; copilot is the door callers ask (it routes to
+      RAID, as its atlas says); guardian and Ollama dispatch.
+    open_raid_maps_this_folds:   # §10.3 — one plan, not competing ones; each phase below names which it closes
+      - "raid-routing-fidelity RR1 (SNR/fidelity scoring for general routing — today only when a faultClass is given), RR2 (token-sized chunking per agent, asking RAID first), RR3 (per-agent config in cortex, not AGENT_CONSTRAINTS constants), RR6 (fitness: routing tuned by observed performance)"
+      - "agent-intelligence-loop AP2–AP4 (agent events to intelligence, strategy rows, the optimizer — 'RAID governs every change'); RR6 IS AP4 system-wide: one optimizer"
+      - "raid-simulation-engine (proposed: simulate a decision in a COS compartment before it commits) — an optional check, not this map's"
+      - "axiom-5-2-raid-routing MCO8 (the observability pattern: submit, run elsewhere, report — 'never re-executing the work') — its claim is what to_prove's double dispatch tests"
+      - "copilot-awareness-routing CA5/CA6 (agent-router, routing_config) and code-tab-and-one-router CT1/CT2/CT6 (the door, verdicts, the ladder)"
 
   # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
   inventory:
@@ -52,6 +83,8 @@ spec:
       - "copilot lifeline: the agent named in the prompt text (extractExplicitAgent), else Ollama first"
       - "copilot resolveDefaultBackend (config.DEFAULT_PROVIDER) and lib/agent-providers.js resolve() (asks /api/prompt/resolve) — used by idearium agent-suite and the repo agent"
       - "lib/seam/adapters/warp-cascade.js providersFor(): a chosen provider alone; else RAID's pick then ollama, chatgpt, claude; or the economy's learned order once it has records"
+      - "the cortex organ path: orion classifies (cortex.orion.classified) → the raid organ decides (cortex.raid.decided) → guardian's spec says it dispatches on that event — whether any live dispatch still rides this event path is to_prove"
+      - "guardian.spec raid_routing: nine clusters each with a provider chain, Ollama first, Claude last (also the guardian atlas) — RAID v6.1 retired CLUSTER_CHAINS for computed fitness; the spec and atlas still describe the old chains (drift)"
       - "idearium's own defaults: speceng.build preferAgent = body.agent || pinned chunk agent || the compartment's provider || chunk.agent || manifest.agent || 'chatgpt'"
 
     ladders:      # every place that retries or moves to another model — by layer
@@ -82,6 +115,7 @@ spec:
     drainers:     # queued work that runs later and survives a restart
       - "RAID: cortex/core/raid/worker.js (started by orchestrator, every 15 s, RAID_WORKER_INTERVAL_MS) → contract-intake processNext: oldest QUEUED contract whose dependsOn passed → acknowledge (intent-contract gate) → executor (_realAgentExecutor: lifeline dispatchToNcpAgent to forAgent) → onFail; reconcileOnBoot resumes after a restart"
       - "idearium: _startBuildQueuePoller (every 15 s) → re-posts spec builds; recoverOrphanedChunks for chunks left BUILDING"
+      - "RAID officiator (cortex/core/raid/officiator.js: start/stop/tick) — a periodic loop that synthesizes contracts from context and asks decideForContract, dispatching through lifeline; what it runs and how often is to_prove"
       - "orchestrator: lib/contract-poller.js scans every system's input/ folder, re-dispatches a stuck contract up to 3 times (lib/contract-queue.js)"
       - "queues that are concurrency, not retry: ollama job queue, copilot _llmQueue, guardian dispatch-pool and its pending queue, lib/queue.js file queues — they stay as they are"
 
@@ -111,6 +145,8 @@ spec:
     dormant:
       - "lib/routing-config.js is read only through agent-router's fallback path and account-registry — whether any live route reads its rows is to_prove"
       - "lib/agent-capability-profile.js — measured, not routed on"
+      - "RAID's SNR / fidelity gate (cortex/core/raid/snr-filter.js) runs only for calls that declare a faultClass — general routing never consults fidelity (RR1, open)"
+      - "AGENT_CONSTRAINTS (per-agent token limits) are constants in agent-router, not cortex rows (RR3, partial)"
 
   to_prove:       # what reading could not settle; each is proved (a test or a live trace) in ME0 before anything moves
     - "DOUBLE DISPATCH: speceng.build submits each chunk to RAID as a QUEUED contract (content = the chunk prompt, forAgent = its agent) for observability and reports PASS/FAIL later; RAID's drainer takes the oldest QUEUED contract every 15 s and sends its content to forAgent. A chunk build slower than a tick may be sent twice. Same for architect/service.js's four observability contracts (content like 'blueprint.scan:<path>' sent to an agent as a prompt). Unless acknowledge()'s boundary gate stops them — read says it may not. Prove with a test against contract-intake: submit as idearium does, run processNext with a recording executor."
@@ -118,6 +154,8 @@ spec:
     - "whether chunk-dispatch's attempts_per_hop cap, QueueCompartment's strategies and WARP's maxAttempts multiply on one chunk, and the worst case in attempts"
     - "whether cortex /api/raid/feedback now reaches RAID's weights (guardian raid-feedback says it never had)"
     - "which choosers disagree today for the same job: run each on the same inputs"
+    - "whether anything still dispatches on cortex.raid.decided (the organ path guardian's spec describes)"
+    - "what the RAID officiator's tick dispatches, how often, and whether it overlaps the worker"
 
   # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
   pushback:
@@ -125,8 +163,11 @@ spec:
       Unify the mechanism, not the meaning of failure (ChatGPT's line, agreed). One engine; each caller says what an
       acceptable output is and which failures it may retry or climb on.
     - >-
-      One brain, not a new one. The engine is climb() in lib/pipeline-routing behind copilot's door (CT1: "it should use
-      copilot regardless, have copilot figure it, and learn from it"). Eight choosers become one answer; nothing new picks.
+      One brain, and it is RAID (2.1.0 — corrected; 1.0.0 and 2.0.0 said the door, against §5.2, §9.1 and §15). Copilot
+      stays the door every caller asks (CT1: "it should use copilot regardless, have copilot figure it, and learn from
+      it" — copilot figures it BY asking RAID, as its atlas says). lib/pipeline-routing's working parts — the ladder,
+      present(), climb(), breakers, the caller policy, HP4's weights — are not thrown away (§0.3, §8.6): they become
+      RAID's, served from cortex, the way verify() composed engines that already existed. Eight choosers become RAID.
     - >-
       Three layers stay separate, by what they are: TRANSPORT (guardian dispatch-ladder, job-retry, clear-glass host —
       getting a prompt into one agent), CONCURRENCY (job queues, dispatch-pool, _llmQueue — how many at once), CACHE
@@ -142,8 +183,12 @@ spec:
       Silent quality escalation goes. Lifeline's confidence < 0.75 → guardian switches model on a guess about the
       answer; under the caller policy that is opt-in, and a chat reply always names who answered.
     - >-
-      RAID: its health, record and verify spine join the engine; its system router (which SYSTEM fulfils a request) and
-      its contract queue stay its own. Its model choice and the door's become one.
+      RAID's two decisions stay two (raid.spec two_decisions): which AGENT (_decide — this map) and which SYSTEM (router.js
+      — untouched). Its contract queue stays its own; synchronous callers are not made to wait on a 15 s drain (MCO7's
+      finding) — RAID decides and records inline, the queue is for work that may run later.
+    - >-
+      §9.4 bounds route depth at 3 with history written; his CT6 ladder ("3b … 7b … 16b deepseek, then the agents") is
+      four rungs or more. Not silently resolved: see decide.
     - >-
       Old settings are translated with a stated precedence and an end date; keeping every behaviour forever under one
       name keeps the fragmentation.
@@ -154,7 +199,8 @@ spec:
       its screen.
 
   decide:   # his calls, needed before the phases that name them
-    - "ME5 — the brain: the door's plan (pipeline-routing: configured, persisted, tested) with RAID's _decide delegating to it (the coder's recommendation), or RAID's _decide with the door asking it."
+    - "ME5 — confirm: RAID is the brain (his axioms §5.2, §9.1, §15; the coder's recommendation since 2.1.0), copilot the door that asks it, pipeline-routing's parts moved under RAID."
+    - "ME3 — §9.4 MAX_ROUTE_DEPTH = 3 vs the CT6 ladder of four or more rungs: does depth count models (raise it, said in the axioms) or systems crossed (a ladder of models inside one RAID route is depth 1)?"
     - "ME5 — LAW_I: Ollama first (raid.spec, the phase ladder today) or ChatGPT first (RAID's code since 2026-09-02, speceng.build's default)."
     - "ME10 — lifeline's confidence escalation: keep as an opt-in policy, or retire."
     - "ME8 — observability contracts: a status the drainer never runs ('external'), or stop submitting them and record through the one attempt record instead."
@@ -205,9 +251,10 @@ spec:
       status: OPEN
       james: '"needs escalating retry logic and fallback routing … have all of this configurable."'
       depends_on: [ME2]
-      files: [lib/pipeline-routing.js, lib/model-door.js, copilot/server.js]
+      files: [cortex/core/raid/index.js, lib/pipeline-routing.js, lib/model-door.js, copilot/server.js]
       does: >-
-        climb() is the engine, behind copilot's door: the rungs from the one chooser (ME5), filtered by present() and
+        §15.1 made real for every caller: climb() becomes RAID's, reached through copilot's door; the rungs from RAID's
+        decision (ME5), filtered by present() and
         RAID's health, each attempt optionally retried with feedback (the prompt strategies) before climbing, the
         caller's policy deciding. One job carries one attempt budget through every nesting (proof, chunks, rungs,
         strategies, drain ticks); a nested climb spends from it and stops when it is gone, saying so.
@@ -229,12 +276,14 @@ spec:
       status: OPEN
       james: '"What about hooking in raid?"'
       depends_on: [ME3]
-      files: [lib/pipeline-routing.js, lib/model-door.js, cortex/core/raid/index.js, cortex/core/raid/routing-ir.js, lib/agent-router.js, copilot/lifeline.js, copilot/server.js, lib/agent-providers.js, lib/seam/adapters/warp-cascade.js, guardian/lib/provider-routing.js, clear-glass/src/mesh/agent-mesh.js, idearium/spec-engine/chunk-dispatch.js]
+      files: [cortex/core/raid/index.js, cortex/core/raid/snr-filter.js, lib/pipeline-routing.js, lib/model-door.js, cortex/core/raid/routing-ir.js, lib/agent-router.js, copilot/lifeline.js, copilot/server.js, lib/agent-providers.js, lib/seam/adapters/warp-cascade.js, guardian/lib/provider-routing.js, clear-glass/src/mesh/agent-mesh.js, idearium/spec-engine/chunk-dispatch.js]
       does: >-
-        The eight choosers give one answer for one job: one function decides (per `decide`), the others ask it —
-        RAID _decide / decideForContract / routing-ir, guardian chooseProvider and the mesh (both via /api/raid/decide),
-        WARP providersFor, lifeline's ollama-first, resolveDefaultBackend and agent-providers, speceng.build's default.
-        agent-router's intent strengths become an input to it (a prior), not a second chooser; LAW_I stated once.
+        RAID's _decide is the one chooser (§5.2, §9.1). Copilot's door (/api/route) answers by asking it; pipeline-routing's
+        modes, ladder, present() and learned order become its inputs, served from cortex; WARP providersFor, lifeline's
+        ollama-first, resolveDefaultBackend, agent-providers and speceng.build's default ask it instead of choosing.
+        agent-router's intent strengths and AGENT_CONSTRAINTS become cortex rows it reads (RR3); fidelity scoring (the
+        SNR gate) runs for every routing call, not only fault calls (RR1). LAW_I stated once, in raid.spec and the code
+        alike. Closes RR1, RR3.
       decide: "see decide: the brain; LAW_I"
       proof: "for the same job every former chooser names the same model; changing the chain in Settings changes all of them"
     ME6_one_learner:
@@ -244,11 +293,13 @@ spec:
       depends_on: [ME4, ME5]
       files: [lib/economy/router.js, cortex/core/raid/index.js, lib/agent-build-learning.js, lib/agent-record.js, guardian/lib/raid-feedback.js]
       does: >-
-        The economy ledger is the one learning store (persisted, weighted per HP4). RAID's in-memory weights read from it
-        and recordOutcome writes to it; agent-build-learning's priors and agent-record's learned ladder order come from it
-        (agent-record keeps its undone-by-the-person signal as a verdict class); guardian's feedback lands in it.
-        Transport health (agent-registry) stays the transport's.
-      proof: "an outcome recorded anywhere moves the one order; a restart keeps what was learned"
+        §15.3: RAID's weight table is the one learner — persisted in cortex (it is in memory today and lost on restart;
+        §2.2 storage is truth), weighted by class (HP4's weights move with it). recordOutcome is the one write: the
+        economy ledger's hops, agent-record's verdicts (undone by the person), agent-build-learning, guardian's feedback
+        all land there; the ledger keeps cost and usage, RAID keeps who is good at what. Tuning the weights over time is
+        RR6 / AP4 — one optimizer, RAID-governed — named, not built here. Transport health (agent-registry) stays the
+        transport's.
+      proof: "an outcome recorded anywhere moves RAID's one order; a restart keeps what was learned"
     ME7_raid_spine_joins:
       layer: library
       status: OPEN
@@ -296,8 +347,9 @@ spec:
         The ladders inside ladders become the engine's steps: chunk-dispatch's hops and attempts_per_hop cap, WARP's
         runCascade across providers (WARP keeps its cache and axiom gate, one provider per call), QueueCompartment's
         strategies (the engine's feedback step), chunk-build-orchestrator (a policy: try every rung, did-not-run is not
-        a turn), adaptive-fulfillment (the engine with the reflection score as an opt-in quality check), lifeline's
-        confidence escalation (per `decide`).
+        a turn), adaptive-fulfillment (it IS §15 — the engine, with the reflection score as an opt-in quality check),
+        lifeline's confidence escalation (per `decide`). When a climb changes agent, the work is re-sized to that agent's
+        token budget (RR2: "Each agent needs its own") — a 3b's chunk is not a claude's.
       decide: "see decide: lifeline"
       proof: "a chunk build makes the attempts its policy says and no more; the same failure walks the same rungs whichever entry point it came through"
     ME11_old_settings_translated:
