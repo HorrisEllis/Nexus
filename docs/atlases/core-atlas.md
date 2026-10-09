@@ -146,7 +146,7 @@ Since 0.39.341 (SY2 — James: "cos needs to be a nested compartment", then "Its
 
 ## ui/ — the shells
 
-The home shell (`ui/home/index.html`, its structure written down in `ui/home/STRUCTURE.md`), the TV shell (`ui/tv-shell/`), BrainOS and its floating panel (`ui/brainos/`, `ui/brainos-float/`), the control panel (`ui/control-panel/index.html`), the Eravos canvas Idearium embeds (`ui/eravos/index.html`), the provider agents' pages (`ui/agents/`), the pipeline tutorial (`ui/pipeline-tutorial.js`), and shared code (`ui/api.js`, `ui/ports.js`, `ui/pulse.js`, `ui/store.js`). The orchestrator serves each shell under /ui/.
+The home shell (`ui/home/index.html`, its structure written down in `ui/home/STRUCTURE.md`), the TV shell (`ui/tv-shell/`), BrainOS and its floating panel (`ui/brainos/`, `ui/brainos-float/`), the control panel (`ui/control-panel/index.html`), the Eravos canvas Idearium embeds (`ui/eravos/index.html`), the provider agents' pages (`ui/agents/`), the pipeline tutorial (ui/pipeline-tutorial.js — archived 0.54.0 to _archive/2026-10-09-declutter/), and shared code (`ui/api.js`, `ui/ports.js`, `ui/pulse.js`, `ui/store.js`). The orchestrator serves each shell under /ui/.
 
 ---
 
@@ -2040,7 +2040,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 14 code · 1 other file(s).
 
-- `scripts/_register-session-hooks.js` (75 lines) — // One-shot: register the six endpoints built this session that had no // hook declaration (§5.1). Inserts at each array head, matching the
+- scripts/_register-session-hooks.js — archived 0.54.0 to _archive/2026-10-09-declutter/ (75 lines) — // One-shot: register the six endpoints built this session that had no // hook declaration (§5.1). Inserts at each array head, matching the
 - `scripts/analyze-methodless-routes.js` (96 lines) — scripts/analyze-methodless-routes.js §WHY — scripts/generate-hooks.js declared 38 of 65 orphaned routes and
 - `scripts/bench-file-prompt.js` (53 lines) — the benchmark behind the file prompt's size claim (§17.11: every performance claim names its benchmark, and reports the unfavourable case beside the favourable one).  
   requires 1 · required by 0
@@ -2191,14 +2191,14 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   requires 0 · required by 3
 - `ui/ncp.js` (374 lines) — lib/ncp.js — NEXUS Channel Protocol v1.2.0 Architecture:  
   exports createNCPServer, jsonResponse, readBody, handleOptions
-- `ui/pipeline-tutorial.js` (484 lines) — NEXUS Full Pipeline Tutorial Walks the complete idea → spec → compile → dispatch → artifact → heal pipeline.  
+- ui/pipeline-tutorial.js — archived 0.54.0 to _archive/2026-10-09-declutter/ (484 lines) — NEXUS Full Pipeline Tutorial Walks the complete idea → spec → compile → dispatch → artifact → heal pipeline.  
   exports PIPELINE_STAGES, escalate, sleep, GET, POST
 - `ui/ports.js` (47 lines) — Canonical NEXUS port map Served by orchestrator at http://localhost:9000/ports.js
 - `ui/pulse.js` (288 lines) — lib/pulse.js — NEXUS Pulse System v1.0.0 The pulse is the heartbeat made active. Every system that imports this  
   exports createPulse, createNCPPulse, _Ring
 - `ui/store.js` (646 lines) — NEXUS Reactive State Store Status: pre-release  
   requires 2 · required by 0 · emits artifacts.changed, config.changed, cortex.memory.updated, entropy.changed +18
-- `ui/ui-pulse.js` (233 lines) — ui/pulse.js — NEXUS Browser Pulse System v1.0.0 Browser-side pulse. Two independent heartbeats:  
+- ui/ui-pulse.js — archived 0.54.0 to _archive/2026-10-09-declutter/ (233 lines) — ui/pulse.js — NEXUS Browser Pulse System v1.0.0 Browser-side pulse. Two independent heartbeats:  
   requires 1 · required by 0 · emits health.changed
 
 #### `ui/agents/chatgpt/`

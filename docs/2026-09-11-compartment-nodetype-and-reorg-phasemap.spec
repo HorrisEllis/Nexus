@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        2026-09-11-compartment-nodetype-and-reorg-phasemap
+    roadmap: 'later — folder reorg — later (declutter 2026-10-09, James: "okay")'
     version:     1.0.0
     foundation:  nexus-system-foundation@1.1.0
     status:      mapped-not-built

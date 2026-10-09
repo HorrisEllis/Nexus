@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        idearium-creative-repo-overhaul
+    roadmap: folded into idearium-repository-overhaul — the same repo host, earlier (declutter 2026-10-09, James: "okay")
     version:     0.1.0-phasemap
     status:      "PHASEMAP 2026-09-15. NOT STARTED — planning artifact only, zero
       code written against it yet. Builds ON TOP of

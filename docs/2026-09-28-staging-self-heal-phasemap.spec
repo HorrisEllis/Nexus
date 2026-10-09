@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     staging-self-heal
+    roadmap: 'later — self-heal — after the loop (declutter 2026-10-09, James: "okay")'
     version:  1.0.0
     date:     2026-09-28
     release:  0.39.274 (base) · nothing below is built yet

@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        nexus-system-standardization
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status:      PHASEMAP 2026-08-08. Mapped before build (§3.3). The target architecture.
     uuid:        nexus-system-standardization-v0-0000-2026-0808-001

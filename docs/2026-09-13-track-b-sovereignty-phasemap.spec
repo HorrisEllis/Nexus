@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        track-b-sovereignty
+    roadmap: 'later — sovereignty — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status:      "PHASEMAP 2026-09-13. Executes
       TRACKS_EXPLICITLY_NOT_STARTED_YET.track_b_sovereignty from

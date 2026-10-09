@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        2026-09-02-versionium-sovereign-and-cleanup-phasemap
+    roadmap: 'later — versionium works; cleanup later (declutter 2026-10-09, James: "okay")'
     version:     1.0.0
     foundation:  nexus-system-foundation@1.1.0
     status:      "STALE HEADER, corrected 2026-09-19. VS1 (versionium as its own sovereign system, :3754, autopilot phase 3)

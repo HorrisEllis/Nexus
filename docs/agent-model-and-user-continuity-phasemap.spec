@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        agent-model-and-user-continuity
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status:      PHASEMAP 2026-08-13. Mapped, not built. §3.3 — map before build.
     uuid:        nexus-agent-model-continuity-v0-0000-2026-0813-001

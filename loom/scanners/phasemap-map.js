@@ -292,6 +292,16 @@ function parsePhasemapText(text, name) {
     });
     seen.add(id);
   }
+  // §OR3 0.53.1 — a whole map answered at once (docs/2026-10-09-one-roadmap-phasemap.spec): a top-level
+  //   roadmap: later — reason          every phase not done goes on the shelf
+  //   roadmap: folded into <map> — why  every phase not done is closed, folded into that map
+  // in the map's meta. One line, reversible; the phases' own statuses are untouched.
+  const rm = String(text).match(/^\s{2,4}roadmap:\s*["']?(later|folded)\b(?:\s+into\s+([\w.-]+))?/im);
+  if (rm) for (const p of out) {
+    if (p.status === 'done') continue;
+    if (rm[1].toLowerCase() === 'later') { p.status = 'pending'; p.shelf = true; }
+    else { p.status = 'done'; p.closedAs = 'folded'; p.foldedInto = rm[2] || null; }
+  }
   return out;
 }
 
@@ -368,7 +378,8 @@ function loadAll() {
     let text;
     try { text = fs.readFileSync(file, 'utf8'); } catch (_) { continue; }
     for (const p of parsePhasemapText(text, name)) {
-      phases.push({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, tags: p.tags, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn });
+      phases.push({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, tags: p.tags, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn,
+        ...(p.shelf ? { shelf: true } : {}), ...(p.closedAs ? { closedAs: p.closedAs } : {}), ...(p.foldedInto ? { foldedInto: p.foldedInto } : {}) });   // §OR1 — were dropped here
     }
   }
   // group by system (LP2 — split by system).

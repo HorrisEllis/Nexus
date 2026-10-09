@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        axiom-5-2-raid-routing
+    roadmap: folded into one-model-engine — its open routes are ME8 (observability contracts) (declutter 2026-10-09, James: "okay")
     version:     0.1.0-phasemap
     status:      "PHASEMAP 2026-09-13. Executes
       TRACKS_EXPLICITLY_NOT_STARTED_YET.track_d_axiom_5_2_compliance from

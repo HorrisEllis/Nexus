@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     graph-build-context-settings-memory
+    roadmap: 'later — graph per project — after the loop (declutter 2026-10-09, James: "okay")'
     version:  1.1.0
     date:     2026-09-28
     release:  0.39.277 (map revised on 0.39.276 + staging C0/C1) · nothing in THIS map is built yet

@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-08-23-backlog
+    roadmap: 'later — a night''s leftovers; anything on the path will resurface there (declutter 2026-10-09, James: "okay")'
     version: 0.2.0-phasemap
     status:  PHASEMAP 2026-08-23. Real, evidence-grounded where evidence
              already exists (Guardian-zip mining report, live tool-registry

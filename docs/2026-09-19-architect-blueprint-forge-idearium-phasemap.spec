@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        architect-blueprint-forge-idearium-consolidation
+    roadmap: 'later — architect forge — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status:      "DRAFT — mapped, nothing built yet. Written per §8.5/§3.3 before
       touching any of the four systems. Explicitly reconciles with, does not

@@ -1,3 +1,4 @@
+// ARCHIVED 0.54.0 (docs/2026-10-09-one-roadmap-phasemap.spec OR6) — an older copy of ui/pulse.js (232 vs 287 lines); nothing loads it. James: "make sure to clean up old code that isnt needed anymore". Was ui/ui-pulse.js.
 /**
  * ui/pulse.js — NEXUS Browser Pulse System  v1.0.0
  * UUID: nexus-ui-pulse-v1-0000-4000-0000-000000000001

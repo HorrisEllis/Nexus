@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     verified-primitives
+    roadmap: 'later — adversarial checks — after the engine (declutter 2026-10-09, James: "okay")'
     version:  1.1.0
     date:     2026-10-05
     release:  0.39.309 (base) → 0.39.310

@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     tool-layers-and-pane-memory
+    roadmap: 'later — one leftover (declutter 2026-10-09, James: "okay")'
     version:  1.0.0
     date:     2026-09-29
     release:  0.39.278

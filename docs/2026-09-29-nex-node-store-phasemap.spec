@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     nex-node-store
+    roadmap: 'later — storage performance — when it hurts (declutter 2026-10-09, James: "okay")'
     version:  0.1.0
     date:     2026-09-29
     release:  "0.39.281 (base) → from 0.39.282, one phase at a time"

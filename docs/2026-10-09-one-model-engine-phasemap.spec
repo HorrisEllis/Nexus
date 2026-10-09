@@ -435,6 +435,7 @@ spec:
         copilot (module-builder, recursive-diagnose, reword, the bridge routes), cortex (officiator, self-heal),
         architect, orchestrator, clear-glass, cli.
       proof: "each caller's old tests pass; each climbs per its policy; the Plan, the Code tab and the pages show a climb the same way"
+      retires: "every path a moved caller used before goes to _archive in the same change (OR6's rule): the choosers it no longer asks, its own retry loop, its settings once translated"
     ME13_no_bypass:
       layer: library
       status: OPEN

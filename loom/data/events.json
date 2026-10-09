@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791558745401,
+ "generatedAt": 1791559594770,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -2446,12 +2446,6 @@
     "nexus.contract.loaded",
     "nexus.ledger.entry",
     "nexus.system.poll"
-   ],
-   "listens": []
-  },
-  "nexus.ui.ui-pulse": {
-   "emits": [
-    "health.changed"
    ],
    "listens": []
   }
@@ -7564,8 +7558,7 @@
   },
   "health.changed": {
    "emitters": [
-    "nexus.ui.store",
-    "nexus.ui.ui-pulse"
+    "nexus.ui.store"
    ],
    "listeners": []
   },

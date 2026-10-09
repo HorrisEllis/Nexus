@@ -1,6 +1,7 @@
 spec:
   meta:
     name: guardian-mesh-first-dispatch
+    roadmap: 'later — transport layer (ME9 keeps it as is) (declutter 2026-10-09, James: "okay")'
     version: 0.1.0-phasemap
     status: "GUARDIAN SIDE BUILT 2026-09-19 (registry, ladder, mesh client, dispatcher hook, RAID feedback); default GUARDIAN_TRANSPORT=ncp-only so behaviour is unchanged. CLEAR GLASS SIDE BUILT (0.39.155) but ONLY VERIFIED against jsdom fixtures and a fake Electron, never a real site or real Electron. See code_base_scale and live_smoke_required."
     ask: "James: guardian should send jobs to the agent MESH (ClearDriver: DOM inject + mutation observer) and use the

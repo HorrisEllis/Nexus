@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     runtime-load
+    roadmap: 'later — performance — when it hurts (declutter 2026-10-09, James: "okay")'
     version:  1.4.0
     date:     2026-10-07
     release:  "PF1 0.40.1 (a fix: patch). PF2–PF5 each a phase."

@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-08-27-event-taxonomy-and-brainstorm
+    roadmap: 'later — event taxonomy per system — not on the path (declutter 2026-10-09, James: "okay")'
     version: 0.1.0-phasemap
     status: >-
       PHASEMAP 2026-08-27. Two things captured here: (1) a real,

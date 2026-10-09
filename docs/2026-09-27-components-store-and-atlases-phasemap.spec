@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     components-store-and-atlases
+    roadmap: 'later — two leftovers; atlases are ME15 (declutter 2026-10-09, James: "okay")'
     version:  1.0.0
     date:     2026-09-27
     release:  0.39.266 (part 3)

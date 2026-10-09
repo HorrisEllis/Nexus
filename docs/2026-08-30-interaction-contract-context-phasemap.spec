@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-08-30-interaction-contract-context-phasemap
+    roadmap: 'later — contracts and context — after the loop (declutter 2026-10-09, James: "okay")'
     version: 0.1.0-phasemap
     status: >
       PHASEMAP 2026-08-30. James: "Schemas. Frameworks... hooking UUIDs

@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     system-expectations
+    roadmap: 'later — later (declutter 2026-10-09, James: "okay")'
     version:  1.0.0
     date:     2026-10-07
     release:  "each phase its own minor"

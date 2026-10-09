@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     guardian-retry-novelty-and-installs
+    roadmap: 'later — guardian retries are ME9; installs later (declutter 2026-10-09, James: "okay")'
     version:  1.0.0
     date:     2026-09-26
     release:  0.39.265

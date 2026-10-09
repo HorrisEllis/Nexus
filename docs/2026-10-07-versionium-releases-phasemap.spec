@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     versionium-releases
+    roadmap: 'later — release notes — later (declutter 2026-10-09, James: "okay")'
     version:  1.0.0
     date:     2026-10-07
     release:  "after 0.39.376 — each phase its own version (VR0 decides the scheme)"

@@ -1,6 +1,7 @@
 spec:
   meta:
     name:        clear-glass-tab-per-repo-and-ui-expansion
+    roadmap: 'later — Clear Glass UI — later (declutter 2026-10-09, James: "okay")'
     version:     0.1.0-phasemap
     status: >-
       PHASEMAP 2026-09-22. James: "What if each container gets a

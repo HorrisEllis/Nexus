@@ -95,7 +95,7 @@ spec:
       proof: "every open phase has a proposed answer with a reason; every DONE-ELSEWHERE names the code or phase that proves it"
     OR3_his_decisions_applied:
       layer: docs
-      status: OPEN
+      status: "DONE (0.54.0) — James: \"okay\" (accepting docs/roadmap-triage.md). One line per map, the phases untouched: roadmap: 'later — why' on 48 maps, roadmap: 'folded into <map> — why' on 5; the scanner reads them (PS-014). The roadmap: 188 open phases on the path, 463 on the shelf, 36 closed by the declutter. Reversible: delete the line. Phase-by-phase triage of the path maps, checked against the code, comes next."
       james: '"we also need to declutter the roadmap."'
       depends_on: [OR2]
       files: [docs/*-phasemap.spec]
@@ -103,6 +103,27 @@ spec:
         Map by map, as he decides: each phase's status set to his answer, with a dated line in the map saying it was the
         declutter and who decided. Maps left with nothing open are marked done; maps wholly on the shelf say so at the top.
       proof: "the census after OR3 shows a roadmap that is only the path, a shelf, and nothing silently dropped"
+    OR6_old_code_out:
+      layer: library
+      status: "PARTIAL (0.54.0) — the first sweep done; the larger part rides each engine and loop phase"
+      james: '"okay. and make sure to clean up old code that isnt needed anymore"'
+      depends_on: [OR0]
+      files: [_archive/2026-10-09-declutter/]
+      does: >-
+        Old code goes to _archive/ (every scanner skips it; §0.3 — kept, with an ARCHIVED header saying why), never
+        deleted. Found by a scan of every code file for any mention of it anywhere (code, HTML, JSON, YAML, scripts):
+        55 candidates; a strict re-check (whole file names, a folder's index loaded by its folder name, HTML src=)
+        left 34 actually used, 7 tools run by hand, 14 mentioned only by docs or tests. Of those 14, archived now: three
+        superseded files — ui/ui-pulse.js (an older copy of ui/pulse.js), ui/pipeline-tutorial.js (the old shell's
+        tutorial), scripts/_register-session-hooks.js (a one-shot that has run). NOT old, kept and named for him: his
+        built-but-never-wired work — security/e2e-channel.js ("a mistake could cost lives … we need this airtight"),
+        guardian/lib/command-registry.js (".command nodes as the source of truth"), ui/consent/consent-gate.js; and
+        tested-only modules (genesis-catalog, canvas-intelligence, clear-glass seam watchdog-gates). The finding that
+        matters more: NEXUS's clutter is not unused files — it is superseded parallel paths still wired in (eight model
+        choosers, three drainers, nested ladders, two copies of specs, two Eravos canvases, two run-all lists). Those
+        are retired by the phases that replace them: the rule from here is that a phase that replaces something
+        archives the old in the same change, and says so.
+      proof: "the three files in _archive with their reasons; atlas reference test 53/53; loom unchanged; the rule written into ME10, ME12 and the loop map"
     OR4_one_roadmap_in_idearium:
       layer: ui
       status: OPEN

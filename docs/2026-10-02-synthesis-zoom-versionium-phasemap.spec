@@ -1,6 +1,7 @@
 spec:
   meta:
     name:     synthesis-zoom-versionium
+    roadmap: 'later — zoom views — after Idearium holds the systems (declutter 2026-10-09, James: "okay")'
     version:  1.0.0
     date:     2026-10-02
     release:  0.39.300

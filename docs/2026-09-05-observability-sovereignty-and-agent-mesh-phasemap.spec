@@ -1,6 +1,7 @@
 spec:
   meta:
     name:    2026-09-05-observability-sovereignty-and-agent-mesh-phasemap
+    roadmap: 'later — observability — later (declutter 2026-10-09, James: "okay")'
     version: 0.1.0-phasemap
     status: >
       PHASEMAP 2026-09-05. Single long session, mapping only (§3.3 — map

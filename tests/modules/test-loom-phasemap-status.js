@@ -172,5 +172,22 @@ t('PS-013 the value\'s first word: BUILT / CLOSED read done; the declutter\'s an
   const s = pm.summary(); assert.ok('shelf' in s && 'closed' in s && 'roadmap' in s);
 });
 
+t('PS-014 a whole map answered in one line: roadmap: later shelves, roadmap: folded into X closes; done stays done; loadAll keeps the marks', () => {
+  delete require.cache[require.resolve('../../loom/scanners/phasemap-map.js')];
+  const pm = require('../../loom/scanners/phasemap-map.js');
+  const doc = (r) => ['spec:', '  meta:', '    name: x', ...(r ? [`    roadmap: ${r}`] : []), '  phases:', '    QA1_one:', '      status: OPEN', '    QA2_two:', '      status: "DONE 0.1"'].join('\n');
+  const l = pm.parsePhasemapText(doc('later — after the loop'), 'm');
+  assert.deepStrictEqual(l.map(p => [p.status, !!p.shelf]), [['pending', true], ['done', false]]);
+  const f = pm.parsePhasemapText(doc('folded into one-model-engine — same work'), 'm');
+  assert.deepStrictEqual(f.map(p => [p.status, p.closedAs || null, p.foldedInto || null]), [['done', 'folded', 'one-model-engine'], ['done', null, null]]);
+  assert.deepStrictEqual(pm.parsePhasemapText(doc(null), 'm').map(p => p.status), ['pending', 'done']);
+  const fs2 = require('fs'), os = require('os'), dir = fs2.mkdtempSync(path.join(os.tmpdir(), 'ps14-'));
+  fs2.writeFileSync(path.join(dir, 'a-phasemap.spec'), doc('later — x'));
+  process.env.NEXUS_PHASEMAP_DIR = dir; delete require.cache[require.resolve('../../loom/scanners/phasemap-map.js')];
+  const pm2 = require('../../loom/scanners/phasemap-map.js'); const sum = pm2.summary();
+  delete process.env.NEXUS_PHASEMAP_DIR;
+  assert.strictEqual(sum.shelf, 1, 'loadAll keeps shelf'); assert.strictEqual(sum.roadmap, 0);
+});
+
 console.log(`\n${fail === 0 ? '✓' : '✗'} phasemap status: ${pass} passed, ${fail} failed\n`);
 process.exit(fail === 0 ? 0 : 1);
