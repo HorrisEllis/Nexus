@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791572119271,
+ "generatedAt": 1791572900090,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -2018,7 +2018,9 @@
     "guardian.job.complete",
     "guardian.job.error"
    ],
-   "listens": []
+   "listens": [
+    "guardian.job.progress"
+   ]
   },
   "nexus.tests.modules.test-ico-ledger-writethrough": {
    "emits": [],
@@ -5632,7 +5634,8 @@
    ],
    "listeners": [
     "nexus.guardian.lib.chat-transcripts",
-    "nexus.tests.modules.test-back-and-forth.test"
+    "nexus.tests.modules.test-back-and-forth.test",
+    "nexus.tests.modules.test-guardian-retry-novelty-installs"
    ]
   },
   "guardian.ncp.transcript": {

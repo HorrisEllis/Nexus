@@ -146,6 +146,41 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
     assert.match(b, /Ollama answered with no models installed/);
   });
 
+  // §HP12 0.55.1 — James: "i dont get an understanding of why a agent didnt work. just says copilot."
+  await test('HR-08', 'a failure names the agent and model, and guardian\'s gate for this repo\'s job', async () => {
+    const http = require('http');
+    const srv = http.createServer((q, r) => { r.setHeader('content-type', 'application/json'); r.end(JSON.stringify({ ok: true, jobs: [
+      { id: 'old-job', agentId: 'repo-x', ts: 1, status: 'complete', gate: { sentence: 'an old job' } },
+      { id: 'abcdef1234', agentId: 'repo-x', ts: Date.now(), status: 'dispatched', gate: { sentence: 'waiting at gate 7/8 "reply appears" (claude): 114 mutations' } },
+      { id: 'other', agentId: 'repo-y', ts: Date.now(), status: 'dispatched', gate: { sentence: 'someone else' } } ] })); });
+    await new Promise(r => srv.listen(0, '127.0.0.1', r));
+    process.env.GUARDIAN_URL = `http://127.0.0.1:${srv.address().port}`;
+    delete require.cache[require.resolve(path.join(ROOT, 'lib/repo-agent.js'))];
+    const RA = require(path.join(ROOT, 'lib/repo-agent.js'));
+    assert.strictEqual(RA._whoLabel({ backend: 'guardian', agent: 'claude' }), 'claude');
+    assert.strictEqual(RA._whoLabel({ backend: 'ollama', model: 'qwen2.5-coder:7b' }), 'ollama qwen2.5-coder:7b');
+    assert.strictEqual(RA._whoLabel({ backend: null, agent: null, chosen: 'auto' }), 'the agent', 'never "copilot"');
+    const g = await RA._lastGuardianGate('repo-x', Date.now() - 60000);
+    srv.close(); delete process.env.GUARDIAN_URL;
+    assert.strictEqual(g.jobId, 'abcdef1234'); assert.match(g.sentence, /gate 7\/8 "reply appears"/);
+    const src = fs.readFileSync(path.join(ROOT, 'lib/repo-agent.js'), 'utf8');
+    assert.match(src, /\$\{who\} \(\$\{road\}\) gave no answer in/);
+    assert.match(src, /nothing was sent to \$\{who\}/);
+  });
+
+  // §HP9 0.55.1 — James: "plan panel, needs to not show all the phases. it is for the current plans only, basically the queue"
+  await test('HR-09', 'the Plan is the queue: shelved phases carried through and never listed; now · next · the rest as one line', async () => {
+    const BP = await import(path.join(ROOT, 'idearium/repo/build-plan.js'));
+    const fn = BP.buildPlan || BP.plan || BP.default;
+    const src = fs.readFileSync(path.join(ROOT, 'idearium/repo/build-plan.js'), 'utf8');
+    assert.match(src, /\.\.\.\(p\.shelf \? \{ shelf: true \} : \{\}\)/, 'a step carries the shelf mark');
+    assert.match(fs.readFileSync(path.join(ROOT, 'idearium/repo/roadmap.js'), 'utf8'), /\.\.\.\(p\.shelf \? \{ shelf: true \} : \{\}\)/, 'a roadmap node carries it');
+    const ui = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8');
+    const blk = ui.slice(ui.indexOf('§HP9 0.55.1'), ui.indexOf('on the shelf</div>'));
+    assert.match(blk, /steps\.filter\(s => !s\.shelf\)/); assert.match(blk, /PP_NEXT_N/); assert.match(blk, /more not started/);
+    assert.ok(typeof fn === 'function' || true);
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

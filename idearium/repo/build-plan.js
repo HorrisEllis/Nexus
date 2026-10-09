@@ -83,7 +83,7 @@ export function buildPlan({ phases = [], runs = [], order = null, now = Date.now
     if (g.gates[0] && !g.gates[0].at && typeof times.mapped === 'number') g.gates[0].at = times.mapped;
     if (times.closed && typeof times.closed === 'number') { const c = g.gates.find(x => x.gate === 'closed'); if (c && !c.at) c.at = times.closed; }
     return {
-      key: p.phase_key, uuid: p.uuid || null, map: p.map, title: p.title || p.name || p.phase_key, layer: p.layer || null, status: p.status,
+      key: p.phase_key, uuid: p.uuid || null, map: p.map, title: p.title || p.name || p.phase_key, layer: p.layer || null, status: p.status, ...(p.shelf ? { shelf: true } : {}),
       ...g, runs: rs.length, times,
       ledger: rs.slice().reverse().map(r => ({ ts: r.ts, startedAt: r.startedAt || null, runId: r.runId, ...(r.chunk ? { chunk: r.chunk, chunks: r.chunks, file: r.file || null } : {}), state: r.state, snapshot: r.snapshot || null, provider: r.provider || null, ...(r.route ? { route: r.route } : {}), ...(r.precedent ? { precedent: r.precedent } : {}), ...(r.against ? { against: r.against, overlaid: r.overlaid || [], againstNote: r.againstNote || null, leverage: r.leverage || null } : {}), ...(r.rung ? { rung: r.rung, rungs: r.rungs, attempt: r.attempt } : {}),
         error: r.error || null, injected: r.injects ? r.injects.injected || [] : [], reply: r.reply ? String(r.reply).slice(0, 600) : null })),

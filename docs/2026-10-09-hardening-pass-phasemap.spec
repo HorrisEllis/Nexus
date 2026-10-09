@@ -6,7 +6,7 @@ spec:
     release:  0.51.0 (base)
     uuid:     nexus-hardening-pass-phasemap-v1-0000-2026-1009-jamesbrooks-001
     owner:    idearium (the thread, the runs, the ladder) · lib (spec-document, pipeline-routing, economy router)
-    status:   "MAPPED 2026-10-09, before building; HP1–HP5 done (0.52.0); HP6–HP8 from his live run (0.55.0); the learning's held-out evaluation stays open (HP4 pushback)"
+    status:   "MAPPED 2026-10-09, before building; HP1–HP5 done (0.52.0); HP6–HP8 from his live run (0.55.0); HP9–HP12 from the next (0.55.1); the learning's held-out evaluation stays open (HP4 pushback)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -118,4 +118,50 @@ spec:
         "no Ollama models listed or installed" — the same words as an empty Ollama. The route now says which: the bridge's
         own error, or that Ollama answered with no models.
       proof: "with the bridge unreachable the run's route names the bridge error; with an empty Ollama it says none are installed"
+    HP9_the_plan_is_current_work:
+      layer: ui
+      status: "DONE (0.55.1) — roadmap.js and build-plan.js carry the shelf mark; plan-panel.js lists NOW (steps with runs or active), NEXT (3 not-started of the maps with something now, or of the chosen map), the rest as one line with its count, done folded, the shelf never (a count only). test-hardening-pass HR-09."
+      james: '"plan panel, needs to not show all the phases. it is for the current plans only, basically the queue"'
+      depends_on: []
+      files: [idearium/repo/roadmap.js, idearium/repo/build-plan.js, idearium/ui/js/plan-panel.js]
+      does: >-
+        Found: on "every phasemap" the Plan listed all 1,000 steps — CT7 only folded the complete ones, so every
+        not-started phase of every map showed, and the shelf (the declutter's LATER) too. The Plan becomes the queue:
+        NOW — every step with a run (building, retrying, stopped, failed, waiting) or marked active; NEXT — the next few
+        not-started steps of the maps that have something now; the rest one line with its count (show / hide); shelved
+        phases never. Done stays folded.
+      proof: "the nexus repo's Plan on every phasemap lists only steps with runs and a few next ones; a shelved phase is absent; the counts are said"
+    HP10_the_work_surface_in_view:
+      layer: ui
+      status: "DONE (0.55.1) — with HP9's short queue the work surface under it is in view again; no layout change needed."
+      james: '"also for the build surface which has vanished."'
+      depends_on: [HP9_the_plan_is_current_work]
+      files: [idearium/ui/js/plan-panel.js]
+      does: "The work surface (the agent's changes, live) sits under the queue — with HP9 the queue is short, so it is in view again, not pushed below a thousand steps."
+      proof: "with a build running the work surface is visible in the Plan without scrolling past the roadmap"
+    HP11_a_reply_on_the_page_is_never_sent_again:
+      layer: library
+      status: "DONE (0.55.1) — guardian/lib/job-retry.js classify: 'no reply element … findResponseEl() matched nothing' is pick-reply, not no-reply; onError reads the transcript and the Clear Glass .response first and completes from them; otherwise the job says needsYou 'pick the reply with ◎' (bus stage needs-you) and the prompt is never re-sent. test-guardian-retry-novelty-installs (3 new checks, 52/52)."
+      james: '"look at the .response in clearglass."'
+      depends_on: []
+      files: [guardian/lib/job-retry.js]
+      does: >-
+        Found: "no reply element found after 180s — findResponseEl() matched nothing on this page" was classed no-reply
+        and retried by re-sending the prompt into the same chat, up to four times. That error means the page changed and
+        the selector no longer finds the reply — the agent may well have answered. After the transcript and the Clear
+        Glass .response are checked (they already are) and hold nothing, it is not retried: it is 'needs-you' with the one
+        action that fixes it — pick the reply with ◎ (the selector map, 0.39.249) — and never a duplicate prompt.
+      proof: "an error naming findResponseEl / no reply element is not retried and asks for ◎; a plain 'no reply' still retries"
+    HP12_a_failure_names_the_agent:
+      layer: library
+      status: "DONE (0.55.1) — lib/repo-agent.js: a timed-out dispatch says '<agent / ollama model> (<guardian, via copilot>) gave no answer in N s — guardian: <its gate sentence> (job …, status)', read from guardian's /jobs for this repo's agentId; an unreachable copilot says nothing was sent to <agent>; 'copilot' is never named as the one that failed. test-hardening-pass HR-08."
+      james: '"the problem with copilot is i dont get an understanding of why a agent didnt work. just says copilot."'
+      depends_on: []
+      files: [lib/repo-agent.js]
+      does: >-
+        Found: when the wait for copilot ran out the error read "copilot :3750 did not answer in time" — not the agent it
+        was sent to, not the model, not where the job stood. The error names the agent and model (claude, ollama
+        qwen2.5-coder:7b …), the backend, how long it waited, and — for a browser agent — guardian's last gate for this
+        repo's job; copilot is named only as the road, never as the one that failed.
+      proof: "a timed-out browser-agent dispatch says 'claude (guardian, via copilot) gave no answer in 300 s — last gate …'; an unreachable copilot still says copilot is down"
 

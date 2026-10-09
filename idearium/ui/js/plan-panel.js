@@ -21,6 +21,8 @@ const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), fo
 // complete button." Complete steps and complete sections fold into one line with their count (hidden, never deleted);
 // one click shows them; the choice is remembered in this browser.
 function _ppShowDoneSaved() { try { return localStorage.getItem('idearium.plan.showDone') === '1'; } catch (_) { return false; } }
+const PP_NEXT_N = 3;   // §HP9 — how many not-started steps the queue shows after what is running
+function planToggleRest() { PLANP.showRest = !PLANP.showRest; _planPaint(); }
 function planToggleDone() { PLANP.showDone = !PLANP.showDone; try { localStorage.setItem('idearium.plan.showDone', PLANP.showDone ? '1' : '0'); } catch (_) { /* a per-browser convenience */ } _planPaint(); }
 function _ppDoneLine(n, what) { return n ? `<button class="pp-donefold" onclick="planToggleDone()" title="${PLANP.showDone ? 'hide' : 'show'} what is complete">✓ ${n} ${what} complete — ${PLANP.showDone ? 'hide' : 'show'}</button>` : ''; }
 const _PLAN_GATE_LABEL = { escalating: 'escalating', retrying: 'retrying', interrupted: 'interrupted', mapped: 'mapped', snapshot: 'snapshot', dispatched: 'sent', replied: 'replied', blocked: 'blocked', incomplete: 'incomplete', reviewing: 'reviewing', reviewed: 'reviewed', skipped: 'skipped', landed: 'landed', closed: 'closed' };
@@ -224,10 +226,23 @@ function _planPaint() {
     <div class="pp-sec">tasks</div>
     ${(() => {   // §CT7 — current work: what is building, next, stopped or waiting; the complete fold into one line
       if (!steps.length) return '<div class="pp-empty">no phases yet — plan a spec (Spec tab → ▶ Build this spec)</div>';
+      // §HP9 0.55.1 — James: "it is for the current plans only, basically the queue". NOW: a step with runs or marked
+      // active; NEXT: a few not-started steps of the maps that have something now (or of the one map chosen); the rest
+      // one line; shelved phases never; done folded as before.
       const isDone = (s) => s.status === 'complete' || s.status === 'done';
-      const open = steps.filter(s => !isDone(s)), done = steps.filter(isDone);
-      return (open.length ? open.map(task).join('') : '<div class="pp-empty">nothing left to build here — every step is complete</div>')
-        + _ppDoneLine(done.length, `step${done.length === 1 ? '' : 's'}`) + (PLANP.showDone ? done.map(task).join('') : '');
+      const live = steps.filter(s => !s.shelf);
+      const done = live.filter(isDone), open = live.filter(s => !isDone(s));
+      const isNow = (s) => (s.runs || 0) > 0 || s.current && s.run || ['active', 'building', 'in-progress'].includes(String(s.status));
+      const now = open.filter(isNow);
+      const nowMaps = new Set(now.map(s => s.map));
+      const pool = open.filter(s => !isNow(s) && (PLANP.map ? s.map === PLANP.map : nowMaps.has(s.map)));
+      const next = pool.slice(0, PP_NEXT_N), rest = open.length - now.length - next.length;
+      const shelf = steps.length - live.length;
+      return (now.length ? now.map(task).join('') : `<div class="pp-empty">nothing building${PLANP.map ? '' : ' — pick a map to see what is next, or ▶ build a phase'}</div>`)
+        + (next.length ? `<div class="pp-sec pp-next">next</div>${next.map(task).join('')}` : '')
+        + (rest > 0 ? `<button class="pp-donefold" onclick="planToggleRest()" title="every other not-started phase">○ ${rest} more not started${PLANP.showRest ? ' — hide' : ' — show'}</button>${PLANP.showRest ? open.filter(s => !isNow(s) && !next.includes(s)).map(task).join('') : ''}` : '')
+        + _ppDoneLine(done.length, `step${done.length === 1 ? '' : 's'}`) + (PLANP.showDone ? done.map(task).join('') : '')
+        + (shelf ? `<div class="pp-shelfnote" title="the declutter's LATER — kept in their maps, not the queue">${shelf} on the shelf</div>` : '');
     })()}
     ${other.length ? `<div class="pp-sec">plans and file jobs</div>${other.map(r => `<div class="pp-act"><span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.title || `${r.phase} ${r.map}`)} <span class="pp-led-t">${new Date(r.ts).toLocaleTimeString()}</span>${r.error ? `<div style="color:var(--coral);font-size:10px">${escapeHtml(r.error)}</div>` : ''}</div>`).join('')}` : ''}
     <details class="pp-actwrap pp-agents" ontoggle="if(this.open)ppAgentsLoad(this)"><summary class="pp-sec">agents · what Nexus has learned</summary><div class="pp-agents-body">${PLANP.agentsHtml || 'reading…'}</div></details>
