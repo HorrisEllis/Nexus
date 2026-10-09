@@ -14,7 +14,7 @@
  *   idearium/ui/js/app.js → idearium/ui/js/repo-settings.js            renderRepoSettings (the repo's Settings subtab)
  *   idearium/ui/js/repo-settings.js → idearium/ui/js/ollama-check.js   renderOllamaCheck (the Models category, CT4)
  *   idearium/ui/js/desktop-setup.js → app.js (page globals) · idearium/api (HTTP); repo-environment.js and repo-settings.js open it (DK2)
- *   idearium/ui/js/workshop.js → idearium/api (HTTP: /api/workshop/*, the repo's /spec/plan, /spec/build, /plan) · app.js (postMessage
+ *   idearium/ui/js/workshop.js → idearium/api (HTTP: /api/workshop/*, the repo's /spec/plan, /spec/build, /plan, /thread — §0.51.0 RS11) · app.js (postMessage
  *     nexus:repo.open, its message listener opens the repo on its Phases) (WS7, docs/2026-10-02-workshop-codex-rewind-phasemap.spec)
  *   idearium/ui/js/template-picker.js → idearium/api (HTTP: /api/workshop/templates, …/:tid/remove); workshop.js mounts it
  *     (window.TemplatePicker — the start page's new-spec picker) (RS5, docs/2026-10-05-spec-workshop-rebuild-phasemap.spec)

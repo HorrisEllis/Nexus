@@ -3641,9 +3641,10 @@ function openArchitect(from = null) {
   _architectWin = w || _architectWin;
   return w;
 }
-function openWorkshop(from = null, id = null) {
+function openWorkshop(from = null, id = null, block = null) {
   if (!API_BASE) { toast('idearium is offline — the spec workshop is served by it', 'err'); return null; }
-  const q = id ? `?id=${encodeURIComponent(id)}` : from ? `?from=${encodeURIComponent(from)}` : '';
+  // §RS11 0.51.0 — a phase opens the workshop at the section (block) it was planned from
+  const q = id ? `?id=${encodeURIComponent(id)}${block ? `&block=${encodeURIComponent(block)}` : ''}` : from ? `?from=${encodeURIComponent(from)}` : '';
   const w = window.open(`${API_BASE}/workshop.html${q}`, 'idearium-workshop', 'width=1440,height=920');
   if (!w) toast('the spec workshop window was blocked — allow pop-ups for idearium', 'err');
   _workshopWin = w || _workshopWin;
@@ -3667,6 +3668,8 @@ window.addEventListener('message', async (ev) => {
   if (!repo) { toast(`the repo is not listed yet: ${d.repoUuid}`, 'err'); return; }
   openRepoFor(repo.ideaUuid, repo.specUuid, repo.name);
   // §0.39.354 WS7 — the workshop's pipeline opens the repo on its Phases (what it just planned and started building)
+  // §RS11 0.51.0 — from a workshop section: its spec picked in the Phases tab, and the phase opened
+  if (d.subtab === 'phases' && typeof PHASES !== 'undefined' && typeof d.spec === 'string' && d.spec) { PHASES.wantSpec = d.spec; PHASES.wantKey = typeof d.phase === 'string' ? d.phase : null; }
   if ((d.subtab === 'spec' || d.subtab === 'architect' || d.subtab === 'phases') && typeof setRepoSubtab === 'function') setRepoSubtab(d.subtab);
   toast(d.subtab === 'spec' ? `${repo.name}: its spec, from the workshop` : d.subtab === 'architect' ? `${repo.name}: its architecture` : d.subtab === 'phases' ? `${repo.name}: its phases, from the workshop's pipeline` : `${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
 });

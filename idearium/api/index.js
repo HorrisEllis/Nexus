@@ -2041,6 +2041,7 @@ const ROUTE_CAP = {
   'routing.agents':   CAPS.READ_IDEAS,
   'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
+  'repo.thread': CAPS.READ_IDEAS,   // §RS9
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
@@ -2330,6 +2331,7 @@ function matchRoute(method, url) {
     // §0.39.271 S1 — the living model: the repo's spec/ .spec files, parsed (?path= one file)
     ['GET',    ['api','repos',    ':uuid','living-spec'],           'repo.living-spec'],
     ['GET',    ['api','repos',    ':uuid','phases'],                'repo.phases.get'],
+    ['GET',    ['api','repos',    ':uuid','thread'],                'repo.thread'],   // §RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
@@ -6413,6 +6415,36 @@ async function handle(req, res, route, query, body) {
       if (!dir) return err(res, 500, 'could not resolve repo directory');
       const PH = await import('../repo/phases.js');
       return ok(res, PH.managerView({ repo, repoDir: dir, runs: _phaseRuns(params.uuid) }));
+    }
+    // §RS9 0.49.0 — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade.
+    // interconnected". The thread (idearium/repo/thread.js): one spec's blocks ⇄ the phases planned from them ⇄ their runs
+    // ⇄ files and waiting changes, staleness per block. No ?spec= → the specs this repo's maps were planned from.
+    case 'repo.thread': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      const PH = await import('../repo/phases.js');
+      const TH = await import('../repo/thread.js');
+      const { maps } = PH.mapsFor({ repo, repoDir: dir });
+      if (!query.spec) {
+        const specs = new Map();
+        for (const m of maps) { const sp = TH.mapMetaOf(m.text).spec; if (sp) specs.set(sp, [...(specs.get(sp) || []), m.path]); }
+        for (const f of repo.files || []) if (/\.(spec|eg)$/i.test(f.path) && !/phasemap\.spec$/i.test(f.path) && !specs.has(f.path)) specs.set(f.path, []);
+        return ok(res, { repoUuid: params.uuid, specs: [...specs.entries()].map(([path, mapsOf]) => ({ path, maps: mapsOf })) });
+      }
+      const specPath = String(query.spec);
+      let specText = null;
+      try { const r = getRepoLayer().readTextFile(params.uuid, specPath); if (r && typeof r.content === 'string') specText = r.content; } catch (_) {}
+      if (specText == null) { try { const fsx = _require('fs'), px = _require('path'); const abs = px.resolve(dir, specPath); if (abs.startsWith(px.resolve(dir) + px.sep)) specText = fsx.readFileSync(abs, 'utf8'); } catch (_) {} }
+      if (specText == null) return err(res, 404, `no spec ${specPath} in this repo`);
+      const D = _require('../../lib/spec-document.js');
+      const P = _require('../../loom/scanners/phasemap-map.js');
+      let pending = []; try { pending = _require('../../lib/repo-inject.js').list(params.uuid, { status: 'proposed' }); } catch (_) {}
+      // §RS11 0.51.0 — the workshop session that saved this spec (the newest), so a phase can open the workshop at its block
+      let workshop = null;
+      try { const WSm = await import('../lib/workshop.js'); const w = loadTable(WSm.TABLE).filter(r => r.repoUuid === params.uuid && r.specPath === specPath).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))[0]; if (w) workshop = { uuid: w.uuid, title: w.title || null }; } catch (_) {}
+      return ok(res, { repoUuid: params.uuid, workshop, ...TH.thread({ specPath, specText, maps, runs: _phaseRuns(params.uuid), pending, parsePhases: P.parsePhasemapText, doc: D, sha: D.sha }) });
     }
     case 'repo.phases.runs': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);

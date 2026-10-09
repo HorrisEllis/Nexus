@@ -38,6 +38,11 @@ let W = null, PARTS = [], SEL = null, SRC = null, ALL = [], BUSY = false, STOP =
 const PEND = new Map();   // section id → { title?, body? } typed, not yet kept
 const SEEN = new Set();
 let PIPE = null;          // { repo, path, mapPath, runId, poll, t0, plan }
+// §RS11 0.51.0 — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade. interconnected".
+// The thread of the saved spec (GET /api/repos/:repo/thread?spec=): each section's phases (a section's id is the block id
+// its phases name), their state, a section moved since it was planned. Read on open, after save / plan / build, and when
+// the window comes back into focus — no polling.
+let THREAD = null, THREAD_ERR = null;
 
 // ── plumbing ──────────────────────────────────────────────────────────────────────────────────────────────────────
 function toast(t, bad) { const d = document.createElement('div'); d.className = 'toast' + (bad ? ' bad' : ''); d.textContent = t; $('toasts').appendChild(d); while ($('toasts').children.length > 4) $('toasts').firstChild.remove(); setTimeout(() => d.remove(), bad ? 7000 : 3400); }
@@ -185,13 +190,51 @@ async function open(id) {
   $('start').classList.add('hidden'); $('writer').classList.remove('hidden');
   ['newBtn', 'saveBtn', 'sendBtn'].forEach(x => $(x).classList.remove('hidden'));
   if (!SEL || !sec(SEL)) SEL = (W.sections[0] || {}).id || null;
+  // §RS11 — opened at a block (from a phase in idearium: ?block=<section id>)
+  const want = Q.get('block'); if (want && sec(want)) SEL = want;
   W.proposals.forEach(p => SEEN.add(p.uuid));
   paint();
+  if (want && sec(want)) setTimeout(() => jump(want), 0);
+  loadThread();
 }
+// §RS11 — the saved spec's thread; a workshop not saved to a repo yet has none, said in the strip
+async function loadThread() {
+  if (!W || !W.repoUuid || !W.specPath) { THREAD = null; THREAD_ERR = null; paintThread(); return; }
+  try { THREAD = await api(`/api/repos/${enc(W.repoUuid)}/thread?spec=${enc(W.specPath)}`, undefined, 30000); THREAD_ERR = null; }
+  catch (e) { THREAD = null; THREAD_ERR = e.message; }
+  paintThread();
+}
+function phasesOf(id) { return THREAD ? (THREAD.phases || []).filter(p => (p.blocks || []).includes(id)) : []; }
+function blockOf(id) { return THREAD ? ((THREAD.spec || {}).blocks || []).find(b => b.id === id) || null : null; }
+const PH_STATE = (p) => (p.status === 'done' || p.status === 'complete' ? 'done' : p.run && /building|dispatched|replied|escalating|retrying/.test(p.run.state || '') ? 'busy' : p.run && /failed|refused|blocked|unproven/.test(p.run.state || '') ? 'bad' : p.status === 'in-progress' || p.status === 'active' ? 'busy' : 'todo');
+/** the phases strip on every section, and the dots in the outline — painted in place, never rebuilding the document */
+function paintThread() {
+  if (!W) return;
+  for (const s of W.sections) {
+    const ps = phasesOf(s.id), b = blockOf(s.id), stale = ps.some(p => (p.stale || []).includes(s.id));
+    // edited since its spec was last saved to the repo (still typing, or kept in the workshop and not saved yet)
+    const dirty = ps.length && (PEND.has(s.id) || (W.savedAt && (s.updatedAt || 0) > W.savedAt + 1500));
+    const strip = $(`blk-${s.id}`) && $(`blk-${s.id}`).querySelector('.thr');
+    if (strip) {
+      // rewritten only when it changed: a repaint mid-click (selecting the section repaints) must not swap the button under the pointer
+      const html = !W.specPath ? '' : THREAD_ERR ? `<span class="thr-bad">PHASES COULD NOT BE READ: ${esc(THREAD_ERR)}</span>`
+        : !THREAD ? '' : !ps.length ? (b && !b.bookkeeping && String(s.body || '').trim() ? '<span class="thr-none">NOT IN A PHASE YET — SEND TO THE PIPELINE PLANS IT</span>' : '')
+        : `<span class="thr-lbl">${ps.length} PHASE${ps.length === 1 ? '' : 'S'}</span>${ps.map(p => `<button class="thr-ph ${PH_STATE(p)}" data-ph="${esc(p.key)}" title="${esc(p.title || p.key)}${p.run ? ` — ${esc(p.run.state)}${p.run.provider ? ` · ${esc(p.run.provider)}` : ''}` : ''} · OPEN IN IDEARIUM">${esc(String(p.key).split('_')[0])}<i>${esc(PH_STATE(p) === 'done' ? 'DONE' : PH_STATE(p) === 'busy' ? (p.run ? String(p.run.state).toUpperCase() : 'ACTIVE') : PH_STATE(p) === 'bad' ? String(p.run.state).toUpperCase() : 'PLANNED')}</i></button>`).join('')}${stale ? '<span class="thr-stale">↻ CHANGED SINCE IT WAS PLANNED — REPLAN</span>' : ''}${dirty ? `<span class="thr-stale">SAVING THIS CHANGES ${ps.length} PLANNED PHASE${ps.length === 1 ? '' : 'S'}</span>` : ''}`;
+      if (strip.dataset.h !== html) {
+        strip.innerHTML = html; strip.dataset.h = html;
+        strip.querySelectorAll('[data-ph]').forEach(x => { x.onclick = (e) => { e.stopPropagation(); openRepo('phases', { phase: x.dataset.ph }); }; });
+        const rp = strip.querySelector('.thr-stale'); if (rp && stale) { rp.classList.add('act'); rp.onclick = (e) => { e.stopPropagation(); openPipe(); planStage(true); }; }
+      }
+    }
+    const ol = document.querySelector(`#outline .ol[data-id="${CSS.escape(s.id)}"] .phd`);
+    if (ol) ol.innerHTML = ps.map(p => `<i class="${PH_STATE(p)}${(p.stale || []).includes(s.id) ? ' stale' : ''}" title="${esc(p.key)}"></i>`).join('');
+  }
+}
+window.addEventListener('focus', () => { if (W && W.specPath) loadThread(); });
 function paint() {
   if (!W) return;
   document.title = `${String(W.title).toUpperCase()} — THE SPEC WORKSHOP`;
-  stations(); savedNote(); paintOutline(); paintParts(); paintDoc(); paintAgent(); paintProposals(); paintStats();
+  stations(); savedNote(); paintOutline(); paintParts(); paintDoc(); paintAgent(); paintProposals(); paintStats(); paintThread();
   const h = $('hist'); h.innerHTML = (W.history || []).slice(-30).reverse().map(x => `<div>${new Date(x.at).toLocaleTimeString()} · ${esc(x.what)}</div>`).join('') || '<div>NOTHING YET</div>';
 }
 function savedNote() {
@@ -209,7 +252,7 @@ function paintOutline() {
   $('outline').innerHTML = W.sections.map((s, i) => {
     const full = !!String(s.body || '').trim(), agent = /agent/.test(String(s.by || ''));
     return `<div class="ol ${s.id === SEL ? 'on' : ''}" role="option" aria-selected="${s.id === SEL}" tabindex="0" data-id="${esc(s.id)}">
-      <span class="no">${String(i + 1).padStart(2, '0')}</span><span class="dot ${full ? (agent ? 'agent' : 'full') : ''}"></span><span class="t">${esc(s.title)}</span>
+      <span class="no">${String(i + 1).padStart(2, '0')}</span><span class="dot ${full ? (agent ? 'agent' : 'full') : ''}"></span><span class="t">${esc(s.title)}</span><span class="phd" aria-label="its phases"></span>
       <span class="mv"><button data-mv="up" ${i === 0 ? 'disabled' : ''} title="MOVE UP">↑</button><button data-mv="down" ${i === W.sections.length - 1 ? 'disabled' : ''} title="MOVE DOWN">↓</button></span></div>`;
   }).join('') || '<div class="empty">NO SECTIONS — ADD ONE, OR ADD A PART BELOW</div>';
   $('outline').querySelectorAll('.ol').forEach(el => {
@@ -250,6 +293,7 @@ function paintDoc() {
     $('blocks').innerHTML = W.sections.map((s, i) => `<div class="blk ${s.id === SEL ? 'on' : ''}" data-id="${esc(s.id)}" id="blk-${esc(s.id)}">
         <div class="hd"><span class="dot"></span><input class="h" maxlength="160" aria-label="section title"><span class="pt"></span>
           <span class="acts"><button class="btn small m" data-act="draft" title="ASK THE AGENT FOR A DRAFT OF THIS SECTION">✎</button><button class="btn small ghost" data-act="up" ${i === 0 ? 'disabled' : ''} title="MOVE UP">↑</button><button class="btn small ghost" data-act="down" ${i === W.sections.length - 1 ? 'disabled' : ''} title="MOVE DOWN">↓</button><button class="btn small ghost" data-act="rm" title="REMOVE — IT IS KEPT AND CAN BE RESTORED">✕</button></span></div>
+        <div class="thr" aria-label="the phases planned from this section"></div>
         <textarea class="b" maxlength="20000" rows="2" aria-label="section text" placeholder="WRITE THIS SECTION — OR ASK THE AGENT FOR A DRAFT, AND TAKE WHAT YOU WANT OF IT"></textarea>
         <div class="ft"><span class="by"></span><span class="limit"></span></div></div>
       <div class="add-here"><button data-after="${esc(s.id)}" title="ADD A SECTION HERE">+ SECTION HERE</button></div>`).join('')
@@ -276,7 +320,7 @@ function limit(el) { const n = el.querySelector('.b').value.length, l = el.query
 function bindBlock(el) {
   const id = el.dataset.id, h = el.querySelector('.h'), b = el.querySelector('.b');
   el.addEventListener('focusin', () => select(id));
-  const typed = (field, v) => { const p = PEND.get(id) || {}; p[field] = v; PEND.set(id, p); el.querySelector('.by').textContent = 'EDITING…'; savedNote(); clearTimeout(timer); timer = setTimeout(flush, 800); };
+  const typed = (field, v) => { const p = PEND.get(id) || {}; p[field] = v; PEND.set(id, p); el.querySelector('.by').textContent = 'EDITING…'; savedNote(); if (THREAD) paintThread(); clearTimeout(timer); timer = setTimeout(flush, 800); };
   h.oninput = () => { typed('title', h.value); const o = $('outline').querySelector(`.ol[data-id="${CSS.escape(id)}"] .t`); if (o) o.textContent = h.value; };
   b.oninput = () => { typed('body', b.value); size(b); limit(el); liveStats(); };
   h.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); b.focus(); } };
@@ -429,16 +473,16 @@ async function decide(pid, a, sid) {
 async function save(quiet = false) {
   if (!W) return null; await flush(); $('saveBtn').disabled = true;
   try {
-    const d = await api(`/api/workshop/${W.uuid}/save`, {}, 120000); take(d); paint();
+    const d = await api(`/api/workshop/${W.uuid}/save`, {}, 120000); take(d); paint(); loadThread();   // §RS11 — what it changed in its phases
     if (!quiet) toast(`SAVED TO ${d.specPath}${d.madeRepo === 'new' ? ' — IN A NEW REPO' : d.madeRepo ? " — IN ITS LIBRARY DOCUMENT'S REPO" : ''}`);
     return d;
   } catch (e) { if (quiet) throw e; toast(`NOT SAVED: ${e.message}`, true); return null; }
   finally { $('saveBtn').disabled = false; }
 }
 $('saveBtn').onclick = () => save();
-function openRepo(subtab) {
+function openRepo(subtab, extra = {}) {
   const repo = (PIPE && PIPE.repo) || (W && W.repoUuid); if (!repo) return;
-  if (window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'nexus:repo.open', repoUuid: repo, label: W ? W.title : '', subtab }, '*'); toast(subtab === 'phases' ? 'OPENED IN IDEARIUM — ITS PHASES' : 'OPENED IN IDEARIUM — THE SPEC TAB'); }
+  if (window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'nexus:repo.open', repoUuid: repo, label: W ? W.title : '', subtab, spec: (PIPE && PIPE.path) || (W && W.specPath) || null, ...(extra.phase ? { phase: extra.phase } : {}) }, '*'); toast(subtab === 'phases' ? 'OPENED IN IDEARIUM — ITS PHASES' : 'OPENED IN IDEARIUM — THE SPEC TAB'); }
   else toast(`ITS REPO: ${repo} — OPEN IDEARIUM TO FOLLOW IT`);
 }
 
@@ -553,6 +597,7 @@ async function derive() {
   }
 }
 function phasesStage(p) {
+  loadThread();   // §RS11 — the new phases on their sections
   PIPE.plan = p;
   const done = (x) => x.status === 'done' || x.status === 'complete';
   const n = p.phases.filter(done).length, next = p.phases.find(x => x.id === p.next);

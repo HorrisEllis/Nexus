@@ -66,7 +66,7 @@ const SPEC = [
     const many = 'spec:\n' + Array.from({ length: 60 }, (_, i) => `  part_${i}:\n    x: ${'y'.repeat(i)}\n`).join('');
     const dm = SP.derivePlan({ specPath: 'big.spec', specText: many, maxPhases: 12 });
     check('PL-05 a spec of 60 sections becomes at most 12 phases — grouped, none dropped', dm.ok && dm.phases.length <= 12 && dm.sections === 60
-      && (dm.text.match(/sections: \[/g) || []).length === dm.phases.length && dm.text.split('part_').length - 1 >= 60);
+      && (dm.text.match(/^      blocks:$/gm) || []).length === dm.phases.length   /* §RS9 0.49.0 — each phase names its blocks */ && dm.text.split('part_').length - 1 >= 60);
     const md = SP.derivePlan({ specPath: 'readme.md.spec', specText: '# Tool\n\n## Storage\nfiles\n\n## HTTP API\nroutes\n\n## Web UI\npanel\n' });
     check('PL-06 a markdown spec plans by its headings', md.ok && md.phases.map(p => p.layer).join() === 'foundation,library,api,ui', JSON.stringify(md.phases.map(p => [p.id, p.layer])));
     // §0.47.0 SP1 — the browser-engine repo's spec (workshop form): phases from its sections, by title — never 'spec' / 'sections'

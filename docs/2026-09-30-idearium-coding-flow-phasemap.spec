@@ -185,3 +185,8 @@ spec:
 # "its just the code tab is meaningless. what about uncommited changes?" W3's cards now also live in the Code tab (idearium/ui/js/code-surface.js): the open file's change above its
 # lines, or every change with no file open. work-surface.js tells the Code tab after Apply / Reject / Revert / Promote
 # (csAfterChange) and when a card opens or closes (csRepaint). The Plan panel's work surface is unchanged.
+#
+# ADDENDUM 2026-10-08 (0.49.0, RS9 of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec) — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade. interconnected"
+# W2's derivePlan now cuts by the spec's blocks (lib/spec-document.js — an emerge spec like genesis plans too) and writes
+# each phase's blocks: and meta.block_hashes; planPrompt lists the block ids and requires blocks:. The thread
+# (idearium/repo/thread.js, GET /api/repos/:uuid/thread) reads them back with the runs, files and changes.

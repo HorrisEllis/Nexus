@@ -367,3 +367,9 @@ spec:
 # Rejections at the baseline: 10 unique-id, 109 wire-endpoints-exist, none from the maps touched here.
 # Found in the browser: the wires' svg kept its wide size after a resize and held the page wide — it is collapsed
 # before measuring now.
+#
+# ADDENDUM 2026-10-08 (0.51.0, RS11 of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec) — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade. interconnected"
+# WS7's writer shows each section's phases from the saved spec's thread (GET /api/repos/:uuid/thread): a strip per
+# section, dots in the outline, ↻ when a section moved since it was planned (REPLAN), a warning while a planned section
+# is edited and not saved; a phase opens Idearium's Phases on it; ?block= opens the writer at a section. A strip is
+# rewritten only when it changed (a repaint had swapped its buttons under the pointer).

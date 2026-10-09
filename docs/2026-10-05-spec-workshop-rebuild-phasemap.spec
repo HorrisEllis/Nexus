@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     spec-workshop-rebuild
-    version:  1.2.0   # 1.1.0: RS5 built on James's yes (0.39.357) — the workshop's start page is the template picker · 1.2.0: RS9–RS11 (the phases, interconnected), recovered from branch claude/charming-lamport-mdzuau (d0e906f), never merged
+    version:  1.2.0   # 1.2.0+: RS3 and RS9 built (0.49.0) · 1.1.0: RS5 built on James's yes (0.39.357) — the workshop's start page is the template picker · 1.2.0: RS9–RS11 (the phases, interconnected), recovered from branch claude/charming-lamport-mdzuau (d0e906f), never merged
     date:     2026-10-05
     release:  0.39.345 (base)
     uuid:     nexus-spec-workshop-rebuild-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the workshop, the template picker, the architect, the blueprint) · warp (WARP 2) · intelligence (rfr2 clip)
-    status:   "MAPPED 2026-10-05, before building; RS9–RS11 (the phases, interconnected) and the build order added"
+    status:   "MAPPED 2026-10-05, before building; RS9–RS11 (the phases, interconnected) and the build order added; RS5 done (0.39.357); RS3 and RS9 done (0.49.0); RS10 done (0.50.0); RS11 done (0.51.0); RS6 re-mapped onto WS7"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -112,7 +112,7 @@ spec:
 
     RS3_the_spec_document:
       layer: library
-      status: OPEN
+      status: "DONE (0.49.0) — lib/spec-document.js: detect (emerge · yaml · markdown · the workshop's sections list), parse into blocks that partition the file (emerge: domain \"…\" and // ── banners, with the comments directly above; yaml: top keys or, under one root, its keys; markdown: headings; the workshop form: each sections: item, its id its id: field), ids natural or given (a marker line // @block, # @block, <!-- @block -->; in the workshop form the id: field itself), serialize byte-identical, replaceBlock (every other block byte for byte, the check run on the result, an id it would duplicate refused), setId (any id but empty or a line break; a taken id refused), renameRefs (that spec's maps' blocks: / sections:), check (yaml by js-yaml; emerge structural — the Emerge kernel's parser reads another dialect, compartment · invariant · signal, not genesis's domains — said), isBookkeeping (meta, history … and the idea's framing, one rule with main's SP1). genesis.spec, a YAML phasemap, a markdown spec and a workshop spec round-trip byte-identical. test-spec-document. SB28 (genesis's file list) stays its own phase; the routes for editing blocks come with RS6."
       james: '"I''m thinking like document editor but for the emerge and .spec files. each block has a block id, which can be completely custom, can be anything."'
       depends_on: []
       files: [lib/spec-document.js, emerge/emerge-kernel.js, idearium/spec-engine/templates/genesis.spec]
@@ -176,7 +176,7 @@ spec:
 
     RS6_the_workshop_as_the_editor:
       layer: ui
-      status: OPEN
+      status: "MOSTLY BUILT AS WS7 (0.39.354, docs/2026-10-02-workshop-codex-rewind-phasemap.spec) — the full writer: one document, the outline, the parts in tiers, the agent in three modes whose proposals need his yes, SEND TO THE PIPELINE; RS5's picker is its start. Not rebuilt here (two workshops would drift). What is left of RS6 is the macro's timeline along the bottom — scrub to rewind, replay, branch — which needs RS1 (the recorder) and RS2 (replay) first."
       james: '"rebuild the spec workshop."'
       depends_on: [RS5_the_template_picker, RS2_replay_rewind_branch]
       closes: [WS5, WS6, UI0]
@@ -214,7 +214,7 @@ spec:
 
     RS9_the_thread:
       layer: library
-      status: OPEN
+      status: "DONE (0.49.0) — idearium/repo/thread.js (a projection) + GET /api/repos/:uuid/thread (?spec= the thread; none = the specs its maps came from). spec-plan derivePlan, merged with main's SP1 (the workshop form by its sections, blanks not planned): every other spec cut by the document's blocks (genesis, which planned nothing before, plans 21 phases); every section carries its block's hash; it writes blocks: (exact ids) and meta.block_hashes; its prompt lists the block ids and requires blocks: on every phase; the one phasemap parser reads blocks: (else sections:). Staleness per block; an older map says the spec moved; no blocks: = 'no link', a missing id = 'broken'. test-thread (TH-04 through the real router: plan, edit one block, only its phases stale)."
       james: '"interconnected"'
       depends_on: [RS3_the_spec_document]
       files: [idearium/repo/thread.js, idearium/repo/spec-plan.js, idearium/repo/phases.js, idearium/api/index.js]
@@ -229,7 +229,7 @@ spec:
 
     RS10_the_phases_tab_rebuilt:
       layer: ui
-      status: OPEN
+      status: "DONE (0.50.0) — idearium/ui/js/phases.js rebuilt on the thread (GET …/thread, GET …/plan): the rail (every phasemap · each spec with its maps, its blocks planned / unplanned / moved · specs not planned yet with ⚡ plan · maps not from a spec); lanes by dependency layer, active and ready first, complete folded (✓ N complete — show, remembered); cards with their blocks (↻ stale), the Plan's gate bar, the last run's state, model and rung; the detail with the block's own text from the spec (moved since planned, or not in the spec any more), files and changes waiting (open in Code), the Plan's ledger, status, build (the ladder by default), open in the Plan, its spec in the Spec tab. Table and Maps kept; Board and Layers became Lanes; every action kept (status, build, ▶, add, expand, plan from a spec, live events). roadmap.js passes each phase's blocks. test-phases-tab 4/4 in Clear Glass."
       james: '"the phases with the spec workshop. needs to be rebuilt, enterprise grade."'
       depends_on: [RS9_the_thread]
       files: [idearium/ui/js/phases.js, idearium/ui/css/phases.css]
@@ -243,7 +243,7 @@ spec:
 
     RS11_workshop_and_phases_one_surface:
       layer: ui
-      status: OPEN
+      status: "DONE on WS7's workshop (0.51.0) — idearium/ui/js/workshop.js: the saved spec's thread (GET …/thread, now naming the workshop that saved it) read on open, after save / plan / build and on focus (no polling); each section a strip of its phases (key, state — planned, active, the run's state, done, failed) that opens Idearium's Phases on that spec with that phase open; dots in the outline; ↻ CHANGED SINCE IT WAS PLANNED with REPLAN (the pipeline's replan); SAVING THIS CHANGES N PLANNED PHASES while a planned section is edited and not saved; ?block= opens at a section. The Phases tab: open in the workshop at the phase's block; a spec and phase handed from the workshop survive the switch to another repo. Not built: planning only the picked sections (the pipeline plans the whole spec; replanning keeps nothing of the old map's statuses — said, not hidden). test-workshop-thread 4/4, test-phases-tab PT-05."
       james: '"interconnected"'
       depends_on: [RS6_the_workshop_as_the_editor, RS10_the_phases_tab_rebuilt]
       files: [idearium/ui/workshop.html, idearium/ui/js/spec-editor.js, idearium/ui/js/phases.js]

@@ -542,6 +542,11 @@
       "_action": "repo.agent.route"
     },
     {
+      "method": "GET",
+      "path": "/api/repos/:uuid/thread",
+      "_action": "repo.thread"
+    },
+    {
       "method": "POST",
       "path": "/api/repos/:uuid/agent/tool-event",
       "_action": "repo.agent.tool.event"

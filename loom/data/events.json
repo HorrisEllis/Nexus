@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791264594889,
+ "generatedAt": 1791486801161,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -396,6 +396,7 @@
     "provider.host.closed_unexpectedly",
     "provider.host.crashed",
     "provider.host.injected",
+    "provider.host.load_failed",
     "provider.host.navigate",
     "provider.host.navigate-failed",
     "provider.host.navigated",
@@ -2046,6 +2047,14 @@
    ],
    "listens": [
     "cortex.orion.classified"
+   ]
+  },
+  "nexus.tests.modules.test-pf1-stalls.test": {
+   "emits": [
+    "forge.patch.proposed"
+   ],
+   "listens": [
+    "liminal.velocity.runaway"
    ]
   },
   "nexus.tests.modules.test-raid-orion-wiring": {
@@ -3850,6 +3859,12 @@
    "listeners": []
   },
   "provider.host.injected": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.load_failed": {
    "emitters": [
     "nexus.clear-glass.src.providers.host"
    ],
@@ -7339,6 +7354,18 @@
    "emitters": [],
    "listeners": [
     "nexus.tests.modules.test-manifest-phase1.test"
+   ]
+  },
+  "forge.patch.proposed": {
+   "emitters": [
+    "nexus.tests.modules.test-pf1-stalls.test"
+   ],
+   "listeners": []
+  },
+  "liminal.velocity.runaway": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-pf1-stalls.test"
    ]
   },
   "cortex.raid.decided": {

@@ -60,6 +60,10 @@ export function planPrompt({ repo, specPath, specText = '', mapPath = phasemapPa
       'Every phase carries the axioms that bind it. The axioms (docs/AXIOMS-v3.1.md):',
       ...AXIOMS.map(([n, t]) => `  ${n} ${t}`),
       '',
+      // §RS9 0.49.0 — every phase names the spec blocks it builds (blocks:), so the spec, its phases, their runs and
+      // files are one thread; the ids are the spec's own (lib/spec-document.js), a custom id as written
+      `The spec's blocks, by id — every phase names the ones it builds in blocks: (each block in at least one phase): ${(() => { const b = _docBlocks(specText, specPath); return b.length ? b.map(x => JSON.stringify(x.key)).join(', ') : '(none found — name the sections you build)'; })()}`,
+      '',
       'Write the file in exactly this shape (loom reads it; ids are ' + id + '<n>_<snake_name>, two-space indent under phases:):',
       'spec:',
       '  meta:',
@@ -73,6 +77,7 @@ export function planPrompt({ repo, specPath, specText = '', mapPath = phasemapPa
       '      status: OPEN',
       '      depends_on: []',
       '      axioms: [§3.1, §1.3, …]',
+      '      blocks: [<the ids of the spec blocks this phase builds, from the list below>]',
       '      files: [<paths it creates or changes>]',
       '      does: >-',
       '        <what it builds, the spec sections it covers>',
@@ -149,7 +154,7 @@ export function nextReady(phases, isComplete = (p) => p.status === 'done' || p.s
 //                         per section (small ones grouped), its layer read from the section's name and text. A
 //                         mechanical reading of the spec, never presented as the agent's: meta.planned_by says so.
 
-const _SKIP = /^(meta|version_?history|history|changelog|gaps|open_gaps|known_gaps|addend(a|um)|notes?|references?|glossary|provenance|origin|uuid|name|version|status|date|owner|license)$/i;
+const _SKIP = require('../../lib/spec-document.js').BOOKKEEPING;   // §RS9 — one rule for what is bookkeeping (lib/spec-document.js)
 // order matters: the first rule whose words appear in the section's name (then its text) sets its layer
 const _LAYER_RULES = [
   ['ui', /\b(ui|ux|view|views|panel|panels|page|pages|screen|canvas|render|renderer|widget|display|theme|css|html|layout|visual|dashboard|window|frontend|gui|animation|graph_view)\b/i],
@@ -194,7 +199,7 @@ export function sectionsOf(specText) {
       const id = String(x.id || x.title || 'section'), body = String(x.body == null ? '' : x.body);
       const at = lines.findIndex(l => new RegExp(`^\\s*-?\\s*id:\\s*['"]?${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]?\\s*$`).test(l));
       return { key: id, title: String(x.title || id), line: at + 1 || 1, text: body, blank: !body.trim() };
-    }).filter(s => !_SKIP.test(s.key) && !/^(idea|purpose|meta[-_ ]?identity|ambition|end[-_ ]?state)$/i.test(s.key));   // the idea's own framing: context for every phase, not one to build
+    }).filter(s => !_SKIP.test(s.key) && !require('../../lib/spec-document.js').FRAMING.test(s.key));   // one rule (lib/spec-document.js)   // the idea's own framing: context for every phase, not one to build
   }
   // the body's keys: under a single root (spec:, x:) they sit at 2 spaces; a flat file has them at 0
   const tops = lines.map((l, i) => ({ l, i })).filter(x => /^[A-Za-z_][\w.-]*:/.test(x.l));
@@ -223,9 +228,25 @@ export function sectionsOf(specText) {
  * One phase per section, ordered bottom-up; consecutive small sections of one layer are grouped so the map stays
  * within maxPhases. Each phase depends on the one before it in its own layer and on the top of the layer below.
  */
+/** _docBlocks(text, path) — the spec's blocks as sections ({ key: id, line, text, hash }); the preamble and the
+ *  bookkeeping keys (_SKIP: meta, history, notes …) are not planned. Empty when the document reader is absent. */
+function _docBlocks(specText, specPath) {
+  try {
+    const D = require('../../lib/spec-document.js');
+    return D.parse(specText, { path: specPath }).blocks.filter(b => !D.isBookkeeping(b))
+      .map(b => ({ key: b.id, line: b.line, text: b.text, hash: b.hash }));
+  } catch (_) { return []; }
+}
 export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(specPath), prefix = null, maxPhases = 24, reason = 'derived from the spec' } = {}) {
   const id = prefix || (path.posix.basename(specPath).replace(/\.spec$/i, '').replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase() || 'P');
-  const all = sectionsOf(specText);
+  // §0.47.0 SP1 (main) — the workshop / library form is read as its sections (title, blank); a blank section is not a
+  // phase until it is completed. §RS9 0.49.0 / 0.49.0 — every other spec is cut by its own blocks (lib/spec-document.js:
+  // emerge domains, YAML keys, headings); either way each section carries its block's hash at plan time, so a phase names
+  // exactly the blocks it serves and an edited block marks it stale.
+  const docBlocks = _docBlocks(specText, specPath);
+  const hashOf = new Map(docBlocks.map(b => [b.key, b.hash]));
+  const listForm = /^sections:\s*$/m.test(String(specText || ''));
+  const all = (listForm || !docBlocks.length ? sectionsOf(specText) : docBlocks).map(x => ({ ...x, hash: x.hash || hashOf.get(x.key) || null }));
   const blank = all.filter(s => s.blank).map(s => s.key);
   const secs = all.filter(s => !s.blank).map((s, i) => ({ ...s, order: i, layer: _layerOf(s.key, `${s.title || ''}\n${s.text}`) }));
   if (!secs.length) return { ok: false, problems: [blank.length ? `every section is blank (${blank.join(', ')}) — complete them first` : 'the spec has no sections to plan from'], sections: [], blank };
@@ -266,6 +287,8 @@ export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(
     `    name: ${path.posix.basename(mapPath).replace(/\.spec$/, '')}`,
     `    spec: ${specPath}`,
     `    spec_sha256: ${sha(specText)}`,
+    // §RS9 — each block's hash when this map was planned: a block whose hash moves makes its phases stale
+    ...(secs.some(x => x.hash) ? ['    block_hashes:', ...secs.filter(x => x.hash).map(x => `      ${JSON.stringify(x.key)}: ${x.hash.slice(0, 16)}`)] : []),
     '    axioms: docs/AXIOMS-v3.1.md §3.1 §3.3 §3.4 §1.1 §1.3 §0.3 §8.6 §12.1 §17.5',
     '    planned_by: idearium/repo/spec-plan.js derivePlan',
     `    planned_at: ${now}`,
@@ -280,7 +303,8 @@ export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(
       '      status: OPEN',
       `      depends_on: [${p.depends_on.join(', ')}]`,
       `      axioms: [${_AXIOMS_BY_LAYER[p.layer].join(', ')}]`,
-      `      sections: [${p.sections.map(s => _snake(s)).join(', ')}]`,
+      '      blocks:',
+      ...p.sections.map(s => `        - ${JSON.stringify(s)}`),
       '      files: []',
       '      does: >-',
       `        ${p.does}`,

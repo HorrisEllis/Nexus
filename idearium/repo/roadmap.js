@@ -140,7 +140,7 @@ export function buildRoadmap({ projectId, maps = [] } = {}) {
         map: m.path, phase_key: p.id, line: p.line + 1,
         unresolved_deps: unresolved, blocked_by: [], ready: false, layer: null,
         // §0.39.271 P2 — what the phase says it does, closes and touches (loom P1)
-        name: nm || null, closes: p.closes || [], files: p.files || [], systems: p.systems || [], form: p.form || 'key',
+        name: nm || null, closes: p.closes || [], files: p.files || [], systems: p.systems || [], blocks: p.blocks || [], form: p.form || 'key',   // §RS10 0.50.0 — the spec blocks it was planned from
         _mapIdx: mapIdx,
       });
     }
