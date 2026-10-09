@@ -75,6 +75,7 @@ spec:
       systems: [core, guardian, idearium, copilot, cortex, ollama-bridge]
       value: { score: 4, cost: M, for: [foundation, daily-use], why: "a verb exists once, owned by its system; terminal and Agent tab cannot drift" }
       status: OPEN
+      path: 'step 3 — each system''s verbs, owned by it (declutter 2026-10-09)'
       depends_on: []
       files: [lib/command-registry.js, guardian/commands, idearium/cli/index.js, cos/cli/index.js, copilot/cli.js, cli/nexus.js]
       does: >-
@@ -87,6 +88,7 @@ spec:
       systems: [idearium, cortex]
       value: { score: 4, cost: M, for: [daily-use, safety], why: "every command from one place, through RAID, never a shell" }
       status: OPEN
+      path: 'step 3 — every system''s CLI from one place in Idearium (declutter 2026-10-09)'
       depends_on: [CL1_commands_declared_by_their_system]
       files: [idearium/ui/js/app.js, idearium/api/index.js]
       does: >-
@@ -98,7 +100,8 @@ spec:
       layer: foundation
       systems: [cortex, intelligence, core]
       value: { score: 5, cost: M, for: [foundation, safety], why: "nothing can move home safely until every table has a named owner" }
-      status: OPEN
+      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: []
       files: [cortex/memory/jaa-db.js, lib/context-atlas.js, intelligence/lattice/associative-lattice.js]
       does: >-
@@ -110,7 +113,8 @@ spec:
       layer: foundation
       systems: [cortex]
       value: { score: 4, cost: XL, for: [foundation, ownership], why: "each system owns its data; repeated once per system" }
-      status: OPEN
+      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [DS1_cortex_the_catalog]
       files: [cortex/memory/jaa-db.js, "<system>/data/"]
       does: >-
@@ -123,6 +127,7 @@ spec:
       systems: [idearium, core]
       value: { score: 5, cost: M, for: [quality, safety], why: "one truth for code not yet in the repo; no change shown pending and applied at once" }
       status: OPEN
+      path: 'step 2 — proposed → staged → applied → committed, one lifecycle (declutter 2026-10-09)'
       depends_on: []
       files: [lib/repo-inject.js, lib/code-edit.js, idearium/repo/work-surface.js, lib/repo-git.js]
       does: >-
@@ -135,6 +140,7 @@ spec:
       systems: [idearium, clear-glass]
       value: { score: 4, cost: M, for: [daily-use], why: "one place to review, apply and follow the agents' code" }
       status: OPEN
+      path: 'step 2 — check first: CT3/CT5 (0.39.349–351) made the Code tab the work surface (declutter 2026-10-09)'
       depends_on: [CT1_one_pending_change_path]
       files: [idearium/ui/js/code-tab.js, idearium/ui/js/work-surface.js]
       does: >-
@@ -149,7 +155,8 @@ spec:
       layer: foundation
       systems: [idearium, loom, core]
       value: { score: 2, cost: S, for: [quality], why: "a phasemap that does not parse is invisible to every tool that reads maps" }
-      status: OPEN
+      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: []
       files: [docs/2026-09-27-components-store-and-atlases-phasemap.spec]
       does: "It fails YAML at line 24 (\"expected ':' after a mapping key\"), unchanged since before 0.39.308. Fix the line; the content stays."
@@ -160,7 +167,8 @@ spec:
       layer: foundation
       systems: [loom]
       value: { score: 3, cost: L, for: [quality, foundation], why: "460 rejected declarations are 460 places the self-model is wrong" }
-      status: OPEN
+      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: []
       files: [loom/bootstrap.js, loom/maps/]
       does: >-
@@ -172,7 +180,8 @@ spec:
       layer: library
       systems: [core, idearium]
       value: { score: 3, cost: S, for: [quality], why: "a failing test that everyone learns to ignore hides the next real failure" }
-      status: OPEN
+      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: []
       files: [tests/modules/test-build-verify.test.js, lib/seam/detector.js]
       does: "test-build-verify BV-09 (\"the detector judges a file chunk as a file\") fails on 0.39.307's base and since. Root-cause it: the test or the detector, said which."
@@ -183,7 +192,8 @@ spec:
       layer: foundation
       systems: [cortex, idearium, core]
       value: { score: 3, cost: S, for: [safety], why: "a benchmark or probe script wrote a spec into data/cortex twice this session" }
-      status: OPEN
+      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: []
       files: [lib/test-sandbox.js, scripts/]
       does: >-
@@ -196,7 +206,8 @@ spec:
       layer: foundation
       systems: [loom]
       value: { score: 2, cost: S, for: [quality], why: "a registry diff should show what changed, not 8,700 timestamps" }
-      status: OPEN
+      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: []
       files: [loom/bootstrap.js, loom/schema/index.js]
       does: >-
@@ -208,7 +219,8 @@ spec:
       layer: foundation
       systems: [loom]
       value: { score: 2, cost: S, for: [quality], why: "a phase marked BUILT read as pending — finished work looks unstarted" }
-      status: OPEN
+      status: 'DONE — built 0.53.0 — one-roadmap OR1 (_answerOf, PS-013) (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: []
       files: [loom/scanners/phasemap-map.js]
       does: >-
@@ -244,7 +256,8 @@ spec:
       layer: foundation
       systems: [loom]
       value: { score: 2, cost: S, for: [quality], why: "loom's phase history must catch a real status change, or the roadmap's past is wrong" }
-      status: OPEN
+      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: []
       files: [loom/scanners/phasemap-map.js, loom/test/phasemap-map.test.js]
       does: >-

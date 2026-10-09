@@ -41,7 +41,8 @@ spec:
     # ── layer 0 — data and engines ─────────────────────────────────────────────────────────────────────────────
     RW1_rewind_engine_vm_snapshots:
       layer: engine
-      status: OPEN
+      status: 'LATER — off the path — VM rewind, Codex, blueprint rebuild, NEXUS in a VM come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       files: [cos/compartment/qmp.js, cos/workspace/index.js, cos/workspace/rewind.js, lib/cos-bridge.js]
       does: >-
         "the rewind engine for the entire state of the os, like vmware." A snapshot of a running repo VM is the whole
@@ -55,7 +56,8 @@ spec:
 
     CX0_codex_component_store:
       layer: engine
-      status: OPEN
+      status: 'LATER — off the path — VM rewind, Codex, blueprint rebuild, NEXUS in a VM come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: []
       files: [lib/component-store.js, lib/codex/index.js]
       does: >-
@@ -71,7 +73,8 @@ spec:
     # ── layer 1 — services ─────────────────────────────────────────────────────────────────────────────────────
     BP1_destroy_and_rebuild_blueprint:
       layer: service
-      status: OPEN
+      status: 'LATER — off the path — VM rewind, Codex, blueprint rebuild, NEXUS in a VM come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [CX0_codex_component_store]
       files: [architect/src/spec/Blueprint.js, idearium/lib/blueprint.js]
       does: >-
@@ -202,6 +205,7 @@ spec:
     PL1_one_entry_point:
       layer: service
       status: "OPEN — 0.39.354 WS7 walks Workshop → Repo from the page (SEND TO THE PIPELINE on the repo's own routes); the run node, its gates and the CLI are still this phase's"
+      path: 'step 2 — idea → workshop → architect → repo → code, one way in; re-cut so it does not wait on BP1 (now on the shelf) (declutter 2026-10-09)'
       depends_on: [SW1_spec_workshop, AR2_architect_in_the_workshop, BP1_destroy_and_rebuild_blueprint]
       files: [idearium/lib/pipeline.js, idearium/api/index.js, idearium/cli/index.js]
       does: >-
@@ -214,7 +218,8 @@ spec:
 
     GD1_guardian_supervises_cos:
       layer: service
-      status: OPEN
+      status: 'LATER — off the path — VM rewind, Codex, blueprint rebuild, NEXUS in a VM come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [RW1_rewind_engine_vm_snapshots]
       files: [guardian/lib/cos-supervisor.js, cos/workspace/index.js]
       does: >-
@@ -227,7 +232,8 @@ spec:
     # ── layer 2 — interface ────────────────────────────────────────────────────────────────────────────────────
     DP1_desktop_popout_options:
       layer: interface
-      status: OPEN
+      status: 'LATER — off the path — VM rewind, Codex, blueprint rebuild, NEXUS in a VM come after the loop (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [RW1_rewind_engine_vm_snapshots]
       files: [idearium/ui/desktop.html, idearium/api/index.js, idearium/ui/js/app.js]
       does: >-
@@ -241,6 +247,7 @@ spec:
     UI12_workshop_surface:
       layer: interface
       status: "OPEN — 0.39.354 WS7 built the workshop page itself (the stations true to state, sections, the agent; WS6 took the ambition dial out); left here: Welcome → Start, the Architect map and Blueprint diff, retiring the old builders"
+      path: 'step 2 — check first: WS7 (0.39.354) built the full workshop page; what is left is retiring the old builders (OR6) (declutter 2026-10-09)'
       depends_on: [SW1_spec_workshop, AR2_architect_in_the_workshop, BP1_destroy_and_rebuild_blueprint, PL1_one_entry_point]
       files: [idearium/ui/workshop.html, idearium/ui/js/app.js, idearium/ui/index.html]
       does: >-
@@ -310,7 +317,8 @@ spec:
 
     NX1_nexus_in_a_vm:
       layer: later
-      status: OPEN — after RW1, DP1, GD1
+      status: 'LATER — off the path — VM rewind, Codex, blueprint rebuild, NEXUS in a VM come after the loop (declutter 2026-10-09)'
+      status_before: OPEN — after RW1, DP1, GD1
       does: >-
         "im thinking we can get all of nexus in these at some point." A COS image that runs NEXUS itself (its own
         checkout pulled in by versionium), so a whole NEXUS can be snapshotted, rewound and branched like a repo

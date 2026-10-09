@@ -84,7 +84,7 @@ spec:
       proof: "the attempt and its false positives (RS1, BR5, SB10) recorded here; OR1's 31"
     OR2_the_proposal:
       layer: docs
-      status: "PARTIAL 2026-10-09 — first pass by WHOLE MAP (James: \"most amount of power, and highest leverage, least amount of tokens.\"): docs/roadmap-triage.md — 69 decisions instead of 721 open phases; if accepted the roadmap is 205 open phases on the path (engine 22 · the loop 145 · Idearium holds the systems 38), 485 to the shelf, 31 folded. Phase-by-phase only for path maps, after his answer."
+      status: "DONE (0.54.1) — map by map (69 decisions, accepted), then phase by phase for every path map, each checked against the code and the version history: 22 path phases kept, the rest shelved; found already built and never marked: idearium-one-surface's 12 (0.47.0–0.48.0; two of them superseded), HG6 (0.53.0), AT2 (edit-atlas.js); duplicates folded across maps. The path, ordered by step: docs/the-path.md — 51 phases (engine 16, the loop 21, Idearium holds the systems 9, this clean-up 5). The roadmap: 49 open, 585 on the shelf, 48 closed. Each answered phase keeps its old status as status_before."
       james: '"can you get us there."'
       depends_on: [OR1]
       files: [docs/roadmap-triage.md]

@@ -107,6 +107,7 @@ spec:
     WK4_the_void_feeds_the_workshop:
       layer: api
       status: OPEN
+      path: 'step 2 — the void → the workshop, carrying what the back-and-forth found (declutter 2026-10-09)'
       james: '"also the spacial void is supposed to feed into the spec workshop pipeline"'
       depends_on: [WK1_the_workshop_is_blocks_from_the_templates]
       files: [idearium/ui/void.html, idearium/api/index.js, idearium/lib/workshop.js]
@@ -118,6 +119,7 @@ spec:
     WK5_lanes_feed_gaps_and_phases:
       layer: api
       status: OPEN
+      path: 'step 2 — the idea''s lanes feed gaps and phases (declutter 2026-10-09)'
       james: '"should we have the lanes, be hooked into gaps, phases? like i want to be able to brainstorm."'
       depends_on: [WK1_the_workshop_is_blocks_from_the_templates]
       files: [idearium/ui/js/app.js, idearium/api/index.js]
@@ -130,6 +132,7 @@ spec:
     WK6_enterprise_grade:
       layer: ui
       status: OPEN
+      path: 'step 2 — check first: WS7 (0.39.354) built the full workshop (declutter 2026-10-09)'
       james: '"like enterprise grade, it looks bad."'
       depends_on: [WK3_the_agent_drafts_every_block]
       files: [idearium/ui/workshop.html, idearium/ui/css/void-theme.css]

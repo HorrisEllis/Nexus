@@ -116,6 +116,7 @@ spec:
       axioms: ["§8.6", "§10.3", "§0.3"]
 
     SB2_universal_file_parse:
+      status: 'LATER — off the path — parse-any-file, the decision lattice, contract schemas, compartments as sessions, Clear Glass control (declutter 2026-10-09)'
       depends_on: []
       does: >
         Co-pilot 'read and parse any file in NEXUS' — extends the real
@@ -132,6 +133,7 @@ spec:
       axioms: ["§10.3", "§8.6"]
 
     SB3_guided_build_loop:
+      path: 'step 2 — the same loop, for NEXUS itself: plan → spec change → phases → build (declutter 2026-10-09)'
       priority: THE ACTUAL PIPELINE — plan -> spec -> contract -> RAID -> compartment -> agent -> artifact -> quality-check -> close
       depends_on: [SB1, SB2]
       does: >
@@ -161,6 +163,7 @@ spec:
       axioms: ["§RAID", "§0.3", "§8.6", "§1.1"]
 
     SB4_decision_lattice_wiring:
+      status: 'LATER — off the path — parse-any-file, the decision lattice, contract schemas, compartments as sessions, Clear Glass control (declutter 2026-10-09)'
       depends_on: [SB3]
       does: >
         Every co-pilot decision in SB3's loop gets a real node in
@@ -176,6 +179,7 @@ spec:
       axioms: ["§10.3", "§8.6"]
 
     SB5_self_modification_from_inside:
+      path: 'step 3 — NEXUS changed from inside NEXUS, through the loop (declutter 2026-10-09)'
       priority: HIGHEST CEREMONY, HIGHEST VALUE
       depends_on: [SB3, SB4]
       does: >
@@ -194,6 +198,7 @@ spec:
       axioms: ["§1.1", "§RAID", "§8.6"]
 
     SB6_contract_type_schemas_and_toolbox_directory:
+      status: 'LATER — off the path — parse-any-file, the decision lattice, contract schemas, compartments as sessions, Clear Glass control (declutter 2026-10-09)'
       priority: MOSTLY ALREADY REAL — verified, not assumed, this pass.
       depends_on: [SB1]
       does: >
@@ -219,6 +224,7 @@ spec:
       axioms: ["§10.3", "§8.6"]
 
     SB7_compartments_as_sessions:
+      status: 'LATER — off the path — parse-any-file, the decision lattice, contract schemas, compartments as sessions, Clear Glass control (declutter 2026-10-09)'
       priority: NEW — the most structurally novel idea this pass; genuinely extends real COS infrastructure rather than wrapping it.
       depends_on: [SB1]
       does: >
@@ -250,6 +256,7 @@ spec:
       axioms: ["§8.6", "§0.3", "§RAID"]
 
     SB8_tool_agnosticism_and_new_tool_flow:
+      status: 'LATER — off the path — parse-any-file, the decision lattice, contract schemas, compartments as sessions, Clear Glass control (declutter 2026-10-09)'
       depends_on: [SB6]
       does: >
         (a) AGENT/MODEL AGNOSTICISM — when an agent is scoped OUT of a tool
@@ -288,6 +295,7 @@ spec:
       axioms: ["§8.6", "§10.3", "§1.1"]
 
     SB9_full_clearglass_control:
+      status: 'LATER — off the path — parse-any-file, the decision lattice, contract schemas, compartments as sessions, Clear Glass control (declutter 2026-10-09)'
       priority: THE FINDING THAT MATTERS MOST HERE — the element picker isn't a gap, it's an ORPHAN.
       depends_on: []
       does: >

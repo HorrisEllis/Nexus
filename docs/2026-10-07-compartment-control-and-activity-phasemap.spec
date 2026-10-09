@@ -156,7 +156,8 @@ spec:
 
     UN1_nexus_surfaces_in_the_field:
       systems: [clear-glass, copilot, ui]
-      status: MAPPED
+      status: 'LATER — off the path — copilot on Nexus surfaces, spotlight and dead-click diagnosis come after the loop (declutter 2026-10-09)'
+      status_before: MAPPED
       depends_on: [CM2_every_command_for_every_agent]
       files: [clear-glass/src/page/field.js, lib/agent-tools/tools/clear-glass/browser.js, ui/tv-shell/spotlight/spotlight.js]
       does: >-
@@ -169,7 +170,8 @@ spec:
 
     SP1_one_spotlight:
       systems: [ui, clear-glass, copilot]
-      status: MAPPED
+      status: 'LATER — off the path — copilot on Nexus surfaces, spotlight and dead-click diagnosis come after the loop (declutter 2026-10-09)'
+      status_before: MAPPED
       depends_on: [UN1_nexus_surfaces_in_the_field]
       files: [ui/tv-shell/spotlight/spotlight.js, clear-glass/src/page/field.js]
       does: >-
@@ -181,7 +183,8 @@ spec:
 
     DC1_a_click_that_did_nothing:
       systems: [clear-glass, ui, idearium]
-      status: MAPPED
+      status: 'LATER — off the path — copilot on Nexus surfaces, spotlight and dead-click diagnosis come after the loop (declutter 2026-10-09)'
+      status_before: MAPPED
       depends_on: [UN1_nexus_surfaces_in_the_field]
       files: [clear-glass/src/page/field.js, clear-glass/src/diagnostic/error-capture.js, lib/activity-log/compartment.js]
       does: >-
@@ -194,7 +197,8 @@ spec:
 
     DX1_diagnose_it:
       systems: [clear-glass, copilot, idearium, nerve]
-      status: MAPPED
+      status: 'LATER — off the path — copilot on Nexus surfaces, spotlight and dead-click diagnosis come after the loop (declutter 2026-10-09)'
+      status_before: MAPPED
       depends_on: [DC1_a_click_that_did_nothing, SP1_one_spotlight]
       does: >-
         A dead click (or copilot asked "why didn't that work?") runs a diagnosis made only of things that exist: the

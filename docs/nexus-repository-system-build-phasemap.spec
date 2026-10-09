@@ -222,7 +222,8 @@ spec:
   # ── MCO4: hooks/wires/flows/tools as first-class repository nodes ────
   MCO4_hooks_wires_flows_tools:
     depends_on: [MCO1]
-    status: "NOT STARTED"
+    status: 'LATER — off the path — repository tools as nodes and full git come after (declutter 2026-10-09)'
+    status_before: "NOT STARTED"
     does: >
       Wraps the real functions that already exist (agent-suite's
       listRepositories/getRepositoryMap/etc., import-pipeline's
@@ -245,7 +246,8 @@ spec:
   # ── MCO5: git push/pull + credentials ─────────────────────────────────
   MCO5_git_integration_credentials:
     depends_on: [MCO3]
-    status: "NOT STARTED — SAME WORK as
+    status: 'LATER — off the path — repository tools as nodes and full git come after (declutter 2026-10-09)'
+    status_before: "NOT STARTED — SAME WORK as
       idearium-creative-repo-overhaul-phasemap.spec's MCO-G. Build once,
       satisfy both gates. See build_order_note."
     does: >
@@ -271,6 +273,7 @@ spec:
   MCO6_compartment_ownership:
     depends_on: [MCO0]
     status: "NOT STARTED"
+    path: 'step 3 — check first: CHANGELOG-0.39.178''s table lists MCO6 compartments DONE (declutter 2026-10-09)'
     does: >
       Wires §5's ownership rule: repository import creates or attaches
       to an existing cos/ Compartment, never a second parallel
@@ -291,6 +294,7 @@ spec:
   MCO7_nexus_systems_as_repo_compartments:
     depends_on: [MCO0, MCO6]
     status: "PARTIAL 2026-09-19. 7a (audit) and 7b (manifests) DONE - commit 4890f29. 7c-7h NOT STARTED."
+    path: 'step 3 — Idearium holds the systems: 7a and 7b done, 7c–7h not started (declutter 2026-10-09)'
     does: >
       James: "make every system a repo compartment" - all Nexus systems. Dogfoods this
       spec on Nexus itself: each system is ONE repo record (source/structure, idearium

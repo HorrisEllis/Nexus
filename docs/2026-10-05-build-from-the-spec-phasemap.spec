@@ -323,7 +323,8 @@ spec:
     SB4_template_fidelity:
       james: '"like nexus needs to be able to build itself from the spec." · "guardian is the closest the system."'
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [SB17_the_system_template_is_complete]
       files: [idearium/spec-engine/templates/genesis.spec, idearium/spec-engine/templates/architecture-spec.template.yaml, architecture-spec/registry/, lib/nexus-self/systems.js]
       does: >-
@@ -341,7 +342,8 @@ spec:
     SB5_nexus_rebuilds_a_system_from_its_spec:
       james: '"nexus needs to be able to build itself from within also."'
       layer: automation
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [SB4_template_fidelity]
       files: [lib/nexus-self/branch.js, lib/cos-run.js, idearium/repo/proof-run.js]
       does: >-
@@ -357,7 +359,8 @@ spec:
     SB6_hundreds_of_specs:
       james: '"i havce hundreds of specs i want built. that why i had the resuable architecture"'
       layer: automation
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [SB3_the_section_prompt_is_domain_agnostic, SB5_nexus_rebuilds_a_system_from_its_spec]
       files: [lib/spec-library.js, idearium/lib/spec-library-import.js, lib/component-store.js, lib/economy/]
       does: >-
@@ -372,7 +375,8 @@ spec:
     SB7_domain_file_tree_templates:
       james: 'none — this phase is the coder''s suggestion (Eravos mods offered for a music idea), not James''s. His to keep or cut.'
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [SB1_templates_are_the_default_frame]
       files: [lib/file-tree-plan.js, eravos/ui/mods/, cos/archetype/registry.js]
       does: >-
@@ -387,6 +391,7 @@ spec:
       james: '"Promote into a spec with full options for each block and a custom setting to write in."'
       layer: api
       status: OPEN
+      path: 'step 2 — idea → spec, his options per block (declutter 2026-10-09)'
       overlaps: "TP1_promote_to_spec_templates (docs/2026-10-01-idearium-agent-ready-master-phasemap.spec) — one piece of work; build it once, close both"
       depends_on: [SB2_his_words_seed_the_spec, SB9_the_spec_is_a_spec_file, SB10_reuse_first_keyed_on_the_contract, SB11_each_block_chunked]
       files: [idearium/api/index.js, idearium/spec-engine/index.js, idearium/spec-engine/blocks.yaml, idearium/cli/index.js, idearium/ui/workshop.html]
@@ -405,6 +410,7 @@ spec:
       james: '"Like it needs to build .spec files."'
       layer: library
       status: OPEN
+      path: 'step 2 — the .spec file is the artifact (RS3''s spec-document reads it already) (declutter 2026-10-09)'
       overlaps: "none found"
       depends_on: [SB1_templates_are_the_default_frame]
       files: [idearium/spec-engine/index.js, idearium/lib/spec-library-import.js, idearium/lib/workshop.js, idearium/repo/index.js]
@@ -422,6 +428,7 @@ spec:
       james: '"Like it needs to reuse as much as possible by default. To save tokens. Like nexus gets more effectient."'
       layer: library
       status: OPEN
+      path: 'step 2 — check first: the chunk build already tries the component store and prior sections (idearium atlas); finish the contract key (declutter 2026-10-09)'
       overlaps: "none found — but the findPriorSection fix touches every map that builds specs"
       depends_on: [SB9_the_spec_is_a_spec_file]
       files: [idearium/spec-engine/index.js, idearium/api/index.js, lib/component-store.js, lib/economy/]
@@ -440,6 +447,7 @@ spec:
       james: '"Each block is then chunked,"'
       layer: library
       status: OPEN
+      path: 'step 2 — "chunked, phased, possibly chunked again" (declutter 2026-10-09)'
       overlaps: "FG2_token_budget_chunking (docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec) — FG2 is the mechanism, SB11 its use on spec blocks"
       depends_on: [SB10_reuse_first_keyed_on_the_contract]
       files: [idearium/spec-engine/index.js, lib/chunker/index.js]
@@ -476,6 +484,7 @@ spec:
       james: '"then each component is chunked."'
       layer: api
       status: OPEN
+      path: 'step 2 — chunked again, per component (declutter 2026-10-09)'
       overlaps: "FG4_context_for_any_agent + FG5_recursive_build (fractal-graph map) — the mechanism; SB13 is their use per component"
       depends_on: [SB12_the_registry_is_the_component_list]
       files: [idearium/api/index.js, idearium/spec-engine/index.js, lib/code-intel/]
@@ -491,7 +500,8 @@ spec:
     SB14_reuse_compounds:
       james: '"it needs to reuse as much as possible by default … Like nexus gets more effectient."'
       layer: automation
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       overlaps: "CX0_codex_component_store (docs/2026-10-02-workshop-codex-rewind-phasemap.spec, carried into the emerge map) — CX0 grows the store, SB14 feeds it"
       depends_on: [SB13_each_component_chunked, SB6_hundreds_of_specs]
       files: [lib/component-store.js, idearium/lib/architect.js, idearium/repo/proof-run.js]
@@ -566,7 +576,8 @@ spec:
       layer: library
       systems: [idearium, core, copilot]
       value: { score: 3, cost: S, for: [ownership, safety], why: "every dispatch can be replayed and explained from a node, not only from a response field" }
-      status: OPEN — James's call (which node type)
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN — James's call (which node type)
       depends_on: [BC2_the_build_agent_gets_all_of_the_hat_and_repo_context]
       files: [lib/node-schemas/schema.injection, lib/node-export.js, idearium/api/index.js]
       does: >-
@@ -582,7 +593,8 @@ spec:
       layer: library
       systems: [core, loom]
       value: { score: 2, cost: S, for: [quality], why: "a module with no caller is debt; one upstream walk, not two" }
-      status: OPEN
+      status: 'FOLDED — into one-roadmap OR6 (old code out — wire or archive) (declutter 2026-10-09)'
+      status_before: OPEN
       depends_on: [BC1_build_context]
       files: [lib/relational-context.js, lib/build-context.js, lib/registry-harness.js]
       does: >-
@@ -597,6 +609,7 @@ spec:
       james: 'none — a bug the coder found while wiring SB12; recorded so it is not lost.'
       layer: library
       status: OPEN
+      path: 'step 2 — an empty file is not a build (PB2 did it for phase builds; chunks still need it) (declutter 2026-10-09)'
       overlaps: "none — found 2026-10-05 while wiring SB12"
       depends_on: [SB12_the_registry_is_the_component_list]
       files: [lib/build-verify.js, idearium/repo/index.js]
@@ -652,7 +665,8 @@ spec:
     SB18_the_system_template_is_used:
       james: '"like it needs to use the templates as default." · "like can you make sure this is all added to the system template."'
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       overlaps: "SB1 (the frames mechanism, reused); GN1 (genesis the default of a system spec)"
       depends_on: [SB17_the_system_template_is_complete, SB1_templates_are_the_default_frame]
       files: [idearium/spec-engine/templates.js, idearium/spec-engine/index.js, idearium/spec-engine/blocks.yaml]
@@ -668,7 +682,8 @@ spec:
     SB19_atlases_per_component:
       james: '"like the atlas'' are supposed to list the commands and routes in relation to the component or module, like its all supposed to be very specific and etailed. nodes schemas, taxonomy."'
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       overlaps: "lib/atlas-generate.js (0.39.266, first run 0.39.310)"
       depends_on: [SB17_the_system_template_is_complete]
       files: [lib/atlas-generate.js, lib/registry-harness.js]
@@ -684,7 +699,8 @@ spec:
     SB20_each_system_owns_its_own:
       james: '"like each system is responsible for its data, schemas, contracts, configurations, heartbeat and pulse, each node has a schema,"'
       layer: foundation
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       overlaps: "SB17 (the template states it); DT6_node_store (agent-ready master)"
       depends_on: [SB17_the_system_template_is_complete]
       files: [lib/node-schemas.js, guardian/schemas/, clear-glass/schemas/, lib/node-index.js, lib/nexus-self/systems.js]
@@ -702,7 +718,8 @@ spec:
     SB21_deterministic_parts_grow_with_the_system:
       james: '"every deterministic replicatable espect of each system can be expanded with the system."'
       layer: automation
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       overlaps: "loom/templates/system-scaffold.js (makes a new system's skeleton once); lib/atlas-generate.js (atlases)"
       depends_on: [SB20_each_system_owns_its_own, SB19_atlases_per_component]
       files: [loom/templates/system-scaffold.js, lib/atlas-generate.js, lib/node-index.js]
@@ -719,7 +736,8 @@ spec:
 
     SB22_every_component_capability_command_events_as_nodes:
       layer: foundation
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"like each component has to have at least one capability, with at least one command, and events, each a node each."'
       overlaps: "lib/system-nodes.js (capability + command nodes, 0.39.271); loom/templates/system-scaffold.js (1.6.0: the default); SB20, SB21"
       depends_on: [SB20_each_system_owns_its_own]
@@ -738,7 +756,8 @@ spec:
 
     SB23_a_new_system_slots_in:
       layer: automation
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"okay but i want that to be the default. then each new system can slot into nexus automatically. right?"'
       overlaps: "SB20 (each system owns its own), SB21 (derived parts generated), lib/system-nodes.js (.system nodes)"
       depends_on: [SB22_every_component_capability_command_events_as_nodes, SB21_deterministic_parts_grow_with_the_system]
@@ -757,7 +776,8 @@ spec:
 
     SB24_loom_builds_a_new_system:
       layer: ui
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"like look at the directory. loom, like it needs to build a new system. and click into it."'
       overlaps: "loom/templates/system-scaffold.js (built, never called); SB23 (a new system slots in); SB21 (generated parts)"
       depends_on: [SB23_a_new_system_slots_in, SB25_atlas_template_in_his_structure]
@@ -776,7 +796,8 @@ spec:
 
     SB25_atlas_template_in_his_structure:
       layer: library
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"like look at the atlas template" · "Then an atlas in the atlas template but not a list, each detailed, and referenced. All expanded."'
       overlaps: "SB19 (atlases per component); lib/atlas-generate.js; architecture-spec/registry/create-atlas.js (unwired)"
       depends_on: [SB17_the_system_template_is_complete]
@@ -794,6 +815,7 @@ spec:
     SB26_an_imported_project_shows_its_progress:
       layer: api
       status: OPEN
+      path: 'step 3 — Idearium holds a system: its spec and phases from its code (declutter 2026-10-09)'
       james: '"map any existing phases from the code into the phases tab. same with the specs. need to know the progress of projects i import."'
       overlaps: "DT4b_registry_chunk_in_repo_chunking (agent-ready master: every imported repo carries its registry); idearium/repo/architecture.js; spec-plan.js derivePlan; PH1 proof runs"
       depends_on: [SB17_the_system_template_is_complete, SB12_the_registry_is_the_component_list]
@@ -815,6 +837,7 @@ spec:
     SB27_expanding_a_repo_keeps_its_spec_and_phases_current:
       layer: automation
       status: OPEN
+      path: 'step 3 — the spec and phases stay true as the repo grows (declutter 2026-10-09)'
       james: '"like i was thinking that expanding and repo needs to either update or build and specs, then add phases to the phasemap."'
       overlaps: "roadmap.addPhase / setPhaseStatus (exist); BK2_phase_build_writes_code; the living spec's addenda"
       depends_on: [SB26_an_imported_project_shows_its_progress]
@@ -850,6 +873,7 @@ spec:
     SB29_the_build_flow_in_his_order:
       layer: api
       status: OPEN
+      path: 'step 2 — map → phases → snapshot → Plan → build, his order (declutter 2026-10-09)'
       james: '"like needs to map, phase, check for snapshot if none exist, create one, then populate the plan section and begin, then add precommited changes to the files tab, greyed out. dont create an entirely new repo, just compartment until the changes are commited."'
       overlaps: "the one-idearium map's I2 (snapshot before a phase run); the coding-flow map's W2/W3 (plan lands, work surface); staging S1; file-state P (greyed proposals); speceng.codegen (makes a second repo — to change)"
       depends_on: [SB26_an_imported_project_shows_its_progress, SB12_the_registry_is_the_component_list]
@@ -1158,7 +1182,8 @@ spec:
 
     SB46_every_step_by_hand:
       layer: api
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"Human friendly, to use by hand without ai."'
       depends_on: [SB42_a_repo_expands_from_its_spec]
       files: [cos/archetype/nexus-system/cli.js, cos/archetype/nexus-system/lib/scaffold.js, idearium/ui/js/phases.js, cli/idearium.js]
@@ -1172,7 +1197,8 @@ spec:
 
     SB47_built_and_run_in_cos:
       layer: api
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"Using cos also."'
       depends_on: [SB29_the_build_flow_in_his_order, SB46_every_step_by_hand]
       files: [lib/cos-run.js, idearium/api/index.js, lib/cos-bridge.js]
@@ -1184,7 +1210,8 @@ spec:
 
     SB48_proof_in_cos_closes_the_phase:
       layer: api
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"then coded" — and known: the proof does not check the slot'
       depends_on: [SB47_built_and_run_in_cos]
       files: [lib/registry-plan.js, idearium/api/index.js, lib/repo-expand.js]
@@ -1197,7 +1224,8 @@ spec:
 
     SB49_an_idea_runs_through_by_itself:
       layer: api
-      status: OPEN
+      status: 'LATER — off the path — system templates, per-system ownership, atlases per component and hundreds of specs come after one spec builds end to end (declutter 2026-10-09)'
+      status_before: OPEN
       james: '"This is supposed to be ideas fed into an autonomous system."'
       depends_on: [SB46_every_step_by_hand, SB48_proof_in_cos_closes_the_phase]
       files: [lib/idea-run.js, idearium/api/index.js, idearium/ui/js/app.js]
