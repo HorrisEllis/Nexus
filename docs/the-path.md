@@ -21,6 +21,11 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 | SD7_blocks_that_generate_themselves | 2026-10-10-idearium-solid | the DAG; after SD6 and SD10 |
 | SD8_an_agent_can_see_and_fix_a_tab | 2026-10-10-idearium-solid | Clear Glass as agent tools |
 | SD9_claude_code_inside_idearium | 2026-10-10-idearium-solid | half real |
+| SD11_the_desktop_inside_idearium | 2026-10-10-idearium-solid | the VM's screen in a pane, not a pop-up |
+
+## After solid — the design surface (docs/2026-10-10-design-surface-phasemap.spec)
+
+James: "i want to make a design system for creating and editing different types of graphical interfaces. like open any file and edit the ui in real time". DS0 one token source → DS1 tokens edited live → DS2 pick and edit any page (Clear Glass ◎, written back) → DS3 components as Eravos mods → DS4 interface types by adapter → DS5 the agents design too.
 
 ## Step 0 — health and the clean-up
 

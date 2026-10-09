@@ -200,6 +200,24 @@ spec:
         economy. The gate needs a mode: always for generated spec blocks and phase builds, sampled or off for chat.
         And a confidence number from a model is a claim too; it is stored with its reasons, never shown bare.
       proof: "a block of filler (claims with no source) is flagged with its attacks and a low score; a grounded block passes; the verdicts appear in the learned order"
+    SD11_the_desktop_inside_idearium:
+      layer: ui
+      status: "OPEN"
+      james: '"tell me about the cos desktop envirement ui. like can we have in like the ui?"'
+      depends_on: []
+      files: [idearium/ui/desktop.html, idearium/ui/js/repo-settings.js, idearium/ui/js/app.js, cos/workspace/index.js]
+      does: >-
+        Today: a repo's compartment is a QEMU VM (an xfce desktop) branched from its original (a qcow2 overlay and a git
+        worktree); QEMU serves its screen as VNC over a websocket on 127.0.0.1:5700+N; idearium/ui/desktop.html draws it
+        with noVNC, opened as a separate pop-up window from Settings → Desktop. noVNC's RFB attaches to any element, so
+        the same screen is drawn inside Idearium as a pane (beside the Code tab, or full) — natively, no iframe (his
+        "the idearium settings still have iframes") — with the box's pause / resume / checkpoint / rewind beside it.
+        noVNC is vendored (it loads from jsDelivr today, which fails offline and in Clear Glass without network).
+      pushback: >-
+        One VM per repo is memory — the pane shows the desktop only while it is open, and says the VM's cost. Not
+        verifiable in the cloud container (no VM image); proven on his machine in Clear Glass, and with a stubbed VNC
+        stream in the probe.
+      proof: "a repo's desktop opens in a pane in Idearium, keyboard and mouse work, rewind from beside it"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"
