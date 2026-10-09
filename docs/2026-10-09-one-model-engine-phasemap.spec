@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     one-model-engine
-    version:  2.2.0
+    version:  2.3.0
     date:     2026-10-09
     release:  0.52.0 (base)
     uuid:     nexus-one-model-engine-phasemap-v1-0000-2026-1009-jamesbrooks-001
@@ -19,7 +19,7 @@ spec:
       retry mechanism, not the definition of failure"): "Perfect. Add to map. What about hooking in raid?" — then
       "Doesn't it have a drainer." — then "Okay. Map thoroughly before moving. That was supposed to be the point of the
       map." — then "Look at the raid engine atlas and spec" — then "okay. deeply check, nexus idearium guardian and coipilot
-      specs and atals".
+      specs and atals" — then "okay, yes thats the point update the map first." (ME15, the docs made true, goes first.)
     method: >
       How this inventory was made, so it can be re-run and checked: (1) the bottom — every place a prompt leaves a
       process (Ollama generate/chat, guardian browser agents and REST APIs, copilot's prompt routes); (2) every caller
@@ -239,6 +239,23 @@ spec:
     - "ME5 — LAW_I, from his own words in order (first_model_said): the coder reads them as Ollama first, smallest up, then ChatGPT, then Gemini, Claude last — confirm, or say otherwise; then raid.spec, RAID's code, nexus.spec and idearium's default all say the same."
     - "ME10 — lifeline's confidence escalation: keep as an opt-in policy, or retire."
     - "ME8 — observability contracts: a status the drainer never runs ('external'), or stop submitting them and record through the one attempt record instead."
+
+  next_map:   # 2.3.0 — his larger ask, named here so it is not lost; mapped on its own, after this one, not folded in
+    james: >-
+      "idearium is supposed to do that also. like you update the spec, which is then chunked, phased, possibly chunked
+      again, and built. like the map is whats expanded, then phases to the phasemap." · "i want idearium to be able to do
+      what you do." · "as simple as possible, that anyone can use. but also powerful and advanced enough for entire
+      codebases." · "all my ideas i usually throw at you, and we back and fourth, which is what the void was supposed to
+      be, back and fourth, but i dont think it is"
+    found: >-
+      He is right about the void (idearium/lib/void.js): every echo is one fresh call that sees his idea's text and his
+      repo and library names — never its own earlier echoes, never what he said back. He answers only by taking a part
+      in his own words. It is a set of single replies, not a conversation. The other steps exist in pieces: the
+      workshop (WS7), derivePlan (spec → phasemap), the Phases tab and the thread (RS9–RS11), phase builds.
+    why_after_this_map: >-
+      The loop he describes calls a model at every step (the void's replies, drafting the spec, cutting phases,
+      building). Built on today's eight choosers it would inherit the fragmentation this map removes; built after, every
+      step asks RAID through the one engine.
 
   # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
   phases:
