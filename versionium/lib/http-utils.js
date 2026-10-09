@@ -31,12 +31,17 @@ function readRawBody(req, maxBytes = 25 * 1024 * 1024) {
   return new Promise((resolve, reject) => {
     const chunks = [];
     let size = 0;
+    // §SD0 0.56.0 — over the limit the socket was destroyed, so the caller's 413 never arrived: the sender read
+    // "read ECONNRESET", which looks exactly like versionium being down. The rest of the body is drained and dropped
+    // instead, and the caller answers 413 on a live connection.
+    let over = false;
     req.on('data', c => {
+      if (over) return;
       size += c.length;
-      if (size > maxBytes) { req.destroy(); reject(new Error(`upload exceeds ${maxBytes} byte limit`)); return; }
+      if (size > maxBytes) { over = true; chunks.length = 0; reject(new Error(`upload exceeds ${maxBytes} byte limit`)); return; }
       chunks.push(c);
     });
-    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('end', () => { if (!over) resolve(Buffer.concat(chunks)); });
     req.on('error', reject);
   });
 }

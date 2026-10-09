@@ -150,7 +150,7 @@ function qemu(sockPath) {
     assert.ok(/RAct\.setCheckpointer\(async/.test(idx) && /desktop\.checkpoint_before/.test(idx));
     assert.ok(/kind = op === 'checkpoint' \? 'checkpoint\.saved' : op === 'rewind' \? 'checkpoint\.restored'/.test(idx), "the person's desktop acts are log rows");
     const ui = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/repo-tasks.js'), 'utf8');
-    assert.ok(/async function rtRewind\(tag\)/.test(ui) && /desktop\/rewind/.test(ui) && /rewind the desktop to before this/.test(ui));
+    assert.ok(/async function rtRewind\(tag\b/.test(ui) && /desktop\/rewind/.test(ui) && /rewind the desktop to before this/.test(ui));
   });
 
   WS._sessions.delete(comp.id);

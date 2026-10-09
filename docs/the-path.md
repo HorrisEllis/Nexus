@@ -17,7 +17,8 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 | SD6_an_idea_logged_asked_expanded | 2026-10-10-idearium-solid | the void as a real back-and-forth |
 | SD4_agents_live_in_guardian | 2026-10-10-idearium-solid | one .agent per model |
 | SD5_account_fallback | 2026-10-10-idearium-solid | after SD4 |
-| SD7_blocks_that_generate_themselves | 2026-10-10-idearium-solid | the DAG; after SD6 |
+| SD10_the_adversarial_gate | 2026-10-10-idearium-solid | "the adversarial is a gate for each output" — any domain |
+| SD7_blocks_that_generate_themselves | 2026-10-10-idearium-solid | the DAG; after SD6 and SD10 |
 | SD8_an_agent_can_see_and_fix_a_tab | 2026-10-10-idearium-solid | Clear Glass as agent tools |
 | SD9_claude_code_inside_idearium | 2026-10-10-idearium-solid | half real |
 

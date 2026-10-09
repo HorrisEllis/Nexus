@@ -123,6 +123,21 @@ const freePort = () => new Promise(res => { const s = net.createServer(); s.list
     check('Spec tab: the blank part is named, with ✦ draft them', /1 blank/.test(bl) && /Integration/.test(bl) && /draft them/.test(bl), bl);
     if (process.env.PROBE_SHOT !== '0') await pg.screenshot({ path: path.join(SHOT, 'idearium-spec.png') });
 
+    // §SD1 0.56.0 — James: "can you add the rewind engine controls and versioning to the repos box you click on to open it."
+    await pg.evaluate(() => { exitRepoDetail(); renderRepoLibrary(); }); await pg.waitForTimeout(400);
+    const hasBtn = await pg.evaluate((u) => !!document.querySelector(`.rc-time-btn[onclick*="${u}"]`), U);
+    check('the repo card has a ⟲ versions-and-rewind button', hasBtn);
+    const sel0 = await pg.evaluate(() => CURRENT_API_REPO && CURRENT_API_REPO.uuid);
+    await pg.evaluate((u) => document.querySelector(`.rc-time-btn[onclick*="${u}"]`).click(), U);
+    for (let i = 0; i < 80 && !(await pg.evaluate((u) => !!(RC_TIME.data[u] && RC_TIME.data[u].at), U)); i++) await pg.waitForTimeout(250);
+    const card = await pg.evaluate((u) => (document.getElementById(`rct-${u}`) || {}).innerText || '', U);
+    check('the card opens its versions (id, when, what) and the desktop, without opening the repo', /versions/i.test(card) && /all \d+ versions/.test(card) && /desktop/i.test(card) && (await pg.evaluate(() => CURRENT_API_REPO && CURRENT_API_REPO.uuid)) === sel0, card.slice(0, 300));
+    await pg.evaluate((u) => { const b = [...document.querySelectorAll(`#rct-${u} .rc-act`)].filter(x => x.textContent.trim() === '↶'); b[b.length - 1].click(); }, U);
+    for (let i = 0; i < 80 && !(await pg.evaluate((u) => /would write|already matches|cannot restore/.test((document.getElementById(`rct-out-${u}`) || {}).innerText || ''), U)); i++) await pg.waitForTimeout(250);
+    const pv = await pg.evaluate((u) => (document.getElementById(`rct-out-${u}`) || {}).innerText || '', U);
+    check('↶ on a version previews its restore inside the card (the real preview — what it would write and delete)', /would write|already matches/.test(pv), pv.slice(0, 300));
+    if (process.env.PROBE_SHOT !== '0') await pg.screenshot({ path: path.join(SHOT, 'idearium-repo-card-time.png') });
+
     check('no page errors', errs.length === 0, errs.slice(0, 3).join('; '));
   } finally { await br.close(); for (const s of servers) s.close(); }
   console.log(`\n  ${pass} passed, ${fail} failed\n`);

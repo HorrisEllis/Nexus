@@ -96,6 +96,7 @@ function createDispatcher(deps) {
   function cancel(jobId, reason = 'cancelled') {
     const j = (typeof getJob === 'function' && getJob(jobId)) || _watchedJobs.get(jobId) || null;
     if (!j || _OVER.has(j.status)) return { ok: false, status: j ? j.status : 'unknown' };
+    if (_econHeld.has(j.provider)) _econHeld.get(j.provider).delete(jobId);   // §SD3
     _clearCompletionWatch(jobId); _clearPickupWatch(jobId); _watchedJobs.delete(jobId);
     for (const [prov, q] of pendingQueue) { const i = q.findIndex(x => x && x.id === jobId); if (i >= 0) q.splice(i, 1); if (!q.length) pendingQueue.delete(prov); }
     try { _dispatchPool.release(j.provider, jobId); } catch (_) {}
@@ -250,6 +251,7 @@ function createDispatcher(deps) {
   // §0.39.265 — a job the pool already holds (active or waiting) is not enqueued twice: a joined twin
   // (guardian/lib/jobs.js) or a caller that dispatches again gets the one run already under way.
   const _inPool = new Set();
+  const _econHeld = new Map();   // §SD3 — provider → ids of high-priority jobs the economy is holding
   _dispatchPool.on('slot-freed', ({ jobId }) => _inPool.delete(jobId));
   _dispatchPool.on('job-failed', ({ jobId }) => _inPool.delete(jobId));
 
@@ -261,6 +263,13 @@ function createDispatcher(deps) {
     // §0.39.281 EC6 — the provider economy (lib/economy/*): wait, stop, or the fallback the person configured
     if (economy && typeof economy.check === 'function') {
       let d = null; try { d = economy.check(job); } catch (e) { console.warn(`[guardian/economy] check failed (dispatching as before): ${e.message}`); }
+      // §SD3 0.56.0 — the economy's gap is one slot: when it opens, a job someone is waiting on takes it. A background
+      // job that would go now while a high-priority job for the same provider is held steps back a second.
+      if (d && d.verdict === 'allow' && job.priority !== 'high' && [...(_econHeld.get(job.provider) || [])].some(id => id !== job.id)) {
+        d = { verdict: 'wait', ms: 1000, reason: `${job.provider}: a job someone is waiting on goes first` };
+      }
+      if (d && d.verdict === 'wait' && job.priority === 'high') { if (!_econHeld.has(job.provider)) _econHeld.set(job.provider, new Set()); _econHeld.get(job.provider).add(job.id); }
+      else if (_econHeld.has(job.provider)) _econHeld.get(job.provider).delete(job.id);
       if (d && d.verdict === 'wait') {
         updateJob(job.id, { status: 'queued', queuedAt: Date.now(), queueReason: `economy: ${d.reason}`, economyWaitUntil: Date.now() + Math.max(1000, d.ms || 0) });   // §HP21 — askSync reads how long
         bus.emit('guardian.economy.wait', { jobId: job.id, provider: job.provider, ms: d.ms, reason: d.reason });

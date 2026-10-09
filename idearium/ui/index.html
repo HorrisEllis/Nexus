@@ -642,6 +642,17 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .repo-card-body{flex:1;min-width:0}
 .repo-card-name{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
 .repo-card-meta{font-family:var(--mono);font-size:9px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* §SD1 0.56.0 — versions and rewind on the repo card */
+.rc-time-btn{margin-left:auto;flex:none;background:none;border:1px solid var(--border,rgba(255,255,255,.1));color:var(--text3);font-size:11px;line-height:1;padding:2px 5px;border-radius:4px;cursor:pointer}
+.rc-time-btn:hover,.rc-time-btn.on{color:var(--sky,#38bdf8);border-color:var(--sky,#38bdf8)}
+.rc-time{margin:0 0 6px 10px;padding:6px 8px;border-left:2px solid var(--sky,#38bdf8);font-family:var(--mono);font-size:9.5px;color:var(--text2)}
+.rc-sec{color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-size:8.5px;margin:4px 0 2px}
+.rc-row{display:flex;gap:6px;align-items:center;min-width:0;padding:1px 0}
+.rc-id{color:var(--sky,#38bdf8)}.rc-dim{color:var(--text3)}.rc-bad{color:var(--coral,#f87171)}
+.rc-msg{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-act{flex:none;background:none;border:1px solid var(--border,rgba(255,255,255,.1));color:var(--text2);font:inherit;padding:0 5px;border-radius:3px;cursor:pointer}
+.rc-act:hover{color:var(--sky,#38bdf8)}
+.rc-link{background:none;border:none;color:var(--sky,#38bdf8);font:inherit;padding:2px 0;cursor:pointer}
 /* §FIXED 2026-09-20 — James: "the formatting is floaty. make it full
    size." Was: padding + text-align:center only — a grid ITEM aligns to
    its container's top-left by default (CSS Grid's align-content:start),
@@ -2488,6 +2499,7 @@ async function saveToIdearium(){
 <link rel="stylesheet" href="css/arch-canvas.css">   <!-- §0.39.299 AR5 — the Architect's canvas, scoped (.ax / .ac) -->
 <link rel="stylesheet" href="css/desktop-setup.css">   <!-- §0.39.340 DK2 — the desktop setup popup, scoped (.dsu-*) -->
 <script src="js/arch-canvas.js"></script>   <!-- §0.39.299 AR3 — the one canvas both Architects use -->
+<script src="js/repo-card-time.js"></script>   <!-- §SD1 0.56.0 versions and rewind on the repo card (before app.js: its card renderer reads RC_TIME) -->
 <script src="js/app.js"></script>
 <script src="js/compartment.js"></script>
 <script src="js/agent-blocks.js"></script>

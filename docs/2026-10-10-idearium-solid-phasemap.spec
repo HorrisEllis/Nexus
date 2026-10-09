@@ -6,7 +6,7 @@ spec:
     release:  0.55.2 (base)
     uuid:     nexus-idearium-solid-phasemap-v1-0000-2026-1010-jamesbrooks-001
     owner:    idearium · guardian (agents, accounts) · copilot (the door)
-    status:   "MAPPED 2026-10-10, before building; nothing built"
+    status:   "MAPPED 2026-10-10, before building; James 2026-10-10: \"yes\" to SD0 → SD2 → SD3 → SD1 → SD6; SD10 added from his answer to SD7; SD0–SD3 done (0.56.0)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -38,7 +38,7 @@ spec:
   phases:
     SD0_versionium_down_is_said_and_restarted:
       layer: backend
-      status: "OPEN"
+      status: "DONE (0.56.0) — found: versionium/lib/http-utils.js readRawBody destroyed the socket over its size limit, so the 413 never arrived and the sender read exactly \"read ECONNRESET\" (reproduced on 0.55.2; a clean 413 now). idearium/repo/snapshot.js _againWhileDown: limits/plan/stage tried again while versionium comes back (2·4·8·16·30 s), the refusal says how long it waited and what to start; commit and record are never repeated. Autopilot already restarts versionium with backoff. Whether his 12:46 reset was this or a crash is not known from here. test-idearium-solid SO-01..04."
       james: '"12:46:45 refused — no snapshot: the file layer was not available before commit — no snapshot was made: [nexus-client] versionium unreachable at 127.0.0.1:3754 — read ECONNRESET"'
       depends_on: []
       files: [nexus/autopilot.js, versionium/server.js, lib/repo-layer.js]
@@ -51,7 +51,7 @@ spec:
       proof: "kill versionium mid-build: the build pauses, versionium comes back, the write lands with its snapshot"
     SD1_rewind_and_versions_on_the_repo_card:
       layer: ui
-      status: "OPEN"
+      status: "DONE (0.56.0) — idearium/ui/js/repo-card-time.js: ⟲ versions on the repo's box in the Repos grid (and its row in the open repo's list) — the last three versions with ↶ (the real restore preview, inside the box), the desktop's pause/resume/checkpoint and its last checkpoints with ↶ rewind, all versions →; previewRepoRestore and rtRewind take a repo id. Clear Glass: tests/probe/idearium-one-surface-glass.js 21/21, real API and versionium."
       james: '"can you add the rewind engine controls and versioning to the repos box you click on to open it."'
       depends_on: []
       files: [idearium/ui/js/app.js, idearium/ui/js/repo-drawer-views.js, idearium/ui/js/repo-tasks.js]
@@ -66,7 +66,7 @@ spec:
       proof: "from the Repos list, one click rewinds a repo to its last checkpoint and shows the commit it came back to"
     SD2_copilot_never_answers_ok_with_nothing:
       layer: backend
-      status: "OPEN"
+      status: "DONE (0.56.0) — copilot/server.js _noAnswer: both /api/prompt lifeline handlers answer ok:false with lifeline's own reason when there is no text (live: 'Both Ollama and Guardian are unavailable. Check system health.'); the overview says it. SO-05."
       james: '"[unstructured response — keys: ok, requestId, sessionId, text, modelUsed, intent, channel, contextLayers, fromStream] via none" (his screenshot, the overview co-pilot)'
       depends_on: []
       files: [copilot/server.js, copilot/lifeline.js, ui/tv-shell/index.html]
@@ -77,7 +77,7 @@ spec:
       proof: "with Ollama down and no tab, /api/prompt says ok:false and lists what it tried"
     SD3_the_person_goes_first:
       layer: guardian
-      status: "OPEN"
+      status: "DONE (0.56.0) — guardian/ask.js marks its job high (the autonomous loop passes normal); dispatcher: a background job steps back while the economy holds a high one for the same agent; the reconnect flush sends high first; the pool already sorted. SO-06, SO-07."
       james: '"i need to get this working and feel see the progress."'
       depends_on: []
       files: [guardian/ask.js, guardian/lib/jobs.js, guardian/lib/dispatch-pool.js]
@@ -143,7 +143,14 @@ spec:
       pushback: >-
         Generating a whole spec from one line will produce confident filler; each generated block should cite which
         earlier block or thread turn it came from, and an empty input gives an empty block, not an invented one.
-      proof: "an idea with a components block → {file_tree} fills; the empty blocks after it fill in dependency order, each citing its source"
+      answered: >-
+        James, 2026-10-10: "for the confident, filler, maybe use confidence score and adversarial. like maybe the
+        adversarial is a gate for each output." Taken: every generated block passes SD10's gate before it is offered —
+        an adversary (a different agent from the one that wrote it) attacks it, a confidence score comes back with the
+        attacks, and below the bar the block is not offered as done: it is offered with the attacks beside it, or
+        regenerated once with them as the brief.
+      depends_on_gate: SD10_the_adversarial_gate
+      proof: "an idea with a components block → {file_tree} fills; the empty blocks after it fill in dependency order, each citing its source and carrying its gate verdict"
     SD8_an_agent_can_see_and_fix_a_tab:
       layer: backend
       status: "OPEN"
@@ -168,6 +175,31 @@ spec:
         with the same tools and the same Plan, and its runs on the same gate trail. Check first what the Settings →
         provider list offers for claude-code today.
       proof: "a repo set to claude-code builds a phase from the Plan; its changes land versioned; its run shows like any agent's"
+    SD10_the_adversarial_gate:
+      layer: library
+      status: "OPEN"
+      james: '"for the confident, filler, maybe use confidence score and adversarial. like maybe the adversarial is a gate for each output. yes. this needs to be coding like you do. nexus is supposed to be nonlinear and domain agnostic. like with guardian, we can make ai assistance."'
+      depends_on: []
+      files: [lib/draft-review.js, lib/compartment-engine.js, copilot/lifeline.js, lib/pipeline-routing.js]
+      does: >-
+        One gate any output can pass through — a spec block, a phase, a file, an answer — in any domain, because what it
+        checks comes from the output's own stated purpose and sources, not from a code-only rule. An adversary (through
+        the copilot route, preferring a different agent from the author, as draft-review already pairs a drafter with a
+        reviewer) is asked to break it: unsupported claims, contradictions with its sources, filler, missing parts. It
+        returns attacks and a confidence (0–1, with the reasons). The gate passes, flags (offered with the attacks
+        beside it) or sends it back once with the attacks as the brief. Every verdict is kept with the output, and the
+        verdicts teach the learned order (a 'dismissed'-style signal, HP4 weights) — so which agent writes which kind of
+        output well is learned, not assumed.
+      reuse: >-
+        lib/draft-review.js (author ≠ reviewer, one plain hand-off), lib/compartment-engine.js's adversary-suite slot
+        (named, never built — this fills it), copilot/lifeline.js _estimateConfidence (a text heuristic, kept only as a
+        floor when no adversary answers), pipeline-routing verdicts (CT2). Not a fifth router: the adversary is reached
+        through the same copilot route as any call.
+      pushback: >-
+        An adversary costs a second model call per output — on a 30-block spec that is 30 more calls through the
+        economy. The gate needs a mode: always for generated spec blocks and phase builds, sampled or off for chat.
+        And a confidence number from a model is a claim too; it is stored with its reasons, never shown bare.
+      proof: "a block of filler (claims with no source) is flagged with its attacks and a low score; a grounded block passes; the verdicts appear in the learned order"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"

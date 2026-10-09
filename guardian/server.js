@@ -547,6 +547,9 @@ function flushQueuedJobs(provider) {
   if (jobItems.length) pendingQueue.set(provider, jobItems);
   const remaining = jobItems;
   console.log(`[guardian] flushing ${queued.length} queued jobs → ${provider}`);
+  // §SD3 0.56.0 — a job someone is waiting on (priority high, askSync) goes before background work
+  const _pri = { high: 0, normal: 1, low: 2 };
+  queued.sort((a, b) => (_pri[(jobs.get(a.id) || a).priority] ?? 1) - (_pri[(jobs.get(b.id) || b).priority] ?? 1));
   for (const job of queued) {
     const fresh = jobs.get(job.id);
     if (fresh && fresh.status === 'queued') dispatchJob(fresh);

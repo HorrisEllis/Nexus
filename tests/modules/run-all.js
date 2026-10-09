@@ -327,6 +327,7 @@ const SUITES = [
   'test-thread.test.js',
   'test-hardening-pass.test.js',   // 0.52.0 HP2–HP4 — interrupted runs, the ladder climbs only what is installed, signals weighted
   'test-guardian-stack-sim.test.js',   // 0.55.2 HP13–HP22 — the stack run end to end: right gate, pickup, never resend, cancel, no tab, economy, tab order
+  'test-idearium-solid.test.js',   // 0.56.0 SD0 versionium dropped → retried and said · SD2 copilot never ok with nothing · SD3 the person goes first
   'test-phases-tab.test.js',
   'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls

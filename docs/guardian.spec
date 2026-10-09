@@ -17,3 +17,8 @@ James: "loop simulations of every deep and drecursive test and debug method you 
 - **A typed prompt is never re-queued.** The idle window and a mid-flight disconnect now send it to awaiting_transcript, not back to the queue.
 - **cancel(jobId).** The dispatcher re-reads every job before sending it. askSync cancels an untyped job it stops waiting for, gives up after GUARDIAN_NO_TAB_MS (45 s) when there is no tab, and gives up at once when the economy holds the job longer than GUARDIAN_ECONOMY_WAIT_MS (30 s) or longer than it will wait.
 - **Gate trail.** `gateOfError` reads an unknown gate (the userscripts' 'handleJob') from its error text. `guardian.economy.wait` is a waiting gate with its reason.
+
+## ADDENDUM 2026-10-10 — 0.56.0 SD3: the person goes first (docs/2026-10-10-idearium-solid-phasemap.spec)
+- askSync marks its job `priority: 'high'` unless the caller passes `priority` (the autonomous loop passes 'normal').
+- When the economy holds a high job for an agent, the dispatcher holds back a normal job for the same agent for 1 s at a time, so the opening gap goes to the high job.
+- The reconnect flush sends high jobs first. The dispatch pool already sorted its waiting jobs by priority.

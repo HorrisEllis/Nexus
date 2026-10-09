@@ -131,3 +131,6 @@ spec:
       for confirmation, then shows the server's own verification result
       (verified against disk, or the mismatching files and the pre-restore
       snapshot id) and an undo button that previews restoring that snapshot.
+
+## ADDENDUM 2026-10-10 — 0.56.0 SD0: over the limit is a 413, not a reset (docs/2026-10-10-idearium-solid-phasemap.spec)
+James: "versionium unreachable at 127.0.0.1:3754 — read ECONNRESET". `lib/http-utils.js readRawBody` used to destroy the request socket when an upload went over its limit, so the route's 413 was never delivered and the sender saw a connection reset. It now drains and drops the rest of the body, and the route answers 413 on a live connection. On Idearium's side, `idearium/repo/snapshot.js _againWhileDown` retries limits, plan and stage (all content-addressed) while versionium comes back, waiting 2, 4, 8, 16 and 30 s. It never repeats commit or record. `VERSIONIUM_RETRY_MS=0` turns the waiting off.

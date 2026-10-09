@@ -323,6 +323,30 @@ export function isRepoSnapshotState(state) {
  * leaves no snapshot behind. If the commit succeeds and only the file record
  * fails, the commit stays and the result says so (code FILES_RECORD_FAILED).
  */
+// §SD0 0.56.0 — James: "refused — no snapshot: the file layer was not available before commit … versionium unreachable
+// at 127.0.0.1:3754 — read ECONNRESET". A dropped connection (versionium restarting under autopilot, or resetting a
+// request) refused the whole build. limits/plan/stage change nothing on versionium's side (stage is content-addressed
+// and verified by hash), so they are tried again while versionium comes back — waits 2·4·8·16·30 s (~1 min) — and the
+// refusal, if it still comes, says how long it waited. The commit and the record are not repeated (a lost reply could
+// double them). VERSIONIUM_RETRY_MS=0 turns the waiting off.
+const _DROPPED = /unreachable|ECONNRESET|ECONNREFUSED|socket hang up|EPIPE|ETIMEDOUT/i;
+export async function _againWhileDown(what, fn, { waits = null, sleep = (ms) => new Promise(r => setTimeout(r, ms)), onRetry = null } = {}) {
+  const off = process.env.VERSIONIUM_RETRY_MS === '0';
+  const plan = waits || (off ? [] : [2000, 4000, 8000, 16000, 30000]);
+  let waited = 0;
+  for (let i = 0; ; i++) {
+    try { return await fn(); }
+    catch (e) {
+      if (!_DROPPED.test(String(e && e.message)) || i >= plan.length) {
+        if (waited) e.message = `${e.message} (versionium ${what}: tried ${i + 1} times over ${Math.round(waited / 1000)} s — is versionium running? autopilot restarts it; alone: node versionium/server.js)`;
+        throw e;
+      }
+      if (onRetry) { try { onRetry({ what, attempt: i + 1, waitMs: plan[i], error: e.message }); } catch (_) {} }
+      await sleep(plan[i]); waited += plan[i];
+    }
+  }
+}
+
 export async function commitRepoSnapshot({ repo, repoDir, commit, message = null, causedBy = null, now, fileLayer = null, snapshotMode = 'delta', provenance = null } = {}) {
   if (typeof commit !== 'function') return { ok: false, code: 'NO_TRANSPORT', error: 'commit function is required' };
   const built = buildSnapshotRecord({ repo, repoDir, now });
@@ -334,9 +358,9 @@ export async function commitRepoSnapshot({ repo, repoDir, commit, message = null
   let kept = null; let contents = null;
   if (fileLayer) {
     try {
-      const limits = await fileLayer.limits();
+      const limits = await _againWhileDown('limits', () => fileLayer.limits());
       const col = collectFiles(repo, repoDir, limits.maxFileBytes);
-      const plan = await fileLayer.plan(col.entries);
+      const plan = await _againWhileDown('plan', () => fileLayer.plan(col.entries));
       const tooLarge = new Set(plan.tooLarge || []);
       kept = col.entries.filter(e => !tooLarge.has(e.path));
       const need = new Set(plan.need || []);
@@ -349,7 +373,7 @@ export async function commitRepoSnapshot({ repo, repoDir, commit, message = null
         // 0.39.263 — over one request: stage the content in batches under the cap
         // (versionium verifies each by hash), then record with nothing inline.
         let batch = [], size = 0;
-        const flush = async () => { if (batch.length) await fileLayer.stage(batch); batch = []; size = 0; };
+        const flush = async () => { if (batch.length) { const b = batch; await _againWhileDown('stage', () => fileLayer.stage(b)); } batch = []; size = 0; };
         for (const e of needed) {
           const b64 = col.buffers.get(e.path).toString('base64');
           if (size + b64.length > limits.maxRecordBytes && batch.length) await flush();

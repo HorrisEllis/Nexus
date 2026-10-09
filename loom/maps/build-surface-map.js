@@ -55,6 +55,9 @@ const FILES = [
   // §0.39.350 CT4 — Settings → Models: HTTP ollama/check, ollama/check/ask; idearium/api runs lib/ollama-check.js
   ['lib/ollama-check.js', I('lib/ollama-check.js'), []],
   ['idearium/ui/js/ollama-check.js', I('idearium/ui/js/ollama-check.js'), [I('idearium/api/index.js')]],
+  // §0.56.0 SD1 — versions and rewind on the repo's box: HTTP snapshots, desktop, desktop/checkpoints, desktop/:op;
+  // app.js previewRepoRestore (the real restore preview); repo-tasks.js rtRewind
+  ['idearium/ui/js/repo-card-time.js', I('idearium/ui/js/repo-card-time.js'), [I('idearium/api/index.js'), I('idearium/ui/js/app.js'), I('idearium/ui/js/repo-tasks.js')]],
   ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/plan-panel.js')]],   // §CT5 openPlanPanel, _gateBar
 ];
 

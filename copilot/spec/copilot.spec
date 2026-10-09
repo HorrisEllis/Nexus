@@ -402,3 +402,6 @@ spec:
 
 ## ADDENDUM 2026-10-10 — 0.55.2 HP18: the door orders by guardian's open tabs
 POST /api/route reads guardian's GET /providers (`lib/agent-providers.js guardianTabs`, 1.5 s). If guardian doesn't answer, the order is unchanged. `lib/model-door.js route({ tabs })` moves a browser agent with no tab connected behind the ones that have one; the reason is said on the hop and returned as `moved`. HP22: `lib/pipeline-routing.js classify` reads "not connected / no <agent> tab open|connected|free" as provider-down before it checks for a login wall.
+
+## ADDENDUM 2026-10-10 — 0.56.0 SD2: never ok with nothing
+Both /api/prompt handlers that go through lifeline answer `{ ok:false, error, reason }` when there is no text, carrying lifeline's own error (for example "Both Ollama and Guardian are unavailable"). Previously they returned `ok:true` with empty text and `modelUsed: 'none'`.

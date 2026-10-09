@@ -123,3 +123,8 @@ spec:
       - "PROJECTS — phase board (seed→complete), spec drop zone"
       - "IDEAS — idea list with weight and lattice connections"
       - "LATTICE — resonance graph visualisation"
+
+## ADDENDUM 2026-10-10 — 0.56.0 SD1: versions and rewind on the repo's box (docs/2026-10-10-idearium-solid-phasemap.spec)
+James: "can you add the rewind engine controls and versioning to the repos box you click on to open it."
+- `idearium/ui/js/repo-card-time.js` puts **⟲ versions** on each box in the Repos grid and on each row of the open repo's list. It shows the last three versions, each with ↶ (the real restore preview, rendered inside the box), the desktop's pause, resume and checkpoint, and its last checkpoints with ↶ rewind.
+- It uses the same routes as the Plan panel. `previewRepoRestore(uuid, commitId, outId)` and `rtRewind(tag, uuid)` now take the repo, so they work outside the open repo.
