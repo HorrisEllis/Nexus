@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     one-model-engine
-    version:  2.1.0
+    version:  2.2.0
     date:     2026-10-09
     release:  0.52.0 (base)
     uuid:     nexus-one-model-engine-phasemap-v1-0000-2026-1009-jamesbrooks-001
     owner:    lib/pipeline-routing (the engine and its policy) · copilot (the door) · cortex/core/raid (choice, health, record, verify, the drainer) · guardian (transport) · idearium and every other caller
-    status:   "MAPPED 2026-10-09, before building — 2.0.0 rewritten from a full scan of the codebase (1.0.0 was mapped from a partial look and missed RAID, the drainers and most ladders); 2.1.0 corrected against RAID's atlas, spec and the axioms: RAID is the brain, not copilot's door; nothing built; goes ahead of RS1"
+    status:   "MAPPED 2026-10-09, before building — 2.0.0 rewritten from a full scan of the codebase (1.0.0 was mapped from a partial look and missed RAID, the drainers and most ladders); 2.1.0 corrected against RAID's atlas, spec and the axioms: RAID is the brain, not copilot's door; 2.2.0 checked against the nexus, idearium, guardian and copilot specs and atlases — his standing rules, the drift between docs and code, and what already exists; nothing built; goes ahead of RS1"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -18,7 +18,8 @@ spec:
       configurable.") was for every model call; it was built for phase builds only. On a ChatGPT review ("Unify the
       retry mechanism, not the definition of failure"): "Perfect. Add to map. What about hooking in raid?" — then
       "Doesn't it have a drainer." — then "Okay. Map thoroughly before moving. That was supposed to be the point of the
-      map." — then "Look at the raid engine atlas and spec".
+      map." — then "Look at the raid engine atlas and spec" — then "okay. deeply check, nexus idearium guardian and coipilot
+      specs and atals".
     method: >
       How this inventory was made, so it can be re-run and checked: (1) the bottom — every place a prompt leaves a
       process (Ollama generate/chat, guardian browser agents and REST APIs, copilot's prompt routes); (2) every caller
@@ -43,6 +44,20 @@ spec:
       - "nexus atlas: RAID, the routing authority every request passes through (§5.2, §9.1), writes the ledger entry before anything is dispatched."
       - "copilot atlas: copilot receives intent, assembles context, routes to RAID, and answers — intelligence, kept separate from guardian's dispatch on purpose."
       - "cortex atlas: the raid organ (order 5) hears cortex.orion.classified, emits cortex.raid.decided; guardian handles cortex.raid.decided → dispatch to the chosen provider."
+    standing_rules:   # 2.2.0 — his rules recorded in the four systems' specs and atlases; the engine keeps every one
+      - 'A chosen agent is the only one tried — economy I1: "A provider someone chose is never swapped silently" (guardian spec, idearium and guardian atlases); BS13: "why claude? set to chatgpt. it hasn''t build one line yet." The ladder climbs only when nobody chose; a chosen agent that fails is reported as its failure.'
+      - 'Nothing is guessed: "If copilot cannot say, nothing is sent" (idearium atlas, who answers).'
+      - 'A sign-in wall never moves on (idearium atlas, routing) — it waits for the person (§9.3 held, guardian''s login wall).'
+      - 'Tokens last: the chunk build spends tokens "only as a last resort" — component store, prior sections, memory, WARP cache, then a model (idearium atlas); RAID''s SNR "Invariants first. Patterns second. AI last." (raid-snr-filter); copilot answers data-only before any model (TOKEN_FIRST_THRESHOLD, copilot spec); SEAM T0/T1 emit structure at zero tokens (guardian spec); Clear Glass verbs act without a model (copilot atlas). The engine''s first rung is no model at all.'
+      - 'Guardian is dispatch, copilot is intelligence; they are separate (copilot and guardian specs). Ollama is isolated from guardian so a slow model never blocks it (nexus atlas).'
+      - 'Configurable economy, not hidden constants: every provider''s tier, limits, quiet hours and what to do at a limit (wait · stop · fallback to a provider he names); each job type (build, chat, plan, manage, heal, wake, automation) names the tiers it may use (provider-economy, guardian and idearium atlases).'
+    first_model_said:   # his words on which model goes first, in order — the input to decide's LAW_I
+      - '2026-06 (raid.spec LAW_I/LAW_III): Ollama always first, Claude always last.'
+      - '2026-08-18 (RAID code): "I want to use ChatGPT and Gemini since they are free. Use you [claude] as a last resort."'
+      - '2026-09-02 (RAID code, §DEFAULT-AGENT-CHANGE): "use Gemini or ChatGPT as the default agent" / "ChatGPT first, Gemini fallback."'
+      - '2026-09-29 (repos.default_provider, 0.39.282): "Ollama should be default"'
+      - '2026-10-05 (CT6): "if the 3b fails, switch to the 7b, then the 16b deepseek, then the agents."'
+      - 'Read together (the coder''s reading, his to confirm): Ollama first, smallest model up; then the free agents (ChatGPT, then Gemini); Claude last. The spec, RAID''s code, nexus.spec (ChatGPT priority 1) and idearium (ollama default) each hold one moment of this; none holds all of it.'
     what_this_means_for_the_map: >-
       The engine this map describes is already law: §15 is adaptive fulfillment through RAID, §9.3 is the drainer's
       retry later, §9.4 is the bounded, written route. It was built partly (adaptive-fulfillment, RAID's weights in
@@ -57,6 +72,26 @@ spec:
       - "raid-simulation-engine (proposed: simulate a decision in a COS compartment before it commits) — an optional check, not this map's"
       - "axiom-5-2-raid-routing MCO8 (the observability pattern: submit, run elsewhere, report — 'never re-executing the work') — its claim is what to_prove's double dispatch tests"
       - "copilot-awareness-routing CA5/CA6 (agent-router, routing_config) and code-tab-and-one-router CT1/CT2/CT6 (the door, verdicts, the ladder)"
+
+    drift_docs_vs_code:   # 2.2.0 — what the four systems' specs and atlases say that the code does not do (§12.5, §13.4)
+      - "copilot.spec: 'receives intent, assembles context, routes to RAID'; hook copilot.prompt.to-raid → cortex.raid.receive; handles cortex.raid.decide.result — none in code: /api/prompt never asks RAID (only /build queues a RAID contract and /fulfill uses RAID's pick); the nexus atlas's own walk-through says copilot chooses the backend (lifeline)"
+      - "copilot.spec modules intent-classifier, context-assembler, data-answerer, action-router, session-manager, memory-writer — only lib/intent-classifier.js exists; the rest live inside server.js and copilot-context.js or not at all"
+      - "copilot.spec routes and copilot/registry-components.js lack POST /api/route and /api/route/outcome (CT1, 0.39.346 — this session's own undeclared routes); /api/prompt/resolve is declared in the registry, not the spec"
+      - "guardian.spec handles 'cortex.raid.decided → dispatch to chosen provider' — the raid organ emits it, nothing in code hears it: a dead path (settles a to_prove)"
+      - "guardian.spec raid_routing (nine cluster chains, Ollama first, Claude last) and the guardian atlas table copied from it — retired in RAID v6.1; RAID's code is ChatGPT first"
+      - "guardian.spec / guardian atlas: 'the only system that touches AI providers … no API keys, browser tabs only' — the ollama bridge is its own system (nexus atlas: isolated from guardian), idearium's agent-suite calls Ollama directly, guardian/api-dispatch.js calls REST APIs with keys"
+      - "nexus.spec providers: chatgpt priority 1, claude 2, ollama 3 ('RAID_local_first'); guardian purpose 'ChatGPT is primary' — a fifth answer on which model goes first; nexus.spec lists neither copilot nor the ollama bridge as systems"
+      - "model names: qwen2.5-coder:1.5b and mistral:7b-instruct in nexus.spec, guardian.spec and the guardian atlas — not what is installed or used (the ladder reads the bridge)"
+      - "two copies, two contracts: docs/copilot.spec 3.5.0 vs copilot/spec/copilot.spec 3.9.0; docs/idearium.spec 4.1.0 (spec builds 'dispatch via Guardian') vs idearium/spec/idearium.spec 4.35.0 — guardian's pair was already made one (GA1), these two were not"
+      - "atlases behind their specs: copilot atlas v3.7.0 (spec 3.9.0), guardian atlas v3.6.2 (spec 3.21.0); the idearium atlas records nothing from 0.39.346 to 0.52.0 (this session's CT1–CT9, RS3–RS11, HP1–HP5); it says a new compartment defaults to chatgpt through guardian in one place and ollama (repos.default_provider) in another"
+    exists_already:   # 2.2.0 — found in the docs; the phases build on these instead of beside them
+      - "the provider economy's job types × tiers (guardian/lib/economy-guard.js over lib/economy policy) — the caller policy's 'who may answer this kind of job' already exists, configurable, in Settings → Provider economy"
+      - "the economy's wait / stop / fallback at a limit — the time axis (wait) and a configured climb (fallback), at dispatch"
+      - "lib/economy/tokens.js — token limits learned per provider from what came back whole (estimate-v1) — measured budgets, beside agent-router's hand-written AGENT_CONSTRAINTS (RR2/RR3 need one of them, the measured one)"
+      - "idearium's chunk build tiers (component store → prior sections → memory → WARP cache → model) — the no-model first rung, for chunks"
+      - "copilot's data-only answer (TOKEN_FIRST_THRESHOLD 0.6) and fromGrammar on every response — 'did this need a model at all', recorded"
+      - "the ollama client's own retry: a thinking model that answered nothing is asked once more with thinking off (transport, kept)"
+      - "the Clear Glass co-pilot pane's own who-answers switch (ollama · copilot · guardian · clear_glass) — a ninth chooser at a caller, to ask RAID through the door like the rest"
 
   # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
   inventory:
@@ -154,7 +189,7 @@ spec:
     - "whether chunk-dispatch's attempts_per_hop cap, QueueCompartment's strategies and WARP's maxAttempts multiply on one chunk, and the worst case in attempts"
     - "whether cortex /api/raid/feedback now reaches RAID's weights (guardian raid-feedback says it never had)"
     - "which choosers disagree today for the same job: run each on the same inputs"
-    - "whether anything still dispatches on cortex.raid.decided (the organ path guardian's spec describes)"
+    - "SETTLED by reading (2.2.0): nothing hears cortex.raid.decided — guardian.spec's handler does not exist in code; kept as a test in ME0 so it stays settled"
     - "what the RAID officiator's tick dispatches, how often, and whether it overlaps the worker"
 
   # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
@@ -201,7 +236,7 @@ spec:
   decide:   # his calls, needed before the phases that name them
     - "ME5 — confirm: RAID is the brain (his axioms §5.2, §9.1, §15; the coder's recommendation since 2.1.0), copilot the door that asks it, pipeline-routing's parts moved under RAID."
     - "ME3 — §9.4 MAX_ROUTE_DEPTH = 3 vs the CT6 ladder of four or more rungs: does depth count models (raise it, said in the axioms) or systems crossed (a ladder of models inside one RAID route is depth 1)?"
-    - "ME5 — LAW_I: Ollama first (raid.spec, the phase ladder today) or ChatGPT first (RAID's code since 2026-09-02, speceng.build's default)."
+    - "ME5 — LAW_I, from his own words in order (first_model_said): the coder reads them as Ollama first, smallest up, then ChatGPT, then Gemini, Claude last — confirm, or say otherwise; then raid.spec, RAID's code, nexus.spec and idearium's default all say the same."
     - "ME10 — lifeline's confidence escalation: keep as an opt-in policy, or retire."
     - "ME8 — observability contracts: a status the drainer never runs ('external'), or stop submitting them and record through the one attempt record instead."
 
@@ -241,7 +276,8 @@ spec:
       depends_on: [ME1]
       files: [lib/pipeline-routing.js]
       does: >-
-        A caller policy: { kind, accept(output) → ok | invalid with why, climbOn, retryOn, retryLater, stopOn,
+        Built on the provider economy, not beside it: the economy's job types and tiers are who may answer, its limits and
+        wait / stop / fallback stay its own. A caller policy adds: { kind, accept(output) → ok | invalid with why, climbOn, retryOn, retryLater, stopOn,
         feedback: none | context | shorter | forensic (the prompt strategies), quality: off | on, budget }. Defaults
         per caller: page — non-empty text; build — a changed file; chunk — the Detector's verification; chat — any
         answer, climbs only on did-not-run, names who answered; reviewer — a verdict; repair — a proposed patch.
@@ -256,7 +292,9 @@ spec:
         §15.1 made real for every caller: climb() becomes RAID's, reached through copilot's door; the rungs from RAID's
         decision (ME5), filtered by present() and
         RAID's health, each attempt optionally retried with feedback (the prompt strategies) before climbing, the
-        caller's policy deciding. One job carries one attempt budget through every nesting (proof, chunks, rungs,
+        caller's policy deciding. Rung zero is no model (his rule, tokens last): a cached, stored, data-only or
+        deterministic answer is tried first and recorded as such. A chosen agent is the only rung (I1); the ladder runs
+        only when nobody chose. One job carries one attempt budget through every nesting (proof, chunks, rungs,
         strategies, drain ticks); a nested climb spends from it and stops when it is gone, saying so.
       proof: "a phase with proof retries, two chunks and a three-rung ladder, and a chunk through every strategy, never exceed their budget; exhaustion is a record naming it"
     ME4_one_attempt_record:
@@ -280,8 +318,10 @@ spec:
       does: >-
         RAID's _decide is the one chooser (§5.2, §9.1). Copilot's door (/api/route) answers by asking it; pipeline-routing's
         modes, ladder, present() and learned order become its inputs, served from cortex; WARP providersFor, lifeline's
-        ollama-first, resolveDefaultBackend, agent-providers and speceng.build's default ask it instead of choosing.
-        agent-router's intent strengths and AGENT_CONSTRAINTS become cortex rows it reads (RR3); fidelity scoring (the
+        ollama-first, resolveDefaultBackend, agent-providers, speceng.build's default and the Clear Glass pane's switch
+        ask it instead of choosing (a person's explicit pick in any of them is passed as the chosen agent, never
+        overridden). agent-router's intent strengths become cortex rows it reads, and token budgets come from the
+        economy's learned limits (lib/economy/tokens.js) over AGENT_CONSTRAINTS' hand-written ones (RR2, RR3); fidelity scoring (the
         SNR gate) runs for every routing call, not only fault calls (RR1). LAW_I stated once, in raid.spec and the code
         alike. Closes RR1, RR3.
       decide: "see decide: the brain; LAW_I"
@@ -389,6 +429,22 @@ spec:
         dispatch, the repo agent's dispatch, RAID's decide, guardian's prompt routes or Ollama's generate fails the test
         — except the engine and the transports, named with why in this map.
       proof: "a direct call added anywhere fails the test, naming the file and line"
+    ME15_the_docs_tell_the_truth:
+      layer: docs
+      status: OPEN
+      james: '"okay. deeply check, nexus idearium guardian and coipilot specs and atals"'
+      depends_on: [ME0]
+      files: [copilot/spec/copilot.spec, docs/copilot.spec, guardian/spec/guardian.spec, docs/nexus.spec, docs/idearium.spec, idearium/spec/idearium.spec, docs/atlases/copilot-atlas.md, docs/atlases/guardian-atlas.md, docs/atlases/idearium-atlas.md, docs/atlases/nexus-atlas.md, copilot/registry-components.js]
+      does: >-
+        Every drift_docs_vs_code item answered in its own doc, with a dated addendum, before code moves (what the docs
+        say now must be true now): copilot's RAID claims marked as not yet true (ME5 makes them true); its missing
+        modules marked; /api/route and /api/route/outcome declared in the spec and registry; guardian's dead
+        cortex.raid.decided handler and retired cluster chains marked retired (kept, §0.3); guardian's 'only system that
+        touches providers' corrected to what is; nexus.spec's provider priorities pointed at the one LAW_I once decided;
+        stale model names replaced by a pointer to the bridge's list; the copilot and idearium doc copies surfaced to
+        him and made one the GA1 way, with his ok; the copilot, guardian and idearium atlases brought to their specs,
+        including this session's CT, RS and HP work. Then each later phase updates the atlases it changes.
+      proof: "the atlas reference test and a spec-vs-code check pass for every item listed; no claim in the four specs names a route, module, event or chain the code does not have"
     ME14_across_callers:
       layer: library
       status: OPEN
