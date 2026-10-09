@@ -29,6 +29,9 @@ spec:
     - "RAID's spec and its code disagree: raid.spec LAW_I says Ollama always first, LAW_III Claude always last; _decide since 2026-09-02 puts ChatGPT first, Gemini its fallback (§DEFAULT-AGENT-CHANGE)"
     - "RAID already has what the engine lacks: a health poll per agent (_pollHealth), a decision ledger persisted to cortex (raid_decisions), the verification spine (raid.verify: constitution gate → isolation → drift → contract compare), the tool approval gate"
     - "guardian/lib/dispatch-ladder.js is a TRANSPORT ladder (mesh → repair selectors → userscript NCP → the person) for one browser agent — a layer below choosing the model"
+    - "RAID's drainer (cortex/core/raid/worker.js) ticks every 15 s: contract-intake processNext() takes the next queued contract whose dependsOn have passed, runs it, and on failure applies onFail — retry (default maxRetries 2, James 2026-09-03: \"we need all files in raids drainer with a retry logic if it fails\"), fallbackAgent (re-queue to another agent), or halt; persisted in JAA, so it survives a restart"
+    - "idearium has its own drainer (_startBuildQueuePoller, every 15 s, James 2026-09-06: \"it needs to start the queue each boot\"): it re-posts spec builds, which run chunk-dispatch's own verification retry ladder"
+    - "so retries nest a level further: drainer retries × chunk-dispatch's ladder × hops; and onFail fallbackAgent is a second, one-step model ladder beside the engine's"
     - "attempts are recorded three ways: idearium_phase_runs rows, the economy ledger, _agentAsk's route list — no one shape"
   pushback:
     - >-
@@ -51,6 +54,11 @@ spec:
     - >-
       Chat never quietly switches model on a weak answer: a hard failure falls back and the reply names who answered;
       climbing on quality is opt-in per caller.
+    - >-
+      The drainer is the time axis, the engine the model axis. A did-not-run failure (provider down, rate-limited,
+      login) is often better retried LATER than climbed NOW: the drainer's re-queue is that. Invalid output climbs now.
+      So queued work runs each drain tick through the engine, and the drainer re-queues only what the engine marks
+      "retry later" — never a second model ladder (fallbackAgent becomes a climb), never outside the job's budget.
     - >-
       RS1's recorder stays in RS1: this map gives it one attempt record to read, nothing more.
   phases:
@@ -135,6 +143,20 @@ spec:
         request — that stays RAID's (router.js), untouched. And LAW_I: Ollama first (raid.spec) or ChatGPT first (_decide
         since 2026-09-02)? The ladder today is Ollama smallest first, then the chain — his call which law stands.
       proof: "a model RAID's health marks down is skipped and said; every attempt appears in raid_decisions; RAID and the door name the same model for the same job; a build whose isolated verify breaches its contract climbs"
+    ME10_the_drainers_run_the_engine:
+      layer: library
+      status: OPEN
+      james: '"Doesn''t it have a drainer."'
+      depends_on: [ME3, ME5]
+      files: [cortex/core/raid/contract-intake.js, cortex/core/raid/worker.js, idearium/api/index.js, idearium/spec-engine/chunk-dispatch.js]
+      does: >-
+        RAID's drainer and idearium's build-queue drainer stay the way queued work runs (and survives a restart), and
+        each drained attempt goes through the engine. The engine says per outcome: done, climb now, or retry later
+        (did-not-run classes, with the time the provider says or a backoff); the drainer re-queues only "retry later".
+        onFail fallbackAgent becomes the engine's climb; onFail maxRetries spends from the job's one budget. A phase
+        build may be queued (run in the background, survives restart — HP2's interrupted runs become resumable) or
+        awaited, the same engine either way.
+      proof: "a contract whose provider is down is re-queued, not climbed, and runs on a later tick; one whose output is invalid climbs in the same tick; total attempts across drain ticks never exceed the budget; a restart mid-climb resumes from the queue"
     ME6_old_settings_translated:
       layer: library
       status: OPEN
