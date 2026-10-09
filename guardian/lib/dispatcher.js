@@ -52,7 +52,7 @@ const _payload = (e) => (e && typeof e === 'object' && typeof e.type === 'string
 
 function createDispatcher(deps) {
   const { updateJob, bus, ncp, pendingQueue, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek, pingTimeoutMs, completionTimeoutMs,
-          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy } = deps;   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
+          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, getJob, pickupMs } = deps;   // §HP14/HP16 0.55.2: optional getJob(id) — the job as it is now; pickupMs — the pickup watch   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
   for (const [name, fn] of Object.entries({ updateJob, bus, ncp, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek })) {
     if (!fn) throw new Error(`[dispatcher] missing required dependency: ${name}`);
   }
@@ -88,7 +88,26 @@ function createDispatcher(deps) {
   // 15-minute idle-window path). Extracted so guardian.provider.disconnected
   // (added below) can requeue through the exact same bounded-retry logic
   // instead of a second, drifting copy of it (§no repetition).
+  // §HP16 0.55.2 — a job is re-read before it is sent: a cancelled, failed or finished one is never sent (the simulated
+  // tab reconnected and was sent two jobs whose callers had given up minutes before, four times each).
+  const _OVER = new Set(['complete', 'done', 'failed', 'error', 'cancelled']);
+  function _isOver(job) { const j = (typeof getJob === 'function' && job && getJob(job.id)) || job; return !!(j && _OVER.has(j.status)); }
+  /** cancel(jobId, reason) — nobody waits for this job any more: off every queue, its watches stopped, never sent. */
+  function cancel(jobId, reason = 'cancelled') {
+    const j = (typeof getJob === 'function' && getJob(jobId)) || _watchedJobs.get(jobId) || null;
+    if (!j || _OVER.has(j.status)) return { ok: false, status: j ? j.status : 'unknown' };
+    _clearCompletionWatch(jobId); _clearPickupWatch(jobId); _watchedJobs.delete(jobId);
+    for (const [prov, q] of pendingQueue) { const i = q.findIndex(x => x && x.id === jobId); if (i >= 0) q.splice(i, 1); if (!q.length) pendingQueue.delete(prov); }
+    try { _dispatchPool.release(j.provider, jobId); } catch (_) {}
+    _inPool.delete(jobId);
+    updateJob(jobId, { status: 'cancelled', cancelledAt: Date.now(), cancelReason: reason });
+    console.log(`[guardian] ${jobId} → ${j.provider}: cancelled — ${reason}`);
+    bus.emit('guardian.job.cancelled', { jobId, provider: j.provider, agentId: j.agentId || null, reason });
+    return { ok: true };
+  }
+
   function _requeueOrFail(job, reason, waitedMs) {
+    if (_isOver(job)) { _clearCompletionWatch(job.id); _dispatchPool.release(job.provider, job.id); return; }   // §HP16
     _clearCompletionWatch(job.id);
     const retries = (job._timeoutRetries || 0) + 1;
     job._timeoutRetries = retries;
@@ -96,6 +115,24 @@ function createDispatcher(deps) {
     // §0.39.247 — either way the tab slot comes back: with one tab per
     // provider, a timed-out job holding it blocked every job behind it.
     _dispatchPool.release(job.provider, job.id);
+    // §HP15 0.55.2 — a prompt the tab confirmed typing is in the chat: requeueing it sent it again (HP11 closed that
+    // for job-retry; the idle window and a mid-flight disconnect still did). It waits for the chat transcript instead
+    // (the same awaiting_transcript path an empty reply takes), and fails saying so if none carries the reply.
+    if (_typed(job)) {
+      const graceMs = parseInt(process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS || '120000', 10);
+      updateJob(job.id, { status: 'awaiting_transcript', awaitingSince: Date.now(), awaitReason: reason });
+      console.warn(`[guardian] ${job.id} → ${job.provider}: ${reason} — the prompt was already typed; not sent again, waiting up to ${Math.round(graceMs / 1000)}s for the chat transcript`);
+      bus.emit('guardian.job.progress', { jobId: job.id, provider: job.provider, stage: 'awaiting-transcript', how: `${reason} — the prompt was typed, so it is not sent again; waiting for the chat transcript`, ts: Date.now() });
+      const t = setTimeout(() => {
+        const j = (typeof getJob === 'function' && getJob(job.id)) || job;
+        if (!j || j.status !== 'awaiting_transcript') return;
+        const error = `${reason}; the prompt was typed into the ${job.provider} chat and no reply came back — not sent again: if the reply is on the page, pick it with ◎`;
+        updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason: error, error, needsYou: 'pick the reply with ◎ — the prompt is not sent again' });
+        bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'no_reply' });
+      }, graceMs);
+      if (t.unref) t.unref();
+      return;
+    }
     if (retries > _MAX_TIMEOUT_RETRIES) {
       const failReason = `${reason} after ${retries - 1} retr${retries - 1 === 1 ? 'y' : 'ies'} — giving up, not requeuing forever`;
       updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason });
@@ -109,6 +146,14 @@ function createDispatcher(deps) {
     console.warn(`[guardian] ${job.id} → ${job.provider}: ${reason} — requeuing (attempt ${retries})`);
     if (!pendingQueue.has(job.provider)) pendingQueue.set(job.provider, []);
     pendingQueue.get(job.provider).push(job);
+  }
+
+  /** §HP15 — did the tab confirm it typed this job's prompt? (delivered_confirmed / a chunk / a submit gate) */
+  function _typed(job) {
+    const j = (typeof getJob === 'function' && getJob(job.id)) || job;
+    if (!j) return false;
+    if (j.confirmedAt || j.lastChunk || ['delivered_confirmed', 'responding', 'awaiting_transcript'].includes(j.status)) return true;
+    return Array.isArray(j.gates) && j.gates.some(e => (e.gate === 'submit' || e.gate === 'reply') && e.state === 'passed' && !e.implied);
   }
 
   function _armCompletionWatch(job) {
@@ -125,6 +170,37 @@ function createDispatcher(deps) {
     if (t.unref) t.unref();
     _completionWatch.set(job.id, t);
   }
+
+  // §HP14 0.55.2 — the pickup watch. 'delivered' above means guardian wrote the job to the tab's socket, not that the
+  // tab took it; a tab alive enough to answer pings but doing nothing with the job held it for the whole idle window
+  // (15 min, twice). Any word from the tab about this job — accepted, delivered, progress, a chunk, an error, the
+  // reply — clears the watch; none within GUARDIAN_PICKUP_MS means the prompt was never typed: the job ends at 'tab
+  // takes the job', its slot is freed, and the caller's route can move on. Nothing was typed, so nothing is sent twice.
+  const _PICKUP_MS = pickupMs || parseInt(process.env.GUARDIAN_PICKUP_MS || '90000', 10);
+  const _pickupWatch = new Map();
+  function _armPickupWatch(job) {
+    _clearPickupWatch(job.id);
+    const t = setTimeout(() => {
+      _pickupWatch.delete(job.id);
+      const cur = (typeof getJob === 'function' && getJob(job.id)) || job;
+      if (!cur || ['complete', 'done', 'failed', 'error', 'cancelled'].includes(cur.status) || cur.confirmedAt) return;
+      _clearCompletionWatch(job.id);
+      _watchedJobs.delete(job.id);
+      _dispatchPool.release(job.provider, job.id);
+      const error = `the ${job.provider} tab was handed the job and did nothing with it for ${Math.round(_PICKUP_MS / 1000)} s — the prompt was not typed, so it is not sent there again`;
+      updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason: error, error });
+      console.warn(`[guardian] ${job.id} → ${job.provider}: ${error}`);
+      bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'pickup' });
+    }, _PICKUP_MS);
+    if (t.unref) t.unref();
+    _pickupWatch.set(job.id, t);
+  }
+  function _clearPickupWatch(jobId) {
+    const t = _pickupWatch.get(jobId);
+    if (t) { clearTimeout(t); _pickupWatch.delete(jobId); }
+  }
+  const _tabSpoke = (ev) => _clearPickupWatch(_payload(ev).jobId);
+  for (const t of ['guardian.job.confirmed', 'guardian.job.progress', 'guardian.job.chunk', 'guardian.job.complete', 'guardian.job.error']) bus.on(t, _tabSpoke);
 
   function _clearCompletionWatch(jobId) {
     const t = _completionWatch.get(jobId);
@@ -179,13 +255,14 @@ function createDispatcher(deps) {
 
   function dispatchJob(job) {
     if (!job) return;
+    if (_isOver(job)) { console.log(`[guardian] ${job.id}: ${((typeof getJob === 'function' && getJob(job.id)) || job).status} — not sent`); return; }   // §HP16
     if (job.status === 'retry_wait') { console.log(`[guardian] ${job.id}: waiting to retry — guardian/lib/job-retry.js sends it when its backoff ends`); return; }
     if (_inPool.has(job.id)) { console.log(`[guardian] ${job.id}: already queued or running — not dispatched twice`); return; }
     // §0.39.281 EC6 — the provider economy (lib/economy/*): wait, stop, or the fallback the person configured
     if (economy && typeof economy.check === 'function') {
       let d = null; try { d = economy.check(job); } catch (e) { console.warn(`[guardian/economy] check failed (dispatching as before): ${e.message}`); }
       if (d && d.verdict === 'wait') {
-        updateJob(job.id, { status: 'queued', queuedAt: Date.now(), queueReason: `economy: ${d.reason}` });
+        updateJob(job.id, { status: 'queued', queuedAt: Date.now(), queueReason: `economy: ${d.reason}`, economyWaitUntil: Date.now() + Math.max(1000, d.ms || 0) });   // §HP21 — askSync reads how long
         bus.emit('guardian.economy.wait', { jobId: job.id, provider: job.provider, ms: d.ms, reason: d.reason });
         console.log(`[guardian/economy] ${job.id} → ${job.provider} waits ${Math.round(d.ms / 1000)}s — ${d.reason}`);
         const t = setTimeout(() => dispatchJob(job), Math.max(1000, d.ms)); if (t.unref) t.unref();
@@ -288,6 +365,7 @@ function createDispatcher(deps) {
   // enforced by dispatch-pool.js (browser providers capped at 1).
 
   async function _doDispatch(job) {
+    if (_isOver(job)) return false;   // §HP16 — cancelled or finished while it waited in the pool: its slot is freed
     // §BUILT 2026-07-13 — Clear Glass command surface, not a chat provider.
     if (job.provider === 'browser') {
       let _approval;
@@ -574,6 +652,7 @@ function createDispatcher(deps) {
     }
     updateJob(job.id, { status: 'delivered', deliveredAt: Date.now() });
     _armCompletionWatch(job);
+    _armPickupWatch(job);   // §HP14
     // §FIXED 2026-09-15 — pushActive() only ever returns 0 or 1 now (single-
     // target, not a broadcast count), so the old "(N clients)" phrasing was
     // stale — always printed "(1 client)" and implied a fan-out that no
@@ -591,7 +670,7 @@ function createDispatcher(deps) {
     return true;
   }
 
-  return { dispatchJob, _doDispatch, pool: _dispatchPool };
+  return { dispatchJob, _doDispatch, cancel, pool: _dispatchPool };
 }
 
 module.exports = { createDispatcher };

@@ -733,6 +733,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     else if (omDerived && omDerived.ok && !omDerived.models.length) ladderFrom = `${ladderFrom} — Ollama answered with no models installed`;
     // §HP3 0.52.0 — a rung whose Ollama model is not installed (or every Ollama rung, Ollama unreachable) is left off
     // before the climb, said on the run's route; never tried, never counted as that model's failure
+    // §HP18 0.55.2 — and a browser agent with no tab open in guardian is tried after the ones that have one
+    const _tabs = rungs.some(x => x.base !== 'ollama') ? await _require('../../lib/agent-providers.js').guardianTabs() : null;
+    if (_tabs) { const t = PRt.byTabs(rungs, _tabs, (r) => r.base); if (t.moved.length) { rungs = t.order; ladderFrom = `${ladderFrom} — moved later: ${t.moved.map(m => `${m.provider} (${m.why})`).join('; ')}`; } }
     if (rungs.some(x => x.base === 'ollama')) {
       const om = await _ollamaModels();
       const pr = PRt.present(rungs, { reachable: om.ok, installed: om.models, error: om.error });

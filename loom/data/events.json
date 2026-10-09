@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791572900090,
+ "generatedAt": 1791577463967,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -2021,6 +2021,13 @@
    "listens": [
     "guardian.job.progress"
    ]
+  },
+  "nexus.tests.modules.test-guardian-stack-sim.test": {
+   "emits": [
+    "guardian.job.confirmed",
+    "guardian.job.progress"
+   ],
+   "listens": []
   },
   "nexus.tests.modules.test-ico-ledger-writethrough": {
    "emits": [],
@@ -5630,6 +5637,7 @@
     "nexus.guardian.lib.job-retry",
     "nexus.tests.modules.test-back-and-forth.test",
     "nexus.tests.modules.test-chat-transcripts.test",
+    "nexus.tests.modules.test-guardian-stack-sim.test",
     "nexus.tests.modules.test-live-stream-and-gates.test"
    ],
    "listeners": [
@@ -7338,6 +7346,12 @@
   "sys.known": {
    "emitters": [
     "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "guardian.job.confirmed": {
+   "emitters": [
+    "nexus.tests.modules.test-guardian-stack-sim.test"
    ],
    "listeners": []
   },

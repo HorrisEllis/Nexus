@@ -399,3 +399,6 @@ spec:
 # /api/copilot/prompt → askSync never received it and waited its 90 s default. timeoutMs is now in the body (less 5 s above 10 s,
 # so guardian answers with its gate sentence first). test-lifeline-guardian-timeout LT-006.
 
+
+## ADDENDUM 2026-10-10 — 0.55.2 HP18: the door orders by guardian's open tabs
+POST /api/route reads guardian's GET /providers (`lib/agent-providers.js guardianTabs`, 1.5 s). If guardian doesn't answer, the order is unchanged. `lib/model-door.js route({ tabs })` moves a browser agent with no tab connected behind the ones that have one; the reason is said on the hop and returned as `moved`. HP22: `lib/pipeline-routing.js classify` reads "not connected / no <agent> tab open|connected|free" as provider-down before it checks for a login wall.

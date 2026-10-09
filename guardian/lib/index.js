@@ -61,6 +61,7 @@ function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL,
     dispatchToDeepseek: providerRouter._dispatchToDeepseek,
     ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith,   // 0.39.265 — late-bound, see server.js
     economy,   // 0.39.281 — guardian/lib/economy-guard.js (optional)
+    getJob: (id) => jobStore.jobs.get(id),   // §HP14–HP16 0.55.2 — the job as it is now, not the pool's copy
   });
 
   wireDispatchPoolRelease(bus, dispatcher.pool); // the leak fix — every completion path frees its slot now
@@ -69,6 +70,7 @@ function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL,
     ...jobStore,
     ...providerRouter,
     dispatchJob: dispatcher.dispatchJob,
+    cancelJob: dispatcher.cancel,   // §HP16
     pool: dispatcher.pool,
   };
 }

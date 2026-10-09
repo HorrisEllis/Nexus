@@ -2327,7 +2327,9 @@ const server = http.createServer(async (req, res) => {
   // chain), not a fourth router. POST /api/route/outcome { provider, kind, ok, class, ms, error } → recorded in the
   // economy ledger (what the learned mode learns from) and the breaker. The caller still sends its own prompt (0.39.258).
   if (method === 'POST' && p === '/api/route') {
-    try { json(res, 200, require('../lib/model-door.js').route(await readBody(req), { defaultProvider: config.DEFAULT_PROVIDER, resolve: resolveDefaultBackend })); }
+    // §HP18 0.55.2 — guardian's open tabs order the browser agents (fail-open: guardian silent = order unchanged)
+    try { const b = await readBody(req); const tabs = await require('../lib/agent-providers.js').guardianTabs({ url: GD_URL });
+      json(res, 200, require('../lib/model-door.js').route(b, { defaultProvider: config.DEFAULT_PROVIDER, resolve: resolveDefaultBackend, tabs })); }
     catch (e) { json(res, 500, { ok: false, error: e.message }); }
     return;
   }

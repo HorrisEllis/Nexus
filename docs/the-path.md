@@ -4,6 +4,23 @@ James: "can you get us there." · "most amount of power, and highest leverage, l
 
 The whole roadmap after the declutter: **53 phases**. Everything else is on the shelf, kept and visible, and can come back; the shelf was combed for anything broken, failing, losing data or security-critical, and what mattered came back here (step 0). "Check first" means part of it may already be built; it is checked against the code before anything is written.
 
+## Step 0a — solid (docs/2026-10-10-idearium-solid-phasemap.spec)
+
+James: "maybe we get idearium solid then start finally using nexus to build nexus". Solid has a finish line now: the map's `solid_means` checks, each proven against the running stack with tests/sim/fake-tab.js.
+
+| phase | map | note |
+|---|---|---|
+| SD0_versionium_down_is_said_and_restarted | 2026-10-10-idearium-solid | his 12:46 refusal |
+| SD2_copilot_never_answers_ok_with_nothing | 2026-10-10-idearium-solid | "unstructured response … via none" |
+| SD3_the_person_goes_first | 2026-10-10-idearium-solid | background builds never ahead of him |
+| SD1_rewind_and_versions_on_the_repo_card | 2026-10-10-idearium-solid | backend exists; the card |
+| SD6_an_idea_logged_asked_expanded | 2026-10-10-idearium-solid | the void as a real back-and-forth |
+| SD4_agents_live_in_guardian | 2026-10-10-idearium-solid | one .agent per model |
+| SD5_account_fallback | 2026-10-10-idearium-solid | after SD4 |
+| SD7_blocks_that_generate_themselves | 2026-10-10-idearium-solid | the DAG; after SD6 |
+| SD8_an_agent_can_see_and_fix_a_tab | 2026-10-10-idearium-solid | Clear Glass as agent tools |
+| SD9_claude_code_inside_idearium | 2026-10-10-idearium-solid | half real |
+
 ## Step 0 — health and the clean-up
 
 | phase | map | note |

@@ -679,7 +679,7 @@ const _completeFromMesh = (job, lr) => _handleNCPMessage({ type: 'GUARDIAN_COMPL
 
 const {
   jobs, createJob, updateJob, _suggestJobHat, _findActiveJobForProvider,
-  chooseProvider, normaliseProvider, parseCommand, dispatchJob,
+  chooseProvider, normaliseProvider, parseCommand, dispatchJob, cancelJob,
 } = wireGuardianCore({
   bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL, postEvent: _postEvent,
   ladder: _ladder, completeFromMesh: _completeFromMesh,
@@ -3144,6 +3144,8 @@ function handleExtendedRoutes(req, res, url, method) {
         createJob,
         dispatchJob,
         getJob: (id) => jobs.get(id),
+        // §HP16 0.55.2 — a job askSync stops waiting for, never typed, is cancelled (its retry timer too)
+        cancelJob: (id, why) => { try { if (_jobRetryRef) _jobRetryRef.cancel(id); } catch (_) {} return cancelJob(id, why); },
         isProviderConnected: (p) => { try { return ncp.isConnected(p); } catch (_) { return false; } },
         // §SOVEREIGNTY 2026-07-09 — this required
         // '../cortex/core/raid/routing-ir.js' across a system boundary (I

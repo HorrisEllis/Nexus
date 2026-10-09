@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — Gemini v10.0
 // @namespace    nexus.guardian.gemini
-// @version      10.10.0
+// @version      10.10.1
 // @description  Guardian v10 — Gemini: protocol parity with Claude/ChatGPT v10 (NCP
 //               handshake, IndexedDB kernel, SHA-256 dedup, tab-claim, SEAM jobs,
 //               intelligence injection, usage detection) built around Gemini's actual
@@ -29,7 +29,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'gemini';
-const VERSION     = '10.10.0';
+const VERSION     = '10.10.1';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
@@ -1192,6 +1192,7 @@ function _handleServerMessage(msg) {
           error:`this ${PROVIDER} tab is still answering job ${currentJobId} — refused job ${msg.jobId} rather than overwrite it` });
         break;
       }
+      ncpPost(NCP_RESULT, { type:'GUARDIAN_PROGRESS', jobId:msg.jobId, provider:PROVIDER, stage:'accepted', ts:Date.now() });   // §HP14 0.55.2 — the tab took it (guardian's pickup watch)
       currentJobId = msg.jobId; _txJobStart(msg); handleJob(msg); break;
     case 'NEXUS_CONTEXT_RESPONSE': if (msg.context) _intelligenceCtx = msg.context; break;
     case 'GUARDIAN_SYNC_REQUEST': handleSyncRequest(msg); break;
