@@ -25,6 +25,10 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 | SD13_the_machine_is_cos | 2026-10-10-idearium-solid | "the vm, i have no control over" — one COS surface: setup → start → screen → control |
 | SD11_the_desktop_inside_idearium | 2026-10-10-idearium-solid | the VM's screen in a pane, not a pop-up |
 
+## Straight after solid — self-awareness (docs/2026-10-10-self-awareness-phasemap.spec)
+
+James: "the data nodes arent a reflection of guardian. which means there is blind spots … also connecting it to the associative lattice". AW0 no guessed causes (the 2 s edge never walked) → AW1 guardian's live state as nodes (jobs, tabs, agents) → AW2 every call says who asked (so the lattice gets idearium→guardian, copilot→guardian) → AW3 the field hears guardian's whole lifecycle → AW4 the door reads the lattice → AW5 a node's face.
+
 ## After solid — a snapshot is a compartment (docs/2026-10-10-snapshot-compartments-phasemap.spec)
 
 James: "what if a snapshot is a cos compartment? that can branch, or run in parralel to for benchmarks, using deltas and sigmas? using rfr2?" SN0 one branch mechanism (three today) → SN1 open any snapshot as a compartment → SN2 one workload on N of them, repeated → SN3 measured by RFR2 delta and sigma → SN4 benchmarks teach the learned order.
