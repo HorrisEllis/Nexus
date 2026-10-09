@@ -26,7 +26,8 @@ spec:
       graph-build-context-settings-memory 29 · sovereign-node-architecture 29 · observability-sovereignty-and-agent-mesh 30 ·
       living-model-and-autonomous-pipeline 26 · nex-node-store 26 · cortex-to-intelligence-consolidation 20 · one-model-engine 16
     seen_already: >-
-      Open phases that are really done elsewhere (raid-routing-fidelity RR2 = BR5, found 2026-08-29), open phases that
+      Fixed by OR1 (0.53.0): 31 phases already marked BUILT / CLOSED / MET in their own maps now count done — the
+      roadmap went from 683 open to 653 with no map touched. Still to find: open phases that are really done elsewhere (raid-routing-fidelity RR2 = BR5, found 2026-08-29), open phases that
       repeat each other across maps, and maps whose statuses were never moved — the census counts them all as open.
 
   the_path:   # the one thing everything else waits for — his words, put in order
@@ -56,7 +57,7 @@ spec:
       proof: "the census above, reproducible with phasemap-map summary() and loadAll()"
     OR1_five_answers_for_an_open_phase:
       layer: library
-      status: OPEN
+      status: "DONE (0.53.0) — loom/scanners/phasemap-map.js _answerOf reads the status value's first word in both readers: BUILT · CLOSED · MET · SHIPPED … read done (31 finished phases had been counted open — HG6); SUPERSEDED · RETRACTED · RETIRED · FOLDED · DONE-ELSEWHERE close a phase (closedAs); LATER shelves it (shelf); NOT STARTED still wins; summary() gives roadmap, shelf and closed. test-loom-phasemap-status PS-013. Refusing FOLDED / DONE-ELSEWHERE without a pointer comes with OR3, when they are first written."
       james: '"we also need to declutter the roadmap."'
       depends_on: [OR0]
       files: [loom/scanners/phasemap-map.js]
@@ -67,6 +68,20 @@ spec:
         no longer true; says why). The scanner reads them: only PATH counts as the roadmap, LATER as the shelf; the
         others count as closed with their pointer.
       proof: "the census splits into roadmap, shelf and closed; a phase marked FOLDED or DONE-ELSEWHERE without a pointer is refused"
+    OR2_how_done_is_checked:   # 2.0 note — what the census taught about checking "done"
+      layer: docs
+      status: "DONE (0.53.0) — a finding, not code"
+      james: '"can you map all of them. see what is done already, or do it as you go?"'
+      depends_on: [OR0]
+      files: [docs/2026-10-09-one-roadmap-phasemap.spec]
+      does: >-
+        Tried: matching every open phase's key against the changelogs and version history. It over-reports — changelogs
+        name phases when they are MAPPED ("SB10 …" in the 0.39.306 map announcement) as often as when they ship, and
+        lib/version.js's one-line history matches nearly any key. So done is checked by reading the phase against the
+        code: now for the path maps' phases, one map at a time as each is triaged; for shelf maps, when one comes back
+        (§8.6 reuse-before-build already asks it). The one reliable mechanical check — a map's own BUILT / CLOSED words
+        — became OR1.
+      proof: "the attempt and its false positives (RS1, BR5, SB10) recorded here; OR1's 31"
     OR2_the_proposal:
       layer: docs
       status: "PARTIAL 2026-10-09 — first pass by WHOLE MAP (James: \"most amount of power, and highest leverage, least amount of tokens.\"): docs/roadmap-triage.md — 69 decisions instead of 721 open phases; if accepted the roadmap is 205 open phases on the path (engine 22 · the loop 145 · Idearium holds the systems 38), 485 to the shelf, 31 folded. Phase-by-phase only for path maps, after his answer."

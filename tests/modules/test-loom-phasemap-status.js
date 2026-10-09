@@ -150,5 +150,27 @@ t('PS-012 no real phase in docs/ says NOT STARTED while reporting in-progress', 
     `${offenders.length} real phases say NOT STARTED but report in-progress: ${offenders.slice(0, 4).join(', ')}`);
 });
 
+// §OR1 0.52.1 — docs/2026-10-09-one-roadmap-phasemap.spec. James: "we also need to declutter the roadmap."
+t('PS-013 the value\'s first word: BUILT / CLOSED read done; the declutter\'s answers close or shelve; prose never counts', () => {
+  delete require.cache[require.resolve('../../loom/scanners/phasemap-map.js')];
+  const pm = require('../../loom/scanners/phasemap-map.js');
+  const doc = (st) => ['spec:', '  phases:', '    QX1_a_phase:', `      status: ${st}`, '      does: x'].join('\n');
+  const one = (st) => pm.parsePhasemapText(doc(st), 'm')[0];
+  assert.strictEqual(one('"BUILT 0.39.282 (first slice)"').status, 'done');
+  assert.strictEqual(one('"CLOSED 2026-09-05. Fixed"').status, 'done');
+  assert.strictEqual(one('"MET — by finding"').status, 'done');
+  const f = one('"FOLDED into one-model-engine ME5"'); assert.strictEqual(f.status, 'done'); assert.strictEqual(f.closedAs, 'folded');
+  assert.strictEqual(one('"SUPERSEDED by RS9"').closedAs, 'superseded');
+  assert.strictEqual(one('"DONE-ELSEWHERE build-from-the-spec SB10"').closedAs, 'done-elsewhere');
+  const l = one('"LATER — the shelf: after the loop"'); assert.strictEqual(l.status, 'pending'); assert.strictEqual(l.shelf, true);
+  assert.strictEqual(one('"PARTIAL 2026-08-29 — real correction"').status, 'in-progress');
+  assert.strictEqual(one('"NOT STARTED — built later"').status, 'pending');
+  assert.strictEqual(one('OPEN').status, 'pending');
+  assert.strictEqual(one('"OPEN — the old builder is built and closed elsewhere"').status, 'pending', 'a word in prose never counts');
+  const list = pm.parsePhasemapText(['phases:', '  - id: L1', '    status: later'].join('\n'), 'l')[0];
+  assert.strictEqual(list.shelf, true);
+  const s = pm.summary(); assert.ok('shelf' in s && 'closed' in s && 'roadmap' in s);
+});
+
 console.log(`\n${fail === 0 ? '✓' : '✗'} phasemap status: ${pass} passed, ${fail} failed\n`);
 process.exit(fail === 0 ? 0 : 1);

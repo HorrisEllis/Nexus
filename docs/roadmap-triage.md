@@ -3,23 +3,23 @@
 James: "we also need to declutter the roadmap." · "most amount of power, and highest leverage, least amount of tokens."
 
 The coder's proposal; **you decide** (with your mentor if you like). Nothing is deleted: a map on the shelf keeps every phase and can come back.
-Whole maps first — 69 decisions instead of 721 phases. Only maps on the path get phase-by-phase work after this.
+Whole maps first — 67 decisions instead of 690 phases. Only maps on the path get phase-by-phase work after this.
 
-**If you accept it:** the roadmap is **205 open phases** on the path (step 1 the engine: 22 · step 2 the loop: 145 · step 3 Idearium holds the systems: 38). **485** go to the shelf, **31** fold into a map already on the path.
+**If you accept it:** the roadmap is **196 open phases** on the path (step 1 the engine: 21 · step 2 the loop: 137 · step 3 Idearium holds the systems: 38). **463** go to the shelf, **31** fold into a map already on the path.
 
 ## The path
 
 | step | map | open | why |
 |---|---|---|---|
-| 0 | 2026-10-09-one-roadmap | 6 | this clean-up |
+| 0 | 2026-10-09-one-roadmap | 5 | this clean-up |
 | 1 | 2026-10-09-one-model-engine | 16 | the engine itself |
 | 2 | 2026-10-02-emerge-field-memory-build | 42 | "i want the repos to be able to do what im doing right now" — the loop |
 | 2 | 2026-10-01-idearium-agent-ready-master | 40 | mixed — the repo agent; needs phase-by-phase |
-| 2 | 2026-10-05-build-from-the-spec | 29 | spec → phases → build |
-| 2 | 2026-10-02-workshop-codex-rewind | 12 | the workshop; rewind parts go later |
+| 2 | 2026-10-05-build-from-the-spec | 28 | spec → phases → build |
+| 2 | 2026-10-02-workshop-codex-rewind | 8 | the workshop; rewind parts go later |
 | 2 | nexus-self-build-pipeline | 8 | the same loop, for NEXUS itself |
-| 2 | 2026-10-05-idea-to-spec-workshop | 6 | idea → spec |
 | 2 | 2026-10-05-spec-workshop-rebuild | 6 | the spec as blocks; RS1 replay comes after the loop works |
+| 2 | 2026-10-05-idea-to-spec-workshop | 3 | idea → spec |
 | 2 | 2026-09-30-idearium-coding-flow | 2 | plan → phases → build in a repo |
 | 3 | 2026-10-05-cli-data-code | 13 | mixed — the Agent tab as every system's CLI; phase-by-phase |
 | 3 | 2026-10-07-idearium-one-surface | 12 | Idearium as the one place |
@@ -43,42 +43,40 @@ Whole maps first — 69 decisions instead of 721 phases. Only maps on the path g
 
 | map | open | why |
 |---|---|---|
-| 2026-09-02-nexus-vision-master | 58 | his own words on it: "some ideas to map to phasemaps. do not build." — the vision shelf |
-| 2026-09-05-observability-sovereignty-and-agent-mesh | 30 | observability — later |
+| 2026-09-02-nexus-vision-master | 56 | his own words on it: "some ideas to map to phasemaps. do not build." — the vision shelf |
 | 2026-09-11-sovereign-node-architecture | 29 | architecture — later |
 | 2026-09-28-graph-build-context-settings-memory | 29 | graph per project — after the loop |
 | 2026-09-01-living-model-and-autonomous-pipeline | 26 | autonomy comes after the loop works by hand |
-| 2026-09-29-nex-node-store | 26 | storage performance — when it hurts |
+| 2026-09-05-observability-sovereignty-and-agent-mesh | 26 | observability — later |
 | 2026-09-19-cortex-to-intelligence-and-versionium-consolidation | 20 | consolidation — later |
+| 2026-09-29-nex-node-store | 20 | storage performance — when it hurts |
 | 2026-08-23-backlog | 17 | a night's leftovers; anything on the path will resurface there |
 | 2026-08-27-event-taxonomy-and-brainstorm | 16 | event taxonomy per system — not on the path |
 | 2026-09-19-guardian-mesh-first-dispatch | 15 | transport layer (ME9 keeps it as is) |
 | clearglass-agent-suite-and-cfr-loom | 14 | later |
 | 2026-08-30-interaction-contract-context | 13 | contracts and context — after the loop |
-| 2026-09-11-compartment-nodetype-and-reorg | 12 | folder reorg — later |
 | nexus-architecture-rebuild | 12 | later |
+| 2026-09-11-compartment-nodetype-and-reorg | 11 | folder reorg — later |
 | 2026-09-02-versionium-sovereign-and-cleanup | 10 | versionium works; cleanup later |
 | 2026-09-19-architect-blueprint-forge-idearium | 10 | architect forge — later |
 | agent-model-and-user-continuity | 10 | later |
 | 2026-09-28-staging-self-heal | 9 | self-heal — after the loop |
 | 2026-10-05-cos-machines | 9 | VM features — later |
-| 2026-09-22-clear-glass-tab-per-repo-and-ui-expansion | 8 | Clear Glass UI — later |
 | 2026-10-01-work-visibility-job-reuse | 8 | later |
 | 2026-10-02-fractal-graph-any-size-agent | 8 | later |
 | nexus-system-standardization | 8 | later |
+| 2026-09-22-clear-glass-tab-per-repo-and-ui-expansion | 7 | Clear Glass UI — later |
 | 2026-09-26-guardian-retry-novelty-and-installs | 7 | guardian retries are ME9; installs later |
 | copilot-guardian-cos-expansion | 7 | later |
 | nexus-repo-compartment-and-rich-dispatch | 7 | later |
 | 2026-09-02-agent-mesh-full-map | 6 | agent mesh — after the engine |
 | 2026-09-22-brainos-agent-suite | 6 | later |
-| 2026-10-02-synthesis-zoom-versionium | 6 | zoom views — after Idearium holds the systems |
 | 2026-10-05-verified-primitives | 6 | adversarial checks — after the engine |
 | 2026-10-07-versionium-releases | 6 | release notes — later |
 | 2026-10-07-heal-nodes | 5 | later |
 | 2026-10-07-system-expectations | 5 | later |
 | 2026-10-05-failure-reproduction | 4 | later |
 | gemini-multiagent-coding | 3 | later |
-| 2026-09-13-track-b-sovereignty | 2 | sovereignty — later |
 | 2026-09-27-components-store-and-atlases | 2 | two leftovers; atlases are ME15 |
 | 2026-10-05-announce-pulse-repair | 2 | later |
 | 2026-10-05-fiverr-guide | 2 | separate project |
