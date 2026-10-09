@@ -109,3 +109,12 @@ CA5 (lib/agent-router.js): intent→agent by strength, both AUTO (classified/inf
 ---
 ## ADDENDUM 2026-07-30 — sigma serves five roles (OB10, docs/nexus-observability-tablet-phasemap.spec)
 James's insight, mapped: computeSigma produces ONE score from three input axes (structural/temporal/contextual), but that score serves FIVE roles depending on the consuming component's declared intent: (1) deviation — how far from expected shape, (2) performance — how far from expected timing/throughput, (3) expectations — contract/spec conformance, (4) drift-detection — shift over time (§13.4), (5) leverage — impact weighting for pattern importance (OB8). OB10 will map a sigma_intent per loom component so a spike is reported AS its role (a pipeline's spike = "performance deviation"; a gap-engine's = "drift"; a contract's = "expectation violation") rather than a bare number. The same score, interpreted per component (§16.2 legible, §17.5 provenance). OB11 extends the CA2 tool-guide edge-case pattern to loom components + systems, feeding OB2 gap-detection so a known edge case is diagnosed by name, not as an unknown fault.
+
+---
+## ADDENDUM 2026-10-09 — RAID in the one model engine (planned, docs/2026-10-09-one-model-engine-phasemap.spec ME5)
+James: "What about hooking in raid?" Planned, not built: RAID's health poll becomes an availability source for the engine's
+ladder; every engine attempt is recorded as a RAID decision (raid_decisions); raid.verify becomes a check a caller's policy
+can name for consequential outputs (builds), never for chat or pages; RAID's in-memory weight table and the economy ledger
+become one learner; decideForContract and copilot's door give one answer per job. Open, his call: which is the brain, and
+LAW_I as written here (Ollama first) versus _decide since 2026-09-02 (ChatGPT first). The router (which SYSTEM fulfils a
+request) and the contract queue are untouched.
