@@ -254,6 +254,28 @@ spec:
       revised_pushback: >-
         More than five or six verbs and the relations become noise; a view a person cannot read as a document is a
         regression from today. And existing specs (block form) are read as-is and converted on request, never in place.
+    SD13_the_machine_is_cos:
+      layer: backend
+      status: "OPEN"
+      james: '"also the vm, i have no control over, also the remote desktop, what about integrating it into cos?"'
+      depends_on: []
+      files: [cos/workspace/index.js, cos/workspace/vm-control.js, cos/testenv/provision.js, cos/cli/commands/vm.js, idearium/ui/desktop.html, idearium/api/index.js]
+      does: >-
+        Found: the machine is COS's code (qemu-runtime, workspace, vm-control, provision) but its controls are scattered —
+        start/stop and checkpoints are Idearium routes, the viewer is an Idearium page, the base image is a separate
+        script (node cos/testenv/provision.js --with desktop) nothing in the UI runs, so "Start VM" on a machine with no
+        desktop image cannot work and says so only in the window. COS gets one machine surface — commands first
+        (cos vm setup|start|stop|status|pause|resume|checkpoint|rewind|screen), each a COS route, each in the one command
+        table — and one viewer that is COS's (moved from idearium/ui/desktop.html, archived there), which Idearium and
+        Clear Glass embed (SD11). Setup is a step in that surface: does this machine have QEMU, does it have the desktop
+        image, build it now (with progress), then start. Status says what is missing, in order, with the button that
+        fixes it.
+      pushback: >-
+        COS has no process of its own (lib/nexus-self/systems.js: "no process — like components"); its routes are served
+        by whoever hosts it (Idearium today, through lib/cos-bridge). Either COS gets a small server of its own (a port,
+        autopilot supervision) or it stays hosted and only the ownership moves. Recommended: hosted for now — a process is
+        one more thing to keep alive — and the commands make the host irrelevant to the person.
+      proof: "on a machine with QEMU and no image: status says 'no desktop image' with Build it; building shows progress; Start VM boots it; the viewer and every control are COS's, opened from Idearium"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"

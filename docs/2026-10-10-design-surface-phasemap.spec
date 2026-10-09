@@ -123,3 +123,28 @@ spec:
         its --help is a draft, never trusted until the trial run proves accepts → produces. And the photo-editor mod
         already exists: the first tools are browser ones, native ones after.
       proof: "a crop mod wired to a filter mod wired to an export mod edits a PNG; an ImageMagick mod added from the GUI runs in a compartment on the same PNG and its output feeds the export mod"
+      answered: >-
+        James, 2026-10-10: "each tools needs to have its dependancies, and boundaries or conostraints mapped. each tool needs
+        to be its own piece, anything that is a component is seperate, like anything that is a full feature that another
+        tool could use is its own tool with the hooks and wires." Taken: a tool's contract is a spec in SD12's form — its
+        primitives, its rules (constraints), its boundaries (accepts, produces, hooks), its dependencies (uses) — so one
+        shape describes a spec, a module (DS6) and a tool. The split rule: any part another tool could use is its own tool.
+    DS8_the_registry_routes_the_ui_reflects:
+      layer: library
+      status: "OPEN"
+      james: '"what about changing to the component registry for the event bus instead of hooking into each other then the ui is a reflection of that instead?"'
+      depends_on: [DS7_tools_are_mods]
+      files: [eravos/ui/kernel/kernel.js, eravos/ui/runtime/wire-system.js, loom/driver.js, nexus/nexus-bus.js]
+      does: >-
+        Found: Eravos is already half this — mods never call each other; a wire is a bus subscription that republishes
+        one mod's event as another's input (wire-system.js), held in the canvas's own memory. And Nexus already has a
+        component registry with hooks and wires: loom. The change: wires are registry entries (a tool, its hooks, the
+        wires between hooks), the bus routes by reading the registry, and the canvas is drawn from the registry — add a
+        wire in the UI = add a registry entry; the UI never holds state of its own. The same registry serves the agents
+        (they wire tools by writing entries) and loom (the self-model sees every tool and wire).
+      pushback: >-
+        Loom today is rebuilt at build time (loom/bootstrap.js); a live tool graph needs a live registry — loom's model
+        with a runtime store, not the bootstrap file. And two transports, one registry: inside one page the Eravos kernel
+        bus (fast enough for live edits); across systems nexus-bus (HTTP/SSE — fine for events, too slow for streaming
+        pixels). A wire says which it uses.
+      proof: "a wire added in the canvas appears in the registry; deleting the registry entry removes the wire from the canvas; an agent adds a wire by writing an entry and the canvas shows it"
