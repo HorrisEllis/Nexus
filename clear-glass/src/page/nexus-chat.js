@@ -25,7 +25,7 @@
  */
 
 const MODULE_ID = 'clear-glass.page.nexus-chat';
-const VERSION = '1.2.0';
+const VERSION = '1.3.0';
 const POLL_MS = 2000;
 const PER_MINUTE = 6;
 const READ_ALLOW = new Set(['dump']);   // the one write allowed here: an idea dropped into the Void
@@ -43,7 +43,9 @@ function _urls(options) {
 function watched(url, options) { const u = String(url || ''); return _urls(options).some(p => u.startsWith(p)); }
 
 /** the page's command lines, read from the main process */
-const READ_JS = `(() => { const t = ((document.body && document.body.innerText) || '').replace(/\\u00a0/g, ' '); return (t.match(/^[ \\t]*nexus>[ \\t]+.+$/gm) || []).map(l => l.trim().replace(/^nexus>\\s+/, '')); })()`;   // 0.59.7: code blocks can render spaces as U+00A0
+const READ_JS = `(() => { const parts = [(document.body && document.body.innerText) || '']; const walk = (root) => { for (const el of root.querySelectorAll('*')) if (el.shadowRoot) { for (const c of el.shadowRoot.children) parts.push(c.innerText || c.textContent || ''); walk(el.shadowRoot); } }; try { walk(document); } catch (_) {} const t = parts.join('\\n').replace(/\\u00a0/g, ' '); return (t.match(/^[ \\t]*nexus>[ \\t]+.+$/gm) || []).map(l => l.trim().replace(/^nexus>\\s+/, '')); })()`;   // 0.59.7: U+00A0 · 0.59.8: open shadow roots too
+/** what the page looks like to the reader — logged once per open, so a page that shows no lines can be told apart (0.59.8) */
+const DIAG_JS = `(() => ({ chars: ((document.body && document.body.innerText) || '').length, iframes: document.querySelectorAll('iframe').length, shadows: [...document.querySelectorAll('*')].filter(e => e.shadowRoot).length, nexusAnywhere: ((document.body && document.body.textContent) || '').includes('nexus>') }))()`;
 /** type text into the page's message box and send it; returns what happened */
 function replyJs(text) {
   return `(() => {
@@ -78,12 +80,24 @@ async function readOnly(parsed) {
 function attach(contents, { options = null, emit = () => {}, postEvent = () => {}, runner = null, pollMs = POLL_MS } = {}) {
   const log = (m) => console.log(`[ClearGlass/nexus-chat] ${m}`);   // 0.59.7 — every step is in the boot log: 0.59.6 failed silently on his machine
   const said = {};
-  let timer = null, baseline = null, last = new Map(), times = [], busy = false, opened = false, url = '';
+  let timer = null, baseline = null, last = new Map(), times = [], busy = false, opened = false, url = '', firstAt = 0, lastCount = -1, hit = null;
+  // every frame of the page (a chat can live in an iframe); the frame that held the lines is the one typed into (0.59.8)
+  async function readAll() {
+    const frames = (contents.mainFrame && contents.mainFrame.framesInSubtree) || null;
+    if (!frames || !frames.length) { const l = await contents.executeJavaScript(READ_JS, false).catch(() => null); hit = null; return l; }
+    let all = null;
+    for (const f of frames) {
+      const l = await f.executeJavaScript(READ_JS).catch(() => null);
+      if (!Array.isArray(l)) continue;
+      all = (all || []).concat(l); if (l.length) hit = f;
+    }
+    return all;
+  }
   const LC = require('../../../lib/listener-commands.js');
   const run = runner || LC.createRunner({ policy: readOnly });
   const stop = () => { if (timer) clearInterval(timer); timer = null; };
   const start = () => {
-    stop(); baseline = null; last = new Map();
+    stop(); baseline = null; last = new Map(); firstAt = 0; lastCount = -1; said.diag = false;
     url = String(contents.getURL() || '').split('#')[0];
     if (!watched(url, options)) return;
     if (!RAN.has(url)) RAN.set(url, new Set());
@@ -94,9 +108,16 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
     if (busy || contents.isDestroyed()) return;
     busy = true;
     try {
-      const lines = await contents.executeJavaScript(READ_JS, false).catch(() => null);
+      const lines = await readAll();
       if (!Array.isArray(lines)) { if (!said.unreadable) { said.unreadable = true; log(`could not read ${url} (the page refused the read)`); } return; }
       const ran = RAN.get(url) || new Set();
+      if (!said.diag) { said.diag = true; const d = await contents.executeJavaScript(DIAG_JS, false).catch(e => ({ error: e.message })); log(`${url}: page text ${JSON.stringify(d)} · frames ${((contents.mainFrame && contents.mainFrame.framesInSubtree) || []).length || 1}`); }
+      if (lines.length !== lastCount) { if (lastCount >= 0) log(`${url}: ${lines.length} command line(s) now${lines.length ? `, newest "${lines[lines.length - 1]}"` : ''}`); lastCount = lines.length; }
+      if (baseline == null && !opened && !lines.length) {
+        // a chat app renders its messages after the page has loaded: wait up to 15 s for them before deciding what is history
+        firstAt = firstAt || Date.now();
+        if (Date.now() - firstAt < 15000) return;
+      }
       if (baseline == null) {
         // first read: history never runs — except, on the first open, the newest line (the one he opened the page to run)
         log(`${url}: ${lines.length} command line(s) on the page${lines.length ? `, newest "${lines[lines.length - 1]}"` : ''}${opened ? ' — reload, none run' : ''}`);
@@ -111,14 +132,15 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
         if (times.length >= PER_MINUTE) { emit('nexus.chat.limited', { url: contents.getURL(), line, ts: now }); continue; }
         ran.add(line); times.push(now);
         let r;
-        try { [r] = await run.hear(`chat:${contents.id}`, `nexus> ${line}`); }
+        log(`running "${line}"…`);
+        try { [r] = await Promise.race([run.hear(`chat:${contents.id}`, `nexus> ${line}`), new Promise((_, no) => setTimeout(() => no(new Error('no answer in 30 s')), 30000))]); }
         catch (e) { r = { line, error: `the command tool failed: ${e.message}` }; }
         if (!r) { log(`"${line}" — not run (already heard)`); continue; }
         log(`ran "${line}" → ${r.refused ? 'refused' : r.error ? `error: ${r.error}` : 'ok'}`);
         const said = LC.summary(r).replace(/^nexus>\s*/, '⌘ Nexus ran: ').replace(/^([ \t]*)nexus>/gm, '$1nexus›');   // no line of it starts with nexus> — it cannot run itself
         emit('guardian.listener.command-result', { listenerId: `chat:${contents.id}`, line, ok: !r.error && !r.refused, text: said, ts: Date.now() });
         postEvent('nexus.chat.command', { url: contents.getURL(), line, ok: !r.error && !r.refused, refused: !!r.refused });
-        const typed = await contents.executeJavaScript(replyJs(said), true).catch(e => ({ ok: false, error: e.message }));
+        const typed = await (hit ? hit.executeJavaScript(replyJs(said), true) : contents.executeJavaScript(replyJs(said), true)).catch(e => ({ ok: false, error: e.message }));
         if (typed && typed.ok) {
           await new Promise(res => setTimeout(res, 150));
           for (const type of ['keyDown', 'char', 'keyUp']) contents.sendInputEvent(type === 'char' ? { type, keyCode: '\r' } : { type, keyCode: 'Enter' });
@@ -134,4 +156,4 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
   return { stop, _tick: tick, _start: start };
 }
 
-module.exports = { MODULE_ID, VERSION, RAN, attach, watched, readOnly, READ_JS, replyJs, DEFAULT_URLS };
+module.exports = { MODULE_ID, VERSION, RAN, DIAG_JS, attach, watched, readOnly, READ_JS, replyJs, DEFAULT_URLS };

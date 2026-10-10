@@ -18,7 +18,7 @@ function fakePage(url) {
   const c = new EventEmitter();
   c.id = 7; c.lines = []; c.typed = []; c.keys = [];
   c.getURL = () => url; c.isDestroyed = () => false;
-  c.executeJavaScript = async (js) => (js === NC.READ_JS ? c.lines.slice() : (c.typed.push(js), { ok: true }));
+  c.executeJavaScript = async (js) => (js === NC.READ_JS ? c.lines.slice() : js === NC.DIAG_JS ? { chars: 0 } : (c.typed.push(js), { ok: true }));
   c.sendInputEvent = (e) => c.keys.push(e.type);
   return c;
 }
@@ -67,12 +67,23 @@ function fakePage(url) {
     assert.ok(NC.watched('https://chatgpt.com/c/1', { get: () => ({ nexusChat: { urls: ['https://chatgpt.com/'] } }) }));
   });
 
+  await test('NC-07', '0.59.8: a chat that renders its messages after load — the newest line still runs, the older one never', async () => {
+    NC.RAN.clear();
+    const page = fakePage('https://claude.ai/code/s7');
+    const heard = []; const runner = { hear: async (id, t) => { heard.push(t); return [{ line: t, result: {} }]; } };
+    const w = NC.attach(page, { runner, pollMs: 1e9 }); page.emit('did-finish-load');
+    page.lines = []; await w._tick(); await w._tick();                 // still loading: nothing decided yet
+    page.lines = ['census --limit 2', 'census --limit 1']; await w._tick(); await w._tick(); await w._tick();
+    assert.deepStrictEqual(heard, ['nexus> census --limit 1']);
+    w.stop();
+  });
+
   await test('NC-03', 'at most 6 commands a minute per page', async () => {
     const page = fakePage('https://claude.ai/code/s2');
     let n = 0; const runner = { hear: async (id, t) => { n++; return [{ line: t, result: {} }]; } };
     const w = NC.attach(page, { runner, pollMs: 1e9 }); page.emit('did-finish-load');
-    NC.RAN.clear(); page.lines = []; await w._tick();
-    page.lines = Array.from({ length: 9 }, (_, i) => `census --limit ${i}`);
+    NC.RAN.clear(); page.lines = ['status']; await w._tick();
+    page.lines = ['status', ...Array.from({ length: 9 }, (_, i) => `census --limit ${i}`)];
     await w._tick(); await w._tick();
     assert.strictEqual(n, 6);
     w.stop();
@@ -90,12 +101,12 @@ function fakePage(url) {
     const eng = glass && glass.engine ? glass.engine() : null;
     let br = null;
     try { br = await glass.chromium.launch(); } catch (e) { console.log(`    (Clear Glass's engine could not start here — ${String(e.message).split('\n')[0]}; the scripts are checked by NC-02 through the fake page)`); return; }
-    const server = http.createServer((q, rs) => { rs.writeHead(200, { 'Content-Type': 'text/html' }); rs.end(`<!doctype html><body><div>I will check the census.</div><pre>nexus> census --limit 5</pre><pre>nexus>&nbsp;picks</pre><p>Talking about nexus> inline does not count.</p><textarea style="width:400px;height:60px"></textarea></body>`); });
+    const server = http.createServer((q, rs) => { rs.writeHead(200, { 'Content-Type': 'text/html' }); rs.end(`<!doctype html><body><div>I will check the census.</div><pre>nexus> census --limit 5</pre><pre>nexus>&nbsp;picks</pre><div id="sh"></div><script>document.getElementById('sh').attachShadow({mode:'open'}).innerHTML='<pre>nexus> status</pre>'</script><p>Talking about nexus> inline does not count.</p><textarea style="width:400px;height:60px"></textarea></body>`); });
     await new Promise(r => server.listen(0, '127.0.0.1', r));
     try {
       const pg = await br.newPage();
       await pg.goto(`http://127.0.0.1:${server.address().port}/`);
-      assert.deepStrictEqual(await pg.evaluate(NC.READ_JS), ['census --limit 5', 'picks'], 'a non-breaking space after nexus> counts (0.59.7)');
+      assert.deepStrictEqual(await pg.evaluate(NC.READ_JS), ['census --limit 5', 'picks', 'status'], 'a non-breaking space counts (0.59.7); so does text inside an open shadow root (0.59.8)');
       const r = await pg.evaluate(NC.replyJs('⌘ Nexus ran: census\n1232 phases'));
       assert.ok(r.ok, JSON.stringify(r));
       assert.strictEqual(await pg.evaluate(() => document.querySelector('textarea').value), '⌘ Nexus ran: census\n1232 phases');
