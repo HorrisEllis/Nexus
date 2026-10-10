@@ -317,6 +317,22 @@ spec:
         (as the context budget already does), never silently trims. Documents with no primitives (an old spec, a plain
         file) keep the text-structure cut.
       proof: "a spec with 12 primitives builds in chunks that each hold one primitive and only its related ones; a small model's chunk names what did not fit"
+    SD15_no_website_can_drive_nexus:
+      layer: backend
+      systems: [guardian, idearium, copilot, cortex, versionium, core]
+      status: "OPEN"
+      james: '"find all useful tests, debugging, hostile attacking, red teaming, and qa, qc, and anything else for nexus"'
+      depends_on: []
+      files: [guardian/server.js, idearium/api/index.js, copilot/server.js, cortex/boot.js, versionium/server.js]
+      does: >-
+        Found 2026-10-10 and proven live: guardian answers Access-Control-Allow-Origin: * and parses a text/plain body as
+        JSON, so a page on any website (a "simple" POST, no preflight) reached POST /api/copilot/prompt — with a tab
+        connected it would send a prompt through his ChatGPT/Claude account and read the reply — and POST /cli/exec (200).
+        Every localhost service: refuse a request whose Origin is not Nexus's own (its UIs, Clear Glass, the userscripts'
+        provider hosts), writes require application/json (a preflight), no '*', /cli/exec behind a local token. One shared
+        helper, not five copies. Idearium and the rest checked the same way (Idearium sends no CORS header, so a page
+        cannot read it, but may still make it act).
+      proof: "a POST from Origin https://evil.example to each service is refused with 403; the UIs, Clear Glass and the userscripts still work"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"

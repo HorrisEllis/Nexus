@@ -10,6 +10,7 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 
 | phase | map | note |
 |---|---|---|
+| SD15_no_website_can_drive_nexus | 2026-10-10-idearium-solid | VERIFIED: any web page can POST to guardian (CORS *) — first |
 | SD0_versionium_down_is_said_and_restarted | 2026-10-10-idearium-solid | his 12:46 refusal |
 | SD2_copilot_never_answers_ok_with_nothing | 2026-10-10-idearium-solid | "unstructured response … via none" |
 | SD3_the_person_goes_first | 2026-10-10-idearium-solid | background builds never ahead of him |
