@@ -284,3 +284,14 @@ spec:
 #   - tool intent routes action-shaped prompts through ollama's real agent-tools loop (read_file/run_command/diagnose/move_data/run_pipeline)
 #   - adversarial faculty wired with a narrow trigger; AX-008 bridge+diagnostic SSE streams into copilot's live buffer
 #   - fluid agent routing (extractExplicitAgent) + lifeline /command transport fix (was posting to a removed route, every escalation silently 404ing)
+
+## ADDENDUM 2026-10-10 — talk to Nexus in plain words (0.59.9–0.59.11)
+# James: "okay. now. make it useful like; hooked into copilot so you can talk to nexus".
+# Map: docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec.
+# - The co-pilot pane (clear-glass/src/copilot/bridge.js send) and /api/prompt (copilot/server.js, after nexus-awareness)
+#   answer plain words that mean a Nexus command by running it: the words are declared on the command's row (ASK in
+#   idearium/cli/route-commands.js), copilot/lib/nexus-ask.js matches and runs them through nexus.command. model_used
+#   'nexus' (pane) / 'nexus-ask' (/api/prompt). Setting copilotNexusAsk: false turns the pane's off.
+# - `nexus> <command>` / `/nexus <command>` in the pane runs any command by name (0.59.9).
+# - nexus.command returns `text` — the row's own printer, plain — beside the JSON `result` (renderText).
+

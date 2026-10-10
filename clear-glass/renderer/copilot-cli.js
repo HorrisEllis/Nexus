@@ -42,10 +42,15 @@
     '  /build <description>  /diagnose [topic]',
     '  /history  /clear  /settings',
     '  /new                            a fresh conversation (the current one is kept)',
+    '  nexus> <command> | /nexus <command>  run a Nexus command, no model (nexus> list shows them all)',
+    'TALK TO NEXUS — plain words run the command, no model:',
+    '  what\'s unbuilt? · what\'s left · show contradicted phases · which models are loaded? · how\'s memory?',
+    '  what\'s been happening · what failed · which systems are up · how big is the store · what did I pick',
+    '  idea: <text>                    drop it into the Void',
     'anything else is a message to co-pilot',
   ];
   const ALIASES = { '?': 'help', h: 'help', st: 'status', b: 'backend', a: 'agent', be: 'backend', p: 'persona', hist: 'history', cls: 'clear', s: 'site', m: 'macro', diag: 'diagnose' };
-  const COMMANDS = ['help', 'status', 'backend', 'agent', 'hat', 'forge', 'persona', 'ctx', 'run', 'go', 'back', 'forward', 'reload', 'site', 'macro', 'cookies', 'build', 'diagnose', 'history', 'clear', 'settings', 'new'];
+  const COMMANDS = ['help', 'nexus', 'status', 'backend', 'agent', 'hat', 'forge', 'persona', 'ctx', 'run', 'go', 'back', 'forward', 'reload', 'site', 'macro', 'cookies', 'build', 'diagnose', 'history', 'clear', 'settings', 'new'];
 
   function create({ cg, agentId, wv, print, getCtx, setCtx, sendMessage, clearMessages, normalizeUrl, navigate }) {
     const state = { backend: 'copilot', agent: 'claude', hat: true, pending: [], history: [], pos: -1, historyMax: 200, hatName: 'clear_glass', autoRun: true, showRoute: true };
@@ -168,6 +173,7 @@
       const cmd = ALIASES[head.toLowerCase()] || head.toLowerCase();
       const arg = text.slice(1 + head.length).trim();
       if (cmd === 'build' || cmd === 'diagnose') return { passthrough: `/${cmd} ${arg}`.trim() };
+      if (cmd === 'nexus') return false;   // §0.59.11 — /nexus <command> is a message: the bridge runs it (it said "unknown command /nexus")
       print('user', text);
       try {
         switch (cmd) {

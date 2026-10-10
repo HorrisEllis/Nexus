@@ -43,6 +43,11 @@ picks), **guardian** (a browser agent — best for writing and reasoning), **cle
 | **open indeed.com and find remote support jobs** | Goes there first, then the model gets your request **with that page in hand**. |
 | **click #3** · **type "remote" into #2** · **press Enter** | The model turns it into a driver command; the pane shows which one ran, e.g. **[driver: click #3]**. A command the model wrote badly is repaired, or reported as unreadable — never silently skipped. |
 | **what does this form want?** | It reads the page (readPage) and answers. |
+| **what's unbuilt?** · **what's left** · **show contradicted phases** · **which specs are partial** | Nexus runs **census** with the matching filter and answers with its text and the command (`⌘ Nexus · census … — nexus> census --specs unbuilt`) **without asking a model** (0.59.11; the words live on the row, `ASK` in `idearium/cli/route-commands.js`; `copilot/lib/nexus-ask.js`). |
+| **which models are loaded?** · **how's memory?** · **cpu usage** · **which systems are up** · **how big is the store** | **models**, **perf**, **nerve**, **store** — the same, no model. |
+| **what's been happening** · **what failed** · **what did I pick** · **who am i** · **what did ollama say** | **activity** (failed only, for "what failed"), **picks**, **access**, **ollama tape**. |
+| **idea: a gig that builds booking sites** | Drops it into the Void (**dump**), verbatim. |
+| **nexus> census --limit 4** · **/nexus status** | Any Nexus command by name, no model (0.59.9); **nexus> list** shows them all. The ones that stay yours (approving, stopping a system) are refused. |
 | **hey nexus, what jobs are queued?** | Asked inside a provider chat (ChatGPT, Claude…), the answer comes back as the next message (`guardian/lib/wake-loop.js`). |
 
 ### 3. Slash commands in the pane

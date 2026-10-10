@@ -360,6 +360,40 @@ export const SPEC = [
     } },
 ];
 
+/**
+ * ASK — the plain words that mean a row (0.59.11 TN2). James: "make it useful like; hooked into copilot so you can talk to
+ * nexus". copilot/lib/nexus-ask.js matches a message against these, in this order, and runs the row: no model, so it
+ * answers with Ollama down. Each entry: re (tested against the whole message), flags(m, text)/args(m, text) → what the
+ * words imply. Only rows named here are reachable by plain words; the one that writes (dump) needs his "idea:" first.
+ * Attached to the rows as row.ask, so the table stays the one place a command is described.
+ */
+export const ASK = {
+  'dump': { re: /^\s*(?:new\s+)?idea\s*[:\-–]\s*([\s\S]+)$|^\s*(?:dump|save (?:this )?idea|remember (?:this )?idea)\s*[:\-–]\s*([\s\S]+)$/i,
+    args: (m) => [(m[1] || m[2]).trim()] },
+  'census': { re: /\bcensus\b|\b(?:what(?:'s| is| are)|which|show(?: me)?|list|how many)\b[^?.!\n]{0,30}\b(?:specs?|phases?)\b|\b(?:specs?|phases?)\b[^?.!\n]{0,20}\b(?:built|unbuilt|done|open|contradicted|claimed|verified|partial|status)\b|\bwhat(?:'s| is) (?:un)?built\b|\bunbuilt\b|\bwhat(?:'s| is) left(?: to (?:build|do))?\b/i,
+    flags: (m, t) => {
+      const f = { limit: 10 };
+      if (/\bunbuilt|not built|isn'?t built\b/i.test(t)) f.specs = 'unbuilt';
+      else if (/\bpartial|half/i.test(t)) f.specs = 'partial';
+      else if (/\bunregistered|not (?:in )?(?:the )?registry\b/i.test(t)) f.specs = 'unregistered';
+      else if (/\bcontradict|gone|missing files?\b/i.test(t)) f.verdict = 'contradicted';
+      else if (/\bopen (?:phases?|work)\b|\bphases?\b[^?.!\n]{0,12}\bopen\b|\bwhat(?:'s| is) left\b/i.test(t)) f.verdict = 'open';
+      else if (/\bclaimed|unproven|not proven\b/i.test(t)) f.verdict = 'claimed';
+      return f;
+    } },
+  'models': { re: /\b(?:what|which|list|show(?: me)?)\b[^?.!\n]{0,20}\b(?:(?:ollama|llm|local) models?|models)\b|\b(?:ollama )?models?\b[^?.!\n]{0,12}\b(?:installed|loaded|fit|available)\b/i },
+  'perf': { re: /\b(?:how(?:'s| is| much)|what(?:'s| is))\b[^?.!\n]{0,20}\b(?:memory|ram|cpu|heap|load)\b|\b(?:memory|ram|cpu|heap)\b[^?.!\n]{0,12}\b(?:usage|free|left|use)\b|\bperf(?:ormance)?\b|\bhow(?:'s| is) (?:the |my )?(?:machine|computer|pc|box)\b/i },
+  'activity': { re: /\bwhat(?:'s| has)? (?:been )?happen(?:ing|ed)\b|\brecent activity\b|\bactivity log\b|\bwhat (?:did|have) (?:the )?agents? (?:do|done|been doing)\b|\bwhat failed\b/i,
+    flags: (m, t) => ({ limit: 15, ...(/\bfail/i.test(t) ? { status: 'failed' } : {}) }) },
+  'nerve': { re: /\bnerve\b|\bwhich systems (?:are )?(?:up|live|present|running|online)\b|\bwhat(?:'s| is) (?:up|running|online)\b|\bis (?:everything|nexus) (?:up|running|online)\b/i },
+  'store': { re: /\b(?:memory |shared )?store\b[^?.!\n]{0,12}\b(?:size|big|tables?)\b|\bhow big is (?:the )?(?:store|memory)\b|\btable sizes?\b/i },
+  'picks': { re: /\bwhat (?:did|have) i (?:pick|picked|hand(?:ed)?)\b|\b(?:my|the) picks\b|\bpicked elements?\b/i },
+  'access': { re: /\bwho am i\b|\baccess mode\b|\bam i signed in\b/i },
+  'ollama.tape': { re: /\bollama (?:tape|calls|runs|history)\b|\bwhat (?:did|has) ollama (?:do|done|say|said)\b/i },
+  'field.windows': { re: /\bwhat(?:'s| is) (?:each|every) window (?:doing|showing|on)\b|\bfield windows\b|\bwhere(?:'s| is) (?:the )?attention\b/i },
+};
+for (const [k, ask] of Object.entries(ASK)) { const row = SPEC.find(r => r.key === k); if (row) row.ask = ask; }
+
 function printLog(d, h, names) {
   const rows = d.rows || [];
   if (!rows.length) { console.log(h.c.gray('  nothing logged')); return; }
@@ -432,6 +466,26 @@ export function makeRouteCommands(h) {
     };
   }
   return out;
+}
+
+/**
+ * renderText(row, d, a) → the row's own print(), as plain text (0.59.11 TN1). Outside the terminal a command's answer was
+ * raw JSON; the pane, a watched chat and an agent now read what the terminal shows, without colour. print() is
+ * synchronous: console.log and stdout are captured for its call only. A printer that throws gives null (the caller keeps
+ * the JSON).
+ */
+const _plain = new Proxy({}, { get: () => (s) => String(s) });
+export function renderText(row, d, a = { repo: null, args: [], flags: {} }) {
+  const out = [];
+  const h = { c: _plain, header: (t) => out.push(String(t)), shortRepo: (u) => String(u || '').split('-repo-')[1] || String(u || '').slice(0, 8),
+    die: (m) => { throw new Error(m); }, port: process.env.IDEARIUM_PORT || 4800, api: () => { throw new Error('not here'); }, findRepo: () => null };
+  const log = console.log, write = process.stdout.write;
+  console.log = (...x) => out.push(x.join(' '));
+  process.stdout.write = (chunk) => { out.push(String(chunk).replace(/\n$/, '')); return true; };
+  try { row.print(d && d.data && !d.tasks && !d.rows ? { ...d, ...d.data } : d, { repo: null, args: [], flags: {}, ...a }, h); }
+  catch (_) { return null; }
+  finally { console.log = log; process.stdout.write = write; }
+  return out.join('\n').replace(/\n{3,}/g, '\n\n').replace(/[ \t]+$/gm, '').trim();
 }
 
 /** helpLines() — one line per command group, for `idearium help` */

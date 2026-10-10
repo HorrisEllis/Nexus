@@ -73,6 +73,8 @@ const FILES = [
   // §0.59.5 a watched chat page talks to Nexus: main/index.js attaches it to every web-contents; it runs through lib/listener-commands.js
   ['clear-glass/src/page/nexus-chat.js', I('clear-glass/src/page/nexus-chat.js'), [I('lib/listener-commands.js'), I('idearium/cli/route-commands.js')]],
   ['lib/listener-commands.js', I('lib/listener-commands.js'), [I('lib/agent-tools/tools/nexus/command.js')]],
+  // §0.59.11 TN4 talk to Nexus in plain words: the pane (bridge) and /api/prompt (server) → nexus-ask → the rows' ASK words → the command tool
+  ['copilot/lib/nexus-ask.js', I('copilot/lib/nexus-ask.js'), [I('idearium/cli/route-commands.js'), I('lib/agent-tools/tools/nexus/command.js')]],
   ['clear-glass/renderer/gig-panel.js', I('clear-glass/renderer/gig-panel.js'), [I('clear-glass/src/preload/index.js')]],
   ['idearium/ui/js/access-guard.js', I('idearium/ui/js/access-guard.js'), [I('idearium/api/index.js')]],   // a 401 naming /login.html
   ['idearium/ui/login.html', I('idearium/ui/login.html'), [I('idearium/api/index.js')]],                   // HTTP access/me, access/login
@@ -82,6 +84,9 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('clear-glass/src/copilot/bridge.js'), I('copilot/lib/nexus-ask.js'), '§0.59.11 TN3 send(): plain words that mean a Nexus command, before the model'],
+  [I('copilot/server.js'), I('copilot/lib/nexus-ask.js'), '§0.59.11 TN3 /api/prompt: after nexus-awareness, for every other channel'],
+  [I('lib/agent-tools/tools/nexus/command.js'), I('idearium/cli/route-commands.js'), '§0.59.11 TN1 renderText — the row\'s printer as plain text'],
   [I('guardian/lib/dispatcher.js'), I('guardian/options.js'), '§OP1 jobs.pickup_ms, completion_idle_ms, empty_reply_grace_ms, resume_grace_ms'],
   [I('guardian/ask.js'), I('guardian/options.js'), '§OP1 jobs.no_tab_ms, economy_wait_ms, ask.default_timeout_ms'],
   [I('guardian/lib/ncp-handler.js'), I('guardian/options.js'), '§OP1 jobs.empty_reply_grace_ms, max_response_chars'],

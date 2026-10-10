@@ -155,6 +155,21 @@ class CoPilotBridge {
       this.sse.emit('copilot.response', { msgId, agentId, text, commands: [], modelUsed: 'nexus', ts: Date.now() });
       return { text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'nexus' } };
     }
+    // §0.59.11 TN3 — James: "make it useful like; hooked into copilot so you can talk to nexus". Plain words that mean a
+    // Nexus command ("what's unbuilt?", "which models are loaded?", "idea: …") run it — the rows say which words
+    // (idearium/cli/route-commands.js ASK; copilot/lib/nexus-ask.js) — and answer with its text, no model. Setting
+    // copilotNexusAsk: false turns it off.
+    if (this.settings.get().copilotNexusAsk !== false) {
+      let said = null;
+      try { said = await (this._nexusAsk || require('../../../copilot/lib/nexus-ask.js')).answer(message, { by: 'copilot' }); }
+      catch (e) { console.warn(`[CoPilot] nexus-ask unavailable: ${e.message}`); }
+      if (said) {
+        this.postEvent('copilot.nexus.command', { line: said.command, ok: said.ok, refused: said.refused });
+        if (remember) this._remember(agentId, 'assistant', said.text, { via: 'nexus' });
+        this.sse.emit('copilot.response', { msgId, agentId, text: said.text, commands: [], modelUsed: 'nexus', ts: Date.now() });
+        return { text: said.text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'nexus' } };
+      }
+    }
     const intent = this._driver ? (V.archiveImportIntent(message) || V.browseIntent(message)) : null;   // §0.39.283 N30 — the archive drop box first
     // §0.59.6 — "what do you see" / "it's on the screen" (alone, or after "visit x.com"): the tab is read, not guessed at
     if (this._driver && !intent && V.screenIntent(message)) {
