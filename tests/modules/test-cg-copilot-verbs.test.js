@@ -106,6 +106,37 @@ const jsonBody = (q) => new Promise(r => { let d = ''; q.on('data', c => d += c)
     cop.close();
   });
 
+  await t('CV-08', '§0.59.9 "ok go to google.com", "just go to x", "go to: x", localhost: the browse rule, not the model; prose still is not', () => {
+    const V = require(path.join(ROOT, 'clear-glass/src/copilot/verbs.js'));
+    for (const [m, u] of [['ok go to google.com', 'https://google.com'], ['hey, just go to bing.com', 'https://bing.com'], ['go to: google.com', 'https://google.com'],
+      ['copilot, visit indeed.com', 'https://indeed.com'], ['go to localhost:9000', 'http://localhost:9000'], ['open 127.0.0.1:4800/x', 'http://127.0.0.1:4800/x']]) {
+      const r = V.browseIntent(m); assert.ok(r, m); assert.strictEqual(r.url, u, m);
+    }
+    for (const m of ['help me with jobs', 'i want to go to bed', 'go to the store and buy milk']) assert.strictEqual(V.browseIntent(m), null, m);
+  });
+
+  await t('CV-09', '§0.59.9 "nexus> census --limit 4" in the pane runs through Nexus and says "⌘ Nexus ran: …" — no model, again each time', async () => {
+    const V = require(path.join(ROOT, 'clear-glass/src/copilot/verbs.js'));
+    assert.deepStrictEqual(V.nexusIntent('nexus> census --limit 4'), { line: 'census --limit 4' });
+    assert.deepStrictEqual(V.nexusIntent('/nexus status'), { line: 'status' });
+    assert.strictEqual(V.nexusIntent('tell me about nexus'), null);
+    const prompts = [], events = [];
+    const cop = await listen(async (q, s) => { prompts.push(1); s.end(JSON.stringify({ text: 'model' })); });
+    const b = new CoPilotBridge({ sse: { emit: (...e) => events.push(e) }, apiSettings: stubSettings(cop.address().port, { copilotRemember: false }) });
+    b._liveToolsPrompt = async () => '';
+    const heard = [];
+    b._nexusRunner = { hear: async (id, text) => { heard.push([id, text]); return [{ line: text.replace('nexus> ', ''), result: { text: '1232 phases: 563 shelf' } }]; } };
+    const r = await b.send({ message: 'nexus> census --limit 4', agentId: 'w1' });
+    assert.strictEqual(r.text, '⌘ Nexus ran: census --limit 4\n1232 phases: 563 shelf');
+    assert.strictEqual(r.route.modelUsed, 'nexus');
+    await b.send({ message: 'nexus> census --limit 4', agentId: 'w1' });
+    assert.strictEqual(heard.length, 2, 'the same line typed again runs again');
+    assert.notStrictEqual(heard[0][0], heard[1][0]);
+    assert.strictEqual(prompts.length, 0, 'no model call');
+    assert.ok(events.some(e => e[0] === 'copilot.response' && e[1].modelUsed === 'nexus'));
+    cop.close();
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed\n`);
   process.exit(failed ? 1 : 0);
 })();

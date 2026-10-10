@@ -27,6 +27,7 @@ function fakePage(url) {
   await test('NC-01', 'only watched pages: Claude Code on the web by default, others by option', async () => {
     assert.ok(NC.watched('https://claude.ai/code/session_123'));
     assert.ok(!NC.watched('https://chatgpt.com/'));
+    assert.ok(NC.watched('https://claude.ai/chat/abc'), '§0.59.9 "all sessions": every claude.ai page');
     assert.ok(NC.watched('https://chatgpt.com/c/1', { get: (k) => k === 'nexusChat.urls' ? ['https://chatgpt.com/'] : undefined }));
   });
 

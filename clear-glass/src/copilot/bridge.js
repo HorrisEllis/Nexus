@@ -134,6 +134,30 @@ class CoPilotBridge {
     // browser goes there and says what is on the page. Anything asked after it ("… and what do you see") is answered
     // by the model WITH that page in hand.
     const V = require('./verbs.js');
+    // §0.59.9 — James: "hooked into copilot so you can talk to nexus". `nexus> census` typed here runs through the one
+    // command tool (lib/listener-commands.js), the same as a watched chat's lines, and the answer comes back as
+    // `⌘ Nexus ran: …` with no model in between. He typed it in his own pane, so commands that change Nexus run too;
+    // the rows that stay the person's (approving, stopping a system) are refused by the tool itself, as everywhere.
+    const nx = V.nexusIntent(message);
+    if (nx) {
+      const LC = require('../../../lib/listener-commands.js');
+      let text;
+      if (!nx.line) text = '⌘ Nexus: type a command after nexus> — e.g. `nexus> census --limit 4`, or `nexus> list` for every command.';
+      else if (/^(?:list|help|commands)$/i.test(nx.line)) {   // what he can type
+        try { const l = await require('../../../lib/agent-tools/tools/nexus/command.js').command.execute({ action: 'list' }); text = `⌘ Nexus commands (type nexus> <command>):\n${(l.commands || []).map(c => `${c.command}${c.about ? ` — ${String(c.about).slice(0, 80)}` : ''}`).join('\n')}`; }
+        catch (e) { text = `⌘ Nexus: the command list failed: ${e.message}`; }
+      } else {
+        this._nexusRunner = this._nexusRunner || LC.createRunner();
+        let r;
+        try { [r] = await Promise.race([this._nexusRunner.hear(`copilot:${msgId}`, `nexus> ${nx.line}`), new Promise((_, no) => setTimeout(() => no(new Error('no answer in 60 s')), 60000))]); }
+        catch (e) { r = { line: nx.line, error: `the command tool failed: ${e.message}` }; }
+        text = r ? LC.summary(r).replace(/^nexus>\s*/, '⌘ Nexus ran: ') : `⌘ Nexus: "${nx.line}" is not a command line`;
+        this.postEvent('copilot.nexus.command', { line: nx.line, ok: !!r && !r.error && !r.refused, refused: !!(r && r.refused) });
+      }
+      if (remember) this._remember(agentId, 'assistant', text, { via: 'nexus' });
+      this.sse.emit('copilot.response', { msgId, agentId, text, commands: [], modelUsed: 'nexus', ts: Date.now() });
+      return { text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'nexus' } };
+    }
     const intent = this._driver ? (V.archiveImportIntent(message) || V.browseIntent(message)) : null;   // §0.39.283 N30 — the archive drop box first
     // §0.59.6 — "what do you see" / "it's on the screen" (alone, or after "visit x.com"): the tab is read, not guessed at
     if (this._driver && !intent && V.screenIntent(message)) {

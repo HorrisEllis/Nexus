@@ -7,7 +7,7 @@
  * now."
  *
  * No picker, no listener to set up. On a chat page Clear Glass is told to watch (option nexusChat.urls — by default Claude
- * Code on the web, https://claude.ai/code), it reads the page's text every 2 s. A line that starts with `nexus> ` and has
+ * Code on the web and every claude.ai chat, https://claude.ai/ — 0.59.9), it reads the page's text every 2 s. A line that starts with `nexus> ` and has
  * stayed the same for two reads (so a streaming reply is finished) runs as a Nexus command through the one command tool
  * (lib/listener-commands.js), and the answer is typed into the page's message box and sent — so the agent reads it as the
  * next message and can carry on.
@@ -25,12 +25,13 @@
  */
 
 const MODULE_ID = 'clear-glass.page.nexus-chat';
-const VERSION = '1.3.0';
+const VERSION = '1.4.0';
 const POLL_MS = 2000;
 const PER_MINUTE = 6;
 const READ_ALLOW = new Set(['dump']);   // the one write allowed here: an idea dropped into the Void
 
-const DEFAULT_URLS = ['https://claude.ai/code'];
+// §0.59.9 — James: "i want all sessions captured": every Claude page (Claude Code sessions and claude.ai chats), not one
+const DEFAULT_URLS = ['https://claude.ai/'];
 const RAN = new Map();   // url → Set of lines already run, across reloads of the page in this session
 function _urls(options) {
   try {
@@ -138,7 +139,7 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
         if (!r) { log(`"${line}" — not run (already heard)`); continue; }
         log(`ran "${line}" → ${r.refused ? 'refused' : r.error ? `error: ${r.error}` : 'ok'}`);
         const said = LC.summary(r).replace(/^nexus>\s*/, '⌘ Nexus ran: ').replace(/^([ \t]*)nexus>/gm, '$1nexus›');   // no line of it starts with nexus> — it cannot run itself
-        emit('guardian.listener.command-result', { listenerId: `chat:${contents.id}`, line, ok: !r.error && !r.refused, text: said, ts: Date.now() });
+        emit('guardian.listener.command-result', { listenerId: `chat:${contents.id}`, url: contents.getURL(), line, ok: !r.error && !r.refused, text: said, ts: Date.now() });
         postEvent('nexus.chat.command', { url: contents.getURL(), line, ok: !r.error && !r.refused, refused: !!r.refused });
         const typed = await (hit ? hit.executeJavaScript(replyJs(said), true) : contents.executeJavaScript(replyJs(said), true)).catch(e => ({ ok: false, error: e.message }));
         if (typed && typed.ok) {

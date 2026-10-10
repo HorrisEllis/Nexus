@@ -16,6 +16,7 @@
  *   browseIntent(message)    "visit google.com", "go to https://x", "open indeed.com and …" → { url, rest } | null —
  *                            the one verb that needs no model at all
  *   archiveImportIntent(msg) "import my archives", "/import-archives" → idearium's archive drop box (0.39.283 N30)
+ *   nexusIntent(msg)         "nexus> census", "/nexus census" → { line } — a Nexus command, run without a model (0.59.9)
  *   label(raw)               what the pane shows for a block: "[driver: navigate https://google.com]"
  * Pure; bridge.js runs what these return.
  */
@@ -61,11 +62,15 @@ function parseCommands(text) {
   return out;
 }
 
-const INTENT_RE = /^\s*(?:please\s+|can you\s+|could you\s+)?(?:visit|go\s+to|goto|open(?:\s+up)?|navigate\s+to|browse\s+to|take\s+me\s+to|load)\s+(?:the\s+(?:site|page|website)\s+)?<?((?:https?:\/\/)?[\w-]+(?:\.[\w-]+)+(?::\d+)?(?:\/[^\s>]*)?)>?[\s,.!?;:]*(.*)$/i;
+// §0.59.9 — "ok go to google.com", "just go to x", "go to: x", "go to localhost:9000" reached the model: an opener word or
+// two and a colon are allowed, and localhost / an IP with a port is a site too
+const INTENT_RE = /^\s*(?:(?:hey|ok(?:ay)?|now|so|just|copilot|co-pilot)[\s,]+)*(?:please\s+|can you\s+|could you\s+)?(?:just\s+)?(?:visit|go\s+to|goto|open(?:\s+up)?|navigate\s+to|browse\s+to|take\s+me\s+to|load)\s*:?\s+(?:the\s+(?:site|page|website)\s+)?<?((?:https?:\/\/)?(?:localhost(?::\d+)?|[\w-]+(?:\.[\w-]+)+(?::\d+)?)(?:\/[^\s>]*)?)>?[\s,.!?;:]*(.*)$/i;
 function browseIntent(message) {
   const m = INTENT_RE.exec(String(message || ''));
   if (!m) return null;
-  return { url: normalize({ action: 'navigate', url: m[1].replace(/[.,!?]+$/, '') }).url, rest: (m[2] || '').trim() };
+  const u = m[1].replace(/[.,!?]+$/, '');
+  const local = /^(?:localhost|127\.0\.0\.1|\d+\.\d+\.\d+\.\d+)(?:[:/]|$)/i.test(u);   // a local system is plain http
+  return { url: local ? `http://${u}` : normalize({ action: 'navigate', url: u }).url, rest: (m[2] || '').trim() };
 }
 
 // §0.59.6 — James's panel: "visit google.com what do you see" and "safeway.com its on the screen" got "Could you please
@@ -82,6 +87,14 @@ function archiveImportIntent(message, env = process.env) {
   return { kind: 'archive-import', url: `http://127.0.0.1:${port}/archive-import.html`, rest: '' };
 }
 
+// §0.59.9 — James: "hooked into copilot so you can talk to nexus". A line typed in the pane as `nexus> census`, `nexus: …`
+// or `/nexus …` is a Nexus command: it runs through the one command tool and the answer is said, no model in between.
+const NEXUS_RE = /^\s*(?:nexus>|nexus:|\/nexus\b)[ \t\u00a0]*([\s\S]*?)\s*$/i;
+function nexusIntent(message) {
+  const m = NEXUS_RE.exec(String(message || ''));
+  return m ? { line: m[1].split('\n')[0].trim() } : null;
+}
+
 function label(raw) {
   const c = parseBlock(raw);
   if (c && c.__unreadable) return '[driver: unreadable — reported]';
@@ -91,4 +104,4 @@ function label(raw) {
   return `[driver: ${what}${arg ? ` ${String(arg).slice(0, 60)}` : ''}]`;
 }
 
-module.exports = { parseBlock, normalize, parseCommands, browseIntent, archiveImportIntent, screenIntent, label, ALIASES };
+module.exports = { parseBlock, normalize, parseCommands, browseIntent, archiveImportIntent, screenIntent, nexusIntent, label, ALIASES };

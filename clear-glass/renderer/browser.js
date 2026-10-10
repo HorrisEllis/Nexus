@@ -1305,7 +1305,10 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     // §0.59.4 — a listener that runs Nexus commands says what ran and what came back
     es.addEventListener('guardian.listener.command-result', (e) => {
       const d = JSON.parse(e.data);
-      addMsg('assistant', `⌘ ${String(d.text || d.line || '').slice(0, 1400)}`);
+      // §0.59.9 — a watched chat's text already starts with ⌘ (it showed "⌘ ⌘ Nexus ran"); say which session it came from
+      const t = String(d.text || d.line || '').slice(0, 1400);
+      const from = (/\/(session_[\w-]+|chat\/[\w-]+)/.exec(String(d.url || '')) || [])[1];
+      addMsg('assistant', `${t.startsWith('⌘') ? t : `⌘ ${t}`}${from ? `\n— from ${from}` : ''}`);
     });
     es.addEventListener('guardian.listener.copilot-panel', (e) => {
       const d = JSON.parse(e.data);
