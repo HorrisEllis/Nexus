@@ -81,7 +81,7 @@ async function askSync(prompt, opts = {}, deps = {}) {
   if (!prompt) return { ok: false, error: 'prompt required' };
 
   const provider  = opts.provider || 'auto';
-  const timeoutMs = opts.timeoutMs || DEFAULT_TIMEOUT_MS;
+  const timeoutMs = opts.timeoutMs || require('./options.js').get('ask.default_timeout_ms');   // §OP1 0.57.0 (was DEFAULT_TIMEOUT_MS)
 
   // §BUG FIXED 2026-07-07 (caught before shipping) — the first version of
   // this passed provider straight to createJob. But createJob stores the
@@ -211,7 +211,7 @@ async function askSync(prompt, opts = {}, deps = {}) {
   // §HP17 0.55.2 — no tab for the provider: the repo agent (an agentId job skips the fail-fast above) waited its whole
   // 295 s at "provider tab" while guardian knew in the first second. GUARDIAN_NO_TAB_MS (45 s — time for Clear Glass to
   // open one) with the provider still not connected and nothing typed: said, and the job cancelled (HP16).
-  const noTabMs = parseInt(process.env.GUARDIAN_NO_TAB_MS || '45000', 10);
+  const noTabMs = require('./options.js').get('jobs.no_tab_ms');   // §OP1 0.57.0
   let noTabSince = null;
   while (Date.now() < deadline) {
     await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));
@@ -219,7 +219,7 @@ async function askSync(prompt, opts = {}, deps = {}) {
     if (!current) continue; // not yet visible in the store — keep waiting
     // §HP21 0.55.2 — the economy holds the job longer than this caller will wait (or longer than GUARDIAN_ECONOMY_WAIT_MS,
     // 30 s): said now, with the limit, and the job cancelled — the copilot route reads it as rate-limit and moves on
-    const econMax = parseInt(process.env.GUARDIAN_ECONOMY_WAIT_MS || '30000', 10);
+    const econMax = require('./options.js').get('jobs.economy_wait_ms');   // §OP1 0.57.0
     if (current.economyWaitUntil && current.status === 'queued' && !_typed(current)) {
       const left = current.economyWaitUntil - Date.now();
       if (left > econMax || Date.now() + left > deadline) {

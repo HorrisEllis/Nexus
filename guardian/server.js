@@ -2992,6 +2992,23 @@ function handleExtendedRoutes(req, res, url, method) {
   // and kept so a job waiting for that provider can say why. A dismissed nag ('modal') is recorded, not alarmed.
   // §0.39.281 EC6/EC3/EC4 — the provider economy: its policy (the one writer: lib/economy/store.js), usage against each
   // limit, the token limits learned from the ledger, and the learning router's scores — all read on request, nothing cached.
+  // §OP1/OP2 0.57.0 — guardian's options (guardian/options.js, lib/options.js): every one with its value, default, range,
+  // unit, description and where its value came from; set and reset through here, each change in its own ledger.
+  // A write must be application/json — a page elsewhere cannot send that without a preflight, which this route refuses.
+  if (url.pathname === '/api/options' && method === 'GET') {
+    return json(res, 200, { ok: true, system: 'guardian', options: require('./options.js').options().describe() });
+  }
+  if (url.pathname === '/api/options' && method === 'POST') {
+    if (!/application\/json/i.test(String(req.headers['content-type'] || ''))) return json(res, 415, { ok: false, error: 'options are changed with a JSON body (Content-Type: application/json)' });
+    bodyJ(req).then(body => {
+      const O = require('./options.js').options();
+      const actor = body && body.actor === 'copilot' ? 'copilot' : 'user';
+      const r = body && body.reset ? O.reset(String(body.id || ''), { actor }) : O.set(String((body && body.id) || ''), body ? body.value : undefined, { actor });
+      if (r.ok) bus.emit('guardian.options.changed', { id: body.id, value: r.value, old: r.old, actor });
+      return json(res, r.ok ? 200 : 400, r);
+    }).catch(e => json(res, 400, { ok: false, error: e.message }));
+    return true;
+  }
   if (url.pathname === '/api/economy' && method === 'GET') {
     const E = require('../lib/economy/store.js');
     return json(res, 200, { ok: true, policy: E.load(), tiers: require('../lib/economy/policy.js').TIERS, jobTypes: require('../lib/economy/policy.js').JOB_TYPES, limits: require('../lib/economy/policy.js').LIMITS });

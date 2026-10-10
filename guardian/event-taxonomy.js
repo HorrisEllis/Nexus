@@ -81,6 +81,12 @@ module.exports = Object.freeze({
     payloadShape: ['jobId', 'provider', 'agentId', 'reason'],
     severity: 'notable',
   },
+  // §OP1 0.57.0 — POST /api/options: one of guardian's options was set or reset (guardian/options.js)
+  GUARDIAN_OPTIONS_CHANGED: {
+    description: 'One of guardian\'s options was set or reset through its options route; the change is also in guardian/data/options-ledger.jsonl.',
+    payloadShape: ['id', 'value', 'old', 'actor'],
+    severity: 'notable',
+  },
 
   // ── Code artifacts — guardian/lib/code-artifact.js — real, governed,
   //    emitted from the ncp-handler completion path only when the job

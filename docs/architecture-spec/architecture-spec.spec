@@ -533,3 +533,13 @@ spec:
 #   P13, P19–P22 and P33–P37 (node registry everywhere, nodes in the lattice, copilot through the contract, an event ledger
 #   per registry, the UI on the registry); docs/2026-10-05-cli-data-code-phasemap.spec DS1 (cortex the catalog) and DS2
 #   (one system moves home at a time, behind a warning shim).
+
+# ── ADDENDUM 2026-10-10 (0.57.0) — ConfigNode made real for every system (additive) ──────────────────────────────────
+# James: "i prefer options over hard coded, and i prefer it over code honestly."
+# HARDLINE_AS_LITTLE_AS_POSSIBLE and ConfigNode (above) now have one implementation for every system:
+#   lib/options.js            the leaf shape {type, default, min, max, unit, description, env, copilot_writable}
+#   <system>/options.js       a system's schema
+#   <system>/data/options.json  its values, owned by the system
+#   <system>/data/options-ledger.jsonl  every change, with who made it
+#   GET/POST <system>/api/options  how anything else reads and changes them (JSON writes only)
+# Guardian is the first system (0.57.0). Idearium's config-core is the same shape and stays as it is.

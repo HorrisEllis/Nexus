@@ -22,3 +22,14 @@ James: "loop simulations of every deep and drecursive test and debug method you 
 - askSync marks its job `priority: 'high'` unless the caller passes `priority` (the autonomous loop passes 'normal').
 - When the economy holds a high job for an agent, the dispatcher holds back a normal job for the same agent for 1 s at a time, so the opening gap goes to the high job.
 - The reconnect flush sends high jobs first. The dispatch pool already sorted its waiting jobs by priority.
+
+## ADDENDUM 2026-10-10 — 0.57.0 OP1: guardian's options (docs/2026-10-10-shape-of-nexus-phasemap.spec)
+James: "i prefer options over hard coded, and i prefer it over code honestly."
+- `guardian/options.js` declares 13 options on `lib/options.js`:
+  - **jobs:** pickup_ms, no_tab_ms, economy_wait_ms, completion_idle_ms, empty_reply_grace_ms, resume_grace_ms, max_response_chars;
+  - **retry:** max_attempts, first_wait_ms, busy_first_wait_ms;
+  - **ask:** default_timeout_ms;
+  - **routing:** transport, wake_max_depth.
+- Each default is the value the code used before. The GUARDIAN_* environment variables still win.
+- The dispatcher, ask, ncp-handler, job-retry, dispatch-ladder and wake-loop read these options on each use.
+- `GET /api/options` lists every option with its value and source. `POST /api/options {id, value | reset, actor}` takes a JSON body only (415 otherwise). Each change emits `guardian.options.changed` and is written to `guardian/data/options-ledger.jsonl`.

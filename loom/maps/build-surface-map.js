@@ -58,11 +58,21 @@ const FILES = [
   // §0.56.0 SD1 — versions and rewind on the repo's box: HTTP snapshots, desktop, desktop/checkpoints, desktop/:op;
   // app.js previewRepoRestore (the real restore preview); repo-tasks.js rtRewind
   ['idearium/ui/js/repo-card-time.js', I('idearium/ui/js/repo-card-time.js'), [I('idearium/api/index.js'), I('idearium/ui/js/app.js'), I('idearium/ui/js/repo-tasks.js')]],
+  // §0.57.0 OP0–OP3 — one options shape for every system: lib/options.js (pure: fs only), guardian its first system
+  // (guardian/options.js, read by dispatcher, ask, ncp-handler, job-retry, dispatch-ladder, wake-loop; served at /api/options)
+  ['lib/options.js', I('lib/options.js'), []],
+  ['guardian/options.js', I('guardian/options.js'), [I('lib/options.js')]],
   ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/plan-panel.js')]],   // §CT5 openPlanPanel, _gateBar
 ];
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('guardian/lib/dispatcher.js'), I('guardian/options.js'), '§OP1 jobs.pickup_ms, completion_idle_ms, empty_reply_grace_ms, resume_grace_ms'],
+  [I('guardian/ask.js'), I('guardian/options.js'), '§OP1 jobs.no_tab_ms, economy_wait_ms, ask.default_timeout_ms'],
+  [I('guardian/lib/ncp-handler.js'), I('guardian/options.js'), '§OP1 jobs.empty_reply_grace_ms, max_response_chars'],
+  [I('guardian/lib/job-retry.js'), I('guardian/options.js'), '§OP1 retry.max_attempts, first_wait_ms, busy_first_wait_ms'],
+  [I('guardian/server.js'), I('guardian/options.js'), '§OP1 GET/POST /api/options'],
+  [I('idearium/api/index.js'), I('guardian/server.js'), '§OP2 HTTP /api/systems/:system/options → the system\'s /api/options'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/main/compartment-window.js'), 'web-contents-created → attach(); registerIpc(ipcMain, BrowserWindow)'],
   [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/copilot/verbs.js'), '_parseCommands, send() browseIntent'],
   [I('guardian/server.js'), I('guardian/lib/provider-login.js'), 'POST/GET /api/provider/login'],

@@ -428,18 +428,64 @@ async function renderEconomy() {
 }
 
 const TABS = [['agent', 'Agent'], ['prompt', 'Prompt'], ['hat', 'Hat'], ['env', 'Compartment & desktop']];
+// §OP2 0.57.0 — James: "can you have these settings broken up into repos? … i prefer options over hard coded". A Nexus
+// system's repo (nexus/guardian …) also shows that SYSTEM's own options, asked of the system through Idearium
+// (GET/POST /api/systems/:system/options → the system's /api/options). One system at a time declares them (OP1).
+const SYS_PORT_NAME = { 'ollama-bridge': 'ollama' };
+const SYS_OPTS = {};   // system → { loading, data, error }
+function _sysOf(r) { const s = r && r.nexusSelf && r.nexusSelf.role === 'system' ? r.nexusSelf.system : null; return s ? (SYS_PORT_NAME[s] || s) : null; }
+function _tabsFor(r) { const s = _sysOf(r); return s ? [...TABS, ['system', `System · ${s}`]] : TABS; }
 function renderRepo() {
   const d = DETAIL, r = d.repo;
   $('title').textContent = r.name;
   $('sub').innerHTML = [`<span class="tag">${esc(r.uuid)}</span>`, r.source ? `<span class="tag">${esc(r.source)}</span>` : '', r.branchOf ? `<span class="tag acc">branch ${esc(r.branch || '')}</span>` : '', r.nexusSelf ? '<span class="tag warn">nexus — code only on approval</span>' : '',
     r.settingsFrom ? `<span class="tag warn">agent settings live in the original — edit them there</span> <button class="btn" data-open="${esc(r.settingsFrom)}">open original</button>` : '',
     (d.blind || []).length ? `<span class="tag warn" title="${esc(d.blind.map(b => `${b.source}: ${b.error}`).join('\n'))}">${d.blind.length} source(s) unreadable</span>` : ''].filter(Boolean).join(' ');
-  $('tabs').innerHTML = TABS.map(([id, name]) => `<button class="tab${CUR.tab === id ? ' on' : ''}" data-tab="${id}">${name}</button>`).join('');
+  $('tabs').innerHTML = _tabsFor(r).map(([id, name]) => `<button class="tab${CUR.tab === id ? ' on' : ''}" data-tab="${id}">${name}</button>`).join('');
   for (const b of $('tabs').querySelectorAll('[data-tab]')) b.onclick = () => { CUR.tab = b.dataset.tab; render(); };
-  const view = { agent: viewAgent, prompt: viewPrompt, hat: viewHat, env: viewEnv }[CUR.tab] || viewAgent;
+  const view = { agent: viewAgent, prompt: viewPrompt, hat: viewHat, env: viewEnv, system: viewSystem }[CUR.tab] || viewAgent;
   $('body').innerHTML = view(d);
   for (const b of document.querySelectorAll('[data-open]')) b.onclick = () => go('repo', b.dataset.open);
   wire[CUR.tab] && wire[CUR.tab](d);
+}
+
+function viewSystem(d) {
+  const sys = _sysOf(d.repo);
+  if (!sys) return '<div class="empty">This repo is not a Nexus system.</div>';
+  const st = SYS_OPTS[sys];
+  if (!st || (!st.data && !st.error)) { _loadSystemOptions(sys); return `<div class="empty">reading ${esc(sys)}'s options…</div>`; }
+  if (st.error) return `<div class="card"><h3><span class="grow">${esc(sys)}</span><span class="tag warn">unreachable</span></h3><div class="note">${esc(st.error)}</div><div class="row"><div></div><div class="ctl"><button class="btn" id="o-retry">Try again</button></div><div></div></div></div>`;
+  const D = st.data;
+  if (!D.declared || !(D.options || []).length) return `<div class="card"><h3><span class="grow">${esc(sys)}</span><span class="tag">no options yet</span></h3><div class="note">${esc(D.note || `${sys} has not declared its options yet.`)}</div></div>`;
+  const groups = [...new Set(D.options.map(o => o.group))];
+  const ctl = (o) => {
+    const dis = o.source === 'env' ? 'disabled' : '';
+    if (o.type === 'boolean') return `<select data-oid="${esc(o.id)}" ${dis}><option ${o.value ? 'selected' : ''} value="true">on</option><option ${!o.value ? 'selected' : ''} value="false">off</option></select>`;
+    if (o.type === 'enum') return `<select data-oid="${esc(o.id)}" ${dis}>${(o.values || []).map(v => `<option ${v === o.value ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select>`;
+    return `<input data-oid="${esc(o.id)}" value="${esc(String(o.value))}" ${o.type === 'number' ? 'inputmode="numeric"' : ''} ${dis} style="width:140px">`;
+  };
+  const human = (o) => o.unit === 'ms' && typeof o.value === 'number' ? ` (${o.value >= 60000 ? `${+(o.value / 60000).toFixed(2)} min` : `${+(o.value / 1000).toFixed(2)} s`})` : '';
+  const src = (o) => o.source === 'env' ? `<span class="tag warn" title="set by the environment variable ${esc(o.overriddenBy)} — it wins over this console; unset it to edit here">env ${esc(o.overriddenBy)}</span>`
+    : o.source === 'file' ? `<span class="tag acc" title="set here (${esc(sys)}/data/options.json)">set</span>` : '<span class="tag">default</span>';
+  return `<div class="note" style="margin:0 0 12px">${esc(sys)}'s own options — the values its code reads, read and written through ${esc(sys)} itself. A change applies to the next job; no restart. Every change is kept in ${esc(sys)}/data/options-ledger.jsonl.</div>`
+    + groups.map(g => `<div class="card"><h3><span class="grow">${esc(g)}</span></h3>${D.options.filter(o => o.group === g).map(o => `
+      <div class="row"><div><div class="k">${esc(o.key)} ${src(o)}</div><div class="d">${esc(o.description)}${o.unit ? ` · ${esc(o.unit)}` : ''}${o.min != null ? ` · ${o.min}–${o.max}` : ''} · default ${esc(String(o.default))}${o.invalid ? ` · <b>ignored: ${esc(o.invalid)}</b>` : ''}</div></div>
+      <div class="ctl">${ctl(o)}<span class="d">${esc(human(o))}</span></div>
+      <div>${o.source === 'file' ? `<button class="btn" data-oreset="${esc(o.id)}" title="back to the default">reset</button>` : ''}</div></div>`).join('')}</div>`).join('');
+}
+async function _loadSystemOptions(sys, again = false) {
+  if (SYS_OPTS[sys] && SYS_OPTS[sys].loading && !again) return;
+  SYS_OPTS[sys] = { loading: true };
+  try { SYS_OPTS[sys] = { data: await api(`/api/systems/${encodeURIComponent(sys)}/options`) }; }
+  catch (e) { SYS_OPTS[sys] = { error: e.message }; }
+  if (CUR.tab === 'system') render();
+}
+async function _setSystemOption(sys, id, value, reset = false) {
+  try {
+    const r = await api(`/api/systems/${encodeURIComponent(sys)}/options`, { method: 'POST', body: JSON.stringify(reset ? { id, reset: true } : { id, value }) });
+    toast(reset ? `${id} back to its default` : `${id} = ${r.value}${r.note ? ` — ${r.note}` : ''}`, 'ok');
+  } catch (e) { toast(e.message, 'bad'); }
+  _loadSystemOptions(sys, true);
 }
 
 function viewAgent(d) {
@@ -528,6 +574,12 @@ const wire = {
     };
   },
   hat() {},
+  system(d) {
+    const sys = _sysOf(d.repo); if (!sys) return;
+    const rt = $('o-retry'); if (rt) rt.onclick = () => _loadSystemOptions(sys, true);
+    for (const el of document.querySelectorAll('[data-oid]')) el.onchange = () => _setSystemOption(sys, el.dataset.oid, el.value);
+    for (const b of document.querySelectorAll('[data-oreset]')) b.onclick = () => _setSystemOption(sys, b.dataset.oreset, null, true);
+  },
   env(d) {
     const o = $('d-open'); if (o) o.onclick = () => { const w = window.open(`/desktop.html?repo=${encodeURIComponent(d.repo.uuid)}`, `desktop-${d.repo.uuid}`, 'width=1320,height=860'); if (!w) toast('the desktop window was blocked', 'bad'); };
     const s = $('d-stop'); if (s) s.onclick = async () => { try { await api(`/api/repos/${encodeURIComponent(d.repo.uuid)}/desktop`, { method: 'DELETE', body: '{}' }); toast('VM stopping — its disk is kept', 'ok'); load(d.repo.uuid); } catch (e) { toast(e.message, 'bad'); } };
@@ -539,7 +591,7 @@ const wire = {
   const repo = new URLSearchParams(location.search).get('repo');
   if (new URLSearchParams(location.search).get('view') === 'appearance') CUR = { kind: 'appearance', uuid: null, tab: 'agent' };
   const _tab = new URLSearchParams(location.search).get('tab');   // §0.39.310 VP7 — open on one view
-  if (repo) CUR = { kind: 'repo', uuid: repo, tab: TABS.some(t => t[0] === _tab) ? _tab : 'agent' };
+  if (repo) CUR = { kind: 'repo', uuid: repo, tab: (TABS.some(t => t[0] === _tab) || _tab === 'system') ? _tab : 'agent' };
   load(repo);
 })();
 </script>

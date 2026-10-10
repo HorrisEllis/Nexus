@@ -203,7 +203,7 @@ function createNCPMessageHandler(deps) {
           if (!String(finalText).trim() && msg.source !== 'transcript' && job
               && job.status !== 'complete' && job.status !== 'error' && job.status !== 'failed'
               && !findActiveSeamCompartment(jobId)) {
-            const graceMs = parseInt(process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS || '120000', 10);
+            const graceMs = require('../options.js').get('jobs.empty_reply_grace_ms');   // §OP1
             updateJob(jobId, { status: 'awaiting_transcript', emptyCompletionAt: Date.now(), ...(chatUrl ? { chatUrl } : {}) });
             console.warn(`[guardian] job ${String(jobId).slice(0, 8)} — the ${provider || '?'} tab reported an EMPTY reply; withheld, waiting up to ${Math.round(graceMs / 1000)}s for the chat transcript to carry the real one`);
             bus.emit('guardian.job.progress', { jobId, provider, stage: 'empty-reply-withheld', how: 'waiting for the chat transcript', chatUrl: chatUrl || null, ts: Date.now() });
@@ -233,10 +233,10 @@ function createNCPMessageHandler(deps) {
           if (job) {
             // 2026-09-19: this was slice(0, 100000), a SILENT cap: a whole-code-base answer is routinely several
             // times that and lost its tail with no signal. The cap is now generous, configurable, and flagged.
-            const _MAX = parseInt(process.env.GUARDIAN_MAX_RESPONSE_CHARS || '5000000', 10);
+            const _MAX = require('../options.js').get('jobs.max_response_chars');   // §OP1
             job.responseText = finalText.slice(0, _MAX);
             job.responseTruncated = finalText.length > _MAX;
-            if (job.responseTruncated) console.warn(`[guardian] ${jobId}: response of ${finalText.length} chars truncated to ${_MAX} (GUARDIAN_MAX_RESPONSE_CHARS)`);
+            if (job.responseTruncated) console.warn(`[guardian] ${jobId}: response of ${finalText.length} chars truncated to ${_MAX} (guardian option jobs.max_response_chars)`);
             job.status = 'complete';
             // §WIRED 2026-08-14 — the tool-call half of P4. See
             // _extractToolCallsFromDOM's header note: this is the one real

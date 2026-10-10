@@ -35,7 +35,8 @@ const USER_STAGES     = new Set(['no_login', 'captcha']);
 // but the mesh itself is healthy, so this must not trip the circuit breaker.
 const CONTENT_STAGES  = new Set(['attach_failed', 'inject_failed']);
 
-function createLadder({ registry, mesh, picker, mode = () => process.env.GUARDIAN_TRANSPORT || 'ncp-only',
+function createLadder({ registry, mesh, picker, mode = () => require('../options.js').get('routing.transport'),   // §OP1 — GUARDIAN_TRANSPORT still wins
+                       
                         breakerThreshold = 3, breakerMs = 60000, now = Date.now, log = () => {}, onProgress = null, wakeHint = null,
                         // v0.39.227 — claim(job, {agentId, accountId}) records on the .job that Clear Glass owns delivery,
                         // BEFORE anything is sent. Clear Glass's intake refuses any job without this claim. Throwing = no send.

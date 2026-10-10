@@ -80,7 +80,8 @@ function createDispatcher(deps) {
   // 2026-09-19: was a fixed 90s, then REQUEUE (i.e. resend the prompt). A whole-code-base answer routinely generates
   // for many minutes, so a slow-but-alive generation was asked twice. Now an IDLE window (default 15 min) that is
   // re-armed by real activity (userscript chunks / confirmation), configurable via GUARDIAN_COMPLETION_TIMEOUT_MS.
-  const _COMPLETION_TIMEOUT_MS = completionTimeoutMs || parseInt(process.env.GUARDIAN_COMPLETION_TIMEOUT_MS || '900000', 10);
+  // §OP1 0.57.0 — read on every use from guardian's options (jobs.completion_idle_ms; GUARDIAN_COMPLETION_TIMEOUT_MS still wins), so a change applies to the next job
+  const _completionMs = () => completionTimeoutMs || require('../options.js').get('jobs.completion_idle_ms');
   const _watchedJobs = new Map();
   const _MAX_TIMEOUT_RETRIES = 2; // §1.2 — bounded, not an infinite requeue loop
 
@@ -120,7 +121,7 @@ function createDispatcher(deps) {
     // for job-retry; the idle window and a mid-flight disconnect still did). It waits for the chat transcript instead
     // (the same awaiting_transcript path an empty reply takes), and fails saying so if none carries the reply.
     if (_typed(job)) {
-      const graceMs = parseInt(process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS || '120000', 10);
+      const graceMs = require('../options.js').get('jobs.empty_reply_grace_ms');   // §OP1
       updateJob(job.id, { status: 'awaiting_transcript', awaitingSince: Date.now(), awaitReason: reason });
       console.warn(`[guardian] ${job.id} → ${job.provider}: ${reason} — the prompt was already typed; not sent again, waiting up to ${Math.round(graceMs / 1000)}s for the chat transcript`);
       bus.emit('guardian.job.progress', { jobId: job.id, provider: job.provider, stage: 'awaiting-transcript', how: `${reason} — the prompt was typed, so it is not sent again; waiting for the chat transcript`, ts: Date.now() });
@@ -159,11 +160,12 @@ function createDispatcher(deps) {
 
   function _armCompletionWatch(job) {
     _clearCompletionWatch(job.id);
+    const waitMs = _completionMs();
     _watchedJobs.set(job.id, job);
     const t = setTimeout(() => {
       _completionWatch.delete(job.id);
-      _requeueOrFail(job, `no completion within ${_COMPLETION_TIMEOUT_MS}ms — real absence, not a guess`, _COMPLETION_TIMEOUT_MS);
-    }, _COMPLETION_TIMEOUT_MS);
+      _requeueOrFail(job, `no completion within ${waitMs}ms — real absence, not a guess`, waitMs);
+    }, waitMs);
     // 0.39.248 — unref'd: the watchdog still fires in guardian (its HTTP server keeps
     // the process up), but it no longer keeps a process alive on its own. It did:
     // tests/dispatcher-stale-socket.test.js passed and then never exited, so the boot
@@ -177,10 +179,11 @@ function createDispatcher(deps) {
   // (15 min, twice). Any word from the tab about this job — accepted, delivered, progress, a chunk, an error, the
   // reply — clears the watch; none within GUARDIAN_PICKUP_MS means the prompt was never typed: the job ends at 'tab
   // takes the job', its slot is freed, and the caller's route can move on. Nothing was typed, so nothing is sent twice.
-  const _PICKUP_MS = pickupMs || parseInt(process.env.GUARDIAN_PICKUP_MS || '90000', 10);
+  const _pickupMs = () => pickupMs || require('../options.js').get('jobs.pickup_ms');   // §OP1 — read per job
   const _pickupWatch = new Map();
   function _armPickupWatch(job) {
     _clearPickupWatch(job.id);
+    const waitMs = _pickupMs();
     const t = setTimeout(() => {
       _pickupWatch.delete(job.id);
       const cur = (typeof getJob === 'function' && getJob(job.id)) || job;
@@ -188,11 +191,11 @@ function createDispatcher(deps) {
       _clearCompletionWatch(job.id);
       _watchedJobs.delete(job.id);
       _dispatchPool.release(job.provider, job.id);
-      const error = `the ${job.provider} tab was handed the job and did nothing with it for ${Math.round(_PICKUP_MS / 1000)} s — the prompt was not typed, so it is not sent there again`;
+      const error = `the ${job.provider} tab was handed the job and did nothing with it for ${Math.round(waitMs / 1000)} s — the prompt was not typed, so it is not sent there again`;   // waitMs: guardian option jobs.pickup_ms
       updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason: error, error });
       console.warn(`[guardian] ${job.id} → ${job.provider}: ${error}`);
       bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'pickup' });
-    }, _PICKUP_MS);
+    }, waitMs);
     if (t.unref) t.unref();
     _pickupWatch.set(job.id, t);
   }
@@ -235,11 +238,11 @@ function createDispatcher(deps) {
   // 0.39.259 — a tab that navigates to the job's own chat (resumeChatUrl, below) reloads and
   // disconnects ON PURPOSE; it carries the job across the load itself. Requeueing it here would send
   // the prompt twice. Bounded: after RESUME_GRACE_MS the disconnect is treated as real again.
-  const RESUME_GRACE_MS = parseInt(process.env.GUARDIAN_RESUME_GRACE_MS || '60000', 10);
+  const _resumeGraceMs = () => require('../options.js').get('jobs.resume_grace_ms');   // §OP1
   bus.on('guardian.provider.disconnected', (ev) => { const { provider } = _payload(ev);
     for (const job of _watchedJobs.values()) {
       if (job.provider !== provider) continue;
-      if (job.resumingChatAt && Date.now() - job.resumingChatAt < RESUME_GRACE_MS) {
+      if (job.resumingChatAt && Date.now() - job.resumingChatAt < _resumeGraceMs()) {
         console.log(`[guardian] ${job.id} → ${provider}: tab disconnected while opening the job's chat — expected, not requeued`);
         continue;
       }

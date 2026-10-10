@@ -46,7 +46,7 @@ spec:
     OP0_one_options_shape_for_every_system:
       layer: library
       systems: [core]
-      status: "OPEN"
+      status: "DONE (0.57.0) — lib/options.js: config-core's leaf shape for any system; default → <system>/data/options.json → the env var it names; validated, never clamped; atomic writes; a ledger per change with who asked; read on every get (no restart). test-options OP-01..04."
       james: '"i prefer options over hard coded, and i prefer it over code honestly"'
       depends_on: []
       files: [lib/options.js, idearium/lib/config-core.cjs]
@@ -60,7 +60,7 @@ spec:
     OP1_every_system_declares_its_options:
       layer: library
       systems: [guardian, copilot, cortex, intelligence, versionium, cos, loom, orchestrator, architect, diagnostic, eravos, clear-glass, ollama, emerge, warp]
-      status: "OPEN"
+      status: "PARTIAL (0.57.0) — guardian done (guardian/options.js: 13 options in jobs, retry, ask, routing; its code reads them, env vars still win; OP-05); copilot, versionium, cos and the rest open"
       james: '"anything high leverage, or that removes the need to understand code so i dont have to change it"'
       depends_on: [OP0_one_options_shape_for_every_system]
       files: ["<system>/options.js"]
@@ -69,7 +69,7 @@ spec:
     OP2_the_system_settings_in_its_repo:
       layer: ui
       systems: [idearium, core]
-      status: "OPEN"
+      status: "DONE for guardian (0.57.0) — Idearium GET/POST /api/systems/:system/options → the system's /api/options (JSON writes only); the console's nexus/<system> repo has a System tab (grouped, described, range, default, source, reset; refusals said). Clear Glass probe; other systems show 'no options yet' until OP1 reaches them"
       james: '"can you have these settings broken up into repos? or at least expand the settings drastically"'
       depends_on: [OP1_every_system_declares_its_options]
       files: [idearium/ui/settings.html, idearium/api/index.js]
@@ -78,7 +78,7 @@ spec:
     OP3_copilot_reads_and_sets_options:
       layer: backend
       systems: [copilot, core]
-      status: "OPEN"
+      status: "DONE (0.57.0) — `idearium options <system> [<group.key> <value> | --reset] [--actor copilot]` in the one command table (copilot through nexus.command); copilot-writable enforced by lib/options"
       james: '"removes the need to understand code"'
       depends_on: [OP2_the_system_settings_in_its_repo]
       files: [idearium/cli/route-commands.js]
@@ -87,7 +87,7 @@ spec:
     OP4_environment_and_desktop_one_menu:
       layer: ui
       systems: [idearium]
-      status: "OPEN"
+      status: "DONE (0.57.0) — idearium/ui/js/repo-settings.js: one item, Environment & desktop; the desktop's buttons follow /api/cos/testenv vm.ok and its state (⚙ set up · ▣ open · ✎ edit · ■ stop · ⚙ settings). Clear Glass probe: the three states."
       james: '"also have the envirement and desktop tabs in the same manu, have it dynamic. like once you set it up, change the button to edit desktop. and have a setting button next to it."'
       depends_on: []
       files: [idearium/ui/js/repo-settings.js]

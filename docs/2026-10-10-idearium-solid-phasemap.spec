@@ -330,8 +330,9 @@ spec:
         connected it would send a prompt through his ChatGPT/Claude account and read the reply — and POST /cli/exec (200).
         Every localhost service: refuse a request whose Origin is not Nexus's own (its UIs, Clear Glass, the userscripts'
         provider hosts), writes require application/json (a preflight), no '*', /cli/exec behind a local token. One shared
-        helper, not five copies. Idearium and the rest checked the same way (Idearium sends no CORS header, so a page
-        cannot read it, but may still make it act).
+        helper, not five copies. Idearium and the rest checked the same way. Corrected 2026-10-10: Idearium DOES send CORS
+        headers on every answer (config api.cors_origin, default '*'), so a page can read it too. 0.57.0's options routes
+        already refuse non-JSON writes (guardian POST /api/options → 415).
       proof: "a POST from Origin https://evil.example to each service is refused with 403; the UIs, Clear Glass and the userscripts still work"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"

@@ -10,10 +10,10 @@
     "memory": 7823
   },
   "uuid": "guardian-contract-v1-0000-4000-0000-000000000001",
-  "role": "AI orchestration \u2014 job queue, SISO bus, Forge IDE",
+  "role": "AI orchestration — job queue, SISO bus, Forge IDE",
   "forge_ide": {
     "path": "/cockpit",
-    "description": "Forge IDE \u2014 SEAM chunker, pipeline, brain, providers"
+    "description": "Forge IDE — SEAM chunker, pipeline, brain, providers"
   },
   "health": {
     "method": "GET",
@@ -357,6 +357,16 @@
       "method": "GET",
       "path": "/api/chats/item/:id",
       "_confirmed": "server.js _chatTranscripts.route (lib/chat-transcripts.js) — 0.39.254"
+    },
+    {
+      "method": "GET",
+      "path": "/api/options",
+      "_added": "0.57.0 OP1 — guardian's options"
+    },
+    {
+      "method": "POST",
+      "path": "/api/options",
+      "_added": "0.57.0 OP1 — guardian's options (JSON body only)"
     }
   ],
   "cli": {
@@ -388,7 +398,7 @@
     "note": "visit https://127.0.0.1:7821/ once to accept self-signed cert"
   },
   "cfr": {
-    "description": "CFR-\u03a9 field baked into every ledger entry. Every bus.emit is annotated with sigma + delta + frozen CFR snapshot.",
+    "description": "CFR-Ω field baked into every ledger entry. Every bus.emit is annotated with sigma + delta + frozen CFR snapshot.",
     "dimensions": [
       "coherence",
       "friction",

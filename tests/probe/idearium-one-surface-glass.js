@@ -29,6 +29,17 @@ const freePort = () => new Promise(res => { const s = net.createServer(); s.list
   const TapeRoutes = require(path.join(ROOT, 'ollama/routes/tape.js'));
   await serve(ports.ollama, async (req, rs) => { const url = new URL(req.url, 'http://x'); if (!(await TapeRoutes.handle(req, rs, { method: req.method, url, pathname: url.pathname }))) { rs.writeHead(404); rs.end('{}'); } });
 
+  // §OP2 0.57.0 — guardian's port answers /api/options with guardian's REAL options (guardian/options.js on lib/options.js), its
+  // values in a sandboxed folder — the console's System tab reads and writes them through Idearium's real proxy route
+  process.env.GUARDIAN_OPTIONS_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'probe-gopt-'));
+  const GO = require(path.join(ROOT, 'guardian/options.js')).options();
+  await serve(ports.guardian, (req, rs) => {
+    const send = (st, o) => { rs.writeHead(st, { 'Content-Type': 'application/json' }); rs.end(JSON.stringify(o)); };
+    if (req.url !== '/api/options') return send(404, { ok: false });
+    if (req.method === 'GET') return send(200, { ok: true, system: 'guardian', options: GO.describe() });
+    let b = ''; req.on('data', c => { b += c; }); req.on('end', () => { const j = JSON.parse(b || '{}'); const r = j.reset ? GO.reset(j.id) : GO.set(j.id, j.value, { actor: j.actor }); send(r.ok ? 200 : 400, r); });
+  });
+
   process.env.IDEARIUM_PORT = String(await freePort());
   const api = await quiet(() => import(pathToFileURL(path.join(ROOT, 'idearium/api/index.js')).href));
   const R = (m, p, b) => quiet(() => api._route(m, p, b));
@@ -115,6 +126,25 @@ const freePort = () => new Promise(res => { const s = net.createServer(); s.list
     await pg.evaluate(() => repoSettingsShow('agent-hat')); await pg.waitForTimeout(1500);
     check('Hat & tools: the hat, drawn here', /hat|forge/i.test(await pg.evaluate(() => document.getElementById('ao-hat').innerText)));
     await pg.evaluate(() => repoSettingsShow('desktop')); await pg.waitForTimeout(900);
+    // §OP4 0.57.0 — James: "have the envirement and desktop tabs in the same manu, have it dynamic. like once you set it up, change the button to edit desktop. and have a setting button next to it."
+    for (let i = 0; i < 40 && !(await pg.evaluate(() => { const a = document.getElementById('rs-desktop-actions'); return a && !/reading the desktop/.test(a.innerText); })); i++) await pg.waitForTimeout(250);
+    const nav = await pg.evaluate(() => [...document.querySelectorAll('#repo-subtab-settings .rs-item')].map(b => b.textContent.trim()));
+    const acts = await pg.evaluate(() => { const a = document.getElementById('rs-desktop-actions'); return a ? a.innerText : ''; });
+    const hasCompartment = await pg.evaluate(() => !!(CURRENT_API_REPO && CURRENT_API_REPO.compartmentId));
+    check('Settings: Environment & desktop is one item (no separate Desktop)', nav.includes('Environment & desktop') && !nav.includes('Desktop'), JSON.stringify(nav));
+    check('Settings: the desktop buttons follow its state — not set up here: ⚙ set up desktop with ⚙ beside it and the reason', !hasCompartment || (/set up desktop/.test(acts) && (acts.match(/⚙/g) || []).length >= 2 && !/edit desktop/.test(acts)), acts.slice(0, 200));
+    const states = await pg.evaluate(() => {
+      const r = { ...CURRENT_API_REPO, compartmentId: CURRENT_API_REPO.compartmentId || 'probe-compartment' };
+      let el = document.getElementById('rs-desktop-actions'); const keep = el && el.innerHTML;
+      if (!el) { el = document.createElement('div'); el.id = 'rs-desktop-actions'; document.body.appendChild(el); }
+      const out = {};
+      _rsDesktopActions(r, { setUp: true, state: null }); out.stopped = el.innerText;
+      _rsDesktopActions(r, { setUp: true, state: 'running' }); out.running = el.innerText;
+      if (keep != null) el.innerHTML = keep;
+      return out;
+    });
+    check('Settings: set up and stopped → ▣ open desktop · ✎ edit desktop · ⚙', /open desktop/.test(states.stopped) && /edit desktop/.test(states.stopped) && /⚙/.test(states.stopped) && !/set up desktop/.test(states.stopped), states.stopped);
+    check('Settings: running → ▣ open desktop · ■ stop · ⚙', /open desktop/.test(states.running) && /stop/.test(states.running) && /⚙/.test(states.running) && !/edit desktop/.test(states.running), states.running);
     check('Settings: no iframe (desktop drawn natively)', await pg.evaluate(() => document.querySelectorAll('#repo-subtab-settings iframe').length === 0 && /compartment|virtual machine/i.test(document.getElementById('rs-desktop-detail').innerText)));
 
     // the Spec tab: what is blank, and ✦ draft them
@@ -137,6 +167,23 @@ const freePort = () => new Promise(res => { const s = net.createServer(); s.list
     const pv = await pg.evaluate((u) => (document.getElementById(`rct-out-${u}`) || {}).innerText || '', U);
     check('↶ on a version previews its restore inside the card (the real preview — what it would write and delete)', /would write|already matches/.test(pv), pv.slice(0, 300));
     if (process.env.PROBE_SHOT !== '0') await pg.screenshot({ path: path.join(SHOT, 'idearium-repo-card-time.png') });
+
+    // §OP2 0.57.0 — James: "can you have these settings broken up into repos? or at least expand the settings drastically, i prefer options over hard coded"
+    const sp = await br.newPage({ viewport: { width: 1280, height: 900 } }); const serrs = []; sp.on('pageerror', e => serrs.push(e.message));
+    await sp.goto(`${BASE}/settings.html`); await sp.waitForTimeout(800);
+    await sp.evaluate(() => { DETAIL = { repo: { uuid: 'nexus-id-repo-probe', name: 'nexus/guardian', nexusSelf: { role: 'system', system: 'guardian' } }, agent: null, blocks: null, blind: [] }; CUR = { kind: 'repo', uuid: 'nexus-id-repo-probe', tab: 'system' }; renderRepo(); });
+    for (let i = 0; i < 40 && !(await sp.evaluate(() => /pickup_ms/.test(document.getElementById('body').innerText))); i++) await sp.waitForTimeout(250);
+    const sysTxt = await sp.evaluate(() => document.getElementById('body').innerText);
+    const tabs = await sp.evaluate(() => [...document.querySelectorAll('#tabs .tab')].map(b => b.textContent.trim()));
+    check('Settings console: a Nexus system\'s repo has a System tab', tabs.includes('System · guardian'), JSON.stringify(tabs));
+    check('System tab: guardian\'s options, grouped, each with its description, range, default and source', /jobs/.test(sysTxt) && /retry/.test(sysTxt) && /pickup_ms/.test(sysTxt) && /did nothing|says anything|without saying/.test(sysTxt) && /default 90000/.test(sysTxt) && /1\.5 min/.test(sysTxt), sysTxt.slice(0, 400));
+    await sp.evaluate(() => { const el = document.querySelector('[data-oid="jobs.pickup_ms"]'); el.value = '60000'; el.onchange(); });
+    for (let i = 0; i < 40 && !(await sp.evaluate(() => { const el = document.querySelector('[data-oid="jobs.pickup_ms"]'); return el && el.value === '60000' && /data-oreset="jobs.pickup_ms"/.test(document.getElementById('body').innerHTML); })); i++) await sp.waitForTimeout(250);
+    check('System tab: changing a value writes it through guardian — it reads back as set, with reset beside it', GO.resolve('jobs.pickup_ms').value === 60000 && GO.resolve('jobs.pickup_ms').source === 'file' && await sp.evaluate(() => !!document.querySelector('[data-oreset="jobs.pickup_ms"]')));
+    await sp.evaluate(() => { const el = document.querySelector('[data-oid="retry.max_attempts"]'); el.value = '99'; el.onchange(); }); await sp.waitForTimeout(800);
+    check('System tab: an out-of-range value is refused with the reason and nothing changes', GO.resolve('retry.max_attempts').value === 4 && /at most 10/.test(await sp.evaluate(() => document.getElementById('toast').textContent)));
+    if (process.env.PROBE_SHOT !== '0') await sp.screenshot({ path: path.join(SHOT, 'settings-system-guardian.png') });
+    check('Settings console: no page errors', serrs.length === 0, serrs.slice(0, 3).join('; '));
 
     check('no page errors', errs.length === 0, errs.slice(0, 3).join('; '));
   } finally { await br.close(); for (const s of servers) s.close(); }

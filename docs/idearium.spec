@@ -128,3 +128,9 @@ spec:
 James: "can you add the rewind engine controls and versioning to the repos box you click on to open it."
 - `idearium/ui/js/repo-card-time.js` puts **⟲ versions** on each box in the Repos grid and on each row of the open repo's list. It shows the last three versions, each with ↶ (the real restore preview, rendered inside the box), the desktop's pause, resume and checkpoint, and its last checkpoints with ↶ rewind.
 - It uses the same routes as the Plan panel. `previewRepoRestore(uuid, commitId, outId)` and `rtRewind(tag, uuid)` now take the repo, so they work outside the open repo.
+
+## ADDENDUM 2026-10-10 — 0.57.0 OP2–OP4: a system's options and Environment & desktop (docs/2026-10-10-shape-of-nexus-phasemap.spec)
+- `GET/POST /api/systems/:system/options` forwards to that system's own `/api/options` (the port comes from nexus-config ports). A system that declares no options yet says so.
+- The settings console gives each `nexus/<system>` repo a System tab.
+- `idearium options <system> [<group.key> <value> | --reset] [--actor copilot]` is in the one command table.
+- Repo Settings: Environment and Desktop are one item. The desktop's buttons follow `/api/cos/testenv` vm.ok and its state (OP4).

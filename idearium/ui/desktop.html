@@ -33,7 +33,7 @@
   <h1 id="title">Repo desktop</h1>
   <span id="state" class="pill">connecting</span>
   <span id="info" class="pill"></span>
-  <span id="login" class="pill" title="The VM's desktop account (Settings → Desktop: user / password). Click to copy the password." style="display:none;cursor:pointer"></span>
+  <span id="login" class="pill" title="The VM's desktop account (Settings → Environment & desktop: user / password). Click to copy the password." style="display:none;cursor:pointer"></span>
   <span class="spacer"></span>
   <button id="start" title="Boot this repo's VM (its disk is a branch of the original's when it has one)">Start VM</button>
   <button id="cad" title="Send Ctrl+Alt+Del">Ctrl+Alt+Del</button>
@@ -69,7 +69,7 @@
     if (s.login && s.login.user) {
       $login.style.display = '';
       $login.textContent = `login: ${s.login.user} / ${s.login.password}${s.login.applied === 'pending' ? ' (setting…)' : String(s.login.applied || '').startsWith('failed') ? ' (not applied)' : ''}`;
-      $login.title = `The VM's desktop account (Settings → Desktop: user / password). ${s.login.applied === 'set' ? 'Applied through the guest agent.' : s.login.applied || ''} Click to copy the password.`;
+      $login.title = `The VM's desktop account (Settings → Environment & desktop: user / password). ${s.login.applied === 'set' ? 'Applied through the guest agent.' : s.login.applied || ''} Click to copy the password.`;
       $login.onclick = () => { try { navigator.clipboard.writeText(s.login.password); } catch (_) {} };
     } else if (s.login && s.login.applied) { $login.style.display = ''; $login.textContent = `login: ${s.login.applied}`; }
     $info.textContent = [s.branchedFrom ? `disk: branch of ${s.branchedFrom}` : null, s.repoIn && s.repoIn.startsWith('/') ? `files: ${s.repoIn}` : s.repoIn === 'pending' ? 'copying files…' : null, s.accel ? `accel ${s.accel}${s.accelFallback ? ` (${s.accelFallback.from} failed)` : ''}` : null, s.repoIn === 'failed' ? `files: failed — ${s.repoError || ''}` : null].filter(Boolean).join(' · ');
