@@ -181,12 +181,34 @@ spec:
       files: [clear-glass/src/page/field.js, clear-glass/src/copilot/tools.js]
       does: "Invented. Point at anything in a Nexus page (the field gives it a target) and ask: copilot says what it is, which node and system it belongs to, which options govern it (OP2) and what it last did — and offers to change the option rather than the code."
       proof: "pointing at the Plan's 'retrying' badge explains it and offers guardian's retry option"
+    LR0_the_shared_primitives_are_the_glyph:
+      layer: library
+      systems: [core, idearium, guardian]
+      status: "OPEN"
+      james: '"what about using the most common primitives between the code langauges, to synthesize the cheapest code tokens. like at lib folder, the listener or language tool in guardian or root/ib?"'
+      depends_on: []
+      files: [lib/chunk-glyph.js, lib/languages.js, lib/build-context.js]
+      does: >-
+        The primitives every language shares already have a grammar: lib/chunk-glyph.js (defines, imports, calls,
+        events, routes, env, side effects, throws, purpose). Today it reads JS only. LR0 gives it one small reader per
+        language family (python, go, rust, shell first), keyed from lib/languages.js, so a glyph means the same thing
+        whatever the file is written in. Two uses, both deterministic: (1) READ — agents get glyphs of the code around a
+        task instead of the code (lib/build-context.js already packs glyphs for JS); (2) WRITE — from a component's
+        glyph (its signatures, imports and contract) the skeleton is generated in the target language, so the model
+        writes only the bodies. It lives in root lib/: it serves every system; guardian is the transport to the agents
+        and only carries what lib/build-context.js packs.
+      pushback: >-
+        Not a new code language for the models to write. A synthesized "cheapest common syntax" saves tokens on output
+        and loses them back on errors — the models write JS, TS and Python best. The tokens are on the input side (what
+        an agent must read to work), and that is where the glyph saves them. Writing stays in a real language; only the
+        scaffolding comes from the primitives.
+      proof: "the same small module written in JS and Python gives the same glyph fields; a phase build's prompt with glyph context is measured smaller (scripts/bench-file-prompt.js) with the same phase passing; a Python skeleton generated from a JS component's glyph runs its contract test in COS"
     LR1_each_component_in_the_language_that_fits:
       layer: library
       systems: [core, loom, idearium, cos]
       status: "OPEN"
       james: '"huge idea. wait what about dynamic language routing, like with a parser or adapter, use what ever coding language is best fit for the job, or the lest amount of tokens, using the components registry as a bridge?"'
-      depends_on: [P8_per_system_component_registry]
+      depends_on: [P8_per_system_component_registry, LR0_the_shared_primitives_are_the_glyph]
       files: [lib/agent-providers.js, cos/testenv/detect.js, idearium/repo/graph.js]
       does: >-
         A component's language is chosen per component and recorded in the registry with why — the job's fit (a parser
