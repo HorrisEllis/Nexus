@@ -224,7 +224,7 @@ const INTERACTION_CONTRACT = {
     {
       cmd: 'forge guardian dispatch',
       args: [
-        { name: 'provider', type: 'string', required: true, enum: ['claude','chatgpt','gemini','ollama'] },
+        { name: 'provider', type: 'string', required: true, enum: ['claude','chatgpt','gemini','deepseek','perplexity','ollama'] },
         { name: 'prompt',   type: 'string', required: true },
       ],
       opts: [{ name: 'timeout', type: 'number', default: 90000 }],
@@ -337,7 +337,7 @@ const INTERACTION_CONTRACT = {
       icon: '🤖',
       color: '#f472b6',
       fields: [
-        { name: 'provider', type: 'select', options: ['claude','chatgpt','gemini','ollama'], default: 'claude' },
+        { name: 'provider', type: 'select', options: ['claude','chatgpt','gemini','deepseek','perplexity','ollama'], default: 'claude' },
         { name: 'prompt',   type: 'textarea', label: 'Prompt', required: true, placeholder: 'Analyze this: {{trigger.payload.data}}' },
         { name: 'timeout',  type: 'number', label: 'Timeout (ms)', default: 90000 },
       ],

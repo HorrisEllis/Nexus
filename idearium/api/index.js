@@ -2091,6 +2091,7 @@ const ROUTE_CAP = {
   'settings.console': CAPS.READ_IDEAS,
   // §0.58.0 IA1 — the door's own routes: who am I / sign in / sign out are public; app passwords are admin's
   'access.me': null, 'access.login': null, 'access.logout': null,
+  'census': CAPS.READ_IDEAS,   // §0.59.1 every spec and phase checked against the tree (lib/spec-census.js)
   'access.keys': CAPS.ADMIN, 'access.keys.create': CAPS.ADMIN, 'access.keys.revoke': CAPS.ADMIN,
   'settings.console.repo': CAPS.READ_IDEAS,
   'economy.get': CAPS.READ_IDEAS, 'economy.set': CAPS.WRITE_IDEAS, 'economy.view': CAPS.READ_IDEAS,   // §0.39.281 EC8
@@ -2124,6 +2125,7 @@ function matchRoute(method, url) {
     // actor?} — actor defaults to 'user' inside config.js itself.
     ['GET',    ['api','config'],          'config.get'],
     // §0.58.0 IA1 — app passwords (idearium/lib/access.cjs, docs/2026-10-10-idearium-access-phasemap.spec)
+    ['GET',    ['api','census'],          'census'],      // §0.59.1 lib/spec-census.js
     ['GET',    ['api','access','me'],     'access.me'],
     ['POST',   ['api','access','login'],  'access.login'],
     ['POST',   ['api','access','logout'], 'access.logout'],
@@ -2760,6 +2762,21 @@ async function handle(req, res, route, query, body) {
     }
 
     // §0.58.0 IA1 — the door: who am I, sign in/out, app passwords (made and revoked by admin only — ROUTE_CAP)
+    // §0.59.1 — James: "all of the over 1000 specs, map onto whats done, and what isn't or make a tool to check." Every
+    // phase's status checked against its evidence, every spec against the code it names (lib/spec-census.js, read-only).
+    case 'census': {
+      try {
+        const C = _require('../../lib/spec-census.js'); const c = C.census();
+        const pick = (rows, f, n) => rows.filter(f).slice(0, n);
+        const lim = Math.max(1, Math.min(2000, parseInt(query.limit || '40', 10) || 40));
+        return ok(res, { text: c.text, phases: { total: c.phases.total, byVerdict: c.phases.byVerdict,
+            contradicted: pick(c.phases.rows, p => p.verdict === 'contradicted', lim), builtMaybe: pick(c.phases.rows, p => p.verdict === 'built?', lim),
+            ...(query.verdict ? { rows: pick(c.phases.rows, p => p.verdict === query.verdict, lim) } : {}) },
+          specs: { total: c.specs.total, byVerdict: c.specs.byVerdict, unregistered: c.specs.unregistered,
+            ...(query.specs ? { rows: pick(c.specs.rows, s => query.specs === 'all' || s.verdict === query.specs || (query.specs === 'unregistered' && !s.registered), lim) } : {}) },
+          ...(query.report ? { report: C.report(c) } : {}) });
+      } catch (e) { return err(res, 500, `census failed: ${e.message}`); }
+    }
     case 'access.me': {
       const ac = getIdeariumConfig().access || {};
       return ok(res, { mode: ac.mode || 'origin', signedIn: !!(req.access && req.access.who), who: (req.access && req.access.who) || null,

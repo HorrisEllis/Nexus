@@ -2270,7 +2270,7 @@ function handleExtendedRoutes(req, res, url, method) {
     // §GA1 — the browser agents are Guardian's provider nodes (this list was hard-coded and had no deepseek); ollama is local
     const out = {}; let ids = [];
     try { ids = require('./lib/agent-facts.js').list().map(p => p.id); } catch (_) {}
-    for (const id of (ids.length ? ids : ['claude', 'chatgpt', 'gemini', 'perplexity'])) out[id] = 'null';
+    for (const id of (ids.length ? ids : ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'])) out[id] = 'null';
     out.ollama = 'null';
     for (const [p] of Object.entries(out)) {
       if (ncp.isConnected(p)) out[p] = 'connected';

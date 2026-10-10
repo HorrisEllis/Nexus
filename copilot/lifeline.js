@@ -429,7 +429,9 @@ function _persist(opts, result) {
 // If that explicit dispatch fails (agent not connected), fall through to
 // the normal cascade rather than dead-ending — they asked for a specific
 // agent, but they should still get an answer.
-const KNOWN_AGENTS = ['chatgpt', 'claude', 'mistral', 'gemini', 'ollama'];
+// §0.59.1 — James: "deepseek is absent." Was hard-coded without deepseek or perplexity; the browser agents now come from
+// lib/agent-providers.js (the guardian userscripts — one source), then the local ones
+const KNOWN_AGENTS = [...(() => { try { return require('../lib/agent-providers.js').guardianProviders(); } catch (_) { return ['chatgpt', 'claude', 'deepseek', 'gemini', 'perplexity']; } })(), 'mistral', 'ollama'];
 const EXPLICIT_AGENT_RE = new RegExp(
   `\\b(?:talk to|use|switch to|route (?:this|it)? ?to|ask)\\s+(${KNOWN_AGENTS.join('|')})\\b`, 'i'
 );

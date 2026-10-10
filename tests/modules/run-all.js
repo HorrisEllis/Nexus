@@ -331,6 +331,7 @@ const SUITES = [
   'test-options.test.js',   // 0.57.0 OP0–OP3 — one options shape for every system (lib/options.js), guardian first, its routes, the console's System tab
   'test-idearium-access.test.js',   // 0.58.0 IA0–IA4 — app passwords scoped per repo/hat, the gate, /api/access/*, the command, Clear Glass sign-in
   'test-field-nerve.test.js',   // 0.59.0 FN1–FN3 — the interaction field as commands; Clear Glass's attention record; Nexus Nerve reads it
+  'test-provider-lists.test.js',   // 0.59.1 — every hard-coded list of browser agents names them all (deepseek was absent)
   'test-phases-tab.test.js',
   'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls

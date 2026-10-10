@@ -283,6 +283,21 @@ export const SPEC = [
       if (pres.length) console.log(`  ${pres.join('  ')}`);
       _printWindows(d.windows || [], h);
     } },
+  // §0.59.1 — James: "all of the over 1000 specs, map onto whats done, and what isn't or make a tool to check."
+  { key: 'census', repo: false, usage: 'census [--verdict claimed|verified|contradicted|built?|open] [--specs built|partial|unbuilt|doc|unregistered|all] [--limit n] [--report]',
+    about: 'every phase and spec checked against the tree: done and proven, done and only claimed, done but its files are gone, open but looks built; specs built / partial / unbuilt',
+    req: (a) => ({ method: 'GET', timeoutMs: 60000, path: `/api/census${qs(a.flags, ['verdict', 'specs', 'limit', 'report'])}` }),
+    print: (d, a, h) => {
+      if (a.flags.report) { process.stdout.write(d.report || ''); return; }
+      console.log(`  ${d.text}`);
+      const ph = d.phases || {}, sp = d.specs || {};
+      const show = (title, rows, fmt) => { if (!rows || !rows.length) return; console.log(`\n  ${h.c.bold(title)} (${rows.length})`); for (const r of rows) console.log(`    ${fmt(r)}`); };
+      show('done, but files it names are gone', ph.contradicted, p => `${h.c.coral(p.id)} ${h.c.dim(p.map)} — ${p.evidence.missing.slice(0, 3).join(', ')}`);
+      show('open, but looks built (check, then mark)', ph.builtMaybe, p => `${h.c.amber(p.id)} ${h.c.dim(p.map)} — ${p.evidence.testsFound.join(', ')}`);
+      show(`phases: ${a.flags.verdict}`, ph.rows, p => `${p.id} ${h.c.dim(p.map)}`);
+      show(`specs: ${a.flags.specs}`, sp.rows, s => `${s.path} ${h.c.dim(`${s.system} · ${s.verdict}${s.registered ? '' : ' · not registered'}`)}`);
+      console.log(h.c.dim('\n  full report: idearium census --report > docs/census/spec-census.md'));
+    } },
   { key: 'store', repo: false, usage: 'store', about: 'the shared memory store by its files: each table\'s size, append segments, cap and archive (cortex)',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/store' }),
     print: (d, a, h) => {

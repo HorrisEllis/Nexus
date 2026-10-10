@@ -44,7 +44,7 @@ const raid = require('./index.js');
 // use `meshCapable` to decide whether AgentMesh is a viable SECOND path
 // to reach the same agent RAID picked, e.g. if Guardian's own dispatch
 // to that provider is what's actually down.
-const MESH_AGENT_REGISTRY_KEYS = new Set(['claude', 'chatgpt', 'gemini', 'perplexity', 'mistral', 'grok']);
+const MESH_AGENT_REGISTRY_KEYS = new Set(['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek', 'mistral', 'grok']);   // §0.59.1 deepseek was absent
 
 /**
  * buildRoutingIR — call RAID's real _decide() and wrap the result in the
