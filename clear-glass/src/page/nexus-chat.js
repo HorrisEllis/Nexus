@@ -1,0 +1,114 @@
+'use strict';
+/**
+ * clear-glass/src/page/nexus-chat.js — open a chat in Clear Glass and the agent in it can talk to Nexus (0.59.5).
+ * comp_id: clear-glass.page.nexus-chat
+ *
+ * James, 2026-10-10: "All I'm going to do. Is open this chat in clearglass. Then you should be able to talk to nexus right
+ * now."
+ *
+ * No picker, no listener to set up. On a chat page Clear Glass is told to watch (option nexusChat.urls — by default Claude
+ * Code on the web, https://claude.ai/code), it reads the page's text every 2 s. A line that starts with `nexus> ` and has
+ * stayed the same for two reads (so a streaming reply is finished) runs as a Nexus command through the one command tool
+ * (lib/listener-commands.js), and the answer is typed into the page's message box and sent — so the agent reads it as the
+ * next message and can carry on.
+ *
+ * Guard rails, because anything printed on that page can reach the machine:
+ *   - what is on the page when it opens never runs (a reload does not replay old commands)
+ *   - each line runs once; at most 6 commands a minute per page
+ *   - read commands only (and `dump`, an idea into the Void): anything that changes Nexus is refused here — a listener he
+ *     sets himself (⦿ LISTEN → Run Nexus commands) is the door for those; the person's own rows are refused everywhere
+ *   - the answer it types back never starts with `nexus>`, so it cannot run itself
+ * Reads the page from the main process (executeJavaScript): nothing is injected into the page, so it adds nothing to the
+ * per-frame injection count (CG1).
+ */
+
+const MODULE_ID = 'clear-glass.page.nexus-chat';
+const VERSION = '1.0.0';
+const POLL_MS = 2000;
+const PER_MINUTE = 6;
+const READ_ALLOW = new Set(['dump']);   // the one write allowed here: an idea dropped into the Void
+
+const DEFAULT_URLS = ['https://claude.ai/code'];
+function _urls(options) {
+  try { const v = options && options.get && options.get('nexusChat.urls'); if (Array.isArray(v) && v.length) return v; } catch (_) {}
+  const env = process.env.CLEARGL_NEXUS_CHAT_URLS; return env ? env.split(',').map(s => s.trim()).filter(Boolean) : DEFAULT_URLS;
+}
+function watched(url, options) { const u = String(url || ''); return _urls(options).some(p => u.startsWith(p)); }
+
+/** the page's command lines, read from the main process */
+const READ_JS = `(() => { const t = (document.body && document.body.innerText) || ''; return (t.match(/^[ \\t]*nexus>[ \\t]+.+$/gm) || []).map(l => l.trim().replace(/^nexus>\\s+/, '')); })()`;
+/** type text into the page's message box and send it; returns what happened */
+function replyJs(text) {
+  return `(() => {
+    const text = ${JSON.stringify(String(text))};
+    const vis = (el) => { const r = el.getBoundingClientRect(); return r.width > 40 && r.height > 10 && getComputedStyle(el).visibility !== 'hidden'; };
+    const boxes = [...document.querySelectorAll('textarea, [contenteditable="true"], [contenteditable=""]')].filter(vis);
+    const box = boxes.sort((a, b) => b.getBoundingClientRect().bottom - a.getBoundingClientRect().bottom)[0];
+    if (!box) return { ok: false, error: 'no message box found on the page' };
+    box.focus();
+    if (box.tagName === 'TEXTAREA') { const set = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set; set.call(box, text); box.dispatchEvent(new Event('input', { bubbles: true })); }
+    else document.execCommand('insertText', false, text);
+    return { ok: true };
+  })()`;
+}
+
+/** policy for pages Clear Glass watches by itself: read commands and dump only */
+async function readOnly(parsed) {
+  if (READ_ALLOW.has(parsed.command)) return null;
+  const { pathToFileURL } = require('url');
+  const path = require('path');
+  const { SPEC } = await import(pathToFileURL(path.join(__dirname, '..', '..', '..', 'idearium', 'cli', 'route-commands.js')).href);
+  const row = SPEC.find(r => r.key.replace('.', ' ') === parsed.command);
+  if (!row) return null;   // the tool says it does not exist
+  let rq; try { rq = row.req({ repo: { uuid: 'repo', name: 'repo' }, args: parsed.args || [], flags: parsed.flags || {} }) || {}; } catch (_) { rq = {}; }
+  return (rq.method || 'GET') === 'GET' ? null : `"${parsed.command}" changes Nexus — from a watched chat only read commands and dump run. Set a listener yourself (◎ → ⦿ LISTEN → Run Nexus commands) to allow it.`;
+}
+
+/**
+ * attach(contents, { options, emit, postEvent, runner }) — watch one web-contents. Safe to call for every one: it does
+ * nothing until the page's URL is watched.
+ */
+function attach(contents, { options = null, emit = () => {}, postEvent = () => {}, runner = null, pollMs = POLL_MS } = {}) {
+  let timer = null, baseline = null, last = new Map(), ran = new Set(), times = [], busy = false;
+  const LC = require('../../../lib/listener-commands.js');
+  const run = runner || LC.createRunner({ policy: readOnly });
+  const stop = () => { if (timer) clearInterval(timer); timer = null; };
+  const start = () => {
+    stop(); baseline = null; last = new Map();
+    if (!watched(contents.getURL(), options)) return;
+    timer = setInterval(tick, pollMs); if (timer.unref) timer.unref();
+  };
+  async function tick() {
+    if (busy || contents.isDestroyed()) return;
+    busy = true;
+    try {
+      const lines = await contents.executeJavaScript(READ_JS, false).catch(() => null);
+      if (!Array.isArray(lines)) return;
+      if (baseline == null) { baseline = new Set(lines); return; }   // what was there when it opened never runs
+      const now = Date.now(); times = times.filter(t => now - t < 60000);
+      for (const line of [...new Set(lines)]) {
+        if (baseline.has(line) || ran.has(line)) continue;
+        const seen = (last.get(line) || 0) + 1; last.set(line, seen);
+        if (seen < 2) continue;                                       // stable for two reads: the reply is finished
+        if (times.length >= PER_MINUTE) { emit('nexus.chat.limited', { url: contents.getURL(), line, ts: now }); continue; }
+        ran.add(line); times.push(now);
+        const [r] = await run.hear(`chat:${contents.id}`, `nexus> ${line}`);
+        if (!r) continue;
+        const said = LC.summary(r).replace(/^nexus>\s*/, '⌘ Nexus ran: ');   // never starts with nexus> — it cannot run itself
+        emit('guardian.listener.command-result', { listenerId: `chat:${contents.id}`, line, ok: !r.error && !r.refused, text: said, ts: Date.now() });
+        postEvent('nexus.chat.command', { url: contents.getURL(), line, ok: !r.error && !r.refused, refused: !!r.refused });
+        const typed = await contents.executeJavaScript(replyJs(said), true).catch(e => ({ ok: false, error: e.message }));
+        if (typed && typed.ok) {
+          await new Promise(res => setTimeout(res, 150));
+          for (const type of ['keyDown', 'char', 'keyUp']) contents.sendInputEvent(type === 'char' ? { type, keyCode: '\r' } : { type, keyCode: 'Enter' });
+        } else emit('nexus.chat.reply.failed', { url: contents.getURL(), line, error: (typed && typed.error) || 'not typed', ts: Date.now() });
+      }
+    } catch (_) { /* the page went away mid-read */ } finally { busy = false; }
+  }
+  contents.on('did-finish-load', start);
+  contents.on('did-navigate-in-page', () => { if (!timer) start(); });
+  contents.on('destroyed', stop);
+  return { stop, _tick: tick, _start: start };
+}
+
+module.exports = { MODULE_ID, VERSION, attach, watched, readOnly, READ_JS, replyJs, DEFAULT_URLS };

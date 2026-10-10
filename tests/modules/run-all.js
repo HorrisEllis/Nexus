@@ -335,6 +335,7 @@ const SUITES = [
   'test-workshop-nexus-specs.test.js',   // 0.59.2 — Nexus's own specs, by system, as a start in the spec workshop (saved: a new repo)
   'test-idea-dump.test.js',   // 0.59.3 — idearium dump: a raw idea dump into the Void, verbatim, many at once
   'test-listener-commands.test.js',   // 0.59.4 — a Guardian listener runs the Nexus commands it hears (nexus> …), once each, the person's rows refused
+  'test-nexus-chat.test.js',   // 0.59.5 — open a chat in Clear Glass: its nexus> lines run (read-only), the answer typed back
   'test-phases-tab.test.js',
   'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls

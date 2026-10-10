@@ -44,6 +44,22 @@ module.exports = Object.freeze({
     payloadShape: ['listenerId', 'line', 'ok', 'text', 'ts'],
     severity: 'info',
   },
+  // §0.59.5 — a watched chat page (src/page/nexus-chat.js): its nexus> lines run read-only, the answer typed back
+  NEXUS_CHAT_COMMAND: {
+    description: 'A nexus> line on a watched chat page ran as a Nexus command (read-only there): the page, the line, and whether it ran or was refused.',
+    payloadShape: ['url', 'line', 'ok', 'refused'],
+    severity: 'notable',
+  },
+  NEXUS_CHAT_LIMITED: {
+    description: 'A watched chat page asked for more than 6 commands in a minute; the rest waited.',
+    payloadShape: ['url', 'line', 'ts'],
+    severity: 'warning',
+  },
+  NEXUS_CHAT_REPLY_FAILED: {
+    description: "A command's answer could not be typed back into the watched chat (no message box found); it is still in the co-pilot panel.",
+    payloadShape: ['url', 'line', 'error', 'ts'],
+    severity: 'warning',
+  },
   FIELD_POINTER: {
     description: 'An agent (or a person through `idearium field point`) acted on the page with the field\'s pointer: what it did, where, which numbered target, whether something covered it, and how (native or ErosmancerOS).',
     payloadShape: ['agentId', 'do', 'x', 'y', 'n', 'name', 'covered', 'via', 'ts'],
