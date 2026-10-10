@@ -1,12 +1,12 @@
 # Torture chamber — made in the spec workshop (idearium)
-# Written 2026-10-10 from docs/2026-10-10-test-attack-qa-catalog.md (about 90 methods, eight families) and
+# Written 2026-10-10 from cos/spec/qa-catalog.spec (about 90 methods, eight families) and
 # docs/2026-10-10-snapshot-compartments-phasemap.spec (SN0–SN4), to be opened in the workshop (nexus/cos → cos/spec) and
 # built through Idearium. Every decision is offered as choices [A] [B] [C] [custom], the coder's recommendation marked;
 # "chosen:" stays "open" until James picks. Nothing here is built yet.
 spec:
   name: Torture chamber
   ambition: 4 — novel
-  source: "docs/2026-10-10-test-attack-qa-catalog.md · maps: docs/2026-10-10-snapshot-compartments-phasemap.spec SN0–SN4"
+  source: "cos/spec/qa-catalog.spec · maps: docs/2026-10-10-snapshot-compartments-phasemap.spec SN0–SN4"
   owner: cos (the template, the compartments, branching, the runner) · intelligence (rfr2 measures each run) · core (the learned order reads the results)
   status: specced 2026-10-10, not built
   james: >-

@@ -1606,6 +1606,18 @@ function _architectView(AR, a) {
   return { architecture: a, analysis: AR.analyse(a, idx), index: { ...idx.counts, ...(idx.regError ? { error: idx.regError } : {}) } };
 }
 /** a repo's spec files: *.spec under spec/ or specs/ (or at its root), phasemaps left out — the Spec tab's set */
+// §0.59.2 — James: "need the specs to be relevant to the system they are for … also the spec workshop uses them, and
+// idearium has the option to choose spec from library to create a repo with." Nexus's own specs (every system's spec
+// folder and docs/, phasemaps aside) as a workshop source: listed by the census (lib/spec-census.js — owning system and
+// how built), opened as a NEW workshop (saving makes a new repo; the original spec is never written from here).
+function _nexusSpecs() {
+  const fs_ = _require('fs'), path_ = _require('path'), ROOT_ = path_.resolve(path_.dirname(_require('url').fileURLToPath(import.meta.url)), '..', '..');
+  let rows = []; try { rows = _require('../../lib/spec-census.js').specs(); } catch (_) { return []; }
+  return rows.map(r => {
+    let title = null; try { const head = fs_.readFileSync(path_.join(ROOT_, r.path), 'utf8').slice(0, 3000); const m = head.match(/^\s*name:\s*["']?([^"'\n]+)/m); title = m ? m[1].trim() : null; } catch (_) {}
+    return { path: r.path, system: r.system, verdict: r.verdict, title: title || path_.basename(r.path, '.spec') };
+  });
+}
 function _workshopSpecFiles(repo) {
   try {
     const m = getSpecEngine().loadSpec(repo.specUuid || repo.promotedFromSpec);
@@ -4959,7 +4971,7 @@ async function handle(req, res, route, query, body) {
       const library = listLibrary().filter(r => r.specUuid).map(r => ({ sha: r.sha, title: r.title, family: r.family, sections: r.sections, repoUuid: r.repoUuid || null }));
       await _specEngineReady();
       const repos = getRepoLayer().list().filter(r => r.status !== 'archived' && !r.nexusSelf).map(r => ({ uuid: r.uuid, name: r.name, specFiles: _workshopSpecFiles(r) }));
-      return ok(res, { ideas, library, repos });
+      return ok(res, { ideas, library, repos, nexus: _nexusSpecs() });   // §0.59.2 Nexus's own specs, by system
     }
     case 'workshop.create': {
       const WS = await _workshop();
@@ -4997,7 +5009,13 @@ async function handle(req, res, route, query, body) {
           if (f.error) return err(res, 404, f.error);
           sections = WS.sectionsFromSpecText(f.content, _require('js-yaml'));
         }
-      } else if (from.kind !== 'blank') return err(res, 400, `from.kind must be idea, library, repo or blank`);
+      } else if (from.kind === 'nexus') {   // §0.59.2 a Nexus spec as the start of a new spec (and, saved, a new repo)
+        const hit = _nexusSpecs().find(x => x.path === from.id);
+        if (!hit) return err(res, 404, `not a Nexus spec: ${from.id}`);
+        let text = ''; try { text = _require('fs').readFileSync(_require('path').join(_require('path').resolve(_require('path').dirname(_require('url').fileURLToPath(import.meta.url)), '..', '..'), hit.path), 'utf8'); } catch (e) { return err(res, 404, `could not read ${hit.path}: ${e.message}`); }
+        sections = WS.sectionsFromSpecText(text, _require('js-yaml'));
+        title = title || hit.title; source = { kind: 'nexus', id: hit.path, title: `${hit.system} · ${hit.title}` };
+      } else if (from.kind !== 'blank') return err(res, 400, `from.kind must be idea, library, repo, nexus or blank`);
       // §0.39.357 RS5 — the picked template: its sections after the source's, never over a part the source already lays out
       let template = null, mode = WS.MODES.includes(body.mode) ? body.mode : null;
       if (body.template) {

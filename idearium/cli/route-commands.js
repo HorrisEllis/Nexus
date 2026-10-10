@@ -269,6 +269,20 @@ export const SPEC = [
     need: (a) => (/^\d+$/.test(a.args[0] || '') ? (!a.args[1] || ['click', 'double', 'right', 'move', 'scroll', 'type'].includes(a.args[1]) ? null : 'what to do: click, double, right, move, scroll or type') : '<n> (a number from `idearium field`)'),
     req: (a) => _fieldReq(a, { action: 'pointer', n: +a.args[0], do: a.args[1] || 'click', ...(a.flags.text ? { text: String(a.flags.text) } : {}), ...(a.flags.via ? { via: a.flags.via } : {}) }),
     print: (d, a, h) => { const r = d.result || {}; console.log(`${h.c.mint('✓')} ${a.args[1] || 'click'} #${a.args[0]} in ${d.agentId}${r.under && r.under[0] ? h.c.dim(`  (hit ${r.under[0].tag || ''}${r.under[0].name ? ` "${r.under[0].name}"` : ''})`) : ''}${r.note ? `\n  ${h.c.amber(r.note)}` : ''}`); } },
+  // §0.59.2 — James: "can you make it so i can use guardian element picker for claude code". The elements he sent with
+  // → CLAUDE CODE in the Guardian picker: selector, page, text, a slice of the HTML — what Claude Code needs to act on it.
+  { key: 'picks', repo: false, usage: 'picks [--last] [--html]', about: 'the elements James handed to the agents with the Guardian picker (→ CLAUDE CODE): selector, page, text — newest first',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/picks' }),
+    print: (d, a, h) => {
+      const ps = (d.picks || []).slice(0, a.flags.last ? 1 : 25);
+      if (!ps.length) { console.log(h.c.dim('  nothing picked yet — in Clear Glass: the picker, an element, → CLAUDE CODE')); return; }
+      for (const p of ps) {
+        console.log(`  ${h.c.amber(`#${p.n}`)} ${h.c.dim(new Date(p.at).toLocaleTimeString('en-GB', { hour12: false }))} ${p.label ? h.c.bold(p.label) + ' ' : ''}${h.c.sky(p.selector)}`);
+        console.log(h.c.dim(`      ${p.tag || ''}${p.rect ? ` (${p.rect.x},${p.rect.y}) ${p.rect.w}×${p.rect.h}` : ''} · ${p.title || ''} · ${p.url || ''}`));
+        if (p.text) console.log(`      "${p.text.slice(0, 160)}"`);
+        if (a.flags.html && p.html) console.log(h.c.dim(`      ${p.html.slice(0, 600)}`));
+      }
+    } },
   { key: 'field.windows', repo: false, usage: 'field windows', about: 'what the field is doing in each Clear Glass window: its last map, spotlight and pointer, and how lately the page changed',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/attention' }),
     print: (d, a, h) => _printWindows(d.windows || [], h) },
@@ -296,7 +310,7 @@ export const SPEC = [
       show('open, but looks built (check, then mark)', ph.builtMaybe, p => `${h.c.amber(p.id)} ${h.c.dim(p.map)} — ${p.evidence.testsFound.join(', ')}`);
       show(`phases: ${a.flags.verdict}`, ph.rows, p => `${p.id} ${h.c.dim(p.map)}`);
       show(`specs: ${a.flags.specs}`, sp.rows, s => `${s.path} ${h.c.dim(`${s.system} · ${s.verdict}${s.registered ? '' : ' · not registered'}`)}`);
-      console.log(h.c.dim('\n  full report: idearium census --report > docs/census/spec-census.md'));
+      console.log(h.c.dim('\n  full report: idearium census --report'));
     } },
   { key: 'store', repo: false, usage: 'store', about: 'the shared memory store by its files: each table\'s size, append segments, cap and archive (cortex)',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/store' }),

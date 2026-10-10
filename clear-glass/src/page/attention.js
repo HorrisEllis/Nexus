@@ -20,10 +20,18 @@ const FORGET_MS = 10 * 60000;   // a window silent this long is dropped
 
 function createAttention({ now = () => Date.now() } = {}) {
   const wins = new Map();   // agentId → { agentId, url, lastMutation, mutationCount, field, spotlight, pointer, lastAt }
+  const picks = [];         // §0.59.2 — elements handed to the agents from the Guardian picker (→ CLAUDE CODE), newest last
+  const MAX_PICKS = 25;
   const win = (id) => { if (!wins.has(id)) wins.set(id, { agentId: id, url: null, lastMutation: 0, mutationCount: 0, field: null, spotlight: null, pointer: null, lastAt: 0 }); return wins.get(id); };
 
   /** note(type, data) — fed every Clear Glass bus event; keeps only what says where attention is */
   function note(type, data = {}) {
+    if (type === 'dom.pick.sent' && data && data.selector) {
+      picks.push({ n: (picks.length ? picks[picks.length - 1].n : 0) + 1, at: +data.ts || now(), selector: data.selector, xpath: data.xpath || null, url: data.url || null,
+        title: data.title || null, label: data.label || null, tag: data.tag || null, text: String(data.text || '').slice(0, 600), html: String(data.html || '').slice(0, 2000), rect: data.rect || null });
+      if (picks.length > MAX_PICKS) picks.splice(0, picks.length - MAX_PICKS);
+      return true;
+    }
     const id = data && data.agentId;
     if (!id || typeof type !== 'string') return false;
     const t = +data.ts || now();
@@ -51,7 +59,10 @@ function createAttention({ now = () => Date.now() } = {}) {
     }));
   }
 
-  return { note, windows };
+  /** picks() → the elements handed to the agents, newest first */
+  function pickList() { return picks.slice().reverse(); }
+
+  return { note, windows, picks: pickList };
 }
 
 let _shared = null;

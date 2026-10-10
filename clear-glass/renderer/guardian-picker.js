@@ -1,6 +1,12 @@
 (function() {
   if (window.__gPickerActive) { window.__gPickerActive.destroy?.(); }
   if (window.__cgPicker) { try { window.__cgPicker.destroy(); } catch (_) {} }
+  // §0.59.2 — James: "the popup … cant close it." Every toggle of the picker runs this file again; destroy() closed the
+  // popups but left their elements, so a second run added a SECOND #__g-popup with the same ids — the buttons were wired
+  // (getElementById) to the first, hidden one, and the ✕ on the one he saw did nothing. Anything left by an earlier run
+  // is removed first, and destroy() now removes what it made.
+  for (const n of document.querySelectorAll('[id^="__g-"]')) { try { n.remove(); } catch (_) {} }
+  const _life = new AbortController();   // the listeners that live as long as this run (the global ESC)
 
   // ── Injected styles — VERBATIM from the real, original Guardian
   // content.js (v3.4.0), byte-for-byte, per James: "do not change any
@@ -8,6 +14,7 @@
   // programmatically from the archive, not retyped, to guarantee
   // fidelity. ─────────────────────────────────────────────────────────
   const STYLE = document.createElement('style');
+  STYLE.id = '__g-style';
   STYLE.textContent = `
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Rajdhani:wght@600;700&display=swap');
 
@@ -136,6 +143,10 @@
     .__g-nearby-chip:hover { background: rgba(0,212,255,0.14); border-color: rgba(0,212,255,0.6); }
     #__g-btn-add    { background: rgba(0,255,163,0.1);  border-color: rgba(0,255,163,0.4);  color: #00ffa3; }
     #__g-btn-add:hover { background: rgba(0,255,163,0.2); border-color: #00ffa3; }
+    #__g-btn-agent  { background: rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.5); color: #00d4ff; }
+    #__g-btn-agent:hover { background: rgba(0,212,255,0.22); border-color: #00d4ff; }
+    #__g-btn-copy   { background: transparent; border-color: rgba(0,255,163,0.25); color: rgba(0,255,163,0.75); }
+    #__g-btn-copy:hover { border-color: #00ffa3; color: #00ffa3; }
     /* LISTEN button: opens listener config modal — NOT a callto action */
     #__g-btn-listen { background: rgba(204,68,255,0.1); border-color: rgba(204,68,255,0.4); color: #cc44ff; }
     #__g-btn-listen:hover { background: rgba(204,68,255,0.2); border-color: #cc44ff; }
@@ -259,10 +270,14 @@
         <div id="__g-ct-id-row"><div id="__g-ct-id">—</div><button id="__g-ct-regen" title="Regenerate ID">↻</button></div>
       </div>
       <div id="__g-popup-actions">
-        <button class="gf-btn" id="__g-btn-add">ADD TO INDEX</button>
+        <button class="gf-btn" id="__g-btn-agent" title="Hand this element (selector, text, page) to Claude Code and the agents — they read it with: idearium picks">→ CLAUDE CODE</button>
+        <button class="gf-btn" id="__g-btn-copy" title="Copy the selector">⧉ COPY</button>
         <button class="gf-btn" id="__g-btn-listen">⦿ LISTEN</button>
         <button class="gf-btn" id="__g-btn-pick">RE-PICK</button>
-        <button class="gf-btn" id="__g-btn-cancel">CANCEL</button>
+      </div>
+      <div id="__g-popup-actions2" style="display:flex;gap:6px;margin-top:6px;">
+        <button class="gf-btn" id="__g-btn-add" title="Save as a callto in Clear Glass's index (Settings → Suite)">SAVE CALLTO</button>
+        <button class="gf-btn" id="__g-btn-cancel">CLOSE</button>
       </div>
     </div>
   `;
@@ -709,15 +724,16 @@
   // ── Single global ESC handler — registered once, never duplicated ─────────
   // Distinct from onKey (which only lives during picking).
   // Uses { capture: true } so it fires before any page handler can swallow it.
-  document.addEventListener('keydown', function onGlobalEsc(e) {
+  document.addEventListener('keydown', function onGlobalEsc(e) {   // §0.59.2 — removed with the run (_life)
     if (e.key !== 'Escape') return;
     if (pickerActive) {
       // Picker is active — let onKey (registered by startPicker) handle it.
       // Do NOT also trigger killswitch here.
       return;
     }
+    if (popup.classList.contains('show')) { closeCalltoPopup(true); return; }   // §0.59.2 — ESC closes the popup first
     triggerKillswitch('ESC');
-  }, { capture: true });
+  }, { capture: true, signal: _life.signal });
 
 
   // ── Popup ────────────────────────────────────────────────────────────────
@@ -1269,6 +1285,29 @@
 
   document.getElementById('__g-btn-add').addEventListener('click', commitCallto);
 
+  // §0.59.2 — James: "can you make it so i can use guardian element picker for claude code … the popup when picking an
+  // element needs buttons that wre usefull." → CLAUDE CODE hands the element to Clear Glass (dom:event dom.pick.sent), which
+  // keeps the last picks (src/page/attention.js) at GET :7702/cli/picks; Claude Code and every agent read them with
+  // `idearium picks`. The element's own text and a slice of its HTML go with it, so the agent sees what he pointed at.
+  document.getElementById('__g-btn-agent').addEventListener('click', () => {
+    if (!_currentFp) return;
+    const elx = _currentEl || null;
+    let rect = null; try { const r = elx && elx.getBoundingClientRect(); if (r) rect = { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) }; } catch (_) {}
+    const label = (document.getElementById('__g-ct-label').value || '').trim();
+    const sent = { type: 'dom.pick.sent', selector: _currentFp.selector, xpath: _currentFp.xpath, url: window.location.href, title: document.title, label: label || null,
+      tag: elx ? elx.tagName.toLowerCase() : null, text: elx ? String(elx.innerText || elx.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 600) : '',
+      html: elx ? String(elx.outerHTML || '').slice(0, 2000) : '', rect, ts: Date.now() };
+    try { window.__cg?.send('dom:event', sent); showToast('→ sent to Claude Code — read it with: idearium picks', 'ok'); }
+    catch (e2) { showToast('⚠ could not reach Clear Glass: ' + String(e2.message || e2).slice(0, 40), 'warn'); return; }
+    closeCalltoPopup(true);
+  });
+  document.getElementById('__g-btn-copy').addEventListener('click', () => {
+    if (!_currentFp) return;
+    const t = _currentFp.selector;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject(new Error('no clipboard')))
+      .then(() => showToast('⧉ selector copied', 'ok'), () => { try { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); showToast('⧉ selector copied', 'ok'); } catch (_) { showToast('⚠ copy failed — selector: ' + t.slice(0, 60), 'warn'); } });
+  });
+
   // LISTEN button: opens the listener config modal with the current element.
   // It does NOT commit a callto. Callto popup stays open so user can still ADD TO INDEX.
   document.getElementById('__g-btn-listen').addEventListener('click', () => {
@@ -1431,7 +1470,12 @@
     startListen: () => startPicker('listener'),
     stop: () => stopPicker(),
     killswitch: () => triggerKillswitch('host', true),
-    destroy() { stopPicker(true); closeCalltoPopup(true); closeListenModal(); for (const [lid] of activeListeners) detachListenerDOM(lid); activeListeners.clear(); },
+    destroy() {
+      stopPicker(true); closeCalltoPopup(true); closeListenModal(); for (const [lid] of activeListeners) detachListenerDOM(lid); activeListeners.clear();
+      _life.abort();   // §0.59.2 — and remove what this run made, so the next run starts clean
+      for (const e of [STYLE, selBox, overlay, tip, escHint, toast, popup, listenModal]) { try { e.remove(); } catch (_) {} }
+      if (window.__gPickerActive === this) window.__gPickerActive = null;
+    },
   };
 
   // Global ESC already wired above via onGlobalEsc. Auto-start in pick mode
