@@ -44,7 +44,8 @@ async function job(msg) {
   let text = MODE === 'partial' ? 'Here is the first part of' : `FAKE ANSWER from ${PROVIDER} to job ${String(jobId).slice(0, 8)}: ok.`;
   if (MODE === 'smart') {
     const prompt = String(msg.prompt || msg.content || '');
-    const named = (prompt.match(/\b((?:src|lib|app|test|tests)\/[\w./-]+\.(?:js|ts|py|json|md))\b/) || [])[1] || `src/sim-${String(jobId).slice(0, 6)}.js`;
+    // the inject protocol's own example (```js src/file.js) is an instruction, not a file to write — skip paths that follow a fence
+    const named = [...prompt.matchAll(/(`{3}\w*\s)?\b((?:src|lib|app|test|tests)\/[\w./-]+\.(?:js|ts|py|json|md))\b/g)].filter(m => !m[1] && m[2] !== 'src/file.js').map(m => m[2])[0] || `src/sim-${String(jobId).slice(0, 6)}.js`;
     const lang = named.split('.').pop() === 'py' ? 'py' : named.endsWith('.json') ? 'json' : named.endsWith('.md') ? 'md' : 'js';
     const body = lang === 'json' ? '{ "ok": true }' : lang === 'md' ? '# written by the fake tab' : lang === 'py' ? 'def ok():\n    return True' : `// written by the fake ${PROVIDER} tab for job ${String(jobId).slice(0, 8)}\nmodule.exports = { ok: () => true };`;
     text = `Here is ${named}.\n\n\`\`\`${lang} ${named}\n${body}\n\`\`\`\n`;
