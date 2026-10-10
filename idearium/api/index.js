@@ -2005,6 +2005,7 @@ const ROUTE_CAP = {
   'void.field':       CAPS.READ_IDEAS,   // §0.39.295 the spatial void
   'void.idea.show':   CAPS.READ_IDEAS,
   'void.idea.create': CAPS.WRITE_IDEAS,
+  'void.ideas.dump': CAPS.WRITE_IDEAS,
   'void.idea.update': CAPS.WRITE_IDEAS,
   'void.echo':        CAPS.WRITE_IDEAS,   // asks the agent; stores an echo beside the idea, never in it
   'void.spec':        CAPS.WRITE_IDEAS,
@@ -2526,6 +2527,7 @@ function matchRoute(method, url) {
     // §0.39.295 — the spatial void (idearium/lib/void.js, ui/void.html): James's ideas, the two dials, the echoes
     ['GET',    ['api','void'],                                   'void.field'],
     ['POST',   ['api','void','idea'],                            'void.idea.create'],
+    ['POST',   ['api','void','ideas'],                           'void.ideas.dump'],   // §0.59.3 many at once
     ['GET',    ['api','void','idea',':uuid'],                    'void.idea.show'],
     ['POST',   ['api','void','idea',':uuid'],                    'void.idea.update'],
     ['POST',   ['api','void','idea',':uuid','echo'],             'void.echo'],
@@ -4891,6 +4893,21 @@ async function handle(req, res, route, query, body) {
       if (!idea) return err(res, 500, 'the idea was not created');
       os.emit('idearium.void.idea', { uuid: idea.uuid, creativity: state.creativity, stability: state.stability, tension: state.tension });
       return ok(res, { idea });
+    }
+    // §0.59.3 — James: "a raw idea dump … type it all or send it from a cli or copilot". Many ideas at once, each verbatim.
+    case 'void.ideas.dump': {
+      const V = await import('../lib/void.js');
+      const texts = (Array.isArray(body.texts) ? body.texts : String(body.text || '').split(/\n\s*\n|\n/)).map(t => String(t || '').trim()).filter(Boolean).slice(0, 500);
+      if (!texts.length) return err(res, 400, 'nothing to drop — send texts: [...] or text');
+      const made = [], refused = [];
+      for (const t0 of texts) {
+        const ct = V.checkText(t0, V.MAX_IDEA, 'the idea'); if (ct.error) { refused.push({ text: t0.slice(0, 80), error: ct.error }); continue; }
+        const state = V.shapeVoid(null, {});
+        os.emit('idearium.idea.create', { text: ct.text, tags: ['void', 'dump'], source: 'void', void: state });
+        const idea = [...os.db.ideas].reverse().find(i => i.source === 'void' && i.text === ct.text);
+        if (idea) { made.push({ uuid: idea.uuid, text: idea.text.slice(0, 80) }); os.emit('idearium.void.idea', { uuid: idea.uuid, creativity: state.creativity, stability: state.stability, tension: state.tension }); }
+      }
+      return ok(res, { ideas: made, ...(refused.length ? { refused } : {}) });
     }
     case 'void.idea.update': {
       const V = await import('../lib/void.js');

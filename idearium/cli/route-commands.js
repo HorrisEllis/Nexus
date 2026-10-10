@@ -298,6 +298,18 @@ export const SPEC = [
       _printWindows(d.windows || [], h);
     } },
   // §0.59.1 — James: "all of the over 1000 specs, map onto whats done, and what isn't or make a tool to check."
+  // §0.59.3 — James: "maybe even like a raw idea dump. like where i can type it all or send it from a cli or copilot". Into the
+  // Void through the running Idearium, his words verbatim (the Void never rewrites an idea). Several ideas at once: one per
+  // line with --lines. Copilot reaches it through nexus.command ("dump …").
+  { key: 'dump', repo: false, usage: 'dump <text…> [--lines]', about: 'drop an idea (or many, one per line with --lines) into the Void — verbatim, sorted later',
+    need: (a) => (a.args.join(' ').trim() ? null : '<text>'),
+    req: (a) => {
+      const text = a.args.join(' ').trim();
+      const many = a.flags.lines ? text.split(/\s*(?:\n|\\n|;;)\s*/).map(t => t.trim()).filter(Boolean) : [text];
+      if (many.length === 1) return { method: 'POST', path: '/api/void/idea', body: { text: many[0] } };
+      return { method: 'POST', path: '/api/void/ideas', body: { texts: many } };
+    },
+    print: (d, a, h) => { const n = d.ideas ? d.ideas.length : 1; console.log(`${h.c.mint('✓')} ${n} idea${n === 1 ? '' : 's'} in the Void${d.idea ? h.c.dim(`  ${d.idea.uuid}`) : ''}`); } },
   { key: 'census', repo: false, usage: 'census [--verdict claimed|verified|contradicted|built?|open] [--specs built|partial|unbuilt|doc|unregistered|all] [--limit n] [--report]',
     about: 'every phase and spec checked against the tree: done and proven, done and only claimed, done but its files are gone, open but looks built; specs built / partial / unbuilt',
     req: (a) => ({ method: 'GET', timeoutMs: 60000, path: `/api/census${qs(a.flags, ['verdict', 'specs', 'limit', 'report'])}` }),

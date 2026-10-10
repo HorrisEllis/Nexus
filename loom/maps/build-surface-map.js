@@ -68,6 +68,8 @@ const FILES = [
   // §0.59.0 FN1–FN3 — the interaction field as commands, Nexus Nerve seeing it: Clear Glass's per-window attention record
   // (pure; fed from the bus by main/index.js, served at /cli/attention by ipc/agent-routes.js)
   ['clear-glass/src/page/attention.js', I('clear-glass/src/page/attention.js'), []],
+  // §0.59.3 the Fiverr panel in the browser: cg.autofill.gig / gigFill / gigToIdearium (preload → ipc/bridge.js → src/autofill/gig.js; Idearium through lib/nexus-client)
+  ['clear-glass/renderer/gig-panel.js', I('clear-glass/renderer/gig-panel.js'), [I('clear-glass/src/preload/index.js')]],
   ['idearium/ui/js/access-guard.js', I('idearium/ui/js/access-guard.js'), [I('idearium/api/index.js')]],   // a 401 naming /login.html
   ['idearium/ui/login.html', I('idearium/ui/login.html'), [I('idearium/api/index.js')]],                   // HTTP access/me, access/login
   ['clear-glass/src/accounts/idearium-login.js', I('clear-glass/src/accounts/idearium-login.js'), [I('clear-glass/src/passwords/vault.js'), I('idearium/api/index.js')]],   // vault.get(origin); HTTP POST access/login

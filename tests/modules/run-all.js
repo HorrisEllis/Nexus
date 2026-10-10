@@ -333,6 +333,7 @@ const SUITES = [
   'test-field-nerve.test.js',   // 0.59.0 FN1–FN3 — the interaction field as commands; Clear Glass's attention record; Nexus Nerve reads it
   'test-provider-lists.test.js',   // 0.59.1 — every hard-coded list of browser agents names them all (deepseek was absent)
   'test-workshop-nexus-specs.test.js',   // 0.59.2 — Nexus's own specs, by system, as a start in the spec workshop (saved: a new repo)
+  'test-idea-dump.test.js',   // 0.59.3 — idearium dump: a raw idea dump into the Void, verbatim, many at once
   'test-phases-tab.test.js',
   'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls

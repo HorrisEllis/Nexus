@@ -420,6 +420,8 @@ class IpcBridge {
       catch (e) { res.status(500).json({ error: e.message }); }
     });
     // §0.39.301 — the gig writer's second door (src/autofill/gig.js), same functions the autofill:gig* IPC uses.
+    // §0.59.3 — a buyer's answers → a spec in Idearium, built from there (the same function the Gig panel calls)
+    this.app.post('/cli/autofill/gig/to-idearium', async (req, res) => { const r = await this._gigToIdearium(req.body || {}); res.status(r.ok ? 200 : 502).json(r); });
     this.app.post('/cli/autofill/gig', async (req, res) => {
       const r = await this._gigDraft(req.body || {});
       res.status(r.ok ? 200 : (r.error === 'autofill unavailable' || r.error === 'co-pilot is not connected' ? 503 : 400)).json(r);
@@ -1301,6 +1303,7 @@ class IpcBridge {
     // from a profile + one line of what it offers (src/autofill/gig.js), then — only when asked — typed into the gig
     // editor open in a tab. Nothing is saved or published; he does that on Fiverr.
     ipcMain.handle('autofill:gig', async (e, payload = {}) => this._gigDraft(payload));
+    ipcMain.handle('autofill:gig:to-idearium', async (e, payload = {}) => this._gigToIdearium(payload));   // §0.59.3
     ipcMain.handle('autofill:gig:detect', async (e, { gig, agentId = 'default' } = {}) => {
       if (!this.dom) return { error: 'dom bridge unavailable' };
       return require('../autofill/gig.js').detectGig(this.dom, gig, { agentId });
@@ -1634,6 +1637,26 @@ class IpcBridge {
   // correctly never needed the body.
   // §0.39.301 — the gig writer, shared by its IPC and REST doors (src/autofill/gig.js). Draft: the co-pilot writes the
   // gig as JSON from the profile's facts and James's one line; parseGig holds it to Fiverr's limits and says every cut.
+  // §0.59.3 — James: "have the questions for the end state conditions in the gigs, so i can just send them to idearium and have
+  // them built." A buyer's answers (src/autofill/gig.js briefToSpec) → a workshop in Idearium with those sections → saved
+  // as a new repo. Through lib/nexus-client (a local process: Idearium's access gate lets it in). Returns where it landed.
+  async _gigToIdearium({ gig = {}, answers = [], buyer = '', order = '' } = {}) {
+    const G = require('../autofill/gig.js');
+    const NC = require('../../../lib/nexus-client.js');
+    const spec = G.briefToSpec({ gig, answers, buyer, order });
+    if (!(Array.isArray(answers) ? answers : Object.values(answers || {})).some(a => String(a || '').trim())) return { ok: false, error: 'paste the buyer\'s answers first — nothing to build from' };
+    try {
+      const w = (await NC.call('idearium', 'POST', '/api/workshop', { from: { kind: 'blank' }, title: spec.title, mode: 'assisted' }, { timeout: 20000 })).workshop;
+      const PARTS = { purpose: 'purpose', axioms: 'axioms', tests: 'tests' };
+      const edits = spec.sections.map(x => x.id === 'purpose' ? { id: 'purpose', body: x.body } : { add: true, title: x.title, body: x.body, ...(PARTS[x.id] ? { part: PARTS[x.id] } : {}) });
+      await NC.call('idearium', 'POST', `/api/workshop/${encodeURIComponent(w.uuid)}`, { sections: edits }, { timeout: 20000 });
+      const saved = await NC.call('idearium', 'POST', `/api/workshop/${encodeURIComponent(w.uuid)}/save`, {}, { timeout: 60000 });
+      try { this.postEvent('autofill.gig.to-idearium', { title: spec.title, workshop: w.uuid, repoUuid: saved.repoUuid || null, ts: Date.now() }); } catch (_) {}
+      return { ok: true, title: spec.title, workshop: w.uuid, repoUuid: saved.repoUuid || null, specPath: saved.specPath || null,
+        open: `http://127.0.0.1:4800/workshop.html?id=${encodeURIComponent(w.uuid)}` };
+    } catch (e) { return { ok: false, error: `Idearium did not take it: ${e.message}` }; }
+  }
+
   async _gigDraft({ profileId, offer, extra, agentId = 'default' } = {}) {
     if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
     if (!this.copilot) return { ok: false, error: 'co-pilot is not connected' };

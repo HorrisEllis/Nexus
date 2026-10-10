@@ -53,6 +53,36 @@ function _clipBlock(s, n, what, warnings) {   // keeps line breaks (the descript
 }
 
 /** buildGigPrompt({ profile, offer, extra }) → { prompt } | { error } */
+// §0.59.3 — the buyer's questions are the end-state conditions of the work: what is asked here is what Idearium needs to
+// build it. Each maps to a spec section (briefToSpec), so a buyer's answers become a spec without retyping.
+const END_STATE_QUESTIONS = Object.freeze([
+  { id: 'end_state',  ask: 'what the finished result must do or be — the end state, in the buyer\'s words',          section: 'purpose',  title: 'End state' },
+  { id: 'users',      ask: 'who will use it and where (people, devices, platform)',                                   section: 'context',  title: 'Who uses it, and where' },
+  { id: 'rules',      ask: 'what it must always do and must never do',                                               section: 'axioms',   title: 'Must and must never' },
+  { id: 'acceptance', ask: 'how the buyer will check it is done (the test they will run or the thing they will look at)', section: 'tests', title: 'How we know it is done' },
+  { id: 'materials',  ask: 'materials, examples, logins or files the seller needs',                                  section: 'materials', title: 'Materials and examples' },
+]);
+
+/**
+ * briefToSpec({ gig, answers, buyer, order }) → { title, sections[] } — a buyer's answers to the gig's questions as the
+ * sections of an Idearium spec (workshop form). answers: [string] in the gig's question order, or { end_state, … }.
+ * Nothing is invented: an unanswered question gives an empty section that says so.
+ */
+function briefToSpec({ gig = {}, answers = [], buyer = '', order = '' } = {}) {
+  const qs = (gig.requirements && gig.requirements.length ? gig.requirements : END_STATE_QUESTIONS.map(q => q.ask));
+  const ans = Array.isArray(answers) ? answers : END_STATE_QUESTIONS.map(q => (answers || {})[q.id] || '');
+  const sections = END_STATE_QUESTIONS.map((q, i) => {
+    const a = String(ans[i] || '').trim();
+    return { id: q.section, title: q.title, body: `Asked: ${qs[i] || q.ask}\n\n${a || '(not answered yet — ask the buyer)'}\n` };
+  });
+  // anything the buyer said past the five questions is kept, not dropped
+  for (let i = END_STATE_QUESTIONS.length; i < ans.length; i++) if (String(ans[i] || '').trim()) sections.push({ id: `buyer_note_${i + 1}`, title: `Buyer note ${i + 1}`, body: `Asked: ${qs[i] || '—'}\n\n${String(ans[i]).trim()}\n` });
+  const gigLine = gig.title ? `Gig: ${gig.title}` : '';
+  sections.unshift({ id: 'order', title: 'The order', body: [gigLine, buyer && `Buyer: ${buyer}`, order && `Order: ${order}`].filter(Boolean).join('\n') + '\n' });
+  const first = String(ans[0] || '').split(/[.\n]/)[0].trim().slice(0, 60);
+  return { title: `${buyer ? `${buyer} — ` : ''}${first || gig.title || 'Fiverr order'}`, sections };
+}
+
 function buildGigPrompt({ profile, offer, extra = '' } = {}) {
   if (!profile || !profile.fields) return { error: 'pick an autofill profile' };
   const what = String(offer || '').trim();
@@ -76,7 +106,10 @@ function buildGigPrompt({ profile, offer, extra = '' } = {}) {
       `The description at most ${LIMITS.description} characters: what the buyer gets, how it works, what makes it reliable, short paragraphs. ` +
       `Each package: a name of at most ${LIMITS.packageName} characters, a description of at most ${LIMITS.packageDescription} characters saying exactly what is delivered, ` +
       `whole days, revisions as a number, a price in US dollars (at least ${LIMITS.minPrice}); basic < standard < premium in scope and price. ` +
-      `Up to ${LIMITS.faq} FAQ entries a buyer would really ask. Up to ${LIMITS.requirements} questions the buyer must answer before work starts.`,
+      `Up to ${LIMITS.faq} FAQ entries a buyer would really ask. ` +
+      // §0.59.3 — James: "i was thinking to have the questions for the end state conditions in the gigs, so i can just send them to idearium and have them built."
+      `Exactly ${LIMITS.requirements} questions the buyer must answer before work starts, in this order, phrased for this gig so the answers define the finished result: ` +
+      END_STATE_QUESTIONS.map((q, i) => `(${i + 1}) ${q.ask}`).join(' ') + '.',
     'Use ONLY facts from "About the seller". Never invent clients, reviews, years, numbers, tools or results that are not there. ' +
       'Promise only what can be delivered within the stated days; prefer a smaller promise kept to a larger one broken.',
     extra ? `Also: ${String(extra).trim()}` : null,
@@ -266,4 +299,4 @@ async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium'
   return { totalFields: domFields.length, filled, skipped, failed, leftToCopy: gigParts(gig).filter(p => !done.has(p.key)).map(p => p.key) };
 }
 
-module.exports = { LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
+module.exports = { END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
