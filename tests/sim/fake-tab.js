@@ -7,7 +7,7 @@
  * delivered, chunk, complete, error), POST /heartbeat. Start guardian, copilot and Idearium from the tree, run this,
  * and drive POST :4800/api/repos/<uuid>/agent/prompt — the whole stack with no browser.
  *   GD=http://127.0.0.1:7820 PROVIDER=chatgpt MODE=<mode> node tests/sim/fake-tab.js
- * MODE: answer | silent (acks pings, never touches a job) | slow (SLOW_MS) | error (input not found) |
+ * MODE: answer | smart (a fenced code block for a file the prompt names) | silent (acks pings, never touches a job) | slow (SLOW_MS) | error (input not found) |
  *       pickreply (typed, reply element not found) | dropafterdeliver | partial. SIGUSR2 flips answer ⇄ silent.
  */
 const http = require('http');
@@ -39,7 +39,16 @@ async function job(msg) {
   if (MODE === 'dropafterdeliver') return;
   if (MODE === 'pickreply') return send({ type: 'GUARDIAN_ERROR', jobId, gate: 'reply', error: 'no reply element found after 180s — findResponseEl() matched nothing' });
   if (MODE === 'slow') await new Promise(r => setTimeout(r, SLOW));
-  const text = MODE === 'partial' ? 'Here is the first part of' : `FAKE ANSWER from ${PROVIDER} to job ${String(jobId).slice(0, 8)}: ok.`;
+  // smart: answers the way an agent that writes code does — a fenced block with the path after the language
+  // (lib/repo-inject.js), the path taken from a file the prompt names, so a phase build lands a real proposal
+  let text = MODE === 'partial' ? 'Here is the first part of' : `FAKE ANSWER from ${PROVIDER} to job ${String(jobId).slice(0, 8)}: ok.`;
+  if (MODE === 'smart') {
+    const prompt = String(msg.prompt || msg.content || '');
+    const named = (prompt.match(/\b((?:src|lib|app|test|tests)\/[\w./-]+\.(?:js|ts|py|json|md))\b/) || [])[1] || `src/sim-${String(jobId).slice(0, 6)}.js`;
+    const lang = named.split('.').pop() === 'py' ? 'py' : named.endsWith('.json') ? 'json' : named.endsWith('.md') ? 'md' : 'js';
+    const body = lang === 'json' ? '{ "ok": true }' : lang === 'md' ? '# written by the fake tab' : lang === 'py' ? 'def ok():\n    return True' : `// written by the fake ${PROVIDER} tab for job ${String(jobId).slice(0, 8)}\nmodule.exports = { ok: () => true };`;
+    text = `Here is ${named}.\n\n\`\`\`${lang} ${named}\n${body}\n\`\`\`\n`;
+  }
   await send({ type: 'GUARDIAN_CHUNK', jobId, text, delta: text });
   await send({ type: 'GUARDIAN_COMPLETE', jobId, text, chatUrl: `https://chatgpt.com/c/${TAB}`, requestId: jobId });
   log('COMPLETE', String(jobId).slice(0, 8));

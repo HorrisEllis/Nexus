@@ -21,6 +21,7 @@
  * Every result is { status, json } — index.js writes it.
  */
 import path from 'path';
+import fs from 'fs';
 
 const DEV_TABLE = 'idearium_repo_deviation';
 const _prevManifest = new Map();   // repoUuid → the manifest the last recalculation saw (major-change detection)
@@ -180,9 +181,18 @@ async function _specMap(deps, repo, dir, specPath) {
   const v = SP.validatePlan(read.content, path.posix.basename(mapPath).replace(/\.spec$/, ''));
   return { SP, mapPath, exists: true, text: read.content, v };
 }
+// §0.58.0 — the end-to-end run of Idearium's loop asked for the plan without naming the spec, as a CLI or agent would:
+// a repo with exactly one spec/*.spec needs no path; with several (or none) the error lists them.
+function _onlySpec(r) {
+  let specs = [];
+  try { specs = fs.readdirSync(path.join(r.dir, 'spec')).filter(f => /\.spec$/.test(f)).map(f => `spec/${f}`); } catch (_) { specs = []; }
+  return { only: specs.length === 1 ? specs[0] : null, specs };
+}
+function _needSpec(r) { const o = _onlySpec(r); return bad(400, o.specs.length ? `path (the spec) is required — this repo has ${o.specs.length}: ${o.specs.slice(0, 8).join(', ')}` : 'path (the spec) is required — this repo has no spec/*.spec'); }
 export async function specPlanGet(deps, uuid, specPath) {
   const r = _repo(deps, uuid); if (r.error) return r.error;
-  if (!specPath) return bad(400, 'path (the spec) is required');
+  if (!specPath) specPath = _onlySpec(r).only;
+  if (!specPath) return _needSpec(r);
   const m = await _specMap(deps, r.repo, r.dir, specPath);
   if (!m.exists) return ok({ repoUuid: uuid, spec: specPath, mapPath: m.mapPath, exists: false, layers: m.SP.LAYERS });
   const ordered = m.SP.orderPhases(m.v.phases);
@@ -194,8 +204,8 @@ export async function specPlanGet(deps, uuid, specPath) {
 }
 export async function specPlan(deps, uuid, body) {
   const r = _repo(deps, uuid); if (r.error) return r.error;
-  const specPath = body && body.path;
-  if (!specPath) return bad(400, 'path (the spec) is required');
+  const specPath = (body && body.path) || _onlySpec(r).only;
+  if (!specPath) return _needSpec(r);
   const spec = deps.getRepoLayer().readTextFile(uuid, specPath);
   if (!spec || spec.error || typeof spec.content !== 'string') return bad(404, `no spec ${specPath} in this repo`);
   const m = await _specMap(deps, r.repo, r.dir, specPath);

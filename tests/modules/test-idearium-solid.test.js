@@ -105,6 +105,20 @@ async function main() {
     assert.ok(/priority: 'normal'/.test(loop), 'the autonomous loop is background');
   });
 
+  await test('SO-08', '0.58.0 — the plan needs no spec path when the repo has exactly one spec; with several, the error lists them', async () => {
+    const BS = await import(pathToFileURL(path.join(ROOT, 'idearium/api/build-surface.js')).href);
+    const os = require('os');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bs-')); fs.mkdirSync(path.join(dir, 'spec'));
+    fs.writeFileSync(path.join(dir, 'spec', 'a.spec'), 'x'); fs.writeFileSync(path.join(dir, 'spec', 'b.spec'), 'y');
+    const deps = { getRepoLayer: () => ({ get: () => ({ uuid: 'r' }), readTextFile: () => null }), repoDir: () => dir };
+    const r = await BS.specPlan(deps, 'r', {});
+    const j = r.json || r.body || r;
+    assert.ok(/this repo has 2: spec\/a\.spec, spec\/b\.spec|this repo has 2: spec\/b\.spec, spec\/a\.spec/.test(JSON.stringify(j)), JSON.stringify(j));
+    fs.unlinkSync(path.join(dir, 'spec', 'b.spec'));
+    const r2 = await BS.specPlan(deps, 'r', {});
+    assert.ok(/no spec spec\/a\.spec in this repo/.test(JSON.stringify(r2.json || r2.body || r2)), 'with one spec the path is taken from it (then read through the layer)');
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 }

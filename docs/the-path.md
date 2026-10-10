@@ -11,6 +11,7 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 | phase | map | note |
 |---|---|---|
 | SD15_no_website_can_drive_nexus | 2026-10-10-idearium-solid | VERIFIED: any web page can POST to guardian (CORS *) — first |
+| SD16_a_plan_step_never_proposes_code | 2026-10-10-idearium-solid | found by the loop simulator |
 | SD0_versionium_down_is_said_and_restarted | 2026-10-10-idearium-solid | his 12:46 refusal |
 | SD2_copilot_never_answers_ok_with_nothing | 2026-10-10-idearium-solid | "unstructured response … via none" |
 | SD3_the_person_goes_first | 2026-10-10-idearium-solid | background builds never ahead of him |
@@ -45,7 +46,7 @@ James: "i want to make a design system for creating and editing different types 
 
 ## Step 0b — the shape (docs/2026-10-10-shape-of-nexus-phasemap.spec)
 
-James: "i prefer options over hard coded, and i prefer it over code honestly … invent any you can think of to fix the shape of nexus. maybe like epistomology, and using the cos as empirical." OP4 environment & desktop one menu → OP0 one options shape → OP1 every system declares its options (guardian first) → OP2 the system's settings in its repo → OP3 copilot reads and sets options → SH1 one home for every concept → SH2 explain this anywhere → EP1 every claim says how it is known → EP2 COS is the empirical layer → CG1 the field injects once → CG2 one source of truth for the browser → TU1 the Nexus tutorial → CG3 the Fiverr tutorial in the browser.
+James: "i prefer options over hard coded, and i prefer it over code honestly … invent any you can think of to fix the shape of nexus. maybe like epistomology, and using the cos as empirical." OP4 environment & desktop one menu → OP0 one options shape → OP1 every system declares its options (guardian first) → OP2 the system's settings in its repo → OP3 copilot reads and sets options → SH1 one home for every concept → SH2 explain this anywhere → EP1 every claim says how it is known → EP2 COS is the empirical layer → CG1 the field injects once → CG2 one source of truth for the browser → TU1 the Nexus tutorial → CG3 the Fiverr tutorial in the browser → LR1 each component in the language that fits (the registry as the bridge).
 
 ## Step 0 — health and the clean-up
 

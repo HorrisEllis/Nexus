@@ -181,3 +181,26 @@ spec:
       files: [clear-glass/src/page/field.js, clear-glass/src/copilot/tools.js]
       does: "Invented. Point at anything in a Nexus page (the field gives it a target) and ask: copilot says what it is, which node and system it belongs to, which options govern it (OP2) and what it last did — and offers to change the option rather than the code."
       proof: "pointing at the Plan's 'retrying' badge explains it and offers guardian's retry option"
+    LR1_each_component_in_the_language_that_fits:
+      layer: library
+      systems: [core, loom, idearium, cos]
+      status: "OPEN"
+      james: '"huge idea. wait what about dynamic language routing, like with a parser or adapter, use what ever coding language is best fit for the job, or the lest amount of tokens, using the components registry as a bridge?"'
+      depends_on: [P8_per_system_component_registry]
+      files: [lib/agent-providers.js, cos/testenv/detect.js, idearium/repo/graph.js]
+      does: >-
+        A component's language is chosen per component and recorded in the registry with why — the job's fit (a parser
+        in a language with the right library, numeric work in one with fast arrays, the UI in JS), the tokens it costs
+        the model to write and read, how well the agents write it (measured: the eval sweep, SN benchmarks), and what the
+        person can read. Components never call each other across languages directly: they meet at the registry's
+        contract — a route or a stdio JSON hook declared in the registry — so the registry is the bridge and every
+        language is an adapter (run it, call it, parse its errors). COS already knows how to install and test node,
+        python, go, rust, ruby, php and make (cos/testenv/detect.js); the code graph already reads several languages.
+      pushback: >-
+        "Fewest tokens" is a trap on its own: terse languages are cheap to write and expensive to get right, and the
+        agents are measurably better in JS, TS and Python than elsewhere. Every language added is a toolchain to install,
+        a test runner, an error format and a reader James cannot follow. And every cross-language call is a process
+        boundary — serialization and latency — so it belongs between components, never inside one. Proposed rule: one
+        default (JS, Nexus's own), a second only when a component's declared need names it, the choice and its evidence
+        on the component's node; a language is admitted when its adapter (install, run, test, parse errors) passes in COS.
+      proof: "a component declared as Python (for a library only Python has) is built, tested in COS and called from a JS component through its registry contract; its node says why Python"

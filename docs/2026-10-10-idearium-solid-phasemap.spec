@@ -334,6 +334,21 @@ spec:
         headers on every answer (config api.cors_origin, default '*'), so a page can read it too. 0.57.0's options routes
         already refuse non-JSON writes (guardian POST /api/options → 415).
       proof: "a POST from Origin https://evil.example to each service is refused with 403; the UIs, Clear Glass and the userscripts still work"
+    SD16_a_plan_step_never_proposes_code:
+      layer: backend
+      systems: [idearium]
+      status: "OPEN"
+      james: '"okay lets get idearium working."'
+      depends_on: []
+      files: [idearium/api/build-surface.js, lib/repo-agent.js]
+      does: >-
+        Found 2026-10-10 by tests/sim/loop.js (Idearium's loop end to end through the real stack — it now runs: idea →
+        workshop → repo → plan → phases → build → proposal → apply → version, ~25 s). The plan step asks the agent for
+        the phasemap; an agent that answers with code instead had that code proposed into the repo (src/file.js, beside
+        the build's own). The plan then fell back correctly (derived from the spec), but its stray proposal stayed. A
+        plan run lands only its phasemap: any other file in its reply is said in the run ("the agent answered with code,
+        not a plan — not proposed"), never proposed.
+      proof: "the loop with a tab that answers the plan with code: the plan is derived, no proposal comes from the plan run, the run says why"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"
