@@ -8440,9 +8440,12 @@ export function startAPI() {
       label:'Announce bind — internal API, no auth, no remote surface',
       fn: async () => {
         console.log(`[idearium] bound :${PORT} on ${BINDING}`);
-        console.log('[idearium] auth  — disabled (internal-only, reached via orchestrator)');
-        if (BINDING !== '127.0.0.1') {
-          console.warn(`[idearium] binding=${BINDING} — this system has no auth. Use 127.0.0.1 unless you know what you are doing.`);
+        // §0.59.6 — was "auth — disabled (internal-only, reached via orchestrator)", stale since 0.58.0 IA0 (the gate in startAPI)
+        let mode = 'origin'; try { mode = (getIdeariumConfig().access || {}).mode || 'origin'; } catch (_) {}
+        const who = { open: 'nobody needs a password', origin: 'websites and other devices need an app password; this machine\'s Nexus pages do not', password: 'every caller needs an app password' }[mode] || mode;
+        console.log(`[idearium] auth  — app passwords, access.mode=${mode}: ${who}`);
+        if (BINDING !== '127.0.0.1' && mode === 'open') {
+          console.warn(`[idearium] binding=${BINDING} with access.mode=open — anyone on the network can act. Use 127.0.0.1 or access.mode=origin.`);
         }
       },
     });

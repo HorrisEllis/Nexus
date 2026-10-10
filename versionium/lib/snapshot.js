@@ -404,7 +404,7 @@ function prune(opts = {}) {
 }
 
 function _softPrune(jaa, rec, now, reason) {
-  try { fs.unlinkSync(rec.snapPath); } catch (e) { console.warn(`[cortex/snapshot] prune could not remove ${rec.snapPath}: ${e.message}`); }
+  try { fs.unlinkSync(rec.snapPath); } catch (e) { if (e.code !== 'ENOENT') console.warn(`[cortex/snapshot] prune could not remove ${rec.snapPath}: ${e.message}`); }   // §0.59.6 — already gone (or a row from another machine's path) is the goal reached, not a warning: it flooded James's boot with hundreds of lines
   try {
     jaa.insert(PRUNE_LOG_TABLE, { snapId: rec.snapId, cortex_state_hash: rec.cortex_state_hash, action: 'soft-prune', reason, ts: now });
     // §TOMBSTONE — keeps the real hash-chain fields (cortex_state_hash,

@@ -59,14 +59,14 @@ const jsonBody = (q) => new Promise(r => { let d = ''; q.on('data', c => d += c)
     cop.close();
   });
 
-  await t('CV-04', '"visit google.com what do you see": navigates, then the model is asked WITH the page', async () => {
+  await t('CV-04', '"visit google.com where do i search": navigates, then the model is asked WITH the page', async () => {
     const prompts = [];
     const cop = await listen(async (q, s) => { const b = await jsonBody(q); prompts.push(b); s.end(JSON.stringify({ text: 'A search box.' })); });
     const b = new CoPilotBridge({ sse: { emit: () => {} }, apiSettings: stubSettings(cop.address().port, { copilotRemember: false }) });
     b._driver = driver; b._liveToolsPrompt = async () => '';
-    const r = await b.send({ message: 'visit google.com what do you see', agentId: 'w1', domContext: {} });
+    const r = await b.send({ message: 'visit google.com where do i search', agentId: 'w1', domContext: {} });
     assert.strictEqual(r.text, 'A search box.');
-    assert.match(prompts[0].prompt, /^what do you see\n\n\[you are on https:\/\/www\.google\.com\/ — "Google"/);
+    assert.match(prompts[0].prompt, /^where do i search\n\n\[you are on https:\/\/www\.google\.com\/ — "Google"/);
     cop.close();
   });
 
@@ -90,6 +90,20 @@ const jsonBody = (q) => new Promise(r => { let d = ''; q.on('data', c => d += c)
     const src = require('fs').readFileSync(path.join(ROOT, 'clear-glass/renderer/browser.js'), 'utf8');
     assert.match(src, /function _driverLabel\(raw\)/);
     assert.doesNotMatch(src.match(/function formatReply[\s\S]*?\n  \}/)[0], /\[driver command sent\]/);
+  });
+
+  await t('CV-07', '§0.59.6 "what do you see" / "safeway.com its on the screen" / "visit google.com what do you see": the tab is read, the model is not asked', async () => {
+    const prompts = [];
+    const cop = await listen(async (q, s) => { prompts.push(await jsonBody(q)); s.end(JSON.stringify({ text: 'Could you please provide more details' })); });
+    const b = new CoPilotBridge({ sse: { emit: () => {} }, apiSettings: stubSettings(cop.address().port, { copilotRemember: false }) });
+    b._driver = driver; b._liveToolsPrompt = async () => '';
+    for (const m of ['what do you see', 'safeway.com its on the screen', 'visit google.com what do you see']) {
+      const r = await b.send({ message: m, agentId: 'w1', domContext: {} });
+      assert.match(r.text, /Google/, m);
+      assert.strictEqual(r.route.modelUsed, 'browser', m);
+    }
+    assert.strictEqual(prompts.length, 0, 'no model call');
+    cop.close();
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`);

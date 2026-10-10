@@ -114,7 +114,8 @@ async function answer(prompt, session, stream = []) {
   if (lower.includes('crystal') || lower.includes('learned') || lower.includes('what do you know')) {
     try {
       const d = await _fetch(`${INTEL_URL}/api/intelligence/crystals?limit=5`);
-      const patterns = d?.patterns || [];
+      // §0.59.6 — rows with no precursor/outcome printed as "?:? → unknown (0×, 0%)" five times; only real ones are said
+      const patterns = (d?.patterns || []).filter(p => p && p.count > 0 && p.outcome && p.outcome !== 'unknown' && !/^\?*:?\?*$/.test(String(p.precursor || '')));
       if (!patterns.length) return null;
       return { text: `Crystallised patterns:\n${patterns.slice(0,5).map(p=>`  ${p.precursor} → ${p.outcome} (${p.count}×, ${Math.round((p.confidence||0)*100)}%)`).join('\n')}`,
         modelUsed: 'data-only', intent: 'patterns', source: 'intuition.crystals' };

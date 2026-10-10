@@ -30,31 +30,48 @@ function fakePage(url) {
     assert.ok(NC.watched('https://chatgpt.com/c/1', { get: (k) => k === 'nexusChat.urls' ? ['https://chatgpt.com/'] : undefined }));
   });
 
-  await test('NC-02', 'old lines never run; a new line runs once, after it is stable; the answer is typed back and sent', async () => {
+  await test('NC-02', 'first open: only the newest line runs (history never); then a new line runs once, after it is stable; the answer is typed back and sent', async () => {
+    NC.RAN.clear();
     const page = fakePage('https://claude.ai/code/s1');
     const heard = [];
-    const runner = { hear: async (id, text) => { heard.push(text); return [{ line: text.replace('nexus> ', ''), result: { text: '1232 phases' } }]; } };
+    const runner = { hear: async (id, text) => { heard.push(text); return [{ line: text.replace('nexus> ', ''), result: { text: '1232 phases\nnexus> echo' } }]; } };
     const w = NC.attach(page, { runner, pollMs: 1e9 }); page.emit('did-finish-load');
-    page.lines = ['census'];            await w._tick();   // baseline: was there when it opened
-    await w._tick(); await w._tick();
-    assert.strictEqual(heard.length, 0, 'an old line never runs');
-    page.lines = ['census', 'nexus picks'.replace('nexus ', '')];
+    page.lines = ['status', 'census --limit 3'];
     await w._tick();
     assert.strictEqual(heard.length, 0, 'not on the first read — the reply may still be streaming');
     await w._tick();
-    assert.deepStrictEqual(heard, ['nexus> picks']);
+    assert.deepStrictEqual(heard, ['nexus> census --limit 3'], 'the command he opened the page to run (0.59.5 swallowed it); the older line never');
+    await w._tick();
+    page.lines = ['status', 'census --limit 3', 'picks'];
+    await w._tick();
+    assert.strictEqual(heard.length, 1);
+    await w._tick();
+    assert.deepStrictEqual(heard, ['nexus> census --limit 3', 'nexus> picks']);
     await w._tick(); await w._tick();
-    assert.strictEqual(heard.length, 1, 'once');
-    assert.ok(/⌘ Nexus ran: picks/.test(page.typed[0]) && !/"nexus>/.test(page.typed[0]), 'typed back, never starting with nexus>');
-    assert.deepStrictEqual(page.keys, ['keyDown', 'char', 'keyUp'], 'and sent');
+    assert.strictEqual(heard.length, 2, 'once');
+    assert.ok(/⌘ Nexus ran: census/.test(page.typed[0]) && !/^\s*nexus>/m.test(JSON.parse(page.typed[0].match(/const text = (".*?");/)[1])), 'typed back, no line of it starting with nexus>');
+    assert.deepStrictEqual(page.keys.slice(0, 3), ['keyDown', 'char', 'keyUp'], 'and sent');
     w.stop();
+  });
+
+  await test('NC-06', 'a reload of the same page replays nothing; options read from NexusOptions.get() (no key)', async () => {
+    NC.RAN.clear();
+    const page = fakePage('https://claude.ai/code/s9');
+    const heard = []; const runner = { hear: async (id, t) => { heard.push(t); return [{ line: t, result: {} }]; } };
+    const w = NC.attach(page, { runner, pollMs: 1e9 }); page.emit('did-finish-load');
+    page.lines = ['census']; await w._tick(); await w._tick();
+    assert.strictEqual(heard.length, 1);
+    page.emit('did-finish-load'); page.lines = ['census', 'status']; await w._tick(); await w._tick(); await w._tick();
+    assert.strictEqual(heard.length, 1, 'reload: all of it is history');
+    w.stop();
+    assert.ok(NC.watched('https://chatgpt.com/c/1', { get: () => ({ nexusChat: { urls: ['https://chatgpt.com/'] } }) }));
   });
 
   await test('NC-03', 'at most 6 commands a minute per page', async () => {
     const page = fakePage('https://claude.ai/code/s2');
     let n = 0; const runner = { hear: async (id, t) => { n++; return [{ line: t, result: {} }]; } };
     const w = NC.attach(page, { runner, pollMs: 1e9 }); page.emit('did-finish-load');
-    page.lines = []; await w._tick();
+    NC.RAN.clear(); page.lines = []; await w._tick();
     page.lines = Array.from({ length: 9 }, (_, i) => `census --limit ${i}`);
     await w._tick(); await w._tick();
     assert.strictEqual(n, 6);

@@ -135,6 +135,14 @@ class CoPilotBridge {
     // by the model WITH that page in hand.
     const V = require('./verbs.js');
     const intent = this._driver ? (V.archiveImportIntent(message) || V.browseIntent(message)) : null;   // §0.39.283 N30 — the archive drop box first
+    // §0.59.6 — "what do you see" / "it's on the screen" (alone, or after "visit x.com"): the tab is read, not guessed at
+    if (this._driver && !intent && V.screenIntent(message)) {
+      const seen = await this._read(agentId);
+      if (remember) this._remember(agentId, 'assistant', seen.text, { via: 'browser' });
+      this.sse.emit('copilot.response', { msgId, agentId, text: seen.text, commands: [], modelUsed: 'browser', ts: Date.now() });
+      return { text: seen.text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'browser' } };
+    }
+    if (intent && intent.rest && V.screenIntent(intent.rest)) intent.rest = '';
     if (intent) {
       const went = await this._browse(intent.url, agentId);
       if (intent.kind === 'archive-import' && went.ok) went.text = 'Opened the NEXUS archive import. Drop your release zips (or a folder) — "Check the order" first, then Import; each zip becomes a dated commit on history/snapshots.';
@@ -222,12 +230,18 @@ class CoPilotBridge {
     try { result = await this._driver.exec({ ...command, agentId }); }
     catch (e) { return { ok: false, command, result: { ok: false, error: e.message }, text: `Could not open ${url}: ${e.message}` }; }
     if (result && (result.ok === false || result.error)) return { ok: false, command, result, text: `Could not open ${url}: ${result.error || 'the browser refused'}` };
+    const seen = await this._read(agentId, url, 'Opened');
+    return { ok: true, command, result, ...seen };
+  }
+
+  // §0.59.6 — what the tab shows now: title, url, the interaction field's targets as text (shared with _browse)
+  async _read(agentId, url = '', verb = 'On screen:') {
     let title = '', here = url, map = '';
     try { const t = await this._driver.exec({ action: 'getTitle', agentId }); title = (t && (t.title || t.result)) || ''; } catch (_) {}
     try { const u = await this._driver.exec({ action: 'getUrl', agentId }); here = (u && (u.url || u.result)) || url; } catch (_) {}
     try { const f = await this._driver.exec({ action: 'field', agentId, overlay: false }); map = f && (f.text || (f.targets ? require('../page/field.js').describe(f, { limit: 25 }) : '')) || ''; } catch (_) {}
-    const text = `Opened ${title ? `"${title}" — ` : ''}${here}.${map ? `\nOn the page (numbered — say "click #3", "type into #2 …"):\n${map.split('\n').slice(0, 25).join('\n')}` : ''}`;
-    return { ok: true, command, result, title, url: here, map, text };
+    const text = `${verb} ${title ? `"${title}" — ` : ''}${here || '(no page)'}.${map ? `\nOn the page (numbered — say "click #3", "type into #2 …"):\n${map.split('\n').slice(0, 25).join('\n')}` : '\n(nothing on it I can act on)'}`;
+    return { title, url: here, map, text };
   }
 
   // 0.39.272 — one compact message per round: each result as JSON, capped so a page read cannot flood the chat.

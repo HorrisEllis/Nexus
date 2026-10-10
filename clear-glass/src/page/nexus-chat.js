@@ -13,7 +13,9 @@
  * next message and can carry on.
  *
  * Guard rails, because anything printed on that page can reach the machine:
- *   - what is on the page when it opens never runs (a reload does not replay old commands)
+ *   - when the page first opens, only its newest command line may run — the rest is history (0.59.6: 0.59.5 skipped
+ *     everything on the page at open, so the command he opened the chat to run never ran); a reload of the same page in
+ *     the same session replays nothing; after a Clear Glass restart the newest line can run once more (read-only)
  *   - each line runs once; at most 6 commands a minute per page
  *   - read commands only (and `dump`, an idea into the Void): anything that changes Nexus is refused here — a listener he
  *     sets himself (⦿ LISTEN → Run Nexus commands) is the door for those; the person's own rows are refused everywhere
@@ -23,14 +25,19 @@
  */
 
 const MODULE_ID = 'clear-glass.page.nexus-chat';
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 const POLL_MS = 2000;
 const PER_MINUTE = 6;
 const READ_ALLOW = new Set(['dump']);   // the one write allowed here: an idea dropped into the Void
 
 const DEFAULT_URLS = ['https://claude.ai/code'];
+const RAN = new Map();   // url → Set of lines already run, across reloads of the page in this session
 function _urls(options) {
-  try { const v = options && options.get && options.get('nexusChat.urls'); if (Array.isArray(v) && v.length) return v; } catch (_) {}
+  try {
+    let v = options && options.get && options.get('nexusChat.urls');
+    if (v && !Array.isArray(v)) v = (v.nexusChat || {}).urls;   // §0.59.6 — NexusOptions.get() takes no key: it returns the whole options object
+    if (Array.isArray(v) && v.length) return v;
+  } catch (_) {}
   const env = process.env.CLEARGL_NEXUS_CHAT_URLS; return env ? env.split(',').map(s => s.trim()).filter(Boolean) : DEFAULT_URLS;
 }
 function watched(url, options) { const u = String(url || ''); return _urls(options).some(p => u.startsWith(p)); }
@@ -69,13 +76,16 @@ async function readOnly(parsed) {
  * nothing until the page's URL is watched.
  */
 function attach(contents, { options = null, emit = () => {}, postEvent = () => {}, runner = null, pollMs = POLL_MS } = {}) {
-  let timer = null, baseline = null, last = new Map(), ran = new Set(), times = [], busy = false;
+  let timer = null, baseline = null, last = new Map(), times = [], busy = false, opened = false, url = '';
   const LC = require('../../../lib/listener-commands.js');
   const run = runner || LC.createRunner({ policy: readOnly });
   const stop = () => { if (timer) clearInterval(timer); timer = null; };
   const start = () => {
     stop(); baseline = null; last = new Map();
-    if (!watched(contents.getURL(), options)) return;
+    url = String(contents.getURL() || '').split('#')[0];
+    if (!watched(url, options)) return;
+    if (!RAN.has(url)) RAN.set(url, new Set());
+    console.log(`[ClearGlass/nexus-chat] watching ${url} — its newest \`nexus> \` line, and every new one, runs read-only`);
     timer = setInterval(tick, pollMs); if (timer.unref) timer.unref();
   };
   async function tick() {
@@ -84,7 +94,12 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
     try {
       const lines = await contents.executeJavaScript(READ_JS, false).catch(() => null);
       if (!Array.isArray(lines)) return;
-      if (baseline == null) { baseline = new Set(lines); return; }   // what was there when it opened never runs
+      const ran = RAN.get(url) || new Set();
+      if (baseline == null) {
+        // first read: history never runs — except, on the first open, the newest line (the one he opened the page to run)
+        baseline = new Set(opened ? lines : lines.slice(0, -1)); opened = true;
+        if (baseline.size === lines.length) return;
+      }
       const now = Date.now(); times = times.filter(t => now - t < 60000);
       for (const line of [...new Set(lines)]) {
         if (baseline.has(line) || ran.has(line)) continue;
@@ -94,7 +109,7 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
         ran.add(line); times.push(now);
         const [r] = await run.hear(`chat:${contents.id}`, `nexus> ${line}`);
         if (!r) continue;
-        const said = LC.summary(r).replace(/^nexus>\s*/, '⌘ Nexus ran: ');   // never starts with nexus> — it cannot run itself
+        const said = LC.summary(r).replace(/^nexus>\s*/, '⌘ Nexus ran: ').replace(/^([ \t]*)nexus>/gm, '$1nexus›');   // no line of it starts with nexus> — it cannot run itself
         emit('guardian.listener.command-result', { listenerId: `chat:${contents.id}`, line, ok: !r.error && !r.refused, text: said, ts: Date.now() });
         postEvent('nexus.chat.command', { url: contents.getURL(), line, ok: !r.error && !r.refused, refused: !!r.refused });
         const typed = await contents.executeJavaScript(replyJs(said), true).catch(e => ({ ok: false, error: e.message }));
@@ -106,9 +121,10 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
     } catch (_) { /* the page went away mid-read */ } finally { busy = false; }
   }
   contents.on('did-finish-load', start);
-  contents.on('did-navigate-in-page', () => { if (!timer) start(); });
+  // an in-page move to another chat (Claude Code's sessions are one app) is a first open of that chat (0.59.6)
+  contents.on('did-navigate-in-page', () => { const u = String(contents.getURL() || '').split('#')[0]; if (!timer || u !== url) { if (u !== url) opened = false; start(); } });
   contents.on('destroyed', stop);
   return { stop, _tick: tick, _start: start };
 }
 
-module.exports = { MODULE_ID, VERSION, attach, watched, readOnly, READ_JS, replyJs, DEFAULT_URLS };
+module.exports = { MODULE_ID, VERSION, RAN, attach, watched, readOnly, READ_JS, replyJs, DEFAULT_URLS };

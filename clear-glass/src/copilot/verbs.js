@@ -68,6 +68,11 @@ function browseIntent(message) {
   return { url: normalize({ action: 'navigate', url: m[1].replace(/[.,!?]+$/, '') }).url, rest: (m[2] || '').trim() };
 }
 
+// §0.59.6 — James's panel: "visit google.com what do you see" and "safeway.com its on the screen" got "Could you please
+// provide more details". Reading the tab needs no model: the browser says what is there (title, url, numbered targets).
+const SCREEN_RE = /^\s*(?:<?(?:https?:\/\/)?[\w-]+(?:\.[\w-]+)+\S*>?[\s,.-]+)?(?:what(?:'?s| is) (?:on|in) (?:(?:the|my|this) )?(?:screen|page|tab)|what (?:do|can) you see(?: (?:on|in) (?:(?:the|my|this) )?(?:screen|page|tab))?|(?:read|look at|describe|check)(?: (?:the|my|this))? (?:screen|page|tab)|(?:it'?s|its|it is) (?:on|up on) (?:the|my) screen|(?:on|see) (?:the|my) screen)[\s.!?]*$/i;
+function screenIntent(message) { return SCREEN_RE.test(String(message || '').trim()); }
+
 // §0.39.283 N30 — James: "give copilot a command … i want to import my archives of nexus. have it pull up a drop box ui
 // and run the command". "/import-archives", "import my archives", "load the nexus zips" → idearium's drop box page.
 const ARCHIVE_RE = /^\s*\/(?:import-archives|archives?)\b|\b(?:import|bring\s+in|load|restore)\b[^.\n]{0,40}\b(?:archives?|zips?|nexus\s+history)\b/i;
@@ -86,4 +91,4 @@ function label(raw) {
   return `[driver: ${what}${arg ? ` ${String(arg).slice(0, 60)}` : ''}]`;
 }
 
-module.exports = { parseBlock, normalize, parseCommands, browseIntent, archiveImportIntent, label, ALIASES };
+module.exports = { parseBlock, normalize, parseCommands, browseIntent, archiveImportIntent, screenIntent, label, ALIASES };

@@ -316,9 +316,9 @@ class SystemMap {
   _persist() {
     try {
       const json = JSON.stringify({ ...this._map, generatedAt: Date.now() }, null, 2);
-      const tmp  = this._file + '.tmp';
+      const tmp  = `${this._file}.${process.pid}.${Math.random().toString(36).slice(2, 8)}.tmp`;   // §0.59.6 — one shared .tmp raced between processes (idearium + ollama-bridge: ENOENT on rename)
       fs.writeFileSync(tmp, json, 'utf8');
-      fs.renameSync(tmp, this._file);
+      try { fs.renameSync(tmp, this._file); } catch (e) { try { fs.unlinkSync(tmp); } catch (_) {} throw e; }
     } catch (err) {
       console.error('[system-map] persist failed:', err.message);
     }
