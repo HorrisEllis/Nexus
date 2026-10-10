@@ -52,6 +52,10 @@
   let nodes = {};  // id → { id, x, y, vx, vy, pressure }
   let wires = [];  // [{ from, to, seam, pressure }]
   let tick  = 0;
+  // §FN2/FN3 0.59.0 — each Clear Glass window's attention (the interaction field's last map, spotlight, pointer), from the
+  // snapshot's windows[].focus; and the node a person (or the field) last pressed
+  let attention = [];
+  let picked = null, pickedAt = 0;
 
   // ── Fixed layout — positions chosen for clarity, not force-directed ──────
   // Force-direction produces chaos with 10 nodes and 16 edges at this scale;
@@ -114,6 +118,7 @@
       // (Phase 2+: Nerve will carry wire graph directly; for now
       //  fall back to the hooks/summary route if snapshot has no wires)
       if (d.stresses) field.stressCount = d.stresses.length;
+      if (Array.isArray(d.windows)) attention = d.windows;   // §FN2 — where each window's attention is
     } catch (_) {}
   }
 
@@ -187,8 +192,8 @@
     // Update HUD labels
     const hudRegime = document.getElementById('nerve-regime');
     const hudSigma  = document.getElementById('nerve-sigma');
-    const hudNodes  = document.getElementById('nerve-nodes-count');
-    const hudWires  = document.getElementById('nerve-wires-count');
+    const hudNodes  = document.getElementById('nerve-nodes-count') || document.getElementById('nerve-nodes');   // §FN3 — nerve.html names them nerve-nodes/nerve-wires
+    const hudWires  = document.getElementById('nerve-wires-count') || document.getElementById('nerve-wires');
     const nerveDot  = document.getElementById('nerve-dot');
     if (hudRegime) { hudRegime.textContent = field.regime; hudRegime.dataset.regime = field.regime; }
     if (hudSigma)  hudSigma.textContent  = `σ ${field.sigma.toFixed(3)}`;
@@ -279,7 +284,69 @@
     ctx.font      = '10px ui-monospace,monospace';
     ctx.textAlign = 'left';
     ctx.fillText(`σ ${field.sigma.toFixed(3)}  ${field.regime}`, 8, 14);
+
+    // §FN3 0.59.0 — where an agent's attention is: the browser node rings while a window's field is in use (15 s), and
+    // the HUD says what it did last. The node last pressed (by a person, or through the field) rings too.
+    const f = _latestFocus();
+    const hudFocus = _hudSpan('nerve-focus');
+    if (hudFocus) hudFocus.textContent = picked && Date.now() - pickedAt < 8000 ? _nodeText(picked) : f ? _focusText(f) : '';
+    const ring = (n, a) => { if (!n || isNaN(n.x)) return; ctx.beginPath(); ctx.arc(n.x, n.y, 18 + 6 * Math.sin(tick / 8), 0, Math.PI * 2); ctx.strokeStyle = `rgba(167,139,250,${a})`; ctx.lineWidth = 1.5; ctx.stroke(); };
+    if (f && Date.now() - f.at < 15000) ring(nodes.browser, 0.8);
+    if (picked) ring(nodes[picked], 0.6);
+    placeTargets();
   }
+
+  // §FN3 — the newest window focus that has something to say
+  function _latestFocus() {
+    let best = null;
+    for (const w of attention) {
+      const fc = w && w.focus; if (!fc || !fc.at) continue;
+      if (!(fc.pointer || fc.spotlight || fc.field)) continue;
+      if (!best || fc.at > best.at) best = { ...fc, agentId: w.agentId };
+    }
+    return best && Date.now() - best.at < 120000 ? best : null;
+  }
+  function _focusText(f) {
+    const last = [f.pointer && { at: f.pointer.at, t: `${f.pointer.do} ${f.pointer.n != null ? `#${f.pointer.n}` : `(${f.pointer.x},${f.pointer.y})`}${f.pointer.name ? ` ${f.pointer.name}` : ''}${f.pointer.covered ? ' (covered)' : ''}` },
+      f.spotlight && { at: f.spotlight.at, t: `showing ${f.spotlight.label || f.spotlight.selector || ''}` },
+      f.field && { at: f.field.at, t: `field ${f.field.targets} targets` }].filter(Boolean).sort((a, b) => b.at - a.at)[0];
+    return `◎ ${f.agentId} · ${last ? last.t : ''}`;
+  }
+  function _hudSpan(id) {
+    let el = document.getElementById(id);
+    const hud = document.getElementById('nerve-hud');
+    if (!el && hud) { el = document.createElement('span'); el.id = id; el.style.color = 'rgba(167,139,250,.8)'; hud.appendChild(el); }
+    return el;
+  }
+
+  // §FN3 0.59.0 — a canvas has nothing for the interaction field to number, so the nerve was invisible to it (and to any
+  // agent reading the page). Each node gets a transparent, labelled button over it: the field numbers the nodes by name,
+  // spotlight rings one, a press says that node's state. The holder is 0×0 at the canvas's corner so only the buttons
+  // take the pointer, and they inherit the root's pointer-events (the home page's background nerve stays untouchable).
+  let _targets = null;
+  function placeTargets() {
+    const root = canvas.parentElement; if (!root) return;
+    if (!_targets) { _targets = document.createElement('div'); _targets.id = 'nerve-targets'; _targets.style.cssText = 'position:absolute;left:0;top:0;width:0;height:0;overflow:visible;'; root.appendChild(_targets); }
+    const ids = Object.keys(nodes).filter(id => !isNaN(nodes[id].x));
+    for (const b of [..._targets.children]) if (!nodes[b.dataset.node]) b.remove();
+    for (const id of ids) {
+      const n = nodes[id];
+      let b = _targets.querySelector(`[data-node="${CSS.escape(id)}"]`);
+      if (!b) {
+        b = document.createElement('button'); b.type = 'button'; b.dataset.node = id;
+        b.style.cssText = 'position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;';
+        b.onclick = () => { picked = id; pickedAt = Date.now(); try { window.dispatchEvent(new CustomEvent('nerve:node', { detail: { id, wires: _wiresOf(id) } })); } catch (_) {} };
+        _targets.appendChild(b);
+      }
+      const label = `nerve node ${id} — ${_wiresOf(id)} wire(s), pressure ${n.pressure.toFixed(2)}, field ${field.regime}`;
+      if (b.getAttribute('aria-label') !== label) { b.setAttribute('aria-label', label); b.title = label; }
+      const left = `${Math.round(n.x)}px`, top = `${Math.round(n.y)}px`;
+      if (b.style.left !== left) b.style.left = left;
+      if (b.style.top !== top) b.style.top = top;
+    }
+  }
+  function _wiresOf(id) { return wires.filter(w => w.from === id || w.to === id).length; }
+  function _nodeText(id) { const n = nodes[id] || {}; return `● ${id} · ${_wiresOf(id)} wire(s) · pressure ${(n.pressure || 0).toFixed(2)} · ${field.regime}`; }
 
   // ── Main loop ────────────────────────────────────────────────────────────
   function loop() {
@@ -310,6 +377,8 @@
     field: ()   => ({ ...field }),
     nodes: ()   => ({ ...nodes }),
     wires: ()   => wires.slice(),
+    attention: () => attention.slice(),                                   // §FN2 — each window's focus
+    pick:  (id) => { const b = _targets && _targets.querySelector(`[data-node="${CSS.escape(id)}"]`); if (b) b.click(); return !!b; },   // §FN3
   };
   } // §BUG FIXED 2026-07-11 — closes the `if (!canvas) {...} else {` guard added above.
     // NexusNerve is intentionally left unexposed on window when the canvas

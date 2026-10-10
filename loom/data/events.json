@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791597553493,
+ "generatedAt": 1791606428341,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -151,6 +151,7 @@
     "driver.screenshot",
     "driver.start",
     "field.map",
+    "field.pointer",
     "field.spotlight",
     "nav.loaded",
     "nav.started"
@@ -2863,6 +2864,12 @@
    "listeners": []
   },
   "field.map": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "field.pointer": {
    "emitters": [
     "nexus.clear-glass.src.driver"
    ],

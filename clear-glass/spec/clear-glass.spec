@@ -687,3 +687,11 @@ spec:
 # src/driver/glass.js: page.dblclick(sel) — click(sel), then a second mousePressed/mouseReleased pair with clickCount 2 at the
 # element's centre, through Input.dispatchMouseEvent like click (real input, so dblclick listeners fire as for a person).
 # Needed by the workshop's template picker (a double-click on a template creates from it; tests/modules/test-template-picker).
+
+# ── ADDENDUM 2026-10-10 (0.59.0) — FN1/FN2: the interaction field as commands; each window's attention ──
+# James: "Can you make the commands for the interaction field and maybe integrate it with nexus nerve?"
+# `idearium field` / `field off` / `field at <x> <y>` / `field show <n|selector> [label]` / `field point <n> [do]` /
+# `field windows` — idearium/cli/route-commands.js rows over POST :7702/cli/driver (agentId from --on, default 'default'),
+# so a person at the CLI and every agent through nexus.command have the field. The driver now emits field.pointer for
+# every pointer act (as field.map and field.spotlight were). src/page/attention.js keeps, per window, page changes and the
+# field's last map, spotlight and pointer (fed from the bus by main/index.js, bus.on('*')); GET /cli/attention serves it.

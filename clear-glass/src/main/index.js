@@ -1175,6 +1175,9 @@ async function bootstrap() {
   // 0. SISO bus
   const bus = createBus('EVENTS');
   console.log('[ClearGlass] SISO bus →E→E→');
+  // §FN2 0.59.0 — every bus event passes the attention record (src/page/attention.js), which keeps only where each window's
+  // attention is (page changes, the interaction field). Served at /cli/attention; Nexus Nerve reads it.
+  { const att = require('../page/attention').shared(); bus.on('*', (ev) => { try { att.note(ev.type, ev.data); } catch (_) {} }); }
 
   // 0.1 Network subsystem — §RETIRED 2026-09-06, James: "DNS/firewall/
   // crypto/host-rotation is redundant and should be deleted." Only

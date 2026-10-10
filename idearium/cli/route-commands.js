@@ -248,6 +248,41 @@ export const SPEC = [
     personOnly: () => 'revoking an app password is the person\'s — ask them (Settings → Access, or: idearium access revoke <id>)',
     req: (a) => ({ method: 'POST', path: `/api/access/keys/${encodeURIComponent(a.args[0])}/revoke`, body: {} }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} revoked ${d.key.label} (${d.key.id})${d.note ? h.c.dim(` — ${d.note}`) : ''}`) },
+  // §FN1 0.59.0 — James: "Can you make the commands for the interaction field and maybe integrate it with nexus nerve?"
+  // The field (clear-glass/src/page/field.js) through Clear Glass's own driver door (:7702 /cli/driver): number the page,
+  // ask what is under a point, show a target, act on one. --on <window> picks the window (default: the main one).
+  { key: 'field', repo: false, usage: 'field [--on <window>] [--overlay] [--all] [--limit n]', about: 'the interaction field: every clickable thing in a Clear Glass window, numbered, with x, y and z (0 = on top) — --overlay draws the numbers on the page',
+    req: (a) => _fieldReq(a, { action: 'field', overlay: !!a.flags.overlay, all: !!a.flags.all, ...(a.flags.limit ? { limit: +a.flags.limit } : {}) }),
+    print: (d, a, h) => { const f = d.result || {}; console.log(h.c.dim(`  ${d.agentId} · ${f.url || ''} · ${Array.isArray(f.targets) ? f.targets.length : f.targets} target(s)${f.overlay ? ' · drawn on the page' : ''}`)); console.log(f.text || h.c.dim('  (no targets)')); console.log(h.c.dim(`\n  next: idearium field show <n> · idearium field point <n> click${f.overlay ? ' · idearium field off' : ''}`)); } },
+  { key: 'field.off', repo: false, usage: 'field off [--on <window>]', about: 'take the field\'s numbers (and any spotlight) off the page',
+    req: (a) => _fieldReq(a, { action: 'fieldOff' }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} the field is off in ${d.agentId}`) },
+  { key: 'field.at', repo: false, usage: 'field at <x> <y> [--on <window>]', about: 'what is under one point, top first — what a click there would hit',
+    need: (a) => (a.args.length >= 2 && a.args.slice(0, 2).every(v => Number.isFinite(+v)) ? null : '<x> <y> (viewport pixels)'),
+    req: (a) => _fieldReq(a, { action: 'at', x: +a.args[0], y: +a.args[1] }),
+    print: (d, a, h) => { const st = (d.result && d.result.stack) || []; (Array.isArray(st) ? st : [st]).forEach((e, i) => console.log(`  ${i === 0 ? h.c.mint('z0') : h.c.dim(`z${i}`)} ${e.tag || ''}${e.name ? ` "${e.name}"` : ''}${e.id ? h.c.dim(`  #${e.id}`) : ''}${h.c.dim(`  (${e.x},${e.y}) ${e.w}×${e.h}`)}`)); } },
+  { key: 'field.show', repo: false, usage: 'field show <n|selector> [label…] [--on <window>] [--off]', about: 'spotlight a target — a ring on it and the page dimmed around it, with a label',
+    need: (a) => (a.flags.off || a.args[0] ? null : '<n> (a number from `idearium field`) or a CSS selector'),
+    req: (a) => _fieldReq(a, a.flags.off ? { action: 'spotlight', off: true } : { action: 'spotlight', ...(/^\d+$/.test(a.args[0]) ? { n: +a.args[0] } : { selector: a.args[0] }), ...(a.args.length > 1 ? { label: a.args.slice(1).join(' ') } : {}) }),
+    print: (d, a, h) => console.log(d.result && d.result.ok === false ? h.c.coral(`  ${d.result.error || 'not shown'}`) : `${h.c.mint('✓')} ${a.flags.off ? 'spotlight off' : `showing ${a.args[0]}`} in ${d.agentId}`) },
+  { key: 'field.point', repo: false, usage: 'field point <n> [click|double|right|move|scroll|type] [--text t] [--via native|eros] [--on <window>]', about: 'act on a numbered target, the way a person\'s pointer would — a covered target is said, never clicked through',
+    need: (a) => (/^\d+$/.test(a.args[0] || '') ? (!a.args[1] || ['click', 'double', 'right', 'move', 'scroll', 'type'].includes(a.args[1]) ? null : 'what to do: click, double, right, move, scroll or type') : '<n> (a number from `idearium field`)'),
+    req: (a) => _fieldReq(a, { action: 'pointer', n: +a.args[0], do: a.args[1] || 'click', ...(a.flags.text ? { text: String(a.flags.text) } : {}), ...(a.flags.via ? { via: a.flags.via } : {}) }),
+    print: (d, a, h) => { const r = d.result || {}; console.log(`${h.c.mint('✓')} ${a.args[1] || 'click'} #${a.args[0]} in ${d.agentId}${r.under && r.under[0] ? h.c.dim(`  (hit ${r.under[0].tag || ''}${r.under[0].name ? ` "${r.under[0].name}"` : ''})`) : ''}${r.note ? `\n  ${h.c.amber(r.note)}` : ''}`); } },
+  { key: 'field.windows', repo: false, usage: 'field windows', about: 'what the field is doing in each Clear Glass window: its last map, spotlight and pointer, and how lately the page changed',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/attention' }),
+    print: (d, a, h) => _printWindows(d.windows || [], h) },
+  // §FN2 0.59.0 — Nexus Nerve, the attention layer (lib/nerve, served by cortex): the field's regime, which systems are
+  // present, and each Clear Glass window's focus. Read-only — Nerve shows, it never acts.
+  { key: 'nerve', repo: false, usage: 'nerve', about: 'Nexus Nerve: the field\'s regime, which systems are present, and where each window\'s attention is',
+    req: () => ({ system: 'cortex', method: 'GET', path: '/nerve/snapshot' }),
+    print: (d, a, h) => {
+      const f = ((d.nodes || [])[0] || {}).health || {};
+      console.log(`  ${h.c.bold(f.regime || 'stable')} · coherence ${(+f.coherence || 0).toFixed(2)} · friction ${(+f.friction || 0).toFixed(2)} · entropy ${(+f.entropy || 0).toFixed(2)}${(d.stresses || []).length ? h.c.amber(` · ${d.stresses.length} stress`) : ''}`);
+      const pres = (d.nodes || []).map(n => `${(n.presence && n.presence.status) === 'live' ? h.c.mint('●') : h.c.dim('○')} ${n.id}`);
+      if (pres.length) console.log(`  ${pres.join('  ')}`);
+      _printWindows(d.windows || [], h);
+    } },
   { key: 'store', repo: false, usage: 'store', about: 'the shared memory store by its files: each table\'s size, append segments, cap and archive (cortex)',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/store' }),
     print: (d, a, h) => {
@@ -297,10 +332,40 @@ function printLog(d, h, names) {
   if (d.more) console.log(h.c.dim(`\n  older: --before ${rows[rows.length - 1].ts}`));
 }
 
+/** §FN1 — one request shape for every field row: Clear Glass's driver, the window from --on */
+function _fieldReq(a, payload) {
+  return { system: 'clear-glass', method: 'POST', path: '/cli/driver', timeoutMs: 30000, body: { agentId: a.flags.on && a.flags.on !== true ? String(a.flags.on) : 'default', ...payload } };
+}
+function _ago(ts) { if (!ts) return 'never'; const s = Math.round((Date.now() - ts) / 1000); return s < 60 ? `${s}s ago` : s < 3600 ? `${Math.round(s / 60)}m ago` : `${Math.round(s / 3600)}h ago`; }
+function _printWindows(ws, h) {
+  if (!ws.length) { console.log(h.c.dim('  no window has used the field or changed lately')); return; }
+  for (const w of ws) {
+    const f = w.focus || {};
+    const bits = [f.field ? `field ${f.field.targets} target(s) ${_ago(f.field.at)}` : null, f.spotlight ? `showing "${f.spotlight.label || '?'}" ${_ago(f.spotlight.at)}` : null,
+      f.pointer ? `${f.pointer.do} ${f.pointer.n != null ? `#${f.pointer.n}` : `(${f.pointer.x},${f.pointer.y})`} ${_ago(f.pointer.at)}` : null].filter(Boolean);
+    console.log(`  ${w.idle ? h.c.dim('○') : h.c.mint('●')} ${h.c.sky(w.agentId)}${f.url ? h.c.dim(`  ${String(f.url).slice(0, 60)}`) : ''}${bits.length ? `  ${bits.join(' · ')}` : ''}${w.mutationCount ? h.c.dim(`  · ${w.mutationCount} page change(s), last ${_ago(w.lastMutation)}`) : ''}`);
+  }
+}
+
 /** _system(name, method, path) — another Nexus system's API (lib/nexus-client resolves its port from the one config) */
-async function _system(name, method, path, timeoutMs = 8000) {
+async function _system(name, method, path, timeoutMs = 8000, body = undefined) {
+  // §FN1 0.59.0 — Clear Glass is not in the ports block (it is the browser, not an orchestrated service); its IPC port is
+  // the one the agent tools already use (CLEARGL_IPC_PORT, 7702). A POST's body is now sent (it was dropped).
+  if (name === 'clear-glass') return _clearGlass(method, path, body, timeoutMs);
   const NC = require('../../lib/nexus-client.js');
-  return NC.call(name, method, path, undefined, { timeout: timeoutMs });
+  return NC.call(name, method, path, body, { timeout: timeoutMs });
+}
+function _clearGlass(method, path, body, timeoutMs) {
+  const http = require('http'), port = parseInt(process.env.CLEARGL_IPC_PORT || '7702', 10);
+  const data = body == null ? null : JSON.stringify(body);
+  return new Promise((resolve, reject) => {
+    const r = http.request({ host: '127.0.0.1', port, path, method, timeout: timeoutMs, headers: data ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } : {} }, (rs) => {
+      let d = ''; rs.on('data', c => { d += c; }); rs.on('end', () => { let j = null; try { j = JSON.parse(d); } catch (_) { return reject(new Error(`Clear Glass ${method} ${path} → ${rs.statusCode}, not JSON`)); } resolve(j); });
+    });
+    r.on('timeout', () => { r.destroy(); reject(new Error(`Clear Glass ${method} ${path} timed out after ${timeoutMs} ms`)); });
+    r.on('error', (e) => reject(new Error(`Clear Glass unreachable at :${port} — ${e.message} (is Clear Glass open?)`)));
+    if (data) r.write(data); r.end();
+  });
 }
 
 /**
@@ -318,7 +383,7 @@ export function makeRouteCommands(h) {
       const rq = row.req(a);
       if (rq.error) h.die(rq.error);
       let d;
-      try { d = rq.system ? await _system(rq.system, rq.method, rq.path) : await h.api(rq.method, rq.path, rq.body || null, rq.timeoutMs || 15000); }
+      try { d = rq.system ? await _system(rq.system, rq.method, rq.path, rq.timeoutMs || 8000, rq.body) : await h.api(rq.method, rq.path, rq.body || null, rq.timeoutMs || 15000); }
       catch (e) { h.die(`${e.message}${/ECONNREFUSED|unreachable/.test(e.message) ? ` — is ${rq.system || `idearium (:${h.port})`} running?` : ''}`); }
       if (d && d.ok === false) h.die(d.error || 'refused');
       if (flags.json) { process.stdout.write(`${JSON.stringify(d, null, 2)}\n`); return; }
