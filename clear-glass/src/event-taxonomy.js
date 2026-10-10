@@ -27,6 +27,39 @@ module.exports = Object.freeze({
   // §0.39.365 — a provider tab that did not load after its retries (the window is closed; guardian fails the jobs queued for it)
   // §FN2 0.59.0 — the interaction field's pointer act (driver/index.js _pointer), kept per window by page/attention.js and
   // carried by Nexus Nerve as that window's focus
+  // §0.59.3 — a Fiverr order's end-state answers sent to Idearium as a spec and a repo (ipc/bridge.js _gigToIdearium)
+  AUTOFILL_GIG_TO_IDEARIUM: {
+    description: "A buyer's answers to a gig's end-state questions were sent to Idearium: the spec's title, its workshop and the repo it was saved as.",
+    payloadShape: ['title', 'workshop', 'repoUuid', 'ts'],
+    severity: 'notable',
+  },
+  // §0.59.4 — a Guardian listener with the link target "Run Nexus commands" (lib/listener-commands.js)
+  GUARDIAN_LISTENER_COMMAND: {
+    description: 'A command line a Guardian listener heard ("nexus> …", "idearium …", a ```nexus block) was run through the Nexus command tool: which listener, the line, and whether it ran, was refused (a person-only command) or failed.',
+    payloadShape: ['listenerId', 'line', 'ok', 'refused', 'error'],
+    severity: 'notable',
+  },
+  GUARDIAN_LISTENER_COMMAND_RESULT: {
+    description: "What a listener-run command came back with, shown in the co-pilot panel: the line and a short text of its result.",
+    payloadShape: ['listenerId', 'line', 'ok', 'text', 'ts'],
+    severity: 'info',
+  },
+  // §0.59.5 — a watched chat page (src/page/nexus-chat.js): its nexus> lines run read-only, the answer typed back
+  NEXUS_CHAT_COMMAND: {
+    description: 'A nexus> line on a watched chat page ran as a Nexus command (read-only there): the page, the line, and whether it ran or was refused.',
+    payloadShape: ['url', 'line', 'ok', 'refused'],
+    severity: 'notable',
+  },
+  NEXUS_CHAT_LIMITED: {
+    description: 'A watched chat page asked for more than 6 commands in a minute; the rest waited.',
+    payloadShape: ['url', 'line', 'ts'],
+    severity: 'warning',
+  },
+  NEXUS_CHAT_REPLY_FAILED: {
+    description: "A command's answer could not be typed back into the watched chat (no message box found); it is still in the co-pilot panel.",
+    payloadShape: ['url', 'line', 'error', 'ts'],
+    severity: 'warning',
+  },
   FIELD_POINTER: {
     description: 'An agent (or a person through `idearium field point`) acted on the page with the field\'s pointer: what it did, where, which numbered target, whether something covered it, and how (native or ErosmancerOS).',
     payloadShape: ['agentId', 'do', 'x', 'y', 'n', 'name', 'covered', 'via', 'ts'],

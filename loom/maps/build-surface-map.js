@@ -69,6 +69,10 @@ const FILES = [
   // (pure; fed from the bus by main/index.js, served at /cli/attention by ipc/agent-routes.js)
   ['clear-glass/src/page/attention.js', I('clear-glass/src/page/attention.js'), []],
   // §0.59.3 the Fiverr panel in the browser: cg.autofill.gig / gigFill / gigToIdearium (preload → ipc/bridge.js → src/autofill/gig.js; Idearium through lib/nexus-client)
+  // §0.59.4 a Guardian listener runs the Nexus commands it hears, through the one command tool
+  // §0.59.5 a watched chat page talks to Nexus: main/index.js attaches it to every web-contents; it runs through lib/listener-commands.js
+  ['clear-glass/src/page/nexus-chat.js', I('clear-glass/src/page/nexus-chat.js'), [I('lib/listener-commands.js'), I('idearium/cli/route-commands.js')]],
+  ['lib/listener-commands.js', I('lib/listener-commands.js'), [I('lib/agent-tools/tools/nexus/command.js')]],
   ['clear-glass/renderer/gig-panel.js', I('clear-glass/renderer/gig-panel.js'), [I('clear-glass/src/preload/index.js')]],
   ['idearium/ui/js/access-guard.js', I('idearium/ui/js/access-guard.js'), [I('idearium/api/index.js')]],   // a 401 naming /login.html
   ['idearium/ui/login.html', I('idearium/ui/login.html'), [I('idearium/api/index.js')]],                   // HTTP access/me, access/login

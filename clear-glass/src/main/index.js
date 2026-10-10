@@ -2574,6 +2574,10 @@ app.on('web-contents-created', (_e, contents) => {
     try { _runShortcut(action, accel, owner); } catch (e) { console.warn(`[shortcuts] ${accel} → ${action} failed: ${e.message}`); }
   });
   try { CompartmentWindow.attach(contents); } catch (_) {}   // §0.39.280 — idearium's desktop / settings pop-outs
+  // §0.59.5 — James: "All I'm going to do. Is open this chat in clearglass. Then you should be able to talk to nexus right now."
+  // A watched chat page (option nexusChat.urls; Claude Code on the web by default): its `nexus> …` lines run, read-only, and
+  // the answer is typed back as the next message (src/page/nexus-chat.js).
+  try { require('../page/nexus-chat').attach(contents, { options: nexusOptions, emit: (t, d) => emit(t, d), postEvent: (t, d) => _postEvent(t, d) }); } catch (_) {}
 });
 
 // ── Shutdown ───────────────────────────────────────────────────────────────
