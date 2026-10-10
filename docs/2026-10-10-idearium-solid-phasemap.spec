@@ -334,6 +334,10 @@ spec:
         headers on every answer (config api.cors_origin, default '*'), so a page can read it too. 0.57.0's options routes
         already refuse non-JSON writes (guardian POST /api/options → 415).
       proof: "a POST from Origin https://evil.example to each service is refused with 403; the UIs, Clear Glass and the userscripts still work"
+      addendum_2026_10_10: >-
+        0.58.0 — Idearium's part is done by IA0 (docs/2026-10-10-idearium-access-phasemap.spec): a page on another origin is
+        403 with no CORS, a preflight from one is not answered, another device must sign in, and CORS is no longer '*'.
+        Guardian, copilot, cortex and versionium are still open here — the same rule, one shared helper, is next.
     SD16_a_plan_step_never_proposes_code:
       layer: backend
       systems: [idearium]

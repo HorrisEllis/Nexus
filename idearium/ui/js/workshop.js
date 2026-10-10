@@ -119,7 +119,8 @@ async function showStart(fromParam = null) {
   try { const d = await api('/api/workshop'); ALL = d.workshops || []; $('wsCount').textContent = ALL.length || ''; paintWorkshops(); setState(null); }
   catch (e) { setState('bad', e.message); return; }
   setTimeout(() => $('beginTitle').focus(), 300);
-  try { SRC = await api('/api/workshop/sources'); } catch (e) { SRC = { ideas: [], library: [], repos: [] }; toast(`SOURCES DID NOT LOAD: ${e.message}`, true); }
+  try { SRC = await api('/api/workshop/sources'); } catch (e) { SRC = { ideas: [], library: [], repos: [], nexus: [] }; toast(`SOURCES DID NOT LOAD: ${e.message}`, true); }
+  SRC.nexus = SRC.nexus || []; if ($('nNexus')) $('nNexus').textContent = SRC.nexus.length;   // §0.59.2
   $('nIdea').textContent = SRC.ideas.length; $('nLibrary').textContent = SRC.library.length; $('nRepo').textContent = SRC.repos.length;
   // a promoted idea (?from=idea:<uuid>) opens the picker with the idea as its START FROM (RS5: the picker first)
   // what it opened on (?from=idea:… — a promoted idea; ?from=repo:… — a repo with no .spec yet) is the picker's START FROM
@@ -131,7 +132,7 @@ async function showStart(fromParam = null) {
 function paintWorkshops() {
   const q = $('wsFilter').value.trim().toLowerCase();
   const list = ALL.filter(w => !q || String(w.title).toLowerCase().includes(q));
-  const FROM = { idea: 'FROM THE VOID', library: 'FROM THE LIBRARY', repo: "FROM A REPO'S SPEC", blank: 'BLANK' };
+  const FROM = { idea: 'FROM THE VOID', library: 'FROM THE LIBRARY', repo: "FROM A REPO'S SPEC", nexus: 'FROM A NEXUS SPEC', blank: 'BLANK' };
   $('wsGrid').innerHTML = list.length ? list.map((w, i) => `<div class="wscard emerge" style="--i:${Math.min(i, 12)}" tabindex="0" data-id="${esc(w.uuid)}">
       <div class="t">${esc(w.title)}</div>
       <div class="m">${FROM[(w.source && w.source.kind) || 'blank'] || ''} · ${w.sections} SECTIONS · ${new Date(w.updatedAt).toLocaleDateString()}</div>
@@ -152,9 +153,10 @@ function pickSource(kind) {
   const C = ['NORMAL', 'CREATIVE', 'OUTSIDE THE BOX', 'NOVEL', 'OUTLIER'], S = ['STABLE', 'SHAKY', 'RISKY', 'DANGEROUS', 'UNSTABLE'];
   const items = kind === 'idea' ? SRC.ideas.map(i => ({ id: i.uuid, t: i.text, m: i.void ? `${C[i.void.creativity] || ''} · ${S[i.void.stability] || ''}` : (i.phase || ''), cls: i.void && i.void.tension >= 2 ? 'wild' : i.void && i.void.tension <= -2 ? 'unsteady' : '' }))
     : kind === 'library' ? SRC.library.map(r => ({ id: r.sha, t: r.title, m: `${r.family || ''} · ${r.sections} SECTIONS${r.repoUuid ? ' · HAS A REPO' : ''}` }))
+    : kind === 'nexus' ? SRC.nexus.map(x => ({ id: x.path, t: `${x.system} · ${x.title}`, m: `${x.path} · ${String(x.verdict).toUpperCase()}`, cls: x.verdict === 'unbuilt' ? 'wild' : '' }))   // §0.59.2
     : SRC.repos.map(r => ({ id: r.uuid, t: r.name, m: r.specFiles.length ? r.specFiles.join(', ') : 'NO .SPEC YET — STARTS EMPTY' }));
-  const Q2 = { idea: 'FROM THE VOID', library: 'FROM THE SPEC LIBRARY', repo: "FROM A REPO'S SPEC" }[kind];
-  const EMPTY = { idea: 'NO IDEAS YET. <a class="btn small" href="void.html">OPEN THE VOID</a>', library: 'NOTHING IMPORTED YET. <a class="btn small" href="spec-library.html">OPEN THE SPEC LIBRARY</a>', repo: 'NO REPOS YET — SAVE A SPEC AND ONE IS MADE FOR IT.' }[kind];
+  const Q2 = { idea: 'FROM THE VOID', library: 'FROM THE SPEC LIBRARY', repo: "FROM A REPO'S SPEC", nexus: "FROM NEXUS'S OWN SPECS — BY SYSTEM" }[kind];
+  const EMPTY = { idea: 'NO IDEAS YET. <a class="btn small" href="void.html">OPEN THE VOID</a>', library: 'NOTHING IMPORTED YET. <a class="btn small" href="spec-library.html">OPEN THE SPEC LIBRARY</a>', repo: 'NO REPOS YET — SAVE A SPEC AND ONE IS MADE FOR IT.', nexus: 'NO NEXUS SPECS FOUND.' }[kind];
   let pick = null;
   const back = document.createElement('div'); back.className = 'sheet-back'; back.id = 'picker';
   back.innerHTML = `<div class="sheet glass" role="dialog" aria-modal="true" aria-label="${Q2}"><div class="q">${Q2} <span class="lbl" style="margin:0"><span class="n">${items.length}</span></span><button class="btn small ghost x" data-no title="CLOSE">CLOSE</button></div>

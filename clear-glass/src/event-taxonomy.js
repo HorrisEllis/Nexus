@@ -25,6 +25,13 @@
 module.exports = Object.freeze({
   // ── providers/host.js — 9 real event types, all confirmed via grep ────────
   // §0.39.365 — a provider tab that did not load after its retries (the window is closed; guardian fails the jobs queued for it)
+  // §FN2 0.59.0 — the interaction field's pointer act (driver/index.js _pointer), kept per window by page/attention.js and
+  // carried by Nexus Nerve as that window's focus
+  FIELD_POINTER: {
+    description: 'An agent (or a person through `idearium field point`) acted on the page with the field\'s pointer: what it did, where, which numbered target, whether something covered it, and how (native or ErosmancerOS).',
+    payloadShape: ['agentId', 'do', 'x', 'y', 'n', 'name', 'covered', 'via', 'ts'],
+    severity: 'info',
+  },
   PROVIDER_HOST_LOAD_FAILED: {
     description: "A provider tab did not load after three attempts (the second after clearing service workers and cache storage): each failure's code, reason and the URL it failed at.",
     payloadShape: ['providerId', 'agentId', 'url', 'error', 'failures'],

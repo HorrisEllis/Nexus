@@ -47,6 +47,7 @@
  */
 
 const TOOLBAR_COMMANDS = [
+  { id: 'btn-gig',         icon: '✦', label: 'Fiverr gigs',            group: 'Tools',   pinnable: true, defaultPinned: true },   // §0.59.3 James: "fiverr … this is my only chance"
   { id: 'btn-dom',         icon: '⛏', label: 'DOM Archaeology',        group: 'Tools',   pinnable: true, defaultPinned: false },
   // §BUGFIX 2026-08-24 — picker-route (the "→ SSE / → API" select) and
   // picker-api-url (the endpoint input, shown only when "→ API" is chosen)

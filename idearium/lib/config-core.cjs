@@ -120,7 +120,18 @@ const SCHEMA = {
     port:               { default: 4800, min: 1, max: 65535, copilot_writable: false, type: 'number' },
     binding:            { default: '127.0.0.1', copilot_writable: false, type: 'string' },
     chunk_events_limit: { default: 200, min: 1, max: 100000, copilot_writable: true, type: 'number' },
-    cors_origin:        { default: '*', copilot_writable: false, type: 'string' },
+    // §0.58.0 IA0 — 'trusted' (the default): answer only a loopback page, a listed one (access.trusted_origins) or a
+    // signed-in caller. '*' (the old default) let any website read Idearium; still settable, said plainly.
+    cors_origin:        { default: 'trusted', copilot_writable: false, type: 'string' },
+  },
+
+  // §0.58.0 IA0 — who may act on Idearium (idearium/lib/access.cjs, docs/2026-10-10-idearium-access-phasemap.spec).
+  // James: "what about a app password style login in idearium from clearglass panel". mode: open (nobody signs in) ·
+  // origin (websites and other devices sign in) · password (everyone signs in). Never copilot-writable.
+  access: {
+    mode:            { default: 'origin', enum: ['open', 'origin', 'password'], copilot_writable: false, type: 'string' },
+    trusted_origins: { default: '', copilot_writable: false, type: 'string' },
+    session_days:    { default: 30, min: 1, max: 365, copilot_writable: false, type: 'number' },
   },
 
   pipeline: {

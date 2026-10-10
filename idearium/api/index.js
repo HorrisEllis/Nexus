@@ -23,6 +23,7 @@ import { spawnSync, spawn as spawnProc } from 'child_process';
 import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
+const _access = _require('../lib/access.cjs');   // §0.58.0 IA0 — who may act on Idearium
 // §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
@@ -1605,6 +1606,18 @@ function _architectView(AR, a) {
   return { architecture: a, analysis: AR.analyse(a, idx), index: { ...idx.counts, ...(idx.regError ? { error: idx.regError } : {}) } };
 }
 /** a repo's spec files: *.spec under spec/ or specs/ (or at its root), phasemaps left out — the Spec tab's set */
+// §0.59.2 — James: "need the specs to be relevant to the system they are for … also the spec workshop uses them, and
+// idearium has the option to choose spec from library to create a repo with." Nexus's own specs (every system's spec
+// folder and docs/, phasemaps aside) as a workshop source: listed by the census (lib/spec-census.js — owning system and
+// how built), opened as a NEW workshop (saving makes a new repo; the original spec is never written from here).
+function _nexusSpecs() {
+  const fs_ = _require('fs'), path_ = _require('path'), ROOT_ = path_.resolve(path_.dirname(_require('url').fileURLToPath(import.meta.url)), '..', '..');
+  let rows = []; try { rows = _require('../../lib/spec-census.js').specs(); } catch (_) { return []; }
+  return rows.map(r => {
+    let title = null; try { const head = fs_.readFileSync(path_.join(ROOT_, r.path), 'utf8').slice(0, 3000); const m = head.match(/^\s*name:\s*["']?([^"'\n]+)/m); title = m ? m[1].trim() : null; } catch (_) {}
+    return { path: r.path, system: r.system, verdict: r.verdict, title: title || path_.basename(r.path, '.spec') };
+  });
+}
 function _workshopSpecFiles(repo) {
   try {
     const m = getSpecEngine().loadSpec(repo.specUuid || repo.promotedFromSpec);
@@ -1992,6 +2005,7 @@ const ROUTE_CAP = {
   'void.field':       CAPS.READ_IDEAS,   // §0.39.295 the spatial void
   'void.idea.show':   CAPS.READ_IDEAS,
   'void.idea.create': CAPS.WRITE_IDEAS,
+  'void.ideas.dump': CAPS.WRITE_IDEAS,
   'void.idea.update': CAPS.WRITE_IDEAS,
   'void.echo':        CAPS.WRITE_IDEAS,   // asks the agent; stores an echo beside the idea, never in it
   'void.spec':        CAPS.WRITE_IDEAS,
@@ -2088,6 +2102,10 @@ const ROUTE_CAP = {
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
   'settings.console': CAPS.READ_IDEAS,
+  // §0.58.0 IA1 — the door's own routes: who am I / sign in / sign out are public; app passwords are admin's
+  'access.me': null, 'access.login': null, 'access.logout': null,
+  'census': CAPS.READ_IDEAS,   // §0.59.1 every spec and phase checked against the tree (lib/spec-census.js)
+  'access.keys': CAPS.ADMIN, 'access.keys.create': CAPS.ADMIN, 'access.keys.revoke': CAPS.ADMIN,
   'settings.console.repo': CAPS.READ_IDEAS,
   'economy.get': CAPS.READ_IDEAS, 'economy.set': CAPS.WRITE_IDEAS, 'economy.view': CAPS.READ_IDEAS,   // §0.39.281 EC8
   // §0.39.280 — build surface
@@ -2119,6 +2137,13 @@ function matchRoute(method, url) {
     // idearium/lib/config.js. GET has no body; POST takes {key, value,
     // actor?} — actor defaults to 'user' inside config.js itself.
     ['GET',    ['api','config'],          'config.get'],
+    // §0.58.0 IA1 — app passwords (idearium/lib/access.cjs, docs/2026-10-10-idearium-access-phasemap.spec)
+    ['GET',    ['api','census'],          'census'],      // §0.59.1 lib/spec-census.js
+    ['GET',    ['api','access','me'],     'access.me'],
+    ['POST',   ['api','access','login'],  'access.login'],
+    ['POST',   ['api','access','logout'], 'access.logout'],
+    ['GET',    ['api','access','keys'],   'access.keys'],
+    ['POST',   ['api','access','keys'],   'access.keys.create'],
     // §0.39.286 RG2 — the pipeline's routing and fallback policy (lib/pipeline-routing.js); set it through POST /api/config routing.*
     ['GET',    ['api','routing'],         'routing.show'],
     ['GET',    ['api','routing','plan'],  'routing.plan'],
@@ -2238,6 +2263,7 @@ function matchRoute(method, url) {
 
   // Dynamic routes
   const dynRoutes = [
+    ['POST',   ['api','access','keys',':id','revoke'], 'access.keys.revoke'],   // §0.58.0 IA1
     ['GET',    ['api','ideas',    ':uuid'],               'idea.show'],
     ['PATCH',  ['api','ideas',    ':uuid'],               'idea.update'],
     ['DELETE', ['api','ideas',    ':uuid'],               'idea.archive'],
@@ -2501,6 +2527,7 @@ function matchRoute(method, url) {
     // §0.39.295 — the spatial void (idearium/lib/void.js, ui/void.html): James's ideas, the two dials, the echoes
     ['GET',    ['api','void'],                                   'void.field'],
     ['POST',   ['api','void','idea'],                            'void.idea.create'],
+    ['POST',   ['api','void','ideas'],                           'void.ideas.dump'],   // §0.59.3 many at once
     ['GET',    ['api','void','idea',':uuid'],                    'void.idea.show'],
     ['POST',   ['api','void','idea',':uuid'],                    'void.idea.update'],
     ['POST',   ['api','void','idea',':uuid','echo'],             'void.echo'],
@@ -2627,10 +2654,11 @@ async function handle(req, res, route, query, body) {
   const os = getIdeaOS();
   const { action, params } = route;
 
-  // ── Auth gate — disabled ──────────────────────────────────────────────────
-  // Idearium has no remote/direct access path. The orchestrator (:9000) is the
-  // sole entry point to NEXUS; all subsystem traffic is proxied through it.
-  // Key-based auth was for a per-system access model that no longer applies here.
+  // ── Auth gate ─────────────────────────────────────────────────────────────
+  // §0.58.0 IA0 — superseded (kept as history, §0.3): "Idearium has no remote/direct access path. The orchestrator
+  // (:9000) is the sole entry point" stopped being true — Clear Glass, the console and every Nexus page call :4800
+  // directly, and any website could too (SD15). The gate now runs in startAPI() before this function
+  // (idearium/lib/access.cjs decide(), ROUTE_CAP enforced for every keyed caller); req.access says who passed it.
 
   switch (action) {
 
@@ -2745,6 +2773,55 @@ async function handle(req, res, route, query, body) {
         branches: repo.branchOf ? null : rows.filter(r => r.branchOf === repo.uuid).map(r => ({ uuid: r.uuid, name: r.name, branch: r.branch || null })),
         blind,
       });
+    }
+
+    // §0.58.0 IA1 — the door: who am I, sign in/out, app passwords (made and revoked by admin only — ROUTE_CAP)
+    // §0.59.1 — James: "all of the over 1000 specs, map onto whats done, and what isn't or make a tool to check." Every
+    // phase's status checked against its evidence, every spec against the code it names (lib/spec-census.js, read-only).
+    case 'census': {
+      try {
+        const C = _require('../../lib/spec-census.js'); const c = C.census();
+        const pick = (rows, f, n) => rows.filter(f).slice(0, n);
+        const lim = Math.max(1, Math.min(2000, parseInt(query.limit || '40', 10) || 40));
+        return ok(res, { text: c.text, phases: { total: c.phases.total, byVerdict: c.phases.byVerdict,
+            contradicted: pick(c.phases.rows, p => p.verdict === 'contradicted', lim), builtMaybe: pick(c.phases.rows, p => p.verdict === 'built?', lim),
+            ...(query.verdict ? { rows: pick(c.phases.rows, p => p.verdict === query.verdict, lim) } : {}) },
+          specs: { total: c.specs.total, byVerdict: c.specs.byVerdict, unregistered: c.specs.unregistered,
+            ...(query.specs ? { rows: pick(c.specs.rows, s => query.specs === 'all' || s.verdict === query.specs || (query.specs === 'unregistered' && !s.registered), lim) } : {}) },
+          ...(query.report ? { report: C.report(c) } : {}) });
+      } catch (e) { return err(res, 500, `census failed: ${e.message}`); }
+    }
+    case 'access.me': {
+      const ac = getIdeariumConfig().access || {};
+      return ok(res, { mode: ac.mode || 'origin', signedIn: !!(req.access && req.access.who), who: (req.access && req.access.who) || null,
+        local: !(req.access && req.access.who) && !(req.headers && req.headers.origin && !_access.originTrusted(req.headers.origin, ac.trusted_origins)) });
+    }
+    case 'access.login': {
+      const ac = getIdeariumConfig().access || {};
+      const r = _access.login(body && body.password, { days: ac.session_days || 30 });
+      if (!r.ok) return err(res, 401, r.error);
+      res.setHeader('Set-Cookie', _access.sessionCookie(r.session, r.maxAge));
+      return ok(res, { signedIn: true, who: { keyId: r.key.id, label: r.key.label, hat: r.key.hat, caps: r.key.caps, repos: r.key.repos }, days: Math.round(r.maxAge / 86400) });
+    }
+    case 'access.logout':
+      _access.logout(_access.sessionOf(req.headers || {}));
+      res.setHeader('Set-Cookie', _access.clearCookie());
+      return ok(res, { signedIn: false });
+    case 'access.keys':
+      return ok(res, { keys: _access.listKeys(), mode: (getIdeariumConfig().access || {}).mode || 'origin' });
+    case 'access.keys.create': {
+      const actor = (req.access && req.access.who && (req.access.who.hat || req.access.who.label)) || (body && body.actor) || 'user';
+      const r = _access.createKey({ label: body.label, hat: body.hat, repos: body.repos, caps: body.caps }, { actor });
+      if (!r.ok) return err(res, 400, r.error);
+      try { os.emit('idearium.access.key', { act: 'created', id: r.key.id, label: r.key.label, hat: r.key.hat, actor }); } catch (_) {}
+      return ok(res, { key: r.key, password: r.password, note: 'shown once — save it in Clear Glass (Passwords, for http://127.0.0.1:4800) or paste it on the sign-in page' });
+    }
+    case 'access.keys.revoke': {
+      const actor = (req.access && req.access.who && (req.access.who.hat || req.access.who.label)) || (body && body.actor) || 'user';
+      const r = _access.revokeKey(params.id, { actor });
+      if (!r.ok) return err(res, 404, r.error);
+      try { os.emit('idearium.access.key', { act: 'revoked', id: params.id, actor }); } catch (_) {}
+      return ok(res, { key: r.key, ...(r.note ? { note: r.note } : {}) });
     }
 
     case 'config.get':
@@ -4817,6 +4894,21 @@ async function handle(req, res, route, query, body) {
       os.emit('idearium.void.idea', { uuid: idea.uuid, creativity: state.creativity, stability: state.stability, tension: state.tension });
       return ok(res, { idea });
     }
+    // §0.59.3 — James: "a raw idea dump … type it all or send it from a cli or copilot". Many ideas at once, each verbatim.
+    case 'void.ideas.dump': {
+      const V = await import('../lib/void.js');
+      const texts = (Array.isArray(body.texts) ? body.texts : String(body.text || '').split(/\n\s*\n|\n/)).map(t => String(t || '').trim()).filter(Boolean).slice(0, 500);
+      if (!texts.length) return err(res, 400, 'nothing to drop — send texts: [...] or text');
+      const made = [], refused = [];
+      for (const t0 of texts) {
+        const ct = V.checkText(t0, V.MAX_IDEA, 'the idea'); if (ct.error) { refused.push({ text: t0.slice(0, 80), error: ct.error }); continue; }
+        const state = V.shapeVoid(null, {});
+        os.emit('idearium.idea.create', { text: ct.text, tags: ['void', 'dump'], source: 'void', void: state });
+        const idea = [...os.db.ideas].reverse().find(i => i.source === 'void' && i.text === ct.text);
+        if (idea) { made.push({ uuid: idea.uuid, text: idea.text.slice(0, 80) }); os.emit('idearium.void.idea', { uuid: idea.uuid, creativity: state.creativity, stability: state.stability, tension: state.tension }); }
+      }
+      return ok(res, { ideas: made, ...(refused.length ? { refused } : {}) });
+    }
     case 'void.idea.update': {
       const V = await import('../lib/void.js');
       const idea = os.idea(params.uuid); if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
@@ -4896,7 +4988,7 @@ async function handle(req, res, route, query, body) {
       const library = listLibrary().filter(r => r.specUuid).map(r => ({ sha: r.sha, title: r.title, family: r.family, sections: r.sections, repoUuid: r.repoUuid || null }));
       await _specEngineReady();
       const repos = getRepoLayer().list().filter(r => r.status !== 'archived' && !r.nexusSelf).map(r => ({ uuid: r.uuid, name: r.name, specFiles: _workshopSpecFiles(r) }));
-      return ok(res, { ideas, library, repos });
+      return ok(res, { ideas, library, repos, nexus: _nexusSpecs() });   // §0.59.2 Nexus's own specs, by system
     }
     case 'workshop.create': {
       const WS = await _workshop();
@@ -4934,7 +5026,13 @@ async function handle(req, res, route, query, body) {
           if (f.error) return err(res, 404, f.error);
           sections = WS.sectionsFromSpecText(f.content, _require('js-yaml'));
         }
-      } else if (from.kind !== 'blank') return err(res, 400, `from.kind must be idea, library, repo or blank`);
+      } else if (from.kind === 'nexus') {   // §0.59.2 a Nexus spec as the start of a new spec (and, saved, a new repo)
+        const hit = _nexusSpecs().find(x => x.path === from.id);
+        if (!hit) return err(res, 404, `not a Nexus spec: ${from.id}`);
+        let text = ''; try { text = _require('fs').readFileSync(_require('path').join(_require('path').resolve(_require('path').dirname(_require('url').fileURLToPath(import.meta.url)), '..', '..'), hit.path), 'utf8'); } catch (e) { return err(res, 404, `could not read ${hit.path}: ${e.message}`); }
+        sections = WS.sectionsFromSpecText(text, _require('js-yaml'));
+        title = title || hit.title; source = { kind: 'nexus', id: hit.path, title: `${hit.system} · ${hit.title}` };
+      } else if (from.kind !== 'blank') return err(res, 400, `from.kind must be idea, library, repo, nexus or blank`);
       // §0.39.357 RS5 — the picked template: its sections after the source's, never over a part the source already lays out
       let template = null, mode = WS.MODES.includes(body.mode) ? body.mode : null;
       if (body.template) {
@@ -7967,8 +8065,39 @@ export function startAPI() {
   const os = getIdeaOS();
 
   const server = http.createServer(async (req, res) => {
-    // Preflight
+    // §0.58.0 IA0 — who is asking decides the CORS answer (idearium/lib/access.cjs): a loopback page, a listed origin or a
+    // signed-in caller gets its own origin back; a website gets none, so it can neither read Idearium nor be told it may.
+    let _cors = null;
+    const _wh = res.writeHead.bind(res);
+    res.writeHead = (code, a, b) => {
+      const at = (a && typeof a === 'object') ? 1 : (b && typeof b === 'object') ? 2 : 0;
+      if (!at) return _wh(code, a, b);
+      const h = { ...(at === 1 ? a : b) };
+      if ('Access-Control-Allow-Origin' in h) {
+        if (_cors) { h['Access-Control-Allow-Origin'] = _cors; if (_cors !== '*') { h.Vary = 'Origin'; h['Access-Control-Allow-Credentials'] = 'true'; } }
+        else delete h['Access-Control-Allow-Origin'];
+      }
+      return at === 1 ? _wh(code, h) : _wh(code, a, h);
+    };
+    const _ac = () => { try { return getIdeariumConfig().access || {}; } catch (_) { return {}; } };
+    const _corsSetting = () => { try { return (getIdeariumConfig().api || {}).cors_origin || 'trusted'; } catch (_) { return 'trusted'; } };
+    const _gate = (action, cap) => {
+      const ac = _ac();
+      const g = _access.decide({ action, cap, method: req.method, repo: _access.repoOf(req.url), headers: req.headers, remoteAddress: req.socket && req.socket.remoteAddress,
+        mode: ac.mode || 'origin', trustedOrigins: ac.trusted_origins || '', corsSetting: _corsSetting() });
+      _cors = g.cors; req.access = g;
+      return g;
+    };
+    const _refuse = (g) => {
+      if (g.clearCookie) res.setHeader('Set-Cookie', _access.clearCookie());
+      return err(res, g.status, g.error, g.how ? { how: g.how, signIn: '/login.html' } : null);
+    };
+
+    // Preflight — answered for a trusted origin, or for any page that is about to send an app password (the real
+    // request is then held to that password's scope)
     if (req.method === 'OPTIONS') {
+      const o = req.headers.origin, cs = _corsSetting();
+      _cors = cs !== 'trusted' ? cs : (o && (_access.originTrusted(o, _ac().trusted_origins) || /authorization/i.test(String(req.headers['access-control-request-headers'] || ''))) ? o : null);
       res.writeHead(204, CORS);
       return res.end();
     }
@@ -7986,6 +8115,8 @@ export function startAPI() {
     // sees as a socket hang up. Caught here the same way the main route
     // dispatch already is.
     if (req.url === '/sse') {
+      const g = _gate('sse', CAPS.READ_IDEAS);   // §0.58.0 IA0 — the event stream is read access
+      if (!g.allow) return _refuse(g);
       try {
         res.writeHead(200, {
           'Content-Type':  'text/event-stream',
@@ -8055,7 +8186,7 @@ export function startAPI() {
 
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html')) {   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html' || cleanUrl === '/login.html')) {   // §0.58.0 IA3 the sign-in page   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');
@@ -8098,6 +8229,8 @@ export function startAPI() {
     }
 
     const route = matchRoute(req.method, req.url);
+    // §0.58.0 IA0 — the one gate: every API route (and /cfr) passes it before anything is read or done
+    { const g = _gate(route ? route.action : (req.url.startsWith('/cfr') ? 'cfr' : null), route ? ROUTE_CAP[route.action] : undefined); if (!g.allow) return _refuse(g); }
     if (!route) {
       // ── CFR-Ω routes — same handleCFRRoute() contract as the other kernels ──
       // §CFR-WIRE-05: checked here, not before matchRoute, so existing

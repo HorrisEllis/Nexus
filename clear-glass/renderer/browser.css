@@ -1327,3 +1327,28 @@
   .bk-btn .bk-acct, .bk-btn .bk-state { margin-right: 4px; font-size: 10px; color: var(--accent); opacity: .8; }
   #window-account { flex-shrink: 0; margin-left: 6px; padding: 2px 9px; border-radius: 999px; font-size: 11px; color: var(--accent);
     border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); -webkit-app-region: no-drag; }
+
+/* §0.59.3 — the Fiverr panel (gig-panel.js) */
+#gig-panel { display: none; position: absolute; top: 96px; right: 12px; width: 420px; max-height: calc(100vh - 120px); overflow-y: auto; z-index: 120;
+  background: var(--bg2, #111); border: 1px solid var(--border, #333); border-radius: 8px; box-shadow: 0 8px 28px rgba(0,0,0,.5); padding: 10px 12px; font-size: 12px; color: var(--text, #ddd); }
+#gig-panel.visible { display: block; }
+#gig-panel .gig-head { display: flex; justify-content: space-between; align-items: center; font-weight: 700; letter-spacing: .08em; margin-bottom: 8px; }
+#gig-panel .gig-head button { background: none; border: none; color: var(--text-dim, #999); cursor: pointer; font-size: 14px; }
+#gig-panel .gig-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+#gig-panel .gig-tab { flex: 1; padding: 6px; border-radius: 5px; border: 1px solid var(--border, #333); background: transparent; color: var(--text-dim, #999); cursor: pointer; }
+#gig-panel .gig-tab.on { color: var(--accent, #4fd1c5); border-color: var(--accent, #4fd1c5); }
+#gig-panel .gig-field { display: block; margin-bottom: 8px; }
+#gig-panel .gig-field span, #gig-panel .gig-q span { display: block; color: var(--text-dim, #999); margin-bottom: 3px; }
+#gig-panel textarea, #gig-panel input, #gig-panel select { width: 100%; box-sizing: border-box; background: var(--bg, #0a0a0a); color: inherit; border: 1px solid var(--border, #333); border-radius: 5px; padding: 6px; font: inherit; }
+#gig-panel button { cursor: pointer; border-radius: 5px; border: 1px solid var(--border, #333); background: var(--bg, #0a0a0a); color: inherit; padding: 6px 10px; margin: 2px 4px 2px 0; }
+#gig-panel .gig-main { background: var(--accent, #4fd1c5); color: #031; border-color: transparent; font-weight: 700; }
+#gig-panel .gig-main:disabled { opacity: .5; cursor: default; }
+#gig-panel .gig-status { min-height: 16px; margin: 6px 0; color: var(--text-dim, #999); }
+#gig-panel .gig-status.ok { color: #6ee7a0; } #gig-panel .gig-status.bad { color: #ff7a8a; }
+#gig-panel .gig-note { background: rgba(79,209,197,.07); border-left: 2px solid var(--accent, #4fd1c5); padding: 6px 8px; margin-bottom: 8px; color: var(--text-dim, #aaa); }
+#gig-panel .gig-part { border: 1px solid var(--border, #333); border-radius: 6px; padding: 6px 8px; margin-top: 6px; }
+#gig-panel .gig-part-h { display: flex; align-items: center; gap: 8px; } #gig-panel .gig-part-h b { flex: 1; }
+#gig-panel .gig-part-h span { color: var(--text-dim, #999); } #gig-panel .gig-part-h span.bad { color: #ff7a8a; }
+#gig-panel .gig-part-t { white-space: pre-wrap; margin-top: 4px; }
+#gig-panel .gig-q { display: block; margin-bottom: 8px; }
+#gig-panel .gig-row { display: flex; gap: 6px; margin-bottom: 8px; }

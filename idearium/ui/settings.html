@@ -14,6 +14,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script src="js/access-guard.js"></script>   <!-- §0.58.0 IA3 — a page Idearium asks to sign in goes to /login.html -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Settings console</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -165,6 +166,7 @@ function renderNav() {
   $('nav').innerHTML = `<div class="navgroup">Idearium</div>` + item(CUR.kind === 'global', 'data-global="1"', 'Global configuration', `<span class="tag">${(CONSOLE.config.keys || []).length}</span>`)
     + item(CUR.kind === 'economy', 'data-economy="1"', 'Provider economy', '<span class="tag acc">limits · learning</span>')
     + item(CUR.kind === 'routing', 'data-routing="1"', 'Routing & fallback', '<span class="tag acc">pipeline</span>')
+    + item(CUR.kind === 'access', 'data-access="1"', 'Access', '<span class="tag acc">app passwords</span>')
     + item(CUR.kind === 'appearance', 'data-appearance="1"', 'Appearance', `<span class="tag">${esc((window.IdeariumTheme && IdeariumTheme.current().theme) || 'nexus')}</span>`)
     + `<div class="navgroup">Repos · compartments (${originals.length})</div>` + (originals.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') || '<div class="kv">none match</div>')
     + (branches.length ? `<div class="navgroup">Branches (${branches.length})</div>` + branches.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') : '');
@@ -173,6 +175,7 @@ function renderNav() {
   const ec = $('nav').querySelector('[data-economy]'); if (ec) ec.onclick = () => go('economy');
   const ap = $('nav').querySelector('[data-appearance]'); if (ap) ap.onclick = () => go('appearance');
   const rt = $('nav').querySelector('[data-routing]'); if (rt) rt.onclick = () => go('routing');
+  const ax = $('nav').querySelector('[data-access]'); if (ax) ax.onclick = () => go('access');
 }
 $('q').oninput = () => { renderNav(); if (CUR.kind === 'global') render(); };
 
@@ -214,6 +217,7 @@ function readCtl(el, k) {
 function render() {
   if (CUR.kind === 'economy') return renderEconomy();
   if (CUR.kind === 'appearance') return renderAppearance();
+  if (CUR.kind === 'access') return renderAccess();
   if (CUR.kind === 'routing') return renderRouting();
   if (CUR.kind === 'global' || !DETAIL) return renderGlobal();
   return renderRepo();
@@ -427,6 +431,58 @@ async function renderEconomy() {
   for (const el of B.querySelectorAll('[data-econ-router]')) el.oninput = () => _econPatch(() => { ECON_PATCH.router = { ...(ECON_PATCH.router || {}), [el.dataset.econRouter]: Number(el.value) }; });
 }
 
+// §0.58.0 IA3 — James: "what about a app password style login in idearium from clearglass panel, then we could accounts
+// per hat/repo?" Who may act on Idearium: the mode, and app passwords — each for some repos, some capabilities, a hat.
+// Made and revoked here (admin only); the password is shown once. Reads /api/access/me + /api/access/keys.
+const ACCESS_CAPS = [['read_ideas', 'read'], ['write_ideas', 'write'], ['admin', 'admin (make passwords, every route)']];
+async function renderAccess(made = null) {
+  $('title').textContent = 'Access';
+  $('sub').innerHTML = 'Who may act on Idearium. App passwords sign in a person, a tablet, a hat or a website — each held to its repos and capabilities. Save one in Clear Glass (Passwords, for http://127.0.0.1:4800) and every panel is signed in.';
+  $('tabs').innerHTML = '';
+  $('body').innerHTML = '<div class="empty">Reading access…</div>';
+  let me, keys = null, keysErr = null;
+  try { me = await api('/api/access/me'); } catch (e) { $('body').innerHTML = `<div class="empty">Could not read access: ${esc(e.message)}</div>`; return; }
+  try { keys = (await api('/api/access/keys')).keys; } catch (e) { keysErr = e.message; }
+  const cfg = Object.fromEntries((CONSOLE.config.keys || []).filter(k => k.key.startsWith('access.')).map(k => [k.key, k.value]));
+  const mode = cfg['access.mode'] || me.mode;
+  const MODES = { open: 'nobody signs in (as before 0.58)', origin: 'websites and other devices sign in — this machine\'s own pages and processes do not', password: 'everyone signs in (Nexus\'s own processes too — IA6 is not built yet, so they will be refused)' };
+  const repoName = (u) => ((CONSOLE.repos || []).find(r => r.uuid === u) || {}).name || u;
+  const row = (k) => `<div class="row"><div><div class="k">${esc(k.label)} ${k.revokedAt ? '<span class="tag warn">revoked</span>' : ''}${k.hat ? ` <span class="tag acc">hat ${esc(k.hat)}</span>` : ''}</div>
+      <div class="d">${esc(k.id)} · ${esc(k.caps.join(', '))} · ${k.repos === '*' ? 'every repo' : esc(k.repos.map(repoName).join(', '))} · made ${new Date(k.createdAt).toLocaleString()}${k.lastUsedAt ? ` · used ${new Date(k.lastUsedAt).toLocaleString()}` : ' · never used'}</div></div>
+      <div class="ctl"></div><div>${k.revokedAt ? '' : `<button class="btn" data-revoke="${esc(k.id)}">Revoke</button>`}</div></div>`;
+  $('body').innerHTML = `
+    <div class="card"><h3><span class="grow">You</span><span class="tag">${me.signedIn ? 'signed in' : 'this machine'}</span></h3>
+      <div class="kv">${me.signedIn ? `${esc(me.who.label)}${me.who.hat ? ` · hat ${esc(me.who.hat)}` : ''} · ${esc(me.who.caps.join(', '))} · ${me.who.repos === '*' ? 'every repo' : esc(me.who.repos.join(', '))}` : 'not signed in — a page or process on this machine, full access'}</div>
+      ${me.signedIn ? '<div class="row"><div></div><div class="ctl"></div><div><button class="btn" id="ax-out">Sign out</button></div></div>' : ''}</div>
+    <div class="card"><h3><span class="grow">Who must sign in</span></h3>
+      <div class="row"><div><div class="k">access.mode</div><div class="d" id="ax-mode-d">${esc(MODES[mode] || '')}</div></div><div class="ctl"><select id="ax-mode">${Object.keys(MODES).map(m => `<option ${m === mode ? 'selected' : ''}>${m}</option>`).join('')}</select></div><div></div></div>
+      <div class="row"><div><div class="k">access.trusted_origins</div><div class="d">websites allowed without a password, comma-separated (e.g. https://my.dashboard) — loopback pages always are</div></div><div class="ctl"><input type="text" id="ax-origins" value="${esc(cfg['access.trusted_origins'] || '')}" placeholder="(none)"></div><div></div></div>
+      <div class="row"><div><div class="k">access.session_days</div><div class="d">how long a sign-in lasts</div></div><div class="ctl"><input type="number" min="1" max="365" id="ax-days" value="${esc(cfg['access.session_days'] || 30)}"></div><div></div></div></div>
+    <div class="card"><h3><span class="grow">App passwords</span><span class="tag">${keys ? keys.filter(k => !k.revokedAt).length : '—'} live</span></h3>
+      ${made ? `<div class="note"><b>${esc(made.key.label)}</b> — copy it now, it is not shown again:<div class="kv" id="ax-pw" style="user-select:all">${esc(made.password)}</div><button class="btn" id="ax-copy">Copy</button></div>` : ''}
+      ${keysErr ? `<div class="empty">${esc(keysErr)}</div>` : (keys.length ? keys.slice().reverse().map(row).join('') : '<div class="empty">No app passwords yet.</div>')}
+      ${keysErr ? '' : `<div class="block"><div class="bh"><span class="lbl"><b>Make one</b></span></div>
+        <div class="row"><div><div class="k">label</div><div class="d">who or what it is for — "tablet", "reviewer hat", "my dashboard"</div></div><div class="ctl"><input type="text" id="ax-label"></div><div></div></div>
+        <div class="row"><div><div class="k">hat</div><div class="d">optional — the persona whose actions this is</div></div><div class="ctl"><input type="text" id="ax-hat" placeholder="(none)"></div><div></div></div>
+        <div class="row"><div><div class="k">repos</div><div class="d">none ticked = every repo</div></div><div class="ctl">${(CONSOLE.repos || []).filter(r => !r.branchOf).map(r => `<label class="econ-chk"><input type="checkbox" data-ax-repo="${esc(r.uuid)}"> ${esc(r.name)}</label>`).join(' ') || '<span class="d">no repos</span>'}</div><div></div></div>
+        <div class="row"><div><div class="k">may</div><div class="d">write holds read; admin holds everything</div></div><div class="ctl">${ACCESS_CAPS.map(([c, n]) => `<label class="econ-chk"><input type="checkbox" data-ax-cap="${c}" ${c !== 'admin' ? 'checked' : ''}> ${n}</label>`).join(' ')}</div><div></div></div>
+        <div class="row"><div></div><div class="ctl"></div><div><button class="btn" id="ax-make">Make password</button></div></div></div>`}</div>`;
+  const setCfg = async (key, value) => { try { await post('/api/config', { key, value, actor: 'user' }); toast(`${key} saved`, 'ok'); CONSOLE = await api('/api/settings/console'); } catch (e) { toast(e.message, 'bad'); } };
+  $('ax-mode').onchange = () => { const v = $('ax-mode').value; if (v === 'password' && !confirm('Everyone will have to sign in, including Nexus\'s own processes (copilot, guardian) — they cannot yet (IA6). Continue?')) { $('ax-mode').value = mode; return; } $('ax-mode-d').textContent = MODES[v]; setCfg('access.mode', v); };
+  $('ax-origins').onchange = () => setCfg('access.trusted_origins', $('ax-origins').value.trim());
+  $('ax-days').onchange = () => setCfg('access.session_days', Number($('ax-days').value));
+  const out = $('ax-out'); if (out) out.onclick = async () => { await post('/api/access/logout', {}); toast('signed out', 'ok'); renderAccess(); };
+  const cp = $('ax-copy'); if (cp) cp.onclick = () => navigator.clipboard.writeText(made.password).then(() => toast('copied', 'ok'), () => toast('select it and copy', 'bad'));
+  for (const b of document.querySelectorAll('[data-revoke]')) b.onclick = async () => { if (!confirm('Revoke it? Its sign-ins end at once.')) return; try { await post(`/api/access/keys/${encodeURIComponent(b.dataset.revoke)}/revoke`, {}); toast('revoked', 'ok'); renderAccess(); } catch (e) { toast(e.message, 'bad'); } };
+  const mk = $('ax-make'); if (mk) mk.onclick = async () => {
+    const label = $('ax-label').value.trim(); if (!label) return toast('a label is needed', 'bad');
+    const repos = [...document.querySelectorAll('[data-ax-repo]')].filter(x => x.checked).map(x => x.dataset.axRepo);
+    const caps = [...document.querySelectorAll('[data-ax-cap]')].filter(x => x.checked).map(x => x.dataset.axCap);
+    try { const r = await post('/api/access/keys', { label, hat: $('ax-hat').value.trim() || null, repos: repos.length ? repos : '*', caps }); renderAccess(r); }
+    catch (e) { toast(e.message, 'bad'); }
+  };
+}
+
 const TABS = [['agent', 'Agent'], ['prompt', 'Prompt'], ['hat', 'Hat'], ['env', 'Compartment & desktop']];
 // §OP2 0.57.0 — James: "can you have these settings broken up into repos? … i prefer options over hard coded". A Nexus
 // system's repo (nexus/guardian …) also shows that SYSTEM's own options, asked of the system through Idearium
@@ -590,6 +646,7 @@ const wire = {
   if (window.IdeariumTheme) IdeariumTheme.load('').then(() => { if (CUR.kind === 'appearance') renderAppearance(); });
   const repo = new URLSearchParams(location.search).get('repo');
   if (new URLSearchParams(location.search).get('view') === 'appearance') CUR = { kind: 'appearance', uuid: null, tab: 'agent' };
+  if (new URLSearchParams(location.search).get('view') === 'access') CUR = { kind: 'access', uuid: null, tab: 'agent' };   // §0.58.0 IA3
   const _tab = new URLSearchParams(location.search).get('tab');   // §0.39.310 VP7 — open on one view
   if (repo) CUR = { kind: 'repo', uuid: repo, tab: (TABS.some(t => t[0] === _tab) || _tab === 'system') ? _tab : 'agent' };
   load(repo);

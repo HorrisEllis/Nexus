@@ -1175,6 +1175,9 @@ async function bootstrap() {
   // 0. SISO bus
   const bus = createBus('EVENTS');
   console.log('[ClearGlass] SISO bus →E→E→');
+  // §FN2 0.59.0 — every bus event passes the attention record (src/page/attention.js), which keeps only where each window's
+  // attention is (page changes, the interaction field). Served at /cli/attention; Nexus Nerve reads it.
+  { const att = require('../page/attention').shared(); bus.on('*', (ev) => { try { att.note(ev.type, ev.data); } catch (_) {} }); }
 
   // 0.1 Network subsystem — §RETIRED 2026-09-06, James: "DNS/firewall/
   // crypto/host-rotation is redundant and should be deleted." Only
@@ -1387,6 +1390,13 @@ async function bootstrap() {
   // 8.97. Passwords — §NEW 2026-08-24, real gap named in the same map's §7.
   passwordVault = new PasswordVault();
   passwordVault.load();
+
+  // 8.971. §0.58.0 IA4 — James: "app password style login in idearium from clearglass panel". If an Idearium app
+  // password is saved (Passwords, for http://127.0.0.1:4800), sign in with it now so every panel showing Idearium is
+  // signed in. Nothing saved → nothing done. Said either way, never thrown.
+  require('../accounts/idearium-login').signIn({ vault: passwordVault, cookies: session.defaultSession.cookies })
+    .then(r => console.log(`[ClearGlass/Idearium] ${r.skipped ? r.note : r.ok ? `signed in as ${(r.who && r.who.label) || 'app password'}${r.who && r.who.hat ? ` (hat ${r.who.hat})` : ''}` : `not signed in: ${r.error}`}`))
+    .catch(e => console.warn(`[ClearGlass/Idearium] sign-in failed: ${e.message}`));
 
   // 9. Co-pilot — Cortex-wired, CFR-logged, DOM-aware
   const copilot = new CoPilotBridge({

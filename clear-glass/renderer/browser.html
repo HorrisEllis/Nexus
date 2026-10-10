@@ -361,6 +361,33 @@
   <div class="ctx-item" data-action="print">🖨 Print page</div>
 </div>
 
+<!-- §0.59.3 Fiverr — James: "fiverr … i need serious help … its built somewhere but not in the browser.html". The gig
+     writer (src/autofill/gig.js) had only a Settings screen; this is it beside the page. Behaviour: gig-panel.js. -->
+<div id="gig-panel" role="dialog" aria-label="Fiverr gigs">
+  <div class="gig-head"><span>✦ FIVERR</span><button id="gig-close" title="Close">✕</button></div>
+  <div class="gig-tabs"><button class="gig-tab on" data-step="write">1 · Write a gig</button><button class="gig-tab" data-step="build">2 · Order → build</button></div>
+  <div id="gig-step-write">
+    <div id="gig-no-profile" hidden class="gig-note">One time: add your profile (skills, summary, portfolio) — the gig is written only from it. <button id="gig-open-settings">Open Settings → Autofill</button></div>
+    <label class="gig-field"><span>Profile</span><select id="gig-profile"></select></label>
+    <label class="gig-field"><span>What does this gig offer? (one line)</span><textarea id="gig-offer" rows="2" placeholder="e.g. simple booking websites for small businesses"></textarea></label>
+    <label class="gig-field"><span>Anything else (optional)</span><input id="gig-extra" placeholder="e.g. fast delivery, beginner-friendly prices"></label>
+    <button id="gig-write" class="gig-main">Write the gig</button>
+    <div id="gig-write-status" class="gig-status"></div>
+    <div id="gig-actions" hidden><button id="gig-fill" class="gig-main">Fill this Fiverr page</button><button id="gig-copy-all">Copy all</button></div>
+    <div id="gig-parts"></div>
+  </div>
+  <div id="gig-step-build" hidden>
+    <div class="gig-note">An order came in. The buyer answered your five questions — they are the end state of the job. Send them to Idearium and it becomes a spec and a repo to build.</div>
+    <label class="gig-field"><span>Paste the buyer's whole reply (optional)</span><textarea id="gig-reply" rows="3" placeholder="1. … 2. … 3. …"></textarea></label>
+    <button id="gig-split">Split into the answers</button>
+    <div id="gig-questions"></div>
+    <div class="gig-row"><input id="gig-buyer" placeholder="Buyer (name)"><input id="gig-order" placeholder="Order # (optional)"></div>
+    <button id="gig-send" class="gig-main">Send to Idearium → build</button>
+    <div id="gig-build-status" class="gig-status"></div>
+    <button id="gig-open-idearium" hidden>Open it in Idearium</button>
+  </div>
+</div>
+
 <!-- Picks panel -->
 <div id="picks-panel">
   <div id="picks-header"><span>Picked Elements</span></div>
@@ -465,6 +492,7 @@
        unrelated feature that happens to share the "Agent Mesh" label). -->
   <button class="nav-btn" id="mesh-picker-btn" data-tool-id="mesh-picker" data-tool-label="Agent Mesh" data-tool-icon="◈" title="Agent Mesh">◈</button>
   <button class="nav-btn" id="btn-mesh" data-tool-id="mesh" data-tool-label="Agent Mesh" data-tool-icon="⬡" title="Agent Mesh">⬡</button>
+  <button class="nav-btn" id="btn-gig" data-tool-id="gig" data-tool-label="Fiverr gigs" data-tool-icon="✦" title="Fiverr — write a gig, fill the page, turn an order into a build">✦</button>   <!-- §0.59.3 -->
   <button class="nav-btn" id="btn-diag" data-tool-id="diag" data-tool-label="Diagnostics" data-tool-icon="⚕" title="Diagnostics">⚕</button>
   <!-- §ADDED 2026-09-25 — real backing element for src/toolbar/commands.js's
        btn-settings entry. James: "WHERE IS IT?" — Settings used to be a
@@ -526,5 +554,6 @@
 <script src="selector-assign/selector-assign.js"></script>
 <script src="copilot-cli.js"></script>
 <script src="browser.js"></script>
+<script src="gig-panel.js"></script>   <!-- §0.59.3 Fiverr in the browser -->
 </body>
 </html>

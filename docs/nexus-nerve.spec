@@ -371,3 +371,14 @@ spec:
     written, Phase 0 not started`. Not added automatically here since
     this spec only exists in this conversation right now — add it the
     same commit this file lands in docs/.
+# ── ADDENDUM 2026-10-10 (0.59.0) — FN2/FN3: Nerve sees the interaction field (docs/2026-10-10-shape-of-nexus-phasemap.spec) ──
+# James: "Can you make the commands for the interaction field and maybe integrate it with nexus nerve?"
+# Found: P7's per-window attention never saw a window. lib/nerve read Clear Glass's /bus/log as an array (or .events /
+# .sample); the log answers { level, count, entries }, and at Clear Glass's EVENTS level an entry carries no data, so no
+# agentId. Clear Glass now keeps each window's attention (clear-glass/src/page/attention.js — page changes and the
+# interaction field's last map, spotlight and pointer) at GET :7702/cli/attention; lib/nerve reads it first, and each
+# snapshot window carries `focus: { url, field, spotlight, pointer, at }`. /bus/log stays as the fallback, reading entries.
+# attention-non-truth holds: Nerve still only shows. The canvas (ui/tv-shell/nerve/nerve.js) rings the browser node while
+# a window's field is in use and says the last act in the HUD; each node has a transparent labelled button, so the
+# interaction field (which cannot number a canvas) numbers the nodes, and `idearium field point <n>` presses one (it says
+# that node's state — nothing more). `idearium nerve` prints the snapshot.

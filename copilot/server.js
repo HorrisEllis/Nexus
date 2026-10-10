@@ -1448,7 +1448,11 @@ const server = http.createServer(async (req, res) => {
       'clearglass.browser.tool', 'clearglass.learned.tool', 'nexus.context.tool', 'nexus.opportunity.tool',
       'browser_action', 'macro', 'rewind_replay', 'agent_mesh_route', 'bookmarks_manage', 'history_manage', 'account_manage',
       'site_settings_manage', 'autofill_manage', 'clear_glass_provider_deploy', 'clear_glass_command_index',
-      'clear_glass_stream_bridge', 'clearglass.search_engine.tool'];
+      'clear_glass_stream_bridge', 'clearglass.search_engine.tool',
+      // §0.59.3 — James: "can you make sure copilot has access to all of nexus". Every command a person has (idearium dump,
+      // census, field, picks, repos, phases, versions, systems …) through the one command tool; the person-only rows
+      // (approving, minting passwords, stopping a system) stay refused for an agent by the tool itself.
+      'nexus.command.tool'];
     if (DEFAULT_CHAT_TOOLS.length) {
       const agentToolsForManifest = require('../lib/agent-tools/index.js');
       const manifest = DEFAULT_CHAT_TOOLS

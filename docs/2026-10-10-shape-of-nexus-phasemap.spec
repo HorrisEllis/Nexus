@@ -111,6 +111,50 @@ spec:
       files: [clear-glass/src/main/index.js, clear-glass/src/page/field.js, clear-glass/src/dom/archaeology.js]
       does: "Measure first: count injections per page load (a counter per web-contents, reported) on google.com. Then: inject into the top document only (not every frame and worker), once per navigation, guarded so a second injection is a no-op; field and spotlight on demand, not on every load. And say how to use it — the field answers a copilot request, it is not always on."
       proof: "google.com: injections per load reported before and after; after, one per navigation; the field still numbers the page's targets"
+    FN1_the_field_as_commands:
+      layer: command
+      systems: [clear-glass, idearium, copilot]
+      status: "DONE (0.59.0)"
+      james: '"Can you make the commands for the interaction field and maybe integrate it with nexus nerve?" · earlier: "i dont know how to use it, or it doesnt work."'
+      depends_on: []
+      files: [idearium/cli/route-commands.js]
+      does: >-
+        The field had a door only for agents (the clear-glass browser tool → :7702 /cli/driver). Now it is commands, for
+        him at the CLI and for every agent through nexus.command: `field` (number the page, --overlay draws it, --all every
+        target, --on <window>) · `field off` · `field at <x> <y>` (what a click there would hit) · `field show <n|selector>
+        [label]` (spotlight) · `field point <n> [click|double|right|move|scroll|type] [--text] [--via eros]` · `field
+        windows` (what the field is doing in each window). Route commands could reach other systems but dropped a POST's
+        body, and Clear Glass was not one of them; both fixed (Clear Glass by CLEARGL_IPC_PORT, the agent tools' own).
+      proof: "test-field-nerve FN-01..: each row's request; a stub Clear Glass answers and the row prints the field's text map"
+    FN2_nerve_sees_the_field:
+      layer: backend
+      systems: [clear-glass, cortex]
+      status: "DONE (0.59.0)"
+      james: '"maybe integrate it with nexus nerve"'
+      depends_on: [FN1_the_field_as_commands]
+      files: [clear-glass/src/page/attention.js, clear-glass/src/ipc/agent-routes.js, clear-glass/src/driver/index.js, lib/nerve/index.js]
+      does: >-
+        Nerve is the attention layer (docs/nexus-nerve.spec: it shows, it never decides or acts). The field is where an
+        agent is looking and pointing — attention, exactly. Found reading it: Nerve's per-window attention (P7) never saw
+        anything — it read /bus/log as an array or .events/.sample, but the bus log answers { level, count, entries } and at
+        the EVENTS level carries no event data, so no agentId. Clear Glass now keeps a small per-window attention record
+        (page/attention.js: DOM activity, the last field map, spotlight and pointer — field.pointer is now emitted) served
+        at GET /cli/attention; Nerve reads it, and each window in its snapshot carries its focus. Still read-only: nothing
+        here acts, and Nerve has no command path.
+      proof: "FN: attention.js keeps per-window focus from the real event names; nerve's snapshot windows carry it from a stub /cli/attention"
+    FN3_the_nerve_shows_it_and_the_field_sees_the_nerve:
+      layer: ui
+      systems: [ui, clear-glass]
+      status: "DONE (0.59.0)"
+      james: '"maybe integrate it with nexus nerve"'
+      depends_on: [FN2_nerve_sees_the_field]
+      files: [ui/tv-shell/nerve/nerve.js, ui/tv-shell/nerve/nerve.html, ui/tv-shell/nerve/nerve.css]
+      does: >-
+        Both ways. The nerve canvas shows where an agent's attention is: the browser node lights while a window's field is
+        in use, and the HUD says it ("default · #3 Apply now · click"). And the canvas was invisible to the field — a canvas
+        has no elements to number — so each node now has a transparent, labelled button over it: the field numbers the
+        nerve's nodes, `field show` rings one, `field point` presses one (it says that node's state).
+      proof: "Clear Glass probe nerve-field-glass: the field numbers the nerve's nodes by name; the HUD shows a window's focus from the snapshot"
     CG2_one_source_of_truth_for_the_browser:
       layer: ui
       systems: [clear-glass]

@@ -323,6 +323,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     gig:       (payload)                     => ipcRenderer.invoke('autofill:gig', payload),
     gigDetect: (gig, agentId)                => ipcRenderer.invoke('autofill:gig:detect', { gig, agentId }),
     gigFill:   (gig, agentId, minConfidence) => ipcRenderer.invoke('autofill:gig:fill', { gig, agentId, minConfidence }),
+    gigToIdearium: (payload)                 => ipcRenderer.invoke('autofill:gig:to-idearium', payload),   // §0.59.3 a buyer's answers → a spec in Idearium
   },
 
   // §BUILT 2026-09-21 — James: "clearglass needs to help me with job

@@ -52,7 +52,7 @@ const SESSION_ID  = 'tv-shell-menu-' + Date.now();
 
 // Real, NCP-confirmed agent set — same 4 as ui/tv-shell/index.html's
 // CP_GUARDIAN_AGENTS, not guessed independently.
-const CP_GUARDIAN_AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity'];
+const CP_GUARDIAN_AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];   // §0.59.1 — James: "deepseek is absent." Must name every guardian userscript (tests/modules/test-provider-lists.test.js)
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let _open       = false;

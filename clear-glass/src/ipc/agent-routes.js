@@ -22,6 +22,8 @@
  *   GET  /cli/state         ?agentId=                        → one snapshot of everything above, each source degrading alone
  *   GET  /cli/invoke                                        → every IPC channel (grouped; denied ones named with the reason)
  *   POST /cli/invoke        { channel, args?, agentId? }     → that channel's own handler, awaited (ipc/handler-registry.js)
+ *   GET  /cli/picks                                          → elements handed to the agents from the Guardian picker (§0.59.2)
+ *   GET  /cli/attention                                      → each window's attention: page changes, the field's last map/spotlight/pointer (§FN2 0.59.0)
  *
  * Same handlers, second door — the driver is the same instance the bus gate calls; nothing is reimplemented.
  */
@@ -125,6 +127,19 @@ function install(app, deps) {
     const b = req.body || {};
     const r = await deps.handlers.invoke(b.channel, b.args, { agentId: b.agentId || null, timeoutMs: +b.timeoutMs || DEFAULT_TIMEOUT_MS });
     res.status(r.ok ? 200 : r.denied ? 403 : /^no handler/.test(r.error || '') ? 404 : 502).json(r);
+  });
+
+  // §FN2 0.59.0 — where each window's attention is (page/attention.js): page changes and the interaction field's last
+  // map, spotlight and pointer. Read by Nexus Nerve (lib/nerve) and `idearium field windows`. Observation only.
+  // §0.59.2 — the elements he handed to the agents from the Guardian picker (→ CLAUDE CODE); `idearium picks` reads them
+  app.get('/cli/picks', (req, res) => {
+    try { res.json({ ok: true, picks: require('../page/attention').shared().picks(), ts: Date.now() }); }
+    catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+  });
+
+  app.get('/cli/attention', (req, res) => {
+    try { res.json({ ok: true, windows: require('../page/attention').shared().windows(), ts: Date.now() }); }
+    catch (e) { res.status(500).json({ ok: false, error: e.message }); }
   });
 
   app.get('/cli/state', async (req, res) => {

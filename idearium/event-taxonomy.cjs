@@ -27,6 +27,8 @@ module.exports = Object.freeze({
     severity: 'notable',
   },
   // ── §0.39.362 CH1 — a repo's charter (its compartment intent, cos/foundation/intent.js): set, and its end state checked
+  // §0.58.0 IA1 — an app password made or revoked (idearium/lib/access.cjs); never carries the password
+  IDEARIUM_ACCESS_KEY: { description: 'An Idearium app password was made or revoked: which, its label and hat, and who did it (never the password).', payloadShape: ['act', 'id', 'label', 'hat', 'actor'], severity: 'notable' },
   IDEARIUM_REPO_CHARTER_SET: { description: "A repo's charter was saved: its axioms, conditions and end state.", payloadShape: ['repoUuid', 'axioms', 'conditions', 'endState'], severity: 'notable' },
   IDEARIUM_REPO_CHARTER_CHECKED: { description: "A repo's end state was checked (after a proven phase, or by hand): how many of its checks are met.", payloadShape: ['repoUuid', 'met', 'total', 'against'], severity: 'info' },
   IDEARIUM_REPO_TASK: { description: "One of a repo's background tasks changed: an agent wearing its hat started, moved on (a feed event, a tool call, a rung) or ended (lib/repo-activity.js).", payloadShape: ['repoUuid', 'task'], severity: 'info' },

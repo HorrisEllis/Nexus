@@ -806,7 +806,15 @@ class ClearDriver {
    * via 'native' (default) — sendInputEvent along a curved path from where the pointer last was;
    * via 'eros' — ErosmancerOS's /api/input over the DevTools protocol (this.erosInput, wired by main/index.js).
    */
-  async _pointer(agentId, { n, x, y, selector, do: action = 'click', text, deltaY = 300, via = 'native', spotlight = true, label } = {}) {
+  // §FN2 0.59.0 — every pointer act is said on the bus (field.pointer), as field.map and field.spotlight already were, so
+  // Clear Glass's attention record (src/page/attention.js) and Nexus Nerve know where an agent pointed
+  async _pointer(agentId, args = {}) {
+    const r = await this._pointerAct(agentId, args);
+    try { this.sse.emit('field.pointer', { agentId, do: r.action, x: r.x, y: r.y, n: r.target ? r.target.n : null, name: r.target ? r.target.name : null, covered: !!r.covered, via: r.via, ts: Date.now() }); } catch (_) {}
+    return r;
+  }
+
+  async _pointerAct(agentId, { n, x, y, selector, do: action = 'click', text, deltaY = 300, via = 'native', spotlight = true, label } = {}) {
     if (!['move', 'click', 'double', 'right', 'scroll', 'type'].includes(action)) throw new Error(`pointer "do" must be move|click|double|right|scroll|type, not "${action}"`);
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);

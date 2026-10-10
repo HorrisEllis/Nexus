@@ -62,6 +62,17 @@ const FILES = [
   // (guardian/options.js, read by dispatcher, ask, ncp-handler, job-retry, dispatch-ladder, wake-loop; served at /api/options)
   ['lib/options.js', I('lib/options.js'), []],
   ['guardian/options.js', I('guardian/options.js'), [I('lib/options.js')]],
+  // §0.58.0 IA0–IA4 — who may act on Idearium: idearium/lib/access.cjs (keys, sessions, the gate; fs + crypto + data-dir),
+  // the fetch guard every Idearium page loads first, the sign-in page, Clear Glass's sign-in from its password vault
+  ['idearium/lib/access.cjs', I('idearium/lib/access.cjs'), [I('idearium/lib/data-dir.cjs')]],
+  // §0.59.0 FN1–FN3 — the interaction field as commands, Nexus Nerve seeing it: Clear Glass's per-window attention record
+  // (pure; fed from the bus by main/index.js, served at /cli/attention by ipc/agent-routes.js)
+  ['clear-glass/src/page/attention.js', I('clear-glass/src/page/attention.js'), []],
+  // §0.59.3 the Fiverr panel in the browser: cg.autofill.gig / gigFill / gigToIdearium (preload → ipc/bridge.js → src/autofill/gig.js; Idearium through lib/nexus-client)
+  ['clear-glass/renderer/gig-panel.js', I('clear-glass/renderer/gig-panel.js'), [I('clear-glass/src/preload/index.js')]],
+  ['idearium/ui/js/access-guard.js', I('idearium/ui/js/access-guard.js'), [I('idearium/api/index.js')]],   // a 401 naming /login.html
+  ['idearium/ui/login.html', I('idearium/ui/login.html'), [I('idearium/api/index.js')]],                   // HTTP access/me, access/login
+  ['clear-glass/src/accounts/idearium-login.js', I('clear-glass/src/accounts/idearium-login.js'), [I('clear-glass/src/passwords/vault.js'), I('idearium/api/index.js')]],   // vault.get(origin); HTTP POST access/login
   ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/plan-panel.js')]],   // §CT5 openPlanPanel, _gateBar
 ];
 
@@ -73,6 +84,15 @@ const CONSUMERS = [
   [I('guardian/lib/job-retry.js'), I('guardian/options.js'), '§OP1 retry.max_attempts, first_wait_ms, busy_first_wait_ms'],
   [I('guardian/server.js'), I('guardian/options.js'), '§OP1 GET/POST /api/options'],
   [I('idearium/api/index.js'), I('guardian/server.js'), '§OP2 HTTP /api/systems/:system/options → the system\'s /api/options'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/page/attention.js'), '§FN2 bus.on(\'*\') → attention.note(type, data)'],
+  [I('clear-glass/src/ipc/agent-routes.js'), I('clear-glass/src/page/attention.js'), '§FN2 GET /cli/attention → shared().windows()'],
+  [I('lib/nerve/index.js'), I('clear-glass/src/ipc/agent-routes.js'), '§FN2 HTTP GET :7702/cli/attention → each window\'s focus in the snapshot'],
+  [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/agent-routes.js'), '§FN1 HTTP POST :7702/cli/driver (field, fieldOff, at, spotlight, pointer) · GET /cli/attention'],
+  [I('idearium/cli/route-commands.js'), I('cortex/boot.js'), '§FN2 HTTP GET /nerve/snapshot (`idearium nerve`)'],
+  [I('ui/tv-shell/nerve/nerve.js'), I('guardian/server.js'), '§FN3 HTTP /api/guardian/nerve/snapshot windows[].focus → the HUD and the browser node ring'],
+  [I('idearium/api/index.js'), I('idearium/lib/access.cjs'), '§IA0 decide() before every route (ROUTE_CAP); §IA1 /api/access/* — login, keys, revoke'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/accounts/idearium-login.js'), '§IA4 signIn({vault: passwordVault, cookies: session.defaultSession.cookies}) at start'],
+  [I('idearium/ui/settings.html'), I('idearium/api/index.js'), '§IA3 Settings → Access: HTTP access/me, access/keys, config access.*'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/main/compartment-window.js'), 'web-contents-created → attach(); registerIpc(ipcMain, BrowserWindow)'],
   [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/copilot/verbs.js'), '_parseCommands, send() browseIntent'],
   [I('guardian/server.js'), I('guardian/lib/provider-login.js'), 'POST/GET /api/provider/login'],

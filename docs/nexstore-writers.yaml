@@ -142,6 +142,10 @@ writers:
     reason: a system's options (<system>/data/options.json, 0.57.0 OP0) — the values a person or copilot set through that system's /api/options; written atomically (tmp then rename) by the owning system only
   lib/options.js · appendFileSync · ledgerFile:
     reason: the history of a system's options (<system>/data/options-ledger.jsonl, 0.57.0 OP0) — one line per set or reset, when, old, new and who asked; append-only
+  idearium/lib/access.cjs · writeFileSync · tmp:
+    reason: Idearium's app passwords and sign-ins (<idearium data>/access/keys.json · sessions.json, 0.58.0 IA0) — hashes only, never a password; written atomically (tmp then rename, mode 0600) by Idearium only
+  idearium/lib/access.cjs · appendFileSync · _file('ledger.jsonl'):
+    reason: the history of Idearium's door (<idearium data>/access/ledger.jsonl, 0.58.0 IA0) — one line per password made, sign-in, refusal or revoke; append-only, never a password
   cos/workspace/vm-control.js · writeFileSync · tmp:
     reason: a desktop's checkpoint index (<state>/.cos-desktop/checkpoints.json, 0.39.371 VM1) — the label, cause and time of each live snapshot kept inside the desktop's own qcow2; written atomically (tmp then rename) beside the disk it describes
   idearium/api/index.js · appendRow · 'idearium_charter_runs':

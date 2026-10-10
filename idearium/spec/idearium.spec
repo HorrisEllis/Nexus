@@ -615,3 +615,17 @@ spec:
 # by the Phases tab; each code file a pending chunk until a phase writes it. Answers { components, phasemap: { path,
 # phases }, written, planned, rejected, snapshot }; 409 NOT_SKELETON, 422 nothing new, 502 no snapshot — nothing written.
 # Emits idearium.repo.expanded. GET /api/repos/:uuid/files/state adds the state 'uncoded' (a planned file not coded yet).
+
+# ── ADDENDUM 2026-10-10 (0.58.0) — IA0–IA4: who may act on Idearium (docs/2026-10-10-idearium-access-phasemap.spec) ──
+# James: "what about a app password style login in idearium from clearglass panel, then we could accounts per hat/repo?"
+# One gate before every API route, /sse and /cfr (idearium/lib/access.cjs decide()). config access.mode: open (nobody signs
+# in) · origin, the default (a website — an Origin not loopback nor in access.trusted_origins — or another device signs in)
+# · password (everyone but /health and /api/access/{me,login,logout}). An app password (nxa_<id>_<secret>, kept as a
+# sha256 hash) holds a label, an optional hat, repos ('*' or a list) and CAPS; a keyed caller (Authorization: Bearer, or the
+# nx_idearium session cookie from POST /api/access/login — HttpOnly, SameSite=Strict, access.session_days) is held to
+# ROUTE_CAP — declared since the start and never read until now — and to /api/repos/<uuid> in its list, in every mode; a
+# wrong or revoked one is 401. CORS answers only a trusted or signed-in origin (api.cors_origin default 'trusted', was '*').
+# Routes: GET /api/access/me · POST /api/access/login · POST /api/access/logout · GET/POST /api/access/keys (admin) ·
+# POST /api/access/keys/:id/revoke (admin). Emits idearium.access.key. Files: <data>/access/{keys,sessions}.json, ledger.jsonl.
+# Not yet: a scoped key still sees every repo in list routes (only /api/repos/<uuid>/… is held); Nexus's own processes do
+# not carry a key, so password mode refuses them (IA6).
