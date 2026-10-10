@@ -226,6 +226,28 @@ export const SPEC = [
       }
       console.log('');
     } },
+  // §IA2 0.58.0 — James: "what about a app password style login in idearium from clearglass panel, then we could accounts
+  // per hat/repo?" Who this caller is; app passwords, each scoped to repos, capabilities and a hat. Making and revoking is
+  // the person's — an agent asks.
+  { key: 'access', repo: false, usage: 'access', about: 'who Idearium sees you as, and its access mode (open · origin · password)',
+    req: () => ({ method: 'GET', path: '/api/access/me' }),
+    print: (d, a, h) => console.log(`  mode ${h.c.bold(d.mode)} · ${d.signedIn ? `signed in as ${h.c.mint(d.who.label)}${d.who.hat ? ` (hat ${d.who.hat})` : ''} · ${d.who.caps.join(', ')} · repos ${Array.isArray(d.who.repos) ? d.who.repos.join(', ') : d.who.repos}` : h.c.dim('not signed in — this machine, full access')}`) },
+  { key: 'access.keys', repo: false, usage: 'access keys', about: 'the app passwords: label, hat, repos, capabilities, last used (never the password)',
+    req: () => ({ method: 'GET', path: '/api/access/keys' }),
+    print: (d, a, h) => {
+      if (!(d.keys || []).length) { console.log(h.c.dim('  no app passwords yet — idearium access new <label> [--hat h] [--repos a,b] [--caps read_ideas,write_ideas]')); return; }
+      for (const k of d.keys) console.log(`  ${k.revokedAt ? h.c.coral('revoked') : h.c.mint('live   ')} ${h.c.amber(k.id)} ${k.label}${k.hat ? h.c.sky(`  hat ${k.hat}`) : ''}${h.c.dim(`  ${k.caps.join(',')} · repos ${Array.isArray(k.repos) ? k.repos.join(',') : k.repos}${k.lastUsedAt ? ` · used ${when(k.lastUsedAt)}` : ''}`)}`);
+    } },
+  { key: 'access.new', repo: false, usage: 'access new <label> [--hat h] [--repos a,b] [--caps read_ideas,write_ideas,admin]', about: 'make an app password — shown once; save it in Clear Glass to be signed in everywhere',
+    need: (a) => (a.args.length ? null : '<label>'),
+    personOnly: () => 'making an app password is the person\'s — ask them (Settings → Access, or: idearium access new <label>)',
+    req: (a) => ({ method: 'POST', path: '/api/access/keys', body: { label: a.args.join(' '), ...(a.flags.hat ? { hat: a.flags.hat } : {}), ...(a.flags.repos ? { repos: a.flags.repos } : {}), ...(a.flags.caps ? { caps: a.flags.caps } : {}) } }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.key.label} (${d.key.id})\n\n  ${h.c.bold(d.password)}\n\n  ${h.c.amber('shown once')} — ${d.note}`) },
+  { key: 'access.revoke', repo: false, usage: 'access revoke <id>', about: 'revoke an app password — its sign-ins end at once',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    personOnly: () => 'revoking an app password is the person\'s — ask them (Settings → Access, or: idearium access revoke <id>)',
+    req: (a) => ({ method: 'POST', path: `/api/access/keys/${encodeURIComponent(a.args[0])}/revoke`, body: {} }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} revoked ${d.key.label} (${d.key.id})${d.note ? h.c.dim(` — ${d.note}`) : ''}`) },
   { key: 'store', repo: false, usage: 'store', about: 'the shared memory store by its files: each table\'s size, append segments, cap and archive (cortex)',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/store' }),
     print: (d, a, h) => {

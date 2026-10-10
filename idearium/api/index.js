@@ -23,6 +23,7 @@ import { spawnSync, spawn as spawnProc } from 'child_process';
 import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
+const _access = _require('../lib/access.cjs');   // §0.58.0 IA0 — who may act on Idearium
 // §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
@@ -2088,6 +2089,9 @@ const ROUTE_CAP = {
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
   'settings.console': CAPS.READ_IDEAS,
+  // §0.58.0 IA1 — the door's own routes: who am I / sign in / sign out are public; app passwords are admin's
+  'access.me': null, 'access.login': null, 'access.logout': null,
+  'access.keys': CAPS.ADMIN, 'access.keys.create': CAPS.ADMIN, 'access.keys.revoke': CAPS.ADMIN,
   'settings.console.repo': CAPS.READ_IDEAS,
   'economy.get': CAPS.READ_IDEAS, 'economy.set': CAPS.WRITE_IDEAS, 'economy.view': CAPS.READ_IDEAS,   // §0.39.281 EC8
   // §0.39.280 — build surface
@@ -2119,6 +2123,12 @@ function matchRoute(method, url) {
     // idearium/lib/config.js. GET has no body; POST takes {key, value,
     // actor?} — actor defaults to 'user' inside config.js itself.
     ['GET',    ['api','config'],          'config.get'],
+    // §0.58.0 IA1 — app passwords (idearium/lib/access.cjs, docs/2026-10-10-idearium-access-phasemap.spec)
+    ['GET',    ['api','access','me'],     'access.me'],
+    ['POST',   ['api','access','login'],  'access.login'],
+    ['POST',   ['api','access','logout'], 'access.logout'],
+    ['GET',    ['api','access','keys'],   'access.keys'],
+    ['POST',   ['api','access','keys'],   'access.keys.create'],
     // §0.39.286 RG2 — the pipeline's routing and fallback policy (lib/pipeline-routing.js); set it through POST /api/config routing.*
     ['GET',    ['api','routing'],         'routing.show'],
     ['GET',    ['api','routing','plan'],  'routing.plan'],
@@ -2238,6 +2248,7 @@ function matchRoute(method, url) {
 
   // Dynamic routes
   const dynRoutes = [
+    ['POST',   ['api','access','keys',':id','revoke'], 'access.keys.revoke'],   // §0.58.0 IA1
     ['GET',    ['api','ideas',    ':uuid'],               'idea.show'],
     ['PATCH',  ['api','ideas',    ':uuid'],               'idea.update'],
     ['DELETE', ['api','ideas',    ':uuid'],               'idea.archive'],
@@ -2627,10 +2638,11 @@ async function handle(req, res, route, query, body) {
   const os = getIdeaOS();
   const { action, params } = route;
 
-  // ── Auth gate — disabled ──────────────────────────────────────────────────
-  // Idearium has no remote/direct access path. The orchestrator (:9000) is the
-  // sole entry point to NEXUS; all subsystem traffic is proxied through it.
-  // Key-based auth was for a per-system access model that no longer applies here.
+  // ── Auth gate ─────────────────────────────────────────────────────────────
+  // §0.58.0 IA0 — superseded (kept as history, §0.3): "Idearium has no remote/direct access path. The orchestrator
+  // (:9000) is the sole entry point" stopped being true — Clear Glass, the console and every Nexus page call :4800
+  // directly, and any website could too (SD15). The gate now runs in startAPI() before this function
+  // (idearium/lib/access.cjs decide(), ROUTE_CAP enforced for every keyed caller); req.access says who passed it.
 
   switch (action) {
 
@@ -2745,6 +2757,40 @@ async function handle(req, res, route, query, body) {
         branches: repo.branchOf ? null : rows.filter(r => r.branchOf === repo.uuid).map(r => ({ uuid: r.uuid, name: r.name, branch: r.branch || null })),
         blind,
       });
+    }
+
+    // §0.58.0 IA1 — the door: who am I, sign in/out, app passwords (made and revoked by admin only — ROUTE_CAP)
+    case 'access.me': {
+      const ac = getIdeariumConfig().access || {};
+      return ok(res, { mode: ac.mode || 'origin', signedIn: !!(req.access && req.access.who), who: (req.access && req.access.who) || null,
+        local: !(req.access && req.access.who) && !(req.headers && req.headers.origin && !_access.originTrusted(req.headers.origin, ac.trusted_origins)) });
+    }
+    case 'access.login': {
+      const ac = getIdeariumConfig().access || {};
+      const r = _access.login(body && body.password, { days: ac.session_days || 30 });
+      if (!r.ok) return err(res, 401, r.error);
+      res.setHeader('Set-Cookie', _access.sessionCookie(r.session, r.maxAge));
+      return ok(res, { signedIn: true, who: { keyId: r.key.id, label: r.key.label, hat: r.key.hat, caps: r.key.caps, repos: r.key.repos }, days: Math.round(r.maxAge / 86400) });
+    }
+    case 'access.logout':
+      _access.logout(_access.sessionOf(req.headers || {}));
+      res.setHeader('Set-Cookie', _access.clearCookie());
+      return ok(res, { signedIn: false });
+    case 'access.keys':
+      return ok(res, { keys: _access.listKeys(), mode: (getIdeariumConfig().access || {}).mode || 'origin' });
+    case 'access.keys.create': {
+      const actor = (req.access && req.access.who && (req.access.who.hat || req.access.who.label)) || (body && body.actor) || 'user';
+      const r = _access.createKey({ label: body.label, hat: body.hat, repos: body.repos, caps: body.caps }, { actor });
+      if (!r.ok) return err(res, 400, r.error);
+      try { os.emit('idearium.access.key', { act: 'created', id: r.key.id, label: r.key.label, hat: r.key.hat, actor }); } catch (_) {}
+      return ok(res, { key: r.key, password: r.password, note: 'shown once — save it in Clear Glass (Passwords, for http://127.0.0.1:4800) or paste it on the sign-in page' });
+    }
+    case 'access.keys.revoke': {
+      const actor = (req.access && req.access.who && (req.access.who.hat || req.access.who.label)) || (body && body.actor) || 'user';
+      const r = _access.revokeKey(params.id, { actor });
+      if (!r.ok) return err(res, 404, r.error);
+      try { os.emit('idearium.access.key', { act: 'revoked', id: params.id, actor }); } catch (_) {}
+      return ok(res, { key: r.key, ...(r.note ? { note: r.note } : {}) });
     }
 
     case 'config.get':
@@ -7967,8 +8013,39 @@ export function startAPI() {
   const os = getIdeaOS();
 
   const server = http.createServer(async (req, res) => {
-    // Preflight
+    // §0.58.0 IA0 — who is asking decides the CORS answer (idearium/lib/access.cjs): a loopback page, a listed origin or a
+    // signed-in caller gets its own origin back; a website gets none, so it can neither read Idearium nor be told it may.
+    let _cors = null;
+    const _wh = res.writeHead.bind(res);
+    res.writeHead = (code, a, b) => {
+      const at = (a && typeof a === 'object') ? 1 : (b && typeof b === 'object') ? 2 : 0;
+      if (!at) return _wh(code, a, b);
+      const h = { ...(at === 1 ? a : b) };
+      if ('Access-Control-Allow-Origin' in h) {
+        if (_cors) { h['Access-Control-Allow-Origin'] = _cors; if (_cors !== '*') { h.Vary = 'Origin'; h['Access-Control-Allow-Credentials'] = 'true'; } }
+        else delete h['Access-Control-Allow-Origin'];
+      }
+      return at === 1 ? _wh(code, h) : _wh(code, a, h);
+    };
+    const _ac = () => { try { return getIdeariumConfig().access || {}; } catch (_) { return {}; } };
+    const _corsSetting = () => { try { return (getIdeariumConfig().api || {}).cors_origin || 'trusted'; } catch (_) { return 'trusted'; } };
+    const _gate = (action, cap) => {
+      const ac = _ac();
+      const g = _access.decide({ action, cap, method: req.method, repo: _access.repoOf(req.url), headers: req.headers, remoteAddress: req.socket && req.socket.remoteAddress,
+        mode: ac.mode || 'origin', trustedOrigins: ac.trusted_origins || '', corsSetting: _corsSetting() });
+      _cors = g.cors; req.access = g;
+      return g;
+    };
+    const _refuse = (g) => {
+      if (g.clearCookie) res.setHeader('Set-Cookie', _access.clearCookie());
+      return err(res, g.status, g.error, g.how ? { how: g.how, signIn: '/login.html' } : null);
+    };
+
+    // Preflight — answered for a trusted origin, or for any page that is about to send an app password (the real
+    // request is then held to that password's scope)
     if (req.method === 'OPTIONS') {
+      const o = req.headers.origin, cs = _corsSetting();
+      _cors = cs !== 'trusted' ? cs : (o && (_access.originTrusted(o, _ac().trusted_origins) || /authorization/i.test(String(req.headers['access-control-request-headers'] || ''))) ? o : null);
       res.writeHead(204, CORS);
       return res.end();
     }
@@ -7986,6 +8063,8 @@ export function startAPI() {
     // sees as a socket hang up. Caught here the same way the main route
     // dispatch already is.
     if (req.url === '/sse') {
+      const g = _gate('sse', CAPS.READ_IDEAS);   // §0.58.0 IA0 — the event stream is read access
+      if (!g.allow) return _refuse(g);
       try {
         res.writeHead(200, {
           'Content-Type':  'text/event-stream',
@@ -8055,7 +8134,7 @@ export function startAPI() {
 
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html')) {   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html' || cleanUrl === '/login.html')) {   // §0.58.0 IA3 the sign-in page   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');
@@ -8098,6 +8177,8 @@ export function startAPI() {
     }
 
     const route = matchRoute(req.method, req.url);
+    // §0.58.0 IA0 — the one gate: every API route (and /cfr) passes it before anything is read or done
+    { const g = _gate(route ? route.action : (req.url.startsWith('/cfr') ? 'cfr' : null), route ? ROUTE_CAP[route.action] : undefined); if (!g.allow) return _refuse(g); }
     if (!route) {
       // ── CFR-Ω routes — same handleCFRRoute() contract as the other kernels ──
       // §CFR-WIRE-05: checked here, not before matchRoute, so existing

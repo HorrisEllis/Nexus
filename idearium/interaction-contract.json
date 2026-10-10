@@ -2,7 +2,7 @@
   "id": "idearium-v1",
   "version": "1.0.0",
   "namespace": "idearium",
-  "_reconciled_2026_09_20": "MCO7f/P2 \u2014 regenerated using idearium/api/index.js's own contract.live projection logic (\u00a7PHASE 3 2026-07-10, the same regex that action already runs at request time), not hand-reconciled. Real drift found: static file had 78 routes, live route table has 115 \u2014 37 missing, same failure mode contract.live was built to catch in the first place, just grown since. idearium/schemas/interaction-contract.json (v2.0.0, resources/views/components) is a SEPARATE, richer artifact, not served anywhere, deliberately not touched here \u2014 that is the richer per-system shape James asked to defer until P1/P2/P11 are done.",
+  "_reconciled_2026_09_20": "MCO7f/P2 — regenerated using idearium/api/index.js's own contract.live projection logic (§PHASE 3 2026-07-10, the same regex that action already runs at request time), not hand-reconciled. Real drift found: static file had 78 routes, live route table has 115 — 37 missing, same failure mode contract.live was built to catch in the first place, just grown since. idearium/schemas/interaction-contract.json (v2.0.0, resources/views/components) is a SEPARATE, richer artifact, not served anywhere, deliberately not touched here — that is the richer per-system shape James asked to defer until P1/P2/P11 are done.",
   "ports": {
     "http": 4800
   },
@@ -760,6 +760,36 @@
       "method": "GET",
       "path": "/api/repos/:uuid/agent/graph",
       "_action": "repo.agent.graph"
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/me",
+      "_action": "access.me"
+    },
+    {
+      "method": "POST",
+      "path": "/api/access/login",
+      "_action": "access.login"
+    },
+    {
+      "method": "POST",
+      "path": "/api/access/logout",
+      "_action": "access.logout"
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/keys",
+      "_action": "access.keys"
+    },
+    {
+      "method": "POST",
+      "path": "/api/access/keys",
+      "_action": "access.keys.create"
+    },
+    {
+      "method": "POST",
+      "path": "/api/access/keys/:id/revoke",
+      "_action": "access.keys.revoke"
     }
   ]
 }

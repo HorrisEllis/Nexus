@@ -1,0 +1,56 @@
+<!doctype html>
+<!--
+  idearium/ui/login.html — sign in to Idearium with an app password. §0.58.0 IA3 (docs/2026-10-10-idearium-access-phasemap.spec).
+  James: "what about a app password style login in idearium from clearglass panel, then we could accounts per hat/repo?"
+  POST /api/access/login sets an HttpOnly session cookie scoped like the password (repos, capabilities, hat); ?next=
+  says where to go back to. Clear Glass does this for you when the password is saved in its Passwords.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in to Idearium</title>
+<link rel="stylesheet" href="css/nexus-theme.css">
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--nx-void, #00000f); color: var(--nx-text, #d0d4f0); font: 14px/1.5 'IBM Plex Sans', system-ui, sans-serif; }
+  form { width: min(420px, calc(100vw - 32px)); background: var(--nx-card, #0d0d1f); border: 1px solid var(--nx-edge, #1e1e3a); border-radius: 12px; padding: 24px; box-sizing: border-box; }
+  h1 { margin: 0 0 4px; font-size: 18px; color: var(--nx-bright, #eeeeff); }
+  p { margin: 0 0 16px; color: var(--nx-dim, #7070a0); font-size: 13px; }
+  input { width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--nx-rim, #2a2a4a); background: var(--nx-ink, #080814); color: inherit; font: 13px 'IBM Plex Mono', monospace; }
+  button { margin-top: 12px; width: 100%; padding: 10px; border: 0; border-radius: 8px; background: hsl(var(--ac-h, 192) var(--ac-s, 100%) var(--ac-l, 56%)); color: #00000f; font-weight: 600; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: default; }
+  #msg { min-height: 20px; margin-top: 12px; font-size: 13px; }
+  #msg.bad { color: var(--nx-err, #ff3355); } #msg.ok { color: var(--nx-ok, #00ff88); }
+</style>
+</head>
+<body>
+<form id="f" autocomplete="on">
+  <h1>Sign in to Idearium</h1>
+  <p id="why">Paste an app password (it starts <code>nxa_</code>). Settings → Access makes one. Save it in Clear Glass and it signs you in for every panel.</p>
+  <input id="u" name="username" value="idearium" autocomplete="username" hidden>
+  <input id="pw" name="password" type="password" placeholder="nxa_…" autocomplete="current-password" required autofocus>
+  <button id="go" type="submit">Sign in</button>
+  <div id="msg"></div>
+</form>
+<script>
+'use strict';
+const $ = (id) => document.getElementById(id);
+const next = (() => { const n = new URLSearchParams(location.search).get('next') || '/'; return n.startsWith('/') && !n.startsWith('//') ? n : '/'; })();
+fetch('/api/access/me').then(r => r.json()).then(d => {
+  if (d.signedIn) { $('msg').className = 'ok'; $('msg').textContent = `Signed in as ${d.who.label}${d.who.hat ? ` (hat ${d.who.hat})` : ''}.`; }
+  if (d.mode) $('why').insertAdjacentText('beforeend', ` Idearium asks ${d.mode === 'password' ? 'everyone' : d.mode === 'origin' ? 'websites and other devices' : 'nobody'} to sign in.`);
+}).catch(() => {});
+$('f').onsubmit = async (e) => {
+  e.preventDefault();
+  $('go').disabled = true; $('msg').className = ''; $('msg').textContent = 'Signing in…';
+  try {
+    const r = await fetch('/api/access/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: $('pw').value.trim() }) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || d.ok === false) throw new Error(d.error || `HTTP ${r.status}`);
+    $('msg').className = 'ok'; $('msg').textContent = `Signed in as ${d.who.label}${d.who.hat ? ` (hat ${d.who.hat})` : ''} — for ${d.days} days.`;
+    setTimeout(() => { location.href = next; }, 600);
+  } catch (err) { $('msg').className = 'bad'; $('msg').textContent = err.message; $('go').disabled = false; }
+};
+</script>
+</body>
+</html>

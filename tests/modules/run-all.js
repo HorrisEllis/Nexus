@@ -329,6 +329,7 @@ const SUITES = [
   'test-guardian-stack-sim.test.js',   // 0.55.2 HP13–HP22 — the stack run end to end: right gate, pickup, never resend, cancel, no tab, economy, tab order
   'test-idearium-solid.test.js',   // 0.56.0 SD0 versionium dropped → retried and said · SD2 copilot never ok with nothing · SD3 the person goes first
   'test-options.test.js',   // 0.57.0 OP0–OP3 — one options shape for every system (lib/options.js), guardian first, its routes, the console's System tab
+  'test-idearium-access.test.js',   // 0.58.0 IA0–IA4 — app passwords scoped per repo/hat, the gate, /api/access/*, the command, Clear Glass sign-in
   'test-phases-tab.test.js',
   'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls

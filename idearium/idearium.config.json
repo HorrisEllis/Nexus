@@ -61,7 +61,13 @@
     "port": 4800,
     "binding": "127.0.0.1",
     "chunk_events_limit": 200,
-    "cors_origin": "*"
+    "cors_origin": "trusted"
+  },
+
+  "access": {
+    "mode": "origin",
+    "trusted_origins": "",
+    "session_days": 30
   },
 
   "pipeline": {
