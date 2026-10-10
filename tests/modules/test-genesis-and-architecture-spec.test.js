@@ -31,7 +31,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       if (b) for (const x of b[2].split(',')) paths.push(`${b[1]}${x}${b[3]}`); else paths.push(m.path);
     }
     const missing = paths.filter(p => !fs.existsSync(path.join(ROOT, p)));
-    check('GA-01 every module path the architecture spec names exists', /^0\.(8|9|10)\.\d+$/.test(spec.meta.version) /* 0.39.313 SB17: 0.9.0 agrees with genesis 1.3.0; 0.39.316: 0.10.0 points at James's template */ && paths.length >= 14 && !missing.length, JSON.stringify(missing));
+    check('GA-01 every module path the architecture spec names exists', /^0\.(8|9|10|11)\.\d+$/.test(spec.meta.version) /* 0.39.313 SB17: 0.9.0 agrees with genesis 1.3.0; 0.39.316: 0.10.0 points at James's template; 0.57.0: 0.11.0 additive (every system a node system, options) */ && paths.length >= 14 && !missing.length, JSON.stringify(missing));
     const idx = read('idearium/api/index.js');
     const orch = read('orchestrator/orchestrator.js');
     const emitted = (spec.events.emits || []).every(e => idx.includes(`'${e}'`));

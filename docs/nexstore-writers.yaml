@@ -138,6 +138,10 @@ writers:
     reason: OWED — a node type or a stated reason
   guardian/server.js · writeFileSync · storeFile(name):
     reason: OWED — a node type or a stated reason
+  lib/options.js · writeFileSync · tmp:
+    reason: a system's options (<system>/data/options.json, 0.57.0 OP0) — the values a person or copilot set through that system's /api/options; written atomically (tmp then rename) by the owning system only
+  lib/options.js · appendFileSync · ledgerFile:
+    reason: the history of a system's options (<system>/data/options-ledger.jsonl, 0.57.0 OP0) — one line per set or reset, when, old, new and who asked; append-only
   cos/workspace/vm-control.js · writeFileSync · tmp:
     reason: a desktop's checkpoint index (<state>/.cos-desktop/checkpoints.json, 0.39.371 VM1) — the label, cause and time of each live snapshot kept inside the desktop's own qcow2; written atomically (tmp then rename) beside the disk it describes
   idearium/api/index.js · appendRow · 'idearium_charter_runs':
