@@ -43,6 +43,10 @@ James: "what if a snapshot is a cos compartment? that can branch, or run in parr
 
 James: "i want to make a design system for creating and editing different types of graphical interfaces. like open any file and edit the ui in real time". DS0 one token source → DS1 tokens edited live → DS2 pick and edit any page (Clear Glass ◎, written back) → DS3 components as Eravos mods → DS4 interface types by adapter → DS5 the agents design too · DS6 one module contract, nested · DS7 every editing tool an Eravos mod, typed by what it accepts and produces (native GNU tools run in a compartment) · DS8 the registry routes, the UI reflects (compartments inside compartments — logical; a VM only where isolation is needed).
 
+## Step 0b — the shape (docs/2026-10-10-shape-of-nexus-phasemap.spec)
+
+James: "i prefer options over hard coded, and i prefer it over code honestly … invent any you can think of to fix the shape of nexus. maybe like epistomology, and using the cos as empirical." OP4 environment & desktop one menu → OP0 one options shape → OP1 every system declares its options (guardian first) → OP2 the system's settings in its repo → OP3 copilot reads and sets options → SH1 one home for every concept → SH2 explain this anywhere → EP1 every claim says how it is known → EP2 COS is the empirical layer → CG1 the field injects once → CG2 one source of truth for the browser → TU1 the Nexus tutorial → CG3 the Fiverr tutorial in the browser.
+
 ## Step 0 — health and the clean-up
 
 | phase | map | note |
