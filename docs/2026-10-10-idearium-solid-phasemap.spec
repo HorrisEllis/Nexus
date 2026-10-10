@@ -264,6 +264,15 @@ spec:
         things and their fields, api/events = the boundaries and actions, tests = the rules turned into checks,
         build_order = the graph sorted — so a block is as dumb as possible: one shape, no section knows another. Purpose
         stays prose; the views are what a person reads.
+      revised_2: >-
+        James, 2026-10-10: "what about using primitives as a boundary, relation meaning using rfr2." Taken: a relation says
+        how it is known, as RFR2 causality already does for events (intelligence/rfr2/causality: causal/explicit,
+        causal/rule, causal/adapter, observational — declared when written, never inferred after). For a spec: stated (he or
+        the agent wrote it), rule (derived deterministically, e.g. schema from a thing's fields), proposed (an agent's
+        suggestion, not yet accepted) and observed (a similarity, shown, never built from). Only stated and rule relations
+        drive generation, staleness and the build order; the causal ones form a DAG — a cycle is rejected with both ends
+        named, as RFR2 rejects a diamond. A primitive is a boundary: nothing inside it is reached except through its
+        relations.
       revised_pushback: >-
         More than five or six verbs and the relations become noise; a view a person cannot read as a document is a
         regression from today. And existing specs (block form) are read as-is and converted on request, never in place.
@@ -290,6 +299,24 @@ spec:
         autopilot supervision) or it stays hosted and only the ownership moves. Recommended: hosted for now — a process is
         one more thing to keep alive — and the commands make the host irrelevant to the person.
       proof: "on a machine with QEMU and no image: status says 'no desktop image' with Build it; building shows progress; Start VM boots it; the viewer and every control are COS's, opened from Idearium"
+    SD14_chunks_cut_at_primitives:
+      layer: library
+      systems: [core, idearium]
+      status: "OPEN"
+      james: '"could also use it for the chunking."'
+      depends_on: [SD12_a_spec_starts_from_its_primitives]
+      files: [lib/chunker/index.js, idearium/spec-engine/index.js, idearium/spec-engine/chunk-dispatch.js]
+      does: >-
+        Found: lib/chunker cuts a document at its text structure (headings — "natural boundary"), and a build chunk is a
+        spec section. With a spec as primitives and relations, a build chunk is a primitive (or a module of them) plus
+        exactly the primitives its stated relations reach — its boundary is the primitive's, so a chunk carries what it
+        needs and nothing else, sized to the model by how many relations it pulls in. "Chunked again" (SB11/SB13) is the
+        same cut one level down: a module's primitives.
+      pushback: >-
+        A primitive with many relations pulls in a lot; the cut stops at the model's budget and names what it left out
+        (as the context budget already does), never silently trims. Documents with no primitives (an old spec, a plain
+        file) keep the text-structure cut.
+      proof: "a spec with 12 primitives builds in chunks that each hold one primitive and only its related ones; a small model's chunk names what did not fit"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"

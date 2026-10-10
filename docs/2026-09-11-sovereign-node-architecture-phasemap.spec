@@ -1056,3 +1056,16 @@ spec:
         not from state the UI keeps. The same stack for every system, top to bottom: UI → interaction contract (routes,
         CLI commands) → component registry by module → event bus → event ledger → node registry → its own store. Systems
         hand off to each other only through the contract (P13).
+    P38_every_graph_has_its_route_command_and_node:
+      systems: [idearium, intelligence, cortex, loom, core]
+      status: open
+      depends_on: [P2_per_system_interaction_contracts]
+      description: |
+        James, 2026-10-10: "also the idearium graphs. should the graphs abnd everything have routes?" Yes — through
+        THE_STACK: a graph is data its system owns, so it has a route (contract), a command (the one command table, so
+        copilot and every agent reach it through nexus.command), and it is a node (its kind, its relations, when it was
+        built, from what). Found: Idearium's code graph has five routes (graph, traverse, cone, spec, graphs) and no
+        command; intelligence serves the CFR field (/cfr/field, /cfr/events, /cfr/sse) and one lattice route, and the
+        causal graph's traceToRoot has no route at all. One verb set for every graph — get, traverse, cone (what depends
+        on this), trace (what caused this), as views of one relational field when RF1 lands — each system answering for
+        its own.

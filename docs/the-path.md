@@ -19,6 +19,7 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 | SD5_account_fallback | 2026-10-10-idearium-solid | after SD4 |
 | SD10_the_adversarial_gate | 2026-10-10-idearium-solid | "the adversarial is a gate for each output" — any domain |
 | SD12_a_spec_starts_from_its_primitives | 2026-10-10-idearium-solid | idea → primitives & invariants → schema → the rest, as a DAG |
+| SD14_chunks_cut_at_primitives | 2026-10-10-idearium-solid | a build chunk = a primitive and what its relations reach |
 | SD7_blocks_that_generate_themselves | 2026-10-10-idearium-solid | the DAG; after SD6 and SD10 |
 | SD8_an_agent_can_see_and_fix_a_tab | 2026-10-10-idearium-solid | Clear Glass as agent tools |
 | SD9_claude_code_inside_idearium | 2026-10-10-idearium-solid | half real |
@@ -27,7 +28,7 @@ James: "maybe we get idearium solid then start finally using nexus to build nexu
 
 ## Straight after solid — every system a node system (docs/2026-09-11-sovereign-node-architecture-phasemap.spec, back from the shelf; docs/architecture-spec ADDENDUM 2026-10-10)
 
-James: "im saying all systems are supposed to be like guardian with the nodes … cortex data is clumped together instead of being decoupled". DS1 cortex the catalog → P3 node schemas → P33 every system runs its node registry (the store a node) → DS2/P5 one system moves home at a time → P8 component registry by module → P36 an event ledger per registry → P2/P13 contracts and handoffs → P34 nodes in the lattice → P35 copilot reads, edits, creates nodes → P37 the UI floats on the registry. Self-awareness (below) builds on it.
+James: "im saying all systems are supposed to be like guardian with the nodes … cortex data is clumped together instead of being decoupled". DS1 cortex the catalog → P3 node schemas → P33 every system runs its node registry (the store a node) → DS2/P5 one system moves home at a time → P8 component registry by module → P36 an event ledger per registry → P2/P13 contracts and handoffs → P34 nodes in the lattice → P35 copilot reads, edits, creates nodes → P37 the UI floats on the registry → P38 every graph has its route, command and node. Self-awareness (below) builds on it.
 
 ## Straight after solid — self-awareness (docs/2026-10-10-self-awareness-phasemap.spec)
 
