@@ -62,6 +62,17 @@ function _extractText(job) {
  * @param {object} deps — { createJob, dispatchJob, getJob, isProviderConnected }
  * @returns {Promise<{ok, text?, jobId, provider, error?}>}
  */
+/** §HP16 — did the tab confirm typing this job's prompt? (the same reading as guardian/lib/dispatcher.js _typed) */
+function _typed(j) {
+  if (!j) return false;
+  if (j.confirmedAt || j.lastChunk || ['delivered_confirmed', 'responding', 'awaiting_transcript', 'complete', 'done'].includes(j.status)) return true;
+  return Array.isArray(j.gates) && j.gates.some(e => (e.gate === 'submit' || e.gate === 'reply') && e.state === 'passed' && !e.implied);
+}
+/** §HP16 — cancel a job nobody waits for (deps.cancelJob, guardian/lib/dispatcher.js cancel); absent → left as before */
+function _abandon(deps, jobId, reason) {
+  try { if (typeof deps.cancelJob === 'function') deps.cancelJob(jobId, reason); } catch (_) {}
+}
+
 async function askSync(prompt, opts = {}, deps = {}) {
   const { createJob, dispatchJob, getJob, isProviderConnected } = deps;
   if (typeof createJob !== 'function' || typeof dispatchJob !== 'function' || typeof getJob !== 'function') {
@@ -70,7 +81,7 @@ async function askSync(prompt, opts = {}, deps = {}) {
   if (!prompt) return { ok: false, error: 'prompt required' };
 
   const provider  = opts.provider || 'auto';
-  const timeoutMs = opts.timeoutMs || DEFAULT_TIMEOUT_MS;
+  const timeoutMs = opts.timeoutMs || require('./options.js').get('ask.default_timeout_ms');   // §OP1 0.57.0 (was DEFAULT_TIMEOUT_MS)
 
   // §BUG FIXED 2026-07-07 (caught before shipping) — the first version of
   // this passed provider straight to createJob. But createJob stores the
@@ -188,16 +199,46 @@ async function askSync(prompt, opts = {}, deps = {}) {
     // idearium's lib/repo-agent.js — every hop now forwards it.
     job = createJob({ command: opts.command || 'ask', provider: resolved, prompt, content: opts.content || '', tools: resolvedTools, agentId: opts.agentId || undefined,
       canonical: opts.canonical || undefined, reuse: opts.reuse || undefined });   // 0.39.265 — an identical in-flight job is joined, not sent twice
+    // §SD3 0.56.0 — someone is waiting on this answer: it goes before background builds (the pool, the reconnect
+    // flush and the economy's gap all read it). A caller that is itself background passes priority: 'normal'.
+    if (job.status !== 'complete' && !job.priority) job.priority = opts.priority || 'high';
     if (job.status !== 'complete') dispatchJob(job);
   } catch (e) {
     return { ok: false, error: `failed to enqueue job: ${e.message}` };
   }
 
   const deadline = Date.now() + timeoutMs;
+  // §HP17 0.55.2 — no tab for the provider: the repo agent (an agentId job skips the fail-fast above) waited its whole
+  // 295 s at "provider tab" while guardian knew in the first second. GUARDIAN_NO_TAB_MS (45 s — time for Clear Glass to
+  // open one) with the provider still not connected and nothing typed: said, and the job cancelled (HP16).
+  const noTabMs = require('./options.js').get('jobs.no_tab_ms');   // §OP1 0.57.0
+  let noTabSince = null;
   while (Date.now() < deadline) {
     await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));
     const current = getJob(job.id);
     if (!current) continue; // not yet visible in the store — keep waiting
+    // §HP21 0.55.2 — the economy holds the job longer than this caller will wait (or longer than GUARDIAN_ECONOMY_WAIT_MS,
+    // 30 s): said now, with the limit, and the job cancelled — the copilot route reads it as rate-limit and moves on
+    const econMax = require('./options.js').get('jobs.economy_wait_ms');   // §OP1 0.57.0
+    if (current.economyWaitUntil && current.status === 'queued' && !_typed(current)) {
+      const left = current.economyWaitUntil - Date.now();
+      if (left > econMax || Date.now() + left > deadline) {
+        const p = current.provider || resolved, why = String(current.queueReason || '').replace(/^economy:\s*/, '');
+        _abandon(deps, job.id, `the economy holds ${p} ${Math.round(left / 1000)} s`);
+        return { ok: false, jobId: job.id, provider: p, gate: current.gate || null,
+          error: `economy: ${p} is at its limit (${why}) — next slot in ${Math.round(left / 1000)} s; nothing was typed, the job is cancelled — use another agent, or change the limits in Settings → economy` };
+      }
+    }
+    if (typeof isProviderConnected === 'function' && !_typed(current) && !['complete', 'done', 'error', 'failed', 'cancelled'].includes(current.status)) {
+      const p = current.provider || resolved;
+      if (isProviderConnected(p)) noTabSince = null;
+      else if (noTabSince === null) noTabSince = Date.now();
+      else if (Date.now() - noTabSince >= noTabMs) {
+        _abandon(deps, job.id, `no ${p} tab connected for ${Math.round(noTabMs / 1000)} s`);
+        return { ok: false, jobId: job.id, provider: p, gate: current.gate || null,
+          error: `not connected — no ${p} tab open in guardian for ${Math.round(noTabMs / 1000)} s: open ${p} in Clear Glass (or the browser with its Guardian userscript), signed in — nothing was typed, the job is cancelled` };
+      }
+    }
 
     if (current.status === 'complete' || current.status === 'done') {
       const text = _extractText(current);
@@ -222,7 +263,15 @@ async function askSync(prompt, opts = {}, deps = {}) {
   // Timed out. The job is still alive and may complete later — name it so
   // the caller can retrieve it via GET /jobs rather than assume it's lost.
   // 0.39.256 — said with the gate it is waiting at (lib/gate-trail.js), so the caller knows WHERE it is stuck.
-  const _g = (getJob(job.id) || {}).gate || null;
+  const _last = getJob(job.id) || {};
+  const _g = _last.gate || null;
+  // §HP16 0.55.2 — nobody waits for it now: never typed → cancelled (it would be sent later, to nobody); typed → left
+  // to finish, its reply adoptable late (§LATE)
+  if (!_typed(_last)) {
+    _abandon(deps, job.id, `the caller stopped waiting after ${Math.round(timeoutMs / 1000)} s`);
+    return { ok: false, jobId: job.id, provider: _last.provider || resolved, gate: _g, cancelled: true,
+      error: `timed out after ${timeoutMs}ms — ${_g ? _g.sentence : 'no gate reported yet'} · nothing was typed, so the job is cancelled (not sent later)` };
+  }
   return { ok: false, jobId: job.id, provider: resolved, gate: _g,
     error: `timed out after ${timeoutMs}ms — ${_g ? _g.sentence : 'no gate reported yet'} · job ${job.id} may still complete (GET /status/${job.id})` };
 }

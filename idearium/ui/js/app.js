@@ -1892,7 +1892,8 @@ function renderRepoLibrary() {
           <div class="repo-block${r.nexusSelf && (r.nexusSelf.role === 'parent' || r.nexusSelf.system === 'core') ? ' main' : ''}" onclick="enterRepoDetail('${r.uuid}')">
             <div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(_nxIsMain(r) ? 'nexus' : r.name)}</span></div>
             <div class="repo-block-desc">${_nxIsMain(r) && r.nexusSelf.role === 'system' ? `${Object.keys((_nxParent() || { nexusSelf: {} }).nexusSelf.children || {}).length} systems · ${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable` : r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · snapshot ${escapeHtml(String(r.nexusSelf.snapshot || '').slice(0, 8))}` : `${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable`) : `${r.fileCount} files${r.promotedFromSpec ? ' · from spec' : ''}`}</div>
-            <div class="repo-block-meta"><span class="dot ${r.nexusSelf ? 'done' : dotClass}"></span><span>${r.nexusSelf ? `immutable · synced ${r.nexusSelf.syncedAt ? new Date(r.nexusSelf.syncedAt).toLocaleTimeString() : '—'}` : escapeHtml(r.phase||'idle')}</span></div>
+            <div class="repo-block-meta"><span class="dot ${r.nexusSelf ? 'done' : dotClass}"></span><span>${r.nexusSelf ? `immutable · synced ${r.nexusSelf.syncedAt ? new Date(r.nexusSelf.syncedAt).toLocaleTimeString() : '—'}` : escapeHtml(r.phase||'idle')}</span>${r.nexusSelf && r.nexusSelf.role === 'parent' ? '' : `<button class="rc-time-btn${RC_TIME.open.has(r.uuid) ? ' on' : ''}" title="versions and rewind" onclick="event.stopPropagation();rcTimeToggle('${r.uuid}')">⟲ versions</button>`}</div>
+            ${RC_TIME.open.has(r.uuid) ? `<div class="rc-time" id="rct-${r.uuid}" onclick="event.stopPropagation()" style="cursor:default">${rcTimeHtml(r.uuid)}</div>` : ''}
           </div>`;
         }).join('')}`;
     }).join('');
@@ -1920,7 +1921,9 @@ function renderRepoLibrary() {
                 <div class="repo-card-name">${escapeHtml(_nxIsMain(r) ? 'nexus' : r.name)}</div>
                 <div class="repo-card-meta">${r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · immutable` : `nexus/${escapeHtml(r.nexusSelf.system)} · ${r.nexusSelf.fileCount || r.fileCount} files`) : `${r.fileCount} files · ${escapeHtml(r.phase||'—')}`}</div>
               </div>
-            </div>`;
+              ${r.nexusSelf && r.nexusSelf.role === 'parent' ? '' : `<button class="rc-time-btn${RC_TIME.open.has(r.uuid) ? ' on' : ''}" title="versions and rewind" onclick="event.stopPropagation();rcTimeToggle('${r.uuid}')">⟲</button>`}
+            </div>
+            ${RC_TIME.open.has(r.uuid) ? `<div class="rc-time" id="rct-${r.uuid}" onclick="event.stopPropagation()">${rcTimeHtml(r.uuid)}</div>` : ''}`;
           }).join('')}
         </div>
       </div>`;
@@ -3110,8 +3113,8 @@ function _pathList(paths, max = 20) {
 
 let SNAP_PREVIEW = null; // { uuid, commitId, plan } — what the confirm button acts on
 
-async function previewRepoRestore(uuid, commitId) {
-  const out = document.getElementById('snap-restore-out'); if (!out) return;
+async function previewRepoRestore(uuid, commitId, outId = 'snap-restore-out') {   // §SD1 0.56.0 — outId: a repo card's own panel
+  const out = document.getElementById(outId); if (!out) return;
   out.innerHTML = `<div class="detail-empty">reading the file layer…</div>`;
   let r;
   try { r = await api(`/api/repos/${uuid}/snapshots/${encodeURIComponent(commitId)}/restore`, { method: 'POST', body: JSON.stringify({ dryRun: true }) }, 60000); }
@@ -3120,7 +3123,7 @@ async function previewRepoRestore(uuid, commitId) {
   if (!res.ok) { SNAP_PREVIEW = null; out.innerHTML = `<div class="ds-mono" style="color:var(--coral)">cannot restore: ${escapeHtml(res.error || res.code || 'refused')}</div>`; return; }
   const p = res.plan || {};
   const changes = (p.write || []).length + (p.delete || []).length;
-  SNAP_PREVIEW = res.restorable && changes ? { uuid, commitId, plan: p } : null;
+  SNAP_PREVIEW = res.restorable && changes ? { uuid, commitId, plan: p, outId } : null;
   const blocked = (p.blocked || []);
   out.innerHTML = `
     <div style="font-family:var(--mono);font-size:10px;color:var(--text2);margin-top:8px">
@@ -3138,7 +3141,7 @@ async function previewRepoRestore(uuid, commitId) {
 }
 
 async function runRepoRestore() {
-  const pv = SNAP_PREVIEW; const out = document.getElementById('snap-restore-out');
+  const pv = SNAP_PREVIEW; const out = document.getElementById((pv && pv.outId) || 'snap-restore-out');
   if (!pv || !out) return;
   const w = (pv.plan.write || []).length, d = (pv.plan.delete || []).length;
   if (!window.confirm(`Restore ${w} file(s) and delete ${d} file(s)?\n\nA pre-restore snapshot is taken first, so this can be undone.`)) return;
@@ -3149,7 +3152,7 @@ async function runRepoRestore() {
   SNAP_PREVIEW = null;
   const res = r.result || {};
   const pre = res.preRestoreCommitId;
-  const undo = pre ? `<div class="action-row" style="margin-top:6px"><button class="action-btn" onclick="previewRepoRestore('${pv.uuid}','${escapeHtml(pre)}')">undo — preview restoring ${escapeHtml(pre)}</button></div>` : '';
+  const undo = pre ? `<div class="action-row" style="margin-top:6px"><button class="action-btn" onclick="previewRepoRestore('${pv.uuid}','${escapeHtml(pre)}','${escapeHtml(pv.outId || 'snap-restore-out')}')">undo — preview restoring ${escapeHtml(pre)}</button></div>` : '';
   if (res.ok && res.verified) {
     toast(`restored ${res.written} file(s), deleted ${res.deleted} — verified against disk`, 'ok');
     out.innerHTML = `<div class="ds-mono" style="color:var(--mint)">restored and verified against the files on disk: ${res.written} written, ${res.deleted} deleted.</div>${undo}`;
@@ -4044,7 +4047,7 @@ function _vmWizardHtml() {
   const s3 = running || done ? `Node ${escapeHtml(_vmWiz.node)}${_vmWiz.extras.length ? ' + ' + escapeHtml(_vmWiz.extras.join(', ')) : ''}, Python 3, git, build tools`
     : `Always included: Python 3, git, build tools, the QEMU guest agent. Node version:
       <select onchange="_vmWiz.node=this.value">${['lts', '22', '20'].map(v => `<option value="${v}" ${_vmWiz.node === v ? 'selected' : ''}>${v === 'lts' ? 'latest LTS' : 'Node ' + v}</option>`).join('')}</select>
-      <div style="margin-top:3px"><label><input type="checkbox" class="vm-setup-extra" value="desktop" ${_vmWiz.extras.includes('desktop') ? 'checked' : ''} onchange="_vmWiz.extras=[...document.querySelectorAll('.vm-setup-extra:checked')].map(e=>e.value)"> <b>desktop</b> — xfce, a browser and an editor; the repo's <b>Desktop</b> button needs it (login from Settings → Desktop, default nexus / nexus)</label></div>
+      <div style="margin-top:3px"><label><input type="checkbox" class="vm-setup-extra" value="desktop" ${_vmWiz.extras.includes('desktop') ? 'checked' : ''} onchange="_vmWiz.extras=[...document.querySelectorAll('.vm-setup-extra:checked')].map(e=>e.value)"> <b>desktop</b> — xfce, a browser and an editor; the repo's <b>Desktop</b> button needs it (login from Settings → Environment &amp; desktop, default nexus / nexus)</label></div>
       <div style="margin-top:3px">Extra languages for repos that need them: ${['go', 'ruby', 'php', 'rust'].map(x => `<label style="margin-right:8px"><input type="checkbox" class="vm-setup-extra" value="${x}" ${_vmWiz.extras.includes(x) ? 'checked' : ''} onchange="_vmWiz.extras=[...document.querySelectorAll('.vm-setup-extra:checked')].map(e=>e.value)"> ${x}</label>`).join('')}</div>
       <div style="opacity:.7;margin-top:3px">Needs ~350 MB download and ~3 GB of disk${host.home ? ` in <code>${escapeHtml(host.home)}</code>` : ''}. You can run the setup again later to add languages.</div>`;
   h += step(3, running || done ? 'ok' : qemuOk ? 'now' : 'todo', 'Choose what goes in the VM', s3);

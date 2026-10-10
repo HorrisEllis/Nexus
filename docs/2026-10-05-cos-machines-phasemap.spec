@@ -43,7 +43,8 @@ spec:
     VM1_control_like_vmware:
       layer: library
       systems: [cos]
-      status: OPEN
+      status: "DONE-ELSEWHERE — built 0.39.371 (cos/workspace/vm-control.js: pause/resume over QMP, live checkpoints savevm/loadvm, the index beside the disk; routes repo.desktop.control, the Plan's control view, 0.56.0 the repo's box). Found open 2026-10-10 while mapping SD13."
+      status_before: OPEN
       depends_on: []
       files: [cos/compartment/qemu-runtime.js, cos/workspace/index.js, cos/cli/commands/vm.js, idearium/api/index.js]
       james: '"I want to use snapshots, pause, rewind, etc. like full VMware style. Not actual VMware."'

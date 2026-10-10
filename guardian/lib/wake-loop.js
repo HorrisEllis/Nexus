@@ -73,7 +73,7 @@ function createCopilotAsk({ url = process.env.COPILOT_URL || 'http://127.0.0.1:3
   });
 }
 
-function createWakeLoop({ askCopilot, createJob, dispatchJob, getJob, bus = { emit() {} }, maxDepth = parseInt(process.env.GUARDIAN_WAKE_MAX_DEPTH || '3', 10), log = () => {}, answeredTtlMs = 10 * 60e3, now = Date.now } = {}) {
+function createWakeLoop({ askCopilot, createJob, dispatchJob, getJob, bus = { emit() {} }, maxDepth = require('../options.js').get('routing.wake_max_depth'), log = () => {}, answeredTtlMs = 10 * 60e3, now = Date.now } = {}) {
   const handled = new Set();
   // §0.39.279 — one answer per wake when BOTH paths see the same turn (a job's completion and that chat's transcript).
   // Each path records the asks it answered; the other path yields to a matching record ONCE (consumed), within

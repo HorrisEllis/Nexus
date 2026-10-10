@@ -46,10 +46,10 @@ const LABEL = Object.fromEntries(GATES.map(g => [g.id, g.label]));
 // What to do when a gate fails or waits too long. Said plainly, and only what is known to help.
 const FIX = Object.freeze({
   create:   'guardian could not write the job — check guardian/data/jobs is writable',
-  tab:      'open the provider in Clear Glass (or your browser with its Guardian userscript) and sign in',
+  tab:      'open the provider in Clear Glass (or your browser with its Guardian userscript), signed in',   // §HP22 — not "sign in": the routing classes read that as a login wall
   ping:     'the tab did not answer — it may be frozen or mid-reply; reload it',
   deliver:  'the tab\'s connection went stale — reload the tab',
-  accept:   'the tab is still answering another job — wait for it, or reload the tab',
+  accept:   'the tab did not take the job — it may be frozen, on another page, or still answering another job: reload it',
   submit:   'the composer or send button was not found — pick them with ◎ (the element picker)',
   reply:    'no reply was read — pick the reply with ◎, or wait: the chat transcript completes the job when the chat settles',
   complete: '',
@@ -59,7 +59,25 @@ const FIX = Object.freeze({
 const ERROR_GATE = Object.freeze({
   tab_busy: 'accept', submit: 'submit', watch: 'reply', no_reply: 'reply', no_reply_element: 'reply',
   ping: 'ping', ping_gate_failed: 'ping', stale_socket: 'deliver', raid_unavailable: 'deliver',
+  pickup: 'accept', no_tab: 'tab',   // §HP14 / §HP17 0.55.2
 });
+
+// §HP13 0.55.2 — the userscripts' gate() wrapper reports every page-side failure as gate 'handleJob', which named no
+// gate here, so it fell to the current one ('tab takes the job') and the sentence said "the tab is still answering
+// another job" when the input box was missing. An unknown gate is read from what the error says.
+const ERROR_TEXT_GATE = Object.freeze([
+  [/still answering|another job|tab is busy|tab_busy/i, 'accept'],
+  [/log ?in|sign ?in|captcha|verify you are/i, 'tab'],
+  [/input not found|contenteditable|composer|send button|never sent|submit/i, 'submit'],
+  [/no reply|findResponseEl|reply (element|selector)|reply never|watch timed out/i, 'reply'],
+]);
+function gateOfError(gate, error) {
+  if (ERROR_GATE[gate]) return ERROR_GATE[gate];
+  if (ERROR_GATE[error]) return ERROR_GATE[error];
+  const text = `${error || ''}`;
+  for (const [re, g] of ERROR_TEXT_GATE) if (re.test(text)) return g;
+  return null;
+}
 
 /** The furthest gate passed so far, or null. */
 function _lastPassed(trail) {
@@ -108,9 +126,12 @@ function apply(trail = [], type, data = {}, now = Date.now()) {
       else { add('create', 'passed'); change = add('tab', 'waiting', `no ${data.provider || 'provider'} tab free yet${r ? ` (${r})` : ''} — waiting`); }
       break;
     }
+    // §HP21 0.55.2 — the economy holding a job was on no gate: the caller read "no gate reported yet" for 5 minutes
+    case 'guardian.economy.wait': { add('create', 'passed'); change = add('tab', 'waiting', `economy: ${data.reason || 'a limit'} — waits ${Math.round((data.ms || 0) / 1000)} s`); break; }
     case 'guardian.job.dispatched': change = add('deliver', 'passed', data.transport ? `via ${data.transport}` : null); break;
     case 'guardian.job.progress': {
-      if (data.stage === 'submitted') change = add('submit', 'passed', data.how ? `by ${data.how}` : null);
+      if (data.stage === 'accepted') change = add('accept', 'passed', null);   // §HP14 — the tab said it took the job
+      else if (data.stage === 'submitted') change = add('submit', 'passed', data.how ? `by ${data.how}` : null);
       else if (data.stage === 'dom' && !t.some(e => e.gate === 'reply' && e.state === 'passed')) {
         add('submit', 'passed');
         const a = data.anchor;
@@ -126,7 +147,7 @@ function apply(trail = [], type, data = {}, now = Date.now()) {
       break;
     }
     case 'guardian.job.error': {
-      const g = ERROR_GATE[data.gate] || ERROR_GATE[data.error] || currentGate(t);
+      const g = gateOfError(data.gate, data.error) || currentGate(t);
       change = add(g, 'failed', String(data.error || data.gate || 'failed'));
       break;
     }
@@ -153,7 +174,7 @@ function describe(trail = [], { provider = null } = {}) {
     : lastFail || [...trail].reverse().find(e => e.gate === gate) || null;
   const state = done ? 'passed' : lastFail ? 'failed' : (news ? news.state : 'waiting');
   const detail = news ? news.detail : null;
-  const fix = state === 'passed' ? '' : FIX[gate] || '';
+  const fix = state === 'passed' ? '' : (detail && /^economy:/.test(detail)) ? 'the provider economy holds it — another agent, or the limits in Settings → economy' : FIX[gate] || '';
   const where = `gate ${ORDER[gate] + 1}/${GATES.length} "${LABEL[gate]}"${provider ? ` (${provider})` : ''}`;
   const sentence = state === 'passed'
     ? `complete${detail ? ` — ${detail}` : ''}`
@@ -167,7 +188,7 @@ function describe(trail = [], { provider = null } = {}) {
  */
 function attach({ bus, jobs } = {}) {
   const TYPES = ['guardian.job.created', 'guardian.job.queued', 'guardian.job.dispatched', 'guardian.job.progress',
-    'guardian.job.chunk', 'guardian.job.complete', 'guardian.job.timeout', 'guardian.job.error'];
+    'guardian.job.chunk', 'guardian.job.complete', 'guardian.job.timeout', 'guardian.job.error', 'guardian.economy.wait'];
   function onEvent(type, data) {
     if (!data || !data.jobId || !jobs) return null;
     const job = jobs.get(data.jobId);
@@ -185,4 +206,4 @@ function attach({ bus, jobs } = {}) {
   return { onEvent };
 }
 
-module.exports = { MODULE_ID, VERSION, GATES, FIX, ERROR_GATE, apply, describe, currentGate, attach };
+module.exports = { MODULE_ID, VERSION, GATES, FIX, ERROR_GATE, gateOfError, apply, describe, currentGate, attach };

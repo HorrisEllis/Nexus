@@ -4,6 +4,50 @@ James: "can you get us there." · "most amount of power, and highest leverage, l
 
 The whole roadmap after the declutter: **53 phases**. Everything else is on the shelf, kept and visible, and can come back; the shelf was combed for anything broken, failing, losing data or security-critical, and what mattered came back here (step 0). "Check first" means part of it may already be built; it is checked against the code before anything is written.
 
+## Step 0a — solid (docs/2026-10-10-idearium-solid-phasemap.spec)
+
+James: "maybe we get idearium solid then start finally using nexus to build nexus". Solid has a finish line now: the map's `solid_means` checks, each proven against the running stack with tests/sim/fake-tab.js.
+
+| phase | map | note |
+|---|---|---|
+| SD15_no_website_can_drive_nexus | 2026-10-10-idearium-solid | VERIFIED: any web page can POST to guardian (CORS *) — first |
+| SD16_a_plan_step_never_proposes_code | 2026-10-10-idearium-solid | found by the loop simulator |
+| SD0_versionium_down_is_said_and_restarted | 2026-10-10-idearium-solid | his 12:46 refusal |
+| SD2_copilot_never_answers_ok_with_nothing | 2026-10-10-idearium-solid | "unstructured response … via none" |
+| SD3_the_person_goes_first | 2026-10-10-idearium-solid | background builds never ahead of him |
+| SD1_rewind_and_versions_on_the_repo_card | 2026-10-10-idearium-solid | backend exists; the card |
+| SD6_an_idea_logged_asked_expanded | 2026-10-10-idearium-solid | the void as a real back-and-forth |
+| SD4_agents_live_in_guardian | 2026-10-10-idearium-solid | one .agent per model |
+| SD5_account_fallback | 2026-10-10-idearium-solid | after SD4 |
+| SD10_the_adversarial_gate | 2026-10-10-idearium-solid | "the adversarial is a gate for each output" — any domain |
+| SD12_a_spec_starts_from_its_primitives | 2026-10-10-idearium-solid | idea → primitives & invariants → schema → the rest, as a DAG |
+| SD14_chunks_cut_at_primitives | 2026-10-10-idearium-solid | a build chunk = a primitive and what its relations reach |
+| SD7_blocks_that_generate_themselves | 2026-10-10-idearium-solid | the DAG; after SD6 and SD10 |
+| SD8_an_agent_can_see_and_fix_a_tab | 2026-10-10-idearium-solid | Clear Glass as agent tools |
+| SD9_claude_code_inside_idearium | 2026-10-10-idearium-solid | half real |
+| SD13_the_machine_is_cos | 2026-10-10-idearium-solid | "the vm, i have no control over" — one COS surface: setup → start → screen → control |
+| SD11_the_desktop_inside_idearium | 2026-10-10-idearium-solid | the VM's screen in a pane, not a pop-up |
+
+## Straight after solid — every system a node system (docs/2026-09-11-sovereign-node-architecture-phasemap.spec, back from the shelf; docs/architecture-spec ADDENDUM 2026-10-10)
+
+James: "im saying all systems are supposed to be like guardian with the nodes … cortex data is clumped together instead of being decoupled". DS1 cortex the catalog → P3 node schemas → P33 every system runs its node registry (the store a node) → DS2/P5 one system moves home at a time → P8 component registry by module → P36 an event ledger per registry → P2/P13 contracts and handoffs → P34 nodes in the lattice → P35 copilot reads, edits, creates nodes → P37 the UI floats on the registry → P38 every graph has its route, command and node. Self-awareness (below) builds on it.
+
+## Straight after solid — self-awareness (docs/2026-10-10-self-awareness-phasemap.spec)
+
+James: "the data nodes arent a reflection of guardian. which means there is blind spots … also connecting it to the associative lattice". AW0 no guessed causes (the 2 s edge never walked) → AW1 guardian's live state as nodes (jobs, tabs, agents) → AW2 every call says who asked (so the lattice gets idearium→guardian, copilot→guardian) → AW3 the field hears guardian's whole lifecycle → AW4 the door reads the lattice → AW5 a node's face.
+
+## After solid — a snapshot is a compartment (docs/2026-10-10-snapshot-compartments-phasemap.spec)
+
+James: "what if a snapshot is a cos compartment? that can branch, or run in parralel to for benchmarks, using deltas and sigmas? using rfr2?" SN0 one branch mechanism (three today) → SN1 open any snapshot as a compartment → SN2 one workload on N of them, repeated → SN3 measured by RFR2 delta and sigma → SN4 benchmarks teach the learned order.
+
+## After solid — the design surface (docs/2026-10-10-design-surface-phasemap.spec)
+
+James: "i want to make a design system for creating and editing different types of graphical interfaces. like open any file and edit the ui in real time". DS0 one token source → DS1 tokens edited live → DS2 pick and edit any page (Clear Glass ◎, written back) → DS3 components as Eravos mods → DS4 interface types by adapter → DS5 the agents design too · DS6 one module contract, nested · DS7 every editing tool an Eravos mod, typed by what it accepts and produces (native GNU tools run in a compartment) · DS8 the registry routes, the UI reflects (compartments inside compartments — logical; a VM only where isolation is needed).
+
+## Step 0b — the shape (docs/2026-10-10-shape-of-nexus-phasemap.spec)
+
+James: "i prefer options over hard coded, and i prefer it over code honestly … invent any you can think of to fix the shape of nexus. maybe like epistomology, and using the cos as empirical." OP4 environment & desktop one menu → OP0 one options shape → OP1 every system declares its options (guardian first) → OP2 the system's settings in its repo → OP3 copilot reads and sets options → SH1 one home for every concept → SH2 explain this anywhere → EP1 every claim says how it is known → EP2 COS is the empirical layer → CG1 the field injects once → CG2 one source of truth for the browser → TU1 the Nexus tutorial → CG3 the Fiverr tutorial in the browser → LR1 each component in the language that fits (the registry as the bridge).
+
 ## Step 0 — health and the clean-up
 
 | phase | map | note |

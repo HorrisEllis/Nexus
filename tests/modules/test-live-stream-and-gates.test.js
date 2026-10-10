@@ -174,7 +174,10 @@ test('GS-11', 'every userscript: the job start arms the streamer; the watch mark
     // 0.39.278 — no longer a 500 ms poll: the transcript's MutationObserver kicks the streamer (150 ms coalescing)
     assert.ok(/const _TX_STREAM_MS = 150;/.test(s) && /function _txStreamKick\(\)/.test(s) && !/setInterval\(_txStreamTick/.test(s), `${p}: cadence`);
     const esc = v.replace(/\./g, '\\.');
-    assert.ok(new RegExp(`// @version\\s+${esc}\\b`).test(s) && new RegExp(`const VERSION\\s*=\\s*'${esc}'`).test(s), `${p}: not ${v}`);
+    // 0.55.2 — at least the version it landed in, header and constant agreeing (a later bump is fine)
+    const hv = (s.match(/\/\/ @version\s+([\d.]+)/) || [])[1], cv = (s.match(/const VERSION\s*=\s*'([\d.]+)'/) || [])[1];
+    const ge = (a, b) => { const x = String(a).split('.').map(Number), y = String(b).split('.').map(Number); for (let i = 0; i < 3; i++) { if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); } return true; };
+    assert.ok(hv && ge(hv, v) && cv === hv, `${p}: @version ${hv} / VERSION ${cv} — not at least ${v}, or not agreeing`); void esc;
   }
 });
 

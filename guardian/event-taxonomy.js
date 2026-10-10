@@ -75,6 +75,18 @@ module.exports = Object.freeze({
     payloadShape: ['jobId', 'error', 'provider', 'gate'],
     severity: 'failure',
   },
+  // §HP16 0.55.2 — guardian/lib/dispatcher.js cancel(): askSync stopped waiting on a job nothing was typed for
+  GUARDIAN_JOB_CANCELLED: {
+    description: 'A job nobody waits for any more (its caller gave up and the tab never typed it) was taken off every queue and will not be sent.',
+    payloadShape: ['jobId', 'provider', 'agentId', 'reason'],
+    severity: 'notable',
+  },
+  // §OP1 0.57.0 — POST /api/options: one of guardian's options was set or reset (guardian/options.js)
+  GUARDIAN_OPTIONS_CHANGED: {
+    description: 'One of guardian\'s options was set or reset through its options route; the change is also in guardian/data/options-ledger.jsonl.',
+    payloadShape: ['id', 'value', 'old', 'actor'],
+    severity: 'notable',
+  },
 
   // ── Code artifacts — guardian/lib/code-artifact.js — real, governed,
   //    emitted from the ncp-handler completion path only when the job

@@ -204,6 +204,28 @@ export const SPEC = [
       if (!l.length) { console.log(h.c.gray(`  no commit names ${d.path}${d.untracked ? ` (${d.untracked} older commit(s) do not say what they touched)` : ''}`)); return; }
       for (const c of l) console.log(`  ${h.c.amber(String(c.commitId).slice(0, 10))} ${h.c.dim(when(c.ts))} ${c.op === 'delete' ? h.c.coral('deleted') : 'changed'}  ${String(c.message || '').slice(0, 90)}${(c.provenance.refs || []).length ? h.c.dim(`  · ${c.provenance.refs.join(', ')}`) : ''}`);
     } },
+  // §OP3 0.57.0 — James: "i prefer options over hard coded … anything high leverage, or that removes the need to understand code".
+  // A system's options through Idearium's proxy (GET/POST /api/systems/:system/options → the system's own /api/options).
+  { key: 'options', repo: false, usage: 'options <system> [<group.key> <value> | <group.key> --reset] [--actor copilot]', about: 'a system\'s options — every value its code reads, with its default, range and source; set or reset one',
+    need: (a) => a.args[0] ? null : 'a system (guardian, …)',
+    req: (a) => {
+      const [sys, id, value] = a.args, base = `/api/systems/${encodeURIComponent(sys)}/options`;
+      if (id && (value !== undefined || a.flags.reset)) return { method: 'POST', path: base, body: { id, ...(a.flags.reset ? { reset: true } : { value }), actor: a.flags.actor === 'copilot' ? 'copilot' : 'user' } };
+      return { method: 'GET', path: base };
+    },
+    print: (d, a, h) => {
+      if (d.id || d.value !== undefined && !d.options) { console.log(`${h.c.mint('✓')} ${a.args[1]} = ${h.c.bold(String(d.value))}${d.old !== undefined ? h.c.dim(`  (was ${d.old})`) : ''}${d.note ? `\n  ${h.c.amber(d.note)}` : ''}`); return; }
+      if (!d.declared) { console.log(h.c.dim(`  ${d.note || 'no options declared yet'}`)); return; }
+      const want = a.args[1];
+      let group = null;
+      for (const o of (d.options || []).filter(o => !want || o.id === want || o.group === want)) {
+        if (o.group !== group) { group = o.group; console.log(`\n  ${h.c.sky(group)}`); }
+        const src = o.source === 'env' ? h.c.amber(`env ${o.overriddenBy}`) : o.source === 'file' ? h.c.mint('set') : h.c.dim('default');
+        console.log(`    ${o.key.padEnd(24)} ${h.c.bold(String(o.value)).padEnd(12)} ${src}${o.unit ? h.c.dim(` ${o.unit}`) : ''}${h.c.dim(`  default ${o.default}${o.min != null ? ` · ${o.min}–${o.max}` : ''}`)}`);
+        if (want) console.log(h.c.dim(`      ${o.description}`));
+      }
+      console.log('');
+    } },
   { key: 'store', repo: false, usage: 'store', about: 'the shared memory store by its files: each table\'s size, append segments, cap and archive (cortex)',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/store' }),
     print: (d, a, h) => {

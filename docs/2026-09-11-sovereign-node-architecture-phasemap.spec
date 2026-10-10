@@ -1,7 +1,7 @@
 spec:
   meta:
     name:    2026-09-11-sovereign-node-architecture-phasemap
-    roadmap: 'later — architecture — later (declutter 2026-10-09, James: "okay")'
+    roadmap: 'path — brought back 2026-10-10 (James: "im saying all systems are supposed to be like guardian with the nodes"); the phases he did not ask for stay on the shelf, each marked'
     version: 0.1.0
     status: draft
     created: 2026-09-11
@@ -55,7 +55,8 @@ spec:
   # ── Real phases, in dependency order — each is real, bounded, testable work ──
   phases:
     P1_fix_the_declared_living_maps:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         docs/nexus.spec and any other file that CLAIMS to be a real,
         current source of truth must actually be current. Same real fix
@@ -136,7 +137,8 @@ spec:
       blocks: []
 
     P7_copilot_ticket_queue:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "what if copilot inputs starts a ledger until the
         request is marked complete... using a contract... input goes
@@ -183,7 +185,8 @@ spec:
       blocks: [P3_per_system_node_schemas]
 
     P9_diagnostic_from_expected_behavior:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "this way we can also use the data as a way to
         understand expected behavior, that way we can diagnose the
@@ -199,7 +202,8 @@ spec:
       blocks: [P8_per_system_component_registry]
 
     P10_intelligence_reads_sse_and_data_folders:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "then the intelligence system can use the sse and data
         folders for each system." Real, closing connection — once P5
@@ -213,7 +217,8 @@ spec:
       blocks: [P5_data_folder_completion, P8_per_system_component_registry]
 
     P11_unify_failure_tracking:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         Real, confirmed audit finding (this session, deliberately kept
         shallow given real token constraints — this phase is the real,
@@ -234,7 +239,8 @@ spec:
       blocks: [P8_per_system_component_registry]
 
     P12_compartment_per_contract:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "working memory is meant for immediate data for the
         contract which we should create a compartment for to copy and
@@ -266,7 +272,8 @@ spec:
       blocks: [P2_per_system_interaction_contracts, P11_unify_failure_tracking]
 
     P14_per_system_living_gap_index:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "we can have a living gap index for each system, with
         the relevant information using the intelligence system and
@@ -280,7 +287,8 @@ spec:
       blocks: [P8_per_system_component_registry]
 
     P15_redundant_file_purge:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "copilot has files in the folder it doesn't really need
         i feel like. i feel like a purge of redundant files needs to
@@ -378,7 +386,8 @@ spec:
       blocks: [P5_data_folder_completion, P19_dynamic_nodes_via_causal_graph]
 
     P23_guardian_job_durability:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James/doc4: "needs to stop being implicit, needs to be a
         tangible payload per job." Confirmed real, not hypothetical —
@@ -401,7 +410,8 @@ spec:
       blocks: []
 
     P24_response_queue_and_delivery_ack:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James/doc4: "a job can only complete if there is a response per
         job... then the response needs to also queue until delivered to
@@ -416,7 +426,8 @@ spec:
       blocks: [P23_guardian_job_durability]
 
     P25_universal_per_system_queue:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "clearglass can have a queue per provider. like every
         system needs a queue, that's persistent, drainer that loops
@@ -437,7 +448,8 @@ spec:
       blocks: [P23_guardian_job_durability, P24_response_queue_and_delivery_ack]
 
     P26_unify_conversation_logging:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "clearglass has a full listener for each provider and
         logs each conversation fully into a ledger in real time." Found,
@@ -462,7 +474,8 @@ spec:
       blocks: []
 
     P27_guardian_picker_userscript_manager:
-      status: partially_done
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: partially_done
       description: |
         James: "hook guardian picker into the userscripts... a button
         to show userscripts for the page, a way to edit the userscript."
@@ -491,7 +504,8 @@ spec:
       blocks: []
 
     P31_job_reference_command_syntax:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "/guardian /chatgpt /code efe37d5d-...job (file pasted
         into the agent chat)." Checked the real, current grammar first
@@ -515,7 +529,8 @@ spec:
       blocks: []
 
     P32_clearglass_enterprise_ui_scope:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "build all the ui for clearglass. expand the ui, full
         enterprise grade, full pages." Deliberately NOT attempted as one
@@ -536,7 +551,8 @@ spec:
       blocks: [P27_guardian_picker_userscript_manager, P28_dom_tool_and_command_flow, P29_clearglass_brainos_canvas]
 
     P28_dom_tool_and_command_flow:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "click the element picker, select an element, then
         select userscript, then a dropdown for inputs or outputs.
@@ -556,7 +572,8 @@ spec:
       blocks: [P25_universal_per_system_queue, P27_guardian_picker_userscript_manager]
 
     P29_clearglass_brainos_canvas:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "clearglass ui expanded with the userscripts, agent
         features, brainos ui for the entire agent orchestration node
@@ -568,7 +585,8 @@ spec:
       blocks: [P27_guardian_picker_userscript_manager, P28_dom_tool_and_command_flow]
 
     P30_provider_ping_delta:
-      status: open
+      status: 'LATER — kept on the shelf when this map came back 2026-10-10 (not part of "every system like guardian")'
+      status_before: open
       description: |
         James: "each time clearglass opens, needs to send ping to each
         provider, with a delta to measure performance." Real, small,
@@ -981,3 +999,73 @@ spec:
     checkable today) and P3 (the schema-ownership decision, which is a real
     open question, not something either of us should pick from outside
     context).
+
+  # ── 2026-10-10 — brought back, and what was missing (additive) ─────────────────────────────────────────────────────
+  # James: "im saying all systems are supposed to be like guardian with the nodes. like look at the architecture spec. like
+  # the node taxonomy, also cortex data is clumped together instead of being decoupled. like all data is the relative
+  # systems job to create, read, manage, integrate into the index for each node as tables for each, then its a jaa database
+  # which is also a node, all timestamped and holds the history, connects to the lattice as nodes, that makes them dynamic,
+  # copilot can read them, edit and create them. so they can expand contract and grow with the system." · "routes and cli
+  # commands, and the component registry for each system, as an interaction contract, and event bus, each component uses
+  # the registry sorted by module, and then each system uses for ineraction and handoffs, the ui floats on top. then a
+  # event ledger for each registry?"
+  # Kept from this map: P2 contracts, P3 node schemas, P4 node coverage, P5 data home (with DS1/DS2 of the cli-data-code
+  # map, also brought back), P6 contract schemas, P8 component registry per system, P13 contract + handshake per call,
+  # P19–P22 the causal field (their awareness half is docs/2026-10-10-self-awareness-phasemap.spec, which builds on them).
+  phases_added_2026_10_10:
+    P33_every_system_runs_its_node_registry:
+      systems: [core, cortex, guardian, idearium, copilot, intelligence, versionium, cos, loom, orchestrator, architect, diagnostic, eravos, clear-glass, ollama, emerge, warp]
+      status: open
+      depends_on: [P3_per_system_node_schemas, P5_data_folder_completion]
+      description: |
+        The architecture spec's AS1, made the rule: guardian/lib/node-registry.js's pattern (a watcher per node type, a
+        JAA table per type as the index, a ledger per type with every change timestamped) runs in EVERY system, over that
+        system's own data/nodes/ and its own JAA store. Only guardian's watcher runs today. The store itself is a node
+        (.store: owner, tables, counts, hash, location), so cortex's catalog (DS1) is a list of store nodes, not a copy.
+    P34_nodes_in_the_lattice:
+      systems: [intelligence, cortex]
+      status: open
+      depends_on: [P33_every_system_runs_its_node_registry, P19_dynamic_nodes_via_causal_graph]
+      description: |
+        Every node (not only system pairs) is a lattice node: its relations to other nodes carry a field, so a node grows
+        and shrinks with its use — "that makes them dynamic". Bounded: live nodes in RFR2's ring buffer, the rest in the
+        owner's store, re-entered when touched.
+    P35_copilot_reads_edits_creates_nodes:
+      systems: [copilot, core]
+      status: open
+      depends_on: [P33_every_system_runs_its_node_registry]
+      description: |
+        Through each system's contract, never its files: copilot (and any agent, through nexus.command) lists, reads,
+        creates, edits and archives a system's nodes; the owning system validates against its schema, writes, indexes and
+        ledgers. A new node type is proposed the same way (its schema a node too), so the taxonomy can expand and contract.
+    P36_an_event_ledger_per_registry:
+      systems: [core, cortex, guardian, idearium, copilot, intelligence, versionium, cos, loom, orchestrator, architect, diagnostic, eravos, clear-glass, ollama, emerge, warp]
+      status: open
+      depends_on: [P8_per_system_component_registry]
+      description: |
+        Each system's registry (components sorted by module — P8's "core components, then each module with each
+        component") has its own event ledger: every event a component emits or handles, by the event taxonomy, written by
+        the owner, timestamped. lib/component-ledger.js already writes per system / per component / per day; it becomes the
+        registry's ledger rather than a shared one, and the event taxonomy exists for every system (8 of 16 have one).
+    P37_the_ui_floats_on_the_registry:
+      systems: [idearium, clear-glass, orchestrator]
+      status: open
+      depends_on: [P8_per_system_component_registry, P36_an_event_ledger_per_registry]
+      description: |
+        A system's screens are drawn from its registry and its event ledger — the components, their state, their events —
+        not from state the UI keeps. The same stack for every system, top to bottom: UI → interaction contract (routes,
+        CLI commands) → component registry by module → event bus → event ledger → node registry → its own store. Systems
+        hand off to each other only through the contract (P13).
+    P38_every_graph_has_its_route_command_and_node:
+      systems: [idearium, intelligence, cortex, loom, core]
+      status: open
+      depends_on: [P2_per_system_interaction_contracts]
+      description: |
+        James, 2026-10-10: "also the idearium graphs. should the graphs abnd everything have routes?" Yes — through
+        THE_STACK: a graph is data its system owns, so it has a route (contract), a command (the one command table, so
+        copilot and every agent reach it through nexus.command), and it is a node (its kind, its relations, when it was
+        built, from what). Found: Idearium's code graph has five routes (graph, traverse, cone, spec, graphs) and no
+        command; intelligence serves the CFR field (/cfr/field, /cfr/events, /cfr/sse) and one lattice route, and the
+        causal graph's traceToRoot has no route at all. One verb set for every graph — get, traverse, cone (what depends
+        on this), trace (what caused this), as views of one relational field when RF1 lands — each system answering for
+        its own.

@@ -100,7 +100,7 @@ spec:
       layer: foundation
       systems: [cortex, intelligence, core]
       value: { score: 5, cost: M, for: [foundation, safety], why: "nothing can move home safely until every table has a named owner" }
-      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status: 'OPEN — brought back 2026-10-10 with sovereign-node P5 (James: "cortex data is clumped together instead of being decoupled")'
       status_before: OPEN
       depends_on: []
       files: [cortex/memory/jaa-db.js, lib/context-atlas.js, intelligence/lattice/associative-lattice.js]
@@ -113,7 +113,7 @@ spec:
       layer: foundation
       systems: [cortex]
       value: { score: 4, cost: XL, for: [foundation, ownership], why: "each system owns its data; repeated once per system" }
-      status: 'LATER — off the path — data moves home, bootstrap and test hygiene come after the loop (declutter 2026-10-09)'
+      status: 'OPEN — brought back 2026-10-10 with sovereign-node P5 (James: "cortex data is clumped together instead of being decoupled")'
       status_before: OPEN
       depends_on: [DS1_cortex_the_catalog]
       files: [cortex/memory/jaa-db.js, "<system>/data/"]

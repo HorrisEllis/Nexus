@@ -21,14 +21,15 @@ const RS_CATEGORIES = [
   // §0.48.0 OS8 — James: "all agent settings and options in the options tab under agents". Every agent setting is
   // here, drawn natively (js/agent-options.js); the agent itself — talking to it, its proposals — is the Code tab.
   { group: 'Agents', items: [['agent-behaviour', 'Behaviour'], ['agent-prompt', 'Prompt'], ['agent-hat', 'Hat & tools'], ['agent-models', 'Models']] },
-  { group: 'Environment', items: [['environment', 'Environment'], ['desktop', 'Desktop']] },
+  // §OP4 0.57.0 — James: "have the envirement and desktop tabs in the same manu, have it dynamic"
+  { group: 'Environment', items: [['environment', 'Environment & desktop']] },
 ];
 const RS_IDS = RS_CATEGORIES.flatMap(g => g.items.map(i => i[0]));
 const RS_KEY = 'idearium.repoSettings.category';
 const RS = { uuid: null, cat: null };
 
 function _rsSavedCategory() {
-  try { const v = localStorage.getItem(RS_KEY); return RS_IDS.includes(v) ? v : null; } catch (_) { return null; }   // storage may be blocked
+  try { let v = localStorage.getItem(RS_KEY); if (v === 'desktop') v = 'environment'; return RS_IDS.includes(v) ? v : null; } catch (_) { return null; }   // storage may be blocked; 'desktop' lives in Environment since OP4
 }
 function _rsSaveCategory(id) { try { localStorage.setItem(RS_KEY, id); } catch (_) { /* a per-browser convenience only */ } }
 
@@ -49,6 +50,7 @@ function renderRepoSettings(repo) {
 }
 
 function repoSettingsShow(id) {
+  if (id === 'desktop') id = 'environment';   // §OP4 0.57.0 — the desktop lives in Environment & desktop
   if (!RS_IDS.includes(id)) return;
   RS.cat = id; _rsSaveCategory(id);
   for (const b of document.querySelectorAll('.rs-item[data-rs]')) b.classList.toggle('on', b.dataset.rs === id);
@@ -59,18 +61,45 @@ function repoSettingsShow(id) {
  *  here from the console's own detail (GET /api/settings/console/:uuid) — the same data settings.html shows, no frame. */
 async function _rsDesktopDetail(repo) {
   const el = document.getElementById('rs-desktop-detail'); if (!el) return;
-  let d;
-  try { d = await api(`/api/settings/console/${encodeURIComponent(repo.uuid)}`, {}, 15000); }
-  catch (e) { el.innerHTML = `<div class="ds-mono">the compartment could not be read: ${escapeHtml(e.message)}</div>`; return; }
+  let d, vm = null;
+  try {
+    [d, vm] = await Promise.all([
+      api(`/api/settings/console/${encodeURIComponent(repo.uuid)}`, {}, 15000),
+      api('/api/cos/testenv', {}, 15000).then(t => (t && t.vm) || null).catch(() => null),   // §OP4 — is the machine set up (QEMU + a base image)?
+    ]);
+  } catch (e) { el.innerHTML = `<div class="ds-mono">the compartment could not be read: ${escapeHtml(e.message)}</div>`; return; }
   if (!document.getElementById('rs-desktop-detail') || CURRENT_API_REPO !== repo) return;
   const c = d.compartment, dk = d.desktop, r = d.repo || repo, st = dk && dk.ok !== false ? dk.state : null;
+  _rsDesktopActions(repo, { setUp: !!(vm && vm.ok), reason: vm ? vm.reason : 'the machine\'s setup could not be read', state: st });
   const kv = (label, text) => `<div class="ds"><div class="ds-label">${escapeHtml(label)}</div><div class="ds-mono">${escapeHtml(text)}</div></div>`;
   el.innerHTML = kv(`compartment${c ? ` · ${c.state}` : ''}`, c ? `name    ${c.name}\nid      ${c.id}\nroot    ${c.root || '—'}\nparent  ${c.parentId || '—'}${c.purpose ? `\npurpose ${c.purpose}` : ''}` : 'no compartment attached to this repo')
     + kv('branching', r.branchOf ? `branch ${r.branch || '?'} of ${r.branchOf}\nfiles: a git worktree of the original (one history) · VM disk: an overlay of the original's`
       : `original repo${(d.branches || []).length ? `\nbranches: ${d.branches.map(b => `${b.name} (${b.branch || '?'})`).join(', ')}` : '\nno branches yet'}`)
     + kv(`virtual machine${st ? ` · ${st}` : ''}`, dk && dk.ports ? `VNC ${dk.ports.vncPort} · websocket ${dk.ports.wsPort}${dk.branchedFrom ? ` · disk: branch of the ${dk.branchedFrom}` : ''}${dk.repoIn && dk.repoIn !== 'none' ? ` · files: ${dk.repoIn}` : ''}${dk.error ? `\nlast exit: ${dk.error}` : ''}`
       : 'not running — RAM, CPUs and network: Global → desktop.* · needs QEMU and a base image')
-    + (st === 'running' || st === 'booting' ? `<div class="action-row"><button class="action-btn" onclick="_rsDesktopStop('${repo.uuid}')">■ stop the VM</button><span class="ds-mono" style="opacity:.6">its disk is kept</span></div>` : '');
+    ;   // §OP4 — stop is in the desktop's buttons above (_rsDesktopActions), not repeated here
+}
+/** §OP4 0.57.0 — the desktop's buttons, by its state. Not set up: ⚙ Set up desktop (and why). Set up: ▣ Open desktop ·
+ *  ✎ Edit desktop (the same setup, to change the account, memory, CPUs, languages) · ⚙ (the desktop's settings in the
+ *  console); running: ■ Stop in place of Edit. */
+function _rsDesktopActions(repo, { setUp, reason, state }) {
+  const el = document.getElementById('rs-desktop-actions'); if (!el || !repo.compartmentId) return;
+  const gear = `<button class="action-btn" title="the desktop's settings — memory, CPUs, network, account" onclick="_rsDesktopSettings('${repo.uuid}')">⚙</button>`;
+  if (!setUp) {
+    el.innerHTML = `<button class="action-btn primary" onclick="openDesktopSetup(CURRENT_API_REPO)" title="install what the desktop needs and build its image">⚙ set up desktop</button>${gear}
+      <span class="ds-mono" style="opacity:.7">${escapeHtml(reason || 'not set up yet')}</span>`;
+    return;
+  }
+  const running = state === 'running' || state === 'booting';
+  el.innerHTML = `<button class="action-btn primary" onclick="openRepoDesktop('${repo.uuid}')" title="boot this repo's VM if needed and open it as a desktop">▣ open desktop</button>`
+    + (running ? `<button class="action-btn" onclick="_rsDesktopStop('${repo.uuid}')" title="stop the VM — its disk is kept">■ stop</button>`
+               : `<button class="action-btn" onclick="openDesktopSetup(CURRENT_API_REPO)" title="change the desktop's account, memory, CPUs and languages">✎ edit desktop</button>`)
+    + gear + `<span class="ds-mono" style="opacity:.7">${escapeHtml(running ? state : 'set up · stopped')}</span>`;
+}
+function _rsDesktopSettings(uuid) {
+  if (typeof API_BASE === 'undefined' || !API_BASE) { if (typeof toast === 'function') toast('idearium is offline — its settings are served by it', 'err'); return; }
+  const w = window.open(`${API_BASE}/settings.html?repo=${encodeURIComponent(uuid)}&tab=env`, 'idearium-settings', 'width=1280,height=900');
+  if (!w && typeof toast === 'function') toast('the settings window was blocked — allow pop-ups for idearium', 'err');
 }
 async function _rsDesktopStop(uuid) {
   try { await api(`/api/repos/${encodeURIComponent(uuid)}/desktop`, { method: 'DELETE', body: '{}' }); if (typeof toast === 'function') toast('VM stopping — its disk is kept', 'ok'); }
@@ -113,19 +142,16 @@ function _rsPaint(repo) {
     agentSettingsFill(id);
     return;
   }
-  if (id === 'environment') {
-    pane.innerHTML = head('Environment', 'Whether the code is downloaded and configured, and what this codebase needs installed.')
-      + '<div id="repo-env-section"></div>';
-    if (typeof renderRepoEnvironment === 'function') renderRepoEnvironment(repo);
-    return;
-  }
-  if (id === 'desktop') {
-    pane.innerHTML = head('Desktop', 'The compartment\'s VM, opened as a desktop in a Clear Glass window.')
-      + `<div class="ds"><div class="action-row">
-        ${repo.compartmentId ? `<button class="action-btn primary" onclick="openRepoDesktop('${repo.uuid}')" title="Boot this repo's VM and open it as a desktop (Clear Glass window)">▣ open desktop</button> <button class="action-btn" onclick="openDesktopSetup(CURRENT_API_REPO)" title="§0.39.340 DK2 — the account, the VM's memory and CPUs, and the setup's progress">⚙ set up desktop</button>` : '<span class="ds-mono">no compartment attached — no desktop</span>'}
-      </div></div>
+  if (id === 'environment' || id === 'desktop') {
+    // §OP4 0.57.0 — one menu: what the codebase needs, then its desktop; the desktop's buttons follow its state (_rsDesktopDetail)
+    pane.innerHTML = head('Environment & desktop', 'Whether the code is downloaded and configured, what it needs installed, and its desktop.')
+      + '<div id="repo-env-section"></div>'
+      + `<div class="ds-label" style="margin-top:18px">desktop</div>
+      <div class="ds"><div class="action-row" id="rs-desktop-actions">${repo.compartmentId ? '<span class="ds-mono">reading the desktop…</span>' : '<span class="ds-mono">no compartment attached — no desktop</span>'}</div></div>
       <div id="rs-desktop-detail"><div class="ds-mono">reading the compartment…</div></div>`;
+    if (typeof renderRepoEnvironment === 'function') renderRepoEnvironment(repo);
     _rsDesktopDetail(repo);   // §0.47.0 OS5 — native, no iframe
+    return;
   }
 
 }

@@ -80,8 +80,18 @@ function fingerprint({ provider, agentId, canonical, prompt }) {
  *                  maxAttempts, delays, now, setTimer })
  */
 function createJobRetry({ jobs, updateJob, bus, pool, dispatchJob, complete, readResponse = () => null, replyFor = () => null,
-                          erosAvailable = () => false, log = console, maxAttempts = 4, delays = DELAYS, setTimer = setTimeout } = {}) {
+                          erosAvailable = () => false, log = console, maxAttempts = undefined, delays = undefined, setTimer = setTimeout } = {}) {
   for (const [k, v] of Object.entries({ jobs, updateJob, dispatchJob, complete })) if (!v) throw new Error(`[${MODULE_ID}] missing dependency: ${k}`);
+  // §OP1 0.57.0 — unless the caller passes them, read from guardian's options on every use (retry.max_attempts,
+  // retry.first_wait_ms, retry.busy_first_wait_ms), so a change applies to the next failure without a restart
+  const _O = () => { try { return require('../options.js'); } catch (_) { return null; } };
+  const _maxAttempts = () => maxAttempts != null ? maxAttempts : ((_O() && _O().get('retry.max_attempts')) || 4);
+  const _delays = () => {
+    if (delays) return delays;
+    const o = _O(); if (!o) return DELAYS;
+    const f = o.get('retry.first_wait_ms'), b = o.get('retry.busy_first_wait_ms');
+    return { default: [f, f * 3, f * 7.5], 'tab-busy': [b, b * 2, b * 4] };
+  };
   const stats = { retried: 0, answeredFromResponse: 0, answeredFromTranscript: 0, viaEros: 0, exhausted: 0, joined: 0, final: 0 };
   const _timers = new Map();
 
@@ -121,8 +131,8 @@ function createJobRetry({ jobs, updateJob, bus, pool, dispatchJob, complete, rea
     const viaEros = n >= 2 && (last.kind === 'input' || last.kind === 'submit') && erosAvailable();
     if (viaEros) stats.viaEros++;
     updateJob(job.id, { status: 'pending', retryAt: null, ...(viaEros ? { transport: 'eros' } : {}) });
-    log.log && log.log(`[guardian/retry] ${String(job.id).slice(0, 8)} — attempt ${n + 1} of ${maxAttempts}${viaEros ? ' through ErosmancerOS (the tab could not take it twice)' : ''}`);
-    _say(job, `attempt ${n + 1} of ${maxAttempts}${viaEros ? ' — ErosmancerOS types it' : ''}`);
+    log.log && log.log(`[guardian/retry] ${String(job.id).slice(0, 8)} — attempt ${n + 1} of ${_maxAttempts()}${viaEros ? ' through ErosmancerOS (the tab could not take it twice)' : ''}`);
+    _say(job, `attempt ${n + 1} of ${_maxAttempts()}${viaEros ? ' — ErosmancerOS types it' : ''}`);
     dispatchJob(jobs.get(job.id));
   }
 
@@ -152,7 +162,7 @@ function createJobRetry({ jobs, updateJob, bus, pool, dispatchJob, complete, rea
       if (c.kind !== 'pick-reply') updateJob(job.id, { attempts });
       return { handled: false, kind: c.kind };
     }
-    if (attempts.length >= maxAttempts) {
+    if (attempts.length >= _maxAttempts()) {
       stats.exhausted++;
       updateJob(job.id, { attempts });
       return { handled: false, kind: c.kind, exhausted: true };
@@ -165,14 +175,14 @@ function createJobRetry({ jobs, updateJob, bus, pool, dispatchJob, complete, rea
       complete(job, found.text, found.chatUrl || job.chatUrl || null, found.source);
       return { handled: true, kind: c.kind, answered: found.source };
     }
-    const table = delays[c.kind] || delays.default;
+    const _d = _delays(); const table = _d[c.kind] || _d.default;
     const delayMs = table[Math.min(attempts.length - 1, table.length - 1)];
     updateJob(job.id, { status: 'retry_wait', attempts, retryAt: Date.now() + delayMs, error: null });
     const prov = provider || job.provider;
     try { if (pool && typeof pool.release === 'function') pool.release(prov, job.id); } catch (_) {}
     stats.retried++;
-    log.warn && log.warn(`[guardian/retry] ${String(job.id).slice(0, 8)} → ${prov}: ${c.kind} (${String(error || gate || '').slice(0, 120)}) — trying again in ${Math.round(delayMs / 1000)}s (attempt ${attempts.length + 1} of ${maxAttempts})`);
-    _say(job, `${c.kind}: ${String(error || gate || '').slice(0, 160)} — trying again in ${Math.round(delayMs / 1000)}s (attempt ${attempts.length + 1} of ${maxAttempts})`, { kind: c.kind, attempt: attempts.length + 1, delayMs });
+    log.warn && log.warn(`[guardian/retry] ${String(job.id).slice(0, 8)} → ${prov}: ${c.kind} (${String(error || gate || '').slice(0, 120)}) — trying again in ${Math.round(delayMs / 1000)}s (attempt ${attempts.length + 1} of ${_maxAttempts()})`);
+    _say(job, `${c.kind}: ${String(error || gate || '').slice(0, 160)} — trying again in ${Math.round(delayMs / 1000)}s (attempt ${attempts.length + 1} of ${_maxAttempts()})`, { kind: c.kind, attempt: attempts.length + 1, delayMs });
     const t = setTimer(() => _redispatch(job.id), delayMs);
     if (t && t.unref) t.unref();
     _timers.set(job.id, t);

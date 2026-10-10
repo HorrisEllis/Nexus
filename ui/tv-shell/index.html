@@ -2191,7 +2191,11 @@ async function asSend(){
       // now: if ok is explicitly false, show the real reason plainly.
       const text = result?.ok === false
         ? `Co-pilot didn't respond: ${result.reason || result.status || 'unknown failure'}${result.status && result.reason !== result.status ? ` (status: ${result.status})` : ''}. If this keeps happening, copilot's own process may be down — check whether its circuit breaker has tripped.`
-        : (result?.text || result?.response || (result ? `[unstructured response — keys: ${Object.keys(result).join(', ')}]` : 'No response'));
+        : (result?.text || result?.response || (result && ('text' in result || 'response' in result)
+            // §0.55.2 — James's screenshot: "[unstructured response — keys: ok, requestId, … text, modelUsed …] via none".
+            // The reply had a text field, empty, and no model behind it — said as that, not as a list of key names.
+            ? `Co-pilot answered with no text${result.modelUsed && result.modelUsed !== 'none' ? ` (model: ${result.modelUsed})` : ' — no model answered (model: none)'}: check that Ollama is running, or switch to GUARDIAN with an agent tab open.`
+            : (result ? `[unstructured response — keys: ${Object.keys(result).join(', ')}]` : 'No response')));
       out.style.color = 'rgba(0,229,255,.92)';
       out.textContent = text;
       // Model tag

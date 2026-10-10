@@ -110,6 +110,7 @@ function _makeExecutor({ goalText, provider, timeoutMs, jobs, createJob, dispatc
       provider: opts.provider || provider || 'auto',
       timeoutMs: timeoutMs || DEFAULT_STEP_TIMEOUT_MS,
       command: 'ask',
+      priority: 'normal',   // §SD3 — a background loop, not a person waiting
     }, {
       createJob, dispatchJob, getJob: (id) => jobs.get(id),
       isProviderConnected: (p) => { try { return ncp.isConnected(p); } catch (_) { return false; } },

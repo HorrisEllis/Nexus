@@ -61,6 +61,12 @@ const config = require('./config.js');
 // (see _getCopilotContext elsewhere in this file).
 const _injectConfig = require('./lib/inject-config.js');
 let _injectSeeded = false;
+/** §SD2 0.56.0 — an /api/prompt with no text: ok:false, said with lifeline's reason (reason too, for callers that read it) */
+function _noAnswer({ requestId, sessionId, modelUsed = 'none', lifeError = null, ...rest } = {}) {
+  const error = lifeError || (modelUsed && modelUsed !== 'none' ? `${modelUsed} answered with no text` : 'no model answered — Ollama and the guardian agents gave nothing back');
+  return { ok: false, error, reason: error, text: '', modelUsed, requestId, sessionId, contextLayers: 7, ...rest };
+}
+
 function _getInjectRule(id) {
   if (!_injectSeeded) { try { _injectConfig.seedDefaultInjectRules(); } catch (_) {} _injectSeeded = true; }
   return _injectConfig.getInjectRule(id);
@@ -2145,7 +2151,7 @@ const server = http.createServer(async (req, res) => {
     } catch (_) { /* container-panel query unavailable — fall through */ }
 
     // Dispatch through lifeline (lib/lifeline → Ollama first, Guardian fallback)
-    let text = '', modelUsed = 'none', confidence = null, escalated = false, escalationReason = null;
+    let text = '', modelUsed = 'none', confidence = null, escalated = false, escalationReason = null, lifeError = null;
     try {
       // §BUILT 2026-09-06 — James: "a toggle switch to switch between
       // ollama and guardian." lifeline.route() already accepts a real
@@ -2183,6 +2189,7 @@ const server = http.createServer(async (req, res) => {
       );
       text      = life?.text || '';
       modelUsed = life?.provider_used || 'none';
+      lifeError = life && !life.ok ? (life.error || null) : null;   // §SD2
       confidence = life?.confidence ?? null;
       escalated  = !!life?.escalated;
       // §BUG FIXED 2026-07-11 — "the confidence score is over-relying on
@@ -2234,6 +2241,9 @@ const server = http.createServer(async (req, res) => {
     // with no actual answer anywhere in it. The real fix is in
     // bridge/router.js's ResultGate — this endpoint's shape was correct
     // then and is correct now; it was never the actual problem.
+    // §SD2 0.56.0 — James's screenshot: "[unstructured response — keys: ok, … text, modelUsed …] via none". Nothing
+    // answered and this said ok:true with empty text. No text is a failure, said with lifeline's own reason.
+    if (!String(text || '').trim()) { json(res, 200, _noAnswer({ requestId, sessionId, modelUsed, lifeError })); return; }
     json(res, 200, { ok: true, text, modelUsed, contextLayers: 7, requestId, sessionId });
     return;
   }
@@ -2327,7 +2337,9 @@ const server = http.createServer(async (req, res) => {
   // chain), not a fourth router. POST /api/route/outcome { provider, kind, ok, class, ms, error } → recorded in the
   // economy ledger (what the learned mode learns from) and the breaker. The caller still sends its own prompt (0.39.258).
   if (method === 'POST' && p === '/api/route') {
-    try { json(res, 200, require('../lib/model-door.js').route(await readBody(req), { defaultProvider: config.DEFAULT_PROVIDER, resolve: resolveDefaultBackend })); }
+    // §HP18 0.55.2 — guardian's open tabs order the browser agents (fail-open: guardian silent = order unchanged)
+    try { const b = await readBody(req); const tabs = await require('../lib/agent-providers.js').guardianTabs({ url: GD_URL });
+      json(res, 200, require('../lib/model-door.js').route(b, { defaultProvider: config.DEFAULT_PROVIDER, resolve: resolveDefaultBackend, tabs })); }
     catch (e) { json(res, 500, { ok: false, error: e.message }); }
     return;
   }
@@ -2728,6 +2740,7 @@ const server = http.createServer(async (req, res) => {
     // Route through LIFELINE — Ollama primary, Guardian fallback
     let text = '';
     let modelUsed = 'none';
+    let lifeError = null;
     try {
       const lifeResult = await _lifeline.route(
         `${contextText}\n\nUSER: ${prompt}\nNEXUS CO-PILOT: `,
@@ -2735,6 +2748,7 @@ const server = http.createServer(async (req, res) => {
       );
       text      = lifeResult?.text || '';
       modelUsed = lifeResult?.provider_used || 'none';
+      lifeError = lifeResult && !lifeResult.ok ? (lifeResult.error || null) : null;   // §SD2
       if (lifeResult?.escalated) broadcast('copilot.lifeline.escalated', { provider: lifeResult.provider_used });
     } catch(e) {
       text = `Analysis failed: ${e.message}`;
@@ -2753,6 +2767,7 @@ const server = http.createServer(async (req, res) => {
     await _persist('chat_log', row);
     streamIngest({ type: 'copilot.answered', requestId, intent: callerIntent, modelUsed });
 
+    if (!String(text || '').trim()) { json(res, 200, _noAnswer({ requestId, sessionId, modelUsed, lifeError, intent: 'ask', channel })); return; }   // §SD2
     const ui = await _buildSpotlightUI(text);
     json(res, 200, { ok:true, requestId, sessionId, text, modelUsed, intent:'ask',
       channel, contextLayers: 7, fromStream: true, ...(ui ? { ui } : {}) });

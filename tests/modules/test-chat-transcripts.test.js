@@ -222,9 +222,11 @@ test('TX-18', 'every provider userscript pushes GUARDIAN_TRANSCRIPT and stamps a
     const s = fs.readFileSync(path.join(ROOT, `guardian/userscript-${p}.js`), 'utf8');
     assert.ok(/type: 'GUARDIAN_TRANSCRIPT'/.test(s), `${p}: no transcript push`);
     assert.ok(/type: 'GUARDIAN_SYNC_RESULT', syncId: msg\.syncId, provider: PROVIDER, tabId: MY_TAB, agentId: NEXUS_AGENT_ID/.test(s), `${p}: sync result without agentId`);
-    const esc = v.replace(/\./g, '\\.');
-    assert.ok(new RegExp(`// @version\\s+${esc}\\b`).test(s), `${p}: @version is not ${v}`);
-    assert.ok(new RegExp(`const VERSION\\s*=\\s*'${esc}'`).test(s), `${p}: VERSION is not ${v}`);
+    // 0.55.2 — at least the version the feature landed in, the header and the constant agreeing (a later bump is fine)
+    const hv = (s.match(/\/\/ @version\s+([\d.]+)/) || [])[1], cv = (s.match(/const VERSION\s*=\s*'([\d.]+)'/) || [])[1];
+    const ge = (a, b) => { const x = String(a).split('.').map(Number), y = String(b).split('.').map(Number); for (let i = 0; i < 3; i++) { if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); } return true; };
+    assert.ok(hv && ge(hv, v), `${p}: @version ${hv} is below ${v}`);
+    assert.strictEqual(cv, hv, `${p}: VERSION ${cv} differs from @version ${hv}`);
   }
 });
 

@@ -733,6 +733,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     else if (omDerived && omDerived.ok && !omDerived.models.length) ladderFrom = `${ladderFrom} — Ollama answered with no models installed`;
     // §HP3 0.52.0 — a rung whose Ollama model is not installed (or every Ollama rung, Ollama unreachable) is left off
     // before the climb, said on the run's route; never tried, never counted as that model's failure
+    // §HP18 0.55.2 — and a browser agent with no tab open in guardian is tried after the ones that have one
+    const _tabs = rungs.some(x => x.base !== 'ollama') ? await _require('../../lib/agent-providers.js').guardianTabs() : null;
+    if (_tabs) { const t = PRt.byTabs(rungs, _tabs, (r) => r.base); if (t.moved.length) { rungs = t.order; ladderFrom = `${ladderFrom} — moved later: ${t.moved.map(m => `${m.provider} (${m.why})`).join('; ')}`; } }
     if (rungs.some(x => x.base === 'ollama')) {
       const om = await _ollamaModels();
       const pr = PRt.present(rungs, { reachable: om.ok, installed: om.models, error: om.error });
@@ -2134,6 +2137,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','economy'],                     'economy.set'],
     ['GET',    ['api','economy',':what'],             'economy.view'],
     ['GET',    ['api','settings','console',':uuid'],  'settings.console.repo'],
+    ['GET',    ['api','systems',':system','options'], 'system.options'],        // §OP2 0.57.0 — a system's options, through its own route
+    ['POST',   ['api','systems',':system','options'], 'system.options.set'],
     ['POST',   ['api','config'],          'config.set'],
     ['GET',    ['api','stats'],           'stats.get'],
     ['GET',    ['api','snr'],             'snr.current'],
@@ -2679,6 +2684,31 @@ async function handle(req, res, route, query, body) {
     // actor is rejected on non-copilot_writable keys (ssh_key_path) by
     // config.js itself — same validation either way, only the event's
     // actor field differs.
+    // §OP2 0.57.0 — James: "can you have these settings broken up into repos? … i prefer options over hard coded". A
+    // system's options are asked of that system (its GET/POST /api/options), never read from its files here; a system
+    // that declares none yet (OP1 is one system at a time) says so.
+    case 'system.options':
+    case 'system.options.set': {
+      const sys = String(params.system || '').toLowerCase();
+      const port = (_require('../../lib/nexus-config.js').getPath('ports', {}) || {})[sys];
+      if (!/^[a-z-]+$/.test(sys) || !port) return err(res, 404, `no system '${sys}' with a port`);
+      const post = route.action === 'system.options.set';
+      const payload = post ? JSON.stringify({ id: body.id, value: body.value, reset: !!body.reset, actor: body.actor === 'copilot' ? 'copilot' : 'user' }) : null;
+      const r = await new Promise((resolve) => {
+        const rq = http.request({ host: '127.0.0.1', port, path: '/api/options', method: post ? 'POST' : 'GET', timeout: 8000,
+          headers: post ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) } : {} }, (rs) => {
+          let d = ''; rs.on('data', c => { d += c; });
+          rs.on('end', () => { let j = null; try { j = JSON.parse(d); } catch (_) {} resolve({ status: rs.statusCode, json: j }); });
+        });
+        rq.on('timeout', () => { rq.destroy(); resolve({ status: 0, error: `${sys} :${port} did not answer in 8 s` }); });
+        rq.on('error', (e) => resolve({ status: 0, error: `${sys} :${port} is not reachable — ${e.message}` }));
+        if (payload) rq.write(payload); rq.end();
+      });
+      if (r.status === 404 || (r.status === 200 && !(r.json && r.json.options) && !post)) return ok(res, { ok: true, system: sys, declared: false, options: [], note: `${sys} has not declared its options yet (docs/2026-10-10-shape-of-nexus-phasemap.spec OP1 — guardian first)` });
+      if (!r.status) return err(res, 502, r.error);
+      if (r.status >= 400) return err(res, r.status, (r.json && r.json.error) || `${sys} refused (${r.status})`);
+      return ok(res, { system: sys, declared: true, ...(r.json || {}) });
+    }
     // §0.39.279 — James: "can you have a full enterprise grade settings menu that encompassed all the idearium compartment
     // and agent settings." One read for the console: idearium's layered config (with where each value came from), and
     // every repo with its agent, prompt blocks, hat, compartment, branch and desktop. Each source is read on its own; one

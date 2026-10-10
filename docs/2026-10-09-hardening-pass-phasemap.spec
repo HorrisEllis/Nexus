@@ -6,7 +6,7 @@ spec:
     release:  0.51.0 (base)
     uuid:     nexus-hardening-pass-phasemap-v1-0000-2026-1009-jamesbrooks-001
     owner:    idearium (the thread, the runs, the ladder) · lib (spec-document, pipeline-routing, economy router)
-    status:   "MAPPED 2026-10-09, before building; HP1–HP5 done (0.52.0); HP6–HP8 from his live run (0.55.0); HP9–HP12 from the next (0.55.1); the learning's held-out evaluation stays open (HP4 pushback)"
+    status:   "MAPPED 2026-10-09, before building; HP1–HP5 done (0.52.0); HP6–HP8 from his live run (0.55.0); HP9–HP12 from the next (0.55.1); HP13–HP22 from the stack run end to end (0.55.2); the learning's held-out evaluation stays open (HP4 pushback)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -165,3 +165,154 @@ spec:
         repo's job; copilot is named only as the road, never as the one that failed.
       proof: "a timed-out browser-agent dispatch says 'claude (guardian, via copilot) gave no answer in 300 s — last gate …'; an unreachable copilot still says copilot is down"
 
+    # ── 2026-10-09, second round: the stack run end to end ───────────────────────────────────────────────────────────
+    # James: "loop simulations of every deep and drecursive test and debug method you can for idearium and the agents.
+    # fix the biggest most structural problems you can, bottom up." · "like i want to make sure we arent using idearium
+    # for anything guardian should be doing."
+    # How it was found: guardian (:7820), copilot (:3750) and Idearium (:4800) started from this tree, with a fake
+    # provider tab speaking guardian's real NCP protocol (SSE /channel, POST /result, the ping/claim acks) in six modes —
+    # answers · silent · fails at inject · no tab · auto routing · Ollama down — and the real repo-agent route
+    # POST /api/repos/:uuid/agent/prompt driven through all three. Only the answering tab worked (0.9 s). Every other mode
+    # cost the full 5-minute wait or worse. Each phase below is one of those, lowest layer first.
+    HP13_the_failure_is_put_at_the_right_gate:
+      layer: guardian
+      systems: [guardian]
+      status: "DONE (0.55.2) — guardian/lib/gate-trail.js gateOfError: an unknown gate (the userscripts' 'handleJob') is read from its error text. test-guardian-stack-sim GS-01."
+      james: '"the problem with copilot is i dont get an understanding of why a agent didnt work."'
+      depends_on: []
+      files: [guardian/lib/gate-trail.js]
+      does: >-
+        Found: every page-side failure of the real userscripts arrives as gate 'handleJob' (their gate() wrapper), which
+        gate-trail does not know, so it falls to the current gate — 'tab takes the job' — and the sentence says "the tab is
+        still answering another job — wait for it, or reload the tab" when the input box was not found. An unknown gate is
+        read from its error text: input/composer/contenteditable → typed and sent; no reply / findResponseEl → reply
+        appears; log in/captcha → provider tab; still answering / another job → tab takes the job.
+      proof: "a 'handleJob: Input not found — no contenteditable' error stops at 'typed and sent' with the ◎ fix, not 'tab busy'"
+    HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds:
+      layer: guardian
+      systems: [guardian]
+      status: "DONE (0.55.2) — guardian/lib/dispatcher.js pickup watch (GUARDIAN_PICKUP_MS 90 s, cleared by any word from the tab); 'accepted' sent by all five userscripts; gate-trail reads it. Stack run: a silent tab failed in 91 s (was 295 s). GS-02, GS-03, GS-11."
+      james: '"timeout · no completion within 900000ms — real absence, not a guess" (his screenshot, chatgpt job 707917ec, 0 ch)'
+      depends_on: []
+      files: [guardian/lib/dispatcher.js, guardian/lib/gate-trail.js, guardian/userscript-chatgpt.js, guardian/userscript-claude.js, guardian/userscript-gemini.js, guardian/userscript-deepseek.js, guardian/userscript-perplexity.js]
+      does: >-
+        Found: a job is marked 'delivered' when guardian writes it to the tab's socket — not when the tab says it took it —
+        and the only watch after that is the 15-minute idle window, twice. A tab that is alive enough to answer pings but
+        does nothing with the job (frozen page, wrong chat, a script error) held the job 15 minutes per try. Now the tab
+        says 'accepted' the moment a job reaches it (one GUARDIAN_PROGRESS, all five userscripts), and the dispatcher
+        arms a pickup watch on every NCP send: no word at all about the job from the tab (accepted, delivered, progress,
+        a chunk, an error) within GUARDIAN_PICKUP_MS (90 s — an older userscript without 'accepted' still says
+        'delivered' well inside that) → the prompt was never typed, so the job ends at 'tab takes the job' with that
+        said, the tab's slot is freed, and the caller's ladder can move on. Nothing was typed, so nothing is sent twice.
+      proof: "a tab that acks pings but never touches the job fails in ~90 s with 'the chatgpt tab was handed the job and did nothing with it', not 5 or 15 minutes"
+    HP15_a_typed_prompt_is_never_sent_again:
+      layer: guardian
+      systems: [guardian]
+      status: "DONE (0.55.2) — dispatcher _requeueOrFail: a typed job (confirmed, a chunk, a submit) waits for the transcript (awaiting_transcript, the empty-reply grace) and fails saying it was not sent again. GS-04."
+      james: '"look at the .response in clearglass."'
+      depends_on: [HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds]
+      files: [guardian/lib/dispatcher.js]
+      does: >-
+        Found: HP11 stopped job-retry re-sending a typed prompt, but two other paths still did — the 15-minute idle window
+        and 'provider disconnected mid-flight' both requeue the job, and the requeue sends the prompt again into the chat
+        that already has it. A job the tab confirmed typing (delivered_confirmed, responding, a submit) is no longer
+        requeued: it waits for the chat transcript (the existing awaiting_transcript path and its grace), and if none
+        carries the reply it fails saying the prompt was typed and not sent again, pick the reply with ◎. A job that was
+        never typed is requeued as before.
+      proof: "idle-out or disconnect of a typed job → awaiting_transcript, never a second GUARDIAN_JOB for it; of an untyped job → requeued once"
+    HP16_a_job_nobody_waits_for_is_not_sent_later:
+      layer: guardian
+      systems: [guardian]
+      status: "DONE (0.55.2) — dispatcher cancel() and the re-read before every send; askSync cancels an untyped job it stops waiting for (server.js wires cancelJob + the retry timer); repo-agent offers no late answer for it. Stack run: reconnecting the tab sent nothing. GS-05, GS-06."
+      james: '"i want to make sure we arent using idearium for anything guardian should be doing."'
+      depends_on: []
+      files: [guardian/ask.js, guardian/lib/dispatcher.js, guardian/server.js]
+      does: >-
+        Found: when askSync gives up, the job stays queued. The simulated tab reconnected and was sent two jobs whose
+        callers had given up minutes before (one 8,855 chars), four times each, ahead of the new job. When askSync stops
+        waiting on a job that was never typed, the job is cancelled — off the queue, its retry timer stopped, said as
+        'cancelled: nobody is waiting for it'; a typed job is left to finish (its reply can still be adopted late, §LATE).
+        The dispatcher re-reads a job before sending and never sends a cancelled, failed or complete one.
+      proof: "askSync times out on an untyped job → status cancelled; reconnecting the tab sends nothing for it"
+    HP17_no_tab_is_said_in_seconds:
+      layer: guardian
+      systems: [guardian]
+      status: "DONE (0.55.2) — guardian/ask.js GUARDIAN_NO_TAB_MS (45 s). Stack run: 46 s (was 295 s), job cancelled. GS-06."
+      james: '"working for any size model llm, within reaso."'
+      depends_on: [HP16_a_job_nobody_waits_for_is_not_sent_later]
+      files: [guardian/ask.js]
+      does: >-
+        Found: with no chatgpt tab open, the repo agent waited the full 295 s at "provider tab" and then said so. Guardian
+        knew in the first second. askSync (the waiting caller — a background job still queues for its tab as before) now
+        gives up after GUARDIAN_NO_TAB_MS (45 s, time for Clear Glass to open one) while the provider is still not
+        connected, saying "not connected — no <agent> tab open", which the routing classes read as provider-down, so the
+        copilot route moves to its next rung; the job is cancelled (HP16).
+      proof: "no tab open → the ask fails in ~45 s naming the agent and 'no tab open', and the job is cancelled"
+    HP18_auto_tries_agents_with_a_tab_first:
+      layer: library
+      systems: [core, copilot]
+      status: "DONE (0.55.2) — lib/agent-providers.js guardianTabs (GET /providers, fail-open), pipeline-routing byTabs, model-door route({tabs}), copilot /api/route, Idearium's run ladder. Stack run: auto answered through chatgpt in 9 s (was 295 s at a gemini with no tab). GS-08."
+      james: '"consolidated and interconnected and working for any size model llm"'
+      depends_on: []
+      files: [lib/pipeline-routing.js, lib/model-door.js, copilot/server.js]
+      does: >-
+        Found: on 'auto' the door chose gemini — no gemini tab was open, chatgpt's was — and waited 295 s. The door now
+        reads guardian's GET /providers (1.5 s, fail-open: no answer = order unchanged) and moves a browser agent with no
+        tab connected behind the ones that have one, the reason said on the hop. Moved, not dropped: Clear Glass can open
+        a tab on demand, and the last rung may be the only one.
+      proof: "with chatgpt connected and gemini not, /api/route puts chatgpt first and says why gemini moved"
+    HP19_the_simulator_stays:
+      layer: test
+      status: "DONE (0.55.2) — tests/sim/fake-tab.js kept; tests/modules/test-guardian-stack-sim.test.js 11/11."
+      james: '"loop simulations of every deep and drecursive test and debug method you can"'
+      depends_on: [HP13_the_failure_is_put_at_the_right_gate, HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds, HP15_a_typed_prompt_is_never_sent_again, HP16_a_job_nobody_waits_for_is_not_sent_later, HP17_no_tab_is_said_in_seconds, HP18_auto_tries_agents_with_a_tab_first]
+      files: [tests/sim/fake-tab.js, tests/modules/test-guardian-stack-sim.test.js]
+      does: >-
+        The fake tab is kept (tests/sim/fake-tab.js) — a provider tab in any mode, for anyone to drive the real stack —
+        and HP13–HP18 are proven against guardian's real modules with it, not mocks of them.
+      proof: "the test passes with the fake tab in each mode"
+    # Not built here, said: a pinned agent (Settings → chatgpt) still has no next rung when it fails — the climb lives in
+    # Idearium (lib/repo-agent.js) for the copilot position only, beside copilot's door, the build ladder and lifeline's
+    # cascade. Moving every climb into one place is the one-model-engine map (ME5, RAID chooses), not a fifth patch here.
+    HP20_a_routing_try_is_not_a_job:
+      layer: library
+      systems: [core]
+      status: "DONE (0.55.2) — ledger kind 'route' (recordHop), usage() skips it. Stack run: 0 s then the policy's 15 s gap (was 55 s). GS-09."
+      james: '"we need to prioritize on getting it stable and working."'
+      depends_on: []
+      files: [lib/economy/ledger.js, lib/pipeline-routing.js]
+      does: >-
+        Found in the stack run after HP13–HP18: the repo agent's message took 55 s through an answering tab (0.9 s
+        before). Guardian's economy made it wait four times for "the 15 s gap between jobs" — the gap clock reads the
+        economy ledger's last row for chatgpt, and pipeline-routing's recordHop writes a row for every routing try (a
+        background chunk build's failed hop on chatgpt that never reached guardian, the door's outcome). Each failed
+        background try restarted the gap. A hop's row is marked kind 'route': still read by the learned order, never
+        counted as use (gap, per-hour, per-day, tokens).
+      proof: "a route row for chatgpt does not move usage().lastAt; a job row does"
+    HP21_the_economy_holding_a_job_is_said:
+      layer: guardian
+      systems: [guardian]
+      status: "DONE (0.55.2) — economyWaitUntil on the job, guardian.economy.wait on the gate trail, askSync stops past GUARDIAN_ECONOMY_WAIT_MS (30 s). Stack run: 8 s naming 30/30 (was 295 s, 'no gate reported yet'). GS-07."
+      james: '"i dont get an understanding of why a agent didnt work."'
+      depends_on: [HP16_a_job_nobody_waits_for_is_not_sent_later]
+      files: [guardian/lib/dispatcher.js, guardian/lib/gate-trail.js, guardian/ask.js]
+      does: >-
+        Found in the stack run: chatgpt reached its hourly cap (30/30), guardian held the job 300 s, and the repo agent
+        waited its whole 295 s reading "no gate reported yet". The hold goes on the gate trail ('provider tab', waiting,
+        "economy: 30/30 jobs in the last hour — waits 300 s", fix: another agent or the limits), and askSync stops at
+        once when the hold is longer than GUARDIAN_ECONOMY_WAIT_MS (30 s) or than it will wait: the limit said, the job
+        cancelled (HP16), the error worded so the routing classes read rate-limit and the copilot route moves on.
+      proof: "a job held 300 s by the economy fails in ~1 s naming the limit and the time to the next slot"
+    HP22_a_missing_tab_is_not_a_login_wall:
+      layer: library
+      systems: [core, guardian]
+      status: "DONE (0.55.2) — classify reads not connected / no <agent> tab open|connected|free as provider-down before login; the advice says 'signed in'. GS-10."
+      james: '"i dont get an understanding of why a agent didnt work."'
+      depends_on: [HP17_no_tab_is_said_in_seconds]
+      files: [lib/pipeline-routing.js, guardian/lib/gate-trail.js, guardian/ask.js]
+      does: >-
+        Found in the stack run: after a no-tab failure, 'auto' never offered chatgpt again — its breaker was open with
+        class 'login'. The failure sentence ended with gate-trail's fix "…and sign in" (and HP17's own wording did too);
+        classify() reads /sign ?in/ as a login wall, which never falls back and opens the breaker. "not connected / no
+        <agent> tab open" is read first as provider-down, and the advice says "signed in".
+      proof: "classify('not connected — no chatgpt tab open … signed in') is provider-down; 'please log in' is still login"

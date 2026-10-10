@@ -243,14 +243,15 @@ function rtCtlPaint() {
 }
 
 // §0.39.371 CK1 — the log is the rewind: a checkpoint taken before a task (or by hand) puts the repo's desktop back
-async function rtRewind(tag) {
-  const uuid = _rtCurrent(); if (!uuid || !tag) return;
+async function rtRewind(tag, forUuid = null) {   // §SD1 0.56.0 — forUuid: from a repo card, not only the open repo
+  const uuid = forUuid || _rtCurrent(); if (!uuid || !tag) return;
   if (typeof confirm === 'function' && !confirm(`Rewind this repo's desktop to ${tag}? Its files, memory and running programs go back to that moment.`)) return;
   try {
     await api(`/api/repos/${uuid}/desktop/rewind`, { method: 'POST', body: JSON.stringify({ tag }) }, 120000);
     if (typeof toast === 'function') toast(`desktop rewound to ${tag}`, 'ok');
   } catch (e) { if (typeof toast === 'function') toast(`rewind refused: ${e.message}`, 'err'); else console.warn(e); }
-  if (RT_VIEW === 'log') rtLogLoad();
+  if (RT_VIEW === 'log' && !forUuid) rtLogLoad();
+  if (forUuid && typeof rcTimeLoad === 'function') rcTimeLoad(forUuid);
 }
 
 function _rtViews() {

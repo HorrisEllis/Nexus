@@ -547,6 +547,9 @@ function flushQueuedJobs(provider) {
   if (jobItems.length) pendingQueue.set(provider, jobItems);
   const remaining = jobItems;
   console.log(`[guardian] flushing ${queued.length} queued jobs → ${provider}`);
+  // §SD3 0.56.0 — a job someone is waiting on (priority high, askSync) goes before background work
+  const _pri = { high: 0, normal: 1, low: 2 };
+  queued.sort((a, b) => (_pri[(jobs.get(a.id) || a).priority] ?? 1) - (_pri[(jobs.get(b.id) || b).priority] ?? 1));
   for (const job of queued) {
     const fresh = jobs.get(job.id);
     if (fresh && fresh.status === 'queued') dispatchJob(fresh);
@@ -679,7 +682,7 @@ const _completeFromMesh = (job, lr) => _handleNCPMessage({ type: 'GUARDIAN_COMPL
 
 const {
   jobs, createJob, updateJob, _suggestJobHat, _findActiveJobForProvider,
-  chooseProvider, normaliseProvider, parseCommand, dispatchJob,
+  chooseProvider, normaliseProvider, parseCommand, dispatchJob, cancelJob,
 } = wireGuardianCore({
   bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL, postEvent: _postEvent,
   ladder: _ladder, completeFromMesh: _completeFromMesh,
@@ -2989,6 +2992,23 @@ function handleExtendedRoutes(req, res, url, method) {
   // and kept so a job waiting for that provider can say why. A dismissed nag ('modal') is recorded, not alarmed.
   // §0.39.281 EC6/EC3/EC4 — the provider economy: its policy (the one writer: lib/economy/store.js), usage against each
   // limit, the token limits learned from the ledger, and the learning router's scores — all read on request, nothing cached.
+  // §OP1/OP2 0.57.0 — guardian's options (guardian/options.js, lib/options.js): every one with its value, default, range,
+  // unit, description and where its value came from; set and reset through here, each change in its own ledger.
+  // A write must be application/json — a page elsewhere cannot send that without a preflight, which this route refuses.
+  if (url.pathname === '/api/options' && method === 'GET') {
+    return json(res, 200, { ok: true, system: 'guardian', options: require('./options.js').options().describe() });
+  }
+  if (url.pathname === '/api/options' && method === 'POST') {
+    if (!/application\/json/i.test(String(req.headers['content-type'] || ''))) return json(res, 415, { ok: false, error: 'options are changed with a JSON body (Content-Type: application/json)' });
+    bodyJ(req).then(body => {
+      const O = require('./options.js').options();
+      const actor = body && body.actor === 'copilot' ? 'copilot' : 'user';
+      const r = body && body.reset ? O.reset(String(body.id || ''), { actor }) : O.set(String((body && body.id) || ''), body ? body.value : undefined, { actor });
+      if (r.ok) bus.emit('guardian.options.changed', { id: body.id, value: r.value, old: r.old, actor });
+      return json(res, r.ok ? 200 : 400, r);
+    }).catch(e => json(res, 400, { ok: false, error: e.message }));
+    return true;
+  }
   if (url.pathname === '/api/economy' && method === 'GET') {
     const E = require('../lib/economy/store.js');
     return json(res, 200, { ok: true, policy: E.load(), tiers: require('../lib/economy/policy.js').TIERS, jobTypes: require('../lib/economy/policy.js').JOB_TYPES, limits: require('../lib/economy/policy.js').LIMITS });
@@ -3144,6 +3164,8 @@ function handleExtendedRoutes(req, res, url, method) {
         createJob,
         dispatchJob,
         getJob: (id) => jobs.get(id),
+        // §HP16 0.55.2 — a job askSync stops waiting for, never typed, is cancelled (its retry timer too)
+        cancelJob: (id, why) => { try { if (_jobRetryRef) _jobRetryRef.cancel(id); } catch (_) {} return cancelJob(id, why); },
         isProviderConnected: (p) => { try { return ncp.isConnected(p); } catch (_) { return false; } },
         // §SOVEREIGNTY 2026-07-09 — this required
         // '../cortex/core/raid/routing-ir.js' across a system boundary (I

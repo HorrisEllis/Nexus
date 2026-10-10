@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — ChatGPT v10.0
 // @namespace    nexus.guardian.chatgpt
-// @version      10.12.0
+// @version      10.12.1
 // @description  Guardian v10 — ChatGPT: full feature parity with Claude v10. IndexedDB
 //               kernel, SHA-256 dedup, intelligence injection, SEAM, NEXUS module,
 //               memory/RAID/self-heal hooks, structured output detection, tool intercept.
@@ -27,7 +27,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'chatgpt';
-const VERSION    = '10.12.0';
+const VERSION    = '10.12.1';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
@@ -1378,6 +1378,7 @@ function _handleServerMessage(msg) {
           error:`this ${PROVIDER} tab is still answering job ${currentJobId} — refused job ${msg.jobId} rather than overwrite it` });
         break;
       }
+      ncpPost(NCP_RESULT, { type:'GUARDIAN_PROGRESS', jobId:msg.jobId, provider:PROVIDER, stage:'accepted', ts:Date.now() });   // §HP14 0.55.2 — the tab took it (guardian's pickup watch)
       if (_nexusOpenJobChat(msg)) break;   // 0.39.259 — the tab reloads into the agent's chat and runs the job there
       currentJobId = msg.jobId; _txJobStart(msg); handleJob(msg); break;
     case 'NEXUS_CONTEXT_RESPONSE':
