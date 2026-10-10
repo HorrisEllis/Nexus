@@ -143,10 +143,7 @@ class CoPilotBridge {
       const LC = require('../../../lib/listener-commands.js');
       let text;
       if (!nx.line) text = '⌘ Nexus: type a command after nexus> — e.g. `nexus> census --limit 4`, or `nexus> list` for every command.';
-      else if (/^(?:list|help|commands)$/i.test(nx.line)) {   // what he can type
-        try { const l = await require('../../../lib/agent-tools/tools/nexus/command.js').command.execute({ action: 'list' }); text = `⌘ Nexus commands (type nexus> <command>):\n${(l.commands || []).map(c => `${c.command}${c.about ? ` — ${String(c.about).slice(0, 80)}` : ''}`).join('\n')}`; }
-        catch (e) { text = `⌘ Nexus: the command list failed: ${e.message}`; }
-      } else {
+      else {
         this._nexusRunner = this._nexusRunner || LC.createRunner();
         let r;
         try { [r] = await Promise.race([this._nexusRunner.hear(`copilot:${msgId}`, `nexus> ${nx.line}`), new Promise((_, no) => setTimeout(() => no(new Error('no answer in 60 s')), 60000))]); }

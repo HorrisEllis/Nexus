@@ -68,6 +68,19 @@ function fakePage(url) {
     assert.ok(NC.watched('https://chatgpt.com/c/1', { get: () => ({ nexusChat: { urls: ['https://chatgpt.com/'] } }) }));
   });
 
+  await test('NC-08', '0.59.10: prose that starts with nexus> ("`nexus> list` shows every command.") is not answered in the chat', async () => {
+    NC.RAN.clear();
+    const page = fakePage('https://claude.ai/code/s10');
+    const events = [];
+    const runner = { hear: async (id, t) => [{ line: t.replace('nexus> ', ''), error: 'no Nexus command "list shows"', unknown: true }] };
+    const w = NC.attach(page, { runner, pollMs: 1e9, emit: (...e) => events.push(e) }); page.emit('did-finish-load');
+    page.lines = ['list shows every command.'];
+    await w._tick(); await w._tick();
+    assert.strictEqual(page.typed.length, 0, 'nothing typed into the chat');
+    assert.ok(events.some(e => e[0] === 'guardian.listener.command-result' && /not run/.test(e[1].text)), 'shown in the pane');
+    w.stop();
+  });
+
   await test('NC-07', '0.59.8: a chat that renders its messages after load — the newest line still runs, the older one never', async () => {
     NC.RAN.clear();
     const page = fakePage('https://claude.ai/code/s7');

@@ -25,7 +25,7 @@
  */
 
 const MODULE_ID = 'clear-glass.page.nexus-chat';
-const VERSION = '1.4.0';
+const VERSION = '1.5.0';
 const POLL_MS = 2000;
 const PER_MINUTE = 6;
 const READ_ALLOW = new Set(['dump']);   // the one write allowed here: an idea dropped into the Void
@@ -138,6 +138,9 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
         catch (e) { r = { line, error: `the command tool failed: ${e.message}` }; }
         if (!r) { log(`"${line}" — not run (already heard)`); continue; }
         log(`ran "${line}" → ${r.refused ? 'refused' : r.error ? `error: ${r.error}` : 'ok'}`);
+        // 0.59.10 — prose on the page can start with nexus> ("`nexus> list` shows every command." got "✗ no Nexus command \"list
+        // shows\"" typed into his chat): a line that names no command is logged and shown in the pane, never typed back
+        if (r.unknown) { emit('guardian.listener.command-result', { listenerId: `chat:${contents.id}`, url: contents.getURL(), line, ok: false, text: `⌘ not run (no such command, not answered in the chat): ${line}`, ts: Date.now() }); continue; }
         const said = LC.summary(r).replace(/^nexus>\s*/, '⌘ Nexus ran: ').replace(/^([ \t]*)nexus>/gm, '$1nexus›');   // no line of it starts with nexus> — it cannot run itself
         emit('guardian.listener.command-result', { listenerId: `chat:${contents.id}`, url: contents.getURL(), line, ok: !r.error && !r.refused, text: said, ts: Date.now() });
         postEvent('nexus.chat.command', { url: contents.getURL(), line, ok: !r.error && !r.refused, refused: !!r.refused });
