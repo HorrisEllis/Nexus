@@ -25,7 +25,7 @@
  */
 
 const MODULE_ID = 'clear-glass.page.nexus-chat';
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 const POLL_MS = 2000;
 const PER_MINUTE = 6;
 const READ_ALLOW = new Set(['dump']);   // the one write allowed here: an idea dropped into the Void
@@ -43,7 +43,7 @@ function _urls(options) {
 function watched(url, options) { const u = String(url || ''); return _urls(options).some(p => u.startsWith(p)); }
 
 /** the page's command lines, read from the main process */
-const READ_JS = `(() => { const t = (document.body && document.body.innerText) || ''; return (t.match(/^[ \\t]*nexus>[ \\t]+.+$/gm) || []).map(l => l.trim().replace(/^nexus>\\s+/, '')); })()`;
+const READ_JS = `(() => { const t = ((document.body && document.body.innerText) || '').replace(/\\u00a0/g, ' '); return (t.match(/^[ \\t]*nexus>[ \\t]+.+$/gm) || []).map(l => l.trim().replace(/^nexus>\\s+/, '')); })()`;   // 0.59.7: code blocks can render spaces as U+00A0
 /** type text into the page's message box and send it; returns what happened */
 function replyJs(text) {
   return `(() => {
@@ -76,6 +76,8 @@ async function readOnly(parsed) {
  * nothing until the page's URL is watched.
  */
 function attach(contents, { options = null, emit = () => {}, postEvent = () => {}, runner = null, pollMs = POLL_MS } = {}) {
+  const log = (m) => console.log(`[ClearGlass/nexus-chat] ${m}`);   // 0.59.7 — every step is in the boot log: 0.59.6 failed silently on his machine
+  const said = {};
   let timer = null, baseline = null, last = new Map(), times = [], busy = false, opened = false, url = '';
   const LC = require('../../../lib/listener-commands.js');
   const run = runner || LC.createRunner({ policy: readOnly });
@@ -93,10 +95,11 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
     busy = true;
     try {
       const lines = await contents.executeJavaScript(READ_JS, false).catch(() => null);
-      if (!Array.isArray(lines)) return;
+      if (!Array.isArray(lines)) { if (!said.unreadable) { said.unreadable = true; log(`could not read ${url} (the page refused the read)`); } return; }
       const ran = RAN.get(url) || new Set();
       if (baseline == null) {
         // first read: history never runs — except, on the first open, the newest line (the one he opened the page to run)
+        log(`${url}: ${lines.length} command line(s) on the page${lines.length ? `, newest "${lines[lines.length - 1]}"` : ''}${opened ? ' — reload, none run' : ''}`);
         baseline = new Set(opened ? lines : lines.slice(0, -1)); opened = true;
         if (baseline.size === lines.length) return;
       }
@@ -107,8 +110,11 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
         if (seen < 2) continue;                                       // stable for two reads: the reply is finished
         if (times.length >= PER_MINUTE) { emit('nexus.chat.limited', { url: contents.getURL(), line, ts: now }); continue; }
         ran.add(line); times.push(now);
-        const [r] = await run.hear(`chat:${contents.id}`, `nexus> ${line}`);
-        if (!r) continue;
+        let r;
+        try { [r] = await run.hear(`chat:${contents.id}`, `nexus> ${line}`); }
+        catch (e) { r = { line, error: `the command tool failed: ${e.message}` }; }
+        if (!r) { log(`"${line}" — not run (already heard)`); continue; }
+        log(`ran "${line}" → ${r.refused ? 'refused' : r.error ? `error: ${r.error}` : 'ok'}`);
         const said = LC.summary(r).replace(/^nexus>\s*/, '⌘ Nexus ran: ').replace(/^([ \t]*)nexus>/gm, '$1nexus›');   // no line of it starts with nexus> — it cannot run itself
         emit('guardian.listener.command-result', { listenerId: `chat:${contents.id}`, line, ok: !r.error && !r.refused, text: said, ts: Date.now() });
         postEvent('nexus.chat.command', { url: contents.getURL(), line, ok: !r.error && !r.refused, refused: !!r.refused });
@@ -116,9 +122,10 @@ function attach(contents, { options = null, emit = () => {}, postEvent = () => {
         if (typed && typed.ok) {
           await new Promise(res => setTimeout(res, 150));
           for (const type of ['keyDown', 'char', 'keyUp']) contents.sendInputEvent(type === 'char' ? { type, keyCode: '\r' } : { type, keyCode: 'Enter' });
-        } else emit('nexus.chat.reply.failed', { url: contents.getURL(), line, error: (typed && typed.error) || 'not typed', ts: Date.now() });
+          log(`typed the answer into the page and pressed Enter`);
+        } else log(`could not type the answer: ${(typed && typed.error) || 'not typed'}`), emit('nexus.chat.reply.failed', { url: contents.getURL(), line, error: (typed && typed.error) || 'not typed', ts: Date.now() });
       }
-    } catch (_) { /* the page went away mid-read */ } finally { busy = false; }
+    } catch (e) { log(`stopped mid-read: ${e.message}`); } finally { busy = false; }
   }
   contents.on('did-finish-load', start);
   // an in-page move to another chat (Claude Code's sessions are one app) is a first open of that chat (0.59.6)

@@ -90,12 +90,12 @@ function fakePage(url) {
     const eng = glass && glass.engine ? glass.engine() : null;
     let br = null;
     try { br = await glass.chromium.launch(); } catch (e) { console.log(`    (Clear Glass's engine could not start here — ${String(e.message).split('\n')[0]}; the scripts are checked by NC-02 through the fake page)`); return; }
-    const server = http.createServer((q, rs) => { rs.writeHead(200, { 'Content-Type': 'text/html' }); rs.end(`<!doctype html><body><div>I will check the census.</div><pre>nexus> census --limit 5</pre><p>Talking about nexus> inline does not count.</p><textarea style="width:400px;height:60px"></textarea></body>`); });
+    const server = http.createServer((q, rs) => { rs.writeHead(200, { 'Content-Type': 'text/html' }); rs.end(`<!doctype html><body><div>I will check the census.</div><pre>nexus> census --limit 5</pre><pre>nexus>&nbsp;picks</pre><p>Talking about nexus> inline does not count.</p><textarea style="width:400px;height:60px"></textarea></body>`); });
     await new Promise(r => server.listen(0, '127.0.0.1', r));
     try {
       const pg = await br.newPage();
       await pg.goto(`http://127.0.0.1:${server.address().port}/`);
-      assert.deepStrictEqual(await pg.evaluate(NC.READ_JS), ['census --limit 5']);
+      assert.deepStrictEqual(await pg.evaluate(NC.READ_JS), ['census --limit 5', 'picks'], 'a non-breaking space after nexus> counts (0.59.7)');
       const r = await pg.evaluate(NC.replyJs('⌘ Nexus ran: census\n1232 phases'));
       assert.ok(r.ok, JSON.stringify(r));
       assert.strictEqual(await pg.evaluate(() => document.querySelector('textarea').value), '⌘ Nexus ran: census\n1232 phases');
