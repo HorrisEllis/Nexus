@@ -1793,6 +1793,18 @@ class IpcBridge {
         const answer = res.body?.text || res.body?.response || res.raw || '';
         this.sse.emit('guardian.listener.copilot-answer', { [idField]: id, answer, ts: Date.now() });
       }).catch(err => this.sse.emit('guardian.listener.route.error', { [idField]: id, target: 'copilot-cli', error: err.message }));
+    } else if (target.type === 'nexus-command') {
+      // §0.59.4 — James: "Use the listener to have you use a command." The heard text's command lines (nexus> …, idearium …,
+      // a ```nexus block) run through the one command tool (lib/listener-commands.js); each once per listener; the result
+      // goes to the co-pilot panel and the ledger. The person's rows stay refused.
+      if (!this._listenerCmd) {
+        this._listenerCmd = require('../../../lib/listener-commands.js').createRunner({ onResult: (r) => {
+          const LC = require('../../../lib/listener-commands.js');
+          this.sse.emit('guardian.listener.command-result', { [idField]: r.listenerId, line: r.line, ok: !r.error && !r.refused, text: LC.summary(r), ts: Date.now() });
+          this.postEvent('guardian.listener.command', { listenerId: r.listenerId, line: r.line, ok: !r.error && !r.refused, refused: !!r.refused, error: r.error || null });
+        } });
+      }
+      this._listenerCmd.hear(id || 'listener', eventData?.text || eventData?.value || '').catch(err => this.sse.emit('guardian.listener.route.error', { [idField]: id, target: 'nexus-command', error: err.message }));
     } else if (target.type === 'copilot-panel') {
       // Fully local — no HTTP call, no external system. browser.js's own
       // co-pilot panel already listens on the real SSE stream this file

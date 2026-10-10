@@ -370,6 +370,10 @@
         <div class="gf-label">Intent</div>
         <input class="gf-input" id="__g-lm-copilot-cli-intent" placeholder="e.g. summarize, flag, ask"/>
       </div>
+      <div class="lm-link-opt" data-lm-link="nexus-command" id="__g-lm-link-nexus-command">
+        <span class="lm-link-opt-icon">⌘</span>
+        <div><span class="lm-link-opt-label">Run Nexus commands</span><span class="lm-link-opt-desc">Lines it hears like "nexus&gt; census" or "idearium dump …" run as Nexus commands, once each — the result shows in the co-pilot panel</span></div>
+      </div>
       <div class="lm-link-opt" data-lm-link="copilot-panel" id="__g-lm-link-copilot-panel">
         <span class="lm-link-opt-icon">💬</span>
         <div><span class="lm-link-opt-label">Co-pilot Panel</span><span class="lm-link-opt-desc">Shows up directly in Clear Glass's own co-pilot chat — no external system</span></div>
@@ -948,6 +952,8 @@
       linkTarget = { type: 'sse-system', system: document.getElementById('__g-lm-compartment-select')?.value || 'cortex' };
     } else if (_lmLinkType === 'copilot-cli') {
       linkTarget = { type: 'copilot-cli', intent: document.getElementById('__g-lm-copilot-cli-intent').value.trim() || 'ask' };
+    } else if (_lmLinkType === 'nexus-command') {
+      linkTarget = { type: 'nexus-command' };   // §0.59.4
     } else if (_lmLinkType === 'copilot-panel') {
       // Fully local — no external system, no HTTP call. Routes into
       // Clear Glass's own co-pilot chat panel via the same real SSE

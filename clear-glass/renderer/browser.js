@@ -1302,6 +1302,11 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     //    emits this exact event name, no HTTP call, no external system.
     //    Renders the matched text directly as a chat message so a person
     //    watching the co-pilot panel sees it the moment it fires.
+    // §0.59.4 — a listener that runs Nexus commands says what ran and what came back
+    es.addEventListener('guardian.listener.command-result', (e) => {
+      const d = JSON.parse(e.data);
+      addMsg('assistant', `⌘ ${String(d.text || d.line || '').slice(0, 1400)}`);
+    });
     es.addEventListener('guardian.listener.copilot-panel', (e) => {
       const d = JSON.parse(e.data);
       const text = d.text || d.value || '(no text captured)';
