@@ -505,6 +505,12 @@ class IpcBridge {
     this.app.get('/cli/calltos/for-url', (req, res) => res.json({ calltos: this.options?.findCalltosForUrl(req.query.url) || [] }));
     this.app.delete('/cli/calltos/:id', (req, res) => res.json(this.options?.removeCallto(req.params.id) || { error: 'options unavailable' }));
 
+    // 0.59.12 — James: "the nexus> is for you. not me. give yourself the tools using nexus>." `glass open <url>` shows a
+    // page to him: the window already on that site comes to the front, else the default window goes there, else a new one
+    this.app.post('/cli/open', async (req, res) => {
+      try { const r = await require('../main/index').openOrFocus(req.body || {}); res.status(r.ok ? 200 : 400).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
     this.app.post('/cli/bgtab', async (req, res) => {
       try { res.json(await require('../main/index').openBackgroundTab(req.body)); }
       catch (e) { res.status(500).json({ error: e.message }); }

@@ -19,7 +19,8 @@ const LOG_FLAGS = ['kind', 'actor', 'status', 'q', 'before', 'limit'];
 
 /**
  * SPEC — the table. Each row: { key, usage, about, repo (needs <repo> first), req(a) → { method, path, body, timeoutMs }
- * | { system, method, path } (another Nexus system, through lib/nexus-client), print(d, a, h) }.
+ * | { system, method, path } (another Nexus system, through lib/nexus-client), print(d, a, h) }. Or local(a) → d instead of
+ * req: run in the calling process, read-only (0.59.12: log, file, grep). maxChars: how much of its text an answer may carry.
  * a = { repo, args (positional after the repo), flags }. personOnly(a) → a reason: an agent calling the row through the
  * nexus.command tool (lib/agent-tools/tools/nexus/command.js) is refused with it; a person at the CLI is not.
  */
@@ -358,6 +359,25 @@ export const SPEC = [
         console.log(`  ${fit.fits ? h.c.mint('✓') : h.c.coral('✗')} ${m.padEnd(48)} ${h.c.dim(size ? `${(size / 1073741824).toFixed(1)}GB` : '?')}${loaded ? h.c.sky(' loaded') : ''}${m === d.active ? h.c.amber(' default') : ''}${fit.fits ? '' : h.c.dim(`  ${fit.why}`)}`);
       }
     } },
+  // ── 0.59.12 — James: "the nexus> is for you. not me. give yourself the tools using nexus>. dude...." What the agent in a
+  //    chat Clear Glass watches needs to work on his machine: show him a page, and read (never write) logs, files and the
+  //    tree. `local` rows run in the process that hears the line (lib/nexus-read.js); secrets refused, keys redacted. ──
+  { key: 'glass.open', repo: false, usage: 'glass open <url>', about: 'show James a page in Clear Glass: the window already on that site comes to the front, else the main window goes there, else a new one',
+    need: (a) => (a.args[0] ? null : '<url>'),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/open', body: { url: /^[a-z][\w+.-]*:\/\//i.test(a.args[0]) ? a.args[0] : `${/^(?:localhost|127\.|\d+\.\d+\.\d+\.\d+)/.test(a.args[0]) ? 'http' : 'https'}://${a.args[0]}` } }),   // a local system is plain http
+    print: (d) => console.log(`  ${d.reused ? 'brought to the front' : d.navigated ? 'the main window went to' : 'opened'} ${d.url}${d.agentId ? `  (window ${d.agentId})` : ''}`) },
+  { key: 'log', repo: false, usage: 'log [autopilot|errors|<path>.log] [--lines n] [--grep pattern]', about: 'the end of a Nexus log (autopilot by default; errors = data/error.log), keys redacted',
+    maxChars: 8000,
+    local: (a) => require('../../lib/nexus-read.js').tailLog(a.args[0] || 'autopilot', { lines: a.flags.lines, grep: a.flags.grep }),
+    print: (d) => console.log(d.text) },
+  { key: 'file', repo: false, usage: 'file <path> [--from n] [--lines n]', about: 'read a file (or list a folder) of the Nexus tree, numbered — never a secret, under data/ only logs',
+    need: (a) => (a.args[0] ? null : '<path>'), maxChars: 8000,
+    local: (a) => require('../../lib/nexus-read.js').readFile(a.args[0], { from: a.flags.from, lines: a.flags.lines }),
+    print: (d) => console.log(d.text) },
+  { key: 'grep', repo: false, usage: 'grep <pattern> [--path dir] [--limit n]', about: 'search the Nexus code for a pattern: file:line: text (no node_modules, data or archive)',
+    need: (a) => (a.args[0] ? null : '<pattern>'), maxChars: 8000,
+    local: (a) => require('../../lib/nexus-read.js').grep(a.args.join(' '), { path: a.flags.path, limit: a.flags.limit }),
+    print: (d) => console.log(d.text) },
 ];
 
 /**
@@ -455,6 +475,7 @@ export function makeRouteCommands(h) {
       const a = { repo, args: row.repo ? positional.slice(1) : positional, flags };
       const missing = row.need ? row.need(a) : null;
       if (missing) h.die(`${missing} is needed — usage: idearium ${row.usage}`);
+      if (row.local) { const d = await row.local(a); if (d && d.error) h.die(d.error); if (flags.json) { process.stdout.write(`${JSON.stringify(d, null, 2)}\n`); return; } row.print(d, a, h); return; }   // 0.59.12
       const rq = row.req(a);
       if (rq.error) h.die(rq.error);
       let d;

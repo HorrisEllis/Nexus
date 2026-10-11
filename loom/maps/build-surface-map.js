@@ -74,6 +74,8 @@ const FILES = [
   ['clear-glass/src/page/nexus-chat.js', I('clear-glass/src/page/nexus-chat.js'), [I('lib/listener-commands.js'), I('idearium/cli/route-commands.js')]],
   ['lib/listener-commands.js', I('lib/listener-commands.js'), [I('lib/agent-tools/tools/nexus/command.js')]],
   // §0.59.11 TN4 talk to Nexus in plain words: the pane (bridge) and /api/prompt (server) → nexus-ask → the rows' ASK words → the command tool
+  // §0.59.12 the agent's own nexus> tools: log, file, grep read here (route-commands.js `local` rows); glass open → Clear Glass /cli/open → openOrFocus
+  ['lib/nexus-read.js', I('lib/nexus-read.js'), []],
   ['copilot/lib/nexus-ask.js', I('copilot/lib/nexus-ask.js'), [I('idearium/cli/route-commands.js'), I('lib/agent-tools/tools/nexus/command.js')]],
   ['clear-glass/renderer/gig-panel.js', I('clear-glass/renderer/gig-panel.js'), [I('clear-glass/src/preload/index.js')]],
   ['idearium/ui/js/access-guard.js', I('idearium/ui/js/access-guard.js'), [I('idearium/api/index.js')]],   // a 401 naming /login.html
@@ -84,6 +86,9 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('idearium/cli/route-commands.js'), I('lib/nexus-read.js'), '§0.59.12 the log / file / grep rows (local)'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/main/index.js'), '§0.59.12 /cli/open → openOrFocus()'],
+  [I('scripts/generate-atlases.js'), I('lib/atlas-generate.js'), '§0.59.12 syncReadme(): README.md ← docs/atlases/nexus-atlas.md'],
   [I('clear-glass/src/copilot/bridge.js'), I('copilot/lib/nexus-ask.js'), '§0.59.11 TN3 send(): plain words that mean a Nexus command, before the model'],
   [I('copilot/server.js'), I('copilot/lib/nexus-ask.js'), '§0.59.11 TN3 /api/prompt: after nexus-awareness, for every other channel'],
   [I('lib/agent-tools/tools/nexus/command.js'), I('idearium/cli/route-commands.js'), '§0.59.11 TN1 renderText — the row\'s printer as plain text'],

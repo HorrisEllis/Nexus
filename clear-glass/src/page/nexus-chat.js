@@ -25,10 +25,10 @@
  */
 
 const MODULE_ID = 'clear-glass.page.nexus-chat';
-const VERSION = '1.5.0';
+const VERSION = '1.6.0';
 const POLL_MS = 2000;
 const PER_MINUTE = 6;
-const READ_ALLOW = new Set(['dump']);   // the one write allowed here: an idea dropped into the Void
+const READ_ALLOW = new Set(['dump', 'glass open']);   // the writes allowed here: an idea into the Void; a page shown to James (0.59.12)
 
 // §0.59.9 — James: "i want all sessions captured": every Claude page (Claude Code sessions and claude.ai chats), not one
 const DEFAULT_URLS = ['https://claude.ai/'];
@@ -70,6 +70,7 @@ async function readOnly(parsed) {
   const { SPEC } = await import(pathToFileURL(path.join(__dirname, '..', '..', '..', 'idearium', 'cli', 'route-commands.js')).href);
   const row = SPEC.find(r => r.key.replace('.', ' ') === parsed.command);
   if (!row) return null;   // the tool says it does not exist
+  if (row.local) return null;   // 0.59.12 — log, file, grep: read-only by construction (lib/nexus-read.js)
   let rq; try { rq = row.req({ repo: { uuid: 'repo', name: 'repo' }, args: parsed.args || [], flags: parsed.flags || {} }) || {}; } catch (_) { rq = {}; }
   return (rq.method || 'GET') === 'GET' ? null : `"${parsed.command}" changes Nexus — from a watched chat only read commands and dump run. Set a listener yourself (◎ → ⦿ LISTEN → Run Nexus commands) to allow it.`;
 }
