@@ -150,4 +150,10 @@ module.exports = Object.freeze({
     payloadShape: ['reason', 'hash', 'file'],
     severity: 'warning',
   },
+  // §0.60.0 — providers/attention.js: an agent's tab shown to the person with the COMPARTMENT OS panel
+  PROVIDER_ATTENTION: {
+    description: "Guardian asked for the person (sign in / map the chat / not connecting) and Clear Glass showed the agent's tab with the panel, or could not.",
+    payloadShape: ['providerId', 'reason', 'note', 'shown', 'window'],
+    severity: 'notable',
+  },
 });

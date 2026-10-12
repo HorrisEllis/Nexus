@@ -7,11 +7,11 @@ register:
   map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (DT1)
   generatedBy: lib/nexstore/writers.js
   stats:
-    writers: 218
-    files: 143
-    typed: 27
-    reason: 36
-    owed: 155
+    writers: 232
+    files: 150
+    typed: 25
+    reason: 54
+    owed: 153
 rules:
   - match: '^(guardian/jaa-store\.js|idearium/lib/db\.js|lib/nexstore/(log|record)\.js) · '
     reason: the store engine itself — it writes for every table or type; the type is its caller's, and the caller is censused
@@ -78,6 +78,10 @@ writers:
     reason: OWED — a node type or a stated reason
   cortex/boot.js · writeFileSync · store:
     reason: OWED — a node type or a stated reason
+  cortex/memory/table-compactor.js · appendFileSync · path.join(dir, `${day}.jsonl.gz`):
+    reason: >-
+      0.43.0 PF5 — the archive of rows leaving a capped table (gzip members, one per batch); rows already recorded as JAA rows, kept compressed so nothing is
+      lost — not a node of its own
   cos/ci/index.js · writeFileSync · configPath(rootDir):
     reason: OWED — a node type or a stated reason
   cos/ci/index.js · writeFileSync · path.join(dir, `${run.runId}.json`):
@@ -110,6 +114,10 @@ writers:
     reason: OWED — a node type or a stated reason
   cos/workspace/index.js · writeFileSync · _stampPath(disk):
     reason: OWED — a node type or a stated reason
+  cos/workspace/vm-control.js · writeFileSync · tmp:
+    reason: >-
+      a desktop's checkpoint index (<state>/.cos-desktop/checkpoints.json, 0.39.371 VM1) — the label, cause and time of each live snapshot kept inside the
+      desktop's own qcow2; written atomically (tmp then rename) beside the disk it describes
   diagnostic/nexus-diagnostic.js · appendFileSync · _remediationLog:
     reason: OWED — a node type or a stated reason
   emerge/cortex-query/writeback.js · appendFileSync · logPath:
@@ -138,22 +146,28 @@ writers:
     reason: OWED — a node type or a stated reason
   guardian/server.js · writeFileSync · storeFile(name):
     reason: OWED — a node type or a stated reason
-  lib/options.js · writeFileSync · tmp:
-    reason: a system's options (<system>/data/options.json, 0.57.0 OP0) — the values a person or copilot set through that system's /api/options; written atomically (tmp then rename) by the owning system only
-  lib/options.js · appendFileSync · ledgerFile:
-    reason: the history of a system's options (<system>/data/options-ledger.jsonl, 0.57.0 OP0) — one line per set or reset, when, old, new and who asked; append-only
-  idearium/lib/access.cjs · writeFileSync · tmp:
-    reason: Idearium's app passwords and sign-ins (<idearium data>/access/keys.json · sessions.json, 0.58.0 IA0) — hashes only, never a password; written atomically (tmp then rename, mode 0600) by Idearium only
-  idearium/lib/access.cjs · appendFileSync · _file('ledger.jsonl'):
-    reason: the history of Idearium's door (<idearium data>/access/ledger.jsonl, 0.58.0 IA0) — one line per password made, sign-in, refusal or revoke; append-only, never a password
-  cos/workspace/vm-control.js · writeFileSync · tmp:
-    reason: a desktop's checkpoint index (<state>/.cos-desktop/checkpoints.json, 0.39.371 VM1) — the label, cause and time of each live snapshot kept inside the desktop's own qcow2; written atomically (tmp then rename) beside the disk it describes
   idearium/api/index.js · appendRow · 'idearium_charter_runs':
-    reason: each check of a repo's end state against its charter (0.39.362 CH5) — one row per check, the compartment's progress on the Plan; a JAA table, typed by name
+    reason: >-
+      each check of a repo's end state against its charter (0.39.362 CH5) — one row per check, the compartment's progress on the Plan; a JAA table, typed by
+      name
   idearium/api/index.js · appendRow · WS.TEMPLATE_TABLE:
-    reason: the workshop's saved templates (idearium_workshop_templates, 0.39.357 RS5) — a JAA table of his saved spec templates, each version a row; the store engine types the table by name
+    reason: >-
+      the workshop's saved templates (idearium_workshop_templates, 0.39.357 RS5) — a JAA table of his saved spec templates, each version a row; the store engine
+      types the table by name
+  idearium/api/index.js · syncTable · AR.TABLE:
+    reason: Idearium's repo activity rows (lib/repo-activity.js AR.TABLE, 0.59.x) — a JAA table synced through idearium/lib/db.js; one row per agent action on a repo
+  idearium/api/index.js · appendRow · AR.TABLE:
+    reason: Idearium's repo activity rows (lib/repo-activity.js AR.TABLE) — one appended row per agent action on a repo, the same table as its syncTable
   idearium/api/index.js · writeFileSync · pathMod.join(specDir, 'manifest.json'):
     reason: OWED — a node type or a stated reason
+  idearium/lib/access.cjs · writeFileSync · tmp:
+    reason: >-
+      Idearium's app passwords and sign-ins (<idearium data>/access/keys.json · sessions.json, 0.58.0 IA0) — hashes only, never a password; written atomically
+      (tmp then rename, mode 0600) by Idearium only
+  idearium/lib/access.cjs · appendFileSync · _file('ledger.jsonl'):
+    reason: >-
+      the history of Idearium's door (<idearium data>/access/ledger.jsonl, 0.58.0 IA0) — one line per password made, sign-in, refusal or revoke; append-only,
+      never a password
   idearium/lib/event-ledger.cjs · writeFileSync · STATS_FILE:
     reason: OWED — a node type or a stated reason
   idearium/repo/graph.js · writeFileSync · p:
@@ -258,6 +272,10 @@ writers:
     reason: OWED — a node type or a stated reason
   lib/chat-logger.js · appendFileSync · file:
     reason: OWED — a node type or a stated reason
+  lib/claude-code-backend.js · writeFileSync · f:
+    reason: >-
+      the co-pilot's Claude Code session map (0.59.14) — which Claude session id belongs to which pane conversation, so a conversation resumes its session;
+      small JSON, not a node
   lib/cli-map.js · writeFileSync · CLI_MAP_PATH:
     reason: OWED — a node type or a stated reason
   lib/code-intel/index.js · writeFileSync · path.join(idx, 'cards.json'):
@@ -330,14 +348,14 @@ writers:
     reason: OWED — a node type or a stated reason
   lib/node-ledger.js · writeFileSync · INDEX_FILE:
     reason: OWED — a node type or a stated reason
-  cortex/memory/table-compactor.js · appendFileSync · path.join(dir, `${day}.jsonl.gz`):
-    reason: "0.43.0 PF5 — the archive of rows leaving a capped table (gzip members, one per batch); rows already recorded as JAA rows, kept compressed so nothing is lost — not a node of its own"
-  ollama/lib/tape.js · writeFileSync · f:
-    reason: "0.44.0 OR2 — content-addressed blobs (prompt/answer text by sha256), written once; the frame that names them is the record"
-  ollama/lib/tape.js · appendFileSync · path.join(dir, `${new Date(frame.at).toISOString().slice(0, 10)}.${process.pid}.jsonl`):
-    reason: "0.44.0 OR2 — model-call frames, one writer per file (PF3's shape); OWED a node type (.frame) when the tape becomes a node store reader (OR4)"
   lib/ollama-activity.js · appendFileSync · f:
     reason: OWED — a node type or a stated reason
+  lib/options.js · writeFileSync · tmp:
+    reason: >-
+      a system's options (<system>/data/options.json, 0.57.0 OP0) — the values a person or copilot set through that system's /api/options; written atomically
+      (tmp then rename) by the owning system only
+  lib/options.js · appendFileSync · ledgerFile:
+    reason: the history of a system's options (<system>/data/options-ledger.jsonl, 0.57.0 OP0) — one line per set or reset, when, old, new and who asked; append-only
   lib/project-container.js · writeFileSync · p:
     reason: OWED — a node type or a stated reason
   lib/queue.js · writeFileSync · path.join(this.queueDir, `${uuid}.json`):
@@ -350,6 +368,10 @@ writers:
     reason: OWED — a node type or a stated reason
   lib/queue.js · writeFileSync · f:
     reason: OWED — a node type or a stated reason
+  lib/repo-run-state.js · writeFileSync · tmp:
+    reason: >-
+      a repo's play / pause state (0.60.0, <idearium data>/repo-run-state.json) — written atomically (tmp then rename); read by mtime by every process that
+      dispatches to the repo
   lib/semantic-variant.js · appendFileSync · this._file(key):
     reason: OWED — a node type or a stated reason
   lib/semantic-variant.js · writeFileSync · this._file(key):
@@ -392,6 +414,10 @@ writers:
     reason: OWED — a node type or a stated reason
   mesh/lib/reverse-proxy.js · appendFileSync · this.logFile:
     reason: OWED — a node type or a stated reason
+  ollama/lib/tape.js · writeFileSync · f:
+    reason: 0.44.0 OR2 — content-addressed blobs (prompt/answer text by sha256), written once; the frame that names them is the record
+  ollama/lib/tape.js · appendFileSync · path.join(dir, `${new Date(frame.at).toISOString().slice(0, 10)}.${process.pid}.jsonl`):
+    reason: 0.44.0 OR2 — model-call frames, one writer per file (PF3's shape); OWED a node type (.frame) when the tape becomes a node store reader (OR4)
   orchestrator/lib/changelog.js · writeFileSync · SNAPSHOT_PATH:
     reason: OWED — a node type or a stated reason
   orchestrator/orchestrator.js · writeFileSync · statePath:

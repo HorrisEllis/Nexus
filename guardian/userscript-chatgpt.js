@@ -600,6 +600,8 @@ function injectText(text, opts = {}) {
   // before injection, same as every other provider script.
   // 0.39.258 — a composed job (opts.composed) is sent exactly as its caller built it: no agent hint appended.
   if (NEXUS && !opts.composed) text = NEXUS.decorate(text);
+  // §0.60.2 — a verified pick (guardian-picked input, userscript-field-map.js) is used first; else the lookup below.
+  if (window.NexusFields && window.NexusFields.type(text)) return true;
   // Try contenteditable first (ChatGPT's main input)
   const ce = document.querySelector('[contenteditable="true"]');
   if (ce) {
@@ -624,6 +626,9 @@ function injectText(text, opts = {}) {
   return false;
 }
 function submit() {
+  // §0.60.2 — the picked send button (userscript-field-map.js), when one is verified and enabled.
+  const _mapped = window.NexusFields && window.NexusFields.press();
+  if (_mapped) return _mapped;
   const btn = document.querySelector('button[data-testid="send-button"]:not([disabled])') ||
               document.querySelector('button[aria-label="Send prompt"]:not([disabled])') ||
               document.querySelector('button[aria-label="Send message"]:not([disabled])') ||
@@ -1343,6 +1348,8 @@ function _nexusResumeCarriedJob() {
 }
 
 function _handleServerMessage(msg) {
+  // §0.60.2 — the selector map (with each pick's anchor) goes to the shared field map too: userscript-field-map.js
+  if (msg && msg.type === 'GUARDIAN_SELECTORS' && msg.provider === PROVIDER && window.NexusFields) window.NexusFields.set(PROVIDER, msg);
   switch(msg.type) {
     case 'NCP_READY':
     case 'GUARDIAN_READY':

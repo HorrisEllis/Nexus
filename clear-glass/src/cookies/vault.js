@@ -31,6 +31,28 @@ const VAULT_KEY  = 'clear-glass-vault-key-v1';
 const { loadVaultKey, encryptWith, decryptWithFallback } = require('../security/vault-key');
 const T_SNAP = 'cookie_snapshots', T_ACCT = 'account_cookies';
 
+/** siteOf(domain) — the site a cookie belongs to: its last two labels (three for a two-letter second level, co.uk) */
+function siteOf(domain) {
+  const h = String(domain || '').replace(/^\./, '').toLowerCase();
+  const p = h.split('.');
+  if (p.length <= 2) return h || '*';
+  return (p[p.length - 2].length <= 3 && p[p.length - 1].length === 2 ? p.slice(-3) : p.slice(-2)).join('.');
+}
+
+/**
+ * cookieSetArgs(cookie) — a cookie as ses.cookies.get() gave it -> what ses.cookies.set() accepts: a url on the cookie's
+ * own host and path; no domain for a host-only or __Host- cookie; sameSite kept; a session cookie stays one.
+ */
+function cookieSetArgs(c = {}) {
+  const host = String(c.domain || 'localhost').replace(/^\./, '');
+  const a = { url: `${c.secure === false ? 'http' : 'https'}://${host}${c.path || '/'}`, name: c.name, value: c.value, path: c.path || '/',
+    secure: c.secure !== false, httpOnly: !!c.httpOnly };
+  if (c.domain && !c.hostOnly && !String(c.name || '').startsWith('__Host-')) a.domain = c.domain;
+  if (c.expirationDate && !c.session) a.expirationDate = c.expirationDate;
+  if (c.sameSite && c.sameSite !== 'unspecified') a.sameSite = c.sameSite;
+  return a;
+}
+
 class CookieVault {
   // noSqlite: accepted and ignored since 0.39.243 (there is no SQLite path any more).
   constructor({ dir = VAULT_DIR, safeStorage } = {}) {
@@ -151,7 +173,7 @@ class CookieVault {
   }
 
   // ── Restore cookies into session ──────────────────────────────────────
-  async restore({ agentId, accountId, version, ses }) {
+  async restore({ agentId, accountId, version, ses, replace = false }) {
     let cookies = [];
 
     if (accountId) {
@@ -164,31 +186,55 @@ class CookieVault {
 
     if (!ses) return { cookies, restored: false, reason: 'no session provided' };
 
-    // Clear existing cookies for these domains
-    const domains = [...new Set(cookies.map(c => c.domain).filter(Boolean))];
-    for (const domain of domains) {
-      await ses.cookies.remove(`https://${domain.replace(/^\./, '')}`, '').catch(() => {});
+    // §0.60.2 — was: cookies.remove(url, '') (removes nothing — a name is required) and a set() without sameSite, with a
+    // domain on host-only and __Host- cookies (Chromium refuses those), so an account switch kept the old identity's
+    // cookies and lost some of the new one's. Now: replace clears the session's cookies first (an account switch);
+    // otherwise each existing cookie on a restored domain is removed by name; each cookie is set the way Chromium
+    // accepts it (cookieSetArgs).
+    if (replace) {
+      try { await ses.clearStorageData({ storages: ['cookies'] }); } catch (_) {}
+    } else {
+      const hosts = new Set(cookies.map(c => String(c.domain || '').replace(/^\./, '')).filter(Boolean));
+      for (const h of hosts) {
+        let have = []; try { have = await ses.cookies.get({ domain: h }); } catch (_) {}
+        for (const c of have) { try { await ses.cookies.remove(cookieSetArgs(c).url, c.name); } catch (_) {} }
+      }
     }
 
-    // Set restored cookies
-    let restored = 0;
+    let restored = 0; const failed = [];
     for (const cookie of cookies) {
-      try {
-        await ses.cookies.set({
-          url:      `https://${cookie.domain?.replace(/^\./, '') || 'localhost'}`,
-          name:     cookie.name,
-          value:    cookie.value,
-          domain:   cookie.domain,
-          path:     cookie.path || '/',
-          secure:   cookie.secure,
-          httpOnly: cookie.httpOnly,
-          expirationDate: cookie.expirationDate,
-        });
-        restored++;
-      } catch {}
+      try { await ses.cookies.set(cookieSetArgs(cookie)); restored++; }
+      catch (e) { if (failed.length < 10) failed.push(`${cookie.name}@${cookie.domain}: ${e.message}`); }
     }
 
-    return { restored, total: cookies.length };
+    return { restored, total: cookies.length, failed };
+  }
+
+  /**
+   * capture({ agentId, accountId, ses }) — §0.60.2 the session's cookies, saved for that account: one encrypted row per
+   * site (example.com and its subdomains), rows for sites the session no longer has removed. -> { count, sites }
+   */
+  async capture({ agentId, accountId, ses }) {
+    if (!agentId || !accountId || !ses) throw new Error('agentId, accountId and ses required');
+    const cookies = await ses.cookies.get({});
+    const bySite = new Map();
+    for (const c of cookies) { const site = siteOf(c.domain); if (!bySite.has(site)) bySite.set(site, []); bySite.get(site).push(c); }
+    for (const [site, list] of bySite) await this.save({ agentId, accountId, domain: site, cookies: list });
+    const st = this._jaa();
+    for (const row of st.all(T_ACCT, { agent_id: agentId, account_id: accountId })) if (!bySite.has(row.domain)) st.delete(T_ACCT, { id: row.id });
+    st.flushAll();
+    return { count: cookies.length, sites: [...bySite.keys()] };
+  }
+
+  /** accounts(agentId) — §0.60.2 the accounts this agent has cookies saved for: { accountId, sites, count, updatedAt } (no values) */
+  accounts(agentId) {
+    const out = new Map();
+    for (const r of this._jaa().all(T_ACCT, { agent_id: agentId })) {
+      const a = out.get(r.account_id) || { accountId: r.account_id, sites: [], count: 0, updatedAt: 0 };
+      a.sites.push(r.domain); a.count += r.count || 0; a.updatedAt = Math.max(a.updatedAt, r.updated_at || 0);
+      out.set(r.account_id, a);
+    }
+    return [...out.values()];
   }
 
   // ── List snapshots ────────────────────────────────────────────────────
@@ -238,8 +284,11 @@ class CookieVault {
 
   async _loadAccountCookies(agentId, accountId) {
     this._legacyAccount(agentId, accountId);
-    const row = this._jaa().all(T_ACCT, { agent_id: agentId, account_id: accountId }, { orderBy: 'updated_at', order: 'DESC', limit: 1 })[0];
-    return row ? JSON.parse(this._decrypt(JSON.parse(row.data))) : [];
+    // §0.60.2 — every site's row (was the newest one only: an account saved per domain restored one domain)
+    const rows = this._jaa().all(T_ACCT, { agent_id: agentId, account_id: accountId }, { orderBy: 'updated_at', order: 'DESC' });
+    const out = [];
+    for (const row of rows) { try { out.push(...JSON.parse(this._decrypt(JSON.parse(row.data)))); } catch (_) {} }
+    return out;
   }
 
   _accountFile(agentId, accountId) {   // the pre-JAA file store's path; used only to remove a legacy file on delete
@@ -282,4 +331,6 @@ class CookieVault {
   _decrypt(blob) { return decryptWithFallback(this._k, blob); }
 }
 
+CookieVault.cookieSetArgs = cookieSetArgs;   // §0.60.2 — exported for the account switch and its test
+CookieVault.siteOf = siteOf;
 module.exports = CookieVault;

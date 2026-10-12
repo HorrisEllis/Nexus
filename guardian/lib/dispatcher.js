@@ -52,7 +52,7 @@ const _payload = (e) => (e && typeof e === 'object' && typeof e.type === 'string
 
 function createDispatcher(deps) {
   const { updateJob, bus, ncp, pendingQueue, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek, pingTimeoutMs, completionTimeoutMs,
-          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, getJob, pickupMs } = deps;   // §HP14/HP16 0.55.2: optional getJob(id) — the job as it is now; pickupMs — the pickup watch   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
+          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, getJob, pickupMs, accountRouting, useAccount } = deps;   // §0.60.2: optional accountRouting (lib/account-routing.js) + useAccount(provider, accountId, job) — the tab switched to the routed account before the job is typed   // §HP14/HP16 0.55.2: optional getJob(id) — the job as it is now; pickupMs — the pickup watch   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
   for (const [name, fn] of Object.entries({ updateJob, bus, ncp, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek })) {
     if (!fn) throw new Error(`[dispatcher] missing required dependency: ${name}`);
   }
@@ -633,6 +633,26 @@ function createDispatcher(deps) {
     // carries the chat that agent was last talking in; the tab opens it before typing, so every turn lands
     // in one conversation — across a guardian restart or a tab that wandered to another chat.
     // GUARDIAN_RESUME_CHAT=0 turns it off (every job runs wherever the tab is, as before).
+    // §0.60.2 — account routing. James: "actual account routing, and hat specific accounts. intent routing?" The job's
+    // hat / intent / repo picks the account (lib/account-routing.js); Clear Glass switches the provider tab to it (its
+    // cookies from the JAA vault) before anything is typed. No rule and no account on the job: nothing changes. A
+    // switch that fails fails the job with why — it never runs as an identity it was not routed to.
+    if (accountRouting && typeof useAccount === 'function') {
+      let routed = null;
+      try { routed = accountRouting.route(job); } catch (e) { console.warn(`[guardian] ${job.id}: account routing failed (job runs as the tab is): ${e.message}`); }
+      if (routed && routed.accountId) {
+        let sw;
+        try { sw = await useAccount(job.provider, routed.accountId, job); } catch (e) { sw = { ok: false, error: e.message }; }
+        if (!sw || !sw.ok) {
+          const error = `could not switch the ${job.provider} tab to account ${routed.accountId} (${routed.why}): ${(sw && sw.error) || 'Clear Glass did not answer'}`;
+          updateJob(job.id, { status: 'error', error, failedAt: Date.now(), accountId: routed.accountId });
+          bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'account' });
+          return true;
+        }
+        updateJob(job.id, { accountId: routed.accountId, accountWhy: routed.why, accountSwitched: !!sw.switched });
+        bus.emit('guardian.job.account', { jobId: job.id, provider: job.provider, accountId: routed.accountId, why: routed.why, switched: !!sw.switched });
+      }
+    }
     let resumeChatUrl = null;
     if (typeof chatFor === 'function' && process.env.GUARDIAN_RESUME_CHAT !== '0') {
       try { resumeChatUrl = chatFor(job) || null; } catch (e) { console.warn(`[guardian] ${job.id}: chat lookup failed (job runs where the tab is): ${e.message}`); }

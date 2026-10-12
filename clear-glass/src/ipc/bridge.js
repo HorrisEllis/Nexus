@@ -2063,6 +2063,8 @@ class IpcBridge {
     const attention = () => _attention || (_attention = require('../providers/attention').createAttentionHandler({
       providerHost: ph, assign: (p) => require('../providers/selector-assign').assign(p),
       getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
+      // §0.60.2 — the account switch (main/index.js sets it): the panel names the tab's account and saves a sign-in to the vault
+      accounts: () => (typeof this.accountSwitch === 'function' ? this.accountSwitch() : null),
       log: (m) => console.log(m),
     }));
     this.app.post('/providers/:id/attention', async (req, res) => {

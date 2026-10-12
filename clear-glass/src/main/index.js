@@ -1678,6 +1678,28 @@ async function bootstrap() {
       if (r.error) return res.status(404).json({ ok: false, error: r.error, code: r.code });
       res.json({ ok: true, provider, ...r });
     });
+    // §0.60.2 — the provider tab runs as the account guardian routed the job to (guardian/lib/account-routing.js →
+    // dispatcher → here): src/providers/account-switch.js, cookies from the JAA vault. GET the tab's account and the
+    // saved sign-ins; POST { accountId } switches; POST …/capture { accountId } saves the tab's sign-in as that account.
+    let _acctSwitch = null;
+    const acctSwitch = () => _acctSwitch || (_acctSwitch = require('../providers/account-switch').createAccountSwitch({
+      providerHost, vault: cookieVault, options: nexusOptions,
+      getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
+      sessionFor: (id) => session.fromPartition(`persist:ncp-${id}`),
+      log: (m) => console.log(m),
+    }));
+    ipcBridge.accountSwitch = acctSwitch;   // the attention panel (ipc/bridge.js) reads the tab's account through it
+    ipcBridge.app.get('/providers/:id/account', (req, res) => {
+      try { res.json({ ok: true, ...acctSwitch().state(req.params.id) }); } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    ipcBridge.app.post('/providers/:id/account', async (req, res) => {
+      try { const r = await acctSwitch().use(req.params.id, req.body && req.body.accountId, { reason: req.body && (req.body.why || req.body.jobId) }); res.status(r.ok ? 200 : 409).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    ipcBridge.app.post('/providers/:id/account/capture', async (req, res) => {
+      try { const r = await acctSwitch().capture(req.params.id, req.body && req.body.accountId); res.status(r.ok ? 200 : 409).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
     ipcBridge.app.get('/accounts', (req, res) => res.json({ ok: true, accounts: nexusOptions.listAccounts().map(a => ({ id: a.id, label: a.label, agentKeys: a.agentKeys, providers: Object.keys(a.providerAccounts || {}) })), defaults: nexusOptions.get().accountDefaults || {} }));
     ipcBridge.app.post('/compartment/set-active', (req, res) => {
       try {

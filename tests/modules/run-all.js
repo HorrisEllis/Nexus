@@ -342,6 +342,7 @@ const SUITES = [
   'test-copilot-claude-code.test.js',   // 0.59.14 — Claude Code as the co-pilot: reads all of Nexus, writes nothing itself, one session per conversation
   'test-plan-code-run-attention.test.js',   // 0.60.0 — plan then code (Ollama codes the planned files), the planner grounded and the system checked, learning from the agents; repo play/pause/rewind; Plan clear; Guardian sign-in / map attention + Clear Glass panel and picker
   // 0.60.1 — the nexus-system template's handoff and modules are checked by test-system-skeleton (SK-02 runs the laid-out system's own self-test)
+  'test-accounts-picker-cos.test.js',   // 0.60.2 — account routing by hat / intent / repo (Guardian, JAA) + Clear Glass's account switch on the JAA cookie vault; the COS-window attention panel; the pick checked by Clear Glass's selector check, anchored at x/y/z and used by every userscript (field map); ChatGPT works signed out; sign-in responses untouched
   'test-phases-tab.test.js',
   'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls
