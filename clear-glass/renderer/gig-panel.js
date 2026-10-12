@@ -81,6 +81,26 @@
     try { await navigator.clipboard.writeText(String(text)); } catch (_) { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
     if (btn) { const t = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = t; }, 1200); }
   }
+  // A gig is one .gig.json file: save it, edit or share it, load it back. Loading runs the same limits as a written gig.
+  $('gig-import').addEventListener('click', () => $('gig-file').click());
+  $('gig-file').addEventListener('change', async (ev) => {
+    const f = ev.target.files && ev.target.files[0]; ev.target.value = '';
+    if (!f) return;
+    if (f.size > 200000) return say('gig-write-status', 'That file is too large to be a gig.', 'bad');
+    let r; try { r = await cg.autofill.gigImport(await f.text()); } catch (e) { r = { ok: false, error: e.message }; }
+    if (!r || r.ok === false || !r.gig) return say('gig-write-status', `Not loaded: ${(r && r.error) || 'no answer'}`, 'bad');
+    GIG = r.gig; store.set('last', GIG);
+    say('gig-write-status', `Loaded "${r.gig.title}".${(r.warnings || []).length ? ` ${r.warnings.length} note(s): ${r.warnings.slice(0, 2).join(' · ')}` : ''} Fill this Fiverr page, or copy a part.`, 'ok');
+    paintGig();
+  });
+  $('gig-export').addEventListener('click', () => {
+    if (!GIG) return;
+    const blob = new Blob([JSON.stringify({ format: 'clearglass.gig/1', platform: 'fiverr', ...GIG }, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'), slug = String(GIG.title || 'gig').toLowerCase().replace(/^i will\s+/, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'gig';
+    a.href = URL.createObjectURL(blob); a.download = `${slug}.gig.json`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    say('gig-write-status', `Saved ${a.download} (to your downloads).`, 'ok');
+  });
   $('gig-copy-all').addEventListener('click', (e) => GIG && copy(parts(GIG).map(p => `${p.label}\n${p.text}`).join('\n\n'), e.currentTarget));
   $('gig-fill').addEventListener('click', async () => {
     if (!GIG) return;

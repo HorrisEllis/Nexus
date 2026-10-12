@@ -218,11 +218,33 @@
       const all = [...parts.querySelectorAll('.af-gig-part')].map(el => `${el.querySelector('.lbl').textContent.toUpperCase()}\n${el.querySelector('textarea').value}`).join('\n\n');
       copy(all, 'The gig');
     }, 'sm');
+    // A gig is one .gig.json file: load one (held to the same limits as a written gig) or save this one.
+    const file = h('input', { type: 'file', accept: '.json,application/json', style: 'display:none' });
+    file.addEventListener('change', async () => {
+      const f = file.files && file.files[0]; file.value = '';
+      if (!f) return;
+      if (f.size > 200000) return toast('That file is too large to be a gig', 'bad');
+      try {
+        const text = await f.text();
+        const r = await call(() => cg.autofill.gigImport(text), 'load gig');
+        if (!r.ok) throw new Error(r.error);
+        render(r); toast(`Loaded "${r.gig.title}"`);
+      } catch (e) { toast(e.message, 'bad'); }
+    });
+    const load = btn('Load a gig file…', () => file.click(), 'sm');
+    const save = btn('Save gig file', () => {
+      if (!gig) return toast('Write or load a gig first', 'warn');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify({ format: 'clearglass.gig/1', platform: 'fiverr', ...gig }, null, 2)], { type: 'application/json' }));
+      a.download = `${String(gig.title || 'gig').toLowerCase().replace(/^i will\s+/, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'gig'}.gig.json`;
+      a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      toast(`Saved ${a.download}`);
+    }, 'sm');
     const fill = btn('Fill the gig editor in a tab', () => gigFillFlow(() => gig).catch(e => toast(e.message, 'bad')), 'sm');
     return pane({ title: 'Fiverr gigs', sub: 'Written only from your profile and your one line. It types into the gig editor only when you ask, and never saves or publishes.', body: [
       h('div', { class: 'grid' }, field('Profile', prof), field('What the gig offers', offer)),
       field('Anything to add', extra),
-      h('div', { class: 'af-acts' }, write, copyAll, fill), meta, warn, parts] });
+      h('div', { class: 'af-acts' }, write, load, save, copyAll, fill, file), meta, warn, parts] });
   }
   async function gigFillFlow(getGig) {
     const gig = getGig();

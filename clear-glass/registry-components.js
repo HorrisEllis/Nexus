@@ -183,6 +183,7 @@ const components = [
   _c('autofill.readPage',     'IPC', 'autofill:readPage',       'The text and url of the page open in a tab (the job post the proposal answers)', { tags: ['autofill', 'freelance'] }),
   _c('autofill.gig',          'IPC', 'autofill:gig',            'Write a Fiverr gig from a profile and one line of what it offers — title, tags, description, three packages, FAQ, buyer questions, held to Fiverr\'s limits', { tags: ['autofill', 'freelance', 'gig'] }),
   _c('autofill.gigDetect',    'IPC', 'autofill:gig:detect',     'Preview which field of the gig editor open in a tab takes which part of the gig (nothing typed)', { tags: ['autofill', 'freelance', 'gig'] }),
+  _c('autofill.gigImport',    'IPC', 'autofill:gig:import',     'Load a gig from a .gig.json file — held to Fiverr\'s limits like a written gig; never saves, types or publishes', { tags: ['autofill', 'freelance', 'gig'] }),
   _c('autofill.gigFill',      'IPC', 'autofill:gig:fill',       'Type the gig into the gig editor open in a tab — never saves or publishes', { tags: ['autofill', 'freelance', 'gig'] }),
 
   // ── Screen Q&A — real, detect an open-ended on-screen question, answer
@@ -253,6 +254,7 @@ module.exports = {
       'selectors.assigned',        // v0.39.251 — SSE, a picked selector recorded by guardian
       'selectors.assign.failed',   // v0.39.251 — SSE, refused here or by guardian (the reason travels with it)
       'autofill.gig.drafted',      // v0.39.301 — a Fiverr gig was written (title, counts, how many warnings)
+      'autofill.gig.imported',     // 2026-10-12 — a gig file was loaded (title, how many warnings)
       'autofill.gig.filled',       // v0.39.301 — a gig was typed into the editor in a tab (filled / skipped / failed / left to copy)
     ],
     handles: [
