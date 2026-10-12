@@ -23,12 +23,13 @@ function rcTimeToggle(uuid) {
 }
 
 async function rcTimeLoad(uuid) {
-  const [v, d, c] = await Promise.all([
+  const [v, d, c, run] = await Promise.all([
     api(`/api/repos/${uuid}/snapshots`, {}, 30000).catch(e => ({ error: e.message })),
     api(`/api/repos/${uuid}/desktop`, {}, 15000).catch(e => ({ error: e.message })),
     api(`/api/repos/${uuid}/desktop/checkpoints`, {}, 15000).catch(e => ({ error: e.message })),
+    api(`/api/repos/${uuid}/run`, {}, 15000).catch(e => ({ error: e.message })),
   ]);
-  RC_TIME.data[uuid] = { versions: v, desktop: d, checkpoints: c, at: Date.now() };
+  RC_TIME.data[uuid] = { versions: v, desktop: d, checkpoints: c, run, at: Date.now() };
   const el = document.getElementById(`rct-${uuid}`);
   if (el) el.innerHTML = rcTimeHtml(uuid);
 }
@@ -37,6 +38,28 @@ async function rcDesk(uuid, op) {
   try { await api(`/api/repos/${uuid}/desktop/${op}`, { method: 'POST', body: JSON.stringify(op === 'checkpoint' ? { label: 'by hand' } : {}) }, 120000); if (typeof toast === 'function') toast(`desktop ${op} — done`, 'ok'); }
   catch (e) { if (typeof toast === 'function') toast(`desktop ${op} refused: ${e.message}`, 'err'); }
   rcTimeLoad(uuid);
+}
+
+// §0.60.0 RS1 — James: "needs play, pause and rewind … like i want to be able to pause the repo activity like the way vmware
+// pauses the state of the vm." The repo itself, not only its desktop: ⏸ freezes its agent, its phase builds and its spec
+// builds at their next step (a version and a desktop checkpoint taken first); ▶ lets them go on; ⏮ goes back one version
+// (or to the one picked), restored and verified, the desktop to its checkpoint before it — and stays paused.
+async function rcRun(uuid, op, commitId = null) {
+  if (op === 'rewind' && typeof confirm === 'function' && !confirm(commitId ? `Rewind this repo to version ${String(commitId).slice(0, 8)}? Its activity is paused first; its files go back to that version (a pre-restore version is kept, so this can be undone); the desktop goes back to its checkpoint before it.` : 'Rewind this repo one version back? Its activity is paused first; a pre-restore version is kept.')) return;
+  try {
+    const r = await api(`/api/repos/${uuid}/run/${op}`, { method: 'POST', body: JSON.stringify(commitId ? { commitId } : {}) }, op === 'rewind' ? 240000 : 120000);
+    if (typeof toast === 'function') toast(op === 'pause' ? `paused${r.run && r.run.snapshot ? ` at ${String(r.run.snapshot).slice(0, 8)}` : ''}${(r.running || []).length ? ` — ${r.running.length} running step(s) finish, nothing new starts` : ''}` : op === 'play' ? 'playing — waiting work goes on' : `rewound to ${String(r.rewoundTo).slice(0, 8)} — still paused, ▶ to go on`, 'ok');
+  } catch (e) { if (typeof toast === 'function') toast(`${op} refused: ${e.message}`, 'err'); }
+  rcTimeLoad(uuid);
+  if (typeof PLANP !== 'undefined' && PLANP.uuid === uuid && typeof loadPlanPanel === 'function') loadPlanPanel();
+}
+function rcRunBar(uuid, run) {
+  const st = run && run.run ? run.run : null;
+  if (!st) return run && run.error ? `<div class="rc-bad">run state: ${_rcEsc(run.error)}</div>` : '';
+  const paused = st.state === 'paused';
+  const busy = (run.running || []).length;
+  return `<div class="rc-sec">activity <span class="rc-dim">${paused ? `⏸ paused ${_rcWhen(st.since)}${st.snapshot ? ` at ${_rcEsc(String(st.snapshot).slice(0, 8))}` : ''}` : `▶ playing${busy ? ` · ${busy} running` : ''}`}</span></div>
+    <div class="rc-row">${paused ? `<button class="rc-act" title="let the repo's work go on where it stopped" onclick="rcRun('${uuid}','play')">▶ play</button>` : `<button class="rc-act" title="freeze the repo's agent, phase and spec builds at their next step — a version and a desktop checkpoint are taken first" onclick="rcRun('${uuid}','pause')">⏸ pause</button>`}<button class="rc-act" title="pause, then go back one version (files restored and verified; the desktop to its checkpoint before it)" onclick="rcRun('${uuid}','rewind')">⏮ rewind</button></div>`;
 }
 
 function rcAllVersions(uuid) {
@@ -50,11 +73,11 @@ function rcTimeHtml(uuid) {
   const vs = (t.versions && t.versions.snapshots) || [];
   const cps = (t.checkpoints && t.checkpoints.checkpoints) || [];
   const d = t.desktop || {};
-  let h = '<div class="rc-sec">versions</div>';
+  let h = rcRunBar(uuid, t.run) + '<div class="rc-sec">versions</div>';
   if (t.versions && t.versions.error) h += `<div class="rc-bad">${_rcEsc(t.versions.error)}</div>`;
   else if (!vs.length) h += '<div class="rc-dim">no versions yet — the next file change makes the first</div>';
   for (const c of vs.slice(0, 3)) {
-    h += `<div class="rc-row"><span class="rc-id" title="${_rcEsc(c.commitId)}">${_rcEsc(String(c.commitId).slice(0, 8))}</span><span class="rc-dim">${_rcWhen(c.ts)}</span><span class="rc-msg" title="${_rcEsc(c.message)}">${_rcEsc(String(c.message || '').slice(0, 60))}</span><button class="rc-act" title="preview restoring this version" onclick="previewRepoRestore('${uuid}','${_rcEsc(c.commitId)}','rct-out-${uuid}')">↶</button></div>`;
+    h += `<div class="rc-row"><span class="rc-id" title="${_rcEsc(c.commitId)}">${_rcEsc(String(c.commitId).slice(0, 8))}</span><span class="rc-dim">${_rcWhen(c.ts)}</span><span class="rc-msg" title="${_rcEsc(c.message)}">${_rcEsc(String(c.message || '').slice(0, 60))}</span><button class="rc-act" title="preview restoring this version" onclick="previewRepoRestore('${uuid}','${_rcEsc(c.commitId)}','rct-out-${uuid}')">↶</button><button class="rc-act" title="pause the repo and rewind it to this version" onclick="rcRun('${uuid}','rewind','${_rcEsc(c.commitId)}')">⏮</button></div>`;
   }
   if (vs.length) h += `<button class="rc-link" onclick="rcAllVersions('${uuid}')">all ${vs.length} versions →</button>`;
   h += `<div class="rc-sec">desktop <span class="rc-dim">${_rcEsc(d.state || (d.error ? 'unavailable' : '…'))}</span></div>`;

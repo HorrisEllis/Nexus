@@ -618,6 +618,7 @@ const ncp = createNCPServer({
       global._ncpLastLog[_key] = _now;
     }
     bus.emit('guardian.provider.connected', { provider, tabId });
+    try { _providerAttention().clear(provider); } catch (_) {}   // §0.60.0 GA1 — connected: the next problem is asked at once
     // 0.39.249 — the tab learns the current selector map before any job arrives.
     try { require('./lib/selector-map').pushToTab(ncp, _agentRegistry, provider, tabId); } catch (e) { console.warn(`[guardian] selector map not pushed to ${provider}/${tabId}: ${e.message}`); }
     flushQueuedJobs(provider);
@@ -649,11 +650,24 @@ let _chatTranscriptsRef = null;  // 0.39.259 — set once chat-transcripts is cr
 // §2026-09-23 — Clear Glass owns accounts (James: "yes clearglass"); the registry asks it instead of its own list.
 const _agentRegistry = require('./lib/agent-registry').createAgentRegistry({ accountAuthority: require('./lib/cg-account-authority').createClearGlassAccountAuthority() });
 const _meshClient    = require('./lib/mesh-client').createMeshClient();
+// §0.60.0 GA1 — James: "guardian should detect when a sign in is needed, also when it cant map to the chat, have a
+// compartment os style popup for the chat, to have me sign in or map the dom using the element picker." One instance:
+// the bus and every cockpit client hear each request; Clear Glass shows the agent's window with the Nexus panel.
+function _providerAttention() {
+  return require('./lib/provider-attention').attention(global.__nexusAttentionWired ? undefined : (global.__nexusAttentionWired = true, {
+    emit: (type, data) => { try { bus.emit(type, data); } catch (_) {} try { cockpitBroadcast({ type: type === 'guardian.provider.attention' ? 'GUARDIAN_PROVIDER_ATTENTION' : 'GUARDIAN_PROVIDER_ATTENTION_CLEARED', ...data }); } catch (_) {} },
+  }));
+}
 const _ladder = require('./lib/dispatch-ladder').createLadder({
   registry: _agentRegistry, mesh: _meshClient, wakeHint: require('./lib/wake-hint').createHintInjector(),
   picker: { request: async (a) => {
     bus.emit('guardian.picker.needed', { jobId: a.job && a.job.id, provider: a.provider, reason: a.reason, note: a.note || null });
     cockpitBroadcast({ type: 'GUARDIAN_PICKER_NEEDED', jobId: a.job && a.job.id, provider: a.provider, reason: a.reason, note: a.note || null });
+    // §0.60.0 GA1 — and the person is actually shown it: a sign-in stage → sign in; a selector or an unread reply → pick
+    const signin = ['no_login', 'captcha', 'login'].includes(a.reason);
+    _providerAttention().raise({ provider: a.provider, reason: signin ? 'signin' : 'map', jobId: a.job && a.job.id, agentId: a.job && a.job.agentId || null, stage: a.reason,
+      note: signin ? (a.reason === 'captcha' ? 'a captcha is in the way' : 'the chat wants you to sign in') : a.reason === 'sent_no_response' ? 'the prompt was sent but Guardian cannot find the reply — pick the reply' : `Guardian cannot find the chat's ${String(a.reason).replace(/_not_found$/, '').replace('resp', 'reply')} — pick it` })
+      .catch(() => {});
   } },
   log: (m) => console.log(`[guardian/ladder] ${m}`),
   // long generations: surface progress on the job and the bus (drives dashboards; proves the job is alive)
@@ -3054,6 +3068,9 @@ function handleExtendedRoutes(req, res, url, method) {
       _providerLogin.set(provider, rec);
       if (state === 'wall') { bus.emit('guardian.provider.login_required', rec); broadcast({ type: 'provider.login_required', ...rec }); console.warn(`[guardian] ${provider} needs a sign-in in its Clear Glass tab — its jobs wait (${rec.text || rec.url || ''})`); }
       else bus.emit('guardian.provider.login_state', rec);
+      // §0.60.0 GA1 — a wall (or signed out) is shown to the person; ok clears it
+      if (state === 'wall' || state === 'signed-out') _providerAttention().raise({ provider, reason: 'signin', url: rec.url, note: rec.text || `${provider} is signed out` }).catch(() => {});
+      else if (state === 'ok') _providerAttention().clear(provider);
       return json(res, 200, { ok: true, ...rec });
     }).catch(e => json(res, 400, { ok: false, error: e.message }));
     return true;   // §0.39.282 handled (async): a bare return fell through to the 404 fallback

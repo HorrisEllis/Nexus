@@ -2055,6 +2055,24 @@ class IpcBridge {
       ph.show(req.params.id);
       res.json({ ok: true });
     });
+
+    // §0.60.0 GA1 — Guardian asks for the person (guardian/lib/provider-attention.js): the agent's tab — the repo's own
+    // agent tab when the job names one — is shown with the Nexus panel: sign in, or pick the chat's input / send / reply
+    // (the picks go to Guardian through selector-assign.js, with the live check's evidence).
+    let _attention = null;
+    const attention = () => _attention || (_attention = require('../providers/attention').createAttentionHandler({
+      providerHost: ph, assign: (p) => require('../providers/selector-assign').assign(p),
+      getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
+      log: (m) => console.log(m),
+    }));
+    this.app.post('/providers/:id/attention', async (req, res) => {
+      try {
+        const r = await attention().attend(req.params.id, req.body || {});
+        try { this.sse && this.sse.emit('provider.attention', { providerId: req.params.id, ...(req.body || {}), shown: r.ok, window: r.window || null }); } catch (_) {}
+        res.status(r.ok ? 200 : 409).json(r);
+      } catch (err) { res.status(500).json({ ok: false, error: err.message }); }
+    });
+    this.app.get('/providers/attention', (req, res) => res.json({ ok: true, open: attention().state() }));
   }
 
   async stop() {

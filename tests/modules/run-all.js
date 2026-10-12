@@ -340,6 +340,7 @@ const SUITES = [
   'test-nexus-read.test.js',   // 0.59.12 — the agent's own nexus> tools: glass open, log, file, grep — secrets refused, keys redacted
   'test-readme-atlas.test.js',   // 0.59.12 — README.md is the NEXUS atlas
   'test-copilot-claude-code.test.js',   // 0.59.14 — Claude Code as the co-pilot: reads all of Nexus, writes nothing itself, one session per conversation
+  'test-plan-code-run-attention.test.js',   // 0.60.0 — plan then code (Ollama codes the planned files), the planner grounded and the system checked, learning from the agents; repo play/pause/rewind; Plan clear; Guardian sign-in / map attention + Clear Glass panel and picker
   'test-phases-tab.test.js',
   'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls

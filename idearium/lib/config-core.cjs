@@ -238,6 +238,15 @@ const SCHEMA = {
     // counts 1. "class:weight" pairs, comma-separated.
     signal_weights:      { default: 'test-failed:1,constraint:1,dismissed:0.5', copilot_writable: true, type: 'string' },
     min_build_b:         { default: 3, min: 0, max: 1000, copilot_writable: true, type: 'number' },
+    // §0.39.361 SB51 / AR1 — read by policyFrom since then, declared here only now (§0.60.0)
+    chunk_phases:        { default: 'auto', enum: ['auto', 'always', 'never'], copilot_writable: true, type: 'string' },
+    ladder_learn:        { default: true, copilot_writable: true, type: 'boolean' },
+    // §0.60.0 PC1 — James: "an intent for the reasoning, to map and plan, then ollama codes in chunks. that way ollama can
+    // be as dumb as possible." A phase build plans first (a reasoning agent maps it to the spec and the component
+    // registry, and writes the conditions from the intent), then Ollama writes each planned file (lib/phase-plan.js).
+    plan_code:           { default: 'auto', enum: ['auto', 'always', 'never'], copilot_writable: true, type: 'string' },
+    planner:             { default: '', copilot_writable: true, type: 'string' },
+    plan_attempts:       { default: 2, min: 1, max: 5, copilot_writable: true, type: 'number' },
   },
 
   cicd: {
