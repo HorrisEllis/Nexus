@@ -1,6 +1,8 @@
 'use strict';
 // tests/skeleton.test.js — the skeleton is alive: it boots, indexes its nodes, has the component shape, serves its
 // route nodes, runs its command nodes, picks up a node dropped into its folder, and gains a capability from nodes alone.
+// It lays out a module — a whole system — from its own template, and that module lays out one of its own; and it hands
+// work to its module as a verified file that moves input/ → processing/ → done/, the receipt back in its output/.
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
@@ -9,6 +11,8 @@ const { boot } = require('../lib/system.js');
 const { start } = require('../server.js');
 const commands = require('../lib/commands.js');
 const env = require('../lib/envelope.js');
+const modules = require('../lib/modules.js');
+const handoff = require('../lib/handoff.js');
 
 const get = (port, p) => new Promise((resolve, reject) => http.get({ host: '127.0.0.1', port, path: p }, (res) => {
   let s = ''; res.on('data', (c) => { s += c; }); res.on('end', () => resolve({ status: res.statusCode, json: JSON.parse(s) }));
@@ -48,9 +52,53 @@ const get = (port, p) => new Promise((resolve, reject) => http.get({ host: '127.
     for (let i = 0; i < 40 && !(got && got.status === 200); i++) { await new Promise(r => setTimeout(r, 100)); got = await get(port, '/count/event'); }
     assert.ok(got.status === 200 && got.json.nodes.some(n => n.id === `${S}.count.done`), 'a capability added as nodes alone is served');
     assert.deepStrictEqual((await get(port, '/status')).json.shape, [], 'and the shape still holds');
+
+    // recursion: a module is a system — laid out from this system's own template, booted with its own code, and able to
+    // lay out a module of its own
+    const mod = await commands.run(ctx, 'module', { name: 'Probe Part', description: 'a module of the probe' });
+    added.push(['dir', 'modules']);
+    assert.strictEqual(mod.module, 'probe-part');
+    const child = modules.boot(ctx, 'probe-part');
+    assert.strictEqual(child.system, 'probe-part', 'the module is a system with its own name');
+    assert.deepStrictEqual(child.index.problems, [], 'its nodes match its schemas');
+    assert.deepStrictEqual(child.shape(), [], 'and it has the component shape');
+    const grand = await commands.run(child, 'module', { name: 'Probe Leaf' });
+    assert.ok(fs.existsSync(path.join(ctx.root, 'modules', 'probe-part', 'modules', 'probe-leaf', 'registry-components.js')), 'a module lays out a module of its own');
+    assert.strictEqual(grand.module, 'probe-leaf');
+    const listed = (await commands.run(ctx, 'modules')).modules;
+    assert.ok(listed.some(m => m.system === 'probe-part' && m.verified && m.modules === 1), 'the parent sees its module, its contract verified, and its nested module');
+
+    // the handoff: verified before it moves, its state the folder it is in, the receipt back with the sender
+    const refused = await commands.run(ctx, 'handoff', { to: 'probe-part', kind: 'probe', payload: { n: 1 } });
+    assert.strictEqual(refused.state, 'refused', 'the module accepts no "probe" yet — refused, nothing moved');
+    assert.ok(/accepts no "probe"/.test(refused.reason));
+    assert.ok(!fs.readdirSync(path.join(child.root, 'input')).some(f => f.endsWith('.handoff')), 'nothing landed in its input/');
+    env.write(child.root, 'command', 'probe-part.take-probe', { capability: 'probe-part.core.observe', cli: 'take-probe', handler: 'status', accepts: ['probe'], events: ['probe-part.status.reported'] });
+    child.listener.sync();
+    const nowhere = await commands.run(ctx, 'handoff', { to: 'no-such-system', kind: 'probe', payload: {} });
+    assert.ok(nowhere.state === 'refused' && /not in this system's registry/.test(nowhere.reason), 'a target the registry does not know is refused');
+    const sent = await commands.run(ctx, 'handoff', { to: 'probe-part', kind: 'probe', payload: { n: 2 } });
+    assert.strictEqual(sent.state, 'queued', 'verified: queued in the module\'s input/');
+    assert.ok(fs.existsSync(path.join(child.root, 'input', `${sent.id}.handoff`)), 'tangible: the file is in its input/');
+    const ran = await handoff.drain(child);
+    assert.ok(ran.some(r => r.id === sent.id && r.state === 'done'), 'the module took it, ran the command that accepts it, and it is done');
+    assert.ok(fs.existsSync(path.join(child.root, 'done', `${sent.id}.handoff`)), 'tangible: in its done/');
+    const receipt = env.read(path.join(ctx.root, 'output', `${sent.id}.handoff`));
+    assert.strictEqual(receipt.payload.state, 'done', 'the sender\'s receipt says done');
+    assert.deepStrictEqual(receipt.payload.history.map(h => h.state), ['verifying', 'queued', 'taken', 'done'], 'every step it passed through');
+    // a crash mid-work: what is left in processing/ goes back to input/ at boot, said
+    const stuck = env.read(path.join(child.root, 'done', `${sent.id}.handoff`));
+    fs.writeFileSync(path.join(child.root, 'processing', 'stuck-1.handoff'), JSON.stringify({ ...stuck, id: 'stuck-1' }));
+    assert.deepStrictEqual(handoff.recover(child), ['stuck-1'], 'recovered at boot');
+    assert.ok(fs.existsSync(path.join(child.root, 'input', 'stuck-1.handoff')));
+    const hs = await commands.run(ctx, 'handoffs');
+    assert.ok(hs.output.some(h => h.id === sent.id && h.state === 'done') && hs.peers['probe-part'] === 'module', 'the handoffs, by folder, and the peers the registry gives');
+    assert.ok((await get(port, '/contract')).json.resources.some(r => r.method === 'POST' && r.path === '/handoff'), 'the drawbridge is in the contract');
+    child.stop();
   } finally {
     fs.unlinkSync(env.nodePath(ctx.root, 'route', '{{slug}}.probe'));
     for (const [type, id, before] of added) {
+      if (type === 'dir') { fs.rmSync(path.join(ctx.root, id), { recursive: true, force: true }); for (const d of ['input', 'processing', 'done', 'failed', 'output']) for (const f of fs.readdirSync(path.join(ctx.root, d)).filter(f => f.endsWith('.handoff'))) fs.unlinkSync(path.join(ctx.root, d, f)); try { fs.rmSync(path.join(ctx.root, 'data', 'nodes', 'module'), { recursive: true, force: true }); } catch (_) {} continue; }
       if (before) env.write(ctx.root, type, id, before.payload, { uuid: before.uuid, system: before.system, summary: before.summary });
       else fs.unlinkSync(env.nodePath(ctx.root, type, id));
     }

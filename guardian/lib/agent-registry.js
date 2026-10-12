@@ -53,6 +53,11 @@ function createAgentRegistry({ dir = process.env.GUARDIAN_AGENTS_DIR || path.joi
     for (const k of ['input', 'send', 'resp']) {
       if (typeof selectors[k] === 'string' && selectors[k].trim() && selectors[k] !== cur[k]) changed[k] = selectors[k].trim();
     }
+    // §0.60.2 — the same selector picked again with where it sits (evidence.anchor: x, y, z) is a change too: the
+    // anchor is what tells several matches apart (the claude send selector matched 27).
+    if (!Object.keys(changed).length && meta.evidence && meta.evidence.anchor) {
+      for (const k of ['input', 'send', 'resp']) if (typeof selectors[k] === 'string' && selectors[k].trim() === cur[k]) changed[k] = cur[k];
+    }
     if (!Object.keys(changed).length) return { changed: false, selectors: cur };
     const o = ov(id);
     o.selectors = { ...(o.selectors || {}), ...changed };

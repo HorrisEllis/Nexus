@@ -1,0 +1,15 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-even-0000-0000-000000000111",
+  "type": "event",
+  "id": "{{slug}}.handoffs.listed",
+  "system": "{{slug}}",
+  "summary": "the handoffs were listed",
+  "payload": {
+    "command": "{{slug}}.handoffs",
+    "payload": {
+      "command": "string",
+      "result": "object"
+    }
+  }
+}

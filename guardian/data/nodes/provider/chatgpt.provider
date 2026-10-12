@@ -31,3 +31,4 @@ payload:
     - grounded
     - hostile_testing
     - structured_output
+  loginOptional: true

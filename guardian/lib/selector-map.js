@@ -34,14 +34,18 @@ const VERIFIED_SOURCES = new Set(['picker', 'archaeology']);
 function mapFor(registry, provider) {
   const a = registry.get(provider);
   if (!a) return null;
-  const verified = {}, source = {};
+  const verified = {}, source = {}, anchors = {};
   for (const k of KEYS) {
     // The last history entry that changed this key decides; none -> the seed.
     const last = [...(a.selectorHistory || [])].reverse().find(h => h && h.to && typeof h.to[k] === 'string');
     source[k] = last ? (last.source || 'mesh') : 'seed';
     verified[k] = !!last && VERIFIED_SOURCES.has(last.source);
+    // §0.60.2 — where the picked element sat (x, y, w, h, rx/ry of the viewport, z: its layer, z-index, depth): the
+    // userscript's field map (userscript-field-map.js) picks among several matches by it, or finds the element there.
+    const an = last && last.evidence && last.evidence.anchor;
+    if (an && typeof an === 'object') anchors[k] = an;
   }
-  return { provider, selectors: { ...a.selectors }, verified, source };
+  return { provider, selectors: { ...a.selectors }, verified, source, anchors };
 }
 
 function message(registry, provider) {

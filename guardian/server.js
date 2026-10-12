@@ -708,6 +708,9 @@ const {
   erosType: (job) => _erosTypist.type(job),
   completeWith: (job, text, chatUrl, source) => _completeJobWith(job, text, chatUrl, source),
   economy: _economyGuard,   // §0.39.281 EC6
+  // §0.60.2 — which account a job runs as (hat / intent / repo rules, JAA); Clear Glass switches the tab to it
+  accountRouting: require('./lib/account-routing.js').routing(),
+  useAccount: (provider, accountId, job) => require('./lib/account-routing.js').cgUseAccount(provider, accountId, job),
 });
 _economyGuard.attach(bus, (id) => jobs.get(id));
 
@@ -1801,6 +1804,35 @@ function handleExtendedRoutes(req, res, url, method) {
       done:     done.slice(-20),  // last 20 done items
     });
     return true;
+  }
+
+  // §0.60.2 — account routing (guardian/lib/account-routing.js): which Clear Glass account a job runs as, by hat /
+  // intent / repo. GET /api/accounts/rules · POST /api/accounts/rules (add or change; the account must be one Clear
+  // Glass knows for that provider) · DELETE /api/accounts/rules/:id · POST /api/accounts/route (what a job would run as,
+  // not logged) · GET /api/accounts/route-log.
+  if (url.pathname.startsWith('/api/accounts/')) {
+    const AR = require('./lib/account-routing.js');
+    const R = AR.routing();
+    if (url.pathname === '/api/accounts/rules' && method === 'GET') { pRes(res, 200, { ok: true, rules: R.rules({ provider: url.searchParams.get('provider') || undefined }) }); return true; }
+    if (url.pathname === '/api/accounts/route-log' && method === 'GET') { pRes(res, 200, { ok: true, log: R.log({ provider: url.searchParams.get('provider') || undefined, limit: Math.min(500, parseInt(url.searchParams.get('limit') || '50', 10) || 50) }) }); return true; }
+    if (url.pathname === '/api/accounts/rules' && method === 'POST') {
+      bodyJ(req).then(async (body) => {
+        if (!body || !body.provider || !body.account) return pRes(res, 400, { ok: false, error: 'provider and account required' });
+        // the account must exist in Clear Glass for this provider — a rule never routes to an identity nobody signed in as
+        try { await require('./lib/cg-account-authority.js').createClearGlassAccountAuthority().resolve(String(body.provider), String(body.account)); }
+        catch (e) { if (e.code === 'unknown_account') return pRes(res, 400, { ok: false, error: e.message, code: e.code }); if (!body.force) return pRes(res, 503, { ok: false, error: `Clear Glass could not confirm the account: ${e.message} (force:true saves it anyway)`, code: e.code || null }); }
+        const r = R.setRule(body);
+        if (r.ok) bus.emit('guardian.accounts.rule', { rule: r.rule });
+        pRes(res, r.ok ? 200 : 400, r);
+      }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+      return true;
+    }
+    const rm = url.pathname.match(/^\/api\/accounts\/rules\/([\w.-]+)$/);
+    if (rm && method === 'DELETE') { pRes(res, 200, R.removeRule(rm[1])); return true; }
+    if (url.pathname === '/api/accounts/route' && method === 'POST') {
+      bodyJ(req).then(body => pRes(res, 200, { ok: true, route: R.route(body || {}, { log: false }) })).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+      return true;
+    }
   }
 
   // ── POST /queue/enqueue — add item to physical queue ────────────────────────

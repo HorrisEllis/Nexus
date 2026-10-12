@@ -114,6 +114,28 @@ module.exports = Object.freeze({
     severity: 'info',
   },
 
+  // ── §0.60.0 / 0.60.2 — the person asked for; which account a job runs as ──────
+  GUARDIAN_PROVIDER_ATTENTION: {
+    description: "An agent's tab needs the person (lib/provider-attention.js): a sign-in, the chat's input/send/reply picked, or a tab that will not connect — Clear Glass shows the tab with the COMPARTMENT OS panel.",
+    payloadShape: ['provider', 'reason', 'note', 'url', 'jobId', 'agentId'],
+    severity: 'notable',
+  },
+  GUARDIAN_PROVIDER_ATTENTION_CLEARED: {
+    description: 'The agent connected or its sign-in is ok: the attention for it is cleared, so the next problem is asked at once.',
+    payloadShape: ['provider'],
+    severity: 'info',
+  },
+  GUARDIAN_JOB_ACCOUNT: {
+    description: 'A job was routed to an account (lib/account-routing.js: hat / intent / repo) and Clear Glass switched the provider tab to it before the job was typed.',
+    payloadShape: ['jobId', 'provider', 'accountId', 'why', 'switched'],
+    severity: 'info',
+  },
+  GUARDIAN_ACCOUNTS_RULE: {
+    description: 'An account routing rule was added or changed (POST /api/accounts/rules).',
+    payloadShape: ['rule'],
+    severity: 'info',
+  },
+
   // ── §HONEST GAP — gate.checked / gate.failed, named in ET2's own
   //    phasemap entry for ET6's sigma work, deliberately not included.
   //    Confirmed directly (grepped guardian/server.js for both strings):

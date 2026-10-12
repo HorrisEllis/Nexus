@@ -1,7 +1,9 @@
 'use strict';
 // event-taxonomy.js — the system's events, generated from its event nodes (data/nodes/event/), never hand-written.
 // The system events below are the ones the skeleton's own parts emit whether or not a node names them.
-const SYSTEM = ['{{slug}}.heartbeat', '{{slug}}.node.changed', '{{slug}}.command.ran', '{{slug}}.listener.failed'];
+const SYSTEM = ['{{slug}}.heartbeat', '{{slug}}.node.changed', '{{slug}}.command.ran', '{{slug}}.listener.failed',
+  // a handoff's life on the receiving side, and the receipts that come back (lib/handoff.js)
+  '{{slug}}.handoff.taken', '{{slug}}.handoff.done', '{{slug}}.handoff.failed', '{{slug}}.handoff.reported', '{{slug}}.handoff.recovered', '{{slug}}.handoff.drain_failed'];
 
 function taxonomy(index) {
   const out = Object.fromEntries(SYSTEM.map(e => [e, { from: 'skeleton' }]));

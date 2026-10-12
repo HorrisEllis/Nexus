@@ -1,0 +1,16 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-capa-0000-0000-000000000104",
+  "type": "capability",
+  "id": "{{slug}}.modules.nest",
+  "system": "{{slug}}",
+  "summary": "nest systems",
+  "payload": {
+    "component": "{{slug}}.modules",
+    "summary": "lay out a module (a whole system) from this system's template; list the modules with their contracts checked",
+    "commands": [
+      "{{slug}}.module.new",
+      "{{slug}}.modules"
+    ]
+  }
+}

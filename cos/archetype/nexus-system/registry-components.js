@@ -17,6 +17,34 @@ module.exports = {
       consumers: [],
       data: { dir: 'data/nodes', store: 'node', types: ['component', 'capability', 'command', 'event', 'route', 'hook', 'wire', 'bundle'] },
     },
+    // the drawbridge: work moves to and from other systems as verified files (input/ → processing/ → done/ | failed/)
+    {
+      type: 'component',
+      id: '{{slug}}.handoff',
+      uuid: '{{uuid8}}-hand-0000-0000-000000000101',
+      file: 'lib/handoff.js',
+      intent: 'work moves between systems as a file: verified by the registry and the handshake, then moved to the target\'s input/',
+      version: '0.1.0',
+      status: 'built',
+      capabilities: ['{{slug}}.handoff.move'],
+      hooks: [],
+      consumers: [],
+      data: { dir: 'input, processing, done, failed, output', store: 'node', types: ['handoff'] },
+    },
+    // recursion: a module is a system — this skeleton again, one level down, from the system's own template
+    {
+      type: 'component',
+      id: '{{slug}}.modules',
+      uuid: '{{uuid8}}-modu-0000-0000-000000000102',
+      file: 'lib/modules.js',
+      intent: 'a module is a system: the skeleton laid out again under modules/, from template/',
+      version: '0.1.0',
+      status: 'built',
+      capabilities: ['{{slug}}.modules.nest'],
+      hooks: [],
+      consumers: [],
+      data: { dir: 'modules', store: 'node', types: ['module'] },
+    },
     // ── the idea's components slot in below ──
   ],
 };

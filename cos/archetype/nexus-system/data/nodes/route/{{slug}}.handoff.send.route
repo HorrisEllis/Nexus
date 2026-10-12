@@ -1,0 +1,13 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-rout-0000-0000-000000000114",
+  "type": "route",
+  "id": "{{slug}}.handoff.send",
+  "system": "{{slug}}",
+  "summary": "POST /handoffs",
+  "payload": {
+    "method": "POST",
+    "path": "/handoffs",
+    "command": "{{slug}}.handoff.send"
+  }
+}

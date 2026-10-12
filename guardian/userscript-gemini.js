@@ -625,6 +625,8 @@ function injectText(text, opts = {}) {
   // before injection, same as every other provider script.
   // 0.39.258 — a composed job (opts.composed) is sent exactly as its caller built it: no agent hint appended.
   if (NEXUS && !opts.composed) text = NEXUS.decorate(text);
+  // §0.60.2 — a verified pick (guardian-picked input, userscript-field-map.js) is used first; else the lookup below.
+  if (window.NexusFields && window.NexusFields.type(text)) return true;
   const inp = _getInput();
   if (!inp) return false;
   inp.focus();
@@ -635,6 +637,9 @@ function injectText(text, opts = {}) {
   return true;
 }
 function submit() {
+  // §0.60.2 — the picked send button (userscript-field-map.js), when one is verified and enabled.
+  const _mapped = window.NexusFields && window.NexusFields.press();
+  if (_mapped) return _mapped;
   // §SUBMIT-EVIDENCE 2026-09-23 — James's run: job created -> dispatched ->
   // ACKED -> silence, while the tab itself showed a real answer on screen.
   // submit() returned NOTHING, so "never sent" and "sent fine" were
@@ -1176,6 +1181,8 @@ function connect() {
   };
 }
 function _handleServerMessage(msg) {
+  // §0.60.2 — the selector map (with each pick's anchor) goes to the shared field map too: userscript-field-map.js
+  if (msg && msg.type === 'GUARDIAN_SELECTORS' && msg.provider === PROVIDER && window.NexusFields) window.NexusFields.set(PROVIDER, msg);
   switch(msg.type) {
     case 'NCP_READY': case 'GUARDIAN_READY': connState='ready'; updatePill(); toast('Guardian connected ✓','success',2000); break;
     case 'GUARDIAN_CLAIM':

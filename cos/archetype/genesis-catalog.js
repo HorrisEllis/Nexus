@@ -39,13 +39,18 @@ const INTENT = {
   'cli.js': ['run_the_command_nodes', 'node cli.js <command> [--flag value] — the same command nodes the routes run.'],
   'spec/<system>.spec': ['the_living_spec', 'identity, context, file_structure, modules, components, generated — the architecture template\'s sections; grows with the system.'],
   'spec/<system>.node-taxonomy.md': ['the_node_types', 'Each node type, what it is and its required fields.'],
-  'tests/skeleton.test.js': ['prove_the_skeleton_is_alive', 'Boots, indexes, checks the shape, serves routes, runs the CLI, and serves a route node dropped in without a restart.'],
+  'tests/skeleton.test.js': ['prove_the_skeleton_is_alive', 'Boots, indexes, checks the shape, serves routes, runs the CLI, serves a route node dropped in without a restart, lays out a module that lays out its own, and hands work to it as a verified file.'],
+  // §0.60.1 — the drawbridge and the recursion
+  'lib/handoff.js': ['hand_work_to_another_system_as_a_verified_file', 'Registry + handshake + schema checked before anything moves; refused = a receipt saying why. Queued in the target\'s input/, taken to processing/, done/ or failed/ with why; the receipt back in the sender\'s output/; processing/ recovered at boot.'],
+  'lib/modules.js': ['a_module_is_a_system', 'Lays out template/ again under modules/<slug>/ — the same skeleton one level down, carrying the template so it can nest further; registers it as one module node; boots it with its own code.'],
+  'template/nexus-system.template.json': ['the_template_this_system_came_from', 'Every skeleton file with its placeholders written [[key]], so the system can lay out modules of its own (lib/modules.js) — the same architecture on every level.'],
 };
 const EXTRA = {   // reads that are not a require(): files read at run time
   'config.js': ['<system>.config.json'],
   'lib/system.js': ['registry-components.js'],
   'server.js': ['interaction-contract.json'],
   'schemas/index.js': [],
+  'lib/modules.js': ['template/nexus-system.template.json'],
 };
 
 function intentOf(p) {
@@ -61,7 +66,7 @@ function _deps(f, keys) {
   const out = new Set();
   const re = /require\(\s*'(\.{1,2}\/[^']+)'\s*\)/g;
   let m;
-  while ((m = re.exec(f.content))) {
+  while (/\.(c|m)?js$/.test(f.p) && (m = re.exec(f.content))) {   // §0.60.1 — code only: the self-template is data that holds code as text
     let r = path.posix.normalize(path.posix.join(path.posix.dirname(f.p), m[1]));
     if (!r.endsWith('.js') && !r.endsWith('.json')) r += '.js';
     if (!keys.has(r)) throw new Error(`${f.p} requires ${r}, not in the tree`);

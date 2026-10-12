@@ -2,11 +2,13 @@
 // server.js — the API server. It serves the route nodes (data/nodes/route/): each one names a method, a path and the
 // command it runs. A new route is a node dropped in its folder; this file does not change.
 //   GET /health  the heartbeat snapshot · GET /contract  the contract with every route node · GET /nodes/:type[/:id]
+//   POST /handoff  a handoff from another system lands in input/ · POST /handoff/receipt  how one this system sent went
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { boot } = require('./lib/system.js');
 const commands = require('./lib/commands.js');
+const handoff = require('./lib/handoff.js');
 
 function _match(pattern, actual) {
   const p = pattern.split('/').filter(Boolean), a = actual.split('/').filter(Boolean);
@@ -22,7 +24,9 @@ function _match(pattern, actual) {
 function contract(ctx) {
   const base = JSON.parse(fs.readFileSync(path.join(ctx.root, 'interaction-contract.json'), 'utf8'));
   const routes = ctx.index.list('route').map(r => ({ method: r.method, path: r.path, command: r.command }));
-  return { ...base, resources: [...base.resources, ...routes] };
+  // the handoff kinds this system takes: every command node that declares accepts
+  const accepts = [...new Set(ctx.index.list('command').flatMap(c => (Array.isArray(c.accepts) ? c.accepts : c.accepts ? [c.accepts] : [])))].sort();
+  return { ...base, resources: [...base.resources, ...routes], accepts };
 }
 
 function _body(req) {
@@ -40,6 +44,8 @@ function create(ctx) {
     try {
       if (req.method === 'GET' && url.pathname === '/health') return send(200, ctx.heartbeat.snapshot());
       if (req.method === 'GET' && url.pathname === '/contract') return send(200, contract(ctx));
+      if (req.method === 'POST' && url.pathname === '/handoff') return send(200, handoff.accept(ctx, await _body(req)));
+      if (req.method === 'POST' && url.pathname === '/handoff/receipt') return send(200, handoff.receipt(ctx, await _body(req)));
       let p = _match('/nodes/:type/:id', url.pathname);
       if (req.method === 'GET' && p) { const n = ctx.index.get(p.type, p.id); return n ? send(200, n) : send(404, { error: `no ${p.type} ${p.id}` }); }
       p = _match('/nodes/:type', url.pathname);
@@ -59,8 +65,9 @@ function create(ctx) {
 function start({ port, root } = {}) {
   const ctx = boot({ root, watch: true, beat: true });
   const server = create(ctx);
+  const drain = handoff.start(ctx);   // what is queued in input/ is taken, run, and moved to done/ or failed/
   return new Promise((resolve) => server.listen(port !== undefined ? port : ctx.config.port, '127.0.0.1', () => {
-    server.on('close', () => ctx.stop());
+    server.on('close', () => { drain.stop(); ctx.stop(); });
     resolve({ server, ctx, port: server.address().port });
   }));
 }

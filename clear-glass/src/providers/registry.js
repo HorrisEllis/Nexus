@@ -38,6 +38,9 @@ const SEED = Object.freeze({
     hosts:          ['chatgpt.com', 'chat.openai.com'],
     userscriptFile: 'userscript-chatgpt.js',
     color:          '#19c37d',
+    // §0.60.2 — James: "chatgpt doesn't need a login currently." Its chat works signed out: a tab on a sign-in page is
+    // sent back to the chat before the person is asked (providers/attention.js).
+    loginOptional:  true,
   },
   gemini: {
     id:             'gemini',

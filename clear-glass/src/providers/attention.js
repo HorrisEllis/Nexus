@@ -24,67 +24,131 @@
  */
 
 const MODULE_ID = 'clear-glass.provider-attention';
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';   // 1.1.0 (0.60.2): the COS window, Clear Glass's selector check, x/y/z anchors, accounts
 const SIGNIN_RE = /\/(login|log-in|signin|sign-in|sign_in|auth|authenticate|oauth|sso|u\/login)(\/|$|\?|#)/i;
 
 const TITLES = { signin: 'needs you to sign in', map: 'cannot find its chat', 'no-connect': 'is not connecting' };
+const STATE = { signin: ['sign in', 'warn'], map: ['map the chat', 'warn'], 'no-connect': ['not connecting', 'bad'] };
 
-/** panelScript(rec) — the panel, as a page script returning Promise<{ action, key? }> */
+/**
+ * panelScript(rec) — the panel, as a page script returning Promise<{ action, key?, account? }>.
+ * §0.60.2 — James: "when popups happen, can you have it be the same ui as the cos ui? like the screenshot but for agent
+ * providers?" The COMPARTMENT OS window: idearium/ui/js/window-chrome.js's title bar (glyph · "COMPARTMENT · AGENT" ·
+ * title · — ▢ ✕) over idearium/ui/desktop.html's toolbar (state pills, then the buttons), same colours and type.
+ * — collapses the window to its title bar, ▢ widens it, ✕ hides the tab; neither of the first two ends the panel.
+ */
 function panelScript(rec = {}) {
+  const st = STATE[rec.reason] || ['needs you', 'warn'];
   const data = JSON.stringify({ provider: rec.providerName || rec.provider || 'the agent', reason: rec.reason || 'map', title: TITLES[rec.reason] || 'needs you',
-    note: rec.note || '', forWhat: rec.forWhat || rec.agentId || '', last: rec.lastResult || '' });
+    state: st[0], stateCls: st[1], note: rec.note || '', forWhat: rec.forWhat || rec.agentId || '', last: rec.lastResult || '',
+    loginOptional: !!rec.loginOptional, account: rec.account || null, accounts: Array.isArray(rec.accounts) ? rec.accounts.slice(0, 20) : [] });
   return `(() => new Promise((resolve) => {
   const D = ${data};
   const old = document.getElementById('nexus-attention'); if (old) old.remove();
+  const ui = window.__nexusAttnUi = window.__nexusAttnUi || { min: false, max: false };
   const box = document.createElement('div'); box.id = 'nexus-attention';
-  box.setAttribute('style', 'position:fixed;z-index:2147483647;right:24px;top:24px;width:340px;font:12px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;color:#e6edf6;background:rgba(10,14,24,.94);border:1px solid rgba(56,189,248,.45);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);backdrop-filter:blur(10px);overflow:hidden');
+  const W = () => (ui.max ? Math.min(900, innerWidth - 48) : 460) + 'px';
+  box.setAttribute('style', 'position:fixed;z-index:2147483647;right:24px;top:24px;width:' + W() + ';font:13px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:#e5e7ef;background:#0b0d12;border:1px solid #232838;border-radius:8px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden');
   const esc = (s) => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const btn = (act, key, label, primary) => '<button data-act="' + act + '"' + (key ? ' data-key="' + key + '"' : '') + ' style="all:unset;cursor:pointer;padding:6px 10px;border-radius:7px;border:1px solid ' + (primary ? 'rgba(56,189,248,.8);background:rgba(56,189,248,.18)' : 'rgba(255,255,255,.16)') + ';font:600 11px system-ui,sans-serif;color:#e6edf6">' + label + '</button>';
-  box.innerHTML = '<div data-drag="1" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:linear-gradient(90deg,rgba(56,189,248,.22),rgba(167,139,250,.18));cursor:move;user-select:none">'
-    + '<span style="width:8px;height:8px;border-radius:50%;background:' + (D.reason === 'signin' ? '#fbbf24' : '#38bdf8') + '"></span>'
-    + '<b style="flex:1">NEXUS · ' + esc(D.provider) + ' ' + esc(D.title) + '</b>'
-    + '<button data-act="hide" title="hide this window" style="all:unset;cursor:pointer;opacity:.7">✕</button></div>'
-    + '<div style="padding:10px 12px">'
-    + (D.note ? '<div style="margin-bottom:6px">' + esc(D.note) + '</div>' : '')
-    + (D.forWhat ? '<div style="opacity:.65;font-size:11px;margin-bottom:6px">for ' + esc(D.forWhat) + '</div>' : '')
-    + (D.reason === 'signin' ? '<div style="opacity:.8;margin-bottom:8px">Sign in on this page as you normally would. Nexus goes on by itself once the chat opens.</div>'
-      : '<div style="opacity:.8;margin-bottom:8px">Show Nexus the chat: pick the box you type in, the send button, and a reply. Each pick is checked on this page, then saved in Guardian for this agent.</div>')
-    + (D.last ? '<div style="margin:6px 0;padding:6px 8px;border-radius:6px;background:rgba(255,255,255,.06);font-size:11px">' + esc(D.last) + '</div>' : '')
-    + '<div style="display:flex;flex-wrap:wrap;gap:6px">'
-    + (D.reason === 'signin' ? btn('signed-in', '', "I've signed in", true) : '')
-    + btn('pick', 'input', 'pick the input', D.reason !== 'signin') + btn('pick', 'send', 'pick send', false) + btn('pick', 'resp', 'pick the reply', false)
-    + btn('hide', '', 'hide', false) + '</div></div>';
+  const css = '#nexus-attention *{box-sizing:border-box}'
+    + '#nexus-attention .cx{height:34px;display:flex;align-items:center;gap:10px;padding:0 0 0 12px;background:linear-gradient(180deg,#141827,#0f121c);border-bottom:1px solid #242838;color:#e6e8f0;font:12px/1 system-ui,-apple-system,Segoe UI,sans-serif;cursor:move;user-select:none}'
+    + '#nexus-attention .glyph{width:18px;height:18px;border-radius:5px;display:grid;place-items:center;background:rgba(124,156,255,.22);color:#7c9cff;border:1px solid rgba(124,156,255,.45);font-size:11px}'
+    + '#nexus-attention .kind{font:600 10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:#5b6178;white-space:nowrap}'
+    + '#nexus-attention .ttl{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'
+    + '#nexus-attention .grow{flex:1}'
+    + '#nexus-attention .ctl{display:flex;height:100%}'
+    + '#nexus-attention .ctl button{all:unset;width:44px;height:100%;display:grid;place-items:center;color:#8a90a6;font:13px system-ui,sans-serif;cursor:pointer}'
+    + '#nexus-attention .ctl button:hover{background:#1c2133;color:#e6e8f0}#nexus-attention .ctl button.x:hover{background:#e5484d;color:#fff}'
+    + '#nexus-attention header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:8px 12px;background:#12151d;border-bottom:1px solid #232838}'
+    + '#nexus-attention h1{all:unset;font-size:14px;font-weight:600}'
+    + '#nexus-attention .pill{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;padding:2px 8px;border-radius:999px;border:1px solid #232838;color:#8b91a5;white-space:nowrap}'
+    + '#nexus-attention .pill.ok{color:#34d399;border-color:#34d399}#nexus-attention .pill.warn{color:#fbbf24;border-color:#fbbf24}#nexus-attention .pill.bad{color:#f87171;border-color:#f87171}'
+    + '#nexus-attention .spacer{flex:1}'
+    + '#nexus-attention .tb{all:unset;cursor:pointer;background:#1b2030;border:1px solid #232838;border-radius:6px;padding:5px 10px;color:#e5e7ef;font:12px system-ui,sans-serif;white-space:nowrap}'
+    + '#nexus-attention .tb:hover{border-color:#38bdf8}#nexus-attention .tb.pri{border-color:#38bdf8;background:rgba(56,189,248,.14)}'
+    + '#nexus-attention .bd{padding:10px 12px;display:grid;gap:8px}#nexus-attention .dim{color:#8b91a5}'
+    + '#nexus-attention .last{padding:6px 8px;border-radius:6px;background:#12151d;border:1px solid #232838;font:11px ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}'
+    + '#nexus-attention select{all:unset;background:#1b2030;border:1px solid #232838;border-radius:6px;padding:5px 8px;color:#e5e7ef;font:12px system-ui,sans-serif;min-width:140px}'
+    + '#nexus-attention .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}';
+  const tb = (act, key, label, pri) => '<button class="tb' + (pri ? ' pri' : '') + '" data-act="' + act + '"' + (key ? ' data-key="' + key + '"' : '') + '>' + label + '</button>';
+  const acctLabel = D.account ? (D.accounts.find(a => a.id === D.account) || { label: D.account }).label : null;
+  const signin = D.reason === 'signin';
+  box.innerHTML = '<style>' + css + '</style>'
+    + '<div class="cx" data-drag="1"><span class="glyph">▣</span><span class="kind">compartment · agent</span><span class="ttl">' + esc(D.provider) + ' — ' + esc(D.title) + '</span><span class="grow"></span>'
+    + '<div class="ctl"><button data-ui="min" title="minimize">—</button><button data-ui="max" title="maximize">' + (ui.max ? '❐' : '▢') + '</button><button class="x" data-act="hide" title="hide the tab">✕</button></div></div>'
+    + '<div data-body="1"' + (ui.min ? ' style="display:none"' : '') + '>'
+    + '<header><h1>' + esc(D.provider) + '</h1><span class="pill ' + D.stateCls + '">' + esc(D.state) + '</span>'
+    + '<span class="pill' + (acctLabel ? ' ok' : '') + '">' + (acctLabel ? 'as ' + esc(acctLabel) : 'account: not set') + '</span>'
+    + (D.forWhat ? '<span class="pill">for ' + esc(D.forWhat) + '</span>' : '') + '<span class="spacer"></span>'
+    + (signin ? tb('signed-in', '', "I've signed in", true) + (D.loginOptional ? tb('skip-signin', '', 'Use without signing in', false) : '')
+      : tb('pick', 'input', 'Pick input', true) + tb('pick', 'send', 'Pick send', false) + tb('pick', 'resp', 'Pick reply', false))
+    + tb('reload', '', 'Reload', false) + '</header>'
+    + '<div class="bd">'
+    + (D.note ? '<div>' + esc(D.note) + '</div>' : '')
+    + (signin ? '<div class="dim">Sign in on this page as you normally would; Nexus goes on by itself once the chat opens.' + (D.loginOptional ? ' ' + esc(D.provider) + ' also works signed out.' : '') + '</div>'
+      : '<div class="dim">Show Nexus the chat: pick the box you type in, the send button and a reply. Each pick is checked on this page by the Clear Glass selector check, saved in Guardian with where it sits (x, y, z), and used by the userscript on the next job.</div>')
+    + (D.accounts.length ? '<div class="row"><span class="dim">this sign-in is</span><select data-acct="1">' + D.accounts.map(a => '<option value="' + esc(a.id) + '"' + (a.id === D.account ? ' selected' : '') + '>' + esc(a.label || a.id) + '</option>').join('') + '</select>' + tb('capture', '', 'Save sign-in to vault', false) + '</div>' : '')
+    + (D.last ? '<div class="last">' + esc(D.last) + '</div>' : '')
+    + '</div></div>';
   document.documentElement.appendChild(box);
   const head = box.querySelector('[data-drag]');
   head.addEventListener('mousedown', (e) => {
     if (e.target.closest('button')) return;
     const r = box.getBoundingClientRect(); const dx = e.clientX - r.left, dy = e.clientY - r.top;
-    const mv = (m) => { box.style.left = Math.max(0, Math.min(innerWidth - 80, m.clientX - dx)) + 'px'; box.style.top = Math.max(0, Math.min(innerHeight - 40, m.clientY - dy)) + 'px'; box.style.right = 'auto'; };
+    const mv = (m) => { box.style.left = Math.max(0, Math.min(innerWidth - 80, m.clientX - dx)) + 'px'; box.style.top = Math.max(0, Math.min(innerHeight - 34, m.clientY - dy)) + 'px'; box.style.right = 'auto'; };
     const up = () => { removeEventListener('mousemove', mv, true); removeEventListener('mouseup', up, true); };
     addEventListener('mousemove', mv, true); addEventListener('mouseup', up, true);
   });
+  head.addEventListener('dblclick', (e) => { if (e.target.closest('button')) return; ui.max = !ui.max; box.style.width = W(); });
   box.addEventListener('click', (e) => {
+    const u = e.target.closest('button[data-ui]');
+    if (u) { e.preventDefault(); e.stopPropagation();
+      if (u.dataset.ui === 'min') { ui.min = !ui.min; box.querySelector('[data-body]').style.display = ui.min ? 'none' : ''; }
+      else { ui.max = !ui.max; box.style.width = W(); u.textContent = ui.max ? '❐' : '▢'; }
+      return; }
     const b = e.target.closest('button[data-act]'); if (!b) return;
     e.preventDefault(); e.stopPropagation();
+    const sel = box.querySelector('select[data-acct]');
     box.remove();
-    resolve({ action: b.dataset.act, key: b.dataset.key || null });
+    resolve({ action: b.dataset.act, key: b.dataset.key || null, account: sel ? sel.value : null });
   }, true);
 }))()`;
 }
 
-/** pickerScript(key) — the element picker, as a page script returning Promise<{ selector, matched, url, tag } | { cancelled }> */
+/**
+ * pickerScript(key) — the element picker, as a page script returning
+ *   Promise<{ xpath, selector, matched, url, tag, anchor } | { cancelled }>.
+ * §0.60.2 — James: "have it use the actual element picker or guardian picker … mapped to the scripts injected for the
+ * interaction field or the x y z coords for the elements." The pick gives the node (its xpath — what Clear Glass's
+ * selector check, renderer/selector-check.js, takes) and where it sits: anchor { x, y, w, h, rx, ry (its centre as a
+ * fraction of the viewport), z (its layer in the stack of elements at that point), zIndex, depth, tag, role }. The
+ * selector here is only the fallback when the check finds no unique one; the anchor then tells the matches apart
+ * (guardian/userscript-field-map.js).
+ */
 function pickerScript(key) {
   const label = { input: 'the box you type in', send: 'the send button', resp: 'a reply from the agent' }[key] || key;
   return `(() => new Promise((resolve) => {
   const hint = document.createElement('div');
-  hint.setAttribute('style', 'position:fixed;z-index:2147483647;left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;border-radius:8px;background:rgba(10,14,24,.94);color:#e6edf6;border:1px solid rgba(56,189,248,.6);font:12px system-ui,sans-serif;pointer-events:none');
-  hint.textContent = 'NEXUS — click ${label.replace(/'/g, "\\'")} · Esc cancels';
+  hint.setAttribute('style', 'position:fixed;z-index:2147483647;left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;border-radius:8px;background:#0b0d12;color:#e5e7ef;border:1px solid #38bdf8;font:12px system-ui,sans-serif;pointer-events:none');
+  hint.textContent = 'COMPARTMENT · PICK — click ${label.replace(/'/g, "\\'")} · Esc cancels';
   const hl = document.createElement('div');
   hl.setAttribute('style', 'position:fixed;z-index:2147483646;pointer-events:none;border:2px solid #38bdf8;background:rgba(56,189,248,.12);border-radius:4px;transition:all .05s');
-  document.documentElement.append(hint, hl);
+  const tag = document.createElement('div');
+  tag.setAttribute('style', 'position:fixed;z-index:2147483647;pointer-events:none;padding:1px 6px;border-radius:4px;background:#38bdf8;color:#0b0d12;font:600 10px ui-monospace,monospace');
+  document.documentElement.append(hint, hl, tag);
   let cur = null;
   const cssEsc = (s) => (window.CSS && CSS.escape ? CSS.escape(s) : String(s).replace(/[^a-zA-Z0-9_-]/g, '\\\\$&'));
   const unique = (sel) => { try { return document.querySelectorAll(sel).length === 1; } catch (_) { return false; } };
+  const xpathOf = (el) => {
+    if (el.id && !/\\d{4,}/.test(el.id)) { try { if (document.querySelectorAll('#' + cssEsc(el.id)).length === 1) return '//*[@id="' + el.id.replace(/"/g, '') + '"]'; } catch (_) {} }
+    const parts = []; let n = el;
+    while (n && n.nodeType === 1) {
+      const same = n.parentElement ? [...n.parentElement.children].filter(x => x.localName === n.localName) : [n];
+      parts.unshift(n.localName + '[' + (same.indexOf(n) + 1) + ']');
+      n = n.parentElement;
+    }
+    return '/' + parts.join('/');
+  };
   const selectorOf = (el) => {
     if (el.id && !/\\d{4,}/.test(el.id) && unique('#' + cssEsc(el.id))) return '#' + cssEsc(el.id);
     for (const a of ['data-testid', 'data-test-id', 'aria-label', 'name', 'placeholder', 'data-message-author-role']) {
@@ -96,8 +160,6 @@ function pickerScript(key) {
       let p = n.tagName.toLowerCase();
       const cls = [...(n.classList || [])].filter(c => !/^(css-|sc-|_|\\d)|[0-9]{3,}|:/.test(c)).slice(0, 2);
       if (cls.length) p += '.' + cls.map(cssEsc).join('.');
-      const sib = n.parentElement ? [...n.parentElement.children].filter(x => x.tagName === n.tagName) : [];
-      if (sib.length > 1 && '${key}' !== 'resp') p += ':nth-of-type(' + (sib.indexOf(n) + 1) + ')';
       parts.unshift(p);
       const s = parts.join(' > ');
       if (unique(s)) return s;
@@ -105,20 +167,60 @@ function pickerScript(key) {
     }
     return parts.join(' > ');
   };
-  const move = (e) => { const el = document.elementFromPoint(e.clientX, e.clientY); if (!el || el === hl || el === hint) return; cur = el; const r = el.getBoundingClientRect(); Object.assign(hl.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' }); };
-  const done = (out) => { removeEventListener('mousemove', move, true); removeEventListener('click', click, true); removeEventListener('keydown', key, true); hint.remove(); hl.remove(); resolve(out); };
-  const click = (e) => { e.preventDefault(); e.stopPropagation(); if (!cur) return; const selector = selectorOf(cur); let matched = 0; try { matched = document.querySelectorAll(selector).length; } catch (_) {} done({ selector, matched, url: location.href, tag: cur.tagName.toLowerCase() }); };
-  const key = (e) => { if (e.key === 'Escape') { e.preventDefault(); done({ cancelled: true }); } };
-  addEventListener('mousemove', move, true); addEventListener('click', click, true); addEventListener('keydown', key, true);
+  const target = (el) => '${key}' === 'send' ? (el.closest('button,[role="button"]') || el) : '${key}' === 'input' ? (el.closest('[contenteditable="true"],textarea,input') || el) : el;
+  const anchorOf = (el) => {
+    const r = el.getBoundingClientRect(); const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    let stack = []; try { stack = document.elementsFromPoint(cx, cy).filter(x => x !== hl && x !== hint && x !== tag); } catch (_) {}
+    let z = stack.indexOf(el); if (z < 0) z = stack.findIndex(x => el.contains(x));
+    let zIndex = 0, depth = 0;
+    for (let n = el; n && n.nodeType === 1; n = n.parentElement) { depth++; if (!zIndex) { const zi = getComputedStyle(n).zIndex; if (zi && zi !== 'auto') zIndex = parseInt(zi, 10) || 0; } }
+    return { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height),
+      rx: +(cx / innerWidth).toFixed(4), ry: +(cy / innerHeight).toFixed(4), z, layer: z, zIndex, depth: depth - 1,
+      vw: innerWidth, vh: innerHeight, dpr: window.devicePixelRatio || 1, scrollY: Math.round(scrollY), tag: el.tagName.toLowerCase(), role: el.getAttribute('role') || null };
+  };
+  const move = (e) => { const el = document.elementFromPoint(e.clientX, e.clientY); if (!el || el === hl || el === hint || el === tag) return; cur = target(el); const r = cur.getBoundingClientRect();
+    Object.assign(hl.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
+    tag.textContent = cur.tagName.toLowerCase() + ' · x ' + Math.round(r.left) + ' y ' + Math.round(r.top); Object.assign(tag.style, { left: r.left + 'px', top: Math.max(0, r.top - 16) + 'px' }); };
+  const done = (out) => { removeEventListener('mousemove', move, true); removeEventListener('click', click, true); removeEventListener('keydown', keyd, true); hint.remove(); hl.remove(); tag.remove(); resolve(out); };
+  const click = (e) => { e.preventDefault(); e.stopPropagation(); if (!cur) return; const selector = selectorOf(cur); let matched = 0; try { matched = document.querySelectorAll(selector).length; } catch (_) {}
+    done({ xpath: xpathOf(cur), selector, matched, url: location.href, tag: cur.tagName.toLowerCase(), anchor: anchorOf(cur) }); };
+  const keyd = (e) => { if (e.key === 'Escape') { e.preventDefault(); done({ cancelled: true }); } };
+  addEventListener('mousemove', move, true); addEventListener('click', click, true); addEventListener('keydown', keyd, true);
 }))()`;
 }
 
 /**
- * createAttentionHandler({ providerHost, assign, log }) -> { attend(providerId, rec), state() }
- * attend returns at once ({ ok, window }); the panel loop runs on its own until the person is done.
+ * checkPick(win, picked, key, checkerSource) — §0.60.2 the pick checked by Clear Glass's own selector check
+ * (renderer/selector-check.js, the one the Clear Glass picker's assign flow runs): a stable selector, checked the way
+ * the userscript will read it. -> { selector, matched, by, why? }. When the check finds no unique selector for an input
+ * or send button, the picker's selector is kept with its anchor (by: 'anchor') if it matches at all — the userscript's
+ * field map picks the match at the anchor's x/y/z; a reply has no such fallback (the userscript reads the LAST match).
  */
-function createAttentionHandler({ providerHost, assign, getProvider = null, log = () => {} } = {}) {
+async function checkPick(win, picked, key, checkerSource) {
+  if (!checkerSource || !picked.xpath) return { selector: picked.selector, matched: picked.matched, by: 'picker' };
+  let r = null;
+  try {
+    await win.webContents.executeJavaScript(checkerSource, true);
+    r = await win.webContents.executeJavaScript(`window.__cgSelectorCheck.check(${JSON.stringify({ xpath: picked.xpath, key })})`, true);
+  } catch (e) { r = { ok: false, why: `the check could not run on the page: ${e.message}` }; }
+  if (r && r.ok) return { selector: r.selector, matched: r.matched, by: 'selector-check', single: !!r.single };
+  if (key !== 'resp' && picked.matched >= 1 && picked.anchor) return { selector: picked.selector, matched: picked.matched, by: 'anchor', why: (r && r.why) || 'no stable unique selector' };
+  return { selector: null, matched: 0, by: 'none', why: (r && r.why) || 'no selector passed the check' };
+}
+
+/**
+ * createAttentionHandler({ providerHost, assign, getProvider, accounts, checkerSource, log }) -> { attend(providerId, rec), state() }
+ * attend returns at once ({ ok, window }); the panel loop runs on its own until the person is done.
+ * accounts() -> the account switch (src/providers/account-switch.js) or null: the panel says which account the tab is,
+ * and "Save sign-in to vault" stores the tab's cookies for the account chosen (JAA cookie vault, encrypted).
+ */
+function _defaultChecker() {
+  try { return require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'renderer', 'selector-check.js'), 'utf8'); } catch (_) { return null; }
+}
+
+function createAttentionHandler({ providerHost, assign, getProvider = null, accounts = () => null, checkerSource, signedOutWaitMs = 2500, log = () => {} } = {}) {
   const _active = new Map();   // window id -> { providerId, rec }
+  const checker = checkerSource === undefined ? _defaultChecker() : checkerSource;
 
   function _windowFor(providerId, agentId) {
     if (agentId && providerHost.agentTabs) {
@@ -129,11 +231,18 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, log 
     return w && !w.isDestroyed() ? { win: w, which: `${providerId} tab` } : null;
   }
   const _onSignin = (url) => SIGNIN_RE.test(String(url || '')) || /accounts\.google\.com|login\.microsoftonline\.com|auth\.openai\.com|appleid\.apple\.com/.test(String(url || ''));
+  const _def = (id) => { try { return getProvider ? getProvider(id) : null; } catch (_) { return null; } };
+  function _accountInfo(providerId) {
+    const sw = accounts && accounts();
+    if (!sw) return {};
+    try { const st = sw.state(providerId); return { account: st.current || null, accounts: st.known || [] }; } catch (_) { return {}; }
+  }
 
   async function _loop(win, providerId, rec) {
     const id = win.id;
     try {
       for (let round = 0; round < 40 && !win.isDestroyed(); round++) {
+        rec = { ...rec, ..._accountInfo(providerId) };
         let act;
         try { act = await win.webContents.executeJavaScript(panelScript(rec), true); }
         catch (_) {   // the page navigated under the panel (a sign-in moving on): look where it is now
@@ -143,19 +252,33 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, log 
           continue;
         }
         if (!act || act.action === 'hide') { win.hide(); break; }
-        if (act.action === 'signed-in') {
-          try { const def = getProvider ? getProvider(providerId) : null; if (def && def.url && _onSignin(win.webContents.getURL())) await win.loadURL(def.url); } catch (_) {}
-          log(`[attention] ${providerId} — the person says they signed in; the tab reloads its chat and hides`);
+        const def = _def(providerId);
+        if (act.action === 'reload') { try { await (def && def.url && _onSignin(win.webContents.getURL()) ? win.loadURL(def.url) : win.webContents.reload()); } catch (_) {} await new Promise(r => setTimeout(r, 1500)); continue; }
+        if (act.action === 'signed-in' || act.action === 'skip-signin') {
+          try { if (def && def.url && _onSignin(win.webContents.getURL())) await win.loadURL(def.url); } catch (_) {}
+          log(`[attention] ${providerId} — ${act.action === 'skip-signin' ? 'used signed out' : 'the person says they signed in'}; the tab reloads its chat and hides`);
           setTimeout(() => { try { if (!win.isDestroyed()) win.hide(); } catch (_) {} }, 1500);
           break;
+        }
+        if (act.action === 'capture') {
+          const sw = accounts && accounts();
+          let r;
+          try { r = sw ? await sw.capture(providerId, act.account) : { ok: false, error: 'the account vault is not running' }; } catch (e) { r = { ok: false, error: e.message }; }
+          rec = { ...rec, lastResult: r.ok ? `sign-in saved to the vault as ${r.accountId}: ${r.cookies} cookie(s) on ${r.sites.length} site(s)` : `not saved: ${r.error}` };
+          continue;
         }
         if (act.action === 'pick' && act.key) {
           let picked;
           try { picked = await win.webContents.executeJavaScript(pickerScript(act.key), true); } catch (e) { picked = { cancelled: true, error: e.message }; }
           if (!picked || picked.cancelled) { rec = { ...rec, lastResult: `${act.key}: not picked${picked && picked.error ? ` (${picked.error})` : ''}` }; continue; }
-          const r = await assign({ provider: providerId, key: act.key, selector: picked.selector, evidence: { matched: picked.matched, url: picked.url, tag: picked.tag, checkedAt: Date.now(), via: 'attention-panel' } });
-          rec = { ...rec, lastResult: r && r.ok ? `${act.key} saved in Guardian: ${picked.selector} (matches ${picked.matched})` : `${act.key} refused: ${(r && r.error) || 'Guardian did not answer'} — ${picked.selector}` };
-          log(`[attention] ${providerId} — picked ${act.key}: ${picked.selector} (${picked.matched}) → ${r && r.ok ? 'saved' : `refused: ${r && r.error}`}`);
+          const c = await checkPick(win, picked, act.key, checker);
+          if (!c.selector) { rec = { ...rec, lastResult: `${act.key}: ${c.why} — pick it again` }; log(`[attention] ${providerId} — ${act.key} pick refused by the check: ${c.why}`); continue; }
+          const evidence = { matched: c.matched, url: picked.url, tag: picked.tag, xpath: picked.xpath || null, anchor: picked.anchor || null,
+            uniqueBy: c.by, checkWhy: c.why || null, checkedAt: Date.now(), via: 'attention-panel' };
+          const r = await assign({ provider: providerId, key: act.key, selector: c.selector, evidence });
+          const at = picked.anchor ? ` at x ${picked.anchor.x} y ${picked.anchor.y} z ${picked.anchor.z}` : '';
+          rec = { ...rec, lastResult: r && r.ok ? `${act.key} saved in Guardian: ${c.selector} (matches ${c.matched}${c.by === 'anchor' ? `, told apart by position${at}` : ''}${at && c.by !== 'anchor' ? `;${at}` : ''})` : `${act.key} refused: ${(r && r.error) || 'Guardian did not answer'} — ${c.selector}` };
+          log(`[attention] ${providerId} — picked ${act.key}: ${c.selector} (${c.matched}, by ${c.by})${at} → ${r && r.ok ? 'saved' : `refused: ${r && r.error}`}`);
         }
       }
     } finally { _active.delete(id); }
@@ -169,11 +292,21 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, log 
       if (!w) return { ok: false, error: `${providerId} has no window to show` };
     }
     const { win, which } = w;
+    const def = _def(providerId);
+    // §0.60.2 — James: "chatgpt doesn't need a login currently." A provider whose chat works signed out
+    // (registry loginOptional) is first sent back to its chat; the person is asked only if it lands on a sign-in page again.
+    if (rec.reason === 'signin' && def && def.loginOptional && def.url && !rec.askAnyway) {
+      try { await win.loadURL(def.url); } catch (_) {}
+      await new Promise(r => setTimeout(r, signedOutWaitMs));
+      if (!win.isDestroyed() && !_onSignin(win.webContents.getURL())) {
+        log(`[attention] ${providerId} — on a sign-in page, but ${def.name || providerId} works signed out: back to ${def.url}, no sign-in asked`);
+        return { ok: true, window: which, resolved: 'signed-out' };
+      }
+    }
     try { win.setSkipTaskbar(false); } catch (_) {}
-    try { win.setTitle(`NEXUS — ${providerId} ${TITLES[rec.reason] || 'needs you'}`); } catch (_) {}
+    try { win.setTitle(`COMPARTMENT · AGENT — ${(def && def.name) || providerId} ${TITLES[rec.reason] || 'needs you'}`); } catch (_) {}
     win.show(); win.focus();
-    const def = getProvider ? (() => { try { return getProvider(providerId); } catch (_) { return null; } })() : null;
-    const full = { ...rec, providerName: (def && def.name) || providerId };
+    const full = { ...rec, providerName: (def && def.name) || providerId, loginOptional: !!(def && def.loginOptional) };
     if (_active.has(win.id)) { _active.get(win.id).rec = full; return { ok: true, window: which, already: true }; }   // the panel up already: it shows the newest reason next round
     _active.set(win.id, { providerId, rec: full });
     _loop(win, providerId, full).catch(e => log(`[attention] ${providerId} panel failed: ${e.message}`));
@@ -184,4 +317,4 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, log 
   return { attend, state, MODULE_ID };
 }
 
-module.exports = { MODULE_ID, VERSION, panelScript, pickerScript, createAttentionHandler, TITLES };
+module.exports = { MODULE_ID, VERSION, panelScript, pickerScript, checkPick, createAttentionHandler, TITLES };

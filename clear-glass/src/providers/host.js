@@ -201,10 +201,12 @@ class ProviderHost {
   // §0.39.278 — a second shared prelude, the same way: guardian/userscript-chat-stream.js (window.NexusChatStream) —
   // each provider chat streamed live, mutation by mutation, into this app's download manager (chat ledger). Each file
   // loads on its own: one missing never stops the other.
+  // §0.60.2 — a third: guardian/userscript-field-map.js (window.NexusFields) — the picked input/send/reply, with where
+  // each sat (x, y, z), used by every provider script before its own lookup.
   _loadSharedPrelude() {
     if (!this.guardianDir) return '';
     const out = [];
-    for (const f of ['userscript-nexus-wake.js', 'userscript-chat-stream.js']) {
+    for (const f of ['userscript-nexus-wake.js', 'userscript-chat-stream.js', 'userscript-field-map.js']) {
       try { out.push(fs.readFileSync(path.join(this.guardianDir, f), 'utf8')); }
       catch (e) { _logWarn(`[ProviderHost] ${f} prelude not loaded: ${e.message}`); }
     }
@@ -367,13 +369,26 @@ class ProviderHost {
       } });
     } catch (e) { _logWarn(`[ProviderHost] download-capture not attached for ${providerId}: ${e.message}`); }
 
+    // §0.60.2 — James: "the chatgpt popup said there was a problem with cookies when i tried to login with google"
+    // (accounts.google.com/CookieMismatch). Every response in this session — Google's and OpenAI's sign-in pages
+    // included — was rebuilt here and handed back as a new header set, Set-Cookie included; Google's sign-in sets a test
+    // cookie and reads it back on the next page, and a rewritten response is where that can go missing. Now only the
+    // provider's own pages are touched (CSP removed, so the userscript can talk to 127.0.0.1); every other response —
+    // the sign-in hosts — passes through exactly as the site sent it (callback({}) changes nothing).
+    const _ownHost = (u) => { try { const h = new URL(u).hostname; return def.hosts.some(x => h === x || h.endsWith(`.${x}`)); } catch (_) { return false; } };
     ses.webRequest.onHeadersReceived((details, callback) => {
+      if (!_ownHost(details.url)) return callback({});
       const headers = { ...details.responseHeaders };
-      // Remove CSP that would block our script injection
-      delete headers['content-security-policy'];
-      delete headers['content-security-policy-report-only'];
+      for (const k of Object.keys(headers)) if (/^content-security-policy(-report-only)?$/i.test(k)) delete headers[k];
       callback({ responseHeaders: headers });
     });
+    // …and the session says it is Chrome, not Electron: Google's sign-in refuses an embedded browser it can name. The
+    // default session was scrubbed at boot (main/index.js); these partitions never were.
+    try {
+      const ua = ses.getUserAgent();
+      const clean = ua.replace(/\s+Electron\/[\d.]+/gi, '').replace(/\s+(?:Node\.js|node)\/[\d.]+/gi, '').replace(/\s+clear[\s-]?glass\/[\d.]+/gi, '').trim();
+      if (clean !== ua) ses.setUserAgent(clean);
+    } catch (_) {}
 
     const win = new BrowserWindow({
       width:  1280,
