@@ -286,7 +286,18 @@ function _httpGetJson(url, timeoutMs = 2000) {
   });
 }
 
+// §0.60.3 — when health was last read. Only cortex's process ever started the poll (cortex/boot.js), so RAID's decisions
+// made in guardian (/command auto), the orchestrator (the officiator) and idearium (chunk-dispatch) read the boot
+// default — every agent offline — and every one answered claude (LAW_III): "no real agent response (forAgent=claude)"
+// every 20 s. ready() polls once (and keeps polling) wherever RAID is asked; a decision taken on health never read says so.
+let _polledAt = null;
+let _firstPoll = null;
+function polledAt() { return _polledAt; }
+
 async function _pollHealth() {
+  try { await _pollHealthOnce(); } finally { _polledAt = Date.now(); }
+}
+async function _pollHealthOnce() {
   const OL_URL = process.env.OLLAMA_URL   || 'http://127.0.0.1:3749';
   const GD_URL = process.env.GUARDIAN_URL || 'http://127.0.0.1:7820';
 
@@ -322,9 +333,18 @@ async function _pollHealth() {
 
 let _pollTimer = null;
 function startHealthPoll(intervalMs = 15000) {
-  if (_pollTimer) return;
-  _pollHealth().catch(() => {});
+  if (_pollTimer) return _firstPoll;
+  _firstPoll = _pollHealth().catch(() => {});
   _pollTimer = setInterval(() => _pollHealth().catch(() => {}), intervalMs);
+  if (_pollTimer.unref) _pollTimer.unref();   // a process that asks RAID once is not kept alive by its poll
+  return _firstPoll;
+}
+/** ready({ timeoutMs }) — §0.60.3 health read at least once in THIS process (the poll started if it was not) */
+async function ready({ timeoutMs = 3000 } = {}) {
+  if (_polledAt) return true;
+  const first = startHealthPoll();
+  await Promise.race([first, new Promise(r => { const t = setTimeout(r, timeoutMs); if (t.unref) t.unref(); })]);
+  return !!_polledAt;
 }
 function stopHealthPoll() {
   if (_pollTimer) clearInterval(_pollTimer);
@@ -834,10 +854,14 @@ function decideForContract(contract = {}, health = _health, weights = _weights) 
   if (!survivors.length) {
     // §1.2 — never fabricate a winner when nothing is available; same
     // unconditional-reserve law LAW_III already relies on in _decide().
+    // §0.60.3 — and say when that is because this process never read health (the poll is started for next time)
+    const unread = health === _health && !_polledAt;
+    if (unread) startHealthPoll();
     return {
       agent: 'claude', cluster, score: null, tokenBudget: null,
-      reason: 'no survivors available — claude API unconditional reserve (LAW_III parity)',
-      candidates: [],
+      reason: unread ? 'health not read yet in this process (call raid.ready() first) — claude API unconditional reserve (LAW_III parity)'
+        : 'no survivors available — claude API unconditional reserve (LAW_III parity)',
+      candidates: [], healthUnread: unread || undefined,
     };
   }
 
@@ -868,7 +892,7 @@ module.exports = {
   _agentAvailable, _fitness, HEALTH_KEY,
   _roleConfidence, _topologicalProximity, setCausalGraph,
   recordOutcome,
-  startHealthPoll, stopHealthPoll,
+  startHealthPoll, stopHealthPoll, ready, polledAt,
   _approveTool, _toolHealthSnapshot, recordDecision, verifyInIsolation, verify,
   init, stop, _onOrionClassified,
   decideForContract,

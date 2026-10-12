@@ -130,6 +130,7 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
   if (!resolvedProvider) {
     try {
       const raid = require('../../cortex/core/raid');
+      await raid.ready();   // §0.60.3 — RAID's health read in this process first (else it always answered claude)
       const decision = raid.decideForContract({
         intention: `build:${chunk.chunkTitle || chunk.sectionTitle || 'chunk'}`,
         content: chunkPrompt,

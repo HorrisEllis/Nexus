@@ -145,6 +145,7 @@ function _agentFor(opts = {}, what = 'synthesize a contract from a staged artifa
 }
 
 async function _synthesizeCore(prompt, opts = {}) {
+  if (!opts.forAgent) { try { await require('./index.js').ready(); } catch (_) {} }   // §0.60.3 — health read in this process before RAID decides
   const forAgent = _agentFor(opts);
   if (!forAgent) return { ok: false, reason: 'RAID found no available agent to synthesize with' };
   const hat = hatForge.get('the_officiator');
@@ -239,6 +240,7 @@ async function synthesizeFromContext(contextText, opts = {}) {
 }
 
 async function officiate(drop, opts = {}) {
+  if (!opts.forAgent) { try { await require('./index.js').ready(); } catch (_) {} }   // §0.60.3
   const forAgent = _agentFor(opts);
   const core = await _synthesizeCore(_buildSynthesisPrompt(drop), { ...opts, forAgent });
   if (!core.ok) return core;
