@@ -21,14 +21,14 @@
  * with its own cg / agentId / webview / message printer.
  */
 (function () {
-  const BACKENDS = ['ollama', 'copilot', 'guardian'];
+  const BACKENDS = ['ollama', 'copilot', 'guardian', 'claude-code'];   // 0.59.14 — Claude Code on this machine, the whole of Nexus in reach
   const AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];   // same real NCP set as ui/tv-shell/menu.js
 
   const HELP = [
     'CO-PILOT CLI — wearing the Clear Glass hat',
     '  /help                           this list',
     '  /status                         route, hat, context, this tab',
-    '  /backend ollama|copilot|guardian  who answers (same as the toggle)',
+    '  /backend ollama|copilot|guardian|claude-code  who answers (same as the toggle)',
     '  /agent claude|chatgpt|gemini|perplexity  NCP agent when backend is guardian',
     '  /hat [on|off]                   show the hat, or wear/remove it for this window',
     '  /forge                          create the clear_glass hat if it has none',
@@ -64,7 +64,7 @@
       bar.replaceChildren();
       for (const b of BACKENDS) {
         const el = document.createElement('button');
-        el.className = 'cr-toggle'; el.textContent = b; el.title = b === 'copilot' ? 'copilot decides (ollama first, then guardian)' : b === 'ollama' ? 'local models only' : 'a specific NCP agent';
+        el.className = 'cr-toggle'; el.textContent = b; el.title = b === 'copilot' ? 'copilot decides (ollama first, then guardian)' : b === 'ollama' ? 'local models only' : b === 'claude-code' ? 'Claude Code on this machine: reads all of Nexus, fixes go to Idearium for your approval' : 'a specific NCP agent';
         el.addEventListener('click', () => setBackend(b, true));
         bar.append(el); btns[b] = el;
       }

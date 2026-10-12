@@ -339,6 +339,7 @@ const SUITES = [
   'test-nexus-ask.test.js',   // 0.59.11 — talk to Nexus in plain words: the rows' ASK words run the command, no model; the row's printer as plain text
   'test-nexus-read.test.js',   // 0.59.12 — the agent's own nexus> tools: glass open, log, file, grep — secrets refused, keys redacted
   'test-readme-atlas.test.js',   // 0.59.12 — README.md is the NEXUS atlas
+  'test-copilot-claude-code.test.js',   // 0.59.14 — Claude Code as the co-pilot: reads all of Nexus, writes nothing itself, one session per conversation
   'test-phases-tab.test.js',
   'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
   'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls

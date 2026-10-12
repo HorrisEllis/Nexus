@@ -86,6 +86,7 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('clear-glass/src/copilot/bridge.js'), I('lib/claude-code-backend.js'), '§0.59.14 _callClaudeCode → ask(): Claude Code as a co-pilot backend'],
   [I('idearium/cli/route-commands.js'), I('lib/nexus-read.js'), '§0.59.12 the log / file / grep rows (local)'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/main/index.js'), '§0.59.12 /cli/open → openOrFocus()'],
   [I('scripts/generate-atlases.js'), I('lib/atlas-generate.js'), '§0.59.12 syncReadme(): README.md ← docs/atlases/nexus-atlas.md'],

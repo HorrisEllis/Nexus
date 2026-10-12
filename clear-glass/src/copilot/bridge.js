@@ -101,7 +101,7 @@ class CoPilotBridge {
   // instead of switching copilot's global agent.
   _route({ backend, agent, hat } = {}) {
     const s = this.settings.get();
-    const b = ['ollama', 'copilot', 'guardian'].includes(backend) ? backend : (s.copilotBackend || 'copilot');
+    const b = ['ollama', 'copilot', 'guardian', 'claude-code'].includes(backend) ? backend : (s.copilotBackend || 'copilot');   // 0.59.14 claude-code
     return { backend: b, agent: b === 'guardian' ? (agent || s.copilotAgent || 'claude') : undefined,
       hat: typeof hat === 'boolean' ? hat : s.copilotWearHat !== false };
   }
@@ -614,6 +614,7 @@ ${toolsPrompt}${domSection}`;
   async _ask({ message, agentId, domContext, systemExtra, msgId, route, followUp = false, direct = null }) {
     const s = this.settings.get();
     const tried = [];
+    if (route && route.backend === 'claude-code' && !direct) return this._callClaudeCode({ message, agentId });   // 0.59.14
     if (!direct && s.useCortex !== false) {
       try {
         const r = await this._callNexusCopilot({ message, agentId, domContext, systemExtra, msgId, route, followUp });
@@ -638,6 +639,24 @@ ${toolsPrompt}${domSection}`;
       text: `Nothing answered. Tried:\n${tried.map(t => `• ${t}`).join('\n')}\n\nStart the copilot service (:${s.copilotPort || 3750}), or Ollama, or connect a Guardian agent — then send again.`,
       modelUsed: 'none', via: 'none',
     };
+  }
+
+  // §0.59.14 — James: "Can you build the capability? Like first I thought of using you as copilot, then you would have full
+  // range of the system." Claude Code on this machine, in the Nexus folder: it reads everything and every Nexus tool, writes
+  // nothing itself (a fix goes to Idearium as a proposal he approves — lib/claude-code-backend.js ask()). One Claude session
+  // per pane conversation, resumed turn after turn; /new starts a fresh one. Its own tools run the page, so no tool rounds
+  // here and no DOM: it asks Nexus (nexus_command field / picks) when it needs the page.
+  async _callClaudeCode({ message, agentId = 'default' }) {
+    const CC = require('../../../lib/claude-code-backend.js');
+    let conv = null; try { conv = chatStore.current(agentId); } catch (_) {}
+    const key = `${agentId}:${conv && (conv.id || conv.conversationId || conv) || ''}`;
+    this._ccSessions = this._ccSessions || new Map();
+    const s = this.settings.get();
+    const r = await (this._claudeCode || CC).ask({ prompt: message, sessionId: this._ccSessions.get(key) || null, model: s.copilotClaudeModel || null,
+      timeoutMs: Number(s.copilotClaudeTimeoutMs) || 10 * 60 * 1000, context: `The Clear Glass window asking is "${agentId}".` });
+    if (r.sessionId) this._ccSessions.set(key, r.sessionId);
+    if (!r.ok) return { text: `Claude Code could not answer: ${r.error}`, modelUsed: 'claude-code', via: 'claude-code', direct: 'claude-code' };
+    return { text: r.text, modelUsed: 'claude-code', via: 'claude-code', direct: 'claude-code', cost: r.cost };
   }
 
   // Ollama directly — the shared runtime every NEXUS system uses (ollama/ollama-runtime.js), model from the

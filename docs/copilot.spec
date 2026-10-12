@@ -295,3 +295,14 @@ spec:
 # - `nexus> <command>` / `/nexus <command>` in the pane runs any command by name (0.59.9).
 # - nexus.command returns `text` — the row's own printer, plain — beside the JSON `result` (renderText).
 
+## ADDENDUM 2026-10-12 — Claude Code as a co-pilot backend (0.59.14)
+# James: "Can you build the capability? Like first I thought of using you as copilot, then you would have full range of the
+# system. Then I was trying hey nexus. So you could talk to copilot and build fix what's not working, improve what needs to
+# improve."
+# - The pane's fourth backend, claude-code (toggle, or /backend claude-code): clear-glass bridge _callClaudeCode →
+#   lib/claude-code-backend.js ask(). Claude Code on this machine, cwd = the Nexus root, tools Read/Glob/Grep + every
+#   mcp__nexus__* tool; no Edit/Write/Bash. One session per pane conversation (--resume); /new starts another.
+# - A fix is sent to Idearium (nexus_command "repo ask" … --provider claude-code) → a proposal → James approves → the apply
+#   gate writes it, recorded and reversible. Applying stays his.
+# - Settings: copilotClaudeModel, copilotClaudeTimeoutMs (default 10 min). Needs `claude` installed and signed in.
+
