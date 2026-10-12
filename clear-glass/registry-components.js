@@ -183,6 +183,7 @@ const components = [
   _c('autofill.readPage',     'IPC', 'autofill:readPage',       'The text and url of the page open in a tab (the job post the proposal answers)', { tags: ['autofill', 'freelance'] }),
   _c('autofill.gig',          'IPC', 'autofill:gig',            'Write a Fiverr gig from a profile and one line of what it offers — title, tags, description, three packages, FAQ, buyer questions, held to Fiverr\'s limits', { tags: ['autofill', 'freelance', 'gig'] }),
   _c('autofill.gigDetect',    'IPC', 'autofill:gig:detect',     'Preview which field of the gig editor open in a tab takes which part of the gig (nothing typed)', { tags: ['autofill', 'freelance', 'gig'] }),
+  _c('autofill.gigFile',      'IPC', 'autofill:gig:file',       'A gig as a .gig file (YAML, limits beside each field), or an empty .gig template to fill in — text only, never saves, types or publishes', { tags: ['autofill', 'freelance', 'gig'] }),
   _c('autofill.gigImport',    'IPC', 'autofill:gig:import',     'Load a gig from a .gig.json file — held to Fiverr\'s limits like a written gig; never saves, types or publishes', { tags: ['autofill', 'freelance', 'gig'] }),
   _c('autofill.gigFill',      'IPC', 'autofill:gig:fill',       'Type the gig into the gig editor open in a tab — never saves or publishes', { tags: ['autofill', 'freelance', 'gig'] }),
 

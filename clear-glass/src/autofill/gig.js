@@ -119,10 +119,11 @@ function buildGigPrompt({ profile, offer, extra = '' } = {}) {
 }
 
 function _json(text) {
-  const t = String(text || '').replace(/```(?:json)?/gi, '');
+  const t = String(text || '').replace(/```(?:json|ya?ml)?/gi, '');
   const a = t.indexOf('{'), b = t.lastIndexOf('}');
-  if (a < 0 || b <= a) return null;
-  try { return JSON.parse(t.slice(a, b + 1)); } catch (_) { return null; }
+  if (a >= 0 && b > a) { try { return JSON.parse(t.slice(a, b + 1)); } catch (_) { /* not JSON — a .gig is YAML */ } }
+  // 2026-10-12 — a .gig file is YAML (gigFile / gigTemplate below); a .gig.json still loads above
+  try { const y = require('js-yaml').load(t); return y && typeof y === 'object' && !Array.isArray(y) ? y : null; } catch (_) { return null; }
 }
 function _int(v, min, what, warnings, dflt) {
   const n = Math.round(Number(v));
@@ -299,4 +300,56 @@ async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium'
   return { totalFields: domFields.length, filled, skipped, failed, leftToCopy: gigParts(gig).filter(p => !done.has(p.key)).map(p => p.key) };
 }
 
-module.exports = { END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
+// ── .gig files (YAML) ─────────────────────────────────────────────────────────
+// 2026-10-12 — James: "make a template with a download button in the settings for the fiverr, next to download gig
+// file. maybe you could use a yaml file with a real .gig extension." A .gig is YAML a person can read and edit, with the
+// limits written beside each field; parseGig reads it (and a .gig.json) and holds it to the same limits as a written gig.
+const GIG_FORMAT = 'clearglass.gig/1';
+
+function _slug(title) {
+  return String(title || 'gig').toLowerCase().replace(/^i will\s+/, '').replace(/[^a-z0-9]+/g, '-').slice(0, 50).replace(/^-+|-+$/g, '') || 'gig';
+}
+
+/** gigFile(gig) → { text, filename } — the gig as a .gig YAML file */
+function gigFile(gig = {}) {
+  const yaml = require('js-yaml');
+  const body = yaml.dump({ format: GIG_FORMAT, platform: 'fiverr', ...gig }, { lineWidth: 100, noRefs: true, quotingType: '"' });
+  return { text: `# Clear Glass gig file (${GIG_FORMAT}) — load it in Settings → Autofill → Gig, or in the gig panel.\n${body}`, filename: `${_slug(gig.title)}.gig` };
+}
+
+/** gigTemplate() → { text, filename } — an empty .gig with every field, its limit and what it is for */
+function gigTemplate() {
+  const L = LIMITS;
+  const q = END_STATE_QUESTIONS.map(x => { const a = x.ask.replace(/"/g, "'"); return `  - "${a[0].toUpperCase()}${a.slice(1)}?"`; }).join('\n');
+  const pkg = (tier, days, rev, price) => [
+    `  ${tier}:`,
+    `    name: ""            # at most ${L.packageName} characters`,
+    `    description: ""     # at most ${L.packageDescription} characters — exactly what is delivered`,
+    `    deliveryDays: ${days}`,
+    `    revisions: ${rev}`,
+    `    price: ${price}            # US dollars, at least ${L.minPrice}; basic < standard < premium`,
+  ].join('\n');
+  const text = [
+    `# Clear Glass gig file (${GIG_FORMAT}) — a template. Fill it in, then load it: Settings → Autofill → Gig → "Load a gig file…".`,
+    '# Every limit below is checked when it loads (Fiverr\'s own counter is the judge). Only write what is true about you.',
+    `format: ${GIG_FORMAT}`,
+    'platform: fiverr',
+    `title: "I will "        # starts with "I will", at most ${L.title} characters, the words a buyer would search for`,
+    'category: ""',
+    'subcategory: ""',
+    `tags: []                # at most ${L.tags} tags, each at most ${L.tag} characters, lowercase, no #`,
+    `description: |          # at most ${L.description} characters: what the buyer gets, how it works, why it is reliable`,
+    '  Write the description here. Keep the two-space indent on every line.',
+    'packages:',
+    pkg('basic', 2, 1, 30), pkg('standard', 4, 2, 90), pkg('premium', 7, 3, 250),
+    `faq:                    # up to ${L.faq}: questions a buyer would really ask`,
+    '  - question: ""',
+    '    answer: ""',
+    `requirements:           # ${L.requirements} questions the buyer answers before work starts — their answers are the end state Idearium builds to`,
+    q,
+    '',
+  ].join('\n');
+  return { text, filename: 'gig-template.gig' };
+}
+
+module.exports = { GIG_FORMAT, gigFile, gigTemplate, END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };

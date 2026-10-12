@@ -28,3 +28,18 @@ has('registry-components.js', "'autofill:gig:import'");
 has('renderer/browser.html', 'id="gig-file"');
 has('renderer/settings/sections/autofill.js', 'cg.autofill.gigImport');
 console.log('gig-file.test.js: ok');
+
+// 2026-10-12 — a .gig is YAML: the template and a saved gig both load back through parseGig
+const tpl = G.gigTemplate();
+assert.strictEqual(tpl.filename, 'gig-template.gig');
+assert.strictEqual(G.parseGig(tpl.text).ok, true);
+assert.ok(/at most 80 characters/.test(tpl.text) && /requirements:/.test(tpl.text));
+const saved = G.gigFile(r.gig);
+assert.ok(saved.filename.endsWith('.gig') && !saved.filename.includes('-.gig'));
+assert.deepStrictEqual(G.parseGig(saved.text).gig, r.gig);
+assert.deepStrictEqual(G.parseGig(fs.readFileSync(path.join(root, 'docs/gigs/nodejs-automation-scraping.gig'), 'utf8')).gig, r.gig);
+has('src/ipc/bridge.js', "ipcMain.handle('autofill:gig:file'");
+has('src/preload/index.js', 'gigTemplate:');
+has('renderer/settings/sections/autofill.js', "btn('Download template'");
+has('renderer/browser.html', 'id="gig-template"');
+console.log('gig-file.test.js: .gig YAML ok');

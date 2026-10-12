@@ -1317,6 +1317,12 @@ class IpcBridge {
     ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
     // 2026-10-12 — a gig FILE (.gig.json, the shape parseGig reads) → the same gig, held to Fiverr's limits like a written one.
     // Reads and checks only: nothing is saved, typed or published.
+    // 2026-10-12 — a gig as a .gig file (YAML, its limits written beside each field), or an empty template to fill in
+    ipcMain.handle('autofill:gig:file', async (e, { gig = null, template = false } = {}) => {
+      const G = require('../autofill/gig.js');
+      if (template || !gig) return { ok: true, ...G.gigTemplate() };
+      return { ok: true, ...G.gigFile(gig) };
+    });
     ipcMain.handle('autofill:gig:import', async (e, { text } = {}) => {
       const G = require('../autofill/gig.js');
       const r = G.parseGig(String(text == null ? '' : text).slice(0, 200000));

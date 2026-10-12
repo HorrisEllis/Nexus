@@ -1,0 +1,38 @@
+# Clear Glass gig file (clearglass.gig/1) — a template. Fill it in, then load it: Settings → Autofill → Gig → "Load a gig file…".
+# Every limit below is checked when it loads (Fiverr's own counter is the judge). Only write what is true about you.
+format: clearglass.gig/1
+platform: fiverr
+title: "I will "        # starts with "I will", at most 80 characters, the words a buyer would search for
+category: ""
+subcategory: ""
+tags: []                # at most 5 tags, each at most 20 characters, lowercase, no #
+description: |          # at most 1200 characters: what the buyer gets, how it works, why it is reliable
+  Write the description here. Keep the two-space indent on every line.
+packages:
+  basic:
+    name: ""            # at most 35 characters
+    description: ""     # at most 100 characters — exactly what is delivered
+    deliveryDays: 2
+    revisions: 1
+    price: 30            # US dollars, at least 5; basic < standard < premium
+  standard:
+    name: ""            # at most 35 characters
+    description: ""     # at most 100 characters — exactly what is delivered
+    deliveryDays: 4
+    revisions: 2
+    price: 90            # US dollars, at least 5; basic < standard < premium
+  premium:
+    name: ""            # at most 35 characters
+    description: ""     # at most 100 characters — exactly what is delivered
+    deliveryDays: 7
+    revisions: 3
+    price: 250            # US dollars, at least 5; basic < standard < premium
+faq:                    # up to 5: questions a buyer would really ask
+  - question: ""
+    answer: ""
+requirements:           # 5 questions the buyer answers before work starts — their answers are the end state Idearium builds to
+  - "What the finished result must do or be — the end state, in the buyer's words?"
+  - "Who will use it and where (people, devices, platform)?"
+  - "What it must always do and must never do?"
+  - "How the buyer will check it is done (the test they will run or the thing they will look at)?"
+  - "Materials, examples, logins or files the seller needs?"

@@ -93,13 +93,23 @@
     say('gig-write-status', `Loaded "${r.gig.title}".${(r.warnings || []).length ? ` ${r.warnings.length} note(s): ${r.warnings.slice(0, 2).join(' · ')}` : ''} Fill this Fiverr page, or copy a part.`, 'ok');
     paintGig();
   });
-  $('gig-export').addEventListener('click', () => {
-    if (!GIG) return;
-    const blob = new Blob([JSON.stringify({ format: 'clearglass.gig/1', platform: 'fiverr', ...GIG }, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a'), slug = String(GIG.title || 'gig').toLowerCase().replace(/^i will\s+/, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'gig';
-    a.href = URL.createObjectURL(blob); a.download = `${slug}.gig.json`; a.click();
+  // 2026-10-12 — saved as a .gig (YAML, readable and editable); the template is an empty one to fill in
+  const _download = (r) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([r.text], { type: 'text/yaml' })); a.download = r.filename; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-    say('gig-write-status', `Saved ${a.download} (to your downloads).`, 'ok');
+    return a.download;
+  };
+  $('gig-export').addEventListener('click', async () => {
+    if (!GIG) return;
+    let r; try { r = await cg.autofill.gigFile(GIG); } catch (e) { r = { ok: false, error: e.message }; }
+    if (!r || !r.ok) return say('gig-write-status', `Not saved: ${(r && r.error) || 'no answer'}`, 'bad');
+    say('gig-write-status', `Saved ${_download(r)} (to your downloads).`, 'ok');
+  });
+  $('gig-template').addEventListener('click', async () => {
+    let r; try { r = await cg.autofill.gigTemplate(); } catch (e) { r = { ok: false, error: e.message }; }
+    if (!r || !r.ok) return say('gig-write-status', `No template: ${(r && r.error) || 'no answer'}`, 'bad');
+    say('gig-write-status', `Saved ${_download(r)} — fill it in, then "Load a gig file…".`, 'ok');
   });
   $('gig-copy-all').addEventListener('click', (e) => GIG && copy(parts(GIG).map(p => `${p.label}\n${p.text}`).join('\n\n'), e.currentTarget));
   $('gig-fill').addEventListener('click', async () => {
