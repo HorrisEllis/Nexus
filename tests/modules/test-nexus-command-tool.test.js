@@ -73,6 +73,15 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
     assert.ok(st2.refused && /the person's/.test(st2.reason), JSON.stringify(st2));
   });
 
+  await test('NC-08', '0.59.13: a typed line names the repo first (`repo phase 7ffe2ae6 ER0`); taking it never unlocks a person row', async () => {
+    const st = await run({ command: 'repo system', args: ['7ffe2ae6', 'stop'] }, asCopilot);
+    assert.ok(st.refused && /the person's/.test(st.reason), JSON.stringify(st));
+    const ap = await run({ command: 'repo apply', args: ['7ffe2ae6', 'some-inject'] }, asCopilot);
+    assert.ok(ap.refused, JSON.stringify(ap));
+    const ph = await run({ command: 'repo phase', args: ['no-such-repo-xyz', 'ER0_primitives'] }, asCopilot);
+    assert.ok(!/which repo\?/.test(ph.error || ''), `the first word was taken as the repo: ${JSON.stringify(ph).slice(0, 200)}`);
+  });
+
   await test('NC-05', 'an unknown command names the near ones; a missing argument says what is needed', async () => {
     const u = await run({ command: 'repo taks' }, asCopilot);
     assert.match(u.error, /no command "repo taks"/);
