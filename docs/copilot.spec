@@ -306,3 +306,12 @@ spec:
 #   gate writes it, recorded and reversible. Applying stays his.
 # - Settings: copilotClaudeModel, copilotClaudeTimeoutMs (default 10 min). Needs `claude` installed and signed in.
 
+## ADDENDUM 2026-10-12 — the same ways in for every agent (0.59.15)
+# James: "Okay but any of the agents need to be able to do that too for the agent switching. Like guardian is the source of
+# truth for browser agents."
+# - INSIDE_NEXUS (lib/agent-tools/tool-guide.js): read anything through nexus.command.tool (file, grep, log, census,
+#   activity, nerve, perf); change Nexus only by repo ask → a proposal James approves → the apply gate. Said once; read by
+#   toolGuide() (opens it wherever nexus.command.tool is in scope), guardian/tool-runtime.js (browser agents — it had no
+#   guide), the Clear Glass pane's context (every backend it switches to) and Claude Code's preamble.
+# - flags.provider is optional: the repo's own ladder builds (Guardian decides which browser agents are live), or the agent named.
+

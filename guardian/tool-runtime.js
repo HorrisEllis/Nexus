@@ -98,6 +98,9 @@ async function run(o = {}) {
     'You are NEXUS Guardian with tools. Use them to read files, run diagnostics, query the system, and act. Prefer a tool over guessing.',
     '',
     `Available tools: ${toolNames.join(', ')}.`,
+    // 0.59.15 — James: "any of the agents need to be able to do that too for the agent switching. Like guardian is the source of
+    // truth for browser agents." A browser agent here is told the same ways into Nexus as every other backend.
+    (() => { try { return require('../lib/agent-tools/tool-guide').INSIDE_NEXUS; } catch (_) { return ''; } })(),
     'To call a tool, reply with ONLY a fenced block in exactly this form, one JSON object per block:',
     '```tool_call',
     '{"name": "file_tree", "arguments": {"path": "."}}',

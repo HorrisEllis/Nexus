@@ -34,7 +34,7 @@ const ok = (text, sid) => ({ out: JSON.stringify({ type: 'result', subtype: 'suc
     for (const t of ['Edit', 'Write', 'MultiEdit', 'Bash', 'acceptEdits']) assert.ok(!a.includes(t), `${t} must not be allowed`);
     assert.ok(!a.includes('--no-session-persistence'), 'the conversation is kept');
     assert.deepStrictEqual(CC.askArgsFor({ sessionId: 's1' }).slice(-2), ['--resume', 's1']);
-    assert.match(CC.ASK_PREAMBLE, /never write files yourself/i);
+    assert.match(CC.ASK_PREAMBLE, /never write its files yourself/i);
     assert.match(CC.ASK_PREAMBLE, /repo ask/);
   });
 
@@ -77,6 +77,23 @@ const ok = (text, sid) => ({ out: JSON.stringify({ type: 'result', subtype: 'suc
     assert.strictEqual(asks[2].sessionId, null, '/new → a fresh Claude session');
     assert.strictEqual(prompts.length, 0, 'no other model was asked');
     cop.close();
+  });
+
+  await test('CC-05', '0.59.15: every backend is told the same ways into Nexus — the tool guide (copilot, repo agents), Guardian\'s browser agents, the pane, Claude Code', async () => {
+    const G = require(path.join(ROOT, 'lib/agent-tools/tool-guide.js'));
+    assert.ok(G.toolGuide(['nexus.command.tool']).startsWith(G.INSIDE_NEXUS), 'the tool guide opens with it');
+    assert.ok(!G.toolGuide(['read_file']).includes('WORKING INSIDE NEXUS'), 'not where nexus.command is out of scope');
+    assert.ok(CC.ASK_PREAMBLE.includes(G.INSIDE_NEXUS), 'Claude Code');
+    assert.ok(!/provider":"claude-code"/.test(G.INSIDE_NEXUS), 'no agent is hard-wired as the builder');
+    const AT = require(path.join(ROOT, 'lib/agent-tools'));
+    const real = AT.runToolLoop; let sys = null;
+    AT.runToolLoop = async (cm, systemPrompt) => { sys = systemPrompt; return { text: '' }; };
+    try { await require(path.join(ROOT, 'guardian/tool-runtime.js')).run({ userPrompt: 'x', createAndDispatch: async () => ({}), resolveJob: async () => ({}) }); }
+    finally { AT.runToolLoop = real; }
+    assert.ok(sys && sys.includes(G.INSIDE_NEXUS), 'Guardian\'s browser agents');
+    const CoPilotBridge = require(path.join(ROOT, 'clear-glass/src/copilot/bridge.js'));
+    const b = new CoPilotBridge({ sse: { emit: () => {} }, apiSettings: { get: () => ({}) } });
+    assert.ok((await b._buildCgContext('w1', null)).includes(G.INSIDE_NEXUS), 'the Clear Glass pane (ollama, guardian, copilot)');
   });
 
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);

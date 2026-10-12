@@ -572,6 +572,7 @@ class CoPilotBridge {
       'Anything the Clear Glass window can do: {"action":"channels","query":"window"} lists it, {"action":"invoke","channel":"…","args":{…}} runs it.',
       'Any NEXUS agent tool: ```tool {"name":"<tool>","arguments":{...}}``` — e.g. nexus.opportunity.tool (jobs, gigs, Fiverr/Upwork),',
       'nexus.context.tool (search every memory), clearglass.learned.tool (what you have learned about sites).',
+      require('../../../lib/agent-tools/tool-guide.js').INSIDE_NEXUS,   // 0.59.15 — the same ways in for every backend the pane switches to
     ].join('\n');
     return `## Clear Glass Browser Context
 Agent ID: ${agentId}
