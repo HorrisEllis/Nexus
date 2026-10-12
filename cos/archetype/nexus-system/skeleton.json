@@ -1,5 +1,5 @@
 {
   "name": "nexus-system",
-  "description": "A Nexus system skeleton in Guardian's shape: server, CLI, registry, contract, node schemas, a JAA node index, listener, heartbeat and ledger. The idea slots in as components under lib/.",
-  "components": ["listener", "heartbeat", "handshake", "commands"]
+  "description": "A Nexus system skeleton in Guardian's shape: server, CLI, registry, contract, node schemas, a JAA node index, listener, heartbeat and ledger. The idea slots in as components under lib/. Work moves between systems as verified handoff files (input/ → processing/ → done/ | failed/), and every module is a system laid out from the system's own template.",
+  "components": ["listener", "heartbeat", "handshake", "commands", "handoff", "modules"]
 }

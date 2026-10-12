@@ -25,6 +25,10 @@ const COMPONENTS = Object.freeze([
   { id: 'heartbeat',    files: ['lib/heartbeat.js'], intent: 'the pulse: uptime, node counts, problems, on an interval', requires: ['node-index', 'bus'] },
   { id: 'handshake',    files: ['contracts/handshake.js'], intent: 'verify another system\'s interaction contract before calling it', requires: [] },
   { id: 'commands',     files: ['lib/commands.js'], intent: 'run command nodes through the registry; emit their events', requires: ['node-index', 'bus'] },
+  // §0.60.1 — James: "each system hands the file off to the target system, using the registry and hanbdshake verification"
+  { id: 'handoff',      files: ['lib/handoff.js'], intent: 'work moves between systems as a verified file; its state is the folder it is in (input/ processing/ done/ failed/, receipts in output/)', requires: ['envelope', 'atomic-write', 'handshake', 'commands'] },
+  // §0.60.1 — James: "nexus is recursive, builds itself, using itself. the same architecture on every level."
+  { id: 'modules',      files: ['lib/modules.js'], intent: 'a module is a system: the skeleton laid out again under modules/ from the system\'s own template', requires: ['envelope', 'atomic-write', 'handshake'] },
 ]);
 
 function list() { return COMPONENTS.map(c => ({ ...c, files: [...c.files] })); }

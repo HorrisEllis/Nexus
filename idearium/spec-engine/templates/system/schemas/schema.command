@@ -42,3 +42,11 @@ payload:
       type: array
       required: true
       description: "event ids it emits"
+    accepts:
+      type: array
+      required: false
+      description: "the handoff kinds this command takes (lib/handoff.js): a handoff of one of these kinds, landing in input/, is run by this command; the contract lists them as accepts"
+    handler:
+      type: string
+      required: false
+      description: "the function in its component's file it runs (default: the last part of its id)"

@@ -46,7 +46,21 @@ function schemaFiles() {
   });
 }
 
-/** files() -> [{ path, content, binary, from }] — the whole skeleton, components included. */
+/**
+ * §0.60.1 — James: "nexus is recursive, builds itself, using itself. the same architecture on every level." Every system
+ * carries the template it was laid out from, as one data file, its placeholders written [[key]] so laying out the
+ * system does not fill them: lib/modules.js lays it out again under modules/<slug>/ — a module is a system — and the
+ * module carries it too, so it can nest further. One file, not a second copy of the code tree.
+ */
+const SELF_TEMPLATE = 'template/nexus-system.template.json';
+function selfTemplate(base) {
+  const toMarks = (t) => String(t).replace(/\{\{(\w+)\}\}/g, '[[$1]]');
+  const doc = { name: 'nexus-system', version: '1.1.0', note: 'the skeleton this system was laid out from; [[key]] placeholders are filled by lib/modules.js when it lays out a module',
+    files: base.map(f => ({ path: toMarks(f.path), content: toMarks(f.content) })) };
+  return { path: SELF_TEMPLATE, content: JSON.stringify(doc, null, 2) + '\n', from: 'self-template' };
+}
+
+/** files() -> [{ path, content, binary, from }] — the whole skeleton, components included, and its own template. */
 function files() {
   const sk = skeleton();
   const mine = components.owned();
@@ -60,6 +74,7 @@ function files() {
     seen.add(f.path);
     out.push({ ...f, binary: false });
   }
+  out.push({ ...selfTemplate(out), binary: false });
   return out;
 }
 
@@ -82,7 +97,7 @@ function archetype() {
       customRules: [], alertWebhook: null,
     },
     networkPreset: { isolated: false, level: 3, proxyPort: null, allowedHosts: [], deniedHosts: [], dnsOverride: {}, logAllTraffic: true },
-    pipeSignature: { exposes: ['heartbeat', 'node.changed', 'command.ran'], consumes: [] },
+    pipeSignature: { exposes: ['heartbeat', 'node.changed', 'command.ran', 'handoff.queued', 'handoff.done', 'handoff.failed', 'module.created'], consumes: ['handoff'] },
     fsTemplate: files().map(({ path: p, content, binary }) => ({ path: p, content, binary })),
     detectionHints: ['registry-components.js', 'interaction-contract.json', 'event-taxonomy.js'],
     tags: ['nexus', 'system', 'skeleton', 'genesis'],
@@ -90,4 +105,4 @@ function archetype() {
   };
 }
 
-module.exports = { archetype, files, skeleton, DIR, SCHEMA_DIR };
+module.exports = { archetype, files, skeleton, selfTemplate, SELF_TEMPLATE, DIR, SCHEMA_DIR };

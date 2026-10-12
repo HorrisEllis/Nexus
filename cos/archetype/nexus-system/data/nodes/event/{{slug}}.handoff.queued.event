@@ -1,0 +1,15 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-even-0000-0000-000000000109",
+  "type": "event",
+  "id": "{{slug}}.handoff.queued",
+  "system": "{{slug}}",
+  "summary": "a handoff passed verification and is in the target's input/",
+  "payload": {
+    "command": "{{slug}}.handoff.send",
+    "payload": {
+      "command": "string",
+      "result": "object"
+    }
+  }
+}

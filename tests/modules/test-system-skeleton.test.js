@@ -107,8 +107,8 @@ const runNode = (dir, args) => spawnSync(process.execPath, args, { cwd: dir, enc
       && daw.files.some(f => f.path === 'data/nodes/command/pulse-daw.audio-engine.set-tempo.command' && JSON.parse(f.content).payload.handler === 'setTempo')
       && JSON.stringify(pendingDaw) === JSON.stringify(['lib/audio-engine.js', 'lib/mixer.js', 'tests/mixer.test.js'])
       && /skeleton is already laid out and fixed/.test(daw.asked) && /Pulse DAW/.test(daw.asked)
-      && s2.counts && s2.counts.component === 3 && s2.counts.command === 5 && !s2.shape.length && !s2.problems.length
-      && s3.counts && s3.counts.component === 2 && !s3.shape.length && !s3.problems.length,
+      && s2.counts && s2.counts.component === 5 && s2.counts.command === 9 && !s2.shape.length && !s2.problems.length
+      && s3.counts && s3.counts.component === 4 && !s3.shape.length && !s3.problems.length,
       JSON.stringify({ s2: s2.counts || s2, s3: s3.counts || s3, pendingDaw, src: daw.planSource }).slice(0, 600));
 
     // SK-05

@@ -943,7 +943,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     for (let n = 1; n <= policy.planAttempts; n++) {
       const msg = PP.planPrompt({ phaseKey: phase, title: node.title, body: ctx.body, intent: note, files: expectFiles, registry, spec: specText,
         invariants: ctx.invariants, charter: [charterText, precedent.text].filter(Boolean).join('\n\n'), repoName: target.name, feedback,
-        system, atlas, loom, reuse, lessons: learned.text });
+        system, atlas, loom, reuse, lessons: learned.text, skeleton: (() => { try { return fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'registry-components.js')) && fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'interaction-contract.json')); } catch (_) { return false; } })() });
       appendRow('idearium_phase_runs', { uuid: `${runId}-plan${n}-planning`, ...base, state: 'planning', snapshot: commitId, provider: planner, attempt: n, promptChars: msg.length,
         grounding: { system, registry: registry.length, atlas: atlas.length, loom: loom.length, reuse: reuse.map(x => x.file), lessons: learned.text ? learned.text.split('\n').length : 0, notes: regNotes }, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planning', snapshot: commitId, provider: planner });

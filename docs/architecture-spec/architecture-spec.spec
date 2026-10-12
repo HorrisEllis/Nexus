@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        architecture-spec
-    version:     0.11.0
+    version:     0.11.1
     extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.3.0 — the default template of a system spec since 0.39.286; since 1.3.0 the architecture of the system template, section by section (Domain 0a)
     foundation:  TBD — no runtime exists yet, unassigned until first real implementation
     port:        TBD — no runtime process exists yet
@@ -12,6 +12,11 @@ spec:
       this need as little tokens as possible. scales as it builds, and as simple as possible." · "Like I want this to be
       a skeleton, only using the minimal code. Then expands from there. Using the .spec as a living model. Then an atlas
       in the atlas template but not a list, each detailed, and referenced. All expanded."
+    james_2026_10_12: >
+      "each system hands the file off to the target system, using the registry and hanbdshake verification to tag the
+      progress and success or failure of the handoff and why." · "nexus is recursive, builds itself, using itself. the
+      same architecture on every level." — 0.11.1: the template's tree and rules carry the handoff folders and modules/
+      (cos/archetype/nexus-system lib/handoff.js, lib/modules.js, template/).
     template:    idearium/spec-engine/templates/architecture-spec.template.yaml   # the tree, the registry and the rules — one home; this spec points at it, never copies it
     schemas:     idearium/spec-engine/templates/system/schemas/                    # schema.<type> for component, capability, command, event, route, hook, wire, bundle — a new system copies and owns them
     purpose: >

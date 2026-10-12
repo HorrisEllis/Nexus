@@ -1,0 +1,13 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-rout-0000-0000-000000000117",
+  "type": "route",
+  "id": "{{slug}}.modules",
+  "system": "{{slug}}",
+  "summary": "GET /modules",
+  "payload": {
+    "method": "GET",
+    "path": "/modules",
+    "command": "{{slug}}.modules"
+  }
+}

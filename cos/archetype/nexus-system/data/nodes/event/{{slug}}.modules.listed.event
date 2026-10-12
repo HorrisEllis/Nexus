@@ -1,0 +1,15 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-even-0000-0000-000000000113",
+  "type": "event",
+  "id": "{{slug}}.modules.listed",
+  "system": "{{slug}}",
+  "summary": "the modules were listed",
+  "payload": {
+    "command": "{{slug}}.modules",
+    "payload": {
+      "command": "string",
+      "result": "object"
+    }
+  }
+}

@@ -5,6 +5,15 @@
 // Status: proposed. Foundation domains freeze at v1.0.0 per COS-5 pattern.
 
 version 1.4.0
+// 1.4.0 + NEXUS 0.60.1 (2026-10-12): the catalog gains the drawbridge and the recursion — lib/handoff.js (work moves between
+// systems as a file: registry + handshake + schema checked first, a refusal is a receipt with why; its state is the folder
+// it is in: input/ processing/ done/ failed/, the receipt in the sender's output/), lib/modules.js (a module is a system:
+// this skeleton laid out again under modules/<slug>/ from the system's own template/nexus-system.template.json, which it
+// carries so it can nest further), schema.handoff and schema.module. James: "each system hands the file off to the target
+// system, using the registry and hanbdshake verification to tag the progress and success or failure of the handoff and
+// why." · "nexus is recursive, builds itself, using itself. the same architecture on every level. like it should be a
+// template." · "like anything resuable needs a schema and template … nothing pretends to work, and everything is tangible
+// until completed." The catalog below is regenerated from the archetype (node cos/archetype/genesis-catalog.js --write).
 // 1.4.0 (2026-10-06, NEXUS 0.39.359 — build-from-the-spec SB28): the file catalog is the shape Nexus systems really have —
 // Guardian's and Versionium's: server.js, cli.js, config, compartment.json, registry-components.js, the interaction
 // contract, event-taxonomy.js, jaa-store.js, schemas/, data/nodes, lib/, spec/, tests/. It is the COS archetype
@@ -537,17 +546,17 @@ catalog GENESIS_FILE_TREE {
     intent  = load_the_configuration
     summary = "Reads <system>.config.json, then the environment (<SYSTEM>_PORT, <SYSTEM>_HEARTBEAT_MS) over it."
     source  = skeleton
-    depends = [ "gs0027" ]
+    depends = [ "gs0047" ]
   }
   file "package.json" {
-    uuid    = gs0020-skele-4000-8000-000000000020
+    uuid    = gs0039-skele-4000-8000-000000000039
     intent  = declare_the_system_package
     summary = "Name, version, scripts: start (server.js), cli (cli.js), test (tests/skeleton.test.js). No dependencies — the system stands alone."
     source  = skeleton
     depends = []
   }
   file "<system>.config.json" {
-    uuid    = gs0027-skele-4000-8000-000000000027
+    uuid    = gs0047-skele-4000-8000-000000000047
     intent  = system_wide_adjustable_values
     summary = "Port, heartbeat interval, listener poll, the Versionium slot. Anything adjustable lives here, not in code."
     source  = skeleton
@@ -556,28 +565,28 @@ catalog GENESIS_FILE_TREE {
 
   // ── registry, contract and taxonomy
   file "event-taxonomy.js" {
-    uuid    = gs0014-skele-4000-8000-000000000014
+    uuid    = gs0032-skele-4000-8000-000000000032
     intent  = the_events_generated_from_event_nodes
     summary = "The system events the skeleton emits, plus every event node — generated, never hand-written; the bus asks it whether an event is declared."
     source  = skeleton
     depends = []
   }
   file "interaction-contract.json" {
-    uuid    = gs0016-skele-4000-8000-000000000016
+    uuid    = gs0035-skele-4000-8000-000000000035
     intent  = the_fixed_part_of_the_interaction_contract
     summary = "id, version, namespace, transport and the fixed resources; GET /contract adds every route node, so the contract grows with the system."
     source  = skeleton
     depends = []
   }
   file "registry-components.js" {
-    uuid    = gs0021-skele-4000-8000-000000000021
+    uuid    = gs0041-skele-4000-8000-000000000041
     intent  = the_component_registry_the_spine
     summary = "Every component: type, id, uuid, file, intent, version, status, capabilities (at least one), hooks, consumers, data. Every component connects only to this."
     source  = skeleton
     depends = []
   }
   file "contracts/handshake.js" {
-    uuid    = gs0036-compo-4000-8000-000000000036
+    uuid    = gs0056-compo-4000-8000-000000000056
     intent  = verify_another_systems_contract
     summary = "Same id, compatible version, the resources needed, the hash last seen — before one system calls another."
     source  = component:handshake
@@ -586,63 +595,77 @@ catalog GENESIS_FILE_TREE {
 
   // ── schemas
   file "schemas/index.js" {
-    uuid    = gs0022-skele-4000-8000-000000000022
+    uuid    = gs0042-skele-4000-8000-000000000042
     intent  = load_the_systems_own_schemas
     summary = "Reads schemas/schema.<type>; the node index refuses a node whose type has no schema."
     source  = skeleton
     depends = []
   }
   file "schemas/schema.bundle" {
-    uuid    = gs0038-templ-4000-8000-000000000038
+    uuid    = gs0060-templ-4000-8000-000000000060
     intent  = schema_for_bundle_nodes
     summary = "The bundle node type's fields, copied from the system template; the system owns this copy."
     source  = template-schemas
     depends = []
   }
   file "schemas/schema.capability" {
-    uuid    = gs0039-templ-4000-8000-000000000039
+    uuid    = gs0061-templ-4000-8000-000000000061
     intent  = schema_for_capability_nodes
     summary = "The capability node type's fields, copied from the system template; the system owns this copy."
     source  = template-schemas
     depends = []
   }
   file "schemas/schema.command" {
-    uuid    = gs0040-templ-4000-8000-000000000040
+    uuid    = gs0062-templ-4000-8000-000000000062
     intent  = schema_for_command_nodes
     summary = "The command node type's fields, copied from the system template; the system owns this copy."
     source  = template-schemas
     depends = []
   }
   file "schemas/schema.component" {
-    uuid    = gs0041-templ-4000-8000-000000000041
+    uuid    = gs0063-templ-4000-8000-000000000063
     intent  = schema_for_component_nodes
     summary = "The component node type's fields, copied from the system template; the system owns this copy."
     source  = template-schemas
     depends = []
   }
   file "schemas/schema.event" {
-    uuid    = gs0042-templ-4000-8000-000000000042
+    uuid    = gs0064-templ-4000-8000-000000000064
     intent  = schema_for_event_nodes
     summary = "The event node type's fields, copied from the system template; the system owns this copy."
     source  = template-schemas
     depends = []
   }
+  file "schemas/schema.handoff" {
+    uuid    = gs0065-templ-4000-8000-000000000065
+    intent  = schema_for_handoff_nodes
+    summary = "The handoff node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
+  }
   file "schemas/schema.hook" {
-    uuid    = gs0043-templ-4000-8000-000000000043
+    uuid    = gs0066-templ-4000-8000-000000000066
     intent  = schema_for_hook_nodes
     summary = "The hook node type's fields, copied from the system template; the system owns this copy."
     source  = template-schemas
     depends = []
   }
+  file "schemas/schema.module" {
+    uuid    = gs0067-templ-4000-8000-000000000067
+    intent  = schema_for_module_nodes
+    summary = "The module node type's fields, copied from the system template; the system owns this copy."
+    source  = template-schemas
+    depends = []
+  }
   file "schemas/schema.route" {
-    uuid    = gs0044-templ-4000-8000-000000000044
+    uuid    = gs0068-templ-4000-8000-000000000068
     intent  = schema_for_route_nodes
     summary = "The route node type's fields, copied from the system template; the system owns this copy."
     source  = template-schemas
     depends = []
   }
   file "schemas/schema.wire" {
-    uuid    = gs0045-templ-4000-8000-000000000045
+    uuid    = gs0069-templ-4000-8000-000000000069
     intent  = schema_for_wire_nodes
     summary = "The wire node type's fields, copied from the system template; the system owns this copy."
     source  = template-schemas
@@ -662,142 +685,275 @@ catalog GENESIS_FILE_TREE {
     intent  = seed_capability_node
     summary = "A seed capability node of the core component, so the skeleton has the component shape from its first boot."
     source  = skeleton
-    depends = [ "gs0039" ]
+    depends = [ "gs0061" ]
+  }
+  file "data/nodes/capability/<system>.handoff.move.capability" {
+    uuid    = gs0006-skele-4000-8000-000000000006
+    intent  = seed_capability_node
+    summary = "A seed capability node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0061" ]
+  }
+  file "data/nodes/capability/<system>.modules.nest.capability" {
+    uuid    = gs0007-skele-4000-8000-000000000007
+    intent  = seed_capability_node
+    summary = "A seed capability node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0061" ]
+  }
+  file "data/nodes/command/<system>.handoff.send.command" {
+    uuid    = gs0008-skele-4000-8000-000000000008
+    intent  = seed_command_node
+    summary = "A seed command node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0062" ]
+  }
+  file "data/nodes/command/<system>.handoffs.command" {
+    uuid    = gs0009-skele-4000-8000-000000000009
+    intent  = seed_command_node
+    summary = "A seed command node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0062" ]
+  }
+  file "data/nodes/command/<system>.module.new.command" {
+    uuid    = gs0010-skele-4000-8000-000000000010
+    intent  = seed_command_node
+    summary = "A seed command node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0062" ]
+  }
+  file "data/nodes/command/<system>.modules.command" {
+    uuid    = gs0011-skele-4000-8000-000000000011
+    intent  = seed_command_node
+    summary = "A seed command node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0062" ]
   }
   file "data/nodes/command/<system>.nodes.command" {
-    uuid    = gs0006-skele-4000-8000-000000000006
+    uuid    = gs0012-skele-4000-8000-000000000012
     intent  = seed_command_node
     summary = "A seed command node of the core component, so the skeleton has the component shape from its first boot."
     source  = skeleton
-    depends = [ "gs0040" ]
+    depends = [ "gs0062" ]
   }
   file "data/nodes/command/<system>.status.command" {
-    uuid    = gs0007-skele-4000-8000-000000000007
+    uuid    = gs0013-skele-4000-8000-000000000013
     intent  = seed_command_node
     summary = "A seed command node of the core component, so the skeleton has the component shape from its first boot."
     source  = skeleton
-    depends = [ "gs0040" ]
+    depends = [ "gs0062" ]
   }
   file "data/nodes/component/<system>.core.component" {
-    uuid    = gs0008-skele-4000-8000-000000000008
+    uuid    = gs0014-skele-4000-8000-000000000014
     intent  = seed_component_node
     summary = "A seed component node of the core component, so the skeleton has the component shape from its first boot."
     source  = skeleton
-    depends = [ "gs0041" ]
+    depends = [ "gs0063" ]
+  }
+  file "data/nodes/component/<system>.handoff.component" {
+    uuid    = gs0015-skele-4000-8000-000000000015
+    intent  = seed_component_node
+    summary = "A seed component node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0063" ]
+  }
+  file "data/nodes/component/<system>.modules.component" {
+    uuid    = gs0016-skele-4000-8000-000000000016
+    intent  = seed_component_node
+    summary = "A seed component node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0063" ]
+  }
+  file "data/nodes/event/<system>.handoff.queued.event" {
+    uuid    = gs0017-skele-4000-8000-000000000017
+    intent  = seed_event_node
+    summary = "A seed event node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0064" ]
+  }
+  file "data/nodes/event/<system>.handoff.refused.event" {
+    uuid    = gs0018-skele-4000-8000-000000000018
+    intent  = seed_event_node
+    summary = "A seed event node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0064" ]
+  }
+  file "data/nodes/event/<system>.handoffs.listed.event" {
+    uuid    = gs0019-skele-4000-8000-000000000019
+    intent  = seed_event_node
+    summary = "A seed event node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0064" ]
+  }
+  file "data/nodes/event/<system>.module.created.event" {
+    uuid    = gs0020-skele-4000-8000-000000000020
+    intent  = seed_event_node
+    summary = "A seed event node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0064" ]
+  }
+  file "data/nodes/event/<system>.modules.listed.event" {
+    uuid    = gs0021-skele-4000-8000-000000000021
+    intent  = seed_event_node
+    summary = "A seed event node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0064" ]
   }
   file "data/nodes/event/<system>.nodes.listed.event" {
-    uuid    = gs0009-skele-4000-8000-000000000009
+    uuid    = gs0022-skele-4000-8000-000000000022
     intent  = seed_event_node
     summary = "A seed event node of the core component, so the skeleton has the component shape from its first boot."
     source  = skeleton
-    depends = [ "gs0042" ]
+    depends = [ "gs0064" ]
   }
   file "data/nodes/event/<system>.status.reported.event" {
-    uuid    = gs0010-skele-4000-8000-000000000010
+    uuid    = gs0023-skele-4000-8000-000000000023
     intent  = seed_event_node
     summary = "A seed event node of the core component, so the skeleton has the component shape from its first boot."
     source  = skeleton
-    depends = [ "gs0042" ]
+    depends = [ "gs0064" ]
   }
   file "data/nodes/hook/<system>.core.http.hook" {
-    uuid    = gs0011-skele-4000-8000-000000000011
+    uuid    = gs0024-skele-4000-8000-000000000024
     intent  = seed_hook_node
     summary = "A seed hook node of the core component, so the skeleton has the component shape from its first boot."
     source  = skeleton
-    depends = [ "gs0043" ]
+    depends = [ "gs0066" ]
+  }
+  file "data/nodes/route/<system>.handoff.send.route" {
+    uuid    = gs0025-skele-4000-8000-000000000025
+    intent  = seed_route_node
+    summary = "A seed route node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0068" ]
+  }
+  file "data/nodes/route/<system>.handoffs.route" {
+    uuid    = gs0026-skele-4000-8000-000000000026
+    intent  = seed_route_node
+    summary = "A seed route node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0068" ]
+  }
+  file "data/nodes/route/<system>.module.new.route" {
+    uuid    = gs0027-skele-4000-8000-000000000027
+    intent  = seed_route_node
+    summary = "A seed route node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0068" ]
+  }
+  file "data/nodes/route/<system>.modules.route" {
+    uuid    = gs0028-skele-4000-8000-000000000028
+    intent  = seed_route_node
+    summary = "A seed route node of the core component, so the skeleton has the component shape from its first boot."
+    source  = skeleton
+    depends = [ "gs0068" ]
   }
   file "data/nodes/route/<system>.nodes.route" {
-    uuid    = gs0012-skele-4000-8000-000000000012
+    uuid    = gs0029-skele-4000-8000-000000000029
     intent  = seed_route_node
     summary = "A seed route node of the core component, so the skeleton has the component shape from its first boot."
     source  = skeleton
-    depends = [ "gs0044" ]
+    depends = [ "gs0068" ]
   }
   file "data/nodes/route/<system>.status.route" {
-    uuid    = gs0013-skele-4000-8000-000000000013
+    uuid    = gs0030-skele-4000-8000-000000000030
     intent  = seed_route_node
     summary = "A seed route node of the core component, so the skeleton has the component shape from its first boot."
     source  = skeleton
-    depends = [ "gs0044" ]
+    depends = [ "gs0068" ]
   }
   file "jaa-store.js" {
-    uuid    = gs0030-compo-4000-8000-000000000030
+    uuid    = gs0050-compo-4000-8000-000000000050
     intent  = the_jaa_database
     summary = "A table per name, rows upserted by id, soft deletes, an append-only <table>.jsonl beside each. The node index lives in it."
     source  = component:jaa-store
-    depends = [ "gs0028" ]
+    depends = [ "gs0048" ]
   }
 
   // ── lib: the code the nodes point at
   file "lib/core.js" {
-    uuid    = gs0017-skele-4000-8000-000000000017
+    uuid    = gs0036-skele-4000-8000-000000000036
     intent  = the_core_component
     summary = "Component <system>.core, capability <system>.core.observe: status and nodes — the system reporting on itself."
     source  = skeleton
-    depends = [ "gs0037" ]
+    depends = [ "gs0057" ]
   }
   file "lib/system.js" {
-    uuid    = gs0018-skele-4000-8000-000000000018
+    uuid    = gs0037-skele-4000-8000-000000000037
     intent  = boot
     summary = "Config, schemas, store, ledger, bus, node index, listener, heartbeat, and the component-shape check. server.js and cli.js both start here."
     source  = skeleton
-    depends = [ "gs0003", "gs0022", "gs0014", "gs0030", "gs0032", "gs0033", "gs0031", "gs0034", "gs0035", "gs0037", "gs0021" ]
+    depends = [ "gs0003", "gs0042", "gs0032", "gs0050", "gs0052", "gs0053", "gs0051", "gs0054", "gs0055", "gs0057", "gs0041" ]
   }
   file "lib/atomic-write.js" {
-    uuid    = gs0028-compo-4000-8000-000000000028
+    uuid    = gs0048-compo-4000-8000-000000000048
     intent  = write_a_file_whole_or_not_at_all
     summary = "Temp file then rename; retries the Windows EPERM/EBUSY rename before it is an error."
     source  = component:atomic-write
     depends = []
   }
   file "lib/envelope.js" {
-    uuid    = gs0029-compo-4000-8000-000000000029
+    uuid    = gs0049-compo-4000-8000-000000000049
     intent  = read_write_and_check_node_files
     summary = "data/nodes/<type>/<id>.<type> in the node envelope (JSON, which is also YAML); fingerprint; validate against a schema."
     source  = component:envelope
-    depends = [ "gs0028" ]
+    depends = [ "gs0048" ]
   }
   file "lib/node-index.js" {
-    uuid    = gs0031-compo-4000-8000-000000000031
+    uuid    = gs0051-compo-4000-8000-000000000051
     intent  = index_the_nodes_in_jaa_tables
     summary = "Domain 2d: nodes_<type> per type, nodes_<type>_ledger history; refuses a node that fails its schema; rebuildable from the files alone."
     source  = component:node-index
-    depends = [ "gs0029" ]
+    depends = [ "gs0049" ]
   }
   file "lib/ledger.js" {
-    uuid    = gs0032-compo-4000-8000-000000000032
+    uuid    = gs0052-compo-4000-8000-000000000052
     intent  = the_event_ledger
     summary = "Every event, per session, timestamped: data/ledger/<session>/events.jsonl."
     source  = component:ledger
     depends = []
   }
   file "lib/bus.js" {
-    uuid    = gs0033-compo-4000-8000-000000000033
+    uuid    = gs0053-compo-4000-8000-000000000053
     intent  = the_one_way_an_event_moves
     summary = "Ledger first, then listeners; an event no node declares is still delivered and marked undeclared."
     source  = component:bus
     depends = []
   }
   file "lib/listener.js" {
-    uuid    = gs0034-compo-4000-8000-000000000034
+    uuid    = gs0054-compo-4000-8000-000000000054
     intent  = a_dropped_node_goes_live
     summary = "Watches data/nodes, reindexes, emits <system>.node.changed, rewrites each capability bundle (references, never copies)."
     source  = component:listener
-    depends = [ "gs0029" ]
+    depends = [ "gs0049" ]
   }
   file "lib/heartbeat.js" {
-    uuid    = gs0035-compo-4000-8000-000000000035
+    uuid    = gs0055-compo-4000-8000-000000000055
     intent  = the_pulse
     summary = "Domain 10: <system>.heartbeat on an interval with uptime, node counts and refused nodes — an index behind its files shows as drift."
     source  = component:heartbeat
     depends = []
   }
   file "lib/commands.js" {
-    uuid    = gs0037-compo-4000-8000-000000000037
+    uuid    = gs0057-compo-4000-8000-000000000057
     intent  = run_command_nodes_through_the_registry
     summary = "A command names its capability; the registry names the component and file; the command's events are emitted after it runs."
     source  = component:commands
     depends = []
+  }
+  file "lib/handoff.js" {
+    uuid    = gs0058-compo-4000-8000-000000000058
+    intent  = hand_work_to_another_system_as_a_verified_file
+    summary = "Registry + handshake + schema checked before anything moves; refused = a receipt saying why. Queued in the target's input/, taken to processing/, done/ or failed/ with why; the receipt back in the sender's output/; processing/ recovered at boot."
+    source  = component:handoff
+    depends = [ "gs0049", "gs0048", "gs0056", "gs0057" ]
+  }
+  file "lib/modules.js" {
+    uuid    = gs0059-compo-4000-8000-000000000059
+    intent  = a_module_is_a_system
+    summary = "Lays out template/ again under modules/<slug>/ — the same skeleton one level down, carrying the template so it can nest further; registers it as one module node; boots it with its own code."
+    source  = component:modules
+    depends = [ "gs0049", "gs0048", "gs0056", "gs0070" ]
   }
 
   // ── entry points
@@ -806,51 +962,79 @@ catalog GENESIS_FILE_TREE {
     intent  = run_the_command_nodes
     summary = "node cli.js <command> [--flag value] — the same command nodes the routes run."
     source  = skeleton
-    depends = [ "gs0018", "gs0037" ]
+    depends = [ "gs0037", "gs0057" ]
   }
   file "server.js" {
-    uuid    = gs0023-skele-4000-8000-000000000023
+    uuid    = gs0043-skele-4000-8000-000000000043
     intent  = serve_the_route_nodes
     summary = "/health, /contract, /nodes/:type[/:id], and every route node — a new route is a node, this file does not change."
     source  = skeleton
-    depends = [ "gs0018", "gs0037", "gs0016" ]
+    depends = [ "gs0037", "gs0057", "gs0058", "gs0035" ]
   }
 
   // ── spec, input/output, tests
+  file "done/.gitkeep" {
+    uuid    = gs0031-skele-4000-8000-000000000031
+    intent  = keep_done
+    summary = "Keeps done/ in version control."
+    source  = skeleton
+    depends = []
+  }
+  file "failed/.gitkeep" {
+    uuid    = gs0033-skele-4000-8000-000000000033
+    intent  = keep_failed
+    summary = "Keeps failed/ in version control."
+    source  = skeleton
+    depends = []
+  }
   file "input/.gitkeep" {
-    uuid    = gs0015-skele-4000-8000-000000000015
+    uuid    = gs0034-skele-4000-8000-000000000034
     intent  = keep_input
     summary = "Keeps input/ in version control."
     source  = skeleton
     depends = []
   }
   file "output/.gitkeep" {
-    uuid    = gs0019-skele-4000-8000-000000000019
+    uuid    = gs0038-skele-4000-8000-000000000038
     intent  = keep_output
     summary = "Keeps output/ in version control."
     source  = skeleton
     depends = []
   }
+  file "processing/.gitkeep" {
+    uuid    = gs0040-skele-4000-8000-000000000040
+    intent  = keep_processing
+    summary = "Keeps processing/ in version control."
+    source  = skeleton
+    depends = []
+  }
   file "spec/<system>.node-taxonomy.md" {
-    uuid    = gs0024-skele-4000-8000-000000000024
+    uuid    = gs0044-skele-4000-8000-000000000044
     intent  = the_node_types
     summary = "Each node type, what it is and its required fields."
     source  = skeleton
     depends = []
   }
   file "spec/<system>.spec" {
-    uuid    = gs0025-skele-4000-8000-000000000025
+    uuid    = gs0045-skele-4000-8000-000000000045
     intent  = the_living_spec
     summary = "identity, context, file_structure, modules, components, generated — the architecture template's sections; grows with the system."
     source  = skeleton
     depends = []
   }
   file "tests/skeleton.test.js" {
-    uuid    = gs0026-skele-4000-8000-000000000026
+    uuid    = gs0046-skele-4000-8000-000000000046
     intent  = prove_the_skeleton_is_alive
-    summary = "Boots, indexes, checks the shape, serves routes, runs the CLI, and serves a route node dropped in without a restart."
+    summary = "Boots, indexes, checks the shape, serves routes, runs the CLI, serves a route node dropped in without a restart, lays out a module that lays out its own, and hands work to it as a verified file."
     source  = skeleton
-    depends = [ "gs0018", "gs0023", "gs0037", "gs0029" ]
+    depends = [ "gs0037", "gs0043", "gs0057", "gs0049", "gs0059", "gs0058" ]
+  }
+  file "template/nexus-system.template.json" {
+    uuid    = gs0070-selft-4000-8000-000000000070
+    intent  = the_template_this_system_came_from
+    summary = "Every skeleton file with its placeholders written [[key]], so the system can lay out modules of its own (lib/modules.js) — the same architecture on every level."
+    source  = self-template
+    depends = []
   }
 }
 

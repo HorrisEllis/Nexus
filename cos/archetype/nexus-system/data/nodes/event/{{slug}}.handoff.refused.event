@@ -1,0 +1,15 @@
+{
+  "envelope": 1,
+  "uuid": "{{uuid8}}-even-0000-0000-000000000110",
+  "type": "event",
+  "id": "{{slug}}.handoff.refused",
+  "system": "{{slug}}",
+  "summary": "a handoff failed verification — nothing moved; the receipt says why",
+  "payload": {
+    "command": "{{slug}}.handoff.send",
+    "payload": {
+      "command": "string",
+      "result": "object"
+    }
+  }
+}

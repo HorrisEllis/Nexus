@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "namespace": "{{slug}}",
   "transport": "http",
-  "note": "the fixed part; GET /contract adds a resource for every route node, so the contract grows with the system",
+  "note": "the fixed part; GET /contract adds a resource for every route node and accepts: every handoff kind a command node accepts, so the contract grows with the system",
   "resources": [
     { "method": "GET", "path": "/health", "intent": "the heartbeat snapshot" },
     { "method": "GET", "path": "/contract", "intent": "this contract, with the route nodes" },
     { "method": "GET", "path": "/nodes/:type", "intent": "the node index for one type" },
-    { "method": "GET", "path": "/nodes/:type/:id", "intent": "one node" }
+    { "method": "GET", "path": "/nodes/:type/:id", "intent": "one node" },
+    { "method": "POST", "path": "/handoff", "intent": "the drawbridge: a verified handoff node lands in input/" },
+    { "method": "POST", "path": "/handoff/receipt", "intent": "a system this one handed work to reports its state (done | failed, with why)" }
   ]
 }

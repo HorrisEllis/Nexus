@@ -10,6 +10,15 @@
 #   "hardcoded has to earn its place."
 #   "Maybe add, if applicant, data dir with the directory for the data, consumers, intent, data type/system like node,
 #    vector, database or table, etc." · "maybe create a template or schema from that."
+#
+# James, 2026-10-12:
+#   "like anything resuable needs a schema and template. contracts and nodes for persistent data, and expanding the
+#    system. events. like nothing pretends to work, and everything is tangible until completed."
+#   "each system hands the file off to the target system, using the registry and hanbdshake verification to tag the
+#    progress and success or failure of the handoff and why. then if it passes can be moved to the physical input
+#    folder or queue of the system that recieved the handoff."
+#   "nexus is recursive, builds itself, using itself. the same architecture on every level. like it should be a
+#    template." · "each module in nexus is a system with its own modules."
 
 tree: |
   <system>/
@@ -37,12 +46,19 @@ tree: |
   │   │   ├── hook/<id>.hook                 end points
   │   │   ├── wire/<id>.wire                 wires between hooks — the interaction space
   │   │   ├── toast/<id>.toast               notifications
+  │   │   ├── module/<id>.module             one per module: its dir, its mode, the contract hash it registered with
   │   │   └── <type>/<id>.<type>             every other node type — drop in, the listener integrates it
   │   ├── node-index/              the JAA index of the nodes
   │   ├── ledger/<session>/        event ledger — per session, timestamped
   │   └── baseline/                deltas and sigmas measure against this
-  ├── input/
-  ├── output/
+  ├── input/                       handoffs queued for this system — verified before they arrived (lib/handoff.js)
+  ├── processing/                  a handoff a command is working on (back to input/ at boot if the work died)
+  ├── done/                        finished handoffs, with the command's result
+  ├── failed/                      failed handoffs, with why
+  ├── output/                      receipts for the handoffs this system sent: queued · refused (why) · done · failed
+  ├── modules/<module>/            each module is a system — this same tree, one level down, laid out from template/
+  ├── template/
+  │   └── nexus-system.template.json   the skeleton this system came from ([[key]] placeholders) — so it can nest
   ├── lib/                         the code the nodes point at — heartbeat and pulse, the listener, gates,
   │                                handshake, hashes and snapshots
   ├── spec/
@@ -92,3 +108,9 @@ rules:
   - "every file has a timestamp and a hash; a modified file is backed up by a Versionium snapshot"
   - "changes start at the registry and reach only what is wired to them; the registry owns the interface, the code owns the implementation"
   - "hardcoded has to earn its place"
+  - "anything reusable has a schema and a template; anything that persists or expands the system is a node with a schema"
+  - "work moves between systems as a handoff file, never as a bare call: registry + handshake + schema are checked before it moves, and a refusal is a receipt that says why"
+  - "a handoff's state is the folder it is in — input/, processing/, done/, failed/ at the receiver; its receipt in output/ at the sender — nothing is in progress that is not a file"
+  - "a system hands work only to what its registry knows: its modules (module nodes), its parent, the peers in its config"
+  - "a command takes a handoff kind by declaring accepts; the contract lists every kind the system accepts"
+  - "a module is a system: the same skeleton, laid out from the parent's template/, carrying the template so it can nest further; the parent knows it by one module node and meets it only through its contract and handoffs"
