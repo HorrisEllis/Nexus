@@ -101,7 +101,7 @@ class CoPilotBridge {
   // instead of switching copilot's global agent.
   _route({ backend, agent, hat } = {}) {
     const s = this.settings.get();
-    const b = ['ollama', 'copilot', 'guardian'].includes(backend) ? backend : (s.copilotBackend || 'copilot');
+    const b = ['ollama', 'copilot', 'guardian', 'claude-code'].includes(backend) ? backend : (s.copilotBackend || 'copilot');   // 0.59.14 claude-code
     return { backend: b, agent: b === 'guardian' ? (agent || s.copilotAgent || 'claude') : undefined,
       hat: typeof hat === 'boolean' ? hat : s.copilotWearHat !== false };
   }
@@ -134,7 +134,51 @@ class CoPilotBridge {
     // browser goes there and says what is on the page. Anything asked after it ("… and what do you see") is answered
     // by the model WITH that page in hand.
     const V = require('./verbs.js');
+    // §0.59.9 — James: "hooked into copilot so you can talk to nexus". `nexus> census` typed here runs through the one
+    // command tool (lib/listener-commands.js), the same as a watched chat's lines, and the answer comes back as
+    // `⌘ Nexus ran: …` with no model in between. He typed it in his own pane, so commands that change Nexus run too;
+    // the rows that stay the person's (approving, stopping a system) are refused by the tool itself, as everywhere.
+    const nx = V.nexusIntent(message);
+    if (nx) {
+      const LC = require('../../../lib/listener-commands.js');
+      let text;
+      if (!nx.line) text = '⌘ Nexus: type a command after nexus> — e.g. `nexus> census --limit 4`, or `nexus> list` for every command.';
+      else {
+        this._nexusRunner = this._nexusRunner || LC.createRunner();
+        let r;
+        try { [r] = await Promise.race([this._nexusRunner.hear(`copilot:${msgId}`, `nexus> ${nx.line}`), new Promise((_, no) => setTimeout(() => no(new Error('no answer in 60 s')), 60000))]); }
+        catch (e) { r = { line: nx.line, error: `the command tool failed: ${e.message}` }; }
+        text = r ? LC.summary(r).replace(/^nexus>\s*/, '⌘ Nexus ran: ') : `⌘ Nexus: "${nx.line}" is not a command line`;
+        this.postEvent('copilot.nexus.command', { line: nx.line, ok: !!r && !r.error && !r.refused, refused: !!(r && r.refused) });
+      }
+      if (remember) this._remember(agentId, 'assistant', text, { via: 'nexus' });
+      this.sse.emit('copilot.response', { msgId, agentId, text, commands: [], modelUsed: 'nexus', ts: Date.now() });
+      return { text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'nexus' } };
+    }
+    // §0.59.11 TN3 — James: "make it useful like; hooked into copilot so you can talk to nexus". Plain words that mean a
+    // Nexus command ("what's unbuilt?", "which models are loaded?", "idea: …") run it — the rows say which words
+    // (idearium/cli/route-commands.js ASK; copilot/lib/nexus-ask.js) — and answer with its text, no model. Setting
+    // copilotNexusAsk: false turns it off.
+    if (this.settings.get().copilotNexusAsk !== false) {
+      let said = null;
+      try { said = await (this._nexusAsk || require('../../../copilot/lib/nexus-ask.js')).answer(message, { by: 'copilot' }); }
+      catch (e) { console.warn(`[CoPilot] nexus-ask unavailable: ${e.message}`); }
+      if (said) {
+        this.postEvent('copilot.nexus.command', { line: said.command, ok: said.ok, refused: said.refused });
+        if (remember) this._remember(agentId, 'assistant', said.text, { via: 'nexus' });
+        this.sse.emit('copilot.response', { msgId, agentId, text: said.text, commands: [], modelUsed: 'nexus', ts: Date.now() });
+        return { text: said.text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'nexus' } };
+      }
+    }
     const intent = this._driver ? (V.archiveImportIntent(message) || V.browseIntent(message)) : null;   // §0.39.283 N30 — the archive drop box first
+    // §0.59.6 — "what do you see" / "it's on the screen" (alone, or after "visit x.com"): the tab is read, not guessed at
+    if (this._driver && !intent && V.screenIntent(message)) {
+      const seen = await this._read(agentId);
+      if (remember) this._remember(agentId, 'assistant', seen.text, { via: 'browser' });
+      this.sse.emit('copilot.response', { msgId, agentId, text: seen.text, commands: [], modelUsed: 'browser', ts: Date.now() });
+      return { text: seen.text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'browser' } };
+    }
+    if (intent && intent.rest && V.screenIntent(intent.rest)) intent.rest = '';
     if (intent) {
       const went = await this._browse(intent.url, agentId);
       if (intent.kind === 'archive-import' && went.ok) went.text = 'Opened the NEXUS archive import. Drop your release zips (or a folder) — "Check the order" first, then Import; each zip becomes a dated commit on history/snapshots.';
@@ -222,12 +266,18 @@ class CoPilotBridge {
     try { result = await this._driver.exec({ ...command, agentId }); }
     catch (e) { return { ok: false, command, result: { ok: false, error: e.message }, text: `Could not open ${url}: ${e.message}` }; }
     if (result && (result.ok === false || result.error)) return { ok: false, command, result, text: `Could not open ${url}: ${result.error || 'the browser refused'}` };
+    const seen = await this._read(agentId, url, 'Opened');
+    return { ok: true, command, result, ...seen };
+  }
+
+  // §0.59.6 — what the tab shows now: title, url, the interaction field's targets as text (shared with _browse)
+  async _read(agentId, url = '', verb = 'On screen:') {
     let title = '', here = url, map = '';
     try { const t = await this._driver.exec({ action: 'getTitle', agentId }); title = (t && (t.title || t.result)) || ''; } catch (_) {}
     try { const u = await this._driver.exec({ action: 'getUrl', agentId }); here = (u && (u.url || u.result)) || url; } catch (_) {}
     try { const f = await this._driver.exec({ action: 'field', agentId, overlay: false }); map = f && (f.text || (f.targets ? require('../page/field.js').describe(f, { limit: 25 }) : '')) || ''; } catch (_) {}
-    const text = `Opened ${title ? `"${title}" — ` : ''}${here}.${map ? `\nOn the page (numbered — say "click #3", "type into #2 …"):\n${map.split('\n').slice(0, 25).join('\n')}` : ''}`;
-    return { ok: true, command, result, title, url: here, map, text };
+    const text = `${verb} ${title ? `"${title}" — ` : ''}${here || '(no page)'}.${map ? `\nOn the page (numbered — say "click #3", "type into #2 …"):\n${map.split('\n').slice(0, 25).join('\n')}` : '\n(nothing on it I can act on)'}`;
+    return { title, url: here, map, text };
   }
 
   // 0.39.272 — one compact message per round: each result as JSON, capped so a page read cannot flood the chat.
@@ -522,6 +572,7 @@ class CoPilotBridge {
       'Anything the Clear Glass window can do: {"action":"channels","query":"window"} lists it, {"action":"invoke","channel":"…","args":{…}} runs it.',
       'Any NEXUS agent tool: ```tool {"name":"<tool>","arguments":{...}}``` — e.g. nexus.opportunity.tool (jobs, gigs, Fiverr/Upwork),',
       'nexus.context.tool (search every memory), clearglass.learned.tool (what you have learned about sites).',
+      require('../../../lib/agent-tools/tool-guide.js').INSIDE_NEXUS,   // 0.59.15 — the same ways in for every backend the pane switches to
     ].join('\n');
     return `## Clear Glass Browser Context
 Agent ID: ${agentId}
@@ -564,6 +615,7 @@ ${toolsPrompt}${domSection}`;
   async _ask({ message, agentId, domContext, systemExtra, msgId, route, followUp = false, direct = null }) {
     const s = this.settings.get();
     const tried = [];
+    if (route && route.backend === 'claude-code' && !direct) return this._callClaudeCode({ message, agentId });   // 0.59.14
     if (!direct && s.useCortex !== false) {
       try {
         const r = await this._callNexusCopilot({ message, agentId, domContext, systemExtra, msgId, route, followUp });
@@ -588,6 +640,24 @@ ${toolsPrompt}${domSection}`;
       text: `Nothing answered. Tried:\n${tried.map(t => `• ${t}`).join('\n')}\n\nStart the copilot service (:${s.copilotPort || 3750}), or Ollama, or connect a Guardian agent — then send again.`,
       modelUsed: 'none', via: 'none',
     };
+  }
+
+  // §0.59.14 — James: "Can you build the capability? Like first I thought of using you as copilot, then you would have full
+  // range of the system." Claude Code on this machine, in the Nexus folder: it reads everything and every Nexus tool, writes
+  // nothing itself (a fix goes to Idearium as a proposal he approves — lib/claude-code-backend.js ask()). One Claude session
+  // per pane conversation, resumed turn after turn; /new starts a fresh one. Its own tools run the page, so no tool rounds
+  // here and no DOM: it asks Nexus (nexus_command field / picks) when it needs the page.
+  async _callClaudeCode({ message, agentId = 'default' }) {
+    const CC = require('../../../lib/claude-code-backend.js');
+    let conv = null; try { conv = chatStore.current(agentId); } catch (_) {}
+    const key = `${agentId}:${conv && (conv.id || conv.conversationId || conv) || ''}`;
+    this._ccSessions = this._ccSessions || new Map();
+    const s = this.settings.get();
+    const r = await (this._claudeCode || CC).ask({ prompt: message, sessionId: this._ccSessions.get(key) || null, model: s.copilotClaudeModel || null,
+      timeoutMs: Number(s.copilotClaudeTimeoutMs) || 10 * 60 * 1000, context: `The Clear Glass window asking is "${agentId}".` });
+    if (r.sessionId) this._ccSessions.set(key, r.sessionId);
+    if (!r.ok) return { text: `Claude Code could not answer: ${r.error}`, modelUsed: 'claude-code', via: 'claude-code', direct: 'claude-code' };
+    return { text: r.text, modelUsed: 'claude-code', via: 'claude-code', direct: 'claude-code', cost: r.cost };
   }
 
   // Ollama directly — the shared runtime every NEXUS system uses (ollama/ollama-runtime.js), model from the

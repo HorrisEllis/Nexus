@@ -284,3 +284,34 @@ spec:
 #   - tool intent routes action-shaped prompts through ollama's real agent-tools loop (read_file/run_command/diagnose/move_data/run_pipeline)
 #   - adversarial faculty wired with a narrow trigger; AX-008 bridge+diagnostic SSE streams into copilot's live buffer
 #   - fluid agent routing (extractExplicitAgent) + lifeline /command transport fix (was posting to a removed route, every escalation silently 404ing)
+
+## ADDENDUM 2026-10-10 — talk to Nexus in plain words (0.59.9–0.59.11)
+# James: "okay. now. make it useful like; hooked into copilot so you can talk to nexus".
+# Map: docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec.
+# - The co-pilot pane (clear-glass/src/copilot/bridge.js send) and /api/prompt (copilot/server.js, after nexus-awareness)
+#   answer plain words that mean a Nexus command by running it: the words are declared on the command's row (ASK in
+#   idearium/cli/route-commands.js), copilot/lib/nexus-ask.js matches and runs them through nexus.command. model_used
+#   'nexus' (pane) / 'nexus-ask' (/api/prompt). Setting copilotNexusAsk: false turns the pane's off.
+# - `nexus> <command>` / `/nexus <command>` in the pane runs any command by name (0.59.9).
+# - nexus.command returns `text` — the row's own printer, plain — beside the JSON `result` (renderText).
+
+## ADDENDUM 2026-10-12 — Claude Code as a co-pilot backend (0.59.14)
+# James: "Can you build the capability? Like first I thought of using you as copilot, then you would have full range of the
+# system. Then I was trying hey nexus. So you could talk to copilot and build fix what's not working, improve what needs to
+# improve."
+# - The pane's fourth backend, claude-code (toggle, or /backend claude-code): clear-glass bridge _callClaudeCode →
+#   lib/claude-code-backend.js ask(). Claude Code on this machine, cwd = the Nexus root, tools Read/Glob/Grep + every
+#   mcp__nexus__* tool; no Edit/Write/Bash. One session per pane conversation (--resume); /new starts another.
+# - A fix is sent to Idearium (nexus_command "repo ask" … --provider claude-code) → a proposal → James approves → the apply
+#   gate writes it, recorded and reversible. Applying stays his.
+# - Settings: copilotClaudeModel, copilotClaudeTimeoutMs (default 10 min). Needs `claude` installed and signed in.
+
+## ADDENDUM 2026-10-12 — the same ways in for every agent (0.59.15)
+# James: "Okay but any of the agents need to be able to do that too for the agent switching. Like guardian is the source of
+# truth for browser agents."
+# - INSIDE_NEXUS (lib/agent-tools/tool-guide.js): read anything through nexus.command.tool (file, grep, log, census,
+#   activity, nerve, perf); change Nexus only by repo ask → a proposal James approves → the apply gate. Said once; read by
+#   toolGuide() (opens it wherever nexus.command.tool is in scope), guardian/tool-runtime.js (browser agents — it had no
+#   guide), the Clear Glass pane's context (every backend it switches to) and Claude Code's preamble.
+# - flags.provider is optional: the repo's own ladder builds (Guardian decides which browser agents are live), or the agent named.
+

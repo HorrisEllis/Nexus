@@ -24,6 +24,15 @@ function _ppShowDoneSaved() { try { return localStorage.getItem('idearium.plan.s
 const PP_NEXT_N = 3;   // §HP9 — how many not-started steps the queue shows after what is running
 function planToggleRest() { PLANP.showRest = !PLANP.showRest; _planPaint(); }
 function planToggleDone() { PLANP.showDone = !PLANP.showDone; try { localStorage.setItem('idearium.plan.showDone', PLANP.showDone ? '1' : '0'); } catch (_) { /* a per-browser convenience */ } _planPaint(); }
+// §0.60.0 PP1 — James: "the plan panel doesn't need to show all the completed phases at all times. needs a clear button
+// to remove them." ⌫ clear takes everything complete off the panel — steps, a finished spec build, a finished proof, done
+// plans and file jobs — as of that moment; new work still shows. Nothing is deleted (the runs stay in the ledger and the
+// log); "restore" brings them back. Per repo, remembered in this browser.
+function _ppClearKey(uuid) { return `idearium.plan.cleared.${uuid}`; }
+function _ppClearedAt() { try { return Number(localStorage.getItem(_ppClearKey(PLANP.uuid))) || 0; } catch (_) { return 0; } }
+function planClearDone() { try { localStorage.setItem(_ppClearKey(PLANP.uuid), String(Date.now())); } catch (_) { /* a per-browser convenience */ } PLANP.showDone = false; _planPaint(); }
+function planRestoreDone() { try { localStorage.removeItem(_ppClearKey(PLANP.uuid)); } catch (_) {} _planPaint(); }
+function _ppLastTs(s) { let t = 0; for (const l of s.ledger || []) t = Math.max(t, Number(l.ts) || 0); return t; }
 function _ppDoneLine(n, what) { return n ? `<button class="pp-donefold" onclick="planToggleDone()" title="${PLANP.showDone ? 'hide' : 'show'} what is complete">✓ ${n} ${what} complete — ${PLANP.showDone ? 'hide' : 'show'}</button>` : ''; }
 const _PLAN_GATE_LABEL = { escalating: 'escalating', retrying: 'retrying', interrupted: 'interrupted', mapped: 'mapped', snapshot: 'snapshot', dispatched: 'sent', replied: 'replied', blocked: 'blocked', incomplete: 'incomplete', reviewing: 'reviewing', reviewed: 'reviewed', skipped: 'skipped', landed: 'landed', closed: 'closed' };
 
@@ -33,6 +42,8 @@ function _planEl() {
   el = document.createElement('div'); el.id = 'plan-panel';
   el.innerHTML = `<div class="pp-head" id="pp-head"><span class="pp-title">Plan</span><span class="pp-sub" id="pp-sub"></span><span class="pp-grow"></span>
       <select id="pp-map" class="pp-map" onchange="PLANP.map=this.value||null;loadPlanPanel()"></select>
+      <span id="pp-run" class="pp-run"></span>
+      <button class="pp-btn" title="take everything complete off the panel (kept in the ledger; restore brings it back)" onclick="planClearDone()">⌫ clear done</button>
       <button class="pp-btn" title="wide" onclick="PLANP.wide=!PLANP.wide;document.getElementById('plan-panel').classList.toggle('wide',PLANP.wide)">⤢</button>
       <button class="pp-btn" title="close" onclick="closePlanPanel()">✕</button></div>
     <div class="pp-body" id="pp-body"></div>`;
@@ -187,7 +198,34 @@ function _ledgerHtml(rows) {
   if (!rows.length) return '<div class="pp-led-empty">no runs yet — ▶ builds it (a snapshot first, then the repo\'s agent)</div>';
   return rows.map(l => `<div class="pp-led"><span class="pp-led-t" title="${escapeHtml(new Date(l.ts).toLocaleString())}${l.startedAt ? ` · run started ${escapeHtml(new Date(l.startedAt).toLocaleString())}` : ''}">${escapeHtml(_ppWhen(l.ts))}${l.startedAt && l.ts > l.startedAt ? ` <small>+${escapeHtml(_ppSpan(l.ts - l.startedAt))}</small>` : ''}</span>${l.chunk ? `<span class="pp-led-c" title="${escapeHtml(l.file || '')}">chunk ${l.chunk}/${l.chunks}</span>` : ''}<span class="pp-led-s pp-${escapeHtml(l.state)}">${escapeHtml(l.state)}</span>
     <span class="pp-led-d">${l.snapshot ? `snapshot ${escapeHtml(String(l.snapshot).slice(0, 12))} · ` : ''}${l.provider ? `${escapeHtml(l.provider)}${l.rung ? ` (rung ${l.rung}/${l.rungs}${l.attempt > 1 ? `, try ${l.attempt}` : ''})` : ''} · ` : ''}${l.toolErrors ? '<span style="color:var(--coral)">stopped: failed tool calls in a row</span> · ' : ''}${(l.injected || []).length ? `files ${l.injected.slice(0, 6).map(f => typeof wsOpenInCode === 'function' ? `<a href="#" class="pp-file" title="open in the Code tab" onclick="wsOpenInCode('${escapeHtml(String(f).replace(/'/g, "\\'"))}');return false">${escapeHtml(f)}</a>` : escapeHtml(f)).join(', ')}${l.injected.length > 6 ? ` +${l.injected.length - 6}` : ''} · ` : ''}${l.error ? `<span style="color:var(--coral)">${escapeHtml(l.error)}</span>` : ''}</span>
-    ${l.against === 'proposed' ? `<div class="pp-against">${l.state === 'proven' ? '✓ proven on the proposed code' : 'checked on the proposed code'} (${(l.overlaid || []).length} file${(l.overlaid || []).length === 1 ? '' : 's'}) — nothing is in your files until you Apply${l.leverage ? ` · <span title="the least-code axiom, measured">${escapeHtml(l.leverage.says)}</span>` : ''}</div>` : l.againstNote ? `<div class="pp-against warn">${escapeHtml(l.againstNote)}</div>` : ''}${_ppPrecedent(l.precedent)}${_ppRoute(l.route)}${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
+    ${l.against === 'proposed' ? `<div class="pp-against">${l.state === 'proven' ? '✓ proven on the proposed code' : 'checked on the proposed code'} (${(l.overlaid || []).length} file${(l.overlaid || []).length === 1 ? '' : 's'}) — nothing is in your files until you Apply${l.leverage ? ` · <span title="the least-code axiom, measured">${escapeHtml(l.leverage.says)}</span>` : ''}</div>` : l.againstNote ? `<div class="pp-against warn">${escapeHtml(l.againstNote)}</div>` : ''}${_ppPrecedent(l.precedent)}${_ppRoute(l.route)}${_ppPlanned(l)}${l.reply ? `<details class="pp-reply"><summary>reply</summary><pre>${escapeHtml(l.reply)}</pre></details>` : ''}</div>`).join('');
+}
+
+// §0.60.0 RS1 — the repo's play / pause / rewind in the Plan header (the same routes as the repo card, repo-card-time.js)
+async function ppRunLoad() {
+  const el = document.getElementById('pp-run'); if (!el || !PLANP.uuid) return;
+  let r; try { r = await api(`/api/repos/${PLANP.uuid}/run`, {}, 10000); } catch (_) { el.innerHTML = ''; return; }
+  const paused = r.run && r.run.state === 'paused';
+  el.innerHTML = `${paused ? `<button class="pp-btn" title="paused ${escapeHtml(new Date(r.run.since).toLocaleTimeString())} — play: the waiting work goes on" onclick="rcRun('${PLANP.uuid}','play')">▶</button>` : `<button class="pp-btn" title="pause the repo's activity at its next step (a version and a desktop checkpoint first)" onclick="rcRun('${PLANP.uuid}','pause')">⏸</button>`}<button class="pp-btn" title="pause and rewind one version" onclick="rcRun('${PLANP.uuid}','rewind')">⏮</button>${paused ? '<span class="pp-paused" style="font-size:10px;margin:0 4px">paused</span>' : ''}`;
+}
+
+// §0.60.0 PC1/PC2 — plan, then code, on the ledger: who plans and why, the system it maps to, what the planner read,
+// the plan (files → registry components, exports, conditions), why a plan was refused, what a coder dropped
+function _ppPlanned(l) {
+  const out = [];
+  if (l.planning && l.state === 'building') out.push(`<div class="pp-against">${l.planning.plan ? '◇ plan, then code' : 'no plan'} — ${escapeHtml(l.planning.why || '')}</div>`);
+  if (l.system && l.system.conflict) out.push(`<div class="pp-against warn">system: ${escapeHtml(l.system.conflict)}</div>`);
+  else if (l.system && l.system.system && l.state === 'building') out.push(`<div class="pp-against">system: ${escapeHtml(l.system.system)} (${escapeHtml(l.system.why || '')})</div>`);
+  if (l.grounding) out.push(`<div class="pp-against">read first: ${l.grounding.system ? `atlas ${l.grounding.atlas ? '✓' : '—'} · loom ${l.grounding.loom} components · ` : ''}registry ${l.grounding.registry}${(l.grounding.reuse || []).length ? ` · reuse ${escapeHtml(l.grounding.reuse.slice(0, 4).join(', '))}` : ''}${l.grounding.lessons ? ` · ${l.grounding.lessons} lesson${l.grounding.lessons === 1 ? '' : 's'} from earlier builds` : ''}${(l.grounding.notes || []).length ? ` · <span style="color:var(--coral)">${escapeHtml(l.grounding.notes.join('; '))}</span>` : ''}</div>`);
+  if (l.planSummary && l.plan) out.push(`<details class="pp-reply"><summary>plan — ${escapeHtml(l.planSummary)}</summary><pre>${escapeHtml([
+    l.plan.read && l.plan.read.length ? `read: ${l.plan.read.join(' · ')}` : '',
+    ...(l.plan.files || []).map(f => `${f.path}  ← ${f.component || (f.new ? `new ${f.layer || ''}` : '?')}${f.exports.length ? `  exports ${f.exports.join(', ')}` : ''}`),
+    (l.plan.conditions || []).length ? `\nconditions (from the intent):\n${l.plan.conditions.map(c => `- ${c}`).join('\n')}` : '',
+    (l.warnings || []).length ? `\nwarnings:\n${l.warnings.map(w => `- ${w}`).join('\n')}` : '',
+  ].filter(Boolean).join('\n'))}</pre></details>`);
+  if ((l.problems || []).length) out.push(`<div class="pp-against warn">plan refused: ${escapeHtml(l.problems.slice(0, 4).join(' · '))}</div>`);
+  if (l.coderOrder) out.push(`<div class="pp-against">coders: ${escapeHtml(l.coderOrder.join(' → '))}${l.note ? ` — ${escapeHtml(l.note)}` : ''}</div>`);
+  return out.join('');
 }
 
 function _planPaint() {
@@ -216,7 +254,8 @@ function _planPaint() {
         ${_ledgerHtml(s.ledger || [])}</div>` : ''}
     </div>`;
   };
-  const other = (PLANP.runs || []).filter(r => r.phase === 'PLAN' || String(r.map || '').startsWith('file:')).slice(0, 12);
+  const _cAt = _ppClearedAt();
+  const other = (PLANP.runs || []).filter(r => r.phase === 'PLAN' || String(r.map || '').startsWith('file:')).filter(r => !_cAt || (r.ts || 0) > _cAt || ['building', 'running', 'dispatched'].includes(r.state)).slice(0, 12);
   body.innerHTML = `
     ${_planCodeBuild()}
     ${_planProof()}
@@ -231,7 +270,10 @@ function _planPaint() {
       // one line; shelved phases never; done folded as before.
       const isDone = (s) => s.status === 'complete' || s.status === 'done';
       const live = steps.filter(s => !s.shelf);
-      const done = live.filter(isDone), open = live.filter(s => !isDone(s));
+      const clearedAt = _ppClearedAt();
+      const allDone = live.filter(isDone), open = live.filter(s => !isDone(s));
+      const done = clearedAt ? allDone.filter(s => _ppLastTs(s) > clearedAt) : allDone;
+      const cleared = allDone.length - done.length;
       const isNow = (s) => (s.runs || 0) > 0 || s.current && s.run || ['active', 'building', 'in-progress'].includes(String(s.status));
       const now = open.filter(isNow);
       const nowMaps = new Set(now.map(s => s.map));
@@ -242,6 +284,7 @@ function _planPaint() {
         + (next.length ? `<div class="pp-sec pp-next">next</div>${next.map(task).join('')}` : '')
         + (rest > 0 ? `<button class="pp-donefold" onclick="planToggleRest()" title="every other not-started phase">○ ${rest} more not started${PLANP.showRest ? ' — hide' : ' — show'}</button>${PLANP.showRest ? open.filter(s => !isNow(s) && !next.includes(s)).map(task).join('') : ''}` : '')
         + _ppDoneLine(done.length, `step${done.length === 1 ? '' : 's'}`) + (PLANP.showDone ? done.map(task).join('') : '')
+        + (cleared ? `<button class="pp-donefold" onclick="planRestoreDone()" title="bring the cleared steps back">⌫ ${cleared} cleared — restore</button>` : '')
         + (shelf ? `<div class="pp-shelfnote" title="the declutter's LATER — kept in their maps, not the queue">${shelf} on the shelf</div>` : '');
     })()}
     ${other.length ? `<div class="pp-sec">plans and file jobs</div>${other.map(r => `<div class="pp-act"><span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.title || `${r.phase} ${r.map}`)} <span class="pp-led-t">${new Date(r.ts).toLocaleTimeString()}</span>${r.error ? `<div style="color:var(--coral);font-size:10px">${escapeHtml(r.error)}</div>` : ''}</div>`).join('')}` : ''}
@@ -253,6 +296,7 @@ function _planPaint() {
   PLANP.focus = null;
   if (typeof rtMounted === 'function') rtMounted(false);   // §0.47.0 OS2 (a repaint: drawn from what is held, nothing re-read) — tasks · log · control · versions · machine, in the activity section
   planTabSync();   // §CT9 — the tab's count follows the plan
+  ppRunLoad();     // §0.60.0 RS1 — ▶ / ⏸ / ⏮ for the repo, beside the plan
   // §0.39.284 W3 — the work surface, below the plan: every file the agent changed, as diffs, and its tools
   if (typeof wsLoad === 'function') { const w = document.getElementById('pp-ws'); if (WSURF.data && WSURF.uuid === PLANP.uuid) wsPaint(w); wsLoad(w); }
 }
@@ -290,7 +334,7 @@ async function planBuild(map, phase) {
 let _planT = null;
 function planPanelOnEvent(ev) {
   const t = ev && ev.type ? ev.type.replace(/^idearium\./, '') : '';
-  if (!/^(repo\.(phase\.run|file\.manage|deviation|roadmap\.updated|inject\.|spec\.planned|prove\.|verify)|spec-engine\.|spec\.chunk|chunk\.)/.test(t)) return;
+  if (!/^(repo\.(run|phase\.run|file\.manage|deviation|roadmap\.updated|inject\.|spec\.planned|prove\.|verify)|spec-engine\.|spec\.chunk|chunk\.)/.test(t)) return;
   const el = document.getElementById('plan-panel'); if (!el || !el.classList.contains('open')) return;
   const u = ev.payload && ev.payload.repoUuid; if (u && PLANP.uuid && u !== PLANP.uuid) return;
   clearTimeout(_planT); _planT = setTimeout(loadPlanPanel, 500);
@@ -338,6 +382,7 @@ function _planCodeBuild() {
   const done = live.filter(c => c.status === 'complete').length;
   const bad = live.filter(c => c.status === 'failed' || c.status === 'stalled');
   const busy = live.some(c => ['building', 'dispatched', 'generating'].includes(c.status));
+  if (_ppClearedAt() && live.length && done === live.length) return '';   // §0.60.0 PP1 — a finished build, cleared
   const isDone = (c) => c.status === 'complete';
   const rows = live.filter(c => PLANP.showDone || !isDone(c)).map(c => {
     const name = (c.file && c.file.path) || c.title || c.sectionId;
@@ -362,6 +407,7 @@ function _planProof() {
   const m = PLANP.code; if (!m || !(m.fileTree || (m.chunks || []).some(c => c.realPath))) return '';
   const run = PLANP.proof && PLANP.proof.run;
   const running = run && run.state === 'running';
+  if (run && !running && run.verdict === 'proven' && _ppClearedAt() && (Number(run.endedAt || run.ts || run.startedAt) || 0) <= _ppClearedAt()) return '';   // §0.60.0 PP1
   const rounds = run ? (run.rounds || []).map(rr => `<div class="pp-task ${rr.verdict === 'proven' ? 'done' : ''}"><div class="pp-row">
       <span class="pp-mark">${rr.round}</span><span class="pp-name">round ${rr.round} · ${rr.built} built${rr.reused ? ` · ${rr.reused} reused` : ''}${rr.current ? ` · building ${escapeHtml(rr.current)}` : ''}</span>
       <span class="pp-led-s">${_ppVerdict(rr.verdict)}</span></div>

@@ -13,6 +13,12 @@ const SCHEMA = {
       description: 'How long a tab may hold a job without saying anything about it (accepted, typed, a chunk, an error) before the job ends at "tab takes the job". Nothing was typed, so nothing is sent twice.' },
     no_tab_ms:            { type: 'number', default: 45000,   min: 1,     max: 3600000,  unit: 'ms', env: 'GUARDIAN_NO_TAB_MS',
       description: 'With no tab open for the agent, how long a waiting caller waits for one (time for Clear Glass to open it) before it is told and the job is cancelled.' },
+    // §0.60.0 GA1 — James: "guardian should detect when a sign in is needed". A tab on a sign-in page is shown to the
+    // person (Clear Glass raises it with a Nexus panel) and the waiting job waits this long for the sign-in, not no_tab_ms.
+    signin_wait_ms:       { type: 'number', default: 300000,  min: 1000,  max: 3600000,  unit: 'ms', env: 'GUARDIAN_SIGNIN_WAIT_MS',
+      description: 'With the agent\'s tab on a sign-in page (or a page Guardian cannot map), how long a waiting job waits for the person to sign in or map the chat before it is cancelled.' },
+    attention_cooldown_ms: { type: 'number', default: 120000, min: 0,     max: 3600000,  unit: 'ms', env: 'GUARDIAN_ATTENTION_COOLDOWN_MS',
+      description: 'How long after asking for the person (sign in, map the chat) Guardian waits before asking again for the same agent and reason.' },
     economy_wait_ms:      { type: 'number', default: 30000,   min: 0,     max: 3600000,  unit: 'ms', env: 'GUARDIAN_ECONOMY_WAIT_MS',
       description: 'The longest economy hold a waiting caller sits through; a longer one is said at once with the limit, and the job is cancelled so the route can move on.' },
     completion_idle_ms:   { type: 'number', default: 900000,  min: 1,    max: 86400000, unit: 'ms', env: 'GUARDIAN_COMPLETION_TIMEOUT_MS',

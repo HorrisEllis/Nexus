@@ -1122,34 +1122,7 @@ async function _startWire() {
           // Removed the guard: check for an existing window on this
           // origin FIRST, always, regardless of what agentId (if any)
           // the caller asked for.
-          let targetOrigin = null;
-          try { targetOrigin = new URL(openUrl).origin; } catch (_) {}
-          if (targetOrigin) {
-            for (const [wid, win] of windows) {
-              if (win.isDestroyed()) continue;
-              let currentOrigin = null;
-              try { currentOrigin = new URL(win.webContents.getURL()).origin; } catch (_) {}
-              if (currentOrigin === targetOrigin) {
-                win.show(); win.focus();
-                return res.end(JSON.stringify({ ok: true, agentId: wid, url: openUrl, reused: true }));
-              }
-            }
-          }
-          // Boot race: the default window opens at about:blank (or
-          // whatever defaultStartUrl is) before this wire call ever
-          // arrives, so the origin check above can't match it yet.
-          // Navigate it in place instead of opening a second window —
-          // regardless of what agentId this specific /open call asked
-          // for, 'default' is the one real window that already exists.
-          const defaultWin = windows.get('default');
-          if (defaultWin && !defaultWin.isDestroyed()) {
-            defaultWin.webContents.send('cg:navigate', openUrl);
-            defaultWin.show(); defaultWin.focus();
-            return res.end(JSON.stringify({ ok: true, agentId: 'default', url: openUrl, navigated: true }));
-          }
-          const aid = openAgent || `nexus-${Date.now()}`;
-          openAgentWindow({ agentId: aid, url: openUrl }).catch(() => {});
-          return res.end(JSON.stringify({ ok: true, agentId: aid, url: openUrl }));
+          return res.end(JSON.stringify(await openOrFocus({ url: openUrl, agentId: openAgent })));   // 0.59.12 — the body moved to openOrFocus(), shared with /cli/open
         } catch(e) {
           res.writeHead(500);
           return res.end(JSON.stringify({ ok: false, error: e.message }));
@@ -2038,6 +2011,35 @@ async function _restoreAccountWindow(agentId, partition) {
 }
 
 // ── Window management ──────────────────────────────────────────────────────
+/**
+ * openOrFocus({ url, agentId }) — show a page to James: the window already on that site is brought to the front; else the
+ * default window navigates there; else a new window opens. Was the body of the wire server's POST /open (2026-07-04
+ * fixes: no second window for the same origin, the boot race on 'default'); 0.59.12 shares it with /cli/open, so an
+ * agent can bring something up with `nexus> glass open <url>`.
+ */
+async function openOrFocus({ url, agentId } = {}) {
+  if (!url) return { ok: false, error: 'url required' };
+  let targetOrigin = null;
+  try { targetOrigin = new URL(url).origin; } catch (_) {}
+  if (targetOrigin) {
+    for (const [wid, win] of windows) {
+      if (win.isDestroyed()) continue;
+      let currentOrigin = null;
+      try { currentOrigin = new URL(win.webContents.getURL()).origin; } catch (_) {}
+      if (currentOrigin === targetOrigin) { win.show(); win.focus(); return { ok: true, agentId: wid, url, reused: true }; }
+    }
+  }
+  const defaultWin = windows.get('default');
+  if (defaultWin && !defaultWin.isDestroyed()) {
+    defaultWin.webContents.send('cg:navigate', url);
+    defaultWin.show(); defaultWin.focus();
+    return { ok: true, agentId: 'default', url, navigated: true };
+  }
+  const aid = agentId || `nexus-${Date.now()}`;
+  openAgentWindow({ agentId: aid, url }).catch(() => {});
+  return { ok: true, agentId: aid, url, opened: true };
+}
+
 async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank' } = {}) {
   if (windows.has(agentId)) {
     windows.get(agentId).show();
@@ -2613,7 +2615,7 @@ async function shutdown() {
 }
 
 module.exports = {
-  openAgentWindow, closeAgentWindow, minimizeAgentWindow, hideAgentWindow, maximizeAgentWindow,
+  openAgentWindow, openOrFocus, closeAgentWindow, minimizeAgentWindow, hideAgentWindow, maximizeAgentWindow,
   focusAgentWindow, listOpenAgents,
   openBackgroundTab, closeBackgroundTab, listBackgroundTabs,
   closeSettingsWindow, openLibraryWindow, closeLibraryWindow, windows, bgTabs,

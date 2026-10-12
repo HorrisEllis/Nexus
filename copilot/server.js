@@ -2120,6 +2120,11 @@ const server = http.createServer(async (req, res) => {
         const ans = await na.answerAbout(prompt, {});
         if (ans) return json(res, 200, { text: ans.text, model_used: 'nexus-awareness', confidence: 1, escalated: false, detail: ans, requestId });
       } catch (_) { /* awareness unavailable — fall through to normal path */ }
+      // §0.59.11 TN3 — plain words that mean a Nexus command run it (copilot/lib/nexus-ask.js; the rows' ASK words)
+      try {
+        const nxa = await require('./lib/nexus-ask').answer(prompt, { by: 'copilot' });
+        if (nxa) return json(res, 200, { text: nxa.text, model_used: 'nexus-ask', confidence: 1, escalated: false, command: nxa.command, requestId });
+      } catch (_) { /* the command table unavailable — fall through to the model */ }
       if (/^\s*list accounts\b/i.test(prompt) || /\bshow (my )?accounts\b/i.test(prompt)) {
         const ar = require('../lib/account-registry');
         const accounts = ar.listAccounts ? ar.listAccounts() : [];

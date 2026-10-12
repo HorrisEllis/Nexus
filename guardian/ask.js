@@ -213,6 +213,10 @@ async function askSync(prompt, opts = {}, deps = {}) {
   // open one) with the provider still not connected and nothing typed: said, and the job cancelled (HP16).
   const noTabMs = require('./options.js').get('jobs.no_tab_ms');   // §OP1 0.57.0
   let noTabSince = null;
+  // §0.60.0 GA1 — halfway through that wait guardian looks at the tab's page (Clear Glass): a sign-in page (or one off the
+  // agent's own site) is shown to the person with the Nexus panel and the job waits jobs.signin_wait_ms for the sign-in;
+  // an open page that never connected is shown too ('no-connect'). Before, a hidden claude.ai/login tab was cancelled at 45 s.
+  let pageLooked = false, signinWait = null;
   while (Date.now() < deadline) {
     await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));
     const current = getJob(job.id);
@@ -231,12 +235,29 @@ async function askSync(prompt, opts = {}, deps = {}) {
     }
     if (typeof isProviderConnected === 'function' && !_typed(current) && !['complete', 'done', 'error', 'failed', 'cancelled'].includes(current.status)) {
       const p = current.provider || resolved;
-      if (isProviderConnected(p)) noTabSince = null;
+      if (isProviderConnected(p)) { noTabSince = null; pageLooked = false; signinWait = null; }
       else if (noTabSince === null) noTabSince = Date.now();
-      else if (Date.now() - noTabSince >= noTabMs) {
-        _abandon(deps, job.id, `no ${p} tab connected for ${Math.round(noTabMs / 1000)} s`);
-        return { ok: false, jobId: job.id, provider: p, gate: current.gate || null,
-          error: `not connected — no ${p} tab open in guardian for ${Math.round(noTabMs / 1000)} s: open ${p} in Clear Glass (or the browser with its Guardian userscript), signed in — nothing was typed, the job is cancelled` };
+      else {
+        if (!pageLooked && Date.now() - noTabSince >= noTabMs / 2) {
+          pageLooked = true;
+          try {
+            const A = require('./lib/provider-attention.js').attention();
+            const pg = await A.pageOf(p);
+            if (pg && (pg.state === 'signin' || pg.state === 'off-host')) {
+              signinWait = require('./options.js').get('jobs.signin_wait_ms');
+              await A.raise({ provider: p, reason: 'signin', jobId: job.id, agentId: opts.agentId || null, url: pg.url, note: `${p}'s tab is on ${pg.state === 'signin' ? 'a sign-in page' : 'a page off its own site'} (${pg.url}) — sign in and the job goes on` });
+            } else if (pg && pg.running) {
+              await A.raise({ provider: p, reason: 'no-connect', jobId: job.id, agentId: opts.agentId || null, url: pg.url, note: `${p}'s tab is open${pg.url ? ` on ${pg.url}` : ''} but Guardian's userscript has not connected` });
+            }
+          } catch (_) { /* Clear Glass not answering: the plain wait below */ }
+        }
+        const limit = signinWait || noTabMs;
+        if (Date.now() - noTabSince >= limit) {
+          _abandon(deps, job.id, signinWait ? `${p} still not signed in after ${Math.round(limit / 1000)} s` : `no ${p} tab connected for ${Math.round(noTabMs / 1000)} s`);
+          return { ok: false, jobId: job.id, provider: p, gate: current.gate || null, ...(signinWait ? { class: 'login' } : {}),
+            error: signinWait ? `login — ${p} needs you to sign in: its tab was shown in Clear Glass and waited ${Math.round(limit / 1000)} s — nothing was typed, the job is cancelled`
+              : `not connected — no ${p} tab open in guardian for ${Math.round(noTabMs / 1000)} s: open ${p} in Clear Glass (or the browser with its Guardian userscript), signed in — nothing was typed, the job is cancelled` };
+        }
       }
     }
 

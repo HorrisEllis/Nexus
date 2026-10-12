@@ -193,6 +193,19 @@ export function buildRequest({ phase, mapText, repo, depsDone = [] }) {
 }
 
 /**
+ * §0.60.0 PC1 — phaseContext({ phase, mapText }) -> { body, does, proof, invariants, meta } — what a planner reads of one
+ * phase: its body as the map writes it, its does/proof, and the map's invariants. Read from the map (§1.1), nothing added.
+ */
+export function phaseContext({ phase, mapText }) {
+  const lines = String(mapText || '').split('\n');
+  const loom = require('../../loom/scanners/phasemap-map.js');
+  const raw = loom.parsePhasemapText(mapText, phase.map).find(p => p.id === phase.phase_key);
+  const body = raw ? lines.slice(raw.line, raw.bodyEnd).join('\n').trim() : '';
+  return { body: body || `${phase.phase_key}: ${phase.name || phase.title || ''}`, does: fieldOf(body, 'does') || phase.name || phase.title || '', proof: fieldOf(body, 'proof'),
+    invariants: blockOf(mapText, 'invariants', 2500), meta: mapMeta(mapText) };
+}
+
+/**
  * §0.39.361 SB51 — James: "phases need chunked i feel like. at least for small ollama models."
  * A phase is built one file at a time when its ladder starts on a small local model (lib/pipeline-routing shouldChunk):
  * buildRequest hands over the whole phase, and llama3.2:3b's prompt ran 16613 chars at num_ctx 9216 — seven rounds,
@@ -205,15 +218,8 @@ export function phaseFiles(phase) {
   return [...new Set((phase.files || []).map(f => String(f).split(/[\s(]/)[0]).filter(f => f && /[\w-]\.[\w]+$/.test(f)))];
 }
 
-/** exportsOf(code) -> the names a JS file exports (module.exports = { … }, exports.x =, export function/const/class) */
-export function exportsOf(code) {
-  const s = String(code || ''); const out = new Set();
-  for (const m of s.matchAll(/module\.exports\s*=\s*\{([^}]*)\}/g)) for (const part of m[1].split(',')) { const k = part.split(':')[0].trim().replace(/^\.\.\..*/, ''); if (/^[A-Za-z_$][\w$]*$/.test(k)) out.add(k); }
-  for (const m of s.matchAll(/(?:module\.)?exports\.([A-Za-z_$][\w$]*)\s*=/g)) out.add(m[1]);
-  for (const m of s.matchAll(/export\s+(?:default\s+)?(?:async\s+)?(?:function\*?|const|let|class)\s+([A-Za-z_$][\w$]*)/g)) out.add(m[1]);
-  for (const m of s.matchAll(/export\s*\{([^}]*)\}/g)) for (const part of m[1].split(',')) { const k = part.split(/\s+as\s+/).pop().trim(); if (/^[A-Za-z_$][\w$]*$/.test(k)) out.add(k); }
-  return [...out];
-}
+/** exportsOf(code) -> the names a JS file exports — one implementation, lib/phase-plan.js (§0.60.0 PC1) */
+export function exportsOf(code) { return require('../../lib/phase-plan.js').exportsOf(code); }
 
 /** the value of one key of a phase body (`does: >-` and its indented lines, or `proof: "…"`) on one line */
 function fieldOf(body, key) {

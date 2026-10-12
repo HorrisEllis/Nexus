@@ -41,8 +41,14 @@ module.exports = Object.freeze({
   },
   GUARDIAN_LISTENER_COMMAND_RESULT: {
     description: "What a listener-run command came back with, shown in the co-pilot panel: the line and a short text of its result.",
-    payloadShape: ['listenerId', 'line', 'ok', 'text', 'ts'],
+    payloadShape: ['listenerId', 'url', 'line', 'ok', 'text', 'ts'],
     severity: 'info',
+  },
+  // §0.59.9 — a `nexus> …` line typed in the co-pilot pane runs as a Nexus command, no model
+  COPILOT_NEXUS_COMMAND: {
+    description: 'A nexus> line typed in the co-pilot pane ran as a Nexus command: the line, and whether it ran or was refused.',
+    payloadShape: ['line', 'ok', 'refused'],
+    severity: 'notable',
   },
   // §0.59.5 — a watched chat page (src/page/nexus-chat.js): its nexus> lines run read-only, the answer typed back
   NEXUS_CHAT_COMMAND: {

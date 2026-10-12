@@ -43,5 +43,13 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
     assert.ok(r.refused && /person/.test(r.reason), JSON.stringify(r));
     assert.ok(/✗/.test(LC.summary(r)));
   });
+  await test('LC-05', '0.59.10: `nexus> list` lists the commands (through any runner); an unknown line is marked unknown', async () => {
+    const tool = { execute: async (i) => i.action === 'list' ? { commands: [{ command: 'census', about: 'count phases' }, { command: 'dump' }] } : { result: { text: 'ok' } } };
+    const R = LC.createRunner({ tool });
+    const [r] = await R.hear('L1', 'nexus> list');
+    assert.match(LC.summary(r), /^nexus> list\nNexus commands[\s\S]*census — count phases\ndump$/);
+    const [u] = await R.hear('L1', 'nexus> list shows every command.');
+    assert.ok(u.unknown && /no Nexus command "list shows"/.test(u.error));
+  });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

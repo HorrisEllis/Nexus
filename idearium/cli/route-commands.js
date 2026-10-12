@@ -19,7 +19,8 @@ const LOG_FLAGS = ['kind', 'actor', 'status', 'q', 'before', 'limit'];
 
 /**
  * SPEC — the table. Each row: { key, usage, about, repo (needs <repo> first), req(a) → { method, path, body, timeoutMs }
- * | { system, method, path } (another Nexus system, through lib/nexus-client), print(d, a, h) }.
+ * | { system, method, path } (another Nexus system, through lib/nexus-client), print(d, a, h) }. Or local(a) → d instead of
+ * req: run in the calling process, read-only (0.59.12: log, file, grep). maxChars: how much of its text an answer may carry.
  * a = { repo, args (positional after the repo), flags }. personOnly(a) → a reason: an agent calling the row through the
  * nexus.command tool (lib/agent-tools/tools/nexus/command.js) is refused with it; a person at the CLI is not.
  */
@@ -358,7 +359,60 @@ export const SPEC = [
         console.log(`  ${fit.fits ? h.c.mint('✓') : h.c.coral('✗')} ${m.padEnd(48)} ${h.c.dim(size ? `${(size / 1073741824).toFixed(1)}GB` : '?')}${loaded ? h.c.sky(' loaded') : ''}${m === d.active ? h.c.amber(' default') : ''}${fit.fits ? '' : h.c.dim(`  ${fit.why}`)}`);
       }
     } },
+  // ── 0.59.12 — James: "the nexus> is for you. not me. give yourself the tools using nexus>. dude...." What the agent in a
+  //    chat Clear Glass watches needs to work on his machine: show him a page, and read (never write) logs, files and the
+  //    tree. `local` rows run in the process that hears the line (lib/nexus-read.js); secrets refused, keys redacted. ──
+  { key: 'glass.open', repo: false, usage: 'glass open <url>', about: 'show James a page in Clear Glass: the window already on that site comes to the front, else the main window goes there, else a new one',
+    need: (a) => (a.args[0] ? null : '<url>'),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/open', body: { url: /^[a-z][\w+.-]*:\/\//i.test(a.args[0]) ? a.args[0] : `${/^(?:localhost|127\.|\d+\.\d+\.\d+\.\d+)/.test(a.args[0]) ? 'http' : 'https'}://${a.args[0]}` } }),   // a local system is plain http
+    print: (d) => console.log(`  ${d.reused ? 'brought to the front' : d.navigated ? 'the main window went to' : 'opened'} ${d.url}${d.agentId ? `  (window ${d.agentId})` : ''}`) },
+  { key: 'log', repo: false, usage: 'log [autopilot|errors|<path>.log] [--lines n] [--grep pattern]', about: 'the end of a Nexus log (autopilot by default; errors = data/error.log), keys redacted',
+    maxChars: 8000,
+    local: (a) => require('../../lib/nexus-read.js').tailLog(a.args[0] || 'autopilot', { lines: a.flags.lines, grep: a.flags.grep }),
+    print: (d) => console.log(d.text) },
+  { key: 'file', repo: false, usage: 'file <path> [--from n] [--lines n]', about: 'read a file (or list a folder) of the Nexus tree, numbered — never a secret, under data/ only logs',
+    need: (a) => (a.args[0] ? null : '<path>'), maxChars: 8000,
+    local: (a) => require('../../lib/nexus-read.js').readFile(a.args[0], { from: a.flags.from, lines: a.flags.lines }),
+    print: (d) => console.log(d.text) },
+  { key: 'grep', repo: false, usage: 'grep <pattern> [--path dir] [--limit n]', about: 'search the Nexus code for a pattern: file:line: text (no node_modules, data or archive)',
+    need: (a) => (a.args[0] ? null : '<pattern>'), maxChars: 8000,
+    local: (a) => require('../../lib/nexus-read.js').grep(a.args.join(' '), { path: a.flags.path, limit: a.flags.limit }),
+    print: (d) => console.log(d.text) },
 ];
+
+/**
+ * ASK — the plain words that mean a row (0.59.11 TN2). James: "make it useful like; hooked into copilot so you can talk to
+ * nexus". copilot/lib/nexus-ask.js matches a message against these, in this order, and runs the row: no model, so it
+ * answers with Ollama down. Each entry: re (tested against the whole message), flags(m, text)/args(m, text) → what the
+ * words imply. Only rows named here are reachable by plain words; the one that writes (dump) needs his "idea:" first.
+ * Attached to the rows as row.ask, so the table stays the one place a command is described.
+ */
+export const ASK = {
+  'dump': { re: /^\s*(?:new\s+)?idea\s*[:\-–]\s*([\s\S]+)$|^\s*(?:dump|save (?:this )?idea|remember (?:this )?idea)\s*[:\-–]\s*([\s\S]+)$/i,
+    args: (m) => [(m[1] || m[2]).trim()] },
+  'census': { re: /\bcensus\b|\b(?:what(?:'s| is| are)|which|show(?: me)?|list|how many)\b[^?.!\n]{0,30}\b(?:specs?|phases?)\b|\b(?:specs?|phases?)\b[^?.!\n]{0,20}\b(?:built|unbuilt|done|open|contradicted|claimed|verified|partial|status)\b|\bwhat(?:'s| is) (?:un)?built\b|\bunbuilt\b|\bwhat(?:'s| is) left(?: to (?:build|do))?\b/i,
+    flags: (m, t) => {
+      const f = { limit: 10 };
+      if (/\bunbuilt|not built|isn'?t built\b/i.test(t)) f.specs = 'unbuilt';
+      else if (/\bpartial|half/i.test(t)) f.specs = 'partial';
+      else if (/\bunregistered|not (?:in )?(?:the )?registry\b/i.test(t)) f.specs = 'unregistered';
+      else if (/\bcontradict|gone|missing files?\b/i.test(t)) f.verdict = 'contradicted';
+      else if (/\bopen (?:phases?|work)\b|\bphases?\b[^?.!\n]{0,12}\bopen\b|\bwhat(?:'s| is) left\b/i.test(t)) f.verdict = 'open';
+      else if (/\bclaimed|unproven|not proven\b/i.test(t)) f.verdict = 'claimed';
+      return f;
+    } },
+  'models': { re: /\b(?:what|which|list|show(?: me)?)\b[^?.!\n]{0,20}\b(?:(?:ollama|llm|local) models?|models)\b|\b(?:ollama )?models?\b[^?.!\n]{0,12}\b(?:installed|loaded|fit|available)\b/i },
+  'perf': { re: /\b(?:how(?:'s| is| much)|what(?:'s| is))\b[^?.!\n]{0,20}\b(?:memory|ram|cpu|heap|load)\b|\b(?:memory|ram|cpu|heap)\b[^?.!\n]{0,12}\b(?:usage|free|left|use)\b|\bperf(?:ormance)?\b|\bhow(?:'s| is) (?:the |my )?(?:machine|computer|pc|box)\b/i },
+  'activity': { re: /\bwhat(?:'s| has)? (?:been )?happen(?:ing|ed)\b|\brecent activity\b|\bactivity log\b|\bwhat (?:did|have) (?:the )?agents? (?:do|done|been doing)\b|\bwhat failed\b/i,
+    flags: (m, t) => ({ limit: 15, ...(/\bfail/i.test(t) ? { status: 'failed' } : {}) }) },
+  'nerve': { re: /\bnerve\b|\bwhich systems (?:are )?(?:up|live|present|running|online)\b|\bwhat(?:'s| is) (?:up|running|online)\b|\bis (?:everything|nexus) (?:up|running|online)\b/i },
+  'store': { re: /\b(?:memory |shared )?store\b[^?.!\n]{0,12}\b(?:size|big|tables?)\b|\bhow big is (?:the )?(?:store|memory)\b|\btable sizes?\b/i },
+  'picks': { re: /\bwhat (?:did|have) i (?:pick|picked|hand(?:ed)?)\b|\b(?:my|the) picks\b|\bpicked elements?\b/i },
+  'access': { re: /\bwho am i\b|\baccess mode\b|\bam i signed in\b/i },
+  'ollama.tape': { re: /\bollama (?:tape|calls|runs|history)\b|\bwhat (?:did|has) ollama (?:do|done|say|said)\b/i },
+  'field.windows': { re: /\bwhat(?:'s| is) (?:each|every) window (?:doing|showing|on)\b|\bfield windows\b|\bwhere(?:'s| is) (?:the )?attention\b/i },
+};
+for (const [k, ask] of Object.entries(ASK)) { const row = SPEC.find(r => r.key === k); if (row) row.ask = ask; }
 
 function printLog(d, h, names) {
   const rows = d.rows || [];
@@ -421,6 +475,7 @@ export function makeRouteCommands(h) {
       const a = { repo, args: row.repo ? positional.slice(1) : positional, flags };
       const missing = row.need ? row.need(a) : null;
       if (missing) h.die(`${missing} is needed — usage: idearium ${row.usage}`);
+      if (row.local) { const d = await row.local(a); if (d && d.error) h.die(d.error); if (flags.json) { process.stdout.write(`${JSON.stringify(d, null, 2)}\n`); return; } row.print(d, a, h); return; }   // 0.59.12
       const rq = row.req(a);
       if (rq.error) h.die(rq.error);
       let d;
@@ -432,6 +487,26 @@ export function makeRouteCommands(h) {
     };
   }
   return out;
+}
+
+/**
+ * renderText(row, d, a) → the row's own print(), as plain text (0.59.11 TN1). Outside the terminal a command's answer was
+ * raw JSON; the pane, a watched chat and an agent now read what the terminal shows, without colour. print() is
+ * synchronous: console.log and stdout are captured for its call only. A printer that throws gives null (the caller keeps
+ * the JSON).
+ */
+const _plain = new Proxy({}, { get: () => (s) => String(s) });
+export function renderText(row, d, a = { repo: null, args: [], flags: {} }) {
+  const out = [];
+  const h = { c: _plain, header: (t) => out.push(String(t)), shortRepo: (u) => String(u || '').split('-repo-')[1] || String(u || '').slice(0, 8),
+    die: (m) => { throw new Error(m); }, port: process.env.IDEARIUM_PORT || 4800, api: () => { throw new Error('not here'); }, findRepo: () => null };
+  const log = console.log, write = process.stdout.write;
+  console.log = (...x) => out.push(x.join(' '));
+  process.stdout.write = (chunk) => { out.push(String(chunk).replace(/\n$/, '')); return true; };
+  try { row.print(d && d.data && !d.tasks && !d.rows ? { ...d, ...d.data } : d, { repo: null, args: [], flags: {}, ...a }, h); }
+  catch (_) { return null; }
+  finally { console.log = log; process.stdout.write = write; }
+  return out.join('\n').replace(/\n{3,}/g, '\n\n').replace(/[ \t]+$/gm, '').trim();
 }
 
 /** helpLines() — one line per command group, for `idearium help` */

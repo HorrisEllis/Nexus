@@ -505,6 +505,12 @@ class IpcBridge {
     this.app.get('/cli/calltos/for-url', (req, res) => res.json({ calltos: this.options?.findCalltosForUrl(req.query.url) || [] }));
     this.app.delete('/cli/calltos/:id', (req, res) => res.json(this.options?.removeCallto(req.params.id) || { error: 'options unavailable' }));
 
+    // 0.59.12 — James: "the nexus> is for you. not me. give yourself the tools using nexus>." `glass open <url>` shows a
+    // page to him: the window already on that site comes to the front, else the default window goes there, else a new one
+    this.app.post('/cli/open', async (req, res) => {
+      try { const r = await require('../main/index').openOrFocus(req.body || {}); res.status(r.ok ? 200 : 400).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
     this.app.post('/cli/bgtab', async (req, res) => {
       try { res.json(await require('../main/index').openBackgroundTab(req.body)); }
       catch (e) { res.status(500).json({ error: e.message }); }
@@ -2049,6 +2055,24 @@ class IpcBridge {
       ph.show(req.params.id);
       res.json({ ok: true });
     });
+
+    // §0.60.0 GA1 — Guardian asks for the person (guardian/lib/provider-attention.js): the agent's tab — the repo's own
+    // agent tab when the job names one — is shown with the Nexus panel: sign in, or pick the chat's input / send / reply
+    // (the picks go to Guardian through selector-assign.js, with the live check's evidence).
+    let _attention = null;
+    const attention = () => _attention || (_attention = require('../providers/attention').createAttentionHandler({
+      providerHost: ph, assign: (p) => require('../providers/selector-assign').assign(p),
+      getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
+      log: (m) => console.log(m),
+    }));
+    this.app.post('/providers/:id/attention', async (req, res) => {
+      try {
+        const r = await attention().attend(req.params.id, req.body || {});
+        try { this.sse && this.sse.emit('provider.attention', { providerId: req.params.id, ...(req.body || {}), shown: r.ok, window: r.window || null }); } catch (_) {}
+        res.status(r.ok ? 200 : 409).json(r);
+      } catch (err) { res.status(500).json({ ok: false, error: err.message }); }
+    });
+    this.app.get('/providers/attention', (req, res) => res.json({ ok: true, open: attention().state() }));
   }
 
   async stop() {

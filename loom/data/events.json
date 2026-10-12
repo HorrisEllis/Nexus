@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791606428341,
+ "generatedAt": 1791619232557,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -284,6 +284,7 @@
   },
   "nexus.clear-glass.src.ipc.bridge": {
    "emits": [
+    "guardian.listener.command-result",
     "guardian.listener.copilot-answer",
     "guardian.listener.copilot-panel",
     "guardian.listener.direct-file-write",
@@ -3524,6 +3525,12 @@
   "userscript.toggled": {
    "emitters": [
     "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "guardian.listener.command-result": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge"
    ],
    "listeners": []
   },
