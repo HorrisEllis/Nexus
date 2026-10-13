@@ -699,6 +699,8 @@ class IpcBridge {
       }
     };
     walk(this.app._router?.stack);
+    // 0.60.23 — this app is lib/micro-http.js since 0.39.261, which has no _router: the index read 0 commands on his machine
+    if (!commands.length && typeof this.app.routes === 'function') commands.push(...this.app.routes().filter(r => r.method !== 'ALL'));
     return {
       systemId: 'clear-glass', port: this.port,
       generatedAt: Date.now(),
