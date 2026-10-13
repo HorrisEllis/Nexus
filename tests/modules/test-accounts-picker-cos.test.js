@@ -174,8 +174,8 @@ function fakeSession(initial = []) {
     const CA = require(path.join(ROOT, 'clear-glass/src/providers/attention.js'));
     const panel = CA.panelScript({ provider: 'chatgpt', providerName: 'ChatGPT', reason: 'signin', loginOptional: true, accounts: [{ id: 'acct-work', label: 'Work' }], account: 'acct-work' });
     new Function(`return ${panel}`);
-    check('AT-01 the panel is the COMPARTMENT OS window: the title bar (glyph · compartment · agent · — ▢ ✕), the toolbar\'s pills and buttons, the same colours',
-      /compartment · agent/.test(panel) && /linear-gradient\(180deg,#141827,#0f121c\)/.test(panel) && /data-ui="min"/.test(panel) && /data-ui="max"/.test(panel) && /class="x" data-act="hide"/.test(panel)
+    check('AT-01 the panel is the COMPARTMENT OS window: the title bar (glyph · title · — ▢ ✕, no "compartment" label — 0.60.11), the toolbar\'s pills and buttons, the same colours',
+      !/compartment ·/i.test(panel) && /linear-gradient\(180deg,#141827,#0f121c\)/.test(panel) && /data-ui="min"/.test(panel) && /data-ui="max"/.test(panel) && /class="x" data-act="hide"/.test(panel)
       && /\.pill\.warn/.test(panel) && /background:#1b2030/.test(panel) && /Use without signing in/.test(panel) && /Save sign-in to vault/.test(panel));
     for (const k of ['input', 'send', 'resp']) new Function(`return ${CA.pickerScript(k)}`);
     check('AT-02 the picker records the node (xpath) and where it sits: x, y, w, h, rx, ry, z (its layer), zIndex, depth', /anchor: anchorOf\(cur\)/.test(CA.pickerScript('send')) && /rx: \+\(cx \/ innerWidth\)/.test(CA.pickerScript('send')) && /xpath: xpathOf\(cur\)/.test(CA.pickerScript('send')));
