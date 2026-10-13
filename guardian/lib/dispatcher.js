@@ -52,7 +52,7 @@ const _payload = (e) => (e && typeof e === 'object' && typeof e.type === 'string
 
 function createDispatcher(deps) {
   const { updateJob, bus, ncp, pendingQueue, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek, pingTimeoutMs, completionTimeoutMs,
-          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, getJob, pickupMs, accountRouting, useAccount } = deps;   // §0.60.2: optional accountRouting (lib/account-routing.js) + useAccount(provider, accountId, job) — the tab switched to the routed account before the job is typed   // §HP14/HP16 0.55.2: optional getJob(id) — the job as it is now; pickupMs — the pickup watch   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
+          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, getJob, pickupMs, accountRouting, useAccount, usageOf } = deps;   // §0.60.2: optional accountRouting (lib/account-routing.js) + useAccount(provider, accountId, job) — the tab switched to the routed account before the job is typed   // §HP14/HP16 0.55.2: optional getJob(id) — the job as it is now; pickupMs — the pickup watch   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
   for (const [name, fn] of Object.entries({ updateJob, bus, ncp, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek })) {
     if (!fn) throw new Error(`[dispatcher] missing required dependency: ${name}`);
   }
@@ -638,8 +638,23 @@ function createDispatcher(deps) {
     // cookies from the JAA vault) before anything is typed. No rule and no account on the job: nothing changes. A
     // switch that fails fails the job with why — it never runs as an identity it was not routed to.
     if (accountRouting && typeof useAccount === 'function') {
+      // 0.60.25 — fallback chaining: the tab says its account hit the usage limit (its heartbeat, after the last switch
+      // settled) → that account rests; the next one in the provider's chain takes the job; none left → a rate limit,
+      // so the ladder moves on rather than typing into a spent account
+      if (typeof usageOf === 'function' && typeof accountRouting.markExhausted === 'function') {
+        try {
+          const u = usageOf(job.provider), cur = accountRouting.current(job.provider);
+          if (u && u.limited === true && cur && (u.detectedAt || 0) > accountRouting.switchedAt(job.provider) + 10000) accountRouting.markExhausted(job.provider, cur, { why: u.message || 'usage limit' });
+        } catch (e) { console.warn(`[guardian] ${job.id}: usage check failed: ${e.message}`); }
+      }
       let routed = null;
-      try { routed = accountRouting.route(job); } catch (e) { console.warn(`[guardian] ${job.id}: account routing failed (job runs as the tab is): ${e.message}`); }
+      try { routed = accountRouting.route(job); if (typeof accountRouting.fallback === 'function') routed = accountRouting.fallback(job, routed); } catch (e) { console.warn(`[guardian] ${job.id}: account routing failed (job runs as the tab is): ${e.message}`); }
+      if (routed && routed.exhaustedAll) {
+        const error = `rate-limit — ${routed.why}; nothing was typed`;
+        updateJob(job.id, { status: 'error', error, errorClass: 'rate-limit', failedAt: Date.now() });
+        bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'account', class: 'rate-limit' });
+        return true;
+      }
       if (routed && routed.accountId) {
         let sw;
         try { sw = await useAccount(job.provider, routed.accountId, job); } catch (e) { sw = { ok: false, error: e.message }; }
@@ -649,6 +664,7 @@ function createDispatcher(deps) {
           bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'account' });
           return true;
         }
+        if (typeof accountRouting.noteSwitched === 'function') accountRouting.noteSwitched(job.provider, routed.accountId);
         updateJob(job.id, { accountId: routed.accountId, accountWhy: routed.why, accountSwitched: !!sw.switched });
         bus.emit('guardian.job.account', { jobId: job.id, provider: job.provider, accountId: routed.accountId, why: routed.why, switched: !!sw.switched });
       }

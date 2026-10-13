@@ -28,7 +28,7 @@ const crypto = require('crypto');
 
 const MODULE_ID = 'guardian.account-routing';
 const VERSION = '1.0.0';
-const T_RULES = 'account_rules', T_LOG = 'account_route_log';
+const T_RULES = 'account_rules', T_LOG = 'account_route_log', T_EXH = 'account_exhausted';   // 0.60.25 T_EXH: accounts at their limit
 const MATCH_FIELDS = ['hat', 'intent', 'repo'];
 const LOG_KEEP = 500;
 
@@ -75,7 +75,7 @@ function createAccountRouting({ dir = process.env.GUARDIAN_ACCOUNTS_DIR || path.
   const st = () => {
     if (_st) return _st;
     const { JaaStore } = require('../jaa-store.js');
-    _st = new JaaStore(path.join(dir, 'jaa'), { tables: [T_RULES, T_LOG], settings: false });
+    _st = new JaaStore(path.join(dir, 'jaa'), { tables: [T_RULES, T_LOG, T_EXH], settings: false });
     return _st;
   };
 
@@ -126,12 +126,53 @@ function createAccountRouting({ dir = process.env.GUARDIAN_ACCOUNTS_DIR || path.
     }
     return out;
   }
+  // 0.60.25 — James: "i have like 9 or 12 accounts, and i would love to be able to add them to clearglass and use routing
+  // each time tokens run out. like account routing and fallback chaining" · "check the accounts, account routing, fallback
+  // routing." The chain is a provider's every-job rules (no hat/intent/repo), highest priority first. An account whose
+  // tab reported its usage limit is exhausted until it resets (REST_MS, 5 h unless said); route() skips it and says so,
+  // and when every account in the chain is spent, route() says that — the dispatcher fails the job as a rate limit so the
+  // ladder moves on to the next agent instead of typing into a spent account.
+  const REST_MS = Number(process.env.GUARDIAN_ACCOUNT_REST_MS) || 5 * 3600 * 1000;
+  const _current = new Map(), _switchedAt = new Map();
+  function chain(provider) {
+    const seen = new Set();
+    return rules({ provider }).filter(r => r.enabled !== false && !r.specificity).sort((a, b) => (b.priority || 0) - (a.priority || 0) || (a.updatedAt || 0) - (b.updatedAt || 0))
+      .map(r => r.account).filter(a => !seen.has(a) && seen.add(a));
+  }
+  function exhausted(provider) {
+    const t = now();
+    return st().all(T_EXH, { provider: _norm(provider) }).filter(r => (r.until || 0) > t);
+  }
+  function isExhausted(provider, account) { return exhausted(provider).find(r => r.account === account) || null; }
+  function markExhausted(provider, account, { until = null, why = null } = {}) {
+    if (!provider || !account) return { ok: false, error: 'provider and account required' };
+    const row = { id: `${_norm(provider)}:${account}`, provider: _norm(provider), account, at: now(), until: until || now() + REST_MS, why: why ? String(why).slice(0, 200) : 'its tab reported the usage limit' };
+    st().upsert(T_EXH, row); st().flushAll();
+    return { ok: true, exhausted: row };
+  }
+  function clearExhausted(provider, account) { const n = st().delete(T_EXH, account ? { id: `${_norm(provider)}:${account}` } : { provider: _norm(provider) }); st().flushAll(); return { ok: true, cleared: n || 0 }; }
+  function current(provider) { return _current.get(_norm(provider)) || null; }
+  function noteSwitched(provider, account) { _current.set(_norm(provider), account); _switchedAt.set(_norm(provider), now()); }
+  function switchedAt(provider) { return _switchedAt.get(_norm(provider)) || 0; }
+  /** fallback(job, out) — out's account at its limit (or none, with a chain): the next account in the chain that is not */
+  function fallback(job, out) {
+    const c = chain(job.provider);
+    const want = out ? out.accountId : (current(job.provider) || null);
+    const spent = want ? isExhausted(job.provider, want) : null;
+    if (!spent && out) return out;
+    if (!spent && !out) return null;
+    const next = c.find(a => a !== want && !isExhausted(job.provider, a));
+    const when = new Date(spent.until).toISOString().slice(11, 16);
+    if (!next) return { accountId: null, exhaustedAll: true, why: `every ${job.provider} account in the chain is at its limit (${[...new Set([want, ...c])].join(', ')}); ${want} until ${when} UTC` };
+    return { accountId: next, rule: null, fallback: true, why: `fallback: ${want} is at its limit until ${when} UTC (${spent.why}) — the next account in the chain` };
+  }
+
   function log({ provider, limit = 50 } = {}) {
     return st().all(T_LOG, provider ? { provider: _norm(provider) } : undefined, { orderBy: 'at', order: 'DESC', limit });
   }
   function flush() { try { st().flushAll(); } catch (_) {} }
 
-  return { MODULE_ID, VERSION, rules, setRule, removeRule, route, log, flush };
+  return { MODULE_ID, VERSION, rules, setRule, removeRule, route, log, flush, chain, exhausted, isExhausted, markExhausted, clearExhausted, current, noteSwitched, switchedAt, fallback };
 }
 
 /**
@@ -153,8 +194,21 @@ function cgUseAccount(provider, accountId, job = {}, { port = parseInt(process.e
   });
 }
 
+/** cgStartProvider(provider) — 0.60.25: Clear Glass opens the provider's tab (POST :7702/providers/:id/start), hidden */
+function cgStartProvider(provider, { port = parseInt(process.env.CLEARGL_IPC_PORT || '7702', 10), timeoutMs = 30000 } = {}) {
+  const http = require('http');
+  return new Promise((resolve) => {
+    const data = JSON.stringify({ show: false });
+    const req = http.request({ host: '127.0.0.1', port, path: `/providers/${encodeURIComponent(provider)}/start`, method: 'POST', timeout: timeoutMs,
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } }, (res) => { let raw = ''; res.on('data', (c) => { raw += c; }); res.on('end', () => resolve({ ok: res.statusCode < 400, status: res.statusCode, body: raw.slice(0, 300) })); });
+    req.on('error', (e) => resolve({ ok: false, error: `Clear Glass unreachable: ${e.message}` }));
+    req.on('timeout', () => { req.destroy(); resolve({ ok: false, error: `no answer in ${timeoutMs} ms` }); });
+    req.write(data); req.end();
+  });
+}
+
 let _one = null;
 /** routing() — the process-wide instance (guardian/server.js and the dispatcher share it) */
 function routing() { return _one || (_one = createAccountRouting()); }
 
-module.exports = { MODULE_ID, VERSION, MATCH_FIELDS, intentOf, repoOf, match, pick, createAccountRouting, routing, cgUseAccount };
+module.exports = { MODULE_ID, VERSION, MATCH_FIELDS, intentOf, repoOf, match, pick, createAccountRouting, routing, cgUseAccount, cgStartProvider };

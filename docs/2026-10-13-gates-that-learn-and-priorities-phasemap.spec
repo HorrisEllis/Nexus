@@ -150,3 +150,35 @@ planning, review only when the cheap check fails."
        GitHub App id is the later, multi-repo form.
   - Status: OPEN, ranked after the live run and AC1.
 
+## ADDENDUM 2026-10-13 — AC1 account fallback chaining built (0.60.25)
+
+James: "not working. can you get it working. check the accounts, account routing, fallback routing."
+
+What his run showed (SB9): the ladder ran to rung 5, where claude sent back an empty reply, then rung 6, where deepseek
+failed "not connected — no deepseek tab open in guardian". Ladder exhausted.
+
+What was there:
+- Account rules by hat, intent or repo (guardian/lib/account-routing.js, 0.60.2).
+- Clear Glass switching a tab's account.
+- Every tab's heartbeat reporting `usage.limited`.
+
+What was missing:
+- Anything that acts on a limit.
+- Opening a missing tab.
+
+Built:
+- The chain is a provider's every-job rules, highest priority first.
+- A tab that reports its limit makes its account rest (5 h). The next account takes the job, and the run says why.
+- When every account is resting, the job fails as rate-limit and the ladder moves to the next agent.
+- A job whose provider has no tab asks Clear Glass to open it.
+- Where to set it:
+  - guardian GET/POST /api/accounts/chain and POST /api/accounts/rest;
+  - Idearium /api/accounts/* (passes through to Guardian);
+  - the command row accounts.chain;
+  - Idearium → Settings → Routing → Accounts (order them, save; wake a resting one).
+
+To confirm:
+- Claude's empty reply in that run has another cause. Possibly its tab was signed out or at its limit; the next run's
+  rows will say which.
+- The 5 h rest is a default. A reset time read from the banner would be better.
+

@@ -2371,6 +2371,7 @@ const ROUTE_CAP = {
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,
   'repo.run': CAPS.READ_IDEAS, 'repo.run.control': CAPS.WRITE_IDEAS,   // §0.60.0 RS1 — play · pause · rewind   // §0.39.371 VM1
   'system.lean': CAPS.READ_IDEAS, 'system.lean.set': CAPS.ADMIN,   // 0.60.20 lean mode
+  'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
   'repo.system': CAPS.READ_IDEAS, 'repo.system.control': CAPS.ADMIN,   // §0.39.372 NC2 — stopping a system is an admin act
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
@@ -2634,6 +2635,9 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','desktop'],        'repo.desktop.start'],
     ['DELETE', ['api','repos',    ':uuid','desktop'],        'repo.desktop.stop'],
     ['GET',    ['api','repos',    ':uuid','system'],  'repo.system'],      // §0.39.372 NC2 — a Nexus system repo's live system: its processes as its supervisor sees them
+    ['GET',    ['api','accounts','chain'],  'accounts.chain'],      // 0.60.25 — the fallback chain (guardian owns it)
+    ['POST',   ['api','accounts','chain'],  'accounts.chain.set'],
+    ['POST',   ['api','accounts','rest'],   'accounts.rest'],
     ['GET',    ['api','system','lean'],   'system.lean'],        // 0.60.20 — lean mode: what is held, saved for the next boot
     ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
     ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
@@ -4586,6 +4590,18 @@ async function handle(req, res, route, query, body) {
     // 0.60.20 — James: "start lean? why not just have that a toggle? i want to test it now" · "idearium for the lean
     // toggle". Lean mode: the services a build does not use (lib/lean-mode.js HOLD) are stopped now through the
     // supervisor, and saved so `npm run start:all` boots without them. Off starts them again.
+    // 0.60.25 — James: "check the accounts, account routing, fallback routing." The chain is Guardian's (lib/account-routing.js);
+    // Idearium shows and sets it, so the one Settings page has it (no command line, no second screen).
+    case 'accounts.chain': case 'accounts.chain.set': case 'accounts.rest': {
+      let r;
+      try {
+        r = action === 'accounts.chain'
+          ? await _nexusClient.get('guardian', `/api/accounts/chain?provider=${encodeURIComponent(query.provider || '')}`, { timeout: 8000 })
+          : await _nexusClient.post('guardian', action === 'accounts.rest' ? '/api/accounts/rest' : '/api/accounts/chain', body || {}, { timeout: 8000 });
+      } catch (e) { return err(res, 502, `guardian is not answering: ${e.message}`); }
+      if (!r || r.ok === false) return err(res, 400, (r && r.error) || 'guardian refused it');
+      return ok(res, r);
+    }
     case 'system.lean':
     case 'system.lean.set': {
       const LM = _require('../../lib/lean-mode.js');
