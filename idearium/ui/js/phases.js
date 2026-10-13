@@ -26,7 +26,7 @@
 // moved; the phase on the right with its block's own text, its runs (the Plan's ledger), its files and waiting changes
 // (open in Code), and build · status · open in the Plan · open its spec. Table and Maps stay; Board became Lanes.
 const PHASES = { uuid: null, data: null, view: 'lanes', open: null, sort: { k: 'order', dir: 1 },
-  filter: { q: '', status: 'all', map: 'all', mine: true, ready: false }, busy: false, adding: false,
+  filter: { q: '', status: 'all', map: 'all', mine: true, ready: false, files: false }, busy: false, adding: false,
   specs: null, spec: null, thread: null, threadErr: null, plan: null, showDone: _phShowDoneSaved() };
 const _PH_STATUS_COLOR = { complete: 'var(--mint)', active: 'var(--sky)', planned: 'var(--text2)' };
 const _PH_RUN_COLOR = { building: 'var(--sky)', replied: 'var(--mint)', failed: 'var(--coral)', refused: 'var(--coral)', escalating: 'var(--amber)', retrying: 'var(--amber)', proven: 'var(--mint)', unproven: 'var(--coral)', interrupted: 'var(--amber)' };   // §HP2 interrupted: idearium restarted mid-run
@@ -99,6 +99,7 @@ function _phFiltered() {
     if (f.status === 'blocked' && !(p.status !== 'complete' && p.blocked_by.length)) return false;
     if (['planned', 'active', 'complete'].includes(f.status) && p.status !== f.status) return false;
     if (f.ready && !p.ready) return false;
+    if (f.files && !(p.files || []).length) return false;   // 0.60.24 — James: "i can barely find any": the phases a build can start from
     if (q && !`${p.phase_key} ${p.title} ${p.name || ''} ${p.map} ${(p.closes || []).join(' ')} ${(p.files || []).join(' ')} ${(p.blocks || []).join(' ')}`.toLowerCase().includes(q)) return false;
     return true;
   });
@@ -155,6 +156,7 @@ function _phPaint() {
       ${PHASES.spec ? '' : `<select onchange="phasesFilter('map',this.value)"><option value="all">every phasemap</option>${mapOpts}</select>`}
       ${d.scope.system ? `<label><input type="checkbox" ${f.mine ? 'checked' : ''} onchange="phasesFilter('mine',this.checked)"> ${escapeHtml(d.scope.system)}'s only</label>` : ''}
       <label><input type="checkbox" ${f.ready ? 'checked' : ''} onchange="phasesFilter('ready',this.checked)"> ready only</label>
+      <label title="phases that name the files they build"><input type="checkbox" ${f.files ? 'checked' : ''} onchange="phasesFilter('files',this.checked)"> names files</label>
       <span class="ph-views">${views}</span>
       <button class="action-btn" onclick="phasesAddOpen()">+ phase</button>
       ${d.scope.source === 'nexus' ? '' : '<button class="action-btn" title="grow the system from its spec: new components slotted into the registry and the nodes, a phasemap of them here, their code planned (greyed until coded)" onclick="phasesExpandOpen()">+ expand</button>'}
