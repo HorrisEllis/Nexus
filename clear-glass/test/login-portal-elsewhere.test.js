@@ -24,7 +24,7 @@ const lp = new LoginPortal({ options, vault, registry: () => [{ id: 'chatgpt', n
   st = await lp.status({ id: 'a1', provider: 'chatgpt' });
   assert.strictEqual(st.liveCookies, 1, 'and copied into the account\'s own session, so its agent tab is signed in too');
   assert.strictEqual(st.session.authCookies, 1, 'the status now reads signed in');
-  const none = await lp.capture({ id: 'a1', provider: 'chatgpt', from: 'ncp' });
-  assert.ok(!none.ok && /sign in there first/.test(none.error), 'nothing in the provider tab: said, not faked');
+  const none = await lp.capture({ id: 'a1', provider: 'chatgpt', from: 'ncp' });   // 0.60.13: the provider tab is no longer "elsewhere" — it is the account's own session
+  assert.ok(!none.ok, 'no such place to take a sign-in from: said, not faked');
   console.log('login-portal-elsewhere: ok');
 })().catch(e => { console.error(e); process.exit(1); });

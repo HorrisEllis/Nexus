@@ -547,3 +547,23 @@ spec:
         (exists) and RQ18 (test and attack intents). The proof is his: he uploads real projects and each of the four is
         done on one of them, end to end, with what failed written down.
       proof: "one of his uploaded projects: imported, its tests run in COS, one request expanded it through a contract, one failure observed and fixed"
+
+    # ── ADDENDUM 1.2.0 (2026-10-13) ─────────────────────────────────────────────
+    AS1_provider_tab_runs_as_the_default_account:
+      layer: backend
+      systems: [clear-glass, guardian]
+      component: clear-glass.src.providers.account-switch
+      status: "DONE — 0.60.12 (tests 9/9; not yet run live in Clear Glass)"
+      james: '"the logins for the agent providers needs to be all the same. the accounts and sign in, isn\'t wired into the provider tabs in clearglass. fix that please."'
+      context: >-
+        Accounts & sign-in (login-portal) saved to persist:mesh-<provider>-<id> and the vault; provider tabs ran in
+        persist:ncp-<provider>; only guardian's per-job routing (account-switch.use) crossed between them. Read from his
+        screenshots: ChatGPT's tab showed Log in while its account said Signed in. The coder's reading: "the same" means one
+        identity per provider, so the tab follows the default account. To confirm: whether he wants the tab to follow guardian's
+        per-job routing for the whole job (it still does) or return to the default after it (the next sync does).
+      files: [clear-glass/src/providers/account-switch.js, clear-glass/src/providers/host.js, clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/renderer/settings/sections/accounts.js, clear-glass/renderer/settings/sections/providers.js, idearium/cli/route-commands.js]
+      does: >-
+        sync(provider) restores the default account's saved sign-in into the tab before its first load; a sign-in the tab
+        holds that the account lacks is saved to the account, never overwritten. Saving a session, starring and signing out
+        follow through to the tab and say what they did. signedOut() signs the tab out when it runs as that account.
+      proof: "clear-glass/test/provider-account-sync.test.js 9/9; then live: sign in once, restart Clear Glass, the ChatGPT tab opens signed in"

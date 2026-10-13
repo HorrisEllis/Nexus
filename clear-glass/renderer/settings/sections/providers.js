@@ -23,16 +23,39 @@
       const [list, opts, accounts, defaults] = await Promise.all([call(() => cg.providers.list(), 'providers'), call(() => cg.options.get(), 'options'),
         cg.accounts.list().catch(() => []), cg.accounts.defaults().catch(() => ({}))]);
       const auto = opts.autoStartOnBoot || {};
+      // §0.60.12 — James: "the logins for the agent providers needs to be all the same." What each tab really runs as (the
+      // account-switch record), beside the account Accounts & sign-in says it should (the dispatch account).
+      const tabAcct = {};
+      // 0.60.13 merge: an older preload has no providers.account — the section still renders
+      await Promise.all(list.map(async p => { tabAcct[p.id] = await (typeof cg.providers.account === 'function' ? cg.providers.account(p.id) : Promise.resolve(null)).catch(() => null); }));
+      const labelOf = (id) => { const a = accounts.find(x => x.id === id); return a ? a.label : (id ? String(id).slice(0, 8) : null); };
       // §0.39.265 — linked to Accounts & sign-in and Agent mesh: which account
       // the mesh signs in with for this provider, and a jump to each.
       const acctLine = (p) => {
         const mine = accounts.filter(a => (a.agentKeys || []).includes(p.id));
         const def = mine.find(a => a.id === defaults[p.id]) || mine[0];
-        return h('div', { class: 'links' },
+        const ta = tabAcct[p.id];
+        const runsAs = ta && ta.current ? labelOf(ta.current) : null;
+        const inSync = def && ta && ta.current === def.id;
+        const links = h('div', { class: 'links' },
           h('button', { class: 'link-btn', onclick: () => goto('accounts', p.id),
-            text: mine.length ? `${mine.length} account${mine.length === 1 ? '' : 's'} \u00B7 mesh uses \u201C${def.label}\u201D` : 'No accounts \u2014 add one' }),
+            text: mine.length ? `${mine.length} account${mine.length === 1 ? '' : 's'} \u00B7 ${p.running ? 'tab runs as' : 'tab will run as'} \u201C${def.label}\u201D` : 'No accounts \u2014 add one' }),
           h('span', { text: ' \u00B7 ' }),
           h('button', { class: 'link-btn', onclick: () => goto('mesh', p.id), text: 'Agent mesh' }));
+        // the tab is signed in as something other than the dispatch account (or as nothing Nexus knows): say so, one press fixes it
+        if (def && !inSync) {
+          links.append(h('span', { text: ' \u00B7 ' }),
+            h('span', { class: 'blurb', text: runsAs ? `signed in as \u201C${runsAs}\u201D now` : 'sign-in not applied yet' }),
+            h('span', { text: ' ' }),
+            btn('Use \u201C' + def.label + '\u201D sign-in', (e) => busy(e.currentTarget, async () => {
+              const r = await call(() => cg.providers.syncAccount(p.id), 'sync sign-in');
+              if (r && r.ok === false) toast(`${p.name}: ${r.error || r.why}`, 'warn', 8000);
+              else if (r && r.action === 'skipped') toast(`${p.name}: ${r.why}`, 'warn', 8000);
+              else toast(r && r.action === 'saved' ? `${p.name} tab\u2019s sign-in saved to \u201C${def.label}\u201D` : `${p.name} tab now runs as \u201C${def.label}\u201D`);
+              rerender();
+            }), 'sm'));
+        }
+        return links;
       };
       const rows = list.map(p => {
         const status = p.running ? chip(p.status || 'running', p.status === 'crashed' ? 'bad' : 'ok') : chip('stopped', 'plain');

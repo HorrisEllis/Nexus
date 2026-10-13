@@ -171,12 +171,13 @@ const REGISTRY = [{ id: 'claude', name: 'Claude', url: 'https://claude.ai', colo
   await test('LP-01', 'opens the provider sign-in in EXACTLY the partition agent-mesh spawn() uses, sandboxed, no node', async () => {
     const r = await portal.open({ id: A.id, provider: 'claude' });
     const w = E.windows[E.windows.length - 1];
-    assert.strictEqual(r.partition, `persist:mesh-claude-${A.id}`);
+    assert.strictEqual(r.partition, 'persist:ncp-claude', '0.60.13: the provider\'s ONE session (the provider tab\'s), not a per-account mesh jar');
     assert.strictEqual(w.opts.webPreferences.partition, partitionFor('claude', A.id));
     assert.strictEqual(w.opts.webPreferences.sandbox, true); assert.strictEqual(w.opts.webPreferences.nodeIntegration, false);
     assert.strictEqual(w.url, 'https://claude.ai/login');
     const mesh = fs.readFileSync(path.join(CG, 'src/mesh/agent-mesh.js'), 'utf8');
-    assert.ok(mesh.includes('`persist:mesh-${agentKey}-${accountId || \'default\'}`'), 'mesh partition scheme unchanged — the portal and the mesh agree');
+    assert.ok(!mesh.includes('`persist:mesh-${agentKey}-'), 'the mesh no longer opens its own persist:mesh-* jar');
+    assert.ok(mesh.includes('hub.partition(agentKey)') && /webviewPartition: partition/.test(mesh), 'the mesh tab and its webview run in the same one session the portal signs in to');
     assert.ok(/vault\.restore\(\{ agentId: agentKey, accountId/.test(mesh), 'mesh restores by {agentId: provider, accountId} — the key capture writes');
   });
   await test('LP-02', 'opening again reuses and focuses the same window (idempotent)', async () => {
@@ -215,7 +216,7 @@ const REGISTRY = [{ id: 'claude', name: 'Claude', url: 'https://claude.ai', colo
   await test('LP-07', 'status reports live cookies, vault copy, identity, credential and default', async () => {
     opts.setDefaultAccount('claude', A.id);
     const s = await portal.status({ id: A.id, provider: 'claude' });
-    assert.ok(s.portalOpen); assert.strictEqual(s.liveCookies, 2); assert.ok(s.vault.stored); assert.strictEqual(s.identity.accountId, 'james@rheon.world'); assert.ok(s.isDefault);
+    assert.ok(!s.portalOpen, '0.60.13: one session per provider — opening B\'s sign-in closed A\'s window'); assert.ok(portal.list().some(p => p.id === B.id)); assert.strictEqual(s.liveCookies, 2); assert.ok(s.vault.stored); assert.strictEqual(s.identity.accountId, 'james@rheon.world'); assert.ok(s.isDefault);
     const sb = await portal.status({ id: B.id, provider: 'claude' });
     assert.strictEqual(sb.credential.username, 'b@x.io');
   });

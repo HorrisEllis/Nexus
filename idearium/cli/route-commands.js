@@ -339,6 +339,15 @@ export const SPEC = [
         if (a.flags.html && p.html) console.log(h.c.dim(`      ${p.html.slice(0, 600)}`));
       }
     } },
+  // §0.60.12 — James: "the logins for the agent providers needs to be all the same. the accounts and sign in, isn't wired into
+  // the provider tabs in clearglass." A provider tab runs as the provider's default account (Accounts & sign-in). This brings
+  // one tab, or every provider's, to it, and says what it did to each. Agents get what the Provider tabs page's button gives a person.
+  { key: 'glass.signin', repo: false, usage: 'glass signin [provider]', about: 'bring a provider tab (or every one) to its default account\'s saved sign-in in Clear Glass; says what it did per provider',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: a.args[0] ? `/providers/${encodeURIComponent(a.args[0])}/account/sync` : '/providers/account/sync', body: {} }),
+    print: (d, a, h) => {
+      const rows = d.results || [d];
+      for (const r of rows) console.log(`  ${r.ok === false ? h.c.coral('✗') : h.c.mint('✓')} ${(r.provider || a.args[0] || '').padEnd(11)} ${r.action || ''}${r.accountId ? h.c.dim(`  as ${r.accountId}`) : ''}${r.why || r.error ? h.c.dim(`  ${r.why || r.error}`) : ''}`);
+    } },
   { key: 'field.windows', repo: false, usage: 'field windows', about: 'what the field is doing in each Clear Glass window: its last map, spotlight and pointer, and how lately the page changed',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/attention' }),
     print: (d, a, h) => _printWindows(d.windows || [], h) },

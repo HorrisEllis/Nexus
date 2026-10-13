@@ -355,6 +355,8 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     stop:  (providerId)        => ipcRenderer.invoke('providers:stop',  { providerId }),
     show:  (providerId)        => ipcRenderer.invoke('providers:show',  { providerId }),
     deploy:(providerId)        => ipcRenderer.invoke('providers:deploy',{ providerId }),
+    account:     (providerId)  => ipcRenderer.invoke('providers:account',     { providerId }),   // §0.60.12 which account the tab runs as
+    syncAccount: (providerId)  => ipcRenderer.invoke('providers:syncAccount', { providerId }),   // §0.60.12 bring it to the dispatch account
   },
 
   // §SELECTOR-ASSIGN 0.39.251 — element picker → guardian's selector map.

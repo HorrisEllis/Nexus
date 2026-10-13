@@ -300,9 +300,7 @@ function derivePort(compartmentId, base, span) {
 /** desktopPorts(compartmentId) -> { display, vncPort, wsPort } — where a headless VM's screen is (§0.39.279). */
 function desktopPorts(compartmentId) {
   const display = derivePort(String(compartmentId), 0, 100);
-  // 0.60.12 — sshPort: the guest's sshd (22) forwarded to the host's loopback on 2200+N (James: "cant move the mouse,
-  // connect to the terminal, or anything regardless")
-  return { display, vncPort: 5900 + display, wsPort: 5700 + display, sshPort: 2200 + display };
+  return { display, vncPort: 5900 + display, wsPort: 5700 + display };
 }
 
 // ─── Argv construction ──────────────────────────────────────────────────────────
@@ -341,8 +339,7 @@ function buildQemuArgs(vmConfig, compartmentId, name) {
 
   // Network
   if (vmConfig.network === 'nat') {
-    // 0.60.12 — ssh into the VM: the guest's port 22 on the host's loopback only, 2200+N (desktopPorts)
-    args.push('-netdev', `user,id=net0,hostfwd=tcp:127.0.0.1:${2200 + derivePort(compartmentId, 0, 100)}-:22`);
+    args.push('-netdev', 'user,id=net0');
     // id=nic0 lets QMP `set_link nic0 off` cut the network mid-run (cos/testenv:
     // dependencies install online, then the tests run with the cable pulled).
     args.push('-device', 'virtio-net-pci,netdev=net0,id=nic0');
@@ -360,9 +357,6 @@ function buildQemuArgs(vmConfig, compartmentId, name) {
     // §0.39.279 — the same display as a websocket on 5700+N, so the desktop viewer (idearium/ui/desktop.html, noVNC)
     // opens it in Clear Glass without a separate VNC client. Loopback only, like the VNC port.
     args.push('-vnc', `127.0.0.1:${vncDisplayNum},websocket=${5700 + vncDisplayNum}`);
-    // 0.60.12 — an absolute pointer: without it the guest has only a relative PS/2 mouse, which a VNC viewer cannot
-    // steer (the pointer never follows), so the desktop could be seen but not used
-    args.push('-device', 'qemu-xhci', '-device', 'usb-tablet');
   } else {
     args.push('-display', process.platform === 'linux' ? 'gtk' : 'default');
   }

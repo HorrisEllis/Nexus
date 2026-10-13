@@ -210,6 +210,10 @@ const components = [
   _c('accounts.portal.signOut',    'IPC', 'accounts:portal:signOut',    'Clear the account\'s partition and delete its vault copy',            { tags: ['accounts', 'portal', 'vault'] }),
   _c('accounts.portal.credentials','IPC', 'accounts:portal:credentials','Seal optional sign-in credentials in the password vault for pre-fill', { tags: ['accounts', 'portal', 'passwords', 'security'] }),
   _c('accounts.portal.list',       'IPC', 'accounts:portal:list',       'List open sign-in windows',                                            { tags: ['accounts', 'portal'] }),
+  // 0.60.12 — the provider tab runs as the provider's default account (src/providers/account-switch.js sync/signedOut; host.js beforeLoad; consumers: main/index.js, ipc/bridge.js, Settings → Provider tabs and Accounts)
+  _c('providers.account',          'IPC',  'providers:account',                 'Which account a provider tab runs as, the provider\'s dispatch account, and the saved sign-ins', { tags: ['accounts', 'providers'] }),
+  _c('providers.syncAccount',      'IPC',  'providers:syncAccount',             'Bring a provider tab to its default account\'s saved sign-in (or save the tab\'s sign-in to it)', { tags: ['accounts', 'providers', 'vault'] }),
+  _c('providers.account.sync',     'POST', '/providers/:id/account/sync',       'Same, over HTTP; `glass signin [provider]`', { tags: ['accounts', 'providers', 'vault'] }),
   _c('vault.status',               'IPC', 'vault:status',               'Which key protects each vault — OS-sealed (safeStorage) or legacy',    { tags: ['vault', 'security'] }),
   _c('macros.create',              'IPC', 'macros:create',              'Create a macro through macro.js\'s own validation (step builder)',     { tags: ['macros'] }),
   _c('macros.delete',              'IPC', 'macros:delete',              'Delete a macro (soft-delete, audit trail kept)',                       { tags: ['macros'] }),

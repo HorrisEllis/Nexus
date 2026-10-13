@@ -169,7 +169,10 @@ class AgentMesh {
   // main/index.js's real boot path wires the real RewindEngine in, which
   // turns send()'s labeled snapshot below from a no-op into a real
   // rollback point.
-  constructor({ ctxMgr, driver, sse, seam, vault, accounts, rewind }) {
+  constructor({ ctxMgr, driver, sse, seam, vault, accounts, rewind, accountSwitch = null, sessionHub = null }) {
+    // §0.60.13 — one cookie session per provider (src/cookies/session-hub.js); both are lazy getters (made after the mesh)
+    this._acctSwitch = typeof accountSwitch === 'function' ? accountSwitch : () => accountSwitch;
+    this._sessionHub = typeof sessionHub === 'function' ? sessionHub : () => sessionHub;
     this.ctxMgr   = ctxMgr;
     this.driver   = driver;
     this.sse      = sse;
@@ -370,19 +373,26 @@ class AgentMesh {
     // openBackgroundTab in the same commit as this fix) preserves the
     // real multi-account cookie isolation the old ctxMgr-based
     // approach provided — not traded away for this real fix.
-    let windowId = null, cookiesRestored = 0, realSession = null;
+    let windowId = null, cookiesRestored = 0, realSession = null, switched = null;
     try {
-      const partition = guardianOwned
-        ? `persist:ncp-${agentKey}`
-        : `persist:mesh-${agentKey}-${accountId || 'default'}`;
-      const opened = await require('../main/index.js').openBackgroundTab({ agentId: contextId, url: def.url, partition });
+      // §0.60.13 — James: "providers, accounts, and agent mesh all need to be using the same cookies." This used to open
+      // persist:mesh-<agent>-<account> (a jar nothing else read: the Accounts page signed in there, the provider tab in
+      // persist:ncp-<agent>, and the page itself — the <webview> — in neither: it ran in the app's default session). Now every
+      // agent tab runs in the provider's ONE session (persist:ncp-<agent>), and the webview is put in it too.
+      const hub = this._sessionHub();
+      const partition = hub ? hub.partition(agentKey) : `persist:ncp-${agentKey}`;
+      // the session is signed in as one account at a time: an agent tab for another account brings it to that account first
+      const as = this._acctSwitch();
+      if (as && accountId) { try { switched = await as.use(agentKey, accountId, { reason: 'agent tab', reload: false }); cookiesRestored = (switched && switched.restored) || 0; } catch (_) { switched = null; } }
+      const opened = await require('../main/index.js').openBackgroundTab({ agentId: contextId, url: def.url, partition, webviewPartition: partition });
       windowId = opened.agentId;
       realSession = opened.session || null;
     } catch (err) {
       this.sse.emit('mesh.spawn.window_error', { agentKey, contextId, error: err.message, ts: Date.now() });
     }
 
-    if (this.vault) {
+    // with the account switch the session already runs as the account (above); the direct restore is only the fallback
+    if (this.vault && !(switched && switched.ok)) {
       try {
         const r = await this.vault.restore({ agentId: agentKey, accountId, ses: realSession });
         cookiesRestored = r?.restored || 0;

@@ -101,6 +101,10 @@ class ProviderHost {
     // it lazily on next genuine use (start(), already real) — this is a
     // real idle layer on top of both, not a third mechanism.
     this._lastUsed = new Map(); // providerId → timestamp of last real dispatch
+    // §0.60.12 — James: "the logins for the agent providers needs to be all the same. the accounts and sign in, isn't wired into
+    // the provider tabs." main/index.js sets this to account-switch's sync(): before a tab's first page load the provider's
+    // dispatch account (Accounts & sign-in) has its saved sign-in put in this session, so the tab opens signed in as it.
+    this.beforeLoad = null;
     this._pending   = new Map(); // providerId → in-flight ensureStarted() promise, so concurrent callers share one real start() rather than racing two
     this.IDLE_TIMEOUT_MS = parseInt(process.env.CG_PROVIDER_IDLE_MS || '120000', 10); // 2 minutes, matching the person's own stated number
     const idleSweep = setInterval(() => this._sweepIdle(), 15_000);
@@ -628,6 +632,14 @@ class ProviderHost {
     // redirect target, not just the first URL); the load is retried twice, the second time after clearing the tab's
     // service workers and cache storage (a stale service worker is the usual instant ERR_FAILED; cookies are kept, so
     // the login survives); and a load that still fails closes the window and says so, so the next request starts clean.
+    // §0.60.12 — the account's sign-in goes in BEFORE the first load. Fail-soft and bounded: a sync that errors or hangs
+    // (vault locked, keychain prompt) is said and the tab loads as it is, exactly as it did before this hook existed (§1.2).
+    if (typeof this.beforeLoad === 'function') {
+      try {
+        const synced = await Promise.race([Promise.resolve(this.beforeLoad(providerId, ses)), new Promise(r => setTimeout(() => r({ action: 'timeout', why: 'account sync took over 8s' }), 8000))]);
+        if (synced && synced.action && synced.action !== 'unchanged') _log(`[ProviderHost] ${providerId} account sync — ${synced.action}${synced.accountId ? ` (${synced.accountId})` : ''}${synced.why ? `: ${synced.why}` : ''}`);
+      } catch (e) { _logWarn(`[ProviderHost] ${providerId} account sync failed — loading as is: ${e.message}`); }
+    }
     const loaded = await this._load(providerId, win, def, ses, agentId);
     if (!loaded.ok) {
       _logWarn(`[ProviderHost] ${providerId} did not load after ${loaded.attempts} attempt(s): ${loaded.error}`);
