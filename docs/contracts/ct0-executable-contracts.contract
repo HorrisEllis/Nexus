@@ -121,27 +121,27 @@ payload:
           - exists: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
         hashes:
           v1: 745d48021f1d439d5bcea5e2d7272c1aa691c39a66590df8af8a9c0f85583dda
-          phasemap: 295a5016d6bc602b109545a2ce13d983195edda0cabfb26a4ca4ffdd2ce07b4b
-        at: 1791889214788
-        attempts: 3
+          phasemap: 501f86f3592f4b139267533f4f2be767e88c528f0c9f4c26cddcedf8d0fc959d
+        at: 1791890422713
+        attempts: 4
       evaluator:
         status: PASSED
         reasons: []
         evidence:
           - exists: cortex/core/raid/contract-gates.js
         hashes:
-          evaluator: cc79885ad1d5551d591a91f4c748ddf47e6c0254efc83549ba3f9fc56c21ac45
-        at: 1791889216573
-        attempts: 3
+          evaluator: 6e2ca64b969e364acdbde6ed0456c1f55c6b4dca45096def710c527e6062924f
+        at: 1791890424521
+        attempts: 4
       commands:
         status: PASSED
         reasons: []
         evidence:
           - exists: idearium/cli/route-commands.js
         hashes:
-          commands: 1e1a995df4b2093ae2d9d23703330378ea04cef1cb33cfe82e56e4322583bc2e
-        at: 1791889218343
-        attempts: 3
+          commands: fbfe84f52fda42213a5aad456f3e953c05af17b866edea12632bd15c02b8ac29
+        at: 1791890426349
+        attempts: 4
       verify:
         status: PASSED
         reasons: []
@@ -150,20 +150,20 @@ payload:
             exit: 0
             tail: ' | 20 passed, 0 failed'
         hashes:
-          evaluator: cc79885ad1d5551d591a91f4c748ddf47e6c0254efc83549ba3f9fc56c21ac45
-          commands: 1e1a995df4b2093ae2d9d23703330378ea04cef1cb33cfe82e56e4322583bc2e
-          tests: 50ee49638dc9a29745c796a83ea421b55c14fbafafb7ebaff984b4eb6e0d1d26
-        at: 1791889220714
-        attempts: 3
+          evaluator: 6e2ca64b969e364acdbde6ed0456c1f55c6b4dca45096def710c527e6062924f
+          commands: fbfe84f52fda42213a5aad456f3e953c05af17b866edea12632bd15c02b8ac29
+          tests: 0f74b995a8746f3801e07cf1c7e69c2801304be449a46b58a1beefd481daf522
+        at: 1791890428862
+        attempts: 4
       self-host:
         status: PASSED
         reasons: []
         evidence:
           - gate: verify
         hashes:
-          evaluator: cc79885ad1d5551d591a91f4c748ddf47e6c0254efc83549ba3f9fc56c21ac45
-        at: 1791889222528
-        attempts: 3
+          evaluator: 6e2ca64b969e364acdbde6ed0456c1f55c6b4dca45096def710c527e6062924f
+        at: 1791890430822
+        attempts: 4
     evidence: {}
     invariants:
       INV-compat: verified

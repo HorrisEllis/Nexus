@@ -100,6 +100,11 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-13: "the scheduler must distinguish a failed task from a task that has no available executor. The latter should be reported as blocked or unsupported, not repeatedly retried or incorrectly marked complete."**
+  - **Context:** he approved the agent and phase adapters and set the order: build and test them on their own first, then connect the Build action. He named one failure mode before any code existed.
+  - **What it shows:** failure-mode thinking and specification. The distinction he named is the one a naive scheduler gets wrong: it loops on work nothing can run, or reports it done. His order (adapters alone, then integration) is why the end-to-end test could find the next defect, a learned size limit poisoned by one provider error, and point at the right module.
+  - **Evidence:** `tests/modules/test-contract-adapters.test.js` (EA-03: blocked, not retried, not FAILED, not complete), `tests/modules/test-contract-phase-build.test.js` (CP-01 to CP-05 on the real route), `CHANGELOG-0.60.18.md`.
+
 - **2026-10-13: "the logins for the agent providers needs to be all the same. the accounts and sign in, isn't wired into the provider tabs in clearglass."**
   - **Context:** he looked at two Clear Glass screens that each said something different about the same login, and named the cause: one screen was not wired to the other.
   - **What it shows:** he reads a system from its screens and finds the integration gap, not just the symptom. The screenshots pointed at the right seam.

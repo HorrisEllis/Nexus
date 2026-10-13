@@ -359,7 +359,7 @@ function split(p, gateId, { by = null } = {}) {
     const own = (g.pass_when || []).filter(c => c && typeof c === 'object' && refPath && (c.exists === refPath || c.test === refPath));
     return { id, type: 'task', parent: gateId, requirement: g.requirement || { gate: gateId, outcome: (p.outcome && p.outcome.what) || null, actions: g.actions || [] }, depends_on: [...(g.depends_on || [])],
       requires: mode === 'requires' ? [it] : [...(g.requires || [])], actions: mode === 'actions' ? [it] : (g.actions || []),
-      pass_when: [...own, { evidence: `${id}.done` }], kind: g.kind || g.type };
+      pass_when: [...own, { evidence: `${id}.done` }], kind: g.kind || g.type, ...(g.run ? { run: g.run } : {}), ...(g.file ? { file: g.file } : {}) };
   });
   const at = p.gates.indexOf(g);
   p.gates.splice(at, 0, ...children);
@@ -386,41 +386,76 @@ function split(p, gateId, { by = null } = {}) {
 function _defaultExecutors() {
   return { tool: async (name, args) => require(path.join(DEFAULT_ROOT, 'lib/agent-tools/index.js')).executeTool(name, args || {}) };
 }
-async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {} } = {}) {
+async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {}, onCheckpoint = () => {} } = {}) {
   const ex = executors || _defaultExecutors();
   const log = [];
-  const noExecutor = new Map();   // gate → the kind of work nothing here can run: set aside, said, never retried in a loop
+  // 0.60.18 EX0a — James: "the scheduler must distinguish a failed task from a task that has no available executor. The
+  // latter should be reported as blocked or unsupported, not repeatedly retried or incorrectly marked complete."
+  const noExecutor = new Map();   // gate → why nothing here can run it: set aside, said, never retried in a loop, never FAILED
+  const limit = (p.failure && p.failure.retry_limit) || 3;
+  const aside = () => [...noExecutor].map(([id, why]) => ({ id, why, unsupported: true }));
   for (let round = 1; round <= maxRounds; round++) {
     const ev = evaluate(p, { root });
-    const ready = ev.gates.filter(g => g.status === 'READY' || g.status === 'STALE').map(g => (p.gates || []).find(x => x.id === g.id));
+    // READY or STALE runs; a FAILED brick with work to do and retries left runs again (recovery)
+    const ready = ev.gates.filter(g => g.status === 'READY' || g.status === 'STALE' || (g.status === 'FAILED' && ((p.state.gates[g.id] || {}).attempts || 0) < limit && (p.gates || []).find(x => x.id === g.id).run))
+      .map(g => (p.gates || []).find(x => x.id === g.id));
     const runnable = ready.filter(g => !noExecutor.has(g.id) && (g.run || !(g.pass_when || []).some(c => c && c.evidence && !(p.state.evidence || {})[c.evidence])));
-    if (!runnable.length) return { rounds: round - 1, log, complete: ev.complete, why: ev.why, waiting: ready.filter(g => !runnable.includes(g)).map(g => ({ id: g.id, why: noExecutor.has(g.id) ? `no executor for ${noExecutor.get(g.id)} work` : 'waits on evidence a person or agent records' })) };
+    if (!runnable.length) {
+      return { rounds: round - 1, log, complete: ev.complete, why: ev.why, blocked: aside(),
+        waiting: ready.filter(g => !runnable.includes(g) && !noExecutor.has(g.id)).map(g => ({ id: g.id, why: 'waits on evidence a person or agent records' })) };
+    }
     for (let i = 0; i < runnable.length; i += concurrency) {
       await Promise.all(runnable.slice(i, i + concurrency).map(async (g) => {
+        const before = (p.state.gates[g.id] || {}).status;
+        // a brick failed twice that has pieces is split rather than run a third time the same way (capability trigger)
+        if (before === 'FAILED' && !(g.children || []).length) {
+          const sp = (g.actions || []).length >= 2 ? shouldSplit(p, g.id, { root }) : { split: false };
+          if (sp.split) { const kids = split(p, g.id, { by: 'actions' }); log.push({ round, gate: g.id, status: 'SPLIT', reasons: [sp.why, `into ${kids.join(', ')}`] }); onEvent({ gate: g.id, status: 'SPLIT', round }); return; }
+        }
         p.state.gates[g.id] = { ...(p.state.gates[g.id] || {}), status: 'RUNNING' };
         onEvent({ gate: g.id, status: 'RUNNING', round });
+        let agent = null, learn = true;
         if (g.run) {
           const kind = g.run.tool ? 'tool' : Object.keys(g.run)[0];
           const fn = ex[kind];
-          if (!fn) { p.state.gates[g.id].status = 'READY'; noExecutor.set(g.id, kind); log.push({ round, gate: g.id, status: 'READY', why: `no executor for ${kind}` }); return; }
+          const setAside = (why) => { p.state.gates[g.id].status = before && before !== 'RUNNING' ? before : 'READY'; noExecutor.set(g.id, why); record(p, `${g.id}.blocked`, why, { by: `scheduler:${kind}` }); log.push({ round, gate: g.id, status: 'BLOCKED', reasons: [why] }); onEvent({ gate: g.id, status: 'BLOCKED', round }); };
+          if (!fn) { setAside(`no executor for ${kind} work`); return; }
           let out;
-          try { out = await fn(g.run.tool || g.run[kind], g.run.args || {}, { gate: g, packet: packet(p, g.id, { root }) }); }
+          try { out = await fn(g.run.tool || g.run[kind], g.run.args || {}, { gate: g, packet: packet(p, g.id, { root }), contract: p, root }); }
           catch (e) { out = { ok: false, error: e.message }; }
+          if (out && out.unsupported) { setAside(`unsupported: ${out.why || `nothing can run this ${kind} work`}`); return; }
+          if (out && out.decompose) {
+            // its pieces are its actions (a file brick's steps); refs it shares with every brick are not pieces of it
+            if ((g.actions || []).length >= 2 && !(g.children || []).length) { const kids = split(p, g.id, { by: 'actions' }); log.push({ round, gate: g.id, status: 'SPLIT', reasons: [out.why || 'too big for the routed agents', `into ${kids.join(', ')}`] }); onEvent({ gate: g.id, status: 'SPLIT', round }); return; }
+            setAside(`unsupported: ${out.why || 'too big for every routed agent'} — and it is one piece already, so it cannot be split`); return;
+          }
           const ok = out && out.ok !== false && !out.error;
-          record(p, `${g.id}.output`, typeof out === 'string' ? out.slice(0, 2000) : JSON.stringify(out).slice(0, 2000), { by: `scheduler:${kind}` });
+          for (const [k, v] of Object.entries((out && typeof out === 'object' && out.evidence) || {})) if (v != null) record(p, k, typeof v === 'string' ? v : JSON.stringify(v), { by: `scheduler:${kind}` });
+          record(p, `${g.id}.output`, typeof out === 'string' ? out.slice(0, 2000) : JSON.stringify(out && out.output !== undefined ? { ok, output: out.output, error: out.error } : out).slice(0, 2000), { by: `scheduler:${kind}` });
           if (ok) record(p, `${g.id}.done`, 'yes', { by: `scheduler:${kind}` });
+          agent = (out && (out.agent || out.provider)) || null;
+          // a transient failure (the provider never answered) says nothing about how big a piece the agent can hold
+          if (out && out.transient) learn = false;
         }
-        const r = await check(p, g.id, { root });
-        log.push({ round, gate: g.id, status: r.status, reasons: r.reasons });
+        const r = await check(p, g.id, { root, agent, learn });
+        log.push({ round, gate: g.id, status: r.status, reasons: r.reasons, ...(agent ? { agent } : {}) });
+        if (r.status === 'PASSED') {
+          // every pass is a checkpoint: what was verified, against which input hashes, by whom — the caller saves it
+          p.state.checkpoints = p.state.checkpoints || [];
+          p.state.checkpoints.push({ gate: g.id, at: Date.now(), hashes: (p.state.gates[g.id] || {}).hashes || {}, ...(agent ? { agent } : {}) });
+          try { onCheckpoint(p, g.id); } catch (_) { /* the caller's save failing never fails the brick; it is in memory */ }
+        }
         onEvent({ gate: g.id, status: r.status, round });
       }));
     }
     // a gate that failed and has no retries left stops the loop from spinning on it
-    const stuck = (p.gates || []).filter(g => { const s = p.state.gates[g.id] || {}; return s.status === 'FAILED' && (s.attempts || 0) >= ((p.failure && p.failure.retry_limit) || 3); });
-    if (stuck.length && !evaluate(p, { root }).gates.some(g => g.status === 'READY')) { const e2 = evaluate(p, { root }); return { rounds: round, log, complete: e2.complete, why: e2.why, failed: stuck.map(g => g.id) }; }
+    const stuck = (p.gates || []).filter(g => { const s = p.state.gates[g.id] || {}; return s.status === 'FAILED' && (s.attempts || 0) >= limit; });
+    const e1 = evaluate(p, { root });
+    const more = e1.gates.some(g => (g.status === 'READY' || g.status === 'STALE') && !noExecutor.has(g.id));
+    if (stuck.length && !more) return { rounds: round, log, complete: e1.complete, why: e1.why, failed: stuck.map(g => g.id), blocked: aside() };
   }
   const e3 = evaluate(p, { root });
-  return { rounds: maxRounds, log, complete: e3.complete, why: e3.why };
+  return { rounds: maxRounds, log, complete: e3.complete, why: e3.why, blocked: aside() };
 }
 
 module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition,

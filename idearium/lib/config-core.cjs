@@ -247,6 +247,9 @@ const SCHEMA = {
     plan_code:           { default: 'auto', enum: ['auto', 'always', 'never'], copilot_writable: true, type: 'string' },
     planner:             { default: '', copilot_writable: true, type: 'string' },
     plan_attempts:       { default: 2, min: 1, max: 5, copilot_writable: true, type: 'number' },
+    // 0.60.18 EX0 — a held plan runs as a .contract through the scheduler (off: the planned files one after another)
+    contract_build:      { default: 'on', enum: ['on', 'off'], copilot_writable: true, type: 'string' },
+    contract_concurrency: { default: 2, min: 1, max: 8, copilot_writable: true, type: 'number' },
   },
 
   cicd: {
