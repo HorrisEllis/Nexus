@@ -1791,7 +1791,7 @@ function openRepoFor(ideaUuid, specUuid, label) {
     (specUuid && r.promotedFromSpec === specUuid) ||
     (CURRENT_REPO_IDEA && r.ideaUuid === CURRENT_REPO_IDEA) ||
     (specUuid && r.specUuid === specUuid));
-  if (repo) selectApiRepo(repo.uuid); else { renderRepoLibrary(); renderApiRepoPanel(null); }
+  if (repo) { document.getElementById('repo-view-title').textContent = repo.name; selectApiRepo(repo.uuid); } else { renderRepoLibrary(); renderApiRepoPanel(null); }
 }
 
 // §OVERHAUL 2026-09-17 — the compartment → repo rail. Real grouping on
@@ -1819,6 +1819,15 @@ function _isRaidContractRepo(r) { return !!r && (r.source === 'raid-contract' ||
 // repo, alongside its file tree + editor, so switching repos mid-session
 // doesn't force a trip back to the grid.
 let REPO_DETAIL_OPEN = false;
+// 0.60.7 — the eyes (an Electron pass over the library) showed every imported project headed by its raw compartment
+// uuid ("21C90435-0CF6-…"). A compartment is named by what is in it: its one repo's name, or the first name and a count.
+function _compartmentLabel(key, repos) {
+  if (key === 'RAID contracts') return key;
+  if (!key) return 'Uncategorized';
+  const names = (repos || []).map(r => r.name).filter(Boolean);
+  if (!names.length) return `compartment ${key.slice(0, 8)}`;
+  return names.length === 1 ? names[0] : `${names[0]} + ${names.length - 1} more`;
+}
 function renderRepoLibrary() {
   const body = document.getElementById('repo-rail-body');
   const badge = document.getElementById('repo-count-badge');
@@ -1879,7 +1888,7 @@ function renderRepoLibrary() {
     // in it as a block. No collapsing here — the point is to see all of it.
     body.innerHTML = keys.map(key => {
       const repos = key === NEXUS_KEY ? groups.get(key) : groups.get(key).slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-      const label = key === NEXUS_KEY ? 'nexus' : key ? key : 'Uncategorized';
+      const label = key === NEXUS_KEY ? 'nexus' : _compartmentLabel(key, groups.get(key));
       if (key === RAID_KEY) {
         return `<details class="repo-grid-raid"><summary class="repo-grid-group-label">${escapeHtml(label)} · ${repos.length} — made automatically for RAID's queued contracts</summary>
           ${repos.map(r => `<div class="repo-block raid" onclick="enterRepoDetail('${r.uuid}')"><div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name.replace(/^raid-contract-/, 'contract '))}</span></div><div class="repo-block-desc">${r.fileCount} file${r.fileCount === 1 ? '' : 's'}</div></div>`).join('')}</details>`;
@@ -1902,7 +1911,7 @@ function renderRepoLibrary() {
   // ── Compact list: used once a repo is open, for quick switching ──
   body.innerHTML = keys.map(key => {
     const repos = key === NEXUS_KEY ? groups.get(key) : groups.get(key).slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-    const label = key ? key : 'Uncategorized';
+    const label = _compartmentLabel(key, groups.get(key));
     const collapsed = REPO_RAIL_COLLAPSED.has(key);
     return `
       <div class="compartment-group${collapsed?' collapsed':''}" data-key="${escapeHtml(key)}">
@@ -1950,7 +1959,9 @@ function enterRepoDetail(uuid) {
   _syncNestScope();
   document.getElementById('repo-wrap').classList.add('repo-open');
   document.getElementById('repo-back-btn').style.display = '';
-  document.getElementById('repo-view-title').textContent = 'Repository';
+  // 0.60.7 — the title bar names the repo you are in (it said only "Repository")
+  const _r = API_REPOS.find(x => x.uuid === uuid);
+  document.getElementById('repo-view-title').textContent = _r ? _r.name : 'Repository';
   _setRepoToolbarMode('detail');
   selectApiRepo(uuid);
 }
@@ -2280,7 +2291,7 @@ parse failures       ${bad(d.parseFailures.length)}
 failed tiers         ${bad(d.failedTiers.length)}${d.verification ? ` (verification ${escapeHtml(d.verification.status || '')} · ${escapeHtml(d.verification.level || '')})` : ' (not through the pipeline yet)'}
 last COS run         ${lastRun ? `${escapeHtml(lastRun.label || lastRun.option)} — ${lastRun.allPassed ? '<span style="color:var(--mint)">passed</span>' : `<span style="color:var(--coral)">${lastRun.failed} failed</span>`} · ${new Date(lastRun.ts).toLocaleString()}` : 'none'}
 agent errors         ${bad(d.agentErrors.length)}</div>
-      <div class="action-row"><button class="action-btn" onclick="renderRepoDebug(CURRENT_API_REPO)">re-check</button><button class="action-btn" onclick="repoRun('test')">run tests…</button><button class="action-btn" onclick="repoDebugToAgent()">hand this to the agent</button></div></div>
+      <div class="action-row"><button class="action-btn" onclick="renderRepoDebug(CURRENT_API_REPO)">re-check</button><button class="action-btn" title="the import checks: parses, requires, npm, duplicates, secrets, files arrived — written as Notes" onclick="runIntegrity(CURRENT_API_REPO.uuid)">import checks → notes</button><button class="action-btn" onclick="repoRun('test')">run tests…</button><button class="action-btn" onclick="repoDebugToAgent()">hand this to the agent</button></div></div>
     ${nSyntax ? `<div class="ds"><div class="ds-label">syntax errors</div><div class="ds-mono">${d.syntax.failed.map(f => `${escapeHtml(f.file)}${f.line ? `:${f.line}` : ''}  ${escapeHtml(f.error)}`).join('\n')}</div></div>` : ''}
     ${nBroken || nMissing ? `<div class="ds"><div class="ds-label">imports that resolve to nothing</div><div class="ds-mono">${(deps.brokenRelative || []).map(b => `${escapeHtml(b.file)} → ${escapeHtml(b.specifier)}`).join('\n')}${nMissing ? `${nBroken ? '\n\n' : ''}not installed: ${escapeHtml(deps.packages.map(p => p.name).join(', '))}` : ''}</div></div>` : ''}
     ${d.parseFailures.length ? `<div class="ds"><div class="ds-label">files the pipeline could not parse</div><div class="ds-mono">${d.parseFailures.map(f => `${escapeHtml(f.path)}${f.error ? `  ${escapeHtml(String(f.error).slice(0, 160))}` : ''}`).join('\n')}</div></div>` : ''}
@@ -2959,7 +2970,9 @@ async function renderRepoVersionium(repo) {
   const isNexusParent = repo.nexusSelf && repo.nexusSelf.role === 'parent';
   el.innerHTML = (isNexusParent ? `<div id="nx-versions"><div class="detail-empty">reading every system's versions…</div></div>` : '')
     + actions.replace('>snapshot<', isNexusParent ? '>snapshot the index only (NEXUS.md)<' : '>snapshot<')
+    + `<div id="ver-index"></div>`   // §0.60.7 every version, compare any two, import history (js/repo-versions.js)
     + listBlock + `<div id="snap-detail"></div>`;
+  if (typeof renderVersionIndex === 'function') renderVersionIndex(forUuid);
   if (isNexusParent) renderNexusVersionium(forUuid, stale);
   if (SNAP_OPEN && SNAP_OPEN.repoUuid === forUuid && snaps.some(s => s.commitId === SNAP_OPEN.commitId)) {
     openRepoSnapshot(forUuid, SNAP_OPEN.commitId, snaps);
@@ -3710,8 +3723,11 @@ function renderApiRepoPanel(repo) {
     return;
   }
   CURRENT_API_REPO = repo;
-  const statusLine = repo.localPath
-    ? `${repo.materializedCount||repo.fileCount} of ${repo.fileCount} files materialized — <span style="color:var(--mint)">${escapeHtml(repo.localPath)}</span>`
+  // 0.60.7 — read the fields the server sends (materializeDir, sourceFileCount). This read repo.localPath, which nothing
+  // produces, so every imported project claimed "file content isn't stored yet" while its files sat on disk (the eyes).
+  const _onDisk = repo.materializeDir || repo.localPath;
+  const statusLine = _onDisk
+    ? `${repo.sourceFileCount || repo.materializedCount || repo.fileCount} files on disk (${repo.fileCount} indexed) — <span style="color:var(--mint)">${escapeHtml(_onDisk)}</span>`
     : (repo.promotedFromSpec ? 'promoted from spec — file structure as components' : 'manifest only — file content isn\'t stored yet');
 
   // dir path -> { __dir:true, children:{} } | { __dir:false, ...file }

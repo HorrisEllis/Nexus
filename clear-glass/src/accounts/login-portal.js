@@ -93,6 +93,35 @@ class LoginPortal {
   _origin(provider) { try { return new URL(this.loginUrl(provider)).origin; } catch (_) { return null; } }
   _key(provider, id) { return `${provider}:${id}`; }
   _ses(provider, id) { return this.session.fromPartition(partitionFor(provider, id)); }
+  // 0.60.7 — James: "its saying its not signed in to the account when it is." status() read only this account's own
+  // partition (persist:mesh-<provider>-<id>); he signs in in a normal tab (the <webview> in browser.html uses the app's
+  // default session) or the provider tab (persist:ncp-<provider>), which it never looked at. _elsewhere() reads those two
+  // too, only the provider's own site's cookies, so the status can say where the sign-in is and capture can take it.
+  _siteOf(host) { const p = String(host || '').replace(/^\./, '').split('.'); return p.slice(-2).join('.'); }
+  _sitesFor(provider) {
+    const out = new Set();
+    for (const u of [this._def(provider).url, this.loginUrl(provider)]) { try { out.add(this._siteOf(new URL(u).hostname)); } catch (_) {} }
+    return [...out];
+  }
+  _elsewhereSessions(provider) {
+    const list = [];
+    try { if (this.session.defaultSession) list.push({ key: 'default', where: 'a normal tab', ses: this.session.defaultSession }); } catch (_) {}
+    try { list.push({ key: 'ncp', where: `the ${this._def(provider).name || provider} provider tab`, ses: this.session.fromPartition(`persist:ncp-${provider}`) }); } catch (_) {}
+    return list;
+  }
+  async _siteCookies(ses, provider) {
+    const sites = this._sitesFor(provider);
+    const all = await ses.cookies.get({});
+    return all.filter(c => sites.includes(this._siteOf(c.domain)));
+  }
+  async _elsewhere(provider) {
+    const out = [];
+    for (const s of this._elsewhereSessions(provider)) {
+      try { const c = await this._siteCookies(s.ses, provider); if (c.length) out.push({ key: s.key, where: s.where, cookieCount: c.length, authCookies: c.filter(x => AUTH_COOKIE_RE.test(x.name)).length }); }
+      catch (_) { /* that session is not available: not listed */ }
+    }
+    return out;
+  }
 
   providers() {
     return (this.registry() || []).map(d => ({ id: d.id, name: d.name, color: d.color, url: d.url, loginUrl: LOGIN_URLS[d.id] || d.url }));
@@ -165,9 +194,25 @@ class LoginPortal {
    * collision check runs BEFORE any write, so a refused identity leaves the
    * vault untouched (never half-captured).
    */
-  async capture({ id, provider, identity = null, close = false }) {
+  async capture({ id, provider, identity = null, close = false, from = null }) {
     this._account(id); const def = this._def(provider);
     const ses = this._ses(provider, id);
+    // 0.60.7 — from 'default' | 'ncp': take the sign-in from where he signed in (a normal tab, the provider tab), copy it
+    // into this account's own session too, so the account's agent tab is signed in as well
+    if (from) {
+      const src = this._elsewhereSessions(provider).find(s => s.key === from);
+      if (!src) return { ok: false, error: `no session "${from}" to take the sign-in from` };
+      const taken = await this._siteCookies(src.ses, provider);
+      if (!taken.length) return { ok: false, error: `no ${def.name} cookies in ${src.where} — sign in there first` };
+      for (const c of taken) {
+        const host = String(c.domain || '').replace(/^\./, '');
+        const url = `${c.secure ? 'https' : 'http'}://${host}${c.path || '/'}`;
+        const set = { url, name: c.name, value: c.value, path: c.path, secure: c.secure, httpOnly: c.httpOnly, sameSite: c.sameSite };
+        if (!c.hostOnly && c.domain) set.domain = c.domain;
+        if (c.expirationDate) set.expirationDate = c.expirationDate;
+        try { await ses.cookies.set(set); } catch (_) { /* a cookie Chromium refuses is skipped; the count below says what landed */ }
+      }
+    }
     const cookies = await ses.cookies.get({});
     if (!cookies.length) return { ok: false, error: `no cookies in ${def.name}'s session for this account — sign in first` };
 
@@ -205,6 +250,7 @@ class LoginPortal {
       ok: true, id, provider, partition: partitionFor(provider, id),
       portalOpen: !!(portal && !portal.win.isDestroyed()), portalUrl: portal?.lastUrl || null,
       liveCookies: live, authCookies: auth,
+      elsewhere: await this._elsewhere(provider).catch(() => []),
       vault: this.vault.accountMeta(provider, id),
       identity: acc.providerAccounts?.[provider] || null,
       session: sess ? { capturedAt: sess.capturedAt || null, cookieCount: sess.cookieCount ?? null, authCookies: sess.authCookies ?? null } : null,

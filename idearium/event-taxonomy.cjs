@@ -176,6 +176,9 @@ module.exports = Object.freeze({
   // 0.60.5 / 0.60.6 — lib/project-decompose.js and lib/repo-notes.js
   IDEARIUM_COMPONENTS_DECOMPOSED: { description: 'A project (zip or folder) was decomposed into the component store: how many components, how many new, how many requires point at nothing.', payloadShape: ['project', 'components', 'created', 'unresolved'], severity: 'info' },
   IDEARIUM_NOTE_ADDED: { description: 'A note was written — on a repo or on none; its kind, title and who wrote it.', payloadShape: ['id', 'repoUuid', 'kind', 'title', 'source'], severity: 'info' },
+  IDEARIUM_REPO_HISTORY_IMPORTED: { description: 'A project\'s past was imported into its repo as real versions (repo-<uuid>@history): git commits or version zips.', payloadShape: ['repoUuid', 'imported', 'skipped', 'branch'], severity: 'info' },
+  IDEARIUM_REPO_VERSION_RESTORED: { description: 'One file was put back as it was at a version; the write is itself versioned.', payloadShape: ['repoUuid', 'commitId', 'path', 'sha256'], severity: 'info' },
+  IDEARIUM_REPO_INTEGRITY_CHECKED: { description: 'The import checks ran on a repo (parses, requires, npm, duplicates, secrets, files arrived); findings are its notes.', payloadShape: ['repoUuid', 'ok', 'failed', 'notes'], severity: 'info' },
   IDEARIUM_NOTE_UPDATED: { description: 'A note changed: edited, pinned, done, archived or brought back.', payloadShape: ['id', 'repoUuid', 'kind', 'status'], severity: 'info' },
 });
 

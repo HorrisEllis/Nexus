@@ -29,7 +29,7 @@
         const r = await api('/api/components/decompose', { method: 'POST', body: JSON.stringify({ filename: f.name, contentBase64 }) }, 10 * 60000);
         const s = r.stats || {};
         row.innerHTML = `<b>${esc(r.project)}</b> — ${s.components} component(s), ${s.created} new`
-          + `${s.unresolved ? ` · <span class="cmp-warn">${s.unresolved} require(s) not found</span>` : ''}${s.skipped ? ` · <span class="cmp-dim">${s.skipped} skipped</span>` : ''}`
+          + `${s.unresolved ? ` · <span class="cmp-warn">${s.unresolved} unresolved imports</span>` : ''}${s.skipped ? ` · <span class="cmp-dim">${s.skipped} skipped</span>` : ''}`
           + `${(r.npm || []).length ? `<div class="cmp-dim">npm: ${esc(r.npm.join(', '))}</div>` : ''}`;
         say(`${r.project}: ${s.components} component(s) in the store`, 'ok');
       } catch (e) { row.innerHTML = `<b>${esc(f.name)}</b> <span class="cmp-warn">not decomposed: ${esc(e.message)}</span>`; }

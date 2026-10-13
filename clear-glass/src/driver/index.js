@@ -736,6 +736,12 @@ class ClearDriver {
     // focused). Non-agent ids keep the legacy fallback: the interactive browser tabs may rely on it.
     try { return this._pageResolver().resolve(agentId); }
     catch (e) { if (/^(mesh|ncp|auto)-/.test(String(agentId))) return null; }
+    // 0.60.7 — James, recording a macro: "the record button doesn't work". Picking "default (window)" and pressing Start
+    // recorded the SETTINGS page (file:///…/settings.html#macros): 'default' is not in any window title, so this fell to
+    // getFocusedWebContents(), and the focused window was Settings. A window's agentId is the key of main's own windows /
+    // bgTabs maps; its browsing page is the <webview> guest inside it. That page, never a Clear Glass UI page.
+    const own = this._windowPage(agentId);
+    if (own) return own;
     const all = webContents.getAllWebContents();
     for (const wc of all) {
       try {
@@ -743,7 +749,23 @@ class ClearDriver {
         if (win && win.getTitle().includes(agentId)) return wc;
       } catch {}
     }
-    return webContents.getFocusedWebContents() || all[0] || null;
+    const focused = webContents.getFocusedWebContents();
+    if (focused && !this._isChromePage(focused)) return focused;
+    return all.find(wc => { try { return wc.getType() === 'webview' && !wc.isDestroyed(); } catch (_) { return false; } }) || null;
+  }
+  // a Clear Glass page of its own (settings, library, the browser chrome) is never an agent's page
+  _isChromePage(wc) {
+    try { const u = wc.getURL() || ''; return /^file:.*\/renderer\/[^/]+\.html/.test(u) || /\/renderer\/(settings|library|browser)\.html/.test(u); } catch (_) { return true; }
+  }
+  _windowPage(agentId) {
+    let main; try { main = require('../main/index'); } catch (_) { return null; }
+    const win = (main.windows && main.windows.get && main.windows.get(agentId)) || (main.bgTabs && main.bgTabs.get && main.bgTabs.get(agentId)) || null;
+    const host = win && (win.webContents || (win.win && win.win.webContents));
+    if (!host || host.isDestroyed()) return null;
+    const guests = webContents.getAllWebContents().filter(g => { try { return g.getType() === 'webview' && g.hostWebContents === host && !g.isDestroyed(); } catch (_) { return false; } });
+    const real = guests.find(g => { const u = g.getURL(); return u && u !== 'about:blank'; });
+    if (real || guests[0]) return real || guests[0];
+    return this._isChromePage(host) ? null : host;
   }
   _pageResolver() { return this.__resolver || (this.__resolver = require('./page-resolver').createPageResolver({ electron: require('electron') })); }
 

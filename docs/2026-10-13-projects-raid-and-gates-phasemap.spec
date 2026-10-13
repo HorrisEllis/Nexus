@@ -55,6 +55,9 @@ spec:
     - "MASTERMIND v0.1.50: 1376 entries, 1355 chunked — 5.4 s. Decomposed: 1026 components; 143 imports point at files that are not in the project (most under unintegrated/); three copies of spatial-v2 (v2_0_0, v2_1_0, v2_2_0_1). Two store bugs found and fixed: a URL import named as the npm package 'https:', a required ./package.json reported missing."
     - "All five became repos. What did not come in is history — the .git folders — and that is the 'past' of 'past, present and future'."
     - "Found by the run itself: an import under the test sandbox still wrote its files into the real idearium/repo/repos/ (lib/project-import.config.js REPO_STORAGE is not one of lib/test-sandbox.js's STORES), and other suites then scanned them. The five were removed; the store is named in PL1's proof so a test import stays in its sandbox."
+    - "0.60.7, the same sandbox, the routes of VM0: Bridge-OS's .git became 33 versions on repo-<uuid>@history (2026-07-24 'Initial import: Bridge OS pre-review snapshot' to 2026-08-11 'fix(forensic-sweep)…', author James Brooks) in 3.6 s, its zipped files skipped as equal to the last commit; first → last commit: 10 added, 5 removed, 31 changed. clearglass-gig-import's two zips: two versions in order; the same zip again: nothing stored."
+    - "0.60.7 import checks on the four: ERAVOS 22 duplicate files (the zip ships the source and a packaged windows-x64 build of it), 1 undeclared package; Bridge-OS 2 undeclared packages, 2 duplicates; clearglass-gig-import 24 requires that resolve to nothing (it is a patch over the clear-glass tree, not a whole project); update-system clean. Each a note on its repo."
+    - "0.60.7 the eyes (Electron, the engine Clear Glass runs on, over the sandboxed Idearium; DOM read beside each screenshot): every imported repo's Files tab said 'manifest only — file content isn't stored yet' with 544 files on disk (app.js read repo.localPath, which nothing writes); the library headed each project with its compartment uuid; the title bar said 'Repository' with no name. All three fixed and seen fixed on the next pass."
 
   folds:
     - "'what if a contract uses each chunk as a one block of the contract … a contract file that fullfilled, is each chunk as a block and synthesized into one contract file' → request spine decision_contract_format / decision_contract_files [A] (recorded 1.2.0) and RQ21. RD4 below records his sentence as the confirmation: the contract file is one; each chunk is a block of it; when the contract is fulfilled the blocks — each with its result and evidence — are synthesized into that one file."
@@ -92,6 +95,18 @@ spec:
         - "[A] a zip's .git becomes the repo's git history (Versionium imports the commits); nested .git dirs become linked repos  ← recommended"
         - "[B] keep .git as plain files beside the repo (cheap; history unread)"
         - "[C] skip as now"
+      chosen: >-
+        A, 2026-10-13. James: "can you add history import tool to the repos. like maybe with versionium. i want real
+        versions with the versionium tab." Built 0.60.7 as a tool he drops zips on (and the import keeps the latest files as
+        before), not automatic at import: the coder's reading, because a history import stores every commit and can carry
+        credentials, so it runs with a dry run and a secrets stop. To confirm: run it automatically on every import of a
+        zip that carries .git. Nested .git dirs becoming linked repos (nexus 4.23's eravos) is still open.
+    decision_refactor_tool:
+      asked: '"can you have a refactor tool, or a option to fix or migrate archecture, like decompose components, and use the component registry for the spine, decompose nodes, organize file structure… like the way guardian is using nodes, and the way the architecture spec and genesis are, the taxnomy, the phases, like what do you think of that?"'
+      choices:
+        - "[A] a proposal engine: read the architecture, propose a migration as phases, apply each as staged injects with a snapshot before and tests after; nothing moves without his yes  ← recommended"
+        - "[B] an automatic rewriter that reorganizes a repo in one pass"
+        - "[C] report only (what is wrong with the architecture), no changes"
       chosen: open
 
   phases:
@@ -133,8 +148,8 @@ spec:
     PL2_history_kept:
       layer: library
       systems: [idearium, versionium]
-      component: lib.project-container
-      status: "OPEN"
+      component: lib.repo-history
+      status: "DONE — 0.60.7 (as a tool: Versionium tab → import history, repo history-import, POST /api/repos/:uuid/history/import). Nested .git as linked repos: OPEN"
       james: '"completely manage a project. past, present and future."'
       depends_on: [PL0_his_projects_imported_for_real]
       files: [lib/zip-ingest.js, lib/project-container.js, versionium/lib/engine.js, lib/history-import-job.js]
@@ -146,8 +161,8 @@ spec:
     PL3_versions_become_history:
       layer: library
       systems: [idearium, versionium]
-      component: lib.history-import-job
-      status: "OPEN"
+      component: lib.repo-history
+      status: "DONE — 0.60.7 (cli/import-history.js scanZip/orderScans reused; clearglass-gig-import's two zips became two versions in order)"
       james: '"past, present and future"'
       files: [lib/history-import-job.js, cli/import-history.js]
       does: >-
@@ -158,7 +173,7 @@ spec:
       layer: library
       systems: [idearium, cos]
       component: lib.import-checks
-      status: "OPEN"
+      status: "DONE — 0.60.7 for the deterministic six (CK-001, CK-002, CK-006, CK-008 whole-file, CK-060, IMP-01); the rest of the catalogue's import stage waits on CK1"
       james: '"i want nexus to be able to parse, import, map"'
       depends_on: [CK1_the_catalogue_runs]
       files: [lib/project-decompose.js, cos/spec/check-catalogue.spec, lib/repo-notes.js]
@@ -168,6 +183,62 @@ spec:
         finding is a note (kind question or todo, source 'import') on the repo, grouped, so the repo arrives with what is
         already broken written down — MASTERMIND's 143 broken imports and its three spatial-v2 copies would be the first.
       proof: "MASTERMIND imported: its Notes list the broken imports by package and the duplicate copies"
+    VM0_versionium_managed_per_repo:
+      layer: ui
+      systems: [idearium, versionium]
+      component: lib.repo-history
+      status: "DONE — 0.60.7"
+      james: '"i want real versions with the versionium tab. like a full index of versions, versions, revisions from the work surface, diffs, backups/snapshots, etc. like full management system for versionium backend, then with the api, expand the idearium ui repo tab."'
+      files: [lib/repo-history.js, lib/import-checks.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/repo-versions.js, idearium/ui/js/app.js, idearium/ui/index.html]
+      does: >-
+        Nothing stored beside versionium. One index per repo: snapshots (repo-<uuid>), backups (the pre-restore snapshot a
+        restore takes), staging (@staging), imported history (@history, ordered by the original dates), work-surface revisions
+        (injects). A diff between any two versions or one against the files on disk, with patches. One file put back (the
+        write is itself versioned). Routes GET versions / versions/diff / versions/tree, POST versions/restore-file /
+        history/import; commands repo versions (now the whole index), repo diff, repo restore-file, repo history-import, repo
+        integrity. The tab: kind filters, A/B compare, open a version, diff now, put back, drop zips to import history.
+      not_yet: [".nex backups (versionium/lib/snapshot.js backup_records) are system-wide, not per repo: not in the index", "restore a whole staging commit or branch from the tab", "blame per line"]
+      proof: "tests/modules/test-repo-history.test.js RH-01–RH-12, IC-01–IC-05, WR-01–WR-03 (20/20, against versionium's real engine and file layer); the eyes run in proof_run"
+
+    RF0_architecture_read:
+      layer: library
+      systems: [idearium, loom, core]
+      component: lib.architecture-migrate
+      status: "MAPPED"
+      james: '"can you have a refactor tool, or a option to fix or migrate archecture, like decompose components, and use the component registry for the spine, decompose nodes, organize file structure… like the way guardian is using nodes, and the way the architecture spec and genesis are, the taxnomy, the phases"'
+      depends_on: [VM0_versionium_managed_per_repo, PL4_import_reports_what_is_broken, PL6_global_links_seen]
+      files: [lib/project-decompose.js, lib/component-store.js, lib/import-checks.js, idearium/repo/architecture.js]
+      does: >-
+        What the repo's architecture is now, from what already exists: its components and real edges (component store,
+        decompose), cycles and coupling (CK-004, CK-104), duplicates (CK-008), files that sit outside any layer, and how far
+        its layout is from the target taxonomy (architecture-spec and genesis: system / layer / component, Guardian's node
+        files). Read only.
+      proof: "MASTERMIND read: its three spatial-v2 copies, its cycles, and its layout against the taxonomy, as one report"
+    RF1_migration_proposed_as_phases:
+      layer: library
+      systems: [idearium]
+      component: lib.architecture-migrate
+      status: "MAPPED"
+      depends_on: [RF0_architecture_read]
+      files: [lib/architecture-migrate.js, idearium/repo/roadmap.js]
+      does: >-
+        The migration as a phasemap in the repo: each phase one kind of move (split a component, merge duplicates, move files
+        into the taxonomy's folders, rewrite the requires that point at them, emit a node file per component), bottom-up
+        (leaves first), each with its proof (the import checks and the repo's tests still pass).
+      proof: "the proposal for MASTERMIND is a phasemap its Phases tab shows; nothing changed on disk"
+    RF2_applied_one_phase_at_a_time:
+      layer: library
+      systems: [idearium, versionium]
+      component: lib.code-edit
+      status: "MAPPED"
+      depends_on: [RF1_migration_proposed_as_phases]
+      files: [lib/code-edit.js, lib/repo-inject.js, lib/repo-history.js]
+      does: >-
+        A phase's moves are staged as injects on repo-<uuid>@staging (lib/code-edit.js stage), the snapshot taken first,
+        promoted all-or-nothing, the checks and tests run after; a failure rolls back (promote already does) and is written
+        as a note. Every step is a version in the index, so any migration can be compared and undone.
+      proof: "one MASTERMIND phase applied: the diff in the Versionium tab, the tests green, and its undo"
+
     PL5_specs_become_the_roadmap:
       layer: library
       systems: [idearium, loom]

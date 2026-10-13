@@ -25,6 +25,9 @@
     if (st.vault && st.vault.stored && auth > 0) return chip(`Signed in, saved ${ago(st.session.capturedAt || st.vault.updatedAt)}`, 'ok');
     if (st.vault && st.vault.stored) return chip('Saved, but no sign-in cookies', 'warn');
     if (st.liveCookies > 0) return chip('Session not saved yet', 'warn');
+    // 0.60.7 — signed in where he actually signs in (a normal tab, the provider tab), not yet in this account
+    const there = (st.elsewhere || []).filter(e => e.authCookies > 0);
+    if (there.length) return chip(`Signed in in ${there.map(e => e.where).join(' and ')} — not saved to this account`, 'warn');
     return chip('Not signed in', 'plain');
   }
 
@@ -110,6 +113,13 @@
     const isDefault = defaults[prov.id] === acc.id;
     const statusSlot = h('span', {}, statusChip(st));
     statusNodes.push({ acc, prov, slot: statusSlot });
+    // 0.60.7 — one press takes the sign-in from where it is into this account (its vault row and its own session)
+    const there = ((st && st.elsewhere) || []).filter(e => e.authCookies > 0 && !(st.vault && st.vault.stored && st.session && st.session.authCookies > 0));
+    const takeBtns = there.map(e => btn(`Save the sign-in from ${e.where}`, () => busy(null, async () => {
+      const r = await call(() => cg.accounts.portal.capture(acc.id, prov.id, null, false, e.key), 'save sign-in');
+      toast(r && r.likelySignedIn ? `“${acc.label}” is signed in to ${prov.name} (${r.cookieCount} cookies saved)` : `Saved ${r ? r.cookieCount : 0} cookies, but none look like a sign-in`);
+      rerender();
+    }), 'sm'));
 
     const nameIn = h('input', { type: 'text', value: acc.label, 'aria-label': 'Account name' });
     nameIn.addEventListener('keydown', (e) => { if (e.key === 'Enter') nameIn.blur(); });
@@ -132,7 +142,7 @@
       ctx.startPolling();
     }), 'sm primary');
     return h('div', { class: 'acct' },
-      h('div', { class: 'name' }, star, nameIn, statusSlot),
+      h('div', { class: 'name' }, star, nameIn, statusSlot, ...takeBtns),
       h('div', { class: 'acts' },
         signIn,
         // §0.39.265 — straight into the agent mesh as this account (its own

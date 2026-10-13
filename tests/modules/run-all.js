@@ -344,6 +344,7 @@ const SUITES = [
   // 0.60.1 — the nexus-system template's handoff and modules are checked by test-system-skeleton (SK-02 runs the laid-out system's own self-test)
   'test-accounts-picker-cos.test.js',
   'test-project-decompose.test.js',   // 0.60.5 — a project (zip or folder) decomposed into the component store, each component bundled with its require closure; the drop zone; Clear Glass in the COS window style   // 0.60.2 — account routing by hat / intent / repo (Guardian, JAA) + Clear Glass's account switch on the JAA cookie vault; the COS-window attention panel; the pick checked by Clear Glass's selector check, anchored at x/y/z and used by every userscript (field map); ChatGPT works signed out; sign-in responses untouched
+  'test-repo-history.test.js',   // 0.60.7 — Versionium per repo: history import (git, version zips, secrets gate), index, diff, restore one file; import checks as notes
   'test-repo-notes.test.js',   // 0.60.6 — notes per repo and on no repo (ideas, decisions, todos, questions, quotes); routes, commands, the Notes tab
   'test-phases-tab.test.js',
   'test-workshop-thread.test.js',   // 0.51.0 RS11 — each workshop section its phases (Clear Glass)   // 0.50.0 RS10 — the Phases tab rebuilt on the thread (Clear Glass)   // 0.49.0 RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files, stale per block
