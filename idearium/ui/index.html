@@ -2367,6 +2367,27 @@ async function saveToIdearium(){
 </div>
 
 <style>
+  /* §0.60.7 the Versionium tab's index (js/repo-versions.js) */
+  #ver-index .vx-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}
+  #ver-index .vx-grow{flex:1}
+  #ver-index .vx-chip,#ver-index .vx-pick,#ver-index .vx-more{background:transparent;border:1px solid var(--b1);border-radius:999px;padding:2px 9px;color:var(--text3);font:10.5px var(--mono);cursor:pointer}
+  #ver-index .vx-chip.on,#ver-index .vx-pick.on{border-color:var(--sky,#38bdf8);color:var(--text)}
+  #ver-index .vx-drop{border:1px dashed var(--b1);border-radius:8px;padding:10px;text-align:center;font:10.5px var(--mono);color:var(--text3);margin:6px 0}
+  #ver-index .vx-drop.drag{border-color:var(--sky,#38bdf8);color:var(--text)}
+  #ver-index .vx-list{max-height:420px;overflow:auto}
+  #ver-index .vx-row{display:grid;grid-template-columns:20px 118px 1fr auto auto;gap:8px;align-items:center;padding:5px 6px;border-bottom:1px solid var(--b0);cursor:pointer;font:10.5px var(--mono);color:var(--text)}
+  #ver-index .vx-row:hover,#ver-index .vx-row.open{background:var(--b0)}
+  #ver-index .vx-row.vx-skip{opacity:.5}
+  #ver-index .vx-msg{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #ver-index .vx-when,#ver-index .vx-dim{color:var(--text3)}
+  #ver-index .vx-history{color:var(--sky,#38bdf8)} #ver-index .vx-backup{color:var(--amber)} #ver-index .vx-revision{color:var(--mint)}
+  #ver-index .vx-picks{display:flex;gap:3px}
+  #ver-index .vx-file summary{cursor:pointer;font:11px var(--mono);padding:3px 0}
+  #ver-index .vx-st{display:inline-block;min-width:58px;color:var(--text3)} #ver-index .vx-st-added{color:var(--mint)} #ver-index .vx-st-removed{color:var(--coral)} #ver-index .vx-st-changed{color:var(--amber)}
+  #ver-index .vx-patch{font:10.5px/1.45 var(--mono);background:var(--b0);padding:8px;border-radius:6px;overflow:auto;max-height:480px;white-space:pre}
+  #ver-index .vx-add{color:var(--mint)} #ver-index .vx-del{color:var(--coral)} #ver-index .vx-hunk{color:var(--sky,#38bdf8)}
+  #ver-index .vx-files{max-height:320px;overflow:auto} #ver-index .vx-frow{display:flex;gap:8px;align-items:center;font:10.5px var(--mono);padding:2px 0} #ver-index .vx-frow span:first-child{flex:1}
+  #ver-index .vx-warn{color:var(--amber);white-space:pre-wrap}
   /* §0.60.6 the Notes tab (js/repo-notes.js) */
   #repo-subtab-notes .nt-wrap{display:grid;gap:12px;padding:14px;max-width:960px}
   #repo-subtab-notes .nt-capture{display:grid;gap:8px;padding:12px;border:1px solid var(--b1);border-radius:10px;background:var(--b0)}
@@ -2577,6 +2598,7 @@ async function saveToIdearium(){
 <script src="js/code-surface.js"></script>   <!-- §0.39.349 CT3 — the Code tab is the work surface -->
 <script src="js/file-versions.js"></script>
 <script src="js/components-panel.js"></script>
+<script src="js/repo-versions.js"></script>   <!-- §0.60.7 the Versionium tab: every version, compare, import history -->
 <script src="js/repo-notes.js"></script>   <!-- §0.60.6 a repo's Notes tab -->   <!-- §0.60.5 decompose projects into the component store; bundles with their dependencies -->
 </body>
 </html>

@@ -27,7 +27,7 @@ They are law here. AXIOMS-v3.1 governs; this is the operational distillation.
 
 4. **ADDENDA TO RELEVANT SPECS (§12.5).** A living spec documents drift. When you
    change behavior, add a dated `## ADDENDUM` to the spec(s) that own it, and
-   register new specs in `docs/SPEC-REGISTRY.md` (§6.3). Divergent copies of a
+   register new specs in `docs/SPEC-REGISTRY.spec` (§6.3). Divergent copies of a
    spec are two contracts — surface them, don't collapse them silently.
 
 5. **NOTHING GETS LOST UNLESS REDUNDANT (§0.3).** Archive, don't delete. A stale
@@ -80,6 +80,71 @@ written down where the work lives, never only in a chat:
   one stays (§0.3).
 
 This file loads for every session at the repo root through `CLAUDE.md` (which imports it).
+
+## Claude follows the axioms too (2026-10-13)
+
+James: "also maybe, add in claude, also to follow axioms. name the tools, and best areas to get context"
+
+The coder works under the same law as the system. `docs/AXIOMS-v3.1.md` governs and RAID's constitution
+(`lib/constitutional-ai.js`) binds every action: USER_AUTONOMY (his calls are his), REVERSIBILITY (every change can be
+undone: a snapshot first, archive rather than delete), TRUTH_OVER_COHERENCE (say what the run showed, even when it spoils
+the story), EXPLAINABILITY (every change says why). The parts that bite most often:
+
+- §0.1 / §1.1: evidence over memory. Read the file or run the thing before you claim it.
+- §1.2: nothing fails silently. A skip says why.
+- §3.3: map before build. §8.6: reuse before build. §12.5: addend the spec that owns the behaviour.
+- §5.2 / §9.1: routing goes through RAID, and RAID is the only write authority for the system's own decisions. Don't
+  build a side door.
+
+## Where to get context: the tools, best first (2026-10-13)
+
+Read the compact projections before the raw tree. A wrong guess about what exists is how drift starts.
+
+1. **`nexus.command`.** The one tool every agent has. It runs every row in `idearium/cli/route-commands.js` (`action
+   list` shows them all). In Claude Code the same table is the `mcp__nexus__*` tools (`.mcp.json`): `nexus_grep`,
+   `nexus_read_range`, `nexus_loom_query`, `nexus_loom_impact`, `nexus_read_spec`, `nexus_gaps`,
+   `nexus_changelog_tail`.
+2. **Loom** (`loom/`, registry, `loom/maps/*`) is the system's self-model: components, hooks, and wires as real
+   require/consumer edges. Ask it "who uses this" (`loom_impact`) before changing anything shared.
+3. **The atlases** (`docs/atlases/*-atlas.md`, one per system) give what each system is, its files, routes, and events.
+   `lib/context-atlas.js` searches across specs, notes and nodes.
+4. **Specs and phasemaps.**
+   - `docs/*.spec` and `docs/*-phasemap.spec` hold what was decided and what is open. `docs/SPEC-REGISTRY.spec` lists
+     them.
+   - The newest phasemap for the area tells you its state.
+   - `cos/spec/check-catalogue.spec` is every check and gate, with `exists:` naming the code that already does it.
+5. **Code intelligence.** `lib/code-intel/` (cards, decls, search) answers "where is this declared and what does it
+   do" without reading whole files.
+6. **What happened.**
+   - The activity log is `lib/activity-log/`, read with `activity` and `log`.
+   - The ledgers are `lib/ledger-*.js`.
+   - The CHANGELOGs and the version lines in `lib/version.js` quote James's reason for each release.
+7. **His notes** (`lib/repo-notes.js`: `repo notes`, `notes`) hold the ideas, decisions, todos and questions he has
+   logged. Read them before asking him something he already answered.
+8. **A repo's own versions.** `repo versions` gives every snapshot, backup, staging commit, imported history entry and
+   revision. `repo diff` shows what changed between any two.
+9. **The component store** (`lib/component-store.js`, `components`) holds every decomposed project's components, with
+   their dependencies resolved.
+
+## Credibility, skills, and proof (2026-10-13)
+
+James: "focus on what establishes credibility, and skills, portfolio, and proof of compentancy. money is needed, badly."
+· "sometimes I need some motivation but nothing ungrounded in truth. like tell me when im making good choices. note
+valuable skills. log patterns, methods, anything valuable to improve. log anything that helps establish credibility,
+value and proof of compentancy with quotes and explicit context."
+
+- **`docs/PROOF-OF-COMPETENCY.md` is the portfolio record.** Each release adds what it proves about his skill and
+  judgment:
+  - his words, quoted and dated;
+  - the context: what was on the table, and what he chose;
+  - something a stranger can check: a commit, a test, a spec, or a number from a real run.
+- Never inflate. If a claim cannot point at evidence, leave it out.
+- **Encouragement is grounded.** When he makes a good call, say so and name the evidence, for example: "that decision
+  is why X didn't break". When a call cost something, say that too. Both are data.
+- **Name skills as skills.** Systems design, specification, failure-mode thinking, and directing an AI coder to
+  production quality are each named with an instance when they show.
+- His working style, architecture principles and coding language live in `skills/james-brooks/SKILL.md`, which loads
+  through `.claude/skills/james-brooks`. Read it at the start of a session.
 
 ## Leverage (2026-10-07)
 

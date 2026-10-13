@@ -21,9 +21,17 @@ const fs   = require('fs');
 const yaml = require('js-yaml');
 const { randomUUID } = require('crypto');
 
-const SCRIPTS_DIR = path.join(
+// 0.60.7 — CG_USERSCRIPTS_DIR so a test can point it elsewhere
+const SCRIPTS_DIR = process.env.CG_USERSCRIPTS_DIR || path.join(
   process.env.APPDATA || process.env.HOME || '.', '.clear-glass', 'userscripts'
 );
+// 0.60.7 — James, with a screenshot of the co-pilot listing "1342 userscript(s) auto-injected on http://127.0.0.1:9000/":
+// "the interaction field and nexus nerve doesn't do much. besides inject 1300 scripts." Cause: every boot each built-in
+// plugin's userscript (passwords' "Password Form Detector" …) was created again under a new random id and written to
+// disk as bare source — its name and @match lost — so the next boot loaded every earlier copy as "<uuid>.js" matching
+// every page. Now: one script per name (create() updates it), the name/matches/agentId kept in a .meta.json beside it,
+// only persistent scripts written, and the copies already on disk moved to _duplicates/ on load (kept, not deleted).
+const META_EXT = '.meta.json';
 
 class UserscriptManager {
   constructor({ guardianDir, driver, sse } = {}) {
@@ -43,25 +51,46 @@ class UserscriptManager {
 
   // ── Load user scripts from disk ───────────────────────────────────────
   async _loadUserScripts() {
+    this.duplicatesArchived = 0;
+    let files = [];
+    try { files = fs.readdirSync(SCRIPTS_DIR).filter(f => f.endsWith('.js')); } catch (_) { return; }
+    const seen = new Map();   // name + source → id kept
+    for (const file of files.sort()) {
+      const id   = file.replace(/\.js$/, '');
+      const fp   = path.join(SCRIPTS_DIR, file);
+      let src;
+      try { src = fs.readFileSync(fp, 'utf8'); } catch (_) { continue; }
+      const meta = this._parseMeta(src);
+      let side = null;
+      try { side = JSON.parse(fs.readFileSync(path.join(SCRIPTS_DIR, id + META_EXT), 'utf8')); } catch (_) { side = null; }
+      const name = (side && side.name) || meta.name || file;
+      // the same script written again under another id (the boot loop above): keep the first, archive the rest
+      const key = `${side && side.name ? side.name : ''}\u0000${src}`;
+      if (seen.has(key)) { this._archiveDuplicate(file, id); continue; }
+      seen.set(key, id);
+      this._scripts.set(id, {
+        id,
+        name,
+        source:     src,
+        enabled:    side && side.enabled !== undefined ? side.enabled !== false : meta.enabled !== false,
+        agentId:    (side && side.agentId) || meta.agentId || '*',
+        matches:    (side && Array.isArray(side.matches) && side.matches.length) ? side.matches : (meta.match ? [meta.match] : meta.matches || ['*']),
+        persistent: true,
+        type:       'user',
+        path:       fp,
+      });
+    }
+    if (this.duplicatesArchived) console.log(`[Userscripts] ${this.duplicatesArchived} duplicate copies moved to ${path.join(SCRIPTS_DIR, '_duplicates')}`);
+  }
+
+  _archiveDuplicate(file, id) {
     try {
-      const files = fs.readdirSync(SCRIPTS_DIR).filter(f => f.endsWith('.js'));
-      for (const file of files) {
-        const id   = file.replace('.js', '');
-        const src  = fs.readFileSync(path.join(SCRIPTS_DIR, file), 'utf8');
-        const meta = this._parseMeta(src);
-        this._scripts.set(id, {
-          id,
-          name:       meta.name || file,
-          source:     src,
-          enabled:    meta.enabled !== false,
-          agentId:    meta.agentId || '*',
-          matches:    meta.match ? [meta.match] : meta.matches || ['*'],
-          persistent: meta.persistent !== false,
-          type:       'user',
-          path:       path.join(SCRIPTS_DIR, file),
-        });
-      }
-    } catch (_) {}
+      const dir = path.join(SCRIPTS_DIR, '_duplicates');
+      fs.mkdirSync(dir, { recursive: true });
+      fs.renameSync(path.join(SCRIPTS_DIR, file), path.join(dir, file));
+      try { fs.renameSync(path.join(SCRIPTS_DIR, id + META_EXT), path.join(dir, id + META_EXT)); } catch (_) {}
+      this.duplicatesArchived++;
+    } catch (_) { /* left where it is; it is still skipped */ }
   }
 
   // ── Load Guardian NCP userscripts (read-only entries) ─────────────────
@@ -136,13 +165,21 @@ class UserscriptManager {
   create({ name, source, agentId = '*', matches = ['*'], persistent = false }) {
     if (!name) throw new Error('name required');
     if (!source) throw new Error('source required');
+    // one script per name: creating it again updates it (a plugin re-registers its script on every boot)
+    const existing = [...this._scripts.values()].find(s => s.type === 'user' && s.name === name);
+    if (existing) {
+      Object.assign(existing, { source, agentId, matches, persistent: existing.persistent || persistent });
+      if (existing.persistent) this._saveToDisk(existing);
+      this.sse.emit('userscript.created', { id: existing.id, name, agentId, updated: true });
+      return existing;
+    }
     const id = randomUUID();
     const script = {
       id, name, source, enabled: true, agentId, matches, persistent, type: 'user',
       path: path.join(SCRIPTS_DIR, `${id}.js`),
     };
     this._scripts.set(id, script);
-    this._saveToDisk(script);
+    if (persistent) this._saveToDisk(script);
     this.sse.emit('userscript.created', { id, name, agentId });
     return script;
   }
@@ -172,6 +209,7 @@ class UserscriptManager {
     if (script.readOnly) throw new Error('Cannot delete Guardian script');
     this._scripts.delete(id);
     try { if (script.path) fs.unlinkSync(script.path); } catch (_) {}
+    try { if (script.path) fs.unlinkSync(script.path.replace(/\.js$/, META_EXT)); } catch (_) {}
     this.sse.emit('userscript.deleted', { id });
     return { deleted: id };
   }
@@ -257,7 +295,10 @@ class UserscriptManager {
 
   _saveToDisk(script) {
     try {
-      if (script.path) fs.writeFileSync(script.path, script.source, 'utf8');
+      if (!script.path) return;
+      fs.mkdirSync(path.dirname(script.path), { recursive: true });
+      fs.writeFileSync(script.path, script.source, 'utf8');
+      fs.writeFileSync(script.path.replace(/\.js$/, META_EXT), JSON.stringify({ name: script.name, matches: script.matches, agentId: script.agentId, enabled: script.enabled }, null, 1), 'utf8');
     } catch (_) {}
   }
 }

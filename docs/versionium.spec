@@ -332,3 +332,20 @@ spec:
       date: 2026-09-02
       summary: "VS1 — promoted from a library embedded in cortex's process to its own sovereign system (versionium/server.js, port 3754, own data folder, own component registry, own event taxonomy). Every real caller repointed."
       versioniumCommitId: null
+
+# ## ADDENDUM 2026-10-13 (0.60.7) — managed per repo from Idearium; a project's past imported as real versions
+# James: "i want real versions with the versionium tab. like a full index of versions, versions, revisions from the work
+# surface, diffs, backups/snapshots, etc. like full management system for versionium backend, then with the api, expand
+# the idearium ui repo tab."
+# Versionium's own store and routes are unchanged. lib/repo-history.js (consumed by idearium/api) reads and writes through
+# them:
+#   - a third per-repo branch, repo-<uuid>@history, holds imported history. Its commits are system idearium.repo with
+#     state.repository set, so files/record attaches the file layer to them. state.imported carries the original
+#     {source git|zip, originalId, date, author, version, zip}, because commit() always stamps wall = now and cannot
+#     back-date. files.js headOfRepo reads repo-<uuid> only, so the live branch's base and snapshot list are untouched.
+#   - drift noted: files/plan's base is the head of repo-<uuid>, not of the branch being recorded. The history import
+#     therefore computes what changed against its own previous version, stages that content, and records with
+#     contents: [] (record takes staged blobs). A caller recording on another branch must do the same.
+#   - not covered: .nex backups (lib/snapshot.js backup_records) are system-wide and do not appear in a repo's index.
+#     There is still no diff route here; the diff is composed from files/tree + files/content in lib/repo-history.js.
+# Phase VM0 of docs/2026-10-13-projects-raid-and-gates-phasemap.spec; proof tests/modules/test-repo-history.test.js.

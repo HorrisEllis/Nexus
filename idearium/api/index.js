@@ -2131,6 +2131,9 @@ const ROUTE_CAP = {
   'cos.testenv.status': CAPS.READ_IDEAS,
   'history.import.status': CAPS.READ_IDEAS,
   'repo.worksurface': CAPS.READ_IDEAS, 'repo.worksurface.prove': CAPS.WRITE_IDEAS,
+  'repo.versions.index': CAPS.READ_IDEAS, 'repo.versions.diff': CAPS.READ_IDEAS, 'repo.versions.tree': CAPS.READ_IDEAS,   // §0.60.7
+  'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
+  'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
@@ -2522,6 +2525,16 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','spec','complete'],'repo.spec.complete'],    // §0.47.0 SP2 — draft them (workshop proposals)          // §0.47.0 OS1 — ?path= the commits that touched one file
     ['GET',    ['api','repos',    ':uuid','snapshots',':commitId'], 'repo.snapshot.show'],
     ['POST',   ['api','repos',    ':uuid','snapshots',':commitId','restore'], 'repo.snapshot.restore'],
+    // §0.60.7 — Versionium managed per repo (lib/repo-history.js): every version in one index (snapshots, backups, staging,
+    // imported history, work-surface revisions), any two compared, one file brought back, the project's past imported.
+    ['GET',    ['api','repos',    ':uuid','versions'],                 'repo.versions.index'],
+    ['GET',    ['api','repos',    ':uuid','versions','diff'],          'repo.versions.diff'],       // ?a=&b=(commit|working)&path=
+    ['GET',    ['api','repos',    ':uuid','versions','tree'],          'repo.versions.tree'],       // ?commitId=
+    ['POST',   ['api','repos',    ':uuid','versions','restore-file'],  'repo.versions.restoreFile'],// { commitId, path }
+    ['POST',   ['api','repos',    ':uuid','history','import'],         'repo.history.import'],      // { zips:[{name, contentBase64}], dryRun, allowSecrets }
+    // §0.60.7 PL4 — the import checks (lib/import-checks.js): GET reads them; POST also writes them as the repo's notes
+    ['GET',    ['api','repos',    ':uuid','integrity'],                'repo.integrity'],
+    ['POST',   ['api','repos',    ':uuid','integrity'],                'repo.integrity.notes'],
     // §MCO-E 2026-09-20 — the repo's roadmap, from the phasemaps inside it
     // (idearium/repo/roadmap.js; spec idearium/spec/idearium.repo-roadmap.spec).
     ['GET',    ['api','repos',    ':uuid','roadmap'],        'repo.roadmap.get'],
@@ -4187,6 +4200,16 @@ async function handle(req, res, route, query, body) {
       // §MCO-C — baseline after finalize (so .git exists). A deferred import has
       // no index yet; its baseline is taken when POST /api/repos/:uuid/chunk finishes.
       if (!body.deferChunking && pipeline && pipeline.state !== 'FAULT') void _baselineSnapshot(repoUuid, 'project-import');
+      // §0.60.7 PL4 — James: "like maybe have integrity checks when importing?" The repo arrives with what is already
+      // broken written in its Notes (lib/import-checks.js). Never awaited: the import's answer does not wait on it.
+      void (async () => {
+        try {
+          const IC = _require('../../lib/import-checks.js');
+          const r = await IC.run({ repo: getRepoLayer().get(repoUuid), dir: mat.dir });
+          const notes = IC.toNotes(repoUuid, r);
+          os.emit('idearium.repo.integrity.checked', { repoUuid, ok: r.ok, failed: r.checks.filter(c => !c.ok).map(c => c.id), notes });
+        } catch (e) { console.warn(`[api] import checks for ${repoUuid} did not run: ${e.message}`); }
+      })();
       // §CHECKLIST — see _readPipelineArtifacts' own header. mat.dir is
       // guaranteed here (materialize() already err-returned above if it
       // failed), so this only degrades on the artifact read itself.
@@ -6198,6 +6221,59 @@ async function handle(req, res, route, query, body) {
     // §0.39.368 AL1 — James: "I also want to have a full extensive activity log in each repo."
     // §0.60.6 — James: "can we have a notes or something section for the repos so i can note all of this down?"
     // lib/repo-notes.js: one table, one writer; kinds note · idea · decision · todo · question · quote; archive, never delete.
+    // §0.60.7 — James: "i want real versions with the versionium tab. like a full index of versions, versions, revisions
+    // from the work surface, diffs, backups/snapshots, etc. like full management system for versionium backend, then with
+    // the api, expand the idearium ui repo tab." lib/repo-history.js over versionium's own store; nothing kept beside it.
+    case 'repo.versions.index': case 'repo.versions.diff': case 'repo.versions.tree': case 'repo.versions.restoreFile': case 'repo.history.import': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RH = _require('../../lib/repo-history.js');
+      try {
+        if (action === 'repo.versions.index') {
+          let injects = [];
+          try { injects = _require('../../lib/repo-inject.js').list(repo.uuid, { limit: 500 }); } catch (_) {}
+          return ok(res, await RH.index(_vcall, repo.uuid, { injects }));
+        }
+        if (action === 'repo.versions.tree') {
+          if (!query.commitId) return err(res, 400, 'commitId is required');
+          return ok(res, await _vcall('GET', `/api/versionium/files/tree?${new URLSearchParams({ repository: repo.uuid, commitId: query.commitId })}`, undefined, 30000));
+        }
+        if (action === 'repo.versions.diff') {
+          const dir = _repoDiskDir(repo.uuid);
+          const working = dir ? {
+            tree: () => { const CR = _require('../../lib/cos-run.js'); return CR.repoFiles(repo, dir).filter(p => !/(^|\/)(\.git|node_modules)\//.test(p)).map(p => { const b = fs.readFileSync(path.join(dir, p)); return { path: p, sha256: _require('crypto').createHash('sha256').update(b).digest('hex'), bytes: b.length }; }); },
+            read: (p) => fs.readFileSync(path.join(dir, p)),
+          } : null;
+          return ok(res, await RH.diff(_vcall, repo.uuid, query.a, query.b || 'working', { path: query.path || null, working }));
+        }
+        if (action === 'repo.versions.restoreFile') {
+          const write = async (p, buf) => {
+            const w = getRepoLayer().writeFile(repo.uuid, p, buf.toString('utf8'), { preserveWhitespace: true });
+            if (!w || w.error) throw Object.assign(new Error(`the repo did not take ${p}: ${w ? w.error : 'no answer'}`), { status: w && w.code === 'IMMUTABLE' ? 409 : 500 });
+          };
+          const r = await RH.restoreFile(_vcall, repo.uuid, body.commitId, body.path, write);
+          os.emit('idearium.repo.version.restored', { repoUuid: repo.uuid, commitId: r.commitId, path: r.path, sha256: r.sha256 });
+          return ok(res, r);
+        }
+        const zips = (body.zips || []).map(z => ({ name: String(z.name || 'project.zip'), buffer: Buffer.from(String(z.contentBase64 || ''), 'base64') }));
+        const r = await RH.importHistory(_vcall, repo.uuid, { zips, dryRun: !!body.dryRun, allowSecrets: !!body.allowSecrets });
+        if (!r.ok) return err(res, 409, r.error, { code: r.code, versions: r.versions, secrets: r.secrets });
+        if (!r.dryRun) os.emit('idearium.repo.history.imported', { repoUuid: repo.uuid, imported: r.imported, skipped: r.skipped, branch: r.branch });
+        return ok(res, r);
+      } catch (e) { return err(res, e.status || 502, e.message); }
+    }
+    case 'repo.integrity': case 'repo.integrity.notes': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const IC = _require('../../lib/import-checks.js');
+      try {
+        const r = await IC.run({ repo, dir: _repoDiskDir(repo.uuid) });
+        if (action === 'repo.integrity') return ok(res, r);
+        const notes = IC.toNotes(repo.uuid, r);
+        os.emit('idearium.repo.integrity.checked', { repoUuid: repo.uuid, ok: r.ok, failed: r.checks.filter(c => !c.ok).map(c => c.id), notes });
+        return ok(res, { ...r, notes });
+      } catch (e) { return err(res, e.status || 500, e.message); }
+    }
     case 'repo.notes': case 'repo.notes.add': case 'notes.list': case 'notes.add': case 'notes.update': {
       const RN = _require('../../lib/repo-notes.js');
       try {

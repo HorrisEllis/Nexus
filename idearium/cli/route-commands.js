@@ -90,6 +90,22 @@ export const SPEC = [
   { key: 'repo.activity', repo: true, usage: 'repo activity <repo> [--kind task|phase|inject|fault|run|checkpoint|system] [--actor a] [--status failed] [--q words] [--limit n] [--before ts]', about: 'the repo\'s durable activity log, newest first',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/activity${qs(a.flags, LOG_FLAGS)}` }),
     print: (d, a, h) => printLog(d, h, null) },
+  // 0.60.7 — Versionium managed per repo (lib/repo-history.js) and the import checks (lib/import-checks.js)
+  { key: 'repo.diff', repo: true, usage: 'repo diff <repo> <a> [b|working] [--path file]', about: 'what changed between two versions (b defaults to the files on disk now)',
+    need: (a) => (a.args.length ? null : '<a> (a version id from repo versions)'),
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/versions/diff?a=${encodeURIComponent(a.args[0])}&b=${encodeURIComponent(a.args[1] || 'working')}${a.flags.path ? `&path=${encodeURIComponent(a.flags.path)}` : ''}` }),
+    print: (d, a, h) => { console.log(h.c.dim(`  ${d.counts.added} added · ${d.counts.removed} removed · ${d.counts.changed} changed`)); for (const f of d.files || []) { console.log(`  ${f.status.padEnd(8)} ${f.path}`); if (f.patch && (a.flags.path || (d.files || []).length <= 5)) console.log(f.patch); } } },
+  { key: 'repo.restore-file', repo: true, usage: 'repo restore-file <repo> <version> <path>', about: 'put one file back as it was at a version (the change is itself versioned)',
+    need: (a) => (a.args.length >= 2 ? null : '<version> <path>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/versions/restore-file`, body: { commitId: a.args[0], path: a.args[1] } }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.path} restored from ${d.commitId} (${d.bytes} bytes)`) },
+  { key: 'repo.history-import', repo: true, usage: 'repo history-import <repo> <zip> [zip…] [--dry] [--allow-secrets]', about: 'import the project\'s past as real versions: a zip with its .git gives every commit; several zips of one project become one version each, in order',
+    need: (a) => (a.args.length ? null : '<zip> (a project zip with its .git, or several versions)'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/history/import`, body: { dryRun: !!a.flags.dry, allowSecrets: !!a.flags['allow-secrets'], zips: a.args.map(p => ({ name: require('path').basename(p), contentBase64: require('fs').readFileSync(p).toString('base64') })) } }),
+    print: (d, a, h) => { for (const x of d.versions || []) console.log(`  ${x.skipped ? h.c.dim('skip') : h.c.mint(d.dryRun ? 'would' : '  ✓ ')} ${String(x.date || '').slice(0, 10)} ${x.source.padEnd(3)} ${x.message.slice(0, 70)} ${h.c.dim(`${x.files} files`)}`); if ((d.secrets || []).length) console.log(h.c.amber(`  ${d.secrets.length} possible credential(s): ${d.secrets.slice(0, 5).map(s => `${s.path}:${s.line} ${s.kind}`).join('; ')}`)); console.log(h.c.dim(d.dryRun ? `  dry run: ${d.wouldImport} would be imported` : `  ${d.imported} imported, ${d.skipped} skipped → ${d.branch}`)); } },
+  { key: 'repo.integrity', repo: true, usage: 'repo integrity <repo> [--notes]', about: 'the import checks: parses, requires resolve, npm declared, duplicate files, secrets, files arrived (--notes writes them as the repo\'s notes)',
+    req: (a) => ({ method: a.flags.notes ? 'POST' : 'GET', path: `/api/repos/${a.repo.uuid}/integrity`, ...(a.flags.notes ? { body: {} } : {}) }),
+    print: (d, a, h) => { for (const c of d.checks || []) console.log(`  ${c.ok ? h.c.mint('✓') : (c.severity === 'error' ? h.c.amber('✗') : h.c.dim('?'))} ${c.id.padEnd(7)} ${c.name.padEnd(22)} ${c.ok ? '' : c.count}${c.error ? h.c.dim(` ${c.error}`) : ''}`); if (d.notes) console.log(h.c.dim(`  notes: ${d.notes.added} added, ${d.notes.updated} updated, ${d.notes.done} closed`)); } },
   // 0.60.6 — notes (lib/repo-notes.js): he and every agent log ideas, decisions, todos and questions in one place
   { key: 'repo.notes', repo: true, usage: 'repo notes <repo> [--q words] [--kind idea|decision|todo|question|quote|note]', about: 'the repo\'s notes, pinned first then newest',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/notes${a.flags.q || a.flags.kind ? `?${[a.flags.q ? `q=${encodeURIComponent(a.flags.q)}` : '', a.flags.kind ? `kind=${encodeURIComponent(a.flags.kind)}` : ''].filter(Boolean).join('&')}` : ''}` }),
@@ -159,13 +175,16 @@ export const SPEC = [
       if (!runs.length) { console.log(h.c.gray(`  ${a.args[0]} has never run — idearium repo phase ${a.repo.name} ${a.args[0]} build`)); return; }
       for (const r of runs) console.log(`  ${h.c.dim(when(r.ts))} ${r.state === 'failed' || r.state === 'blocked' ? h.c.coral(r.state) : r.state === 'complete' || r.state === 'proved' ? h.c.mint(r.state) : h.c.sky(r.state || '?')}  ${h.c.dim(r.provider || '')}${r.error ? `  ${String(r.error).slice(0, 140)}` : ''}`);
     } },
-  { key: 'repo.versions', repo: true, usage: 'repo versions <repo> [--limit n]', about: 'its versionium history: every change a commit (VR1) — message, who, files, tests',
-    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/snapshots`, timeoutMs: 30000 }),
+  // 0.60.7 — the same command, now the whole index (lib/repo-history.js): VR1's commits are its snapshots; backups,
+  // staging, imported history and the work surface's revisions beside them. --kind snapshot is the old list.
+  { key: 'repo.versions', repo: true, usage: 'repo versions <repo> [--limit n] [--kind snapshot|backup|staging|history|revision]', about: 'every version of the repo, newest first: snapshots (VR1: every change a commit), backups, staging, imported history, work-surface revisions',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/versions`, timeoutMs: 30000 }),
     print: (d, a, h) => {
-      const l = (d.snapshots || []).slice(0, parseInt(a.flags.limit || '25', 10) || 25);
-      if (!l.length) { console.log(h.c.gray('  no commits yet')); return; }
-      for (const c of l) console.log(`  ${h.c.amber(String(c.commitId).slice(0, 10))} ${h.c.dim(when(c.ts))}  ${String(c.message || '').slice(0, 100)}${c.files ? h.c.dim(`  · ${c.files.count} files`) : ''}${c.tests ? h.c.dim(`  · tests ${c.tests}`) : ''}`);
-      console.log(h.c.dim(`\n  ${(d.snapshots || []).length} commit(s)`));
+      const l = (d.entries || []).filter(e => !a.flags.kind || e.kind === a.flags.kind).slice(0, parseInt(a.flags.limit || '25', 10) || 25);
+      if (!l.length) { console.log(h.c.gray('  no versions yet')); return; }
+      for (const e of l) console.log(`  ${h.c.amber(String(e.id).slice(0, 12).padEnd(12))} ${h.c.dim(when(e.at))} ${e.kind.padEnd(8)} ${String(e.message || '').slice(0, 90)}${e.fileCount != null ? h.c.dim(`  · ${e.fileCount} files`) : ''}`);
+      const c = d.counts || {};
+      console.log(h.c.dim(`\n  ${Object.keys(c).map(k => `${c[k]} ${k}`).join(' · ')}`));
     } },
 
   // ── its desktop, like VMware ──────────────────────────────────────────────────────────────────────────────────────

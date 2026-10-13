@@ -200,7 +200,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     portal: {
       providers:   ()                                   => ipcRenderer.invoke('accounts:portal:providers'),
       open:        (id, provider)                       => ipcRenderer.invoke('accounts:portal:open',    { id, provider }),
-      capture:     (id, provider, identity, close)      => ipcRenderer.invoke('accounts:portal:capture', { id, provider, identity, close }),
+      capture:     (id, provider, identity, close, from) => ipcRenderer.invoke('accounts:portal:capture', { id, provider, identity, close, from }),   // 0.60.7 from: 'default' | 'ncp'
       status:      (id, provider)                       => ipcRenderer.invoke('accounts:portal:status',  { id, provider }),
       close:       (id, provider)                       => ipcRenderer.invoke('accounts:portal:close',   { id, provider }),
       signOut:     (id, provider, opts = {})            => ipcRenderer.invoke('accounts:portal:signOut', { id, provider, ...opts }),

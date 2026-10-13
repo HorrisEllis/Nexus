@@ -156,7 +156,7 @@
   async function agentOptions() {
     const [wins, bg] = await Promise.all([cg.window.list().catch(() => []), cg.bgTabs.list().catch(() => [])]);
     const ids = new Map();
-    ((wins && wins.windows) || []).forEach(id => ids.set(id, `${id} (window)`));
+    ((wins && wins.windows) || []).forEach(id => ids.set(id, `${id} — the tab open in that window`));   // 0.60.7: records the page in its tab, never this settings page
     (bg || []).forEach(b => ids.set(b.agentId, `${b.agentId} (background${b.url ? ' · ' + b.url : ''})`));
     return [...ids.entries()].map(([value, label]) => ({ value, label }));
   }
