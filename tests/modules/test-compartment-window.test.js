@@ -88,7 +88,7 @@ t('CW-11', 'every pop-out page with its own title bar opens frameless — the wo
     assert.strictEqual(CW.isCompartmentPage(`http://127.0.0.1:9000/${file}`), kind, file);
     const o = CW.windowOptions(kind, '', '/p.js');
     assert.strictEqual(o.frame, false); assert.strictEqual(o.title, CW.TITLES[kind]);
-    const src = fs.readFileSync(path.join(ROOT, 'idearium/ui', file), 'utf8');
+    const src = fs.readFileSync(path.join(ROOT, 'idearium/ui', file === 'architect.html' ? '_archive/architect-0.60.18.html' : file), 'utf8');   // 0.60.18 archived
     assert.ok(src.includes(`js/window-chrome.js" data-kind="${kind}"`), `${file} draws its own title bar`);
   }
 });

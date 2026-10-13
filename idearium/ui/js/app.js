@@ -3651,13 +3651,9 @@ document.addEventListener('keydown', (e) => {
 });
 document.addEventListener('click', () => document.querySelectorAll('.welcome-more.open').forEach(m => m.classList.remove('open')));
 
-function openArchitect(from = null) {
-  if (!API_BASE) { toast('idearium is offline — the architect is served by it', 'err'); return null; }
-  const w = window.open(`${API_BASE}/architect.html${from ? `?from=${encodeURIComponent(from)}` : ''}`, 'idearium-architect', 'width=1520,height=960');
-  if (!w) toast('the architect window was blocked — allow pop-ups for idearium', 'err');
-  _architectWin = w || _architectWin;
-  return w;
-}
+// 0.60.18 — James: "can you delete this architecture afrom idearium?" The Architect page is archived
+// (ui/_archive/architect-0.60.18.html); nothing opens it. A repo's own Architect tab (its component registry) stays.
+function openArchitect() { toast('the Architect page was removed (archived) — a repo\'s Architect tab holds its components', 'err'); return null; }
 function openWorkshop(from = null, id = null, block = null) {
   if (!API_BASE) { toast('idearium is offline — the spec workshop is served by it', 'err'); return null; }
   // §RS11 0.51.0 — a phase opens the workshop at the section (block) it was planned from

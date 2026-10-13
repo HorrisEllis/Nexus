@@ -89,11 +89,11 @@ function take(d) {
 
 // ── the stations ──────────────────────────────────────────────────────────────────────────────────────────────────
 function stations() {
-  // IDEA → SPEC → ARCHITECT → BLUEPRINT → REPO → COS, true to state (BLUEPRINT and COS are mapped, not built)
+  // IDEA → SPEC → BLUEPRINT → REPO → COS, true to state (BLUEPRINT and COS are mapped, not built)
   const s = [
     ['IDEA', 'stIdea', (W && W.source && W.source.kind === 'idea' ? 'done ' : '') + 'link', 'THE VOID — WHERE THE IDEAS ARE'],
     ['SPEC', null, 'now', null],
-    ['ARCHITECT', W ? 'stArch' : null, W ? 'link' : '', W ? 'NEXT: LAY THIS SPEC OUT AS COMPONENTS' : 'OPENS ONCE THE SPEC IS STARTED'],
+    // 0.60.18 — James: "can you delete this architecture afrom idearium?" ARCHITECT left the stations (page archived)
     ['BLUEPRINT', null, 'soon', 'MAPPED (BP1), NOT BUILT YET'],
     ['REPO', W && W.repoUuid ? 'stRepo' : null, W && W.repoUuid ? 'done link' : '', W && W.repoUuid ? 'OPEN THE REPO IN IDEARIUM — ITS SPEC TAB' : 'THE REPO THIS SPEC IS SAVED INTO'],
     ['COS', null, 'soon', 'MAPPED, NOT BUILT YET'],
@@ -101,7 +101,6 @@ function stations() {
   $('stations').innerHTML = s.map(([n, id, c, tip], i) => `${i ? `<span class="flow${i > 2 ? ' dim' : ''}"></span>` : ''}<span class="st ${c}"${id ? ` id="${id}" tabindex="0"` : ''}${tip ? ` title="${tip}"` : ''}><span class="i">0${i + 1}</span>${n}</span>`).join('');
   const bind = (id, go) => { const el = $(id); if (el) { el.onclick = go; el.onkeydown = (e) => { if (e.key === 'Enter') go(); }; } };
   bind('stIdea', () => flush().then(() => { location.href = 'void.html'; }));
-  bind('stArch', () => flush().then(() => { location.href = `architect.html?from=workshop:${enc(W.uuid)}`; }));
   bind('stRepo', () => openRepo('spec'));
 }
 

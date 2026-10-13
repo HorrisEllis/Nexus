@@ -63,14 +63,15 @@ async function main() {
   await test('SZ-02', 'the pipeline together: Void → Workshop → Architect, the old builder retired, the Architect without a repo', () => {
     const idx = read('idearium/ui/index.html'), app = read('idearium/ui/js/app.js');
     const create = idx.slice(idx.indexOf('data-group="create"'), idx.indexOf('data-group="build"'));
-    const order = ['openVoid()', 'openWorkshop()', 'openArchitect()'].map(x => create.indexOf(x));
-    assert.ok(order.every(i => i > 0) && order[0] < order[1] && order[1] < order[2], `Create ▾ in pipeline order ${order}`);
+    const order = ['openVoid()', 'openWorkshop()'].map(x => create.indexOf(x));
+    assert.ok(order.every(i => i > 0) && order[0] < order[1], `Create ▾ in pipeline order ${order}`);
+    assert.ok(!idx.includes('onclick="openArchitect()"'), '0.60.18 — the Architect page left the pipeline (James: "can you delete this architecture afrom idearium?")');
     const b0 = idx.indexOf('data-group="build"'), build = idx.slice(b0, idx.indexOf('class="tab-spacer"', b0));
     assert.ok(!/setView\('spec-wizard'\)/.test(build), 'the retired Spec Builder left Build ▾'); assert.match(build, /openWorkshop\(\)/);
     assert.ok(!/setView\('spec-wizard'\)/.test(idx), 'no surface opens the retired builder');
     assert.match(app, /const nestViews = \['brainstorm', 'ideas', 'eravos', 'spec-wizard'\]/, 'the Architect is not a repo\'s view');
-    assert.match(app, /function openArchitect\(from = null\)/);
-    for (const f of ['idearium/ui/architect.html', 'idearium/ui/js/workshop.js']) assert.match(read(f), /location\.href = 'void\.html'/, `${f} reaches the Void`);
+    assert.match(app, /function openArchitect\(\) \{ toast\('the Architect page was removed \(archived\)/);
+    for (const f of ['idearium/ui/_archive/architect-0.60.18.html', 'idearium/ui/js/workshop.js']) assert.match(read(f), /location\.href = 'void\.html'/, `${f} reaches the Void`);
   });
 
   await test('SZ-03', 'the increments: systems by level, components inside, wires summed', () => {

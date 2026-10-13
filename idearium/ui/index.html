@@ -1011,16 +1011,15 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
         <div class="tab-sub-head">THE PIPELINE</div>
         <button class="tab-sub" onclick="openVoid()" title="01 · IDEA — your ideas, the two dials, the echoes — its own page"><span class="tab-icon">∞</span><span>The Void<small>01 · idea — yours, the agent only echoes</small></span></button>
         <button class="tab-sub" onclick="openWorkshop()" title="02 · SPEC — shape the idea into a spec's sections, saved into the repo's spec"><span class="tab-icon">✎</span><span>Spec workshop<small>02 · spec — sections, by hand or with the agent</small></span></button>
-        <button class="tab-sub" onclick="openArchitect()" title="03 · ARCHITECT — lay the spec out as components on the canvas, reuse what exists"><span class="tab-icon">⌘</span><span>Architect<small>03 · architect — components, bottom-up, reuse what exists</small></span></button>
+        <!-- 0.60.18 — James: "can you delete this architecture afrom idearium?" The Architect page left the pipeline (archived: ui/_archive/architect-0.60.18.html). Each repo's Architect tab (its component registry, which the planner reads) stays. -->
       </div>
     </div>
     <div class="tab-group" data-group="build">
-      <button class="tab-btn tab-group-btn" data-views="eravos,architect-build" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
+      <button class="tab-btn tab-group-btn" data-views="eravos" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
       <div class="tab-dropdown tab-dropdown-deep">
         <button class="tab-sub tab-sub-lead" onclick="openBuildFlow()"><span class="tab-icon">▶</span><span>Build this repo<small>plan the spec → its phases → the agent codes them, one at a time</small></span></button>
         <div class="tab-sub-sep"></div>
         <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
-        <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect</button>
         <!-- §0.39.300 WS3 — the retired Spec Builder (spec-wizard) left Build ▾ (UI12: retired from every surface; its view
              stays below, §0.3). The spec is made in the workshop. -->
         <button class="tab-sub" onclick="openWorkshop()"><span class="tab-icon">✎</span>Spec workshop</button>
@@ -1053,7 +1052,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
              starts from something you already have (each action unchanged, one click deeper). -->
         <div class="welcome-actions">
           <button class="welcome-action-btn primary" onclick="openVoid()" title="THE SPATIAL VOID — your ideas, the two dials, the echoes">ENTER THE VOID</button>
-          <button class="welcome-action-btn secondary" onclick="openWorkshop()" title="IDEA → SPEC WORKSHOP → ARCHITECT — make the spec, by hand or with the agent">SPEC WORKSHOP</button>
+          <button class="welcome-action-btn secondary" onclick="openWorkshop()" title="IDEA → SPEC WORKSHOP → REPO — make the spec, by hand or with the agent">SPEC WORKSHOP</button>
           <div class="welcome-more">
             <button class="welcome-action-btn secondary" onclick="this.parentElement.classList.toggle('open');event.stopPropagation()">BRING IN ▾</button>
             <div class="welcome-menu" onclick="this.parentElement.classList.remove('open')">
@@ -1090,14 +1089,9 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <div class="pillar-step">02 · SPEC</div>
             <div class="pillar-icon">✎</div>
             <div class="pillar-name">Spec workshop</div>
-            <div class="pillar-desc">Shape the idea into a spec's sections, by hand or with the agent — saved into the repo's spec. Its ARCHITECT station opens the next step.</div>
+            <div class="pillar-desc">Shape the idea into a spec's sections, by hand or with the agent — saved into the repo's spec. Its REPO station opens the next step.</div>
           </div>
-          <div class="pillar flow" onclick="openArchitect()">
-            <div class="pillar-step">03 · ARCHITECT</div>
-            <div class="pillar-icon">⌘</div>
-            <div class="pillar-name">Architect</div>
-            <div class="pillar-desc">Lay the spec out as components on the canvas, bottom-up — what exists is reused, what is new is marked, a gap is said. Each repo's own wiring is on its Architect tab.</div>
-          </div>
+<!-- 0.60.18 — 03 · ARCHITECT left the pipeline (James: "can you delete this architecture afrom idearium?") -->
         </div>
         <div class="welcome-foot" id="welcome-foot" hidden>awaiting connection to nexus idearium service · :4800</div>
       </div>
@@ -1191,7 +1185,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
       <!-- §0.39.299 AR4 — James: "look at architect in idearium. rebuild it, fully … open ui". The pipeline's Architect is
            idearium's own page now (ui/architect.html on the one canvas, js/arch-canvas.js), not architect/'s arch-builder
            (no data, and unserved when idearium runs alone). arch-builder.html stays the architect system's own (§5.9). -->
-      <iframe class="system-frame" id="architect-frame" src="about:blank" data-src="architect.html" title="The Architect"></iframe>
+      <!-- 0.60.18 — the Architect page is archived (ui/_archive/architect-0.60.18.html); this view is no longer reached -->
     </section>
 
     <!-- ══════════ REPOSITORY LIBRARY / FILE BROWSER / IDE ══════════ -->

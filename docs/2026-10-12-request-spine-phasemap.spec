@@ -801,3 +801,17 @@ spec:
     - "Capability and integration API for outside clients: nexus.command is the one door already; a versioned external schema waits until two clients need it."
     - "A child .contract per chunk as the default (decision_contract_files [B]): after RQ24 shows how many chunks have to run apart."
     - "Invariants that span two components' contracts: after RQ22 has run on one component."
+
+## ADDENDUM 2026-10-13 — RQ9 · RQ12 · RQ15 · RQ21 partly delivered under another map (0.60.15–0.60.18)
+
+Two maps of one thing, surfaced and not collapsed. The contract phasemap
+(docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec, CT0–EX0) delivered:
+- RQ9, the chunked contract: .contract v2 bricks, split, learned budgets.
+- RQ12, the phase DAG: depends_on, the plan's import edges as edges.
+- RQ15, cells in parallel: schedule() runs independent bricks at once.
+- RQ21, the contract file is its record: the saved contract, checkpoints, audit.
+
+What these phases still own: RQ21's single fulfilled-contract file per request (RD4), and RQ15 beyond phase builds. RQ2,
+RQ3, RQ4 and RQ24 fold into GT1, and RQ6 into RT1, in docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+(James: "each gate can route, diagnose, and retry also, failure modes and fault taxonomy to help nexus learn").
+
