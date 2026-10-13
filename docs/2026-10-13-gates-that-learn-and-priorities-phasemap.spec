@@ -121,3 +121,32 @@ phasemap:
       and RQ21 (the contract file is its record). CT0–EX0 (0.60.15–0.60.18) built most of that under the contract
       phasemap. These are two maps of one thing. They are surfaced here, not collapsed: RQ9, RQ12, RQ15 and RQ21 get an
       addendum naming what CT0–EX0 delivered and what remains.
+
+## ADDENDUM 2026-10-13 — retry button built (0.60.22); four asks mapped
+
+James: "maybe add a retry button. consolidate the intelligence and debug system. notes and ideas one fully built feature. phases and specs? it would be nice to use agents intentionally for what theyre best at. as little as possible. like spread agents out opimally for what theyre best at. less tokens from you, the better. … i have like 9 or 12 accounts, and i would love to be able to add them to clearglass and use routing each time tokens run out. like account routing and fallback chaining"
+
+- RB0 retry button: DONE 0.60.22. A failed or stalled phase task in the repo's task panel has ↻ retry, which calls the Build route. lib/repo-activity.js keeps map and phase on the task.
+- AC1 account fallback chaining (= ID1 identities + SD5 account fallback; the coder recommends it next): an ordered chain of accounts per provider. When a tab reports its limit, Guardian marks that account exhausted until its reset time and dispatches the job to the next account's tab (its own profile partition). Proof: the limit reached on account 1 moves the job to account 2 with no lost job.
+- AG1 agents for what they are best at, as little as possible (folds RT1): the door's learned order already ranks per kind. The default is cheap and local first; a reasoning agent only plans, reviews and repairs when a deterministic check failed. Calls per phase are counted, so "as little as possible" is measured.
+- UX1 consolidation: Intelligence + Debug become one tab, Notes + Ideas one feature (one list with kinds), and Phases shown beside their Spec sections. This is a reorganisation of existing screens. Nothing is lost: old views stay reachable until the new ones are proven.
+
+## ADDENDUM 2026-10-13 — the agent rule written down; Versionium ↔ GitHub mapped
+
+James: "yes use you for the cheapest but most effective intention." He then quoted the coder's line back as his decision:
+"Agents used for what they're best at, as little as possible. … cheap and local by default, a reasoning agent only for
+planning, review only when the cheap check fails."
+- AG1 decision: that rule is now written down in docs/CLAUDE.md ("Agents for what they are best at"). Building it into
+  the door (counting calls and tokens per phase, review gated on a failed check) is still OPEN.
+- VG1 Versionium ↔ git ↔ GitHub. His words: "what if we have the git integration integrated into versioium. use github
+  api or app id or what ever to sync ideairum with github?"
+  - Exists: lib/repo-git.js (0.39.265) does status, commit, push and pull with an SSH key or HTTPS token, and clone; the
+    Sync & CI tab; history import from .git (0.60.7).
+  - Missing:
+    1. A Versionium snapshot and a git commit are linked both ways (each snapshot records its commit sha, each commit
+       carries the snapshot id).
+    2. Sync on a schedule or on Apply, per repo.
+    3. The GitHub API with a fine-grained token first (simplest), so PRs, issues and CI status show in Sync & CI. A
+       GitHub App id is the later, multi-repo form.
+  - Status: OPEN, ranked after the live run and AC1.
+

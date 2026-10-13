@@ -1108,6 +1108,62 @@ function _proposedSize(dir, overlays) {
   return { added, removed, files: overlays.length };
 }
 
+// 0.60.21 — James: "needs to retry when you reject it. what if you have copilot monitor repos every now and again if they
+// stall? or have an agent check in? the diagnostic system when it expierences a stall or gate not fire?" Idearium owns the
+// runs, so it watches them (lib/run-watch.js over idearium_phase_runs): a run with no new step for repos.stall_minutes is
+// closed as 'stalled', reported to the gap field (what diagnostic and copilot's repair loop already watch), and built
+// again once (repos.on_stall: retry). A rejected agent proposal builds its phase again with James's reason. Both are capped
+// by repos.auto_retries per phase a day, and never start while another run of that phase is still going.
+function _cfg(k, d) { try { const v = getIdeariumValue(k); return v === undefined || v === null ? d : v; } catch (_) { return d; } }
+async function _autoRetry(info, kind, note) {
+  const RW = _require('../../lib/run-watch.js');
+  const rows = loadTable('idearium_phase_runs');
+  const limit = Number(_cfg('repos.auto_retries', 2));
+  const base = { runId: `auto-${Date.now().toString(36)}`, repoUuid: info.repoUuid, targetRepo: info.targetRepo, map: info.map, phase: info.phase, retryKind: kind };
+  const said = (state, error) => { appendRow('idearium_phase_runs', { uuid: `${base.runId}-${state}`, ...base, state, error, retryOf: info.runId || null, ts: Date.now() }); getIdeaOS().emit('idearium.repo.phase.run', { ...base, state }); };
+  if (!(limit > 0)) return { ok: false, why: 'repos.auto_retries is 0' };
+  if (RW.retriesFor(rows, { phase: info.phase }) >= limit) { said('auto-retry-held', `not retried: ${info.phase} already had ${limit} automatic retr${limit === 1 ? 'y' : 'ies'} today — ${note}`); return { ok: false, why: 'limit' }; }
+  const active = [...RW.runsOf(rows).values()].some(r => r.last && r.last.phase === info.phase && r.runId !== info.runId && !RW.isFinal(r) && !/-(review|proof)$/.test(r.runId) && Date.now() - (r.last.ts || 0) < 30 * 60 * 1000);
+  if (active) { said('auto-retry-held', `not retried: another run of ${info.phase} is still going — ${note}`); return { ok: false, why: 'active' }; }
+  const repo = getRepoLayer().get(info.repoUuid);
+  if (!repo || !info.map || !info.phase) return { ok: false, why: 'the run names no repo, map or phase' };
+  said('auto-retry', `${kind === 'reject' ? 'rejected' : 'stalled'} — building ${info.phase} again: ${note}`);
+  try { const r = await _phaseBuild(repo, _repoDiskDir(repo.uuid), { map: info.map, phase: info.phase, note }); return { ok: !!r.ok, run: r.data || null, error: r.error || null }; }
+  catch (e) { return { ok: false, error: e.message }; }
+}
+async function _watchRuns() {
+  const mins = Number(_cfg('repos.stall_minutes', 10));
+  if (!(mins > 0)) return [];
+  const RW = _require('../../lib/run-watch.js');
+  const st = RW.stalled(loadTable('idearium_phase_runs'), { stallMs: mins * 60 * 1000 });
+  for (const s of st) {
+    const why = `no new step for ${Math.round(s.idleMs / 60000)} min after "${s.state}" — the watchdog closed it`;
+    appendRow('idearium_phase_runs', { uuid: `${s.runId}-stalled`, runId: s.runId, repoUuid: s.repoUuid, targetRepo: s.targetRepo, map: s.map, phase: s.phase, state: 'stalled', stalledAfter: s.state, error: why, ts: Date.now() });
+    getIdeaOS().emit('idearium.repo.phase.run', { runId: s.runId, repoUuid: s.repoUuid, phase: s.phase, state: 'stalled' });
+    try { _require('../../lib/gap-field.js').report({ type: 'phase.run.stalled', body: `${s.phase}: ${why}`, source: `idearium:${s.repoUuid}:${s.phase}`, domain: 'idearium', severity: 'medium', meta: { runId: s.runId, kind: s.kind } }); } catch (_) {}
+    // only a recent stall is retried: an old run that never closed (from before the watchdog) is closed, not rebuilt
+    if (s.kind === 'build' && s.idleMs < 2 * 3600 * 1000 && _cfg('repos.on_stall', 'retry') === 'retry') await _autoRetry(s, 'stall', `the previous run stalled after "${s.state}"; start over, smaller steps`).catch(() => {});
+  }
+  return st;
+}
+
+// 0.60.20 — a rejected proposal is said to the agent that made it, in its own chat, so the conversation is closed rather
+// than left waiting on a tool result (James: "it needs to tell the agent its been rejected. stuck in limbo").
+async function _tellAgentRejected(repo, n, reason) {
+  const RA = _require('../../lib/repo-agent.js');
+  const msg = [`Your proposed change to ${n.path} was REJECTED by James${reason ? `: ${String(reason).slice(0, 500)}` : ''}.`,
+    'Nothing was written. That run is over: do not call more tools for it and do not resend the file.',
+    'Reply in one or two lines: what was wrong with it, and what you would do differently next time.'].join('\n');
+  let r;
+  try { r = await RA.dispatch({ repo, repoDir: await _agentDir(repo.uuid), message: msg, layer: getRepoLayer(), noContext: true }); }
+  catch (e) { r = { ok: false, error: e.message }; }
+  try {
+    _require('../../lib/activity-log/compartment.js').record({ compartment: repo.uuid, kind: 'inject.rejected.told', status: r && r.ok ? 'ok' : 'failed', actor: 'person',
+      title: r && r.ok ? `told the agent ${n.path} was rejected — it said: ${String(r.text || '').slice(0, 200)}` : `could not tell the agent ${n.path} was rejected — ${(r && r.error) || 'no answer'}`, ref: n.uuid });
+  } catch (_) {}
+  return r;
+}
+
 // §0.39.372 NC2 — a repo's charter as it applies: its own (charter.spec), with every condition and axiom its compartment
 // inherits from its parents (a Nexus system: Nexus's). Where the charter is read for a request or a proof, this is read.
 function _charterOf(repoUuid) {
@@ -2314,6 +2370,7 @@ const ROUTE_CAP = {
   'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,
   'repo.run': CAPS.READ_IDEAS, 'repo.run.control': CAPS.WRITE_IDEAS,   // §0.60.0 RS1 — play · pause · rewind   // §0.39.371 VM1
+  'system.lean': CAPS.READ_IDEAS, 'system.lean.set': CAPS.ADMIN,   // 0.60.20 lean mode
   'repo.system': CAPS.READ_IDEAS, 'repo.system.control': CAPS.ADMIN,   // §0.39.372 NC2 — stopping a system is an admin act
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
@@ -2577,6 +2634,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','desktop'],        'repo.desktop.start'],
     ['DELETE', ['api','repos',    ':uuid','desktop'],        'repo.desktop.stop'],
     ['GET',    ['api','repos',    ':uuid','system'],  'repo.system'],      // §0.39.372 NC2 — a Nexus system repo's live system: its processes as its supervisor sees them
+    ['GET',    ['api','system','lean'],   'system.lean'],        // 0.60.20 — lean mode: what is held, saved for the next boot
+    ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
     ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
     ['GET',    ['api','repos',    ':uuid','run'],            'repo.run'],           // §0.60.0 RS1 — the repo's run state: playing | paused
     ['POST',   ['api','repos',    ':uuid','run',':op'],      'repo.run.control'],   // §0.60.0 RS1 — pause | play | rewind {commitId?}
@@ -4524,6 +4583,30 @@ async function handle(req, res, route, query, body) {
     // restarts, crashes, health — and restart / stop / start, asked of the supervisor, never of the system itself. The
     // shared code (core, cos, components) has no process: said. Each act is a row of the repo's log.
     case 'repo.system':
+    // 0.60.20 — James: "start lean? why not just have that a toggle? i want to test it now" · "idearium for the lean
+    // toggle". Lean mode: the services a build does not use (lib/lean-mode.js HOLD) are stopped now through the
+    // supervisor, and saved so `npm run start:all` boots without them. Off starts them again.
+    case 'system.lean':
+    case 'system.lean.set': {
+      const LM = _require('../../lib/lean-mode.js');
+      const root = path.dirname(_require.resolve('../../package.json'));
+      let st = null;
+      try { st = await _nexusClient.get('autopilot', '/status', { timeout: 4000 }); } catch (e) { st = null; }
+      const running = (n) => !!(st && st.kernels && st.kernels[n] && !['held', 'stopped', 'dormant'].includes(st.kernels[n].status));
+      if (action === 'system.lean') {
+        const saved = LM.read({ root });
+        return ok(res, { ...saved, supervisor: !!(st && st.kernels), services: saved.hold.map(n => ({ name: n, running: running(n) })) });
+      }
+      const on = !!(body && (body.on === true || body.on === 'on' || body.on === 'true'));
+      const saved = LM.write(on, { root, by: (body && body.actor) || 'person' });
+      const results = [];
+      for (const n of saved.hold) {
+        let r;
+        try { r = await _nexusClient.post('autopilot', `/control/${encodeURIComponent(n)}/${on ? 'stop' : 'start'}`, {}, { timeout: 8000 }); } catch (e) { r = { ok: false, error: e.message }; }
+        results.push({ name: n, ok: !!(r && r.ok), status: (r && r.status) || null, error: r && !r.ok ? (r.error || 'no answer') : null });
+      }
+      return ok(res, { ...saved, results, note: results.some(x => !x.ok) ? 'saved for the next start; some services did not answer now (see results)' : on ? 'held now and at every start' : 'started now; every start runs everything' });
+    }
     case 'repo.system.control': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -6137,7 +6220,18 @@ async function handle(req, res, route, query, body) {
         }
         case 'repo.inject.reject':
           if (!owned()) return err(res, 404, `inject not found in this repo: ${params.id}`);
-          return done(RI.reject(params.id, { reason: body.reason || null }));
+          {
+            const r = RI.reject(params.id, { reason: body.reason || null });
+            // 0.60.20 — James: "it needs to tell the agent its been rejected. stuck in limbo". The agent that proposed it
+            // is told in its own chat (the repo's agent, as every dispatch is), in the background: what was rejected,
+            // why, and that the run is over — never left waiting on a tool result that will not come. body.tell:false skips it.
+            if (r.ok && body.tell !== false && r.inject && r.inject.source && r.inject.source.kind === 'agent') _tellAgentRejected(repo, r.inject, body.reason || null).catch(() => {});
+            if (r.ok && body.retry !== false && _cfg('repos.retry_on_reject', true) !== false && r.inject && r.inject.source && r.inject.source.kind === 'agent') {
+              const info = _require('../../lib/run-watch.js').runForInject(loadTable('idearium_phase_runs'), r.inject);
+              if (info) _autoRetry(info, 'reject', `James rejected ${r.inject.path}${body.reason ? `: ${body.reason}` : ''}. Build it again so it is right: real paths, real imports, the phase's own files`).catch(() => {});
+            }
+            return done(r);
+          }
         case 'repo.inject.revert': {
           if (!owned()) return err(res, 404, `inject not found in this repo: ${params.id}`);
           const r = RI.revert(params.id, { layer, force: !!body.force });
@@ -8488,6 +8582,8 @@ function _startBuildQueuePoller(port) {
   if (timer.unref) timer.unref(); // never keeps the process alive on its own
   tick(); // real, immediate first pass — don't wait a full interval before resuming work that was already pending when this boot started
   console.log(`[idearium/build-queue] real, periodic queue drain started — every ${BUILD_QUEUE_POLL_MS}ms`);
+  // 0.60.21 — the run watchdog: every minute, a run with no new step for repos.stall_minutes is closed and retried once
+  setInterval(() => { _watchRuns().catch(e => console.warn(`[idearium/run-watch] ${e.message}`)); }, 60000).unref?.();
   return timer; // real handle — lets a caller (or a test) stop this poller; startAPI() itself never needs to
 }
 

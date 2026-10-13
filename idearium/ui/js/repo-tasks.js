@@ -98,6 +98,7 @@ function _rtRow(t, depth = 0) {
       <span class="rt-grow"></span>
       ${t.provider && t.kind !== 'phase' ? `<span class="rt-prov">${_rtEsc(t.provider)}</span>` : ''}
       <span class="rt-dur" data-rt-dur="${_rtEsc(t.id)}">${_rtDur(t)}</span>
+      ${t.kind === 'phase' && !depth && t.map && t.phase && ['failed', 'stale'].includes(t.status) ? `<button class="rt-rewind" title="build this phase again" onclick="event.stopPropagation();rtRetry('${_rtEsc(t.repoUuid)}','${_rtEsc(t.map)}','${_rtEsc(t.phase)}',this)">↻ retry</button>` : ''}
     </div>
     ${sub && !open ? `<div class="rt-sub${t.status === 'failed' ? ' rt-sub-bad' : ''}">${_rtEsc(sub)}</div>` : ''}`;   // red only for a task that failed: a skipped rung on the way is not
   if (open) {
@@ -364,3 +365,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let wasOpen = false; try { wasOpen = localStorage.getItem('idearium.rt.open') === '1'; RT_VIEW = _rtViewOk(localStorage.getItem('idearium.rt.view')) ? localStorage.getItem('idearium.rt.view') : 'tasks'; } catch (_) {}
   if (typeof PLANP !== 'undefined') PLANP.logOpen = wasOpen;   // §0.47.0 OS2 — the panel's section opens as it was left
 });
+
+// 0.60.22 — James: "maybe add a retry button." A failed or stalled phase build, built again by the same route Build uses.
+async function rtRetry(uuid, map, phase, btn) {
+  if (btn) btn.disabled = true;
+  try { await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase, note: 'retry: the previous run failed or stalled' }) }); if (typeof toast === 'function') toast(`${phase}: building again`, 'ok'); }
+  catch (e) { if (typeof toast === 'function') toast(`${phase} not retried: ${e.message}`, 'err'); if (btn) btn.disabled = false; }
+}

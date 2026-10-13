@@ -1725,7 +1725,14 @@ function _phasePlan(kernels) {
 const PHASE_GATE_TIMEOUT_MS = 30000;
 
 async function _bootPhases() {
-  const plan = _phasePlan(KERNELS);
+  // 0.60.20 — lean mode (Idearium → Settings): the services a build does not use stay held from boot — one command still
+  // (npm run start:all); a held one starts from the same toggle, or POST /control/<name>/start. --only wins over it.
+  let lean = { on: false, hold: [] };
+  try { if (!ONLY_NAMES) lean = require(path.join(ROOT, 'lib', 'lean-mode.js')).read({ root: ROOT }); } catch (_) {}
+  const held = new Set(lean.on ? lean.hold : []);
+  for (const k of KERNELS) if (held.has(k.name) && _state[k.name]) _state[k.name].status = 'held';
+  if (held.size) _log(`lean mode on — held: ${[...held].filter(n => KERNELS.some(k => k.name === n)).join(', ')} (Idearium → Settings → Lean mode)`);
+  const plan = _phasePlan(KERNELS.filter(k => !held.has(k.name)));
   for (const { phase, kernels, undeclared } of plan) {
     _log(`── boot phase ${phase} — ${kernels.map(k => k.name).join(', ')}${undeclared ? ' (no phase declared — booted last, loudly)' : ''}`);
     for (const kernel of kernels) {
