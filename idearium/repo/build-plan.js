@@ -99,6 +99,8 @@ export function buildPlan({ phases = [], runs = [], rows = null, order = null, n
         ...(r.planning ? { planning: r.planning } : {}), ...(r.system ? { system: r.system } : {}), ...(r.grounding ? { grounding: r.grounding } : {}),
         ...(r.planSummary ? { planSummary: r.planSummary, plan: r.plan ? { system: r.plan.system || null, read: r.plan.read || [], intent: r.plan.intent, order: r.plan.order, files: (r.plan.files || []).map(f => ({ path: f.path, component: f.component, new: f.new, layer: f.layer, exports: (f.exports || []).map(e => e.name) })), conditions: (r.plan.conditions || []).map(c => c.says) } : null, warnings: r.warnings || [] } : {}),
         ...(r.problems ? { problems: r.problems } : {}), ...(r.missingExports ? { missingExports: r.missingExports } : {}), ...(r.planned ? { planned: true } : {}), ...(r.coderOrder ? { coderOrder: r.coderOrder, note: r.note || null } : {}),
+        // 0.60.28 PF1/PF2 — what was ready before the run, and a plan Nexus wrote without a model
+        ...(r.ready ? { ready: r.ready } : {}), ...(r.derived ? { derived: true, derivedNote: r.note || null } : {}),
         error: r.error || null, injected: r.injects ? r.injects.injected || [] : [], reply: r.reply ? String(r.reply).slice(0, 600) : null })),
     };
   });

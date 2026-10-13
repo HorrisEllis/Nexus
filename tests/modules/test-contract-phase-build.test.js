@@ -171,6 +171,50 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(db.loadTable('idearium_phase_runs').filter(r => r.phase === ph.key && r.state === 'failed' && r.rung == null && /-c\d+-failed$/.test(r.uuid)).every(r => r.provider), 'every failed coder call names its agent');
   });
 
+  // 0.60.28 PF1 + PF2 — James: "why doesn't this work yet?" → "A then B". Guardian says what is ready; the build reads
+  // it before its first agent call (a fake Guardian here: the readiness route's answer).
+  let readyAnswer = null;
+  const fakeGuardian = await listen((q) => (q.url.startsWith('/api/providers/ready') && readyAnswer ? { body: { ok: true, providers: readyAnswer } } : { status: 404, body: { error: 'stub' } }));
+  process.env.GUARDIAN_URL = `http://127.0.0.1:${fakeGuardian.address().port}`;
+
+  await test('CP-07', 'PF1+PF2: the planner is behind a sign-in wall, so no agent can plan — Nexus plans the phase itself and it is still built one file per request, through to proven', async () => {
+    readyAnswer = { claude: { ready: false, why: 'claude needs a sign-in in its Clear Glass tab (test)' } };
+    const before = dispatchedTotal;
+    const sessions = []; const orig = RA.dispatch; RA.dispatch = async (a) => { sessions.push(a.session); return orig(a); };
+    const rows = await build();
+    RA.dispatch = orig;
+    const started = rows.find(r => r.state === 'building');
+    assert.ok(started && started.ready && started.ready.checked && started.ready.planner && started.ready.planner.use === null && /sign-in/.test(started.ready.planner.why), JSON.stringify(started && started.ready));
+    assert.ok(!rows.some(r => r.state === 'planning'), `no planner was asked: ${states(rows)}`);
+    const pl = rows.find(r => r.state === 'planned' && r.derived);
+    assert.ok(pl && pl.plan && pl.plan.files.length === 2 && /without a model/.test(pl.planSummary) && /sign-in/.test(pl.note), states(rows));
+    assert.ok(rows.some(r => r.state === 'contract-complete'), `the phase still completes through its proof: ${states(rows)}`);
+    assert.ok(sessions.length >= 1 && sessions.every(x => !/-plan\d+$/.test(x)) && dispatchedTotal - before === sessions.length, `only coder requests went out: ${sessions.join(', ')}`);
+    const plan = await R('GET', `/api/repos/${repoUuid}/plan?map=${encodeURIComponent(map)}`);
+    const st = ((plan.json.data || plan.json).steps || []).find(x => x.key === ph.key);
+    assert.ok(st && st.ledger.some(l => l.derived) && st.ledger.some(l => l.ready && /without a model/.test(l.ready.line)), 'the Plan shows the readiness and the derived plan');
+    const UI = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8');
+    assert.ok(/ready: \$\{escapeHtml\(l\.ready\.line\)\}/.test(UI) && /planned without a model/.test(UI));
+  });
+
+  await test('CP-08', 'PF1: every agent on the ladder is not ready → the run does not start: refused before any agent call, with what to fix', async () => {
+    readyAnswer = { claude: { ready: false, why: 'claude needs a sign-in in its Clear Glass tab (test)' }, deepseek: { ready: false, why: 'every deepseek account is resting at its limit' } };
+    await R('POST', '/api/config', { key: 'routing.escalation', value: 'claude,deepseek' });
+    const before = dispatchedTotal;
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key });
+    await R('POST', '/api/config', { key: 'routing.escalation', value: '' });
+    assert.strictEqual(b.status, 409, JSON.stringify(b.json).slice(0, 400));
+    assert.ok(/no agent on the ladder can take a job now/.test(JSON.stringify(b.json)) && /sign-in/.test(JSON.stringify(b.json)) && /resting/.test(JSON.stringify(b.json)), JSON.stringify(b.json).slice(0, 500));
+    assert.strictEqual(dispatchedTotal, before, 'no agent was asked');
+    const refused = db.loadTable('idearium_phase_runs').filter(r => r.phase === ph.key && r.state === 'refused').pop();
+    assert.ok(refused && refused.ready && refused.ready.dropped.length === 2, JSON.stringify(refused).slice(0, 400));
+  });
+  delete process.env.GUARDIAN_URL;
+  await new Promise(x => fakeGuardian.close(x));
+
+  const PV = fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8');
+  if (!PV.includes("key: 'providers.ready'")) { failed++; console.log('  ✗ the providers.ready command row is missing'); }
+
   RA.dispatch = realDispatch;
   await new Promise(x => vers.close(x));
   console.log(`\n  ${passed} passed, ${failed} failed\n`);

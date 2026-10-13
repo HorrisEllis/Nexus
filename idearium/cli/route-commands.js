@@ -166,6 +166,10 @@ export const SPEC = [
     req: (a) => (a.args[0] ? { method: 'POST', path: '/api/system/lean', body: { on: a.args[0] === 'on', actor: 'command' } } : { method: 'GET', path: '/api/system/lean' }),
     print: (d, a, h) => { console.log(`  lean ${d.on ? h.c.mint('on') : h.c.amber('off')} · ${d.hold.join(', ')}`); for (const r of d.results || d.services || []) console.log(h.c.dim(`    ${r.name} ${r.running != null ? (r.running ? 'running' : 'stopped') : (r.ok ? r.status || 'ok' : `failed: ${r.error}`)}`)); if (d.note) console.log(h.c.dim(`  ${d.note}`)); } },
   // 0.60.25 — the account fallback chain per provider (same as Idearium → Settings → Routing → Accounts)
+  // 0.60.28 PF1 — ready before run: what a phase build reads before its first agent call
+  { key: 'providers.ready', repo: false, usage: 'providers ready', about: 'can each browser agent take a job now, and if not why: a sign-in wall, every account resting, a usage limit, a reply waiting on your ◎ pick',
+    req: () => ({ method: 'GET', path: '/api/providers/ready' }),
+    print: (d, a, h) => { for (const [id, r] of Object.entries(d.providers || {})) console.log(`  ${(r.ready ? (r.order === 'last' ? h.c.amber : h.c.mint) : h.c.amber)((r.ready ? (r.order === 'last' ? 'last ' : 'ready') : 'not  ').padEnd(5))} ${id.padEnd(11)} ${h.c.dim(r.why)}`); } },
   { key: 'accounts.chain', repo: false, usage: 'accounts chain <provider> [account1,account2,…]', about: 'a provider\'s account fallback chain: show it (and which accounts rest at their limit), or set it in order',
     need: (a) => (a.args.length ? null : '<provider>'),
     req: (a) => (a.args[1] ? { method: 'POST', path: '/api/accounts/chain', body: { provider: a.args[0], accounts: a.args[1].split(',').map(x => x.trim()).filter(Boolean) } } : { method: 'GET', path: `/api/accounts/chain?provider=${encodeURIComponent(a.args[0])}` }),

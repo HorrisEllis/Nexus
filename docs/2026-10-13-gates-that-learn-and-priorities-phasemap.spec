@@ -252,3 +252,43 @@ phasemap:
 #   idearium/repo/build-plan.js (rows, cost); idearium/api/build-surface.js (phaseRows); idearium/ui/js/plan-panel.js;
 #   idearium/cli/route-commands.js (repo.cost); loom/maps/build-surface-map.js (phase-cost → run-watch; api, build-plan →
 #   phase-cost; api → economy/tokens).
+
+## ADDENDUM 2026-10-13 — why the pipeline doesn't work yet; PF1 ready before run, PF2 a plan without a model
+
+# James: "can we work on inventing anything that will get this pipeline going. like why doesn't this work yet?"
+#
+# The coder's reading of every run he pasted this session:
+# - The agents answer: in these logs ChatGPT finished 38 jobs and Gemini 16.
+# - The pipeline gambles twice.
+#   1. It starts a run without knowing its parts are ready.
+#      - SB9: the ladder climbed to claude, whose page needed his ◎ pick (an empty reply), then to deepseek, which had
+#        no tab and was behind a sign-in wall. Ladder exhausted.
+#      - BL30: the planner was asked while memory was critical, and the request was dropped.
+#   2. When the planner fails, the build falls back to its hardest mode, "built whole as before": one chat agent explores
+#      the whole phase alone, one tool call every 15 s. BL30 ended there, as a placeholder in the wrong place,
+#      `incomplete`.
+# - Both invert his rule ("deterministic first"): the run asks an agent first and finds out afterwards.
+#
+# The coder proposed two inventions and recommended A first. He chose: "A then B (Recommended)" (2026-10-13).
+#
+# - PF1 ready before run.
+#   - One check before the first agent call:
+#     - Guardian answers;
+#     - each rung's agent is not behind a sign-in wall, has no job waiting on his ◎ pick, and has an account left in
+#       its chain;
+#     - an Ollama rung's model is installed and memory is not critical;
+#     - a disconnected tab is fine: it is opened on demand (0.60.25).
+#   - Rungs that are not ready are dropped before the run, said on the Plan.
+#   - The planner is the configured one if ready, else the first ready remote rung.
+#   - No ready rung → the run does not start: state not-ready, with what to fix.
+#   - Guardian owns its facts (GET /api/providers/ready, guardian/lib/provider-ready.js). The run's check is pure
+#     (lib/run-ready.js).
+#   - Delivery order: backend → route → command (providers.ready) → UI (the not-ready / ready row on the Plan).
+# - PF2 a plan without a model.
+#   - When no planner is ready, or the planner fails, Nexus writes the plan itself (lib/phase-plan.js derive), from:
+#     - the files the phase names, else the paths and registry components its text names;
+#     - the exports a file it edits already has;
+#     - `does:` as its steps;
+#     - `proof:` as its conditions.
+#   - The build stays one file per request, through the same contract path, and is never handed whole to one agent.
+#     The precedent one level up: idearium/repo/spec-plan.js derivePlan.

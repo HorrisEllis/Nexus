@@ -28,6 +28,9 @@ const FILES = [
     I('cos/testenv/detect.js'),                                 // require('./detect.js') — plan(), describe()
   ]],
   ['idearium/repo/file-state.js', I('idearium/repo/file-state.js'), []],
+  // 0.60.28 PF1 — ready before run: Guardian's facts per agent, and the build's pure check over its ladder
+  ['guardian/lib/provider-ready.js', I('guardian/lib/provider-ready.js'), []],
+  ['lib/run-ready.js', I('lib/run-ready.js'), []],
   // 0.60.27 AG1a — agent calls and tokens per phase, counted over the run rows
   ['lib/phase-cost.js', I('lib/phase-cost.js'), [
     I('lib/run-watch.js'),                                      // require('./run-watch.js') — runsOf groups the rows by run
@@ -134,6 +137,10 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/phase-cost.js'), '0.60.27 AG1a GET /phases/cost (_require)'],
   [I('idearium/repo/build-plan.js'), I('lib/phase-cost.js'), '0.60.27 AG1a each Plan step carries its cost (createRequire)'],
   [I('idearium/api/index.js'), I('lib/economy/tokens.js'), '0.60.27 AG1a _tokEst: tokens estimated on each call row'],
+  [I('guardian/server.js'), I('guardian/lib/provider-ready.js'), '0.60.28 PF1 GET /api/providers/ready (readiness)'],
+  [I('idearium/api/index.js'), I('lib/run-ready.js'), '0.60.28 PF1 _phaseBuild: apply(rungs, ready, { planner })'],
+  [I('lib/agent-providers.js'), I('guardian/server.js'), '0.60.28 PF1 guardianReady(): HTTP GET :7820/api/providers/ready'],
+  [I('idearium/api/index.js'), I('lib/phase-plan.js'), '0.60.28 PF2 derivePlan when no planner is ready or it failed'],
 ];
 
 function mapBuildSurface(driver) {

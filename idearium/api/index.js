@@ -773,10 +773,38 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // what lands, what is proven, what the person undid, and the request size each one keeps failing at. Nothing
   // learned yet → the ladder exactly as configured. routing.ladder_learn: false turns it off.
   // §0.39.361 SB51 — one request per file when the build starts on a small local model (routing.chunk_phases)
+  // 0.60.28 PF1 — James: "why doesn't this work yet?" … "A then B". Ready before run: what Guardian knows about each
+  // browser agent (a sign-in wall, every account resting, a usage limit with no fallback, a ◎ wait) is read before the
+  // first agent call. What cannot answer is left off, a ◎ wait goes last, a planner that is not ready is replaced by
+  // one that is; nothing left that can answer → the run does not start, and says what to fix (lib/run-ready.js).
+  let ready = null, plannerSwap = null;
+  try {
+    const pre = PRt.planMode(policy, { rungs, backend: paramsOfBackend(backend, rungs) });
+    if (rungs.length || (pre.plan && pre.planner)) {
+      const RR = _require('../../lib/run-ready.js');
+      const gr = await _require('../../lib/agent-providers.js').guardianReady();
+      let memoryLevel = null; try { memoryLevel = _require('../../lib/resource-monitor.js').shared('idearium').level(); } catch (_) {}
+      const rr = RR.apply(rungs, gr, { planner: pre.plan ? pre.planner : null, memoryLevel });
+      ready = { checked: gr != null, line: RR.line(rr), dropped: rr.dropped, moved: rr.moved, planner: rr.planner, notes: rr.notes };
+      plannerSwap = rr.planner && rr.planner.use !== rr.planner.was ? rr.planner : null;
+      if (rungs.length) {
+        rungs = rr.rungs;
+        if (rr.dropped.length) ladderFrom = `${ladderFrom} — not ready: ${rr.dropped.map(d => `${d.provider} (${d.why})`).join('; ')}`;
+        if (!rungs.length) {
+          const why = `no agent on the ladder can take a job now — ${rr.dropped.map(d => `${d.provider}: ${d.why}`).join('; ')}`;
+          appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', snapshot: commitId, ready, rungsSkipped: [...rungsSkipped, ...rr.dropped], error: why, ts: Date.now() });
+          getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'refused', snapshot: commitId });
+          return { ok: false, status: 409, error: `not built: ${why}`, extra: { code: 'NOT_READY', ready } };
+        }
+      }
+    }
+  } catch (e) { ready = { checked: false, line: `readiness not checked: ${e.message}`, dropped: [], moved: [], planner: null, notes: [] }; }
   const chunking = PRt.shouldChunk(policy, { rungs, files: expectFiles, backend: paramsOfBackend(backend, rungs) });
   // §0.60.0 PC1 — James: "an intent for the reasoning, to map and plan, then ollama codes in chunks". A reasoning agent
   // plans the phase (mapped to the spec and the component registry, conditions from the intent), Ollama writes each file.
-  const planning = PRt.planMode(policy, { rungs, backend: paramsOfBackend(backend, rungs) });
+  let planning = PRt.planMode(policy, { rungs, backend: paramsOfBackend(backend, rungs) });
+  // 0.60.28 PF1 — the planner that is ready (or none: then the plan is written without a model, PF2)
+  if (plannerSwap && planning.plan) planning = { ...planning, planner: plannerSwap.use, why: `${planning.why} — ${plannerSwap.why}`, ...(plannerSwap.use ? {} : { noModel: true }) };
   let route = null;
   if (rungs.length > 1 && policy.ladderLearn !== false) {
     try {
@@ -794,6 +822,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom, ...(rungsSkipped.length ? { skipped: rungsSkipped } : {}) } } : {}),
     chunking: { chunk: chunking.chunk, why: chunking.why, ...(chunking.chunk ? { files: expectFiles } : {}) },
     planning: { plan: planning.plan, planner: planning.planner, why: planning.why },
+    ...(ready ? { ready } : {}),
     ...(systemCheck ? { system: { system: systemCheck.system, why: systemCheck.why, conflict: systemCheck.conflict } } : {}), ts: Date.now() });
   getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
   const paramsOf = (rg) => (!rg ? { backend, agent, provider } : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
@@ -946,10 +975,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const PL = _require('../../lib/plan-learning.js');
     const allRuns = loadTable('idearium_phase_runs');
     const learned = PL.lessons(allRuns.filter(r => r.state !== 'planned' || r.targetRepo === target.uuid), { system, files: expectFiles });
-    const planner = planning.planner;
-    const pdp = { ...RA.routeFor(PRt.baseOf(planner)), provider: null };
+    const planner = planning.planner;   // 0.60.28 PF1 — null: no planner was ready, the plan is written without a model
+    const pdp = planner ? { ...RA.routeFor(PRt.baseOf(planner)), provider: null } : null;
     let parsed = null, feedback = '', plannerError = null;
-    for (let n = 1; n <= policy.planAttempts; n++) {
+    for (let n = 1; planner && n <= policy.planAttempts; n++) {
       const msg = PP.planPrompt({ phaseKey: phase, title: node.title, body: ctx.body, intent: note, files: expectFiles, registry, spec: specText,
         invariants: ctx.invariants, charter: [charterText, precedent.text].filter(Boolean).join('\n\n'), repoName: target.name, feedback,
         system, atlas, loom, reuse, lessons: learned.text, skeleton: (() => { try { return fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'registry-components.js')) && fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'interaction-contract.json')); } catch (_) { return false; } })() });
@@ -972,8 +1001,25 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         problems: parsed.problems, warnings: parsed.warnings, reply: String(r.text || '').slice(0, 3000), error: `the plan was refused: ${parsed.problems.slice(0, 3).join('; ')}`, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'plan-refused', snapshot: commitId, provider: planner });
     }
+    // 0.60.28 PF2 — no planner ready, or it failed: Nexus writes the plan from the phase itself (lib/phase-plan.js
+    // derivePlan) and the build still goes one file per request. Before, it fell back to one agent exploring the whole
+    // phase (his BL30 run: a placeholder in the wrong place). Nothing derivable → the old fallback, with the reason.
+    let derivedWhy = null;
     if (!parsed || !parsed.ok) {
-      const why = plannerError ? `${planner} could not plan it — ${plannerError}` : `no plan held after ${policy.planAttempts} tr${policy.planAttempts === 1 ? 'y' : 'ies'}: ${(parsed && parsed.problems || []).slice(0, 3).join('; ')}`;
+      const before = !planner ? (planning.why || 'no planner was ready') : plannerError ? `${planner} could not plan it — ${plannerError}` : `${planner}'s plan did not hold after ${policy.planAttempts} tr${policy.planAttempts === 1 ? 'y' : 'ies'}`;
+      const dv = PP.derivePlan({ phaseKey: phase, body: ctx.body, does: ctx.does, proof: ctx.proof, files: expectFiles, registry, system,
+        ownerOf: system ? _require('../../lib/nexus-self/systems.js').ownerOf : null,
+        codeOf: (f) => { try { const t = getRepoLayer().readTextFile(target.uuid, f); return t && !t.error ? String(t.content || '') : null; } catch (_) { return null; } } });
+      if (dv.ok) {
+        parsed = dv;
+        appendRow('idearium_phase_runs', { uuid: `${runId}-plan-derived-planned`, ...base, state: 'planned', snapshot: commitId, provider: null, derived: true,
+          plan: dv.plan, planSummary: `${PP.summary(dv.plan)} — planned without a model`, warnings: dv.warnings, error: null, note: `${before} — Nexus planned it from the phase itself`, ts: Date.now() });
+        getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planned', snapshot: commitId, derived: true });
+      } else derivedWhy = dv.problems.slice(0, 2).join('; ');
+    }
+    if (!parsed || !parsed.ok) {
+      const why = (!planner ? `no planner was ready (${planning.why || ''})` : plannerError ? `${planner} could not plan it — ${plannerError}` : `no plan held after ${policy.planAttempts} tr${policy.planAttempts === 1 ? 'y' : 'ies'}: ${(parsed && parsed.problems || []).slice(0, 3).join('; ')}`)
+        + (derivedWhy ? `; nor could Nexus plan it without a model: ${derivedWhy}` : '');
       appendRow('idearium_phase_runs', { uuid: `${runId}-plan-failed`, ...base, state: 'plan-failed', snapshot: commitId, provider: planner,
         error: `${why} — built ${chunking.chunk ? 'one file at a time' : 'whole'} as before`, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'plan-failed', snapshot: commitId });
@@ -985,7 +1031,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const co = PL.orderCoders(PRt.coderRungs(rungs), allRuns);
     rungs = co.rungs;
     if (co.changed) appendRow('idearium_phase_runs', { uuid: `${runId}-coders`, ...base, state: 'routed', snapshot: commitId, coderOrder: rungs.map(x => x.provider), error: null, note: co.why, ts: Date.now() });
-    const generated = plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${planner} (the phase's plan)` } : null;
+    const generated = plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${plan.derived ? 'Nexus, without a model (the phase\'s proof and files)' : planner} (the phase's plan)` } : null;
     if (policy.contractBuild) return runContract(plan, generated);
     const done = []; let last = null;
     for (let i = 0; i < plan.order.length; i++) {
@@ -1001,7 +1047,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       }
       done.push({ path: file, exports: PP.exportsOf(_landedCode(last.r, file)) });
     }
-    return { ...last, chunked: true, generated: plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${planner} (the phase's plan)` } : null };
+    return { ...last, chunked: true, generated: plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${plan.derived ? 'Nexus, without a model' : planner} (the phase's plan)` } : null };
   };
   // 0.60.18 EX0e — James: "wire Idearium's phase build through the contract scheduler... make the first real phase build
   // produce an auditable record of every brick, dependency, checkpoint and gate." A held plan runs as a .contract
@@ -2380,6 +2426,7 @@ const ROUTE_CAP = {
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,
   'repo.run': CAPS.READ_IDEAS, 'repo.run.control': CAPS.WRITE_IDEAS,   // §0.60.0 RS1 — play · pause · rewind   // §0.39.371 VM1
   'system.lean': CAPS.READ_IDEAS, 'system.lean.set': CAPS.ADMIN,   // 0.60.20 lean mode
+  'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
   'repo.system': CAPS.READ_IDEAS, 'repo.system.control': CAPS.ADMIN,   // §0.39.372 NC2 — stopping a system is an admin act
   'config.set':       CAPS.WRITE_IDEAS,
@@ -2644,6 +2691,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','desktop'],        'repo.desktop.start'],
     ['DELETE', ['api','repos',    ':uuid','desktop'],        'repo.desktop.stop'],
     ['GET',    ['api','repos',    ':uuid','system'],  'repo.system'],      // §0.39.372 NC2 — a Nexus system repo's live system: its processes as its supervisor sees them
+    ['GET',    ['api','providers','ready'], 'providers.ready'],     // 0.60.28 PF1 — can each browser agent take a job now (guardian owns it)
     ['GET',    ['api','accounts','chain'],  'accounts.chain'],      // 0.60.25 — the fallback chain (guardian owns it)
     ['POST',   ['api','accounts','chain'],  'accounts.chain.set'],
     ['POST',   ['api','accounts','rest'],   'accounts.rest'],
@@ -4602,6 +4650,12 @@ async function handle(req, res, route, query, body) {
     // supervisor, and saved so `npm run start:all` boots without them. Off starts them again.
     // 0.60.25 — James: "check the accounts, account routing, fallback routing." The chain is Guardian's (lib/account-routing.js);
     // Idearium shows and sets it, so the one Settings page has it (no command line, no second screen).
+    // 0.60.28 PF1 — what a phase build reads before its first agent call: each browser agent ready or not, and why
+    case 'providers.ready': {
+      const providers = await _require('../../lib/agent-providers.js').guardianReady();
+      if (!providers) return err(res, 502, 'Guardian did not answer — readiness is read from it (is it running?)');
+      return ok(res, { providers });
+    }
     case 'accounts.chain': case 'accounts.chain.set': case 'accounts.rest': {
       let r;
       try {

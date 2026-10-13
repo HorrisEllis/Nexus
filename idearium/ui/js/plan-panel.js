@@ -213,6 +213,10 @@ async function ppRunLoad() {
 // the plan (files → registry components, exports, conditions), why a plan was refused, what a coder dropped
 function _ppPlanned(l) {
   const out = [];
+  // 0.60.28 PF1 — ready before run: what was left off or put last before the first agent call, and why
+  if (l.ready && l.ready.line) out.push(`<div class="pp-against${(l.ready.dropped || []).length || l.state === 'refused' ? ' warn' : ''}">ready: ${escapeHtml(l.ready.line)}</div>`);
+  // 0.60.28 PF2 — no planner could plan it: Nexus planned it from the phase itself, one file per request
+  if (l.derived) out.push(`<div class="pp-against">◇ planned without a model${l.derivedNote ? ` — ${escapeHtml(l.derivedNote)}` : ''}</div>`);
   if (l.planning && l.state === 'building') out.push(`<div class="pp-against">${l.planning.plan ? '◇ plan, then code' : 'no plan'} — ${escapeHtml(l.planning.why || '')}</div>`);
   if (l.system && l.system.conflict) out.push(`<div class="pp-against warn">system: ${escapeHtml(l.system.conflict)}</div>`);
   else if (l.system && l.system.system && l.state === 'building') out.push(`<div class="pp-against">system: ${escapeHtml(l.system.system)} (${escapeHtml(l.system.why || '')})</div>`);

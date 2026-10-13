@@ -2346,6 +2346,24 @@ function handleExtendedRoutes(req, res, url, method) {
     return true;
   }
 
+  // 0.60.28 PF1 — James: "why doesn't this work yet?" Can each browser agent take a job right now, and if not, why
+  // (guardian/lib/provider-ready.js): a sign-in wall, every account resting, a usage limit with no fallback, a ◎ wait.
+  // A phase build reads it before its first agent call and leaves off what cannot answer.
+  if (method==='GET' && url.pathname==='/api/providers/ready') {
+    try {
+      let ids = []; try { ids = require('./lib/agent-facts.js').list().map(p => p.id); } catch (_) {}
+      if (!ids.length) ids = ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];
+      const connected = {}; for (const id of ids) connected[id] = ncp.isConnected(id) ? 'connected' : null;
+      const PL = require('./lib/provider-login.js'); const login = {}; for (const id of ids) login[id] = PL.blockedReason(id) || null;
+      const R = require('./lib/account-routing.js').routing(); const chains = {};
+      for (const id of ids) { try { chains[id] = { chain: R.chain(id), exhausted: R.exhausted(id) }; } catch (_) { chains[id] = { chain: [], exhausted: [] }; } }
+      let all = []; try { all = [...jobs.values()]; } catch (_) {}
+      const providers = require('./lib/provider-ready.js').readiness({ ids, connected, channels: ncp.getProviders(), login, jobs: all, chains });
+      pRes(res, 200, { ok: true, providers, at: Date.now() });
+    } catch (e) { pRes(res, 500, { ok: false, error: e.message }); }
+    return true;
+  }
+
   if (method==='GET' && url.pathname==='/providers') {
     const connected = ncp.getProviders();
     // §GA1 — the browser agents are Guardian's provider nodes (this list was hard-coded and had no deepseek); ollama is local
