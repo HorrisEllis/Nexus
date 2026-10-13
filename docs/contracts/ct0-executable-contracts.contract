@@ -121,49 +121,49 @@ payload:
           - exists: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
         hashes:
           v1: 745d48021f1d439d5bcea5e2d7272c1aa691c39a66590df8af8a9c0f85583dda
-          phasemap: 52f79377ae73cc545b370ad257a0348bc217a793bed446d7630135a1b854dfa7
-        at: 1791889005269
-        attempts: 2
+          phasemap: 501f86f3592f4b139267533f4f2be767e88c528f0c9f4c26cddcedf8d0fc959d
+        at: 1791890422713
+        attempts: 4
       evaluator:
         status: PASSED
         reasons: []
         evidence:
           - exists: cortex/core/raid/contract-gates.js
         hashes:
-          evaluator: 474ba7f29edd4f6122e2d242892037be857e3b7a06484d3b90f400d519075607
-        at: 1791889007083
-        attempts: 2
+          evaluator: 6e2ca64b969e364acdbde6ed0456c1f55c6b4dca45096def710c527e6062924f
+        at: 1791890424521
+        attempts: 4
       commands:
         status: PASSED
         reasons: []
         evidence:
           - exists: idearium/cli/route-commands.js
         hashes:
-          commands: f5e73bfd8dbbdb4b4f7eb24f08d02870058f0880451a7dafdfe703f9b53c5056
-        at: 1791889008990
-        attempts: 2
+          commands: fbfe84f52fda42213a5aad456f3e953c05af17b866edea12632bd15c02b8ac29
+        at: 1791890426349
+        attempts: 4
       verify:
         status: PASSED
         reasons: []
         evidence:
           - test: tests/modules/test-contract-gates.test.js
             exit: 0
-            tail: ' | 15 passed, 0 failed'
+            tail: ' | 20 passed, 0 failed'
         hashes:
-          evaluator: 474ba7f29edd4f6122e2d242892037be857e3b7a06484d3b90f400d519075607
-          commands: f5e73bfd8dbbdb4b4f7eb24f08d02870058f0880451a7dafdfe703f9b53c5056
-          tests: a860b5169de6ff56ec06d994204a39a74ab47e6c493eadfd9508c3ffc553bb45
-        at: 1791889011336
-        attempts: 2
+          evaluator: 6e2ca64b969e364acdbde6ed0456c1f55c6b4dca45096def710c527e6062924f
+          commands: fbfe84f52fda42213a5aad456f3e953c05af17b866edea12632bd15c02b8ac29
+          tests: 0f74b995a8746f3801e07cf1c7e69c2801304be449a46b58a1beefd481daf522
+        at: 1791890428862
+        attempts: 4
       self-host:
         status: PASSED
         reasons: []
         evidence:
           - gate: verify
         hashes:
-          evaluator: 474ba7f29edd4f6122e2d242892037be857e3b7a06484d3b90f400d519075607
-        at: 1791889013202
-        attempts: 2
+          evaluator: 6e2ca64b969e364acdbde6ed0456c1f55c6b4dca45096def710c527e6062924f
+        at: 1791890430822
+        attempts: 4
     evidence: {}
     invariants:
       INV-compat: verified

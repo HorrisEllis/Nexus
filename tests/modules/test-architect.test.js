@@ -243,7 +243,7 @@ async function main() {
     }
     assert.match(A, /cleanUrl === '\/architect\.html'/);
     assert.match(A, /channel: 'idearium-architect'/, 'the same copilot route the repo agents use');
-    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/architect.html'), 'utf8');
+    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/_archive/architect-0.60.18.html'), 'utf8');
     assert.match(page, /js\/window-chrome\.js/); assert.match(page, /href="css\/void-theme\.css"/, 'the Void\'s look, shared'); assert.match(page, /src="js\/void-sky\.js"/);
     assert.match(page, /<title>THE ARCHITECT<\/title>/); assert.match(page, /data-title="THE ARCHITECT"/);
     const tips = [...page.matchAll(/title="([^"$]*)"/g)].map(m => m[1]).filter(t => /[a-z]/.test(t));
@@ -253,7 +253,7 @@ async function main() {
     for (const st of ['OPENING THE ARCHITECT', 'THE ARCHITECT IS UNREACHABLE', 'REUSE', 'NEW', 'GAP']) assert.ok(page.includes(st), st);
     assert.match(page, /const AGENT_MS = 330000/);
     const wpage = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/workshop.js'), 'utf8');   // 0.39.354 WS7 — the page's script is its own file
-    assert.match(wpage, /architect\.html\?from=workshop:/, 'the workshop\'s ARCHITECT station opens the architect');
+    assert.ok(!/architect\.html\?from=workshop:/.test(wpage), '0.60.18 — the workshop no longer opens the archived Architect page');
     const cli = fs.readFileSync(path.join(ROOT, 'idearium/cli/index.js'), 'utf8');
     for (const c of ['list', 'new', 'show', 'add', 'draft', 'accept', 'dismiss', 'save']) assert.match(cli, new RegExp(`async 'architect\\.${c}'`));
   });
@@ -292,11 +292,12 @@ async function main() {
     AR.editComponent(s, { id: 'bed-store', x: null, y: null });
     assert.ok(!('x' in s.components[0]), 'null unpins'); void before;
     // the surfaces
-    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/architect.html'), 'utf8');
+    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/_archive/architect-0.60.18.html'), 'utf8');
     assert.match(page, /src="js\/arch-canvas\.js"/); assert.match(page, /href="css\/arch-canvas\.css"/); assert.match(page, /ArchCanvas\.mount\(\$\('map'\), \{\s*linkable: true/);
     assert.match(page, /onLink: \(from, to\) => link\(from, to\)/, 'a handle dropped on a card is a dependency');
     const idx = fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8');
-    assert.match(idx, /id="architect-frame"[^>]*data-src="architect\.html"/, 'Build › Architect is idearium\'s own page');
+    // 0.60.18 — James: "can you delete this architecture afrom idearium?" — the page is archived, nothing in idearium opens it
+    assert.ok(!/data-src="architect\.html"/.test(idx) && !/setView\('architect-build'\)/.test(idx), 'the Architect page left Build ▾ (archived)');
     assert.ok(!/data-src="\.\.\/architect\/arch-builder\.html"/.test(idx), 'not the data-less arch-builder');
     assert.match(idx, /<script src="js\/arch-canvas\.js"><\/script>/); assert.match(idx, /href="css\/arch-canvas\.css"/);
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');

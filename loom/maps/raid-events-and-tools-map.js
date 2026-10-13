@@ -63,6 +63,26 @@ const FILES = [
   ['lib/agent-tools/tools/faculty/faculty-tools.js', 'nexus.lib.agent-tools.tools.faculty-tools',
     ['nexus.cortex.core.raid.officiator']],
   ['lib/agent-tool-call.js',              'nexus.lib.agent-tool-call', []],
+  // 0.60.15/0.60.18 — .contract v2 (contract-gates: the evaluator, packets, chunking, the scheduler) and its EX0 adapters
+  // (contract-adapters: the agent executor, phase plan → contract, checkpoints, audit). contract-gates was never mapped
+  // when it landed in 0.60.15 — registration debt, closed here. Real edges, read from source: contract-gates requires
+  // lib/node-export.js, lib/agent-tools (its default executor), cortex/memory/jaa-db.js (Boundaries) and
+  // lib/import-checks.js (no registered id — left out, this map's convention); contract-adapters requires
+  // contract-gates, lib/model-door.js (doorRoute) and lib/phase-plan.js (depsOf). model-door's own requires
+  // (pipeline-routing, reasoning-route) have no registered ids yet — left out, said.
+  ['cortex/core/raid/contract-gates.js',    'nexus.cortex.core.raid.contract-gates',
+    ['nexus.lib.node-export', 'nexus.lib.agent-tools', 'nexus.cortex.jaa-db']],
+  ['lib/model-door.js',                     'nexus.lib.model-door', []],
+  ['lib/phase-plan.js',                     'nexus.lib.phase-plan', []],
+  ['cortex/core/raid/contract-adapters.js', 'nexus.cortex.core.raid.contract-adapters',
+    ['nexus.cortex.core.raid.contract-gates', 'nexus.lib.model-door', 'nexus.lib.phase-plan']],
+];
+// consumers declared in other maps that require components declared here: [consumer id, dependency id]
+// (idearium/api/index.js's _phaseBuild runs a held plan through contract-adapters + contract-gates, 0.60.18 EX0e)
+const CONSUMERS = [
+  ['nexus.idearium.api', 'nexus.cortex.core.raid.contract-adapters'],
+  ['nexus.idearium.api', 'nexus.cortex.core.raid.contract-gates'],
+  ['nexus.idearium.api', 'nexus.lib.phase-plan'],
 ];
 
 function mapRaidEventsAndTools(driver) {
@@ -80,6 +100,7 @@ function mapRaidEventsAndTools(driver) {
   // which ids are required by at least one file here → need an .export hook
   const requiredBy = new Set();
   for (const [, , requires] of FILES) for (const dep of requires) requiredBy.add(dep);
+  for (const [, dep] of CONSUMERS) requiredBy.add(dep);
 
   // Pass 2 — hooks (export if required elsewhere, import if this file requires others)
   for (const [, id, requires] of FILES) {
@@ -117,7 +138,17 @@ function mapRaidEventsAndTools(driver) {
     }
   }
 
+  for (const [consumer, dep] of CONSUMERS) {
+    wireN++;
+    const r = driver.declare('wire', {
+      id: `raid-events-and-tools.wire.${wireN}.${dep}--${consumer}`,
+      from_hook_id: `${dep}.export`, to_hook_id: `${consumer}.import`,
+      uuid: `nexus-loom-map-raid-tools-wire-${wireN}-v1-0000-2026-0831-001`,
+    });
+    (r.ok ? results.wires : results.failures).push({ from: dep, to: consumer, r });
+  }
+
   return results;
 }
 
-module.exports = { mapRaidEventsAndTools, FILES };
+module.exports = { mapRaidEventsAndTools, FILES, CONSUMERS };

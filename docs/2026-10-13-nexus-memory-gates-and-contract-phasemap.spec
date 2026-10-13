@@ -106,4 +106,58 @@ spec:
         agent splits (CT1), and the sizes each agent handled are learned per kind of source (Boundaries, kind = the source
         kind) — so boundaries get better with use. Nexus holds the whole (the contract, its refs, the evidence); each agent
         only ever holds one piece.
+    CT1b_reviewed:
+      status: "DONE — 0.60.17"
+      asked: "the review he brought: split also on capability mismatch, verification complexity and dependency complexity; every child keeps the original requirement; a parent must not pass merely because its children did — integration is a first-class gate; test a cycle, a child stale mid-execution, and children-pass-but-integration-fails"
+      does: "shouldSplit: context · capability · verification · dependency. split: each child carries requirement {gate, outcome, actions}; the parent needs its own integration condition (or <gate>.integrated evidence); validate refuses a split parent without one. STALE now sticks until re-verified (a bug the mid-execution case found)."
+      proof: "test-contract-gates CC-15–18"
+    SC0_scheduler:
+      status: "DONE — 0.60.17 (core); executors beyond the agent tools registry OPEN (EX0)"
+      james: '"include from copilots tools, brainos, and clearglass automatation, and pipeline workflow and macros, and frameworks and programmable. like a lot of this exists, in clearglass, brainos, phases already."'
+      files: [cortex/core/raid/contract-gates.js, idearium/cli/route-commands.js]
+      does: "schedule(): every READY (or STALE) brick runs — independent ones concurrently — its run { tool, args } through lib/agent-tools executeTool (the one registry: copilot tools, clear-glass/automation.js · macro.js · browser-automation.js, execution/run-pipeline.js · run-chain.js · run-closed-loop.js, nexus/command.js); output recorded as evidence; the gate checked; repeat until nothing is ready. A brick whose kind of work has no executor is set aside and said. contract run."
+      proof: "test-contract-gates CC-19 (two independent bricks overlap in time; outputs recorded; complete by the evaluator; a no-executor brick reported)"
+    EX0_executors_he_already_built:
+      status: "agent + phase adapters and the Build integration DONE — 0.60.18 (EX0a–f); glass and pipeline executors OPEN; the live update-system run with Ollama is his (CHANGELOG-0.60.18)"
+      builds_on: "lib/agent-tools/tools/* (registered) · BrainOS workflows · Clear Glass automation nodes + macros (clear-glass/src/automation/*, src/macros) · the phase pipeline (plan → code) · the model door (agent work by kind)"
+      does: "One executor kind per thing that exists: tool (done), agent (the door: a brick's kind picks the model — 0.60.9 routing), glass (a Clear Glass automation or macro on a named tab), pipeline (a BrainOS / Idearium workflow), phase (an Idearium phase build). No new runner: each is an adapter onto what is already there."
+      james: '"Yes. Build the agent and phase adapters next, then wire Idearium\'s phase build through the contract scheduler... build and test the adapters independently first, then connect the phase-build action." · "the scheduler must distinguish a failed task from a task that has no available executor. The latter should be reported as blocked or unsupported, not repeatedly retried or incorrectly marked complete." · "Keep the existing tool registry as the execution boundary, avoid duplicating routing logic and make the first real phase build produce an auditable record of every brick, dependency, checkpoint and gate."'
+      chunks:
+        EX0a_scheduler_outcomes:
+          files: [cortex/core/raid/contract-gates.js]
+          does: "schedule() reads what an executor says: { unsupported, why } → the brick is set aside as blocked/unsupported (reported under blocked[], never retried, never FAILED, never complete); { decompose } → split() when the brick has pieces, else unsupported (too big for every routed agent and indivisible); { evidence } → recorded. A FAILED brick under the retry limit is run again (recovery); twice failed with pieces → split (capability trigger). Every pass is a checkpoint: p.state.checkpoints[] { gate, at, hashes, agent } and onCheckpoint(p, gate) so the caller saves. Children of a split keep the parent's run and kind."
+        EX0b_agent_adapter:
+          files: [cortex/core/raid/contract-adapters.js]
+          does: "agentExecutor({ route, dispatch }) — route defaults to lib/model-door.js route() by the brick's kind (no routing of its own); each routed agent's learned budget (Boundaries.budget) is checked against the brick's packet; agents it is too big for are skipped, said; none fit → decompose. dispatch(hops, ctx) is the caller's existing runner (Idearium: PRt.climb over the existing makeAttempt — the ladder escalates). Evidence: <brick>.agent, <brick>.route, plus the runner's verification. No dispatcher or no agent → unsupported."
+        EX0c_phase_adapter:
+          files: [cortex/core/raid/contract-adapters.js, lib/phase-plan.js]
+          does: "fromPhasePlan(plan) → a v2 contract: one brick per planned file (kind build:file.<ext>, requirement = the file's purpose and exports, actions = its steps, depends_on = the plan's import edges via phase-plan depsOf), pass_when = the verification evidence (<brick>.verified matching ^ok — checkChunk: every planned export present) plus { exists } when writes go to disk; refs = the inputs given (the phasemap) + every existing file the plan edits; a parent `phase` gate whose integration is <phase>.integrated matching ^met (the phase's proof run). plan_hash kept so a changed plan rejects old checkpoints."
+        EX0d_checkpoints_and_audit:
+          files: [cortex/core/raid/contract-adapters.js]
+          does: "openCheckpoint(file, built): no file → fresh; plan_hash differs → the old contract archived beside it (.superseded-<ts>, §0.3) and fresh, said; same plan → resumed: PASSED kept, changed inputs STALE (evaluate), exhausted FAILED reset to READY with the old attempts kept in state.history. audit(p) → every brick (file, status, agent, attempts), every dependency edge, every checkpoint, every gate."
+        EX0e_build_integration:
+          files: [idearium/api/index.js, lib/pipeline-routing.js]
+          does: "_phaseBuild's planned path runs the plan as a contract (routing.contract_build, default on; off = the sequential loop, kept). The contract lives at data/contracts/phase-builds/<repo>/<map>.<phase>.contract (state, never committed). Bricks run through the scheduler (routing.contract_concurrency, default 2); the agent executor's dispatch is the existing climb + makeAttempt with the plan's chunkBrief (what earlier bricks really export, read from their evidence); the integrate executor is the existing _provePhase. Each pass saved; a 'contract' row on idearium_phase_runs carries the audit, so the Plan shows it."
+        EX0f_command_route_ui:
+          files: [idearium/cli/route-commands.js, idearium/api/index.js, idearium/ui/js/phases-manager.js]
+          does: "contract.audit <file> (command row, every agent has it); GET /api/idearium/repos/:uuid/phases/contract?map&phase → the audit; the Plan shows the contract row (bricks, checkpoints, blocked)."
+      proof: "tests/modules/test-contract-adapters.test.js — EA-01 agent routed through the door, evidence recorded; EA-02 over every budget → decompose; EA-03 no dispatcher → blocked, not retried, not complete; EA-04 a failed brick recovers on retry; EA-05 plan → contract keeps files, deps, requirements, integration; EA-06 a changed input makes the checkpoint stale and only that brick and its dependents re-run; EA-07 a changed plan rejects the checkpoint (archived); EA-08 the phase cannot pass until integration is met; EA-09 audit lists every brick, edge, checkpoint, gate. Live: the end-to-end run on update-system with Ollama is his (commands in CHANGELOG-0.60.18)."
+      reading: "The coder's reading, to confirm: 'the existing tool registry as the execution boundary' — nothing runs outside schedule()'s executors; the tool executor stays lib/agent-tools executeTool and the agent executor dispatches through the repo agent Idearium already uses (its tools are the registry's). No new runner."
+
+## ADDENDUM 2026-10-13 — EX0 built (0.60.18)
+
+James: "Yes. Build the agent and phase adapters next, then wire Idearium's phase build through the contract scheduler... build and test the adapters independently first, then connect the phase-build action." His order was kept: EX0a–d were built and tested alone (test-contract-adapters 11/11) before EX0e touched _phaseBuild (test-contract-phase-build 5/5 on the real route).
+
+- Decided by him: the order; blocked/unsupported is not failed; the tool registry stays the execution boundary; no
+  duplicated routing; an auditable record of every brick, dependency, checkpoint and gate.
+- The coder's calls, his to confirm:
+  - routing.contract_build is on by default. Off restores the sequential loop, which is kept.
+  - Contracts live in Idearium's data dir as state.
+  - An indivisible brick over every learned budget is tried anyway, its route saying so, rather than blocked. A budget
+    is a prediction, and his rule was "escalate or decompose".
+  - A transient provider failure no longer teaches Boundaries a size.
+- Drift from the map: none in scope. One real defect was found by CP-04: one provider error capped the learned budget,
+  and the next brick read as "too big". It is fixed and recorded in CHANGELOG-0.60.18.
+- Registration: contract-gates (owed since 0.60.15), contract-adapters, model-door and phase-plan are now in
+  loom/maps/raid-events-and-tools-map.js with their real edges, plus idearium/api as their consumer.
 
