@@ -2810,6 +2810,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       document.removeEventListener('pointermove', _onMove);
       document.removeEventListener('pointerup', _endDrag);
       document.removeEventListener('pointercancel', _endDrag);
+      wrap.dataset.manual = '1';   // §0.60.7 — a width the person dragged wins over auto-fit
       const finalWidth = Math.round(wrap.getBoundingClientRect().width);
       cg.options.set({ urlBarWidthPx: finalWidth }).catch(() => {});
     }
@@ -2831,7 +2832,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     });
 
     handle.addEventListener('dblclick', () => {
-      wrap.style.flex = '1 1 auto';
+      delete wrap.dataset.manual; wrap.style.flex = '1 1 auto';   // §0.60.7 — back to auto-fit (setupUrlBarAuto reruns)
       cg.options.set({ urlBarWidthPx: null }).catch(() => {});
     });
 
@@ -2845,6 +2846,47 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         wrap.style.flex = `0 0 ${Math.max(MIN_WIDTH, opts.urlBarWidthPx)}px`;
       }
     }).catch(() => {});
+  })();
+
+  // §0.60.7 — James: "have the search bar dynamically change size and let me drag it around."
+  // AUTO-FIT: unless the person dragged an explicit width, the bar is as wide as the address in it (clamped to what the row
+  // has free), so a short address gives a short bar and a long one grows. MOVE: the ⋮⋮ grip slides the bar along the row
+  // (a left margin, clamped so nothing is pushed off); double-click the grip to put it back. Both persist in cg.options.
+  (function setupUrlBarAuto() {
+    const wrap = document.getElementById('url-bar-wrap'), input = document.getElementById('url-bar');
+    const grip = document.getElementById('url-bar-grip'), chrome = document.getElementById('chrome');
+    if (!wrap || !input || !chrome) return;
+    const MIN = 240; let offset = 0, last = '', ctx = null;
+    const others = () => { let w = 0; for (const c of chrome.children) if (c !== wrap) w += c.getBoundingClientRect().width;
+      const cs = getComputedStyle(chrome); const gap = parseFloat(cs.columnGap || cs.gap || '0') || 0;
+      return w + gap * Math.max(0, chrome.children.length - 1) + (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0) + 4; };
+    const room = () => Math.max(MIN, chrome.getBoundingClientRect().width - others());          // width the bar could take with no offset
+    const textW = (t) => { ctx = ctx || document.createElement('canvas').getContext('2d'); const cs = getComputedStyle(input);
+      ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; return ctx.measureText(t || input.placeholder || '').width; };
+    function fit() {
+      const cs = getComputedStyle(input), pad = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0) + 24;
+      if (!wrap.dataset.manual) wrap.style.flex = `0 0 ${Math.round(Math.min(room() - offset, Math.max(MIN, textW(input.value) + pad + 40)))}px`;
+      applyOffset(offset);
+    }
+    function applyOffset(px) {
+      const free = Math.max(0, room() - wrap.getBoundingClientRect().width);
+      offset = Math.max(0, Math.min(free, px)); wrap.style.marginLeft = offset ? `${Math.round(offset)}px` : '';
+    }
+    setInterval(() => { if (document.activeElement !== input || input.value !== last) { if (input.value !== last) { last = input.value; fit(); } } }, 250);
+    input.addEventListener('input', () => { last = input.value; fit(); });
+    window.addEventListener('resize', fit);
+    if (grip) {
+      let drag = false, sx = 0, so = 0;
+      const mv = (e) => { if (drag) applyOffset(so + e.clientX - sx); };
+      const up = () => { if (!drag) return; drag = false; chrome.style.webkitAppRegion = ''; document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', up);
+        cg.options.set({ urlBarOffsetPx: Math.round(offset) }).catch(() => {}); };
+      grip.addEventListener('pointerdown', (e) => { drag = true; sx = e.clientX; so = offset; chrome.style.webkitAppRegion = 'no-drag';
+        document.addEventListener('pointermove', mv); document.addEventListener('pointerup', up); document.addEventListener('pointercancel', up); e.preventDefault(); });
+      grip.addEventListener('dblclick', () => { applyOffset(0); cg.options.set({ urlBarOffsetPx: null }).catch(() => {}); fit(); });
+    }
+    const rh = document.getElementById('url-bar-resize-handle');
+    if (rh) rh.addEventListener('dblclick', () => setTimeout(fit, 0));
+    cg.options.get().then(o => { if (typeof o.urlBarOffsetPx === 'number' && o.urlBarOffsetPx > 0) offset = o.urlBarOffsetPx; }).catch(() => {}).then(() => setTimeout(fit, 150));
   })();
 
   // ── Mesh queue panel ─────────────────────────────────────────────────

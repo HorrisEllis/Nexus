@@ -230,6 +230,7 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
     const w = providerHost.windows && providerHost.windows.get(providerId);
     return w && !w.isDestroyed() ? { win: w, which: `${providerId} tab` } : null;
   }
+  const _lastBack = new Map();   // providerId -> ts of the last send-back-to-chat reload
   const _onSignin = (url) => SIGNIN_RE.test(String(url || '')) || /accounts\.google\.com|login\.microsoftonline\.com|auth\.openai\.com|appleid\.apple\.com/.test(String(url || ''));
   const _def = (id) => { try { return getProvider ? getProvider(id) : null; } catch (_) { return null; } };
   function _accountInfo(providerId) {
@@ -296,6 +297,17 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
     // §0.60.2 — James: "chatgpt doesn't need a login currently." A provider whose chat works signed out
     // (registry loginOptional) is first sent back to its chat; the person is asked only if it lands on a sign-in page again.
     if (rec.reason === 'signin' && def && def.loginOptional && def.url && !rec.askAnyway) {
+      // §0.60.7 — FLAP FIX. A signed-out ChatGPT chat is a normal page: the userscript reports "signed-out" on every load,
+      // and reloading it here dropped the NCP connection, which reloaded the page, which reported again — a reload every ~3 s.
+      // If the tab is already off any sign-in page there is nothing to go back to: leave it alone. And never reload the same
+      // provider tab more than once per minute.
+      const nowUrl = (() => { try { return win.webContents.getURL(); } catch (_) { return ''; } })();
+      if (nowUrl && !_onSignin(nowUrl)) {
+        return { ok: true, window: which, resolved: 'signed-out', reloaded: false };
+      }
+      const last = _lastBack.get(providerId) || 0;
+      if (Date.now() - last < 60000) return { ok: true, window: which, resolved: 'signed-out', reloaded: false, throttled: true };
+      _lastBack.set(providerId, Date.now());
       try { await win.loadURL(def.url); } catch (_) {}
       await new Promise(r => setTimeout(r, signedOutWaitMs));
       if (!win.isDestroyed() && !_onSignin(win.webContents.getURL())) {

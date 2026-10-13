@@ -11,7 +11,7 @@ const SCHEMA = {
   jobs: {
     pickup_ms:            { type: 'number', default: 90000,   min: 1,     max: 3600000,  unit: 'ms', env: 'GUARDIAN_PICKUP_MS',
       description: 'How long a tab may hold a job without saying anything about it (accepted, typed, a chunk, an error) before the job ends at "tab takes the job". Nothing was typed, so nothing is sent twice.' },
-    no_tab_ms:            { type: 'number', default: 45000,   min: 1,     max: 3600000,  unit: 'ms', env: 'GUARDIAN_NO_TAB_MS',
+    no_tab_ms:            { type: 'number', default: 120000,   min: 1,     max: 3600000,  unit: 'ms', env: 'GUARDIAN_NO_TAB_MS',
       description: 'With no tab open for the agent, how long a waiting caller waits for one (time for Clear Glass to open it) before it is told and the job is cancelled.' },
     // §0.60.0 GA1 — James: "guardian should detect when a sign in is needed". A tab on a sign-in page is shown to the
     // person (Clear Glass raises it with a Nexus panel) and the waiting job waits this long for the sign-in, not no_tab_ms.

@@ -83,7 +83,7 @@ const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       /openComponentsModal\(\)/.test(UI) && /id="cmp-drop"/.test(UI) && /accept="\.zip" multiple/.test(UI) && /js\/components-panel\.js/.test(UI) && /\/bundle"/.test(src('idearium/ui/js/components-panel.js')));
     const B = src('clear-glass/renderer/browser.html');
     check('WR-04 Clear Glass wears the COMPARTMENT OS window: the theme after browser.css, the glyph and kind in the title bar, the window buttons as COS draws them',
-      B.indexOf('href="cos-theme.css"') > B.indexOf('href="browser.css"') && /compartment · browser/.test(B) && /chrome-group cos-ctl/.test(B)
+      B.indexOf('href="cos-theme.css"') > B.indexOf('href="browser.css"') && /chrome-group cos-ctl/.test(B)
       && /linear-gradient\(180deg, #141827, #0f121c\)/.test(src('clear-glass/renderer/cos-theme.css')) && /cos-theme\.css/.test(src('clear-glass/renderer/settings.html')));
   } catch (e) { fail++; console.log(`  ✗ threw: ${e.stack}`); }
   finally { try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {} }

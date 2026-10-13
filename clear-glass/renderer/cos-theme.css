@@ -83,3 +83,11 @@ html, body { background: #0a0b10; }
 #titlebar .title b { color: #e6e8f0; }
 #titlebar button { width: 44px; height: 34px; border: 0; border-radius: 0; background: none; color: #8a90a6; margin-left: auto; }
 #titlebar button:hover { background: #e5484d; color: #fff; }
+
+/* §0.60.7 — the search bar's move grip (the title label is gone; the tab strip starts at its tabs) */
+#tab-bar { padding-left: 8px !important; }
+#url-bar-wrap { -webkit-app-region: no-drag; transition: margin-left .05s linear; }
+#url-bar-grip { position: absolute; left: 3px; top: 50%; transform: translateY(-50%); z-index: 3; width: 14px; text-align: center;
+  font: 10px/1 system-ui; letter-spacing: -2px; color: #5b6178; cursor: grab; user-select: none; -webkit-app-region: no-drag; }
+#url-bar-grip:hover { color: #38bdf8; } #url-bar-grip:active { cursor: grabbing; }
+#url-bar { padding-left: 20px !important; }

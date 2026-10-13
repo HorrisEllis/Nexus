@@ -31,7 +31,6 @@
 
 <!-- Tab bar -->
   <div id="tab-bar" style="display:flex;align-items:center;background:#0e0e18;border-bottom:1px solid rgba(255,255,255,.08);padding:0 6px;height:34px;flex-shrink:0;overflow-x:auto;overflow-y:hidden;gap:2px;">
-    <span class="cos-glyph" aria-hidden="true">▣</span><span class="cos-kind">compartment · browser</span>
     <div id="tab-list" style="display:flex;align-items:center;gap:2px;flex:0 1 auto;overflow-x:auto;min-width:0;"></div>
     <button id="btn-new-tab" title="New tab" style="flex-shrink:0;background:none;border:none;color:#6a6d82;font-size:16px;padding:0 8px;cursor:pointer;line-height:34px;">+</button>
     <div style="flex:1;-webkit-app-region:drag;"></div>
@@ -51,6 +50,7 @@
   </div>
 
   <div id="url-bar-wrap">
+    <div id="url-bar-grip" title="Drag to move the search bar · double-click to put it back" aria-label="Move search bar">⋮⋮</div>
     <input id="url-bar" type="text" placeholder="Navigate to..." spellcheck="false" autocomplete="off">
     <!-- §BUILD 2026-08-28 — James: "in firefox the search bar looks
          like this with the bookmark button at the end, over the search
