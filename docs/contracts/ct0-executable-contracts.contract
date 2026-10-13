@@ -1,0 +1,171 @@
+envelope: 1
+uuid: nexus-export-contract-ct0-executable-contracts
+type: contract
+id: ct0-executable-contracts
+context: >-
+  CT0 — docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec. James: "each block in a
+  .contract file(literally contract as the file extension.) using yaml file, each gated as steps"
+intent: null
+summary: null
+system: null
+tags:
+  - v2
+exported_at: 1791887655766
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1791887655766
+lastSeenAt: 1791887655766
+fingerprint: null
+payload:
+  v: 2
+  uuid: ct0-executable-contracts
+  status: draft
+  intention: build
+  outcome:
+    what: >-
+      .contract v2: an executable contract — gates evaluated against real evidence, completion
+      derived, never declared
+    why: >-
+      his: each gate a step an agent with a small context can do; nothing passes on an unsupported
+      claim
+    done_when:
+      - gate: self-host
+  refs:
+    evaluator:
+      path: cortex/core/raid/contract-gates.js
+    commands:
+      path: idearium/cli/route-commands.js
+      note: the contract.* rows
+    tests:
+      path: tests/modules/test-contract-gates.test.js
+    v1:
+      path: cortex/core/raid/contract-intake.js
+      note: BUILD_CONTRACT_SCHEMA — v1, extended not replaced
+    phasemap:
+      path: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+      note: CT0 acceptance
+  invariants:
+    - id: INV-compat
+      says: every real v1 contract loads and stays v1
+      check:
+        gate: verify
+    - id: INV-evidence
+      says: missing proof is never a pass; a free sentence is unverifiable
+      check:
+        gate: verify
+    - id: INV-invalidate
+      says: a changed ref invalidates its gates and only their downstream
+      check:
+        gate: verify
+  gaps: []
+  gates:
+    - id: context
+      type: context
+      requires:
+        - v1
+        - phasemap
+      actions:
+        - read BUILD_CONTRACT_SCHEMA and the node envelope
+        - read CT0 acceptance
+      pass_when:
+        - exists: cortex/core/raid/contract-intake.js
+        - exists: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+    - id: evaluator
+      type: task
+      depends_on:
+        - context
+      requires:
+        - evaluator
+      actions:
+        - schema, validate, evaluate, check, packet, record
+      pass_when:
+        - exists: cortex/core/raid/contract-gates.js
+    - id: commands
+      type: task
+      depends_on:
+        - context
+      requires:
+        - commands
+      actions:
+        - contract new · gates · packet · check · evidence · status
+      pass_when:
+        - exists: idearium/cli/route-commands.js
+    - id: verify
+      type: verification
+      depends_on:
+        - evaluator
+        - commands
+      requires:
+        - evaluator
+        - commands
+        - tests
+      pass_when:
+        - test: tests/modules/test-contract-gates.test.js
+    - id: self-host
+      type: phase
+      depends_on:
+        - verify
+      requires:
+        - evaluator
+      pass_when:
+        - gate: verify
+  failure:
+    retry_limit: 3
+  state:
+    gates:
+      context:
+        status: PASSED
+        reasons: []
+        evidence:
+          - exists: cortex/core/raid/contract-intake.js
+          - exists: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+        hashes:
+          v1: 745d48021f1d439d5bcea5e2d7272c1aa691c39a66590df8af8a9c0f85583dda
+          phasemap: 048919cc590995baa056dde1cf2cbf1349117c0726445a4d2fb55a1819140dff
+        at: 1791887660938
+        attempts: 1
+      evaluator:
+        status: PASSED
+        reasons: []
+        evidence:
+          - exists: cortex/core/raid/contract-gates.js
+        hashes:
+          evaluator: 85ecb118627b209824ea124773387d0ea2e4818992c2fe4f12e2d9c20445dc4d
+        at: 1791887661240
+        attempts: 1
+      commands:
+        status: PASSED
+        reasons: []
+        evidence:
+          - exists: idearium/cli/route-commands.js
+        hashes:
+          commands: ed8837f220249cde191310663ba94385f9e9a3f07064f899f7c2359fad04485c
+        at: 1791887661561
+        attempts: 1
+      verify:
+        status: PASSED
+        reasons: []
+        evidence:
+          - test: tests/modules/test-contract-gates.test.js
+            exit: 0
+            tail: ' | 11 passed, 0 failed'
+        hashes:
+          evaluator: 85ecb118627b209824ea124773387d0ea2e4818992c2fe4f12e2d9c20445dc4d
+          commands: ed8837f220249cde191310663ba94385f9e9a3f07064f899f7c2359fad04485c
+          tests: 76bb408c1dd1c096fb224dfda683928986ae997d851c0f45435b88284266a32e
+        at: 1791887662365
+        attempts: 1
+      self-host:
+        status: PASSED
+        reasons: []
+        evidence:
+          - gate: verify
+        hashes:
+          evaluator: 85ecb118627b209824ea124773387d0ea2e4818992c2fe4f12e2d9c20445dc4d
+        at: 1791887662756
+        attempts: 1
+    evidence: {}
+    invariants:
+      INV-compat: verified
+      INV-evidence: verified
+      INV-invalidate: verified

@@ -36,16 +36,40 @@ spec:
       proof: "test-reasoning-route DR-04, DR-05"
 
     CT0_the_contract_is_a_reference:
-      status: "OPEN"
-      james: '"the contract is like a reference, like it needs to list everything needed to be done, dependancies,, context, everything in as little context as possible, each blocvk a task or phase to the llm to reference each gate"'
-      builds_on: "RD4 (the fulfilled contract is one file, projects phasemap) · his request spine RQ0–RQ27 · lib/phase-plan.js (the plan names files and exports) · lib/context-atlas.js"
+      status: "DONE — 0.60.15 (proof: test-contract-gates 11/11, test-contract-ct0-self 2/2; CT0 complete by its own contract)"
+      james: '"the contract is like a reference, like it needs to list everything needed to be done, dependancies,, context, everything in as little context as possible, each blocvk a task or phase to the llm to reference each gate" · "Intent and outcome … Dependency graph … Context references … Primitive requirements and invariants … Tasks, phases and gates … Verification and failure handling … each block in a .contract file(literally contract as the file extension.) using yaml file, each gated as steps"'
+      decision: >-
+        James, 2026-10-13, approving the coder's proposal: "extend Nexus's existing .contract system and make it executable,
+        rather than create another planning format alongside it." Build on BUILD_CONTRACT_SCHEMA (cortex/core/raid/
+        contract-intake.js), the node envelope (lib/node-export.js), the check catalogue and .chunk references; duplicate none.
+      exists: [cortex/core/raid/contract-intake.js (BUILD_CONTRACT_SCHEMA, synthesizeContract, submitContract, dependsOn/onFail), lib/node-export.js (envelope, toYaml/fromYaml), cortex/input/*.contract and guardian/input/*.contract (v1, real), lib/import-checks.js (CK-001/002/060 executable), cos/spec/check-catalogue.spec]
+      files: [cortex/core/raid/contract-gates.js, idearium/cli/route-commands.js, docs/contracts/ct0-executable-contracts.contract, tests/modules/test-contract-gates.test.js]
       does: >-
-        One contract file per piece of work: one block per task/phase, each block ≤ a few lines — id, the task, its
-        dependencies (block ids), its inputs as REFERENCES (file:line ranges, component ids, spec section ids, note ids —
-        never pasted text), its gate (the check that proves it), and its status. An agent is handed one block plus the
-        references it names, resolved on demand (LN0 for lines, loom for components). The smallest representation that
-        keeps the meaning: anything resolvable is a pointer.
-      proof: "a phase's contract under 1/10 of the context the same phase sends today, and the phase still builds"
+        .contract v2 (same envelope, same file type; every v2 field optional so v1 loads as v1): outcome (what, why,
+        done_when), refs (path + content hash, line range, component id), invariants (each with a check), gaps
+        (missing, inspected, blocks, resolve_when), gates (context | task | verification | phase; depends_on, requires,
+        actions, pass_when, proof, on_failure), completion, failure policy, and state (each gate's status, evidence, the
+        hashes it passed against, attempts). Gate states BLOCKED · READY · RUNNING · PASSED · FAILED · STALE (SKIPPED only by
+        a rule that marks a gate optional). Conditions are machine-checkable — test <file>, exists <path>, evidence <key>
+        [match], gate <id>, check CK-nnn — anything else is unverifiable and can never pass. Commands: contract new, contract
+        gates, contract packet <gate> (the minimal context for one gate), contract check <gate> (verify and record),
+        contract status.
+      acceptance:   # his four, verbatim in substance (2026-10-13)
+        - "Backward compatibility: existing contracts load and behave correctly under v2 — tested on the real legacy files (cortex/input, guardian/input), not only fixtures."
+        - "Evidence-driven evaluation: every mandatory completion condition resolves to a machine-checkable check or recorded evidence with a validation rule; missing proof is never a pass."
+        - "Reliable invalidation: a hash mismatch invalidates the gates that require that ref and, through depends_on, only those downstream — unrelated gates keep their result."
+        - "Self-hosting proof: CT0 runs through its own contract; its completion is established by the evaluator, not declared by the agent building it."
+      note: "His: a content hash proves the content is a given version, not that it is correct — the checks prove correctness."
+      success: "Nexus loads a contract, builds a minimal gate packet, evaluates the gate against real evidence, records the result, and resumes safely without trusting an unsupported claim of completion."
+    CT1_dynamic_chunking:
+      status: "OPEN"
+      james: '"everything can be broken down into smaller pieces, with gates between. dynamic chunking for smaller agents or if the agent is struggling?"'
+      depends_on: [CT0_the_contract_is_a_reference]
+      builds_on: "pipeline-routing shouldChunk/planMode (per-file chunking for Ollama) · the door's learned outcomes · CT0 gates"
+      does: >-
+        A gate whose packet exceeds its agent's budget (a small model's context), or that failed twice, is split into
+        sub-gates — one per required ref, action or file — each with its own pass_when, the parent passing only when all its
+        children pass. The split is recorded in the contract (nothing lost), so the next run starts from the smaller gates.
     GT0_every_interaction_gated:
       status: "OPEN"
       james: '"each interaction gated, that way each gate can be a different agent, using the ledgers or previous conversations"'
