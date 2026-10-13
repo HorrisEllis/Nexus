@@ -260,10 +260,21 @@
       observe(job, Math.max(0, n - 1));
       return { started: true, jobId: o.jobId };
     },
+    // 0.60.8 — a job whose page was reloaded (the chat reopened at its URL by the host): the prompt was already sent, so
+    // this page only READS — the last response in the chat — and never types. Refuses on a sign-in or captcha wall.
+    adopt: function (o) {
+      if (JOBS[o.jobId]) return { started: false, existing: true, jobId: o.jobId };
+      var b = checkBlockers() || (looksLoggedOut() ? 'no_login' : null); if (b) return { started: false, stage: b };
+      var job = JOBS[o.jobId] = { id: o.jobId, selectors: o.selectors, prompt: '', content: '', opts: Object.assign({}, DEFAULT_OPTS, o.opts || {}),
+        phase: 'reading', done: false, ok: false, sent: true, stage: null, url0: location.href, startedAt: now(), chars: 0, continues: 0, via: 'reloaded' };
+      var n = qsa(job.selectors.resp).length;
+      observe(job, Math.max(0, n - 1));
+      return { started: true, jobId: o.jobId };
+    },
     poll: function (jobId) {
       var j = JOBS[jobId]; if (!j) return { known: false };
       return { known: true, phase: j.phase, done: j.done, ok: j.ok, sent: j.sent, stage: j.stage, error: j.error || null, chars: j.chars || 0, generating: !!j.generating,
-        continues: j.continues || 0, elapsedMs: j.elapsedMs || (now() - j.startedAt), via: j.via || null, text: j.done ? (j.text || '') : undefined, url: location.href };
+        continues: j.continues || 0, elapsedMs: j.elapsedMs || (now() - j.startedAt), via: j.via || null, text: j.done ? (j.text || '') : undefined, url: location.href, clicked: !!j.clickedAt };
     },
     abort: function (jobId) { var j = JOBS[jobId]; if (j) j.abort = true; return !!j; },
     forget: function (jobId) { delete JOBS[jobId]; return true; },

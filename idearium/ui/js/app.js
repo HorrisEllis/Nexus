@@ -4533,7 +4533,7 @@ function _agentSettle(line, r) {
   line.role = ok ? 'agent' : 'agent — failed';
   line.text = ok ? r.text : (r.error || 'no response');
   line.meta = ok
-    ? [r.hatName, r.providerUsed || r.provider, r.modelUsed, r.elapsedMs ? `${Math.round(r.elapsedMs / 100) / 10}s` : null, r.late ? 'late — from the Responses index' : null, r.viaCopilot ? `copilot → ${r.viaCopilot.backend}${r.viaCopilot.agent ? ' ' + r.viaCopilot.agent : ''}` : null].filter(Boolean).join(' · ')
+    ? [r.hatName, r.providerUsed || r.provider, r.modelUsed, r.elapsedMs ? `${Math.round(r.elapsedMs / 100) / 10}s` : null, r.late ? 'late — from the Responses index' : null, r.viaCopilot ? `copilot → ${r.viaCopilot.backend}${r.viaCopilot.agent ? ' ' + r.viaCopilot.agent : ''}` : null, r.viaCopilot && r.viaCopilot.reasoning && r.viaCopilot.reasoning.kind === 'agent:reason' ? 'reasoning: complex' : null].filter(Boolean).join(' · ')
     : (r.hatName || null);
   line.detail = _agentDetail(r);
   // §0.39.266 — James: "just prompt for approval." Code the agent wrote for a Nexus repo

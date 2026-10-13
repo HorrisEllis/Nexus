@@ -126,6 +126,17 @@ function createLadder({ registry, mesh, picker, mode = () => require('../options
       }
     }
 
+    // 0.60.8 — James: "can you have the chaturl logged an reused for agents, unless it is blocked. like i want it to reload
+    // using the chat url before it escalates." The prompt is (or may be) in the chat but the answer was not read: reopen
+    // the chat at its URL once and read it there. Never a resend; a sign-in or captcha wall goes to a person as before.
+    if ((r.sent || r.sent === null) && !USER_STAGES.has(r.stage) && typeof mesh.read === 'function') {
+      let rr;
+      try { rr = await mesh.read({ jobId: job.id, reload: true, chatUrl: r.chatUrl || job.chatUrl || null, timeoutMs, onProgress: onProgress ? (p) => onProgress(job, p) : null }); }
+      catch (e) { rr = { ok: false, sent: true, stage: 'mesh_unreachable', error: e.message }; }
+      step('mesh-reload', rr, { chatUrl: r.chatUrl || job.chatUrl || null });
+      if (rr.ok) { infraOk(); registry.recordOutcome(job.provider, { ok: true }); return { kind: 'complete', text: rr.text, chatUrl: rr.chatUrl || r.chatUrl || null, agentId, accountId, trail }; }
+      if (USER_STAGES.has(rr.stage)) return { kind: 'user', reason: rr.stage, note: `${job.provider} needs a human (${rr.stage}) — the chat was reopened and is blocked.`, stage: rr.stage, trail };
+    }
     // sent:null = the mesh timed out mid-flight: the prompt MAY be in the chat, so treat it as sent.
     if (r.sent || r.sent === null) {   // the prompt is (or may be) already in the chat: NEVER resend
       return { kind: 'user', reason: 'sent_no_response', note: 'The prompt was already injected; do not resend it. Pick the response element or paste it.', stage: r.stage, trail };

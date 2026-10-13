@@ -44,9 +44,29 @@ function createDomTransport({ resolvePage, execJs, sleep = (ms) => new Promise(r
     for (;;) {
       let p;
       try { p = await execJs(wc, `window.__cgAgent.poll(${j(r.jobId)})`); }
-      catch (e) { return finish(r, { ok: false, sent: r.lastSent === true ? true : (r.lastSent === null ? null : (r.started ? null : false)), stage: 'page_navigated', error: `lost the page: ${e.message}` }); }
-      if (!p || p.known === false) return finish(r, { ok: false, sent: r.lastSent === false ? null : (r.lastSent ?? null), stage: 'page_navigated', error: 'the page reloaded and the job state was lost' });
+      catch (e) {
+        // 0.60.8 — the page navigated away under the job (its script is gone): the same reopen as below
+        if ((r.lastSent !== false || r.clicked) && r.lastUrl && !r.reloaded) {   // sent, or send pressed (unconfirmed): never a job that did not reach the chat
+          const again = await reopen(r, { chatUrl: r.lastUrl });
+          if (again.ok) { wc = r.wc; continue; }
+          return finish(r, { ok: false, sent: true, stage: again.stage || 'page_navigated', error: again.error, chatUrl: r.lastUrl });
+        }
+        return finish(r, { ok: false, sent: r.lastSent === true ? true : (r.lastSent === null ? null : (r.started ? null : false)), stage: 'page_navigated', error: `lost the page: ${e.message}`, chatUrl: r.lastUrl || null });
+      }
+      if (!p || p.known === false) {
+        // 0.60.8 — James: "can you have the chaturl logged an reused for agents, unless it is blocked. like i want it to
+        // reload using the chat url before it escalates." The page reloaded under the job (ChatGPT moves a new chat from
+        // /c/WEB:… to /c/<id>). If the prompt was sent and we know the chat's URL: reopen it once and read the answer there.
+        if ((r.lastSent !== false || r.clicked) && r.lastUrl && !r.reloaded) {   // sent, or send pressed (unconfirmed): never a job that did not reach the chat
+          const again = await reopen(r, { chatUrl: r.lastUrl });
+          if (again.ok) { wc = r.wc; continue; }
+          return finish(r, { ok: false, sent: true, stage: again.stage || 'page_navigated', error: again.error, chatUrl: r.lastUrl });
+        }
+        return finish(r, { ok: false, sent: r.lastSent === false ? null : (r.lastSent ?? null), stage: 'page_navigated', error: 'the page reloaded and the job state was lost', chatUrl: r.lastUrl || null });
+      }
       r.lastSent = p.sent;
+      if (p.url) r.lastUrl = p.url;
+      if (p.clicked) r.clicked = true;
       r.progress = { phase: p.phase, chars: p.chars, generating: p.generating, elapsedMs: p.elapsedMs, continues: p.continues, sent: p.sent };
       try { onProgress({ jobId: r.jobId, agentId: r.agentId, provider: r.provider, ...r.progress }); } catch (_) {}
       if (p.done) {
@@ -61,6 +81,24 @@ function createDomTransport({ resolvePage, execJs, sleep = (ms) => new Promise(r
     }
   }
 
+  // 0.60.8 — reopen a sent job's chat at its URL and read the answer there (never types). Blocked (sign-in, captcha) is
+  // reported as such, so the caller escalates to a person instead of reloading again.
+  async function reopen(r, { chatUrl = null, selectors = null } = {}) {
+    const url = chatUrl || r.lastUrl;
+    if (!url || !r.wc) return { ok: false, stage: 'no_chat_url', error: 'no chat URL known for this job' };
+    r.reloaded = true;
+    try { await r.wc.loadURL(url); } catch (e) { /* a redirect rejects loadURL; the page may still be there */ }
+    await waitReady(r.wc);
+    try { await execJs(r.wc, PAGE_SRC); } catch (e) { return { ok: false, stage: 'inject_failed', error: e.message }; }
+    if (selectors) r.selectors = { ...(r.selectors || {}), ...selectors };
+    let a;
+    try { a = await execJs(r.wc, `window.__cgAgent.adopt(${j({ jobId: r.jobId, selectors: r.selectors || {} })})`); }
+    catch (e) { return { ok: false, stage: 'inject_failed', error: e.message }; }
+    if (a && a.stage) return { ok: false, stage: a.stage, error: `the chat is blocked (${a.stage}) — a person is needed` };
+    r.lastUrl = url;
+    return { ok: true };
+  }
+
   async function runJob(r, args) {
     r.status = 'running';
     let wc;
@@ -72,7 +110,7 @@ function createDomTransport({ resolvePage, execJs, sleep = (ms) => new Promise(r
     let started;
     try { started = await execJs(wc, `window.__cgAgent.start(${j(payload)})`); }
     catch (e) { return finish(r, { ok: false, sent: false, stage: 'inject_failed', error: e.message }); }
-    r.wc = wc;
+    r.wc = wc; r.selectors = args.selectors;
     return pollUntilDone(r, wc);
   }
 
@@ -89,10 +127,18 @@ function createDomTransport({ resolvePage, execJs, sleep = (ms) => new Promise(r
   function getJob(jobId) { const r = jobs.get(jobId); return r ? pub(r) : { known: false }; }
 
   // Re-read an already-sent job's response with (repaired) selectors. Never resends.
-  async function read({ jobId, selectors }) {
+  async function read({ jobId, selectors, reload = false, chatUrl = null }) {
     const r = jobs.get(jobId);
     if (!r || !r.wc) return { ok: false, error: 'unknown job' };
     r.status = 'running'; r.result = null;
+    // 0.60.8 — Guardian's ladder asks for this once before it escalates: reopen the chat at its URL, then read
+    if (reload) {
+      r.reloaded = false;
+      const o = await reopen(r, { chatUrl, selectors });
+      if (!o.ok) return finish(r, { ok: false, sent: true, stage: o.stage, error: o.error, chatUrl: chatUrl || r.lastUrl || null });
+      pollUntilDone(r, r.wc);
+      return { ok: true, jobId, reloaded: true };
+    }
     try { await execJs(r.wc, `window.__cgAgent.read(${j({ jobId, selectors })})`); } catch (e) { return { ok: false, error: e.message }; }
     pollUntilDone(r, r.wc);
     return { ok: true, jobId };

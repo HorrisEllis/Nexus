@@ -1155,7 +1155,7 @@ class AgentMesh {
     return dom.send({ jobId, agentId: contextId, provider, prompt, content, selectors: selectors || { input: def.inputSel, send: def.sendSel, resp: def.respSel }, url: def.url, timeoutMs, opts });
   }
   getDomJob(jobId) { return this._dom().getJob(jobId); }
-  async readDomJob({ jobId, selectors }) { return this._dom().read({ jobId, selectors }); }
+  async readDomJob({ jobId, selectors, reload, chatUrl }) { return this._dom().read({ jobId, selectors, reload: !!reload, chatUrl: chatUrl || null }); }   // 0.60.8 reload: reopen the chat first
   async diagnoseDom({ provider, agentId, accountId, stage, selectors }) {
     const def = AGENT_REGISTRY[provider];
     const contextId = agentId || `mesh-${provider}-${accountId || 'default'}`;
