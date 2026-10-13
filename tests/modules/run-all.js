@@ -348,6 +348,7 @@ const SUITES = [
   'test-contract-adapters.test.js', // 0.60.18 EX0 — agent + phase adapters: routed, budgeted, blocked≠failed, checkpoints, integration, audit
   'test-contract-phase-build.test.js', // 0.60.18 EX0e — Build through the contract scheduler on the real route: bricks, checkpoints, resume, rejected checkpoint, recovery, integration
   'test-lean-mode.test.js', // 0.60.20 — lean mode: one switch in Idearium settings, read by npm run start:all
+  'test-run-watch.test.js', // 0.60.21 — no run left in limbo: stalls closed + retried once, a reject retries its phase, a finished review ends
   'test-contract-ct0-self.test.js',   // 0.60.15 — CT0 complete by its own contract, read by the evaluator
   'test-no-compartment-label.test.js',   // 0.60.11 — regression guard: no "compartment · …" label drawn anywhere
   'test-reasoning-route.test.js',   // 0.60.8 — intent routing for reasoning: complex chat → agent:reason with the reasoning agent; route assess

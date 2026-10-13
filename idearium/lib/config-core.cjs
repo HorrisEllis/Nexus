@@ -171,6 +171,13 @@ const SCHEMA = {
     // conversation (lib/draft-review.js). review_provider: which agent reviews ('' = guardian's first provider).
     draft_then_review: { default: true, copilot_writable: false, type: 'boolean' },
     review_provider:   { default: '', copilot_writable: false, type: 'string' },
+    // 0.60.21 — James: "needs to retry when you reject it. what if you have copilot monitor repos every now and again if
+    // they stall?" A run with no new step for stall_minutes is closed as stalled (a gap diagnostic sees) and, on_stall:
+    // retry, built again once; a rejected agent proposal builds its phase again with the reason. auto_retries per phase a day.
+    stall_minutes:   { default: 10, min: 0, max: 240, copilot_writable: true, type: 'number' },
+    on_stall:        { default: 'retry', enum: ['retry', 'close'], copilot_writable: true, type: 'string' },
+    retry_on_reject: { default: true, copilot_writable: true, type: 'boolean' },
+    auto_retries:    { default: 2, min: 0, max: 10, copilot_writable: true, type: 'number' },
   },
   desktop: {
     ram_mb:  { default: 4096, min: 512, max: 65536, copilot_writable: true, type: 'number' },

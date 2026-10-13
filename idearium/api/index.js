@@ -1108,6 +1108,45 @@ function _proposedSize(dir, overlays) {
   return { added, removed, files: overlays.length };
 }
 
+// 0.60.21 — James: "needs to retry when you reject it. what if you have copilot monitor repos every now and again if they
+// stall? or have an agent check in? the diagnostic system when it expierences a stall or gate not fire?" Idearium owns the
+// runs, so it watches them (lib/run-watch.js over idearium_phase_runs): a run with no new step for repos.stall_minutes is
+// closed as 'stalled', reported to the gap field (what diagnostic and copilot's repair loop already watch), and built
+// again once (repos.on_stall: retry). A rejected agent proposal builds its phase again with James's reason. Both are capped
+// by repos.auto_retries per phase a day, and never start while another run of that phase is still going.
+function _cfg(k, d) { try { const v = getIdeariumValue(k); return v === undefined || v === null ? d : v; } catch (_) { return d; } }
+async function _autoRetry(info, kind, note) {
+  const RW = _require('../../lib/run-watch.js');
+  const rows = loadTable('idearium_phase_runs');
+  const limit = Number(_cfg('repos.auto_retries', 2));
+  const base = { runId: `auto-${Date.now().toString(36)}`, repoUuid: info.repoUuid, targetRepo: info.targetRepo, map: info.map, phase: info.phase, retryKind: kind };
+  const said = (state, error) => { appendRow('idearium_phase_runs', { uuid: `${base.runId}-${state}`, ...base, state, error, retryOf: info.runId || null, ts: Date.now() }); getIdeaOS().emit('idearium.repo.phase.run', { ...base, state }); };
+  if (!(limit > 0)) return { ok: false, why: 'repos.auto_retries is 0' };
+  if (RW.retriesFor(rows, { phase: info.phase }) >= limit) { said('auto-retry-held', `not retried: ${info.phase} already had ${limit} automatic retr${limit === 1 ? 'y' : 'ies'} today — ${note}`); return { ok: false, why: 'limit' }; }
+  const active = [...RW.runsOf(rows).values()].some(r => r.last && r.last.phase === info.phase && r.runId !== info.runId && !RW.isFinal(r) && !/-(review|proof)$/.test(r.runId) && Date.now() - (r.last.ts || 0) < 30 * 60 * 1000);
+  if (active) { said('auto-retry-held', `not retried: another run of ${info.phase} is still going — ${note}`); return { ok: false, why: 'active' }; }
+  const repo = getRepoLayer().get(info.repoUuid);
+  if (!repo || !info.map || !info.phase) return { ok: false, why: 'the run names no repo, map or phase' };
+  said('auto-retry', `${kind === 'reject' ? 'rejected' : 'stalled'} — building ${info.phase} again: ${note}`);
+  try { const r = await _phaseBuild(repo, _repoDiskDir(repo.uuid), { map: info.map, phase: info.phase, note }); return { ok: !!r.ok, run: r.data || null, error: r.error || null }; }
+  catch (e) { return { ok: false, error: e.message }; }
+}
+async function _watchRuns() {
+  const mins = Number(_cfg('repos.stall_minutes', 10));
+  if (!(mins > 0)) return [];
+  const RW = _require('../../lib/run-watch.js');
+  const st = RW.stalled(loadTable('idearium_phase_runs'), { stallMs: mins * 60 * 1000 });
+  for (const s of st) {
+    const why = `no new step for ${Math.round(s.idleMs / 60000)} min after "${s.state}" — the watchdog closed it`;
+    appendRow('idearium_phase_runs', { uuid: `${s.runId}-stalled`, runId: s.runId, repoUuid: s.repoUuid, targetRepo: s.targetRepo, map: s.map, phase: s.phase, state: 'stalled', stalledAfter: s.state, error: why, ts: Date.now() });
+    getIdeaOS().emit('idearium.repo.phase.run', { runId: s.runId, repoUuid: s.repoUuid, phase: s.phase, state: 'stalled' });
+    try { _require('../../lib/gap-field.js').report({ type: 'phase.run.stalled', body: `${s.phase}: ${why}`, source: `idearium:${s.repoUuid}:${s.phase}`, domain: 'idearium', severity: 'medium', meta: { runId: s.runId, kind: s.kind } }); } catch (_) {}
+    // only a recent stall is retried: an old run that never closed (from before the watchdog) is closed, not rebuilt
+    if (s.kind === 'build' && s.idleMs < 2 * 3600 * 1000 && _cfg('repos.on_stall', 'retry') === 'retry') await _autoRetry(s, 'stall', `the previous run stalled after "${s.state}"; start over, smaller steps`).catch(() => {});
+  }
+  return st;
+}
+
 // 0.60.20 — a rejected proposal is said to the agent that made it, in its own chat, so the conversation is closed rather
 // than left waiting on a tool result (James: "it needs to tell the agent its been rejected. stuck in limbo").
 async function _tellAgentRejected(repo, n, reason) {
@@ -6187,6 +6226,10 @@ async function handle(req, res, route, query, body) {
             // is told in its own chat (the repo's agent, as every dispatch is), in the background: what was rejected,
             // why, and that the run is over — never left waiting on a tool result that will not come. body.tell:false skips it.
             if (r.ok && body.tell !== false && r.inject && r.inject.source && r.inject.source.kind === 'agent') _tellAgentRejected(repo, r.inject, body.reason || null).catch(() => {});
+            if (r.ok && body.retry !== false && _cfg('repos.retry_on_reject', true) !== false && r.inject && r.inject.source && r.inject.source.kind === 'agent') {
+              const info = _require('../../lib/run-watch.js').runForInject(loadTable('idearium_phase_runs'), r.inject);
+              if (info) _autoRetry(info, 'reject', `James rejected ${r.inject.path}${body.reason ? `: ${body.reason}` : ''}. Build it again so it is right: real paths, real imports, the phase's own files`).catch(() => {});
+            }
             return done(r);
           }
         case 'repo.inject.revert': {
@@ -8539,6 +8582,8 @@ function _startBuildQueuePoller(port) {
   if (timer.unref) timer.unref(); // never keeps the process alive on its own
   tick(); // real, immediate first pass — don't wait a full interval before resuming work that was already pending when this boot started
   console.log(`[idearium/build-queue] real, periodic queue drain started — every ${BUILD_QUEUE_POLL_MS}ms`);
+  // 0.60.21 — the run watchdog: every minute, a run with no new step for repos.stall_minutes is closed and retried once
+  setInterval(() => { _watchRuns().catch(e => console.warn(`[idearium/run-watch] ${e.message}`)); }, 60000).unref?.();
   return timer; // real handle — lets a caller (or a test) stop this poller; startAPI() itself never needs to
 }
 
