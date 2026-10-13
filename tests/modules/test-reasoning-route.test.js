@@ -41,6 +41,15 @@ try {
     && D.route({ kind: 'page:workshop', policy: { ...pol, reasoner: 'chatgpt' } }, { defaultProvider: 'auto', resolve: res }).route[0].provider === 'chatgpt');
   check('DR-03 a spec block that names its agent is never overridden; routing.reason_route: off turns it off',
     first('page:workshop', { block: { id: 'b', agent: 'ollama:small:3b', fallback: [] } }) === 'ollama:small:3b' && D.route({ kind: 'page:workshop', policy: { ...pol, reason_route: 'off' } }, { defaultProvider: 'auto', resolve: res }).route[0].provider === 'ollama:small:3b');
+  // 0.60.14 — his intent map (routing.reason_kinds) and the lines tool
+  check('DR-04 the intent map is his to change: a kind added, prefix* matches many, !kind takes a built-in off',
+    R.forDoor({ kind: 'page:deliver', policy: { reason_kinds: 'page:deliver' } }).reason && R.forDoor({ kind: 'build:x', policy: { reason_kinds: 'build:*' } }).reason
+    && !R.forDoor({ kind: 'build:file.md', policy: { reason_kinds: '!build:file.md' } }).reason && !R.forDoor({ kind: 'page:deliver', policy: {} }).reason);
+  const P = require(path.join(ROOT, 'lib/pipeline-routing.js')).policyFrom({ reason_route: 'off', reasoner: 'Gemini', reason_kinds: 'page:deliver' });
+  check('DR-05 the settings reach the door: policyFrom carries reason_route, reasoner, reason_kinds; Settings → routing shows all three',
+    P.reason_route === 'off' && P.reasoner === 'gemini' && P.reason_kinds === 'page:deliver' && /data-rt-rr/.test(src('idearium/ui/settings.html')) && /data-rt="reasoner"/.test(src('idearium/ui/settings.html')) && /data-rt="reason_kinds"/.test(src('idearium/ui/settings.html')));
+  check('WR-04 tiny amounts of code: repo lines (a range, numbered) and repo lines copy (to the work surface, a proposal)',
+    /\['api','repos',\s+':uuid','lines'\]/.test(src('idearium/api/index.js')) && /'repo\.lines\.copy'\]/.test(src('idearium/api/index.js')) && /RI\.propose\(/.test(src('idearium/api/index.js')) && /key: 'repo\.lines'/.test(src('idearium/cli/route-commands.js')) && /key: 'repo\.lines\.copy'/.test(src('idearium/cli/route-commands.js')));
 } catch (e) { fail++; console.log(`  ✗ threw: ${e.stack}`); }
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

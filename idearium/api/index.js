@@ -2135,6 +2135,7 @@ const ROUTE_CAP = {
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
+  'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
@@ -2452,6 +2453,9 @@ function matchRoute(method, url) {
     // content, resolved through spec-engine chunks (v2 has no content
     // store of its own — see repo/index.js's file CRUD methods).
     ['GET',    ['api','repos',    ':uuid','file'],         'repo.file.read'],
+    // 0.60.14 — James: "a tool to request lines from a file to copy to the worksurface or a new file to edit so it can be tiny amounts of code"
+    ['GET',    ['api','repos',    ':uuid','lines'],        'repo.lines'],          // ?path=&from=&to=
+    ['POST',   ['api','repos',    ':uuid','lines','copy'], 'repo.lines.copy'],     // { path, from, to, toPath? }
     // §BUILT 2026-09-16 — nexus://repo/{repoUuid}/chunk/{chunkUuid}
     // (lib/nexus-uri.js's 'repo-chunk' route) needs to resolve a bare
     // chunkUuid to real content, and no existing route did that — the
@@ -4262,6 +4266,27 @@ async function handle(req, res, route, query, body) {
       return ok(res, result);
     }
 
+    // 0.60.14 — tiny amounts of code: a line range of a repo file, numbered; copy it to the work surface as a new file
+    // (a proposed inject — nothing is written until it is applied, and apply/revert are the work surface's own)
+    case 'repo.lines': case 'repo.lines.copy': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const src = action === 'repo.lines' ? query : body;
+      if (!src.path) return err(res, 400, 'path is required');
+      const r = getRepoLayer().readFile(params.uuid, src.path);
+      if (r.error) return err(res, /not found/.test(r.error) ? 404 : 400, r.error);
+      const all = String(r.content ?? r.text ?? '').split('\n');
+      const from = Math.max(1, parseInt(src.from, 10) || 1), to = Math.min(all.length, parseInt(src.to, 10) || Math.min(all.length, from + 79));
+      if (to < from) return err(res, 400, `to (${to}) is before from (${from})`);
+      const slice = all.slice(from - 1, to);
+      if (action === 'repo.lines') return ok(res, { path: src.path, from, to, total: all.length, text: slice.map((l, i) => `${String(from + i).padStart(5)}  ${l}`).join('\n') });
+      const ext = path.extname(src.path), base = path.basename(src.path, ext);
+      const toPath = src.toPath || `worksurface/${base}.L${from}-${to}${ext}`;
+      const RI = _require('../../lib/repo-inject.js');
+      const p = RI.propose({ layer: getRepoLayer(), repo, path: toPath, content: slice.join('\n') + '\n', source: { kind: 'lines', from: src.path, lines: [from, to] } });
+      if (!p || p.ok === false) return err(res, 400, (p && p.errors || ['could not propose']).join('; '));
+      return ok(res, { path: toPath, from, to, lines: slice.length, inject: p.inject || p.node || p });
+    }
     case 'repo.chunk.show': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo || !repo.specUuid) return err(res, 404, `repo not found: ${params.uuid}`);
