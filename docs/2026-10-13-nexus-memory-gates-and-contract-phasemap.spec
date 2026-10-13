@@ -118,6 +118,7 @@ spec:
       does: "schedule(): every READY (or STALE) brick runs — independent ones concurrently — its run { tool, args } through lib/agent-tools executeTool (the one registry: copilot tools, clear-glass/automation.js · macro.js · browser-automation.js, execution/run-pipeline.js · run-chain.js · run-closed-loop.js, nexus/command.js); output recorded as evidence; the gate checked; repeat until nothing is ready. A brick whose kind of work has no executor is set aside and said. contract run."
       proof: "test-contract-gates CC-19 (two independent bricks overlap in time; outputs recorded; complete by the evaluator; a no-executor brick reported)"
     EX0_executors_he_already_built:
+      depends_on: [SC0_scheduler]   # mapped from the files they share: SC0_scheduler (cortex/core/raid/contract-gates.js)
       status: "agent + phase adapters and the Build integration DONE — 0.60.18 (EX0a–f); glass and pipeline executors OPEN; the live update-system run with Ollama is his (CHANGELOG-0.60.18)"
       builds_on: "lib/agent-tools/tools/* (registered) · BrainOS workflows · Clear Glass automation nodes + macros (clear-glass/src/automation/*, src/macros) · the phase pipeline (plan → code) · the model door (agent work by kind)"
       does: "One executor kind per thing that exists: tool (done), agent (the door: a brick's kind picks the model — 0.60.9 routing), glass (a Clear Glass automation or macro on a named tab), pipeline (a BrainOS / Idearium workflow), phase (an Idearium phase build). No new runner: each is an adapter onto what is already there."

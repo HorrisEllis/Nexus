@@ -55,6 +55,7 @@ check('RR-08 derivePlan: the named files, an existing file keeps its exports, a 
 const e = PP.derivePlan({ phaseKey: 'BL30', does: 'check the systems', body: 'BL30:\n  does: check the 13 systems against the registry\n', registry: reg });
 check('RR-09 a phase that names no file is not guessed at (his BL30): no plan, and the reason says what to add', !e.ok && /names no files.*add files:/.test(e.problems[0]), JSON.stringify(e.problems));
 const f = PP.derivePlan({ phaseKey: 'X', body: '  does: wire `lib/foo.js` into idearium/api/index.js (the route)\n', registry: reg });
-check('RR-10 with no files: block, the file paths the phase text writes are planned', f.ok && f.plan.files.map(x => x.path).join(',') === 'lib/foo.js,idearium/api/index.js', JSON.stringify(f.problems));
+check('RR-10 0.60.29 PM0: the file paths a phase\'s text writes are NOT planned (27% of them are its files) — no files: means no plan, and the reason says how to map it',
+  !f.ok && /names no files — map it/.test(f.problems[0]), JSON.stringify(f));
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

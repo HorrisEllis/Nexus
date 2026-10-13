@@ -292,3 +292,49 @@ phasemap:
 #     - `proof:` as its conditions.
 #   - The build stays one file per request, through the same contract path, and is never handed whole to one agent.
 #     The precedent one level up: idearium/repo/spec-plan.js derivePlan.
+
+## ADDENDUM 2026-10-13 — PM: every phase mapped to its files and dependencies, Nexus and every project
+
+# James: "All the phases need to be mapped to files and dependencies. With nexus and all projects."
+#
+# Measured first, on Nexus's own phasemaps (the loom parser, docs/*phasemap.spec): 1351 phases, 777 open.
+# - Of the open ones: 370 name files:; 184 write file paths in their text but name none; 223 write no path at all;
+#   195 have no depends_on.
+# - The text is not the answer. On the phases that do name their files (ground truth), only 172 of the 644 paths in
+#   their text are among their files (27%). Phrases that suggest a file is being built score 23%. A path in a phase's
+#   prose is as often a reference ("checked against", "mirrors", "already in") as a target.
+# - That also condemns 0.60.28's derivePlan, which took paths from the text when files: was missing. Fixed here
+#   (PM0): it plans only the files a phase names.
+#
+# The design (the coder's; his rule decides the split, "deterministic first … a reasoning agent only plans"):
+# - PM0: derivePlan uses files: only. A phase without it is not planned without a model.
+# - PM1 candidates (code): the paths a phase writes, each marked as existing or new (its folder exists). Done phases are
+#   skipped unless asked.
+# - PM2 classify (model, through the learned door, Ollama first): a few phases per request. Each answer is JSON
+#   {files:[{path,new}]}, checked by code: safe paths, existing or under an existing folder.
+# - PM3 a gate that learns: before mapping, the same agent maps phases whose files are known, with their files hidden,
+#   and is scored (precision, recall). Its answers are written only when the precision reaches the threshold
+#   (phase_mapping.min_precision, 0.8). Otherwise they are kept as proposals and the report says why.
+# - PM4 dependencies (code): within a map, a phase depends on the nearest earlier phase that changes the same file.
+#   Existing depends_on is kept, and only what is missing is added.
+# - PM5 apply: files: and depends_on are added to the phase block, never replacing what is there, with a comment saying
+#   who mapped it and the measured precision. Through _phaseWrite (a nexus repo goes through the apply gate:
+#   snapshotted, reversible). A map that parsed before and would not after is refused.
+# - Order: backend (lib/phase-files.js, idearium/repo/phase-mapping.js) → route (POST/GET /api/repos/:uuid/phases/map)
+#   → command (repo map-phases) → UI (Phases tab: "Map files & dependencies", progress, the report).
+# - To confirm with him: the threshold, and whether done phases are mapped too (default: open phases only).
+# - Built (0.60.29):
+#   - PM0 derivePlan uses files: only (RR-10).
+#   - PM1–PM5: lib/phase-files.js and idearium/repo/phase-mapping.js; POST/GET /api/repos/:uuid/phases/map;
+#     `repo map-phases`; Phases tab "⇄ map files & dependencies" with its progress line.
+#   - Settings: repos.map_min_precision, map_min_scored, map_batch and map_done.
+# - Found while building:
+#   - Hub files: idearium/api/index.js is named by 118 phases and app.js by 57, so sharing one says nothing about order.
+#     A file named by at least max(8, 2% of the phases naming files) is not dependency evidence. A false depends_on
+#     blocks a phase.
+#   - A phase written on one line ({ … }) cannot take a key in place: 33 in Nexus. Not sent to the agent, and said.
+# - Applied to Nexus now, by code alone: 13 depends_on lines on open phases in 4 maps, from the files they share, each
+#   with its reason as a comment. Every map still parses and keeps its phase count.
+# - Not applied here: files: for the 407 open phases that name none. That needs the agent and its score, and it runs on
+#   his machine (Ollama first, through the door). The coder does not do this bulk mapping by hand (docs/CLAUDE.md, the
+#   agent rule).

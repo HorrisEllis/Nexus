@@ -424,6 +424,7 @@ spec:
         manage ▾ menu, and save sits right next to manage ▾, one button style (ide-tab-btn).
       proof: "static check: no injected history tab; the manage menu lists Version history; save precedes manage"
     UI2_desktop_environment_menu:
+      depends_on: [DK2_desktop_setup_popup]   # mapped from the files they share: DK2_desktop_setup_popup (idearium/ui/js/repo-environment.js)
       layer: interface
       status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
@@ -529,6 +530,7 @@ spec:
         (architecture.js's projection, written as nodes) — so every repo, built or imported, carries its own registry.
       proof: "an imported fixture repo has a registry chunk whose nodes match the projection"
     UI8_code_tab_is_code:
+      depends_on: [UI1_history_and_save_in_manage]   # mapped from the files they share: UI1_history_and_save_in_manage (idearium/ui/js/file-manage.js)
       layer: interface
       status: OPEN
       path: 'step 3 — Idearium holds the code plainly (declutter 2026-10-09)'

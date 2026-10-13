@@ -641,6 +641,59 @@ async function _phaseWrite(repo, scope, mapPath, text, base, reason) {
   return { ok: true, via: 'apply-gate', applyId: r.applyId, snapshot: r.snapshot };
 }
 
+// 0.60.29 PM — several maps in one write: a project through its repo layer, a nexus repo through ONE apply (one
+// snapshot, one reversible record, one sync) rather than one per map
+async function _phaseWriteMany(repo, scope, changes, base, reason) {
+  if (scope.source !== 'nexus') {
+    for (const c of changes) { const w = await _phaseWrite(repo, scope, c.path, c.content, base, reason); if (!w.ok) return w; }
+    return { ok: true, via: 'repo-layer' };
+  }
+  const A = _require('../../lib/nexus-self/apply.js');
+  const SYS = _require('../../lib/nexus-self/systems.js');
+  const bySys = new Map();
+  for (const c of changes) { const s = SYS.ownerOf(c.path) || 'core'; if (!bySys.has(s)) bySys.set(s, []); bySys.get(s).push(c); }
+  const ids = [];
+  for (const [system, cs] of bySys) {
+    const r = A.apply({ system, base, changes: cs.map(c => ({ path: c.path, content: c.content })), reason, by: 'idearium.phases.map' });
+    if (!r.ok) return { ok: false, status: 409, error: `the apply gate refused ${system}: ${[...(r.errors || []), ...(r.conflicts || []).map(c => `${c.path}: ${c.why}`)].join('; ') || 'refused'}` };
+    ids.push(r.applyId);
+    getIdeaOS().emit('idearium.nexus-self.applied', { applyId: r.applyId, system, paths: cs.map(c => c.path), snapshot: r.snapshot });
+  }
+  _nexusSelfSync({ only: [...bySys.keys()] });
+  return { ok: true, via: 'apply-gate', applyIds: ids };
+}
+
+// 0.60.29 PM — James: "All the phases need to be mapped to files and dependencies. With nexus and all projects."
+// One mapping job per repo at a time, in the background (it asks a model a few phases per request)
+const _phaseMapJobs = new Map();
+async function _phaseMapStart(repo, opts = {}) {
+  if (_phaseMapJobs.get(repo.uuid)?.running) return { ok: false, status: 409, error: 'a mapping run is already going for this repo' };
+  const PH = await import('../repo/phases.js');
+  const PMx = await import('../repo/phase-mapping.js');
+  const dir = _repoDiskDir(repo.uuid);
+  const { maps, scope, snapshot } = PH.mapsFor({ repo, repoDir: dir });
+  if (!maps.length) return { ok: false, status: 404, error: 'this repo has no phasemaps' };
+  const root = scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : dir;
+  if (!root) return { ok: false, status: 409, error: 'this repo has no files on disk to map against' };
+  const isFile = (p) => { try { return fs.statSync(path.join(root, p)).isFile(); } catch (_) { return false; } };
+  const isDir = (p) => { try { return fs.statSync(path.join(root, p)).isDirectory(); } catch (_) { return false; } };
+  let folders = []; try { folders = fs.readdirSync(root, { withFileTypes: true }).filter(d => d.isDirectory() && !/^(\.|node_modules$|data$)/.test(d.name)).map(d => d.name); } catch (_) {}
+  const cfg = (() => { try { return (getIdeariumConfig() || {}).repos || {}; } catch (_) { return {}; } })();
+  const job = { running: true, startedAt: Date.now(), progress: null, report: null, error: null };
+  _phaseMapJobs.set(repo.uuid, job);
+  PMx.runMapping({ repoName: repo.name, maps, stateFile: path.join(IDEARIUM_DATA_DIR, 'phase-mapping', `${repo.uuid}.json`),
+    ask: (prompt) => _agentAsk(prompt, { channel: 'idearium-phase-map', sessionId: `phase-map-${repo.uuid}`, kind: 'map:phase-files' }),
+    write: (changes, reason) => _phaseWriteMany(repo, scope, changes, snapshot, reason),
+    exists: isFile, dirExists: isDir, folders,
+    opts: { apply: opts.apply !== false, limit: Number(opts.limit) || 0, includeDone: opts.includeDone ?? cfg.map_done ?? false, applyUntrusted: opts.applyUntrusted === true,
+      minPrecision: cfg.map_min_precision ?? 0.8, minScored: cfg.map_min_scored ?? 5, batch: cfg.map_batch ?? 4 },
+    onProgress: (p) => { job.progress = p; } })
+    .then((report) => { job.report = report; getIdeaOS().emit('idearium.repo.phases.mapped', { repoUuid: repo.uuid, line: report.line, applied: report.applied }); })
+    .catch((e) => { job.error = e.message; })
+    .finally(() => { job.running = false; job.endedAt = Date.now(); });
+  return { ok: true, job: { running: true, startedAt: job.startedAt, maps: maps.length } };
+}
+
 async function _phaseSetStatus(repo, { map, phase, status, force = false, reason = '' }) {
   const PH = await import('../repo/phases.js');
   const { setPhaseStatus, RoadmapError } = await import('../repo/roadmap.js');
@@ -2325,6 +2378,7 @@ const ROUTE_CAP = {
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
   'repo.architecture': CAPS.READ_IDEAS,
+  'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,
@@ -2752,6 +2806,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
     ['GET',    ['api','repos',    ':uuid','phases','cost'],         'repo.phases.cost'],       // 0.60.27 AG1a — agent calls and tokens per phase
+    ['POST',   ['api','repos',    ':uuid','phases','map'],          'repo.phases.map'],        // 0.60.29 PM — map every phase to its files and dependencies
+    ['GET',    ['api','repos',    ':uuid','phases','map'],          'repo.phases.map.status'],
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
@@ -7272,6 +7328,20 @@ async function handle(req, res, route, query, body) {
     }
     // 0.60.27 AG1a — James: "as little as possible." What each phase cost in agent calls and tokens (lib/phase-cost.js):
     // one phase (?phase=, ?map=) with each run, or every phase of the repo, most calls first
+    // 0.60.29 PM — map every phase to its files and dependencies (idearium/repo/phase-mapping.js)
+    case 'repo.phases.map': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const r = await _phaseMapStart(repo, body || {});
+      return r.ok ? ok(res, r.job) : err(res, r.status || 500, r.error);
+    }
+    case 'repo.phases.map.status': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const job = _phaseMapJobs.get(params.uuid) || null;
+      let saved = null; try { saved = JSON.parse(fs.readFileSync(path.join(IDEARIUM_DATA_DIR, 'phase-mapping', `${params.uuid}.json`), 'utf8')); } catch (_) {}
+      return ok(res, { running: !!(job && job.running), progress: job ? job.progress : null, error: job ? job.error : null,
+        report: (job && job.report) || (saved && saved.report) || null, scored: saved ? saved.scored : null, proposals: saved ? Object.keys(saved.proposals || {}).length : 0 });
+    }
     case 'repo.phases.cost': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
       const PC = _require('../../lib/phase-cost.js');

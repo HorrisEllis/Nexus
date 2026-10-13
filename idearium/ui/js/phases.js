@@ -158,6 +158,7 @@ function _phPaint() {
       <label><input type="checkbox" ${f.ready ? 'checked' : ''} onchange="phasesFilter('ready',this.checked)"> ready only</label>
       <label title="phases that name the files they build"><input type="checkbox" ${f.files ? 'checked' : ''} onchange="phasesFilter('files',this.checked)"> names files</label>
       <span class="ph-views">${views}</span>
+      <button class="action-btn" title="map every phase that names no files to the files it builds (an agent, scored first on phases whose files are known), and every phase to its dependencies (from the files) — written into the phasemaps where missing" onclick="phasesMapRun()">⇄ map files &amp; dependencies</button>
       <button class="action-btn" onclick="phasesAddOpen()">+ phase</button>
       ${d.scope.source === 'nexus' ? '' : '<button class="action-btn" title="grow the system from its spec: new components slotted into the registry and the nodes, a phasemap of them here, their code planned (greyed until coded)" onclick="phasesExpandOpen()">+ expand</button>'}
     </div>`;
@@ -181,7 +182,7 @@ function _phPaint() {
     : !t ? '<div class="ph2-note">reading the spec\'s thread…</div>'
     : `${unplanned.length ? `<div class="ph2-note">blocks with no phase yet: ${unplanned.map(b => `<span class="ph2-block">${escapeHtml(b.id)}</span>`).join(' ')}</div>` : ''}${t.summary.staleBlocks ? `<div class="ph2-note warn">${t.summary.staleBlocks} block${t.summary.staleBlocks === 1 ? '' : 's'} moved since planned — ${t.summary.stalePhases} phase${t.summary.stalePhases === 1 ? '' : 's'} stale${t.summary.staleDownstream ? `, ${t.summary.staleDownstream} of them through a phase they depend on` : ''} (↻ on the card)</div>` : ''}`) : '';
 
-  el.innerHTML = `<div class="ph-wrap">${header}${toolbar}
+  el.innerHTML = `<div class="ph-wrap">${header}${toolbar}<div id="ph-map" class="ph-via" style="margin:4px 0"></div>
       ${PHASES.adding ? _phAddForm(d) : ''}
       ${PHASES.expanding ? _phExpandForm() : ''}
       <div class="ph2 ${PHASES.open ? 'with-detail' : ''}">
@@ -189,6 +190,7 @@ function _phPaint() {
         <div class="ph2-mid">${threadNote}${body}<div class="ph-count">${list.length} of ${d.phases.length} shown</div>${notes}</div>
         ${PHASES.open ? `<aside class="ph-detail ph2-detail" id="ph-detail">${_phDetail(d, PHASES.open)}</aside>` : ''}
       </div></div>`;
+  setTimeout(phasesMapLoad, 0);   // 0.60.29 PM — the mapping's line
 }
 
 function _phCard(p) {
@@ -463,6 +465,28 @@ async function phPlanAgent(specPath) {
   await specBuildLoad(specPath);
   specPlanAsk();
 }
+// 0.60.29 PM — James: "All the phases need to be mapped to files and dependencies. With nexus and all projects."
+// One button: the mapping runs in the background (POST /phases/map); this line says where it is and what it found.
+let _phMapTimer = null;
+async function phasesMapLoad() {
+  const el = document.getElementById('ph-map'); const uuid = PHASES.uuid; if (!el || !uuid) return;
+  let r; try { r = await api(`/api/repos/${uuid}/phases/map`, {}, 10000); } catch (_) { return; }
+  const rep = r.report;
+  el.innerHTML = r.running
+    ? `⇄ mapping — ${r.progress ? `${escapeHtml(r.progress.step === 'score' ? 'scoring the agent on phases whose files are known' : 'mapping phases')} ${r.progress.done}/${r.progress.of}` : 'starting'}`
+    : rep ? `⇄ last mapping: ${escapeHtml(rep.line || '')}${(rep.skipped || []).length ? ` <span title="${escapeHtml(rep.skipped.join('\n'))}">· ${rep.skipped.length} skipped</span>` : ''}${(rep.problems || []).length ? ` <span style="color:var(--amber)" title="${escapeHtml(rep.problems.join('\n'))}">· ${rep.problems.length} problem${rep.problems.length === 1 ? '' : 's'}</span>` : ''}${r.error ? ` <span style="color:var(--coral)">· ${escapeHtml(r.error)}</span>` : ''}` : '';
+  clearTimeout(_phMapTimer);
+  if (r.running) _phMapTimer = setTimeout(phasesMapLoad, 4000);
+  else if (PHASES._mapWasRunning) { PHASES._mapWasRunning = false; renderPhasesRefresh(); }
+  if (r.running) PHASES._mapWasRunning = true;
+}
+async function phasesMapRun() {
+  const uuid = PHASES.uuid; if (!uuid) return;
+  try { const r = await api(`/api/repos/${uuid}/phases/map`, { method: 'POST', body: '{}' }, 20000); toast(`mapping ${r.maps} phasemap${r.maps === 1 ? '' : 's'} in the background`, 'ok'); }
+  catch (e) { toast(`not started: ${e.message}`, 'err'); }
+  phasesMapLoad();
+}
+
 function renderPhasesRefresh() {
   const repo = CURRENT_API_REPO; if (!repo) return;
   if (typeof renderRepoPhases === 'function') renderRepoPhases(repo, { keepScroll: true });

@@ -28,6 +28,13 @@ const FILES = [
     I('cos/testenv/detect.js'),                                 // require('./detect.js') — plan(), describe()
   ]],
   ['idearium/repo/file-state.js', I('idearium/repo/file-state.js'), []],
+  // 0.60.29 PM — every phase mapped to its files and dependencies
+  ['lib/phase-files.js', I('lib/phase-files.js'), [
+    I('loom/scanners/phasemap-map.js'),                         // require — parsePhasemapText, the one phase parser
+  ]],
+  ['idearium/repo/phase-mapping.js', I('idearium/repo/phase-mapping.js'), [
+    I('lib/phase-files.js'),                                    // createRequire — candidates, brief, parseAnswer, score, depsFor, applyTo
+  ]],
   // 0.60.28 PF1 — ready before run: Guardian's facts per agent, and the build's pure check over its ladder
   ['guardian/lib/provider-ready.js', I('guardian/lib/provider-ready.js'), []],
   ['lib/run-ready.js', I('lib/run-ready.js'), []],
@@ -141,6 +148,8 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/run-ready.js'), '0.60.28 PF1 _phaseBuild: apply(rungs, ready, { planner })'],
   [I('lib/agent-providers.js'), I('guardian/server.js'), '0.60.28 PF1 guardianReady(): HTTP GET :7820/api/providers/ready'],
   [I('idearium/api/index.js'), I('lib/phase-plan.js'), '0.60.28 PF2 derivePlan when no planner is ready or it failed'],
+  [I('idearium/api/index.js'), I('idearium/repo/phase-mapping.js'), '0.60.29 PM POST/GET /phases/map (await import) — runMapping'],
+  [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), '0.60.29 PM HTTP POST/GET /api/repos/:uuid/phases/map — the Phases tab button'],
 ];
 
 function mapBuildSurface(driver) {
