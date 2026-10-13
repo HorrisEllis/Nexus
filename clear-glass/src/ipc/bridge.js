@@ -1315,6 +1315,21 @@ class IpcBridge {
       return require('../autofill/gig.js').detectGig(this.dom, gig, { agentId });
     });
     ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
+    // 2026-10-12 — a gig FILE (.gig.json, the shape parseGig reads) → the same gig, held to Fiverr's limits like a written one.
+    // Reads and checks only: nothing is saved, typed or published.
+    // 2026-10-12 — a gig as a .gig file (YAML, its limits written beside each field), or an empty template to fill in
+    ipcMain.handle('autofill:gig:file', async (e, { gig = null, template = false } = {}) => {
+      const G = require('../autofill/gig.js');
+      if (template || !gig) return { ok: true, ...G.gigTemplate() };
+      return { ok: true, ...G.gigFile(gig) };
+    });
+    ipcMain.handle('autofill:gig:import', async (e, { text } = {}) => {
+      const G = require('../autofill/gig.js');
+      const r = G.parseGig(String(text == null ? '' : text).slice(0, 200000));
+      if (r.ok === false || !r.gig) return r;
+      this.postEvent('autofill.gig.imported', { title: r.gig.title, warnings: (r.warnings || []).length, ts: Date.now() });
+      return { ok: true, gig: r.gig, warnings: r.warnings, parts: G.gigParts(r.gig), text: G.gigText(r.gig) };
+    });
     // The text of a tab's page (the job post), for the proposal drafter.
     ipcMain.handle('autofill:readPage', async (e, { agentId = 'default' } = {}) => {
       if (!this.driver) return { ok: false, error: 'driver unavailable' };

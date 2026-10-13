@@ -323,6 +323,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     gig:       (payload)                     => ipcRenderer.invoke('autofill:gig', payload),
     gigDetect: (gig, agentId)                => ipcRenderer.invoke('autofill:gig:detect', { gig, agentId }),
     gigFill:   (gig, agentId, minConfidence) => ipcRenderer.invoke('autofill:gig:fill', { gig, agentId, minConfidence }),
+    gigImport: (text)                        => ipcRenderer.invoke('autofill:gig:import', { text }),
+    gigFile: (gig)                           => ipcRenderer.invoke('autofill:gig:file', { gig }),        // the gig as a .gig (YAML) file: { text, filename }
+    gigTemplate: ()                          => ipcRenderer.invoke('autofill:gig:file', { template: true }),   // an empty .gig to fill in   // a .gig.json file's text -> the gig, checked against Fiverr's limits
     gigToIdearium: (payload)                 => ipcRenderer.invoke('autofill:gig:to-idearium', payload),   // §0.59.3 a buyer's answers → a spec in Idearium
   },
 

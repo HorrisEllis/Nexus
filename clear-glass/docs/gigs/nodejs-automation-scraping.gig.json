@@ -1,0 +1,26 @@
+{
+  "format": "clearglass.gig/1",
+  "platform": "fiverr",
+  "title": "I will build a custom Node.js automation or web scraping tool",
+  "category": "Programming & Tech",
+  "subcategory": "",
+  "tags": ["node.js", "automation", "web scraping", "electron", "scripting"],
+  "description": "Got a repetitive job, a messy data source, or a tool you wish existed? I build it as a clean, working Node.js tool you can actually run.\n\nUnder the hood I'm used to large, many-part systems. What you get is the opposite: one simple tool that does the one thing you asked for, with plain instructions.\n\nWhat I can build:\n- Web scrapers that collect data into CSV or JSON\n- Automation scripts for repetitive file, data and browser tasks\n- Small desktop tools in Electron\n- Fixes and cleanup for an existing Node.js script\n\nHow it works: you tell me what the finished result should do and how you'll check it. I build to that, show you it working, and hand over the code with a short readme.\n\nA complex system in a simple form.",
+  "packages": {
+    "basic": { "name": "Single Task Script", "description": "One script that does one task, with run instructions.", "deliveryDays": 2, "revisions": 1, "price": 30 },
+    "standard": { "name": "Scraper or Automation", "description": "Scraper or automation with an output file and a readme.", "deliveryDays": 4, "revisions": 2, "price": 90 },
+    "premium": { "name": "Desktop Tool or Multi-Step Flow", "description": "Small Electron tool or multi-step automation, tested and documented.", "deliveryDays": 7, "revisions": 3, "price": 250 }
+  },
+  "faq": [
+    { "question": "What do you need from me?", "answer": "What the finished result should do, an example of the data or page, and how you will know it is right." },
+    { "question": "Do you scrape any site?", "answer": "Only where the site's terms allow it. I will tell you up front if I cannot." },
+    { "question": "Will I get the source code?", "answer": "Yes, with a short readme on how to run it." }
+  ],
+  "requirements": [
+    "What must the finished tool do or produce? Describe the end result in your own words.",
+    "Who will run it, and on what? (Windows, Mac, a server; one person or a team)",
+    "What must it always do, and what must it never do?",
+    "How will you check that it is done? (the test you will run, or what you will look at)",
+    "Please share any example pages, files, logins or data I need to build it."
+  ]
+}

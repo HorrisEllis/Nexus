@@ -81,6 +81,36 @@
     try { await navigator.clipboard.writeText(String(text)); } catch (_) { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
     if (btn) { const t = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = t; }, 1200); }
   }
+  // A gig is one .gig.json file: save it, edit or share it, load it back. Loading runs the same limits as a written gig.
+  $('gig-import').addEventListener('click', () => $('gig-file').click());
+  $('gig-file').addEventListener('change', async (ev) => {
+    const f = ev.target.files && ev.target.files[0]; ev.target.value = '';
+    if (!f) return;
+    if (f.size > 200000) return say('gig-write-status', 'That file is too large to be a gig.', 'bad');
+    let r; try { r = await cg.autofill.gigImport(await f.text()); } catch (e) { r = { ok: false, error: e.message }; }
+    if (!r || r.ok === false || !r.gig) return say('gig-write-status', `Not loaded: ${(r && r.error) || 'no answer'}`, 'bad');
+    GIG = r.gig; store.set('last', GIG);
+    say('gig-write-status', `Loaded "${r.gig.title}".${(r.warnings || []).length ? ` ${r.warnings.length} note(s): ${r.warnings.slice(0, 2).join(' · ')}` : ''} Fill this Fiverr page, or copy a part.`, 'ok');
+    paintGig();
+  });
+  // 2026-10-12 — saved as a .gig (YAML, readable and editable); the template is an empty one to fill in
+  const _download = (r) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([r.text], { type: 'text/yaml' })); a.download = r.filename; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    return a.download;
+  };
+  $('gig-export').addEventListener('click', async () => {
+    if (!GIG) return;
+    let r; try { r = await cg.autofill.gigFile(GIG); } catch (e) { r = { ok: false, error: e.message }; }
+    if (!r || !r.ok) return say('gig-write-status', `Not saved: ${(r && r.error) || 'no answer'}`, 'bad');
+    say('gig-write-status', `Saved ${_download(r)} (to your downloads).`, 'ok');
+  });
+  $('gig-template').addEventListener('click', async () => {
+    let r; try { r = await cg.autofill.gigTemplate(); } catch (e) { r = { ok: false, error: e.message }; }
+    if (!r || !r.ok) return say('gig-write-status', `No template: ${(r && r.error) || 'no answer'}`, 'bad');
+    say('gig-write-status', `Saved ${_download(r)} — fill it in, then "Load a gig file…".`, 'ok');
+  });
   $('gig-copy-all').addEventListener('click', (e) => GIG && copy(parts(GIG).map(p => `${p.label}\n${p.text}`).join('\n\n'), e.currentTarget));
   $('gig-fill').addEventListener('click', async () => {
     if (!GIG) return;

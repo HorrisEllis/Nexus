@@ -156,4 +156,10 @@ module.exports = Object.freeze({
     payloadShape: ['providerId', 'reason', 'note', 'shown', 'window'],
     severity: 'notable',
   },
+  // 2026-10-12 — his gig import (renderer/gig-panel.js, settings → Autofill): a gig file was loaded
+  AUTOFILL_GIG_IMPORTED: {
+    description: 'A gig file (.gig or .gig.json) was loaded into the gig writer and held to Fiverr\'s limits; nothing was saved, typed or published.',
+    payloadShape: ['title', 'warnings', 'ts'],
+    severity: 'info',
+  },
 });

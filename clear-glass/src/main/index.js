@@ -201,7 +201,11 @@ const bgTabUrls       = new Map(); // agentId → the real url it was opened wit
 
 // ── Single instance ────────────────────────────────────────────────────────
 app.setName('Clear Glass');
-app.disableHardwareAcceleration();
+// §0.60.3 — with hardware acceleration off, every page's WebGL reports "Google SwiftShader", the software renderer bot
+// detectors read as a headless browser or a VM (fiverr's PerimeterX "It needs a human touch"). It stays off by default:
+// it was turned off for this machine's GPU crashes (below). CG_GPU=on turns it back on — try it when a site keeps
+// asking for a human; if the GPU crash comes back, unset it.
+if (process.env.CG_GPU !== 'on') app.disableHardwareAcceleration();
 // §BUG FIXED 2026-07-11, REVISED 2026-07-11 — the first version of this
 // fix (app.commandLine.appendSwitch('disable-gpu') + disable-gpu-compositing
 // + disable-software-rasterizer) stopped the fatal crash-loop but broke
@@ -1189,6 +1193,9 @@ async function bootstrap() {
     // Strip ' Electron/X.Y.Z' and ' Node.js/X.Y.Z' tokens
     const cleanUA = rawUA
       .replace(/\s+Electron\/[\d.]+/gi, '')
+      // §0.60.3 — the app's own name token ("Clear Glass/x.y" / "clear-glass/x.y") too: no Chrome sends one, and a
+      // bot detector (fiverr's PerimeterX) reads a UA it cannot place as automation
+      .replace(/\s+clear[\s-]?glass\/[\d.]+/gi, '')
       .replace(/\s+Node\.js\/[\d.]+/gi, '')
       .replace(/\s+node\.js\/[\d.]+/gi, '')
       .replace(/\s+node\/[\d.]+/gi, '')

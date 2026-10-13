@@ -3482,7 +3482,9 @@ function handleExtendedRoutes(req, res, url, method) {
           // `[guardian] RAID → ...` log line below has never once printed.
           // Found while wiring /api/copilot/prompt, which reused this same
           // broken call.
-          const _decision = _raid._decide({ prompt: _prompt, context: { cfrRegime: _cfrCtx.regime, cfrSigmaFloor: _cfrCtx.sigmaFloor } });
+          // §0.60.3 — with the health it read (it passed none: every agent counted offline, so 'auto' was always claude)
+          await _raid.ready();
+          const _decision = _raid._decide({ prompt: _prompt, context: { cfrRegime: _cfrCtx.regime, cfrSigmaFloor: _cfrCtx.sigmaFloor } }, _raid._health, _raid._weights);
           _rawProvider = _decision.agent;
           console.log(`[guardian] RAID → ${_rawProvider} (${_decision.reason}) σfloor:${_cfrCtx.sigmaFloor}`);
         } catch(_) {

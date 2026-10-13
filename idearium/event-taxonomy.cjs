@@ -173,6 +173,10 @@ module.exports = Object.freeze({
   SPEC_GRAPH_FAILED: { description: "The repo's spec graph failed.", payloadShape: ["error"], severity: 'warning' },
   INTEL_BUILD_COMPLETE: { description: "The repo's intelligence cards are built.", payloadShape: ["cards", "ms"], severity: 'info' },
   INTEL_BUILD_FAILED: { description: "The repo's intelligence cards failed.", payloadShape: ["error"], severity: 'warning' },
+  // 0.60.5 / 0.60.6 — lib/project-decompose.js and lib/repo-notes.js
+  IDEARIUM_COMPONENTS_DECOMPOSED: { description: 'A project (zip or folder) was decomposed into the component store: how many components, how many new, how many requires point at nothing.', payloadShape: ['project', 'components', 'created', 'unresolved'], severity: 'info' },
+  IDEARIUM_NOTE_ADDED: { description: 'A note was written — on a repo or on none; its kind, title and who wrote it.', payloadShape: ['id', 'repoUuid', 'kind', 'title', 'source'], severity: 'info' },
+  IDEARIUM_NOTE_UPDATED: { description: 'A note changed: edited, pinned, done, archived or brought back.', payloadShape: ['id', 'repoUuid', 'kind', 'status'], severity: 'info' },
 });
 
 // Validated against the shared ET1 shape on load, as clear-glass's is — a malformed entry fails loudly here.

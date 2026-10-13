@@ -56,6 +56,31 @@ job, or portfolio. i want this as much me as possible. you're the coder."
   own words, quoted verbatim — his spelling, his phrasing, not cleaned up. Then what was built, and the proof.
 - The idea, the direction and the calls are his; say so. The code is the coder's job; the project is his work.
 
+## His decisions, quoted with their context (2026-10-13)
+
+James: "can you add to claude.md to quote me and my decisions, with context to establish credibility."
+
+The record has to show that the design is his: what he decided, when, in his words, and what he was deciding between. A
+reader who never met him should be able to follow the line from his idea to the code. So every decision he makes is
+written down where the work lives, never only in a chat:
+
+- **Where.** A phasemap's `decisions:` entry (its `chosen:`), a spec's `## ADDENDUM`, a repo's Notes (kind `decision`
+  or `quote` — lib/repo-notes.js), and the version line and CHANGELOG of the release that acts on it.
+- **What it carries.**
+  1. His words, verbatim and dated: his spelling, his phrasing, not cleaned up.
+  2. The context: what he was asked or was looking at, and the choices on the table. Name the coder's recommendation
+     as the coder's.
+  3. What was decided, and what it changed (files, phases).
+  4. If the coder read his words one way where another reading exists, say so and mark it "to confirm". Never
+     present the coder's reading as his decision.
+- **Credit.** Ideas, direction and decisions are attributed to him by name. The coder's part is named as the coder's:
+  a reading, a recommendation, a pushback, the code. Where a design came from his idea and the coder shaped it, both
+  are said.
+- **Nothing rewritten.** A later decision supersedes an earlier one by a dated addendum that quotes both; the earlier
+  one stays (§0.3).
+
+This file loads for every session at the repo root through `CLAUDE.md` (which imports it).
+
 ## Leverage (2026-10-07)
 
 James: "remember to use as little tokens for as much leverage and power as possible. invent around contraints if it fits

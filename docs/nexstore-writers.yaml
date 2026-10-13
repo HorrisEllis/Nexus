@@ -7,10 +7,10 @@ register:
   map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (DT1)
   generatedBy: lib/nexstore/writers.js
   stats:
-    writers: 232
-    files: 150
+    writers: 233
+    files: 151
     typed: 25
-    reason: 54
+    reason: 55
     owed: 153
 rules:
   - match: '^(guardian/jaa-store\.js|idearium/lib/db\.js|lib/nexstore/(log|record)\.js) · '
@@ -358,6 +358,10 @@ writers:
     reason: the history of a system's options (<system>/data/options-ledger.jsonl, 0.57.0 OP0) — one line per set or reset, when, old, new and who asked; append-only
   lib/project-container.js · writeFileSync · p:
     reason: OWED — a node type or a stated reason
+  lib/project-decompose.js · writeFileSync · tmp:
+    reason: >-
+      the component store's project list (<store>/projects.json, 0.60.5) — each decomposed project's name and its package.json versions, so a bundle names them;
+      written atomically (tmp then rename) beside the store it describes
   lib/queue.js · writeFileSync · path.join(this.queueDir, `${uuid}.json`):
     reason: OWED — a node type or a stated reason
   lib/queue.js · writeFileSync · outPath:

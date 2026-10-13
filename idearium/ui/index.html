@@ -1057,6 +1057,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="welcome-action-btn secondary" onclick="this.parentElement.classList.toggle('open');event.stopPropagation()">BRING IN ▾</button>
             <div class="welcome-menu" onclick="this.parentElement.classList.remove('open')">
               <button onclick="openUploadProjectModal()">IMPORT PROJECT<small>a folder or a zip becomes a repo</small></button>
+              <button onclick="openComponentsModal()">DECOMPOSE INTO COMPONENTS<small>drop project zips — every file a component, each downloadable with its dependencies</small></button>
               <button onclick="openSpecLibrary()">IMPORT SPECS<small>a zip of specs — each becomes an idea with its spec</small></button>
               <button onclick="openGitCloneModal()">CLONE FROM GIT<small>any git url, into its own repo</small></button>
               <button onclick="openCosRemoteBrowse()">COMPARTMENTS · PUSH / PULL<small>repos on another COS</small></button>
@@ -1246,6 +1247,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
           <nav class="repo-subnav" id="repo-subnav">
             <button class="repo-subtab-btn active" data-subtab="home" onclick="setRepoSubtab('home')">Home</button>
             <button class="repo-subtab-btn" data-subtab="idea" onclick="setRepoSubtab('idea')">Idea</button>
+            <button class="repo-subtab-btn" data-subtab="notes" onclick="setRepoSubtab('notes')" title="write it down: notes, ideas, decisions, todos, questions, quotes (0.60.6)">Notes</button>
             <button class="repo-subtab-btn" data-subtab="files" onclick="setRepoSubtab('files')">Files</button>
             <button class="repo-subtab-btn" data-subtab="code" onclick="setRepoSubtab('code')" title="the work surface: the files (uncommitted greyed), the code with its chunk cards, the agent's changes as diffs, the agent docked (0.39.349)">Code</button>
             <button class="repo-subtab-btn" data-subtab="architect" onclick="setRepoSubtab('architect')">Architect</button>
@@ -1264,6 +1266,8 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
                  from the repos and moved back to the main navbar"). They still act on the open repo. -->
           </nav>
 
+          <!-- NOTES — §0.60.6 js/repo-notes.js: write it down before it is lost -->
+          <div class="repo-subtab-panel" id="repo-subtab-notes"></div>
           <!-- HOME — the repo's own README/.spec, or basic identity if neither exists -->
           <div class="repo-subtab-panel active" id="repo-subtab-home">
             <div class="detail-empty">← select a repo</div>
@@ -2362,6 +2366,57 @@ async function saveToIdearium(){
   </div>
 </div>
 
+<style>
+  /* §0.60.6 the Notes tab (js/repo-notes.js) */
+  #repo-subtab-notes .nt-wrap{display:grid;gap:12px;padding:14px;max-width:960px}
+  #repo-subtab-notes .nt-capture{display:grid;gap:8px;padding:12px;border:1px solid var(--b1);border-radius:10px;background:var(--b0)}
+  #repo-subtab-notes textarea{width:100%;box-sizing:border-box;resize:vertical;background:transparent;border:1px solid var(--b1);border-radius:6px;padding:8px 10px;color:var(--text);font:13px/1.45 var(--sans,system-ui)}
+  #repo-subtab-notes textarea:focus,#repo-subtab-notes input:focus{outline:none;border-color:var(--sky,#38bdf8)}
+  #repo-subtab-notes .nt-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  #repo-subtab-notes input,#repo-subtab-notes select{background:var(--b0);border:1px solid var(--b1);border-radius:6px;padding:5px 8px;color:var(--text);font:12px var(--mono)}
+  #repo-subtab-notes #nt-tags{flex:1;min-width:140px}
+  #repo-subtab-notes #nt-q{flex:1;min-width:180px}
+  #repo-subtab-notes .nt-kind{background:transparent;border:1px solid var(--b1);border-radius:999px;padding:3px 10px;color:var(--text3);font:11px var(--mono);cursor:pointer}
+  #repo-subtab-notes .nt-kind.on{border-color:var(--sky,#38bdf8);color:var(--text)}
+  #repo-subtab-notes .nt-list{display:grid;gap:6px}
+  #repo-subtab-notes .nt-item{border:1px solid var(--b1);border-radius:8px;padding:8px 10px;background:var(--b0)}
+  #repo-subtab-notes .nt-item.pinned{border-color:color-mix(in srgb,var(--amber,#fbbf24) 55%,transparent)}
+  #repo-subtab-notes .nt-item.done .nt-title{text-decoration:line-through;opacity:.6}
+  #repo-subtab-notes .nt-head{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  #repo-subtab-notes .nt-title{color:var(--text);font-weight:600}
+  #repo-subtab-notes .nt-k{font:10px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text3)}
+  #repo-subtab-notes .nt-k-idea{color:var(--violet,#a78bfa)} #repo-subtab-notes .nt-k-decision{color:var(--amber,#fbbf24)} #repo-subtab-notes .nt-k-todo{color:var(--sky,#38bdf8)} #repo-subtab-notes .nt-k-question{color:var(--coral,#f87171)} #repo-subtab-notes .nt-k-quote{color:var(--mint,#34d399)}
+  #repo-subtab-notes .nt-acts{margin-left:auto;display:flex;gap:2px}
+  #repo-subtab-notes .nt-acts button{background:none;border:0;color:var(--text3);cursor:pointer;padding:2px 6px;border-radius:4px}
+  #repo-subtab-notes .nt-acts button:hover{background:var(--b1);color:var(--text)}
+  #repo-subtab-notes .nt-body{white-space:pre-wrap;color:var(--text2);margin-top:6px;font-size:12.5px;line-height:1.5}
+  #repo-subtab-notes .nt-tags{display:flex;gap:6px;margin-top:6px;font:10px var(--mono);color:var(--text3)}
+  #repo-subtab-notes .nt-dim{color:var(--text3);font:11px var(--mono)}
+</style>
+<!-- 0.60.5 — a project into the component store, and each component out again with its dependencies (js/components-panel.js) -->
+<div class="modal-overlay" id="components-modal">
+  <div class="modal" style="max-width:720px;width:92vw">
+    <div class="modal-title">Decompose into components</div>
+    <div class="project-drop" id="cmp-drop"><span class="pd-big">⬇</span><span>drop project .zip files here (several at once), or click to choose — each is decomposed straight away</span></div>
+    <input type="file" id="cmp-file" accept=".zip" multiple style="display:none">
+    <div id="cmp-results" style="margin:10px 0;display:grid;gap:6px;font-family:var(--mono);font-size:11px"></div>
+    <div style="display:flex;gap:8px;align-items:center;margin:8px 0">
+      <input type="text" id="cmp-q" placeholder="search the store…" autocomplete="off" style="flex:1;font-family:var(--mono);font-size:12px;padding:7px 10px;background:var(--b0);border:1px solid var(--b1);border-radius:5px;color:var(--text)">
+      <span id="cmp-count" class="cmp-dim"></span>
+    </div>
+    <div id="cmp-list" style="max-height:42vh;overflow:auto;display:grid;gap:4px"></div>
+    <div class="modal-actions"><button class="modal-btn" onclick="closeComponentsModal()">close</button></div>
+  </div>
+</div>
+<style>
+  #components-modal .cmp-row{display:flex;align-items:center;gap:10px;padding:6px 8px;border:1px solid var(--b1);border-radius:6px;font-family:var(--mono);font-size:11px}
+  #components-modal .cmp-id{color:var(--text);flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #components-modal .cmp-dim{color:var(--text3)}
+  #components-modal .cmp-warn{color:var(--amber,#fbbf24)}
+  #components-modal .cmp-dl{margin-left:auto;text-decoration:none;padding:3px 8px;font-size:10px}
+  #components-modal .cmp-line{padding:6px 8px;border-left:2px solid var(--sky,#38bdf8);background:var(--b0)}
+</style>
+
 <div class="modal-overlay" id="upload-project-modal">
   <div class="modal">
     <div class="modal-title">Upload Project</div>
@@ -2521,5 +2576,7 @@ async function saveToIdearium(){
 <script src="js/agent-options.js"></script>   <!-- §0.47.0 OS4 every agent option in the Agent tab; its proposals (OS7) -->
 <script src="js/code-surface.js"></script>   <!-- §0.39.349 CT3 — the Code tab is the work surface -->
 <script src="js/file-versions.js"></script>
+<script src="js/components-panel.js"></script>
+<script src="js/repo-notes.js"></script>   <!-- §0.60.6 a repo's Notes tab -->   <!-- §0.60.5 decompose projects into the component store; bundles with their dependencies -->
 </body>
 </html>
