@@ -2637,6 +2637,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','prove','cancel'],        'repo.prove.cancel'],
     // §0.39.266 — the registry harness (lib/registry-harness.js): what a repo agent navigates instead of injected code
     // §0.39.266 (C1) — the component store (lib/component-store.js)
+    ['POST',   ['api','components','decompose'],                     'components.decompose'],   // 0.60.5 — a project (zip or folder) → components
+    ['GET',    ['api','components',':id','bundle'],                  'components.bundle'],      // 0.60.5 — a component + its require closure as one zip
     ['GET',    ['api','components'],                                 'components.list'],
     ['GET',    ['api','components',':id'],                           'components.get'],
     ['POST',   ['api','components',':id','invalidate'],              'components.invalidate'],
@@ -5684,6 +5686,36 @@ async function handle(req, res, route, query, body) {
     // thats way too much to inject when we have tools they can use to get context." find / card / read are pure
     // reads of the registry (loom's for a nexus repo, the repo's own graph otherwise); write proposes an .inject
     // (for a nexus repo: the approval prompt, then the gate); test runs the tests the registry says cover it.
+    // 0.60.5 — James: "copy projects and decompose them into components for the component store with the dependancies
+    // zipped together in a organized structured way … as well as a way to drag and drop zips to do it automatically."
+    // lib/project-decompose.js: every code file → the component store (requires resolved, npm named); a component +
+    // everything it requires → one zip laid out at the project's own paths, with component.json, package.json, README.
+    case 'components.decompose': {
+      const PD = _require('../../lib/project-decompose.js');
+      try {
+        let r;
+        if (body.contentBase64) {
+          if (!/\.zip$/i.test(String(body.filename || ''))) return err(res, 400, 'only a .zip is decomposed from an upload (or pass dir: a folder on this machine)');
+          const buf = Buffer.from(String(body.contentBase64), 'base64');
+          if (!buf.length) return err(res, 400, 'empty file');
+          r = PD.fromZip(buf, body.project || String(body.filename).replace(/\.zip$/i, ''));
+        } else if (body.dir) r = PD.fromDir(String(body.dir), body.project || null);
+        else return err(res, 400, 'a .zip (filename + contentBase64) or dir required');
+        os.emit('idearium.components.decomposed', { project: r.project, components: r.stats.components, created: r.stats.created, unresolved: r.stats.unresolved });
+        return ok(res, r);
+      } catch (e) { return err(res, e.status || 500, e.message); }
+    }
+    case 'components.bundle': {
+      const PD = _require('../../lib/project-decompose.js');
+      let b; try { b = PD.bundle(decodeURIComponent(params.id)); } catch (e) { return err(res, e.status || 500, e.message); }
+      if (query.save === '1') {   // agents and the CLI: written beside the store, the path answered
+        const out = path.join(_require('../../lib/component-store.js').storeDir(), 'bundles', b.filename);
+        fs.mkdirSync(path.dirname(out), { recursive: true }); fs.writeFileSync(out, b.buffer);
+        return ok(res, { file: out, filename: b.filename, files: b.files, closure: b.closure });
+      }
+      res.writeHead(200, { 'Content-Type': 'application/zip', 'Content-Disposition': `attachment; filename="${b.filename}"`, 'Content-Length': b.buffer.length, ...CORS });
+      return res.end(b.buffer);
+    }
     case 'components.list': case 'components.get': case 'components.invalidate': {
       const CS = _require('../../lib/component-store.js');
       if (action === 'components.list') {

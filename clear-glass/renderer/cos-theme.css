@@ -1,0 +1,85 @@
+/* renderer/cos-theme.css — Clear Glass in the COMPARTMENT OS window style.
+ * 0.60.5 — James: "can you build the renderer.html as a compartment os ui, like the ones the desktop envirement use. i
+ * like those. theyre beautiful."
+ *
+ * The look is the COS desktop window's, taken from its two sources, not invented:
+ *   idearium/ui/js/window-chrome.js — the title bar: a 34px gradient bar (#141827 → #0f121c, #242838 under it), the ▣
+ *     glyph in a #7c9cff tile, the "COMPARTMENT · <KIND>" label in small spaced mono caps (#5b6178), 44px window buttons
+ *     that light #1c2133 on hover and the close button #e5484d.
+ *   idearium/ui/desktop.html — the toolbar: a #12151d panel, #232838 lines, buttons #1b2030 with a 6px radius whose border
+ *     turns #38bdf8 on hover, pills in mono with ok / warn / bad colours, text #e5e7ef, dim #8b91a5.
+ * Loaded after browser.css (and after settings.css in settings.html / library.html), so it only retunes: tokens first,
+ * then the few places that set colour inline. Remove the <link> and Clear Glass looks as it did — nothing else depends on it.
+ */
+:root {
+  --bg-0:  #0a0b10;  --bg-1: #0f121c;  --bg-2: #12151d;  --bg-3: #1b2030;
+  --glass: #1b2030;  --border: #232838;
+  --accent: #38bdf8; --accent2: #7c9cff;
+  --green: #34d399;  --red: #f87171;
+  --text: #e5e7ef;   --text-dim: #8b91a5; --text-bright: #e6e8f0;
+  /* settings.css names */
+  --void: #0a0b10; --pane: #12151d; --pane-2: #1b2030; --edge: #232838; --edge-hi: #2e3448;
+  --ink: #e5e7ef; --ink-dim: #8b91a5; --ink-faint: #5b6178; --ink-hi: #e6e8f0;
+  --cyan: #38bdf8; --violet: #7c9cff; --ok: #34d399; --warn: #fbbf24; --bad: #f87171;
+  --cos-glyph: #7c9cff;
+}
+html, body { background: #0a0b10; }
+
+/* ── the title bar: the tab strip is the window's bar ─────────────────── */
+#tab-bar {
+  background: linear-gradient(180deg, #141827, #0f121c) !important;
+  border-bottom: 1px solid #242838 !important;
+  padding: 0 0 0 12px !important; gap: 10px !important;
+  font: 12px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+#tab-bar .cos-glyph, #titlebar .cos-glyph {
+  width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; flex-shrink: 0; font-size: 11px;
+  background: color-mix(in srgb, var(--cos-glyph) 22%, transparent); color: var(--cos-glyph);
+  border: 1px solid color-mix(in srgb, var(--cos-glyph) 45%, transparent); -webkit-app-region: drag;
+}
+#tab-bar .cos-kind, #titlebar .cos-kind {
+  font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase;
+  color: #5b6178; white-space: nowrap; flex-shrink: 0; -webkit-app-region: drag;
+}
+#tab-bar .tab-item {
+  background: transparent !important; color: #8a90a6 !important; border: 1px solid transparent !important;
+  border-radius: 6px !important; height: 24px !important; transition: background .12s, color .12s;
+}
+#tab-bar .tab-item:hover { background: #1c2133 !important; color: #e6e8f0 !important; }
+#tab-bar .tab-item.active {
+  background: #12151d !important; color: #e6e8f0 !important; border-color: #232838 !important;
+  box-shadow: inset 0 -2px 0 #38bdf8;
+}
+#tab-bar #btn-new-tab { color: #8a90a6 !important; }
+#tab-bar #btn-new-tab:hover { color: #e6e8f0 !important; }
+/* the window's own buttons, as window-chrome.js draws them */
+#tab-bar .cos-ctl { display: flex; align-self: stretch; height: 34px; gap: 0 !important; }
+#tab-bar .cos-ctl .nav-btn {
+  width: 44px; height: 100%; border: 0; border-radius: 0; background: none; color: #8a90a6; font: 13px/1 system-ui;
+}
+#tab-bar .cos-ctl .nav-btn:hover { background: #1c2133; color: #e6e8f0; }
+#tab-bar .cos-ctl #btn-close-tray:hover { background: #e5484d; color: #fff; }
+
+/* ── the toolbar: desktop.html's header ───────────────────────────────── */
+#chrome { background: #12151d; border-bottom: 1px solid #232838; gap: 10px; }
+.nav-btn { background: #1b2030; border: 1px solid #232838; border-radius: 6px; color: #8b91a5; }
+.nav-btn:hover { background: #1b2030; border-color: #38bdf8; color: #e6e8f0; }
+.nav-btn:focus-visible { outline: 2px solid #38bdf8; outline-offset: 1px; }
+#url-bar { background: #0b0d12; border: 1px solid #232838; color: #e5e7ef; }
+#url-bar:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px color-mix(in srgb, #38bdf8 14%, transparent); }
+
+/* pills (the status dots and any .pill) in desktop.html's shape */
+.pill { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; padding: 2px 8px; border-radius: 999px; border: 1px solid #232838; color: #8b91a5; }
+.pill.ok { color: #34d399; border-color: #34d399; } .pill.warn { color: #fbbf24; border-color: #fbbf24; } .pill.bad { color: #f87171; border-color: #f87171; }
+.status-dot.ok { background: #34d399; } .status-dot.warn { background: #fbbf24; } .status-dot.error { background: #f87171; }
+
+/* ── settings.html / library.html: their #titlebar is the same COS bar ── */
+#titlebar {
+  background: linear-gradient(180deg, #141827, #0f121c) !important; border-bottom: 1px solid #242838 !important;
+  height: 34px; gap: 10px; padding: 0 0 0 12px; font: 12px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+#titlebar .mark { display: none; }
+#titlebar .title { color: #e6e8f0; font-weight: 600; }
+#titlebar .title b { color: #e6e8f0; }
+#titlebar button { width: 44px; height: 34px; border: 0; border-radius: 0; background: none; color: #8a90a6; margin-left: auto; }
+#titlebar button:hover { background: #e5484d; color: #fff; }

@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     request-spine
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-12
     release:  "0.60.0 (base)"
     uuid:     nexus-request-spine-phasemap-v1-0000-2026-1012-jamesbrooks-001
     owner:    "cortex (cortex/core/raid — a request's obligations, chunks, gates) · core (lib/ — verifiers, failure vocabulary, intent) · cos (cells, parallel branches, differential runs) · idearium (where he sees it)"
-    status:   "MAPPED 2026-10-12, before building; nothing built. Everything under `exists` was read in source this session, none of it was run (RQ0 runs it). ADDENDUM 1.1.0 (same day, second pass): RQ21–RQ27 and three decisions (decision_raid_home, decision_contract_files, decision_revert_authority) added from James's contract-intelligence idea; read in source, not run, by the same rule. RQ0–RQ20 are unchanged."
+    status:   "MAPPED 2026-10-12, before building; nothing built. Everything under `exists` was read in source this session, none of it was run (RQ0 runs it). ADDENDUM 1.1.0 (same day, second pass): RQ21–RQ27 and three decisions (decision_raid_home, decision_contract_files, decision_revert_authority) added from James's contract-intelligence idea; read in source, not run, by the same rule. RQ0–RQ20 are unchanged. ADDENDUM 1.2.0 (2026-10-13): James answered decision_contract_format and decision_contract_files in his words (recorded under each `chosen:`), and asked where the failure-mode field is specced (answered in `failure_mode_field`); no phase changed."
     voice: >-
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -144,7 +144,17 @@ spec:
         - "[A] extend BUILD_CONTRACT_SCHEMA with chunks[] and keep the .contract envelope  ← recommended (one contract, one queue, one compartment per contract)"
         - "[B] a .contract v2 beside it — cleaner, but two formats"
         - "[C] idearium manifest chunks only — already per file, but not RAID's"
-      chosen: open
+      chosen: >-
+        2026-10-13, James: "contract format, maybe using primitives, priniciples, or invariants or maybe depenedancies as a
+        boundary or constrain field for the contract, using a yaml file each as a block, then chunked, just like idearium."
+        The coder's reading, his to correct: [A] — the one .contract envelope, extended. Its payload gains `boundary:`
+        with four lists — primitives (the proven building blocks the work may use: lib/build-context.js's PROVEN
+        PRIMITIVES, the component store), principles (the axioms that govern it: AXIOMS-v3.1 §ids, the charter's axioms),
+        invariants (what must stay true, each with a check kind: file · command · tests · page, run by RQ22 — never
+        carried unevaluated), dependencies (the components it requires and is required by, from the registry card, which
+        bound what it may touch) — and `blocks:`, each block a YAML section shaped like an idearium spec block (id, title,
+        intent, files, lines, change, why, depends_on, conditions), chunked one per file change exactly as idearium chunks a
+        spec. `failure_modes:` names the failure classes each block is checked against (failure_mode_field below).
     decision_failure_vocabulary:
       choices:
         - "[A] one lib/failure-vocab.js that pipeline-routing VERDICTS, agent-record and the verifiers all read; fault_taxonomy stays the system-fault ladder  ← recommended"
@@ -177,13 +187,33 @@ spec:
         - "[A] one .contract envelope per contract, as today, extended: the payload gains boundary, conditions, gates[], checkpoints[], progress and a revision; a chunk and a gate are entries inside it; 'each gate tags' means each gate adds its tags to that one file  ← recommended (every queue row makes a compartment, a COS compartment and an idearium repo, so a file per chunk multiplies that by the chunk count on a 4 GB box)"
         - "[B] a parent .contract (payload.kind: manifest) plus one child .contract per chunk, linked by dependsOn, each tagged and queryable alone. The most literal reading, and submitIdeariumChunk already makes a contract per idearium chunk; costs a compartment, a COS compartment and a repo per child unless children run inside the parent's"
         - "[C] [A] as the record, plus a child .contract only where a chunk has to run apart (a parallel cell, RQ15; a repair that was escalated) — the file count follows the work"
-      chosen: open
+      chosen: >-
+        2026-10-13, James: "using a yaml file each as a block, then chunked". Read as: each block is its own YAML section of
+        the one .contract (as an idearium spec's blocks are sections of one spec), so [A]; where a block has to run apart
+        it is written out as a child .contract ([C]). If he meant one file per block on disk, that is [B] — to confirm.
     decision_revert_authority:
       choices:
         - "[A] two layers. lib/repo-inject.js's revert (the `before` of every inject: exact, per chunk, self-contained) is the revert; a versionium commit at each passing gate is the named backup that survives a restart and can be browsed  ← recommended (versionium is optional, so when it is down the gate says 'backup unavailable' and only reversible work goes on)"
         - "[B] versionium only — one mechanism, but optional and not always up when needed, and a commit is a whole state, not a chunk"
         - "[C] a COS snapshot of the contract's compartment at each pass — isolates well, heavier (a manifest of every file in the root) and restores a compartment, not a repo's working tree"
       chosen: open
+
+  failure_mode_field:   # ADDENDUM 1.2.0 — James: "failure mode field, should be specced somewhere, check all of the phases, a lot of this is mapped already i feel like."
+    answer: >-
+      It is specced, in three places that agree, and this map already builds on them: (1) RQ2 here — the generation
+      failure vocabulary (syntax-error · bad-require · missing-export · unknown-symbol · out-of-scope · oversize ·
+      stale-anchor · test-failed · repeated-output · constraint) and the record each failure writes; (2)
+      lib/node-schemas/schema.failure_mode — the .failure_mode node (a causal chain, written by
+      cortex/self-heal/failure-mode-forensics.js) that a recurring class is promoted to; (3)
+      docs/2026-10-05-failure-reproduction-phasemap.spec FM4 (the failure-mode report) and FM2 (a failure is a clip).
+      fault_taxonomy (cortex/self-heal/fault-taxonomy.js) stays the SYSTEM-fault ladder (decision_failure_vocabulary).
+      What is new is only the field on the contract: `failure_modes:` per block, naming RQ2's classes — so a gate knows
+      which checks to run on that block and the index knows which block a failure belongs to.
+    other_maps_that_already_cover_this: >-
+      SB11/SB13 (each block / each component chunked, build-from-the-spec), IC5 (the input → queue → output lifecycle),
+      CH1–CH5 + lib/end-state.js (conditions frozen, check kinds), contract-boundary.js + context-gate.js (the boundary
+      keyed by source:intention, invariants carried, none evaluated — M10), BUILD_CONTRACT_SCHEMA (endState, conditions,
+      warpPrimitives, axioms — the boundary's ancestors). The contract format above is these, put in one file.
 
   # ── Phases ─────────────────────────────────────────────────────────────────
   # Delivery order for every phase (CLAUDE.md): backend JS → API route → a row in idearium/cli/route-commands.js SPEC

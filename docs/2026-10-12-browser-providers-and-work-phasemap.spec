@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     browser-providers-and-work
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-12
     release:  "0.60.3 (base)"
     uuid:     nexus-browser-providers-and-work-phasemap-v1-0000-2026-1012-jamesbrooks-001
     owner:    "clear-glass (tabs, accounts, site and account nodes, element endpoints, gigs, autofill) · guardian (providers and hats as nodes, Claude Code as a provider, .input nodes) · copilot (the copilot hat's agent and account, gig writing) · loom + idearium (component tags, mapping before building) · cos (tab compartments)"
-    status:   "MAPPED 2026-10-12, before building. Two phases are done (JB0, PV5/PV6 in 0.60.2/0.60.3); everything else OPEN. Everything under `exists` was read in source this session, not run."
+    status:   "MAPPED 2026-10-12, before building. ADDENDUM 1.1.0 (2026-10-13): RN0 the COS window, CS0–CS1 decompose into components (built, 0.60.5), CS2 manage uploaded projects (mapped onto what exists), JB7 decision chosen (a prompt to schedule). Done: JB0, PV5, PV6, RN0, CS0, CS1; MX2 partial; everything else OPEN."
     voice: >-
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -127,6 +127,11 @@ spec:
         - "[A] drafted and scheduled; each one sent only when he approves it  ← recommended (default)"
         - "[B] a standing rule he writes (delay, at most one per application, which accounts) sends without asking"
         - "[C] drafts only; he sends them himself"
+      chosen: >-
+        2026-10-13, James: "okay yeah, how about a prompt to schedule the email." — after an application with a contact
+        email, Clear Glass asks him: schedule a follow-up? [in 5 working days] [pick a date] [not this one]. The draft is
+        shown in that prompt; what he picks is scheduled; at its time it is sent (his scheduling it is the approval) unless
+        a reply or a status change cancelled it.
     decision_mail_channel:
       choices:
         - "[A] his own webmail in a Clear Glass tab (compose URL + the field map), the account's sign-in from the vault  ← recommended (no new credential kind)"
@@ -464,9 +469,9 @@ spec:
       layer: library
       systems: [loom]
       component: loom.maps.accounts-authority-map
-      status: "OPEN"
+      status: "PARTIAL — 0.60.5: loom/maps/component-intake-map.js wires lib/project-decompose.js and idearium/api's requires of phase-plan, plan-learning and repo-run-state; the clear-glass and guardian 0.60.x files are scanned (the source scanner declares them and their requires); left: confirm each has a wire after a from-scratch bootstrap"
       james: '"I dont want anything to go unmapped."'
-      files: [loom/maps/accounts-authority-map.js, loom/maps/observability-map.js]
+      files: [loom/maps/component-intake-map.js, loom/maps/accounts-authority-map.js, loom/maps/observability-map.js]
       does: >-
         Debt owned by the coder (docs/CLAUDE.md rule 3: every new component is mapped into loom WITH its require/consumer
         wires): 0.60.0–0.60.3 added lib/phase-plan.js, lib/plan-learning.js, lib/repo-run-state.js,
@@ -487,3 +492,58 @@ spec:
         can take one at a time. A nexus.command row and an agent tool; RQ17 reads it per request, an observer agent reads
         it per system.
       proof: "the digest of guardian over the last hour names its faults first and fits the chunk size it was asked for"
+
+    # ── ADDENDUM 1.1.0 (2026-10-13) ─────────────────────────────────────────────
+    RN0_the_renderer_as_a_cos_window:
+      layer: ui
+      systems: [clear-glass]
+      component: clear-glass.renderer.theme
+      status: "DONE — 0.60.5"
+      james: '"can you build the renderer.html as a compartment os ui, like the ones the desktop envirement use. i like those. theyre beautiful."'
+      files: [clear-glass/renderer/cos-theme.css, clear-glass/renderer/browser.html, clear-glass/renderer/settings.html, clear-glass/renderer/library.html]
+      does: >-
+        Clear Glass's browser window, settings and library wear the COMPARTMENT OS window: the title bar from
+        idearium/ui/js/window-chrome.js (gradient bar, ▣ glyph, COMPARTMENT · BROWSER, 44px window buttons, red close) and
+        the toolbar from idearium/ui/desktop.html (panel, lines, buttons, pills). One stylesheet loaded after the old one —
+        remove its <link> and the old look returns; no behaviour changed.
+      proof: "tests/modules/test-project-decompose.test.js WR-04; the UI-reading suites unchanged. Not yet looked at in the running app."
+    CS0_projects_decomposed_into_components:
+      layer: library
+      systems: [core, idearium]
+      component: lib.project-decompose
+      status: "DONE — 0.60.5"
+      james: '"i want to be able to copy projects and decompose them into components for the component store with the dependancies zipped together in a organized structured way. like make a tool for it"'
+      files: [lib/project-decompose.js, lib/component-store.js, idearium/api/index.js, idearium/cli/route-commands.js, loom/maps/component-intake-map.js]
+      does: >-
+        A project (a zip or a folder) → every code file a component in the component store (requires resolved whatever
+        order the files come in, npm packages named, builtins not, a require that points nowhere reported); a component +
+        everything it requires → one zip at the project's own paths with component.json (versions pinned), package.json
+        (the project's npm versions) and a README. Routes components.decompose / components.bundle; commands components,
+        components decompose, components bundle (every agent has them); mapped in loom with its wires.
+      proof: "tests/modules/test-project-decompose.test.js PD-01–PD-10"
+    CS1_drop_zips_to_decompose:
+      layer: ui
+      systems: [idearium]
+      component: idearium.ui.components-panel
+      status: "DONE — 0.60.5"
+      james: '"as well as a way to drag and drop zips to do it automatically."'
+      depends_on: [CS0_projects_decomposed_into_components]
+      files: [idearium/ui/js/components-panel.js, idearium/ui/index.html]
+      does: "Bring in → Decompose into components: drop one or more project zips and each is decomposed at once; search the store; ⬇ bundle downloads a component with its dependencies."
+      proof: "WR-03; not yet clicked through in the running app"
+    CS2_uploaded_projects_managed:
+      layer: library
+      systems: [idearium, cortex, cos]
+      component: idearium.repo
+      status: "OPEN — mapped onto what exists"
+      james: '"can I upload some projects and see if you can give nexus the ability to manage, expand, debug, and test them?"'
+      depends_on: [CS0_projects_decomposed_into_components]
+      files: [idearium/api/index.js, lib/project-container.js, cos/testenv/index.js]
+      does: >-
+        Upload already exists: Bring in → Import project turns a zip into a repo (repo.import-archive, a COS compartment,
+        indexed, chunked). Managing it is the repo's tabs (Files, Code, Phases, Versionium, Settings → environment). The new
+        part is what the request spine adds, applied to an imported repo: expand = a request mapped, contracted and phased
+        (RQ7–RQ13, MX1); debug = RQ17 (observe by request) and RQ16; test = cos/testenv runs its own tests in a guest
+        (exists) and RQ18 (test and attack intents). The proof is his: he uploads real projects and each of the four is
+        done on one of them, end to end, with what failed written down.
+      proof: "one of his uploaded projects: imported, its tests run in COS, one request expanded it through a contract, one failure observed and fixed"

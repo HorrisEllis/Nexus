@@ -1057,6 +1057,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="welcome-action-btn secondary" onclick="this.parentElement.classList.toggle('open');event.stopPropagation()">BRING IN ▾</button>
             <div class="welcome-menu" onclick="this.parentElement.classList.remove('open')">
               <button onclick="openUploadProjectModal()">IMPORT PROJECT<small>a folder or a zip becomes a repo</small></button>
+              <button onclick="openComponentsModal()">DECOMPOSE INTO COMPONENTS<small>drop project zips — every file a component, each downloadable with its dependencies</small></button>
               <button onclick="openSpecLibrary()">IMPORT SPECS<small>a zip of specs — each becomes an idea with its spec</small></button>
               <button onclick="openGitCloneModal()">CLONE FROM GIT<small>any git url, into its own repo</small></button>
               <button onclick="openCosRemoteBrowse()">COMPARTMENTS · PUSH / PULL<small>repos on another COS</small></button>
@@ -2362,6 +2363,30 @@ async function saveToIdearium(){
   </div>
 </div>
 
+<!-- 0.60.5 — a project into the component store, and each component out again with its dependencies (js/components-panel.js) -->
+<div class="modal-overlay" id="components-modal">
+  <div class="modal" style="max-width:720px;width:92vw">
+    <div class="modal-title">Decompose into components</div>
+    <div class="project-drop" id="cmp-drop"><span class="pd-big">⬇</span><span>drop project .zip files here (several at once), or click to choose — each is decomposed straight away</span></div>
+    <input type="file" id="cmp-file" accept=".zip" multiple style="display:none">
+    <div id="cmp-results" style="margin:10px 0;display:grid;gap:6px;font-family:var(--mono);font-size:11px"></div>
+    <div style="display:flex;gap:8px;align-items:center;margin:8px 0">
+      <input type="text" id="cmp-q" placeholder="search the store…" autocomplete="off" style="flex:1;font-family:var(--mono);font-size:12px;padding:7px 10px;background:var(--b0);border:1px solid var(--b1);border-radius:5px;color:var(--text)">
+      <span id="cmp-count" class="cmp-dim"></span>
+    </div>
+    <div id="cmp-list" style="max-height:42vh;overflow:auto;display:grid;gap:4px"></div>
+    <div class="modal-actions"><button class="modal-btn" onclick="closeComponentsModal()">close</button></div>
+  </div>
+</div>
+<style>
+  #components-modal .cmp-row{display:flex;align-items:center;gap:10px;padding:6px 8px;border:1px solid var(--b1);border-radius:6px;font-family:var(--mono);font-size:11px}
+  #components-modal .cmp-id{color:var(--text);flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #components-modal .cmp-dim{color:var(--text3)}
+  #components-modal .cmp-warn{color:var(--amber,#fbbf24)}
+  #components-modal .cmp-dl{margin-left:auto;text-decoration:none;padding:3px 8px;font-size:10px}
+  #components-modal .cmp-line{padding:6px 8px;border-left:2px solid var(--sky,#38bdf8);background:var(--b0)}
+</style>
+
 <div class="modal-overlay" id="upload-project-modal">
   <div class="modal">
     <div class="modal-title">Upload Project</div>
@@ -2521,5 +2546,6 @@ async function saveToIdearium(){
 <script src="js/agent-options.js"></script>   <!-- §0.47.0 OS4 every agent option in the Agent tab; its proposals (OS7) -->
 <script src="js/code-surface.js"></script>   <!-- §0.39.349 CT3 — the Code tab is the work surface -->
 <script src="js/file-versions.js"></script>
+<script src="js/components-panel.js"></script>   <!-- §0.60.5 decompose projects into the component store; bundles with their dependencies -->
 </body>
 </html>

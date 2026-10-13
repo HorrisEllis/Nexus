@@ -145,6 +145,7 @@ const handMapped = [
   ...require('./maps/build-surface-map').FILES.map(f => f[0]),   // §0.39.280
   ...require('./maps/economy-map').FILES.map(f => f[0]),         // §0.39.281
   ...require('./maps/build-context-map').FILES.map(f => f[0]),   // §0.39.309
+  ...require('./maps/component-intake-map').FILES.map(f => f[0]),   // §0.60.5
   ...require('./maps/verified-primitives-map').FILES.map(f => f[0]),   // §0.39.310
   ...require('./maps/compartment-activity-map').FILES.map(f => f[0]),   // §0.39.367
   'loom/agent-suite/index.js',
@@ -317,6 +318,10 @@ if (mappedBuildSurface.failures.length) { console.log(`  build-surface FAILURES:
 const mappedBuildContext = require('./maps/build-context-map').mapBuildContext(driver);
 console.log(`  build-context: ${mappedBuildContext.components.length} components, ${mappedBuildContext.hooks.length} hooks, ${mappedBuildContext.wires.length} wires`);
 if (mappedBuildContext.failures.length) { console.log(`  build-context FAILURES: ${mappedBuildContext.failures.length}`); for (const f of mappedBuildContext.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedBuildContext.failures.length; }
+// §0.60.5 — a project decomposed into the component store (lib/project-decompose.js) + the 0.60.0 build path's libraries
+const mappedComponentIntake = require('./maps/component-intake-map').mapComponentIntake(driver);
+console.log(`  component-intake: ${mappedComponentIntake.components.length} components, ${mappedComponentIntake.hooks.length} hooks, ${mappedComponentIntake.wires.length} wires`);
+if (mappedComponentIntake.failures.length) { console.log(`  component-intake FAILURES: ${mappedComponentIntake.failures.length}`); for (const f of mappedComponentIntake.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedComponentIntake.failures.length; }
 // §0.39.310 — docs/2026-10-05-verified-primitives-phasemap.spec (VP7: the repo Settings tab's categories — page-global and HTTP edges)
 const mappedVerifiedPrimitives = require('./maps/verified-primitives-map').mapVerifiedPrimitives(driver);
 console.log(`  verified-primitives: ${mappedVerifiedPrimitives.components.length} components, ${mappedVerifiedPrimitives.hooks.length} hooks, ${mappedVerifiedPrimitives.wires.length} wires`);

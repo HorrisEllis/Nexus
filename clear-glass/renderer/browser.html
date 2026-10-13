@@ -23,6 +23,7 @@
                frame-src 'none'">
 <title>Clear Glass</title>
 <link rel="stylesheet" href="browser.css">
+<link rel="stylesheet" href="cos-theme.css"><!-- 0.60.5 — the COMPARTMENT OS window style; remove this line for the old look -->
 <!-- 0.39.251 — selector-assign area (element picker → guardian selector map): one JS + one CSS -->
 <link rel="stylesheet" href="selector-assign/selector-assign.css">
 </head>
@@ -30,10 +31,11 @@
 
 <!-- Tab bar -->
   <div id="tab-bar" style="display:flex;align-items:center;background:#0e0e18;border-bottom:1px solid rgba(255,255,255,.08);padding:0 6px;height:34px;flex-shrink:0;overflow-x:auto;overflow-y:hidden;gap:2px;">
+    <span class="cos-glyph" aria-hidden="true">▣</span><span class="cos-kind">compartment · browser</span>
     <div id="tab-list" style="display:flex;align-items:center;gap:2px;flex:0 1 auto;overflow-x:auto;min-width:0;"></div>
     <button id="btn-new-tab" title="New tab" style="flex-shrink:0;background:none;border:none;color:#6a6d82;font-size:16px;padding:0 8px;cursor:pointer;line-height:34px;">+</button>
     <div style="flex:1;-webkit-app-region:drag;"></div>
-    <div class="chrome-group" style="flex-shrink:0;-webkit-app-region:no-drag;">
+    <div class="chrome-group cos-ctl" style="flex-shrink:0;-webkit-app-region:no-drag;">
       <button class="nav-btn" id="btn-minimize" title="Minimize to Taskbar">–</button>
       <button class="nav-btn" id="btn-maximize" title="Maximize">⛶</button>
       <button class="nav-btn" id="btn-close-tray" title="Close to Tray">✕</button>
