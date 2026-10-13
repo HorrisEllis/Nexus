@@ -194,7 +194,7 @@ function completion(p, status) {
  * check(payload, gateId, { root, runTest }) → { status, reasons, evidence } — verify one READY (or FAILED/STALE) gate now,
  * against real evidence, and record the result. Missing proof is never a pass.
  */
-async function check(p, gateId, { root = DEFAULT_ROOT, runTest = _runTest } = {}) {
+async function check(p, gateId, { root = DEFAULT_ROOT, runTest = _runTest, agent = null, learn = true } = {}) {
   const ev = evaluate(p, { root });
   const g = (p.gates || []).find(x => x.id === gateId);
   if (!g) throw Object.assign(new Error(`no gate ${gateId}`), { status: 404 });
@@ -218,6 +218,8 @@ async function check(p, gateId, { root = DEFAULT_ROOT, runTest = _runTest } = {}
   const hashes = {};
   for (const r of g.requires || []) hashes[r] = _refHash((p.refs || {})[r] || {}, root);
   p.state.gates[gateId] = { ...st, status: passed ? 'PASSED' : 'FAILED', evidence, reasons, hashes: passed ? hashes : st.hashes || {}, at: Date.now(), attempts: (st.attempts || 0) + 1 };
+  // CT1 — every check is a lesson about boundaries: how big this gate's packet was, for which agent and kind of work
+  if (learn) { try { Boundaries.record({ agent: agent || g.agent || null, kind: g.kind || g.type, tokens: packetTokens(p, gateId, { root }), ok: passed }); } catch (_) { /* learning is best-effort; the gate result stands */ } }
   for (const inv of p.invariants || []) {
     if (inv.check && inv.check.gate === gateId && passed) { p.state.invariants = p.state.invariants || {}; p.state.invariants[inv.id] = 'verified'; }
   }
@@ -282,4 +284,84 @@ function record(p, key, value, { by = null } = {}) {
   return { key, value };
 }
 
-module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition };
+// ── CT1 — dynamic chunking ─────────────────────────────────────────────────────────────────────────────────────────
+// James (2026-10-13): "everything can be broken down into smaller pieces, with gates between. dynamic chunking for smaller
+// agents or if the agent is struggling?" · "like this is meant to be agent tools. like the chunking. for data ingestion
+// … also learns better boundaries overtime, nuance, uses nexus to hold the complexity".
+
+/** packetTokens(p, gateId) → a rough size of the gate's packet (chars / 4) — what an agent would have to hold */
+function packetTokens(p, gateId, { root = DEFAULT_ROOT } = {}) {
+  const pk = packet(p, gateId, { root, maxLines: 400 });
+  let n = JSON.stringify(pk).length;
+  for (const r of Object.values(pk.refs)) if (!r.excerpt && r.path) { try { n += fs.statSync(path.join(root, r.path)).size; } catch (_) {} }
+  return Math.ceil(n / 4);
+}
+
+/** Boundaries — what Nexus learns about how big a piece each agent handles: one JAA row per check (agent, kind, size, ok) */
+const Boundaries = {
+  _db() { return require(path.join(DEFAULT_ROOT, 'cortex/memory/jaa-db.js')).jaaDB; },
+  record({ agent, kind, tokens, ok }) { this._db().insert('contract_boundaries', { agent: agent || 'any', kind: kind || 'task', tokens: tokens || 0, ok: !!ok, at: Date.now() }); },
+  /** budget(agent, kind) → the size this agent has passed reliably (the 75th percentile of its passes, capped below its first failure size), or null while untried */
+  budget(agent, kind, { min = 3 } = {}) {
+    const rows = this._db().query('contract_boundaries', r => r.agent === (agent || 'any') && (!kind || r.kind === kind), { limit: 5000 });
+    const ok = rows.filter(r => r.ok).map(r => r.tokens).sort((a, b) => a - b);
+    if (ok.length < min) return null;
+    let b = ok[Math.floor((ok.length - 1) * 0.75)];
+    const failedAbove = rows.filter(r => !r.ok && r.tokens > 0).map(r => r.tokens).sort((a, b2) => a - b2);
+    if (failedAbove.length && failedAbove[0] <= b) b = Math.max(ok[0], Math.floor(failedAbove[0] * 0.8));
+    return b;
+  },
+};
+
+/**
+ * shouldSplit(p, gateId, { agent, budget }) → { split, why } — too big for the agent (its learned budget, or the one
+ * given), or it has failed twice. A gate with one ref and one action cannot be split further: said, not forced.
+ */
+function shouldSplit(p, gateId, { agent = null, budget = null, root = DEFAULT_ROOT } = {}) {
+  const g = (p.gates || []).find(x => x.id === gateId);
+  if (!g) throw Object.assign(new Error(`no gate ${gateId}`), { status: 404 });
+  const st = (p.state && p.state.gates && p.state.gates[gateId]) || {};
+  const pieces = Math.max((g.requires || []).length, (g.actions || []).length);
+  if (pieces < 2) return { split: false, why: 'one ref and one action — already the smallest piece' };
+  const size = packetTokens(p, gateId, { root });
+  const b = budget || Boundaries.budget(agent, g.kind || g.type);
+  if (b && size > b) return { split: true, why: `its packet is ~${size} tokens; ${agent || 'this agent'} passes reliably up to ~${b}`, size, budget: b };
+  if (st.status === 'FAILED' && (st.attempts || 0) >= 2) return { split: true, why: `failed ${st.attempts} times — smaller pieces`, size };
+  return { split: false, why: b ? `~${size} tokens, within ~${b}` : `~${size} tokens; no learned budget yet`, size, budget: b };
+}
+
+/**
+ * split(p, gateId, { by }) → the child gate ids. One child per ref (by 'requires') or per action ('actions'): each child
+ * keeps the parent's dependencies, its own piece, the parent's conditions that concern that piece, and an evidence key
+ * of its own. The parent becomes a phase that passes only when every child has — downstream gates are unchanged.
+ * Recorded in p.splits (nothing lost); the parent's own conditions still have to hold.
+ */
+function split(p, gateId, { by = null } = {}) {
+  const g = (p.gates || []).find(x => x.id === gateId);
+  if (!g) throw Object.assign(new Error(`no gate ${gateId}`), { status: 404 });
+  if (g.children && g.children.length) throw Object.assign(new Error(`gate ${gateId} is already split into ${g.children.join(', ')}`), { status: 409 });
+  const mode = by || ((g.requires || []).length >= (g.actions || []).length ? 'requires' : 'actions');
+  const items = mode === 'requires' ? (g.requires || []) : (g.actions || []);
+  if (items.length < 2) throw Object.assign(new Error(`gate ${gateId} has fewer than two ${mode} — nothing to split`), { status: 400 });
+  const children = items.map((it, i) => {
+    const id = `${gateId}.${i + 1}`;
+    const refPath = mode === 'requires' ? ((p.refs || {})[it] || {}).path : null;
+    const own = (g.pass_when || []).filter(c => c && typeof c === 'object' && refPath && (c.exists === refPath || c.test === refPath));
+    return { id, type: 'task', parent: gateId, depends_on: [...(g.depends_on || [])],
+      requires: mode === 'requires' ? [it] : [...(g.requires || [])], actions: mode === 'actions' ? [it] : (g.actions || []),
+      pass_when: [...own, { evidence: `${id}.done` }], kind: g.kind || g.type };
+  });
+  const at = p.gates.indexOf(g);
+  p.gates.splice(at, 0, ...children);
+  g.children = children.map(c => c.id);
+  g.type = 'phase';
+  g.depends_on = [...new Set([...(g.depends_on || []), ...g.children])];
+  g.pass_when = [...g.children.map(id => ({ gate: id })), ...(g.pass_when || []).filter(c => !(c && c.evidence && /\.done$/.test(c.evidence)))];
+  p.splits = p.splits || [];
+  p.splits.push({ gate: gateId, by: mode, into: g.children, at: Date.now() });
+  if (p.state && p.state.gates && p.state.gates[gateId]) p.state.gates[gateId] = { ...p.state.gates[gateId], status: 'BLOCKED', reasons: [`split into ${g.children.join(', ')}`] };
+  return g.children;
+}
+
+module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition,
+  packetTokens, Boundaries, shouldSplit, split };

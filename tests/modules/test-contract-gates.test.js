@@ -101,8 +101,28 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
     const sf = path.join(tmp, 'my.contract'); fs.writeFileSync(sf, NE.toYaml(sc));
     check('CC-08 contract new: a v2 scaffold in the same envelope, valid, its three gates evaluable', C.load(sf).v === 2 && C.validate(C.load(sf).payload).length === 0 && C.evaluate(C.load(sf).payload, { root: tmp }).gates.length === 3);
 
+    // CT1 — dynamic chunking
+    const q = make(); q.gates[0].actions = ['read a', 'read b'];
+    const kids = C.split(q, 'ctx', { by: 'requires' });
+    const ev3 = C.evaluate(q, { root: tmp });
+    const sg = (id) => ev3.gates.find(g => g.id === id).status;
+    check('CC-11 split: one child per ref, each keeping its own condition and an evidence key; the parent becomes a phase that waits on its children; downstream unchanged; recorded',
+      kids.join() === 'ctx.1,ctx.2' && q.gates.find(g => g.id === 'ctx.1').pass_when.some(c => c.exists === 'src/a.js') && q.gates.find(g => g.id === 'ctx').type === 'phase'
+      && sg('ctx.1') === 'READY' && sg('ctx.2') === 'READY' && sg('ctx') === 'BLOCKED' && q.gates.find(g => g.id === 'build').depends_on.join() === 'ctx' && q.splits.length === 1 && C.validate(q).length === 0, JSON.stringify(ev3.gates));
+    C.record(q, 'ctx.1.done', 'yes'); C.record(q, 'ctx.2.done', 'yes');
+    await C.check(q, 'ctx.1', { root: tmp }); await C.check(q, 'ctx.2', { root: tmp });
+    const pr = await C.check(q, 'ctx', { root: tmp });
+    check('CC-12 the parent passes only when every child has, and its own conditions still hold', pr.status === 'PASSED' && pr.evidence.some(e => e.gate === 'ctx.1'));
+    const big = make(); big.gates[0].actions = ['x', 'y'];
+    const s1 = C.shouldSplit(big, 'ctx', { root: tmp, budget: 10 }), s2 = C.shouldSplit(big, 'ctx', { root: tmp, budget: 100000 }), s3 = C.shouldSplit(big, 'build', { root: tmp, budget: 1 });
+    check('CC-13 shouldSplit: over the agent\'s budget → split; within → not; a one-ref one-action gate is already the smallest piece', s1.split && !s2.split && !s3.split && /smallest/.test(s3.why));
+    for (let i = 0; i < 4; i++) C.Boundaries.record({ agent: 'small-model', kind: 'task', tokens: 1000 + i * 100, ok: true });
+    C.Boundaries.record({ agent: 'small-model', kind: 'task', tokens: 1200, ok: false });
+    const lb = C.Boundaries.budget('small-model', 'task');
+    check('CC-14 boundaries are learned: from its passes and failures Nexus learns the size an agent handles (under its first failure); untried is null, not a guess',
+      lb && lb <= 1200 && lb >= 960 && C.Boundaries.budget('never-seen', 'task') === null, String(lb));
     const CMD = fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8');
-    check('CC-10 every agent has it: contract new · gates · packet · check · evidence · status', ['contract.new', 'contract.gates', 'contract.packet', 'contract.check', 'contract.evidence', 'contract.status'].every(k => CMD.includes(`key: '${k}'`)));
+    check('CC-10 every agent has it: contract new · gates · packet · check · evidence · status', ['contract.new', 'contract.gates', 'contract.packet', 'contract.check', 'contract.evidence', 'contract.status', 'contract.split', 'contract.budget'].every(k => CMD.includes(`key: '${k}'`)));
   } catch (e) { fail++; console.log(`  ✗ threw: ${e.stack}`); }
   finally { try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {} }
   console.log(`\n${pass} passed, ${fail} failed`);

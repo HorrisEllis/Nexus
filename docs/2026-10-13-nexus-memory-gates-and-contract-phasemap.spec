@@ -62,7 +62,7 @@ spec:
       note: "His: a content hash proves the content is a given version, not that it is correct — the checks prove correctness."
       success: "Nexus loads a contract, builds a minimal gate packet, evaluates the gate against real evidence, records the result, and resumes safely without trusting an unsupported claim of completion."
     CT1_dynamic_chunking:
-      status: "OPEN"
+      status: "DONE — 0.60.16 (split, shouldSplit, learned boundaries; contract split / contract budget; test-contract-gates CC-11–14)"
       james: '"everything can be broken down into smaller pieces, with gates between. dynamic chunking for smaller agents or if the agent is struggling?"'
       depends_on: [CT0_the_contract_is_a_reference]
       builds_on: "pipeline-routing shouldChunk/planMode (per-file chunking for Ollama) · the door's learned outcomes · CT0 gates"
@@ -95,3 +95,15 @@ spec:
     PF0_profiles_linked_to_hats:
       status: "OPEN — mapped as ID1 in docs/2026-10-13-identities-tabs-and-automation-phasemap.spec; his 0.60.13 session hub is its base"
       james: '"profiles in clearlgas that can link to hats. multiaccunt setup in clearglass, using porofiles?"'
+    CT2_ingestion_as_contracts:
+      status: "OPEN"
+      james: '"like this is meant to be agent tools. like the chunking. for data ingestion. like this could be immensly powerful to intake data. like think clearglass. etc. also learns better boundaries overtime, nuance, uses nexus to hold the complexity, models or compartments."'
+      depends_on: [CT1_dynamic_chunking]
+      builds_on: "contract-gates (split, packet, Boundaries) · Clear Glass readPage / the interaction field · lib/import-checks.js · the component store · idearium spec-engine chunking"
+      does: >-
+        Intake as a contract: a source (a page Clear Glass reads, a zip, a repo, a document) becomes refs; one gate per
+        piece; each piece's packet goes to the agent the door picks; what it extracted is evidence; a piece too big for its
+        agent splits (CT1), and the sizes each agent handled are learned per kind of source (Boundaries, kind = the source
+        kind) — so boundaries get better with use. Nexus holds the whole (the contract, its refs, the evidence); each agent
+        only ever holds one piece.
+
