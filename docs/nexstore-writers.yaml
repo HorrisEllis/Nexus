@@ -7,10 +7,10 @@ register:
   map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (DT1)
   generatedBy: lib/nexstore/writers.js
   stats:
-    writers: 234
-    files: 152
+    writers: 235
+    files: 153
     typed: 25
-    reason: 56
+    reason: 57
     owed: 153
 rules:
   - match: '^(guardian/jaa-store\.js|idearium/lib/db\.js|lib/nexstore/(log|record)\.js) · '
@@ -82,6 +82,8 @@ writers:
     reason: OWED — a node type or a stated reason
   cortex/boot.js · writeFileSync · store:
     reason: OWED — a node type or a stated reason
+  cortex/core/raid/contract-gates.js · writeFileSync · file:
+    reason: a .contract node (type contract, lib/node-export.js envelope) written back with its gates' recorded state — the contract file IS the record (0.60.15)
   cortex/memory/table-compactor.js · appendFileSync · path.join(dir, `${day}.jsonl.gz`):
     reason: >-
       0.43.0 PF5 — the archive of rows leaving a capped table (gzip members, one per batch); rows already recorded as JAA rows, kept compressed so nothing is

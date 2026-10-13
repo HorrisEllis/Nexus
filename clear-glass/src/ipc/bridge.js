@@ -1250,15 +1250,41 @@ class IpcBridge {
       if (!this.loginPortal) return { ok: false, error: 'login portal not initialized' };
       try { return await fn(d); } catch (err) { return { ok: false, error: err.message, code: err.code || null }; }
     };
-    ipcMain.handle('accounts:setDefault',  async (e, d) => this.options?.setDefaultAccount(d.agentKey, d.id ?? null));
+    // §0.60.12 — James: "the logins for the agent providers needs to be all the same. the accounts and sign in, isn't wired into
+    // the provider tabs." The provider tab runs as the provider's dispatch account, so each change on the Accounts page
+    // that can change who that is, or what it is signed in as, is followed by account-switch.sync()/signedOut(). The result
+    // rides back as `tab` so the page can say what happened to the tab (nothing is silent, §1.2).
+    const tabSync = async (fn, provider, ...args) => {
+      try {
+        const as = typeof this.accountSwitch === 'function' ? this.accountSwitch() : null;
+        if (!as) return { ok: false, action: 'skipped', why: 'account switch not initialized' };
+        return await as[fn](provider, ...args);
+      } catch (err) { return { ok: false, action: 'skipped', error: err.message }; }
+    };
+    ipcMain.handle('accounts:setDefault',  async (e, d) => {
+      const r = this.options?.setDefaultAccount(d.agentKey, d.id ?? null);
+      if (r && !r.error) r.tab = await tabSync('sync', d.agentKey);
+      return r;
+    });
     ipcMain.handle('accounts:defaults',    async ()     => ({ ...(this.options?.get().accountDefaults || {}) }));
     ipcMain.handle('accounts:resolve',     async (e, d) => this.options?.resolveAccountForDispatch(d.agentKey, d.id || null));
     ipcMain.handle('accounts:portal:providers',   portal(async ()  => this.loginPortal.providers()));
     ipcMain.handle('accounts:portal:open',        portal(async (d) => this.loginPortal.open(d)));
-    ipcMain.handle('accounts:portal:capture',     portal(async (d) => this.loginPortal.capture(d)));
+    ipcMain.handle('accounts:portal:capture',     portal(async (d) => {
+      const r = await this.loginPortal.capture(d);
+      if (r && r.ok) r.tab = await tabSync('sync', d.provider);
+      return r;
+    }));
     ipcMain.handle('accounts:portal:status',      portal(async (d) => this.loginPortal.status(d)));
     ipcMain.handle('accounts:portal:close',       portal(async (d) => this.loginPortal.close(d)));
-    ipcMain.handle('accounts:portal:signOut',     portal(async (d) => this.loginPortal.signOut(d)));
+    ipcMain.handle('accounts:portal:signOut',     portal(async (d) => {
+      const r = await this.loginPortal.signOut(d);
+      if (r && r.ok) r.tab = await tabSync('signedOut', d.provider, d.id);
+      return r;
+    }));
+    // §0.60.12 — the Provider tabs page: which account a tab runs as, and a press to bring it to the dispatch account
+    ipcMain.handle('providers:account',    async (e, d) => { try { return { ok: true, ...this.accountSwitch().state(d.providerId) }; } catch (err) { return { ok: false, error: err.message }; } });
+    ipcMain.handle('providers:syncAccount', async (e, d) => tabSync('sync', d.providerId));
     ipcMain.handle('accounts:portal:credentials', portal(async (d) => this.loginPortal.saveCredentials(d)));
     ipcMain.handle('accounts:portal:list',        portal(async ()  => this.loginPortal.list()));
     ipcMain.handle('vault:status', async () => ({

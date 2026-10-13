@@ -127,13 +127,14 @@ function desktopLogin(login = null, env = process.env) {
   return { user, password: (login && login.password) || env.COS_DESKTOP_PASSWORD || 'nexus' };
 }
 function userData({ node = 'lts', extras = [], seedUrl, login = null }) {
-  const pkgs = ['qemu-guest-agent', 'python3', 'python3-venv', 'python3-pip', 'git', 'build-essential', 'make', 'ca-certificates', 'curl', 'xz-utils', 'tar', 'unzip',
+  const pkgs = ['qemu-guest-agent', 'openssh-server', 'python3', 'python3-venv', 'python3-pip', 'git', 'build-essential', 'make', 'ca-certificates', 'curl', 'xz-utils', 'tar', 'unzip',
     ...extras.flatMap(e => EXTRA_PACKAGES[e] || [])];
   const script = provisionScript({ node, extras, login: desktopLogin(login) });
   const indent = (s, n) => s.split('\n').map(l => (l ? ' '.repeat(n) + l : l)).join('\n');
   return `#cloud-config
 hostname: cos-testenv
-ssh_pwauth: false
+# 0.60.12 — ssh in with the desktop login; the port is forwarded to the host's loopback only (qemu-runtime desktopPorts.sshPort)
+ssh_pwauth: true
 package_update: true
 package_upgrade: false
 packages:

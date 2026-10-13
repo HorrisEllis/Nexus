@@ -180,6 +180,9 @@ let tray, sse, ipcBridge, nexusOptions, bookmarks, rewind, providerHost, userscr
 let fp          = null;   // FingerprintEngine  — set in bootstrap()
 let ctxMgr      = null;   // ContextMgr         — set in bootstrap()
 let driver      = null;   // ClearDriver        — set in bootstrap()
+let _sessionHub = null;   // session hub (§0.60.13) — ONE cookie session per provider; made on first use by sessionHub()
+let _hubBoot = new Map(); // provider -> promise: attach + consolidate done (before the provider's first load)
+let _acctSwitch = null;   // account-switch instance (§0.60.12) — made on first use by acctSwitch(); declared up here so boot can never reach it before it exists
 let cookieVault = null;   // CookieVault        — set in bootstrap(); account windows restore from it
 let urlListener = null;   // UrlListener        — set in bootstrap()
 let apiSettings = null;   // ApiSettings        — set in bootstrap()
@@ -1256,6 +1259,10 @@ async function bootstrap() {
     postEvent:   (type, data) => _postEvent(type, data),
     history:     history,
   });
+  // §0.60.12 — James: "the logins for the agent providers needs to be all the same." Each provider tab opens signed in as the
+  // provider's dispatch account from Accounts & sign-in (account-switch.sync, before the first load). It cannot fail a start:
+  // host.js bounds it and loads the tab as it is if the sync errors (cookie vault locked, no account yet).
+  providerHost.beforeLoad = async (providerId) => { await hubReady(providerId); return acctSwitch().sync(providerId, { reload: false }); };
   // §WIRED 2026-08-22 — James: "listens for the co-pilot response and
   // injects it into the corresponding agent chat using clearglass."
   // Real close of the loop — see src/copilot/wake-relay.js for the full
@@ -1401,7 +1408,7 @@ async function bootstrap() {
   // the shared singleton instead of declared locally so a real,
   // direct HTTP entry point (added below, POST /agent-mesh/route and
   // GET /agent-mesh/view) can actually call it.
-  mesh = new AgentMesh({ ctxMgr, driver, vault, accounts: nexusOptions, sse: { emit: (t, d) => emit(t, d) } });
+  mesh = new AgentMesh({ ctxMgr, driver, vault, accounts: nexusOptions, sse: { emit: (t, d) => emit(t, d) }, accountSwitch: () => acctSwitch(), sessionHub: () => sessionHub() });
   await mesh.init();
   // §0.39.265 — workflow steps that run a macro or show a notification
   // §0.39.265 — and browser steps (a hidden automation page per workflow, or an
@@ -1443,7 +1450,11 @@ async function bootstrap() {
   loginPortal = new LoginPortal({
     options: nexusOptions, vault, passwordVault, registry: () => mesh.getRegistry(),
     BrowserWindow, session, emit: (t, d) => emit(t, d),
+    accountSwitch: () => acctSwitch(), hub: sessionHub(),   // §0.60.13 — the portal signs in in the provider's ONE session
   });
+  // §0.60.13 — every provider's session is attached (normal tabs mirror it live) and consolidated at boot, in the background;
+  // a provider tab's first load waits for its own (hubReady, above)
+  setTimeout(() => { sessionHub().providers().forEach(p => hubReady(p).catch(() => {})); }, 0);
 
   // §BUILT — James: "deepseek as a ncp provider and open in the background
   // in clearglass." Every other real provider only ever opens on-demand,
@@ -1688,13 +1699,6 @@ async function bootstrap() {
     // §0.60.2 — the provider tab runs as the account guardian routed the job to (guardian/lib/account-routing.js →
     // dispatcher → here): src/providers/account-switch.js, cookies from the JAA vault. GET the tab's account and the
     // saved sign-ins; POST { accountId } switches; POST …/capture { accountId } saves the tab's sign-in as that account.
-    let _acctSwitch = null;
-    const acctSwitch = () => _acctSwitch || (_acctSwitch = require('../providers/account-switch').createAccountSwitch({
-      providerHost, vault: cookieVault, options: nexusOptions,
-      getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
-      sessionFor: (id) => session.fromPartition(`persist:ncp-${id}`),
-      log: (m) => console.log(m),
-    }));
     ipcBridge.accountSwitch = acctSwitch;   // the attention panel (ipc/bridge.js) reads the tab's account through it
     ipcBridge.app.get('/providers/:id/account', (req, res) => {
       try { res.json({ ok: true, ...acctSwitch().state(req.params.id) }); } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
@@ -1702,6 +1706,31 @@ async function bootstrap() {
     ipcBridge.app.post('/providers/:id/account', async (req, res) => {
       try { const r = await acctSwitch().use(req.params.id, req.body && req.body.accountId, { reason: req.body && (req.body.why || req.body.jobId) }); res.status(r.ok ? 200 : 409).json(r); }
       catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    // §0.60.12 — bring a tab (or every running one) to its provider's dispatch account; says what it did, per provider
+    ipcBridge.app.post('/providers/:id/account/sync', async (req, res) => {
+      try { const r = await acctSwitch().sync(req.params.id); res.status(r.ok ? 200 : 409).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    ipcBridge.app.post('/providers/account/sync', async (req, res) => {
+      try {
+        const ids = require('../providers/registry').listProviders().map(p => p.id);
+        const results = []; for (const id of ids) results.push(await acctSwitch().sync(id));
+        res.json({ ok: results.every(r => r.ok), results });
+      } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    // §0.60.13 — one cookie session per provider (CLI-first: nothing here needs the UI). GET what each place holds; POST
+    // …/consolidate takes the sign-in a person really has (the provider session, else a normal tab, else the old mesh
+    // sessions) into the one session, once — { force: true } runs it again.
+    ipcBridge.app.get('/accounts/session/:id', async (req, res) => {
+      try { res.json({ ok: true, ...(await sessionHub().status(req.params.id)) }); } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    ipcBridge.app.post('/accounts/session/consolidate', async (req, res) => {
+      try {
+        const ids = req.body && req.body.provider ? [req.body.provider] : sessionHub().providers();
+        const results = []; for (const id of ids) { sessionHub().attach(id); const r = await sessionHub().consolidate(id, { force: !!(req.body && req.body.force) }); results.push(r); if (r.action === 'consolidated') await acctSwitch().sync(id, { reload: true }).catch(() => {}); }
+        res.json({ ok: results.every(r => r.ok), results });
+      } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
     });
     ipcBridge.app.post('/providers/:id/account/capture', async (req, res) => {
       try { const r = await acctSwitch().capture(req.params.id, req.body && req.body.accountId); res.status(r.ok ? 200 : 409).json(r); }
@@ -2011,6 +2040,61 @@ function _rebuildTrayMenu(mesh) {
   ].filter(Boolean);
 
   tray.setContextMenu(Menu.buildFromTemplate(menuTemplate));
+}
+
+// ── Provider-tab account switch — §0.60.12 ────────────────────────────────────
+// One instance, made on first use. It lives here (not inside the HTTP route block further down) because ProviderHost
+// asks it to sync a tab's sign-in BEFORE the tab's first load, and that happens at boot, before the routes exist.
+// James (2026-10-13): "the logins for the agent providers needs to be all the same. the accounts and sign in, isn't wired
+// into the provider tabs in clearglass."
+function acctSwitch() {
+  return _acctSwitch || (_acctSwitch = require('../providers/account-switch').createAccountSwitch({
+    providerHost, vault: cookieVault, options: nexusOptions,
+    getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
+    sessionFor: (id) => sessionHub().sessionFor(id),
+    hold: (id) => sessionHub().hold(id),
+    log: (m) => console.log(m),
+  }));
+}
+
+// ── Session hub — §0.60.13 ──────────────────────────────────────────────────────────────────────────────────────
+// James (2026-10-13): "providers, accounts, and agent mesh all need to be using the same cookies … I'm signed in but the
+// provider when opened is signed out. sync them together. migrate and consolidate them." See src/cookies/session-hub.js.
+function sessionHub() {
+  if (_sessionHub) return _sessionHub;
+  const { SessionHub } = require('../cookies/session-hub');
+  const reg = () => { try { return require('../providers/registry'); } catch (_) { return null; } };
+  const meshDef = (id) => { try { return (mesh && mesh.getRegistry() || []).find(a => a.id === id) || null; } catch (_) { return null; } };
+  const { LOGIN_URLS } = require('../accounts/login-portal');
+  _sessionHub = new SessionHub({
+    session,
+    defFor: (id) => {
+      let n = null; try { n = reg() && reg().getProvider(id); } catch (_) {}
+      const m = meshDef(id);
+      return (n || m) ? { url: (n && n.url) || (m && m.url), hosts: (n && n.hosts) || [], loginUrl: LOGIN_URLS[id] || null } : null;
+    },
+    // every provider with a session: the NCP providers and every agent the mesh can drive
+    providers: () => { const ids = new Set(); try { for (const p of reg().listProviders()) ids.add(p.id); } catch (_) {} try { for (const a of (mesh && mesh.getRegistry() || [])) ids.add(a.id); } catch (_) {} return [...ids]; },
+    accounts: () => { try { return nexusOptions.listAccounts(); } catch (_) { return []; } },
+    vault: cookieVault,
+    dispatchAccount: (id) => { try { const r = nexusOptions.resolveAccountForDispatch(id, null); return r && !r.error ? r.accountId : null; } catch (_) { return null; } },
+    onSettled: (id) => acctSwitch().settled(id),
+    cleanUA: (ses) => { const ua = ses.getUserAgent(); const clean = ua.replace(/\s+Electron\/[\d.]+/gi, '').replace(/\s+(?:Node\.js|node)\/[\d.]+/gi, '').replace(/\s+clear[\s-]?glass\/[\d.]+/gi, '').trim(); if (clean !== ua) ses.setUserAgent(clean); },
+    log: (m) => console.log(m),
+  });
+  return _sessionHub;
+}
+/** hubReady(provider) — the provider's session is mirrored to the normal tabs and consolidated; once, memoized */
+function hubReady(provider) {
+  if (!_hubBoot.has(provider)) {
+    _hubBoot.set(provider, (async () => {
+      const hub = sessionHub();
+      try { hub.attach(provider); } catch (e) { console.warn(`[session-hub] ${provider}: not attached — ${e.message}`); }
+      try { const r = await hub.consolidate(provider); if (r.action === 'consolidated') await acctSwitch().sync(provider, { reload: false }).catch(() => {}); return r; }
+      catch (e) { console.warn(`[session-hub] ${provider}: consolidation failed — ${e.message}`); return { ok: false, provider, error: e.message }; }
+    })());
+  }
+  return _hubBoot.get(provider);
 }
 
 // ── Account windows — §0.39.265 ─────────────────────────────────────────────

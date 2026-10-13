@@ -96,6 +96,50 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<request words>'),
     req: (a) => ({ method: 'POST', path: '/api/route/assess', body: { message: a.args.join(' ') } }),
     print: (d, a, h) => { const s = d.assessment || {}; console.log(`  ${s.level === 'complex' ? h.c.amber(s.level) : s.level}  score ${s.score} → ${d.kind}${d.preferAgent ? ` (${d.preferAgent})` : ''}`); for (const x of s.signals || []) console.log(h.c.dim(`    · ${x}`)); console.log(h.c.dim(`  ${d.why}`)); } },
+  // 0.60.14 — tiny amounts of code: a line range, and a copy of it to the work surface / a new file
+  { key: 'repo.lines', repo: true, usage: 'repo lines <repo> <path> <from> [to]', about: 'lines from..to of a repo file, numbered (80 lines when to is left out)',
+    need: (a) => (a.args.length >= 2 ? null : '<path> <from> [to]'),
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/lines?path=${encodeURIComponent(a.args[0])}&from=${a.args[1]}${a.args[2] ? `&to=${a.args[2]}` : ''}` }),
+    print: (d, a, h) => { console.log(h.c.dim(`  ${d.path} ${d.from}–${d.to} of ${d.total}`)); console.log(d.text); } },
+  { key: 'repo.lines.copy', repo: true, usage: 'repo lines copy <repo> <path> <from> <to> [--to newPath]', about: 'copy those lines to the work surface as a new file to edit (a proposal: apply writes it)',
+    need: (a) => (a.args.length >= 3 ? null : '<path> <from> <to>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/lines/copy`, body: { path: a.args[0], from: a.args[1], to: a.args[2], ...(a.flags.to ? { toPath: a.flags.to } : {}) } }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.lines} lines → ${d.path} (on the work surface; apply to write it)`) },
+  // 0.60.15 — .contract v2 (cortex/core/raid/contract-gates.js): executable contracts, gated step by step. Local: they read
+  // and write the .contract file itself; completion is the evaluator's, never declared.
+  { key: 'contract.new', repo: false, usage: 'contract new <id> <file.contract> [--what text] [--why text]', about: 'a new v2 contract (context → build → verify gates) to edit',
+    need: (a) => (a.args.length >= 2 ? null : '<id> <file.contract>'),
+    local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const fs = require('fs'); if (fs.existsSync(a.args[1])) throw new Error(`${a.args[1]} exists`); fs.writeFileSync(a.args[1], require('../../lib/node-export.js').toYaml(C.scaffold({ id: a.args[0], what: a.flags.what || '', why: a.flags.why || '' }))); return { file: a.args[1] }; },
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.file}`) },
+  { key: 'contract.gates', repo: false, usage: 'contract gates <file.contract>', about: 'every gate and its state (BLOCKED · READY · PASSED · FAILED · STALE), and whether the contract is complete — and why not',
+    need: (a) => (a.args.length ? null : '<file.contract>'),
+    local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); const r = C.evaluate(L.payload); if (!r.legacy) C.save(a.args[0], L); return r; },
+    print: (d, a, h) => { if (d.legacy) { console.log(h.c.dim(`  ${d.why}`)); return; } for (const p of d.problems || []) console.log(h.c.amber(`  ! ${p}`)); for (const g of d.gates) console.log(`  ${(g.status === 'PASSED' ? h.c.mint : g.status === 'READY' ? (x) => x : h.c.amber)(g.status.padEnd(8))} ${g.id.padEnd(16)} ${h.c.dim(g.type)}${g.reasons.length ? h.c.dim(`  — ${g.reasons.join('; ')}`) : ''}`); console.log(`  ${d.complete ? h.c.mint('complete') : h.c.amber('not complete')}: ${d.why.join('; ')}`); } },
+  { key: 'contract.packet', repo: false, usage: 'contract packet <file.contract> <gate>', about: 'the smallest context one gate needs (its refs resolved, upstream evidence, its gaps) — what an agent is handed',
+    need: (a) => (a.args.length >= 2 ? null : '<file.contract> <gate>'),
+    local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); return C.packet(C.load(a.args[0]).payload, a.args[1]); },
+    print: (d) => console.log(require('../../lib/node-export.js').toYaml ? JSON.stringify(d, null, 1) : d) },
+  { key: 'contract.check', repo: false, usage: 'contract check <file.contract> <gate>', about: 'verify one gate now against real evidence and record the result (missing proof is never a pass)',
+    need: (a) => (a.args.length >= 2 ? null : '<file.contract> <gate>'),
+    local: async (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); const r = await C.check(L.payload, a.args[1]); C.save(a.args[0], L); return r; },
+    print: (d, a, h) => { console.log(`  ${d.status === 'PASSED' ? h.c.mint('PASSED') : h.c.amber(d.status)}`); for (const e of d.evidence || []) console.log(h.c.dim(`    ✓ ${JSON.stringify(e)}`)); for (const r of d.reasons || []) console.log(h.c.amber(`    ✗ ${r}`)); } },
+  { key: 'contract.evidence', repo: false, usage: 'contract evidence <file.contract> <key> <value…>', about: 'record evidence a gate condition reads ({ evidence: key }) — who and when are kept',
+    need: (a) => (a.args.length >= 3 ? null : '<file.contract> <key> <value>'),
+    local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); const r = C.record(L.payload, a.args[1], a.args.slice(2).join(' '), { by: a.flags.by || 'cli' }); C.save(a.args[0], L); return r; },
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.key} = ${d.value}`) },
+  // 0.60.16 CT1 — dynamic chunking: a piece too big for its agent, or failing, splits; Nexus learns each agent's size
+  { key: 'contract.split', repo: false, usage: 'contract split <file.contract> <gate> [--by requires|actions] [--agent name] [--budget tokens] [--force]', about: 'split a gate into child gates — when it is too big for the agent (its learned budget) or has failed twice; --force splits anyway',
+    need: (a) => (a.args.length >= 2 ? null : '<file.contract> <gate>'),
+    local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); const s = C.shouldSplit(L.payload, a.args[1], { agent: a.flags.agent || null, budget: a.flags.budget ? Number(a.flags.budget) : null }); if (!s.split && !a.flags.force) return { split: false, why: s.why }; const into = C.split(L.payload, a.args[1], { by: a.flags.by || null }); C.save(a.args[0], L); return { split: true, why: s.split ? s.why : 'forced', into }; },
+    print: (d, a, h) => console.log(d.split ? `${h.c.mint('✓')} split into ${d.into.join(', ')} — ${d.why}` : h.c.dim(`  not split: ${d.why}`)) },
+  { key: 'contract.budget', repo: false, usage: 'contract budget <agent> [kind]', about: 'how big a piece this agent passes reliably, learned from every contract check (null while untried)',
+    need: (a) => (a.args.length ? null : '<agent>'),
+    local: (a) => ({ agent: a.args[0], kind: a.args[1] || null, budget: require('../../cortex/core/raid/contract-gates.js').Boundaries.budget(a.args[0], a.args[1] || null) }),
+    print: (d, a, h) => console.log(d.budget ? `  ${d.agent}${d.kind ? ` · ${d.kind}` : ''}: ~${d.budget} tokens per piece` : h.c.dim(`  ${d.agent}: not enough checks yet to learn a size`)) },
+  { key: 'contract.status', repo: false, usage: 'contract status <file.contract>', about: 'complete or not, and exactly why — derived from the gates, gaps and invariants',
+    need: (a) => (a.args.length ? null : '<file.contract>'),
+    local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); const r = C.evaluate(L.payload); return { legacy: r.legacy, complete: r.complete, why: r.why, problems: r.problems, passed: r.gates.filter(g => g.status === 'PASSED').length, total: r.gates.length }; },
+    print: (d, a, h) => { if (d.legacy) { console.log(h.c.dim('  v1 contract — RAID runs it as before')); return; } console.log(`  ${d.complete ? h.c.mint('complete') : h.c.amber('not complete')} · ${d.passed}/${d.total} gates passed`); for (const w of d.why) console.log(h.c.dim(`    ${w}`)); } },
   { key: 'repo.diff', repo: true, usage: 'repo diff <repo> <a> [b|working] [--path file]', about: 'what changed between two versions (b defaults to the files on disk now)',
     need: (a) => (a.args.length ? null : '<a> (a version id from repo versions)'),
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/versions/diff?a=${encodeURIComponent(a.args[0])}&b=${encodeURIComponent(a.args[1] || 'working')}${a.flags.path ? `&path=${encodeURIComponent(a.flags.path)}` : ''}` }),
@@ -338,6 +382,15 @@ export const SPEC = [
         if (p.text) console.log(`      "${p.text.slice(0, 160)}"`);
         if (a.flags.html && p.html) console.log(h.c.dim(`      ${p.html.slice(0, 600)}`));
       }
+    } },
+  // §0.60.12 — James: "the logins for the agent providers needs to be all the same. the accounts and sign in, isn't wired into
+  // the provider tabs in clearglass." A provider tab runs as the provider's default account (Accounts & sign-in). This brings
+  // one tab, or every provider's, to it, and says what it did to each. Agents get what the Provider tabs page's button gives a person.
+  { key: 'glass.signin', repo: false, usage: 'glass signin [provider]', about: 'bring a provider tab (or every one) to its default account\'s saved sign-in in Clear Glass; says what it did per provider',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: a.args[0] ? `/providers/${encodeURIComponent(a.args[0])}/account/sync` : '/providers/account/sync', body: {} }),
+    print: (d, a, h) => {
+      const rows = d.results || [d];
+      for (const r of rows) console.log(`  ${r.ok === false ? h.c.coral('✗') : h.c.mint('✓')} ${(r.provider || a.args[0] || '').padEnd(11)} ${r.action || ''}${r.accountId ? h.c.dim(`  as ${r.accountId}`) : ''}${r.why || r.error ? h.c.dim(`  ${r.why || r.error}`) : ''}`);
     } },
   { key: 'field.windows', repo: false, usage: 'field windows', about: 'what the field is doing in each Clear Glass window: its last map, spotlight and pointer, and how lately the page changed',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/attention' }),

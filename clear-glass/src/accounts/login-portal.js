@@ -43,10 +43,17 @@ const LOGIN_URLS = {
   meta:       'https://www.meta.ai/',
 };
 
-const AUTH_COOKIE_RE = /sess|token|auth|jwt|sid|__Secure|__Host|SAPISID|SSID/i;
+// §0.60.13 — one test for "signed in" (src/cookies/session-hub.js): a csrf token or callback-url cookie that a signed-OUT page
+// also sets is not a sign-in. AUTH_COOKIE_RE is kept as an export for callers that read it.
+const { isAuthCookie, AUTH_COOKIE_RE, canonicalPartition } = require('../cookies/session-hub');
 const LOGIN_PATH_RE  = /\/(login|signin|sign_in|sign-in|auth|authenticate|ServiceLogin)(\/|$|\?)/i;
 
-function partitionFor(provider, accountId) { return `persist:mesh-${provider}-${accountId}`; }
+// §0.60.13 — James: "providers, accounts, and agent mesh all need to be using the same cookies." ONE session per provider:
+// persist:ncp-<provider>, the provider tab's own. The account is no longer part of the partition name (it was
+// persist:mesh-<provider>-<account>, a jar nothing else read); which account the session is signed in as is account-switch's
+// (the vault keeps every account's cookies). accountId is accepted and ignored so callers keep their shape.
+function partitionFor(provider, _accountId) { return canonicalPartition(provider); }
+function legacyPartitionFor(provider, accountId) { return `persist:mesh-${provider}-${accountId}`; }
 
 /** fillScript(username, password) — pre-fill only. Uses the native value setter so React/Vue inputs register it. Never submits. */
 function fillScript(username, password) {
@@ -73,9 +80,10 @@ class LoginPortal {
    * @param {object} d.session        electron session (fromPartition)
    * @param {Function} [d.emit]       (type, data) => void
    */
-  constructor({ options, vault, passwordVault = null, registry, BrowserWindow, session, emit = () => {} } = {}) {
+  constructor({ options, vault, passwordVault = null, registry, BrowserWindow, session, emit = () => {}, accountSwitch = null, hub = null } = {}) {
     if (!options || !vault || !registry || !BrowserWindow || !session) throw new Error('LoginPortal needs options, vault, registry, BrowserWindow and session');
-    Object.assign(this, { options, vault, passwordVault, registry, BrowserWindow, session, emit });
+    Object.assign(this, { options, vault, passwordVault, registry, BrowserWindow, session, emit, hub });
+    this._as = typeof accountSwitch === 'function' ? accountSwitch : () => accountSwitch;   // the account switch (lazy: it is made after the portal)
     this.portals = new Map(); // `${provider}:${accountId}` -> { win, openedAt, url }
   }
 
@@ -106,7 +114,8 @@ class LoginPortal {
   _elsewhereSessions(provider) {
     const list = [];
     try { if (this.session.defaultSession) list.push({ key: 'default', where: 'a normal tab', ses: this.session.defaultSession }); } catch (_) {}
-    try { list.push({ key: 'ncp', where: `the ${this._def(provider).name || provider} provider tab`, ses: this.session.fromPartition(`persist:ncp-${provider}`) }); } catch (_) {}
+    // the provider tab is no longer "elsewhere": it IS the account's session now (and a normal tab is kept equal to it live by
+    // the session hub, so this only ever shows a sign-in made before the hub ran)
     return list;
   }
   async _siteCookies(ses, provider) {
@@ -117,7 +126,7 @@ class LoginPortal {
   async _elsewhere(provider) {
     const out = [];
     for (const s of this._elsewhereSessions(provider)) {
-      try { const c = await this._siteCookies(s.ses, provider); if (c.length) out.push({ key: s.key, where: s.where, cookieCount: c.length, authCookies: c.filter(x => AUTH_COOKIE_RE.test(x.name)).length }); }
+      try { const c = await this._siteCookies(s.ses, provider); if (c.length) out.push({ key: s.key, where: s.where, cookieCount: c.length, authCookies: c.filter(isAuthCookie).length }); }
       catch (_) { /* that session is not available: not listed */ }
     }
     return out;
@@ -154,6 +163,11 @@ class LoginPortal {
     if (existing && !existing.win.isDestroyed()) { existing.win.show(); existing.win.focus(); return { ok: true, reused: true, partition: partitionFor(provider, id) }; }
 
     const partition = partitionFor(provider, id);
+    // one session per provider: another account's sign-in window on it is closed (it would sign in to the wrong account), and the
+    // session is made ready for THIS account — what it holds is saved first, this account's saved sign-in put in, else cleared
+    for (const [k, p] of this.portals) if (k.startsWith(`${provider}:`) && k !== key && !p.win.isDestroyed()) p.win.close();
+    const as = this._as();
+    if (as) { const b = await as.beginSignIn(provider, id); if (!b.ok) return { ok: false, error: b.error, code: 'session_not_ready' }; }
     const win = new this.BrowserWindow({
       width: 1100, height: 820, minWidth: 720, minHeight: 560,
       backgroundColor: '#08080d', autoHideMenuBar: true,
@@ -197,6 +211,9 @@ class LoginPortal {
   async capture({ id, provider, identity = null, close = false, from = null }) {
     this._account(id); const def = this._def(provider);
     const ses = this._ses(provider, id);
+    const as = this._as();
+    const runsAs = as ? as.current(provider) : null;
+    if (runsAs && runsAs !== id) return { ok: false, error: `the ${def.name} session is signed in as another account (“${runsAs}”) — press Sign in on this account first, then save` };
     // 0.60.7 — from 'default' | 'ncp': take the sign-in from where he signed in (a normal tab, the provider tab), copy it
     // into this account's own session too, so the account's agent tab is signed in as well
     if (from) {
@@ -225,8 +242,9 @@ class LoginPortal {
     let host; try { host = new URL(def.url).hostname; } catch (_) { host = '*'; }
     await this.vault.save({ agentId: provider, accountId: id, domain: host, cookies });
     const health = await this.vault.checkTokenHealth(provider, ses);
-    const authCookies = cookies.filter(c => AUTH_COOKIE_RE.test(c.name)).length;
+    const authCookies = cookies.filter(isAuthCookie).length;
     this.options.linkAgent(id, provider);
+    if (as && authCookies > 0) as.markCurrent(provider, id, 'portal-capture');
 
     let identityResult = null;
     if (provAccountId) {
@@ -243,11 +261,15 @@ class LoginPortal {
     const acc = this._account(id); this._def(provider);
     const portal = this.portals.get(this._key(provider, id));
     let live = 0, auth = 0;
-    try { const c = await this._ses(provider, id).cookies.get({}); live = c.length; auth = c.filter(x => AUTH_COOKIE_RE.test(x.name)).length; }
-    catch (_) { /* session unavailable — reported as zero, not hidden */ }
+    const as = this._as(); const runsAs = as ? as.current(provider) : null;
+    // the one provider session shows as this account's only while it runs as it (else it holds another account's, or nobody's)
+    if (!runsAs || runsAs === id) {
+      try { const c = await this._siteCookies(this._ses(provider, id), provider); live = c.length; auth = c.filter(isAuthCookie).length; }
+      catch (_) { /* session unavailable — reported as zero, not hidden */ }
+    }
     const sess = acc.sessions?.[provider] || null;
     return {
-      ok: true, id, provider, partition: partitionFor(provider, id),
+      ok: true, id, provider, partition: partitionFor(provider, id), sessionRunsAs: runsAs,
       portalOpen: !!(portal && !portal.win.isDestroyed()), portalUrl: portal?.lastUrl || null,
       liveCookies: live, authCookies: auth,
       elsewhere: await this._elsewhere(provider).catch(() => []),
@@ -269,15 +291,21 @@ class LoginPortal {
   async signOut({ id, provider, forgetIdentity = false, forgetCredential = false }) {
     const acc = this._account(id); this._def(provider);
     this.close({ id, provider });
-    const ses = this._ses(provider, id);
-    await ses.clearStorageData().catch(err => this.emit('accounts.portal.signout.error', { id, provider, error: err.message }));
+    // the one provider session is cleared only if it is THIS account's (or nobody's); another account's sign-in is not touched
+    const as = this._as(); const runsAs = as ? as.current(provider) : null;
+    let cleared = false;
+    if (!runsAs || runsAs === id) {
+      await this._ses(provider, id).clearStorageData().catch(err => this.emit('accounts.portal.signout.error', { id, provider, error: err.message }));
+      if (this.hub) await this.hub.clearNormal(provider).catch(() => {});   // and the normal tabs, which mirror it
+      cleared = true;
+    }
     const vr = this.vault.deleteAccountCookies(provider, id);
     const cred = acc.sessions?.[provider]?.credential || null;
     if (forgetCredential && cred && this.passwordVault) this.passwordVault.delete(cred.passwordId);
     if (forgetIdentity && acc.providerAccounts?.[provider]) this.options.unlinkProviderAccount(id, provider);
     this.options.recordSession(id, provider, forgetCredential || !cred ? null : { capturedAt: null, cookieCount: 0, authCookies: 0 });
     this.emit('accounts.portal.signedOut', { id, provider });
-    return { ok: true, vaultRemoved: vr.removed };
+    return { ok: true, vaultRemoved: vr.removed, sessionCleared: cleared };
   }
 
   list() {
@@ -288,4 +316,4 @@ class LoginPortal {
   }
 }
 
-module.exports = { LoginPortal, LOGIN_URLS, partitionFor, fillScript };
+module.exports = { LoginPortal, LOGIN_URLS, partitionFor, legacyPartitionFor, fillScript, AUTH_COOKIE_RE };

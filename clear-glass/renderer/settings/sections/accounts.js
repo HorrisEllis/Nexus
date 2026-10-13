@@ -31,7 +31,20 @@
     return chip('Not signed in', 'plain');
   }
 
-  async function captureFlow(acc, prov, st) {
+
+  // §0.60.12 — James: "the logins for the agent providers needs to be all the same." The provider tab runs as the provider's
+  // dispatch account; main answers every save / star / sign-out with what it did to the tab (`tab`), and this says it.
+  function tabToast(prov, labelOf, tab) {
+    if (!tab) return;
+    if (tab.ok === false) { toast(`${prov.name} provider tab not updated: ${tab.error || tab.why || 'unknown reason'}`, 'warn', 8000); return; }
+    const who = tab.accountId ? `\u201C${labelOf(tab.accountId)}\u201D` : 'the default account';
+    if (tab.action === 'restored') toast(`The ${prov.name} provider tab is now signed in as ${who}.`);
+    else if (tab.action === 'saved') toast(`The ${prov.name} provider tab was already signed in \u2014 that sign-in is now saved to ${who}.`);
+    else if (tab.action === 'signed-out') toast(`The ${prov.name} provider tab is signed out too.`);
+    else if (tab.action === 'skipped' && tab.why) toast(`${prov.name} provider tab: ${tab.why}`, 'warn', 8000);
+  }
+
+  async function captureFlow(acc, prov, st, labelOf) {
     const idIn = h('input', { type: 'email', placeholder: 'you@example.com', value: (st && st.identity && st.identity.accountId) || '' });
     const closeIn = h('input', { type: 'checkbox', checked: true });
     const r = await modal({
@@ -50,6 +63,7 @@
     if (r.authCookies > 0) toast(`Saved ${r.cookieCount} cookies — ${r.authCookies} look like sign-in tokens.`);
     else toast(`Saved ${r.cookieCount} cookies, but none look like sign-in tokens. Finish signing in, then save again.`, 'warn', 7000);
     if (r.identity && r.identity.linked === false) toast(`Session saved; identity not linked: ${r.identity.error}`, 'warn', 8000);
+    tabToast(prov, labelOf, r.tab);
     return true;
   }
 
@@ -70,7 +84,7 @@
     });
   }
 
-  async function signOutFlow(acc, prov) {
+  async function signOutFlow(acc, prov, labelOf) {
     const idC = h('input', { type: 'checkbox' }), pwC = h('input', { type: 'checkbox' });
     return modal({
       title: `Sign “${acc.label}” out of ${prov.name}?`,
@@ -79,7 +93,7 @@
         h('label', { class: 'row', style: { padding: 0, borderTop: 0 } }, idC, h('span', { text: 'Also unlink the signed-in identity' })),
         h('label', { class: 'row', style: { padding: 0, borderTop: 0 } }, pwC, h('span', { text: 'Also delete the saved sign-in password' })),
       ],
-      actions: [{ label: 'Sign out', danger: true, run: () => call(() => cg.accounts.portal.signOut(acc.id, prov.id, { forgetIdentity: idC.checked, forgetCredential: pwC.checked }), 'sign out') }],
+      actions: [{ label: 'Sign out', danger: true, run: async () => { const r = await call(() => cg.accounts.portal.signOut(acc.id, prov.id, { forgetIdentity: idC.checked, forgetCredential: pwC.checked }), 'sign out'); tabToast(prov, labelOf, r && r.tab); return r; } }],
     });
   }
 
@@ -118,6 +132,7 @@
     const takeBtns = there.map(e => btn(`Save the sign-in from ${e.where}`, () => busy(null, async () => {
       const r = await call(() => cg.accounts.portal.capture(acc.id, prov.id, null, false, e.key), 'save sign-in');
       toast(r && r.likelySignedIn ? `“${acc.label}” is signed in to ${prov.name} (${r.cookieCount} cookies saved)` : `Saved ${r ? r.cookieCount : 0} cookies, but none look like a sign-in`);
+      tabToast(prov, ctx.labelOf, r && r.tab);
       rerender();
     }), 'sm'));
 
@@ -130,8 +145,9 @@
     });
     const star = h('button', { class: 'star', 'aria-pressed': String(isDefault), title: isDefault ? `Default ${prov.name} account` : `Make default for ${prov.name}`, text: isDefault ? '\u2605' : '\u2606' });
     star.addEventListener('click', () => busy(null, async () => {
-      await call(() => cg.accounts.setDefault(prov.id, isDefault ? null : acc.id), 'set default');
+      const r = await call(() => cg.accounts.setDefault(prov.id, isDefault ? null : acc.id), 'set default');
       toast(isDefault ? `No default ${prov.name} account — dispatch uses the oldest one` : `“${acc.label}” is now the default for ${prov.name}`);
+      tabToast(prov, ctx.labelOf, r && r.tab);
       rerender();
     }));
 
@@ -151,9 +167,9 @@
           const r = await wire('/agent-mesh/spawn', { method: 'POST', body: { agentKey: prov.id, accountId: acc.id } });
           toast(`${prov.name} tab open as \u201C${acc.label}\u201D (${r.contextId})`);
         }), 'sm'),
-        btn('Save session', async () => { if (await captureFlow(acc, prov, st)) rerender(); }, 'sm'),
+        btn('Save session', async () => { if (await captureFlow(acc, prov, st, ctx.labelOf)) rerender(); }, 'sm'),
         btn('Saved sign-in', async () => { if (await credentialsFlow(acc, prov, st, vaultKey.passwords)) { toast('Sign-in saved'); rerender(); } }, 'sm'),
-        btn('Sign out', async () => { const r = await signOutFlow(acc, prov); if (r) { toast(`Signed out of ${prov.name}`); rerender(); } }, 'sm danger'),
+        btn('Sign out', async () => { const r = await signOutFlow(acc, prov, ctx.labelOf); if (r) { toast(`Signed out of ${prov.name}`); rerender(); } }, 'sm danger'),
         btn('Remove', async () => {
           const others = acc.agentKeys.filter(k => k !== prov.id);
           if (others.length) {
@@ -175,7 +191,7 @@
   section({
     id: 'accounts', group: 'Accounts & agents', icon: '\u25C8', label: 'Accounts & sign-in',
     keywords: 'login portal app password cookie vault account id default provider session',
-    blurb: 'Every account gets its own id and its own isolated session per provider. Sign in once here; the agent mesh reuses the saved session whenever it dispatches to that account.',
+    blurb: 'Every account gets its own id and its own isolated session per provider. Sign in once here; the agent mesh and the provider tab reuse the saved session \u2014 the provider tab always runs as the provider\u2019s default (starred) account.',
     related: ['providers', 'mesh'],
     async render({ tools, rerender }) {
       const [providers, accounts, defaults, vaultKey, tabs] = await Promise.all([
@@ -199,6 +215,7 @@
       let poll = null;
       const ctx = {
         defaults, vaultKey, rerender, statusNodes,
+        labelOf: (id) => { const a = accounts.find(x => x.id === id); return a ? a.label : String(id).slice(0, 8); },
         startPolling() {
           if (poll) return;
           poll = setInterval(async () => {
