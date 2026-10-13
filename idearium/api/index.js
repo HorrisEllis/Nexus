@@ -2134,6 +2134,7 @@ const ROUTE_CAP = {
   'repo.versions.index': CAPS.READ_IDEAS, 'repo.versions.diff': CAPS.READ_IDEAS, 'repo.versions.tree': CAPS.READ_IDEAS,   // §0.60.7
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
+  'route.assess': CAPS.READ_IDEAS,   // §0.60.8
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
@@ -2535,6 +2536,8 @@ function matchRoute(method, url) {
     // §0.60.7 PL4 — the import checks (lib/import-checks.js): GET reads them; POST also writes them as the repo's notes
     ['GET',    ['api','repos',    ':uuid','integrity'],                'repo.integrity'],
     ['POST',   ['api','repos',    ':uuid','integrity'],                'repo.integrity.notes'],
+    // §0.60.8 — intent routing for reasoning (lib/reasoning-route.js): how hard a request is, and where it would go
+    ['POST',   ['api','route','assess'],                                'route.assess'],             // { message, kind? }
     // §MCO-E 2026-09-20 — the repo's roadmap, from the phasemaps inside it
     // (idearium/repo/roadmap.js; spec idearium/spec/idearium.repo-roadmap.spec).
     ['GET',    ['api','repos',    ':uuid','roadmap'],        'repo.roadmap.get'],
@@ -6261,6 +6264,14 @@ async function handle(req, res, route, query, body) {
         if (!r.dryRun) os.emit('idearium.repo.history.imported', { repoUuid: repo.uuid, imported: r.imported, skipped: r.skipped, branch: r.branch });
         return ok(res, r);
       } catch (e) { return err(res, e.status || 502, e.message); }
+    }
+    // §0.60.8 — James: "we need intent routing for the reasoning, for the complex tasks". The same call the repo agent makes
+    // before it asks the door: the level, the signals, the kind and the preferred reasoning agent. Reads only.
+    case 'route.assess': {
+      if (!body || !String(body.message || '').trim()) return err(res, 400, 'message is required');
+      let policy = {};
+      try { policy = _routingPolicy() || {}; } catch (_) { policy = {}; }   // the same policy the repo agent reads
+      return ok(res, _require('../../lib/reasoning-route.js').route(String(body.message), { jobKind: body.kind || 'agent:chat', policy }));
     }
     case 'repo.integrity': case 'repo.integrity.notes': {
       const repo = getRepoLayer().get(params.uuid);

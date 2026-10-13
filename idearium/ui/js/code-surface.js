@@ -339,6 +339,7 @@ async function csAsk() {
   const v = r.viaCopilot;
   line.meta = [v ? `copilot → ${v.provider || v.backend}${v.model && !(v.provider || '').includes(v.model) ? ` ${v.model}` : ''}` : h ? `picked ${_csHopLabel(h)}` : (r.providerUsed || r.provider || null),
     r.modelUsed && !(v && v.model) ? r.modelUsed : null, (r.switchedFrom || []).length ? `switched from ${r.switchedFrom.map(s => `${s.provider} (${s.class})`).join(', ')}` : null,
+    v && v.reasoning && v.reasoning.kind === 'agent:reason' ? `reasoning: complex (${(v.reasoning.signals || []).slice(0, 2).join('; ')})` : null,   // 0.60.8 lib/reasoning-route.js
     r.elapsedMs ? `${Math.round(r.elapsedMs / 100) / 10}s` : null].filter(Boolean).join(' · ') || null;
   await csAfterChange();
   csPaint();

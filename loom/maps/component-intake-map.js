@@ -38,11 +38,12 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('lib/repo-run-state.js'),    'idearium/api/index.js repo.run.control, the phase attempt\'s pause wait, speceng.build REPO_PAUSED (0.60.0)'],
   ['nexus.idearium.api', I('lib/repo-notes.js'),        'idearium/api/index.js repo.notes / notes.* (0.60.6)'],
   ['nexus.idearium.api', I('lib/repo-history.js'),      'idearium/api/index.js repo.versions.* / repo.history.import (0.60.7)'],
+  ['nexus.idearium.api', I('lib/reasoning-route.js'),   'idearium/api/index.js route.assess (0.60.8); lib/repo-agent.js requires it too (scanned)'],
   ['nexus.idearium.api', I('lib/import-checks.js'),     'idearium/api/index.js repo.integrity / repo.integrity.notes, and every project import\'s finalize (0.60.7)'],
 ];
 
 // scanned files whose only consumers are hand-mapped: their export hook is declared here so the wires above land
-const SCANNED_EXPORTS = [I('lib/phase-plan.js'), I('lib/plan-learning.js'), I('lib/zip-writer.js'), I('lib/repo-notes.js'), I('lib/repo-history.js'), I('lib/import-checks.js')];   // repo-run-state and zip-ingest already have theirs (another map declares them)
+const SCANNED_EXPORTS = [I('lib/phase-plan.js'), I('lib/plan-learning.js'), I('lib/zip-writer.js'), I('lib/repo-notes.js'), I('lib/repo-history.js'), I('lib/import-checks.js'), I('lib/reasoning-route.js')];   // repo-run-state and zip-ingest already have theirs (another map declares them)
 
 function mapComponentIntake(driver) {
   const results = { components: [], hooks: [], wires: [], failures: [] };

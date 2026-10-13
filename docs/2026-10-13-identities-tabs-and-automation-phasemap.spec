@@ -6,7 +6,7 @@ spec:
     release:  "0.60.7 (base)"
     uuid:     nexus-identities-tabs-automation-phasemap-v1-0000-2026-1013-jamesbrooks-001
     owner:    "clear-glass (sessions, tabs, cookies, bookmarks, macros, the interaction field) · guardian (account routing by hat/repo/intent) · idearium (a hat's repo model) · cos (a tab as a compartment)"
-    status:   "MAPPED 2026-10-13. Done in 0.60.7: ID0 (sign-in seen where he signs in), MC0 (the recorder records the tab), NV0 (the 1342 copies). Everything else OPEN. The `found:` facts were read in source this session (file:line), not recalled."
+    status:   "MAPPED 2026-10-13. Done in 0.60.7: ID0 (sign-in seen where he signs in), MC0 (the recorder records the tab), NV0 (the 1342 copies). Done in 0.60.8: CU0 (chat URL reload before escalating), IR0 (intent routing for reasoning). Everything else OPEN. The `found:` facts were read in source this session (file:line), not recalled."
     voice: >-
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -167,6 +167,36 @@ spec:
       james: '"also keeps losing connection to chatgpt."'
       does: "Find why first (the provider tab's session, its sign-in, the dispatcher's timeouts — logs from his machine needed). Then reconnect without losing the turn."
       gap: "needs a log from his machine: the Guardian dispatcher log and Clear Glass's provider-tab events around a drop"
+      found_0_60_8: "One cause found in source: ChatGPT moves a new chat from /c/WEB:… to /c/<id> mid-answer; the page script that held the job went with the old page, and the job ended page_navigated — a person asked for an answer already in the chat. CU0 fixes that one; the log is still wanted for any other."
+    CU0_chat_url_reload_before_escalating:
+      layer: library
+      systems: [clear-glass, guardian]
+      component: guardian.dispatch-ladder
+      status: "DONE — 0.60.8"
+      james: '"can you have the chaturl logged an reused for agents, unless it is blocked. like i want it to reload using the chat url before it escalates."'
+      files: [clear-glass/src/mesh/dom-transport.js, clear-glass/src/mesh/page/agent-page.js, clear-glass/src/mesh/agent-mesh.js, guardian/lib/dispatch-ladder.js]
+      does: >-
+        Each poll records the chat's URL. When the page navigates under a job whose send was pressed, Clear Glass reopens
+        that URL once and READS the answer there (adopt: never types); a sign-in or captcha wall is reported as no_login /
+        captcha. Guardian's ladder, before it asks a person about a sent job with no answer, asks for that reload once
+        (/agent-mesh/read with reload) at the job's chat URL. A job that never reached the chat is never reloaded, so an
+        older answer cannot be taken for this one.
+      proof: "tests/modules/test-mesh-chat-reload.test.js CR-01–02, LR-01–03; test-mesh-dom-transport 16/16 and test-guardian-dispatch-ladder 18/18 unchanged"
+    IR0_intent_routing_for_reasoning:
+      layer: library
+      systems: [idearium, copilot]
+      component: lib.reasoning-route
+      status: "DONE — 0.60.8"
+      james: '"we need intent routing for the reasoning, for the complex tasks, i feel that is priority, do you?" · "only if its a good idea. i just want it to be able to use clearglass."'
+      files: [lib/reasoning-route.js, lib/repo-agent.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/code-surface.js, idearium/ui/js/app.js]
+      does: >-
+        The join between what existed: intent-classifier (RAID's entry gate) and deterministic signals (reasoning words,
+        length, several asks, code/stack traces, files) rate a chat request simple / moderate / complex. Complex goes to the
+        model door as kind agent:reason with the reasoning agent preferred (routing.reasoner, else routing.planner, never
+        Ollama), so the door learns per kind which provider reasons best; outcomes are reported under that kind. Builds
+        unchanged (they already plan first). routing.reason_route: off turns it off. route assess <words> shows the call.
+      next: "the reasoning agent works through Clear Glass tabs (NV1/NV2) — his: 'i just want it to be able to use clearglass'"
+      proof: "tests/modules/test-reasoning-route.test.js RR-01–06, WR-01–03; model-door routes agent:reason (learning, claude first)"
 
     NV0_scripts_injected_once:
       layer: library
