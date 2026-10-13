@@ -40,7 +40,9 @@ module.exports = {
   // James, 2026-08-23: "now using huihui_ai/qwen2.5-coder-abliterate:3b for
   // ollama/co-pilot." Real tag, verified against ollama.com before it was
   // ever written down (1.9GB, Q4_K_M, real arch qwen2).
-  DEFAULT_MODEL:  process.env.OLLAMA_DEFAULT_MODEL  || 'huihui_ai/qwen2.5-coder-abliterate:3b',
+  // 0.60.10 — James, after his models were wiped: "new models. qwen3.5:9b qwen2.5-coder:7b". The coder answers by default;
+  // qwen3.5:9b (a thinking model) is the fallback. The abliterated tags stay in ollama/abliterated-catalog.js.
+  DEFAULT_MODEL:  process.env.OLLAMA_DEFAULT_MODEL  || 'qwen2.5-coder:7b',
   // §FIX 2026-09-03 — James, from a real screenshot of his own Ollama
   // model list: "no mistral." FALLBACK_MODEL was never updated in the
   // 2026-08-23 change above — DEFAULT_MODEL got the real, actually-pulled
@@ -65,7 +67,7 @@ module.exports = {
   // historical bugfix comment confirms copilot defers to THIS constant
   // (never hardcodes a model), and copilot's interactive tool loop is
   // where the earlier latency tradeoff favored staying fast.
-  FALLBACK_MODEL: process.env.OLLAMA_FALLBACK_MODEL || 'huihui_ai/qwen2.5-coder-abliterate:7b',
+  FALLBACK_MODEL: process.env.OLLAMA_FALLBACK_MODEL || 'qwen3.5:9b',   // 0.60.10 — see DEFAULT_MODEL
 
   // ── Concurrency ────────────────────────────────────────────────────────
   // 1 is the honest default for a single-GPU/single-box install: it

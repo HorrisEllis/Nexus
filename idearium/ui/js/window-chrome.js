@@ -30,7 +30,7 @@
   document.head.appendChild(st);
   const bar = document.createElement('div'); bar.id = 'nx-chrome';
   const glyph = kind === 'desktop' ? '▣' : kind === 'settings' ? '⚙' : '◇';
-  bar.innerHTML = `<span class="glyph">${glyph}</span><span class="kind">compartment · ${kind}</span><span class="ttl"></span><span class="grow"></span>`;
+  bar.innerHTML = `<span class="glyph">${glyph}</span><span class="ttl"></span><span class="grow"></span>`;
   const setTitle = (t) => { bar.querySelector('.ttl').textContent = t || document.title || ''; };
   setTitle(me && me.dataset.title);
   if (W) {

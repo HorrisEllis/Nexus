@@ -74,7 +74,7 @@ function panelScript(rec = {}) {
   const acctLabel = D.account ? (D.accounts.find(a => a.id === D.account) || { label: D.account }).label : null;
   const signin = D.reason === 'signin';
   box.innerHTML = '<style>' + css + '</style>'
-    + '<div class="cx" data-drag="1"><span class="glyph">▣</span><span class="kind">compartment · agent</span><span class="ttl">' + esc(D.provider) + ' — ' + esc(D.title) + '</span><span class="grow"></span>'
+    + '<div class="cx" data-drag="1"><span class="glyph">▣</span><span class="ttl">' + esc(D.provider) + ' — ' + esc(D.title) + '</span><span class="grow"></span>'
     + '<div class="ctl"><button data-ui="min" title="minimize">—</button><button data-ui="max" title="maximize">' + (ui.max ? '❐' : '▢') + '</button><button class="x" data-act="hide" title="hide the tab">✕</button></div></div>'
     + '<div data-body="1"' + (ui.min ? ' style="display:none"' : '') + '>'
     + '<header><h1>' + esc(D.provider) + '</h1><span class="pill ' + D.stateCls + '">' + esc(D.state) + '</span>'
@@ -130,7 +130,7 @@ function pickerScript(key) {
   return `(() => new Promise((resolve) => {
   const hint = document.createElement('div');
   hint.setAttribute('style', 'position:fixed;z-index:2147483647;left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;border-radius:8px;background:#0b0d12;color:#e5e7ef;border:1px solid #38bdf8;font:12px system-ui,sans-serif;pointer-events:none');
-  hint.textContent = 'COMPARTMENT · PICK — click ${label.replace(/'/g, "\\'")} · Esc cancels';
+  hint.textContent = 'Pick — click ${label.replace(/'/g, "\\'")} · Esc cancels';
   const hl = document.createElement('div');
   hl.setAttribute('style', 'position:fixed;z-index:2147483646;pointer-events:none;border:2px solid #38bdf8;background:rgba(56,189,248,.12);border-radius:4px;transition:all .05s');
   const tag = document.createElement('div');
@@ -230,6 +230,7 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
     const w = providerHost.windows && providerHost.windows.get(providerId);
     return w && !w.isDestroyed() ? { win: w, which: `${providerId} tab` } : null;
   }
+  const _lastBack = new Map();   // providerId -> ts of the last send-back-to-chat reload
   const _onSignin = (url) => SIGNIN_RE.test(String(url || '')) || /accounts\.google\.com|login\.microsoftonline\.com|auth\.openai\.com|appleid\.apple\.com/.test(String(url || ''));
   const _def = (id) => { try { return getProvider ? getProvider(id) : null; } catch (_) { return null; } };
   function _accountInfo(providerId) {
@@ -296,6 +297,17 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
     // §0.60.2 — James: "chatgpt doesn't need a login currently." A provider whose chat works signed out
     // (registry loginOptional) is first sent back to its chat; the person is asked only if it lands on a sign-in page again.
     if (rec.reason === 'signin' && def && def.loginOptional && def.url && !rec.askAnyway) {
+      // §0.60.7 — FLAP FIX. A signed-out ChatGPT chat is a normal page: the userscript reports "signed-out" on every load,
+      // and reloading it here dropped the NCP connection, which reloaded the page, which reported again — a reload every ~3 s.
+      // If the tab is already off any sign-in page there is nothing to go back to: leave it alone. And never reload the same
+      // provider tab more than once per minute.
+      const nowUrl = (() => { try { return win.webContents.getURL(); } catch (_) { return ''; } })();
+      if (nowUrl && !_onSignin(nowUrl)) {
+        return { ok: true, window: which, resolved: 'signed-out', reloaded: false };
+      }
+      const last = _lastBack.get(providerId) || 0;
+      if (Date.now() - last < 60000) return { ok: true, window: which, resolved: 'signed-out', reloaded: false, throttled: true };
+      _lastBack.set(providerId, Date.now());
       try { await win.loadURL(def.url); } catch (_) {}
       await new Promise(r => setTimeout(r, signedOutWaitMs));
       if (!win.isDestroyed() && !_onSignin(win.webContents.getURL())) {
@@ -304,7 +316,7 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
       }
     }
     try { win.setSkipTaskbar(false); } catch (_) {}
-    try { win.setTitle(`COMPARTMENT · AGENT — ${(def && def.name) || providerId} ${TITLES[rec.reason] || 'needs you'}`); } catch (_) {}
+    try { win.setTitle(`${(def && def.name) || providerId} ${TITLES[rec.reason] || 'needs you'}`); } catch (_) {}
     win.show(); win.focus();
     const full = { ...rec, providerName: (def && def.name) || providerId, loginOptional: !!(def && def.loginOptional) };
     if (_active.has(win.id)) { _active.get(win.id).rec = full; return { ok: true, window: which, already: true }; }   // the panel up already: it shows the newest reason next round

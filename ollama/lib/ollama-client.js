@@ -85,13 +85,13 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
 //      '' and the job read as an empty reply. Now: thinking with no answer → one retry with think:false.
 //   3. done_reason 'length' was dropped — a reply cut at num_predict landed as if complete. Now it is continued
 //      (lib/reply-continuation.js: the tail is shown back, the model continues, the parts are stitched).
-function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
+function _generateOnceRaw(model, prompt, maxTokens, idleMs, caller, extra = {}) {
   const OA = require('../../lib/ollama-activity.js');
   const want = maxTokens || config.DEFAULT_MAX_TOKENS;
   const ctx = OA.withNumCtx({ num_predict: want, temperature: extra.temperature != null ? extra.temperature : 0.2 }, String(prompt || '').length + String(extra.system || '').length, want);
   // §0.43.0 OR2/OR3 — the tape (ollama/lib/tape.js): a seed always set and recorded; the cassette answers first when replaying
   const Tape = require('./tape.js');
-  const options = Tape.withSeed(ctx.options);
+  const options = { ...Tape.withSeed(ctx.options), ...(extra.optionsOverride || {}) };   // §0.60.7 — the GPU-out-of-memory retry sets num_gpu / num_ctx here
   const treq = { prompt, system: extra.system || null, think: extra.think === false ? false : null };
   const body = JSON.stringify({ model, prompt, stream: true, options, ...(extra.system ? { system: extra.system } : {}), ...(extra.think === false ? { think: false } : {}) });
   const t0 = Date.now();
@@ -201,6 +201,27 @@ async function dispatchWithTools(prompt, model, maxIterations) {
     (messages, toolSchemas) => callOllamaChatWithTools(model, messages, toolSchemas),
     systemPrompt, prompt, { maxIterations: maxIterations || 6 }
   );
+}
+
+
+// §0.60.7 — "llama-server reported out-of-memory during startup: cudaMalloc failed" (the bridge jobs, the adversarial probe).
+// The GPU did not have room for the model while the browser, Electron and Idearium were holding memory. Not a model fault:
+// retry the same call once on the CPU (num_gpu 0) with a smaller context, and remember for GPU_OOM_COOLDOWN_MS that the GPU
+// is full, so the next jobs go straight to the CPU instead of each paying a failed model load first.
+const OOM_RE = /out of memory|cudaMalloc|failed to allocate|GGML_ASSERT|unable to allocate|0xc0000409|kv cache/i;
+const GPU_OOM_COOLDOWN_MS = parseInt(process.env.NEXUS_OLLAMA_GPU_OOM_COOLDOWN_MS || '600000', 10);
+const _cpuOverride = (extra) => ({ ...(extra.optionsOverride || {}), num_gpu: 0, num_ctx: Math.min(4096, (extra.optionsOverride && extra.optionsOverride.num_ctx) || 4096) });
+async function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
+  if (state.gpuFullUntil && Date.now() < state.gpuFullUntil && !(extra.optionsOverride && extra.optionsOverride.num_gpu === 0)) {
+    return _generateOnceRaw(model, prompt, maxTokens, idleMs, `${caller} [cpu: gpu full]`, { ...extra, optionsOverride: _cpuOverride(extra) });
+  }
+  try { return await _generateOnceRaw(model, prompt, maxTokens, idleMs, caller, extra); }
+  catch (e) {
+    if (!OOM_RE.test(String(e && e.message))) throw e;
+    state.gpuFullUntil = Date.now() + GPU_OOM_COOLDOWN_MS;
+    console.warn(`[ollama] ${caller}: the GPU is out of memory for "${model}" — retrying on the CPU; the GPU is skipped for ${Math.round(GPU_OOM_COOLDOWN_MS / 60000)} min`);
+    return _generateOnceRaw(model, prompt, maxTokens, idleMs, `${caller} [cpu retry]`, { ...extra, optionsOverride: _cpuOverride(extra) });
+  }
 }
 
 module.exports = { checkOllama, callOllamaChatWithTools, callOllamaRaw, dispatchWithTools, _generateOnce, _ollamaCut };

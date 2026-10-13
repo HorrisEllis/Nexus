@@ -8887,8 +8887,13 @@ export function startAPI() {
     // not snapshot the real tree) and with NEXUS_SELF_AUTOSYNC=0.
     if (process.env.NEXUS_SELF_AUTOSYNC !== '0' && !_require('../../lib/test-sandbox.js').isTestProcess()) {
       const every = Math.max(60000, parseInt(process.env.NEXUS_SELF_SYNC_MS, 10) || 600000);
-      const first = setTimeout(() => { _nexusSelfSync({}); }, parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 20000);
-      const t = setInterval(() => { _nexusSelfSync({}); }, every);
+      // §0.60.7 — the full sync re-reads and re-writes ~2300 files (25 MB, ~125 s on the first pass) and was running while the
+      // machine was at 5-10% free memory (Ollama then failed to load its model, and Idearium itself crashed). Under memory
+      // pressure the sync waits for the next round; the first pass is also pushed back so boot is not competing with it.
+      const _lowMem = () => { try { const os = require('os'); return os.freemem() / os.totalmem() < (parseFloat(process.env.NEXUS_SELF_MIN_FREE) || 0.2); } catch (_) { return false; } };
+      const _guardedSync = () => { if (_lowMem()) { console.log('[idearium/nexus-self] sync skipped — free memory is under 20%; it runs on the next round'); return; } _nexusSelfSync({}); };
+      const first = setTimeout(_guardedSync, parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 60000);
+      const t = setInterval(_guardedSync, every);
       if (first.unref) first.unref();
       if (t.unref) t.unref();
       console.log(`[idearium/nexus-self] Nexus repo sync scheduled — first in ${Math.round((parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 20000) / 1000)}s, then every ${Math.round(every / 60000)} min`);

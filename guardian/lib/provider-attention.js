@@ -27,6 +27,7 @@ const http = require('http');
 const MODULE_ID = 'guardian.provider-attention';
 const VERSION = '1.0.0';
 const REASONS = Object.freeze(['signin', 'map', 'no-connect']);
+const LOGIN_OPTIONAL = new Set(['chatgpt']);   // mirrors clear-glass/src/providers/registry.js loginOptional
 const SIGNIN_RE = /\/(login|log-in|signin|sign-in|sign_in|auth|authenticate|oauth|sso|account\/login|u\/login)(\/|$|\?|#)/i;
 const SIGNIN_HOSTS = /(^|\.)(accounts\.google\.com|login\.microsoftonline\.com|auth0\.com|appleid\.apple\.com|auth\.openai\.com|login\.live\.com)$/i;
 
@@ -76,6 +77,9 @@ function createAttention({ post = _cgPost, get = _cgGet, emit = () => {}, cooldo
     const p = String(provider || '').toLowerCase();
     if (!p) return { sent: false, error: 'provider required' };
     if (!REASONS.includes(reason)) return { sent: false, error: `reason must be one of ${REASONS.join(', ')}` };
+    // §0.60.7 — a provider whose chat works signed out (ChatGPT) is not raised for 'signed-out' while its page is its own chat:
+    // the raise reloaded the tab, dropped the userscript's NCP connection and made the next report (the flap).
+    if (reason === 'signin' && LOGIN_OPTIONAL.has(p) && !(url && pageState(url, []) === 'signin')) return { sent: false, skipped: 'login-optional' };
     const k = `${p}:${reason}`;
     const t = now();
     if (_last.has(k) && t - _last.get(k) < cd()) return { sent: false, skipped: 'cooldown', since: _last.get(k) };
