@@ -78,6 +78,7 @@ function validate(p) {
     if (!(g.pass_when || []).length && !g.optional) errs.push(`gate ${g.id} has no pass_when: a mandatory gate needs conditions it can be proven against`);
   }
   for (const g of gates) for (const d of g.depends_on || []) if (!ids.has(d)) errs.push(`gate ${g.id} depends on "${d}", which is not a gate`);
+  for (const g of gates) if ((g.children || []).length && !(g.pass_when || []).some(c => c && typeof c === 'object' && !c.gate)) errs.push(`gate ${g.id} is split but has no integration check — its children passing does not prove the whole`);
   // cycles
   const seen = new Map();
   const visit = (id, trail) => {
@@ -157,7 +158,11 @@ function evaluate(p, { root = DEFAULT_ROOT } = {}) {
     const upstream = (g.depends_on || []).filter(d => status[d] !== 'PASSED' && status[d] !== 'SKIPPED');
     const blockingGaps = (p.gaps || []).filter(x => !x.resolved && (x.blocks || []).includes(g.id));
     let s;
-    if (st.status === 'PASSED') {
+    if (st.status === 'STALE') {
+      // stale is sticky: it was invalidated and has not been re-verified since — only check() clears it
+      s = 'STALE'; reasons.push(...((st.reasons || []).length ? st.reasons : ['invalidated; re-verify']));
+      changed.forEach(r => staleRefs.includes(r) || staleRefs.push(r));
+    } else if (st.status === 'PASSED') {
       if (changed.length) { s = 'STALE'; reasons.push(`changed since it passed: ${changed.join(', ')}`); changed.forEach(r => staleRefs.includes(r) || staleRefs.push(r)); }
       else if (upstream.length) { s = 'STALE'; reasons.push(`upstream is no longer passed: ${upstream.join(', ')}`); }
       else s = 'PASSED';
@@ -326,7 +331,12 @@ function shouldSplit(p, gateId, { agent = null, budget = null, root = DEFAULT_RO
   const size = packetTokens(p, gateId, { root });
   const b = budget || Boundaries.budget(agent, g.kind || g.type);
   if (b && size > b) return { split: true, why: `its packet is ~${size} tokens; ${agent || 'this agent'} passes reliably up to ~${b}`, size, budget: b };
-  if (st.status === 'FAILED' && (st.attempts || 0) >= 2) return { split: true, why: `failed ${st.attempts} times — smaller pieces`, size };
+  if (st.status === 'FAILED' && (st.attempts || 0) >= 2) return { split: true, why: `capability: failed ${st.attempts} times — smaller pieces`, size };
+  // 0.60.17 — the reviewer's two more triggers: a gate whose completion cannot be verified as it stands, and a gate holding
+  // separable work (several actions over several refs that need not wait on each other)
+  const unverifiable = (g.pass_when || []).filter(c => !c || typeof c !== 'object').length;
+  if (unverifiable && (g.actions || []).length >= 2) return { split: true, why: `verification: ${unverifiable} condition(s) cannot be checked as written — one verifiable piece per action`, size };
+  if ((g.actions || []).length >= 3 && (g.requires || []).length >= 2) return { split: true, why: `dependency: ${(g.actions || []).length} actions over ${(g.requires || []).length} refs can progress independently`, size };
   return { split: false, why: b ? `~${size} tokens, within ~${b}` : `~${size} tokens; no learned budget yet`, size, budget: b };
 }
 
@@ -347,7 +357,7 @@ function split(p, gateId, { by = null } = {}) {
     const id = `${gateId}.${i + 1}`;
     const refPath = mode === 'requires' ? ((p.refs || {})[it] || {}).path : null;
     const own = (g.pass_when || []).filter(c => c && typeof c === 'object' && refPath && (c.exists === refPath || c.test === refPath));
-    return { id, type: 'task', parent: gateId, depends_on: [...(g.depends_on || [])],
+    return { id, type: 'task', parent: gateId, requirement: g.requirement || { gate: gateId, outcome: (p.outcome && p.outcome.what) || null, actions: g.actions || [] }, depends_on: [...(g.depends_on || [])],
       requires: mode === 'requires' ? [it] : [...(g.requires || [])], actions: mode === 'actions' ? [it] : (g.actions || []),
       pass_when: [...own, { evidence: `${id}.done` }], kind: g.kind || g.type };
   });
@@ -356,12 +366,62 @@ function split(p, gateId, { by = null } = {}) {
   g.children = children.map(c => c.id);
   g.type = 'phase';
   g.depends_on = [...new Set([...(g.depends_on || []), ...g.children])];
-  g.pass_when = [...g.children.map(id => ({ gate: id })), ...(g.pass_when || []).filter(c => !(c && c.evidence && /\.done$/.test(c.evidence)))];
+  // the parent never passes merely because its children did: it keeps its own conditions, and when it has none that
+  // prove the pieces fit together, an integration check is required (recorded evidence of the assembled result)
+  const own = (g.pass_when || []).filter(c => !(c && c.evidence && /\.done$/.test(c.evidence)));
+  const integration = own.filter(c => c && typeof c === 'object' && !c.gate);
+  g.pass_when = [...g.children.map(id => ({ gate: id })), ...own, ...(integration.length ? [] : [{ evidence: `${gateId}.integrated` }])];
+  g.integration = integration.length ? 'its own conditions' : `${gateId}.integrated`;
   p.splits = p.splits || [];
   p.splits.push({ gate: gateId, by: mode, into: g.children, at: Date.now() });
   if (p.state && p.state.gates && p.state.gates[gateId]) p.state.gates[gateId] = { ...p.state.gates[gateId], status: 'BLOCKED', reasons: [`split into ${g.children.join(', ')}`] };
   return g.children;
 }
 
+// ── SC0 — the scheduler ───────────────────────────────────────────────────────────────────────────────────────────
+// Every READY brick with work to do runs — independent bricks at the same time — through the executors Nexus already has
+// (lib/agent-tools executeTool: the copilot's tools, Clear Glass automation and macros, run-pipeline/run-chain, nexus.command);
+// its output is recorded as evidence, its gate is checked, and the next round sees what became READY. Order is whatever
+// the dependencies allow. A brick with no executor for its kind of work is left READY and said — never faked.
+function _defaultExecutors() {
+  return { tool: async (name, args) => require(path.join(DEFAULT_ROOT, 'lib/agent-tools/index.js')).executeTool(name, args || {}) };
+}
+async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {} } = {}) {
+  const ex = executors || _defaultExecutors();
+  const log = [];
+  const noExecutor = new Map();   // gate → the kind of work nothing here can run: set aside, said, never retried in a loop
+  for (let round = 1; round <= maxRounds; round++) {
+    const ev = evaluate(p, { root });
+    const ready = ev.gates.filter(g => g.status === 'READY' || g.status === 'STALE').map(g => (p.gates || []).find(x => x.id === g.id));
+    const runnable = ready.filter(g => !noExecutor.has(g.id) && (g.run || !(g.pass_when || []).some(c => c && c.evidence && !(p.state.evidence || {})[c.evidence])));
+    if (!runnable.length) return { rounds: round - 1, log, complete: ev.complete, why: ev.why, waiting: ready.filter(g => !runnable.includes(g)).map(g => ({ id: g.id, why: noExecutor.has(g.id) ? `no executor for ${noExecutor.get(g.id)} work` : 'waits on evidence a person or agent records' })) };
+    for (let i = 0; i < runnable.length; i += concurrency) {
+      await Promise.all(runnable.slice(i, i + concurrency).map(async (g) => {
+        p.state.gates[g.id] = { ...(p.state.gates[g.id] || {}), status: 'RUNNING' };
+        onEvent({ gate: g.id, status: 'RUNNING', round });
+        if (g.run) {
+          const kind = g.run.tool ? 'tool' : Object.keys(g.run)[0];
+          const fn = ex[kind];
+          if (!fn) { p.state.gates[g.id].status = 'READY'; noExecutor.set(g.id, kind); log.push({ round, gate: g.id, status: 'READY', why: `no executor for ${kind}` }); return; }
+          let out;
+          try { out = await fn(g.run.tool || g.run[kind], g.run.args || {}, { gate: g, packet: packet(p, g.id, { root }) }); }
+          catch (e) { out = { ok: false, error: e.message }; }
+          const ok = out && out.ok !== false && !out.error;
+          record(p, `${g.id}.output`, typeof out === 'string' ? out.slice(0, 2000) : JSON.stringify(out).slice(0, 2000), { by: `scheduler:${kind}` });
+          if (ok) record(p, `${g.id}.done`, 'yes', { by: `scheduler:${kind}` });
+        }
+        const r = await check(p, g.id, { root });
+        log.push({ round, gate: g.id, status: r.status, reasons: r.reasons });
+        onEvent({ gate: g.id, status: r.status, round });
+      }));
+    }
+    // a gate that failed and has no retries left stops the loop from spinning on it
+    const stuck = (p.gates || []).filter(g => { const s = p.state.gates[g.id] || {}; return s.status === 'FAILED' && (s.attempts || 0) >= ((p.failure && p.failure.retry_limit) || 3); });
+    if (stuck.length && !evaluate(p, { root }).gates.some(g => g.status === 'READY')) { const e2 = evaluate(p, { root }); return { rounds: round, log, complete: e2.complete, why: e2.why, failed: stuck.map(g => g.id) }; }
+  }
+  const e3 = evaluate(p, { root });
+  return { rounds: maxRounds, log, complete: e3.complete, why: e3.why };
+}
+
 module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition,
-  packetTokens, Boundaries, shouldSplit, split };
+  packetTokens, Boundaries, shouldSplit, split, schedule };

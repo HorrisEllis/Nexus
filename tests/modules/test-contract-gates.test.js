@@ -121,8 +121,50 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
     const lb = C.Boundaries.budget('small-model', 'task');
     check('CC-14 boundaries are learned: from its passes and failures Nexus learns the size an agent handles (under its first failure); untried is null, not a guess',
       lb && lb <= 1200 && lb >= 960 && C.Boundaries.budget('never-seen', 'task') === null, String(lb));
+    // 0.60.17 — the reviewer's adversarial cases and the scheduler
+    const cyc = make(); cyc.gates[0].depends_on = ['verify'];
+    check('CC-15 adversarial: a dependency cycle is refused by validate, naming the loop', C.validate(cyc).some(x => /loop/.test(x)));
+    const ad = make(); ad.failure.retry_limit = 9;
+    C.split(ad, 'ctx', { by: 'requires' });
+    C.record(ad, 'ctx.1.done', 'y'); C.record(ad, 'ctx.2.done', 'y');
+    await C.check(ad, 'ctx.1', { root: tmp });
+    fs.writeFileSync(path.join(tmp, 'src/a.js'), 'module.exports = 11;\n// line 2\n// line 3\n');   // ctx.1's input (lines 1–2) changes while ctx.2 is still to run
+    await C.check(ad, 'ctx.2', { root: tmp });
+    const evm = C.evaluate(ad, { root: tmp });
+    const sm = (id) => evm.gates.find(g => g.id === id).status;
+    check('CC-16 adversarial: a child whose input goes stale mid-execution reads STALE and holds its parent back (the parent cannot pass on a stale piece)',
+      sm('ctx.1') === 'STALE' && sm('ctx.2') === 'PASSED' && sm('ctx') === 'BLOCKED' && (await C.check(ad, 'ctx', { root: tmp })).status === 'BLOCKED');
+    const ig = make(); ig.gates[0].pass_when = [{ gate: 'nope-never' }].slice(0, 0); ig.gates[0].pass_when = [{ evidence: 'ctx.done' }];
+    C.split(ig, 'ctx', { by: 'requires' });
+    const parent = ig.gates.find(g => g.id === 'ctx');
+    C.record(ig, 'ctx.1.done', 'y'); C.record(ig, 'ctx.2.done', 'y');
+    await C.check(ig, 'ctx.1', { root: tmp }); await C.check(ig, 'ctx.2', { root: tmp });
+    const before = await C.check(ig, 'ctx', { root: tmp });
+    C.record(ig, 'ctx.integrated', 'combined output verified');
+    const after = await C.check(ig, 'ctx', { root: tmp });
+    check('CC-17 adversarial: every child passed but the integration is not proven → the parent FAILS; proven integration → it passes (and validate refuses a split parent with no integration check)',
+      parent.integration === 'ctx.integrated' && before.status === 'FAILED' && /ctx\.integrated/.test(before.reasons.join()) && after.status === 'PASSED'
+      && C.validate({ v: 2, outcome: { what: 'x' }, refs: {}, gates: [{ id: 'k', type: 'task', pass_when: [{ evidence: 'k.done' }] }, { id: 'p', type: 'phase', children: ['k'], depends_on: ['k'], pass_when: [{ gate: 'k' }] }] }).some(x => /no integration check/.test(x)));
+    const tv = make(); tv.gates[1].actions = ['one', 'two']; tv.gates[1].pass_when = ['looks right'];
+    const td = make(); td.gates[1].actions = ['x', 'y', 'z']; td.gates[1].requires = ['a', 'b'];
+    const kids2 = (() => { const k = make(); k.gates[0].actions = ['read a', 'read b']; C.split(k, 'ctx', { by: 'requires' }); return k.gates.find(g => g.id === 'ctx.1'); })();
+    check('CC-18 more split triggers: a gate that cannot be verified as written, and separable work; each child carries the original requirement',
+      /verification/.test(C.shouldSplit(tv, 'build', { root: tmp, budget: 1e9 }).why) && /dependency/.test(C.shouldSplit(td, 'build', { root: tmp, budget: 1e9 }).why)
+      && kids2.requirement && kids2.requirement.gate === 'ctx' && kids2.requirement.outcome === 'a and b wired');
+    // the scheduler: independent bricks at once, dependents after, outputs recorded, a missing executor said
+    write('src/a.js', 'module.exports = 1;\n// line 2\n// line 3\n');
+    const sc2 = make();
+    sc2.gates[1].run = { tool: 'slow', args: { ms: 120 } }; sc2.gates[1].pass_when = [{ evidence: 'build.done' }];
+    sc2.gates[2].run = { tool: 'slow', args: { ms: 120 } }; sc2.gates[2].pass_when = [{ evidence: 'side.done' }];
+    sc2.gates.push({ id: 'browser', type: 'task', depends_on: ['ctx'], run: { glass: 'readPage' }, pass_when: [{ evidence: 'browser.done' }], optional: true });
+    const spans = {};
+    const res = await C.schedule(sc2, { root: tmp, executors: { tool: async (name, args, { gate }) => { spans[gate.id] = [Date.now()]; await new Promise(r => setTimeout(r, args.ms)); spans[gate.id].push(Date.now()); return { ok: true, name }; } } });
+    const overlap = spans.build && spans.side && spans.build[0] < spans.side[1] && spans.side[0] < spans.build[1];
+    const se = C.evaluate(sc2, { root: tmp });
+    check('CC-19 the scheduler runs every READY brick — independent ones at the same time — records each output as evidence, checks each gate, and finishes when the evaluator says; a brick with no executor for its kind is left waiting and said',
+      overlap && se.gates.filter(g => g.id !== 'browser').every(g => g.status === 'PASSED') && sc2.state.evidence['build.output'] && res.complete === true && res.waiting.some(w => w.id === 'browser' && /no executor/.test(w.why)), JSON.stringify({ spans, why: res.why, waiting: res.waiting }));
     const CMD = fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8');
-    check('CC-10 every agent has it: contract new · gates · packet · check · evidence · status', ['contract.new', 'contract.gates', 'contract.packet', 'contract.check', 'contract.evidence', 'contract.status', 'contract.split', 'contract.budget'].every(k => CMD.includes(`key: '${k}'`)));
+    check('CC-10 every agent has it: contract new · gates · packet · check · evidence · status', ['contract.new', 'contract.gates', 'contract.packet', 'contract.check', 'contract.evidence', 'contract.status', 'contract.split', 'contract.budget', 'contract.run'].every(k => CMD.includes(`key: '${k}'`)));
   } catch (e) { fail++; console.log(`  ✗ threw: ${e.stack}`); }
   finally { try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {} }
   console.log(`\n${pass} passed, ${fail} failed`);

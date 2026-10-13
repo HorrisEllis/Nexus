@@ -136,6 +136,11 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<agent>'),
     local: (a) => ({ agent: a.args[0], kind: a.args[1] || null, budget: require('../../cortex/core/raid/contract-gates.js').Boundaries.budget(a.args[0], a.args[1] || null) }),
     print: (d, a, h) => console.log(d.budget ? `  ${d.agent}${d.kind ? ` · ${d.kind}` : ''}: ~${d.budget} tokens per piece` : h.c.dim(`  ${d.agent}: not enough checks yet to learn a size`)) },
+  // 0.60.17 SC0 — the scheduler: every READY brick (independent ones at once) through the agent tools registry
+  { key: 'contract.run', repo: false, usage: 'contract run <file.contract> [--concurrency n]', about: 'run every READY brick — independent ones at the same time — through the agent tools (copilot, Clear Glass automation and macros, pipelines, nexus.command); check each; repeat until nothing is ready',
+    need: (a) => (a.args.length ? null : '<file.contract>'),
+    local: async (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); const r = await C.schedule(L.payload, { concurrency: Number(a.flags.concurrency) || 4 }); C.save(a.args[0], L); return r; },
+    print: (d, a, h) => { for (const l of d.log || []) console.log(`  r${l.round} ${(l.status === 'PASSED' ? h.c.mint : h.c.amber)(String(l.status).padEnd(7))} ${l.gate}${(l.reasons || []).length ? h.c.dim(`  — ${l.reasons.join('; ')}`) : ''}`); for (const w of d.waiting || []) console.log(h.c.dim(`  waiting ${w.id}: ${w.why}`)); console.log(`  ${d.complete ? h.c.mint('complete') : h.c.amber('not complete')}: ${(d.why || []).join('; ')}`); } },
   { key: 'contract.status', repo: false, usage: 'contract status <file.contract>', about: 'complete or not, and exactly why — derived from the gates, gaps and invariants',
     need: (a) => (a.args.length ? null : '<file.contract>'),
     local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); const r = C.evaluate(L.payload); return { legacy: r.legacy, complete: r.complete, why: r.why, problems: r.problems, passed: r.gates.filter(g => g.status === 'PASSED').length, total: r.gates.length }; },

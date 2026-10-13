@@ -106,4 +106,19 @@ spec:
         agent splits (CT1), and the sizes each agent handled are learned per kind of source (Boundaries, kind = the source
         kind) — so boundaries get better with use. Nexus holds the whole (the contract, its refs, the evidence); each agent
         only ever holds one piece.
+    CT1b_reviewed:
+      status: "DONE — 0.60.17"
+      asked: "the review he brought: split also on capability mismatch, verification complexity and dependency complexity; every child keeps the original requirement; a parent must not pass merely because its children did — integration is a first-class gate; test a cycle, a child stale mid-execution, and children-pass-but-integration-fails"
+      does: "shouldSplit: context · capability · verification · dependency. split: each child carries requirement {gate, outcome, actions}; the parent needs its own integration condition (or <gate>.integrated evidence); validate refuses a split parent without one. STALE now sticks until re-verified (a bug the mid-execution case found)."
+      proof: "test-contract-gates CC-15–18"
+    SC0_scheduler:
+      status: "DONE — 0.60.17 (core); executors beyond the agent tools registry OPEN (EX0)"
+      james: '"include from copilots tools, brainos, and clearglass automatation, and pipeline workflow and macros, and frameworks and programmable. like a lot of this exists, in clearglass, brainos, phases already."'
+      files: [cortex/core/raid/contract-gates.js, idearium/cli/route-commands.js]
+      does: "schedule(): every READY (or STALE) brick runs — independent ones concurrently — its run { tool, args } through lib/agent-tools executeTool (the one registry: copilot tools, clear-glass/automation.js · macro.js · browser-automation.js, execution/run-pipeline.js · run-chain.js · run-closed-loop.js, nexus/command.js); output recorded as evidence; the gate checked; repeat until nothing is ready. A brick whose kind of work has no executor is set aside and said. contract run."
+      proof: "test-contract-gates CC-19 (two independent bricks overlap in time; outputs recorded; complete by the evaluator; a no-executor brick reported)"
+    EX0_executors_he_already_built:
+      status: "OPEN"
+      builds_on: "lib/agent-tools/tools/* (registered) · BrainOS workflows · Clear Glass automation nodes + macros (clear-glass/src/automation/*, src/macros) · the phase pipeline (plan → code) · the model door (agent work by kind)"
+      does: "One executor kind per thing that exists: tool (done), agent (the door: a brick's kind picks the model — 0.60.9 routing), glass (a Clear Glass automation or macro on a named tab), pipeline (a BrainOS / Idearium workflow), phase (an Idearium phase build). No new runner: each is an adapter onto what is already there."
 
