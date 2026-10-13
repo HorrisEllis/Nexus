@@ -36,11 +36,12 @@ const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       { path: 'shop/node_modules/lodash/index.js', content: 'module.exports = {};\n' },
       { path: 'shop/src/broken.js', content: "require('./nowhere');\n" },
       { path: 'shop/README.md', content: '# shop\n' },
+      { path: 'shop/src/rates.js', content: "const table = require('./rates.json');\nimport remote from 'https://cdn.example.com/fx.js';\nmodule.exports = table;\n" },
     ];
     const r = PD.fromZip(createZip(project), 'Shop');
     const byPath = Object.fromEntries(r.components.map(c => [c.path, c]));
     check('PD-01 a zipped project: its top folder stripped, every code file a component, node_modules and non-code left out',
-      r.project === 'shop' && Object.keys(byPath).sort().join() === 'src/app.js,src/broken.js,src/cart.js,src/lib/money.js', JSON.stringify(Object.keys(byPath)));
+      r.project === 'shop' && Object.keys(byPath).sort().join() === 'src/app.js,src/broken.js,src/cart.js,src/lib/money.js,src/rates.js', JSON.stringify(Object.keys(byPath)));
     check('PD-02 requires resolve whatever order the files came in (app.js before cart.js); builtins are not npm; lodash is',
       byPath['src/app.js'].dependencies === 1 && byPath['src/cart.js'].dependencies === 1 && byPath['src/lib/money.js'].npm.length === 0 && byPath['src/app.js'].npm.join() === 'lodash', JSON.stringify(byPath));
     check('PD-03 a require that points nowhere is reported, not guessed', byPath['src/broken.js'].unresolved.join() === './nowhere' && r.stats.unresolved === 1);
@@ -55,6 +56,9 @@ const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const man = JSON.parse(zip.readAsText('shop-app/component.json'));
     check('PD-06 package.json names the npm packages the closure needs at the project\'s versions; component.json pins every version',
       pkg.dependencies.lodash === '^4.17.21' && pkg.main === 'src/app.js' && man.closure.length === 3 && man.closure.every(c => c.version), JSON.stringify(pkg));
+    const rates = require(path.join(ROOT, 'lib/component-store.js')).manifest(byPath['src/rates.js'].id);
+    check('PD-11 a required .json is an asset and an import from a URL is remote — neither an unresolved dependency nor an npm package (found decomposing MASTERMIND)',
+      rates.unresolved.length === 0 && rates.npm.length === 0 && rates.assets.join() === 'src/rates.json' && rates.remote.join() === 'https://cdn.example.com/fx.js', JSON.stringify(rates));
     const leaf = PD.bundle(byPath['src/lib/money.js'].id);
     check('PD-07 a leaf component\'s bundle holds only itself', leaf.closure.length === 1 && !new Zip(leaf.buffer).getEntries().some(e => /cart\.js$/.test(e.entryName)));
 
@@ -66,7 +70,7 @@ const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const d = PD.fromDir(dir);
     check('PD-08 a folder on disk: its name is the project, .git skipped, the same resolution', d.project === 'tools' && d.components.length === 2 && d.components.find(c => c.path === 'index.js').dependencies === 1);
     const again = PD.fromZip(createZip(project), 'Shop');
-    check('PD-09 decomposing the same project again stores nothing new (content-addressed)', again.stats.created === 0 && again.stats.components === 4);
+    check('PD-09 decomposing the same project again stores nothing new (content-addressed)', again.stats.created === 0 && again.stats.components === 5);
     let threw = null; try { PD.bundle('no.such.component'); } catch (e) { threw = e; }
     check('PD-10 a bundle of something not stored is a 404 with why', threw && threw.status === 404);
 

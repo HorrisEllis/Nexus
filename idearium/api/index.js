@@ -2574,7 +2574,12 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
     ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
-    ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
+    ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],
+    ['GET',    ['api','repos',    ':uuid','notes'],     'repo.notes'],         // §0.60.6 — the repo's notes: ?q=&kind=&status=&tag=
+    ['POST',   ['api','repos',    ':uuid','notes'],     'repo.notes.add'],     // §0.60.6 — { body, title?, kind?, tags?, pinned? }
+    ['GET',    ['api','notes'],                         'notes.list'],         // §0.60.6 — ?scope=all (default) | loose (on no repo) &q=&kind=&status=&tag=
+    ['POST',   ['api','notes'],                         'notes.add'],          // §0.60.6 — a note on no repo, or { repoUuid }
+    ['PATCH',  ['api','notes',':id'],                   'notes.update'],       // §0.60.6 — { body?, title?, kind?, tags?, status?, pinned?, repoUuid? }      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
     ['GET',    ['api','activity'],  'activity.all'],
     ['GET',    ['api','nexus','store'],         'nexus.store'],        // §0.46.0 — cortex's store report, for the UI (idearium store)
     ['GET',    ['api','nexus','tape'],          'nexus.tape'],         // §0.46.0 — the Ollama tape's runs, for the UI (idearium ollama tape)
@@ -6191,6 +6196,36 @@ async function handle(req, res, route, query, body) {
       return ok(res, { ok: true, ...page, names });
     }
     // §0.39.368 AL1 — James: "I also want to have a full extensive activity log in each repo."
+    // §0.60.6 — James: "can we have a notes or something section for the repos so i can note all of this down?"
+    // lib/repo-notes.js: one table, one writer; kinds note · idea · decision · todo · question · quote; archive, never delete.
+    case 'repo.notes': case 'repo.notes.add': case 'notes.list': case 'notes.add': case 'notes.update': {
+      const RN = _require('../../lib/repo-notes.js');
+      try {
+        if (action === 'repo.notes' || action === 'repo.notes.add') {
+          const repo = getRepoLayer().get(params.uuid);
+          if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+          if (action === 'repo.notes') return ok(res, { repoUuid: params.uuid, notes: RN.list({ repoUuid: params.uuid, q: query.q || null, kind: query.kind || null, status: query.status || null, tag: query.tag || null }), counts: RN.counts(params.uuid) });
+          const n = RN.add({ ...body, repoUuid: params.uuid, source: body.source || 'james' });
+          os.emit('idearium.note.added', { id: n.id, repoUuid: n.repoUuid, kind: n.kind, title: n.title, source: n.source });
+          return ok(res, { note: n });
+        }
+        if (action === 'notes.list') {
+          const scope = query.scope === 'loose' ? { repoUuid: null } : { all: true };
+          const notes = RN.list({ ...scope, q: query.q || null, kind: query.kind || null, status: query.status || null, tag: query.tag || null });
+          const names = {}; try { for (const r of (getRepoLayer().repos && getRepoLayer().repos.repos) || []) names[r.uuid] = r.name; } catch (_) {}
+          return ok(res, { notes, names });
+        }
+        if (action === 'notes.add') {
+          if (body.repoUuid && !getRepoLayer().get(body.repoUuid)) return err(res, 404, `repo not found: ${body.repoUuid}`);
+          const n = RN.add({ ...body, source: body.source || 'james' });
+          os.emit('idearium.note.added', { id: n.id, repoUuid: n.repoUuid, kind: n.kind, title: n.title, source: n.source });
+          return ok(res, { note: n });
+        }
+        const n = RN.update(decodeURIComponent(params.id), body || {});
+        os.emit('idearium.note.updated', { id: n.id, repoUuid: n.repoUuid, kind: n.kind, status: n.status });
+        return ok(res, { note: n });
+      } catch (e) { return err(res, e.status || 500, e.message); }
+    }
     case 'repo.activity': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
       _repoActivity();   // wires the live broadcast on first use

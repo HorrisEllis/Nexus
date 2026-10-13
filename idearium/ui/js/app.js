@@ -2032,6 +2032,7 @@ function renderCurrentRepoSubtab() {
   else if (CURRENT_REPO_SUBTAB === 'intelligence') renderRepoIntelligence(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'agent') renderRepoAgent(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'idea') renderRepoIdea(CURRENT_API_REPO);
+  else if (CURRENT_REPO_SUBTAB === 'notes' && typeof renderRepoNotes === 'function') renderRepoNotes(CURRENT_API_REPO);   // §0.60.6
   else if (CURRENT_REPO_SUBTAB === 'debug') renderRepoDebug(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'versionium') renderRepoVersionium(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'git') renderRepoGit(CURRENT_API_REPO);

@@ -36,10 +36,11 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('lib/phase-plan.js'),        'idearium/api/index.js _phaseBuild → targetSystem, planPrompt, parsePlan, chunkBrief (0.60.0 PC1)'],
   ['nexus.idearium.api', I('lib/plan-learning.js'),     'idearium/api/index.js _phaseBuild → lessons, orderCoders (0.60.0)'],
   ['nexus.idearium.api', I('lib/repo-run-state.js'),    'idearium/api/index.js repo.run.control, the phase attempt\'s pause wait, speceng.build REPO_PAUSED (0.60.0)'],
+  ['nexus.idearium.api', I('lib/repo-notes.js'),        'idearium/api/index.js repo.notes / notes.* (0.60.6)'],
 ];
 
 // scanned files whose only consumers are hand-mapped: their export hook is declared here so the wires above land
-const SCANNED_EXPORTS = [I('lib/phase-plan.js'), I('lib/plan-learning.js'), I('lib/zip-writer.js')];   // repo-run-state and zip-ingest already have theirs (another map declares them)
+const SCANNED_EXPORTS = [I('lib/phase-plan.js'), I('lib/plan-learning.js'), I('lib/zip-writer.js'), I('lib/repo-notes.js')];   // repo-run-state and zip-ingest already have theirs (another map declares them)
 
 function mapComponentIntake(driver) {
   const results = { components: [], hooks: [], wires: [], failures: [] };
