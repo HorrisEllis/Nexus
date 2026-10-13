@@ -20,3 +20,5 @@ idearium/repo/repos/
 
 # 0.39.337 SB37 — one working set per tool-loop run (copilot/lib/workset.js): state, never committed
 copilot/data/worksets/
+# 0.60.28 — guardian's per-type node ledgers are runtime state (appended on every boot and test run), never code
+guardian/data/nodes/*/_ledger.jsonl
