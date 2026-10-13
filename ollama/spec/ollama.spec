@@ -11,7 +11,7 @@ spec:
     # in either direction. Versions already agreed (1.0.0 == 1.0.0) before
     # this fix — this is a naming correction, not a content rewrite.
     name:        ollama-bridge
-    version:     1.1.0   # 0.39.356 MINOR — a running job keeps job.partial (LS1); was 1.0.0
+    version:     1.4.0   # 0.60.27 — matched to lib/version.js: 0.44.0 every call on the tape, 0.45.0 /api/tape, 0.46.0 the tape is ollama's own (each MINOR) · was 1.1.0 (0.39.356 MINOR — a running job keeps job.partial, LS1) · was 1.0.0
     foundation:  nexus-system-foundation@1.0.0
     port:        3749
     uuid:        nexus-ollama-v1-0000-2026-0627-jamesbrooks-001

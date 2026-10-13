@@ -62,7 +62,8 @@ function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL,
     ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith,   // 0.39.265 — late-bound, see server.js
     economy,   // 0.39.281 — guardian/lib/economy-guard.js (optional)
     getJob: (id) => jobStore.jobs.get(id),   // §HP14–HP16 0.55.2 — the job as it is now, not the pool's copy
-    accountRouting, useAccount,   // §0.60.2 — lib/account-routing.js + Clear Glass's account switch (optional)
+    accountRouting, useAccount,
+    usageOf: (p) => { try { return ((ncp && ncp.getProviders ? ncp.getProviders() : {})[p] || {}).usage || null; } catch (_) { return null; } },   // 0.60.25 — a tab's usage limit, for account fallback   // §0.60.2 — lib/account-routing.js + Clear Glass's account switch (optional)
   });
 
   wireDispatchPoolRelease(bus, dispatcher.pool); // the leak fix — every completion path frees its slot now

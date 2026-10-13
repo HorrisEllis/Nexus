@@ -1827,6 +1827,41 @@ function handleExtendedRoutes(req, res, url, method) {
       }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
       return true;
     }
+    // 0.60.25 — the fallback chain, one provider at a time: the accounts Clear Glass knows for it, the chain (every-job
+    // rules, first = highest priority), which are resting at their limit. POST replaces the chain in the order given;
+    // POST /api/accounts/rest marks one resting or clears it (clear:true).
+    if (url.pathname === '/api/accounts/chain' && method === 'GET') {
+      const provider = String(url.searchParams.get('provider') || '').trim().toLowerCase();
+      if (!provider) { pRes(res, 400, { ok: false, error: 'provider required' }); return true; }
+      const http = require('http');
+      new Promise((ok) => {
+        const rq = http.request({ host: '127.0.0.1', port: parseInt(process.env.CLEARGL_IPC_PORT || '7702', 10), path: '/accounts', method: 'GET', timeout: 4000 }, (r2) => { let b = ''; r2.on('data', c => { b += c; }); r2.on('end', () => { try { ok(JSON.parse(b)); } catch (_) { ok(null); } }); });
+        rq.on('error', () => ok(null)); rq.on('timeout', () => { rq.destroy(); ok(null); }); rq.end();
+      }).then((cg) => {
+      const accounts = cg && Array.isArray(cg.accounts) ? cg.accounts.filter(a => (a.providers || []).includes(provider) || (a.agentKeys || []).includes(provider)).map(a => ({ id: a.id, label: a.label || a.id })) : null;
+      pRes(res, 200, { ok: true, provider, accounts, accountsError: accounts ? null : 'Clear Glass did not answer — its accounts are listed when it is running', chain: R.chain(provider), exhausted: R.exhausted(provider), current: R.current(provider) });
+      }).catch(e => pRes(res, 500, { ok: false, error: e.message }));
+      return true;
+    }
+    if (url.pathname === '/api/accounts/chain' && method === 'POST') {
+      bodyJ(req).then((body) => {
+        const provider = String((body && body.provider) || '').trim().toLowerCase();
+        const list = Array.isArray(body && body.accounts) ? body.accounts.map(String).filter(Boolean) : null;
+        if (!provider || !list) return pRes(res, 400, { ok: false, error: 'provider and accounts (an ordered list) required' });
+        for (const r of R.rules({ provider })) if (!r.specificity) R.removeRule(r.id);   // the old chain, replaced (hat/intent/repo rules kept)
+        const rules = list.map((account, i) => R.setRule({ provider, account, priority: list.length - i, label: `chain ${i + 1}` }).rule);
+        bus.emit('guardian.accounts.chain', { provider, accounts: list });
+        pRes(res, 200, { ok: true, provider, chain: R.chain(provider), rules });
+      }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+      return true;
+    }
+    if (url.pathname === '/api/accounts/rest' && method === 'POST') {
+      bodyJ(req).then((body) => {
+        if (!body || !body.provider) return pRes(res, 400, { ok: false, error: 'provider required' });
+        pRes(res, 200, body.clear ? R.clearExhausted(body.provider, body.account || null) : R.markExhausted(body.provider, body.account, { why: body.why || 'marked by a person' }));
+      }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+      return true;
+    }
     const rm = url.pathname.match(/^\/api\/accounts\/rules\/([\w.-]+)$/);
     if (rm && method === 'DELETE') { pRes(res, 200, R.removeRule(rm[1])); return true; }
     if (url.pathname === '/api/accounts/route' && method === 'POST') {
@@ -2308,6 +2343,24 @@ function handleExtendedRoutes(req, res, url, method) {
   if (method==='GET' && url.pathname==='/api/providers') {
     try { pRes(res, 200, { ok:true, ...require('./lib/agent-facts.js').facts() }); }
     catch (e) { pRes(res, 500, { ok:false, error: e.message }); }
+    return true;
+  }
+
+  // 0.60.28 PF1 — James: "why doesn't this work yet?" Can each browser agent take a job right now, and if not, why
+  // (guardian/lib/provider-ready.js): a sign-in wall, every account resting, a usage limit with no fallback, a ◎ wait.
+  // A phase build reads it before its first agent call and leaves off what cannot answer.
+  if (method==='GET' && url.pathname==='/api/providers/ready') {
+    try {
+      let ids = []; try { ids = require('./lib/agent-facts.js').list().map(p => p.id); } catch (_) {}
+      if (!ids.length) ids = ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];
+      const connected = {}; for (const id of ids) connected[id] = ncp.isConnected(id) ? 'connected' : null;
+      const PL = require('./lib/provider-login.js'); const login = {}; for (const id of ids) login[id] = PL.blockedReason(id) || null;
+      const R = require('./lib/account-routing.js').routing(); const chains = {};
+      for (const id of ids) { try { chains[id] = { chain: R.chain(id), exhausted: R.exhausted(id) }; } catch (_) { chains[id] = { chain: [], exhausted: [] }; } }
+      let all = []; try { all = [...jobs.values()]; } catch (_) {}
+      const providers = require('./lib/provider-ready.js').readiness({ ids, connected, channels: ncp.getProviders(), login, jobs: all, chains });
+      pRes(res, 200, { ok: true, providers, at: Date.now() });
+    } catch (e) { pRes(res, 500, { ok: false, error: e.message }); }
     return true;
   }
 

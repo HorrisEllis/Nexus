@@ -350,6 +350,11 @@ const SUITES = [
   'test-lean-mode.test.js', // 0.60.20 — lean mode: one switch in Idearium settings, read by npm run start:all
   'test-run-watch.test.js', // 0.60.21 — no run left in limbo: stalls closed + retried once, a reject retries its phase, a finished review ends
   'test-cg-command-index.test.js', // 0.60.23 — Clear Glass's command index read 0 commands (micro-http has no _router)
+  'test-account-fallback.test.js', // 0.60.25 — account fallback chaining: a spent account rests, the next takes the job; all spent → rate-limit
+  'test-lean-quiet.test.js', // 0.60.26 — what lean mode holds is not retried against; the probe is held; relays say it once
+  'test-phase-cost.test.js', // 0.60.27 AG1a — agent calls and tokens per phase: plan/code/review, local vs remote, estimated tokens
+  'test-run-ready.test.js', // 0.60.28 PF1/PF2 — ready before run (Guardian's facts, the ladder) and a plan written without a model
+  'test-phase-mapping.test.js', // 0.60.29 PM — every phase mapped to its files (an agent, scored first) and dependencies (from the files)
   'test-contract-ct0-self.test.js',   // 0.60.15 — CT0 complete by its own contract, read by the evaluator
   'test-no-compartment-label.test.js',   // 0.60.11 — regression guard: no "compartment · …" label drawn anywhere
   'test-reasoning-route.test.js',   // 0.60.8 — intent routing for reasoning: complex chat → agent:reason with the reasoning agent; route assess

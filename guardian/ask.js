@@ -236,7 +236,12 @@ async function askSync(prompt, opts = {}, deps = {}) {
     if (typeof isProviderConnected === 'function' && !_typed(current) && !['complete', 'done', 'error', 'failed', 'cancelled'].includes(current.status)) {
       const p = current.provider || resolved;
       if (isProviderConnected(p)) { noTabSince = null; pageLooked = false; signinWait = null; }
-      else if (noTabSince === null) noTabSince = Date.now();
+      else if (noTabSince === null) {
+        noTabSince = Date.now();
+        // 0.60.25 — no tab for this agent: Clear Glass is asked to open it (hidden) now, instead of waiting it out and
+        // failing "not connected" (SB9's rung 6, deepseek, on his machine)
+        try { require('./lib/account-routing.js').cgStartProvider(p).catch(() => {}); } catch (_) {}
+      }
       else {
         if (!pageLooked && Date.now() - noTabSince >= noTabMs / 2) {
           pageLooked = true;

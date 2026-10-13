@@ -244,6 +244,35 @@ await test('OFF-RAID', 'no forAgent: the agent is RAID\'s pick, not a hard-coded
   assert.ok(!/\|\| 'claude'/.test(require('fs').readFileSync(path.join(ROOT, 'cortex/core/raid/officiator.js'), 'utf8')), 'no literal claude fallback left');
 });
 
+// §0.60.26 — James's 0.60.23 log: every boot re-sent the same nine failed drops to Claude. A failure is persisted with
+// backoff (a restart does not reset it), the rest of the tick waits when the agent did not answer, and after
+// MAX_ATTEMPTS the drop is parked.
+await test('OFF-BACKOFF', 'a failed drop is retried with persisted backoff: not re-sent by the next tick nor by a restart, and parked after MAX_ATTEMPTS', async () => {
+  // drops left from the tests above are officiated already; start from one new staged drop
+  const { dropId } = stageRealTestArtifact('console.log("backoff test");');
+  _mockResponse = { ok: false };
+  const fresh = () => { delete require.cache[require.resolve(path.join(ROOT, 'cortex/core/raid/officiator.js'))]; return require(path.join(ROOT, 'cortex/core/raid/officiator.js')); };
+  const o1 = fresh();
+  const r1 = await o1.tick();
+  assert.strictEqual(r1.failed, 1, JSON.stringify(r1));
+  const file = path.join(path.dirname(intake.INTAKE_DIR), 'officiator-attempts.json');
+  const rec = JSON.parse(fs.readFileSync(file, 'utf8'))[dropId];
+  assert.ok(rec && rec.n === 1 && /no real agent response/.test(rec.reason), JSON.stringify(rec));
+  const r2 = await o1.tick();
+  assert.strictEqual(r2.failed, 0, 'the same process does not re-send before the backoff');
+  const r3 = await fresh().tick();
+  assert.ok(r3.failed === 0 && r3.waiting >= 1, `a restart does not reset the backoff: ${JSON.stringify(r3)}`);
+  assert.strictEqual(o1.due({ n: 1, at: Date.now() }), false);
+  assert.strictEqual(o1.due({ n: 1, at: Date.now() - 11 * 60 * 1000 }), true);
+  assert.strictEqual(o1.due({ n: 2, at: Date.now() - 11 * 60 * 1000 }), false, 'the second wait is twice the first');
+  assert.strictEqual(o1.due({ n: o1.MAX_ATTEMPTS, at: 0 }), false, 'parked after MAX_ATTEMPTS');
+  // a success clears the record
+  const all = JSON.parse(fs.readFileSync(file, 'utf8')); all[dropId].at = 0; fs.writeFileSync(file, JSON.stringify(all));
+  _mockResponse = { ok: true, text: JSON.stringify({ endState: 'a', conditions: [], intent: 'build', context: 'a', warpPrimitives: [], axioms: [], tools: [], compartmentUuid: null, fileDirectory: null, fileName: null }) };
+  const r4 = await fresh().tick();
+  assert.ok(r4.synthesized === 1 && !JSON.parse(fs.readFileSync(file, 'utf8'))[dropId], JSON.stringify(r4));
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 delete process.env.NEXUS_INTAKE_DIR;
 delete process.env.JAA_DATA_DIR;

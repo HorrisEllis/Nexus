@@ -100,6 +100,23 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-13: "can we work on inventing anything that will get this pipeline going. like why doesn't this work yet?"**
+  - **Context:** after a day of fixes, he stopped asking for features and asked why the pipeline still failed. The
+    coder read every run he had pasted: the agents answered (38 ChatGPT and 16 Gemini jobs completed), but each run
+    started without knowing its parts were ready, and fell back to its hardest mode when the planner failed. The coder
+    proposed two fixes, "ready before run" and "a plan without a model", and recommended doing them in that order. He
+    chose "A then B (Recommended)".
+  - **What it shows:** asking the root-cause question instead of adding features is the judgment. Both fixes come from
+    his own rule, written down the same day: "deterministic first … a reasoning agent only plans". The pipeline had been
+    breaking that rule. The diagnosis and the design are the coder's; the question and the rule are his.
+  - **Evidence:** `tests/modules/test-contract-phase-build.test.js` runs on the real build route with only the model
+    stubbed:
+    - CP-07: with the planner behind a sign-in wall, the phase is planned without a model, built one file per request,
+      and passes its proof;
+    - CP-08: with no agent ready, nothing is sent, and the run says what to fix.
+
+    Also `tests/modules/test-run-ready.test.js` 10/10 and `CHANGELOG-0.60.28.md`. Not yet run on his machine.
+
 - **2026-10-13: "the scheduler must distinguish a failed task from a task that has no available executor. The latter should be reported as blocked or unsupported, not repeatedly retried or incorrectly marked complete."**
   - **Context:** he approved the agent and phase adapters and set the order: build and test them on their own first, then connect the Build action. He named one failure mode before any code existed.
   - **What it shows:** failure-mode thinking and specification. The distinction he named is the one a naive scheduler gets wrong: it loops on work nothing can run, or reports it done. His order (adapters alone, then integration) is why the end-to-end test could find the next defect, a learned size limit poisoned by one provider error, and point at the right module.

@@ -196,6 +196,7 @@ spec:
         lists them. A closed compartment keeps its record and its last state snapshot (rewind) until he deletes it.
       proof: "a background tab opened as a compartment, closed, reopened with its sign-in and page; its activity rows read back"
     TB4_bookmark_checklists:
+      depends_on: [TB2_a_tab_runs_as_an_account]   # mapped from the files they share: TB2_a_tab_runs_as_an_account (clear-glass/renderer/browser.js)
       layer: ui
       systems: [clear-glass]
       component: clear-glass.bookmarks
@@ -267,6 +268,7 @@ spec:
         RAID and the door can choose it by name.
       proof: "a guardian /command job with provider claude-code answers through the CLI and lands a .response node; no tab is opened"
     PV1_providers_read_from_nodes:
+      depends_on: [PV0_claude_code_is_a_guardian_provider]   # mapped from the files they share: PV0_claude_code_is_a_guardian_provider (lib/agent-providers.js)
       layer: library
       systems: [guardian, core, clear-glass]
       component: guardian.agent-facts
@@ -291,6 +293,7 @@ spec:
         file as its copy ([B]). Either way a hat can be read, diffed, versioned and dropped in as a file.
       proof: "a hat edited in the file is the hat the next dispatch wears; a revoked hat's file says so"
     PV3_input_nodes:
+      depends_on: [PV2_hats_are_nodes]   # mapped from the files they share: PV2_hats_are_nodes (guardian/lib/node-registry.js)
       layer: library
       systems: [guardian, copilot, idearium, core]
       component: lib.input-nodes
@@ -359,6 +362,7 @@ spec:
         the gig panel), with the warnings. Nothing is published; the file is his to edit and load.
       proof: "asking the copilot for a gig leaves a .gig that loads without warnings beyond the ones it reported"
     JB2_the_copilot_hat_agent_and_account:
+      depends_on: [TB2_a_tab_runs_as_an_account]   # mapped from the files they share: TB2_a_tab_runs_as_an_account (clear-glass/src/options/store.js)
       layer: ui
       systems: [clear-glass, copilot, guardian]
       component: clear-glass.copilot.hat
@@ -386,6 +390,7 @@ spec:
         empty, never guessed.
       proof: "a form the matcher misses two fields on: two clicks, then a refill of the same form fills all of them"
     JB4_resume_import:
+      depends_on: [JB0_gig_files]   # mapped from the files they share: JB0_gig_files (clear-glass/renderer/settings/sections/autofill.js)
       layer: library
       systems: [clear-glass]
       component: clear-glass.autofill.resume
@@ -412,6 +417,7 @@ spec:
         novel against it.
       proof: "two applications to similar roles get different wording with identical facts; a changed fact is refused"
     JB6_the_application_ledger:
+      depends_on: [JB4_resume_import]   # mapped from the files they share: JB4_resume_import (clear-glass/src/autofill/store.js)
       layer: library
       systems: [clear-glass]
       component: clear-glass.applications
@@ -480,6 +486,7 @@ spec:
         loom wires. Each is declared with its real edges (who requires it, what it emits) in the map that owns its area.
       proof: "loom's context graph shows each of them with at least one real wire; loom's declared-vs-served scanner finds no orphan among them"
     MX4_one_system_digest:
+      depends_on: [TB3_tabs_are_compartments, PV3_input_nodes]   # mapped from the files they share: TB3_tabs_are_compartments (lib/activity-log/compartment.js), PV3_input_nodes (lib/agent-tools/tools/nexus/command.js)
       layer: library
       systems: [core, cortex]
       component: lib.system-digest

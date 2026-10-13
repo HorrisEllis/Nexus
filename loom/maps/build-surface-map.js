@@ -28,6 +28,20 @@ const FILES = [
     I('cos/testenv/detect.js'),                                 // require('./detect.js') — plan(), describe()
   ]],
   ['idearium/repo/file-state.js', I('idearium/repo/file-state.js'), []],
+  // 0.60.29 PM — every phase mapped to its files and dependencies
+  ['lib/phase-files.js', I('lib/phase-files.js'), [
+    I('loom/scanners/phasemap-map.js'),                         // require — parsePhasemapText, the one phase parser
+  ]],
+  ['idearium/repo/phase-mapping.js', I('idearium/repo/phase-mapping.js'), [
+    I('lib/phase-files.js'),                                    // createRequire — candidates, brief, parseAnswer, score, depsFor, applyTo
+  ]],
+  // 0.60.28 PF1 — ready before run: Guardian's facts per agent, and the build's pure check over its ladder
+  ['guardian/lib/provider-ready.js', I('guardian/lib/provider-ready.js'), []],
+  ['lib/run-ready.js', I('lib/run-ready.js'), []],
+  // 0.60.27 AG1a — agent calls and tokens per phase, counted over the run rows
+  ['lib/phase-cost.js', I('lib/phase-cost.js'), [
+    I('lib/run-watch.js'),                                      // require('./run-watch.js') — runsOf groups the rows by run
+  ]],
   ['idearium/repo/deviation.js', I('idearium/repo/deviation.js'), []],
   ['idearium/repo/spec-plan.js', I('idearium/repo/spec-plan.js'), [
     I('loom/scanners/phasemap-map.js'),                         // parsePhasemapText — the one phasemap parser
@@ -121,6 +135,21 @@ const CONSUMERS = [
   [I('idearium/repo/spec-plan.js'), I('lib/spec-document.js'), '§RS9 derivePlan / planPrompt cut by the blocks; BOOKKEEPING'],
   [I('idearium/ui/js/app.js'), I('idearium/ui/js/code-surface.js'), '§CT5 the SSE handler → codeSurfaceOnEvent; renderRepoCode for the Code subtab'],
   [I('idearium/api/index.js'), I('idearium/repo/run-reconcile.js'), '§HP2 _reconcileRuns at boot (interruptedRows)'],
+  // 0.60.26 — what lean mode holds is stopped on purpose: the callers read it before retrying or loading a model
+  [I('orchestrator/orchestrator.js'), I('lib/lean-mode.js'), '0.60.26 gap-relay isHeld: no reconnect to a held diagnostic'],
+  [I('cortex/boot.js'), I('lib/lean-mode.js'), '0.60.26 _intelligenceHeld: no relay to a held intelligence'],
+  [I('copilot/adversarial.js'), I('lib/lean-mode.js'), '0.60.26 run(): the probe is held while lean is on'],
+  [I('guardian/lib/dispatcher.js'), I('ollama/lib/model-inventory.js'), '0.60.26 deepseek → Ollama only with an installed model'],
+  [I('guardian/lib/dispatcher.js'), I('guardian/lib/provider-routing.js'), '0.60.26 deepseekLocal(names, want)'],
+  [I('idearium/api/index.js'), I('lib/phase-cost.js'), '0.60.27 AG1a GET /phases/cost (_require)'],
+  [I('idearium/repo/build-plan.js'), I('lib/phase-cost.js'), '0.60.27 AG1a each Plan step carries its cost (createRequire)'],
+  [I('idearium/api/index.js'), I('lib/economy/tokens.js'), '0.60.27 AG1a _tokEst: tokens estimated on each call row'],
+  [I('guardian/server.js'), I('guardian/lib/provider-ready.js'), '0.60.28 PF1 GET /api/providers/ready (readiness)'],
+  [I('idearium/api/index.js'), I('lib/run-ready.js'), '0.60.28 PF1 _phaseBuild: apply(rungs, ready, { planner })'],
+  [I('lib/agent-providers.js'), I('guardian/server.js'), '0.60.28 PF1 guardianReady(): HTTP GET :7820/api/providers/ready'],
+  [I('idearium/api/index.js'), I('lib/phase-plan.js'), '0.60.28 PF2 derivePlan when no planner is ready or it failed'],
+  [I('idearium/api/index.js'), I('idearium/repo/phase-mapping.js'), '0.60.29 PM POST/GET /phases/map (await import) — runMapping'],
+  [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), '0.60.29 PM HTTP POST/GET /api/repos/:uuid/phases/map — the Phases tab button'],
 ];
 
 function mapBuildSurface(driver) {

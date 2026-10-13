@@ -213,6 +213,10 @@ async function ppRunLoad() {
 // the plan (files → registry components, exports, conditions), why a plan was refused, what a coder dropped
 function _ppPlanned(l) {
   const out = [];
+  // 0.60.28 PF1 — ready before run: what was left off or put last before the first agent call, and why
+  if (l.ready && l.ready.line) out.push(`<div class="pp-against${(l.ready.dropped || []).length || l.state === 'refused' ? ' warn' : ''}">ready: ${escapeHtml(l.ready.line)}</div>`);
+  // 0.60.28 PF2 — no planner could plan it: Nexus planned it from the phase itself, one file per request
+  if (l.derived) out.push(`<div class="pp-against">◇ planned without a model${l.derivedNote ? ` — ${escapeHtml(l.derivedNote)}` : ''}</div>`);
   if (l.planning && l.state === 'building') out.push(`<div class="pp-against">${l.planning.plan ? '◇ plan, then code' : 'no plan'} — ${escapeHtml(l.planning.why || '')}</div>`);
   if (l.system && l.system.conflict) out.push(`<div class="pp-against warn">system: ${escapeHtml(l.system.conflict)}</div>`);
   else if (l.system && l.system.system && l.state === 'building') out.push(`<div class="pp-against">system: ${escapeHtml(l.system.system)} (${escapeHtml(l.system.why || '')})</div>`);
@@ -258,6 +262,7 @@ function _planPaint() {
       ${_ppTimes(s)}
       ${s.failed && !done ? `<div class="pp-why" title="${escapeHtml(s.failed.error || s.failed.state)}">${escapeHtml(s.failed.state)}${s.failed.error ? ` — ${escapeHtml(String(s.failed.error).slice(0, 160))}` : ''}</div>` : ''}
       ${open ? `<div class="pp-detail"><div class="pp-meta">${escapeHtml(s.key)} · ${escapeHtml(String(s.map).split('/').pop())} · gate: ${escapeHtml(s.gate || 'all passed')}${s.failed ? ` · <span style="color:var(--coral)">${escapeHtml(s.failed.state)}: ${escapeHtml(s.failed.error || '')}</span>` : ''}</div>
+        ${s.cost ? `<div class="pp-against" title="${escapeHtml(`${s.cost.runs} run(s) · tokens: ${s.cost.method || 'estimate'} — 0.60.27 AG1a: agents used as little as possible, counted`)}">agents: ${escapeHtml(s.cost.line)}</div>` : ''}
         ${done ? '' : `<button class="pp-go" onclick="event.stopPropagation();planBuild('${escapeHtml(s.map)}','${escapeHtml(s.key)}')">▶ build</button>`}
         ${_ledgerHtml(s.ledger || [])}</div>` : ''}
     </div>`;

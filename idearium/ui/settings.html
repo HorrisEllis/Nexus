@@ -300,6 +300,37 @@ async function rtSet(key, value) {
 }
 // 0.60.20 — James: "start lean? why not just have that a toggle? i want to test it now" · "idearium for the lean toggle".
 // One switch: the services a build does not use stop now and stay stopped at every start (npm run start:all reads it).
+// 0.60.25 — James: "i have like 9 or 12 accounts … use routing each time tokens run out" · "check the accounts, account
+// routing, fallback routing." Per provider: the accounts Clear Glass knows, in the order the chain uses them; ↑↓ to order,
+// a checkbox to include; Save. An account resting at its limit is shown with when it comes back.
+const ACCT = { provider: 'claude', d: null, order: [] };
+async function acctLoad(provider) {
+  const el = document.getElementById('acct-card'); if (!el) return;
+  if (provider) ACCT.provider = provider;
+  let d; try { d = await api(`/api/accounts/chain?provider=${encodeURIComponent(ACCT.provider)}`); d = d.data || d; } catch (e) { el.innerHTML = `<h3><span class="grow">Accounts — fallback chain</span></h3><div class="empty">${esc(e.message)}</div>`; return; }
+  ACCT.d = d;
+  const known = (d.accounts || []).map(a => a.id);
+  ACCT.order = [...(d.chain || []), ...known.filter(k => !(d.chain || []).includes(k))];
+  acctPaint();
+}
+function acctPaint() {
+  const el = document.getElementById('acct-card'); const d = ACCT.d; if (!el || !d) return;
+  const label = (id) => ((d.accounts || []).find(a => a.id === id) || {}).label || id;
+  const rest = new Map((d.exhausted || []).map(x => [x.account, x]));
+  el.innerHTML = `<h3><span class="grow">Accounts — fallback chain</span><select id="acct-prov">${['claude', 'chatgpt', 'gemini', 'deepseek', 'perplexity'].map(p => `<option ${p === ACCT.provider ? 'selected' : ''}>${p}</option>`).join('')}</select></h3>
+    <div class="kv">Jobs for ${esc(ACCT.provider)} use the first account; when its tab says the limit is reached, it rests (5 h) and the next takes over. All resting → the ladder moves to the next agent. Add accounts in Clear Glass (its account picker), then order them here.</div>
+    ${d.accountsError ? `<div class="kv"><span class="tag warn">${esc(d.accountsError)}</span></div>` : ''}
+    ${ACCT.order.length ? ACCT.order.map((id, i) => `<div class="row"><div><label><input type="checkbox" data-acct-on="${esc(id)}" ${(d.chain || []).includes(id) || !(d.chain || []).length ? 'checked' : ''}> ${i + 1}. ${esc(label(id))}</label>${d.current === id ? ' <span class="tag ok">in use</span>' : ''}${rest.has(id) ? ` <span class="tag warn" title="${esc(rest.get(id).why)}">resting until ${esc(new Date(rest.get(id).until).toLocaleTimeString())}</span> <button class="ap-chip" data-acct-wake="${esc(id)}">wake</button>` : ''}</div><div class="ctl"><button class="ap-chip" data-acct-up="${i}">↑</button><button class="ap-chip" data-acct-down="${i}">↓</button></div><div class="ctl"></div></div>`).join('') : '<div class="empty">no accounts for this provider in Clear Glass yet</div>'}
+    <div class="ap-chips"><button class="ap-chip on" id="acct-save">save chain</button></div>`;
+  document.getElementById('acct-prov').onchange = (e) => acctLoad(e.target.value);
+  for (const b of el.querySelectorAll('[data-acct-up],[data-acct-down]')) b.onclick = () => { const i = Number(b.dataset.acctUp ?? b.dataset.acctDown), j = b.dataset.acctUp != null ? i - 1 : i + 1; if (j < 0 || j >= ACCT.order.length) return; [ACCT.order[i], ACCT.order[j]] = [ACCT.order[j], ACCT.order[i]]; acctPaint(); };
+  for (const b of el.querySelectorAll('[data-acct-wake]')) b.onclick = async () => { try { await post('/api/accounts/rest', { provider: ACCT.provider, account: b.dataset.acctWake, clear: true }); toast('awake', 'ok'); } catch (e) { toast(e.message, 'bad'); } acctLoad(); };
+  document.getElementById('acct-save').onclick = async () => {
+    const on = new Set([...el.querySelectorAll('[data-acct-on]')].filter(x => x.checked).map(x => x.dataset.acctOn));
+    try { await post('/api/accounts/chain', { provider: ACCT.provider, accounts: ACCT.order.filter(id => on.has(id)) }); toast(`${ACCT.provider} chain saved`, 'ok'); } catch (e) { toast(`not saved: ${e.message}`, 'bad'); }
+    acctLoad();
+  };
+}
 async function leanLoad() {
   const el = document.getElementById('lean-card'); if (!el) return;
   let d; try { d = await api('/api/system/lean'); d = d.data || d; } catch (e) { el.innerHTML = `<h3><span class="grow">Lean mode</span></h3><div class="empty">could not read it: ${esc(e.message)}</div>`; return; }
@@ -324,7 +355,7 @@ async function renderRouting() {
   const row = (k, desc, ctl) => `<div class="row"><div><div class="k">routing.${k}</div><div class="d">${desc}</div></div><div class="ctl">${ctl}</div><div class="ctl"></div></div>`;
   const num = (k, v, min, max) => `<input type="number" data-rt="${k}" value="${esc(v)}" min="${min}" max="${max}">`;
   const br = (d.breakers || []);
-  $('body').innerHTML = `<div class="card" id="lean-card"><h3><span class="grow">Lean mode</span></h3><div class="kv">reading…</div></div><div class="card"><h3><span class="grow">Mode</span><span class="tag">${esc(p.mode)}</span></h3><div class="ap-chips">${Object.entries(RT_MODES).map(([m, t]) => `<button class="ap-chip ${p.mode === m ? 'on' : ''}" data-rt-mode="${m}" title="${esc(t)}">${esc(m)}</button>`).join('')}</div><div class="kv">${esc(RT_MODES[p.mode])}</div></div>
+  $('body').innerHTML = `<div class="card" id="acct-card"><h3><span class="grow">Accounts — fallback chain</span></h3><div class="kv">reading…</div></div><div class="card" id="lean-card"><h3><span class="grow">Lean mode</span></h3><div class="kv">reading…</div></div><div class="card"><h3><span class="grow">Mode</span><span class="tag">${esc(p.mode)}</span></h3><div class="ap-chips">${Object.entries(RT_MODES).map(([m, t]) => `<button class="ap-chip ${p.mode === m ? 'on' : ''}" data-rt-mode="${m}" title="${esc(t)}">${esc(m)}</button>`).join('')}</div><div class="kv">${esc(RT_MODES[p.mode])}</div></div>
     <div class="card"><h3><span class="grow">Fallback chain</span></h3>${row('chain', 'tried in this order after the chosen agent (and the block\'s own <code>fallback:</code> in blocks.yaml)', `<input type="text" data-rt="chain" value="${esc(p.chain.join(','))}">`)}</div>
     <div class="card"><h3><span class="grow">Ollama models</span></h3>${row('ollama_models', 'each listed model is its own candidate, learned separately (e.g. qwen2.5-coder:3b,qwen2.5-coder:7b); empty = the hat\'s model', `<input type="text" data-rt="ollama_models" value="${esc((p.ollamaModels || []).join(','))}">`)}${row('learn_min_records', 'outcomes needed for a chunk type before learned mode reorders it', `<input type="number" data-rt="learn_min_records" value="${esc(p.learnMinRecords)}" min="1" max="1000">`)}
       <div id="rt-learned" class="kv">loading what has been learned…</div></div>
@@ -361,6 +392,7 @@ async function renderRouting() {
     <div class="card"><h3><span class="grow">The route per block</span><span class="tag">${(d.blocks || []).length} blocks</span></h3>
       ${(d.blocks || []).map(b => `<div class="row"><div><div class="k">${esc(b.id)}</div><div class="d">${esc(b.title)}</div></div><div class="ctl">${b.route.map(r => `<span class="tag" title="${esc(r.why)}">${esc(r.provider)}</span>`).join(' → ')}${b.skipped.length ? ` <span class="kv">skipped ${b.skipped.map(x => esc(x.provider)).join(', ')}</span>` : ''}</div><div class="ctl"></div></div>`).join('')}</div>`;
   leanLoad();   // 0.60.20
+  acctLoad();   // 0.60.25
   for (const b of $('body').querySelectorAll('[data-rt-mode]')) b.onclick = () => rtSet('mode', b.dataset.rtMode);
   for (const b of $('body').querySelectorAll('[data-rt-pc]')) b.onclick = () => rtSet('plan_code', b.dataset.rtPc);   // §0.60.0 PC1
   for (const b of $('body').querySelectorAll('[data-rt-rr]')) b.onclick = () => rtSet('reason_route', b.dataset.rtRr);   // 0.60.12 intent routing for reasoning

@@ -132,8 +132,21 @@ const RELAY_TO_INTELLIGENCE = new Set([
   'forge.patch.proposed', 'cortex.gap.resolved',
 ]);
 let _relayFail = { n: 0, lastWarn: 0 };
+// 0.60.26 — lean mode holds intelligence on purpose (lib/lean-mode.js). James's log warned "relay to intelligence:3753
+// failing (N dropped so far)" all session. While it is held the event is not sent at all; said once, re-read every 30s.
+let _leanHeld = { held: false, at: 0, said: false };
+function _intelligenceHeld() {
+  if (Date.now() - _leanHeld.at > 30000) {
+    _leanHeld.at = Date.now();
+    try { const l = require('../lib/lean-mode.js').read(); _leanHeld.held = l.on && l.hold.includes('intelligence'); } catch (_) { _leanHeld.held = false; }
+    if (_leanHeld.held && !_leanHeld.said) { _leanHeld.said = true; console.log('[cortex] intelligence is held by lean mode; its events are not relayed until lean is off'); }
+    if (!_leanHeld.held) _leanHeld.said = false;
+  }
+  return _leanHeld.held;
+}
 bus.on('*', (event) => {
   if (!event || !RELAY_TO_INTELLIGENCE.has(event.type)) return;
+  if (_intelligenceHeld()) return;
   const data = JSON.stringify({ type: event.type, payload: event.payload || {}, source: event.source, causedBy: event.causedBy });
   const rq = http.request({
     hostname: '127.0.0.1', port: IN_PORT, path: '/api/intelligence/bus', method: 'POST', timeout: 2000,

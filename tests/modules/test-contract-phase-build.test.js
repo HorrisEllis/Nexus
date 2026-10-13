@@ -77,7 +77,9 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
       { path: ph.files[0], new: true, layer: 'engine', purpose: 'keeps notes', exports: [{ name: 'add' }, { name: 'list' }], imports: [], steps: [`keep notes in memory${variant}`] },
       { path: ph.files[1], new: true, layer: 'test', purpose: 'tests notes', exports: [], imports: [`../${ph.files[0]}`], steps: ['require notes and check add'] },
     ], order: ph.files, conditions: [] });
+  let dispatchedTotal = 0;   // CP-06: every call the agent saw, never reset
   RA.dispatch = async (a) => {
+    dispatchedTotal++;
     if (/-plan\d+$/.test(a.session || '')) return { ok: true, text: '```json\n' + planOf() + '\n```', provider: 'claude', providerUsed: 'claude', elapsedMs: 3 };
     const file = (String(a.message).match(/^Write ONE file: (\S+)/m) || [])[1];
     sent.push({ file, session: a.session });
@@ -147,6 +149,71 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8').includes("key: 'repo.contract'"));
     assert.ok(/contract audit —/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
   });
+
+  // 0.60.27 AG1a — James: "as little as possible." The builds above, counted: each call's own row, tokens estimated at
+  // the source, the same count on the route, the Plan and the command
+  await test('CP-06', 'AG1a: the phase\'s agent calls and tokens are counted from the real build rows: route, Plan and command agree', async () => {
+    const g = await R('GET', `/api/repos/${repoUuid}/phases/cost?phase=${encodeURIComponent(ph.key)}&map=${encodeURIComponent(map)}`, {});
+    assert.strictEqual(g.status, 200, JSON.stringify(g.json).slice(0, 300));
+    const d = g.json.data || g.json, c = d.cost;
+    assert.ok(c.byRole.plan >= 1 && c.byRole.code >= 2 && c.calls === c.byRole.plan + c.byRole.code + c.byRole.review, JSON.stringify(c).slice(0, 500));
+    assert.ok(c.tokensIn > 0 && c.tokensOut > 0 && /estimate-v1/.test(c.method), `tokens estimated at the source: ${JSON.stringify({ i: c.tokensIn, o: c.tokensOut, m: c.method })}`);
+    assert.ok(c.runs.length >= 2 && c.runs.every(r => r.calls >= 1), 'each build run has its own count');
+    assert.ok(/calls? \(plan \d+ · code \d+/.test(d.line), d.line);
+    const all = await R('GET', `/api/repos/${repoUuid}/phases/cost`, {});
+    assert.ok(((all.json.data || all.json).phases || []).some(x => x.phase === ph.key && x.calls === c.calls), 'the all-phases view has the same count');
+    const plan = await R('GET', `/api/repos/${repoUuid}/plan?map=${encodeURIComponent(map)}`);
+    const st = ((plan.json.data || plan.json).steps || []).find(x => x.key === ph.key);
+    assert.ok(st && st.cost && st.cost.calls === c.calls, `the Plan shows the same count: ${JSON.stringify(st && st.cost)}`);
+    assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8').includes("key: 'repo.cost'") && /agents: \$\{escapeHtml\(s\.cost\.line\)\}/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
+    assert.strictEqual(c.calls, dispatchedTotal, `every dispatch the agent saw is counted once, no more: counted ${c.calls}, dispatched ${dispatchedTotal}`);
+    // the failed attempt says who failed (0.60.27: with no ladder it was recorded with no provider)
+    assert.ok(db.loadTable('idearium_phase_runs').filter(r => r.phase === ph.key && r.state === 'failed' && r.rung == null && /-c\d+-failed$/.test(r.uuid)).every(r => r.provider), 'every failed coder call names its agent');
+  });
+
+  // 0.60.28 PF1 + PF2 — James: "why doesn't this work yet?" → "A then B". Guardian says what is ready; the build reads
+  // it before its first agent call (a fake Guardian here: the readiness route's answer).
+  let readyAnswer = null;
+  const fakeGuardian = await listen((q) => (q.url.startsWith('/api/providers/ready') && readyAnswer ? { body: { ok: true, providers: readyAnswer } } : { status: 404, body: { error: 'stub' } }));
+  process.env.GUARDIAN_URL = `http://127.0.0.1:${fakeGuardian.address().port}`;
+
+  await test('CP-07', 'PF1+PF2: the planner is behind a sign-in wall, so no agent can plan — Nexus plans the phase itself and it is still built one file per request, through to proven', async () => {
+    readyAnswer = { claude: { ready: false, why: 'claude needs a sign-in in its Clear Glass tab (test)' } };
+    const before = dispatchedTotal;
+    const sessions = []; const orig = RA.dispatch; RA.dispatch = async (a) => { sessions.push(a.session); return orig(a); };
+    const rows = await build();
+    RA.dispatch = orig;
+    const started = rows.find(r => r.state === 'building');
+    assert.ok(started && started.ready && started.ready.checked && started.ready.planner && started.ready.planner.use === null && /sign-in/.test(started.ready.planner.why), JSON.stringify(started && started.ready));
+    assert.ok(!rows.some(r => r.state === 'planning'), `no planner was asked: ${states(rows)}`);
+    const pl = rows.find(r => r.state === 'planned' && r.derived);
+    assert.ok(pl && pl.plan && pl.plan.files.length === 2 && /without a model/.test(pl.planSummary) && /sign-in/.test(pl.note), states(rows));
+    assert.ok(rows.some(r => r.state === 'contract-complete'), `the phase still completes through its proof: ${states(rows)}`);
+    assert.ok(sessions.length >= 1 && sessions.every(x => !/-plan\d+$/.test(x)) && dispatchedTotal - before === sessions.length, `only coder requests went out: ${sessions.join(', ')}`);
+    const plan = await R('GET', `/api/repos/${repoUuid}/plan?map=${encodeURIComponent(map)}`);
+    const st = ((plan.json.data || plan.json).steps || []).find(x => x.key === ph.key);
+    assert.ok(st && st.ledger.some(l => l.derived) && st.ledger.some(l => l.ready && /without a model/.test(l.ready.line)), 'the Plan shows the readiness and the derived plan');
+    const UI = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8');
+    assert.ok(/ready: \$\{escapeHtml\(l\.ready\.line\)\}/.test(UI) && /planned without a model/.test(UI));
+  });
+
+  await test('CP-08', 'PF1: every agent on the ladder is not ready → the run does not start: refused before any agent call, with what to fix', async () => {
+    readyAnswer = { claude: { ready: false, why: 'claude needs a sign-in in its Clear Glass tab (test)' }, deepseek: { ready: false, why: 'every deepseek account is resting at its limit' } };
+    await R('POST', '/api/config', { key: 'routing.escalation', value: 'claude,deepseek' });
+    const before = dispatchedTotal;
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key });
+    await R('POST', '/api/config', { key: 'routing.escalation', value: '' });
+    assert.strictEqual(b.status, 409, JSON.stringify(b.json).slice(0, 400));
+    assert.ok(/no agent on the ladder can take a job now/.test(JSON.stringify(b.json)) && /sign-in/.test(JSON.stringify(b.json)) && /resting/.test(JSON.stringify(b.json)), JSON.stringify(b.json).slice(0, 500));
+    assert.strictEqual(dispatchedTotal, before, 'no agent was asked');
+    const refused = db.loadTable('idearium_phase_runs').filter(r => r.phase === ph.key && r.state === 'refused').pop();
+    assert.ok(refused && refused.ready && refused.ready.dropped.length === 2, JSON.stringify(refused).slice(0, 400));
+  });
+  delete process.env.GUARDIAN_URL;
+  await new Promise(x => fakeGuardian.close(x));
+
+  const PV = fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8');
+  if (!PV.includes("key: 'providers.ready'")) { failed++; console.log('  ✗ the providers.ready command row is missing'); }
 
   RA.dispatch = realDispatch;
   await new Promise(x => vers.close(x));

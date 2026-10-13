@@ -381,7 +381,10 @@ for (const f of files) {
   // identically and would have falsely blocked every commit touching any
   // file designed to start a real server on require() — caught before
   // this ever shipped, not after.
-  if (req.status !== 0 && req.signal !== 'SIGTERM') {
+  // §0.60.28 — the timeout's SIGTERM can also come back as exit status 143 (128 + 15) with no signal: guardian/server.js
+  // stays up until stopped and its process reports the stop that way. Found when a commit touching it was blocked as
+  // "crashes on require()" with nothing but a warning in its stderr. A stop by this probe's own timeout is not a crash.
+  if (req.status !== 0 && req.signal !== 'SIGTERM' && req.status !== 143) {
     const firstLine = (req.stderr || '').split('\n').find(l => /Error/.test(l)) || (req.stderr || '').split('\n')[0];
     // §BROWSER-GLOBAL — a ReferenceError naming window/document/navigator/
     // localStorage/sessionStorage/alert/confirm at module-load time means

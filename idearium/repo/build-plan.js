@@ -30,6 +30,11 @@
  *   runningMs  how long its current run has gone, while it builds
  * Each ledger row carries startedAt — when its run began — so the panel can say how far into the run it came.
  */
+import { createRequire } from 'module';
+const _req = createRequire(import.meta.url);
+// 0.60.27 AG1a — each phase says what it cost in agent calls and tokens (lib/phase-cost.js, pure, over the same rows)
+let _PC = null; try { _PC = _req('../../lib/phase-cost.js'); } catch (_) { _PC = null; }
+
 export const GATES = ['mapped', 'snapshot', 'dispatched', 'replied', 'landed', 'closed'];
 
 function _gatesFor(phase, runs) {
@@ -68,7 +73,10 @@ export function timesOf(phase, runs = [], now = Date.now()) {
   };
 }
 
-export function buildPlan({ phases = [], runs = [], order = null, now = Date.now() } = {}) {
+export function buildPlan({ phases = [], runs = [], rows = null, order = null, now = Date.now() } = {}) {
+  // 0.60.27 AG1a — the cost counts every call's own row (rows, unmerged); merged runs (one row per run) undercount
+  const rowsBy = new Map();
+  for (const r of rows || runs) { const k = `${r.map}::${r.phase}`; if (!rowsBy.has(k)) rowsBy.set(k, []); rowsBy.get(k).push(r); }
   const runsBy = new Map();
   for (const r of [...runs].sort((a, b) => (b.ts || 0) - (a.ts || 0))) {
     const k = `${r.map}::${r.phase}`;
@@ -85,11 +93,14 @@ export function buildPlan({ phases = [], runs = [], order = null, now = Date.now
     return {
       key: p.phase_key, uuid: p.uuid || null, map: p.map, title: p.title || p.name || p.phase_key, layer: p.layer || null, status: p.status, ...(p.shelf ? { shelf: true } : {}),
       ...g, runs: rs.length, times,
+      ...(_PC && (rowsBy.get(`${p.map}::${p.phase_key}`) || []).length ? (() => { const c = _PC.costOf(rowsBy.get(`${p.map}::${p.phase_key}`)); return c.calls ? { cost: { calls: c.calls, byRole: c.byRole, local: c.local, remote: c.remote, tokensIn: c.tokensIn, tokensOut: c.tokensOut, runs: c.runs.length, method: c.method, line: _PC.line(c) } } : {}; })() : {}),
       ledger: rs.slice().reverse().map(r => ({ ts: r.ts, startedAt: r.startedAt || null, runId: r.runId, ...(r.chunk ? { chunk: r.chunk, chunks: r.chunks, file: r.file || null } : {}), state: r.state, snapshot: r.snapshot || null, provider: r.provider || null, ...(r.route ? { route: r.route } : {}), ...(r.precedent ? { precedent: r.precedent } : {}), ...(r.against ? { against: r.against, overlaid: r.overlaid || [], againstNote: r.againstNote || null, leverage: r.leverage || null } : {}), ...(r.rung ? { rung: r.rung, rungs: r.rungs, attempt: r.attempt } : {}),
         // §0.60.0 PC1/PC2 — plan, then code: what the planner read and mapped, why a plan was refused, what a coder dropped
         ...(r.planning ? { planning: r.planning } : {}), ...(r.system ? { system: r.system } : {}), ...(r.grounding ? { grounding: r.grounding } : {}),
         ...(r.planSummary ? { planSummary: r.planSummary, plan: r.plan ? { system: r.plan.system || null, read: r.plan.read || [], intent: r.plan.intent, order: r.plan.order, files: (r.plan.files || []).map(f => ({ path: f.path, component: f.component, new: f.new, layer: f.layer, exports: (f.exports || []).map(e => e.name) })), conditions: (r.plan.conditions || []).map(c => c.says) } : null, warnings: r.warnings || [] } : {}),
         ...(r.problems ? { problems: r.problems } : {}), ...(r.missingExports ? { missingExports: r.missingExports } : {}), ...(r.planned ? { planned: true } : {}), ...(r.coderOrder ? { coderOrder: r.coderOrder, note: r.note || null } : {}),
+        // 0.60.28 PF1/PF2 — what was ready before the run, and a plan Nexus wrote without a model
+        ...(r.ready ? { ready: r.ready } : {}), ...(r.derived ? { derived: true, derivedNote: r.note || null } : {}),
         error: r.error || null, injected: r.injects ? r.injects.injected || [] : [], reply: r.reply ? String(r.reply).slice(0, 600) : null })),
     };
   });

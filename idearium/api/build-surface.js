@@ -320,7 +320,7 @@ export async function plan(deps, uuid, { map = null } = {}) {
   const texts = new Map(); try { for (const m of PH.mapsFor({ repo: r.repo, repoDir: r.dir }).maps) texts.set(m.path, m.text); } catch (_) {}
   phases = phases.map(p => ({ ...p, layer: layered[p.phase_key] || p.layer || null, ...(texts.has(p.map) ? (({ mapped, statusDate }) => ({ mappedOn: mapped, statusDate }))(PH.phaseDates(texts.get(p.map), p.phase_key)) : {}) }));
   const runs = deps.phaseRuns(uuid);
-  const out = BP.buildPlan({ phases, runs });
+  const out = BP.buildPlan({ phases, runs, rows: typeof deps.phaseRows === 'function' ? deps.phaseRows(uuid) : null });   // 0.60.27 AG1a — raw rows for the cost
   const planning = runs.filter(x => x.phase === 'PLAN' && (!map || x.map === map)).slice(0, 5);
   return ok({ repoUuid: uuid, map, ...out, planning });
 }

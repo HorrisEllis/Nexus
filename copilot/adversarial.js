@@ -146,6 +146,16 @@ async function run(stream = []) {
       return { skipped: true, reason: `memory ${mon.level()}` };
     }
   } catch (_) { /* no monitor: run as before */ }
+  // §0.60.26 — lean mode means only what a build needs runs (lib/lean-mode.js). James's 0.60.23 log: with lean on, the
+  // probe still loaded qwen2.5-coder:7b for 60–85s every ten minutes, the same model the build was waiting on.
+  try {
+    if (require('../lib/lean-mode.js').read().on) {
+      _leanSkipped = (_leanSkipped || 0) + 1;
+      if (_leanSkipped === 1) console.log('[copilot/adversarial] probe held — lean mode is on (turn it off in Idearium Settings to probe again)');
+      return { skipped: true, reason: 'lean mode' };
+    }
+    _leanSkipped = 0;
+  } catch (_) {}
   _running = true;
 
   const runId    = crypto.randomUUID();
@@ -223,6 +233,7 @@ const INTERVAL_MS = (() => {
 })();
 
 let _skipped = 0;
+let _leanSkipped = 0;
 
 function start(getStream) {
   if (_timer) return;

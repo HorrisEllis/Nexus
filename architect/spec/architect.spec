@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        architect
-    version:     1.0.0
+    version:     1.1.0   # 0.60.27 — matched to lib/version.js: 0.39.298 ARCHITECT index, 0.39.299 a component keeps its canvas place (MINOR); was 1.0.0
     foundation:  nexus-system-foundation@1.0.0
     port:        3747
     uuid:        nexus-architect-v1-0000-2026-0627-jamesbrooks-001

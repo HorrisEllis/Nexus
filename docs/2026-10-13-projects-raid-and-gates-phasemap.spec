@@ -240,6 +240,7 @@ spec:
       proof: "one MASTERMIND phase applied: the diff in the Versionium tab, the tests green, and its undo"
 
     PL5_specs_become_the_roadmap:
+      depends_on: [RF1_migration_proposed_as_phases]   # mapped from the files they share: RF1_migration_proposed_as_phases (idearium/repo/roadmap.js)
       layer: library
       systems: [idearium, loom]
       component: idearium.repo.spec-plan
@@ -251,6 +252,7 @@ spec:
         parse become the repo's Phases; plain specs become proposed phases (spec-plan derive) for him to accept (MX1).
       proof: "ERAVOS's specs appear in its Spec and Phases tabs; one accepted becomes a buildable phase"
     PL6_global_links_seen:
+      depends_on: [RF0_architecture_read]   # mapped from the files they share: RF0_architecture_read (lib/project-decompose.js)
       layer: library
       systems: [core]
       component: lib.component-store
@@ -315,6 +317,7 @@ spec:
         reaching the system it names (nothing subscribes today). Measured, then widened system by system.
       proof: "raid.route.decided for idearium arrives at idearium's declared hook; the registry shows the wire live"
     RD4_the_fulfilled_contract_is_one_file:
+      depends_on: [RD2_idearium_routes_through_raid]   # mapped from the files they share: RD2_idearium_routes_through_raid (cortex/core/raid/contract-intake.js)
       layer: library
       systems: [cortex]
       component: cortex.raid.contract-intake

@@ -2915,6 +2915,8 @@ if (nexusBus) {
           { name: 'guardian',   host: '127.0.0.1', port: 7820, path: '/events' },
           { name: 'diagnostic', host: '127.0.0.1', port: 7825, path: '/events' },
         ],
+        // 0.60.26 — a service lean mode holds is stopped on purpose: no reconnect storm, no warning every 30s
+        isHeld: (name) => { const l = require('../lib/lean-mode.js').read(); return l.on && l.hold.includes(name); },
       });
       _gapRelay.start();
       console.log('[gap-relay] relaying gap events from guardian:7820 + diagnostic:7825 → heal-loop');

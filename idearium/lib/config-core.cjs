@@ -178,6 +178,13 @@ const SCHEMA = {
     on_stall:        { default: 'retry', enum: ['retry', 'close'], copilot_writable: true, type: 'string' },
     retry_on_reject: { default: true, copilot_writable: true, type: 'boolean' },
     auto_retries:    { default: 2, min: 0, max: 10, copilot_writable: true, type: 'number' },
+    // 0.60.29 PM — James: "All the phases need to be mapped to files and dependencies. With nexus and all projects."
+    // The agent that maps phases is first scored on phases whose files are known; its files are written only when its
+    // precision reaches map_min_precision on map_min_scored phases (idearium/repo/phase-mapping.js). Done phases too: map_done.
+    map_min_precision: { default: 0.8, min: 0, max: 1, copilot_writable: false, type: 'number' },
+    map_min_scored:    { default: 5, min: 1, max: 50, copilot_writable: false, type: 'number' },
+    map_batch:         { default: 4, min: 1, max: 10, copilot_writable: true, type: 'number' },
+    map_done:          { default: false, copilot_writable: false, type: 'boolean' },
   },
   desktop: {
     ram_mb:  { default: 4096, min: 512, max: 65536, copilot_writable: true, type: 'number' },

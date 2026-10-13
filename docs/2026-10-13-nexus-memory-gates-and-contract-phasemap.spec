@@ -118,10 +118,11 @@ spec:
       does: "schedule(): every READY (or STALE) brick runs — independent ones concurrently — its run { tool, args } through lib/agent-tools executeTool (the one registry: copilot tools, clear-glass/automation.js · macro.js · browser-automation.js, execution/run-pipeline.js · run-chain.js · run-closed-loop.js, nexus/command.js); output recorded as evidence; the gate checked; repeat until nothing is ready. A brick whose kind of work has no executor is set aside and said. contract run."
       proof: "test-contract-gates CC-19 (two independent bricks overlap in time; outputs recorded; complete by the evaluator; a no-executor brick reported)"
     EX0_executors_he_already_built:
+      depends_on: [SC0_scheduler]   # mapped from the files they share: SC0_scheduler (cortex/core/raid/contract-gates.js)
       status: "agent + phase adapters and the Build integration DONE — 0.60.18 (EX0a–f); glass and pipeline executors OPEN; the live update-system run with Ollama is his (CHANGELOG-0.60.18)"
       builds_on: "lib/agent-tools/tools/* (registered) · BrainOS workflows · Clear Glass automation nodes + macros (clear-glass/src/automation/*, src/macros) · the phase pipeline (plan → code) · the model door (agent work by kind)"
       does: "One executor kind per thing that exists: tool (done), agent (the door: a brick's kind picks the model — 0.60.9 routing), glass (a Clear Glass automation or macro on a named tab), pipeline (a BrainOS / Idearium workflow), phase (an Idearium phase build). No new runner: each is an adapter onto what is already there."
-      james: '"Yes. Build the agent and phase adapters next, then wire Idearium\'s phase build through the contract scheduler... build and test the adapters independently first, then connect the phase-build action." · "the scheduler must distinguish a failed task from a task that has no available executor. The latter should be reported as blocked or unsupported, not repeatedly retried or incorrectly marked complete." · "Keep the existing tool registry as the execution boundary, avoid duplicating routing logic and make the first real phase build produce an auditable record of every brick, dependency, checkpoint and gate."'
+      james: '"Yes. Build the agent and phase adapters next, then wire Idearium''s phase build through the contract scheduler... build and test the adapters independently first, then connect the phase-build action." · "the scheduler must distinguish a failed task from a task that has no available executor. The latter should be reported as blocked or unsupported, not repeatedly retried or incorrectly marked complete." · "Keep the existing tool registry as the execution boundary, avoid duplicating routing logic and make the first real phase build produce an auditable record of every brick, dependency, checkpoint and gate."'
       chunks:
         EX0a_scheduler_outcomes:
           files: [cortex/core/raid/contract-gates.js]
@@ -146,18 +147,18 @@ spec:
 
 ## ADDENDUM 2026-10-13 — EX0 built (0.60.18)
 
-James: "Yes. Build the agent and phase adapters next, then wire Idearium's phase build through the contract scheduler... build and test the adapters independently first, then connect the phase-build action." His order was kept: EX0a–d were built and tested alone (test-contract-adapters 11/11) before EX0e touched _phaseBuild (test-contract-phase-build 5/5 on the real route).
+# James: "Yes. Build the agent and phase adapters next, then wire Idearium's phase build through the contract scheduler... build and test the adapters independently first, then connect the phase-build action." His order was kept: EX0a–d were built and tested alone (test-contract-adapters 11/11) before EX0e touched _phaseBuild (test-contract-phase-build 5/5 on the real route).
 
-- Decided by him: the order; blocked/unsupported is not failed; the tool registry stays the execution boundary; no
-  duplicated routing; an auditable record of every brick, dependency, checkpoint and gate.
-- The coder's calls, his to confirm:
-  - routing.contract_build is on by default. Off restores the sequential loop, which is kept.
-  - Contracts live in Idearium's data dir as state.
-  - An indivisible brick over every learned budget is tried anyway, its route saying so, rather than blocked. A budget
-    is a prediction, and his rule was "escalate or decompose".
-  - A transient provider failure no longer teaches Boundaries a size.
-- Drift from the map: none in scope. One real defect was found by CP-04: one provider error capped the learned budget,
-  and the next brick read as "too big". It is fixed and recorded in CHANGELOG-0.60.18.
-- Registration: contract-gates (owed since 0.60.15), contract-adapters, model-door and phase-plan are now in
-  loom/maps/raid-events-and-tools-map.js with their real edges, plus idearium/api as their consumer.
+# - Decided by him: the order; blocked/unsupported is not failed; the tool registry stays the execution boundary; no
+#   duplicated routing; an auditable record of every brick, dependency, checkpoint and gate.
+# - The coder's calls, his to confirm:
+#   - routing.contract_build is on by default. Off restores the sequential loop, which is kept.
+#   - Contracts live in Idearium's data dir as state.
+#   - An indivisible brick over every learned budget is tried anyway, its route saying so, rather than blocked. A budget
+#     is a prediction, and his rule was "escalate or decompose".
+#   - A transient provider failure no longer teaches Boundaries a size.
+# - Drift from the map: none in scope. One real defect was found by CP-04: one provider error capped the learned budget,
+#   and the next brick read as "too big". It is fixed and recorded in CHANGELOG-0.60.18.
+# - Registration: contract-gates (owed since 0.60.15), contract-adapters, model-door and phase-plan are now in
+#   loom/maps/raid-events-and-tools-map.js with their real edges, plus idearium/api as their consumer.
 

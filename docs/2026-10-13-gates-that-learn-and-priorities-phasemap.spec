@@ -124,29 +124,217 @@ phasemap:
 
 ## ADDENDUM 2026-10-13 — retry button built (0.60.22); four asks mapped
 
-James: "maybe add a retry button. consolidate the intelligence and debug system. notes and ideas one fully built feature. phases and specs? it would be nice to use agents intentionally for what theyre best at. as little as possible. like spread agents out opimally for what theyre best at. less tokens from you, the better. … i have like 9 or 12 accounts, and i would love to be able to add them to clearglass and use routing each time tokens run out. like account routing and fallback chaining"
+# James: "maybe add a retry button. consolidate the intelligence and debug system. notes and ideas one fully built feature. phases and specs? it would be nice to use agents intentionally for what theyre best at. as little as possible. like spread agents out opimally for what theyre best at. less tokens from you, the better. … i have like 9 or 12 accounts, and i would love to be able to add them to clearglass and use routing each time tokens run out. like account routing and fallback chaining"
 
-- RB0 retry button: DONE 0.60.22. A failed or stalled phase task in the repo's task panel has ↻ retry, which calls the Build route. lib/repo-activity.js keeps map and phase on the task.
-- AC1 account fallback chaining (= ID1 identities + SD5 account fallback; the coder recommends it next): an ordered chain of accounts per provider. When a tab reports its limit, Guardian marks that account exhausted until its reset time and dispatches the job to the next account's tab (its own profile partition). Proof: the limit reached on account 1 moves the job to account 2 with no lost job.
-- AG1 agents for what they are best at, as little as possible (folds RT1): the door's learned order already ranks per kind. The default is cheap and local first; a reasoning agent only plans, reviews and repairs when a deterministic check failed. Calls per phase are counted, so "as little as possible" is measured.
-- UX1 consolidation: Intelligence + Debug become one tab, Notes + Ideas one feature (one list with kinds), and Phases shown beside their Spec sections. This is a reorganisation of existing screens. Nothing is lost: old views stay reachable until the new ones are proven.
+# - RB0 retry button: DONE 0.60.22. A failed or stalled phase task in the repo's task panel has ↻ retry, which calls the Build route. lib/repo-activity.js keeps map and phase on the task.
+# - AC1 account fallback chaining (= ID1 identities + SD5 account fallback; the coder recommends it next): an ordered chain of accounts per provider. When a tab reports its limit, Guardian marks that account exhausted until its reset time and dispatches the job to the next account's tab (its own profile partition). Proof: the limit reached on account 1 moves the job to account 2 with no lost job.
+# - AG1 agents for what they are best at, as little as possible (folds RT1): the door's learned order already ranks per kind. The default is cheap and local first; a reasoning agent only plans, reviews and repairs when a deterministic check failed. Calls per phase are counted, so "as little as possible" is measured.
+# - UX1 consolidation: Intelligence + Debug become one tab, Notes + Ideas one feature (one list with kinds), and Phases shown beside their Spec sections. This is a reorganisation of existing screens. Nothing is lost: old views stay reachable until the new ones are proven.
 
 ## ADDENDUM 2026-10-13 — the agent rule written down; Versionium ↔ GitHub mapped
 
-James: "yes use you for the cheapest but most effective intention." He then quoted the coder's line back as his decision:
-"Agents used for what they're best at, as little as possible. … cheap and local by default, a reasoning agent only for
-planning, review only when the cheap check fails."
-- AG1 decision: that rule is now written down in docs/CLAUDE.md ("Agents for what they are best at"). Building it into
-  the door (counting calls and tokens per phase, review gated on a failed check) is still OPEN.
-- VG1 Versionium ↔ git ↔ GitHub. His words: "what if we have the git integration integrated into versioium. use github
-  api or app id or what ever to sync ideairum with github?"
-  - Exists: lib/repo-git.js (0.39.265) does status, commit, push and pull with an SSH key or HTTPS token, and clone; the
-    Sync & CI tab; history import from .git (0.60.7).
-  - Missing:
-    1. A Versionium snapshot and a git commit are linked both ways (each snapshot records its commit sha, each commit
-       carries the snapshot id).
-    2. Sync on a schedule or on Apply, per repo.
-    3. The GitHub API with a fine-grained token first (simplest), so PRs, issues and CI status show in Sync & CI. A
-       GitHub App id is the later, multi-repo form.
-  - Status: OPEN, ranked after the live run and AC1.
+# James: "yes use you for the cheapest but most effective intention." He then quoted the coder's line back as his decision:
+# "Agents used for what they're best at, as little as possible. … cheap and local by default, a reasoning agent only for
+# planning, review only when the cheap check fails."
+# - AG1 decision: that rule is now written down in docs/CLAUDE.md ("Agents for what they are best at"). Building it into
+#   the door (counting calls and tokens per phase, review gated on a failed check) is still OPEN.
+# - VG1 Versionium ↔ git ↔ GitHub. His words: "what if we have the git integration integrated into versioium. use github
+#   api or app id or what ever to sync ideairum with github?"
+#   - Exists: lib/repo-git.js (0.39.265) does status, commit, push and pull with an SSH key or HTTPS token, and clone; the
+#     Sync & CI tab; history import from .git (0.60.7).
+#   - Missing:
+#     1. A Versionium snapshot and a git commit are linked both ways (each snapshot records its commit sha, each commit
+#        carries the snapshot id).
+#     2. Sync on a schedule or on Apply, per repo.
+#     3. The GitHub API with a fine-grained token first (simplest), so PRs, issues and CI status show in Sync & CI. A
+#        GitHub App id is the later, multi-repo form.
+#   - Status: OPEN, ranked after the live run and AC1.
 
+## ADDENDUM 2026-10-13 — AC1 account fallback chaining built (0.60.25)
+
+# James: "not working. can you get it working. check the accounts, account routing, fallback routing."
+
+# What his run showed (SB9): the ladder ran to rung 5, where claude sent back an empty reply, then rung 6, where deepseek
+# failed "not connected — no deepseek tab open in guardian". Ladder exhausted.
+
+# What was there:
+# - Account rules by hat, intent or repo (guardian/lib/account-routing.js, 0.60.2).
+# - Clear Glass switching a tab's account.
+# - Every tab's heartbeat reporting `usage.limited`.
+
+# What was missing:
+# - Anything that acts on a limit.
+# - Opening a missing tab.
+
+# Built:
+# - The chain is a provider's every-job rules, highest priority first.
+# - A tab that reports its limit makes its account rest (5 h). The next account takes the job, and the run says why.
+# - When every account is resting, the job fails as rate-limit and the ladder moves to the next agent.
+# - A job whose provider has no tab asks Clear Glass to open it.
+# - Where to set it:
+#   - guardian GET/POST /api/accounts/chain and POST /api/accounts/rest;
+#   - Idearium /api/accounts/* (passes through to Guardian);
+#   - the command row accounts.chain;
+#   - Idearium → Settings → Routing → Accounts (order them, save; wake a resting one).
+
+# To confirm:
+# - Claude's empty reply in that run has another cause. Possibly its tab was signed out or at its limit; the next run's
+#   rows will say which.
+# - The 5 h rest is a default. A reset time read from the banner would be better.
+
+
+## ADDENDUM 2026-10-13 — his 0.60.23 log, fixed line by line (0.60.26)
+
+# James: "next. fix anything you can." He pasted the whole PowerShell log of a 0.60.23 run with lean mode on.
+
+# What the log showed, and what changed:
+# - The gap-relay (orchestrator) reconnected to diagnostic :7825 every 30 s, and cortex warned "relay to
+#   intelligence:3753 failing". Lean mode holds both on purpose.
+#   - Now both read lib/lean-mode.js. A held target is said once and left alone, and they reconnect by themselves when
+#     lean is off.
+#   - A source that is really down still warns (§1.2), once a minute.
+# - raid-officiator sent the same nine staged drops to Claude on every boot (in-memory dedup only); each came back "no real
+#   agent response". Now each failure is persisted beside the intake dir (officiator-attempts.json, state, never
+#   committed):
+#   - backoff of 10 min, doubling;
+#   - parked after 4 tries (said once);
+#   - a tick stops at the first unanswered drop rather than sending the rest to the same silent agent;
+#   - "no available agent" spends no attempt.
+# - The copilot adversarial probe loaded qwen2.5-coder:7b for 60–85 s every ten minutes beside the build. It is held while
+#   lean mode is on (the memory gate was already there).
+# - A deepseek job with no tab went to Ollama as deepseek-coder-v2, which is not installed on his machine (HTTP 404). Then it
+#   waited 120 s.
+#   - Now the Ollama inventory is read first, and only an installed deepseek model is used.
+#   - With none installed, the job takes the tab path, which opens the tab (AC1, 0.60.25).
+
+# Checked, not changed:
+# - The "nexus" spec made on each sync is the parent index (NEXUS.md) re-versioned when a system changes; the old version
+#   is purged right after (nexus-self.js purgeSpecsOf). One spec, not a growing pile.
+# - Eros is in-process (Erosmancer events), not a service lean mode can hold. Memory returned to ok by itself each time.
+# - "Claude reply element not found" needs his ◎ pick in Clear Glass once. It cannot be fixed without seeing the page.
+
+# Proof: test-lean-quiet 5/5, test-raid-officiator 15/15 (OFF-BACKOFF), test-dispatcher-deepseek-ncp 4/4 (DSK-003/004).
+#
+# Also fixed (the coder's own debt): three phasemaps had stopped parsing as YAML because the coder's addenda were
+# written as bare prose (request-spine from line 805, nexus-memory-gates-and-contract from line 147, this one from line
+# 125). They are now `# `-commented, as this repo's other phasemaps write addenda. No word changed, and loom reads the
+# same phases (28, 12, 4). There were two quoting slips: `Idearium\'s` (YAML single quotes double the quote) and an
+# unquoted `chunks[]` inside a flow list.
+
+## ADDENDUM 2026-10-13 — AG1a mapped and built: agent calls and tokens counted per phase (0.60.27)
+
+# James: "next. fix anything you can." then "conintue". The coder picked AG1's counting half as the next piece. It was
+# OPEN since the agent rule was written down, and it is what makes "as little as possible" a number (docs/CLAUDE.md:
+# "Count it.").
+# - Reuse:
+#   - every agent call of a phase build already writes an idearium_phase_runs row: 'planning' for the planner, an
+#     attempt row with its rung for a coder, and 'reviewing' for a reviewer;
+#   - lib/economy/tokens.js estimate() is the token estimate;
+#   - lib/run-watch.js runsOf() groups the rows by run.
+# - AG1a, built:
+#   - the rows carry tokensIn/tokensOut (estimate-v1) and replyChars at the source;
+#   - lib/phase-cost.js costOf(rows) gives:
+#     - calls by role (plan/code/review) and by agent;
+#     - local vs remote;
+#     - tokens in and out;
+#     - per run, and the phase total.
+#   - Older rows without estimates use chars/4, and the result says so.
+#   - Where it shows:
+#     - route GET /api/repos/:uuid/phases/cost;
+#     - command repo cost;
+#     - the Plan panel: one line per phase, "agents: N calls (plan p · code c · review r) · L local · R remote ·
+#       ~T tokens".
+# - AG1b, still OPEN: review only after a cheap check failed. Today a draft review runs whenever reviewing is on.
+# - Found by the count (0.60.27): CP-06 counted 7 calls where the stubbed agent saw 8. With no ladder (a fixed backend), a
+#   failed coder call whose reply did not name its agent was written with no provider, so the record could not say who
+#   failed. It now names the backend it was sent to. CP-06 asserts that the calls counted equal the dispatches.
+# - Source changes: idearium/api/index.js (_tokEst, the three call rows, _phaseRows, the route);
+#   idearium/repo/build-plan.js (rows, cost); idearium/api/build-surface.js (phaseRows); idearium/ui/js/plan-panel.js;
+#   idearium/cli/route-commands.js (repo.cost); loom/maps/build-surface-map.js (phase-cost → run-watch; api, build-plan →
+#   phase-cost; api → economy/tokens).
+
+## ADDENDUM 2026-10-13 — why the pipeline doesn't work yet; PF1 ready before run, PF2 a plan without a model
+
+# James: "can we work on inventing anything that will get this pipeline going. like why doesn't this work yet?"
+#
+# The coder's reading of every run he pasted this session:
+# - The agents answer: in these logs ChatGPT finished 38 jobs and Gemini 16.
+# - The pipeline gambles twice.
+#   1. It starts a run without knowing its parts are ready.
+#      - SB9: the ladder climbed to claude, whose page needed his ◎ pick (an empty reply), then to deepseek, which had
+#        no tab and was behind a sign-in wall. Ladder exhausted.
+#      - BL30: the planner was asked while memory was critical, and the request was dropped.
+#   2. When the planner fails, the build falls back to its hardest mode, "built whole as before": one chat agent explores
+#      the whole phase alone, one tool call every 15 s. BL30 ended there, as a placeholder in the wrong place,
+#      `incomplete`.
+# - Both invert his rule ("deterministic first"): the run asks an agent first and finds out afterwards.
+#
+# The coder proposed two inventions and recommended A first. He chose: "A then B (Recommended)" (2026-10-13).
+#
+# - PF1 ready before run.
+#   - One check before the first agent call:
+#     - Guardian answers;
+#     - each rung's agent is not behind a sign-in wall, has no job waiting on his ◎ pick, and has an account left in
+#       its chain;
+#     - an Ollama rung's model is installed and memory is not critical;
+#     - a disconnected tab is fine: it is opened on demand (0.60.25).
+#   - Rungs that are not ready are dropped before the run, said on the Plan.
+#   - The planner is the configured one if ready, else the first ready remote rung.
+#   - No ready rung → the run does not start: state not-ready, with what to fix.
+#   - Guardian owns its facts (GET /api/providers/ready, guardian/lib/provider-ready.js). The run's check is pure
+#     (lib/run-ready.js).
+#   - Delivery order: backend → route → command (providers.ready) → UI (the not-ready / ready row on the Plan).
+# - PF2 a plan without a model.
+#   - When no planner is ready, or the planner fails, Nexus writes the plan itself (lib/phase-plan.js derive), from:
+#     - the files the phase names, else the paths and registry components its text names;
+#     - the exports a file it edits already has;
+#     - `does:` as its steps;
+#     - `proof:` as its conditions.
+#   - The build stays one file per request, through the same contract path, and is never handed whole to one agent.
+#     The precedent one level up: idearium/repo/spec-plan.js derivePlan.
+
+## ADDENDUM 2026-10-13 — PM: every phase mapped to its files and dependencies, Nexus and every project
+
+# James: "All the phases need to be mapped to files and dependencies. With nexus and all projects."
+#
+# Measured first, on Nexus's own phasemaps (the loom parser, docs/*phasemap.spec): 1351 phases, 777 open.
+# - Of the open ones: 370 name files:; 184 write file paths in their text but name none; 223 write no path at all;
+#   195 have no depends_on.
+# - The text is not the answer. On the phases that do name their files (ground truth), only 172 of the 644 paths in
+#   their text are among their files (27%). Phrases that suggest a file is being built score 23%. A path in a phase's
+#   prose is as often a reference ("checked against", "mirrors", "already in") as a target.
+# - That also condemns 0.60.28's derivePlan, which took paths from the text when files: was missing. Fixed here
+#   (PM0): it plans only the files a phase names.
+#
+# The design (the coder's; his rule decides the split, "deterministic first … a reasoning agent only plans"):
+# - PM0: derivePlan uses files: only. A phase without it is not planned without a model.
+# - PM1 candidates (code): the paths a phase writes, each marked as existing or new (its folder exists). Done phases are
+#   skipped unless asked.
+# - PM2 classify (model, through the learned door, Ollama first): a few phases per request. Each answer is JSON
+#   {files:[{path,new}]}, checked by code: safe paths, existing or under an existing folder.
+# - PM3 a gate that learns: before mapping, the same agent maps phases whose files are known, with their files hidden,
+#   and is scored (precision, recall). Its answers are written only when the precision reaches the threshold
+#   (phase_mapping.min_precision, 0.8). Otherwise they are kept as proposals and the report says why.
+# - PM4 dependencies (code): within a map, a phase depends on the nearest earlier phase that changes the same file.
+#   Existing depends_on is kept, and only what is missing is added.
+# - PM5 apply: files: and depends_on are added to the phase block, never replacing what is there, with a comment saying
+#   who mapped it and the measured precision. Through _phaseWrite (a nexus repo goes through the apply gate:
+#   snapshotted, reversible). A map that parsed before and would not after is refused.
+# - Order: backend (lib/phase-files.js, idearium/repo/phase-mapping.js) → route (POST/GET /api/repos/:uuid/phases/map)
+#   → command (repo map-phases) → UI (Phases tab: "Map files & dependencies", progress, the report).
+# - To confirm with him: the threshold, and whether done phases are mapped too (default: open phases only).
+# - Built (0.60.29):
+#   - PM0 derivePlan uses files: only (RR-10).
+#   - PM1–PM5: lib/phase-files.js and idearium/repo/phase-mapping.js; POST/GET /api/repos/:uuid/phases/map;
+#     `repo map-phases`; Phases tab "⇄ map files & dependencies" with its progress line.
+#   - Settings: repos.map_min_precision, map_min_scored, map_batch and map_done.
+# - Found while building:
+#   - Hub files: idearium/api/index.js is named by 118 phases and app.js by 57, so sharing one says nothing about order.
+#     A file named by at least max(8, 2% of the phases naming files) is not dependency evidence. A false depends_on
+#     blocks a phase.
+#   - A phase written on one line ({ … }) cannot take a key in place: 33 in Nexus. Not sent to the agent, and said.
+# - Applied to Nexus now, by code alone: 13 depends_on lines on open phases in 4 maps, from the files they share, each
+#   with its reason as a comment. Every map still parses and keeps its phase count.
+# - Not applied here: files: for the 407 open phases that name none. That needs the agent and its score, and it runs on
+#   his machine (Ollama first, through the door). The coder does not do this bulk mapping by hand (docs/CLAUDE.md, the
+#   agent rule).
