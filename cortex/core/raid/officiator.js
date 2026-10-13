@@ -60,6 +60,23 @@ let _running = false;
 // ago), not the only defense anymore.
 const _seen = new Set();
 
+// §0.60.26 — a drop that failed is retried with backoff, persisted. James's 0.60.23 log: every boot re-sent the same
+// nine staged drops to Claude (each failed: "no real agent response"), four boots in a row, because _seen is memory
+// only. Now each failure is written beside the intake dir; the next try waits BACKOFF_MS · 2^(n-1), capped, and after
+// MAX_ATTEMPTS the drop is parked (said once), never sent again until its record is cleared.
+const BACKOFF_MS = parseInt(process.env.OFFICIATOR_BACKOFF_MS || String(10 * 60 * 1000), 10);
+const MAX_ATTEMPTS = parseInt(process.env.OFFICIATOR_MAX_ATTEMPTS || '4', 10);
+const _fs = require('fs'), _path = require('path');
+function _attemptsFile() { return _path.join(_path.dirname(intake.INTAKE_DIR), 'officiator-attempts.json'); }
+function _readAttempts() { try { return JSON.parse(_fs.readFileSync(_attemptsFile(), 'utf8')) || {}; } catch (_) { return {}; } }
+function _writeAttempts(a) { try { _fs.mkdirSync(_path.dirname(_attemptsFile()), { recursive: true }); _fs.writeFileSync(_attemptsFile(), JSON.stringify(a, null, 2)); } catch (_) {} }
+/** due(rec, now) → may this drop be tried now (no record, or its backoff has passed and it is not parked) */
+function due(rec, now = Date.now()) {
+  if (!rec || !rec.n) return true;
+  if (rec.n >= MAX_ATTEMPTS) return false;
+  return now - (rec.at || 0) >= Math.min(BACKOFF_MS * 2 ** (rec.n - 1), 24 * 3600 * 1000);
+}
+
 // §FIXED 2026-09-02 — checked lib/intake.js's real stage()/read() shape
 // directly before writing this (not assumed): the drop object IS the
 // contract, flat — drop.dropId/state/summary/provenance/claims, not
@@ -295,16 +312,31 @@ async function tick() {
   _running = true;
   try {
     const drops = intake.list().filter(d => d.state === intake.STATE.STAGED && !d.officiated);
-    let synthesized = 0, failed = 0;
+    const attempts = _readAttempts();
+    let synthesized = 0, failed = 0, waiting = 0, parked = 0;
     for (const drop of drops) {
       const id = drop.dropId || drop.id;
       if (!id || _seen.has(id)) continue;
-      _seen.add(id);
+      const rec = attempts[id];
+      if (!due(rec)) { if (rec.n >= MAX_ATTEMPTS) parked++; else waiting++; continue; }
       const result = await officiate(drop);
-      if (result.ok) { synthesized++; console.log(`[${MODULE_ID}] synthesized contract ${result.queueId?.slice(0, 8)} from drop ${id.slice(0, 8)}`); }
-      else { failed++; console.warn(`[${MODULE_ID}] synthesis failed for drop ${id.slice(0, 8)}: ${result.reason}`); }
+      if (result.ok) {
+        _seen.add(id); synthesized++; if (rec) { delete attempts[id]; _writeAttempts(attempts); }
+        console.log(`[${MODULE_ID}] synthesized contract ${result.queueId?.slice(0, 8)} from drop ${id.slice(0, 8)}`);
+        continue;
+      }
+      failed++;
+      // no agent at all is not this drop's failure: no attempt is spent, and the rest wait for the next tick
+      if (/no available agent/.test(result.reason || '')) { console.warn(`[${MODULE_ID}] ${drops.length} drop(s) waiting: ${result.reason}`); break; }
+      const n = ((rec && rec.n) || 0) + 1;
+      attempts[id] = { n, at: Date.now(), reason: String(result.reason || '').slice(0, 200) };
+      _writeAttempts(attempts);
+      if (n >= MAX_ATTEMPTS) { _seen.add(id); console.warn(`[${MODULE_ID}] drop ${id.slice(0, 8)} parked after ${n} failed tries (${result.reason}); clear it in ${_attemptsFile()} to try again`); }
+      else console.warn(`[${MODULE_ID}] synthesis failed for drop ${id.slice(0, 8)} (try ${n}/${MAX_ATTEMPTS}, next in ${Math.round(Math.min(BACKOFF_MS * 2 ** (n - 1), 864e5) / 60000)} min): ${result.reason}`);
+      // the agent did not answer: the other drops would go to the same agent now; they wait for the next tick
+      if (/no real agent response/.test(result.reason || '')) break;
     }
-    return { ok: true, checked: drops.length, synthesized, failed };
+    return { ok: true, checked: drops.length, synthesized, failed, waiting, parked };
   } catch (e) {
     console.warn(`[${MODULE_ID}] tick failed, will retry next interval: ${e.message}`);
     return { ok: false, error: e.message };
@@ -325,4 +357,4 @@ function stop() {
   if (_timer) { clearInterval(_timer); _timer = null; }
 }
 
-module.exports = { start, stop, tick, officiate, synthesizeFromContext, MODULE_ID, VERSION };
+module.exports = { start, stop, tick, officiate, synthesizeFromContext, due, MAX_ATTEMPTS, MODULE_ID, VERSION };

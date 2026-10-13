@@ -222,7 +222,7 @@ function createProviderRouter(deps) {
   // like mistral does.
   async function _dispatchToDeepseek(job) {
     const BRIDGE_PORT = parseInt(process.env.OLLAMA_BRIDGE_PORT || '3749');
-    const model = process.env.DEEPSEEK_MODEL || 'deepseek-coder-v2';
+    const model = job._deepseekModel || process.env.DEEPSEEK_MODEL || 'deepseek-coder-v2';
     return new Promise(resolve => {
       const body = JSON.stringify({
         prompt: job.prompt || job.content || '',
@@ -286,7 +286,28 @@ function createProviderRouter(deps) {
     });
   }
 
-  return { chooseProvider, normaliseProvider, parseCommand, _dispatchToMistral, _dispatchToDeepseek, PROVIDER_ALIASES };
+  return { chooseProvider, normaliseProvider, parseCommand, _dispatchToMistral, _dispatchToDeepseek, deepseekLocal, PROVIDER_ALIASES };
 }
 
 module.exports = { createProviderRouter };
+
+/**
+ * deepseekLocal(names, want) — 0.60.26 — the installed Ollama model a deepseek job may use locally, or null.
+ * James's 0.60.23 log: "deepseek job → ollama-bridge :3749 (no NCP tab connected)", then Ollama HTTP 404 (no deepseek
+ * model pulled), then 120 s waiting for a tab. Only an installed model is used: the asked name (DEEPSEEK_MODEL) when it
+ * is installed (or names one installed tag), else the one installed deepseek coder, else any installed deepseek. None
+ * installed → null, and the job goes to the deepseek tab path, which opens the tab (0.60.25).
+ */
+function deepseekLocal(names = [], want = '') {
+  const list = (names || []).filter(Boolean);
+  if (want) {
+    if (list.includes(want)) return want;
+    const base = String(want).toLowerCase().split(':')[0];
+    const tagged = list.filter(n => n.toLowerCase().split(':')[0] === base);
+    if (tagged.length === 1) return tagged[0];
+  }
+  const ds = list.filter(n => /^deepseek/i.test(n));
+  return ds.find(n => /coder/i.test(n)) || ds[0] || null;
+}
+module.exports.deepseekLocal = deepseekLocal;
+

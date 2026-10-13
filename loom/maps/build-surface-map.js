@@ -121,6 +121,12 @@ const CONSUMERS = [
   [I('idearium/repo/spec-plan.js'), I('lib/spec-document.js'), '§RS9 derivePlan / planPrompt cut by the blocks; BOOKKEEPING'],
   [I('idearium/ui/js/app.js'), I('idearium/ui/js/code-surface.js'), '§CT5 the SSE handler → codeSurfaceOnEvent; renderRepoCode for the Code subtab'],
   [I('idearium/api/index.js'), I('idearium/repo/run-reconcile.js'), '§HP2 _reconcileRuns at boot (interruptedRows)'],
+  // 0.60.26 — what lean mode holds is stopped on purpose: the callers read it before retrying or loading a model
+  [I('orchestrator/orchestrator.js'), I('lib/lean-mode.js'), '0.60.26 gap-relay isHeld: no reconnect to a held diagnostic'],
+  [I('cortex/boot.js'), I('lib/lean-mode.js'), '0.60.26 _intelligenceHeld: no relay to a held intelligence'],
+  [I('copilot/adversarial.js'), I('lib/lean-mode.js'), '0.60.26 run(): the probe is held while lean is on'],
+  [I('guardian/lib/dispatcher.js'), I('ollama/lib/model-inventory.js'), '0.60.26 deepseek → Ollama only with an installed model'],
+  [I('guardian/lib/dispatcher.js'), I('guardian/lib/provider-routing.js'), '0.60.26 deepseekLocal(names, want)'],
 ];
 
 function mapBuildSurface(driver) {

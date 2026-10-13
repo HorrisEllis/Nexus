@@ -439,10 +439,20 @@ function createDispatcher(deps) {
     // connected browser tab wins; only fall back to the local ollama model
     // when no tab is connected — never removed, still a real, legitimate
     // option, just no longer unconditionally shadowing the browser path.
+    // §0.60.26 — only to an installed model. James's log: the bridge was sent "deepseek-coder-v2" with none pulled
+    // (HTTP 404), then the job sat 120 s. No deepseek model installed → the tab path below (it opens the tab).
+    let _dsLocal = null;
     if (job.provider === 'deepseek' && !ncp.isConnected('deepseek')) {
+      try {
+        const inv = await require('../../ollama/lib/model-inventory.js').inventory();
+        _dsLocal = inv.ok ? require('./provider-routing.js').deepseekLocal(inv.models.map(m => m.name), process.env.DEEPSEEK_MODEL || '') : null;
+      } catch (_) { _dsLocal = null; }
+      if (!_dsLocal) console.log('[guardian] deepseek job: no NCP tab and no deepseek model in Ollama → opening the deepseek tab');
+    }
+    if (_dsLocal) {
       updateJob(job.id, { status: 'dispatched', dispatchedAt: Date.now() });
-      console.log('[guardian] deepseek job → ollama-bridge :3749 (no NCP tab connected)');
-      dispatchToDeepseek(job).catch(e => {
+      console.log(`[guardian] deepseek job → ollama-bridge :3749 · ${_dsLocal} (no NCP tab connected)`);
+      dispatchToDeepseek({ ...job, _deepseekModel: _dsLocal }).catch(e => {
         updateJob(job.id, { status: 'error', error: e.message });
         bus.emit('guardian.job.error', { jobId: job.id, error: e.message, provider: 'deepseek' });
       });

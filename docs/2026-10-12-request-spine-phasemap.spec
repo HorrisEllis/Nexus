@@ -366,7 +366,7 @@ spec:
       status: OPEN
       james: '"Begin a .contract file using each block as chunks for each file that needs to be changed."'
       depends_on: [RQ7, RQ1]
-      files: [cortex/core/raid/contract-intake.js (BUILD_CONTRACT_SCHEMA gains chunks[] and a revision), cortex/core/raid/officiator.js, lib/phase-plan.js (parsePlan is the ancestor), lib/seam/spec-parser.js, cortex/schemas/schema.contract]
+      files: ["cortex/core/raid/contract-intake.js (BUILD_CONTRACT_SCHEMA gains chunks[] and a revision)", cortex/core/raid/officiator.js, lib/phase-plan.js (parsePlan is the ancestor), lib/seam/spec-parser.js, cortex/schemas/schema.contract]
       does: >-
         The satisfied obligations are synthesized into a manifest plus independently addressable chunks: { id, file,
         directory, lines [from, to], anchor { symbol, hash, revision }, change { from, to }, why, evidence[], dependsOn[],
@@ -804,14 +804,14 @@ spec:
 
 ## ADDENDUM 2026-10-13 — RQ9 · RQ12 · RQ15 · RQ21 partly delivered under another map (0.60.15–0.60.18)
 
-Two maps of one thing, surfaced and not collapsed. The contract phasemap
-(docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec, CT0–EX0) delivered:
-- RQ9, the chunked contract: .contract v2 bricks, split, learned budgets.
-- RQ12, the phase DAG: depends_on, the plan's import edges as edges.
-- RQ15, cells in parallel: schedule() runs independent bricks at once.
-- RQ21, the contract file is its record: the saved contract, checkpoints, audit.
+# Two maps of one thing, surfaced and not collapsed. The contract phasemap
+# (docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec, CT0–EX0) delivered:
+# - RQ9, the chunked contract: .contract v2 bricks, split, learned budgets.
+# - RQ12, the phase DAG: depends_on, the plan's import edges as edges.
+# - RQ15, cells in parallel: schedule() runs independent bricks at once.
+# - RQ21, the contract file is its record: the saved contract, checkpoints, audit.
 
-What these phases still own: RQ21's single fulfilled-contract file per request (RD4), and RQ15 beyond phase builds. RQ2,
-RQ3, RQ4 and RQ24 fold into GT1, and RQ6 into RT1, in docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
-(James: "each gate can route, diagnose, and retry also, failure modes and fault taxonomy to help nexus learn").
+# What these phases still own: RQ21's single fulfilled-contract file per request (RD4), and RQ15 beyond phase builds. RQ2,
+# RQ3, RQ4 and RQ24 fold into GT1, and RQ6 into RT1, in docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+# (James: "each gate can route, diagnose, and retry also, failure modes and fault taxonomy to help nexus learn").
 
