@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        intelligence
-    version:     1.0.0
+    version:     1.1.0   # 0.60.27 — matched to lib/version.js: 0.39.300 gap synthesis (intelligence/synthesis, /api/intelligence/synthesis*) (MINOR); was 1.0.0
     foundation:  nexus-system-foundation@1.0.0
     port:        :3753
     uuid:        nexus-intelligence-v1-0000-2026-0822-jamesbrooks-001

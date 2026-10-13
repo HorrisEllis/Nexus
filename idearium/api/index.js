@@ -24,6 +24,8 @@ import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
 const _access = _require('../lib/access.cjs');   // §0.58.0 IA0 — who may act on Idearium
+// 0.60.27 AG1a — an agent call's tokens, estimated where it happens (lib/economy/tokens.js estimate-v1; no vendor tokenizer)
+const _tokEst = (t) => { try { return t ? _require('../../lib/economy/tokens.js').estimate(String(t)) : 0; } catch (_) { return 0; } };
 // §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
@@ -605,6 +607,9 @@ function _toolsBrief(r) {
 }
 // Runs are append-only rows (one per state change) in idearium_phase_runs; the
 // latest row of each runId is the run.
+// 0.60.27 AG1a — every row, unmerged: _phaseRuns keeps one row per run (its latest state), and a count of agent calls
+// needs each call's own row (lib/phase-cost.js)
+function _phaseRows(repoUuid) { return loadTable('idearium_phase_runs').filter(r => r && r.repoUuid === repoUuid); }
 function _phaseRuns(repoUuid) {
   const by = new Map();
   for (const r of loadTable('idearium_phase_runs')) {
@@ -855,9 +860,13 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     }
     const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}), ...(missingExports ? { missingExports } : {}),
       error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : missingExports ? `${files[0]} came back without ${missingExports.join(', ')} — the plan says it exports ${missingExports.length === 1 ? 'it' : 'them'}` : null)),
-      provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || null,
+      // 0.60.27 — with no ladder a failed reply that does not name its agent was recorded with no provider (found by AG1a's
+      // count: one failed call missing). The call's own agent is known: the backend it was sent to.
+      provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || (dp && (dp.provider || (dp.backend === 'ollama' && dp.model ? `ollama:${dp.model}` : dp.backend))) || null,
       ...(rg ? { rung: ri + 1, rungs: rungs.length, attempt: tryNo, ...(r && r.toolErrors ? { toolErrors: true } : {}) } : {}),
-      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, promptChars: msg.length, ts: Date.now() };
+      reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, promptChars: msg.length,
+      // 0.60.27 AG1a — the call counted where it happens: estimated tokens in and out (lib/phase-cost.js sums them per phase)
+      replyChars: r && r.text ? String(r.text).length : 0, tokensIn: _tokEst(msg), tokensOut: _tokEst(r && r.text), ts: Date.now() };
     // §0.39.284 W3 — the tool calls of this run are kept on it, so the work surface can show what the agent used
     try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
     return { r, state, absent, dp, row, trigger: r && r.toolErrors ? 'tool-errors' : state };
@@ -944,7 +953,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const msg = PP.planPrompt({ phaseKey: phase, title: node.title, body: ctx.body, intent: note, files: expectFiles, registry, spec: specText,
         invariants: ctx.invariants, charter: [charterText, precedent.text].filter(Boolean).join('\n\n'), repoName: target.name, feedback,
         system, atlas, loom, reuse, lessons: learned.text, skeleton: (() => { try { return fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'registry-components.js')) && fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'interaction-contract.json')); } catch (_) { return false; } })() });
-      appendRow('idearium_phase_runs', { uuid: `${runId}-plan${n}-planning`, ...base, state: 'planning', snapshot: commitId, provider: planner, attempt: n, promptChars: msg.length,
+      appendRow('idearium_phase_runs', { uuid: `${runId}-plan${n}-planning`, ...base, state: 'planning', snapshot: commitId, provider: planner, attempt: n, promptChars: msg.length, tokensIn: _tokEst(msg),
         grounding: { system, registry: registry.length, atlas: atlas.length, loom: loom.length, reuse: reuse.map(x => x.file), lessons: learned.text ? learned.text.split('\n').length : 0, notes: regNotes }, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planning', snapshot: commitId, provider: planner });
       let r;
@@ -1294,7 +1303,7 @@ async function _reviewDraft({ r, state, absent, target, base, commitId, req, not
     return null;
   }
   const text = DR.reviewMessage({ repoName: target.name, title: base.title || base.phase, need: req && req.message ? req.message : message, files, absent: absent || [], note });
-  appendRow('idearium_phase_runs', { uuid: `${reviewRunId}-started`, ...rbase, state: 'reviewing', reviewer, draftFiles: files.map(f => f.path), snapshot: commitId, promptChars: text.length, ts: Date.now() });
+  appendRow('idearium_phase_runs', { uuid: `${reviewRunId}-started`, ...rbase, state: 'reviewing', reviewer, draftFiles: files.map(f => f.path), snapshot: commitId, promptChars: text.length, tokensIn: _tokEst(text), ts: Date.now() });
   getIdeaOS().emit('idearium.repo.phase.run', { ...rbase, state: 'reviewing', reviewer });
   const SH = _require('../../lib/shadow.js');
   const shadow = SH.declare({ step: 'phase.review', expects: { files: [...new Set([...files.map(f => f.path), ...(absent || [])])] }, subject: { repoUuid: target.uuid, map: base.map, phase: base.phase, runId: reviewRunId }, causedBy: `idearium.phases.build:${base.runId}` });
@@ -1307,7 +1316,7 @@ async function _reviewDraft({ r, state, absent, target, base, commitId, req, not
   else { const got = SH.settle(shadow, { files: ((rr.injects && rr.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { rstate = 'incomplete'; rabsent = got.absent.files; } }
   appendRow('idearium_phase_runs', { uuid: `${reviewRunId}-${rstate}`, ...rbase, state: rstate, reviewer, snapshot: commitId, ...(rabsent ? { absent: rabsent } : {}),
     error: rr && !rr.ok ? String(rr.error || 'review failed').slice(0, 500) : (rabsent ? `the review did not bring back ${rabsent.join(', ')}` : null),
-    provider: rr && (rr.providerUsed || rr.provider) || reviewer, reply: rr && rr.text ? String(rr.text).slice(0, 4000) : null,
+    provider: rr && (rr.providerUsed || rr.provider) || reviewer, reply: rr && rr.text ? String(rr.text).slice(0, 4000) : null, tokensOut: _tokEst(rr && rr.text),   // 0.60.27 AG1a — the review's answer, counted on its 'reviewing' call
     injects: rr && rr.injects ? { injected: (rr.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, ts: Date.now() });
   getIdeaOS().emit('idearium.repo.phase.run', { ...rbase, state: rstate, reviewer });
   return { state: rstate, reviewer };
@@ -1322,7 +1331,7 @@ function _buildSurfaceDeps() {
     getRepoLayer, repoDir: _repoDiskDir, versionium: _versionium, loadTable, appendRow, require: _require,
     emit: (t, d) => getIdeaOS().emit(t, d), RI: () => _require('../../lib/repo-inject.js'),
     config: (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } },
-    snapshot: (uuid, b) => _commitRepoSnapshotFor(uuid, b), phaseBuild: _phaseBuild, phaseRuns: _phaseRuns,
+    snapshot: (uuid, b) => _commitRepoSnapshotFor(uuid, b), phaseBuild: _phaseBuild, phaseRuns: _phaseRuns, phaseRows: _phaseRows,
   };
 }
 // §0.39.280 BS3 — "baseline deviation needs to recaclute each version or major file change"
@@ -2694,6 +2703,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','thread'],                'repo.thread'],   // §RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
+    ['GET',    ['api','repos',    ':uuid','phases','cost'],         'repo.phases.cost'],       // 0.60.27 AG1a — agent calls and tokens per phase
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
@@ -7205,6 +7215,20 @@ async function handle(req, res, route, query, body) {
         const L = CG.load(file);
         return ok(res, { repoUuid: params.uuid, phase: query.phase, file, audit: _require('../../cortex/core/raid/contract-adapters.js').audit(L.payload, { root: _repoDiskDir(run ? run.targetRepo || params.uuid : params.uuid) || undefined }) });
       } catch (e) { return err(res, 422, `the contract could not be read: ${e.message}`); }
+    }
+    // 0.60.27 AG1a — James: "as little as possible." What each phase cost in agent calls and tokens (lib/phase-cost.js):
+    // one phase (?phase=, ?map=) with each run, or every phase of the repo, most calls first
+    case 'repo.phases.cost': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const PC = _require('../../lib/phase-cost.js');
+      const rows = _phaseRows(params.uuid).filter(r => (!query.phase || r.phase === query.phase) && (!query.map || r.map === query.map));
+      if (query.phase) { const c = PC.costOf(rows); return ok(res, { repoUuid: params.uuid, phase: query.phase, cost: c, line: PC.line(c) }); }
+      const by = new Map();
+      for (const r of rows) { if (!r.phase) continue; const k = `${r.map || ''}::${r.phase}`; if (!by.has(k)) by.set(k, []); by.get(k).push(r); }
+      const phases = [...by.entries()].map(([k, rs]) => { const c = PC.costOf(rs); return { map: k.split('::')[0] || null, phase: k.split('::')[1], calls: c.calls, byRole: c.byRole, local: c.local, remote: c.remote, tokensIn: c.tokensIn, tokensOut: c.tokensOut, runs: c.runs.length, line: PC.line(c) }; })
+        .filter(x => x.calls).sort((a, b) => b.calls - a.calls);
+      const all = PC.costOf(rows);
+      return ok(res, { repoUuid: params.uuid, total: { ...all, runs: undefined }, line: PC.line(all), phases });
     }
     case 'repo.phases.runs': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);

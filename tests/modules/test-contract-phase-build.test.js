@@ -77,7 +77,9 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
       { path: ph.files[0], new: true, layer: 'engine', purpose: 'keeps notes', exports: [{ name: 'add' }, { name: 'list' }], imports: [], steps: [`keep notes in memory${variant}`] },
       { path: ph.files[1], new: true, layer: 'test', purpose: 'tests notes', exports: [], imports: [`../${ph.files[0]}`], steps: ['require notes and check add'] },
     ], order: ph.files, conditions: [] });
+  let dispatchedTotal = 0;   // CP-06: every call the agent saw, never reset
   RA.dispatch = async (a) => {
+    dispatchedTotal++;
     if (/-plan\d+$/.test(a.session || '')) return { ok: true, text: '```json\n' + planOf() + '\n```', provider: 'claude', providerUsed: 'claude', elapsedMs: 3 };
     const file = (String(a.message).match(/^Write ONE file: (\S+)/m) || [])[1];
     sent.push({ file, session: a.session });
@@ -146,6 +148,27 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(au && au.bricks.length === 2 && au.complete, JSON.stringify(au).slice(0, 400));
     assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8').includes("key: 'repo.contract'"));
     assert.ok(/contract audit —/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
+  });
+
+  // 0.60.27 AG1a — James: "as little as possible." The builds above, counted: each call's own row, tokens estimated at
+  // the source, the same count on the route, the Plan and the command
+  await test('CP-06', 'AG1a: the phase\'s agent calls and tokens are counted from the real build rows: route, Plan and command agree', async () => {
+    const g = await R('GET', `/api/repos/${repoUuid}/phases/cost?phase=${encodeURIComponent(ph.key)}&map=${encodeURIComponent(map)}`, {});
+    assert.strictEqual(g.status, 200, JSON.stringify(g.json).slice(0, 300));
+    const d = g.json.data || g.json, c = d.cost;
+    assert.ok(c.byRole.plan >= 1 && c.byRole.code >= 2 && c.calls === c.byRole.plan + c.byRole.code + c.byRole.review, JSON.stringify(c).slice(0, 500));
+    assert.ok(c.tokensIn > 0 && c.tokensOut > 0 && /estimate-v1/.test(c.method), `tokens estimated at the source: ${JSON.stringify({ i: c.tokensIn, o: c.tokensOut, m: c.method })}`);
+    assert.ok(c.runs.length >= 2 && c.runs.every(r => r.calls >= 1), 'each build run has its own count');
+    assert.ok(/calls? \(plan \d+ · code \d+/.test(d.line), d.line);
+    const all = await R('GET', `/api/repos/${repoUuid}/phases/cost`, {});
+    assert.ok(((all.json.data || all.json).phases || []).some(x => x.phase === ph.key && x.calls === c.calls), 'the all-phases view has the same count');
+    const plan = await R('GET', `/api/repos/${repoUuid}/plan?map=${encodeURIComponent(map)}`);
+    const st = ((plan.json.data || plan.json).steps || []).find(x => x.key === ph.key);
+    assert.ok(st && st.cost && st.cost.calls === c.calls, `the Plan shows the same count: ${JSON.stringify(st && st.cost)}`);
+    assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8').includes("key: 'repo.cost'") && /agents: \$\{escapeHtml\(s\.cost\.line\)\}/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
+    assert.strictEqual(c.calls, dispatchedTotal, `every dispatch the agent saw is counted once, no more: counted ${c.calls}, dispatched ${dispatchedTotal}`);
+    // the failed attempt says who failed (0.60.27: with no ladder it was recorded with no provider)
+    assert.ok(db.loadTable('idearium_phase_runs').filter(r => r.phase === ph.key && r.state === 'failed' && r.rung == null && /-c\d+-failed$/.test(r.uuid)).every(r => r.provider), 'every failed coder call names its agent');
   });
 
   RA.dispatch = realDispatch;

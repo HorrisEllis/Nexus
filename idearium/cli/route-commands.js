@@ -154,6 +154,13 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<phase>'),
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/contract?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(a.flags.map)}` : ''}` }),
     print: (d, a, h) => { const au = d.audit; for (const b of au.bricks) console.log(`  ${(b.status === 'PASSED' ? h.c.mint : h.c.amber)(String(b.status).padEnd(7))} ${b.file || b.id}${b.agent ? h.c.dim(` · ${b.agent}`) : ''}${b.attempts ? h.c.dim(` · ${b.attempts} attempt(s)`) : ''}${b.blocked ? h.c.amber(` · ${b.blocked}`) : ''}`); console.log(h.c.dim(`  ${au.dependencies.length} dependencies · ${au.checkpoints.length} checkpoints · ${au.gates.length} gates · ${d.file}`)); console.log(`  ${au.complete ? h.c.mint('complete') : h.c.amber('not complete')}: ${(au.why || []).join('; ')}`); } },
+  // 0.60.27 AG1a — "as little as possible", counted: agent calls (plan · code · review), local vs remote, tokens
+  { key: 'repo.cost', repo: true, usage: 'repo cost <repo> [phase] [--map name]', about: 'what each phase cost in agent calls and tokens: plan, code and review calls, local vs remote, tokens in and out (estimated), per run',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/cost${a.args[0] ? `?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(a.flags.map)}` : ''}` : ''}` }),
+    print: (d, a, h) => {
+      if (d.cost) { console.log(`  ${d.phase}: ${d.line}`); for (const r of d.cost.runs) console.log(h.c.dim(`    ${r.runId} · ${r.calls} call(s) · ${Object.entries(r.byAgent).map(([k, v]) => `${k} ×${v}`).join(', ')} · ~${r.tokensIn} in / ~${r.tokensOut} out`)); if (d.cost.method) console.log(h.c.dim(`  tokens: ${d.cost.method}`)); return; }
+      console.log(`  all phases: ${d.line}`); for (const p of d.phases) console.log(`  ${String(p.phase).padEnd(12)} ${h.c.dim(p.line)}`);
+    } },
   // 0.60.20 — lean mode, the same switch as Idearium → Settings → Routing (every agent has it through nexus.command)
   { key: 'system.lean', repo: false, usage: 'system lean [on|off]', about: 'lean mode: stop the services a build does not use (now and at every start), or start them again',
     req: (a) => (a.args[0] ? { method: 'POST', path: '/api/system/lean', body: { on: a.args[0] === 'on', actor: 'command' } } : { method: 'GET', path: '/api/system/lean' }),

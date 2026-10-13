@@ -220,3 +220,35 @@ phasemap:
 # 125). They are now `# `-commented, as this repo's other phasemaps write addenda. No word changed, and loom reads the
 # same phases (28, 12, 4). There were two quoting slips: `Idearium\'s` (YAML single quotes double the quote) and an
 # unquoted `chunks[]` inside a flow list.
+
+## ADDENDUM 2026-10-13 — AG1a mapped and built: agent calls and tokens counted per phase (0.60.27)
+
+# James: "next. fix anything you can." then "conintue". The coder picked AG1's counting half as the next piece. It was
+# OPEN since the agent rule was written down, and it is what makes "as little as possible" a number (docs/CLAUDE.md:
+# "Count it.").
+# - Reuse:
+#   - every agent call of a phase build already writes an idearium_phase_runs row: 'planning' for the planner, an
+#     attempt row with its rung for a coder, and 'reviewing' for a reviewer;
+#   - lib/economy/tokens.js estimate() is the token estimate;
+#   - lib/run-watch.js runsOf() groups the rows by run.
+# - AG1a, built:
+#   - the rows carry tokensIn/tokensOut (estimate-v1) and replyChars at the source;
+#   - lib/phase-cost.js costOf(rows) gives:
+#     - calls by role (plan/code/review) and by agent;
+#     - local vs remote;
+#     - tokens in and out;
+#     - per run, and the phase total.
+#   - Older rows without estimates use chars/4, and the result says so.
+#   - Where it shows:
+#     - route GET /api/repos/:uuid/phases/cost;
+#     - command repo cost;
+#     - the Plan panel: one line per phase, "agents: N calls (plan p · code c · review r) · L local · R remote ·
+#       ~T tokens".
+# - AG1b, still OPEN: review only after a cheap check failed. Today a draft review runs whenever reviewing is on.
+# - Found by the count (0.60.27): CP-06 counted 7 calls where the stubbed agent saw 8. With no ladder (a fixed backend), a
+#   failed coder call whose reply did not name its agent was written with no provider, so the record could not say who
+#   failed. It now names the backend it was sent to. CP-06 asserts that the calls counted equal the dispatches.
+# - Source changes: idearium/api/index.js (_tokEst, the three call rows, _phaseRows, the route);
+#   idearium/repo/build-plan.js (rows, cost); idearium/api/build-surface.js (phaseRows); idearium/ui/js/plan-panel.js;
+#   idearium/cli/route-commands.js (repo.cost); loom/maps/build-surface-map.js (phase-cost → run-watch; api, build-plan →
+#   phase-cost; api → economy/tokens).

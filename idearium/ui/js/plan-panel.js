@@ -258,6 +258,7 @@ function _planPaint() {
       ${_ppTimes(s)}
       ${s.failed && !done ? `<div class="pp-why" title="${escapeHtml(s.failed.error || s.failed.state)}">${escapeHtml(s.failed.state)}${s.failed.error ? ` — ${escapeHtml(String(s.failed.error).slice(0, 160))}` : ''}</div>` : ''}
       ${open ? `<div class="pp-detail"><div class="pp-meta">${escapeHtml(s.key)} · ${escapeHtml(String(s.map).split('/').pop())} · gate: ${escapeHtml(s.gate || 'all passed')}${s.failed ? ` · <span style="color:var(--coral)">${escapeHtml(s.failed.state)}: ${escapeHtml(s.failed.error || '')}</span>` : ''}</div>
+        ${s.cost ? `<div class="pp-against" title="${escapeHtml(`${s.cost.runs} run(s) · tokens: ${s.cost.method || 'estimate'} — 0.60.27 AG1a: agents used as little as possible, counted`)}">agents: ${escapeHtml(s.cost.line)}</div>` : ''}
         ${done ? '' : `<button class="pp-go" onclick="event.stopPropagation();planBuild('${escapeHtml(s.map)}','${escapeHtml(s.key)}')">▶ build</button>`}
         ${_ledgerHtml(s.ledger || [])}</div>` : ''}
     </div>`;

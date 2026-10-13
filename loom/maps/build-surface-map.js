@@ -28,6 +28,10 @@ const FILES = [
     I('cos/testenv/detect.js'),                                 // require('./detect.js') — plan(), describe()
   ]],
   ['idearium/repo/file-state.js', I('idearium/repo/file-state.js'), []],
+  // 0.60.27 AG1a — agent calls and tokens per phase, counted over the run rows
+  ['lib/phase-cost.js', I('lib/phase-cost.js'), [
+    I('lib/run-watch.js'),                                      // require('./run-watch.js') — runsOf groups the rows by run
+  ]],
   ['idearium/repo/deviation.js', I('idearium/repo/deviation.js'), []],
   ['idearium/repo/spec-plan.js', I('idearium/repo/spec-plan.js'), [
     I('loom/scanners/phasemap-map.js'),                         // parsePhasemapText — the one phasemap parser
@@ -127,6 +131,9 @@ const CONSUMERS = [
   [I('copilot/adversarial.js'), I('lib/lean-mode.js'), '0.60.26 run(): the probe is held while lean is on'],
   [I('guardian/lib/dispatcher.js'), I('ollama/lib/model-inventory.js'), '0.60.26 deepseek → Ollama only with an installed model'],
   [I('guardian/lib/dispatcher.js'), I('guardian/lib/provider-routing.js'), '0.60.26 deepseekLocal(names, want)'],
+  [I('idearium/api/index.js'), I('lib/phase-cost.js'), '0.60.27 AG1a GET /phases/cost (_require)'],
+  [I('idearium/repo/build-plan.js'), I('lib/phase-cost.js'), '0.60.27 AG1a each Plan step carries its cost (createRequire)'],
+  [I('idearium/api/index.js'), I('lib/economy/tokens.js'), '0.60.27 AG1a _tokEst: tokens estimated on each call row'],
 ];
 
 function mapBuildSurface(driver) {
