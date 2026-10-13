@@ -298,6 +298,22 @@ async function rtSet(key, value) {
   try { await post('/api/config', { key: `routing.${key}`, value, actor: 'settings-console' }); toast(`routing.${key} saved`, 'ok'); renderRouting(); }
   catch (e) { toast(`not saved: ${e.message}`, 'bad'); }
 }
+// 0.60.20 — James: "start lean? why not just have that a toggle? i want to test it now" · "idearium for the lean toggle".
+// One switch: the services a build does not use stop now and stay stopped at every start (npm run start:all reads it).
+async function leanLoad() {
+  const el = document.getElementById('lean-card'); if (!el) return;
+  let d; try { d = await api('/api/system/lean'); d = d.data || d; } catch (e) { el.innerHTML = `<h3><span class="grow">Lean mode</span></h3><div class="empty">could not read it: ${esc(e.message)}</div>`; return; }
+  el.innerHTML = `<h3><span class="grow">Lean mode — only what a build needs</span><span class="tag ${d.on ? 'ok' : ''}">${d.on ? 'on' : 'off'}</span></h3>
+    <div class="kv">On: ${esc(d.hold.join(', '))} stop now and stay stopped every time Nexus starts. Builds, Idearium, copilot, Guardian, Ollama, Versionium and Clear Glass keep running. With everything up, memory fell to 7% and the build's planner was dropped.</div>
+    <div class="ap-chips">${['on', 'off'].map(m => `<button class="ap-chip ${(d.on ? 'on' : 'off') === m ? 'on' : ''}" data-lean="${m}">${m}</button>`).join('')}</div>
+    <div class="kv">${d.supervisor ? d.services.map(x => `<span class="tag ${x.running ? 'warn' : 'ok'}">${esc(x.name)} · ${x.running ? 'running' : 'stopped'}</span>`).join(' ') : '<span class="tag warn">the supervisor is not answering — the choice is still saved for the next start</span>'}</div>`;
+  for (const b of el.querySelectorAll('[data-lean]')) b.onclick = async () => {
+    b.disabled = true;
+    try { const r = await post('/api/system/lean', { on: b.dataset.lean === 'on', actor: 'settings' }); const x = r.data || r; toast(`lean ${x.on ? 'on' : 'off'} — ${x.note}`, x.results && x.results.some(y => !y.ok) ? 'bad' : 'ok'); }
+    catch (e) { toast(`not changed: ${e.message}`, 'bad'); }
+    leanLoad();
+  };
+}
 async function renderRouting() {
   $('title').textContent = 'Routing & fallback';
   $('sub').innerHTML = 'Which agent builds each spec chunk, and where it goes when that fails. Saved as <span class="tag">routing.*</span> in idearium\'s config (also <code>POST /api/config</code>, <code>idearium routing</code>).';
@@ -308,7 +324,7 @@ async function renderRouting() {
   const row = (k, desc, ctl) => `<div class="row"><div><div class="k">routing.${k}</div><div class="d">${desc}</div></div><div class="ctl">${ctl}</div><div class="ctl"></div></div>`;
   const num = (k, v, min, max) => `<input type="number" data-rt="${k}" value="${esc(v)}" min="${min}" max="${max}">`;
   const br = (d.breakers || []);
-  $('body').innerHTML = `<div class="card"><h3><span class="grow">Mode</span><span class="tag">${esc(p.mode)}</span></h3><div class="ap-chips">${Object.entries(RT_MODES).map(([m, t]) => `<button class="ap-chip ${p.mode === m ? 'on' : ''}" data-rt-mode="${m}" title="${esc(t)}">${esc(m)}</button>`).join('')}</div><div class="kv">${esc(RT_MODES[p.mode])}</div></div>
+  $('body').innerHTML = `<div class="card" id="lean-card"><h3><span class="grow">Lean mode</span></h3><div class="kv">reading…</div></div><div class="card"><h3><span class="grow">Mode</span><span class="tag">${esc(p.mode)}</span></h3><div class="ap-chips">${Object.entries(RT_MODES).map(([m, t]) => `<button class="ap-chip ${p.mode === m ? 'on' : ''}" data-rt-mode="${m}" title="${esc(t)}">${esc(m)}</button>`).join('')}</div><div class="kv">${esc(RT_MODES[p.mode])}</div></div>
     <div class="card"><h3><span class="grow">Fallback chain</span></h3>${row('chain', 'tried in this order after the chosen agent (and the block\'s own <code>fallback:</code> in blocks.yaml)', `<input type="text" data-rt="chain" value="${esc(p.chain.join(','))}">`)}</div>
     <div class="card"><h3><span class="grow">Ollama models</span></h3>${row('ollama_models', 'each listed model is its own candidate, learned separately (e.g. qwen2.5-coder:3b,qwen2.5-coder:7b); empty = the hat\'s model', `<input type="text" data-rt="ollama_models" value="${esc((p.ollamaModels || []).join(','))}">`)}${row('learn_min_records', 'outcomes needed for a chunk type before learned mode reorders it', `<input type="number" data-rt="learn_min_records" value="${esc(p.learnMinRecords)}" min="1" max="1000">`)}
       <div id="rt-learned" class="kv">loading what has been learned…</div></div>
@@ -344,6 +360,7 @@ async function renderRouting() {
       <div class="row"><div><div class="k">routing.chunk_phases</div><div class="d">without a plan: one request per file when the ladder starts on Ollama (auto), always, or never</div></div><div class="ctl"><div class="ap-chips">${['auto', 'always', 'never'].map(m => `<button class="ap-chip ${(p.chunkPhases || 'auto') === m ? 'on' : ''}" data-rt-cp="${m}">${m}</button>`).join('')}</div></div><div class="ctl"></div></div></div>
     <div class="card"><h3><span class="grow">The route per block</span><span class="tag">${(d.blocks || []).length} blocks</span></h3>
       ${(d.blocks || []).map(b => `<div class="row"><div><div class="k">${esc(b.id)}</div><div class="d">${esc(b.title)}</div></div><div class="ctl">${b.route.map(r => `<span class="tag" title="${esc(r.why)}">${esc(r.provider)}</span>`).join(' → ')}${b.skipped.length ? ` <span class="kv">skipped ${b.skipped.map(x => esc(x.provider)).join(', ')}</span>` : ''}</div><div class="ctl"></div></div>`).join('')}</div>`;
+  leanLoad();   // 0.60.20
   for (const b of $('body').querySelectorAll('[data-rt-mode]')) b.onclick = () => rtSet('mode', b.dataset.rtMode);
   for (const b of $('body').querySelectorAll('[data-rt-pc]')) b.onclick = () => rtSet('plan_code', b.dataset.rtPc);   // §0.60.0 PC1
   for (const b of $('body').querySelectorAll('[data-rt-rr]')) b.onclick = () => rtSet('reason_route', b.dataset.rtRr);   // 0.60.12 intent routing for reasoning
