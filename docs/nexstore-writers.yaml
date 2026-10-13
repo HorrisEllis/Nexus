@@ -7,10 +7,10 @@ register:
   map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (DT1)
   generatedBy: lib/nexstore/writers.js
   stats:
-    writers: 233
-    files: 151
+    writers: 234
+    files: 152
     typed: 25
-    reason: 55
+    reason: 56
     owed: 153
 rules:
   - match: '^(guardian/jaa-store\.js|idearium/lib/db\.js|lib/nexstore/(log|record)\.js) · '
@@ -68,6 +68,10 @@ writers:
     reason: a cache of the provider registry, rebuilt from the source when missing — not data being kept
   clear-glass/src/rewind/engine.js · writeFileSync · fp:
     reason: OWED — a node type or a stated reason
+  clear-glass/src/userscripts/manager.js · writeFileSync · script.path.replace(/\.js$/, META_EXT):
+    reason: >-
+      a userscript's own name/@match/agent beside its source (0.60.7) — the script file's metadata, not data being kept; without it a reload made every script
+      match every page
   copilot/axiom-manager.js · writeFileSync · RUNTIME_FILE:
     reason: OWED — a node type or a stated reason
   copilot/lib/workset.js · writeFileSync · file(ws):
