@@ -155,6 +155,25 @@ nexus better and i prefer novel if it's stable./"
 - Where a constraint can be designed around in a way that fits Nexus better, do it. Prefer the novel design when it
   is stable (built on primitives that already exist and are proven), not novel for its own sake.
 
+## Agents for what they are best at, as little as possible (2026-10-13)
+
+James: "yes use you for the cheapest but most effective intention." · "it would be nice to use agents intentionally for what
+theyre best at. as little as possible. like spread agents out opimally for what theyre best at. less tokens from you, the
+better. becasue you can code better than any but you're not free."
+
+The rule, for Nexus's routing and for this coder:
+- **Deterministic first.** A parser, a test, a grep or a check runs before any model is asked.
+- **Local by default.** Ollama does the bulk of the coding (one planned file per request).
+- **A reasoning agent only plans, and reviews or repairs only after a cheap check has failed.** Never "review everything".
+- **Claude Code (this coder) costs the most, so it gets the work where it is worth that cost:**
+  - root causes from logs;
+  - small fixes that carry a lot;
+  - architecture and specs;
+  - closing what other agents could not.
+  It does not do bulk file writing that a planned brief and a local model can do.
+- **Count it.** Agent calls and tokens per phase are recorded, so "as little as possible" is a number, not a feeling
+  (phase AG1, docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec).
+
 ## Order of delivery (2026-10-07)
 
 James: "always add backend js first, then the ui. can you do that. make sure you build the ui. then make sure the ollama

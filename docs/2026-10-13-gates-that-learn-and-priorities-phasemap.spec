@@ -131,3 +131,22 @@ James: "maybe add a retry button. consolidate the intelligence and debug system.
 - AG1 agents for what they are best at, as little as possible (folds RT1): the door's learned order already ranks per kind. The default is cheap and local first; a reasoning agent only plans, reviews and repairs when a deterministic check failed. Calls per phase are counted, so "as little as possible" is measured.
 - UX1 consolidation: Intelligence + Debug become one tab, Notes + Ideas one feature (one list with kinds), and Phases shown beside their Spec sections. This is a reorganisation of existing screens. Nothing is lost: old views stay reachable until the new ones are proven.
 
+## ADDENDUM 2026-10-13 — the agent rule written down; Versionium ↔ GitHub mapped
+
+James: "yes use you for the cheapest but most effective intention." He then quoted the coder's line back as his decision:
+"Agents used for what they're best at, as little as possible. … cheap and local by default, a reasoning agent only for
+planning, review only when the cheap check fails."
+- AG1 decision: that rule is now written down in docs/CLAUDE.md ("Agents for what they are best at"). Building it into
+  the door (counting calls and tokens per phase, review gated on a failed check) is still OPEN.
+- VG1 Versionium ↔ git ↔ GitHub. His words: "what if we have the git integration integrated into versioium. use github
+  api or app id or what ever to sync ideairum with github?"
+  - Exists: lib/repo-git.js (0.39.265) does status, commit, push and pull with an SSH key or HTTPS token, and clone; the
+    Sync & CI tab; history import from .git (0.60.7).
+  - Missing:
+    1. A Versionium snapshot and a git commit are linked both ways (each snapshot records its commit sha, each commit
+       carries the snapshot id).
+    2. Sync on a schedule or on Apply, per repo.
+    3. The GitHub API with a fine-grained token first (simplest), so PRs, issues and CI status show in Sync & CI. A
+       GitHub App id is the later, multi-repo form.
+  - Status: OPEN, ranked after the live run and AC1.
+
