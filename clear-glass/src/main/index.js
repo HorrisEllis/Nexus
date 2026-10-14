@@ -183,6 +183,7 @@ let driver      = null;   // ClearDriver        — set in bootstrap()
 let _sessionHub = null;   // session hub (§0.60.13) — ONE cookie session per provider; made on first use by sessionHub()
 let _hubBoot = new Map(); // provider -> promise: attach + consolidate done (before the provider's first load)
 let _acctSwitch = null;   // account-switch instance (§0.60.12) — made on first use by acctSwitch(); declared up here so boot can never reach it before it exists
+let _profileTabs = null;   // profile tabs (§PF1 0.60.32) — made on first use by profileTabs()
 let cookieVault = null;   // CookieVault        — set in bootstrap(); account windows restore from it
 let urlListener = null;   // UrlListener        — set in bootstrap()
 let apiSettings = null;   // ApiSettings        — set in bootstrap()
@@ -1732,6 +1733,18 @@ async function bootstrap() {
         res.json({ ok: results.every(r => r.ok), results });
       } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
     });
+    // §PF1 0.60.32 — an account's own tab: POST { accountId } opens it (signed in from the vault), GET lists them, DELETE closes
+    ipcBridge.app.post('/providers/:id/profile', async (req, res) => {
+      if (!providerHost) { res.status(503).json({ ok: false, error: 'provider host not initialized' }); return; }
+      try { const r = await profileTabs().open(req.params.id, req.body && req.body.accountId); res.status(r.ok ? 200 : 409).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    ipcBridge.app.get('/providers/:id/profiles', (req, res) => {
+      try { res.json({ ok: true, provider: req.params.id, profiles: profileTabs().list(req.params.id) }); } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    ipcBridge.app.delete('/providers/:id/profile/:account', (req, res) => {
+      try { res.json(profileTabs().close(req.params.id, req.params.account)); } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
     ipcBridge.app.post('/providers/:id/account/capture', async (req, res) => {
       try { const r = await acctSwitch().capture(req.params.id, req.body && req.body.accountId); res.status(r.ok ? 200 : 409).json(r); }
       catch (e) { res.status(500).json({ ok: false, error: e.message }); }
@@ -2053,6 +2066,18 @@ function acctSwitch() {
     getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
     sessionFor: (id) => sessionHub().sessionFor(id),
     hold: (id) => sessionHub().hold(id),
+    log: (m) => console.log(m),
+  }));
+}
+
+// ── Profile tabs — §PF1 0.60.32 ──────────────────────────────────────────────────────────────────────────────────
+// James: "each tab can beb a compartment or different profile. that way we can use multiaccount routing." Another account's
+// own provider tab, in its own session (src/providers/profile-tabs.js); Guardian sends only that account's jobs to it.
+function profileTabs() {
+  return _profileTabs || (_profileTabs = require('../providers/profile-tabs').createProfileTabs({
+    providerHost, vault: cookieVault, options: nexusOptions,
+    getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
+    sessionFor: (partition) => session.fromPartition(partition),
     log: (m) => console.log(m),
   }));
 }

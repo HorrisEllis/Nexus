@@ -52,7 +52,7 @@ const _payload = (e) => (e && typeof e === 'object' && typeof e.type === 'string
 
 function createDispatcher(deps) {
   const { updateJob, bus, ncp, pendingQueue, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek, pingTimeoutMs, completionTimeoutMs,
-          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, getJob, pickupMs, accountRouting, useAccount, usageOf } = deps;   // §0.60.2: optional accountRouting (lib/account-routing.js) + useAccount(provider, accountId, job) — the tab switched to the routed account before the job is typed   // §HP14/HP16 0.55.2: optional getJob(id) — the job as it is now; pickupMs — the pickup watch   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
+          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, getJob, pickupMs, accountRouting, useAccount, usageOf, openProfile } = deps;   // §0.60.2: optional accountRouting (lib/account-routing.js) + useAccount(provider, accountId, job) — the tab switched to the routed account before the job is typed   // §HP14/HP16 0.55.2: optional getJob(id) — the job as it is now; pickupMs — the pickup watch   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
   for (const [name, fn] of Object.entries({ updateJob, bus, ncp, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek })) {
     if (!fn) throw new Error(`[dispatcher] missing required dependency: ${name}`);
   }
@@ -61,6 +61,26 @@ function createDispatcher(deps) {
   }
 
   const { pool: _dispatchPool } = require('./dispatch-pool'); // §P11: per-provider semaphore
+  // §PF1 0.60.32 — a job's lane: the provider's own tab (lane = provider), or the profile tab of the account it is routed
+  // to (lane = provider~account, its own pool slot — accounts in parallel). guardian/lib/profile-lanes.js decides.
+  const PL = require('./profile-lanes.js');
+  const _lane = (job) => (job && job.lane) || (job && job.provider);
+  function _assignLane(job) {
+    if (!accountRouting) { job.lane = job.provider; job.profileTab = null; return null; }
+    // a profile tab that reported its usage limit rests its account before the route is read (the 0.60.25 chain, per tab)
+    try {
+      if (typeof ncp.getTabs === 'function' && typeof accountRouting.markExhausted === 'function') {
+        for (const t of ncp.getTabs()) {
+          if (t.provider !== job.provider || !t.profile || !t.usage || t.usage.limited !== true) continue;
+          if (!accountRouting.isExhausted || !accountRouting.isExhausted(job.provider, t.profile)) accountRouting.markExhausted(job.provider, t.profile, { why: t.usage.message || 'usage limit (its profile tab)' });
+        }
+      }
+    } catch (e) { console.warn(`[guardian] ${job.id}: profile usage check failed: ${e.message}`); }
+    let ln; try { ln = PL.laneFor(job, { accountRouting }); } catch (e) { ln = { lane: job.provider, profile: false, why: e.message }; }
+    job.lane = ln.lane; job.profileTab = ln.profile ? ln.tabId : null; job.profileAccount = ln.profile ? ln.accountId : null;
+    return ln;
+  }
+  const _profileOpening = new Map();   // provider:tabId → when Clear Glass was last asked to open it
 
   // §BUILT 2026-09-16 — James: "negative space... events to trigger from
   // the lack." Real, confirmed gap traced before building this, not
@@ -100,7 +120,7 @@ function createDispatcher(deps) {
     if (_econHeld.has(j.provider)) _econHeld.get(j.provider).delete(jobId);   // §SD3
     _clearCompletionWatch(jobId); _clearPickupWatch(jobId); _watchedJobs.delete(jobId);
     for (const [prov, q] of pendingQueue) { const i = q.findIndex(x => x && x.id === jobId); if (i >= 0) q.splice(i, 1); if (!q.length) pendingQueue.delete(prov); }
-    try { _dispatchPool.release(j.provider, jobId); } catch (_) {}
+    try { _dispatchPool.release(_lane(j), jobId); } catch (_) {}
     _inPool.delete(jobId);
     updateJob(jobId, { status: 'cancelled', cancelledAt: Date.now(), cancelReason: reason });
     console.log(`[guardian] ${jobId} → ${j.provider}: cancelled — ${reason}`);
@@ -109,14 +129,14 @@ function createDispatcher(deps) {
   }
 
   function _requeueOrFail(job, reason, waitedMs) {
-    if (_isOver(job)) { _clearCompletionWatch(job.id); _dispatchPool.release(job.provider, job.id); return; }   // §HP16
+    if (_isOver(job)) { _clearCompletionWatch(job.id); _dispatchPool.release(_lane(job), job.id); return; }   // §HP16
     _clearCompletionWatch(job.id);
     const retries = (job._timeoutRetries || 0) + 1;
     job._timeoutRetries = retries;
     bus.emit('guardian.job.timeout', { jobId: job.id, provider: job.provider, waitedMs, retry: retries, reason });
     // §0.39.247 — either way the tab slot comes back: with one tab per
     // provider, a timed-out job holding it blocked every job behind it.
-    _dispatchPool.release(job.provider, job.id);
+    _dispatchPool.release(_lane(job), job.id);
     // §HP15 0.55.2 — a prompt the tab confirmed typing is in the chat: requeueing it sent it again (HP11 closed that
     // for job-retry; the idle window and a mid-flight disconnect still did). It waits for the chat transcript instead
     // (the same awaiting_transcript path an empty reply takes), and fails saying so if none carries the reply.
@@ -190,7 +210,7 @@ function createDispatcher(deps) {
       if (!cur || ['complete', 'done', 'failed', 'error', 'cancelled'].includes(cur.status) || cur.confirmedAt) return;
       _clearCompletionWatch(job.id);
       _watchedJobs.delete(job.id);
-      _dispatchPool.release(job.provider, job.id);
+      _dispatchPool.release(_lane(job), job.id);
       const error = `the ${job.provider} tab was handed the job and did nothing with it for ${Math.round(waitMs / 1000)} s — the prompt was not typed, so it is not sent there again`;   // waitMs: guardian option jobs.pickup_ms
       updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason: error, error });
       console.warn(`[guardian] ${job.id} → ${job.provider}: ${error}`);
@@ -239,9 +259,12 @@ function createDispatcher(deps) {
   // disconnects ON PURPOSE; it carries the job across the load itself. Requeueing it here would send
   // the prompt twice. Bounded: after RESUME_GRACE_MS the disconnect is treated as real again.
   const _resumeGraceMs = () => require('../options.js').get('jobs.resume_grace_ms');   // §OP1
-  bus.on('guardian.provider.disconnected', (ev) => { const { provider } = _payload(ev);
+  bus.on('guardian.provider.disconnected', (ev) => { const { provider, tabId } = _payload(ev);
+    const goneProfile = PL && require('./ncp.js').isProfileTab(tabId);
     for (const job of _watchedJobs.values()) {
       if (job.provider !== provider) continue;
+      // §PF1 0.60.32 — a tab's disconnect requeues only that tab's jobs: a profile tab's own, or the provider tab's
+      if (tabId && (job.profileTab ? job.profileTab !== tabId : goneProfile)) continue;
       if (job.resumingChatAt && Date.now() - job.resumingChatAt < _resumeGraceMs()) {
         console.log(`[guardian] ${job.id} → ${provider}: tab disconnected while opening the job's chat — expected, not requeued`);
         continue;
@@ -296,9 +319,12 @@ function createDispatcher(deps) {
       try { economy.begin(job); } catch (_) {}
     }
     _inPool.add(job.id);
+    // §PF1 0.60.32 — the lane first: the provider's own tab, or the profile tab of the account the job is routed to
+    const _ln = _assignLane(job);
+    if (_ln && _ln.profile) updateJob(job.id, { lane: job.lane, profileTab: job.profileTab, accountId: job.profileAccount, accountWhy: _ln.why });
     // §P11: route through dispatch pool — per-provider semaphore, job stealing.
     // Slot release is NOT here — see dispatch-pool-bridge.js's header for why.
-    _dispatchPool.enqueue(job.provider, { id: job.id, provider: job.provider, priority: job.priority || 'normal', payload: job },
+    _dispatchPool.enqueue(_lane(job), { id: job.id, provider: _lane(job), priority: job.priority || 'normal', payload: job },
       (poolJob) => {
         // §0.39.247 — a job handed a slot but NOT delivered (no tab, stale
         // socket) went back on pendingQueue still holding that slot; on the
@@ -375,6 +401,71 @@ function createDispatcher(deps) {
   // still carried on the job, so the reply is filed under the repo that
   // asked (.response node, downloads entry, Library). One-at-a-time is
   // enforced by dispatch-pool.js (browser providers capped at 1).
+
+  // the job as the tab receives it (shared by the provider tab and a profile tab)
+  function _payloadFor(job) {
+    let resumeChatUrl = null;
+    if (typeof chatFor === 'function' && process.env.GUARDIAN_RESUME_CHAT !== '0') {
+      try { resumeChatUrl = chatFor(job) || null; } catch (e) { console.warn(`[guardian] ${job.id}: chat lookup failed (job runs where the tab is): ${e.message}`); }
+    }
+    // §0.39.279 — a job that names its chat (a wake answered from that chat's transcript) goes back to it, whatever
+    // chat the agent last used; only a real, resumable chat URL of this provider is honoured.
+    if (job.chatUrl && process.env.GUARDIAN_RESUME_CHAT !== '0') {
+      try { resumeChatUrl = require('./chat-transcripts.js').resumableChatUrl(job.provider, job.chatUrl) || resumeChatUrl; } catch (_) {}
+    }
+    const payload = {
+      type: 'GUARDIAN_JOB', jobId: job.id, command: job.command,
+      provider: job.provider, prompt: job.prompt, content: job.content,
+      tools: job.tools || null,
+      hat: job.hat || null,
+      resumeChatUrl,
+      // §0.39.266 — the agent has no chat of its own yet: the tab opens a new one (and does not wait for earlier turns)
+      newChat: !!(resumeChatUrl && require('./chat-transcripts.js').isNewChatUrl(resumeChatUrl)),
+    };
+    return payload;
+  }
+
+  // §PF1 0.60.32 — a profile tab's job: its tab connected → pushed to that tab only (pushTab); not connected → Clear Glass
+  // is asked to open it (once a minute at most) and the job waits for its connect (pendingQueue; flushQueuedJobs on the
+  // provider's connect re-dispatches it). Never pushed to the provider's own tab, never switches an account.
+  async function _dispatchToProfile(job) {
+    const tabId = job.profileTab, key = `${job.provider}:${tabId}`;
+    if (!ncp.isTabConnected || !ncp.isTabConnected(job.provider, tabId)) {
+      if (!pendingQueue.has(job.provider)) pendingQueue.set(job.provider, []);
+      if (!pendingQueue.get(job.provider).some(x => x && x.id === job.id)) pendingQueue.get(job.provider).push(job);
+      updateJob(job.id, { status: 'queued', queuedAt: Date.now(), queueReason: `waiting for account ${job.profileAccount}'s ${job.provider} tab (${tabId})` });
+      bus.emit('guardian.job.queued', { jobId: job.id, provider: job.provider, reason: 'profile_tab', tabId });
+      const last = _profileOpening.get(key) || 0;
+      if (typeof openProfile === 'function' && Date.now() - last > 60000) {
+        _profileOpening.set(key, Date.now());
+        Promise.resolve().then(() => openProfile(job.provider, job.profileAccount, job)).then((r) => {
+          if (r && r.ok === false) {
+            const error = `could not open account ${job.profileAccount}'s ${job.provider} tab: ${r.error || 'Clear Glass did not answer'}`;
+            const q = pendingQueue.get(job.provider) || []; const i = q.findIndex(x => x && x.id === job.id); if (i >= 0) q.splice(i, 1);
+            updateJob(job.id, { status: 'error', error, failedAt: Date.now(), gate: 'profile' });
+            bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'profile' });
+          }
+        }).catch((e) => console.warn(`[guardian] ${job.id}: opening ${tabId} failed: ${e.message}`));
+      }
+      console.log(`[guardian] queued ${job.id} — waiting for ${job.provider} ${tabId}`);
+      return false;
+    }
+    const payload = _payloadFor(job);
+    const sent = ncp.pushTab(job.provider, tabId, payload);
+    if (!sent) {
+      if (!pendingQueue.has(job.provider)) pendingQueue.set(job.provider, []);
+      pendingQueue.get(job.provider).push(job);
+      updateJob(job.id, { status: 'queued', queuedAt: Date.now(), queueReason: `${tabId} said connected but the write reached it not — requeued` });
+      return false;
+    }
+    updateJob(job.id, { status: 'delivered', deliveredAt: Date.now(), tabId, lane: job.lane, accountId: job.profileAccount });
+    _armCompletionWatch(job);
+    _armPickupWatch(job);
+    console.log(`[guardian] dispatched ${job.id} → ${job.provider} via NCP (account ${job.profileAccount}'s own tab, ${tabId})`);
+    bus.emit('guardian.job.account', { jobId: job.id, provider: job.provider, accountId: job.profileAccount, why: 'its own profile tab', switched: false, tabId });
+    bus.emit('guardian.job.dispatched', { jobId: job.id, provider: job.provider, tabId });
+    return true;
+  }
 
   async function _doDispatch(job) {
     if (_isOver(job)) return false;   // §HP16 — cancelled or finished while it waited in the pool: its slot is freed
@@ -522,6 +613,9 @@ function createDispatcher(deps) {
       // v0.39.227: the mesh claim is released on fallback — the .job must never say two transports own it.
       if (lr.reason && lr.reason !== 'policy_ncp_only') updateJob(job.id, { transport: 'ncp', claimedBy: null, transportFallbackReason: lr.reason, transportTrail: lr.trail });
     }
+
+    // §PF1 0.60.32 — a job routed to an account other than the provider tab's: that account's own tab, never a switch
+    if (job.profileTab) return _dispatchToProfile(job);
 
     if (!ncp.isConnected(job.provider)) {
       if (!pendingQueue.has(job.provider)) pendingQueue.set(job.provider, []);
@@ -679,24 +773,7 @@ function createDispatcher(deps) {
         bus.emit('guardian.job.account', { jobId: job.id, provider: job.provider, accountId: routed.accountId, why: routed.why, switched: !!sw.switched });
       }
     }
-    let resumeChatUrl = null;
-    if (typeof chatFor === 'function' && process.env.GUARDIAN_RESUME_CHAT !== '0') {
-      try { resumeChatUrl = chatFor(job) || null; } catch (e) { console.warn(`[guardian] ${job.id}: chat lookup failed (job runs where the tab is): ${e.message}`); }
-    }
-    // §0.39.279 — a job that names its chat (a wake answered from that chat's transcript) goes back to it, whatever
-    // chat the agent last used; only a real, resumable chat URL of this provider is honoured.
-    if (job.chatUrl && process.env.GUARDIAN_RESUME_CHAT !== '0') {
-      try { resumeChatUrl = require('./chat-transcripts.js').resumableChatUrl(job.provider, job.chatUrl) || resumeChatUrl; } catch (_) {}
-    }
-    const payload = {
-      type: 'GUARDIAN_JOB', jobId: job.id, command: job.command,
-      provider: job.provider, prompt: job.prompt, content: job.content,
-      tools: job.tools || null,
-      hat: job.hat || null,
-      resumeChatUrl,
-      // §0.39.266 — the agent has no chat of its own yet: the tab opens a new one (and does not wait for earlier turns)
-      newChat: !!(resumeChatUrl && require('./chat-transcripts.js').isNewChatUrl(resumeChatUrl)),
-    };
+    const payload = _payloadFor(job);
     const sent = ncp.pushActive(job.provider, payload);
     const via = job.agentId ? `the ${job.provider} tab, for ${job.agentId}` : `the ${job.provider} tab`;
     if (sent === 0) {
@@ -715,7 +792,7 @@ function createDispatcher(deps) {
     // target, not a broadcast count), so the old "(N clients)" phrasing was
     // stale — always printed "(1 client)" and implied a fan-out that no
     // longer happens. Says what actually occurred instead.
-    console.log(`[guardian] dispatched ${job.id} → ${job.provider} via NCP (${via})${resumeChatUrl ? ` · chat ${resumeChatUrl}` : ''}`);
+    console.log(`[guardian] dispatched ${job.id} → ${job.provider} via NCP (${via})${payload.resumeChatUrl ? ` · chat ${payload.resumeChatUrl}` : ''}`);
     try {
       const alk = require('../../intelligence/alk');
       alk.record({

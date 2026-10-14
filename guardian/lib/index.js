@@ -44,7 +44,7 @@ const wireDispatchPoolRelease = require('./dispatch-pool-bridge');
  * this file does not create a bus or an NCP server, those stay owned by
  * server.js's boot sequence exactly as before.
  */
-function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL, postEvent, ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, accountRouting, useAccount }) {
+function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL, postEvent, ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, accountRouting, useAccount, openProfile }) {
   for (const [name, v] of Object.entries({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL })) {
     if (!v) throw new Error(`[guardian/lib] wireGuardianCore missing required dependency: ${name}`);
   }
@@ -62,7 +62,7 @@ function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL,
     ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith,   // 0.39.265 — late-bound, see server.js
     economy,   // 0.39.281 — guardian/lib/economy-guard.js (optional)
     getJob: (id) => jobStore.jobs.get(id),   // §HP14–HP16 0.55.2 — the job as it is now, not the pool's copy
-    accountRouting, useAccount,
+    accountRouting, useAccount, openProfile,   // §PF1 0.60.32
     usageOf: (p) => { try { return ((ncp && ncp.getProviders ? ncp.getProviders() : {})[p] || {}).usage || null; } catch (_) { return null; } },   // 0.60.25 — a tab's usage limit, for account fallback   // §0.60.2 — lib/account-routing.js + Clear Glass's account switch (optional)
   });
 

@@ -78,6 +78,11 @@ const FILES = [
   ['lib/model-door.js',                     'nexus.lib.model-door', ['nexus.lib.route-eligibility']],
   ['lib/route-eligibility.js',              'nexus.lib.route-eligibility', ['nexus.lib.ollama-activity', 'nexus.guardian.lib.agent-facts']],
   ['guardian/lib/agent-facts.js',           'nexus.guardian.lib.agent-facts', ['nexus.lib.node-export', 'nexus.lib.agent-facts-hash']],
+  // 0.60.32 PF1 — a tab per account profile: guardian/lib/profile-lanes.js (hat → account → tab and lane; reads ncp's
+  // PROFILE_TAB) and clear-glass/src/providers/profile-tabs.js (an account's own tab in its own session; session-hub's
+  // isAuthCookie). Consumers: the dispatcher and guardian/server.js (/api/accounts/profiles); Clear Glass main (its routes).
+  ['guardian/lib/profile-lanes.js',         'nexus.guardian.lib.profile-lanes', ['nexus.guardian.lib.ncp']],
+  ['clear-glass/src/providers/profile-tabs.js', 'nexus.clear-glass.src.providers.profile-tabs', ['nexus.clear-glass.src.cookies.session-hub']],
   ['lib/phase-plan.js',                     'nexus.lib.phase-plan', []],
   ['cortex/core/raid/contract-adapters.js', 'nexus.cortex.core.raid.contract-adapters',
     ['nexus.cortex.core.raid.contract-gates', 'nexus.lib.model-door', 'nexus.lib.phase-plan']],
@@ -89,6 +94,9 @@ const CONSUMERS = [
   ['nexus.idearium.api', 'nexus.cortex.core.raid.contract-gates'],
   ['nexus.idearium.api', 'nexus.lib.phase-plan'],
   ['nexus.guardian.server', 'nexus.guardian.lib.agent-facts'],   // 0.60.31 — GET /api/providers, /providers (GA1)
+  ['nexus.guardian.lib.dispatcher', 'nexus.guardian.lib.profile-lanes'],          // 0.60.32 PF1 — the lane before the pool
+  ['nexus.guardian.server', 'nexus.guardian.lib.profile-lanes'],                  // 0.60.32 PF1 — /api/accounts/profiles, /route
+  ['nexus.clear-glass.src.main', 'nexus.clear-glass.src.providers.profile-tabs'],  // 0.60.32 PF1 — :7702/providers/:id/profile(s)
 ];
 
 function mapRaidEventsAndTools(driver) {

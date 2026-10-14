@@ -47,8 +47,9 @@ function wireDispatchPoolRelease(bus, pool) {
   // malformed. Every userscript completion arrived that way, so the job's slot
   // (cap 1 per browser provider) was never freed and the NEXT job waited forever.
   // Not a guess: the pool itself records which provider's slot the job holds.
-  const _providerFor = (payload) => payload.provider
-    || (typeof pool.providerOf === 'function' ? pool.providerOf(payload.jobId) : null);
+  // §PF1 0.60.32 — the slot the job really holds comes first: a profile tab's job holds `provider~account`, not provider
+  const _providerFor = (payload) => (typeof pool.providerOf === 'function' ? pool.providerOf(payload.jobId) : null)
+    || payload.provider || null;
 
   bus.on('guardian.job.complete', (ev) => {
     const payload = _payload(ev);

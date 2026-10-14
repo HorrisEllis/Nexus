@@ -2482,6 +2482,7 @@ const ROUTE_CAP = {
   'system.lean': CAPS.READ_IDEAS, 'system.lean.set': CAPS.ADMIN,   // 0.60.20 lean mode
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
+  'accounts.profiles': CAPS.READ_IDEAS,   // 0.60.32 PF1 — every account tab and its lane
   'repo.system': CAPS.READ_IDEAS, 'repo.system.control': CAPS.ADMIN,   // §0.39.372 NC2 — stopping a system is an admin act
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
@@ -2748,6 +2749,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','providers','ready'], 'providers.ready'],     // 0.60.28 PF1 — can each browser agent take a job now (guardian owns it)
     ['GET',    ['api','accounts','chain'],  'accounts.chain'],      // 0.60.25 — the fallback chain (guardian owns it)
     ['POST',   ['api','accounts','chain'],  'accounts.chain.set'],
+    ['GET',    ['api','accounts','profiles'], 'accounts.profiles'],   // 0.60.32 PF1 — guardian's account tabs: the provider's own and each profile tab
     ['POST',   ['api','accounts','rest'],   'accounts.rest'],
     ['GET',    ['api','system','lean'],   'system.lean'],        // 0.60.20 — lean mode: what is held, saved for the next boot
     ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
@@ -4712,10 +4714,11 @@ async function handle(req, res, route, query, body) {
       if (!providers) return err(res, 502, 'Guardian did not answer — readiness is read from it (is it running?)');
       return ok(res, { providers });
     }
-    case 'accounts.chain': case 'accounts.chain.set': case 'accounts.rest': {
+    case 'accounts.chain': case 'accounts.chain.set': case 'accounts.rest': case 'accounts.profiles': {
       let r;
       try {
-        r = action === 'accounts.chain'
+        r = action === 'accounts.profiles' ? await _nexusClient.get('guardian', '/api/accounts/profiles', { timeout: 8000 })
+          : action === 'accounts.chain'
           ? await _nexusClient.get('guardian', `/api/accounts/chain?provider=${encodeURIComponent(query.provider || '')}`, { timeout: 8000 })
           : await _nexusClient.post('guardian', action === 'accounts.rest' ? '/api/accounts/rest' : '/api/accounts/chain', body || {}, { timeout: 8000 });
       } catch (e) { return err(res, 502, `guardian is not answering: ${e.message}`); }

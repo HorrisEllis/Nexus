@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791954782716,
+ "generatedAt": 1791955427516,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -2068,6 +2068,15 @@
    ],
    "listens": [
     "liminal.velocity.runaway"
+   ]
+  },
+  "nexus.tests.modules.test-profile-tabs.test": {
+   "emits": [
+    "guardian.job.complete",
+    "guardian.provider.disconnected"
+   ],
+   "listens": [
+    "guardian.job.timeout"
    ]
   },
   "nexus.tests.modules.test-raid-orion-wiring": {
@@ -5706,7 +5715,8 @@
     "nexus.guardian.lib.response-sink",
     "nexus.tests.modules.test-back-and-forth.test",
     "nexus.tests.modules.test-economy-guardian.test",
-    "nexus.tests.modules.test-guardian-retry-novelty-installs"
+    "nexus.tests.modules.test-guardian-retry-novelty-installs",
+    "nexus.tests.modules.test-profile-tabs.test"
    ],
    "listeners": [
     "nexus.tests.modules.test-back-and-forth.test",
@@ -7240,7 +7250,8 @@
   },
   "guardian.provider.disconnected": {
    "emitters": [
-    "nexus.tests.modules.test-back-and-forth.test"
+    "nexus.tests.modules.test-back-and-forth.test",
+    "nexus.tests.modules.test-profile-tabs.test"
    ],
    "listeners": []
   },
@@ -7249,7 +7260,8 @@
     "nexus.tests.modules.test-economy-guardian.test"
    ],
    "listeners": [
-    "nexus.tests.modules.test-back-and-forth.test"
+    "nexus.tests.modules.test-back-and-forth.test",
+    "nexus.tests.modules.test-profile-tabs.test"
    ]
   },
   "real.evt": {
