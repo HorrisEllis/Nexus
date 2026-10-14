@@ -56,3 +56,13 @@ payload:
       description: >-
         its chat works signed out (0.60.2) — a tab that lands on a sign-in page is sent back to its chat before the
         person is asked to sign in (clear-glass/src/providers/attention.js)
+    tools:
+      type: array
+      description: >-
+        what Nexus can use it for (lib/route-eligibility.js TOOLS: text, code, web, browser, files, shell, nexus) — RT1
+        (0.60.31): a job that requires a tool this agent lacks is never routed to it, whatever its learned score
+    contextTokens:
+      type: number
+      description: >-
+        the most tokens one job can hand it (its stated window) — RT1: a packet bigger than this is never routed to it;
+        Boundaries (contract-gates) still learns the size it passes reliably below this

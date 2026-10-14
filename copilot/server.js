@@ -2347,8 +2347,10 @@ const server = http.createServer(async (req, res) => {
   // economy ledger (what the learned mode learns from) and the breaker. The caller still sends its own prompt (0.39.258).
   if (method === 'POST' && p === '/api/route') {
     // §HP18 0.55.2 — guardian's open tabs order the browser agents (fail-open: guardian silent = order unchanged)
-    try { const b = await readBody(req); const tabs = await require('../lib/agent-providers.js').guardianTabs({ url: GD_URL });
-      json(res, 200, require('../lib/model-door.js').route(b, { defaultProvider: config.DEFAULT_PROVIDER, resolve: resolveDefaultBackend, tabs })); }
+    // §RT1 0.60.31 — and guardian's readiness removes an agent that cannot answer now (a sign-in wall, every account resting)
+    try { const b = await readBody(req); const AP = require('../lib/agent-providers.js');
+      const [tabs, ready] = await Promise.all([AP.guardianTabs({ url: GD_URL }), AP.guardianReady({ url: GD_URL })]);
+      json(res, 200, require('../lib/model-door.js').route(b, { defaultProvider: config.DEFAULT_PROVIDER, resolve: resolveDefaultBackend, tabs, ready })); }
     catch (e) { json(res, 500, { ok: false, error: e.message }); }
     return;
   }

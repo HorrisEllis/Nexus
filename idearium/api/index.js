@@ -6604,7 +6604,12 @@ async function handle(req, res, route, query, body) {
       if (!body || !String(body.message || '').trim()) return err(res, 400, 'message is required');
       let policy = {};
       try { policy = _routingPolicy() || {}; } catch (_) { policy = {}; }   // the same policy the repo agent reads
-      return ok(res, _require('../../lib/reasoning-route.js').route(String(body.message), { jobKind: body.kind || 'agent:chat', policy }));
+      const out = _require('../../lib/reasoning-route.js').route(String(body.message), { jobKind: body.kind || 'agent:chat', policy });
+      // §RT1 0.60.31 — and the door's route for it: eligibility (tools, window, readiness), then preference, with its record
+      const RAr = _require('../../lib/repo-agent.js');
+      const d = await _postJson(`${RAr.COPILOT_URL}/api/route`, { kind: out.kind, message: String(body.message), preferAgent: out.preferAgent || null, policy, ...(body.needs ? { needs: body.needs } : {}) }, 8000);
+      out.door = d.json && typeof d.json === 'object' && 'ok' in d.json ? d.json : { ok: false, error: d.status ? `copilot answered ${d.status}` : `copilot unreachable at ${RAr.COPILOT_URL}` };
+      return ok(res, out);
     }
     case 'repo.integrity': case 'repo.integrity.notes': {
       const repo = getRepoLayer().get(params.uuid);

@@ -389,6 +389,11 @@ async function renderRouting() {
       <div class="row"><div><div class="k">routing.contract_build</div><div class="d">0.60.18 — a held plan runs as a .contract: a brick per file, independent ones at once, each pass a checkpoint a later build resumes from, the phase passing only on its proof · off: one file after another</div></div><div class="ctl"><div class="ap-chips">${['on', 'off'].map(m => `<button class="ap-chip ${(p.contractBuild !== false ? 'on' : 'off') === m ? 'on' : ''}" data-rt-cb="${m}">${m}</button>`).join('')}</div></div></div>
       ${row('contract_concurrency', 'bricks built at the same time (independent files only)', num('contract_concurrency', p.contractConcurrency || 2, 1, 8))}
       <div class="row"><div><div class="k">routing.chunk_phases</div><div class="d">without a plan: one request per file when the ladder starts on Ollama (auto), always, or never</div></div><div class="ctl"><div class="ap-chips">${['auto', 'always', 'never'].map(m => `<button class="ap-chip ${(p.chunkPhases || 'auto') === m ? 'on' : ''}" data-rt-cp="${m}">${m}</button>`).join('')}</div></div><div class="ctl"></div></div></div>
+    <div class="card" id="rt-try"><h3><span class="grow">Try a route</span><span class="tag">RT1</span></h3>
+      <div class="kv">James: "and we have intent routing? that way the complex reasoning can be done by the bigger models or agents. like claude or deepseek?" First who <b>can</b> take the job (the tools it needs, its size against each agent's window, whether Guardian says the agent can answer now), then who is <b>preferred</b> among them (the learned order, the reasoner first for reasoning work).</div>
+      <div class="row"><div><div class="k">request</div><div class="d">what you would ask; kind and tools are optional (tools: text, code, web, browser, files, shell, nexus)</div></div><div class="ctl"><input type="text" id="rt-try-msg" placeholder="design the retry policy and compare the trade-offs"></div><div class="ctl"></div></div>
+      <div class="row"><div><div class="k">kind · tools · tokens</div><div class="d">e.g. agent:browser · browser · 40000</div></div><div class="ctl"><input type="text" id="rt-try-kind" placeholder="agent:chat" style="width:9em"> <input type="text" id="rt-try-tools" placeholder="tools" style="width:8em"> <input type="number" id="rt-try-tok" placeholder="tokens" style="width:7em"> <button class="ap-chip" id="rt-try-go">route it</button></div><div class="ctl"></div></div>
+      <div id="rt-try-out" class="kv"></div></div>
     <div class="card"><h3><span class="grow">The route per block</span><span class="tag">${(d.blocks || []).length} blocks</span></h3>
       ${(d.blocks || []).map(b => `<div class="row"><div><div class="k">${esc(b.id)}</div><div class="d">${esc(b.title)}</div></div><div class="ctl">${b.route.map(r => `<span class="tag" title="${esc(r.why)}">${esc(r.provider)}</span>`).join(' → ')}${b.skipped.length ? ` <span class="kv">skipped ${b.skipped.map(x => esc(x.provider)).join(', ')}</span>` : ''}</div><div class="ctl"></div></div>`).join('')}</div>`;
   leanLoad();   // 0.60.20
@@ -404,6 +409,25 @@ async function renderRouting() {
   api('/api/routing/learned').then(r => { const L = (r.data || r).learned || {}; const ks = Object.keys(L).sort();
     $('rt-learned').innerHTML = ks.length ? ks.map(k => `<div><b>${esc(k)}</b> ${L[k].slice(0, 5).map(x => `<span class="tag ${x.success >= 0.5 ? 'ok' : 'warn'}" title="${x.ok} ok · ${x.failed} failed">${esc(x.provider)} ${Math.round(x.success * 100)}%</span>`).join(' ')}</div>`).join('') : 'nothing learned yet — every chunk build records its outcome'; }).catch(() => { $('rt-learned').textContent = ''; });
   $('rt-reset').onclick = async () => { try { await post('/api/routing/breaker/reset', {}); toast('breakers reset', 'ok'); renderRouting(); } catch (e) { toast(e.message, 'bad'); } };
+  $('rt-try-go').onclick = rtTry;   // 0.60.31 RT1
+}
+
+// 0.60.31 RT1 — the door's route for one request: eligible agents in order, the rejected ones and why, its record
+async function rtTry() {
+  const msg = $('rt-try-msg').value.trim(), out = $('rt-try-out');
+  if (!msg) { toast('write a request first', 'bad'); return; }
+  const tools = $('rt-try-tools').value.trim(), tok = Number($('rt-try-tok').value) || 0, kind = $('rt-try-kind').value.trim();
+  out.innerHTML = 'routing…';
+  let d;
+  try { d = await post('/api/route/assess', { message: msg, ...(kind ? { kind } : {}), ...(tools || tok ? { needs: { ...(tools ? { tools } : {}), ...(tok ? { tokens: tok } : {}) } } : {}) }); d = d.data || d; }
+  catch (e) { out.innerHTML = `<span class="tag warn">${esc(e.message)}</span>`; return; }
+  const a = d.assessment || {}, r = d.door || {}, rec = r.record || {};
+  const conf = rec.confidence ? (rec.confidence.value == null ? 'untried' : `${Math.round(rec.confidence.value * 100)}%`) : '—';
+  out.innerHTML = `<div><b>${esc(a.level || '?')}</b> → ${esc(d.kind || '')}${d.preferAgent ? ` (reasoner ${esc(d.preferAgent)})` : ''} <span class="d">${esc(d.why || '')}</span></div>`
+    + (r.ok || rec.rejected ? `<div>route: ${(r.route || []).map(h => `<span class="tag ok" title="${esc(h.why || '')}">${esc(h.provider)}</span>`).join(' → ') || '<span class="tag warn">no agent can take it</span>'} <span class="tag" title="${esc(rec.confidence ? rec.confidence.basis : '')}">confidence ${esc(conf)}</span>${rec.fallback ? ` <span class="d">fallback ${esc(rec.fallback)}</span>` : ''}</div>`
+      + ((rec.needs && ((rec.needs.tools || []).length || rec.needs.tokens)) ? `<div class="d">needs: ${esc([...(rec.needs.tools || []), rec.needs.tokens ? `~${rec.needs.tokens} tokens` : ''].filter(Boolean).join(', '))}</div>` : '')
+      + (rec.rejected || []).map(x => `<div><span class="tag warn">${esc(x.provider)}</span> <span class="d">${esc(x.requirement)}: ${esc(x.why)}</span></div>`).join('')
+      : `<div><span class="tag warn">door: ${esc(r.error || 'no route')}</span></div>`);
 }
 
 // ── §0.39.281 EC8 — the provider economy (docs/2026-09-29-provider-economy-phasemap.spec) ──

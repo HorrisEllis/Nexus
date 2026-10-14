@@ -92,10 +92,16 @@ export const SPEC = [
     print: (d, a, h) => printLog(d, h, null) },
   // 0.60.7 — Versionium managed per repo (lib/repo-history.js) and the import checks (lib/import-checks.js)
   // 0.60.8 — intent routing for reasoning (lib/reasoning-route.js)
-  { key: 'route.assess', usage: 'route assess <request words>', about: 'how hard a request is and where it would be routed: complex → a reasoning agent (agent:reason), simple → the usual route',
+  // 0.60.31 RT1 — and the door's route: who is eligible (tools, window, readiness), who was rejected and why, the record
+  { key: 'route.assess', usage: 'route assess <request words> [--kind=agent:browser] [--tools=browser,files] [--tokens=N]', about: 'how hard a request is and where it would be routed: complex → a reasoning agent (agent:reason), simple → the usual route; then the door\'s route — eligible agents in order, the rejected ones with why, confidence, fallback',
     need: (a) => (a.args.length ? null : '<request words>'),
-    req: (a) => ({ method: 'POST', path: '/api/route/assess', body: { message: a.args.join(' ') } }),
-    print: (d, a, h) => { const s = d.assessment || {}; console.log(`  ${s.level === 'complex' ? h.c.amber(s.level) : s.level}  score ${s.score} → ${d.kind}${d.preferAgent ? ` (${d.preferAgent})` : ''}`); for (const x of s.signals || []) console.log(h.c.dim(`    · ${x}`)); console.log(h.c.dim(`  ${d.why}`)); } },
+    req: (a) => ({ method: 'POST', path: '/api/route/assess', body: { message: a.args.join(' '), ...(a.flags.kind ? { kind: a.flags.kind } : {}), ...(a.flags.tools || a.flags.tokens ? { needs: { ...(a.flags.tools ? { tools: String(a.flags.tools) } : {}), ...(a.flags.tokens ? { tokens: Number(a.flags.tokens) } : {}) } } : {}) } }),
+    print: (d, a, h) => { const s = d.assessment || {}; console.log(`  ${s.level === 'complex' ? h.c.amber(s.level) : s.level}  score ${s.score} → ${d.kind}${d.preferAgent ? ` (${d.preferAgent})` : ''}`); for (const x of s.signals || []) console.log(h.c.dim(`    · ${x}`)); console.log(h.c.dim(`  ${d.why}`));
+      const r = d.door || {}; const rec = r.record || {};
+      if (!r.ok && !rec.rejected) { console.log(h.c.amber(`  door: ${r.error || 'no route'}`)); return; }
+      console.log(`  route: ${(r.route || []).map(x => x.provider).join(' → ') || h.c.amber('none eligible')}${rec.confidence ? h.c.dim(`  (confidence ${rec.confidence.value == null ? 'untried' : rec.confidence.value} — ${rec.confidence.basis})`) : ''}`);
+      if (rec.needs && ((rec.needs.tools || []).length || rec.needs.tokens)) console.log(h.c.dim(`  needs: ${[...(rec.needs.tools || []), rec.needs.tokens ? `~${rec.needs.tokens} tokens` : null].filter(Boolean).join(', ')}`));
+      for (const x of rec.rejected || []) console.log(h.c.amber(`    ✗ ${x.provider} (${x.requirement}): ${x.why}`)); } },
   // 0.60.14 — tiny amounts of code: a line range, and a copy of it to the work surface / a new file
   { key: 'repo.lines', repo: true, usage: 'repo lines <repo> <path> <from> [to]', about: 'lines from..to of a repo file, numbered (80 lines when to is left out)',
     need: (a) => (a.args.length >= 2 ? null : '<path> <from> [to]'),
