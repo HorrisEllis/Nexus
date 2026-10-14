@@ -2376,6 +2376,7 @@ const ROUTE_CAP = {
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
+  'checks.list': CAPS.READ_IDEAS, 'checks.run': CAPS.READ_IDEAS,   // §0.60.33 QA1 — the check catalogue; a run only reads and parses
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
@@ -2795,6 +2796,9 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','integrity'],                'repo.integrity.notes'],
     // §0.60.8 — intent routing for reasoning (lib/reasoning-route.js): how hard a request is, and where it would go
     ['POST',   ['api','route','assess'],                                'route.assess'],             // { message, kind? }
+    // §0.60.33 QA1 — the check catalogue (lib/check-catalogue.js): every check, which ones run; run one now
+    ['GET',    ['api','checks'],                                        'checks.list'],              // ?family=&how=&stage=&runnable=1|0
+    ['POST',   ['api','checks',':id','run'],                            'checks.run'],               // { repo?, path?, step?, only?, files? }
     // §MCO-E 2026-09-20 — the repo's roadmap, from the phasemaps inside it
     // (idearium/repo/roadmap.js; spec idearium/spec/idearium.repo-roadmap.spec).
     ['GET',    ['api','repos',    ':uuid','roadmap'],        'repo.roadmap.get'],
@@ -6603,6 +6607,23 @@ async function handle(req, res, route, query, body) {
     }
     // §0.60.8 — James: "we need intent routing for the reasoning, for the complex tasks". The same call the repo agent makes
     // before it asks the door: the level, the signals, the kind and the preferred reasoning agent. Reads only.
+    // §0.60.33 QA1 — James: "gates for everything to reduce workload from agents" · "im scared of regression." The
+    // catalogue as a table, and one check run now — over Nexus, or a repo's own files (its folder, or a path inside it)
+    case 'checks.list': {
+      const CC = _require('../../lib/check-catalogue.js');
+      const rn = query.runnable == null || query.runnable === '' ? null : query.runnable === '1' || query.runnable === 'true';
+      return ok(res, { summary: CC.summary(), checks: CC.list({ family: query.family || null, how: query.how || null, stage: query.stage || null, runnable: rn }) });
+    }
+    case 'checks.run': {
+      const CC = _require('../../lib/check-catalogue.js');
+      const b = body || {};
+      if (b.path && (path.isAbsolute(String(b.path)) || String(b.path).split(/[\\/]/).includes('..'))) return err(res, 400, 'path must be relative, inside the repo');
+      let root;
+      if (b.repo) { const repo = getRepoLayer().get(b.repo); if (!repo) return err(res, 404, `repo not found: ${b.repo}`); root = _repoDiskDir(repo.uuid); }
+      const cond = { ...(b.path ? { path: String(b.path) } : {}), ...(b.step ? { step: String(b.step) } : {}), ...(b.only ? { only: b.only } : {}), ...(b.files ? { files: b.files } : {}), ...(b.max ? { max: Number(b.max) } : {}) };
+      const r = CC.run(params.id, cond, root ? { root } : {});
+      return ok(res, { ...r, entry: CC.get(params.id) });
+    }
     case 'route.assess': {
       if (!body || !String(body.message || '').trim()) return err(res, 400, 'message is required');
       let policy = {};

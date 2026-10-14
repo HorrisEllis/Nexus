@@ -92,6 +92,17 @@ export const SPEC = [
     print: (d, a, h) => printLog(d, h, null) },
   // 0.60.7 — Versionium managed per repo (lib/repo-history.js) and the import checks (lib/import-checks.js)
   // 0.60.8 — intent routing for reasoning (lib/reasoning-route.js)
+  // 0.60.33 QA1 — the check catalogue: what each check is and whether Nexus runs it; run one over Nexus or a repo
+  { key: 'checks.list', repo: false, usage: 'checks list [--family=shadow] [--runnable]', about: 'the check catalogue (cos/spec/check-catalogue.spec): every check, its family and stage, and which ones Nexus can run now',
+    req: (a) => ({ method: 'GET', path: `/api/checks?${a.flags.family ? `family=${encodeURIComponent(a.flags.family)}&` : ''}${a.flags.runnable ? 'runnable=1' : ''}` }),
+    print: (d, a, h) => { const s = d.summary || {}; console.log(`  ${s.total} checks · ${s.runnable} runnable now (${(s.runners || []).concat(s.importChecks || []).join(', ')})`);
+      for (const c of d.checks || []) console.log(`  ${c.runnable ? h.c.mint(c.id) : h.c.dim(c.id)}  ${c.name}  ${h.c.dim(`${c.family} · ${c.how}`)}`); } },
+  { key: 'checks.run', repo: false, usage: 'checks run <CK-nnn> [--repo=<uuid>] [--path=dir] [--step=<step>]', about: 'run one check now: CK-233 (nothing forbidden is back), CK-248 (every file passes its language\'s own parser), CK-230 (a step\'s shadow settled)',
+    need: (a) => (a.args.length ? null : '<CK-nnn>'),
+    req: (a) => ({ method: 'POST', path: `/api/checks/${encodeURIComponent(a.args[0])}/run`, timeoutMs: 10 * 60000, body: { ...(a.flags.repo ? { repo: a.flags.repo } : {}), ...(a.flags.path ? { path: a.flags.path } : {}), ...(a.flags.step ? { step: a.flags.step } : {}) } }),
+    print: (d, a, h) => { console.log(`  ${d.ok ? h.c.mint(`${d.id} passed`) : d.verifiable === false ? h.c.amber(`${d.id} could not be checked`) : h.c.amber(`${d.id} failed`)}${d.ms != null ? h.c.dim(`  ${d.ms} ms`) : ''}`);
+      if (d.reason) console.log(h.c.dim(`  ${d.reason}`));
+      for (const i of (d.items || []).slice(0, 30)) console.log(`    ${i.skipped ? h.c.amber(`skipped ${i.lang}: ${i.skipped}`) : i.error ? `${i.file} (${i.lang}): ${i.error}` : i.file ? `${i.file}:${i.line} ${h.c.dim(`[${i.id}] ${i.text}`)}` : JSON.stringify(i)}`); } },
   // 0.60.31 RT1 — and the door's route: who is eligible (tools, window, readiness), who was rejected and why, the record
   { key: 'route.assess', usage: 'route assess <request words> [--kind=agent:browser] [--tools=browser,files] [--tokens=N]', about: 'how hard a request is and where it would be routed: complex → a reasoning agent (agent:reason), simple → the usual route; then the door\'s route — eligible agents in order, the rejected ones with why, confidence, fallback',
     need: (a) => (a.args.length ? null : '<request words>'),

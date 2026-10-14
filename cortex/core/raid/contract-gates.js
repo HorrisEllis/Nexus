@@ -27,6 +27,8 @@
  *     { evidence: <key>, match? }      recorded evidence under that key (and, given, matching the regex)
  *     { gate: <id> }                   that gate is PASSED
  *     { check: CK-001|CK-002|CK-060, path? }   lib/import-checks.js over a folder — clean passes
+ *     { check: CK-230|CK-233|CK-248, … }        §QA1 lib/check-catalogue.js runners (a step's shadow settled; nothing on
+ *                                              the deny list; every file passes its language's own parser)
  *   Anything else (a free sentence) is `unverifiable`: reported, never counted as proof.
  *
  *   Gate states: BLOCKED · READY · RUNNING · PASSED · FAILED · STALE. SKIPPED only for a gate marked optional by its
@@ -124,8 +126,13 @@ function checkCondition(c, { root, state, runTest }) {
   if (c.gate) { const s = state.gates && state.gates[c.gate] && state.gates[c.gate].status; return { ok: s === 'PASSED', verifiable: true, evidence: s === 'PASSED' ? { gate: c.gate } : null, reason: s === 'PASSED' ? null : `gate ${c.gate} is ${s || 'not run'}` }; }
   if (c.check) {
     const id = String(c.check).toUpperCase();
-    if (!['CK-001', 'CK-002', 'CK-060'].includes(id)) return { ok: false, verifiable: false, reason: `unverifiable: ${id} has no executable check here yet (lib/import-checks.js runs CK-001, CK-002, CK-060)` };
-    return { ok: false, verifiable: true, async: true, check: id, dir: path.join(root, c.path || '.') };
+    if (['CK-001', 'CK-002', 'CK-060'].includes(id)) return { ok: false, verifiable: true, async: true, check: id, dir: path.join(root, c.path || '.') };
+    // §QA1 0.60.33 — every other check with a runner (lib/check-catalogue.js: CK-230 shadow, CK-233 deny list, CK-248 each
+    // language's own toolchain); without one it stays unverifiable — never a pass
+    let CC = null; try { CC = require(path.join(DEFAULT_ROOT, 'lib/check-catalogue.js')); } catch (_) { CC = null; }
+    if (!CC || CC.runnable(id) !== 'runner') return { ok: false, verifiable: false, reason: `unverifiable: ${id} has no executable check here yet (lib/check-catalogue.js runners: ${CC ? CC.summary().runners.join(', ') : 'not loaded'}; lib/import-checks.js: CK-001, CK-002, CK-060)` };
+    const r = CC.run(id, c, { root });
+    return { ok: !!r.ok, verifiable: r.verifiable !== false, evidence: r.ok ? (r.evidence || { check: id }) : null, reason: r.ok ? null : r.reason };
   }
   return { ok: false, verifiable: false, reason: `unverifiable: ${JSON.stringify(c)} names no check` };
 }

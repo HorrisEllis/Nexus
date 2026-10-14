@@ -249,3 +249,14 @@ spec:
     - "Each deterministic check becomes a station { id, family, needs[], run, verdict } (cos/spec/torture-chamber.spec's shape) under cos/templates/torture-chamber/stations/, or a gate check in RQ1's library — never both."
     - "A check's failure is a class in RQ2's vocabulary; its result is a ledger row with causedBy; recurrence promotes a .failure_mode (FM4). CK-220–CK-223 are the checks on the checks."
     - "The import stage (CK-001, 002, 004, 006, 007, 008, 010, 012, 060, 064, 084, 086, 120, 125, 126) runs when a project is brought in, so an imported repo arrives with what is already broken listed — MASTERMIND's 143 broken imports and its three copies of spatial-v2 are what that run would have said."
+
+## ADDENDUM 2026-10-14 — the catalogue runs (QA1, 0.60.33)
+# James: "yes start QA1". lib/check-catalogue.js loads this file (list / get / runnable / run / summary) — before this
+# nothing loaded it. Runners, one per check, in lib/checks/: CK-230 (ck-230-shadow.js: lib/shadow.js now keeps its last
+# settles), CK-233 (ck-233-deny.js over cos/spec/deny-list.spec and a repo's .nexus/deny.yaml), CK-248
+# (ck-248-toolchain.js: node --check, tsc, python ast, bash -n, JSON, YAML, gofmt, gcc/g++; a missing tool is said, never
+# a pass). CK-001/002/006/008/060 keep their path (lib/import-checks.js). A contract condition { check: CK-nnn } runs any
+# of them (contract-gates checkCondition); one with no runner is unverifiable, which GT1 classes as spec.
+# First run of CK-248 over Nexus: 2489 files, 6 languages (js 2309, json 152, ts 19, yaml 6, py 2, sh 1), all clean,
+# 77 s. Not covered: docs/*.spec (YAML with markdown addenda — not one language).
+# Surfaces: GET /api/checks, POST /api/checks/:id/run; `checks list`, `checks run`; Idearium Settings → Checks.
