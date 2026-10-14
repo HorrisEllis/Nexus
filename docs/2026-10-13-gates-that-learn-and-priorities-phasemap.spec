@@ -94,7 +94,7 @@ phasemap:
         today). CK-241 checks that the three agree.
       proof: "two hats on one provider answer from two accounts in two tabs at once; a job for hat A never lands in hat B's tab"
     QA1_the_catalogue_runs:
-      status: OPEN
+      status: "PARTLY DONE 0.60.33 — lib/check-catalogue.js serves the catalogue; runners CK-230 (shadow), CK-233 (deny list), CK-248 (every language's toolchain); contract gates run them; test-check-catalogue QA-01..07. Open: the other section-13 checks (CK-231, 234–252) and RQ18's test/attack intents"
       folds: [CK1_the_catalogue_runs, RQ1_the_verifier_library, RQ18_test_and_attack_intents]
       does: >-
         lib/check-catalogue.js serves cos/spec/check-catalogue.spec: 119 checks; section 13 is his 2026-10-13 list of
@@ -466,3 +466,56 @@ phasemap:
 #   provider tab's account-switch capture is unchanged.
 # - Not run in Clear Glass on his machine yet: the Electron half (profile-tabs.js, host partition, :7702 routes) is unit
 #   tested with fakes, not driven live.
+
+## ADDENDUM 2026-10-14 — QA1 mapped for build: the catalogue runs (0.60.33)
+
+# James: "yes start QA1" — after the coder's answer to "now what? does that make it more stalbe?": GT1 and RT1 add
+# stability, PF1 adds capacity; the live run is the real proof; QA1 next because it guards what already works (CK-233,
+# the regressions he fears: "im scared of regression", 2026-10-13).
+#
+# Grounded first:
+# - The map says "lib/check-catalogue.js serves cos/spec/check-catalogue.spec". It does not exist: nothing loads the
+#   catalogue (only lib/import-checks.js names it). Drift, said here; QA1 builds it.
+# - contract-gates checkCondition runs { check: CK-001|CK-002|CK-060 } through lib/import-checks.js; every other id is
+#   "unverifiable".
+# - lib/shadow.js keeps open shadows in memory and forgets a shadow once settled — CK-230 cannot tell "settled clean"
+#   from "never declared" without a record of settles.
+# - CK-233 exists as two one-off tests (test-no-compartment-label, CG-001b Playwright); the removed Architect page has
+#   no guard at all.
+# - Toolchains here: node, tsc, python3 + ruff, go, cargo, gcc, javac; not shellcheck, yamllint. CK-248 must say which
+#   tool it lacked, never pass silently.
+#
+# Build, bottom-up:
+# 1. lib/shadow.js: settled history (a bounded ring) and settled({ step }); open({ step, olderThanMs }).
+# 2. lib/checks/: one runner per check, each (condition, ctx) → { ok, verifiable, evidence, reason, items }:
+#    ck-230-shadow.js (open shadows for a step past their age, or settled with absences → fail; settled clean → pass;
+#    never declared → unverifiable), ck-233-deny.js (cos/spec/deny-list.spec + a repo's own .nexus/deny.yaml: pattern,
+#    paths, except, why, since — every hit file:line), ck-248-toolchain.js (per extension: node --check, tsc --noEmit,
+#    py_compile, bash -n, JSON.parse, YAML parse, gofmt -e, gcc -fsyntax-only; a missing tool is reported, not passed).
+# 3. lib/check-catalogue.js: load the spec, list / get / runnable / run(id, condition, ctx); import-checks ids keep
+#    their path.
+# 4. cos/spec/deny-list.spec: Nexus's own — the compartment label, Playwright, the Architect page's entry points —
+#    each with his words and the version that removed it.
+# 5. contract-gates checkCondition: a { check: CK-nnn } with a runner runs it; without one, "unverifiable" (as today).
+# 6. API + command + UI: GET /api/checks (the catalogue, runnable marked), POST /api/checks/:id/run; `checks list`,
+#    `checks run <id> [path]`; Settings → Checks.
+#
+# Proof (the map's): "a contract condition { check: CK-230 } passes on a settled shadow and fails on an open one"; plus a
+# planted forbidden thing turns CK-233 red and Nexus's own tree is green; a planted syntax error per language turns
+# CK-248 red; the old one-off guards and CK-233 agree (test-check-catalogue).
+
+## ADDENDUM 2026-10-14 — QA1 first cut built: the catalogue runs (0.60.33)
+
+# Built as mapped above (steps 1–6). Proof: test-check-catalogue 7/7 — the map's own ({ check: CK-230 } passes on a
+# settled shadow, fails on an open one, fails when settled with something absent, unverifiable when never declared);
+# each planted forbidden thing turns CK-233 red at its file:line while comments, _archive and data stay quiet; CK-233
+# and the two one-off guards use the same patterns and agree; a planted syntax error in each of 8 languages turns CK-248
+# red with that language's own tool, valid files pass, a missing tool is said and never counted.
+# First real runs: CK-233 over Nexus clean (0.6 s); CK-248 over Nexus 2489 files in 6 languages clean (77 s).
+# Regression suites unchanged (contract-gates 20/20, adapters 18/18, phase-build 8/8, chunked 15/15, shadow 16/16,
+# shadow-space 5/5, atlas-and-glass 10/10, no-compartment-label 1/1); CT0 re-checked 5/5 after the evaluator changed.
+#
+# Kept, not replaced (§0.3): test-no-compartment-label and CG-001b still run; CK-233 gathers the same patterns as data.
+# Next in QA1 (open): CK-231 half-states (a sweep), CK-234 unhandled branches, CK-235 untested surface, CK-237 free-
+# sentence conditions, CK-239 dangling edges (loom), CK-245 a retry changes something — all deterministic; each one a
+# runner file and a catalogue line.

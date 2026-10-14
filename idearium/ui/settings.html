@@ -167,6 +167,7 @@ function renderNav() {
     + item(CUR.kind === 'economy', 'data-economy="1"', 'Provider economy', '<span class="tag acc">limits · learning</span>')
     + item(CUR.kind === 'routing', 'data-routing="1"', 'Routing & fallback', '<span class="tag acc">pipeline</span>')
     + item(CUR.kind === 'access', 'data-access="1"', 'Access', '<span class="tag acc">app passwords</span>')
+    + item(CUR.kind === 'checks', 'data-checks="1"', 'Checks', '<span class="tag acc">gates · regressions</span>')   // 0.60.33 QA1
     + item(CUR.kind === 'appearance', 'data-appearance="1"', 'Appearance', `<span class="tag">${esc((window.IdeariumTheme && IdeariumTheme.current().theme) || 'nexus')}</span>`)
     + `<div class="navgroup">Repos · compartments (${originals.length})</div>` + (originals.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') || '<div class="kv">none match</div>')
     + (branches.length ? `<div class="navgroup">Branches (${branches.length})</div>` + branches.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') : '');
@@ -176,6 +177,7 @@ function renderNav() {
   const ap = $('nav').querySelector('[data-appearance]'); if (ap) ap.onclick = () => go('appearance');
   const rt = $('nav').querySelector('[data-routing]'); if (rt) rt.onclick = () => go('routing');
   const ax = $('nav').querySelector('[data-access]'); if (ax) ax.onclick = () => go('access');
+  const ck = $('nav').querySelector('[data-checks]'); if (ck) ck.onclick = () => go('checks');
 }
 $('q').oninput = () => { renderNav(); if (CUR.kind === 'global') render(); };
 
@@ -219,6 +221,7 @@ function render() {
   if (CUR.kind === 'appearance') return renderAppearance();
   if (CUR.kind === 'access') return renderAccess();
   if (CUR.kind === 'routing') return renderRouting();
+  if (CUR.kind === 'checks') return renderChecks();   // 0.60.33 QA1
   if (CUR.kind === 'global' || !DETAIL) return renderGlobal();
   return renderRepo();
 }
@@ -358,6 +361,32 @@ async function leanLoad() {
     leanLoad();
   };
 }
+// ── 0.60.33 QA1 — the check catalogue (cos/spec/check-catalogue.spec, lib/check-catalogue.js) ──
+// James: "gates for everything to reduce workload from agents" · "im scared of regression." Every check, and the ones
+// Nexus runs now, with a Run button over Nexus (or a path inside it).
+async function renderChecks() {
+  $('title').textContent = 'Checks';
+  $('sub').innerHTML = 'Every check in <code>cos/spec/check-catalogue.spec</code>. The green ones run now — in a contract gate (<code>{ check: CK-233 }</code>), with <code>idearium checks run</code>, or here. A check that cannot run never passes.';
+  $('tabs').innerHTML = '';
+  let d; try { d = await api('/api/checks'); d = d.data || d; } catch (e) { $('body').innerHTML = `<div class="empty">Could not read the catalogue: ${esc(e.message)}</div>`; return; }
+  const s = d.summary || {};
+  const fams = [...new Set((d.checks || []).map(c => c.family))];
+  const row = (c) => `<div class="row"><div><div class="k">${esc(c.id)} · ${esc(c.name)}</div><div class="d">${esc(c.invariant || '')}</div></div><div class="ctl">${c.runnable === 'runner' ? `<button class="ap-chip on" data-ck-run="${esc(c.id)}">run</button>` : c.runnable ? '<span class="tag">import checks</span>' : `<span class="tag" title="${esc(c.exists || 'none')}">${esc(c.how)}</span>`}</div><div class="ctl" id="ck-out-${esc(c.id)}"></div></div>`;
+  $('body').innerHTML = `<div class="card"><h3><span class="grow">The catalogue</span><span class="tag ok">${s.runnable} runnable</span><span class="tag">${s.total} checks</span></h3>
+      <div class="kv">path (optional, inside Nexus) <input type="text" id="ck-path" placeholder="e.g. idearium/ui" style="width:16em"> · step for CK-230 <input type="text" id="ck-step" placeholder="phase.build" style="width:10em"></div>
+      ${(d.checks || []).filter(c => c.runnable).map(row).join('')}</div>`
+    + fams.map(f => `<div class="card"><h3><span class="grow">${esc(f)}</span><span class="tag">${(d.checks || []).filter(c => c.family === f).length}</span></h3>${(d.checks || []).filter(c => c.family === f && !c.runnable).map(row).join('') || '<div class="kv">all runnable (above)</div>'}</div>`).join('');
+  for (const b of $('body').querySelectorAll('[data-ck-run]')) b.onclick = async () => {
+    const id = b.dataset.ckRun, out = document.getElementById(`ck-out-${id}`); out.innerHTML = 'running…';
+    const p = $('ck-path').value.trim(), st = $('ck-step').value.trim();
+    try {
+      let r = await post(`/api/checks/${encodeURIComponent(id)}/run`, { ...(p ? { path: p } : {}), ...(st ? { step: st } : {}) }); r = r.data || r;
+      const items = (r.items || []).slice(0, 12).map(i => i.skipped ? `skipped ${esc(i.lang)}: ${esc(i.skipped)}` : i.error ? `${esc(i.file)}: ${esc(i.error)}` : i.file ? `${esc(i.file)}:${i.line} [${esc(i.id)}]` : esc(JSON.stringify(i))).join('<br>');
+      out.innerHTML = `<span class="tag ${r.ok ? 'ok' : 'warn'}">${r.ok ? 'passed' : r.verifiable === false ? 'could not check' : 'failed'}</span> <span class="d">${esc(r.reason || '')}${r.ms != null ? ` · ${r.ms} ms` : ''}</span>${items ? `<div class="d">${items}</div>` : ''}`;
+    } catch (e) { out.innerHTML = `<span class="tag warn">${esc(e.message)}</span>`; }
+  };
+}
+
 async function renderRouting() {
   $('title').textContent = 'Routing & fallback';
   $('sub').innerHTML = 'Which agent builds each spec chunk, and where it goes when that fails. Saved as <span class="tag">routing.*</span> in idearium\'s config (also <code>POST /api/config</code>, <code>idearium routing</code>).';

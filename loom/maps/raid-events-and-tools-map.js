@@ -83,6 +83,12 @@ const FILES = [
   // isAuthCookie). Consumers: the dispatcher and guardian/server.js (/api/accounts/profiles); Clear Glass main (its routes).
   ['guardian/lib/profile-lanes.js',         'nexus.guardian.lib.profile-lanes', ['nexus.guardian.lib.ncp']],
   ['clear-glass/src/providers/profile-tabs.js', 'nexus.clear-glass.src.providers.profile-tabs', ['nexus.clear-glass.src.cookies.session-hub']],
+  // 0.60.33 QA1 — the catalogue runs: lib/check-catalogue.js loads cos/spec/check-catalogue.spec and runs lib/checks/*
+  // (CK-230 reads lib/shadow.js); contract-gates checkCondition and idearium/api (checks.list / checks.run) consume it
+  ['lib/check-catalogue.js',                'nexus.lib.check-catalogue', ['nexus.lib.checks.ck-230-shadow', 'nexus.lib.checks.ck-233-deny', 'nexus.lib.checks.ck-248-toolchain']],
+  ['lib/checks/ck-230-shadow.js',           'nexus.lib.checks.ck-230-shadow', ['nexus.lib.shadow']],
+  ['lib/checks/ck-233-deny.js',             'nexus.lib.checks.ck-233-deny', []],
+  ['lib/checks/ck-248-toolchain.js',        'nexus.lib.checks.ck-248-toolchain', []],
   ['lib/phase-plan.js',                     'nexus.lib.phase-plan', []],
   ['cortex/core/raid/contract-adapters.js', 'nexus.cortex.core.raid.contract-adapters',
     ['nexus.cortex.core.raid.contract-gates', 'nexus.lib.model-door', 'nexus.lib.phase-plan']],
@@ -97,6 +103,8 @@ const CONSUMERS = [
   ['nexus.guardian.lib.dispatcher', 'nexus.guardian.lib.profile-lanes'],          // 0.60.32 PF1 — the lane before the pool
   ['nexus.guardian.server', 'nexus.guardian.lib.profile-lanes'],                  // 0.60.32 PF1 — /api/accounts/profiles, /route
   ['nexus.clear-glass.src.main', 'nexus.clear-glass.src.providers.profile-tabs'],  // 0.60.32 PF1 — :7702/providers/:id/profile(s)
+  ['nexus.cortex.core.raid.contract-gates', 'nexus.lib.check-catalogue'],          // 0.60.33 QA1 — { check: CK-nnn } conditions
+  ['nexus.idearium.api', 'nexus.lib.check-catalogue'],                             // 0.60.33 QA1 — /api/checks
 ];
 
 function mapRaidEventsAndTools(driver) {
