@@ -48,6 +48,17 @@ function agentExecutor({ route = doorRoute, dispatch = null, boundaries = CG.Bou
     try { hops = (await route({ kind, gate, packet, target, args })) || []; }
     catch (e) { return { unsupported: true, why: `routing ${kind} failed: ${e.message}` }; }
     if (!hops.length) return { unsupported: true, why: `no agent is available for ${kind}` };
+    // §GT1 — an agent that failed this brick on capability is skipped on the next attempt (escalate); when every routed
+    // agent has, all of them are tried again rather than none — escalation, never a silent block
+    const ev = (contract && contract.state && contract.state.evidence) || {};
+    let excluded = []; try { excluded = JSON.parse(ev[`${gate.id}.exclude`] || '[]'); } catch (_) { excluded = []; }
+    let exNote = '';
+    if (excluded.length) {
+      const rest = hops.filter(h => !excluded.includes(h.provider));
+      if (rest.length) { exNote = ` (failed it before, skipped: ${hops.filter(h => excluded.includes(h.provider)).map(h => h.provider).join(', ')})`; hops = rest; }
+      else exNote = ` (every routed agent failed it before — tried again)`;
+    }
+    const feedback = ev[`${gate.id}.feedback`] || null;   // RQ3 — the retry carries the check's own words
     const size = sizeOf ? sizeOf(gate, packet) : contract ? CG.packetTokens(contract, gate.id, { root }) : Math.ceil(JSON.stringify(packet || {}).length / 4);
     const fits = [], over = [];
     for (const h of hops) {
@@ -63,14 +74,14 @@ function agentExecutor({ route = doorRoute, dispatch = null, boundaries = CG.Bou
       overNote = ` (~${size} tokens is over every learned budget — ${over.map(h => `${h.provider} ~${h.budget}`).join(', ')} — and it is one piece, so tried anyway, largest first)`;
     }
     let out;
-    try { out = await dispatch(fits, { gate, packet, kind, target, args, size }); }
+    try { out = await dispatch(fits, { gate, packet, kind, target, args, size, ...(feedback ? { feedback } : {}) }); }
     catch (e) { out = { ok: false, error: e.message }; }
     out = out || { ok: false, error: 'the dispatcher returned nothing' };
     if (out.unsupported) return { unsupported: true, why: out.why || 'the dispatcher could not run it' };
     const agent = out.agent || out.provider || fits[0].provider;
     const ok = out.ok !== false && !out.error;
     return { ok, agent, ...(out.transient ? { transient: true } : {}), ...(ok ? {} : { error: String(out.error || out.state || 'failed').slice(0, 500) }), output: out.output !== undefined ? out.output : (out.state || null),
-      evidence: { [`${gate.id}.agent`]: agent, [`${gate.id}.route`]: `${fits.map(h => h.provider).join(' → ')}${overNote}`, ...(out.evidence || {}) } };
+      evidence: { [`${gate.id}.agent`]: agent, [`${gate.id}.route`]: `${fits.map(h => h.provider).join(' → ')}${overNote}${exNote}`, ...(out.evidence || {}) } };
   };
 }
 

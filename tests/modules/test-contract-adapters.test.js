@@ -113,6 +113,69 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
     check('EA-09 the audit records every brick (with its agent and attempts), every dependency edge, every checkpoint and every gate',
       au.bricks.length === 3 && au.bricks.every(x => x.agent && x.status === 'PASSED') && au.dependencies.some(e => e.from === ida && e.to === idb)
       && au.checkpoints.length >= 6 && au.gates.length === 4 && au.complete, JSON.stringify({ ...au, why: undefined }).slice(0, 600));
+    // §GT1 — gates classify before they learn: a planted failure of each class takes its own path; only capability and
+    // context failures change routing or budgets
+    const learned = { door: [], friction: [], bounds: [] };
+    const learners = { door: (o) => learned.door.push(o), friction: (cls) => learned.friction.push(cls) };
+    const realRecord = C.Boundaries.record;
+    C.Boundaries.record = (row) => { learned.bounds.push(row); };
+    const reset = () => { learned.door.length = 0; learned.friction.length = 0; learned.bounds.length = 0; };
+    const plant = async (fileOf, fails, { mutate = null } = {}) => {
+      const Lg = built(); if (mutate) mutate(Lg.payload);
+      const g = Lg.payload.gates.find(x => x.file === fileOf && !x.parent);
+      const seen = []; const queue = [...fails];
+      const disp = async (hops, { gate, feedback }) => {
+        seen.push({ gate: gate.id, first: hops[0].provider, feedback: feedback || null });
+        if (gate.id === g.id && queue.length) return { provider: hops[0].provider, ...queue.shift() };
+        return { ok: true, provider: hops[0].provider, evidence: { [`${gate.id}.verified`]: 'ok' } };
+      };
+      const ag = A.agentExecutor({ route: () => [{ provider: 'small' }, { provider: 'big' }], dispatch: disp, boundaries: noBudget });
+      reset();
+      const r = await C.schedule(Lg.payload, { root: tmp, executors: { agent: ag, integrate }, learners });
+      const ev = Lg.payload.state.evidence || {};
+      const st = Lg.payload.state.gates[g.id] || {};
+      return { r, g, ev, st, seen: seen.filter(x => x.gate === g.id), bounds: learned.bounds.filter(x => x.ok === false), door: [...learned.door], friction: [...learned.friction] };
+    };
+    integrated = 'met 2/2';
+    try {
+      const t = await plant('lib/c.js', [{ ok: false, transient: true, error: 'timed out after 120s' }, { ok: false, error: 'ETIMEDOUT' }]);
+      check('GT-01 transient (timed out, flagged or by its text): retried on the same agent, no retry spent, nothing learned about route or size',
+        t.ev[`${t.g.id}.class`] === 'transient' && t.seen.length === 3 && t.seen.every(x => x.first === 'small') && t.st.status === 'PASSED' && t.st.attempts === 1
+        && !t.bounds.length && !t.door.length && !t.ev[`${t.g.id}.exclude`] && t.friction.filter(c => c === 'transient').length === 2 && t.r.complete, JSON.stringify({ seen: t.seen, st: t.st, b: t.bounds.length, d: t.door }));
+
+      const c = await plant('lib/c.js', [{ ok: false, error: 'the export z is missing' }]);
+      check('GT-02 capability: the next attempt skips the agent that failed (escalation), the door\'s order learns it, Boundaries learns a size lesson, and the retry carries the check\'s words',
+        c.ev[`${c.g.id}.class`] === 'capability' && JSON.parse(c.ev[`${c.g.id}.exclude`]).join() === 'small' && c.seen[1].first === 'big' && /failed it before, skipped: small/.test(c.ev[`${c.g.id}.route`])
+        && c.door.length === 1 && c.door[0].provider === 'small' && c.door[0].class === 'capability' && c.door[0].verdict === 'failed' && c.bounds.length === 1 && c.bounds[0].agent === 'small'
+        && /^capability: /.test(c.seen[1].feedback || '') && c.r.complete, JSON.stringify({ seen: c.seen, door: c.door, ev: c.ev[`${c.g.id}.route`] }));
+
+      const x = await plant('lib/a.js', [{ ok: false, error: 'maximum context length is 8192 tokens' }]);
+      check('GT-03 context: a brick with pieces is split at once; Boundaries learns the size; the route is not touched',
+        x.ev[`${x.g.id}.class`] === 'context' && x.r.log.some(l => l.gate === x.g.id && l.status === 'SPLIT' && /^context: /.test(l.reasons[0])) && x.bounds.length === 1 && !x.door.length && !x.ev[`${x.g.id}.exclude`] && x.r.complete,
+        JSON.stringify(x.r.log.map(l => `${l.gate}:${l.status}`)));
+
+      const s = await plant('lib/c.js', [], { mutate: (pp) => { pp.gates.find(g => g.file === 'lib/c.js' && !g.parent).pass_when.push({ test: 'tests/no-such.test.js' }); } });
+      check('GT-04 spec: a gate naming a test that does not exist becomes a question for a person — not retried, nothing learned, the contract not complete',
+        s.ev[`${s.g.id}.class`] === 'spec' && /^spec: test tests\/no-such\.test\.js does not exist/.test(s.ev[`${s.g.id}.question`]) && s.st.attempts === 1 && s.seen.length === 1
+        && s.r.blocked.some(b2 => b2.id === s.g.id) && !s.bounds.length && !s.door.length && s.r.complete === false, JSON.stringify({ st: s.st, blocked: s.r.blocked }));
+
+      const tl = await plant('lib/c.js', [{ ok: false, error: '3 tool calls failed in a row' }]);
+      check('GT-05 tool: failing tool calls set the brick aside with a question — not retried, no route or size lesson',
+        tl.ev[`${tl.g.id}.class`] === 'tool' && /^tool: /.test(tl.ev[`${tl.g.id}.question`]) && tl.seen.length === 1 && !tl.bounds.length && !tl.door.length && tl.r.complete === false);
+
+      const v = C.classifyFailure({ out: { ok: true }, result: { reasons: ['test tests/x.test.js exited null'] } });
+      const all = [C.classifyFailure({ out: { unsupported: true } }).cls, C.classifyFailure({ result: { reasons: ['unverifiable: CK-9 has no executable check here yet'] } }).cls,
+        C.classifyFailure({ out: { ok: false, error: 'not connected: no claude tab open' } }).cls, C.classifyFailure({ out: { ok: false, error: 'response truncated mid_sentence' } }).cls,
+        C.classifyFailure({ out: { ok: true }, result: { reasons: ['evidence "x" does not match /y/'] } }).cls];
+      check('GT-06 the classifier: a check whose runner died is verification; unsupported is tool; unverifiable is spec; a missing tab is transient; truncation is context; a failed check is capability',
+        v.cls === 'verification' && all.join() === 'tool,spec,transient,context,capability' && C.FAILURE_CLASSES.length === 6, JSON.stringify([v, all]));
+
+      const ex = await A.agentExecutor({ route: () => [{ provider: 'small' }], dispatch: async (h) => ({ ok: true, provider: h[0].provider }), boundaries: noBudget, sizeOf: () => 10 })
+        ('lib/c.js', {}, { gate: b('lib/c.js'), packet: {}, contract: { state: { evidence: { [`${b('lib/c.js').id}.exclude`]: '["small"]' } } }, root: tmp });
+      check('GT-07 every routed agent failed it before → all are tried again, said on the route (escalation, never a silent block)',
+        ex.ok && ex.agent === 'small' && /every routed agent failed it before/.test(ex.evidence[`${b('lib/c.js').id}.route`]), JSON.stringify(ex));
+    } finally { C.Boundaries.record = realRecord; }
+
     const CMD = fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8');
     check('EA-10 every agent has the audit: contract.audit is a command row', CMD.includes("key: 'contract.audit'"));
   } catch (e) { fail++; console.log(`  ✗ threw: ${e.stack}`); }
