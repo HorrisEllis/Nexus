@@ -85,7 +85,7 @@ phasemap:
         or asked about (CK-236).
       proof: "an agent without the browser tool is never routed browser work, whatever its score; the route record lists the alternatives it rejected and why"
     PF1_profiles_hats_tabs:
-      status: OPEN
+      status: "DONE 0.60.32 — a tab per account: guardian/lib/profile-lanes.js (hat → account → tab, a pool lane per account), ncp profile tabs never active, dispatcher pushTab + open-on-demand, clear-glass profile-tabs.js (own session, vault sign-in); test-profile-tabs PT-01..07. Compartments as profiles (TB1/HM0) and CK-241 not built"
       is: [ID1_identities, TB1_tab_is_a_view, HM0_the_hat_keeps_a_model_of_the_repo]
       james_now: '"dynamic routing to profiles in clearglass, which can hook into hats. each tab can beb a compartment or different profile. that way we can use multiaccount routing."'
       adds: >-
@@ -400,3 +400,69 @@ phasemap:
 # (learned outcomes for the kind), not the intent's. The existing callers send no `needs`; they get the window and
 # readiness checks only when they pass a message or tokens. Wiring the build path's bricks to pass their packet size is
 # the next small step.
+
+## ADDENDUM 2026-10-14 — PF1 mapped for build: a tab per account profile (0.60.32)
+
+# James: "dynamic routing to profiles in clearglass, which can hook into hats. each tab can beb a compartment or different
+# profile. that way we can use multiaccount routing." (PF1's james_now) · 2026-10-14: "also multiaccount routing in
+# clearglass, each tab can be a different profile?" · "yes we need to get it all working."
+#
+# Supersedes, per account (both kept, §0.3): 0.39.247 §ONE-TAB — James (2026-09-25): "repo-agent jobs must use ONE ChatGPT
+# tab" — and 0.60.13 session-hub — "providers, accounts, and agent mesh all need to be using the same cookies". The
+# coder's reading, to confirm: both still hold for ONE account. One account = one tab = one session (the canonical
+# persist:ncp-<provider>, mirrored to normal tabs, unchanged). A second account gets its own tab in its own session; it is
+# never mirrored, never the provider's active tab, and never shares a sign-in.
+#
+# Grounded (reuse): ProviderHost already runs per-agent tabs (start(provider, { agentId }) → the userscript's tabId is the
+# agentId); NCP already keys clients by provider:tabId and has pushTab; the vault keeps every account's cookies
+# (vault.restore); account-routing already resolves hat / intent / repo → account and the fallback chain; the dispatch
+# pool is a semaphore per key.
+#
+# Found while grounding (each a defect for multi-tab, fixed in this phase):
+# - ncp handleChannel makes ANY newly connected tab the provider's active tab: a second tab would take every job.
+# - ncp getProviders keeps the LAST client per provider: a second tab would overwrite the provider's usage, chat and tab
+#   state (readiness, usage-limit fallback).
+# - the dispatcher requeues every in-flight job of a provider when ANY of its tabs disconnects.
+#
+# Build, bottom-up:
+# 1. guardian/lib/ncp.js: a profile tab (tabId `profile~<accountId>`) is never the provider's active tab and is not in
+#    getProviders; isTabConnected(provider, tabId); getTabs() lists every tab with its usage.
+# 2. guardian/lib/profile-lanes.js: laneFor(job, { accountRouting, enabled }) → { lane, accountId, tabId, profile, why }.
+#    A job routed to an account other than the canonical tab's account runs in that account's profile tab, in its own
+#    pool lane (provider~account, one job at a time per account). The canonical tab's account (or no account) keeps the
+#    old path: one tab, switching as before. GUARDIAN_PROFILE_TABS=0 turns profiles off.
+# 3. guardian/lib/dispatcher.js: the lane is decided before the pool; a profile job is pushed to its tab (pushTab), and
+#    when the tab is not open Clear Glass is asked to open it (cgOpenProfile) and the job waits for its connect; a
+#    disconnect requeues only the jobs of that tab; a profile tab's usage limit rests only its account.
+# 4. clear-glass/src/providers/profile-tabs.js + host.js: open(provider, accountId) — the account must be known and have a
+#    saved sign-in; its session persist:ncp-<provider>~<accountId> gets the account's cookies from the vault when it holds
+#    no sign-in yet; ProviderHost starts the tab with that partition and tabId. POST/GET :7702/providers/:id/profile(s).
+# 5. API + command + UI: Guardian GET /api/accounts/profiles (lanes, tabs, which account each runs); `guardian profiles`
+#    in the command table; the Accounts card on Idearium's Routing page shows each provider's profile tabs.
+#
+# Proof (the map's): two hats on one provider answer from two accounts in two tabs at once; a job for hat A never lands in
+# hat B's tab (test-profile-tabs, a real dispatcher over a real NCP server with two fake tabs).
+# Not in this phase: CK-241 (the three agree), compartments as profiles (TB1/HM0).
+
+## ADDENDUM 2026-10-14 — PF1 built: a tab per account profile (0.60.32)
+
+# Built as mapped above (steps 1–5). Proof: test-profile-tabs 7/7 — a real NCP server with live SSE tabs, the real
+# dispatcher and account routing: hat builder → acct-a (the provider tab), hat critic → acct-b (its profile tab); both
+# delivered at once, B2 waits only for B1 (one job per account), no job crossed tabs; with GUARDIAN_PROFILE_TABS=0 the
+# old single-tab behaviour holds. Guardian suites unchanged (back-and-forth 18/18, stack-sim 11/11, account-fallback
+# 7/7, run-ready 10/10, economy 5/5, ncp-hostile 5/5, sr3 7/7, retry 52/52; mesh-client 13/14 as on main).
+#
+# Found by the proof test, fixed before it shipped: moving the job payload into one builder left the provider tab's log
+# line reading a variable that no longer existed — every dispatch to the provider tab threw after the job was sent and
+# gave its slot back, so a second job went out beside it.
+# Also fixed on the way: the pool bridge freed a completion's slot by the provider the payload named; it now frees the
+# slot the job really holds (job-retry the same), so a profile lane is never left held.
+#
+# Open, said:
+# - A repo agent's resumed chat (resumeChatUrl) belongs to the account that started it; a profile tab of another account
+#   asked to open it lands on a chat it cannot see. Same as switching accounts on one tab since 0.60.2 — not made worse;
+#   keying chats by account is the fix (not built).
+# - A profile tab's refreshed sign-in lives in its own persistent session; it is not written back to the vault. The
+#   provider tab's account-switch capture is unchanged.
+# - Not run in Clear Glass on his machine yet: the Electron half (profile-tabs.js, host partition, :7702 routes) is unit
+#   tested with fakes, not driven live.

@@ -711,6 +711,8 @@ const {
   // §0.60.2 — which account a job runs as (hat / intent / repo rules, JAA); Clear Glass switches the tab to it
   accountRouting: require('./lib/account-routing.js').routing(),
   useAccount: (provider, accountId, job) => require('./lib/account-routing.js').cgUseAccount(provider, accountId, job),
+  // §PF1 0.60.32 — a job routed to another account than the provider tab's runs in that account's own tab: Clear Glass opens it
+  openProfile: (provider, accountId, job) => require('./lib/account-routing.js').cgOpenProfile(provider, accountId, job),
 });
 _economyGuard.attach(bus, (id) => jobs.get(id));
 
@@ -1865,7 +1867,19 @@ function handleExtendedRoutes(req, res, url, method) {
     const rm = url.pathname.match(/^\/api\/accounts\/rules\/([\w.-]+)$/);
     if (rm && method === 'DELETE') { pRes(res, 200, R.removeRule(rm[1])); return true; }
     if (url.pathname === '/api/accounts/route' && method === 'POST') {
-      bodyJ(req).then(body => pRes(res, 200, { ok: true, route: R.route(body || {}, { log: false }) })).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+      // §PF1 0.60.32 — and the tab it would run in (the provider's own, or the account's profile tab) and its lane
+      bodyJ(req).then(body => { const b = body || {}; pRes(res, 200, { ok: true, route: R.route(b, { log: false }), lane: b.provider ? require('./lib/profile-lanes.js').laneFor(b, { accountRouting: R }) : null }); }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+      return true;
+    }
+    // §PF1 0.60.32 — every account tab: the provider's own (and the account it runs) and each profile tab (its account), with
+    // the lanes the pool holds — which jobs run where, and in parallel
+    if (url.pathname === '/api/accounts/profiles' && method === 'GET') {
+      const PLm = require('./lib/profile-lanes.js');
+      const tabs = typeof ncp.getTabs === 'function' ? ncp.getTabs() : [];
+      const pool = require('./lib/dispatch-pool').pool;
+      const providers = [...new Set(tabs.map(t => t.provider))].map((provider) => ({ provider, account: R.current(provider), chain: R.chain(provider),
+        tabs: tabs.filter(t => t.provider === provider).map(t => ({ tabId: t.tabId, profile: t.profile, active: t.active, limited: !!(t.usage && t.usage.limited), lane: t.profile ? `${provider}~${t.profile}` : provider, busy: pool.cap(t.profile ? `${provider}~${t.profile}` : provider) - pool.available(t.profile ? `${provider}~${t.profile}` : provider) })) }));
+      pRes(res, 200, { ok: true, enabled: PLm.enabledByEnv(), providers });
       return true;
     }
   }

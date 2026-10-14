@@ -188,6 +188,13 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<provider>'),
     req: (a) => (a.args[1] ? { method: 'POST', path: '/api/accounts/chain', body: { provider: a.args[0], accounts: a.args[1].split(',').map(x => x.trim()).filter(Boolean) } } : { method: 'GET', path: `/api/accounts/chain?provider=${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => { console.log(`  ${d.provider}: ${(d.chain || []).join(' → ') || h.c.dim('no chain')}`); for (const x of d.exhausted || []) console.log(h.c.amber(`    resting: ${x.account} until ${new Date(x.until).toLocaleString()} — ${x.why}`)); } },
+  // 0.60.32 PF1 — James: "each tab can be a different profile". Every account tab: the provider's own (the account it runs) and
+  // each profile tab (another account, its own session), with its lane — accounts run at once, one job each
+  { key: 'accounts.profiles', repo: false, usage: 'accounts profiles', about: 'every account tab: each provider\'s own tab (and the account it runs) and its profile tabs (other accounts, in their own sessions), busy or idle — jobs for different accounts run at once',
+    req: () => ({ method: 'GET', path: '/api/accounts/profiles' }),
+    print: (d, a, h) => { if (!d.enabled) console.log(h.c.amber('  profile tabs are off (GUARDIAN_PROFILE_TABS=0)')); if (!(d.providers || []).length) { console.log(h.c.dim('  no account tab connected')); return; }
+      for (const p of d.providers) { console.log(`  ${p.provider}: own tab runs ${p.account || h.c.dim('no known account')}${(p.chain || []).length ? h.c.dim(`  (chain ${p.chain.join(' → ')})`) : ''}`);
+        for (const t of p.tabs || []) console.log(`    ${t.profile ? `profile ${t.profile}` : 'own tab'}  ${t.busy ? h.c.amber('busy') : h.c.dim('idle')}${t.limited ? h.c.amber('  at its limit') : ''}${h.c.dim(`  ${t.tabId}`)}`); } } },
   { key: 'repo.diff', repo: true, usage: 'repo diff <repo> <a> [b|working] [--path file]', about: 'what changed between two versions (b defaults to the files on disk now)',
     need: (a) => (a.args.length ? null : '<a> (a version id from repo versions)'),
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/versions/diff?a=${encodeURIComponent(a.args[0])}&b=${encodeURIComponent(a.args[1] || 'working')}${a.flags.path ? `&path=${encodeURIComponent(a.flags.path)}` : ''}` }),

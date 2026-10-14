@@ -207,8 +207,25 @@ function cgStartProvider(provider, { port = parseInt(process.env.CLEARGL_IPC_POR
   });
 }
 
+/** cgOpenProfile(provider, accountId) — §PF1 0.60.32: Clear Glass opens the account's own tab (POST :7702/providers/:id/profile)
+ *  in its own session, signed in from the vault -> { ok, tabId, error? } */
+function cgOpenProfile(provider, accountId, job = {}, { port = parseInt(process.env.CLEARGL_IPC_PORT || '7702', 10), timeoutMs = 60000 } = {}) {
+  const http = require('http');
+  return new Promise((resolve) => {
+    const data = JSON.stringify({ accountId, jobId: (job && job.id) || null });
+    const req = http.request({ host: '127.0.0.1', port, path: `/providers/${encodeURIComponent(provider)}/profile`, method: 'POST', timeout: timeoutMs,
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } }, (res) => {
+      let raw = ''; res.on('data', (c) => { raw += c; });
+      res.on('end', () => { let j = null; try { j = JSON.parse(raw); } catch (_) {} resolve(j && typeof j === 'object' ? { ...j, ok: res.statusCode < 400 && j.ok !== false } : { ok: false, error: `Clear Glass answered ${res.statusCode}` }); });
+    });
+    req.on('error', (e) => resolve({ ok: false, error: `Clear Glass unreachable: ${e.message}` }));
+    req.on('timeout', () => { req.destroy(); resolve({ ok: false, error: `no answer in ${timeoutMs} ms` }); });
+    req.write(data); req.end();
+  });
+}
+
 let _one = null;
 /** routing() — the process-wide instance (guardian/server.js and the dispatcher share it) */
 function routing() { return _one || (_one = createAccountRouting()); }
 
-module.exports = { MODULE_ID, VERSION, MATCH_FIELDS, intentOf, repoOf, match, pick, createAccountRouting, routing, cgUseAccount, cgStartProvider };
+module.exports = { MODULE_ID, VERSION, MATCH_FIELDS, intentOf, repoOf, match, pick, createAccountRouting, routing, cgUseAccount, cgStartProvider, cgOpenProfile };

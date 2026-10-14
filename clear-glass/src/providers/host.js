@@ -354,7 +354,8 @@ class ProviderHost {
     }
 
     const def = getProvider(providerId);
-    const partition = `persist:ncp-${providerId}`;
+    // §PF1 0.60.32 — a profile tab (another account) runs in its own session; every other tab in the provider's one session
+    const partition = opts.partition || `persist:ncp-${providerId}`;
 
     // Intercept WebSocket upgrades — allow NCP SSE but strip CSP on provider pages
     const ses = session.fromPartition(partition);

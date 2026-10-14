@@ -179,7 +179,8 @@ function createJobRetry({ jobs, updateJob, bus, pool, dispatchJob, complete, rea
     const delayMs = table[Math.min(attempts.length - 1, table.length - 1)];
     updateJob(job.id, { status: 'retry_wait', attempts, retryAt: Date.now() + delayMs, error: null });
     const prov = provider || job.provider;
-    try { if (pool && typeof pool.release === 'function') pool.release(prov, job.id); } catch (_) {}
+    // §PF1 0.60.32 — the slot the job holds (a profile tab's lane is provider~account)
+    try { if (pool && typeof pool.release === 'function') pool.release((typeof pool.providerOf === 'function' && pool.providerOf(job.id)) || prov, job.id); } catch (_) {}
     stats.retried++;
     log.warn && log.warn(`[guardian/retry] ${String(job.id).slice(0, 8)} → ${prov}: ${c.kind} (${String(error || gate || '').slice(0, 120)}) — trying again in ${Math.round(delayMs / 1000)}s (attempt ${attempts.length + 1} of ${_maxAttempts()})`);
     _say(job, `${c.kind}: ${String(error || gate || '').slice(0, 160)} — trying again in ${Math.round(delayMs / 1000)}s (attempt ${attempts.length + 1} of ${_maxAttempts()})`, { kind: c.kind, attempt: attempts.length + 1, delayMs });

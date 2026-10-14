@@ -40,6 +40,13 @@
 
 const { randomUUID } = require('crypto');
 
+// §PF1 0.60.32 — James: "each tab can be a different profile. that way we can use multiaccount routing." A profile tab
+// (tabId `profile~<accountId>`, opened by Clear Glass for an account other than the provider tab's own) is one of the
+// provider's tabs but never its active tab: only a job routed to that account is pushed to it (pushTab). It is left out
+// of isConnected / getProviders (the provider's own tab: readiness, usage, chat) and listed by getTabs().
+const PROFILE_TAB = 'profile~';
+const isProfileTab = (tabId) => String(tabId || '').startsWith(PROFILE_TAB);
+
 // ── Server-side NCP handler ───────────────────────────────────────────────────
 
 function createNCPServer({ onMessage, onConnect, onDisconnect, busEmit } = {}) {
@@ -156,7 +163,7 @@ function createNCPServer({ onMessage, onConnect, onDisconnect, busEmit } = {}) {
     // regression. If the prior connection really is dead, its own
     // req.on('close') (below) or the staleness sweep will retire it on
     // its own real timeline, not forced by a new arrival.
-    _activeByProvider.set(provider, key);
+    if (!isProfileTab(tabId)) _activeByProvider.set(provider, key);   // §PF1 — a profile tab never takes the provider's jobs
     const client = { res, tabId, provider, connectedAt: Date.now(), lastHeartbeat: Date.now() };
     _clients.set(key, client);
 
@@ -337,7 +344,7 @@ function createNCPServer({ onMessage, onConnect, onDisconnect, busEmit } = {}) {
         // dispatch always aimed at a real, live client without ever
         // needing to kill another one to get there.
         const activeKey = _activeByProvider.get(provider);
-        if (activeKey !== key && !_clients.has(activeKey)) _activeByProvider.set(provider, key);
+        if (activeKey !== key && !_clients.has(activeKey) && !isProfileTab(tabId)) _activeByProvider.set(provider, key);
       }
 
       res.writeHead(200, {
@@ -455,7 +462,7 @@ function createNCPServer({ onMessage, onConnect, onDisconnect, busEmit } = {}) {
    */
   function isConnected(provider) {
     for (const [key, client] of _clients) {
-      if (client.provider !== provider) continue;
+      if (client.provider !== provider || isProfileTab(client.tabId)) continue;
       if (_isStale(client)) {
         // Found while checking, not just skipped — evict it here too, not
         // only in the periodic sweep, so a check that happens to run
@@ -499,12 +506,29 @@ function createNCPServer({ onMessage, onConnect, onDisconnect, busEmit } = {}) {
   }, 15_000);
   if (_staleSweep.unref) _staleSweep.unref(); // never keeps the process alive on its own
 
+  /** §PF1 — is this one tab connected and alive (a profile tab's lane waits on exactly this) */
+  function isTabConnected(provider, tabId) {
+    const c = _clients.get(`${provider}:${tabId}`);
+    return !!(c && !_isStale(c));
+  }
+  /** §PF1 — every connected tab: provider, tabId, profile account (null: the provider's own tab), active, usage */
+  function getTabs() {
+    const out = [];
+    for (const [key, c] of _clients) {
+      out.push({ provider: c.provider, tabId: c.tabId, profile: isProfileTab(c.tabId) ? c.tabId.slice(PROFILE_TAB.length) : null,
+        active: _activeByProvider.get(c.provider) === key, connectedAt: c.connectedAt, lastHeartbeat: c.lastHeartbeat,
+        usage: c.usage || null, chatId: c.chatId || null });
+    }
+    return out;
+  }
+
   /**
    * Get all connected providers.
    */
   function getProviders() {
     const providers = {};
     for (const client of _clients.values()) {
+      if (isProfileTab(client.tabId)) continue;   // §PF1 — the provider's own tab; profile tabs are in getTabs()
       const key = `${client.provider}:${client.tabId}`;
       providers[client.provider] = {
         tabId:        client.tabId,
@@ -555,10 +579,12 @@ function createNCPServer({ onMessage, onConnect, onDisconnect, busEmit } = {}) {
     broadcast,
     // State
     isConnected,
+    isTabConnected,
     getProviders,
+    getTabs,
     clientCount,
     updateClient,
   };
 }
 
-module.exports = { createNCPServer };
+module.exports = { createNCPServer, isProfileTab, PROFILE_TAB };

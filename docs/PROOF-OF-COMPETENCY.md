@@ -100,6 +100,25 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-14: "and we have intent routing? that way the complex reasoning can be done by the bigger models or agents. like claude or deepseek? also multiaccount routing in clearglass, each tab can be a different profile?"** · then: "yes we need to get it all working."
+  - **Context:** he was checking that two pieces he had asked for earlier actually worked end to end. They half did:
+    - Intent routing existed (0.60.8), but it only ordered agents by preference, so a high-scoring agent could still be sent work it can't do.
+    - Account routing existed (0.60.25), but on one tab per provider, so accounts took turns.
+  - **What it shows:** systems thinking. His question tied routing ("who should answer") to capacity ("who can answer at once"), and both had to be finished for the pipeline to scale. Earlier he wrote PF1's design himself ("each tab can beb a compartment or different profile"). Grounding that design found three defects that would have broken any second tab:
+    - a new tab took over every job of its provider;
+    - the provider's status showed whichever tab connected last;
+    - one tab's disconnect requeued every tab's jobs.
+  - **Evidence:**
+    - `tests/modules/test-route-eligibility.test.js` 8/8 (RT1). An agent without the browser tool is never routed browser work, even with 12 successes and even when preferred.
+    - `tests/modules/test-profile-tabs.test.js` 7/7 (PF1), a real NCP server with live tabs. Two hats answer from two accounts in two tabs at the same time, and a job for hat A never lands in hat B's tab.
+    - `CHANGELOG-0.60.31.md`, `CHANGELOG-0.60.32.md`.
+    - Not yet run on his machine.
+
+- **2026-10-14: "Build GT1 here (Recommended)"** (his choice of the map's first priority)
+  - **Context:** the map he directed ranks GT1 first: "0.60.18 showed that learning from unclassified failures poisons routing."
+  - **What it shows:** prioritising the foundation every later build runs through over the next visible feature.
+  - **Evidence:** `tests/modules/test-contract-adapters.test.js` GT-01..07. A planted failure of each type takes its own path, and only capability and context failures change routing or size limits. `CHANGELOG-0.60.30.md`.
+
 - **2026-10-13: "can we work on inventing anything that will get this pipeline going. like why doesn't this work yet?"**
   - **Context:** after a day of fixes, he stopped asking for features and asked why the pipeline still failed. The
     coder read every run he had pasted: the agents answered (38 ChatGPT and 16 Gemini jobs completed), but each run

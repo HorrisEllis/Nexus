@@ -321,8 +321,10 @@ function acctPaint() {
     <div class="kv">Jobs for ${esc(ACCT.provider)} use the first account; when its tab says the limit is reached, it rests (5 h) and the next takes over. All resting → the ladder moves to the next agent. Add accounts in Clear Glass (its account picker), then order them here.</div>
     ${d.accountsError ? `<div class="kv"><span class="tag warn">${esc(d.accountsError)}</span></div>` : ''}
     ${ACCT.order.length ? ACCT.order.map((id, i) => `<div class="row"><div><label><input type="checkbox" data-acct-on="${esc(id)}" ${(d.chain || []).includes(id) || !(d.chain || []).length ? 'checked' : ''}> ${i + 1}. ${esc(label(id))}</label>${d.current === id ? ' <span class="tag ok">in use</span>' : ''}${rest.has(id) ? ` <span class="tag warn" title="${esc(rest.get(id).why)}">resting until ${esc(new Date(rest.get(id).until).toLocaleTimeString())}</span> <button class="ap-chip" data-acct-wake="${esc(id)}">wake</button>` : ''}</div><div class="ctl"><button class="ap-chip" data-acct-up="${i}">↑</button><button class="ap-chip" data-acct-down="${i}">↓</button></div><div class="ctl"></div></div>`).join('') : '<div class="empty">no accounts for this provider in Clear Glass yet</div>'}
-    <div class="ap-chips"><button class="ap-chip on" id="acct-save">save chain</button></div>`;
+    <div class="ap-chips"><button class="ap-chip on" id="acct-save">save chain</button></div>
+    <div class="kv" id="acct-tabs">reading the account tabs…</div>`;
   document.getElementById('acct-prov').onchange = (e) => acctLoad(e.target.value);
+  acctTabs();   // 0.60.32 PF1
   for (const b of el.querySelectorAll('[data-acct-up],[data-acct-down]')) b.onclick = () => { const i = Number(b.dataset.acctUp ?? b.dataset.acctDown), j = b.dataset.acctUp != null ? i - 1 : i + 1; if (j < 0 || j >= ACCT.order.length) return; [ACCT.order[i], ACCT.order[j]] = [ACCT.order[j], ACCT.order[i]]; acctPaint(); };
   for (const b of el.querySelectorAll('[data-acct-wake]')) b.onclick = async () => { try { await post('/api/accounts/rest', { provider: ACCT.provider, account: b.dataset.acctWake, clear: true }); toast('awake', 'ok'); } catch (e) { toast(e.message, 'bad'); } acctLoad(); };
   document.getElementById('acct-save').onclick = async () => {
@@ -330,6 +332,17 @@ function acctPaint() {
     try { await post('/api/accounts/chain', { provider: ACCT.provider, accounts: ACCT.order.filter(id => on.has(id)) }); toast(`${ACCT.provider} chain saved`, 'ok'); } catch (e) { toast(`not saved: ${e.message}`, 'bad'); }
     acctLoad();
   };
+}
+// 0.60.32 PF1 — James: "each tab can be a different profile. that way we can use multiaccount routing." The provider's own tab
+// (and the account it runs) and every profile tab (another account, its own session); a job routed to that account runs there,
+// at the same time as the others
+async function acctTabs() {
+  const el = document.getElementById('acct-tabs'); if (!el) return;
+  let d; try { d = await api('/api/accounts/profiles'); d = d.data || d; } catch (e) { el.innerHTML = `<span class="tag warn">account tabs: ${esc(e.message)}</span>`; return; }
+  const p = (d.providers || []).find(x => x.provider === ACCT.provider);
+  el.innerHTML = `<b>Tabs</b> — ${d.enabled ? 'each account gets its own tab when a job is routed to it (a hat rule, or the chain), so accounts run at once' : '<span class="tag warn">profile tabs off (GUARDIAN_PROFILE_TABS=0)</span>'}<br>`
+    + (p ? (p.tabs || []).map(t => `<span class="tag ${t.busy ? 'warn' : 'ok'}" title="${esc(t.tabId)}">${t.profile ? esc(t.profile) : `own tab · ${esc(p.account || 'no known account')}`} — ${t.busy ? 'busy' : 'idle'}${t.limited ? ' · at its limit' : ''}</span>`).join(' ')
+      : `<span class="d">no ${esc(ACCT.provider)} tab connected</span>`);
 }
 async function leanLoad() {
   const el = document.getElementById('lean-card'); if (!el) return;
