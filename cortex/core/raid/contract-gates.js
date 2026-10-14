@@ -380,13 +380,58 @@ function split(p, gateId, { by = null } = {}) {
 
 // ── SC0 — the scheduler ───────────────────────────────────────────────────────────────────────────────────────────
 // Every READY brick with work to do runs — independent bricks at the same time — through the executors Nexus already has
+/**
+ * §GT1 2026-10-14 — gates classify before they learn (docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec GT1;
+ * folds RQ2, RQ3, RQ4, RQ24). James: "each gate can route, diagnose, and retry". 0.60.18 showed that learning from an
+ * unclassified failure poisons routing: a provider that timed out was learned as one that could not do the work.
+ *
+ * classifyFailure({ out, result }) → { cls, why } — out is what the executor returned, result what check() found.
+ *   transient     the agent never really answered (timeout, empty, down, login, rate limit)  → retry, same agent, learn nothing
+ *   context       the piece was too big for it (truncated, context / token limit)            → split; Boundaries learns
+ *   capability    it answered and the work did not meet the gate (or it refused)             → next agent; the door's order learns
+ *   spec          the gate's own condition cannot be checked (unverifiable, names a missing test) → a question, not a retry
+ *   verification  the check itself broke (its runner did not run)                            → a question, not a retry
+ *   tool          nothing here can run it (unsupported, failing tool calls)                   → blocked, said
+ */
+const FAILURE_CLASSES = Object.freeze(['transient', 'capability', 'context', 'spec', 'tool', 'verification']);
+const LEARNS_ROUTE = new Set(['capability']);              // only these change the door's learned order
+const LEARNS_BUDGET = new Set(['capability', 'context']);  // only these teach Boundaries (a size lesson)
+function classifyFailure({ out = null, result = null } = {}) {
+  const reasons = (result && result.reasons) || [];
+  if (out && out.unsupported) return { cls: 'tool', why: out.why || 'nothing here can run it' };
+  if (reasons.some(r => /^unverifiable:/.test(String(r)))) return { cls: 'spec', why: reasons.find(r => /^unverifiable:/.test(String(r))) };
+  if (reasons.some(r => /^test .+ does not exist$/.test(String(r)))) return { cls: 'spec', why: reasons.find(r => /does not exist$/.test(String(r))) };
+  if (reasons.some(r => /^test .+ exited (null|undefined|-?\d{3,})$/.test(String(r)) || /runner (crashed|failed)/i.test(String(r)))) return { cls: 'verification', why: reasons.join('; ') };
+  const failedToRun = out && (out.ok === false || out.error);
+  if (failedToRun) {
+    if (out.transient) return { cls: 'transient', why: String(out.error || 'the agent did not answer').slice(0, 300) };
+    let mode = 'unknown';
+    try { mode = require(path.join(DEFAULT_ROOT, 'lib/pipeline-routing.js')).classify({ error: String(out.error || ''), ok: false, toolErrors: out.toolErrors }); } catch (_) { /* no classifier: the text rules below */ }
+    const text = String(out.error || '');
+    if (mode === 'tool-errors') return { cls: 'tool', why: text.slice(0, 300) };
+    if (mode === 'truncated' || /context (length|window)|too (long|large|big)|token limit|maximum context/i.test(text)) return { cls: 'context', why: text.slice(0, 300) };
+    if (['timeout', 'empty', 'provider-down', 'login', 'rate-limit'].includes(mode)) return { cls: 'transient', why: `${mode}: ${text.slice(0, 280)}` };
+    return { cls: 'capability', why: text.slice(0, 300) || 'the agent failed the work' };
+  }
+  return { cls: 'capability', why: reasons.join('; ').slice(0, 300) || 'the work did not meet the gate' };
+}
+
 // (lib/agent-tools executeTool: the copilot's tools, Clear Glass automation and macros, run-pipeline/run-chain, nexus.command);
 // its output is recorded as evidence, its gate is checked, and the next round sees what became READY. Order is whatever
 // the dependencies allow. A brick with no executor for its kind of work is left READY and said — never faked.
 function _defaultExecutors() {
   return { tool: async (name, args) => require(path.join(DEFAULT_ROOT, 'lib/agent-tools/index.js')).executeTool(name, args || {}) };
 }
-async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {}, onCheckpoint = () => {} } = {}) {
+// §GT1 — what each classified outcome writes: fault-taxonomy friction (the next route reads it) and, for a capability
+// failure only, the door's learned order (a verdict: it never moves a breaker). Both best-effort, both injectable.
+function _defaultLearners() {
+  return {
+    friction: (cls, meta) => { try { return require(path.join(DEFAULT_ROOT, 'cortex/self-heal/fault-taxonomy.js')).raiseFriction(`contract.${cls}`, cls === 'transient' ? 0 : 1, meta); } catch (_) { return null; } },
+    door: (o) => { try { return require(path.join(DEFAULT_ROOT, 'lib/model-door.js')).outcome(o); } catch (_) { return null; } },
+  };
+}
+async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {}, onCheckpoint = () => {}, learners = null } = {}) {
+  const L = learners || _defaultLearners();   // not `learn`: inside the loop that name is the per-attempt boolean
   const ex = executors || _defaultExecutors();
   const log = [];
   // 0.60.18 EX0a — James: "the scheduler must distinguish a failed task from a task that has no available executor. The
@@ -414,7 +459,7 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
         }
         p.state.gates[g.id] = { ...(p.state.gates[g.id] || {}), status: 'RUNNING' };
         onEvent({ gate: g.id, status: 'RUNNING', round });
-        let agent = null, learn = true;
+        let agent = null, learn = true, lastOut = null;
         if (g.run) {
           const kind = g.run.tool ? 'tool' : Object.keys(g.run)[0];
           const fn = ex[kind];
@@ -423,6 +468,7 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
           let out;
           try { out = await fn(g.run.tool || g.run[kind], g.run.args || {}, { gate: g, packet: packet(p, g.id, { root }), contract: p, root }); }
           catch (e) { out = { ok: false, error: e.message }; }
+          lastOut = out;
           if (out && out.unsupported) { setAside(`unsupported: ${out.why || `nothing can run this ${kind} work`}`); return; }
           if (out && out.decompose) {
             // its pieces are its actions (a file brick's steps); refs it shares with every brick are not pieces of it
@@ -437,8 +483,41 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
           // a transient failure (the provider never answered) says nothing about how big a piece the agent can hold
           if (out && out.transient) learn = false;
         }
-        const r = await check(p, g.id, { root, agent, learn });
-        log.push({ round, gate: g.id, status: r.status, reasons: r.reasons, ...(agent ? { agent } : {}) });
+        // §GT1 — check without learning; what is learned depends on the failure's class
+        const r = await check(p, g.id, { root, agent, learn: false });
+        let fc = null;
+        if (r.status === 'PASSED') {
+          if (learn) { try { Boundaries.record({ agent: agent || g.agent || null, kind: g.kind || g.type, tokens: packetTokens(p, g.id, { root }), ok: true }); } catch (_) {} }
+        } else if (r.status === 'FAILED') {
+          fc = classifyFailure({ out: lastOut, result: r });
+          record(p, `${g.id}.class`, fc.cls, { by: 'scheduler:classify' });
+          const st = p.state.gates[g.id];
+          st.classes = [...(st.classes || []), fc.cls].slice(-10);
+          // RQ3 — the retry carries the check's own words
+          if (r.reasons && r.reasons.length) record(p, `${g.id}.feedback`, `${fc.cls}: ${r.reasons.join('; ')}`.slice(0, 1000), { by: 'scheduler:classify' });
+          if (learn && LEARNS_BUDGET.has(fc.cls)) { try { Boundaries.record({ agent: agent || g.agent || null, kind: g.kind || g.type, tokens: packetTokens(p, g.id, { root }), ok: false }); } catch (_) {} }
+          if (LEARNS_ROUTE.has(fc.cls) && agent) {
+            // the next attempt skips this agent (escalate); the door's order learns it was not up to this kind of work
+            let excl = []; try { excl = JSON.parse((p.state.evidence || {})[`${g.id}.exclude`] || "[]"); } catch (_) {}
+            if (!excl.includes(agent)) record(p, `${g.id}.exclude`, JSON.stringify([...excl, agent]), { by: 'scheduler:classify' });
+            try { L.door({ provider: agent, kind: g.kind || g.type, ok: false, class: 'capability', verdict: 'failed', error: fc.why }); } catch (_) {}
+          }
+          try { L.friction(fc.cls, { example: { gate: g.id, agent, why: fc.why } }); } catch (_) {}
+          if (fc.cls === 'transient') {
+            // nothing was learned and nothing was tried: a transient failure does not spend the brick's retries — up to
+            // `limit` of them in a row, then it counts like any other (a provider that never answers is not retried forever)
+            st.transients = (st.transients || 0) + 1;
+            if (st.transients <= limit) st.attempts = Math.max(0, (st.attempts || 1) - 1);
+          } else if (fc.cls === 'spec' || fc.cls === 'verification' || fc.cls === 'tool') {
+            // the gate itself (or its runner, or its tool) is suspect: a question for a person, never a retry loop
+            const q = `${fc.cls}: ${fc.why}`;
+            noExecutor.set(g.id, q); record(p, `${g.id}.question`, q, { by: 'scheduler:classify' });
+          } else if (fc.cls === 'context' && (g.actions || []).length >= 2 && !(g.children || []).length) {
+            const kids = split(p, g.id, { by: 'actions' });
+            log.push({ round, gate: g.id, status: 'SPLIT', reasons: [`context: ${fc.why}`, `into ${kids.join(', ')}`] });
+          }
+        }
+        log.push({ round, gate: g.id, status: r.status, reasons: r.reasons, ...(agent ? { agent } : {}), ...(fc ? { class: fc.cls } : {}) });
         if (r.status === 'PASSED') {
           // every pass is a checkpoint: what was verified, against which input hashes, by whom — the caller saves it
           p.state.checkpoints = p.state.checkpoints || [];
@@ -459,4 +538,4 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
 }
 
 module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition,
-  packetTokens, Boundaries, shouldSplit, split, schedule };
+  packetTokens, Boundaries, shouldSplit, split, schedule, classifyFailure, FAILURE_CLASSES };

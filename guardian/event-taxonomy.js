@@ -135,6 +135,11 @@ module.exports = Object.freeze({
     payloadShape: ['rule'],
     severity: 'info',
   },
+  GUARDIAN_ACCOUNTS_CHAIN: {
+    description: "A provider's account chain was replaced (the order its accounts are tried in); hat / intent / repo rules kept.",
+    payloadShape: ['provider', 'accounts'],
+    severity: 'info',
+  },
 
   // ── §HONEST GAP — gate.checked / gate.failed, named in ET2's own
   //    phasemap entry for ET6's sigma work, deliberately not included.

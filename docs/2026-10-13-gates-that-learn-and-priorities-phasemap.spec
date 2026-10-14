@@ -57,7 +57,7 @@ phasemap:
 
   phases:
     GT1_gates_route_diagnose_retry:
-      status: OPEN
+      status: "DONE 0.60.30 — classifyFailure in contract-gates; schedule learns by class; agentExecutor skips excluded agents and passes the check's words (test-contract-adapters GT-01..07)"
       folds: [RQ2_the_generation_failure_vocabulary_and_index, RQ3_repair_with_the_checks_own_words, RQ4_escalate_on_the_checks_and_keep_the_lesson, RQ24_the_gate_transaction]
       builds_on: "cortex/core/raid/contract-gates.js schedule/check · contract-adapters agentExecutor · cortex/self-heal/fault-taxonomy.js (raiseFriction, recordSuccess, recordAttempt) · lib/phase-faults.js modeOf · lib/model-door.js outcome({ verdict })"
       does: >-
@@ -338,3 +338,35 @@ phasemap:
 # - Not applied here: files: for the 407 open phases that name none. That needs the agent and its score, and it runs on
 #   his machine (Ollama first, through the door). The coder does not do this bulk mapping by hand (docs/CLAUDE.md, the
 #   agent rule).
+
+## ADDENDUM 2026-10-14 — GT1 built: gates classify before they learn (0.60.30)
+
+# James chose "Build GT1 here (Recommended)". The order this map gives: "1. GT1: gates classify before they learn.
+# 0.60.18 showed that learning from unclassified failures poisons routing. Every later build runs through gates."
+#
+# Built (reused, nothing new beside it):
+# - cortex/core/raid/contract-gates.js classifyFailure({ out, result }) → { cls, why }, one of FAILURE_CLASSES
+#   (transient, capability, context, spec, tool, verification). It reads the executor's output first (lib/pipeline-
+#   routing.js classify for its error text), then the check's reasons.
+# - schedule() checks with learn: false, then learns by class:
+#   - transient: retried on the same agent; does not spend the brick's retries (up to retry_limit in a row); nothing
+#     learned about route or size.
+#   - capability: `<gate>.exclude` records the agent; model-door outcome({ verdict: 'failed', class }) teaches the
+#     learned order without moving a breaker; Boundaries learns the size.
+#   - context: split at once when the brick has pieces; Boundaries learns; the route is not touched.
+#   - spec / verification / tool: a `<gate>.question` for a person, set aside, never a retry loop.
+#   - every class: fault-taxonomy friction `contract.<class>` (transient at level 0), so the next route reads it.
+#   - `<gate>.class` and `<gate>.feedback` (the check's own words, RQ3) are recorded as evidence.
+#   - learners are injectable (schedule(p, { learners })), best-effort, never fail a brick.
+# - cortex/core/raid/contract-adapters.js agentExecutor skips agents in `<gate>.exclude` (all of them failed it → all
+#   tried again, said on the route) and hands `feedback` to the dispatcher.
+#
+# Proof: test-contract-adapters 18/18 (GT-01..07: a planted failure of each class takes its own path; only capability
+# and context change routing or budgets). test-contract-gates 20/20, test-contract-phase-build 8/8, test-chunked-
+# phase-build 15/15 unchanged. CT0's self-contract re-checked by the evaluator after the evaluator changed (5/5 PASSED).
+#
+# Found on main and fixed on the way: two events emitted but not declared (idearium.repo.phases.mapped,
+# guardian.accounts.chain) — declared, so the EV0 contract check is green again.
+#
+# Not done here: Idearium's dispatch does not yet read `feedback` into its prompt (it is passed; the coder prompt is
+# RQ3's other half). The live run on his PC is still the proof that matters.
