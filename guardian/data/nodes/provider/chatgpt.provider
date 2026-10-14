@@ -32,3 +32,8 @@ payload:
     - hostile_testing
     - structured_output
   loginOptional: true
+  tools:
+    - text
+    - code
+    - web
+  contextTokens: 128000

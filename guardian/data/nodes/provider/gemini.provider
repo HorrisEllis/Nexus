@@ -32,3 +32,8 @@ payload:
     - image_understanding
     - multimodal
     - speed
+  tools:
+    - text
+    - code
+    - web
+  contextTokens: 1000000

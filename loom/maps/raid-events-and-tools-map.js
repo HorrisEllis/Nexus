@@ -72,7 +72,12 @@ const FILES = [
   // (pipeline-routing, reasoning-route) have no registered ids yet — left out, said.
   ['cortex/core/raid/contract-gates.js',    'nexus.cortex.core.raid.contract-gates',
     ['nexus.lib.node-export', 'nexus.lib.agent-tools', 'nexus.cortex.jaa-db']],
-  ['lib/model-door.js',                     'nexus.lib.model-door', []],
+  // 0.60.31 RT1 — the door now requires lib/route-eligibility.js (eligibility, then preference); route-eligibility reads
+  // the window Nexus gives Ollama (lib/ollama-activity.js) and Guardian's provider facts (guardian/lib/agent-facts.js —
+  // GA1, never mapped until now: node-export + agent-facts-hash; guardian/server.js serves it at /api/providers)
+  ['lib/model-door.js',                     'nexus.lib.model-door', ['nexus.lib.route-eligibility']],
+  ['lib/route-eligibility.js',              'nexus.lib.route-eligibility', ['nexus.lib.ollama-activity', 'nexus.guardian.lib.agent-facts']],
+  ['guardian/lib/agent-facts.js',           'nexus.guardian.lib.agent-facts', ['nexus.lib.node-export', 'nexus.lib.agent-facts-hash']],
   ['lib/phase-plan.js',                     'nexus.lib.phase-plan', []],
   ['cortex/core/raid/contract-adapters.js', 'nexus.cortex.core.raid.contract-adapters',
     ['nexus.cortex.core.raid.contract-gates', 'nexus.lib.model-door', 'nexus.lib.phase-plan']],
@@ -83,6 +88,7 @@ const CONSUMERS = [
   ['nexus.idearium.api', 'nexus.cortex.core.raid.contract-adapters'],
   ['nexus.idearium.api', 'nexus.cortex.core.raid.contract-gates'],
   ['nexus.idearium.api', 'nexus.lib.phase-plan'],
+  ['nexus.guardian.server', 'nexus.guardian.lib.agent-facts'],   // 0.60.31 — GET /api/providers, /providers (GA1)
 ];
 
 function mapRaidEventsAndTools(driver) {

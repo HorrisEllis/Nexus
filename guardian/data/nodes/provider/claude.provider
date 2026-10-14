@@ -30,3 +30,7 @@ payload:
     - code_quality
     - nuance
     - long_context
+  tools:
+    - text
+    - code
+  contextTokens: 200000

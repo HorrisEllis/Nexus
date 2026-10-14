@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791619232557,
+ "generatedAt": 1791954782716,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -290,6 +290,7 @@
     "guardian.listener.direct-file-write",
     "guardian.listener.ollama-answer",
     "guardian.listener.route.error",
+    "provider.attention",
     "window.hide",
     "window.minimize",
     "window.open"
@@ -300,18 +301,12 @@
   },
   "nexus.clear-glass.src.main": {
    "emits": [
-    "app.start",
     "bgtab.closed",
     "bgtab.opened",
-    "context.fp.switch",
-    "diag.nexus",
     "download.done",
     "library.opened",
-    "lifecycle.ready",
     "lifecycle.shutdown",
-    "nexus.status",
     "page.visited",
-    "userscript.auto-injected",
     "window.maximized",
     "window.opened"
    ],
@@ -1262,6 +1257,13 @@
   "nexus.guardian.lib.node-registry": {
    "emits": [
     "guardian.node.removed"
+   ],
+   "listens": []
+  },
+  "nexus.guardian.lib.provider-attention": {
+   "emits": [
+    "guardian.provider.attention",
+    "guardian.provider.attention_cleared"
    ],
    "listens": []
   },
@@ -3566,6 +3568,12 @@
    ],
    "listeners": []
   },
+  "provider.attention": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ],
+   "listeners": []
+  },
   "window.hide": {
    "emitters": [
     "nexus.clear-glass.src.ipc.bridge"
@@ -3584,12 +3592,6 @@
    ],
    "listeners": []
   },
-  "app.start": {
-   "emitters": [
-    "nexus.clear-glass.src.main"
-   ],
-   "listeners": []
-  },
   "bgtab.closed": {
    "emitters": [
     "nexus.clear-glass.src.main"
@@ -3599,20 +3601,6 @@
   "bgtab.opened": {
    "emitters": [
     "nexus.clear-glass.src.main"
-   ],
-   "listeners": []
-  },
-  "context.fp.switch": {
-   "emitters": [
-    "nexus.clear-glass.src.main",
-    "nexus.clear-glass.src.main.index.pre-userscripts"
-   ],
-   "listeners": []
-  },
-  "diag.nexus": {
-   "emitters": [
-    "nexus.clear-glass.src.main",
-    "nexus.clear-glass.src.main.index.pre-userscripts"
    ],
    "listeners": []
   },
@@ -3628,13 +3616,6 @@
    ],
    "listeners": []
   },
-  "lifecycle.ready": {
-   "emitters": [
-    "nexus.clear-glass.src.main",
-    "nexus.clear-glass.src.main.index.pre-userscripts"
-   ],
-   "listeners": []
-  },
   "lifecycle.shutdown": {
    "emitters": [
     "nexus.clear-glass.src.main",
@@ -3642,24 +3623,10 @@
    ],
    "listeners": []
   },
-  "nexus.status": {
-   "emitters": [
-    "nexus.clear-glass.src.main",
-    "nexus.clear-glass.src.main.index.pre-userscripts",
-    "nexus.clear-glass.test.watchdog.test"
-   ],
-   "listeners": []
-  },
   "page.visited": {
    "emitters": [
     "nexus.clear-glass.src.main",
     "nexus.tests.modules.automation-v2.test"
-   ],
-   "listeners": []
-  },
-  "userscript.auto-injected": {
-   "emitters": [
-    "nexus.clear-glass.src.main"
    ],
    "listeners": []
   },
@@ -3673,6 +3640,31 @@
    "emitters": [
     "nexus.clear-glass.src.main",
     "nexus.clear-glass.src.main.index.pre-userscripts"
+   ],
+   "listeners": []
+  },
+  "context.fp.switch": {
+   "emitters": [
+    "nexus.clear-glass.src.main.index.pre-userscripts"
+   ],
+   "listeners": []
+  },
+  "diag.nexus": {
+   "emitters": [
+    "nexus.clear-glass.src.main.index.pre-userscripts"
+   ],
+   "listeners": []
+  },
+  "lifecycle.ready": {
+   "emitters": [
+    "nexus.clear-glass.src.main.index.pre-userscripts"
+   ],
+   "listeners": []
+  },
+  "nexus.status": {
+   "emitters": [
+    "nexus.clear-glass.src.main.index.pre-userscripts",
+    "nexus.clear-glass.test.watchdog.test"
    ],
    "listeners": []
   },
@@ -5687,6 +5679,18 @@
   "guardian.node.removed": {
    "emitters": [
     "nexus.guardian.lib.node-registry"
+   ],
+   "listeners": []
+  },
+  "guardian.provider.attention": {
+   "emitters": [
+    "nexus.guardian.lib.provider-attention"
+   ],
+   "listeners": []
+  },
+  "guardian.provider.attention_cleared": {
+   "emitters": [
+    "nexus.guardian.lib.provider-attention"
    ],
    "listeners": []
   },

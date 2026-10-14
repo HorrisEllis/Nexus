@@ -24,3 +24,7 @@ payload:
   userscriptFile: userscript-deepseek.js
   color: '#4d6bfe'
   autostart: true
+  tools:
+    - text
+    - code
+  contextTokens: 64000

@@ -73,7 +73,7 @@ phasemap:
         reads it.
       proof: "a planted failure of each class takes its own path; only capability and context failures change routing or budgets (extends test-contract-adapters)"
     RT1_eligibility_then_preference:
-      status: OPEN
+      status: "DONE 0.60.31 — lib/route-eligibility.js; the door checks tools, window and readiness over every candidate, then the learned order, then the hop cap; the record on every route (test-route-eligibility RE-01..08). Low-confidence split/ask (CK-236) not built"
       folds: [RQ6_one_intent_map]
       builds_on: "lib/model-door.js route · lib/pipeline-routing.js byTabs · lib/agent-capability-profile.js · contract-adapters doorRoute"
       does: >-
@@ -370,3 +370,33 @@ phasemap:
 #
 # Not done here: Idearium's dispatch does not yet read `feedback` into its prompt (it is passed; the coder prompt is
 # RQ3's other half). The live run on his PC is still the proof that matters.
+
+## ADDENDUM 2026-10-14 — RT1 built: eligibility, then preference (0.60.31)
+
+# James asked: "and we have intent routing? that way the complex reasoning can be done by the bigger models or agents.
+# like claude or deepseek? also multiaccount routing in clearglass, each tab can be a different profile?" Told what
+# existed (0.60.8 intent routing; 0.60.25 account chains on one tab per provider) and what did not (RT1, PF1), with the
+# coder's recommendation RT1 then PF1, he answered: "yes we need to get it all working."
+#
+# Built, reusing what was there:
+# - lib/route-eligibility.js: needsOf (tools asked for, or named by the kind as a whole ':' segment — agent:browser,
+#   page:research; never map:phase-files; size stated or from the message), factsOf (from their owners: Guardian's
+#   provider nodes, the window Nexus gives Ollama, copilot's tools, claude-code's allowed tools), check (a hop failing
+#   tools, context or readiness is removed with its reason; a fact not stated never removes).
+# - The provider facts gained `tools` and `contextTokens` (schema.provider, the five nodes, agent-facts-hash FIELDS —
+#   Clear Glass's cache stamp covers them). The values are stated claims: chatgpt 128k, claude 200k, deepseek 64k,
+#   gemini 1M, perplexity 32k. Boundaries still learns the size each passes reliably below them.
+# - lib/model-door.js route: eligibility over every candidate, then the learned order, then max_hops. Found while
+#   proving it: the cap ran first, so an agent that could do the job but sat past max_hops was never seen (RE-02).
+#   Every route returns `record` (reason, chosen, alternatives, rejected with why, needs, confidence, fallback,
+#   verification) and `ok: false` with every reason when no agent can take the job.
+# - copilot POST /api/route passes Guardian's readiness (0.60.28) beside its tabs. A tab that is not open is not removed
+#   (Clear Glass opens it when a job comes); it is only tried later, as before.
+# - Idearium route.assess returns the door's route; `route assess … --kind --tools --tokens`; Settings → Routing →
+#   "Try a route".
+# - loom: model-door → route-eligibility → ollama-activity, guardian agent-facts (mapped for the first time).
+#
+# Not built: splitting or asking on a low-confidence intent (CK-236). The confidence on the record is the route's
+# (learned outcomes for the kind), not the intent's. The existing callers send no `needs`; they get the window and
+# readiness checks only when they pass a message or tokens. Wiring the build path's bricks to pass their packet size is
+# the next small step.
