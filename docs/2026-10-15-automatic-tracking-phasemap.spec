@@ -63,6 +63,23 @@ phases:
       current, last tag) is one query.
     proof: "a 3-brick contract → 3 tags on 3 commits, 1 activity row per move, progress reads 3/3; a retry does not re-tag"
 
+  QA2_a_real_run:
+    status: OPEN (added 2026-10-15, see addendum)
+    does: "one real phase build end to end — real repo, Ollama, Versionium, the Plan in Clear Glass — every link checked (RAID, tags, progress, rewind, release); real numbers recorded; what breaks is fixed first"
+
+  GA1_the_gate_assesses_before_it_spends:
+    status: OPEN (added 2026-10-15, see addendum)
+    depends_on: [GT2_each_gate_tags_and_reports]
+    files: [cortex/core/raid/contract-gates.js (assess), cortex/core/raid/contract-intake.js, idearium/api/index.js]
+    does: >-
+      Before a brick is dispatched, its gate checks, with no model: (1) are its dependencies met in substance — the exports
+      each upstream gate recorded are still in the file now (not only "status PASSED"); unmet → the upstream gate goes
+      STALE and re-runs, the brick waits, said; (2) is context needed — the names its actions and planned imports use
+      that its packet does not hold, and the packet's size against the routed agent's budget; missing → the context is
+      fetched (CX1 when built; until then the dependency's file excerpt) or the brick splits (exists). Each verdict is a
+      move (WAITING / NEEDS_CONTEXT / READY) through GT2, so it is tagged, logged and on the Plan.
+    proof: "a dependency whose export was removed after it passed: the brick waits and the upstream re-runs, no agent called; a brick naming a symbol nowhere in its packet gets it before dispatch; agent calls counted before/after"
+
   KT1_observations_on_a_semantic_tree:
     status: OPEN (added 2026-10-15, see addendum)
     depends_on: [GT2_each_gate_tags_and_reports]
@@ -144,7 +161,7 @@ phases:
   # carried from the previous map, unchanged: RN2 (changelog from commits), RN3 (Releases view), FR1 (failure reports),
   # ST1 (check runners), RD1b (spec chunks as bricks). AT1 folds into AU1.
 
-order: "GT2 → KT1 → CX1 → CP1 → CS1 → AU1 → RT2 → RN2 → RN3 → FR1 → MC1 → ST1 → LA1 (after LA0)"
+order: "GT2 → QA2 → GA1 → KT1 → CX1 → CP1 → CS1 → AU1 → RT2 → RN2 → RN3 → FR1 → MC1 → ST1 → LA1 (after LA0)"
 
 drift_accounted:
   - "Nothing new stores a second copy: tags in Versionium, rows in the activity log, components in the store, context composed on demand."
@@ -186,4 +203,16 @@ drift_accounted:
 # UI/CLI capability as a component). lib/component-store.js holds the components of every decomposed project, with their
 # dependencies resolved — reusable parts. The coder reads "new projects also using the component registry" as the
 # component store (designing a new project from proven parts); not assumed until he says.
+
+## ADDENDUM 2026-10-15 — QA2 and GA1 added: prove it, then gates that check before they spend
+
+# Context: James asked "Is this going in a good direction." The coder said yes, with one risk: eight phases (RD0–GT2) are
+# proven in sandbox tests with stubbed agents, none in a real build; proposed a real end-to-end run before more weight
+# goes on top (QA2). James: "Yes like gates can asses if dependacies are being met or if context is needed."
+# Coder's reading (to confirm): yes to proving it, and the gates themselves should do the checking — before a brick runs.
+# Found (§8.6): today a gate is READY when its upstream gates say PASSED and its refs' hashes are unchanged
+# (contract-gates evaluate ~163). Nothing re-checks that the upstream's recorded exports are still in the code at
+# dispatch time (idearium reads them from evidence, ~1172), and "needs context" is only learned AFTER a failed agent call
+# (GT1 class 'context'). GA1 moves both checks before the call: deterministic first, the agent only when the brick is
+# ready — fewer wasted calls, which is the number QA2 measures.
 
