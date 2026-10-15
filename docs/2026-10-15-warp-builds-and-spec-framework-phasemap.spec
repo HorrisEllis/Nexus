@@ -8,6 +8,8 @@ origin:
     "make sure all builds use warp. also need the agents to use the spec compiler? like the yaml. need to inject a
     framework for generating a .spec file. then need to listen for it to collect it. intent based .inject nodes, with
     full expanded settings in the repos.e"
+  james_4: >-
+    "Merge with main. Then look at the recent spacs for idearium. And begin on the pipeline. The speccing, mapping, listener. It doesn't know how to map. Nexus needs to generate dependancies for each phase, with files. The agent keeps having to find context, with tools.  Need them all mapped. Need that be automatic for every new phase from any project. Look at the new spec per module phase from main"
   james_3: "phases tags by system/nested repo"
   james_2: >-
     "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are
@@ -122,6 +124,39 @@ phases:
     does: "a phase is tagged with every system (nested repo) that owns a file it names (systems.js ownerOf), beside its declared systems; each system's nested repo lists it (its 'mine' filter, on by default); the phase row and detail show its system tags."
     proof: "test-phase-specs-tag PT-05..07: a phase editing guardian/ is in guardian's repo without declaring it; declared tags always cover the files' owners in this map"
 
+  MP1_nexus_maps_every_phase:
+    status: DONE (0.60.65)
+    systems: [core]
+    files: [lib/phase-map-auto.js (new), lib/phase-files.js, tests/modules/test-phase-map-auto.test.js (new)]
+    depends_on: [PT2_phases_tagged_by_system_repo]
+    specs: [idearium/spec/idearium.repo-roadmap.spec, docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec]
+    does: "no model: each phase's files from what it declares, real paths in its words, code names it mentions (the file that defines them) and hyphenated module names; each with its evidence; one hop of requires and consumers; the phases it waits on through shared files; the specs that own the files. 'none' only when nothing names a file."
+    proof: "test-phase-map-auto MA-01..06 on a fixture project; MA-08 on Nexus: 1,496 phases in under a second of mapping"
+  MP2_automatic_in_every_repo:
+    status: DONE (0.60.65)
+    systems: [idearium, core, loom]
+    files: [idearium/repo/phases.js, idearium/api/index.js, idearium/ui/js/phases.js, loom/maps/build-surface-map.js, loom/maps/one-idearium-map.js]
+    depends_on: [MP1_nexus_maps_every_phase]
+    specs: [idearium/spec/idearium.repo-roadmap.spec, idearium/spec/nexus-repository-system.spec, loom/spec/loom.spec]
+    does: "the Phases view of any repo (Nexus: the live tree; a project: its own files) carries each phase's mapping, cached by the maps' text; a phase never seen before in a repo is announced (idearium.phase.mapped) with what it was mapped to; the phase detail shows mapped files with why, requires, used by, waits on, specs. James's maps are never rewritten."
+    proof: "MA-07: a project's Phases view carries the mapping; a phase added later is announced as new and mapped"
+  MP3_builds_get_the_mapped_context:
+    status: OPEN
+    systems: [idearium, core]
+    files: [idearium/api/index.js, lib/repo-prompt-blocks.js, lib/build-context.js, lib/phase-map-auto.js]
+    depends_on: [MP2_automatic_in_every_repo, SF1_intent_blocks]
+    specs: [idearium/spec/idearium.spec, docs/2026-10-15-automatic-tracking-phasemap.spec]
+    does: "a phase build's brief carries its mapping (files with their current lines, requires, consumers, specs) as an editable prompt block (when: build), so the agent starts with the context instead of finding it with tools. This is the automatic-tracking map's CX1, fed by MP1."
+    proof: "a build of a mapped phase sends its files and consumers in the first request; tool calls per phase (AG1a's count) drop on the same phase"
+  MP4_a_model_only_where_nothing_maps:
+    status: OPEN
+    systems: [idearium]
+    files: [idearium/repo/phase-mapping.js, idearium/api/index.js]
+    depends_on: [MP2_automatic_in_every_repo]
+    specs: [idearium/spec/idearium.repo-roadmap.spec]
+    does: "the 0.60.29 Map phases flow asks a model only for phases MP1 left 'none', scored as before; accepting a mapping writes files:/depends_on into the map through the repo layer or the apply gate."
+    proof: "a run sends no request for a phase MP1 mapped"
+
 # file -> what it requires (real, measured 2026-10-15) and who consumes it. Each becomes a loom wire when its phase lands.
 file_dependencies:
   idearium/api/index.js: {requires: [lib/repo-agent.js, lib/pipeline-routing.js, lib/repo-prompt-blocks.js, lib/repo-inject.js, lib/spec-document.js, idearium/compiler-bridge.js, idearium/spec-engine/warp-build-dispatch.js (dynamic import)], consumers: [autopilot (spawned), every Idearium page]}
@@ -139,7 +174,7 @@ file_dependencies:
   cortex/core/raid/contract-intake.js: {requires: [copilot/lifeline.js], consumers: [idearium/api/index.js, cortex/core/raid/officiator.js, and 8 more (10 files)]}
   lib/intent-classifier.js: {consumers: [lib/reasoning-route.js, and 6 more (7 files)]}
 
-order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1 (0.60.63) and PT2 (0.60.64) done first. Each phase: backend → route → command → UI."
+order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1, PT2 (0.60.63-64), MP1, MP2 (0.60.65) done first. Next: MP3 (needs SF1), MP4. Each phase: backend → route → command → UI."
 
 ## ADDENDUM 2026-10-15 — 0.60.63 PT1: in Idearium's phases, files and dependencies mapped, specs tagged per phase
 # James: "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are mapped. and i want the specs to tagged per phase"
@@ -159,3 +194,16 @@ order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → 
 # with the owner of every file it names (ownerOf); this map's systems lines were corrected to match. Across all maps:
 # 429 phases move from guessed to file-owned tags, 72 declared phases gain one. Coder's reading (to confirm): "nested
 # repo" = the per-system repos inside Idearium's Nexus repo, one per system in lib/nexus-self/systems.js.
+
+## ADDENDUM 2026-10-15 — 0.60.65 MP1 + MP2: Nexus maps every phase, in every repo, with no model
+# James: "Merge with main. Then look at the recent spacs for idearium. And begin on the pipeline. The speccing, mapping, listener. It doesn't know how to map. Nexus needs to generate dependancies for each phase, with files. The agent keeps having to find context, with tools.  Need them all mapped. Need that be automatic for every new phase from any project. Look at the new spec per module phase from main"
+# Read first: main's newest Idearium maps (code-tab run state, gate-held work) and CS2 "spec the unspecced" (capability-
+# specs map, still OPEN — the "spec per module" phase). And the 0.60.29 mapper (idearium/repo/phase-mapping.js): it asks
+# a model for every phase and writes only when the model scores well — the evidence already in each phase was never used.
+# Measured on Nexus: 898 open phases, 436 name files, 196 name real paths in their words, 266 nothing.
+# Built: MP1 (lib/phase-map-auto.js) maps from evidence — after it, open phases with no file evidence fall from 462 to
+# about 198 (one try with single words reached 41, but they matched files the phase did not mean — "guardian",
+# "listener"; dropped, said here). MP2 makes it automatic in every repo's Phases view and announces new phases.
+# Coder's reading (to confirm): "listener" = a new phase is mapped the moment any repo's phases are read and announced
+# as an event — not a file watcher. MP3 (builds get the mapped context) is the part that stops agents hunting with
+# tools; it needs SF1's intent blocks.

@@ -217,3 +217,10 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **What it shows:** traceability as a requirement: every phase answers "what does it touch, what does it wait on,
     which contract owns it" before code is written. That is the discipline of specification-led engineering.
   - **Evidence:** `tests/modules/test-phase-specs-tag.test.js` (4/4, all fail on the old reader); `CHANGELOG-0.60.63.md`.
+- **2026-10-15: "It doesn't know how to map. Nexus needs to generate dependancies for each phase, with files."**
+  - **Context:** agents kept spending tool calls finding the context for each phase, and the existing mapper asked a
+    model for every phase. He named the cause, not the symptom: the system itself should know each phase's files and
+    dependencies, for every project, automatically.
+  - **What it shows:** he pushed work from the most expensive layer (a model) to the cheapest that can do it (code
+    reading evidence already in the text). Measured: open phases with no file evidence fell from 462 to 198 with no model.
+  - **Evidence:** `tests/modules/test-phase-map-auto.test.js` (8/8); `lib/phase-map-auto.js`; `CHANGELOG-0.60.65.md`.

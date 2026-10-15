@@ -298,8 +298,9 @@ function _phDetail(d, uuid) {
     <div class="ph-d-row"><label>depends on</label><span>${p.depends_on.map(link).join(' ') || '—'}${(p.unresolved_deps || []).length ? ` <span style="color:var(--text3)">(not phases here: ${escapeHtml(p.unresolved_deps.join(', '))})</span>` : ''}</span></div>
     <div class="ph-d-row"><label>needed by</label><span>${dependents.map(x => link(x.uuid)).join(' ') || '—'}</span></div>
     <div class="ph-d-row"><label>systems</label><span>${escapeHtml((p.systems || []).join(' · ') || '—')}</span></div>   <!-- 0.60.64 PT2: the nested repos it is tagged for -->
-    <div class="ph-d-row"><label>specs</label><span>${escapeHtml((p.specs || []).join(' · ') || '—')}</span></div>   <!-- 0.60.63 PT1: the specs that own this phase -->
+    <div class="ph-d-row"><label>specs</label><span>${escapeHtml([...new Set([...(p.specs || []), ...((p.mapped && p.mapped.specs) || [])])].join(' · ') || '—')}</span></div>   <!-- 0.60.63 PT1: the specs that own this phase -->
     <div class="ph-d-row"><label>closes</label><span>${escapeHtml((p.closes || []).join(' ') || '—')}</span></div>
+    ${_phMappedHtml(p)}
     <div class="ph-d-sec">files · ${files.length}</div>
     <div class="ph2-files">${files.map(f => `<a href="#" class="ph2-file" title="open in the Code tab" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(f)}')` : ''};return false">${escapeHtml(f)}</a>`).join('') || '<span class="ph2-dim">—</span>'}</div>
     ${changes.length ? `<div class="ph-d-sec">changes waiting · ${changes.length}</div><div class="ph2-files">${changes.map(c => `<a href="#" class="ph2-file warn" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(c.path)}')` : ''};return false">${escapeHtml(c.op)} ${escapeHtml(c.path)} — ${escapeHtml(c.status)}</a>`).join('')}</div>` : ''}
@@ -492,4 +493,19 @@ async function phasesMapRun() {
 function renderPhasesRefresh() {
   const repo = CURRENT_API_REPO; if (!repo) return;
   if (typeof renderRepoPhases === 'function') renderRepoPhases(repo, { keepScroll: true });
+}
+
+// §MP2 0.60.65 — what Nexus mapped this phase to, with no model: each file and why, what they require, who requires them,
+// the phases it waits on through shared files, and the specs that own them. James: "Need them all mapped."
+function _phMappedHtml(p) {
+  const m = p && p.mapped; if (!m) return '';
+  const link = (f, extra = '') => `<a href="#" class="ph2-file" title="${escapeHtml(extra || 'open in the Code tab')}" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(f)}')` : ''};return false">${escapeHtml(f)}</a>`;
+  const label = { declared: 'declared in the phase', evidence: 'mapped by Nexus from the phase\'s own words and the code', none: 'nothing in the phase names a file — left for an agent (Map phases)' }[m.source] || m.source;
+  const rows = [];
+  rows.push(`<div class="ph-d-sec">mapped · ${escapeHtml(label)}</div>`);
+  if (m.files.length) rows.push(`<div class="ph2-files">${m.files.map(f => link(f.path, `${f.why}${f.exists ? '' : ' — not on disk yet'}`)).join('')}</div>`);
+  if (m.requires.length) rows.push(`<div class="ph-d-row"><label>requires</label><span class="ph2-files">${m.requires.map(r => link(r.path, `required by ${r.by}`)).join('')}</span></div>`);
+  if (m.consumers.length) rows.push(`<div class="ph-d-row"><label>used by</label><span class="ph2-files">${m.consumers.map(c => link(c.path, `requires ${c.of} — a change can break it`)).join('')}</span></div>`);
+  if ((m.dependsOnInferred || []).length) rows.push(`<div class="ph-d-row"><label>waits on</label><span>${m.dependsOnInferred.map(d => `${escapeHtml(d.on)} <span class="ph2-dim">(both change ${escapeHtml(d.file)})</span>`).join(' · ')}</span></div>`);
+  return rows.join('\n');
 }
