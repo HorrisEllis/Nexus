@@ -105,6 +105,19 @@ const heals = []; bus.on('HEAL_REQUESTED', (e) => heals.push(e && (e.payload || 
     assert.strictEqual(r.status, 'pass', JSON.stringify(r.result && r.result.why));
   }));
 
+  await test('RR-06', 'RD1: every build path passes RAID\'s gates; nothing schedules bricks outside RAID', () => quiet(async () => {
+    const no = CI.gateBefore({ source: 'guardian', title: 'x' });
+    assert.ok(!no.ok && /RAID refused: 'build' is not in 'guardian's allowed_actions/.test(no.blocked.reason));
+    const yes = CI.gateBefore({ source: 'idearium', forAgent: 'ollama:qwen2.5-coder:7b', title: 'a chunk' });
+    assert.ok(yes.ok, JSON.stringify(yes));
+    const bogus = CI.gateBefore({ source: 'idearium', hat: 'no-such-hat-rd1', title: 'a chunk' });
+    assert.ok(!bogus.ok && bogus.blocked.gate === 'intent-contract' && /not a live hat/.test(bogus.blocked.reason), JSON.stringify(bogus));
+    const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
+    assert.ok(!/CG\.schedule\(/.test(api), 'idearium no longer runs the scheduler itself');
+    assert.ok(api.includes("CI.runContract({ ...L, file }, { source: 'idearium'"), 'the phase build runs through RAID');
+    assert.strictEqual((api.match(/contract-intake\.js'\)\.gateBefore\(/g) || []).length, 2, 'spec-chunk build and compile are gated');
+  }));
+
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exitCode = failed ? 1 : 0;
