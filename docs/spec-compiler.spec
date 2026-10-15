@@ -99,3 +99,12 @@ spec:
       4. T2/T3 fill the logic gaps via Ollama
       5. System is recovered without starting from memory
     The specs ARE the backup.
+
+## ADDENDUM 2026-10-15 — 0.60.66 agents write specs in this format, and the gate holds them to it
+# spec_format above is now enforced on agent writes: lib/spec-collect.js validate() (root spec:, required_keys, meta_required, module_required, exports as "name(params) → returns") runs in the code.write step gate for any .spec whose top key is spec:. The 'spec-framework' prompt block teaches this format when a request's intent is spec. test-spec-pipeline SP-05 fails if the lists here and in spec-collect.js drift apart. James: "need the agents to use the spec compiler? like the yaml."
+
+## ADDENDUM 2026-10-15 — 0.60.67 SF4: a collected spec compiled into proposals
+# lib/spec-collect.js compileToProposals runs compile(…, { skipCortex: true, tier: 1 }) in a temp folder and proposes each emitted file as an .inject; existing files are skipped and named. Route POST /api/repos/:uuid/specs/compile, command `repo compile-spec`, setting specs.compile_on_collect (default off) / specs.compile_into. Measured on the test spec: T0 emitted the 9-file tree, T1 emitted nothing — not investigated.
+
+## ADDENDUM 2026-10-15 — 0.60.68 a collected spec is laid out from a template, genesis by default
+# lib/spec-collect.js compileToProposals: template = request › spec.meta.template › specs.default_template (genesis). genesis lays out the nexus-system skeleton with the spec's modules slotted in (lib/file-tree-plan.js plan({ slot })); compiler is this compiler's T0/T1 as before. James: "Use the templates. The genesis by default."

@@ -85,7 +85,7 @@ const FILES = [
   ['clear-glass/src/providers/profile-tabs.js', 'nexus.clear-glass.src.providers.profile-tabs', ['nexus.clear-glass.src.cookies.session-hub']],
   // 0.60.33 QA1 — the catalogue runs: lib/check-catalogue.js loads cos/spec/check-catalogue.spec and runs lib/checks/*
   // (CK-230 reads lib/shadow.js); contract-gates checkCondition and idearium/api (checks.list / checks.run) consume it
-  ['lib/check-catalogue.js',                'nexus.lib.check-catalogue', ['nexus.lib.checks.ck-230-shadow', 'nexus.lib.checks.ck-233-deny', 'nexus.lib.checks.ck-248-toolchain', 'nexus.lib.checks.ck-253-versions']],
+  ['lib/check-catalogue.js',                'nexus.lib.check-catalogue', ['nexus.lib.checks.ck-230-shadow', 'nexus.lib.checks.ck-233-deny', 'nexus.lib.checks.ck-248-toolchain', 'nexus.lib.checks.ck-253-versions', 'nexus.lib.checks.ck-255-warp-builds']],
   ['lib/checks/ck-230-shadow.js',           'nexus.lib.checks.ck-230-shadow', ['nexus.lib.shadow']],
   ['lib/checks/ck-233-deny.js',             'nexus.lib.checks.ck-233-deny', []],
   ['lib/checks/ck-248-toolchain.js',        'nexus.lib.checks.ck-248-toolchain', []],
@@ -95,6 +95,10 @@ const FILES = [
   ['lib/release-version.js',                'nexus.lib.release-version', ['nexus.lib.version']],
   ['lib/checks/ck-253-versions.js',         'nexus.lib.checks.ck-253-versions', ['nexus.lib.release-version']],
   ['scripts/release-zip.js',                'nexus.scripts.release-zip', ['nexus.lib.release-version']],
+  // 0.60.67 WB0 — James: "make sure all builds use warp." lib/build-paths.js measures every agent call in the build code
+  // (idearium/api, the officiator, contract-intake — read as text, not required); CK-255 runs it
+  ['lib/build-paths.js',                    'nexus.lib.build-paths', []],
+  ['lib/checks/ck-255-warp-builds.js',      'nexus.lib.checks.ck-255-warp-builds', ['nexus.lib.build-paths']],
   ['lib/phase-plan.js',                     'nexus.lib.phase-plan', []],
   ['cortex/core/raid/contract-adapters.js', 'nexus.cortex.core.raid.contract-adapters',
     ['nexus.cortex.core.raid.contract-gates', 'nexus.lib.model-door', 'nexus.lib.phase-plan']],

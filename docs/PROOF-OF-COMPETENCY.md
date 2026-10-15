@@ -224,3 +224,17 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **What it shows:** he pushed work from the most expensive layer (a model) to the cheapest that can do it (code
     reading evidence already in the text). Measured: open phases with no file evidence fell from 462 to 198 with no model.
   - **Evidence:** `tests/modules/test-phase-map-auto.test.js` (8/8); `lib/phase-map-auto.js`; `CHANGELOG-0.60.65.md`.
+- **2026-10-15: "need to inject a framework for generating a .spec file. then need to listen for it to collect it."**
+  - **Context:** agents wrote specs in whatever shape they liked, and nothing noticed when one arrived.
+  - **What it shows:** a closed loop designed in one sentence: teach the format (the framework, only when the request
+    is for a spec), hold every write to it (the gate), and collect what passes, traced to the phase that asked.
+    That is contract-first systems design: the spec compiler's own format becomes the contract between agent and system.
+  - **Evidence:** `tests/modules/test-spec-pipeline.test.js` (7/7, 5 fail on the old code); `lib/spec-collect.js`;
+    `CHANGELOG-0.60.66.md`.
+- **2026-10-15: "Use the templates. The genesis by default."**
+  - **Context:** the spec pipeline compiled an agent's spec into a generic TypeScript package. Nexus already had its own
+    system template (genesis, the nexus-system skeleton) and the machinery to slot components into it.
+  - **What it shows:** consistency of architecture. He kept every new system on the one shape Nexus systems share,
+    instead of accepting a second, foreign one. "nexus is recursive, builds itself, using itself. the same architecture
+    on every level" (his words, genesis 1.4.0) is what this decision enforces.
+  - **Evidence:** `tests/modules/test-spec-pipeline.test.js` SP-08..08c; `CHANGELOG-0.60.68.md`.

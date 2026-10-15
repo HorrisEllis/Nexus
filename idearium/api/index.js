@@ -29,6 +29,8 @@ const _tokEst = (t) => { try { return t ? _require('../../lib/economy/tokens.js'
 // §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
+// §0.60.67 SF4 — whether a collected spec is compiled at once (specs.compile_on_collect, specs.compile_into)
+try { _require('../../lib/spec-collect.js').setCompileSetting(() => { try { return { on: getIdeariumValue('specs.compile_on_collect') === true, into: getIdeariumValue('specs.compile_into') || '', template: getIdeariumValue('specs.default_template') || 'genesis' }; } catch (_) { return { on: false, into: '' }; } }); } catch (_) {}
 // §CT1 0.39.347 — the repo agent asks copilot's door with idearium's routing policy (routing.* config)
 try { _require('../../lib/repo-agent.js').setRoutingPolicySource(() => _routingPolicy()); } catch (_) {}
 
@@ -785,7 +787,20 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // §0.39.362 CH2 — the compartment's charter (charter.spec at the repo root): its axioms, what must stay true, its end state
   let charterText = '';
   try { charterText = _require('../../lib/charter.js').requestText(_charterOf(target.uuid)); } catch (_) {}
-  const message = [req.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+  // §0.60.66 MP3 — James: "The agent keeps having to find context, with tools. Need them all mapped." What Nexus mapped for
+  // this phase (MP1/MP2: node.mapped) goes in its 'build-phase-map' prompt block (editable, Settings → Agents), so the agent
+  // starts with the files, exports, requires, used-by and specs instead of searching for them. Chunked: each file's own.
+  let phaseMapFor = () => '';
+  try {
+    const AM = _require('../../lib/phase-map-auto.js'); const PBm = _require('../../lib/repo-prompt-blocks.js');
+    const blocksPM = PBm.getBlocks(repo.uuid);
+    const exportsOf = AM.exportsOfTree(scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : dir);
+    phaseMapFor = (focus = null) => {
+      const t = AM.contextText(node.mapped, { focus, max: focus ? 500 : 900, exportsOf });
+      return t ? PBm.renderBuild(blocksPM.filter(b => b.id === 'build-phase-map'), { phasemap: t }).text : '';
+    };
+  } catch (_) { /* no mapping: the request is sent as before */ }
+  const message = [req.message, phaseMapFor(), charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
@@ -930,7 +945,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
-    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, ...(bare ? { noContext: true } : {}) }); }
+    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(bare ? { noContext: true } : {}) }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -984,7 +999,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const file = expectFiles[i];
       const ck = { chunk: i + 1, chunks: expectFiles.length, file };
       const cr = PH.chunkRequest({ phase: node, mapText, repo: target, file, index: i, files: expectFiles, done, depsDone });
-      const msg = [cr.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+      const msg = [cr.message, phaseMapFor(file), charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
       last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg, files: [file], ck }), onOutcome: makeOnOutcome(ck) });
       if (last.state !== 'replied') {
         appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-stopped`, ...base, ...ck, state: 'failed', chunkStopped: true, snapshot: commitId,
@@ -2472,6 +2487,7 @@ const ROUTE_CAP = {
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
+  'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,
@@ -2912,6 +2928,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
     ['GET',    ['api','repos',    ':uuid','phases','cost'],         'repo.phases.cost'],       // 0.60.27 AG1a — agent calls and tokens per phase
     ['POST',   ['api','repos',    ':uuid','phases','map'],          'repo.phases.map'],        // 0.60.29 PM — map every phase to its files and dependencies
+    ['POST',   ['api','repos',    ':uuid','specs','compile'],       'repo.specs.compile'],     // 0.60.67 SF4 — a spec's T0/T1 files as proposed .inject nodes
     ['GET',    ['api','repos',    ':uuid','phases','map'],          'repo.phases.map.status'],
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
@@ -7452,6 +7469,21 @@ async function handle(req, res, route, query, body) {
     }
 
     // ── §0.39.271 P2/P3 — the Phases manager ───────────────────────────────
+    // §0.60.67 SF4 — James: "need the agents to use the spec compiler? like the yaml." A spec in the compiler's format, in this
+    // repo, compiled (T0/T1, zero tokens); every emitted file is a PROPOSED .inject — nothing written, nothing overwritten.
+    case 'repo.specs.compile': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const rel = String(body.path || '').trim();
+      if (!rel) return err(res, 400, 'path is required — the .spec file in this repo to compile');
+      const f = getRepoLayer().readFile(params.uuid, rel);
+      if (!f || f.error) return err(res, 404, `no file ${rel} in this repo`);
+      const SC = _require('../../lib/spec-collect.js');
+      if (!SC.isCompilerSpec(rel, f.content)) return err(res, 422, `${rel} is not in the spec compiler's format (its top key must be spec:)`);
+      const into = body.into != null ? String(body.into) : (getIdeariumValue('specs.compile_into') || '');
+      const r = await SC.compileToProposals({ layer: getRepoLayer(), repo, specPath: rel, content: f.content, into, template: body.template || null });   // 0.60.68 — genesis unless named
+      return r.ok ? ok(res, r) : err(res, 422, r.error);
+    }
     case 'repo.phases.get': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);

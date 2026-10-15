@@ -4649,7 +4649,9 @@ function _agentDetail(r) {
     const rows = [
       ...(I.injects || []).map(x => `<div style="padding-left:12px">${x.status === 'applied' ? '✎ wrote' : '◇ proposed'} <span style="cursor:pointer;text-decoration:underline" onclick="openInjectEditor('${escapeHtml(x.uuid)}')">${escapeHtml(x.path)}</span>${x.creates ? ' (new file)' : ''}` +
         `${x.addressedBy ? ` <span style="opacity:.55" title="${escapeHtml(x.evidence || '')}">— ${x.addressedBy === 'fence' ? 'path stated' : x.addressedBy === 'symbols' ? `matched ${escapeHtml(x.evidence || 'symbols')}` : 'agent placed it'}</span>` : ''}` +
-        `${x.applyError ? ` <span style="color:var(--bad,#f87171)">— not applied: ${escapeHtml(x.applyError)}</span>` : ''}</div>`),
+        `${x.applyError ? ` <span style="color:var(--bad,#f87171)">— not applied: ${escapeHtml(x.applyError)}</span>` : ''}` +
+        // 0.60.67 SF3/SF4 — a spec it collected: its modules and exports, the phase that asked, and Compile (proposals only)
+        `${x.spec ? `<div style="padding-left:24px;opacity:.8">spec collected${x.spec.name ? ` <b>${escapeHtml(x.spec.name)}</b>` : ''}: ${escapeHtml((x.spec.modules || []).map(m => `${m.id}(${(m.exports || []).join(', ')})`).join(' · ') || 'no modules')}${x.spec.phase ? ` <span style="opacity:.6">— for ${escapeHtml(x.spec.phase)}</span>` : ''} ${x.spec.compiling ? '<span style="opacity:.6">— compiling: its files arrive as proposals</span>' : `<button class="action-btn" style="font-size:9px;padding:0 6px" title="lay the spec out from its template — genesis by default (the nexus-system skeleton, its modules slotted in); every file is a proposal, nothing existing is overwritten" onclick="compileCollectedSpec('${escapeHtml(x.path)}', this)">compile</button>`}</div>` : ''}</div>`),
       ...(I.refused || []).map(x => `<div style="padding-left:12px;color:var(--bad,#f87171)">refused: ${escapeHtml(x.reason)}</div>`),
       ...(I.unresolved || []).map(x => `<div style="padding-left:12px;opacity:.65">not written: ${escapeHtml(x.reason)}</div>`),
       ...(I.commands ? [`<div style="padding-left:12px;opacity:.6">${I.commands} shell block${I.commands === 1 ? '' : 's'} — commands, not files</div>`] : []),
@@ -5919,4 +5921,17 @@ async function archWrite() {
   const repo = CURRENT_API_REPO; if (!repo) return;
   try { const r = await api(`/api/repos/${repo.uuid}/architecture`, { method: 'POST', body: '{}' }, 60000); toast(`registry written — ${r.stats.components} components, ${r.stats.wires} wires · nodes: ${r.nodes ? `${r.nodes.written} written, ${r.nodes.unchanged} unchanged, ${r.nodes.archived} archived` : '—'}`, 'ok'); }
   catch (e) { toast(`not written: ${e.message}`, 'err'); }
+}
+
+// 0.60.67 SF4 — James: "need the agents to use the spec compiler? like the yaml." Compile a collected spec: T0/T1, zero tokens;
+// each emitted file comes back as a proposed .inject (review it like any other), nothing existing is overwritten.
+async function compileCollectedSpec(specPath, btn) {
+  const uuid = (typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO) ? CURRENT_API_REPO.uuid : null;   // the Agent tab's repo, as openInjectEditor reads it
+  if (!uuid) { if (btn) btn.textContent = 'no repo open'; return; }
+  if (btn) { btn.disabled = true; btn.textContent = 'compiling…'; }
+  try {
+    const r = await fetch(`/api/repos/${encodeURIComponent(uuid)}/specs/compile`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ path: specPath }) });
+    const j = await r.json(); const d = j.data || j;
+    if (btn) btn.textContent = r.ok ? `${d.template || 'genesis'}: ${(d.proposed || []).length} proposed${(d.toBuild || []).length ? `, ${d.toBuild.length} to build` : ''}${(d.skipped || []).length ? `, ${d.skipped.length} skipped` : ''}` : `failed: ${String(d.error || j.error || r.status).slice(0, 80)}`;
+  } catch (e) { if (btn) btn.textContent = `failed: ${e.message}`; }
 }

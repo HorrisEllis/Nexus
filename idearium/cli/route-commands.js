@@ -200,6 +200,15 @@ export const SPEC = [
       if (a.args[0] === 'status') { console.log(d.running ? h.c.amber(`  running — ${d.progress ? `${d.progress.step} ${d.progress.done}/${d.progress.of}` : 'starting'}`) : '  not running'); if (d.report) console.log(`  ${d.report.line}`); if (d.report && (d.report.skipped || []).length) console.log(h.c.dim(`  skipped: ${d.report.skipped.slice(0, 5).join(' · ')}`)); return; }
       console.log(h.c.mint(`  started on ${d.maps} map(s) — repo map-phases <repo> status shows its progress`));
     } },
+  // 0.60.67 SF4 — James: "need the agents to use the spec compiler? like the yaml."
+  { key: 'repo.compile-spec', repo: true, usage: 'repo compile-spec <repo> <path.spec> [--into folder] [--template genesis|compiler|<id>]', about: 'lay out a .spec in the compiler\'s format from its template — genesis by default (the nexus-system skeleton, the spec\'s modules slotted in as components), or the compiler\'s TypeScript scaffold; every file is a proposed .inject, nothing existing is overwritten, component files are listed to build',
+    need: (a) => (a.args.length ? null : '<path.spec>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/specs/compile`, body: { path: a.args[0], ...(a.flags.into != null ? { into: String(a.flags.into) } : {}), ...(a.flags.template ? { template: String(a.flags.template) } : {}) } }),
+    print: (d, a, h) => {
+      console.log(h.c.mint(`  ${d.template || 'genesis'}: ${d.proposed.length} file(s) proposed`)); for (const p of d.proposed) console.log(`    + ${p.path}  ${h.c.dim(p.uuid)}`);
+      if ((d.toBuild || []).length) { console.log(`  ${d.toBuild.length} to build`); for (const x of d.toBuild) console.log(`    · ${x.path}  ${h.c.dim(String(x.purpose || '').slice(0, 140))}`); }
+      if (d.skipped.length) { console.log(h.c.amber(`  ${d.skipped.length} skipped`)); for (const x of d.skipped) console.log(`    - ${x.path}  ${h.c.dim(x.why)}`); }
+    } },
   // 0.60.27 AG1a — "as little as possible", counted: agent calls (plan · code · review), local vs remote, tokens
   { key: 'repo.cost', repo: true, usage: 'repo cost <repo> [phase] [--map name]', about: 'what each phase cost in agent calls and tokens: plan, code and review calls, local vs remote, tokens in and out (estimated), per run',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/cost${a.args[0] ? `?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(a.flags.map)}` : ''}` : ''}` }),
