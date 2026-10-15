@@ -255,6 +255,37 @@ class IpcBridge {
     // fixed here; named directly rather than faked with an empty stub.
     this.app.get('/cli/calltos',            (req, res) => res.json({ calltos: this.options?.listCalltos() || [] }));
     this.app.get('/cli/downloads/listeners',(req, res) => res.json({ listeners: this.options?.listDownloadListeners() || [] }));
+    // §0.60.60 NP9 — James, 2026-10-15: "add support for snowflake, using cli, then you can add the commands to the agents, or make agent tools."
+    // CLI first: /cli/net/* -> idearium `net` command -> clear_glass_net agent tool. All of it is src/net/service.js; nothing here decides a route.
+    const _net = () => {
+      const svc = require('../net/service').service();
+      svc.bindStore({ get: () => this.options?.get().netPolicy || null, set: (v) => this.options?.set({ netPolicy: v }) });
+      return svc;
+    };
+    const _netHost = () => {
+      const svc = _net(); const fs = require('fs'), path = require('path'), net = require('net');
+      const { app } = require('electron');
+      const which = (n) => { for (const d of String(process.env.PATH || '').split(path.delimiter)) { for (const ext of (process.platform === 'win32' ? ['.exe', ''] : [''])) { const f = path.join(d, n + ext); try { if (fs.statSync(f).isFile()) return f; } catch (_) { /* next */ } } } return null; };
+      const pickPort = () => new Promise((ok, no) => { const s = net.createServer(); s.once('error', no); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => ok(p)); }); });
+      return svc.host({ spawn: require('child_process').spawn, fs, dir: path.join(app.getPath('userData'), 'net'), which, pickPort, now: Date.now });
+    };
+    const _netRoute = (fn) => async (req, res) => { try { res.json(await fn(req.body || {}, req.query || {})); } catch (e) { res.json({ ok: false, error: e.message }); } };
+    this.app.get('/cli/net/status',   _netRoute(() => ({ ..._net().status(), detect: _netHost().detect() })));
+    this.app.get('/cli/net/routes',   _netRoute(() => _net().routes()));
+    this.app.post('/cli/net/routes',  _netRoute((b) => _net().addRoute(b)));
+    this.app.post('/cli/net/routes/rm', _netRoute((b) => _net().removeRoute(b.id)));
+    this.app.post('/cli/net/default', _netRoute((b) => _net().setDefault(b.via)));
+    this.app.post('/cli/net/resolve', _netRoute((b) => _net().resolve({ url: b.url, provider: b.provider, caller: b.caller })));
+    this.app.post('/cli/net/bridge',  _netRoute((b) => _net().setBridge(b.line)));
+    this.app.post('/cli/net/paths',   _netRoute((b) => _net().setPaths({ torPath: b.torPath, snowflakePath: b.snowflakePath })));
+    this.app.post('/cli/net/transport', _netRoute(async (b) => {
+      const host = _netHost();
+      if (b.action === 'start') return host.start();
+      if (b.action === 'stop') return host.stop({ wipe: !!b.wipe });
+      if (b.action === 'detect') return { ok: true, ...host.detect() };
+      return { ok: false, error: 'action must be start, stop or detect' };
+    }));
+    this.app.post('/cli/net/test', _netRoute(() => ({ ok: false, error: 'the leak test is not built yet (NP5). No route is shown as verified until it is.' })));
     // §BUILT 2026-09-15 — James: "...clearglass download manager..." as a
     // guardian response sink. downloads:* was IPC-only (ipcMain.handle,
     // renderer-side); nothing outside Electron could reach the real

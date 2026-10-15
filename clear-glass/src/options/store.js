@@ -85,7 +85,8 @@ const DEFAULTS = {
   // two. Derived now so there's exactly one place that decides what's
   // pinned on a fresh install or a reset.
   pinnedToolbarButtons:  defaultPinnedIds(),
-  macroRecordToast:      true,   // 0.60.58 — a toast when the record hotkey starts/stops a recording (Settings > Macros)
+  macroRecordToast:      true,
+  netPolicy:             null,   // 0.60.60 — routes + Snowflake transport settings (src/net/service.js); null = nothing routed   // 0.60.58 — a toast when the record hotkey starts/stops a recording (Settings > Macros)
 
   // §NEW 2026-08-28 — TX16's real, first buildable slice (docs/clearglass-
   // agent-suite-and-cfr-loom-phasemap.spec's own TX16 entry, and TX14's own

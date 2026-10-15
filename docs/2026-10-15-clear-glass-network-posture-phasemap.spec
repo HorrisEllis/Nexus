@@ -58,21 +58,24 @@ decisions:
 
 phases:
   NP1_compartment:
-    status: OPEN
+    status: PARTIAL-BUILT-0.60.60
+    built_note: "process isolation, loopback ports, cookie auth, empty env, backoff, wipe. Fake-tor tests only; real tor and snowflake-client unverified."
     files: [clear-glass/src/net/transport-host.js]
     does: >-
       Spawns the transport (tor with snowflake as its pluggable transport) as a child process: own data directory, loopback-only SOCKS and control ports on random
       ports, a fresh control password each start, killed with the app, no environment secrets, no access to Nexus data paths. Reports bootstrap progress and state.
     proof: "fake-binary test: starts, picks ports, passes a password, restarts on crash with backoff, is killed on quit, never binds a non-loopback address."
   NP2_policy_and_storage:
-    status: OPEN
+    status: PARTIAL-BUILT-0.60.60
+    built_note: "policy table, precedence, collisions refused, PAC. Stored in plain options, NOT encrypted; needs NP19."
     files: [clear-glass/src/net/policy.js, clear-glass/src/net/vault.js]
     does: >-
       One pure table of routes: {match: protocol + host pattern, via: direct | socks5(host,port) | http(host,port) | transport | block, dns: proxy | os}.
       Global default plus per-site rules, first match wins, a visible 'why' for each decision. Optional chain (VPN/SOCKS then transport). Stored through safeStorage.
     proof: "table tests: protocol split (https via transport while ftp blocked), per-site override, no-match falls to the global default, secrets never in plain text on disk."
   NP3_apply_to_electron:
-    status: OPEN
+    status: PARTIAL-BUILT-0.60.60
+    built_note: "PAC per registered session, fail closed. Only agent windows are registered; provider and login windows not yet. Unverified in Electron."
     files: [clear-glass/src/net/apply.js]
     does: >-
       Turns the policy into Electron session proxy config (per partition) using a generated PAC for per-site rules, socks5h so DNS goes through the proxy, and a
@@ -136,7 +139,8 @@ decisions:
 
 phases:
   NP9_cli_first:
-    status: OPEN
+    status: PARTIAL-BUILT-0.60.60
+    built_note: "service, /cli/net/*, the net command, the clear_glass_net agent tool. Browser and Settings surfaces still open."
     does: >-
       Verbs through nexus.command and the Clear Glass CLI: net route list|add|rm|test, net transport status|start|stop, net preset list|apply,
       open <url> --via <route> --incognito --preset sentinel. API routes under /cli/net/*. Every later surface calls these.
@@ -276,3 +280,47 @@ phases:
     depends_on: [NP17_hold_primitive, NP12_plugin_split]
     does: "The plugin that freezes pages (page lifecycle), snapshots with the rewind engine, resumes or restores, and wires Erosmancer, the co-pilot, macros and automations; its Settings part, and the exit-change rule."
     proof: "all the failure modes above, with a fake driver and a fake clock; remove/disable/re-enable tested explicitly."
+
+# ═══ ADDENDUM 2026-10-15 (f) — Snowflake by CLI, agent tools, and the encrypted container ═══
+addendum_f:
+  james: >-
+    "im saying add support for snowflake, using cli, then you can add the commands to the agents, or make agent tools. what about an encrypted container,
+    only accessable through clearglass?"
+  built_0_60_60:
+    - "clear-glass/src/net/policy.js: rules by provider, url pattern, origin and caller; most specific wins; equally specific overlapping rules with a different route are refused at add, and compile CLOSED if one is already stored; PAC compiler; transport down = closed port, never DIRECT."
+    - "clear-glass/src/net/transport-host.js: tor with Snowflake as the bridge in an isolated child (loopback ports, cookie auth, empty environment, backoff, deliberate stop never restarts, wipe)."
+    - "clear-glass/src/net/service.js + /cli/net/* + the `net` command + the clear_glass_net agent tool (lib/agent-tools/tools/clear-glass/net.js)."
+    - "Default posture NP0b applied: nothing is routed until a rule exists; with no rules no session is touched."
+  decisions_applied_by_default_his_to_change:
+    NP0_binaries: "detect, do not bundle (the coder's recommendation, applied because it was not answered). tor and snowflake-client paths are settings; a Snowflake bridge line is required and is NOT hardcoded (it changes; Tor Browser ships the current one)."
+    agents_read_only: >-
+      The coder's call, not his instruction: agents can READ routes and the transport (status, routes, detect, resolve) but not change them (add, rm, default, bridge, paths, start, stop).
+      An agent that could remove a rule could quietly send his traffic direct. The `net` command marks those verbs personOnly; the tool refuses them. He can open a rule to agents later on purpose.
+  not_built_and_said_so_in_status: ["leak test NP5 (so nothing is ever shown Verified)", "provider-chat and login windows are not routed yet", "browser.html and Settings surfaces (his order: CLI first)", "kill switch and freeze (NP15, NP17)", "proxy credentials (need NP19)"]
+  encrypted_container:
+    reading: "The coder's reading (to confirm): one encrypted store for what must not sit readable on disk (quarantined downloads from NP16, the transport's state, and proxy credentials, which NP2 refuses until this exists), opened only by Clear Glass."
+    coder_says: >-
+      Yes, worth building, and it pays for itself twice: it unlocks proxy credentials, and it makes the kill switch instant. If the key is destroyed first, the container is unreadable even if deleting the
+      files fails or is slow (crypto-shred). Use the project's own pieces: clear-glass/src/security/vault-key.js (a random key sealed by the OS keystore through Electron safeStorage) and Node's built-in AES-256-GCM.
+      No new cipher.
+    must_differ_from_the_existing_vaults: >-
+      vault-key.js falls back to a HARDCODED key when the OS keystore is unavailable (that is how the password and cookie vaults behave today). That is not encryption. The container must refuse to open
+      unless the key really came from the keystore (or from a passphrase), and say why.
+    format: "A folder of blobs. Each file is encrypted in chunks (AES-256-GCM, a nonce from a counter, the chunk number and a final-chunk flag authenticated, so chunks cannot be reordered, dropped or truncated), names and sizes live in an encrypted manifest, one key per container. Optional second factor: a passphrase run through scrypt and mixed with the sealed key."
+    lock: "Key held in memory only while unlocked. Locks on idle (setting), sleep, quit, and kill_compartment."
+    honest_limits:
+      - "It protects data at rest: a stolen disk, another OS user, a copied backup, someone browsing the folder."
+      - "It does NOT stop malware running as him. On Windows the keystore opens for any process of the same user, and a process can read memory while the container is unlocked. The passphrase factor and the idle lock narrow this; they do not remove it."
+      - "A file released out of the container (to open it in another app) is plaintext on disk again. Release is a decision, and it is logged."
+      - "'Only accessible through Clear Glass' means: only through its code and keys. It is not an OS-level mounted drive; that needs a driver (VeraCrypt-style) and is out of scope."
+  decisions:
+    NP19_passphrase:
+      question: Passphrase as a second factor, or the OS keystore alone?
+      coder_recommends: Optional, off by default, with an idle lock; the keystore alone is the default because a forgotten passphrase destroys the data for good (the same property that makes the kill switch work).
+      chosen: null
+  phases:
+    NP19_container:
+      status: OPEN
+      depends_on: [NP1_compartment]
+      does: "clear-glass/src/vault/container.js (chunked AEAD, manifest, lock/unlock, crypto-shred), a `vault` CLI first (create, status, put, get, ls, release, shred, lock), then the Library and Settings; NP2 then stores proxy credentials in it, and NP16's quarantine lives in it."
+      proof: "tests: tamper, reorder, truncate and wrong-key all fail; refuses to open on a legacy-key fallback; shred makes every blob unreadable even if the files remain; lock zeroes the key; a 0-byte and a multi-chunk file round-trip."
