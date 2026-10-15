@@ -438,7 +438,15 @@ class ProviderHost {
         // preload is NOT used here — we inject via executeJavaScript after load
       },
       title: `NEXUS NCP — ${def.name}`,
+      // §0.60.45 — James: "popup windows in clearglass should look nice like the browser, borderless windowed." The
+      // provider tab showed Windows' File/Edit/View/Window menu over a white frame. The menu is gone and the window is
+      // dark before the first paint. Fully frameless needs a Nexus title bar above the page (the page is the provider's,
+      // it draws none) — mapped, not built here: it cannot be checked without Electron running (CW1, the map).
+      autoHideMenuBar: true,
+      backgroundColor: '#0b0d12',
+      darkTheme: true,
     });
+    try { win.removeMenu(); } catch (_) {}
 
     if (agentKey) {
       this.agentTabs.set(agentKey, { win, agentId, providerId, lastUsed: Date.now() });

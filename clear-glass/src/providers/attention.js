@@ -231,6 +231,18 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
     return w && !w.isDestroyed() ? { win: w, which: `${providerId} tab` } : null;
   }
   const _lastBack = new Map();   // providerId -> ts of the last send-back-to-chat reload
+  // §0.60.45 — James: "i click login and it closes the login. like i cant click anywhere without closing any popup".
+  // Every attention request called show() + focus() on the tab, and a provider that flaps (connects, drops, connects)
+  // asks again each time — focus was pulled off whatever the person was clicking (a sign-in popup, a dropdown), which
+  // closed it. The person's own input on a window is stamped here; while they are using it (PERSON_MS), Nexus neither
+  // re-focuses it nor sends it back to its chat.
+  const PERSON_MS = 120000;
+  const _input = new WeakMap();   // win -> ts of the person's last input there
+  const _watch = (win) => {
+    if (!win || win.__nexusInputWatch) return;
+    try { const wc = win.webContents; if (wc && typeof wc.on === 'function') { wc.on('input-event', () => _input.set(win, Date.now())); win.__nexusInputWatch = true; } } catch (_) {}
+  };
+  const _personUsing = (win) => { const t = _input.get(win); return !!t && Date.now() - t < PERSON_MS; };
   const _onSignin = (url) => SIGNIN_RE.test(String(url || '')) || /accounts\.google\.com|login\.microsoftonline\.com|auth\.openai\.com|appleid\.apple\.com/.test(String(url || ''));
   const _def = (id) => { try { return getProvider ? getProvider(id) : null; } catch (_) { return null; } };
   function _accountInfo(providerId) {
@@ -293,10 +305,14 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
       if (!w) return { ok: false, error: `${providerId} has no window to show` };
     }
     const { win, which } = w;
+    _watch(win);
     const def = _def(providerId);
+    const full0 = { ...rec, providerName: (def && def.name) || providerId, loginOptional: !!(def && def.loginOptional) };
+    // the panel is already up on this tab: it shows the newest reason next round — never shown or focused again
+    if (_active.has(win.id)) { _active.get(win.id).rec = full0; return { ok: true, window: which, already: true }; }
     // §0.60.2 — James: "chatgpt doesn't need a login currently." A provider whose chat works signed out
     // (registry loginOptional) is first sent back to its chat; the person is asked only if it lands on a sign-in page again.
-    if (rec.reason === 'signin' && def && def.loginOptional && def.url && !rec.askAnyway) {
+    if (rec.reason === 'signin' && def && def.loginOptional && def.url && !rec.askAnyway && !_personUsing(win)) {
       // §0.60.7 — FLAP FIX. A signed-out ChatGPT chat is a normal page: the userscript reports "signed-out" on every load,
       // and reloading it here dropped the NCP connection, which reloaded the page, which reported again — a reload every ~3 s.
       // If the tab is already off any sign-in page there is nothing to go back to: leave it alone. And never reload the same
@@ -317,9 +333,11 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
     }
     try { win.setSkipTaskbar(false); } catch (_) {}
     try { win.setTitle(`${(def && def.name) || providerId} ${TITLES[rec.reason] || 'needs you'}`); } catch (_) {}
-    win.show(); win.focus();
-    const full = { ...rec, providerName: (def && def.name) || providerId, loginOptional: !!(def && def.loginOptional) };
-    if (_active.has(win.id)) { _active.get(win.id).rec = full; return { ok: true, window: which, already: true }; }   // the panel up already: it shows the newest reason next round
+    // shown, but focus is taken only when the person is not already working in it (a sign-in popup keeps its focus)
+    const using = _personUsing(win);
+    try { if (!win.isVisible || !win.isVisible()) win.show(); else if (!using) win.show(); } catch (_) { win.show(); }
+    if (!using) win.focus();
+    const full = full0;
     _active.set(win.id, { providerId, rec: full });
     _loop(win, providerId, full).catch(e => log(`[attention] ${providerId} panel failed: ${e.message}`));
     log(`[attention] ${providerId} — ${rec.reason}: ${rec.note || ''} (shown: ${which})`);
