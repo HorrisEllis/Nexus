@@ -197,6 +197,14 @@ function pickerScript(key) {
  * field map picks the match at the anchor's x/y/z; a reply has no such fallback (the userscript reads the LAST match).
  */
 async function checkPick(win, picked, key, checkerSource) {
+  // §0.60.46 — James's run: "picked send: p.placeholder (1, by anchor)" — twice, before the real send button. The text
+  // inside the input box was saved as the send button. A send pick must be something you press.
+  if (key === 'send') {
+    const tag = String(picked.tag || '').toLowerCase(), role = String((picked.anchor && picked.anchor.role) || '').toLowerCase();
+    if (!(tag === 'button' || role === 'button' || (tag === 'input' && /submit|button/i.test(String(picked.type || 'submit'))))) {
+      return { selector: null, matched: 0, by: 'none', why: `that is a <${tag || '?'}>, not a button — click the send button itself` };
+    }
+  }
   if (!checkerSource || !picked.xpath) return { selector: picked.selector, matched: picked.matched, by: 'picker' };
   let r = null;
   try {
