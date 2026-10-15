@@ -108,6 +108,45 @@ const BAD = 'spec:\n  meta:\n    name: ledger\n  modules:\n    - id: ledger-stor
     assert.ok(/spec\.meta\.version is required/.test(why) && /name\(params\) → returns/.test(why), why);
   });
 
+  // ── SF4 (0.60.67): a collected spec compiled — T0/T1, zero tokens; every file a proposal, nothing overwritten ──
+  await test('SP-08', 'SF4: compile proposes every emitted file as an .inject, writes nothing, never overwrites', async () => {
+    await quiet(() => layer.writeFile(repo.uuid, 'package.json', '{"name":"mine"}\n'));
+    const r = await quiet(() => SC.compileToProposals({ layer, repo, specPath: 'spec/ledger.spec', content: GOOD }));
+    assert.ok(r.ok, r.error);
+    assert.ok(r.proposed.some(p => p.path === 'src/modules/ledger-store/ledger-store.ts'), JSON.stringify(r.proposed.map(p => p.path)));
+    assert.ok(r.skipped.some(x => x.path === 'package.json' && /never overwrites/.test(x.why)), 'the existing package.json is skipped, said');
+    const pf = layer.readFile(repo.uuid, 'package.json');
+    assert.strictEqual(pf.content.trim(), '{"name":"mine"}', 'not overwritten');
+    const ts = layer.readFile(repo.uuid, 'src/modules/ledger-store/ledger-store.ts');
+    assert.ok(!ts || ts.error, 'a proposal is not written until applied');
+    const n = RI.get(r.proposed[0].uuid);
+    assert.strictEqual(n.status, 'proposed'); assert.strictEqual(n.source.kind, 'compiler');
+  });
+
+  await test('SP-09', 'SF4: the route compiles a spec in the repo; a file not in the compiler\'s format is refused', async () => {
+    await quiet(() => layer.writeFile(repo.uuid, 'spec/route.spec', GOOD.replace('ledger-store', 'route-store')));
+    const ok = await quiet(() => api._route('POST', `/api/repos/${repo.uuid}/specs/compile`, { path: 'spec/route.spec', into: 'gen' }));
+    assert.strictEqual(ok.status, 200, JSON.stringify(ok.json).slice(0, 300));
+    const d = ok.json.data || ok.json;
+    assert.ok(d.proposed.some(p => p.path === 'gen/src/modules/route-store/route-store.ts'), JSON.stringify(d.proposed.map(p => p.path)));
+    await quiet(() => layer.writeFile(repo.uuid, 'docs/x-phasemap.spec', 'phases:\n  A1_x:\n    status: OPEN\n'));
+    const no = await quiet(() => api._route('POST', `/api/repos/${repo.uuid}/specs/compile`, { path: 'docs/x-phasemap.spec' }));
+    assert.strictEqual(no.status, 422);
+  });
+
+  await test('SP-10', 'SF4: with specs.compile_on_collect on, a spec that lands is compiled at once (off by default)', async () => {
+    assert.strictEqual(SC.compileSetting().on, false, 'off by default');
+    SC.setCompileSetting(() => ({ on: true, into: 'auto' }));
+    const heardC = []; bus.on('idearium.spec.compiled', (e) => heardC.push(e && e.payload !== undefined ? e.payload : e));
+    const fr = await quiet(() => RI.fromReply({ layer, repo, hat: { uuid: 'hat-s', name: 'repo_s' }, text: '```yaml spec/auto.spec\n' + GOOD.replace('ledger-store', 'auto-store') + '```\n', repoDir: DIR }));
+    const inj = fr.injects.find(i => i.path === 'spec/auto.spec');
+    assert.ok(inj && inj.spec && inj.spec.compiling, JSON.stringify(inj && inj.spec));
+    for (let i = 0; i < 40 && !heardC.length; i++) await new Promise(r => setTimeout(r, 100));
+    const ev = heardC[0]; const p = ev && (ev.proposed || (ev.data && ev.data.proposed));
+    assert.ok(p && p.includes('auto/src/modules/auto-store/auto-store.ts'), JSON.stringify(ev));
+    SC.setCompileSetting(() => ({ on: false, into: '' }));
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

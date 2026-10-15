@@ -455,3 +455,6 @@ v1_4_addendum:
           test/digest-regression.test.js (4), and
           test/v1.1.0-additions.test.js (6) suites all still pass
           unmodified against this addendum: 43/43 green."
+
+## ADDENDUM 2026-10-15 — 0.60.67 WB0: which builds go through WARP, measured
+# lib/build-paths.js census (CK-255): through WARP — spec-chunk build (createWarpChunkDispatch; buildChunkWithAgent only when WARP cannot load), codegen plan, new-spec plan, expand. Not through WARP — the phase build (RA.dispatch in _phaseBuild), proof repair, draft review, the RAID worker brick and the officiator (copilot/lifeline dispatchToNcpAgent). James: "make sure all builds use warp." docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec WB1/WB2.

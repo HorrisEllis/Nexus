@@ -219,6 +219,11 @@ const SCHEMA = {
     // §0.47.0 SP3 — a document spec that becomes complete plans its file tree by itself (codegen: its registry is the
     // file list; the files slotted into the skeleton's registry — the spine). false = only when Code is pressed.
     auto_file_tree: { default: true, copilot_writable: true, type: 'boolean' },
+    // §0.60.67 SF4 — a spec an agent wrote (collected, lib/spec-collect.js) runs the spec compiler's T0/T1 (zero tokens) and
+    // its files arrive as PROPOSED .inject nodes — never written, never over an existing file. Off by default: a scaffold
+    // landing in a repo is a big change to happen unasked. compile_into: the folder it goes under ('' = the repo root).
+    compile_on_collect: { default: false, copilot_writable: false, type: 'boolean' },
+    compile_into:       { default: '', copilot_writable: false, type: 'string' },
   },
 
   // §0.39.286 RG2 (docs/2026-10-01-routing-registry-genesis-phasemap.spec) — James: "full options for fallback logic,

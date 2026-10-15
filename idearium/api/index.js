@@ -29,6 +29,8 @@ const _tokEst = (t) => { try { return t ? _require('../../lib/economy/tokens.js'
 // §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
+// §0.60.67 SF4 — whether a collected spec is compiled at once (specs.compile_on_collect, specs.compile_into)
+try { _require('../../lib/spec-collect.js').setCompileSetting(() => { try { return { on: getIdeariumValue('specs.compile_on_collect') === true, into: getIdeariumValue('specs.compile_into') || '' }; } catch (_) { return { on: false, into: '' }; } }); } catch (_) {}
 // §CT1 0.39.347 — the repo agent asks copilot's door with idearium's routing policy (routing.* config)
 try { _require('../../lib/repo-agent.js').setRoutingPolicySource(() => _routingPolicy()); } catch (_) {}
 
@@ -2485,6 +2487,7 @@ const ROUTE_CAP = {
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
+  'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,
@@ -2925,6 +2928,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
     ['GET',    ['api','repos',    ':uuid','phases','cost'],         'repo.phases.cost'],       // 0.60.27 AG1a — agent calls and tokens per phase
     ['POST',   ['api','repos',    ':uuid','phases','map'],          'repo.phases.map'],        // 0.60.29 PM — map every phase to its files and dependencies
+    ['POST',   ['api','repos',    ':uuid','specs','compile'],       'repo.specs.compile'],     // 0.60.67 SF4 — a spec's T0/T1 files as proposed .inject nodes
     ['GET',    ['api','repos',    ':uuid','phases','map'],          'repo.phases.map.status'],
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
@@ -7465,6 +7469,21 @@ async function handle(req, res, route, query, body) {
     }
 
     // ── §0.39.271 P2/P3 — the Phases manager ───────────────────────────────
+    // §0.60.67 SF4 — James: "need the agents to use the spec compiler? like the yaml." A spec in the compiler's format, in this
+    // repo, compiled (T0/T1, zero tokens); every emitted file is a PROPOSED .inject — nothing written, nothing overwritten.
+    case 'repo.specs.compile': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const rel = String(body.path || '').trim();
+      if (!rel) return err(res, 400, 'path is required — the .spec file in this repo to compile');
+      const f = getRepoLayer().readFile(params.uuid, rel);
+      if (!f || f.error) return err(res, 404, `no file ${rel} in this repo`);
+      const SC = _require('../../lib/spec-collect.js');
+      if (!SC.isCompilerSpec(rel, f.content)) return err(res, 422, `${rel} is not in the spec compiler's format (its top key must be spec:)`);
+      const into = body.into != null ? String(body.into) : (getIdeariumValue('specs.compile_into') || '');
+      const r = await SC.compileToProposals({ layer: getRepoLayer(), repo, specPath: rel, content: f.content, into });
+      return r.ok ? ok(res, r) : err(res, 422, r.error);
+    }
     case 'repo.phases.get': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);

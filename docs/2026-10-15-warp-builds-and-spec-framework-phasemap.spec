@@ -43,9 +43,9 @@ phases:
   # Each phase: systems (declared, not guessed), files (real paths; "(new)" = to be created), depends_on, and specs —
   # the specs that own the behaviour it changes (each gets a dated ADDENDUM when the phase lands, §12.5).
   WB0_census:
-    status: OPEN
+    status: DONE (0.60.67 — CK-255 red: 5 build paths bypass WARP)
     systems: [core, idearium, cos]
-    files: [lib/build-paths.js (new), lib/checks/ck-255-warp-builds.js (new), cos/spec/check-catalogue.spec, idearium/api/index.js, tests/modules/test-build-paths.test.js (new)]
+    files: [lib/build-paths.js (new), lib/checks/ck-255-warp-builds.js (new), lib/check-catalogue.js, cos/spec/check-catalogue.spec, tests/modules/test-build-paths.test.js (new)]
     depends_on: []
     specs: [docs/warp.spec, cos/spec/check-catalogue.spec, idearium/spec/idearium.spec]
     does: "lib/build-paths.js: every build path, the call it makes, whether WARP is on it; CK-255 red while one bypasses WARP."
@@ -91,9 +91,9 @@ phases:
     does: "lib/spec-collect.js: when an .inject lands a *.spec (or yaml with a spec: root) — validate (spec-document check + compiler shape); valid -> registered on the repo's specs and the spec engine, event idearium.spec.collected, tagged with the phase that asked for it; invalid -> errors back to the agent once, said."
     proof: "a planted good reply is collected, registered and tagged to its phase; a bad one returns its errors, nothing registered"
   SF4_compile_on_collect:
-    status: OPEN
+    status: DONE (0.60.67)
     systems: [idearium, core]
-    files: [lib/spec-collect.js, idearium/compiler-bridge.js, emerge/compiler/index.js, lib/repo-inject.js, tests/modules/test-spec-pipeline.test.js]
+    files: [lib/spec-collect.js, emerge/compiler/index.js, lib/repo-inject.js, idearium/lib/config-core.cjs, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/app.js, tests/modules/test-spec-pipeline.test.js]
     depends_on: [SF3_collect_the_spec]
     specs: [docs/spec-compiler.spec, idearium/spec/idearium.spec]
     does: "per-repo setting: a collected spec runs T0/T1 (zero tokens); its files arrive as proposed .inject nodes."
@@ -174,7 +174,7 @@ file_dependencies:
   cortex/core/raid/contract-intake.js: {requires: [copilot/lifeline.js], consumers: [idearium/api/index.js, cortex/core/raid/officiator.js, and 8 more (10 files)]}
   lib/intent-classifier.js: {consumers: [lib/reasoning-route.js, and 6 more (7 files)]}
 
-order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1, PT2 (0.60.63-64), MP1, MP2 (0.60.65), SF1, SF2, SF3, MP3 (0.60.66) done. Next: WB0-WB2 (WARP), SF4, MP4, IS1. Each phase: backend → route → command → UI."
+order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1, PT2 (0.60.63-64), MP1, MP2 (0.60.65), SF1, SF2, SF3, MP3 (0.60.66), WB0, SF4 (0.60.67) done. Next: WB1-WB2 (waits on the WARP decision), MP4, IS1. Each phase: backend → route → command → UI."
 
 ## ADDENDUM 2026-10-15 — 0.60.63 PT1: in Idearium's phases, files and dependencies mapped, specs tagged per phase
 # James: "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are mapped. and i want the specs to tagged per phase"
@@ -225,3 +225,20 @@ order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → 
 #   exports, requires, used-by, waits-on and specs; a chunked build gets its own file's only, under the small-model budget.
 # Found by the run (TRUTH_OVER_COHERENCE): threading the phase broke 9 of 67 test-repo-agent-provider checks ("phase is not
 #   defined" — the inject call sits in _finish, not _dispatch); fixed before shipping, 67/67.
+
+## ADDENDUM 2026-10-15 — 0.60.67 WB0 + SF4: the WARP census, and a collected spec compiled
+# James: "Next."
+# WB0: lib/build-paths.js measures every agent call in the build code and names the function or route it sits in. Today:
+#   through WARP — spec-chunk build (direct only when WARP cannot load), codegen plan, new-spec plan, expand;
+#   not through WARP — phase build (2 sites), proof repair, draft review, RAID worker brick, officiator synthesis;
+#   not builds — the Agent tab chat, the rejection notice. CK-255 (catalogued, runnable: route, `checks run`, Settings →
+#   Checks) is red until WB1/WB2 land. Found by the census on its first run: two units I had named from memory
+#   ('repo.plan.draft') were really speceng.codegen and speceng.create — the census is why the list is measured, not typed.
+# SF4: lib/spec-collect.js compileToProposals runs the spec compiler's T0/T1 (zero tokens) in a temp folder; each file it
+#   emits is a PROPOSED .inject (reviewed like any other), a file the repo already has is skipped and named. On request:
+#   POST /api/repos/:uuid/specs/compile, `repo compile-spec`, the "compile" button on a collected spec in the Agent tab.
+#   At once: specs.compile_on_collect (default off — a scaffold landing unasked is a big change), specs.compile_into.
+#   Measured: the compiler's T1 emitted nothing on the test spec (T0 gave the 9-file tree); not investigated here.
+# WB1 still waits on James: WARP wraps each build's agent call (the coder's recommendation), or WARP's cascade picks the agent.
+# Also found while shipping 0.60.67 (the coder's regression, said): addenda appended as plain text since 0.60.63 broke six
+# YAML specs, the check catalogue among them. The added lines are now # comments; test-build-paths BP-05 guards it.
