@@ -163,7 +163,7 @@ function renderNav() {
   const item = (on, attrs, name, tags) => `<button class="navitem${on ? ' on' : ''}" ${attrs}><span class="nm">${esc(name)}</span>${tags}</button>`;
   const originals = repos.filter(r => !r.branchOf), branches = repos.filter(r => r.branchOf);
   const tagsOf = (r) => [r.nexusSelf ? '<span class="tag warn">nexus</span>' : '', r.branchOf ? '<span class="tag acc">branch</span>' : '', r.provider ? `<span class="tag">${esc(r.provider)}</span>` : ''].join('');
-  $('nav').innerHTML = `<div class="navgroup">Idearium</div>` + item(CUR.kind === 'global', 'data-global="1"', 'Global configuration', `<span class="tag">${(CONSOLE.config.keys || []).length}</span>`)
+  $('nav').innerHTML = `<div class="navgroup">Idearium${NEXUS_VER ? ` · Nexus ${esc(NEXUS_VER)}` : ''}</div>` + item(CUR.kind === 'global', 'data-global="1"', 'Global configuration', `<span class="tag">${(CONSOLE.config.keys || []).length}</span>`)
     + item(CUR.kind === 'economy', 'data-economy="1"', 'Provider economy', '<span class="tag acc">limits · learning</span>')
     + item(CUR.kind === 'routing', 'data-routing="1"', 'Routing & fallback', '<span class="tag acc">pipeline</span>')
     + item(CUR.kind === 'access', 'data-access="1"', 'Access', '<span class="tag acc">app passwords</span>')
@@ -189,6 +189,9 @@ function go(kind, uuid = null) {
   load(uuid);
 }
 
+// 0.60.34 VR1 — the Nexus release in the nav header (GET /api/version)
+let NEXUS_VER = null;
+api('/api/version').then(r => { const d = r && (r.data || r); if (d && d.version) { NEXUS_VER = d.version; if (CONSOLE) try { renderNav(); } catch (_) {} } }).catch(() => {});
 async function load(uuid) {
   if (ECON) ECON._stale = true;   // §0.39.281 — the economy page re-reads guardian after a save
   try {

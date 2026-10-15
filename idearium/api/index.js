@@ -1725,6 +1725,19 @@ async function _agentDir(repoUuid) {
 // DESIGN, import-pipeline.js) — a missing/unreadable artifact degrades
 // to null with an error string, never throws, never blocks the response
 // the repo itself already succeeded on.
+// §0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match." The version a zip
+// carries (its VERSION, lib/version.js or package.json — lib/release-version.js), recorded on the repo it became, and for
+// a Nexus zip how far it is from the running Nexus ("Nexus 0.60.23 — 10 versions behind the running 0.60.33").
+function _zipVersion(repoUuid, files) {
+  try {
+    const R = _require('../../lib/release-version.js');
+    const v = R.fromFiles(files || [], { anyPackage: true });
+    const out = v ? { ...v, describe: v.nexus ? R.describe(v.version) : `version ${v.version} (${v.source})`, at: Date.now() }
+      : { version: null, source: null, nexus: false, describe: 'the zip says no version (no VERSION file, lib/version.js or package.json)', at: Date.now() };
+    if (repoUuid) getRepoLayer().annotate(repoUuid, { sourceVersion: out });
+    return out;
+  } catch (e) { return { version: null, error: e.message }; }
+}
 function _readPipelineArtifacts(dir) {
   const out = { files: null, graph: null, filesError: null, graphError: null };
   try {
@@ -2481,6 +2494,7 @@ const ROUTE_CAP = {
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,
   'repo.run': CAPS.READ_IDEAS, 'repo.run.control': CAPS.WRITE_IDEAS,   // §0.60.0 RS1 — play · pause · rewind   // §0.39.371 VM1
   'system.lean': CAPS.READ_IDEAS, 'system.lean.set': CAPS.ADMIN,   // 0.60.20 lean mode
+  'system.version': CAPS.READ_IDEAS,   // 0.60.34 VR1 — the one release version
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
   'accounts.profiles': CAPS.READ_IDEAS,   // 0.60.32 PF1 — every account tab and its lane
@@ -2753,6 +2767,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','accounts','profiles'], 'accounts.profiles'],   // 0.60.32 PF1 — guardian's account tabs: the provider's own and each profile tab
     ['POST',   ['api','accounts','rest'],   'accounts.rest'],
     ['GET',    ['api','system','lean'],   'system.lean'],        // 0.60.20 — lean mode: what is held, saved for the next boot
+    ['GET',    ['api','version'],         'system.version'],     // 0.60.34 VR1 — the release (lib/version.js), where it is stated, the module versions labelled
     ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
     ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
     ['GET',    ['api','repos',    ':uuid','run'],            'repo.run'],           // §0.60.0 RS1 — the repo's run state: playing | paused
@@ -4265,9 +4280,10 @@ async function handle(req, res, route, query, body) {
       // only valid when materialize() didn't error, matching the guard
       // already used above to decide whether to run the pipeline at all.
       const checklist1 = (!mat.error && pipeline) ? _readPipelineArtifacts(mat.dir) : { files: null, graph: null };
+      const zipVersion = _zipVersion(result.repo.uuid, included);   // §0.60.34 VR1
 
       return ok(res, {
-        ...result,
+        ...result, version: zipVersion,
         fileCount: included.length,
         sourceFileCount: sources ? sources.written : 0,
         sourceFailed: sources ? sources.failed : [],
@@ -4482,8 +4498,9 @@ async function handle(req, res, route, query, body) {
       // guaranteed here (materialize() already err-returned above if it
       // failed), so this only degrades on the artifact read itself.
       const checklist2 = _readPipelineArtifacts(mat.dir);
+      const zipVersion = _zipVersion(repoUuid, included);   // §0.60.34 VR1
       return ok(res, {
-        ...result, repo: ingestResult.repo, deduped: !!ingestResult.deduped,
+        ...result, repo: ingestResult.repo, deduped: !!ingestResult.deduped, version: zipVersion,
         fileCount: realFileCount, chunkCount: included.length,
         sourceFailed: sources ? sources.failed : [],
         files: checklist2.files, graph: checklist2.graph,
@@ -4666,13 +4683,23 @@ async function handle(req, res, route, query, body) {
       }
       if (!entries.length) return err(res, 500, 'export produced no files — repo may be empty or unreadable');
 
+      // §0.60.34 VR1 — the zip says its version, in its name and inside: Nexus's own repos the running release; any other
+      // repo the version its own files state (VERSION / package.json), else the one its import zip carried
+      const RV = _require('../../lib/release-version.js');
+      const inner = entries.filter(e => e.path.startsWith(`${safeName}/`)).map(e => ({ path: e.path.slice(safeName.length + 1), content: e.content }));
+      const found = RV.fromFiles(inner, { anyPackage: true });
+      const exportVersion = repo.nexusSelf ? RV.current().version : (found && found.version) || (repo.sourceVersion && repo.sourceVersion.version) || null;
+      if (exportVersion && !inner.some(e => e.path === 'VERSION')) entries.push({ path: `${safeName}/VERSION`, content: `${exportVersion}\n` });
+      const zipName = exportVersion ? `${safeName}-${exportVersion}` : safeName;
+
       const { createZip } = _require('../../lib/zip-writer.js');
       const zipBuf = createZip(entries);
 
-      console.log(`[API] repo.export: ${params.uuid} -> ${entries.length} entries (${readErrors} read errors), ${zipBuf.length}b`);
+      console.log(`[API] repo.export: ${params.uuid} -> ${entries.length} entries (${readErrors} read errors), ${zipBuf.length}b${exportVersion ? `, version ${exportVersion}` : ', no version'}`);
       res.writeHead(200, {
         'Content-Type': 'application/zip',
-        'Content-Disposition': `attachment; filename="${safeName}.zip"`,
+        'Content-Disposition': `attachment; filename="${zipName}.zip"`,
+        'X-Nexus-Version': exportVersion || '',
         'Content-Length': zipBuf.length,
         ...CORS,
       });
@@ -4728,6 +4755,17 @@ async function handle(req, res, route, query, body) {
       } catch (e) { return err(res, 502, `guardian is not answering: ${e.message}`); }
       if (!r || r.ok === false) return err(res, 400, (r && r.error) || 'guardian refused it');
       return ok(res, r);
+    }
+    // §0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match." The release, said
+    // once: its tag and zip name (the GitHub release v<version>, asset nexus-<version>.zip), whether every place that
+    // states it agrees (CK-253), and the module versions — labelled as modules, never shown as the version
+    case 'system.version': {
+      const R = _require('../../lib/release-version.js');
+      const root = path.dirname(_require.resolve('../../package.json'));
+      const modVer = (rel) => { try { return JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8')).version || null; } catch (_) { return null; } };
+      const cur = R.current();
+      return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
+        modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
     }
     case 'system.lean':
     case 'system.lean.set': {
