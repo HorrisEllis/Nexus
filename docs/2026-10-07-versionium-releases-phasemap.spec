@@ -163,3 +163,12 @@ spec:
       proof: "a git repo imported → the same commits in History; exported → `git log` shows them; round trip changes no hash of any file"
 
   ordering: "VR1 → LT1 → VR2 → RN1 → RN2 → RN3 → GH1. VR1 is the foundation: without a commit per change there is nothing to diff, release or replace GitHub with."
+
+## ADDENDUM 2026-10-15 — RN1–RN3 to be built (docs/2026-10-15-one-contract-raid-releases-phasemap.spec)
+
+# James: "need more coordination for releases. like i want idearium to have releases and a changelog for each version. it
+# was added to the wrong place. like I want versionium to be working fully for versioning and revisioning, with the
+# worksurface, file changes and diff." · "use versioning in versionium for versions using the api. should be hooked into
+# the atlas." 0.60.34 put releases on GitHub first; this map's RN1–RN3 put them in Versionium. The new map builds RN1,
+# RN2 (notes from the commits first — the coder's change of order, LT1 after; to confirm), RN3, and AT1 (the atlases
+# and system specs generated from releases). GitHub becomes the mirror (GH1's direction).

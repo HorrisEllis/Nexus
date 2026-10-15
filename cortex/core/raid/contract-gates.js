@@ -513,8 +513,10 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
           if (fc.cls === 'transient') {
             // nothing was learned and nothing was tried: a transient failure does not spend the brick's retries — up to
             // `limit` of them in a row, then it counts like any other (a provider that never answers is not retried forever)
+            // §GT1a 0.60.35 — but an executor that already climbed every agent it had (out.exhausted: a ladder walked to its
+            // end) DID try: refunding that attempt re-ran the whole climb up to `limit` more times for nothing
             st.transients = (st.transients || 0) + 1;
-            if (st.transients <= limit) st.attempts = Math.max(0, (st.attempts || 1) - 1);
+            if (st.transients <= limit && !(lastOut && lastOut.exhausted)) st.attempts = Math.max(0, (st.attempts || 1) - 1);
           } else if (fc.cls === 'spec' || fc.cls === 'verification' || fc.cls === 'tool') {
             // the gate itself (or its runner, or its tool) is suspect: a question for a person, never a retry loop
             const q = `${fc.cls}: ${fc.why}`;

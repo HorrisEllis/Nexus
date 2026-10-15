@@ -80,7 +80,7 @@ function agentExecutor({ route = doorRoute, dispatch = null, boundaries = CG.Bou
     if (out.unsupported) return { unsupported: true, why: out.why || 'the dispatcher could not run it' };
     const agent = out.agent || out.provider || fits[0].provider;
     const ok = out.ok !== false && !out.error;
-    return { ok, agent, ...(out.transient ? { transient: true } : {}), ...(ok ? {} : { error: String(out.error || out.state || 'failed').slice(0, 500) }), output: out.output !== undefined ? out.output : (out.state || null),
+    return { ok, agent, ...(out.transient ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}), ...(ok ? {} : { error: String(out.error || out.state || 'failed').slice(0, 500) }), output: out.output !== undefined ? out.output : (out.state || null),
       evidence: { [`${gate.id}.agent`]: agent, [`${gate.id}.route`]: `${fits.map(h => h.provider).join(' → ')}${overNote}${exNote}`, ...(out.evidence || {}) } };
   };
 }

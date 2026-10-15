@@ -568,3 +568,11 @@ phasemap:
 # Not settable from here: whether GitHub runs the workflow (Actions enabled, workflow token allowed to write) — it is
 # proven by its first run on main, which should publish v0.60.34. A "Download ZIP" of a branch is still named by GitHub
 # (<repo>-main.zip); it carries lib/version.js, which Idearium reads, and the release asset is the named zip.
+
+## ADDENDUM 2026-10-15 — priority 6 written, and a regression of GT1 fixed (GT1a, 0.60.35)
+
+# James: "we added gating and chunking recursively, dynamically, like bricks. look at the contracts also and raid. i feel
+# something happened" · "yes, read it all, map it first, in the phases". RD0–RD2 (priority 6) were named here and never
+# written as phases; they are written in docs/2026-10-15-one-contract-raid-releases-phasemap.spec (RD0, RD1, BR1, GS1,
+# BR2, FR1, ST1), with the versions work (RN1–AT1) beside them. GT1 (0.60.30) refunded the attempt of a ladder climbed
+# to its end: a failing brick re-climbed every agent up to retry_limit more times. GT1a fixes it (GT-08).

@@ -1156,7 +1156,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const ok = out.state === 'replied';
       const code = ok ? _landedCode(out.r, f) : '';
       const v = ok && !gate.parent ? PP.checkChunk(code, plan, f) : null;
-      return { ok: ok && (!v || v.ok), agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(ok ? {} : { error: String((out.row && out.row.error) || out.state).slice(0, 400) }),
+      return { ok: ok && (!v || v.ok), agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),   /* §GT1a — the ladder was climbed to its end: an attempt spent */ ...(ok ? {} : { error: String((out.row && out.row.error) || out.state).slice(0, 400) }),
         evidence: ok ? { [`${gate.id}.verified`]: v ? (v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}`) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)) } : {} };
     };
     const agentEx = CA.agentExecutor({ dispatch, route: () => (rungs.length ? rungs.map(r => ({ provider: r.provider, rung: r })) : [{ provider: provider || agent || backend || 'the call\'s own agent', rung: null }]) });
