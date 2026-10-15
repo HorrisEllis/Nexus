@@ -1154,7 +1154,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       // a brick that was split: its pieces wrote the file — it is verified as a whole (its exports), nothing sent
       if ((gate.children || []).length) {
         const v = PP.checkChunk(codeOf(f), plan, f);
-        return { ok: v.ok, agent: 'verify', ...(v.ok ? {} : { error: `${f} lacks ${v.missing.join(', ')}` }), evidence: { [`${gate.id}.verified`]: v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}` } };
+        // §BR2 0.60.40 — and its pieces came back together: the integration a split parent needs (recorded only when it holds)
+        return { ok: v.ok, agent: 'verify', ...(v.ok ? {} : { error: `${f} lacks ${v.missing.join(', ')}` }), evidence: { [`${gate.id}.verified`]: v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}`,
+          ...(v.ok ? { [`${gate.id}.integrated`]: 'ok — its steps assembled; every planned export present' } : {}) } };
       }
       const done = plan.order.map(x => brickOf(x)).filter(g => g && g.id !== gate.id && (p.state.gates[g.id] || {}).status === 'PASSED')
         .map(g => { let ex = []; try { ex = JSON.parse(p.state.evidence[`${g.id}.exports`] || '[]'); } catch (_) {} return { path: g.file, exports: ex }; });
@@ -1210,7 +1212,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       },
     };
     const viaRaid = await CI.runContract({ ...L, file }, { source: 'idearium', intention: 'build', title: `phase ${phase} — ${target.name}`, root, concurrency: policy.contractConcurrency,
-      executors: { agent: agentEx, integrate }, onCheckpoint: save, causedBy: runId, versioning,
+      executors: { agent: agentEx, integrate }, onCheckpoint: save, causedBy: runId, versioning, depth: policy.contractDepth,
       onEvent: (e) => getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state: `brick-${String(e.status).toLowerCase()}`, brick: e.gate, snapshot: commitId }) });
     save();
     if (viaRaid.status === 'blocked') {
