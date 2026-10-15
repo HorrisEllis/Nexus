@@ -213,6 +213,11 @@ async function ppRunLoad() {
 // the plan (files → registry components, exports, conditions), why a plan was refused, what a coder dropped
 function _ppPlanned(l) {
   const out = [];
+  // §GT2 0.60.42 — a gate's move: where the run stands, the commit it passed at (tagged in Versionium), why it failed
+  if (l.brick && l.progress) {
+    const pr = l.progress, pct = pr.total ? Math.round(pr.passed / pr.total * 100) : 0;
+    out.push(`<div class="pp-against${l.state === 'brick-failed' ? ' warn' : ''}">▪ ${escapeHtml(l.brick)}${l.file ? ` · ${escapeHtml(l.file)}` : ''} — ${escapeHtml(String(l.state).replace(/^brick-/, ''))}${l.failureClass ? ` (${escapeHtml(l.failureClass)})` : ''} · ${pr.passed}/${pr.total} passed (${pct}%)${l.commit ? ` · at ${escapeHtml(String(l.commit).slice(0, 12))}` : ''}</div>`);
+  }
   // 0.60.28 PF1 — ready before run: what was left off or put last before the first agent call, and why
   if (l.ready && l.ready.line) out.push(`<div class="pp-against${(l.ready.dropped || []).length || l.state === 'refused' ? ' warn' : ''}">ready: ${escapeHtml(l.ready.line)}</div>`);
   // 0.60.28 PF2 — no planner could plan it: Nexus planned it from the phase itself, one file per request
