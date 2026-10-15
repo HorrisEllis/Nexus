@@ -75,6 +75,8 @@ class ClearDriver {
       case 'record.stop':    return this._recordStop(agentId);
       // 0.39.259 — what an agent needs to fill a real form without writing its own script each time.
       case 'readPage':       return this._readPage(agentId, args);
+      case 'readTree':       return this._readTree(agentId, args);   // 0.60.49 SP1 — the semantic tree
+      case 'resolve':        return this._resolve(agentId, args);    // 0.60.49 SP1 — a semantic address → its element
       case 'select':         return this._select(agentId, args);
       case 'check':          return this._check(agentId, args);
       case 'setValue':       return this._setValue(agentId, args);
@@ -624,6 +626,28 @@ class ClearDriver {
     const opts = Object.fromEntries(Object.entries({ maxText, maxLinks, maxFields, maxButtons }).filter(([, v]) => typeof v === 'number'));
     const raw = await this._evalJs(wc, reader.pageScript(opts));
     return reader.normalize(raw, opts);
+  }
+
+  // §0.60.49 SP1 — James: "what about a semantic tree for our own browser agent?" readTree: the page as the browser's
+  // own accessibility tree (CDP), pruned to landmarks, headings, chat messages and everything actionable, each with a
+  // semantic address (main › form › button "Send prompt"); source 'page' (or a debugger already in use) computes the
+  // same tree in the page. resolve: an address → the element's selector, which click/type/setValue take.
+  async _readTree(agentId, { source = 'auto', maxNodes } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    const ST = require('../page/semantic-tree');
+    const opts = typeof maxNodes === 'number' ? { maxNodes } : {};
+    if (source !== 'page') {
+      try { const r = await ST.readAX(wc, opts); if (r && r.ok) return r; if (source === 'ax') return r; } catch (e) { if (source === 'ax') throw e; }
+    }
+    const raw = await this._evalJs(wc, ST.pageScript(opts));
+    return ST.normalize(raw, opts);
+  }
+  async _resolve(agentId, { address } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!address) throw new Error('resolve requires address');
+    return this._evalJs(wc, require('../page/semantic-tree').resolveScript(address));
   }
 
   // select: a <select> cannot be typed into reliably (typing jumps between options by first letter). Sets the option

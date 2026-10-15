@@ -228,6 +228,13 @@ function check(opts = {}) {
     for (const s of synced) {
       _resolveGap(jaaDB, bus, s);
     }
+    // §0.60.49 — surface drift is a gap too; a spec that now matches its code (or now exists) closes its gap
+    for (const x of surface) {
+      if (!x.verifiable) continue;
+      if (!x.ok) _openSurfaceGap(jaaDB, bus, x, now);
+      else _resolveTyped(jaaDB, bus, 'spec.surface.drift', r => r.path === x.file, `${x.name}: code and capability spec agree (CK-254 green)`);
+    }
+    for (const s of [...synced, ...drifted]) _resolveTyped(jaaDB, bus, 'spec.missing', r => r.source === s.system, `${s.system} has a spec now (${s.specFile})`);
   }
 
   return {
@@ -242,6 +249,38 @@ function check(opts = {}) {
 }
 
 // ── Gap management ────────────────────────────────────────────────────────────
+// §0.60.49 — James: "i want any gaps to be mapped to the intelligence system". Every gap this module opens goes through
+// the intelligence gap system's door (intelligence/gap/predicate.js enrichGap): its predicate, dedup key, truth floor
+// and TTL come with it, so the gap hunter, tension escalation and reflection see it like any other. If that module
+// cannot load, the gap is still written raw — said once, never lost.
+let _intelWarned = false;
+function _intelligenceGap(jaaDB, bus, raw) {
+  let gap = raw;
+  try {
+    const { enriched_gap, existing_uuid } = require('../../intelligence/gap/predicate').enrichGap(raw);
+    if (existing_uuid) return { uuid: existing_uuid, deduplicated: true };
+    if (enriched_gap) gap = enriched_gap;
+  } catch (e) { if (!_intelWarned) { _intelWarned = true; console.warn(`  [${MODULE_ID}] the intelligence gap system did not load (${e.message}) — gaps written raw`); } }
+  jaaDB.insert('gaps', gap);
+  if (bus?.emit) bus.emit('cortex.gap.found', { gap, source: MODULE_ID });
+  return { uuid: gap.uuid, deduplicated: false, enriched: gap !== raw };
+}
+function _resolveTyped(jaaDB, bus, type, match, resolution) {
+  for (const g of jaaDB.query('gaps', r => r.type === type && match(r) && (r.status === 'open' || r.status === 'investigating'), 50)) {
+    jaaDB.update('gaps', g.uuid, { status: 'resolved', resolution, resolvedAt: Date.now() });
+    if (bus?.emit) bus.emit('cortex.gap.resolved', { uuid: g.uuid, source: MODULE_ID, reason: resolution });
+    console.log(`  [${MODULE_ID}] gap resolved: ${type} — ${resolution}`);
+  }
+}
+function _openSurfaceGap(jaaDB, bus, s, now) {
+  const existing = jaaDB.query('gaps', r => r.type === 'spec.surface.drift' && r.path === s.file && r.status === 'open', 1);
+  if (existing.length) { jaaDB.update('gaps', existing[0].uuid, { body: s.reason, updatedAt: now }); return; }
+  _intelligenceGap(jaaDB, bus, { uuid: crypto.randomUUID(), type: 'spec.surface.drift', severity: 'medium', status: 'open', source: s.name, path: s.file,
+    body: s.reason, description: `${s.name}'s code and its capability spec (${s.file}) disagree on what it exposes: ${s.reason}`,
+    resolution: 'either the spec\'s surface block takes the change (a dated addendum says why) or the code goes back to what the spec promises; CK-254 turns green', ts: now });
+  console.log(`  [${MODULE_ID}] gap opened: spec.surface.drift — ${s.name}`);
+}
+
 function _openDriftGap(jaaDB, bus, d, now) {
   // Check if gap already open for this system
   const existing = jaaDB.query('gaps',
@@ -273,9 +312,7 @@ function _openDriftGap(jaaDB, bus, d, now) {
     ts:          now,
   };
 
-  jaaDB.insert('gaps', gap);
-
-  if (bus?.emit) bus.emit('cortex.gap.found', { gap, source: MODULE_ID });
+  _intelligenceGap(jaaDB, bus, gap);
 
   console.log(`  [${MODULE_ID}] gap opened: spec.version.drift — ${d.system}`);
 }
@@ -301,8 +338,7 @@ function _openMissingGap(jaaDB, bus, m, now) {
     ts:          now,
   };
 
-  jaaDB.insert('gaps', gap);
-  if (bus?.emit) bus.emit('cortex.gap.found', { gap, source: MODULE_ID });
+  _intelligenceGap(jaaDB, bus, gap);
 }
 
 function _resolveGap(jaaDB, bus, s) {

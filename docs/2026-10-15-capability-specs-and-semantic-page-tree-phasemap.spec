@@ -34,7 +34,7 @@ decided:
 
 phases:
   CS1_capability_spec_and_surface_check:
-    status: OPEN
+    status: DONE (0.60.49)
     files: [lib/capability-spec.js (new), orchestrator/lib/spec-drift.js, lib/code-intel/decls.js]
     does: "parse a capability spec's surface block; measure the module's real surface (decls + routes + command rows + emitted events); diff: in code not in spec (surface grew), in spec not in code (promise unkept). spec-drift reports it beside versions; a runnable check (CK-, catalogue)."
     proof: "a module that adds an export not in its spec is red, named; the spec's addendum makes it green"
@@ -52,7 +52,7 @@ phases:
     proof: "a spec with two promised exports yields phases that build exactly those; a brick adding a third is refused, said"
 
   SP1_semantic_page_tree:
-    status: OPEN
+    status: DONE (0.60.49; the CDP path awaits a run in Clear Glass on James's machine)
     files: [clear-glass/src/page/semantic-tree.js (new), clear-glass/src/page/reader.js]
     does: "read the accessibility tree (webContents.debugger, Accessibility.getFullAXTree), prune to landmarks/headings/interactive/text, give each node a semantic address (role + name + landmark path) and a CSS fallback; budgeted; readPage gains it."
     proof: "on a fixture page: the send button is 'button \"Send prompt\"' whatever its classes; the tree of a long page fits the budget"
@@ -74,3 +74,33 @@ order: "CS1 → SP1 → SP2 → CS2 → CS3 → SP3 (CS1 and SP1 first: each is 
 drift_accounted:
   - "Nothing stored twice: surfaces are measured from code; the semantic tree is read from the browser each time."
   - "This map runs beside docs/2026-10-15-automatic-tracking-phasemap.spec (KT1/CX1); SP1's tree and KT1's tree share one node shape."
+
+## ADDENDUM 2026-10-15 — CS1 and SP1 built (0.60.49)
+
+# James: "start CS1 and SP1".
+# CS1. lib/capability-spec.js (parse / measure / check / find / draft) and CK-254 (lib/checks/ck-254-surface.js, the
+# catalogue's 121st check). A capability spec lives at <system>/spec/<name>.spec with meta kind: capability and files:,
+# and a surface block (exports, events, routes); a kind left out is not checked and is said to be unconstrained.
+# spec-drift counts capability specs as a module's spec and logs each one's surface every boot. Changed from the map:
+# the surface does not include command rows yet (route-commands keys) — exports, events and routes first. Found by CS1
+# checking itself: its measurement read doc comments as surface; comments are stripped by a character scanner that
+# keeps strings, templates and regex whole (a regex stripper swallowed 289 of Idearium's 307 routes on a '/*' inside a
+# glob string). Then CK-254 flagged the export that fix added (stripComments) until the spec listed it.
+# First capability specs: lib/spec/capability-spec.spec, clear-glass/spec/semantic-tree.spec (both green).
+# SP1. clear-glass/src/page/semantic-tree.js: _inPageTree (serialised into the page; jsdom-tested), fromAX (CDP
+# Accessibility.getFullAXTree nodes → the same shape), readAX (Electron; attaches the debugger only if free), resolve.
+# Addresses are numbered as the walk goes, so a child of the 2nd article says article #2. Driver: readTree (auto: the
+# browser's tree, else the page's) and resolve; listed in the agent tool and copilot action lists and tool cards.
+# Not proven here: readAX against a live Electron page (no Electron in the coder's container) — the AX path is tested
+# on a CDP-shaped fixture; the in-page path in jsdom. SP2 (the userscripts' field map by address) is next.
+
+## ADDENDUM 2026-10-15 — spec gaps mapped to the intelligence system (0.60.49)
+
+# James: "i want any gaps to be mapped to the intelligence system". Found: spec drift (orchestrator/lib/spec-drift.js)
+# wrote spec.version.drift and spec.missing gaps raw into the gaps table — no predicate, dedup key, truth floor or TTL,
+# so the intelligence gap system (intelligence/gap/predicate.js: hunter, tension, reflection) treated them as unknown.
+# Now one door (_intelligenceGap → enrichGap) for every gap spec drift opens, including the new spec.surface.drift;
+# the three types are in the predicate library under the names spec drift already writes (no open gap orphaned); spec
+# drift resolves surface and missing gaps when the next check is green. Still to do (named): the gaps other modules write
+# raw — FR1 (failure reports) is the phase that maps contract failures; a sweep for every raw `insert('gaps'` is next.
+
