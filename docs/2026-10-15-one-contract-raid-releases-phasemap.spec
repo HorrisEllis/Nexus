@@ -146,7 +146,7 @@ spec:
       proof: "a planted half-write by a failing brick is gone before its retry; `contract compare <file> <gate>` shows the diff since it passed; a rerun's divergence is named"
 
     BR2_recursion_to_a_depth:
-      status: OPEN
+      status: "DONE 0.60.40 — unitsOf / depthOf / split(by 'units') / _splitDeeper; schedule({ depth }) from routing.contract_depth (default 3); twice-failed, too-big and context failures go one level deeper by the steps inside an action; at the bound or with no steps: indivisible, said once; CK-247 runner (lib/checks/ck-247-decomposition.js). test-recursive-split RS-01..05"
       depends_on: [GS1_a_snapshot_per_gate_rewind_and_compare]
       files: [cortex/core/raid/contract-gates.js]
       does: "split(by: 'units') on a child: the file's existing code units (lib/chunker) or its requirement's sentences; routing.contract_depth bounds it; CK-247 is a runnable check (no re-split of the same pieces, depth said)."
@@ -249,3 +249,12 @@ spec:
 # In review mode nothing was written, so a rewind sets the brick's pending proposals aside instead.
 # The Clear Glass RewindEngine (whole-browser state) is not used for code; the desktop checkpoint (CK1) a repo task
 # takes stays the way to rewind a machine.
+
+## ADDENDUM 2026-10-15 — BR2 built (0.60.40)
+
+# James: "we added gating and chunking recursively, dynamically, like bricks" · "yes" (to recursion deeper than one
+# level). The first split is a brick's actions (as before); the next is the steps inside one action — read out of its own
+# text (';', sentences, list items, 'then'), the brief's own words, nothing invented. routing.contract_depth bounds it
+# (default 3, 1–8). A split parent passes on its children AND its own integration: Idearium re-verifies the assembled
+# file and records <gate>.integrated only when it holds. Not done: splitting by an existing file's code units
+# (lib/chunker) — a step names what to do, not where in the file; that axis waits for a planner that names units.

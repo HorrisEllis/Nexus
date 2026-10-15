@@ -1368,7 +1368,7 @@ function _loadV2(input) {
   throw new Error('runContract needs a .contract file, a loaded contract ({ payload, v }) or a v2 payload');
 }
 
-async function runContract(input, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, executors = null, onEvent = () => {}, onCheckpoint = () => {}, root, causedBy = null, raid = null, concurrency, queueId: existingId = null, versioning = null, learners = null } = {}) {
+async function runContract(input, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, executors = null, onEvent = () => {}, onCheckpoint = () => {}, root, causedBy = null, raid = null, concurrency, queueId: existingId = null, versioning = null, learners = null, depth = null } = {}) {
   const CG = require('./contract-gates.js');
   const { file, loaded } = _loadV2(input);
   const p = loaded.payload;
@@ -1393,7 +1393,7 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
   // the bricks
   let res;
   try {
-    res = await CG.schedule(p, { ...(root ? { root } : {}), ...(concurrency ? { concurrency } : {}), ...(versioning ? { versioning } : {}), ...(learners ? { learners } : {}), executors: executors || _executorsBySource.get(source) || null, onEvent,
+    res = await CG.schedule(p, { ...(root ? { root } : {}), ...(concurrency ? { concurrency } : {}), ...(versioning ? { versioning } : {}), ...(learners ? { learners } : {}), ...(depth ? { depth } : {}), executors: executors || _executorsBySource.get(source) || null, onEvent,
       onCheckpoint: (px, g) => { try { if (file) CG.save(file, loaded); } catch (_) {} try { onCheckpoint(px, g); } catch (_) {} } });
   } catch (e) { res = { complete: false, why: [`the scheduler threw: ${e.message}`], log: [], blocked: [], failed: [] }; }
   try { if (file) CG.save(file, loaded); } catch (_) {}

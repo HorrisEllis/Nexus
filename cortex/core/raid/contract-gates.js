@@ -309,6 +309,22 @@ function packetTokens(p, gateId, { root = DEFAULT_ROOT } = {}) {
   return Math.ceil(n / 4);
 }
 
+/** §BR2 — split one level deeper by units, within the depth bound; at the bound, or with no units, say it is indivisible
+ *  (once). → { status: 'SPLIT' | 'INDIVISIBLE', reasons } | null */
+function _splitDeeper(p, g, { maxDepth = 3, why = '' } = {}) {
+  const d = depthOf(p, g);
+  const units = unitsOf(g);
+  if (units && d < maxDepth) {
+    try { const kids = split(p, g.id, { by: 'units', units }); return { status: 'SPLIT', reasons: [`${why} — split into its own ${kids.length} steps (depth ${d + 1} of ${maxDepth})`, `into ${kids.join(', ')}`] }; }
+    catch (e) { return { status: 'INDIVISIBLE', reasons: [e.message] }; }
+  }
+  const ev = (p.state.evidence || {});
+  if (ev[`${g.id}.indivisible`]) return null;
+  const reason = d >= maxDepth ? `at the depth bound (${maxDepth}) — not split further` : 'one step that cannot be split further';
+  record(p, `${g.id}.indivisible`, reason, { by: 'scheduler:split' });
+  return { status: 'INDIVISIBLE', reasons: [`${why} — ${reason}`] };
+}
+
 /** Boundaries — what Nexus learns about how big a piece each agent handles: one JAA row per check (agent, kind, size, ok) */
 const Boundaries = {
   _db() { return require(path.join(DEFAULT_ROOT, 'cortex/memory/jaa-db.js')).jaaDB; },
@@ -353,19 +369,39 @@ function shouldSplit(p, gateId, { agent = null, budget = null, root = DEFAULT_RO
  * of its own. The parent becomes a phase that passes only when every child has — downstream gates are unchanged.
  * Recorded in p.splits (nothing lost); the parent's own conditions still have to hold.
  */
-function split(p, gateId, { by = null } = {}) {
+/**
+ * §BR2 0.60.39 — recursion, bounded. A brick with one action can still hold several steps ("export x; document it; add a
+ * test"): unitsOf() reads them out of the action's own text (sentences, ';', list items, 'then'). depthOf() counts its
+ * splits so far; split(by 'units') goes one level deeper until the bound (schedule's depth, routing.contract_depth,
+ * default 3). CK-247: a piece is never split into the same pieces it came from, and an indivisible piece says so.
+ */
+function unitsOf(g) {
+  if (!g || (g.actions || []).length !== 1) return null;
+  const parts = String(g.actions[0]).split(/(?:\.\s+(?=[A-Za-z])|;\s*|\n+\s*(?:[-*•]|\d+[.)])?\s*|\s+then\s+|,\s*then\s+)/i)
+    .map(x => x.trim().replace(/^(?:[-*•]|\d+[.)])\s*/, '').replace(/^then\s+/i, '').replace(/\.$/, '')).filter(x => x.length >= 3);
+  return parts.length >= 2 ? parts : null;
+}
+function depthOf(p, g) { let d = 0, cur = g; while (cur && cur.parent && d < 50) { d++; cur = (p.gates || []).find(x => x.id === cur.parent); } return d; }
+
+function split(p, gateId, { by = null, units = null } = {}) {
   const g = (p.gates || []).find(x => x.id === gateId);
   if (!g) throw Object.assign(new Error(`no gate ${gateId}`), { status: 404 });
   if (g.children && g.children.length) throw Object.assign(new Error(`gate ${gateId} is already split into ${g.children.join(', ')}`), { status: 409 });
   const mode = by || ((g.requires || []).length >= (g.actions || []).length ? 'requires' : 'actions');
-  const items = mode === 'requires' ? (g.requires || []) : (g.actions || []);
+  let items = mode === 'requires' ? (g.requires || []) : mode === 'units' ? (units || unitsOf(g) || []) : (g.actions || []);
+  if (mode === 'units') {
+    // CK-247 — never the same pieces again: a split whose pieces are exactly its parent's (or its own) is refused
+    const parent = g.parent ? (p.gates || []).find(x => x.id === g.parent) : null;
+    const same = (a, b) => Array.isArray(a) && Array.isArray(b) && a.length === b.length && a.every((x, i) => String(x).trim() === String(b[i]).trim());
+    if (same(items, g.actions) || (parent && same(items, parent.actions))) throw Object.assign(new Error(`gate ${gateId}: its units are the pieces it already is — not split again (CK-247)`), { status: 409 });
+  }
   if (items.length < 2) throw Object.assign(new Error(`gate ${gateId} has fewer than two ${mode} — nothing to split`), { status: 400 });
   const children = items.map((it, i) => {
     const id = `${gateId}.${i + 1}`;
     const refPath = mode === 'requires' ? ((p.refs || {})[it] || {}).path : null;
     const own = (g.pass_when || []).filter(c => c && typeof c === 'object' && refPath && (c.exists === refPath || c.test === refPath));
     return { id, type: 'task', parent: gateId, requirement: g.requirement || { gate: gateId, outcome: (p.outcome && p.outcome.what) || null, actions: g.actions || [] }, depends_on: [...(g.depends_on || [])],
-      requires: mode === 'requires' ? [it] : [...(g.requires || [])], actions: mode === 'actions' ? [it] : (g.actions || []),
+      requires: mode === 'requires' ? [it] : [...(g.requires || [])], actions: mode === 'actions' || mode === 'units' ? [it] : (g.actions || []),
       pass_when: [...own, { evidence: `${id}.done` }], kind: g.kind || g.type, ...(g.run ? { run: g.run } : {}), ...(g.file ? { file: g.file } : {}) };
   });
   const at = p.gates.indexOf(g);
@@ -455,8 +491,9 @@ function _defaultLearners() {
     door: (o) => { try { return require(path.join(DEFAULT_ROOT, 'lib/model-door.js')).outcome(o); } catch (_) { return null; } },
   };
 }
-async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {}, onCheckpoint = () => {}, learners = null, versioning = null } = {}) {
-  const L = learners || _defaultLearners();   // not `learn`: inside the loop that name is the per-attempt boolean
+async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {}, onCheckpoint = () => {}, learners = null, versioning = null, depth = null } = {}) {
+  const L = learners || _defaultLearners();
+  const maxDepth = Number(depth || (p.policy && p.policy.depth) || 3);   // §BR2 — how deep a brick may split   // not `learn`: inside the loop that name is the per-attempt boolean
   const ex = executors || _defaultExecutors();
   const log = [];
   // 0.60.18 EX0a — James: "the scheduler must distinguish a failed task from a task that has no available executor. The
@@ -481,6 +518,11 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
         if (before === 'FAILED' && !(g.children || []).length) {
           const sp = (g.actions || []).length >= 2 ? shouldSplit(p, g.id, { root }) : { split: false };
           if (sp.split) { const kids = split(p, g.id, { by: 'actions' }); log.push({ round, gate: g.id, status: 'SPLIT', reasons: [sp.why, `into ${kids.join(', ')}`] }); onEvent({ gate: g.id, status: 'SPLIT', round }); return; }
+          // §BR2 — one action, failed twice: deeper, by the steps inside it, to the depth bound
+          if ((st0 => (st0.attempts || 0) >= 2)(p.state.gates[g.id] || {})) {
+            const deeper = _splitDeeper(p, g, { maxDepth, why: `capability: failed ${(p.state.gates[g.id] || {}).attempts} times` });
+            if (deeper) { log.push({ round, gate: g.id, status: deeper.status, reasons: deeper.reasons }); onEvent({ gate: g.id, status: deeper.status, round }); if (deeper.status === 'SPLIT') return; }
+          }
         }
         p.state.gates[g.id] = { ...(p.state.gates[g.id] || {}), status: 'RUNNING' };
         onEvent({ gate: g.id, status: 'RUNNING', round });
@@ -497,6 +539,10 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
           if (out && out.unsupported) { setAside(`unsupported: ${out.why || `nothing can run this ${kind} work`}`); return; }
           if (out && out.decompose) {
             // its pieces are its actions (a file brick's steps); refs it shares with every brick are not pieces of it
+            if ((g.actions || []).length < 2 && !(g.children || []).length) {
+              const deeper = _splitDeeper(p, g, { maxDepth, why: out.why || 'too big for the routed agents' });   // §BR2
+              if (deeper && deeper.status === 'SPLIT') { log.push({ round, gate: g.id, status: 'SPLIT', reasons: deeper.reasons }); onEvent({ gate: g.id, status: 'SPLIT', round }); return; }
+            }
             if ((g.actions || []).length >= 2 && !(g.children || []).length) { const kids = split(p, g.id, { by: 'actions' }); log.push({ round, gate: g.id, status: 'SPLIT', reasons: [out.why || 'too big for the routed agents', `into ${kids.join(', ')}`] }); onEvent({ gate: g.id, status: 'SPLIT', round }); return; }
             setAside(`unsupported: ${out.why || 'too big for every routed agent'} — and it is one piece already, so it cannot be split`); return;
           }
@@ -542,6 +588,9 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
           } else if (fc.cls === 'context' && (g.actions || []).length >= 2 && !(g.children || []).length) {
             const kids = split(p, g.id, { by: 'actions' });
             log.push({ round, gate: g.id, status: 'SPLIT', reasons: [`context: ${fc.why}`, `into ${kids.join(', ')}`] });
+          } else if (fc.cls === 'context' && !(g.children || []).length) {
+            const deeper = _splitDeeper(p, g, { maxDepth, why: `context: ${fc.why}` });   // §BR2
+            if (deeper) log.push({ round, gate: g.id, status: deeper.status, reasons: deeper.reasons });
           }
         }
         // §GS1 0.60.39 — a brick that failed (and will be tried again) is put back to its last good state first: the commit
@@ -583,5 +632,5 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
   return { rounds: maxRounds, log, complete: e3.complete, why: e3.why, blocked: aside() };
 }
 
-module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition, compare,
+module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition, compare, unitsOf, depthOf,
   packetTokens, Boundaries, shouldSplit, split, schedule, classifyFailure, FAILURE_CLASSES };
