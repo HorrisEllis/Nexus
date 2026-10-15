@@ -100,7 +100,7 @@ function _phFiltered() {
     if (['planned', 'active', 'complete'].includes(f.status) && p.status !== f.status) return false;
     if (f.ready && !p.ready) return false;
     if (f.files && !(p.files || []).length) return false;   // 0.60.24 — James: "i can barely find any": the phases a build can start from
-    if (q && !`${p.phase_key} ${p.title} ${p.name || ''} ${p.map} ${(p.closes || []).join(' ')} ${(p.files || []).join(' ')} ${(p.specs || []).join(' ')} ${(p.blocks || []).join(' ')}`.toLowerCase().includes(q)) return false;
+    if (q && !`${p.phase_key} ${p.title} ${p.name || ''} ${p.map} ${(p.closes || []).join(' ')} ${(p.files || []).join(' ')} ${(p.specs || []).join(' ')} ${(p.systems || []).join(' ')} ${(p.blocks || []).join(' ')}`.toLowerCase().includes(q)) return false;
     return true;
   });
 }
@@ -151,7 +151,7 @@ function _phPaint() {
       </div>
     </div>`;
   const toolbar = `<div class="ph-tools">
-      <input type="text" placeholder="search id, name, map, block, closes, files…" value="${escapeHtml(f.q)}" oninput="phasesFilter('q',this.value)">
+      <input type="text" placeholder="search id, name, map, block, closes, files, specs, systems…" value="${escapeHtml(f.q)}" oninput="phasesFilter('q',this.value)">
       <select onchange="phasesFilter('status',this.value)">${[['all', 'every status'], ['open', 'not complete'], ['planned', 'planned'], ['active', 'active'], ['blocked', 'blocked'], ['complete', 'complete']].map(([v, l]) => `<option value="${v}" ${f.status === v ? 'selected' : ''}>${l}</option>`).join('')}</select>
       ${PHASES.spec ? '' : `<select onchange="phasesFilter('map',this.value)"><option value="all">every phasemap</option>${mapOpts}</select>`}
       ${d.scope.system ? `<label><input type="checkbox" ${f.mine ? 'checked' : ''} onchange="phasesFilter('mine',this.checked)"> ${escapeHtml(d.scope.system)}'s only</label>` : ''}
@@ -200,7 +200,7 @@ function _phCard(p) {
   const chips = blocks.slice(0, 3).map(b => `<span class="ph2-block ${stale.includes(b) ? 'stale' : ''}" title="${stale.includes(b) ? 'this block moved since the phase was planned' : 'a block of its spec'}">${stale.includes(b) ? '↻ ' : ''}${escapeHtml(b)}</span>`).join('') + (blocks.length > 3 ? `<span class="ph2-dim">+${blocks.length - 3}</span>` : '');
   const gates = step && step.gates && typeof _gateBar === 'function' ? _gateBar(step) : '';
   return `<div class="ph-card ph2-card st-${escapeHtml(p.status)} ${PHASES.open === p.uuid ? 'open' : ''} ${stale.length || (th && (th.specMoved || th.staleVia)) ? 'stale' : ''}" onclick="phasesOpen('${escapeHtml(p.uuid)}')" data-key="${escapeHtml(p.phase_key)}" title="${escapeHtml(p.map)}:${p.line}">
-    <div class="ph-card-top"><span class="ph-key" style="color:${_PH_STATUS_COLOR[p.status]}">${escapeHtml(_phKey(p))}</span>${PHASES.spec ? '' : `<span class="ph-map">${escapeHtml(_phShortMap(p.map))}</span>`}
+    <div class="ph-card-top"><span class="ph-key" style="color:${_PH_STATUS_COLOR[p.status]}">${escapeHtml(_phKey(p))}</span>${PHASES.spec ? '' : `<span class="ph-map">${escapeHtml(_phShortMap(p.map))}</span>`}${(p.systems || []).length ? `<span class="ph-map" title="the systems (nested repos) this phase belongs to — declared, plus the owner of every file it names">${escapeHtml(p.systems.join(' · '))}</span>` : ''}
       ${p.status !== 'complete' ? `<button class="ph-quick" title="snapshot, then the agent builds it (climbing the ladder)" ${PHASES.busy ? 'disabled' : ''} onclick="event.stopPropagation();phasesBuildQuick('${_phq(p.map)}','${_phq(p.phase_key)}')">▶</button>` : ''}</div>
     <div class="ph-card-title">${escapeHtml(p.name || p.title)}</div>
     ${blocks.length ? `<div class="ph2-blocks">${chips}</div>` : (PHASES.spec ? '<div class="ph2-dim">no link to its spec</div>' : '')}
@@ -297,6 +297,7 @@ function _phDetail(d, uuid) {
     ${th && th.staleVia ? `<div class="ph2-note warn">stale through ${escapeHtml(th.staleVia)} — it depends on a phase whose block moved since it was planned (§HP1)</div>` : ''}
     <div class="ph-d-row"><label>depends on</label><span>${p.depends_on.map(link).join(' ') || '—'}${(p.unresolved_deps || []).length ? ` <span style="color:var(--text3)">(not phases here: ${escapeHtml(p.unresolved_deps.join(', '))})</span>` : ''}</span></div>
     <div class="ph-d-row"><label>needed by</label><span>${dependents.map(x => link(x.uuid)).join(' ') || '—'}</span></div>
+    <div class="ph-d-row"><label>systems</label><span>${escapeHtml((p.systems || []).join(' · ') || '—')}</span></div>   <!-- 0.60.52 PT2: the nested repos it is tagged for -->
     <div class="ph-d-row"><label>specs</label><span>${escapeHtml((p.specs || []).join(' · ') || '—')}</span></div>   <!-- 0.60.51 PT1: the specs that own this phase -->
     <div class="ph-d-row"><label>closes</label><span>${escapeHtml((p.closes || []).join(' ') || '—')}</span></div>
     <div class="ph-d-sec">files · ${files.length}</div>

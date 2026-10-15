@@ -8,6 +8,7 @@ origin:
     "make sure all builds use warp. also need the agents to use the spec compiler? like the yaml. need to inject a
     framework for generating a .spec file. then need to listen for it to collect it. intent based .inject nodes, with
     full expanded settings in the repos.e"
+  james_3: "phases tags by system/nested repo"
   james_2: >-
     "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are
     mapped. and i want the specs to tagged per phase"
@@ -41,7 +42,7 @@ phases:
   # the specs that own the behaviour it changes (each gets a dated ADDENDUM when the phase lands, §12.5).
   WB0_census:
     status: OPEN
-    systems: [idearium, cortex, copilot]
+    systems: [core, idearium, cos]
     files: [lib/build-paths.js (new), lib/checks/ck-255-warp-builds.js (new), cos/spec/check-catalogue.spec, idearium/api/index.js, tests/modules/test-build-paths.test.js (new)]
     depends_on: []
     specs: [docs/warp.spec, cos/spec/check-catalogue.spec, idearium/spec/idearium.spec]
@@ -57,7 +58,7 @@ phases:
     proof: "an identical brick retained 3x is served from WARP with no agent call; a reply failing an axiom never lands"
   WB2_raid_bricks_and_officiator_through_warp:
     status: OPEN
-    systems: [cortex, copilot]
+    systems: [cortex, copilot, core]
     files: [cortex/core/raid/contract-intake.js, cortex/core/raid/officiator.js, copilot/lifeline.js, lib/warp-rung.js, tests/modules/test-raid-officiator.js, tests/modules/test-lifeline-ollama-dispatch.test.js]
     depends_on: [WB1_warp_at_the_rung]
     specs: [docs/warp.spec, cortex/spec/cortex.spec, copilot/spec/copilot.spec, docs/raid-warp-verification-phasemap.spec]
@@ -97,7 +98,7 @@ phases:
     proof: "a collected spec yields its tree as proposals, nothing overwritten"
   IS1_intent_settings_per_repo:
     status: OPEN
-    systems: [idearium, core]
+    systems: [idearium, core, loom]
     files: [lib/repo-inject.js, lib/repo-prompt-blocks.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/repo-settings.js, loom/maps/observability-map.js, tests/modules/test-intent-settings.test.js (new)]
     depends_on: [SF1_intent_blocks]
     specs: [idearium/spec/idearium.spec, idearium/spec/nexus-repository-system.spec]
@@ -105,12 +106,21 @@ phases:
     proof: "two intents with different landing modes land differently in one repo"
   PT1_specs_tagged_per_phase:
     status: DONE (0.60.51)
-    systems: [loom, idearium]
+    systems: [loom, idearium, core]
     files: [loom/scanners/phasemap-map.js, idearium/ui/js/phases.js, tests/modules/test-phase-specs-tag.test.js]
     depends_on: []
     specs: [loom/spec/loom.spec, idearium/spec/idearium.repo-roadmap.spec]
     does: "a phase's `specs:` list is read by loom's phasemap reader (key and list forms) and shown on the phase in Idearium; every phase of this map carries its specs."
     proof: "test-phase-specs-tag: this map's phases each carry systems (declared), files and specs"
+
+  PT2_phases_tagged_by_system_repo:
+    status: DONE (0.60.52)
+    systems: [loom, idearium, core]
+    files: [loom/scanners/phasemap-map.js, idearium/ui/js/phases.js, tests/modules/test-phase-specs-tag.test.js]
+    depends_on: [PT1_specs_tagged_per_phase]
+    specs: [loom/spec/loom.spec, idearium/spec/idearium.repo-roadmap.spec, idearium/spec/nexus-repository-system.spec]
+    does: "a phase is tagged with every system (nested repo) that owns a file it names (systems.js ownerOf), beside its declared systems; each system's nested repo lists it (its 'mine' filter, on by default); the phase row and detail show its system tags."
+    proof: "test-phase-specs-tag PT-05..07: a phase editing guardian/ is in guardian's repo without declaring it; declared tags always cover the files' owners in this map"
 
 # file -> what it requires (real, measured 2026-10-15) and who consumes it. Each becomes a loom wire when its phase lands.
 file_dependencies:
@@ -129,7 +139,7 @@ file_dependencies:
   cortex/core/raid/contract-intake.js: {requires: [copilot/lifeline.js], consumers: [idearium/api/index.js, cortex/core/raid/officiator.js, and 8 more (10 files)]}
   lib/intent-classifier.js: {consumers: [lib/reasoning-route.js, and 6 more (7 files)]}
 
-order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1 done first (0.60.51). Each phase: backend → route → command → UI."
+order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1 (0.60.51) and PT2 (0.60.52) done first. Each phase: backend → route → command → UI."
 
 ## ADDENDUM 2026-10-15 — 0.60.51 PT1: in Idearium's phases, files and dependencies mapped, specs tagged per phase
 # James: "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are mapped. and i want the specs to tagged per phase"
@@ -140,3 +150,12 @@ order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → 
 # become loom wires as each phase lands); loom's reader and Idearium's roadmap carry `specs`, and the phase detail shows
 # them. Coder's reading (to confirm): "tagged per phase" = each phase names the specs that own it; a spec an agent
 # writes under SF3 is tagged with the phase that asked for it.
+
+## ADDENDUM 2026-10-15 — 0.60.52 PT2: phases tagged by system / nested repo
+# James: "phases tags by system/nested repo"
+# Found: each Nexus system is a nested repo in Idearium, and its Phases tab already lists the phases tagged for it (the
+# "<system>'s only" filter, on by default). But a phase's tags came from a hand-written systems line or a guess from its
+# prose — WB0 creates lib/ files and edits a cos/ spec yet was tagged idearium/cortex/copilot. Now loom also tags a phase
+# with the owner of every file it names (ownerOf); this map's systems lines were corrected to match. Across all maps:
+# 429 phases move from guessed to file-owned tags, 72 declared phases gain one. Coder's reading (to confirm): "nested
+# repo" = the per-system repos inside Idearium's Nexus repo, one per system in lib/nexus-self/systems.js.

@@ -190,3 +190,6 @@ spec:
 
 ## ADDENDUM 2026-10-15 — 0.60.51 PT1: a phase's specs
 loom/scanners/phasemap-map.js reads a phase's `specs:` list (key and list forms) beside `files:` and returns it as `specs` (the specs that own the phase). James: "i want the specs to tagged per phase". test-phase-specs-tag PT-01.
+
+## ADDENDUM 2026-10-15 — 0.60.52 PT2: a phase's systems include its files' owners
+_systemsOf: declared systems, plus lib/nexus-self/systems.js ownerOf of each file in `files:` ("(new)" stripped; globs skipped) → systemsFrom 'declared+files' with systemsFromFiles; no systems line but files → 'files'; neither → 'guessed' as before. James: "phases tags by system/nested repo". test-phase-specs-tag PT-05..07.

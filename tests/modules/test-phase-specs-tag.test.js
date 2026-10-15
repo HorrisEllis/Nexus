@@ -35,7 +35,7 @@ async function test(id, desc, fn) {
     assert.ok(phases.length >= 9, `phases read: ${phases.length}`);
     const ids = new Set(phases.map(p => p.id));
     for (const p of phases) {
-      assert.strictEqual(p.systemsFrom, 'declared', `${p.id}: systems guessed`);
+      assert.ok(/^declared/.test(p.systemsFrom), `${p.id}: systems ${p.systemsFrom}`);
       assert.ok(p.files.length, `${p.id}: no files`);
       assert.ok(p.specs.length, `${p.id}: no specs`);
       for (const d of (p.dependsOn ? p.dependsOn.split(',').map(s => s.trim()).filter(Boolean) : [])) assert.ok(ids.has(d), `${p.id}: depends on unknown ${d}`);
@@ -56,6 +56,29 @@ async function test(id, desc, fn) {
     const n = (r.phases || []).find(x => x.phase_key === 'SF3_collect_the_spec');
     assert.ok(n, 'SF3 not on the roadmap');
     assert.ok(n.specs.includes('docs/spec-compiler.spec'), JSON.stringify(n.specs));
+  });
+
+  // 0.60.52 PT2 — James: "phases tags by system/nested repo"
+  const NS = require(path.join(ROOT, 'lib/nexus-self/systems.js'));
+  const inRepo = (ph, system) => (ph.systems || []).some(t => NS.systemForLoomTag(t) === system);   // nexusPhasemaps' own predicate
+
+  await test('PT-05', 'a phase that edits guardian/ is in guardian\'s nested repo though its systems line names only idearium', async () => {
+    const ph = pm.parsePhasemapText('phases:\n  AB1_x:\n    status: OPEN\n    systems: [idearium]\n    files: [guardian/server.js, lib/new-thing.js (new)]\n', 'k')[0];
+    assert.deepStrictEqual(ph.systems, ['idearium', 'guardian', 'core']);
+    assert.strictEqual(ph.systemsFrom, 'declared+files');
+    assert.ok(inRepo(ph, 'guardian') && inRepo(ph, 'core') && inRepo(ph, 'idearium'));
+    assert.ok(!inRepo(ph, 'cortex'));
+  });
+
+  await test('PT-06', 'a phase with files and no systems line is tagged from its files, not guessed from prose', async () => {
+    const ph = pm.parsePhasemapText('phases:\n  AB1_x:\n    status: OPEN\n    does: "talks about cortex and guardian"\n    files: [loom/server.js]\n', 'k')[0];
+    assert.deepStrictEqual(ph.systems, ['loom']);
+    assert.strictEqual(ph.systemsFrom, 'files');
+  });
+
+  await test('PT-07', 'in the WARP / spec-framework map, every phase\'s declared systems already cover its files\' owners', async () => {
+    for (const p of phases) assert.strictEqual(p.systemsFrom, 'declared', `${p.id}: files add ${(p.systemsFromFiles || []).join(', ')} — declare them`);
+    assert.ok(phases.some(p => inRepo(p, 'cortex')) && phases.some(p => inRepo(p, 'loom')));
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);
