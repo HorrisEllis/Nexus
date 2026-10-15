@@ -151,6 +151,11 @@ function check(opts = {}) {
 
   const specs        = _loadSpecs();
   const codeVersions = _loadCodeVersions();
+  // §0.60.49 CS1 — capability specs (<system>/spec/*.spec, meta kind: capability) count as a module's spec, and their
+  // surface is checked against the code (lib/capability-spec.js) — versions alone said nothing about what a module exposes
+  let caps = [];
+  try { caps = require('../../lib/capability-spec.js').find(); } catch (_) {}
+  for (const c of caps) if (c.name && c.version && !specs[c.name]) specs[c.name] = { version: c.version, file: c.file, path: c.file, canonical: 'capability' };
 
   const synced  = [];
   const drifted = [];
@@ -199,6 +204,13 @@ function check(opts = {}) {
   for (const m of missing) {
     console.warn(`  ✗  ${m.system}: no spec (code@${m.codeVersion})`);
   }
+  const surface = [];
+  for (const c of caps) {
+    let r; try { r = require('../../lib/capability-spec.js').check(c); } catch (e) { r = { ok: false, verifiable: false, reason: e.message }; }
+    surface.push({ name: c.name, file: c.file, ok: !!r.ok, verifiable: r.verifiable !== false, reason: r.reason || null, grew: r.grew || null, unkept: r.unkept || null });
+    if (!r.ok) console.warn(`  ⬚  ${c.name}: surface ${r.verifiable === false ? 'unchecked' : 'drift'} — ${r.reason}`);
+  }
+  if (caps.length) console.log(`  surface:   ${surface.filter(x => x.ok).length}/${caps.length} capability spec(s) match their code`);
   // §13.4 — untracked drift is the failure; tracked drift is data.
   for (const l of legacyLayout) {
     console.warn(`  ◇  ${l.name}: spec at legacy path ${l.file} — standard is ${l.name}/spec/${l.name}.spec`);
@@ -223,8 +235,9 @@ function check(opts = {}) {
     synced,
     drifted,
     missing,
+    surface,
     checkedAt: now,
-    summary:   `${synced.length} synced, ${drifted.length} drifted, ${missing.length} unspecced`,
+    summary:   `${synced.length} synced, ${drifted.length} drifted, ${missing.length} unspecced${caps.length ? `, ${surface.filter(x => !x.ok).length}/${caps.length} surface drift` : ''}`,
   };
 }
 

@@ -354,6 +354,7 @@ const SUITES = [
   'test-ncp-half-open.test.js', // 0.60.46 — a half-open NCP tab reconnects within one heartbeat; send picks must be buttons
   'test-reply-not-found-attention.test.js', // 0.60.47 — a reply that cannot be found opens the agent's window
   'test-update-script.test.js', // 0.60.48 — npm run update: the latest Nexus without a zip
+  'test-capability-spec.test.js', // 0.60.49 CS1 — a spec per capability, whose surface is the gate (CK-254)
   'test-gate-versioning.test.js', // 0.60.39 GS1 — a snapshot per gate: commit, rewind before a retry, compare, replay decisions
   'test-raid-runs-contract.test.js', // 0.60.36 RD0 — RAID runs the .contract: its gates before, bricks, verdict, self-heal
   'test-release-version.test.js', // 0.60.34 VR1 — one version: Idearium, GitHub (tag + release + zip), every zip
