@@ -1150,7 +1150,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     };
     const brickOf = (f) => p.gates.find(g => g.file === f && !g.parent && g.type !== 'phase') || p.gates.find(g => g.file === f && g.type === 'phase' && g.id !== 'phase');
     let lastDp = paramsOf(rungs[0] || null);
-    const dispatch = async (hops, { gate }) => {
+    const dispatch = async (hops, { gate, assessment = null }) => {
       if (whole && gate.id === 'work') {
         // §BR1 — the whole phase as one request to the ladder, as runWhole sent it — but as a brick: gated, checkpointed, classed
         const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles }), onOutcome: makeOnOutcome() });
@@ -1171,7 +1171,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const done = plan.order.map(x => brickOf(x)).filter(g => g && g.id !== gate.id && (p.state.gates[g.id] || {}).status === 'PASSED')
         .map(g => { let ex = []; try { ex = JSON.parse(p.state.evidence[`${g.id}.exports`] || '[]'); } catch (_) {} return { path: g.file, exports: ex }; });
       const cb = PP.chunkBrief({ plan, path: f, done, repoName: target.name, phaseKey: phase });
-      const msg = gate.parent ? `${cb.message}\n\nDO ONLY THIS STEP NOW: ${(gate.actions || [])[0] || ''}\nKeep everything the file already has.` : cb.message;
+      // §GA1 0.60.44 — the gate found names its imports need that no dependency's exports cover: the dependencies' code goes
+      // in the brief (trimmed), so the agent sees what it can actually import instead of guessing
+      const ctxNote = assessment && assessment.context.needs.length ? `\n\nCONTEXT — you import ${assessment.context.needs.join(', ')}, which no dependency exports yet. What the dependencies actually contain:\n${
+        assessment.deps.map(x => `--- ${x.file}\n${String(codeOf(x.file)).split('\n').slice(0, 120).join('\n')}`).join('\n')}` : '';
+      const msg = (gate.parent ? `${cb.message}\n\nDO ONLY THIS STEP NOW: ${(gate.actions || [])[0] || ''}\nKeep everything the file already has.` : cb.message) + ctxNote;
       const ck = { chunk: gate.parent ? `${i + 1}.${gate.id.split('.').pop()}` : i + 1, chunks: plan.order.length, file: f, planned: true, brick: gate.id };
       const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy,
         attempt: makeAttempt({ msg, files: [f], ck, verify: gate.parent ? null : (code) => PP.checkChunk(code, plan, f), bare: true }), onOutcome: makeOnOutcome(ck) });
@@ -1224,7 +1228,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       },
     };
     const viaRaid = await CI.runContract({ ...L, file }, { source: 'idearium', intention: 'build', title: `phase ${phase} — ${target.name}`, root, concurrency: policy.contractConcurrency,
-      executors: { agent: agentEx, integrate }, onCheckpoint: save, causedBy: runId, versioning, depth: policy.contractDepth, compartment: target.uuid,
+      executors: { agent: agentEx, integrate }, onCheckpoint: save, causedBy: runId, versioning, depth: policy.contractDepth, compartment: target.uuid, assessing: { read: codeOf },   // §GA1 — the code as this build sees it (proposals in review mode)
       // §GT2 0.60.42 — a settled gate move is a row on the Plan's ledger (the run's gate timeline: nothing lost on a reload)
       onEvent: (e) => {
         const st = `brick-${String(e.status).toLowerCase()}`;

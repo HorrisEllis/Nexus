@@ -68,7 +68,7 @@ phases:
     does: "one real phase build end to end — real repo, Ollama, Versionium, the Plan in Clear Glass — every link checked (RAID, tags, progress, rewind, release); real numbers recorded; what breaks is fixed first"
 
   GA1_the_gate_assesses_before_it_spends:
-    status: OPEN (added 2026-10-15, see addendum)
+    status: DONE (0.60.44)
     depends_on: [GT2_each_gate_tags_and_reports]
     files: [cortex/core/raid/contract-gates.js (assess), cortex/core/raid/contract-intake.js, idearium/api/index.js]
     does: >-
@@ -256,3 +256,17 @@ drift_accounted:
 # so a lost run is reproduced from the contract file, its checkpoints and the Versionium commits, not from memory.
 # GL1 (the gate lifecycle) = GA1 assess → CX1/KT1 elaborate → RT2 route → run → GT2 record → persist; event-driven
 # scheduling (closes RD1b) is its last piece. Order unchanged: GA1 is next.
+
+## ADDENDUM 2026-10-15 — GA1 built (0.60.44)
+
+# contract-gates assess(p, gate, { read, exportsOf }) runs in the scheduler before a task brick with dependencies is
+# dispatched. Changed from the map: the dependency check uses only the exports a brick was SEEN to have when it passed
+# (its recorded <id>.exports), never the plan's promise alone — the first cut used the promise as a fallback and an older
+# test (EA-04, stubbed executors that record no exports) showed it reopening a brick three times on a guess. Unchecked
+# deps are said ("not checked"), and the context check runs only when every dependency could be checked.
+# A reopened dependency goes STALE (evaluate then holds the dependent as waiting on it); reopenings are capped at
+# retry_limit per dependency. NEEDS_CONTEXT is informational: the brick still runs, with the dependencies' code in its
+# brief (Idearium) — CX1 will replace that excerpt with ranked, budgeted context. Not done: a measured drop in agent
+# calls on a real model (QA2's stub writes correct code, so its 4 calls are unchanged; the saving shows when a real
+# model leaves an export out).
+
