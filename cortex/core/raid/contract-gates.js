@@ -491,7 +491,50 @@ function _defaultLearners() {
     door: (o) => { try { return require(path.join(DEFAULT_ROOT, 'lib/model-door.js')).outcome(o); } catch (_) { return null; } },
   };
 }
-async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {}, onCheckpoint = () => {}, learners = null, versioning = null, depth = null } = {}) {
+/**
+ * assess(p, gateId, { root, read, exportsOf }) — §GA1 0.60.44: before a brick spends an agent call, its gate checks with no
+ * model (docs/2026-10-15-automatic-tracking-phasemap.spec GA1). James: "gates can asses if dependacies are being met or
+ * if context is needed."
+ *   deps     each upstream brick's exports as recorded when it passed (<id>.exports) still in its file now —
+ *            not only "status PASSED". read(file) is the caller's view of the code (Idearium: the proposal overlay in
+ *            review mode); a file it cannot read is said, never counted as unmet.
+ *   context  the names this brick's planned imports take ('./a.js: x, y') that no dependency's code provides.
+ * → { gate, ready, deps: [{ gate, file, missing, unreadable }], context: { needs: [names] }, why: [] }
+ */
+function _importNames(imports) {
+  const out = [];
+  for (const i of imports || []) { const m = String(i).match(/:\s*(.+)$/); if (m) for (const n of m[1].split(',')) { const k = n.trim(); if (/^[A-Za-z_$][\w$]*$/.test(k)) out.push(k); } }
+  return out;
+}
+function assess(p, gateId, { root = DEFAULT_ROOT, read = null, exportsOf = null } = {}) {
+  const g = (p.gates || []).find(x => x.id === gateId);
+  if (!g) throw Object.assign(new Error(`no gate ${gateId}`), { status: 404 });
+  const ev = (p.state && p.state.evidence) || {};
+  const rd = read || ((f) => { try { return fs.readFileSync(path.join(root, f), 'utf8'); } catch (_) { return null; } });
+  const exOf = exportsOf || ((code) => require(path.join(DEFAULT_ROOT, 'lib/phase-plan.js')).exportsOf(code));
+  const deps = [], provided = new Set();
+  for (const d of g.depends_on || []) {
+    const dg = (p.gates || []).find(x => x.id === d);
+    if (!dg || dg.type !== 'task' || !dg.file) continue;
+    // what the dependency was SEEN to export when it passed (its recorded evidence) — never the plan's promise alone: a
+    // brick passed by an executor that records no exports is not checked (said), rather than reopened on a guess
+    let promised = null; try { promised = JSON.parse(ev[`${d}.exports`] || 'null'); } catch (_) {}
+    if (!Array.isArray(promised)) { deps.push({ gate: d, file: dg.file, missing: [], unchecked: true }); continue; }
+    let code = null; try { code = rd(dg.file); } catch (_) { code = null; }
+    if (code == null) { deps.push({ gate: d, file: dg.file, missing: [], unreadable: true }); continue; }
+    const have = new Set(exOf(code)); have.forEach(n => provided.add(n));
+    deps.push({ gate: d, file: dg.file, missing: promised.filter(n => !have.has(n)) });
+  }
+  const unreadable = deps.some(x => x.unreadable || x.unchecked);
+  const needs = unreadable ? [] : _importNames(g.requirement && g.requirement.imports).filter(n => !provided.has(n));
+  const why = [...deps.filter(x => x.missing.length).map(x => `${x.gate}: ${x.file} no longer exports ${x.missing.join(', ')}`),
+    ...(needs.length ? [`imports ${needs.join(', ')}, which no dependency provides`] : []),
+    ...deps.filter(x => x.unreadable).map(x => `${x.gate}: ${x.file} could not be read — not checked`),
+    ...deps.filter(x => x.unchecked).map(x => `${x.gate}: no exports were recorded when it passed — not checked`)];
+  return { gate: gateId, ready: !deps.some(x => x.missing.length), deps, context: { needs }, why };
+}
+
+async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {}, onCheckpoint = () => {}, learners = null, versioning = null, depth = null, assessing = null } = {}) {
   const L = learners || _defaultLearners();
   const maxDepth = Number(depth || (p.policy && p.policy.depth) || 3);   // §BR2 — how deep a brick may split   // not `learn`: inside the loop that name is the per-attempt boolean
   const ex = executors || _defaultExecutors();
@@ -524,6 +567,32 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
             if (deeper) { log.push({ round, gate: g.id, status: deeper.status, reasons: deeper.reasons }); onEvent({ gate: g.id, status: deeper.status, round }); if (deeper.status === 'SPLIT') return; }
           }
         }
+        // §GA1 0.60.44 — the gate checks before it spends: a dependency whose promised export is gone is reopened (it re-runs;
+        // this brick waits, no attempt used); names its imports need that nothing provides are said (NEEDS_CONTEXT) and
+        // handed to the executor. A dependency is reopened at most retry_limit times, so a loop cannot form.
+        let assessment = null;
+        if (g.type === 'task' && (g.depends_on || []).length && !(g.children || []).length && assessing !== false) {
+          try { assessment = assess(p, g.id, { root, ...(assessing || {}) }); } catch (e) { assessment = null; }
+          if (assessment) {
+            record(p, `${g.id}.assessed`, JSON.stringify({ ready: assessment.ready, why: assessment.why }).slice(0, 600), { by: 'scheduler:assess' });
+            const reopen = assessment.deps.filter(x => x.missing.length && Number(((p.state.evidence || {})[`${x.gate}.reopened`]) || 0) < limit);
+            if (reopen.length) {
+              for (const x of reopen) {
+                const n = Number(((p.state.evidence || {})[`${x.gate}.reopened`]) || 0) + 1;
+                record(p, `${x.gate}.reopened`, String(n), { by: 'scheduler:assess' });
+                p.state.gates[x.gate] = { ...(p.state.gates[x.gate] || {}), status: 'STALE', reasons: [`${x.file} no longer exports ${x.missing.join(', ')} — ${g.id} needs it (GA1)`] };
+              }
+              p.state.gates[g.id] = { ...(p.state.gates[g.id] || {}), status: before === 'RUNNING' ? 'READY' : (before || 'READY') };
+              log.push({ round, gate: g.id, status: 'WAITING', reasons: assessment.why });
+              onEvent({ gate: g.id, status: 'WAITING', round, waitOn: reopen.map(x => x.gate), why: assessment.why });
+              return;
+            }
+            if (assessment.context.needs.length) {
+              log.push({ round, gate: g.id, status: 'NEEDS_CONTEXT', reasons: assessment.why });
+              onEvent({ gate: g.id, status: 'NEEDS_CONTEXT', round, needs: assessment.context.needs, why: assessment.why });
+            }
+          }
+        }
         p.state.gates[g.id] = { ...(p.state.gates[g.id] || {}), status: 'RUNNING' };
         onEvent({ gate: g.id, status: 'RUNNING', round });
         let agent = null, learn = true, lastOut = null;
@@ -533,7 +602,7 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
           const setAside = (why) => { p.state.gates[g.id].status = before && before !== 'RUNNING' ? before : 'READY'; noExecutor.set(g.id, why); record(p, `${g.id}.blocked`, why, { by: `scheduler:${kind}` }); log.push({ round, gate: g.id, status: 'BLOCKED', reasons: [why] }); onEvent({ gate: g.id, status: 'BLOCKED', round }); };
           if (!fn) { setAside(`no executor for ${kind} work`); return; }
           let out;
-          try { out = await fn(g.run.tool || g.run[kind], g.run.args || {}, { gate: g, packet: packet(p, g.id, { root }), contract: p, root }); }
+          try { out = await fn(g.run.tool || g.run[kind], g.run.args || {}, { gate: g, packet: packet(p, g.id, { root }), contract: p, root, ...(assessment ? { assessment } : {}) }); }
           catch (e) { out = { ok: false, error: e.message }; }
           lastOut = out;
           if (out && out.unsupported) { setAside(`unsupported: ${out.why || `nothing can run this ${kind} work`}`); return; }
@@ -636,4 +705,4 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
 }
 
 module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition, compare, unitsOf, depthOf,
-  packetTokens, Boundaries, shouldSplit, split, schedule, classifyFailure, FAILURE_CLASSES };
+  packetTokens, Boundaries, shouldSplit, split, schedule, assess, classifyFailure, FAILURE_CLASSES };

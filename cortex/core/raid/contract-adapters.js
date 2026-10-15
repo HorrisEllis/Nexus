@@ -41,7 +41,7 @@ function doorRoute({ kind, packet }) {
  * no agent for its kind), or { decompose, why } when the brick is bigger than every routed agent has passed reliably.
  */
 function agentExecutor({ route = doorRoute, dispatch = null, boundaries = CG.Boundaries, sizeOf = null } = {}) {
-  return async (target, args, { gate, packet, contract = null, root = ROOT } = {}) => {
+  return async (target, args, { gate, packet, contract = null, root = ROOT, assessment = null } = {}) => {
     if (typeof dispatch !== 'function') return { unsupported: true, why: 'no agent dispatcher is wired here' };
     const kind = gate.kind || 'agent:build';
     let hops;
@@ -74,7 +74,7 @@ function agentExecutor({ route = doorRoute, dispatch = null, boundaries = CG.Bou
       overNote = ` (~${size} tokens is over every learned budget — ${over.map(h => `${h.provider} ~${h.budget}`).join(', ')} — and it is one piece, so tried anyway, largest first)`;
     }
     let out;
-    try { out = await dispatch(fits, { gate, packet, kind, target, args, size, ...(feedback ? { feedback } : {}) }); }
+    try { out = await dispatch(fits, { gate, packet, kind, target, args, size, ...(feedback ? { feedback } : {}), ...(assessment ? { assessment } : {}) }); }
     catch (e) { out = { ok: false, error: e.message }; }
     out = out || { ok: false, error: 'the dispatcher returned nothing' };
     if (out.unsupported) return { unsupported: true, why: out.why || 'the dispatcher could not run it' };
@@ -116,7 +116,7 @@ function fromPhasePlan(plan, { id = null, phaseKey = 'phase', title = '', intent
     // a file the plan edits (not new) that is there now is this brick's input: changed under it → STALE
     if (!f.new && fs.existsSync(path.join(root, p))) { const rid = `src.${_id(p)}`; refs[rid] = { path: p, ...(f.component ? { component: f.component } : {}), note: 'edited by this brick' }; own.push(rid); }
     gates.push({ id: gid, type: 'task', kind: `build:file.${_ext(p)}`, file: p,
-      requirement: { phase: phaseKey, file: p, purpose: f.purpose || null, component: f.component || null, exports: (f.exports || []).map(e => e.name) },
+      requirement: { phase: phaseKey, file: p, purpose: f.purpose || null, component: f.component || null, exports: (f.exports || []).map(e => e.name), imports: f.imports || [] },
       depends_on: (deps.get(p) || []).map(d => brickOf.get(d)).filter(Boolean),
       requires: [...shared, ...own], actions: (f.steps || []).length ? f.steps : [`write ${p}`],
       pass_when: [{ evidence: `${gid}.verified`, match: '^ok' }, ...(onDisk ? [{ exists: p }] : [])],

@@ -1380,7 +1380,7 @@ function _loadV2(input) {
  *     name is recorded as the gate's evidence (<gate>.tag) and so in the audit
  * Every side effect is best-effort and said once when it fails; a brick never fails because tracking did.
  */
-const SETTLED = new Set(['PASSED', 'FAILED', 'SPLIT', 'REWOUND', 'INDIVISIBLE', 'BLOCKED']);
+const SETTLED = new Set(['PASSED', 'FAILED', 'SPLIT', 'REWOUND', 'INDIVISIBLE', 'BLOCKED', 'WAITING', 'NEEDS_CONTEXT']);
 function _tracker({ queueId, p, source, title, versioning, compartment, onEvent }) {
   const CG = require('./contract-gates.js');
   const pending = [];
@@ -1424,7 +1424,7 @@ function _tracker({ queueId, p, source, title, versioning, compartment, onEvent 
 /** progress(queueId) — a run's gate progress as last written: { passed, failed, total, moves, last } | null */
 function progress(queueId) { try { const r = jaaDB.get(TABLE, { uuid: queueId }); return r ? (r.progress || null) : null; } catch (_) { return null; } }
 
-async function runContract(input, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, executors = null, onEvent = () => {}, onCheckpoint = () => {}, root, causedBy = null, raid = null, concurrency, queueId: existingId = null, versioning = null, learners = null, depth = null, compartment = null } = {}) {
+async function runContract(input, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, executors = null, onEvent = () => {}, onCheckpoint = () => {}, root, causedBy = null, raid = null, concurrency, queueId: existingId = null, versioning = null, learners = null, depth = null, compartment = null, assessing = null } = {}) {
   const CG = require('./contract-gates.js');
   const { file, loaded } = _loadV2(input);
   const p = loaded.payload;
@@ -1450,7 +1450,7 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
   // the bricks
   let res;
   try {
-    res = await CG.schedule(p, { ...(root ? { root } : {}), ...(concurrency ? { concurrency } : {}), ...(versioning ? { versioning } : {}), ...(learners ? { learners } : {}), ...(depth ? { depth } : {}), executors: executors || _executorsBySource.get(source) || null, onEvent: tr.track,
+    res = await CG.schedule(p, { ...(root ? { root } : {}), ...(concurrency ? { concurrency } : {}), ...(versioning ? { versioning } : {}), ...(learners ? { learners } : {}), ...(depth ? { depth } : {}), ...(assessing != null ? { assessing } : {}), executors: executors || _executorsBySource.get(source) || null, onEvent: tr.track,
       onCheckpoint: (px, g) => { try { if (file) CG.save(file, loaded); } catch (_) {} try { onCheckpoint(px, g); } catch (_) {} } });
   } catch (e) { res = { complete: false, why: [`the scheduler threw: ${e.message}`], log: [], blocked: [], failed: [] }; }
   await tr.settle();

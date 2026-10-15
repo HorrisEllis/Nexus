@@ -349,6 +349,7 @@ const SUITES = [
   'test-releases.test.js', // 0.60.41 RN1 — releases in Versionium: tags, Nexus's backfill, a repo's releases
   'test-gate-tracking.test.js', // 0.60.42 GT2 — each gate tags and reports its progress
   'test-qa2-real-run.test.js', // 0.60.43 QA2 — one phase build end to end with the real Versionium
+  'test-gate-assess.test.js', // 0.60.44 GA1 — the gate assesses dependencies and context before it spends
   'test-gate-versioning.test.js', // 0.60.39 GS1 — a snapshot per gate: commit, rewind before a retry, compare, replay decisions
   'test-raid-runs-contract.test.js', // 0.60.36 RD0 — RAID runs the .contract: its gates before, bricks, verdict, self-heal
   'test-release-version.test.js', // 0.60.34 VR1 — one version: Idearium, GitHub (tag + release + zip), every zip

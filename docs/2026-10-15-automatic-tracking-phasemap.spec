@@ -68,7 +68,7 @@ phases:
     does: "one real phase build end to end — real repo, Ollama, Versionium, the Plan in Clear Glass — every link checked (RAID, tags, progress, rewind, release); real numbers recorded; what breaks is fixed first"
 
   GA1_the_gate_assesses_before_it_spends:
-    status: OPEN (added 2026-10-15, see addendum)
+    status: DONE (0.60.44)
     depends_on: [GT2_each_gate_tags_and_reports]
     files: [cortex/core/raid/contract-gates.js (assess), cortex/core/raid/contract-intake.js, idearium/api/index.js]
     does: >-
@@ -225,4 +225,48 @@ drift_accounted:
 # Found and fixed: the rewind ran and reported BEFORE the failure did, so the record read rewound → failed; the rewind now
 # follows the failure. Numbers (test-qa2-real-run QA-05): 4 agent calls, 5 moves, 3 gate tags, 5 commits, 14 ledger rows,
 # ~7.8 s. Still open: the same run on James's machine (real model, 4 GB GPU, the Plan in Clear Glass).
+
+
+## ADDENDUM 2026-10-15 — ideas logged: dynamic, event-driven gates (not yet decided)
+
+# James: "What about dynamic gates, that get built one by one, event driven. Each gate could also route dynamically.
+# Gates can do a fuck ton. Persistence. Like inject the previous gates context, or save progress. What do you think? I'm
+# a lightning rod again and am dumping ideas."
+# Found (§8.6): gates are built up front from the plan (contract-adapters fromPhasePlan); the only gates made during a
+# run are splits (BR2, bounded by depth, CK-247). The scheduler runs in rounds (contract-gates schedule, maxRounds 50),
+# not on events. The route hook is already per gate — agentExecutor calls route({ kind, gate, packet, target }) — but
+# Idearium hands it one ladder for every brick. Progress is saved per pass (checkpoints, resume: CP-03) and per move
+# (GT2); a brick's own partial work is not. A later brick receives only its predecessors' exports (chunkBrief `done`).
+# Coder's proposal (to confirm): one gate lifecycle, run when a gate becomes READY — assess (GA1) → elaborate (its brief
+# and context from the gates before it, CX1/KT1) → route (RT2, per gate) → run → record (GT2) → persist. "Built one by
+# one" = a skeleton up front (ids, dependencies: what progress n/m and the audit count), each gate filled in just in
+# time; new gates appended only through a recorded, bounded rule (like split). "Event driven" = the scheduler wakes on
+# moves and outside callbacks instead of rounds — which is also what RD1b (spec chunks completing through Guardian) needs.
+
+## ADDENDUM 2026-10-15 — decided: a skeleton up front, each gate filled in just in time (GL1)
+
+# James: "yes that way the system always knows what its doing, and can replicate or reproduce it if lost from the maps,
+# or snapshots"
+# Context: the coder pushed back on gates built entirely one by one (no n/m, no audit spine, no stopping point) and
+# proposed a skeleton (gate ids + dependencies) up front with each gate elaborated when it becomes READY, new gates only
+# through a recorded, bounded rule. He chose that, and named the reason: reproducibility — a run can be replayed or
+# rebuilt from its map and its snapshots.
+# What this requires (the coder's consequence of his reason): everything a gate decides when it is elaborated — its
+# assessment, its brief's inputs, its route — is recorded on the gate (evidence + the replay engine's decision log, GS1),
+# so a lost run is reproduced from the contract file, its checkpoints and the Versionium commits, not from memory.
+# GL1 (the gate lifecycle) = GA1 assess → CX1/KT1 elaborate → RT2 route → run → GT2 record → persist; event-driven
+# scheduling (closes RD1b) is its last piece. Order unchanged: GA1 is next.
+
+## ADDENDUM 2026-10-15 — GA1 built (0.60.44)
+
+# contract-gates assess(p, gate, { read, exportsOf }) runs in the scheduler before a task brick with dependencies is
+# dispatched. Changed from the map: the dependency check uses only the exports a brick was SEEN to have when it passed
+# (its recorded <id>.exports), never the plan's promise alone — the first cut used the promise as a fallback and an older
+# test (EA-04, stubbed executors that record no exports) showed it reopening a brick three times on a guess. Unchecked
+# deps are said ("not checked"), and the context check runs only when every dependency could be checked.
+# A reopened dependency goes STALE (evaluate then holds the dependent as waiting on it); reopenings are capped at
+# retry_limit per dependency. NEEDS_CONTEXT is informational: the brick still runs, with the dependencies' code in its
+# brief (Idearium) — CX1 will replace that excerpt with ranked, budgeted context. Not done: a measured drop in agent
+# calls on a real model (QA2's stub writes correct code, so its 4 calls are unchanged; the saving shows when a real
+# model leaves an export out).
 
