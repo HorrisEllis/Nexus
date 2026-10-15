@@ -29,13 +29,13 @@ function makeBus() {
     off: (name, fn) => { listeners.get(name)?.delete(fn); },
   };
 }
-function makeDispatcher({ pickupMs = 60, completionTimeoutMs = 60000, pushReturns = 1 } = {}) {
+function makeDispatcher({ pickupMs = 60, completionTimeoutMs = 60000, pushReturns = 1, tabs = undefined } = {}) {
   const { createDispatcher } = require('../../guardian/lib/dispatcher.js');
   const jobs = new Map(), bus = makeBus(), pendingQueue = new Map(), pushed = [];
   const updateJob = (id, patch) => { const j = jobs.get(id); if (!j) return null; Object.assign(j, patch); return j; };
   const d = createDispatcher({
     updateJob, bus, pendingQueue, cockpitBroadcast: () => {},
-    ncp: { isConnected: () => true, push: () => pushReturns, pushActive: (p, payload) => { pushed.push(payload); return pushReturns; } },
+    ncp: { isConnected: () => true, push: () => pushReturns, pushActive: (p, payload) => { pushed.push(payload); return pushReturns; }, ...(tabs ? { getTabs: () => tabs } : {}) },
     dispatchToMistral: () => Promise.resolve(), dispatchToDeepseek: () => Promise.resolve(),
     pingTimeoutMs: 10, pickupMs, completionTimeoutMs, getJob: (id) => jobs.get(id),
   });
@@ -196,6 +196,17 @@ async function main() {
       assert.ok(/stage:'accepted'/.test(c.slice(0, c.indexOf('handleJob(msg)'))), `${p}: accepted before handleJob`);
     }
     assert.ok(fs.existsSync(path.join(__dirname, '..', 'sim', 'fake-tab.js')));
+  });
+
+  await test('GS-12', '0.60.61 — the pickup timeout says WHICH failure it was: no tab / script stopped / script alive but did not act; the first sentence still classifies as "lost"', async () => {
+    const now = Date.now(); const run = async (tabs, id) => { const { d, add, jobs, bus } = makeDispatcher({ pickupMs: 40, tabs }); add({ id, provider: 'chatgpt', command: 'ask', prompt: 'hi' }); await d._doDispatch(jobs.get(id)); await sleep(90); return { j: jobs.get(id), bus }; };
+    const none = await run([], 'j-none'); assert.ok(/no chatgpt tab is connected/.test(none.j.failReason), none.j.failReason); assert.deepStrictEqual(none.j.pickupDiagnosis, []);
+    const frozen = await run([{ provider: 'chatgpt', tabId: 'abcdef123456', active: true, connectedAt: now - 600000, lastHeartbeat: now - 45000 }], 'j-frozen'); assert.ok(/stopped \(frozen, hidden and throttled/.test(frozen.j.failReason), frozen.j.failReason);
+    const alive = await run([{ provider: 'chatgpt', tabId: 'abcdef123456', active: true, connectedAt: now - 600000, lastHeartbeat: now - 2000 }], 'j-alive'); assert.ok(/alive and did not act/.test(alive.j.failReason), alive.j.failReason);
+    assert.strictEqual(alive.j.pickupDiagnosis[0].tabId, 'abcdef12');
+    const ev = alive.bus.emitted.find(e => e.name === 'guardian.job.error' && e.payload.jobId === 'j-alive'); assert.ok(ev.payload.diagnosis && ev.payload.gate === 'pickup');
+    for (const r of [none, frozen, alive]) assert.strictEqual(require('../../lib/pipeline-routing.js').classify({ error: r.j.failReason }), 'lost', 'still classified lost');
+    const noApi = await run(undefined, 'j-noapi'); assert.ok(/did nothing with it/.test(noApi.j.failReason) && !/Tab state/.test(noApi.j.failReason), 'a dispatcher without getTabs behaves as before');
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

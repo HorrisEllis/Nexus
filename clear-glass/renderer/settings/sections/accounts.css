@@ -25,3 +25,8 @@ body[data-area="accounts"] .banner .d { color: var(--ink-dim); font-size: 12px; 
   body[data-area="accounts"] .acct { grid-template-columns: 1fr; }
   body[data-area="accounts"] .acct .acts { grid-row: auto; justify-content: flex-start; }
 }
+
+/* 0.60.54 CS2 — the provider tab's controls sit in each provider's header; the mesh half follows the providers */
+.tabctl { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; justify-content: flex-end; }
+.pane-tools { flex-wrap: wrap; row-gap: 6px; }
+.half-title { margin: 28px 0 4px; font-size: 15px; font-weight: 600; letter-spacing: .02em; color: var(--text-bright, #e6e6f0); scroll-margin-top: 12px; }

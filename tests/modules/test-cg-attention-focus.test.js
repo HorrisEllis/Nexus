@@ -68,6 +68,18 @@ function fakeWin(id, url) {
     assert.strictEqual(r.resolved, 'signed-out');
   });
 
+  await test('AF-02b', 'a window he opened and is looking at (visible, focused) is his even with no input stamp: his sign-in page is not bounced (0.60.52)', async () => {
+    const def = { name: 'ChatGPT', url: 'https://chatgpt.com', loginOptional: true };
+    const w = fakeWin(7, 'https://auth.openai.com/log-in'); w.visible = true; w.isFocused = () => true;   // never typed through the watch: it was opened and clicked before any attention request
+    const H = CA.createAttentionHandler({ providerHost: { windows: new Map([['chatgpt', w]]), agentTabs: new Map() }, assign: async () => ({ ok: true }), checkerSource: null, getProvider: () => def, signedOutWaitMs: 5 });
+    await H.attend('chatgpt', { reason: 'signin' });
+    assert.deepStrictEqual(w.loaded, [], 'he is on the sign-in page and looking at it: left alone');
+    const w2 = fakeWin(8, 'https://auth.openai.com/log-in'); w2.visible = true; w2.isFocused = () => false;   // visible but another window has focus: still the NCP tab
+    const H2 = CA.createAttentionHandler({ providerHost: { windows: new Map([['chatgpt', w2]]), agentTabs: new Map() }, assign: async () => ({ ok: true }), checkerSource: null, getProvider: () => def, signedOutWaitMs: 5 });
+    await H2.attend('chatgpt', { reason: 'signin' });
+    assert.deepStrictEqual(w2.loaded, ['https://chatgpt.com'], 'not focused and untouched: back to the chat, as before');
+  });
+
   await test('AF-03', 'the vault refuses a signed-out tab and saves a signed-in one', async () => {
     let jar = [{ name: '__cf_bm', value: 'x', domain: '.chatgpt.com' }, { name: 'oai-did', value: 'y', domain: 'chatgpt.com' }];
     const ses = { cookies: { get: async () => jar.map(c => ({ ...c })) } };

@@ -29,6 +29,7 @@ const BROWSER_ACTIONS = [
   { value: 'hover', label: 'Hover' },
   { value: 'scroll', label: 'Scroll the page' },
   { value: 'scroll_to', label: 'Scroll to an element' },
+  { value: 'scroll_until', label: 'Scroll slowly until nothing new loads' },
   { value: 'upload_text', label: 'Attach a file made from text' },
   { value: 'highlight', label: 'Highlight what a selector matches' },
   { value: 'back', label: 'Back' }, { value: 'forward', label: 'Forward' }, { value: 'reload', label: 'Reload' },
@@ -74,11 +75,23 @@ const CATALOGUE = [
       { key: 'fileName', label: 'File name', type: 'text', placeholder: 'cover-letter.txt', when: { action: ['upload_text'] } },
       { key: 'key', label: 'Key', type: 'text', placeholder: 'Enter, Tab, Escape, ArrowDown …', default: 'Enter', when: { action: ['press', 'storage_get', 'storage_set'] }, help: 'For localStorage: the storage key' },
       { key: 'deltaY', label: 'Scroll by (pixels)', type: 'number', default: 600, when: { action: ['scroll'] } },
+      // 0.60.56 — James: "use erosmanceros, scroll slowly, using the arrow keys or something, could also make it a macro and or automation in clearglass"
+      { key: 'via', label: 'Scroll with', type: 'select', default: 'erosmancer', when: { action: ['scroll_until'] }, options: [
+        { value: 'erosmancer', label: 'ErosmancerOS (real mouse wheel)' }, { value: 'keys', label: 'Arrow keys (real keystrokes)' }, { value: 'page', label: 'In the page (scrollBy)' }],
+        help: 'ErosmancerOS needs to be running and connected (Settings → ErosmancerOS). The step says which path ran; it never quietly uses another.' },
+      { key: 'direction', label: 'Direction', type: 'select', default: 'down', when: { action: ['scroll_until'] }, options: [{ value: 'down', label: 'down' }, { value: 'up', label: 'up (older messages load upward in a chat)' }] },
+      { key: 'stepPx', label: 'Each step (pixels)', type: 'number', default: 120, when: { action: ['scroll_until'] }, help: 'Small on purpose: slow scrolling lets a page load what it lazily loads.' },
+      { key: 'keysPerRound', label: 'Key presses per step', type: 'number', default: 5, when: { action: ['scroll_until'] } },
+      { key: 'key', label: 'Key', type: 'text', placeholder: 'ArrowDown, ArrowUp, PageDown …', when: { action: ['scroll_until'] }, help: 'Only for “arrow keys”. Blank = ArrowDown (or ArrowUp when scrolling up).' },
+      { key: 'pauseMs', label: 'Wait after each step', type: 'duration', default: 700, when: { action: ['scroll_until'] } },
+      { key: 'countSelector', label: 'What counts as content', type: 'text', placeholder: '[data-message-id] · article', when: { action: ['scroll_until'] }, help: 'Elements counted after each step. When their number, the scroll position and the page height all stop changing, it is done. Also used to find the scrolling area.' },
+      { key: 'stableRounds', label: 'Done after this many steps with no change', type: 'number', default: 4, when: { action: ['scroll_until'] } },
+      { key: 'maxRounds', label: 'Most steps', type: 'number', default: 200, when: { action: ['scroll_until'] } },
       { key: 'code', label: 'JavaScript', type: 'code', placeholder: 'return document.querySelectorAll(".job").length', required: true, when: { action: ['eval'] }, help: 'Runs in the page; `return` a value to keep it' },
       // §0.39.281 EC9 — James: "the jobs types using ErosmancerOS". Additive: the same click / hover / type, sent as real input through
       // ErosmancerOS (the driver's pointer, via 'eros' → POST /api/input) for pages that ignore in-page events. Default unchanged.
-      { key: 'input', label: 'Input', type: 'select', default: 'page', when: { action: ['click', 'hover', 'type'] }, options: [
-        { value: 'page', label: 'in the page (events in the page)' }, { value: 'erosmancer', label: 'ErosmancerOS (real mouse and keyboard input)' }],
+      { key: 'input', label: 'Input', type: 'select', default: 'page', when: { action: ['click', 'hover', 'type', 'scroll', 'press'] }, options: [
+        { value: 'page', label: 'in the page (events in the page)' }, { value: 'erosmancer', label: 'ErosmancerOS (real mouse, wheel and typing — no key press)' }, { value: 'native', label: 'a real keystroke (press only)' }],
         help: 'ErosmancerOS input needs it running and connected (Settings → ErosmancerOS). The step says which path ran.' },
       { key: 'waitAfterMs', label: 'Then wait', type: 'duration', default: 0 },
     ] },

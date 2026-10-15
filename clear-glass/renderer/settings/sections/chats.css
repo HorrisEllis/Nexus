@@ -1,0 +1,7 @@
+/* 0.60.55 PI5 — Chat capture */
+.acct-row { flex-wrap: wrap; }
+.acct-row .acct-more { flex-basis: 100%; margin-top: 8px; }
+.acct-more > summary { cursor: pointer; color: var(--text-dim); font-size: 12px; }
+.acct-more .row { border-top: 1px solid var(--border); }
+input.num { width: 110px; }
+textarea { width: 100%; min-width: 220px; }

@@ -189,11 +189,12 @@
   }
 
   section({
-    id: 'accounts', group: 'Accounts & agents', icon: '\u25C8', label: 'Accounts & sign-in',
-    keywords: 'login portal app password cookie vault account id default provider session',
-    blurb: 'Every account gets its own id and its own isolated session per provider. Sign in once here; the agent mesh and the provider tab reuse the saved session \u2014 the provider tab always runs as the provider\u2019s default (starred) account.',
-    related: ['providers', 'mesh'],
+    id: 'accounts', group: 'Accounts & agents', icon: '\u25C8', label: 'Providers & accounts',
+    keywords: 'login portal app password cookie vault account id default provider session tab ncp userscript guardian autostart deploy mesh spawn route pipeline feedback queue health jobs nodes diagnose transform',
+    blurb: 'One place for each provider: its accounts and sign-in, its Guardian tab, and below them the agent mesh \u2014 what is running, trial dispatches, routes between agents and jobs. Every account has its own id and its own isolated session; the provider tab always runs as the provider\u2019s default (starred) account.',
     async render({ tools, rerender }) {
+      window.CGS.loadAreaCss('providers'); window.CGS.loadAreaCss('mesh');   // 0.60.54 CS2: the parts' own stylesheets
+      const PT = await window.CGS.parts.providers.load().catch(() => null);
       const [providers, accounts, defaults, vaultKey, tabs] = await Promise.all([
         call(() => cg.accounts.portal.providers(), 'providers'),
         call(() => cg.accounts.list(), 'accounts'),
@@ -201,14 +202,6 @@
         cg.vault.status().catch(() => ({})),
         cg.providers.list().catch(() => []),
       ]);
-      // §0.39.265 — each provider pane links to its Guardian provider tab and its mesh agent.
-      const tabLink = (prov) => {
-        const t = tabs.find(x => x.id === prov.id);
-        const links = h('span', { class: 'pane-links' });
-        if (t) links.append(h('button', { class: 'link-btn', title: 'Provider tabs', onclick: () => goto('providers', prov.id), text: `provider tab ${t.running ? (t.status || 'running') : 'stopped'}` }), h('span', { text: ' \u00B7 ' }));
-        links.append(h('button', { class: 'link-btn', onclick: () => goto('mesh', prov.id), text: 'agent mesh' }));
-        return links;
-      };
       tools.append(btn('New account', () => newAccount(null, providers, rerender, accounts.length), 'primary'));
 
       const statusNodes = [];
@@ -249,7 +242,7 @@
         const def = mine.find(a => a.id === defaults[prov.id]);
         const plus = h('button', { class: 'plus', title: `Add a ${prov.name} account`, 'aria-label': `Add a ${prov.name} account`, text: '+', onclick: () => newAccount(prov, providers, rerender, mine.length) });
         out.push(pane({
-          title: prov.name, prov: prov.color || undefined, tools: h('span', { class: 'pane-tools' }, tabLink(prov), plus), flush: true, anchor: prov.id,
+          title: prov.name, prov: prov.color || undefined, tools: h('span', { class: 'pane-tools' }, PT ? window.CGS.parts.providers.controls(prov.id, PT, { rerender }) : null, plus), flush: true, anchor: prov.id,
           sub: mine.length ? `${mine.length} account${mine.length === 1 ? '' : 's'} \u00B7 dispatch uses ${def ? `\u201C${def.label}\u201D` : `\u201C${mine[0].label}\u201D (oldest \u2014 star one to choose)`}` : 'No accounts yet',
           body: mine.length ? mine.map(a => accountRow(a, prov, statuses.get(`${prov.id}:${a.id}`), ctx))
             : empty(`Add a ${prov.name} account, then sign in once.`, btn('Add account', () => newAccount(prov, providers, rerender, 0), 'sm')),
@@ -262,6 +255,11 @@
         h('div', { class: 'acts' }, btn('Delete', async () => {
           if (await confirmDo(`Delete “${a.label}”?`, 'It isn\u2019t linked to any provider.', 'Delete account')) { await busy(null, () => call(() => cg.accounts.delete(a.id), 'delete')); rerender(); }
         }, 'sm danger')))) }));
+
+      if (PT) out.push(window.CGS.parts.providers.startup(PT));
+      out.push(h('h2', { class: 'half-title', 'data-anchor': 'mesh', text: 'Agent mesh' }));
+      try { out.push(...await window.CGS.parts.mesh.panes({ rerender })); }
+      catch (e) { out.push(pane({ title: 'Agent mesh', body: h('div', { class: 'err-box' }, h('span', { text: e.message })) })); }
 
       if ([...statuses.values()].some(s => s && s.portalOpen)) ctx.startPolling();
       return out;

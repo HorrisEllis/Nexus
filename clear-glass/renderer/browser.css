@@ -1352,3 +1352,20 @@
 #gig-panel .gig-part-t { white-space: pre-wrap; margin-top: 4px; }
 #gig-panel .gig-q { display: block; margin-bottom: 8px; }
 #gig-panel .gig-row { display: flex; gap: 6px; margin-bottom: 8px; }
+
+/* 0.60.52 — James: "most of the tool bar things dont work. and the ones that do look terrible."
+   The pinned tools were bordered glass squares holding mixed glyphs (some drawn as colour emoji, some as text), so no two
+   looked alike. One rule now: no box until hover, one glyph size, text presentation forced so the glyphs share a weight.
+   Not seen on a screen from here (no Electron in the cloud box): it is CSS only, and it is the first thing to look at. */
+#toolbar-pinned-tools { gap: 2px; }
+#toolbar-pinned-tools .nav-btn, #copilot-toggle {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: transparent; border-color: transparent;
+  color: var(--text-dim);
+  font-size: 15px; line-height: 1;
+  font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", "Noto Sans Symbols", "DejaVu Sans", system-ui, sans-serif;
+  font-variant-emoji: text;
+}
+#toolbar-pinned-tools .nav-btn:hover, #copilot-toggle:hover { background: var(--bg-3); color: var(--text-bright); }
+#toolbar-pinned-tools .nav-btn.active, #copilot-toggle.active { background: var(--bg-3); color: var(--accent); border-color: var(--border); }
+#toolbar-pinned-tools .nav-btn:focus-visible, #copilot-toggle:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--accent); }

@@ -26,6 +26,19 @@ const TEMPLATES = [
       { type: 'notify', config: { title: 'Job {{steps.Score.output | trim}}/10: {{item.title}}', body: '{{item.budget}} — {{item.link}}' } },
     ] },
 
+  // 0.60.56 — James: "use erosmanceros, scroll slowly, using the arrow keys or something, could also make it a macro and or automation in clearglass, a good way to test them"
+  { id: 'chat-read', name: 'Read one chat slowly (test)', category: 'Browser',
+    help: 'Opens one chat page, scrolls it a little at a time (ErosmancerOS wheel, or arrow keys) until nothing new loads, then counts what it found. Run it by hand on a chat to test the scrolling before the background reader uses it. Fill in the chat address and the selector for one message.',
+    vars: { chatUrl: 'https://chatgpt.com/c/PASTE-A-CHAT-ID', countSelector: '[data-message-id]', via: 'erosmancer', direction: 'up', stepPx: '120', pauseMs: '700', stableRounds: '4' },
+    steps: [
+      { type: 'trigger', config: {} },
+      { type: 'browser', label: 'Open the chat', config: { action: 'navigate', page: 'auto', url: '{{vars.chatUrl}}' } },
+      { type: 'wait_until', config: { kind: 'present', page: 'auto', selector: '{{vars.countSelector}}', timeoutMs: 30000 } },
+      { type: 'browser', label: 'Scroll', config: { action: 'scroll_until', page: 'auto', via: '{{vars.via}}', direction: '{{vars.direction}}', stepPx: '{{vars.stepPx}}', pauseMs: '{{vars.pauseMs}}', countSelector: '{{vars.countSelector}}', stableRounds: '{{vars.stableRounds}}', maxRounds: 300 } },
+      { type: 'extract', label: 'Messages', config: { page: 'auto', mode: 'count', selector: '{{vars.countSelector}}' } },
+      { type: 'log', config: { message: 'scrolled {{steps.Scroll.output.rounds}} steps via {{steps.Scroll.output.via}}; {{steps.Messages.output}} messages on the page ({{steps.Scroll.output.countBefore}} before)' } },
+    ] },
+
   { id: 'price', name: 'Price / change watcher', category: 'Browser',
     help: 'Every hour, read one value from a page (a price, a stock level, a status) and notify you when it changes or drops below a limit.',
     vars: { url: 'https://example.com/product', selector: '.price', below: '100' },

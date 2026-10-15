@@ -388,11 +388,18 @@ function formatToolResult(template, name, content) {
 
 function makeNcpCallModel(dispatchToAgent, opts = {}) {
   let _composedSent = 0;   // composed mode: how many messages this tab has already been given
+  let _offTaskRetried = false;   // §0.60.50 CE3 — one re-prompt per run
   return async function callModel(messages, toolSchemas) {
     if (opts.composed) {
       // First round: the user message exactly as composed. Later rounds: only the tool results since then.
       const fresh = messages.slice(Math.max(_composedSent, 1)).filter(m => m.role === 'user' || m.role === 'tool');
-      const out = fresh.map(m => m.role === 'tool' ? formatToolResult(opts.resultTemplate, m.name, m.content) : String(m.content || '')).join('\n\n');
+      let out = fresh.map(m => m.role === 'tool' ? formatToolResult(opts.resultTemplate, m.name, m.content) : String(m.content || '')).join('\n\n');
+      // §0.60.50 CE2 — Nexus keeps the task (lib/run-state.js); the agent is told it at the head of every follow-up round (tool
+      // results only) and at the start of a RESUMED run (attempt > 1: a retry, a fallback, a restart), from the editable
+      // 'task-header' block. No run or no template (block off): nothing is added.
+      const _hdr = () => { try { return opts.runId && opts.headerTemplate ? require('../lib/run-state.js').header(opts.runId, opts.headerTemplate) : null; } catch (_) { return null; } };
+      const _followUp = _composedSent >= 1;
+      if (_followUp || (opts.runAttempt || 1) > 1) { const h = _hdr(); if (h) out = `${h}\n\n${out}`; }
       _composedSent = messages.length;
       _recordInjection({ provider: opts.provider || 'auto', primed: false, composed: true, injectedSystemPrompt: false,
         injectedToolGuide: false, toolCount: toolSchemas.length, promptLength: out.length, idleMsThreshold: PROVIDER_IDLE_MS });
@@ -404,7 +411,27 @@ function makeNcpCallModel(dispatchToAgent, opts = {}) {
         const why = (result && result.error) || 'no response';
         return { text: (result && result.text) || `[NCP dispatch failed — ${why}]`, toolCalls: null, failed: !(result && result.text), error: why, jobId: jobId || null };
       }
-      const found = _findToolCalls(result.text, (opts.toolScope && opts.toolScope.length ? opts.toolScope : toolSchemas.map(t => t.function.name)));
+      const _known = (opts.toolScope && opts.toolScope.length ? opts.toolScope : toolSchemas.map(t => t.function.name));
+      let found = _findToolCalls(result.text, _known);
+      // §0.60.50 CE3 — the reply must show the agent still has the task (lib/step-gates/reply.on_task.step_gate): a reply that
+      // hands the task back to the person ("What would you like me to do with this material?") and calls no tool is blocked
+      // AT THIS STEP — an event (step.blocked), not a result — and the round is sent once more with the task header (the
+      // re-prompt is the editable block, nothing else). Only with a run and a header; one retry; then the reply stands.
+      if (!found.calls.length && opts.runId && opts.headerTemplate && !_offTaskRetried) {
+        let g = null; try { g = require('../lib/step-gate.js').gate('reply.on_task', { text: result.text }, { source: 'copilot.tool-runtime', causedBy: opts.runId }); } catch (_) {}
+        if (g && !g.ok) {
+          _offTaskRetried = true;
+          const h = _hdr();
+          if (h) {
+            try { require('../lib/run-state.js').note(opts.runId, 'off-task', g.reasons.map(r => r.reason).join('; ')); } catch (_) {}
+            const again = await dispatchToAgent(h, { ...opts, tools: [] });
+            if (again && again.ok && again.text) {
+              const f2 = _findToolCalls(again.text, _known);
+              return { text: f2.calls.length ? f2.text : again.text, toolCalls: f2.calls.length ? f2.calls : null, reprompted: true };
+            }
+          }
+        }
+      }
       return { text: found.calls.length ? found.text : result.text, toolCalls: found.calls.length ? found.calls : null };
     }
     // §EXTENDED 2026-08-13 (P8) — a hat with a toolScope narrows which
@@ -550,7 +577,8 @@ async function runViaAgent(agent, dispatchToAgent, userPrompt, opts = {}) {
   // tab" check above could never fire, since opts.provider was always
   // undefined regardless of which real agent this dispatch targets.
   const callModel = makeNcpCallModel(dispatchToAgent, { ...(opts.modelOpts || {}), toolScope: opts.toolScope, provider: agent,
-    composed: !!opts.composed, resultTemplate: opts.resultTemplate || null });
+    composed: !!opts.composed, resultTemplate: opts.resultTemplate || null,
+    runId: opts.runId || null, headerTemplate: opts.headerTemplate || null, runAttempt: opts.runAttempt || 1 });   // §0.60.50 CE1-CE3
   if (opts.composed) {
     // 0.39.258 — the caller's prompt is the whole prompt; nothing of copilot's own is added.
     return agentTools.runToolLoop(callModel, '', fillToolPlaceholders(userPrompt, opts.toolScope), {

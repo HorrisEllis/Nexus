@@ -108,6 +108,23 @@ function _sha256(s) { return crypto.createHash('sha256').update(String(s)).diges
 // jobs.get(), the artifacts row's own .jobId field) indexes by exactly
 // that — so wrapping it in a longer name would only make it harder to
 // find, not more meaningful.
+// §0.60.50 CE4 — James: "adding status for each response. also grouping them by contract or repo? maybe tagging for repo?"
+// What KIND of reply it is (lib/reply-kind.js) and which run it belongs to (lib/run-state.js, found from the job's session):
+// kind, repo, run, session, step, attempt — on the node's tags (queryable, node-export.queryDir) and in its payload. Both
+// lookups are best-effort and never stop a response being written; with no run the node carries the kind alone.
+function _kindTags(rec) {
+  const payload = {}; const tags = [];
+  try { const k = require('../../lib/reply-kind.js').classify(rec.text || ''); payload.kind = k; tags.push(`kind:${k}`); } catch (_) {}
+  try {
+    const aid = String(rec.agentId || ''); const repo = /^repo-/.test(aid) ? aid.slice(5) : null;
+    const run = rec.sessionId ? require('../../lib/run-state.js').forSession(rec.sessionId) : null;
+    if (repo) { payload.repoUuid = repo; tags.push(`repo:${repo}`); }
+    if (rec.sessionId) { payload.sessionId = rec.sessionId; tags.push(`session:${rec.sessionId}`); }
+    if (run) { payload.runId = run.runId; payload.step = run.stepCount; payload.attempt = run.attempt; tags.push(`run:${run.runId}`, `step:${run.stepCount}`, `attempt:${run.attempt}`); }
+  } catch (_) {}
+  return { payload, tags };
+}
+
 function writeNode(rec, sinks = {}) {
   try {
     fs.mkdirSync(NODES_DIR, { recursive: true });
@@ -116,6 +133,7 @@ function writeNode(rec, sinks = {}) {
       provider: rec.provider || 'unknown',
       agentId: rec.agentId || null,
       status: rec.status,
+      ...(_kindTags(rec).payload),
       text: rec.text || '',
       chars: (rec.text || '').length,
       contentHash: _sha256(rec.text || ''),
@@ -135,7 +153,7 @@ function writeNode(rec, sinks = {}) {
       context: 'guardian agent response — durable return-point record',
       system: 'guardian',
       summary: `${payload.provider} ${payload.status} (${payload.chars} chars)`,
-      tags: [`provider:${payload.provider}`, `status:${payload.status}`, `source:${payload.source}`, ...(payload.agentId ? [`agent:${payload.agentId}`] : [])],
+      tags: [`provider:${payload.provider}`, `status:${payload.status}`, `source:${payload.source}`, ...(payload.agentId ? [`agent:${payload.agentId}`] : []), ..._kindTags(rec).tags],
     }, NODES_DIR);
     return { ok: true, detail: filePath };
   } catch (e) {
@@ -379,6 +397,7 @@ async function deliver(rec, deps = {}) {
     jobId: rec.jobId,
     provider: rec.provider || 'unknown',
     agentId: rec.agentId || null,
+    sessionId: rec.sessionId || null,   // §0.60.50 CE4
     compartmentId: rec.compartmentId || null,
     status: rec.status || 'complete',
     text: rec.text || '',
@@ -397,6 +416,8 @@ async function deliver(rec, deps = {}) {
     ...(rec.codeArtifact !== undefined ? { codeArtifact: rec.codeArtifact } : {}),
   };
 
+  // §0.60.50 CE4/CE5 — say what kind of reply this was and which run it belongs to (the same facts the node's tags carry)
+  try { const kt = _kindTags(record); if (bus && typeof bus.emit === 'function') bus.emit('guardian.reply.classified', { jobId: record.jobId, provider: record.provider, agentId: record.agentId, kind: kt.payload.kind || null, runId: kt.payload.runId || null, step: kt.payload.step ?? null, attempt: kt.payload.attempt ?? null }); } catch (_) { /* never in the way of a response */ }
   const sinks = {};
 
   // SSE first — a client waiting on this job should see it at the

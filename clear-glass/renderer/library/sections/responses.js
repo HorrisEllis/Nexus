@@ -16,6 +16,7 @@
   const { h, modal, pane, row, btn, chip, empty, ago, section } = window.CGS;
   const { api, fmtBytes, matches } = window.CGL;
   let agentFilter = '';   // survives re-renders (search, refresh) while the window is open
+  let groupBy = '';       // §0.60.50 CE4 — '' | agent | repo | run | kind (a reply's kind and run come from lib/reply-kind.js and lib/run-state.js)
 
   function kv(pairs) {
     return h('div', { class: 'resp-kv' }, pairs.filter(([, v]) => v).map(([k, v]) => [h('span', { class: 'k', text: k }), h('span', { class: 'v', text: String(v) })]));
@@ -77,23 +78,35 @@
         h('option', { value: '', text: `All agents (${total})` }),
         names.map(a => h('option', { value: a === '(no agent)' ? '' : a, text: `${a} (${agents[a]})`, selected: a === agentFilter ? 'selected' : null })));
       pick.addEventListener('change', () => { agentFilter = pick.value; rerender(); });
-      tools.append(pick, btn('Refresh', rerender, 'sm'));
+      // §0.60.50 CE4 — James: "what about adding status for each response. also grouping them by contract or repo? maybe tagging for repo?"
+      const grp = h('select', { class: 'resp-agent', 'aria-label': 'Group the responses' },
+        [['', 'No grouping'], ['agent', 'Group by agent'], ['repo', 'Group by repo'], ['run', 'Group by run'], ['kind', 'Group by kind']].map(([v, l]) => h('option', { value: v, text: l, selected: v === groupBy ? 'selected' : null })));
+      grp.addEventListener('change', () => { groupBy = grp.value; rerender(); });
+      tools.append(pick, grp, btn('Refresh', rerender, 'sm'));
 
-      const items = (r.items || []).filter(it => matches(query, it.agent_id, it.provider, it.job_id, it.chat_id, it.kind));
+      const items = (r.items || []).filter(it => matches(query, it.agent_id, it.provider, it.job_id, it.chat_id, it.kind, it.reply_kind, it.run_id, it.repo_uuid));
       if (!items.length) return pane({ flush: true, body: empty(query ? `Nothing matches “${query}”.` : agentFilter ? `No responses for ${agentFilter} yet.` : 'No chats or agent responses captured yet.') });
+      const KIND_TONE = { code: 'ok', plan: 'ok', 'off-task': 'warn', empty: 'bad', 'tool-call': 'plain', prose: 'plain' };
+      const groupOf = (it) => groupBy === 'agent' ? (it.agent_id || '(no agent)') : groupBy === 'repo' ? (it.repo_uuid || '(no repo)')
+        : groupBy === 'run' ? (it.run_id || '(no run)') : groupBy === 'kind' ? (it.reply_kind || (it.kind === 'transcript' ? 'chat' : it.kind || 'other')) : '';
+      const ordered = groupBy ? items.slice().sort((a, b) => String(groupOf(a)).localeCompare(String(groupOf(b)))) : items;
+      let lastGroup = null;
       return pane({
         title: `${items.length} item${items.length === 1 ? '' : 's'}`, flush: true,
-        body: items.map(it => {
+        body: ordered.flatMap(it => {
+          const head = groupBy && groupOf(it) !== lastGroup ? (lastGroup = groupOf(it), [h('div', { class: 'resp-group', text: `${groupOf(it)} · ${ordered.filter(x => groupOf(x) === groupOf(it)).length}` })]) : [];
           const rw = row(it.agent_id || '(no agent)',
             (it.kind === 'transcript'
               ? ['chat', `v${it.version}${it.versions > 1 ? ` (${it.versions} versions)` : ''}`, `${it.message_count} messages`, ago(it.captured_at), it.chat_id]
               : [it.kind === 'artifact' ? 'download' : 'reply', it.job_id ? `job ${String(it.job_id).slice(0, 8)}` : null, ago(it.captured_at), it.chat_id]).filter(Boolean).join(' · '),
             it.provider ? chip(it.provider, 'plain') : null,
+            it.reply_kind ? chip(it.reply_kind, KIND_TONE[it.reply_kind] || 'plain') : null,
+            it.run_id ? chip(`step ${it.step ?? '?'} · attempt ${it.attempt ?? '?'}`, 'plain') : null,
             it.status === 'unreadable' ? chip('unreadable', 'bad') : null,
             btn('View', () => view(it.id).catch(e => window.CGS.fail(e)), 'sm'));
           rw.classList.add('resp-row', `resp-${it.kind || 'x'}`);
           rw.prepend(h('span', { class: 'resp-kind', 'aria-hidden': 'true', text: it.kind === 'artifact' ? '⤓' : it.kind === 'transcript' ? '☰' : '❝' }));
-          return rw;
+          return [...head, rw];
         }),
       });
     },

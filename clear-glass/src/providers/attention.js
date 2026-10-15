@@ -250,7 +250,16 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
     if (!win || win.__nexusInputWatch) return;
     try { const wc = win.webContents; if (wc && typeof wc.on === 'function') { wc.on('input-event', () => _input.set(win, Date.now())); win.__nexusInputWatch = true; } } catch (_) {}
   };
-  const _personUsing = (win) => { const t = _input.get(win); return !!t && Date.now() - t < PERSON_MS; };
+  // §0.60.52 — James: "i cant click the login on the popup for chatgpt. just chat gpt." ChatGPT is the one provider whose chat works
+  // signed out (loginOptional), so a window on a sign-in page is sent back to the chat — unless the person is using it. But input was
+  // only stamped from the first attention request on: a window he opened and clicked "Log in" in BEFORE that had no stamp, so the
+  // sign-in page he had just reached was bounced back to the chat 2.5 s later. A window that is visible and has focus is his:
+  // that needs no stamp (the hidden NCP tab is neither).
+  const _personUsing = (win) => {
+    const t = _input.get(win);
+    if (t && Date.now() - t < PERSON_MS) return true;
+    try { return !!(win && typeof win.isVisible === 'function' && win.isVisible() && typeof win.isFocused === 'function' && win.isFocused()); } catch (_) { return false; }
+  };
   const _onSignin = (url) => SIGNIN_RE.test(String(url || '')) || /accounts\.google\.com|login\.microsoftonline\.com|auth\.openai\.com|appleid\.apple\.com/.test(String(url || ''));
   const _def = (id) => { try { return getProvider ? getProvider(id) : null; } catch (_) { return null; } };
   function _accountInfo(providerId) {

@@ -2569,7 +2569,14 @@ const server = http.createServer(async (req, res) => {
           const maxToolErrors = Math.min(Math.max(parseInt(T.maxToolErrors, 10) || 0, 0), 20);
           // §CT8 — each tool call reported as it starts and ends to the caller's sink (idearium's tool-event route), so the
           // Code tab shows the agent working; loopback only, fire and forget, never in the way of the run
-          const onToolCall = toolRuntime.toolEventSink(T.progressUrl, { session: sessionId || null, repoUuid: T.repoUuid ? String(T.repoUuid) : null });
+          const _sink = toolRuntime.toolEventSink(T.progressUrl, { session: sessionId || null, repoUuid: T.repoUuid ? String(T.repoUuid) : null });
+          // §0.60.50 CE1 — each finished tool call is also written to the run's state (lib/run-state.js), so a restart or a retry
+          // continues from it. Fire and forget: the run state never slows or stops the run.
+          const runId = typeof T.runId === 'string' && T.runId ? T.runId : null;
+          const onToolCall = (!runId && !_sink) ? null : (ev) => {
+            if (_sink) { try { _sink(ev); } catch (_) {} }
+            if (runId && ev && (ev.state === 'ok' || ev.state === 'failed')) { try { require('../lib/run-state.js').step(runId, { name: ev.name, arguments: ev.arguments, ok: !ev.error, error: ev.error, iteration: ev.iteration, at: ev.at }); } catch (_) {} }
+          };
           // §0.39.356 LS2 — what the model writes, as it writes it, to the caller's stream sink (idearium's agent/stream
           // route → the Code tab and the work surface). Ollama only: a browser agent's text reaches idearium through
           // guardian's own feed (0.39.244), with its DOM mutations and node anchor.
@@ -2586,7 +2593,7 @@ const server = http.createServer(async (req, res) => {
             let _canon = typeof body.canonical === 'string' ? body.canonical : undefined;
             const dispatchToAgent = (fullPrompt, o = {}) => { const c = _canon; _canon = undefined; return _lifeline.dispatchToNcpAgent(fullPrompt, { ...o, provider: body.agent || undefined,
               agentId: body.agentId || undefined, timeoutMs: body.timeoutMs || undefined, requestId, sessionId, canonical: c }); };
-            loop = await toolRuntime.runViaAgent(agent, dispatchToAgent, prompt, { toolScope: scope, identity: composed ? null : identity, context, maxIterations, composed, resultTemplate, maxToolErrors, onToolCall });
+            loop = await toolRuntime.runViaAgent(agent, dispatchToAgent, prompt, { toolScope: scope, identity: composed ? null : identity, context, maxIterations, composed, resultTemplate, maxToolErrors, onToolCall, runId, runAttempt: parseInt(T.runAttempt, 10) || 1, headerTemplate: composed && typeof T.headerTemplate === 'string' ? T.headerTemplate : null });
           } else {
             // §0.39.337 SB37 — the working set: the caller's 'workset' template and the question its signal is picked by
             const worksetTemplate = composed && typeof T.worksetTemplate === 'string' ? T.worksetTemplate : null;

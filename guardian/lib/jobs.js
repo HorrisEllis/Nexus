@@ -200,7 +200,7 @@ function createJobStore() {
     return done;
   }
 
-  function createJob({ command, provider, prompt, content, source, tools, accountId, agentId, transport, wakeDepth, fileName, syntax, canonical, reuse, join = true, hatInPrompt = null, chatUrl = null }) {
+  function createJob({ command, provider, prompt, content, source, tools, accountId, agentId, transport, wakeDepth, fileName, syntax, canonical, reuse, join = true, hatInPrompt = null, chatUrl = null, sessionId = null }) {
     const fingerprint = require('./job-retry.js').fingerprint({ provider, agentId, canonical, prompt });
     if (join !== false && provider !== 'ollama') {
       const twin = _twin(fingerprint, { reuse });
@@ -229,6 +229,8 @@ function createJobStore() {
       accountId: accountId || null, agentId: agentId || null, transport: transport || null, wakeDepth: wakeDepth || 0,
       // §0.39.279 — the chat this job must be typed into (a wake answered from a chat no job owns goes back to THAT chat)
       chatUrl: chatUrl || null,
+      // §0.60.50 CE4 — the repo agent's session this job belongs to (lib/run-state.js finds its run from it): the reply's tags link it
+      sessionId: sessionId || null,
       // §CODE-ARTIFACT 2026-09-19 — James: "Each job needs to list file
       // name. Then the listener listens for the code and uses the file
       // name for the artifact. And coding syntax." The requester is the

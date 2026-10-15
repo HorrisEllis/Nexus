@@ -396,6 +396,7 @@ class ProviderHost {
     } catch (_) {}
 
     const win = new BrowserWindow({
+      backgroundColor: '#08080d', autoHideMenuBar: true,   // 0.60.54 CS1 — the same dark base as window-frame.js, for the moments this window is shown
       width:  1280,
       height: 800,
       show:   opts.show === true && process.env.CG_HEADLESS !== '1',

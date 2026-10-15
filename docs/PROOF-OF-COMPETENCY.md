@@ -166,3 +166,41 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     - `tests/modules/test-releases.test.js` (5/5);
     - `CHANGELOG-0.60.41.md`;
     - 250 Nexus releases are now recorded in Versionium, 210 of them with his words.
+
+- **2026-10-15: "i feel lime also needs to use the gates to maintain persistence using the memory. so we can use nexus for
+  the workload, instead of relying on the agents to remember."**
+  - **Context:** a build agent lost its task mid-run and asked the person what to do. The usual fix would be a better
+    prompt; he asked for the opposite, that the workload be held by the system.
+  - **What it shows:** he moved state out of the part that forgets (the model) into the part that persists. That is
+    systems-design judgment about where state belongs.
+  - **Evidence:** `lib/run-state.js`, `lib/step-gates/reply.on_task.step_gate`,
+    `tests/modules/test-run-state.test.js` (27/27), `CHANGELOG-0.60.50.md`. Not yet confirmed live.
+
+- **2026-10-15: "can you create a ledger for anything you can log thats useful for fiverr, that you can verify for a fact?"**
+  - **Context:** he wanted a record of his work that builds up over time and slots into a gig. The easy version
+    logs what agents say about themselves. He asked for the version a stranger can check.
+  - **What it shows:** he put the standard where it belongs, on verification, not volume. A claim that cannot point at
+    evidence never reaches a buyer. That is the same rule he set for this very document ("nothing here is claimed
+    without a pointer to evidence"), applied to a machine.
+  - **Evidence:** `lib/gig-ledger.js` (a claim holds only while its commit, file, test or count checks out),
+    `tests/modules/test-gig-ledger.test.js` (10/10, including an overstated count that fails and a made-up commit that
+    fails), `CHANGELOG-0.60.53.md`.
+
+- **2026-10-15: "see? why the repitition?" (three Settings sections listing the same providers)**
+  - **Context:** he sent screenshots of Accounts & sign-in, Provider tabs and Agent mesh. Each listed the same
+    providers with the same account counts and links to each other.
+  - **What it shows:** he reads a system from its screens and sees duplicated state as a design fault. The screens
+    also disagreed ("dispatch uses the oldest account" against "no default"), which is the real cost of repetition.
+  - **Evidence:** the three are now one section, `clear-glass/renderer/settings/sections/accounts.js`;
+    `clear-glass/test/settings-merge.test.js` and `settings-merge-render.test.js` (jsdom); `CHANGELOG-0.60.54.md`. Not yet
+    seen in Electron.
+
+- **2026-10-15: "i dont [want] anything missed. then it only logs the chaturl once unless it has new data, maybe check the previous chat url once, but use it as an edge for a stopping point for catching up."**
+  - **Context:** he was specifying a background reader for his own chats. The coder proposed a timer; he described the
+    completeness and stopping rules instead.
+  - **What it shows:** specification by invariant: complete (nothing missed), idempotent (a chat is logged once unless it
+    has new data), and a defined stopping edge. The stopping edge is what makes catching up cheap.
+  - **Evidence:** `lib/chat-crawl-plan.js`, `tests/modules/test-chat-crawl-plan.test.js` (18/18: backfill is done only when
+    the list is fully loaded and no chat is pending or failed; an unchanged chat is never revisited; the walk stops at the
+    edge and re-checks it once; a restart resumes), `lib/chat-crawl-settings.js` (39 settings), `CHANGELOG-0.60.55.md`.
+    The part that drives a real tab is not built.

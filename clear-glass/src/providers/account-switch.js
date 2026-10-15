@@ -214,10 +214,16 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
    * What the session holds is saved first (under the account it runs as, else as a vault snapshot); the account's own saved
    * sign-in is put in if it has one, else the session is cleared so the account signs in fresh. -> { ok, switched, restored? }
    */
-  async function _beginSignIn(provider, accountId) {
+  const _parked = new Map();   // provider -> windows held at about:blank while a sign-in window is open
+  async function _beginSignIn(provider, accountId, { park = false } = {}) {
     const bad = _known(provider, accountId); if (bad) return { ok: false, error: bad };
     const was = current(provider);
-    if (was === accountId) return { ok: true, switched: false, provider, accountId };
+    // §0.60.51 — a sign-in window opens next in THIS cookie jar. The provider's own tabs are signed out in it, so reloading them
+    // (below) sent each to Google's sign-in as a second flow: two pages writing Google's test cookie into one jar, and whichever
+    // loaded first read back the other's ("We've detected a problem with your cookie settings"). While the window is open the
+    // tabs wait at about:blank; endSignIn() brings them back.
+    if (park) { const ws = _windows(provider); _parked.set(provider, ws); await Promise.all(ws.map(w => Promise.resolve(w.loadURL('about:blank')).catch(() => {}))); }
+    if (was === accountId) return { ok: true, switched: false, provider, accountId, parked: park ? (_parked.get(provider) || []).length : 0 };
     const ses = sessionFor(provider);
     const tab = await _tabAuth(provider);
     try {
@@ -230,16 +236,25 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     else { try { await ses.clearStorageData({ storages: ['cookies', 'localstorage', 'indexdb', 'cachestorage', 'serviceworkers'] }); } catch (_) {} }
     _setCurrent(provider, accountId, 'signing-in');
     const def = (() => { try { return getProvider(provider); } catch (_) { return null; } })();
-    await Promise.all(_windows(provider).map(w => _reload(w, def && def.url)));
+    if (!park) await Promise.all(_windows(provider).map(w => _reload(w, def && def.url)));
     log(`[account-switch] ${provider} — session now “${accountId}” for sign-in (${restored ? `${restored} saved cookie(s) restored` : 'cleared, signs in fresh'}; was ${was || 'unknown'})`);
-    return { ok: true, switched: true, provider, accountId, from: was, restored };
+    return { ok: true, switched: true, provider, accountId, from: was, restored, parked: park ? (_parked.get(provider) || []).length : 0 };
   }
-  function beginSignIn(provider, accountId) {
+  function beginSignIn(provider, accountId, opts = {}) {
     const prev = _chain.get(provider) || Promise.resolve();
-    const next = prev.catch(() => {}).then(() => _held(provider, () => _beginSignIn(provider, accountId)));
+    const next = prev.catch(() => {}).then(() => _held(provider, () => _beginSignIn(provider, accountId, opts)));
     _chain.set(provider, next);
     next.finally(() => { if (_chain.get(provider) === next) _chain.delete(provider); }).catch(() => {});
     return next;
+  }
+
+  /** endSignIn(provider) — the sign-in window closed: the provider's tabs that waited at about:blank load the provider again, in whatever the jar now holds */
+  async function endSignIn(provider) {
+    const ws = (_parked.get(provider) || []).filter(w => w && !w.isDestroyed());
+    _parked.delete(provider);
+    const def = (() => { try { return getProvider(provider); } catch (_) { return null; } })();
+    const loads = await Promise.all(ws.map(w => _reload(w, def && def.url)));
+    return { ok: true, provider, tabs: loads.length };
   }
 
   /**
@@ -277,7 +292,7 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
       known: (options.listAccounts ? options.listAccounts() : []).filter(a => (a.agentKeys || []).includes(provider)).map(a => ({ id: a.id, label: a.label })) };
   }
 
-  return { MODULE_ID, VERSION, current, capture, use, sync, signedOut, beginSignIn, settled, markCurrent, state };
+  return { MODULE_ID, VERSION, current, capture, use, sync, signedOut, beginSignIn, endSignIn, settled, markCurrent, state };
 }
 
 module.exports = { MODULE_ID, VERSION, createAccountSwitch };

@@ -153,6 +153,24 @@
     return el;
   })();
 
+  // 0.60.58 — Electron has no window.prompt (it throws), so the state-bookmark button never got a name. A dark in-page one:
+  // askText('Title', 'Label') -> Promise<string|null>. Enter confirms, Esc or a click outside cancels.
+  function askText(title, label, initial = '') {
+    return new Promise((resolve) => {
+      const scrim = document.createElement('div'); scrim.className = 'cg-ask-scrim';
+      const box = document.createElement('div'); box.className = 'cg-ask'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', title);
+      const lab = document.createElement('label'); lab.textContent = label || title;
+      const inp = document.createElement('input'); inp.type = 'text'; inp.value = initial; inp.spellcheck = false;
+      const row = document.createElement('div'); row.className = 'row';
+      const no = document.createElement('button'); no.textContent = 'Cancel';
+      const ok = document.createElement('button'); ok.textContent = 'OK'; ok.className = 'go';
+      const done = (v) => { scrim.remove(); resolve(v); };
+      no.onclick = () => done(null); ok.onclick = () => done(inp.value.trim() || null);
+      scrim.addEventListener('mousedown', (e) => { if (e.target === scrim) done(null); });
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') ok.click(); else if (e.key === 'Escape') no.click(); });
+      row.append(no, ok); box.append(lab, inp, row); scrim.append(box); document.body.appendChild(scrim); inp.focus(); inp.select();
+    });
+  }
   function toast(msg, type = 'info', durationMs = 3500) {
     const colors = { info:'#00f5ff', error:'#ff4466', success:'#00ff9d', warn:'#ffb454' };
     const el = document.createElement('div');
@@ -2062,15 +2080,24 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     'cg.picker':      () => pickerBtn.click(),
     'cg.autofill':    () => _shortcutAutofill(),
     'cg.macroRecord': async () => {
+      // 0.60.58 — James: "have a optional toast for macro recording when you press the hotkey". Settings > Macros > "Toast when the record hotkey is used".
+      const wantToast = async () => { try { return (await cg.options.get()).macroRecordToast !== false; } catch (_) { return true; } };
+      const say = async (msg, type) => { if (await wantToast()) toast(msg, type || 'info', 4500); };
       if (!_recordingMacro) {
         const r = await cg.macros.recordStart(agentId).catch(e => ({ error: e.message }));
-        if (r && r.error) return addMsg('assistant', `Recording: ${r.error}`);
+        if (r && r.error) { addMsg('assistant', `Recording: ${r.error}`); return say(`Recording could not start: ${r.error}`, 'error'); }
         _recordingMacro = true; addMsg('assistant', '\u25CF Recording a macro \u2014 press the shortcut again to stop.');
-      } else {
-        _recordingMacro = false;
-        const r = await cg.macros.recordStop(agentId).catch(e => ({ error: e.message }));
-        addMsg('assistant', r && r.error ? `Recording: ${r.error}` : `Recording stopped${r && r.steps ? ` \u2014 ${r.steps.length} step(s)` : ''}. Save it in Settings \u203A Macros.`);
+        return say('\u25CF Recording a macro \u2014 press the same shortcut to stop');
       }
+      _recordingMacro = false;
+      const r = await cg.macros.recordStop(agentId).catch(e => ({ error: e.message }));
+      if (r && r.error) { addMsg('assistant', `Recording: ${r.error}`); return say(`Recording: ${r.error}`, 'error'); }
+      // the hotkey has no editor to open, so keep the recording as a real macro now; the .macro file is already on disk
+      let saved = false;
+      if (r && r.steps && r.steps.length && r.name) saved = !(await cg.macros.create({ name: r.name, steps: r.steps, params: r.params || [], description: 'Recorded with the hotkey' }).then(x => x && x.error).catch(() => true));
+      const n = r && r.steps ? r.steps.length : 0;
+      const line = n ? `Recording stopped \u2014 ${n} step${n === 1 ? '' : 's'}${saved ? ` saved as \u201C${r.name}\u201D (Settings \u203A Macros)` : '; the .macro file was kept'}.` : 'Recording stopped \u2014 nothing usable was captured.';
+      addMsg('assistant', line); return say(line, n ? 'success' : 'warn');
     },
   };
   cg.shortcuts?.onAction(({ action, result }) => {
@@ -2402,7 +2429,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // and building one is a real, separate, scoped UI task, not silently
   // done as a side effect of wiring the label convention through.
   document.getElementById('rewind-bookmark-btn').addEventListener('click', async () => {
-    const name = window.prompt('Name this state bookmark (captures cookies, storage, and scroll position):');
+    const name = await askText('State bookmark', 'Name this state bookmark (captures cookies, storage, and scroll position)');
     if (!name) return; // real cancel — no snapshot taken, matches every other cancel-prompt convention in this file
     await cg.rewind.snapshot(agentId, { label: `bookmark:${name}` });
     await loadRewindList();
@@ -2745,6 +2772,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     .then(() => cg.options.get())
     .then(opts => applyToolbarPins(opts.pinnedToolbarButtons))
     .catch(() => {});
+  // 0.60.52 — a pin changed in the Settings window shows here at once, not after a restart.
+  try { if (cg.options.onChange) cg.options.onChange(d => { if (d && d.options && d.keys && d.keys.includes('pinnedToolbarButtons')) applyToolbarPins(d.options.pinnedToolbarButtons); }); } catch (_) {}
 
   // §BUILD 2026-08-30 — James: "maybe adjustable search bar like you
   // can grab the edge?" Real drag-to-resize for #url-bar-wrap, which

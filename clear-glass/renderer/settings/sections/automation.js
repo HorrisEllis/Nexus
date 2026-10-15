@@ -521,7 +521,7 @@
     id: 'automation', group: 'Agents', icon: '↻', label: 'Automation',
     keywords: 'workflow trigger schedule cron webhook event step condition loop delay command tasker automate notify macro daily every browser scrape extract dom click fill form wait variable http csv',
     blurb: 'Workflows read as sentences: when something happens, do these steps. Drive web pages (open, click, fill, read, wait), loop over what you read, ask agents and use their replies, call web APIs, save CSV/JSON, get notified — on a schedule, a cron, an event, a webhook, or when you press Run.',
-    related: ['macros', 'mesh'],
+    related: ['macros', 'accounts'],
     async render({ tools, rerender }) {
       if (poll) { clearTimeout(poll); poll = null; }
       const [wf, m, accounts, macros, cat, windows] = await Promise.all([

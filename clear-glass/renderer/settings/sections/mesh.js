@@ -28,41 +28,14 @@
     catch (e) { return pane({ title, body: h('div', { class: 'err-box' }, h('span', { text: e.message })) }); }
   }
 
-  section({
-    id: 'mesh', group: 'Accounts & agents', icon: '\u2B21', label: 'Agent mesh',
-    keywords: 'mesh spawn route pipeline feedback queue health constraints raid jobs intake nodes diagnose transform',
-    blurb: 'The agents Clear Glass can drive in their own background tabs, what\u2019s running now, and the routes that pass one agent\u2019s answer to another.',
-    related: ['accounts', 'providers'],
-    async render({ rerender }) {
+  // 0.60.54 CS2 — no longer a page: the mesh half of Providers & accounts (sections/accounts.js). The "Agents" list that used to open this page
+  // repeated the provider rows (account count, Open tab), and the same two buttons are on every account row, so it is gone; what is left is what is
+  // not a provider row: what is running now, a trial dispatch, the routes between agents, jobs and network nodes.
+  window.CGS.part('mesh', {
+    async panes({ rerender }) {
       const m = await call(() => cg.mesh.list(), 'mesh');
       const [accounts, defaults] = await Promise.all([cg.accounts.list().catch(() => []), cg.accounts.defaults().catch(() => ({}))]);
       const label = (id) => { const a = accounts.find(x => x.id === id); return a ? a.label : (id ? id.slice(0, 8) + '…' : 'default'); };
-
-      // §0.39.265 — linked to Accounts & sign-in: the account chip opens that
-      // provider's accounts, and "Open tab" asks which account when there are several.
-      const acctsFor = (key) => accounts.filter(x => (x.agentKeys || []).includes(key));
-      const openTab = (a) => async (e) => {
-        const mine = acctsFor(a.id);
-        let accountId;
-        if (mine.length > 1) {
-          const pick = select(mine.map(x => ({ value: x.id, label: x.label })), defaults[a.id] || mine[0].id);
-          const ok = await modal({ title: `Open ${a.name} as\u2026`, body: [field('Account', pick, 'Each account has its own signed-in session.')],
-            actions: [{ label: 'Open tab', primary: true, run: () => true }] });
-          if (!ok) return;
-          accountId = pick.value;
-        } else if (mine.length === 1) accountId = mine[0].id;
-        await busy(e.currentTarget, async () => {
-          const r = await wire('/agent-mesh/spawn', { method: 'POST', body: { agentKey: a.id, accountId } });
-          toast(`${a.name} tab ready${accountId ? ` as \u201C${label(accountId)}\u201D` : ''} (${r.contextId})`); rerender();
-        });
-      };
-      const registry = pane({ title: 'Agents', sub: `${m.registry.length} available \u00B7 ${m.queueDepth} queued`, flush: true, body: m.registry.map(a => {
-        const n = acctsFor(a.id).length;
-        const acct = h('button', { class: 'link-btn', title: 'Accounts & sign-in', onclick: () => goto('accounts', a.id),
-          text: defaults[a.id] ? `default: ${label(defaults[a.id])}` : n ? `${n} account${n === 1 ? '' : 's'}, no default` : 'no account \u2014 add one' });
-        const r = row(a.name, a.url, acct, btn('Open tab', openTab(a), 'sm'));
-        r.style.setProperty('--prov', a.color || 'var(--cyan)'); r.prepend(h('span', { class: 'dot' })); r.dataset.anchor = a.id; return r;
-      }) });
 
       const diagnose = (provider, agentId) => async (e) => busy(e.currentTarget, async () => {
         const r = await wire('/agent-mesh/diagnose', { method: 'POST', body: { provider, agentId }, allowNotOk: true });
@@ -147,7 +120,7 @@
           chip(x.status || '?', x.status === 'done' ? 'ok' : x.status === 'error' ? 'bad' : 'warn'),
           btn('Status', async (e) => busy(e.currentTarget, async () => { const st = await wire(`/agent-mesh/job?jobId=${encodeURIComponent(x.jobId)}`); modal({ title: `Job ${x.jobId}`, wide: true, body: [h('pre', { class: 'out', text: JSON.stringify(st, null, 2) })] }); }), 'sm'))) : empty('No jobs yet.') });
       });
-      return [registry, live, tryIt, routes, jobs, nodes];
+      return [live, tryIt, routes, jobs, nodes];
     },
   });
 })();
