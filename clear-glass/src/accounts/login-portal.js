@@ -175,7 +175,7 @@ class LoginPortal {
     if (as) { const b = await as.beginSignIn(provider, id, { park: true }); if (!b.ok) { try { releaseQuiet && releaseQuiet(); } catch (_) {} return { ok: false, error: b.error, code: 'session_not_ready' }; } }
     const win = new this.BrowserWindow({
       width: 1100, height: 820, minWidth: 720, minHeight: 560,
-      backgroundColor: '#08080d', autoHideMenuBar: true,
+      backgroundColor: '#08080d', autoHideMenuBar: true,   // the same dark base as window-frame.js (CS1)
       title: `Sign in — ${def.name} · ${acc.label}`,
       webPreferences: { partition, contextIsolation: true, nodeIntegration: false, sandbox: true },
     });

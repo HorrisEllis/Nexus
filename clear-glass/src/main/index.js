@@ -37,8 +37,9 @@
  * It does not depend on nexus-wired or ErosmancerOS to boot.
  */
 
-const { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, session, shell } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, session, shell, nativeTheme } = require('electron');
 const CompartmentWindow = require('./compartment-window.js');
+const WindowFrame = require('./window-frame.js');   // 0.60.54 CS1
 const path   = require('path');
 const http   = require('http');
 const { randomUUID } = require('crypto');
@@ -399,7 +400,7 @@ function registerNexusUriActions() {
     const url = `http://127.0.0.1:4800/?${query}`;
     const w = windows.get('default');
     if (w) { w.loadURL(url); w.show(); w.focus(); }
-    else { const nw = new BrowserWindow({ width: 1280, height: 860 }); nw.loadURL(url); windows.set('idearium-deeplink', nw); }
+    else { const nw = new BrowserWindow(WindowFrame.withDark({ width: 1280, height: 860 })); nw.loadURL(url); windows.set('idearium-deeplink', nw); }
   };
   nexusUri.registerAction('repo', ({ repoUuid }) => openIdeariumUrl(`repo=${repoUuid}`));
   nexusUri.registerAction('repo-chunk', ({ repoUuid, chunkUuid }) => openIdeariumUrl(`repo=${repoUuid}&chunk=${chunkUuid}`));
@@ -429,7 +430,7 @@ function registerNexusUriActions() {
   nexusUri.registerAction('remote-desktop', ({ sessionId }) => {
     const path = require('path');
     const viewerPath = path.join(__dirname, '..', '..', '..', 'remote-desktop', 'viewer.html');
-    const w = new BrowserWindow({ width: 1024, height: 768 });
+    const w = new BrowserWindow(WindowFrame.withDark({ width: 1024, height: 768 }));
     w.loadFile(viewerPath, { search: `session=${sessionId}` });
     windows.set(`remote-desktop-${sessionId}`, w);
     return { sessionId };
@@ -1152,6 +1153,7 @@ async function _startWire() {
 
 async function bootstrap() {
   console.log(`[ClearGlass v${CG_VERSION}] Boot — ${MODULE_UUID}`);
+  WindowFrame.setAppTheme(nativeTheme);   // 0.60.54 CS1: native title bars follow the app, and the app is dark
 
   // 0. SISO bus
   const bus = createBus('EVENTS');

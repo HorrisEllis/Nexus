@@ -169,6 +169,12 @@
   // consolidate or link these?" They share one group now, side by side.
   const GROUPS = ['Accounts & agents', 'Agents', 'Browser', 'System'];
   function section(def) { sections.push(def); }
+  // 0.60.54 CS2 — James: "consolidate the provider and accounts settings sections". Provider tabs and Agent mesh are no longer pages: they are
+  // PARTS the one Providers & accounts section builds from (sections/providers.js, mesh.js keep their code, and register it here instead of
+  // in the rail). An old id (a bookmark #mesh, a goto('providers')) still lands: it opens the merged section at that provider or at the mesh half.
+  const parts = {};
+  function part(id, def) { parts[id] = def; }
+  const ALIAS = { providers: 'accounts', mesh: 'accounts' };
 
   // §LIBRARY 0.39.241 — the Library window (renderer/library.html) runs on this
   // same runtime so it IS the Settings UI, not a copy of its look: same frame,
@@ -196,7 +202,7 @@
   // goto(id, anchor) — open a section and bring the pane marked `anchor` into
   // view (e.g. goto('accounts', 'claude') lands on Claude's accounts).
   let pendingAnchor = null;
-  function goto(id, anchor) { pendingAnchor = anchor || null; return show(id); }
+  function goto(id, anchor) { if (ALIAS[id] && !anchor && id === 'mesh') anchor = 'mesh'; pendingAnchor = anchor || null; return show(ALIAS[id] || id); }
   function _focusAnchor(page) {
     if (!pendingAnchor) return;
     const el = page.querySelector(`[data-anchor="${CSS.escape(pendingAnchor)}"]`);
@@ -215,7 +221,7 @@
   }
 
   async function show(id) {
-    const def = sections.find(s => s.id === id) || sections[0];
+    const def = sections.find(s => s.id === (ALIAS[id] || id)) || sections[0];
     pollers.forEach(f => { try { f(); } catch (_) {} }); pollers = [];
     const same = current === def.id;   // a re-render (search, refresh, poll) keeps what is on screen until the new render is ready
     if (CFG.search === 'list' && !same) {   // a new area starts unfiltered
@@ -294,5 +300,5 @@
   }
 
   window.CGS = { cg, h, unwrap, call, wire, toast, fail, busy, modal, confirmDo, field, toggle, row, pane, btn, chip, empty, ago, copy,
-    agentOptions, select, section, show, goto, onLeave, boot, query, current: () => current, WIRE_PORT };
+    agentOptions, select, section, part, parts, loadAreaCss, show, goto, onLeave, boot, query, current: () => current, WIRE_PORT };
 })();

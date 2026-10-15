@@ -12,11 +12,12 @@
  *   frameless, dark (#0a0b10 before the first paint), resizable from every edge, a minimum size, no menu bar,
  *   the size window.open asked for, and a small preload (preload/compartment-window.js) that gives the page's own
  *   title bar minimize / maximize / close. Dragging is the page's title bar (-webkit-app-region: drag).
- * Every other popup keeps Electron's default — nothing else changes.
+ * Every other popup gets the dark OS frame (window-frame.js, 0.60.54); before that it kept Electron's light default.
  *
  * Pure parts (isCompartmentPage, parseFeatures, windowOptions) are exported for tests.
  */
 const path = require('path');
+const Frame = require('./window-frame.js');   // 0.60.54 CS1
 
 // §0.39.345 — James: "can you make the windows borderless like comportmant desktop for cos." Every idearium page that
 // pops out and already draws its own title bar (ui/js/window-chrome.js: drag, minimize, maximize, close) opens
@@ -67,14 +68,14 @@ const PRELOAD = path.join(__dirname, '../preload/compartment-window.js');
 /** Route one webContents' popups (call from app 'web-contents-created'). */
 function attach(contents) {
   if (!contents || typeof contents.setWindowOpenHandler !== 'function') return false;
-  if (contents.getType && contents.getType() !== 'webview') return false;
+  if (contents.getType && !['webview', 'window'].includes(contents.getType())) return false;   // 0.60.54: a provider or sign-in window's popups too
   contents.setWindowOpenHandler(({ url, features }) => {
     const kind = isCompartmentPage(url);
-    if (!kind) return { action: 'allow' };
+    if (!kind) return { action: 'allow', overrideBrowserWindowOptions: Frame.popupOptions(features) };   // 0.60.54 CS1: dark frame, no menu bar
     return { action: 'allow', overrideBrowserWindowOptions: windowOptions(kind, features, PRELOAD) };
   });
   contents.on('did-create-window', (win, { url }) => {
-    if (!isCompartmentPage(url)) return;
+    if (!isCompartmentPage(url)) { Frame.darkenWindow(win); return; }
     try { win.removeMenu(); } catch (_) {}
   });
   return true;
