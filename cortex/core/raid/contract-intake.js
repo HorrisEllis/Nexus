@@ -769,6 +769,16 @@ async function processNext(executor) {
   }
   const queued = ready[0];
 
+  // §RD0 0.60.36 — a .contract row runs its bricks through runContract with its source's executors
+  if (queued.kind === 'v2') {
+    const ex = _executorsBySource.get(queued.source);
+    if (!ex) {
+      try { jaaDB.update(TABLE, queued.uuid, { status: STATUS.BLOCKED, blockReason: `no executors registered for source "${queued.source}" — RAID cannot run its bricks here`, updatedAt: Date.now() }); } catch (_) {}
+      return { queueId: queued.uuid, status: STATUS.BLOCKED, reason: `no executors for ${queued.source}` };
+    }
+    return runContract(queued.contractFile, { queueId: queued.uuid, source: queued.source, intention: queued.intention, forAgent: queued.forAgent, hat: queued.hat, title: queued.title, executors: ex, ...(queued.root ? { root: queued.root } : {}) });
+  }
+
   // §AM6-CLOSED 2026-09-02 — James confirmed: "yes. sure." (to fixing
   // this). Real gap found while explaining how to test the agent mesh:
   // this function dequeued and dispatched purely on status===QUEUED,
@@ -1332,6 +1342,116 @@ function reportExternalOutcome(queueId, { status, verdict } = {}) {
  *
  * @returns {{resumed:Array, retried:Array, escalated:Array, checked:number}}
  */
+// ── §RD0 0.60.36 — RAID runs the .contract ─────────────────────────────────────────────────────────────────────────────
+// James (2026-08-28): "we have all contracts, whether its from loom, idearium, co-pilot, self-heal go to raid's input
+// folder, and queue, then through raid" · (2026-10-15) "look at the contracts also and raid. i feel something happened".
+// The .contract v2 bricks (contract-gates, 0.60.15–18) ran beside this queue, never through it. Now RAID runs them:
+//   runContract(input, { source, intention, forAgent, hat, title, executors, onEvent, onCheckpoint, root, causedBy })
+//     input: a .contract file path, or { doc, payload, v } as contract-gates load() returns, or a v2 payload
+//   1. a queue row (kind 'v2': the file, its bricks) — RAID's queue shows every contract run
+//   2. RAID's gates BEFORE: the boundary (resolveBoundary — informs, never refuses), the agent's intent contract
+//      (checkAgentIntentContract — refuses), RAID's approval (_approveTool: the constitution, then the source's own
+//      contract — action 'build'). A refusal is BLOCKED, said, and nothing runs.
+//   3. contract-gates.schedule with the submitter's executors — bricks, splits, checkpoints, GT1 classes
+//   4. the verdict = the evaluator's completion (PASS) or not (FAIL, naming each failed / blocked brick and its class)
+//   5. on FAIL (not from self-heal): HEAL_REQUESTED, carrying the bricks and their classes
+// → { ok, queueId, status, result, audit, blocked? }
+const _executorsBySource = new Map();
+/** registerExecutors(source, executors) — what processNext uses for a queued v2 contract from that source */
+function registerExecutors(source, executors) { if (source && executors) _executorsBySource.set(String(source), executors); return { ok: true, source }; }
+
+function _loadV2(input) {
+  const CG = require('./contract-gates.js');
+  if (typeof input === 'string') return { file: input, loaded: CG.load(input) };
+  if (input && input.payload && input.v) return { file: input.file || null, loaded: input };
+  if (input && input.gates) return { file: null, loaded: { v: 2, doc: null, payload: input } };
+  throw new Error('runContract needs a .contract file, a loaded contract ({ payload, v }) or a v2 payload');
+}
+
+async function runContract(input, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, executors = null, onEvent = () => {}, onCheckpoint = () => {}, root, causedBy = null, raid = null, concurrency, queueId: existingId = null } = {}) {
+  const CG = require('./contract-gates.js');
+  const { file, loaded } = _loadV2(input);
+  const p = loaded.payload;
+  const bricks = (p.gates || []).filter(g => g.type !== 'phase').length;
+  const name = title || p.id || (p.outcome && p.outcome.what) || (file ? require('path').basename(file) : 'contract');
+  const queueId = existingId || uid();
+  const boundary = require('./contract-boundary.js').resolveBoundary(source, intention);
+  const row = { uuid: queueId, kind: 'v2', status: STATUS.RUNNING, stage: STAGE.PROCESSING, source, intention, forAgent, hat,
+    title: String(name).slice(0, 200), contractFile: file, bricks, boundary: boundary ? boundary.key : null, causedBy, createdAt: Date.now(), updatedAt: Date.now() };
+  try { if (existingId) jaaDB.update(TABLE, queueId, { status: row.status, stage: row.stage, bricks, boundary: row.boundary, updatedAt: Date.now() }); else jaaDB.insert(TABLE, row); }
+  catch (e) { console.warn(`[${MODULE_ID}] v2 row not written (the run goes on): ${e.message}`); }
+  _raidLedger.record('raid.contract.v2.started', { queueId, source, title: row.title, bricks, file }, { source: 'raid', causedBy: causedBy || queueId });
+  const block = (reason, gate) => {
+    try { jaaDB.update(TABLE, queueId, { status: STATUS.BLOCKED, blockReason: reason, blockedBy: gate, updatedAt: Date.now() }); } catch (_) {}
+    _raidLedger.record('raid.contract.rejected', { queueId, reason, gate }, { source: 'raid', causedBy: queueId });
+    return { ok: false, queueId, status: STATUS.BLOCKED, blocked: { gate, reason } };
+  };
+  // RAID's gates before anything runs
+  if (forAgent) {
+    try {
+      const { checkAgentIntentContract } = require('../../../lib/agent-intent-contract.js');
+      const ck = checkAgentIntentContract(forAgent, intention, { hat });
+      if (ck && ck.ok === false) return block(`intent contract refused: ${ck.reason}`, 'intent-contract');
+    } catch (e) { console.warn(`[${MODULE_ID}] intent contract check unavailable (proceeding, said): ${e.message}`); }
+  }
+  let approval = null;
+  try {
+    const R = raid || require('./index.js');
+    approval = R._approveTool(source, `contract.run ${row.title}`, { action: 'build', intent: { action: 'implement', target: row.title }, causedBy: queueId });
+  } catch (e) { approval = { approved: true, reason: `RAID approval unavailable (${e.message}) — run, said` }; }
+  if (approval && approval.approved === false) return block(`RAID refused: ${approval.reason}`, approval.axiom ? 'constitution' : 'source-contract');
+  // the bricks
+  let res;
+  try {
+    res = await CG.schedule(p, { ...(root ? { root } : {}), ...(concurrency ? { concurrency } : {}), executors: executors || _executorsBySource.get(source) || null, onEvent,
+      onCheckpoint: (px, g) => { try { if (file) CG.save(file, loaded); } catch (_) {} try { onCheckpoint(px, g); } catch (_) {} } });
+  } catch (e) { res = { complete: false, why: [`the scheduler threw: ${e.message}`], log: [], blocked: [], failed: [] }; }
+  try { if (file) CG.save(file, loaded); } catch (_) {}
+  let audit = null; try { audit = require('./contract-adapters.js').audit(p, root ? { root } : {}); } catch (_) {}
+  const ev = (p.state && p.state.evidence) || {};
+  const failedBricks = [...new Set([...(res.failed || []), ...((res.log || []).filter(l => l.status === 'FAILED').map(l => l.gate))])]
+    .filter(id => ((p.state.gates || {})[id] || {}).status !== 'PASSED')
+    .map(id => ({ id, class: ev[`${id}.class`] || null, why: (((p.state.gates || {})[id] || {}).reasons || []).slice(0, 2).join('; ') || null }));
+  const blockedBricks = (res.blocked || []).map(b => ({ id: b.id, why: b.why }));
+  const status = res.complete ? STATUS.PASS : STATUS.FAIL;
+  const verdict = res.complete ? 'complete' : (res.why || []).slice(0, 4).join('; ');
+  try { jaaDB.update(TABLE, queueId, { status, stage: STAGE.OUTPUT_FOLDER, verdict, failedBricks, blockedBricks, rounds: res.rounds || 0, updatedAt: Date.now() }); } catch (_) {}
+  _raidLedger.record(`raid.contract.v2.${status}`, { queueId, title: row.title, failedBricks, blockedBricks, rounds: res.rounds || 0 }, { source: 'raid', causedBy: queueId });
+  if (status === STATUS.FAIL && source !== 'self-heal') {
+    try {
+      require('../../../nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
+        gapType: 'raid_contract_exhausted', gapUuid: queueId,
+        body: `RAID contract "${row.title}" (source: ${source}) did not complete: ${verdict}${failedBricks.length ? ` — failed: ${failedBricks.map(b => `${b.id}${b.class ? ` (${b.class})` : ''}`).join(', ')}` : ''}${blockedBricks.length ? ` — set aside: ${blockedBricks.map(b => b.id).join(', ')}` : ''}`,
+        bricks: failedBricks, blocked: blockedBricks,
+      }, { source: 'raid-contract-intake' });
+    } catch (e) { console.warn(`[${MODULE_ID}] HEAL_REQUESTED not emitted for ${queueId}: ${e.message}`); }
+  }
+  return { ok: status === STATUS.PASS, queueId, status, result: res, audit, failedBricks, blockedBricks, approval: approval ? { approved: approval.approved !== false, reason: approval.reason || null } : null };
+}
+
+/** submitV2(file, { source, intention, forAgent, hat, title, dependsOn, root }) — a .contract into RAID's queue; processNext runs
+ *  it with the executors that source registered (registerExecutors), or sets it aside, said, when none are */
+function submitV2(file, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, dependsOn = [], root = null } = {}) {
+  const CG = require('./contract-gates.js');
+  const loaded = CG.load(file);
+  const queueId = uid();
+  const row = { uuid: queueId, kind: 'v2', status: STATUS.QUEUED, stage: STAGE.SYSTEM_QUEUE, source, intention, forAgent, hat,
+    title: String(title || loaded.payload.id || require('path').basename(file)).slice(0, 200), contractFile: file, dependsOn,
+    bricks: (loaded.payload.gates || []).filter(g => g.type !== 'phase').length, root, createdAt: Date.now(), updatedAt: Date.now() };   // root: what the contract's refs are relative to (a repo's folder)
+  jaaDB.insert(TABLE, row);
+  _raidLedger.record('raid.contract.v2.queued', { queueId, source, file }, { source: 'raid', causedBy: queueId });
+  return { queueId, status: STATUS.QUEUED };
+}
+
+/** legacyToV2(contract) — a pre-v2 contract ({ content, title, forAgent }) as a one-brick .contract (nothing lost) */
+function legacyToV2(c = {}, { id = null } = {}) {
+  const gid = 'work';
+  return { v: 2, id: id || `legacy-${uid()}`, outcome: { what: c.title || String(c.content || '').slice(0, 120) }, refs: {},
+    gates: [{ id: gid, type: 'task', kind: 'agent:build', actions: [String(c.content || '')], requirement: { gate: gid, outcome: c.title || null, actions: [String(c.content || '')] },
+      run: { agent: c.forAgent || 'auto' }, pass_when: [{ evidence: `${gid}.done` }], depends_on: [] }],
+    invariants: [], state: { gates: {}, evidence: {} }, legacy: { title: c.title || null, forAgent: c.forAgent || null } };
+}
+
 function reconcileOnBoot() {
   const fs = require('fs');
   const allRows = listQueue();
@@ -1386,4 +1506,4 @@ function reconcileOnBoot() {
   return { resumed, retried, escalated, checked: orphaned.length };
 }
 
-module.exports = { submitContract, submitIdeariumChunk, submitBuildPhaseContract, synthesizeContract, BUILD_CONTRACT_SCHEMA, reportExternalOutcome, acknowledge, listQueue, processNext, reconcileOnBoot, MODULE_ID, VERSION, STATUS, STAGE, queryContractRepoFile, writeContractRepoFile, BROWSER_PROVIDERS, _dispatchToClearGlass, _advanceToOutputFolder };
+module.exports = { runContract, registerExecutors, submitV2, legacyToV2, submitContract, submitIdeariumChunk, submitBuildPhaseContract, synthesizeContract, BUILD_CONTRACT_SCHEMA, reportExternalOutcome, acknowledge, listQueue, processNext, reconcileOnBoot, MODULE_ID, VERSION, STATUS, STAGE, queryContractRepoFile, writeContractRepoFile, BROWSER_PROVIDERS, _dispatchToClearGlass, _advanceToOutputFolder };
