@@ -167,3 +167,29 @@ phases:
       transport_down. A macro or workflow can DECLARE a required route/preset (macro node field requires.route) and refuses to run, with the reason, if it
       cannot be met. Agent jobs carry a route. Recorder option: record in incognito/preset. All through the same policy table, never a side door.
     proof: "a macro requiring 'sentinel' does not run on a tab with a stale leak test; a trigger fires on transport_down."
+
+# ═══ ADDENDUM 2026-10-15 (c) — kill switch (MAPPED, nothing below is built) ═══
+addendum_c:
+  james: "maybe a kill if disconnected, like kills the sandbox or compartment completely?"
+  reading: "The coder's reading (to confirm): if the protected path is lost, tear down everything that depended on it, not only stop the traffic."
+  coder_says: >-
+    Yes, and it is a ladder, not one switch. The fail-closed rule (NP3) already blocks traffic the moment a route's transport is down; that costs nothing and is
+    always on. A kill goes further and destroys state, so it is a per-rule choice: on_failure = block | kill_tabs | kill_compartment.
+      block              traffic stops; tabs, cookies and the transport process stay. Resumes when the route is verified again.
+      kill_tabs          every tab on that route is closed and its in-memory/incognito partition destroyed (cookies, storage, cache gone).
+      kill_compartment   kill_tabs, plus the transport process is killed, its data directory wiped, control credentials discarded; a restart is a fresh start.
+    The watchdog that decides must live in core and outside the transport. A kill switch inside the thing that failed does not run when it fails.
+  triggers: [transport_process_exit, heartbeat_miss (control-port ping), circuit_lost_and_not_rebuilt_in_N_seconds, leak_test_failed, os_network_change, sleep_wake, route_removed_while_in_use]
+  failure_modes_to_test:
+    - "Race: a request already in flight when the transport dies. The block is applied at the session layer before the kill, and in-flight requests are cancelled, not retried direct."
+    - "False positive: a slow bootstrap or brief hiccup kills a long session. N seconds and a 'warn first' grace are settings; the default is block (reversible), not kill (destructive)."
+    - "Kill that fails: the process will not die or the wipe errors. The route stays BLOCKED and the UI says the kill failed (§1.2 nothing fails silently)."
+    - "Persistent profiles: kill_tabs on a persistent (non-incognito) route destroys logins he may want. The setting says so and asks once; incognito and Sentinel default to kill_tabs."
+    - "Auto-reconnect after a kill is off by default; a new transport needs a click, a CLI call, or an explicit setting."
+    - "Macros and agent jobs mid-run on a killed route are stopped with the reason in the run, not left half done."
+phases:
+  NP15_kill_switch:
+    status: OPEN
+    depends_on: [NP1_compartment, NP3_apply_to_electron, NP5_leak_test]
+    does: "Core watchdog (heartbeat + triggers above) applying the rule's on_failure; kill ladder; a Panic button and CLI verb (net kill [--route R] [--all]); events for macro/automation triggers (NP14)."
+    proof: "fake transport: exit => block within one tick; kill_tabs destroys the partition; kill_compartment wipes the data dir; a failing wipe leaves the route blocked and reports it; in-flight request is not retried direct."
