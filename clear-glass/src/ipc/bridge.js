@@ -1146,7 +1146,19 @@ class IpcBridge {
 
     // Nexus options
     ipcMain.handle('options:get',    async ()    => this.options?.get());
-    ipcMain.handle('options:set',    async (e, d) => this.options?.set(d));
+    // 0.60.52 — James: "most of the tool bar things dont work." Settings saved the pin list and told no one, so the
+    // main window only applied it at load. Every window hears the change now (the toolbar re-applies live).
+    ipcMain.handle('options:set',    async (e, d) => {
+      const out = await this.options?.set(d);
+      try {
+        const { BrowserWindow } = require('electron');
+        for (const w of BrowserWindow.getAllWindows()) {
+          if (w.isDestroyed() || w.webContents.isDestroyed() || w.webContents.id === e.sender.id) continue;
+          w.webContents.send('options:changed', { keys: Object.keys(d || {}), options: out });
+        }
+      } catch (_) { /* a window that is closing never stops a save */ }
+      return out;
+    });
 
     // Toolbar command registry — §STRUCTURAL 2026-08-24. Backend-owned
     // (src/toolbar/commands.js); the renderer has no command list of its

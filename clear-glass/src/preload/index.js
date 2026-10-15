@@ -77,6 +77,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   options: {
     get: ()        => ipcRenderer.invoke('options:get'),
     set: (payload) => ipcRenderer.invoke('options:set', payload),
+    onChange: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('options:changed', f); return () => ipcRenderer.removeListener('options:changed', f); },
   },
 
   // ── Toolbar command registry — §STRUCTURAL 2026-08-24 ─────────────────

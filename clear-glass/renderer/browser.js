@@ -2745,6 +2745,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     .then(() => cg.options.get())
     .then(opts => applyToolbarPins(opts.pinnedToolbarButtons))
     .catch(() => {});
+  // 0.60.52 — a pin changed in the Settings window shows here at once, not after a restart.
+  try { if (cg.options.onChange) cg.options.onChange(d => { if (d && d.options && d.keys && d.keys.includes('pinnedToolbarButtons')) applyToolbarPins(d.options.pinnedToolbarButtons); }); } catch (_) {}
 
   // §BUILD 2026-08-30 — James: "maybe adjustable search bar like you
   // can grab the edge?" Real drag-to-resize for #url-bar-wrap, which
