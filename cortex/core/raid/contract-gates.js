@@ -423,6 +423,24 @@ function classifyFailure({ out = null, result = null } = {}) {
   return { cls: 'capability', why: reasons.join('; ').slice(0, 300) || 'the work did not meet the gate' };
 }
 
+/**
+ * §GS1 0.60.39 — compare(p, gateId, { root, diff }) → { gate, status, stale, reasons, passedAt, commit, diff } — the gate as
+ * it is now against what passed: the evaluator's own reasons (a changed input makes it STALE), the commit it passed at,
+ * and — given the caller's diff({ gate, from, files }) (Idearium: Versionium) — what changed in its files since.
+ */
+async function compare(p, gateId, { root = DEFAULT_ROOT, diff = null } = {}) {
+  const g = (p.gates || []).find(x => x.id === gateId);
+  if (!g) throw Object.assign(new Error(`no gate ${gateId}`), { status: 404 });
+  const ev = evaluate(p, { root });
+  const now = ev.gates.find(x => x.id === gateId) || {};
+  const passedAt = [...(p.state.checkpoints || [])].reverse().find(c => c.gate === gateId) || null;
+  const files = [...new Set([g.file, ...(g.requires || []).map(r => ((p.refs || {})[r] || {}).path)].filter(Boolean))];
+  let d = null;
+  if (diff && passedAt && passedAt.commit) { try { d = await diff({ gate: g, from: passedAt.commit, files }); } catch (e) { d = { error: e.message }; } }
+  return { gate: gateId, status: now.status || null, stale: now.status === 'STALE', reasons: now.reasons || [], passedAt: passedAt ? passedAt.at : null,
+    commit: passedAt ? passedAt.commit || null : null, files, diff: d };
+}
+
 // (lib/agent-tools executeTool: the copilot's tools, Clear Glass automation and macros, run-pipeline/run-chain, nexus.command);
 // its output is recorded as evidence, its gate is checked, and the next round sees what became READY. Order is whatever
 // the dependencies allow. A brick with no executor for its kind of work is left READY and said — never faked.
@@ -437,7 +455,7 @@ function _defaultLearners() {
     door: (o) => { try { return require(path.join(DEFAULT_ROOT, 'lib/model-door.js')).outcome(o); } catch (_) { return null; } },
   };
 }
-async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {}, onCheckpoint = () => {}, learners = null } = {}) {
+async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency = 4, maxRounds = 50, onEvent = () => {}, onCheckpoint = () => {}, learners = null, versioning = null } = {}) {
   const L = learners || _defaultLearners();   // not `learn`: inside the loop that name is the per-attempt boolean
   const ex = executors || _defaultExecutors();
   const log = [];
@@ -526,11 +544,30 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
             log.push({ round, gate: g.id, status: 'SPLIT', reasons: [`context: ${fc.why}`, `into ${kids.join(', ')}`] });
           }
         }
+        // §GS1 0.60.39 — a brick that failed (and will be tried again) is put back to its last good state first: the commit
+        // its gate last passed at, else the build's own snapshot (p.state.baseCommit). The retry starts from known-good, not
+        // from the failed attempt's half-write. Only for a failure that wrote (not transient: it never answered; not a
+        // question: nothing will retry it). versioning.rewind is the caller's (Idearium: Versionium restore-file / the
+        // brick's pending proposals set aside).
+        if (r.status === 'FAILED' && fc && !['transient', 'spec', 'verification', 'tool'].includes(fc.cls) && versioning && typeof versioning.rewind === 'function') {
+          const passedAt = [...(p.state.checkpoints || [])].reverse().find(c => c.gate === g.id && c.commit);
+          const toCommit = (passedAt && passedAt.commit) || (p.state.baseCommit || null);
+          let rw = null;
+          try { rw = await versioning.rewind({ gate: g, toCommit, contract: p }); } catch (e) { rw = { ok: false, why: e.message }; }
+          if (rw) {
+            record(p, `${g.id}.rewound`, JSON.stringify({ to: toCommit, ok: rw.ok !== false, files: rw.files || [], why: rw.why || null }).slice(0, 1000), { by: 'scheduler:rewind' });
+            log.push({ round, gate: g.id, status: 'REWOUND', reasons: [rw.ok !== false ? `back to ${toCommit || 'the build snapshot'}${(rw.files || []).length ? ` — ${rw.files.join(', ')}` : ''}` : `not rewound: ${rw.why || 'no answer'}`] });
+          }
+        }
         log.push({ round, gate: g.id, status: r.status, reasons: r.reasons, ...(agent ? { agent } : {}), ...(fc ? { class: fc.cls } : {}) });
         if (r.status === 'PASSED') {
           // every pass is a checkpoint: what was verified, against which input hashes, by whom — the caller saves it
+          // §GS1 — and the Versionium commit it passed at (versioning.commit), so it can be rewound to and compared against
+          let commit = null;
+          if (versioning && typeof versioning.commit === 'function') { try { commit = await versioning.commit({ gate: g, contract: p }); } catch (_) { commit = null; } }
+          if (commit) record(p, `${g.id}.commit`, String(commit), { by: 'scheduler:versioning' });
           p.state.checkpoints = p.state.checkpoints || [];
-          p.state.checkpoints.push({ gate: g.id, at: Date.now(), hashes: (p.state.gates[g.id] || {}).hashes || {}, ...(agent ? { agent } : {}) });
+          p.state.checkpoints.push({ gate: g.id, at: Date.now(), hashes: (p.state.gates[g.id] || {}).hashes || {}, ...(agent ? { agent } : {}), ...(commit ? { commit } : {}) });
           try { onCheckpoint(p, g.id); } catch (_) { /* the caller's save failing never fails the brick; it is in memory */ }
         }
         onEvent({ gate: g.id, status: r.status, round });
@@ -546,5 +583,5 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
   return { rounds: maxRounds, log, complete: e3.complete, why: e3.why, blocked: aside() };
 }
 
-module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition,
+module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition, compare,
   packetTokens, Boundaries, shouldSplit, split, schedule, classifyFailure, FAILURE_CLASSES };

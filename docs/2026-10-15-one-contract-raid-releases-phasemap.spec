@@ -133,7 +133,7 @@ spec:
       proof: "with no Ollama on the ladder and no planner: the phase still runs as bricks, checkpointed; a resumed build skips the passed ones"
 
     GS1_a_snapshot_per_gate_rewind_and_compare:
-      status: OPEN
+      status: "DONE 0.60.39 — schedule({ versioning: { commit, rewind } }): a pass records its commit; a failure that wrote is rewound to the gate's last commit (else the build snapshot) before its retry; compare(); each brick a replay-engine decision under its RAID run. Idearium: Versionium flush / restore-file / proposals set aside; ?gate= on the contract route; repo contract --gate; the Plan shows commit, class, rewind. test-gate-versioning GV-01..06"
       depends_on: [BR1_bricks_on_every_path]
       files: [cortex/core/raid/contract-gates.js, lib/repo-versions.js, idearium/repo/snapshot-restore.js, lib/replay-engine.js]
       does: >-
@@ -238,3 +238,14 @@ spec:
 # file → one whole-phase brick (fromWholePhase) whose phase gate passes only on the proof run (RR-07). The old paths stay,
 # kept, behind routing.contract_build: off (CP-11); test-chunked-phase-build is pinned to that setting so it still guards
 # the one-file-at-a-time path (its 15 checks pass).
+
+## ADDENDUM 2026-10-15 — GS1 built (0.60.39)
+
+# James: "rewind engine and snapshots for each gate, comparing using the contract". Built on what was there: Versionium
+# commits (lib/repo-versions.js flush — every write already settles into a commit), restore-file (lib/repo-history.js),
+# the work surface's proposals (lib/repo-inject.js reject), the replay engine's decision log (lib/replay-engine.js). The
+# scheduler takes the caller's versioning so contract-gates stays system-free. Rewind is only for a failure that wrote:
+# never for transient (nothing came back) and never for a question (spec / verification / tool — nothing retries it).
+# In review mode nothing was written, so a rewind sets the brick's pending proposals aside instead.
+# The Clear Glass RewindEngine (whole-browser state) is not used for code; the desktop checkpoint (CK1) a repo task
+# takes stays the way to rewind a machine.
