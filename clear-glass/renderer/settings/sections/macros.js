@@ -27,7 +27,7 @@
  * a navigate step; steps read as {action, data}) is unchanged.
  */
 (function () {
-  const { cg, h, call, wire, toast, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, agentOptions, section, goto } = window.CGS;
+  const { cg, h, call, wire, toast, toggle, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, agentOptions, section, goto } = window.CGS;
 
   // Friendly definitions for the actions people use; anything else in the
   // live enum still works through the generic two-field form.
@@ -275,19 +275,27 @@
     const agents = await agentOptions();
     if (!agents.length) throw new Error('Open a tab to record in first.');
     const agentSel = select(agents);
-    const status = h('p', { class: 'blurb', text: 'Pick the tab, press Start, then do the steps in that tab. Come back and press Stop.' });
-    let recording = null;
+    const status = h('p', { class: 'blurb', text: 'Pick the tab, press Start. A .macro file is created right away and grows as you click, type, scroll and page through the tab. Press Stop when done.' });
+    const nameIn = h('input', { type: 'text', placeholder: 'Recording name (optional)' });
+    let recording = null, poll = null, file = null;
     const startBtn = btn('Start recording', (e) => busy(e.currentTarget, async () => {
-      const r = await call(() => cg.macros.recordStart(agentSel.value), 'start recording');
-      recording = agentSel.value; agentSel.disabled = true;
-      status.textContent = `● Recording in ${recording}${r.startUrl ? ` from ${r.startUrl}` : ''}. Clicks, typing and Enter are captured; passwords are never stored.`;
+      const r = await call(() => cg.macros.recordStart(agentSel.value, nameIn.value), 'start recording');
+      recording = agentSel.value; file = r.file; agentSel.disabled = true; nameIn.disabled = true; startBtn.disabled = true; startBtn.textContent = 'Recording…';
       status.classList.add('rec');
+      const paint = (n) => { status.textContent = `● Recording in ${recording}. Saved as ${file} — ${n ? `${n.events} events, ${n.steps} steps` : 'no events yet'}. Clicks, typing, scrolling and arrow/page keys are captured; navigation too; passwords are never stored.`; };
+      paint(null);
+      poll = setInterval(async () => { try { const st = await cg.macros.recordStatus(recording); if (st && st.recording) paint(st); } catch (_) { /* the file is already on disk */ } }, 800);
     }), 'primary');
-    const out = await modal({ title: 'Record a macro', body: [field('Tab', agentSel), h('div', {}, startBtn), status], actions: [{ label: 'Stop and edit steps', primary: true, run: async () => {
+    const out = await modal({ title: 'Record a macro', body: [field('Tab', agentSel), field('Name', nameIn), h('div', {}, startBtn), status], actions: [{ label: 'Stop and edit steps', primary: true, run: async () => {
       if (!recording) throw new Error('Start recording first.');
-      return call(() => cg.macros.recordStop(recording), 'stop recording');
+      clearInterval(poll);
+      const r = await call(() => cg.macros.recordStop(recording), 'stop recording');
+      recording = null; return r;
     } }] });
-    if (!out) { if (recording) cg.macros.recordStop(recording).catch(() => {}); return; }
+    clearInterval(poll);
+    // Cancel / Escape: nothing is thrown away. The recorder keeps running to the file until stopped here, so stop it and keep the draft (§0.3).
+    if (!out) { if (recording) { const r = await cg.macros.recordStop(recording).catch(() => null); if (r && r.file) toast(`Recording kept as ${r.file}`); } return; }
+    if (out.file) toast(`Saved ${out.file}`);
     if (!out.steps || !out.steps.length) { toast(`Nothing usable was recorded (${out.events || 0} events).`, 'bad'); return; }
     toast(`Recorded ${out.steps.length} step${out.steps.length === 1 ? '' : 's'}`);
     const host = (() => { try { return new URL(out.steps.find(s => s.action === 'navigate')?.data.url).host; } catch (_) { return ''; } })();
@@ -358,7 +366,24 @@
         btn('Import .macro', () => importMacroFile(rerender).catch(fail), 'ghost'));
       const macros = lr.macros || [];
       const full = async (m) => (await call(() => cg.macros.get(m.name), 'macro')).macro;
-      return pane({ title: 'Macros', sub: `${macros.length} macro${macros.length === 1 ? '' : 's'}`, flush: true, body: macros.length ? macros.map(m => row(m.name,
+      const opts = await cg.options.get().catch(() => ({}));
+      // 0.60.58 — James: "have a simple step by step guide for making a macro on a webpage, and have a optional toast for macro recording when you press the hotkey"
+      const GUIDE = [
+        ['Open the page', 'Go to the website in a tab and get to the point where the macro should begin. Sign in first if you need to. Passwords you type while recording are never stored; they become a {{password}} question.'],
+        ['Press Record', 'Click ● Record above (or press the record hotkey, Alt+Shift+R by default, while on the page). Pick the tab, give it a name, press Start. A .macro file is created at once and grows as you go.'],
+        ['Do the task slowly', 'Click, type, scroll and page with the arrow keys as you normally would. Pause when a page is loading: pauses of 1.5 seconds or more are kept as waits.'],
+        ['Press Stop', 'Click Stop and edit steps, or press the hotkey again. The recording is kept either way.'],
+        ['Check the steps', 'Delete any accidental clicks. Change text you want asked each time to a {{placeholder}}, for example {{search}}. Set the page pattern so the macro only offers itself on that site.'],
+        ['Save and test', 'Save it, then press Run on the page. If a step misses, open Edit and fix its selector with the element picker (Alt+Shift+E).'],
+        ['Give it a key (optional)', 'Settings › Keyboard shortcuts: bind a key to macro:<name> so one press runs it.'],
+      ];
+      const guide = pane({ title: 'Make a macro on a web page', sub: 'seven steps', body: [
+        h('details', { open: macros.length === 0 }, h('summary', { text: 'Show the steps' }),
+          h('ol', { class: 'step-read' }, GUIDE.map(([t, d]) => h('li', {}, h('b', { text: t + '. ' }), h('span', { text: d }))))),
+        row('Toast when the record hotkey is used', 'Shows a small message when the hotkey starts or stops a recording. Off: the co-pilot chat still notes it.',
+          toggle(opts.macroRecordToast !== false, (on) => call(() => cg.options.set({ macroRecordToast: on }), 'save').then(() => toast(on ? 'Hotkey toast on' : 'Hotkey toast off')).catch(fail))),
+      ] });
+      const listPane = pane({ title: 'Macros', sub: `${macros.length} macro${macros.length === 1 ? '' : 's'}`, flush: true, body: macros.length ? macros.map(m => row(m.name,
         `${m.description ? m.description + ' · ' : ''}${m.urlPattern || 'any page'} · ${m.steps} step${m.steps === 1 ? '' : 's'} · ${m.runCount} run${m.runCount === 1 ? '' : 's'} · last ${ago(m.lastRunAt)}${(m.params || []).length ? ` · asks for ${m.params.join(', ')}` : ''}`,
         btn('Run', () => runFlow(m).catch(fail), 'sm primary'),
         btn('Steps', async () => { const g = await full(m); modal({ title: m.name, wide: true, body: [h('ol', { class: 'step-read' }, (g.steps || []).map(s => h('li', { text: describe(s) })))] }); }, 'sm'),
@@ -379,6 +404,7 @@
         }), 'sm'),
         btn('Delete', async () => { if (await confirmDo(`Delete “${m.name}”?`, 'It stops appearing here; the history is kept in the macro ledger.', 'Delete')) { await busy(null, () => call(() => cg.macros.delete(m.name), 'delete')); rerender(); } }, 'sm danger')))
         : empty('No macros yet.', btn('Record one', () => recordFlow(schema, rerender).catch(fail), 'sm primary'), btn('Use a template', () => templateFlow(schema, rerender).catch(fail), 'sm')) });
+      return [guide, listPane];
     },
   });
 })();

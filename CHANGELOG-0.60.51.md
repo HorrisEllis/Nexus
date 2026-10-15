@@ -1,40 +1,32 @@
-# 0.60.51 — 2026-10-15
+# 0.60.51 - 2026-10-15
 
-James: "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are mapped. and i want the specs to tagged per phase"
+James: (a screenshot of Google's sign-in window: "We've detected a problem with your cookie settings.") "can you fix this."
 
-## What was there
+## What the window is
 
-Idearium's Phases tab reads every `docs/*phasemap*.spec` through loom (`loom/scanners/phasemap-map.js` →
-`idearium/repo/roadmap.js`), so the WARP / spec-framework map was already listed. But:
-- each phase's system was guessed from its prose (WB0 came out as cortex, WB1 as guardian);
-- no phase named its files;
-- a phase had nowhere to say which specs own it.
+The Accounts sign-in window (`clear-glass/src/accounts/login-portal.js`) on a Google login. It opens at 1100x820, which matches the screenshot's frame. Clear Glass had already fixed this message once (0.60.2, response rewriting in the provider tab); this is a different cause.
 
-## What changed
+## Cause (from reading the code; not reproduced here)
 
-- **The map** (`docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec`): every phase now declares
-  - `systems` (no longer guessed),
-  - `files` — real paths, with "(new)" on the phase that creates a file,
-  - `depends_on`,
-  - `specs` — the specs that own the behaviour it changes.
-- **`file_dependencies`**: each file's requires and consumers, measured by grep on 2026-10-15. Each becomes a loom
-  wire when its phase lands.
-- **Specs tagged per phase**: loom's phasemap reader reads `specs:` (key and list forms); Idearium's roadmap keeps it;
-  the phase detail shows a "specs" row; the phase search matches spec names. Any phasemap can use it now.
-- **PT1** added to the map as a done phase for this work.
+Google's sign-in sets a test cookie on one page and reads it back on the next. Two things wrote into the same cookie jar while the window was open:
+
+1. `account-switch` `beginSignIn` cleared the jar and then reloaded the provider's own tabs to the provider URL. Those tabs are signed out, so each went to Google's sign-in: a second flow in the same jar.
+2. The session hub mirrors the normal tabs' cookies into the provider jar live. Google's NID and SIDCC rotate constantly, so a normal tab with any Google page open was copying cookies in mid sign-in.
+
+## Fix
+
+While a sign-in window is open:
+- the provider's tabs wait at `about:blank`; closing the window reloads them (`beginSignIn(..., { park })`, `endSignIn`);
+- cookies from the normal tabs are not copied into the jar (`SessionHub.quiet`); the other direction still works, so a finished sign-in still reaches the normal tabs;
+- the window's session gets the Chrome-not-Electron user agent (it only had it once a provider tab existed);
+- the Google cookie changes seen while it was open are logged by name and cause, never a value.
+
+Every other caller of `beginSignIn` is unchanged: parking is opt-in.
 
 ## Proof
 
-- `tests/modules/test-phase-specs-tag.test.js` 4/4; all 4 fail on the old reader:
-  - PT-01 specs read on key- and list-form phases;
-  - PT-02 every phase of the map declares systems, files and specs; every dependency resolves;
-  - PT-03 every spec and existing file named exists (new files are marked);
-  - PT-04 Idearium's roadmap keeps the specs on its nodes.
-- Unchanged: test-loom-phasemap 7/7, test-loom-phasemap-status 14/14, test-phasemap-diagnosis-facts 10/10,
-  test-phases-tab 5/5. (test-moce-roadmap needs `js-yaml`, not installed in this container; it fails the same way
-  without this change.)
+`clear-glass/test/signin-window-quiet.test.js` (fakes), plus `provider-account-sync`, `login-portal-elsewhere`, `session-hub` still pass.
 
-## To confirm
+## Not verified
 
-"Tagged per phase" was read as: each phase names the specs that own it, and (SF3) a spec an agent writes is tagged
-with the phase that asked for it.
+No Electron and no Google reachable from here. If the message returns, the log line `[login-portal] <provider> - Google cookie changes while the sign-in window was open: ...` shows what touched the jar.

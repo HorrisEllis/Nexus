@@ -198,7 +198,7 @@ async function askSync(prompt, opts = {}, deps = {}) {
     // guardian/server.js, copilot/lifeline.js, copilot/server.js, to
     // idearium's lib/repo-agent.js — every hop now forwards it.
     job = createJob({ command: opts.command || 'ask', provider: resolved, prompt, content: opts.content || '', tools: resolvedTools, agentId: opts.agentId || undefined,
-      canonical: opts.canonical || undefined, reuse: opts.reuse || undefined });   // 0.39.265 — an identical in-flight job is joined, not sent twice
+      canonical: opts.canonical || undefined, reuse: opts.reuse || undefined, sessionId: opts.sessionId || undefined });   // 0.39.265 — an identical in-flight job is joined, not sent twice
     // §SD3 0.56.0 — someone is waiting on this answer: it goes before background builds (the pool, the reconnect
     // flush and the economy's gap all read it). A caller that is itself background passes priority: 'normal'.
     if (job.status !== 'complete' && !job.priority) job.priority = opts.priority || 'high';

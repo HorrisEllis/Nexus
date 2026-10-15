@@ -1,0 +1,95 @@
+envelope: 1
+uuid: nexus-export-schema-run
+type: schema
+id: run
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: core
+tags: []
+exported_at: 1792108800000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/run-state.js (0.60.50, CE1 of docs/2026-10-15-code-tab-run-state-phasemap.spec). James, 2026-10-15: "use nexus
+    for the workload, instead of relying on the agents to remember." Read from his own runs: a build step made 7 tool
+    calls, the agent then asked what to do, and the retry replayed the original prompt from zero. One .run file per run
+    under data/run-state/, keyed by repo + session, written atomically after every tool call.
+  fields:
+    runId:
+      type: string
+      required: true
+      description: real, `<repoUuid>__<session>` — stable across a phase build's retries
+    repoUuid:
+      type: string
+      required: false
+      description: real, the repo the run works in
+    session:
+      type: string
+      required: false
+      description: real, the session id the run belongs to (a phase build's `phrun-…` id)
+    goal:
+      type: string
+      required: true
+      description: real, the task as first sent (first 2000 chars)
+    goalHash:
+      type: string
+      required: true
+      description: real, hash of the goal with whitespace collapsed — the same goal sent again resumes this run
+    provider:
+      type: string
+      required: false
+      description: real, the agent that last worked it
+    status:
+      type: string
+      required: true
+      description: real enum — running | done | failed | stopped
+    attempt:
+      type: number
+      required: true
+      description: real, 1 on the first dispatch, +1 each time the same goal is sent again while unfinished
+    resumed:
+      type: boolean
+      required: false
+      description: real, true when this attempt picked up an earlier one
+    stepCount:
+      type: number
+      required: true
+      description: real, tool calls made in all attempts (steps below keeps the last 60)
+    steps:
+      type: array
+      required: true
+      description: real, [{ n, name, arg, ok, error, attempt, at }]
+    filesRead:
+      type: array
+      required: true
+      description: real, repo paths a read tool was called on
+    filesChanged:
+      type: array
+      required: true
+      description: real, repo paths an edit or write tool was called on
+    next:
+      type: string
+      required: false
+      description: real, the next step when a plan names one (set by the phase run); empty otherwise
+    startedAt:
+      type: number
+      required: true
+      description: real
+    updatedAt:
+      type: number
+      required: true
+      description: real
+    note:
+      type: string
+      required: false
+      description: real, why a run failed or stopped
+    events:
+      type: array
+      required: false
+      description: real, what happened to the run that is not a tool call (off-task, lost, fallback), last 40
+    offTask:
+      type: number
+      required: false
+      description: real, how many replies were blocked by reply.on_task

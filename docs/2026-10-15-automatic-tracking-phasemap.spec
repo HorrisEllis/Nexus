@@ -270,3 +270,8 @@ drift_accounted:
 # calls on a real model (QA2's stub writes correct code, so its 4 calls are unchanged; the saving shows when a real
 # model leaves an export out).
 
+## ADDENDUM 2026-10-15 - the run state is the memory the gates use (0.60.50)
+
+James: "i feel lime also needs to use the gates to maintain persistence using the memory. so we can use nexus for the workload, instead of relying on the agents to remember."
+lib/run-state.js is that memory for a run; the reply.on_task step gate (on_block: reprompt) is the gate that uses it.
+

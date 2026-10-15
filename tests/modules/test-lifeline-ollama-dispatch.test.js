@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-lifeline-ollama-dispatch.test.js — 0.60.50
+ * tests/modules/test-lifeline-ollama-dispatch.test.js — 0.60.62
  *
  * James, 2026-10-15: "bricks keep failing." Every officiator drop and RAID-worker brick routed to Ollama read
  * "no real agent response (forAgent=ollama)": dispatchToNcpAgent sent the job through guardian's tab check, where

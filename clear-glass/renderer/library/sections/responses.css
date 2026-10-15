@@ -19,3 +19,5 @@ body[data-area="responses"] .resp-msg .who { font-size: 11px; color: var(--ink-f
 body[data-area="responses"] .resp-msg pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
 body[data-area="responses"] .resp-user pre { border-left: 2px solid var(--violet); }
 body[data-area="responses"] .resp-assistant pre { border-left: 2px solid var(--cyan); }
+
+body[data-area="responses"] .resp-group { padding: 8px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim, #8a93a6); background: color-mix(in srgb, var(--panel, #12151c) 70%, transparent); border-top: 1px solid var(--edge, #232838); }

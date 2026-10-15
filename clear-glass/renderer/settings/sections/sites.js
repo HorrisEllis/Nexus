@@ -117,7 +117,7 @@
   }
 
   section({
-    id: 'sites', group: 'Browser', icon: '◎', label: 'Site settings',
+    id: 'sites', into: 'privacy', group: 'Browser', icon: '◎', label: 'Site settings',
     keywords: 'site settings per site origin permissions camera microphone location notifications clipboard zoom adblock content blocking exceptions',
     blurb: 'Choices Clear Glass remembers per site: permissions, zoom, and whether ad and tracker blocking runs there. Sites with no choice follow the defaults below.',
     async render({ tools, rerender, query }) {

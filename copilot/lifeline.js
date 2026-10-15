@@ -30,7 +30,7 @@ const CX_URL  = process.env.CORTEX_URL    || 'http://127.0.0.1:3748';
 
 const CONFIDENCE_THRESHOLD = parseFloat(process.env.LIFELINE_CONF || '0.75');
 const OLLAMA_POLL_MAX      = 35;    // seconds to poll for Ollama result
-const OLLAMA_DISPATCH_TIMEOUT_MS = Number(process.env.NEXUS_OLLAMA_DISPATCH_TIMEOUT_MS) || 240000;   // §0.60.50 — RAID/officiator work routed to Ollama
+const OLLAMA_DISPATCH_TIMEOUT_MS = Number(process.env.NEXUS_OLLAMA_DISPATCH_TIMEOUT_MS) || 240000;   // §0.60.62 — RAID/officiator work routed to Ollama
 const GUARDIAN_TIMEOUT_MS  = 45000;
 
 const MODULE_ID = 'copilot/lifeline';
@@ -174,7 +174,7 @@ async function _tryOllama(prompt, opts = {}) {
 
     if (!job?.jobId) return null;
 
-    // Poll for result. §0.60.50 — the window follows the job's own timeout: a 35 s poll gave up on jobs the bridge
+    // Poll for result. §0.60.62 — the window follows the job's own timeout: a 35 s poll gave up on jobs the bridge
     // was still running (qwen2.5-coder:7b took 55–87 s on a 1.2 KB prompt in James's 2026-10-15 log).
     const pollMax = Math.max(OLLAMA_POLL_MAX, Math.ceil((opts.timeoutMs || 0) / 1000) + 10);
     for (let i = 0; i < pollMax; i++) {
@@ -238,7 +238,7 @@ async function _tryGuardian(prompt, opts = {}) {
       } catch (_) { ragProvider = 'auto'; }
     }
 
-    // §0.60.50 — Ollama has no browser tab: guardian's /providers always lists it 'null', so the tab pre-check below
+    // §0.60.62 — Ollama has no browser tab: guardian's /providers always lists it 'null', so the tab pre-check below
     // refused every job RAID routed to it. James, 2026-10-15: "bricks keep failing." — every officiator drop and
     // every RAID-worker brick read "no real agent response (forAgent=ollama)". RAID's choice was right (Ollama was the
     // one agent up); the door was wrong. An Ollama job goes to the bridge itself, with a window that fits a 7B model.

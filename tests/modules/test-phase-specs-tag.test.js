@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-phase-specs-tag.test.js — 0.60.51 PT1
+ * tests/modules/test-phase-specs-tag.test.js — 0.60.63 PT1
  * James, 2026-10-15: "can you make sure those are added to the phases in idearium. make sure all of the files and
  * dependancies are mapped. and i want the specs to tagged per phase"
  * Proves: a phase's `specs:` is read by loom's reader (key and list forms) and kept by Idearium's roadmap; the
@@ -58,7 +58,7 @@ async function test(id, desc, fn) {
     assert.ok(n.specs.includes('docs/spec-compiler.spec'), JSON.stringify(n.specs));
   });
 
-  // 0.60.52 PT2 — James: "phases tags by system/nested repo"
+  // 0.60.64 PT2 — James: "phases tags by system/nested repo"
   const NS = require(path.join(ROOT, 'lib/nexus-self/systems.js'));
   const inRepo = (ph, system) => (ph.systems || []).some(t => NS.systemForLoomTag(t) === system);   // nexusPhasemaps' own predicate
 

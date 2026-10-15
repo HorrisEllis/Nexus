@@ -1,6 +1,6 @@
 # docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
 # Every build through WARP; agents write .spec files from an injected framework; Nexus collects them; intent-based
-# .inject blocks with every setting shown in the repo. Registered in docs/SPEC-REGISTRY.spec. MAPPED; PT1 (specs tagged per phase) built 0.60.51.
+# .inject blocks with every setting shown in the repo. Registered in docs/SPEC-REGISTRY.spec. MAPPED; PT1 (specs tagged per phase) built 0.60.63.
 
 origin:
   date: 2026-10-15
@@ -105,7 +105,7 @@ phases:
     does: "each .inject node records its intent; per repo, per intent: blocks sent, landing folder, apply mode (auto/review), validator, compile-on-collect — all shown expanded in Repo > Settings; route + `repo intents` command + UI."
     proof: "two intents with different landing modes land differently in one repo"
   PT1_specs_tagged_per_phase:
-    status: DONE (0.60.51)
+    status: DONE (0.60.63)
     systems: [loom, idearium, core]
     files: [loom/scanners/phasemap-map.js, idearium/ui/js/phases.js, tests/modules/test-phase-specs-tag.test.js]
     depends_on: []
@@ -114,7 +114,7 @@ phases:
     proof: "test-phase-specs-tag: this map's phases each carry systems (declared), files and specs"
 
   PT2_phases_tagged_by_system_repo:
-    status: DONE (0.60.52)
+    status: DONE (0.60.64)
     systems: [loom, idearium, core]
     files: [loom/scanners/phasemap-map.js, idearium/ui/js/phases.js, tests/modules/test-phase-specs-tag.test.js]
     depends_on: [PT1_specs_tagged_per_phase]
@@ -139,9 +139,9 @@ file_dependencies:
   cortex/core/raid/contract-intake.js: {requires: [copilot/lifeline.js], consumers: [idearium/api/index.js, cortex/core/raid/officiator.js, and 8 more (10 files)]}
   lib/intent-classifier.js: {consumers: [lib/reasoning-route.js, and 6 more (7 files)]}
 
-order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1 (0.60.51) and PT2 (0.60.52) done first. Each phase: backend → route → command → UI."
+order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1 (0.60.63) and PT2 (0.60.64) done first. Each phase: backend → route → command → UI."
 
-## ADDENDUM 2026-10-15 — 0.60.51 PT1: in Idearium's phases, files and dependencies mapped, specs tagged per phase
+## ADDENDUM 2026-10-15 — 0.60.63 PT1: in Idearium's phases, files and dependencies mapped, specs tagged per phase
 # James: "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are mapped. and i want the specs to tagged per phase"
 # Found: Idearium's Phases tab already reads every docs/*phasemap*.spec through loom (loom/scanners/phasemap-map.js →
 # idearium/repo/roadmap.js), so this map was already listed — but with systems GUESSED from prose (WB0 read as cortex,
@@ -151,7 +151,7 @@ order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → 
 # them. Coder's reading (to confirm): "tagged per phase" = each phase names the specs that own it; a spec an agent
 # writes under SF3 is tagged with the phase that asked for it.
 
-## ADDENDUM 2026-10-15 — 0.60.52 PT2: phases tagged by system / nested repo
+## ADDENDUM 2026-10-15 — 0.60.64 PT2: phases tagged by system / nested repo
 # James: "phases tags by system/nested repo"
 # Found: each Nexus system is a nested repo in Idearium, and its Phases tab already lists the phases tagged for it (the
 # "<system>'s only" filter, on by default). But a phase's tags came from a hand-written systems line or a guess from its

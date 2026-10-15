@@ -15,6 +15,12 @@
 // (inaccurate, in this one respect) description of it.
 
 module.exports = Object.freeze({
+  // ── §0.60.50 CE4 — guardian/lib/response-sink.js: what kind of reply a finished job was, and the run it belongs to
+  GUARDIAN_REPLY_CLASSIFIED: {
+    description: 'A finished job\'s reply was classified (tool-call, code, plan, off-task, prose, empty) and linked to its run.',
+    payloadShape: ['jobId', 'provider', 'agentId', 'kind', 'runId', 'step', 'attempt'],
+    severity: 'info',
+  },
   // ── NCP client connection state — guardian/lib/ncp.js ──────────────────────
   NCP_CLIENT_CONNECTED: {
     description: 'A provider tab (claude/chatgpt/gemini/perplexity) established a real NCP connection to guardian.',

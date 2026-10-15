@@ -406,5 +406,5 @@ POST /api/route reads guardian's GET /providers (`lib/agent-providers.js guardia
 ## ADDENDUM 2026-10-10 — 0.56.0 SD2: never ok with nothing
 Both /api/prompt handlers that go through lifeline answer `{ ok:false, error, reason }` when there is no text, carrying lifeline's own error (for example "Both Ollama and Guardian are unavailable"). Previously they returned `ok:true` with empty text and `modelUsed: 'none'`.
 
-## ADDENDUM 2026-10-15 — 0.60.50: an Ollama job goes to the bridge, not Guardian's tab check
+## ADDENDUM 2026-10-15 — 0.60.62: an Ollama job goes to the bridge, not Guardian's tab check
 James: "bricks keep failing." Every officiator drop and RAID brick routed to Ollama failed "no real agent response (forAgent=ollama)": `dispatchToNcpAgent` (= `_tryGuardian`) refused it at Guardian's GET /providers check, where `ollama` is always 'null' (no tab). Now `_tryGuardian`, once its provider resolves to `ollama` (and the job has no `agentId`), calls `_tryOllama` with `timeoutMs` 240 s (env `NEXUS_OLLAMA_DISPATCH_TIMEOUT_MS`) and returns `{ ok:false, error }` when the bridge gives nothing. `_tryOllama` polls for max(35 s, timeoutMs + 10 s). test-lifeline-ollama-dispatch LO1–LO3.

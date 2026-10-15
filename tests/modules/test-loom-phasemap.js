@@ -56,7 +56,7 @@ test('T-007', 'only the systems in systems.js: every phase\'s systems are Ideari
   assert.deepStrictEqual(outside, [], 'a phase on something that is not a system');
   assert.deepStrictEqual(Object.keys(all.bySystem).filter(k => !NS.names().includes(k)), []);
   const mine = all.phases.filter(p => /emerge-field-memory-build-phasemap/.test(p.map));
-  assert.ok(mine.length > 30 && mine.every(p => /^declared/.test(p.systemsFrom)), 'the EMERGE map still declares every phase (0.60.52 PT2: "declared+files" — declared, plus the owners of its files)');
+  assert.ok(mine.length > 30 && mine.every(p => /^declared/.test(p.systemsFrom)), 'the EMERGE map still declares every phase (0.60.64 PT2: "declared+files" — declared, plus the owners of its files)');
   assert.ok((all.bySystem.core || []).some(p => p.id === 'EV0_contracts_for_every_system'), 'EV0 (cos, warp, emerge) is core\'s (warp, emerge)');
   assert.ok((all.bySystem.cos || []).some(p => p.id === 'EV0_contracts_for_every_system'), '… and COS\'s (SY2)');
   const cosMap = all.phases.filter(p => /cos-machines-phasemap/.test(p.map));

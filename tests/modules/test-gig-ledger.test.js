@@ -1,0 +1,33 @@
+'use strict';
+// GL-01..08 (0.60.53): the Fiverr ledger keeps only what checks out. Sandboxed: GIG_LEDGER_DIR and RUN_STATE_DIR are temp dirs.
+const fs = require('fs'), os = require('os'), path = require('path'), { execSync } = require('child_process');
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gl-'));
+process.env.GIG_LEDGER_DIR = path.join(tmp, 'ledger'); process.env.RUN_STATE_DIR = path.join(tmp, 'runs');
+const L = require('../../lib/gig-ledger.js'), LS = require('../../lib/gig-ledger-listener.js'), RS = require('../../lib/run-state.js');
+let pass = 0, fail = 0;
+const ok = (c, m) => { if (c) { pass++; console.log('  PASS ' + m); } else { fail++; console.log('  FAIL ' + m); } };
+const head = execSync('git rev-parse HEAD', { cwd: path.join(__dirname, '..', '..'), encoding: 'utf8' }).trim();
+
+let c = L.record({ kind: 'skill', claim: 'Writes tests before code', evidence: [{ type: 'file', ref: 'lib/run-state.js' }, { type: 'commit', ref: head }] });
+ok(L.verify(c.id).ok && L.facts().length === 1, 'GL-01 a claim whose file and commit exist is verified and reaches facts()');
+c = L.record({ kind: 'skill', claim: 'Has 500 test suites', evidence: [{ type: 'count', ref: 'tests/modules', suffix: '.test.js', min: 100000 }] });
+ok(!L.verify(c.id).ok && L.facts().length === 1, 'GL-02 an overstated count fails and is withheld');
+c = L.record({ kind: 'skill', claim: 'Says things with no evidence' });
+ok(!L.verify(c.id).ok && L.list().length === 3 && L.facts().length === 1, 'GL-03 no evidence: kept in the ledger, never ok, never a fact');
+c = L.record({ kind: 'deliverable', claim: 'A made-up commit', evidence: [{ type: 'commit', ref: 'deadbeefdeadbeef' }] });
+ok(!L.verify(c.id).ok, 'GL-04 a commit that is not in the repo fails');
+c = L.record({ kind: 'metric', claim: 'Run-state suite passes', evidence: [{ type: 'test', ref: 'tests/modules/test-run-state.test.js' }] });
+ok(L.verify(c.id).ok, 'GL-05 a real test is run and its "N passed, 0 failed" line is the evidence');
+c = L.record({ kind: 'metric', claim: 'Reads a file outside', evidence: [{ type: 'file', ref: '../../etc/passwd' }, { type: 'test', ref: 'lib/run-state.js' }] });
+ok(!L.verify(c.id).ok, 'GL-06 paths outside the repo, and non-test files as test evidence, are refused');
+const all = L.facts(); const good = all[0]; all.forEach(f => L.note(f.id, 'withdrawn: wording was too strong'));
+ok(all.length === 2 && L.facts().length === 0 && L.list().find(x => x.id === good.id).withdrawn, 'GL-07 a note withdraws a claim without deleting it');
+const lines = fs.readFileSync(path.join(process.env.GIG_LEDGER_DIR, 'ledger.jsonl'), 'utf8').trim().split('\n').length;
+const before = lines; L.verifyAll();
+ok(fs.readFileSync(path.join(process.env.GIG_LEDGER_DIR, 'ledger.jsonl'), 'utf8').trim().split('\n').length > before, 'GL-08 the ledger only grows (verifyAll appended, nothing rewritten)');
+const r = RS.begin({ repoUuid: 'r1', session: 's1', goal: 'add a widget' }); RS.step(r.runId, { name: 'code_write', arguments: { path: 'lib/run-state.js' }, ok: true }); RS.finish(r.runId, 'done');
+const cl = LS.onRunFinished({ runId: r.runId });
+ok(cl && cl.kind === 'deliverable' && L.list({ kind: 'deliverable' }).some(x => x.id === cl.id && x.verified && x.verified.ok), 'GL-09 a finished run files a deliverable claim with its changed files as evidence');
+ok(LS.onRunFinished({ runId: 'none' }) === null, 'GL-10 an unknown run files nothing');
+fs.rmSync(tmp, { recursive: true, force: true });
+console.log(`${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

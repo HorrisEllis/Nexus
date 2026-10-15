@@ -255,6 +255,37 @@ class IpcBridge {
     // fixed here; named directly rather than faked with an empty stub.
     this.app.get('/cli/calltos',            (req, res) => res.json({ calltos: this.options?.listCalltos() || [] }));
     this.app.get('/cli/downloads/listeners',(req, res) => res.json({ listeners: this.options?.listDownloadListeners() || [] }));
+    // §0.60.60 NP9 — James, 2026-10-15: "add support for snowflake, using cli, then you can add the commands to the agents, or make agent tools."
+    // CLI first: /cli/net/* -> idearium `net` command -> clear_glass_net agent tool. All of it is src/net/service.js; nothing here decides a route.
+    const _net = () => {
+      const svc = require('../net/service').service();
+      svc.bindStore({ get: () => this.options?.get().netPolicy || null, set: (v) => this.options?.set({ netPolicy: v }) });
+      return svc;
+    };
+    const _netHost = () => {
+      const svc = _net(); const fs = require('fs'), path = require('path'), net = require('net');
+      const { app } = require('electron');
+      const which = (n) => { for (const d of String(process.env.PATH || '').split(path.delimiter)) { for (const ext of (process.platform === 'win32' ? ['.exe', ''] : [''])) { const f = path.join(d, n + ext); try { if (fs.statSync(f).isFile()) return f; } catch (_) { /* next */ } } } return null; };
+      const pickPort = () => new Promise((ok, no) => { const s = net.createServer(); s.once('error', no); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => ok(p)); }); });
+      return svc.host({ spawn: require('child_process').spawn, fs, dir: path.join(app.getPath('userData'), 'net'), which, pickPort, now: Date.now });
+    };
+    const _netRoute = (fn) => async (req, res) => { try { res.json(await fn(req.body || {}, req.query || {})); } catch (e) { res.json({ ok: false, error: e.message }); } };
+    this.app.get('/cli/net/status',   _netRoute(() => ({ ..._net().status(), detect: _netHost().detect() })));
+    this.app.get('/cli/net/routes',   _netRoute(() => _net().routes()));
+    this.app.post('/cli/net/routes',  _netRoute((b) => _net().addRoute(b)));
+    this.app.post('/cli/net/routes/rm', _netRoute((b) => _net().removeRoute(b.id)));
+    this.app.post('/cli/net/default', _netRoute((b) => _net().setDefault(b.via)));
+    this.app.post('/cli/net/resolve', _netRoute((b) => _net().resolve({ url: b.url, provider: b.provider, caller: b.caller })));
+    this.app.post('/cli/net/bridge',  _netRoute((b) => _net().setBridge(b.line)));
+    this.app.post('/cli/net/paths',   _netRoute((b) => _net().setPaths({ torPath: b.torPath, snowflakePath: b.snowflakePath })));
+    this.app.post('/cli/net/transport', _netRoute(async (b) => {
+      const host = _netHost();
+      if (b.action === 'start') return host.start();
+      if (b.action === 'stop') return host.stop({ wipe: !!b.wipe });
+      if (b.action === 'detect') return { ok: true, ...host.detect() };
+      return { ok: false, error: 'action must be start, stop or detect' };
+    }));
+    this.app.post('/cli/net/test', _netRoute(() => ({ ok: false, error: 'the leak test is not built yet (NP5). No route is shown as verified until it is.' })));
     // §BUILT 2026-09-15 — James: "...clearglass download manager..." as a
     // guardian response sink. downloads:* was IPC-only (ipcMain.handle,
     // renderer-side); nothing outside Electron could reach the real
@@ -1061,22 +1092,20 @@ class IpcBridge {
     // §BUILT 2026-09-26 — record a macro from a real tab: the driver's
     // recorder captures, src/macros/recording.js turns it into steps the
     // builder opens pre-filled (passwords become a {{password}} parameter).
-    const _recStart = new Map(); // agentId → start url
-    ipcMain.handle('macros:recordStart', async (e, { agentId } = {}) => {
+    // §0.60.57 MR1 — James, 2026-10-15: "needs to start recording a macro node file." The recording IS a .macro file from the first
+    // second (src/macros/live-recording.js); recordStop returns the same steps the file holds, so the step editor opens on what was saved.
+    let _live = null;
+    const live = () => _live || (_live = new (require('../macros/live-recording').LiveRecorder)({
+      getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
+      dir: require('../mesh/automation-engine.js').NODES_DIR }));
+    ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => {
       if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
-      if (!agentId) return { ok: false, error: 'agentId required' };
-      try { const r = await this.driver.exec({ action: 'record.start', agentId }); _recStart.set(agentId, r.startUrl || null); return { ok: true, agentId, startUrl: r.startUrl || null }; }
-      catch (err) { return { ok: false, error: err.message }; }
+      try { return await live().start({ agentId, name }); } catch (err) { return { ok: false, error: err.message }; }
     });
+    ipcMain.handle('macros:recordStatus', async (e, { agentId } = {}) => { try { return live().status(agentId); } catch (err) { return { ok: false, error: err.message }; } });
     ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => {
       if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
-      try {
-        const r = await this.driver.exec({ action: 'record.stop', agentId });
-        const { recordingToSteps } = require('../macros/recording');
-        const out = recordingToSteps(r.recording || [], { startUrl: _recStart.get(agentId) });
-        _recStart.delete(agentId);
-        return { ok: true, events: (r.recording || []).length, ...out };
-      } catch (err) { return { ok: false, error: err.message }; }
+      try { return await live().stop(agentId); } catch (err) { return { ok: false, error: err.message }; }
     });
     ipcMain.handle('macros:schema', async () => {
       try {
@@ -1146,7 +1175,39 @@ class IpcBridge {
 
     // Nexus options
     ipcMain.handle('options:get',    async ()    => this.options?.get());
-    ipcMain.handle('options:set',    async (e, d) => this.options?.set(d));
+    // 0.60.52 — James: "most of the tool bar things dont work." Settings saved the pin list and told no one, so the
+    // main window only applied it at load. Every window hears the change now (the toolbar re-applies live).
+    ipcMain.handle('options:set',    async (e, d) => {
+      const out = await this.options?.set(d);
+      try {
+        const { BrowserWindow } = require('electron');
+        for (const w of BrowserWindow.getAllWindows()) {
+          if (w.isDestroyed() || w.webContents.isDestroyed() || w.webContents.id === e.sender.id) continue;
+          w.webContents.send('options:changed', { keys: Object.keys(d || {}), options: out });
+        }
+      } catch (_) { /* a window that is closing never stops a save */ }
+      return out;
+    });
+
+    // 0.60.55 PI5 — personal-chat capture settings. The table (lib/chat-crawl-settings.js) is the one definition of every setting: defaults, limits and the
+    // rows the Settings screen draws. Stored under options.chatCapture = { global, accounts: { '<provider>:<accountId>': { …overrides } } }.
+    ipcMain.handle('chats:schema', async () => { const S = require('../../../lib/chat-crawl-settings.js'); return { GROUPS: S.GROUPS, SCHEMA: S.SCHEMA }; });
+    ipcMain.handle('chats:settings', async () => {
+      const S = require('../../../lib/chat-crawl-settings.js'); const cc = (this.options?.get() || {}).chatCapture || {};
+      return { global: S.clean(cc.global || {}).settings, accounts: cc.accounts || {} };
+    });
+    ipcMain.handle('chats:save', async (e, d = {}) => {
+      const S = require('../../../lib/chat-crawl-settings.js'); const notes = [];
+      const g = S.clean(d.global || {}); notes.push(...g.notes);
+      const accounts = {};
+      for (const [k, ov] of Object.entries(d.accounts || {})) {
+        if (!/^[a-z0-9_-]+:[A-Za-z0-9-]+$/.test(k)) { notes.push(`${k}: not an account key, dropped`); continue; }
+        const keep = {}; for (const [key, v] of Object.entries(ov || {})) if (S.BY_KEY[key] && S.BY_KEY[key].per === 'account') keep[key] = v; else notes.push(`${k}.${key}: not an account setting, dropped`);
+        accounts[k] = S.clean({ ...g.settings, ...keep }).settings; accounts[k] = Object.fromEntries(Object.keys(keep).map(key => [key, accounts[k][key]]));
+      }
+      await this.options?.set({ chatCapture: { global: g.settings, accounts } });
+      return { ok: true, notes, global: g.settings, accounts };
+    });
 
     // Toolbar command registry — §STRUCTURAL 2026-08-24. Backend-owned
     // (src/toolbar/commands.js); the renderer has no command list of its

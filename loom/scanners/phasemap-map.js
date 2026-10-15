@@ -97,7 +97,7 @@ function _tagSystem(text) {
  */
 function _systemsOf(fields, body) {
   const declared = _list(fields && fields.systems).map(x => x.toLowerCase());
-  // §0.60.52 PT2 — James: "phases tags by system/nested repo". A phase is also tagged with the system (nested repo) that
+  // §0.60.64 PT2 — James: "phases tags by system/nested repo". A phase is also tagged with the system (nested repo) that
   // owns each file it names (lib/nexus-self/systems.js ownerOf — the one owner of every path), so a phase that edits
   // guardian/ shows in guardian's repo even when its `systems:` line forgot it. Files are evidence, not a guess.
   const owners = [...new Set(_list(fields && fields.files).map(f => String(f).replace(/\s*\(new\)\s*$/, '').trim())
@@ -238,7 +238,7 @@ function parsePhasemapText(text, name) {
         // header line, the `status:` key's line (-1 if it has none) and the
         // first line of the next phase. Not part of loadAll()'s output.
         line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
-        name: f.name || f.does || null, closes: _list(f.closes), files: _list(f.files), specs: _list(f.specs), blocks: _blocks(f), form: 'key',   // 0.60.51 PT1 — James: "i want the specs to tagged per phase"
+        name: f.name || f.does || null, closes: _list(f.closes), files: _list(f.files), specs: _list(f.specs), blocks: _blocks(f), form: 'key',   // 0.60.63 PT1 — James: "i want the specs to tagged per phase"
       });
     }
   // §0.39.271 P1 — the LIST form. Since 0.39.260 phasemaps are also written as

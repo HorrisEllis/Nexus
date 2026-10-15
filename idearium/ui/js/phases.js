@@ -297,8 +297,8 @@ function _phDetail(d, uuid) {
     ${th && th.staleVia ? `<div class="ph2-note warn">stale through ${escapeHtml(th.staleVia)} — it depends on a phase whose block moved since it was planned (§HP1)</div>` : ''}
     <div class="ph-d-row"><label>depends on</label><span>${p.depends_on.map(link).join(' ') || '—'}${(p.unresolved_deps || []).length ? ` <span style="color:var(--text3)">(not phases here: ${escapeHtml(p.unresolved_deps.join(', '))})</span>` : ''}</span></div>
     <div class="ph-d-row"><label>needed by</label><span>${dependents.map(x => link(x.uuid)).join(' ') || '—'}</span></div>
-    <div class="ph-d-row"><label>systems</label><span>${escapeHtml((p.systems || []).join(' · ') || '—')}</span></div>   <!-- 0.60.52 PT2: the nested repos it is tagged for -->
-    <div class="ph-d-row"><label>specs</label><span>${escapeHtml((p.specs || []).join(' · ') || '—')}</span></div>   <!-- 0.60.51 PT1: the specs that own this phase -->
+    <div class="ph-d-row"><label>systems</label><span>${escapeHtml((p.systems || []).join(' · ') || '—')}</span></div>   <!-- 0.60.64 PT2: the nested repos it is tagged for -->
+    <div class="ph-d-row"><label>specs</label><span>${escapeHtml((p.specs || []).join(' · ') || '—')}</span></div>   <!-- 0.60.63 PT1: the specs that own this phase -->
     <div class="ph-d-row"><label>closes</label><span>${escapeHtml((p.closes || []).join(' ') || '—')}</span></div>
     <div class="ph-d-sec">files · ${files.length}</div>
     <div class="ph2-files">${files.map(f => `<a href="#" class="ph2-file" title="open in the Code tab" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(f)}')` : ''};return false">${escapeHtml(f)}</a>`).join('') || '<span class="ph2-dim">—</span>'}</div>

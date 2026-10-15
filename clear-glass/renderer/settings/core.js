@@ -168,7 +168,15 @@
   // §0.39.265 — James: "Accounts & sign-in, Provider tabs, Agent mesh — can you
   // consolidate or link these?" They share one group now, side by side.
   const GROUPS = ['Accounts & agents', 'Agents', 'Browser', 'System'];
-  function section(def) { sections.push(def); }
+  // 0.60.58 — James: "can you consolidate the settings? if you havent?". A section with `into: '<host>'` is not a page of its own: the host section renders
+  // it below its own panes (one page, one rail entry). Its id still works as a link or bookmark: it opens the host scrolled to that part.
+  function section(def) { sections.push(def); if (def.into) ALIAS[def.id] = def.into; }
+  // 0.60.54 CS2 — James: "consolidate the provider and accounts settings sections". Provider tabs and Agent mesh are no longer pages: they are
+  // PARTS the one Providers & accounts section builds from (sections/providers.js, mesh.js keep their code, and register it here instead of
+  // in the rail). An old id (a bookmark #mesh, a goto('providers')) still lands: it opens the merged section at that provider or at the mesh half.
+  const parts = {};
+  function part(id, def) { parts[id] = def; }
+  const ALIAS = { providers: 'accounts', mesh: 'accounts' };
 
   // §LIBRARY 0.39.241 — the Library window (renderer/library.html) runs on this
   // same runtime so it IS the Settings UI, not a copy of its look: same frame,
@@ -196,7 +204,7 @@
   // goto(id, anchor) — open a section and bring the pane marked `anchor` into
   // view (e.g. goto('accounts', 'claude') lands on Claude's accounts).
   let pendingAnchor = null;
-  function goto(id, anchor) { pendingAnchor = anchor || null; return show(id); }
+  function goto(id, anchor) { if (ALIAS[id] && !anchor && (id === 'mesh' || (sections.find(x => x.id === id) || {}).into)) anchor = id; pendingAnchor = anchor || null; return show(ALIAS[id] || id); }
   function _focusAnchor(page) {
     if (!pendingAnchor) return;
     const el = page.querySelector(`[data-anchor="${CSS.escape(pendingAnchor)}"]`);
@@ -215,7 +223,7 @@
   }
 
   async function show(id) {
-    const def = sections.find(s => s.id === id) || sections[0];
+    const def = sections.find(s => s.id === (ALIAS[id] || id)) || sections[0];
     pollers.forEach(f => { try { f(); } catch (_) {} }); pollers = [];
     const same = current === def.id;   // a re-render (search, refresh, poll) keeps what is on screen until the new render is ready
     if (CFG.search === 'list' && !same) {   // a new area starts unfiltered
@@ -234,6 +242,9 @@
     // so one area's styles can never leak into another.
     main.dataset.area = def.id;
     document.body.dataset.area = def.id;   // modals live on body, outside #main — scope area CSS from body
+    const kids = sections.filter(k => k.into === def.id);   // 0.60.58: merged parts; their CSS is scoped body[data-areas~="<id>"]
+    kids.forEach(k => loadAreaCss(k.id));
+    document.body.dataset.areas = [def.id, ...kids.map(k => k.id)].join(' ');
     loadAreaCss(def.id);
     const tools = h('div', { class: 'tools' });
     main.append(h('header', { class: 'page-head' }, h('h1', { text: def.label }), def.blurb ? h('p', { text: def.blurb }) : null, _relatedStrip(def), tools));
@@ -243,8 +254,13 @@
     const rerender = () => show(def.id);
     try {
       const nodes = await def.render({ page, tools, rerender, query: listQuery });
+      const extra = [];
+      for (const k of kids) {   // a failing part shows its own error and never takes the page down
+        try { const n = await k.render({ page, tools, rerender, query: listQuery }); extra.push(h('div', { class: 'merged-part', dataset: { anchor: k.id } }, [].concat(n || []))); }
+        catch (e) { extra.push(h('div', { class: 'err-box', dataset: { anchor: k.id } }, h('div', { style: { flex: 1 } }, h('div', { text: `${k.label} could not load.` }), h('div', { class: 'blurb', text: e.message })), btn('Retry', rerender))); }
+      }
       if (current !== def.id) return;
-      page.replaceChildren(...[].concat(nodes || []));
+      page.replaceChildren(...[].concat(nodes || []), ...extra);
       if (scroll) main.scrollTop = scroll;
       _focusAnchor(page);
     } catch (e) {
@@ -259,7 +275,7 @@
     const search = h('input', { id: 'search', type: 'search', placeholder: CFG.searchPlaceholder, 'aria-label': CFG.searchPlaceholder });
     rail.append(search);
     for (const g of CFG.groups) {
-      const items = sections.filter(s => s.group === g);
+      const items = sections.filter(s => s.group === g && !s.into);
       if (!items.length) continue;
       rail.append(h('div', { class: 'rail-group' }, h('h3', { text: g }),
         items.map(s => h('button', { class: 'rail-item', dataset: { id: s.id, keys: `${s.label} ${s.keywords || ''}`.toLowerCase() }, onclick: () => show(s.id) },
@@ -294,5 +310,5 @@
   }
 
   window.CGS = { cg, h, unwrap, call, wire, toast, fail, busy, modal, confirmDo, field, toggle, row, pane, btn, chip, empty, ago, copy,
-    agentOptions, select, section, show, goto, onLeave, boot, query, current: () => current, WIRE_PORT };
+    agentOptions, select, section, part, parts, loadAreaCss, show, goto, onLeave, boot, query, current: () => current, WIRE_PORT };
 })();

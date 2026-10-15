@@ -806,8 +806,17 @@ class AutomationEngine {
         out = await this._drive(wf, page, 'type', { text: String(cfg.value == null ? '' : cfg.value), delay: cfg.delay || 40 });
         break;
       }
-      case 'press': out = await this._evalIn(wf, page, DOM.key({ key: cfg.key || 'Enter', selector: sel || null })); break;
-      case 'scroll': out = await this._evalIn(wf, page, `(function(){ window.scrollBy(0, ${JSON.stringify(parseInt(cfg.deltaY, 10) || 600)}); return { y: window.scrollY, height: document.documentElement.scrollHeight }; })()`); break;
+      // 0.60.56 — input 'native': the key goes in as a REAL keystroke (the driver's pressKey -> sendInputEvent), which scrolls and focuses the way a person's key does;
+      // the default (in the page) sends a synthetic event, which a page's own handler sees but the browser's default action (scrolling) does not. ErosmancerOS
+      // has a pointer, a wheel and typing but no key press, so 'erosmancer' here is refused, said, and never quietly sent the other way.
+      case 'press':
+        if (cfg.input === 'erosmancer') throw new Error('ErosmancerOS input has no key press (it has pointer, wheel and typing). Use "native" for a real keystroke.');
+        out = cfg.input === 'native' ? { ...(await this._drive(wf, page, 'pressKey', { key: cfg.key || 'Enter' })), inputPath: 'native' }
+          : await this._evalIn(wf, page, DOM.key({ key: cfg.key || 'Enter', selector: sel || null }));
+        break;
+      case 'scroll_until': out = await this._scrollUntil(cfg, wf, page, R); break;
+      case 'scroll': if (cfg.input === 'erosmancer') { const v = await this._evalIn(wf, page, '({ x: Math.round(innerWidth / 2), y: Math.round(innerHeight / 2) })'); out = await this._erosInput(wf, page, { ...v, do: 'scroll', deltaY: parseInt(cfg.deltaY, 10) || 600 }); break; }
+        out = await this._evalIn(wf, page, `(function(){ window.scrollBy(0, ${JSON.stringify(parseInt(cfg.deltaY, 10) || 600)}); return { y: window.scrollY, height: document.documentElement.scrollHeight }; })()`); break;
       case 'back': case 'forward': case 'reload': out = await this._drive(wf, page, action); break;
       case 'screenshot': {
         const r = await this._drive(wf, page, 'screenshot');
@@ -838,6 +847,45 @@ class AutomationEngine {
     const after = parseInt(cfg.waitAfterMs, 10) || 0;
     if (after > 0) await this._sleep(R, Math.min(after, 600000));
     return { output: out, note: `${action}${cfg.url ? ` ${cfg.url}` : sel ? ` ${sel}` : ''}` };
+  }
+
+
+  /**
+   * scroll_until — 0.60.56. James, 2026-10-15: "use erosmanceros, scroll slowly, using the arrow keys or something, could also make it a macro and or
+   * automation in clearglass, a good way to test them." Scrolls a page a little at a time, pausing between, and stops when nothing new has appeared for
+   * `stableRounds` rounds in a row (or at `maxRounds`). "New" is the count of `countSelector` matches (a chat's turns), the scroll position, or the
+   * scroller's height changing. via: 'erosmancer' (wheel input through ErosmancerOS), 'keys' (real arrow / page keys), or 'page' (scrollBy in the page).
+   * The scroller is found, not assumed: a chat's messages are usually in an inner element, not the window.
+   */
+  async _scrollUntil(cfg, wf, page, R) {
+    const via = ['erosmancer', 'keys', 'page'].includes(cfg.via) ? cfg.via : 'erosmancer';
+    const dir = cfg.direction === 'up' ? -1 : 1;
+    const stepPx = Math.max(20, Math.min(2000, parseInt(cfg.stepPx, 10) || 120));
+    const pauseMs = Math.max(100, Math.min(30000, parseInt(cfg.pauseMs, 10) || 700));
+    const stableRounds = Math.max(1, Math.min(50, parseInt(cfg.stableRounds, 10) || 4));
+    const maxRounds = Math.max(1, Math.min(5000, parseInt(cfg.maxRounds, 10) || 200));
+    const keysPerRound = Math.max(1, Math.min(30, parseInt(cfg.keysPerRound, 10) || 5));
+    const key = cfg.key || (dir > 0 ? 'ArrowDown' : 'ArrowUp');
+    const count = cfg.countSelector ? JSON.stringify(String(cfg.countSelector)) : 'null';
+    const FIND = `function(){ var sel = ${count}; var first = sel ? document.querySelector(sel) : null; var el = first || document.elementFromPoint(innerWidth / 2, innerHeight / 2) || document.body;
+      while (el && el !== document.documentElement) { var cs = getComputedStyle(el); if (/(auto|scroll)/.test(cs.overflowY) && el.scrollHeight > el.clientHeight + 4) return el; el = el.parentElement; }
+      return document.scrollingElement || document.documentElement; }`;
+    const STATE = `(function(){ var sc = (${FIND})(); var sel = ${count}; return { y: Math.round(sc.scrollTop), h: sc.scrollHeight, n: sel ? document.querySelectorAll(sel).length : 0 }; })()`;
+    const FOCUS = `(function(){ var sc = (${FIND})(); try { if (sc.tabIndex < 0 || sc.tabIndex === undefined) sc.setAttribute('tabindex', '-1'); sc.focus({ preventScroll: true }); } catch (e) {} return true; })()`;
+    let prev = await this._evalIn(wf, page, STATE); const first = prev; let stable = 0, rounds = 0, reached = 'max';
+    if (via === 'keys') await this._evalIn(wf, page, FOCUS);
+    for (; rounds < maxRounds; rounds++) {
+      this._checkCancel(R);
+      if (via === 'erosmancer') { const c = await this._evalIn(wf, page, '({ x: Math.round(innerWidth / 2), y: Math.round(innerHeight / 2) })'); await this._erosInput(wf, page, { ...c, do: 'scroll', deltaY: dir * stepPx }); }
+      else if (via === 'keys') { for (let k = 0; k < keysPerRound; k++) await this._drive(wf, page, 'pressKey', { key }); }
+      else await this._evalIn(wf, page, `(function(){ var sc = (${FIND})(); sc.scrollBy(0, ${dir * stepPx}); return true; })()`);
+      await this._sleep(R, pauseMs);
+      const now = await this._evalIn(wf, page, STATE);
+      const moved = !prev || now.n !== prev.n || now.h !== prev.h || Math.abs(now.y - prev.y) > 1;
+      stable = moved ? 0 : stable + 1; prev = now;
+      if (stable >= stableRounds) { reached = 'stable'; rounds++; break; }
+    }
+    return { via, direction: dir > 0 ? 'down' : 'up', rounds, reached, count: prev ? prev.n : 0, countBefore: first ? first.n : 0, height: prev ? prev.h : 0, inputPath: via };
   }
 
   async _extractStep(cfg, wf) {

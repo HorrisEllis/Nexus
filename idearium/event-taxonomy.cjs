@@ -9,6 +9,17 @@
 // `nexus contracts check --system=idearium` holds this file to the code — an emit added without its entry fails.
 
 module.exports = Object.freeze({
+  // ── §0.60.50 CE5 — a repo agent's run (lib/run-state.js emits these on nexus-bus; the repo agent, copilot and the Code tab are the
+  // ones that read them). Declared here because the run is idearium's (repo + session); the emit sites are in lib/, so the delivery
+  // check lists them as 'unused' for this system — said, not failed. James: "also needs way more events i feel like."
+  RUN_STARTED: { description: 'A repo agent run began: a new goal in a repo session.', payloadShape: ['runId', 'repoUuid', 'status', 'attempt', 'ts'], severity: 'info' },
+  RUN_RESUMED: { description: 'The same goal was sent again while its run was unfinished: the run continues (attempt + 1, steps kept).', payloadShape: ['runId', 'repoUuid', 'status', 'attempt', 'ts'], severity: 'notable' },
+  RUN_STEP: { description: 'A tool call finished and was written to the run state.', payloadShape: ['runId', 'n', 'name', 'ok', 'path', 'ts'], severity: 'info' },
+  RUN_FINISHED: { description: 'A run ended with an answer.', payloadShape: ['runId', 'repoUuid', 'status', 'attempt', 'ts'], severity: 'info' },
+  RUN_FAILED: { description: 'A run ended without an answer (failed or stopped); it can be resumed by sending the same goal again.', payloadShape: ['runId', 'repoUuid', 'status', 'attempt', 'ts'], severity: 'warning' },
+  RUN_OFF_TASK: { description: 'A reply handed the task back to the person and called no tool (reply.on_task blocked it); the round was re-prompted once with the task header.', payloadShape: ['runId', 'repoUuid', 'status', 'attempt', 'ts'], severity: 'warning' },
+  RUN_LOST: { description: 'A provider tab was handed the job and did nothing with it (nothing was typed); the run moves to the next agent.', payloadShape: ['runId', 'repoUuid', 'status', 'attempt', 'ts'], severity: 'warning' },
+  RUN_FALLBACK: { description: 'A run moved from one agent to the next, with its state.', payloadShape: ['runId', 'repoUuid', 'status', 'attempt', 'ts'], severity: 'notable' },
   // ── idearium/api/index.js repo.deliver.check — idearium/repo/proof-run.js ─────────────────────────────────────
   IDEARIUM_PROOF_RUN_SETTLED: {
     description: 'A delivery check ran a repo\'s end-state conditions: how many were met, the verdict, the failure modes, and where the proof report was written.',

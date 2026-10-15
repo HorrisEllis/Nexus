@@ -1,47 +1,33 @@
-# 0.60.50 — 2026-10-15
+# 0.60.50 - 2026-10-15
 
-James: "bricks keep failing." (with his run log of 0.60.47)
+James: "i feel lime also needs to use the gates to maintain persistence using the memory. so we can use nexus for the workload, instead of relying on the agents to remember." · "i want it to start exactly where it left off if it restarts." · "need the full pipeline working."
 
-## What his log showed
+## What was wrong
 
-From 13:48 on, every staged drop the RAID officiator tried failed the same way, every 20 s:
+In his own runs, a build step made 7 tool calls and then ChatGPT answered "What would you like me to do with this material?". The goal lived only in the first prompt. The retry replayed that prompt, so its first call was `code_map` again and the reading was gone.
 
-> `[raid-officiator] synthesis failed for drop 71ba5ced (try 1/4, next in 10 min): no real agent response (forAgent=ollama) — guardian unreachable or an empty response`
+## What changed (CE1-CE5, CE10)
 
-After four tries each, 40+ drops were parked. Guardian was not unreachable: it completed dozens of ChatGPT, Gemini and
-DeepSeek jobs in the same minutes.
-
-## Root cause (read from source)
-
-- RAID chose Ollama to synthesize (`decideForContract`), which was right: it was the agent that was up.
-- The officiator and RAID's brick executor (`contract-intake.js _realAgentExecutor`) both send work through
-  `copilot/lifeline.js dispatchToNcpAgent`, which is `_tryGuardian`.
-- `_tryGuardian` first checks Guardian's `GET /providers` and refuses any provider not `connected`. Guardian lists
-  `ollama` there, but it has no browser tab, so it is always `'null'`. Every Ollama job was refused before being sent.
-- A second fault waited behind it: `_tryOllama` polled for 35 s at most, with a 30 s job timeout. His log shows
-  qwen2.5-coder:7b taking 55–87 s on a 1.2 KB prompt (`adversarial-probe` lines); a contract-synthesis prompt is bigger.
-
-## The fix
-
-- An Ollama job in `dispatchToNcpAgent` goes to ollama-bridge directly (`_tryOllama`), with a 240 s window
-  (`NEXUS_OLLAMA_DISPATCH_TIMEOUT_MS` to change it) and 2048 tokens. A repo agent's job (`agentId`) still goes to Guardian.
-- `_tryOllama`'s poll follows the job's own timeout instead of stopping at 35 s.
-- A dead bridge returns `{ ok:false, error }` with a reason, not `null`.
+- **CE1 run state.** `lib/run-state.js`: one `.run` node per repo + session. It holds the goal, each tool call, files read and changed, and the attempt, and is written after every call. The same goal sent again resumes it (attempt + 1, steps kept).
+- **CE2 task header.** A prompt block `task-header`, editable in Settings -> Agents. Follow-up rounds and resumed runs open with it: goal, step, what is done, last call.
+- **CE3 reply gate.** `reply.on_task` (a step-gate node) blocks a reply that gives the task back and carries no tool call or code. The round is re-sent once with the header.
+- **CE4 reply tags.** Each response node carries `kind:`, `repo:`, `session:`, `run:`, `step:`, `attempt:`. The Library groups by agent, repo, run or kind.
+- **CE5 events.** `run.started/resumed/step/finished/failed/off-task/lost/fallback` and `guardian.reply.classified`, declared in the taxonomies.
+- **CE10 lost jobs.** "Did nothing with it" is the failure class `lost`. It always falls back to the next provider in the policy chain, bounded by `maxHops`.
 
 ## Proof
 
-- `tests/modules/test-lifeline-ollama-dispatch.test.js` 3/3, against a fake bridge and a fake Guardian on loopback:
-  LO1 the bridge answers and Guardian is never asked; LO2 the job carries ≥ 120 s; LO3 a dead bridge is an honest failure.
-- All 3 fail on the old `lifeline.js`.
+- `tests/modules/test-run-state.test.js` 27/27, including the live reply from job c2e60104 (RS-20).
+- step-gate 18/18, pipeline-routing 19/19, node-export 10/10, loom map 19/19, phasemap 7/7 and 14/14.
 
-## For him to do once
+## Found afterwards (same day)
 
-Drops already parked stay parked (§0.3: nothing is erased for him). To retry them, delete
-`data/officiator-attempts.json` or the entries in it, then restart.
+- `tests/modules/test-run-pipeline.test.js` 11/11 runs the REAL `repo-agent.dispatch` against a stub copilot: a run per goal, a tab that "did nothing with it" moves to the next provider (attempt 2, events recorded), a finished goal starts fresh, a failed one resumes, and all-providers-lost is bounded.
+- A bug in what shipped: `RUN_STATE_DIR` was not in the test sandbox, so every repo-agent test wrote `.run` nodes into the real `data/run-state/`. Registered in `lib/test-sandbox.js`.
+- `docs/PHASE-CENSUS-2026-10-15.md`: all 1472 phases read; 250 pending phases name files that all exist (status may be stale); GW3/GW7/GW8/GW11/GW16 overlap N14/N15/RS2/RW1 from his earlier words.
 
-## Also in the log, not changed here
+## Not verified / known
 
-- The first `start:all` failed on every port (`EADDRINUSE`): an earlier Nexus was still running. The circuit breaker
-  said so. The second run was clean.
-- Free memory swung between 3% and 25% the whole run. A 7B model on Ollama plus Electron and 13 Node processes is near
-  the machine's limit; slow Ollama answers are part of that.
+- No live run through ChatGPT yet.
+- The Ollama loop does not get the task header.
+- `test-event-contracts` EC-05 fails on main already: `idearium.repo.released`, `versionium.released`, `versionium.tagged` are emitted but undeclared.

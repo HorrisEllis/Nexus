@@ -34,6 +34,8 @@ class ContextManager {
     // Isolated Chromium session partition
     const ses = session.fromPartition(`persist:agent-${id}`, { cache: true });
     applyCspBypass(ses);
+    // 0.60.60 NP3 — routes (src/net): a no-op unless a rule applies to this window; never lets a routing error stop the window opening
+    try { require('../net/service').service().register(`persist:agent-${id}`, ses, { provider: null, caller: 'person-tab' }).catch(() => {}); } catch (_) { /* routing is optional */ }
 
     // Apply user agent
     ses.setUserAgent(profile.ua);

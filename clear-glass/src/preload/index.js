@@ -77,6 +77,14 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   options: {
     get: ()        => ipcRenderer.invoke('options:get'),
     set: (payload) => ipcRenderer.invoke('options:set', payload),
+    onChange: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('options:changed', f); return () => ipcRenderer.removeListener('options:changed', f); },
+  },
+
+  // ── Personal-chat capture settings (0.60.55 PI5) ─────────────────────
+  chats: {
+    schema:   ()  => ipcRenderer.invoke('chats:schema'),
+    settings: ()  => ipcRenderer.invoke('chats:settings'),
+    save:     (d) => ipcRenderer.invoke('chats:save', d),
   },
 
   // ── Toolbar command registry — §STRUCTURAL 2026-08-24 ─────────────────
@@ -146,7 +154,8 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   macros: {
     list:   ()     => ipcRenderer.invoke('macros:list'),
     get:    (name) => ipcRenderer.invoke('macros:get', { name }),
-    recordStart: (agentId) => ipcRenderer.invoke('macros:recordStart', { agentId }),
+    recordStart: (agentId, name) => ipcRenderer.invoke('macros:recordStart', { agentId, name }),
+    recordStatus: (agentId) => ipcRenderer.invoke('macros:recordStatus', { agentId }),
     recordStop:  (agentId) => ipcRenderer.invoke('macros:recordStop', { agentId }),
     run:    (name, agentOrOpts, params, skipSnapshot) => {
       const o = (agentOrOpts && typeof agentOrOpts === 'object') ? agentOrOpts : { agentId: agentOrOpts, params, skipSnapshot };
