@@ -226,3 +226,19 @@ drift_accounted:
 # follows the failure. Numbers (test-qa2-real-run QA-05): 4 agent calls, 5 moves, 3 gate tags, 5 commits, 14 ledger rows,
 # ~7.8 s. Still open: the same run on James's machine (real model, 4 GB GPU, the Plan in Clear Glass).
 
+
+## ADDENDUM 2026-10-15 — ideas logged: dynamic, event-driven gates (not yet decided)
+
+# James: "What about dynamic gates, that get built one by one, event driven. Each gate could also route dynamically.
+# Gates can do a fuck ton. Persistence. Like inject the previous gates context, or save progress. What do you think? I'm
+# a lightning rod again and am dumping ideas."
+# Found (§8.6): gates are built up front from the plan (contract-adapters fromPhasePlan); the only gates made during a
+# run are splits (BR2, bounded by depth, CK-247). The scheduler runs in rounds (contract-gates schedule, maxRounds 50),
+# not on events. The route hook is already per gate — agentExecutor calls route({ kind, gate, packet, target }) — but
+# Idearium hands it one ladder for every brick. Progress is saved per pass (checkpoints, resume: CP-03) and per move
+# (GT2); a brick's own partial work is not. A later brick receives only its predecessors' exports (chunkBrief `done`).
+# Coder's proposal (to confirm): one gate lifecycle, run when a gate becomes READY — assess (GA1) → elaborate (its brief
+# and context from the gates before it, CX1/KT1) → route (RT2, per gate) → run → record (GT2) → persist. "Built one by
+# one" = a skeleton up front (ids, dependencies: what progress n/m and the audit count), each gate filled in just in
+# time; new gates appended only through a recorded, bounded rule (like split). "Event driven" = the scheduler wakes on
+# moves and outside callbacks instead of rounds — which is also what RD1b (spec chunks completing through Guardian) needs.
