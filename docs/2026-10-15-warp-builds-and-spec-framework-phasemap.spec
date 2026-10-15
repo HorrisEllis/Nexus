@@ -1,6 +1,6 @@
 # docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
 # Every build through WARP; agents write .spec files from an injected framework; Nexus collects them; intent-based
-# .inject blocks with every setting shown in the repo. Registered in docs/SPEC-REGISTRY.spec. MAPPED, nothing built.
+# .inject blocks with every setting shown in the repo. Registered in docs/SPEC-REGISTRY.spec. MAPPED; PT1 (specs tagged per phase) built 0.60.51.
 
 origin:
   date: 2026-10-15
@@ -8,6 +8,9 @@ origin:
     "make sure all builds use warp. also need the agents to use the spec compiler? like the yaml. need to inject a
     framework for generating a .spec file. then need to listen for it to collect it. intent based .inject nodes, with
     full expanded settings in the repos.e"
+  james_2: >-
+    "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are
+    mapped. and i want the specs to tagged per phase"
 
 found:
   # §8.6, read on 2026-10-15
@@ -34,43 +37,106 @@ decided:
       the repo has per-intent landing settings — IS1 covers that too; to confirm which he meant, or both.
 
 phases:
+  # Each phase: systems (declared, not guessed), files (real paths; "(new)" = to be created), depends_on, and specs —
+  # the specs that own the behaviour it changes (each gets a dated ADDENDUM when the phase lands, §12.5).
   WB0_census:
     status: OPEN
-    does: "lib/build-paths.js: every build path, the call it makes, whether WARP is on it; a runnable check (CK) red while one bypasses WARP."
+    systems: [idearium, cortex, copilot]
+    files: [lib/build-paths.js (new), lib/checks/ck-255-warp-builds.js (new), cos/spec/check-catalogue.spec, idearium/api/index.js, tests/modules/test-build-paths.test.js (new)]
+    depends_on: []
+    specs: [docs/warp.spec, cos/spec/check-catalogue.spec, idearium/spec/idearium.spec]
+    does: "lib/build-paths.js: every build path, the call it makes, whether WARP is on it; CK-255 red while one bypasses WARP."
     proof: "today: red, naming phase build, whole-phase brick, officiator, RAID worker"
   WB1_warp_at_the_rung:
     status: OPEN
+    systems: [idearium, core]
+    files: [idearium/api/index.js, idearium/spec-engine/warp-build-dispatch.js, lib/seam/adapters/warp-cascade.js, lib/repo-agent.js, lib/pipeline-routing.js, lib/warp-rung.js (new), tests/modules/test-warp-rung.test.js (new)]
     depends_on: [WB0_census]
-    does: "warp-wrap RA.dispatch in makeAttempt: cache/population lookup keyed by (repo, file, prompt hash), axiom gate on the injects, retain after the gate passes; the ladder unchanged."
-    proof: "an identical brick retained 3× is served from WARP with no agent call; a reply failing an axiom never lands"
+    specs: [docs/warp.spec, idearium/spec/idearium.spec, docs/2026-10-15-one-contract-raid-releases-phasemap.spec]
+    does: "lib/warp-rung.js wraps RA.dispatch in makeAttempt: cache/population lookup keyed by (repo, file, prompt hash), axiom gate on the injects, retain after the gate passes; the ladder unchanged."
+    proof: "an identical brick retained 3x is served from WARP with no agent call; a reply failing an axiom never lands"
   WB2_raid_bricks_and_officiator_through_warp:
     status: OPEN
+    systems: [cortex, copilot]
+    files: [cortex/core/raid/contract-intake.js, cortex/core/raid/officiator.js, copilot/lifeline.js, lib/warp-rung.js, tests/modules/test-raid-officiator.js, tests/modules/test-lifeline-ollama-dispatch.test.js]
     depends_on: [WB1_warp_at_the_rung]
-    does: "contract-intake _realAgentExecutor and the officiator call through the same wrapper; WB0's check green."
-    proof: "CK green on Nexus"
+    specs: [docs/warp.spec, cortex/spec/cortex.spec, copilot/spec/copilot.spec, docs/raid-warp-verification-phasemap.spec]
+    does: "contract-intake _realAgentExecutor and the officiator call through the same wrapper; CK-255 green."
+    proof: "CK-255 green on Nexus"
   SF1_intent_blocks:
     status: OPEN
-    does: "prompt blocks gain `when: intent:<name>`; dispatch passes the classified intent; the Agents settings list shows each block's intent, expanded."
+    systems: [idearium, core]
+    files: [lib/repo-prompt-blocks.js, lib/intent-classifier.js, lib/repo-agent.js, idearium/api/index.js, idearium/ui/js/repo-settings.js, tests/modules/test-intent-blocks.test.js (new)]
+    depends_on: []
+    specs: [idearium/spec/idearium.spec, docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec]
+    does: "prompt blocks gain `when: intent:<name>`; dispatch passes the classified intent; Repo > Settings > Agents shows each block's intent, expanded."
     proof: "a spec-intent request carries the block; a build request does not"
   SF2_spec_framework_block:
     status: OPEN
+    systems: [idearium, core]
+    files: [lib/repo-prompt-blocks.js, docs/spec-compiler.spec, idearium/compiler-bridge.js, tests/modules/test-intent-blocks.test.js]
     depends_on: [SF1_intent_blocks]
-    does: "a default block 'spec-framework' (when intent:spec): the spec-compiler YAML skeleton from docs/spec-compiler.spec (meta, purpose, axioms, modules with exports, schemas, gates, tests) and the rule: reply with ```yaml spec/<name>.spec. Editable like every block."
+    specs: [docs/spec-compiler.spec, idearium/spec/idearium.spec]
+    does: "default block 'spec-framework' (when intent:spec): the spec-compiler YAML skeleton (meta, purpose, axioms, modules with exports, schemas, gates, tests) and the rule: reply with ```yaml spec/<name>.spec. Editable like every block."
     proof: "the block text is the compiler's own sections; edited text is what is sent"
   SF3_collect_the_spec:
     status: OPEN
+    systems: [idearium, core]
+    files: [lib/repo-inject.js, lib/spec-document.js, lib/spec-collect.js (new), idearium/spec-engine/index.js, idearium/api/index.js, idearium/cli/route-commands.js, tests/modules/test-spec-collect.test.js (new)]
     depends_on: [SF2_spec_framework_block]
-    does: "when an .inject lands a *.spec (or yaml with a spec: root): validate (spec-document check + compiler shape); valid → registered on the repo's specs and the spec engine, event idearium.spec.collected; invalid → the errors go back to the agent once, said."
-    proof: "a planted good reply is collected and registered; a bad one returns its errors, nothing registered"
+    specs: [docs/spec-compiler.spec, idearium/spec/idea-to-spec.spec, idearium/spec/idearium.spec]
+    does: "lib/spec-collect.js: when an .inject lands a *.spec (or yaml with a spec: root) — validate (spec-document check + compiler shape); valid -> registered on the repo's specs and the spec engine, event idearium.spec.collected, tagged with the phase that asked for it; invalid -> errors back to the agent once, said."
+    proof: "a planted good reply is collected, registered and tagged to its phase; a bad one returns its errors, nothing registered"
   SF4_compile_on_collect:
     status: OPEN
+    systems: [idearium, core]
+    files: [lib/spec-collect.js, idearium/compiler-bridge.js, emerge/compiler/index.js, lib/repo-inject.js, tests/modules/test-spec-collect.test.js]
     depends_on: [SF3_collect_the_spec]
+    specs: [docs/spec-compiler.spec, idearium/spec/idearium.spec]
     does: "per-repo setting: a collected spec runs T0/T1 (zero tokens); its files arrive as proposed .inject nodes."
     proof: "a collected spec yields its tree as proposals, nothing overwritten"
   IS1_intent_settings_per_repo:
     status: OPEN
+    systems: [idearium, core]
+    files: [lib/repo-inject.js, lib/repo-prompt-blocks.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/repo-settings.js, loom/maps/observability-map.js, tests/modules/test-intent-settings.test.js (new)]
     depends_on: [SF1_intent_blocks]
-    does: "each .inject node records its intent; per repo, per intent: blocks sent, landing folder, apply mode (auto/review), validator, compile-on-collect — all shown expanded in Repo → Settings; route + `repo intents` command + UI."
+    specs: [idearium/spec/idearium.spec, idearium/spec/nexus-repository-system.spec]
+    does: "each .inject node records its intent; per repo, per intent: blocks sent, landing folder, apply mode (auto/review), validator, compile-on-collect — all shown expanded in Repo > Settings; route + `repo intents` command + UI."
     proof: "two intents with different landing modes land differently in one repo"
+  PT1_specs_tagged_per_phase:
+    status: DONE (0.60.51)
+    systems: [loom, idearium]
+    files: [loom/scanners/phasemap-map.js, idearium/ui/js/phases.js, tests/modules/test-phase-specs-tag.test.js]
+    depends_on: []
+    specs: [loom/spec/loom.spec, idearium/spec/idearium.repo-roadmap.spec]
+    does: "a phase's `specs:` list is read by loom's phasemap reader (key and list forms) and shown on the phase in Idearium; every phase of this map carries its specs."
+    proof: "test-phase-specs-tag: this map's phases each carry systems (declared), files and specs"
 
-order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. Each phase: backend → route → command → UI."
+# file -> what it requires (real, measured 2026-10-15) and who consumes it. Each becomes a loom wire when its phase lands.
+file_dependencies:
+  idearium/api/index.js: {requires: [lib/repo-agent.js, lib/pipeline-routing.js, lib/repo-prompt-blocks.js, lib/repo-inject.js, lib/spec-document.js, idearium/compiler-bridge.js, idearium/spec-engine/warp-build-dispatch.js (dynamic import)], consumers: [autopilot (spawned), every Idearium page]}
+  idearium/spec-engine/warp-build-dispatch.js: {requires: [lib/seam/adapters/warp-cascade.js, warp/plugins/crystallizer-flatfile.js, warp/dispatch/population.js, idearium/spec-engine/chunk-dispatch.js, lib/extract-code.js], consumers: [idearium/api/index.js]}
+  lib/seam/adapters/warp-cascade.js: {consumers: [idearium/spec-engine/warp-build-dispatch.js, lib/seam/index.js]}
+  lib/repo-agent.js: {requires: [lib/pipeline-routing.js, lib/repo-prompt-blocks.js, lib/repo-inject.js], consumers: [idearium/api/index.js, idearium/api/build-surface.js, lib/repo-agent-node.js]}
+  lib/pipeline-routing.js: {consumers: [idearium/api/index.js, lib/repo-agent.js, lib/phase-faults.js, lib/model-door.js, lib/agent-record.js]}
+  lib/repo-prompt-blocks.js: {consumers: [idearium/api/index.js, lib/repo-agent.js, lib/repo-inject.js]}
+  lib/repo-inject.js: {consumers: [idearium/api/index.js, idearium/repo/code-api.js, lib/repo-agent.js]}
+  lib/spec-document.js: {consumers: [idearium/api/index.js, idearium/repo/spec-plan.js]}
+  idearium/compiler-bridge.js: {requires: [emerge/compiler/index.js], consumers: [idearium/api/index.js]}
+  emerge/compiler/index.js: {consumers: [idearium/compiler-bridge.js, cli/diagnose.js]}
+  copilot/lifeline.js: {consumers: [cortex/core/raid/officiator.js, cortex/core/raid/contract-intake.js, lib/hat-forge.js, lib/agent-tools/tools/coordination/*, clear-glass/src/mesh/agent-mesh.js, and 7 more (14 files)]}
+  cortex/core/raid/officiator.js: {requires: [copilot/lifeline.js, cortex/core/raid/index.js, cortex/core/raid/contract-intake.js], consumers: [orchestrator/orchestrator.js]}
+  cortex/core/raid/contract-intake.js: {requires: [copilot/lifeline.js], consumers: [idearium/api/index.js, cortex/core/raid/officiator.js, and 8 more (10 files)]}
+  lib/intent-classifier.js: {consumers: [lib/reasoning-route.js, and 6 more (7 files)]}
+
+order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1 done first (0.60.51). Each phase: backend → route → command → UI."
+
+## ADDENDUM 2026-10-15 — 0.60.51 PT1: in Idearium's phases, files and dependencies mapped, specs tagged per phase
+# James: "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are mapped. and i want the specs to tagged per phase"
+# Found: Idearium's Phases tab already reads every docs/*phasemap*.spec through loom (loom/scanners/phasemap-map.js →
+# idearium/repo/roadmap.js), so this map was already listed — but with systems GUESSED from prose (WB0 read as cortex,
+# WB1 as guardian), no files, and no place for specs. Now each phase declares systems, files (real paths; "(new)" where
+# a phase creates one), depends_on and specs; file_dependencies lists each file's measured requires and consumers (to
+# become loom wires as each phase lands); loom's reader and Idearium's roadmap carry `specs`, and the phase detail shows
+# them. Coder's reading (to confirm): "tagged per phase" = each phase names the specs that own it; a spec an agent
+# writes under SF3 is tagged with the phase that asked for it.

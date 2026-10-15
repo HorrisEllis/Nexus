@@ -102,3 +102,6 @@ spec:
 # The trailing-comment fix that keeps `depends_on: [A, B]  # why` from swallowing a `]` lives in loom's _list().
 # Proven by tests/modules/test-moce-roadmap.js DG-1..DG-4 (DG-4 reads the two real 2026-09-28 phasemaps in docs/).
 # idearium 4.9.0 -> 4.9.1 (lib/version.js services.idearium).
+
+## ADDENDUM 2026-10-15 — 0.60.51 PT1: specs on the phase node
+buildRoadmap keeps a phase's `specs` on its node; the Phases detail shows a "specs" row and the phase search matches them. James: "i want the specs to tagged per phase". test-phase-specs-tag PT-04.

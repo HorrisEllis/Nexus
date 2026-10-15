@@ -18,6 +18,7 @@ const fs   = require('fs');
 const MODULES_DIR = __dirname;
 
 const SUITES = [
+  'test-phase-specs-tag.test.js',          // 0.60.51 PT1 — specs tagged per phase; the WARP / spec-framework map's files and deps declared
   'test-lifeline-ollama-dispatch.test.js', // 0.60.50 — an Ollama job goes to the bridge, not Guardian's tab check (officiator / RAID bricks)
   'test-cg-copilot-no-api.test.js',      // 0.39.274 — the Clear Glass pane: copilot, else Ollama / Guardian directly; no API
   'test-code-intel.test.js',             // 0.39.273 — structural chunker v2, chunk cards, search, grep (lib/code-intel)

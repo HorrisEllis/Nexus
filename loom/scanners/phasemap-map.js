@@ -228,7 +228,7 @@ function parsePhasemapText(text, name) {
         // header line, the `status:` key's line (-1 if it has none) and the
         // first line of the next phase. Not part of loadAll()'s output.
         line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
-        name: f.name || f.does || null, closes: _list(f.closes), files: _list(f.files), blocks: _blocks(f), form: 'key',
+        name: f.name || f.does || null, closes: _list(f.closes), files: _list(f.files), specs: _list(f.specs), blocks: _blocks(f), form: 'key',   // 0.60.51 PT1 — James: "i want the specs to tagged per phase"
       });
     }
   // §0.39.271 P1 — the LIST form. Since 0.39.260 phasemaps are also written as
@@ -288,7 +288,7 @@ function parsePhasemapText(text, name) {
       ...(() => { const sys = _systemsOf(f, phaseLines.join(' ')); return { systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom }; })(),
       dependsOn: deps.length ? deps.join(', ') : null,
       line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
-      name: f.name || null, closes: _list(f.closes), files: _list(f.files), blocks: _blocks(f), form: 'list',
+      name: f.name || null, closes: _list(f.closes), files: _list(f.files), specs: _list(f.specs), blocks: _blocks(f), form: 'list',
     });
     seen.add(id);
   }

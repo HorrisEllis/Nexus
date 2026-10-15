@@ -172,3 +172,10 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **What it shows:** reporting a failure with its raw evidence is what made a one-file root cause findable: the log
     itself showed Guardian was up, so "guardian unreachable" was the wrong lead.
   - **Evidence:** `tests/modules/test-lifeline-ollama-dispatch.test.js` (3/3, 3 fail on the old code); `CHANGELOG-0.60.50.md`.
+- **2026-10-15: "make sure all of the files and dependancies are mapped. and i want the specs to tagged per phase"**
+  - **Context:** a new phasemap (WARP for every build, the spec framework) showed up in Idearium with its systems
+    guessed from prose and no files. He asked for the files, the dependencies and the owning specs on every phase
+    before anything is built.
+  - **What it shows:** traceability as a requirement: every phase answers "what does it touch, what does it wait on,
+    which contract owns it" before code is written. That is the discipline of specification-led engineering.
+  - **Evidence:** `tests/modules/test-phase-specs-tag.test.js` (4/4, all fail on the old reader); `CHANGELOG-0.60.51.md`.
