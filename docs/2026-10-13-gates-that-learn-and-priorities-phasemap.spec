@@ -576,3 +576,14 @@ phasemap:
 # written as phases; they are written in docs/2026-10-15-one-contract-raid-releases-phasemap.spec (RD0, RD1, BR1, GS1,
 # BR2, FR1, ST1), with the versions work (RN1–AT1) beside them. GT1 (0.60.30) refunded the attempt of a ladder climbed
 # to its end: a failing brick re-climbed every agent up to retry_limit more times. GT1a fixes it (GT-08).
+
+## ADDENDUM 2026-10-15 — `npm run update`: the latest Nexus without a zip (0.60.48)
+
+# James: "im so sick of zips" · "how will it link to github?" His run was an unzipped download (no .git — "fatal: not a
+# git repository"), at 0.60.44 while main was 0.60.47, so each fix meant a new zip. scripts/update.js (npm run update):
+# refuses an unzipped folder with the one clone command; fetches origin; refuses when his local edits would be
+# overwritten (names them); git pull --ff-only; npm install only when package.json / package-lock.json changed; says the
+# version before → after. data/** is never in git, so an update cannot touch his state. The link to GitHub is the clone's
+# own remote (origin = https://github.com/HorrisEllis/Nexus.git); sign-in, when the repo needs it, is Git for Windows'
+# credential manager (a browser sign-in once, then remembered). The release zip (scripts/release-zip.js) stays for
+# anyone without git. Found by its test: porcelain status lines were trimmed, cutting the first file name — fixed.
