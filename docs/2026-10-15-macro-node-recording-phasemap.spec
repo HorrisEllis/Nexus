@@ -43,6 +43,12 @@ phases:
     status: BUILT-0.60.57-unverified-in-electron
     files: [clear-glass/renderer/settings/sections/macros.js]
     does: "Start disables once recording; live counter and file path; Cancel keeps the draft; Stop opens the step editor."
+  MR3b_guide_and_hotkey_toast:
+    status: BUILT-0.60.58
+    james: "have a simple step by step guide for making a macro on a webpage, and have a optional toast for macro recording when you press the hotkey"
+    files: [clear-glass/renderer/settings/sections/macros.js, clear-glass/renderer/browser.js, clear-glass/src/options/store.js]
+    does: "Seven-step guide at the top of Settings > Macros; macroRecordToast option (default on); the cg.macroRecord hotkey toasts start/stop and, on stop, saves the recording as a macro."
+    proof: "clear-glass/test/macros-guide.test.js MG-01..03 (jsdom). The hotkey path itself is unverified (needs real Clear Glass)."
   MR4_listener_as_nodes:
     status: OPEN
     does: "Per-provider recorded nodes: list chats, open chat, scroll and read; crawler hands each chat to the chat-read workflow."

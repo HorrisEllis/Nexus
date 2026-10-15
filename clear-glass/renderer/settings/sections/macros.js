@@ -27,7 +27,7 @@
  * a navigate step; steps read as {action, data}) is unchanged.
  */
 (function () {
-  const { cg, h, call, wire, toast, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, agentOptions, section, goto } = window.CGS;
+  const { cg, h, call, wire, toast, toggle, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, agentOptions, section, goto } = window.CGS;
 
   // Friendly definitions for the actions people use; anything else in the
   // live enum still works through the generic two-field form.
@@ -366,7 +366,24 @@
         btn('Import .macro', () => importMacroFile(rerender).catch(fail), 'ghost'));
       const macros = lr.macros || [];
       const full = async (m) => (await call(() => cg.macros.get(m.name), 'macro')).macro;
-      return pane({ title: 'Macros', sub: `${macros.length} macro${macros.length === 1 ? '' : 's'}`, flush: true, body: macros.length ? macros.map(m => row(m.name,
+      const opts = await cg.options.get().catch(() => ({}));
+      // 0.60.58 — James: "have a simple step by step guide for making a macro on a webpage, and have a optional toast for macro recording when you press the hotkey"
+      const GUIDE = [
+        ['Open the page', 'Go to the website in a tab and get to the point where the macro should begin. Sign in first if you need to. Passwords you type while recording are never stored; they become a {{password}} question.'],
+        ['Press Record', 'Click ● Record above (or press the record hotkey, Alt+Shift+R by default, while on the page). Pick the tab, give it a name, press Start. A .macro file is created at once and grows as you go.'],
+        ['Do the task slowly', 'Click, type, scroll and page with the arrow keys as you normally would. Pause when a page is loading: pauses of 1.5 seconds or more are kept as waits.'],
+        ['Press Stop', 'Click Stop and edit steps, or press the hotkey again. The recording is kept either way.'],
+        ['Check the steps', 'Delete any accidental clicks. Change text you want asked each time to a {{placeholder}}, for example {{search}}. Set the page pattern so the macro only offers itself on that site.'],
+        ['Save and test', 'Save it, then press Run on the page. If a step misses, open Edit and fix its selector with the element picker (Alt+Shift+E).'],
+        ['Give it a key (optional)', 'Settings › Keyboard shortcuts: bind a key to macro:<name> so one press runs it.'],
+      ];
+      const guide = pane({ title: 'Make a macro on a web page', sub: 'seven steps', body: [
+        h('details', { open: macros.length === 0 }, h('summary', { text: 'Show the steps' }),
+          h('ol', { class: 'step-read' }, GUIDE.map(([t, d]) => h('li', {}, h('b', { text: t + '. ' }), h('span', { text: d }))))),
+        row('Toast when the record hotkey is used', 'Shows a small message when the hotkey starts or stops a recording. Off: the co-pilot chat still notes it.',
+          toggle(opts.macroRecordToast !== false, (on) => call(() => cg.options.set({ macroRecordToast: on }), 'save').then(() => toast(on ? 'Hotkey toast on' : 'Hotkey toast off')).catch(fail))),
+      ] });
+      const listPane = pane({ title: 'Macros', sub: `${macros.length} macro${macros.length === 1 ? '' : 's'}`, flush: true, body: macros.length ? macros.map(m => row(m.name,
         `${m.description ? m.description + ' · ' : ''}${m.urlPattern || 'any page'} · ${m.steps} step${m.steps === 1 ? '' : 's'} · ${m.runCount} run${m.runCount === 1 ? '' : 's'} · last ${ago(m.lastRunAt)}${(m.params || []).length ? ` · asks for ${m.params.join(', ')}` : ''}`,
         btn('Run', () => runFlow(m).catch(fail), 'sm primary'),
         btn('Steps', async () => { const g = await full(m); modal({ title: m.name, wide: true, body: [h('ol', { class: 'step-read' }, (g.steps || []).map(s => h('li', { text: describe(s) })))] }); }, 'sm'),
@@ -387,6 +404,7 @@
         }), 'sm'),
         btn('Delete', async () => { if (await confirmDo(`Delete “${m.name}”?`, 'It stops appearing here; the history is kept in the macro ledger.', 'Delete')) { await busy(null, () => call(() => cg.macros.delete(m.name), 'delete')); rerender(); } }, 'sm danger')))
         : empty('No macros yet.', btn('Record one', () => recordFlow(schema, rerender).catch(fail), 'sm primary'), btn('Use a template', () => templateFlow(schema, rerender).catch(fail), 'sm')) });
+      return [guide, listPane];
     },
   });
 })();

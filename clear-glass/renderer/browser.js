@@ -2062,15 +2062,24 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     'cg.picker':      () => pickerBtn.click(),
     'cg.autofill':    () => _shortcutAutofill(),
     'cg.macroRecord': async () => {
+      // 0.60.58 — James: "have a optional toast for macro recording when you press the hotkey". Settings > Macros > "Toast when the record hotkey is used".
+      const wantToast = async () => { try { return (await cg.options.get()).macroRecordToast !== false; } catch (_) { return true; } };
+      const say = async (msg, type) => { if (await wantToast()) toast(msg, type || 'info', 4500); };
       if (!_recordingMacro) {
         const r = await cg.macros.recordStart(agentId).catch(e => ({ error: e.message }));
-        if (r && r.error) return addMsg('assistant', `Recording: ${r.error}`);
+        if (r && r.error) { addMsg('assistant', `Recording: ${r.error}`); return say(`Recording could not start: ${r.error}`, 'error'); }
         _recordingMacro = true; addMsg('assistant', '\u25CF Recording a macro \u2014 press the shortcut again to stop.');
-      } else {
-        _recordingMacro = false;
-        const r = await cg.macros.recordStop(agentId).catch(e => ({ error: e.message }));
-        addMsg('assistant', r && r.error ? `Recording: ${r.error}` : `Recording stopped${r && r.steps ? ` \u2014 ${r.steps.length} step(s)` : ''}. Save it in Settings \u203A Macros.`);
+        return say('\u25CF Recording a macro \u2014 press the same shortcut to stop');
       }
+      _recordingMacro = false;
+      const r = await cg.macros.recordStop(agentId).catch(e => ({ error: e.message }));
+      if (r && r.error) { addMsg('assistant', `Recording: ${r.error}`); return say(`Recording: ${r.error}`, 'error'); }
+      // the hotkey has no editor to open, so keep the recording as a real macro now; the .macro file is already on disk
+      let saved = false;
+      if (r && r.steps && r.steps.length && r.name) saved = !(await cg.macros.create({ name: r.name, steps: r.steps, params: r.params || [], description: 'Recorded with the hotkey' }).then(x => x && x.error).catch(() => true));
+      const n = r && r.steps ? r.steps.length : 0;
+      const line = n ? `Recording stopped \u2014 ${n} step${n === 1 ? '' : 's'}${saved ? ` saved as \u201C${r.name}\u201D (Settings \u203A Macros)` : '; the .macro file was kept'}.` : 'Recording stopped \u2014 nothing usable was captured.';
+      addMsg('assistant', line); return say(line, n ? 'success' : 'warn');
     },
   };
   cg.shortcuts?.onAction(({ action, result }) => {
