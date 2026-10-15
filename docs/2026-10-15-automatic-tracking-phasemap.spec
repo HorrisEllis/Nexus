@@ -242,3 +242,17 @@ drift_accounted:
 # one" = a skeleton up front (ids, dependencies: what progress n/m and the audit count), each gate filled in just in
 # time; new gates appended only through a recorded, bounded rule (like split). "Event driven" = the scheduler wakes on
 # moves and outside callbacks instead of rounds — which is also what RD1b (spec chunks completing through Guardian) needs.
+
+## ADDENDUM 2026-10-15 — decided: a skeleton up front, each gate filled in just in time (GL1)
+
+# James: "yes that way the system always knows what its doing, and can replicate or reproduce it if lost from the maps,
+# or snapshots"
+# Context: the coder pushed back on gates built entirely one by one (no n/m, no audit spine, no stopping point) and
+# proposed a skeleton (gate ids + dependencies) up front with each gate elaborated when it becomes READY, new gates only
+# through a recorded, bounded rule. He chose that, and named the reason: reproducibility — a run can be replayed or
+# rebuilt from its map and its snapshots.
+# What this requires (the coder's consequence of his reason): everything a gate decides when it is elaborated — its
+# assessment, its brief's inputs, its route — is recorded on the gate (evidence + the replay engine's decision log, GS1),
+# so a lost run is reproduced from the contract file, its checkpoints and the Versionium commits, not from memory.
+# GL1 (the gate lifecycle) = GA1 assess → CX1/KT1 elaborate → RT2 route → run → GT2 record → persist; event-driven
+# scheduling (closes RD1b) is its last piece. Order unchanged: GA1 is next.
