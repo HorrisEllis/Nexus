@@ -93,3 +93,24 @@ phases:
     status: OPEN
     depends_on: [COSA3_run_and_supervise]
     does: "Any project with a COS spec (the archetype/blueprint system) is a COS project: its own versions, data, run command and port map. Nexus is the first."
+
+# ADDENDUM 2026-10-15 (b): COS syncs with Idearium, so repos are managed from the app
+addendum_b:
+  james: "holy shit, what if the exe syncs with idearium. like i can manage repos with it."
+  reading: "To confirm. COS.exe is a second front-end on Idearium's repo system: the same repos, versions, notes, phasemaps and runs, listed and driven from the desktop app. Idearium stays the source of truth; COS holds no second copy."
+  grounded: "Substrate exists and is reused, not rebuilt: the repo.* command rows (repo versions, diff, restore-file, history-import, phasemap, phase build, notes, run), lib/repo-releases.js, lib/repo-run.js, lib/repo-run-state.js, lib/repo-history.js, lib/component-store.js, docs/nexus-repository-system.spec. A repo's snapshot versions (VR1) and COS's installed versions are the same idea at two layers."
+  coder_opinion: >-
+    Good idea, and it removes a duplicate: COSA1's version store should not invent its own version model. A COS project IS an Idearium repo; an installed version is a release of that repo; a switch is "run this version".
+    Idearium is the one door (nexus.command); COS calls it, so agents and the app share every capability.
+  failure_modes:
+    - "Idearium down: COS must still start, stop and roll back the last installed version on its own (it cannot depend on the thing it supervises). Sync is optional, never a start condition."
+    - "Two writers: COS must not write repo state directly; all writes go through Idearium (RAID is the only write authority, AXIOMS 5.2/9.1)."
+    - "Auth: the local API is loopback; COS should hold a token rather than trust any localhost caller."
+    - "Offline edits: if COS records a switch while Idearium is down, it queues the event and replays it, in order, with the original timestamp."
+  phase:
+    COSA9_idearium_sync:
+      status: OPEN
+      depends_on: [COSA1_version_store_and_import, COSA3_run_and_supervise]
+      does: "COS lists Idearium repos, shows versions/phasemap/notes, imports a repo's release as an installed version, reports run state back (started, healthy, rolled back) as repo activity, and queues events while Idearium is down. CLI first: cos app repos|sync|link <repo>."
+      proof: "a switch while Idearium is down is queued and replayed once; COS still starts the last good version with Idearium off; a repo's activity log shows the switch and any rollback with its reason."
+  question: "Which repo actions do you want from the app first: only version/run (list, switch, roll back), or also phasemap builds and notes? I recommend version/run first."
