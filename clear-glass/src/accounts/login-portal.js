@@ -80,9 +80,9 @@ class LoginPortal {
    * @param {object} d.session        electron session (fromPartition)
    * @param {Function} [d.emit]       (type, data) => void
    */
-  constructor({ options, vault, passwordVault = null, registry, BrowserWindow, session, emit = () => {}, accountSwitch = null, hub = null } = {}) {
+  constructor({ options, vault, passwordVault = null, registry, BrowserWindow, session, emit = () => {}, accountSwitch = null, hub = null, log = () => {} } = {}) {
     if (!options || !vault || !registry || !BrowserWindow || !session) throw new Error('LoginPortal needs options, vault, registry, BrowserWindow and session');
-    Object.assign(this, { options, vault, passwordVault, registry, BrowserWindow, session, emit, hub });
+    Object.assign(this, { options, vault, passwordVault, registry, BrowserWindow, session, emit, hub, log });
     this._as = typeof accountSwitch === 'function' ? accountSwitch : () => accountSwitch;   // the account switch (lazy: it is made after the portal)
     this.portals = new Map(); // `${provider}:${accountId}` -> { win, openedAt, url }
   }
@@ -167,7 +167,12 @@ class LoginPortal {
     // session is made ready for THIS account — what it holds is saved first, this account's saved sign-in put in, else cleared
     for (const [k, p] of this.portals) if (k.startsWith(`${provider}:`) && k !== key && !p.win.isDestroyed()) p.win.close();
     const as = this._as();
-    if (as) { const b = await as.beginSignIn(provider, id); if (!b.ok) return { ok: false, error: b.error, code: 'session_not_ready' }; }
+    // §0.60.51 — James: Google's sign-in window said "We've detected a problem with your cookie settings". Nothing else may touch this
+    // jar while the window is open: the provider's own tabs wait at about:blank (account-switch park), the normal tabs' cookies
+    // are not copied in (session hub quiet), and the session is Chrome to Google, not Electron (the provider tab already was).
+    let releaseQuiet = null; try { releaseQuiet = this.hub && this.hub.quiet ? this.hub.quiet(provider) : null; } catch (_) {}
+    try { if (this.hub && this.hub.sessionFor) this.hub.sessionFor(provider); } catch (_) {}
+    if (as) { const b = await as.beginSignIn(provider, id, { park: true }); if (!b.ok) { try { releaseQuiet && releaseQuiet(); } catch (_) {} return { ok: false, error: b.error, code: 'session_not_ready' }; } }
     const win = new this.BrowserWindow({
       width: 1100, height: 820, minWidth: 720, minHeight: 560,
       backgroundColor: '#08080d', autoHideMenuBar: true,
@@ -192,7 +197,22 @@ class LoginPortal {
       entry.lastUrl = u;
       this.emit('accounts.portal.navigated', { id, provider, url: u, onLoginPage: LOGIN_PATH_RE.test(u) });
     });
-    win.on('closed', () => { this.portals.delete(key); this.emit('accounts.portal.closed', { id, provider }); });
+    // what happens to Google's cookies while the window is open — names and causes only, never a value (they are secrets)
+    const ses = this._ses(provider, id); const seen = []; let offCookies = null;
+    try {
+      if (ses && ses.cookies && typeof ses.cookies.on === 'function') {
+        const onCh = (_e, c, cause, removed) => { if (seen.length < 80 && c && /google|youtube/i.test(String(c.domain || ''))) { seen.push(`${removed ? '-' : '+'}${c.name}(${cause})`); } };
+        ses.cookies.on('changed', onCh); offCookies = () => { try { ses.cookies.removeListener('changed', onCh); } catch (_) {} };
+      }
+    } catch (_) {}
+    win.on('closed', () => {
+      this.portals.delete(key);
+      try { offCookies && offCookies(); } catch (_) {}
+      try { releaseQuiet && releaseQuiet(); } catch (_) {}
+      try { if (seen.length) this.log(`[login-portal] ${provider} — Google cookie changes while the sign-in window was open: ${seen.join(' ')}`); } catch (_) {}
+      Promise.resolve(as && as.endSignIn ? as.endSignIn(provider) : null).catch(() => {});
+      this.emit('accounts.portal.closed', { id, provider });
+    });
 
     this.options.linkAgent(id, provider);
     await win.loadURL(url).catch(err => this.emit('accounts.portal.load.error', { id, provider, url, error: err.message }));

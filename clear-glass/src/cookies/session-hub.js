@@ -66,6 +66,7 @@ class SessionHub {
     this._echo = new Map();       // key -> expiry — a write the hub made, so its own 'changed' event is not mirrored back
     this._timers = new Map();
     this._held = new Map();       // provider -> count of identity switches in flight (see hold())
+    this._quiet = new Map();      // provider -> count of sign-in windows open (see quiet())
     this._uaDone = new WeakSet();
   }
 
@@ -113,6 +114,10 @@ class SessionHub {
         // an account switch is rewriting the provider session: that is a change of WHO it is signed in as, not a sign-in or
         // sign-out the normal tabs should follow (guardian routes jobs to other accounts all day)
         if (side === 'canonical' && this._held.get(provider)) return;
+        // §0.60.51 — a sign-in window is open in the provider session: Google's sign-in sets a test cookie on one page and reads it
+        // back on the next, so nothing else may write into that jar meanwhile. A normal tab's Google cookies rotate constantly (NID,
+        // SIDCC) and were being copied INTO the jar mid sign-in ("We've detected a problem with your cookie settings").
+        if (side === 'normal' && this._quiet.get(provider)) return;
         if (side === 'canonical') this._settle(provider);
         this._apply(other, otherSide, cookie, removed).then(ok => { if (ok && otherSide === 'canonical') this._settle(provider); });
       } catch (_) {}
@@ -125,6 +130,12 @@ class SessionHub {
     this._held.set(provider, (this._held.get(provider) || 0) + 1);
     let done = false;
     return () => { if (done) return; done = true; setTimeout(() => { const n = (this._held.get(provider) || 1) - 1; if (n > 0) this._held.set(provider, n); else this._held.delete(provider); }, 1500).unref?.(); };
+  }
+  /** quiet(provider) -> release() — a sign-in window is open in the provider session; cookies from the normal tabs are not copied into it until released */
+  quiet(provider) {
+    this._quiet.set(provider, (this._quiet.get(provider) || 0) + 1);
+    let done = false;
+    return () => { if (done) return; done = true; const n = (this._quiet.get(provider) || 1) - 1; if (n > 0) this._quiet.set(provider, n); else this._quiet.delete(provider); };
   }
   _settle(provider) {
     if (!this.onSettled) return;
