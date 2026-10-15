@@ -297,6 +297,16 @@ try {
     return r.ok ? { ok: true, commitId: r.data.commitId, changed: r.data.files ? r.data.files.counts : null } : { ok: false, error: r.error };
   });
 } catch (_) {}
+// §0.60.41 RN1 — Nexus's releases recorded in Versionium once Versionium answers: idempotent, so every boot is safe; a
+// sync that cannot reach it is said in the log and tried at the next boot (or POST /api/releases/sync)
+if (!process.env.NEXUS_TEST_SANDBOX) {
+  const t = setTimeout(() => {
+    _require('../../lib/nexus-releases.js').sync(_vcall)
+      .then(r => { if (r.recorded) console.log(`[idearium] releases: ${r.recorded} recorded in versionium (${r.already} already, ${r.unpinned} without a git commit in this clone)`); })
+      .catch(e => console.warn(`[idearium] releases not synced to versionium yet: ${e.message}`));
+  }, 20000);
+  if (t.unref) t.unref();
+}
 // §0.39.366 — a compartment's background tasks (lib/repo-activity.js): every change broadcast as idearium.repo.task; the
 // history before this process from the compartment's own exchange log
 let _repoActivityMod = null;
@@ -2443,6 +2453,7 @@ const ROUTE_CAP = {
   'repo.worksurface': CAPS.READ_IDEAS, 'repo.worksurface.prove': CAPS.WRITE_IDEAS,
   'repo.versions.index': CAPS.READ_IDEAS, 'repo.versions.diff': CAPS.READ_IDEAS, 'repo.versions.tree': CAPS.READ_IDEAS,   // §0.60.7
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
+  'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS,   // §0.60.41 RN1
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
   'checks.list': CAPS.READ_IDEAS, 'checks.run': CAPS.READ_IDEAS,   // §0.60.33 QA1 — the check catalogue; a run only reads and parses
@@ -2861,6 +2872,11 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','versions','diff'],          'repo.versions.diff'],       // ?a=&b=(commit|working)&path=
     ['GET',    ['api','repos',    ':uuid','versions','tree'],          'repo.versions.tree'],       // ?commitId=
     ['POST',   ['api','repos',    ':uuid','versions','restore-file'],  'repo.versions.restoreFile'],// { commitId, path }
+    // §0.60.41 RN1 — releases in Versionium (versionium/lib/releases.js): a repo's, and Nexus's own
+    ['GET',    ['api','repos',    ':uuid','releases'],                 'repo.releases.list'],
+    ['POST',   ['api','repos',    ':uuid','releases'],                 'repo.releases.create'],     // { version?, quote?, notes? }
+    ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
+    ['POST',   ['api','releases','sync'],                              'releases.sync'],
     ['POST',   ['api','repos',    ':uuid','history','import'],         'repo.history.import'],      // { zips:[{name, contentBase64}], dryRun, allowSecrets }
     // §0.60.7 PL4 — the import checks (lib/import-checks.js): GET reads them; POST also writes them as the repo's notes
     ['GET',    ['api','repos',    ':uuid','integrity'],                'repo.integrity'],
@@ -4820,6 +4836,30 @@ async function handle(req, res, route, query, body) {
     // §0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match." The release, said
     // once: its tag and zip name (the GitHub release v<version>, asset nexus-<version>.zip), whether every place that
     // states it agrees (CK-253), and the module versions — labelled as modules, never shown as the version
+    // §0.60.41 RN1 — James: "i want idearium to have releases and a changelog for each version. it was added to the wrong
+    // place." A repo's release is a Versionium tag on its branch head with the commits since the last; Nexus's own come
+    // from lib/version.js, its changelogs and git (lib/nexus-releases.js), synced into Versionium.
+    case 'repo.releases.list': case 'repo.releases.create': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RR = _require('../../lib/repo-releases.js');
+      try {
+        if (action === 'repo.releases.list') return ok(res, { repoUuid: repo.uuid, releases: await RR.list(_vcall, repo.uuid) });
+        const b = body || {};
+        const r = await RR.cut(_vcall, repo.uuid, { version: b.version || null, quote: b.quote || null, notes: b.notes || null, by: b.by || 'idearium',
+          flush: (id) => _require('../../lib/repo-versions.js').flush(id) });
+        if (!r.already) os.emit('idearium.repo.released', { repoUuid: repo.uuid, version: r.version, tag: r.tag, commitId: r.commitId });
+        return ok(res, { release: r });
+      } catch (e) { return err(res, e.status || 502, e.message, { code: e.code || null }); }
+    }
+    case 'releases.list': case 'releases.sync': {
+      try {
+        if (action === 'releases.sync') return ok(res, await _require('../../lib/nexus-releases.js').sync(_vcall));
+        const repository = query.repository || 'nexus';
+        const d = await _vcall('GET', `/api/versionium/releases?${new URLSearchParams({ repository, n: String(parseInt(query.n, 10) || 1000) })}`);
+        return ok(res, { repository, current: _require('../../lib/release-version.js').current().version, releases: d.releases || [] });
+      } catch (e) { return err(res, 502, `versionium: ${e.message}`); }
+    }
     case 'system.version': {
       const R = _require('../../lib/release-version.js');
       const root = path.dirname(_require.resolve('../../package.json'));

@@ -93,6 +93,20 @@ export const SPEC = [
   // 0.60.7 — Versionium managed per repo (lib/repo-history.js) and the import checks (lib/import-checks.js)
   // 0.60.8 — intent routing for reasoning (lib/reasoning-route.js)
   // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
+  // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (lib/nexus-releases.js): James's words, the proof, the commit
+  { key: 'system.releases', repo: false, usage: 'releases [--sync] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog; --sync records any missing',
+    req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: {} } : { method: 'GET', path: '/api/releases' },
+    print: (d, a, h) => {
+      if (a.flags.sync) { console.log(`  ${d.releases} releases: ${h.c.mint(`${d.recorded} recorded`)} · ${d.already} already · ${d.unpinned} without a git commit in this clone${d.refused && d.refused.length ? h.c.coral(` · ${d.refused.length} refused`) : ''}`); return; }
+      let l = d.releases || [];
+      if (a.flags.version) l = l.filter(r => r.version === String(a.flags.version).replace(/^v/, ''));
+      if (!l.length) { console.log(h.c.gray('  no releases in Versionium yet — idearium releases --sync')); return; }
+      for (const r of l.slice(0, parseInt(a.flags.limit || '15', 10) || 15)) {
+        console.log(`  ${h.c.mint(r.tag.padEnd(10))} ${h.c.dim(r.gitCommit ? r.gitCommit.slice(0, 7) : 'no commit')}  ${r.changelog ? h.c.dim(r.changelog) : ''}${r.version === d.current ? h.c.amber('  ← running') : ''}`);
+        if (r.quote) console.log(`    ${h.c.sky(String(r.quote).slice(0, 180))}`);
+        if (a.flags.version && r.notes) console.log(h.c.dim(`    ${r.notes}`));
+      }
+    } },
   { key: 'system.version', repo: false, usage: 'version', about: 'the Nexus release (lib/version.js): its GitHub tag and zip name, whether every place that states it agrees (CK-253), and the module versions, labelled',
     req: () => ({ method: 'GET', path: '/api/version' }),
     print: (d, a, h) => { console.log(`  ${h.c.mint(`Nexus ${d.version}`)}${d.commit ? h.c.dim(`  ${d.commit}`) : ''}  ·  GitHub ${d.tag}  ·  zip ${d.zipName}`);
@@ -309,6 +323,20 @@ export const SPEC = [
       console.log(h.c.dim(`\n  ${Object.keys(c).map(k => `${c[k]} ${k}`).join(' · ')}`));
     } },
 
+  // 0.60.41 RN1 — James: "i want idearium to have releases and a changelog for each version." A release is a Versionium
+  // tag on the repo's head with the commits since the last one (lib/repo-releases.js).
+  { key: 'repo.releases', repo: true, usage: 'repo releases <repo> [--cut] [--version x.y.z] [--quote "…"] [--notes "…"]', about: 'the repo\'s releases, newest first (Versionium tags with the commits since each last one); --cut releases the head now',
+    req: (a) => a.flags.cut ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/releases`, timeoutMs: 60000, body: { ...(a.flags.version ? { version: String(a.flags.version) } : {}), ...(a.flags.quote ? { quote: String(a.flags.quote) } : {}), ...(a.flags.notes ? { notes: String(a.flags.notes) } : {}) } }
+      : { method: 'GET', path: `/api/repos/${a.repo.uuid}/releases` },
+    print: (d, a, h) => {
+      const l = d.release ? [d.release] : (d.releases || []);
+      if (!l.length) { console.log(h.c.gray(`  no releases yet — idearium repo releases ${a.repo.name} --cut`)); return; }
+      for (const r of l) {
+        console.log(`  ${h.c.mint(r.tag.padEnd(10))} ${h.c.dim(when(r.at))} ${h.c.amber(String(r.commitId || '').slice(0, 12))}  ${(r.commits || []).length} commit(s)${r.already ? h.c.dim('  (already released)') : ''}`);
+        if (r.quote) console.log(`    ${h.c.sky(String(r.quote).slice(0, 160))}`);
+        if (d.release && r.notes) console.log(h.c.dim(String(r.notes).split('\n').slice(0, 12).map(x => `    ${x}`).join('\n')));
+      }
+    } },
   // ── its desktop, like VMware ──────────────────────────────────────────────────────────────────────────────────────
   { key: 'repo.desktop', repo: true, usage: 'repo desktop <repo> [status | start | stop | pause | resume | checkpoint [--label "…"] | checkpoints | rewind <tag>]', about: 'the repo\'s desktop VM: power, pause, live checkpoints, rewind',
     req: (a) => { const v = a.args[0] || 'status', base = `/api/repos/${a.repo.uuid}/desktop`;

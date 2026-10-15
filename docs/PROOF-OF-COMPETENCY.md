@@ -156,3 +156,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **Context:** the decompose tool (0.60.5) turned projects into components, and he named the larger goal.
   - **What it shows:** he keeps the end state in view: a project you can keep working on, not a parts bin.
   - **Evidence:** phases PL0–PL6 in `docs/2026-10-13-projects-raid-and-gates-phasemap.spec`.
+- **2026-10-15: "i want idearium to have releases and a changelog for each version. it was added to the wrong place."**
+  - **Context:** releases existed only in Nexus's own `lib/version.js` and as GitHub tags. Versionium is the system
+    built to hold versions, yet it had no idea what a release was, and Idearium repos had none.
+  - **What it shows:** he spotted an ownership error, a capability living in the wrong system. That is systems-design
+    judgment: put each thing where the data it describes already lives.
+  - **Evidence:**
+    - `versionium/lib/releases.js` and `lib/nexus-releases.js`;
+    - `tests/modules/test-releases.test.js` (5/5);
+    - `CHANGELOG-0.60.41.md`;
+    - 250 Nexus releases are now recorded in Versionium, 210 of them with his words.

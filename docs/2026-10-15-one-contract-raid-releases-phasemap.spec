@@ -153,7 +153,7 @@ spec:
       proof: "a child failing twice splits again by units; at the depth bound it stops and says so; never the same pieces twice"
 
     RN1_versionium_tags_and_releases:
-      status: OPEN
+      status: DONE (0.60.41; see addendum: release restore and the GitHub mirror are named, not built)
       depends_on: [GS1_a_snapshot_per_gate_rewind_and_compare]
       files: [versionium/lib/engine.js, versionium/routes/versionium.js, lib/release-version.js, idearium/api/index.js]
       does: >-
@@ -258,3 +258,28 @@ spec:
 # (default 3, 1–8). A split parent passes on its children AND its own integration: Idearium re-verifies the assembled
 # file and records <gate>.integrated only when it holds. Not done: splitting by an existing file's code units
 # (lib/chunker) — a step names what to do, not where in the file; that axis waits for a planner that names units.
+
+## ADDENDUM 2026-10-15 — RN1 built (0.60.41)
+
+# James: "i want idearium to have releases and a changelog for each version. it was added to the wrong place" · "use
+# versioning in versionium for versions using the api. should be hooked into the atlas."
+# Built: versionium/lib/releases.js — tags (a name on a commit; the same name on another commit is refused, 409) and
+# releases (repo, version, tag, Versionium commit and/or git commit, his quote, notes, proof, the commits since the last,
+# changelog). API: GET/POST /api/versionium/tags, /api/versionium/releases (one, or { releases: [...] }), GET
+# /api/versionium/releases/:version. Idempotent: recorded again, a release keeps what it had and only fills what it
+# lacked (nothing rewritten, §0.3).
+# Nexus's releases (lib/nexus-releases.js): read from the three places they already are — the lib/version.js line, the
+# CHANGELOG, and the git commit that set `system:` (one pass over that file's log) — and synced through the API on each
+# Idearium boot (and POST /api/releases/sync, `releases --sync`). 249 releases at 0.60.41's writing; 209 carry his words
+# (the version line's opening, else the changelog's); the rest open with something else and carry no quote rather than a
+# made-up one. This clone is shallow: 160 have their git commit, the rest say why they have none.
+# A repo's releases (lib/repo-releases.js): POST /api/repos/:uuid/releases commits what is pending (flush), then tags the
+# head of repo-<uuid> with the commits since the last release, walked by parent (not by time — commits in one millisecond
+# tie), notes written from them unless given; version = last patch + 1, or 0.1.0. Refused, said: no versions, nothing new,
+# not above the last. Commands: `repo releases <repo> [--cut]`, `releases [--sync]`.
+# Changed from the map (the coder's, to confirm): (1) restoring a release is the existing snapshot restore of its
+# commitId (POST /api/repos/:uuid/snapshots/:commitId/restore) — no second restore path; RN3's button calls it; not proven
+# by a test here. (2) The GitHub workflow is left as it is: it runs on GitHub and cannot reach a local Versionium, so
+# "mirror" means both read lib/version.js — one source, two records — rather than the workflow asking Versionium.
+# UI: deferred to RN3 (the Releases view), the next phase — this phase has no screen yet.
+

@@ -172,3 +172,12 @@ spec:
 # the atlas." 0.60.34 put releases on GitHub first; this map's RN1–RN3 put them in Versionium. The new map builds RN1,
 # RN2 (notes from the commits first — the coder's change of order, LT1 after; to confirm), RN3, and AT1 (the atlases
 # and system specs generated from releases). GitHub becomes the mirror (GH1's direction).
+
+## ADDENDUM 2026-10-15 — releases are Versionium's (0.60.41, RN1 of docs/2026-10-15-one-contract-raid-releases-phasemap.spec)
+
+# James (2026-10-15): "i want idearium to have releases and a changelog for each version. it was added to the wrong
+# place." This map's RN1/RN2 (a release as a node and a tag) is carried out there: Versionium now holds tags and releases
+# (versionium/lib/releases.js, /api/versionium/tags|releases); every Nexus release is recorded in it from lib/version.js,
+# the changelogs and git; every Idearium repo can cut its own. 0.60.34's GitHub-first release stays, as a second record of
+# the same lib/version.js.
+
