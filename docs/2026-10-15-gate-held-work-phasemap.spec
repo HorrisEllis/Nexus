@@ -101,6 +101,14 @@ open_decisions:
     coder_recommends: "A cap read from the resource monitor (free memory and cores) at dispatch, never a fixed number; his Settings value is the ceiling. To confirm."
     status: OPEN
 
+  GW0h_minimal_default:
+    asked: "minimal environment - what is the default for a repo with no detected need?"
+    coder_recommends: "base + the one runtime plan() finds; display none; no desktop account, no extras. The wizard's extras default becomes empty (reversing DK1's default); the repo desktop stays one tick away. To confirm."
+    status: OPEN
+  GW0i_find_order:
+    asked: "search as the index for intents - in what order does an agent look?"
+    coder_recommends: "own component store and the code index first (they are free and already trusted), then package registries and code hosts through APIs, then image/UI sites, then the open web. Stop at the first adequate hit. To confirm."
+    status: OPEN
   GW0d_listener_question:
     asked: "carried from 0.60.50: the listener 'cant detect any specs'. Needs James's failing log, and whether 'full inject' means per-stage framework text or Clear Glass injecting once (CG1)."
     status: OPEN - unanswered
@@ -279,6 +287,15 @@ phases:
       headless Electron) | desktop (a GUI toolkit it must see: Tk, Qt, GTK, a desktop Electron app). environment.js 'desktop' stays a
       bool the person can force; the default follows the detection. Default tier is none.
     proof: "a plain Node repo plans display none and installs no xfce; a repo with a headed-browser test plans virtual; one with a Tk import plans desktop; the person's setting overrides"
+    amended_2026-10-15: >-
+      James: "currently it uses a desktop envirement. needs to use a minimal envirement. just what the project needs."
+      Found: the setup wizard defaults extras to ['desktop'] (idearium/ui/js/app.js _vmWiz, 0.39.293 DK1: "the repo desktop needs
+      it: on by default"). That was his earlier call; this one supersedes it (the earlier stays, §0.3). The image becomes layered:
+      a small base built once (OS minimum + sshd + the runtime the repo needs), plus a per-repo overlay (qcow2 backing file over
+      the base: cheap to make, and each overlay is what GW11 snapshots). What goes in the overlay is computed from detect.js plan()
+      - its stacks and runtimes, the display tier - so a Node repo gets Node and nothing else; go/ruby/php/rust/desktop are added
+      only when the repo's files say so, or when he ticks them. System packages a manifest cannot reveal are a named gap, not a guess.
+      Whether a container or microVM would be lighter than QEMU on his hosts is NOT verified; the layering is in QEMU itself.
 
   GW13_the_sandbox_door:
     status: OPEN
@@ -365,13 +382,55 @@ phases:
       macro (GW7) naming the gate, the file, the diff and the causal path (GW8), with the sandbox's logs and exec output attached.
     proof: "a fixture contract where gate 3 breaks a test: bisect names gate 3 in log2(n) runs and the macro reproduces it"
 
-build_order: [GW3, GW1, GW2, GW5, GW13, GW14, GW11, GW15, GW16, GW17, GW4, GW6, GW12, GW7, GW18, GW8, GW9, GW10]
+  GW22_find_before_generate:
+    status: OPEN
+    systems: [clear-glass, core, idearium, intelligence]
+    files: [lib/agent-tools/tools/clear-glass/search-engine.js, lib/component-store.js, lib/agent-tools/tools/query/, idearium/cli/route-commands.js, lib/agent-memory.js]
+    depends_on: [GW5_agents_are_copilot, GW13_the_sandbox_door]
+    axioms: ["§16.5 delete before you add", "§8.6 reuse", "§5.10", "§16.2 provenance", "§9.1"]
+    james: '"at one point i want clearglass hooked into a search engine feature to use search queries as a command that the agents to use as a index for different intents, like github for components, image sites for ui elements, etc. anything that can cut down on code generation. finding components. like agentic"'
+    found: >-
+      clearglass.search_engine.tool exists (lib/agent-tools/tools/clear-glass/search-engine.js): register / register_from_pick /
+      search / list / delete / export_node (an engine becomes a .command or .tool). It stores templates in a jaa table and fetches
+      by api or resolves a URL to navigate. Its own header says v1: one {query} slot, no ranking, no pagination, no de-duplication,
+      no credentials. James's original words had "with an intent"; there is no intent field in the file (grep). So the engine
+      exists, the intent index does not.
+    does: >-
+      An engine gets an intent (component | snippet | package | ui-element | image | doc | ...) and a result kind. One command row,
+      find <intent> <query>, which nexus.command gives every agent, routes by intent to the engines registered for it and returns
+      candidates with provenance: source URL, license, version, a content hash. Lookup order is GW0i (own store first). Choosing a
+      candidate is adopt: it enters the component store with its dependencies pinned (component-store put, builtBy = the source),
+      arrives in the repo as a diff on the work surface, and runs through the sandbox tests (GW15) before it counts - fetched code
+      is untrusted. Search runs from Nexus/Clear Glass, not from the sandbox, so the sandbox's egress stays denied (GW0e). Image
+      and UI-element results are kept as references (URL, hash, license), not copied blindly. Which engine and intent produce
+      adopted components feeds the door (GW6), and tokens saved are a number: adopted-from-search against generated, per phase (AG1).
+    cautions: >-
+      A license is recorded with every candidate, and a copyleft licence in a permissive project is flagged before adopt. A site's
+      terms and rate limits are respected: prefer its API to scraping through his logged-in tabs, and never put his sessions in a
+      recording (GW7 masks secrets). Ranking is a first guess until adopt rates exist.
+    proof: "a registered engine with intent 'component' returns candidates with licence and hash; adopt writes the component store entry and a diff, and the sandbox test must pass first; an agent that asks for a thing the store already has gets the store's, not a web hit; tokens saved is reported"
+
+  GW23_wire_what_exists:
+    status: OPEN
+    systems: [loom, core, idearium, intelligence]
+    files: [loom/registry, loom/scanners/, loom/maps/, lib/rfr2-bridge.js]
+    depends_on: []
+    axioms: ["§8.6", "§1.1 nothing pretends", "§16.1 close the nearest gap", "§16.5"]
+    james: '"nexus can do a fuck ton, not all wired."'
+    does: >-
+      A deterministic census from loom's own registry (no model): every component that is declared but has no consumer wires, every
+      route declared but not served, every event declared and never emitted or emitted and never heard - ranked by what this map's
+      phases would use (rfr2 has 13 built modules and no consumers, FM1 says; the replay engine is sandbox-only). The output is the
+      list of already-built capabilities worth wiring first, so the next phase reuses before it builds. It reports; it wires nothing.
+    proof: "the census names rfr2's unconsumed modules and the replay engine's live-replay refusal; a component wired since no longer appears"
+
+build_order: [GW23, GW3, GW1, GW2, GW5, GW13, GW14, GW11, GW15, GW16, GW17, GW4, GW6, GW12, GW7, GW18, GW22, GW8, GW9, GW10]
 build_order_reason: >-
   §16.1, the nearest gap first. GW3 (tracing) is smallest, touches no behaviour, and every later phase reads it - and
   it makes the next ones testable. GW1 -> GW2 is the state following the gate. GW5 is deterministic parity work. GW13/GW14 are
   the sandbox door and copy-in: the agents' test environment, which GW11 (snapshots), GW15 (every file tested) and GW16
   (parallel branches) all run in. GW17 reads what those produce. GW4 puts copilot on it, GW6 closes the learning loop, GW12 is
-  independent and small. GW7/GW18/GW8 need the recordings GW3 makes. GW9 is the surface. GW10 waits for his log.
+  independent and small. GW7/GW18/GW8 need the recordings GW3 makes. GW9 is the surface. GW10 waits for his log. GW23 goes first: it is read-only and tells every later phase what to reuse. GW22 (find before generate) comes once agents have the sandbox door and the tool parity it needs.
 
 not_verified:
   - "That the repo agent's tool scope and copilot's capabilities differ (GW5 is built from a diff nobody has run yet; 159 tool files and a capabilities list were not compared)."
@@ -383,3 +442,5 @@ not_verified:
   - "Whether detect.js already sees any display need (read: it plans stacks and runtimes only; not the whole file)."
   - "What the diagnostic's friction and tension measure, exactly (GW17 reuses their definitions; read loom/server.js proxy comments only)."
   - "Resource headroom for N parallel compartments on his machine (GW0g reads it live; no number is assumed)."
+  - "How many engines are registered in the search_engines jaa table today (the table was not read), and whether any has an intent-like tag."
+  - "That a content hash and licence can be obtained from every source GW22 would use (GitHub's API gives a licence; image sites vary)."
