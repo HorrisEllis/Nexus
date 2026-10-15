@@ -120,6 +120,14 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(end.audit.gates.find(g => g.id === 'phase').status === 'PASSED');
     assert.ok(rows.filter(r => ['proven', 'unproven', 'no-proof'].includes(r.state)).length === 1, 'proved once, by the integration gate — not again after');
   });
+  // §RD1 0.60.37 — the build ran THROUGH RAID: its contract-complete row names RAID's queue row, which is a v2 row that PASSed
+  await test('CP-09', 'the build ran through RAID: a v2 row in RAID\'s queue, PASS, the same contract file', () => {
+    const end = rows.find(r => r.state === 'contract-complete');
+    assert.ok(end && end.raidQueueId, JSON.stringify(end));
+    const CI = require(path.join(ROOT, 'cortex/core/raid/contract-intake.js'));
+    const row = CI.listQueue().find(x => x.uuid === end.raidQueueId);
+    assert.ok(row && row.kind === 'v2' && row.status === 'pass' && row.source === 'idearium' && row.contractFile === end.contract, JSON.stringify(row));
+  });
   await test('CP-03', 'building again resumes from the checkpoints: no file is re-sent; only the integration is re-checked', async () => {
     sent.length = 0;
     const rs = await build();

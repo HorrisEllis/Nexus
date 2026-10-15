@@ -1167,12 +1167,25 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     };
     const save = () => { try { CG.save(file, L); } catch (e) { console.warn(`[idearium] contract save ${file}: ${e.message}`); } };
     save();
-    const res = await CG.schedule(p, { root, concurrency: policy.contractConcurrency, executors: { agent: agentEx, integrate }, onCheckpoint: save,
+    // §RD1 0.60.37 — James (2026-08-28): "all contracts … go to raid's input folder, and queue, then through raid". The
+    // contract runs through RAID (contract-intake runContract): RAID's queue row, its gates before (the constitution,
+    // idearium's RAID contract), the bricks with this build's executors, the verdict, self-heal on a failure.
+    const CI = _require('../../cortex/core/raid/contract-intake.js');
+    const viaRaid = await CI.runContract({ ...L, file }, { source: 'idearium', intention: 'build', title: `phase ${phase} — ${target.name}`, root, concurrency: policy.contractConcurrency,
+      executors: { agent: agentEx, integrate }, onCheckpoint: save, causedBy: runId,
       onEvent: (e) => getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state: `brick-${String(e.status).toLowerCase()}`, brick: e.gate, snapshot: commitId }) });
     save();
+    if (viaRaid.status === 'blocked') {
+      appendRow('idearium_phase_runs', { uuid: `${runId}-contract-blocked`, ...cbase, state: 'contract-blocked', snapshot: commitId, raidQueueId: viaRaid.queueId,
+        error: `RAID did not run it — ${viaRaid.blocked.reason}`, ts: Date.now() });
+      getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state: 'contract-blocked', snapshot: commitId });
+      return { r: null, state: 'failed', absent: null, dp: lastDp, contracted: true };
+    }
+    const res = viaRaid.result;
     const au = CA.audit(p, { root });
     const state = res.complete ? 'contract-complete' : 'contract-incomplete';
     appendRow('idearium_phase_runs', { uuid: `${runId}-${state}`, ...cbase, state, snapshot: commitId, error: res.complete ? null : (res.why || []).slice(0, 4).join('; '),
+      raidQueueId: viaRaid.queueId, failedBricks: viaRaid.failedBricks || [],
       audit: { bricks: au.bricks, dependencies: au.dependencies, checkpoints: au.checkpoints.length, gates: au.gates, splits: au.splits, blocked: res.blocked || [], failed: res.failed || [], rounds: res.rounds }, ts: Date.now() });
     getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state, snapshot: commitId });
     return { r: null, state: res.complete ? 'replied' : 'failed', absent: null, dp: lastDp, contracted: true };
@@ -3798,6 +3811,11 @@ async function handle(req, res, route, query, body) {
         ).queueId;
       } catch (e) {
         console.warn('[idearium/api] could not submit real RAID observability contract for spec.build (build proceeds regardless):', e.message);
+      }
+      // §RD1 0.60.37 — and RAID's gates before the compile runs (a refusal is said, nothing compiled)
+      {
+        const gb = _require('../../cortex/core/raid/contract-intake.js').gateBefore({ source: 'idearium', intention: 'build', title: spec.name || params.uuid, queueId: _raidQueueId });
+        if (!gb.ok) return err(res, 403, `RAID did not let this build run — ${gb.blocked.reason}`, { code: 'RAID_REFUSED', gate: gb.blocked.gate, raidQueueId: _raidQueueId });
       }
 
       // ── Actually compile — this used to be the gap: spec.build only
@@ -8279,6 +8297,16 @@ async function handle(req, res, route, query, body) {
           raidQueueId = submitted.queueId;
         } catch (e) {
           console.warn('[idearium/api] could not submit real RAID observability contract (build proceeds regardless):', e.message);
+        }
+        // §RD1 0.60.37 — no longer observability only: RAID's gates decide before the chunk is sent (the constitution,
+        // idearium's RAID contract, the hat's intent contract when one is worn). A refusal fails the chunk, said.
+        {
+          const gb = _require('../../cortex/core/raid/contract-intake.js').gateBefore({ source: 'idearium', intention: 'build', forAgent: preferAgent || null,
+            hat: who.hat ? (who.hat.uuid || who.hat.name) : null, title: chunk.title || chunk.sectionId, queueId: raidQueueId });
+          if (!gb.ok) {
+            se.failChunk(params.uuid, chunk.uuid, `RAID did not let it run — ${gb.blocked.reason}`);
+            return err(res, 403, `RAID did not let this chunk run — ${gb.blocked.reason}`, { code: 'RAID_REFUSED', gate: gb.blocked.gate, raidQueueId });
+          }
         }
 
         // §GAP CLOSED 2026-07-06 — this used to be a single, unverified

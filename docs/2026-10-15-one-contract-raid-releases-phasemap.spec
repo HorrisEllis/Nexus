@@ -116,7 +116,7 @@ spec:
       proof: "a .contract submitted to RAID: its bricks run, the row PASSes with the audit; a constitution-refused one is BLOCKED and never runs; an exhausted one emits HEAL_REQUESTED naming its bricks and their classes; a legacy contract still runs"
 
     RD1_every_build_goes_through_raid:
-      status: OPEN
+      status: "PARTLY DONE 0.60.37 (RD1a) — the phase build runs through RAID's runContract (a v2 row, RAID's gates, the verdict, self-heal); spec-chunk builds and compile pass RAID's gates (gateBefore) before they run. RD1b open: the spec engine's chunks as bricks of a contract (their completion arrives later through Guardian's job callback, so the chunk loop must become the scheduler's)"
       depends_on: [RD0_raid_runs_the_contract]
       files: [idearium/api/index.js, lib/repo-agent.js]
       does: >-
@@ -217,3 +217,15 @@ spec:
 # remember the root its refs are relative to, so processNext ran it against Nexus's own tree; the row now carries root.
 # Not changed: legacy rows still run through processNext's compartment path exactly as before; legacyToV2 is there for
 # a caller that wants bricks (RD1 moves the build sources over).
+
+## ADDENDUM 2026-10-15 — RD1a built (0.60.37); RD1b named
+
+# The phase build calls contract-intake.runContract instead of contract-gates.schedule: RAID's queue row (kind v2), its
+# gates, the bricks with the build's executors, the verdict, self-heal on failure (CP-09: the build's row names RAID's
+# PASSed v2 row and the same contract file). Spec-chunk builds and compile were "observability only"; now RAID's gates
+# decide before they run (gateBefore: the hat's intent contract when worn — or a base agent's — then RAID's approval);
+# a refusal fails the chunk / the build, said (403 RAID_REFUSED). A ladder model (ollama:qwen…) is not asked the base-
+# agent intent question (it is not a base agent); RAID's approval still applies.
+# Found by the test: a loaded checkpoint (openCheckpoint) carries no `v`, and runContract refused it — fixed.
+# RD1b, named: a spec's chunks become bricks of one contract. Not done here because a chunk's completion often arrives
+# later through Guardian's job callback (result.queued), so the spec engine's own loop has to become the scheduler's.

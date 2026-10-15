@@ -1363,7 +1363,7 @@ function registerExecutors(source, executors) { if (source && executors) _execut
 function _loadV2(input) {
   const CG = require('./contract-gates.js');
   if (typeof input === 'string') return { file: input, loaded: CG.load(input) };
-  if (input && input.payload && input.v) return { file: input.file || null, loaded: input };
+  if (input && input.payload && Array.isArray(input.payload.gates)) return { file: input.file || null, loaded: input };   // a loaded contract (openCheckpoint's has no v)
   if (input && input.gates) return { file: null, loaded: { v: 2, doc: null, payload: input } };
   throw new Error('runContract needs a .contract file, a loaded contract ({ payload, v }) or a v2 payload');
 }
@@ -1386,20 +1386,10 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
     _raidLedger.record('raid.contract.rejected', { queueId, reason, gate }, { source: 'raid', causedBy: queueId });
     return { ok: false, queueId, status: STATUS.BLOCKED, blocked: { gate, reason } };
   };
-  // RAID's gates before anything runs
-  if (forAgent) {
-    try {
-      const { checkAgentIntentContract } = require('../../../lib/agent-intent-contract.js');
-      const ck = checkAgentIntentContract(forAgent, intention, { hat });
-      if (ck && ck.ok === false) return block(`intent contract refused: ${ck.reason}`, 'intent-contract');
-    } catch (e) { console.warn(`[${MODULE_ID}] intent contract check unavailable (proceeding, said): ${e.message}`); }
-  }
-  let approval = null;
-  try {
-    const R = raid || require('./index.js');
-    approval = R._approveTool(source, `contract.run ${row.title}`, { action: 'build', intent: { action: 'implement', target: row.title }, causedBy: queueId });
-  } catch (e) { approval = { approved: true, reason: `RAID approval unavailable (${e.message}) — run, said` }; }
-  if (approval && approval.approved === false) return block(`RAID refused: ${approval.reason}`, approval.axiom ? 'constitution' : 'source-contract');
+  // RAID's gates before anything runs (gateBefore — the same gates every build path passes)
+  const g = gateBefore({ source, intention, forAgent, hat, title: row.title, queueId, raid });
+  if (!g.ok) return { ok: false, queueId, status: STATUS.BLOCKED, blocked: g.blocked };
+  const approval = g.approval;
   // the bricks
   let res;
   try {
@@ -1427,6 +1417,39 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
     } catch (e) { console.warn(`[${MODULE_ID}] HEAL_REQUESTED not emitted for ${queueId}: ${e.message}`); }
   }
   return { ok: status === STATUS.PASS, queueId, status, result: res, audit, failedBricks, blockedBricks, approval: approval ? { approved: approval.approved !== false, reason: approval.reason || null } : null };
+}
+
+/**
+ * gateBefore({ source, intention, forAgent, hat, title, queueId }) — §RD1 0.60.37: RAID's gates before any build runs,
+ * for every path (a .contract, a spec chunk, a compile). The intent contract when a hat is worn or the agent is a base
+ * agent (claude, chatgpt …; a model like ollama:qwen is the ladder's, not a base agent's intent); then RAID's own
+ * approval — the constitution, then the source's RAID contract (action build). A refusal is written on the queue row
+ * (when there is one) and on RAID's ledger. → { ok, approval } | { ok:false, blocked: { gate, reason } }
+ */
+function gateBefore({ source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, queueId = null, raid = null } = {}) {
+  const block = (reason, gate) => {
+    if (queueId) { try { jaaDB.update(TABLE, queueId, { status: STATUS.BLOCKED, blockReason: reason, blockedBy: gate, updatedAt: Date.now() }); } catch (_) {} }
+    _raidLedger.record('raid.contract.rejected', { queueId, source, reason, gate }, { source: 'raid', causedBy: queueId || source });
+    return { ok: false, blocked: { gate, reason } };
+  };
+  const base = forAgent ? String(forAgent).split(':')[0] : null;
+  if (hat || base) {
+    try {
+      const A = require('../../../lib/agent-intent-contract.js');
+      const known = !base || !A.VALID_BASE_AGENTS || A.VALID_BASE_AGENTS.has(base);
+      if (hat || known) {
+        const ck = A.checkAgentIntentContract(base, intention, { hat });
+        if (ck && ck.ok === false) return block(`intent contract refused: ${ck.reason}`, 'intent-contract');
+      }
+    } catch (e) { console.warn(`[${MODULE_ID}] intent contract check unavailable (proceeding, said): ${e.message}`); }
+  }
+  let approval;
+  try {
+    const R = raid || require('./index.js');
+    approval = R._approveTool(source, `contract.run ${title || ''}`.trim(), { action: 'build', intent: { action: 'implement', target: title || source }, causedBy: queueId || undefined });
+  } catch (e) { approval = { approved: true, reason: `RAID approval unavailable (${e.message}) — run, said` }; }
+  if (approval && approval.approved === false) return block(`RAID refused: ${approval.reason}`, approval.axiom ? 'constitution' : 'source-contract');
+  return { ok: true, approval };
 }
 
 /** submitV2(file, { source, intention, forAgent, hat, title, dependsOn, root }) — a .contract into RAID's queue; processNext runs
@@ -1506,4 +1529,4 @@ function reconcileOnBoot() {
   return { resumed, retried, escalated, checked: orphaned.length };
 }
 
-module.exports = { runContract, registerExecutors, submitV2, legacyToV2, submitContract, submitIdeariumChunk, submitBuildPhaseContract, synthesizeContract, BUILD_CONTRACT_SCHEMA, reportExternalOutcome, acknowledge, listQueue, processNext, reconcileOnBoot, MODULE_ID, VERSION, STATUS, STAGE, queryContractRepoFile, writeContractRepoFile, BROWSER_PROVIDERS, _dispatchToClearGlass, _advanceToOutputFolder };
+module.exports = { runContract, gateBefore, registerExecutors, submitV2, legacyToV2, submitContract, submitIdeariumChunk, submitBuildPhaseContract, synthesizeContract, BUILD_CONTRACT_SCHEMA, reportExternalOutcome, acknowledge, listQueue, processNext, reconcileOnBoot, MODULE_ID, VERSION, STATUS, STAGE, queryContractRepoFile, writeContractRepoFile, BROWSER_PROVIDERS, _dispatchToClearGlass, _advanceToOutputFolder };
