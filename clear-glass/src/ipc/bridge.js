@@ -1075,7 +1075,15 @@ class IpcBridge {
     });
     ipcMain.handle('macros:run', async (e, d) => {
       if (!this.macroTool) return { error: 'macro tool not available' };
-      return this.macroTool.execute({ action: 'run', name: d.name, agentId: d.agentId, params: d.params, skipSnapshot: d.skipSnapshot });
+      // §0.60.62 — James, 2026-10-15: "should not rely on raid." His run drives the driver in this process: no Guardian, no RAID.
+      // A step that is not a driver action (dom_query, url_listen) still takes the Guardian path, and says so if that fails.
+      const BA = require('../../../lib/agent-tools/tools/browser/browser-action.js'); const agentId = d.agentId || 'default';
+      const runStep = async ({ action, data = {} }) => {
+        const call = BA.driverCall(action, data); if (!call) return BA.execute({ action, data });
+        if (!this.driver) return { error: 'driver not wired' };
+        try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call }) }; } catch (err) { return { error: err.message }; }
+      };
+      return this.macroTool.execute({ action: 'run', name: d.name, agentId: d.agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
     });
     // §BUILT 2026-09-23 — the step builder the 2026-08-29 note above named as
     // "a separate, larger piece" rather than a bare JSON textarea. create/

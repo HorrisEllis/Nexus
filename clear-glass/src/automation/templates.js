@@ -39,6 +39,24 @@ const TEMPLATES = [
       { type: 'log', config: { message: 'scrolled {{steps.Scroll.output.rounds}} steps via {{steps.Scroll.output.via}}; {{steps.Messages.output}} messages on the page ({{steps.Scroll.output.countBefore}} before)' } },
     ] },
 
+  // 0.60.62 — James, 2026-10-15: "also need that macro or automation template for the chatgpt listener/scraper"
+  { id: 'chatgpt-scrape', name: 'ChatGPT chats: read new ones to a file', category: 'Browser',
+    help: 'Opens ChatGPT, reads the chat list in the sidebar, then opens each chat NOT seen before, scrolls it to the top, and saves its messages (who said it, the text) as one line of JSON per chat. Run it by hand first on one chat (set Max chats to 1). A chat already read is skipped even if it has new messages since: that is the honest limit until the crawler tracks changes. The selectors are ChatGPT\'s today and can change; fix them here, not in code.',
+    vars: { home: 'https://chatgpt.com/', chatLink: 'a[href^="/c/"]', messageSelector: '[data-message-author-role]', maxChats: '5', via: 'erosmancer', stepPx: '120', pauseMs: '700', stableRounds: '4' },
+    steps: [
+      { type: 'trigger', config: {} },
+      { type: 'browser', label: 'Open ChatGPT', config: { action: 'navigate', page: 'auto', url: '{{vars.home}}' } },
+      { type: 'wait_until', config: { kind: 'present', page: 'auto', selector: '{{vars.chatLink}}', timeoutMs: 30000 } },
+      { type: 'extract', label: 'Chats', config: { page: 'auto', mode: 'records', selector: '{{vars.chatLink}}', limit: 200, fields: 'title = @text\nlink = @href' } },
+      { type: 'loop', label: 'Each new chat', config: { items: '{{steps.Chats.output}}', body: 5, onlyNew: '{{item.link}}', max: '{{vars.maxChats}}', delayMs: 2000 } },
+      { type: 'browser', label: 'Open the chat', config: { action: 'navigate', page: 'auto', url: '{{item.link}}' } },
+      { type: 'wait_until', config: { kind: 'present', page: 'auto', selector: '{{vars.messageSelector}}', timeoutMs: 30000 } },
+      { type: 'browser', label: 'Scroll', config: { action: 'scroll_until', page: 'auto', via: '{{vars.via}}', direction: 'up', stepPx: '{{vars.stepPx}}', pauseMs: '{{vars.pauseMs}}', countSelector: '{{vars.messageSelector}}', stableRounds: '{{vars.stableRounds}}', maxRounds: 300 } },
+      { type: 'extract', label: 'Messages', config: { page: 'auto', mode: 'records', selector: '{{vars.messageSelector}}', fields: 'role = @attr:data-message-author-role\nid = @attr:data-message-id\ntext = @text' } },
+      { type: 'file', label: 'Save', config: { path: 'chatgpt-chats.jsonl', format: 'jsonl', content: '{"read": {{now:YYYY-MM-DD HH:mm | json}}, "title": {{item.title | json}}, "link": {{item.link | json}}, "messages": {{steps.Messages.output | json}}}' } },
+      { type: 'notify', config: { title: '{{workflow}} finished', body: 'Chats saved to chatgpt-chats.jsonl in the output folder.' } },
+    ] },
+
   { id: 'price', name: 'Price / change watcher', category: 'Browser',
     help: 'Every hour, read one value from a page (a price, a stock level, a status) and notify you when it changes or drops below a limit.',
     vars: { url: 'https://example.com/product', selector: '.price', below: '100' },

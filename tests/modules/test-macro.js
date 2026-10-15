@@ -259,6 +259,28 @@ async function main() {
     assert.ok(r.error && r.error.includes('no bookmark named'));
   });
 
+  await test('RS-01 a person\'s run uses runStep and never touches the Guardian path (no RAID)', async () => {
+    await macro.execute({ action: 'create', name: 'runstep_test', steps: [{ action: 'navigate', data: { url: 'https://example.com' } }, { action: 'dom_mutate', data: { selector: '#a', value: 'x' } }] });
+    const before = mockCalls.length, seen = [];
+    const r = await macro.execute({ action: 'run', name: 'runstep_test', agentId: 'default', skipSnapshot: true, runStep: async (st) => { seen.push(st.action); return { ok: true }; } });
+    assert.strictEqual(r.ok, true, JSON.stringify(r));
+    assert.deepStrictEqual(seen, ['navigate', 'dom_mutate']);
+    assert.strictEqual(mockCalls.length, before, 'browser_action (Guardian + RAID) must not be called when runStep is given');
+  });
+
+  await test('RS-02 a failing runStep stops the macro at that step with its error', async () => {
+    const r = await macro.execute({ action: 'run', name: 'runstep_test', agentId: 'default', skipSnapshot: true, runStep: async (st) => st.action === 'dom_mutate' ? { error: 'no such element' } : { ok: true } });
+    assert.strictEqual(r.ok, false); assert.strictEqual(r.failedAtStep, 1); assert.strictEqual(r.error, 'no such element');
+  });
+
+  await test('RS-03 driverCall maps a tool action to the driver sub-action, null for non-driver ones', async () => {
+    delete require.cache[baPath]; const real = require(baPath);
+    assert.deepStrictEqual(real.driverCall('get_url', {}), { action: 'getUrl' });
+    assert.deepStrictEqual(real.driverCall('scroll', { deltaY: 5 }), { action: 'scroll', deltaY: 5 });
+    assert.strictEqual(real.driverCall('dom_query', {}), null);
+    require.cache[baPath] = { id: baPath, filename: baPath, loaded: true, exports: mockBrowserAction };
+  });
+
   console.log(`\n${passed} passed, ${failed} failed\n`);
   process.exit(failed ? 1 : 0);
 }
