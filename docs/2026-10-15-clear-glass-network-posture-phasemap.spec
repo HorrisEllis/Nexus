@@ -225,3 +225,54 @@ phases:
     depends_on: [NP1_compartment, NP9_cli_first]
     does: "CLI first: downloads list|show|check|release|delete [--quarantined]. Then the Library Downloads area gets a state column, a Check and Release button and a filter; then Settings > Downloads gets the rules, caps, scanner path and the allow/deny hash lists."
     proof: "tests: a file lands in quarantine and is never moved to Downloads without release; type/extension mismatch and a zip-bomb fixture are flagged; no scanner => 'not scanned'; release hands the file to intake-bridge exactly once; kill_compartment removes the folder."
+
+# ═══ ADDENDUM 2026-10-15 (e) — freeze and resume on connection loss (MAPPED, nothing below is built) ═══
+addendum_e:
+  james: >-
+    "could even freeze the process on connection loss, using the rewind engine, then resume if the connection is established. with a timer. erosmancer and
+    copilot. cleardriver and agent mesh. but remember a plugin that can be removed and disabled or re-enabled."
+  reading: "The coder's reading (to confirm): a gentler rung on the kill ladder (NP15). Instead of destroying the tabs, hold them still, keep the rewind snapshot as the safety net, and carry on if the route comes back before a deadline; if it does not, escalate to the rule's kill."
+  ladder_now: "block (always) -> freeze with a deadline (new) -> kill_tabs -> kill_compartment. The rule picks the highest rung; the deadline moves it up automatically."
+  coder_says:
+    freeze_is_not_rewind: >-
+      Two different tools, used together. FREEZE keeps the live page in memory exactly as it was (a pause: Chromium's page lifecycle 'frozen' through the debugger protocol,
+      plus the network block). The REWIND engine saves cookies, storage and scroll position, not live memory, so it cannot bring back a running page; it is the fallback if the
+      page is discarded, the app restarts, or the deadline passes and he chooses restore over kill. Resume = unfreeze if the page is still alive, else restore from the snapshot.
+    what_does_not_survive: >-
+      Requests in flight, open sockets and streams (a ChatGPT or Claude reply mid-stream is cut and needs a re-ask), video/calls, and any server-side session that times out
+      while frozen. Resume brings the page back; it cannot un-break a connection the other side dropped.
+    the_exit_changes: >-
+      A rebuilt Tor circuit usually exits from a different address. To a site that is a new location mid-session, which can log him out or flag the account. So resume is
+      not automatic for signed-in sites: the rule has 'resume on a new exit: allow | ask | never'. The default is ask.
+    timer_lives_in_core: >-
+      The deadline must be enforced by core, not by the plugin. If the plugin that froze the tabs is removed or disabled, a plugin-held timer would leave them frozen forever.
+      Core's 'hold' primitive refuses a hold without a deadline, and escalates at the deadline whether or not any plugin is alive.
+  plugin_contract:
+    core_owns: ["the hold primitive with a mandatory deadline", "block-on-loss (always)", "escalation at the deadline", "the recorded state of every hold"]
+    plugin_adds: ["the graceful behaviour: freeze, snapshot, resume checks, the timer settings UI, notices", "per-system adapters for the four systems below"]
+    removed_or_disabled: "Core falls back to the stricter rung (block, then the rule's kill at the deadline). Never looser. Anything frozen when the plugin goes is escalated at once, not left frozen."
+    re_enabled: "The plugin reads core's recorded holds and reconciles. It does not assume a clean slate, and it does not resume a hold whose deadline has passed."
+  systems_and_what_each_does_during_a_hold:
+    erosmancer: "Virtual input stops. Its queue is paused, not dropped; on resume each queued pointer action is re-checked against the page (target still there, same position) or discarded with a note."
+    copilot: "Proposed actions are held and shown as held, with the countdown. Nothing auto-runs on resume: it re-reads the page (semantic tree) first, then asks or continues per its action setting."
+    cleardriver: "Calls to a held tab return a typed 'route_held' result with retry_after and the deadline, instead of hanging or failing generically; no call is sent direct."
+    agent_mesh: "Jobs on that route become 'held', not failed and not retried on another route. They resume in order after the route is verified, or fail with the reason at the deadline."
+    macros_and_automations: "A run pauses at a step boundary and, on resume, re-checks the last step's page condition (wait_for) before continuing; the same events feed triggers (transport_down, route_held, route_resumed)."
+failure_modes_to_test:
+  - "Deadline passes with no route: escalates to the rule's kill, once, and logs why."
+  - "Plugin removed while frozen: tabs are escalated at once, none stay frozen."
+  - "Plugin re-enabled mid-hold: it adopts the hold, does not duplicate it, does not extend the deadline."
+  - "Route flaps (up, down, up): holds are not stacked; the deadline is from the first loss unless the route stayed verified for N seconds."
+  - "Leak test fails on return: stays held/blocked, never resumes unverified."
+  - "Resume on a new exit with 'never': goes to kill_tabs, with the reason."
+  - "Frozen tab closed by the person: the hold ends with it, snapshot kept per retention."
+phases:
+  NP17_hold_primitive:
+    status: OPEN
+    depends_on: [NP15_kill_switch]
+    does: "Core: hold(route, deadline, reason) with mandatory deadline, recorded state, escalation, events (route_held, route_resumed, hold_expired); adapters for ClearDriver and agent mesh first (CLI first: net hold list|release|extend)."
+  NP18_freeze_plugin:
+    status: OPEN
+    depends_on: [NP17_hold_primitive, NP12_plugin_split]
+    does: "The plugin that freezes pages (page lifecycle), snapshots with the rewind engine, resumes or restores, and wires Erosmancer, the co-pilot, macros and automations; its Settings part, and the exit-change rule."
+    proof: "all the failure modes above, with a fake driver and a fake clock; remove/disable/re-enable tested explicitly."
