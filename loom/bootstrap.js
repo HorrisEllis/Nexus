@@ -148,6 +148,7 @@ const handMapped = [
   ...require('./maps/component-intake-map').FILES.map(f => f[0]),   // §0.60.5
   ...require('./maps/verified-primitives-map').FILES.map(f => f[0]),   // §0.39.310
   ...require('./maps/compartment-activity-map').FILES.map(f => f[0]),   // §0.39.367
+  ...require('./maps/releases-map').FILES.map(f => f[0]),   // §0.60.41 RN1
   'loom/agent-suite/index.js',
 ];
 console.log('\nscanning whole tree from source (real require/import edges only)...\n');
@@ -306,6 +307,9 @@ if (mappedCodebase.failures.length) { console.log(`  idearium-codebase FAILURES:
 const mappedCompartmentActivity = require('./maps/compartment-activity-map').mapCompartmentActivity(driver);
 console.log(`  compartment-activity: ${mappedCompartmentActivity.components.length} components, ${mappedCompartmentActivity.hooks.length} hooks, ${mappedCompartmentActivity.wires.length} wires`);
 if (mappedCompartmentActivity.failures.length) { console.log(`  compartment-activity FAILURES: ${mappedCompartmentActivity.failures.length}`); for (const f of mappedCompartmentActivity.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedCompartmentActivity.failures.length; }
+const mappedReleases = require('./maps/releases-map').mapReleases(driver);   // §0.60.41 RN1
+console.log(`  releases: ${mappedReleases.components.length} components, ${mappedReleases.hooks.length} hooks, ${mappedReleases.wires.length} wires`);
+if (mappedReleases.failures.length) { console.log(`  releases FAILURES: ${mappedReleases.failures.length}`); for (const f of mappedReleases.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedReleases.failures.length; }
 // §0.39.278 — the live chat ledger, the page-side stream that feeds it (HTTP), the pane's kept conversation
 const mappedChatLedger = require('./maps/chat-ledger-map').mapChatLedger(driver);
 console.log(`  chat-ledger: ${mappedChatLedger.components.length} components, ${mappedChatLedger.hooks.length} hooks, ${mappedChatLedger.wires.length} wires`);

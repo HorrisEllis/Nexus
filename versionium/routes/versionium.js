@@ -8,6 +8,7 @@
  * sovereign store now, not cortex's) are new.
  */
 const engine = require('../lib/engine.js');
+const REL = require('../lib/releases.js');
 const { jaaDB } = require('../lib/store.js');
 const { json, readBody } = require('../lib/http-utils.js');
 
@@ -34,6 +35,41 @@ async function handle(req, res, { method, pathname, url }) {
       json(res, 500, { ok: false, error: `versionium commit failed: ${e.message}` });
     }
     return true;
+  }
+
+  // §0.60.41 RN1 — tags (immovable) and releases, per repository (docs/2026-10-15-one-contract-raid-releases-phasemap.spec)
+  if (pathname === '/api/versionium/tags' || pathname === '/api/versionium/releases' || pathname.startsWith('/api/versionium/releases/')) {
+    try {
+      if (pathname === '/api/versionium/tags' && method === 'GET') { json(res, 200, { ok: true, tags: REL.tags({ repository: url.searchParams.get('repository') || null }) }); return true; }
+      if (pathname === '/api/versionium/releases' && method === 'GET') {
+        json(res, 200, { ok: true, releases: REL.releases({ repository: url.searchParams.get('repository') || null, limit: parseInt(url.searchParams.get('n'), 10) || 1000 }) });
+        return true;
+      }
+      if (pathname.startsWith('/api/versionium/releases/') && method === 'GET') {
+        const r = REL.get({ repository: url.searchParams.get('repository') || null, version: decodeURIComponent(pathname.slice('/api/versionium/releases/'.length)) });
+        json(res, r ? 200 : 404, r ? { ok: true, release: r } : { ok: false, error: 'no such release' });
+        return true;
+      }
+      const body = (await readBody(req)) || {};
+      if (pathname === '/api/versionium/tags' && method === 'POST') {
+        const t = REL.tag(body);
+        if (!t.already) _emitEvent('versionium.tagged', { repository: t.repository, name: t.name, commitId: t.commitId, gitCommit: t.gitCommit });
+        json(res, 200, { ok: true, tag: t });
+        return true;
+      }
+      if (pathname === '/api/versionium/releases' && method === 'POST') {
+        const list = Array.isArray(body.releases) ? body.releases : [body];
+        const out = list.map(r => { try { return REL.release(r); } catch (e) { return { ok: false, version: r && r.version, error: e.message, code: e.code }; } });
+        for (const r of out) if (r && r.uuid && !r.already) _emitEvent('versionium.released', { repository: r.repository, version: r.version, tag: r.tag, commitId: r.commitId, gitCommit: r.gitCommit });
+        const bad = out.filter(r => r && r.ok === false);
+        if (!Array.isArray(body.releases)) { json(res, bad.length ? (bad[0].code === 'TAG_EXISTS' ? 409 : 400) : 200, bad.length ? bad[0] : { ok: true, release: out[0] }); return true; }
+        json(res, 200, { ok: !bad.length, recorded: out.filter(r => r && r.uuid && !r.already).length, already: out.filter(r => r && r.already).length, refused: bad });
+        return true;
+      }
+    } catch (e) {
+      json(res, e.code === 'TAG_EXISTS' ? 409 : e.code === 'BAD_REQUEST' ? 400 : 500, { ok: false, error: e.message, code: e.code || null });
+      return true;
+    }
   }
 
   // §0.39.279 (staging-self-heal S0) — branches with their fork points; POST makes one AT a commit (or a branch's head)
