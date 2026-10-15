@@ -18,6 +18,7 @@ const fs   = require('fs');
 const MODULES_DIR = __dirname;
 
 const SUITES = [
+  'test-lifeline-ollama-dispatch.test.js', // 0.60.50 — an Ollama job goes to the bridge, not Guardian's tab check (officiator / RAID bricks)
   'test-cg-copilot-no-api.test.js',      // 0.39.274 — the Clear Glass pane: copilot, else Ollama / Guardian directly; no API
   'test-code-intel.test.js',             // 0.39.273 — structural chunker v2, chunk cards, search, grep (lib/code-intel)
   'test-code-edit.test.js',              // 0.39.273 — edit engine, inject delete/defer, real-bytes reads (lib/code-edit.js)

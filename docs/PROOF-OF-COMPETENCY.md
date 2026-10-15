@@ -166,3 +166,9 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     - `tests/modules/test-releases.test.js` (5/5);
     - `CHANGELOG-0.60.41.md`;
     - 250 Nexus releases are now recorded in Versionium, 210 of them with his words.
+- **2026-10-15: "bricks keep failing."**
+  - **Context:** he pasted his full run log instead of a guess at the cause. In it, every RAID officiator drop failed
+    with `forAgent=ollama` while Guardian was completing jobs for three other agents in the same minutes.
+  - **What it shows:** reporting a failure with its raw evidence is what made a one-file root cause findable: the log
+    itself showed Guardian was up, so "guardian unreachable" was the wrong lead.
+  - **Evidence:** `tests/modules/test-lifeline-ollama-dispatch.test.js` (3/3, 3 fail on the old code); `CHANGELOG-0.60.50.md`.
