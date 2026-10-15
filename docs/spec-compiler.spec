@@ -99,3 +99,6 @@ spec:
       4. T2/T3 fill the logic gaps via Ollama
       5. System is recovered without starting from memory
     The specs ARE the backup.
+
+## ADDENDUM 2026-10-15 — 0.60.66 agents write specs in this format, and the gate holds them to it
+spec_format above is now enforced on agent writes: lib/spec-collect.js validate() (root spec:, required_keys, meta_required, module_required, exports as "name(params) → returns") runs in the code.write step gate for any .spec whose top key is spec:. The 'spec-framework' prompt block teaches this format when a request's intent is spec. test-spec-pipeline SP-05 fails if the lists here and in spec-collect.js drift apart. James: "need the agents to use the spec compiler? like the yaml."

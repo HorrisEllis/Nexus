@@ -19,3 +19,7 @@ payload:
       kind: parses
       # languages checked here; any other syntax passes this check (it is not proof, just not checkable yet)
       languages: [json, yaml, yml, js, mjs, cjs]
+    # 0.60.66 SF3 — James: "need to inject a framework for generating a .spec file. then need to listen for it to collect it."
+    # A .spec whose top key is spec: (the compiler's format, written from the spec-framework block) must be readable by it.
+    - id: spec-compiler-format
+      kind: spec_format

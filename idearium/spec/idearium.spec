@@ -629,3 +629,6 @@ spec:
 # POST /api/access/keys/:id/revoke (admin). Emits idearium.access.key. Files: <data>/access/{keys,sessions}.json, ledger.jsonl.
 # Not yet: a scoped key still sees every repo in list routes (only /api/repos/<uuid>/… is held); Nexus's own processes do
 # not carry a key, so password mode refuses them (IA6).
+
+## ADDENDUM 2026-10-15 — 0.60.66 intent blocks, the spec framework, builds with their mapped context
+Prompt blocks (lib/repo-prompt-blocks.js 1.8.0) can apply by intent (`when: intent:<name>`, intent from lib/context-prereqs.js intentOf: explain · change · debug · build · spec). New default blocks: 'spec-framework' (intent:spec — the spec compiler's format) and 'build-phase-map' (build — what Nexus mapped for the phase, lib/phase-map-auto.js contextText). A phase build passes `map::phase` to RA.dispatch so a spec it writes is tagged with it. James: "need to inject a framework for generating a .spec file. then need to listen for it to collect it." test-spec-pipeline, test-chunked-phase-build CB-03b.

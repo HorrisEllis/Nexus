@@ -8,6 +8,8 @@
 const _AB = { repo: null, blocks: [], placeholders: {} };
 
 const _AB_WHEN = { always: 'every dispatch', tools: 'guardian + ollama (tool loop)', guardian: 'guardian (browser agents) only', build: 'file builds (spec chunks) only' };
+// 0.60.66 SF1 — an intent block names its intent in full: 'intent:spec' → 'requests to write a spec'
+const _abWhen = (w) => _AB_WHEN[w] || (String(w).startsWith('intent:') ? `requests whose intent is ${String(w).slice(7).split('|').join(' or ')}` : w);
 
 async function renderAgentBlocks(repo) {
   const el = document.getElementById('agent-blocks-section');
@@ -42,7 +44,7 @@ function _abBlockHtml(b) {
       <input type="checkbox" ${b.enabled ? 'checked' : ''} onclick="event.stopPropagation();agentBlockEnable('${b.id}',this.checked)" title="send this block">
       <span class="ab-label">${escapeHtml(b.label)}</span>
       ${b.edited ? '<span class="ab-edited">edited</span>' : ''}
-      <span class="ab-tag">${escapeHtml(_AB_WHEN[b.when] || b.when)}</span>
+      <span class="ab-tag">${escapeHtml(_abWhen(b.when))}</span>
     </div>
     <div class="ab-body">
       <textarea class="ab-text" id="ab-text-${b.id}" spellcheck="false">${escapeHtml(b.text)}</textarea>

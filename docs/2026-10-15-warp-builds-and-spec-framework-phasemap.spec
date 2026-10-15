@@ -67,25 +67,25 @@ phases:
     does: "contract-intake _realAgentExecutor and the officiator call through the same wrapper; CK-255 green."
     proof: "CK-255 green on Nexus"
   SF1_intent_blocks:
-    status: OPEN
+    status: DONE (0.60.66)
     systems: [idearium, core]
-    files: [lib/repo-prompt-blocks.js, lib/intent-classifier.js, lib/repo-agent.js, idearium/api/index.js, idearium/ui/js/repo-settings.js, tests/modules/test-intent-blocks.test.js (new)]
+    files: [lib/repo-prompt-blocks.js, lib/context-prereqs.js, lib/repo-agent.js, idearium/ui/js/agent-blocks.js, idearium/ui/settings.html, tests/modules/test-spec-pipeline.test.js (new)]
     depends_on: []
     specs: [idearium/spec/idearium.spec, docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec]
     does: "prompt blocks gain `when: intent:<name>`; dispatch passes the classified intent; Repo > Settings > Agents shows each block's intent, expanded."
     proof: "a spec-intent request carries the block; a build request does not"
   SF2_spec_framework_block:
-    status: OPEN
+    status: DONE (0.60.66)
     systems: [idearium, core]
-    files: [lib/repo-prompt-blocks.js, docs/spec-compiler.spec, idearium/compiler-bridge.js, tests/modules/test-intent-blocks.test.js]
+    files: [lib/repo-prompt-blocks.js, docs/spec-compiler.spec, idearium/compiler-bridge.js, tests/modules/test-spec-pipeline.test.js]
     depends_on: [SF1_intent_blocks]
     specs: [docs/spec-compiler.spec, idearium/spec/idearium.spec]
     does: "default block 'spec-framework' (when intent:spec): the spec-compiler YAML skeleton (meta, purpose, axioms, modules with exports, schemas, gates, tests) and the rule: reply with ```yaml spec/<name>.spec. Editable like every block."
     proof: "the block text is the compiler's own sections; edited text is what is sent"
   SF3_collect_the_spec:
-    status: OPEN
+    status: DONE (0.60.66 — gate + collect + phase tag; registering in the spec engine is not built, see addendum)
     systems: [idearium, core]
-    files: [lib/repo-inject.js, lib/spec-document.js, lib/spec-collect.js (new), idearium/spec-engine/index.js, idearium/api/index.js, idearium/cli/route-commands.js, tests/modules/test-spec-collect.test.js (new)]
+    files: [lib/repo-inject.js, lib/spec-collect.js (new), lib/step-gate.js, lib/step-gates/code.write.step_gate, lib/repo-agent.js, idearium/api/index.js, tests/modules/test-spec-pipeline.test.js]
     depends_on: [SF2_spec_framework_block]
     specs: [docs/spec-compiler.spec, idearium/spec/idea-to-spec.spec, idearium/spec/idearium.spec]
     does: "lib/spec-collect.js: when an .inject lands a *.spec (or yaml with a spec: root) — validate (spec-document check + compiler shape); valid -> registered on the repo's specs and the spec engine, event idearium.spec.collected, tagged with the phase that asked for it; invalid -> errors back to the agent once, said."
@@ -93,7 +93,7 @@ phases:
   SF4_compile_on_collect:
     status: OPEN
     systems: [idearium, core]
-    files: [lib/spec-collect.js, idearium/compiler-bridge.js, emerge/compiler/index.js, lib/repo-inject.js, tests/modules/test-spec-collect.test.js]
+    files: [lib/spec-collect.js, idearium/compiler-bridge.js, emerge/compiler/index.js, lib/repo-inject.js, tests/modules/test-spec-pipeline.test.js]
     depends_on: [SF3_collect_the_spec]
     specs: [docs/spec-compiler.spec, idearium/spec/idearium.spec]
     does: "per-repo setting: a collected spec runs T0/T1 (zero tokens); its files arrive as proposed .inject nodes."
@@ -141,9 +141,9 @@ phases:
     does: "the Phases view of any repo (Nexus: the live tree; a project: its own files) carries each phase's mapping, cached by the maps' text; a phase never seen before in a repo is announced (idearium.phase.mapped) with what it was mapped to; the phase detail shows mapped files with why, requires, used by, waits on, specs. James's maps are never rewritten."
     proof: "MA-07: a project's Phases view carries the mapping; a phase added later is announced as new and mapped"
   MP3_builds_get_the_mapped_context:
-    status: OPEN
+    status: DONE (0.60.66 — phase builds; the chat Agent tab still finds context with tools)
     systems: [idearium, core]
-    files: [idearium/api/index.js, lib/repo-prompt-blocks.js, lib/build-context.js, lib/phase-map-auto.js]
+    files: [idearium/api/index.js, lib/repo-prompt-blocks.js, lib/phase-map-auto.js, tests/modules/test-chunked-phase-build.test.js]
     depends_on: [MP2_automatic_in_every_repo, SF1_intent_blocks]
     specs: [idearium/spec/idearium.spec, docs/2026-10-15-automatic-tracking-phasemap.spec]
     does: "a phase build's brief carries its mapping (files with their current lines, requires, consumers, specs) as an editable prompt block (when: build), so the agent starts with the context instead of finding it with tools. This is the automatic-tracking map's CX1, fed by MP1."
@@ -174,7 +174,7 @@ file_dependencies:
   cortex/core/raid/contract-intake.js: {requires: [copilot/lifeline.js], consumers: [idearium/api/index.js, cortex/core/raid/officiator.js, and 8 more (10 files)]}
   lib/intent-classifier.js: {consumers: [lib/reasoning-route.js, and 6 more (7 files)]}
 
-order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1, PT2 (0.60.63-64), MP1, MP2 (0.60.65) done first. Next: MP3 (needs SF1), MP4. Each phase: backend → route → command → UI."
+order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → SF3 → SF4; IS1 after SF1. PT1, PT2 (0.60.63-64), MP1, MP2 (0.60.65), SF1, SF2, SF3, MP3 (0.60.66) done. Next: WB0-WB2 (WARP), SF4, MP4, IS1. Each phase: backend → route → command → UI."
 
 ## ADDENDUM 2026-10-15 — 0.60.63 PT1: in Idearium's phases, files and dependencies mapped, specs tagged per phase
 # James: "can you make sure those are added to the phases in idearium. make sure all of the files and dependancies are mapped. and i want the specs to tagged per phase"
@@ -207,3 +207,21 @@ order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → 
 # Coder's reading (to confirm): "listener" = a new phase is mapped the moment any repo's phases are read and announced
 # as an event — not a file watcher. MP3 (builds get the mapped context) is the part that stops agents hunting with
 # tools; it needs SF1's intent blocks.
+
+## ADDENDUM 2026-10-15 — 0.60.66 SF1 + SF2 + SF3 + MP3: the spec framework, its listener, and builds that start with their context
+# James (continuing the pipeline): "Continue"
+# SF1: lib/context-prereqs.js gains the intent `spec` (a request to WRITE a spec, or one naming a .spec file — "does this
+#   match the spec?" stays explain); a prompt block can say when: intent:<name>; repo-agent compose() passes the intent to
+#   every caller. The Agents settings name an intent block's intent in full.
+# SF2: the 'spec-framework' block (when: intent:spec) teaches the spec compiler's own format; its example is checked to be a
+#   spec the compiler reads (SP-03), so it cannot teach a broken shape. Editable and switchable like every block.
+# SF3: the code.write step gate gains spec_format (lib/spec-collect.js): a .spec whose top key is spec: must satisfy
+#   docs/spec-compiler.spec spec_format, else it is refused with exactly what to add. One that lands is collected: its modules
+#   and exports on the inject's result, idearium.spec.collected on the bus, tagged with the phase that asked for it (a phase
+#   build passes `map::phase` through repo-agent to the reply's injects). Not built (said, §1.2): registering a collected
+#   spec in the spec engine or the repo's spec list — the file is in the repo, which is where Idearium reads specs from; and
+#   sending the refusal back to the agent for one retry — the reasons are in the reply's refused list, which the person sees.
+# MP3: a phase build's request carries the 'build-phase-map' block (editable): the phase's mapped files with why and their
+#   exports, requires, used-by, waits-on and specs; a chunked build gets its own file's only, under the small-model budget.
+# Found by the run (TRUTH_OVER_COHERENCE): threading the phase broke 9 of 67 test-repo-agent-provider checks ("phase is not
+#   defined" — the inject call sits in _finish, not _dispatch); fixed before shipping, 67/67.

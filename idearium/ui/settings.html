@@ -699,11 +699,12 @@ function viewPrompt(d) {
   if (!b) return '<div class="empty">The prompt blocks could not be read.</div>';
   if (d.repo.settingsFrom) return '<div class="empty">This branch uses the original repo\'s prompt blocks — open the original to edit them.</div>';
   const when = { always: 'every backend', tools: 'Ollama + Guardian (tool loop)', guardian: 'Guardian browser agents', build: 'file builds (spec chunks)' };
+  const whenOf = (w) => when[w] || (String(w).startsWith('intent:') ? `requests whose intent is ${String(w).slice(7).split('|').join(' or ')}` : w);
   return `<div class="card"><h3><span class="grow">Prompt blocks · v${esc(b.version)}</span><button class="btn" id="p-reset">Reset all to default</button></h3>
     <div class="note">Everything the agent is sent besides its persona, in order. Only necessities are on by default (0.39.279): context is fetched with tools, not pasted.</div>
     ${b.list.map(x => `<div class="block${x.enabled ? '' : ' off'}" data-b="${esc(x.id)}"><div class="bh">
       <label class="switch"><input type="checkbox" ${x.enabled ? 'checked' : ''} data-on="${esc(x.id)}"><span></span></label>
-      <div class="lbl"><div class="k">${esc(x.label)}</div><div class="d">${esc(x.id)} · ${esc(when[x.when] || x.when)}${x.edited ? ' · <b>edited</b>' : ''}${(b.placeholders[x.id] || []).length ? ` · fills ${esc(b.placeholders[x.id].join(' '))}` : ''}</div></div>
+      <div class="lbl"><div class="k">${esc(x.label)}</div><div class="d">${esc(x.id)} · ${esc(whenOf(x.when))}${x.edited ? ' · <b>edited</b>' : ''}${(b.placeholders[x.id] || []).length ? ` · fills ${esc(b.placeholders[x.id].join(' '))}` : ''}</div></div>
       ${x.edited ? `<button class="btn" data-breset="${esc(x.id)}">default text</button>` : ''}</div>
       <textarea rows="${Math.min(12, Math.max(2, String(x.text).split('\n').length + 1))}" data-text="${esc(x.id)}">${esc(x.text)}</textarea></div>`).join('')}</div>
   <div class="card"><h3><span class="grow">Preview the first message</span></h3>

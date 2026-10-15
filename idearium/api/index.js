@@ -785,7 +785,20 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // §0.39.362 CH2 — the compartment's charter (charter.spec at the repo root): its axioms, what must stay true, its end state
   let charterText = '';
   try { charterText = _require('../../lib/charter.js').requestText(_charterOf(target.uuid)); } catch (_) {}
-  const message = [req.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+  // §0.60.66 MP3 — James: "The agent keeps having to find context, with tools. Need them all mapped." What Nexus mapped for
+  // this phase (MP1/MP2: node.mapped) goes in its 'build-phase-map' prompt block (editable, Settings → Agents), so the agent
+  // starts with the files, exports, requires, used-by and specs instead of searching for them. Chunked: each file's own.
+  let phaseMapFor = () => '';
+  try {
+    const AM = _require('../../lib/phase-map-auto.js'); const PBm = _require('../../lib/repo-prompt-blocks.js');
+    const blocksPM = PBm.getBlocks(repo.uuid);
+    const exportsOf = AM.exportsOfTree(scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : dir);
+    phaseMapFor = (focus = null) => {
+      const t = AM.contextText(node.mapped, { focus, max: focus ? 500 : 900, exportsOf });
+      return t ? PBm.renderBuild(blocksPM.filter(b => b.id === 'build-phase-map'), { phasemap: t }).text : '';
+    };
+  } catch (_) { /* no mapping: the request is sent as before */ }
+  const message = [req.message, phaseMapFor(), charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
@@ -930,7 +943,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
-    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, ...(bare ? { noContext: true } : {}) }); }
+    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(bare ? { noContext: true } : {}) }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -984,7 +997,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const file = expectFiles[i];
       const ck = { chunk: i + 1, chunks: expectFiles.length, file };
       const cr = PH.chunkRequest({ phase: node, mapText, repo: target, file, index: i, files: expectFiles, done, depsDone });
-      const msg = [cr.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+      const msg = [cr.message, phaseMapFor(file), charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
       last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg, files: [file], ck }), onOutcome: makeOnOutcome(ck) });
       if (last.state !== 'replied') {
         appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-stopped`, ...base, ...ck, state: 'failed', chunkStopped: true, snapshot: commitId,
