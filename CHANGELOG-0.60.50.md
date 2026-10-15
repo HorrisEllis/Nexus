@@ -20,6 +20,12 @@ In his own runs, a build step made 7 tool calls and then ChatGPT answered "What 
 - `tests/modules/test-run-state.test.js` 27/27, including the live reply from job c2e60104 (RS-20).
 - step-gate 18/18, pipeline-routing 19/19, node-export 10/10, loom map 19/19, phasemap 7/7 and 14/14.
 
+## Found afterwards (same day)
+
+- `tests/modules/test-run-pipeline.test.js` 11/11 runs the REAL `repo-agent.dispatch` against a stub copilot: a run per goal, a tab that "did nothing with it" moves to the next provider (attempt 2, events recorded), a finished goal starts fresh, a failed one resumes, and all-providers-lost is bounded.
+- A bug in what shipped: `RUN_STATE_DIR` was not in the test sandbox, so every repo-agent test wrote `.run` nodes into the real `data/run-state/`. Registered in `lib/test-sandbox.js`.
+- `docs/PHASE-CENSUS-2026-10-15.md`: all 1472 phases read; 250 pending phases name files that all exist (status may be stale); GW3/GW7/GW8/GW11/GW16 overlap N14/N15/RS2/RW1 from his earlier words.
+
 ## Not verified / known
 
 - No live run through ChatGPT yet.

@@ -444,3 +444,21 @@ not_verified:
   - "Resource headroom for N parallel compartments on his machine (GW0g reads it live; no number is assumed)."
   - "How many engines are registered in the search_engines jaa table today (the table was not read), and whether any has an intent-like tag."
   - "That a content hash and licence can be obtained from every source GW22 would use (GitHub's API gives a licence; image sites vary)."
+
+## ADDENDUM 2026-10-15 - the phase census (docs/PHASE-CENSUS-2026-10-15.md): what this map duplicates
+
+James: "check all phases in nexus, over 1200, for any useful phases."
+The census read all 1472 phases (595 done, 872 pending). Several GW phases restate phases he already specced, in his words. They are
+NOT dropped (the GW text stays, §0.3); building them means building the older phase, and this map defers to it:
+- GW8 (failure mode field) is N14_failure_mode_field + FR1_failure_reports. GW3 (contract trace) is N15_contract_history + RQ21.
+- GW7 replay and GW16 branching are RS2_replay_rewind_branch (replay byte-identical, no model; rewind to a step; branch from a step).
+- GW11 (snapshot per gate) is RW1_rewind_engine_vm_snapshots, which says QMP savevm of the live machine. vm-control refuses that while the
+  repo is shared over 9p/vvfat (read in source), so GW14 (copy in) is what RW1 needs on Linux hosts - an addition to RW1, not a replacement.
+- GW1/GW2 build on RQ24_the_gate_transaction and RQ3 (a retry carries only the failing check's output).
+- CE10 overlaps R1 (guardian job-retry), not built. R1 retries the same tab; CE10 moves provider only when nothing was typed.
+- CE10 picks the next provider from the pipeline-routing chain (how the existing 'rest' fallback already works). ME5 makes RAID's _decide the
+  one chooser (§9.1); CE10 must move onto it when ME5 lands.
+New with no earlier phase found: GW4 (copilot dispatched through contract gates), GW5 (tool parity), GW12 (minimal layered environment), GW13/GW14
+(SSH door, copy-in), GW15 (every file tested, mutation), GW17 (friction per file), GW18 (bisect), GW19-GW21 (sandbox results, file actions,
+autonomy), GW22 (find before generate), GW23 (wire what exists). "New" means no phase with that name was found; it was not read phase by phase.
+
