@@ -606,20 +606,22 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
           if (rw) {
             record(p, `${g.id}.rewound`, JSON.stringify({ to: toCommit, ok: rw.ok !== false, files: rw.files || [], why: rw.why || null }).slice(0, 1000), { by: 'scheduler:rewind' });
             log.push({ round, gate: g.id, status: 'REWOUND', reasons: [rw.ok !== false ? `back to ${toCommit || 'the build snapshot'}${(rw.files || []).length ? ` — ${rw.files.join(', ')}` : ''}` : `not rewound: ${rw.why || 'no answer'}`] });
+            onEvent({ gate: g.id, status: 'REWOUND', round, to: toCommit, ok: rw.ok !== false, files: rw.files || [] });
           }
         }
+        let commit = null;
         log.push({ round, gate: g.id, status: r.status, reasons: r.reasons, ...(agent ? { agent } : {}), ...(fc ? { class: fc.cls } : {}) });
         if (r.status === 'PASSED') {
           // every pass is a checkpoint: what was verified, against which input hashes, by whom — the caller saves it
           // §GS1 — and the Versionium commit it passed at (versioning.commit), so it can be rewound to and compared against
-          let commit = null;
           if (versioning && typeof versioning.commit === 'function') { try { commit = await versioning.commit({ gate: g, contract: p }); } catch (_) { commit = null; } }
           if (commit) record(p, `${g.id}.commit`, String(commit), { by: 'scheduler:versioning' });
           p.state.checkpoints = p.state.checkpoints || [];
           p.state.checkpoints.push({ gate: g.id, at: Date.now(), hashes: (p.state.gates[g.id] || {}).hashes || {}, ...(agent ? { agent } : {}), ...(commit ? { commit } : {}) });
           try { onCheckpoint(p, g.id); } catch (_) { /* the caller's save failing never fails the brick; it is in memory */ }
         }
-        onEvent({ gate: g.id, status: r.status, round });
+        // §GT2 0.60.42 — the move carries what the caller tracks: the file, the agent, the failure class, the commit it passed at
+        onEvent({ gate: g.id, status: r.status, round, file: g.file || null, ...(agent ? { agent } : {}), ...(fc ? { class: fc.cls } : {}), ...(commit ? { commit } : {}) });
       }));
     }
     // a gate that failed and has no retries left stops the loop from spinning on it

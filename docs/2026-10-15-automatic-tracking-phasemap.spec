@@ -54,7 +54,7 @@ phases:
   # order: bottom-up. Each phase: backend → API → command → UI, versioned, tested, merged.
 
   GT2_each_gate_tags_and_reports:
-    status: OPEN
+    status: DONE (0.60.42)
     files: [cortex/core/raid/contract-gates.js, cortex/core/raid/contract-intake.js, idearium/api/index.js]
     does: >-
       One progress event per gate move (READY/RUNNING/PASSED/FAILED/SPLIT/REWOUND/INDIVISIBLE), from the scheduler's own
@@ -156,4 +156,13 @@ drift_accounted:
 # path, each citing its source. CX1 then reads a brick's context from the tree (its node, its dependencies' nodes, their
 # observations) instead of composing from scratch. Coder's reading of "semantic tree" (to confirm): a tree by structure
 # with meaning attached (summaries, observations), searchable by words; embeddings added only where vector-memory runs.
+
+## ADDENDUM 2026-10-15 — GT2 built (0.60.42)
+
+# James: "then each gate tags and tracks progress through the system." One wrapper (contract-intake _tracker) around the
+# scheduler's onEvent, so contract-gates stays system-free: the scheduler only adds what a move already knew (file, agent,
+# class, commit; REWOUND is now a move too). Tags are named per run (gate/<contract>~<run>/<gate>@<n>) — the coder's
+# change from the map's gate/<contract>/<gate>: the same phase built twice, or two maps' P1 in one repo, would otherwise
+# collide with a tag that never moves. RAID_GATE_MOVED has no listener yet; KT1 is its first (observations per file).
+# Each settled move is also a row on the Plan's ledger, so a reload keeps the run's gate timeline (no progress lost).
 

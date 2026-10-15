@@ -1368,7 +1368,63 @@ function _loadV2(input) {
   throw new Error('runContract needs a .contract file, a loaded contract ({ payload, v }) or a v2 payload');
 }
 
-async function runContract(input, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, executors = null, onEvent = () => {}, onCheckpoint = () => {}, root, causedBy = null, raid = null, concurrency, queueId: existingId = null, versioning = null, learners = null, depth = null } = {}) {
+/**
+ * §GT2 0.60.42 — each gate tags and reports its progress (docs/2026-10-15-automatic-tracking-phasemap.spec GT2).
+ * James: "then each gate tags and tracks progress through the system." One wrapper around the scheduler's onEvent, so
+ * nothing the scheduler does needs to know who is watching. A settled move (not RUNNING/READY):
+ *   - progress on RAID's queue row: { passed, failed, total, moves, last } — one query (progress(queueId)), survives a restart
+ *   - a bus event, RAID_GATE_MOVED — the run, the gate, the move, the commit, the class, the progress
+ *   - a row in the compartment's activity log when the caller names one (an Idearium repo)
+ *   - on PASSED with a commit: a Versionium tag gate/<contract>~<run>/<gate>@<n> on that commit, through the caller's
+ *     versioning.tag (n counts the gate's passes, so a re-pass after a change is a new tag and a tag never moves); the tag
+ *     name is recorded as the gate's evidence (<gate>.tag) and so in the audit
+ * Every side effect is best-effort and said once when it fails; a brick never fails because tracking did.
+ */
+const SETTLED = new Set(['PASSED', 'FAILED', 'SPLIT', 'REWOUND', 'INDIVISIBLE', 'BLOCKED']);
+function _tracker({ queueId, p, source, title, versioning, compartment, onEvent }) {
+  const CG = require('./contract-gates.js');
+  const pending = [];
+  const warned = new Set();
+  const warn = (what, e, also = '') => { if (warned.has(what)) return; warned.add(what); console.warn(`[${MODULE_ID}] ${what}${also} (${queueId}): ${e && e.message ? e.message : e}`); };
+  // the run names its tags: the same phase built again (or another map's P1 in the same repo) never collides with these
+  const contractId = `${String(p.id || p.uuid || 'contract').replace(/[^\w.-]+/g, '-').slice(0, 60)}~${String(queueId).slice(0, 8)}`;
+  let moves = 0;
+  const progress = (last) => {
+    const gs = (p.gates || []).filter(g => g.type !== 'phase');
+    const st = (id) => ((p.state.gates || {})[id] || {}).status;
+    return { passed: gs.filter(g => st(g.id) === 'PASSED').length, failed: gs.filter(g => st(g.id) === 'FAILED').length, total: gs.length, moves, last };
+  };
+  const track = (e) => {
+    const tell = (x) => { try { onEvent(x); } catch (_) { /* the caller's listener never stops a brick */ } };
+    if (!e || !SETTLED.has(e.status)) return tell(e);
+    moves++;
+    const last = { gate: e.gate, status: e.status, at: Date.now(), ...(e.commit ? { commit: e.commit } : {}), ...(e.class ? { class: e.class } : {}) };
+    const pr = progress(last);
+    tell({ ...e, progress: pr });
+    try { jaaDB.update(TABLE, queueId, { progress: pr, updatedAt: Date.now() }); } catch (err) { warn('progress not written on the queue row', err); }
+    try { require('../../../nexus/nexus-bus.js').emit('RAID_GATE_MOVED', { queueId, source, title, ...e, progress: pr }, { source: 'raid-contract-intake' }); } catch (err) { warn('RAID_GATE_MOVED not emitted', err); }
+    if (compartment) {
+      try {
+        require('../../../lib/activity-log/compartment.js').record({ compartment, kind: 'gate', status: e.status === 'PASSED' ? 'ok' : e.status === 'FAILED' ? 'failed' : 'info',
+          actor: e.agent || `raid:${source}`, ref: e.commit || queueId, title: `${e.gate} ${e.status.toLowerCase()}${e.class ? ` (${e.class})` : ''} — ${pr.passed}/${pr.total} · ${title}`,
+          detail: { queueId, ...e, progress: pr } });
+      } catch (err) { warn('gate move not in the activity log', err); }
+    }
+    if (e.status === 'PASSED' && e.commit && versioning && typeof versioning.tag === 'function') {
+      const n = (p.state.checkpoints || []).filter(c => c.gate === e.gate && c.commit).length || 1;
+      const name = `gate/${contractId}/${e.gate}@${n}`;
+      pending.push(Promise.resolve().then(() => versioning.tag({ name, commitId: e.commit, gate: e.gate, queueId }))
+        .then(() => { try { CG.record(p, `${e.gate}.tag`, name, { by: 'raid:gt2' }); } catch (_) {} })
+        .catch(err => warn('gate tags not written in Versionium', err, ` (first: ${name})`)));
+    }
+  };
+  return { track, settle: () => Promise.all(pending), progress };
+}
+
+/** progress(queueId) — a run's gate progress as last written: { passed, failed, total, moves, last } | null */
+function progress(queueId) { try { const r = jaaDB.get(TABLE, { uuid: queueId }); return r ? (r.progress || null) : null; } catch (_) { return null; } }
+
+async function runContract(input, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, executors = null, onEvent = () => {}, onCheckpoint = () => {}, root, causedBy = null, raid = null, concurrency, queueId: existingId = null, versioning = null, learners = null, depth = null, compartment = null } = {}) {
   const CG = require('./contract-gates.js');
   const { file, loaded } = _loadV2(input);
   const p = loaded.payload;
@@ -1390,12 +1446,14 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
   const g = gateBefore({ source, intention, forAgent, hat, title: row.title, queueId, raid });
   if (!g.ok) return { ok: false, queueId, status: STATUS.BLOCKED, blocked: g.blocked };
   const approval = g.approval;
+  const tr = _tracker({ queueId, p, source, title: row.title, versioning, compartment, onEvent });
   // the bricks
   let res;
   try {
-    res = await CG.schedule(p, { ...(root ? { root } : {}), ...(concurrency ? { concurrency } : {}), ...(versioning ? { versioning } : {}), ...(learners ? { learners } : {}), ...(depth ? { depth } : {}), executors: executors || _executorsBySource.get(source) || null, onEvent,
+    res = await CG.schedule(p, { ...(root ? { root } : {}), ...(concurrency ? { concurrency } : {}), ...(versioning ? { versioning } : {}), ...(learners ? { learners } : {}), ...(depth ? { depth } : {}), executors: executors || _executorsBySource.get(source) || null, onEvent: tr.track,
       onCheckpoint: (px, g) => { try { if (file) CG.save(file, loaded); } catch (_) {} try { onCheckpoint(px, g); } catch (_) {} } });
   } catch (e) { res = { complete: false, why: [`the scheduler threw: ${e.message}`], log: [], blocked: [], failed: [] }; }
+  await tr.settle();
   try { if (file) CG.save(file, loaded); } catch (_) {}
   let audit = null; try { audit = require('./contract-adapters.js').audit(p, root ? { root } : {}); } catch (_) {}
   // §GS1 0.60.39 — every brick's outcome is a decision on the replay engine's log (lib/replay-engine.js decision_log, under
@@ -1429,7 +1487,7 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
       }, { source: 'raid-contract-intake' });
     } catch (e) { console.warn(`[${MODULE_ID}] HEAL_REQUESTED not emitted for ${queueId}: ${e.message}`); }
   }
-  return { ok: status === STATUS.PASS, queueId, status, result: res, audit, failedBricks, blockedBricks, approval: approval ? { approved: approval.approved !== false, reason: approval.reason || null } : null };
+  return { ok: status === STATUS.PASS, queueId, status, progress: tr.progress(null), result: res, audit, failedBricks, blockedBricks, approval: approval ? { approved: approval.approved !== false, reason: approval.reason || null } : null };
 }
 
 /**
@@ -1542,4 +1600,4 @@ function reconcileOnBoot() {
   return { resumed, retried, escalated, checked: orphaned.length };
 }
 
-module.exports = { runContract, gateBefore, registerExecutors, submitV2, legacyToV2, submitContract, submitIdeariumChunk, submitBuildPhaseContract, synthesizeContract, BUILD_CONTRACT_SCHEMA, reportExternalOutcome, acknowledge, listQueue, processNext, reconcileOnBoot, MODULE_ID, VERSION, STATUS, STAGE, queryContractRepoFile, writeContractRepoFile, BROWSER_PROVIDERS, _dispatchToClearGlass, _advanceToOutputFolder };
+module.exports = { runContract, progress, gateBefore, registerExecutors, submitV2, legacyToV2, submitContract, submitIdeariumChunk, submitBuildPhaseContract, synthesizeContract, BUILD_CONTRACT_SCHEMA, reportExternalOutcome, acknowledge, listQueue, processNext, reconcileOnBoot, MODULE_ID, VERSION, STATUS, STAGE, queryContractRepoFile, writeContractRepoFile, BROWSER_PROVIDERS, _dispatchToClearGlass, _advanceToOutputFolder };

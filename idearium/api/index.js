@@ -1201,6 +1201,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const RVx = _require('../../lib/repo-versions.js'), RHx = _require('../../lib/repo-history.js'), RIx = _require('../../lib/repo-inject.js');
     const versioning = {
       commit: async () => { const r = await RVx.flush(target.uuid); return (r && (r.commitId || (r.commit && r.commit.commitId))) || null; },
+      // §GT2 0.60.42 — each pass tagged in Versionium on the repo's own tags (immovable: a re-pass is @n+1)
+      tag: ({ name, commitId: c }) => _vcall('POST', '/api/versionium/tags', { repository: target.uuid, name, commitId: c, by: `idearium:${runId}` }),
       rewind: async ({ gate, toCommit }) => {
         const files = gate.file ? [gate.file] : expectFiles;
         if (!onDisk) {
@@ -1222,8 +1224,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       },
     };
     const viaRaid = await CI.runContract({ ...L, file }, { source: 'idearium', intention: 'build', title: `phase ${phase} — ${target.name}`, root, concurrency: policy.contractConcurrency,
-      executors: { agent: agentEx, integrate }, onCheckpoint: save, causedBy: runId, versioning, depth: policy.contractDepth,
-      onEvent: (e) => getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state: `brick-${String(e.status).toLowerCase()}`, brick: e.gate, snapshot: commitId }) });
+      executors: { agent: agentEx, integrate }, onCheckpoint: save, causedBy: runId, versioning, depth: policy.contractDepth, compartment: target.uuid,
+      // §GT2 0.60.42 — a settled gate move is a row on the Plan's ledger (the run's gate timeline: nothing lost on a reload)
+      onEvent: (e) => {
+        const st = `brick-${String(e.status).toLowerCase()}`;
+        if (e.progress) appendRow('idearium_phase_runs', { uuid: `${runId}-g${e.progress.moves}`, ...cbase, state: st, brick: e.gate, file: e.file || null, commit: e.commit || null,
+          failureClass: e.class || null, provider: e.agent || null, progress: e.progress, snapshot: commitId, ts: Date.now() });
+        getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state: st, brick: e.gate, snapshot: commitId, ...(e.progress ? { progress: e.progress } : {}) });
+      } });
     save();
     if (viaRaid.status === 'blocked') {
       appendRow('idearium_phase_runs', { uuid: `${runId}-contract-blocked`, ...cbase, state: 'contract-blocked', snapshot: commitId, raidQueueId: viaRaid.queueId,
@@ -7503,7 +7511,9 @@ async function handle(req, res, route, query, body) {
             diff: async ({ from, files }) => { const out = {}; for (const f of files.slice(0, 8)) { try { out[f] = await RH.diff(_vcall, tgt, from, 'working', { path: f, working }); } catch (e) { out[f] = { error: e.message }; } } return out; } });
           return ok(res, { repoUuid: params.uuid, phase: query.phase, file, compare: cmp });
         }
-        return ok(res, { repoUuid: params.uuid, phase: query.phase, file, audit: _require('../../cortex/core/raid/contract-adapters.js').audit(L.payload, { root: _repoDiskDir(run ? run.targetRepo || params.uuid : params.uuid) || undefined }) });
+        // §GT2 0.60.42 — where the newest run stands, from its last gate move
+        const lastMove = _phaseRuns(params.uuid).filter(r => r.phase === query.phase && r.progress && (!run || r.runId === run.runId)).sort((a, b) => (b.ts || 0) - (a.ts || 0))[0];
+        return ok(res, { repoUuid: params.uuid, phase: query.phase, file, progress: lastMove ? lastMove.progress : null, audit: _require('../../cortex/core/raid/contract-adapters.js').audit(L.payload, { root: _repoDiskDir(run ? run.targetRepo || params.uuid : params.uuid) || undefined }) });
       } catch (e) { return err(res, 422, `the contract could not be read: ${e.message}`); }
     }
     // 0.60.27 AG1a — James: "as little as possible." What each phase cost in agent calls and tokens (lib/phase-cost.js):
