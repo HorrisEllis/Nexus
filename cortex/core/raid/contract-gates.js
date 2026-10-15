@@ -593,6 +593,20 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
             if (deeper) log.push({ round, gate: g.id, status: deeper.status, reasons: deeper.reasons });
           }
         }
+        let commit = null;
+        log.push({ round, gate: g.id, status: r.status, reasons: r.reasons, ...(agent ? { agent } : {}), ...(fc ? { class: fc.cls } : {}) });
+        if (r.status === 'PASSED') {
+          // every pass is a checkpoint: what was verified, against which input hashes, by whom — the caller saves it
+          // §GS1 — and the Versionium commit it passed at (versioning.commit), so it can be rewound to and compared against
+          if (versioning && typeof versioning.commit === 'function') { try { commit = await versioning.commit({ gate: g, contract: p }); } catch (_) { commit = null; } }
+          if (commit) record(p, `${g.id}.commit`, String(commit), { by: 'scheduler:versioning' });
+          p.state.checkpoints = p.state.checkpoints || [];
+          p.state.checkpoints.push({ gate: g.id, at: Date.now(), hashes: (p.state.gates[g.id] || {}).hashes || {}, ...(agent ? { agent } : {}), ...(commit ? { commit } : {}) });
+          try { onCheckpoint(p, g.id); } catch (_) { /* the caller's save failing never fails the brick; it is in memory */ }
+        }
+        // §GT2 0.60.42 — the move carries what the caller tracks: the file, the agent, the failure class, the commit it passed at
+        onEvent({ gate: g.id, status: r.status, round, file: g.file || null, ...(agent ? { agent } : {}), ...(fc ? { class: fc.cls } : {}), ...(commit ? { commit } : {}) });
+        // §QA2 0.60.43 — after the failure is said, not before: the record reads fail → rewind → retry, the order it happened.
         // §GS1 0.60.39 — a brick that failed (and will be tried again) is put back to its last good state first: the commit
         // its gate last passed at, else the build's own snapshot (p.state.baseCommit). The retry starts from known-good, not
         // from the failed attempt's half-write. Only for a failure that wrote (not transient: it never answered; not a
@@ -609,19 +623,6 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
             onEvent({ gate: g.id, status: 'REWOUND', round, to: toCommit, ok: rw.ok !== false, files: rw.files || [] });
           }
         }
-        let commit = null;
-        log.push({ round, gate: g.id, status: r.status, reasons: r.reasons, ...(agent ? { agent } : {}), ...(fc ? { class: fc.cls } : {}) });
-        if (r.status === 'PASSED') {
-          // every pass is a checkpoint: what was verified, against which input hashes, by whom — the caller saves it
-          // §GS1 — and the Versionium commit it passed at (versioning.commit), so it can be rewound to and compared against
-          if (versioning && typeof versioning.commit === 'function') { try { commit = await versioning.commit({ gate: g, contract: p }); } catch (_) { commit = null; } }
-          if (commit) record(p, `${g.id}.commit`, String(commit), { by: 'scheduler:versioning' });
-          p.state.checkpoints = p.state.checkpoints || [];
-          p.state.checkpoints.push({ gate: g.id, at: Date.now(), hashes: (p.state.gates[g.id] || {}).hashes || {}, ...(agent ? { agent } : {}), ...(commit ? { commit } : {}) });
-          try { onCheckpoint(p, g.id); } catch (_) { /* the caller's save failing never fails the brick; it is in memory */ }
-        }
-        // §GT2 0.60.42 — the move carries what the caller tracks: the file, the agent, the failure class, the commit it passed at
-        onEvent({ gate: g.id, status: r.status, round, file: g.file || null, ...(agent ? { agent } : {}), ...(fc ? { class: fc.cls } : {}), ...(commit ? { commit } : {}) });
       }));
     }
     // a gate that failed and has no retries left stops the loop from spinning on it
