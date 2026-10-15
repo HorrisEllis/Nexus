@@ -319,6 +319,32 @@ const PREDICATE_LIBRARY = {
     strategy: 'RETRIEVE',
   },
 
+  // §0.60.49 — James: "i want any gaps to be mapped to the intelligence system". The three gaps spec drift finds
+  // (orchestrator/lib/spec-drift.js) were written raw into the gaps table, outside this library: no predicate, no dedup
+  // key, no truth floor, no tension. Keyed by the types spec drift already writes, so no open gap is orphaned. Each is
+  // closed by spec drift itself when the next check is green (it resolves the gap, said); the predicate is its identity.
+  'spec.version.drift': {
+    predicate: (gap) => ({ table: 'gaps', field: 'type', op: 'equals', value: 'spec.version.drift', scope: gap.source || null }),
+    artifact_requirement: (gap) => ({ type: 'file_written', location: gap.path || null, key: gap.source || null, validator: 'spec version == code version' }),
+    truth_floor_hint: (gap) => `${gap.source}: its spec says one version and lib/version.js another — the spec has fallen behind the code.`,
+    ttl_ms: 7 * 86400000,
+    strategy: 'RETRIEVE',
+  },
+  'spec.missing': {
+    predicate: (gap) => ({ table: 'gaps', field: 'type', op: 'equals', value: 'spec.missing', scope: gap.source || null }),
+    artifact_requirement: (gap) => ({ type: 'file_written', location: `<system>/spec/${gap.source}.spec (kind: capability)`, key: gap.source || null, validator: 'a spec names it' }),
+    truth_floor_hint: (gap) => `${gap.source} has code and a version but no spec: nothing says what it is for or what it may expose (CS2 drafts one from its measured surface).`,
+    ttl_ms: 30 * 86400000,
+    strategy: 'EXTEND',
+  },
+  'spec.surface.drift': {
+    predicate: (gap) => ({ table: 'gaps', field: 'type', op: 'equals', value: 'spec.surface.drift', scope: gap.path || null }),
+    artifact_requirement: (gap) => ({ type: 'check', location: 'CK-254', key: gap.path || null, validator: 'CK-254 green for this spec' }),
+    truth_floor_hint: (gap) => `${gap.source}: its code and its capability spec disagree on what it exposes — ${String(gap.body || '').slice(0, 240)}`,
+    ttl_ms: 7 * 86400000,
+    strategy: 'RETRIEVE',
+  },
+
   reflection_contract_unresolved: {
     predicate: (gap) => ({
       table: 'reflection_contracts', field: 'status', op: 'equals',

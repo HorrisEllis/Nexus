@@ -44,6 +44,9 @@ const TOOLS = [
   { name: 'record.stop',      cat: 'browser',  desc: 'Stop recording, return action sequence', params: {} },
   // 0.39.272 — read the page, and the form actions typing alone could not do. Results come back to you.
   { name: 'readPage',         cat: 'browser',  desc: 'What is on the page: text, headings, links, every form field (label + selector), every button', params: { maxText: 'number?' } },
+  // 0.60.49 SP1 — the semantic tree: what a page IS, by role and name, stable when its classes change
+  { name: 'readTree',         cat: 'browser',  desc: 'The page as a semantic tree: landmarks, headings, messages and everything actionable, each with an address like main › form › button "Send"', params: { maxNodes: 'number?' } },
+  { name: 'resolve',          cat: 'browser',  desc: 'A semantic address (from readTree) → the selector click/type/setValue take', params: { address: 'string' } },
   { name: 'state',            cat: 'browser',  desc: 'Everything Clear Glass is doing: open tabs with url/title, providers, accounts, autofill profiles, macros, userscripts', params: {} },
   { name: 'setValue',         cat: 'browser',  desc: 'Set a field\'s whole value at once (long answers; React/Vue inputs register it)', params: { selector: 'string', value: 'string' } },
   { name: 'select',           cat: 'browser',  desc: 'Choose a <select> option by value or visible text', params: { selector: 'string', value: 'string?', text: 'string?' } },

@@ -990,7 +990,7 @@ CoPilotBridge.DRIVER_ACTIONS = new Set([
   'navigate', 'click', 'type', 'setValue', 'select', 'check', 'upload', 'pressKey', 'scroll', 'hover', 'wait', 'waitFor',
   'screenshot', 'toast', 'eval', 'zoom', 'findInPage', 'stopFindInPage', 'print', 'getUrl', 'getTitle', 'back', 'forward',
   'reload', 'cookies.get', 'cookies.set', 'cookies.clear', 'storage.get', 'storage.set', 'network.block',
-  'network.intercept', 'picker.enable', 'picker.disable', 'inject', 'record.start', 'record.stop', 'readPage',
+  'network.intercept', 'picker.enable', 'picker.disable', 'inject', 'record.start', 'record.stop', 'readPage', 'readTree', 'resolve',
   'field', 'fieldOff', 'at', 'spotlight', 'pointer',   // 0.39.279 — the interaction field (src/page/field.js)
 ]);
 

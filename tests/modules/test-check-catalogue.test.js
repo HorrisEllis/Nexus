@@ -43,8 +43,8 @@ const cond = (c) => CG.checkCondition(c, { root: ROOT, state: { evidence: {}, ga
 
   await test('QA-01', 'the catalogue loads; runnable ones marked; no runner is never a pass', () => {
     const s = CC.summary();
-    assert.strictEqual(s.total, 120);   // 119 + CK-253 versions agree (0.60.34)
-    assert.deepStrictEqual(s.runners, ['CK-230', 'CK-233', 'CK-247', 'CK-248', 'CK-253']);   // CK-247: 0.60.40 BR2
+    assert.strictEqual(s.total, 121);   // 119 + CK-253 versions agree (0.60.34) + CK-254 spec surface (0.60.49)
+    assert.deepStrictEqual(s.runners, ['CK-230', 'CK-233', 'CK-247', 'CK-248', 'CK-253', 'CK-254']);   // CK-247: 0.60.40 BR2
     for (const id of ['CK-230', 'CK-233', 'CK-248']) assert.strictEqual(CC.get(id).runnable, 'runner', id);
     assert.strictEqual(CC.get('CK-060').runnable, 'import-checks');
     const r = CC.run('CK-234');

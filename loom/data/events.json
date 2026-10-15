@@ -1,5 +1,5 @@
 {
- "generatedAt": 1792055466293,
+ "generatedAt": 1792071695834,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -1917,6 +1917,12 @@
    "listens": [
     "real.evt"
    ]
+  },
+  "nexus.tests.modules.test-capability-spec.test": {
+   "emits": [
+    "fake.event"
+   ],
+   "listens": []
   },
   "nexus.tests.modules.test-cg-shortcuts.test": {
    "emits": [],
@@ -7269,6 +7275,12 @@
    "listeners": [
     "nexus.tests.modules.test-bus-subscriptions"
    ]
+  },
+  "fake.event": {
+   "emitters": [
+    "nexus.tests.modules.test-capability-spec.test"
+   ],
+   "listeners": []
   },
   "escalation.friction.increased": {
    "emitters": [],
