@@ -201,6 +201,23 @@ function createDispatcher(deps) {
   // takes the job', its slot is freed, and the caller's route can move on. Nothing was typed, so nothing is sent twice.
   const _pickupMs = () => pickupMs || require('../options.js').get('jobs.pickup_ms');   // §OP1 — read per job
   const _pickupWatch = new Map();
+  // 0.60.61 — James, 2026-10-15 ("now can we get the pipeline working?", after the red line "the chatgpt tab was handed the job and did nothing with it").
+  // That message said WHAT happened, never WHICH kind. Guardian already knows each tab's connection and heartbeat (ncp.getTabs), so the timeout now says
+  // which of the three failures it is. The original sentence is kept first and unchanged: lib/pipeline-routing.js classifies on it ('lost').
+  //   no tab connected            -> the page script is not running there (tab closed, page not injected, a different page)
+  //   connected, heartbeat fresh  -> the script is alive but never took the job (it never said "accepted": wrong page state, e.g. a sign-in or consent screen, or the input box was not found)
+  //   connected, heartbeat stale  -> the script stopped running (frozen, hidden and throttled, or the page crashed)
+  function _diagnoseTab(provider) {
+    let tabs = [];
+    try { tabs = typeof ncp.getTabs === 'function' ? ncp.getTabs().filter(t => t.provider === provider) : null; } catch (_) { tabs = null; }
+    if (tabs === null) return { text: '', facts: null };
+    const now = Date.now();
+    const facts = tabs.map(t => ({ tabId: String(t.tabId || '').slice(0, 8), active: !!t.active, connectedS: Math.round((now - (t.connectedAt || now)) / 1000), heartbeatAgoS: Math.round((now - (t.lastHeartbeat || now)) / 1000), chatId: t.chatId || null }));
+    if (!facts.length) return { text: `Tab state: no ${provider} tab is connected to Guardian, so the page script is not running there (tab closed, or the script was not injected).`, facts };
+    const live = facts.find(f => f.active) || facts[0];
+    if (live.heartbeatAgoS > 30) return { text: `Tab state: connected, but its last heartbeat was ${live.heartbeatAgoS} s ago, so the page script has stopped (frozen, hidden and throttled, or the page crashed).`, facts };
+    return { text: `Tab state: connected (heartbeat ${live.heartbeatAgoS} s ago${facts.length > 1 ? `, ${facts.length} tabs` : ''}) but it never said it accepted the job, so the page script is alive and did not act (a sign-in or consent screen, a different page, or the input box not found).`, facts };
+  }
   function _armPickupWatch(job) {
     _clearPickupWatch(job.id);
     const waitMs = _pickupMs();
@@ -211,10 +228,11 @@ function createDispatcher(deps) {
       _clearCompletionWatch(job.id);
       _watchedJobs.delete(job.id);
       _dispatchPool.release(_lane(job), job.id);
-      const error = `the ${job.provider} tab was handed the job and did nothing with it for ${Math.round(waitMs / 1000)} s — the prompt was not typed, so it is not sent there again`;   // waitMs: guardian option jobs.pickup_ms
-      updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason: error, error });
+      const diag = _diagnoseTab(job.provider);
+      const error = `the ${job.provider} tab was handed the job and did nothing with it for ${Math.round(waitMs / 1000)} s — the prompt was not typed, so it is not sent there again${diag.text ? `. ${diag.text}` : ''}`;   // waitMs: guardian option jobs.pickup_ms
+      updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason: error, error, pickupDiagnosis: diag.facts });
       console.warn(`[guardian] ${job.id} → ${job.provider}: ${error}`);
-      bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'pickup' });
+      bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'pickup', diagnosis: diag.facts });
     }, waitMs);
     if (t.unref) t.unref();
     _pickupWatch.set(job.id, t);
