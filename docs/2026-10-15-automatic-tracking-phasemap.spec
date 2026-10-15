@@ -64,7 +64,7 @@ phases:
     proof: "a 3-brick contract → 3 tags on 3 commits, 1 activity row per move, progress reads 3/3; a retry does not re-tag"
 
   QA2_a_real_run:
-    status: OPEN (added 2026-10-15, see addendum)
+    status: PARTLY DONE (0.60.43 — real Versionium/Idearium/RAID, model stubbed; the run on James's machine is open)
     does: "one real phase build end to end — real repo, Ollama, Versionium, the Plan in Clear Glass — every link checked (RAID, tags, progress, rewind, release); real numbers recorded; what breaks is fixed first"
 
   GA1_the_gate_assesses_before_it_spends:
@@ -215,4 +215,14 @@ drift_accounted:
 # dispatch time (idearium reads them from evidence, ~1172), and "needs context" is only learned AFTER a failed agent call
 # (GT1 class 'context'). GA1 moves both checks before the call: deterministic first, the agent only when the brick is
 # ready — fewer wasted calls, which is the number QA2 measures.
+
+## ADDENDUM 2026-10-15 — QA2 run here (0.60.43)
+
+# What could run in this container ran: the real Versionium (routes + store, sandboxed), the real Idearium phase build,
+# repo, injects, RAID and proof run. No Ollama here, so the model is stubbed — the first notes reply is a planted
+# half-write (missing an export). GS1 + GT2 + RN1 together, for the first time: fail (capability) → rewind → retry → pass;
+# each pass tagged on a real commit; 2/2 progress; every move on the Plan's ledger; a release listing the build's commits.
+# Found and fixed: the rewind ran and reported BEFORE the failure did, so the record read rewound → failed; the rewind now
+# follows the failure. Numbers (test-qa2-real-run QA-05): 4 agent calls, 5 moves, 3 gate tags, 5 commits, 14 ledger rows,
+# ~7.8 s. Still open: the same run on James's machine (real model, 4 GB GPU, the Plan in Clear Glass).
 
