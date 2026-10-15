@@ -369,7 +369,8 @@ build_order: [GW3, GW1, GW2, GW5, GW13, GW14, GW11, GW15, GW16, GW17, GW4, GW6, 
 build_order_reason: >-
   §16.1, the nearest gap first. GW3 (tracing) is smallest, touches no behaviour, and every later phase reads it - and
   it makes the next ones testable. GW1 -> GW2 is the state following the gate. GW5 is deterministic parity work. GW13/GW14 are
-  the sandbox door and copy-in: the agents' test environment, which GW11 (snapshots), GW15 (every file tested) and GW16\n  (parallel branches) all run in. GW17 reads what those produce. GW4 puts copilot on it, GW6 closes the learning loop, GW12 is
+  the sandbox door and copy-in: the agents' test environment, which GW11 (snapshots), GW15 (every file tested) and GW16
+  (parallel branches) all run in. GW17 reads what those produce. GW4 puts copilot on it, GW6 closes the learning loop, GW12 is
   independent and small. GW7/GW18/GW8 need the recordings GW3 makes. GW9 is the surface. GW10 waits for his log.
 
 not_verified:
