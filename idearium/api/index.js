@@ -7458,7 +7458,13 @@ async function handle(req, res, route, query, body) {
       const dir = _repoDiskDir(params.uuid);
       if (!dir) return err(res, 500, 'could not resolve repo directory');
       const PH = await import('../repo/phases.js');
-      return ok(res, PH.managerView({ repo, repoDir: dir, runs: _phaseRuns(params.uuid) }));
+      const view = PH.managerView({ repo, repoDir: dir, runs: _phaseRuns(params.uuid), seenFile: path.join(IDEARIUM_DATA_DIR, 'phase-map-auto', `${params.uuid}.json`) });
+      // §MP2 — the listener: a phase never seen before in this repo is announced with what it was mapped to
+      for (const k of (view.mapping && view.mapping.newPhases) || []) {
+        const ph = view.phases.find(p => `${p.map}::${p.phase_key}` === k);
+        try { getIdeaOS().emit('idearium.phase.mapped', { repoUuid: params.uuid, map: ph && ph.map, phase: ph && ph.phase_key, source: ph && ph.mapped && ph.mapped.source, files: ph && ph.mapped ? ph.mapped.files.map(f => f.path) : [] }); } catch (_) {}
+      }
+      return ok(res, view);
     }
     // §RS9 0.49.0 — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade.
     // interconnected". The thread (idearium/repo/thread.js): one spec's blocks ⇄ the phases planned from them ⇄ their runs

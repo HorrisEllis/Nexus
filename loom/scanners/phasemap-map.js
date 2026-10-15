@@ -97,8 +97,18 @@ function _tagSystem(text) {
  */
 function _systemsOf(fields, body) {
   const declared = _list(fields && fields.systems).map(x => x.toLowerCase());
+  // §0.60.64 PT2 — James: "phases tags by system/nested repo". A phase is also tagged with the system (nested repo) that
+  // owns each file it names (lib/nexus-self/systems.js ownerOf — the one owner of every path), so a phase that edits
+  // guardian/ shows in guardian's repo even when its `systems:` line forgot it. Files are evidence, not a guess.
+  const owners = [...new Set(_list(fields && fields.files).map(f => String(f).replace(/\s*\(new\)\s*$/, '').trim())
+    .filter(f => /[\/.]/.test(f) && !/[*\s]/.test(f)).map(NS.ownerOf))];
   // §0.39.314 SY1 — declared tags resolve to the 15; the tags as written are kept for provenance
-  if (declared.length) return { systems: [...new Set(declared.map(NS.systemFor))], tags: [...new Set(declared)], systemsFrom: 'declared' };
+  if (declared.length) {
+    const sys = [...new Set(declared.map(NS.systemFor))];
+    const added = owners.filter(o => !sys.includes(o));
+    return { systems: [...sys, ...added], tags: [...new Set([...declared, ...added])], systemsFrom: added.length ? 'declared+files' : 'declared', ...(added.length ? { systemsFromFiles: added } : {}) };
+  }
+  if (owners.length) return { systems: owners, tags: owners, systemsFrom: 'files' };
   const guessed = _tagSystem(body);
   return { systems: guessed, tags: guessed, systemsFrom: 'guessed' };
 }
@@ -222,13 +232,13 @@ function parsePhasemapText(text, name) {
         id, map: name,
         title: id.replace(/_/g, ' '),
         status, ...(ans && ans.closedAs ? { closedAs: ans.closedAs } : {}), ...(ans && ans.shelf ? { shelf: true } : {}),
-        systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom,
+        systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom, ...(sys.systemsFromFiles ? { systemsFromFiles: sys.systemsFromFiles } : {}),
         dependsOn: dep.trim().replace(/[\[\]]/g, '') || null,
         // location, for callers that EDIT a phase (idearium/repo/roadmap.js):
         // header line, the `status:` key's line (-1 if it has none) and the
         // first line of the next phase. Not part of loadAll()'s output.
         line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
-        name: f.name || f.does || null, closes: _list(f.closes), files: _list(f.files), blocks: _blocks(f), form: 'key',
+        name: f.name || f.does || null, closes: _list(f.closes), files: _list(f.files), specs: _list(f.specs), blocks: _blocks(f), form: 'key',   // 0.60.63 PT1 — James: "i want the specs to tagged per phase"
       });
     }
   // §0.39.271 P1 — the LIST form. Since 0.39.260 phasemaps are also written as
@@ -288,7 +298,7 @@ function parsePhasemapText(text, name) {
       ...(() => { const sys = _systemsOf(f, phaseLines.join(' ')); return { systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom }; })(),
       dependsOn: deps.length ? deps.join(', ') : null,
       line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
-      name: f.name || null, closes: _list(f.closes), files: _list(f.files), blocks: _blocks(f), form: 'list',
+      name: f.name || null, closes: _list(f.closes), files: _list(f.files), specs: _list(f.specs), blocks: _blocks(f), form: 'list',
     });
     seen.add(id);
   }

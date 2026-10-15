@@ -35,6 +35,11 @@ const FILES = [
   ['idearium/repo/phase-mapping.js', I('idearium/repo/phase-mapping.js'), [
     I('lib/phase-files.js'),                                    // createRequire — candidates, brief, parseAnswer, score, depsFor, applyTo
   ]],
+  // 0.60.65 MP1/MP2 — every phase mapped by Nexus with no model: files with evidence, requires, consumers, specs, waits-on
+  ['lib/phase-map-auto.js', I('lib/phase-map-auto.js'), [
+    I('lib/phase-files.js'),                                    // require — phasesOf, candidates, hubsOf, depsFor
+    I('lib/nexus-self/systems.js'),                             // require (specsOfNexus) — ownerOf, get: the specs that own a file
+  ]],
   // 0.60.28 PF1 — ready before run: Guardian's facts per agent, and the build's pure check over its ladder
   ['guardian/lib/provider-ready.js', I('guardian/lib/provider-ready.js'), []],
   ['lib/run-ready.js', I('lib/run-ready.js'), []],

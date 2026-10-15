@@ -204,3 +204,23 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     the list is fully loaded and no chat is pending or failed; an unchanged chat is never revisited; the walk stops at the
     edge and re-checks it once; a restart resumes), `lib/chat-crawl-settings.js` (39 settings), `CHANGELOG-0.60.55.md`.
     The part that drives a real tab is not built.
+- **2026-10-15: "bricks keep failing."**
+  - **Context:** he pasted his full run log instead of a guess at the cause. In it, every RAID officiator drop failed
+    with `forAgent=ollama` while Guardian was completing jobs for three other agents in the same minutes.
+  - **What it shows:** reporting a failure with its raw evidence is what made a one-file root cause findable: the log
+    itself showed Guardian was up, so "guardian unreachable" was the wrong lead.
+  - **Evidence:** `tests/modules/test-lifeline-ollama-dispatch.test.js` (3/3, 3 fail on the old code); `CHANGELOG-0.60.62.md`.
+- **2026-10-15: "make sure all of the files and dependancies are mapped. and i want the specs to tagged per phase"**
+  - **Context:** a new phasemap (WARP for every build, the spec framework) showed up in Idearium with its systems
+    guessed from prose and no files. He asked for the files, the dependencies and the owning specs on every phase
+    before anything is built.
+  - **What it shows:** traceability as a requirement: every phase answers "what does it touch, what does it wait on,
+    which contract owns it" before code is written. That is the discipline of specification-led engineering.
+  - **Evidence:** `tests/modules/test-phase-specs-tag.test.js` (4/4, all fail on the old reader); `CHANGELOG-0.60.63.md`.
+- **2026-10-15: "It doesn't know how to map. Nexus needs to generate dependancies for each phase, with files."**
+  - **Context:** agents kept spending tool calls finding the context for each phase, and the existing mapper asked a
+    model for every phase. He named the cause, not the symptom: the system itself should know each phase's files and
+    dependencies, for every project, automatically.
+  - **What it shows:** he pushed work from the most expensive layer (a model) to the cheapest that can do it (code
+    reading evidence already in the text). Measured: open phases with no file evidence fell from 462 to 198 with no model.
+  - **Evidence:** `tests/modules/test-phase-map-auto.test.js` (8/8); `lib/phase-map-auto.js`; `CHANGELOG-0.60.65.md`.
