@@ -118,6 +118,18 @@ addendum_2026_10_15_b:
         request, topics by frequency. An INVARIANT is a feature that holds across at least N chats in at least M separate months, filed OBSERVED with the counts as evidence. A model's reading
         ("a recurring blocker", "a strength") is filed INFERRED, labelled as the model's, never as a measurement. Nothing about health, mood or history is inferred from style.
 
+addendum_2026_10_15_c:
+  james: >-
+    "no uses the dom mutator to listen for any new data from clearglass, ledger for each chat url. like it automatically logs the chats by
+    provider than by url, with keyworks, etc."
+  coder_correction: >-
+    The coder's PI2 above planned a new page reader. That was wrong: it was built on 2026-09 (0.39.278, James: "live streams the dom mutation live to the download
+    manager, that way we don't lose progress"). guardian/userscript-chat-stream.js is the page's own MutationObserver; it posts each change to /cli/downloads/ledger and
+    clear-glass/src/downloads/chat-ledger.js appends it to one append-only file per chat (head: provider, chatId, url, agentId; deltas by turn, reply and thinking apart).
+    PI2 is now only what that ledger lacks: an `account` and an `origin` (nexus-job | personal) on the head; keywords per chat from deterministic counting (no model); an index
+    by provider then url; per-account switches in Settings; and a check, in Clear Glass, that the observer is injected on his own tabs (injection is by navigation for a tab with an agent id and a matching userscript, src/main/index.js nav.loaded: UNVERIFIED for his own tabs).
+    PI1 (the importer) and PI5 (the sync) write the SAME ledger format, so an imported chat, a synced phone chat and a live one are one kind of record. A DOM observer cannot see the phone app; PI5 stands.
+
 build_order: [PI1_the_importer, PI3_the_intelligence_pass, PI3b_the_measured_patterns, PI5_the_sync, PI2_the_listener, PI4_the_review_screen, PI6_the_firefox_script]
 build_order_reason: >-
   The importer needs no Electron and can be proven here; the extraction decides whether the whole idea is worth having, so it comes before the live listener, which can only be checked in Clear Glass.
