@@ -138,6 +138,34 @@ function fromPhasePlan(plan, { id = null, phaseKey = 'phase', title = '', intent
 }
 
 /**
+ * fromWholePhase({ phaseKey, title, intent, inputs, message }) — §BR1 0.60.38: a phase that names no file is still a
+ * contract — one brick (the whole phase, sent as one request to the ladder), and the phase gate that passes only on its
+ * integration (the proof run). Gated, checkpointed and run through RAID like any other; never the old ungated path.
+ */
+function fromWholePhase({ id = null, phaseKey = 'phase', title = '', intent = '', inputs = [], message = '' } = {}) {
+  const refs = {};
+  for (const inp of inputs) if (inp && inp.id && inp.path) refs[_id(inp.id)] = { path: inp.path, ...(inp.lines ? { lines: inp.lines } : {}), note: inp.note || 'an input of the phase' };
+  const shared = Object.keys(refs);
+  const gates = [
+    { id: 'work', type: 'task', kind: 'agent:build', requirement: { phase: phaseKey, title, intent: intent || null, whole: true },
+      depends_on: [], requires: [...shared], actions: [String(message || title || `build ${phaseKey}`).slice(0, 4000)],
+      pass_when: [{ evidence: 'work.verified', match: '^ok' }], run: { agent: 'phase' } },
+    { id: 'phase', type: 'phase', kind: 'phase:integrate', children: ['work'], depends_on: ['work'], requires: [...shared],
+      requirement: { phase: phaseKey, title, intent: intent || null },
+      pass_when: [{ gate: 'work' }, { evidence: 'phase.integrated', match: '^met' }], integration: 'phase.integrated', run: { integrate: phaseKey } },
+  ];
+  const cid = _id(id || `phase-${phaseKey}-whole`);
+  const planLike = { order: ['(the whole phase)'], files: [{ path: '(the whole phase)', exports: [], imports: [], steps: [String(message || '').slice(0, 200)], new: true }] };
+  const payload = { v: 2, uuid: cid, status: 'draft', intention: 'build', plan_hash: planHash(planLike), whole: true,
+    outcome: { what: title || `phase ${phaseKey}`, why: intent || '', done_when: [{ gate: 'phase' }] },
+    refs, invariants: [], gaps: [], gates, failure: { retry_limit: 3 }, state: { gates: {}, evidence: {}, checkpoints: [] } };
+  const problems = CG.validate(payload);
+  if (problems.length) throw Object.assign(new Error(`the whole-phase contract is not valid: ${problems.join('; ')}`), { status: 422, problems });
+  const doc = require(path.join(ROOT, 'lib/node-export.js')).wrap('contract', cid, payload, { context: 'cortex/core/raid/contract-adapters.js fromWholePhase', tags: ['v2', 'phase-build', 'whole'] });
+  return { doc, payload: doc.payload || payload };
+}
+
+/**
  * openCheckpoint(file, built, { root }) → { loaded, resumed, rejected?, kept[], stale[], reset[] }
  * Saved and the same plan → resumed: PASSED bricks kept (their inputs unchanged), changed inputs STALE, bricks that ran
  * out of retries given a fresh budget (their attempts kept in state.history). The plan changed → the saved contract is a
@@ -185,4 +213,4 @@ function audit(p, { root = ROOT } = {}) {
   };
 }
 
-module.exports = { VERSION, doorRoute, agentExecutor, planHash, fromPhasePlan, openCheckpoint, audit };
+module.exports = { VERSION, doorRoute, agentExecutor, planHash, fromPhasePlan, fromWholePhase, openCheckpoint, audit };

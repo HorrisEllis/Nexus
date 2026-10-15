@@ -126,7 +126,7 @@ spec:
       proof: "a phase build and a spec-chunk build each leave one RAID row with bricks; nothing builds outside RAID (a check: no CG.schedule call outside contract-intake)"
 
     BR1_bricks_on_every_path:
-      status: OPEN
+      status: "DONE 0.60.38 — no plan mode → the plan is written from the phase itself (PF2's derivePlan) and built as bricks through RAID; a phase that names no file → contract-adapters fromWholePhase (one gated brick + the integration gate). runWhole / runChunked only behind routing.contract_build: off. test-contract-phase-build CP-10/11, test-raid-runs-contract RR-07"
       depends_on: [RD1_every_build_goes_through_raid]
       files: [idearium/api/index.js, cortex/core/raid/contract-adapters.js, lib/phase-plan.js]
       does: "No plan → contract-adapters.fromPhase(phase): a brick per file the phase names (requirement = its body, does, proof), else one brick for the phase; the coders are whatever the ladder has (Ollama or the agents). Lean mode and a down Ollama keep gates and checkpoints."
@@ -229,3 +229,12 @@ spec:
 # Found by the test: a loaded checkpoint (openCheckpoint) carries no `v`, and runContract refused it — fixed.
 # RD1b, named: a spec's chunks become bricks of one contract. Not done here because a chunk's completion often arrives
 # later through Guardian's job callback (result.queued), so the spec engine's own loop has to become the scheduler's.
+
+## ADDENDUM 2026-10-15 — BR1 built (0.60.38)
+
+# Before: bricks only when routing.plan_code planned (an Ollama model AND a reasoning agent on the ladder). Now every
+# build with routing.contract_build on (the default) is bricks: no plan mode → Nexus writes the plan from the phase itself
+# (derivePlan, 0.60.28 PF2) with no planner asked, and builds it as bricks through RAID (CP-10); a phase that names no
+# file → one whole-phase brick (fromWholePhase) whose phase gate passes only on the proof run (RR-07). The old paths stay,
+# kept, behind routing.contract_build: off (CP-11); test-chunked-phase-build is pinned to that setting so it still guards
+# the one-file-at-a-time path (its 15 checks pass).

@@ -217,6 +217,31 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     const refused = db.loadTable('idearium_phase_runs').filter(r => r.phase === ph.key && r.state === 'refused').pop();
     assert.ok(refused && refused.ready && refused.ready.dropped.length === 2, JSON.stringify(refused).slice(0, 400));
   });
+  // §BR1 0.60.38 — bricks on every path
+  await test('CP-10', 'BR1: no plan mode (routing.plan_code: never) → still bricks: planned from the phase itself, run through RAID, proven', async () => {
+    readyAnswer = {};
+    await R('POST', '/api/config', { key: 'routing.plan_code', value: 'never' });
+    const before = dispatchedTotal; sent.length = 0;
+    rows = await build();
+    await R('POST', '/api/config', { key: 'routing.plan_code', value: 'auto' });
+    assert.ok(!rows.some(r => r.state === 'planning'), `no planner was asked: ${states(rows)}`);
+    assert.ok(rows.some(r => r.state === 'planned' && r.derived), `planned from the phase itself: ${states(rows)}`);
+    const end = rows.find(r => r.state === 'contract-complete');
+    assert.ok(end && end.raidQueueId, `bricks, through RAID, complete: ${states(rows)}`);
+    assert.ok(!rows.some(r => r.chunkStopped) && dispatchedTotal - before === sent.length, 'no old chunked/whole path, only brick requests');
+  });
+  await test('CP-11', 'BR1: routing.contract_build: off keeps the old path (no contract, no RAID row)', async () => {
+    await R('POST', '/api/config', { key: 'routing.plan_code', value: 'never' });
+    await R('POST', '/api/config', { key: 'routing.contract_build', value: 'off' });
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama' });
+    const runId = (b.json.data || b.json).runId;
+    let rs = [];
+    for (let i = 0; i < 120; i++) { rs = runRows(runId); if (rs.some(r => ['proven', 'unproven', 'no-proof', 'failed'].includes(r.state))) break; await wait(100); }
+    await R('POST', '/api/config', { key: 'routing.contract_build', value: 'on' });
+    await R('POST', '/api/config', { key: 'routing.plan_code', value: 'auto' });
+    assert.ok(!rs.some(r => /^contract/.test(r.state)), `no contract on the old path: ${states(rs)}`);
+  });
+
   delete process.env.GUARDIAN_URL;
   await new Promise(x => fakeGuardian.close(x));
 

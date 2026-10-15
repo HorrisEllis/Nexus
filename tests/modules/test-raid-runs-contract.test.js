@@ -118,6 +118,19 @@ const heals = []; bus.on('HEAL_REQUESTED', (e) => heals.push(e && (e.payload || 
     assert.strictEqual((api.match(/contract-intake\.js'\)\.gateBefore\(/g) || []).length, 2, 'spec-chunk build and compile are gated');
   }));
 
+  await test('RR-07', 'BR1: a phase that names no file is one brick (the whole phase) and passes only through its integration', () => quiet(async () => {
+    const L = CA.fromWholePhase({ phaseKey: 'Z1', title: 'a phase with no files', message: 'make the thing', inputs: [{ id: 'map', path: 'docs/x-phasemap.spec' }] });
+    assert.deepStrictEqual(L.payload.gates.map(g => g.id), ['work', 'phase']); assert.deepStrictEqual(CG.validate(L.payload), []);
+    let integrated = 'unmet 0/1';
+    const ex = { agent: async (t, a, { gate }) => ({ ok: true, agent: 'claude', evidence: { [`${gate.id}.verified`]: 'ok — the phase reply landed' } }),
+      integrate: async () => ({ ok: /^met/.test(integrated), evidence: { 'phase.integrated': integrated } }) };
+    const no = await CI.runContract(JSON.parse(JSON.stringify(L)), { source: 'idearium', title: 'whole Z1', executors: ex, root: tmp });
+    assert.strictEqual(no.status, 'fail', 'the brick passed but the proof did not: not complete');
+    integrated = 'met 1/1';
+    const yes = await CI.runContract(L, { source: 'idearium', title: 'whole Z1', executors: ex, root: tmp });
+    assert.strictEqual(yes.status, 'pass', JSON.stringify(yes.result && yes.result.why));
+  }));
+
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exitCode = failed ? 1 : 0;
