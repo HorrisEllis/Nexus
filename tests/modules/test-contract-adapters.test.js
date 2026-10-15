@@ -174,6 +174,18 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
         ('lib/c.js', {}, { gate: b('lib/c.js'), packet: {}, contract: { state: { evidence: { [`${b('lib/c.js').id}.exclude`]: '["small"]' } } }, root: tmp });
       check('GT-07 every routed agent failed it before → all are tried again, said on the route (escalation, never a silent block)',
         ex.ok && ex.agent === 'small' && /every routed agent failed it before/.test(ex.evidence[`${b('lib/c.js').id}.route`]), JSON.stringify(ex));
+
+      // GT-08 (§GT1a 0.60.35) — a ladder climbed to its end (transient AND exhausted) spends its attempt: before the fix
+      // each such failure was refunded, so a failing brick re-climbed every agent up to retry_limit more times
+      const Lx = built(); Lx.payload.failure = { retry_limit: 2 };
+      const gx = Lx.payload.gates.find(x => x.file === 'lib/c.js' && !x.parent);
+      let climbs = 0;
+      const exAgent = A.agentExecutor({ route: () => [{ provider: 'small' }, { provider: 'big' }], boundaries: noBudget,
+        dispatch: async (hops, { gate }) => { if (gate.id === gx.id) { climbs++; return { ok: false, provider: 'big', transient: true, exhausted: true, error: 'every rung failed' }; } return { ok: true, provider: hops[0].provider, evidence: { [`${gate.id}.verified`]: 'ok' } }; } });
+      reset();
+      const rx = await C.schedule(Lx.payload, { root: tmp, executors: { agent: exAgent, integrate }, learners, maxRounds: 12 });
+      check('GT-08 a ladder climbed to its end spends its attempt (no free re-climbs): the brick stops after retry_limit climbs',
+        climbs === 2 && (rx.failed || []).includes(gx.id) && Lx.payload.state.gates[gx.id].attempts === 2, JSON.stringify({ climbs, failed: rx.failed, st: Lx.payload.state.gates[gx.id] }));
     } finally { C.Boundaries.record = realRecord; }
 
     const CMD = fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8');
