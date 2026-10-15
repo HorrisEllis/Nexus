@@ -275,19 +275,27 @@
     const agents = await agentOptions();
     if (!agents.length) throw new Error('Open a tab to record in first.');
     const agentSel = select(agents);
-    const status = h('p', { class: 'blurb', text: 'Pick the tab, press Start, then do the steps in that tab. Come back and press Stop.' });
-    let recording = null;
+    const status = h('p', { class: 'blurb', text: 'Pick the tab, press Start. A .macro file is created right away and grows as you click, type, scroll and page through the tab. Press Stop when done.' });
+    const nameIn = h('input', { type: 'text', placeholder: 'Recording name (optional)' });
+    let recording = null, poll = null, file = null;
     const startBtn = btn('Start recording', (e) => busy(e.currentTarget, async () => {
-      const r = await call(() => cg.macros.recordStart(agentSel.value), 'start recording');
-      recording = agentSel.value; agentSel.disabled = true;
-      status.textContent = `● Recording in ${recording}${r.startUrl ? ` from ${r.startUrl}` : ''}. Clicks, typing and Enter are captured; passwords are never stored.`;
+      const r = await call(() => cg.macros.recordStart(agentSel.value, nameIn.value), 'start recording');
+      recording = agentSel.value; file = r.file; agentSel.disabled = true; nameIn.disabled = true; startBtn.disabled = true; startBtn.textContent = 'Recording…';
       status.classList.add('rec');
+      const paint = (n) => { status.textContent = `● Recording in ${recording}. Saved as ${file} — ${n ? `${n.events} events, ${n.steps} steps` : 'no events yet'}. Clicks, typing, scrolling and arrow/page keys are captured; navigation too; passwords are never stored.`; };
+      paint(null);
+      poll = setInterval(async () => { try { const st = await cg.macros.recordStatus(recording); if (st && st.recording) paint(st); } catch (_) { /* the file is already on disk */ } }, 800);
     }), 'primary');
-    const out = await modal({ title: 'Record a macro', body: [field('Tab', agentSel), h('div', {}, startBtn), status], actions: [{ label: 'Stop and edit steps', primary: true, run: async () => {
+    const out = await modal({ title: 'Record a macro', body: [field('Tab', agentSel), field('Name', nameIn), h('div', {}, startBtn), status], actions: [{ label: 'Stop and edit steps', primary: true, run: async () => {
       if (!recording) throw new Error('Start recording first.');
-      return call(() => cg.macros.recordStop(recording), 'stop recording');
+      clearInterval(poll);
+      const r = await call(() => cg.macros.recordStop(recording), 'stop recording');
+      recording = null; return r;
     } }] });
-    if (!out) { if (recording) cg.macros.recordStop(recording).catch(() => {}); return; }
+    clearInterval(poll);
+    // Cancel / Escape: nothing is thrown away. The recorder keeps running to the file until stopped here, so stop it and keep the draft (§0.3).
+    if (!out) { if (recording) { const r = await cg.macros.recordStop(recording).catch(() => null); if (r && r.file) toast(`Recording kept as ${r.file}`); } return; }
+    if (out.file) toast(`Saved ${out.file}`);
     if (!out.steps || !out.steps.length) { toast(`Nothing usable was recorded (${out.events || 0} events).`, 'bad'); return; }
     toast(`Recorded ${out.steps.length} step${out.steps.length === 1 ? '' : 's'}`);
     const host = (() => { try { return new URL(out.steps.find(s => s.action === 'navigate')?.data.url).host; } catch (_) { return ''; } })();

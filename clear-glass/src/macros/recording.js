@@ -12,7 +12,9 @@
  *   input/change on the same el  → one type {selector, text} (last value wins)
  *   keydown Enter + submit       → type {selector, text:'\n'} (Enter alone is not kept)
  *   submit after a click         → dropped: it is the click's effect
- *   scroll / other keydowns      → dropped (noise for a replay)
+ *   scroll                       → scroll {deltaY} (0.60.57: kept, summed per scroller)
+ *   arrow/Page/Home/End/Space    → driver_exec pressKey (0.60.57)
+ *   gap >= 1.5 s                 → wait {ms} (0.60.57, capped 5 s)
  *   navigation                   → navigate {url} for the start url and each new url
  *
  * Password fields are never stored in clear: their value becomes the
@@ -20,6 +22,8 @@
  * ever holding the secret.
  */
 
+const GAP_MS = 1500, MAX_WAIT_MS = 5000;
+const PAGE_KEYS = new Set(['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', 'Space']);
 const SENSITIVE = /pass(word)?|pwd|secret|otp|cvv|cvc|pin\b/i;
 
 function _paramName(sel, used) {
@@ -40,7 +44,8 @@ function recordingToSteps(recording, { startUrl = null } = {}) {
   const steps = [];
   const params = [];
   const used = new Set();
-  let lastUrl = null;
+  let lastUrl = null, lastTs = 0;
+  const scrollY = new Map();
   const pushNav = (url) => {
     if (!url || url === lastUrl || /^about:|^data:/.test(url)) return;
     steps.push({ action: 'navigate', data: { url } });
@@ -51,6 +56,28 @@ function recordingToSteps(recording, { startUrl = null } = {}) {
   for (let i = 0; i < (recording || []).length; i++) {
     const ev = recording[i] || {};
     if (ev.url && ev.url !== lastUrl && ev.type === 'navigate') { pushNav(ev.url); continue; }
+    // MR2 (0.60.57): slow gaps become waits; scroll and paging keys are kept, because a chat read depends on them
+    if (ev.ts && lastTs && ev.ts - lastTs >= GAP_MS && ev.type !== 'navigate') {
+      const prevS = steps[steps.length - 1];
+      const ms = Math.min(MAX_WAIT_MS, ev.ts - lastTs);
+      if (prevS && prevS.action === 'wait') prevS.data.ms = Math.min(MAX_WAIT_MS, prevS.data.ms + ms); else steps.push({ action: 'wait', data: { ms } });
+    }
+    if (ev.ts) lastTs = ev.ts;
+    if (ev.type === 'scroll') {
+      const k = ev.sel || '';
+      const from = scrollY.has(k) ? scrollY.get(k) : 0;
+      scrollY.set(k, ev.y || 0);
+      const dy = (ev.y || 0) - from;
+      if (!dy) continue;
+      const prev = steps[steps.length - 1];
+      if (prev && prev.action === 'scroll' && (prev.data._k || '') === k) { prev.data.deltaY += dy; if (!prev.data.deltaY) steps.pop(); }
+      else steps.push({ action: 'scroll', data: { deltaY: dy, ...(k ? { _k: k } : {}) } });
+      continue;
+    }
+    if (ev.type === 'keydown' && ev.key && ev.key !== 'Enter') {
+      if (PAGE_KEYS.has(ev.key)) steps.push({ action: 'driver_exec', data: { action: 'pressKey', key: ev.key === 'Space' ? ' ' : ev.key } });
+      continue;
+    }
     const sel = ev.sel;
     if (!sel) continue;
     if (ev.type === 'click') {
@@ -84,7 +111,7 @@ function recordingToSteps(recording, { startUrl = null } = {}) {
     }
     // submit after a recorded click is the click's effect; scroll/other keys are noise
   }
-  return { steps: steps.map(({ _param, ...s }) => s), params };
+  return { steps: steps.map(({ _param, ...s }) => { if (s.data && s.data._k !== undefined) { const { _k, ...d } = s.data; return { ...s, data: d }; } return s; }), params };
 }
 
 /** One-line, plain-language description of a step (for the step list). */

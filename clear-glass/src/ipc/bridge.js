@@ -1061,22 +1061,20 @@ class IpcBridge {
     // §BUILT 2026-09-26 — record a macro from a real tab: the driver's
     // recorder captures, src/macros/recording.js turns it into steps the
     // builder opens pre-filled (passwords become a {{password}} parameter).
-    const _recStart = new Map(); // agentId → start url
-    ipcMain.handle('macros:recordStart', async (e, { agentId } = {}) => {
+    // §0.60.57 MR1 — James, 2026-10-15: "needs to start recording a macro node file." The recording IS a .macro file from the first
+    // second (src/macros/live-recording.js); recordStop returns the same steps the file holds, so the step editor opens on what was saved.
+    let _live = null;
+    const live = () => _live || (_live = new (require('../macros/live-recording').LiveRecorder)({
+      getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
+      dir: require('../mesh/automation-engine.js').NODES_DIR }));
+    ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => {
       if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
-      if (!agentId) return { ok: false, error: 'agentId required' };
-      try { const r = await this.driver.exec({ action: 'record.start', agentId }); _recStart.set(agentId, r.startUrl || null); return { ok: true, agentId, startUrl: r.startUrl || null }; }
-      catch (err) { return { ok: false, error: err.message }; }
+      try { return await live().start({ agentId, name }); } catch (err) { return { ok: false, error: err.message }; }
     });
+    ipcMain.handle('macros:recordStatus', async (e, { agentId } = {}) => { try { return live().status(agentId); } catch (err) { return { ok: false, error: err.message }; } });
     ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => {
       if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
-      try {
-        const r = await this.driver.exec({ action: 'record.stop', agentId });
-        const { recordingToSteps } = require('../macros/recording');
-        const out = recordingToSteps(r.recording || [], { startUrl: _recStart.get(agentId) });
-        _recStart.delete(agentId);
-        return { ok: true, events: (r.recording || []).length, ...out };
-      } catch (err) { return { ok: false, error: err.message }; }
+      try { return await live().stop(agentId); } catch (err) { return { ok: false, error: err.message }; }
     });
     ipcMain.handle('macros:schema', async () => {
       try {

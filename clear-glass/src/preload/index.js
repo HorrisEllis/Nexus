@@ -154,7 +154,8 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   macros: {
     list:   ()     => ipcRenderer.invoke('macros:list'),
     get:    (name) => ipcRenderer.invoke('macros:get', { name }),
-    recordStart: (agentId) => ipcRenderer.invoke('macros:recordStart', { agentId }),
+    recordStart: (agentId, name) => ipcRenderer.invoke('macros:recordStart', { agentId, name }),
+    recordStatus: (agentId) => ipcRenderer.invoke('macros:recordStatus', { agentId }),
     recordStop:  (agentId) => ipcRenderer.invoke('macros:recordStop', { agentId }),
     run:    (name, agentOrOpts, params, skipSnapshot) => {
       const o = (agentOrOpts && typeof agentOrOpts === 'object') ? agentOrOpts : { agentId: agentOrOpts, params, skipSnapshot };
