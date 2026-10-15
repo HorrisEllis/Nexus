@@ -94,3 +94,76 @@ phases:
   NP8_macro_hooks:
     status: OPEN
     does: "Macro and automation steps/conditions can read and set the route for a site (e.g. 'run this macro through the transport'), through the policy table only."
+
+# ═══ ADDENDUM 2026-10-15 (b) — scope, incognito, plugin split, macros (MAPPED, nothing below is built) ═══
+addendum_b:
+  james: >-
+    "with extensive options for this to enable for each site, maybe add incognito mode, cli first, always then the browser.html and settings html.
+    provider or url specific, site or cli specific, options for using incognito mode, add extensive support to the macro and automation features,
+    maybe make snowflake a plugin for clearglass? like i want to start using plugins to seperate features from clearglass. good idea? right click context
+    menu, open in snowflake? open with sentinel? or something?"
+  reading: >-
+    The coder's reading (to confirm). (1) Order of delivery is his standing rule: CLI verb and API first, then browser.html, then settings.html. (2) A route
+    can be scoped by provider (ChatGPT, Claude...), by URL pattern, by origin (site) or by caller (a CLI / agent call vs a person's tab). (3) Incognito is a
+    per-tab or per-window mode that composes with a route. (4) "Sentinel" is not defined anywhere in the repo; the coder reads it as a NAME for a hardened
+    preset (incognito + transport route + leak test must pass + no userscripts/extensions injected + no history). If he means something else he says so.
+  coder_answer_good_idea: >-
+    Yes to a plugin, with one hard condition. The plugin system already has the right shapes (context-menu-item, toolbar-command, permission-filter,
+    request-interceptor; clear-glass/src/plugins/contribution-types.js). The seam to cut is: the TRANSPORT (tor + snowflake, its settings, its menu items, its
+    status) is the plugin; the ENFORCEMENT stays in core. If enforcement lived in a plugin, a disabled, crashed or missing plugin would mean traffic goes
+    direct, which is the exact failure this feature exists to prevent. So core owns a small 'route slot': the policy table, the fail-closed rule, and the leak
+    test gate. A plugin fills a slot ('transport'); an empty or dead slot means BLOCK for any route that points at it. This is also the template for moving
+    other features out of core: plugin owns the capability, core owns the invariant.
+  plugin_system_gaps_to_close_first:
+    - "no contribution type for a network transport/route (NP12 adds 'network-transport')"
+    - "no contribution type for a Settings section or a CLI verb from a plugin (type 'cli' exists in COS vocabulary; verify Clear Glass maps it)"
+    - "a plugin that spawns a child process needs a declared permission (permissions.process) so it is visible and revocable"
+
+scope_model:
+  matches: [provider, url_pattern, origin, caller]   # caller: person-tab | cli | agent:<id> | macro:<name> | automation:<id>
+  precedence: "most specific wins: macro/automation > url_pattern > provider > origin > caller default > global. Ties are a hard error (collision), never a silent winner (SISO law 1)."
+  per_rule: [via, dns, protocols, incognito, allow_userscripts, allow_extensions, require_leak_test, on_failure=block]
+  incognito_note: >-
+    Electron partitions whose name has no 'persist:' prefix live in memory and vanish on close. Incognito = such a partition, no history, no autofill save, no
+    rewind, no ledger of page content, userscripts off by default. It hides nothing from the network by itself: only the route does. The UI says so.
+
+decisions:
+  NP9_sentinel_meaning:
+    question: What is 'Sentinel'?
+    coder_recommends: A named preset ('Sentinel' = incognito + transport route + leak test required + userscripts/extensions off), shown as a context-menu item and a CLI flag. Presets are data, so he can define more.
+    chosen: null
+    to_confirm: true
+
+phases:
+  NP9_cli_first:
+    status: OPEN
+    does: >-
+      Verbs through nexus.command and the Clear Glass CLI: net route list|add|rm|test, net transport status|start|stop, net preset list|apply,
+      open <url> --via <route> --incognito --preset sentinel. API routes under /cli/net/*. Every later surface calls these.
+    proof: "route CRUD and precedence/collision tests; 'open' refuses a route whose leak test is stale."
+  NP10_browser_surface:
+    status: OPEN
+    depends_on: [NP9_cli_first]
+    does: "browser.html: a route indicator per tab (direct / via X / incognito / blocked-and-why), New incognito window, New window via..., and a per-site quick toggle in the address bar."
+  NP11_context_menu:
+    status: OPEN
+    depends_on: [NP9_cli_first]
+    does: "Right click a link or page: Open in incognito, Open via <transport>, Open with <preset>. Contributed by the transport plugin through context-menu-item; the core only provides the slot."
+  NP12_plugin_split:
+    status: OPEN
+    does: >-
+      New contribution type 'network-transport'. The Snowflake/Tor transport becomes plugins/snowflake (manifest permissions.process=true, network=true).
+      Core keeps the route slot, policy table, fail-closed rule and leak-test gate. Disabled/crashed plugin => routes that point at it BLOCK.
+    proof: "disable the plugin under test: every route via it blocks and the UI says why; nothing goes direct."
+  NP13_settings_html:
+    status: OPEN
+    depends_on: [NP9_cli_first, NP10_browser_surface]
+    does: "Settings > Network (last, per his order): global, per provider, per URL/origin, per caller, presets, incognito defaults, transport state, leak test, the 'what this does not hide' panel."
+  NP14_macros_and_automation:
+    status: OPEN
+    depends_on: [NP9_cli_first]
+    does: >-
+      Steps: set_route, open_in (incognito / preset / route), net_test. Conditions: route_is, leak_test_passed, transport_up. Triggers: leak_test_failed,
+      transport_down. A macro or workflow can DECLARE a required route/preset (macro node field requires.route) and refuses to run, with the reason, if it
+      cannot be met. Agent jobs carry a route. Recorder option: record in incognito/preset. All through the same policy table, never a side door.
+    proof: "a macro requiring 'sentinel' does not run on a tab with a stale leak test; a trigger fires on transport_down."
