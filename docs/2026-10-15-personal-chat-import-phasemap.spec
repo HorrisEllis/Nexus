@@ -130,6 +130,34 @@ addendum_2026_10_15_c:
     by provider then url; per-account switches in Settings; and a check, in Clear Glass, that the observer is injected on his own tabs (injection is by navigation for a tab with an agent id and a matching userscript, src/main/index.js nav.loaded: UNVERIFIED for his own tabs).
     PI1 (the importer) and PI5 (the sync) write the SAME ledger format, so an imported chat, a synced phone chat and a live one are one kind of record. A DOM observer cannot see the phone app; PI5 stands.
 
-build_order: [PI1_the_importer, PI3_the_intelligence_pass, PI3b_the_measured_patterns, PI5_the_sync, PI2_the_listener, PI4_the_review_screen, PI6_the_firefox_script]
+addendum_2026_10_15_d:
+  james: >-
+    "like i want to have it automatically load new chats, like have it run in the background. and log each chat, by url, one by one until it's done.
+    then once thats done it logs one by one until it's caught up. only logging novel data, but each one interconnected."
+  coder_reads: >-
+    A crawler. For each account with the switch on, a background tab (the agent-mesh background tabs and the provider host already exist) visits that account's chat urls one at a time.
+    The same DOM observer that feeds chat-ledger.js logs each one; when a chat has settled the crawler goes to the next. Two modes in one queue: BACKFILL (every chat the account has, oldest known gap first, until done),
+    then CATCH-UP (a cheap look at the chat list on a timer; only chats whose last-updated changed are visited). This replaces PI5's API sync as the main path, because it uses the page as he does and no undocumented endpoint; the API stays an optional later speed-up.
+  phases:
+    PI5_the_crawler:
+      status: OPEN
+      depends_on: [PI1_the_importer]
+      files: [clear-glass/src/chats/crawler.js, lib/chat-crawl-plan.js]
+      does: >-
+        lib/chat-crawl-plan.js (pure, provable here): the queue per account (state: pending / visiting / logged / failed with reason / skipped-unchanged), the cursor that survives a restart, the diff between the chat list seen now and what the ledger holds (a chat is
+        revisited only when its last-updated or its turn count differs), the pace (one chat at a time, a jittered wait between, a cap per hour), and the stop rules (a login wall, a captcha or a challenge page, a rate-limit message, three failures in a row: it stops, says so, and waits for him).
+        clear-glass/src/chats/crawler.js (needs Electron): loads the list, loads each url in a background tab on the account's own session, scrolls until no new turns render (long chats render lazily: UNVERIFIED), waits until the ledger's `settled`, closes the tab, reports to the plan.
+      proof: "plan: 200 chats, restart at 80, resumes at 80; an unchanged list visits nothing; a challenge page stops the queue; the pace never exceeds the cap. crawler: checked by him in Clear Glass on one account, ten chats."
+    PI7_the_links:
+      status: OPEN
+      depends_on: [PI5_the_crawler, PI3b_the_measured_patterns]
+      does: >-
+        "Each one interconnected": every chat gets edges to the chats it relates to, from evidence only: shared keywords above a threshold, a url or file name quoted in both, adjacency in time, an explicit continuation ("as we discussed"), the same repo or component named.
+        Edges go into the chat index and into the person model's lattice (it has typed edges with provenance). A link names why it exists; there are no unexplained links. "Novel only" = a turn already in the ledger is never re-logged (the ledger refuses a mismatched add and resyncs), and a chat adds a lattice node only when its keywords are not already held.
+  risks:
+    - "Automated visiting of his own account at volume can trip a provider's bot checks or its terms. Slow by default; a stop on any challenge; his choice per account; unverified how each provider reacts."
+    - "A crawler holds the account's session in a hidden tab for hours; it never types, never sends, never clicks anything but navigation and scroll."
+
+build_order: [PI1_the_importer, PI5_the_crawler, PI3_the_intelligence_pass, PI3b_the_measured_patterns, PI7_the_links, PI2_the_listener, PI4_the_review_screen, PI6_the_firefox_script]
 build_order_reason: >-
   The importer needs no Electron and can be proven here; the extraction decides whether the whole idea is worth having, so it comes before the live listener, which can only be checked in Clear Glass.
