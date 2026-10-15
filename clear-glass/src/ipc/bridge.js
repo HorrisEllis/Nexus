@@ -1160,6 +1160,26 @@ class IpcBridge {
       return out;
     });
 
+    // 0.60.55 PI5 — personal-chat capture settings. The table (lib/chat-crawl-settings.js) is the one definition of every setting: defaults, limits and the
+    // rows the Settings screen draws. Stored under options.chatCapture = { global, accounts: { '<provider>:<accountId>': { …overrides } } }.
+    ipcMain.handle('chats:schema', async () => { const S = require('../../../lib/chat-crawl-settings.js'); return { GROUPS: S.GROUPS, SCHEMA: S.SCHEMA }; });
+    ipcMain.handle('chats:settings', async () => {
+      const S = require('../../../lib/chat-crawl-settings.js'); const cc = (this.options?.get() || {}).chatCapture || {};
+      return { global: S.clean(cc.global || {}).settings, accounts: cc.accounts || {} };
+    });
+    ipcMain.handle('chats:save', async (e, d = {}) => {
+      const S = require('../../../lib/chat-crawl-settings.js'); const notes = [];
+      const g = S.clean(d.global || {}); notes.push(...g.notes);
+      const accounts = {};
+      for (const [k, ov] of Object.entries(d.accounts || {})) {
+        if (!/^[a-z0-9_-]+:[A-Za-z0-9-]+$/.test(k)) { notes.push(`${k}: not an account key, dropped`); continue; }
+        const keep = {}; for (const [key, v] of Object.entries(ov || {})) if (S.BY_KEY[key] && S.BY_KEY[key].per === 'account') keep[key] = v; else notes.push(`${k}.${key}: not an account setting, dropped`);
+        accounts[k] = S.clean({ ...g.settings, ...keep }).settings; accounts[k] = Object.fromEntries(Object.keys(keep).map(key => [key, accounts[k][key]]));
+      }
+      await this.options?.set({ chatCapture: { global: g.settings, accounts } });
+      return { ok: true, notes, global: g.settings, accounts };
+    });
+
     // Toolbar command registry — §STRUCTURAL 2026-08-24. Backend-owned
     // (src/toolbar/commands.js); the renderer has no command list of its
     // own, it asks for this one. Read-only: the renderer can PIN/unpin via

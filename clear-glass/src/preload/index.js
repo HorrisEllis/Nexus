@@ -80,6 +80,13 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     onChange: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('options:changed', f); return () => ipcRenderer.removeListener('options:changed', f); },
   },
 
+  // ── Personal-chat capture settings (0.60.55 PI5) ─────────────────────
+  chats: {
+    schema:   ()  => ipcRenderer.invoke('chats:schema'),
+    settings: ()  => ipcRenderer.invoke('chats:settings'),
+    save:     (d) => ipcRenderer.invoke('chats:save', d),
+  },
+
   // ── Toolbar command registry — §STRUCTURAL 2026-08-24 ─────────────────
   // Backend-owned (src/toolbar/commands.js). The renderer asks for this
   // once at startup instead of hardcoding its own copy of the command

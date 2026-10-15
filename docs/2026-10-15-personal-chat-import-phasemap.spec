@@ -140,7 +140,7 @@ addendum_2026_10_15_d:
     then CATCH-UP (a cheap look at the chat list on a timer; only chats whose last-updated changed are visited). This replaces PI5's API sync as the main path, because it uses the page as he does and no undocumented endpoint; the API stays an optional later speed-up.
   phases:
     PI5_the_crawler:
-      status: OPEN
+      status: PLAN + SETTINGS BUILT 0.60.55 (lib/chat-crawl-plan.js CC-01..18, lib/chat-crawl-settings.js 39 settings, Settings -> Chat capture CS-01..04); the tab-driving crawler.js is NOT built
       depends_on: [PI1_the_importer]
       files: [clear-glass/src/chats/crawler.js, lib/chat-crawl-plan.js]
       does: >-

@@ -13,9 +13,12 @@ const FILES = [
   ['lib/run-state.js',   I('lib/run-state.js'),   [I('lib/node-export.js'), I('nexus/nexus-bus.js')]],
   ['lib/reply-kind.js',  I('lib/reply-kind.js'),  [I('lib/step-gate.js')]],
   ['lib/gig-ledger.js',  I('lib/gig-ledger.js'),  []],   // §0.60.53 PF0
+  ['lib/chat-crawl-settings.js', I('lib/chat-crawl-settings.js'), []],   // §0.60.55 PI5
+  ['lib/chat-crawl-plan.js', I('lib/chat-crawl-plan.js'), [I('lib/chat-crawl-settings.js')]],
   ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
 ];
 const CONSUMERS = [
+  [I('clear-glass/src/ipc/bridge.js'),              I('lib/chat-crawl-settings.js'), 'chats:schema / chats:settings / chats:save: the one table of every capture setting, its limits and its Settings rows (0.60.55 PI5)'],
   [I('lib/repo-agent.js'),                          I('lib/gig-ledger-listener.js'), 'attach() before a run begins: a finished run files a deliverable claim with its changed files as evidence (0.60.53 PF0)'],
   [I('lib/repo-agent.js'),                          I('lib/run-state.js'),  'begin() a run (resume on the same goal) before dispatch, finish() it after; lost-job fallback notes it (0.60.50 CE1, CE10)'],
   [I('copilot/server.js'),                          I('lib/run-state.js'),  'every ok/failed tool call is written to the run by step() (0.60.50 CE1)'],
