@@ -85,10 +85,16 @@ const FILES = [
   ['clear-glass/src/providers/profile-tabs.js', 'nexus.clear-glass.src.providers.profile-tabs', ['nexus.clear-glass.src.cookies.session-hub']],
   // 0.60.33 QA1 — the catalogue runs: lib/check-catalogue.js loads cos/spec/check-catalogue.spec and runs lib/checks/*
   // (CK-230 reads lib/shadow.js); contract-gates checkCondition and idearium/api (checks.list / checks.run) consume it
-  ['lib/check-catalogue.js',                'nexus.lib.check-catalogue', ['nexus.lib.checks.ck-230-shadow', 'nexus.lib.checks.ck-233-deny', 'nexus.lib.checks.ck-248-toolchain']],
+  ['lib/check-catalogue.js',                'nexus.lib.check-catalogue', ['nexus.lib.checks.ck-230-shadow', 'nexus.lib.checks.ck-233-deny', 'nexus.lib.checks.ck-248-toolchain', 'nexus.lib.checks.ck-253-versions']],
   ['lib/checks/ck-230-shadow.js',           'nexus.lib.checks.ck-230-shadow', ['nexus.lib.shadow']],
   ['lib/checks/ck-233-deny.js',             'nexus.lib.checks.ck-233-deny', []],
   ['lib/checks/ck-248-toolchain.js',        'nexus.lib.checks.ck-248-toolchain', []],
+  // 0.60.34 VR1 — one version everywhere: lib/release-version.js (the release, where it is stated, what a zip carries)
+  // reads lib/version.js; CK-253 runs it; scripts/release-zip.js builds the GitHub release asset with it; idearium/api
+  // serves /api/version and stamps/reads zips with it
+  ['lib/release-version.js',                'nexus.lib.release-version', ['nexus.lib.version']],
+  ['lib/checks/ck-253-versions.js',         'nexus.lib.checks.ck-253-versions', ['nexus.lib.release-version']],
+  ['scripts/release-zip.js',                'nexus.scripts.release-zip', ['nexus.lib.release-version']],
   ['lib/phase-plan.js',                     'nexus.lib.phase-plan', []],
   ['cortex/core/raid/contract-adapters.js', 'nexus.cortex.core.raid.contract-adapters',
     ['nexus.cortex.core.raid.contract-gates', 'nexus.lib.model-door', 'nexus.lib.phase-plan']],
@@ -105,6 +111,7 @@ const CONSUMERS = [
   ['nexus.clear-glass.src.main', 'nexus.clear-glass.src.providers.profile-tabs'],  // 0.60.32 PF1 — :7702/providers/:id/profile(s)
   ['nexus.cortex.core.raid.contract-gates', 'nexus.lib.check-catalogue'],          // 0.60.33 QA1 — { check: CK-nnn } conditions
   ['nexus.idearium.api', 'nexus.lib.check-catalogue'],                             // 0.60.33 QA1 — /api/checks
+  ['nexus.idearium.api', 'nexus.lib.release-version'],                             // 0.60.34 VR1 — /api/version, zip import/export
 ];
 
 function mapRaidEventsAndTools(driver) {

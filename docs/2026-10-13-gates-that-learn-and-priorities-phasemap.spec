@@ -519,3 +519,52 @@ phasemap:
 # Next in QA1 (open): CK-231 half-states (a sweep), CK-234 unhandled branches, CK-235 untested surface, CK-237 free-
 # sentence conditions, CK-239 dangling edges (loom), CK-245 a retry changes something — all deterministic; each one a
 # runner file and a catalogue line.
+
+## ADDENDUM 2026-10-15 — VR1 mapped for build: one version everywhere (0.60.34)
+
+# James: "i also want versions in idearium, github, and each zip, needs to match." · "then the version thing" ·
+# "Continue." Context: he uploaded Nexus-main-6.zip and nothing in it or its name said which version it was; the coder had
+# to compare it file by file with commits to find it was 0.60.23, six versions behind main.
+#
+# Grounded (2026-10-15):
+# - lib/version.js VERSION.system is the one source (0.60.33); package.json follows it by rule, unchecked.
+# - GitHub: 0 tags, 0 releases, 0 workflows. A "Download ZIP" of main is always named <repo>-main.zip.
+# - Idearium shows no Nexus version anywhere; its log prints IdeaOS v4.35.0 (a module version), which reads like a
+#   second, different version. Clear Glass's package.json says 3.24.0 (also a module version).
+# - A zip imported into Idearium (repo.import-archive) is not read for a version; repo.export names its zip <name>.zip.
+#
+# The coder's reading, to confirm: "match" = one release number, lib/version.js system, said the same in Idearium, on
+# GitHub (tag v<version> and a release) and in/on every zip; the module versions (IdeaOS 4.35.0, Clear Glass 3.24.0) stay
+# as module versions but are labelled as such and never shown as the version.
+#
+# Build:
+# 1. lib/release-version.js: current() → { version, tag, zipName, commit }; agreement() → every place that states the
+#    version and whether it matches (package.json, CHANGELOG-<v>.md, the git tag when one is at HEAD); fromFiles(files)
+#    → the version a zip carries (VERSION, lib/version.js, package.json) and how far it is from the running one.
+# 2. CK-253 "versions agree" (catalogue + lib/checks/ck-253-versions.js) — QA1's catalogue runs it; a test in run-all.
+# 3. GitHub: .github/workflows/release.yml — on a push to main that changes lib/version.js (and by hand): check
+#    agreement, then, if v<version> is not tagged yet, tag it and publish release "Nexus <version>" with the asset
+#    nexus-<version>.zip (git archive, a VERSION file inside) and CHANGELOG-<version>.md as its notes.
+# 4. Zips Nexus writes: repo.export names the zip <repo>-<version>.zip and puts a VERSION file in it (Nexus's own repo:
+#    the release version); zips Nexus reads: repo.import-archive reads the version a zip carries, records it on the
+#    repo, and says how far it is from the running Nexus.
+# 5. Idearium: GET /api/version; the version in the top bar and Settings; `version` command.
+# Proof: agreement goes red on a planted mismatch; a zip of an older Nexus is recognised and its distance said; the
+# workflow's own steps run here (version read, zip built with VERSION inside, the name).
+
+## ADDENDUM 2026-10-15 — VR1 built: one version everywhere (0.60.34)
+
+# Built as mapped above. Proof: test-release-version 5/5 — Nexus agrees and a planted mismatch (package.json, a missing
+# changelog, a git tag at HEAD for another version) is named place by place with CK-253 red; a GitHub "Download ZIP" of
+# 0.60.23 is recognised and said to be 11 releases behind 0.60.34 (counted over the version lines — the changelogs miss
+# 0.60.23–25); the release zip is nexus-<version>.zip, every path under nexus-<version>/, VERSION inside, and Idearium's
+# own importer reads the same version back; the workflow's triggers, agreement step, tag/release/asset and the
+# already-tagged skip; Idearium's surfaces. Zip and import suites unchanged (history-import 18/18, mcoc-baseline 25/25,
+# opportunity 28/28, repo-git 11/11, decompose 15/15, repo-history 20/20).
+#
+# Found and fixed on the way: lib/zip-ingest.js dropped every file without an extension as "unlisted extension (none)"
+# — VERSION, LICENSE, Makefile, Dockerfile, .gitignore never reached a repo's chunks. Now well-known names are text.
+#
+# Not settable from here: whether GitHub runs the workflow (Actions enabled, workflow token allowed to write) — it is
+# proven by its first run on main, which should publish v0.60.34. A "Download ZIP" of a branch is still named by GitHub
+# (<repo>-main.zip); it carries lib/version.js, which Idearium reads, and the release asset is the named zip.

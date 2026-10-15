@@ -1,0 +1,60 @@
+# .github/workflows/release.yml — VR1 (0.60.34): one version everywhere.
+# James (2026-10-14): "i also want versions in idearium, github, and each zip, needs to match."
+#
+# When main's release changes (lib/version.js system), and on demand: the versions must agree (package.json, the
+# changelog — CK-253), then the release is published once: tag v<version> on that commit, release "Nexus <version>",
+# its notes CHANGELOG-<version>.md, its asset nexus-<version>.zip (every path under nexus-<version>/, a VERSION file
+# inside). A version already tagged is left alone. Built by scripts/release-zip.js, which runs the same way locally.
+name: release
+
+on:
+  push:
+    branches: [main]
+    paths: ['lib/version.js', 'package.json', 'CHANGELOG-*.md']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: The release version
+        id: v
+        run: |
+          V=$(node -p "require('./lib/version.js').system")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "tag=v$V" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$V" >/dev/null; then echo "tagged=yes" >> "$GITHUB_OUTPUT"; else echo "tagged=no" >> "$GITHUB_OUTPUT"; fi
+          echo "Nexus $V"
+
+      - name: Versions agree, and the zip (nexus-<version>.zip, VERSION inside)
+        if: steps.v.outputs.tagged == 'no'
+        run: node scripts/release-zip.js --out dist --check
+
+      - name: Publish the release
+        if: steps.v.outputs.tagged == 'no'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          V: ${{ steps.v.outputs.version }}
+        run: |
+          NOTES="CHANGELOG-$V.md"
+          if [ -f "$NOTES" ]; then N=(--notes-file "$NOTES"); else N=(--notes "Nexus $V"); fi
+          gh release create "v$V" "dist/nexus-$V.zip" --title "Nexus $V" --target "$GITHUB_SHA" "${N[@]}"
+
+      - name: Already released
+        if: steps.v.outputs.tagged == 'yes'
+        run: echo "v${{ steps.v.outputs.version }} is already tagged — nothing to publish"

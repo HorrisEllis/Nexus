@@ -665,7 +665,7 @@ export class RepoLayer {
   annotate(repoUuid, fields = {}) {
     const r = this.repos.repos.find(x => x.uuid === repoUuid);
     if (!r) return { error: 'repo not found' };
-    const ALLOWED = ['immutable', 'nexusSelf', 'ideaUuid', 'environment'];   // §0.39.280 BS4 — the repo's environment options
+    const ALLOWED = ['immutable', 'nexusSelf', 'ideaUuid', 'environment', 'sourceVersion'];   // §0.39.280 BS4 — the repo's environment options · §0.60.34 VR1 the version its zip carried
     for (const k of ALLOWED) if (Object.prototype.hasOwnProperty.call(fields, k)) r[k] = fields[k];
     r.updatedAt = Date.now();
     this._save();

@@ -92,6 +92,12 @@ export const SPEC = [
     print: (d, a, h) => printLog(d, h, null) },
   // 0.60.7 — Versionium managed per repo (lib/repo-history.js) and the import checks (lib/import-checks.js)
   // 0.60.8 — intent routing for reasoning (lib/reasoning-route.js)
+  // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
+  { key: 'system.version', repo: false, usage: 'version', about: 'the Nexus release (lib/version.js): its GitHub tag and zip name, whether every place that states it agrees (CK-253), and the module versions, labelled',
+    req: () => ({ method: 'GET', path: '/api/version' }),
+    print: (d, a, h) => { console.log(`  ${h.c.mint(`Nexus ${d.version}`)}${d.commit ? h.c.dim(`  ${d.commit}`) : ''}  ·  GitHub ${d.tag}  ·  zip ${d.zipName}`);
+      for (const p of (d.agreement && d.agreement.places) || []) console.log(`    ${p.ok ? h.c.mint('✓') : h.c.amber('✗')} ${p.place}${p.ok ? '' : h.c.amber(`  ${p.why}`)}`);
+      if (d.modules) console.log(h.c.dim(`  modules (not the release): IdeaOS ${d.modules.ideaos || '?'} · Clear Glass ${d.modules.clearGlass || '?'}`)); } },
   // 0.60.33 QA1 — the check catalogue: what each check is and whether Nexus runs it; run one over Nexus or a repo
   { key: 'checks.list', repo: false, usage: 'checks list [--family=shadow] [--runnable]', about: 'the check catalogue (cos/spec/check-catalogue.spec): every check, its family and stage, and which ones Nexus can run now',
     req: (a) => ({ method: 'GET', path: `/api/checks?${a.flags.family ? `family=${encodeURIComponent(a.flags.family)}&` : ''}${a.flags.runnable ? 'runnable=1' : ''}` }),

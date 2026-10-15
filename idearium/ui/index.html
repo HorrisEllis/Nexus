@@ -176,6 +176,9 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .pillars .pillar.flow::after{display:none}
 /* §0.39.300 UI1 — one bar, full screen, a calmer welcome */
 .tab-logo{display:flex;align-items:center;padding:0 16px 0 10px;margin-right:6px;border-right:1px solid var(--b1)}
+/* 0.60.34 VR1 — the release, beside the logo */
+.tab-ver{margin-left:8px;font-size:10px;letter-spacing:.04em;opacity:.65;font-weight:400}
+.tab-ver.warn{color:var(--amber, #e0a040);opacity:1}
 .tab-icon-btn{padding:0 11px}
 .tab-icon-btn .tab-icon{margin:0;font-size:14px}
 .tab-right{margin-left:8px;padding-left:10px;border-left:1px solid var(--b1)}
@@ -970,7 +973,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
 <!-- APP SHELL -->
 <div class="app-shell">
   <nav class="tabbar" id="tabbar">
-    <div class="logo tab-logo" onclick="setView('welcome')" title="IDEARIUM — HOME">IDEA<span>RIUM</span></div>
+    <div class="logo tab-logo" onclick="setView('welcome')" title="IDEARIUM — HOME">IDEA<span>RIUM</span><span class="tab-ver" id="nexus-version" title="the Nexus release (lib/version.js) — the same on GitHub (v…) and in every zip">…</span></div>
     <button class="tab-btn active" data-view="welcome" onclick="setView('welcome')"><span class="tab-icon">⌂</span>Welcome</button>
 
 
@@ -2595,5 +2598,21 @@ async function saveToIdearium(){
 <script src="js/components-panel.js"></script>
 <script src="js/repo-versions.js"></script>   <!-- §0.60.7 the Versionium tab: every version, compare, import history -->
 <script src="js/repo-notes.js"></script>   <!-- §0.60.6 a repo's Notes tab -->   <!-- §0.60.5 decompose projects into the component store; bundles with their dependencies -->
+<script>
+// 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match." The Nexus release beside
+// the logo (GET /api/version); amber, with the reason on hover, when a place that states it disagrees (CK-253).
+(function () {
+  const el = document.getElementById('nexus-version'); if (!el) return;
+  fetch('/api/version').then(r => r.json()).then((j) => {
+    const d = j && (j.data || j); if (!d || !d.version) { el.textContent = ''; return; }
+    el.textContent = `v${d.version}`;
+    const bad = ((d.agreement && d.agreement.places) || []).filter(p => !p.ok);
+    el.title = `Nexus ${d.version}${d.commit ? ` · ${d.commit}` : ''} — GitHub release ${d.tag}, zip ${d.zipName}`
+      + `${d.modules ? ` · modules: IdeaOS ${d.modules.ideaos || '?'}, Clear Glass ${d.modules.clearGlass || '?'}` : ''}`
+      + (bad.length ? `\nNOT MATCHING: ${bad.map(p => `${p.place} — ${p.why}`).join('; ')}` : '');
+    if (bad.length) el.classList.add('warn');
+  }).catch(() => { el.textContent = ''; });
+})();
+</script>
 </body>
 </html>

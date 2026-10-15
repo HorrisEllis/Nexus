@@ -270,7 +270,9 @@ export class IdeaOS {
     try { registerCortexListeners(this); }
     catch (e) { console.error(`[IdeaOS] cortex listener registration failed: ${e.message}`); }
     this._recalcSNR();
-    console.log(`[IdeaOS] v${VERSION} — ${this.db.ideas.length} ideas, ${this.db.gaps.filter(g=>g.status==='open').length} open gaps, SNR ${this.snr.toFixed(3)}`);
+    // §0.60.34 VR1 — the release first; IdeaOS's own number is a module version, said as one (it read like a second version)
+    let _rel = null; try { _rel = createRequire(import.meta.url)('../lib/version.js').system; } catch (_) {}
+    console.log(`[IdeaOS] ${_rel ? `Nexus ${_rel} · IdeaOS module ` : ''}v${VERSION} — ${this.db.ideas.length} ideas, ${this.db.gaps.filter(g=>g.status==='open').length} open gaps, SNR ${this.snr.toFixed(3)}`);
   }
 
   // ─── Gate Registration ──────────────────────────────────────────────────────
