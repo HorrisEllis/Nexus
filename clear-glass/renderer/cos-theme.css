@@ -23,7 +23,20 @@
   --cyan: #38bdf8; --violet: #7c9cff; --ok: #34d399; --warn: #fbbf24; --bad: #f87171;
   --cos-glyph: #7c9cff;
 }
+/* 0.60.58 — James: "the dark mode on the popups". Without this, native <select> lists, scrollbars, date pickers and form controls draw light
+   on a dark page. One line here covers browser.html, library.html and settings.html (all three link this file). */
+:root { color-scheme: dark; }
 html, body { background: #0a0b10; }
+
+/* the in-page text prompt (askText in browser.js) that replaces window.prompt */
+.cg-ask-scrim { position: fixed; inset: 0; background: rgba(4,5,9,.62); display: flex; align-items: center; justify-content: center; z-index: 99999; }
+.cg-ask { width: min(420px, 90vw); background: #0f121c; color: #e5e7ef; border: 1px solid #232838; border-radius: 10px; padding: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.6); font: 12px/1.45 ui-sans-serif, system-ui, sans-serif; }
+.cg-ask label { display: block; margin-bottom: 8px; color: #8b91a5; }
+.cg-ask input { width: 100%; box-sizing: border-box; background: #12151d; color: #e5e7ef; border: 1px solid #232838; border-radius: 6px; padding: 8px 10px; font: inherit; outline: none; }
+.cg-ask input:focus { border-color: #7c9cff; }
+.cg-ask .row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+.cg-ask button { background: #1b2030; color: #e5e7ef; border: 1px solid #232838; border-radius: 6px; padding: 6px 12px; cursor: pointer; font: inherit; }
+.cg-ask button.go { background: #7c9cff; color: #08080d; border-color: #7c9cff; }
 
 /* ── the title bar: the tab strip is the window's bar ─────────────────── */
 #tab-bar {

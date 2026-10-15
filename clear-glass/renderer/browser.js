@@ -153,6 +153,24 @@
     return el;
   })();
 
+  // 0.60.58 — Electron has no window.prompt (it throws), so the state-bookmark button never got a name. A dark in-page one:
+  // askText('Title', 'Label') -> Promise<string|null>. Enter confirms, Esc or a click outside cancels.
+  function askText(title, label, initial = '') {
+    return new Promise((resolve) => {
+      const scrim = document.createElement('div'); scrim.className = 'cg-ask-scrim';
+      const box = document.createElement('div'); box.className = 'cg-ask'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', title);
+      const lab = document.createElement('label'); lab.textContent = label || title;
+      const inp = document.createElement('input'); inp.type = 'text'; inp.value = initial; inp.spellcheck = false;
+      const row = document.createElement('div'); row.className = 'row';
+      const no = document.createElement('button'); no.textContent = 'Cancel';
+      const ok = document.createElement('button'); ok.textContent = 'OK'; ok.className = 'go';
+      const done = (v) => { scrim.remove(); resolve(v); };
+      no.onclick = () => done(null); ok.onclick = () => done(inp.value.trim() || null);
+      scrim.addEventListener('mousedown', (e) => { if (e.target === scrim) done(null); });
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') ok.click(); else if (e.key === 'Escape') no.click(); });
+      row.append(no, ok); box.append(lab, inp, row); scrim.append(box); document.body.appendChild(scrim); inp.focus(); inp.select();
+    });
+  }
   function toast(msg, type = 'info', durationMs = 3500) {
     const colors = { info:'#00f5ff', error:'#ff4466', success:'#00ff9d', warn:'#ffb454' };
     const el = document.createElement('div');
@@ -2411,7 +2429,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // and building one is a real, separate, scoped UI task, not silently
   // done as a side effect of wiring the label convention through.
   document.getElementById('rewind-bookmark-btn').addEventListener('click', async () => {
-    const name = window.prompt('Name this state bookmark (captures cookies, storage, and scroll position):');
+    const name = await askText('State bookmark', 'Name this state bookmark (captures cookies, storage, and scroll position)');
     if (!name) return; // real cancel — no snapshot taken, matches every other cancel-prompt convention in this file
     await cg.rewind.snapshot(agentId, { label: `bookmark:${name}` });
     await loadRewindList();

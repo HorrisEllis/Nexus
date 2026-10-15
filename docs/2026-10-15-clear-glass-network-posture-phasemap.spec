@@ -193,3 +193,35 @@ phases:
     depends_on: [NP1_compartment, NP3_apply_to_electron, NP5_leak_test]
     does: "Core watchdog (heartbeat + triggers above) applying the rule's on_failure; kill ladder; a Panic button and CLI verb (net kill [--route R] [--all]); events for macro/automation triggers (NP14)."
     proof: "fake transport: exit => block within one tick; kill_tabs destroys the partition; kill_compartment wipes the data dir; a failing wipe leaves the route blocked and reports it; in-flight request is not retried direct."
+
+# ═══ ADDENDUM 2026-10-15 (d) — a safe download pipeline from the compartment (MAPPED, nothing below is built) ═══
+addendum_d:
+  james: "downloads any files into the sandbox, shows in the downloads library, a safe pipeline."
+  reading: "The coder's reading (to confirm): files downloaded by a tab on a protected route land in a quarantine folder inside the compartment, not the normal Downloads folder; they appear in the Library's Downloads area marked 'quarantined'; a person (or a rule) releases them after checks."
+  grounding: >-
+    Reuse, do not rebuild. src/downloads/store.js (the list), adapter.js, intake-bridge.js (regular downloads -> Guardian artifacts), providers/download-capture.js
+    (provider chat downloads) and the Library Downloads area already exist. The new work is a QUARANTINE state in front of them, not a second downloads system.
+  pipeline:
+    1_land: "Download completes into <compartment>/quarantine/<id>/<name>, mode not executable, never opened by the OS or an app. The route's partition owns it."
+    2_record: "Downloads store row with state=quarantined, route, source URL, size, time, SHA-256 (computed while streaming)."
+    3_check: >-
+      Cheap deterministic checks first (§ leverage rule): size cap, extension vs sniffed type mismatch, double extensions, executable/script/installer types flagged,
+      archive bombs (depth and expansion ratio), known-hash list (his own allow/deny list), and an optional external scanner IF one is installed (ClamAV or Windows Defender
+      through its CLI). No scanner installed = the row says 'not scanned', never 'clean'.
+    4_release: "Release is a click, a CLI verb (downloads release <id> [--to DIR]) or a rule (e.g. images under 5 MB from this site). Release MOVES the file out and then hands it to the existing intake-bridge. Flagged types need an explicit confirm."
+    5_destroy: "kill_compartment (NP15) wipes the quarantine folder with the rest; released files are untouched."
+  honest_limits:
+    - "Quarantine is a folder plus checks, not a virtual machine. A file that is released and then opened runs with his user's rights. The pipeline lowers risk; it does not make an unknown executable safe."
+    - "Hash/type/archive checks catch the careless cases. A new malicious file passes them. Without a real scanner the label stays 'not scanned'."
+    - "True detonation (running the file in a VM) is a different system and is out of scope here."
+decisions:
+  NP16_default_quarantine:
+    question: Quarantine for every download on a protected route only, or for all downloads?
+    coder_recommends: Protected routes and incognito/Sentinel by default (the ones he marked as risky); a setting to quarantine everything; normal browsing unchanged.
+    chosen: null
+phases:
+  NP16_quarantine_pipeline:
+    status: OPEN
+    depends_on: [NP1_compartment, NP9_cli_first]
+    does: "CLI first: downloads list|show|check|release|delete [--quarantined]. Then the Library Downloads area gets a state column, a Check and Release button and a filter; then Settings > Downloads gets the rules, caps, scanner path and the allow/deny hash lists."
+    proof: "tests: a file lands in quarantine and is never moved to Downloads without release; type/extension mismatch and a zip-bomb fixture are flagged; no scanner => 'not scanned'; release hands the file to intake-bridge exactly once; kill_compartment removes the folder."
