@@ -63,9 +63,21 @@ phases:
       current, last tag) is one query.
     proof: "a 3-brick contract → 3 tags on 3 commits, 1 activity row per move, progress reads 3/3; a retry does not re-tag"
 
+  KT1_observations_on_a_semantic_tree:
+    status: OPEN (added 2026-10-15, see addendum)
+    depends_on: [GT2_each_gate_tags_and_reports]
+    files: [lib/knowledge-tree.js (new — a projection plus one observations table), lib/code-intel/cards.js, lib/component-store.js, lib/atlas-generate.js]
+    does: >-
+      One tree, read from what exists: system (its atlas) → component (component store / loom) → file → chunk (code-intel
+      cards: uses / usedBy). Observations attach at any node, keyed by path: what happened there (gate PASS/FAIL with its
+      GT1 class, rewinds, the provider that passed, fault_log rows, his notes and decisions, the spec that owns it) — each
+      citing its source row, never summarised away. A node's view rolls its children's up (this module fails on context
+      3 times; this file's last 4 bricks passed on qwen). Written automatically by GT2's gate events and FR1's reports.
+    proof: "a run's gate failures on lib/x.js appear on lib/x.js, roll up to its component and system, each citing its gate"
+
   CX1_context_from_the_dependencies:
     status: OPEN
-    depends_on: [GT2_each_gate_tags_and_reports]
+    depends_on: [KT1_observations_on_a_semantic_tree]
     files: [lib/contract-context.js (new — a composer, nothing stored), cortex/core/raid/contract-adapters.js]
     does: >-
       contextFor(contract, gate) composes, from what exists: its dependencies' passed outputs (depsOf, their gate
@@ -127,8 +139,21 @@ phases:
   # carried from the previous map, unchanged: RN2 (changelog from commits), RN3 (Releases view), FR1 (failure reports),
   # ST1 (check runners), RD1b (spec chunks as bricks). AT1 folds into AU1.
 
-order: "GT2 → CX1 → CP1 → CS1 → AU1 → RT2 → RN2 → RN3 → FR1 → MC1 → ST1 → LA1 (after LA0)"
+order: "GT2 → KT1 → CX1 → CP1 → CS1 → AU1 → RT2 → RN2 → RN3 → FR1 → MC1 → ST1 → LA1 (after LA0)"
 
 drift_accounted:
   - "Nothing new stores a second copy: tags in Versionium, rows in the activity log, components in the store, context composed on demand."
   - "'Automatic' is a setting per kind (addenda, macros), on by default only where nothing outside the run is rewritten."
+
+## ADDENDUM 2026-10-15 — KT1 added: observations per file and module, on one tree
+
+# James: "like the system atlas and component store were supposed to be a map for context. like what about obervations
+# per file or module, like for the learning, like a semantic tree?"
+# Found (§8.6): the levels exist but are not joined — atlases (system), component store and loom (component), code-intel
+# cards (chunk: what it uses, what uses it). The learning exists but is keyed by agent or plan (agent-build-learning,
+# plan-learning), and fault_log by component, never by file. Nothing answers "what do we know about this file".
+# Added KT1 between GT2 and CX1: the tree is a projection of those levels; observations are the one new table, keyed by
+# path, each citing its source. CX1 then reads a brick's context from the tree (its node, its dependencies' nodes, their
+# observations) instead of composing from scratch. Coder's reading of "semantic tree" (to confirm): a tree by structure
+# with meaning attached (summaries, observations), searchable by words; embeddings added only where vector-memory runs.
+
