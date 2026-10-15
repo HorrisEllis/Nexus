@@ -14,6 +14,10 @@ origin:
     coded, that or consolidate them into one and add ai assisted coding using the chunking and line count tool for the
     ai to change lines at a time or a section. so the cli can read the current worksurface in the code tab. expand it as
     much as you can."
+  second_message: >-
+    "that and manage and histry should be one menu i feel like. versioning each diff using versioning in versionium, also
+    make the versioning more competant and universal. rewind engine for each file. full history tracked and tagged.
+    looking at the last phases from the last phasemap. also make sure those are in idearium. phases need to be in idearium."
   earlier_same_day:
     - >-
       "it hasn't really coded anything. i want it to start exactly where it left off if it restarts. the code tab in
@@ -66,12 +70,19 @@ open_decisions:
     asked: "can one reply carry several tool calls?"
     coder_recommends: "no change to 'one call per reply'; teach the persona to use code_batch for reads. To confirm."
     status: OPEN
+  CV0_versioning_scope:
+    asked: "making the versioning more competant and universal"
+    coder_reading: >-
+      'universal' read as: the same history for every node type Nexus keeps (CV5), not a second version system. To confirm
+      - it could also mean versioning that works for any project James imports, which Versionium's files layer already does.
+    status: OPEN
 
 phases:
   # order: bottom-up. backend -> API -> command -> UI, versioned, tested in Clear Glass (never Playwright), loom-wired.
 
   CE1_the_run_state:
     status: OPEN
+    systems: [core, cortex, idearium]
     files: [lib/run-state.js (new), lib/agent-memory.js, cortex/core/raid/contract-gates.js, lib/node-export.js, lib/repo-agent.js, idearium/api/index.js]
     depends_on: []
     does: >-
@@ -83,6 +94,7 @@ phases:
 
   CE2_the_task_header:
     status: OPEN
+    systems: [core]
     files: [lib/repo-agent.js, lib/agent-tools/tool-call-listener.js]
     depends_on: [CE1_the_run_state]
     does: >-
@@ -92,6 +104,7 @@ phases:
 
   CE3_reply_on_task_gate:
     status: OPEN
+    systems: [core, guardian]
     files: [lib/step-gates/reply.on_task.step_gate (new), lib/step-gates loader, guardian/lib/gate-trail.js]
     depends_on: [CE1_the_run_state]
     does: >-
@@ -103,6 +116,7 @@ phases:
 
   CE4_reply_kind_and_tags:
     status: OPEN
+    systems: [guardian, clear-glass]
     files: [guardian/lib/response-sink.js, lib/agent-memory.js, clear-glass/renderer/library/sections/responses.js]
     depends_on: [CE1_the_run_state]
     does: >-
@@ -113,6 +127,7 @@ phases:
 
   CE5_events:
     status: OPEN
+    systems: [idearium]
     files: [idearium/event-taxonomy.cjs, lib/event-contract-check.js, lib/run-state.js]
     depends_on: [CE1_the_run_state, CE3_reply_on_task_gate]
     does: >-
@@ -125,6 +140,7 @@ phases:
 
   CE6_one_tab:
     status: OPEN (blocked by CE0_one_tab_or_two)
+    systems: [idearium]
     files: [idearium/ui/js/code-surface.js, idearium/ui/js/file-manage.js, idearium/ui/js/app.js]
     depends_on: [CE0_one_tab_or_two]
     does: >-
@@ -134,6 +150,7 @@ phases:
 
   CE7_ai_assisted_editing:
     status: OPEN
+    systems: [idearium, core]
     files: [idearium/ui/js/code-surface.js, lib/line-edit.js, idearium/api/index.js, lib/agent-tools/tools]
     depends_on: [CE1_the_run_state, CE5_events]
     does: >-
@@ -145,6 +162,7 @@ phases:
 
   CE8_the_cli_reads_the_surface:
     status: OPEN
+    systems: [idearium]
     files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/code-surface.js, lib/run-state.js]
     depends_on: [CE5_events]
     does: >-
@@ -155,6 +173,7 @@ phases:
 
   CE9_the_panels:
     status: OPEN
+    systems: [idearium, clear-glass]
     files: [idearium/ui/js/repo-tasks.js, idearium/ui/js/repo-drawer-views.js, idearium/ui/js/code-surface.js, clear-glass/src/mesh/route-graph.js]
     depends_on: [CE5_events, CE4_reply_kind_and_tags]
     does: >-
@@ -167,6 +186,7 @@ phases:
 
   CE10_lost_jobs_fall_back:
     status: OPEN
+    systems: [guardian]
     files: [guardian/lib/dispatcher.js, guardian/lib/job-retry.js, lib/run-state.js]
     depends_on: [CE1_the_run_state]
     does: >-
@@ -175,11 +195,13 @@ phases:
 
   CE11_contract_panel_and_context:
     status: OPEN (is automatic-tracking CX1 + CP1; not re-specced here)
+    systems: [idearium, cortex]
     depends_on: [CE1_the_run_state]
     does: "CX1 (context from the dependencies: lines, spec, memory, loom impact) feeds CE2's header; CP1 (the contract panel) is a Code-tab panel next to the gates."
 
   CE12_proof_and_wiring:
     status: OPEN
+    systems: [core, loom]
     files: [tests/modules/run-all.js, loom/maps/*, docs/atlases/idearium-atlas.md, docs/SPEC-REGISTRY.spec, lib/version.js]
     depends_on: [CE1_the_run_state]
     does: >-
@@ -187,7 +209,75 @@ phases:
       edge (rule 3); dated ADDENDUM to automatic-tracking and code-tab-and-one-router (rule 4); a version bump with James's
       words quoted, a CHANGELOG entry and a PROOF-OF-COMPETENCY line; archive, never delete (rule 5).
 
-build_order: [CE1, CE2, CE3, CE4, CE5, CE10, CE8, CE7, CE9, CE6, CE11, CE12]
+  # ── Added 2026-10-15 (second message): one menu for Manage + History, and versioning made universal ──────────────
+  CV1_one_menu:
+    status: OPEN
+    systems: [idearium]
+    files: [idearium/ui/js/file-manage.js, idearium/ui/js/file-versions.js, idearium/ui/js/code-surface.js]
+    depends_on: [CE0_one_tab_or_two]
+    does: >-
+      Manage and History become one dialog on one file: the action cards and scope (Change / Fix & prove / Understand)
+      on one side, and the file's whole timeline on the other - its manage runs (replied, blocked, incomplete, reviewed,
+      with the reason), its Versionium versions, its tags and restore points - in one list, newest first. Pick any entry to
+      see it, diff any two, restore one. The two modals today (file-manage.js, file-versions.js) share one data call.
+
+  CV2_a_version_per_diff:
+    status: OPEN
+    systems: [core, versionium, idearium]
+    files: [lib/repo-versions.js, versionium/lib/files.js, versionium/lib/releases.js, lib/line-edit.js]
+    depends_on: [CE7_ai_assisted_editing]
+    does: >-
+      Today a burst of writes settles into ONE commit after 1.5 s (repo-versions.js SETTLE_MS) - good for a six-file run,
+      wrong for 'each diff'. An applied edit (CE7 Apply, a Manage run, a restore) is its own commit with labels: {run,
+      phase, step, provider or hat, action, checksum before/after, kind: edit|manage|agent|restore|person}. Bulk writes
+      still settle; the edit path commits at once. Named milestones keep using Versionium tag() (immovable names).
+
+  CV3_file_rewind:
+    status: OPEN
+    systems: [idearium, versionium, clear-glass]
+    files: [idearium/ui/js/file-versions.js, idearium/api/index.js, versionium/lib/files.js, lib/run-state.js]
+    depends_on: [CV2_a_version_per_diff, CE1_the_run_state]
+    does: >-
+      A rewind per file: a timeline to scrub, preview any version, diff any two, restore (the restore is itself a commit).
+      And a rewind per run: 'undo this run' puts every file the run touched back to its state before the run, found
+      through the run state (CE1) and the commit labels (CV2). Clear Glass's rewind engine (clear-glass/src/rewind/engine.js)
+      is a BROWSER-session rewind (URL, cookies, storage, scroll; 50 snapshots per agent); only its shape is borrowed (a
+      bounded list, list / restore / clear), not its code.
+
+  CV4_tagged_history:
+    status: OPEN
+    systems: [idearium, versionium, core]
+    files: [versionium/lib/files.js, idearium/api/index.js, idearium/cli/route-commands.js]
+    depends_on: [CV2_a_version_per_diff]
+    does: >-
+      Every version carries tags, and history is queried by them: GET /api/repos/:uuid/file/history?path=&tag= (run:,
+      phase:, agent:, provider:, kind:), `repo history <repo> <path> [--tag t]` in the one command table so agents have it
+      too. versions() today returns commit, sha, kind, wall and message; tags are the addition.
+
+  CV5_universal_versioning:
+    status: OPEN (scope to confirm - see open_decisions CV0)
+    systems: [versionium, core]
+    files: [versionium/lib/files.js, lib/node-export.js, lib/repo-versions.js]
+    depends_on: [CV4_tagged_history]
+    does: >-
+      The same versioning for every kind of thing Nexus keeps, not only a repo's code files: specs and phasemaps,
+      .job / .response nodes, step gates, repo notes, settings - each in its own Versionium namespace (files.js already
+      takes a `repository`), with the same history, diff, restore and tags. Plus the competence a replacement for GitHub
+      needs (James, VR1: 'supposed to be an alternative to github to an extent. but i want to replace it for myself'):
+      verify a tree against its hash, retention and compaction that never drops a tagged version, export.
+
+  CV6_phases_in_idearium:
+    status: OPEN
+    systems: [idearium, loom]
+    files: [loom/scanners/phasemap-map.js, idearium/repo/thread.js, idearium/ui/js/phases.js]
+    depends_on: []
+    does: >-
+      Every CE and CV phase is declared with a `systems:` line (done in this file) so the Phases tab and the roadmap place it
+      by what was declared, not guessed from prose (the scanner parsed 13 phases on 2026-10-15 and guessed each one's
+      system). As each phase is built its run and commits attach to it (the thread, RS9), so a phase shows the versions that
+      built it. The two entries parsed as phases from open_decisions (CE0) are marked decisions, not phases.
+
+build_order: [CE1, CE2, CE3, CE4, CE5, CE10, CE8, CE7, CV2, CV4, CV3, CV1, CE9, CE6, CV5, CV6, CE11, CE12]
 first_slice: "CE1 + CE2 + CE3: the three that stop the agent losing the task. Everything else reads what they write."
 
 not_verified:
