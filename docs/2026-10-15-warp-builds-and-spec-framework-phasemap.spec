@@ -8,6 +8,7 @@ origin:
     "make sure all builds use warp. also need the agents to use the spec compiler? like the yaml. need to inject a
     framework for generating a .spec file. then need to listen for it to collect it. intent based .inject nodes, with
     full expanded settings in the repos.e"
+  james_5: "Use the templates. The genesis by default."
   james_4: >-
     "Merge with main. Then look at the recent spacs for idearium. And begin on the pipeline. The speccing, mapping, listener. It doesn't know how to map. Nexus needs to generate dependancies for each phase, with files. The agent keeps having to find context, with tools.  Need them all mapped. Need that be automatic for every new phase from any project. Look at the new spec per module phase from main"
   james_3: "phases tags by system/nested repo"
@@ -242,3 +243,16 @@ order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → 
 # WB1 still waits on James: WARP wraps each build's agent call (the coder's recommendation), or WARP's cascade picks the agent.
 # Also found while shipping 0.60.67 (the coder's regression, said): addenda appended as plain text since 0.60.63 broke six
 # YAML specs, the check catalogue among them. The added lines are now # comments; test-build-paths BP-05 guards it.
+
+## ADDENDUM 2026-10-15 — 0.60.68 SF4 revised: specs are laid out from the templates, genesis by default
+# James: "Use the templates. The genesis by default." (after "So it can spec now?" — the coder had said a compiled spec came
+# out as the spec compiler's generic TypeScript package, nothing like a Nexus system)
+# Read first: genesis is already Idearium's default system template (speceng.create, GN1 0.39.286); its file tree is the
+# nexus-system skeleton (SB31), and lib/file-tree-plan.js plan({ slot }) already slots components into it (slotIn: a registry
+# entry plus component / capability / command / event / route / hook nodes each). SF4 now uses that, not a second layout:
+# a collected spec's modules ARE the slot (spec-collect slotFromSpec: a module → a component, its exports → its commands).
+# Choice of template: the request, the spec's meta.template, then idearium specs.default_template (default genesis);
+# compiler and any file-tree template id remain. The components' lib files are listed to build, not stubbed.
+# The spec-framework block gains a {template} line (spec-collect templateBrief) and meta.template: genesis in its example.
+# Coder's reading (to confirm): "use the templates" = the spec is laid out from Idearium's template catalog (genesis first),
+# not that the agent fills a template document's sections.

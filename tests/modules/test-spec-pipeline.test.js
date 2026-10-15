@@ -109,18 +109,51 @@ const BAD = 'spec:\n  meta:\n    name: ledger\n  modules:\n    - id: ledger-stor
   });
 
   // ── SF4 (0.60.67): a collected spec compiled — T0/T1, zero tokens; every file a proposal, nothing overwritten ──
-  await test('SP-08', 'SF4: compile proposes every emitted file as an .inject, writes nothing, never overwrites', async () => {
+  await test('SP-08', 'SF4 (0.60.68: genesis by default): the nexus-system skeleton with the spec\'s module slotted in — proposals only, nothing overwritten', async () => {
     await quiet(() => layer.writeFile(repo.uuid, 'package.json', '{"name":"mine"}\n'));
     const r = await quiet(() => SC.compileToProposals({ layer, repo, specPath: 'spec/ledger.spec', content: GOOD }));
     assert.ok(r.ok, r.error);
-    assert.ok(r.proposed.some(p => p.path === 'src/modules/ledger-store/ledger-store.ts'), JSON.stringify(r.proposed.map(p => p.path)));
+    assert.strictEqual(r.template, 'genesis');
+    const paths = r.proposed.map(p => p.path);
+    for (const f of ['server.js', 'cli.js', 'registry-components.js', 'interaction-contract.json', 'event-taxonomy.js', 'jaa-store.js'])
+      assert.ok(paths.includes(f), `the genesis skeleton's ${f} is proposed`);
+    for (const n of ['data/nodes/component/ledger.ledger-store.component', 'data/nodes/command/ledger.ledger-store.append.command', 'data/nodes/command/ledger.ledger-store.read.command', 'data/nodes/event/ledger.ledger-store.append.done.event'])
+      assert.ok(paths.includes(n), `the module is slotted in: ${n}`);
+    const reg = RI.get(r.proposed.find(p => p.path === 'registry-components.js').uuid);
+    assert.ok(/id: 'ledger\.ledger-store'/.test(reg.content || fs.readFileSync(path.join(process.env.NEXUS_INJECT_DIR, `${reg.uuid}.inject`), 'utf8')), 'the registry names the module');
+    assert.deepStrictEqual(r.toBuild.map(t => t.path), ['lib/ledger-store.js'], 'the module\'s own file is left to build, not stubbed');
+    assert.ok(/append\(args, ctx\)/.test(r.toBuild[0].purpose) && /read\(args, ctx\)/.test(r.toBuild[0].purpose), r.toBuild[0].purpose);
     assert.ok(r.skipped.some(x => x.path === 'package.json' && /never overwrites/.test(x.why)), 'the existing package.json is skipped, said');
-    const pf = layer.readFile(repo.uuid, 'package.json');
-    assert.strictEqual(pf.content.trim(), '{"name":"mine"}', 'not overwritten');
-    const ts = layer.readFile(repo.uuid, 'src/modules/ledger-store/ledger-store.ts');
-    assert.ok(!ts || ts.error, 'a proposal is not written until applied');
-    const n = RI.get(r.proposed[0].uuid);
-    assert.strictEqual(n.status, 'proposed'); assert.strictEqual(n.source.kind, 'compiler');
+    assert.strictEqual(layer.readFile(repo.uuid, 'package.json').content.trim(), '{"name":"mine"}', 'not overwritten');
+    const sv = layer.readFile(repo.uuid, 'server.js');
+    assert.ok(!sv || sv.error, 'a proposal is not written until applied');
+    assert.strictEqual(RI.get(r.proposed[0].uuid).status, 'proposed');
+  });
+
+  await test('SP-08b', '0.60.68: the template can be chosen — compiler (the TypeScript scaffold) by request or by the spec\'s meta.template; unknown is refused', async () => {
+    const r = await quiet(() => SC.compileToProposals({ layer, repo, specPath: 'spec/ledger.spec', content: GOOD, template: 'compiler', into: 'ts' }));
+    assert.ok(r.ok, r.error); assert.strictEqual(r.template, 'compiler');
+    assert.ok(r.proposed.some(p => p.path === 'ts/src/modules/ledger-store/ledger-store.ts'), JSON.stringify(r.proposed.map(p => p.path)));
+    const viaMeta = GOOD.replace('    uuid: ledger-v1\n', '    uuid: ledger-v1\n    template: compiler\n');
+    assert.strictEqual(SC.templateOf(require('js-yaml').load(viaMeta).spec), 'compiler');
+    assert.strictEqual(SC.templateOf(require('js-yaml').load(GOOD).spec), 'genesis', 'none named: genesis');
+    const bad = await quiet(() => SC.compileToProposals({ layer, repo, specPath: 'spec/ledger.spec', content: GOOD, template: 'nope' }));
+    assert.ok(!bad.ok && /no template "nope"/.test(bad.error), bad.error);
+  });
+
+  await test('SP-08c', '0.60.68: the spec framework tells the agent its spec is laid out on genesis; a stored copy of the 0.60.66 text follows the new default', async () => {
+    const sent = RA.compose({ hat: { personaPrompt: 'P' }, message: 'write a spec for the ledger', blocks: PB.DEFAULT_BLOCKS, backend: 'guardian' });
+    assert.ok(/GENESIS template/.test(sent) && /meta\.template: genesis/.test(sent) && !sent.includes('{template}'), 'the template line is filled');
+    const old = require(path.join(ROOT, 'lib/repo-prompt-blocks.previous.json'))['spec-framework@0.60.66'];
+    assert.ok(old && !old.includes('{template}'), 'the 0.60.66 text is kept as an earlier default');
+    // a repo whose blocks were saved under 0.60.66 stored that text; it is not his edit, so the genesis default applies
+    const saved = PB.setBlocks(repo.uuid, PB.getBlocks(repo.uuid).map(b => ({ id: b.id, enabled: b.enabled, text: b.id === 'spec-framework' ? old : b.text })));
+    assert.ok(saved.ok, JSON.stringify(saved.errors));
+    const now = PB.getBlocks(repo.uuid).find(b => b.id === 'spec-framework');
+    assert.ok(now.text.includes('{template}') && now.edited === false, 'the stored 0.60.66 copy follows the new default');
+    PB.setBlocks(repo.uuid, PB.getBlocks(repo.uuid).map(b => ({ id: b.id, enabled: b.enabled, text: b.id === 'spec-framework' ? 'MINE' : b.text })));
+    assert.strictEqual(PB.getBlocks(repo.uuid).find(b => b.id === 'spec-framework').text, 'MINE', 'his own edit is kept');
+    PB.resetBlocks(repo.uuid, ['spec-framework']);
   });
 
   await test('SP-09', 'SF4: the route compiles a spec in the repo; a file not in the compiler\'s format is refused', async () => {
@@ -128,7 +161,9 @@ const BAD = 'spec:\n  meta:\n    name: ledger\n  modules:\n    - id: ledger-stor
     const ok = await quiet(() => api._route('POST', `/api/repos/${repo.uuid}/specs/compile`, { path: 'spec/route.spec', into: 'gen' }));
     assert.strictEqual(ok.status, 200, JSON.stringify(ok.json).slice(0, 300));
     const d = ok.json.data || ok.json;
-    assert.ok(d.proposed.some(p => p.path === 'gen/src/modules/route-store/route-store.ts'), JSON.stringify(d.proposed.map(p => p.path)));
+    assert.strictEqual(d.template, 'genesis');
+    assert.ok(d.proposed.some(p => p.path === 'gen/data/nodes/component/ledger.route-store.component'), JSON.stringify(d.proposed.map(p => p.path)));
+    assert.ok(d.toBuild.some(t => t.path === 'gen/lib/route-store.js'));
     await quiet(() => layer.writeFile(repo.uuid, 'docs/x-phasemap.spec', 'phases:\n  A1_x:\n    status: OPEN\n'));
     const no = await quiet(() => api._route('POST', `/api/repos/${repo.uuid}/specs/compile`, { path: 'docs/x-phasemap.spec' }));
     assert.strictEqual(no.status, 422);
@@ -143,7 +178,7 @@ const BAD = 'spec:\n  meta:\n    name: ledger\n  modules:\n    - id: ledger-stor
     assert.ok(inj && inj.spec && inj.spec.compiling, JSON.stringify(inj && inj.spec));
     for (let i = 0; i < 40 && !heardC.length; i++) await new Promise(r => setTimeout(r, 100));
     const ev = heardC[0]; const p = ev && (ev.proposed || (ev.data && ev.data.proposed));
-    assert.ok(p && p.includes('auto/src/modules/auto-store/auto-store.ts'), JSON.stringify(ev));
+    assert.ok(p && p.includes('auto/data/nodes/component/ledger.auto-store.component'), JSON.stringify(ev).slice(0, 400));
     SC.setCompileSetting(() => ({ on: false, into: '' }));
   });
 

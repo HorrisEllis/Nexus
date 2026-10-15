@@ -30,7 +30,7 @@ const _tokEst = (t) => { try { return t ? _require('../../lib/economy/tokens.js'
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
 // §0.60.67 SF4 — whether a collected spec is compiled at once (specs.compile_on_collect, specs.compile_into)
-try { _require('../../lib/spec-collect.js').setCompileSetting(() => { try { return { on: getIdeariumValue('specs.compile_on_collect') === true, into: getIdeariumValue('specs.compile_into') || '' }; } catch (_) { return { on: false, into: '' }; } }); } catch (_) {}
+try { _require('../../lib/spec-collect.js').setCompileSetting(() => { try { return { on: getIdeariumValue('specs.compile_on_collect') === true, into: getIdeariumValue('specs.compile_into') || '', template: getIdeariumValue('specs.default_template') || 'genesis' }; } catch (_) { return { on: false, into: '' }; } }); } catch (_) {}
 // §CT1 0.39.347 — the repo agent asks copilot's door with idearium's routing policy (routing.* config)
 try { _require('../../lib/repo-agent.js').setRoutingPolicySource(() => _routingPolicy()); } catch (_) {}
 
@@ -7481,7 +7481,7 @@ async function handle(req, res, route, query, body) {
       const SC = _require('../../lib/spec-collect.js');
       if (!SC.isCompilerSpec(rel, f.content)) return err(res, 422, `${rel} is not in the spec compiler's format (its top key must be spec:)`);
       const into = body.into != null ? String(body.into) : (getIdeariumValue('specs.compile_into') || '');
-      const r = await SC.compileToProposals({ layer: getRepoLayer(), repo, specPath: rel, content: f.content, into });
+      const r = await SC.compileToProposals({ layer: getRepoLayer(), repo, specPath: rel, content: f.content, into, template: body.template || null });   // 0.60.68 — genesis unless named
       return r.ok ? ok(res, r) : err(res, 422, r.error);
     }
     case 'repo.phases.get': {

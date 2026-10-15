@@ -632,3 +632,6 @@ spec:
 
 ## ADDENDUM 2026-10-15 — 0.60.66 intent blocks, the spec framework, builds with their mapped context
 # Prompt blocks (lib/repo-prompt-blocks.js 1.8.0) can apply by intent (`when: intent:<name>`, intent from lib/context-prereqs.js intentOf: explain · change · debug · build · spec). New default blocks: 'spec-framework' (intent:spec — the spec compiler's format) and 'build-phase-map' (build — what Nexus mapped for the phase, lib/phase-map-auto.js contextText). A phase build passes `map::phase` to RA.dispatch so a spec it writes is tagged with it. James: "need to inject a framework for generating a .spec file. then need to listen for it to collect it." test-spec-pipeline, test-chunked-phase-build CB-03b.
+
+## ADDENDUM 2026-10-15 — 0.60.68 specs laid out from the templates, genesis by default
+# Setting specs.default_template (default genesis). POST /api/repos/:uuid/specs/compile takes template; `repo compile-spec --template`. The spec-framework prompt block carries {template}. James: "Use the templates. The genesis by default." test-spec-pipeline SP-08..08c.
