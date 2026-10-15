@@ -76,6 +76,10 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     if (!acct) return { ok: false, error: `which account is the ${provider} tab signed in as? name one (Clear Glass → Accounts)` };
     const bad = _known(provider, acct);
     if (bad) return { ok: false, error: bad };
+    // §0.60.45 — James: "still says signed out." A signed-out tab was saved as the account (72 cookies, none of them a
+    // sign-in), so restoring it restored "signed out". A tab with no sign-in cookie on the provider's own site is not saved.
+    const auth = await _tabAuth(provider);
+    if (!auth.auth) return { ok: false, signedOut: true, error: `the ${provider} tab is not signed in (no sign-in cookie on its site among ${auth.cookies}) — sign in on the page first, then save` };
     const r = await vault.capture({ agentId: provider, accountId: acct, ses: sessionFor(provider) });
     if (makeCurrent) _setCurrent(provider, acct, 'captured');
     try { options.recordSession && options.recordSession(acct, provider, { capturedAt: now(), cookieCount: r.count, sites: r.sites.slice(0, 20), via: 'provider-tab' }); } catch (_) {}

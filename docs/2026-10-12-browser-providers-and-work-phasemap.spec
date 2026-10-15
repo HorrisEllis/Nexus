@@ -574,3 +574,30 @@ spec:
         holds that the account lacks is saved to the account, never overwritten. Saving a session, starring and signing out
         follow through to the tab and say what they did. signedOut() signs the tab out when it runs as that account.
       proof: "clear-glass/test/provider-account-sync.test.js 9/9; then live: sign in once, restart Clear Glass, the ChatGPT tab opens signed in"
+
+## ADDENDUM 2026-10-15 — the provider tab stops fighting the person (0.60.45)
+
+# James (screenshots of the ChatGPT tab "is not connecting" and the Nexus window stuck in PICKING): "still says signed
+# out. also escape does nothing. also i can't sign in on the popup. i click login and it closes the login. like i cant
+# click anywhere without closing any popup or not letting me navigate. also popup windows in clearglass should look nice
+# like the browser, borderless windowed."
+# Root causes, read from source:
+#  1. Focus theft. attend() ran win.show() + win.focus() on EVERY attention request, even with the panel already up.
+#     Guardian's cooldown (provider-attention.js, 2 min) is reset by clear() on each connect; a provider that flaps
+#     (his Plan log: "provider 'chatgpt' disconnected mid-flight", every few seconds) re-raised it each time, so focus
+#     was pulled off his sign-in popup and any open menu — "it closes the login". Fixed: a panel already up is updated,
+#     never re-shown or re-focused; the person's input on a tab is stamped (webContents 'input-event') and for 2 min no
+#     focus is taken and a loginOptional tab on a sign-in page is not sent back to its chat (he is signing in).
+#  2. A signed-out sign-in saved. "Save sign-in to vault" saved 72 cookies from a signed-out tab; restoring it restored
+#     "signed out". capture() now refuses a tab with no sign-in cookie on the provider's own site (the same auth-cookie
+#     rule account sync uses) and says so.
+#  3. Escape. The Guardian picker's Escape listener was on document in the bubble phase; the page (Idearium closes its
+#     panels on Escape) took it first, and while picking every click is a pick — no way out. Now: Escape on window in
+#     the capture phase, right-click cancels, and the PICKING banner is a cancel button.
+#  4. The window. The provider tab's File/Edit/View/Window menu is gone and it is dark before the first paint. Fully
+#     frameless needs a Nexus title bar ABOVE the provider's page (it draws none, and an injected drag strip would cover
+#     its header): CW1, open — a chrome view stacked over the page in the provider window, verified in Clear Glass on
+#     his machine (Electron does not run in the coder's container).
+# Still open, named: why ChatGPT keeps disconnecting mid-flight (NCP) — the flapping that made the focus theft so bad.
+# Proof: test-cg-attention-focus 5/5 (AF-01..03 fail on the old code); accounts, profile-tabs, plan-code-run-attention
+# and provider-account-sync unchanged (WR-01 and the clear-glass-accounts send() check fail the same way on main).

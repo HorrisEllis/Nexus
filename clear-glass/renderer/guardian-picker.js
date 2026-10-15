@@ -89,9 +89,10 @@
       z-index: 2147483648; background: rgba(8,12,16,0.92);
       border: 1px solid rgba(0,255,163,0.25); padding: 5px 16px;
       font: 10px/1.5 'IBM Plex Mono', monospace; color: rgba(0,255,163,0.6);
-      border-radius: 2px; pointer-events: none; display: none;
+      border-radius: 2px; pointer-events: auto; cursor: pointer; display: none;
       box-shadow: 0 2px 12px rgba(0,0,0,0.6);
     }
+    #__g-esc:hover { border-color: rgba(255,59,59,0.5); color: #ff6b6b; }
     #__g-esc.listener-mode { border-color: rgba(204,68,255,0.35); color: rgba(204,68,255,0.7); }
     #__g-esc.show { display: block; animation: g-fadein 0.2s ease; }
     @keyframes g-fadein { from { opacity:0; transform: translateX(-50%) translateY(-4px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
@@ -610,8 +611,8 @@
     tip.classList.toggle('listener-mode', mode === 'listener');
     escHint.className = 'show' + (mode === 'listener' ? ' listener-mode' : '');
     escHint.textContent = mode === 'listener'
-      ? 'LISTEN MODE — click element  ·  ESC to cancel'
-      : 'PICKING — click element to capture  ·  ESC to cancel';
+      ? 'LISTEN MODE — click element  ·  ESC, right-click or click here to cancel'
+      : 'PICKING — click element to capture  ·  ESC, right-click or click here to cancel';
     document.body.style.cursor = 'crosshair';
 
     _pickerAbort = new AbortController();
@@ -669,9 +670,15 @@
       openPopup(_currentFp, e.clientX, e.clientY);
     }, { signal: sig, capture: true });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') stopPicker();
-    }, { signal: sig });
+    // §0.60.45 — James: "also escape does nothing." The listener sat on document in the bubble phase, so any page
+    // handler that took Escape first (Idearium closes its panels on Escape) swallowed it, and while picking every click
+    // is a pick: the person was stuck. Now Escape is caught on window in the capture phase, first; a right-click or a
+    // click on the banner cancels too, so a page that eats every key still has a way out.
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); stopPicker(); }
+    }, { signal: sig, capture: true });
+    window.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); stopPicker(); }, { signal: sig, capture: true });
+    escHint.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); stopPicker(); }, { signal: sig });
 
     try { if (typeof URCK !== 'undefined') URCK.ingest('guardian.picker.start', { url: window.location.href, mode }, { source: 'content' }); } catch(_) {}
   }
