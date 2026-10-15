@@ -620,3 +620,13 @@ spec:
 # Seen in the same log, named not fixed: the RAID officiator fails synthesis every 20 s ("no real agent response
 # (forAgent=ollama)") while Ollama was up; intelligence logs hundreds of trivial co-occurrence "patterns" a minute;
 # Claude's reply element not found ("needs-you"); the machine ran to 4% free memory during the first nexus-self sync.
+
+## ADDENDUM 2026-10-15 — a reply that cannot be found opens the agent's window (0.60.47)
+
+# James: "Claude's reply not found … it should have poped up with the claude window but didint." His log: "job 119a854e —
+# needs-you (claude's page changed: the reply could not be found on it — pick the reply …)", and no "[attention] claude".
+# Root cause: two paths reach "pick the reply". The dispatch ladder's picker.request raises provider-attention (the
+# window + the Nexus panel); job-retry's pick-reply branch (a watch that ended with "no reply element") only wrote the
+# message on the job. Fixed: job-retry takes an attention hook and raises it (provider, reason 'map', job, agent, stage
+# reply_not_found) after first trying the transcript and the .response; Guardian wires it to the same raise.
+# Proof: test-reply-not-found-attention 3/3 (RA-01, RA-03 fail on the old code).

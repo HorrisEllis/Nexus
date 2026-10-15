@@ -753,6 +753,7 @@ _jobRetryRef = require('./lib/job-retry.js').createJobRetry({
   readResponse: (jobId) => require('./lib/response-sink').readNode(jobId),
   replyFor: (job) => _chatTranscripts.replyFor(job),
   erosAvailable: () => _erosTypist.available(),
+  attention: (rec) => _providerAttention().raise(rec),   // §0.60.47 — a reply that cannot be found opens the agent's window
 });
 
 // §BUILT 2026-09-11 — James: "persistent and doesn't leave until it's
