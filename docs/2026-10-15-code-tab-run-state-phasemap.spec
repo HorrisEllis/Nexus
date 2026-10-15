@@ -65,7 +65,7 @@ open_decisions:
     coder_recommends: >-
       a. The Code tab already draws the Files tree and states; two trees of one repo is the drift the project keeps
       having (SH1, one home per concept). To confirm with James.
-    status: OPEN
+    status: DECIDED - one tab (James, 2026-10-15: "yes one tab.")
   CE0b_batching:
     asked: "can one reply carry several tool calls?"
     coder_recommends: "no change to 'one call per reply'; teach the persona to use code_batch for reads. To confirm."
@@ -81,7 +81,7 @@ phases:
   # order: bottom-up. backend -> API -> command -> UI, versioned, tested in Clear Glass (never Playwright), loom-wired.
 
   CE1_the_run_state:
-    status: OPEN
+    status: BUILT 0.60.50 (tests/modules/test-run-state.test.js)
     systems: [core, cortex, idearium]
     files: [lib/run-state.js (new), lib/agent-memory.js, cortex/core/raid/contract-gates.js, lib/node-export.js, lib/repo-agent.js, idearium/api/index.js]
     depends_on: []
@@ -93,7 +93,7 @@ phases:
     proof: "kill the agent mid-run; start it again; its first call is the next unread step, not code_map."
 
   CE2_the_task_header:
-    status: OPEN
+    status: BUILT 0.60.50 (tests/modules/test-run-state.test.js)
     systems: [core]
     files: [lib/repo-agent.js, lib/agent-tools/tool-call-listener.js]
     depends_on: [CE1_the_run_state]
@@ -103,7 +103,7 @@ phases:
       (lib/agent-memory recall) - never only the original prompt. Context size is bounded (header under 600 chars).
 
   CE3_reply_on_task_gate:
-    status: OPEN
+    status: BUILT 0.60.50 (tests/modules/test-run-state.test.js)
     systems: [core, guardian]
     files: [lib/step-gates/reply.on_task.step_gate (new), lib/step-gates loader, guardian/lib/gate-trail.js]
     depends_on: [CE1_the_run_state]
@@ -115,7 +115,7 @@ phases:
     proof: "c2e60104's reply is blocked off-task at its step and the retry continues at step 7."
 
   CE4_reply_kind_and_tags:
-    status: OPEN
+    status: BUILT 0.60.50 (tests/modules/test-run-state.test.js)
     systems: [guardian, clear-glass]
     files: [guardian/lib/response-sink.js, lib/agent-memory.js, clear-glass/renderer/library/sections/responses.js]
     depends_on: [CE1_the_run_state]
@@ -126,7 +126,7 @@ phases:
       status badge and groups by agent / repo / phase / task.
 
   CE5_events:
-    status: OPEN
+    status: BUILT 0.60.50 (tests/modules/test-run-state.test.js)
     systems: [idearium]
     files: [idearium/event-taxonomy.cjs, lib/event-contract-check.js, lib/run-state.js]
     depends_on: [CE1_the_run_state, CE3_reply_on_task_gate]
@@ -185,7 +185,7 @@ phases:
       coupled - one set of data, two mounts).
 
   CE10_lost_jobs_fall_back:
-    status: OPEN
+    status: BUILT 0.60.50 (tests/modules/test-run-state.test.js)
     systems: [guardian]
     files: [guardian/lib/dispatcher.js, guardian/lib/job-retry.js, lib/run-state.js]
     depends_on: [CE1_the_run_state]
@@ -284,3 +284,20 @@ not_verified:
   - "repo-tasks.js and repo-drawer-views.js internals were not read in full; CE9's data sources are from their headers."
   - "whether guardian's dispatcher exposes a hook where CE10's retry fits (guardian/lib/dispatcher.js, job-retry.js) is to be read before CE10."
   - "the stored prompt of 2012e2a0 ends at '## Context'; whether that is the storage cap or what was sent is not known."
+
+## ADDENDUM 2026-10-15 - CE1-CE5 + CE10 built (0.60.50)
+
+James: "need the full pipeline working." (after pasting the CE1-CE5 + CE10 list)
+
+- Built: lib/run-state.js (the run node, resume on the same goal), the 'task-header' prompt block (editable in
+  Settings -> Agents), the reply.on_task step gate + lib/reply-kind.js, reply tags on .response nodes and Library rows
+  (kind, repo, session, run, step, attempt) with grouping, the run.* / guardian.reply.classified events, and the 'lost'
+  failure class that always falls back to the next provider.
+- Proof: tests/modules/test-run-state.test.js 27/27. The live reply that started this (job c2e60104, "What would you like
+  me to do with this material?") is blocked by the gate node in RS-20.
+- Not verified: no live run through ChatGPT yet. The Ollama loop does not get the task header (browser agents only).
+- Reading to confirm (the coder's, not James's decision): James wrote "no versions per file using versionium, only the
+  diff." The coder reads it as: file history shows the Versionium diffs/deltas, not whole-file versions. CV1 and CV3
+  are written for that reading and stay OPEN until he confirms.
+- Pre-existing, not caused by this: test-event-contracts EC-05 fails on main for idearium.repo.released and
+  versionium.released / versionium.tagged (undeclared).

@@ -76,7 +76,25 @@ function _row(e) {
     // which version of it, and the hash of its messages alone.
     chat_key: e.chat_key || null, version: e.version || null,
     transcript_hash: e.transcript_hash || null, message_count: e.message_count ?? null,
+    // §0.60.50 CE4 — James: "adding status for each response. also grouping them by contract or repo? maybe tagging for repo?"
+    // reply rows: what kind of reply it was (lib/reply-kind.js) and the run it belongs to (lib/run-state.js); null elsewhere
+    reply_kind: e.reply_kind || null, run_id: e.run_id || null, step: e.step ?? null, attempt: e.attempt ?? null,
+    repo_uuid: e.repo_uuid || null, session_id: e.session_id || null,
   };
+}
+
+/** _replyFacts(raw) → the CE4 columns for a reply (kind from its text; the run from its session), best-effort, {} when unknown */
+function _replyFacts(raw) {
+  const out = {};
+  try {
+    if (!raw || typeof raw.response !== 'string') return out;
+    out.reply_kind = raw.replyKind || require('../../../lib/reply-kind.js').classify(raw.response);
+    out.session_id = raw.sessionId || null;
+    out.repo_uuid = raw.repoUuid || (/^repo-/.test(String(raw.agentId || '')) ? String(raw.agentId).slice(5) : null);
+    const run = raw.sessionId ? require('../../../lib/run-state.js').forSession(raw.sessionId) : null;
+    if (run) { out.run_id = run.runId; out.step = run.stepCount; out.attempt = run.attempt; }
+  } catch (_) { /* a reply is indexed without them */ }
+  return out;
 }
 
 // ── Compartment lifecycle — real create + assign, same event-driven
@@ -154,7 +172,7 @@ function recordResponse(root, { kind, provider, chatId, agentId, jobId, raw, art
   // 0.39.239 — who the response belongs to is a field, not something to dig out of raw.
   const agent = agentId || (raw && raw.agentId) || null;
   const job   = jobId   || (raw && raw.jobId)   || null;
-  return _write(root, { kind, provider, chatId, agentId: agent, jobId: job, raw, artifactBuffer, artifactFileName });
+  return _write(root, { kind, provider, chatId, agentId: agent, jobId: job, raw, extra: kind === 'chat' ? _replyFacts(raw) : {}, artifactBuffer, artifactFileName });
 }
 
 /**
@@ -250,6 +268,7 @@ function rebuildIndexFromResponses(root) {
           artifact_path: parsed.artifact_path || null, status: 'ok',
           chat_key: parsed.chat_key, version: parsed.version,
           transcript_hash: parsed.transcript_hash, message_count: parsed.message_count,
+          reply_kind: parsed.reply_kind, run_id: parsed.run_id, step: parsed.step, attempt: parsed.attempt, repo_uuid: parsed.repo_uuid, session_id: parsed.session_id,
         });
         recovered++;
       } catch (e) {
@@ -281,7 +300,7 @@ function rebuildIndexFromResponses(root) {
  *      files copied in by hand), it is rebuilt from responses/ and read again;
  *   3. if JAA itself fails, responses/ is read directly — slower, and correct.
  */
-function queryItems(root, { kind, provider, chatId, chatKey, agentId, jobId, limit = 100 } = {}) {
+function queryItems(root, { kind, provider, chatId, chatKey, agentId, jobId, runId, repoUuid, replyKind, limit = 100 } = {}) {
   const p = _paths(root);
   const where = {};
   if (kind)     where.kind = kind;
@@ -290,6 +309,9 @@ function queryItems(root, { kind, provider, chatId, chatKey, agentId, jobId, lim
   if (agentId)  where.agent_id = agentId;
   if (jobId)    where.job_id = jobId;
   if (chatKey)  where.chat_key = chatKey;
+  if (runId)     where.run_id = runId;          // §0.60.50 CE4
+  if (repoUuid)  where.repo_uuid = repoUuid;
+  if (replyKind) where.reply_kind = replyKind;
   try {
     const st = _store(p);
     st.reloadTable(INDEX_TABLE);

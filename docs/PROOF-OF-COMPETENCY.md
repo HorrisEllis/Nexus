@@ -166,3 +166,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     - `tests/modules/test-releases.test.js` (5/5);
     - `CHANGELOG-0.60.41.md`;
     - 250 Nexus releases are now recorded in Versionium, 210 of them with his words.
+
+- **2026-10-15: "i feel lime also needs to use the gates to maintain persistence using the memory. so we can use nexus for
+  the workload, instead of relying on the agents to remember."**
+  - **Context:** a build agent lost its task mid-run and asked the person what to do. The usual fix would be a better
+    prompt; he asked for the opposite, that the workload be held by the system.
+  - **What it shows:** he moved state out of the part that forgets (the model) into the part that persists. That is
+    systems-design judgment about where state belongs.
+  - **Evidence:** `lib/run-state.js`, `lib/step-gates/reply.on_task.step_gate`,
+    `tests/modules/test-run-state.test.js` (27/27), `CHANGELOG-0.60.50.md`. Not yet confirmed live.

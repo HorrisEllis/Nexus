@@ -149,6 +149,7 @@ const handMapped = [
   ...require('./maps/verified-primitives-map').FILES.map(f => f[0]),   // §0.39.310
   ...require('./maps/compartment-activity-map').FILES.map(f => f[0]),   // §0.39.367
   ...require('./maps/releases-map').FILES.map(f => f[0]),   // §0.60.41 RN1
+  ...require('./maps/run-state-map').FILES.map(f => f[0]),   // §0.60.50 CE1
   'loom/agent-suite/index.js',
 ];
 console.log('\nscanning whole tree from source (real require/import edges only)...\n');
@@ -310,6 +311,9 @@ if (mappedCompartmentActivity.failures.length) { console.log(`  compartment-acti
 const mappedReleases = require('./maps/releases-map').mapReleases(driver);   // §0.60.41 RN1
 console.log(`  releases: ${mappedReleases.components.length} components, ${mappedReleases.hooks.length} hooks, ${mappedReleases.wires.length} wires`);
 if (mappedReleases.failures.length) { console.log(`  releases FAILURES: ${mappedReleases.failures.length}`); for (const f of mappedReleases.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedReleases.failures.length; }
+const mappedRunState = require('./maps/run-state-map').mapRunState(driver);   // §0.60.50 CE1
+console.log(`  run-state: ${mappedRunState.components.length} components, ${mappedRunState.hooks.length} hooks, ${mappedRunState.wires.length} wires`);
+if (mappedRunState.failures.length) { console.log(`  run-state FAILURES: ${mappedRunState.failures.length}`); for (const f of mappedRunState.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedRunState.failures.length; }
 // §0.39.278 — the live chat ledger, the page-side stream that feeds it (HTTP), the pane's kept conversation
 const mappedChatLedger = require('./maps/chat-ledger-map').mapChatLedger(driver);
 console.log(`  chat-ledger: ${mappedChatLedger.components.length} components, ${mappedChatLedger.hooks.length} hooks, ${mappedChatLedger.wires.length} wires`);

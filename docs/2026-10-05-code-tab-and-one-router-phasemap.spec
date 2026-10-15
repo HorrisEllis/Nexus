@@ -214,3 +214,10 @@ spec:
         height: "Plan" written down it, the done count, a blinking dot while a step is building. A click opens the panel;
         opening hides the tab, closing shows it. It follows the repo view: gone on the repos grid and the other pages.
       proof: "driven in Clear Glass: close the panel → the tab at the right edge; click it → the panel, the tab gone; leave the repo → no tab"
+
+## ADDENDUM 2026-10-15 - the Code tab keeps its run in Nexus (0.60.50)
+
+James: "i want it to start exactly where it left off if it restarts." · "yes one tab."
+The run (goal, steps, files read and changed, attempt) is a node kept by Nexus (lib/run-state.js), not by the agent.
+The tab merge itself is CE6 in docs/2026-10-15-code-tab-run-state-phasemap.spec, still open.
+

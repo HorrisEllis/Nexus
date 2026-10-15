@@ -361,6 +361,7 @@ function recordAgentResponse({ job, text, blocks } = {}) {
         provider: job.provider || null,
         command: job.command || null,
         agentId: job.agentId || null,
+        sessionId: job.sessionId || null,   // §0.60.50 CE4 — the reply's run is found from it (clear-glass/src/downloads/artifact-chat-index.js)
         prompt: job.prompt || null,
         response: text,
         // The declared target, when the job named one — so a .response
