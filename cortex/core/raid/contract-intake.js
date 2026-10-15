@@ -1368,7 +1368,7 @@ function _loadV2(input) {
   throw new Error('runContract needs a .contract file, a loaded contract ({ payload, v }) or a v2 payload');
 }
 
-async function runContract(input, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, executors = null, onEvent = () => {}, onCheckpoint = () => {}, root, causedBy = null, raid = null, concurrency, queueId: existingId = null } = {}) {
+async function runContract(input, { source = 'raid', intention = 'build', forAgent = null, hat = null, title = null, executors = null, onEvent = () => {}, onCheckpoint = () => {}, root, causedBy = null, raid = null, concurrency, queueId: existingId = null, versioning = null, learners = null } = {}) {
   const CG = require('./contract-gates.js');
   const { file, loaded } = _loadV2(input);
   const p = loaded.payload;
@@ -1393,11 +1393,24 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
   // the bricks
   let res;
   try {
-    res = await CG.schedule(p, { ...(root ? { root } : {}), ...(concurrency ? { concurrency } : {}), executors: executors || _executorsBySource.get(source) || null, onEvent,
+    res = await CG.schedule(p, { ...(root ? { root } : {}), ...(concurrency ? { concurrency } : {}), ...(versioning ? { versioning } : {}), ...(learners ? { learners } : {}), executors: executors || _executorsBySource.get(source) || null, onEvent,
       onCheckpoint: (px, g) => { try { if (file) CG.save(file, loaded); } catch (_) {} try { onCheckpoint(px, g); } catch (_) {} } });
   } catch (e) { res = { complete: false, why: [`the scheduler threw: ${e.message}`], log: [], blocked: [], failed: [] }; }
   try { if (file) CG.save(file, loaded); } catch (_) {}
   let audit = null; try { audit = require('./contract-adapters.js').audit(p, root ? { root } : {}); } catch (_) {}
+  // §GS1 0.60.39 — every brick's outcome is a decision on the replay engine's log (lib/replay-engine.js decision_log, under
+  // this run's queue id): the agent chosen, the route it had, the outcome, its class and commit. A rerun's decisions sit
+  // beside these, so detectDivergence names where it parted from the run that passed; the reflection engine scores them.
+  try {
+    const RE = require('../../../lib/replay-engine.js');
+    for (const b of (audit && audit.bricks) || []) {
+      RE.logDecision({ requestId: queueId, actor: `raid:${source}`, snapshotId: queueId,
+        input: { gate: b.id, file: b.file || null, kind: b.kind, contract: file || null },
+        chosen: b.agent || null, alternatives: String(b.route || '').split(' → ').filter(x => x && x !== b.agent).slice(0, 6),
+        output: { status: b.status, class: b.class || null, commit: b.commit || null, attempts: b.attempts || 0, rewound: !!b.rewound },
+        outcome: b.status === 'PASSED' ? 'success' : 'failure' });
+    }
+  } catch (e) { console.warn(`[${MODULE_ID}] gate decisions not logged on the replay engine: ${e.message}`); }
   const ev = (p.state && p.state.evidence) || {};
   const failedBricks = [...new Set([...(res.failed || []), ...((res.log || []).filter(l => l.status === 'FAILED').map(l => l.gate))])]
     .filter(id => ((p.state.gates || {})[id] || {}).status !== 'PASSED')

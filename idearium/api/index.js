@@ -1182,8 +1182,35 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     // contract runs through RAID (contract-intake runContract): RAID's queue row, its gates before (the constitution,
     // idearium's RAID contract), the bricks with this build's executors, the verdict, self-heal on a failure.
     const CI = _require('../../cortex/core/raid/contract-intake.js');
+    // §GS1 0.60.39 — a snapshot per gate: each pass records the Versionium commit it passed at; a failed brick is put back
+    // to its last good state before its retry (its file restored from that commit — or, in review mode, its pending
+    // proposals set aside, since nothing was written); the build's own snapshot is the floor
+    p.state.baseCommit = p.state.baseCommit || commitId || null;
+    const RVx = _require('../../lib/repo-versions.js'), RHx = _require('../../lib/repo-history.js'), RIx = _require('../../lib/repo-inject.js');
+    const versioning = {
+      commit: async () => { const r = await RVx.flush(target.uuid); return (r && (r.commitId || (r.commit && r.commit.commitId))) || null; },
+      rewind: async ({ gate, toCommit }) => {
+        const files = gate.file ? [gate.file] : expectFiles;
+        if (!onDisk) {
+          const pend = RIx.list(target.uuid, { limit: 500 }).filter(n => files.includes(n.path || n.file) && ['proposed', 'staged'].includes(n.status));
+          for (const n of pend) { try { RIx.reject(n.id || n.uuid, { reason: `brick ${gate.id} failed — set aside before its retry (GS1)` }); } catch (_) {} }
+          return { ok: true, files: pend.map(n => n.path || n.file), why: pend.length ? 'pending proposals set aside' : 'nothing pending to set aside' };
+        }
+        const done = [];
+        for (const f of files) {
+          try {
+            await RHx.restoreFile(_vcall, target.uuid, toCommit, f, async (pp, buf) => { const w = getRepoLayer().writeFile(target.uuid, pp, buf.toString('utf8'), { preserveWhitespace: true }); if (!w || w.error) throw new Error(w ? w.error : 'no answer'); });
+            done.push(f);
+          } catch (e) {
+            // not in that commit: the file is new — the half-write is removed (Versionium keeps the attempt's own commit)
+            try { const d = getRepoLayer().deleteFile(target.uuid, f); if (d && !d.error) done.push(f); } catch (_) {}
+          }
+        }
+        return { ok: true, files: done };
+      },
+    };
     const viaRaid = await CI.runContract({ ...L, file }, { source: 'idearium', intention: 'build', title: `phase ${phase} — ${target.name}`, root, concurrency: policy.contractConcurrency,
-      executors: { agent: agentEx, integrate }, onCheckpoint: save, causedBy: runId,
+      executors: { agent: agentEx, integrate }, onCheckpoint: save, causedBy: runId, versioning,
       onEvent: (e) => getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state: `brick-${String(e.status).toLowerCase()}`, brick: e.gate, snapshot: commitId }) });
     save();
     if (viaRaid.status === 'blocked') {
@@ -7422,6 +7449,18 @@ async function handle(req, res, route, query, body) {
       try {
         const CG = _require('../../cortex/core/raid/contract-gates.js');
         const L = CG.load(file);
+        // §GS1 0.60.39 — ?gate=: the gate now against what passed — the evaluator's reasons, the commit it passed at, and
+        // the Versionium diff of its files since (lib/repo-history.js diff against the files on disk now)
+        if (query.gate) {
+          const tgt = (run && run.targetRepo) || params.uuid;
+          const dirT = _repoDiskDir(tgt);
+          const RH = _require('../../lib/repo-history.js');
+          const working = dirT ? { tree: () => { const CR = _require('../../lib/cos-run.js'); const repoT = getRepoLayer().get(tgt); return CR.repoFiles(repoT, dirT).filter(x => !/(^|\/)(\.git|node_modules)\//.test(x)).map(x => { const b = fs.readFileSync(path.join(dirT, x)); return { path: x, size: b.length, sha256: _require('crypto').createHash('sha256').update(b).digest('hex') }; }); },
+            read: (x) => fs.readFileSync(path.join(dirT, x)) } : null;
+          const cmp = await CG.compare(L.payload, String(query.gate), { root: dirT || undefined,
+            diff: async ({ from, files }) => { const out = {}; for (const f of files.slice(0, 8)) { try { out[f] = await RH.diff(_vcall, tgt, from, 'working', { path: f, working }); } catch (e) { out[f] = { error: e.message }; } } return out; } });
+          return ok(res, { repoUuid: params.uuid, phase: query.phase, file, compare: cmp });
+        }
         return ok(res, { repoUuid: params.uuid, phase: query.phase, file, audit: _require('../../cortex/core/raid/contract-adapters.js').audit(L.payload, { root: _repoDiskDir(run ? run.targetRepo || params.uuid : params.uuid) || undefined }) });
       } catch (e) { return err(res, 422, `the contract could not be read: ${e.message}`); }
     }

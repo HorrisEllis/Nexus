@@ -205,7 +205,10 @@ function audit(p, { root = ROOT } = {}) {
   return {
     contract: p.uuid || null, plan_hash: p.plan_hash || null, complete: ev.complete, why: ev.why,
     bricks: (p.gates || []).filter(g => g.type !== 'phase').map(g => ({ id: g.id, file: g.file || null, kind: g.kind || g.type, status: status.get(g.id), agent: evd[`${g.id}.agent`] || null,
-      attempts: st(g.id).attempts || 0, verified: evd[`${g.id}.verified`] || null, blocked: evd[`${g.id}.blocked`] || null, ...(g.parent ? { parent: g.parent } : {}) })),
+      attempts: st(g.id).attempts || 0, verified: evd[`${g.id}.verified`] || null, blocked: evd[`${g.id}.blocked`] || null, ...(g.parent ? { parent: g.parent } : {}),
+      // §GS1 0.60.39 — the Versionium commit it passed at; a rewind before a retry (to what, which files); its failure class
+      commit: evd[`${g.id}.commit`] || null, class: evd[`${g.id}.class`] || null, route: evd[`${g.id}.route`] || null,
+      rewound: (() => { try { return evd[`${g.id}.rewound`] ? JSON.parse(evd[`${g.id}.rewound`]) : null; } catch (_) { return null; } })() })),
     dependencies: (p.gates || []).flatMap(g => (g.depends_on || []).map(d => ({ from: d, to: g.id }))),
     checkpoints: p.state.checkpoints || [],
     gates: ev.gates.map(g => ({ id: g.id, type: g.type, status: g.status, reasons: g.reasons })),

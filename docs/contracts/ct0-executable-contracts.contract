@@ -120,28 +120,28 @@ payload:
           - exists: cortex/core/raid/contract-intake.js
           - exists: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
         hashes:
-          v1: 745d48021f1d439d5bcea5e2d7272c1aa691c39a66590df8af8a9c0f85583dda
+          v1: c7fd99c52e77dedc08aaa44ea317f1dd0fe9a6fa7eac4d7f22d3f19b26f5f318
           phasemap: a4ebc1b028355a0c12d5c18fc0ecf7b57783fdbe1860be34b5ba937889befd95
-        at: 1792053205833
-        attempts: 8
+        at: 1792054542790
+        attempts: 9
       evaluator:
         status: PASSED
         reasons: []
         evidence:
           - exists: cortex/core/raid/contract-gates.js
         hashes:
-          evaluator: ed491683edefa3a96fff96a1cdbc9bc28bf76ddd2601d14a6aa225ae3c127998
-        at: 1792053205837
-        attempts: 8
+          evaluator: cf9ba500fc422f374bf607bf82e170cf1037c326bbddb81cd1f9e9e82cfd0e4f
+        at: 1792054542793
+        attempts: 9
       commands:
         status: PASSED
         reasons: []
         evidence:
           - exists: idearium/cli/route-commands.js
         hashes:
-          commands: ccd198dd319d4fc50261a63d928f8b6cc23261c6f34a5b7140b333f4b342758c
-        at: 1792053205838
-        attempts: 8
+          commands: 0281b5d05c2c4bf7eacd429cc123de0c771c7d722ba27403c59dc04cee18c9e0
+        at: 1792054542795
+        attempts: 9
       verify:
         status: PASSED
         reasons: []
@@ -150,20 +150,20 @@ payload:
             exit: 0
             tail: ' | 20 passed, 0 failed'
         hashes:
-          evaluator: ed491683edefa3a96fff96a1cdbc9bc28bf76ddd2601d14a6aa225ae3c127998
-          commands: ccd198dd319d4fc50261a63d928f8b6cc23261c6f34a5b7140b333f4b342758c
+          evaluator: cf9ba500fc422f374bf607bf82e170cf1037c326bbddb81cd1f9e9e82cfd0e4f
+          commands: 0281b5d05c2c4bf7eacd429cc123de0c771c7d722ba27403c59dc04cee18c9e0
           tests: 0f74b995a8746f3801e07cf1c7e69c2801304be449a46b58a1beefd481daf522
-        at: 1792053206339
-        attempts: 8
+        at: 1792054543291
+        attempts: 9
       self-host:
         status: PASSED
         reasons: []
         evidence:
           - gate: verify
         hashes:
-          evaluator: ed491683edefa3a96fff96a1cdbc9bc28bf76ddd2601d14a6aa225ae3c127998
-        at: 1792053206340
-        attempts: 8
+          evaluator: cf9ba500fc422f374bf607bf82e170cf1037c326bbddb81cd1f9e9e82cfd0e4f
+        at: 1792054543292
+        attempts: 9
     evidence: {}
     invariants:
       INV-compat: verified
