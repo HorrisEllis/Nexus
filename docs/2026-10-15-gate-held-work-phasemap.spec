@@ -5,7 +5,8 @@
 # Follows docs/2026-10-15-code-tab-run-state-phasemap.spec (CE1-CE5, CE10 built, 0.60.50),
 # docs/2026-10-15-automatic-tracking-phasemap.spec (GT2, GA1 built), docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
 # (CT0-CT1b, SC0, EX0 built; GT0, MEM0, CX0 open) and docs/2026-10-05-failure-reproduction-phasemap.spec (FM1-FM4 open).
-# This map adds no parallel plan. It indexes the phases that already own each ask, says what is built, and names what is new.
+# 2026-10-15 second pass: GW11-GW18 (the agents' test environment: snapshots, optional desktop, the SSH door, copy-in, every file tested,
+# parallel branches, friction, debug by bisect). This map adds no parallel plan. It indexes the phases that already own each ask, says what is built, and names what is new.
 
 origin:
   date: 2026-10-15
@@ -81,6 +82,25 @@ open_decisions:
       b: "recorded only."
     coder_recommends: "a. Recorded is the reproducible one (and the regression test). Live is 'rewind engine to replicate agents'. Same recording, two modes. To confirm."
     status: OPEN
+  GW0e_sandbox_egress:
+    asked: "the agents' test environment has full access - should it reach the network?"
+    options:
+      a: "Default deny; an allowlist per compartment (package registries, the repo's own hosts). Open egress is a per-run switch he sets."
+      b: "Open by default."
+    coder_recommends: "a. A sandbox the agents own completely should still not be able to reach his accounts or leak a secret (§5.9). Deny is one switch to flip; a leak is not undoable (§0.3). To confirm."
+    status: OPEN
+  GW0f_mutation_testing:
+    asked: "'each file needs meticulous testing' - how far?"
+    options:
+      a: "Per file: its tests run, its exports each exercised, hostile inputs (§12.1), and mutation checks (flip a line; a test must fail - §12.2) as an opt-in tier because it multiplies run time."
+      b: "Tests run and exports exercised only."
+    coder_recommends: "a, mutation opt-in per run and on by default only for files a gate just changed. To confirm."
+    status: OPEN
+  GW0g_parallel_limit:
+    asked: "'parallel branching for benchmarking and comparing' - how many at once?"
+    coder_recommends: "A cap read from the resource monitor (free memory and cores) at dispatch, never a fixed number; his Settings value is the ceiling. To confirm."
+    status: OPEN
+
   GW0d_listener_question:
     asked: "carried from 0.60.50: the listener 'cant detect any specs'. Needs James's failing log, and whether 'full inject' means per-stage framework text or Clear Glass injecting once (CG1)."
     status: OPEN - unanswered
@@ -233,11 +253,124 @@ phases:
       is a gate result 'unrecognised', said with the expectation it missed - never silently dropped.
     proof: "pending James's failing log: that reply must be detected, and a reply matching none says what was expected"
 
-build_order: [GW3, GW1, GW2, GW5, GW4, GW6, GW7, GW8, GW9, GW10]
+  GW11_a_snapshot_per_gate:
+    status: OPEN
+    systems: [cos, versionium, cortex]
+    files: [cos/compartment/qemu-runtime.js, cos/workspace/vm-control.js, cortex/core/raid/contract-gates.js, versionium/lib/releases.js]
+    depends_on: [GW3_a_contract_is_traced, GW14_copy_in_diff_out]
+    axioms: ["§2.1", "§0.3 nothing lost", "§16.4"]
+    james: '"snapshot per gate."'
+    does: >-
+      Two layers. Code: the gate's Versionium commit and gate/<contract>/<gate> tag (GS1/GT2, built) - every gate. Environment: a
+      COS checkpoint (qcow2 internal snapshot, qemu-runtime) taken when the gate changed the machine (install, build, migrate,
+      service start); the checkpoint id is recorded on the gate beside the commit. Rewind restores both. vm-control refuses a live
+      checkpoint while the repo is shared over 9p/vvfat, so this depends on GW14 (copy in, not share).
+    proof: "a gate that installs a package is rewound: the package is gone and the code is at the previous commit; a code-only gate takes no environment snapshot; a live checkpoint with a shared repo is refused with the reason"
+
+  GW12_desktop_is_optional:
+    status: OPEN
+    systems: [cos, core]
+    files: [cos/testenv/detect.js, cos/testenv/environment.js, cos/testenv/provision.js]
+    depends_on: []
+    axioms: ["§5.12 the UI is disposable", "§8.6 reuse"]
+    james: '"the desktop envirement needs to work as a test envirement, doesn''t need a desktop unless its detected as a dependancy from the repo. like make it optional."'
+    does: >-
+      detect.js plan() gains a display need read from the repo's files: none | virtual (xvfb: headed browser tests, Playwright-style,
+      headless Electron) | desktop (a GUI toolkit it must see: Tk, Qt, GTK, a desktop Electron app). environment.js 'desktop' stays a
+      bool the person can force; the default follows the detection. Default tier is none.
+    proof: "a plain Node repo plans display none and installs no xfce; a repo with a headed-browser test plans virtual; one with a Tk import plans desktop; the person's setting overrides"
+
+  GW13_the_sandbox_door:
+    status: OPEN
+    systems: [cos, core, guardian]
+    files: [cos/testenv/provision.js, cos/workspace/vm-control.js, lib/agent-tools/tools/sandbox/ (new), idearium/cli/route-commands.js]
+    depends_on: [GW3_a_contract_is_traced, GW0e_sandbox_egress]
+    axioms: ["§5.9", "§5.10", "§9.1", "§1.2", "§16.4 one door"]
+    james: '"we need to be able to completely use it from a ssh, same with the agents to use to test the project, same with sftp or ftp, or a bus or something so the agents can manage files, copy, test, use cos as a complete sandbox for them to have full access to."'
+    does: >-
+      SSH is the one door: exec, SFTP and port forwarding over one key-authenticated channel, forwarded on localhost only, one key
+      per compartment. He can ssh in himself. Agents get sandbox.exec / put / get / ls / snapshot / restore as tools (rows in
+      route-commands, so nexus.command has them): each call goes through the tool registry, is a ledger row tagged with the
+      contract and gate (GW3), and is under RAID's write authority. Plain FTP is not built (cleartext, SFTP does the same job). The
+      bus carries events about the sandbox (started, exec finished, test result), not file bytes.
+    proof: "an agent puts a file, execs a command, gets the output and a file back; every call is a traced ledger row; ssh from outside works with the compartment key and fails without it; egress is denied unless allowed"
+
+  GW14_copy_in_diff_out:
+    status: OPEN
+    systems: [cos, idearium, versionium]
+    files: [cos/testenv/tar.js, lib/repo-inject.js, lib/repo-versions.js, cos/testenv/provision.js]
+    depends_on: [GW13_the_sandbox_door]
+    axioms: ["§5.9", "§0.3", "§7.6"]
+    james: '"no versions per file using versionium, only the diff." (2026-10-15; the coder reads it as: what returns from a run is a diff)'
+    does: >-
+      The repo is copied into the compartment (tar.js exists), not shared. The agent works on the copy. What returns is a diff
+      against the commit it started from, proposed to the work surface (repo-inject) for the person to apply - never written into
+      the host repo by the VM. This is also what lets GW11 snapshot a running machine.
+    proof: "a change made in the compartment returns as a diff, the host tree is untouched until applied, and applying it makes one Versionium commit"
+
+  GW15_every_file_tested:
+    status: OPEN
+    systems: [cos, idearium, intelligence]
+    files: [cos/testenv/detect.js, lib/code-intel/, lib/gap-field.js, idearium/api/index.js]
+    depends_on: [GW13_the_sandbox_door, GW0f_mutation_testing]
+    axioms: ["§12.1", "§12.2", "§12.3", "§12.5"]
+    james: '"each file needs maticalulas testing"'
+    does: >-
+      A test plan per file, computed (no model): the tests that use it (the code card's 'tests'), its exports each exercised, hostile
+      inputs by the file's kind (empty, null, huge, unicode, concurrent writes, corrupt state), and - by GW0f - mutation checks (a line
+      flipped must make a test fail; a test that cannot fail proves nothing). The plan runs per file in the sandbox (detect.js already
+      knows which runtimes run per file). Every file gets a verdict recorded as evidence (expected, actual, the gap). A file with no
+      test that touches it, or whose tests survive a mutation, is a gap in the gap system, not a silent pass.
+    proof: "a fixture repo: an untested file is a gap; a file whose test survives a flipped line is flagged; a file whose test fails on the flip passes; the verdicts are evidence on the gate"
+
+  GW16_parallel_branches_benchmark:
+    status: OPEN
+    systems: [cos, cortex, intelligence, idearium]
+    files: [lib/shadow-space.js, cos/workspace/, cortex/core/raid/contract-adapters.js, lib/model-door.js]
+    depends_on: [GW14_copy_in_diff_out, GW15_every_file_tested, GW0g_parallel_limit]
+    axioms: ["§0.3", "§12.2", "§15.2", "§16.2"]
+    james: '"parralel branching for benchmarking and comparing"'
+    does: >-
+      A gate can fan out to N branches (shadow-space worktrees already branch the repo and merge fast-forward only): the same packet to
+      different agents, or different approaches, each in its own compartment, same checks. Each branch is measured: tests passed,
+      time, memory, diff size, tokens, retries (agent calls and tokens per phase are already a number, AG1). A comparison table
+      names the winner by the gate's own pass_when and the measured rest; the winner merges fast-forward only, the losers are kept as
+      branches (archived, not deleted). The comparison is evidence and feeds GW6 (which agent is good at which gate kind).
+    proof: "a gate run on 3 branches yields a table; the winner merges; the losers still exist and can be replayed; the door's next pick for that kind moves toward the better agent"
+
+  GW17_friction_and_tension_per_file:
+    status: OPEN
+    systems: [intelligence, core, cos]
+    files: [diagnostic/nexus-diagnostic.js, intelligence/cfr/sigma.js, intelligence/cfr/field.js, lib/fault-log.js]
+    depends_on: [GW3_a_contract_is_traced]
+    axioms: ["§2.3", "§11.1", "§11.3", "§7.7"]
+    james: '"finding friction or tension"'
+    does: >-
+      Friction and tension exist today as live, in-memory readings in the diagnostic (loom proxies /api/friction and /api/tension),
+      so they vanish on restart (§2.2). This persists a sample per file and per gate into the ledger and reads them back: where
+      the retries, reverted edits, re-prompts, flaky tests and slow runs gather. The definitions are the diagnostic's, not new ones.
+      Computed async (§11.3). It marks the hot files the next gate should treat more carefully.
+    proof: "after a run, the ledger holds a friction sample per touched file; a restart does not lose them; a file that took 3 retries ranks above one that took none"
+
+  GW18_debug_by_bisect:
+    status: OPEN
+    systems: [cos, versionium, intelligence, idearium]
+    files: [lib/failure-macro.js, lib/replay-engine.js, versionium/lib/engine.js, cos/testenv/index.js]
+    depends_on: [GW7_failure_macro_and_rewind, GW11_a_snapshot_per_gate]
+    axioms: ["§12.5", "§16.2", "§2.1"]
+    james: '"debugging, anything it needs."'
+    does: >-
+      A failing test is bisected across the contract's gate commits automatically (each gate is a commit, GS1): the first gate whose
+      commit fails the test is the culprit, found by rewinding in the sandbox, not by an agent guessing. The result is a failure
+      macro (GW7) naming the gate, the file, the diff and the causal path (GW8), with the sandbox's logs and exec output attached.
+    proof: "a fixture contract where gate 3 breaks a test: bisect names gate 3 in log2(n) runs and the macro reproduces it"
+
+build_order: [GW3, GW1, GW2, GW5, GW13, GW14, GW11, GW15, GW16, GW17, GW4, GW6, GW12, GW7, GW18, GW8, GW9, GW10]
 build_order_reason: >-
   §16.1, the nearest gap first. GW3 (tracing) is smallest, touches no behaviour, and every later phase reads it - and
-  it makes the next ones testable. GW1 -> GW2 is the state follow the gate. GW5 is deterministic parity work. GW4 puts
-  copilot on it. GW6 closes the learning loop. GW7/GW8 need the recordings GW3 makes. GW9 is the surface. GW10 waits for his log.
+  it makes the next ones testable. GW1 -> GW2 is the state following the gate. GW5 is deterministic parity work. GW13/GW14 are
+  the sandbox door and copy-in: the agents' test environment, which GW11 (snapshots), GW15 (every file tested) and GW16\n  (parallel branches) all run in. GW17 reads what those produce. GW4 puts copilot on it, GW6 closes the learning loop, GW12 is
+  independent and small. GW7/GW18/GW8 need the recordings GW3 makes. GW9 is the surface. GW10 waits for his log.
 
 not_verified:
   - "That the repo agent's tool scope and copilot's capabilities differ (GW5 is built from a diff nobody has run yet; 159 tool files and a capabilities list were not compared)."
@@ -245,3 +378,7 @@ not_verified:
   - "That rfr2 can ingest a gate row as a typed edge (FM1 is OPEN; the bridge exists, the ingestion does not)."
   - "That a COS compartment can run a Nexus system's replay route (FM3 pushback: each system needs one; none verified)."
   - "meta/cfr has 24 consumers; GW6/GW8 read it, they do not change it. Any change there needs its own impact check (loom impact)."
+  - "That a QEMU user-net hostfwd + sshd works on his Windows host (setup-vm.bat exists; his setup was stuck earlier) - GW13 verifies before relying on it."
+  - "Whether detect.js already sees any display need (read: it plans stacks and runtimes only; not the whole file)."
+  - "What the diagnostic's friction and tension measure, exactly (GW17 reuses their definitions; read loom/server.js proxy comments only)."
+  - "Resource headroom for N parallel compartments on his machine (GW0g reads it live; no number is assumed)."
