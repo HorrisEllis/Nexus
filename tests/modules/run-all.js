@@ -353,6 +353,7 @@ const SUITES = [
   'test-qa2-real-run.test.js', // 0.60.43 QA2 — one phase build end to end with the real Versionium
   'test-gate-assess.test.js', // 0.60.44 GA1 — the gate assesses dependencies and context before it spends
   'test-cg-attention-focus.test.js', // 0.60.45 — the provider tab stops fighting the person (focus, sign-in, Escape)
+  'test-gig-ledger.test.js',         // 0.60.53 — the Fiverr ledger keeps only what checks out
   'test-cg-toolbar-live.test.js',    // 0.60.52 — a pin changed in Settings reaches the main window live
   'test-ncp-half-open.test.js', // 0.60.46 — a half-open NCP tab reconnects within one heartbeat; send picks must be buttons
   'test-reply-not-found-attention.test.js', // 0.60.47 — a reply that cannot be found opens the agent's window
