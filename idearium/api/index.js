@@ -1073,10 +1073,12 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     if (!parsed || !parsed.ok) {
       const why = (!planner ? `no planner was ready (${planning.why || ''})` : plannerError ? `${planner} could not plan it — ${plannerError}` : `no plan held after ${policy.planAttempts} tr${policy.planAttempts === 1 ? 'y' : 'ies'}: ${(parsed && parsed.problems || []).slice(0, 3).join('; ')}`)
         + (derivedWhy ? `; nor could Nexus plan it without a model: ${derivedWhy}` : '');
+      // §BR1 0.60.38 — still bricks: the whole phase as one gated, checkpointed brick through RAID (the old ungated
+      // paths only behind routing.contract_build: off)
       appendRow('idearium_phase_runs', { uuid: `${runId}-plan-failed`, ...base, state: 'plan-failed', snapshot: commitId, provider: planner,
-        error: `${why} — built ${chunking.chunk ? 'one file at a time' : 'whole'} as before`, ts: Date.now() });
+        error: `${why} — built ${policy.contractBuild ? 'as one brick (the whole phase), gated and checkpointed' : chunking.chunk ? 'one file at a time as before' : 'whole as before'}`, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'plan-failed', snapshot: commitId });
-      return chunking.chunk ? runChunked() : runWhole();
+      return policy.contractBuild ? runContract(null, null, { whole: true }) : (chunking.chunk ? runChunked() : runWhole());
     }
     const plan = parsed.plan;
     // the plan is written for a small model: Ollama first — in the order the coders' records on planned files say — the
@@ -1111,7 +1113,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // resumes from them, re-runs only what a changed input made STALE, and rejects a checkpoint whose plan changed
   // (archived). The phase passes only when its proof run (_provePhase — the integration) is met.
   // routing.contract_build: off → the planned files one after another, as before.
-  const runContract = async (plan, generated) => {
+  const runContract = async (plan, generated, { whole = false } = {}) => {
     const PP = _require('../../lib/phase-plan.js');
     const CG = _require('../../cortex/core/raid/contract-gates.js');
     const CA = _require('../../cortex/core/raid/contract-adapters.js');
@@ -1122,7 +1124,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     fs.mkdirSync(path.dirname(file), { recursive: true });
     const inputs = root && fs.existsSync(path.join(root, map)) ? [{ id: 'phasemap', path: map, note: 'the phase as its map writes it' }] : [];
     let onDisk = false; try { onDisk = _require('../../lib/repo-inject.js').getMode(target.uuid) !== 'review'; } catch (_) {}
-    const built = CA.fromPhasePlan(plan, { id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || plan.intent || '', inputs, onDisk, root });
+    const built = whole ? CA.fromWholePhase({ id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || '', inputs, message })   // §BR1 — no file named: the whole phase, one brick
+      : CA.fromPhasePlan(plan, { id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || plan.intent || '', inputs, onDisk, root });
     const opened = CA.openCheckpoint(file, built, { root });
     const L = opened.loaded, p = L.payload;
     p.failure = { retry_limit: 2, ...(p.failure || {}) };
@@ -1138,6 +1141,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const brickOf = (f) => p.gates.find(g => g.file === f && !g.parent && g.type !== 'phase') || p.gates.find(g => g.file === f && g.type === 'phase' && g.id !== 'phase');
     let lastDp = paramsOf(rungs[0] || null);
     const dispatch = async (hops, { gate }) => {
+      if (whole && gate.id === 'work') {
+        // §BR1 — the whole phase as one request to the ladder, as runWhole sent it — but as a brick: gated, checkpointed, classed
+        const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles }), onOutcome: makeOnOutcome() });
+        if (out.dp) lastDp = out.dp;
+        const ok = out.state === 'replied';
+        return { ok, agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),
+          ...(ok ? {} : { error: String((out.row && out.row.error) || out.state).slice(0, 400) }), evidence: ok ? { 'work.verified': 'ok — the phase reply landed' } : {} };
+      }
       const f = gate.file;
       const i = plan.order.indexOf(f);
       // a brick that was split: its pieces wrote the file — it is verified as a whole (its exports), nothing sent
@@ -1190,6 +1201,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state, snapshot: commitId });
     return { r: null, state: res.complete ? 'replied' : 'failed', absent: null, dp: lastDp, contracted: true };
   };
+  // §BR1 0.60.38 — bricks on every path: no plan mode (no Ollama, no planner) → the plan is written from the phase itself
+  // and built as bricks; only routing.contract_build: off keeps the old ungated paths
+  if (!planning.plan && policy.contractBuild) planning = { ...planning, plan: true, planner: null, bricksAnyway: true, why: `${planning.why} — bricks anyway: planned from the phase itself, no model (BR1)` };
   Promise.resolve().then(() => (planning.plan ? runPlanned() : chunking.chunk ? runChunked() : runWhole()))
     .then(({ r, state, absent, dp, stopped, chunked, generated, contracted }) => {
       if (stopped || contracted) return;   // a contract run proved itself (its integration gate)

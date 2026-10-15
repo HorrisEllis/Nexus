@@ -64,6 +64,9 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   }, require(path.join(ROOT, 'lib/nexus-client.js')).resolve('versionium').port);
   const api = await import(path.join(ROOT, 'idearium/api/index.js'));
   const R = (m, p, b) => quiet(() => api._route(m, p, b));
+  // §BR1 0.60.38 — this suite guards the one-file-at-a-time path, which is now kept only behind routing.contract_build:
+  // off (every other build is bricks, through RAID — test-contract-phase-build CP-10). Pinned, so it keeps guarding it.
+  await R('POST', '/api/config', { key: 'routing.contract_build', value: 'off' });
 
   let made = null;
   for (let i = 0; i < 20; i++) { made = await R('POST', '/api/spec-engine/specs', { name: `chunk-probe-${Date.now()}`, type: 'system', description: 'a probe system' }); if (made.status !== 503) break; await wait(250); }
