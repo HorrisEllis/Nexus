@@ -345,6 +345,7 @@ const SUITES = [
   'test-accounts-picker-cos.test.js',
   'test-project-decompose.test.js',   // 0.60.5 — a project (zip or folder) decomposed into the component store, each component bundled with its require closure; the drop zone; Clear Glass in the COS window style   // 0.60.2 — account routing by hat / intent / repo (Guardian, JAA) + Clear Glass's account switch on the JAA cookie vault; the COS-window attention panel; the pick checked by Clear Glass's selector check, anchored at x/y/z and used by every userscript (field map); ChatGPT works signed out; sign-in responses untouched
   'test-contract-gates.test.js',   // 0.60.15 — .contract v2: his four acceptance conditions (legacy files, evidence, invalidation, packet)
+  'test-raid-runs-contract.test.js', // 0.60.36 RD0 — RAID runs the .contract: its gates before, bricks, verdict, self-heal
   'test-release-version.test.js', // 0.60.34 VR1 — one version: Idearium, GitHub (tag + release + zip), every zip
   'test-check-catalogue.test.js', // 0.60.33 QA1 — the catalogue runs: CK-230 shadow, CK-233 deny list, CK-248 every language's toolchain
   'test-profile-tabs.test.js', // 0.60.32 PF1 — a tab per account profile: hat → account → tab, accounts at once

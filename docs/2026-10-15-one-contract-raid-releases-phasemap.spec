@@ -103,7 +103,7 @@ spec:
       proof: "test-contract-adapters GT-08: a failing brick climbs exactly retry_limit times (4 before the fix — the test fails on the old code)"
 
     RD0_raid_runs_the_contract:
-      status: OPEN
+      status: "DONE 0.60.36 — contract-intake runContract / submitV2 / registerExecutors / legacyToV2; processNext runs v2 rows; RAID's gates before (intent contract, _approveTool: constitution + the source's contract, action build); verdict = completion; HEAL_REQUESTED carries failed bricks and classes. test-raid-runs-contract RR-01..05"
       depends_on: [GT1a_exhausted_climb_spends_its_attempt]
       files: [cortex/core/raid/contract-intake.js, cortex/core/raid/contract-gates.js, cortex/core/raid/contract-boundary.js]
       does: >-
@@ -208,3 +208,12 @@ spec:
       proof: "each runner red on a planted case, green on Nexus"
 
   order: "GT1a → RD0 → RD1 → BR1 → GS1 → BR2 → RN1 → RN2 → RN3 → AT1 → FR1 → ST1. RD0 first: one contract under RAID is the frame every later phase hangs on. Versions (RN1–AT1) after the gates can snapshot, since a gate's commit is what a release lists."
+
+## ADDENDUM 2026-10-15 — RD0 built (0.60.36)
+
+# RAID's own approval (_approveTool) is the gate before a contract runs — the constitution first, then the source's own
+# RAID contract (cortex/contract/index.js allowed_actions): idearium, copilot and cli may 'build'; guardian and
+# orchestrator may not, so a contract they submit is BLOCKED and said (RR-02). Found by RR-04: a queued contract did not
+# remember the root its refs are relative to, so processNext ran it against Nexus's own tree; the row now carries root.
+# Not changed: legacy rows still run through processNext's compartment path exactly as before; legacyToV2 is there for
+# a caller that wants bricks (RD1 moves the build sources over).
