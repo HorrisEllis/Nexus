@@ -158,6 +158,24 @@ addendum_2026_10_15_d:
     - "Automated visiting of his own account at volume can trip a provider's bot checks or its terms. Slow by default; a stop on any challenge; his choice per account; unverified how each provider reacts."
     - "A crawler holds the account's session in a hidden tab for hours; it never types, never sends, never clicks anything but navigation and scroll."
 
+addendum_2026_10_15_e:
+  james: >-
+    "use erosmanceros, scroll slowly, using the arrow keys or something, could also make it a macro and or automation in clearglass, a good way to test them"
+  coder_reads: >-
+    The crawler's page work is not new code in a new place: it is a Clear Glass automation workflow (the engine in src/mesh/automation-engine.js already has navigate, wait_until, extract,
+    loop, condition, delay) with ONE new step, scroll_until, that scrolls slowly through ErosmancerOS (real wheel), real arrow keys, or the page, and stops when nothing new loads. Running the reader as a
+    workflow is also the test he asked for: the automation engine, ErosmancerOS input and the DOM-mutation chat ledger are all exercised by one chat. "Macro": automations already convert from macros
+    (src/automation/from-macro.js); the reverse (scroll_until as a macro step) is not built, TO CONFIRM whether he wants it.
+  built_0_60_56:
+    - "scroll_until (automation-engine.js _scrollUntil, steps.js): via erosmancer | keys | page; small steps, a pause, done when the message count, scroll position and page height stop changing; finds the inner scroller; says which input path ran"
+    - "press with input 'native': a real keystroke through the driver (sendInputEvent). ErosmancerOS has pointer, wheel and typing but no key press, so 'erosmancer' for a key is refused and said"
+    - "scroll with input 'erosmancer'"
+    - "workflow template 'Read one chat slowly (test)' (templates.js); 5 new settings under Reading a chat"
+    - "tests/modules/test-scroll-until.test.js SU-01..SU-09"
+  unverified: >-
+    All of it runs in jsdom behind the browserFn hook, which has no layout and no real wheel. Not proven: that ErosmancerOS's /api/input wheel scrolls a provider's chat page; that a chat page's inner scroller is found by the
+    selector walk; that arrow keys reach it (the step focuses the scroller first); which direction loads older messages on each provider. The template is the way to find out, one chat at a time.
+
 build_order: [PI1_the_importer, PI5_the_crawler, PI3_the_intelligence_pass, PI3b_the_measured_patterns, PI7_the_links, PI2_the_listener, PI4_the_review_screen, PI6_the_firefox_script]
 build_order_reason: >-
   The importer needs no Electron and can be proven here; the extraction decides whether the whole idea is worth having, so it comes before the live listener, which can only be checked in Clear Glass.

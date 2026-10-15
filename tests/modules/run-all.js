@@ -353,6 +353,7 @@ const SUITES = [
   'test-qa2-real-run.test.js', // 0.60.43 QA2 — one phase build end to end with the real Versionium
   'test-gate-assess.test.js', // 0.60.44 GA1 — the gate assesses dependencies and context before it spends
   'test-cg-attention-focus.test.js', // 0.60.45 — the provider tab stops fighting the person (focus, sign-in, Escape)
+  'test-scroll-until.test.js',       // 0.60.56 — the slow scroll step (ErosmancerOS wheel, arrow keys, page) and the Read-one-chat template
   'test-chat-crawl-plan.test.js',    // 0.60.55 — the personal-chat crawl plan: nothing missed, the stopping edge, pace, stop rules
   'test-gig-ledger.test.js',         // 0.60.53 — the Fiverr ledger keeps only what checks out
   'test-cg-toolbar-live.test.js',    // 0.60.52 — a pin changed in Settings reaches the main window live
