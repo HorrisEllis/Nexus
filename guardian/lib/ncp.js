@@ -356,6 +356,9 @@ function createNCPServer({ onMessage, onConnect, onDisconnect, busEmit } = {}) {
         ts: Date.now(),
         serverTs: Date.now(),
         latency: ts ? Date.now() - ts : null,
+        // §0.60.46 — does Guardian still hold this tab's channel? A tab whose stream died half-open keeps heartbeating
+        // with no error of its own; false tells it to reconnect now (the userscripts' _hbPost) instead of never.
+        registered: !!client,
       }));
     }).catch(() => {
       res.writeHead(200); res.end('{}');

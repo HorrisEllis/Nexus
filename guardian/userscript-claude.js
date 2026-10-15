@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — Claude v10.0
 // @namespace    nexus.guardian.claude
-// @version      10.12.1
+// @version      10.12.2
 // @description  Guardian v10: IndexedDB kernel, SHA-256 dedup, pre-prompt intelligence
 //               injection, full system widget, connection info, log/ledger, options,
 //               SEAM, queue, tags — fully system aware, no localStorage for state.
@@ -32,7 +32,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'claude';
-const VERSION    = '10.12.1';
+const VERSION    = '10.12.2';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
@@ -1190,6 +1190,16 @@ function _gmEventSource(url) {
   return es;
 }
 
+// §0.60.46 — James's run (2026-10-15): "NCP disconnected: provider=chatgpt" at 13:00:31, then no reconnect for 120 s
+// and the job was cancelled — while this tab kept working and kept heartbeating. The stream had died half-open (the
+// machine at 4% free memory): no error reached _es.onerror, so the backoff never ran. Guardian now says in every
+// heartbeat ACK whether it still has this tab's channel; when it does not, the tab reconnects within one beat.
+function _hbPost(data) {
+  return ncpPost(NCP_HB, data).then((r) => {
+    if (r && r.registered === false && connState !== 'connecting') { _log('err', 'Guardian has no live channel for this tab — reconnecting now'); connect(); }
+    return r;
+  });
+}
 // ── NCP connection ────────────────────────────────────────────────────────────
 function connect() {
   if (_reconnectTimer) { clearTimeout(_reconnectTimer); _reconnectTimer = null; }
@@ -1268,7 +1278,7 @@ function connect() {
       });
     }
     if (_hb) clearInterval(_hb);
-    _hb = setInterval(() => ncpPost(NCP_HB, { type:'GUARDIAN_HEARTBEAT', provider:PROVIDER, tabId:MY_TAB, ts:Date.now(), usage:detectUsageLimit(), chatId:chatId(), claimed:isClaimed }), HB_MS);
+    _hb = setInterval(() => _hbPost({ type:'GUARDIAN_HEARTBEAT', provider:PROVIDER, tabId:MY_TAB, ts:Date.now(), usage:detectUsageLimit(), chatId:chatId(), claimed:isClaimed }), HB_MS);
     autoClaimIfFree();
     setTimeout(() => sendDOMMap(), 2000);
     pollSystemStatus();

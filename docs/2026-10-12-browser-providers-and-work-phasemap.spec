@@ -601,3 +601,22 @@ spec:
 # Still open, named: why ChatGPT keeps disconnecting mid-flight (NCP) — the flapping that made the focus theft so bad.
 # Proof: test-cg-attention-focus 5/5 (AF-01..03 fail on the old code); accounts, profile-tabs, plan-code-run-attention
 # and provider-account-sync unchanged (WR-01 and the clear-glass-accounts send() check fail the same way on main).
+
+## ADDENDUM 2026-10-15 — a half-open tab reconnects within one beat (0.60.46)
+
+# From James's run log (his machine, 0.60.44): at 13:00:31 "NCP disconnected: provider=chatgpt"; the tab went on
+# working (job f53d4860 submitted and completed over HTTP after it) and heartbeating, but never reconnected — the next
+# job waited and was "cancelled — no chatgpt tab connected for 120 s", which raised the "not connecting" panel. Free
+# memory was 4–10% at that moment (resource-monitor critical at 13:00:32).
+# Root cause, read from source: the stream died half-open — Guardian saw the socket close, the tab's reader got no error,
+# so _es.onerror (the backoff) never ran; and POST /heartbeat answered a tab it no longer held with the same plain ACK,
+# so nothing told the tab. Guardian sends no keep-alive on the channel either.
+# Fixed: the ACK carries registered (does Guardian still hold this tab's channel); every provider userscript sends its
+# heartbeat through _hbPost, which reconnects at once on registered:false (unless a reconnect is already under way).
+# Recovery is one heartbeat (8 s), whatever killed the stream. Userscripts: chatgpt/claude 10.12.2, gemini/deepseek
+# 10.10.2, perplexity 10.9.2.
+# Also from his log: the picker saved "p.placeholder" (the input's placeholder) as the send button twice. A send pick
+# that is not a button (or role=button / submit input) is now refused, said on the panel.
+# Seen in the same log, named not fixed: the RAID officiator fails synthesis every 20 s ("no real agent response
+# (forAgent=ollama)") while Ollama was up; intelligence logs hundreds of trivial co-occurrence "patterns" a minute;
+# Claude's reply element not found ("needs-you"); the machine ran to 4% free memory during the first nexus-self sync.
