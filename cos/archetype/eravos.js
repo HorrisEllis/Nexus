@@ -27,6 +27,7 @@ function toCos(s) { let t = String(s); for (const [a, b] of MARKS) t = t.split(a
 function _walk(dir, base = dir) {
   const out = [];
   for (const d of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (d.name === '.template-tree') continue;   // Nexus's marker for its own checks, not part of his files
     const p = path.join(dir, d.name);
     if (d.isDirectory()) out.push(..._walk(p, base));
     else out.push(path.relative(base, p).split(path.sep).join('/'));

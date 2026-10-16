@@ -199,6 +199,8 @@ module.exports = Object.freeze({
   // §0.60.104 CN3 — a canvas compartment and its nested tool compartments (lib/canvas-compartments.js)
   IDEARIUM_CANVAS_CREATED: { description: 'A canvas was made: a COS compartment laid out from his ERAVOS canvas, with a nested compartment per tool.', payloadShape: ['canvasId', 'name', 'tools', 'domains'], severity: 'info' },
   IDEARIUM_CANVAS_TOOL_ADDED: { description: 'A tool was added to a canvas: its own nested compartment, linked into the canvas tools/ tree.', payloadShape: ['canvasId', 'tool', 'compartment', 'linkedAt'], severity: 'info' },
+  // §0.60.105 RL2 — a rejection read for its failure mode, told to the agent, logged as a lesson, and retried from it
+  IDEARIUM_REPO_INJECT_LEARNED: { description: 'A rejected agent proposal was learned from: its failure modes classified from the evidence, the agent told and its diagnosis kept, the lesson logged for the phase, the retry started.', payloadShape: ['repoUuid', 'inject', 'path', 'modes', 'phase', 'diagnosed', 'retried'], severity: 'info' },
   IDEARIUM_NOTE_UPDATED: { description: 'A note changed: edited, pinned, done, archived or brought back.', payloadShape: ['id', 'repoUuid', 'kind', 'status'], severity: 'info' },
 });
 

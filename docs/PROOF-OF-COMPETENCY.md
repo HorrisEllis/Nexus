@@ -323,3 +323,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     Nexus made, and his own harness passes the tools.
   - **Evidence:** `tests/modules/test-canvas-compartments.test.js` (7/7; CC-10 drives it in Clear Glass: 12/12 on his
     harness); `docs/2026-10-16-canvas-compartments-phasemap.spec`; `CHANGELOG-0.60.104.md`.
+- **2026-10-16: "when i reject a propasal, the agent needs to understand the failure mode ad try again, after learning" · "why so much regression?"**
+  - **Context:** his Code tab showed three agent proposals for one phase, each deleting more than it added (-114 +24,
+    -281 +20, -54 +31). He rejected them and asked for the loop to close: understand, learn, retry.
+  - **What it shows:** failure-mode thinking. He named the right unit, the failure mode, rather than "retry harder". The
+    question "why so much regression?" pointed at the cause, an agent returning a cut-down whole file, and that cause is
+    now refused before it reaches him.
+  - **Evidence:** `tests/modules/test-reject-learn-retry.test.js` (7/7, including his intent-hat-router and
+    schema.intent shapes); `docs/2026-10-16-reject-learn-retry-phasemap.spec`; `CHANGELOG-0.60.105.md`.

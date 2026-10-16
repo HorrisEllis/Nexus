@@ -182,6 +182,12 @@ export const SPEC = [
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/runs${qs(a.flags, ['status', 'limit'])}` }),
     print: (d, a, h) => { const l = d.runs || []; if (!l.length) { console.log(h.c.gray('  no runs')); return; }
       for (const r of l) console.log(`  ${ICON[r.status] || '·'} ${h.c.gray(r.runId)} ${h.c.dim(`${r.status} · attempt ${r.attempt} · ${r.stepCount} steps · ${r.filesChanged.length} changed · ${when(r.updatedAt)}`)}\n     ${String(r.goal).split('\n')[0].slice(0, 110)}`); } },
+  // §0.60.105 RL4 — James: "when i reject a propasal, the agent needs to understand the failure mode ad try again, after learning"
+  { key: 'repo.lessons', repo: true, usage: 'repo lessons <repo> [--phase P] [--limit N]', about: 'what the agents were taught: each rejection read for its failure mode (gutted, exports-lost, regressed …), with the agent\'s own diagnosis, and every build fault',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/lessons${qs(a.flags, ['phase', 'limit'])}` }),
+    print: (d, a, h) => { const l = d.faults || []; if (!l.length) { console.log(h.c.gray('  nothing learned yet')); return; }
+      for (const f of l) console.log(`  ${h.c.gray(when(f.ts))} ${f.mode} ${h.c.dim(`${f.agent || ''} ${f.phase || ''} ${f.meta.path || ''}`)}${f.meta.why ? `\n     ${String(f.meta.why).slice(0, 140)}` : ''}${f.meta.diagnosis ? `\n     it said: ${String(f.meta.diagnosis).slice(0, 140)}` : ''}`);
+      if (d.precedent) console.log(h.c.dim(`\n${d.precedent}`)); } },
   { key: 'repo.rewind-run', repo: true, usage: 'repo rewind-run <repo> <runId> [--dry]', about: 'put every file a run changed back as it was before the run (each restore is a version; --dry says what it would do)',
     need: (a) => (a.args[0] ? null : '<runId> (idearium repo runs <repo>)'),
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/runs/${encodeURIComponent(a.args[0])}/rewind`, body: { by: 'cli', ...(a.flags.dry ? { dryRun: true } : {}) }, timeoutMs: 120000 }),

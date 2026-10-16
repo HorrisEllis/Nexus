@@ -1,0 +1,3 @@
+This folder is a template: James's ERAVOS, kept as the COS archetype read by cos/archetype/eravos.js (0.60.104 CN1/CN2).
+Its code runs in the canvases made from it, not in Nexus. Checks that census Nexus's own code (event contracts, writers)
+skip a folder holding this file. cos/archetype/eravos.js leaves this file out of every template.

@@ -593,7 +593,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
   exports compileIdeariumSpec · requires 1 · required by 0
 - `idearium/config.js` (61 lines)  
   requires 0 · required by 1
-- `idearium/event-taxonomy.cjs` (210 lines) — // idearium/event-taxonomy.cjs — idearium's own event taxonomy, in lib/event-taxonomy-pattern.js's ET1 shape. (.cjs: idearium/ is "type": "module".) // §0.39.302 — begun with the delivery checker…  
+- `idearium/event-taxonomy.cjs` (212 lines) — // idearium/event-taxonomy.cjs — idearium's own event taxonomy, in lib/event-taxonomy-pattern.js's ET1 shape. (.cjs: idearium/ is "type": "module".) // §0.39.302 — begun with the delivery checker…  
   requires 1 · required by 0
 - `idearium/index.js` (936 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ IdeaOS — idearium/core/index.js ║  
   exports VERSION, NAMESPACE, PORT, IDEA_PHASES, GAP_STATUSES, GAP_SEVERITIES +4 · requires 7 · required by 0 · emits idearium.error, idearium.gap.ignored, idearium.gap.opened, idearium.gap.resolved +10
@@ -614,8 +614,8 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 
 - `idearium/api/build-surface.js` (405 lines)  
   exports filesState, deviationRecalc, deviationGet, afterVersion, afterFileChange, environmentGet +8 · requires 12 · required by 1
-- `idearium/api/index.js` (9873 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ Idearium HTTP API — idearium/api/index.js ║  
-  exports _setAgentAsk, _reconcileRunsForTest, _agentAskForTest, _verdictForTest, _route, startAPI +8 · requires 69 · required by 23
+- `idearium/api/index.js` (9914 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ Idearium HTTP API — idearium/api/index.js ║  
+  exports _setAgentAsk, _reconcileRunsForTest, _agentAskForTest, _learnFromRejectionForTest, _verdictForTest, _route +9 · requires 69 · required by 23
 
 #### `idearium/cli/`
 
@@ -623,7 +623,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 
 - `idearium/cli/index.js` (1308 lines)  
   requires 5 · required by 0 · emits idearium.gap.ignore, idearium.gap.open, idearium.gap.resolve, idearium.idea.archive +6
-- `idearium/cli/route-commands.js` (896 lines) — §0.39.374: every capability is a command. James: "That was fantastic. Everything needs to be available as commands."  
+- `idearium/cli/route-commands.js` (902 lines) — §0.39.374: every capability is a command. James: "That was fantastic. Everything needs to be available as commands."  
   exports SPEC, ASK, makeRouteCommands, renderText, helpLines · requires 11 · required by 4
 - `idearium/cli/store-chatter.js` (11 lines) — §0.39.374: imported FIRST by idearium/cli/index.js (ES modules run their imports in order, before the importing module's own code). The store prints "[jaa] Loaded N rows …" (and IdeaOS,…
 

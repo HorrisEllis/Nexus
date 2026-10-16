@@ -1414,10 +1414,11 @@ async function _rejectionContext(n, reason) {
   if (ev && ev.summary) parts.push(`What the proposal did, checked:\n${String(ev.summary).slice(0, 1800)}`);
   return parts.join('\n');
 }
-async function _tellAgentRejected(repo, n, reason) {
+async function _tellAgentRejected(repo, n, reason, modes = null) {
   const RA = _require('../../lib/repo-agent.js');
   const ctx = await _rejectionContext(n, reason);
   const msg = [`Your proposed change to ${n.path} was REJECTED by James.`, ctx,
+    modes && modes.length ? `Failure modes Nexus found (§0.60.105): ${modes.map(m => `${m.mode} (${m.why})`).join('; ')}` : '',
     'Nothing was written. That run is over: do not call more tools for it and do not resend the file.',
     'Reply in one or two lines: which of the above was the cause, and what you will do differently — name the file, the declaration or the test.'].join('\n');
   let r;
@@ -1428,6 +1429,36 @@ async function _tellAgentRejected(repo, n, reason) {
       title: r && r.ok ? `told the agent ${n.path} was rejected — it said: ${String(r.text || '').slice(0, 200)}` : `could not tell the agent ${n.path} was rejected — ${(r && r.error) || 'no answer'}`, ref: n.uuid });
   } catch (_) {}
   return r;
+}
+
+// §0.60.105 RL2 — a rejection, learned from before it is retried (docs/2026-10-16-reject-learn-retry-phasemap.spec).
+// The modes come from the evidence (lib/phase-faults.js rejectionModes), the agent is told them and asked which it was,
+// its answer goes on the fault, and the retry's note carries the modes, the evidence and its own diagnosis. An agent that
+// does not answer does not hold the retry: the classified modes are enough to go on.
+async function _learnFromRejection(repo, n, reason, { tell = true, retry = true, deps = {} } = {}) {
+  const PF = _require('../../lib/phase-faults.js');
+  let ev = n.evidence || null;
+  if (!ev && n.content != null) { try { ev = await _require('../../lib/repo-inject.js').evidenceNow(n.uuid, { run: false }); } catch (_) { ev = null; } }
+  const run = (deps.runForInject || ((inj) => _require('../../lib/run-watch.js').runForInject(loadTable('idearium_phase_runs'), inj)))(n);
+  const modes = PF.rejectionModes(ev, reason);
+  let diagnosis = null;
+  if (tell) {
+    const told = await (deps.tell || _tellAgentRejected)(repo, n, reason, modes).catch(e => ({ ok: false, error: e.message }));
+    if (told && told.ok && told.text) diagnosis = String(told.text).trim().slice(0, 600);
+  }
+  const lesson = PF.learnRejection({ node: n, evidence: ev, reason, run, diagnosis, agent: n.hatName || null });
+  try {
+    _require('../../lib/activity-log/compartment.js').record({ compartment: repo.uuid, kind: 'inject.rejected.learned', status: 'ok', actor: 'system',
+      title: `learned from the rejection of ${n.path}: ${lesson.modes.map(m => m.mode).join(', ')}${diagnosis ? ' — with the agent\'s own diagnosis' : ' — the agent gave no diagnosis'}`, ref: n.uuid });
+  } catch (_) {}
+  let retried = null;
+  if (retry && run && _cfg('repos.retry_on_reject', true) !== false) {
+    const ctx = await _rejectionContext(n, reason);
+    const note = `James rejected ${n.path}.\n${lesson.text}\n${ctx}\nBuild it again so it is right: keep what the file already exports and declares, change only what the phase asks.`;
+    retried = await (deps.autoRetry || _autoRetry)(run, 'reject', note).catch(e => ({ ok: false, error: e.message }));
+  }
+  try { getIdeaOS().emit('idearium.repo.inject.learned', { repoUuid: repo.uuid, inject: n.uuid, path: n.path, modes: lesson.modes.map(m => m.mode), phase: run ? run.phase : null, diagnosed: !!diagnosis, retried: !!(retried && retried.ok) }); } catch (_) {}
+  return { modes: lesson.modes, diagnosis, run, retried, lesson: lesson.text };
 }
 
 // §0.39.372 NC2 — a repo's charter as it applies: its own (charter.spec), with every condition and axiom its compartment
@@ -2024,6 +2055,7 @@ function _reconcileRuns({ bootAt = _BOOT_AT, now = Date.now() } = {}) {
 }
 export function _reconcileRunsForTest(opts) { return _reconcileRuns(opts); }
 export function _agentAskForTest(prompt, opts) { return _agentAsk(prompt, opts); }   // §CT1 — its test drives the real route walk
+export function _learnFromRejectionForTest(repo, n, reason, opts) { return _learnFromRejection(repo, n, reason, opts); }   // §0.60.105 RL2
 export function _verdictForTest(chunk, kind, ok, cls, why) { const by = _builtBy(chunk); _verdict(by, kind, ok, cls, why); return by; }   // §CT2
 async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium', kind = null } = {}) {
   if (_agentAskOverride) { try { return await _agentAskOverride(prompt, { channel, sessionId }); } catch (e) { return { ok: false, error: e.message }; } }
@@ -2552,7 +2584,8 @@ const ROUTE_CAP = {
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
   'repo.surface.get': CAPS.READ_IDEAS, 'repo.surface.set': CAPS.WRITE_IDEAS,
   'repo.code.edit': CAPS.WRITE_IDEAS, 'repo.code.assist': CAPS.WRITE_IDEAS,
-  'repo.runs.list': CAPS.READ_IDEAS, 'repo.runs.rewind': CAPS.WRITE_IDEAS,   // §CV3 0.60.81: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.81: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
+  'repo.runs.list': CAPS.READ_IDEAS, 'repo.runs.rewind': CAPS.WRITE_IDEAS, 'repo.lessons': CAPS.READ_IDEAS,   // §0.60.105 RL4
+    // §CV3 0.60.81: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.81: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
   'canvas.list': CAPS.READ_IDEAS, 'canvas.show': CAPS.READ_IDEAS, 'canvas.create': CAPS.WRITE_IDEAS, 'canvas.tool.add': CAPS.WRITE_IDEAS,   // §0.60.104 CN3   // §CV3 0.60.80: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.80: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
@@ -2889,6 +2922,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','code','edit'],   'repo.code.edit'],      // CE7 { path, edits:[{from,to,expect?,replacement}], checksum? }
     ['POST',   ['api','repos',    ':uuid','code','assist'], 'repo.code.assist'],
     ['GET',    ['api','repos',    ':uuid','runs'],          'repo.runs.list'],
+    ['GET',    ['api','repos',    ':uuid','lessons'],       'repo.lessons'],        // §0.60.105 RL4 ?phase= — what rejections and failed builds taught (lib/phase-faults.js)
     ['GET',    ['api','canvas'],                            'canvas.list'],         // CN3 every canvas compartment
     ['POST',   ['api','canvas'],                            'canvas.create'],       // { name, description?, tools?: [{ slug, label, domain, category, sound }] }
     ['GET',    ['api','canvas',':id'],                      'canvas.show'],         // the canvas, its compartment tree, each tool and whether it is linked
@@ -4857,6 +4891,15 @@ async function handle(req, res, route, query, body) {
     // here: every file the run changed (lib/run-state.js filesChanged, plus files named in the body) goes back to how it was at
     // the last commit before the run started. A file the run created (absent then) is named and left, never deleted (§0.3).
     // dryRun says what it would do. Each restore is its own labelled version (CV2), so the rewind is itself undoable.
+    case 'repo.lessons': {
+      // §0.60.105 RL4 — what the agents were taught: rejections read for their failure mode, and every build fault, for
+      // this repo (or one phase). The same precedent text the next attempt of that phase is given.
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const PF = _require('../../lib/phase-faults.js');
+      const phase = query.phase || null;
+      const rows = PF.list({ phase, limit: 200 }).filter(f => f.meta && (f.meta.repoUuid === params.uuid || f.meta.targetRepo === params.uuid)).slice(0, Math.min(100, parseInt(query.limit || '30', 10) || 30));
+      return ok(res, { repoUuid: params.uuid, phase, faults: rows, precedent: phase ? PF.precedent(phase).text : '' });
+    }
     case 'repo.runs.list': case 'repo.runs.rewind': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -6787,11 +6830,9 @@ async function handle(req, res, route, query, body) {
             // 0.60.20 — James: "it needs to tell the agent its been rejected. stuck in limbo". The agent that proposed it
             // is told in its own chat (the repo's agent, as every dispatch is), in the background: what was rejected,
             // why, and that the run is over — never left waiting on a tool result that will not come. body.tell:false skips it.
-            if (r.ok && body.tell !== false && r.inject && r.inject.source && r.inject.source.kind === 'agent') _tellAgentRejected(repo, r.inject, body.reason || null).catch(() => {});
-            if (r.ok && body.retry !== false && _cfg('repos.retry_on_reject', true) !== false && r.inject && r.inject.source && r.inject.source.kind === 'agent') {
-              const info = _require('../../lib/run-watch.js').runForInject(loadTable('idearium_phase_runs'), r.inject);
-              if (info) _rejectionContext(r.inject, body.reason || null).then(ctx => _autoRetry(info, 'reject', `James rejected ${r.inject.path}.\n${ctx}\nBuild it again so it is right: keep what the file already exports and declares, change only what the phase asks, real paths, real imports.`)).catch(() => {});
-            }
+            // §0.60.105 RL2 — James: "when i reject a propasal, the agent needs to understand the failure mode ad try again, after
+            // learning". In order now, not side by side: classify → tell → its diagnosis → the lesson logged → the retry.
+            if (r.ok && r.inject && r.inject.source && r.inject.source.kind === 'agent') _learnFromRejection(repo, r.inject, body.reason || null, { tell: body.tell !== false, retry: body.retry !== false }).catch(() => {});
             return done(r);
           }
         case 'repo.inject.revert': {
