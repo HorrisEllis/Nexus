@@ -15,7 +15,8 @@ t('BD-03 the staged controller loads on its own (no repo around it)', () => {
 });
 t('BD-04 every require in staged files resolves inside the stage', () => {
   const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(d, e.name)) : e.name.endsWith('.js') ? [path.join(d, e.name)] : []);
-  for (const f of walk(s.stage)) for (const m of fs.readFileSync(f, 'utf8').matchAll(/require\('(\.[^']+)'\)/g)) { const p = path.resolve(path.dirname(f), m[1]); assert.ok(fs.existsSync(p) || fs.existsSync(p + '.js'), `${path.relative(s.stage, f)} -> ${m[1]}`); }
+  // 0.60.111: whole-line comments are skipped (lib/version.js, staged for lib/release-version.js, quotes a require in a version line's comment)
+  for (const f of walk(s.stage)) for (const m of fs.readFileSync(f, 'utf8').split('\n').filter(l => !/^\s*(\/\/|\*|\/\*)/.test(l)).join('\n').matchAll(/require\('(\.[^']+)'\)/g)) { const p = path.resolve(path.dirname(f), m[1]); assert.ok(fs.existsSync(p) || fs.existsSync(p + '.js'), `${path.relative(s.stage, f)} -> ${m[1]}`); }
 });
 t('BD-05 the CLI refuses to build an exe off Windows without the override, and says so', () => {
   if (process.platform === 'win32') return; const r = spawnSync(process.execPath, [path.join(ROOT, 'scripts/build-cos-app.js'), '--stage', path.join(out, 'x')], { encoding: 'utf8', env: { ...process.env, COS_BUILD_ANYWHERE: '' } });
@@ -23,6 +24,10 @@ t('BD-05 the CLI refuses to build an exe off Windows without the override, and s
 });
 t('BD-06 the workflow builds on windows, only publishes an untagged version, ships SHA256SUMS', () => {
   const w = fs.readFileSync(path.join(ROOT, '.github/workflows/cos-app.yml'), 'utf8'); assert.match(w, /runs-on: windows-latest/); assert.match(w, /tagged == 'no'/); assert.match(w, /SHA256SUMS/); assert.match(w, /cos-v/);
+  // 0.60.111: the exe rebuilds when anything it is built from changes, and a change with no version bump fails out loud
+  for (const p of ["'cos/app/**'", "'lib/zip.js'", "'lib/release-version.js'"]) assert.ok(w.includes(p), `the workflow runs on ${p}`);
+  assert.match(w, /git diff --name-only "cos-v\$V" HEAD/); assert.match(w, /bump cos\/app\/version\.js/);
+  for (const f of B.FILES.filter(f => f.startsWith('lib/') && f !== 'lib/version.js')) assert.ok(w.includes(`'${f}'`), `${f} is built into the exe, so a change to it must rebuild it`);
 });
 // 0.60.96 — the first real Windows build (run 38887590255) failed: cos/app/version.js was 0 bytes (emptied at 0.60.90 by a bad write), so the staged
 // package.json had no version and electron-builder refused it. These fail on that before CI does.

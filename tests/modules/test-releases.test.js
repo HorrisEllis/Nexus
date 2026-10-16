@@ -141,6 +141,20 @@ const quiet = async (fn) => { const w = console.warn, l = console.log; console.w
   });
 
   server.close();
+  // 0.60.111 — his boot log (a GitHub zip, no .git): "[idearium] releases not synced to versionium yet: Cannot read properties
+  // of undefined (reading 'get')". read() must work in a copy with no git history; its releases are then unpinned, said.
+  await test('RL-06', 'a copy with no .git (a downloaded zip) still reads its releases, unpinned', () => {
+    const t = fs.mkdtempSync(path.join(os.tmpdir(), 'rl-nogit-'));
+    fs.mkdirSync(path.join(t, 'lib'));
+    fs.copyFileSync(path.join(ROOT, 'lib/version.js'), path.join(t, 'lib/version.js'));
+    fs.copyFileSync(path.join(ROOT, 'package.json'), path.join(t, 'package.json'));
+    const v = require(path.join(ROOT, 'lib/version.js')).system;
+    fs.copyFileSync(path.join(ROOT, `CHANGELOG-${v}.md`), path.join(t, `CHANGELOG-${v}.md`));
+    const all = NR.read({ root: t });
+    assert.ok(all.some(r => r.version === v), 'the current release is read');
+    assert.ok(all.every(r => !r.gitCommit), 'no git, so nothing is pinned to a commit');
+    fs.rmSync(t, { recursive: true, force: true });
+  });
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exitCode = failed ? 1 : 0;
   setTimeout(() => process.exit(process.exitCode), 50).unref();

@@ -10,7 +10,9 @@ name: cos-app
 on:
   push:
     branches: [main]
-    paths: ['cos/app/version.js']
+    # 0.60.111: every file the exe is built from, not only the version. The store's naming fix (0.60.103) never reached his exe:
+    # the version stayed 0.1.0, already tagged, so nothing rebuilt. Now a change to these without a bump fails this run, said.
+    paths: ['cos/app/**', 'lib/zip.js', 'lib/release-version.js', 'scripts/build-cos-app.js']
   workflow_dispatch:
 
 permissions:
@@ -39,7 +41,11 @@ jobs:
           V=$(node -p "require('./cos/app/version.js').version")
           case "$V" in [0-9]*.[0-9]*.[0-9]*) ;; *) echo "::error::cos/app/version.js gives no version (got '$V') — it must export { version: 'x.y.z' }"; exit 1 ;; esac
           echo "version=$V" >> "$GITHUB_OUTPUT"
-          if git rev-parse -q --verify "refs/tags/cos-v$V" >/dev/null; then echo "tagged=yes" >> "$GITHUB_OUTPUT"; else echo "tagged=no" >> "$GITHUB_OUTPUT"; fi
+          if git rev-parse -q --verify "refs/tags/cos-v$V" >/dev/null; then
+            echo "tagged=yes" >> "$GITHUB_OUTPUT"
+            CHANGED=$(git diff --name-only "cos-v$V" HEAD -- cos/app lib/zip.js lib/release-version.js scripts/build-cos-app.js)
+            if [ -n "$CHANGED" ]; then echo "::error::COS $V is already released, but the files its exe is built from changed since cos-v$V — bump cos/app/version.js so a new exe is published. Changed: $(echo $CHANGED)"; exit 1; fi
+          else echo "tagged=no" >> "$GITHUB_OUTPUT"; fi
           echo "COS $V"
 
       - name: Stage and build (portable exe and installer)

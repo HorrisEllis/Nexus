@@ -243,3 +243,10 @@ addendum_e:
 # Open: COSA0 decisions (shell, signing, update source: built as the coder recommended, Electron + unsigned + GitHub releases,
 # but never chosen by him), COSA5 data root, COSA8, COSA9, COSA10_compartment_window, COSA11, COSA13 (partial), COSA14.
 
+
+# ## ADDENDUM 2026-10-16 (0.60.111): COSA1 import naming
+# James: "please fix this. the naming in github doesn't even match that..." (COS refused "Nexus-main" and "Nexus v0.60.110").
+# The store names a zip from its contents: lib/release-version.js fromFiles (VERSION, then lib/version.js, then package.json);
+# every version stated inside, and the folder's when it has one, must agree. The project is package.json's name, else the folder's.
+# Root cause of the delay: the 0.60.103 store fix never reached an exe, because COS stayed 0.1.0 and cos-app.yml only watched
+# version.js. COS is now 0.1.1, the workflow watches every file the exe is built from, and a change without a bump fails, said.

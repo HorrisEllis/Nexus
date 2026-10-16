@@ -100,6 +100,15 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-16: "please fix this. the naming in github doesn't even match that..."**
+  - **Context:** COS refused his GitHub downloads ("Nexus-main", "Nexus v0.60.110") because their folder names were
+    not `<project>-<version>`. A fix for that was already on main (0.60.103), yet his COS still refused them.
+  - **What it shows:** testing the real artifact rather than the source. He used the exe, not the code, and that
+    exposed a delivery gap. The COS exe never rebuilt after 0.1.0, so a merged fix had not reached him. The workflow
+    now fails when the exe's files change without a version bump.
+  - **Evidence:** `CHANGELOG-0.60.111.md`; `tests/modules/test-cos-app-store.test.js` CA-15;
+    `tests/modules/test-cos-app-build.test.js` BD-06; cos-app run 38891061643 (cos-v0.1.0 built at 0.60.96).
+
 - **2026-10-14: "and we have intent routing? that way the complex reasoning can be done by the bigger models or agents. like claude or deepseek? also multiaccount routing in clearglass, each tab can be a different profile?"** · then: "yes we need to get it all working."
   - **Context:** he was checking that two pieces he had asked for earlier actually worked end to end. They half did:
     - Intent routing existed (0.60.8), but it only ordered agents by preference, so a high-scoring agent could still be sent work it can't do.
