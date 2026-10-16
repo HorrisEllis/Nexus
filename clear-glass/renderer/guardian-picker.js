@@ -364,7 +364,7 @@
           <option value="cortex">cortex</option><option value="guardian">guardian</option>
           <option value="orchestrator">orchestrator</option><option value="bridge">bridge</option>
           <option value="loom">loom</option><option value="copilot">copilot</option>
-          <option value="intelligence">intelligence</option><option value="eravos">eravos</option>
+          <option value="intelligence">intelligence</option>
           <option value="idearium">idearium</option><option value="architect">architect</option>
           <option value="emerge">emerge</option><option value="ollama">ollama</option>
         </select>

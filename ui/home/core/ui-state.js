@@ -26,22 +26,11 @@ window.NEXUS_UI_STATE = {
   causalGraph: () => {
     try { return CG.getState(); } catch(_) { return null; }
   },
-  canvasOrganisms: () => {
-    try {
-      const iframe = document.getElementById('canvas-iframe');
-      if (!iframe?.contentWindow?.KERNEL) return [];
-      const reg = iframe.contentWindow.KERNEL.registry;
-      const result = [];
-      reg.forEach((org, id) => result.push({ id, label: org.config?.label || id, online: org.state?.online }));
-      return result;
-    } catch(_) { return []; }
-  },
   activeSpotlights: () => window._cpSpotlitEls?.map(el=>el.id)||[],
   snapshot: () => JSON.stringify({
     channel: window.NEXUS_UI_STATE.currentChannel(),
     health: window.NEXUS_UI_STATE.healthMap(),
     causal: window.NEXUS_UI_STATE.causalGraph(),
-    organisms: window.NEXUS_UI_STATE.canvasOrganisms(),
     ts: Date.now(),
   }),
 };

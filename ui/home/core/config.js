@@ -60,6 +60,5 @@ const CH_META=[
   {id:'ch-perplexity-agent', name:'PERPLEXITY',  accent:'Web-grounded · citations · NCP'},
   {id:'ch-causal',       name:'CAUSAL GRAPH', accent:'Event causality · CFR sigma · Live force graph'},
   {id:'ch-conversations',name:'CONVERSATIONS',accent:'Co-pilot log · Intent · Model · Channel'},
-  {id:'ch-canvas',       name:'CANVAS',       accent:'ERAVOS spatial canvas · NEXUS organisms · Wires'},
   {id:'ch-emerge',       name:'EMERGE IDE',   accent:'Phase 28 · Hot-load · Spec-first · Build from inside'},
 ];

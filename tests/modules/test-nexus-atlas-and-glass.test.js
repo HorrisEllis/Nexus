@@ -153,7 +153,7 @@ async function main() {
     assert.deepStrictEqual(offenders, []);
     const tv = fs.readFileSync(path.join(ROOT, 'ui/tv-shell/index.html'), 'utf8');
     assert.ok(tv.includes("f.src='../idearium/'"), 'tv-shell loads /ui/idearium/');
-    assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8').includes('src="../eravos/"'), 'the Eravos canvas loads /ui/eravos/');
+    assert.ok(!fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8').includes('eravos-frame'), '0.60.82 — the Eravos canvas is gone (James: "Delete it outright.")');
     // §0.39.299 AR4 — the Build tab's Architect is idearium's own page (one canvas for both Architects); arch-builder stays architect/'s own
     // 0.60.18 — James: "can you delete this architecture afrom idearium?" — the page is archived; nothing loads it
     assert.ok(!fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8').includes('data-src="architect.html"') && fs.existsSync(path.join(ROOT, 'idearium/ui/_archive/architect-0.60.18.html')), 'the Architect page is archived, not loaded');

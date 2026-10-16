@@ -8196,21 +8196,13 @@ async function handle(req, res, route, query, body) {
       if (!se) return err(res, 503, 'spec-engine not ready');
       // §FILE-TREE-FIRST 2026-09-21 — every COS archetype and blueprint is
       // offered alongside the spec-document templates, read live from cos/.
-      // §BUILT 2026-09-21 — eravos mods (real starting files, same shape
-      // as a COS archetype) offered the same way, read live from eravos/.
+      // (eravos mods were offered here behind ?include=eravos until 0.60.82, when ERAVOS was deleted)
       try {
         const FTP = _require('../../lib/file-tree-plan.js');
-        let cos = [], eros = [];
+        let cos = [];
         try { cos = FTP.listCosTemplates(); }
         catch (e) { console.warn(`[speceng.templates] COS templates unavailable: ${e.message}`); }
-        // §0.39.267 — James: "the eravos options need to be removed from this prompt." A new spec is a project,
-        // not an eravos mod; the mods stay reachable (?include=eravos) and specs already built from one still build.
-        const wantEravos = /(^|,)eravos(,|$)/.test(String((query && query.include) || ''));
-        if (wantEravos) {
-          try { eros = FTP.listEravosMods(); }
-          catch (e) { console.warn(`[speceng.templates] eravos mods unavailable: ${e.message}`); }
-        }
-        return ok(res, { templates: [...se.listTemplates(), ...cos, ...eros] });
+        return ok(res, { templates: [...se.listTemplates(), ...cos] });
       }
       catch (e) { return err(res, 500, e.message); }
     }
@@ -8371,8 +8363,8 @@ async function handle(req, res, route, query, body) {
         // template, or templateIds: [], still wins.
         const _named = Array.isArray(templateIds) ? templateIds : (templateId ? [templateId] : null);
         const allIds = _named !== null ? _named : (type === 'system' ? ['genesis'] : []);
-        // §BUILT 2026-09-21 — isFileTreeTemplate covers both real catalogs
-        // (COS archetypes/blueprints and eravos mods); an id from either
+        // §BUILT 2026-09-21 — isFileTreeTemplate covers the COS catalog
+        // (archetypes/blueprints; eravos mods until 0.60.82); an id from it
         // takes the file-tree path below, same as a COS-only id always did.
         const fileTreeIds = allIds.filter(id => FTP.isFileTreeTemplate(id));
         // §0.39.359 SB31 — genesis IS the skeleton's architecture (1.4.0's catalog is the nexus-system archetype): a spec

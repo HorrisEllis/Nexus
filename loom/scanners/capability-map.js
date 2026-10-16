@@ -61,7 +61,6 @@ const SYSTEMS = Object.freeze({
   'guardian': 'guardian',
   'loom': 'loom',
   'ollama': 'ollama',
-  'eravos': 'eravos',
   'clear-glass': 'clear-glass',
   'clear-glass/seam': 'clear-glass',
   'emerge': 'emerge',

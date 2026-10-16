@@ -401,7 +401,6 @@ function renderTabTree() {
       leaf('∞', 'The Void', 'openVoid()', `<span class="tt-n">${ideas.length || ''}</span>`) +
       leaf('✎', 'Spec workshop', 'openWorkshop()')) +
     branch(`build:${r.uuid}`, '▦', 'Build',
-      leaf('◈', 'Eravos — organism canvas', "setView('eravos')") +
       leaf('⌘', 'Architect — block canvas', "setView('architect-build')") +
       leaf('▤', 'Spec Builder', "setView('spec-wizard')"));
   const repoNode = (r) => branch(`repo:${r.uuid}`, '▣', _wbShort(r.name || r.uuid, 36),

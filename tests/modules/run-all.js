@@ -179,7 +179,6 @@ const SUITES = [
   'test-gm-shim-sse-streaming.js',
   'test-system-registry.js',
   'test-architect-pulse-migration.js',
-  'test-eravos-pulse-migration.js',
   'test-emerge-direct-compile.js',
   'idearium-auto-repo-creation.test.js',
   'idearium-materialize-physical.test.js',

@@ -1019,11 +1019,11 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
       </div>
     </div>
     <div class="tab-group" data-group="build">
-      <button class="tab-btn tab-group-btn" data-views="eravos" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
+      <button class="tab-btn tab-group-btn" data-views="" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
       <div class="tab-dropdown tab-dropdown-deep">
         <button class="tab-sub tab-sub-lead" onclick="openBuildFlow()"><span class="tab-icon">▶</span><span>Build this repo<small>plan the spec → its phases → the agent codes them, one at a time</small></span></button>
         <div class="tab-sub-sep"></div>
-        <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
+        <!-- §0.60.82 — James: "can you remove eravos?" · "Delete it outright." The Eravos canvas is gone with the system. -->
         <!-- §0.39.300 WS3 — the retired Spec Builder (spec-wizard) left Build ▾ (UI12: retired from every surface; its view
              stays below, §0.3). The spec is made in the workshop. -->
         <button class="tab-sub" onclick="openWorkshop()"><span class="tab-icon">✎</span>Spec workshop</button>
@@ -1174,13 +1174,6 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
          a per-repo subtab: #repo-subtab-architect, rendered by
          renderRepoArchitect(repo) against that one repo's own spec. James:
          "Move architect from build tab to repo sub tabs per repo." -->
-
-    <!-- ══════════ ERAVOS (own system, own port — sovereign iframe) ══════════ -->
-    <section class="view" id="view-eravos">
-      <!-- 0.39.263 — eravos's UI is served at /ui/eravos/ (was ../../eravos/ui/index.html → /eravos/ui/index.html, a 404
-           under the orchestrator and on idearium's own :4800). Standalone, app.js points it at the orchestrator's /ui/eravos/. -->
-      <iframe class="system-frame" id="eravos-frame" src="about:blank" data-src="../eravos/" title="Eravos"></iframe>
-    </section>
 
     <!-- ══════════ ARCHITECT BUILD UI (architect/'s own build surface — distinct
          from the "Architect" blueprint viewer under Build, which reads

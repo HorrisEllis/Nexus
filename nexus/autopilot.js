@@ -224,8 +224,6 @@ const ALL_KERNELS = [
     phase: 3, healthUrl: 'http://127.0.0.1:3747/health' },
   { name: 'diagnostic',   cmd: 'node', args: ['diagnostic/nexus-diagnostic.js'],
     critical: true, phase: 2, healthUrl: 'http://127.0.0.1:7825/health' },
-  { name: 'eravos',       cmd: 'node', args: ['eravos/server.js'],
-    phase: 3, healthUrl: 'http://127.0.0.1:3751/health' },
   // §NEW 2026-08-22 — intelligence/server.js. Built and live-tested this
   // session (4 real phases: cortex/intelligence + baseline/snapshot-
   // trigger + meta/cfr moved here, plus the new framework-builder). Needs
