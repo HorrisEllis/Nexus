@@ -67,7 +67,7 @@ const chk = (label, cond) => { console.log((cond?'  ok  ':'  FAIL')+'  '+label);
   const create = q('.tab-group[data-group="create"] .tab-group-btn').dataset.views;
   const build  = q('.tab-group[data-group="build"] .tab-group-btn').dataset.views;
   console.log('  Create =', create, '| Build =', build);
-  chk('Build carries no canvas view (Spec Library moved into repos; Architect into repo tabs; Eravos deleted 0.60.83)',
+  chk('Build carries no canvas view (Spec Library moved into repos; Architect into repo tabs; Eravos deleted 0.60.82)',
       build === '');
   chk('Create is capture only', create === 'brainstorm,ideas');
   for (const v of (create+','+build).split(',').filter(Boolean)) chk('#view-'+v+' exists', !!q('#view-'+v));

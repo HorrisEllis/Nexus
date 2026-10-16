@@ -367,6 +367,18 @@ const SUITES = [
   'test-net-routes.test.js',          // 0.60.60 — net routes + Snowflake transport (CLI first): policy, fail-closed PAC, fake tor, agent read-only
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
+  'test-cos-app-ui.test.js',          // 0.60.89 COSA6 — COS window (jsdom) and controller
+  'test-release-deliver.test.js',     // 0.60.93 COSA7 — Clear Glass delivers a release to COS's inbox
+  'test-autopilot-idle.test.js',      // 0.60.92 the autopilot's GET /idle
+  'test-cos-app-shell.test.js',       // 0.60.91 CON-lite — the COS command line (npm run start:all, nexus ...) without PowerShell
+  'test-cos-app-update.test.js',      // 0.60.90 COSA12/13 — settings and the update policy
+  'test-cos-app-build.test.js',       // 0.60.89 COSA6 — staging for the Windows build
+  'test-cos-app-runtime.test.js',     // 0.60.88 COSA2/3 — start/stop/health of an installed version
+  'test-cos-app-switch.test.js',      // 0.60.88 COSA4 — switch, snapshot, rollback
+  'test-cos-app-store.test.js',       // 0.60.87 COSA1 — COS version store and zip import
+  'test-clearglass-jobs.test.js',     // 0.60.86 — five ready-made jobs run on the real engine, network stubbed
+  'test-chat-ports.test.js',          // 0.60.85 PI5b — the crawler's ports on the real automation engine, fake chat site in jsdom
+  'test-chat-crawler.test.js',        // 0.60.84 PI5 — the crawler driving the plan through fake ports
   'test-scroll-until.test.js',       // 0.60.56 — the slow scroll step (ErosmancerOS wheel, arrow keys, page) and the Read-one-chat template
   'test-chat-crawl-plan.test.js',    // 0.60.55 — the personal-chat crawl plan: nothing missed, the stopping edge, pace, stop rules
   'test-gig-ledger.test.js',         // 0.60.53 — the Fiverr ledger keeps only what checks out

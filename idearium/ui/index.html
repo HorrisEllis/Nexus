@@ -548,7 +548,7 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .ph-key{font-family:var(--mono);font-weight:600}
 .ph-map{color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
 .ph-card-title{font-size:11.5px;color:var(--text);margin:4px 0;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.ph-decision{font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--violet);border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-right:4px}   /* §CV6 0.60.82 */
+.ph-decision{font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--violet);border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-right:4px}   /* §CV6 0.60.81 */
 .ph-card-foot{display:flex;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
 .ph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
 .ph-maps{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
@@ -1242,7 +1242,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="repo-subtab-btn" data-subtab="notes" onclick="setRepoSubtab('notes')" title="write it down: notes, ideas, decisions, todos, questions, quotes (0.60.6)">Notes</button>
             <!-- §CE6 0.60.82 — James: "the file and code tab merge." The Files button is gone; setRepoSubtab('files') opens Code.
                  The Files panel (#repo-subtab-files) stays below, archived (§0.3): renderApiRepoPanel still draws into it. -->
-            <button class="repo-subtab-btn" data-subtab="code" onclick="setRepoSubtab('code')" title="the files and the work surface: the tree (uncommitted greyed; add, delete, filter), the code with its chunk cards (edit, manage, history), the agent's changes as diffs, the agent docked, and the runs, responses and activity below (0.60.82: Files merged in)">Code</button>
+            <button class="repo-subtab-btn" data-subtab="code" onclick="setRepoSubtab('code')" title="the files and the work surface: the tree (uncommitted greyed; add, delete, filter), the code with its chunk cards (edit, manage, history), the agent's changes as diffs, the agent docked, and the runs, responses and activity below (0.60.81: Files merged in)">Code</button>
             <button class="repo-subtab-btn" data-subtab="architect" onclick="setRepoSubtab('architect')">Architect</button>
             <button class="repo-subtab-btn" data-subtab="spec" onclick="setRepoSubtab('spec')">Spec</button>
             <!-- §0.39.271 P4 — James: "i want the roadmap and phases combined into a fully enterprise
@@ -2590,7 +2590,7 @@ async function saveToIdearium(){
 <script src="js/repo-drawer-views.js"></script>   <!-- §0.46.0/0.47.0 the Plan panel's versions · machine views (store + Ollama tape) -->
 <script src="js/agent-options.js"></script>   <!-- §0.47.0 OS4 every agent option in the Agent tab; its proposals (OS7) -->
 <script src="js/code-surface.js"></script>
-<script src="js/code-tab-panels.js"></script>   <!-- §0.60.82 CE6 · CE7 · CE9 — the Files tab's work, the picked lines with an action, the bottom panels -->   <!-- §0.39.349 CT3 — the Code tab is the work surface -->
+<script src="js/code-tab-panels.js"></script>   <!-- §0.60.81 CE6 · CE7 · CE9 — the Files tab's work, the picked lines with an action, the bottom panels -->   <!-- §0.39.349 CT3 — the Code tab is the work surface -->
 <script src="js/file-versions.js"></script>
 <script src="js/components-panel.js"></script>
 <script src="js/repo-versions.js"></script>

@@ -179,3 +179,30 @@ addendum_2026_10_15_e:
 build_order: [PI1_the_importer, PI5_the_crawler, PI3_the_intelligence_pass, PI3b_the_measured_patterns, PI7_the_links, PI2_the_listener, PI4_the_review_screen, PI6_the_firefox_script]
 build_order_reason: >-
   The importer needs no Electron and can be proven here; the extraction decides whether the whole idea is worth having, so it comes before the live listener, which can only be checked in Clear Glass.
+
+addendum_2026_10_16_f:
+  james: >-
+    "chatgpt the thing we talked about earlier, that indexes novel one by one" · "continu"
+  coder_reads: "To confirm. 'novel' = the novelty rule, not a book: the crawler of addendum d ('only logging novel data', one chat at a time until caught up). If he meant something else (a different earlier chat), this is the wrong thing."
+  built_0_60_63:
+    - "clear-glass/src/chats/crawler.js: runs the plan. Reads the list (more of it while backfill is unfinished; on a timer once caught up), takes the plan's next visit, reports the result, saves the state after every visit. Three ports; no tab in it."
+    - "A list read that hits a login wall, challenge or rate limit pauses the account with the reason, as a visit does. Backfill off: the chats that exist are skipped with the reason 'before capture began', then only new ones are read (plan: keepSkipped, so an exclusion removal does not revive them)."
+    - "tests/modules/test-chat-crawler.test.js CR-01..09 and CR-03b: backfill to done with nothing missed, restart resume, unchanged list visits nothing, the stopping chat re-checked once, challenge stop and resume, signed-out stop, backfill off, list not fully loaded, capture off, a throwing visit listed as failed."
+  not_built_needs_clear_glass: >-
+    The ports: readList (a background tab on the account's own session, sidebar list, scroll to load), visit (the 'ChatGPT chats' reading workflow per chat, wait for the ledger's `settled`, read its turn count and hash), and
+    where the per-account state is kept. Unverified there: that the observer is injected into a background tab, that the sidebar list is complete after scrolling, ChatGPT's current selectors.
+  next: "The Clear Glass ports (PI5b), checked by him on one account, ten chats; then PI1 (the importer), which the build order puts first and which needs no Electron."
+
+addendum_2026_10_16_g:
+  james: >-
+    "build it."
+  coder_reads: "To confirm: 'it' = the Clear Glass side of the crawler that addendum f left unbuilt (the ports)."
+  built_0_60_64:
+    - "clear-glass/src/chats/ports.js: two automation workflows per account ('Chat crawler list' and 'read', made once, found by name) run through the engine with workflow setting partition = the account's own session. A step list only navigates, waits, scrolls and reads. The chat list scroll may fail and carry on (the list is then not 'complete', so backfill is not declared done); the chat read scroll may NOT fail quietly: a half-loaded chat is never filed as ok."
+    - "visit files the chat into clear-glass/src/downloads/chat-ledger.js (the same ledger the live observer writes), only the turns it does not already hold word for word: a chat read twice adds nothing; a chat that grew adds only its new turns."
+    - "A login wall or a captcha/challenge page is read from the page (classifyPage) and returned as a kind the plan stops on. Selectors are data per provider (PROVIDERS), chatgpt only."
+    - "clear-glass/src/chats/service.js: one crawler per account key, background, refused while the account's switch is off; /cli/chats/crawl/start|stop|status in the bridge; idearium command `chat-crawl` (start and stop are personOnly)."
+    - "tests/modules/test-chat-ports.test.js PT-01..07 on the REAL automation engine with a fake chat site in jsdom."
+  unverified: "ChatGPT's current selectors; that the account key maps to persist:agent-<accountId> (override with --partition); that the sidebar list is complete after scrolling (the chat-list scroller); that a hidden tab on that partition stays signed in; the Settings screen has no Start button yet (CLI first)."
+  next: "He runs `chat-crawl start chatgpt:<id>` on one account, ten chats (set Max backfill chats to 10), and tells me what the first failure says."
+

@@ -69,7 +69,7 @@ async function main() {
     const b0 = idx.indexOf('data-group="build"'), build = idx.slice(b0, idx.indexOf('class="tab-spacer"', b0));
     assert.ok(!/setView\('spec-wizard'\)/.test(build), 'the retired Spec Builder left Build ▾'); assert.match(build, /openWorkshop\(\)/);
     assert.ok(!/setView\('spec-wizard'\)/.test(idx), 'no surface opens the retired builder');
-    assert.match(app, /const nestViews = \['brainstorm', 'ideas', 'spec-wizard'\]/, 'the Architect is not a repo\'s view (Eravos deleted 0.60.83)');
+    assert.match(app, /const nestViews = \['brainstorm', 'ideas', 'spec-wizard'\]/, 'the Architect is not a repo\'s view (Eravos deleted 0.60.82)');
     assert.match(app, /function openArchitect\(\) \{ toast\('the Architect page was removed \(archived\)/);
     for (const f of ['idearium/ui/_archive/architect-0.60.18.html', 'idearium/ui/js/workshop.js']) assert.match(read(f), /location\.href = 'void\.html'/, `${f} reaches the Void`);
   });

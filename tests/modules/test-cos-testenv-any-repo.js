@@ -219,7 +219,7 @@ async function main() {
 
   // ── Eravos: its "new organism → Idearium idea or spec" checks were here; ERAVOS was deleted 0.60.83 (James: "can you
   // remove eravos?" · "Delete it outright."). What stays true: Idearium no longer takes organism.create at all.
-  check('Idearium: no organism.create handler left (ERAVOS deleted 0.60.83)', !/nexus:organism\.create/.test(APP));
+  check('Idearium: no organism.create handler left (ERAVOS deleted 0.60.82)', !/nexus:organism\.create/.test(APP));
 
   // ── loom: every new component mapped WITH its real edges (docs/CLAUDE.md rule 3) ──
   const { mapCosTestenv, FILES } = require(path.join(ROOT, 'loom', 'maps', 'cos-testenv-map.js'));
