@@ -119,3 +119,25 @@ addendum_b:
       does: "COS lists Idearium repos, shows versions/phasemap/notes, imports a repo's release as an installed version, reports run state back (started, healthy, rolled back) as repo activity, and queues events while Idearium is down. CLI first: cos app repos|sync|link <repo>."
       proof: "a switch while Idearium is down is queued and replayed once; COS still starts the last good version with Idearium off; a repo's activity log shows the switch and any rollback with its reason."
   question: "Which repo actions do you want from the app first: only version/run (list, switch, roll back), or also phasemap builds and notes? I recommend version/run first."
+
+# ADDENDUM 2026-10-16 (c): each compartment is a VM-style window, with the rewind engine and system-state controls
+addendum_c:
+  james: >-
+    "on cos will be an electron app. what about integratoing idearium with cos" then "i want each compartment to be like the vm window, but with the rrewind engine and system state controls."
+  reading: >-
+    To confirm. "The vm window" = the compartment desktop built in 0.39.371 (VM1, "like full VMware style. Not actual VMware."). Each compartment in COS gets that same window: one pane per compartment showing it live, with the controls along its edge.
+    "Rewind engine" = the existing repo.run play/pause/rewind (0.60.0 RS1): pause, restore a version with a pre-restore snapshot verified against disk. "System state controls" = pause/resume/checkpoint/checkpoints/status.
+  grounded: "Reused, not rebuilt: POST /api/repos/:uuid/run/:op (pause|play|rewind {commitId}), /desktop/:op (pause|resume|checkpoint|rewind {tag}), /desktop/checkpoints, lib/cos-bridge.js desktopControl, cos/workspace/vm-control.js (QMP stop/cont/savevm), cos/app/switch.js snapshotData/restoreData."
+  coder_opinion: >-
+    One strip of controls, two honest meanings underneath. A VM compartment gets true state: pause freezes memory, a checkpoint is a live snapshot. A host project (Nexus run by COS, no VM) cannot: pause is suspending the process tree, a checkpoint is version + data snapshot, rewind is restore both and restart. The window must say which kind it is and what a checkpoint holds ("includes running memory" or "files and version only"). Same buttons, never a promise the layer cannot keep.
+  failure_modes:
+    - "A checkpoint that does not include memory shown the same as one that does (a lie by omission): label it."
+    - "Suspending a Windows process tree has no taskkill-like one-liner (needs NtSuspendProcess); unverified, may ship as stop/start only."
+    - "Rewind while a switch or import is running: refused with 'busy' (the controller already serialises per project)."
+    - "COS depends on Idearium for the VM path; with Idearium down, host-project controls must still work."
+  phase:
+    COSA10_compartment_window:
+      status: OPEN
+      depends_on: [COSA6_the_exe, COSA9_idearium_sync]
+      does: "CLI first: cos app state|pause|resume|checkpoint|checkpoints|rewind <project>, host projects through cos/app/switch.js, VM compartments through Idearium's existing routes. Then the window: VM-style pane per compartment (noVNC for VM, status+logs for host), control strip, checkpoint list with 'holds memory: yes/no'."
+  question: "Are your compartments the QEMU desktops (real VM window), the host projects COS runs (Nexus), or both? I assumed both, VM first."
