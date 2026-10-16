@@ -67,15 +67,18 @@ phases:
       read the VERSION file, verify the checksum when one is given, refuse path traversal and oversize, extract beside the others, junction data\ in. CLI first: cos app import|list|status.
     proof: "a zip with ../ entries is refused; a corrupt zip leaves nothing half-extracted; two versions sit side by side with one shared data folder; import of the same version twice is a no-op."
   COSA2_runtime_and_dependencies:
-    status: OPEN
+    status: BUILT-0.60.67
+    built_note: "cos/app/runtime.js preflight + bundled js-yaml via NODE_PATH; RT-01,07. Windows taskkill and ELECTRON_RUN_AS_NODE unverified."
     depends_on: [COSA1_version_store_and_import]
     does: "Pinned Node bundled; node_modules in a shared cache keyed by package-lock hash; npm ci --ignore-scripts; a preflight (Node version, required files, a boot check) before a version may be chosen."
   COSA3_run_and_supervise:
-    status: OPEN
+    status: BUILT-0.60.67
+    built_note: "cos/app/runtime.js start/stop/status/logs; RT-02..09. Windows taskkill and ELECTRON_RUN_AS_NODE unverified."
     depends_on: [COSA2_runtime_and_dependencies]
     does: "Start nexus/autopilot.js with NEXUS_DATA_ROOT set; wait for :7799/status; detect a port already in use and say which program holds it; graceful stop; rotated logs; tray status. CLI: cos app start|stop|status|logs."
   COSA4_switch_and_rollback:
-    status: OPEN
+    status: BUILT-0.60.67
+    built_note: "cos/app/switch.js; SW-01..10. Windows taskkill and ELECTRON_RUN_AS_NODE unverified."
     depends_on: [COSA3_run_and_supervise]
     does: "Stop, snapshot the data, point current at the new version, start, and require healthy within N seconds, else roll back to previous and restore the data snapshot, saying why. Keep the last K versions, prune older ones with a report."
     proof: "a version that fails its health check is rolled back automatically with its data restored; a version that passes stays; the failed one is kept for inspection."
