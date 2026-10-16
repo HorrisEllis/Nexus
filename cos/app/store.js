@@ -74,20 +74,37 @@ function inspect(zipPath, limits = LIMITS) {
     total += (e.header && e.header.size) || 0; tops.add(n.split(/[\\/]/)[0]);
   }
   if (total > limits.maxUncompressed) return { ok: false, error: `unpacks to ${(total / 1048576).toFixed(0)} MB, over the ${(limits.maxUncompressed / 1048576).toFixed(0)} MB limit` };
-  if (tops.size !== 1) return { ok: false, error: `expected one top folder (nexus-<version>/), found ${tops.size}: ${[...tops].slice(0, 3).join(', ')}` };
-  // 0.60.103 — James: "naming schema... versions... why do you do that?" (the zip GitHub gives for a branch is Nexus-<branch>, and was refused).
-  // The version is what is INSIDE the zip: VERSION (a release zip has one), else package.json. The folder name is only a cross-check, and only when it carries a version.
-  const top = [...tops][0]; const m = /^([a-z0-9][a-z0-9_-]*?)-(\d+\.\d+\.\d+)$/.exec(top);
-  const read = (n) => { const e = entries.find(x => x.entryName.replace(/\\/g, '/') === `${top}/${n}`); return e ? zip.readAsText(e) : null; };
-  let inside = null, project = m ? m[1] : null, source = 'VERSION';
-  const vtxt = read('VERSION');
-  if (vtxt != null) inside = vtxt.trim();
-  else { source = 'package.json'; try { const pj = JSON.parse(read('package.json') || ''); inside = String(pj.version || ''); if (!project) project = String(pj.name || '').toLowerCase().replace(/[^a-z0-9_-]+/g, '-'); } catch (_) {} }
-  if (!inside) return { ok: false, error: `no version found inside "${top}": no VERSION file and no package.json with a version` };
-  if (!SEMVER.test(inside)) return { ok: false, error: `${source} says "${inside.slice(0, 40)}", not a version` };
-  if (m && inside !== m[2]) return { ok: false, error: `the folder says ${m[2]} but ${source} says ${inside}: refused, it is not the release it claims to be` };
-  if (!project || !PROJECT.test(project)) return { ok: false, error: `"${project || top}" is not a usable project name` };
-  return { ok: true, project, version: inside, versionFrom: source, top, entries: entries.length, uncompressed: total, zip };
+  // 0.60.103 — James: "naming schema... versions... why do you do that?" (the zip GitHub gives for a branch is Nexus-<branch>, and was refused);
+  // 0.60.103 read VERSION, else package.json. 0.60.111 — the name and version come from what is inside, never from the folder's name alone. James, 2026-10-16, on COS
+  // refusing "Nexus-main" (GitHub's Download ZIP) and "Nexus v0.60.110": "please fix this. the naming in github doesn't even
+  // match that...". GitHub names a branch zip <Repo>-<branch> and a tag zip <Repo>-<tag>; only scripts/release-zip.js makes
+  // nexus-<version>/ with VERSION. The version is lib/release-version.js fromFiles (VERSION → lib/version.js system →
+  // package.json), the same reader Idearium's zip import uses (§8.6). A zip whose files sit at its root (no top folder) works too.
+  const norm = (n) => n.replace(/\\/g, '/');
+  const atRoot = entries.some(e => /^(VERSION|package\.json|lib\/version\.js)$/.test(norm(e.entryName)));
+  if (!atRoot && tops.size !== 1) return { ok: false, error: `expected one top folder (or the project's files at the zip's root), found ${tops.size}: ${[...tops].slice(0, 3).join(', ')}` };
+  const top = atRoot ? '' : [...tops][0]; const pre = top ? `${top}/` : '';
+  const textOf = (rel) => { const e = entries.find(x => norm(x.entryName) === pre + rel); if (!e) return null; try { return zip.readAsText(e); } catch (_) { return null; } };
+  const files = ['VERSION', 'lib/version.js', 'package.json'].map(rel => ({ rel, content: textOf(rel) })).filter(f => f.content != null);
+  const RV = require('../../lib/release-version.js');
+  const found = RV.fromFiles(files.map(f => ({ path: f.rel, content: f.content })), { anyPackage: true });
+  const where = top ? `"${top}"` : 'the zip';
+  if (!found) return { ok: false, error: `no version inside ${where}: no VERSION file, no lib/version.js system line, no package.json version` };
+  // every place inside that states a version must agree, and so must the folder when its name carries one
+  const said = [];
+  const vf = files.find(f => f.rel === 'VERSION'); if (vf) said.push({ place: 'VERSION', v: vf.content.trim().split(/\s+/)[0].replace(/^v/, '') });
+  const lv = files.find(f => f.rel === 'lib/version.js'); const lm = lv && lv.content.match(/^\s*system:\s*'(\d+\.\d+\.\d+)'/m); if (lm) said.push({ place: 'lib/version.js', v: lm[1] });
+  const fm = /(?:^|[^\d.])v?(\d+\.\d+\.\d+)(?:$|[^\d.])/i.exec(top); if (fm) said.push({ place: `the folder "${top}"`, v: fm[1] });
+  if (!SEMVER.test(found.version)) return { ok: false, error: `${found.source} says "${String(found.version).slice(0, 40)}", not a version` };
+  const off = said.filter(x => x.v !== found.version);
+  if (off.length) return { ok: false, error: `${off.map(x => `${x.place} says ${x.v}`).join(', ')} but ${found.source} says ${found.version}: refused, it is not the release it claims to be` };
+  // the project: package.json's name, else the folder's name with its version or branch taken off ("Nexus-main" → nexus)
+  let pj = null; const pf = files.find(f => f.rel === 'package.json'); if (pf) try { pj = JSON.parse(pf.content); } catch (_) {}
+  const clean = (n) => String(n || '').toLowerCase().replace(/^@[^/]+\//, '').replace(/[^a-z0-9_-]+/g, '-').replace(/^[-_]+|[-_]+$/g, '');
+  const fromFolder = clean(top.replace(/[\s_-]*v?\d+\.\d+\.\d+.*$/i, '').replace(/-(main|master|head)(-\d+)?$/i, ''));
+  const project = (pj && clean(pj.name)) || fromFolder;
+  if (!PROJECT.test(project)) return { ok: false, error: `no usable project name: package.json names none and the folder ${where} gives "${project}"` };
+  return { ok: true, project, version: found.version, versionFrom: found.source, top, entries: entries.length, uncompressed: total, zip };
 }
 
 /** linkData(versionDir, dataDir) — make versionDir/data the junction/symlink to the persistent data folder; anything real that was there moves in first, never overwriting. */
@@ -125,8 +142,8 @@ function importZip(root, zipPath, opts = {}) {
   const tmp = path.join(paths.versions, `.incoming-${process.pid}-${Date.now()}`); const dest = path.join(paths.versions, ins.version);
   try {
     fs.mkdirSync(tmp, { recursive: true }); ins.zip.extractAllTo(tmp, true);
-    const got = path.join(tmp, ins.top); if (!fs.existsSync(got)) throw new Error('extraction did not produce the release folder');
-    if (!fs.existsSync(path.join(got, 'VERSION'))) fs.writeFileSync(path.join(got, 'VERSION'), ins.version + '\n');   // a branch zip has none: the folder gets the one the store read
+    const got = ins.top ? path.join(tmp, ins.top) : tmp; if (!fs.existsSync(got)) throw new Error('extraction did not produce the release folder');
+    if (!fs.existsSync(path.join(got, 'VERSION'))) fs.writeFileSync(path.join(got, 'VERSION'), ins.version + '\n');   // a GitHub zip has none; the installed folder says its version like a release does
     const link = linkData(got, paths.data);
     fs.renameSync(got, dest);
     st.versions[ins.version] = { sha256: actual, bytes: fs.statSync(zipPath).size, entries: ins.entries, verified: !!sum, verifiedBy: sum ? sum.source : null, importedAt: new Date().toISOString(), dataMoved: link.moved.length };

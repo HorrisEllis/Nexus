@@ -92,7 +92,8 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, stdio: ['ignore', 'pipe
     assert.strictEqual(y.permissions.contents, 'write');
     const steps = y.jobs.release.steps.map(s => `${s.name || ''} ${s.run || ''} ${s.if || ''}`).join('\n');
     assert.match(steps, /release-zip\.js --out dist --check/);
-    assert.match(steps, /gh release create "v\$V" "dist\/nexus-\$V\.zip" --title "Nexus \$V"/);
+    // 0.60.111: the release also ships SHA256SUMS since 0.60.93 (Clear Glass and COS verify the zip); this line predated it and was red on main
+    assert.match(steps, /gh release create "v\$V" "dist\/nexus-\$V\.zip" "dist\/SHA256SUMS" --title "Nexus \$V"/);
     assert.match(steps, /CHANGELOG-\$V\.md/);
     assert.match(steps, /refs\/tags\/v\$V/); assert.match(steps, /tagged == 'no'/);
   });

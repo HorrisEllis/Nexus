@@ -21,7 +21,7 @@ const FILES = [
   ['clear-glass/src/chats/crawler.js', I('clear-glass/src/chats/crawler.js'), [I('lib/chat-crawl-plan.js'), I('lib/chat-crawl-settings.js')]],   // §0.60.84 PI5
   ['clear-glass/src/chats/ports.js', I('clear-glass/src/chats/ports.js'), [I('clear-glass/src/downloads/chat-ledger.js')]],   // §0.60.85 PI5b
   ['clear-glass/src/chats/service.js', I('clear-glass/src/chats/service.js'), [I('clear-glass/src/chats/crawler.js'), I('clear-glass/src/chats/ports.js'), I('lib/chat-crawl-settings.js')]],
-  ['cos/app/store.js', I('cos/app/store.js'), [I('lib/zip.js')]],   // §0.60.87 COSA1
+  ['cos/app/store.js', I('cos/app/store.js'), [I('lib/zip.js'), I('lib/release-version.js')]],   // §0.60.87 COSA1; 0.60.111 names a zip from its contents
   ['cos/app/runtime.js', I('cos/app/runtime.js'), []],   // §0.60.88 COSA2/3
   ['cos/app/switch.js', I('cos/app/switch.js'), [I('cos/app/store.js'), I('cos/app/runtime.js')]],   // §0.60.88 COSA4
   ['clear-glass/src/releases/deliver.js', I('clear-glass/src/releases/deliver.js'), []],   // §0.60.93 COSA7
