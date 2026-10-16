@@ -18,6 +18,8 @@ const FILES = [
   ['clear-glass/src/chats/crawler.js', I('clear-glass/src/chats/crawler.js'), [I('lib/chat-crawl-plan.js'), I('lib/chat-crawl-settings.js')]],   // §0.60.63 PI5
   ['clear-glass/src/chats/ports.js', I('clear-glass/src/chats/ports.js'), [I('clear-glass/src/downloads/chat-ledger.js')]],   // §0.60.64 PI5b
   ['clear-glass/src/chats/service.js', I('clear-glass/src/chats/service.js'), [I('clear-glass/src/chats/crawler.js'), I('clear-glass/src/chats/ports.js'), I('lib/chat-crawl-settings.js')]],
+  ['cos/app/store.js', I('cos/app/store.js'), [I('lib/zip.js')]],   // §0.60.66 COSA1
+  ['cos/app/cli.js', I('cos/app/cli.js'), [I('cos/app/store.js')]],
   ['clear-glass/src/macros/recorder-script.js', I('clear-glass/src/macros/recorder-script.js'), []],   // §0.60.57 MR1
   ['clear-glass/src/macros/live-recording.js', I('clear-glass/src/macros/live-recording.js'), [I('clear-glass/src/macros/recorder-script.js'), I('clear-glass/src/macros/recording.js'), I('clear-glass/src/automation/nodes.js')]],
   ['clear-glass/src/net/policy.js', I('clear-glass/src/net/policy.js'), []],   // §0.60.60 NP2
