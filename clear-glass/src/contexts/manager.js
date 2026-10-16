@@ -9,7 +9,7 @@
 
 const { session } = require('electron');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
-const { applyCspBypass } = require('./session-headers');
+const { applyCspBypass, requestHook } = require('./session-headers');
 
 class ContextManager {
   constructor({ fp, vault, sse }) {
@@ -44,8 +44,9 @@ class ContextManager {
     ses.setSpellCheckerLanguages([profile.language]);
 
     // Request header injection — Firefox header order and values
-    ses.webRequest.onBeforeSendHeaders((details, callback) => {
-      const headers = { ...details.requestHeaders };
+    // (through requestHook: a second onBeforeSendHeaders here used to replace applyCspBypass's localhost one — 2026-10-16)
+    requestHook(ses, 'fingerprint-profile', (details, requestHeaders) => {
+      const headers = { ...requestHeaders };
       const accept = profile.accept;
       const isNav  = details.resourceType === 'mainFrame' || details.resourceType === 'subFrame';
       const set    = isNav ? accept.navigation : accept.fetch;
@@ -58,7 +59,7 @@ class ContextManager {
       // Override User-Agent always
       headers['User-Agent'] = profile.ua;
 
-      callback({ requestHeaders: headers });
+      return headers;
     });
 
     // Network error tracking for RAID health scoring

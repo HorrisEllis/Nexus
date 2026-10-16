@@ -331,3 +331,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     now refused before it reaches him.
   - **Evidence:** `tests/modules/test-reject-learn-retry.test.js` (7/7, including his intent-hat-router and
     schema.intent shapes); `docs/2026-10-16-reject-learn-retry-phasemap.spec`; `CHANGELOG-0.60.105.md`.
+- **2026-10-16: "need this fixed. completely" (Google: "Couldn't sign you in")**
+  - **Context:** Google refused sign-in inside Clear Glass, his own browser, which every provider account runs through.
+    He stopped other work for it.
+  - **What it shows:** setting priority by what blocks the system. Every agent that runs through a Google account
+    depends on this one window. The fix went to the cause (client hints and `userAgentData`, which the UA scrub had
+    missed), not a workaround. On the way it found a second silent bug: request-header hooks replacing each other.
+  - **Evidence:** `clear-glass/test/google-signin.test.js` (32 checks); `docs/2026-10-16-google-signin-phasemap.spec`;
+    `CHANGELOG-0.60.106.md`. Not yet proven live: his next sign-in is the test.
+

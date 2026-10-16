@@ -52,11 +52,35 @@ function applyCspBypass(ses, { hosts = _providerHosts } = {}) {
   });
 
   // Allow Private Network Access (http://127.0.0.1 from https://) — the request to localhost only; others untouched
-  ses.webRequest.onBeforeSendHeaders((details, callback) => {
+  requestHook(ses, 'private-network', (details, headers) => {
     let h = ''; try { h = new URL(details.url).hostname; } catch (_) {}
-    if (h !== '127.0.0.1' && h !== 'localhost') return callback({});
-    callback({ requestHeaders: { ...details.requestHeaders, 'Access-Control-Request-Private-Network': 'true' } });
+    if (h !== '127.0.0.1' && h !== 'localhost') return null;
+    return { ...headers, 'Access-Control-Request-Private-Network': 'true' };
   });
 }
 
-module.exports = { applyCspBypass, needsRewrite };
+/**
+ * §2026-10-16 (cg-google-signin) — requestHook(ses, name, fn): Electron keeps ONE onBeforeSendHeaders listener per session;
+ * a second registration silently replaces the first. contexts/manager.js registered its Firefox-profile headers after
+ * applyCspBypass, and the localhost Private Network header was gone for those sessions without a word. Every request-
+ * header change now goes through here: one listener per session, the hooks run by `order` (lower first; the same order:
+ * as added), each fn(details, headers) -> new headers or null (no change). A hook that throws is skipped and said.
+ */
+function requestHook(ses, name, fn, { order = 0 } = {}) {
+  if (!ses || !ses.webRequest || typeof fn !== 'function') return false;
+  if (!ses.__cgReqHooks) {
+    ses.__cgReqHooks = new Map();
+    ses.webRequest.onBeforeSendHeaders((details, callback) => {
+      let headers = details.requestHeaders || {}, changed = false;
+      for (const [n, { fn: h }] of [...ses.__cgReqHooks].sort((a, b) => a[1].order - b[1].order)) {
+        try { const out = h(details, headers); if (out) { headers = out; changed = true; } }
+        catch (e) { console.warn(`[session-headers] request hook ${n} failed (skipped): ${e.message}`); }
+      }
+      callback(changed ? { requestHeaders: headers } : {});
+    });
+  }
+  ses.__cgReqHooks.set(name, { fn, order });
+  return true;
+}
+
+module.exports = { applyCspBypass, needsRewrite, requestHook };
