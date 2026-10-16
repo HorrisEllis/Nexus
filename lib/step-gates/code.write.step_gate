@@ -24,3 +24,26 @@ payload:
     # A .spec whose top key is spec: (the compiler's format, written from the spec-framework block) must be readable by it.
     - id: spec-compiler-format
       kind: spec_format
+    # 0.60.104 — James's screenshot: an agent's file said '// Placeholder implementation' and passed its brick. A file an agent
+    # writes that calls itself a placeholder or stub in a comment is refused (a person's file is never judged by this).
+    # Matched case-insensitively inside comments only; extend the list here, not in code.
+    - id: not-a-placeholder
+      kind: no_placeholder
+      phrases:
+        - "placeholder implementation"
+        - "placeholder for the"
+        - "placeholder: "
+        - "stub implementation"
+        - "stub for now"
+        - "todo: implement"
+        - "todo implement"
+        - "implement me"
+        - "implement this"
+        - "not implemented"
+        - "not yet implemented"
+        - "your code here"
+        - "add your code"
+        - "rest of the implementation"
+        - "existing code here"
+        - "logic goes here"
+        - "implementation goes here"

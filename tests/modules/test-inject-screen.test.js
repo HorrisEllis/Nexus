@@ -1,5 +1,5 @@
 'use strict';
-// IS-01..09 (0.60.74): every proposal passes one screen at the door, whoever makes it.
+// IS-01..09 (0.60.74): every proposal passes one screen at the door, whoever makes it. IS-10..13 (0.60.104): a placeholder is not the work.
 // James, 2026-10-16: "what about generating the tests first" — after an agent's lib/hat-seed.js proposal (-281 +20, did not parse) reached Apply.
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path');
 process.env.NEXUS_INJECT_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'is-'));
@@ -54,5 +54,28 @@ test('IS-09 the real proposal from the screenshot (the proposed lib/hat-seed.js)
   const content = fs.readFileSync(f, 'utf8');
   const r = quiet(() => RI.propose({ layer, repo, hat, path: 'lib/hat-seed.js', content }));
   assert.strictEqual(r.ok, false); assert.match(r.errors[0], /does not parse/);
+});
+// §0.60.104 — the agent's lib/intent-chain.js from James's screenshot, as it was shown with Apply (it passed its brick)
+const placeholder = "// lib/intent-chain.js\n\nmodule.exports = {\n  resolve: function(textOrIntentName) {\n    // Placeholder implementation\n    return {\n      hat: null,\n      fallbackHats: [],\n      aliases: [],\n      minConfidence: 0.0\n    };\n  }\n};\n";
+test('IS-10 the placeholder lib/intent-chain.js from the screenshot is refused for an agent, naming its line', () => {
+  const r = quiet(() => RI.propose({ layer, repo, hat, path: 'lib/intent-chain.js', content: placeholder }));
+  assert.strictEqual(r.ok, false); assert.match(r.errors[0], /placeholder, not the work — line 5/);
+});
+test('IS-11 a stub that throws "not implemented" is refused for an agent', () => {
+  const r = quiet(() => RI.propose({ layer, repo, hat, path: 'lib/s.js', content: "function f() { throw new Error('not implemented'); }\nmodule.exports = { f };\n" }));
+  assert.strictEqual(r.ok, false); assert.match(r.errors[0], /a stub, not the work/);
+});
+test('IS-12 a person\'s file with the same words is not judged by it', () => {
+  assert.strictEqual(quiet(() => RI.propose({ layer, repo, path: 'lib/intent-chain.js', content: placeholder })).ok, true);
+});
+test('IS-13 the word in a string or a name is not a comment: real code that mentions placeholders passes', () => {
+  const code = "const PLACEHOLDER = 'placeholder implementation';\nfunction fill(t) { return String(t).replace('{x}', 'y'); }\nmodule.exports = { PLACEHOLDER, fill };\n";
+  assert.strictEqual(quiet(() => RI.propose({ layer, repo, hat, path: 'lib/fill.js', content: code })).ok, true);
+});
+test('IS-14 an agent editing a file that already had such a comment is judged only on what it adds', () => {
+  const base = "// TODO: implement retries (not implemented yet)\nfunction a() { return 1; }\nmodule.exports = { a };\n";
+  const lay = { files: { 'lib/old.js': base }, readFile(u, p) { return this.files[p] != null ? { content: this.files[p] } : { error: 'no' }; } };
+  assert.strictEqual(quiet(() => RI.propose({ layer: lay, repo, hat, path: 'lib/old.js', content: base.replace('return 1', 'return 2') })).ok, true);
+  assert.strictEqual(quiet(() => RI.propose({ layer: lay, repo, hat, path: 'lib/old.js', content: base + '// placeholder implementation of b\n' })).ok, false);
 });
 console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);

@@ -133,8 +133,18 @@ function _csRunning() { const now = Date.now(); return CS.live.filter(x => x.sta
 /** the file a call is about, from its arguments (path, paths[0], file) */
 function _csFileOf(c) { try { const a = typeof c.args === 'string' ? JSON.parse(c.args) : (c.args || {}); return a.path || (Array.isArray(a.paths) && a.paths[0]) || a.file || null; } catch (_) { const m = String(c.args || '').match(/"path"\s*:\s*"([^"]+)"/); return m ? m[1] : null; } }
 function _csLiveFiles() { return new Set(_csRunning().map(_csFileOf).filter(Boolean)); }
+/** TB5 — the five view tabs with their badges; repainted alone by a live event, so a call running blinks on 'runs' from any view */
+function _csTabsHtml() {
+  const nCh = _csChanges().filter(f => f.status === 'proposed' || f.status === 'staged').length;
+  const sm = CS.plan && CS.plan.summary || {};
+  const running = _csRunning().length;
+  const badge = (n, cls) => n ? `<span class="cs-badge${cls ? ' ' + cls : ''}">${n}</span>` : '';
+  return [['files', 'files', ''], ['changes', 'changes', badge(nCh, 'warn')], ['plans', 'plans', badge(sm.building, 'live') + badge(sm.failed, 'bad')], ['runs', 'runs', badge(running, 'live')], ['cos', 'COS', '']]
+    .map(([k, l, bd]) => `<button class="cs-vtab${CS.view === k ? ' on' : ''}" data-view="${k}" onclick="csView('${k}')">${l}${bd}</button>`).join('');
+}
 function _csPaintLive() {
   const repo = CURRENT_API_REPO; if (!repo || CS.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'code') return;
+  const vt = document.getElementById('cs-vtabs'); if (vt) vt.innerHTML = _csTabsHtml();
   const act = document.getElementById('cs-activity'); if (act) act.innerHTML = _csActivity();
   const left = document.getElementById('cs-left');
   if (left) { const t = left.querySelector('.cs-tree'); const sc = t ? t.scrollTop : 0; left.innerHTML = _csTree(repo); const t2 = left.querySelector('.cs-tree'); if (t2) t2.scrollTop = sc; }
@@ -440,12 +450,7 @@ function csPaint() {
   const changesHtml = `<div class="cs-sec">the agent's changes<span class="cs-grow"></span><button class="cs-chip-btn" title="reload" onclick="csAfterChange()">↻</button></div>
         ${wsErr ? `<div class="cs-empty cs-bad">could not read the changes: ${escapeHtml(wsErr)}</div>` : ''}
         ${_csChanges().length ? `<div class="cs-diffs">${_csChanges().map(_wsCard).join('')}</div>` : `<div class="cs-empty">${CS.loadingChanges ? 'reading the changes…' : 'no changes yet — what the agent writes shows here as a diff, and greyed in the files, until you apply it'}</div>`}`;
-  const nCh = _csChanges().filter(f => f.status === 'proposed' || f.status === 'staged').length;
-  const sm = CS.plan && CS.plan.summary || {};
-  const running = _csRunning().length;
-  const badge = (n, cls) => n ? `<span class="cs-badge${cls ? ' ' + cls : ''}">${n}</span>` : '';
-  const tabs = [['files', 'files', ''], ['changes', 'changes', badge(nCh, 'warn')], ['plans', 'plans', badge(sm.building, 'live') + badge(sm.failed, 'bad')], ['runs', 'runs', badge(running, 'live')], ['cos', 'COS', '']]
-    .map(([k, l, bd]) => `<button class="cs-vtab${CS.view === k ? ' on' : ''}" onclick="csView('${k}')">${l}${bd}</button>`).join('');
+  const tabs = _csTabsHtml();
   const agentOn = !!(CS.agentOpen || CS.agent.busy || CS.sel);   // picked lines open the agent: that is where their actions are
   const agentBtn = `<button class="cs-chip-btn${agentOn ? ' on' : ''}" onclick="CS.agentOpen=!CS.agentOpen;csPaint()" title="talk to the repo agent about the open file">agent${CS.agent.busy ? ' ◌' : ''}</button>`;
   const body = CS.view === 'changes' ? `<div class="cs-one">${changesHtml}</div>`
@@ -458,7 +463,7 @@ function csPaint() {
         ${agentOn ? `<div class="cs-right"><div class="cs-card">${_csCardHtml()}</div><div class="cs-agent">${_csAgentHtml()}</div></div>` : ''}
       </div>`;
   el.innerHTML = `<div class="cs">
-    <div class="cs-top"><div class="cs-vtabs">${tabs}</div><span class="cs-dim cs-head">${head}</span><span class="cs-grow"></span>
+    <div class="cs-top"><div class="cs-vtabs" id="cs-vtabs">${tabs}</div><span class="cs-dim cs-head">${head}</span><span class="cs-grow"></span>
       ${CS.view === 'files' ? `<input id="cs-q" class="field-input cs-search" placeholder="what the code does, a name, or exact text" value="${escapeHtml(CS.q)}" onkeydown="if(event.key==='Enter')csSearch()">
       <select id="cs-mode" class="field-input cs-mode"><option value="search"${CS.mode === 'search' ? ' selected' : ''}>by meaning</option><option value="grep"${CS.mode === 'grep' ? ' selected' : ''}>exact text</option></select>
       <button class="action-btn" onclick="csSearch()">search</button>` : ''}${CS.view === 'files' || CS.view === 'changes' ? agentBtn : ''}</div>

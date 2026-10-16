@@ -195,6 +195,7 @@ function harness() {
     });
 
     await test('CT-12', 'a file open: its lines, its chunk marked where it starts, its diff above; the chunk → its card', async () => {
+      await page.evaluate(() => csView('files'));   // TB5 0.60.103: one view at a time; the tree and the open file are under files
       await page.click('.cs-file[data-path="src/a.js"]');
       await page.waitForSelector('#cs-code .cs-ln');
       assert.strictEqual(await page.$$eval('#cs-code .cs-ln', e => e.length), 5);
@@ -253,7 +254,7 @@ function harness() {
     });
 
     await test('CT-21', '"change it" is a Manage edit — file, lines, words, model — and the Plan opens on the run', async () => {
-      await page.evaluate(() => closePlanPanel());
+      await page.evaluate(() => { closePlanPanel(); csView('files'); });   // TB5: the open file is under files
       await page.click('#cs-code .cs-ln[data-ln="3"] .cs-g');   // line 2 is still picked from CT-14: a click on another line picks that one
       await page.selectOption('#cs-pick', '0');
       await page.fill('#cs-ask', 'return 4');
@@ -274,9 +275,10 @@ function harness() {
       await page.waitForSelector('.cs-one .ws-card[data-path="src/b.js"]', { timeout: 4000 });
       await page.evaluate(() => csView('files'));
       assert.strictEqual(await page.$$eval('.cs-file[data-path="src/b.js"] .cs-diffdot', e => e.length), 1);
+      await page.waitForTimeout(700);   // the first event's own debounced reload (500 ms) lands before the stub stops answering b.js
       await page.evaluate(() => { EXTRA = false; codeSurfaceOnEvent({ type: 'idearium.repo.phase.run', payload: { repoUuid: 'other-repo' } }); });
       await page.waitForTimeout(700);
-      assert.strictEqual(await page.$$eval('.cs-mid .ws-card[data-path="src/b.js"]', e => e.length), 1, 'another repo\'s event is not this one\'s');
+      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/b.js"] .cs-diffdot', e => e.length), 1, 'another repo\'s event is not this one\'s');   // TB5: no file open, so the files view shows the tree, not cards
     });
 
     await test('CT-23', 'a card in the Plan panel opens its file in the Code tab; so does a file in a run\'s ledger', async () => {
@@ -304,29 +306,33 @@ function harness() {
     });
 
     await test('CT-31', 'the agent working, live: blinking while a call runs, ✓ when it ends, no reload; the agent box keeps its text', async () => {
-      await page.evaluate(() => { CS.view = 'runs'; });   // TB5: the agent's live activity is in the Runs view
-      await page.evaluate(() => { CURRENT_REPO_SUBTAB = 'code'; csPaint(); });
+      // TB5 0.60.103: one view at a time. In files (the agent open) the file it is on blinks and the runs tab carries the live
+      // count; the runs view shows the call itself. Nothing is fetched for a live call, and the agent box keeps what was typed.
+      await page.evaluate(() => { CURRENT_REPO_SUBTAB = 'code'; CS.agentOpen = true; csView('files'); });
       await page.fill('#cs-ask', 'half typed');
       await page.evaluate(() => document.getElementById('cs-ask').dispatchEvent(new Event('input')));
       const n0 = await page.evaluate(() => CALLS.length);
       await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_read.tool', state: 'running', args: '{"path":"src/b.js"}', iteration: 1, at: Date.now() } }));
+      await page.waitForSelector('.cs-file[data-path="src/b.js"] .cs-livedot');
+      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/a.js"] .cs-livedot', e => e.length), 0);
+      assert.strictEqual(await page.textContent('.cs-vtab[data-view="runs"] .cs-badge.live'), '1', 'the runs tab says a call is running, from the files view');
+      assert.strictEqual(await page.evaluate(() => document.getElementById('cs-ask').value), 'half typed', 'the agent box was not repainted');
+      assert.strictEqual(await page.evaluate(() => CALLS.length), n0, 'live calls arrive by event: nothing was fetched');
+      await page.evaluate(() => csView('runs'));
       await page.waitForSelector('.cs-act-head .cs-now .cs-livedot');
       assert.ok(/code_read/.test(await page.textContent('.cs-act-head .cs-now')));
-      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/b.js"] .cs-livedot', e => e.length), 1, 'the file it is on blinks');
-      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/a.js"] .cs-livedot', e => e.length), 0);
-      const anim = await page.$eval('.cs-act-head .cs-livedot', e => getComputedStyle(e).animationName);
-      assert.strictEqual(anim, 'cs-blink');
-      assert.strictEqual(await page.evaluate(() => document.getElementById('cs-ask').value), 'half typed', 'the agent box was not repainted');
+      assert.strictEqual(await page.$eval('.cs-act-head .cs-livedot', e => getComputedStyle(e).animationName), 'cs-blink');
       await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_read.tool', state: 'ok', args: '{"path":"src/b.js"}', iteration: 1, at: Date.now() } }));
       await page.waitForFunction(() => !document.querySelector('.cs-act-head .cs-now'));
-      assert.strictEqual(await page.$$eval('.cs-file .cs-livedot', e => e.length), 0);
+      assert.strictEqual(await page.$$eval('.cs-vtab[data-view="runs"] .cs-badge', e => e.length), 0, 'no badge once nothing runs');
       await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_edit.tool', state: 'failed', args: '{"changes":[]}', error: 'edits is required', iteration: 2, at: Date.now() } }));
-      await page.evaluate(() => { CS.activity = true; _csPaintLive(); });   // (CT-15 left it open or closed; open it)
+      await page.evaluate(() => { CS.activity = true; _csPaintLive(); });
       const body = await page.textContent('.cs-act-body');
       assert.ok(/LIVE|live/.test(body) && /✗ idearium\.code_edit\.tool/.test(body) && /✓ idearium\.code_read\.tool/.test(body), body);
-      assert.strictEqual(await page.evaluate(() => CALLS.length), n0, 'live calls arrive by event: nothing was fetched');
       await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'other', name: 'x', state: 'running', at: Date.now() } }));
       assert.strictEqual(await page.evaluate(() => CS.live.length), 2, 'another repo\'s calls are not this one\'s');
+      await page.evaluate(() => csView('files'));
+      assert.strictEqual(await page.evaluate(() => document.getElementById('cs-ask').value), 'half typed', 'the draft survives a view switch');
       assert.deepStrictEqual(errors, []);
     });
 

@@ -313,3 +313,9 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     corrected the record when his metaphor ("brick") risked becoming a second node type ("When I said brick I was using
     a metaphor").
   - **Evidence:** `lib/work-funnel.js`; `tests/modules/test-work-funnel.test.js` (8/8); `docs/2026-10-16-agent-work-funnel-phasemap.spec`; `CHANGELOG-0.60.94.md`.
+- **2026-10-16: "can you do the code tab changes?"** (with a screenshot)
+  - **Context:** he reviewed the agent's work in the Code tab instead of trusting the green status. The screenshot showed
+    a run marked contract-complete whose only file was a placeholder.
+  - **What it shows:** reviewing evidence over status. A gate that checked names but not substance was found from one look
+    at a diff, and is now closed at the one door every proposal passes.
+  - **Evidence:** `CHANGELOG-0.60.104.md`; `tests/modules/test-inject-screen.test.js` IS-10..14.
