@@ -76,3 +76,62 @@ failure_modes:
   - "A second record of the same event (a gate result in the ledger and again in a new table): TB2 exists to prevent this."
   - "Live panel polling instead of subscribing: events exist; polling is a defect."
   - "Persisting responses that contain secrets or private chat text: TB3 states what is stored and masks by key name; unverified until the audit lists real contents."
+
+# ADDENDUM 2026-10-16 (a): the Runs tab in detail: every gate, zoom into each, and the traversal between them
+addendum_a:
+  james: >-
+    (with a screenshot of the Code tab today: the Runs strip, a RUNNING phase build, a chain of tool-call chips joined by arrows, and the red line "gate typed and sent · failed · provider 'chatgpt' disconnected mid-flight (retry 1) → the composer or send button was not found — pick them with ◎ (the element picker)")
+    "like i want to see each gate, everythinh happening in the run, like i can zoom in to each gate, control, zoom in, see the response, log, etc. also what about the traversal between gates or each step."
+  reading: "To confirm. (1) The Runs tab draws a run as a graph: gates and steps are NODES, the moves between them are EDGES, and an edge is data too (why it moved, how long it waited, who decided). (2) Four zoom levels, each one click: run, attempt, node, edge. (3) Every node and edge is a persisted record, so a finished or crashed run can be walked the same way as a live one."
+  grounded:
+    today: "The strip shows steps as chips joined by '→' (code_search → code_read → …). The arrow carries nothing: no time, no reason, no decider. The gate failure is one red sentence; its detail is not clickable."
+    what_is_recorded:
+      job_gates: "guardian/lib/gate-trail.js: 8 gates per job, in order: create, tab, ping, deliver, accept, submit, reply, complete. Each entry { gate, state, at, detail, implied }; stored on the job (job.gates), served at GET /status/:jobId, emitted as guardian.job.gate. It already carries a FIX line per gate (e.g. submit: 'pick them with the element picker'). A later gate passing marks earlier ones 'passed (implied)' with at = now: those timestamps are NOT measured."
+      tool_steps: "lib/run-state.js (CE1): one .run node per run, steps { n, name, arg, ok, error, attempt, at }, events { kind, text, attempt, at }, attempts. Kept: the LAST 60 steps; older ones drop off the list (the count stays). That is a persistence gap against 'each output persistent'."
+      outputs: "the .response files and the job's response; the compartment exchange log (repo_agent_log); logs per system."
+      proof_gates: "lib/step-gate.js and lib/step-gates/: the phase's proof checks."
+    not_recorded: "The edge: why a step followed another, how long the system sat at the from-node, who chose the next one (the gate, RAID's route, copilot, a retry rule, a person), and a retry's own reason. A fallback or a retry is visible only as a new chip."
+  layout: |
+    RUNS tab (one thing at a time; the rest of the Code tab is hidden behind its own tabs)
+      [run list]  RUNNING  Write ONE file: lib/intent-chain.js   attempt 1 · 65 steps · 0 changed · 04:21   ◀ pick a run
+      ── zoom 1: RUN ─ attempts as a strip: attempt 1 ✓/✗ · attempt 2 …  with the reason each ended
+      ── zoom 2: ATTEMPT ─ the graph, left to right:
+           [goal] ─▶ [gate create ✓ 0.1s] ─▶ [tab ✓] ─▶ [ping ✓] ─▶ [deliver ✓] ─▶ [accept ✓] ─▶ [submit ✗ 90s] ┄retry 1┄▶ [submit …]
+                                                                      └▶ [tool code_search ✓] ─▶ [code_read ✓] ─▶ …
+           node = colour by state (passed / running (pulses) / failed / waiting / implied (hatched, 'not measured'))
+           edge = a line with its cause on hover; a retry, a fallback route or a restart-resume is a DIFFERENT edge style, so the path actually taken is readable
+      ── zoom 3: NODE ─ side panel: input (the prompt or the arguments), output (the response), log lines in the window of that node, evidence, timing, the FIX line, and CONTROLS for that node
+      ── zoom 4: EDGE ─ why it moved, how long it waited at the previous node, who decided, what changed between (the retry count, the provider, the route)
+  controls_on_a_node:
+    - "retry from here (CE9: retry from step n), skip (marked skipped, never silent), stop the run, resume"
+    - "send to another provider (the RAID route shown first: what it chose, what it fell back to, the cost)"
+    - "on a submit or reply gate failure: open the element picker for that provider (the hook the FIX line already names), then retry from that gate"
+    - "copy the node's input / output / log"
+    - "every control is a command row (nexus.command), so an agent can read the same graph and a person-only row stays person-only"
+  phase:
+    TB7a_edges_recorded:
+      status: OPEN
+      depends_on: [TB2_persistence_audit]
+      does: "Backend first. An edge record { runId, attempt, from, to, at, waitedMs, kind (passed | failed | retry | fallback | resume | skip), by (gate | raid | copilot | rule | person), reason } written when a move happens, through the writers that exist (the job's gate trail, the .run node's events): extend the entry with the fields, no second store. Implied gates keep at = null and 'implied: true'; the UI says 'not measured', it never invents a duration."
+      proof: "a run with a retry and a fallback produces the edges in order; a restart in the middle resumes with an edge of kind 'resume'; an implied gate has no duration."
+    TB7b_keep_every_step:
+      status: OPEN
+      depends_on: [TB2_persistence_audit]
+      does: "Lift the 60-step cap's data loss: keep the last 60 in the live node (cheap to read) and append every step to the run's own jsonl (archive, never delete), so zoom 2 can show step 1 of 400. The count stays truthful."
+      proof: "a run of 100 steps reads back step 1 and step 100 after a restart."
+    TB7c_graph_and_zoom:
+      status: OPEN
+      depends_on: [TB5_tab_shell, TB7a_edges_recorded]
+      does: "The four zoom levels over the records, drawn with the mesh's route-graph (clear-glass/src/mesh/route-graph.js: reuse, one component mounted in the Code tab and the Clear Glass mesh panel). Live: nodes and edges appear and the running node pulses, from guardian.job.gate, idearium.repo.task and idearium.repo.agent.tool, never polled. History: the same view over the stored records."
+      proof: "driven in the real Clear Glass page (glass.js), not Playwright: open a run, zoom to a failed gate, see its response, log and FIX line; open an edge and read why."
+    TB7d_node_controls:
+      status: OPEN
+      depends_on: [TB7c_graph_and_zoom]
+      does: "The controls above, each a command row first, then a button."
+      proof: "retry from the failed submit gate re-runs from there, not from the goal; the element-picker control opens for the right provider."
+  failure_modes:
+    - "An invented duration: an implied gate shown with a time. Hatched, labelled 'not measured', and a test checks the label."
+    - "The graph becomes the new overwhelm (400 steps drawn at once): zoom 2 shows gates and a collapsed group per run of tool calls ('code_search x12'), expanding on click; 'failed only' and 'this file' filters."
+    - "Edge records for tool steps guess at 'who decided': the model chose the next tool call, so by = 'agent' for those, not a gate; only gates, RAID and rules are named as deciders."
+    - "A control that acts on the wrong run (two runs live): every control carries runId + attempt + node id, and the command refuses a stale one."
+  question: "Is this the right shape: a graph with four zoom levels (run, attempt, node, edge), and do you want the tool-call steps drawn as a collapsed group per run (my recommendation) or one node each?"
