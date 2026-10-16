@@ -21,6 +21,8 @@ const FILES = [
   ['cos/app/store.js', I('cos/app/store.js'), [I('lib/zip.js')]],   // §0.60.66 COSA1
   ['cos/app/runtime.js', I('cos/app/runtime.js'), []],   // §0.60.67 COSA2/3
   ['cos/app/switch.js', I('cos/app/switch.js'), [I('cos/app/store.js'), I('cos/app/runtime.js')]],   // §0.60.67 COSA4
+  ['clear-glass/src/releases/deliver.js', I('clear-glass/src/releases/deliver.js'), []],   // §0.60.72 COSA7
+  ['clear-glass/src/releases/service.js', I('clear-glass/src/releases/service.js'), [I('clear-glass/src/releases/deliver.js'), I('cos/app/store.js')]],
   ['cos/app/shell.js', I('cos/app/shell.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/cli.js')]],   // §0.60.70 CON-lite
   ['cos/app/settings.js', I('cos/app/settings.js'), []],   // §0.60.69 COSA12/13
   ['cos/app/controller.js', I('cos/app/controller.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/switch.js'), I('cos/app/settings.js')]],   // §0.60.68 COSA6

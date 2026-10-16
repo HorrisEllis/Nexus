@@ -294,6 +294,9 @@ class IpcBridge {
     this.app.post('/cli/chats/crawl/start',  _netRoute((b) => _crawlSvc().start(String(b.account || ''), { partition: b.partition })));
     this.app.post('/cli/chats/crawl/stop',   _netRoute((b) => _crawlSvc().stop(String(b.account || ''))));
     this.app.get('/cli/chats/crawl/status',  _netRoute((b, q) => _crawlSvc().status(q.account ? String(q.account) : undefined)));
+    // §0.60.72 COSA7 — James, 2026-10-16: "auto updates from dropping in new zips, downloading it from clearglass." /cli/releases/*: the latest Nexus release into COS's inbox (src/releases/). status downloads nothing.
+    this.app.get('/cli/releases/status', _netRoute(() => require('../releases/service').status()));
+    this.app.post('/cli/releases/fetch',  _netRoute(() => require('../releases/service').fetchLatest()));
     // §BUILT 2026-09-15 — James: "...clearglass download manager..." as a
     // guardian response sink. downloads:* was IPC-only (ipcMain.handle,
     // renderer-side); nothing outside Electron could reach the real

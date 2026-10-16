@@ -91,7 +91,8 @@ phases:
     depends_on: [COSA1_version_store_and_import]
     does: "Electron shell (tray, project list, versions, logs, Start/Stop/Switch/Rollback) built by a GitHub Actions Windows job with electron-builder (portable and installer), attached to the release with SHA256SUMS. Screens come after the CLI, per his order."
   COSA7_clear_glass_delivers:
-    status: OPEN
+    status: BUILT-0.60.72
+    built_note: "clear-glass/src/releases/deliver.js + service.js, nexus-release command, /cli/releases/*, job template, release.yml publishes SHA256SUMS; RD-01..13 against a local GitHub stand-in. NOT built: the NP16 quarantine (vault not built), a token setting. Not run against real GitHub."
     depends_on: [COSA1_version_store_and_import]
     does: "Clear Glass checks the releases, downloads the asset and checksum into COS's Inbox through the downloads pipeline (the NP16 quarantine applies), and tells COS. COS verifies and offers the switch; a setting allows auto-switch only while idle. Clear Glass never replaces itself."
   COSA8_other_projects:

@@ -162,6 +162,16 @@ const TEMPLATES = [
       { type: 'notify', config: { title: 'Nexus {{steps.Check.output.body.tag_name}} is out', body: '{{steps.Check.output.body.html_url}}' } },
     ] },
 
+  { id: 'nexus-release-deliver', name: 'Bring new Nexus releases to COS', category: 'NEXUS',
+    help: 'Every 6 hours, put the latest Nexus release in COS\'s inbox (the same as `nexus-release fetch`): the zip is downloaded, checked against the published SHA256SUMS, and only then handed over. What COS does with it is its Updates setting: off, ask (the default), or auto. Nothing is switched by this job.',
+    vars: {},
+    steps: [
+      { type: 'trigger', config: { intervalMs: 21600000 } },
+      { type: 'http', label: 'Fetch', timeoutMs: 600000, retry: { count: 1, delayMs: 60000 }, config: { method: 'POST', url: 'http://127.0.0.1:7702/cli/releases/fetch', body: '{}', failOnHttpError: false } },
+      { type: 'condition', config: { left: '{{steps.Fetch.output.body.action}}', op: '==', value: 'delivered', onTrue: 'next', onFalse: 'stop' } },
+      { type: 'notify', config: { title: 'Nexus {{steps.Fetch.output.body.version}} is in the COS inbox', body: '{{steps.Fetch.output.body.reason}}' } },
+    ] },
+
   { id: 'ollama-models', name: 'Ollama is up and has its models', category: 'NEXUS',
     help: 'Every 30 minutes, check that Ollama answers and that the model Nexus embeds with is installed. Your boot log showed "nomic-embed-text" missing and Ollama failing under memory pressure; this says so once instead of after 63 failed tries.',
     vars: { host: 'http://127.0.0.1:11434', model: 'nomic-embed-text' },
