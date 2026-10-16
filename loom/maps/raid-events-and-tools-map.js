@@ -99,6 +99,9 @@ const FILES = [
   // (idearium/api, the officiator, contract-intake — read as text, not required); CK-255 runs it
   ['lib/build-paths.js',                    'nexus.lib.build-paths', []],
   ['lib/checks/ck-255-warp-builds.js',      'nexus.lib.checks.ck-255-warp-builds', ['nexus.lib.build-paths']],
+  // 0.60.75 GW3 — James: "each contract tracked through the system using the event ledger, tagging and each gate". Pure: a
+  // projection of the contract's log, checkpoints, the run's ledger rows and RAID's queue row (idearium/api ?trace=1 reads it)
+  ['cortex/core/raid/contract-trace.js',    'nexus.cortex.core.raid.contract-trace', []],
   ['lib/phase-plan.js',                     'nexus.lib.phase-plan', []],
   ['cortex/core/raid/contract-adapters.js', 'nexus.cortex.core.raid.contract-adapters',
     ['nexus.cortex.core.raid.contract-gates', 'nexus.lib.model-door', 'nexus.lib.phase-plan']],

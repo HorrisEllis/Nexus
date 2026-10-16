@@ -7587,6 +7587,17 @@ async function handle(req, res, route, query, body) {
             diff: async ({ from, files }) => { const out = {}; for (const f of files.slice(0, 8)) { try { out[f] = await RH.diff(_vcall, tgt, from, 'working', { path: f, working }); } catch (e) { out[f] = { error: e.message }; } } return out; } });
           return ok(res, { repoUuid: params.uuid, phase: query.phase, file, compare: cmp });
         }
+        // §GW3 0.60.75 — ?trace=1: the contract traced end to end (cortex/core/raid/contract-trace.js): its own evidence log,
+        // its checkpoints, every row this run wrote to the ledger and RAID's queue row, in time order, per brick, holes named
+        if (query.trace) {
+          const CT = _require('../../cortex/core/raid/contract-trace.js');
+          const rows = run ? loadTable('idearium_phase_runs').filter(r => r.runId === run.runId) : [];
+          const qid = rows.map(r => r.raidQueueId).find(Boolean) || null;
+          let raid = null;
+          if (qid) { try { raid = _require('../../cortex/core/raid/contract-intake.js').listQueue().find(x => x.uuid === qid) || null; } catch (_) { raid = null; } }
+          const tr = CT.trace(L.payload, { runs: rows, raid });
+          return ok(res, { repoUuid: params.uuid, phase: query.phase, file, runId: run ? run.runId : null, raidQueueId: qid, trace: tr, lines: CT.lines(tr) });
+        }
         // §GT2 0.60.42 — where the newest run stands, from its last gate move
         const lastMove = _phaseRuns(params.uuid).filter(r => r.phase === query.phase && r.progress && (!run || r.runId === run.runId)).sort((a, b) => (b.ts || 0) - (a.ts || 0))[0];
         return ok(res, { repoUuid: params.uuid, phase: query.phase, file, progress: lastMove ? lastMove.progress : null, audit: _require('../../cortex/core/raid/contract-adapters.js').audit(L.payload, { root: _repoDiskDir(run ? run.targetRepo || params.uuid : params.uuid) || undefined }) });

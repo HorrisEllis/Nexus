@@ -158,6 +158,27 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(/contract audit —/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
   });
 
+  // 0.60.75 GW3 — James: "each contract tracked through the system using the event ledger, tagging and each gate". The
+  // same real build, traced: the contract's own log, its checkpoints and this run's ledger moves, in time order, per brick
+  await test('CP-05b', 'GW3: ?trace=1 traces the contract end to end — every brick with its agent, files and moves; holes named, never filled', async () => {
+    const g = await R('GET', `/api/repos/${repoUuid}/phases/contract?phase=${encodeURIComponent(ph.key)}&map=${encodeURIComponent(map)}&trace=1`, {});
+    assert.strictEqual(g.status, 200, JSON.stringify(g.json).slice(0, 300));
+    const d = g.json.data || g.json, tr = d.trace;
+    assert.ok(tr && tr.bricks.length === 2, JSON.stringify(tr).slice(0, 300));
+    assert.ok(d.runId, 'the run it traced is named');
+    for (const b of tr.bricks) {
+      assert.strictEqual(b.status, 'PASSED', b.id);
+      assert.ok(b.files.length >= 1, `${b.id} names its file`);
+      assert.ok(b.agents.length >= 1, `${b.id} names who built it: ${JSON.stringify(b)}`);
+      assert.ok(tr.steps.some(s => s.gate === b.id && s.source === 'ledger' && /^brick-/.test(s.what)), `${b.id} has a ledger move`);
+      assert.ok(tr.steps.some(s => s.gate === b.id && s.source === 'checkpoint'), `${b.id} has a checkpoint`);
+    }
+    const ats = tr.steps.map(s => s.at || 0); assert.deepStrictEqual(ats, [...ats].sort((x, y) => x - y), 'oldest first');
+    for (const h of tr.holes) assert.ok(tr.bricks.some(b => b.id === h.gate) && h.what, JSON.stringify(h));
+    assert.ok(d.lines.length === tr.steps.length || d.lines.length === 200);
+    assert.ok(/ppTrace/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')), 'the Plan panel has the trace button');
+  });
+
   // 0.60.27 AG1a — James: "as little as possible." The builds above, counted: each call's own row, tokens estimated at
   // the source, the same count on the route, the Plan and the command
   await test('CP-06', 'AG1a: the phase\'s agent calls and tokens are counted from the real build rows: route, Plan and command agree', async () => {

@@ -241,6 +241,8 @@ function _ppPlanned(l) {
     `\ngates:\n${l.audit.gates.map(g => `- ${g.id} (${g.type}) ${g.status}${(g.reasons || []).length ? ` — ${g.reasons.join('; ')}` : ''}`).join('\n')}`,
     (l.audit.splits || []).length ? `\nsplits:\n${l.audit.splits.map(x => `- ${x.gate} → ${x.into.join(', ')}`).join('\n')}` : '',
   ].filter(Boolean).join('\n'))}</pre></details>`);
+  // §GW3 0.60.75 — the contract traced end to end: every record, checkpoint and ledger move in time order, per brick, holes named
+  if (l.contract && l.phase && (l.audit || /^contract-|^brick-/.test(String(l.state)))) out.push(`<div class="pp-against"><button class="pp-btn" onclick="ppTrace(this, ${escapeHtml(JSON.stringify(l.phase))}, ${escapeHtml(JSON.stringify(l.map || ''))})">trace</button><div class="pp-trace"></div></div>`);
   if (l.coderOrder) out.push(`<div class="pp-against">coders: ${escapeHtml(l.coderOrder.join(' → '))}${l.note ? ` — ${escapeHtml(l.note)}` : ''}</div>`);
   return out.join('');
 }
@@ -479,3 +481,18 @@ async function planCodeBuild(specUuid) {
   catch (e) { toast(`not started: ${e.message}`, 'err'); }
   setTimeout(loadPlanPanel, 1500);
 }
+
+// §GW3 0.60.75 — James: "each contract tracked through the system using the event ledger, tagging and each gate". The
+// newest run's contract for this phase, traced (GET .../phases/contract?trace=1); the server builds it, this only shows it.
+async function ppTrace(btn, phase, map) {
+  const box = btn && btn.nextElementSibling; if (!box || !PLANP.uuid) return;
+  if (box.dataset.open === '1') { box.dataset.open = ''; box.innerHTML = ''; return; }
+  box.dataset.open = '1'; box.innerHTML = '<div class="pp-led-empty">tracing…</div>';
+  let d; try { d = await api(`/api/repos/${PLANP.uuid}/phases/contract?phase=${encodeURIComponent(phase)}${map ? `&map=${encodeURIComponent(map)}` : ''}&trace=1`, {}, 15000); }
+  catch (e) { box.innerHTML = `<div class="pp-against warn">could not trace: ${escapeHtml(e.message)}</div>`; return; }
+  const tr = d.trace || { bricks: [], holes: [], counts: {} };
+  box.innerHTML = `<div class="pp-against">${tr.counts.passed || 0}/${tr.counts.bricks || 0} bricks passed · ${tr.counts.steps || 0} steps · ${tr.counts.files || 0} files · ${tr.counts.commits || 0} commits${tr.holes.length ? ` · <span style="color:var(--amber)">${tr.holes.length} hole${tr.holes.length === 1 ? '' : 's'}</span>` : ' · no holes'}</div>`
+    + tr.holes.map(x => `<div class="pp-against warn">hole · ${escapeHtml(x.gate || '')}: ${escapeHtml(x.what)}</div>`).join('')
+    + `<details class="pp-reply" open><summary>timeline</summary><pre>${escapeHtml((d.lines || []).join('\n'))}</pre></details>`;
+}
+

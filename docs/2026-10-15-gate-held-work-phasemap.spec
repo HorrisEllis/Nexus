@@ -145,7 +145,7 @@ phases:
     proof: "kill the provider mid-brick: the next provider's first call is the next unread step; a fresh-chat policy still resumes the brick's steps; two bricks never share a run"
 
   GW3_a_contract_is_traced:
-    status: OPEN
+    status: "PARTLY BUILT 0.60.75 — the trace (cortex/core/raid/contract-trace.js, ?trace=1, repo contract --trace, the Plan panel). Open: contract:<id>/gate:<id> on ledger rows, bus events and file writes with before/after hashes"
     systems: [core, cortex, idearium, versionium, intelligence]
     files: [lib/component-ledger.js, cortex/core/raid/contract-gates.js, lib/run-state.js, guardian/lib/response-sink.js, lib/repo-versions.js, lib/ledger-fanin/]
     depends_on: [GW2_the_run_follows_the_gate]
@@ -607,4 +607,14 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 # To confirm: "It’s analysis." The coder reads it as agreeing that the analysis behind the recommendation holds. Another reading:
 # that a brick is (or includes) an analysis step, i.e. a brick analyses before it builds. Not acted on until he says which.
 # Unblocks: GW1 (the baton), GW2 (the run follows the gate), and GW3 (a contract traced) on the brick as the unit.
+
+# ## ADDENDUM 2026-10-16 (e) — GW3 first slice built (0.60.75)
+# Built: cortex/core/raid/contract-trace.js trace(p, { runs, raid }) joins what is already written (§7.6, no second record):
+# the contract's evidence_log, its checkpoints (input hashes, commit), every idearium_phase_runs row of the run (GT2 brick
+# moves: provider, class, commit, file), and RAID's queue row. Ordered oldest first, per brick: agents, files (a rewound one
+# too), commits, attempts. Holes named, never filled: a PASSED brick with no commit, a move with no agent, a brick that ran
+# by its state with no ledger move, a checkpoint commit on no move. Route GET /api/repos/:uuid/phases/contract?trace=1;
+# command `repo contract <repo> <phase> --trace`; the Plan panel's "trace" button on a contract row.
+# Not built yet (GW3 remains open for it): contract:<id> and gate:<id> written onto lib/component-ledger.js rows and bus
+# events (contractUuid is a column nobody passes), each file write with before and after hashes, the .response node per move.
 

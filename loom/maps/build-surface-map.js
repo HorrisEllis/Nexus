@@ -120,6 +120,9 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('idearium/api/index.js'), I('cortex/core/raid/contract-trace.js'), '§GW3 0.60.75 repo.phases.contract ?trace=1 — trace(), lines()'],
+  [I('idearium/api/index.js'), I('cortex/core/raid/contract-intake.js'), '§GW3 0.60.75 ?trace=1 — listQueue(): RAID\'s row for the run'],
+  [I('idearium/ui/js/plan-panel.js'), I('idearium/api/index.js'), '§GW3 0.60.75 ppTrace — HTTP GET /phases/contract?trace=1'],
   [I('idearium/api/index.js'), I('idearium/lib/projects.cjs'), '§COSA10 0.60.74 projects.overview: GET /api/my-projects'],
   [I('idearium/api/index.js'), I('lib/repo-notes.js'), '§COSA10 0.60.74 projects.overview notesOf → counts()'],
   [I('idearium/api/index.js'), I('lib/activity-log/compartment.js'), '§COSA10 0.60.74 projects.overview activityOf → list(u, {limit:1})'],
