@@ -360,6 +360,7 @@ const SUITES = [
   'test-cg-attention-focus.test.js', // 0.60.45 — the provider tab stops fighting the person (focus, sign-in, Escape)
   'test-net-routes.test.js',          // 0.60.60 — net routes + Snowflake transport (CLI first): policy, fail-closed PAC, fake tor, agent read-only
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
+  'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
   'test-scroll-until.test.js',       // 0.60.56 — the slow scroll step (ErosmancerOS wheel, arrow keys, page) and the Read-one-chat template
   'test-chat-crawl-plan.test.js',    // 0.60.55 — the personal-chat crawl plan: nothing missed, the stopping edge, pace, stop rules
   'test-gig-ledger.test.js',         // 0.60.53 — the Fiverr ledger keeps only what checks out
@@ -369,6 +370,8 @@ const SUITES = [
   'test-update-script.test.js', // 0.60.48 — npm run update: the latest Nexus without a zip
   'test-capability-spec.test.js', // 0.60.49 CS1 — a spec per capability, whose surface is the gate (CK-254)
   'test-semantic-page-tree.test.js', // 0.60.49 SP1 — the page as a semantic tree for the browser agent
+  'test-semantic-field-map.test.js', // 0.60.50 SP2 — picked fields found by semantic address after class churn
+  'test-tool-required-alias.test.js', // 0.60.50 — a required tool parameter named the model's own way still arrives
   'test-spec-gaps-intelligence.test.js', // 0.60.49 — every spec gap goes through the intelligence gap system
   'test-gate-versioning.test.js', // 0.60.39 GS1 — a snapshot per gate: commit, rewind before a retry, compare, replay decisions
   'test-raid-runs-contract.test.js', // 0.60.36 RD0 — RAID runs the .contract: its gates before, bricks, verdict, self-heal

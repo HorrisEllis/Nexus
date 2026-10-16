@@ -238,3 +238,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     instead of accepting a second, foreign one. "nexus is recursive, builds itself, using itself. the same architecture
     on every level" (his words, genesis 1.4.0) is what this decision enforces.
   - **Evidence:** `tests/modules/test-spec-pipeline.test.js` SP-08..08c; `CHANGELOG-0.60.68.md`.
+- **2026-10-16: "alright." (choosing SP2 before the gap sweep)**
+  - **Context:** two of his runs failed the same way: a provider changed its markup and the saved CSS selectors
+    stopped matching (Claude's reply not found), or a pick saved the wrong element (ChatGPT's placeholder as the send
+    button). He had already asked for a semantic tree for Clear Glass's agent; SP2 puts it under the provider fields.
+  - **What it shows:** ordering by what broke in real use. He took the fix for the failure his own log showed before
+    the bookkeeping sweep, and the address he asked for now answers both failures: class churn (found by role and name)
+    and wrong picks (refused by role).
+  - **Evidence:** `tests/modules/test-semantic-field-map.test.js` (5/5); `CHANGELOG-0.60.70.md`.
