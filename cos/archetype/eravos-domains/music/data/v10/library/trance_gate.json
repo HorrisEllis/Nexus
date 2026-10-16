@@ -1,0 +1,16 @@
+{
+  "n": "Trance Gate",
+  "cat": "CHORDS",
+  "s": "chord",
+  "c": "#00ff88",
+  "i": "\u2295",
+  "bpm": 138,
+  "key": "Dm",
+  "genre": "Trance",
+  "tags": [
+    "gate",
+    "pulsing",
+    "classic"
+  ],
+  "_file": "trance_gate.json"
+}

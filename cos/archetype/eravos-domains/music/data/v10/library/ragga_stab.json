@@ -1,0 +1,16 @@
+{
+  "n": "Ragga Stab",
+  "cat": "LEADS",
+  "s": "stab",
+  "c": "#ff8800",
+  "i": "\ud83d\udd25",
+  "bpm": 160,
+  "key": "F#m",
+  "genre": "Jungle",
+  "tags": [
+    "ragga",
+    "choppy",
+    "jungle"
+  ],
+  "_file": "ragga_stab.json"
+}

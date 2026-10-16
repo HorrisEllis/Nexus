@@ -1,0 +1,1875 @@
+/* data/library/library.json (v10, kept verbatim as data — 117 entries) */
+window.ERAVOS_DATA = window.ERAVOS_DATA || {};
+window.ERAVOS_DATA.library = [
+{
+"n": "Bunker Kick",
+"cat": "KICKS",
+"s": "kick",
+"c": "#ff6b00",
+"i": "⚡",
+"bpm": 140,
+"key": "C",
+"genre": "Techno",
+"tags": [
+"dark",
+"industrial",
+"hard"
+],
+"_file": "bunker_kick.json"
+},
+{
+"n": "Steel Drum",
+"cat": "KICKS",
+"s": "kick",
+"c": "#ff4400",
+"i": "🔩",
+"bpm": 145,
+"key": "C",
+"genre": "Techno",
+"tags": [
+"metallic",
+"punchy"
+],
+"_file": "steel_drum.json"
+},
+{
+"n": "Concrete Kick",
+"cat": "KICKS",
+"s": "kick",
+"c": "#cc3300",
+"i": "⊘",
+"bpm": 150,
+"key": "C",
+"genre": "Industrial",
+"tags": [
+"hard",
+"gritty"
+],
+"_file": "concrete_kick.json"
+},
+{
+"n": "Gated Snare",
+"cat": "DRUMS",
+"s": "snare",
+"c": "#ffaa00",
+"i": "💥",
+"bpm": 140,
+"key": "C",
+"genre": "Techno",
+"tags": [
+"gated",
+"tight"
+],
+"_file": "gated_snare.json"
+},
+{
+"n": "Iron Rim",
+"cat": "DRUMS",
+"s": "rim",
+"c": "#ff6600",
+"i": "🔔",
+"bpm": 135,
+"key": "C",
+"genre": "Techno",
+"tags": [
+"metallic",
+"click"
+],
+"_file": "iron_rim.json"
+},
+{
+"n": "Machine Hat",
+"cat": "DRUMS",
+"s": "hat",
+"c": "#ffdd00",
+"i": "⚙",
+"bpm": 140,
+"key": "C",
+"genre": "Techno",
+"tags": [
+"mechanical",
+"tight"
+],
+"_file": "machine_hat.json"
+},
+{
+"n": "Neuro Step",
+"cat": "BASS",
+"s": "reese",
+"c": "#00aaff",
+"i": "⚡",
+"bpm": 140,
+"key": "Am",
+"genre": "Techno",
+"tags": [
+"neuro",
+"dark",
+"reese"
+],
+"_file": "neuro_step.json"
+},
+{
+"n": "Dark Matter",
+"cat": "BASS",
+"s": "bass",
+"c": "#330066",
+"i": "◉",
+"bpm": 138,
+"key": "Dm",
+"genre": "Techno",
+"tags": [
+"dark",
+"sub",
+"deep"
+],
+"_file": "dark_matter.json"
+},
+{
+"n": "Chrome Bottom",
+"cat": "BASS",
+"s": "bass",
+"c": "#aaaaff",
+"i": "∿",
+"bpm": 142,
+"key": "Em",
+"genre": "Techno",
+"tags": [
+"chrome",
+"metallic",
+"industrial"
+],
+"_file": "chrome_bottom.json"
+},
+{
+"n": "Acid Tekno",
+"cat": "BASS",
+"s": "acid",
+"c": "#00ff44",
+"i": "⚗",
+"bpm": 143,
+"key": "Am",
+"genre": "Techno",
+"tags": [
+"acid",
+"303",
+"squelch"
+],
+"_file": "acid_tekno.json"
+},
+{
+"n": "Berghain Stab",
+"cat": "LEADS",
+"s": "stab",
+"c": "#ffffff",
+"i": "✦",
+"bpm": 145,
+"key": "Cm",
+"genre": "Techno",
+"tags": [
+"minimal",
+"dark",
+"Berlin"
+],
+"_file": "berghain_stab.json"
+},
+{
+"n": "Warehouse Riff",
+"cat": "LEADS",
+"s": "synth",
+"c": "#888888",
+"i": "🏭",
+"bpm": 140,
+"key": "Am",
+"genre": "Techno",
+"tags": [
+"dark",
+"warehouse",
+"Detroit"
+],
+"_file": "warehouse_riff.json"
+},
+{
+"n": "Amen Break",
+"cat": "BREAKS",
+"s": "crash",
+"c": "#ff0000",
+"i": "🔴",
+"bpm": 174,
+"key": "C",
+"genre": "Jungle",
+"tags": [
+"amen",
+"break",
+"classic"
+],
+"_file": "amen_break.json"
+},
+{
+"n": "Think Break",
+"cat": "BREAKS",
+"s": "crash",
+"c": "#ff3300",
+"i": "💣",
+"bpm": 130,
+"key": "C",
+"genre": "Breakbeat",
+"tags": [
+"think",
+"funk",
+"break"
+],
+"_file": "think_break.json"
+},
+{
+"n": "Hardcore Kick",
+"cat": "KICKS",
+"s": "kick",
+"c": "#ff0000",
+"i": "💢",
+"bpm": 180,
+"key": "C",
+"genre": "Hardcore",
+"tags": [
+"distorted",
+"hard",
+"peak"
+],
+"_file": "hardcore_kick.json"
+},
+{
+"n": "Rave Stab",
+"cat": "LEADS",
+"s": "stab",
+"c": "#ff44ff",
+"i": "⚡",
+"bpm": 138,
+"key": "Bm",
+"genre": "Rave",
+"tags": [
+"rave",
+"hoover",
+"classic"
+],
+"_file": "rave_stab.json"
+},
+{
+"n": "Hoover Lead",
+"cat": "LEADS",
+"s": "synth",
+"c": "#ff00ff",
+"i": "🌀",
+"bpm": 135,
+"key": "Am",
+"genre": "Rave",
+"tags": [
+"hoover",
+"Belgian",
+"classic"
+],
+"_file": "hoover_lead.json"
+},
+{
+"n": "Piano House",
+"cat": "CHORDS",
+"s": "chord",
+"c": "#ffffff",
+"i": "🎹",
+"bpm": 128,
+"key": "Gm",
+"genre": "House",
+"tags": [
+"piano",
+"uplifting",
+"classic"
+],
+"_file": "piano_house.json"
+},
+{
+"n": "Jungle Bass",
+"cat": "BASS",
+"s": "bass",
+"c": "#00ff88",
+"i": "🦁",
+"bpm": 170,
+"key": "Dm",
+"genre": "Jungle",
+"tags": [
+"choppy",
+"fast",
+"jungle"
+],
+"_file": "jungle_bass.json"
+},
+{
+"n": "Ragga Stab",
+"cat": "LEADS",
+"s": "stab",
+"c": "#ff8800",
+"i": "🔥",
+"bpm": 160,
+"key": "F#m",
+"genre": "Jungle",
+"tags": [
+"ragga",
+"choppy",
+"jungle"
+],
+"_file": "ragga_stab.json"
+},
+{
+"n": "Hardcore Riff",
+"cat": "LEADS",
+"s": "synth",
+"c": "#ff2200",
+"i": "🔥",
+"bpm": 180,
+"key": "Em",
+"genre": "Hardcore",
+"tags": [
+"gabber",
+"hard",
+"NL"
+],
+"_file": "hardcore_riff.json"
+},
+{
+"n": "303 Acid",
+"cat": "BASS",
+"s": "acid",
+"c": "#00ff44",
+"i": "⚗",
+"bpm": 130,
+"key": "Am",
+"genre": "Acid",
+"tags": [
+"303",
+"Roland",
+"classic"
+],
+"_file": "303_acid.json"
+},
+{
+"n": "909 Clap",
+"cat": "DRUMS",
+"s": "clap",
+"c": "#ffaaff",
+"i": "👏",
+"bpm": 128,
+"key": "C",
+"genre": "House",
+"tags": [
+"909",
+"classic",
+"snappy"
+],
+"_file": "909_clap.json"
+},
+{
+"n": "808 Boom",
+"cat": "BASS",
+"s": "808",
+"c": "#ff6b00",
+"i": "💣",
+"bpm": 140,
+"key": "C",
+"genre": "Trap",
+"tags": [
+"808",
+"sub",
+"trap"
+],
+"_file": "808_boom.json"
+},
+{
+"n": "Wobble King",
+"cat": "BASS",
+"s": "wobble",
+"c": "#aa44ff",
+"i": "〜",
+"bpm": 140,
+"key": "Am",
+"genre": "Dubstep",
+"tags": [
+"wobble",
+"LFO",
+"classic"
+],
+"_file": "wobble_king.json"
+},
+{
+"n": "Neuro Bass",
+"cat": "BASS",
+"s": "reese",
+"c": "#8800ff",
+"i": "⚡",
+"bpm": 140,
+"key": "Dm",
+"genre": "Dubstep",
+"tags": [
+"neuro",
+"growl",
+"dark"
+],
+"_file": "neuro_bass.json"
+},
+{
+"n": "Growl Bass",
+"cat": "BASS",
+"s": "wobble",
+"c": "#660099",
+"i": "🐉",
+"bpm": 140,
+"key": "Em",
+"genre": "Dubstep",
+"tags": [
+"growl",
+"FM",
+"aggressive"
+],
+"_file": "growl_bass.json"
+},
+{
+"n": "Brostep Riff",
+"cat": "BASS",
+"s": "wobble",
+"c": "#ff44ff",
+"i": "🦅",
+"bpm": 140,
+"key": "Bm",
+"genre": "Dubstep",
+"tags": [
+"brostep",
+"Skrillex",
+"scream"
+],
+"_file": "brostep_riff.json"
+},
+{
+"n": "Sub Quake",
+"cat": "BASS",
+"s": "bass",
+"c": "#440088",
+"i": "🌊",
+"bpm": 140,
+"key": "C",
+"genre": "Dubstep",
+"tags": [
+"sub",
+"earthquake",
+"deep"
+],
+"_file": "sub_quake.json"
+},
+{
+"n": "Laser Cannon",
+"cat": "LEADS",
+"s": "laser",
+"c": "#ff44aa",
+"i": "🔫",
+"bpm": 140,
+"key": "Am",
+"genre": "Dubstep",
+"tags": [
+"laser",
+"scifi",
+"zap"
+],
+"_file": "laser_cannon.json"
+},
+{
+"n": "Pew Pew",
+"cat": "LEADS",
+"s": "laser",
+"c": "#44ffff",
+"i": "👾",
+"bpm": 140,
+"key": "C",
+"genre": "Dubstep",
+"tags": [
+"8bit",
+"zap",
+"pew"
+],
+"_file": "pew_pew.json"
+},
+{
+"n": "Void Scream",
+"cat": "LEADS",
+"s": "synth",
+"c": "#220033",
+"i": "😱",
+"bpm": 140,
+"key": "Am",
+"genre": "Dubstep",
+"tags": [
+"dark",
+"scream",
+"void"
+],
+"_file": "void_scream.json"
+},
+{
+"n": "Chaos Drop",
+"cat": "BASS",
+"s": "wobble",
+"c": "#880000",
+"i": "💀",
+"bpm": 140,
+"key": "Cm",
+"genre": "Dubstep",
+"tags": [
+"drop",
+"chaos",
+"hard"
+],
+"_file": "chaos_drop.json"
+},
+{
+"n": "Half Time Snare",
+"cat": "DRUMS",
+"s": "snare",
+"c": "#aa4400",
+"i": "🥁",
+"bpm": 140,
+"key": "C",
+"genre": "Dubstep",
+"tags": [
+"half-time",
+"heavy"
+],
+"_file": "half_time_snare.json"
+},
+{
+"n": "Reese Deep",
+"cat": "BASS",
+"s": "reese",
+"c": "#000088",
+"i": "∞",
+"bpm": 138,
+"key": "Am",
+"genre": "DnB",
+"tags": [
+"reese",
+"deep",
+"classic"
+],
+"_file": "reese_deep.json"
+},
+{
+"n": "Liquid Pluck",
+"cat": "LEADS",
+"s": "pluck",
+"c": "#00ccff",
+"i": "💧",
+"bpm": 174,
+"key": "Gm",
+"genre": "DnB",
+"tags": [
+"liquid",
+"melodic",
+"smooth"
+],
+"_file": "liquid_pluck.json"
+},
+{
+"n": "Sub Earthquake",
+"cat": "BASS",
+"s": "bass",
+"c": "#003366",
+"i": "🌊",
+"bpm": 174,
+"key": "Dm",
+"genre": "DnB",
+"tags": [
+"sub",
+"heavy",
+"earthquake"
+],
+"_file": "sub_earthquake.json"
+},
+{
+"n": "Amen Chop",
+"cat": "BREAKS",
+"s": "crash",
+"c": "#ff4400",
+"i": "✂",
+"bpm": 174,
+"key": "C",
+"genre": "DnB",
+"tags": [
+"amen",
+"chop",
+"jungle"
+],
+"_file": "amen_chop.json"
+},
+{
+"n": "Neurofunk Reese",
+"cat": "BASS",
+"s": "reese",
+"c": "#220055",
+"i": "🧠",
+"bpm": 174,
+"key": "Am",
+"genre": "DnB",
+"tags": [
+"neuro",
+"reese",
+"dark"
+],
+"_file": "neurofunk_reese.json"
+},
+{
+"n": "Funk Step",
+"cat": "BASS",
+"s": "bass",
+"c": "#44ff44",
+"i": "🕺",
+"bpm": 174,
+"key": "Fm",
+"genre": "DnB",
+"tags": [
+"funky",
+"steppy",
+"groove"
+],
+"_file": "funk_step.json"
+},
+{
+"n": "Roller Kick",
+"cat": "KICKS",
+"s": "kick",
+"c": "#ff6600",
+"i": "🥁",
+"bpm": 174,
+"key": "C",
+"genre": "DnB",
+"tags": [
+"rolling",
+"tight",
+"punchy"
+],
+"_file": "roller_kick.json"
+},
+{
+"n": "Neon Riff",
+"cat": "LEADS",
+"s": "synth",
+"c": "#ff44aa",
+"i": "⚡",
+"bpm": 120,
+"key": "Am",
+"genre": "Synthwave",
+"tags": [
+"neon",
+"retro",
+"80s"
+],
+"_file": "neon_riff.json"
+},
+{
+"n": "Grid Runner",
+"cat": "LEADS",
+"s": "pluck",
+"c": "#aaff00",
+"i": "⚡",
+"bpm": 128,
+"key": "Em",
+"genre": "Synthwave",
+"tags": [
+"Tron",
+"grid",
+"retro"
+],
+"_file": "grid_runner.json"
+},
+{
+"n": "Midnight Chase",
+"cat": "LEADS",
+"s": "synth",
+"c": "#00aaff",
+"i": "🌙",
+"bpm": 122,
+"key": "Dm",
+"genre": "Synthwave",
+"tags": [
+"cinematic",
+"dark",
+"drive"
+],
+"_file": "midnight_chase.json"
+},
+{
+"n": "VHS Shimmer",
+"cat": "PADS",
+"s": "pad",
+"c": "#ff88ff",
+"i": "📼",
+"bpm": 100,
+"key": "Cm",
+"genre": "Synthwave",
+"tags": [
+"dreamy",
+"shimmer",
+"80s"
+],
+"_file": "vhs_shimmer.json"
+},
+{
+"n": "Driver Lead",
+"cat": "LEADS",
+"s": "synth",
+"c": "#ff4400",
+"i": "🚗",
+"bpm": 118,
+"key": "Gm",
+"genre": "Synthwave",
+"tags": [
+"Kavinsky",
+"dark",
+"driving"
+],
+"_file": "driver_lead.json"
+},
+{
+"n": "Turbo Boost",
+"cat": "LEADS",
+"s": "synth",
+"c": "#00ffcc",
+"i": "⚡",
+"bpm": 130,
+"key": "Fm",
+"genre": "Synthwave",
+"tags": [
+"power",
+"boost",
+"outrun"
+],
+"_file": "turbo_boost.json"
+},
+{
+"n": "Retrowave Pad",
+"cat": "PADS",
+"s": "pad",
+"c": "#8844ff",
+"i": "🌅",
+"bpm": 110,
+"key": "Am",
+"genre": "Synthwave",
+"tags": [
+"pad",
+"lush",
+"retrowave"
+],
+"_file": "retrowave_pad.json"
+},
+{
+"n": "Outrun Bass",
+"cat": "BASS",
+"s": "bass",
+"c": "#ff0088",
+"i": "🏎",
+"bpm": 118,
+"key": "Am",
+"genre": "Synthwave",
+"tags": [
+"outrun",
+"driving",
+"bass"
+],
+"_file": "outrun_bass.json"
+},
+{
+"n": "Hyperspace",
+"cat": "LEADS",
+"s": "synth",
+"c": "#8888ff",
+"i": "🚀",
+"bpm": 132,
+"key": "Bm",
+"genre": "Synthwave",
+"tags": [
+"space",
+"fast",
+"warp"
+],
+"_file": "hyperspace.json"
+},
+{
+"n": "Void Choir",
+"cat": "PADS",
+"s": "pad",
+"c": "#220044",
+"i": "🌌",
+"bpm": 90,
+"key": "Cm",
+"genre": "Synthwave",
+"tags": [
+"choir",
+"dark",
+"cosmic"
+],
+"_file": "void_choir.json"
+},
+{
+"n": "Blade Keys",
+"cat": "CHORDS",
+"s": "chord",
+"c": "#88aaff",
+"i": "🔪",
+"bpm": 115,
+"key": "Am",
+"genre": "Synthwave",
+"tags": [
+"Blade Runner",
+"cinematic"
+],
+"_file": "blade_keys.json"
+},
+{
+"n": "Glass Bells",
+"cat": "LEADS",
+"s": "pluck",
+"c": "#ccffff",
+"i": "🔔",
+"bpm": 100,
+"key": "Dm",
+"genre": "Synthwave",
+"tags": [
+"bells",
+"glass",
+"ethereal"
+],
+"_file": "glass_bells.json"
+},
+{
+"n": "Deep Chord",
+"cat": "CHORDS",
+"s": "chord",
+"c": "#0044aa",
+"i": "🌊",
+"bpm": 122,
+"key": "Fm",
+"genre": "Deep House",
+"tags": [
+"deep",
+"warm",
+"soulful"
+],
+"_file": "deep_chord.json"
+},
+{
+"n": "Organ Stab",
+"cat": "CHORDS",
+"s": "chord",
+"c": "#886600",
+"i": "🎹",
+"bpm": 124,
+"key": "Am",
+"genre": "House",
+"tags": [
+"organ",
+"gospel",
+"classic"
+],
+"_file": "organ_stab.json"
+},
+{
+"n": "Filtered Stab",
+"cat": "CHORDS",
+"s": "chord",
+"c": "#004488",
+"i": "⚗",
+"bpm": 126,
+"key": "Dm",
+"genre": "Deep House",
+"tags": [
+"filtered",
+"warm",
+"deep"
+],
+"_file": "filtered_stab.json"
+},
+{
+"n": "Soulful Loop",
+"cat": "CHORDS",
+"s": "chord",
+"c": "#884400",
+"i": "🎷",
+"bpm": 120,
+"key": "Gm",
+"genre": "Deep House",
+"tags": [
+"soul",
+"jazz",
+"sample"
+],
+"_file": "soulful_loop.json"
+},
+{
+"n": "Late Night",
+"cat": "PADS",
+"s": "pad",
+"c": "#001133",
+"i": "🌃",
+"bpm": 118,
+"key": "Bm",
+"genre": "Deep House",
+"tags": [
+"late night",
+"atmospheric"
+],
+"_file": "late_night.json"
+},
+{
+"n": "4AM Kick",
+"cat": "KICKS",
+"s": "kick",
+"c": "#442200",
+"i": "🌅",
+"bpm": 122,
+"key": "C",
+"genre": "Deep House",
+"tags": [
+"deep",
+"warm",
+"4AM"
+],
+"_file": "4am_kick.json"
+},
+{
+"n": "Arpegg Rise",
+"cat": "ARPS",
+"s": "arp",
+"c": "#00ffaa",
+"i": "↑",
+"bpm": 138,
+"key": "Am",
+"genre": "Trance",
+"tags": [
+"uplifting",
+"rise",
+"classic"
+],
+"_file": "arpegg_rise.json"
+},
+{
+"n": "Chord Stab 7th",
+"cat": "CHORDS",
+"s": "chord",
+"c": "#aaffaa",
+"i": "🌈",
+"bpm": 138,
+"key": "Gm",
+"genre": "Trance",
+"tags": [
+"7th",
+"emotional",
+"uplifting"
+],
+"_file": "chord_stab_7th.json"
+},
+{
+"n": "Supersaw Lead",
+"cat": "LEADS",
+"s": "synth",
+"c": "#ff8800",
+"i": "⚡",
+"bpm": 138,
+"key": "Am",
+"genre": "Trance",
+"tags": [
+"supersaw",
+"power",
+"lead"
+],
+"_file": "supersaw_lead.json"
+},
+{
+"n": "Trance Gate",
+"cat": "CHORDS",
+"s": "chord",
+"c": "#00ff88",
+"i": "⊕",
+"bpm": 138,
+"key": "Dm",
+"genre": "Trance",
+"tags": [
+"gate",
+"pulsing",
+"classic"
+],
+"_file": "trance_gate.json"
+},
+{
+"n": "Pluck Rise",
+"cat": "LEADS",
+"s": "pluck",
+"c": "#88ffff",
+"i": "↗",
+"bpm": 132,
+"key": "Em",
+"genre": "Trance",
+"tags": [
+"pluck",
+"uplifting",
+"melodic"
+],
+"_file": "pluck_rise.json"
+},
+{
+"n": "Prog Break",
+"cat": "BREAKS",
+"s": "crash",
+"c": "#ffaa00",
+"i": "🌊",
+"bpm": 128,
+"key": "C",
+"genre": "Progressive",
+"tags": [
+"breakdown",
+"emotional"
+],
+"_file": "prog_break.json"
+},
+{
+"n": "Anthem Chord",
+"cat": "CHORDS",
+"s": "chord",
+"c": "#ffdd44",
+"i": "🎺",
+"bpm": 140,
+"key": "F",
+"genre": "Trance",
+"tags": [
+"anthem",
+"epic",
+"emotional"
+],
+"_file": "anthem_chord.json"
+},
+{
+"n": "Click Tick",
+"cat": "DRUMS",
+"s": "rim",
+"c": "#888888",
+"i": "•",
+"bpm": 126,
+"key": "C",
+"genre": "Minimal",
+"tags": [
+"click",
+"minimal",
+"micro"
+],
+"_file": "click_tick.json"
+},
+{
+"n": "Micro Bass",
+"cat": "BASS",
+"s": "bass",
+"c": "#444444",
+"i": "—",
+"bpm": 124,
+"key": "Am",
+"genre": "Minimal",
+"tags": [
+"minimal",
+"subtle",
+"micro"
+],
+"_file": "micro_bass.json"
+},
+{
+"n": "Shaker Loop",
+"cat": "DRUMS",
+"s": "hat",
+"c": "#996633",
+"i": "🎲",
+"bpm": 126,
+"key": "C",
+"genre": "Minimal",
+"tags": [
+"shaker",
+"groove",
+"minimal"
+],
+"_file": "shaker_loop.json"
+},
+{
+"n": "Ping Pad",
+"cat": "PADS",
+"s": "pad",
+"c": "#004433",
+"i": "·",
+"bpm": 120,
+"key": "Dm",
+"genre": "Minimal",
+"tags": [
+"minimal",
+"ping",
+"subtle"
+],
+"_file": "ping_pad.json"
+},
+{
+"n": "Tool Feed",
+"cat": "LEADS",
+"s": "synth",
+"c": "#224422",
+"i": "⚙",
+"bpm": 130,
+"key": "Am",
+"genre": "Minimal",
+"tags": [
+"Tool-inspired",
+"prog",
+"heavy"
+],
+"_file": "tool_feed.json"
+},
+{
+"n": "Steel Hit",
+"cat": "DRUMS",
+"s": "crash",
+"c": "#886644",
+"i": "🔩",
+"bpm": 145,
+"key": "C",
+"genre": "Industrial",
+"tags": [
+"metal",
+"crash",
+"industrial"
+],
+"_file": "steel_hit.json"
+},
+{
+"n": "Machine Pulse",
+"cat": "BASS",
+"s": "bass",
+"c": "#443322",
+"i": "⚙",
+"bpm": 148,
+"key": "Cm",
+"genre": "Industrial",
+"tags": [
+"machine",
+"pulsing",
+"dark"
+],
+"_file": "machine_pulse.json"
+},
+{
+"n": "Rivet Gun",
+"cat": "DRUMS",
+"s": "perc",
+"c": "#776655",
+"i": "🔫",
+"bpm": 140,
+"key": "C",
+"genre": "Industrial",
+"tags": [
+"metal",
+"percussion",
+"hard"
+],
+"_file": "rivet_gun.json"
+},
+{
+"n": "NIN Lead",
+"cat": "LEADS",
+"s": "synth",
+"c": "#cc2200",
+"i": "⚡",
+"bpm": 140,
+"key": "Dm",
+"genre": "Industrial",
+"tags": [
+"Nine Inch Nails",
+"dark",
+"distorted"
+],
+"_file": "nin_lead.json"
+},
+{
+"n": "Einstürzende",
+"cat": "DRUMS",
+"s": "crash",
+"c": "#664422",
+"i": "🏭",
+"bpm": 120,
+"key": "C",
+"genre": "Industrial",
+"tags": [
+"noise",
+"experimental",
+"Berlin"
+],
+"_file": "einstürzende.json"
+},
+{
+"n": "Void Drone",
+"cat": "DRONES",
+"s": "pad",
+"c": "#000033",
+"i": "∞",
+"bpm": 60,
+"key": "Am",
+"genre": "Ambient",
+"tags": [
+"drone",
+"dark",
+"infinite"
+],
+"_file": "void_drone.json"
+},
+{
+"n": "Shimmer Pad",
+"cat": "PADS",
+"s": "pad",
+"c": "#8899ff",
+"i": "✨",
+"bpm": 80,
+"key": "Cm",
+"genre": "Ambient",
+"tags": [
+"shimmer",
+"reverb",
+"ethereal"
+],
+"_file": "shimmer_pad.json"
+},
+{
+"n": "Arctic Breath",
+"cat": "PADS",
+"s": "pad",
+"c": "#aaccff",
+"i": "❄",
+"bpm": 70,
+"key": "Dm",
+"genre": "Ambient",
+"tags": [
+"arctic",
+"cold",
+"vast"
+],
+"_file": "arctic_breath.json"
+},
+{
+"n": "Neural Static",
+"cat": "DRONES",
+"s": "pad",
+"c": "#334433",
+"i": "≋",
+"bpm": 0,
+"key": "C",
+"genre": "Ambient",
+"tags": [
+"static",
+"noise",
+"texture"
+],
+"_file": "neural_static.json"
+},
+{
+"n": "Tape Hiss",
+"cat": "DRONES",
+"s": "pad",
+"c": "#886655",
+"i": "📼",
+"bpm": 0,
+"key": "C",
+"genre": "Ambient",
+"tags": [
+"tape",
+"vintage",
+"lo-fi"
+],
+"_file": "tape_hiss.json"
+},
+{
+"n": "Rain Machine",
+"cat": "DRONES",
+"s": "pad",
+"c": "#334455",
+"i": "🌧",
+"bpm": 0,
+"key": "C",
+"genre": "Ambient",
+"tags": [
+"rain",
+"nature",
+"texture"
+],
+"_file": "rain_machine.json"
+},
+{
+"n": "Trap Hat",
+"cat": "DRUMS",
+"s": "hat",
+"c": "#ffcc00",
+"i": "🎩",
+"bpm": 140,
+"key": "C",
+"genre": "Trap",
+"tags": [
+"hi-hat",
+"roll",
+"trap"
+],
+"_file": "trap_hat.json"
+},
+{
+"n": "808 Slide",
+"cat": "BASS",
+"s": "808",
+"c": "#ff4400",
+"i": "📉",
+"bpm": 140,
+"key": "Am",
+"genre": "Trap",
+"tags": [
+"808",
+"slide",
+"pitch"
+],
+"_file": "808_slide.json"
+},
+{
+"n": "Banger Kick",
+"cat": "KICKS",
+"s": "kick",
+"c": "#ff3300",
+"i": "💢",
+"bpm": 140,
+"key": "C",
+"genre": "Trap",
+"tags": [
+"punchy",
+"loud",
+"banger"
+],
+"_file": "banger_kick.json"
+},
+{
+"n": "Dark Choir",
+"cat": "PADS",
+"s": "pad",
+"c": "#330033",
+"i": "👻",
+"bpm": 130,
+"key": "Cm",
+"genre": "Trap",
+"tags": [
+"dark",
+"choir",
+"horror"
+],
+"_file": "dark_choir.json"
+},
+{
+"n": "Drill Arp",
+"cat": "ARPS",
+"s": "arp",
+"c": "#444444",
+"i": "🔪",
+"bpm": 140,
+"key": "Dm",
+"genre": "Drill",
+"tags": [
+"UK drill",
+"dark",
+"minor"
+],
+"_file": "drill_arp.json"
+},
+{
+"n": "Cloud Rap Pad",
+"cat": "PADS",
+"s": "pad",
+"c": "#aabbff",
+"i": "☁",
+"bpm": 90,
+"key": "Am",
+"genre": "Cloud Rap",
+"tags": [
+"dreamy",
+"lo-fi",
+"cloud"
+],
+"_file": "cloud_rap_pad.json"
+},
+{
+"n": "Juke Kick",
+"cat": "KICKS",
+"s": "kick",
+"c": "#ff4400",
+"i": "👟",
+"bpm": 160,
+"key": "C",
+"genre": "Footwork",
+"tags": [
+"footwork",
+"Chicago",
+"fast"
+],
+"_file": "juke_kick.json"
+},
+{
+"n": "Juke Clap",
+"cat": "DRUMS",
+"s": "clap",
+"c": "#ffaa00",
+"i": "👏",
+"bpm": 160,
+"key": "C",
+"genre": "Footwork",
+"tags": [
+"syncopated",
+"juke",
+"fast"
+],
+"_file": "juke_clap.json"
+},
+{
+"n": "Sample Chop",
+"cat": "LEADS",
+"s": "synth",
+"c": "#00ff88",
+"i": "✂",
+"bpm": 160,
+"key": "Am",
+"genre": "Footwork",
+"tags": [
+"chopped",
+"vocal",
+"footwork"
+],
+"_file": "sample_chop.json"
+},
+{
+"n": "Autechre Hat",
+"cat": "DRUMS",
+"s": "hat",
+"c": "#444466",
+"i": "⚙",
+"bpm": 130,
+"key": "C",
+"genre": "IDM",
+"tags": [
+"glitch",
+"polyrhythm",
+"complex"
+],
+"_file": "autechre_hat.json"
+},
+{
+"n": "Aphex Acid",
+"cat": "BASS",
+"s": "acid",
+"c": "#00ff44",
+"i": "😈",
+"bpm": 180,
+"key": "Am",
+"genre": "IDM",
+"tags": [
+"Aphex Twin",
+"acid",
+"fast"
+],
+"_file": "aphex_acid.json"
+},
+{
+"n": "Data Burst",
+"cat": "LEADS",
+"s": "synth",
+"c": "#00ffcc",
+"i": "💻",
+"bpm": 120,
+"key": "Em",
+"genre": "IDM",
+"tags": [
+"data",
+"glitch",
+"burst"
+],
+"_file": "data_burst.json"
+},
+{
+"n": "Ion Pulse",
+"cat": "LEADS",
+"s": "synth",
+"c": "#44ffff",
+"i": "⚛",
+"bpm": 128,
+"key": "C",
+"genre": "IDM",
+"tags": [
+"ion",
+"scifi",
+"precise"
+],
+"_file": "ion_pulse.json"
+},
+{
+"n": "Squarepusher Funk",
+"cat": "BASS",
+"s": "bass",
+"c": "#ff8800",
+"i": "🎸",
+"bpm": 190,
+"key": "Am",
+"genre": "IDM",
+"tags": [
+"Squarepusher",
+"fast",
+"funky"
+],
+"_file": "squarepusher_funk.json"
+},
+{
+"n": "Boards of Canada",
+"cat": "PADS",
+"s": "pad",
+"c": "#886633",
+"i": "🌄",
+"bpm": 90,
+"key": "Dm",
+"genre": "IDM",
+"tags": [
+"nostalgic",
+"warm",
+"lo-fi"
+],
+"_file": "boards_of_canada.json"
+},
+{
+"n": "Warp Glitch",
+"cat": "DRUMS",
+"s": "crash",
+"c": "#ff00ff",
+"i": "⚡",
+"bpm": 140,
+"key": "C",
+"genre": "IDM",
+"tags": [
+"glitch",
+"warp",
+"random"
+],
+"_file": "warp_glitch.json"
+},
+{
+"n": "Song for the Dead",
+"cat": "CURVES",
+"s": "curvePerc",
+"c": "#cc2200",
+"i": "💀",
+"bpm": 170,
+"key": "Am",
+"genre": "Rock/Electronic",
+"tags": [
+"QOTSA",
+"curve",
+"percussive",
+"ricochet",
+"edge"
+],
+"curve_preset": "SONG FOR THE DEAD",
+"desc": "The pitch dive from Queens of the Stone Age — accelerates down, slams the right edge, bounces back mirrored",
+"_file": "song_for_the_dead.json"
+},
+{
+"n": "Desert Edge",
+"cat": "CURVES",
+"s": "curvePerc",
+"c": "#ff6600",
+"i": "🏜",
+"bpm": 140,
+"key": "Em",
+"genre": "Rock/Electronic",
+"tags": [
+"desert",
+"QOTSA",
+"stoner",
+"curve",
+"edge"
+],
+"_file": "desert_edge.json"
+},
+{
+"n": "Ricochet Snare",
+"cat": "CURVES",
+"s": "bounceR",
+"c": "#ffaa00",
+"i": "↩",
+"bpm": 140,
+"key": "C",
+"genre": "Electronic",
+"tags": [
+"ricochet",
+"bounce",
+"edge",
+"curve"
+],
+"_file": "ricochet_snare.json"
+},
+{
+"n": "Laser Bounce",
+"cat": "CURVES",
+"s": "ricochet",
+"c": "#00ffff",
+"i": "🔫",
+"bpm": 140,
+"key": "C",
+"genre": "Electronic",
+"tags": [
+"laser",
+"bounce",
+"both edges"
+],
+"_file": "laser_bounce.json"
+},
+{
+"n": "Dive Bomb",
+"cat": "CURVES",
+"s": "curvePerc",
+"c": "#ff2200",
+"i": "💣",
+"bpm": 120,
+"key": "Am",
+"genre": "Rock/Electronic",
+"tags": [
+"dive",
+"pitch",
+"guitar",
+"curve"
+],
+"_file": "dive_bomb.json"
+},
+{
+"n": "Vocal Chop",
+"cat": "VOCALS",
+"s": "synth",
+"c": "#ffaaff",
+"i": "🎤",
+"bpm": 128,
+"key": "Gm",
+"genre": "House",
+"tags": [
+"vocal",
+"chop",
+"pitched"
+],
+"_file": "vocal_chop.json"
+},
+{
+"n": "Robot Voice",
+"cat": "VOCALS",
+"s": "synth",
+"c": "#8888ff",
+"i": "🤖",
+"bpm": 0,
+"key": "C",
+"genre": "Electronic",
+"tags": [
+"vocoder",
+"robot",
+"processed"
+],
+"_file": "robot_voice.json"
+},
+{
+"n": "Breathy Pad",
+"cat": "PADS",
+"s": "pad",
+"c": "#ccddff",
+"i": "💨",
+"bpm": 0,
+"key": "Am",
+"genre": "Ambient",
+"tags": [
+"breath",
+"air",
+"textural"
+],
+"_file": "breathy_pad.json"
+},
+{
+"n": "Dark Whisper",
+"cat": "VOCALS",
+"s": "pad",
+"c": "#220022",
+"i": "👁",
+"bpm": 0,
+"key": "Cm",
+"genre": "Dark Ambient",
+"tags": [
+"whisper",
+"dark",
+"horror"
+],
+"_file": "dark_whisper.json"
+},
+{
+"n": "Conga Slice",
+"cat": "PERCUSSION",
+"s": "perc",
+"c": "#aa6600",
+"i": "🥁",
+"bpm": 120,
+"key": "C",
+"genre": "Latin",
+"tags": [
+"conga",
+"organic",
+"groove"
+],
+"_file": "conga_slice.json"
+},
+{
+"n": "Djembe Hit",
+"cat": "PERCUSSION",
+"s": "perc",
+"c": "#884400",
+"i": "🥁",
+"bpm": 115,
+"key": "C",
+"genre": "World",
+"tags": [
+"djembe",
+"organic",
+"world"
+],
+"_file": "djembe_hit.json"
+},
+{
+"n": "Tabla Tek",
+"cat": "PERCUSSION",
+"s": "perc",
+"c": "#996600",
+"i": "🥁",
+"bpm": 130,
+"key": "C",
+"genre": "World",
+"tags": [
+"tabla",
+"Indian",
+"polyrhythm"
+],
+"_file": "tabla_tek.json"
+},
+{
+"n": "Taiko Boom",
+"cat": "PERCUSSION",
+"s": "kick",
+"c": "#880000",
+"i": "🥁",
+"bpm": 120,
+"key": "C",
+"genre": "World",
+"tags": [
+"taiko",
+"huge",
+"cinematic"
+],
+"_file": "taiko_boom.json"
+},
+{
+"n": "Riser White",
+"cat": "SFX",
+"s": "riser",
+"c": "#ffffff",
+"i": "↑",
+"bpm": 0,
+"key": "C",
+"genre": "SFX",
+"tags": [
+"riser",
+"white noise",
+"build"
+],
+"_file": "riser_white.json"
+},
+{
+"n": "Downlifter",
+"cat": "SFX",
+"s": "synth",
+"c": "#000044",
+"i": "↓",
+"bpm": 0,
+"key": "C",
+"genre": "SFX",
+"tags": [
+"downlifter",
+"impact",
+"drop"
+],
+"_file": "downlifter.json"
+},
+{
+"n": "Impact Hit",
+"cat": "SFX",
+"s": "crash",
+"c": "#ff0000",
+"i": "💥",
+"bpm": 0,
+"key": "C",
+"genre": "SFX",
+"tags": [
+"impact",
+"hit",
+"dramatic"
+],
+"_file": "impact_hit.json"
+},
+{
+"n": "Vinyl Scratch",
+"cat": "SFX",
+"s": "perc",
+"c": "#333333",
+"i": "💿",
+"bpm": 0,
+"key": "C",
+"genre": "SFX",
+"tags": [
+"vinyl",
+"scratch",
+"DJ"
+],
+"_file": "vinyl_scratch.json"
+},
+{
+"n": "Siren Burst",
+"cat": "SFX",
+"s": "synth",
+"c": "#ff4400",
+"i": "🚨",
+"bpm": 0,
+"key": "C",
+"genre": "SFX",
+"tags": [
+"siren",
+"alarm",
+"warning"
+],
+"_file": "siren_burst.json"
+},
+{
+"n": "Zap Attack",
+"cat": "SFX",
+"s": "laser",
+"c": "#00ffff",
+"i": "⚡",
+"bpm": 0,
+"key": "C",
+"genre": "SFX",
+"tags": [
+"zap",
+"electric",
+"scifi"
+],
+"_file": "zap_attack.json"
+}
+];

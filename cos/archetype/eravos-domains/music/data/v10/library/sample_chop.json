@@ -1,0 +1,16 @@
+{
+  "n": "Sample Chop",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#00ff88",
+  "i": "\u2702",
+  "bpm": 160,
+  "key": "Am",
+  "genre": "Footwork",
+  "tags": [
+    "chopped",
+    "vocal",
+    "footwork"
+  ],
+  "_file": "sample_chop.json"
+}

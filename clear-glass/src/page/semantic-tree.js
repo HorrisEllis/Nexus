@@ -275,6 +275,9 @@ function _depthOf(nodes, n) { let d = 0, p = n.parent; while (p != null && d < 5
 async function readAX(wc, opts = {}) {
   const dbg = wc && wc.debugger;
   if (!dbg) throw new Error('no webContents debugger');
+  // 2026-10-16 — never a debugger on Google's sign-in page: an attached debugger is a signal Google's sign-in reads
+  // (James: "do everything you can to prevent that"). The page tree is read instead, said.
+  try { if (require('../contexts/google-signin').isSignin(wc.getURL())) return { ok: false, fallback: true, why: 'Google\'s sign-in page: no debugger is attached there (it would mark the page as automated) — the page tree is read instead' }; } catch (_) {}
   let attachedHere = false;
   if (!dbg.isAttached()) { try { dbg.attach('1.3'); attachedHere = true; } catch (e) { return { ok: false, fallback: true, why: `the debugger is in use (${e.message})` }; } }
   try {

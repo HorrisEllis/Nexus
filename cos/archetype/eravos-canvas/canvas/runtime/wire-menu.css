@@ -1,0 +1,11 @@
+/* 3.27 Connect menu (click a window's ⇢ plug) */
+.wire-menu { position: fixed; z-index: 100000; min-width: 240px; max-width: 360px; max-height: 60vh; overflow: auto; background: var(--bg1, #0d131b); border: 1px solid var(--line2, #2a3a4d); border-radius: 8px; box-shadow: 0 12px 40px rgba(0,0,0,.55); padding: 6px; }
+.wire-menu-title { font: 700 12px var(--font, sans-serif); color: var(--fg, #e6eef6); padding: 4px 6px 6px; }
+.wire-menu-sec { font: 10px var(--mono, monospace); letter-spacing: .06em; text-transform: uppercase; color: var(--pc); padding: 6px 6px 3px; border-top: 1px solid var(--line, #1a2533); }
+.wire-menu-item { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: transparent; border: 0; border-radius: 5px; padding: 6px; color: var(--fg, #e6eef6); cursor: pointer; font: 12px var(--font, sans-serif); }
+.wire-menu-item:hover { background: var(--bg2, #142030); }
+.wire-menu-item b { font-weight: 600; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wire-menu-item .wm-port { color: var(--dim, #7f93a8); font: 11px var(--mono, monospace); }
+.wire-menu-item .wm-chk { width: 16px; text-align: center; color: var(--dim, #7f93a8); }
+.wire-menu-item.on .wm-chk { color: #00ff88; font-weight: 700; }
+.wire-menu-empty { color: var(--dim, #7f93a8); font: 12px var(--font, sans-serif); padding: 6px; max-width: 280px; }

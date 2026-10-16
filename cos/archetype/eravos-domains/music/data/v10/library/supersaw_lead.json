@@ -1,0 +1,16 @@
+{
+  "n": "Supersaw Lead",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#ff8800",
+  "i": "\u26a1",
+  "bpm": 138,
+  "key": "Am",
+  "genre": "Trance",
+  "tags": [
+    "supersaw",
+    "power",
+    "lead"
+  ],
+  "_file": "supersaw_lead.json"
+}

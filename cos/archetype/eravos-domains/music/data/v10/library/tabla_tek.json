@@ -1,0 +1,16 @@
+{
+  "n": "Tabla Tek",
+  "cat": "PERCUSSION",
+  "s": "perc",
+  "c": "#996600",
+  "i": "\ud83e\udd41",
+  "bpm": 130,
+  "key": "C",
+  "genre": "World",
+  "tags": [
+    "tabla",
+    "Indian",
+    "polyrhythm"
+  ],
+  "_file": "tabla_tek.json"
+}

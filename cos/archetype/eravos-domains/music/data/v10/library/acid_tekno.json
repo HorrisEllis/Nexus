@@ -1,0 +1,16 @@
+{
+  "n": "Acid Tekno",
+  "cat": "BASS",
+  "s": "acid",
+  "c": "#00ff44",
+  "i": "\u2697",
+  "bpm": 143,
+  "key": "Am",
+  "genre": "Techno",
+  "tags": [
+    "acid",
+    "303",
+    "squelch"
+  ],
+  "_file": "acid_tekno.json"
+}

@@ -1,0 +1,16 @@
+{
+  "n": "Growl Bass",
+  "cat": "BASS",
+  "s": "wobble",
+  "c": "#660099",
+  "i": "\ud83d\udc09",
+  "bpm": 140,
+  "key": "Em",
+  "genre": "Dubstep",
+  "tags": [
+    "growl",
+    "FM",
+    "aggressive"
+  ],
+  "_file": "growl_bass.json"
+}

@@ -102,6 +102,8 @@ async function loadPlanPanel() {
     ]);
     if (PLANP.uuid !== repo.uuid) return;
     PLANP.data = plan; PLANP.runs = runs.runs || [];
+    // §0.60.107 PS2 — the Progress card's one line for the proposals (their diffs are Code › changes)
+    try { const inj = await api(`/api/repos/${repo.uuid}/injects?status=proposed`, {}, 15000); PLANP.pending = (inj.injects || []).length; } catch (_) { PLANP.pending = 0; }
     // §0.39.284 — James: "i just added a new idea and promoted to spec. it needs to show the plan when building." A
     // promoted spec builds as spec-engine chunks (one per file), not phasemap phases — the panel shows that build too.
     PLANP.code = null;
@@ -274,15 +276,21 @@ function _planPaint() {
         ${_ledgerHtml(s.ledger || [])}</div>` : ''}
     </div>`;
   };
-  const _cAt = _ppClearedAt();
-  const other = (PLANP.runs || []).filter(r => r.phase === 'PLAN' || String(r.map || '').startsWith('file:')).filter(r => !_cAt || (r.ts || 0) > _cAt || ['building', 'running', 'dispatched'].includes(r.state)).slice(0, 12);
-  body.innerHTML = `
-    ${_planCodeBuild()}
+  // §0.60.107 PS2 — James: "Can you make something like the sidebar, for contexT? can you strip the plan panel to just the
+  // plan with context, and progress? make the rest theyre own panel? and remove what is creating clutter". Three cards,
+  // like the sidebar he showed: Progress, Plan, Context. What left (kept, not lost — §0.3): the charter, agents and jobs
+  // are their own panels in the Code tab's bottom bar (code-tab-panels.js); activity is the bottom panels; the work
+  // surface is Code › changes. Each was drawn here a second time.
+  const progress = `${_planCodeBuild()}
     ${_planProof()}
-    ${_ppEndState(d.charter)}
-    ${sm.total ? `<div class="pp-progress${d.charter && d.charter.latest ? ' pp-progress-2' : ''}" title="phases: ${sm.complete || 0}/${sm.total} done"><div style="width:${Math.round((sm.progress || 0) * 100)}%"></div></div>` : ''}
-    ${_ppCharter(d.charter)}
-    <div class="pp-sec">tasks</div>
+    ${sm.total ? `<div class="pp-prog-line"><b>${sm.complete || 0}/${sm.total}</b> phases done${sm.building ? ` · <span class="pp-running">${sm.building} building</span>` : ''}${sm.failed ? ` · <span class="pp-bad">${sm.failed} stopped</span>` : ''}</div>
+    <div class="pp-progress${d.charter && d.charter.latest ? ' pp-progress-2' : ''}" title="phases: ${sm.complete || 0}/${sm.total} done"><div style="width:${Math.round((sm.progress || 0) * 100)}%"></div></div>` : ''}
+    ${_ppEndLine(d.charter)}
+    ${PLANP.pending ? `<button class="pp-donefold pp-pending" onclick="ppOpenChanges()" title="the proposals, as diffs, in the Code tab">◆ ${PLANP.pending} proposal${PLANP.pending === 1 ? '' : 's'} waiting — open in Code › changes</button>` : ''}
+    <div class="al pp-live" data-al="${escapeHtml(PLANP.uuid || '')}">${typeof agentLiveHtml === 'function' && PLANP.uuid ? agentLiveHtml(PLANP.uuid) : ''}</div>`;
+  body.innerHTML = `
+    ${_ppCard('progress', 'Progress', '', progress)}
+    ${_ppCard('plan', 'Plan', sm.total ? `${sm.complete || 0}/${sm.total}` : '', `
     ${(() => {   // §CT7 — current work: what is building, next, stopped or waiting; the complete fold into one line
       if (!steps.length) return '<div class="pp-empty">no phases yet — plan a spec (Spec tab → ▶ Build this spec)</div>';
       // §HP9 0.55.1 — James: "it is for the current plans only, basically the queue". NOW: a step with runs or marked
@@ -306,20 +314,68 @@ function _planPaint() {
         + _ppDoneLine(done.length, `step${done.length === 1 ? '' : 's'}`) + (PLANP.showDone ? done.map(task).join('') : '')
         + (cleared ? `<button class="pp-donefold" onclick="planRestoreDone()" title="bring the cleared steps back">⌫ ${cleared} cleared — restore</button>` : '')
         + (shelf ? `<div class="pp-shelfnote" title="the declutter's LATER — kept in their maps, not the queue">${shelf} on the shelf</div>` : '');
-    })()}
-    ${other.length ? `<div class="pp-sec">plans and file jobs</div>${other.map(r => `<div class="pp-act"><span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.title || `${r.phase} ${r.map}`)} <span class="pp-led-t">${new Date(r.ts).toLocaleTimeString()}</span>${r.error ? `<div style="color:var(--coral);font-size:10px">${escapeHtml(r.error)}</div>` : ''}</div>`).join('')}` : ''}
-    <details class="pp-actwrap pp-agents" ontoggle="if(this.open)ppAgentsLoad(this)"><summary class="pp-sec">agents · what Nexus has learned</summary><div class="pp-agents-body">${PLANP.agentsHtml || 'reading…'}</div></details>
-    <details class="pp-actwrap pp-log" id="pp-log" ${PLANP.logOpen ? 'open' : ''} ontoggle="if (typeof ppLogToggle === 'function') ppLogToggle(this)"><summary class="pp-sec">activity <span id="pp-log-n" class="pp-log-n"></span></summary>
-      <div class="rt-views" id="rt-views"></div><div class="rt-filters" id="rt-filters"></div><div class="rt-list" id="rt-list"></div></details>
-    <div class="al pp-live" data-al="${escapeHtml(PLANP.uuid || '')}">${typeof agentLiveHtml === 'function' && PLANP.uuid ? agentLiveHtml(PLANP.uuid) : ''}</div>
-    <div id="pp-ws" class="pp-ws"></div>`;   // §0.39.356 LS4 — the agent writing, live, above the work surface
+    })()}`)}
+    ${_ppCard('context', 'Context', '', _ppContext(steps))}`;
   PLANP.focus = null;
-  if (typeof rtMounted === 'function') rtMounted(false);   // §0.47.0 OS2 (a repaint: drawn from what is held, nothing re-read) — tasks · log · control · versions · machine, in the activity section
+  // (§0.47.0 OS2 rtMounted here: the activity views moved to the Code tab's bottom panel, 0.60.107 PS3)
   planTabSync();   // §CT9 — the tab's count follows the plan
   ppRunLoad();     // §0.60.0 RS1 — ▶ / ⏸ / ⏮ for the repo, beside the plan
-  // §0.39.284 W3 — the work surface, below the plan: every file the agent changed, as diffs, and its tools
-  if (typeof wsLoad === 'function') { const w = document.getElementById('pp-ws'); if (WSURF.data && WSURF.uuid === PLANP.uuid) wsPaint(w); wsLoad(w); }
+  // (§0.39.284 W3 the work surface was drawn here: it is Code › changes now, one place — 0.60.107 PS3)
 }
+// ── §0.60.107 PS2/PS3 — the cards, the Context card, and what moved to its own panel ─────────────────────────────────
+const _PP_FOLD_KEY = 'idearium.plan.fold';
+function _ppFolded() { try { return new Set(JSON.parse(localStorage.getItem(_PP_FOLD_KEY) || '[]')); } catch (_) { return new Set(); } }
+function ppFold(k) {
+  const f = _ppFolded(); if (f.has(k)) f.delete(k); else f.add(k);
+  try { localStorage.setItem(_PP_FOLD_KEY, JSON.stringify([...f])); } catch (_) { /* a per-browser convenience */ }
+  const el = document.querySelector(`#pp-body .pp-card[data-card="${k}"]`); if (el) el.classList.toggle('folded', f.has(k));
+}
+/** one card of the sidebar: a header that folds it (remembered), its body */
+function _ppCard(k, title, aside, html) {
+  return `<section class="pp-card${_ppFolded().has(k) ? ' folded' : ''}" data-card="${k}"><div class="pp-card-h" onclick="ppFold('${k}')"><span class="pp-card-t">${escapeHtml(title)}</span><span class="pp-card-chev">⌄</span>${aside ? `<span class="pp-card-aside">${escapeHtml(aside)}</span>` : ''}</div><div class="pp-card-b">${html}</div></section>`;
+}
+/** the end state in one line (its list and the charter editor are the Code tab's charter panel) */
+function _ppEndLine(c) {
+  if (!c || !c.endState || !c.endState.length) return '';
+  const l = c.latest;
+  return `<button class="pp-donefold" onclick="ppOpenPanel('charter')" title="the end state, each check, and the charter — the Code tab's charter panel">${l ? `end state <b>${l.met}/${l.total}</b> · ${escapeHtml(_ppWhen(l.ts))}` : `end state not checked yet — ${c.endState.length} check${c.endState.length === 1 ? '' : 's'}`}</button>`;
+}
+function _ppTok(n) { return n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n); }
+const _PP_CTX_COLOR = { request: 'var(--accent,#3b82f6)', mapped: 'var(--mint,#34d399)', charter: 'var(--violet,#a78bfa)', lessons: 'var(--coral,#f87171)', note: 'var(--amber,#fbbf24)' };
+/**
+ * The Context card — like the sidebar James showed: what the agent building the phase is given, part by part (the
+ * request, the mapped files, the charter, the lessons, his note), each as tokens and a share, against the model's window
+ * when Nexus knows it. Read from the run's 'building' row (idearium/api _phaseBuild, lib/economy/tokens.js breakdown).
+ */
+function _ppContext(steps) {
+  let pick = null;
+  for (const s of steps || []) for (const l of s.ledger || []) {
+    if (!l.context) continue;
+    const live = s.current || l.state === 'building';
+    if (!pick || (live && !pick.live) || (live === pick.live && (l.ts || 0) > (pick.l.ts || 0))) pick = { s, l, live };
+  }
+  if (!pick) return '<div class="pp-empty">no build has recorded its context yet — the next ▶ build shows here what its agent is given</div>';
+  const c = pick.l.context;
+  const head = c.window ? `<div class="pp-ctx-h"><b>${c.pct}% used</b><span>${_ppTok(c.used)} / ${_ppTok(c.window)}</span></div>`
+    : `<div class="pp-ctx-h"><b>~${_ppTok(c.used)} tokens</b><span title="Nexus knows the window for Ollama only (the num_ctx it sets); this agent's is not known here">window not known</span></div>`;
+  const base = c.window || c.used || 1;
+  const bar = `<div class="pp-ctx-bar">${c.parts.map(p => `<span style="width:${(p.tokens / base) * 100}%;background:${_PP_CTX_COLOR[p.id] || 'var(--text3)'}" title="${escapeHtml(p.label)} ${p.tokens}"></span>`).join('')}</div>`;
+  const rows = c.parts.map(p => `<div class="pp-ctx-row"><span class="pp-ctx-sw" style="background:${_PP_CTX_COLOR[p.id] || 'var(--text3)'}"></span><span class="pp-ctx-l">${escapeHtml(p.label)}</span><span class="pp-ctx-n">${_ppTok(p.tokens)}</span><span class="pp-ctx-p">${(c.window ? (p.tokens / c.window) * 100 : p.share * 100).toFixed(1)}%</span></div>`).join('')
+    + (c.window ? `<div class="pp-ctx-row pp-ctx-free"><span class="pp-ctx-sw"></span><span class="pp-ctx-l">free</span><span class="pp-ctx-n">${_ppTok(c.free)}</span><span class="pp-ctx-p">${(100 - c.pct).toFixed(1)}%</span></div>` : '');
+  return `${head}${bar}<div class="pp-ctx-rows">${rows}</div><div class="pp-ctx-for">${pick.live ? 'building now' : 'last build'} · ${escapeHtml(pick.s.title || pick.s.key)}${pick.l.provider ? ` · ${escapeHtml(pick.l.provider)}` : ''} · ${escapeHtml(_ppWhen(pick.l.ts))} <span title="${escapeHtml(c.method || '')}: no vendor tokenizer is bundled">· estimated</span></div>`;
+}
+/** the proposals are Code › changes; the charter, agents and jobs panels are the Code tab's bottom bar */
+function ppOpenChanges() { if (typeof setRepoSubtab === 'function' && CURRENT_REPO_SUBTAB !== 'code') setRepoSubtab('code'); if (typeof csView === 'function') csView('changes'); }
+function ppOpenPanel(k) { if (typeof setRepoSubtab === 'function' && CURRENT_REPO_SUBTAB !== 'code') setRepoSubtab('code'); if (typeof cxPanel === 'function') cxPanel(k); }
+/** the panels that left the Plan panel, drawn by the Code tab's bottom bar (code-tab-panels.js) from what PLANP holds */
+function ppCharterPanelHtml() { const c = PLANP.data && PLANP.data.charter; return `${_ppEndState(c)}${_ppCharter(c)}`; }
+function ppJobsPanelHtml() {
+  const _cAt = _ppClearedAt();
+  const other = (PLANP.runs || []).filter(r => r.phase === 'PLAN' || String(r.map || '').startsWith('file:')).filter(r => !_cAt || (r.ts || 0) > _cAt || ['building', 'running', 'dispatched'].includes(r.state)).slice(0, 40);
+  return other.length ? other.map(r => `<div class="pp-act"><span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.title || `${r.phase} ${r.map}`)} <span class="pp-led-t">${new Date(r.ts).toLocaleTimeString()}</span>${r.error ? `<div style="color:var(--coral);font-size:10px">${escapeHtml(r.error)}</div>` : ''}</div>`).join('')
+    : '<div class="pp-empty">no plans or file jobs</div>';
+}
+function ppAgentsPanelHtml() { return `<details class="pp-actwrap pp-agents" open><summary class="pp-sec">agents · what Nexus has learned</summary><div class="pp-agents-body">${PLANP.agentsHtml || 'reading…'}</div></details>`; }
 // §0.39.361 AR1 — each agent's record building phases (GET /api/routing/agents): the table the ladder is ordered by
 function _ppFaultRow(f) {
   return `<div class="pp-fault"><span class="pp-led-t" title="${escapeHtml(new Date(f.ts).toLocaleString())}">${escapeHtml(_ppWhen(f.ts))}</span><b>${escapeHtml(f.mode)}</b> ${escapeHtml(f.phase || f.path || '')}${f.promptChars ? ` <span style="opacity:.6">${f.promptChars} chars</span>` : ''}${f.error ? `<div class="pp-fault-e">${escapeHtml(f.error)}</div>` : ''}</div>`;

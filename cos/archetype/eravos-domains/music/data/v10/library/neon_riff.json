@@ -1,0 +1,16 @@
+{
+  "n": "Neon Riff",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#ff44aa",
+  "i": "\u26a1",
+  "bpm": 120,
+  "key": "Am",
+  "genre": "Synthwave",
+  "tags": [
+    "neon",
+    "retro",
+    "80s"
+  ],
+  "_file": "neon_riff.json"
+}

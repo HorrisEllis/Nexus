@@ -53,6 +53,12 @@ const { randomUUID } = require('crypto');
 const CG_CDP_PORT = parseInt(process.env.CG_CDP_PORT || '9333', 10);
 app.commandLine.appendSwitch('remote-debugging-port', String(CG_CDP_PORT));
 
+// 2026-10-16 — James (Google: "Couldn't sign you in — This browser or app may not be secure"): "need this fixed. completely"
+// Every session Clear Glass makes (default, provider, account, agent, popup partitions) gets the sign-in request side,
+// and every page the page side (src/contexts/google-signin.js). Registered before ready, so no session is missed.
+const GoogleSignin = require('../contexts/google-signin.js');
+app.on('session-created', (ses) => { try { GoogleSignin.applySession(ses); } catch (e) { console.warn(`[google-signin] session not covered: ${e.message}`); } });
+
 // ── SISO bus — must be first ───────────────────────────────────────────────
 const { createBus, emit, on, Event } = require('../core/bus');
 
@@ -1170,10 +1176,18 @@ async function bootstrap() {
   try { require('../network/install.js').install(bus); }
   catch (err) { console.error('[ClearGlass] network/install.js failed:', err.message); }
 
-  // 1. TLS proxy — Firefox JA4 rewrite
-  const tlsProxy = new TlsProxy({ port: TLS_PORT });
-  await tlsProxy.start();
-  console.log(`[ClearGlass] TLS proxy :${TLS_PORT}`);
+  // 1. TLS layer — §0.60.109 TLS2 (docs/2026-10-16-tls-layer-phasemap.spec). James: "fix it. i don't want the trouble again".
+  // The Node proxy (src/tls/proxy.js, superseded and kept) wrapped the browser's TLS in a second TLS and carried no HTTPS
+  // site; cg-tls-helper (Go, uTLS) gives a Firefox persona Firefox's handshake. Down or missing → sessions go direct, said.
+  const { TlsHelper, setCurrent: setTlsCurrent } = require('../tls/helper');
+  const tlsProxy = new TlsHelper({ port: TLS_PORT });
+  setTlsCurrent(tlsProxy);
+  tlsProxy.on('state', (st) => {
+    try { require('../net/service').service().setTlsLayer(st.state === 'running' ? st.port : null).catch(() => {}); } catch (_) {}
+    emit('tls.layer.state', st);
+  });
+  const tlsState = await tlsProxy.start();
+  console.log(tlsState.state === 'running' ? `[ClearGlass] TLS layer :${TLS_PORT} (cg-tls-helper, Firefox handshake; CA ${String(tlsState.caFingerprint).slice(0, 16)}…)` : `[ClearGlass] TLS layer not running — ${tlsState.why}`);
 
   // 2. Fingerprint engine
   fp = new FingerprintEngine();
@@ -1190,6 +1204,7 @@ async function bootstrap() {
   const { session: electronSession } = require('electron');
   const { applyCspBypass } = require('../contexts/session-headers');
   applyCspBypass(electronSession.defaultSession);
+  GoogleSignin.applySession(electronSession.defaultSession);   // the default session may predate 'session-created'
 
   // Scrub Electron/Node identifiers from the default session UA
   // This is a safety net — agent windows should use their own partitions,
@@ -2699,6 +2714,7 @@ function _automationEvents(contents) {
 }
 app.on('web-contents-created', (_e, contents) => {
   try { _automationEvents(contents); } catch (_) {}
+  try { GoogleSignin.attach(contents); } catch (e) { console.warn(`[google-signin] page not covered: ${e.message}`); }
   contents.on('before-input-event', (event, input) => {
     if (!input || input.type !== 'keyDown' || input.isAutoRepeat) return;
     const accel = Shortcuts.accelFromInput(input);
@@ -2730,6 +2746,7 @@ async function shutdown() {
   if (_heartbeatInterval) clearInterval(_heartbeatInterval);
   // §0.39.264 — ErosmancerOS goes down with Clear Glass (only the one Clear Glass started)
   if (erosSupervisor) { try { erosSupervisor.stop(); } catch (_) {} }
+  try { const t = require('../tls/helper').current(); if (t) t.stop(); } catch (_) {}   // §0.60.109 TLS2 — the TLS layer goes down with Clear Glass
 
   // §NEW 2026-08-24 — closes the gap named at the end of the previous
   // commit, but scoped correctly rather than mechanically as originally

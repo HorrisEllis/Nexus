@@ -1,0 +1,97 @@
+{
+  "id": "delay",
+  "name": "ECHO CANYON",
+  "icon": "\ud83c\udf0a",
+  "col": "#00d4ff",
+  "tag": "DELAY",
+  "desc": "Tape delay with ping-pong. Echo off the right edge.",
+  "module": "delay",
+  "visualizer": {
+    "type": "spectrogram",
+    "color": "#00d4ff"
+  },
+  "params": [
+    {
+      "n": "Time",
+      "k": "time",
+      "v": 0.5,
+      "min": 0.01,
+      "max": 2,
+      "unit": "s",
+      "snap": [
+        0.125,
+        0.25,
+        0.333,
+        0.5,
+        0.667,
+        1
+      ]
+    },
+    {
+      "n": "Feedback",
+      "k": "fb",
+      "v": 0.38,
+      "min": 0,
+      "max": 0.98,
+      "unit": "%"
+    },
+    {
+      "n": "Tone",
+      "k": "tone",
+      "v": 0.7,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Mix",
+      "k": "mix",
+      "v": 0.45,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Ping-Pong",
+      "k": "ping",
+      "v": 1,
+      "min": 0,
+      "max": 1,
+      "type": "toggle"
+    },
+    {
+      "n": "Tape Wow",
+      "k": "wow",
+      "v": 0.2,
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "presets": {
+    "SHORT": {
+      "time": 0.12,
+      "fb": 0.2,
+      "mix": 0.3
+    },
+    "SLAP": {
+      "time": 0.08,
+      "fb": 0.15,
+      "mix": 0.4
+    },
+    "QUARTER": {
+      "time": 0.25,
+      "fb": 0.35,
+      "mix": 0.45
+    },
+    "PING": {
+      "time": 0.5,
+      "fb": 0.4,
+      "ping": 1,
+      "mix": 0.5
+    },
+    "WASH": {
+      "time": 0.667,
+      "fb": 0.65,
+      "tone": 0.5,
+      "mix": 0.6
+    }
+  }
+}

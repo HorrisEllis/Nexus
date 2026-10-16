@@ -1,0 +1,16 @@
+{
+  "n": "Chaos Drop",
+  "cat": "BASS",
+  "s": "wobble",
+  "c": "#880000",
+  "i": "\ud83d\udc80",
+  "bpm": 140,
+  "key": "Cm",
+  "genre": "Dubstep",
+  "tags": [
+    "drop",
+    "chaos",
+    "hard"
+  ],
+  "_file": "chaos_drop.json"
+}

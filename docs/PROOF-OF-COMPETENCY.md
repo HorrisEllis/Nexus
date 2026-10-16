@@ -313,3 +313,39 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     corrected the record when his metaphor ("brick") risked becoming a second node type ("When I said brick I was using
     a metaphor").
   - **Evidence:** `lib/work-funnel.js`; `tests/modules/test-work-funnel.test.js` (8/8); `docs/2026-10-16-agent-work-funnel-phasemap.spec`; `CHANGELOG-0.60.94.md`.
+- **2026-10-16: "what about using cos for the canvas, then each tool a nested compartment?"**
+  - **Context:** he had just had ERAVOS deleted from Nexus. He sent the standalone ERAVOS and proposed bringing its
+    design back as COS structure rather than as a running system: the canvas as one compartment, each tool nested
+    under it.
+  - **What it shows:** design that composes. His ERAVOS kept "the canvas and the tools … separate", with each tool a
+    sealed folder with declared ports and permissions. That boundary is why it maps onto COS nesting with no rewrite
+    of his code: his canvas ships byte for byte, his own loader generator and validator run unchanged on a canvas
+    Nexus made, and his own harness passes the tools.
+  - **Evidence:** `tests/modules/test-canvas-compartments.test.js` (7/7; CC-10 drives it in Clear Glass: 12/12 on his
+    harness); `docs/2026-10-16-canvas-compartments-phasemap.spec`; `CHANGELOG-0.60.104.md`.
+- **2026-10-16: "when i reject a propasal, the agent needs to understand the failure mode ad try again, after learning" · "why so much regression?"**
+  - **Context:** his Code tab showed three agent proposals for one phase, each deleting more than it added (-114 +24,
+    -281 +20, -54 +31). He rejected them and asked for the loop to close: understand, learn, retry.
+  - **What it shows:** failure-mode thinking. He named the right unit, the failure mode, rather than "retry harder". The
+    question "why so much regression?" pointed at the cause, an agent returning a cut-down whole file, and that cause is
+    now refused before it reaches him.
+  - **Evidence:** `tests/modules/test-reject-learn-retry.test.js` (7/7, including his intent-hat-router and
+    schema.intent shapes); `docs/2026-10-16-reject-learn-retry-phasemap.spec`; `CHANGELOG-0.60.105.md`.
+- **2026-10-16: "need this fixed. completely" (Google: "Couldn't sign you in")**
+  - **Context:** Google refused sign-in inside Clear Glass, his own browser, which every provider account runs through.
+    He stopped other work for it.
+  - **What it shows:** setting priority by what blocks the system. Every agent that runs through a Google account
+    depends on this one window. The fix went to the cause (client hints and `userAgentData`, which the UA scrub had
+    missed), not a workaround. On the way it found a second silent bug: request-header hooks replacing each other.
+  - **Evidence:** `clear-glass/test/google-signin.test.js` (32 checks); `docs/2026-10-16-google-signin-phasemap.spec`;
+    `CHANGELOG-0.60.106.md`. Not yet proven live: his next sign-in is the test.
+- **2026-10-16: "fix it. i don't want the trouble again" (Clear Glass's TLS layer)**
+  - **Context:** asked what fixing the broken TLS proxy would do, he heard the trade-offs: a helper binary, a local CA,
+    and what it buys (Firefox personas that are Firefox down to the handshake). The coder recommended archiving it. He
+    chose the real fix, and set its standard: no trouble again.
+  - **What it shows:** owning a decision against the recommendation, and stating the requirement that matters: it must
+    work, and it must never be why something breaks. That requirement is in the code: a fallback at every layer, never
+    an orphan, verified certificates.
+  - **Evidence:** `clear-glass/tls-helper/main_test.go` (5/5); `tests/modules/test-tls-layer.test.js` (7/7, the real
+    binary); `docs/2026-10-16-tls-layer-phasemap.spec`; `CHANGELOG-0.60.109.md`.
+

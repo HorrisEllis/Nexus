@@ -1,4 +1,8 @@
 'use strict';
+// SUPERSEDED 2026-10-16 (0.60.109) by clear-glass/tls-helper (cg-tls-helper, Go + uTLS) and src/tls/helper.js. Kept, not
+// deleted (§0.3). Why: on CONNECT this tls.connect()ed to the site and piped the browser's own encrypted bytes into that
+// TLS socket — TLS inside TLS — so no HTTPS site could load through it, and rejectUnauthorized:false never checked the
+// site's certificate. Nothing routed to it. James: "fix it. i don't want the trouble again". docs/2026-10-16-tls-layer-phasemap.spec
 
 /**
  * TLS Proxy — Firefox JA4 Fingerprint Layer
@@ -101,6 +105,25 @@ class TlsProxy {
     const port = parseInt(portStr) || 443;
 
     this.stats.tunneled++;
+
+    // 2026-10-16 — James: "for the google login, can you do everything you can to prevent that? like across domains,
+    // contexts, erosmanceros, proxy,". The browser makes its own TLS inside a CONNECT tunnel; wrapping that stream in a
+    // second TLS connection here cannot work (the server would read the browser's ClientHello as application data).
+    // Nothing points a session at this proxy today (docs/2026-10-16-google-signin-phasemap.spec, GS6). If one ever does,
+    // Google's sign-in hosts at least get a plain TCP tunnel: the browser's own TLS, untouched, end to end.
+    if (/^accounts\.google\.[a-z]{2,3}(?:\.[a-z]{2})?$|^accounts\.youtube\.com$|^gds\.google\.com$/i.test(hostname)) {
+      const raw = net.connect(port, hostname, () => {
+        clientSocket.write('HTTP/1.1 200 Connection Established\r\n\r\n');
+        if (head && head.length) raw.write(head);
+        raw.pipe(clientSocket); clientSocket.pipe(raw);
+        this.sse?.emit('tls.tunnel', { host: hostname, port, protocol: 'raw (google sign-in)', ts: Date.now() });
+      });
+      raw.on('error', (err) => { this.stats.errors++; try { clientSocket.write('HTTP/1.1 502 Bad Gateway\r\n\r\n'); } catch (_) {} clientSocket.destroy(); this.sse?.emit('tls.error', { host: hostname, error: err.message, ts: Date.now() }); });
+      clientSocket.on('error', () => raw.destroy());
+      raw.on('close', () => clientSocket.destroy());
+      clientSocket.on('close', () => raw.destroy());
+      return;
+    }
 
     // Connect to target with Firefox TLS fingerprint
     const serverSocket = tls.connect({

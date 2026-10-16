@@ -1,0 +1,16 @@
+{
+  "n": "Robot Voice",
+  "cat": "VOCALS",
+  "s": "synth",
+  "c": "#8888ff",
+  "i": "\ud83e\udd16",
+  "bpm": 0,
+  "key": "C",
+  "genre": "Electronic",
+  "tags": [
+    "vocoder",
+    "robot",
+    "processed"
+  ],
+  "_file": "robot_voice.json"
+}

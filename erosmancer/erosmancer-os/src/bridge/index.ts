@@ -31,6 +31,16 @@ interface BridgeEvents {
   event: [event: CDPEvent];
   "tab:opened": [tab: Tab];
   "tab:closed": [targetId: string];
+  "tab:detached": [targetId: string, why: string];   // 2026-10-16: let go of (Google's sign-in page), not closed
+}
+
+// 2026-10-16 — James: "for the google login, can you do everything you can to prevent that? like across domains,
+// contexts, erosmanceros, proxy,". A DevTools session on Google's sign-in page is a signal Google's sign-in reads (an
+// automated browser), and it said "This browser or app may not be secure". ErosmancerOS does not attach to a sign-in
+// page, and lets go of a tab that navigates into one (it may attach again once the tab has left).
+export const GOOGLE_SIGNIN_HOST = /^accounts\.google\.[a-z]{2,3}(?:\.[a-z]{2})?$|^accounts\.youtube\.com$|^gds\.google\.com$/i;
+export function isGoogleSignin(url: string | undefined | null): boolean {
+  try { return GOOGLE_SIGNIN_HOST.test(new URL(String(url)).hostname); } catch { return false; }
 }
 
 export class BridgeCore extends EventEmitter<BridgeEvents> {
@@ -131,6 +141,11 @@ export class BridgeCore extends EventEmitter<BridgeEvents> {
    * Subsequent commands for that tab use this sessionId.
    */
   async attachToTarget(targetId: string): Promise<string> {
+    const info = await this.send<{ targetInfo?: { url?: string } }>("Target.getTargetInfo", { targetId }).catch(() => null);
+    if (info && info.targetInfo && isGoogleSignin(info.targetInfo.url)) {
+      this.telemetry.warn("bridge", `Not attached → ${targetId}: it is on Google's sign-in page (an attached debugger marks it as automated)`);
+      throw new Error("refused: the tab is on Google's sign-in page — ErosmancerOS does not attach there; try again once it has left");
+    }
     const result = await this.send<{ sessionId: string }>("Target.attachToTarget", {
       targetId,
       flatten: true,
@@ -296,6 +311,17 @@ export class BridgeCore extends EventEmitter<BridgeEvents> {
           lastActiveAt: now,
         };
         this.emit("tab:opened", tab);
+      }
+    }
+
+    if (event.method === "Target.targetInfoChanged") {
+      const info = event.params.targetInfo as { targetId: string; url: string } | undefined;
+      const sessionId = info ? this.sessions.get(info.targetId) : undefined;
+      if (info && sessionId && isGoogleSignin(info.url)) {
+        this.sessions.delete(info.targetId);
+        this.send("Target.detachFromTarget", { sessionId }).catch(() => {});
+        this.telemetry.warn("bridge", `Detached ← ${info.targetId}: it went to Google's sign-in page`);
+        this.emit("tab:detached", info.targetId, "google-signin");
       }
     }
 

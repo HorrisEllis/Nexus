@@ -1,0 +1,16 @@
+{
+  "n": "Deep Chord",
+  "cat": "CHORDS",
+  "s": "chord",
+  "c": "#0044aa",
+  "i": "\ud83c\udf0a",
+  "bpm": 122,
+  "key": "Fm",
+  "genre": "Deep House",
+  "tags": [
+    "deep",
+    "warm",
+    "soulful"
+  ],
+  "_file": "deep_chord.json"
+}

@@ -1,0 +1,16 @@
+{
+  "n": "Siren Burst",
+  "cat": "SFX",
+  "s": "synth",
+  "c": "#ff4400",
+  "i": "\ud83d\udea8",
+  "bpm": 0,
+  "key": "C",
+  "genre": "SFX",
+  "tags": [
+    "siren",
+    "alarm",
+    "warning"
+  ],
+  "_file": "siren_burst.json"
+}

@@ -1,0 +1,16 @@
+{
+  "n": "Neuro Bass",
+  "cat": "BASS",
+  "s": "reese",
+  "c": "#8800ff",
+  "i": "\u26a1",
+  "bpm": 140,
+  "key": "Dm",
+  "genre": "Dubstep",
+  "tags": [
+    "neuro",
+    "growl",
+    "dark"
+  ],
+  "_file": "neuro_bass.json"
+}

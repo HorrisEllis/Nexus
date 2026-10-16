@@ -1,0 +1,16 @@
+{
+  "n": "Dark Choir",
+  "cat": "PADS",
+  "s": "pad",
+  "c": "#330033",
+  "i": "\ud83d\udc7b",
+  "bpm": 130,
+  "key": "Cm",
+  "genre": "Trap",
+  "tags": [
+    "dark",
+    "choir",
+    "horror"
+  ],
+  "_file": "dark_choir.json"
+}

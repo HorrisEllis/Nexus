@@ -1,0 +1,18 @@
+{
+  "schema": "eravos.tool/1",
+  "id": "__ID__",
+  "version": "0.1.0",
+  "label": "__LABEL__",
+  "icon": "◆",
+  "accent": "#00d4ff",
+  "domain": "__DOMAIN__",
+  "category": "__CATEGORY__",
+  "summary": "One sentence: what someone can do with __LABEL__.",
+  "tags": [],
+  "files": { "engine": "__TOOL__.engine.js", "ui": "__TOOL__.ui.js", "preview": "preview.svg", "spec": "__TOOL__.spec", "tests": "__TOOL__.test.js" },
+  "needs": { "units": ["music.engine"], "tools": [], "permissions": ["audio_out", "bus_publish", "bus_subscribe"] },
+  "packs": { "accepts": ["presets"], "shipped": ["factory"] },
+  "works_with": [],
+  "conflicts": [],
+  "status": "building"
+}

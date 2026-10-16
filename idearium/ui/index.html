@@ -716,6 +716,19 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .pp-body{flex:1;overflow:auto;padding:8px 14px 14px}
 .pp-progress{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin:4px 0 10px;overflow:hidden}.pp-progress div{height:100%;background:var(--mint)}
 .pp-sec{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:10px 0 6px;cursor:default}
+/* §0.60.107 PS2 — the Plan panel as a sidebar of cards (Progress · Plan · Context), like the one James showed */
+.pp-card{border:1px solid var(--nx-rim);border-radius:10px;padding:8px 10px;margin:0 0 10px;background:rgba(255,255,255,.015)}
+.pp-card-h{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;font-size:11.5px;color:var(--text1,#e5e7eb)}
+.pp-card-t{font-weight:600}.pp-card-chev{opacity:.5;font-size:10px;transition:transform .15s}.pp-card-aside{margin-left:auto;color:var(--text3);font-size:10px}
+.pp-card.folded .pp-card-b{display:none}.pp-card.folded .pp-card-chev{transform:rotate(-90deg)}
+.pp-card-b{margin-top:8px}
+.pp-prog-line{font-size:10.5px;color:var(--text2,#cbd5e1)}.pp-bad{color:var(--coral)}
+.pp-pending{color:var(--amber,#fbbf24)}
+.pp-ctx-h{display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px}.pp-ctx-h span{color:var(--text3)}
+.pp-ctx-bar{display:flex;height:5px;border-radius:3px;overflow:hidden;background:rgba(255,255,255,.06);margin-bottom:8px}.pp-ctx-bar span{height:100%}
+.pp-ctx-row{display:grid;grid-template-columns:10px 1fr auto 48px;gap:8px;align-items:center;font-size:10.5px;padding:2px 0;color:var(--text2,#cbd5e1)}
+.pp-ctx-sw{width:9px;height:9px;border-radius:2px;background:rgba(255,255,255,.12)}.pp-ctx-n,.pp-ctx-p{text-align:right;color:var(--text3)}
+.pp-ctx-free{opacity:.6}.pp-ctx-for{margin-top:6px;font-size:9.5px;color:var(--text3)}
 .pp-task{border-radius:6px}.pp-row{display:flex;align-items:center;gap:8px;padding:5px 4px;cursor:pointer;border-radius:6px}.pp-row:hover{background:rgba(255,255,255,.035)}
 .pp-mark{width:14px;text-align:center;color:var(--text3)}.pp-task.done .pp-mark{color:var(--text2)}.pp-task.cur .pp-mark{color:var(--sky)}
 .pp-name{flex:1;font:12.5px/1.35 system-ui,sans-serif;color:var(--nx-text);min-width:0}.pp-task.done .pp-name{text-decoration:line-through;color:var(--text3)}

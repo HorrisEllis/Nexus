@@ -190,9 +190,15 @@ console.log(`  boundary .export hooks for hand-mapped files required by the tree
   const prefixes = skippedIdPrefixes();
   const live = new Set(scan.FILES.map(f => f[1]));
   for (const f of handMapped) live.add(idFor(f));
+  // §0.60.83 — a record whose file lives in a top-level directory that no longer exists is stale whoever made it
+  // (hand-mapped or declared by a registry file): ERAVOS was deleted in 0.60.82 (James: "Delete it outright."), and its
+  // hand-mapped and registry-declared records stayed in registry.json, so the atlases still listed its routes.
+  const fs = require('fs'), path = require('path'), ROOT_DIR = path.join(__dirname, '..');
+  const goneTop = (rel) => { if (typeof rel !== 'string' || !rel.includes('/') || /^(https?:|\/)/.test(rel)) return false; const top = rel.split('/')[0]; return !!top && !fs.existsSync(path.join(ROOT_DIR, top)); };
   const isStaleComp = (c) =>
     prefixes.some(p => c.id.startsWith(p)) ||
-    (typeof c.uuid === 'string' && c.uuid.startsWith('nexus-loom-scan-') && !live.has(c.id));
+    (typeof c.uuid === 'string' && c.uuid.startsWith('nexus-loom-scan-') && !live.has(c.id)) ||
+    goneTop(c.declared_in) || goneTop(c.name);
   const staleComps = new Set(Object.values(driver.registry.all('component')).filter(isStaleComp).map(c => c.id));
   // §0.39.266 — scan-owned EVENT hooks/wires are re-derived every run (below, in mapSource): drop them
   // first, so an event that stopped being emitted or heard leaves the registry instead of dangling, and

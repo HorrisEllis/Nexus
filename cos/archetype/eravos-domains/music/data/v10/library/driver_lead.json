@@ -1,0 +1,16 @@
+{
+  "n": "Driver Lead",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#ff4400",
+  "i": "\ud83d\ude97",
+  "bpm": 118,
+  "key": "Gm",
+  "genre": "Synthwave",
+  "tags": [
+    "Kavinsky",
+    "dark",
+    "driving"
+  ],
+  "_file": "driver_lead.json"
+}

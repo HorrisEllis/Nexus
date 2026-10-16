@@ -1,0 +1,235 @@
+{
+  "id": "curve",
+  "name": "CURVE PERCUSSOR",
+  "icon": "\u301c",
+  "col": "#00ccff",
+  "tag": "PITCH FX",
+  "desc": "Draw pitch curves that slam edges and bounce. The QOTSA sound. Song for the Dead at 1:01 \u2014 draw the dive, let it ricochet.",
+  "module": "curve_percussor",
+  "visualizer": {
+    "type": "curve_canvas",
+    "color": "#00ccff",
+    "interactive": true
+  },
+  "params": [
+    {
+      "n": "Edge",
+      "k": "edge",
+      "v": 1,
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "type": "enum",
+      "options": [
+        "Left",
+        "Right",
+        "Both"
+      ]
+    },
+    {
+      "n": "Decay",
+      "k": "decay",
+      "v": 0.6,
+      "min": 0.01,
+      "max": 0.99
+    },
+    {
+      "n": "Bounces",
+      "k": "bounces",
+      "v": 0.4,
+      "min": 1,
+      "max": 8,
+      "step": 1
+    },
+    {
+      "n": "Pitch Range",
+      "k": "range",
+      "v": 0.7,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Duration",
+      "k": "dur",
+      "v": 0.5,
+      "min": 0.1,
+      "max": 2,
+      "unit": "s"
+    },
+    {
+      "n": "Mix",
+      "k": "mix",
+      "v": 0.9,
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "presets": {
+    "QOTSA DIVE": {
+      "edge": 1,
+      "decay": 0.62,
+      "bounces": 0.4,
+      "range": 0.88,
+      "dur": 0.45
+    },
+    "LASER": {
+      "edge": 1,
+      "decay": 0.45,
+      "bounces": 0.7,
+      "range": 1,
+      "dur": 0.3
+    },
+    "RICOCHET": {
+      "edge": 2,
+      "decay": 0.7,
+      "bounces": 0.8,
+      "range": 0.9,
+      "dur": 0.55
+    },
+    "SLOW FALL": {
+      "edge": 1,
+      "decay": 0.8,
+      "bounces": 0.3,
+      "range": 0.6,
+      "dur": 0.9
+    },
+    "BOTH WALLS": {
+      "edge": 2,
+      "decay": 0.75,
+      "bounces": 0.9,
+      "range": 1,
+      "dur": 0.6
+    }
+  },
+  "builtin_curves": {
+    "SONG FOR THE DEAD": {
+      "pts": [
+        {
+          "x": 0,
+          "y": 0.82
+        },
+        {
+          "x": 0.12,
+          "y": 0.78
+        },
+        {
+          "x": 0.25,
+          "y": 0.72
+        },
+        {
+          "x": 0.4,
+          "y": 0.62
+        },
+        {
+          "x": 0.55,
+          "y": 0.48
+        },
+        {
+          "x": 0.68,
+          "y": 0.32
+        },
+        {
+          "x": 0.8,
+          "y": 0.18
+        },
+        {
+          "x": 0.9,
+          "y": 0.08
+        },
+        {
+          "x": 0.97,
+          "y": 0.02
+        },
+        {
+          "x": 1,
+          "y": 0.01
+        }
+      ],
+      "edge": "right",
+      "decay": 0.62,
+      "desc": "Pitch curves upward slowly, accelerating toward right edge, slams and bounces back mirrored"
+    },
+    "RICOCHET UP": {
+      "pts": [
+        {
+          "x": 0,
+          "y": 0.9
+        },
+        {
+          "x": 0.2,
+          "y": 0.7
+        },
+        {
+          "x": 0.4,
+          "y": 0.4
+        },
+        {
+          "x": 0.6,
+          "y": 0.2
+        },
+        {
+          "x": 0.8,
+          "y": 0.08
+        },
+        {
+          "x": 1.0,
+          "y": 0.02
+        }
+      ],
+      "edge": "right",
+      "decay": 0.58
+    },
+    "LASER ZAP": {
+      "pts": [
+        {
+          "x": 0,
+          "y": 0.5
+        },
+        {
+          "x": 0.3,
+          "y": 0.05
+        },
+        {
+          "x": 0.6,
+          "y": 0.5
+        },
+        {
+          "x": 0.8,
+          "y": 0.8
+        },
+        {
+          "x": 1,
+          "y": 0.9
+        }
+      ],
+      "edge": "both",
+      "decay": 0.5
+    },
+    "VOWEL FALL": {
+      "pts": [
+        {
+          "x": 0,
+          "y": 0.2
+        },
+        {
+          "x": 0.3,
+          "y": 0.4
+        },
+        {
+          "x": 0.5,
+          "y": 0.6
+        },
+        {
+          "x": 0.7,
+          "y": 0.82
+        },
+        {
+          "x": 1,
+          "y": 0.95
+        }
+      ],
+      "edge": "right",
+      "decay": 0.7
+    }
+  }
+}

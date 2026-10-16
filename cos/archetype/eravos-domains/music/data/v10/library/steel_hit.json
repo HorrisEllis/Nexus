@@ -1,0 +1,16 @@
+{
+  "n": "Steel Hit",
+  "cat": "DRUMS",
+  "s": "crash",
+  "c": "#886644",
+  "i": "\ud83d\udd29",
+  "bpm": 145,
+  "key": "C",
+  "genre": "Industrial",
+  "tags": [
+    "metal",
+    "crash",
+    "industrial"
+  ],
+  "_file": "steel_hit.json"
+}

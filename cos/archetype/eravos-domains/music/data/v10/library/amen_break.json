@@ -1,0 +1,16 @@
+{
+  "n": "Amen Break",
+  "cat": "BREAKS",
+  "s": "crash",
+  "c": "#ff0000",
+  "i": "\ud83d\udd34",
+  "bpm": 174,
+  "key": "C",
+  "genre": "Jungle",
+  "tags": [
+    "amen",
+    "break",
+    "classic"
+  ],
+  "_file": "amen_break.json"
+}

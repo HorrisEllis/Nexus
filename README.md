@@ -44,7 +44,6 @@ Autopilot boots NEXUS in four phases. A phase does not start until every kernel 
 | 2 | `diagnostic` | :7825 | `diagnostic/nexus-diagnostic.js` | reads every ledger; the gap relay's other dial target |
 | 3 | `idearium` | :4800 | `idearium/api/index.js` | ideas, specs and repos, including the `nexus` repo this page lives in |
 | 3 | `architect` | :3747 | `architect/service.js` | hook registry, blueprints, the block canvas |
-| 3 | `eravos` | :3751 | `eravos/server.js` | the organism canvas and its kernel |
 | 3 | `intelligence` | :3753 | `intelligence/server.js` | the cognition layer: CFR, sigma, causal field, RFR2 |
 | 3 | `ollama-bridge` | :3749 | `ollama/server.js` | local model dispatch, isolated from guardian |
 | 3 | `versionium` | :3754 | `versionium/server.js` | causal version control |
@@ -69,7 +68,6 @@ nexus/
   idearium/              idearium — ideas, specs, repos, this page :4800
   architect/             architect — hooks, blueprints, block canvas :3747
   diagnostic/            diagnostic — ledgers, gaps, heal loop :7825
-  eravos/                eravos — organism canvas kernel :3751
   intelligence/          intelligence — CFR, sigma, RFR2, causal :3753
   ollama/                ollama-bridge — local models :3749
   versionium/            versionium — causal version control :3754
@@ -102,7 +100,7 @@ nexus/
   scripts/               core — verification and release scripts
   skills/                core — session skills (changelog, persona)
   tablet/                core — tablet homepage and 3D map
-  ui/                    core — UI shells: home, tv-shell, brainos, eravos canvas
+  ui/                    core — UI shells: home, tv-shell, brainos
   docs/                  core — axioms, specs, phasemaps, handoffs, atlases
   tests/                 core — every suite and its runners
 ```
@@ -175,7 +173,7 @@ The provider side is the userscripts: `guardian/userscript-chatgpt.js`, `guardia
 
 ### idearium
 
-Where work begins and where this page lives. `idearium/api/index.js` on :4800 serves ideas, brainstorms, specs, repos and their compartments, and `idearium/ui/` is the whole Idearium interface: Welcome and Repos, where each repo opens into 12 tabs: Home, Idea, Files, Architect, Spec (the living spec), Phases (every phasemap as one manager), Intelligence, Agent, Debug, Versionium, Sync & CI and Settings, then Create (Brainstorm, Ideas) and Build (the Eravos organism canvas, the Architect block canvas, the Spec Builder), which belong to the open repo. The Agent tab is the repo's own agent, a hat forged for that one project that answers on Ollama, through copilot or through a browser agent, remembers its work in the Clear Glass download manager, and proposes its code as injects. `idearium/ui/js/app.js` is the interface, `idearium/ui/js/nexus-atlas.js` renders this atlas, `idearium/ui/js/compartment.js` draws compartments, and `idearium/ui/js/agent-blocks.js` edits exactly what an agent is sent.
+Where work begins and where this page lives. `idearium/api/index.js` on :4800 serves ideas, brainstorms, specs, repos and their compartments, and `idearium/ui/` is the whole Idearium interface: Welcome and Repos, where each repo opens into 12 tabs: Home, Idea, Files, Architect, Spec (the living spec), Phases (every phasemap as one manager), Intelligence, Agent, Debug, Versionium, Sync & CI and Settings, then Create (Brainstorm, Ideas) and Build (the Architect block canvas, the Spec Builder; the Eravos canvas until 0.60.83), which belong to the open repo. The Agent tab is the repo's own agent, a hat forged for that one project that answers on Ollama, through copilot or through a browser agent, remembers its work in the Clear Glass download manager, and proposes its code as injects. `idearium/ui/js/app.js` is the interface, `idearium/ui/js/nexus-atlas.js` renders this atlas, `idearium/ui/js/compartment.js` draws compartments, and `idearium/ui/js/agent-blocks.js` edits exactly what an agent is sent.
 
 The spec engine in `idearium/spec-engine/` turns an idea into a spec by chunking it into blocks (`idearium/spec-engine/blocks.yaml`), dispatching each chunk to guardian (`idearium/spec-engine/chunk-dispatch.js`), and planning a file tree first when asked. The repo layer in `idearium/repo/` imports, snapshots, watches and graphs repos; `idearium/repo/nexus-self.js` is what makes NEXUS one of them. Its spec is `idearium/spec/idearium.spec`, with the roadmap and graph specs beside it. The next zoom level is `idearium-atlas.md`.
 
@@ -188,12 +186,6 @@ Its node schemas live in `architect/schemas/`, and its spec `architect/spec/arch
 ### diagnostic
 
 The system that watches the others. `diagnostic/nexus-diagnostic.js` on :7825 reads every system's ledger on a timer, computes sigma, friction and drift, detects gaps (baseline deviations, missing heartbeats, stuck queues), and serves them live. `diagnostic/nexus-heal-loop.js` is the closed loop from a detected gap to a resolved one, and `diagnostic/wire-integrity.js` classifies loom's dangling hooks so the boot log reports real gaps instead of hundreds of unwired root files. Diagnostic has no spec of its own yet, and its atlas says so. The next zoom level is `diagnostic-atlas.md`.
-
-### eravos
-
-The organism canvas, and a sovereign system rather than a UI folder. `eravos/server.js` on :3751 hosts a kernel, a runtime, a mod registry, a wire system, an audio engine, a catalog, a pack loader and a bridge to NEXUS; RAID routes compose, visualize and sequence intents here, and guardian delivers built mods here. The canvas runs in the browser from `eravos/ui/`: the kernel in `eravos/ui/kernel/kernel.js`, the runtime in `eravos/ui/runtime/`, the catalog in `eravos/ui/catalog/catalog-ui.js`, and each mod in `eravos/ui/mods/`. Its law is `eravos/ui/specs/ERAVOS.kernel.spec`: nothing exists until it is registered, and every connection between mods is a wire owned by the wire registry.
-
-The canvas Idearium embeds is served from a second copy, `ui/eravos/`, which calls its mods organisms (`ui/eravos/catalog/catalog-ui.js`). The two copies have drifted apart and are two contracts until someone reconciles them; the drift is named under **Known drift** below. The catalog's New button in both copies now starts a new organism in Idearium, as an idea or a spec. The next zoom level is `eravos-atlas.md`.
 
 ### intelligence
 
@@ -297,7 +289,7 @@ The base every new sovereign system is built on before it has features: componen
 
 #### `ui/` — the shells
 
-The home shell (`ui/home/index.html`), the TV shell (`ui/tv-shell/`), BrainOS and its floating panel (`ui/brainos/`, `ui/brainos-float/`), the control panel (`ui/control-panel/index.html`), the Eravos canvas Idearium embeds (`ui/eravos/index.html`), the provider agents' pages (`ui/agents/`), and shared UI code (`ui/api.js`, `ui/ports.js`, `ui/pulse.js`). The orchestrator serves each one under /ui/.
+The home shell (`ui/home/index.html`), the TV shell (`ui/tv-shell/`), BrainOS and its floating panel (`ui/brainos/`, `ui/brainos-float/`), the control panel (`ui/control-panel/index.html`), the provider agents' pages (`ui/agents/`), and shared UI code (`ui/api.js`, `ui/ports.js`, `ui/pulse.js`). The orchestrator serves each one under /ui/.
 
 #### `docs/` — the written record
 
@@ -343,7 +335,6 @@ Runtime state lives in data folders at any depth, never in the snapshot and neve
 
 Named here so nobody mistakes it for a design (§12.5, §13.4):
 
-- **Two Eravos canvases.** `eravos/ui/` (mods, served by the eravos system) and `ui/eravos/` (organisms, served by the orchestrator and embedded in Idearium) diverged. Both got the same 0.39.264 change; they are still two contracts.
 - **Stale references in older system atlases.** The atlas reference test lists, for each older atlas, the references the tree no longer has; `clear-glass-atlas.md` has the most. The atlases written in 0.39.264, and `idearium-atlas.md` rewritten in 0.39.270, have none, and the test fails if one appears.
 - **Diagnostic has no spec.** Its atlas says what exists instead.
 - **Two run-all lists.** `tests/modules/run-all.js` and the root `run-all.js` are copies kept in step by hand.
@@ -358,7 +349,8 @@ Named here so nobody mistakes it for a design (§12.5, §13.4):
 |---|---|
 | — | first NEXUS-level atlas: an index of 13 systems, hooked into Idearium's per-repo atlas shape; the pre-0.39.264 text is kept in docs/atlases/_archive/ (outside the snapshot, in git) |
 | 0.39.263 | this document became the `nexus` repo's Home in Idearium; every reference in it resolves and opens |
-| 0.39.264 | written out in full: every system and every top-level directory, how work moves through NEXUS, the governing law, cross-cutting concerns, known drift; atlases added for `orchestrator`, `architect`, `eravos` and `core` so every system opens into a nested atlas; routes and data folders link to the code that owns them; a contents list; every reference checked against the real tree by `tests/modules/test-nexus-atlas-refs.test.js` |
+| 0.39.264 | written out in full: every system and every top-level directory, how work moves through NEXUS, the governing law, cross-cutting concerns, known drift; atlases added for `orchestrator`, `architect`, eravos (deleted 0.60.83) and `core` so every system opens into a nested atlas; routes and data folders link to the code that owns them; a contents list; every reference checked against the real tree by `tests/modules/test-nexus-atlas-refs.test.js` |
+| 0.60.83 | ERAVOS deleted (James: "can you remove eravos?" · "Delete it outright."): its row, its directory line, its section, its canvas and its drift note left this atlas; docs/2026-10-16-eravos-removal-phasemap.spec holds what it was |
 
 ---
 

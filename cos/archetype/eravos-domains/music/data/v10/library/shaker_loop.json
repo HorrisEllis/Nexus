@@ -1,0 +1,16 @@
+{
+  "n": "Shaker Loop",
+  "cat": "DRUMS",
+  "s": "hat",
+  "c": "#996633",
+  "i": "\ud83c\udfb2",
+  "bpm": 126,
+  "key": "C",
+  "genre": "Minimal",
+  "tags": [
+    "shaker",
+    "groove",
+    "minimal"
+  ],
+  "_file": "shaker_loop.json"
+}

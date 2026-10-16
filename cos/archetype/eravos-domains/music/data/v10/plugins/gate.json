@@ -1,0 +1,93 @@
+{
+  "id": "gate",
+  "name": "DEATH GATE",
+  "icon": "\u2298",
+  "col": "#cc0000",
+  "tag": "DYNAMICS",
+  "desc": "Rhythmic noise gate. Stutter patterns, trance gates.",
+  "module": "gate",
+  "visualizer": {
+    "type": "gate_pattern",
+    "color": "#cc0000"
+  },
+  "params": [
+    {
+      "n": "Threshold",
+      "k": "thresh",
+      "v": 0.4,
+      "min": -80,
+      "max": 0,
+      "unit": "dB"
+    },
+    {
+      "n": "Attack",
+      "k": "attack",
+      "v": 0.2,
+      "min": 0.001,
+      "max": 0.5,
+      "unit": "s"
+    },
+    {
+      "n": "Release",
+      "k": "release",
+      "v": 0.3,
+      "min": 0.001,
+      "max": 2,
+      "unit": "s"
+    },
+    {
+      "n": "Hold",
+      "k": "hold",
+      "v": 0.3,
+      "min": 0,
+      "max": 1,
+      "unit": "s"
+    },
+    {
+      "n": "Pattern",
+      "k": "pattern",
+      "v": 0.5,
+      "min": 0,
+      "max": 7,
+      "step": 1,
+      "type": "enum",
+      "options": [
+        "1/4",
+        "1/8",
+        "1/16",
+        "1/32",
+        "triplet",
+        "dotted",
+        "random",
+        "sidechain"
+      ]
+    },
+    {
+      "n": "Depth",
+      "k": "depth",
+      "v": 1,
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "presets": {
+    "TRANCE": {
+      "thresh": 0.4,
+      "pattern": 2,
+      "attack": 0.01,
+      "release": 0.1
+    },
+    "STUTTER": {
+      "pattern": 3,
+      "attack": 0.001,
+      "release": 0.05,
+      "depth": 1
+    },
+    "PUMP": {
+      "thresh": 0.3,
+      "pattern": 1,
+      "attack": 0.05,
+      "release": 0.2
+    }
+  }
+}

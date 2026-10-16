@@ -9,7 +9,7 @@
 
 const { session } = require('electron');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
-const { applyCspBypass } = require('./session-headers');
+const { applyCspBypass, requestHook } = require('./session-headers');
 
 class ContextManager {
   constructor({ fp, vault, sse }) {
@@ -35,7 +35,12 @@ class ContextManager {
     const ses = session.fromPartition(`persist:agent-${id}`, { cache: true });
     applyCspBypass(ses);
     // 0.60.60 NP3 — routes (src/net): a no-op unless a rule applies to this window; never lets a routing error stop the window opening
-    try { require('../net/service').service().register(`persist:agent-${id}`, ses, { provider: null, caller: 'person-tab' }).catch(() => {}); } catch (_) { /* routing is optional */ }
+    // §0.60.109 TLS3 — a Firefox persona routes its direct https/wss through the TLS layer (cg-tls-helper), so its handshake is
+    // Firefox's too; it trusts that layer's local CA, and only for certificates that CA issued (src/tls/helper.js verifyProc).
+    // James: "fix it. i don't want the trouble again"
+    const firefox = /\bFirefox\//.test(this.fp.getOrGenerate(id).ua || '');
+    if (firefox) { try { ses.setCertificateVerifyProc(require('../tls/helper').verifyProc()); } catch (e) { console.warn(`[contexts] TLS layer trust not set on ${id}: ${e.message}`); } }
+    try { require('../net/service').service().register(`persist:agent-${id}`, ses, { provider: null, caller: 'person-tab', firefox }).catch(() => {}); } catch (_) { /* routing is optional */ }
 
     // Apply user agent
     ses.setUserAgent(profile.ua);
@@ -44,8 +49,9 @@ class ContextManager {
     ses.setSpellCheckerLanguages([profile.language]);
 
     // Request header injection — Firefox header order and values
-    ses.webRequest.onBeforeSendHeaders((details, callback) => {
-      const headers = { ...details.requestHeaders };
+    // (through requestHook: a second onBeforeSendHeaders here used to replace applyCspBypass's localhost one — 2026-10-16)
+    requestHook(ses, 'fingerprint-profile', (details, requestHeaders) => {
+      const headers = { ...requestHeaders };
       const accept = profile.accept;
       const isNav  = details.resourceType === 'mainFrame' || details.resourceType === 'subFrame';
       const set    = isNav ? accept.navigation : accept.fetch;
@@ -57,8 +63,11 @@ class ContextManager {
 
       // Override User-Agent always
       headers['User-Agent'] = profile.ua;
+      // 2026-10-16 — a Firefox persona sends no client hints: Chromium's Sec-CH-UA beside a Firefox UA, on every site, was
+      // a Chromium saying it is Firefox (Google's sign-in reads exactly that). James: "do everything you can to prevent that"
+      if (/\bFirefox\//.test(profile.ua)) for (const k of Object.keys(headers)) if (/^sec-ch-ua/i.test(k)) delete headers[k];
 
-      callback({ requestHeaders: headers });
+      return headers;
     });
 
     // Network error tracking for RAID health scoring

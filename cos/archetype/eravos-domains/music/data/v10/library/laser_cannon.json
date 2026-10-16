@@ -1,0 +1,16 @@
+{
+  "n": "Laser Cannon",
+  "cat": "LEADS",
+  "s": "laser",
+  "c": "#ff44aa",
+  "i": "\ud83d\udd2b",
+  "bpm": 140,
+  "key": "Am",
+  "genre": "Dubstep",
+  "tags": [
+    "laser",
+    "scifi",
+    "zap"
+  ],
+  "_file": "laser_cannon.json"
+}

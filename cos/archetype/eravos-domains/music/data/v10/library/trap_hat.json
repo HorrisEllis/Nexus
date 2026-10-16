@@ -1,0 +1,16 @@
+{
+  "n": "Trap Hat",
+  "cat": "DRUMS",
+  "s": "hat",
+  "c": "#ffcc00",
+  "i": "\ud83c\udfa9",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Trap",
+  "tags": [
+    "hi-hat",
+    "roll",
+    "trap"
+  ],
+  "_file": "trap_hat.json"
+}

@@ -1,0 +1,370 @@
+{
+ "schema": "eravos.pack/1",
+ "id": "eravos.presets.seq-songs",
+ "version": "1.0.0",
+ "label": "Sequencer songs",
+ "prefix": "Song",
+ "author": "James Brooks",
+ "tags": [
+  "song"
+ ],
+ "for": [
+  "eravos.sequencer"
+ ],
+ "items": {
+  "eravos.sequencer": {
+   "presets": {
+    "Give Your Head a Shake": {
+     "params": {
+      "chainOn": true,
+      "swing": 0.06,
+      "slot": "A",
+      "humanize": 0.15
+     },
+     "extra": {
+      "lanes": [
+       {
+        "name": "kick",
+        "kind": "drum",
+        "drumNote": 36,
+        "color": "#ff2266"
+       },
+       {
+        "name": "snare",
+        "kind": "drum",
+        "drumNote": 37,
+        "color": "#ffaa00"
+       },
+       {
+        "name": "clap",
+        "kind": "drum",
+        "drumNote": 38,
+        "color": "#ff66aa"
+       },
+       {
+        "name": "hat",
+        "kind": "drum",
+        "drumNote": 39,
+        "color": "#ffdd00",
+        "evolve": 0.3
+       },
+       {
+        "name": "crash",
+        "kind": "drum",
+        "drumNote": 44,
+        "color": "#88ffee"
+       },
+       {
+        "name": "her voice",
+        "kind": "drum",
+        "drumNote": 36,
+        "organism": "eravos.sample-player",
+        "color": "#ff7eb6"
+       },
+       {
+        "name": "wobble",
+        "kind": "melodic",
+        "organism": "eravos.wobble-bass",
+        "role": "bass",
+        "transpose": -1,
+        "evolve": 0.2,
+        "color": "#b066ff"
+       },
+       {
+        "name": "wobble rate",
+        "kind": "auto",
+        "organism": "eravos.wobble-bass",
+        "param": "div",
+        "mode": "hold",
+        "color": "#ffd166"
+       },
+       {
+        "name": "wobble cutoff",
+        "kind": "auto",
+        "organism": "eravos.wobble-bass",
+        "param": "cutoff",
+        "mode": "glide",
+        "color": "#ffb347"
+       },
+       {
+        "name": "DJ filter",
+        "kind": "auto",
+        "organism": "eravos.master-fx",
+        "param": "djFilter",
+        "mode": "glide",
+        "color": "#66eeff"
+       },
+       {
+        "name": "reverb",
+        "kind": "auto",
+        "organism": "eravos.master-fx",
+        "param": "reverbMix",
+        "mode": "hold",
+        "color": "#9fe8ff"
+       }
+      ],
+      "slots": {
+       "A": {
+        "name": "intro",
+        "length": 32,
+        "steps": {
+         "kick": "X...............................",
+         "hat": "..x...x...x...x...x...x...x...x.",
+         "her voice": "X...............................",
+         "DJ filter": "2...............3...............",
+         "reverb": "6..............................."
+        }
+       },
+       "B": {
+        "name": "verse",
+        "length": 64,
+        "steps": {
+         "kick": "X.........X.....X.........X.....X.........X.....X.........X.....",
+         "snare": "........X...............X...............X...............X.......",
+         "hat": "..x...x...x...x...x...x...x...x...x...x...x...x...x...x...x...x.",
+         "her voice": "X...............................................................",
+         "wobble": "1g6 . . . . . . . . . . . 1g2 . 7-g2 . 1g6 . . . . . . . . . . . 1g2 . 7-g2 . 1g6 . . . . . . . . . . . 1g2 . 7-g2 .  1g6 . . . . . . . 3g4 . . . 2g2 . 1g2 .",
+         "wobble rate": "2...............................4...............................",
+         "wobble cutoff": "0...............1...............0...............2...............",
+         "DJ filter": "m...............................................................",
+         "reverb": "3..............................................................."
+        },
+        "conds": {
+         "her voice": {
+          "0": "1:2"
+         }
+        }
+       },
+       "C": {
+        "name": "build",
+        "length": 32,
+        "steps": {
+         "kick": "X...X...X...X...................",
+         "snare": "X.x.X.x.X.x.X.x.XxXxXxXxXXXXXXXX",
+         "hat": "x.x.x.x.x.x.x.x.................",
+         "her voice": "........................X.......",
+         "DJ filter": "m...............7..............8",
+         "reverb": "3.......................7......."
+        }
+       },
+       "D": {
+        "name": "pause",
+        "length": 8,
+        "steps": {
+         "reverb": "9.......",
+         "DJ filter": ".......m"
+        }
+       },
+       "E": {
+        "name": "drop 1",
+        "length": 64,
+        "steps": {
+         "kick": "X.........X.....X.........X.....X.........X.....X.........X.....",
+         "snare": "........X...............X...............X...............X...XXXX",
+         "clap": "........X...............X...............X...............X.......",
+         "crash": "X...............................................................",
+         "hat": "..x...x...x...x...x...x...x...x...x...x...x...x...x...x...x...x.",
+         "her voice": "........................................................X.......",
+         "wobble": "1g4 . . . 1g2 . 1g2 . . . 3g2 . 1g4 . . . 1g2 . 1g2 . 1+g2 . 1g2 . 6-g4 . . . 7-g4 . . . 1g4 . . . 1g2 . 1g2 . . . 3g2 . 1g4 . . . 1g4 . . . 1g2 . 1g2 . 3g2 . 4g2 . 5g4 . . .",
+         "wobble rate": "4...7...2...9...3...4...7...7.7.4...7...2...9...4...4...7...9...",
+         "wobble cutoff": "1...3...1...4...2...4...1...5...1...3...1...4...2...5...6.......",
+         "DJ filter": "m...............................................................",
+         "reverb": "1..............................................................."
+        },
+        "conds": {
+         "snare": {
+          "60": "fill",
+          "61": "fill",
+          "62": "fill",
+          "63": "fill"
+         },
+         "her voice": {
+          "56": "2:2"
+         }
+        },
+        "locks": {
+         "wobble": {
+          "20": {
+           "lfoShape": "yoy"
+          },
+          "28": {
+           "pitchDive": -12
+          }
+         }
+        }
+       },
+       "F": {
+        "name": "drop 2 (talking)",
+        "length": 64,
+        "steps": {
+         "kick": "X.........X.....X.........X.....X.........X.....X.........X.....",
+         "snare": "........X...............X...............X...............X...XXXX",
+         "clap": "........X...............X...............X...............X.......",
+         "crash": "X...............................................................",
+         "hat": "x.x.x.xox.x.x.xox.x.x.xox.x.x.xox.x.x.xox.x.x.xox.x.x.xox.x.x.xo",
+         "her voice": "........................................................X.......",
+         "wobble": "1g4 . . . 1g2 . 1g2 . . . 3g2 . 1g4 . . . 1g2 . 1g2 . 1+g2 . 1g2 . 6-g4 . . . 7-g4 . . . 1g2 . 1g2 . 1+g2 . 1g2 . 1++g2 . . . 7-g4 . . . 1g4 . . . 1g2 . 1g2 . 3g2 . 4g2 . 5g4 . . .",
+         "wobble rate": "7...9...7...4.4.9...7...3...9...7.9.7.9.4...2...9...9...7...9999",
+         "wobble cutoff": "2...6...3...8...3...7...2...9...2...6...3...8...4...8...9.......",
+         "DJ filter": "m...............................................................",
+         "reverb": "1..............................................................."
+        },
+        "conds": {
+         "snare": {
+          "60": "fill",
+          "61": "fill",
+          "62": "fill",
+          "63": "fill"
+         },
+         "her voice": {
+          "56": "2:2"
+         }
+        },
+        "locks": {
+         "wobble": {
+          "20": {
+           "lfoShape": "yoy"
+          },
+          "28": {
+           "pitchDive": -12
+          }
+         }
+        }
+       },
+       "G": {
+        "name": "breakdown",
+        "length": 32,
+        "steps": {
+         "hat": "....x.......x.......x.......x...",
+         "her voice": "X...............................",
+         "DJ filter": "2..............................m",
+         "reverb": "6..............................."
+        }
+       }
+      },
+      "chain": [
+       {
+        "slot": "A",
+        "repeats": 1
+       },
+       {
+        "slot": "B",
+        "repeats": 2
+       },
+       {
+        "slot": "C",
+        "repeats": 1
+       },
+       {
+        "slot": "D",
+        "repeats": 1
+       },
+       {
+        "slot": "E",
+        "repeats": 2
+       },
+       {
+        "slot": "G",
+        "repeats": 1
+       },
+       {
+        "slot": "C",
+        "repeats": 1
+       },
+       {
+        "slot": "D",
+        "repeats": 1
+       },
+       {
+        "slot": "F",
+        "repeats": 2
+       }
+      ]
+     }
+    },
+    "Riddim talk (automation)": {
+     "params": {
+      "chainOn": false,
+      "swing": 0,
+      "slot": "A",
+      "humanize": 0.1
+     },
+     "extra": {
+      "lanes": [
+       {
+        "name": "kick",
+        "kind": "drum",
+        "drumNote": 36,
+        "color": "#ff2266"
+       },
+       {
+        "name": "snare",
+        "kind": "drum",
+        "drumNote": 37,
+        "color": "#ffaa00"
+       },
+       {
+        "name": "hat",
+        "kind": "drum",
+        "drumNote": 39,
+        "color": "#ffdd00",
+        "evolve": 0.4
+       },
+       {
+        "name": "riddim",
+        "kind": "melodic",
+        "organism": "eravos.wobble-bass",
+        "role": "bass",
+        "transpose": -1,
+        "color": "#b066ff"
+       },
+       {
+        "name": "wobble rate",
+        "kind": "auto",
+        "organism": "eravos.wobble-bass",
+        "param": "div",
+        "mode": "hold",
+        "color": "#ffd166"
+       },
+       {
+        "name": "grit",
+        "kind": "auto",
+        "organism": "eravos.wobble-bass",
+        "param": "shaper",
+        "mode": "glide",
+        "color": "#ff8844"
+       }
+      ],
+      "slots": {
+       "A": {
+        "name": "riddim talk",
+        "length": 32,
+        "steps": {
+         "kick": "X.........X.....X.........X.....",
+         "snare": "........X...............X.......",
+         "hat": "..x...x...x...x...x...x...x...x.",
+         "riddim": "1g3 . . 1g3 . . 1g2 . . . 1g3 . . 1g2 . . 1g3 . . 1g3 . . 1g2 . . . 1+g3 . . 7-g2 . .",
+         "wobble rate": "7..5..4...7..4..9..7..4...7..2..",
+         "grit": "2.....6.........3.....9.....2..."
+        },
+        "locks": {
+         "riddim": {
+          "26": {
+           "lfoShape": "yoy"
+          }
+         }
+        }
+       }
+      },
+      "chain": [
+       {
+        "slot": "A",
+        "repeats": 1
+       }
+      ]
+     }
+    }
+   }
+  }
+ }
+}

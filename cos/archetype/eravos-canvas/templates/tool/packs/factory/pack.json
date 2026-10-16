@@ -1,0 +1,18 @@
+{
+  "schema": "eravos.pack/1",
+  "id": "__TOOL__.factory",
+  "version": "0.1.0",
+  "label": "Factory",
+  "author": "__AUTHOR__",
+  "tags": ["factory"],
+  "for": "__ID__",
+  "enabled": true,
+  "items": {
+    "__ID__": {
+      "presets": {
+        "Gentle": { "params": { "amount": 0.25, "mode": "a" } },
+        "Full": { "params": { "amount": 1, "mode": "b" } }
+      }
+    }
+  }
+}
