@@ -50,7 +50,9 @@ test('T-006', 'a phase\'s own systems: line wins and is marked declared; every t
 test('T-007', 'only the systems in systems.js: every phase\'s systems are Idearium\'s; bySystem has no other key; a tag is answered for its system', () => {
   const NS = require('../../lib/nexus-self/systems.js');
   const all = pm.loadAll();
-  assert.strictEqual(NS.names().length, 15, 'the 15 of SY1 + cos (SY2, James: "Its own system (16th)"), less eravos (deleted 0.60.82, James: "Delete it outright.")');
+  // ER1 (0.60.83, docs/2026-10-16-eravos-removal-phasemap.spec) — James: "can you remove eravos?" → "Delete it outright.": 16 − eravos
+  assert.strictEqual(NS.names().length, 15, 'the 15 of SY1 + cos (SY2, James: "Its own system (16th)") − eravos (ER1, deleted 0.60.83)');
+  assert.ok(!NS.names().includes('eravos'), 'eravos is gone (ER1)');
   assert.ok(NS.names().includes('cos'));
   const outside = all.phases.filter(p => p.systems.some(x => !NS.names().includes(x))).map(p => `${p.map}:${p.id} ${p.systems}`);
   assert.deepStrictEqual(outside, [], 'a phase on something that is not a system');

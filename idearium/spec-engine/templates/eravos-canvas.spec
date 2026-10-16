@@ -1,6 +1,6 @@
 // ERAVOS CANVAS TEMPLATE v1.0.0
 // UUID: idearium-template-eravos-canvas-v1-0000-2026-1016-jamesbrooks-001
-// §0.60.83 CN4 — James, 2026-10-16: "what about using cos for the canvas, then each tool a nested compartment?" ·
+// §0.60.104 CN4 — James, 2026-10-16: "what about using cos for the canvas, then each tool a nested compartment?" ·
 // "creating templates for cos and ideariun spec workshop". Source, quoted not invented: his ERAVOS README.md (the
 // layout), canvas/scripts.js and tools/index.js (how the canvas finds its tools), build/new-tool.mjs and
 // build/index-tools.mjs (how a tool is added). The canvas is COS archetype eravos-canvas; each tool a nested compartment.

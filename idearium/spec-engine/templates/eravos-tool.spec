@@ -1,6 +1,6 @@
 // ERAVOS TOOL TEMPLATE v1.0.0
 // UUID: idearium-template-eravos-tool-v1-0000-2026-1016-jamesbrooks-001
-// §0.60.83 CN4 — James, 2026-10-16: "creating templates for cos and ideariun spec workshop" (with Eravos-merged.zip).
+// §0.60.104 CN4 — James, 2026-10-16: "creating templates for cos and ideariun spec workshop" (with Eravos-merged.zip).
 // Source, quoted not invented: his templates/tool/__TOOL__.spec (identity, ports, params, behaviour, needs, packs,
 // acceptance), templates/tool/__TOOL__.engine.js (the engine's comment) and schemas/tool.schema.json (the manifest).
 // One tool on one canvas; in Nexus it is its own COS compartment nested under the canvas (cos-archetype:eravos-tool).

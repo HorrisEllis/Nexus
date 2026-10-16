@@ -23,6 +23,7 @@ const SUITES = [
   'test-projects-overview.test.js',       // 0.60.74 COSA10 — every project on one list; no two API routes share a method and path
   'test-contract-trace.test.js',          // 0.60.75 GW3 — a contract traced end to end; holes named, never filled
   'test-context-budget.test.js',          // 0.60.76 GW24 — the dependencies' code ranked and cut to the agent's budget; the cut said
+  'test-work-funnel.test.js',             // 0.60.94 FN0 — dependencies, spec, phase, chunks, in his order; each stop planted
   'test-spec-pipeline.test.js',           // 0.60.66 SF1-SF3 — intent blocks, the spec framework, the spec gate + collector (phase-tagged)
   'test-phase-map-auto.test.js',          // 0.60.65 MP1/MP2 — every phase mapped by Nexus (no model): files with evidence, requires, consumers, waits-on, specs; automatic in any repo
   'test-phase-specs-tag.test.js',          // 0.60.63 PT1 — specs tagged per phase; the WARP / spec-framework map's files and deps declared
@@ -47,10 +48,10 @@ const SUITES = [
   'test-run-all-process-group.test.js',   // 0.39.282 N29 — a suite's whole process group dies with it (orphaned servers caused full-run-only failures)
   'test-step-gate.test.js',   // 0.39.282 N21 — every build step passes a gate (rule nodes); a refusal is blocked, never 'replied'; no empty file is written
   'test-run-state.test.js',   // 0.60.50 CE1–CE5 + CE10 — the run is kept by Nexus: resume, task header, reply-on-task gate, reply tags, lost-job fallback
-  'test-code-surface-state.test.js',   // 0.60.79 CE8 — the Code tab's surface kept by Nexus: the CLI reads and sets it, the tab follows (Clear Glass)
-  'test-code-tab-expand.test.js',   // 0.60.80 CE7 · CV2 · CV4 · CV3 — line edits checked and proposed, the agent on a picked range, a version per diff, tagged history, run rewind
-  'test-code-tab-merge.test.js',   // 0.60.81 CE6 · CE7 · CE9 · CV1 — Files merged into Code, Manage+History one menu, line actions, the bottom panels (Clear Glass)
-  'test-canvas-compartments.test.js',   // 0.60.83 CN1–CN4 — his ERAVOS canvas as a COS compartment, each tool nested; COS + workshop templates (Clear Glass, his serve.js and harness)
+  'test-code-surface-state.test.js',   // 0.60.80 CE8 — the Code tab's surface kept by Nexus: the CLI reads and sets it, the tab follows (Clear Glass)
+  'test-code-tab-expand.test.js',   // 0.60.81 CE7 · CV2 · CV4 · CV3 — line edits checked and proposed, the agent on a picked range, a version per diff, tagged history, run rewind
+  'test-code-tab-merge.test.js',   // 0.60.82 CE6 · CE7 · CE9 · CV1 — Files merged into Code, Manage+History one menu, line actions, the bottom panels (Clear Glass)
+  'test-canvas-compartments.test.js',   // 0.60.104 CN1–CN4 — his ERAVOS canvas as a COS compartment, each tool nested; COS + workshop templates (Clear Glass, his serve.js and harness)
   'test-run-pipeline.test.js',   // 0.60.50 CE1 + CE10 through the real repo-agent dispatch: a run per goal, a lost tab moves to the next provider, resume
   'test-shadow.test.js',   // 0.39.282 N22 — a step's shadow (what must exist after it); every absence is a gap + a liminal item; manage/plan runs read incomplete
   'test-draft-review.test.js',   // 0.39.282 N23 — each chunk in a fresh chat; an Ollama draft is reviewed by a guardian agent in one plain conversation
@@ -368,6 +369,23 @@ const SUITES = [
   'test-net-routes.test.js',          // 0.60.60 — net routes + Snowflake transport (CLI first): policy, fail-closed PAC, fake tor, agent read-only
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
+  'test-cos-app-ui.test.js',          // 0.60.89 COSA6 — COS window (jsdom) and controller
+  'test-release-deliver.test.js',     // 0.60.93 COSA7 — Clear Glass delivers a release to COS's inbox
+  'test-autopilot-idle.test.js',      // 0.60.92 the autopilot's GET /idle
+  'test-cos-app-shell.test.js',       // 0.60.91 CON-lite — the COS command line (npm run start:all, nexus ...) without PowerShell
+  'test-cos-app-update.test.js',      // 0.60.90 COSA12/13 — settings and the update policy
+  'test-cos-app-build.test.js',       // 0.60.89 COSA6 — staging for the Windows build
+  'test-cos-app-runtime.test.js',     // 0.60.88 COSA2/3 — start/stop/health of an installed version
+  'test-cos-app-switch.test.js',      // 0.60.88 COSA4 — switch, snapshot, rollback
+  'test-cos-app-store.test.js',       // 0.60.87 COSA1 — COS version store and zip import
+  'test-clearglass-jobs.test.js',     // 0.60.86 — five ready-made jobs run on the real engine, network stubbed
+  'test-chat-ports.test.js',          // 0.60.85 PI5b — the crawler's ports on the real automation engine, fake chat site in jsdom
+  'test-chat-crawler.test.js',        // 0.60.84 PI5 — the crawler driving the plan through fake ports
+  'test-vector-memory-embed-check.test.js', // 0.60.97 — the embed check, fixed for good
+  'test-inject-screen.test.js',       // 0.60.98 — every proposal passes one screen at the door
+  'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person
+  'test-language-checks.test.js',     // 0.60.101 — every language's own parser, at the gate
+  'test-cos-vm-shell.test.js',        // 0.60.101 — `cos vm shell`: the test VM's own terminal
   'test-scroll-until.test.js',       // 0.60.56 — the slow scroll step (ErosmancerOS wheel, arrow keys, page) and the Read-one-chat template
   'test-chat-crawl-plan.test.js',    // 0.60.55 — the personal-chat crawl plan: nothing missed, the stopping edge, pace, stop rules
   'test-gig-ledger.test.js',         // 0.60.53 — the Fiverr ledger keeps only what checks out

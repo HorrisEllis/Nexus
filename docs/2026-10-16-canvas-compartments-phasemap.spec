@@ -42,7 +42,7 @@ reading:
 
 phases:
   CN1_canvas_archetype:
-    status: BUILT 0.60.83 (tests/modules/test-canvas-compartments.test.js CC-01)
+    status: BUILT 0.60.104 (tests/modules/test-canvas-compartments.test.js CC-01)
     systems: [cos]
     files: [cos/archetype/eravos-canvas/ (new), cos/archetype/eravos-canvas.js (new), cos/archetype/registry.js]
     does: >-
@@ -52,7 +52,7 @@ phases:
       rewritten.
 
   CN2_tool_archetypes:
-    status: BUILT 0.60.83 (CC-01, CC-02)
+    status: BUILT 0.60.104 (CC-01, CC-02)
     systems: [cos, core]
     files: [cos/archetype/eravos-tool/ (new), cos/archetype/eravos-sound-tool/ (new), cos/archetype/eravos-tool.js (new), cos/archetype/registry.js, lib/file-tree-plan.js]
     does: >-
@@ -62,7 +62,7 @@ phases:
       domain/category "custom" and toolId "<domain>.<slug>".
 
   CN3_nested_compartments:
-    status: BUILT 0.60.83 backend, route, commands (CC-03, CC-04, CC-06, CC-10); UI is CN6, open
+    status: BUILT 0.60.104 backend, route, commands (CC-03, CC-04, CC-06, CC-10); UI is CN6, open
     systems: [core, cos, idearium]
     files: [lib/canvas-compartments.js (new), idearium/api/index.js, idearium/cli/route-commands.js]
     does: >-
@@ -76,7 +76,7 @@ phases:
       deferred to CN6 and said so.
 
   CN4_workshop_templates:
-    status: BUILT 0.60.83 (CC-05)
+    status: BUILT 0.60.104 (CC-05)
     systems: [idearium]
     files: [idearium/spec-engine/templates/eravos-canvas.spec (new), idearium/spec-engine/templates/eravos-tool.spec (new), idearium/spec-engine/templates.js]
     does: >-
@@ -97,7 +97,7 @@ phases:
 
 build_order: [CN2 (vars), CN1, CN2, CN4, CN3, CN6]
 
-## ADDENDUM 2026-10-16 (b) - built (0.60.83), and what the build found
+## ADDENDUM 2026-10-16 (b) - built (0.60.104), and what the build found
 
 - Built to the plan above:
   - the COS archetypes eravos-canvas, eravos-tool and eravos-sound-tool;

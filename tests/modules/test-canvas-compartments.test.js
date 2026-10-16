@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-canvas-compartments.test.js — CN1–CN4 (docs/2026-10-16-canvas-compartments-phasemap.spec), 0.60.83.
+ * tests/modules/test-canvas-compartments.test.js — CN1–CN4 (docs/2026-10-16-canvas-compartments-phasemap.spec), 0.60.104.
  * James: "here, use this. what about using cos for the canvas, then each tool a nested compartment? … creating templates
  *        for cos and ideariun spec workshop" (with Eravos-merged.zip)
  *

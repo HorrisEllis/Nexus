@@ -14,6 +14,7 @@
  *   cos vm snapshot     save|list|apply|delete <compartment> [tag]
  *   cos vm base-image   create <path> [size]                 — new golden qcow2 (default 64G)
  *   cos vm cleanup      [compartment]                        — reap orphaned QEMU processes after a host crash
+ *   cos vm shell        <compartment> [--user=u] [-- cmd…]   — the VM's own terminal, passed straight through (ssh over the loopback forward)
  */
 
 'use strict';
@@ -334,6 +335,38 @@ function cleanupCommand(host, compartmentName, out = {}) {
   return results;
 }
 
+// ─── shell (0.60.77) ─────────────────────────────────────────
+// James, 2026-10-16: "Then Can we have a passthrogu to the terminal for the test inviremr t. Need to get cos working."
+// The guest's sshd is already forwarded to 127.0.0.1:2200+N (qemu-runtime desktopPorts, 0.60.12) and the guest has the desktop
+// login (provision.js: user nexus, password from settings desktop.password, default nexus). This is ssh over that forward with
+// the terminal handed straight to it: a real TTY, so editors, sudo, a test runner's colours and Ctrl+C all work as in the VM.
+// Needs an OpenSSH client (Windows 10+ has one) and a RUNNING VM with sshd (the provisioned test image).
+async function shellCommand(host, compartmentName, rest = [], flags = {}, out = {}) {
+  const log = out.log || ((...a) => console.log(...a));
+  const error = out.error || ((...a) => console.error(...a));
+  if (!compartmentName) { error('  Usage: cos vm shell <compartment> [--user=<name>] [-- <command…>]'); return null; }
+  let comp;
+  try { comp = _resolveComp(host, compartmentName); } catch (e) { error(`  ${e.message}`); return null; }
+  let live;
+  try { live = out.isLive ? await out.isLive(comp) : await _isVmLive(_vmConfigFor(comp)); } catch (e) { error(`  cannot read ${compartmentName}'s VM settings: ${e.message}`); return null; }
+  if (!live) { error(`  ${compartmentName} is not running — start it first: cos start ${compartmentName}`); return null; }
+  const { desktopPorts } = require('../../compartment/qemu-runtime.js');
+  const port = desktopPorts(comp.id || comp.compartmentId || compartmentName).sshPort;
+  const user = String((typeof flags.user === 'string' && flags.user) || process.env.COS_DESKTOP_USER || 'nexus');
+  const nul = process.platform === 'win32' ? 'NUL' : '/dev/null';
+  const cmd = rest.length ? rest.map(String) : [];
+  const args = ['-p', String(port), '-o', 'StrictHostKeyChecking=no', '-o', `UserKnownHostsFile=${nul}`, '-o', 'LogLevel=ERROR', ...(cmd.length ? [] : ['-t']), `${user}@127.0.0.1`, ...cmd];
+  log(`  ${compartmentName}: ssh ${user}@127.0.0.1 -p ${port} — the VM's own terminal${cmd.length ? '' : '; "exit" or Ctrl+D returns here'}. Password: the desktop login (default "nexus").`);
+  const spawn = out.spawn || require('child_process').spawn;
+  return new Promise((resolve) => {
+    let child;
+    try { child = spawn('ssh', args, { stdio: 'inherit', windowsHide: false }); }
+    catch (e) { error(`  could not start ssh: ${e.message}`); return resolve({ ok: false, code: -1, args }); }
+    child.on('error', (e) => { error(e && e.code === 'ENOENT' ? '  ssh was not found. Windows 10+: Settings > Apps > Optional features > OpenSSH Client; Linux/macOS: install openssh-client.' : `  ssh failed: ${e.message}`); resolve({ ok: false, code: -1, args }); });
+    child.on('close', (code) => resolve({ ok: code === 0, code, args, port, user }));
+  });
+}
+
 // ─── dispatcher ─────────────────────────────────────────────────────────────────
 
 function runVmCommand(host, sub, args, flags = {}, out = {}) {
@@ -345,8 +378,9 @@ function runVmCommand(host, sub, args, flags = {}, out = {}) {
     case 'snapshot':   return snapshotCommand(host, args[0], args[1], args[2], out);
     case 'base-image': return baseImageCommand(host, args[0], args[1], args[2], out);
     case 'cleanup':    return cleanupCommand(host, args[0], out);
+    case 'shell':      return shellCommand(host, args[0], args.slice(1), flags, out);
     default:
-      error('  Usage: cos vm <status|reset|stop|snapshot|base-image|cleanup> [args]');
+      error('  Usage: cos vm <status|reset|stop|snapshot|base-image|cleanup|shell> [args]');
       return null;
   }
 }
@@ -359,4 +393,5 @@ module.exports = {
   snapshotCommand,
   baseImageCommand,
   cleanupCommand,
+  shellCommand,
 };

@@ -53,7 +53,9 @@ jobs:
         run: |
           NOTES="CHANGELOG-$V.md"
           if [ -f "$NOTES" ]; then N=(--notes-file "$NOTES"); else N=(--notes "Nexus $V"); fi
-          gh release create "v$V" "dist/nexus-$V.zip" --title "Nexus $V" --target "$GITHUB_SHA" "${N[@]}"
+          # SHA256SUMS beside the zip (0.60.93): Clear Glass checks the download against it, and COS shows the version as verified
+          (cd dist && sha256sum "nexus-$V.zip" > SHA256SUMS && cat SHA256SUMS)
+          gh release create "v$V" "dist/nexus-$V.zip" "dist/SHA256SUMS" --title "Nexus $V" --target "$GITHUB_SHA" "${N[@]}"
 
       - name: Already released
         if: steps.v.outputs.tagged == 'yes'

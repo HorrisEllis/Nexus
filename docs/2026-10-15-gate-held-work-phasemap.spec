@@ -661,3 +661,66 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 # brick's run: attempt, who tried it, steps, files read and changed.
 # Open: GW0b (a new chat per gate kind; today a contract retry reuses the brick's session) and GW1's packet as the one handoff.
 
+
+# ## ADDENDUM 2026-10-16 (i) — everything the pipeline handles is a persistent node (his decision; mapped, no code)
+# James (2026-10-16), right after pasting the 2026-08-22 end-state vision back: ".inputs .outputs .reponses .contracts .chucks.
+# .deps its all persistent. all the data from ideariun, the agents."
+# His decision, recorded as his: every input sent to an agent, every output, response, contract, chunk and dependency set is
+# kept as a typed node (lib/node-export.js), for everything Idearium and the agents do.
+# Coder's reading (to confirm): one set per brick attempt, joined by the brick key (<map>::<phase>::<gate>, 0.60.77) and causedBy:
+# .input (exactly what was sent, its budget and what was cut) → .response (what the agent said) → .output (what landed: files, before
+# and after hashes, commit) on .contract / .chunk, with .deps (what the brick requires and imports). The trace (GW3) reads them.
+# Found 2026-10-16 (writers read in code, not schemas):
+#   .contract  written (contract-intake queue rows; contract-adapters v2 contracts)
+#   .chunk     written (idearium/lib/chunk-nodes.js, spec-engine chunks)
+#   .run       written (lib/run-state.js; per brick since 0.60.77)
+#   .response  partly: guardian/lib/response-sink.js writes one per browser-tab job; Ollama and copilot replies are not nodes
+#   .input     schema only (lib/node-schemas/schema.input), no writer
+#   .output    schema only (lib/node-schemas/schema.output), no writer
+#   .deps      no type at all: dependencies live inside a contract's gates (depends_on, requires) and the phase-map cache
+#
+# GW27_everything_is_a_node (proposed, OPEN; folds the open half of GW3: "the .response node per move, each file write with hashes"):
+#   does: a brick attempt writes .input before dispatch (prompt, brick key, budget, context cut), .response after (every backend, not
+#     only Guardian's), .output when it lands (files, before/after hashes, commit), and the brick's .deps once per plan (requires,
+#     depends_on, imports from phase-map-auto). Each causedBy the one before; each tagged contract:<id>, gate:<id>. A new `dep` schema
+#     beside the others. The trace lists them; nothing is a second record (§7.6: the nodes are the record the trace projects).
+#   proof: one real contract build leaves, per brick attempt, an .input, a .response and an .output linked by causedBy, and one .deps
+#     per brick; an Ollama attempt leaves a .response too; the trace names a missing one as a hole.
+
+# ## ADDENDUM 2026-10-16 (j) — GW27 widened: the whole node taxonomy, carried by the refactor tool (supersedes (i)'s scope; (i) stays)
+# James (2026-10-16), after (i) was mapped: "more than just those nodes. look at the ohases fube the refactor tool or featue" ·
+# "node taxonomy".
+# His direction, recorded as his: not six pipeline node types. Everything goes on the node taxonomy, and the refactor tool is
+# how a repo (Nexus included) gets there.
+# Read in the maps and code on 2026-10-16:
+#   the taxonomy exists: docs/2026-09-29-nex-node-store-phasemap.spec. N0 census (lib/nexstore/census.js →
+#     docs/nexstore-type-catalogue.yaml: 303 shapes, kinds record 148 · ledger 135 · ring 16 · snapshot 2 · edge 1 · lattice 1,
+#     0 unclassified, Guardian's node set the reference), N1 record+log (lib/nexstore/record.js, log.js: hash-chained, no write
+#     without causedBy) and N2 types+gates are DONE. N3–N18 and N24 ("No more json. Only yaml node types using and expanding the
+#     taxonomy.") are OPEN.
+#   the refactor tool is mapped and not built: docs/2026-10-13-projects-raid-and-gates-phasemap.spec RF0 (read the architecture
+#     against the taxonomy), RF1 (the migration as phases, "emit a node file per component"), RF2 (apply one phase at a time,
+#     snapshot first, tests after). lib/architecture-migrate.js does not exist. His decision_refactor_tool is still open:
+#     [A] proposal engine (coder's recommendation) · [B] one-pass rewriter · [C] report only.
+#   already built to lean on: idearium/repo/architecture.js architecture() + toNodes() (a repo's registry as Guardian's nodes:
+#     .component .hook .wire .event .command .contract .system); lib/project-decompose.js + lib/component-store.js.
+#   the pipeline's own units are missing from the taxonomy: phase, brick, dep, file (and run, which is written since 0.60.50 but the
+#     catalogue predates it). Dependencies are edges, and the catalogue holds one edge type in all.
+# Coder's reading (to confirm): GW27 writes its nodes through the NEX log (N1), not only as loose node files, so causedBy is
+# enforced by the store. New types go through the census and a schema each (the taxonomy grows, never a free-form file). After
+# "A brick is a chunk", the brick is the `chunk` type with a field saying build brick or spec section, rather than a second type.
+# To confirm with him.
+# Order proposed: (1) re-run the N0 census (the catalogue is from 0.39.300) and add phase · chunk(brick) · dep(edge) · file ·
+# input · output · run; (2) GW27 writes them per brick through the N1 log; (3) RF0 reads any repo against the taxonomy;
+# (4) RF1/RF2 move it, behind his decision_refactor_tool (A recommended); N24 and N10 retire the JSON writers the census finds.
+
+# ## ADDENDUM 2026-10-16 (k) — decided: the unit is the `chunk` node type; "brick" was his metaphor
+# James (2026-10-16), answering "since 'a brick is a chunk', make bricks the existing `chunk` type with a field saying build
+# brick or spec section, rather than a second type?": "Yes chunk type. When I said brick I was using a metaphor"
+# Decided (his): the taxonomy has one unit type, `chunk` (lib/node-schemas/schema.chunk, idearium/lib/chunk-nodes.js). A build
+# piece of a contract and a spec section are both chunks, told apart by a field. No `brick` node type is added. This settles
+# (j)'s "to confirm" on the type.
+# The coder's note: the code already says "brick" in many places (contract-gates comments, the BR1/BR2 phases, the run-state
+# brick key <map>::<phase>::<gate> of 0.60.77, the trace's per-brick view). Those stay as they are (§0.3, nothing rewritten). They
+# are read as his metaphor for a chunk. Where a chunk node is written (GW27), its kind field says which: build | spec_section.
+# Still open (his): decision_refactor_tool [A] proposal engine (coder recommends) · [B] one-pass rewriter · [C] report only.

@@ -72,7 +72,7 @@ const MANAGE_ACTIONS_UI = MANAGE_GROUPS.flatMap(([, , acts]) => acts.map(([k, ic
 const MANAGE_READONLY = new Set(['review', 'explain']);
 const MANAGE = { action: 'iterate', hits: [], picked: new Set(), scope: 'file', provider: '', settings: null, runs: [] };
 
-// §CE6 0.60.81 — Manage opened from the Code tab works on the Code tab's file and its picked lines (code-surface.js CS)
+// §CE6 0.60.82 — Manage opened from the Code tab works on the Code tab's file and its picked lines (code-surface.js CS)
 function _csManaged() { return typeof CURRENT_REPO_SUBTAB !== 'undefined' && CURRENT_REPO_SUBTAB === 'code' && typeof CS !== 'undefined' && CS.open && CS.open === ACTIVE_API_FILE; }
 function _editorSelectionLines() {
   if (_csManaged()) return CS.sel ? { from: CS.sel.from, to: CS.sel.to || CS.sel.from } : null;
@@ -218,7 +218,7 @@ async function _manageLoadSide(repo, file) {
     if (sel && Array.isArray(s.providers)) sel.innerHTML = `<option value="">this repo's agent${s.provider ? ` (${escapeHtml(s.provider)})` : ''}</option>` + s.providers.filter(p => p !== 'auto').map(p => `<option value="${escapeHtml(p)}"${MANAGE.provider === p ? ' selected' : ''}>${escapeHtml(p)}</option>`).join('');
     managePipeline();
   } catch (_) { /* the list stays "this repo's agent" */ }
-  // §CV1 0.60.81 — James: "that and manage and histry should be one menu i feel like." This file's whole timeline, newest
+  // §CV1 0.60.82 — James: "that and manage and histry should be one menu i feel like." This file's whole timeline, newest
   // first: its manage runs (state and reason), the commits that touched it with their labels (CV2: edit · manage · agent ·
   // person · restore · revert, and by whom), and its Versionium versions. A commit and the version it made are one entry.
   // Any version: diff it against the file now, or restore it (the restore is itself a version). Tags filter the list.

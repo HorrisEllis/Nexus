@@ -1,81 +1,75 @@
 # 0.60.83 — 2026-10-16
 
-James: "here, use this. what about using cos for the canvas, then each tool a nested compartment? remove it from
-idearium also. creating templates for cos and ideariun spec workshop" (with Eravos-merged.zip)
+_Built on the branch claude/exciting-shannon-m4nawj as 0.60.82; renumbered 0.60.83 at the merge with main (main had already used 0.60.79)._
 
-The map is `docs/2026-10-16-canvas-compartments-phasemap.spec`, written before the code.
+James: "can you remove eravos?"
 
-## His idea, and the coder's reading
+He was asked how, with three options:
+1. archive it out (the coder's recommendation, as the Architect page was archived in 0.60.19);
+2. only stop running it;
+3. delete it outright.
 
-The idea is his: COS holds the canvas, and each tool is a nested compartment. It fits what both sides already have.
-- COS already nests (`lib/cos-bridge.js` createCompartment with a parentId, and tree()).
-- His ERAVOS already keeps "the canvas and the tools … separate". A tool is a sealed folder with a manifest, declared
-  ports and declared permissions.
+He chose: **"Delete it outright."** That goes against the standing rule "nothing gets lost unless redundant" (§0.3),
+so it is recorded as his call in `docs/2026-10-16-eravos-removal-phasemap.spec`. Git history keeps every deleted file:
+the parent of this release's commit is the last one with ERAVOS.
 
-The coder's reading, to confirm: the tool's compartment is the unit Nexus **builds, versions and tests**. The tools still
-run together in the one canvas page, because audio has to stay sample-accurate.
+## Deleted (ER1)
 
-## Built (CN1–CN4)
+- `eravos/`: 140 files, 44 of them committed data
+- `ui/eravos/`
+- `hooks/eravos.hooks.js`
+- `docs/eravos.spec`, `docs/eravos-agnostic-canvas.spec`, `docs/atlases/eravos-atlas.md`
+- `tests/modules/test-eravos-pulse-migration.js`
 
-- **COS archetypes**, from his files and assembled each time they are read (as nexus-system is):
-  - **eravos-canvas:** his domain-free `canvas/` byte for byte, `schemas/`, `templates/`, his dependency-free build
-    scripts (new-tool, index-tools, validate), his test `harness.js` with a `run.html` for each tool's own tests,
-    `serve.js` and `index.html`;
-  - **eravos-tool** and **eravos-sound-tool:** his tool templates. His `__MARKS__` are filled by his own
-    `build/new-tool.mjs` rules: `eravos.<tool>` in music, `eravos.<domain>.<tool>` elsewhere; the author defaults to
-    "me";
-  - **eravos-domain-music** and **eravos-domain-dataflow:** found needed while building. A sound tool calls
-    `S.audio_out`, which his music core defines, so a canvas that gets a music tool gets his real music domain. A sound
-    tool outside the music domain is refused, and the refusal says why.
-- **`lib/canvas-compartments.js`:**
-  - a canvas is a COS compartment;
-  - each tool is a **nested** compartment (parentId = the canvas), linked into
-    `tools/<domain>/tools/<category>/<tool>/` (a junction on Windows) and recorded as a mount;
-  - his own `build/index-tools.mjs` writes the loaders;
-  - `canvas.json` lists the canvas's tools with their acceptance lines.
-- **Route → command:**
-  - routes: `GET/POST /api/canvas`, `GET /api/canvas/:id`, `POST /api/canvas/:id/tools`;
-  - commands: `idearium canvas list | new "<name>" | show <canvas> | add-tool <canvas> <domain> <category> <tool-id>
-    "<Label>" [--sound]`. Agents get them through `nexus.command`.
-  - Events `idearium.canvas.created` and `idearium.canvas.tool.added`, both declared.
-- **Spec-workshop templates:**
-  - **eravos-canvas**: from his README layout and the canvas/tools boundary;
-  - **eravos-tool**: from his tool spec (identity, ports, params, behaviour, needs, packs, acceptance) and the tool
-    schema.
-  - Every section is a real block, and every line is quoted from his files.
+## Unwired (ER2, ER3)
 
-## Not shipped, and why
+- **Platform:**
+  - the :3751 port and the orchestrator's systems;
+  - autopilot boot and health checks;
+  - the contract poller and handshake;
+  - lean mode and gap priority;
+  - the blueprint index and the nexus-self systems table;
+  - agent-tool naming and capability ports;
+  - the pre-commit version check and the diagnostic;
+  - loom's maps, scanner and UI lists;
+  - `lib/version.js` modules.
+- **Screens:**
+  - Idearium's Build › Eravos tab, its iframe and its "new organism" handler;
+  - the eravos-mod templates in `lib/file-tree-plan.js`;
+  - the Canvas channel (an iframe of :3751) on the Home and TV pages;
+  - ERAVOS's node and port in BrainOS and the TV shell;
+  - ERAVOS as a system choice in Clear Glass.
+- **Found dead and removed with it:**
+  - Guardian's organism queue: only ERAVOS read it, and nothing ever put anything in it;
+  - the MCP tool `nexus_build_organism`: it built packs "ready to drop into ERAVOS".
 
-- His scripts that load Playwright (shots, perf, run.mjs, tool-kit, specs, planned-deps, migrate-tools). Nexus's
-  CG-001b fails any file that loads Playwright. Clear Glass drives the canvas here instead.
-- His music domain's own test suites. A canvas from the template runs its tools' tests on his harness.
+## Kept on purpose
 
-## "remove it from idearium also"
+- Text classifiers that read old history. Old specs and logs mention ERAVOS, and they are still Nexus history.
+- Provenance comments.
+- CHANGELOGs and version lines.
+- Generated manifests.
+- `data/eravos/` on a machine is runtime state and was never committed. Delete it by hand if you want.
 
-Idearium's code was cleared in 0.60.82; only history comments name it. An ERAVOS repo he imported into his own Idearium
-is his data on his machine. `idearium repo archive <uuid>` archives it. Nothing was done to it from here. To confirm
-which he meant.
+## Also fixed
 
-## Also in this release (from 0.60.82's full suite)
-
-- `lib/build-paths.js` classifies the Code tab's code.edit / code.assist call: not a build, the same footing as the
-  Agent tab chat (the coder's classification).
-- `test-loom-phasemap` counts 15 systems.
-- `README.md` regenerated from the atlas.
-- **loom's prune** now drops a record whose file lives in a top-level directory that no longer exists. ERAVOS's
-  hand-mapped records had stayed in loom's registry, so the atlases still listed its routes. 96 removed, all ERAVOS's.
-  The template files under `cos/archetype/eravos-*` are scanned into loom as `nexus-system`'s are (72 components).
+- `test-nexus-atlas-refs` was failing on the idearium atlas lines added in 0.60.80–0.60.82 (plain-text code spans for
+  routes and commands). That was the coder's own regression. It now passes 49/49.
 
 ## Proof
 
-- `tests/modules/test-canvas-compartments.test.js` 7/7. **CC-10, in Clear Glass:** a canvas made by Nexus, served by
-  **his** `serve.js`, loads its nested tools, and **his** harness passes each tool's contract, 12/12. His
-  `build/validate.mjs` passes on the generated canvas (CC-03).
-- Unchanged and passing: `test-file-tree-plan` 58/58, `test-spec-workshop` 8/8, `test-build-paths` 6/6,
-  `test-loom-phasemap` 7/7, `test-loom-map` 19/19, `test-nexus-atlas-refs` 49/49, `test-readme-atlas` 1/1.
+Targeted, each run after the change:
+- `test-file-tree-plan` 58/58
+- `nexus-nerve` 10/10 (now 9 hook systems)
+- `test-contract-handshake-paths` 8/8
+- `test-cos-testenv-any-repo` 57/57
+- `test-nexus-atlas-and-glass` 10/10
+- `test-nexus-self-and-cos-run` 30/30
+- `test-registration-shape` 8/8
+- `test-synthesis-zoom-versionium` 6/6
+- `test-module-builder-resolve` 6/6
+- `test-nexus-mcp` 5/5
+- `test-nexus-command-tool` 8/8
+- `test-nexus-atlas-refs` 49/49
 
-## Open
-
-- CN6: a screen for a canvas tree, to place with James.
-- To confirm: that a nested compartment means the build unit, not a process per tool; what "remove it from idearium
-  also" asks; the template names.
+The full-suite result follows in the next commit.

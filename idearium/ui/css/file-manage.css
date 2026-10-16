@@ -122,7 +122,7 @@
 .mg-shell ::-webkit-scrollbar-track { background: transparent; }
 .mg-chip.st-saved { color: var(--mint); border-color: rgba(52,211,153,.3); }
 
-/* §0.60.81 CV1 — Manage and History, one menu: the file's timeline (runs · commits · versions), tags, diff, restore */
+/* §0.60.82 CV1 — Manage and History, one menu: the file's timeline (runs · commits · versions), tags, diff, restore */
 .mg-tl-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 10px; }
 .mg-tag { background: none; border: 1px solid var(--b1); color: var(--text3); border-radius: 6px; padding: 2px 7px; font: 10px var(--mono); cursor: pointer; }
 .mg-tag.on { color: var(--text); border-color: var(--b2); background: rgba(255,255,255,.04); }

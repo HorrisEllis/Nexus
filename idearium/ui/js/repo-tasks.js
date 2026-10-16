@@ -116,7 +116,7 @@ function _rtRow(t, depth = 0) {
 // §0.47.0 OS2 — James: "thats supposed to be a idearium feature. also needs to look like the rest of it like the plan
 // panel." No drawer of its own: these views live in the Plan panel's folded ACTIVITY section (plan-panel.js mounts
 // #rt-views / #rt-filters / #rt-list there), styled as the plan.
-// §CE9 0.60.81 — James: "code tab needs all the activity, response ledger, etc." The same views mount in the Code tab's bottom
+// §CE9 0.60.82 — James: "code tab needs all the activity, response ledger, etc." The same views mount in the Code tab's bottom
 // panel (code-tab-panels.js draws #cs-rt-views / #cs-rt-filters / #cs-rt-list). One set of data, two mounts: while the Code
 // tab's mount is on screen the views draw there; otherwise in the Plan panel's activity section, as before.
 function _rtCodeMount() { return typeof CURRENT_REPO_SUBTAB !== 'undefined' && CURRENT_REPO_SUBTAB === 'code' && document.getElementById('cs-rt-list') ? true : false; }

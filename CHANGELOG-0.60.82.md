@@ -1,83 +1,95 @@
 # 0.60.82 — 2026-10-16
 
-James: "can you remove eravos?"
+_Built on the branch claude/exciting-shannon-m4nawj as 0.60.81; renumbered 0.60.82 at the merge with main (main had already used 0.60.79)._
 
-He was asked how, with three options:
-1. archive it out (the coder's recommendation, as the Architect page was archived in 0.60.19);
-2. only stop running it;
-3. delete it outright.
+James: "expand the code tab in repo. the file and code tab merge. all of it from the phases3"
 
-He chose: **"Delete it outright."** That goes against the standing rule "nothing gets lost unless redundant" (§0.3),
-so it is recorded as his call in `docs/2026-10-16-eravos-removal-phasemap.spec`. Git history keeps every deleted file:
-the parent of this release's commit is the last one with ERAVOS.
+The UI on top of 0.60.81's backend, in his order: backend, then route, then command, then UI. The map is
+`docs/2026-10-15-code-tab-run-state-phasemap.spec`, addenda (b) (the plan) and (c) (what was built).
 
-## Deleted (ER1)
+## The Files tab is merged into Code (CE6)
 
-- `eravos/`: 140 files, 44 of them committed data
-- `ui/eravos/`
-- `hooks/eravos.hooks.js`
-- `docs/eravos.spec`, `docs/eravos-agnostic-canvas.spec`, `docs/atlases/eravos-atlas.md`
-- `tests/modules/test-eravos-pulse-migration.js`
+He decided this on 2026-10-15 ("yes one tab.") and repeated it today.
+- **No Files button.** `setRepoSubtab('files')` and `openApiRepoFile()` open the Code tab, so a file opened from
+  search, the atlas or Architect lands there.
+- **Nothing deleted.** The Files panel and its opener (`openApiRepoFileInFiles`) are kept, archived (§0.3).
+- **The tree** gets the Files tab's filter, **+ file** and **× delete** (to .trash/), beside its file states and
+  waiting diffs.
+- **The open file** gets **edit**: a textarea; Ctrl+S saves through `POST …/file`, the one write path, so a save is a
+  version; Esc cancels; a dirty edit is never dropped silently. It also gets **manage · history**.
 
-## Unwired (ER2, ER3)
+## Manage and History are one menu (CV1)
 
-- **Platform:**
-  - the :3751 port and the orchestrator's systems;
-  - autopilot boot and health checks;
-  - the contract poller and handshake;
-  - lean mode and gap priority;
-  - the blueprint index and the nexus-self systems table;
-  - agent-tool naming and capability ports;
-  - the pre-commit version check and the diagnostic;
-  - loom's maps, scanner and UI lists;
-  - `lib/version.js` modules.
-- **Screens:**
-  - Idearium's Build › Eravos tab, its iframe and its "new organism" handler;
-  - the eravos-mod templates in `lib/file-tree-plan.js`;
-  - the Canvas channel (an iframe of :3751) on the Home and TV pages;
-  - ERAVOS's node and port in BrainOS and the TV shell;
-  - ERAVOS as a system choice in Clear Glass.
-- **Found dead and removed with it:**
-  - Guardian's organism queue: only ERAVOS read it, and nothing ever put anything in it;
-  - the MCP tool `nexus_build_organism`: it built packs "ready to drop into ERAVOS".
+He asked for this on 2026-10-15: "that and manage and histry should be one menu".
+- Manage opens on the Code tab's file, with the picked lines as its scope.
+- Its right rail is the file's whole timeline, newest first:
+  - its manage runs;
+  - the commits that touched it, with their labels (0.60.81: edit · manage · agent · person · restore · revert, and
+    by whom);
+  - its versions.
+- Tag chips filter the timeline. Any version can be **diffed with now** or **restored** (the restore is itself a
+  version).
 
-## Kept on purpose
+## The picked lines, with an action (CE7)
 
-- Text classifiers that read old history. Old specs and logs mention ERAVOS, and they are still Nexus history.
-- Provenance comments.
-- CHANGELOGs and version lines.
-- Generated manifests.
-- `data/eravos/` on a machine is runtime state and was never committed. Delete it by hand if you want.
+- Pick lines in the gutter. The agent pane offers change · expand · refactor · fix · document · explain.
+- The agent gets exactly those lines (`POST …/code/assist`). What comes back is a diff above the code, waiting for
+  Apply. Explain only answers.
 
-## Also fixed
+## The bottom panel (CE9)
 
-- `test-nexus-atlas-refs` was failing on the idearium atlas lines added in 0.60.79–0.60.81 (plain-text code spans for
-  routes and commands). That was the coder's own regression. It now passes 49/49.
+He asked on 2026-10-15: "code tab needs all the activity, response ledger, etc."
+- **activity:** as before.
+- **runs:** the run state Nexus keeps.
+  - The route copilot gives this repo's agent.
+  - Each run as a pipeline: goal → each step ✓/✗ → its state.
+  - Opened, a run shows the agents that tried it, what happened to it (fallback, off-task, lost, rewound), and the
+    files it read and changed.
+  - **rewind this run** asks with a dry run first.
+- **responses:** the repo agent's exchanges.
+- **tasks · log · control · versions · machine:** the Plan panel's own views, drawn in the Code tab.
+  `repo-tasks.js`'s one resolver `_rtEl` points them at whichever mount is on screen: one set of data, two mounts.
+
+## Phases in Idearium (CV6)
+
+- Every phase of this map already carried its declared systems (PT1/PT2, 0.60.63–64). What was wrong: the map's
+  `open_decisions:` entries (CE0, CV0) showed as pending phases.
+- loom's reader now marks entries under `open_decisions:` / `decisions:` as `kind: decision`, and reads a DECIDED one
+  as done. The marker is carried through the roadmap node, `schema.phase_node` and a "decision" chip on the Phases
+  tab.
+- Nothing is dropped, so no count changes.
 
 ## Proof
 
-Targeted, each run after the change:
-- `test-file-tree-plan` 58/58
-- `nexus-nerve` 10/10 (now 9 hook systems)
-- `test-contract-handshake-paths` 8/8
-- `test-cos-testenv-any-repo` 57/57
-- `test-nexus-atlas-and-glass` 10/10
-- `test-nexus-self-and-cos-run` 30/30
-- `test-registration-shape` 8/8
-- `test-synthesis-zoom-versionium` 6/6
-- `test-module-builder-resolve` 6/6
-- `test-nexus-mcp` 5/5
-- `test-nexus-command-tool` 8/8
-- `test-nexus-atlas-refs` 49/49
+- `tests/modules/test-code-tab-merge.test.js` 7/7:
+  - MG-00 reads the page's own source;
+  - MG-10…15 drive the real scripts in Clear Glass: tree, edit, Manage + timeline + diff + restore, line actions,
+    runs + rewind, responses + tasks + log.
+- Unchanged and still passing:
+  - `test-code-tab` 16/16
+  - `test-code-surface-state` 6/6
+  - `test-code-tab-expand` 8/8
+  - `test-build-surface` 13/13
+  - `test-build-surface-2` 3/3
+  - `test-phases-tab` 5/5
+  - `test-moce-roadmap-ui` 17/17
+  - `test-one-idearium-phases-nodes` 21/21
+  - `test-loom-phasemap` 7/7
+  - `test-loom-phasemap-status` 14/14
+  - `test-phase-specs-tag` 7/7
+  - `test-vm-control` 7/7
+  - `test-loom-map` 19/19
+- Failing before and after, the same way (checked by running each without these changes):
+  - `test-moce-roadmap`: 3 failures (`specs` and `blocks` undeclared in the schema, and a status read);
+  - `test-event-contracts` EC-05;
+  - the probes `repo-drawer-views-glass` and `repo-tasks-drawer-glass`.
 
-### The full suite (run after the change)
+## Not done (said, not hidden)
 
-- **Result:** 6,196 passed, 77 failed (35 of them known gaps), 3 crashed.
-- **How it was checked:** each of the 21 failing suites was run again in two clean copies: one at session start
-  (95d6c94) and one just before this release (682f035).
-  - 17 fail identically at session start.
-  - `test-workshop-full` WF-04 is intermittent there too (1 run in 3).
-  - Three were this session's. All are fixed in 0.60.83:
-    - `test-build-paths`, from 0.60.80's code.assist call;
-    - `test-loom-phasemap`, which still counted 16 systems;
-    - `test-readme-atlas`, where README.md was not regenerated.
+- **CE9's Clear Glass mesh mount.** The views are Idearium page scripts; mounting them in Clear Glass's renderer is
+  separate work.
+- **"Retry from step n" and "send to another provider".** They have no route yet.
+- **"Every check with its last result".** The runs panel shows the current plan step's gate bar, not the full list
+  of checks.
+- **CV5 (universal versioning)** waits on his answer to CV0. **CE11** belongs to the automatic-tracking map.
+- **No live run on his machine yet.**

@@ -531,7 +531,7 @@ Not expanded further — this session did not read `loom/server.js` or `package.
   exports mapAgentMemory, FILES, BOUNDARY_EXPORTS, CONSUMERS, BOUNDARY_IMPORTS · requires 1 · required by 1
 - `loom/maps/build-context-map.js` (85 lines) — 0.39.308–309: what a build agent is sent about the file it writes (lib/build-context.js) and the editable build blocks that send it, mapped into LOOM one component per FILE with every REAL edge as…  
   exports mapBuildContext, FILES, CONSUMERS, BOUNDARY_IMPORTS · requires 1 · required by 1
-- `loom/maps/build-surface-map.js` (248 lines) — 0.39.280: docs/2026-09-29-build-surface-phasemap.spec mapped into LOOM, one component per FILE with every REAL edge as a wire. Mirrors loom/maps/chat-ledger-map.js.  
+- `loom/maps/build-surface-map.js` (259 lines) — 0.39.280: docs/2026-09-29-build-surface-phasemap.spec mapped into LOOM, one component per FILE with every REAL edge as a wire. Mirrors loom/maps/chat-ledger-map.js.  
   exports mapBuildSurface, FILES, CONSUMERS · requires 1 · required by 1
 - `loom/maps/chat-ledger-map.js` (69 lines) — 0.39.278: the live chat ledger (Clear Glass download manager), the page-side stream that feeds it, and the co-pilot pane's kept conversation, mapped into LOOM one component per FILE with every REAL  
   exports mapChatLedger, FILES, CONSUMERS · requires 1 · required by 1
@@ -541,7 +541,7 @@ Not expanded further — this session did not read `loom/server.js` or `package.
   exports mapComponentIntake, FILES, CONSUMERS, SCANNED_EXPORTS · requires 1 · required by 1
 - `loom/maps/copilot-capability-map.js` (376 lines)  
   exports mapCopilotCapability, FILES · requires 0 · required by 1
-- `loom/maps/cos-testenv-map.js` (75 lines) — the COS test VM (0.39.264), ErosmancerOS started by Clear Glass, and (until 0.60.82, when ERAVOS was deleted) the Eravos → Idearium "new organism" path, mapped into LOOM one component per FILE,…  
+- `loom/maps/cos-testenv-map.js` (75 lines) — the COS test VM (0.39.264), ErosmancerOS started by Clear Glass, and (until 0.60.83, when ERAVOS was deleted) the Eravos → Idearium "new organism" path, mapped into LOOM one component per FILE,…  
   exports mapCosTestenv, FILES · requires 1 · required by 1
 - `loom/maps/declare-map.js` (30 lines) — §0.39.367: the one declare loop a hand map needs. Every map under loom/maps re-implemented the same steps (a component per file, an export hook where something depends on it, an import hook where…  
   exports declareMap · requires 0 · required by 3
@@ -559,7 +559,7 @@ Not expanded further — this session did not read `loom/server.js` or `package.
   exports mapRaidEventsAndTools, FILES, CONSUMERS · requires 0 · required by 1
 - `loom/maps/releases-map.js` (39 lines) — §0.60.41 RN1: the edges the source scanner cannot read in releases-in-Versionium (docs/2026-10-15-one-contract-raid-releases-phasemap.spec RN1). versionium/lib/releases.js is reached by a literal  
   exports mapReleases, FILES, CONSUMERS · requires 2 · required by 1
-- `loom/maps/run-state-map.js` (64 lines) — §0.60.50 CE1–CE5 + CE10: the edges the source scanner cannot read in the run state (docs/2026-10-15-code-tab-run-state-phasemap.spec). lib/run-state.js is reached by lazy require() inside functions  
+- `loom/maps/run-state-map.js` (88 lines) — §0.60.50 CE1–CE5 + CE10: the edges the source scanner cannot read in the run state (docs/2026-10-15-code-tab-run-state-phasemap.spec). lib/run-state.js is reached by lazy require() inside functions  
   exports mapRunState, FILES, CONSUMERS · requires 2 · required by 1
 - `loom/maps/session-2026-08-14-map.js` (471 lines) — maps the three genuinely NEW components this session created (lib/agent-system/contracts.js, submit.js,  
   exports mapSession20260814, FILES · requires 0 · required by 1

@@ -123,7 +123,7 @@ t('mcp-server has nexus_hot_load tool', () => read('lib/mcp-server.js').includes
 t('mcp-stdio imports mcp-server tools', () => read('lib/mcp-stdio.js').includes("require('../orchestrator/lib/mcp-server')"));
 t('self-heal excludes semantic gaps (Phase 24.3 fix)', () => read('cortex/self-heal/index.js').includes('SEMANTIC_GAP_TYPES'));
 
-// ── SECTION 4: ERAVOS system — deleted 0.60.82 (James: "can you remove eravos?" · "Delete it outright."); its checks went with it.
+// ── SECTION 4: ERAVOS system — deleted 0.60.83 (James: "can you remove eravos?" · "Delete it outright."); its checks went with it.
 
 // ── SECTION 5: Home UI ────────────────────────────────────────────────────────
 console.log('\n══ §5 HOME UI ══\n');

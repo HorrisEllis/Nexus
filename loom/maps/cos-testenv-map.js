@@ -1,7 +1,7 @@
 'use strict';
 /**
  * loom/maps/cos-testenv-map.js — the COS test VM (0.39.264), ErosmancerOS started by Clear Glass,
- * and (until 0.60.82, when ERAVOS was deleted) the Eravos → Idearium "new organism" path, mapped into LOOM one component per FILE, with every REAL edge
+ * and (until 0.60.83, when ERAVOS was deleted) the Eravos → Idearium "new organism" path, mapped into LOOM one component per FILE, with every REAL edge
  * as a wire: require() edges (verified against the source) AND the edges the source
  * scanner cannot see — a child process spawned by path, an HTTP call, a postMessage.
  * Mirrors loom/maps/observability-map.js / ui-map.js.

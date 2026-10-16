@@ -1,5 +1,5 @@
 // ════════════════════════════════════════════════════════════════════════════
-// §CODE TAB, expanded — idearium/ui/js/code-tab-panels.js (0.60.81 CE6 · CE7 · CE9)
+// §CODE TAB, expanded — idearium/ui/js/code-tab-panels.js (0.60.82 CE6 · CE7 · CE9)
 // UUID: nexus-idearium-ui-code-tab-panels-v1-0000-2026-1016-jamesbrooks-001
 // Map: docs/2026-10-15-code-tab-run-state-phasemap.spec (addendum 2026-10-16 (b))
 //
@@ -21,7 +21,7 @@
 // Nothing here stores anything; every number is read from a route.
 // ════════════════════════════════════════════════════════════════════════════
 
-const CX = { filter: '', editing: false, draft: null, panel: 'activity', runs: null, runsError: null, resp: null, respError: null, openRuns: new Set() };
+const CX = { filter: '', editing: false, draft: null, panel: 'activity', runs: null, runsError: null, resp: null, respError: null, openRuns: new Set(), work: null, workError: null, workFor: null };
 try { const v = localStorage.getItem('idearium.cs.panel'); if (v) CX.panel = v; } catch (_) {}
 
 // ── CE6: the tree's actions ──────────────────────────────────────────────────────────────────────────
@@ -115,12 +115,13 @@ async function cxAssist(action) {
   if (!r.ok) { line.role = 'failed'; line.text = `${r.error || 'no answer'}${r.reply ? `\n\n${r.reply}` : ''}`; }
   else if (action === 'explain') line.text = r.reply || '';
   else line.text = `a change to ${where} is waiting above the code — Apply writes it (a version of its own), Reject drops it`;
-  line.meta = [r.provider, r.checksumBefore ? `${r.checksumBefore} → ${r.checksumAfter}` : null].filter(Boolean).join(' · ') || null;
+  line.meta = [r.provider, r.checksumBefore ? `${r.checksumBefore} → ${r.checksumAfter}` : null, r.funnel && r.funnel.phase ? `phase ${r.funnel.phase.id}` : null, r.funnel && r.funnel.stoppedAt ? `funnel stopped at ${r.funnel.stoppedAt}` : null].filter(Boolean).join(' · ') || null;
+  if (r.funnel && !r.funnel.error) { CX.work = r.funnel; CX.workFor = `${action} ${CS.open}${note ? `: ${note}` : ''}`; }
   await csAfterChange();
 }
 
 // ── CE9: the bottom panel ────────────────────────────────────────────────────────────────────────────
-const CX_PANELS = [['activity', 'activity'], ['runs', 'runs'], ['responses', 'responses'], ['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ['versions', 'versions'], ['machine', 'machine']];
+const CX_PANELS = [['activity', 'activity'], ['work', 'work'], ['runs', 'runs'], ['responses', 'responses'], ['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ['versions', 'versions'], ['machine', 'machine']];
 const CX_RT = new Set(['tasks', 'log', 'control', 'versions', 'machine']);
 function cxPanel(k) {
   CX.panel = CX_PANELS.some(p => p[0] === k) ? k : 'activity';
@@ -131,9 +132,38 @@ function cxPanel(k) {
 }
 function cxPanelLoad() {
   const repo = CURRENT_API_REPO; if (!repo) return;
+  if (CX.panel === 'work') return cxWorkLoad(repo);
   if (CX.panel === 'runs') return cxRunsLoad(repo);
   if (CX.panel === 'responses') return cxRespLoad(repo);
   if (CX_RT.has(CX.panel) && typeof rtView === 'function') { rtView(CX.panel); if (typeof rtMounted === 'function') rtMounted(true); }
+}
+// §FN4 0.60.95 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." The open file's
+// four answers, in his order, from POST …/funnel (lib/work-funnel.js, no model); the note being typed is part of the request.
+async function cxWorkLoad(repo) {
+  if (!CS.open) { CX.work = null; CX.workError = null; if (CX.panel === 'work') _cxPaintPanel(); return; }
+  const note = (CS.agent && CS.agent.draft || '').trim();
+  const request = `change ${CS.open}${note ? `: ${note}` : ''}`;
+  CX.workFor = request;
+  try { const r = await api(`/api/repos/${repo.uuid}/funnel`, { method: 'POST', body: JSON.stringify({ request }) }, 30000); if (CX.workFor === request) { CX.work = r; CX.workError = null; } }
+  catch (e) { CX.work = null; CX.workError = (e.data && e.data.error) || e.message; }
+  if (CX.panel === 'work') _cxPaintPanel();
+}
+function _cxWork() {
+  if (!CS.open) return '<div class="cs-empty">open a file: its dependencies, spec, phase and chunks show here, in that order</div>';
+  // the open file changed since the last answer: ask again (once per file; the answer repaints)
+  if (!String(CX.workFor || '').includes(` ${CS.open}`) && CX._workAsked !== CS.open && typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO) { CX._workAsked = CS.open; CX.work = null; cxWorkLoad(CURRENT_API_REPO); }
+  if (CX.workError) return `<div class="cs-empty cs-bad">${escapeHtml(CX.workError)}</div>`;
+  const f = CX.work; if (!f) return '<div class="cs-empty">mapping the work…</div>';
+  const step = (n, label, body, on) => `<div class="cx-work-step${on ? '' : ' cx-work-off'}"><span class="cx-work-n">${n}</span><b>${label}</b> ${body}</div>`;
+  const d = f.dependencies, s = f.spec, p = f.phase;
+  const dep = d ? `${d.files.map(x => `<code>${escapeHtml(x.path)}</code>${x.exists ? '' : ' <span class="cs-dim">(new)</span>'}`).join(' ') || '—'}${d.requires.length ? `<div class="cs-dim">requires ${escapeHtml(d.requires.map(r => r.path).join(', '))}</div>` : ''}${d.consumers.length ? `<div class="cs-dim">used by (a change can break these) ${escapeHtml(d.consumers.map(c => c.path).join(', '))}</div>` : ''}` : '';
+  const spec = s ? (s.specs.map(x => `<code>${escapeHtml(x.path)}</code>`).join(' ') || '—') + ` <span class="cs-dim">${escapeHtml(s.source)}</span>` : '';
+  const ph = p ? `<code>${escapeHtml(p.id)}</code> <span class="cs-dim">${escapeHtml(String(p.map || '').split('/').pop())} · ${escapeHtml(p.status || 'no status')}</span>${p.others.length ? `<div class="cs-dim">also ${escapeHtml(p.others.map(o => o.key.split('::').pop()).join(', '))}</div>` : ''}` : '';
+  const ch = (f.chunks || []).map(c => `<div>${c.index}. <code>${escapeHtml(c.file)}</code>${c.exports.length ? ` <span class="cs-dim">${escapeHtml(c.exports.slice(0, 6).join(', '))}</span>` : ''}</div>`).join('');
+  const stop = (f.missing || []).map(m => `<div class="cs-bad cx-work-stop">stopped at ${escapeHtml(m.step)}: ${escapeHtml(m.why)}</div>`).join('');
+  return `<div class="cx-work"><div class="cs-dim">${escapeHtml(f.intent)} · ${escapeHtml(CX.workFor || '')}</div>
+    ${step(1, 'dependencies', dep, !!d)}${step(2, 'spec', spec, !!s)}${step(3, 'phase', ph, !!p)}${step(4, 'chunks', ch || '', !!(f.chunks || []).length)}${stop}
+    <div class="cs-dim cx-note">the agent is given this before it edits the picked lines (FN1); what is missing is said, and made first once FN2 lands</div></div>`;
 }
 async function cxRunsLoad(repo) {
   try { const r = await api(`/api/repos/${repo.uuid}/runs?limit=30`, {}, 20000); CX.runs = r.runs || []; CX.runsError = null; }
@@ -197,7 +227,8 @@ function _cxResp(x) {
     <div class="cx-resp-a">${escapeHtml(String(x.ok ? x.response || '' : x.error || '').slice(0, 600))}</div></div>`;
 }
 function _cxPanelBody() {
-  if (CX.panel === 'activity') return '';   // code-surface.js draws activity itself (_csActivity)
+  if (CX.panel === 'activity') return '';
+  if (CX.panel === 'work') return _cxWork();   // code-surface.js draws activity itself (_csActivity)
   if (CX.panel === 'runs') {
     const cur = CS.plan && CS.plan.current;
     const gates = cur && typeof _gateBar === 'function' && cur.gates ? `<div class="cx-gates"><span class="cs-dim">plan step</span> <b>${escapeHtml(cur.title || cur.key)}</b> ${_gateBar(cur)}</div>` : '';

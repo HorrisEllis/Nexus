@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-code-surface-state.test.js — CE8 (docs/2026-10-15-code-tab-run-state-phasemap.spec), 0.60.79.
+ * tests/modules/test-code-surface-state.test.js — CE8 (docs/2026-10-15-code-tab-run-state-phasemap.spec), 0.60.80.
  * James: "so the cli can read the current worksurface in the code tab."
  *
  *   SS-01  idearium/lib/surface-state.cjs: set / get; a new file clears the old lines and chunk; a bad range is refused;
@@ -141,7 +141,7 @@ function harness() {
     const puts = () => page.evaluate(() => CALLS.filter(c => c.method === 'PUT' && c.p.endsWith('/surface')).map(c => c.body));
 
     await page.goto(pathToFileURL(harness()).href);
-    await page.evaluate(() => renderRepoCode(REPO));
+    await page.evaluate(() => { CS.view = 'files'; renderRepoCode(REPO); });
     await page.waitForSelector('.cs-file[data-path="src/a.js"]');
 
     await test('SS-10', 'opening a file and picking lines publishes the surface once it settles (by ui)', async () => {

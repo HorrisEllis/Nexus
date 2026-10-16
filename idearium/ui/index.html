@@ -1023,7 +1023,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
       <div class="tab-dropdown tab-dropdown-deep">
         <button class="tab-sub tab-sub-lead" onclick="openBuildFlow()"><span class="tab-icon">▶</span><span>Build this repo<small>plan the spec → its phases → the agent codes them, one at a time</small></span></button>
         <div class="tab-sub-sep"></div>
-        <!-- §0.60.82 — James: "can you remove eravos?" · "Delete it outright." The Eravos canvas is gone with the system. -->
+        <!-- §0.60.83 — James: "can you remove eravos?" · "Delete it outright." The Eravos canvas is gone with the system. -->
         <!-- §0.39.300 WS3 — the retired Spec Builder (spec-wizard) left Build ▾ (UI12: retired from every surface; its view
              stays below, §0.3). The spec is made in the workshop. -->
         <button class="tab-sub" onclick="openWorkshop()"><span class="tab-icon">✎</span>Spec workshop</button>
@@ -1240,7 +1240,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="repo-subtab-btn active" data-subtab="home" onclick="setRepoSubtab('home')">Home</button>
             <button class="repo-subtab-btn" data-subtab="idea" onclick="setRepoSubtab('idea')">Idea</button>
             <button class="repo-subtab-btn" data-subtab="notes" onclick="setRepoSubtab('notes')" title="write it down: notes, ideas, decisions, todos, questions, quotes (0.60.6)">Notes</button>
-            <!-- §CE6 0.60.81 — James: "the file and code tab merge." The Files button is gone; setRepoSubtab('files') opens Code.
+            <!-- §CE6 0.60.82 — James: "the file and code tab merge." The Files button is gone; setRepoSubtab('files') opens Code.
                  The Files panel (#repo-subtab-files) stays below, archived (§0.3): renderApiRepoPanel still draws into it. -->
             <button class="repo-subtab-btn" data-subtab="code" onclick="setRepoSubtab('code')" title="the files and the work surface: the tree (uncommitted greyed; add, delete, filter), the code with its chunk cards (edit, manage, history), the agent's changes as diffs, the agent docked, and the runs, responses and activity below (0.60.81: Files merged in)">Code</button>
             <button class="repo-subtab-btn" data-subtab="architect" onclick="setRepoSubtab('architect')">Architect</button>

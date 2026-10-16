@@ -217,7 +217,7 @@ async function main() {
   const BAT = fs.readFileSync(path.join(ROOT, 'cos', 'testenv', 'setup-vm.bat'), 'utf8');
   check('setup-vm.bat: CRLF, installs QEMU with winget, then runs provision.js', /\r\n/.test(BAT) && /winget install --id SoftwareFreedomConservancy\.QEMU/.test(BAT) && /provision\.js/.test(BAT));
 
-  // ── Eravos: its "new organism → Idearium idea or spec" checks were here; ERAVOS was deleted 0.60.82 (James: "can you
+  // ── Eravos: its "new organism → Idearium idea or spec" checks were here; ERAVOS was deleted 0.60.83 (James: "can you
   // remove eravos?" · "Delete it outright."). What stays true: Idearium no longer takes organism.create at all.
   check('Idearium: no organism.create handler left (ERAVOS deleted 0.60.82)', !/nexus:organism\.create/.test(APP));
 

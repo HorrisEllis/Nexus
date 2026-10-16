@@ -123,7 +123,7 @@ function _systemsOf(fields, body) {
 function parsePhasemapText(text, name) {
   const lines = String(text).split('\n');
   const out = [];
-  // §CV6 0.60.81 — an entry under a top-level `open_decisions:` / `decisions:` block is a DECISION, not a phase (the
+  // §CV6 0.60.82 — an entry under a top-level `open_decisions:` / `decisions:` block is a DECISION, not a phase (the
   // code-tab map's CE0 and CV0 were listed as pending phases). Still returned (no count changes), marked kind: 'decision';
   // a decision whose status reads DECIDED is done.
   let section = null;

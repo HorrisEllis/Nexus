@@ -1,73 +1,54 @@
 # 0.60.80 — 2026-10-16
 
-James: "expand the code tab in repo. the file and code tab merge. all of it from the phases3"
+_Built on the branch claude/exciting-shannon-m4nawj as 0.60.79; renumbered 0.60.80 at the merge with main (main had already used 0.60.79)._
 
-The backend for the rest of `docs/2026-10-15-code-tab-run-state-phasemap.spec`, first, as his order of delivery says
-(backend → route → command → UI). The UI is 0.60.81. The plan is the map's addendum 2026-10-16 (b), written before any
-of this.
+James: "tell me recent phases. can we do the code tab now?"
 
-## CE7: AI editing by lines or a section
+The Code tab map (`docs/2026-10-15-code-tab-run-state-phasemap.spec`) had CE1–CE5 and CE10 built (0.60.50). Its build
+order puts CE8 next. CE8 serves his words from 2026-10-15: "so the cli can read the current worksurface in the code tab."
 
-- **`lib/line-edit.js`** gains `verifyText` / `applyText`. They do the same checks as before (`expect` must match the
-  lines as they are now; one bad edit refuses the whole set), but on text in hand, so they work on any repo, not only
-  the Nexus root. Overlapping edits and ranges past the end of the file are refused. Each result carries the checksums
-  before and after.
-- **`POST /api/repos/:uuid/code/edit`** turns a checked edit set into one proposal (source `line-edit`, its ranges and
-  checksums). It lands on the work surface with Apply / Reject.
-  - A stale `expect` or a stale `checksum` is a 409, never a guess.
-- **`POST /api/repos/:uuid/code/assist`** hands the picked lines to the repo's agent with an action (change, expand,
-  refactor, fix, document, explain), plus six lines either side as context.
-  - The agent returns only the replacement, in one fenced block.
-  - Nexus builds the edit with `expect` set to the lines it read, so the model never addresses lines itself.
-  - A reply with no block proposes nothing and says so. `explain` only answers.
+## What was wrong
 
-## CV2: a version per diff (his words: "versioning each diff using versionium")
+The Code tab's surface (the open file, the picked lines, the picked chunk, the filters) lived only in the browser's `CS`
+object (`idearium/ui/js/code-surface.js`).
+- The CLI could not read it, so neither could an agent. The only work-surface route was the list of proposals.
+- Reloading the page lost it.
 
-- `lib/repo-versions.js` gains `label()` and `commitNow()`.
-  - An applied or reverted proposal, a file restore and a run rewind each commit at once, instead of after the 1.5 s
-    settle.
-  - Each commit carries labels: kind (edit · manage · agent · person · restore · revert), inject, run, by, path, action
-    and checksums.
-- A burst of plain writes still settles into one commit.
+## What changed (backend → route → command → UI)
 
-## CV4: tagged history ("full history tracked and tagged")
-
-- `GET …/history?path=&tag=kind:edit` (repeatable, comma-separated; every tag must match). `by:` also matches who
-  stands behind the commit.
-- The command is `repo history <repo> <path> --tag k:v`.
-
-## CV3: rewinding a run ("rewind engine for each file")
-
-- A single file already rewinds through `repo restore-file`.
-- **New:**
-  - `GET …/runs` lists the runs Nexus kept;
-  - `POST …/runs/:id/rewind` puts every file the run changed back as it was at the last version before the run
-    started. A file the run created is named and left (§0.3). `dryRun` says what it would do.
-- Each restore is its own labelled version, so a rewind can itself be undone.
-
-## Commands
-
-- `code edit <repo> <path> <from> <to> --with "…" [--expect "…"]`
-- `code assist <repo> <path> <from> <to> <action> ["…"]`
-- `repo runs`
-- `repo rewind-run <repo> <runId> [--dry]`
-- `repo history … --tag`
+- **`idearium/lib/surface-state.cjs`** (new) keeps one surface per repo under Idearium's data dir.
+  - It holds the open file, the picked lines, the chunk, the filters, who set it (`ui`, `cli` or `agent`) and a `rev`.
+  - Opening a new file clears the old file's lines and chunk.
+  - A bad range or a path outside the repo is refused, never guessed.
+- **`GET / PUT /api/repos/:uuid/surface`.**
+  - GET also returns what the surface shows but does not store: the picked lines' text, the proposals waiting, and the
+    repo's latest run (`lib/run-state.js`).
+  - PUT checks the file exists in the repo, then emits `idearium.surface.changed`, which is declared in the taxonomy.
+- **The commands**, three rows in `idearium/cli/route-commands.js`. Agents get the same rows through `nexus.command`.
+  - `idearium code surface <repo>`
+  - `idearium code open <repo> <path> [--lines a-b]`
+  - `idearium code select <repo> <from> [to] | --chunk <id> | --clear`
+- **The tab:**
+  - it publishes its surface as it changes, at most every 400 ms, and only when it differs from what was last sent;
+  - it follows a change made from the CLI or an agent, and ignores its own echo;
+  - it opens where the surface was left.
+- **Loom:** `loom/maps/run-state-map.js` wires the new module with its consumers (the API, the tab and the CLI rows) and
+  the API's new use of `lib/run-state.js`.
 
 ## Proof
 
-- `tests/modules/test-code-tab-expand.test.js` 8/8, through idearium's real router, with a stand-in copilot and a
-  stand-in Versionium.
-- Unchanged and still passing:
-  - `test-repo-inject` 83/83
-  - `test-repo-versions` 6/6
-  - `test-repo-history` 20/20
-  - `test-work-surface` 27/27
-  - `test-file-versions-and-reassign` 5/5
-  - the line-edit users: `test-agnostic-lib-tools`, `test-gemini-toolbox`, `test-p1`, `test-p2`
-- `test-event-contracts` EC-05 still fails as it does on main, on the four events undeclared before this change. The
-  two new events are declared.
+- `tests/modules/test-code-surface-state.test.js` 6/6. Three of its checks were driven in Clear Glass:
+  - SS-10: picking lines publishes the surface;
+  - SS-11: `code open` from the CLI moves the tab, with no echo;
+  - SS-12: the tab reopens where it was left.
+- No regressions: `test-code-tab` 16/16, `test-run-state` 33/33, `test-loom-map` 19/19, `test-cm3-commands` 4/4,
+  `test-check-catalogue` 7/7.
+- Two failures were already there before this change and fail the same way on main without it:
+  - `test-event-contracts` EC-05: `idearium.phase.mapped`, `idearium.repo.released`, `versionium.released` and
+    `versionium.tagged` are emitted but never declared;
+  - `test-cli-route-commands` CL-07: it needs Guardian running.
 
-## Found on the way
+## Not done
 
-- A file ingested without a final newline keeps none after an edit. That is correct (the edit keeps the file's own
-  ending). The coder's first test assumed otherwise.
+- No live run against his own Idearium yet.
+- CE7 (AI editing by lines or chunk) is next in the build order. It will read this surface for its range.

@@ -113,13 +113,13 @@ test('NNT-09 unknown regime falls back to stable color', () => {
 });
 
 // §0.39.282 — pinned 80 hooks when the registry held 80; it holds 157 now and the pin failed on every addition.
-// It now checks what the summary claims against the hooks themselves: the totals add up, and 9 systems (ERAVOS deleted 0.60.82).
+// It now checks what the summary claims against the hooks themselves: the totals add up, and 9 systems (ERAVOS deleted 0.60.83).
 test('NNT-10 real hooks/summary: the total is the sum of its parts, across 9 systems', () => {
   const s = hooks.summary();
   assert.ok(s.total > 0);
   assert.strictEqual(Object.values(s.byType).reduce((a, b) => a + b, 0), s.total, 'byType adds up to total');
   assert.ok(s.active + s.deprecated + s.seed <= s.total, 'active + deprecated + seed within total');
-  assert.strictEqual(s.systems, 9);   // 0.60.82 — ERAVOS deleted (James: "Delete it outright.")
+  assert.strictEqual(s.systems, 9);   // 0.60.83 — ERAVOS deleted (James: "Delete it outright.")
 });
 
 console.log(`\n  nexus-nerve: ${passed} passed, ${failed} failed\n`);

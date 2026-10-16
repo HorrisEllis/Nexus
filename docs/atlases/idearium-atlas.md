@@ -614,7 +614,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 
 - `idearium/api/build-surface.js` (405 lines)  
   exports filesState, deviationRecalc, deviationGet, afterVersion, afterFileChange, environmentGet +8 · requires 12 · required by 1
-- `idearium/api/index.js` (9799 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ Idearium HTTP API — idearium/api/index.js ║  
+- `idearium/api/index.js` (9873 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ Idearium HTTP API — idearium/api/index.js ║  
   exports _setAgentAsk, _reconcileRunsForTest, _agentAskForTest, _verdictForTest, _route, startAPI +8 · requires 69 · required by 23
 
 #### `idearium/cli/`
@@ -623,7 +623,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 
 - `idearium/cli/index.js` (1308 lines)  
   requires 5 · required by 0 · emits idearium.gap.ignore, idearium.gap.open, idearium.gap.resolve, idearium.idea.archive +6
-- `idearium/cli/route-commands.js` (871 lines) — §0.39.374: every capability is a command. James: "That was fantastic. Everything needs to be available as commands."  
+- `idearium/cli/route-commands.js` (896 lines) — §0.39.374: every capability is a command. James: "That was fantastic. Everything needs to be available as commands."  
   exports SPEC, ASK, makeRouteCommands, renderText, helpLines · requires 11 · required by 4
 - `idearium/cli/store-chatter.js` (11 lines) — §0.39.374: imported FIRST by idearium/cli/index.js (ES modules run their imports in order, before the importing module's own code). The store prints "[jaa] Loaded N rows …" (and IdeaOS,…
 
@@ -851,9 +851,9 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 - `idearium/ui/js/app.js` (5917 lines) — // ════════════════════════════════════════════════════ // STARFIELD CANVAS — twinkling stars (Van Gogh / synthwave reference, dialed  
   requires 2 · required by 6
 - `idearium/ui/js/arch-canvas.js` (669 lines)
-- `idearium/ui/js/code-surface.js` (475 lines) — // ════════════════════════════════════════════════════════════════════════════ // §CODE TAB — idearium/ui/js/code-surface.js (0.39.349 CT3)  
+- `idearium/ui/js/code-surface.js` (501 lines) — // ════════════════════════════════════════════════════════════════════════════ // §CODE TAB — idearium/ui/js/code-surface.js (0.39.349 CT3)  
   requires 6 · required by 3
-- `idearium/ui/js/code-tab-panels.js` (225 lines) — // ════════════════════════════════════════════════════════════════════════════ // §CODE TAB, expanded — idearium/ui/js/code-tab-panels.js (0.60.81 CE6 · CE7 · CE9)  
+- `idearium/ui/js/code-tab-panels.js` (256 lines) — // ════════════════════════════════════════════════════════════════════════════ // §CODE TAB, expanded — idearium/ui/js/code-tab-panels.js (0.60.82 CE6 · CE7 · CE9)  
   requires 5 · required by 1
 - `idearium/ui/js/compartment.js` (435 lines) — // idearium/ui/js/compartment.js — the Compartment view + recursive tab tree // component_id: idearium.ui.compartment
 - `idearium/ui/js/components-panel.js` (68 lines) — // idearium/ui/js/components-panel.js — 0.60.5. Bring in → DECOMPOSE INTO COMPONENTS. // James, 2026-10-13: "i want to be able to copy projects and decompose them into components for the component…
@@ -867,7 +867,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 - `idearium/ui/js/nexus-atlas.js` (260 lines) — // idearium/ui/js/nexus-atlas.js — the nexus repo's Home is the Nexus atlas. // comp_id: nexus.idearium.ui.nexus-atlas
 - `idearium/ui/js/ollama-check.js` (70 lines) — // ════════════════════════════════════════════════════════════════════════════ // §OLLAMA CHECK — idearium/ui/js/ollama-check.js (0.39.350 CT4)  
   requires 1 · required by 1
-- `idearium/ui/js/phases.js` (512 lines) — // ════════════════════════════════════════════════════════════════════════════ // §PHASES — idearium/ui/js/phases.js (0.39.271 P4)  
+- `idearium/ui/js/phases.js` (514 lines) — // ════════════════════════════════════════════════════════════════════════════ // §PHASES — idearium/ui/js/phases.js (0.39.271 P4)  
   requires 3 · required by 0
 - `idearium/ui/js/plan-panel.js` (501 lines) — // ════════════════════════════════════════════════════════════════════════════ // §PLAN — idearium/ui/js/plan-panel.js (0.39.280 BS11)  
   requires 2 · required by 2
@@ -988,12 +988,12 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **Actions per card:** **Apply** / **Reject** (proposed), **Revert** (applied), **Promote** (staged).
 - **The tools strip:** the tool scope, the tools the agent is given, and every call it made, ✓ or ✗ with the error. Phase and plan runs now keep their tool calls.
 
-**The Code tab's surface** (0.60.79 CE8, GET / PUT /api/repos/:uuid/surface, `idearium/lib/surface-state.cjs`). One per repo: the open file, the picked lines, the chunk, the filters, who set it (ui · cli · agent).
+**The Code tab's surface** (0.60.80 CE8, GET / PUT /api/repos/:uuid/surface, `idearium/lib/surface-state.cjs`). One per repo: the open file, the picked lines, the chunk, the filters, who set it (ui · cli · agent).
 - **GET** adds the picked lines' text, the proposals waiting and the repo's latest run (`lib/run-state.js`).
 - **PUT** emits idearium.surface.changed; the Code tab follows a change it did not make, and opens where the surface was left.
 - **Commands:** idearium code surface <repo>, code open <repo> <path> [--lines a-b], code select <repo> <from> [to] | --chunk <id> | --clear (agents: nexus.command).
 
-**The Code tab, Files merged in** (0.60.80–0.60.81, `idearium/ui/js/code-surface.js` + code-tab-panels.js). The Files button is gone; setRepoSubtab('files') and openApiRepoFile() open Code.
+**The Code tab, Files merged in** (0.60.81–0.60.82, `idearium/ui/js/code-surface.js` + code-tab-panels.js). The Files button is gone; setRepoSubtab('files') and openApiRepoFile() open Code.
 - **Tree:** filter, + file, × delete (to .trash/); file states and waiting diffs as before.
 - **Open file:** edit by hand (save = POST …/file, a version), **manage · history** (one menu: the workbench plus the file's timeline of runs, labelled commits and versions; diff with now, restore).
 - **Picked lines:** change · expand · refactor · fix · document · explain → POST …/code/assist; the reply replaces exactly those lines as a proposal. POST …/code/edit takes a checked edit set directly (code edit).

@@ -225,8 +225,8 @@ Not confirmed.
   exports gateCandidate, gateCandidates
 - `cortex/core/raid/context-synthesis.js` (177 lines)  
   exports synthesizeContext, ALL_SYSTEMS
-- `cortex/core/raid/contract-adapters.js` (220 lines)  
-  exports VERSION, doorRoute, agentExecutor, planHash, fromPhasePlan, fromWholePhase +2 · requires 3 · required by 2
+- `cortex/core/raid/contract-adapters.js` (244 lines)  
+  exports VERSION, doorRoute, agentExecutor, planHash, fromPhasePlan, fromWholePhase +3 · requires 3 · required by 2
 - `cortex/core/raid/contract-boundary.js` (200 lines)  
   exports resolveBoundary, listBoundaries, REGISTRY
 - `cortex/core/raid/contract-gates.js` (709 lines)  

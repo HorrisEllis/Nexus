@@ -286,6 +286,15 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     his.
   - **Evidence:** `docs/2026-10-15-gate-held-work-phasemap.spec` addenda (d) and (f); `tests/modules/test-run-state.test.js`
     RS-50..55; `CHANGELOG-0.60.77.md`.
+- **2026-10-16: "can we not have it chunk everytime it restarts. it needs to persist. all data  is meant to persist. hardcoded has to earn its place..."**
+  - **Context:** after a spec's 17 chunks were lost when Clear Glass closed. The coder had mapped a timeline and asked
+    which path lost them; he named the symptom precisely instead: it re-chunks on every restart.
+  - **What it shows:** failure-mode reading from behaviour. The symptom led straight to the root cause: the plan was
+    re-made at every build start, a fresh plan has a fresh hash, and the hash check archived every passed brick. The
+    checkpoints were already persisted; the one thing not reused was the plan. A one-function fix on the contract file,
+    proven by a test where a restart makes no agent call at all.
+  - **Evidence:** `CHANGELOG-0.60.79.md`; `tests/modules/test-contract-phase-build.test.js` CP-03b;
+    `cortex/core/raid/contract-adapters.js` `savedPlan`.
 - **2026-10-15 / 2026-10-16: "if theyre is going to be 2, i feel like code should only be whats being coded, that or consolidate them into one" · "yes one tab." · "the file and code tab merge."**
   - **Context:** Idearium had two views of one repo's files: the Files tab (tree, editor, Manage, version history) and
     the Code tab (tree, chunks, diffs, the agent). He named both ways out himself: a strict split, or one tab. The
@@ -294,8 +303,16 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     same repo would drift. One tab kept every capability of both (filter, add, delete, edit, Manage, history). Every
     old link still lands, through one redirect, and nothing was deleted.
   - **Evidence:** `tests/modules/test-code-tab-merge.test.js` (7/7, six driven in Clear Glass);
-    `docs/2026-10-15-code-tab-run-state-phasemap.spec` addenda (b) and (c); `CHANGELOG-0.60.80.md`,
-    `CHANGELOG-0.60.81.md`.
+    `docs/2026-10-15-code-tab-run-state-phasemap.spec` addenda (b) and (c); `CHANGELOG-0.60.81.md`,
+    `CHANGELOG-0.60.82.md`.
+- **2026-10-16: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk."**
+  - **Context:** the pipeline had all four pieces, but only phase builds used them, and not in that order. A request
+    from the Agent tab, copilot or RAID's officiator went straight to an agent.
+  - **What it shows:** systems design by invariant. He fixed the order of operations for every agent, not for one
+    feature. It is the same rule the project holds its own coder to (map before build), applied to the machine. He also
+    corrected the record when his metaphor ("brick") risked becoming a second node type ("When I said brick I was using
+    a metaphor").
+  - **Evidence:** `lib/work-funnel.js`; `tests/modules/test-work-funnel.test.js` (8/8); `docs/2026-10-16-agent-work-funnel-phasemap.spec`; `CHANGELOG-0.60.94.md`.
 - **2026-10-16: "what about using cos for the canvas, then each tool a nested compartment?"**
   - **Context:** he had just had ERAVOS deleted from Nexus. He sent the standalone ERAVOS and proposed bringing its
     design back as COS structure rather than as a running system: the canvas as one compartment, each tool nested
@@ -305,4 +322,4 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     of his code: his canvas ships byte for byte, his own loader generator and validator run unchanged on a canvas
     Nexus made, and his own harness passes the tools.
   - **Evidence:** `tests/modules/test-canvas-compartments.test.js` (7/7; CC-10 drives it in Clear Glass: 12/12 on his
-    harness); `docs/2026-10-16-canvas-compartments-phasemap.spec`; `CHANGELOG-0.60.83.md`.
+    harness); `docs/2026-10-16-canvas-compartments-phasemap.spec`; `CHANGELOG-0.60.104.md`.

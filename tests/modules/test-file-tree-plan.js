@@ -46,7 +46,7 @@ async function run() {
   check('a blueprint file carries its role\'s stated purpose', fsA.files.some(f => /Serves the user-facing UI/.test(f.purpose)));
   check('an unknown COS template is refused, not guessed', P.fromCosTemplate('cos-archetype:nope').ok === false);
 
-  // ── eravos mods: offered from 2026-09-21 until 0.60.82, when ERAVOS was deleted (James: "Delete it outright.") ──
+  // ── eravos mods: offered from 2026-09-21 until 0.60.83, when ERAVOS was deleted (James: "Delete it outright.") ──
   check('an eravos-mod id is no longer a template; the COS catalog still is', !P.isFileTreeTemplate('eravos-mod:sample-player') && P.isFileTreeTemplate('cos-archetype:ai-agent') && !P.isFileTreeTemplate('00-meta'));
   check('the eravos-mod functions are gone from the module', P.listEravosMods === undefined && P.fromEravosMod === undefined && P.isEravosMod === undefined);
   const noMod = await P.plan({ name: 'x', templateIds: ['eravos-mod:sample-player', 'cos-archetype:ai-agent'], ask: null });
@@ -138,7 +138,7 @@ async function run() {
 
   // ── routes + stall reporting (structural: they live inside the running server) ──
   const API = fs.readFileSync(path.join(ROOT, 'idearium', 'api', 'index.js'), 'utf8');
-  // §BUILT 2026-09-21 — the route merged eravos mods too, until 0.60.82 (ERAVOS deleted).
+  // §BUILT 2026-09-21 — the route merged eravos mods too, until 0.60.83 (ERAVOS deleted).
   check('the templates route merges COS templates into the picker list (no eravos mods)', /\[\.\.\.se\.listTemplates\(\), \.\.\.cos\]/.test(API) && !/listEravosMods/.test(API));
   check('spec creation sends a file-tree template id down the file-tree path, not the document-section path', /isFileTreeTemplate\(id\)/.test(API));
   check('create branches to a file-tree spec for a COS template or fileTree:true', /body\.fileTree === true \|\| fileTreeIds\.length/.test(API) && /createFileTreeSpec\(/.test(API));
@@ -158,7 +158,7 @@ async function run() {
   const APP = fs.readFileSync(path.join(ROOT, 'idearium', 'ui', 'js', 'app.js'), 'utf8');
   check('the picker has a file-tree-first switch, on by default', /id="ns-file-tree" checked/.test(HTML));
   check('the picker groups COS archetypes, COS blueprints and document templates', APP.includes("'cos-archetype'") && APP.includes("'cos-blueprint'") && APP.includes('spec-document templates'));
-  // §0.39.282 — James, 0.39.267: "the eravos options need to be removed from this prompt." 0.60.82: ERAVOS deleted.
+  // §0.39.282 — James, 0.39.267: "the eravos options need to be removed from this prompt." 0.60.83: ERAVOS deleted.
   check('the New Spec modal offers no eravos mods', !/Eravos mods/.test(APP) && !/eravos-mod/.test(APP));
   check('create sends fileTree and waits long enough for a real plan', /fileTree \}\),\s*\}, fileTree \? 180000/.test(APP));
 

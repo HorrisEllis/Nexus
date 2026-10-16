@@ -96,7 +96,7 @@
 .cs-ident-opt{margin-left:auto;background:none;border:0;padding:0;color:var(--sky);font:inherit;cursor:pointer}.cs-ident-opt:hover{text-decoration:underline}
 .cs-m-cli .cs-msg-text{color:var(--text2);white-space:pre-wrap;font:10px/1.5 var(--mono)}
 
-/* §0.60.81 CE6 · CE7 · CE9 (code-tab-panels.js) — the Files tab's work in the Code tab, the picked lines with an action,
+/* §0.60.82 CE6 · CE7 · CE9 (code-tab-panels.js) — the Files tab's work in the Code tab, the picked lines with an action,
    and the bottom panel (activity · runs · responses · tasks · log · control · versions · machine). Same tokens. */
 .cs-filter-row{padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.06)}
 .cs-filter{width:100%;box-sizing:border-box;font:10.5px var(--mono);padding:4px 7px}
@@ -134,3 +134,22 @@
 .cx-resp-q{color:var(--text3);margin-top:2px;white-space:pre-wrap}
 .cx-resp-a{color:var(--text);margin-top:2px;white-space:pre-wrap}
 .cx-note{padding-bottom:6px}
+/* §FN4 0.60.95 — the work panel: dependencies → spec → phase → chunks, in his order */
+.cx-work{display:flex;flex-direction:column;gap:6px;font-size:11px}
+.cx-work-step{display:grid;grid-template-columns:18px 92px 1fr;gap:6px;align-items:baseline}
+.cx-work-step code{font-size:10px}
+.cx-work-n{color:var(--mint);font-family:var(--mono);font-weight:600}
+.cx-work-off{opacity:.45}
+.cx-work-stop{margin-top:4px}
+
+
+/* 0.60.103 TB5 — one view at a time */
+.cs-vtabs{display:flex;gap:2px;border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden}
+.cs-vtab{background:transparent;border:0;color:var(--text2,#9aa);font:11px var(--mono);padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:5px}
+.cs-vtab.on{background:rgba(255,255,255,.09);color:var(--text,#fff)}
+.cs-badge{font-size:9.5px;padding:0 5px;border-radius:8px;background:rgba(255,255,255,.14)}
+.cs-badge.warn{background:#7a5b12;color:#ffd77a}.cs-badge.live{background:#0f4f66;color:#8fdcff}.cs-badge.bad{background:#6b1f1f;color:#ffb3b3}
+.cs-head{max-width:34ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cs-one{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.cs-grid.cs-noagent{grid-template-columns:230px minmax(0,1fr)}
+@media (max-width:760px){.cs-grid.cs-noagent{grid-template-columns:1fr}}

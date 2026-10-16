@@ -38,7 +38,7 @@
 // §0.39.263 — the idearium that served this page comes first: an idearium on
 // another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
 // 0.39.263 — served standalone (idearium's own port, not under the orchestrator's /ui/),
-// a framed system could not resolve ../<system>/ against this server (the Architect is idearium's own, 0.39.299; Eravos deleted 0.60.82).
+// a framed system could not resolve ../<system>/ against this server (the Architect is idearium's own, 0.39.299; Eravos deleted 0.60.83).
 // §0.39.271 — the two frames start at about:blank (data-src holds the relative path):
 (() => {
   try {
@@ -1400,7 +1400,7 @@ async function openNewSpecModal({ name = '', description = '', ideaUuid = null }
   const groups = [
     ['COS archetypes — one compartment, real starting files', templates.filter(t => t.source === 'cos-archetype')],
     ['COS blueprints — several roles, one directory each', templates.filter(t => t.source === 'cos-blueprint')],
-    // §0.39.267 — James: "the eravos options need to be removed from this prompt." · 0.60.82: ERAVOS deleted, its mods with it.
+    // §0.39.267 — James: "the eravos options need to be removed from this prompt." · 0.60.83: ERAVOS deleted, its mods with it.
     ['spec-document templates', templates.filter(t => !String(t.source || '').startsWith('cos-'))],
   ].filter(([, list]) => list.length);
   wrap.innerHTML = groups.map(([title, list]) =>
@@ -2018,7 +2018,7 @@ let CURRENT_REPO_SUBTAB = null;
 function setRepoSubtab(name) {
   if (name === 'roadmap' || name === 'phasemap') name = 'phases';   // §0.39.271 P4 — one tab now
   if (name === 'agent') name = 'code';   // §0.48.0 OS9 — the agent lives in the Code tab; its settings in Settings → Agents
-  if (name === 'files') name = 'code';   // §CE6 0.60.81 — James: "the file and code tab merge." One tab; every old link to Files lands in Code
+  if (name === 'files') name = 'code';   // §CE6 0.60.82 — James: "the file and code tab merge." One tab; every old link to Files lands in Code
   CURRENT_REPO_SUBTAB = name;
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));
@@ -5203,7 +5203,7 @@ function _showIdeEditor(show) {
   document.getElementById('ide-editor').style.display = show ? '' : 'none';
 }
 
-// §CE6 0.60.81 — the Files tab merged into Code: a file opened anywhere (search, the atlas, Architect, a new file) opens in the
+// §CE6 0.60.82 — the Files tab merged into Code: a file opened anywhere (search, the atlas, Architect, a new file) opens in the
 // Code tab. The Files tab's own opener is kept below as openApiRepoFileInFiles (archived, §0.3), unreachable from the UI.
 async function openApiRepoFile(repoUuid, filePath) {
   if (typeof csOpen === 'function') {
@@ -5682,7 +5682,7 @@ window.addEventListener('load', () => {
   setInterval(() => { if (CONNECTED) loadStats(); else nexusConnect(); }, 15000);
 });
 
-// ── 0.39.264 → 0.60.82: the Eravos frame's "new organism" message handler was here; deleted with ERAVOS (James: "Delete it outright.").
+// ── 0.39.264 → 0.60.83: the Eravos frame's "new organism" message handler was here; deleted with ERAVOS (James: "Delete it outright.").
 
 // ════════════════════════════════════════════════════
 // §0.39.284 W7 — THE REPO'S COMPONENT REGISTRY (Architect tab). James: "the architect tab should be the component

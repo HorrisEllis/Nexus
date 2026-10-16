@@ -349,7 +349,7 @@ James's spec delivery and verification language. Every chunk has a contract.
 | Architect | :3747 | Hook registry. Blueprint engine. Topology scanner. |
 | Emerge IDE | :4242 | SEAM compiler + codegen. Spec-driven .eg / .emerge editing. |
 | Bridge | :9999 | P2P trust relay. Circuit breaker. |
-| ERAVOS | — | Deleted 2026-10-16 (0.60.82), his call: "can you remove eravos?" · "Delete it outright." Was the sovereign canvas on :3751 (organisms, wires, audio, spatial composition); in git history. |
+| ERAVOS | — | Deleted 2026-10-16 (0.60.83), his call: "can you remove eravos?" · "Delete it outright." Was the sovereign canvas on :3751 (organisms, wires, audio, spatial composition); in git history. |
 | Ollama Bridge | :3749 | Sovereign local model dispatch. Isolated from Guardian. |
 | Co-pilot | :3750 | Sovereign co-pilot. Continuous stream of consciousness. |
 | Jaa | — | SQL engine on SISO. 1100+ tests. JS + PHP. |

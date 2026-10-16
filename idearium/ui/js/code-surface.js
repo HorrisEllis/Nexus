@@ -32,14 +32,18 @@
 // code tab." Above activity, the agent writing (app.js agentLiveHtml / agentLivePaint — the Agent tab's feed state): an
 // Ollama model's text as it writes, or a browser agent's DOM mutations, its node anchor and its reply.
 //
-// §0.60.81 CE6 · CE7 · CE9 — James: "expand the code tab in repo. the file and code tab merge. all of it from the phases3".
+// §0.60.82 CE6 · CE7 · CE9 — James: "expand the code tab in repo. the file and code tab merge. all of it from the phases3".
 // The Files tab's work (filter, add, delete, edit by hand, Manage) and the bottom panels (runs, responses, tasks · log ·
 // control · versions · machine) live in code-tab-panels.js; this file calls them.
 // ════════════════════════════════════════════════════════════════════════════
 
+// 0.60.103 TB5 — James: "the ui is fucked up. its too cluttered." One view on screen at a time; every region that was stacked on the
+// one page (files, diffs, plan strip, live strip, nine bottom panels) now lives in exactly one of these.
+const CS_VIEWS_IDS = ['files', 'changes', 'plans', 'runs', 'cos'];
 const CS = { uuid: null, overview: null, overviewError: null, open: null, text: null, textError: null, outline: null, outlineError: null,
   card: null, hits: null, more: null, q: '', mode: 'search', changedOnly: false, collapsed: new Set(), sel: null,
-  agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' }, activity: false, loadingChanges: false, plan: null, live: [] };
+  agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' }, activity: false, loadingChanges: false, plan: null, live: [],
+  view: (() => { try { const v = localStorage.getItem('idearium.cs.view'); return CS_VIEWS_IDS.includes(v) ? v : 'files'; } catch (_) { return 'files'; } })() };
 
 function _csq(s) { return escapeHtml(String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'")); }
 
@@ -160,6 +164,17 @@ async function csAfterChange() {
   await Promise.all([CS.open ? csReadOpen(repo) : null, csLoadPlan(repo)]);
   csPaint();
   if (typeof CX !== 'undefined' && (CX.panel === 'runs' || CX.panel === 'responses')) cxPanelLoad();   // §CE9
+}
+/** TB5 — switch the one view on screen; a view that reads (changes, runs, plans) loads as it opens */
+function csView(k) {
+  if (!CS_VIEWS_IDS.includes(k)) k = 'files';
+  CS.view = k;
+  try { localStorage.setItem('idearium.cs.view', k); } catch (_) {}
+  if (k === 'runs' && typeof CX !== 'undefined' && CX.panel === 'activity') CX.panel = 'runs';
+  csPaint();
+  if (k === 'changes') csAfterChange();
+  else if (k === 'runs' && typeof cxPanelLoad === 'function') cxPanelLoad();
+  else if (k === 'plans') { if (typeof cxWorkLoad === 'function' && CURRENT_API_REPO) cxWorkLoad(CURRENT_API_REPO); }
 }
 function csRepaint() { if (CURRENT_REPO_SUBTAB === 'code' && CURRENT_API_REPO && CS.uuid === CURRENT_API_REPO.uuid) csPaint(); }
 
@@ -421,22 +436,33 @@ function csPaint() {
         ${_csHistLine()}
         ${mine.length ? `<div class="cs-diffs">${mine.map((f, i) => _wsCard(f, i)).join('')}</div>` : ''}
         ${typeof CX !== 'undefined' && CX.editing ? _cxEditorHtml() : `<div class="cs-code" id="cs-code">${_csCode()}</div>`}`
-    : `<div class="cs-sec">the agent's changes<span class="cs-grow"></span><button class="cs-chip-btn" title="reload" onclick="csAfterChange()">↻</button></div>
+    : `<div class="cs-empty">pick a file on the left, or search above. What the agent changed is under <b>changes</b>.</div>`;
+  const changesHtml = `<div class="cs-sec">the agent's changes<span class="cs-grow"></span><button class="cs-chip-btn" title="reload" onclick="csAfterChange()">↻</button></div>
         ${wsErr ? `<div class="cs-empty cs-bad">could not read the changes: ${escapeHtml(wsErr)}</div>` : ''}
         ${_csChanges().length ? `<div class="cs-diffs">${_csChanges().map(_wsCard).join('')}</div>` : `<div class="cs-empty">${CS.loadingChanges ? 'reading the changes…' : 'no changes yet — what the agent writes shows here as a diff, and greyed in the files, until you apply it'}</div>`}`;
+  const nCh = _csChanges().filter(f => f.status === 'proposed' || f.status === 'staged').length;
+  const sm = CS.plan && CS.plan.summary || {};
+  const running = _csRunning().length;
+  const badge = (n, cls) => n ? `<span class="cs-badge${cls ? ' ' + cls : ''}">${n}</span>` : '';
+  const tabs = [['files', 'files', ''], ['changes', 'changes', badge(nCh, 'warn')], ['plans', 'plans', badge(sm.building, 'live') + badge(sm.failed, 'bad')], ['runs', 'runs', badge(running, 'live')], ['cos', 'COS', '']]
+    .map(([k, l, bd]) => `<button class="cs-vtab${CS.view === k ? ' on' : ''}" onclick="csView('${k}')">${l}${bd}</button>`).join('');
+  const agentOn = !!(CS.agentOpen || CS.agent.busy || CS.sel);   // picked lines open the agent: that is where their actions are
+  const agentBtn = `<button class="cs-chip-btn${agentOn ? ' on' : ''}" onclick="CS.agentOpen=!CS.agentOpen;csPaint()" title="talk to the repo agent about the open file">agent${CS.agent.busy ? ' ◌' : ''}</button>`;
+  const body = CS.view === 'changes' ? `<div class="cs-one">${changesHtml}</div>`
+    : CS.view === 'plans' ? `<div class="cs-one">${_csPlanStrip()}<div class="cs-sec">the work for the open file</div>${typeof _cxWork === 'function' ? _cxWork() : ''}<div class="al cs-live" data-al="${escapeHtml(repo.uuid)}">${typeof agentLiveHtml === 'function' ? agentLiveHtml(repo.uuid) : ''}</div></div>`
+    : CS.view === 'runs' ? `<div class="cs-one">${typeof cxPanelsHtml === 'function' ? cxPanelsHtml(`<div class="cs-activity" id="cs-activity">${_csActivity()}</div>`) : `<div class="cs-activity" id="cs-activity">${_csActivity()}</div>`}</div>`
+    : CS.view === 'cos' ? `<div class="cs-one"><div class="cs-sec">COS — the test environment</div><div class="cs-empty">The proposal is tested here before it reaches you. From a terminal: <code>node cos/cli/index.js vm shell &lt;name&gt;</code>. The screen for it is not built yet (to confirm what you want here: see the rebuild phasemap, TB0).</div></div>`
+    : `<div class="cs-grid${agentOn ? '' : ' cs-noagent'}">
+        <div class="cs-left" id="cs-left">${_csTree(repo)}</div>
+        <div class="cs-mid">${middle}</div>
+        ${agentOn ? `<div class="cs-right"><div class="cs-card">${_csCardHtml()}</div><div class="cs-agent">${_csAgentHtml()}</div></div>` : ''}
+      </div>`;
   el.innerHTML = `<div class="cs">
-    <div class="cs-top"><span class="cs-dim">${head}</span><span class="cs-grow"></span>
-      <input id="cs-q" class="field-input cs-search" placeholder="what the code does, a name, or exact text" value="${escapeHtml(CS.q)}" onkeydown="if(event.key==='Enter')csSearch()">
+    <div class="cs-top"><div class="cs-vtabs">${tabs}</div><span class="cs-dim cs-head">${head}</span><span class="cs-grow"></span>
+      ${CS.view === 'files' ? `<input id="cs-q" class="field-input cs-search" placeholder="what the code does, a name, or exact text" value="${escapeHtml(CS.q)}" onkeydown="if(event.key==='Enter')csSearch()">
       <select id="cs-mode" class="field-input cs-mode"><option value="search"${CS.mode === 'search' ? ' selected' : ''}>by meaning</option><option value="grep"${CS.mode === 'grep' ? ' selected' : ''}>exact text</option></select>
-      <button class="action-btn" onclick="csSearch()">search</button></div>
-    <div class="cs-grid">
-      <div class="cs-left" id="cs-left">${_csTree(repo)}</div>
-      <div class="cs-mid">${middle}</div>
-      <div class="cs-right"><div class="cs-card">${_csCardHtml()}</div><div class="cs-agent">${_csAgentHtml()}</div></div>
-    </div>
-    ${_csPlanStrip()}
-    <div class="al cs-live" data-al="${escapeHtml(repo.uuid)}">${typeof agentLiveHtml === 'function' ? agentLiveHtml(repo.uuid) : ''}</div>
-    ${typeof cxPanelsHtml === 'function' ? cxPanelsHtml(`<div class="cs-activity" id="cs-activity">${_csActivity()}</div>`) : `<div class="cs-activity" id="cs-activity">${_csActivity()}</div>`}</div>`;
+      <button class="action-btn" onclick="csSearch()">search</button>` : ''}${CS.view === 'files' || CS.view === 'changes' ? agentBtn : ''}</div>
+    ${body}</div>`;
   const code = document.getElementById('cs-code'); if (code && scroll) code.scrollTop = scroll;
   const ed2 = document.getElementById('cs-editor'); if (ed2 && edState) { ed2.scrollTop = edState.top; if (edState.focus) { ed2.focus(); ed2.setSelectionRange(edState.a, edState.b); } }
   if (typeof cxAfterPaint === 'function') cxAfterPaint();

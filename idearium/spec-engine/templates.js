@@ -242,7 +242,7 @@ const TEMPLATES = Object.freeze([
     seedFile:    'axioms.spec',
     seedSection: null,
   },
-  // §0.60.83 CN4 — James: "creating templates for cos and ideariun spec workshop" (with Eravos-merged.zip). Seeds quoted
+  // §0.60.104 CN4 — James: "creating templates for cos and ideariun spec workshop" (with Eravos-merged.zip). Seeds quoted
   // from his ERAVOS files; their COS counterparts are cos-archetype:eravos-canvas / eravos-tool.
   {
     id:          'eravos-canvas',

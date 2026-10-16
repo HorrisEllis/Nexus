@@ -164,7 +164,7 @@ export const SPEC = [
       else { if (a.flags.chunk && a.flags.chunk !== true) body.chunk = String(a.flags.chunk); if (a.args[0]) { const sel = _lines(`${a.args[0]}-${a.args[1] || a.args[0]}`); if (sel.error) return { error: sel.error }; body.sel = sel; } }
       return { method: 'PUT', path: `/api/repos/${a.repo.uuid}/surface`, body }; },
     print: (d, a, h) => _printSurface(d, a, h) },
-  // §CE7 0.60.80 — James: "ai assisted coding using the chunking and line count tool for the ai to change lines at a time or a
+  // §CE7 0.60.81 — James: "ai assisted coding using the chunking and line count tool for the ai to change lines at a time or a
   // section." A checked edit (expect must match the file now) and the agent on a picked range; both land as one proposal.
   { key: 'code.edit', repo: true, usage: 'code edit <repo> <path> <from> <to> --with "<new text>" [--expect "<old text>"]', about: 'replace lines from..to with new text — checked against the file as it is now; lands as a proposal (apply writes it)',
     need: (a) => (a.args.length >= 3 && typeof a.flags.with === 'string' ? null : '<path> <from> <to> --with "<text>"'),
@@ -176,7 +176,7 @@ export const SPEC = [
     print: (d, a, h) => { if (!d.ok) { console.log(h.c.amber(`  ${d.error}`)); if (d.reply) console.log(h.c.dim(d.reply)); return; }
       if (d.action === 'explain') { console.log(h.c.dim(`  ${d.provider || ''}`)); console.log(d.reply); return; }
       console.log(`${h.c.mint('✓')} ${d.path} ${d.from}–${d.to} ${d.action} by ${d.provider || 'the agent'} → proposal ${h.c.gray((d.inject && d.inject.uuid) || '')}`); console.log(h.c.dim(`  idearium repo changes ${h.shortRepo(a.repo.uuid)}`)); } },
-  // §CV3 0.60.80 — James: "rewind engine for each file." The runs Nexus kept (CE1), and undoing one: every file it changed
+  // §CV3 0.60.81 — James: "rewind engine for each file." The runs Nexus kept (CE1), and undoing one: every file it changed
   // back as it was before it started (a file it created is named, not deleted).
   { key: 'repo.runs', repo: true, usage: 'repo runs <repo> [--status running|done|failed]', about: 'the runs Nexus kept for this repo: goal, attempt, agents tried, steps, files read and changed',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/runs${qs(a.flags, ['status', 'limit'])}` }),
@@ -187,7 +187,7 @@ export const SPEC = [
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/runs/${encodeURIComponent(a.args[0])}/rewind`, body: { by: 'cli', ...(a.flags.dry ? { dryRun: true } : {}) }, timeoutMs: 120000 }),
     print: (d, a, h) => { console.log(h.c.dim(`  to ${String(d.to.commitId).slice(0, 12)} · ${when(d.to.ts)} · ${d.to.message || ''}${d.dryRun ? ' (dry run)' : ''}`));
       for (const r of d.results || []) console.log(`  ${r.done ? h.c.mint('↶') : r.dryRun ? '·' : h.c.amber('○')} ${r.path}${r.why ? h.c.dim(`  — ${r.why}`) : ''}`); } },
-  // §0.60.83 CN3 — James: "what about using cos for the canvas, then each tool a nested compartment?" His ERAVOS canvas as a
+  // §0.60.104 CN3 — James: "what about using cos for the canvas, then each tool a nested compartment?" His ERAVOS canvas as a
   // COS compartment, each tool a nested one (lib/canvas-compartments.js).
   { key: 'canvas.list', repo: false, usage: 'canvas list', about: 'every canvas compartment, with how many tools it holds',
     req: () => ({ method: 'GET', path: '/api/canvas' }),
@@ -336,6 +336,11 @@ export const SPEC = [
     need: (a) => (a.args[0] ? null : '<id>'),
     req: (a) => ({ method: 'PATCH', path: `/api/notes/${encodeURIComponent(a.args[0])}`, body: { status: 'done' } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} done: ${d.note.title}`) },
+  // FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." (lib/work-funnel.js)
+  { key: 'repo.funnel', repo: true, usage: 'repo funnel <repo> <request…> [--intent change|build|debug|spec]', about: 'the four answers for a request, in order — its dependencies, its spec, its phase, its chunks — or where it stops and why (no model)',
+    need: (a) => (a.args.length ? null : '<request…>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/funnel`, body: { request: a.args.join(' '), ...(a.flags.intent ? { intent: String(a.flags.intent) } : {}) } }),
+    print: (d, a, h) => { for (const l of d.lines || []) console.log(/^stopped/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); } },
   // 0.60.78 RT1 — what RAID's officiator holds back (the agents' wait, each staged drop's tries and why) and clearing it
   { key: 'raid.parked', repo: false, usage: 'raid parked', about: 'what the officiator holds back: the agents\' wait (no agent answered) and each staged drop\'s tries, why, and when it is tried next',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/raid/officiator' }),
@@ -397,10 +402,10 @@ export const SPEC = [
       }
       console.log(h.c.dim('\n  build one: idearium repo phase <repo> <phase> build'));
     } },
-  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task',
+  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again)',
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => (a.args[1] === 'build'
-      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}) }, timeoutMs: 120000 }
+      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}) }, timeoutMs: 120000 }
       : { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/runs?phase=${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => {
       if (a.args[1] === 'build') {
@@ -692,6 +697,26 @@ export const SPEC = [
   // §0.60.60 NP9 — James, 2026-10-15: "add support for snowflake, using cli, then you can add the commands to the agents, or make agent tools."
   // Routes and the Snowflake/Tor transport (clear-glass/src/net). Reading is open to agents; CHANGING a route or the transport is a person's act
   // (an agent that could remove a rule could quietly send his traffic direct), so personOnly refuses it for the nexus.command tool.
+  // §0.60.85 PI5b — James, 2026-10-16: "build it." The chat crawler (clear-glass/src/chats/): CLI first, then Settings. Starting it is a person's act.
+  { key: 'chat-crawl', repo: false, usage: 'chat-crawl <status|start|stop> [<provider:accountId>]', about: 'the personal-chat crawler: reads an account\'s chat list, then each chat once, then only new or changed ones; off until the account\'s switch is on in Settings > Chat capture',
+    need: (a) => { const v = a.args[0] || 'status'; if ((v === 'start' || v === 'stop') && !a.args[1]) return '<provider:accountId> (like chatgpt:a1)'; return null; },
+    personOnly: (a) => (['start', 'stop'].includes(a.args[0]) ? 'starting the crawler visits his own account\'s chats at volume: it is his call, per account. Ask him to run it or switch the account on in Settings > Chat capture.' : null),
+    req: (a) => { const v = a.args[0] || 'status'; const cg = (method, path, body) => ({ system: 'clear-glass', method, path, ...(body ? { body } : {}) });
+      if (v === 'start') return cg('POST', '/cli/chats/crawl/start', { account: a.args[1], ...(a.flags.partition ? { partition: String(a.flags.partition) } : {}) });
+      if (v === 'stop') return cg('POST', '/cli/chats/crawl/stop', { account: a.args[1] });
+      return cg('GET', '/cli/chats/crawl/status' + (a.args[1] ? `?account=${encodeURIComponent(a.args[1])}` : '')); },
+    print: (d, a, h) => {
+      if (d.ok === false) { console.log(`${h.c.amber('✗')} ${d.error || 'failed'}`); return; }
+      const one = (x) => { const au = x.audit || {}; console.log(`  ${(x.account || '').padEnd(16)} ${x.running ? 'running' : 'idle   '} ${String(x.phase || '').padEnd(10)} ${x.status || ''}${x.pausedReason ? ` (${x.pausedReason})` : ''} · listed ${au.listed || 0} · logged ${au.logged || 0} · failed ${(au.failed || []).length} · pending ${(au.pending || []).length}${au.nothingMissed ? ' · nothing missed' : ''}`); };
+      if (d.started) console.log(`  started ${d.started}`); else if (d.stopping) console.log(`  stopping ${d.stopping}`); else if (d.accounts) { if (!d.accounts.length) console.log('  no crawler has been started in this session'); d.accounts.forEach(one); } else one(d); } },
+  { key: 'nexus-release', repo: false, usage: 'nexus-release <status|fetch>', about: 'the latest Nexus release and COS: status says what is out, what COS has and what a fetch would do (downloads nothing); fetch puts the zip in COS\'s inbox, checked against the published SHA256SUMS. COS\'s update policy decides what happens next',
+    need: () => null,
+    personOnly: (a) => (a.args[0] === 'fetch' ? 'fetching a release puts new code on his machine (COS then installs it, and switches by itself under update.policy auto). It is his call: ask him to run it.' : null),
+    req: (a) => { const v = a.args[0] || 'status'; if (v === 'fetch') return { system: 'clear-glass', method: 'POST', path: '/cli/releases/fetch', body: {}, timeoutMs: 600000 }; return { system: 'clear-glass', method: 'GET', path: '/cli/releases/status', timeoutMs: 30000 }; },
+    print: (d, a, h) => {
+      if (d.ok === false) { console.log(`${h.c.amber('✗')} ${d.error || 'failed'}`); return; }
+      if (d.action) { console.log(d.action === 'delivered' ? `  delivered ${d.version} (${(d.bytes / 1048576).toFixed(1)} MB) · ${d.reason}` : `  nothing to do: ${d.reason}`); return; }
+      console.log(`  latest ${d.latest}${d.publishesChecksum ? '' : ' (publishes no SHA256SUMS)'} · COS has ${d.installed.length ? d.installed.join(', ') : 'nothing'}${d.current ? ` (current ${d.current})` : ''} · inbox ${d.inboxPending} waiting\n  a fetch would: ${d.would}`); } },
   { key: 'net', repo: false, usage: 'net <status|routes|resolve <url>|add <id> --via V [--provider p] [--url pattern] [--origin host] [--caller c] [--protocols https,wss] [--on-failure block]|rm <id>|default <via>|start|stop [--wipe]|detect|bridge <line>|paths --tor P --snowflake P|test>',
     about: 'network routes and the Snowflake transport: which way each request goes (direct, block, transport, socks5://h:p), per provider, url, site or caller; start/stop the transport; fail closed',
     need: (a) => { const v = a.args[0] || 'status'; if (v === 'resolve' && !a.args[1]) return '<url>'; if (v === 'add' && (!a.args[1] || !a.flags.via)) return '<id> --via direct|block|transport|socks5://host:port'; if (v === 'rm' && !a.args[1]) return '<id>'; if (v === 'default' && !a.args[1]) return '<via>'; if (v === 'bridge' && !a.args[1]) return '<snowflake bridge line>'; return null; },

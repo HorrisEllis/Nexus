@@ -13,20 +13,44 @@ const FILES = [
   ['lib/run-state.js',   I('lib/run-state.js'),   [I('lib/node-export.js'), I('nexus/nexus-bus.js')]],
   ['lib/reply-kind.js',  I('lib/reply-kind.js'),  [I('lib/step-gate.js')]],
   ['lib/gig-ledger.js',  I('lib/gig-ledger.js'),  []],   // §0.60.53 PF0
+  ['lib/checks/ck-248-toolchain.js', I('lib/checks/ck-248-toolchain.js'), []],   // §0.60.77 MB5: 18 languages, each by its own parser; selfTest/coverage/checkText
+  ['lib/test-map.js', I('lib/test-map.js'), []],   // §0.60.75 PE1: which tests exercise a file (direct links, by how)
+  ['lib/proposal-evidence.js', I('lib/proposal-evidence.js'), [I('lib/test-map.js'), I('lib/step-gate.js'), I('lib/repo-inject.js')]],   // §0.60.75 PE2
   ['lib/chat-crawl-settings.js', I('lib/chat-crawl-settings.js'), []],   // §0.60.55 PI5
   ['lib/chat-crawl-plan.js', I('lib/chat-crawl-plan.js'), [I('lib/chat-crawl-settings.js')]],
+  ['clear-glass/src/chats/crawler.js', I('clear-glass/src/chats/crawler.js'), [I('lib/chat-crawl-plan.js'), I('lib/chat-crawl-settings.js')]],   // §0.60.84 PI5
+  ['clear-glass/src/chats/ports.js', I('clear-glass/src/chats/ports.js'), [I('clear-glass/src/downloads/chat-ledger.js')]],   // §0.60.85 PI5b
+  ['clear-glass/src/chats/service.js', I('clear-glass/src/chats/service.js'), [I('clear-glass/src/chats/crawler.js'), I('clear-glass/src/chats/ports.js'), I('lib/chat-crawl-settings.js')]],
+  ['cos/app/store.js', I('cos/app/store.js'), [I('lib/zip.js')]],   // §0.60.87 COSA1
+  ['cos/app/runtime.js', I('cos/app/runtime.js'), []],   // §0.60.88 COSA2/3
+  ['cos/app/switch.js', I('cos/app/switch.js'), [I('cos/app/store.js'), I('cos/app/runtime.js')]],   // §0.60.88 COSA4
+  ['clear-glass/src/releases/deliver.js', I('clear-glass/src/releases/deliver.js'), []],   // §0.60.93 COSA7
+  ['clear-glass/src/releases/service.js', I('clear-glass/src/releases/service.js'), [I('clear-glass/src/releases/deliver.js'), I('cos/app/store.js')]],
+  ['cos/app/shell.js', I('cos/app/shell.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/cli.js')]],   // §0.60.91 CON-lite
+  ['cos/app/settings.js', I('cos/app/settings.js'), []],   // §0.60.90 COSA12/13
+  ['cos/app/controller.js', I('cos/app/controller.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/switch.js'), I('cos/app/settings.js')]],   // §0.60.89 COSA6
+  ['cos/app/desktop/main.js', I('cos/app/desktop/main.js'), [I('cos/app/controller.js'), I('cos/app/store.js'), I('cos/app/settings.js'), I('cos/app/shell.js')]],
+  ['cos/app/desktop/preload.js', I('cos/app/desktop/preload.js'), []],
+  ['cos/app/desktop/ui/app.js', I('cos/app/desktop/ui/app.js'), []],
+  ['scripts/build-cos-app.js', I('scripts/build-cos-app.js'), [I('cos/app/controller.js'), I('lib/zip.js')]],
+  ['cos/app/cli.js', I('cos/app/cli.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/switch.js')]],
   ['clear-glass/src/macros/recorder-script.js', I('clear-glass/src/macros/recorder-script.js'), []],   // §0.60.57 MR1
   ['clear-glass/src/macros/live-recording.js', I('clear-glass/src/macros/live-recording.js'), [I('clear-glass/src/macros/recorder-script.js'), I('clear-glass/src/macros/recording.js'), I('clear-glass/src/automation/nodes.js')]],
   ['clear-glass/src/net/policy.js', I('clear-glass/src/net/policy.js'), []],   // §0.60.60 NP2
   ['clear-glass/src/net/transport-host.js', I('clear-glass/src/net/transport-host.js'), []],   // §0.60.60 NP1
   ['clear-glass/src/net/service.js', I('clear-glass/src/net/service.js'), [I('clear-glass/src/net/policy.js'), I('clear-glass/src/net/transport-host.js')]],
   ['lib/agent-tools/tools/clear-glass/net.js', I('lib/agent-tools/tools/clear-glass/net.js'), []],   // §0.60.60 NP9: read-only agent view
-  ['idearium/lib/surface-state.cjs', I('idearium/lib/surface-state.cjs'), [I('idearium/lib/data-dir.cjs')]],   // §0.60.79 CE8: the Code tab's surface, one for the tab, the CLI and agents
-  ['cos/archetype/eravos.js', I('cos/archetype/eravos.js'), []],   // §0.60.83 CN1/CN2: his ERAVOS canvas, tools and domains as COS archetypes (read from cos/archetype/eravos-*/)
-  ['lib/canvas-compartments.js', I('lib/canvas-compartments.js'), [I('lib/cos-bridge.js'), I('lib/file-tree-plan.js'), I('cos/archetype/eravos.js')]],   // §0.60.83 CN3: a canvas compartment, each tool nested
+  ['idearium/lib/surface-state.cjs', I('idearium/lib/surface-state.cjs'), [I('idearium/lib/data-dir.cjs')]],   // §0.60.80 CE8: the Code tab's surface, one for the tab, the CLI and agents
+  ['cos/archetype/eravos.js', I('cos/archetype/eravos.js'), []],   // §0.60.104 CN1/CN2: his ERAVOS canvas, tools and domains as COS archetypes (read from cos/archetype/eravos-*/)
+  ['lib/canvas-compartments.js', I('lib/canvas-compartments.js'), [I('lib/cos-bridge.js'), I('lib/file-tree-plan.js'), I('cos/archetype/eravos.js')]],   // §0.60.104 CN3: a canvas compartment, each tool nested
   ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
 ];
 const CONSUMERS = [
+  [I('lib/step-gate.js'),                           I('lib/checks/ck-248-toolchain.js'), 'checkText(): the code.write gate parses every language the table knows with that language\'s own tool; a missing tool is not a pass (0.60.77)'],
+  [I('lib/proposal-evidence.js'),                   I('lib/checks/ck-248-toolchain.js'), 'compare(): syntax status per file — checked, or NOT checked and why (0.60.77)'],
+  [I('lib/repo-inject.js'),                         I('lib/proposal-evidence.js'), 'attachEvidence()/evidenceNow(): an agent\'s proposal is compared and its linked tests run on the file as it is and as proposed; apply() refuses a regression (0.60.75 PE3)'],
+  [I('lib/repo-inject.js'),                         I('lib/step-gate.js'), '_screen(): the code.write gate and the collapse/shrink guards at propose() and edit(), whoever calls (0.60.74)'],
+  [I('idearium/api/index.js'),                      I('lib/proposal-evidence.js'), '_rejectionContext(): a rejected proposal\'s evidence goes to the agent and into the retry note (0.60.75 PE4)'],
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/service.js'), '/cli/net/*: routes, resolve, bridge, transport start/stop/detect (0.60.60 NP9)'],
   [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/net/service.js'), 'register(partition, session) so a rule can route an agent window; a no-op with no rules (0.60.60 NP3)'],
   [I('lib/agent-tools/index.js'),                   I('lib/agent-tools/tools/clear-glass/net.js'), 'clear_glass_net registered (0.60.60 NP9)'],
@@ -45,10 +69,10 @@ const CONSUMERS = [
   [I('idearium/api/index.js'),                      I('lib/repo-versions.js'), 'commitNow({ kind: restore }) after a file restore and a run rewind (0.60.80 CV2)'],
   [I('lib/repo-inject.js'),                         I('lib/repo-versions.js'), 'an applied or reverted proposal commits at once, labelled kind / inject / by / run (0.60.80 CV2)'],
   [I('idearium/api/index.js'),                      I('lib/run-state.js'),  'GET …/runs (list), POST …/runs/:id/rewind (load, note rewound) (0.60.80 CV3)'],
-  [I('cos/archetype/registry.js'),                  I('cos/archetype/eravos.js'), 'ARCHETYPES_RAW.push(...archetypes()): eravos-canvas, eravos-domain-music, eravos-domain-dataflow, eravos-tool, eravos-sound-tool (0.60.83 CN1/CN2)'],
-  [I('lib/file-tree-plan.js'),                      I('cos/archetype/eravos.js'), 'fromCosTemplate vars + the archetype\'s varDefaults (toolVars: his new-tool.mjs rules) (0.60.83 CN2)'],
-  [I('idearium/api/index.js'),                      I('lib/canvas-compartments.js'), 'GET/POST /api/canvas, GET /api/canvas/:id, POST /api/canvas/:id/tools; emits idearium.canvas.created / tool.added (0.60.83 CN3)'],
-  [I('idearium/cli/route-commands.js'),             I('lib/canvas-compartments.js'), 'canvas list · new · show · add-tool rows, through the routes (0.60.83 CN3; agents through nexus.command)'],
+  [I('cos/archetype/registry.js'),                  I('cos/archetype/eravos.js'), 'ARCHETYPES_RAW.push(...archetypes()): eravos-canvas, eravos-domain-music, eravos-domain-dataflow, eravos-tool, eravos-sound-tool (0.60.104 CN1/CN2)'],
+  [I('lib/file-tree-plan.js'),                      I('cos/archetype/eravos.js'), 'fromCosTemplate vars + the archetype\'s varDefaults (toolVars: his new-tool.mjs rules) (0.60.104 CN2)'],
+  [I('idearium/api/index.js'),                      I('lib/canvas-compartments.js'), 'GET/POST /api/canvas, GET /api/canvas/:id, POST /api/canvas/:id/tools; emits idearium.canvas.created / tool.added (0.60.104 CN3)'],
+  [I('idearium/cli/route-commands.js'),             I('lib/canvas-compartments.js'), 'canvas list · new · show · add-tool rows, through the routes (0.60.104 CN3; agents through nexus.command)'],
   [I('idearium/api/index.js'),                      I('lib/build-paths.js'), 'repo.code.edit / code.assist classified not-build, beside the Agent tab chat (0.60.83, census CK-255)'],
   [I('copilot/server.js'),                          I('lib/run-state.js'),  'every ok/failed tool call is written to the run by step() (0.60.50 CE1)'],
   [I('copilot/tool-runtime.js'),                    I('lib/run-state.js'),  'header() at the head of follow-up rounds and resumed runs; note(off-task) on a blocked reply (0.60.50 CE2, CE3)'],

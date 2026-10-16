@@ -169,7 +169,7 @@ function harness() {
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     await page.goto(pathToFileURL(harness()).href);
-    await page.evaluate(() => renderRepoCode(REPO));
+    await page.evaluate(() => { CS.view = 'files'; CS.agentOpen = true; renderRepoCode(REPO); });
     await page.waitForSelector('.cs-file[data-path="src/a.js"] .fs-tag');
     await page.waitForSelector('.cs-who b');
 
@@ -187,10 +187,11 @@ function harness() {
     });
 
     await test('CT-11', 'no file open: the agent\'s changes as diff cards with Apply / Reject', async () => {
-      assert.ok(/the agent's changes/.test(await page.textContent('.cs-mid')));
-      assert.deepStrictEqual(await page.$$eval('.cs-mid .ws-card', els => els.map(e => e.dataset.path)), ['src/a.js', 'src/new.js']);
-      assert.strictEqual(await page.$$eval('.cs-mid .ws-head .ws-act-apply', e => e.length), 2);
-      assert.strictEqual(await page.$$eval('.cs-mid .ws-head .ws-act-reject', e => e.length), 2);
+      await page.evaluate(() => csView('changes'));
+      assert.ok(/the agent's changes/.test(await page.textContent('.cs-one')));
+      assert.deepStrictEqual(await page.$$eval('.cs-one .ws-card', els => els.map(e => e.dataset.path)), ['src/a.js', 'src/new.js']);
+      assert.strictEqual(await page.$$eval('.cs-one .ws-head .ws-act-apply', e => e.length), 2);
+      assert.strictEqual(await page.$$eval('.cs-one .ws-head .ws-act-reject', e => e.length), 2);
     });
 
     await test('CT-12', 'a file open: its lines, its chunk marked where it starts, its diff above; the chunk → its card', async () => {
@@ -231,6 +232,7 @@ function harness() {
     });
 
     await test('CT-15', 'activity folds open with the tool calls; nothing threw', async () => {
+      await page.evaluate(() => csView('runs'));
       await page.click('.cs-act-head');
       const t = await page.textContent('.cs-act-body');
       assert.ok(/idearium\.code_read\.tool/.test(t) && /outside the repo/.test(t), t);
@@ -239,6 +241,7 @@ function harness() {
 
     // ── §CT5 hooked into the Plan ──
     await test('CT-20', 'the plan strip: the current step with its gates, the runs on the open file; a run opens the Plan on itself', async () => {
+      await page.evaluate(() => csView('plans'));
       await page.waitForSelector('.cs-plan .cs-cur');
       const strip = await page.textContent('.cs-plan');
       assert.ok(/1\/3 done · 1 building/.test(strip) && /KE1 io/.test(strip), strip);
@@ -267,7 +270,9 @@ function harness() {
 
     await test('CT-22', 'a Plan event repaints the Code tab: a new change shows without a click', async () => {
       await page.evaluate(() => { closePlanPanel(); CS.open = null; csPaint(); EXTRA = true; codeSurfaceOnEvent({ type: 'idearium.repo.inject.proposed', payload: { repoUuid: 'r1' } }); });
-      await page.waitForSelector('.cs-mid .ws-card[data-path="src/b.js"]', { timeout: 4000 });
+      await page.evaluate(() => csView('changes'));
+      await page.waitForSelector('.cs-one .ws-card[data-path="src/b.js"]', { timeout: 4000 });
+      await page.evaluate(() => csView('files'));
       assert.strictEqual(await page.$$eval('.cs-file[data-path="src/b.js"] .cs-diffdot', e => e.length), 1);
       await page.evaluate(() => { EXTRA = false; codeSurfaceOnEvent({ type: 'idearium.repo.phase.run', payload: { repoUuid: 'other-repo' } }); });
       await page.waitForTimeout(700);
@@ -299,6 +304,7 @@ function harness() {
     });
 
     await test('CT-31', 'the agent working, live: blinking while a call runs, ✓ when it ends, no reload; the agent box keeps its text', async () => {
+      await page.evaluate(() => { CS.view = 'runs'; });   // TB5: the agent's live activity is in the Runs view
       await page.evaluate(() => { CURRENT_REPO_SUBTAB = 'code'; csPaint(); });
       await page.fill('#cs-ask', 'half typed');
       await page.evaluate(() => document.getElementById('cs-ask').dispatchEvent(new Event('input')));

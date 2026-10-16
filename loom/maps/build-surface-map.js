@@ -45,6 +45,13 @@ const FILES = [
   ['lib/spec-collect.js', I('lib/spec-collect.js'), [
     I('nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
   ]],
+  // 0.60.94 FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." No model.
+  ['lib/work-funnel.js', I('lib/work-funnel.js'), [
+    I('lib/phase-map-auto.js'),                                 // require — mapPhase / mapPhases / envFromTree (deps, owning specs, phases)
+    I('lib/phase-files.js'),                                    // require — phasesOf (the repo's phases, with status)
+    I('lib/phase-plan.js'),                                     // require — derivePlan (the chunks, no model)
+    I('lib/context-prereqs.js'),                                // require — intentOf (who enters the funnel)
+  ]],
   // 0.60.74 COSA10 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." Pure: its readers
   // (notes counts, roadmap, last activity) are passed in by idearium/api projects.overview
   ['idearium/lib/projects.cjs', I('idearium/lib/projects.cjs'), []],
@@ -116,11 +123,15 @@ const FILES = [
   ['idearium/ui/login.html', I('idearium/ui/login.html'), [I('idearium/api/index.js')]],                   // HTTP access/me, access/login
   ['clear-glass/src/accounts/idearium-login.js', I('clear-glass/src/accounts/idearium-login.js'), [I('clear-glass/src/passwords/vault.js'), I('idearium/api/index.js')]],   // vault.get(origin); HTTP POST access/login
   ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/plan-panel.js')]],   // §CT5 openPlanPanel, _gateBar
-  ['idearium/ui/js/code-tab-panels.js', I('idearium/ui/js/code-tab-panels.js'), [I('idearium/api/index.js'), I('idearium/ui/js/code-surface.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/repo-drawer-views.js')]],   // §0.60.81 CE6 · CE7 · CE9: …/file, …/code/assist, …/runs, …/agent/history; openManagePanel; rtView mounted in the Code tab
+  ['idearium/ui/js/code-tab-panels.js', I('idearium/ui/js/code-tab-panels.js'), [I('idearium/api/index.js'), I('idearium/ui/js/code-surface.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/repo-drawer-views.js')]],   // §0.60.82 CE6 · CE7 · CE9: …/file, …/code/assist, …/runs, …/agent/history; openManagePanel; rtView mounted in the Code tab
 ];
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('idearium/ui/js/code-tab-panels.js'), I('idearium/api/index.js'), '§FN4 0.60.95 cxWorkLoad — HTTP POST /api/repos/:uuid/funnel: the Code tab work panel'],
+  [I('idearium/api/index.js'), I('lib/work-funnel.js'), '§FN1 0.60.95 repo.code.assist runs _funnelFor before the agent edits the picked lines'],
+  [I('idearium/api/index.js'), I('lib/work-funnel.js'), '§FN0 0.60.94 repo.funnel: POST /api/repos/:uuid/funnel — the four answers for a request'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FN0 0.60.94 the repo.funnel row → POST /api/repos/:uuid/funnel'],
   [I('cortex/core/raid/officiator.js'), I('cortex/core/raid/index.js'), '§RT1 0.60.78 decideForContract candidates walked; recordOutcome on an answer (never on a silence)'],
   [I('cortex/boot.js'), I('cortex/core/raid/officiator.js'), '§RT1 0.60.78 GET /api/raid/officiator (parked) · POST /api/raid/officiator/unpark'],
   [I('idearium/api/index.js'), I('cortex/boot.js'), '§RT1 0.60.78 HTTP raid.held / raid.held.unpark → cortex /api/raid/officiator'],
