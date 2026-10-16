@@ -150,6 +150,61 @@ const TEMPLATES = [
       { id: 'c1', type: 'condition', config: { var: 'mesh.queueDepth', op: '>', value: '5', onTrue: 'next', onFalse: 'stop' } },
       { id: 'n1', type: 'notify', config: { title: 'Mesh queue is backing up', body: 'More than 5 prompts are waiting.' } },
     ] },
+
+  // 0.60.64 — James, 2026-10-16: "can you make a bunch of jobs for me for clearglass." Each one answers something that actually went wrong or was asked for in this project's own logs.
+  { id: 'nexus-release', name: 'New Nexus release is out', category: 'NEXUS',
+    help: 'Every 6 hours, ask GitHub for the latest Nexus release and notify you when its version changes. (He was 17 releases behind because nothing told him.) Public releases only; a private repository needs a token header added on the Check step. The first run only remembers the version.',
+    vars: { repo: 'HorrisEllis/nexus' },
+    steps: [
+      { type: 'trigger', config: { intervalMs: 21600000 } },
+      { type: 'http', label: 'Check', timeoutMs: 20000, retry: { count: 2, delayMs: 5000 }, config: { method: 'GET', url: 'https://api.github.com/repos/{{vars.repo}}/releases/latest', headers: 'Accept = application/vnd.github+json' } },
+      { type: 'condition', label: 'New version?', config: { left: '{{steps.Check.output.body.tag_name}}', op: 'changed', onTrue: 'next', onFalse: 'stop' } },
+      { type: 'notify', config: { title: 'Nexus {{steps.Check.output.body.tag_name}} is out', body: '{{steps.Check.output.body.html_url}}' } },
+    ] },
+
+  { id: 'ollama-models', name: 'Ollama is up and has its models', category: 'NEXUS',
+    help: 'Every 30 minutes, check that Ollama answers and that the model Nexus embeds with is installed. Your boot log showed "nomic-embed-text" missing and Ollama failing under memory pressure; this says so once instead of after 63 failed tries.',
+    vars: { host: 'http://127.0.0.1:11434', model: 'nomic-embed-text' },
+    steps: [
+      { type: 'trigger', config: { intervalMs: 1800000 } },
+      { type: 'http', label: 'Tags', timeoutMs: 8000, onError: 'down', config: { method: 'GET', url: '{{vars.host}}/api/tags' } },
+      { type: 'condition', label: 'Model installed?', config: { left: '{{steps.Tags.output.body.models | json}}', op: 'contains', value: '{{vars.model}}', onTrue: 'stop', onFalse: 'next' } },
+      { type: 'notify', config: { title: 'Ollama is missing {{vars.model}}', body: 'Run: ollama pull {{vars.model}}' } },
+      { type: 'stop', config: {} },
+      { id: 'down', type: 'notify', config: { title: 'Ollama is not answering', body: '{{error.message}}' } },
+    ] },
+
+  { id: 'guardian-errors', name: 'Guardian jobs are failing', category: 'NEXUS',
+    help: 'Every 15 minutes, count the jobs Guardian lists as failed and notify you when there are more than the limit, with the newest error. A pile of failures is the first sign a provider tab is not picking up work.',
+    vars: { max: '5' },
+    steps: [
+      { type: 'trigger', config: { intervalMs: 900000 } },
+      { type: 'command', label: 'Jobs', onError: 'down', config: { system: 'guardian', method: 'GET', endpoint: '/jobs?status=error&limit=200' } },
+      { type: 'condition', config: { left: '{{steps.Jobs.output.jobs | length}}', op: '>', value: '{{vars.max}}', onTrue: 'next', onFalse: 'stop' } },
+      { type: 'notify', config: { title: '{{steps.Jobs.output.jobs | length}} Guardian jobs have failed', body: 'Newest: {{steps.Jobs.output.jobs | last | json}}' } },
+      { type: 'stop', config: {} },
+      { id: 'down', type: 'notify', config: { title: 'Guardian is not answering', body: '{{error.message}}' } },
+    ] },
+
+  { id: 'chat-crawl-start', name: 'Start chat capture when Clear Glass starts', category: 'Browser',
+    help: 'When Clear Glass starts, start the chat crawler for one account (the same as `chat-crawl start chatgpt:ACCOUNT`). The account must already be switched on in Settings > Chat capture; if it is off, this says so and does nothing.',
+    vars: { account: 'chatgpt:PASTE-ACCOUNT-ID' },
+    steps: [
+      { type: 'trigger', config: { event: 'app.start' } },
+      { type: 'delay', config: { ms: 60000 } },
+      { type: 'http', label: 'Start', timeoutMs: 15000, config: { method: 'POST', url: 'http://127.0.0.1:7702/cli/chats/crawl/start', body: '{"account": {{vars.account | json}}}', failOnHttpError: false } },
+      { type: 'condition', config: { left: '{{steps.Start.output.body.ok}}', op: '==', value: 'true', onTrue: 'stop', onFalse: 'next' } },
+      { type: 'notify', config: { title: 'Chat capture did not start', body: '{{steps.Start.output.body.error}}' } },
+    ] },
+
+  { id: 'chat-crawl-report', name: 'Chat capture: weekly report', category: 'Browser',
+    help: 'Every Monday morning, read the chat crawler\'s progress (chats listed, logged, failed, pending) and notify you with the numbers. Nothing is started or changed.',
+    vars: {},
+    steps: [
+      { type: 'trigger', config: { cron: '0 9 * * 1' } },
+      { type: 'http', label: 'Status', timeoutMs: 15000, config: { method: 'GET', url: 'http://127.0.0.1:7702/cli/chats/crawl/status' } },
+      { type: 'notify', config: { title: 'Chat capture this week', body: '{{steps.Status.output.body | json}}' } },
+    ] },
 ];
 
 module.exports = { TEMPLATES };

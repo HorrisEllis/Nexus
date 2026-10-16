@@ -355,6 +355,7 @@ const SUITES = [
   'test-cg-attention-focus.test.js', // 0.60.45 — the provider tab stops fighting the person (focus, sign-in, Escape)
   'test-net-routes.test.js',          // 0.60.60 — net routes + Snowflake transport (CLI first): policy, fail-closed PAC, fake tor, agent read-only
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
+  'test-clearglass-jobs.test.js',     // 0.60.65 — five ready-made jobs run on the real engine, network stubbed
   'test-chat-ports.test.js',          // 0.60.64 PI5b — the crawler's ports on the real automation engine, fake chat site in jsdom
   'test-chat-crawler.test.js',        // 0.60.63 PI5 — the crawler driving the plan through fake ports
   'test-chatgpt-scrape-template.test.js', // 0.60.62 — the ChatGPT chat reader template (loop body, vars, extract fields)
