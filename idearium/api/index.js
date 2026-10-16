@@ -2585,6 +2585,7 @@ const ROUTE_CAP = {
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
+  'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,
@@ -2976,6 +2977,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],
     ['GET',    ['api','repos',    ':uuid','notes'],     'repo.notes'],         // §0.60.6 — the repo's notes: ?q=&kind=&status=&tag=
     ['POST',   ['api','repos',    ':uuid','notes'],     'repo.notes.add'],     // §0.60.6 — { body, title?, kind?, tags?, pinned? }
+    ['GET',    ['api','my-projects'],                   'projects.overview'],  // §0.60.74 COSA10 (not /api/projects: that is the zip shelf, project.list) — every project of his, sorted by what moved last: notes, phases, last activity
     ['GET',    ['api','notes'],                         'notes.list'],         // §0.60.6 — ?scope=all (default) | loose (on no repo) &q=&kind=&status=&tag=
     ['POST',   ['api','notes'],                         'notes.add'],          // §0.60.6 — a note on no repo, or { repoUuid }
     ['PATCH',  ['api','notes',':id'],                   'notes.update'],       // §0.60.6 — { body?, title?, kind?, tags?, status?, pinned?, repoUuid? }      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
@@ -6854,6 +6856,26 @@ async function handle(req, res, route, query, body) {
         os.emit('idearium.note.updated', { id: n.id, repoUuid: n.repoUuid, kind: n.kind, status: n.status });
         return ok(res, { note: n });
       } catch (e) { return err(res, e.status || 500, e.message); }
+    }
+    // §COSA10 0.60.74 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." One row per
+    // project from what Nexus already keeps: notes counts, the phase roadmap, the last activity (idearium/lib/projects.cjs).
+    case 'projects.overview': {
+      const PJ = _require('../lib/projects.cjs');
+      const RN = _require('../../lib/repo-notes.js');
+      const AL = _require('../../lib/activity-log/compartment.js');
+      const PH = await import('../repo/phases.js');
+      const RM = await import('../repo/roadmap.js');
+      const view = await PJ.overview({
+        repos: getRepoLayer().list({}) || [],
+        notesOf: (u) => RN.counts(u),
+        activityOf: (u) => (AL.list(u, { limit: 1 }).rows || [])[0] || null,
+        phasesOf: (r) => {
+          const dir = _repoDiskDir(r.uuid);
+          if (!dir) throw new Error('could not resolve the repo directory');
+          return RM.buildRoadmap({ projectId: r.uuid, maps: PH.mapsFor({ repo: r, repoDir: dir }).maps });
+        },
+      });
+      return ok(res, view);
     }
     case 'repo.activity': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);

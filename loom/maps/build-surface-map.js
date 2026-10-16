@@ -45,6 +45,9 @@ const FILES = [
   ['lib/spec-collect.js', I('lib/spec-collect.js'), [
     I('nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
   ]],
+  // 0.60.74 COSA10 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." Pure: its readers
+  // (notes counts, roadmap, last activity) are passed in by idearium/api projects.overview
+  ['idearium/lib/projects.cjs', I('idearium/lib/projects.cjs'), []],
   // 0.60.73 WB1/WB2 — James chose option 1: WARP around the agent the ladder and RAID already chose (cache, axiom gate, retain)
   ['lib/warp-rung.js', I('lib/warp-rung.js'), [
     I('lib/seam/adapters/warp-cascade.js'),                     // require — createWarpDispatch (unifiedDispatch, one provider, one attempt)
@@ -82,6 +85,7 @@ const FILES = [
   ['idearium/repo/run-reconcile.js', I('idearium/repo/run-reconcile.js'), []],
   // §0.50.0 RS10 — the Phases tab on the thread: HTTP phases, thread, plan; plan-panel.js (_gateBar, _ledgerHtml, openPlanPanel); work-surface.js (wsOpenInCode)
   ['idearium/ui/js/phases.js', I('idearium/ui/js/phases.js'), [I('idearium/api/index.js'), I('idearium/ui/js/plan-panel.js'), I('idearium/ui/js/work-surface.js')]],
+  ['idearium/ui/js/projects.js', I('idearium/ui/js/projects.js'), [I('idearium/api/index.js'), I('idearium/ui/js/app.js')]],   // §0.60.74 COSA10 HTTP my-projects; enterRepoDetail/selectApiRepo, escapeHtml, api
   // §0.39.350 CT4 — Settings → Models: HTTP ollama/check, ollama/check/ask; idearium/api runs lib/ollama-check.js
   ['lib/ollama-check.js', I('lib/ollama-check.js'), []],
   ['idearium/ui/js/ollama-check.js', I('idearium/ui/js/ollama-check.js'), [I('idearium/api/index.js')]],
@@ -116,6 +120,12 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('idearium/api/index.js'), I('idearium/lib/projects.cjs'), '§COSA10 0.60.74 projects.overview: GET /api/my-projects'],
+  [I('idearium/api/index.js'), I('lib/repo-notes.js'), '§COSA10 0.60.74 projects.overview notesOf → counts()'],
+  [I('idearium/api/index.js'), I('lib/activity-log/compartment.js'), '§COSA10 0.60.74 projects.overview activityOf → list(u, {limit:1})'],
+  [I('idearium/api/index.js'), I('idearium/repo/roadmap.js'), '§COSA10 0.60.74 projects.overview phasesOf → buildRoadmap'],
+  [I('idearium/ui/js/projects.js'), I('idearium/api/index.js'), '§COSA10 0.60.74 HTTP GET /api/my-projects — the My projects button'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§COSA10 0.60.74 the projects row → GET /api/my-projects'],
   [I('idearium/api/index.js'), I('lib/warp-rung.js'), '§WB1 0.60.73 WR.wrap: phase build (gate), planner (cache), proof repair (gate), draft review (gate)'],
   [I('cortex/core/raid/officiator.js'), I('lib/warp-rung.js'), '§WB2 0.60.73 _synthesizeCore: cache mode, a reply that does not parse as a contract fails the hard axiom'],
   [I('cortex/core/raid/contract-intake.js'), I('lib/warp-rung.js'), '§WB2 0.60.73 _realAgentExecutor: cache mode, a retry is fresh'],

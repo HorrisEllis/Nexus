@@ -138,3 +138,10 @@ addendum_b:
 #     phase and the last activity; Idearium shows it first; COSA9's `cos app repos` later calls the same row. Read-only.
 #   proof: three fixture repos sort by last activity; a repo with 2 open todos and an open phase shows both; an agent gets the
 #     same list through nexus.command.
+# 2026-10-16 (later) — COSA10 BUILT 0.60.74: idearium/lib/projects.cjs, GET /api/my-projects (projects.overview), the `projects`
+# command row, Idearium's repo rail "My projects" button (idearium/ui/js/projects.js); test-projects-overview PJ-01..06.
+# Found: GET /api/projects was already the uploaded-zip shelf (project.list); the router takes the first match silently, so the new
+# route was shadowed until renamed. PJ-06 now fails on any two API routes sharing a method and path.
+# Open: Nexus's "next" is the first in-progress or ready phase over all of its maps; it should follow
+# docs/2026-10-15-pipeline-focus-phasemap.spec's order instead.
+

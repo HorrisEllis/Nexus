@@ -67,7 +67,7 @@ open_decisions:
       a: "The unit of work is the CONTRACT GATE (a brick). Step gates are checks run inside a brick's step (they stay as they are). The run state moves from 'one per chat session' to 'one per brick attempt', and the session is only a pointer."
       b: "Keep the run keyed to the session and add a contract link."
     coder_recommends: "a. It is what makes 'a different chat each gate' true: the state follows the brick, not the chat. b leaves the chat as the owner, which is the thing he wants removed (§2.2). To confirm with James."
-    status: OPEN
+    status: "DECIDED 2026-10-16 — a (the brick is the unit). James: \"Yes. It’s analysis. The bricks.\""
   GW0b_fresh_chat_policy:
     asked: "'make each agent able to not need the same chat' - when should a gate use a new chat?"
     options:
@@ -598,3 +598,13 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 #
 # Order unchanged: GW23 → GW3 → GW1 → GW2 ... (build_order above). Blocking decisions still his: GW0 (a brick is the unit,
 # coder recommends a) and GW0c (replay recorded + live, coder recommends a).
+
+# ## ADDENDUM 2026-10-16 (d) — GW0 decided: the brick is the unit
+# James (2026-10-16), answering "is a gate's work unit the brick? I recommend yes. It's what makes 'a different agent each gate'
+# true": "Yes. It’s analysis. The bricks."
+# Decided (his): option a. The unit of work is the contract gate, the brick. Step gates stay checks inside a brick's step. The run
+# state moves from one per chat session to one per brick attempt (GW2); the session is only a pointer.
+# To confirm: "It’s analysis." The coder reads it as agreeing that the analysis behind the recommendation holds. Another reading:
+# that a brick is (or includes) an analysis step, i.e. a brick analyses before it builds. Not acted on until he says which.
+# Unblocks: GW1 (the baton), GW2 (the run follows the gate), and GW3 (a contract traced) on the brick as the unit.
+

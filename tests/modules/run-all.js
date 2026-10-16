@@ -20,6 +20,7 @@ const MODULES_DIR = __dirname;
 const SUITES = [
   'test-build-paths.test.js',             // 0.60.67 WB0 — every build path and whether WARP is on it, measured; CK-255
   'test-warp-rung.test.js',               // 0.60.73 WB1/WB2 — WARP around the chosen agent: cache, axiom gate, retain; gate mode never serves
+  'test-projects-overview.test.js',       // 0.60.74 COSA10 — every project on one list; no two API routes share a method and path
   'test-spec-pipeline.test.js',           // 0.60.66 SF1-SF3 — intent blocks, the spec framework, the spec gate + collector (phase-tagged)
   'test-phase-map-auto.test.js',          // 0.60.65 MP1/MP2 — every phase mapped by Nexus (no model): files with evidence, requires, consumers, waits-on, specs; automatic in any repo
   'test-phase-specs-tag.test.js',          // 0.60.63 PT1 — specs tagged per phase; the WARP / spec-framework map's files and deps declared

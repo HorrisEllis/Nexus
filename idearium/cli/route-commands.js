@@ -275,6 +275,22 @@ export const SPEC = [
     need: (a) => (a.args[0] ? null : '<id>'),
     req: (a) => ({ method: 'PATCH', path: `/api/notes/${encodeURIComponent(a.args[0])}`, body: { status: 'done' } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} done: ${d.note.title}`) },
+  // 0.60.74 COSA10 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." Every project,
+  // newest activity first: questions and todos waiting, phases done/total, what is in progress or next (idearium/lib/projects.cjs)
+  { key: 'projects', repo: false, usage: 'projects', about: 'every project of yours on one list: what is waiting on you, what is next, what moved last',
+    req: () => ({ method: 'GET', path: '/api/my-projects' }),
+    print: (d, a, h) => {
+      const c = d.counts || {};
+      console.log(h.c.dim(`  ${c.projects || 0} projects · ${c.questions || 0} questions · ${c.todos || 0} todos · ${c.inProgress || 0} in progress`));
+      for (const p of d.projects || []) {
+        const when = p.lastActivity && p.lastActivity.ts ? new Date(p.lastActivity.ts).toISOString().slice(0, 10) : '—';
+        const ph = p.phases ? `${p.phases.complete}/${p.phases.total} phases` : 'no phasemap';
+        console.log(`  ${h.c.mint(p.name)}  ${h.c.dim(`${when} · ${ph}`)}`);
+        for (const x of p.attention || []) console.log(`      ${x}`);
+        for (const e of p.errors || []) console.log(`      ${h.c.amber('!')} ${e}`);
+      }
+      if (!(d.projects || []).length) console.log(h.c.gray('  no projects yet'));
+    } },
   // 0.60.5 — the component store from the command line and for every agent (lib/project-decompose.js)
   { key: 'components', repo: false, usage: 'components [--q words] [--limit n]', about: 'the component store: every stored component, or those matching words',
     req: (a) => ({ method: 'GET', path: `/api/components${a.flags.q ? `?q=${encodeURIComponent(a.flags.q)}&limit=${parseInt(a.flags.limit, 10) || 25}` : ''}` }),
