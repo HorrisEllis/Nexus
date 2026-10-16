@@ -156,3 +156,39 @@ addendum_d:
       does: "COS reads the compartment tree from Idearium (parent -> systems), draws it as nested windows, and a new system in systems.js appears with no COS change. Each node shows its kind: has a process (port, health), has a VM desktop, or logical only (components, cos, core). Controls are enabled per kind."
       proof: "adding an entry to SYSTEMS shows a new nested window after a refresh; a logical-only node shows no pause button and says why."
   to_verify: "Whether these compartments have a VM desktop at all (repo.compartmentId set, vm-control reachable) or are logical + read-only mounts. Not yet checked against a running Idearium. If they have none, pause/checkpoint for a system means its kernel process (autopilot) and the data snapshot, not a VM."
+
+# ADDENDUM 2026-10-16 (e): COS behaves like VMware: minimizes to the taskbar, updates itself from dropped or downloaded zips, versions recorded in Versionium through Idearium
+addendum_e:
+  james: >-
+    "i want this almost like vmware. minimize to taskbar. auto updates from dropping in new zips, downloading it from clearglass. versions using versionium  in idearium"
+  reading: >-
+    To confirm. (1) Window: a normal Windows window that minimizes to the taskbar like VMware Workstation; the tray stays as a second place, not the only one. (2) Updates: a zip dropped on the window or into the inbox, or one Clear Glass downloaded, installs by itself and, within a rule he sets, switches by itself. (3) Versions: each install, switch and rollback is a Versionium record made through Idearium, so the history of what ran when is Versionium's, not a second log in COS.
+  grounded:
+    window: "cos/app/desktop/main.js today hides to the tray on close and has no taskbar-minimize behaviour set; Electron minimizes to the taskbar by default, so the change is: closing still hides (VMware keeps VMs running), minimize goes to the taskbar, tray click restores. Quit stays the only thing that stops what COS started."
+    updates: "COSA1 inbox watcher already installs a dropped zip and offers the switch; COSA7 (Clear Glass downloads the asset and its checksum into the inbox through the downloads pipeline, NP16 quarantine applies, Clear Glass never replaces itself) is OPEN and unchanged."
+    versionium: "versionium/server.js is its own system on :3754 (VS1, 2026-09-02, his words: 'versionium is its own folder. it's system with a server.js. cli. api.'); Idearium's VR1 makes every repo change a commit; the repo routes /api/repos/:uuid/git/*, repo versions and repo diff exist."
+  coder_opinion: >-
+    Versionium holds the HISTORY and the metadata of a version (number, checksum, who/what installed it, when, the outcome, the rollback reason, a link to the data snapshot), not the 100s of MB of release files. The zips stay in COS's store, because COS must install and roll back with Idearium and Versionium down. Putting blobs in Versionium would make the supervisor depend on what it supervises. So: COS is the store, Versionium is the record and the diff, and COS queues events while Idearium is down and replays them in order (already in addendum_b).
+    Auto-switch is the risky word. A dropped zip that switches by itself can replace a running Nexus in the middle of a job. The rule I recommend: auto-INSTALL always (safe, nothing running changes), auto-SWITCH only when the running version is idle and the candidate's preflight passes, and every auto-switch is a normal switch (data snapshot first, health check, automatic rollback), so a bad one undoes itself. He sets it to off / ask / auto.
+  phase:
+    COSA12_vmware_window:
+      status: OPEN
+      depends_on: [COSA6_the_exe]
+      does: "Minimize to the taskbar, close hides to the tray, taskbar and tray both restore; window size, position and last selected project remembered; a status strip like VMware's (project, version, running/paused, health) always visible."
+      proof: "UI-tested in Clear Glass, never Playwright (docs/CLAUDE.md); Windows behaviour unverified until a Windows run."
+    COSA13_auto_update:
+      status: OPEN
+      depends_on: [COSA1_version_store_and_import, COSA4_switch_and_rollback]
+      does: "Setting update.policy: off | ask | auto (default ask). auto-install on any arrival (drop, inbox, Clear Glass); auto-switch only when idle and preflight passes; notification says what happened and how to undo. Never installs a zip that fails the checksum or the NP16 quarantine."
+      proof: "a dropped zip installs with no click; with policy auto and an idle Nexus it switches and is healthy; with a crashing release it rolls itself back with the reason shown; with a job running it waits."
+    COSA14_versionium_record:
+      status: OPEN
+      depends_on: [COSA9_idearium_sync, COSA13_auto_update]
+      does: "Every install, switch, rollback and remove is written to Versionium through Idearium (the one write door, RAID is the only write authority), with checksum, outcome, reason and the data-snapshot reference; queued and replayed when Idearium is down. COS's version list can be shown from the record (Nexus's own history in Idearium's repo view), and `repo diff` between two Nexus releases works from it."
+      proof: "a switch while Idearium is down is recorded once, in order, after it returns; the record and COS's store agree (a test compares them); Idearium shows the switch and any rollback with its reason."
+  failure_modes:
+    - "Auto-switch during a running job: idle check plus the normal snapshot and rollback."
+    - "Record and store disagree (record says v2 running, store says v1): the test compares them and COS's store wins, the difference is reported, never silently fixed."
+    - "A release that downloads from Clear Glass is a stranger's zip: checksum and quarantine apply before install, same as a drop."
+    - "Taskbar/tray behaviour differs on Windows: unverified here."
+  question: "Is the update rule off / ask / auto with auto-switch only when idle, as I recommend? And do you want the Versionium record to also hold the release files (I advise no, for the reason above)?"
