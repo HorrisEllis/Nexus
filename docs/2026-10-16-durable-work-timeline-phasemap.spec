@@ -166,3 +166,14 @@ not_verified:
   - "which path lost the 17 chunks (TL0); the map is written for the agent-written-spec path."
   - "his running version; if it is 0.60.44, run state, lost-job fallback and the brick run are not on his machine."
   - "where a contract (p) is persisted between restarts was not read; TL3 reads checkpoints through contract-trace, which takes p as given."
+
+# ## ADDENDUM 2026-10-16 (a) — TL1a built (0.60.79): a restart no longer re-chunks a phase
+# James: "can we not have it chunk everytime it restarts. it needs to persist. all data  is meant to persist. hardcoded has
+# to earn its place..."
+# Found (not in the map above): every build start re-planned the phase; a new plan has a new plan_hash, and openCheckpoint
+# archived the saved contract with every passed brick. Built: the plan and a phase_hash live on the .contract; savedPlan
+# reuses it (or, for a contract saved before 0.60.79, the run log's plan whose hash matches); replan on the route,
+# `--replan` on the command, a box in the phase detail. Proof: test-contract-phase-build CP-03b.
+# His principle, recorded as his decision: all data persists; anything hardcoded has to earn its place. The coder applies it
+# to the open maps: TL1/TL2 (the rest of this map) and IH1 (docs/2026-10-16-intent-hat-agent-chain-phasemap.spec, where the
+# hardcoded VERB_TO_HAT becomes .intent nodes) are the next places it bites.

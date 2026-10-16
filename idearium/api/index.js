@@ -734,7 +734,7 @@ async function _phaseSetStatus(repo, { map, phase, status, force = false, reason
 // the call's own backend when there is no ladder ('ollama' when it names one), for shouldChunk
 function paramsOfBackend(backend, rungs) { return rungs.length ? null : backend || null; }
 
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '' }) {
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
   const node = view.phases.find(p => p.map === map && p.phase_key === phase);
@@ -1021,6 +1021,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // (2) each planned file, in dependency order, is one bare request to the coder ladder (Ollama first): its exports,
   // imports and steps, nothing to infer; a file missing a planned export is incomplete and retried or climbed.
   // (3) the plan's conditions prove the phase when its map declares none. No usable plan → the phase is built as before.
+  // §TL1a 0.60.79 — the phase's saved contract (one per phase, kept across restarts) and what the phase said when planned
+  // (its words, files and note; not its status lines or comments, which the roadmap edits as the build moves)
+  const _safeId = (x) => String(x).replace(/[^A-Za-z0-9._-]+/g, '_');
+  const contractFile = path.join(IDEARIUM_DATA_DIR, 'phase-contracts', target.uuid, `${_safeId(map.split('/').pop().replace(/\.spec$/, ''))}.${_safeId(phase)}.contract`);
+  const phaseHash = (() => { try { return crypto.createHash('sha256').update(JSON.stringify({ body: String(PH.phaseContext({ phase: node, mapText }).body || '').split('\n').filter(l => !/^\s*(#|status(_\w+)?\s*:)/.test(l)).join('\n'), files: expectFiles, note: note || '' })).digest('hex').slice(0, 16); } catch (_) { return null; } })();
   const runPlanned = async () => {
     const PP = _require('../../lib/phase-plan.js');
     const ctx = PH.phaseContext({ phase: node, mapText });
@@ -1059,7 +1064,24 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const planner = planning.planner;   // 0.60.28 PF1 — null: no planner was ready, the plan is written without a model
     const pdp = planner ? { ...RA.routeFor(PRt.baseOf(planner)), provider: null } : null;
     let parsed = null, feedback = '', plannerError = null;
-    for (let n = 1; planner && n <= policy.planAttempts; n++) {
+    // §TL1a 0.60.79 — James: "can we not have it chunk everytime it restarts. it needs to persist. all data is meant to
+    // persist." A saved contract's plan is the plan: a build started again (a restart, a retry, ▶) reuses it and resumes
+    // its passed bricks, instead of asking the planner again (a new plan has a new hash, and the old checkpoints were
+    // archived with it). Planned again only when the phase changed since, or when asked (replan).
+    let keptPlan = null;
+    if (policy.contractBuild && !replan) {
+      try {
+        const candidates = allRuns.filter(r => r.state === 'planned' && r.plan && r.map === map && r.phase === phase).sort((a, b) => (b.ts || 0) - (a.ts || 0)).map(r => r.plan);
+        keptPlan = _require('../../cortex/core/raid/contract-adapters.js').savedPlan(contractFile, { phaseHash, candidates });
+      } catch (e) { keptPlan = { plan: null, why: `the saved plan could not be read: ${e.message}` }; }
+      if (keptPlan.plan) {
+        parsed = { ok: true, plan: keptPlan.plan, problems: [], warnings: [] };
+        appendRow('idearium_phase_runs', { uuid: `${runId}-plan-kept-planned`, ...base, state: 'planned', snapshot: commitId, provider: null, kept: true, keptFrom: keptPlan.from,
+          plan: keptPlan.plan, planSummary: `${PP.summary(keptPlan.plan)} — kept: ${keptPlan.why}, not planned again`, warnings: [], error: null, ts: Date.now() });
+        getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planned', snapshot: commitId, kept: true });
+      }
+    }
+    for (let n = 1; planner && !(keptPlan && keptPlan.plan) && n <= policy.planAttempts; n++) {
       const msg = PP.planPrompt({ phaseKey: phase, title: node.title, body: ctx.body, intent: note, files: expectFiles, registry, spec: specText,
         invariants: ctx.invariants, charter: [charterText, precedent.text].filter(Boolean).join('\n\n'), repoName: target.name, feedback,
         system, atlas, loom, reuse, lessons: learned.text, skeleton: (() => { try { return fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'registry-components.js')) && fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'interaction-contract.json')); } catch (_) { return false; } })() });
@@ -1147,13 +1169,12 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const CA = _require('../../cortex/core/raid/contract-adapters.js');
     const root = _repoDiskDir(target.uuid);
     const mapBase = map.split('/').pop().replace(/\.spec$/, '');
-    const safe = (x) => String(x).replace(/[^A-Za-z0-9._-]+/g, '_');
-    const file = path.join(IDEARIUM_DATA_DIR, 'phase-contracts', target.uuid, `${safe(mapBase)}.${safe(phase)}.contract`);
+    const file = contractFile;
     fs.mkdirSync(path.dirname(file), { recursive: true });
     const inputs = root && fs.existsSync(path.join(root, map)) ? [{ id: 'phasemap', path: map, note: 'the phase as its map writes it' }] : [];
     let onDisk = false; try { onDisk = _require('../../lib/repo-inject.js').getMode(target.uuid) !== 'review'; } catch (_) {}
     const built = whole ? CA.fromWholePhase({ id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || '', inputs, message })   // §BR1 — no file named: the whole phase, one brick
-      : CA.fromPhasePlan(plan, { id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || plan.intent || '', inputs, onDisk, root });
+      : CA.fromPhasePlan(plan, { id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || plan.intent || '', inputs, onDisk, root, phaseHash });
     const opened = CA.openCheckpoint(file, built, { root });
     const L = opened.loaded, p = L.payload;
     p.failure = { retry_limit: 2, ...(p.failure || {}) };
@@ -7869,7 +7890,7 @@ async function handle(req, res, route, query, body) {
         if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
         map = hits[0].map;
       }
-      const r = await _phaseBuild(repo, dir, { map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '' });
+      const r = await _phaseBuild(repo, dir, { map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
     }
