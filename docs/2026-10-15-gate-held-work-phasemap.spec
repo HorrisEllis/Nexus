@@ -507,7 +507,7 @@ the_gate_moments:
 
 proposed_phases:
   GW24_the_gate_holds_the_agent_gets_a_projection:
-    status: OPEN
+    status: "PARTLY BUILT 0.60.76 — GA1's dependency code ranked and cut to the learned budget (lib/phase-plan.js contextNote), the cut recorded on the gate; the whole-phase brick lean on an Ollama rung. Open: the brief and intelligence verdicts sharing the one budget; proof on a real small model"
     depends_on: [GW1_the_baton]
     files: [cortex/core/raid/contract-gates.js, idearium/api/index.js, lib/phase-plan.js]
     does: "One budget per dispatch, from the agent's learned size (CT1): the brief, GA1's dependency code (ranked: the needed names' definitions first, then signatures, never whole files past the budget) and any intelligence verdicts share it. Whole-phase bricks go bare with the phase text cut to the budget, the repo context only when the agent asks for it (a tool, not a preload). Everything the gate gathered stays on the gate (inspectable in the contract panel)."
@@ -630,3 +630,17 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 # brick, unless routing.contract_build is off. The spec engine's "chunks" (a spec's sections, idearium/spec-engine) are a
 # different thing that shares the word. The coder reads his sentence as being about build work, not spec sections (to
 # confirm only if he means those too).
+
+# ## ADDENDUM 2026-10-16 (g) — GW24 first slice built (0.60.76)
+# James: "Let’s get this pipeline working" · "A brick is a chunk. Like analysis." · earlier: "each gate holds the context, which
+# can make tghe agents dumb."
+# Built: lib/phase-plan.js contextNote({ needs, deps, budget }) replaces GA1's note (up to 120 lines of every dependency, no total
+# cap). It is ranked: the definitions of the names the brick needs come first, then each dependency's signatures. It is cut to
+# one budget: the first agent's learned size (Boundaries.budget, ~4 chars a token) less the brief, else LIMITS.context 6000, never
+# below 1200. What was cut, and any name defined nowhere, is recorded on the gate as <gate>.context. Measured on a fixture: a needed
+# definition at line 151 now arrives, where GA1's 120-line cut never sent it.
+# Built: on an Ollama rung the whole-phase brick (a phase that names no files, BR1) goes with noContext. The phase and its
+# phase-map block (MP3) are sent; the repo context card, memory, atlas and checklist stay with the gate, and the agent's tools fetch
+# what it asks for. Agents' rungs are unchanged.
+# Not proven: a real small model passing a brick it failed before. That needs his run on the current release (pipeline-focus step 0).
+

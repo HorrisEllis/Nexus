@@ -946,7 +946,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
-    try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(bare ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
+    try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...((typeof bare === 'function' ? bare(rg) : bare) ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -1169,7 +1169,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const dispatch = async (hops, { gate, assessment = null }) => {
       if (whole && gate.id === 'work') {
         // §BR1 — the whole phase as one request to the ladder, as runWhole sent it — but as a brick: gated, checkpointed, classed
-        const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles }), onOutcome: makeOnOutcome() });
+        // §GW24 0.60.76 — James: "each gate holds the context, which can make tghe agents dumb." On a local model's rung the
+        // whole-phase brick goes lean: the phase and its map (MP3) only; the repo context stays with the gate, and the agent's
+        // tools fetch what it asks for. An agent's rung (ChatGPT, Claude…) gets the full context as before.
+        const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles, bare: (rg) => !!(rg && rg.base === 'ollama') }), onOutcome: makeOnOutcome() });
         if (out.dp) lastDp = out.dp;
         const ok = out.state === 'replied';
         return { ok, agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),
@@ -1189,8 +1192,16 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const cb = PP.chunkBrief({ plan, path: f, done, repoName: target.name, phaseKey: phase });
       // §GA1 0.60.44 — the gate found names its imports need that no dependency's exports cover: the dependencies' code goes
       // in the brief (trimmed), so the agent sees what it can actually import instead of guessing
-      const ctxNote = assessment && assessment.context.needs.length ? `\n\nCONTEXT — you import ${assessment.context.needs.join(', ')}, which no dependency exports yet. What the dependencies actually contain:\n${
-        assessment.deps.map(x => `--- ${x.file}\n${String(codeOf(x.file)).split('\n').slice(0, 120).join('\n')}`).join('\n')}` : '';
+      // §GW24 0.60.76 — one budget for this dispatch: what the first agent on its ladder has passed reliably (Boundaries,
+      // learned from every gate check; ~4 chars a token) less the brief, else LIMITS.context. The dependencies' code is ranked
+      // (the needed names' definitions first, then signatures) and cut to it; what was cut is recorded on the gate.
+      // (was: CONTEXT — you import ${assessment.context.needs.join(', ')} … up to 120 lines of every dependency, no total cap)
+      const ctx = assessment && assessment.context.needs.length ? (() => {
+        let learned = null; try { learned = _require('../../cortex/core/raid/contract-gates.js').Boundaries.budget(hops[0] && hops[0].provider, gate.kind || gate.type); } catch (_) { learned = null; }
+        const budget = learned ? Math.max(PP.LIMITS.contextMin, learned * 4 - cb.message.length) : PP.LIMITS.context;
+        return PP.contextNote({ needs: assessment.context.needs, deps: assessment.deps.map(x => ({ file: x.file, code: String(codeOf(x.file) || '') })), budget });
+      })() : null;
+      const ctxNote = ctx ? `\n\n${ctx.text}` : '';
       const msg = (gate.parent ? `${cb.message}\n\nDO ONLY THIS STEP NOW: ${(gate.actions || [])[0] || ''}\nKeep everything the file already has.` : cb.message) + ctxNote;
       const ck = { chunk: gate.parent ? `${i + 1}.${gate.id.split('.').pop()}` : i + 1, chunks: plan.order.length, file: f, planned: true, brick: gate.id };
       const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy,
@@ -1200,7 +1211,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const code = ok ? _landedCode(out.r, f) : '';
       const v = ok && !gate.parent ? PP.checkChunk(code, plan, f) : null;
       return { ok: ok && (!v || v.ok), agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),   /* §GT1a — the ladder was climbed to its end: an attempt spent */ ...(ok ? {} : { error: String((out.row && out.row.error) || out.state).slice(0, 400) }),
-        evidence: ok ? { [`${gate.id}.verified`]: v ? (v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}`) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)) } : {} };
+        evidence: { ...(ctx ? { [`${gate.id}.context`]: ctx.summary } : {}), ...(ok ? { [`${gate.id}.verified`]: v ? (v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}`) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)) } : {}) } };
     };
     const agentEx = CA.agentExecutor({ dispatch, route: () => (rungs.length ? rungs.map(r => ({ provider: r.provider, rung: r })) : [{ provider: provider || agent || backend || 'the call\'s own agent', rung: null }]) });
     const integrate = async () => {
