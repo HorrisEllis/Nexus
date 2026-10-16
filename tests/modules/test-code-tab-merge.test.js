@@ -70,6 +70,10 @@ function harness() {
     if (p.endsWith('/versions/restore-file')) return { ok: true, commitId: body.commitId, path: body.path };
     if (p.endsWith('/phases/runs')) return { runs: [{ runId: 'manage-1', phase: 'DEBUG', map: 'file:src/a.js', state: 'replied', ts: NOW - 5000, provider: 'ollama' }] };
     if (p.endsWith('/agent/settings')) return { provider: 'auto', providers: ['auto', 'ollama'] };
+    if (p.endsWith('/funnel') && method === 'POST') return { intent: 'change', enters: true, stoppedAt: 'phase', chunks: [],
+      dependencies: { files: [{ path: 'src/a.js', why: 'named in the phase', exists: true }], requires: [{ path: 'src/b.js', by: 'src/a.js' }], consumers: [{ path: 'src/c.js', of: 'src/a.js' }], source: 'evidence' },
+      spec: { specs: [{ path: 'spec/daw.spec', from: 'owning system' }], source: 'owning system' }, phase: null,
+      missing: [{ step: 'phase', why: 'no open phase maps src/a.js — a phase is mapped first' }], lines: [] };
     if (p.endsWith('/code/assist')) return { ok: true, action: body.action, path: body.path, from: body.from, to: body.to, provider: 'ollama:big', inject: { uuid: 'i7' }, checksumBefore: 'ab', checksumAfter: 'cd' };
     if (p.includes('/runs?')) return { runs: [{ runId: 'r1__s1', goal: 'fix the return in a.js', status: 'done', attempt: 2, providers: [{ provider: 'chatgpt', attempt: 1 }, { provider: 'ollama', attempt: 2 }], stepCount: 3,
         steps: [{ n: 1, name: 'idearium.code_read.tool', ok: true }, { n: 2, name: 'idearium.code_edit.tool', ok: false, error: 'stale' }, { n: 3, name: 'idearium.code_edit.tool', ok: true }],
@@ -203,6 +207,19 @@ function harness() {
       await page.waitForFunction(() => CALLS.filter(c => /\/rewind$/.test(c.p)).length === 2);
       const rw = await calls(/\/rewind$/, 'POST');
       assert.deepStrictEqual([rw[0].body.dryRun, rw[1].body.dryRun], [true, undefined]);
+    });
+
+    // §FN4 0.60.95 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk."
+    await test('MG-16', 'work: the open file\'s dependencies, spec, phase and chunks, in his order; where it stops is said', async () => {
+      await page.click('.cx-tab:has-text("work")');
+      await page.waitForSelector('.cx-work-step');
+      const steps = await page.$$eval('.cx-work-step', els => els.map(e => [e.querySelector('b').textContent, e.classList.contains('cx-work-off')]));
+      assert.deepStrictEqual(steps, [['dependencies', false], ['spec', false], ['phase', true], ['chunks', true]]);
+      const txt = await page.$eval('.cx-work', e => e.textContent);
+      assert.ok(/src\/b\.js/.test(txt) && /used by/.test(txt) && /spec\/daw\.spec/.test(txt), txt);
+      assert.ok(/stopped at phase: no open phase maps src\/a\.js/.test(txt), txt);
+      const f = await calls(/\/funnel$/, 'POST');
+      assert.ok(f.length >= 1 && /^change src\/a\.js/.test(f[0].body.request), JSON.stringify(f));
     });
 
     await test('MG-15', 'responses: the exchanges; tasks and log: the Plan panel\'s views drawn in the Code tab', async () => {

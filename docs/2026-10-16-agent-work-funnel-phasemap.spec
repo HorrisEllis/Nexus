@@ -53,7 +53,7 @@ phases:
     proof: "a request naming a Nexus file resolves its deps, its owning spec and the phase that maps it, with each source; a request naming nothing is stopped at dependencies, said; explain never enters"
 
   FN1_every_door_goes_through_it:
-    status: OPEN
+    status: "PARTLY BUILT 0.60.95 — the Code tab's range edit (repo.code.assist) runs the funnel first; the Agent tab, copilot, the officiator and phase builds remain"
     systems: [core, idearium, copilot, cortex]
     files: [lib/repo-agent.js, idearium/api/index.js, copilot/server.js, cortex/core/raid/officiator.js, lib/build-paths.js]
     depends_on: [FN0_the_funnel_as_data]
@@ -88,7 +88,7 @@ phases:
     proof: "a funnelled request leaves its four nodes linked by causedBy; the trace lists them"
 
   FN4_the_screen:
-    status: OPEN
+    status: "PARTLY BUILT 0.60.95 — the Code tab's work panel (code-tab-panels.js), driven in Clear Glass (MG-16); the Agent tab and the Plan's run row remain"
     systems: [idearium]
     files: [idearium/ui/js/app.js, idearium/ui/js/plan-panel.js]
     depends_on: [FN1_every_door_goes_through_it]
@@ -117,4 +117,12 @@ open_decisions:
 #   "change the warp-rung ..." → stops at phase: only finished phases map it (WB1, WB2). A new phase comes first (FN2).
 # Found: a request is short, so a plain word that names one or two files counts ("the officiator"); MP1 skips those in long phase
 # bodies, where they were noise. Kept to requests only, behind a stop list.
+
+# ## ADDENDUM 2026-10-16 (c) — the Code tab first (0.60.95)
+# James (2026-10-16), after FN0 shipped with no screen: "code tab?"
+# The coder's reading: put the funnel where the work happens. The Code tab's bottom panel gains "work" (FN4): the open file's
+# dependencies, spec, phase and chunks in his order, with the note being typed as part of the request and where it stops said.
+# Its range edit (repo.code.assist, the agent on picked lines) is the first door through the funnel (FN1): the answers ride to the
+# agent as context ("WHERE THIS WORK SITS") and come back with the reply; explain is answered directly. Not a block: a missing
+# spec or phase is shown, and making it is FN2. This is also the context half of the Code tab's CE11.
 

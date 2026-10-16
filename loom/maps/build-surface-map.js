@@ -128,6 +128,8 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('idearium/ui/js/code-tab-panels.js'), I('idearium/api/index.js'), '§FN4 0.60.95 cxWorkLoad — HTTP POST /api/repos/:uuid/funnel: the Code tab work panel'],
+  [I('idearium/api/index.js'), I('lib/work-funnel.js'), '§FN1 0.60.95 repo.code.assist runs _funnelFor before the agent edits the picked lines'],
   [I('idearium/api/index.js'), I('lib/work-funnel.js'), '§FN0 0.60.94 repo.funnel: POST /api/repos/:uuid/funnel — the four answers for a request'],
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FN0 0.60.94 the repo.funnel row → POST /api/repos/:uuid/funnel'],
   [I('cortex/core/raid/officiator.js'), I('cortex/core/raid/index.js'), '§RT1 0.60.78 decideForContract candidates walked; recordOutcome on an answer (never on a silence)'],
