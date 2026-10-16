@@ -614,7 +614,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 
 - `idearium/api/build-surface.js` (405 lines)  
   exports filesState, deviationRecalc, deviationGet, afterVersion, afterFileChange, environmentGet +8 · requires 12 · required by 1
-- `idearium/api/index.js` (9914 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ Idearium HTTP API — idearium/api/index.js ║  
+- `idearium/api/index.js` (9926 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ Idearium HTTP API — idearium/api/index.js ║  
   exports _setAgentAsk, _reconcileRunsForTest, _agentAskForTest, _learnFromRejectionForTest, _verdictForTest, _route +9 · requires 69 · required by 23
 
 #### `idearium/cli/`
@@ -853,7 +853,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 - `idearium/ui/js/arch-canvas.js` (669 lines)
 - `idearium/ui/js/code-surface.js` (501 lines) — // ════════════════════════════════════════════════════════════════════════════ // §CODE TAB — idearium/ui/js/code-surface.js (0.39.349 CT3)  
   requires 6 · required by 3
-- `idearium/ui/js/code-tab-panels.js` (256 lines) — // ════════════════════════════════════════════════════════════════════════════ // §CODE TAB, expanded — idearium/ui/js/code-tab-panels.js (0.60.82 CE6 · CE7 · CE9)  
+- `idearium/ui/js/code-tab-panels.js` (288 lines) — // ════════════════════════════════════════════════════════════════════════════ // §CODE TAB, expanded — idearium/ui/js/code-tab-panels.js (0.60.82 CE6 · CE7 · CE9)  
   requires 5 · required by 1
 - `idearium/ui/js/compartment.js` (435 lines) — // idearium/ui/js/compartment.js — the Compartment view + recursive tab tree // component_id: idearium.ui.compartment
 - `idearium/ui/js/components-panel.js` (68 lines) — // idearium/ui/js/components-panel.js — 0.60.5. Bring in → DECOMPOSE INTO COMPONENTS. // James, 2026-10-13: "i want to be able to copy projects and decompose them into components for the component…
@@ -869,7 +869,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
   requires 1 · required by 1
 - `idearium/ui/js/phases.js` (514 lines) — // ════════════════════════════════════════════════════════════════════════════ // §PHASES — idearium/ui/js/phases.js (0.39.271 P4)  
   requires 3 · required by 0
-- `idearium/ui/js/plan-panel.js` (501 lines) — // ════════════════════════════════════════════════════════════════════════════ // §PLAN — idearium/ui/js/plan-panel.js (0.39.280 BS11)  
+- `idearium/ui/js/plan-panel.js` (557 lines) — // ════════════════════════════════════════════════════════════════════════════ // §PLAN — idearium/ui/js/plan-panel.js (0.39.280 BS11)  
   requires 2 · required by 2
 - `idearium/ui/js/projects.js` (78 lines) — // idearium/ui/js/projects.js — COSA10 (0.60.74): every project of his on one screen, sorted by what moved last. // James, 2026-10-16: "i figure cos could be helpfui for managing my projects so im…  
   requires 2 · required by 0
@@ -884,7 +884,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
   requires 1 · required by 0
 - `idearium/ui/js/repo-settings.js` (158 lines) — // ════════════════════════════════════════════════════════════════════════════ // §REPO SETTINGS — idearium/ui/js/repo-settings.js (0.39.310 VP7)  
   requires 6 · required by 1
-- `idearium/ui/js/repo-tasks.js` (380 lines) — §0.39.366: a repo's background tasks. James (with Claude Code's Background tasks panel): "the background tasks, i want that for each repo. any activity from  
+- `idearium/ui/js/repo-tasks.js` (388 lines) — §0.39.366: a repo's background tasks. James (with Claude Code's Background tasks panel): "the background tasks, i want that for each repo. any activity from  
   requires 0 · required by 3
 - `idearium/ui/js/repo-versions.js` (163 lines) — // idearium/ui/js/repo-versions.js — 0.60.7. The Versionium tab's index: every version of a repo in one place. // James, 2026-10-13: "i want real versions with the versionium tab. like a full…
 - `idearium/ui/js/template-picker.js` (142 lines) — // idearium/ui/js/template-picker.js — the workshop's new-spec picker (0.39.357 RS5) // Map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec (RS5_the_template_picker)  

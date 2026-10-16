@@ -53,6 +53,8 @@ const CONSUMERS = [
   [I('lib/repo-inject.js'),                         I('lib/step-gate.js'), '_screen(): the code.write gate and the collapse/shrink guards at propose() and edit(), whoever calls (0.60.74)'],
   [I('idearium/api/index.js'),                      I('lib/proposal-evidence.js'), '_rejectionContext(): a rejected proposal\'s evidence goes to the agent and into the retry note (0.60.75 PE4)'],
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/service.js'), '/cli/net/*: routes, resolve, bridge, transport start/stop/detect (0.60.60 NP9)'],
+  [I('idearium/api/index.js'),                      I('lib/economy/tokens.js'), '_phaseBuild: breakdown() of what the agent is given (request, mapped files, charter, lessons, note) on the building row — the Plan\'s Context card (0.60.107 PS1)'],
+  [I('idearium/api/index.js'),                      I('lib/ollama-activity.js'), '_contextOf: MAX, the num_ctx window Nexus gives Ollama — the Context card\'s window (0.60.107 PS1)'],
   [I('clear-glass/src/main/index.js'),              I('clear-glass/src/contexts/google-signin.js'), "app 'session-created' → applySession; 'web-contents-created' → attach: every session and page, popups and webviews included (0.60.106 GS1)"],
   [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/contexts/session-headers.js'), 'requestHook(fingerprint-profile): composes with the localhost and sign-in hooks instead of replacing them (0.60.106 GS2)'],
   [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/net/service.js'), 'register(partition, session) so a rule can route an agent window; a no-op with no rules (0.60.60 NP3)'],

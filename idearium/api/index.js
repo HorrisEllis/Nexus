@@ -811,7 +811,18 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       return t ? PBm.renderBuild(blocksPM.filter(b => b.id === 'build-phase-map'), { phasemap: t }).text : '';
     };
   } catch (_) { /* no mapping: the request is sent as before */ }
-  const message = [req.message, phaseMapFor(), charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+  const mappedText = phaseMapFor();
+  const message = [req.message, mappedText, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+  // §0.60.107 PS1 — James: "Can you make something like the sidebar, for contexT?" What this build gives the agent, part
+  // by part, sized as sent (lib/economy/tokens.js breakdown) — the Plan panel's Context card. The window is Ollama's
+  // num_ctx ceiling when the first rung is Ollama; otherwise not known here, and said so.
+  const _contextOf = (firstBase) => { try {
+    const T = _require('../../lib/economy/tokens.js');
+    const win = firstBase === 'ollama' ? _require('../../lib/ollama-activity.js').MAX : null;
+    return T.breakdown([{ id: 'request', label: 'phase request', text: req.message }, { id: 'mapped', label: 'mapped files', text: mappedText },
+      { id: 'charter', label: 'charter', text: charterText }, { id: 'lessons', label: 'lessons (went wrong before)', text: precedent.text },
+      { id: 'note', label: 'from James', text: note ? `FROM JAMES: ${note}` : '' }], win);
+  } catch (_) { return null; } };
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
@@ -907,6 +918,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   }
   // the run starts here, its route on it: the ladder's order and, per agent, why it sits where it does
   appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length,
+    context: _contextOf(rungs[0] && rungs[0].base),
     ...(precedent.faults.length ? { precedent: precedent.faults.map(f => ({ uuid: f.uuid, ts: f.ts, agent: f.agent, mode: f.mode, promptChars: f.meta.promptChars || null })) } : {}),
     ...(rungs.length ? { route: { ...(route || { learned: false }), order: rungs.map(x => x.provider), from: ladderFrom, ...(rungsSkipped.length ? { skipped: rungsSkipped } : {}) } } : {}),
     chunking: { chunk: chunking.chunk, why: chunking.why, ...(chunking.chunk ? { files: expectFiles } : {}) },

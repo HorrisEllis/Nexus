@@ -53,6 +53,7 @@ const SUITES = [
   'test-code-tab-merge.test.js',   // 0.60.82 CE6 · CE7 · CE9 · CV1 — Files merged into Code, Manage+History one menu, line actions, the bottom panels (Clear Glass)
   'test-canvas-compartments.test.js',   // 0.60.104 CN1–CN4 — his ERAVOS canvas as a COS compartment, each tool nested; COS + workshop templates (Clear Glass, his serve.js and harness)
   'test-reject-learn-retry.test.js',   // 0.60.105 RL1–RL4 — a rejection read for its failure mode, told, learned, then retried; the agent screen stops gutted files and lost exports
+  'test-plan-sidebar.test.js',   // 0.60.107 PS1–PS3 — the Plan panel as Progress · Plan · Context cards; context recorded per build; charter, agents, jobs their own panels (Clear Glass)
   'test-run-pipeline.test.js',   // 0.60.50 CE1 + CE10 through the real repo-agent dispatch: a run per goal, a lost tab moves to the next provider, resume
   'test-shadow.test.js',   // 0.39.282 N22 — a step's shadow (what must exist after it); every absence is a gap + a liminal item; manage/plan runs read incomplete
   'test-draft-review.test.js',   // 0.39.282 N23 — each chunk in a fresh chat; an Ollama draft is reviewed by a guardian agent in one plain conversation

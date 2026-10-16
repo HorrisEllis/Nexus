@@ -121,10 +121,14 @@ async function cxAssist(action) {
 }
 
 // ── CE9: the bottom panel ────────────────────────────────────────────────────────────────────────────
-const CX_PANELS = [['activity', 'activity'], ['work', 'work'], ['runs', 'runs'], ['responses', 'responses'], ['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ['versions', 'versions'], ['machine', 'machine']];
+// §0.60.107 PS3 — charter · agents · jobs left the Plan panel for panels of their own here (James: "make the rest theyre own panel")
+const CX_PANELS = [['activity', 'activity'], ['work', 'work'], ['runs', 'runs'], ['responses', 'responses'], ['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ['versions', 'versions'], ['machine', 'machine'], ['charter', 'charter'], ['agents', 'agents'], ['jobs', 'jobs']];
+const CX_PLAN = new Set(['charter', 'agents', 'jobs']);
 const CX_RT = new Set(['tasks', 'log', 'control', 'versions', 'machine']);
 function cxPanel(k) {
   CX.panel = CX_PANELS.some(p => p[0] === k) ? k : 'activity';
+  // §0.60.107 PS3 — since TB5 (0.60.103) the panels are the 'runs' view: opened from the Plan panel or a shortcut, that view comes up
+  if (typeof CS !== 'undefined' && CS.view !== 'runs') { CS.view = 'runs'; try { localStorage.setItem('idearium.cs.view', 'runs'); } catch (_) {} }
   try { localStorage.setItem('idearium.cs.panel', CX.panel); } catch (_) {}
   if (CX.panel !== 'activity') CS.activity = true;
   csPaint();
@@ -135,6 +139,7 @@ function cxPanelLoad() {
   if (CX.panel === 'work') return cxWorkLoad(repo);
   if (CX.panel === 'runs') return cxRunsLoad(repo);
   if (CX.panel === 'responses') return cxRespLoad(repo);
+  if (CX_PLAN.has(CX.panel)) return cxPlanLoad(repo);
   if (CX_RT.has(CX.panel) && typeof rtView === 'function') { rtView(CX.panel); if (typeof rtMounted === 'function') rtMounted(true); }
 }
 // §FN4 0.60.95 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." The open file's
@@ -174,6 +179,28 @@ async function cxRespLoad(repo) {
   try { const r = await api(`/api/repos/${repo.uuid}/agent/history?limit=40`, {}, 20000); CX.resp = r.exchanges || []; CX.respError = null; }
   catch (e) { CX.resp = []; CX.respError = e.message; }
   if (CX.panel === 'responses') _cxPaintPanel();
+}
+/** §0.60.107 PS3 — the Plan's data for the charter / agents / jobs panels (what the Plan panel reads), and the repo's lessons (RL4) */
+async function cxPlanLoad(repo) {
+  if (typeof PLANP === 'undefined') return;
+  try {
+    if (!PLANP.data || PLANP.uuid !== repo.uuid) {
+      const [plan, runs] = await Promise.all([api(`/api/repos/${repo.uuid}/plan`, {}, 30000), api(`/api/repos/${repo.uuid}/phases/runs`, {}, 30000).catch(() => ({ runs: [] }))]);
+      if (CURRENT_API_REPO !== repo) return;
+      PLANP.uuid = repo.uuid; PLANP.data = plan; PLANP.runs = runs.runs || [];
+    }
+    if (CX.panel === 'agents') {
+      const el = document.createElement('div'); el.innerHTML = '<div class="pp-agents-body"></div>';
+      await ppAgentsLoad(el);
+      try { const l = await api(`/api/repos/${repo.uuid}/lessons?limit=30`, {}, 15000); CX.lessons = l.faults || []; } catch (e) { CX.lessons = null; CX.lessonsError = e.message; }
+    }
+  } catch (e) { CX.planError = e.message; }
+  _cxPaintPanel();
+}
+function _cxLessons() {
+  if (CX.lessons == null) return CX.lessonsError ? `<div class="cs-empty cs-bad">could not read the lessons: ${escapeHtml(CX.lessonsError)}</div>` : '';
+  if (!CX.lessons.length) return '<div class="cs-empty">no lessons yet — a rejected proposal is read for its failure mode and kept here (repo lessons)</div>';
+  return `<div class="cs-sec">lessons — what rejections and failed builds taught</div>${CX.lessons.map(f => `<div class="pp-fault"><span class="pp-led-t">${escapeHtml(_cxWhen(f.ts))}</span> <b>${escapeHtml(f.mode)}</b> ${escapeHtml(f.phase || '')} ${escapeHtml((f.meta && f.meta.path) || '')}${f.meta && f.meta.why ? `<div class="cs-dim">${escapeHtml(f.meta.why)}</div>` : ''}${f.meta && f.meta.diagnosis ? `<div class="cs-dim">it said: ${escapeHtml(f.meta.diagnosis)}</div>` : ''}</div>`).join('')}`;
 }
 function _cxPaintPanel() { const b = document.getElementById('cx-panel-body'); if (b) b.innerHTML = _cxPanelBody(); }
 function _cxWhen(ts) { return ts ? new Date(ts).toLocaleString('en-GB', { hour12: false, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''; }
@@ -228,7 +255,13 @@ function _cxResp(x) {
 }
 function _cxPanelBody() {
   if (CX.panel === 'activity') return '';
-  if (CX.panel === 'work') return _cxWork();   // code-surface.js draws activity itself (_csActivity)
+  if (CX.panel === 'work') return _cxWork();
+  if (CX_PLAN.has(CX.panel)) {
+    if (typeof PLANP === 'undefined' || !PLANP.data) return CX.planError ? `<div class="cs-empty cs-bad">could not read the plan: ${escapeHtml(CX.planError)}</div>` : '<div class="cs-empty">reading the plan…</div>';
+    if (CX.panel === 'charter') return ppCharterPanelHtml();
+    if (CX.panel === 'jobs') return ppJobsPanelHtml();
+    return `${ppAgentsPanelHtml()}${_cxLessons()}`;
+  }   // code-surface.js draws activity itself (_csActivity)
   if (CX.panel === 'runs') {
     const cur = CS.plan && CS.plan.current;
     const gates = cur && typeof _gateBar === 'function' && cur.gates ? `<div class="cx-gates"><span class="cs-dim">plan step</span> <b>${escapeHtml(cur.title || cur.key)}</b> ${_gateBar(cur)}</div>` : '';
@@ -239,9 +272,8 @@ function _cxPanelBody() {
     return `${CX.respError ? `<div class="cs-empty cs-bad">${escapeHtml(CX.respError)}</div>` : ''}${CX.resp == null ? '<div class="cs-empty">reading the exchanges…</div>'
       : CX.resp.length ? CX.resp.map(_cxResp).join('') : '<div class="cs-empty">no exchanges with this repo\'s agent yet</div>'}`;
   }
-  const pp = document.getElementById('pp-log'), pl = document.getElementById('plan-panel');
-  const there = pp && pp.open && pl && pl.classList.contains('open');
-  return `${there ? '<div class="cs-dim cx-note">also open in the Plan panel\'s activity section — drawn here while this tab is up</div>' : ''}
+  // (0.60.82–0.60.105 said here when the Plan panel's activity section was open too: that section is gone, 0.60.107 PS3)
+  return `
     <div class="rt-views" id="cs-rt-views" style="display:none"></div><div class="rt-filters" id="cs-rt-filters"></div><div class="rt-list" id="cs-rt-list"></div>`;
 }
 /** the panel bar and its body; activity's body is code-surface.js's own strip */
