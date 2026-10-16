@@ -61,3 +61,18 @@ open_questions:
 #                                             built: fiverr-ledger PF1-PF3 and the portfolio section (clear-glass-surfaces PF1-PF3)
 #                                             can run beside 2-8; FR1 the guide; FV1 client jobs after the pipeline holds
 # Everything else stays mapped and waits (§0.3: nothing dropped), behind this list.
+
+# ## ADDENDUM 2026-10-16 (b) — step 5 (routing), first slice built: RT1, the officiator stops failing on one slow agent (0.60.78)
+# James: "Next" (after step 4). His 0.60.44 boot log: 63 failed syntheses and 45 parked drops, all "no real agent response
+# (forAgent=ollama)", parked drops cleared only by hand-editing data/officiator-attempts.json, 40 minutes between tries.
+# Found in cortex/core/raid/officiator.js: an agent's silence was charged to the drop (its tries spent, then parked); RAID was
+# never told and picked the same agent each tick; parked was forever. No phase owned this (step 5 said so); this slice is RT1.
+# Built (the GT1 rule, classify before learning): a drop walks RAID's ranked candidates (up to 3). A silence skips to the next
+# and teaches nothing. An answer with no contract counts against the drop, teaches RAID (recordOutcome false) and tries the
+# next. A success teaches RAID. When no agent answers, no drop is charged: the agents wait (2 min, doubling to an hour,
+# persisted). Records written before this that charged a silence are released, said. A parked drop gets a daily try.
+# parked()/unpark(): cortex GET /api/raid/officiator and POST .../unpark; `idearium raid parked`, `idearium raid unpark [id]`;
+# My projects shows a RAID intake line with "Try all again".
+# Open in step 5: ME5 (RAID _decide as the one chooser across copilot and the pipeline-routing ladder), routing builds away
+# from a slow local model (the ladder climbs on failure, not on slowness).
+

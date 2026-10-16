@@ -100,6 +100,19 @@ async function test(id, desc, fn) {
     assert.strictEqual(seen.get('GET /api/my-projects'), 'projects.overview');
   });
 
+  // §RT1 0.60.78 — the My projects panel reads what RAID's officiator holds back from cortex; cortex down is said, not an empty list
+  await test('PJ-07', 'GET /api/raid/held: cortex not answering is a 502 that says so; the panel and the command rows are wired', async () => {
+    const api = await import('../../idearium/api/index.js');
+    const r = await api._route('GET', '/api/raid/held');
+    assert.ok(r.status === 502 && /cortex did not answer/.test(JSON.stringify(r.json)) || r.status === 200, JSON.stringify(r));
+    const ui = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/projects.js'), 'utf8');
+    assert.ok(ui.includes("api('/api/raid/held')") && ui.includes('/api/raid/held/unpark'));
+    const rc = fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8');
+    assert.ok(rc.includes("key: 'raid.parked'") && rc.includes("key: 'raid.unpark'"));
+    const boot = fs.readFileSync(path.join(ROOT, 'cortex/boot.js'), 'utf8');
+    assert.ok(boot.includes("p === '/api/raid/officiator'") && boot.includes("p === '/api/raid/officiator/unpark' && method === 'POST'"));
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

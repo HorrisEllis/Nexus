@@ -16,7 +16,8 @@ async function openProjects() {
   el.innerHTML = _projectsFrame('<div style="padding:16px;color:var(--text3);font-family:var(--mono);font-size:11px">reading your projects…</div>');
   try {
     const d = await api('/api/my-projects');
-    el.innerHTML = _projectsFrame(_projectsHtml(d));
+    el.innerHTML = _projectsFrame(_projectsHtml(d) + '<div id="projects-raid"></div>');
+    _projectsRaid();
   } catch (e) {
     el.innerHTML = _projectsFrame(`<div style="padding:16px;color:var(--coral);font-family:var(--mono);font-size:11px">could not read projects: ${escapeHtml(e.message)}</div>`);
   }
@@ -54,3 +55,23 @@ function _openProject(uuid) {
   if (typeof enterRepoDetail === 'function' && !REPO_DETAIL_OPEN) enterRepoDetail(uuid);
   else if (typeof selectApiRepo === 'function') selectApiRepo(uuid);
 }
+
+// §RT1 0.60.78 — what RAID's officiator holds back (cortex): the agents' wait and parked drops, with a way to clear it.
+// Said when cortex does not answer; shows nothing when nothing is held.
+async function _projectsRaid() {
+  const box = document.getElementById('projects-raid'); if (!box) return;
+  let d; try { d = await api('/api/raid/held'); } catch (e) { box.innerHTML = `<div style="padding:8px 14px;font-size:10px;color:var(--text3)">RAID: ${escapeHtml(e.message)}</div>`; return; }
+  const parked = (d.drops || []).filter(x => x.parked), waiting = (d.drops || []).filter(x => !x.parked);
+  if (!d.agents && !(d.drops || []).length) { box.innerHTML = ''; return; }
+  box.innerHTML = `<div style="padding:10px 14px;border-top:1px solid var(--b0,#222)">
+    <div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:600">RAID intake</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${parked.length} parked · ${waiting.length} waiting${d.agents ? ` · agents wait until ${escapeHtml(new Date(d.agents.until).toLocaleTimeString())}` : ''}</span>
+      <span style="flex:1"></span><button class="tb-btn" onclick="_projectsUnpark()">Try all again</button></div>
+    ${d.agents ? `<div style="font-size:11px;color:var(--text2)">• no agent answered${(d.agents.tried || []).length ? ` (${escapeHtml(d.agents.tried.join(', '))})` : ''}</div>` : ''}
+    ${parked.slice(0, 6).map(x => `<div style="font-size:11px;color:var(--text2)">• parked ${escapeHtml(x.id.slice(0, 8))}: ${escapeHtml(String(x.reason || '').slice(0, 120))}</div>`).join('')}</div>`;
+}
+async function _projectsUnpark() {
+  try { await api('/api/raid/held/unpark', { method: 'POST', body: JSON.stringify({}) }); } catch (_) {}
+  _projectsRaid();
+}
+

@@ -2599,6 +2599,7 @@ const ROUTE_CAP = {
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
+  'raid.held': CAPS.READ_IDEAS, 'raid.held.unpark': CAPS.WRITE_IDEAS,   // §0.60.78 RT1
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,
@@ -2990,7 +2991,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],
     ['GET',    ['api','repos',    ':uuid','notes'],     'repo.notes'],         // §0.60.6 — the repo's notes: ?q=&kind=&status=&tag=
     ['POST',   ['api','repos',    ':uuid','notes'],     'repo.notes.add'],     // §0.60.6 — { body, title?, kind?, tags?, pinned? }
-    ['GET',    ['api','my-projects'],                   'projects.overview'],  // §0.60.74 COSA10 (not /api/projects: that is the zip shelf, project.list) — every project of his, sorted by what moved last: notes, phases, last activity
+    ['GET',    ['api','my-projects'],                   'projects.overview'],
+    ['GET',    ['api','raid','held'],                   'raid.held'],          // §0.60.78 RT1 — cortex's officiator: the agents' wait, each staged drop's tries
+    ['POST',   ['api','raid','held','unpark'],          'raid.held.unpark'],   // §0.60.78 RT1 — { id? } clear one drop, or everything  // §0.60.74 COSA10 (not /api/projects: that is the zip shelf, project.list) — every project of his, sorted by what moved last: notes, phases, last activity
     ['GET',    ['api','notes'],                         'notes.list'],         // §0.60.6 — ?scope=all (default) | loose (on no repo) &q=&kind=&status=&tag=
     ['POST',   ['api','notes'],                         'notes.add'],          // §0.60.6 — a note on no repo, or { repoUuid }
     ['PATCH',  ['api','notes',':id'],                   'notes.update'],       // §0.60.6 — { body?, title?, kind?, tags?, status?, pinned?, repoUuid? }      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
@@ -6872,6 +6875,15 @@ async function handle(req, res, route, query, body) {
     }
     // §COSA10 0.60.74 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." One row per
     // project from what Nexus already keeps: notes counts, the phase roadmap, the last activity (idearium/lib/projects.cjs).
+    // §RT1 0.60.78 — what RAID's officiator holds back, read from cortex (it runs there); the My projects panel shows it
+    case 'raid.held': case 'raid.held.unpark': {
+      try {
+        const r = action === 'raid.held'
+          ? await _nexusClient.call('cortex', 'GET', '/api/raid/officiator', null, { timeout: 4000 })
+          : await _nexusClient.call('cortex', 'POST', '/api/raid/officiator/unpark', body && body.id ? { id: String(body.id) } : {}, { timeout: 4000 });
+        return ok(res, r);
+      } catch (e) { return err(res, 502, `cortex did not answer: ${e.message}`); }
+    }
     case 'projects.overview': {
       const PJ = _require('../lib/projects.cjs');
       const RN = _require('../../lib/repo-notes.js');

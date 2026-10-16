@@ -277,6 +277,17 @@ export const SPEC = [
     need: (a) => (a.args[0] ? null : '<id>'),
     req: (a) => ({ method: 'PATCH', path: `/api/notes/${encodeURIComponent(a.args[0])}`, body: { status: 'done' } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} done: ${d.note.title}`) },
+  // 0.60.78 RT1 — what RAID's officiator holds back (the agents' wait, each staged drop's tries and why) and clearing it
+  { key: 'raid.parked', repo: false, usage: 'raid parked', about: 'what the officiator holds back: the agents\' wait (no agent answered) and each staged drop\'s tries, why, and when it is tried next',
+    req: () => ({ system: 'cortex', method: 'GET', path: '/api/raid/officiator' }),
+    print: (d, a, h) => {
+      if (d.agents) console.log(`  ${h.c.amber('agents waiting')} until ${new Date(d.agents.until).toLocaleTimeString()} — ${d.agents.reason || ''}${(d.agents.tried || []).length ? h.c.dim(` (tried ${d.agents.tried.join(', ')})`) : ''}`);
+      for (const x of d.drops || []) console.log(`  ${x.parked ? h.c.amber('parked ') : h.c.dim('waiting')} ${x.id.slice(0, 12)}  ${x.n}/${d.maxAttempts} · next ${new Date(x.nextTry).toLocaleString()}${(x.tried || []).length ? h.c.dim(` · ${x.tried.join(', ')}`) : ''}\n          ${h.c.dim(String(x.reason || '').slice(0, 140))}`);
+      if (!d.agents && !(d.drops || []).length) console.log(h.c.gray('  nothing held back'));
+    } },
+  { key: 'raid.unpark', repo: false, usage: 'raid unpark [<drop id or prefix>]', about: 'clear what the officiator holds back: one drop (by id or its first characters), or everything (the agents\' wait included) — tried on the next tick',
+    req: (a) => ({ system: 'cortex', method: 'POST', path: '/api/raid/officiator/unpark', body: a.args[0] ? { id: a.args[0] } : {} }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} cleared ${(d.cleared || []).length}: ${(d.cleared || []).map(x => x.slice(0, 12)).join(', ') || 'nothing was held back'}`) },
   // 0.60.74 COSA10 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." Every project,
   // newest activity first: questions and todos waiting, phases done/total, what is in progress or next (idearium/lib/projects.cjs)
   { key: 'projects', repo: false, usage: 'projects', about: 'every project of yours on one list: what is waiting on you, what is next, what moved last',

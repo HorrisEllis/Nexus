@@ -245,19 +245,21 @@ await test('OFF-RAID', 'no forAgent: the agent is RAID\'s pick, not a hard-coded
 });
 
 // §0.60.26 — James's 0.60.23 log: every boot re-sent the same nine failed drops to Claude. A failure is persisted with
-// backoff (a restart does not reset it), the rest of the tick waits when the agent did not answer, and after
-// MAX_ATTEMPTS the drop is parked.
-await test('OFF-BACKOFF', 'a failed drop is retried with persisted backoff: not re-sent by the next tick nor by a restart, and parked after MAX_ATTEMPTS', async () => {
-  // drops left from the tests above are officiated already; start from one new staged drop
+// backoff (a restart does not reset it). §RT1 0.60.78 — only a CONTENT failure (an agent answered with no contract) is the
+// drop's: it is charged, backed off, and parked after MAX_ATTEMPTS, then tried once a day.
+const fresh = () => { delete require.cache[require.resolve(path.join(ROOT, 'cortex/core/raid/officiator.js'))]; return require(path.join(ROOT, 'cortex/core/raid/officiator.js')); };
+const attemptsFile = () => path.join(path.dirname(intake.INTAKE_DIR), 'officiator-attempts.json');
+const readA = () => { try { return JSON.parse(fs.readFileSync(attemptsFile(), 'utf8')); } catch (_) { return {}; } };
+const GOOD = () => ({ ok: true, text: JSON.stringify({ endState: 'a', conditions: [], intent: 'build', context: 'a', warpPrimitives: [], axioms: [], tools: [], compartmentUuid: null, fileDirectory: null, fileName: null }) });
+
+await test('OFF-BACKOFF', 'an answer with no contract is the drop\'s failure: persisted backoff, not re-sent by the next tick nor a restart; parked after MAX_ATTEMPTS, then tried daily', async () => {
   const { dropId } = stageRealTestArtifact('console.log("backoff test");');
-  _mockResponse = { ok: false };
-  const fresh = () => { delete require.cache[require.resolve(path.join(ROOT, 'cortex/core/raid/officiator.js'))]; return require(path.join(ROOT, 'cortex/core/raid/officiator.js')); };
+  _mockResponse = { ok: true, text: 'I cannot make a contract of this.' };
   const o1 = fresh();
   const r1 = await o1.tick();
   assert.strictEqual(r1.failed, 1, JSON.stringify(r1));
-  const file = path.join(path.dirname(intake.INTAKE_DIR), 'officiator-attempts.json');
-  const rec = JSON.parse(fs.readFileSync(file, 'utf8'))[dropId];
-  assert.ok(rec && rec.n === 1 && /no real agent response/.test(rec.reason), JSON.stringify(rec));
+  const rec = readA()[dropId];
+  assert.ok(rec && rec.n === 1 && rec.cls === 'content' && /could not be parsed/.test(rec.reason), JSON.stringify(rec));
   const r2 = await o1.tick();
   assert.strictEqual(r2.failed, 0, 'the same process does not re-send before the backoff');
   const r3 = await fresh().tick();
@@ -265,12 +267,74 @@ await test('OFF-BACKOFF', 'a failed drop is retried with persisted backoff: not 
   assert.strictEqual(o1.due({ n: 1, at: Date.now() }), false);
   assert.strictEqual(o1.due({ n: 1, at: Date.now() - 11 * 60 * 1000 }), true);
   assert.strictEqual(o1.due({ n: 2, at: Date.now() - 11 * 60 * 1000 }), false, 'the second wait is twice the first');
-  assert.strictEqual(o1.due({ n: o1.MAX_ATTEMPTS, at: 0 }), false, 'parked after MAX_ATTEMPTS');
+  assert.strictEqual(o1.due({ n: o1.MAX_ATTEMPTS, at: Date.now() }), false, 'parked after MAX_ATTEMPTS');
+  assert.strictEqual(o1.due({ n: o1.MAX_ATTEMPTS, at: Date.now() - 25 * 3600 * 1000 }), true, 'parked is not forever: a daily try');
   // a success clears the record
-  const all = JSON.parse(fs.readFileSync(file, 'utf8')); all[dropId].at = 0; fs.writeFileSync(file, JSON.stringify(all));
-  _mockResponse = { ok: true, text: JSON.stringify({ endState: 'a', conditions: [], intent: 'build', context: 'a', warpPrimitives: [], axioms: [], tools: [], compartmentUuid: null, fileDirectory: null, fileName: null }) };
+  const all = readA(); all[dropId].at = 0; fs.writeFileSync(attemptsFile(), JSON.stringify(all));
+  _mockResponse = GOOD();
   const r4 = await fresh().tick();
-  assert.ok(r4.synthesized === 1 && !JSON.parse(fs.readFileSync(file, 'utf8'))[dropId], JSON.stringify(r4));
+  assert.ok(r4.synthesized === 1 && !readA()[dropId], JSON.stringify(r4));
+});
+
+// §RT1 0.60.78 — his 0.60.44 log: 63 failed syntheses and 45 parked drops, all "no real agent response (forAgent=ollama)".
+await test('OFF-RT1a', 'no agent answered: no drop is charged; the agents wait (persisted, doubling); records that charged a silence to a drop are released', async () => {
+  const { dropId } = stageRealTestArtifact('console.log("silence");');
+  const a0 = readA(); a0['old-drop-0'] = { n: 4, at: Date.now(), reason: 'no real agent response (forAgent=ollama) — guardian unreachable or an empty response' }; fs.writeFileSync(attemptsFile(), JSON.stringify(a0));
+  _mockResponse = { ok: false };
+  const o = fresh();
+  const r1 = await o.tick();
+  assert.ok(r1.released >= 1 && !readA()['old-drop-0'], `a pre-0.60.78 parked silence is released: ${JSON.stringify(r1)}`);
+  assert.ok(!readA()[dropId], 'the drop is not charged for the agent\'s silence');
+  const ag = readA()[o.AGENTS_KEY];
+  assert.ok(ag && ag.k === 1 && ag.until > Date.now(), JSON.stringify(ag));
+  let sentAgain = false; const was = _mockResponse; _mockResponse = { get ok() { sentAgain = true; return false; } };
+  const r2 = await fresh().tick();
+  _mockResponse = was;
+  assert.ok(r2.agentsWait && !sentAgain, `nobody is asked again before the wait passes, a restart included: ${JSON.stringify(r2)}`);
+  const all = readA(); all[o.AGENTS_KEY].until = 0; fs.writeFileSync(attemptsFile(), JSON.stringify(all));
+  await fresh().tick();
+  assert.strictEqual(readA()[o.AGENTS_KEY].k, 2, 'the next wait doubles');
+  const all2 = readA(); all2[o.AGENTS_KEY].until = 0; fs.writeFileSync(attemptsFile(), JSON.stringify(all2));
+  _mockResponse = GOOD();
+  const r3 = await fresh().tick();
+  assert.ok(r3.synthesized >= 1 && !readA()[o.AGENTS_KEY], `an answer clears the agents' wait: ${JSON.stringify(r3)}`);
+});
+
+await test('OFF-RT1b', 'RAID\'s ranked candidates are walked: silence skips to the next and teaches nothing; a non-contract answer teaches RAID; a success teaches it', async () => {
+  const idxPath = require.resolve(path.join(ROOT, 'cortex/core/raid/index.js'));
+  const real = require.cache[idxPath];
+  const learned = [];
+  require.cache[idxPath] = { id: idxPath, filename: idxPath, loaded: true, exports: { ...(real ? real.exports : {}), ready: async () => {},
+    decideForContract: () => ({ agent: 'ollama', cluster: 'synth', candidates: [{ name: 'ollama' }, { name: 'gemini' }, { name: 'chatgpt' }] }),
+    recordOutcome: (agent, cluster, ok) => learned.push(`${agent}:${ok}`) } };
+  const byProvider = { ollama: { ok: false }, gemini: { ok: true, text: 'prose, no contract' }, chatgpt: GOOD() };
+  const lifePath = require.resolve(path.join(ROOT, 'copilot/lifeline.js'));
+  const lifeWas = require.cache[lifePath].exports.dispatchToNcpAgent;
+  const asked = [];
+  require.cache[lifePath].exports.dispatchToNcpAgent = async (_p, o) => { asked.push(o.provider); return byProvider[o.provider]; };
+  try {
+    const { dropId } = stageRealTestArtifact('console.log("walk");');
+    const r = await fresh().officiate(intake.read(dropId));
+    assert.ok(r.ok, JSON.stringify(r));
+    assert.deepStrictEqual(asked, ['ollama', 'gemini', 'chatgpt'], 'best first, then the next');
+    assert.deepStrictEqual(learned, ['gemini:false', 'chatgpt:true'], 'silence teaches nothing (GT1); a wrong answer and a success do');
+  } finally {
+    require.cache[lifePath].exports.dispatchToNcpAgent = lifeWas;
+    if (real) require.cache[idxPath] = real; else delete require.cache[idxPath];
+  }
+});
+
+await test('OFF-RT1c', 'parked() says what waits and why; unpark(id|all) clears it — no hand edit of the attempts file', async () => {
+  const o = fresh();
+  const a = readA(); a['drop-aaaa1111'] = { n: o.MAX_ATTEMPTS, at: Date.now(), cls: 'content', reason: 'could not be parsed', tried: ['gemini'] }; a['drop-bbbb2222'] = { n: 1, at: Date.now(), cls: 'content', reason: 'x' };
+  fs.writeFileSync(attemptsFile(), JSON.stringify(a));
+  const p = o.parked();
+  const d = p.drops.find(x => x.id === 'drop-aaaa1111');
+  assert.ok(d && d.parked && d.tried[0] === 'gemini' && d.nextTry > Date.now(), JSON.stringify(p));
+  assert.deepStrictEqual(o.unpark('drop-aaaa').cleared, ['drop-aaaa1111'], 'by id prefix');
+  assert.ok(!readA()['drop-aaaa1111'] && readA()['drop-bbbb2222']);
+  o.unpark('all');
+  assert.deepStrictEqual(Object.keys(readA()), []);
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);

@@ -120,6 +120,10 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('cortex/core/raid/officiator.js'), I('cortex/core/raid/index.js'), '§RT1 0.60.78 decideForContract candidates walked; recordOutcome on an answer (never on a silence)'],
+  [I('cortex/boot.js'), I('cortex/core/raid/officiator.js'), '§RT1 0.60.78 GET /api/raid/officiator (parked) · POST /api/raid/officiator/unpark'],
+  [I('idearium/api/index.js'), I('cortex/boot.js'), '§RT1 0.60.78 HTTP raid.held / raid.held.unpark → cortex /api/raid/officiator'],
+  [I('idearium/ui/js/projects.js'), I('idearium/api/index.js'), '§RT1 0.60.78 HTTP GET /api/raid/held, POST /api/raid/held/unpark — the RAID intake line in My projects'],
   [I('idearium/api/index.js'), I('lib/phase-plan.js'), '§GW24 0.60.76 PP.contextNote — the dependencies\' code ranked and cut to the budget'],
   [I('idearium/api/index.js'), I('cortex/core/raid/contract-gates.js'), '§GW24 0.60.76 Boundaries.budget — the first agent\'s learned size sets the brick\'s context budget'],
   [I('idearium/api/index.js'), I('cortex/core/raid/contract-trace.js'), '§GW3 0.60.75 repo.phases.contract ?trace=1 — trace(), lines()'],
