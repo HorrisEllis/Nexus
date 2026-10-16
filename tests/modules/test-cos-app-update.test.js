@@ -41,9 +41,15 @@ function ctl(root, { running = false, idle = null, policy = 'auto' } = {}) {
     const r = tmp(), d = tmp(); const c = ctl(r); assert.strictEqual((await c.applyPolicy(arrive(r, d, '0.60.69'))).action, 'switched');
     const o = await c.applyPolicy(arrive(r, d, '0.60.65')); assert.strictEqual(o.action, 'offer'); assert.match(o.reason, /not newer/); assert.strictEqual(c.calls.length, 1);
   });
-  await test('AU-06 auto, Nexus running and COS has no idle signal: it WAITS, says why, and does not switch', async () => {
-    const r = tmp(), d = tmp(); const c = ctl(r, { running: false }); await c.applyPolicy(arrive(r, d, '0.60.68')); c.rt = { status: async () => ({ running: true, version: '0.60.68', healthy: true }) }; const o = await c.applyPolicy(arrive(r, d, '0.60.69')); assert.strictEqual(o.action, 'waiting'); assert.match(o.reason, /no idle signal/); assert.strictEqual(c.calls.length, 1, 'only the first install switched');
-    assert.deepStrictEqual((await c.state()).waiting, { nexus: '0.60.69' });
+  await test('AU-06 auto, Nexus running: asks the autopilot GET /idle: a Nexus without /idle, a busy one and an unreachable one all WAIT with the reason; an idle one switches', async () => {
+    const http = require('http'); let mode = '404';
+    const srv = http.createServer((q, r) => { if (q.url !== '/idle' || mode === '404') { r.writeHead(404); return r.end('no'); } r.writeHead(200, { 'Content-Type': 'application/json' }); r.end(JSON.stringify(mode === 'busy' ? { ok: true, idle: false, reasons: ['2 Guardian jobs in progress (queued, started)'] } : { ok: true, idle: true, reasons: [] })); }).listen(0, '127.0.0.1'); await new Promise(r => srv.on('listening', r)); const port = srv.address().port;
+    const r = tmp(), d = tmp(); const c = ctl(r); await c.applyPolicy(arrive(r, d, '0.60.68')); c.rt = { status: async () => ({ running: true, version: '0.60.68', healthy: true, statusPort: port }) };
+    let o = await c.applyPolicy(arrive(r, d, '0.60.69')); assert.strictEqual(o.action, 'waiting'); assert.match(o.reason, /has no \/idle yet.*0\.60\.71/); assert.strictEqual(c.calls.length, 1);
+    mode = 'busy'; o = (await c.retryWaiting())[0]; assert.strictEqual(o.action, 'waiting'); assert.match(o.reason, /2 Guardian jobs in progress/); assert.strictEqual(c.calls.length, 1);
+    mode = 'idle'; o = (await c.retryWaiting())[0]; assert.strictEqual(o.action, 'switched'); assert.strictEqual(c.calls.length, 2); srv.close();
+    const r2 = tmp(), d2 = tmp(); const c2 = ctl(r2); await c2.applyPolicy(arrive(r2, d2, '0.60.68')); c2.rt = { status: async () => ({ running: true, version: '0.60.68', healthy: true, statusPort: 1 }) };
+    const o2 = await c2.applyPolicy(arrive(r2, d2, '0.60.69')); assert.strictEqual(o2.action, 'waiting'); assert.match(o2.reason, /did not answer \/idle/);
   });
   await test('AU-07 auto with an idle probe: waits while busy, switches once idle (retryWaiting)', async () => {
     const r = tmp(), d = tmp(); let idle = false; const c = ctl(r, { idle: async () => ({ idle, why: idle ? 'idle' : 'a job is running' }) }); await c.applyPolicy(arrive(r, d, '0.60.68')); c.rt = { status: async () => ({ running: true, version: '0.60.68', healthy: true }) };

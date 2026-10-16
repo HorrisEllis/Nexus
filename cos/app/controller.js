@@ -11,11 +11,24 @@
  * store.js / runtime.js / switch.js. Electron is not required to load this file, so it is tested without one. One operation per project at a time: a second
  * click on Switch while the first is running is refused with a reason, never queued behind it unseen.
  */
-const Store = require('./store.js'); const Settings = require('./settings.js'); const RT = require('./runtime.js'); const SW = require('./switch.js');
+const Store = require('./store.js'); const Settings = require('./settings.js'); const RT = require('./runtime.js'); const SW = require('./switch.js'); const http = require('http');
+
+/** httpIdleProbe(project, run) — asks the running project's autopilot GET /idle (0.60.71). An older Nexus without it, or one that does not answer, is NOT idle, and the reason says which. */
+function httpIdleProbe(project, run, timeoutMs = 2500) {
+  return new Promise((resolve) => {
+    const req = http.get({ host: '127.0.0.1', port: run.statusPort, path: '/idle', timeout: timeoutMs }, (res) => {
+      let b = ''; res.on('data', d => { b += d; }); res.on('end', () => {
+        if (res.statusCode === 404) return resolve({ idle: false, why: `${project} ${run.version} has no /idle yet (it needs 0.60.71 or newer to say when it is idle)` });
+        try { const j = JSON.parse(b); resolve({ idle: j.idle === true, why: j.idle === true ? 'idle' : (j.reasons || []).join('; ') || 'busy' }); } catch (_) { resolve({ idle: false, why: `${project} answered /idle with something that is not JSON` }); }
+      });
+    });
+    req.on('timeout', () => req.destroy(new Error('timed out'))); req.on('error', (e) => resolve({ idle: false, why: `${project} did not answer /idle (${e.message})` }));
+  });
+}
 
 class Controller {
   constructor({ root = Store.defaultRoot(), opts = {}, store = Store, rt = RT, sw = SW, onEvent = () => {}, idle = null } = {}) {
-    this.root = root; this.opts = opts; this.store = store; this.rt = rt; this.sw = sw; this.emit = onEvent; this.busy = new Map(); this.idleProbe = idle; this.waiting = new Map();
+    this.root = root; this.opts = opts; this.store = store; this.rt = rt; this.sw = sw; this.emit = onEvent; this.busy = new Map(); this.idleProbe = idle || httpIdleProbe; this.waiting = new Map();
   }
   async _exclusive(project, what, fn) {
     if (this.busy.has(project)) return { ok: false, reason: 'busy', error: `${project} is busy (${this.busy.get(project)}): wait for it to finish` };
@@ -29,7 +42,7 @@ class Controller {
   /** idle(project) → { idle, why }. Nothing running is nothing to interrupt. A running project is idle only if the injected probe says so: COS has no idle signal from Nexus yet, so without one it is NOT idle (it waits and says why). */
   async idle(project) {
     const run = await this.rt.status(this.root, project); if (!run.running) return { idle: true, why: `${project} is not running` };
-    if (typeof this.idleProbe !== 'function') return { idle: false, why: `${project} is running and COS has no idle signal from it yet` };
+    if (typeof this.idleProbe !== 'function') return { idle: false, why: `${project} is running and COS has no idle signal from it` };
     try { const r = await this.idleProbe(project, run); return { idle: !!(r && r.idle), why: (r && r.why) || (r && r.idle ? 'idle' : 'busy') }; } catch (e) { return { idle: false, why: `the idle check failed: ${e.message}` }; }
   }
   /**
@@ -71,4 +84,4 @@ class Controller {
   /** stopAll() — on quit: the projects COS started are stopped with it (the window is the owner; a project left running with no window would be invisible) */
   async stopAll() { const out = []; for (const p of this.store.list(this.root)) out.push({ project: p.project, ...(await this.rt.stop(this.root, p.project, this.opts)) }); return out; }
 }
-module.exports = { Controller };
+module.exports = { Controller, httpIdleProbe };

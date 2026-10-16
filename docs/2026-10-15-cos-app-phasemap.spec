@@ -179,7 +179,7 @@ addendum_e:
       proof: "UI-tested in Clear Glass, never Playwright (docs/CLAUDE.md); Windows behaviour unverified until a Windows run."
     COSA13_auto_update:
       status: PARTIAL-0.60.69
-      built_note: "policy off|ask|auto, drop and inbox, auto only when verified+newer+idle; AU-01..09. NOT built: Clear Glass download (COSA7), the autopilot idle signal (with Nexus running, auto waits)."
+      built_note: "policy off|ask|auto, drop and inbox, auto only when verified+newer+idle; AU-01..09. 0.60.71: the autopilot idle signal exists (GET /idle) and COS asks it; a Nexus older than 0.60.71 has none, so auto waits for it. NOT built: Clear Glass download (COSA7)."
       depends_on: [COSA1_version_store_and_import, COSA4_switch_and_rollback]
       does: "Setting update.policy: off | ask | auto (default ask). auto-install on any arrival (drop, inbox, Clear Glass); auto-switch only when idle and preflight passes; notification says what happened and how to undo. Never installs a zip that fails the checksum or the NP16 quarantine."
       proof: "a dropped zip installs with no click; with policy auto and an idle Nexus it switches and is healthy; with a crashing release it rolls itself back with the reason shown; with a job running it waits."

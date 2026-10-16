@@ -928,9 +928,42 @@ function _warpEmit(type, data) {
   catch (e) { console.error(`[warp:autopilot] emit failed for '${type}': ${e.message}`); }
 }
 
+// ── Idle signal (0.60.71) ───────────────────────────────────────────────────
+// James, 2026-10-16: "do it" (the COS auto-update waits while Nexus is running because the autopilot had no way to say "nothing is in the middle of a job").
+// idle:true means: every kernel has settled (none starting or restarting) AND Guardian holds no job that is queued, pending, dispatched, started or responding.
+// It says WHY when it is not idle, and when it cannot tell (Guardian is up but did not answer) it says idle:false, never a guess. Read-only; GET /idle.
+// What it does NOT see: a test run started through /run-tests, an Idearium build, or a person typing. Those are not jobs Guardian holds.
+const ACTIVE_JOB = new Set(['queued', 'pending', 'dispatched', 'started', 'responding']);
+const UNSETTLED = new Set(['starting', 'restarting', 'online']);
+function _httpJson(url, timeoutMs = 1500) {
+  return new Promise((resolve, reject) => {
+    const req = http.get(url, { timeout: timeoutMs }, (res) => { let b = ''; res.on('data', d => { b += d; }); res.on('end', () => { try { resolve(JSON.parse(b)); } catch (e) { reject(new Error('not JSON')); } }); });
+    req.on('timeout', () => req.destroy(new Error('timed out'))); req.on('error', reject);
+  });
+}
+async function _idleReport({ fetchJobs = null } = {}) {
+  const reasons = []; const unsettled = Object.entries(_state).filter(([, s]) => UNSETTLED.has(s.status)).map(([n, s]) => `${n} is ${s.status}`);
+  if (unsettled.length) reasons.push(...unsettled);
+  const g = _state.guardian; const guardianUp = !!(g && g.proc && g.proc.exitCode === null && !g.proc.killed);
+  let jobs = null;
+  if (guardianUp) {
+    try {
+      const k = ALL_KERNELS.find(x => x.name === 'guardian'); const base = k && k.healthUrl ? new URL(k.healthUrl).origin : 'http://127.0.0.1:7820';
+      const r = await (fetchJobs ? fetchJobs() : _httpJson(`${base}/jobs?limit=500`));
+      const list = (r && r.jobs) || []; const active = list.filter(j => ACTIVE_JOB.has(String(j.status || '').toLowerCase()));
+      jobs = { active: active.length, total: list.length }; if (active.length) reasons.push(`${active.length} Guardian job${active.length > 1 ? 's' : ''} in progress (${[...new Set(active.map(j => j.status))].join(', ')})`);
+    } catch (e) { reasons.push(`cannot tell: Guardian is running but did not answer /jobs (${e.message})`); }
+  }
+  return { ok: true, idle: reasons.length === 0, reasons, guardian: guardianUp ? (jobs || { error: true }) : { running: false }, ts: Date.now() };
+}
+
 function _startStatusServer() {
   if (!STATUS_PORT) return;
   const server = http.createServer((req, res) => {
+    if (req.method === 'GET' && req.url === '/idle') {
+      _idleReport().then((r) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(r)); }, (e) => { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, idle: false, reasons: [`idle check failed: ${e.message}`] })); });
+      return;
+    }
     if (req.url === '/status') {
       // §1.2 — a halted boot must be visible to any observer (the tablet
       // reads this), not only to whoever was watching the terminal.
@@ -1946,4 +1979,4 @@ if (require.main === module && CLI_MODE && !statusArg) {
   }, 3000);
 }
 
-module.exports = { start, _statusSnapshot, KERNELS, requestSpawn, controlKernel, touchActivity, _state, _spawnKernel, _phasePlan, _pollHealth, ALL_KERNELS, _startStatusServer, _handleLedgerRead, _handleContractProxy, _handleTablesRead, _handleFilesRead, _handleRunTests, _handleGraphRead, _bootPhases, _runDiagnosticOnStall, _runVitalsCheck, _getBootResult: () => _bootResult, _logInstanceSnapshot };
+module.exports = { start, _idleReport, _statusSnapshot, KERNELS, requestSpawn, controlKernel, touchActivity, _state, _spawnKernel, _phasePlan, _pollHealth, ALL_KERNELS, _startStatusServer, _handleLedgerRead, _handleContractProxy, _handleTablesRead, _handleFilesRead, _handleRunTests, _handleGraphRead, _bootPhases, _runDiagnosticOnStall, _runVitalsCheck, _getBootResult: () => _bootResult, _logInstanceSnapshot };
