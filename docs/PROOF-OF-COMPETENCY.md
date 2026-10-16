@@ -286,3 +286,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     his.
   - **Evidence:** `docs/2026-10-15-gate-held-work-phasemap.spec` addenda (d) and (f); `tests/modules/test-run-state.test.js`
     RS-50..55; `CHANGELOG-0.60.77.md`.
+- **2026-10-16: "can we not have it chunk everytime it restarts. it needs to persist. all data  is meant to persist. hardcoded has to earn its place..."**
+  - **Context:** after a spec's 17 chunks were lost when Clear Glass closed. The coder had mapped a timeline and asked
+    which path lost them; he named the symptom precisely instead: it re-chunks on every restart.
+  - **What it shows:** failure-mode reading from behaviour. The symptom led straight to the root cause: the plan was
+    re-made at every build start, a fresh plan has a fresh hash, and the hash check archived every passed brick. The
+    checkpoints were already persisted; the one thing not reused was the plan. A one-function fix on the contract file,
+    proven by a test where a restart makes no agent call at all.
+  - **Evidence:** `CHANGELOG-0.60.79.md`; `tests/modules/test-contract-phase-build.test.js` CP-03b;
+    `cortex/core/raid/contract-adapters.js` `savedPlan`.

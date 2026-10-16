@@ -24,7 +24,7 @@ const path = require('path');
 const crypto = require('crypto');
 const CG = require('./contract-gates.js');
 
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';   // 1.1.0 (0.60.79): the plan kept on the contract; savedPlan
 const ROOT = path.join(__dirname, '../../..');
 
 /** the door's route for a brick: providers in the order the door gives them (it learns per kind; reasoning kinds first) */
@@ -99,7 +99,7 @@ function planHash(plan) {
  *   inputs  [{ id, path, lines? }] the phase's own inputs (its phasemap): every brick requires them, so a change STALEs it
  *   onDisk  true when writes land on disk (not review proposals): each brick also needs { exists: <its file> }
  */
-function fromPhasePlan(plan, { id = null, phaseKey = 'phase', title = '', intent = '', inputs = [], onDisk = false, root = ROOT } = {}) {
+function fromPhasePlan(plan, { id = null, phaseKey = 'phase', title = '', intent = '', inputs = [], onDisk = false, root = ROOT, phaseHash = null } = {}) {
   if (!plan || !Array.isArray(plan.files) || !plan.files.length) throw Object.assign(new Error('a phase plan with files is required'), { status: 400 });
   const PP = require(path.join(ROOT, 'lib/phase-plan.js'));
   const deps = PP.depsOf(plan);
@@ -128,7 +128,9 @@ function fromPhasePlan(plan, { id = null, phaseKey = 'phase', title = '', intent
     pass_when: [...bricks.map(b => ({ gate: b })), { evidence: 'phase.integrated', match: '^met' }],
     integration: 'phase.integrated', run: { integrate: phaseKey } });
   const cid = _id(id || `phase-${phaseKey}`);
-  const payload = { v: 2, uuid: cid, status: 'draft', intention: 'build', plan_hash: planHash(plan),
+  // §TL1a 0.60.79 — the plan itself is kept on the contract (and what the phase said when it was planned), so a build
+  // started again reuses it instead of asking the planner again (savedPlan below)
+  const payload = { v: 2, uuid: cid, status: 'draft', intention: 'build', plan_hash: planHash(plan), ...(phaseHash ? { phase_hash: phaseHash } : {}), plan,
     outcome: { what: title || `phase ${phaseKey}`, why: intent || plan.intent || '', done_when: [{ gate: 'phase' }] },
     refs, invariants: [], gaps: [], gates, failure: { retry_limit: 3 }, state: { gates: {}, evidence: {}, checkpoints: [] } };
   const problems = CG.validate(payload);
@@ -196,6 +198,28 @@ function openCheckpoint(file, built, { root = ROOT } = {}) {
   return { loaded: old, resumed: true, kept: ev.gates.filter(g => g.status === 'PASSED').map(g => g.id), stale: ev.gates.filter(g => g.status === 'STALE').map(g => g.id), reset };
 }
 
+/**
+ * savedPlan(file, { phaseHash, candidates }) → { plan, from, why } | { plan: null, why }
+ * §TL1a 0.60.79 — James: "can we not have it chunk everytime it restarts. it needs to persist. all data is meant to persist."
+ * Before: every build start asked the planner again. A model's plan differs run to run, so its plan_hash differed, and
+ * openCheckpoint archived the saved contract with every passed brick: a restart re-chunked the phase and began at brick 1.
+ * Now the saved contract's plan is the plan. It is kept unless the phase itself changed since it was planned (phase_hash).
+ * A contract saved before 0.60.79 has no plan on it: the newest candidate plan (the 'planned' rows already on disk) whose
+ * planHash matches the saved plan_hash is the one that built it.
+ */
+function savedPlan(file, { phaseHash = null, candidates = [] } = {}) {
+  if (!file || !fs.existsSync(file)) return { plan: null, why: 'no saved contract for this phase' };
+  let old;
+  try { old = CG.load(file); } catch (e) { return { plan: null, why: `the saved contract could not be read: ${e.message}` }; }
+  const p = (old && old.payload) || {};
+  if (p.whole) return { plan: null, why: 'the saved contract is a whole-phase brick (no plan)' };
+  if (p.phase_hash && phaseHash && p.phase_hash !== phaseHash) return { plan: null, why: 'the phase changed since it was planned' };
+  if (p.plan && Array.isArray(p.plan.files) && p.plan.files.length && planHash(p.plan) === p.plan_hash) return { plan: p.plan, from: 'contract', why: 'the plan saved on the contract' };
+  const hit = (candidates || []).find(c => c && Array.isArray(c.files) && c.files.length && planHash(c) === p.plan_hash);
+  if (hit) return { plan: hit, from: 'runs', why: 'the plan that built the saved contract (from the run log)' };
+  return { plan: null, why: 'the saved contract carries no plan and none on the run log matches it' };
+}
+
 /** audit(p) → the record of a build: every brick, every dependency edge, every checkpoint, every gate, and what is blocked */
 function audit(p, { root = ROOT } = {}) {
   const ev = CG.evaluate(p, { root });
@@ -216,4 +240,4 @@ function audit(p, { root = ROOT } = {}) {
   };
 }
 
-module.exports = { VERSION, doorRoute, agentExecutor, planHash, fromPhasePlan, fromWholePhase, openCheckpoint, audit };
+module.exports = { VERSION, doorRoute, agentExecutor, planHash, fromPhasePlan, fromWholePhase, openCheckpoint, savedPlan, audit };

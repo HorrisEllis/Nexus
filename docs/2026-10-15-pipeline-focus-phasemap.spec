@@ -76,3 +76,11 @@ open_questions:
 # Open in step 5: ME5 (RAID _decide as the one chooser across copilot and the pipeline-routing ladder), routing builds away
 # from a slow local model (the ladder climbs on failure, not on slowness).
 
+
+# ## ADDENDUM 2026-10-16 (c) — work lost at a restart: a new map, slotted before the Code tab UI
+# James: "clearglass closed and nexus didnt recover. like need a timeline with the checkpoints, and gates rewind points. it
+# wrote the whole spec 17 chunks but then lost it on the restart. that needs to change. ... it need has to be physcial files
+# in the backedn for persistence"
+# Mapped in docs/2026-10-16-durable-work-timeline-phasemap.spec (TL0-TL6). The coder's recommendation (his call): TL1 + TL2
+# (chunks are files the moment they exist; a restart resumes them) go before step 4's Code tab UI, and TL5 (the timeline
+# panel) is the Code tab's first panel, after CE6. TL4 is the one rewind CV3 and GW7 both point at (build once).
