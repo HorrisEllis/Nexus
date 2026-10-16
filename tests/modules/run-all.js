@@ -373,6 +373,7 @@ const SUITES = [
   'test-semantic-field-map.test.js', // 0.60.50 SP2 — picked fields found by semantic address after class churn
   'test-tool-required-alias.test.js', // 0.60.50 — a required tool parameter named the model's own way still arrives
   'test-guardian-field-pick.test.js', // 0.60.71 — the attention panel's picks use the Guardian picker: walk one element at a time
+  'test-release-notes.test.js', // 0.60.72 RN2/RN3 — every commit under the release that shipped it; Versionium; the Releases screen
   'test-spec-gaps-intelligence.test.js', // 0.60.49 — every spec gap goes through the intelligence gap system
   'test-gate-versioning.test.js', // 0.60.39 GS1 — a snapshot per gate: commit, rewind before a retry, compare, replay decisions
   'test-raid-runs-contract.test.js', // 0.60.36 RD0 — RAID runs the .contract: its gates before, bricks, verdict, self-heal

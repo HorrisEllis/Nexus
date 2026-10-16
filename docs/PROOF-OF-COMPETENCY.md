@@ -253,4 +253,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **What it shows:** reuse over rebuild, and judging a tool by use. He saw the problem was the interaction, not the
     checks, and pointed at the component that already solved it. The panel now uses that picker; nothing was rewritten.
   - **Evidence:** `tests/modules/test-guardian-field-pick.test.js` (5/5); `CHANGELOG-0.60.71.md`.
+- **2026-10-16: "i want a changelog for each change or diff. i want it all syncd with git, versionium, the zip."**
+  - **Context:** three sessions were building at once; release numbers collided and were renumbered at merges, and
+    half of the commits (maps, addenda) had no changelog. He asked for one record that git, Versionium and the zip agree on.
+  - **What it shows:** auditability as a requirement. Asking for every diff to be accounted for is what exposed real
+    bookkeeping bugs: a release pinned to another session's commit, three releases pinned to nothing, notes never read.
+  - **Evidence:** `tests/modules/test-release-notes.test.js` (6/6); a live sync in the coder's container recorded 280
+    releases, 208 with their commits; `CHANGES.md`; `CHANGELOG-0.60.72.md`.
 

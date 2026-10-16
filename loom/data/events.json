@@ -1,5 +1,5 @@
 {
- "generatedAt": 1792071695834,
+ "generatedAt": 1792113679553,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -384,6 +384,7 @@
   "nexus.clear-glass.src.preload": {
    "emits": [],
    "listens": [
+    "options:changed",
     "shortcut:action"
    ]
   },
@@ -1271,7 +1272,8 @@
    "emits": [
     "guardian.job.chunk",
     "guardian.job.complete",
-    "guardian.job.error"
+    "guardian.job.error",
+    "guardian.reply.classified"
    ],
    "listens": []
   },
@@ -2143,6 +2145,13 @@
    "listens": [
     "shadow.declared",
     "shadow.settled"
+   ]
+  },
+  "nexus.tests.modules.test-spec-pipeline.test": {
+   "emits": [],
+   "listens": [
+    "idearium.spec.collected",
+    "idearium.spec.compiled"
    ]
   },
   "nexus.tests.modules.test-spec-workshop.test": {
@@ -3855,6 +3864,12 @@
    "emitters": [],
    "listeners": [
     "nexus.clear-glass.src.plugins.webrequest-adapter"
+   ]
+  },
+  "options:changed": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.preload"
    ]
   },
   "shortcut:action": {
@@ -5743,6 +5758,12 @@
     "nexus.tests.modules.test-economy-guardian.test"
    ]
   },
+  "guardian.reply.classified": {
+   "emitters": [
+    "nexus.guardian.lib.response-sink"
+   ],
+   "listeners": []
+  },
   "guardian.wake.detected": {
    "emitters": [
     "nexus.guardian.lib.wake-loop"
@@ -7518,6 +7539,18 @@
     "nexus.tests.modules.test-shadow.test"
    ],
    "listeners": []
+  },
+  "idearium.spec.collected": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-spec-pipeline.test"
+   ]
+  },
+  "idearium.spec.compiled": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-spec-pipeline.test"
+   ]
   },
   "step.blocked": {
    "emitters": [],

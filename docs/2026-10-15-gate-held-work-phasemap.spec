@@ -462,3 +462,95 @@ New with no earlier phase found: GW4 (copilot dispatched through contract gates)
 (SSH door, copy-in), GW15 (every file tested, mutation), GW17 (friction per file), GW18 (bisect), GW19-GW21 (sandbox results, file actions,
 autonomy), GW22 (find before generate), GW23 (wire what exists). "New" means no phase with that name was found; it was not read phase by phase.
 
+
+## ADDENDUM 2026-10-16 — every system at the gate, and context that does not make the agent dumb (mapped, no code)
+
+# James (2026-10-16): "the pipeline. the gating. rewind engine, compartments, cos improvements for test envirements." ·
+# "more than that. look at the intelligence system, phases, diagnostic system, versionium, snapshots, raid, look at all of
+# them. reflection engine. hypothosis. adversarial agent, confidence, all of it. look at all of what would be important for
+# the gating. each gate holds the context, which can make tghe agents dumb."
+#
+# The coder's reading (to confirm): a gate is the one place that may hold EVERYTHING (the store); an agent is handed only
+# the projection one step needs (the baton, GW1), sized to that agent. Context the gate holds is not context the agent is
+# given. Read this way, his sentence is GW1's rule made explicit, and it extends GW6 from "on failure" to every moment.
+
+found_2026_10_16:
+  # read in the code, not remembered
+  uses_today: "cortex/core/raid/contract-gates.js (the brick scheduler) requires: pipeline-routing, phase-plan, model-door, import-checks, check-catalogue, agent-tools, fault-taxonomy, jaa-db. Idearium hands it versioning (GT2 tags), assessing (GA1) and the dispatch."
+  not_consulted_by_gates: "lib/reflection.js (decision scoring, low-satisfaction streaks open loops) · meta/confidence.js (weakest-link: one unevidenced item caps the whole) · intelligence/adversarial.js (two reasonings compared; a contradiction is a gap) · lib/diagnostic-report.js (a gap's report: CFR state, rfr2 traceToRoot = cause conditions, descendants = effects) · lib/replay-engine.js (snapshot before a decision, replay, compare) · cos/testenv (process or ephemeral-VM test runs for any repo) · the hypothesis node type (lib/node-schemas/schema.hypothesis; no tracker module found). meta/adversary-suite.js (6 attack classes on a compartment's result) is used only by the older contract-intake path, not by bricks."
+  where_context_piles_up:
+    planned_brick: "lean already: lib/phase-plan.js chunkBrief is budgeted (LIMITS.brief, trims purpose/steps/intent to fit) and dispatched bare (noContext). Keep."
+    whole_phase_brick: "BR1 (no file named) sends the whole phase message through the repo agent WITH its context blocks — the heaviest prompt in the pipeline, and the one a small model fails on."
+    ga1_context_note: "GA1 appends up to 120 lines of EVERY dependency's code with no total cap: a brick with 6 dependencies can grow by ~700 lines. Needs a budget and a ranking (the names it needs first)."
+    the_packet: "contract-gates packet() is small and structured, but it is not what the agent is sent (the brief is). Two shapes of the same handoff: GW1 must make the packet the one handoff."
+
+the_gate_moments:
+  # which system answers at which moment; each answer is stored on the gate (the store) and only its verdict, or the
+  # lines it names, reach the agent (the projection)
+  before_dispatch:
+    - "hypothesis: the gate states what it expects to be true when it passes (its pass_when as a hypothesis node) — scored later (reflection)"
+    - "mental simulation (emerge map MS1): the planned step against mined failure modes — 'likely to hit X' becomes one line in the brief, not the mode's history"
+    - "confidence: weakest-link over the gate's inputs (refs hashed, deps PASSED with evidence, assumptions); below a floor the gate asks for context (NEEDS_CONTEXT) instead of dispatching"
+    - "snapshot: Versionium tag before the attempt (GT2 does this) — the rewind point"
+  the_handoff:
+    - "the baton (GW1): packet + run state, budgeted per agent (CT1 Boundaries learn the size an agent passes); GA1's dependency code ranked by the names needed and cut to the budget"
+  after_reply:
+    - "verification: checks the gate owns (exports, imports, CK catalogue), then cos/testenv runs the file's tests (process; VM when present) in the gate's compartment"
+    - "adversarial: meta/adversary-suite on the result (edge-case, state, replay) for task gates; intelligence/adversarial compare when two agents answered the same gate (GW16)"
+    - "confidence of the PASS: weakest link over its evidence (a pass with an unevidenced condition is capped, said)"
+  on_failure:
+    - "classify (exists: classifyFailure) → fault-log + enrichGap (GW6)"
+    - "diagnostic report (lib/diagnostic-report.js) for a gate failed twice — cause conditions and effects, one paragraph to the next attempt, the full report on the gate"
+    - "replay/rewind: replay-engine / GW7 failure macro from the gate's snapshot"
+  after_settle:
+    - "reflection: the gate's outcome scores its hypothesis and the agent's decision (reflection streaks open a KNOWLEDGE/CAPABILITY loop) — the door learns (GW6)"
+
+proposed_phases:
+  GW24_the_gate_holds_the_agent_gets_a_projection:
+    status: OPEN
+    depends_on: [GW1_the_baton]
+    files: [cortex/core/raid/contract-gates.js, idearium/api/index.js, lib/phase-plan.js]
+    does: "One budget per dispatch, from the agent's learned size (CT1): the brief, GA1's dependency code (ranked: the needed names' definitions first, then signatures, never whole files past the budget) and any intelligence verdicts share it. Whole-phase bricks go bare with the phase text cut to the budget, the repo context only when the agent asks for it (a tool, not a preload). Everything the gate gathered stays on the gate (inspectable in the contract panel)."
+    proof: "a brick with 6 dependencies sends ≤ its budget; the dropped lines are listed on the gate; a fixture small model passes a brick it failed with the unbudgeted note"
+  GW25_the_systems_at_the_gate_moments:
+    status: OPEN
+    depends_on: [GW24_the_gate_holds_the_agent_gets_a_projection, GW6_the_intelligence_system_on_every_gate]
+    does: "the_gate_moments above, each system behind one optional hook in schedule() (before / after / on failure / settle), each answer stored on the gate, its verdict ≤ one line into the baton; every hook can be off per run (cost), each said when skipped"
+    proof: "one contract run with every hook on: each gate shows its hypothesis, confidence, verification, adversarial findings and (on failure) diagnosis; the agent's prompts stay within budget"
+
+order_note: "pipeline-focus's critical path still holds: GW1 (baton) first — GW24 is GW1's budget, GW25 follows GW6. Nothing here before GW0's decision (a brick is the unit)."
+
+## ADDENDUM 2026-10-16 (b) — everything declares what it needs; drift against the contract retries or rewinds (mapped)
+
+# James (2026-10-16): "each spec, phase, chunk/gate needs to have dependancies, then the contract and the dependencies cna
+# be used to check for drift, if it fails, retry or rewind snapshot. so like everything has to create a dependancy, and the
+# dependencies per chunk, every gate needs to know what it needs. always map before anything."
+# His decision, recorded as his: dependencies are mandatory at every level (spec, phase, chunk, gate), and drift is checked
+# against the contract and its dependencies; on failure: retry, or rewind to the snapshot. The coder's part below is what
+# exists and what is missing.
+
+exists_2026_10_16:
+  - "a gate's `requires` are hashed when it passes; evaluate() makes it STALE when one changes or an upstream gate is no longer PASSED (cortex/core/raid/contract-gates.js) — the drift check, at gate level"
+  - "a FAILED gate rewinds to its pre-attempt snapshot after its retries (QA2, 0.60.43); a gate's exports recorded and re-checked on its dependents (GA1, 0.60.44: missing → the dependency reopens STALE)"
+  - "phases carry files and dependencies, automatically, in every repo (lib/phase-map-auto.js, MP1/MP2 0.60.65); specs are tagged per phase (PT1, 0.60.51)"
+missing:
+  - "a brick requires only the phasemap and the file it edits (contract-adapters fromPhasePlan): the files it imports or reads outside the plan (phase-map-auto requires) and the phase's owning spec(s) are not refs, so their drift is invisible"
+  - "a split brick's pieces inherit nothing beyond the parent's shared refs"
+  - "a spec declares no dependencies of its own (what other specs / components it builds on); spec drift (orchestrator/lib/spec-drift.js) compares versions and surfaces, not what a spec depends on"
+  - "STALE re-runs; there is no policy that chooses retry vs rewind by why the drift happened (a dependency changed → re-run; the gate's own output regressed → rewind)"
+
+proposed_phase:
+  GW26_everything_declares_what_it_needs:
+    status: OPEN
+    depends_on: [GW1_the_baton]
+    files: [cortex/core/raid/contract-adapters.js, lib/phase-map-auto.js, lib/capability-spec.js, orchestrator/lib/spec-drift.js, cortex/core/raid/contract-gates.js]
+    does: >-
+      (1) every brick's requires = phasemap + its file + the files it imports/reads (phase-map-auto one hop) + the owning
+      spec(s) of its phase; a split piece inherits its parent's requires plus its own. (2) a spec states `depends_on`
+      (specs, components) — drafted from what its files require (capability-spec measure), never invented — and spec
+      drift checks it. (3) a gate with no requires is refused at contract load (said), never run blind. (4) on drift:
+      a required ref changed → STALE → re-run with the change named in the baton; the gate's own verification regressed →
+      rewind to its snapshot, then retry; both recorded on the gate (GT2).
+    proof: "a fixture contract: changing an imported file STALEs exactly the bricks that import it; changing the phase's spec STALEs the phase; a gate with no requires is refused; a regression rewinds to the snapshot and the retry passes"
+
+order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 decides what a gate watches. Both after GW1."

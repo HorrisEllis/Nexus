@@ -94,10 +94,10 @@ export const SPEC = [
   // 0.60.8 — intent routing for reasoning (lib/reasoning-route.js)
   // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
   // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (lib/nexus-releases.js): James's words, the proof, the commit
-  { key: 'system.releases', repo: false, usage: 'releases [--sync] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog; --sync records any missing',
-    req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: {} } : { method: 'GET', path: '/api/releases' },
+  { key: 'system.releases', repo: false, usage: 'system releases [--sync [--all]] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog, its commits; --sync records any missing (with the newest 30 releases\' commits; --all: every release\'s)',
+    req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: a.flags.all ? { all: true } : {} } : { method: 'GET', path: '/api/releases' },
     print: (d, a, h) => {
-      if (a.flags.sync) { console.log(`  ${d.releases} releases: ${h.c.mint(`${d.recorded} recorded`)} · ${d.already} already · ${d.unpinned} without a git commit in this clone${d.refused && d.refused.length ? h.c.coral(` · ${d.refused.length} refused`) : ''}`); return; }
+      if (a.flags.sync) { console.log(`  ${d.releases} releases: ${h.c.mint(`${d.recorded} recorded`)} · ${d.already} already · ${d.unpinned} without a git commit in this clone${d.withCommits != null ? ` · ${d.withCommits} with their commits` : ''}${d.refused && d.refused.length ? h.c.coral(` · ${d.refused.length} refused`) : ''}`); return; }
       let l = d.releases || [];
       if (a.flags.version) l = l.filter(r => r.version === String(a.flags.version).replace(/^v/, ''));
       if (!l.length) { console.log(h.c.gray('  no releases in Versionium yet — idearium releases --sync')); return; }
@@ -105,8 +105,13 @@ export const SPEC = [
         console.log(`  ${h.c.mint(r.tag.padEnd(10))} ${h.c.dim(r.gitCommit ? r.gitCommit.slice(0, 7) : 'no commit')}  ${r.changelog ? h.c.dim(r.changelog) : ''}${r.version === d.current ? h.c.amber('  ← running') : ''}`);
         if (r.quote) console.log(`    ${h.c.sky(String(r.quote).slice(0, 180))}`);
         if (a.flags.version && r.notes) console.log(h.c.dim(`    ${r.notes}`));
+        if (a.flags.version && Array.isArray(r.commits)) for (const c of r.commits) console.log(`    ${h.c.dim(c.sha.slice(0, 8))} ${c.subject}  ${h.c.dim(`${c.files} file(s) +${c.added} −${c.removed}`)}`);
       }
     } },
+  // §0.60.72 RN2 — James: "tell me all the recent changes. i want a changelog for each change or diff." Written from git.
+  { key: 'system.changes', repo: false, usage: 'system changes [--since x.y.z] [--write]', about: 'every change since a release: each commit under the first release that contains it, with its files (written from git, not by hand); --write saves CHANGES.md',
+    req: (a) => ({ method: 'GET', path: `/api/releases/changes?${new URLSearchParams({ ...(a.flags.since ? { since: String(a.flags.since) } : {}), ...(a.flags.write ? { write: '1' } : {}) })}`, timeoutMs: 120000 }),
+    print: (d, a, h) => { if (d.out) { console.log(`  ${h.c.mint(d.out)} written (${d.bytes} bytes)`); return; } console.log(d.markdown); } },
   { key: 'system.version', repo: false, usage: 'version', about: 'the Nexus release (lib/version.js): its GitHub tag and zip name, whether every place that states it agrees (CK-253), and the module versions, labelled',
     req: () => ({ method: 'GET', path: '/api/version' }),
     print: (d, a, h) => { console.log(`  ${h.c.mint(`Nexus ${d.version}`)}${d.commit ? h.c.dim(`  ${d.commit}`) : ''}  ·  GitHub ${d.tag}  ·  zip ${d.zipName}`);
