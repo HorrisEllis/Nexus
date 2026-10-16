@@ -14,10 +14,10 @@
  */
 const { app, BrowserWindow, Tray, Menu, dialog, ipcMain, nativeImage, Notification, shell } = require('electron');
 const path = require('path'), fs = require('fs');
-const { Controller } = require('../controller.js'); const Store = require('../store.js'); const Settings = require('../settings.js');
+const { Controller } = require('../controller.js'); const Store = require('../store.js'); const Settings = require('../settings.js'); const { Shell } = require('../shell.js');
 
 if (!app.requestSingleInstanceLock()) { app.quit(); process.exit(0); }
-let win = null, tray = null, quitting = false, watcher = null, ctl = null;
+let win = null, tray = null, quitting = false, watcher = null, ctl = null, sh = null;
 
 const send = (ev) => { if (win && !win.isDestroyed()) win.webContents.send('cos:event', ev); };
 function notify(title, body) { try { if (Notification.isSupported()) new Notification({ title, body }).show(); } catch (_) {} }
@@ -48,7 +48,7 @@ function buildTray() {
     items.push({ type: 'separator' }, { label: 'Open the inbox folder', click: () => shell.openPath(s.inbox.path) }, { label: 'Quit (stops what COS started)', click: () => quit() }); return Menu.buildFromTemplate(items); };
   tray.on('click', show); tray.on('right-click', async () => tray.popUpContextMenu(await menu()));
 }
-async function quit() { quitting = true; try { await ctl.stopAll(); } catch (_) {} app.quit(); }
+async function quit() { quitting = true; try { if (sh) sh.cancel(); } catch (_) {} try { await ctl.stopAll(); } catch (_) {} app.quit(); }
 
 async function afterArrival(x) {
   const pol = await ctl.applyPolicy(x);
@@ -71,6 +71,9 @@ function ipc() {
   h('state', () => ctl.state());
   h('pickZip', async () => { const r = await dialog.showOpenDialog(win, { title: 'Pick a release zip', properties: ['openFile'], filters: [{ name: 'Release zip', extensions: ['zip'] }] }); return r.canceled ? {} : { path: r.filePaths[0] }; });
   h('importPath', async (p) => { if (typeof p !== 'string' || !/\.zip$/i.test(p)) return { ok: false, error: 'that is not a .zip file' }; const r = ctl.importZip(p); if (r.ok && !r.already) r.policy = await ctl.applyPolicy(r); return r; });
+  // the command line: one console, one command at a time; it returns at once and streams output as events (sh.data), then sh.exit with the code
+  h('shRun', (line) => { if (typeof line !== 'string' || line.length > 2000) return { ok: false, error: 'not a command line' }; if (sh.running) return { ok: false, error: 'a command is still running: press Stop first' }; sh.run(line).then((code) => send({ type: 'sh.exit', code }), (e) => { send({ type: 'sh.data', text: `✗ ${e.message}\n` }); send({ type: 'sh.exit', code: 1 }); }); return { ok: true }; });
+  h('shCancel', () => ({ ok: true, cancelled: sh.cancel() }));
   h('getSettings', () => ctl.settings()); h('setSetting', (k, v) => ctl.setSetting(String(k), v));
   h('switchTo', (project, v) => ctl.switchTo(String(project), String(v))); h('rollback', (project, o) => ctl.rollback(String(project), o || {}));
   h('start', (project) => ctl.start(String(project))); h('stop', (project) => ctl.stop(String(project))); h('remove', (project, v) => ctl.remove(String(project), String(v))); h('logs', (project) => ctl.logs(String(project)));
@@ -79,7 +82,7 @@ function ipc() {
 app.on('second-instance', show);
 app.whenReady().then(() => {
   ctl = new Controller({ root: process.env.COS_APP_ROOT || Store.defaultRoot(), onEvent: send }); fs.mkdirSync(ctl.root, { recursive: true });
-  ipc(); createWindow(); buildTray(); watchInbox();
+  sh = new Shell({ root: ctl.root, project: 'nexus', stdio: 'pipe', out: (t) => send({ type: 'sh.data', text: t }) }); ipc(); createWindow(); buildTray(); watchInbox();
 });
 app.on('window-all-closed', () => { /* stays in the tray */ });
 app.on('before-quit', () => { quitting = true; });

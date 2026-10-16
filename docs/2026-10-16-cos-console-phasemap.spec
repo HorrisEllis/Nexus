@@ -112,3 +112,14 @@ addendum_b:
     - "Keys read statically miss ones built dynamically: reported as unknown."
   superseded: [CON6_shell_escape]
   open_question: "Still unanswered from the last turn: extract one shared command layer first (menu.js, --cli and the COS console all call it), or build the console on the autopilot and co-pilot now. I recommend extracting first."
+
+# ADDENDUM 2026-10-16 (c): scope narrowed. A command line, not a platform. Supersedes the build order; the earlier phases stay as the long plan.
+addendum_c:
+  james: >-
+    "just need a cli to replace powershell, to run the npm run start:all command, and cli commands."
+  context: "Answer to the coder's question whether to extract one shared command layer (menu.js, --cli, COS) first or build the console now. Neither: he wants a command line that does what PowerShell was being used for."
+  decided: "No shared-layer extraction now, no autopilot/co-pilot clients, no config editing, no per-system controls from this. CON0/CON1/CON3/CON4/CON8/CON9 stay mapped and OPEN, not cancelled. What is built is CON-lite."
+  phase:
+    CON_lite_command_line:
+      status: BUILT-0.60.70
+      built_note: "cos/app/shell.js, cos sh / cos exec, window pane; SH-01..12, UI-15..16. Limits: no stdin in the window pane; chains refused (test:all); Windows unverified."

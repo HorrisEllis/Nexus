@@ -37,3 +37,7 @@ td.act { text-align:right; white-space:nowrap; display:flex; gap:6px; justify-co
 
 .pol{font-size:12px;color:var(--dim,#9aa0b4);margin-right:8px}.pol select{background:#171923;color:inherit;border:1px solid #2b2f40;border-radius:4px;padding:2px 4px}
 .strip{padding:4px 16px;font-size:12px;color:var(--dim,#9aa0b4);border-bottom:1px solid #1f2230;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#console { position:fixed; left:0; right:0; bottom:0; height:46vh; background:#0a0b10; border-top:1px solid var(--line); display:flex; flex-direction:column; z-index:4; }
+#sh-out { margin:0; padding:10px 14px; overflow:auto; flex:1; font:12px/1.4 Consolas, monospace; color:#c9cde0; white-space:pre-wrap; }
+#sh-form { display:flex; gap:8px; align-items:center; padding:6px 14px; border-top:1px solid #1f2230; } #sh-form .prompt { color:#6aa2ff; font:13px Consolas, monospace; }
+#sh-in { flex:1; background:transparent; border:0; outline:0; color:#e6e8f2; font:13px Consolas, monospace; } #sh-in:focus-visible { outline:1px solid #6aa2ff; }

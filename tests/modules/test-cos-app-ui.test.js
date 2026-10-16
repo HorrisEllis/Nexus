@@ -94,6 +94,21 @@ const click = (w, e) => e.dispatchEvent(new w.MouseEvent('click', { bubbles: tru
     assert.match(await mk({ action: 'waiting', reason: 'nexus is running and COS has no idle signal from it yet' }), /Not switched yet: nexus is running and COS has no idle signal/);
     assert.match(await mk({ action: 'none', policy: 'off' }), /Update policy is off: nothing switches by itself/);
   });
+  await test('UI-15 the command line pane: opens, sends the line, streams output (colour codes removed), shows Stop while running and idle after the exit', async () => {
+    const u = await boot(S([P()]), { shRun: async (l) => ({ ok: true }), shCancel: async () => ({ ok: true }) }); assert.strictEqual(u.$('#console').hidden, true); click(u.w, u.$('#btn-console')); assert.strictEqual(u.$('#console').hidden, false);
+    u.$('#sh-in').value = 'npm run start:all'; u.$('#sh-form').dispatchEvent(new u.w.Event('submit', { bubbles: true, cancelable: true })); await tick();
+    assert.match(u.$('#sh-out').textContent, /> npm run start:all/); assert.strictEqual(u.$('#sh-state').textContent, 'running'); assert.strictEqual(u.$('#sh-stop').disabled, false);
+    u.ev({ type: 'sh.data', text: '\x1b[32m✓ started\x1b[0m\n' }); await tick(); assert.match(u.$('#sh-out').textContent, /✓ started/); assert.ok(!/\x1b/.test(u.$('#sh-out').textContent));
+    u.ev({ type: 'sh.exit', code: 0 }); await tick(); assert.strictEqual(u.$('#sh-state').textContent, 'idle'); assert.strictEqual(u.$('#sh-stop').disabled, true);
+  });
+  await test('UI-16 a refused command shows its reason; Stop calls shCancel; Up recalls the last line; clear empties the pane', async () => {
+    let cancelled = 0; const u = await boot(S([P()]), { shRun: async (l) => (/bad/.test(l) ? { ok: false, error: 'a command is still running: press Stop first' } : { ok: true }), shCancel: async () => { cancelled++; return { ok: true }; } });
+    const send = async (v) => { u.$('#sh-in').value = v; u.$('#sh-form').dispatchEvent(new u.w.Event('submit', { bubbles: true, cancelable: true })); await tick(); };
+    await send('bad one'); assert.match(u.$('#sh-out').textContent, /✗ a command is still running/); assert.strictEqual(u.$('#sh-state').textContent, 'idle');
+    await send('npm run hello'); click(u.w, u.$('#sh-stop')); await tick(); assert.strictEqual(cancelled, 1);
+    u.$('#sh-in').dispatchEvent(new u.w.KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true })); assert.strictEqual(u.$('#sh-in').value, 'npm run hello');
+    await send('clear'); assert.strictEqual(u.$('#sh-out').textContent, '');
+  });
   await test('CT-01 the controller: import, state, switch, state again, stop: the window\'s whole life on real files and processes', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-ct-')), dl = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-ctdl-')), port = await free(); const events = [];
     const c = new Controller({ root, opts: { statusPort: port, ports: [port], healthTimeoutMs: 6000, graceMs: 2000, pollMs: 100 }, onEvent: (e) => events.push(e.type + (e.version ? ':' + e.version : '')) });

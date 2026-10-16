@@ -10,7 +10,7 @@
 <body>
 <header>
   <div class="brand"><span class="logo">COS</span><span class="sub" id="root"></span></div>
-  <div class="actions"><label class="pol" title="What COS does with a release that arrives: off = nothing by itself · ask = installs, asks before switching · auto = installs, and switches only when it is safe (verified, newer, idle)">Updates <select id="policy"><option value="off">off</option><option value="ask">ask</option><option value="auto">auto</option></select></label> <button id="btn-import" class="primary">Import a release zip…</button></div>
+  <div class="actions"><label class="pol" title="What COS does with a release that arrives: off = nothing by itself · ask = installs, asks before switching · auto = installs, and switches only when it is safe (verified, newer, idle)">Updates <select id="policy"><option value="off">off</option><option value="ask">ask</option><option value="auto">auto</option></select></label> <button id="btn-console">Command line</button> <button id="btn-import" class="primary">Import a release zip…</button></div>
 </header>
 <div id="strip" class="strip" role="status"></div>
 <div id="banners" aria-live="polite"></div>
@@ -23,6 +23,11 @@
 <section id="logs-panel" hidden>
   <div class="logs-head"><b id="logs-title">Log</b><span class="grow"></span><button id="btn-logs-close">Close</button></div>
   <pre id="logs"></pre>
+</section>
+<section id="console" hidden aria-label="COS command line">
+  <div class="logs-head"><b>Command line</b><span class="sub" id="sh-state">idle</span><span class="grow"></span><button id="sh-stop" disabled>Stop (Ctrl+C)</button><button id="sh-close">Close</button></div>
+  <pre id="sh-out" tabindex="0"></pre>
+  <form id="sh-form" autocomplete="off"><span class="prompt">&gt;</span><input id="sh-in" spellcheck="false" aria-label="command" placeholder="npm run start:all   ·   nexus status   ·   help"></form>
 </section>
 <div id="drop" hidden><div>Drop the release zip to install it</div></div>
 <script src="app.js"></script>

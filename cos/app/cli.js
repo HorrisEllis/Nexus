@@ -40,6 +40,12 @@ const RUNTIME = new Set(['switch', 'rollback', 'start', 'stop', 'running', 'logs
 /** run(argv, out) → exit code. Store commands are main(); the ones that start or stop processes are async. */
 async function run(argv = process.argv.slice(2), out = (s) => console.log(s)) {
   const { flags, pos } = parse(argv); const cmd = pos[0];
+  if (cmd === 'sh' || cmd === 'exec') {   // the COS command line (0.60.70): `cos sh [project]` is interactive, `cos exec <project> "npm run start:all"` is one line
+    const SH = require('./shell.js'); const root = flags.root || S.defaultRoot();
+    if (cmd === 'sh') return SH.repl({ root, project: pos[1] || 'nexus' });
+    if (!pos[1] || !pos[2]) { out('✗ exec needs <project> "<command line>"'); return 1; }
+    const sh = new SH.Shell({ root, project: pos[1], out: (s) => process.stdout.write(s), stdio: 'inherit' }); process.once('SIGINT', () => sh.cancel()); const c = await sh.run(pos.slice(2).join(' ')); return c < 0 ? 0 : c;
+  }
   if (!RUNTIME.has(cmd)) return main(argv, out);
   const root = flags.root || S.defaultRoot(); const J = !!flags.json; const project = pos[1]; let code = 0;
   const say = (o, t) => out(J ? JSON.stringify(o) : t); const fail = (r) => { code = 1; say(r, `✗ ${r.error}${r.rolledBack ? `\n  rolled back${r.restoredData ? ', data restored' : ''}${r.backOn ? `; ${r.backOn} is running again` : ''}${r.backError ? `\n  ${r.backError}` : ''}` : ''}`); };

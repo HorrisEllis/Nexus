@@ -69,7 +69,28 @@
     await refresh(); return r;
   }
 
+  /** the command line pane: text in, text out. Everything it runs is cos/app/shell.js in the main process; this only shows it. */
+  const ANSI = /\x1b\[[0-9;?]*[A-Za-z]/g; const hist = []; let hi = 0, shRunning = false;
+  function shAppend(t) { const o = $('#sh-out'); o.textContent += String(t).replace(ANSI, ''); if (o.textContent.length > 200000) o.textContent = o.textContent.slice(-150000); o.scrollTop = o.scrollHeight; }
+  function shState(running) { shRunning = running; $('#sh-state').textContent = running ? 'running' : 'idle'; $('#sh-stop').disabled = !running; }
+  async function shRun(line) {
+    line = String(line || '').trim(); if (!line) return; if (hist[hist.length - 1] !== line) hist.push(line); hi = hist.length; shAppend(`> ${line}\n`);
+    if (line === 'clear' || line === 'cls') { $('#sh-out').textContent = ''; return; }
+    const r = await api().shRun(line); if (r && r.ok === false) shAppend(`✗ ${r.error}\n`); else shState(true);
+  }
+  function wireConsole() {
+    $('#btn-console').addEventListener('click', () => { const p = $('#console'); p.hidden = !p.hidden; if (!p.hidden) $('#sh-in').focus(); });
+    $('#sh-close').addEventListener('click', () => { $('#console').hidden = true; });
+    $('#sh-stop').addEventListener('click', () => api().shCancel());
+    $('#sh-form').addEventListener('submit', (e) => { e.preventDefault(); const i = $('#sh-in'); const v = i.value; i.value = ''; shRun(v); });
+    $('#sh-in').addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' && hist.length) { e.preventDefault(); hi = Math.max(0, hi - 1); e.target.value = hist[hi] || ''; }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); hi = Math.min(hist.length, hi + 1); e.target.value = hist[hi] || ''; }
+      else if (e.key === 'c' && e.ctrlKey && shRunning) { e.preventDefault(); api().shCancel(); }
+    });
+  }
   function wire() {
+    wireConsole();
     const pol = $('#policy'); if (pol) pol.addEventListener('change', async () => { const r = await api().setSetting('update.policy', pol.value); if (r && r.ok === false) banner('err', r.error); else banner('ok', `Update policy: ${pol.value}.`); await refresh(); });
     $('#btn-import').addEventListener('click', async () => { const r = await api().pickZip(); if (r && r.path) await importPath(r.path); });
     $('#btn-logs-close').addEventListener('click', () => { openLogs = null; $('#logs-panel').hidden = true; });
@@ -77,9 +98,9 @@
     document.addEventListener('dragenter', (e) => { e.preventDefault(); depth++; show(true); }); document.addEventListener('dragover', (e) => e.preventDefault());
     document.addEventListener('dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) show(false); });
     document.addEventListener('drop', async (e) => { e.preventDefault(); depth = 0; show(false); for (const f of Array.from((e.dataTransfer && e.dataTransfer.files) || [])) { const p = api().pathFor(f); if (/\.zip$/i.test(p || f.name || '')) await importPath(p); else banner('err', `${f.name} is not a .zip`); } });
-    if (api().onEvent) api().onEvent((ev) => { if (ev.type === 'policy' && ev.action !== 'none') { policyBanner({ project: ev.project, version: ev.version, verified: true }, ev); refresh(); } else if (ev.type === 'settings') refresh(); });
+    if (api().onEvent) api().onEvent((ev) => { if (ev.type === 'sh.data') shAppend(ev.text); else if (ev.type === 'sh.exit') shState(false); else if (ev.type === 'policy' && ev.action !== 'none') { policyBanner({ project: ev.project, version: ev.version, verified: true }, ev); refresh(); } else if (ev.type === 'settings') refresh(); });
     setInterval(refresh, 4000);
   }
-  window.COSUI = { refresh, importPath, banner, showLogs, get state() { return state; } };
+  window.COSUI = { shRun, refresh, importPath, banner, showLogs, get state() { return state; } };
   wire(); refresh();
 })();

@@ -104,4 +104,4 @@ async function status(root, project) {
 }
 function logs(root, project, { lines = 50 } = {}) { const r = readRun(root, project); let f = r && r.log; if (!f) { try { const d = paths(root, project).logs; const n = fs.readdirSync(d).filter(x => /\.log$/.test(x)).sort().pop(); f = n && path.join(d, n); } catch (_) {} } return f ? { file: f, text: tail(f, lines) } : { file: null, text: '' }; }
 
-module.exports = { MODULE_ID, DEFAULTS, defaultModulesDir, preflight, portsBusy, start, stop, status, logs, readRun };
+module.exports = { MODULE_ID, DEFAULTS, defaultModulesDir, preflight, portsBusy, start, stop, status, logs, readRun, killTree: _killTree };
