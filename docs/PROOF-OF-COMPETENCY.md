@@ -246,3 +246,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     the bookkeeping sweep, and the address he asked for now answers both failures: class churn (found by role and name)
     and wrong picks (refused by role).
   - **Evidence:** `tests/modules/test-semantic-field-map.test.js` (5/5); `CHANGELOG-0.60.70.md`.
+- **2026-10-16: "its needs to use the guardian picker so i can traverse through the elements one at a time."**
+  - **Context:** the provider panel's picks took whatever was under the cursor. On chat pages that is often the wrong
+    layer (the placeholder inside the input, the icon inside the button); his own run once saved a placeholder as the
+    send button. Nexus already had a picker with traversal, used elsewhere.
+  - **What it shows:** reuse over rebuild, and judging a tool by use. He saw the problem was the interaction, not the
+    checks, and pointed at the component that already solved it. The panel now uses that picker; nothing was rewritten.
+  - **Evidence:** `tests/modules/test-guardian-field-pick.test.js` (5/5); `CHANGELOG-0.60.71.md`.
+
