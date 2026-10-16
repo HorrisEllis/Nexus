@@ -228,3 +228,18 @@ addendum_e:
     - "A release that downloads from Clear Glass is a stranger's zip: checksum and quarantine apply before install, same as a drop."
     - "Taskbar/tray behaviour differs on Windows: unverified here."
   question: "Is the update rule off / ask / auto with auto-switch only when idle, as I recommend? And do you want the Versionium record to also hold the release files (I advise no, for the reason above)?"
+
+# ## ADDENDUM 2026-10-16 (later) — the first Windows build failed; root cause fixed (0.60.96)
+# James (2026-10-16): "okay the cos windows app?"
+# Found: the cos-app workflow ran once, when PR #94 merged (run 38887590255, windows-latest), and failed in 50 s. Its log says
+# "COS undefined", then electron-builder: "Please specify 'version' in the package.json". Root cause: cos/app/version.js was 0 bytes
+# on main. It was written at 0.60.89 (398 bytes, version 0.1.0) and emptied at 0.60.90 by a bad write (a pure 4-line deletion, the
+# same failure that branch had already hit on package.json). No other tracked file in the repo is empty where history had content
+# (checked). The tests passed throughout because none read the version.
+# Fixed: the file restored as written (0.1.0, never published: no cos-v tag exists). scripts/build-cos-app.js refuses a missing
+# version and names the file. The workflow's first step fails with that message. test-cos-app-build BD-07/BD-08.
+# Still unverified, as the map always said: the Windows exe itself, the tray, the file dialog, drag-drop paths. The next run on
+# windows-latest is the first that can say.
+# Open: COSA0 decisions (shell, signing, update source: built as the coder recommended, Electron + unsigned + GitHub releases,
+# but never chosen by him), COSA5 data root, COSA8, COSA9, COSA10_compartment_window, COSA11, COSA13 (partial), COSA14.
+

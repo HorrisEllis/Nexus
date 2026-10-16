@@ -107,7 +107,7 @@ spec:
         - "[A] a proposal engine: read the architecture, propose a migration as phases, apply each as staged injects with a snapshot before and tests after; nothing moves without his yes  ← recommended"
         - "[B] an automatic rewriter that reorganizes a repo in one pass"
         - "[C] report only (what is wrong with the architecture), no changes"
-      chosen: open
+      chosen: "A — the proposal engine (2026-10-16). James delegated the pick: \"pickest the highest leverage, structural change. axioms in the docs are law\". The coder chose under the axioms: §0.3 (B overwrites; A stages each move with a snapshot), §3.3 (A is a map before it moves anything), §0.4 (each A phase is undoable, so options grow), USER_AUTONOMY (nothing moves without his yes); C fails his own ask (\"fix or migrate\"). The refactor tool runs through the agent work funnel (docs/2026-10-16-agent-work-funnel-phasemap.spec)."
 
   phases:
     NT0_notes:

@@ -100,6 +100,9 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     const sent = prompts[prompts.length - 1];
     const msg = JSON.stringify(sent);
     assert.ok(/THE LINES 2-2/.test(msg) && /FROM JAMES: two is two/.test(msg), msg.slice(0, 300));
+    // §FN1 0.60.95 — the funnel ran first: the agent is told where the work sits (dependencies at least), and the answer comes back
+    assert.ok(/WHERE THIS WORK SITS/.test(msg) && /1 dependencies/.test(msg), 'the funnel context rode to the agent');
+    assert.ok(r.json.funnel && r.json.funnel.enters && r.json.funnel.dependencies.files.some(f => f.path === 'src/a.js'), JSON.stringify(r.json.funnel).slice(0, 300));
     const n = RI.get(r.json.inject.uuid);
     assert.strictEqual(n.content, read('src/a.js').replace('const two = 0;', 'const two = 2;\nconst three = 3;'), 'only line 2 replaced; the file keeps its own ending');
     assert.strictEqual(n.source.action, 'fix');
@@ -109,6 +112,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.deepStrictEqual([r.json.ok, /no code block/.test(r.json.error)], [false, true]);
     r = await quiet(() => api._route('POST', `/api/repos/${u}/code/assist`, { path: 'src/a.js', from: 1, to: 3, action: 'explain' }));
     assert.deepStrictEqual([r.json.ok, r.json.reply, r.json.inject], [true, REPLY, undefined]);
+    assert.strictEqual(r.json.funnel, null, 'a question is answered directly, not funnelled');
     assert.strictEqual((await api._route('POST', `/api/repos/${u}/code/assist`, { path: 'src/a.js', from: 2, to: 2, action: 'dance' })).status, 400);
     assert.strictEqual((await api._route('POST', `/api/repos/${u}/code/assist`, { path: 'src/a.js', from: 9, to: 2, action: 'fix' })).status, 400);
   });

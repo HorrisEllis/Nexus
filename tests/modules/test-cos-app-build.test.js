@@ -24,5 +24,15 @@ t('BD-05 the CLI refuses to build an exe off Windows without the override, and s
 t('BD-06 the workflow builds on windows, only publishes an untagged version, ships SHA256SUMS', () => {
   const w = fs.readFileSync(path.join(ROOT, '.github/workflows/cos-app.yml'), 'utf8'); assert.match(w, /runs-on: windows-latest/); assert.match(w, /tagged == 'no'/); assert.match(w, /SHA256SUMS/); assert.match(w, /cos-v/);
 });
+// 0.60.96 — the first real Windows build (run 38887590255) failed: cos/app/version.js was 0 bytes (emptied at 0.60.90 by a bad write), so the staged
+// package.json had no version and electron-builder refused it. These fail on that before CI does.
+t('BD-07 cos/app/version.js exports a version, and the staged package.json carries it', () => {
+  const v = require('../../cos/app/version.js').version; assert.match(String(v), /^\d+\.\d+\.\d+/); assert.strictEqual(s.pkg.version, v); assert.strictEqual(s.version, v);
+});
+t('BD-08 staging refuses an empty version and says which file', () => {
+  const fake = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-nov-')); fs.mkdirSync(path.join(fake, 'cos/app'), { recursive: true });
+  fs.writeFileSync(path.join(fake, 'package.json'), fs.readFileSync(path.join(ROOT, 'package.json'))); fs.writeFileSync(path.join(fake, 'cos/app/version.js'), '');
+  assert.throws(() => B.stage({ out: path.join(fake, 'st'), root: fake }), /cos\/app\/version\.js gives no version/); fs.rmSync(fake, { recursive: true, force: true });
+});
 fs.rmSync(out, { recursive: true, force: true });
 console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);

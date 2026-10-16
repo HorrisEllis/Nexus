@@ -305,3 +305,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **Evidence:** `tests/modules/test-code-tab-merge.test.js` (7/7, six driven in Clear Glass);
     `docs/2026-10-15-code-tab-run-state-phasemap.spec` addenda (b) and (c); `CHANGELOG-0.60.81.md`,
     `CHANGELOG-0.60.82.md`.
+- **2026-10-16: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk."**
+  - **Context:** the pipeline had all four pieces, but only phase builds used them, and not in that order. A request
+    from the Agent tab, copilot or RAID's officiator went straight to an agent.
+  - **What it shows:** systems design by invariant. He fixed the order of operations for every agent, not for one
+    feature. It is the same rule the project holds its own coder to (map before build), applied to the machine. He also
+    corrected the record when his metaphor ("brick") risked becoming a second node type ("When I said brick I was using
+    a metaphor").
+  - **Evidence:** `lib/work-funnel.js`; `tests/modules/test-work-funnel.test.js` (8/8); `docs/2026-10-16-agent-work-funnel-phasemap.spec`; `CHANGELOG-0.60.94.md`.

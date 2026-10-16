@@ -623,6 +623,16 @@ function _toolsBrief(r) {
 // 0.60.27 AG1a — every row, unmerged: _phaseRuns keeps one row per run (its latest state), and a count of agent calls
 // needs each call's own row (lib/phase-cost.js)
 function _phaseRows(repoUuid) { return loadTable('idearium_phase_runs').filter(r => r && r.repoUuid === repoUuid); }
+// §FN0/FN1 — the agent work funnel for a request in a repo: its own tree and maps (Nexus: the live tree and every phasemap)
+async function _funnelFor(repo, dir, request, intent = null) {
+  const PH = await import('../repo/phases.js');
+  const { maps, scope } = PH.mapsFor({ repo, repoDir: dir });
+  const NSx = _require('../../lib/nexus-self/systems.js'), AM = _require('../../lib/phase-map-auto.js'), WF = _require('../../lib/work-funnel.js');
+  const root = scope.source === 'nexus' ? NSx.ROOT : dir;
+  const f = WF.funnel({ request, intent, root, maps, specsOf: scope.source === 'nexus' ? AM.specsOfNexus(NSx.ROOT) : null });
+  return { scope: scope.label, ...f, lines: WF.lines(f) };
+}
+
 function _phaseRuns(repoUuid) {
   const by = new Map();
   for (const r of loadTable('idearium_phase_runs')) {
@@ -2623,6 +2633,7 @@ const ROUTE_CAP = {
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
+  'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'raid.held': CAPS.READ_IDEAS, 'raid.held.unpark': CAPS.WRITE_IDEAS,   // §0.60.78 RT1
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
@@ -2970,6 +2981,7 @@ function matchRoute(method, url) {
     // §0.39.271 S1 — the living model: the repo's spec/ .spec files, parsed (?path= one file)
     ['GET',    ['api','repos',    ':uuid','living-spec'],           'repo.living-spec'],
     ['GET',    ['api','repos',    ':uuid','phases'],                'repo.phases.get'],
+    ['POST',   ['api','repos',    ':uuid','funnel'],                'repo.funnel'],   // §FN0 { request, intent? } → dependencies, spec, phase, chunks (no model)
     ['GET',    ['api','repos',    ':uuid','thread'],                'repo.thread'],   // §RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
@@ -4781,6 +4793,12 @@ async function handle(req, res, route, query, body) {
         if (out.status !== 200) return err(res, out.status, out.error, out.failed ? { failed: out.failed } : null);
         return ok(res, { ok: true, path: rel, ...out });
       }
+      // §FN1 0.60.95 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." This door
+      // runs the funnel first: its answers ride to the agent as context and come back with the reply. Not a block yet: a
+      // missing spec or phase is said, and making it first is FN2.
+      let fnl = null;
+      if (String(body.action || '') !== 'explain') { try { const dirF = _repoDiskDir(params.uuid); if (dirF) fnl = await _funnelFor(repo, dirF, `${body.action || 'change'} ${rel}${body.note ? `: ${String(body.note).slice(0, 400)}` : ''}`, 'change'); } catch (e) { fnl = { error: e.message }; } }
+      const fnlBlock = fnl && !fnl.error ? `WHERE THIS WORK SITS (Nexus mapped it; context only, do not repeat):\n${fnl.lines.filter(l => !/^intent /.test(l)).map(l => l.slice(0, 300)).join('\n')}` : null;
       const ACTIONS = { change: 'Change these lines as the instructions say.', expand: 'Expand these lines: add what they are missing for their purpose.', refactor: 'Refactor these lines: the same behaviour, a better structure.', fix: 'Find the real fault in these lines and fix it.', document: 'Add or correct the comments for these lines; no behaviour change.', explain: 'Explain what these lines do and how they connect. Do not change them.' };
       const act = ACTIONS[body.action] ? body.action : null;
       if (!act) return err(res, 400, `action is one of ${Object.keys(ACTIONS).join(', ')}`);
@@ -4791,6 +4809,7 @@ async function handle(req, res, route, query, body) {
       const range = lines.slice(from - 1, to).join('\n');
       const message = [`${ACTIONS[act]}`, body.note ? `FROM JAMES: ${String(body.note).slice(0, 2000)}` : null,
         `File: ${rel} (${total} lines). The lines to work on are ${from}-${to}.`,
+        fnlBlock,
         before ? `Before them (context only, do not repeat):\n${before}` : null, `THE LINES ${from}-${to}:\n${num(from, to)}`, after ? `After them (context only, do not repeat):\n${after}` : null,
         act === 'explain' ? 'Answer in prose.' : `Reply with ONE fenced code block holding ONLY the new text that replaces lines ${from}-${to} (no line numbers, no file path, nothing outside the range). Write the whole replacement; it may be more or fewer lines.`,
       ].filter(Boolean).join('\n\n');
@@ -4801,13 +4820,13 @@ async function handle(req, res, route, query, body) {
       const r = await WR.wrap(() => RA.dispatch({ repo, repoDir: rd0, message, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, model: body.model || null, noContext: true, layer: null, session: `assist-${rel}` }), { kind: 'code-range-edit', provider: body.provider || body.agent || body.model || body.backend || null, key: `${params.uuid}\n${message}`, mode: 'gate' });
       const reply = String((r && (r.text || r.reply)) || '');
       const who = (r && (r.providerUsed || r.provider)) || null;
-      if (!r || r.ok === false) return ok(res, { ok: false, error: (r && r.error) || 'no answer', provider: who });
-      if (act === 'explain') return ok(res, { ok: true, action: act, path: rel, from, to, reply, provider: who });
+      if (!r || r.ok === false) return ok(res, { ok: false, error: (r && r.error) || 'no answer', provider: who, funnel: fnl });
+      if (act === 'explain') return ok(res, { ok: true, action: act, path: rel, from, to, reply, provider: who, funnel: fnl });
       const m = /```[^\n]*\n([\s\S]*?)```/.exec(reply);
-      if (!m) return ok(res, { ok: false, error: 'the reply had no code block — nothing proposed', reply: reply.slice(0, 2000), provider: who });
+      if (!m) return ok(res, { ok: false, error: 'the reply had no code block — nothing proposed', reply: reply.slice(0, 2000), provider: who, funnel: fnl });
       const out = propose([{ anchor: { startLine: from, endLine: to }, expect: range, replacement: m[1].replace(/\n$/, '') }], { action: act, by: who || 'agent', provider: who, note: body.note ? String(body.note).slice(0, 300) : null });
-      if (out.status !== 200) return ok(res, { ok: false, error: out.error, reply: reply.slice(0, 2000), provider: who });
-      return ok(res, { ok: true, action: act, path: rel, from, to, provider: who, ...out });
+      if (out.status !== 200) return ok(res, { ok: false, error: out.error, reply: reply.slice(0, 2000), provider: who, funnel: fnl });
+      return ok(res, { ok: true, action: act, path: rel, from, to, provider: who, funnel: fnl, ...out });
     }
     // §CV3 0.60.81 — James: "rewind engine for each file." A file rewinds through repo.versions.restoreFile; a RUN rewinds
     // here: every file the run changed (lib/run-state.js filesChanged, plus files named in the body) goes back to how it was at
@@ -7706,6 +7725,17 @@ async function handle(req, res, route, query, body) {
       const into = body.into != null ? String(body.into) : (getIdeariumValue('specs.compile_into') || '');
       const r = await SC.compileToProposals({ layer: getRepoLayer(), repo, specPath: rel, content: f.content, into, template: body.template || null });   // 0.60.68 — genesis unless named
       return r.ok ? ok(res, r) : err(res, 422, r.error);
+    }
+    // §FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." The four answers
+    // for a request, in his order, from this repo's own tree and maps (lib/work-funnel.js); read only, no model.
+    case 'repo.funnel': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body || !String(body.request || '').trim()) return err(res, 400, 'request is required');
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      const f = await _funnelFor(repo, dir, String(body.request), body.intent || null);
+      return ok(res, { repoUuid: params.uuid, ...f });
     }
     case 'repo.phases.get': {
       const repo = getRepoLayer().get(params.uuid);

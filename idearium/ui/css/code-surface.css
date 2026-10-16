@@ -134,3 +134,11 @@
 .cx-resp-q{color:var(--text3);margin-top:2px;white-space:pre-wrap}
 .cx-resp-a{color:var(--text);margin-top:2px;white-space:pre-wrap}
 .cx-note{padding-bottom:6px}
+/* §FN4 0.60.95 — the work panel: dependencies → spec → phase → chunks, in his order */
+.cx-work{display:flex;flex-direction:column;gap:6px;font-size:11px}
+.cx-work-step{display:grid;grid-template-columns:18px 92px 1fr;gap:6px;align-items:baseline}
+.cx-work-step code{font-size:10px}
+.cx-work-n{color:var(--mint);font-family:var(--mono);font-weight:600}
+.cx-work-off{opacity:.45}
+.cx-work-stop{margin-top:4px}
+

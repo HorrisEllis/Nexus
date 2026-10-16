@@ -434,3 +434,9 @@ not_verified:
 #   test-loom-phasemap 7/7, test-loom-phasemap-status 14/14.
 # - Pre-existing and unchanged: moce-roadmap's 3 failures, EC-05, and the stale probes repo-drawer-views-glass and
 #   repo-tasks-drawer-glass (all fail the same way without these changes).
+
+# ## ADDENDUM 2026-10-16 (d) — CE11's context half arrives through the agent work funnel (0.60.95)
+# James: "code tab?" The work panel (FN4 of docs/2026-10-16-agent-work-funnel-phasemap.spec) shows the open file's dependencies,
+# spec, phase and chunks; the range edit gives them to the agent first. CE11's contract half (CP1) stays open; the contract trace
+# (0.60.75) is in the Plan panel.
+
