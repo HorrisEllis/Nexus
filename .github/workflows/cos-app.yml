@@ -1,0 +1,68 @@
+# .github/workflows/cos-app.yml — COSA6 (0.60.68): the COS Windows application, built on Windows.
+# James (2026-10-16): "cos app for windows"
+#
+# COS is the small outer shell that runs and switches Nexus; it changes rarely and has its own version (cos/app/version.js), separate from Nexus's.
+# When that version changes on main, and on demand: stage and build the exe on a Windows runner (a Windows exe is not built from Linux under wine),
+# publish release cos-v<version> once, with the portable exe, the installer and a SHA256SUMS file. A version already tagged is left alone.
+# The exe is UNSIGNED: Windows SmartScreen will say "unrecognized app" once per download (More info -> Run anyway). Check the SHA256SUMS line if you want to be sure.
+name: cos-app
+
+on:
+  push:
+    branches: [main]
+    paths: ['cos/app/version.js']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cos-app
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: The COS app version
+        id: v
+        shell: bash
+        run: |
+          V=$(node -p "require('./cos/app/version.js').version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/cos-v$V" >/dev/null; then echo "tagged=yes" >> "$GITHUB_OUTPUT"; else echo "tagged=no" >> "$GITHUB_OUTPUT"; fi
+          echo "COS $V"
+
+      - name: Stage and build (portable exe and installer)
+        if: steps.v.outputs.tagged == 'no'
+        shell: bash
+        run: node scripts/build-cos-app.js
+
+      - name: Checksums
+        if: steps.v.outputs.tagged == 'no'
+        shell: bash
+        working-directory: dist/cos-app-stage/out
+        run: sha256sum COS-*.exe > SHA256SUMS && cat SHA256SUMS
+
+      - name: Publish the release
+        if: steps.v.outputs.tagged == 'no'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          V: ${{ steps.v.outputs.version }}
+        run: |
+          gh release create "cos-v$V" dist/cos-app-stage/out/COS-*.exe dist/cos-app-stage/out/SHA256SUMS --title "COS $V (Windows)" --target "$GITHUB_SHA" \
+            --notes "COS $V for Windows. Unsigned: SmartScreen shows 'unrecognized app' once (More info, Run anyway). Verify with SHA256SUMS. Portable exe: no install. Drop a Nexus release zip on the window, or into the inbox folder."
+
+      - name: Already released
+        if: steps.v.outputs.tagged == 'yes'
+        shell: bash
+        run: echo "cos-v${{ steps.v.outputs.version }} is already tagged — nothing to publish"

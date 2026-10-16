@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COS</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><span class="logo">COS</span><span class="sub" id="root"></span></div>
+  <div class="actions"><button id="btn-import" class="primary">Import a release zip…</button></div>
+</header>
+<div id="banners" aria-live="polite"></div>
+<main id="projects"></main>
+<section id="empty" hidden>
+  <h2>No projects yet</h2>
+  <p>Drop a release zip anywhere on this window, or press <b>Import a release zip…</b>. Zips you save into the inbox folder are picked up on their own:</p>
+  <p class="path" id="inbox-path"></p>
+</section>
+<section id="logs-panel" hidden>
+  <div class="logs-head"><b id="logs-title">Log</b><span class="grow"></span><button id="btn-logs-close">Close</button></div>
+  <pre id="logs"></pre>
+</section>
+<div id="drop" hidden><div>Drop the release zip to install it</div></div>
+<script src="app.js"></script>
+</body>
+</html>

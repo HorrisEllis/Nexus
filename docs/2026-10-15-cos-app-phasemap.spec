@@ -86,7 +86,8 @@ phases:
     status: OPEN
     does: "lib/data-root.js, one honoured NEXUS_DATA_ROOT, replacing the 37 hardcoded data paths. Until done, COSA1's junction carries it. Test: a grep-based check that no module computes its own data folder."
   COSA6_the_exe:
-    status: OPEN
+    status: BUILT-0.60.68
+    built_note: "cos/app/controller.js, cos/app/desktop/*, scripts/build-cos-app.js, .github/workflows/cos-app.yml; UI-01..11, CT-01..05, BD-01..06. UNVERIFIED: the Windows build itself, tray, file dialog, drag-drop paths, junctions, taskkill. Unsigned exe (SmartScreen warns once). Clear Glass is not started by COS."
     depends_on: [COSA1_version_store_and_import]
     does: "Electron shell (tray, project list, versions, logs, Start/Stop/Switch/Rollback) built by a GitHub Actions Windows job with electron-builder (portable and installer), attached to the release with SHA256SUMS. Screens come after the CLI, per his order."
   COSA7_clear_glass_delivers:
