@@ -100,6 +100,14 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-16: "expand it."** (the flight recorder, just branched out of Nexus)
+  - **Context:** he had a 217-file copy of the product and a claim that it was tangled into the rest of Nexus.
+  - **What it shows:** pushing past "it's copied" to "does it work alone". The answer is now measured, not guessed:
+    168 files, 8 systems, and every one of its own files loads in an empty folder. The first attempt failed that check,
+    on a data folder no require mentions; the check is why it was found.
+  - **Evidence:** `CHANGELOG-0.60.113.md`; `docs/2026-10-16-repo-carve-phasemap.spec` (CV2, FR1-FR5);
+    `tests/modules/test-repo-carve.test.js` CV-09..12.
+
 - **2026-10-16: "look at rfr2. versionium. event ledgers. causal graph. cos test env. its a product?"** · then: "can you branch it into a idearium repo?"
   - **Context:** months of separate systems (a version store, a causal toolkit, ledgers, a VM test environment). He
     looked across them and asked whether together they are something people would pay for.

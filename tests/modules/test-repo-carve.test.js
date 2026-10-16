@@ -8,6 +8,7 @@
  *   CV-05..06  POST /api/repos/carve through the real router: dry run, then a real repo with its files, CARVED.json and notes
  *   CV-07      the command row
  *   CV-08      the UI (projects.js) driven in Clear Glass against a stubbed api(); no engine → SKIPPED, said
+ *   CV-09..12  0.60.113 CV2: how each link loads, the tangle, the cut, the load check (verify), the preset through the route
  */
 require('../../lib/test-sandbox.js').ensure();
 const fs = require('fs');
@@ -116,12 +117,84 @@ put('lib/unrelated.js', 'module.exports = 2;\n');
     assert.ok(list.some(n => n.kind === 'decision' && /to confirm/.test(n.body)));
   });
 
+  // §CV2 0.60.113 — how each link loads, the tangle, the cut, the load check
+  const t2 = fs.mkdtempSync(path.join(os.tmpdir(), 'carve-kinds-'));
+  const put2 = (rel, text) => { fs.mkdirSync(path.dirname(path.join(t2, rel)), { recursive: true }); fs.writeFileSync(path.join(t2, rel), text); };
+  put2('core/a.js', [
+    "const top = require('../dep/top.js');",
+    "function later() { return require('../dep/lazy.js'); }",
+    "let opt = null; try { opt = require('../dep/opt.js'); } catch (_) {}",
+    "try {",
+    "  const deep = require('../dep/opt2.js');",
+    "} catch (_) {}",
+    "const path = require('path');",
+    "const SCHEMAS = path.join(__dirname, 'schemas');",
+    "const STATE = path.join(__dirname, '..', 'data', 'x');",
+    "module.exports = { top, later, opt };"].join('\n'));
+  put2('core/schemas/schema.one', 'x');
+  put2('core/schemas/schema.two', 'y');
+  put2('dep/top.js', "module.exports = require('./big1.js');");
+  put2('dep/big1.js', "module.exports = require('./big2.js');");
+  put2('dep/big2.js', 'module.exports = 1;');
+  put2('dep/lazy.js', 'module.exports = 2;');
+  put2('dep/opt.js', "module.exports = require('./top.js');");
+  put2('dep/opt2.js', 'module.exports = 4;');
+  put2('data/x/state.json', '{}');
+
+  await test('CV-09', 'each link says how it loads (load, lazy, optional, asset); the tangle counts the files behind each link', async () => {
+    const p = CV.plan({ root: t2, seeds: ['core/a.js'] });
+    const kinds = Object.fromEntries(p.tangle.map(t => [t.to, [t.kind, t.files]]));
+    assert.deepStrictEqual(kinds['dep/top.js'], ['load', 3], 'top.js brings big1 and big2');
+    assert.deepStrictEqual(kinds['dep/lazy.js'], ['lazy', 1]);
+    assert.deepStrictEqual(kinds['dep/opt.js'], ['optional', 1]);
+    assert.deepStrictEqual(kinds['dep/opt2.js'], ['optional', 1], 'a require inside a try block over several lines');
+    assert.deepStrictEqual(kinds['core/schemas/schema.one'], ['asset', 1], 'data read beside the file comes along');
+    assert.ok(!p.files.some(f => f.path.startsWith('data/')), 'state under data/ is never carried');
+  });
+
+  await test('CV-10', 'cut: optional links are left out and listed; a file another link still needs stays (and is not listed)', async () => {
+    const p = CV.plan({ root: t2, seeds: ['core/a.js'], cut: ['optional'] });
+    const paths = p.files.map(f => f.path);
+    assert.ok(!paths.includes('dep/opt.js') && !paths.includes('dep/opt2.js'));
+    assert.ok(paths.includes('dep/top.js') && paths.includes('dep/lazy.js'));
+    assert.deepStrictEqual(p.leftOut.map(e => e.to).sort(), ['dep/opt.js', 'dep/opt2.js']);
+    const q = CV.plan({ root: t2, seeds: ['core/a.js'], cut: ['optional', 'lazy'] });
+    assert.ok(!q.files.some(f => f.path === 'dep/lazy.js'));
+    assert.deepStrictEqual(CV.plan({ root: t2, seeds: ['core/a.js'], cut: ['load'] }).cut, [], 'a load link is never cut');
+  });
+
+  await test('CV-11', 'verify: the carve loads alone in an empty folder; a missing package fails, named; a server is skipped, said', async () => {
+    const good = CV.verify(CV.plan({ root: t2, seeds: ['core/a.js'], cut: ['optional'] }), { root: t2 });
+    assert.deepStrictEqual([good.ok, good.loaded, good.of], [true, 1, 1], JSON.stringify(good));
+    put2('core/b.js', "require('no-such-package-xyz');\nmodule.exports = 1;");
+    put2('core/server.js', "require('http').createServer().listen(0);");
+    const bad = CV.verify(CV.plan({ root: t2, seeds: ['core'] }), { root: t2 });
+    assert.strictEqual(bad.ok, false);
+    assert.deepStrictEqual(bad.failed.map(f => f.path), ['core/b.js']);
+    assert.match(bad.failed[0].error, /no-such-package-xyz/);
+    assert.deepStrictEqual(bad.skipped.map(f => f.path), ['core/server.js']);
+  });
+
+  await test('CV-12', 'the preset carries its cut and loads alone; the route says so, and a made repo records it', async () => {
+    assert.deepStrictEqual(CV.PRESETS.flight_recorder.cut, ['optional']);
+    const r = await api._route('POST', '/api/repos/carve', { preset: 'flight_recorder', dryRun: true, verify: true });
+    const d = r.json.data || r.json;
+    assert.deepStrictEqual(d.cut, ['optional']);
+    assert.ok(d.verified && d.verified.ok, JSON.stringify(d.verified));
+    assert.ok(d.tangle.length && d.tangle[0].files >= d.tangle[d.tangle.length - 1].files, 'the tangle is ranked');
+    const full = (await api._route('POST', '/api/repos/carve', { preset: 'flight_recorder', dryRun: true, cut: [] })).json;
+    assert.ok((full.data || full).files > d.files, 'keeping every link carries more');
+  });
+  fs.rmSync(t2, { recursive: true, force: true });
+
   await test('CV-07', 'the command: repo carve, with --preset and --dry-run', async () => {
     const rc = require(path.join(ROOT, 'idearium/cli/route-commands.js'));
     const row = (rc.SPEC || rc.ROWS || rc).find ? (rc.SPEC || rc.ROWS || rc).find(x => x.key === 'repo.carve') : null;
     assert.ok(row, 'the row exists');
     const q = row.req({ args: [], flags: { preset: 'flight_recorder', 'dry-run': true } });
     assert.deepStrictEqual(q, { method: 'POST', path: '/api/repos/carve', body: { preset: 'flight_recorder', dryRun: true } });
+    assert.deepStrictEqual(row.req({ args: [], flags: { preset: 'flight_recorder', cut: 'optional,lazy', verify: true } }).body.cut, ['optional', 'lazy']);
+    assert.deepStrictEqual(row.req({ args: [], flags: { preset: 'flight_recorder', cut: 'none' } }).body.cut, []);
     assert.deepStrictEqual(row.req({ args: ['x', 'lib/zip.js', 'versionium'], flags: {} }).body, { name: 'x', seeds: ['lib/zip.js', 'versionium'], dryRun: false });
     assert.ok(row.need({ args: ['x'], flags: {} }));
   });
@@ -146,7 +219,8 @@ put('lib/unrelated.js', 'module.exports = 2;\n');
     if (p === '/api/raid/held') return { agents: null, drops: [] };
     if (p === '/api/repos/carve') return { dryRun: !!body.dryRun, name: body.name, files: 261, seeded: 63, pulledIn: 198, lines: 57975, bySystem: { cos: 68, loom: 13 },
       npm: { 'js-yaml': '^5' }, npmNamedOnly: ['commander'], missing: [{ from: 'a.js', spec: './gone' }], outsideSeeds: [{ path: 'loom/x.js', pulledBy: 'versionium/y.js' }],
-      parent: { name: 'nexus' }, ...(body.dryRun ? {} : { repo: { uuid: 'new-uuid' } }) };
+      parent: { name: 'nexus' }, cut: body.cut, leftOut: [{ from: 'a.js', to: 'b.js', kind: 'optional' }], tangle: [{ from: 'lib/repo-inject.js', to: 'guardian/x.js', files: 54, kind: 'lazy' }],
+      verified: { ok: true, loaded: 57, of: 57, failed: [], skipped: [{ path: 'versionium/server.js' }] }, ...(body.dryRun ? {} : { repo: { uuid: 'new-uuid' } }) };
     throw new Error('unexpected ' + p);
   }
 </script><script src="${pathToFileURL(path.join(ROOT, 'idearium/ui/js/projects.js')).href}"></script></body></html>`);
@@ -163,12 +237,14 @@ put('lib/unrelated.js', 'module.exports = 2;\n');
           await page.waitForFunction(() => /would carve/.test(document.getElementById('carve-out').textContent));
           const txt = await page.$eval('#carve-out', e => e.textContent);
           assert.ok(/261 files \(63 named, 198 pulled in\)/.test(txt) && /parent nexus/.test(txt) && /cos 68/.test(txt), txt);
+          assert.ok(/loads alone: 57\/57/.test(txt) && /left out: 1 optional link/.test(txt) && /54 via lib\/repo-inject\.js → guardian\/x\.js \(lazy\)/.test(txt), txt);
           assert.ok(/named only: commander/.test(txt) && /1 require\(s\) resolve to nothing/.test(txt) && /loom\/x\.js \(by versionium\/y\.js\)/.test(txt), txt);
           await page.click('button:has-text("Create repo")');
           await page.waitForSelector('#carve-out button');
           await page.click('#carve-out button');
           const st = await page.evaluate(() => ({ calls: CALLS.filter(c => c.p === '/api/repos/carve').map(c => c.body), opened: OPENED }));
-          assert.deepStrictEqual(st.calls, [{ preset: 'flight_recorder', name: 'flight-recorder', dryRun: true }, { preset: 'flight_recorder', name: 'flight-recorder', dryRun: false }]);
+          const want = (dryRun) => ({ preset: 'flight_recorder', name: 'flight-recorder', dryRun, cut: ['optional'], verify: true });
+          assert.deepStrictEqual(st.calls, [want(true), want(false)]);
           assert.deepStrictEqual(st.opened, ['new-uuid']);
           assert.deepStrictEqual(errors, []);
         });

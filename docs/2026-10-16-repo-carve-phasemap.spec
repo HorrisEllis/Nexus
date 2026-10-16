@@ -60,10 +60,72 @@ phases:
       paths, Preview (the counts and what came along), Create.
     proof: "test-repo-carve: a fixture tree's closure (pulled-by, npm, missing), the real preset's plan, a repo created through the real router with its parent and note, the command row, the UI"
   CV2_untangle_with_rf0:
-    status: OPEN
+    status: "PARTLY BUILT 0.60.113 — CV2a and CV2b built; CV2c (the edits) open"
     depends_on: [CV1_carve_backend_route_command_ui]
+    james: '"expand it."'
+    reading: >-
+      The coder's reading of "expand it" (to confirm): make the branched product real, not just copied. First the step that
+      tells how far it is from standing alone, then the product's own phases (FR1-FR5 below), mapped.
     does: >-
-      Feed the carve report to RF0: which requires drag loom/warp/guardian/emerge in, and which can be cut (optional
-      requires inside try/catch, comment-only mentions) so the product stands on its own. Then RF1/RF2 apply the cuts as
-      phases in the new repo, each one a version, tested in a COS test environment.
-    proof: "the carved repo's closure shrinks, its tests pass in a COS testenv, every step is a version in its Versionium tab"
+      CV2a — every link says how it loads: load (top of file: cannot load without it), lazy (inside a function: only when it
+      runs), optional (inside a try: the code already runs without it), asset (data read beside the file with
+      path.join(__dirname, ...), never cut; state under data/ is never carried). The tangle: each link from a named file to one
+      outside, ranked by how many files come in only through it. cut: ['optional'] leaves those links out and lists them;
+      'lazy' can be cut too, said as a risk (a function that uses it would throw). The flight_recorder preset carries
+      cut: ['optional'].
+      CV2b — verify: the carve written to an empty folder (Nexus's node_modules linked, nothing else of Nexus reachable), one
+      child process loads every named file and says which threw and why; servers and CLIs are skipped by name. Creating a repo
+      always runs it and records it in CARVED.json, the README and the decision note. Loading is not running: it proves the
+      requires are all there, not that the code works.
+      CV2c (open) — the edits in the carved repo itself, as RF1/RF2 phases: the lazy guardian link (lib/repo-inject.js →
+      guardian/lib/code-artifact.js) and the other load links outside the product, each one a version, tested in a COS testenv.
+    measured_2026_10_16: >-
+      flight_recorder over Nexus 0.60.112: keep every link 326 files / 51,266 lines / 15 systems; optional cut 168 / 27,044 / 8;
+      optional+lazy 135 / 20,438 / 5. Every cut loads alone: 57/57 named files (versionium/server.js skipped). Two links had
+      carried 81 of the first 154 pulled-in files: lib/repo-inject.js → guardian/lib/code-artifact.js (54, lazy, written
+      `function _ca() { return require(...) }` on one line) and lib/diagnostic-causal.js → lib/gap-field.js (27, optional).
+    found_while_building:
+      - "the one-line lazy require read as load at first (any line at column 0); a require after an unclosed { on its own line is lazy"
+      - "intelligence/lib/domain-nodes.js → lib/node-schemas.js reads lib/node-schemas/ from disk: the first carve did not load alone until assets were carried"
+      - "a relative root made verify's node_modules link point at itself: roots are resolved first"
+    proof: "test-repo-carve CV-09..12 (kinds, tangle, cut, verify pass and fail, the preset through the route); the preset loads alone in every cut"
+
+  # The flight recorder as a product: the coder's reading of "its a product?", mapped, nothing built. Each phase reuses what
+  # already exists; none is a second system beside it (§8.6).
+  FR1_one_record_per_change:
+    status: MAPPED
+    depends_on: [CV2_untangle_with_rf0]
+    does: >-
+      One record per change an agent makes, joined from what is already written: the version before and after (Versionium,
+      lib/repo-history.js), the run and its gates (lib/run-state.js, cortex/core/raid/contract-trace.js — the trace already
+      joins the contract log, checkpoints and the run ledger), the events (lib/activity-log), and the causal edges (versionium
+      causality, intelligence/rfr2/causality). Read as one story: what changed, who asked, why, what was checked.
+    proof: "one agent change on a fixture repo reads back as one record with its diff, its gates and its cause"
+  FR2_tested_before_it_lands:
+    status: MAPPED
+    depends_on: [FR1_one_record_per_change]
+    does: >-
+      lib/code-edit.js stage → the repo's tests in a COS test environment (cos/testenv: a process, or a throwaway VM) →
+      promote only when they pass; the result is part of the record. promote already rolls back all-or-nothing.
+    proof: "a change that breaks a test is staged, tested, refused, and the repo is unchanged; one that passes lands"
+  FR3_undo_any_change:
+    status: MAPPED
+    depends_on: [FR1_one_record_per_change]
+    does: >-
+      Undo from the record: the version before it, put back (Versionium restore, lib/repo-history.js), itself recorded as a
+      change. RFR2 clip/context replay the events up to that point (clip has no consumer yet: this would be the first).
+    proof: "three agent changes, the middle one undone, the other two kept, all three still in the history"
+  FR4_stands_alone:
+    status: MAPPED
+    depends_on: [CV2_untangle_with_rf0]
+    does: >-
+      The carved repo runs as its own thing: Versionium's server and one small API/CLI over FR1-FR3, its own package.json,
+      no Nexus checkout needed. CV2b already proves it loads; this proves it runs.
+    proof: "a fresh folder: npm install, start, record a change, undo it"
+  FR5_the_demo:
+    status: MAPPED
+    depends_on: [FR2_tested_before_it_lands, FR3_undo_any_change]
+    does: >-
+      RF2 (the refactor tool applied one phase at a time) on a messy real repo (MASTERMIND), recorded end to end: each step a
+      record, tested before it lands, any step undone. The thing to show someone.
+    proof: "the recording: diff, tests green, undo, in the Versionium tab"

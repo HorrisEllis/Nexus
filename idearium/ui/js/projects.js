@@ -89,6 +89,7 @@ function _carveOpen() {
       <select id="carve-preset" onchange="_carvePresetChanged()"><option value="flight_recorder">flight recorder (versionium, rfr2, causal, COS test env)</option><option value="">my own paths…</option></select>
       <input id="carve-name" placeholder="repo name" value="flight-recorder" style="width:160px">
       <input id="carve-seeds" placeholder="paths, e.g. versionium lib/zip.js" style="flex:1;min-width:200px;display:none">
+      <select id="carve-cut" title="links the code runs without can be left out; the Preview checks the copy still loads"><option value="optional">leave out optional links</option><option value="none">keep every link</option><option value="optional,lazy">also lazy links (risky)</option></select>
       <button class="tb-btn" onclick="_carveRun(true)">Preview</button>
       <button class="tb-btn" onclick="_carveRun(false)">Create repo</button>
     </div>
@@ -98,18 +99,25 @@ function _carvePresetChanged() {
   const own = !document.getElementById('carve-preset').value;
   document.getElementById('carve-seeds').style.display = own ? '' : 'none';
 }
+// §CV2 0.60.113 — the Preview also says how the copy is tangled (the biggest links, and how each loads), what was left out,
+// and whether the copy loads alone (lib/repo-carve.js verify)
 async function _carveRun(dryRun) {
   const out = document.getElementById('carve-out'); if (!out) return;
   const preset = document.getElementById('carve-preset').value, name = document.getElementById('carve-name').value.trim();
   const seeds = document.getElementById('carve-seeds').value.trim();
   out.textContent = dryRun ? 'reading what it requires…' : 'creating the repo…';
   try {
-    const d = await api('/api/repos/carve', { method: 'POST', body: JSON.stringify(preset ? { preset, name, dryRun } : { name, seeds, dryRun }) });
+    const cutSel = document.getElementById('carve-cut').value, cut = cutSel === 'none' ? [] : cutSel.split(',');
+    const d = await api('/api/repos/carve', { method: 'POST', body: JSON.stringify({ ...(preset ? { preset } : { seeds }), name, dryRun, cut, verify: true }) });
+    const v = d.verified;
     const sys = Object.entries(d.bySystem || {}).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join(' · ');
     out.innerHTML = `<div>${dryRun ? 'would carve' : 'carved'} <b>${escapeHtml(d.name)}</b>: ${d.files} files (${d.seeded} named, ${d.pulledIn} pulled in), ${d.lines} lines${d.parent ? ` · parent ${escapeHtml(d.parent.name)}` : ''}</div>
       <div>by system: ${escapeHtml(sys)}</div>
       <div>npm: ${escapeHtml(Object.keys(d.npm || {}).join(', ') || 'none')}${(d.npmNamedOnly || []).length ? ` · named only: ${escapeHtml(d.npmNamedOnly.join(', '))}` : ''}</div>
       ${(d.missing || []).length ? `<div style="color:var(--amber,#d90)">${d.missing.length} require(s) resolve to nothing: ${escapeHtml(d.missing.slice(0, 3).map(m => `${m.from} → ${m.spec}`).join('; '))}</div>` : ''}
+      ${v ? `<div style="color:${v.ok ? 'var(--mint)' : 'var(--amber,#d90)'}">${v.ok ? 'loads alone' : 'does NOT load alone'}: ${v.loaded}/${v.of} named files load in an empty folder${(v.failed || []).length ? ` · failed: ${escapeHtml(v.failed.map(f => `${f.path} (${f.error})`).join('; '))}` : ''}${(v.skipped || []).length ? ` · skipped ${escapeHtml(v.skipped.map(f => f.path).join(', '))}` : ''}</div>` : ''}
+      ${(d.cut || []).length ? `<div>left out: ${(d.leftOut || []).length} ${escapeHtml(d.cut.join('/'))} link(s) the code runs without</div>` : ''}
+      ${(d.tangle || []).length ? `<div style="color:var(--text3)">biggest links: ${escapeHtml(d.tangle.slice(0, 4).map(t => `${t.files} via ${t.from} → ${t.to} (${t.kind})`).join(' · '))}</div>` : ''}
       ${(d.outsideSeeds || []).length ? `<div style="color:var(--text3)">came along from outside the seeds: ${escapeHtml(d.outsideSeeds.slice(0, 6).map(f => `${f.path} (by ${f.pulledBy})`).join(', '))}${d.outsideSeeds.length > 6 ? ' …' : ''}</div>` : ''}
       ${!dryRun && d.repo && d.repo.uuid ? `<div><button class="tb-btn" onclick="_openProject('${escapeHtml(d.repo.uuid)}')">Open the repo</button></div>` : ''}`;
   } catch (e) { out.innerHTML = `<span style="color:var(--coral)">could not carve: ${escapeHtml(e.message)}</span>`; }
