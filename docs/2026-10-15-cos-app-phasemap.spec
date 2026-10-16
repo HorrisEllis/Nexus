@@ -60,7 +60,8 @@ decisions:
 
 phases:
   COSA1_version_store_and_import:
-    status: BUILT 0.60.66 (cos/app/store.js, cos/app/cli.js, tests/modules/test-cos-app-store.test.js CA-01..13). Windows junction UNVERIFIED (Linux symlinks proven). No `cos app` entry in the compartment CLI yet: node cos/app/cli.js
+    status: BUILT-0.60.66
+    built_note: "cos/app/store.js, cos/app/cli.js (node cos/app/cli.js import, inbox, list, status, remove), tests/modules/test-cos-app-store.test.js CA-01..13. Windows junction UNVERIFIED (Linux symlinks proven). No cos app entry in the compartment CLI yet."
     does: >-
       Layout under %LOCALAPPDATA%\COS\projects\<project>\: versions\<version>\, data\ (persistent), current, previous, state.json. Import a zip (file picker or drop into an Inbox folder that COS watches):
       read the VERSION file, verify the checksum when one is given, refuse path traversal and oversize, extract beside the others, junction data\ in. CLI first: cos app import|list|status.
