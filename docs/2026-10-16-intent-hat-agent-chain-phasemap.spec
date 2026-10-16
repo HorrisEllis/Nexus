@@ -107,3 +107,28 @@ not_verified:
 # James: "all data  is meant to persist. hardcoded has to earn its place..."
 # Read for IH1: the VERB_TO_HAT table in lib/intent-hat-router.js does not earn its place as the authority; it stays only as
 # the seed for the .intent nodes and the fallback when none exists. To confirm that the fallback earns its place.
+
+# ## ADDENDUM 2026-10-16 — every hat and repo agent physical; nothing only in the page or in memory (his rule; mapped, no code)
+# James (2026-10-16), after the agent work funnel was mapped: "What about .hats for the repo agents model. All physical. Like nothing
+# is supposed to be dom or lacking persistents besides temporary files."
+# His rule, recorded as his: every hat and every repo agent's model is a physical node file. Nothing lives only in the DOM or in
+# memory, and nothing lacks persistence, except temporary files.
+# Read in code, 2026-10-16:
+#   hats: JAA table forged_hats (lib/hat-forge.js:25, insert :573). A .hat file is written only by exportHat (:610), on request.
+#   what a hat learned (observations) + its exchange log: JAA; in a .repo_agent bundle only on export (lib/repo-agent-node.js).
+#   a repo agent's settings (provider, ollamaModel, toolScope, injectMode): JAA table repo_agent_settings (lib/repo-agent.js:97).
+#   the code-repo → original link: JAA table repo_agent_links (lib/repo-hat.js:225).
+#   only in the browser (localStorage): Clear Glass's gig drafts (clear-glass/renderer/gig-panel.js: cg.gig.last / offer /
+#     profile) and the Void page's dials (idearium/ui/void.html: void.dials). Lost when site data is cleared.
+#   view preferences in localStorage (panel open, showDone, tab, category): temporary by nature, the coder's reading. To confirm.
+# Coder's reading (to confirm): JAA stays the index, written through. The node file is the record: written on every forge, update,
+# learn and settings change, and read back at boot when the table lacks it. That is the same move GW27 makes for chunks and the
+# funnel (FN3) for its answers.
+#
+# IH6_hats_and_repo_agents_are_files (proposed, OPEN; IH1 needs it: an intent node points at a .hat file):
+#   does: hat-forge writes <data>/nodes/hat/<id>.hat on forge/update/learn/revoke (revoke archives, never deletes); repo-agent
+#     writes <data>/nodes/repo_agent/<repo>.repo_agent (hat ref, settings, link, learned set) on every settings or learn change;
+#     boot rebuilds the JAA rows from the files when they are missing. The two browser-only stores move to the backend (gig
+#     drafts as a node the gig ledger owns; the Void dials as a setting), localStorage kept only for view preferences.
+#   proof: "forge a hat and change a repo agent's model: both files exist and match; delete the JAA rows, boot, and they come back
+#     from the files; clear the browser's storage and the gig draft and dials survive"

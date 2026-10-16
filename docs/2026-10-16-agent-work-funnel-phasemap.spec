@@ -99,3 +99,8 @@ build_order: [FN0_the_funnel_as_data, FN3_every_answer_a_node, FN1_every_door_go
 open_decisions:
   - "decision_refactor_tool (docs/2026-10-13-projects-raid-and-gates-phasemap.spec): [A] proposal engine (coder recommends) · [B] one-pass rewriter · [C] report only — the refactor tool will run this funnel too"
   - "the reading above: which requests enter (change, build, debug, spec; explain answered directly)"
+
+# ## ADDENDUM 2026-10-16 — the hat that does the work is a file too
+# James: "What about .hats for the repo agents model. All physical." The funnel's agent is resolved through intent → hat → agent
+# (docs/2026-10-16-intent-hat-agent-chain-phasemap.spec); its hat and repo-agent model become node files there (IH6). FN3's answers
+# and IH6's hats are the same rule: nothing only in memory or the page.
