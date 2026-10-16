@@ -380,6 +380,11 @@ const SUITES = [
   'test-clearglass-jobs.test.js',     // 0.60.86 — five ready-made jobs run on the real engine, network stubbed
   'test-chat-ports.test.js',          // 0.60.85 PI5b — the crawler's ports on the real automation engine, fake chat site in jsdom
   'test-chat-crawler.test.js',        // 0.60.84 PI5 — the crawler driving the plan through fake ports
+  'test-vector-memory-embed-check.test.js', // 0.60.97 — the embed check, fixed for good
+  'test-inject-screen.test.js',       // 0.60.98 — every proposal passes one screen at the door
+  'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person
+  'test-language-checks.test.js',     // 0.60.101 — every language's own parser, at the gate
+  'test-cos-vm-shell.test.js',        // 0.60.101 — `cos vm shell`: the test VM's own terminal
   'test-scroll-until.test.js',       // 0.60.56 — the slow scroll step (ErosmancerOS wheel, arrow keys, page) and the Read-one-chat template
   'test-chat-crawl-plan.test.js',    // 0.60.55 — the personal-chat crawl plan: nothing missed, the stopping edge, pace, stop rules
   'test-gig-ledger.test.js',         // 0.60.53 — the Fiverr ledger keeps only what checks out

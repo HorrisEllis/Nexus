@@ -1364,16 +1364,23 @@ function _cfg(k, d) { try { const v = getIdeariumValue(k); return v === undefine
 async function _autoRetry(info, kind, note) {
   const RW = _require('../../lib/run-watch.js');
   const rows = loadTable('idearium_phase_runs');
-  const limit = Number(_cfg('repos.auto_retries', 2));
+  const limit = RW.limitFor(kind, (k) => _cfg(k, undefined));   // 0.60.78: a rejection has its own cap (repos.reject_retries, 3); a stall keeps repos.auto_retries (2)
   const base = { runId: `auto-${Date.now().toString(36)}`, repoUuid: info.repoUuid, targetRepo: info.targetRepo, map: info.map, phase: info.phase, retryKind: kind };
   const said = (state, error) => { appendRow('idearium_phase_runs', { uuid: `${base.runId}-${state}`, ...base, state, error, retryOf: info.runId || null, ts: Date.now() }); getIdeaOS().emit('idearium.repo.phase.run', { ...base, state }); };
   if (!(limit > 0)) return { ok: false, why: 'repos.auto_retries is 0' };
-  if (RW.retriesFor(rows, { phase: info.phase }) >= limit) { said('auto-retry-held', `not retried: ${info.phase} already had ${limit} automatic retr${limit === 1 ? 'y' : 'ies'} today — ${note}`); return { ok: false, why: 'limit' }; }
+  if (RW.retriesFor(rows, { phase: info.phase, kind }) >= limit) {
+    // a held retry is a FAILURE MODE, not a silent skip: it is a gap the diagnostic/copilot repair loop can see (0.60.78)
+    said('auto-retry-held', `not retried: ${info.phase} already had ${limit} automatic ${kind} retr${limit === 1 ? 'y' : 'ies'} today — ${note}`);
+    try { _require('../../lib/gap-field.js').report({ type: 'phase.retry.held', body: `${info.phase}: ${kind} retry held — ${limit} ${kind} retries already today. ${String(note).split('\n')[0].slice(0, 200)}`, source: `idearium:${info.repoUuid}:${info.phase}`, domain: 'idearium', severity: 'medium', meta: { kind, limit, runId: info.runId || null } }); } catch (_) {}
+    return { ok: false, why: 'limit' };
+  }
   const active = [...RW.runsOf(rows).values()].some(r => r.last && r.last.phase === info.phase && r.runId !== info.runId && !RW.isFinal(r) && !/-(review|proof)$/.test(r.runId) && Date.now() - (r.last.ts || 0) < 30 * 60 * 1000);
   if (active) { said('auto-retry-held', `not retried: another run of ${info.phase} is still going — ${note}`); return { ok: false, why: 'active' }; }
   const repo = getRepoLayer().get(info.repoUuid);
   if (!repo || !info.map || !info.phase) return { ok: false, why: 'the run names no repo, map or phase' };
-  said('auto-retry', `${kind === 'reject' ? 'rejected' : 'stalled'} — building ${info.phase} again: ${note}`);
+  const nth = RW.retriesFor(rows, { phase: info.phase, kind }) + 1;
+  note = `${note}\n(This is ${kind} retry ${nth} of ${limit} for ${info.phase} today.${kind === 'reject' && nth > 1 ? ' Your earlier attempt(s) were also rejected: do not repeat them.' : ''})`;
+  said('auto-retry', `${kind === 'reject' ? 'rejected' : 'stalled'} — building ${info.phase} again (${nth}/${limit}): ${String(note).split('\n')[0].slice(0, 300)}`);
   try { const r = await _phaseBuild(repo, _repoDiskDir(repo.uuid), { map: info.map, phase: info.phase, note }); return { ok: !!r.ok, run: r.data || null, error: r.error || null }; }
   catch (e) { return { ok: false, error: e.message }; }
 }
@@ -1395,11 +1402,24 @@ async function _watchRuns() {
 
 // 0.60.20 — a rejected proposal is said to the agent that made it, in its own chat, so the conversation is closed rather
 // than left waiting on a tool result (James: "it needs to tell the agent its been rejected. stuck in limbo").
+// 0.60.75 — what is known about a rejected proposal, for the agent and for the next build: James's reason (if he gave
+// one) AND what the evidence found (lib/proposal-evidence.js: lines and exports lost, the linked tests that regressed and
+// their errors). A rejection with no reason used to reach the agent as just "rejected" — and the agent could only guess.
+// James, 2026-10-16: "probably should gather context on why it was rejected."
+async function _rejectionContext(n, reason) {
+  let ev = n && n.evidence;
+  if (!ev && n && n.content != null) { try { ev = await _require('../../lib/repo-inject.js').evidenceNow(n.uuid, { run: false }); } catch (_) { ev = null; } }
+  const parts = [];
+  parts.push(reason ? `James's reason: ${String(reason).slice(0, 500)}` : 'James gave no reason.');
+  if (ev && ev.summary) parts.push(`What the proposal did, checked:\n${String(ev.summary).slice(0, 1800)}`);
+  return parts.join('\n');
+}
 async function _tellAgentRejected(repo, n, reason) {
   const RA = _require('../../lib/repo-agent.js');
-  const msg = [`Your proposed change to ${n.path} was REJECTED by James${reason ? `: ${String(reason).slice(0, 500)}` : ''}.`,
+  const ctx = await _rejectionContext(n, reason);
+  const msg = [`Your proposed change to ${n.path} was REJECTED by James.`, ctx,
     'Nothing was written. That run is over: do not call more tools for it and do not resend the file.',
-    'Reply in one or two lines: what was wrong with it, and what you would do differently next time.'].join('\n');
+    'Reply in one or two lines: which of the above was the cause, and what you will do differently — name the file, the declaration or the test.'].join('\n');
   let r;
   try { r = await RA.dispatch({ repo, repoDir: await _agentDir(repo.uuid), message: msg, layer: getRepoLayer(), noContext: true }); }
   catch (e) { r = { ok: false, error: e.message }; }
@@ -6747,7 +6767,7 @@ async function handle(req, res, route, query, body) {
             if (r.ok && body.tell !== false && r.inject && r.inject.source && r.inject.source.kind === 'agent') _tellAgentRejected(repo, r.inject, body.reason || null).catch(() => {});
             if (r.ok && body.retry !== false && _cfg('repos.retry_on_reject', true) !== false && r.inject && r.inject.source && r.inject.source.kind === 'agent') {
               const info = _require('../../lib/run-watch.js').runForInject(loadTable('idearium_phase_runs'), r.inject);
-              if (info) _autoRetry(info, 'reject', `James rejected ${r.inject.path}${body.reason ? `: ${body.reason}` : ''}. Build it again so it is right: real paths, real imports, the phase's own files`).catch(() => {});
+              if (info) _rejectionContext(r.inject, body.reason || null).then(ctx => _autoRetry(info, 'reject', `James rejected ${r.inject.path}.\n${ctx}\nBuild it again so it is right: keep what the file already exports and declares, change only what the phase asks, real paths, real imports.`)).catch(() => {});
             }
             return done(r);
           }

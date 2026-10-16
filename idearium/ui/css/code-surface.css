@@ -142,3 +142,14 @@
 .cx-work-off{opacity:.45}
 .cx-work-stop{margin-top:4px}
 
+
+/* 0.60.103 TB5 — one view at a time */
+.cs-vtabs{display:flex;gap:2px;border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden}
+.cs-vtab{background:transparent;border:0;color:var(--text2,#9aa);font:11px var(--mono);padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:5px}
+.cs-vtab.on{background:rgba(255,255,255,.09);color:var(--text,#fff)}
+.cs-badge{font-size:9.5px;padding:0 5px;border-radius:8px;background:rgba(255,255,255,.14)}
+.cs-badge.warn{background:#7a5b12;color:#ffd77a}.cs-badge.live{background:#0f4f66;color:#8fdcff}.cs-badge.bad{background:#6b1f1f;color:#ffb3b3}
+.cs-head{max-width:34ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cs-one{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.cs-grid.cs-noagent{grid-template-columns:230px minmax(0,1fr)}
+@media (max-width:760px){.cs-grid.cs-noagent{grid-template-columns:1fr}}

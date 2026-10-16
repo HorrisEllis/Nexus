@@ -46,11 +46,11 @@ const proj = (root, p = 'nexus') => path.join(root, 'projects', p);
   await test('CA-06 a zip that is not the release it claims to be is refused: VERSION mismatch, no VERSION, two top folders, not a zip', () => {
     const { root, dl } = fresh();
     assert.match(S.importZip(root, mkzip(dl, { versionFile: '9.9.9' })).error, /not the release it claims/);
-    const noV = path.join(dl, 'nov.zip'); fs.writeFileSync(noV, Zip.create([{ path: 'nexus-1.0.0/a.txt', data: Buffer.from('x') }])); assert.match(S.importZip(root, noV).error, /no nexus-1\.0\.0\/VERSION/);
+    const noV = path.join(dl, 'nov.zip'); fs.writeFileSync(noV, Zip.create([{ path: 'nexus-1.0.0/a.txt', data: Buffer.from('x') }])); assert.match(S.importZip(root, noV).error, /no version found inside "nexus-1\.0\.0"/);
     const two = path.join(dl, 'two.zip'); fs.writeFileSync(two, Zip.create([{ path: 'a/x', data: Buffer.from('x') }, { path: 'b/y', data: Buffer.from('y') }])); assert.match(S.importZip(root, two).error, /one top folder/);
     const junk = path.join(dl, 'junk.zip'); fs.writeFileSync(junk, 'not a zip'); assert.match(S.importZip(root, junk).error, /not a readable zip/);
     assert.match(S.importZip(root, path.join(dl, 'missing.zip')).error, /no such file/);
-    assert.match(S.importZip(root, mkzip(dl, { top: 'nexus-latest', name: 'latest.zip' })).error, /not <project>-<version>/);
+    assert.match(S.importZip(root, mkzip(dl, { top: 'nexus-latest', name: 'latest.zip' })).error, /not a usable project name|no version found/);
   });
   await test('CA-07 size limits refuse before extracting (zip size, entry count, unpacked size)', () => {
     const { root, dl } = fresh(); const z = mkzip(dl, { files: { 'big.txt': 'x'.repeat(5000) } });
@@ -95,6 +95,13 @@ const proj = (root, p = 'nexus') => path.join(root, 'projects', p);
   await test('CA-13 the project filter: a zip for another project is refused when one is named', () => {
     const { root, dl } = fresh(); const r = S.importZip(root, mkzip(dl, { project: 'forge', version: '1.2.3' }), { project: 'nexus' }); assert.strictEqual(r.ok, false); assert.match(r.error, /project "forge", not "nexus"/);
     assert.strictEqual(S.importZip(root, mkzip(dl, { project: 'forge', version: '1.2.3', name: 'f.zip' })).project, 'forge');
+  });
+  await test('CA-14 a GitHub branch zip (Nexus-<branch>/) installs: the version is read from inside, not from the folder name', () => {
+    const { root, dl } = fresh(); const z = path.join(dl, 'branch.zip');
+    fs.writeFileSync(z, Zip.create([{ path: 'Nexus-claude-brave-cori/package.json', data: Buffer.from('{"name":"nexus","version":"0.60.96"}') }]));
+    const r = S.importZip(root, z); assert.strictEqual(r.ok, true, r.error); assert.strictEqual(r.project, 'nexus'); assert.strictEqual(r.version, '0.60.96');
+    const bad = path.join(dl, 'bad.zip'); fs.writeFileSync(bad, Zip.create([{ path: 'Nexus-x/package.json', data: Buffer.from('{"name":"nexus","version":"nope"}') }]));
+    assert.strictEqual(S.importZip(root, bad).ok, false);
   });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

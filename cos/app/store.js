@@ -75,15 +75,19 @@ function inspect(zipPath, limits = LIMITS) {
   }
   if (total > limits.maxUncompressed) return { ok: false, error: `unpacks to ${(total / 1048576).toFixed(0)} MB, over the ${(limits.maxUncompressed / 1048576).toFixed(0)} MB limit` };
   if (tops.size !== 1) return { ok: false, error: `expected one top folder (nexus-<version>/), found ${tops.size}: ${[...tops].slice(0, 3).join(', ')}` };
+  // 0.60.103 — James: "naming schema... versions... why do you do that?" (the zip GitHub gives for a branch is Nexus-<branch>, and was refused).
+  // The version is what is INSIDE the zip: VERSION (a release zip has one), else package.json. The folder name is only a cross-check, and only when it carries a version.
   const top = [...tops][0]; const m = /^([a-z0-9][a-z0-9_-]*?)-(\d+\.\d+\.\d+)$/.exec(top);
-  if (!m) return { ok: false, error: `the top folder "${top}" is not <project>-<version> (like nexus-0.60.65)` };
-  const vEntry = entries.find(e => e.entryName.replace(/\\/g, '/') === `${top}/VERSION`);
-  if (!vEntry) return { ok: false, error: `no ${top}/VERSION file inside (a release zip from scripts/release-zip.js has one)` };
-  const inside = zip.readAsText(vEntry).trim();
-  if (!SEMVER.test(inside)) return { ok: false, error: `VERSION says "${inside.slice(0, 40)}", not a version` };
-  if (inside !== m[2]) return { ok: false, error: `the folder says ${m[2]} but VERSION says ${inside}: refused, it is not the release it claims to be` };
-  if (!PROJECT.test(m[1])) return { ok: false, error: `"${m[1]}" is not a usable project name` };
-  return { ok: true, project: m[1], version: inside, top, entries: entries.length, uncompressed: total, zip };
+  const read = (n) => { const e = entries.find(x => x.entryName.replace(/\\/g, '/') === `${top}/${n}`); return e ? zip.readAsText(e) : null; };
+  let inside = null, project = m ? m[1] : null, source = 'VERSION';
+  const vtxt = read('VERSION');
+  if (vtxt != null) inside = vtxt.trim();
+  else { source = 'package.json'; try { const pj = JSON.parse(read('package.json') || ''); inside = String(pj.version || ''); if (!project) project = String(pj.name || '').toLowerCase().replace(/[^a-z0-9_-]+/g, '-'); } catch (_) {} }
+  if (!inside) return { ok: false, error: `no version found inside "${top}": no VERSION file and no package.json with a version` };
+  if (!SEMVER.test(inside)) return { ok: false, error: `${source} says "${inside.slice(0, 40)}", not a version` };
+  if (m && inside !== m[2]) return { ok: false, error: `the folder says ${m[2]} but ${source} says ${inside}: refused, it is not the release it claims to be` };
+  if (!project || !PROJECT.test(project)) return { ok: false, error: `"${project || top}" is not a usable project name` };
+  return { ok: true, project, version: inside, versionFrom: source, top, entries: entries.length, uncompressed: total, zip };
 }
 
 /** linkData(versionDir, dataDir) — make versionDir/data the junction/symlink to the persistent data folder; anything real that was there moves in first, never overwriting. */
@@ -121,7 +125,8 @@ function importZip(root, zipPath, opts = {}) {
   const tmp = path.join(paths.versions, `.incoming-${process.pid}-${Date.now()}`); const dest = path.join(paths.versions, ins.version);
   try {
     fs.mkdirSync(tmp, { recursive: true }); ins.zip.extractAllTo(tmp, true);
-    const got = path.join(tmp, ins.top); if (!fs.existsSync(path.join(got, 'VERSION'))) throw new Error('extraction did not produce the release folder');
+    const got = path.join(tmp, ins.top); if (!fs.existsSync(got)) throw new Error('extraction did not produce the release folder');
+    if (!fs.existsSync(path.join(got, 'VERSION'))) fs.writeFileSync(path.join(got, 'VERSION'), ins.version + '\n');   // a branch zip has none: the folder gets the one the store read
     const link = linkData(got, paths.data);
     fs.renameSync(got, dest);
     st.versions[ins.version] = { sha256: actual, bytes: fs.statSync(zipPath).size, entries: ins.entries, verified: !!sum, verifiedBy: sum ? sum.source : null, importedAt: new Date().toISOString(), dataMoved: link.moved.length };

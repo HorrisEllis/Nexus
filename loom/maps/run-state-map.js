@@ -13,6 +13,9 @@ const FILES = [
   ['lib/run-state.js',   I('lib/run-state.js'),   [I('lib/node-export.js'), I('nexus/nexus-bus.js')]],
   ['lib/reply-kind.js',  I('lib/reply-kind.js'),  [I('lib/step-gate.js')]],
   ['lib/gig-ledger.js',  I('lib/gig-ledger.js'),  []],   // §0.60.53 PF0
+  ['lib/checks/ck-248-toolchain.js', I('lib/checks/ck-248-toolchain.js'), []],   // §0.60.77 MB5: 18 languages, each by its own parser; selfTest/coverage/checkText
+  ['lib/test-map.js', I('lib/test-map.js'), []],   // §0.60.75 PE1: which tests exercise a file (direct links, by how)
+  ['lib/proposal-evidence.js', I('lib/proposal-evidence.js'), [I('lib/test-map.js'), I('lib/step-gate.js'), I('lib/repo-inject.js')]],   // §0.60.75 PE2
   ['lib/chat-crawl-settings.js', I('lib/chat-crawl-settings.js'), []],   // §0.60.55 PI5
   ['lib/chat-crawl-plan.js', I('lib/chat-crawl-plan.js'), [I('lib/chat-crawl-settings.js')]],
   ['clear-glass/src/chats/crawler.js', I('clear-glass/src/chats/crawler.js'), [I('lib/chat-crawl-plan.js'), I('lib/chat-crawl-settings.js')]],   // §0.60.84 PI5
@@ -41,6 +44,11 @@ const FILES = [
   ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
 ];
 const CONSUMERS = [
+  [I('lib/step-gate.js'),                           I('lib/checks/ck-248-toolchain.js'), 'checkText(): the code.write gate parses every language the table knows with that language\'s own tool; a missing tool is not a pass (0.60.77)'],
+  [I('lib/proposal-evidence.js'),                   I('lib/checks/ck-248-toolchain.js'), 'compare(): syntax status per file — checked, or NOT checked and why (0.60.77)'],
+  [I('lib/repo-inject.js'),                         I('lib/proposal-evidence.js'), 'attachEvidence()/evidenceNow(): an agent\'s proposal is compared and its linked tests run on the file as it is and as proposed; apply() refuses a regression (0.60.75 PE3)'],
+  [I('lib/repo-inject.js'),                         I('lib/step-gate.js'), '_screen(): the code.write gate and the collapse/shrink guards at propose() and edit(), whoever calls (0.60.74)'],
+  [I('idearium/api/index.js'),                      I('lib/proposal-evidence.js'), '_rejectionContext(): a rejected proposal\'s evidence goes to the agent and into the retry note (0.60.75 PE4)'],
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/service.js'), '/cli/net/*: routes, resolve, bridge, transport start/stop/detect (0.60.60 NP9)'],
   [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/net/service.js'), 'register(partition, session) so a rule can route an agent window; a no-op with no rules (0.60.60 NP3)'],
   [I('lib/agent-tools/index.js'),                   I('lib/agent-tools/tools/clear-glass/net.js'), 'clear_glass_net registered (0.60.60 NP9)'],
