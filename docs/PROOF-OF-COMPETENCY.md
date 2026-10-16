@@ -100,6 +100,32 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-16: "next"** (FR1, the flight recorder's first piece)
+  - **Context:** the coder proposed an order (FR1 one record per change, then tested before it lands, undo, standalone,
+    the demo) and named FR1 as its pick. He said go.
+  - **What it shows:** sequencing by dependency. The undo and the demo both read the record, so the record came first.
+    It is a projection of data Nexus already writes, so no second store had to be built. The one piece that was missing
+    (which task wrote a change) was fixed at the source, not guessed after the fact.
+  - **Evidence:** `CHANGELOG-0.60.114.md`; `lib/change-record.js`; `tests/modules/test-change-record.test.js` CR-01..06.
+
+- **2026-10-16: "expand it."** (the flight recorder, just branched out of Nexus)
+  - **Context:** he had a 217-file copy of the product and a claim that it was tangled into the rest of Nexus.
+  - **What it shows:** pushing past "it's copied" to "does it work alone". The answer is now measured, not guessed:
+    168 files, 8 systems, and every one of its own files loads in an empty folder. The first attempt failed that check,
+    on a data folder no require mentions; the check is why it was found.
+  - **Evidence:** `CHANGELOG-0.60.113.md`; `docs/2026-10-16-repo-carve-phasemap.spec` (CV2, FR1-FR5);
+    `tests/modules/test-repo-carve.test.js` CV-09..12.
+
+- **2026-10-16: "look at rfr2. versionium. event ledgers. causal graph. cos test env. its a product?"** · then: "can you branch it into a idearium repo?"
+  - **Context:** months of separate systems (a version store, a causal toolkit, ledgers, a VM test environment). He
+    looked across them and asked whether together they are something people would pay for.
+  - **What it shows:** product thinking. He saw that pieces built to run his own system add up to one thing others
+    need: trust in what AI coding agents change, plus a way to undo it. Then he asked for it as its own project, not a
+    rewrite. The carve that followed measured, rather than guessed, how far it is from standing alone: 217 files,
+    15 systems.
+  - **Evidence:** `CHANGELOG-0.60.112.md`; `docs/2026-10-16-repo-carve-phasemap.spec`;
+    `tests/modules/test-repo-carve.test.js` CV-01..08.
+
 - **2026-10-16: "please fix this. the naming in github doesn't even match that..."**
   - **Context:** COS refused his GitHub downloads ("Nexus-main", "Nexus v0.60.110") because their folder names were
     not `<project>-<version>`. A fix for that was already on main (0.60.103), yet his COS still refused them.

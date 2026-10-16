@@ -380,3 +380,10 @@ spec:
         a wire's id is its endpoints (source.wire.<from>--<to>), so ids are stable; then one regeneration, checked
         endpoint by endpoint against today's registry, and the 115 unresolved export hooks fixed at their cause.
       proof: "two bootstraps in a row change nothing; adding one file adds only its own wires; no endpoint lost against today's registry"
+
+# ## ADDENDUM 2026-10-16 (0.60.112): the refactor tool's first input is a carve
+# James: "look at rfr2. versionium. event ledgers. causal graph. cos test env. its a product?" · "can you branch it into a idearium repo?"
+# The coder's reading (to confirm): those pieces are a product (an undo button and flight recorder for AI coding agents), and RF2
+# (applied one phase at a time, every step a version) is its demo. Built: docs/2026-10-16-repo-carve-phasemap.spec CV1, which copies
+# a part of Nexus into its own Idearium repo with everything it requires. The flight_recorder preset needs 217 files across 15
+# systems (loom, warp, guardian and emerge come along through requires): that report is RF0's first real input (CV2).

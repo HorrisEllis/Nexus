@@ -347,6 +347,35 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<request…>'),
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/funnel`, body: { request: a.args.join(' '), ...(a.flags.intent ? { intent: String(a.flags.intent) } : {}) } }),
     print: (d, a, h) => { for (const l of d.lines || []) console.log(/^stopped/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); } },
+  // FR1 0.60.114 — the flight recorder's first piece: one record per change an agent makes (lib/change-record.js). Not
+  // 'repo.changes': that row (the agent's proposals, --prove) already exists, and a second key is silently shadowed
+  { key: 'repo.record', repo: true, usage: 'repo record <repo> [<change id>] [--status applied|proposed|reverted|rejected] [--limit n]', about: 'each change an agent made: what (lines), who, why (its task and run), what was checked, the version it landed in, whether it can be undone, and any missing link named',
+    req: (a) => (a.args[0]
+      ? { method: 'GET', path: `/api/repos/${a.repo.uuid}/changes/${encodeURIComponent(a.args[0])}` }
+      : { method: 'GET', path: `/api/repos/${a.repo.uuid}/changes?limit=${parseInt(a.flags.limit, 10) || 30}${a.flags.status ? `&status=${encodeURIComponent(String(a.flags.status))}` : ''}` }),
+    print: (d, a, h) => {
+      if (d.change) { for (const l of d.lines || []) console.log(/^missing/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); return; }
+      if (!(d.changes || []).length) { console.log('  no changes yet'); return; }
+      for (const c of d.changes) console.log(`  ${c.id.slice(0, 8)}  ${String(c.status).padEnd(9)} ${c.path}${c.lines ? ` +${c.lines.added} −${c.lines.removed}` : ''}  ${c.agent || ''}${c.goal ? ` — ${String(c.goal).slice(0, 60)}` : ''}${c.landed.length ? `  @${c.landed[0]}` : ''}${c.holes.length ? h.c.amber(`  missing: ${c.holes.join(', ')}`) : ''}`);
+    } },
+  // CV1 0.60.112 — James: "can you branch it into a idearium repo?" (lib/repo-carve.js): a part of Nexus as its own repo, Nexus its parent
+  { key: 'repo.carve', repo: false, usage: 'repo carve <name> <path…> | repo carve --preset flight_recorder [--name n] [--cut optional|optional,lazy|none] [--verify] [--dry-run]', about: 'copy a part of Nexus (files or folders) into a new Idearium repo with everything it requires; says what pulled each file in, the npm it needs, and requires that resolve to nothing. Nothing in Nexus moves',
+    need: (a) => (a.flags.preset || a.args.length >= 2 ? null : '<name> <path…> (or --preset flight_recorder)'),
+    req: (a) => {
+      const extra = { ...(a.flags.cut != null ? { cut: String(a.flags.cut) === 'none' ? [] : String(a.flags.cut).split(/[,+]/).filter(Boolean) } : {}), ...(a.flags.verify ? { verify: true } : {}) };
+      return { method: 'POST', path: '/api/repos/carve', body: a.flags.preset
+        ? { preset: String(a.flags.preset), ...(a.flags.name ? { name: String(a.flags.name) } : {}), dryRun: !!(a.flags['dry-run'] || a.flags.dryRun), ...extra }
+        : { name: a.args[0], seeds: a.args.slice(1), dryRun: !!(a.flags['dry-run'] || a.flags.dryRun), ...extra } };
+    },
+    print: (d, a, h) => {
+      console.log(`  ${d.dryRun ? 'would carve' : `carved ${h.c.green(d.repo && d.repo.uuid ? d.repo.uuid.slice(0, 8) : '')}`} ${d.name}: ${d.files} files (${d.seeded} named, ${d.pulledIn} pulled in), ${d.lines} lines${d.parent ? ` · parent ${d.parent.name}` : ''}`);
+      console.log(`  by system: ${Object.entries(d.bySystem || {}).sort((x, y) => y[1] - x[1]).map(([k, n]) => `${k} ${n}`).join(', ')}`);
+      console.log(`  npm: ${Object.keys(d.npm || {}).join(', ') || 'none'}${(d.npmNamedOnly || []).length ? ` · named only: ${d.npmNamedOnly.join(', ')}` : ''}`);
+      if ((d.missing || []).length) console.log(`  ${h.c.amber(`${d.missing.length} require(s) resolve to nothing`)}: ${d.missing.slice(0, 4).map(m => `${m.from} → ${m.spec}`).join('; ')}`);
+      if ((d.cut || []).length) console.log(`  left out (${d.cut.join(', ')}): ${(d.leftOut || []).length} link(s)`);
+      for (const t of (d.tangle || []).slice(0, 6)) console.log(`  tangle: ${String(t.files).padStart(3)} file(s) via ${t.from} → ${t.to} (${t.kind})`);
+      if (d.verified) console.log(`  ${d.verified.ok ? h.c.green('loads alone') : h.c.amber('does NOT load alone')}: ${d.verified.loaded}/${d.verified.of}${(d.verified.failed || []).map(f => `\n    ✗ ${f.path}: ${f.error}`).join('')}`);
+    } },
   // 0.60.78 RT1 — what RAID's officiator holds back (the agents' wait, each staged drop's tries and why) and clearing it
   { key: 'raid.parked', repo: false, usage: 'raid parked', about: 'what the officiator holds back: the agents\' wait (no agent answered) and each staged drop\'s tries, why, and when it is tried next',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/raid/officiator' }),

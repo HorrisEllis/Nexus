@@ -2700,6 +2700,8 @@ const ROUTE_CAP = {
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
+  'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
+  'repo.carve': CAPS.WRITE_IDEAS,   // §CV1 0.60.112 — makes a repo
   'raid.held': CAPS.READ_IDEAS, 'raid.held.unpark': CAPS.WRITE_IDEAS,   // §0.60.78 RT1
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
@@ -2824,6 +2826,7 @@ function matchRoute(method, url) {
     // in one request — see handler for why the existing zip-ingest code
     // (idearium/repo/watcher.js) isn't called as-is.
     ['POST',   ['api','repos','import'],  'repo.import-archive'],
+    ['POST',   ['api','repos','carve'],   'repo.carve'],   // §CV1 0.60.112 { name?, seeds | preset, dryRun? } → a part of Nexus as its own repo (lib/repo-carve.js)
     // ── Upload Project (§UPLOAD-PROJECT 2026-09-15) — the full prompt ->
     // temp compartment -> dropzone -> "Import Repository" -> manifest/
     // project.json/.git -> full repo page flow. A distinct namespace
@@ -3131,6 +3134,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','worksurface','prove'],   'repo.worksurface.prove'],   // §0.39.362 WS1 an agent proves its proposals
     ['GET',    ['api','repos',    ':uuid','architecture'],          'repo.architecture'],         // §0.39.284 W7 — the repo's component registry + wiring map
     ['POST',   ['api','repos',    ':uuid','architecture'],          'repo.architecture.write'],   // §0.39.284 W3 — changed files as diffs + tools
+    ['GET',    ['api','repos',    ':uuid','changes'],               'repo.changes'],        // §FR1 0.60.114 one record per change (lib/change-record.js)
+    ['GET',    ['api','repos',    ':uuid','changes',':id'],         'repo.change.get'],
     ['GET',    ['api','repos',    ':uuid','injects'],               'repo.inject.list'],
     ['POST',   ['api','repos',    ':uuid','injects'],               'repo.inject.create'],
     ['GET',    ['api','repos',    ':uuid','injects',':id'],         'repo.inject.get'],
@@ -7824,6 +7829,70 @@ async function handle(req, res, route, query, body) {
     }
     // §FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." The four answers
     // for a request, in his order, from this repo's own tree and maps (lib/work-funnel.js); read only, no model.
+    // §CV1 0.60.112 — James, 2026-10-16: "can you branch it into a idearium repo?" (the flight recorder: versionium, rfr2, the
+    // causal graph, the COS test env). A part of Nexus copied into its own repo with everything it requires; Nexus is its parent
+    // (fork lineage) and nothing in Nexus moves. Seeds are paths inside Nexus only; no other folder is read.
+    // §CV2 0.60.113 — the untangle step: how each link loads, cut what the code runs without, and prove the carve loads alone
+    case 'repo.carve': {
+      const CV = _require('../../lib/repo-carve.js'), NSx = _require('../../lib/nexus-self/systems.js');
+      const preset = body && body.preset ? CV.PRESETS[String(body.preset).replace(/-/g, '_')] : null;
+      if (body && body.preset && !preset) return err(res, 400, `no preset "${body.preset}" (have: ${Object.keys(CV.PRESETS).join(', ')})`);
+      const seeds = preset ? preset.seeds : (Array.isArray(body && body.seeds) ? body.seeds : String((body && body.seeds) || '').split(/[\s,]+/).filter(Boolean));
+      const name = String((body && body.name) || (preset && preset.name) || '').trim();
+      if (!name) return err(res, 400, 'name is required (or a preset)');
+      // §CV2a 0.60.113 — cut: leave out requires the code runs without ('optional': inside a try; 'lazy': inside a function, said
+      // as a risk); the preset carries its own. verify: load the carve alone (always, when a repo is made)
+      const cut = body && body.cut != null ? (Array.isArray(body.cut) ? body.cut : String(body.cut).split(/[\s,+]+/).filter(Boolean)) : (preset && preset.cut) || [];
+      const plan = CV.plan({ root: NSx.ROOT, seeds, cut });
+      if (!plan.ok) return err(res, 400, plan.error);
+      const verified = (body && (body.verify || !body.dryRun)) ? CV.verify(plan, { root: NSx.ROOT }) : null;
+      const summary = { name, seeds: plan.seeds, files: plan.files.length, seeded: plan.seeded, pulledIn: plan.pulledIn, lines: plan.lines, bySystem: plan.bySystem,
+        npm: plan.npm, npmNamedOnly: plan.npmNamedOnly, missing: plan.missing, cut: plan.cut, leftOut: plan.leftOut, tangle: plan.tangle.slice(0, 12), verified,
+        outsideSeeds: plan.files.filter(f => f.pulledBy && !plan.seeds.some(sd => f.path === sd || f.path.startsWith(`${sd}/`))).slice(0, 40) };
+      if (body && body.dryRun) return ok(res, { dryRun: true, ...summary });
+      let cur = {}; try { cur = _require('../../lib/release-version.js').current({ root: NSx.ROOT }); } catch (_) {}
+      const quote = String((body && body.quote) || '"can you branch it into a idearium repo?" (2026-10-16)');
+      const files = CV.build(plan, { root: NSx.ROOT, name, nexusVersion: cur.version || null, commit: cur.commit || null, quote, why: preset ? preset.why : null, verified });
+      const nexus = getRepoLayer().list({}).find(r => r.nexusSelf && r.nexusSelf.role === 'parent') || null;
+      const made = getRepoLayer().ingest({ name, files, source: 'carve', parent: nexus ? nexus.uuid : null, description: preset ? preset.why : `carved from Nexus: ${plan.seeds.join(', ')}`, noIdea: true });
+      if (made.error) return err(res, 400, made.error);
+      const repo = made.repo || made;
+      const notes = [];
+      try {
+        const RN = _require('../../lib/repo-notes.js');
+        notes.push(RN.add({ repoUuid: repo.uuid, kind: 'quote', title: 'why this repo exists', body: `James: ${quote}`, source: 'carve' }));
+        notes.push(RN.add({ repoUuid: repo.uuid, kind: 'decision', title: 'carved from Nexus', source: 'carve',
+          body: `Copied from Nexus ${cur.version || ''} with everything it requires: ${plan.files.length} files (${plan.seeded} named, ${plan.pulledIn} pulled in) across ${Object.keys(plan.bySystem).length} systems. Nothing moved out of Nexus. CARVED.json says what pulled each file in.${plan.cut.length ? ` Left out: ${plan.leftOut.length} ${plan.cut.join('/')} link(s) the code runs without.` : ''}${verified ? ` Loads alone: ${verified.ok ? 'yes' : 'NO'} (${verified.loaded}/${verified.of}${verified.failed && verified.failed.length ? `; failed ${verified.failed.map(f => f.path).join(', ')}` : ''}).` : ''} The name "${name}" is the coder's working name: to confirm.` }));
+      } catch (e) { notes.push({ error: `notes not written: ${e.message}` }); }
+      try { getIdeaOS().emit('idearium.repo.carved', { repoUuid: repo.uuid, name, files: plan.files.length, parent: nexus ? nexus.uuid : null }); } catch (_) {}
+      return ok(res, { repo, parent: nexus ? { uuid: nexus.uuid, name: nexus.name } : null, notes: notes.length, ...summary });
+    }
+    // §FR1 0.60.114 — James: "next" (the flight recorder's first piece). One record per change an agent makes: the .inject joined
+    // with its task and run (who, why), its evidence (checked), the version commits that name it (landed), its timeline, its undo,
+    // and every missing link named. A projection of what is already written; nothing is stored here.
+    case 'repo.changes':
+    case 'repo.change.get': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RI = _require('../../lib/repo-inject.js'), CR = _require('../../lib/change-record.js');
+      let activity = []; try { activity = _require('../../lib/activity-log/compartment.js').list(params.uuid, { limit: 500 }).rows || []; } catch (_) {}
+      let runs = []; try { runs = _require('../../lib/run-state.js').list({ repoUuid: params.uuid }); } catch (_) {}
+      if (action === 'repo.change.get') {
+        const inj = RI.get(params.id);
+        if (!inj || inj.repoUuid !== params.uuid) return err(res, 404, `no change ${params.id} in this repo`);
+        let base; if (inj.status === 'proposed' || inj.status === 'staged') { try { const L = getRepoLayer(); const t = typeof L.readTextFile === 'function' ? L.readTextFile(params.uuid, inj.path) : L.readFile(params.uuid, inj.path); base = t && !t.error ? String(t.content ?? '') : null; } catch (_) { base = null; } }
+        const r = CR.record(inj, { activity, runs, base });
+        return ok(res, { change: r, lines: CR.lines(r) });
+      }
+      const limit = Math.max(1, Math.min(200, parseInt(query.limit, 10) || 50));
+      const list = RI.list(params.uuid, { limit, ...(query.status ? { status: String(query.status) } : {}) });
+      const injects = Array.isArray(list) ? list : (list.injects || []);
+      const changes = injects.map(i => CR.record(RI.get(i.uuid) || i, { activity, runs })).filter(Boolean)
+        .map(r => ({ id: r.id, path: r.path, op: r.op, status: r.status, at: r.at, lines: r.what.lines, agent: r.who.agent, provider: r.who.provider,
+          goal: r.why.run ? r.why.run.goal : (r.why.task ? r.why.task.title : null), runHow: r.why.run ? r.why.run.how : null, checked: r.checked,
+          landed: r.landed.map(c => c.commitId), undo: r.undo.possible, holes: r.holes.map(h => h.what) }));
+      return ok(res, { repoUuid: params.uuid, changes, count: changes.length });
+    }
     case 'repo.funnel': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);

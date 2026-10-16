@@ -21,7 +21,7 @@
 // Nothing here stores anything; every number is read from a route.
 // ════════════════════════════════════════════════════════════════════════════
 
-const CX = { filter: '', editing: false, draft: null, panel: 'activity', runs: null, runsError: null, resp: null, respError: null, openRuns: new Set(), work: null, workError: null, workFor: null };
+const CX = { filter: '', editing: false, draft: null, panel: 'activity', runs: null, runsError: null, resp: null, respError: null, openRuns: new Set(), work: null, workError: null, workFor: null, changes: null, changesError: null, changeOpen: null, change: null };
 try { const v = localStorage.getItem('idearium.cs.panel'); if (v) CX.panel = v; } catch (_) {}
 
 // ── CE6: the tree's actions ──────────────────────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ async function cxAssist(action) {
 
 // ── CE9: the bottom panel ────────────────────────────────────────────────────────────────────────────
 // §0.60.107 PS3 — charter · agents · jobs left the Plan panel for panels of their own here (James: "make the rest theyre own panel")
-const CX_PANELS = [['activity', 'activity'], ['work', 'work'], ['runs', 'runs'], ['responses', 'responses'], ['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ['versions', 'versions'], ['machine', 'machine'], ['charter', 'charter'], ['agents', 'agents'], ['jobs', 'jobs']];
+const CX_PANELS = [['activity', 'activity'], ['work', 'work'], ['changes', 'changes'], ['runs', 'runs'], ['responses', 'responses'], ['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ['versions', 'versions'], ['machine', 'machine'], ['charter', 'charter'], ['agents', 'agents'], ['jobs', 'jobs']];
 const CX_PLAN = new Set(['charter', 'agents', 'jobs']);
 const CX_RT = new Set(['tasks', 'log', 'control', 'versions', 'machine']);
 function cxPanel(k) {
@@ -137,6 +137,7 @@ function cxPanel(k) {
 function cxPanelLoad() {
   const repo = CURRENT_API_REPO; if (!repo) return;
   if (CX.panel === 'work') return cxWorkLoad(repo);
+  if (CX.panel === 'changes') return cxChangesLoad(repo);
   if (CX.panel === 'runs') return cxRunsLoad(repo);
   if (CX.panel === 'responses') return cxRespLoad(repo);
   if (CX_PLAN.has(CX.panel)) return cxPlanLoad(repo);
@@ -169,6 +170,35 @@ function _cxWork() {
   return `<div class="cx-work"><div class="cs-dim">${escapeHtml(f.intent)} · ${escapeHtml(CX.workFor || '')}</div>
     ${step(1, 'dependencies', dep, !!d)}${step(2, 'spec', spec, !!s)}${step(3, 'phase', ph, !!p)}${step(4, 'chunks', ch || '', !!(f.chunks || []).length)}${stop}
     <div class="cs-dim cx-note">the agent is given this before it edits the picked lines (FN1); what is missing is said, and made first once FN2 lands</div></div>`;
+}
+// §FR1 0.60.114 — James: "next" (the flight recorder's first piece). Each change an agent made to this repo, one record each:
+// what, who, why, checked, where it landed, undo; a row opens its whole record (GET …/changes/:id); missing links are said.
+async function cxChangesLoad(repo) {
+  try { const r = await api(`/api/repos/${repo.uuid}/changes?limit=40`, {}, 20000); CX.changes = r.changes || []; CX.changesError = null; }
+  catch (e) { CX.changes = []; CX.changesError = (e.data && e.data.error) || e.message; }
+  if (CX.panel === 'changes') _cxPaintPanel();
+}
+async function cxChangeOpen(id) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  CX.changeOpen = id; CX.change = null;
+  if (CX.panel === 'changes') _cxPaintPanel();
+  try { CX.change = await api(`/api/repos/${repo.uuid}/changes/${encodeURIComponent(id)}`, {}, 20000); }
+  catch (e) { CX.change = { lines: [`could not read the change: ${(e.data && e.data.error) || e.message}`] }; }
+  if (CX.panel === 'changes') _cxPaintPanel();
+}
+function _cxChanges() {
+  if (CX.changesError) return `<div class="cs-empty cs-bad">${escapeHtml(CX.changesError)}</div>`;
+  const list = CX.changes; if (!list) return '<div class="cs-empty">reading the changes…</div>';
+  if (!list.length) return '<div class="cs-empty">no changes yet: each file an agent writes shows here, with who, why, what was checked and its undo</div>';
+  const rows = list.map(c => {
+    const open = CX.changeOpen === c.id;
+    const det = open ? `<div class="cx-change-detail">${CX.change ? (CX.change.lines || []).map(l => `<div class="${/^missing/.test(l) ? 'cs-bad' : ''}">${escapeHtml(l)}</div>`).join('') : '<div class="cs-dim">reading…</div>'}</div>` : '';
+    return `<div class="cx-change${open ? ' cx-change-open' : ''}" data-id="${escapeHtml(c.id)}" onclick="cxChangeOpen('${escapeHtml(c.id)}')">
+      <div><span class="cx-change-st cx-st-${escapeHtml(c.status)}">${escapeHtml(c.status)}</span> <code>${escapeHtml(c.path)}</code>${c.lines ? ` <span class="cs-dim">+${c.lines.added} −${c.lines.removed}</span>` : ''} <span class="cs-dim">${escapeHtml(c.agent || '')}</span></div>
+      ${c.goal ? `<div class="cs-dim">${escapeHtml(String(c.goal).slice(0, 140))}${c.runHow && c.runHow !== 'task' ? ` (${escapeHtml(c.runHow)})` : ''}</div>` : ''}
+      <div class="cs-dim">${c.checked ? `checked ${c.checked.testsRan}/${c.checked.testsLinked}, ${c.checked.regressions} regressed · ` : ''}${c.landed.length ? `version ${escapeHtml(c.landed[0])} · ` : ''}${c.undo ? 'can be undone' : 'no undo'}${c.holes.length ? ` · <span class="cs-bad">missing ${escapeHtml(c.holes.join(', '))}</span>` : ''}</div>${det}</div>`;
+  }).join('');
+  return `<div class="cx-changes">${rows}</div>`;
 }
 async function cxRunsLoad(repo) {
   try { const r = await api(`/api/repos/${repo.uuid}/runs?limit=30`, {}, 20000); CX.runs = r.runs || []; CX.runsError = null; }
@@ -256,6 +286,7 @@ function _cxResp(x) {
 function _cxPanelBody() {
   if (CX.panel === 'activity') return '';
   if (CX.panel === 'work') return _cxWork();
+  if (CX.panel === 'changes') return _cxChanges();
   if (CX_PLAN.has(CX.panel)) {
     if (typeof PLANP === 'undefined' || !PLANP.data) return CX.planError ? `<div class="cs-empty cs-bad">could not read the plan: ${escapeHtml(CX.planError)}</div>` : '<div class="cs-empty">reading the plan…</div>';
     if (CX.panel === 'charter') return ppCharterPanelHtml();

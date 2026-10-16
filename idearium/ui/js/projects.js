@@ -1,6 +1,6 @@
 // idearium/ui/js/projects.js — COSA10 (0.60.74): every project of his on one screen, sorted by what moved last.
 // James, 2026-10-16: "i figure cos could be helpfui for managing my projects so im not so overwhelmed."
-// Reads GET /api/my-projects only (idearium/lib/projects.cjs composes notes, phases and activity); remove this file and nothing
+// Reads GET /api/my-projects (and POST /api/repos/carve for Branch from Nexus, §CV1) (idearium/lib/projects.cjs composes notes, phases and activity); remove this file and nothing
 // else changes (§5.12). Opened from the repo rail's "My projects" button; a row opens its repo.
 
 async function openProjects() {
@@ -16,7 +16,7 @@ async function openProjects() {
   el.innerHTML = _projectsFrame('<div style="padding:16px;color:var(--text3);font-family:var(--mono);font-size:11px">reading your projects…</div>');
   try {
     const d = await api('/api/my-projects');
-    el.innerHTML = _projectsFrame(_projectsHtml(d) + '<div id="projects-raid"></div>');
+    el.innerHTML = _projectsFrame('<div id="projects-carve"></div>' + _projectsHtml(d) + '<div id="projects-raid"></div>');
     _projectsRaid();
   } catch (e) {
     el.innerHTML = _projectsFrame(`<div style="padding:16px;color:var(--coral);font-family:var(--mono);font-size:11px">could not read projects: ${escapeHtml(e.message)}</div>`);
@@ -29,6 +29,7 @@ function _projectsFrame(inner) {
   return `<div id="projects-panel" style="width:min(760px,100%);background:var(--bg1,#111);border:1px solid var(--b1,#333);border-radius:8px">
     <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--b0,#222)">
       <div style="flex:1;font-weight:600">My projects</div>
+      <button class="tb-btn" onclick="_carveOpen()" title="copy a part of Nexus into its own repo, with everything it requires">Branch from Nexus</button>
       <button class="tb-btn" onclick="openProjects()" title="read again">Refresh</button>
       <button class="tb-btn" onclick="closeProjects()">Close</button>
     </div>${inner}</div>`;
@@ -75,3 +76,49 @@ async function _projectsUnpark() {
   _projectsRaid();
 }
 
+
+// §CV1 0.60.112 — James, 2026-10-16: "can you branch it into a idearium repo?" A part of Nexus copied into its own repo with
+// everything it requires (POST /api/repos/carve, lib/repo-carve.js). Preview first: what comes along and why; then Create.
+function _carveOpen() {
+  const box = document.getElementById('projects-carve'); if (!box) return;
+  if (box.innerHTML) { box.innerHTML = ''; return; }
+  box.innerHTML = `<div style="padding:10px 14px;border-bottom:1px solid var(--b0,#222);display:flex;flex-direction:column;gap:6px">
+    <div style="font-weight:600">Branch part of Nexus into its own repo</div>
+    <div style="font-size:11px;color:var(--text3)">A copy with everything it requires. Nexus is its parent; nothing in Nexus moves.</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <select id="carve-preset" onchange="_carvePresetChanged()"><option value="flight_recorder">flight recorder (versionium, rfr2, causal, COS test env)</option><option value="">my own paths…</option></select>
+      <input id="carve-name" placeholder="repo name" value="flight-recorder" style="width:160px">
+      <input id="carve-seeds" placeholder="paths, e.g. versionium lib/zip.js" style="flex:1;min-width:200px;display:none">
+      <select id="carve-cut" title="links the code runs without can be left out; the Preview checks the copy still loads"><option value="optional">leave out optional links</option><option value="none">keep every link</option><option value="optional,lazy">also lazy links (risky)</option></select>
+      <button class="tb-btn" onclick="_carveRun(true)">Preview</button>
+      <button class="tb-btn" onclick="_carveRun(false)">Create repo</button>
+    </div>
+    <div id="carve-out" style="font-family:var(--mono);font-size:11px;color:var(--text2)"></div></div>`;
+}
+function _carvePresetChanged() {
+  const own = !document.getElementById('carve-preset').value;
+  document.getElementById('carve-seeds').style.display = own ? '' : 'none';
+}
+// §CV2 0.60.113 — the Preview also says how the copy is tangled (the biggest links, and how each loads), what was left out,
+// and whether the copy loads alone (lib/repo-carve.js verify)
+async function _carveRun(dryRun) {
+  const out = document.getElementById('carve-out'); if (!out) return;
+  const preset = document.getElementById('carve-preset').value, name = document.getElementById('carve-name').value.trim();
+  const seeds = document.getElementById('carve-seeds').value.trim();
+  out.textContent = dryRun ? 'reading what it requires…' : 'creating the repo…';
+  try {
+    const cutSel = document.getElementById('carve-cut').value, cut = cutSel === 'none' ? [] : cutSel.split(',');
+    const d = await api('/api/repos/carve', { method: 'POST', body: JSON.stringify({ ...(preset ? { preset } : { seeds }), name, dryRun, cut, verify: true }) });
+    const v = d.verified;
+    const sys = Object.entries(d.bySystem || {}).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join(' · ');
+    out.innerHTML = `<div>${dryRun ? 'would carve' : 'carved'} <b>${escapeHtml(d.name)}</b>: ${d.files} files (${d.seeded} named, ${d.pulledIn} pulled in), ${d.lines} lines${d.parent ? ` · parent ${escapeHtml(d.parent.name)}` : ''}</div>
+      <div>by system: ${escapeHtml(sys)}</div>
+      <div>npm: ${escapeHtml(Object.keys(d.npm || {}).join(', ') || 'none')}${(d.npmNamedOnly || []).length ? ` · named only: ${escapeHtml(d.npmNamedOnly.join(', '))}` : ''}</div>
+      ${(d.missing || []).length ? `<div style="color:var(--amber,#d90)">${d.missing.length} require(s) resolve to nothing: ${escapeHtml(d.missing.slice(0, 3).map(m => `${m.from} → ${m.spec}`).join('; '))}</div>` : ''}
+      ${v ? `<div style="color:${v.ok ? 'var(--mint)' : 'var(--amber,#d90)'}">${v.ok ? 'loads alone' : 'does NOT load alone'}: ${v.loaded}/${v.of} named files load in an empty folder${(v.failed || []).length ? ` · failed: ${escapeHtml(v.failed.map(f => `${f.path} (${f.error})`).join('; '))}` : ''}${(v.skipped || []).length ? ` · skipped ${escapeHtml(v.skipped.map(f => f.path).join(', '))}` : ''}</div>` : ''}
+      ${(d.cut || []).length ? `<div>left out: ${(d.leftOut || []).length} ${escapeHtml(d.cut.join('/'))} link(s) the code runs without</div>` : ''}
+      ${(d.tangle || []).length ? `<div style="color:var(--text3)">biggest links: ${escapeHtml(d.tangle.slice(0, 4).map(t => `${t.files} via ${t.from} → ${t.to} (${t.kind})`).join(' · '))}</div>` : ''}
+      ${(d.outsideSeeds || []).length ? `<div style="color:var(--text3)">came along from outside the seeds: ${escapeHtml(d.outsideSeeds.slice(0, 6).map(f => `${f.path} (by ${f.pulledBy})`).join(', '))}${d.outsideSeeds.length > 6 ? ' …' : ''}</div>` : ''}
+      ${!dryRun && d.repo && d.repo.uuid ? `<div><button class="tb-btn" onclick="_openProject('${escapeHtml(d.repo.uuid)}')">Open the repo</button></div>` : ''}`;
+  } catch (e) { out.innerHTML = `<span style="color:var(--coral)">could not carve: ${escapeHtml(e.message)}</span>`; }
+}
