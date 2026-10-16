@@ -95,3 +95,42 @@
 .cs-ident b{font-weight:600;color:var(--text2)}
 .cs-ident-opt{margin-left:auto;background:none;border:0;padding:0;color:var(--sky);font:inherit;cursor:pointer}.cs-ident-opt:hover{text-decoration:underline}
 .cs-m-cli .cs-msg-text{color:var(--text2);white-space:pre-wrap;font:10px/1.5 var(--mono)}
+
+/* §0.60.82 CE6 · CE7 · CE9 (code-tab-panels.js) — the Files tab's work in the Code tab, the picked lines with an action,
+   and the bottom panel (activity · runs · responses · tasks · log · control · versions · machine). Same tokens. */
+.cs-filter-row{padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.cs-filter{width:100%;box-sizing:border-box;font:10.5px var(--mono);padding:4px 7px}
+.cs-del{margin-left:6px;color:var(--text3);opacity:0;cursor:pointer;padding:0 3px}
+.cs-file:hover .cs-del{opacity:1}.cs-del:hover{color:var(--coral)}
+.cx-edit{display:flex;flex-direction:column;min-height:360px;height:calc(100% - 40px)}
+.cx-edit-bar{display:flex;align-items:center;gap:6px;padding:5px 9px;border-bottom:1px solid rgba(255,255,255,.06)}
+.cx-editor{flex:1;min-height:340px;width:100%;box-sizing:border-box;resize:none;border:0;outline:none;background:transparent;color:var(--text);font:11.5px/1.55 var(--mono);padding:8px 10px;tab-size:2;color-scheme:dark}
+.cx-lines{padding:6px 9px;border-bottom:1px solid rgba(255,255,255,.06)}
+.cx-acts{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.cx-panels{border:1px solid rgba(255,255,255,.08);border-radius:8px;background:var(--nx-void,var(--bg1))}
+.cx-bar{display:flex;gap:2px;padding:4px 6px;border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap}
+.cx-tab{background:none;border:1px solid transparent;color:var(--text3);font:10px var(--mono);border-radius:5px;padding:2px 9px;cursor:pointer}
+.cx-tab:hover{color:var(--text)}.cx-tab.on{color:var(--text);background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.cx-panels .cs-activity{border:0;border-radius:0}
+.cx-panel-body{max-height:300px;overflow:auto;padding:6px 9px;font:10.5px var(--mono);color:var(--text2)}
+.cx-route{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:4px 0 8px}
+.cx-hop,.cx-node,.cx-step{border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:1px 6px;font-size:10px;white-space:nowrap}
+.cx-hop.first{border-color:var(--sky);color:var(--sky)}
+.cx-arrow{color:var(--text3);font-size:9px}
+.cx-step{color:var(--mint)}.cx-step.bad{color:var(--coral);border-color:rgba(255,120,120,.4)}
+.cx-node.s-done{color:var(--mint)}.cx-node.s-failed,.cx-node.s-stopped{color:var(--coral)}.cx-node.s-running{color:var(--amber)}
+.cx-gates{display:flex;align-items:center;gap:6px;padding:0 0 8px}
+.cx-run{border:1px solid rgba(255,255,255,.07);border-radius:7px;margin:0 0 6px;padding:5px 8px}
+.cx-run-head{display:flex;align-items:center;gap:7px;cursor:pointer}
+.cx-st{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:0 4px}
+.cx-run.s-done .cx-st{color:var(--mint)}.cx-run.s-failed .cx-st,.cx-run.s-stopped .cx-st{color:var(--coral)}.cx-run.s-running .cx-st{color:var(--amber)}
+.cx-pipe{display:flex;align-items:center;flex-wrap:wrap;gap:3px;margin-top:5px}
+.cx-run-body{margin-top:6px;display:flex;flex-direction:column;gap:3px}
+.cx-run-body a{color:var(--sky2,var(--sky));text-decoration:none}
+.cx-evs{border-left:2px solid rgba(255,255,255,.08);padding-left:7px}
+.cx-run-acts{display:flex;align-items:center;gap:8px;margin-top:4px}
+.cx-resp{border-bottom:1px solid rgba(255,255,255,.05);padding:5px 0}
+.cx-resp.bad .cx-st{color:var(--coral)}
+.cx-resp-q{color:var(--text3);margin-top:2px;white-space:pre-wrap}
+.cx-resp-a{color:var(--text);margin-top:2px;white-space:pre-wrap}
+.cx-note{padding-bottom:6px}

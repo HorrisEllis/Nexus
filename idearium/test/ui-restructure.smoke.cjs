@@ -67,10 +67,10 @@ const chk = (label, cond) => { console.log((cond?'  ok  ':'  FAIL')+'  '+label);
   const create = q('.tab-group[data-group="create"] .tab-group-btn').dataset.views;
   const build  = q('.tab-group[data-group="build"] .tab-group-btn').dataset.views;
   console.log('  Create =', create, '| Build =', build);
-  chk('Build carries the three canvases (Spec Library moved into repos)',
-      build === 'eravos,architect-build,spec-wizard');
+  chk('Build carries no canvas view (Spec Library moved into repos; Architect into repo tabs; Eravos deleted 0.60.83)',
+      build === '');
   chk('Create is capture only', create === 'brainstorm,ideas');
-  for (const v of (create+','+build).split(',')) chk('#view-'+v+' exists', !!q('#view-'+v));
+  for (const v of (create+','+build).split(',').filter(Boolean)) chk('#view-'+v+' exists', !!q('#view-'+v));
   chk('global #view-architect removed', !q('#view-architect'));
 
   const dangling = [...new Set([...html.matchAll(/setView\('([a-z-]+)'\)/g)].map(m=>m[1]).filter(v=>!q('#view-'+v)))];

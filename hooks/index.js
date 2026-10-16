@@ -43,7 +43,6 @@ const architect       = require('./architect.hooks');
 // hooks/<system>.hooks.js headers for how, nothing hand-invented.
 const emerge          = require('./emerge.hooks');
 const copilot         = require('./copilot.hooks');
-const eravos           = require('./eravos.hooks');
 const ollama           = require('./ollama.hooks');
 const { structuredSideEffects } = require('./side-effect-parser.js');
 
@@ -56,7 +55,6 @@ const SYSTEMS = {
   architect,
   emerge,
   copilot,
-  eravos,
   ollama,
 };
 

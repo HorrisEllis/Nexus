@@ -111,7 +111,6 @@ const VERSION_SOURCES = [
   { system: 'idearium',     file: 'idearium/index.js',                   re: /export const VERSION\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'architect',    file: 'architect/registry-components.js',    re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'emerge',       file: 'emerge/registry-components.js',       re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },
-  { system: 'eravos',       file: 'eravos/server.js',                    re: /const VERSION\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'ollama-bridge', file: 'ollama/server.js',                   re: /const VERSION\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'clear-glass',  file: 'clear-glass/registry-components.js',  re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'loom',         file: 'loom/registry-components.js',         re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },

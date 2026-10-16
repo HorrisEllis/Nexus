@@ -294,7 +294,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e0e8ff;f
 .conv-expand:hover{color:var(--ac)}
 
 /* ── Canvas channel ─────────────────────────────────────── */
-#ch-canvas.active{display:flex;flex-direction:column;overflow:hidden}
 
 /* Forge tile heartbeat */
 @keyframes forge-pulse{0%{opacity:1;text-shadow:0 0 8px var(--ac)}50%{opacity:.4;text-shadow:none}100%{opacity:1;text-shadow:0 0 8px var(--ac)}}

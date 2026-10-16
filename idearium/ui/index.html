@@ -548,6 +548,7 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .ph-key{font-family:var(--mono);font-weight:600}
 .ph-map{color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
 .ph-card-title{font-size:11.5px;color:var(--text);margin:4px 0;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ph-decision{font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--violet);border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-right:4px}   /* §CV6 0.60.82 */
 .ph-card-foot{display:flex;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
 .ph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
 .ph-maps{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
@@ -1018,11 +1019,11 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
       </div>
     </div>
     <div class="tab-group" data-group="build">
-      <button class="tab-btn tab-group-btn" data-views="eravos" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
+      <button class="tab-btn tab-group-btn" data-views="" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
       <div class="tab-dropdown tab-dropdown-deep">
         <button class="tab-sub tab-sub-lead" onclick="openBuildFlow()"><span class="tab-icon">▶</span><span>Build this repo<small>plan the spec → its phases → the agent codes them, one at a time</small></span></button>
         <div class="tab-sub-sep"></div>
-        <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
+        <!-- §0.60.83 — James: "can you remove eravos?" · "Delete it outright." The Eravos canvas is gone with the system. -->
         <!-- §0.39.300 WS3 — the retired Spec Builder (spec-wizard) left Build ▾ (UI12: retired from every surface; its view
              stays below, §0.3). The spec is made in the workshop. -->
         <button class="tab-sub" onclick="openWorkshop()"><span class="tab-icon">✎</span>Spec workshop</button>
@@ -1174,13 +1175,6 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
          renderRepoArchitect(repo) against that one repo's own spec. James:
          "Move architect from build tab to repo sub tabs per repo." -->
 
-    <!-- ══════════ ERAVOS (own system, own port — sovereign iframe) ══════════ -->
-    <section class="view" id="view-eravos">
-      <!-- 0.39.263 — eravos's UI is served at /ui/eravos/ (was ../../eravos/ui/index.html → /eravos/ui/index.html, a 404
-           under the orchestrator and on idearium's own :4800). Standalone, app.js points it at the orchestrator's /ui/eravos/. -->
-      <iframe class="system-frame" id="eravos-frame" src="about:blank" data-src="../eravos/" title="Eravos"></iframe>
-    </section>
-
     <!-- ══════════ ARCHITECT BUILD UI (architect/'s own build surface — distinct
          from the "Architect" blueprint viewer under Build, which reads
          compiled-spec output; this is the architect system's own real UI) ══════════ -->
@@ -1246,8 +1240,9 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="repo-subtab-btn active" data-subtab="home" onclick="setRepoSubtab('home')">Home</button>
             <button class="repo-subtab-btn" data-subtab="idea" onclick="setRepoSubtab('idea')">Idea</button>
             <button class="repo-subtab-btn" data-subtab="notes" onclick="setRepoSubtab('notes')" title="write it down: notes, ideas, decisions, todos, questions, quotes (0.60.6)">Notes</button>
-            <button class="repo-subtab-btn" data-subtab="files" onclick="setRepoSubtab('files')">Files</button>
-            <button class="repo-subtab-btn" data-subtab="code" onclick="setRepoSubtab('code')" title="the work surface: the files (uncommitted greyed), the code with its chunk cards, the agent's changes as diffs, the agent docked (0.39.349)">Code</button>
+            <!-- §CE6 0.60.82 — James: "the file and code tab merge." The Files button is gone; setRepoSubtab('files') opens Code.
+                 The Files panel (#repo-subtab-files) stays below, archived (§0.3): renderApiRepoPanel still draws into it. -->
+            <button class="repo-subtab-btn" data-subtab="code" onclick="setRepoSubtab('code')" title="the files and the work surface: the tree (uncommitted greyed; add, delete, filter), the code with its chunk cards (edit, manage, history), the agent's changes as diffs, the agent docked, and the runs, responses and activity below (0.60.82: Files merged in)">Code</button>
             <button class="repo-subtab-btn" data-subtab="architect" onclick="setRepoSubtab('architect')">Architect</button>
             <button class="repo-subtab-btn" data-subtab="spec" onclick="setRepoSubtab('spec')">Spec</button>
             <!-- §0.39.271 P4 — James: "i want the roadmap and phases combined into a fully enterprise
@@ -2594,7 +2589,8 @@ async function saveToIdearium(){
 <script src="js/repo-tasks.js"></script>   <!-- §0.39.366 a repo's background tasks: everything the agent wearing its hat is doing -->
 <script src="js/repo-drawer-views.js"></script>   <!-- §0.46.0/0.47.0 the Plan panel's versions · machine views (store + Ollama tape) -->
 <script src="js/agent-options.js"></script>   <!-- §0.47.0 OS4 every agent option in the Agent tab; its proposals (OS7) -->
-<script src="js/code-surface.js"></script>   <!-- §0.39.349 CT3 — the Code tab is the work surface -->
+<script src="js/code-surface.js"></script>
+<script src="js/code-tab-panels.js"></script>   <!-- §0.60.82 CE6 · CE7 · CE9 — the Files tab's work, the picked lines with an action, the bottom panels -->   <!-- §0.39.349 CT3 — the Code tab is the work surface -->
 <script src="js/file-versions.js"></script>
 <script src="js/components-panel.js"></script>
 <script src="js/repo-versions.js"></script>

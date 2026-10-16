@@ -613,7 +613,7 @@ document.getElementById('gaps-filter-tabs').addEventListener('click', e => {
 // siso/warp/meta/ui/tablet/nexus-healer/clear-glass are real, shared
 // code, not real systems, and are correctly excluded now.
 const REAL_SYSTEMS = new Set([
-  'guardian', 'ollama', 'intelligence', 'eravos', 'copilot', 'bridge',
+  'guardian', 'ollama', 'intelligence', 'copilot', 'bridge',
   'loom', 'cortex', 'orchestrator', 'idearium', 'architect', 'emerge',
   'diagnostic',
 ]);
@@ -689,7 +689,7 @@ function renderMapGraph(systems, edgeSet) {
 // Confirmed directly for every real system, not assumed.
 const SYSTEM_PATHS = {
   guardian: 'guardian/server.js', ollama: 'ollama/server.js',
-  intelligence: 'intelligence/server.js', eravos: 'eravos/server.js',
+  intelligence: 'intelligence/server.js',
   copilot: 'copilot/server.js', bridge: 'bridge/server.js',
   loom: 'loom/server.js', cortex: 'cortex/boot.js',
   orchestrator: 'orchestrator/orchestrator.js', idearium: 'idearium/api/index.js',

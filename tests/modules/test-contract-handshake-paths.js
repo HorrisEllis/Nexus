@@ -45,7 +45,6 @@ test('CHP-002', 'versionium\'s own real route file actually serves /contract —
 const REAL_ROUTE_FILES = {
   cortex:       'cortex/boot.js',
   guardian:     'guardian/server.js',
-  eravos:       'eravos/server.js',
   ollama:       'ollama/routes/system.js',
   copilot:      'copilot/server.js',
   loom:         'loom/server.js',

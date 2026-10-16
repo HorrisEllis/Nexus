@@ -147,6 +147,46 @@ export const SPEC = [
     need: (a) => (a.args.length >= 3 ? null : '<path> <from> <to>'),
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/lines/copy`, body: { path: a.args[0], from: a.args[1], to: a.args[2], ...(a.flags.to ? { toPath: a.flags.to } : {}) } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.lines} lines → ${d.path} (on the work surface; apply to write it)`) },
+  // §CE8 — James: "so the cli can read the current worksurface in the code tab." One surface for the Code tab, the CLI and
+  // the agents (idearium/lib/surface-state.cjs): what is open, the picked lines and chunk, what waits, the run. Setting it
+  // from here moves the tab (idearium.surface.changed).
+  { key: 'code.surface', repo: true, usage: 'code surface <repo>', about: 'what the Code tab has open: the file, the picked lines (with their text), the chunk, the proposals waiting, the latest run',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/surface` }),
+    print: (d, a, h) => _printSurface(d, a, h) },
+  { key: 'code.open', repo: true, usage: 'code open <repo> <path> [--lines a-b]', about: 'open a file on the Code tab\'s surface (the tab follows), optionally with lines picked',
+    need: (a) => (a.args[0] ? null : '<path>'),
+    req: (a) => { const sel = _lines(a.flags.lines); if (sel && sel.error) return { error: sel.error }; return { method: 'PUT', path: `/api/repos/${a.repo.uuid}/surface`, body: { open: a.args[0], ...(sel ? { sel } : {}), by: 'cli' } }; },
+    print: (d, a, h) => _printSurface(d, a, h) },
+  { key: 'code.select', repo: true, usage: 'code select <repo> <from> [to] | --chunk <id> | --clear', about: 'pick lines (or a chunk) of the open file on the Code tab\'s surface; --clear unpicks',
+    need: (a) => (a.flags.clear || a.flags.chunk || a.args[0] ? null : '<from> [to], --chunk <id> or --clear'),
+    req: (a) => { const body = { by: 'cli' };
+      if (a.flags.clear) Object.assign(body, { sel: null, chunk: null });
+      else { if (a.flags.chunk && a.flags.chunk !== true) body.chunk = String(a.flags.chunk); if (a.args[0]) { const sel = _lines(`${a.args[0]}-${a.args[1] || a.args[0]}`); if (sel.error) return { error: sel.error }; body.sel = sel; } }
+      return { method: 'PUT', path: `/api/repos/${a.repo.uuid}/surface`, body }; },
+    print: (d, a, h) => _printSurface(d, a, h) },
+  // §CE7 0.60.81 — James: "ai assisted coding using the chunking and line count tool for the ai to change lines at a time or a
+  // section." A checked edit (expect must match the file now) and the agent on a picked range; both land as one proposal.
+  { key: 'code.edit', repo: true, usage: 'code edit <repo> <path> <from> <to> --with "<new text>" [--expect "<old text>"]', about: 'replace lines from..to with new text — checked against the file as it is now; lands as a proposal (apply writes it)',
+    need: (a) => (a.args.length >= 3 && typeof a.flags.with === 'string' ? null : '<path> <from> <to> --with "<text>"'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/code/edit`, body: { path: a.args[0], by: 'cli', edits: [{ from: a.args[1], to: a.args[2], replacement: a.flags.with, ...(typeof a.flags.expect === 'string' ? { expect: a.flags.expect } : {}) }] } }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.path} lines ${d.ranges.map(r => r.join('–')).join(', ')} → proposal ${h.c.gray((d.inject && d.inject.uuid) || '')} ${h.c.dim(`(${d.checksumBefore} → ${d.checksumAfter})`)}`) },
+  { key: 'code.assist', repo: true, usage: 'code assist <repo> <path> <from> <to> <change|expand|refactor|fix|document|explain> ["instructions"] [--provider p] [--model m]', about: 'hand lines from..to to the repo\'s agent with an action; its replacement for exactly those lines lands as a proposal (explain answers only)',
+    need: (a) => (a.args.length >= 4 ? null : '<path> <from> <to> <action>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/code/assist`, timeoutMs: 20 * 60000, body: { path: a.args[0], from: a.args[1], to: a.args[2], action: a.args[3], ...(a.args[4] ? { note: a.args.slice(4).join(' ') } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.model ? { model: a.flags.model } : {}) } }),
+    print: (d, a, h) => { if (!d.ok) { console.log(h.c.amber(`  ${d.error}`)); if (d.reply) console.log(h.c.dim(d.reply)); return; }
+      if (d.action === 'explain') { console.log(h.c.dim(`  ${d.provider || ''}`)); console.log(d.reply); return; }
+      console.log(`${h.c.mint('✓')} ${d.path} ${d.from}–${d.to} ${d.action} by ${d.provider || 'the agent'} → proposal ${h.c.gray((d.inject && d.inject.uuid) || '')}`); console.log(h.c.dim(`  idearium repo changes ${h.shortRepo(a.repo.uuid)}`)); } },
+  // §CV3 0.60.81 — James: "rewind engine for each file." The runs Nexus kept (CE1), and undoing one: every file it changed
+  // back as it was before it started (a file it created is named, not deleted).
+  { key: 'repo.runs', repo: true, usage: 'repo runs <repo> [--status running|done|failed]', about: 'the runs Nexus kept for this repo: goal, attempt, agents tried, steps, files read and changed',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/runs${qs(a.flags, ['status', 'limit'])}` }),
+    print: (d, a, h) => { const l = d.runs || []; if (!l.length) { console.log(h.c.gray('  no runs')); return; }
+      for (const r of l) console.log(`  ${ICON[r.status] || '·'} ${h.c.gray(r.runId)} ${h.c.dim(`${r.status} · attempt ${r.attempt} · ${r.stepCount} steps · ${r.filesChanged.length} changed · ${when(r.updatedAt)}`)}\n     ${String(r.goal).split('\n')[0].slice(0, 110)}`); } },
+  { key: 'repo.rewind-run', repo: true, usage: 'repo rewind-run <repo> <runId> [--dry]', about: 'put every file a run changed back as it was before the run (each restore is a version; --dry says what it would do)',
+    need: (a) => (a.args[0] ? null : '<runId> (idearium repo runs <repo>)'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/runs/${encodeURIComponent(a.args[0])}/rewind`, body: { by: 'cli', ...(a.flags.dry ? { dryRun: true } : {}) }, timeoutMs: 120000 }),
+    print: (d, a, h) => { console.log(h.c.dim(`  to ${String(d.to.commitId).slice(0, 12)} · ${when(d.to.ts)} · ${d.to.message || ''}${d.dryRun ? ' (dry run)' : ''}`));
+      for (const r of d.results || []) console.log(`  ${r.done ? h.c.mint('↶') : r.dryRun ? '·' : h.c.amber('○')} ${r.path}${r.why ? h.c.dim(`  — ${r.why}`) : ''}`); } },
   // 0.60.15 — .contract v2 (cortex/core/raid/contract-gates.js): executable contracts, gated step by step. Local: they read
   // and write the .contract file itself; completion is the evaluator's, never declared.
   { key: 'contract.new', repo: false, usage: 'contract new <id> <file.contract> [--what text] [--why text]', about: 'a new v2 contract (context → build → verify gates) to edit',
@@ -440,13 +480,13 @@ export const SPEC = [
       for (const f of d.emptyFiles || []) console.log(`  ${h.c.amber('○')} ${f}  ${h.c.dim('0 bytes')}`);
       console.log(h.c.dim(`\n  draft them: idearium repo blanks ${a.repo.name} complete`));
     } },
-  { key: 'repo.history', repo: true, usage: 'repo history <repo> <path>', about: 'the commits that touched one file — when, who, why (VR1), newest first',
+  { key: 'repo.history', repo: true, usage: 'repo history <repo> <path> [--tag kind:edit|run:id|by:who|inject:id]', about: 'the commits that touched one file — when, who, why (VR1), newest first; --tag filters by their labels (CV4)',
     need: (a) => (a.args[0] ? null : '<path>'),
-    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/history?path=${encodeURIComponent(a.args[0])}`, timeoutMs: 30000 }),
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/history?path=${encodeURIComponent(a.args[0])}${a.flags.tag && a.flags.tag !== true ? `&tag=${encodeURIComponent(a.flags.tag)}` : ''}`, timeoutMs: 30000 }),
     print: (d, a, h) => {
       const l = d.commits || [];
       if (!l.length) { console.log(h.c.gray(`  no commit names ${d.path}${d.untracked ? ` (${d.untracked} older commit(s) do not say what they touched)` : ''}`)); return; }
-      for (const c of l) console.log(`  ${h.c.amber(String(c.commitId).slice(0, 10))} ${h.c.dim(when(c.ts))} ${c.op === 'delete' ? h.c.coral('deleted') : 'changed'}  ${String(c.message || '').slice(0, 90)}${(c.provenance.refs || []).length ? h.c.dim(`  · ${c.provenance.refs.join(', ')}`) : ''}`);
+      for (const c of l) console.log(`  ${h.c.amber(String(c.commitId).slice(0, 10))} ${h.c.dim(when(c.ts))} ${c.op === 'delete' ? h.c.coral('deleted') : 'changed'}  ${String(c.message || '').slice(0, 90)}${(c.provenance.refs || []).length ? h.c.dim(`  · ${c.provenance.refs.join(', ')}`) : ''}${(c.labels || []).length ? h.c.dim(`  [${c.labels.map(l => [l.kind, l.action, l.by].filter(Boolean).join(' ')).join('; ')}]`) : ''}`);
     } },
   // §OP3 0.57.0 — James: "i prefer options over hard coded … anything high leverage, or that removes the need to understand code".
   // A system's options through Idearium's proxy (GET/POST /api/systems/:system/options → the system's own /api/options).
@@ -748,6 +788,23 @@ function _clearGlass(method, path, body, timeoutMs) {
  * makeRouteCommands(h) -> { [key]: handler } — h: { api(method, path, body, timeoutMs), findRepo, shortRepo, die,
  * header, port, c: { sky, mint, amber, coral, violet, bold, dim, gray } }. One runner for every row of SPEC.
  */
+/** _lines('12-40') → { from, to } · '12' → { from: 12, to: 12 } · nothing → null · anything else → { error } */
+function _lines(v) {
+  if (v == null || v === true) return null;
+  const m = /^(\d+)(?:-(\d+))?$/.exec(String(v).trim());
+  if (!m) return { error: `lines as a-b (e.g. 12-40), not ${v}` };
+  const from = +m[1], to = +(m[2] || m[1]);
+  return from >= 1 ? { from: Math.min(from, to), to: Math.max(from, to) } : { error: 'lines start at 1' };
+}
+function _printSurface(d, a, h) {
+  if (!d.open) console.log(h.c.gray('  no file open'));
+  else console.log(`  ${h.c.bold(d.open)}${d.sel ? h.c.dim(`  lines ${d.sel.from}–${d.sel.to}`) : ''}${d.chunk ? h.c.dim(`  chunk ${d.chunk}`) : ''}`);
+  if (d.lines) console.log(d.lines.text.split('\n').map((l, i) => `${h.c.dim(String(d.lines.from + i).padStart(5))}  ${l}`).join('\n'));
+  if ((d.pending || []).length) { console.log(h.c.dim(`  ${d.pending.length} proposal${d.pending.length === 1 ? '' : 's'} waiting:`)); for (const p of d.pending.slice(0, 20)) console.log(`    ${ICON.proposed} ${p.op === 'delete' ? 'delete ' : ''}${p.path}  ${h.c.gray(p.uuid)}`); }
+  if (d.run) console.log(h.c.dim(`  run ${d.run.status} · attempt ${d.run.attempt} · ${d.run.steps} steps — ${d.run.goal}${d.run.next ? ` · next: ${d.run.next}` : ''}`));
+  console.log(h.c.dim(`  set by ${d.by || 'nobody yet'}${d.updatedAt ? ` · ${when(d.updatedAt)}` : ''} · rev ${d.rev || 0}`));
+}
+
 export function makeRouteCommands(h) {
   const out = {};
   for (const row of SPEC) {

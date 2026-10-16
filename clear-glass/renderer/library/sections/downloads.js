@@ -64,7 +64,7 @@
     ['ledger', 'Event ledger'], ['intelligence', 'Intelligence'], ['compartment', 'Another system (+ intent)'],
     ['sse-system', 'SSE → system'], ['copilot-cli', 'Co-pilot CLI (+ intent)'], ['copilot-panel', 'Co-pilot panel'], ['ollama-stream', 'Ollama stream'],
   ];
-  const SYSTEMS = ['cortex', 'guardian', 'orchestrator', 'bridge', 'loom', 'copilot', 'intelligence', 'eravos', 'idearium', 'architect'];
+  const SYSTEMS = ['cortex', 'guardian', 'orchestrator', 'bridge', 'loom', 'copilot', 'intelligence', 'idearium', 'architect'];
   const targetLabel = (t) => (TARGETS.find(x => x[0] === t) || [t, t])[1];
 
   function listenersPane(listeners, rerender) {

@@ -183,7 +183,7 @@
   const REAL_SYSTEM_PORTS = {
     guardian: 7820, ollama: 3749, copilot: 3750, clearglass: 7704,
     orchestrator: 9000, cortex: 3748, architect: 3747, idearium: 4800,
-    emerge: 4242, loom: 3752, eravos: 3751, diagnostic: 7825,
+    emerge: 4242, loom: 3752, diagnostic: 7825,
     versionium: 3754, autopilot: 7799, 'agent-mesh': 7704,
   };
   function _systemPort(id) { return REAL_SYSTEM_PORTS[id] || null; }

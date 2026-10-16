@@ -59,7 +59,7 @@ A blueprint turns a path into a map of what is there and what is missing. That i
 
 ### Node schemas
 
-`architect/schemas/index.js` loads the node taxonomy every NEXUS system shares: `architect/schemas/schema.component`, `architect/schemas/schema.hook`, `architect/schemas/schema.wire`, `architect/schemas/schema.node`, `architect/schemas/schema.system`, `architect/schemas/schema.command` and `architect/schemas/schema.capability`. The same set is copied into several systems (compare `eravos/schemas/`), which is how each system describes itself in one vocabulary.
+`architect/schemas/index.js` loads the node taxonomy every NEXUS system shares: `architect/schemas/schema.component`, `architect/schemas/schema.hook`, `architect/schemas/schema.wire`, `architect/schemas/schema.node`, `architect/schemas/schema.system`, `architect/schemas/schema.command` and `architect/schemas/schema.capability`. The same set is copied into several systems (`idearium/schemas/` holds idearium's own), which is how each system describes itself in one vocabulary.
 
 ---
 

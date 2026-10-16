@@ -87,7 +87,6 @@
     { id: 'emerge',       port: 4242, sysVar: '--sys-em' },
     { id: 'copilot',      port: 3750, sysVar: '--sys-cp' },
     { id: 'loom',         port: 3752, sysVar: null },
-    { id: 'eravos',       port: 3751, sysVar: '--sys-er' },
     { id: 'diagnostic',   port: 7825, sysVar: '--sys-dg' },
     { id: 'ollama',       port: 3749, sysVar: '--sys-ol' },
     { id: 'versionium',   port: 3754, sysVar: null },

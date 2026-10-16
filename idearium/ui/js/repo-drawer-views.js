@@ -13,7 +13,7 @@ function _rmReset(uuid) { if (RT_MORE.uuid !== uuid) Object.assign(RT_MORE, { uu
 function _rmWhen(ts) { return ts ? new Date(ts).toLocaleString('en-GB', { hour12: false }).replace(',', '') : '—'; }
 function _rmMB(b) { return `${((b || 0) / 1048576).toFixed(1)}MB`; }
 function _rmErr(k) { return RT_MORE.err[k] ? `<div class="rt-sub-bad rt-pad">${_rtEsc(RT_MORE.err[k])}</div>` : ''; }
-function _rmFilters(html) { const f = document.getElementById('rt-filters'); if (f) f.innerHTML = html; }
+function _rmFilters(html) { const f = _rtEl('rt-filters'); if (f) f.innerHTML = html; }
 
 // ── Versions ────────────────────────────────────────────────────────────────────────────────────────────────────────
 async function rtVersionsLoad() {
@@ -23,7 +23,7 @@ async function rtVersionsLoad() {
   if (RT_VIEW === 'versions' && _rtDrawerOpen()) rtVersionsPaint();
 }
 function rtVersionsPaint() {
-  const body = document.getElementById('rt-list'); if (!body) return;
+  const body = _rtEl('rt-list'); if (!body) return;
   const all = (RT_MORE.versions && RT_MORE.versions.snapshots) || [];
   // §0.47.0 OS3 — opened from the Code tab on one file: only the commits that touched it (VR1 provenance), until cleared
   const f = RT_MORE.file, l = f ? all.filter(c => c.provenance && c.provenance.files.some(x => x.path === f)) : all;
@@ -50,7 +50,7 @@ async function rtTapeRun(run) {
   rtMachinePaint();
 }
 function rtMachinePaint() {
-  const body = document.getElementById('rt-list'); if (!body) return;
+  const body = _rtEl('rt-list'); if (!body) return;
   _rmFilters('<button class="rt-f" onclick="rtMachineLoad()">↻ refresh</button><span class="rt-dim">all of Nexus — not only this repo</span>');
   const st = RT_MORE.store, tp = RT_MORE.tape;
   if (!st && !tp) { body.innerHTML = '<div class="rt-empty">reading cortex and ollama…</div>'; return; }

@@ -21,6 +21,7 @@ const FILES = [
   ['clear-glass/src/net/transport-host.js', I('clear-glass/src/net/transport-host.js'), []],   // §0.60.60 NP1
   ['clear-glass/src/net/service.js', I('clear-glass/src/net/service.js'), [I('clear-glass/src/net/policy.js'), I('clear-glass/src/net/transport-host.js')]],
   ['lib/agent-tools/tools/clear-glass/net.js', I('lib/agent-tools/tools/clear-glass/net.js'), []],   // §0.60.60 NP9: read-only agent view
+  ['idearium/lib/surface-state.cjs', I('idearium/lib/surface-state.cjs'), [I('idearium/lib/data-dir.cjs')]],   // §0.60.80 CE8: the Code tab's surface, one for the tab, the CLI and agents
   ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
 ];
 const CONSUMERS = [
@@ -32,6 +33,16 @@ const CONSUMERS = [
   [I('lib/repo-agent.js'),                          I('lib/gig-ledger-listener.js'), 'attach() before a run begins: a finished run files a deliverable claim with its changed files as evidence (0.60.53 PF0)'],
   [I('lib/repo-agent.js'),                          I('lib/run-state.js'),  'begin() a run (resume on the same goal; a brick\'s run by its brick key, 0.60.77 GW2) before dispatch, finish() it after; lost-job and door fallbacks carry the brick; header() on a resumed Ollama run (0.60.50 CE1, CE10; 0.60.77 GW2)'],
   [I('idearium/api/index.js'),                      I('lib/run-state.js'),  'runIdFor({ brick }) + load(): each brick\'s run in the contract trace (0.60.77 GW2)'],
+  [I('idearium/api/index.js'),                      I('idearium/lib/surface-state.cjs'), 'GET / PUT /api/repos/:uuid/surface: get() / set(); a set emits idearium.surface.changed (0.60.80 CE8)'],
+  [I('idearium/api/index.js'),                      I('lib/run-state.js'),  'list({ repoUuid })[0]: the repo\'s latest run on the surface (0.60.80 CE8)'],
+  [I('idearium/ui/js/code-surface.js'),             I('idearium/lib/surface-state.cjs'), 'csPublish() PUTs the surface as it changes; csFollow() opens what the CLI set (idearium.surface.changed) and where it was left (0.60.80 CE8)'],
+  [I('idearium/cli/route-commands.js'),             I('idearium/lib/surface-state.cjs'), 'code surface / code open / code select rows, through the route (0.60.80 CE8; agents reach them through nexus.command)'],
+  [I('idearium/api/index.js'),                      I('lib/line-edit.js'),  'POST …/code/edit and …/code/assist: applyText checks every edit against the file now; one proposal (0.60.81 CE7)'],
+  [I('idearium/api/index.js'),                      I('lib/repo-agent.js'), 'POST …/code/assist: dispatch the picked range with its action, noContext, no layer (0.60.81 CE7)'],
+  [I('idearium/api/index.js'),                      I('lib/repo-history.js'), 'POST …/runs/:id/rewind: restoreFile each file the run changed to the last version before it (0.60.81 CV3)'],
+  [I('idearium/api/index.js'),                      I('lib/repo-versions.js'), 'commitNow({ kind: restore }) after a file restore and a run rewind (0.60.81 CV2)'],
+  [I('lib/repo-inject.js'),                         I('lib/repo-versions.js'), 'an applied or reverted proposal commits at once, labelled kind / inject / by / run (0.60.81 CV2)'],
+  [I('idearium/api/index.js'),                      I('lib/run-state.js'),  'GET …/runs (list), POST …/runs/:id/rewind (load, note rewound) (0.60.81 CV3)'],
   [I('copilot/server.js'),                          I('lib/run-state.js'),  'every ok/failed tool call is written to the run by step() (0.60.50 CE1)'],
   [I('copilot/tool-runtime.js'),                    I('lib/run-state.js'),  'header() at the head of follow-up rounds and resumed runs; note(off-task) on a blocked reply (0.60.50 CE2, CE3)'],
   [I('guardian/lib/response-sink.js'),              I('lib/run-state.js'),  'a response node is tagged with its run, step and attempt via forSession() (0.60.50 CE4)'],

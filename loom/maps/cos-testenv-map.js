@@ -1,7 +1,7 @@
 'use strict';
 /**
  * loom/maps/cos-testenv-map.js — the COS test VM (0.39.264), ErosmancerOS started by Clear Glass,
- * and the Eravos → Idearium "new organism" path, mapped into LOOM one component per FILE, with every REAL edge
+ * and (until 0.60.83, when ERAVOS was deleted) the Eravos → Idearium "new organism" path, mapped into LOOM one component per FILE, with every REAL edge
  * as a wire: require() edges (verified against the source) AND the edges the source
  * scanner cannot see — a child process spawned by path, an HTTP call, a postMessage.
  * Mirrors loom/maps/observability-map.js / ui-map.js.
@@ -38,9 +38,6 @@ const FILES = [
   // The source scanner reads .js/.cjs/.mjs only, so ErosmancerOS's server enters the registry here.
   ['erosmancer/erosmancer-os/src/api/server.ts', 'nexus.erosmancer.erosmancer-os.src.api.server', []],
   ['clear-glass/src/eros/supervisor.js', I('clear-glass/src/eros/supervisor.js'), ['nexus.erosmancer.erosmancer-os.src.api.server']],
-  // Eravos "+ NEW": HTTP to Idearium's API when standalone, postMessage to Idearium's page when embedded
-  ['ui/eravos/catalog/catalog-ui.js', I('ui/eravos/catalog/catalog-ui.js'), [I('idearium/api/index.js'), I('idearium/ui/js/app.js')]],
-  ['eravos/ui/catalog/catalog-ui.js', I('eravos/ui/catalog/catalog-ui.js'), [I('idearium/api/index.js'), I('idearium/ui/js/app.js')]],
 ];
 
 function mapCosTestenv(driver) {

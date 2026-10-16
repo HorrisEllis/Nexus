@@ -10,7 +10,7 @@
 // already uses elsewhere for things like REPO_RAIL_COLLAPSED-style state
 // in the sibling idearium UI. Persisted to localStorage — per-viewer only,
 // never shared, exactly what that mechanism is for.
-const RAIL_DEFAULT_ORDER = ['ch-overview','ch-guardian','ch-cortex','ch-idearium','ch-bridge','ch-log','ch-diagnose','ch-blueprint','ch-causal','ch-conversations','ch-canvas','ch-emerge'];
+const RAIL_DEFAULT_ORDER = ['ch-overview','ch-guardian','ch-cortex','ch-idearium','ch-bridge','ch-log','ch-diagnose','ch-blueprint','ch-causal','ch-conversations','ch-emerge'];
 const RAIL_STATE_KEY = 'nexus.home.rail.v1';
 let RAIL_STATE = { order: RAIL_DEFAULT_ORDER.slice(), hidden: [], labels: {} };
 (function loadRailState(){
