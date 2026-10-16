@@ -33,5 +33,17 @@ const act = fs.readFileSync(path.join(ROOT, 'lib/repo-activity.js'), 'utf8');
 check('RW-05 wired: the watchdog runs every minute, closes a stall, reports a gap diagnostic sees, retries once; a reject retries its phase; the task panel ends a finished review',
   /setInterval\(\(\) => \{ _watchRuns\(\)/.test(api) && /type: 'phase\.run\.stalled'/.test(api) && /_autoRetry\(s, 'stall'/.test(api) && /_autoRetry\(info, 'reject'/.test(api)
   && /-review\$\/\.test\(runId\) && \['reviewed', 'incomplete', 'skipped'\]/.test(act));
+// ── 0.60.78 — James, 2026-10-16: "just needs to recover and retry after rejection. like log the fault or failure mode and retry."
+const note = (id, state, ago) => ({ runId: id, state, phase: 'IH1', map: 'm.spec', repoUuid: 'R', targetRepo: 'R', ts: now - ago });
+check('RW-06 a retry NOTE (auto-retry / auto-retry-held) is final the moment it is written: it is never "a run that stalled" (the 10-minute loop in his Tasks list)',
+  RW.stalled([note('auto-1', 'auto-retry-held', 30 * m), note('auto-2', 'auto-retry', 45 * m)], { now }).length === 0
+  && RW.isFinal(RW.runsOf([note('auto-3', 'auto-retry-held', 1)]).get('auto-3')));
+check('RW-07 a real build that stopped moving still stalls (the fix did not blind the watchdog)', RW.stalled([note('b1', 'started', 30 * m)], { now }).length === 1);
+const cfgOf = (o) => (k) => o[k];
+check('RW-08 a rejection has its own cap (default 3), a stall keeps the tight one (default 2); both come from settings', RW.limitFor('reject', cfgOf({})) === 3 && RW.limitFor('stall', cfgOf({})) === 2
+  && RW.limitFor('reject', cfgOf({ 'repos.reject_retries': 5 })) === 5 && RW.limitFor('stall', cfgOf({ 'repos.auto_retries': 0 })) === 0);
+const mix = [note('a1', 'auto-retry', 1 * m), note('a2', 'auto-retry', 2 * m)].map((r, i) => ({ ...r, retryKind: 'stall' }));
+check('RW-09 two earlier STALL retries do not use up a REJECTION retry (the held retry in his screenshot)', RW.retriesFor(mix, { phase: 'IH1', kind: 'reject' }) === 0 && RW.retriesFor(mix, { phase: 'IH1', kind: 'stall' }) === 2);
+check('RW-10 wired: a held retry is reported as a gap (phase.retry.held) and the retry says which attempt it is', /type: 'phase\.retry\.held'/.test(api) && /retry \$\{nth\} of \$\{limit\}/.test(api) && /RW\.limitFor\(kind/.test(api));
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
