@@ -30,3 +30,34 @@ proof_per_step: "Each step ends in a test and a Clear Glass check (never Playwri
 open_questions:
   - "Is the order right, and is 'solid' = no silent loss + one tab?"
   - "GW0d: what must the listener hear? (blocks GW10)"
+
+# ## ADDENDUM 2026-10-16 — his four musts, in one order (no new phases)
+# James (2026-10-16): "give me a opinion about all of this and the recent phases. all phases on the phasemap. all the ones to
+# help me make money, need to be done. heklp wirth overwhekm need to be done. that get the pipeline working need to e done. cos
+# as a working test env need to be done. pipeline is vitam, the intent and ruoting and chubkiing and gating"
+# His decision, recorded as his: four kinds of phase must be done: money, overwhelm, the pipeline, COS as a working test env.
+# The pipeline is vital, and it means intent, routing, chunking and gating.
+# The coder's ordering (a recommendation, his to change). The pipeline comes first because the money phases that build for
+# clients (FV1) depend on it. Each line names its existing owner phase.
+#   0  his run on the current release ....... SF7 (zero code; he runs 0.60.44)
+#   1  overwhelm: one list of his projects ... COSA10 (small, read-only; independent of the pipeline)
+#   2  gating: what a gate is, and a trace ... GW0 (decision: a brick is the unit), GW3
+#   3  gating + chunking: the gate holds, the
+#      agent gets a budgeted slice .......... GW1 baton + GW24 budget (the whole-phase brick and GA1's uncapped dependency code
+#                                             are what fail small models)
+#   4  gating: the run follows the gate ..... GW2 (a fallback resumes the same brick; the 3h stall and the fail/rewind loop)
+#   5  routing: one chooser, a slow agent
+#      routed away, parked work cleared ..... ME5 (RAID _decide the one chooser) + the officiator on a slow local model
+#                                             (no owner phase found: 63 failed syntheses, 45 parked, cleared only by hand)
+#   6  chunking + gating: dependencies per
+#      chunk, drift → retry or rewind ....... GW26
+#   7  intent: per-repo intent, the listener  IS1 + SF4/GW10 (blocked on GW0d)
+#   8  routing to browser providers survives
+#      a markup change ...................... SP3 (SP1/SP2 built, unverified in Electron)
+#   9  COS as a working test env ........... testenv provision run once for real (never run against a downloaded image), then
+#                                             GW12 minimal default → GW13 sandbox door → GW14 copy in, diff out → GW11 snapshot
+#                                             per gate → GW15 every file tested
+#  10  money ................................ the gig writer exists (clear-glass/src/autofill/gig.js) and the claim ledger PF0 is
+#                                             built: fiverr-ledger PF1-PF3 and the portfolio section (clear-glass-surfaces PF1-PF3)
+#                                             can run beside 2-8; FR1 the guide; FV1 client jobs after the pipeline holds
+# Everything else stays mapped and waits (§0.3: nothing dropped), behind this list.
