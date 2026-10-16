@@ -17,7 +17,9 @@ const path   = require('path');
 const fs     = require('fs');
 
 const ROOT = path.join(__dirname, '../..');
-const INDEX_DIR = path.join(ROOT, 'data', 'vector-index');
+const os = require('os');
+const INDEX_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'vm-pipeline-'));
+process.env.NEXUS_VECTOR_INDEX_DIR = INDEX_DIR;   // 0.60.73: never touch the real data/vector-index
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) {
