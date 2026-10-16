@@ -1,0 +1,993 @@
+{
+ "schema": "eravos.pack/1",
+ "id": "eravos.presets.edm-pads",
+ "version": "1.0.0",
+ "label": "EDM Pads",
+ "prefix": "EDM Pad",
+ "author": "James Brooks",
+ "tags": [
+  "edm-pad"
+ ],
+ "for": [
+  "eravos.pad-forge",
+  "eravos.supersaw",
+  "eravos.retro-poly"
+ ],
+ "items": {
+  "eravos.pad-forge": {
+   "presets": {
+    "Trance Wash": {
+     "params": {
+      "cornerA": "swarm",
+      "cornerB": "strings",
+      "cornerC": "halo",
+      "cornerD": "air",
+      "x": 0.3,
+      "y": 0.35,
+      "orbit": "circle",
+      "orbitRate": 0.1,
+      "orbitSize": 0.25,
+      "cutoff": 5200,
+      "bloom": 0.6,
+      "warmth": 0.15,
+      "width": 1,
+      "attack": 0.8,
+      "release": 3,
+      "space": 0.55,
+      "shimmer": 0.3,
+      "size": 6
+     }
+    },
+    "Future Bass Bloom": {
+     "params": {
+      "cornerA": "swarm",
+      "cornerB": "glass",
+      "cornerC": "swarm",
+      "cornerD": "halo",
+      "x": 0.25,
+      "y": 0.3,
+      "orbit": "figure-8",
+      "orbitRate": 0.15,
+      "orbitSize": 0.2,
+      "cutoff": 6500,
+      "bloom": 0.8,
+      "warmth": 0.2,
+      "width": 1,
+      "attack": 0.25,
+      "release": 2,
+      "space": 0.4,
+      "shimmer": 0.25,
+      "size": 4
+     }
+    },
+    "Melodic Dubstep Halo": {
+     "params": {
+      "cornerA": "halo",
+      "cornerB": "choir",
+      "cornerC": "strings",
+      "cornerD": "glass",
+      "x": 0.45,
+      "y": 0.4,
+      "orbit": "drift",
+      "orbitRate": 0.05,
+      "orbitSize": 0.3,
+      "cutoff": 4500,
+      "bloom": 0.7,
+      "warmth": 0.25,
+      "width": 0.95,
+      "attack": 1.5,
+      "release": 4,
+      "space": 0.65,
+      "shimmer": 0.45,
+      "size": 8
+     }
+    },
+    "Illenium Strings": {
+     "params": {
+      "cornerA": "strings",
+      "cornerB": "choir",
+      "cornerC": "strings",
+      "cornerD": "halo",
+      "x": 0.35,
+      "y": 0.5,
+      "orbit": "drift",
+      "orbitRate": 0.04,
+      "orbitSize": 0.25,
+      "cutoff": 3600,
+      "bloom": 0.75,
+      "warmth": 0.35,
+      "width": 0.9,
+      "attack": 1.8,
+      "release": 4.5,
+      "space": 0.6,
+      "shimmer": 0.35,
+      "size": 7
+     }
+    },
+    "Progressive Air": {
+     "params": {
+      "cornerA": "air",
+      "cornerB": "swarm",
+      "cornerC": "glass",
+      "cornerD": "air",
+      "x": 0.5,
+      "y": 0.3,
+      "orbit": "circle",
+      "orbitRate": 0.07,
+      "orbitSize": 0.35,
+      "cutoff": 3000,
+      "bloom": 0.9,
+      "warmth": 0.1,
+      "width": 1,
+      "attack": 2.5,
+      "release": 5,
+      "space": 0.5,
+      "shimmer": 0.2,
+      "size": 6
+     }
+    },
+    "Euphoric Choir": {
+     "params": {
+      "cornerA": "choir",
+      "cornerB": "halo",
+      "cornerC": "choir",
+      "cornerD": "strings",
+      "x": 0.4,
+      "y": 0.6,
+      "orbit": "figure-8",
+      "orbitRate": 0.06,
+      "orbitSize": 0.2,
+      "cutoff": 5000,
+      "bloom": 0.5,
+      "warmth": 0.2,
+      "width": 1,
+      "attack": 1.2,
+      "release": 4,
+      "space": 0.7,
+      "shimmer": 0.5,
+      "size": 8
+     }
+    },
+    "Chillwave Haze": {
+     "params": {
+      "cornerA": "air",
+      "cornerB": "organ",
+      "cornerC": "swarm",
+      "cornerD": "choir",
+      "x": 0.6,
+      "y": 0.55,
+      "orbit": "drift",
+      "orbitRate": 0.12,
+      "orbitSize": 0.4,
+      "cutoff": 1900,
+      "bloom": 0.3,
+      "warmth": 0.55,
+      "width": 0.85,
+      "attack": 1,
+      "release": 3.5,
+      "space": 0.55,
+      "shimmer": 0.1,
+      "size": 5
+     }
+    },
+    "Deep House Organ Pad": {
+     "params": {
+      "cornerA": "organ",
+      "cornerB": "strings",
+      "cornerC": "organ",
+      "cornerD": "air",
+      "x": 0.3,
+      "y": 0.45,
+      "orbit": "still",
+      "orbitRate": 0.05,
+      "orbitSize": 0.1,
+      "cutoff": 2200,
+      "bloom": 0.2,
+      "warmth": 0.45,
+      "width": 0.7,
+      "attack": 0.15,
+      "release": 1.6,
+      "space": 0.35,
+      "shimmer": 0,
+      "size": 3
+     }
+    },
+    "Techno Drone Bed": {
+     "params": {
+      "cornerA": "swarm",
+      "cornerB": "air",
+      "cornerC": "organ",
+      "cornerD": "swarm",
+      "x": 0.5,
+      "y": 0.5,
+      "orbit": "circle",
+      "orbitRate": 0.02,
+      "orbitSize": 0.45,
+      "cutoff": 900,
+      "bloom": 0.1,
+      "warmth": 0.6,
+      "width": 0.8,
+      "attack": 3,
+      "release": 5,
+      "space": 0.5,
+      "shimmer": 0.05,
+      "size": 7
+     }
+    },
+    "Liquid DnB Pad": {
+     "params": {
+      "cornerA": "glass",
+      "cornerB": "strings",
+      "cornerC": "air",
+      "cornerD": "halo",
+      "x": 0.4,
+      "y": 0.35,
+      "orbit": "circle",
+      "orbitRate": 0.09,
+      "orbitSize": 0.3,
+      "cutoff": 4200,
+      "bloom": 0.55,
+      "warmth": 0.25,
+      "width": 1,
+      "attack": 0.9,
+      "release": 3,
+      "space": 0.6,
+      "shimmer": 0.3,
+      "size": 6
+     }
+    },
+    "Neuro Dark Pad": {
+     "params": {
+      "cornerA": "swarm",
+      "cornerB": "organ",
+      "cornerC": "air",
+      "cornerD": "choir",
+      "x": 0.7,
+      "y": 0.7,
+      "orbit": "drift",
+      "orbitRate": 0.25,
+      "orbitSize": 0.35,
+      "cutoff": 1200,
+      "bloom": 0.2,
+      "warmth": 0.7,
+      "width": 0.9,
+      "attack": 1.4,
+      "release": 3,
+      "space": 0.5,
+      "shimmer": 0.05,
+      "size": 5
+     }
+    },
+    "Hardstyle Euphoria": {
+     "params": {
+      "cornerA": "swarm",
+      "cornerB": "strings",
+      "cornerC": "swarm",
+      "cornerD": "choir",
+      "x": 0.2,
+      "y": 0.4,
+      "orbit": "circle",
+      "orbitRate": 0.18,
+      "orbitSize": 0.15,
+      "cutoff": 7000,
+      "bloom": 0.4,
+      "warmth": 0.3,
+      "width": 1,
+      "attack": 0.4,
+      "release": 2.5,
+      "space": 0.5,
+      "shimmer": 0.35,
+      "size": 5
+     }
+    },
+    "Breakdown Swell": {
+     "params": {
+      "cornerA": "strings",
+      "cornerB": "swarm",
+      "cornerC": "halo",
+      "cornerD": "choir",
+      "x": 0.35,
+      "y": 0.4,
+      "orbit": "figure-8",
+      "orbitRate": 0.03,
+      "orbitSize": 0.3,
+      "cutoff": 2400,
+      "bloom": 1,
+      "warmth": 0.25,
+      "width": 1,
+      "attack": 4,
+      "release": 6,
+      "space": 0.6,
+      "shimmer": 0.4,
+      "size": 8
+     }
+    },
+    "Glass Pluck Pad": {
+     "params": {
+      "cornerA": "glass",
+      "cornerB": "glass",
+      "cornerC": "halo",
+      "cornerD": "air",
+      "x": 0.2,
+      "y": 0.25,
+      "orbit": "circle",
+      "orbitRate": 0.2,
+      "orbitSize": 0.15,
+      "cutoff": 8000,
+      "bloom": 0,
+      "warmth": 0.1,
+      "width": 1,
+      "attack": 0.02,
+      "release": 2.2,
+      "space": 0.55,
+      "shimmer": 0.4,
+      "size": 5
+     }
+    },
+    "Sunrise Festival": {
+     "params": {
+      "cornerA": "halo",
+      "cornerB": "swarm",
+      "cornerC": "strings",
+      "cornerD": "glass",
+      "x": 0.3,
+      "y": 0.3,
+      "orbit": "figure-8",
+      "orbitRate": 0.08,
+      "orbitSize": 0.3,
+      "cutoff": 6000,
+      "bloom": 0.65,
+      "warmth": 0.2,
+      "width": 1,
+      "attack": 1,
+      "release": 3.5,
+      "space": 0.6,
+      "shimmer": 0.45,
+      "size": 7
+     }
+    },
+    "Lo-fi Tape Pad": {
+     "params": {
+      "cornerA": "organ",
+      "cornerB": "air",
+      "cornerC": "strings",
+      "cornerD": "organ",
+      "x": 0.55,
+      "y": 0.5,
+      "orbit": "drift",
+      "orbitRate": 0.3,
+      "orbitSize": 0.2,
+      "cutoff": 1500,
+      "bloom": 0.15,
+      "warmth": 0.75,
+      "width": 0.6,
+      "attack": 0.5,
+      "release": 2,
+      "space": 0.35,
+      "shimmer": 0,
+      "size": 3
+     }
+    },
+    "Cinematic Drop Pad": {
+     "params": {
+      "cornerA": "choir",
+      "cornerB": "strings",
+      "cornerC": "swarm",
+      "cornerD": "halo",
+      "x": 0.45,
+      "y": 0.55,
+      "orbit": "drift",
+      "orbitRate": 0.04,
+      "orbitSize": 0.35,
+      "cutoff": 3200,
+      "bloom": 0.8,
+      "warmth": 0.4,
+      "width": 1,
+      "attack": 2.2,
+      "release": 5,
+      "space": 0.7,
+      "shimmer": 0.4,
+      "size": 9
+     }
+    },
+    "Arctic Shimmer": {
+     "params": {
+      "cornerA": "glass",
+      "cornerB": "halo",
+      "cornerC": "air",
+      "cornerD": "halo",
+      "x": 0.3,
+      "y": 0.2,
+      "orbit": "circle",
+      "orbitRate": 0.05,
+      "orbitSize": 0.25,
+      "cutoff": 9500,
+      "bloom": 0.3,
+      "warmth": 0.05,
+      "width": 1,
+      "attack": 1.5,
+      "release": 5,
+      "space": 0.75,
+      "shimmer": 0.55,
+      "size": 9
+     }
+    },
+    "Warm Sidechain Bed": {
+     "params": {
+      "cornerA": "swarm",
+      "cornerB": "organ",
+      "cornerC": "strings",
+      "cornerD": "air",
+      "x": 0.4,
+      "y": 0.5,
+      "orbit": "still",
+      "orbitRate": 0.05,
+      "orbitSize": 0.1,
+      "cutoff": 2800,
+      "bloom": 0.3,
+      "warmth": 0.4,
+      "width": 0.9,
+      "attack": 0.05,
+      "release": 1.2,
+      "space": 0.3,
+      "shimmer": 0.1,
+      "size": 3
+     }
+    },
+    "Midnight Afterglow": {
+     "params": {
+      "cornerA": "choir",
+      "cornerB": "air",
+      "cornerC": "organ",
+      "cornerD": "halo",
+      "x": 0.55,
+      "y": 0.6,
+      "orbit": "figure-8",
+      "orbitRate": 0.035,
+      "orbitSize": 0.3,
+      "cutoff": 2000,
+      "bloom": 0.5,
+      "warmth": 0.5,
+      "width": 0.95,
+      "attack": 2,
+      "release": 5,
+      "space": 0.65,
+      "shimmer": 0.3,
+      "size": 8
+     }
+    }
+   }
+  },
+  "eravos.supersaw": {
+   "presets": {
+    "Trance Supersaw Pad": {
+     "params": {
+      "unison": 9,
+      "detune": 0.35,
+      "mix": 0.75,
+      "spread": 1,
+      "cutoff": 5200,
+      "res": 1,
+      "fEnv": 0.3,
+      "fA": 0.6,
+      "fD": 1.5,
+      "fS": 0.8,
+      "fR": 1.5,
+      "aA": 0.5,
+      "aD": 1,
+      "aS": 0.9,
+      "aR": 2,
+      "chordMode": "triad",
+      "octave": 0,
+      "level": 0.55
+     }
+    },
+    "Future Bass Chord Pad": {
+     "params": {
+      "unison": 7,
+      "detune": 0.28,
+      "mix": 0.6,
+      "spread": 1,
+      "cutoff": 3800,
+      "res": 2,
+      "fEnv": 1,
+      "fA": 0.25,
+      "fD": 0.8,
+      "fS": 0.6,
+      "fR": 0.8,
+      "aA": 0.08,
+      "aD": 0.6,
+      "aS": 0.85,
+      "aR": 0.9,
+      "chordMode": "add9",
+      "octave": 0,
+      "level": 0.55
+     }
+    },
+    "Melodic Dubstep Saws": {
+     "params": {
+      "unison": 9,
+      "detune": 0.32,
+      "mix": 0.7,
+      "spread": 1,
+      "cutoff": 4400,
+      "res": 1.5,
+      "fEnv": 0.6,
+      "fA": 1,
+      "fD": 1.5,
+      "fS": 0.75,
+      "fR": 1.5,
+      "aA": 0.9,
+      "aD": 1.2,
+      "aS": 0.9,
+      "aR": 2.5,
+      "chordMode": "seventh",
+      "octave": 0,
+      "level": 0.5
+     }
+    },
+    "Progressive Sus Pad": {
+     "params": {
+      "unison": 7,
+      "detune": 0.25,
+      "mix": 0.65,
+      "spread": 0.9,
+      "cutoff": 2600,
+      "res": 1.2,
+      "fEnv": 0.8,
+      "fA": 2,
+      "fD": 2,
+      "fS": 0.7,
+      "fR": 2,
+      "aA": 1.5,
+      "aD": 1.5,
+      "aS": 0.9,
+      "aR": 3,
+      "chordMode": "sus2",
+      "octave": 0,
+      "level": 0.55
+     }
+    },
+    "Hardstyle Lead Pad": {
+     "params": {
+      "unison": 9,
+      "detune": 0.4,
+      "mix": 0.8,
+      "spread": 1,
+      "cutoff": 7500,
+      "res": 1,
+      "fEnv": 0.2,
+      "fA": 0.05,
+      "fD": 0.5,
+      "fS": 0.9,
+      "fR": 0.5,
+      "aA": 0.03,
+      "aD": 0.4,
+      "aS": 0.95,
+      "aR": 1.2,
+      "chordMode": "power",
+      "octave": 0,
+      "level": 0.5
+     }
+    },
+    "Euphoric Breakdown": {
+     "params": {
+      "unison": 9,
+      "detune": 0.3,
+      "mix": 0.7,
+      "spread": 1,
+      "cutoff": 1800,
+      "res": 2.5,
+      "fEnv": 1.8,
+      "fA": 3.5,
+      "fD": 3,
+      "fS": 0.8,
+      "fR": 3,
+      "aA": 2,
+      "aD": 2,
+      "aS": 0.9,
+      "aR": 4,
+      "chordMode": "triad",
+      "octave": 0,
+      "level": 0.5
+     }
+    },
+    "Big Room Swell": {
+     "params": {
+      "unison": 9,
+      "detune": 0.38,
+      "mix": 0.75,
+      "spread": 1,
+      "cutoff": 3000,
+      "res": 1.5,
+      "fEnv": 1.4,
+      "fA": 1.5,
+      "fD": 1,
+      "fS": 0.85,
+      "fR": 1,
+      "aA": 1.2,
+      "aD": 0.8,
+      "aS": 0.95,
+      "aR": 1.8,
+      "chordMode": "power",
+      "octave": 0,
+      "level": 0.5
+     }
+    },
+    "Dark Minor Seventh Pad": {
+     "params": {
+      "unison": 7,
+      "detune": 0.22,
+      "mix": 0.6,
+      "spread": 0.85,
+      "cutoff": 1600,
+      "res": 2,
+      "fEnv": 0.5,
+      "fA": 1.5,
+      "fD": 2,
+      "fS": 0.6,
+      "fR": 2,
+      "aA": 1.2,
+      "aD": 1.5,
+      "aS": 0.85,
+      "aR": 3,
+      "chordMode": "seventh",
+      "octave": -1,
+      "level": 0.55
+     }
+    },
+    "Sus4 Anthem Pad": {
+     "params": {
+      "unison": 8,
+      "detune": 0.3,
+      "mix": 0.7,
+      "spread": 1,
+      "cutoff": 4800,
+      "res": 1.2,
+      "fEnv": 0.4,
+      "fA": 0.8,
+      "fD": 1.2,
+      "fS": 0.85,
+      "fR": 1.5,
+      "aA": 0.6,
+      "aD": 1,
+      "aS": 0.9,
+      "aR": 2.2,
+      "chordMode": "sus4",
+      "octave": 0,
+      "level": 0.5
+     }
+    },
+    "Airy Octave Pad": {
+     "params": {
+      "unison": 6,
+      "detune": 0.18,
+      "mix": 0.55,
+      "spread": 1,
+      "cutoff": 9000,
+      "res": 0.8,
+      "fEnv": 0.2,
+      "fA": 1,
+      "fD": 1,
+      "fS": 0.9,
+      "fR": 2,
+      "aA": 1.4,
+      "aD": 1,
+      "aS": 0.85,
+      "aR": 3.5,
+      "chordMode": "add9",
+      "octave": 1,
+      "level": 0.45
+     }
+    },
+    "Plucky Pad Stab": {
+     "params": {
+      "unison": 7,
+      "detune": 0.25,
+      "mix": 0.6,
+      "spread": 1,
+      "cutoff": 1400,
+      "res": 3,
+      "fEnv": 2.5,
+      "fA": 0.005,
+      "fD": 0.35,
+      "fS": 0.3,
+      "fR": 0.4,
+      "aA": 0.005,
+      "aD": 0.5,
+      "aS": 0.4,
+      "aR": 0.6,
+      "chordMode": "seventh",
+      "octave": 0,
+      "level": 0.55
+     }
+    },
+    "Uplifting Wide Pad": {
+     "params": {
+      "unison": 9,
+      "detune": 0.34,
+      "mix": 0.75,
+      "spread": 1,
+      "cutoff": 6200,
+      "res": 1,
+      "fEnv": 0.3,
+      "fA": 1.2,
+      "fD": 1.5,
+      "fS": 0.85,
+      "fR": 2,
+      "aA": 1,
+      "aD": 1.2,
+      "aS": 0.92,
+      "aR": 3,
+      "chordMode": "add9",
+      "octave": 0,
+      "level": 0.5
+     }
+    },
+    "Dreamy Detuned Bed": {
+     "params": {
+      "unison": 9,
+      "detune": 0.5,
+      "mix": 0.8,
+      "spread": 1,
+      "cutoff": 2400,
+      "res": 1,
+      "fEnv": 0.3,
+      "fA": 2.5,
+      "fD": 2.5,
+      "fS": 0.8,
+      "fR": 3,
+      "aA": 2.5,
+      "aD": 2,
+      "aS": 0.9,
+      "aR": 4.5,
+      "chordMode": "sus2",
+      "octave": 0,
+      "level": 0.5
+     }
+    },
+    "Festival Chord Wall": {
+     "params": {
+      "unison": 9,
+      "detune": 0.36,
+      "mix": 0.8,
+      "spread": 1,
+      "cutoff": 8000,
+      "res": 1,
+      "fEnv": 0.2,
+      "fA": 0.1,
+      "fD": 0.6,
+      "fS": 0.9,
+      "fR": 0.8,
+      "aA": 0.05,
+      "aD": 0.5,
+      "aS": 0.95,
+      "aR": 1.4,
+      "chordMode": "triad",
+      "octave": 0,
+      "level": 0.5
+     }
+    }
+   }
+  },
+  "eravos.retro-poly": {
+   "presets": {
+    "Deep House Chord Pad": {
+     "params": {
+      "saw": 0.7,
+      "pulse": 0.5,
+      "width": 0.4,
+      "pwm": 0.4,
+      "pwmRate": 0.3,
+      "drift": 0.3,
+      "cutoff": 1600,
+      "res": 2,
+      "envAmt": 0.3,
+      "fA": 0.3,
+      "fD": 1,
+      "fS": 0.6,
+      "attack": 0.3,
+      "decay": 1,
+      "sustain": 0.8,
+      "release": 1.6,
+      "chorus": "II",
+      "unison": 2,
+      "arp": "off"
+     }
+    },
+    "Chillwave Juno Wash": {
+     "params": {
+      "saw": 0.5,
+      "pulse": 0.8,
+      "width": 0.5,
+      "pwm": 0.7,
+      "pwmRate": 0.25,
+      "drift": 0.5,
+      "cutoff": 2000,
+      "res": 1.5,
+      "envAmt": 0.2,
+      "fA": 1.5,
+      "fD": 2,
+      "fS": 0.7,
+      "attack": 1.4,
+      "decay": 1.5,
+      "sustain": 0.9,
+      "release": 3,
+      "chorus": "I+II",
+      "unison": 3,
+      "arp": "off"
+     }
+    },
+    "Synthwave Sunset Pad": {
+     "params": {
+      "saw": 0.8,
+      "pulse": 0.6,
+      "width": 0.4,
+      "pwm": 0.5,
+      "pwmRate": 0.4,
+      "drift": 0.4,
+      "cutoff": 2800,
+      "res": 1.5,
+      "envAmt": 0.25,
+      "fA": 1,
+      "fD": 1.5,
+      "fS": 0.7,
+      "attack": 0.9,
+      "decay": 1.2,
+      "sustain": 0.85,
+      "release": 2.5,
+      "chorus": "I+II",
+      "unison": 4,
+      "arp": "off"
+     }
+    },
+    "Techno Stab Pad": {
+     "params": {
+      "saw": 0.9,
+      "pulse": 0.3,
+      "width": 0.3,
+      "cutoff": 1100,
+      "res": 5,
+      "envAmt": 0.6,
+      "fA": 0.01,
+      "fD": 0.3,
+      "fS": 0.2,
+      "attack": 0.005,
+      "decay": 0.4,
+      "sustain": 0.3,
+      "release": 0.8,
+      "chorus": "I",
+      "unison": 2,
+      "arp": "off"
+     }
+    },
+    "Lush Unison Strings": {
+     "params": {
+      "saw": 0.9,
+      "pulse": 0.3,
+      "width": 0.45,
+      "pwm": 0.3,
+      "pwmRate": 0.5,
+      "drift": 0.35,
+      "cutoff": 4200,
+      "res": 1,
+      "envAmt": 0.1,
+      "attack": 0.8,
+      "decay": 1,
+      "sustain": 0.95,
+      "release": 2.2,
+      "chorus": "I+II",
+      "unison": 4,
+      "arp": "off"
+     }
+    },
+    "Garage Organ Pad": {
+     "params": {
+      "saw": 0.3,
+      "pulse": 0.9,
+      "width": 0.5,
+      "cutoff": 2200,
+      "res": 1,
+      "envAmt": 0.15,
+      "attack": 0.02,
+      "decay": 0.6,
+      "sustain": 0.85,
+      "release": 0.6,
+      "chorus": "II",
+      "unison": 1,
+      "arp": "off"
+     }
+    },
+    "Ambient Drift Pad": {
+     "params": {
+      "saw": 0.4,
+      "pulse": 0.7,
+      "width": 0.5,
+      "pwm": 0.9,
+      "pwmRate": 0.15,
+      "drift": 0.8,
+      "cutoff": 1300,
+      "res": 2,
+      "envAmt": 0.35,
+      "fA": 3,
+      "fD": 3,
+      "fS": 0.7,
+      "attack": 3,
+      "decay": 2,
+      "sustain": 0.9,
+      "release": 5,
+      "chorus": "I+II",
+      "unison": 4,
+      "arp": "off"
+     }
+    },
+    "Arp Pad Pulse": {
+     "params": {
+      "saw": 0.6,
+      "pulse": 0.6,
+      "width": 0.35,
+      "cutoff": 1800,
+      "res": 4,
+      "envAmt": 0.5,
+      "fD": 0.3,
+      "fS": 0.3,
+      "attack": 0.01,
+      "decay": 0.3,
+      "sustain": 0.5,
+      "release": 0.6,
+      "chorus": "II",
+      "unison": 2,
+      "arp": "up-down",
+      "arpDiv": "1/16",
+      "arpOct": 2,
+      "arpGate": 0.7
+     }
+    },
+    "Neon Glow Pad": {
+     "params": {
+      "saw": 0.6,
+      "pulse": 0.7,
+      "width": 0.45,
+      "pwm": 0.6,
+      "pwmRate": 0.6,
+      "drift": 0.45,
+      "cutoff": 3400,
+      "res": 2,
+      "envAmt": 0.2,
+      "fA": 0.6,
+      "fD": 1.2,
+      "fS": 0.8,
+      "attack": 0.6,
+      "decay": 1,
+      "sustain": 0.9,
+      "release": 2.2,
+      "chorus": "I+II",
+      "unison": 3,
+      "arp": "off"
+     }
+    },
+    "Midnight Brass Pad": {
+     "params": {
+      "saw": 0.9,
+      "pulse": 0.4,
+      "width": 0.35,
+      "sub": 0.1,
+      "cutoff": 1500,
+      "res": 2,
+      "envAmt": 0.55,
+      "fA": 0.4,
+      "fD": 1,
+      "fS": 0.6,
+      "attack": 0.35,
+      "decay": 0.8,
+      "sustain": 0.85,
+      "release": 1.4,
+      "chorus": "II",
+      "unison": 3,
+      "arp": "off"
+     }
+    }
+   }
+  }
+ }
+}

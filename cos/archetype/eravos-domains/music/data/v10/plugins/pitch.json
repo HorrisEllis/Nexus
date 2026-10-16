@@ -1,0 +1,81 @@
+{
+  "id": "pitch",
+  "name": "PITCH DEMON",
+  "icon": "\ud83c\udfb5",
+  "col": "#ff2266",
+  "tag": "PITCH",
+  "desc": "Pitch shifter + formant. Scream it up, drop it down.",
+  "module": "pitcher",
+  "visualizer": {
+    "type": "pitch_track",
+    "color": "#ff2266"
+  },
+  "params": [
+    {
+      "n": "Semitones",
+      "k": "semi",
+      "v": 0.5,
+      "min": -24,
+      "max": 24,
+      "step": 1,
+      "unit": "st"
+    },
+    {
+      "n": "Cents",
+      "k": "cents",
+      "v": 0.5,
+      "min": -100,
+      "max": 100,
+      "unit": "ct"
+    },
+    {
+      "n": "Formant",
+      "k": "formant",
+      "v": 0.5,
+      "min": -2,
+      "max": 2
+    },
+    {
+      "n": "Mix",
+      "k": "mix",
+      "v": 0.8,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Tracking",
+      "k": "track",
+      "v": 0.7,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Glide",
+      "k": "glide",
+      "v": 0.3,
+      "min": 0,
+      "max": 1,
+      "unit": "s"
+    }
+  ],
+  "presets": {
+    "UP5": {
+      "semi": 0.7,
+      "mix": 0.8
+    },
+    "DOWN8": {
+      "semi": 0.2,
+      "mix": 0.9
+    },
+    "ROBOT": {
+      "semi": 0.5,
+      "cents": 0,
+      "formant": 0,
+      "track": 0
+    },
+    "CHIPMUNK": {
+      "semi": 0.9,
+      "formant": 0.8
+    }
+  }
+}

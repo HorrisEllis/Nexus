@@ -1,0 +1,16 @@
+{
+  "n": "Laser Bounce",
+  "cat": "CURVES",
+  "s": "ricochet",
+  "c": "#00ffff",
+  "i": "\ud83d\udd2b",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Electronic",
+  "tags": [
+    "laser",
+    "bounce",
+    "both edges"
+  ],
+  "_file": "laser_bounce.json"
+}

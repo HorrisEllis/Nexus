@@ -1,0 +1,16 @@
+{
+  "n": "Juke Clap",
+  "cat": "DRUMS",
+  "s": "clap",
+  "c": "#ffaa00",
+  "i": "\ud83d\udc4f",
+  "bpm": 160,
+  "key": "C",
+  "genre": "Footwork",
+  "tags": [
+    "syncopated",
+    "juke",
+    "fast"
+  ],
+  "_file": "juke_clap.json"
+}

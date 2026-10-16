@@ -1,0 +1,16 @@
+{
+  "n": "Retrowave Pad",
+  "cat": "PADS",
+  "s": "pad",
+  "c": "#8844ff",
+  "i": "\ud83c\udf05",
+  "bpm": 110,
+  "key": "Am",
+  "genre": "Synthwave",
+  "tags": [
+    "pad",
+    "lush",
+    "retrowave"
+  ],
+  "_file": "retrowave_pad.json"
+}

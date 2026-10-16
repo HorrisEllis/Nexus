@@ -1,0 +1,16 @@
+{
+  "n": "Roller Kick",
+  "cat": "KICKS",
+  "s": "kick",
+  "c": "#ff6600",
+  "i": "\ud83e\udd41",
+  "bpm": 174,
+  "key": "C",
+  "genre": "DnB",
+  "tags": [
+    "rolling",
+    "tight",
+    "punchy"
+  ],
+  "_file": "roller_kick.json"
+}

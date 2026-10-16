@@ -1,0 +1,79 @@
+{
+  "id": "phaser",
+  "name": "PHASE SHIFT",
+  "icon": "\u2295",
+  "col": "#ff9900",
+  "tag": "MODULATION",
+  "desc": "12-stage phaser. Notch comb sweeps.",
+  "module": "phaser",
+  "visualizer": {
+    "type": "frequency_response",
+    "color": "#ff9900"
+  },
+  "params": [
+    {
+      "n": "Rate",
+      "k": "rate",
+      "v": 0.3,
+      "min": 0.01,
+      "max": 8,
+      "unit": "Hz"
+    },
+    {
+      "n": "Depth",
+      "k": "depth",
+      "v": 0.7,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Stages",
+      "k": "stages",
+      "v": 0.5,
+      "min": 2,
+      "max": 12,
+      "step": 2
+    },
+    {
+      "n": "Feedback",
+      "k": "fb",
+      "v": 0.4,
+      "min": -1,
+      "max": 1
+    },
+    {
+      "n": "Center",
+      "k": "center",
+      "v": 0.5,
+      "min": 200,
+      "max": 8000,
+      "unit": "Hz"
+    },
+    {
+      "n": "Mix",
+      "k": "mix",
+      "v": 0.5,
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "presets": {
+    "CLASSIC": {
+      "rate": 0.3,
+      "depth": 0.7,
+      "stages": 0.5,
+      "mix": 0.5
+    },
+    "SLOW": {
+      "rate": 0.05,
+      "depth": 0.9,
+      "stages": 0.8,
+      "mix": 0.6
+    },
+    "FAST": {
+      "rate": 2,
+      "depth": 0.6,
+      "mix": 0.4
+    }
+  }
+}

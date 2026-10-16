@@ -21,7 +21,7 @@
  *          CT-20 the plan strip: the current step with its gates, the runs on the open file; a run opens the Plan panel on itself
  *          CT-21 "change it" is a Manage edit (file, picked lines, his words, the picked model); the Plan panel opens on the run
  *          CT-22 a Plan event repaints the Code tab (a new change shows without a click)
- *          CT-23 a work-surface card in the Plan panel opens its file in the Code tab; so does a file in a run's ledger
+ *          CT-23 the Plan's Progress card opens Code › changes (the work-surface cards moved there, 0.60.107); a file in a run's ledger opens in Code
  *   CT-3x  §CT7 / §CT8 0.39.352:
  *          CT-30 the Plan shows current work: complete steps fold into one line with their count; show / hide toggles them
  *          CT-31 the agent working, live: a call blinks while it runs (in activity and on its file in the tree), ✓ when it
@@ -283,9 +283,15 @@ function harness() {
 
     await test('CT-23', 'a card in the Plan panel opens its file in the Code tab; so does a file in a run\'s ledger', async () => {
       await page.evaluate(() => { EXTRA = true; CURRENT_REPO_SUBTAB = 'files'; openPlanPanel(); });
-      await page.waitForSelector('#pp-ws .ws-card[data-path="src/b.js"] .ws-act-code');
-      await page.click('#pp-ws .ws-card[data-path="src/b.js"] .ws-act-code');
-      await page.waitForFunction(() => CURRENT_REPO_SUBTAB === 'code' && CS.open === 'src/b.js');
+      // 0.60.107 PS3 — James: "strip the plan panel to just the plan with context, and progress? make the rest theyre own panel".
+      // The work-surface cards left the Plan panel (they were drawn twice): they are Code › changes, and the Plan's Progress
+      // card links there. Before: a #pp-ws card's "open in Code" was clicked here.
+      await page.waitForSelector('#pp-body .pp-card[data-card="progress"]');
+      assert.strictEqual(await page.$('#pp-ws'), null, 'no second work surface in the Plan panel');
+      await page.evaluate(() => ppOpenChanges());
+      await page.waitForFunction(() => CURRENT_REPO_SUBTAB === 'code' && CS.view === 'changes');
+      await page.evaluate(() => csOpen('src/b.js'));
+      await page.waitForFunction(() => CS.open === 'src/b.js');
       await page.evaluate(() => { PLANP.showDone = true; PLANP.open.add('docs/k-phasemap.spec::KE0_core'); _planPaint(); });   // KE0 is complete: shown (CT7 folds it by default)
       await page.click('#pp-body .pp-file');
       await page.waitForFunction(() => CS.open === 'src/a.js');

@@ -1,0 +1,16 @@
+{
+  "n": "Hyperspace",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#8888ff",
+  "i": "\ud83d\ude80",
+  "bpm": 132,
+  "key": "Bm",
+  "genre": "Synthwave",
+  "tags": [
+    "space",
+    "fast",
+    "warp"
+  ],
+  "_file": "hyperspace.json"
+}

@@ -1,0 +1,109 @@
+{
+ "schema": "eravos.pack/1",
+ "id": "eravos.presets.club",
+ "version": "1.0.0",
+ "label": "Club",
+ "prefix": "Club",
+ "author": "James Brooks",
+ "tags": [
+  "club"
+ ],
+ "for": [
+  "eravos.acid-synth",
+  "eravos.sub-engine",
+  "eravos.supersaw",
+  "eravos.sidechain-compressor"
+ ],
+ "items": {
+  "eravos.acid-synth": {
+   "presets": {
+    "Warehouse 303": {
+     "params": {
+      "cutoff": 420,
+      "res": 0.82,
+      "envMod": 0.65,
+      "decay": 0.25,
+      "accent": 0.75,
+      "drive": 0.55,
+      "wave": "saw",
+      "octave": 0
+     }
+    },
+    "Minimal Pluck Bass": {
+     "params": {
+      "cutoff": 300,
+      "res": 0.35,
+      "envMod": 0.35,
+      "decay": 0.12,
+      "accent": 0.4,
+      "drive": 0.15,
+      "wave": "square",
+      "octave": -1
+     }
+    }
+   }
+  },
+  "eravos.sub-engine": {
+   "presets": {
+    "Deep House Sub": {
+     "params": {
+      "shape": 0.2,
+      "octave": -2,
+      "glide": 0.04,
+      "phantom": 0.4,
+      "drive": 0.1,
+      "click": 0.15,
+      "tone": 700,
+      "attack": 0.004,
+      "decay": 0.5,
+      "sustain": 0.6,
+      "release": 0.12,
+      "level": 0.85
+     }
+    }
+   }
+  },
+  "eravos.supersaw": {
+   "presets": {
+    "Organ House Stab": {
+     "params": {
+      "unison": 3,
+      "detune": 0.12,
+      "mix": 0.4,
+      "spread": 0.4,
+      "cutoff": 5200,
+      "res": 1,
+      "fEnv": 0.6,
+      "fA": 0.002,
+      "fD": 0.15,
+      "fS": 0.2,
+      "fR": 0.15,
+      "aA": 0.002,
+      "aD": 0.18,
+      "aS": 0,
+      "aR": 0.12,
+      "chordMode": "seventh",
+      "level": 0.6
+     }
+    }
+   }
+  },
+  "eravos.sidechain-compressor": {
+   "presets": {
+    "House Pump 1/4 (deep)": {
+     "params": {
+      "target": "insert",
+      "mode": "duck",
+      "triggerMode": "tempo",
+      "division": "1/4",
+      "depth": 0.9,
+      "attack": 2,
+      "hold": 20,
+      "release": 200,
+      "curve": 0.7
+     }
+    }
+   }
+  }
+ }
+}

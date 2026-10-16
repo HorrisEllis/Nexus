@@ -1,0 +1,107 @@
+{
+  "id": "dist",
+  "name": "DEVASTATOR",
+  "icon": "\ud83d\udd25",
+  "col": "#ff6b00",
+  "tag": "DISTORTION",
+  "desc": "Tube-saturated overdrive. Push into the red. The sound QOTSA lives in.",
+  "module": "distortion",
+  "visualizer": {
+    "type": "waveform",
+    "color": "#ff6b00"
+  },
+  "params": [
+    {
+      "n": "Drive",
+      "k": "drive",
+      "v": 0.5,
+      "min": 0,
+      "max": 1,
+      "curve": "exp",
+      "unit": "%"
+    },
+    {
+      "n": "Tone",
+      "k": "tone",
+      "v": 0.6,
+      "min": 0,
+      "max": 1,
+      "unit": "Hz"
+    },
+    {
+      "n": "Level",
+      "k": "level",
+      "v": 0.8,
+      "min": 0,
+      "max": 1,
+      "unit": "dB"
+    },
+    {
+      "n": "Mix",
+      "k": "mix",
+      "v": 0.7,
+      "min": 0,
+      "max": 1,
+      "unit": "%"
+    },
+    {
+      "n": "Pre-gain",
+      "k": "pregain",
+      "v": 0.4,
+      "min": 0,
+      "max": 1,
+      "unit": "dB"
+    },
+    {
+      "n": "Clip Mode",
+      "k": "clip",
+      "v": 0,
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "type": "enum",
+      "options": [
+        "Soft",
+        "Hard",
+        "Fuzz"
+      ]
+    }
+  ],
+  "presets": {
+    "CLEAN": {
+      "drive": 0.08,
+      "tone": 0.75,
+      "level": 0.7,
+      "mix": 0.25
+    },
+    "WARM": {
+      "drive": 0.38,
+      "tone": 0.6,
+      "level": 0.8,
+      "mix": 0.5
+    },
+    "HARD": {
+      "drive": 0.82,
+      "tone": 0.5,
+      "level": 0.9,
+      "mix": 0.8
+    },
+    "FUZZ": {
+      "drive": 0.95,
+      "tone": 0.35,
+      "level": 1,
+      "mix": 1,
+      "clip": 2
+    }
+  },
+  "routes": [
+    "pad",
+    "seq",
+    "bus"
+  ],
+  "audio": {
+    "node": "WaveShaperNode",
+    "curve": "makeDistCurve(drive*400)",
+    "tone": "BiquadFilter(lowpass,200+tone*8000)"
+  }
+}

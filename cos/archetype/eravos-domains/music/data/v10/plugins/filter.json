@@ -1,0 +1,93 @@
+{
+  "id": "filter",
+  "name": "ACID QUEEN",
+  "icon": "\u2697",
+  "col": "#00ff44",
+  "tag": "FILTER",
+  "desc": "TB-303 resonant filter. LFO, envelope, full wobble.",
+  "module": "filter",
+  "visualizer": {
+    "type": "frequency_response",
+    "color": "#00ff44"
+  },
+  "params": [
+    {
+      "n": "Cutoff",
+      "k": "cutoff",
+      "v": 0.5,
+      "min": 20,
+      "max": 20000,
+      "curve": "exp",
+      "unit": "Hz"
+    },
+    {
+      "n": "Resonance",
+      "k": "res",
+      "v": 0.6,
+      "min": 0,
+      "max": 30,
+      "unit": "Q"
+    },
+    {
+      "n": "LFO Rate",
+      "k": "lfoRate",
+      "v": 0.3,
+      "min": 0.01,
+      "max": 20,
+      "unit": "Hz"
+    },
+    {
+      "n": "LFO Depth",
+      "k": "lfoDepth",
+      "v": 0.4,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Env Amt",
+      "k": "env",
+      "v": 0.2,
+      "min": -1,
+      "max": 1
+    },
+    {
+      "n": "Type",
+      "k": "type",
+      "v": 0,
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "type": "enum",
+      "options": [
+        "LP",
+        "HP",
+        "BP",
+        "Notch"
+      ]
+    }
+  ],
+  "presets": {
+    "OPEN": {
+      "cutoff": 0.85,
+      "res": 0.2
+    },
+    "SQUELCH": {
+      "cutoff": 0.3,
+      "res": 0.9,
+      "lfoRate": 0.4,
+      "lfoDepth": 0.7
+    },
+    "WOBBLE": {
+      "cutoff": 0.4,
+      "res": 0.7,
+      "lfoRate": 0.6,
+      "lfoDepth": 0.9
+    },
+    "ACID": {
+      "cutoff": 0.25,
+      "res": 1,
+      "env": 0.8,
+      "lfoRate": 0.25
+    }
+  }
+}

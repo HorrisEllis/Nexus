@@ -1,0 +1,16 @@
+{
+  "n": "VHS Shimmer",
+  "cat": "PADS",
+  "s": "pad",
+  "c": "#ff88ff",
+  "i": "\ud83d\udcfc",
+  "bpm": 100,
+  "key": "Cm",
+  "genre": "Synthwave",
+  "tags": [
+    "dreamy",
+    "shimmer",
+    "80s"
+  ],
+  "_file": "vhs_shimmer.json"
+}

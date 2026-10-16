@@ -1,0 +1,20 @@
+{
+  "n": "Song for the Dead",
+  "cat": "CURVES",
+  "s": "curvePerc",
+  "c": "#cc2200",
+  "i": "\ud83d\udc80",
+  "bpm": 170,
+  "key": "Am",
+  "genre": "Rock/Electronic",
+  "tags": [
+    "QOTSA",
+    "curve",
+    "percussive",
+    "ricochet",
+    "edge"
+  ],
+  "curve_preset": "SONG FOR THE DEAD",
+  "desc": "The pitch dive from Queens of the Stone Age \u2014 accelerates down, slams the right edge, bounces back mirrored",
+  "_file": "song_for_the_dead.json"
+}

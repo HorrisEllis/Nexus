@@ -1,0 +1,16 @@
+{
+  "n": "Taiko Boom",
+  "cat": "PERCUSSION",
+  "s": "kick",
+  "c": "#880000",
+  "i": "\ud83e\udd41",
+  "bpm": 120,
+  "key": "C",
+  "genre": "World",
+  "tags": [
+    "taiko",
+    "huge",
+    "cinematic"
+  ],
+  "_file": "taiko_boom.json"
+}

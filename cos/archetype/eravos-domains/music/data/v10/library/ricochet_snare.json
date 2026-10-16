@@ -1,0 +1,17 @@
+{
+  "n": "Ricochet Snare",
+  "cat": "CURVES",
+  "s": "bounceR",
+  "c": "#ffaa00",
+  "i": "\u21a9",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Electronic",
+  "tags": [
+    "ricochet",
+    "bounce",
+    "edge",
+    "curve"
+  ],
+  "_file": "ricochet_snare.json"
+}

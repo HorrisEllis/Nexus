@@ -1,0 +1,16 @@
+{
+  "n": "Jungle Bass",
+  "cat": "BASS",
+  "s": "bass",
+  "c": "#00ff88",
+  "i": "\ud83e\udd81",
+  "bpm": 170,
+  "key": "Dm",
+  "genre": "Jungle",
+  "tags": [
+    "choppy",
+    "fast",
+    "jungle"
+  ],
+  "_file": "jungle_bass.json"
+}

@@ -1,0 +1,16 @@
+{
+  "n": "Think Break",
+  "cat": "BREAKS",
+  "s": "crash",
+  "c": "#ff3300",
+  "i": "\ud83d\udca3",
+  "bpm": 130,
+  "key": "C",
+  "genre": "Breakbeat",
+  "tags": [
+    "think",
+    "funk",
+    "break"
+  ],
+  "_file": "think_break.json"
+}

@@ -41,6 +41,12 @@ const FILES = [
   ['clear-glass/src/net/service.js', I('clear-glass/src/net/service.js'), [I('clear-glass/src/net/policy.js'), I('clear-glass/src/net/transport-host.js')]],
   ['lib/agent-tools/tools/clear-glass/net.js', I('lib/agent-tools/tools/clear-glass/net.js'), []],   // §0.60.60 NP9: read-only agent view
   ['idearium/lib/surface-state.cjs', I('idearium/lib/surface-state.cjs'), [I('idearium/lib/data-dir.cjs')]],   // §0.60.80 CE8: the Code tab's surface, one for the tab, the CLI and agents
+  ['cos/archetype/eravos.js', I('cos/archetype/eravos.js'), []],   // §0.60.104 CN1/CN2: his ERAVOS canvas, tools and domains as COS archetypes (read from cos/archetype/eravos-*/)
+  ['lib/canvas-compartments.js', I('lib/canvas-compartments.js'), [I('lib/cos-bridge.js'), I('lib/file-tree-plan.js'), I('cos/archetype/eravos.js')]],   // §0.60.104 CN3: a canvas compartment, each tool nested
+  ['clear-glass/src/contexts/google-signin.js', I('clear-glass/src/contexts/google-signin.js'), [I('clear-glass/src/contexts/session-headers.js'), I('clear-glass/src/fingerprint/firefox-version.js'), I('clear-glass/src/preload/google-signin.js')]],
+  ['clear-glass/src/fingerprint/firefox-version.js', I('clear-glass/src/fingerprint/firefox-version.js'), []],   // §0.60.108 GS3: the Firefox version from Mozilla's calendar
+  ['clear-glass/src/preload/google-signin.js', I('clear-glass/src/preload/google-signin.js'), []],   // §0.60.108 GS4: the sign-in page reads as Firefox, no debugger   // §0.60.106 GS1: Google's sign-in as Firefox, consistently
+  ['clear-glass/src/tls/helper.js', I('clear-glass/src/tls/helper.js'), []],   // §0.60.109 TLS2: runs cg-tls-helper (clear-glass/tls-helper, Go + uTLS); its CA trust for personas
   ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
 ];
 const CONSUMERS = [
@@ -50,6 +56,16 @@ const CONSUMERS = [
   [I('lib/repo-inject.js'),                         I('lib/step-gate.js'), '_screen(): the code.write gate and the collapse/shrink guards at propose() and edit(), whoever calls (0.60.74)'],
   [I('idearium/api/index.js'),                      I('lib/proposal-evidence.js'), '_rejectionContext(): a rejected proposal\'s evidence goes to the agent and into the retry note (0.60.75 PE4)'],
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/service.js'), '/cli/net/*: routes, resolve, bridge, transport start/stop/detect (0.60.60 NP9)'],
+  [I('idearium/api/index.js'),                      I('lib/economy/tokens.js'), '_phaseBuild: breakdown() of what the agent is given (request, mapped files, charter, lessons, note) on the building row — the Plan\'s Context card (0.60.107 PS1)'],
+  [I('idearium/api/index.js'),                      I('lib/ollama-activity.js'), '_contextOf: MAX, the num_ctx window Nexus gives Ollama — the Context card\'s window (0.60.107 PS1)'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/tls/helper.js'), 'boots TlsHelper on :7703 (in place of the Node proxy), its state → net service setTlsLayer, stopped at shutdown (0.60.109 TLS2)'],
+  [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/tls/helper.js'), 'setCertificateVerifyProc(verifyProc()): a Firefox persona trusts only the layer CA\'s leaves; registers firefox:true (0.60.109 TLS3)'],
+  [I('clear-glass/src/net/service.js'),             I('clear-glass/src/net/policy.js'), 'pacFor(…, { tlsPort }): a persona\'s direct https/wss through the TLS layer, DIRECT after (0.60.109 TLS3)'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/contexts/google-signin.js'), "app 'session-created' → applySession; 'web-contents-created' → attach: every session and page, popups and webviews included (0.60.106 GS1)"],
+  [I('clear-glass/src/fingerprint/engine.js'),      I('clear-glass/src/fingerprint/firefox-version.js'), 'ffPool(): current Firefox personas; getOrGenerate refreshes a stale stored UA (0.60.108 GS5)'],
+  [I('clear-glass/src/page/semantic-tree.js'),      I('clear-glass/src/contexts/google-signin.js'), 'readAX: isSignin → page tree, no debugger on Google\'s sign-in (0.60.108 GS7)'],
+  [I('clear-glass/src/net/policy.js'),              I('clear-glass/src/net/policy.js'), 'pacFor → signinRoute: Google\'s sign-in never via the transport or a collision blackhole (0.60.108 GS6)'],
+  [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/contexts/session-headers.js'), 'requestHook(fingerprint-profile): composes with the localhost and sign-in hooks instead of replacing them (0.60.106 GS2)'],
   [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/net/service.js'), 'register(partition, session) so a rule can route an agent window; a no-op with no rules (0.60.60 NP3)'],
   [I('lib/agent-tools/index.js'),                   I('lib/agent-tools/tools/clear-glass/net.js'), 'clear_glass_net registered (0.60.60 NP9)'],
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/macros/live-recording.js'), 'macros:recordStart / recordStatus / recordStop: a recording is a .macro node file from the first second (0.60.57 MR1)'],
@@ -67,6 +83,14 @@ const CONSUMERS = [
   [I('idearium/api/index.js'),                      I('lib/repo-versions.js'), 'commitNow({ kind: restore }) after a file restore and a run rewind (0.60.80 CV2)'],
   [I('lib/repo-inject.js'),                         I('lib/repo-versions.js'), 'an applied or reverted proposal commits at once, labelled kind / inject / by / run (0.60.80 CV2)'],
   [I('idearium/api/index.js'),                      I('lib/run-state.js'),  'GET …/runs (list), POST …/runs/:id/rewind (load, note rewound) (0.60.80 CV3)'],
+  [I('cos/archetype/registry.js'),                  I('cos/archetype/eravos.js'), 'ARCHETYPES_RAW.push(...archetypes()): eravos-canvas, eravos-domain-music, eravos-domain-dataflow, eravos-tool, eravos-sound-tool (0.60.104 CN1/CN2)'],
+  [I('lib/file-tree-plan.js'),                      I('cos/archetype/eravos.js'), 'fromCosTemplate vars + the archetype\'s varDefaults (toolVars: his new-tool.mjs rules) (0.60.104 CN2)'],
+  [I('idearium/api/index.js'),                      I('lib/phase-faults.js'), '_learnFromRejection(): rejectionModes → tell → diagnosis → learnRejection (fault per mode, with the phase) → the reject retry; GET /api/repos/:uuid/lessons (0.60.105 RL2/RL4)'],
+  [I('lib/repo-inject.js'),                         I('lib/proposal-evidence.js'), '_screen(): compare() for an agent\'s proposal — exports lost, or a gutted file (declarations or keys lost) is refused before it reaches James (0.60.105 RL3)'],
+  [I('idearium/api/index.js'),                      I('lib/run-watch.js'), 'runForInject(): the run and phase a rejected proposal came from, so its lesson and retry land on that phase (0.60.105 RL2)'],
+  [I('idearium/api/index.js'),                      I('lib/canvas-compartments.js'), 'GET/POST /api/canvas, GET /api/canvas/:id, POST /api/canvas/:id/tools; emits idearium.canvas.created / tool.added (0.60.104 CN3)'],
+  [I('idearium/cli/route-commands.js'),             I('lib/canvas-compartments.js'), 'canvas list · new · show · add-tool rows, through the routes (0.60.104 CN3; agents through nexus.command)'],
+  [I('idearium/api/index.js'),                      I('lib/build-paths.js'), 'repo.code.edit / code.assist classified not-build, beside the Agent tab chat (0.60.83, census CK-255)'],
   [I('copilot/server.js'),                          I('lib/run-state.js'),  'every ok/failed tool call is written to the run by step() (0.60.50 CE1)'],
   [I('copilot/tool-runtime.js'),                    I('lib/run-state.js'),  'header() at the head of follow-up rounds and resumed runs; note(off-task) on a blocked reply (0.60.50 CE2, CE3)'],
   [I('guardian/lib/response-sink.js'),              I('lib/run-state.js'),  'a response node is tagged with its run, step and attempt via forSession() (0.60.50 CE4)'],

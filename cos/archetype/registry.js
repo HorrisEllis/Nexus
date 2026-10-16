@@ -718,6 +718,8 @@ const ARCHETYPES_RAW = [
 // §0.39.359 SB30 — nexus-system: a Nexus system skeleton in Guardian's shape, assembled from its own folder and the
 // reusable components (cos/archetype/nexus-system.js). Validated below like every other built-in.
 ARCHETYPES_RAW.push(require('./nexus-system.js').archetype());
+// §0.60.104 CN1/CN2 — James's ERAVOS as COS templates: the canvas, a tool, a sound tool (cos/archetype/eravos.js)
+ARCHETYPES_RAW.push(...require('./eravos.js').archetypes());
 
 // ─── Validate every built-in at load time — COS-1 ─────────────────────────────
 

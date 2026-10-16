@@ -1,0 +1,16 @@
+{
+  "n": "Breathy Pad",
+  "cat": "PADS",
+  "s": "pad",
+  "c": "#ccddff",
+  "i": "\ud83d\udca8",
+  "bpm": 0,
+  "key": "Am",
+  "genre": "Ambient",
+  "tags": [
+    "breath",
+    "air",
+    "textural"
+  ],
+  "_file": "breathy_pad.json"
+}

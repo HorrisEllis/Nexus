@@ -31,7 +31,7 @@ check('RW-04 automatic retries are counted per phase, so they are capped', RW.re
 const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
 const act = fs.readFileSync(path.join(ROOT, 'lib/repo-activity.js'), 'utf8');
 check('RW-05 wired: the watchdog runs every minute, closes a stall, reports a gap diagnostic sees, retries once; a reject retries its phase; the task panel ends a finished review',
-  /setInterval\(\(\) => \{ _watchRuns\(\)/.test(api) && /type: 'phase\.run\.stalled'/.test(api) && /_autoRetry\(s, 'stall'/.test(api) && /_autoRetry\(info, 'reject'/.test(api)
+  /setInterval\(\(\) => \{ _watchRuns\(\)/.test(api) && /type: 'phase\.run\.stalled'/.test(api) && /_autoRetry\(s, 'stall'/.test(api) && /(_autoRetry\(info, 'reject'|\(deps\.autoRetry \|\| _autoRetry\)\(run, 'reject')/.test(api)   /* 0.60.105 RL2: the reject retry runs after the lesson, in _learnFromRejection */
   && /-review\$\/\.test\(runId\) && \['reviewed', 'incomplete', 'skipped'\]/.test(act));
 // ── 0.60.78 — James, 2026-10-16: "just needs to recover and retry after rejection. like log the fault or failure mode and retry."
 const note = (id, state, ago) => ({ runId: id, state, phase: 'IH1', map: 'm.spec', repoUuid: 'R', targetRepo: 'R', ts: now - ago });

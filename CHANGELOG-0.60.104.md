@@ -1,54 +1,83 @@
 # 0.60.104 — 2026-10-16
 
-James: "can you do the code tab changes?"
+_Built on the branch claude/exciting-shannon-m4nawj as 0.60.83; renumbered 0.60.104 at the merge with main (main had used 0.60.83 for the ERAVOS removal, the branch's 0.60.82)._
 
-He sent a screenshot of the Code tab showing three problems:
-- a pending `lib/intent-chain.js` from the agent, whose body is `// Placeholder implementation` and a `resolve()` that
-  returns nulls, credited to a run marked `contract-complete`;
-- `TL0_find_the_loss` building at attempt 9, 20 steps, 0 changed;
-- the old layout, with every region open at once.
+James: "here, use this. what about using cos for the canvas, then each tool a nested compartment? remove it from
+idearium also. creating templates for cos and ideariun spec workshop" (with Eravos-merged.zip)
 
-## 1. A placeholder is not the work (the code.write gate)
+The map is `docs/2026-10-16-canvas-compartments-phasemap.spec`, written before the code.
 
-- **What was wrong.** A brick's check (`lib/phase-plan.js checkChunk`) only looked for the export names its plan named.
-  The stub exported `resolve`, so it passed, and the contract went complete.
-- **What changed.** The one door every proposal passes (`lib/repo-inject.js` `_screen` and `land`) runs the code.write
-  gate, and the gate node (`lib/step-gates/code.write.step_gate`) gains `not-a-placeholder` (a new check kind,
-  `no_placeholder`, in `lib/step-gate.js`). A file an agent writes is refused when:
-  - a comment on a line it adds calls the file a placeholder or a stub (the phrases are in the node; extend them there);
-  - a line it adds throws "not implemented".
-  The refusal names the line.
-- **What it never judges:**
-  - a person's file;
-  - a line the file already had;
-  - the same words inside a string or a name.
-- `lib/stub-scanner.js` stays the broad advisory scan (TODO, hack, for now). This check is its narrow, hard subset.
+## His idea, and the coder's reading
 
-## 2. The Code tab, one view at a time, made solid (TB5)
+The idea is his: COS holds the canvas, and each tool is a nested compartment. It fits what both sides already have.
+- COS already nests (`lib/cos-bridge.js` createCompartment with a parentId, and tree()).
+- His ERAVOS already keeps "the canvas and the tools … separate". A tool is a sealed folder with a manifest, declared
+  ports and declared permissions.
 
-- 0.60.103 split the tab into files, changes, plans, runs and COS, and left 7 of `test-code-tab`'s checks red. They were
-  written for the old all-at-once layout. Each now opens the view it tests.
-- **The Runs tab's live badge now updates from any view.** Before, it changed only on a full repaint, so a call running
-  while you were in files did not show on the tab.
-- **A draft in the agent box survives a view switch.** CT-31 was rewritten to check it.
-- CT-22's own race is fixed: its first event's delayed reload landed after the stub had changed.
+The coder's reading, to confirm: the tool's compartment is the unit Nexus **builds, versions and tests**. The tools still
+run together in the one canvas page, because audio has to stay sample-accurate.
 
-## 3. TL0 is a question for him, not a build
+## Built (CN1–CN4)
 
-- TL0 asked which screen and log lost the 17 chunks. Only he has that, so an agent searched the repo for 9 attempts and
-  changed nothing.
-- It was moved, whole, under `decisions:` of `docs/2026-10-16-durable-work-timeline-phasemap.spec` (addendum c). Entries
-  there are kind `decision`, which no build picks. TL1 no longer waits on it.
+- **COS archetypes**, from his files and assembled each time they are read (as nexus-system is):
+  - **eravos-canvas:** his domain-free `canvas/` byte for byte, `schemas/`, `templates/`, his dependency-free build
+    scripts (new-tool, index-tools, validate), his test `harness.js` with a `run.html` for each tool's own tests,
+    `serve.js` and `index.html`;
+  - **eravos-tool** and **eravos-sound-tool:** his tool templates. His `__MARKS__` are filled by his own
+    `build/new-tool.mjs` rules: `eravos.<tool>` in music, `eravos.<domain>.<tool>` elsewhere; the author defaults to
+    "me";
+  - **eravos-domain-music** and **eravos-domain-dataflow:** found needed while building. A sound tool calls
+    `S.audio_out`, which his music core defines, so a canvas that gets a music tool gets his real music domain. A sound
+    tool outside the music domain is refused, and the refusal says why.
+- **`lib/canvas-compartments.js`:**
+  - a canvas is a COS compartment;
+  - each tool is a **nested** compartment (parentId = the canvas), linked into
+    `tools/<domain>/tools/<category>/<tool>/` (a junction on Windows) and recorded as a mount;
+  - his own `build/index-tools.mjs` writes the loaders;
+  - `canvas.json` lists the canvas's tools with their acceptance lines.
+- **Route → command:**
+  - routes: `GET/POST /api/canvas`, `GET /api/canvas/:id`, `POST /api/canvas/:id/tools`;
+  - commands: `idearium canvas list | new "<name>" | show <canvas> | add-tool <canvas> <domain> <category> <tool-id>
+    "<Label>" [--sound]`. Agents get them through `nexus.command`.
+  - Events `idearium.canvas.created` and `idearium.canvas.tool.added`, both declared.
+- **Spec-workshop templates:**
+  - **eravos-canvas**: from his README layout and the canvas/tools boundary;
+  - **eravos-tool**: from his tool spec (identity, ports, params, behaviour, needs, packs, acceptance) and the tool
+    schema.
+  - Every section is a real block, and every line is quoted from his files.
+
+## Not shipped, and why
+
+- His scripts that load Playwright (shots, perf, run.mjs, tool-kit, specs, planned-deps, migrate-tools). Nexus's
+  CG-001b fails any file that loads Playwright. Clear Glass drives the canvas here instead.
+- His music domain's own test suites. A canvas from the template runs its tools' tests on his harness.
+
+## "remove it from idearium also"
+
+Idearium's code was cleared in 0.60.82; only history comments name it. An ERAVOS repo he imported into his own Idearium
+is his data on his machine. `idearium repo archive <uuid>` archives it. Nothing was done to it from here. To confirm
+which he meant.
+
+## Also in this release (from 0.60.82's full suite)
+
+- `lib/build-paths.js` classifies the Code tab's code.edit / code.assist call: not a build, the same footing as the
+  Agent tab chat (the coder's classification).
+- `test-loom-phasemap` counts 15 systems.
+- `README.md` regenerated from the atlas.
+- **loom's prune** now drops a record whose file lives in a top-level directory that no longer exists. ERAVOS's
+  hand-mapped records had stayed in loom's registry, so the atlases still listed its routes. 96 removed, all ERAVOS's.
+  The template files under `cos/archetype/eravos-*` are scanned into loom as `nexus-system`'s are (72 components).
 
 ## Proof
 
-- `test-inject-screen` 14/14. IS-10 is the screenshot's file.
-- `test-step-gate` 18/18, `test-repo-inject` 83/83.
-- `test-code-tab` 16/16 (was 9/16; driven in Clear Glass, never Playwright), `test-code-tab-expand` 8/8, `test-code-tab-merge` 8/8.
+- `tests/modules/test-canvas-compartments.test.js` 7/7. **CC-10, in Clear Glass:** a canvas made by Nexus, served by
+  **his** `serve.js`, loads its nested tools, and **his** harness passes each tool's contract, 12/12. His
+  `build/validate.mjs` passes on the generated canvas (CC-03).
+- Unchanged and passing: `test-file-tree-plan` 58/58, `test-spec-workshop` 8/8, `test-build-paths` 6/6,
+  `test-loom-phasemap` 7/7, `test-loom-map` 19/19, `test-nexus-atlas-refs` 49/49, `test-readme-atlas` 1/1.
 
-## Not done, said
+## Open
 
-- The pending `lib/intent-chain.js` on his machine is still waiting for Apply. Reject it: IH1's real build waits on his
-  answer to IH0a (one intent list with aliases, or three).
-- "copilot gave no route: timed out after 5000ms" in the agent pane was not looked into.
-- TB2/TB3a/TB4a (save every tool call, recall exact repeats first) and TB7 (the runs graph with zoom) are still open.
+- CN6: a screen for a canvas tree, to place with James.
+- To confirm: that a nested compartment means the build unit, not a process per tool; what "remove it from idearium
+  also" asks; the template names.

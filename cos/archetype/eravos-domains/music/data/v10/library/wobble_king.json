@@ -1,0 +1,16 @@
+{
+  "n": "Wobble King",
+  "cat": "BASS",
+  "s": "wobble",
+  "c": "#aa44ff",
+  "i": "\u301c",
+  "bpm": 140,
+  "key": "Am",
+  "genre": "Dubstep",
+  "tags": [
+    "wobble",
+    "LFO",
+    "classic"
+  ],
+  "_file": "wobble_king.json"
+}

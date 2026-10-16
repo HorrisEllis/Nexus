@@ -1,0 +1,16 @@
+{
+  "n": "Squarepusher Funk",
+  "cat": "BASS",
+  "s": "bass",
+  "c": "#ff8800",
+  "i": "\ud83c\udfb8",
+  "bpm": 190,
+  "key": "Am",
+  "genre": "IDM",
+  "tags": [
+    "Squarepusher",
+    "fast",
+    "funky"
+  ],
+  "_file": "squarepusher_funk.json"
+}

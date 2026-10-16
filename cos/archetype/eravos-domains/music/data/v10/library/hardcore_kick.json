@@ -1,0 +1,16 @@
+{
+  "n": "Hardcore Kick",
+  "cat": "KICKS",
+  "s": "kick",
+  "c": "#ff0000",
+  "i": "\ud83d\udca2",
+  "bpm": 180,
+  "key": "C",
+  "genre": "Hardcore",
+  "tags": [
+    "distorted",
+    "hard",
+    "peak"
+  ],
+  "_file": "hardcore_kick.json"
+}

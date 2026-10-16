@@ -1,0 +1,9 @@
+/* Preview ▶ / ■ (runtime/preview.js) — the button next to any preset, in any list */
+.pv-btn { flex: none; width: 24px; height: 24px; padding: 0; border-radius: 50%; border: 1px solid var(--line2, #333); background: var(--bg2, #16161c); color: var(--text, #ddd); font-size: 10px; line-height: 22px; cursor: pointer; }
+.pv-btn:hover { border-color: #00d4ff; color: #00d4ff; }
+.pv-btn.on { background: #00d4ff; border-color: #00d4ff; color: #000; animation: pv-pulse 1s ease-in-out infinite; }
+.pv-btn:focus-visible { outline: 2px solid #00d4ff; outline-offset: 1px; }
+@keyframes pv-pulse { 50% { box-shadow: 0 0 0 4px rgba(0, 212, 255, .25); } }
+@media (prefers-reduced-motion: reduce) { .pv-btn.on { animation: none; } }
+/* a preset with its ▶ */
+.pv-row { display: inline-flex; align-items: center; gap: 4px; }

@@ -45,6 +45,8 @@ class NetService {
   }
   setPaths({ torPath, snowflakePath }) { this._save({ ...this.policy(), ...(torPath !== undefined ? { torPath } : {}), ...(snowflakePath !== undefined ? { snowflakePath } : {}) }); return { ok: true }; }
   resolve(req) { return Policy.resolve(this.policy(), req); }
+  /** §0.60.109 TLS3 — setTlsLayer(port | null): the TLS layer is up on port (Firefox-persona sessions route through it), or down (they go direct). */
+  setTlsLayer(port) { const v = port || null; if (v === (this.tlsLayer || null)) return Promise.resolve([]); this.tlsLayer = v; return this.reapplyAll(); }
   statusNote() { return 'Applied to registered agent windows only; provider and login windows are not routed yet. Leak test not built: nothing is shown as Verified.'; }
 
   status() {
@@ -58,7 +60,7 @@ class NetService {
   async applyTo(partition) {
     const e = this.sessions.get(partition); if (!e) return { ok: false, error: 'not registered' };
     const t = this._host ? this._host.status() : { socksPort: null };
-    const pac = Policy.pacFor(this.policy(), e.ctx, { socksPort: t.socksPort });
+    const pac = Policy.pacFor(this.policy(), e.ctx, { socksPort: t.socksPort }, { tlsPort: this.tlsLayer || null });
     if (pac === null) { if (e.touched) { await e.ses.setProxy({ mode: 'system' }); e.touched = false; return { ok: true, applied: 'cleared' }; } return { ok: true, applied: false, reason: 'no rule applies; session left alone' }; }
     await e.ses.setProxy({ mode: 'pac_script', pacScript: 'data:application/x-ns-proxy-autoconfig;base64,' + Buffer.from(pac, 'utf8').toString('base64') });
     e.touched = true;

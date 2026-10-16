@@ -1,0 +1,16 @@
+{
+  "n": "Data Burst",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#00ffcc",
+  "i": "\ud83d\udcbb",
+  "bpm": 120,
+  "key": "Em",
+  "genre": "IDM",
+  "tags": [
+    "data",
+    "glitch",
+    "burst"
+  ],
+  "_file": "data_burst.json"
+}

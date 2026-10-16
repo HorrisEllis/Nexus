@@ -1,0 +1,90 @@
+{
+  "id": "arp",
+  "name": "SEQUENCE RUNNER",
+  "icon": "\u27f3",
+  "col": "#44ffaa",
+  "tag": "SEQUENCER",
+  "desc": "Step arpeggiator. 16 steps, chord modes, MIDI out.",
+  "module": "arpeggiator",
+  "visualizer": {
+    "type": "step_grid",
+    "color": "#44ffaa"
+  },
+  "params": [
+    {
+      "n": "Rate",
+      "k": "rate",
+      "v": 0.5,
+      "min": 1,
+      "max": 32,
+      "step": 1,
+      "unit": "div"
+    },
+    {
+      "n": "Octaves",
+      "k": "octs",
+      "v": 0.3,
+      "min": 1,
+      "max": 4,
+      "step": 1
+    },
+    {
+      "n": "Pattern",
+      "k": "pattern",
+      "v": 0,
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "type": "enum",
+      "options": [
+        "Up",
+        "Down",
+        "UpDown",
+        "Random",
+        "Chord",
+        "As Played"
+      ]
+    },
+    {
+      "n": "Gate",
+      "k": "gate",
+      "v": 0.5,
+      "min": 0.01,
+      "max": 1
+    },
+    {
+      "n": "Swing",
+      "k": "swing",
+      "v": 0.5,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Latch",
+      "k": "latch",
+      "v": 0,
+      "type": "toggle"
+    }
+  ],
+  "presets": {
+    "TECHNO": {
+      "rate": 0.5,
+      "octs": 0.3,
+      "pattern": 0,
+      "gate": 0.4
+    },
+    "TRANCE": {
+      "rate": 0.25,
+      "octs": 0.5,
+      "pattern": 2,
+      "gate": 0.6,
+      "swing": 0.5
+    },
+    "ACID": {
+      "rate": 0.5,
+      "octs": 0.3,
+      "pattern": 0,
+      "gate": 0.25
+    }
+  }
+}

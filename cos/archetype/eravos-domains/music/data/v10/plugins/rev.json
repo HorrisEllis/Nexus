@@ -1,0 +1,89 @@
+{
+  "id": "rev",
+  "name": "VOID CHAMBER",
+  "icon": "\u26a1",
+  "col": "#aa44ff",
+  "tag": "REVERB",
+  "desc": "Convolution reverb. Hall, plate, void. Room to infinite space.",
+  "module": "reverb",
+  "visualizer": {
+    "type": "impulse",
+    "color": "#aa44ff"
+  },
+  "params": [
+    {
+      "n": "Size",
+      "k": "size",
+      "v": 0.7,
+      "min": 0.1,
+      "max": 10,
+      "unit": "s"
+    },
+    {
+      "n": "Decay",
+      "k": "decay",
+      "v": 0.6,
+      "min": 0.1,
+      "max": 1
+    },
+    {
+      "n": "Pre-delay",
+      "k": "pre",
+      "v": 0.2,
+      "min": 0,
+      "max": 0.2,
+      "unit": "s"
+    },
+    {
+      "n": "Tone",
+      "k": "tone",
+      "v": 0.5,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Mix",
+      "k": "mix",
+      "v": 0.4,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Shimmer",
+      "k": "shimmer",
+      "v": 0.2,
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "presets": {
+    "ROOM": {
+      "size": 0.2,
+      "decay": 0.3,
+      "pre": 0,
+      "mix": 0.2
+    },
+    "PLATE": {
+      "size": 0.5,
+      "decay": 0.5,
+      "mix": 0.35
+    },
+    "HALL": {
+      "size": 0.7,
+      "decay": 0.55,
+      "pre": 0.15,
+      "mix": 0.4
+    },
+    "CATHEDRAL": {
+      "size": 0.95,
+      "decay": 0.85,
+      "mix": 0.55
+    },
+    "VOID": {
+      "size": 1,
+      "decay": 0.9,
+      "shimmer": 0.8,
+      "mix": 0.7
+    }
+  }
+}

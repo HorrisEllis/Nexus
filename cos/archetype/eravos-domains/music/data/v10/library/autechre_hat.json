@@ -1,0 +1,16 @@
+{
+  "n": "Autechre Hat",
+  "cat": "DRUMS",
+  "s": "hat",
+  "c": "#444466",
+  "i": "\u2699",
+  "bpm": 130,
+  "key": "C",
+  "genre": "IDM",
+  "tags": [
+    "glitch",
+    "polyrhythm",
+    "complex"
+  ],
+  "_file": "autechre_hat.json"
+}

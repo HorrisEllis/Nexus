@@ -1,0 +1,16 @@
+{
+  "n": "Djembe Hit",
+  "cat": "PERCUSSION",
+  "s": "perc",
+  "c": "#884400",
+  "i": "\ud83e\udd41",
+  "bpm": 115,
+  "key": "C",
+  "genre": "World",
+  "tags": [
+    "djembe",
+    "organic",
+    "world"
+  ],
+  "_file": "djembe_hit.json"
+}

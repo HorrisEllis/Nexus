@@ -1,0 +1,16 @@
+{
+  "n": "Impact Hit",
+  "cat": "SFX",
+  "s": "crash",
+  "c": "#ff0000",
+  "i": "\ud83d\udca5",
+  "bpm": 0,
+  "key": "C",
+  "genre": "SFX",
+  "tags": [
+    "impact",
+    "hit",
+    "dramatic"
+  ],
+  "_file": "impact_hit.json"
+}

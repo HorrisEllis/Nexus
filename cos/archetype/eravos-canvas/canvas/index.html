@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ERAVOS</title>
+<link rel="stylesheet" href="runtime/eravos.css">
+<link rel="stylesheet" href="runtime/wire-menu.css">
+<link rel="stylesheet" href="runtime/preview.css">
+<script src="scripts.js"></script>
+</head>
+<body>
+<div id="topbar">
+  <div id="logo" title="ERAVOS 3.36.0-alpha — kernel 3.2">ERAVOS</div>
+  <button class="tb-btn primary" id="startBtn" title="Start from a recipe">✦ Start</button>
+  <button class="tb-btn" id="addBtn" title="Add a tool to the canvas — every tool lists what it needs">＋ Add</button>
+  <div id="slot-bar" class="tb-slot"></div>
+  <div class="tb-spacer"></div>
+  <div id="slot-bar-right" class="tb-slot"></div>
+  <div id="faultLed" title="Fault log (nothing silently fails)"></div>
+  <div class="tb-opts">
+    <button class="tb-btn" id="optBtn" title="Options — undo, stop all, ports, fit, clear, library" aria-haspopup="menu">⋯ Options</button>
+    <div id="optMenu" role="menu" hidden>
+      <div id="slot-options" class="opt-slot"></div>
+      <button class="tb-btn stopall" id="stopAllBtn" title="Stop all — every tool goes quiet now, echoes and drones included (Shift+Esc)">■ Stop all</button>
+      <button class="tb-btn" id="portsBtn" title="Show all port names">⌁ Ports</button>
+      <button class="tb-btn" id="fitBtn" title="Fit all windows in view">⤢ Fit all</button>
+      <button class="tb-btn" id="clearBtn" title="Remove everything from the canvas">Clear canvas</button>
+    </div>
+  </div>
+</div>
+<div id="canvas"></div>
+<div id="dock" class="empty"><div id="dockGrip" title="drag to resize · double-click to fold"></div><div id="dockBody"></div></div>
+<div id="toasts"></div>
+
+<script>
+(function () {
+  'use strict';
+  // The shell is domain-free: it owns the canvas, the Add palette, recipes, faults, workspace and one
+  // keyboard dispatcher. Domains contribute controls into slots through their shell(S) hook.
+  const K = window.Kernel, UI = window.UIKit, h = UI.h;
+  OrganismFactory.boot(K);
+  CanvasWM.init(document.getElementById('canvas'), K);
+  WireSystem.init(K);
+  Workspace.boot(K);
+  Recipes.attach(K);
+  const intake = window.ShellIntake = Intake.create(K);
+  intake.attach(document.getElementById('canvas'));
+
+  // ---------------- toasts + fault LED (K-2)
+  const toasts = document.getElementById('toasts');
+  function toast(msg, kind, ms) {
+    const t = h('div', { class: 'toast ' + (kind || ''), text: msg }); toasts.appendChild(t);
+    setTimeout(() => t.remove(), ms || 5000);
+    while (toasts.children.length > 5) toasts.firstChild.remove();
+  }
+  const led = document.getElementById('faultLed');
+  const seen = new Map();
+  K.bus.subscribe('kernel:fault', (f) => {
+    led.classList.add('bad');
+    const k = f.fault_class + f.message;
+    const now = Date.now();
+    if (seen.has(k) && now - seen.get(k) < 4000) return;
+    seen.set(k, now);
+    // P11.2 (gate E): people read plain language; the code and internals stay in the fault log
+    const pe = PlainErrors.describe(f, K);
+    if (pe.level !== 'quiet') toast(pe.text + (pe.hint ? ' ' + pe.hint : ''), 'bad', pe.hint ? 7000 : 5000);
+  }, 'shell');
+  let logEl = null;
+  led.addEventListener('click', () => {
+    if (logEl) { logEl.remove(); logEl = null; return; }
+    logEl = h('div', { class: 'faultlog' });
+    const list = K.faults.list().slice(-200).reverse();
+    if (!list.length) logEl.appendChild(h('div', { text: 'No problems. Nothing has silently failed.' }));
+    // each entry: what it means (plain) on top, the technical record under it — for whoever fixes it
+    list.forEach(f => { const pe = PlainErrors.describe(f, K); logEl.appendChild(h('div', { class: 'fl-item' }, [h('div', { class: 'fl-plain', text: `${f.timestamp.slice(11, 19)}  ${pe.text}` }), h('div', { class: 'fl-tech' }, [h('span', { class: 'fc', text: f.fault_class + ' ' }), `${f.organism_id || ''} ${f.message}`])])); });
+    document.body.appendChild(logEl); led.classList.remove('bad');
+  });
+  const brand = { tagline: 'A canvas of living tools.', tip: 'Tip: drag files, a pack .zip or a saved .eravos.json anywhere onto the canvas.', categories: [] };
+  const activators = [], keys = new Map();
+  const S = window.Shell = {
+    toast, K, intake,
+    slot: (name) => document.getElementById('slot-' + name),
+    brand(o) { if (o.tagline) brand.tagline = o.tagline; if (o.tip) brand.tip = o.tip; (o.categories || []).forEach(c => { if (!brand.categories.includes(c)) brand.categories.push(c); }); },
+    onActivate(fn) { activators.push(fn); },
+    activate() { K.domains.prepare(); activators.forEach(fn => { try { fn(); } catch (e) { K.fault('RUNTIME_003', { message: 'activate: ' + e.message }); } }); },
+    bindKey(code, fn) { if (keys.has(code)) { K.fault('MOUNT_006', { message: `key ${code} already bound by another domain` }); return false; } keys.set(code, fn); return true; },
+  };
+  // agnostic by default (spec eravos.shell-expansion): domains register units / modes / needs; nothing is painted
+  // until a mode is entered or a tool that needs a unit is added
+  const X = S.X = Expansion.create(S, K);
+  Object.assign(S, { unit: X.unit, mode: X.mode, needs: X.needs, deps: X.deps, expand: X.expand, enterMode: X.enterMode });
+  X.onChange(() => document.body.classList.toggle('agnostic', X.agnostic()));
+  document.body.classList.add('agnostic');
+  // the ONE key dispatcher (F-07): domains bind codes, the shell ignores typing in fields
+  document.addEventListener('keydown', (e) => {
+    const fn = keys.get(e.code); if (!fn) return;
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
+    e.preventDefault(); fn(e);
+  });
+  // domain contributions (in install order)
+  // P13: the skeleton expands — domains that arrive later as packs get their shell hook the moment they install
+  const shelled = new Set();
+  function shellHook(d) {
+    if (!d || shelled.has(d.id) || !K.domains.has(d.id) || typeof d.shell !== 'function') return; shelled.add(d.id);
+    try { d.shell(S); } catch (e) { K.fault('RUNTIME_003', { message: `domain ${d.id} shell: ${e.message}` }); }
+  }
+  Kernel.registeredDomains().forEach(shellHook);
+  K.bus.subscribe('kernel:domain-installed', (p) => shellHook(Kernel.registeredDomains().find(d => d.id === p.id)), 'shell');
+
+  // ---------------- add menu (full popup — runtime/add-menu.js)
+  document.getElementById('addBtn').onclick = () => AddMenu.show(S, X);
+  window.ShellAdd = (view) => AddMenu.show(S, X, { view });
+  document.getElementById('fitBtn').onclick = () => CanvasWM.fitAll();
+  document.getElementById('portsBtn').onclick = (e) => { document.body.classList.toggle('show-ports'); e.currentTarget.classList.toggle('on'); };
+  document.getElementById('clearBtn').onclick = () => {
+    if (!confirm('Remove every tool from the canvas? (Autosave keeps the last state, and Ctrl+Z brings them back.)')) return;
+    // locked-shell CLEAR ALL: remove windows from the DOM; the factory's MutationObserver unmounts each exactly once
+    CanvasWM.world.querySelectorAll('.wm-win').forEach(w => w.remove());
+    OrganismFactory.clearAll(K);
+  };
+
+  // ---------------- boot / recipe picker
+  let bootOpen = null;
+  function bootScreen(first) {
+    if (bootOpen) bootOpen.close();
+    const ov = h('div', { class: 'overlay' });
+    const close = () => { ov.remove(); if (bootOpen && bootOpen.ov === ov) bootOpen = null; };
+    bootOpen = { ov, close, first };
+    const start = async (id) => {
+      S.activate(); close();
+      if (id) {
+        const r = await Recipes.run(id, { clear: !first || K.registry.list().filter(r => !r.descriptor.system).length > 0 ? true : false, origin: { x: 30, y: 20 } });
+        setTimeout(() => CanvasWM.fitAll(), 80);
+        if (r && r.faults.length) toast(`Built, but ${r.faults.length} thing${r.faults.length > 1 ? 's' : ''} didn’t load cleanly — click the red dot (top right) to see what.`, 'bad', 7000);
+      }
+    };
+    // recipes belong to the modes their tools need; on an agnostic canvas none show until a mode is picked
+    const activeDomains = new Set(X.active().map(id => (X.mode_(id) || {}).domain));
+    const visible = (r) => { const ms = X.recipeModes(r); return !ms.length || ms.some(m => X.isActive(m) || activeDomains.has((X.mode_(m) || {}).domain)); };
+    const featured = Recipes.featured().filter(visible);
+    const card = (r) => h('div', { class: 'card', style: { '--acc': r.accent || '#00d4ff' }, onclick: () => start(r.id) }, [h('b', { text: (r.icon || '') + ' ' + r.label }), h('small', { text: r.tagline || '' })]);
+    const listed = Recipes.list().filter(r => !r.featured && !r.hidden && visible(r));
+    const cards = listed.filter(r => !r.section).map(card);
+    // recipes may name a section of their own (3.27) — each becomes its own block on the start screen
+    const sections = []; listed.filter(r => r.section).forEach(r => { let s = sections.find(x => x.name === r.section); if (!s) sections.push(s = { name: r.section, items: [] }); s.items.push(r); });
+    const sectionEls = sections.flatMap(s => [h('div', { class: 'boot-sec', text: s.name }), h('div', { class: 'grid' }, s.items.map(card))]);
+    // 3.37 domains first: one big card per installed domain (its first mode) — "what are you making?" — then any other
+    // modes a domain offers (Lab…) as smaller cards. Domains arrive as packs; this lists whatever is installed.
+    const modeCard = (m, big) => h('div', { class: 'card mode-card' + (big ? ' domain-card' : '') + (X.isActive(m.id) ? ' on' : ''), style: { '--acc': m.accent || '#00d4ff' }, onclick: () => { S.activate(); X.enterMode(m.id); bootScreen(first); } }, [
+      h('b', { text: (m.icon || '◈') + ' ' + m.label + (X.isActive(m.id) ? '  ✓' : '') }), h('small', { text: m.blurb || '' })]);
+    const seenDomain = new Set(), primary = [], more = [];
+    X.modes().forEach(m => { const d = m.domain || m.id; if (seenDomain.has(d)) more.push(m); else { seenDomain.add(d); primary.push(m); } });
+    const modeCards = primary.map(m => modeCard(m, true)), moreCards = more.map(m => modeCard(m, false));
+    const box = h('div', { class: 'boot' }, [
+      h('h1', { text: 'ERAVOS' }),
+      h('p', { class: 'sub', text: X.active().length ? brand.tagline : 'A blank canvas. Pick what you are making — or start empty and add any tool from any domain; it turns on only what it needs.' }),
+      ...(X.modes().length ? [h('div', { class: 'boot-sec', text: 'WHAT ARE YOU MAKING?' }), h('div', { class: 'grid modes domains' }, modeCards)] : []),
+      ...(moreCards.length ? [h('div', { class: 'boot-sec', text: 'MORE MODES' }), h('div', { class: 'grid modes' }, moreCards)] : []),
+      ...featured.map(r => h('div', { class: 'hero-card', onclick: () => start(r.id) }, [h('div', { class: 'big', text: r.featured.icon || r.icon || '✦' }), h('div', {}, [h('h2', { text: r.featured.title || r.label }), h('p', { text: r.featured.text || r.tagline || '' })])])),
+      ...sectionEls,
+      ...(OrganismFactory.defined().length ? [] : [h('div', { class: 'hero-card', style: { cursor: 'default' } }, [h('div', { class: 'big', text: '⧉' }), h('div', {}, [h('h2', { text: 'This canvas has no tools yet' }), h('p', { text: window.ERAVOS_DESKTOP ? 'Drop a pack (.zip) onto the canvas, or put it in ERAVOS Library › Packs and it loads every start. 📁 Library opens the folder.' : 'Drop a pack (.zip) anywhere onto the canvas to add its tools.' })])])]),
+      ...(cards.length || X.active().length ? [h('div', { class: 'boot-sec', text: 'START FROM' })] : []),
+      h('div', { class: 'grid' }, cards.concat([
+        h('div', { class: 'card', onclick: () => start(null) }, [h('b', { text: '◻ Empty canvas' }), h('small', { text: 'Agnostic — add tools yourself (＋ Add)' })]),
+        h('div', { class: 'card', onclick: () => { start(null); setTimeout(() => AddMenu.show(S, X), 30); } }, [h('b', { text: '＋ Browse every tool' }), h('small', { text: 'See what each one needs before you add it' })]),
+      ])),
+      h('div', { class: 'row', id: 'autosaveRow' }),
+      h('p', { class: 'sub', style: { marginTop: '14px', fontSize: '11px' }, text: brand.tip }),
+    ]);
+    ov.appendChild(box);
+    ov.addEventListener('click', (e) => { if (e.target === ov && !first) close(); });
+    document.body.appendChild(ov);
+    // P11.3 (gate S): named projects + earlier autosaves + carry everything to another address
+    Promise.all([Workspace.projects.list(), Workspace.autosaveHistory()]).then(([projs, hist]) => {
+      const row = box.querySelector('#autosaveRow'); if (!row) return;
+      const sec = h('div', { class: 'boot-projects' });
+      if (projs.length) {
+        sec.appendChild(h('div', { class: 'boot-sec', text: 'PROJECTS' }));
+        sec.appendChild(h('div', { class: 'grid' }, projs.slice(0, 12).map(p => h('div', { class: 'card', role: 'button', tabindex: '0', title: 'open this project (what is on the canvas now stays in autosave)', onclick: async () => { S.activate(); close(); await Workspace.projects.load(p.name); setTimeout(() => CanvasWM.fitAll(), 80); }, onkeydown: (e) => { if (e.key === 'Enter') e.currentTarget.click(); } },
+          [h('b', { text: '📁 ' + p.name }), h('small', { text: `${new Date(p.time).toLocaleString()} · ${p.tools} tools` })]))));
+      }
+      const older = hist.slice(1).filter(x => x.snap && x.snap.organisms && x.snap.organisms.length);
+      const tools = h('div', { class: 'row', style: { marginTop: '8px', gap: '8px', flexWrap: 'wrap' } }, [
+        ...(older.length ? [h('select', { class: 'uk-select', 'aria-label': 'Restore an earlier autosave', onchange: async (e) => { const i = +e.target.value; if (!(i >= 0)) return; S.activate(); close(); await Workspace.restore(older[i].snap); setTimeout(() => CanvasWM.fitAll(), 80); } },
+          [h('option', { value: '', text: `⟲ Earlier autosaves (${older.length})…` })].concat(older.map((x, i) => h('option', { value: String(i), text: `${new Date(x.time).toLocaleString()} · ${x.snap.organisms.length} tools` }))))] : []),
+        h('button', { class: 'tb-btn', title: 'download one file with every project, autosave and saved preset from this address — open it in ERAVOS anywhere else (drop it on the canvas)', onclick: async () => { const b = await Workspace.backup(); Workspace.download('eravos-backup-' + new Date().toISOString().slice(0, 10) + '.eravos.json', JSON.stringify(b), 'application/json'); toast(`Backed up ${b.projects.length} project(s)${b.latest ? ' + your latest autosave' : ''}. Drop that file onto ERAVOS anywhere to bring them in.`, 'good', 6000); } }, ['⤓ Back up all my saves']),
+      ]);
+      sec.appendChild(tools);
+      row.parentNode.insertBefore(sec, row);
+    });
+    Workspace.latestAutosave().then(a => {
+      if (!a || !a.snap || !a.snap.organisms.length) return;
+      const row = box.querySelector('#autosaveRow');
+      row.appendChild(h('button', { class: 'tb-btn', onclick: async () => { S.activate(); close(); await Workspace.restore(a.snap); setTimeout(() => CanvasWM.fitAll(), 80); } }, [`⟲ Restore autosave (${new Date(a.time).toLocaleString()}, ${a.snap.organisms.length} tools)`]));
+    });
+  }
+  document.getElementById('startBtn').onclick = () => bootScreen(false);
+  K.bus.subscribe('workspace:backup-imported', (p) => { toast(`Brought in ${p.projects} project(s) and ${p.presets} preset(s). Find them under Start → PROJECTS.`, 'good', 6000); if (bootOpen) bootScreen(bootOpen.first); }, 'shell');
+
+  // ---------------- undo / redo (P11.1, runtime/history.js — works for any organism a pack adds)
+  const history = window.ShellHistory = History.create(K);
+  const undoBtn = h('button', { class: 'tb-btn', text: '↶', title: 'Undo (Ctrl+Z)', disabled: true, onclick: () => doHist('undo') });
+  const redoBtn = h('button', { class: 'tb-btn', text: '↷', title: 'Redo (Ctrl+Shift+Z)', disabled: true, onclick: () => doHist('redo') });
+  // 3.30: the bar holds only Start · Add · Options at first — undo/redo live in Options (Ctrl+Z still works anywhere)
+  undoBtn.textContent = '↶ Undo'; redoBtn.textContent = '↷ Redo';
+  const optSlot = document.getElementById('slot-options'); optSlot.parentNode.insertBefore(undoBtn, optSlot); optSlot.parentNode.insertBefore(redoBtn, optSlot);
+  const optBtn = document.getElementById('optBtn'), optMenu = document.getElementById('optMenu');
+  optBtn.onclick = (e) => { e.stopPropagation(); optMenu.hidden = !optMenu.hidden; };
+  document.addEventListener('pointerdown', (e) => { if (!optMenu.hidden && !e.target.closest('.tb-opts')) optMenu.hidden = true; }, true);
+  optMenu.addEventListener('click', (e) => { if (e.target.closest('button') && !e.target.closest('#portsBtn')) optMenu.hidden = true; });
+  history.onChange((s) => {
+    undoBtn.disabled = !s.canUndo; redoBtn.disabled = !s.canRedo;
+    undoBtn.title = s.canUndo ? `Undo: ${s.undoLabel}  (Ctrl+Z)` : 'Nothing to undo'; redoBtn.title = s.canRedo ? `Redo: ${s.redoLabel}  (Ctrl+Shift+Z)` : 'Nothing to redo';
+  });
+  // 3.28: Stop all — one press, everything quiet (works from anywhere, even while typing: Shift+Esc)
+  function stopAll() { const p = K.silence({ hard: true, reason: 'stop all' }); toast('Stopped all sound. Play anything to carry on.', '', 1800); return p; }
+  document.getElementById('stopAllBtn').onclick = stopAll;
+  // 3.37: the domain slots scroll sideways when the window is narrow — the wheel scrolls them, edges fade when cut
+  ['slot-bar', 'slot-bar-right'].forEach(id => { const el = document.getElementById(id); if (!el) return;
+    el.addEventListener('wheel', (e) => { if (el.scrollWidth <= el.clientWidth || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; e.preventDefault(); el.scrollLeft += e.deltaY; }, { passive: false });
+    const mark = () => el.classList.toggle('scrolls', el.scrollWidth > el.clientWidth + 1); new ResizeObserver(mark).observe(el); new MutationObserver(mark).observe(el, { childList: true, subtree: true }); mark(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && e.shiftKey) { e.preventDefault(); stopAll(); } });
+  function doHist(dir) { const l = dir === 'undo' ? history.undo() : history.redo(); if (l) toast(`${dir === 'undo' ? 'Undid' : 'Redid'}: ${l}`, '', 1500); }
+  document.addEventListener('keydown', (e) => {
+    if (e.defaultPrevented || !(e.ctrlKey || e.metaKey) || e.altKey) return;
+    const k = (e.key || '').toLowerCase(); if (k !== 'z' && k !== 'y') return;
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return; // the field's own undo
+    e.preventDefault(); doHist(k === 'y' || e.shiftKey ? 'redo' : 'undo');
+  });
+  // packs can arrive while the start screen is open (a drop, or the Packs folder) → show what they added
+  let reboot = 0; K.bus.subscribe('kernel:pack-installed', () => { if (!bootOpen) return; clearTimeout(reboot); const f = bootOpen.first; reboot = setTimeout(() => { if (bootOpen) bootScreen(f); }, 120); }, 'shell');
+  // desktop: wait for the Packs folder to finish loading before offering recipes / autosave (both need the tools)
+  // 3.30: the canvas opens BLANK — Start · Add · Options only. The start page opens when you press Start
+  // (or by itself only when no tools are installed yet, to say how to add some). ?boot opens it as before.
+  window.addEventListener('load', () => { if (/noboot/.test(location.search)) return; Promise.resolve(window.ERAVOS_PACKS_READY).then(() => { bootScreen(true); /* 3.37: the domains are the first screen, every time (projects + autosaves are on it too) */ }); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+{ "schema": "eravos.domain/1", "id": "dataflow", "label": "Dataflow", "version": "1.0.0", "icon": "⇄",
+  "core": ["core/dataflow.js"], "ports": ["dataflow"], "modes": [], "pages": [], "content": [] }

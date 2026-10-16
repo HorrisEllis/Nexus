@@ -1,0 +1,16 @@
+{
+  "n": "Cloud Rap Pad",
+  "cat": "PADS",
+  "s": "pad",
+  "c": "#aabbff",
+  "i": "\u2601",
+  "bpm": 90,
+  "key": "Am",
+  "genre": "Cloud Rap",
+  "tags": [
+    "dreamy",
+    "lo-fi",
+    "cloud"
+  ],
+  "_file": "cloud_rap_pad.json"
+}

@@ -1,0 +1,16 @@
+{
+  "n": "Micro Bass",
+  "cat": "BASS",
+  "s": "bass",
+  "c": "#444444",
+  "i": "\u2014",
+  "bpm": 124,
+  "key": "Am",
+  "genre": "Minimal",
+  "tags": [
+    "minimal",
+    "subtle",
+    "micro"
+  ],
+  "_file": "micro_bass.json"
+}

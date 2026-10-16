@@ -1,0 +1,16 @@
+{
+  "n": "Bunker Kick",
+  "cat": "KICKS",
+  "s": "kick",
+  "c": "#ff6b00",
+  "i": "\u26a1",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Techno",
+  "tags": [
+    "dark",
+    "industrial",
+    "hard"
+  ],
+  "_file": "bunker_kick.json"
+}

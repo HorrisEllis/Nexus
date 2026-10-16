@@ -1,0 +1,15 @@
+{
+  "n": "Gated Snare",
+  "cat": "DRUMS",
+  "s": "snare",
+  "c": "#ffaa00",
+  "i": "\ud83d\udca5",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Techno",
+  "tags": [
+    "gated",
+    "tight"
+  ],
+  "_file": "gated_snare.json"
+}

@@ -1,0 +1,16 @@
+{
+  "n": "Vinyl Scratch",
+  "cat": "SFX",
+  "s": "perc",
+  "c": "#333333",
+  "i": "\ud83d\udcbf",
+  "bpm": 0,
+  "key": "C",
+  "genre": "SFX",
+  "tags": [
+    "vinyl",
+    "scratch",
+    "DJ"
+  ],
+  "_file": "vinyl_scratch.json"
+}

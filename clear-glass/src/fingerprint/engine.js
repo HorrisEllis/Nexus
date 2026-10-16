@@ -15,7 +15,17 @@ const { JaaKV } = require('../storage/jaa');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
 
 // Firefox UA pool — realistic, versioned
-const FF_UA_POOL = [
+// 2026-10-16 — James: "for the google login, can you do everything you can to prevent that?" The pool claimed Firefox
+// 121/122 (end of 2023): Google's sign-in reads an outdated browser as "may not be secure". One entry said "Windows NT 11.0",
+// which no Firefox sends (Windows 11 reports 10.0). The pool is now computed from Mozilla's calendar
+// (firefox-version.js): the current release and the one before, on Windows, macOS and Linux. FF_UA_POOL_2023 is the
+// old list, kept (§0.3).
+const FFV = require('./firefox-version');
+function ffPool(now = Date.now()) {
+  const v = FFV.versionNow(now);
+  return [FFV.ua('win32', v), FFV.ua('win32', v - 1), FFV.ua('darwin', v), FFV.ua('linux', v), FFV.ua('win32', v)];
+}
+const FF_UA_POOL_2023 = [
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0',
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:122.0) Gecko/20100101 Firefox/122.0',
@@ -114,7 +124,8 @@ class FingerprintEngine {
   // ── Profile management ─────────────────────────────────────────────────
   generate(agentId, options = {}) {
     const seed     = agentId || uuidv4();
-    const uaIndex  = this._hash(seed) % FF_UA_POOL.length;
+    const pool     = ffPool();
+    const uaIndex  = this._hash(seed) % pool.length;
     const wglIndex = (this._hash(seed + 'wgl')) % WEBGL_RENDERERS.length;
     const scrIndex = (this._hash(seed + 'scr')) % SCREEN_PROFILES.length;
     const tzIndex  = (this._hash(seed + 'tz'))  % TIMEZONES.length;
@@ -123,7 +134,7 @@ class FingerprintEngine {
       uuid:      uuidv4(),
       agentId:   seed,
       version:   1,
-      ua:        options.ua        || FF_UA_POOL[uaIndex],
+      ua:        options.ua        || pool[uaIndex],
       webgl:     options.webgl     || WEBGL_RENDERERS[wglIndex],
       screen:    options.screen    || SCREEN_PROFILES[scrIndex],
       timezone:  options.timezone  || TIMEZONES[tzIndex],
@@ -146,7 +157,16 @@ class FingerprintEngine {
   }
 
   getOrGenerate(agentId) {
-    return this.profiles.get(agentId) || this.generate(agentId);
+    const p = this.profiles.get(agentId);
+    if (!p) return this.generate(agentId);
+    // 2026-10-16 — a stored profile with an outdated Firefox (or "Windows NT 11.0") gets a current one for the same OS;
+    // everything else in the profile stays as it was
+    if (FFV.stale(p.ua)) {
+      const os = /Macintosh/.test(p.ua) ? 'darwin' : /X11|Linux/.test(p.ua) ? 'linux' : 'win32';
+      p.ua = FFV.ua(os);
+      try { this.save(); } catch (_) {}
+    }
+    return p;
   }
 
   // Import from Firefox profile export
@@ -191,6 +211,11 @@ class FingerprintEngine {
       Object.defineProperty(nav, key, { get: () => val, configurable: true });
     } catch {}
   }
+
+  // 2026-10-16 — Firefox has no navigator.userAgentData and no window.chrome; a Firefox persona that has them is a
+  // Chromium saying it is Firefox (Google's sign-in reads exactly that)
+  try { delete Navigator.prototype.userAgentData; } catch {}
+  try { delete window.chrome; } catch {}
 
   // Remove webdriver flag
   try {
@@ -286,3 +311,4 @@ class FingerprintEngine {
 }
 
 module.exports = FingerprintEngine;
+module.exports.ffPool = ffPool; module.exports.FF_UA_POOL_2023 = FF_UA_POOL_2023;   // 2026-10-16, for the sign-in test

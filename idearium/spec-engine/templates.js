@@ -242,6 +242,26 @@ const TEMPLATES = Object.freeze([
     seedFile:    'axioms.spec',
     seedSection: null,
   },
+  // §0.60.104 CN4 — James: "creating templates for cos and ideariun spec workshop" (with Eravos-merged.zip). Seeds quoted
+  // from his ERAVOS files; their COS counterparts are cos-archetype:eravos-canvas / eravos-tool.
+  {
+    id:          'eravos-canvas',
+    kind:        'system',
+    label:       'ERAVOS canvas (COS: each tool a nested compartment)',
+    description: 'His domain-free canvas of tools: the layout, how the canvas finds its tools, how a tool is added ' +
+                 'and tested. Lays out as the COS archetype eravos-canvas, one nested compartment per tool.',
+    seedFile:    'eravos-canvas.spec',
+    seedSection: null,
+  },
+  {
+    id:          'eravos-tool',
+    kind:        'component',
+    label:       'ERAVOS tool (eravos.tool/1)',
+    description: 'One tool on a canvas: identity, ports, params, behaviour, needs, packs and acceptance, from his ' +
+                 'tool template. Lays out as the COS archetype eravos-tool.',
+    seedFile:    'eravos-tool.spec',
+    seedSection: null,
+  },
   {
     id:          'compartments',
     kind:        'system',

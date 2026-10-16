@@ -1,0 +1,16 @@
+{
+  "n": "Void Scream",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#220033",
+  "i": "\ud83d\ude31",
+  "bpm": 140,
+  "key": "Am",
+  "genre": "Dubstep",
+  "tags": [
+    "dark",
+    "scream",
+    "void"
+  ],
+  "_file": "void_scream.json"
+}

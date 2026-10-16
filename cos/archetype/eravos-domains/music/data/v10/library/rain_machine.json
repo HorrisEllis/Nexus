@@ -1,0 +1,16 @@
+{
+  "n": "Rain Machine",
+  "cat": "DRONES",
+  "s": "pad",
+  "c": "#334455",
+  "i": "\ud83c\udf27",
+  "bpm": 0,
+  "key": "C",
+  "genre": "Ambient",
+  "tags": [
+    "rain",
+    "nature",
+    "texture"
+  ],
+  "_file": "rain_machine.json"
+}

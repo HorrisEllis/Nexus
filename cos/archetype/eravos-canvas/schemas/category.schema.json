@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eravos/category.schema.json",
+  "title": "ERAVOS category (tools/<category>/category.json) — the one home folder of a group of tools",
+  "type": "object",
+  "required": ["schema", "id", "label"],
+  "properties": {
+    "schema": { "const": "eravos.category/1" },
+    "id": { "type": "string" }, "label": { "type": "string" }, "icon": { "type": "string" },
+    "order": { "type": "integer" }, "blurb": { "type": "string" }
+  },
+  "additionalProperties": false
+}

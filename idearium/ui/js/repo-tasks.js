@@ -173,8 +173,16 @@ function rtEnsureButton() {
 }
 
 function rtToggleDrawer(force) {
-  // §0.47.0 OS2 — opens (or folds) the Plan panel's activity section; the panel repaints and rtMounted() draws into it
+  // §0.60.107 PS3 — James: "strip the plan panel to just the plan with context, and progress? make the rest theyre own
+  // panel". The views have one home now: the Code tab's bottom panel (tasks · log · control · versions · machine).
   const open = force == null ? !_rtDrawerOpen() : !!force;
+  if (open && typeof cxPanel === 'function') {
+    const k = typeof CX_RT !== 'undefined' && CX_RT.has(RT_VIEW) ? RT_VIEW : 'tasks';
+    if (typeof CURRENT_REPO_SUBTAB !== 'undefined' && CURRENT_REPO_SUBTAB !== 'code' && typeof setRepoSubtab === 'function') setRepoSubtab('code');
+    cxPanel(k);
+    return;
+  }
+  // (before 0.60.106: opens (or folds) the Plan panel's activity section; kept for a page without the Code tab)
   if (typeof PLANP !== 'undefined') PLANP.logOpen = open;
   try { localStorage.setItem('idearium.rt.open', open ? '1' : '0'); } catch (_) {}
   if (open && typeof openPlanPanel === 'function' && !(document.getElementById('plan-panel') || { classList: { contains: () => false } }).classList.contains('open')) openPlanPanel();
