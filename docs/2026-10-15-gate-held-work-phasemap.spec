@@ -661,3 +661,28 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 # brick's run: attempt, who tried it, steps, files read and changed.
 # Open: GW0b (a new chat per gate kind; today a contract retry reuses the brick's session) and GW1's packet as the one handoff.
 
+
+# ## ADDENDUM 2026-10-16 (i) — everything the pipeline handles is a persistent node (his decision; mapped, no code)
+# James (2026-10-16), right after pasting the 2026-08-22 end-state vision back: ".inputs .outputs .reponses .contracts .chucks.
+# .deps its all persistent. all the data from ideariun, the agents."
+# His decision, recorded as his: every input sent to an agent, every output, response, contract, chunk and dependency set is
+# kept as a typed node (lib/node-export.js), for everything Idearium and the agents do.
+# Coder's reading (to confirm): one set per brick attempt, joined by the brick key (<map>::<phase>::<gate>, 0.60.77) and causedBy:
+# .input (exactly what was sent, its budget and what was cut) → .response (what the agent said) → .output (what landed: files, before
+# and after hashes, commit) on .contract / .chunk, with .deps (what the brick requires and imports). The trace (GW3) reads them.
+# Found 2026-10-16 (writers read in code, not schemas):
+#   .contract  written (contract-intake queue rows; contract-adapters v2 contracts)
+#   .chunk     written (idearium/lib/chunk-nodes.js, spec-engine chunks)
+#   .run       written (lib/run-state.js; per brick since 0.60.77)
+#   .response  partly: guardian/lib/response-sink.js writes one per browser-tab job; Ollama and copilot replies are not nodes
+#   .input     schema only (lib/node-schemas/schema.input), no writer
+#   .output    schema only (lib/node-schemas/schema.output), no writer
+#   .deps      no type at all: dependencies live inside a contract's gates (depends_on, requires) and the phase-map cache
+#
+# GW27_everything_is_a_node (proposed, OPEN; folds the open half of GW3: "the .response node per move, each file write with hashes"):
+#   does: a brick attempt writes .input before dispatch (prompt, brick key, budget, context cut), .response after (every backend, not
+#     only Guardian's), .output when it lands (files, before/after hashes, commit), and the brick's .deps once per plan (requires,
+#     depends_on, imports from phase-map-auto). Each causedBy the one before; each tagged contract:<id>, gate:<id>. A new `dep` schema
+#     beside the others. The trace lists them; nothing is a second record (§7.6: the nodes are the record the trace projects).
+#   proof: one real contract build leaves, per brick attempt, an .input, a .response and an .output linked by causedBy, and one .deps
+#     per brick; an Ollama attempt leaves a .response too; the trace names a missing one as a hole.
