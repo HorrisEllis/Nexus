@@ -58,6 +58,9 @@ class ContextManager {
 
       // Override User-Agent always
       headers['User-Agent'] = profile.ua;
+      // 2026-10-16 — a Firefox persona sends no client hints: Chromium's Sec-CH-UA beside a Firefox UA, on every site, was
+      // a Chromium saying it is Firefox (Google's sign-in reads exactly that). James: "do everything you can to prevent that"
+      if (/\bFirefox\//.test(profile.ua)) for (const k of Object.keys(headers)) if (/^sec-ch-ua/i.test(k)) delete headers[k];
 
       return headers;
     });

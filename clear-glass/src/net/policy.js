@@ -130,6 +130,26 @@ function proxyString(via, transport) {
  * A PAC sees only the URL, so provider and caller are decided HERE (which rules apply to this session); urlPattern, origin and protocol are decided in the PAC.
  * Returns null when no rule applies and the default is direct: the caller then leaves the session alone.
  */
+/**
+ * 2026-10-16 — James: "for the google login, can you do everything you can to prevent that? like across domains, contexts,
+ * erosmanceros, proxy,". Google's sign-in refuses (or walls) a sign-in from a Tor exit, and a collision compiled closed
+ * leaves it nowhere to go. signinRoute(policy, ctx, transport) -> { pac, why } — the route Google's sign-in hosts take
+ * in this session:
+ *   - what the policy resolves for https://accounts.google.com/ (a person's own http/socks proxy is honoured: one
+ *     consistent egress is what Google expects);
+ *   - EXCEPT the transport (Tor/Snowflake) and a collision: DIRECT, said. policy.signinOverTransport: true keeps the
+ *     transport for those who want it, knowing Google may refuse;
+ *   - an explicit 'block' stays blocked (that is a decision, not an accident).
+ */
+const SIGNIN_HOSTS_PAC = '/^accounts\\.google\\.[a-z]{2,3}(\\.[a-z]{2})?$|^accounts\\.youtube\\.com$|^gds\\.google\\.com$/';
+function signinRoute(policy = {}, ctx = {}, transport = {}) {
+  const r = resolve(policy, { url: 'https://accounts.google.com/', provider: ctx.provider, caller: ctx.caller });
+  if (!r.ok) return { pac: 'DIRECT', why: `the rules for Google's sign-in collide (${r.ids.join(', ')}): sign-in goes direct rather than nowhere` };
+  const p = parseVia(r.via) || { kind: 'direct' };
+  if (p.kind === 'transport' && !policy.signinOverTransport) return { pac: 'DIRECT', why: 'Google refuses a sign-in from a Tor exit: sign-in goes direct (policy.signinOverTransport: true keeps the transport)' };
+  return { pac: proxyString(r.via, transport), why: r.why };
+}
+
 function pacFor(policy, ctx = {}, transport = {}) {
   const applicable = (policy.rules || []).filter(r => (!r.match.provider || r.match.provider === ctx.provider) && (!r.match.caller || r.match.caller === ctx.caller));
   const def = policy.default || 'direct';
@@ -148,10 +168,11 @@ function pacFor(policy, ctx = {}, transport = {}) {
     'function FindProxyForURL(url, host) {',
     '  host = String(host).toLowerCase(); var proto = url.split(":")[0].toLowerCase();',
     '  if (host === "localhost" || host === "127.0.0.1" || host === "[::1]") return "DIRECT";   // the transport\'s own ports and local tools stay local',
+    (() => { const g = signinRoute(policy, ctx, transport); return `  if (${SIGNIN_HOSTS_PAC}.test(host)) return ${JSON.stringify(g.pac)};   // Google's sign-in: ${g.why.replace(/\n/g, ' ')}`; })(),
     ...lines,
     `  return ${JSON.stringify(proxyString(def, transport))};`,
     '}',
   ].join('\n');
 }
 
-module.exports = { WEB, BLACKHOLE, FAILURES, specificity, overlaps, conflicts, globToRegex, parseVia, validate, matches, resolve, addRule, removeRule, proxyString, pacFor };
+module.exports = { signinRoute, WEB, BLACKHOLE, FAILURES, specificity, overlaps, conflicts, globToRegex, parseVia, validate, matches, resolve, addRule, removeRule, proxyString, pacFor };
