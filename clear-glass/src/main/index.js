@@ -1176,10 +1176,18 @@ async function bootstrap() {
   try { require('../network/install.js').install(bus); }
   catch (err) { console.error('[ClearGlass] network/install.js failed:', err.message); }
 
-  // 1. TLS proxy — Firefox JA4 rewrite
-  const tlsProxy = new TlsProxy({ port: TLS_PORT });
-  await tlsProxy.start();
-  console.log(`[ClearGlass] TLS proxy :${TLS_PORT}`);
+  // 1. TLS layer — §0.60.109 TL2 (docs/2026-10-16-tls-layer-phasemap.spec). James: "fix it. i don't want the trouble again".
+  // The Node proxy (src/tls/proxy.js, superseded and kept) wrapped the browser's TLS in a second TLS and carried no HTTPS
+  // site; cg-tls-helper (Go, uTLS) gives a Firefox persona Firefox's handshake. Down or missing → sessions go direct, said.
+  const { TlsHelper, setCurrent: setTlsCurrent } = require('../tls/helper');
+  const tlsProxy = new TlsHelper({ port: TLS_PORT });
+  setTlsCurrent(tlsProxy);
+  tlsProxy.on('state', (st) => {
+    try { require('../net/service').service().setTlsLayer(st.state === 'running' ? st.port : null).catch(() => {}); } catch (_) {}
+    emit('tls.layer.state', st);
+  });
+  const tlsState = await tlsProxy.start();
+  console.log(tlsState.state === 'running' ? `[ClearGlass] TLS layer :${TLS_PORT} (cg-tls-helper, Firefox handshake; CA ${String(tlsState.caFingerprint).slice(0, 16)}…)` : `[ClearGlass] TLS layer not running — ${tlsState.why}`);
 
   // 2. Fingerprint engine
   fp = new FingerprintEngine();
@@ -2738,6 +2746,7 @@ async function shutdown() {
   if (_heartbeatInterval) clearInterval(_heartbeatInterval);
   // §0.39.264 — ErosmancerOS goes down with Clear Glass (only the one Clear Glass started)
   if (erosSupervisor) { try { erosSupervisor.stop(); } catch (_) {} }
+  try { const t = require('../tls/helper').current(); if (t) t.stop(); } catch (_) {}   // §0.60.109 TL2 — the TLS layer goes down with Clear Glass
 
   // §NEW 2026-08-24 — closes the gap named at the end of the previous
   // commit, but scoped correctly rather than mechanically as originally

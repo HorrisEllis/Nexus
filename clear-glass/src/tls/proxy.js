@@ -1,4 +1,8 @@
 'use strict';
+// SUPERSEDED 2026-10-16 (0.60.109) by clear-glass/tls-helper (cg-tls-helper, Go + uTLS) and src/tls/helper.js. Kept, not
+// deleted (§0.3). Why: on CONNECT this tls.connect()ed to the site and piped the browser's own encrypted bytes into that
+// TLS socket — TLS inside TLS — so no HTTPS site could load through it, and rejectUnauthorized:false never checked the
+// site's certificate. Nothing routed to it. James: "fix it. i don't want the trouble again". docs/2026-10-16-tls-layer-phasemap.spec
 
 /**
  * TLS Proxy — Firefox JA4 Fingerprint Layer

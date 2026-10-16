@@ -339,4 +339,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     missed), not a workaround. On the way it found a second silent bug: request-header hooks replacing each other.
   - **Evidence:** `clear-glass/test/google-signin.test.js` (32 checks); `docs/2026-10-16-google-signin-phasemap.spec`;
     `CHANGELOG-0.60.106.md`. Not yet proven live: his next sign-in is the test.
+- **2026-10-16: "fix it. i don't want the trouble again" (Clear Glass's TLS layer)**
+  - **Context:** asked what fixing the broken TLS proxy would do, he heard the trade-offs: a helper binary, a local CA,
+    and what it buys (Firefox personas that are Firefox down to the handshake). The coder recommended archiving it. He
+    chose the real fix, and set its standard: no trouble again.
+  - **What it shows:** owning a decision against the recommendation, and stating the requirement that matters: it must
+    work, and it must never be why something breaks. That requirement is in the code: a fallback at every layer, never
+    an orphan, verified certificates.
+  - **Evidence:** `clear-glass/tls-helper/main_test.go` (5/5); `tests/modules/test-tls-layer.test.js` (7/7, the real
+    binary); `docs/2026-10-16-tls-layer-phasemap.spec`; `CHANGELOG-0.60.109.md`.
 
