@@ -6,7 +6,8 @@ data/raid/input/
 data/raid/output/
 data/raid/ledger/
 data/loom/loom_events.buffer.jsonl
-data/economy/          # runtime usage logs (lib/economy): state, not code — a test run in a clean clone writes here
+# runtime usage logs (lib/economy): state, not code; a test run in a clean clone writes here
+data/economy/
 idearium/data/projects/
 idearium/data/specs/
 idearium/data/nodes/
