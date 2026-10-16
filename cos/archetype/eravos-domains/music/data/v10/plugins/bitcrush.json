@@ -1,0 +1,86 @@
+{
+  "id": "bitcrush",
+  "name": "8-BIT DESTROYER",
+  "icon": "\ud83d\udc7e",
+  "col": "#aaff00",
+  "tag": "GLITCH",
+  "desc": "Bit crusher + sample rate reducer. Glitch it. Break it.",
+  "module": "bitcrusher",
+  "visualizer": {
+    "type": "waveform",
+    "color": "#aaff00",
+    "style": "stepped"
+  },
+  "params": [
+    {
+      "n": "Bits",
+      "k": "bits",
+      "v": 0.7,
+      "min": 1,
+      "max": 16,
+      "step": 1,
+      "unit": "bit"
+    },
+    {
+      "n": "Sample Rate",
+      "k": "rate",
+      "v": 0.8,
+      "min": 0.01,
+      "max": 1,
+      "unit": "x"
+    },
+    {
+      "n": "Foldback",
+      "k": "fold",
+      "v": 0.3,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Stutter",
+      "k": "stutter",
+      "v": 0.2,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Noise Floor",
+      "k": "noise",
+      "v": 0.1,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Mix",
+      "k": "mix",
+      "v": 0.6,
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "presets": {
+    "SUBTLE": {
+      "bits": 0.85,
+      "rate": 0.9,
+      "mix": 0.3
+    },
+    "CRUNCH": {
+      "bits": 0.5,
+      "rate": 0.6,
+      "fold": 0.4,
+      "mix": 0.7
+    },
+    "DESTROY": {
+      "bits": 0.1,
+      "rate": 0.2,
+      "fold": 0.8,
+      "stutter": 0.7,
+      "mix": 1
+    },
+    "NES": {
+      "bits": 0.5,
+      "rate": 0.4,
+      "mix": 0.8
+    }
+  }
+}

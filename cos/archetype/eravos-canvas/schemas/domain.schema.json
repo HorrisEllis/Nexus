@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eravos/domain.schema.json",
+  "title": "ERAVOS domain (tools/<domain>/domain.json)",
+  "description": "Everything a domain is lives in its folder. The shell reads only this manifest, the units/modes/needs it registers, and its packs.",
+  "type": "object",
+  "required": ["schema", "id", "label", "version", "core", "ports"],
+  "properties": {
+    "schema": { "const": "eravos.domain/1" },
+    "id": { "type": "string" }, "label": { "type": "string" }, "version": { "type": "string" }, "icon": { "type": "string" },
+    "core": { "type": "array", "items": { "type": "string" }, "description": "core/ files in load order (engines, theory, shared UI kit) — shared by the domain's tools, never inside a tool" },
+    "ports": { "type": "array", "items": { "type": "string" }, "description": "port types it speaks: audio, modulation, event, asset, image, video, text, json, style, layout, trigger, number" },
+    "modes": { "type": "array", "items": { "type": "string" } },
+    "pages": { "type": "array", "items": { "type": "string" }, "description": "pages/<id>/ — off-canvas pages (browsers, learn)" },
+    "content": { "type": "array", "items": { "type": "string" }, "description": "content/<kind>/ — domain-wide data packs (genres, lessons, songs)" }
+  },
+  "additionalProperties": false
+}

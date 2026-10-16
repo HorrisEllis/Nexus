@@ -1,0 +1,15 @@
+{
+  "n": "Iron Rim",
+  "cat": "DRUMS",
+  "s": "rim",
+  "c": "#ff6600",
+  "i": "\ud83d\udd14",
+  "bpm": 135,
+  "key": "C",
+  "genre": "Techno",
+  "tags": [
+    "metallic",
+    "click"
+  ],
+  "_file": "iron_rim.json"
+}

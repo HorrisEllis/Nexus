@@ -1,0 +1,16 @@
+{
+  "n": "Sub Earthquake",
+  "cat": "BASS",
+  "s": "bass",
+  "c": "#003366",
+  "i": "\ud83c\udf0a",
+  "bpm": 174,
+  "key": "Dm",
+  "genre": "DnB",
+  "tags": [
+    "sub",
+    "heavy",
+    "earthquake"
+  ],
+  "_file": "sub_earthquake.json"
+}

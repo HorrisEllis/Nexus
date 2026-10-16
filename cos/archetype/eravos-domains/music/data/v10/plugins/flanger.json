@@ -1,0 +1,76 @@
+{
+  "id": "flanger",
+  "name": "JET STREAM",
+  "icon": "\u3030",
+  "col": "#00ffcc",
+  "tag": "MODULATION",
+  "desc": "Jet-engine flanger. Slow sweep to full jet pass.",
+  "module": "flanger",
+  "visualizer": {
+    "type": "comb_filter",
+    "color": "#00ffcc"
+  },
+  "params": [
+    {
+      "n": "Rate",
+      "k": "rate",
+      "v": 0.2,
+      "min": 0.01,
+      "max": 5,
+      "unit": "Hz"
+    },
+    {
+      "n": "Depth",
+      "k": "depth",
+      "v": 0.6,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Feedback",
+      "k": "fb",
+      "v": 0.5,
+      "min": -1,
+      "max": 1
+    },
+    {
+      "n": "Delay",
+      "k": "delay",
+      "v": 0.4,
+      "min": 0.001,
+      "max": 0.02,
+      "unit": "s"
+    },
+    {
+      "n": "Mix",
+      "k": "mix",
+      "v": 0.5,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Stereo",
+      "k": "stereo",
+      "v": 1,
+      "type": "toggle"
+    }
+  ],
+  "presets": {
+    "SLOW": {
+      "rate": 0.05,
+      "depth": 0.4,
+      "mix": 0.5
+    },
+    "JET": {
+      "rate": 0.8,
+      "depth": 0.9,
+      "fb": 0.7,
+      "mix": 0.7
+    },
+    "SUBTLE": {
+      "rate": 0.15,
+      "depth": 0.3,
+      "mix": 0.3
+    }
+  }
+}

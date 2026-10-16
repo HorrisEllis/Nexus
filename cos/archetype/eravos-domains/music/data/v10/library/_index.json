@@ -1,0 +1,1520 @@
+[
+  {
+    "n": "Bunker Kick",
+    "file": "bunker_kick.json",
+    "cat": "KICKS",
+    "genre": "Techno",
+    "col": "#ff6b00",
+    "icon": "\u26a1",
+    "tags": [
+      "dark",
+      "industrial",
+      "hard"
+    ]
+  },
+  {
+    "n": "Steel Drum",
+    "file": "steel_drum.json",
+    "cat": "KICKS",
+    "genre": "Techno",
+    "col": "#ff4400",
+    "icon": "\ud83d\udd29",
+    "tags": [
+      "metallic",
+      "punchy"
+    ]
+  },
+  {
+    "n": "Concrete Kick",
+    "file": "concrete_kick.json",
+    "cat": "KICKS",
+    "genre": "Industrial",
+    "col": "#cc3300",
+    "icon": "\u2298",
+    "tags": [
+      "hard",
+      "gritty"
+    ]
+  },
+  {
+    "n": "Gated Snare",
+    "file": "gated_snare.json",
+    "cat": "DRUMS",
+    "genre": "Techno",
+    "col": "#ffaa00",
+    "icon": "\ud83d\udca5",
+    "tags": [
+      "gated",
+      "tight"
+    ]
+  },
+  {
+    "n": "Iron Rim",
+    "file": "iron_rim.json",
+    "cat": "DRUMS",
+    "genre": "Techno",
+    "col": "#ff6600",
+    "icon": "\ud83d\udd14",
+    "tags": [
+      "metallic",
+      "click"
+    ]
+  },
+  {
+    "n": "Machine Hat",
+    "file": "machine_hat.json",
+    "cat": "DRUMS",
+    "genre": "Techno",
+    "col": "#ffdd00",
+    "icon": "\u2699",
+    "tags": [
+      "mechanical",
+      "tight"
+    ]
+  },
+  {
+    "n": "Neuro Step",
+    "file": "neuro_step.json",
+    "cat": "BASS",
+    "genre": "Techno",
+    "col": "#00aaff",
+    "icon": "\u26a1",
+    "tags": [
+      "neuro",
+      "dark",
+      "reese"
+    ]
+  },
+  {
+    "n": "Dark Matter",
+    "file": "dark_matter.json",
+    "cat": "BASS",
+    "genre": "Techno",
+    "col": "#330066",
+    "icon": "\u25c9",
+    "tags": [
+      "dark",
+      "sub",
+      "deep"
+    ]
+  },
+  {
+    "n": "Chrome Bottom",
+    "file": "chrome_bottom.json",
+    "cat": "BASS",
+    "genre": "Techno",
+    "col": "#aaaaff",
+    "icon": "\u223f",
+    "tags": [
+      "chrome",
+      "metallic",
+      "industrial"
+    ]
+  },
+  {
+    "n": "Acid Tekno",
+    "file": "acid_tekno.json",
+    "cat": "BASS",
+    "genre": "Techno",
+    "col": "#00ff44",
+    "icon": "\u2697",
+    "tags": [
+      "acid",
+      "303",
+      "squelch"
+    ]
+  },
+  {
+    "n": "Berghain Stab",
+    "file": "berghain_stab.json",
+    "cat": "LEADS",
+    "genre": "Techno",
+    "col": "#ffffff",
+    "icon": "\u2726",
+    "tags": [
+      "minimal",
+      "dark",
+      "Berlin"
+    ]
+  },
+  {
+    "n": "Warehouse Riff",
+    "file": "warehouse_riff.json",
+    "cat": "LEADS",
+    "genre": "Techno",
+    "col": "#888888",
+    "icon": "\ud83c\udfed",
+    "tags": [
+      "dark",
+      "warehouse",
+      "Detroit"
+    ]
+  },
+  {
+    "n": "Amen Break",
+    "file": "amen_break.json",
+    "cat": "BREAKS",
+    "genre": "Jungle",
+    "col": "#ff0000",
+    "icon": "\ud83d\udd34",
+    "tags": [
+      "amen",
+      "break",
+      "classic"
+    ]
+  },
+  {
+    "n": "Think Break",
+    "file": "think_break.json",
+    "cat": "BREAKS",
+    "genre": "Breakbeat",
+    "col": "#ff3300",
+    "icon": "\ud83d\udca3",
+    "tags": [
+      "think",
+      "funk",
+      "break"
+    ]
+  },
+  {
+    "n": "Hardcore Kick",
+    "file": "hardcore_kick.json",
+    "cat": "KICKS",
+    "genre": "Hardcore",
+    "col": "#ff0000",
+    "icon": "\ud83d\udca2",
+    "tags": [
+      "distorted",
+      "hard",
+      "peak"
+    ]
+  },
+  {
+    "n": "Rave Stab",
+    "file": "rave_stab.json",
+    "cat": "LEADS",
+    "genre": "Rave",
+    "col": "#ff44ff",
+    "icon": "\u26a1",
+    "tags": [
+      "rave",
+      "hoover",
+      "classic"
+    ]
+  },
+  {
+    "n": "Hoover Lead",
+    "file": "hoover_lead.json",
+    "cat": "LEADS",
+    "genre": "Rave",
+    "col": "#ff00ff",
+    "icon": "\ud83c\udf00",
+    "tags": [
+      "hoover",
+      "Belgian",
+      "classic"
+    ]
+  },
+  {
+    "n": "Piano House",
+    "file": "piano_house.json",
+    "cat": "CHORDS",
+    "genre": "House",
+    "col": "#ffffff",
+    "icon": "\ud83c\udfb9",
+    "tags": [
+      "piano",
+      "uplifting",
+      "classic"
+    ]
+  },
+  {
+    "n": "Jungle Bass",
+    "file": "jungle_bass.json",
+    "cat": "BASS",
+    "genre": "Jungle",
+    "col": "#00ff88",
+    "icon": "\ud83e\udd81",
+    "tags": [
+      "choppy",
+      "fast",
+      "jungle"
+    ]
+  },
+  {
+    "n": "Ragga Stab",
+    "file": "ragga_stab.json",
+    "cat": "LEADS",
+    "genre": "Jungle",
+    "col": "#ff8800",
+    "icon": "\ud83d\udd25",
+    "tags": [
+      "ragga",
+      "choppy",
+      "jungle"
+    ]
+  },
+  {
+    "n": "Hardcore Riff",
+    "file": "hardcore_riff.json",
+    "cat": "LEADS",
+    "genre": "Hardcore",
+    "col": "#ff2200",
+    "icon": "\ud83d\udd25",
+    "tags": [
+      "gabber",
+      "hard",
+      "NL"
+    ]
+  },
+  {
+    "n": "303 Acid",
+    "file": "303_acid.json",
+    "cat": "BASS",
+    "genre": "Acid",
+    "col": "#00ff44",
+    "icon": "\u2697",
+    "tags": [
+      "303",
+      "Roland",
+      "classic"
+    ]
+  },
+  {
+    "n": "909 Clap",
+    "file": "909_clap.json",
+    "cat": "DRUMS",
+    "genre": "House",
+    "col": "#ffaaff",
+    "icon": "\ud83d\udc4f",
+    "tags": [
+      "909",
+      "classic",
+      "snappy"
+    ]
+  },
+  {
+    "n": "808 Boom",
+    "file": "808_boom.json",
+    "cat": "BASS",
+    "genre": "Trap",
+    "col": "#ff6b00",
+    "icon": "\ud83d\udca3",
+    "tags": [
+      "808",
+      "sub",
+      "trap"
+    ]
+  },
+  {
+    "n": "Wobble King",
+    "file": "wobble_king.json",
+    "cat": "BASS",
+    "genre": "Dubstep",
+    "col": "#aa44ff",
+    "icon": "\u301c",
+    "tags": [
+      "wobble",
+      "LFO",
+      "classic"
+    ]
+  },
+  {
+    "n": "Neuro Bass",
+    "file": "neuro_bass.json",
+    "cat": "BASS",
+    "genre": "Dubstep",
+    "col": "#8800ff",
+    "icon": "\u26a1",
+    "tags": [
+      "neuro",
+      "growl",
+      "dark"
+    ]
+  },
+  {
+    "n": "Growl Bass",
+    "file": "growl_bass.json",
+    "cat": "BASS",
+    "genre": "Dubstep",
+    "col": "#660099",
+    "icon": "\ud83d\udc09",
+    "tags": [
+      "growl",
+      "FM",
+      "aggressive"
+    ]
+  },
+  {
+    "n": "Brostep Riff",
+    "file": "brostep_riff.json",
+    "cat": "BASS",
+    "genre": "Dubstep",
+    "col": "#ff44ff",
+    "icon": "\ud83e\udd85",
+    "tags": [
+      "brostep",
+      "Skrillex",
+      "scream"
+    ]
+  },
+  {
+    "n": "Sub Quake",
+    "file": "sub_quake.json",
+    "cat": "BASS",
+    "genre": "Dubstep",
+    "col": "#440088",
+    "icon": "\ud83c\udf0a",
+    "tags": [
+      "sub",
+      "earthquake",
+      "deep"
+    ]
+  },
+  {
+    "n": "Laser Cannon",
+    "file": "laser_cannon.json",
+    "cat": "LEADS",
+    "genre": "Dubstep",
+    "col": "#ff44aa",
+    "icon": "\ud83d\udd2b",
+    "tags": [
+      "laser",
+      "scifi",
+      "zap"
+    ]
+  },
+  {
+    "n": "Pew Pew",
+    "file": "pew_pew.json",
+    "cat": "LEADS",
+    "genre": "Dubstep",
+    "col": "#44ffff",
+    "icon": "\ud83d\udc7e",
+    "tags": [
+      "8bit",
+      "zap",
+      "pew"
+    ]
+  },
+  {
+    "n": "Void Scream",
+    "file": "void_scream.json",
+    "cat": "LEADS",
+    "genre": "Dubstep",
+    "col": "#220033",
+    "icon": "\ud83d\ude31",
+    "tags": [
+      "dark",
+      "scream",
+      "void"
+    ]
+  },
+  {
+    "n": "Chaos Drop",
+    "file": "chaos_drop.json",
+    "cat": "BASS",
+    "genre": "Dubstep",
+    "col": "#880000",
+    "icon": "\ud83d\udc80",
+    "tags": [
+      "drop",
+      "chaos",
+      "hard"
+    ]
+  },
+  {
+    "n": "Half Time Snare",
+    "file": "half_time_snare.json",
+    "cat": "DRUMS",
+    "genre": "Dubstep",
+    "col": "#aa4400",
+    "icon": "\ud83e\udd41",
+    "tags": [
+      "half-time",
+      "heavy"
+    ]
+  },
+  {
+    "n": "Reese Deep",
+    "file": "reese_deep.json",
+    "cat": "BASS",
+    "genre": "DnB",
+    "col": "#000088",
+    "icon": "\u221e",
+    "tags": [
+      "reese",
+      "deep",
+      "classic"
+    ]
+  },
+  {
+    "n": "Liquid Pluck",
+    "file": "liquid_pluck.json",
+    "cat": "LEADS",
+    "genre": "DnB",
+    "col": "#00ccff",
+    "icon": "\ud83d\udca7",
+    "tags": [
+      "liquid",
+      "melodic",
+      "smooth"
+    ]
+  },
+  {
+    "n": "Sub Earthquake",
+    "file": "sub_earthquake.json",
+    "cat": "BASS",
+    "genre": "DnB",
+    "col": "#003366",
+    "icon": "\ud83c\udf0a",
+    "tags": [
+      "sub",
+      "heavy",
+      "earthquake"
+    ]
+  },
+  {
+    "n": "Amen Chop",
+    "file": "amen_chop.json",
+    "cat": "BREAKS",
+    "genre": "DnB",
+    "col": "#ff4400",
+    "icon": "\u2702",
+    "tags": [
+      "amen",
+      "chop",
+      "jungle"
+    ]
+  },
+  {
+    "n": "Neurofunk Reese",
+    "file": "neurofunk_reese.json",
+    "cat": "BASS",
+    "genre": "DnB",
+    "col": "#220055",
+    "icon": "\ud83e\udde0",
+    "tags": [
+      "neuro",
+      "reese",
+      "dark"
+    ]
+  },
+  {
+    "n": "Funk Step",
+    "file": "funk_step.json",
+    "cat": "BASS",
+    "genre": "DnB",
+    "col": "#44ff44",
+    "icon": "\ud83d\udd7a",
+    "tags": [
+      "funky",
+      "steppy",
+      "groove"
+    ]
+  },
+  {
+    "n": "Roller Kick",
+    "file": "roller_kick.json",
+    "cat": "KICKS",
+    "genre": "DnB",
+    "col": "#ff6600",
+    "icon": "\ud83e\udd41",
+    "tags": [
+      "rolling",
+      "tight",
+      "punchy"
+    ]
+  },
+  {
+    "n": "Neon Riff",
+    "file": "neon_riff.json",
+    "cat": "LEADS",
+    "genre": "Synthwave",
+    "col": "#ff44aa",
+    "icon": "\u26a1",
+    "tags": [
+      "neon",
+      "retro",
+      "80s"
+    ]
+  },
+  {
+    "n": "Grid Runner",
+    "file": "grid_runner.json",
+    "cat": "LEADS",
+    "genre": "Synthwave",
+    "col": "#aaff00",
+    "icon": "\u26a1",
+    "tags": [
+      "Tron",
+      "grid",
+      "retro"
+    ]
+  },
+  {
+    "n": "Midnight Chase",
+    "file": "midnight_chase.json",
+    "cat": "LEADS",
+    "genre": "Synthwave",
+    "col": "#00aaff",
+    "icon": "\ud83c\udf19",
+    "tags": [
+      "cinematic",
+      "dark",
+      "drive"
+    ]
+  },
+  {
+    "n": "VHS Shimmer",
+    "file": "vhs_shimmer.json",
+    "cat": "PADS",
+    "genre": "Synthwave",
+    "col": "#ff88ff",
+    "icon": "\ud83d\udcfc",
+    "tags": [
+      "dreamy",
+      "shimmer",
+      "80s"
+    ]
+  },
+  {
+    "n": "Driver Lead",
+    "file": "driver_lead.json",
+    "cat": "LEADS",
+    "genre": "Synthwave",
+    "col": "#ff4400",
+    "icon": "\ud83d\ude97",
+    "tags": [
+      "Kavinsky",
+      "dark",
+      "driving"
+    ]
+  },
+  {
+    "n": "Turbo Boost",
+    "file": "turbo_boost.json",
+    "cat": "LEADS",
+    "genre": "Synthwave",
+    "col": "#00ffcc",
+    "icon": "\u26a1",
+    "tags": [
+      "power",
+      "boost",
+      "outrun"
+    ]
+  },
+  {
+    "n": "Retrowave Pad",
+    "file": "retrowave_pad.json",
+    "cat": "PADS",
+    "genre": "Synthwave",
+    "col": "#8844ff",
+    "icon": "\ud83c\udf05",
+    "tags": [
+      "pad",
+      "lush",
+      "retrowave"
+    ]
+  },
+  {
+    "n": "Outrun Bass",
+    "file": "outrun_bass.json",
+    "cat": "BASS",
+    "genre": "Synthwave",
+    "col": "#ff0088",
+    "icon": "\ud83c\udfce",
+    "tags": [
+      "outrun",
+      "driving",
+      "bass"
+    ]
+  },
+  {
+    "n": "Hyperspace",
+    "file": "hyperspace.json",
+    "cat": "LEADS",
+    "genre": "Synthwave",
+    "col": "#8888ff",
+    "icon": "\ud83d\ude80",
+    "tags": [
+      "space",
+      "fast",
+      "warp"
+    ]
+  },
+  {
+    "n": "Void Choir",
+    "file": "void_choir.json",
+    "cat": "PADS",
+    "genre": "Synthwave",
+    "col": "#220044",
+    "icon": "\ud83c\udf0c",
+    "tags": [
+      "choir",
+      "dark",
+      "cosmic"
+    ]
+  },
+  {
+    "n": "Blade Keys",
+    "file": "blade_keys.json",
+    "cat": "CHORDS",
+    "genre": "Synthwave",
+    "col": "#88aaff",
+    "icon": "\ud83d\udd2a",
+    "tags": [
+      "Blade Runner",
+      "cinematic"
+    ]
+  },
+  {
+    "n": "Glass Bells",
+    "file": "glass_bells.json",
+    "cat": "LEADS",
+    "genre": "Synthwave",
+    "col": "#ccffff",
+    "icon": "\ud83d\udd14",
+    "tags": [
+      "bells",
+      "glass",
+      "ethereal"
+    ]
+  },
+  {
+    "n": "Deep Chord",
+    "file": "deep_chord.json",
+    "cat": "CHORDS",
+    "genre": "Deep House",
+    "col": "#0044aa",
+    "icon": "\ud83c\udf0a",
+    "tags": [
+      "deep",
+      "warm",
+      "soulful"
+    ]
+  },
+  {
+    "n": "Organ Stab",
+    "file": "organ_stab.json",
+    "cat": "CHORDS",
+    "genre": "House",
+    "col": "#886600",
+    "icon": "\ud83c\udfb9",
+    "tags": [
+      "organ",
+      "gospel",
+      "classic"
+    ]
+  },
+  {
+    "n": "Filtered Stab",
+    "file": "filtered_stab.json",
+    "cat": "CHORDS",
+    "genre": "Deep House",
+    "col": "#004488",
+    "icon": "\u2697",
+    "tags": [
+      "filtered",
+      "warm",
+      "deep"
+    ]
+  },
+  {
+    "n": "Soulful Loop",
+    "file": "soulful_loop.json",
+    "cat": "CHORDS",
+    "genre": "Deep House",
+    "col": "#884400",
+    "icon": "\ud83c\udfb7",
+    "tags": [
+      "soul",
+      "jazz",
+      "sample"
+    ]
+  },
+  {
+    "n": "Late Night",
+    "file": "late_night.json",
+    "cat": "PADS",
+    "genre": "Deep House",
+    "col": "#001133",
+    "icon": "\ud83c\udf03",
+    "tags": [
+      "late night",
+      "atmospheric"
+    ]
+  },
+  {
+    "n": "4AM Kick",
+    "file": "4am_kick.json",
+    "cat": "KICKS",
+    "genre": "Deep House",
+    "col": "#442200",
+    "icon": "\ud83c\udf05",
+    "tags": [
+      "deep",
+      "warm",
+      "4AM"
+    ]
+  },
+  {
+    "n": "Arpegg Rise",
+    "file": "arpegg_rise.json",
+    "cat": "ARPS",
+    "genre": "Trance",
+    "col": "#00ffaa",
+    "icon": "\u2191",
+    "tags": [
+      "uplifting",
+      "rise",
+      "classic"
+    ]
+  },
+  {
+    "n": "Chord Stab 7th",
+    "file": "chord_stab_7th.json",
+    "cat": "CHORDS",
+    "genre": "Trance",
+    "col": "#aaffaa",
+    "icon": "\ud83c\udf08",
+    "tags": [
+      "7th",
+      "emotional",
+      "uplifting"
+    ]
+  },
+  {
+    "n": "Supersaw Lead",
+    "file": "supersaw_lead.json",
+    "cat": "LEADS",
+    "genre": "Trance",
+    "col": "#ff8800",
+    "icon": "\u26a1",
+    "tags": [
+      "supersaw",
+      "power",
+      "lead"
+    ]
+  },
+  {
+    "n": "Trance Gate",
+    "file": "trance_gate.json",
+    "cat": "CHORDS",
+    "genre": "Trance",
+    "col": "#00ff88",
+    "icon": "\u2295",
+    "tags": [
+      "gate",
+      "pulsing",
+      "classic"
+    ]
+  },
+  {
+    "n": "Pluck Rise",
+    "file": "pluck_rise.json",
+    "cat": "LEADS",
+    "genre": "Trance",
+    "col": "#88ffff",
+    "icon": "\u2197",
+    "tags": [
+      "pluck",
+      "uplifting",
+      "melodic"
+    ]
+  },
+  {
+    "n": "Prog Break",
+    "file": "prog_break.json",
+    "cat": "BREAKS",
+    "genre": "Progressive",
+    "col": "#ffaa00",
+    "icon": "\ud83c\udf0a",
+    "tags": [
+      "breakdown",
+      "emotional"
+    ]
+  },
+  {
+    "n": "Anthem Chord",
+    "file": "anthem_chord.json",
+    "cat": "CHORDS",
+    "genre": "Trance",
+    "col": "#ffdd44",
+    "icon": "\ud83c\udfba",
+    "tags": [
+      "anthem",
+      "epic",
+      "emotional"
+    ]
+  },
+  {
+    "n": "Click Tick",
+    "file": "click_tick.json",
+    "cat": "DRUMS",
+    "genre": "Minimal",
+    "col": "#888888",
+    "icon": "\u2022",
+    "tags": [
+      "click",
+      "minimal",
+      "micro"
+    ]
+  },
+  {
+    "n": "Micro Bass",
+    "file": "micro_bass.json",
+    "cat": "BASS",
+    "genre": "Minimal",
+    "col": "#444444",
+    "icon": "\u2014",
+    "tags": [
+      "minimal",
+      "subtle",
+      "micro"
+    ]
+  },
+  {
+    "n": "Shaker Loop",
+    "file": "shaker_loop.json",
+    "cat": "DRUMS",
+    "genre": "Minimal",
+    "col": "#996633",
+    "icon": "\ud83c\udfb2",
+    "tags": [
+      "shaker",
+      "groove",
+      "minimal"
+    ]
+  },
+  {
+    "n": "Ping Pad",
+    "file": "ping_pad.json",
+    "cat": "PADS",
+    "genre": "Minimal",
+    "col": "#004433",
+    "icon": "\u00b7",
+    "tags": [
+      "minimal",
+      "ping",
+      "subtle"
+    ]
+  },
+  {
+    "n": "Tool Feed",
+    "file": "tool_feed.json",
+    "cat": "LEADS",
+    "genre": "Minimal",
+    "col": "#224422",
+    "icon": "\u2699",
+    "tags": [
+      "Tool-inspired",
+      "prog",
+      "heavy"
+    ]
+  },
+  {
+    "n": "Steel Hit",
+    "file": "steel_hit.json",
+    "cat": "DRUMS",
+    "genre": "Industrial",
+    "col": "#886644",
+    "icon": "\ud83d\udd29",
+    "tags": [
+      "metal",
+      "crash",
+      "industrial"
+    ]
+  },
+  {
+    "n": "Machine Pulse",
+    "file": "machine_pulse.json",
+    "cat": "BASS",
+    "genre": "Industrial",
+    "col": "#443322",
+    "icon": "\u2699",
+    "tags": [
+      "machine",
+      "pulsing",
+      "dark"
+    ]
+  },
+  {
+    "n": "Rivet Gun",
+    "file": "rivet_gun.json",
+    "cat": "DRUMS",
+    "genre": "Industrial",
+    "col": "#776655",
+    "icon": "\ud83d\udd2b",
+    "tags": [
+      "metal",
+      "percussion",
+      "hard"
+    ]
+  },
+  {
+    "n": "NIN Lead",
+    "file": "nin_lead.json",
+    "cat": "LEADS",
+    "genre": "Industrial",
+    "col": "#cc2200",
+    "icon": "\u26a1",
+    "tags": [
+      "Nine Inch Nails",
+      "dark",
+      "distorted"
+    ]
+  },
+  {
+    "n": "Einst\u00fcrzende",
+    "file": "einst\u00fcrzende.json",
+    "cat": "DRUMS",
+    "genre": "Industrial",
+    "col": "#664422",
+    "icon": "\ud83c\udfed",
+    "tags": [
+      "noise",
+      "experimental",
+      "Berlin"
+    ]
+  },
+  {
+    "n": "Void Drone",
+    "file": "void_drone.json",
+    "cat": "DRONES",
+    "genre": "Ambient",
+    "col": "#000033",
+    "icon": "\u221e",
+    "tags": [
+      "drone",
+      "dark",
+      "infinite"
+    ]
+  },
+  {
+    "n": "Shimmer Pad",
+    "file": "shimmer_pad.json",
+    "cat": "PADS",
+    "genre": "Ambient",
+    "col": "#8899ff",
+    "icon": "\u2728",
+    "tags": [
+      "shimmer",
+      "reverb",
+      "ethereal"
+    ]
+  },
+  {
+    "n": "Arctic Breath",
+    "file": "arctic_breath.json",
+    "cat": "PADS",
+    "genre": "Ambient",
+    "col": "#aaccff",
+    "icon": "\u2744",
+    "tags": [
+      "arctic",
+      "cold",
+      "vast"
+    ]
+  },
+  {
+    "n": "Neural Static",
+    "file": "neural_static.json",
+    "cat": "DRONES",
+    "genre": "Ambient",
+    "col": "#334433",
+    "icon": "\u224b",
+    "tags": [
+      "static",
+      "noise",
+      "texture"
+    ]
+  },
+  {
+    "n": "Tape Hiss",
+    "file": "tape_hiss.json",
+    "cat": "DRONES",
+    "genre": "Ambient",
+    "col": "#886655",
+    "icon": "\ud83d\udcfc",
+    "tags": [
+      "tape",
+      "vintage",
+      "lo-fi"
+    ]
+  },
+  {
+    "n": "Rain Machine",
+    "file": "rain_machine.json",
+    "cat": "DRONES",
+    "genre": "Ambient",
+    "col": "#334455",
+    "icon": "\ud83c\udf27",
+    "tags": [
+      "rain",
+      "nature",
+      "texture"
+    ]
+  },
+  {
+    "n": "Trap Hat",
+    "file": "trap_hat.json",
+    "cat": "DRUMS",
+    "genre": "Trap",
+    "col": "#ffcc00",
+    "icon": "\ud83c\udfa9",
+    "tags": [
+      "hi-hat",
+      "roll",
+      "trap"
+    ]
+  },
+  {
+    "n": "808 Slide",
+    "file": "808_slide.json",
+    "cat": "BASS",
+    "genre": "Trap",
+    "col": "#ff4400",
+    "icon": "\ud83d\udcc9",
+    "tags": [
+      "808",
+      "slide",
+      "pitch"
+    ]
+  },
+  {
+    "n": "Banger Kick",
+    "file": "banger_kick.json",
+    "cat": "KICKS",
+    "genre": "Trap",
+    "col": "#ff3300",
+    "icon": "\ud83d\udca2",
+    "tags": [
+      "punchy",
+      "loud",
+      "banger"
+    ]
+  },
+  {
+    "n": "Dark Choir",
+    "file": "dark_choir.json",
+    "cat": "PADS",
+    "genre": "Trap",
+    "col": "#330033",
+    "icon": "\ud83d\udc7b",
+    "tags": [
+      "dark",
+      "choir",
+      "horror"
+    ]
+  },
+  {
+    "n": "Drill Arp",
+    "file": "drill_arp.json",
+    "cat": "ARPS",
+    "genre": "Drill",
+    "col": "#444444",
+    "icon": "\ud83d\udd2a",
+    "tags": [
+      "UK drill",
+      "dark",
+      "minor"
+    ]
+  },
+  {
+    "n": "Cloud Rap Pad",
+    "file": "cloud_rap_pad.json",
+    "cat": "PADS",
+    "genre": "Cloud Rap",
+    "col": "#aabbff",
+    "icon": "\u2601",
+    "tags": [
+      "dreamy",
+      "lo-fi",
+      "cloud"
+    ]
+  },
+  {
+    "n": "Juke Kick",
+    "file": "juke_kick.json",
+    "cat": "KICKS",
+    "genre": "Footwork",
+    "col": "#ff4400",
+    "icon": "\ud83d\udc5f",
+    "tags": [
+      "footwork",
+      "Chicago",
+      "fast"
+    ]
+  },
+  {
+    "n": "Juke Clap",
+    "file": "juke_clap.json",
+    "cat": "DRUMS",
+    "genre": "Footwork",
+    "col": "#ffaa00",
+    "icon": "\ud83d\udc4f",
+    "tags": [
+      "syncopated",
+      "juke",
+      "fast"
+    ]
+  },
+  {
+    "n": "Sample Chop",
+    "file": "sample_chop.json",
+    "cat": "LEADS",
+    "genre": "Footwork",
+    "col": "#00ff88",
+    "icon": "\u2702",
+    "tags": [
+      "chopped",
+      "vocal",
+      "footwork"
+    ]
+  },
+  {
+    "n": "Autechre Hat",
+    "file": "autechre_hat.json",
+    "cat": "DRUMS",
+    "genre": "IDM",
+    "col": "#444466",
+    "icon": "\u2699",
+    "tags": [
+      "glitch",
+      "polyrhythm",
+      "complex"
+    ]
+  },
+  {
+    "n": "Aphex Acid",
+    "file": "aphex_acid.json",
+    "cat": "BASS",
+    "genre": "IDM",
+    "col": "#00ff44",
+    "icon": "\ud83d\ude08",
+    "tags": [
+      "Aphex Twin",
+      "acid",
+      "fast"
+    ]
+  },
+  {
+    "n": "Data Burst",
+    "file": "data_burst.json",
+    "cat": "LEADS",
+    "genre": "IDM",
+    "col": "#00ffcc",
+    "icon": "\ud83d\udcbb",
+    "tags": [
+      "data",
+      "glitch",
+      "burst"
+    ]
+  },
+  {
+    "n": "Ion Pulse",
+    "file": "ion_pulse.json",
+    "cat": "LEADS",
+    "genre": "IDM",
+    "col": "#44ffff",
+    "icon": "\u269b",
+    "tags": [
+      "ion",
+      "scifi",
+      "precise"
+    ]
+  },
+  {
+    "n": "Squarepusher Funk",
+    "file": "squarepusher_funk.json",
+    "cat": "BASS",
+    "genre": "IDM",
+    "col": "#ff8800",
+    "icon": "\ud83c\udfb8",
+    "tags": [
+      "Squarepusher",
+      "fast",
+      "funky"
+    ]
+  },
+  {
+    "n": "Boards of Canada",
+    "file": "boards_of_canada.json",
+    "cat": "PADS",
+    "genre": "IDM",
+    "col": "#886633",
+    "icon": "\ud83c\udf04",
+    "tags": [
+      "nostalgic",
+      "warm",
+      "lo-fi"
+    ]
+  },
+  {
+    "n": "Warp Glitch",
+    "file": "warp_glitch.json",
+    "cat": "DRUMS",
+    "genre": "IDM",
+    "col": "#ff00ff",
+    "icon": "\u26a1",
+    "tags": [
+      "glitch",
+      "warp",
+      "random"
+    ]
+  },
+  {
+    "n": "Song for the Dead",
+    "file": "song_for_the_dead.json",
+    "cat": "CURVES",
+    "genre": "Rock/Electronic",
+    "col": "#cc2200",
+    "icon": "\ud83d\udc80",
+    "tags": [
+      "QOTSA",
+      "curve",
+      "percussive",
+      "ricochet",
+      "edge"
+    ]
+  },
+  {
+    "n": "Desert Edge",
+    "file": "desert_edge.json",
+    "cat": "CURVES",
+    "genre": "Rock/Electronic",
+    "col": "#ff6600",
+    "icon": "\ud83c\udfdc",
+    "tags": [
+      "desert",
+      "QOTSA",
+      "stoner",
+      "curve",
+      "edge"
+    ]
+  },
+  {
+    "n": "Ricochet Snare",
+    "file": "ricochet_snare.json",
+    "cat": "CURVES",
+    "genre": "Electronic",
+    "col": "#ffaa00",
+    "icon": "\u21a9",
+    "tags": [
+      "ricochet",
+      "bounce",
+      "edge",
+      "curve"
+    ]
+  },
+  {
+    "n": "Laser Bounce",
+    "file": "laser_bounce.json",
+    "cat": "CURVES",
+    "genre": "Electronic",
+    "col": "#00ffff",
+    "icon": "\ud83d\udd2b",
+    "tags": [
+      "laser",
+      "bounce",
+      "both edges"
+    ]
+  },
+  {
+    "n": "Dive Bomb",
+    "file": "dive_bomb.json",
+    "cat": "CURVES",
+    "genre": "Rock/Electronic",
+    "col": "#ff2200",
+    "icon": "\ud83d\udca3",
+    "tags": [
+      "dive",
+      "pitch",
+      "guitar",
+      "curve"
+    ]
+  },
+  {
+    "n": "Vocal Chop",
+    "file": "vocal_chop.json",
+    "cat": "VOCALS",
+    "genre": "House",
+    "col": "#ffaaff",
+    "icon": "\ud83c\udfa4",
+    "tags": [
+      "vocal",
+      "chop",
+      "pitched"
+    ]
+  },
+  {
+    "n": "Robot Voice",
+    "file": "robot_voice.json",
+    "cat": "VOCALS",
+    "genre": "Electronic",
+    "col": "#8888ff",
+    "icon": "\ud83e\udd16",
+    "tags": [
+      "vocoder",
+      "robot",
+      "processed"
+    ]
+  },
+  {
+    "n": "Breathy Pad",
+    "file": "breathy_pad.json",
+    "cat": "PADS",
+    "genre": "Ambient",
+    "col": "#ccddff",
+    "icon": "\ud83d\udca8",
+    "tags": [
+      "breath",
+      "air",
+      "textural"
+    ]
+  },
+  {
+    "n": "Dark Whisper",
+    "file": "dark_whisper.json",
+    "cat": "VOCALS",
+    "genre": "Dark Ambient",
+    "col": "#220022",
+    "icon": "\ud83d\udc41",
+    "tags": [
+      "whisper",
+      "dark",
+      "horror"
+    ]
+  },
+  {
+    "n": "Conga Slice",
+    "file": "conga_slice.json",
+    "cat": "PERCUSSION",
+    "genre": "Latin",
+    "col": "#aa6600",
+    "icon": "\ud83e\udd41",
+    "tags": [
+      "conga",
+      "organic",
+      "groove"
+    ]
+  },
+  {
+    "n": "Djembe Hit",
+    "file": "djembe_hit.json",
+    "cat": "PERCUSSION",
+    "genre": "World",
+    "col": "#884400",
+    "icon": "\ud83e\udd41",
+    "tags": [
+      "djembe",
+      "organic",
+      "world"
+    ]
+  },
+  {
+    "n": "Tabla Tek",
+    "file": "tabla_tek.json",
+    "cat": "PERCUSSION",
+    "genre": "World",
+    "col": "#996600",
+    "icon": "\ud83e\udd41",
+    "tags": [
+      "tabla",
+      "Indian",
+      "polyrhythm"
+    ]
+  },
+  {
+    "n": "Taiko Boom",
+    "file": "taiko_boom.json",
+    "cat": "PERCUSSION",
+    "genre": "World",
+    "col": "#880000",
+    "icon": "\ud83e\udd41",
+    "tags": [
+      "taiko",
+      "huge",
+      "cinematic"
+    ]
+  },
+  {
+    "n": "Riser White",
+    "file": "riser_white.json",
+    "cat": "SFX",
+    "genre": "SFX",
+    "col": "#ffffff",
+    "icon": "\u2191",
+    "tags": [
+      "riser",
+      "white noise",
+      "build"
+    ]
+  },
+  {
+    "n": "Downlifter",
+    "file": "downlifter.json",
+    "cat": "SFX",
+    "genre": "SFX",
+    "col": "#000044",
+    "icon": "\u2193",
+    "tags": [
+      "downlifter",
+      "impact",
+      "drop"
+    ]
+  },
+  {
+    "n": "Impact Hit",
+    "file": "impact_hit.json",
+    "cat": "SFX",
+    "genre": "SFX",
+    "col": "#ff0000",
+    "icon": "\ud83d\udca5",
+    "tags": [
+      "impact",
+      "hit",
+      "dramatic"
+    ]
+  },
+  {
+    "n": "Vinyl Scratch",
+    "file": "vinyl_scratch.json",
+    "cat": "SFX",
+    "genre": "SFX",
+    "col": "#333333",
+    "icon": "\ud83d\udcbf",
+    "tags": [
+      "vinyl",
+      "scratch",
+      "DJ"
+    ]
+  },
+  {
+    "n": "Siren Burst",
+    "file": "siren_burst.json",
+    "cat": "SFX",
+    "genre": "SFX",
+    "col": "#ff4400",
+    "icon": "\ud83d\udea8",
+    "tags": [
+      "siren",
+      "alarm",
+      "warning"
+    ]
+  },
+  {
+    "n": "Zap Attack",
+    "file": "zap_attack.json",
+    "cat": "SFX",
+    "genre": "SFX",
+    "col": "#00ffff",
+    "icon": "\u26a1",
+    "tags": [
+      "zap",
+      "electric",
+      "scifi"
+    ]
+  }
+]

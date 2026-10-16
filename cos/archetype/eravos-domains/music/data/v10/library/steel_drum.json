@@ -1,0 +1,15 @@
+{
+  "n": "Steel Drum",
+  "cat": "KICKS",
+  "s": "kick",
+  "c": "#ff4400",
+  "i": "\ud83d\udd29",
+  "bpm": 145,
+  "key": "C",
+  "genre": "Techno",
+  "tags": [
+    "metallic",
+    "punchy"
+  ],
+  "_file": "steel_drum.json"
+}

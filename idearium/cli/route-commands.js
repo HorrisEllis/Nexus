@@ -187,6 +187,25 @@ export const SPEC = [
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/runs/${encodeURIComponent(a.args[0])}/rewind`, body: { by: 'cli', ...(a.flags.dry ? { dryRun: true } : {}) }, timeoutMs: 120000 }),
     print: (d, a, h) => { console.log(h.c.dim(`  to ${String(d.to.commitId).slice(0, 12)} · ${when(d.to.ts)} · ${d.to.message || ''}${d.dryRun ? ' (dry run)' : ''}`));
       for (const r of d.results || []) console.log(`  ${r.done ? h.c.mint('↶') : r.dryRun ? '·' : h.c.amber('○')} ${r.path}${r.why ? h.c.dim(`  — ${r.why}`) : ''}`); } },
+  // §0.60.83 CN3 — James: "what about using cos for the canvas, then each tool a nested compartment?" His ERAVOS canvas as a
+  // COS compartment, each tool a nested one (lib/canvas-compartments.js).
+  { key: 'canvas.list', repo: false, usage: 'canvas list', about: 'every canvas compartment, with how many tools it holds',
+    req: () => ({ method: 'GET', path: '/api/canvas' }),
+    print: (d, a, h) => { const l = d.canvases || []; if (!l.length) { console.log(h.c.gray('  no canvas yet — idearium canvas new "<name>"')); return; } for (const c of l) console.log(`  ${c.title}  ${h.c.dim(`${c.tools} tool${c.tools === 1 ? '' : 's'} · ${c.name}`)}  ${h.c.gray(c.id)}`); } },
+  { key: 'canvas.new', repo: false, usage: 'canvas new "<name>" [--description "…"]', about: 'a canvas: a COS compartment laid out from his ERAVOS canvas (tools are added as nested compartments)',
+    need: (a) => (a.args.length ? null : '"<name>"'),
+    req: (a) => ({ method: 'POST', path: '/api/canvas', body: { name: a.args.join(' '), ...(typeof a.flags.description === 'string' ? { description: a.flags.description } : {}) }, timeoutMs: 120000 }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.canvas.name}  ${h.c.dim(d.canvas.root)}\n  ${h.c.dim(`add a tool: idearium canvas add-tool ${d.canvas.name} <domain> <category> <tool-id> "<Label>"`)}`) },
+  { key: 'canvas.show', repo: false, usage: 'canvas show <canvas>', about: 'a canvas, its nested tool compartments, and whether each is linked in',
+    need: (a) => (a.args[0] ? null : '<canvas>'),
+    req: (a) => ({ method: 'GET', path: `/api/canvas/${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => { h.header(`${d.canvas.title} — ${d.canvas.name}`); console.log(h.c.dim(`  ${d.canvas.root}`));
+      for (const t of d.tools || []) console.log(`  ${t.linked ? h.c.mint('●') : h.c.coral('○')} ${t.id}  ${h.c.dim(`${t.linkedAt} · compartment ${t.compartment}${t.linked ? '' : ' · NOT linked'}`)}`);
+      if (!(d.tools || []).length) console.log(h.c.gray('  no tools yet')); console.log(''); } },
+  { key: 'canvas.add-tool', repo: false, usage: 'canvas add-tool <canvas> <domain> <category> <tool-id> "<Label>" [--sound]', about: 'a tool on a canvas: its own nested COS compartment, from his tool template, linked into the canvas',
+    need: (a) => (a.args.length >= 4 ? null : '<canvas> <domain> <category> <tool-id> ["<Label>"]'),
+    req: (a) => ({ method: 'POST', path: `/api/canvas/${encodeURIComponent(a.args[0])}/tools`, body: { domain: a.args[1], category: a.args[2], slug: a.args[3], label: a.args.slice(4).join(' ') || a.args[3], sound: !!a.flags.sound }, timeoutMs: 120000 }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.tool.id}  ${h.c.dim(`compartment ${d.tool.compartment} → ${d.tool.linkedAt}`)}${d.tool.acceptance.length ? h.c.dim(`\n  acceptance: ${d.tool.acceptance.join(' · ')}`) : ''}`) },
   // 0.60.15 — .contract v2 (cortex/core/raid/contract-gates.js): executable contracts, gated step by step. Local: they read
   // and write the .contract file itself; completion is the evaluator's, never declared.
   { key: 'contract.new', repo: false, usage: 'contract new <id> <file.contract> [--what text] [--why text]', about: 'a new v2 contract (context → build → verify gates) to edit',

@@ -1,0 +1,16 @@
+{
+  "n": "Sub Quake",
+  "cat": "BASS",
+  "s": "bass",
+  "c": "#440088",
+  "i": "\ud83c\udf0a",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Dubstep",
+  "tags": [
+    "sub",
+    "earthquake",
+    "deep"
+  ],
+  "_file": "sub_quake.json"
+}

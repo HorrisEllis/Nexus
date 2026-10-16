@@ -1,0 +1,16 @@
+{
+  "n": "Riser White",
+  "cat": "SFX",
+  "s": "riser",
+  "c": "#ffffff",
+  "i": "\u2191",
+  "bpm": 0,
+  "key": "C",
+  "genre": "SFX",
+  "tags": [
+    "riser",
+    "white noise",
+    "build"
+  ],
+  "_file": "riser_white.json"
+}

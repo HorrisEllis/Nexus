@@ -1,0 +1,16 @@
+{
+  "n": "Click Tick",
+  "cat": "DRUMS",
+  "s": "rim",
+  "c": "#888888",
+  "i": "\u2022",
+  "bpm": 126,
+  "key": "C",
+  "genre": "Minimal",
+  "tags": [
+    "click",
+    "minimal",
+    "micro"
+  ],
+  "_file": "click_tick.json"
+}

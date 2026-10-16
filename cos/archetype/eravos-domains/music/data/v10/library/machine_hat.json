@@ -1,0 +1,15 @@
+{
+  "n": "Machine Hat",
+  "cat": "DRUMS",
+  "s": "hat",
+  "c": "#ffdd00",
+  "i": "\u2699",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Techno",
+  "tags": [
+    "mechanical",
+    "tight"
+  ],
+  "_file": "machine_hat.json"
+}

@@ -1,0 +1,16 @@
+{
+  "n": "Warp Glitch",
+  "cat": "DRUMS",
+  "s": "crash",
+  "c": "#ff00ff",
+  "i": "\u26a1",
+  "bpm": 140,
+  "key": "C",
+  "genre": "IDM",
+  "tags": [
+    "glitch",
+    "warp",
+    "random"
+  ],
+  "_file": "warp_glitch.json"
+}

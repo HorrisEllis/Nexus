@@ -1,0 +1,16 @@
+{
+  "n": "NIN Lead",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#cc2200",
+  "i": "\u26a1",
+  "bpm": 140,
+  "key": "Dm",
+  "genre": "Industrial",
+  "tags": [
+    "Nine Inch Nails",
+    "dark",
+    "distorted"
+  ],
+  "_file": "nin_lead.json"
+}

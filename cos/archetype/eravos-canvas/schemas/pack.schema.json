@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eravos/pack.schema.json",
+  "title": "ERAVOS content pack (pack.json) \u2014 presets, kits, patterns, samples\u2026 for one tool or a bundle across tools",
+  "description": "Content only: a pack never contains code. Lives in <tool>/packs/<id>/ (shipped), ERAVOS Library/User/<domain>/packs/<id>/ (yours) or a dropped .zip. Switch on/off, mix and match in the Pack Browser.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "version",
+    "label",
+    "for",
+    "items"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eravos.pack/1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]+$"
+    },
+    "version": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "author": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "genre, mood, era \u2014 the browser filters by these"
+    },
+    "for": {
+      "description": "the tool id this pack is for, or a list of tool ids (a bundle)",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      ]
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "default state; the user's choice is remembered"
+    },
+    "preview": {
+      "type": "string",
+      "description": "preview.png or a short preview.mp3/ogg inside the pack folder"
+    },
+    "items": {
+      "type": "object",
+      "description": "keyed by tool id \u2192 kind \u2192 name \u2192 item. Kinds: presets {params, extra?}, kits [16 pads], patterns {\u2026}, samples {file}",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "presets": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": [
+                "params"
+              ],
+              "properties": {
+                "params": {
+                  "type": "object"
+                },
+                "extra": {}
+              }
+            }
+          },
+          "kits": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "minItems": 16,
+              "maxItems": 16
+            }
+          },
+          "patterns": {
+            "type": "object"
+          },
+          "samples": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": [
+                "file"
+              ],
+              "properties": {
+                "file": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "other pack ids it builds on"
+    },
+    "prefix": {
+      "type": "string",
+      "description": "shown before each item name in the tool's menus (\"80s \u00b7 Juno Brass\"); \"\" = no prefix (a tool's own factory presets)"
+    }
+  },
+  "additionalProperties": false
+}

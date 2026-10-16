@@ -1,0 +1,16 @@
+{
+  "n": "Void Drone",
+  "cat": "DRONES",
+  "s": "pad",
+  "c": "#000033",
+  "i": "\u221e",
+  "bpm": 60,
+  "key": "Am",
+  "genre": "Ambient",
+  "tags": [
+    "drone",
+    "dark",
+    "infinite"
+  ],
+  "_file": "void_drone.json"
+}

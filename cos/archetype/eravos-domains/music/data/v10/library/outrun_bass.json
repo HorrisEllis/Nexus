@@ -1,0 +1,16 @@
+{
+  "n": "Outrun Bass",
+  "cat": "BASS",
+  "s": "bass",
+  "c": "#ff0088",
+  "i": "\ud83c\udfce",
+  "bpm": 118,
+  "key": "Am",
+  "genre": "Synthwave",
+  "tags": [
+    "outrun",
+    "driving",
+    "bass"
+  ],
+  "_file": "outrun_bass.json"
+}

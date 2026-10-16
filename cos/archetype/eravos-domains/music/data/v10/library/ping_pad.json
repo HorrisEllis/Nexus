@@ -1,0 +1,16 @@
+{
+  "n": "Ping Pad",
+  "cat": "PADS",
+  "s": "pad",
+  "c": "#004433",
+  "i": "\u00b7",
+  "bpm": 120,
+  "key": "Dm",
+  "genre": "Minimal",
+  "tags": [
+    "minimal",
+    "ping",
+    "subtle"
+  ],
+  "_file": "ping_pad.json"
+}

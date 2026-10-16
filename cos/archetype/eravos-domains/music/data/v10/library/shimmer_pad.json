@@ -1,0 +1,16 @@
+{
+  "n": "Shimmer Pad",
+  "cat": "PADS",
+  "s": "pad",
+  "c": "#8899ff",
+  "i": "\u2728",
+  "bpm": 80,
+  "key": "Cm",
+  "genre": "Ambient",
+  "tags": [
+    "shimmer",
+    "reverb",
+    "ethereal"
+  ],
+  "_file": "shimmer_pad.json"
+}

@@ -1,0 +1,15 @@
+{
+  "n": "Half Time Snare",
+  "cat": "DRUMS",
+  "s": "snare",
+  "c": "#aa4400",
+  "i": "\ud83e\udd41",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Dubstep",
+  "tags": [
+    "half-time",
+    "heavy"
+  ],
+  "_file": "half_time_snare.json"
+}

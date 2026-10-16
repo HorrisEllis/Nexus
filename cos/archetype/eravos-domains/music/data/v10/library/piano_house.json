@@ -1,0 +1,16 @@
+{
+  "n": "Piano House",
+  "cat": "CHORDS",
+  "s": "chord",
+  "c": "#ffffff",
+  "i": "\ud83c\udfb9",
+  "bpm": 128,
+  "key": "Gm",
+  "genre": "House",
+  "tags": [
+    "piano",
+    "uplifting",
+    "classic"
+  ],
+  "_file": "piano_house.json"
+}

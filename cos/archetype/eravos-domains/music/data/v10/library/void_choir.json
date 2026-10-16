@@ -1,0 +1,16 @@
+{
+  "n": "Void Choir",
+  "cat": "PADS",
+  "s": "pad",
+  "c": "#220044",
+  "i": "\ud83c\udf0c",
+  "bpm": 90,
+  "key": "Cm",
+  "genre": "Synthwave",
+  "tags": [
+    "choir",
+    "dark",
+    "cosmic"
+  ],
+  "_file": "void_choir.json"
+}

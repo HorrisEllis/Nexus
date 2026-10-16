@@ -1,0 +1,16 @@
+{
+  "n": "Juke Kick",
+  "cat": "KICKS",
+  "s": "kick",
+  "c": "#ff4400",
+  "i": "\ud83d\udc5f",
+  "bpm": 160,
+  "key": "C",
+  "genre": "Footwork",
+  "tags": [
+    "footwork",
+    "Chicago",
+    "fast"
+  ],
+  "_file": "juke_kick.json"
+}

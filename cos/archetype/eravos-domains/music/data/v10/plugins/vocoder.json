@@ -1,0 +1,86 @@
+{
+  "id": "vocoder",
+  "name": "ROBOT CHOIR",
+  "icon": "\ud83e\udd16",
+  "col": "#8888ff",
+  "tag": "SPECTRAL",
+  "desc": "16-band vocoder. Carrier/modulator. Robot, choir, talkbox.",
+  "module": "vocoder",
+  "visualizer": {
+    "type": "band_spectrum",
+    "color": "#8888ff"
+  },
+  "params": [
+    {
+      "n": "Bands",
+      "k": "bands",
+      "v": 0.5,
+      "min": 4,
+      "max": 32,
+      "step": 4
+    },
+    {
+      "n": "Carrier",
+      "k": "carrier",
+      "v": 0.5,
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "type": "enum",
+      "options": [
+        "Sawtooth",
+        "Square",
+        "Noise",
+        "Ext"
+      ]
+    },
+    {
+      "n": "Pitch",
+      "k": "pitch",
+      "v": 0.5,
+      "min": -24,
+      "max": 24,
+      "step": 1,
+      "unit": "st"
+    },
+    {
+      "n": "Attack",
+      "k": "attack",
+      "v": 0.3,
+      "min": 0.001,
+      "max": 0.5
+    },
+    {
+      "n": "Release",
+      "k": "release",
+      "v": 0.4,
+      "min": 0.01,
+      "max": 2
+    },
+    {
+      "n": "Mix",
+      "k": "mix",
+      "v": 0.8,
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "presets": {
+    "ROBOT": {
+      "bands": 0.5,
+      "carrier": 1,
+      "mix": 1
+    },
+    "CHOIR": {
+      "bands": 0.8,
+      "carrier": 0,
+      "attack": 0.4,
+      "mix": 0.7
+    },
+    "TALKBOX": {
+      "bands": 0.6,
+      "carrier": 2,
+      "mix": 0.9
+    }
+  }
+}

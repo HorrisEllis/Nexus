@@ -1,0 +1,16 @@
+{
+  "n": "Banger Kick",
+  "cat": "KICKS",
+  "s": "kick",
+  "c": "#ff3300",
+  "i": "\ud83d\udca2",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Trap",
+  "tags": [
+    "punchy",
+    "loud",
+    "banger"
+  ],
+  "_file": "banger_kick.json"
+}

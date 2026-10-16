@@ -1,0 +1,16 @@
+{
+  "n": "Dark Whisper",
+  "cat": "VOCALS",
+  "s": "pad",
+  "c": "#220022",
+  "i": "\ud83d\udc41",
+  "bpm": 0,
+  "key": "Cm",
+  "genre": "Dark Ambient",
+  "tags": [
+    "whisper",
+    "dark",
+    "horror"
+  ],
+  "_file": "dark_whisper.json"
+}

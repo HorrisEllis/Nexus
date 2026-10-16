@@ -1,0 +1,2 @@
+{ "schema": "eravos.mode/1", "id": "__DOMAIN__.__MODE__", "label": "__MODE_LABEL__", "icon": "◈", "accent": "#00d4ff", "domain": "__DOMAIN__",
+  "blurb": "What you can make in this mode, in one sentence.", "units": [], "categories": [], "include": [], "exclude": [], "start": [], "lessons": [], "pages": [] }

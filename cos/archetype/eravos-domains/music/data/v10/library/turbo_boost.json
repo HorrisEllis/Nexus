@@ -1,0 +1,16 @@
+{
+  "n": "Turbo Boost",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#00ffcc",
+  "i": "\u26a1",
+  "bpm": 130,
+  "key": "Fm",
+  "genre": "Synthwave",
+  "tags": [
+    "power",
+    "boost",
+    "outrun"
+  ],
+  "_file": "turbo_boost.json"
+}

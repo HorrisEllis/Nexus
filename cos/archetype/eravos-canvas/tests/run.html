@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset="utf-8"><title>{{name}} tests</title>
+<!-- the tests that travel with each tool (tests/tools.index.js, written by build/index-tools.mjs), on his ERAVOS harness.
+     His own run.html also ran the music domain's suites; a canvas made from the template starts with only its tools'. -->
+<style>body{background:#0b0f14;color:#cfe;font:12px ui-monospace,monospace;padding:16px}.pass{color:#3f9}.fail{color:#f46}h3{color:#8cf;margin:12px 0 4px}</style>
+<script src="../canvas/scripts.js" data-base="../canvas/"></script>
+<link rel="stylesheet" href="../canvas/runtime/eravos.css"><style>html,body{overflow:auto}</style><script src="harness.js"></script>
+<script src="tools.index.js"></script>
+</head><body><div id="out"></div><div id="wmhost" style="position:fixed;right:0;top:0;width:900px;height:500px;overflow:hidden;opacity:.9"></div>
+<script>if(!/auto=0/.test(location.search)) addEventListener('load',()=>runAll(new URLSearchParams(location.search).get('f')||''));</script>
+</body></html>

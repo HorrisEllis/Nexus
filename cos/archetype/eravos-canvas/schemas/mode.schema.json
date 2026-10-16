@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eravos/mode.schema.json",
+  "title": "ERAVOS mode (modes/<id>.mode.json) — a VIEW over a domain's tools, never a container",
+  "description": "Modes reference categories and tools; they do not own them. One tool can appear in many modes without moving or copying it.",
+  "type": "object",
+  "required": ["schema", "id", "label", "domain", "units"],
+  "properties": {
+    "schema": { "const": "eravos.mode/1" },
+    "id": { "type": "string" }, "label": { "type": "string" }, "icon": { "type": "string" }, "accent": { "type": "string" },
+    "domain": { "type": "string" }, "blurb": { "type": "string" },
+    "units": { "type": "array", "items": { "type": "string" }, "description": "toolbar units turned on when you enter it" },
+    "categories": { "type": "array", "items": { "type": "string" }, "description": "category folders shown in ＋ Add, in this order" },
+    "include": { "type": "array", "items": { "type": "string" }, "description": "extra tool ids from other categories" },
+    "exclude": { "type": "array", "items": { "type": "string" } },
+    "start": { "type": "array", "items": { "type": "string" }, "description": "start cards: recipe ids, songbook ids" },
+    "lessons": { "type": "array", "items": { "type": "string" }, "description": "Learn track ids shown first" },
+    "pages": { "type": "array", "items": { "type": "string" }, "description": "off-canvas pages offered on the toolbar" }
+  },
+  "additionalProperties": false
+}

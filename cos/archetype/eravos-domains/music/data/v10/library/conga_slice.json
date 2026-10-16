@@ -1,0 +1,16 @@
+{
+  "n": "Conga Slice",
+  "cat": "PERCUSSION",
+  "s": "perc",
+  "c": "#aa6600",
+  "i": "\ud83e\udd41",
+  "bpm": 120,
+  "key": "C",
+  "genre": "Latin",
+  "tags": [
+    "conga",
+    "organic",
+    "groove"
+  ],
+  "_file": "conga_slice.json"
+}

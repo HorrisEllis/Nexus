@@ -70,4 +70,14 @@ Targeted, each run after the change:
 - `test-nexus-command-tool` 8/8
 - `test-nexus-atlas-refs` 49/49
 
-The full-suite result follows in the next commit.
+### The full suite (run after the change)
+
+- **Result:** 6,196 passed, 77 failed (35 of them known gaps), 3 crashed.
+- **How it was checked:** each of the 21 failing suites was run again in two clean copies: one at session start
+  (95d6c94) and one just before this release (682f035).
+  - 17 fail identically at session start.
+  - `test-workshop-full` WF-04 is intermittent there too (1 run in 3).
+  - Three were this session's. All are fixed in 0.60.83:
+    - `test-build-paths`, from 0.60.80's code.assist call;
+    - `test-loom-phasemap`, which still counted 16 systems;
+    - `test-readme-atlas`, where README.md was not regenerated.

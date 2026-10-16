@@ -1,0 +1,16 @@
+{
+  "n": "Anthem Chord",
+  "cat": "CHORDS",
+  "s": "chord",
+  "c": "#ffdd44",
+  "i": "\ud83c\udfba",
+  "bpm": 140,
+  "key": "F",
+  "genre": "Trance",
+  "tags": [
+    "anthem",
+    "epic",
+    "emotional"
+  ],
+  "_file": "anthem_chord.json"
+}

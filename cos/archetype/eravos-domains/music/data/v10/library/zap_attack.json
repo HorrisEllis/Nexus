@@ -1,0 +1,16 @@
+{
+  "n": "Zap Attack",
+  "cat": "SFX",
+  "s": "laser",
+  "c": "#00ffff",
+  "i": "\u26a1",
+  "bpm": 0,
+  "key": "C",
+  "genre": "SFX",
+  "tags": [
+    "zap",
+    "electric",
+    "scifi"
+  ],
+  "_file": "zap_attack.json"
+}

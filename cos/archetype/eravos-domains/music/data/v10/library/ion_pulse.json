@@ -1,0 +1,16 @@
+{
+  "n": "Ion Pulse",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#44ffff",
+  "i": "\u269b",
+  "bpm": 128,
+  "key": "C",
+  "genre": "IDM",
+  "tags": [
+    "ion",
+    "scifi",
+    "precise"
+  ],
+  "_file": "ion_pulse.json"
+}

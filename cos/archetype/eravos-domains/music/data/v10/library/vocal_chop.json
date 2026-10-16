@@ -1,0 +1,16 @@
+{
+  "n": "Vocal Chop",
+  "cat": "VOCALS",
+  "s": "synth",
+  "c": "#ffaaff",
+  "i": "\ud83c\udfa4",
+  "bpm": 128,
+  "key": "Gm",
+  "genre": "House",
+  "tags": [
+    "vocal",
+    "chop",
+    "pitched"
+  ],
+  "_file": "vocal_chop.json"
+}

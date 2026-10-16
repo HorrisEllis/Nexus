@@ -1,0 +1,16 @@
+{
+  "n": "Hoover Lead",
+  "cat": "LEADS",
+  "s": "synth",
+  "c": "#ff00ff",
+  "i": "\ud83c\udf00",
+  "bpm": 135,
+  "key": "Am",
+  "genre": "Rave",
+  "tags": [
+    "hoover",
+    "Belgian",
+    "classic"
+  ],
+  "_file": "hoover_lead.json"
+}

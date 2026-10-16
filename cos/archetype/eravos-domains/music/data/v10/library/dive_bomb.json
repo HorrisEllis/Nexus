@@ -1,0 +1,17 @@
+{
+  "n": "Dive Bomb",
+  "cat": "CURVES",
+  "s": "curvePerc",
+  "c": "#ff2200",
+  "i": "\ud83d\udca3",
+  "bpm": 120,
+  "key": "Am",
+  "genre": "Rock/Electronic",
+  "tags": [
+    "dive",
+    "pitch",
+    "guitar",
+    "curve"
+  ],
+  "_file": "dive_bomb.json"
+}

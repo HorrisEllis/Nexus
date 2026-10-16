@@ -1,0 +1,2 @@
+{ "schema": "eravos.domain/1", "id": "__DOMAIN__", "label": "__DOMAIN_LABEL__", "version": "0.1.0", "icon": "◈",
+  "core": [], "ports": ["event"], "modes": [], "pages": [], "content": [] }

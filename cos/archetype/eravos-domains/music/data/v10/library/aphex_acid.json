@@ -1,0 +1,16 @@
+{
+  "n": "Aphex Acid",
+  "cat": "BASS",
+  "s": "acid",
+  "c": "#00ff44",
+  "i": "\ud83d\ude08",
+  "bpm": 180,
+  "key": "Am",
+  "genre": "IDM",
+  "tags": [
+    "Aphex Twin",
+    "acid",
+    "fast"
+  ],
+  "_file": "aphex_acid.json"
+}

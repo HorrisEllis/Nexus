@@ -2501,7 +2501,8 @@ const ROUTE_CAP = {
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
   'repo.surface.get': CAPS.READ_IDEAS, 'repo.surface.set': CAPS.WRITE_IDEAS,
   'repo.code.edit': CAPS.WRITE_IDEAS, 'repo.code.assist': CAPS.WRITE_IDEAS,
-  'repo.runs.list': CAPS.READ_IDEAS, 'repo.runs.rewind': CAPS.WRITE_IDEAS,   // §CV3 0.60.80: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.80: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
+  'repo.runs.list': CAPS.READ_IDEAS, 'repo.runs.rewind': CAPS.WRITE_IDEAS,
+  'canvas.list': CAPS.READ_IDEAS, 'canvas.show': CAPS.READ_IDEAS, 'canvas.create': CAPS.WRITE_IDEAS, 'canvas.tool.add': CAPS.WRITE_IDEAS,   // §0.60.83 CN3   // §CV3 0.60.80: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.80: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
@@ -2835,7 +2836,11 @@ function matchRoute(method, url) {
     ['PUT',    ['api','repos',    ':uuid','surface'],      'repo.surface.set'],
     ['POST',   ['api','repos',    ':uuid','code','edit'],   'repo.code.edit'],      // CE7 { path, edits:[{from,to,expect?,replacement}], checksum? }
     ['POST',   ['api','repos',    ':uuid','code','assist'], 'repo.code.assist'],
-    ['GET',    ['api','repos',    ':uuid','runs'],          'repo.runs.list'],      // CV3 ?status= — the runs Nexus kept for this repo, newest first
+    ['GET',    ['api','repos',    ':uuid','runs'],          'repo.runs.list'],
+    ['GET',    ['api','canvas'],                            'canvas.list'],         // CN3 every canvas compartment
+    ['POST',   ['api','canvas'],                            'canvas.create'],       // { name, description?, tools?: [{ slug, label, domain, category, sound }] }
+    ['GET',    ['api','canvas',':id'],                      'canvas.show'],         // the canvas, its compartment tree, each tool and whether it is linked
+    ['POST',   ['api','canvas',':id','tools'],              'canvas.tool.add'],     // { slug?, label, domain, category, sound? } — one nested compartment      // CV3 ?status= — the runs Nexus kept for this repo, newest first
     ['POST',   ['api','repos',    ':uuid','runs',':runId','rewind'], 'repo.runs.rewind'],   // CV3 { dryRun? } — every file the run changed, back as it was before it    // CE7 { path, from, to, action, note?, backend?, agent?, provider?, model? }    // { open?, sel?: {from,to}, chunk?, filters?, by? }
     // §BUILT 2026-09-16 — nexus://repo/{repoUuid}/chunk/{chunkUuid}
     // (lib/nexus-uri.js's 'repo-chunk' route) needs to resolve a bare
@@ -4825,6 +4830,24 @@ async function handle(req, res, route, query, body) {
         getIdeaOS().emit('idearium.run.rewound', { repoUuid: repo.uuid, runId: run.runId, commitId: base.commitId, restored: results.filter(x => x.done).map(x => x.path), left: results.filter(x => !x.done).map(x => x.path) });
       }
       return ok(res, { ok: true, runId: run.runId, to: { commitId: base.commitId, ts: base.ts, message: base.message }, dryRun: !!body.dryRun, results });
+    }
+    // §0.60.83 CN3 — James: "what about using cos for the canvas, then each tool a nested compartment?" The canvas is a COS
+    // compartment laid out from his ERAVOS canvas; each tool a child compartment linked into it (lib/canvas-compartments.js).
+    case 'canvas.list': case 'canvas.show': case 'canvas.create': case 'canvas.tool.add': {
+      const CC = _require('../../lib/canvas-compartments.js');
+      if (action === 'canvas.list') return ok(res, { canvases: CC.list() });
+      if (action === 'canvas.show') { const r = CC.show(params.id); return r.ok ? ok(res, r) : err(res, 404, r.error); }
+      if (action === 'canvas.create') {
+        const tools = Array.isArray(body.tools) ? body.tools : [];
+        let r; try { r = CC.create({ name: body.name, description: body.description || '', tools }); } catch (e) { r = { ok: false, error: e.message }; }
+        if (!r.ok) return err(res, 400, r.error);
+        getIdeaOS().emit('idearium.canvas.created', { canvasId: r.canvas.id, name: r.canvas.name, tools: r.tools.map(t => t.id), domains: r.domains });
+        return ok(res, r);
+      }
+      let r; try { r = CC.addTool(params.id, { slug: body.slug, label: body.label, domain: body.domain, category: body.category, sound: !!body.sound }); } catch (e) { r = { ok: false, error: e.message }; }
+      if (!r.ok) return err(res, /^no canvas|not a canvas/.test(r.error) ? 404 : 400, r.error);
+      getIdeaOS().emit('idearium.canvas.tool.added', { canvasId: params.id, tool: r.tool.id, compartment: r.tool.compartment, linkedAt: r.tool.linkedAt });
+      return ok(res, r);
     }
     case 'repo.chunk.show': {
       const repo = getRepoLayer().get(params.uuid);

@@ -196,6 +196,9 @@ module.exports = Object.freeze({
   // §CE7 / §CV3 0.60.80 — a line-edit set proposed (code.edit, code.assist), and a run rewound
   IDEARIUM_EDIT_PROPOSED: { description: 'A checked line-edit set (from the person, the CLI or the agent working on picked lines) became one proposal: its ranges and the checksums before and after.', payloadShape: ['repoUuid', 'path', 'ranges', 'inject', 'checksumBefore', 'checksumAfter', 'action'], severity: 'info' },
   IDEARIUM_RUN_REWOUND: { description: 'Every file a run changed went back to the version before the run; files it created are named and left.', payloadShape: ['repoUuid', 'runId', 'commitId', 'restored', 'left'], severity: 'notable' },
+  // §0.60.83 CN3 — a canvas compartment and its nested tool compartments (lib/canvas-compartments.js)
+  IDEARIUM_CANVAS_CREATED: { description: 'A canvas was made: a COS compartment laid out from his ERAVOS canvas, with a nested compartment per tool.', payloadShape: ['canvasId', 'name', 'tools', 'domains'], severity: 'info' },
+  IDEARIUM_CANVAS_TOOL_ADDED: { description: 'A tool was added to a canvas: its own nested compartment, linked into the canvas tools/ tree.', payloadShape: ['canvasId', 'tool', 'compartment', 'linkedAt'], severity: 'info' },
   IDEARIUM_NOTE_UPDATED: { description: 'A note changed: edited, pinned, done, archived or brought back.', payloadShape: ['id', 'repoUuid', 'kind', 'status'], severity: 'info' },
 });
 

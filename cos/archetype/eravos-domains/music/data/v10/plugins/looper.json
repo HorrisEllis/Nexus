@@ -1,0 +1,78 @@
+{
+  "id": "looper",
+  "name": "INFINITE LOOP",
+  "icon": "\u221e",
+  "col": "#00d4ff",
+  "tag": "LOOPER",
+  "desc": "4-bar looper. Overdub, reverse, half-speed, stutter.",
+  "module": "looper",
+  "visualizer": {
+    "type": "waveform_loop",
+    "color": "#00d4ff"
+  },
+  "params": [
+    {
+      "n": "Length",
+      "k": "len",
+      "v": 0.5,
+      "min": 1,
+      "max": 16,
+      "step": 1,
+      "unit": "bars"
+    },
+    {
+      "n": "Overdub",
+      "k": "overdub",
+      "v": 0.8,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Feedback",
+      "k": "fb",
+      "v": 0.6,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "n": "Pitch",
+      "k": "pitch",
+      "v": 0.5,
+      "min": -12,
+      "max": 12,
+      "step": 1,
+      "unit": "st"
+    },
+    {
+      "n": "Reverse",
+      "k": "rev",
+      "v": 0,
+      "type": "toggle"
+    },
+    {
+      "n": "Half Speed",
+      "k": "half",
+      "v": 0,
+      "type": "toggle"
+    }
+  ],
+  "presets": {
+    "STANDARD": {
+      "len": 0.25,
+      "overdub": 0.8,
+      "fb": 0.6
+    },
+    "AMBIENT": {
+      "len": 0.5,
+      "overdub": 0.9,
+      "fb": 0.85,
+      "pitch": 0.4
+    },
+    "DRONE": {
+      "len": 0.5,
+      "overdub": 1,
+      "fb": 0.95,
+      "half": 1
+    }
+  }
+}

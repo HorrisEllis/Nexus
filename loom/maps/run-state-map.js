@@ -22,6 +22,8 @@ const FILES = [
   ['clear-glass/src/net/service.js', I('clear-glass/src/net/service.js'), [I('clear-glass/src/net/policy.js'), I('clear-glass/src/net/transport-host.js')]],
   ['lib/agent-tools/tools/clear-glass/net.js', I('lib/agent-tools/tools/clear-glass/net.js'), []],   // §0.60.60 NP9: read-only agent view
   ['idearium/lib/surface-state.cjs', I('idearium/lib/surface-state.cjs'), [I('idearium/lib/data-dir.cjs')]],   // §0.60.79 CE8: the Code tab's surface, one for the tab, the CLI and agents
+  ['cos/archetype/eravos.js', I('cos/archetype/eravos.js'), []],   // §0.60.83 CN1/CN2: his ERAVOS canvas, tools and domains as COS archetypes (read from cos/archetype/eravos-*/)
+  ['lib/canvas-compartments.js', I('lib/canvas-compartments.js'), [I('lib/cos-bridge.js'), I('lib/file-tree-plan.js'), I('cos/archetype/eravos.js')]],   // §0.60.83 CN3: a canvas compartment, each tool nested
   ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
 ];
 const CONSUMERS = [
@@ -43,6 +45,11 @@ const CONSUMERS = [
   [I('idearium/api/index.js'),                      I('lib/repo-versions.js'), 'commitNow({ kind: restore }) after a file restore and a run rewind (0.60.80 CV2)'],
   [I('lib/repo-inject.js'),                         I('lib/repo-versions.js'), 'an applied or reverted proposal commits at once, labelled kind / inject / by / run (0.60.80 CV2)'],
   [I('idearium/api/index.js'),                      I('lib/run-state.js'),  'GET …/runs (list), POST …/runs/:id/rewind (load, note rewound) (0.60.80 CV3)'],
+  [I('cos/archetype/registry.js'),                  I('cos/archetype/eravos.js'), 'ARCHETYPES_RAW.push(...archetypes()): eravos-canvas, eravos-domain-music, eravos-domain-dataflow, eravos-tool, eravos-sound-tool (0.60.83 CN1/CN2)'],
+  [I('lib/file-tree-plan.js'),                      I('cos/archetype/eravos.js'), 'fromCosTemplate vars + the archetype\'s varDefaults (toolVars: his new-tool.mjs rules) (0.60.83 CN2)'],
+  [I('idearium/api/index.js'),                      I('lib/canvas-compartments.js'), 'GET/POST /api/canvas, GET /api/canvas/:id, POST /api/canvas/:id/tools; emits idearium.canvas.created / tool.added (0.60.83 CN3)'],
+  [I('idearium/cli/route-commands.js'),             I('lib/canvas-compartments.js'), 'canvas list · new · show · add-tool rows, through the routes (0.60.83 CN3; agents through nexus.command)'],
+  [I('idearium/api/index.js'),                      I('lib/build-paths.js'), 'repo.code.edit / code.assist classified not-build, beside the Agent tab chat (0.60.83, census CK-255)'],
   [I('copilot/server.js'),                          I('lib/run-state.js'),  'every ok/failed tool call is written to the run by step() (0.60.50 CE1)'],
   [I('copilot/tool-runtime.js'),                    I('lib/run-state.js'),  'header() at the head of follow-up rounds and resumed runs; note(off-task) on a blocked reply (0.60.50 CE2, CE3)'],
   [I('guardian/lib/response-sink.js'),              I('lib/run-state.js'),  'a response node is tagged with its run, step and attempt via forSession() (0.60.50 CE4)'],

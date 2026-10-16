@@ -296,3 +296,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **Evidence:** `tests/modules/test-code-tab-merge.test.js` (7/7, six driven in Clear Glass);
     `docs/2026-10-15-code-tab-run-state-phasemap.spec` addenda (b) and (c); `CHANGELOG-0.60.80.md`,
     `CHANGELOG-0.60.81.md`.
+- **2026-10-16: "what about using cos for the canvas, then each tool a nested compartment?"**
+  - **Context:** he had just had ERAVOS deleted from Nexus. He sent the standalone ERAVOS and proposed bringing its
+    design back as COS structure rather than as a running system: the canvas as one compartment, each tool nested
+    under it.
+  - **What it shows:** design that composes. His ERAVOS kept "the canvas and the tools … separate", with each tool a
+    sealed folder with declared ports and permissions. That boundary is why it maps onto COS nesting with no rewrite
+    of his code: his canvas ships byte for byte, his own loader generator and validator run unchanged on a canvas
+    Nexus made, and his own harness passes the tools.
+  - **Evidence:** `tests/modules/test-canvas-compartments.test.js` (7/7; CC-10 drives it in Clear Glass: 12/12 on his
+    harness); `docs/2026-10-16-canvas-compartments-phasemap.spec`; `CHANGELOG-0.60.83.md`.

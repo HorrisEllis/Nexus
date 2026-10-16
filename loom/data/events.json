@@ -1,5 +1,5 @@
 {
- "generatedAt": 1792113679553,
+ "generatedAt": 1792155815775,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -541,6 +541,189 @@
     "sigma.event.warning"
    ]
   },
+  "nexus.cos.archetype.eravos-canvas.canvas.kernel.intake": {
+   "emits": [
+    "intake:file",
+    "kernel:pack-installed"
+   ],
+   "listens": []
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.kernel.kernel": {
+   "emits": [
+    "kernel:domain-installed",
+    "kernel:fault",
+    "kernel:mode",
+    "kernel:organism-mounted",
+    "kernel:organism-unmounted",
+    "kernel:silence",
+    "kernel:wire-registered",
+    "kernel:wire-removed"
+   ],
+   "listens": []
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.runtime.canvas-wm": {
+   "emits": [
+    "canvas:focus",
+    "canvas:layout",
+    "canvas:resize",
+    "canvas:window-closed",
+    "canvas:window-opened"
+   ],
+   "listens": [
+    "canvas:collapse",
+    "canvas:focus-request"
+   ]
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.runtime.expansion": {
+   "emits": [
+    "shell:expanded"
+   ],
+   "listens": []
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.runtime.history": {
+   "emits": [],
+   "listens": [
+    "kernel:wire-registered",
+    "kernel:wire-removed",
+    "recipe:done",
+    "recipe:start",
+    "workspace:restored",
+    "workspace:restoring"
+   ]
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.runtime.organism-factory": {
+   "emits": [
+    "canvas:focus",
+    "factory:spawned"
+   ],
+   "listens": [
+    "canvas:window-closed",
+    "kernel:organism-unmounted"
+   ]
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.runtime.organism-sdk": {
+   "emits": [],
+   "listens": [
+    "kernel:silence"
+   ]
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.runtime.preview": {
+   "emits": [],
+   "listens": [
+    "kernel:silence"
+   ]
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.runtime.recipes": {
+   "emits": [
+    "recipe:done",
+    "recipe:progress",
+    "recipe:start"
+   ],
+   "listens": [
+    "recipe:run"
+   ]
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.runtime.wire-system": {
+   "emits": [],
+   "listens": [
+    "canvas:layout",
+    "canvas:window-opened"
+   ]
+  },
+  "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace": {
+   "emits": [
+    "workspace:autosave-failed",
+    "workspace:autosaved",
+    "workspace:backup-imported",
+    "workspace:kept",
+    "workspace:restored",
+    "workspace:restoring"
+   ],
+   "listens": [
+    "intake:file",
+    "kernel:organism-mounted",
+    "kernel:organism-unmounted"
+   ]
+  },
+  "nexus.cos.archetype.eravos-canvas.tests.harness": {
+   "emits": [
+    "note:trigger"
+   ],
+   "listens": []
+  },
+  "nexus.cos.archetype.eravos-domains.music.core.audio": {
+   "emits": [
+    "audio:lines",
+    "audio:ready",
+    "audio:strip",
+    "audio:trim"
+   ],
+   "listens": [
+    "kernel:silence",
+    "midi:note",
+    "note:trigger",
+    "theory:key-change",
+    "transport:bpm",
+    "transport:play"
+   ]
+  },
+  "nexus.cos.archetype.eravos-domains.music.core.master-transport": {
+   "emits": [
+    "seq:play",
+    "seq:stop",
+    "transport:bounce",
+    "transport:bpm",
+    "transport:loop",
+    "transport:play",
+    "transport:recorded",
+    "transport:state",
+    "transport:stop",
+    "transport:tick"
+   ],
+   "listens": [
+    "kernel:silence",
+    "transport:recorded"
+   ]
+  },
+  "nexus.cos.archetype.eravos-domains.music.core.sdk-music": {
+   "emits": [],
+   "listens": [
+    "midi:note",
+    "note:trigger",
+    "theory:key-change",
+    "transport:bpm",
+    "transport:play",
+    "transport:stop",
+    "transport:tick"
+   ]
+  },
+  "nexus.cos.archetype.eravos-domains.music.domain": {
+   "emits": [
+    "canvas:collapse",
+    "canvas:focus-request",
+    "theory:key-change",
+    "ui:transport-bpm",
+    "ui:transport-loop",
+    "ui:transport-metronome",
+    "ui:transport-play",
+    "ui:transport-record",
+    "ui:transport-restart",
+    "ui:transport-stop",
+    "ui:transport-tap"
+   ],
+   "listens": [
+    "audio:trim",
+    "kernel:organism-mounted",
+    "kernel:organism-unmounted",
+    "midi:status",
+    "recipe:done",
+    "theory:key-change",
+    "transport:bounce",
+    "transport:bpm",
+    "transport:state",
+    "transport:tick"
+   ]
+  },
   "nexus.cos.blueprint": {
    "emits": [
     "host:archetype:assign"
@@ -882,340 +1065,6 @@
     "idea:promoted",
     "idea:recorded",
     "upgrade:committed"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.bridge.nexus-bridge": {
-   "emits": [
-    "kernel:notify"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.catalog.catalog": {
-   "emits": [
-    "catalog:removed"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.kernel.intake": {
-   "emits": [
-    "intake:file"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.kernel.kernel": {
-   "emits": [
-    "kernel:audio-ready",
-    "kernel:bpm-change",
-    "kernel:fault",
-    "kernel:ledger-entry",
-    "kernel:mod-mounted",
-    "kernel:mod-unmounted",
-    "kernel:pack-installed",
-    "kernel:wire-registered",
-    "kernel:wire-removed"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.mods.acid-synth.acid-synth.engine": {
-   "emits": [
-    "audio:signal",
-    "org:state_sync",
-    "org:triggered"
-   ],
-   "listens": [
-    "pad:trigger"
-   ]
-  },
-  "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine": {
-   "emits": [
-    "bass-drop:stage",
-    "org:stage-active",
-    "org:state-sync",
-    "org:vocal-loaded"
-   ],
-   "listens": [
-    "intake:file",
-    "kernel:bpm-change"
-   ]
-  },
-  "nexus.eravos.ui.mods.channel.channel.engine": {
-   "emits": [
-    "org:meter",
-    "org:state_sync"
-   ],
-   "listens": [
-    "audio:signal"
-   ]
-  },
-  "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine": {
-   "emits": [
-    "contrast:analysis",
-    "org:analysis-ready",
-    "org:bpm-detected",
-    "org:mode-changed",
-    "org:slot-loaded"
-   ],
-   "listens": [
-    "intake:file"
-   ]
-  },
-  "nexus.eravos.ui.mods.edm-lab.edm-lab.engine": {
-   "emits": [
-    "edm:drop-fired",
-    "edm:rhythm-step",
-    "org:density-reset",
-    "org:drop-fired",
-    "org:state-sync"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.mods.lfo.lfo.engine": {
-   "emits": [
-    "mod:signal",
-    "org:lfo_tick",
-    "org:state_sync"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.mods.macro-automation.macro-automation.engine": {
-   "emits": [
-    "org:error",
-    "org:state_sync",
-    "org:step"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.mods.master-fx.master-fx.engine": {
-   "emits": [
-    "org:state_sync"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.mods.nexus-shared.nexus-node-core": {
-   "emits": [
-    "org:state_sync"
-   ],
-   "listens": [
-    "transport:play",
-    "transport:record-start",
-    "transport:record-stop",
-    "transport:stop"
-   ]
-  },
-  "nexus.eravos.ui.mods.pads.pads.engine": {
-   "emits": [
-    "org:pad_lit",
-    "org:state_sync",
-    "pad:bank-change",
-    "pad:trigger"
-   ],
-   "listens": [
-    "midi:note",
-    "seq:fire"
-   ]
-  },
-  "nexus.eravos.ui.mods.photo-editor.photo-editor.engine": {
-   "emits": [
-    "org:exported",
-    "org:image_loaded",
-    "org:state_sync",
-    "photo:exported"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.mods.reese-bass.reese-bass.engine": {
-   "emits": [
-    "org:state_sync"
-   ],
-   "listens": [
-    "pad:trigger"
-   ]
-  },
-  "nexus.eravos.ui.mods.sample-player.sample-player.engine": {
-   "emits": [
-    "org:playhead_update",
-    "org:state_sync",
-    "org:waveform_ready"
-   ],
-   "listens": [
-    "intake:file"
-   ]
-  },
-  "nexus.eravos.ui.mods.sequencer.sequencer.engine": {
-   "emits": [
-    "org:grid_sync",
-    "org:state_sync",
-    "org:step_cursor",
-    "org:step_set",
-    "seq:fire",
-    "seq:play",
-    "seq:stop"
-   ],
-   "listens": [
-    "kernel:bpm-change",
-    "pad:bank-change",
-    "pad:trigger",
-    "seq:play",
-    "seq:stop"
-   ]
-  },
-  "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine": {
-   "emits": [
-    "org:connected",
-    "org:disconnected",
-    "org:error",
-    "org:rx",
-    "org:state_sync",
-    "org:tx",
-    "serial:rx"
-   ],
-   "listens": [
-    "mod:xy",
-    "pad:trigger"
-   ]
-  },
-  "nexus.eravos.ui.mods.sidechain-compressor.sidechain-compressor.engine": {
-   "emits": [
-    "org:pumped",
-    "org:state_sync"
-   ],
-   "listens": [
-    "pad:trigger"
-   ]
-  },
-  "nexus.eravos.ui.mods.supersaw.supersaw.engine": {
-   "emits": [
-    "audio:signal",
-    "org:state_sync",
-    "org:triggered"
-   ],
-   "listens": [
-    "midi:note",
-    "pad:trigger"
-   ]
-  },
-  "nexus.eravos.ui.mods.timeline.timeline.engine": {
-   "emits": [
-    "intake:file",
-    "org:asset_loaded",
-    "org:clip_added",
-    "org:clip_removed",
-    "org:clip_sync",
-    "org:playhead_update",
-    "org:state_sync",
-    "seq:play",
-    "seq:stop"
-   ],
-   "listens": [
-    "intake:file",
-    "seq:play",
-    "seq:stop",
-    "transport:play",
-    "transport:recorded"
-   ]
-  },
-  "nexus.eravos.ui.mods.video-editor.video-editor.engine": {
-   "emits": [
-    "org:exported",
-    "org:state_sync",
-    "org:video_loaded",
-    "video:exported"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.mods.webhook-automation.webhook-automation.engine": {
-   "emits": [
-    "org:log",
-    "org:state_sync"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.mods.wobble-bass.wobble-bass.engine": {
-   "emits": [
-    "org:state_sync"
-   ],
-   "listens": [
-    "pad:trigger"
-   ]
-  },
-  "nexus.eravos.ui.mods.xy-pad.xy-pad.engine": {
-   "emits": [
-    "mod:xy",
-    "org:state_sync",
-    "org:xy_update"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.pack.pack-loader": {
-   "emits": [
-    "kernel:fault",
-    "kernel:pack-installed"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.runtime.canvas-wm": {
-   "emits": [
-    "canvas:window-closed"
-   ],
-   "listens": []
-  },
-  "nexus.eravos.ui.runtime.master-transport": {
-   "emits": [
-    "kernel:bpm-change",
-    "kernel:notify",
-    "seq:play",
-    "seq:stop",
-    "transport:play",
-    "transport:record-start",
-    "transport:record-stop",
-    "transport:recorded",
-    "transport:stop"
-   ],
-   "listens": [
-    "ui:transport-bpm",
-    "ui:transport-play",
-    "ui:transport-record",
-    "ui:transport-stop"
-   ]
-  },
-  "nexus.eravos.ui.runtime.mod-factory": {
-   "emits": [
-    "canvas:mod-spawned",
-    "intake:file",
-    "mod:xy"
-   ],
-   "listens": [
-    "kernel:bpm-change",
-    "org:analysis-ready",
-    "org:asset_loaded",
-    "org:bpm-detected",
-    "org:clip_sync",
-    "org:connected",
-    "org:density-reset",
-    "org:disconnected",
-    "org:drop-fired",
-    "org:error",
-    "org:grid_sync",
-    "org:log",
-    "org:pad_lit",
-    "org:playhead_update",
-    "org:rx",
-    "org:slot-loaded",
-    "org:stage-active",
-    "org:state-sync",
-    "org:state_sync",
-    "org:step_cursor",
-    "org:step_set",
-    "org:tx",
-    "org:vocal-loaded",
-    "org:waveform_ready",
-    "ui:config_change"
-   ]
-  },
-  "nexus.eravos.ui.runtime.wire-system": {
-   "emits": [
-    "kernel:notify"
    ],
    "listens": []
   },
@@ -2188,268 +2037,6 @@
    "listens": [
     "anomaly.detected"
    ]
-  },
-  "nexus.ui.eravos.bridge.nexus-bridge": {
-   "emits": [
-    "kernel:notify"
-   ],
-   "listens": []
-  },
-  "nexus.ui.eravos.catalog.catalog": {
-   "emits": [
-    "catalog:removed"
-   ],
-   "listens": []
-  },
-  "nexus.ui.eravos.kernel.intake": {
-   "emits": [
-    "intake:file"
-   ],
-   "listens": []
-  },
-  "nexus.ui.eravos.kernel.kernel": {
-   "emits": [
-    "kernel:audio-ready",
-    "kernel:bpm-change",
-    "kernel:fault",
-    "kernel:ledger-entry",
-    "kernel:organism-mounted",
-    "kernel:organism-unmounted",
-    "kernel:pack-installed",
-    "kernel:wire-registered",
-    "kernel:wire-removed"
-   ],
-   "listens": []
-  },
-  "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine": {
-   "emits": [
-    "audio:signal",
-    "org:state_sync",
-    "org:triggered"
-   ],
-   "listens": [
-    "pad:trigger"
-   ]
-  },
-  "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine": {
-   "emits": [
-    "bass-drop:stage",
-    "org:stage-active",
-    "org:state-sync",
-    "org:vocal-loaded"
-   ],
-   "listens": [
-    "intake:file",
-    "kernel:bpm-change"
-   ]
-  },
-  "nexus.ui.eravos.organisms.channel.channel.engine": {
-   "emits": [
-    "org:meter",
-    "org:state_sync"
-   ],
-   "listens": [
-    "audio:signal"
-   ]
-  },
-  "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine": {
-   "emits": [
-    "contrast:analysis",
-    "org:analysis-ready",
-    "org:bpm-detected",
-    "org:mode-changed",
-    "org:slot-loaded"
-   ],
-   "listens": [
-    "intake:file"
-   ]
-  },
-  "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine": {
-   "emits": [
-    "edm:drop-fired",
-    "edm:rhythm-step",
-    "org:density-reset",
-    "org:drop-fired",
-    "org:state-sync"
-   ],
-   "listens": []
-  },
-  "nexus.ui.eravos.organisms.lfo.lfo.engine": {
-   "emits": [
-    "mod:signal",
-    "org:lfo_tick",
-    "org:state_sync"
-   ],
-   "listens": []
-  },
-  "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core": {
-   "emits": [
-    "org:state_sync"
-   ],
-   "listens": [
-    "transport:play",
-    "transport:record-start",
-    "transport:record-stop",
-    "transport:stop"
-   ]
-  },
-  "nexus.ui.eravos.organisms.pads.pads.engine": {
-   "emits": [
-    "org:pad_lit",
-    "org:state_sync",
-    "pad:bank-change",
-    "pad:trigger"
-   ],
-   "listens": [
-    "midi:note",
-    "seq:fire"
-   ]
-  },
-  "nexus.ui.eravos.organisms.reese-bass.reese-bass.engine": {
-   "emits": [
-    "org:state_sync"
-   ],
-   "listens": [
-    "pad:trigger"
-   ]
-  },
-  "nexus.ui.eravos.organisms.sample-player.sample-player.engine": {
-   "emits": [
-    "org:playhead_update",
-    "org:state_sync",
-    "org:waveform_ready"
-   ],
-   "listens": [
-    "intake:file"
-   ]
-  },
-  "nexus.ui.eravos.organisms.sequencer.sequencer.engine": {
-   "emits": [
-    "org:grid_sync",
-    "org:state_sync",
-    "org:step_cursor",
-    "org:step_set",
-    "seq:fire",
-    "seq:play",
-    "seq:stop"
-   ],
-   "listens": [
-    "kernel:bpm-change",
-    "pad:bank-change",
-    "pad:trigger",
-    "seq:play",
-    "seq:stop"
-   ]
-  },
-  "nexus.ui.eravos.organisms.timeline.timeline.engine": {
-   "emits": [
-    "intake:file",
-    "org:asset_loaded",
-    "org:clip_added",
-    "org:clip_removed",
-    "org:clip_sync",
-    "org:playhead_update",
-    "org:state_sync",
-    "seq:play",
-    "seq:stop"
-   ],
-   "listens": [
-    "intake:file",
-    "seq:play",
-    "seq:stop",
-    "transport:play",
-    "transport:recorded"
-   ]
-  },
-  "nexus.ui.eravos.organisms.wobble-bass.wobble-bass.engine": {
-   "emits": [
-    "org:state_sync"
-   ],
-   "listens": [
-    "pad:trigger"
-   ]
-  },
-  "nexus.ui.eravos.organisms.xy-pad.xy-pad.engine": {
-   "emits": [
-    "mod:xy",
-    "org:state_sync",
-    "org:xy_update"
-   ],
-   "listens": []
-  },
-  "nexus.ui.eravos.pack.pack-loader": {
-   "emits": [
-    "kernel:fault",
-    "kernel:pack-installed"
-   ],
-   "listens": []
-  },
-  "nexus.ui.eravos.runtime.canvas-intelligence": {
-   "emits": [],
-   "listens": [
-    "org:state_sync"
-   ]
-  },
-  "nexus.ui.eravos.runtime.canvas-wm": {
-   "emits": [
-    "canvas:window-closed"
-   ],
-   "listens": []
-  },
-  "nexus.ui.eravos.runtime.master-transport": {
-   "emits": [
-    "kernel:bpm-change",
-    "kernel:notify",
-    "seq:play",
-    "seq:stop",
-    "transport:play",
-    "transport:record-start",
-    "transport:record-stop",
-    "transport:recorded",
-    "transport:stop"
-   ],
-   "listens": [
-    "ui:transport-bpm",
-    "ui:transport-play",
-    "ui:transport-record",
-    "ui:transport-stop"
-   ]
-  },
-  "nexus.ui.eravos.runtime.organism-factory": {
-   "emits": [
-    "canvas:organism-spawned",
-    "catalog:organism-registered",
-    "intake:file",
-    "mod:xy"
-   ],
-   "listens": [
-    "kernel:bpm-change",
-    "org:analysis-ready",
-    "org:asset_loaded",
-    "org:bpm-detected",
-    "org:clip_sync",
-    "org:density-reset",
-    "org:drop-fired",
-    "org:grid_sync",
-    "org:pad_lit",
-    "org:playhead_update",
-    "org:slot-loaded",
-    "org:stage-active",
-    "org:state-sync",
-    "org:state_sync",
-    "org:step_cursor",
-    "org:step_set",
-    "org:vocal-loaded",
-    "org:waveform_ready",
-    "pad:trigger",
-    "ui:config_change"
-   ]
-  },
-  "nexus.ui.eravos.runtime.wire-system": {
-   "emits": [
-    "kernel:notify"
-   ],
-   "listens": []
   },
   "nexus.ui.store": {
    "emits": [
@@ -4221,6 +3808,402 @@
     "nexus.cortex.orion"
    ]
   },
+  "intake:file": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.intake"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace"
+   ]
+  },
+  "kernel:pack-installed": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.intake"
+   ],
+   "listeners": []
+  },
+  "kernel:domain-installed": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:fault": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:mode": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:organism-mounted": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.kernel"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace",
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
+  "kernel:organism-unmounted": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.kernel"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.organism-factory",
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace",
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
+  "kernel:silence": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.kernel"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.organism-sdk",
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.preview",
+    "nexus.cos.archetype.eravos-domains.music.core.audio",
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ]
+  },
+  "kernel:wire-registered": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.kernel"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.history"
+   ]
+  },
+  "kernel:wire-removed": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.kernel.kernel"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.history"
+   ]
+  },
+  "canvas:focus": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.canvas-wm",
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.organism-factory"
+   ],
+   "listeners": []
+  },
+  "canvas:layout": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.canvas-wm"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.wire-system"
+   ]
+  },
+  "canvas:resize": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.canvas-wm"
+   ],
+   "listeners": []
+  },
+  "canvas:window-closed": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.canvas-wm"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.organism-factory"
+   ]
+  },
+  "canvas:window-opened": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.canvas-wm"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.wire-system"
+   ]
+  },
+  "canvas:collapse": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.canvas-wm"
+   ]
+  },
+  "canvas:focus-request": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.canvas-wm"
+   ]
+  },
+  "shell:expanded": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.expansion"
+   ],
+   "listeners": []
+  },
+  "recipe:done": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.recipes"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.history",
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
+  "recipe:start": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.recipes"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.history"
+   ]
+  },
+  "workspace:restored": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.history"
+   ]
+  },
+  "workspace:restoring": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.history"
+   ]
+  },
+  "factory:spawned": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.organism-factory"
+   ],
+   "listeners": []
+  },
+  "recipe:progress": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.recipes"
+   ],
+   "listeners": []
+  },
+  "recipe:run": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.recipes"
+   ]
+  },
+  "workspace:autosave-failed": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace"
+   ],
+   "listeners": []
+  },
+  "workspace:autosaved": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace"
+   ],
+   "listeners": []
+  },
+  "workspace:backup-imported": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace"
+   ],
+   "listeners": []
+  },
+  "workspace:kept": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.canvas.runtime.workspace"
+   ],
+   "listeners": []
+  },
+  "note:trigger": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-canvas.tests.harness"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.core.audio",
+    "nexus.cos.archetype.eravos-domains.music.core.sdk-music"
+   ]
+  },
+  "audio:lines": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.audio"
+   ],
+   "listeners": []
+  },
+  "audio:ready": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.audio"
+   ],
+   "listeners": []
+  },
+  "audio:strip": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.audio"
+   ],
+   "listeners": []
+  },
+  "audio:trim": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.audio"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
+  "midi:note": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.core.audio",
+    "nexus.cos.archetype.eravos-domains.music.core.sdk-music"
+   ]
+  },
+  "theory:key-change": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.core.audio",
+    "nexus.cos.archetype.eravos-domains.music.core.sdk-music",
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
+  "transport:bpm": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.core.audio",
+    "nexus.cos.archetype.eravos-domains.music.core.sdk-music",
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
+  "transport:play": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.core.audio",
+    "nexus.cos.archetype.eravos-domains.music.core.sdk-music"
+   ]
+  },
+  "seq:play": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": []
+  },
+  "seq:stop": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": []
+  },
+  "transport:bounce": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
+  "transport:loop": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": []
+  },
+  "transport:recorded": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ]
+  },
+  "transport:state": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
+  "transport:stop": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.core.sdk-music"
+   ]
+  },
+  "transport:tick": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.core.master-transport"
+   ],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.core.sdk-music",
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
+  "ui:transport-bpm": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": []
+  },
+  "ui:transport-loop": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": []
+  },
+  "ui:transport-metronome": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": []
+  },
+  "ui:transport-play": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": []
+  },
+  "ui:transport-record": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": []
+  },
+  "ui:transport-restart": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": []
+  },
+  "ui:transport-stop": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": []
+  },
+  "ui:transport-tap": {
+   "emitters": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ],
+   "listeners": []
+  },
+  "midi:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.archetype.eravos-domains.music.domain"
+   ]
+  },
   "host:archetype:assign": {
    "emitters": [
     "nexus.cos.blueprint",
@@ -4944,706 +4927,6 @@
     "nexus.emergence.vendor.rfr2.ledger"
    ],
    "listeners": []
-  },
-  "kernel:notify": {
-   "emitters": [
-    "nexus.eravos.ui.bridge.nexus-bridge",
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.eravos.ui.runtime.wire-system",
-    "nexus.ui.eravos.bridge.nexus-bridge",
-    "nexus.ui.eravos.runtime.master-transport",
-    "nexus.ui.eravos.runtime.wire-system"
-   ],
-   "listeners": []
-  },
-  "catalog:removed": {
-   "emitters": [
-    "nexus.eravos.ui.catalog.catalog",
-    "nexus.ui.eravos.catalog.catalog"
-   ],
-   "listeners": []
-  },
-  "intake:file": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.intake",
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.kernel.intake",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
-    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
-    "nexus.eravos.ui.mods.sample-player.sample-player.engine",
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine",
-    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine",
-    "nexus.ui.eravos.organisms.sample-player.sample-player.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ]
-  },
-  "kernel:audio-ready": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.kernel",
-    "nexus.ui.eravos.kernel.kernel"
-   ],
-   "listeners": []
-  },
-  "kernel:bpm-change": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.kernel",
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.kernel.kernel",
-    "nexus.ui.eravos.runtime.master-transport"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "kernel:fault": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.kernel",
-    "nexus.eravos.ui.pack.pack-loader",
-    "nexus.ui.eravos.kernel.kernel",
-    "nexus.ui.eravos.pack.pack-loader"
-   ],
-   "listeners": []
-  },
-  "kernel:ledger-entry": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.kernel",
-    "nexus.ui.eravos.kernel.kernel"
-   ],
-   "listeners": []
-  },
-  "kernel:mod-mounted": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.kernel"
-   ],
-   "listeners": []
-  },
-  "kernel:mod-unmounted": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.kernel"
-   ],
-   "listeners": []
-  },
-  "kernel:pack-installed": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.kernel",
-    "nexus.eravos.ui.pack.pack-loader",
-    "nexus.ui.eravos.kernel.kernel",
-    "nexus.ui.eravos.pack.pack-loader"
-   ],
-   "listeners": []
-  },
-  "kernel:wire-registered": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.kernel",
-    "nexus.ui.eravos.kernel.kernel"
-   ],
-   "listeners": []
-  },
-  "kernel:wire-removed": {
-   "emitters": [
-    "nexus.eravos.ui.kernel.kernel",
-    "nexus.ui.eravos.kernel.kernel"
-   ],
-   "listeners": []
-  },
-  "audio:signal": {
-   "emitters": [
-    "nexus.eravos.ui.mods.acid-synth.acid-synth.engine",
-    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
-    "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.channel.channel.engine",
-    "nexus.ui.eravos.organisms.channel.channel.engine"
-   ]
-  },
-  "org:state_sync": {
-   "emitters": [
-    "nexus.eravos.ui.mods.acid-synth.acid-synth.engine",
-    "nexus.eravos.ui.mods.channel.channel.engine",
-    "nexus.eravos.ui.mods.lfo.lfo.engine",
-    "nexus.eravos.ui.mods.macro-automation.macro-automation.engine",
-    "nexus.eravos.ui.mods.master-fx.master-fx.engine",
-    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
-    "nexus.eravos.ui.mods.pads.pads.engine",
-    "nexus.eravos.ui.mods.photo-editor.photo-editor.engine",
-    "nexus.eravos.ui.mods.reese-bass.reese-bass.engine",
-    "nexus.eravos.ui.mods.sample-player.sample-player.engine",
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine",
-    "nexus.eravos.ui.mods.sidechain-compressor.sidechain-compressor.engine",
-    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.eravos.ui.mods.video-editor.video-editor.engine",
-    "nexus.eravos.ui.mods.webhook-automation.webhook-automation.engine",
-    "nexus.eravos.ui.mods.wobble-bass.wobble-bass.engine",
-    "nexus.eravos.ui.mods.xy-pad.xy-pad.engine",
-    "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine",
-    "nexus.ui.eravos.organisms.channel.channel.engine",
-    "nexus.ui.eravos.organisms.lfo.lfo.engine",
-    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core",
-    "nexus.ui.eravos.organisms.pads.pads.engine",
-    "nexus.ui.eravos.organisms.reese-bass.reese-bass.engine",
-    "nexus.ui.eravos.organisms.sample-player.sample-player.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.wobble-bass.wobble-bass.engine",
-    "nexus.ui.eravos.organisms.xy-pad.xy-pad.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.canvas-intelligence",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:triggered": {
-   "emitters": [
-    "nexus.eravos.ui.mods.acid-synth.acid-synth.engine",
-    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
-    "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine"
-   ],
-   "listeners": []
-  },
-  "pad:trigger": {
-   "emitters": [
-    "nexus.eravos.ui.mods.pads.pads.engine",
-    "nexus.ui.eravos.organisms.pads.pads.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.acid-synth.acid-synth.engine",
-    "nexus.eravos.ui.mods.reese-bass.reese-bass.engine",
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine",
-    "nexus.eravos.ui.mods.sidechain-compressor.sidechain-compressor.engine",
-    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
-    "nexus.eravos.ui.mods.wobble-bass.wobble-bass.engine",
-    "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine",
-    "nexus.ui.eravos.organisms.reese-bass.reese-bass.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.wobble-bass.wobble-bass.engine",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "bass-drop:stage": {
-   "emitters": [
-    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
-    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine"
-   ],
-   "listeners": []
-  },
-  "org:stage-active": {
-   "emitters": [
-    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
-    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:state-sync": {
-   "emitters": [
-    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
-    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
-    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine",
-    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:vocal-loaded": {
-   "emitters": [
-    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
-    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:meter": {
-   "emitters": [
-    "nexus.eravos.ui.mods.channel.channel.engine",
-    "nexus.ui.eravos.organisms.channel.channel.engine"
-   ],
-   "listeners": []
-  },
-  "contrast:analysis": {
-   "emitters": [
-    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
-    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
-   ],
-   "listeners": []
-  },
-  "org:analysis-ready": {
-   "emitters": [
-    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
-    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:bpm-detected": {
-   "emitters": [
-    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
-    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:mode-changed": {
-   "emitters": [
-    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
-    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
-   ],
-   "listeners": []
-  },
-  "org:slot-loaded": {
-   "emitters": [
-    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
-    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "edm:drop-fired": {
-   "emitters": [
-    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
-    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
-   ],
-   "listeners": []
-  },
-  "edm:rhythm-step": {
-   "emitters": [
-    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
-    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
-   ],
-   "listeners": []
-  },
-  "org:density-reset": {
-   "emitters": [
-    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
-    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:drop-fired": {
-   "emitters": [
-    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
-    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "mod:signal": {
-   "emitters": [
-    "nexus.eravos.ui.mods.lfo.lfo.engine",
-    "nexus.ui.eravos.organisms.lfo.lfo.engine"
-   ],
-   "listeners": []
-  },
-  "org:lfo_tick": {
-   "emitters": [
-    "nexus.eravos.ui.mods.lfo.lfo.engine",
-    "nexus.ui.eravos.organisms.lfo.lfo.engine"
-   ],
-   "listeners": []
-  },
-  "org:error": {
-   "emitters": [
-    "nexus.eravos.ui.mods.macro-automation.macro-automation.engine",
-    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory"
-   ]
-  },
-  "org:step": {
-   "emitters": [
-    "nexus.eravos.ui.mods.macro-automation.macro-automation.engine"
-   ],
-   "listeners": []
-  },
-  "transport:play": {
-   "emitters": [
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.runtime.master-transport"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ]
-  },
-  "transport:record-start": {
-   "emitters": [
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.runtime.master-transport"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
-    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core"
-   ]
-  },
-  "transport:record-stop": {
-   "emitters": [
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.runtime.master-transport"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
-    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core"
-   ]
-  },
-  "transport:stop": {
-   "emitters": [
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.runtime.master-transport"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
-    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core"
-   ]
-  },
-  "org:pad_lit": {
-   "emitters": [
-    "nexus.eravos.ui.mods.pads.pads.engine",
-    "nexus.ui.eravos.organisms.pads.pads.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "pad:bank-change": {
-   "emitters": [
-    "nexus.eravos.ui.mods.pads.pads.engine",
-    "nexus.ui.eravos.organisms.pads.pads.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
-   ]
-  },
-  "midi:note": {
-   "emitters": [],
-   "listeners": [
-    "nexus.eravos.ui.mods.pads.pads.engine",
-    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
-    "nexus.ui.eravos.organisms.pads.pads.engine"
-   ]
-  },
-  "seq:fire": {
-   "emitters": [
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.pads.pads.engine",
-    "nexus.ui.eravos.organisms.pads.pads.engine"
-   ]
-  },
-  "org:exported": {
-   "emitters": [
-    "nexus.eravos.ui.mods.photo-editor.photo-editor.engine",
-    "nexus.eravos.ui.mods.video-editor.video-editor.engine"
-   ],
-   "listeners": []
-  },
-  "org:image_loaded": {
-   "emitters": [
-    "nexus.eravos.ui.mods.photo-editor.photo-editor.engine"
-   ],
-   "listeners": []
-  },
-  "photo:exported": {
-   "emitters": [
-    "nexus.eravos.ui.mods.photo-editor.photo-editor.engine"
-   ],
-   "listeners": []
-  },
-  "org:playhead_update": {
-   "emitters": [
-    "nexus.eravos.ui.mods.sample-player.sample-player.engine",
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.sample-player.sample-player.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:waveform_ready": {
-   "emitters": [
-    "nexus.eravos.ui.mods.sample-player.sample-player.engine",
-    "nexus.ui.eravos.organisms.sample-player.sample-player.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:grid_sync": {
-   "emitters": [
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:step_cursor": {
-   "emitters": [
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:step_set": {
-   "emitters": [
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "seq:play": {
-   "emitters": [
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine",
-    "nexus.ui.eravos.runtime.master-transport"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ]
-  },
-  "seq:stop": {
-   "emitters": [
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine",
-    "nexus.ui.eravos.runtime.master-transport"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ]
-  },
-  "org:connected": {
-   "emitters": [
-    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory"
-   ]
-  },
-  "org:disconnected": {
-   "emitters": [
-    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory"
-   ]
-  },
-  "org:rx": {
-   "emitters": [
-    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory"
-   ]
-  },
-  "org:tx": {
-   "emitters": [
-    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory"
-   ]
-  },
-  "serial:rx": {
-   "emitters": [
-    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
-   ],
-   "listeners": []
-  },
-  "mod:xy": {
-   "emitters": [
-    "nexus.eravos.ui.mods.xy-pad.xy-pad.engine",
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.organisms.xy-pad.xy-pad.engine",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
-   ]
-  },
-  "org:pumped": {
-   "emitters": [
-    "nexus.eravos.ui.mods.sidechain-compressor.sidechain-compressor.engine"
-   ],
-   "listeners": []
-  },
-  "org:asset_loaded": {
-   "emitters": [
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "org:clip_added": {
-   "emitters": [
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ],
-   "listeners": []
-  },
-  "org:clip_removed": {
-   "emitters": [
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ],
-   "listeners": []
-  },
-  "org:clip_sync": {
-   "emitters": [
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
-  },
-  "transport:recorded": {
-   "emitters": [
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.runtime.master-transport"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.mods.timeline.timeline.engine",
-    "nexus.ui.eravos.organisms.timeline.timeline.engine"
-   ]
-  },
-  "org:video_loaded": {
-   "emitters": [
-    "nexus.eravos.ui.mods.video-editor.video-editor.engine"
-   ],
-   "listeners": []
-  },
-  "video:exported": {
-   "emitters": [
-    "nexus.eravos.ui.mods.video-editor.video-editor.engine"
-   ],
-   "listeners": []
-  },
-  "org:log": {
-   "emitters": [
-    "nexus.eravos.ui.mods.webhook-automation.webhook-automation.engine"
-   ],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory"
-   ]
-  },
-  "org:xy_update": {
-   "emitters": [
-    "nexus.eravos.ui.mods.xy-pad.xy-pad.engine",
-    "nexus.ui.eravos.organisms.xy-pad.xy-pad.engine"
-   ],
-   "listeners": []
-  },
-  "canvas:window-closed": {
-   "emitters": [
-    "nexus.eravos.ui.runtime.canvas-wm",
-    "nexus.ui.eravos.runtime.canvas-wm"
-   ],
-   "listeners": []
-  },
-  "ui:transport-bpm": {
-   "emitters": [],
-   "listeners": [
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.runtime.master-transport"
-   ]
-  },
-  "ui:transport-play": {
-   "emitters": [],
-   "listeners": [
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.runtime.master-transport"
-   ]
-  },
-  "ui:transport-record": {
-   "emitters": [],
-   "listeners": [
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.runtime.master-transport"
-   ]
-  },
-  "ui:transport-stop": {
-   "emitters": [],
-   "listeners": [
-    "nexus.eravos.ui.runtime.master-transport",
-    "nexus.ui.eravos.runtime.master-transport"
-   ]
-  },
-  "canvas:mod-spawned": {
-   "emitters": [
-    "nexus.eravos.ui.runtime.mod-factory"
-   ],
-   "listeners": []
-  },
-  "ui:config_change": {
-   "emitters": [],
-   "listeners": [
-    "nexus.eravos.ui.runtime.mod-factory",
-    "nexus.ui.eravos.runtime.organism-factory"
-   ]
   },
   "guardian.ncp.sync_result": {
    "emitters": [
@@ -7579,30 +6862,6 @@
   "ui.interaction.gated": {
    "emitters": [
     "nexus.tests.modules.ui-self-diagnosis.test"
-   ],
-   "listeners": []
-  },
-  "kernel:organism-mounted": {
-   "emitters": [
-    "nexus.ui.eravos.kernel.kernel"
-   ],
-   "listeners": []
-  },
-  "kernel:organism-unmounted": {
-   "emitters": [
-    "nexus.ui.eravos.kernel.kernel"
-   ],
-   "listeners": []
-  },
-  "canvas:organism-spawned": {
-   "emitters": [
-    "nexus.ui.eravos.runtime.organism-factory"
-   ],
-   "listeners": []
-  },
-  "catalog:organism-registered": {
-   "emitters": [
-    "nexus.ui.eravos.runtime.organism-factory"
    ],
    "listeners": []
   },

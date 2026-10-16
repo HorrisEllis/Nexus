@@ -1,0 +1,16 @@
+{
+  "n": "Machine Pulse",
+  "cat": "BASS",
+  "s": "bass",
+  "c": "#443322",
+  "i": "\u2699",
+  "bpm": 148,
+  "key": "Cm",
+  "genre": "Industrial",
+  "tags": [
+    "machine",
+    "pulsing",
+    "dark"
+  ],
+  "_file": "machine_pulse.json"
+}

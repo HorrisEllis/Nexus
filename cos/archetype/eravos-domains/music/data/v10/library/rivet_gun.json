@@ -1,0 +1,16 @@
+{
+  "n": "Rivet Gun",
+  "cat": "DRUMS",
+  "s": "perc",
+  "c": "#776655",
+  "i": "\ud83d\udd2b",
+  "bpm": 140,
+  "key": "C",
+  "genre": "Industrial",
+  "tags": [
+    "metal",
+    "percussion",
+    "hard"
+  ],
+  "_file": "rivet_gun.json"
+}

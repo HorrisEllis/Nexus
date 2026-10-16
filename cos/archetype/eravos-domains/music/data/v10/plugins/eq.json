@@ -1,0 +1,86 @@
+{
+  "id": "eq",
+  "name": "SURGICAL EQ",
+  "icon": "\ud83d\udcca",
+  "col": "#aaffdd",
+  "tag": "EQ",
+  "desc": "6-band parametric EQ. Cut, boost, shape anything.",
+  "module": "equalizer",
+  "visualizer": {
+    "type": "eq_curve",
+    "color": "#aaffdd",
+    "interactive": true
+  },
+  "params": [
+    {
+      "n": "Low Cut",
+      "k": "lc",
+      "v": 0.1,
+      "min": 20,
+      "max": 500,
+      "unit": "Hz"
+    },
+    {
+      "n": "Low Shelf",
+      "k": "ls",
+      "v": 0.5,
+      "min": -12,
+      "max": 12,
+      "unit": "dB"
+    },
+    {
+      "n": "Low Mid",
+      "k": "lm",
+      "v": 0.5,
+      "min": -12,
+      "max": 12,
+      "unit": "dB"
+    },
+    {
+      "n": "High Mid",
+      "k": "hm",
+      "v": 0.5,
+      "min": -12,
+      "max": 12,
+      "unit": "dB"
+    },
+    {
+      "n": "High Shelf",
+      "k": "hs",
+      "v": 0.5,
+      "min": -12,
+      "max": 12,
+      "unit": "dB"
+    },
+    {
+      "n": "High Cut",
+      "k": "hc",
+      "v": 0.9,
+      "min": 2000,
+      "max": 20000,
+      "unit": "Hz"
+    }
+  ],
+  "presets": {
+    "FLAT": {
+      "ls": 0.5,
+      "lm": 0.5,
+      "hm": 0.5,
+      "hs": 0.5
+    },
+    "BASS BOOST": {
+      "ls": 0.75,
+      "lm": 0.55,
+      "hm": 0.45
+    },
+    "PRESENCE": {
+      "hm": 0.7,
+      "hs": 0.65,
+      "lc": 0.15
+    },
+    "TELEPHONE": {
+      "lc": 0.4,
+      "hc": 0.5
+    }
+  }
+}

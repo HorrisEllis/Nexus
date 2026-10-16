@@ -1,0 +1,16 @@
+{
+  "n": "Glass Bells",
+  "cat": "LEADS",
+  "s": "pluck",
+  "c": "#ccffff",
+  "i": "\ud83d\udd14",
+  "bpm": 100,
+  "key": "Dm",
+  "genre": "Synthwave",
+  "tags": [
+    "bells",
+    "glass",
+    "ethereal"
+  ],
+  "_file": "glass_bells.json"
+}

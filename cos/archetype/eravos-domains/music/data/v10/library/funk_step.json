@@ -1,0 +1,16 @@
+{
+  "n": "Funk Step",
+  "cat": "BASS",
+  "s": "bass",
+  "c": "#44ff44",
+  "i": "\ud83d\udd7a",
+  "bpm": 174,
+  "key": "Fm",
+  "genre": "DnB",
+  "tags": [
+    "funky",
+    "steppy",
+    "groove"
+  ],
+  "_file": "funk_step.json"
+}

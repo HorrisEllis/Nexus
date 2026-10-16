@@ -1,0 +1,15 @@
+{
+  "n": "Concrete Kick",
+  "cat": "KICKS",
+  "s": "kick",
+  "c": "#cc3300",
+  "i": "\u2298",
+  "bpm": 150,
+  "key": "C",
+  "genre": "Industrial",
+  "tags": [
+    "hard",
+    "gritty"
+  ],
+  "_file": "concrete_kick.json"
+}
