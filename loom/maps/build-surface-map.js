@@ -46,6 +46,11 @@ const FILES = [
     I('nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
   ]],
   // 0.60.94 FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." No model.
+  // §FR1 0.60.114 — one record per change an agent makes (docs/2026-10-16-repo-carve-phasemap.spec)
+  ['lib/change-record.js', I('lib/change-record.js'), [
+    I('versionium/lib/text-diff.js'),                         // require — the lines added and removed
+    I('lib/run-state.js'),                                    // require (lazy) — runIdFor: a task's session → its run
+  ]],
   // §CV1 0.60.112 — a part of Nexus branched into its own Idearium repo (docs/2026-10-16-repo-carve-phasemap.spec)
   ['lib/repo-carve.js', I('lib/repo-carve.js'), []],   // fs/path only: it reads Nexus's files; Idearium's repo.ingest makes the repo
   ['lib/work-funnel.js', I('lib/work-funnel.js'), [
@@ -130,6 +135,10 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('idearium/api/index.js'), I('lib/change-record.js'), '§FR1 0.60.114 repo.changes / repo.change.get: GET /api/repos/:uuid/changes(/:id) — the inject joined with activity, runs, versions'],
+  [I('lib/repo-inject.js'), I('lib/repo-activity.js'), '§FR1 0.60.114 propose() keeps the task it was written in (current())'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FR1 0.60.114 the repo.record row → GET /api/repos/:uuid/changes(/:id)'],
+  [I('idearium/ui/js/code-tab-panels.js'), I('idearium/api/index.js'), '§FR1 0.60.114 the Code tab changes panel — HTTP GET /api/repos/:uuid/changes(/:id)'],
   [I('idearium/api/index.js'), I('lib/repo-carve.js'), '§CV1 0.60.112 repo.carve: POST /api/repos/carve — plan, build, then repo.ingest with Nexus as parent'],
   [I('idearium/api/index.js'), I('lib/repo-notes.js'), '§CV1 0.60.112 repo.carve writes his words (quote) and the carve (decision) as notes on the new repo'],
   [I('idearium/api/index.js'), I('lib/release-version.js'), '§CV1 0.60.112 repo.carve records the Nexus version and commit it was carved at'],

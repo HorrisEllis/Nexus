@@ -347,6 +347,17 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<request…>'),
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/funnel`, body: { request: a.args.join(' '), ...(a.flags.intent ? { intent: String(a.flags.intent) } : {}) } }),
     print: (d, a, h) => { for (const l of d.lines || []) console.log(/^stopped/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); } },
+  // FR1 0.60.114 — the flight recorder's first piece: one record per change an agent makes (lib/change-record.js). Not
+  // 'repo.changes': that row (the agent's proposals, --prove) already exists, and a second key is silently shadowed
+  { key: 'repo.record', repo: true, usage: 'repo record <repo> [<change id>] [--status applied|proposed|reverted|rejected] [--limit n]', about: 'each change an agent made: what (lines), who, why (its task and run), what was checked, the version it landed in, whether it can be undone, and any missing link named',
+    req: (a) => (a.args[0]
+      ? { method: 'GET', path: `/api/repos/${a.repo.uuid}/changes/${encodeURIComponent(a.args[0])}` }
+      : { method: 'GET', path: `/api/repos/${a.repo.uuid}/changes?limit=${parseInt(a.flags.limit, 10) || 30}${a.flags.status ? `&status=${encodeURIComponent(String(a.flags.status))}` : ''}` }),
+    print: (d, a, h) => {
+      if (d.change) { for (const l of d.lines || []) console.log(/^missing/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); return; }
+      if (!(d.changes || []).length) { console.log('  no changes yet'); return; }
+      for (const c of d.changes) console.log(`  ${c.id.slice(0, 8)}  ${String(c.status).padEnd(9)} ${c.path}${c.lines ? ` +${c.lines.added} −${c.lines.removed}` : ''}  ${c.agent || ''}${c.goal ? ` — ${String(c.goal).slice(0, 60)}` : ''}${c.landed.length ? `  @${c.landed[0]}` : ''}${c.holes.length ? h.c.amber(`  missing: ${c.holes.join(', ')}`) : ''}`);
+    } },
   // CV1 0.60.112 — James: "can you branch it into a idearium repo?" (lib/repo-carve.js): a part of Nexus as its own repo, Nexus its parent
   { key: 'repo.carve', repo: false, usage: 'repo carve <name> <path…> | repo carve --preset flight_recorder [--name n] [--cut optional|optional,lazy|none] [--verify] [--dry-run]', about: 'copy a part of Nexus (files or folders) into a new Idearium repo with everything it requires; says what pulled each file in, the npm it needs, and requires that resolve to nothing. Nothing in Nexus moves',
     need: (a) => (a.flags.preset || a.args.length >= 2 ? null : '<name> <path…> (or --preset flight_recorder)'),

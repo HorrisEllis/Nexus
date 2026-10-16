@@ -93,14 +93,30 @@ phases:
   # The flight recorder as a product: the coder's reading of "its a product?", mapped, nothing built. Each phase reuses what
   # already exists; none is a second system beside it (§8.6).
   FR1_one_record_per_change:
-    status: MAPPED
+    status: "BUILT 0.60.114 — test-change-record 6/6 (CR-06 the panel in Clear Glass)"
+    found_while_building:
+      - "a task's runId is the PHASE run (repo-activity runOf: phrun-…), not run-state's; a session's run-state id is <repo>__<session>, so the record finds the run by the task's session"
+      - "'repo.changes' was already a command (the agent's proposals, --prove); a second row with the key was silently shadowed: this one is `repo record`, and CR-05 checks command keys are unique"
+      - "test-proposal-evidence PE-10 fails on main too: the export-loss screen (0.60.105) refuses its fixture before the evidence check it tests; not this phase's, said"
+    built_as: "lib/change-record.js; lib/repo-inject.js propose() keeps .task; GET /api/repos/:uuid/changes(/:id); `repo record`; the Code tab's changes panel"
     depends_on: [CV2_untangle_with_rf0]
+    james: '"next" (2026-10-16, after FR1 was named as the coder''s pick)'
+    found:
+      # read in code, 2026-10-16
+      the_change: "an .inject node (lib/repo-inject.js) IS one change by one agent: path, op, content, before (at apply), baseSha, status proposed → staged → applied → reverted | rejected, history, evidence (lib/proposal-evidence.js: linked tests run, regressions), approvedBy, hatName"
+      where_it_landed: "applying or reverting an inject calls RV.commitNow(repo, { kind, inject: uuid, by, path, run }) (lib/repo-versions.js): the commit's labels name the inject; the activity log gets a version.commit row (ref = commitId, detail.labels)"
+      timeline: "lib/activity-log/compartment.js rows kind inject.<status> with ref = the inject's uuid"
+      who_and_why: "lib/repo-activity.js current() — the task an agent dispatch runs in (id, hat, provider, model, session, runId, title) — is known while the agent writes, but propose() never kept it; lib/run-state.js runs carry goal, attempt, brick, filesChanged, startedAt/updatedAt"
+      causal: "versionium/lib/causality.js causalChain(commit uuid) over versionium_commits + event_log"
     does: >-
-      One record per change an agent makes, joined from what is already written: the version before and after (Versionium,
-      lib/repo-history.js), the run and its gates (lib/run-state.js, cortex/core/raid/contract-trace.js — the trace already
-      joins the contract log, checkpoints and the run ledger), the events (lib/activity-log), and the causal edges (versionium
-      causality, intelligence/rfr2/causality). Read as one story: what changed, who asked, why, what was checked.
-    proof: "one agent change on a fixture repo reads back as one record with its diff, its gates and its cause"
+      lib/change-record.js record(inject, { activity, runs, base }) → one record: what (path, op, lines added/removed by
+      versionium's own text-diff), who (the hat, the provider, who approved), why (the task and the run: goal, attempt, brick
+      — by the task the inject now records, or matched by path and time for injects written before, said as matched), checked
+      (the evidence: tests run, regressions), where it landed (the version commits that name it), the timeline (its activity
+      rows and commits, oldest first), undo (possible or not, and why), and holes (each missing link named, never filled).
+      repo-inject propose() records the task it was written in (forward fix). GET /api/repos/:uuid/changes and
+      /changes/:id, `repo changes [id]`, the Code tab's "changes" panel.
+    proof: "a fixture inject proposed inside a task, applied, committed: its record joins all of it; an old inject without a task is matched by path and time and says so; a missing commit is a hole, named"
   FR2_tested_before_it_lands:
     status: MAPPED
     depends_on: [FR1_one_record_per_change]

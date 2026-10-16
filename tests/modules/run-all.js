@@ -23,6 +23,7 @@ const SUITES = [
   'test-projects-overview.test.js',       // 0.60.74 COSA10 — every project on one list; no two API routes share a method and path
   'test-contract-trace.test.js',          // 0.60.75 GW3 — a contract traced end to end; holes named, never filled
   'test-context-budget.test.js',          // 0.60.76 GW24 — the dependencies' code ranked and cut to the agent's budget; the cut said
+  'test-change-record.test.js',           // 0.60.114 FR1 — one record per change an agent makes (join, holes, route, command, Clear Glass panel)
   'test-repo-carve.test.js',              // 0.60.112 CV1 — a part of Nexus as its own Idearium repo (closure, route, command, Clear Glass UI)
   'test-work-funnel.test.js',             // 0.60.94 FN0 — dependencies, spec, phase, chunks, in his order; each stop planted
   'test-spec-pipeline.test.js',           // 0.60.66 SF1-SF3 — intent blocks, the spec framework, the spec gate + collector (phase-tagged)

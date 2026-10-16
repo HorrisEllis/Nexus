@@ -100,6 +100,14 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-16: "next"** (FR1, the flight recorder's first piece)
+  - **Context:** the coder proposed an order (FR1 one record per change, then tested before it lands, undo, standalone,
+    the demo) and named FR1 as its pick. He said go.
+  - **What it shows:** sequencing by dependency. The undo and the demo both read the record, so the record came first.
+    It is a projection of data Nexus already writes, so no second store had to be built. The one piece that was missing
+    (which task wrote a change) was fixed at the source, not guessed after the fact.
+  - **Evidence:** `CHANGELOG-0.60.114.md`; `lib/change-record.js`; `tests/modules/test-change-record.test.js` CR-01..06.
+
 - **2026-10-16: "expand it."** (the flight recorder, just branched out of Nexus)
   - **Context:** he had a 217-file copy of the product and a claim that it was tangled into the rest of Nexus.
   - **What it shows:** pushing past "it's copied" to "does it work alone". The answer is now measured, not guessed:

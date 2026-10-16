@@ -2700,6 +2700,8 @@ const ROUTE_CAP = {
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
+  'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
+  'repo.carve': CAPS.WRITE_IDEAS,   // §CV1 0.60.112 — makes a repo
   'raid.held': CAPS.READ_IDEAS, 'raid.held.unpark': CAPS.WRITE_IDEAS,   // §0.60.78 RT1
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
@@ -3132,6 +3134,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','worksurface','prove'],   'repo.worksurface.prove'],   // §0.39.362 WS1 an agent proves its proposals
     ['GET',    ['api','repos',    ':uuid','architecture'],          'repo.architecture'],         // §0.39.284 W7 — the repo's component registry + wiring map
     ['POST',   ['api','repos',    ':uuid','architecture'],          'repo.architecture.write'],   // §0.39.284 W3 — changed files as diffs + tools
+    ['GET',    ['api','repos',    ':uuid','changes'],               'repo.changes'],        // §FR1 0.60.114 one record per change (lib/change-record.js)
+    ['GET',    ['api','repos',    ':uuid','changes',':id'],         'repo.change.get'],
     ['GET',    ['api','repos',    ':uuid','injects'],               'repo.inject.list'],
     ['POST',   ['api','repos',    ':uuid','injects'],               'repo.inject.create'],
     ['GET',    ['api','repos',    ':uuid','injects',':id'],         'repo.inject.get'],
@@ -7862,6 +7866,32 @@ async function handle(req, res, route, query, body) {
       } catch (e) { notes.push({ error: `notes not written: ${e.message}` }); }
       try { getIdeaOS().emit('idearium.repo.carved', { repoUuid: repo.uuid, name, files: plan.files.length, parent: nexus ? nexus.uuid : null }); } catch (_) {}
       return ok(res, { repo, parent: nexus ? { uuid: nexus.uuid, name: nexus.name } : null, notes: notes.length, ...summary });
+    }
+    // §FR1 0.60.114 — James: "next" (the flight recorder's first piece). One record per change an agent makes: the .inject joined
+    // with its task and run (who, why), its evidence (checked), the version commits that name it (landed), its timeline, its undo,
+    // and every missing link named. A projection of what is already written; nothing is stored here.
+    case 'repo.changes':
+    case 'repo.change.get': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RI = _require('../../lib/repo-inject.js'), CR = _require('../../lib/change-record.js');
+      let activity = []; try { activity = _require('../../lib/activity-log/compartment.js').list(params.uuid, { limit: 500 }).rows || []; } catch (_) {}
+      let runs = []; try { runs = _require('../../lib/run-state.js').list({ repoUuid: params.uuid }); } catch (_) {}
+      if (action === 'repo.change.get') {
+        const inj = RI.get(params.id);
+        if (!inj || inj.repoUuid !== params.uuid) return err(res, 404, `no change ${params.id} in this repo`);
+        let base; if (inj.status === 'proposed' || inj.status === 'staged') { try { const L = getRepoLayer(); const t = typeof L.readTextFile === 'function' ? L.readTextFile(params.uuid, inj.path) : L.readFile(params.uuid, inj.path); base = t && !t.error ? String(t.content ?? '') : null; } catch (_) { base = null; } }
+        const r = CR.record(inj, { activity, runs, base });
+        return ok(res, { change: r, lines: CR.lines(r) });
+      }
+      const limit = Math.max(1, Math.min(200, parseInt(query.limit, 10) || 50));
+      const list = RI.list(params.uuid, { limit, ...(query.status ? { status: String(query.status) } : {}) });
+      const injects = Array.isArray(list) ? list : (list.injects || []);
+      const changes = injects.map(i => CR.record(RI.get(i.uuid) || i, { activity, runs })).filter(Boolean)
+        .map(r => ({ id: r.id, path: r.path, op: r.op, status: r.status, at: r.at, lines: r.what.lines, agent: r.who.agent, provider: r.who.provider,
+          goal: r.why.run ? r.why.run.goal : (r.why.task ? r.why.task.title : null), runHow: r.why.run ? r.why.run.how : null, checked: r.checked,
+          landed: r.landed.map(c => c.commitId), undo: r.undo.possible, holes: r.holes.map(h => h.what) }));
+      return ok(res, { repoUuid: params.uuid, changes, count: changes.length });
     }
     case 'repo.funnel': {
       const repo = getRepoLayer().get(params.uuid);
