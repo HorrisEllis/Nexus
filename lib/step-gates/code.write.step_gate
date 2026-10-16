@@ -17,5 +17,6 @@ payload:
       min_chars: 1
     - id: file-parses
       kind: parses
-      # languages checked here; any other syntax passes this check (it is not proof, just not checkable yet)
-      languages: [json, yaml, yml, js, mjs, cjs]
+      # '*' = every language lib/checks/ck-248-toolchain.js knows (its own parser, when installed); a language it does not know,
+      # or whose tool is not installed, passes this check (it is not proof, just not checkable here: the evidence says so)
+      languages: ['*']

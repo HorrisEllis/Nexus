@@ -360,6 +360,8 @@ const SUITES = [
   'test-vector-memory-embed-check.test.js', // 0.60.73 — the embed check, fixed for good
   'test-inject-screen.test.js',       // 0.60.74 — every proposal passes one screen at the door
   'test-proposal-evidence.test.js',   // 0.60.75 — a proposal is tested before it reaches a person
+  'test-language-checks.test.js',     // 0.60.77 — every language's own parser, at the gate
+  'test-cos-vm-shell.test.js',        // 0.60.77 — `cos vm shell`: the test VM's own terminal
   'test-autopilot-idle.test.js',      // 0.60.71 the autopilot's GET /idle
   'test-cos-app-shell.test.js',       // 0.60.70 CON-lite — the COS command line (npm run start:all, nexus ...) without PowerShell
   'test-cos-app-update.test.js',      // 0.60.69 COSA12/13 — settings and the update policy
