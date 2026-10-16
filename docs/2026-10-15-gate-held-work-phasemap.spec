@@ -618,3 +618,15 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 # Not built yet (GW3 remains open for it): contract:<id> and gate:<id> written onto lib/component-ledger.js rows and bus
 # events (contractUuid is a column nobody passes), each file write with before and after hashes, the .response node per move.
 
+
+# ## ADDENDUM 2026-10-16 (f) — "It’s analysis" answered: a brick is a chunk
+# James (2026-10-16), after the coder marked "It’s analysis" as to confirm and offered two readings (agreement with the
+# reasoning, or a brick analyses before it builds): "A brick is a chunk. Like analysis."
+# His meaning, recorded as his: a brick is a chunk, the unit you get by breaking the work into parts, the way analysis breaks
+# a whole into its parts. Neither of the coder's readings was it; addendum (d)'s "to confirm" is answered here and (d) stays.
+# What it settles: "per chunk" and "per brick" are one unit everywhere in his asks. His "the dependencies per chunk, every
+# gate needs to know what it needs" (addendum (b), GW26) is per brick, and the trace (GW3) is per chunk.
+# Checked in source: build paths already agree. Since BR1 (0.60.38) every phase build runs as bricks, one planned file per
+# brick, unless routing.contract_build is off. The spec engine's "chunks" (a spec's sections, idearium/spec-engine) are a
+# different thing that shares the word. The coder reads his sentence as being about build work, not spec sections (to
+# confirm only if he means those too).
