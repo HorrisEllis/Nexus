@@ -24,7 +24,8 @@
  */
 
 const MODULE_ID = 'clear-glass.provider-attention';
-const VERSION = '1.1.0';   // 1.1.0 (0.60.2): the COS window, Clear Glass's selector check, x/y/z anchors, accounts
+const VERSION = '1.2.0';   // 1.2.0 (0.60.50, SP2): a pick records its semantic address and its role must fit the field · 1.1.0 (0.60.2): the COS window, Clear Glass's selector check, x/y/z anchors, accounts
+const ST = require('../page/semantic-tree.js');
 const SIGNIN_RE = /\/(login|log-in|signin|sign-in|sign_in|auth|authenticate|oauth|sso|u\/login)(\/|$|\?|#)/i;
 
 const TITLES = { signin: 'needs you to sign in', map: 'cannot find its chat', 'no-connect': 'is not connecting' };
@@ -199,6 +200,12 @@ function pickerScript(key) {
 async function checkPick(win, picked, key, checkerSource) {
   // §0.60.46 — James's run: "picked send: p.placeholder (1, by anchor)" — twice, before the real send button. The text
   // inside the input box was saved as the send button. A send pick must be something you press.
+  // §SP2 0.60.50 — the pick's role in the page's semantic tree (src/page/semantic-tree.js addressScript) must fit its
+  // field: a send is a button, an input a text box. Checked first: the role is what the page says the element IS.
+  const sem = picked.semantic;
+  if (sem && sem.exact && !ST.roleFits(key, sem.role)) {
+    return { selector: null, matched: 0, by: 'none', why: `that is ${sem.address} — a ${sem.role}, not ${key === 'send' ? 'a button' : 'a text box'}; pick the ${key === 'send' ? 'send button' : 'box you type in'} itself` };
+  }
   if (key === 'send') {
     const tag = String(picked.tag || '').toLowerCase(), role = String((picked.anchor && picked.anchor.role) || '').toLowerCase();
     if (!(tag === 'button' || role === 'button' || (tag === 'input' && /submit|button/i.test(String(picked.type || 'submit'))))) {
@@ -301,14 +308,16 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
           let picked;
           try { picked = await win.webContents.executeJavaScript(pickerScript(act.key), true); } catch (e) { picked = { cancelled: true, error: e.message }; }
           if (!picked || picked.cancelled) { rec = { ...rec, lastResult: `${act.key}: not picked${picked && picked.error ? ` (${picked.error})` : ''}` }; continue; }
+          // §SP2 — the semantic address beside the selector: what the field map falls back to when a class change breaks it
+          if (picked.xpath) { try { picked.semantic = await win.webContents.executeJavaScript(ST.addressScript(picked.xpath), true); } catch (e) { log(`[attention] ${providerId} — ${act.key}: no semantic address (${e.message}); the selector alone is kept`); } }
           const c = await checkPick(win, picked, act.key, checker);
           if (!c.selector) { rec = { ...rec, lastResult: `${act.key}: ${c.why} — pick it again` }; log(`[attention] ${providerId} — ${act.key} pick refused by the check: ${c.why}`); continue; }
-          const evidence = { matched: c.matched, url: picked.url, tag: picked.tag, xpath: picked.xpath || null, anchor: picked.anchor || null,
+          const evidence = { matched: c.matched, url: picked.url, tag: picked.tag, xpath: picked.xpath || null, anchor: picked.anchor || null, semantic: picked.semantic || null,
             uniqueBy: c.by, checkWhy: c.why || null, checkedAt: Date.now(), via: 'attention-panel' };
           const r = await assign({ provider: providerId, key: act.key, selector: c.selector, evidence });
           const at = picked.anchor ? ` at x ${picked.anchor.x} y ${picked.anchor.y} z ${picked.anchor.z}` : '';
           rec = { ...rec, lastResult: r && r.ok ? `${act.key} saved in Guardian: ${c.selector} (matches ${c.matched}${c.by === 'anchor' ? `, told apart by position${at}` : ''}${at && c.by !== 'anchor' ? `;${at}` : ''})` : `${act.key} refused: ${(r && r.error) || 'Guardian did not answer'} — ${c.selector}` };
-          log(`[attention] ${providerId} — picked ${act.key}: ${c.selector} (${c.matched}, by ${c.by})${at} → ${r && r.ok ? 'saved' : `refused: ${r && r.error}`}`);
+          log(`[attention] ${providerId} — picked ${act.key}: ${c.selector} (${c.matched}, by ${c.by})${at}${picked.semantic ? ` · ${picked.semantic.address}` : ''} → ${r && r.ok ? 'saved' : `refused: ${r && r.error}`}`);
         }
       }
     } finally { _active.delete(id); }

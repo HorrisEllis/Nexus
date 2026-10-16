@@ -27,7 +27,7 @@
  */
 
 const MODULE_ID = 'clear-glass.page.semantic-tree';
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 const DEFAULTS = Object.freeze({ maxNodes: 400, maxName: 80 });
 
 const LANDMARKS = ['banner', 'navigation', 'main', 'complementary', 'contentinfo', 'search', 'form', 'region', 'dialog', 'alertdialog'];
@@ -125,6 +125,10 @@ function _inPageTree(opts) {
     return parts.join(' > ');
   };
   const nodes = []; let cut = 0;
+  // SP2: the address of ONE element (the picker's pick, by its xpath): the node made for it, else the deepest kept node
+  // that contains it (a reply's text sits inside its article)
+  let tgt = null, exact = null, within = null;
+  if (o.targetXpath) { try { tgt = doc.evaluate(o.targetXpath, doc, null, 9, null).singleNodeValue; } catch (_) { tgt = null; } }
   const q = (s) => JSON.stringify(String(s));
   const part = (r, n) => (n ? r + ' ' + q(n) : r);
   const seen = {};
@@ -151,6 +155,7 @@ function _inPageTree(opts) {
         if (['textbox', 'searchbox', 'combobox', 'spinbutton', 'slider'].includes(role)) { const v = el.value != null && el.tagName !== 'DIV' ? el.value : el.textContent; if (v) n.value = clip(v); }
         if (ACT.includes(role) || role === 'article') n.selector = selectorFor(el);
         nodes.push(n);
+        if (tgt) { if (el === tgt) exact = n; else if (el.contains(tgt)) within = n; }
         nextParent = n.i;
         if (PATH.has(role)) nextChain = n.address;
       }
@@ -159,7 +164,9 @@ function _inPageTree(opts) {
     if (el.shadowRoot) for (const c of el.shadowRoot.children) walk(c, nextChain, nextParent, depth + 1);
   };
   walk(doc.body || doc.documentElement, '', null, 0);
-  return { url: location.href, title: doc.title, source: 'page', nodes, cut };
+  const out = { url: location.href, title: doc.title, source: 'page', nodes, cut };
+  if (o.targetXpath) { const t = exact || within; out.target = t ? { address: t.address, role: t.role, name: t.name, exact: !!exact } : null; }
+  return out;
 }
 
 /** _inPageResolve(address) — the element an address names (in the page): exact address, else role + name when unique */
@@ -184,6 +191,22 @@ function pageScript(opts = {}) { return `(${_inPageTree.toString()})(${JSON.stri
 function resolveScript(address, opts = {}) {
   return `(function(){ var tree = (${_inPageTree.toString()})(${JSON.stringify({ ...DEFAULTS, ...opts, maxNodes: 5000 })}); return (${_inPageResolve.toString()})({ tree: tree, address: ${JSON.stringify(String(address))} }); })()`;
 }
+
+/**
+ * addressScript(xpath) — SP2: the semantic address of the element at an xpath (the picker's pick) →
+ * { address, role, name, exact } | null. exact: false when the element itself is not a kept node and the address is its
+ * nearest kept container's (a reply's <div> → its article).
+ */
+function addressScript(xpath, opts = {}) {
+  return `(function(){ var t = (${_inPageTree.toString()})(${JSON.stringify({ ...DEFAULTS, ...opts, maxNodes: 5000, targetXpath: String(xpath) })}); return t.target || null; })()`;
+}
+/** preludeSource() — SP2: the in-page tree and resolver as window.NexusSemantic, for the provider userscripts' field map */
+function preludeSource() {
+  return `(function(root){ if (root.NexusSemantic) return; root.NexusSemantic = { VERSION: ${JSON.stringify(VERSION)}, tree: ${_inPageTree.toString()}, resolve: ${_inPageResolve.toString()} }; })(typeof window !== 'undefined' ? window : globalThis);`;
+}
+/** roleFits(key, role) — SP2: a pick's role fits its field: send is a button, input is a text box; a reply is anything */
+const FIELD_ROLES = Object.freeze({ send: ['button'], input: ['textbox', 'searchbox', 'combobox'] });
+function roleFits(key, role) { const want = FIELD_ROLES[key]; return !want || !role || want.includes(role); }
 
 /**
  * fromAX(axNodes, opts) — pure: CDP Accessibility.getFullAXTree's nodes → the same tree (the browser's own roles and names).
@@ -263,4 +286,4 @@ async function readAX(wc, opts = {}) {
   } finally { if (attachedHere) { try { dbg.detach(); } catch (_) {} } }
 }
 
-module.exports = { MODULE_ID, VERSION, DEFAULTS, KEEP: [...KEEP], addressOf, parseAddress, pageScript, resolveScript, fromAX, normalize, outline, readAX, _inPageTree, _inPageResolve };
+module.exports = { MODULE_ID, VERSION, DEFAULTS, KEEP: [...KEEP], FIELD_ROLES, addressOf, parseAddress, pageScript, resolveScript, addressScript, preludeSource, roleFits, fromAX, normalize, outline, readAX, _inPageTree, _inPageResolve };

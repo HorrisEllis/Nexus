@@ -1,6 +1,6 @@
 // guardian/userscript-field-map.js — the picked fields, used by every provider userscript.
 // comp_id: nexus.guardian.userscript-field-map
-// Version: 1.0.0
+// Version: 1.1.0
 //
 // §0.60.2 — James: "can you also have the picker mapped to the scripts injected for the interaction field or the x y z
 // coords for the elements?"
@@ -21,17 +21,23 @@
 //   NexusFields.type(text)          — writes text into the mapped input (contenteditable or textarea/input); true if done.
 //   NexusFields.press()             — clicks the mapped send button; { ok, how } or null when no verified send.
 //
+// §SP2 0.60.50 — each verified key may carry its semantic address (role + accessible name + landmark path, recorded by
+// the picker). When the selector matches nothing (a class change), the address is resolved in the page through
+// window.NexusSemantic (clear-glass/src/page/semantic-tree.js, injected just before this prelude) before the anchor's
+// point is tried. A reply's address names a container ("main › article"); the LAST node of that shape is the reply.
+//
 // The provider scripts call type() first in injectText and press() first in submit, and fall back to their own lookup
 // when it returns nothing — so a pick changes what the next job uses, and no pick changes nothing.
 (function (root) {
   'use strict';
   if (root.NexusFields) return;
-  const VERSION = '1.0.0';
-  let map = null;   // { provider, selectors, verified, anchors }
+  const VERSION = '1.1.0';
+  let map = null;   // { provider, selectors, verified, anchors, semantics }
 
   function _all(sel) { try { return sel ? Array.from(document.querySelectorAll(sel)) : []; } catch (_) { return []; } }
   function _visible(el) { try { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; } catch (_) { return false; } }
-  function _editable(el) { return !!el && (el.isContentEditable || /^(TEXTAREA|INPUT)$/.test(el.tagName)); }
+  function _rich(el) { return !!el && (el.isContentEditable === true || ['', 'true', 'plaintext-only'].includes(el.getAttribute && el.getAttribute('contenteditable'))); }
+  function _editable(el) { return !!el && (_rich(el) || /^(TEXTAREA|INPUT)$/.test(el.tagName)); }
   function _clickable(el) { return !!el && (el.tagName === 'BUTTON' || (el.getAttribute && el.getAttribute('role') === 'button')); }
   function _kindOk(key, el) { return key === 'input' ? _editable(el) : key === 'send' ? _clickable(el) : !!el; }
 
@@ -72,22 +78,45 @@
 
   function set(provider, msg) {
     if (!msg || !msg.selectors) return;
-    map = { provider, selectors: msg.selectors || {}, verified: msg.verified || {}, anchors: msg.anchors || {} };
+    map = { provider, selectors: msg.selectors || {}, verified: msg.verified || {}, anchors: msg.anchors || {}, semantics: msg.semantics || {} };
   }
+  const _bare = (a) => String(a || '').split(' \u203a ').map(s => s.replace(/\s+#\d+$/, '')).join(' \u203a ');
+  /** the element a semantic address names now (null when the page cannot say, or says something else) */
+  function _bySemantic(key) {
+    const se = map.semantics && map.semantics[key], S = root.NexusSemantic;
+    if (!se || !se.address || !S) return null;
+    try {
+      const tree = S.tree({ maxNodes: 5000, maxName: 80 });
+      let sel = null;
+      if (key === 'resp') {   // the last node of the reply's shape, whatever its #n
+        const want = _bare(se.address); const hits = tree.nodes.filter(n => _bare(n.address) === want && n.selector);
+        sel = hits.length ? hits[hits.length - 1].selector : null;
+      } else {
+        const r = S.resolve({ tree, address: se.address });
+        sel = r && r.ok ? r.selector : null;
+      }
+      const el = sel ? document.querySelector(sel) : null;
+      if (el) { lastHow[key] = 'semantic'; return el; }
+    } catch (_) {}
+    return null;
+  }
+  const lastHow = {};
   function find(key) {
     if (!map || !map.verified || !map.verified[key]) return null;
     const sel = map.selectors[key], a = map.anchors[key] || null;
     const els = _all(sel);
-    if (key === 'resp') return els.length ? els[els.length - 1] : null;
-    let el = els.length === 1 ? els[0] : els.length > 1 ? _nearest(els, a) : _atPoint(key, a);
+    lastHow[key] = 'selector';
+    if (key === 'resp') return els.length ? els[els.length - 1] : _bySemantic('resp');
+    let el = els.length === 1 ? els[0] : els.length > 1 ? _nearest(els, a) : null;
+    if (!el) { const s2 = _bySemantic(key); if (s2 && _kindOk(key, s2)) return s2; }
+    if (!el) { el = _atPoint(key, a); lastHow[key] = 'anchor'; }
     return el && _kindOk(key, el) ? el : null;
   }
   function type(text) {
     const el = find('input'); if (!el) return false;
     el.focus();
-    if (el.isContentEditable) {
-      document.execCommand('selectAll', false, null);
-      document.execCommand('insertText', false, text);
+    if (_rich(el)) {   // one notion of "rich editor" with find(): the attribute counts where isContentEditable is not computed
+      if (typeof document.execCommand === 'function') { document.execCommand('selectAll', false, null); document.execCommand('insertText', false, text); }
       if (!(el.textContent || '').includes(String(text).slice(0, 20))) { el.textContent = text; el.dispatchEvent(new Event('input', { bubbles: true })); }
       return true;
     }
@@ -103,7 +132,7 @@
     el.click();
     return { ok: true, how: 'mapped-button' };
   }
-  function state() { return map ? { provider: map.provider, verified: map.verified, anchors: Object.keys(map.anchors) } : null; }
+  function state() { return map ? { provider: map.provider, verified: map.verified, anchors: Object.keys(map.anchors), semantics: Object.keys(map.semantics || {}), lastHow: { ...lastHow } } : null; }
 
   root.NexusFields = { VERSION, set, find, type, press, state };
 })(typeof window !== 'undefined' ? window : globalThis);

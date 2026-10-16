@@ -210,6 +210,9 @@ class ProviderHost {
   _loadSharedPrelude() {
     if (!this.guardianDir) return '';
     const out = [];
+    // §SP2 0.60.50 — the in-page semantic tree first (window.NexusSemantic): the field map finds a picked field by its
+    // address when its selector stops matching. Clear Glass's own module, serialised (the code its tests run).
+    try { out.push(require('../page/semantic-tree.js').preludeSource()); } catch (e) { _logWarn(`[ProviderHost] semantic-tree prelude not loaded: ${e.message}`); }
     for (const f of ['userscript-nexus-wake.js', 'userscript-chat-stream.js', 'userscript-field-map.js']) {
       try { out.push(fs.readFileSync(path.join(this.guardianDir, f), 'utf8')); }
       catch (e) { _logWarn(`[ProviderHost] ${f} prelude not loaded: ${e.message}`); }

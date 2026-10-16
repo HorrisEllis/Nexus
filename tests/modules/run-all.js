@@ -370,6 +370,8 @@ const SUITES = [
   'test-update-script.test.js', // 0.60.48 — npm run update: the latest Nexus without a zip
   'test-capability-spec.test.js', // 0.60.49 CS1 — a spec per capability, whose surface is the gate (CK-254)
   'test-semantic-page-tree.test.js', // 0.60.49 SP1 — the page as a semantic tree for the browser agent
+  'test-semantic-field-map.test.js', // 0.60.50 SP2 — picked fields found by semantic address after class churn
+  'test-tool-required-alias.test.js', // 0.60.50 — a required tool parameter named the model's own way still arrives
   'test-spec-gaps-intelligence.test.js', // 0.60.49 — every spec gap goes through the intelligence gap system
   'test-gate-versioning.test.js', // 0.60.39 GS1 — a snapshot per gate: commit, rewind before a retry, compare, replay decisions
   'test-raid-runs-contract.test.js', // 0.60.36 RD0 — RAID runs the .contract: its gates before, bricks, verdict, self-heal

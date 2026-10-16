@@ -34,7 +34,7 @@ const VERIFIED_SOURCES = new Set(['picker', 'archaeology']);
 function mapFor(registry, provider) {
   const a = registry.get(provider);
   if (!a) return null;
-  const verified = {}, source = {}, anchors = {};
+  const verified = {}, source = {}, anchors = {}, semantics = {};
   for (const k of KEYS) {
     // The last history entry that changed this key decides; none -> the seed.
     const last = [...(a.selectorHistory || [])].reverse().find(h => h && h.to && typeof h.to[k] === 'string');
@@ -44,8 +44,11 @@ function mapFor(registry, provider) {
     // userscript's field map (userscript-field-map.js) picks among several matches by it, or finds the element there.
     const an = last && last.evidence && last.evidence.anchor;
     if (an && typeof an === 'object') anchors[k] = an;
+    // §SP2 0.60.50 — the pick's semantic address (role + name + landmark path): found again after a class change
+    const se = last && last.evidence && last.evidence.semantic;
+    if (se && typeof se === 'object' && se.address) semantics[k] = { address: se.address, role: se.role || null, name: se.name || '', exact: se.exact !== false };
   }
-  return { provider, selectors: { ...a.selectors }, verified, source, anchors };
+  return { provider, selectors: { ...a.selectors }, verified, source, anchors, semantics };
 }
 
 function message(registry, provider) {
