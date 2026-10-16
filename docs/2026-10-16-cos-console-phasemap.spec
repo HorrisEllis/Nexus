@@ -87,3 +87,28 @@ addendum_a:
     - "POST /control and /spawn have no token on loopback: any local process can stop a kernel. The console must not widen that, and CON4's person-only gate needs a token the autopilot checks. Not built; flagged."
     - "The floating menu and the --cli interface are two separate implementations of the same idea (menu.js and nexus-cli-interface.js). The console should be a third front-end on one shared command layer, not a third copy. Whether to extract that layer first is the main design call."
   question: "Do you want the shared command layer extracted first (one place the floating menu, --cli and the COS console all call), or the COS console built on the autopilot and co-pilot now and the others joined later? I recommend extracting first: it is the thing that stops a third copy."
+
+# ADDENDUM 2026-10-16 (b): his answers on server.js and PowerShell; configuring through the configs
+addendum_b:
+  james: >-
+    Answering the coder's two readings (the server.js controls go through each system's server via the one door, not editing every server.js; a real-shell tab as an escape hatch): "yes control it, configure it with the configs." and "yes andno more powerhell"
+  decided:
+    server_js: "Confirmed: control goes through each system's own server by the one door. In addition, the console CONFIGURES each system through its config (CON9, new)."
+    powershell: "Read as: the console replaces PowerShell and there is no PowerShell tab. CON6 (real-shell escape) is DROPPED, kept in the file as superseded. To confirm: if he ever needs a non-Nexus Windows command, the console says it cannot run it; it does not hide a shell behind itself."
+  grounded: >-
+    Config today is a config.js per system (architect, copilot, cortex, emerge, eravos, guardian, idearium, intelligence, loom, mesh, ollama, versionium), each a module.exports of values read from process.env with a default (guardian HTTP_PORT from GUARDIAN_HTTP_PORT or 7820; ollama PORT from OLLAMA_BRIDGE_PORT or 3749; copilot PORT from COPILOT_PORT or 3750; loom PORT from LOOM_PORT or 3752). lib/uid/config-schema.js merges component defaults, parent defaults and NEXUS_<ID>_<KEY> env overrides, ignoring them for immutable components. There is no settings file and no list of which keys exist.
+  coder_opinion: >-
+    The console must not edit config.js (code, and the zips COS installs would overwrite it). Config is already env-with-defaults, and the autopilot is what starts every kernel, so the clean seam is an override file per system that the autopilot turns into env when it spawns the kernel. Change a value, restart that system, it takes effect; remove the override and the default returns. Reversible by construction (REVERSIBILITY), and it survives a COS version switch if it lives in the persistent data folder.
+  phase:
+    CON9_configure:
+      status: OPEN
+      depends_on: [CON1_one_door_client, CON4_safety_gate]
+      does: "1) Discover: read each config.js to list its keys, defaults, the env var behind each and the type (a static read, not a guess; a key it cannot read is listed as unknown, not hidden). 2) `config <system> show|get|set|unset|diff|history`: writes data/config-overrides/<system>.json through a command, never by hand. 3) The autopilot reads that file when it spawns a kernel and passes it as env, and reports which values are overridden. 4) set validates type, refuses an immutable component, warns that a port change needs the systems that call it changed too (ORCH_PORT etc.), journals old and new value, and offers restart. 5) The same rows appear in the floating menu and --cli, since they share the command layer."
+      proof: "set OLLAMA_BRIDGE_PORT, restart ollama, it listens on the new port, `config ollama diff` shows it, `unset` restores 3749; an immutable component refuses; a bad type is refused with the reason."
+  failure_modes:
+    - "A port changed on one system and not on its callers: the console lists the dependents from the loom wires before it applies and says which will break."
+    - "Secrets in config (tokens, API keys) shown in plain text or journalled: masked by key name, and unverified until a real key list is read."
+    - "Override file edited by hand or by two writers: the autopilot validates on read and ignores a bad file with a loud reason, never a silent default."
+    - "Keys read statically miss ones built dynamically: reported as unknown."
+  superseded: [CON6_shell_escape]
+  open_question: "Still unanswered from the last turn: extract one shared command layer first (menu.js, --cli and the COS console all call it), or build the console on the autopilot and co-pilot now. I recommend extracting first."
