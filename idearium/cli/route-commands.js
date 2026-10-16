@@ -590,6 +590,18 @@ export const SPEC = [
   // §0.60.60 NP9 — James, 2026-10-15: "add support for snowflake, using cli, then you can add the commands to the agents, or make agent tools."
   // Routes and the Snowflake/Tor transport (clear-glass/src/net). Reading is open to agents; CHANGING a route or the transport is a person's act
   // (an agent that could remove a rule could quietly send his traffic direct), so personOnly refuses it for the nexus.command tool.
+  // §0.60.64 PI5b — James, 2026-10-16: "build it." The chat crawler (clear-glass/src/chats/): CLI first, then Settings. Starting it is a person's act.
+  { key: 'chat-crawl', repo: false, usage: 'chat-crawl <status|start|stop> [<provider:accountId>]', about: 'the personal-chat crawler: reads an account\'s chat list, then each chat once, then only new or changed ones; off until the account\'s switch is on in Settings > Chat capture',
+    need: (a) => { const v = a.args[0] || 'status'; if ((v === 'start' || v === 'stop') && !a.args[1]) return '<provider:accountId> (like chatgpt:a1)'; return null; },
+    personOnly: (a) => (['start', 'stop'].includes(a.args[0]) ? 'starting the crawler visits his own account\'s chats at volume: it is his call, per account. Ask him to run it or switch the account on in Settings > Chat capture.' : null),
+    req: (a) => { const v = a.args[0] || 'status'; const cg = (method, path, body) => ({ system: 'clear-glass', method, path, ...(body ? { body } : {}) });
+      if (v === 'start') return cg('POST', '/cli/chats/crawl/start', { account: a.args[1], ...(a.flags.partition ? { partition: String(a.flags.partition) } : {}) });
+      if (v === 'stop') return cg('POST', '/cli/chats/crawl/stop', { account: a.args[1] });
+      return cg('GET', '/cli/chats/crawl/status' + (a.args[1] ? `?account=${encodeURIComponent(a.args[1])}` : '')); },
+    print: (d, a, h) => {
+      if (d.ok === false) { console.log(`${h.c.amber('✗')} ${d.error || 'failed'}`); return; }
+      const one = (x) => { const au = x.audit || {}; console.log(`  ${(x.account || '').padEnd(16)} ${x.running ? 'running' : 'idle   '} ${String(x.phase || '').padEnd(10)} ${x.status || ''}${x.pausedReason ? ` (${x.pausedReason})` : ''} · listed ${au.listed || 0} · logged ${au.logged || 0} · failed ${(au.failed || []).length} · pending ${(au.pending || []).length}${au.nothingMissed ? ' · nothing missed' : ''}`); };
+      if (d.started) console.log(`  started ${d.started}`); else if (d.stopping) console.log(`  stopping ${d.stopping}`); else if (d.accounts) { if (!d.accounts.length) console.log('  no crawler has been started in this session'); d.accounts.forEach(one); } else one(d); } },
   { key: 'net', repo: false, usage: 'net <status|routes|resolve <url>|add <id> --via V [--provider p] [--url pattern] [--origin host] [--caller c] [--protocols https,wss] [--on-failure block]|rm <id>|default <via>|start|stop [--wipe]|detect|bridge <line>|paths --tor P --snowflake P|test>',
     about: 'network routes and the Snowflake transport: which way each request goes (direct, block, transport, socks5://h:p), per provider, url, site or caller; start/stop the transport; fail closed',
     need: (a) => { const v = a.args[0] || 'status'; if (v === 'resolve' && !a.args[1]) return '<url>'; if (v === 'add' && (!a.args[1] || !a.flags.via)) return '<id> --via direct|block|transport|socks5://host:port'; if (v === 'rm' && !a.args[1]) return '<id>'; if (v === 'default' && !a.args[1]) return '<via>'; if (v === 'bridge' && !a.args[1]) return '<snowflake bridge line>'; return null; },

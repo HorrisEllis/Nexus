@@ -286,6 +286,14 @@ class IpcBridge {
       return { ok: false, error: 'action must be start, stop or detect' };
     }));
     this.app.post('/cli/net/test', _netRoute(() => ({ ok: false, error: 'the leak test is not built yet (NP5). No route is shown as verified until it is.' })));
+    // §0.60.64 PI5b — James, 2026-10-16: "build it." The chat crawler (src/chats/): /cli/chats/crawl/* -> idearium `chat-crawl` command. Off until the account's switch is on.
+    let _crawl = null;
+    const _crawlSvc = () => _crawl || (_crawl = new (require('../chats/service').ChatCrawlService)({
+      engine: () => this.mesh && this.mesh._automation, dir: require('path').join(require('electron').app.getPath('userData'), 'chats', 'crawl'),
+      settings: () => { const cc = (this.options?.get() || {}).chatCapture || {}; return { global: cc.global || {}, accounts: cc.accounts || {} }; } }));
+    this.app.post('/cli/chats/crawl/start',  _netRoute((b) => _crawlSvc().start(String(b.account || ''), { partition: b.partition })));
+    this.app.post('/cli/chats/crawl/stop',   _netRoute((b) => _crawlSvc().stop(String(b.account || ''))));
+    this.app.get('/cli/chats/crawl/status',  _netRoute((b, q) => _crawlSvc().status(q.account ? String(q.account) : undefined)));
     // §BUILT 2026-09-15 — James: "...clearglass download manager..." as a
     // guardian response sink. downloads:* was IPC-only (ipcMain.handle,
     // renderer-side); nothing outside Electron could reach the real
