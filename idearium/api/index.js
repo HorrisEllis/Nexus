@@ -2499,6 +2499,7 @@ const ROUTE_CAP = {
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
   'checks.list': CAPS.READ_IDEAS, 'checks.run': CAPS.READ_IDEAS,   // §0.60.33 QA1 — the check catalogue; a run only reads and parses
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
+  'repo.surface.get': CAPS.READ_IDEAS, 'repo.surface.set': CAPS.WRITE_IDEAS,   // CE8: the Code tab's surface, one for the tab and the CLI
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
@@ -2828,6 +2829,8 @@ function matchRoute(method, url) {
     // 0.60.14 — James: "a tool to request lines from a file to copy to the worksurface or a new file to edit so it can be tiny amounts of code"
     ['GET',    ['api','repos',    ':uuid','lines'],        'repo.lines'],          // ?path=&from=&to=
     ['POST',   ['api','repos',    ':uuid','lines','copy'], 'repo.lines.copy'],     // { path, from, to, toPath? }
+    ['GET',    ['api','repos',    ':uuid','surface'],      'repo.surface.get'],    // CE8: open file, picked lines, chunk, filters + pending, run
+    ['PUT',    ['api','repos',    ':uuid','surface'],      'repo.surface.set'],    // { open?, sel?: {from,to}, chunk?, filters?, by? }
     // §BUILT 2026-09-16 — nexus://repo/{repoUuid}/chunk/{chunkUuid}
     // (lib/nexus-uri.js's 'repo-chunk' route) needs to resolve a bare
     // chunkUuid to real content, and no existing route did that — the
@@ -4690,6 +4693,30 @@ async function handle(req, res, route, query, body) {
       const p = RI.propose({ layer: getRepoLayer(), repo, path: toPath, content: slice.join('\n') + '\n', source: { kind: 'lines', from: src.path, lines: [from, to] } });
       if (!p || p.ok === false) return err(res, 400, (p && p.errors || ['could not propose']).join('; '));
       return ok(res, { path: toPath, from, to, lines: slice.length, inject: p.inject || p.node || p });
+    }
+    // §CE8 — James: "so the cli can read the current worksurface in the code tab." The surface was the browser's CS object;
+    // now it is a node per repo (idearium/lib/surface-state.cjs). The tab writes it on change, the CLI reads and sets it, and
+    // a change from elsewhere goes out as idearium.surface.changed so the tab follows. GET adds what the surface shows but does
+    // not store: the picked lines' text, the proposals waiting, and the repo's latest run (lib/run-state.js).
+    case 'repo.surface.get': case 'repo.surface.set': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const SS = _require('../lib/surface-state.cjs');
+      let sf;
+      if (action === 'repo.surface.set') {
+        const patch = body || {};
+        if (patch.open) { const r = getRepoLayer().readTextFile(params.uuid, String(patch.open).replace(/^\/+/, '')); if (!r || r.error) return err(res, 404, `not a file in this repo: ${patch.open}`); }
+        try { sf = SS.set(params.uuid, patch, { by: patch.by || 'ui' }); } catch (e) { return err(res, 400, e.message); }
+        getIdeaOS().emit('idearium.surface.changed', { repoUuid: params.uuid, open: sf.open, sel: sf.sel, chunk: sf.chunk, by: sf.by, rev: sf.rev });
+      } else sf = SS.get(params.uuid);
+      const out = { ...sf, lines: null, pending: [], run: null };
+      if (sf.open && sf.sel) {
+        const r = getRepoLayer().readTextFile(params.uuid, sf.open);
+        if (r && !r.error && typeof r.content === 'string') { const all = r.content.split('\n'); const to = Math.min(all.length, sf.sel.to); out.lines = { from: sf.sel.from, to, total: all.length, text: all.slice(sf.sel.from - 1, to).join('\n') }; }
+      }
+      try { out.pending = _require('../../lib/repo-inject.js').list(params.uuid, { status: 'proposed', limit: 200 }).map(i => ({ uuid: i.uuid, path: i.path, op: i.op || 'write' })); } catch (_) {}
+      try { const r = _require('../../lib/run-state.js').list({ repoUuid: params.uuid })[0]; if (r) out.run = { runId: r.runId, goal: String(r.goal || '').slice(0, 240), status: r.status, attempt: r.attempt, steps: (r.steps || []).length, next: r.next || null, updatedAt: r.updatedAt }; } catch (_) {}
+      return ok(res, out);
     }
     case 'repo.chunk.show': {
       const repo = getRepoLayer().get(params.uuid);

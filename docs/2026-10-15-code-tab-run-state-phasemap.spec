@@ -161,7 +161,7 @@ phases:
       Edits land in the run state so a restart does not redo them.
 
   CE8_the_cli_reads_the_surface:
-    status: OPEN
+    status: BUILT 0.60.79 (tests/modules/test-code-surface-state.test.js)
     systems: [idearium]
     files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/code-surface.js, lib/run-state.js]
     depends_on: [CE5_events]
@@ -301,3 +301,26 @@ James: "need the full pipeline working." (after pasting the CE1-CE5 + CE10 list)
   are written for that reading and stay OPEN until he confirms.
 - Pre-existing, not caused by this: test-event-contracts EC-05 fails on main for idearium.repo.released and
   versionium.released / versionium.tagged (undeclared).
+
+## ADDENDUM 2026-10-16 - CE8 built: the CLI reads the Code tab's surface (0.60.79)
+
+James: "tell me recent phases. can we do the code tab now?" CE8 was next in build_order after the 0.60.50 slice. It
+serves his words from 2026-10-15: "so the cli can read the current worksurface in the code tab."
+
+- Built:
+  - idearium/lib/surface-state.cjs: one surface per repo, holding the open file, the picked lines, the chunk, the
+    filters, who set it and a rev;
+  - GET / PUT /api/repos/:uuid/surface. GET adds the picked lines' text, the proposals waiting, and the latest run
+    (CE1);
+  - the event idearium.surface.changed;
+  - the commands `code surface | code open [--lines a-b] | code select`;
+  - the tab publishes its surface, follows a change it did not make, and opens where it was left.
+- Narrower than written (the coder's call; the rest is to come):
+  - the surface does not carry the pending diffs' contents, only their paths and ids (`repo changes` has the diffs);
+  - it carries the run as a summary, not the current step.
+- Drift: none against CE1. The run comes from lib/run-state.js list(), not a second store.
+- Proof: tests/modules/test-code-surface-state.test.js 6/6 (SS-10..12 in Clear Glass).
+- Not verified: a live run on his machine.
+- Still OPEN, in build order: CE7, CV2, CV4, CV3, CV1, CE9, CE6, CV5, CV6, CE11, CE12.
+- Still to confirm with James: CE0b (batching), CV0 (what "universal" versioning covers), and the coder's reading of
+  "no versions per file using versionium, only the diff" (addendum 2026-10-15).

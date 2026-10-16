@@ -147,6 +147,23 @@ export const SPEC = [
     need: (a) => (a.args.length >= 3 ? null : '<path> <from> <to>'),
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/lines/copy`, body: { path: a.args[0], from: a.args[1], to: a.args[2], ...(a.flags.to ? { toPath: a.flags.to } : {}) } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.lines} lines → ${d.path} (on the work surface; apply to write it)`) },
+  // §CE8 — James: "so the cli can read the current worksurface in the code tab." One surface for the Code tab, the CLI and
+  // the agents (idearium/lib/surface-state.cjs): what is open, the picked lines and chunk, what waits, the run. Setting it
+  // from here moves the tab (idearium.surface.changed).
+  { key: 'code.surface', repo: true, usage: 'code surface <repo>', about: 'what the Code tab has open: the file, the picked lines (with their text), the chunk, the proposals waiting, the latest run',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/surface` }),
+    print: (d, a, h) => _printSurface(d, a, h) },
+  { key: 'code.open', repo: true, usage: 'code open <repo> <path> [--lines a-b]', about: 'open a file on the Code tab\'s surface (the tab follows), optionally with lines picked',
+    need: (a) => (a.args[0] ? null : '<path>'),
+    req: (a) => { const sel = _lines(a.flags.lines); if (sel && sel.error) return { error: sel.error }; return { method: 'PUT', path: `/api/repos/${a.repo.uuid}/surface`, body: { open: a.args[0], ...(sel ? { sel } : {}), by: 'cli' } }; },
+    print: (d, a, h) => _printSurface(d, a, h) },
+  { key: 'code.select', repo: true, usage: 'code select <repo> <from> [to] | --chunk <id> | --clear', about: 'pick lines (or a chunk) of the open file on the Code tab\'s surface; --clear unpicks',
+    need: (a) => (a.flags.clear || a.flags.chunk || a.args[0] ? null : '<from> [to], --chunk <id> or --clear'),
+    req: (a) => { const body = { by: 'cli' };
+      if (a.flags.clear) Object.assign(body, { sel: null, chunk: null });
+      else { if (a.flags.chunk && a.flags.chunk !== true) body.chunk = String(a.flags.chunk); if (a.args[0]) { const sel = _lines(`${a.args[0]}-${a.args[1] || a.args[0]}`); if (sel.error) return { error: sel.error }; body.sel = sel; } }
+      return { method: 'PUT', path: `/api/repos/${a.repo.uuid}/surface`, body }; },
+    print: (d, a, h) => _printSurface(d, a, h) },
   // 0.60.15 — .contract v2 (cortex/core/raid/contract-gates.js): executable contracts, gated step by step. Local: they read
   // and write the .contract file itself; completion is the evaluator's, never declared.
   { key: 'contract.new', repo: false, usage: 'contract new <id> <file.contract> [--what text] [--why text]', about: 'a new v2 contract (context → build → verify gates) to edit',
@@ -748,6 +765,23 @@ function _clearGlass(method, path, body, timeoutMs) {
  * makeRouteCommands(h) -> { [key]: handler } — h: { api(method, path, body, timeoutMs), findRepo, shortRepo, die,
  * header, port, c: { sky, mint, amber, coral, violet, bold, dim, gray } }. One runner for every row of SPEC.
  */
+/** _lines('12-40') → { from, to } · '12' → { from: 12, to: 12 } · nothing → null · anything else → { error } */
+function _lines(v) {
+  if (v == null || v === true) return null;
+  const m = /^(\d+)(?:-(\d+))?$/.exec(String(v).trim());
+  if (!m) return { error: `lines as a-b (e.g. 12-40), not ${v}` };
+  const from = +m[1], to = +(m[2] || m[1]);
+  return from >= 1 ? { from: Math.min(from, to), to: Math.max(from, to) } : { error: 'lines start at 1' };
+}
+function _printSurface(d, a, h) {
+  if (!d.open) console.log(h.c.gray('  no file open'));
+  else console.log(`  ${h.c.bold(d.open)}${d.sel ? h.c.dim(`  lines ${d.sel.from}–${d.sel.to}`) : ''}${d.chunk ? h.c.dim(`  chunk ${d.chunk}`) : ''}`);
+  if (d.lines) console.log(d.lines.text.split('\n').map((l, i) => `${h.c.dim(String(d.lines.from + i).padStart(5))}  ${l}`).join('\n'));
+  if ((d.pending || []).length) { console.log(h.c.dim(`  ${d.pending.length} proposal${d.pending.length === 1 ? '' : 's'} waiting:`)); for (const p of d.pending.slice(0, 20)) console.log(`    ${ICON.proposed} ${p.op === 'delete' ? 'delete ' : ''}${p.path}  ${h.c.gray(p.uuid)}`); }
+  if (d.run) console.log(h.c.dim(`  run ${d.run.status} · attempt ${d.run.attempt} · ${d.run.steps} steps — ${d.run.goal}${d.run.next ? ` · next: ${d.run.next}` : ''}`));
+  console.log(h.c.dim(`  set by ${d.by || 'nobody yet'}${d.updatedAt ? ` · ${when(d.updatedAt)}` : ''} · rev ${d.rev || 0}`));
+}
+
 export function makeRouteCommands(h) {
   const out = {};
   for (const row of SPEC) {

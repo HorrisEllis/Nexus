@@ -62,6 +62,8 @@ async function renderRepoCode(repo) {
     csLoadPlan(repo).then(() => here() && csPaint());
     // §0.48.0 OS9 — who the agent is, in one line (the Agent tab's head, now the dock's)
     api(`/api/repos/${repo.uuid}/agent`, {}, 15000).then(st => { CS.ident = st; }, e => { CS.ident = { error: e.message }; }).finally(() => here() && csPaint());
+    // §CE8 — the surface is Nexus's (idearium/lib/surface-state.cjs): the tab opens where it was left, or where the CLI put it
+    api(`/api/repos/${repo.uuid}/surface`, {}, 10000).then(sf => { if (here() && !CS.open && sf) csFollow(sf); }, () => {});
     api(`/api/repos/${repo.uuid}/agent/tool-events`, {}, 10000).then(r => { for (const e of r.events || []) csOnTool(e, { paint: false }); }, () => {}).finally(() => here() && csPaint());
     return;
   }
@@ -99,6 +101,7 @@ async function csLoadPlan(repo) {
 let _csEvT = null;
 function codeSurfaceOnEvent(ev) {
   const t = ev && ev.type ? ev.type.replace(/^idearium\./, '') : '';
+  if (t === 'surface.changed') { const p = ev.payload || {}; if (CS.uuid && p.repoUuid === CS.uuid && p.by !== 'ui' && CURRENT_REPO_SUBTAB === 'code') csFollow(p); return; }   // §CE8
   if (t === 'repo.agent.tool') { const p = ev.payload || {}; if (CS.uuid && p.repoUuid === CS.uuid) csOnTool(p); return; }   // §CT8 — live, no reload
   if (!/^(repo\.(phase\.run|file\.manage|inject\.|deviation|prove\.|verify)|repo\.file|spec\.chunk|chunk\.)/.test(t)) return;
   const repo = CURRENT_API_REPO; if (!repo || CS.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'code') return;
@@ -421,4 +424,34 @@ function csPaint() {
     <div class="cs-activity" id="cs-activity">${_csActivity()}</div></div>`;
   const code = document.getElementById('cs-code'); if (code && scroll) code.scrollTop = scroll;
   const t2 = document.getElementById('cs-talk'); if (t2) t2.scrollTop = talk ? t2.scrollHeight : t2.scrollHeight;
+  csPublish();
 }
+
+// §CE8 — James: "so the cli can read the current worksurface in the code tab." The surface goes to the server when it changes
+// (PUT …/surface, at most every 400 ms; only what differs from the last one sent), so `idearium code surface` reads what is
+// open here. A change made elsewhere (the CLI's code open / code select, an agent) arrives as idearium.surface.changed and
+// the tab follows it. The tab's own echo (by: ui) is ignored.
+let _csPubT = null;
+function _csSig(o) { return JSON.stringify([o.open || null, o.sel || null, o.chunk || null, !!(o.filters && o.filters.changedOnly), (o.filters && o.filters.q) || '', (o.filters && o.filters.mode) || 'search']); }
+function _csSurface() { return { open: CS.open, sel: CS.sel, chunk: CS.card && CS.card.card && CS.card.card.file === CS.open ? (CS.card.card.id || null) : null, filters: { changedOnly: CS.changedOnly, q: CS.q, mode: CS.mode } }; }
+function csPublish() {
+  const repo = CURRENT_API_REPO; if (!repo || CS.uuid !== repo.uuid) return;
+  const sf = _csSurface(), sig = _csSig(sf);
+  if (sig === CS.pubSig) return;
+  clearTimeout(_csPubT);
+  _csPubT = setTimeout(() => {
+    if (CS.uuid !== repo.uuid || _csSig(_csSurface()) !== sig) return;
+    CS.pubSig = sig;
+    api(`/api/repos/${repo.uuid}/surface`, { method: 'PUT', body: JSON.stringify({ ...sf, by: 'ui' }) }, 10000).catch(e => { CS.pubSig = null; CS.pubError = e.message; });
+  }, 400);
+}
+async function csFollow(sf) {
+  if (!sf) return;
+  CS.pubSig = _csSig(sf);   // what the server holds now: not sent back
+  if (sf.filters) { if ('changedOnly' in sf.filters) CS.changedOnly = !!sf.filters.changedOnly; }
+  if (!sf.open) { if (CS.open) { CS.open = null; CS.sel = null; csPaint(); } return; }
+  if (sf.chunk && (!CS.card || !CS.card.card || CS.card.card.id !== sf.chunk)) csCard(sf.chunk);
+  await csOpen(sf.open, sf.sel ? sf.sel.from : null);
+  if (sf.sel) { CS.sel = { from: sf.sel.from, to: sf.sel.to }; csPaint(); _csScrollTo(sf.sel.from); }
+}
+

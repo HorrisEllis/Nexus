@@ -973,6 +973,11 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **Actions per card:** **Apply** / **Reject** (proposed), **Revert** (applied), **Promote** (staged).
 - **The tools strip:** the tool scope, the tools the agent is given, and every call it made, ✓ or ✗ with the error. Phase and plan runs now keep their tool calls.
 
+**The Code tab's surface** (0.60.79 CE8, GET / PUT /api/repos/:uuid/surface, `idearium/lib/surface-state.cjs`). One per repo: the open file, the picked lines, the chunk, the filters, who set it (ui · cli · agent).
+- **GET** adds the picked lines' text, the proposals waiting and the repo's latest run (`lib/run-state.js`).
+- **PUT** emits `idearium.surface.changed`; the Code tab follows a change it did not make, and opens where the surface was left.
+- **Commands:** `idearium code surface <repo>`, `code open <repo> <path> [--lines a-b]`, `code select <repo> <from> [to] | --chunk <id> | --clear` (agents: nexus.command).
+
 **Routing & fallback** (0.39.286, `lib/pipeline-routing.js`). Every spec chunk is built along a route:
 - **Order:** the chosen agent, then the block's own fallback list (in `idearium/spec-engine/blocks.yaml`), then the global chain.
 - **Modes:** learned (the default since 0.39.287), fixed, chain, local-first, economy.

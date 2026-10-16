@@ -191,6 +191,8 @@ module.exports = Object.freeze({
   IDEARIUM_REPO_HISTORY_IMPORTED: { description: 'A project\'s past was imported into its repo as real versions (repo-<uuid>@history): git commits or version zips.', payloadShape: ['repoUuid', 'imported', 'skipped', 'branch'], severity: 'info' },
   IDEARIUM_REPO_VERSION_RESTORED: { description: 'One file was put back as it was at a version; the write is itself versioned.', payloadShape: ['repoUuid', 'commitId', 'path', 'sha256'], severity: 'info' },
   IDEARIUM_REPO_INTEGRITY_CHECKED: { description: 'The import checks ran on a repo (parses, requires, npm, duplicates, secrets, files arrived); findings are its notes.', payloadShape: ['repoUuid', 'ok', 'failed', 'notes'], severity: 'info' },
+  // §CE8 — the Code tab's surface (idearium/lib/surface-state.cjs), set by the tab, the CLI or an agent; the tab follows a change it did not make.
+  IDEARIUM_SURFACE_CHANGED: { description: 'The Code tab\'s surface changed: the open file, the picked lines or chunk; by says who (ui, cli, agent).', payloadShape: ['repoUuid', 'open', 'sel', 'chunk', 'by', 'rev'], severity: 'info' },
   IDEARIUM_NOTE_UPDATED: { description: 'A note changed: edited, pinned, done, archived or brought back.', payloadShape: ['id', 'repoUuid', 'kind', 'status'], severity: 'info' },
 });
 
