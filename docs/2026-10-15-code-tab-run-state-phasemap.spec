@@ -65,7 +65,7 @@ open_decisions:
     coder_recommends: >-
       a. The Code tab already draws the Files tree and states; two trees of one repo is the drift the project keeps
       having (SH1, one home per concept). To confirm with James.
-    status: DECIDED - one tab (James, 2026-10-15: "yes one tab.")
+    status: 'DECIDED - one tab (James, 2026-10-15: "yes one tab.")'
   CE0b_batching:
     asked: "can one reply carry several tool calls?"
     coder_recommends: "no change to 'one call per reply'; teach the persona to use code_batch for reads. To confirm."
@@ -287,17 +287,22 @@ not_verified:
 
 ## ADDENDUM 2026-10-15 - CE1-CE5 + CE10 built (0.60.50)
 
-James: "need the full pipeline working." (after pasting the CE1-CE5 + CE10 list)
+# James: "need the full pipeline working." (after pasting the CE1-CE5 + CE10 list)
 
-- Built: lib/run-state.js (the run node, resume on the same goal), the 'task-header' prompt block (editable in
-  Settings -> Agents), the reply.on_task step gate + lib/reply-kind.js, reply tags on .response nodes and Library rows
-  (kind, repo, session, run, step, attempt) with grouping, the run.* / guardian.reply.classified events, and the 'lost'
-  failure class that always falls back to the next provider.
-- Proof: tests/modules/test-run-state.test.js 27/27. The live reply that started this (job c2e60104, "What would you like
-  me to do with this material?") is blocked by the gate node in RS-20.
-- Not verified: no live run through ChatGPT yet. The Ollama loop does not get the task header (browser agents only).
-- Reading to confirm (the coder's, not James's decision): James wrote "no versions per file using versionium, only the
-  diff." The coder reads it as: file history shows the Versionium diffs/deltas, not whole-file versions. CV1 and CV3
-  are written for that reading and stay OPEN until he confirms.
-- Pre-existing, not caused by this: test-event-contracts EC-05 fails on main for idearium.repo.released and
-  versionium.released / versionium.tagged (undeclared).
+# - Built: lib/run-state.js (the run node, resume on the same goal), the 'task-header' prompt block (editable in
+#   Settings -> Agents), the reply.on_task step gate + lib/reply-kind.js, reply tags on .response nodes and Library rows
+#   (kind, repo, session, run, step, attempt) with grouping, the run.* / guardian.reply.classified events, and the 'lost'
+#   failure class that always falls back to the next provider.
+# - Proof: tests/modules/test-run-state.test.js 27/27. The live reply that started this (job c2e60104, "What would you like
+#   me to do with this material?") is blocked by the gate node in RS-20.
+# - Not verified: no live run through ChatGPT yet. The Ollama loop does not get the task header (browser agents only).
+# - Reading to confirm (the coder's, not James's decision): James wrote "no versions per file using versionium, only the
+#   diff." The coder reads it as: file history shows the Versionium diffs/deltas, not whole-file versions. CV1 and CV3
+#   are written for that reading and stay OPEN until he confirms.
+# - Pre-existing, not caused by this: test-event-contracts EC-05 fails on main for idearium.repo.released and
+#   versionium.released / versionium.tagged (undeclared).
+
+## ADDENDUM 2026-10-16 - the timeline and rewind are mapped in their own file
+# James: "can we do the code tab now? ... need a timeline with the checkpoints, and gates rewind points."
+# docs/2026-10-16-durable-work-timeline-phasemap.spec: TL4 (rewind to a gate) is CV3's 'undo this run', built once there;
+# TL5 (the timeline panel) is the first of CE9's panels. CE6 stays next for the Code tab (unblocked).
