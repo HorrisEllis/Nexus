@@ -181,7 +181,8 @@ build_order_reason: >-
   The importer needs no Electron and can be proven here; the extraction decides whether the whole idea is worth having, so it comes before the live listener, which can only be checked in Clear Glass.
 
 addendum_2026_10_16_f:
-  james: "chatgpt the thing we talked about earlier, that indexes novel one by one" · "continu"
+  james: >-
+    "chatgpt the thing we talked about earlier, that indexes novel one by one" · "continu"
   coder_reads: "To confirm. 'novel' = the novelty rule, not a book: the crawler of addendum d ('only logging novel data', one chat at a time until caught up). If he meant something else (a different earlier chat), this is the wrong thing."
   built_0_60_63:
     - "clear-glass/src/chats/crawler.js: runs the plan. Reads the list (more of it while backfill is unfinished; on a timer once caught up), takes the plan's next visit, reports the result, saves the state after every visit. Three ports; no tab in it."
