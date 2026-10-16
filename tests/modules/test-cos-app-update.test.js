@@ -1,5 +1,5 @@
 'use strict';
-// ST-01..05, AU-01..09 (0.60.69, COSA12/13): COS's settings file and the update policy (off / ask / auto), on real zips and the real store.
+// ST-01..05, AU-01..09 (0.60.90, COSA12/13): COS's settings file and the update policy (off / ask / auto), on real zips and the real store.
 // The switch and the process status are faked here (their own tests are test-cos-app-switch / -runtime): what is under test is WHEN COS switches by itself.
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path');

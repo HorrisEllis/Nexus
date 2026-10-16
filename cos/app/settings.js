@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/app/settings.js — COS's own settings: the update policy and the window it remembers (COSA12/13, 0.60.69)
+ * cos/app/settings.js — COS's own settings: the update policy and the window it remembers (COSA12/13, 0.60.90)
  * comp_id: cos.app.settings
  * James, 2026-10-16: "i want this almost like vmware. minimize to taskbar. auto updates from dropping in new zips, downloading it from clearglass."
  *

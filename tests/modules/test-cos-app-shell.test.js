@@ -1,5 +1,5 @@
 'use strict';
-// SH-01..12 (0.60.70): the COS command line. Real zips in the real store, real child processes, no PowerShell, no npm, no shell.
+// SH-01..12 (0.60.91): the COS command line. Real zips in the real store, real child processes, no PowerShell, no npm, no shell.
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), net = require('net'), { PassThrough } = require('stream');
 const Zip = require('../../lib/zip.js'), Store = require('../../cos/app/store.js'), SH = require('../../cos/app/shell.js');

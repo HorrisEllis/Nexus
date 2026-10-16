@@ -30,3 +30,57 @@ proof_per_step: "Each step ends in a test and a Clear Glass check (never Playwri
 open_questions:
   - "Is the order right, and is 'solid' = no silent loss + one tab?"
   - "GW0d: what must the listener hear? (blocks GW10)"
+
+# ## ADDENDUM 2026-10-16 — his four musts, in one order (no new phases)
+# James (2026-10-16): "give me a opinion about all of this and the recent phases. all phases on the phasemap. all the ones to
+# help me make money, need to be done. heklp wirth overwhekm need to be done. that get the pipeline working need to e done. cos
+# as a working test env need to be done. pipeline is vitam, the intent and ruoting and chubkiing and gating"
+# His decision, recorded as his: four kinds of phase must be done: money, overwhelm, the pipeline, COS as a working test env.
+# The pipeline is vital, and it means intent, routing, chunking and gating.
+# The coder's ordering (a recommendation, his to change). The pipeline comes first because the money phases that build for
+# clients (FV1) depend on it. Each line names its existing owner phase.
+#   0  his run on the current release ....... SF7 (zero code; he runs 0.60.44)
+#   1  overwhelm: one list of his projects ... COSA10 (small, read-only; independent of the pipeline)
+#   2  gating: what a gate is, and a trace ... GW0 (decision: a brick is the unit), GW3
+#   3  gating + chunking: the gate holds, the
+#      agent gets a budgeted slice .......... GW1 baton + GW24 budget (the whole-phase brick and GA1's uncapped dependency code
+#                                             are what fail small models)
+#   4  gating: the run follows the gate ..... GW2 (a fallback resumes the same brick; the 3h stall and the fail/rewind loop)
+#   5  routing: one chooser, a slow agent
+#      routed away, parked work cleared ..... ME5 (RAID _decide the one chooser) + the officiator on a slow local model
+#                                             (no owner phase found: 63 failed syntheses, 45 parked, cleared only by hand)
+#   6  chunking + gating: dependencies per
+#      chunk, drift → retry or rewind ....... GW26
+#   7  intent: per-repo intent, the listener  IS1 + SF4/GW10 (blocked on GW0d)
+#   8  routing to browser providers survives
+#      a markup change ...................... SP3 (SP1/SP2 built, unverified in Electron)
+#   9  COS as a working test env ........... testenv provision run once for real (never run against a downloaded image), then
+#                                             GW12 minimal default → GW13 sandbox door → GW14 copy in, diff out → GW11 snapshot
+#                                             per gate → GW15 every file tested
+#  10  money ................................ the gig writer exists (clear-glass/src/autofill/gig.js) and the claim ledger PF0 is
+#                                             built: fiverr-ledger PF1-PF3 and the portfolio section (clear-glass-surfaces PF1-PF3)
+#                                             can run beside 2-8; FR1 the guide; FV1 client jobs after the pipeline holds
+# Everything else stays mapped and waits (§0.3: nothing dropped), behind this list.
+
+# ## ADDENDUM 2026-10-16 (b) — step 5 (routing), first slice built: RT1, the officiator stops failing on one slow agent (0.60.78)
+# James: "Next" (after step 4). His 0.60.44 boot log: 63 failed syntheses and 45 parked drops, all "no real agent response
+# (forAgent=ollama)", parked drops cleared only by hand-editing data/officiator-attempts.json, 40 minutes between tries.
+# Found in cortex/core/raid/officiator.js: an agent's silence was charged to the drop (its tries spent, then parked); RAID was
+# never told and picked the same agent each tick; parked was forever. No phase owned this (step 5 said so); this slice is RT1.
+# Built (the GT1 rule, classify before learning): a drop walks RAID's ranked candidates (up to 3). A silence skips to the next
+# and teaches nothing. An answer with no contract counts against the drop, teaches RAID (recordOutcome false) and tries the
+# next. A success teaches RAID. When no agent answers, no drop is charged: the agents wait (2 min, doubling to an hour,
+# persisted). Records written before this that charged a silence are released, said. A parked drop gets a daily try.
+# parked()/unpark(): cortex GET /api/raid/officiator and POST .../unpark; `idearium raid parked`, `idearium raid unpark [id]`;
+# My projects shows a RAID intake line with "Try all again".
+# Open in step 5: ME5 (RAID _decide as the one chooser across copilot and the pipeline-routing ladder), routing builds away
+# from a slow local model (the ladder climbs on failure, not on slowness).
+
+
+# ## ADDENDUM 2026-10-16 (c) — work lost at a restart: a new map, slotted before the Code tab UI
+# James: "clearglass closed and nexus didnt recover. like need a timeline with the checkpoints, and gates rewind points. it
+# wrote the whole spec 17 chunks but then lost it on the restart. that needs to change. ... it need has to be physcial files
+# in the backedn for persistence"
+# Mapped in docs/2026-10-16-durable-work-timeline-phasemap.spec (TL0-TL6). The coder's recommendation (his call): TL1 + TL2
+# (chunks are files the moment they exist; a restart resumes them) go before step 4's Code tab UI, and TL5 (the timeline
+# panel) is the Code tab's first panel, after CE6. TL4 is the one rewind CV3 and GW7 both point at (build once).

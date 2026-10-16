@@ -60,24 +60,24 @@ decisions:
 
 phases:
   COSA1_version_store_and_import:
-    status: BUILT-0.60.66
+    status: BUILT-0.60.87
     built_note: "cos/app/store.js, cos/app/cli.js (node cos/app/cli.js import, inbox, list, status, remove), tests/modules/test-cos-app-store.test.js CA-01..13. Windows junction UNVERIFIED (Linux symlinks proven). No cos app entry in the compartment CLI yet."
     does: >-
       Layout under %LOCALAPPDATA%\COS\projects\<project>\: versions\<version>\, data\ (persistent), current, previous, state.json. Import a zip (file picker or drop into an Inbox folder that COS watches):
       read the VERSION file, verify the checksum when one is given, refuse path traversal and oversize, extract beside the others, junction data\ in. CLI first: cos app import|list|status.
     proof: "a zip with ../ entries is refused; a corrupt zip leaves nothing half-extracted; two versions sit side by side with one shared data folder; import of the same version twice is a no-op."
   COSA2_runtime_and_dependencies:
-    status: BUILT-0.60.67
+    status: BUILT-0.60.88
     built_note: "cos/app/runtime.js preflight + bundled js-yaml via NODE_PATH; RT-01,07. Windows taskkill and ELECTRON_RUN_AS_NODE unverified."
     depends_on: [COSA1_version_store_and_import]
     does: "Pinned Node bundled; node_modules in a shared cache keyed by package-lock hash; npm ci --ignore-scripts; a preflight (Node version, required files, a boot check) before a version may be chosen."
   COSA3_run_and_supervise:
-    status: BUILT-0.60.67
+    status: BUILT-0.60.88
     built_note: "cos/app/runtime.js start/stop/status/logs; RT-02..09. Windows taskkill and ELECTRON_RUN_AS_NODE unverified."
     depends_on: [COSA2_runtime_and_dependencies]
     does: "Start nexus/autopilot.js with NEXUS_DATA_ROOT set; wait for :7799/status; detect a port already in use and say which program holds it; graceful stop; rotated logs; tray status. CLI: cos app start|stop|status|logs."
   COSA4_switch_and_rollback:
-    status: BUILT-0.60.67
+    status: BUILT-0.60.88
     built_note: "cos/app/switch.js; SW-01..10. Windows taskkill and ELECTRON_RUN_AS_NODE unverified."
     depends_on: [COSA3_run_and_supervise]
     does: "Stop, snapshot the data, point current at the new version, start, and require healthy within N seconds, else roll back to previous and restore the data snapshot, saying why. Keep the last K versions, prune older ones with a report."
@@ -86,12 +86,12 @@ phases:
     status: OPEN
     does: "lib/data-root.js, one honoured NEXUS_DATA_ROOT, replacing the 37 hardcoded data paths. Until done, COSA1's junction carries it. Test: a grep-based check that no module computes its own data folder."
   COSA6_the_exe:
-    status: BUILT-0.60.68
+    status: BUILT-0.60.89
     built_note: "cos/app/controller.js, cos/app/desktop/*, scripts/build-cos-app.js, .github/workflows/cos-app.yml; UI-01..11, CT-01..05, BD-01..06. UNVERIFIED: the Windows build itself, tray, file dialog, drag-drop paths, junctions, taskkill. Unsigned exe (SmartScreen warns once). Clear Glass is not started by COS."
     depends_on: [COSA1_version_store_and_import]
     does: "Electron shell (tray, project list, versions, logs, Start/Stop/Switch/Rollback) built by a GitHub Actions Windows job with electron-builder (portable and installer), attached to the release with SHA256SUMS. Screens come after the CLI, per his order."
   COSA7_clear_glass_delivers:
-    status: BUILT-0.60.72
+    status: BUILT-0.60.93
     built_note: "clear-glass/src/releases/deliver.js + service.js, nexus-release command, /cli/releases/*, job template, release.yml publishes SHA256SUMS; RD-01..13 against a local GitHub stand-in. NOT built: the NP16 quarantine (vault not built), a token setting. Not run against real GitHub."
     depends_on: [COSA1_version_store_and_import]
     does: "Clear Glass checks the releases, downloads the asset and checksum into COS's Inbox through the downloads pipeline (the NP16 quarantine applies), and tells COS. COS verifies and offers the switch; a setting allows auto-switch only while idle. Clear Glass never replaces itself."
@@ -120,6 +120,39 @@ addendum_b:
       does: "COS lists Idearium repos, shows versions/phasemap/notes, imports a repo's release as an installed version, reports run state back (started, healthy, rolled back) as repo activity, and queues events while Idearium is down. CLI first: cos app repos|sync|link <repo>."
       proof: "a switch while Idearium is down is queued and replayed once; COS still starts the last good version with Idearium off; a repo's activity log shows the switch and any rollback with its reason."
   question: "Which repo actions do you want from the app first: only version/run (list, switch, roll back), or also phasemap builds and notes? I recommend version/run first."
+
+# ## ADDENDUM 2026-10-16 — COS to manage his projects; a new Nexus hooks in on arrival (mapped, no code)
+# James (2026-10-16): "check everythign in nexu that can help pipeline, clearglass. cos for windows. automation and macros.
+# tell me whats the most important. i figure cos could be helpfui for managing my projects so im not so overwhelmed.
+# alos what if when i download the newest version of nexus whether on git and drag it into clearcos, or i download it in
+# clearglass, and aurtomatically open it in cos, it can hook into nexus systems."
+# Context: asked with his WB choice (option 1, built 0.60.73). Read in source the same day (two read-only surveys).
+# The coder's reading (to confirm):
+#   "managing my projects" = one overview of every repo: open todos/questions (lib/repo-notes.js counts), the next open phase
+#     (repo.phasemap), the last activity (repo.activity), sorted by what moved last. Everything it needs exists; no route-commands
+#     row lists repos (repo.list is a local idearium CLI call only), so agents cannot see it either. Proposed COSA10 below.
+#   "drag it into clearcos / download it in clearglass ... hook into nexus systems" = COSA7 (Clear Glass hands a release zip to
+#     COS) → COSA1 (version store + import; reuse lib/history-import-job.js and lib/zip-ingest.js, already a safe zip inbox) →
+#     COSA2/3 (install, start autopilot) on the SAME data root (COSA5) → COSA4 (switch, roll back; reuse lib/nexus-self/store.js
+#     checkout and apply.js rollback). Found: systems are found by fixed ports and entry files (nexus/autopilot.js ALL_KERNELS,
+#     lib/nexus-self/systems.js), not by registration, so "hooking in" is automatic once the new copy runs on the same data root
+#     and ports; the blocker is COSA5 (about 42 files compute <file>/../data themselves; recount 2026-10-16, the map said 37).
+# No decision of his is recorded here yet: COSA0 (shell, signing, update source) and the COSA9 question stay open.
+#
+# COSA10_my_projects (proposed, OPEN; depends on nothing):
+#   does: one route-commands row `projects` (and repo.list) reading GET /api/repos plus, per repo, notes counts, the first open
+#     phase and the last activity; Idearium shows it first; COSA9's `cos app repos` later calls the same row. Read-only.
+#   proof: three fixture repos sort by last activity; a repo with 2 open todos and an open phase shows both; an agent gets the
+#     same list through nexus.command.
+# 2026-10-16 (later) — COSA10 BUILT 0.60.74: idearium/lib/projects.cjs, GET /api/my-projects (projects.overview), the `projects`
+# command row, Idearium's repo rail "My projects" button (idearium/ui/js/projects.js); test-projects-overview PJ-01..06.
+# Found: GET /api/projects was already the uploaded-zip shelf (project.list); the router takes the first match silently, so the new
+# route was shadowed until renamed. PJ-06 now fails on any two API routes sharing a method and path.
+# Open: Nexus's "next" is the first in-progress or ready phase over all of its maps; it should follow
+# docs/2026-10-15-pipeline-focus-phasemap.spec's order instead.
+
+# 2026-10-16 (merge) — two sessions each named a phase COSA10 the same day: COSA10_my_projects (above, built 0.60.74) and
+# COSA10_compartment_window (addendum c below, PR #91). Both are kept as written (§0.3); refer to them by their full keys.
 
 # ADDENDUM 2026-10-16 (c): each compartment is a VM-style window, with the rewind engine and system-state controls
 addendum_c:
@@ -173,14 +206,14 @@ addendum_e:
     Auto-switch is the risky word. A dropped zip that switches by itself can replace a running Nexus in the middle of a job. The rule I recommend: auto-INSTALL always (safe, nothing running changes), auto-SWITCH only when the running version is idle and the candidate's preflight passes, and every auto-switch is a normal switch (data snapshot first, health check, automatic rollback), so a bad one undoes itself. He sets it to off / ask / auto.
   phase:
     COSA12_vmware_window:
-      status: BUILT-0.60.69
+      status: BUILT-0.60.90
       built_note: "minimize to taskbar (Electron default, kept), close hides to tray, bounds remembered in settings.json, status strip; UI-12..14. Windows behaviour unverified."
       depends_on: [COSA6_the_exe]
       does: "Minimize to the taskbar, close hides to the tray, taskbar and tray both restore; window size, position and last selected project remembered; a status strip like VMware's (project, version, running/paused, health) always visible."
       proof: "UI-tested in Clear Glass, never Playwright (docs/CLAUDE.md); Windows behaviour unverified until a Windows run."
     COSA13_auto_update:
-      status: PARTIAL-0.60.69
-      built_note: "policy off|ask|auto, drop and inbox, auto only when verified+newer+idle; AU-01..09. 0.60.71: the autopilot idle signal exists (GET /idle) and COS asks it; a Nexus older than 0.60.71 has none, so auto waits for it. NOT built: Clear Glass download (COSA7)."
+      status: PARTIAL-0.60.90
+      built_note: "policy off|ask|auto, drop and inbox, auto only when verified+newer+idle; AU-01..09. 0.60.92: the autopilot idle signal exists (GET /idle) and COS asks it; a Nexus older than 0.60.92 has none, so auto waits for it. NOT built: Clear Glass download (COSA7)."
       depends_on: [COSA1_version_store_and_import, COSA4_switch_and_rollback]
       does: "Setting update.policy: off | ask | auto (default ask). auto-install on any arrival (drop, inbox, Clear Glass); auto-switch only when idle and preflight passes; notification says what happened and how to undo. Never installs a zip that fails the checksum or the NP16 quarantine."
       proof: "a dropped zip installs with no click; with policy auto and an idle Nexus it switches and is healthy; with a crashing release it rolls itself back with the reason shown; with a job running it waits."
@@ -195,3 +228,18 @@ addendum_e:
     - "A release that downloads from Clear Glass is a stranger's zip: checksum and quarantine apply before install, same as a drop."
     - "Taskbar/tray behaviour differs on Windows: unverified here."
   question: "Is the update rule off / ask / auto with auto-switch only when idle, as I recommend? And do you want the Versionium record to also hold the release files (I advise no, for the reason above)?"
+
+# ## ADDENDUM 2026-10-16 (later) — the first Windows build failed; root cause fixed (0.60.96)
+# James (2026-10-16): "okay the cos windows app?"
+# Found: the cos-app workflow ran once, when PR #94 merged (run 38887590255, windows-latest), and failed in 50 s. Its log says
+# "COS undefined", then electron-builder: "Please specify 'version' in the package.json". Root cause: cos/app/version.js was 0 bytes
+# on main. It was written at 0.60.89 (398 bytes, version 0.1.0) and emptied at 0.60.90 by a bad write (a pure 4-line deletion, the
+# same failure that branch had already hit on package.json). No other tracked file in the repo is empty where history had content
+# (checked). The tests passed throughout because none read the version.
+# Fixed: the file restored as written (0.1.0, never published: no cos-v tag exists). scripts/build-cos-app.js refuses a missing
+# version and names the file. The workflow's first step fails with that message. test-cos-app-build BD-07/BD-08.
+# Still unverified, as the map always said: the Windows exe itself, the tray, the file dialog, drag-drop paths. The next run on
+# windows-latest is the first that can say.
+# Open: COSA0 decisions (shell, signing, update source: built as the coder recommended, Electron + unsigned + GitHub releases,
+# but never chosen by him), COSA5 data root, COSA8, COSA9, COSA10_compartment_window, COSA11, COSA13 (partial), COSA14.
+

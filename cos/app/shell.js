@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/app/shell.js — the COS command line: runs `npm run start:all` and the Nexus commands without PowerShell or npm (CON-lite, 0.60.70)
+ * cos/app/shell.js — the COS command line: runs `npm run start:all` and the Nexus commands without PowerShell or npm (CON-lite, 0.60.91)
  * comp_id: cos.app.shell
  * Map: docs/2026-10-16-cos-console-phasemap.spec (addendum c)
  *

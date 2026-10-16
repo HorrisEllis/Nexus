@@ -1,6 +1,6 @@
 'use strict';
 /**
- * clear-glass/src/chats/ports.js — the three ports the chat crawler needs, made of Clear Glass automations (PI5b, 0.60.64)
+ * clear-glass/src/chats/ports.js — the three ports the chat crawler needs, made of Clear Glass automations (PI5b, 0.60.85)
  * comp_id: cg.chats.ports
  * UUID: cg-chats-ports-v1-0000-2026-1016-jamesbrooks-001
  * Map: docs/2026-10-15-personal-chat-import-phasemap.spec (PI5_the_crawler, addendum e: "the crawler's page work is ... a Clear Glass automation workflow")

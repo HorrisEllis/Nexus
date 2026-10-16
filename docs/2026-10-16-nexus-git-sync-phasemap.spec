@@ -7,7 +7,7 @@ origin:
   james: >-
     "i want to sync, nexus with the git repo, with versionium/idearium"
   context: >-
-    Same day as the COS application (COSA1 built 0.60.66) and the Idearium/COS sync idea (COSA9). His running Nexus is an unzipped download with no .git (npm run update said so on 2026-10-15), 17 releases behind GitHub.
+    Same day as the COS application (COSA1 built 0.60.87) and the Idearium/COS sync idea (COSA9). His running Nexus is an unzipped download with no .git (npm run update said so on 2026-10-15), 17 releases behind GitHub.
   reading: >-
     To confirm. Nexus itself is registered in Idearium as a repo; that repo has the GitHub remote (HorrisEllis/nexus); pulling a newer release brings it into his running copy through Versionium
     (a snapshot first, every change a commit); his own edits can go back to GitHub on a branch. Not read as: Idearium pushing every Versionium commit to GitHub (that would bury the history in noise).
@@ -65,7 +65,7 @@ phases:
     does: "A release cut in Idearium (repo releases --cut) is the same version the tag, lib/version.js, package.json and the zip carry (lib/release-version.js agreement already checks three places; add the Idearium release as the fourth)."
   GS6_update_notice:
     status: OPEN
-    does: "Clear Glass 'New Nexus release is out' job (0.60.65) is the notice; this adds a button/command that runs GS3 after he agrees. Offered, not forced."
+    does: "Clear Glass 'New Nexus release is out' job (0.60.86) is the notice; this adds a button/command that runs GS3 after he agrees. Offered, not forced."
 
 questions_for_james:
   - "Is your running copy going to be a git clone, or the COS app importing zips (or both)? It decides whether GS3 pulls or imports."

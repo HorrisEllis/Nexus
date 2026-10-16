@@ -726,17 +726,29 @@ function _enrichCrystallisation(pattern) {
   return enrichment;
 }
 
-function _announceCrystallisation(p) {
+// §0.60.50 — James's run: hundreds of "pattern crystallised" lines per pass buried everything else in the log. The
+// first CRYST_LOG_MAX clean patterns of a pass are named; the rest (and every noise-tainted one) are counted in one line.
+// The bus events are unchanged — the log is for a person, the patterns stay queryable (intelligence patterns).
+const CRYST_LOG_MAX = 3;
+function _announceAll(announcements) {
+  const clean = announcements.filter(p => !p.noiseTainted);
+  const named = new Set(clean.slice(0, CRYST_LOG_MAX));
+  for (const p of announcements) _announceCrystallisation(p, { log: named.has(p) });
+  const rest = announcements.length - named.size;
+  if (rest > 0) _log(`${rest} more pattern(s) crystallised this pass (${announcements.length - clean.length} noise-tainted, not emitted) — not listed here; intelligence patterns lists them`);
+}
+function _announceCrystallisation(p, { log = true } = {}) {
+  if (p.noiseTainted && !log) return;
   const enrichment = _enrichCrystallisation(p);
   const cfrNote = enrichment.cfr ? ` [cfr: regime=${enrichment.cfr.regime}, friction=${enrichment.cfr.friction}]` : '';
   const causalNote = enrichment.causal ? ` [rfr2: ${enrichment.causal.supportingEvents} supporting events, causal depth ${enrichment.causal.rootDepth}]` : '';
-  _log('pattern crystallised: ' + _humanPattern(p) + (p.noiseTainted ? ' [noise-tainted — emit suppressed]' : '') + cfrNote + causalNote);
+  if (log) _log('pattern crystallised: ' + _humanPattern(p) + (p.noiseTainted ? ' [noise-tainted — emit suppressed]' : '') + cfrNote + causalNote);
   if (p.noiseTainted) return;
   try { bus.emit('cortex.intelligence.pattern_crystallised', { pattern: p, enrichment }, { source: MODULE_ID }); }
   catch (e) { console.warn(`[${MODULE_ID}] bus.emit failed: ${e.message}`); }
 }
 
-    for (const p of announcements) _announceCrystallisation(p);
+    _announceAll(announcements);
 
     // Write new patterns to JAA
     for (const p of newPatterns) {

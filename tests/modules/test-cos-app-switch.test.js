@@ -1,5 +1,5 @@
 'use strict';
-// SW-01..09 (0.60.67 COSA4): switch a project between installed versions with a data snapshot, a health check and an automatic rollback. Real zips, real processes, real sockets.
+// SW-01..09 (0.60.88 COSA4): switch a project between installed versions with a data snapshot, a health check and an automatic rollback. Real zips, real processes, real sockets.
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), net = require('net');
 const Zip = require('../../lib/zip.js'); const Store = require('../../cos/app/store.js'); const RT = require('../../cos/app/runtime.js'); const SW = require('../../cos/app/switch.js');
 let passed = 0, failed = 0;

@@ -120,7 +120,7 @@ This request is almost certainly an EDIT, EXPANSION, or REPAIR of this real comp
 Map this to:
 1. A module name (snake_case, short)
 2. A one-sentence purpose
-3. Which NEXUS system it belongs to (guardian/cortex/copilot/eravos/idearium/architect/emerge/bridge/ollama)
+3. Which NEXUS system it belongs to (guardian/cortex/copilot/idearium/architect/emerge/bridge/ollama)
 4. What existing NEXUS capabilities it should use
 5. Any gaps or questions before building
 6. Scope: "cli" if this is just asking for a new CLI command / shortcut /

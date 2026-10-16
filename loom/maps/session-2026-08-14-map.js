@@ -72,8 +72,6 @@ const FILES = [
   // (createBridgeServer, Phase 5) — found genuinely unregistered while
   // fixing a real CORS bug in it.
   ['bridge/config.js', 'nexus.bridge.config', 'bridge', []],
-  ['eravos/config.js', 'nexus.eravos.config', 'eravos', []],
-  ['eravos/server.js', 'nexus.eravos.server', 'eravos', ['nexus.eravos.config']],
   ['bridge/server.js', 'nexus.bridge.server', 'bridge', ['nexus.bridge.index', 'nexus.bridge.config']],
   ['bridge/causal/expectation.js', 'nexus.bridge.causal.expectation', 'bridge/causal', ['nexus.intelligence.causal']],
   ['bridge/causal/projections.js', 'nexus.bridge.causal.projections', 'bridge/causal', ['nexus.intelligence.causal']],

@@ -1,5 +1,5 @@
 'use strict';
-// RD-01..10 (0.60.72, COSA7): Clear Glass delivers a Nexus release to COS's inbox. A local http server plays GitHub; the zip is a real release zip and COS's real store imports it.
+// RD-01..10 (0.60.93, COSA7): Clear Glass delivers a Nexus release to COS's inbox. A local http server plays GitHub; the zip is a real release zip and COS's real store imports it.
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http'), crypto = require('crypto');
 const D = require('../../clear-glass/src/releases/deliver.js'), Zip = require('../../lib/zip.js'), Store = require('../../cos/app/store.js');

@@ -286,7 +286,7 @@ class IpcBridge {
       return { ok: false, error: 'action must be start, stop or detect' };
     }));
     this.app.post('/cli/net/test', _netRoute(() => ({ ok: false, error: 'the leak test is not built yet (NP5). No route is shown as verified until it is.' })));
-    // §0.60.64 PI5b — James, 2026-10-16: "build it." The chat crawler (src/chats/): /cli/chats/crawl/* -> idearium `chat-crawl` command. Off until the account's switch is on.
+    // §0.60.85 PI5b — James, 2026-10-16: "build it." The chat crawler (src/chats/): /cli/chats/crawl/* -> idearium `chat-crawl` command. Off until the account's switch is on.
     let _crawl = null;
     const _crawlSvc = () => _crawl || (_crawl = new (require('../chats/service').ChatCrawlService)({
       engine: () => this.mesh && this.mesh._automation, dir: require('path').join(require('electron').app.getPath('userData'), 'chats', 'crawl'),
@@ -294,7 +294,7 @@ class IpcBridge {
     this.app.post('/cli/chats/crawl/start',  _netRoute((b) => _crawlSvc().start(String(b.account || ''), { partition: b.partition })));
     this.app.post('/cli/chats/crawl/stop',   _netRoute((b) => _crawlSvc().stop(String(b.account || ''))));
     this.app.get('/cli/chats/crawl/status',  _netRoute((b, q) => _crawlSvc().status(q.account ? String(q.account) : undefined)));
-    // §0.60.72 COSA7 — James, 2026-10-16: "auto updates from dropping in new zips, downloading it from clearglass." /cli/releases/*: the latest Nexus release into COS's inbox (src/releases/). status downloads nothing.
+    // §0.60.93 COSA7 — James, 2026-10-16: "auto updates from dropping in new zips, downloading it from clearglass." /cli/releases/*: the latest Nexus release into COS's inbox (src/releases/). status downloads nothing.
     this.app.get('/cli/releases/status', _netRoute(() => require('../releases/service').status()));
     this.app.post('/cli/releases/fetch',  _netRoute(() => require('../releases/service').fetchLatest()));
     // §BUILT 2026-09-15 — James: "...clearglass download manager..." as a
@@ -1086,7 +1086,7 @@ class IpcBridge {
     });
     ipcMain.handle('macros:run', async (e, d) => {
       if (!this.macroTool) return { error: 'macro tool not available' };
-      // §0.60.62 — James, 2026-10-15: "should not rely on raid." His run drives the driver in this process: no Guardian, no RAID.
+      // §0.60.69 — James, 2026-10-15: "should not rely on raid." His run drives the driver in this process: no Guardian, no RAID.
       // A step that is not a driver action (dom_query, url_listen) still takes the Guardian path, and says so if that fails.
       const BA = require('../../../lib/agent-tools/tools/browser/browser-action.js'); const agentId = d.agentId || 'default';
       const runStep = async ({ action, data = {} }) => {

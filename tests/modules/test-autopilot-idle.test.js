@@ -1,5 +1,5 @@
 'use strict';
-// ID-01..07 (0.60.71): the autopilot's idle signal, GET /idle. Real _state, Guardian's job list faked (its own tests cover the queue).
+// ID-01..07 (0.60.92): the autopilot's idle signal, GET /idle. Real _state, Guardian's job list faked (its own tests cover the queue).
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), path = require('path');
 const _l = console.log, _e = console.error; console.log = console.error = () => {}; const AP = require('../../nexus/autopilot.js'); console.log = _l; console.error = _e;   // the autopilot announces itself on load; the runner counts lines

@@ -116,7 +116,7 @@ function blockOf(text, key, max = 2500) {
  *   scope, maps (with meta + per-map summary), phases (roadmap phase_nodes + mine,
  *   runs, lastRun), layers, warnings, summary, skipped, snapshot.
  */
-export function managerView({ repo, repoDir, runs = [] }) {
+export function managerView({ repo, repoDir, runs = [], seenFile = null }) {
   const { maps, skipped, scope, snapshot } = mapsFor({ repo, repoDir });
   const rm = buildRoadmap({ projectId: repo.uuid, maps });
   const systems = scope.system ? require('../../lib/nexus-self/systems.js') : null;
@@ -128,6 +128,28 @@ export function managerView({ repo, repoDir, runs = [] }) {
     const rs = runsBy.get(p.uuid) || [];
     p.runs = rs.length; p.lastRun = rs[0] || null;
   }
+  // §MP2 (docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec) — James: "Nexus needs to generate dependancies for
+  // each phase, with files … Need that be automatic for every new phase from any project." Every phase is mapped by
+  // lib/phase-map-auto.js (no model): its files with the evidence for each, what they require, who requires them, the
+  // phases it waits on through shared files, and the specs that own them. Read from the repo's own tree (Nexus: the
+  // live tree), cached by the maps' text.
+  let mapping = null;
+  try {
+    const AM = require('../../lib/phase-map-auto.js');
+    const NSx = require('../../lib/nexus-self/systems.js');
+    const root = scope.source === 'nexus' ? NSx.ROOT : repoDir;
+    const t0 = Date.now();
+    const r = AM.forMaps({ root, maps, specsOf: scope.source === 'nexus' ? AM.specsOfNexus(NSx.ROOT) : null });
+    const counts = { declared: 0, evidence: 0, none: 0 };
+    for (const p of rm.phases) {
+      const m = r.byKey.get(`${p.map}::${p.phase_key}`);
+      if (!m) continue;
+      p.mapped = { source: m.source, files: m.files, requires: m.requires, consumers: m.consumers, specs: m.specs, dependsOnInferred: m.dependsOnInferred };
+      if (p.status !== 'complete') counts[m.source] = (counts[m.source] || 0) + 1;
+    }
+    const fresh = seenFile ? AM.newKeys(seenFile, rm.phases.map(p => `${p.map}::${p.phase_key}`)) : [];
+    mapping = { ...counts, phases: r.stats.phases, sourceFiles: r.stats.files, ms: Date.now() - t0, newPhases: fresh };
+  } catch (e) { mapping = { error: `phase mapping did not run: ${e.message}` }; }
   const mapInfo = rm.maps.map(m => {
     const src = maps.find(x => x.path === m.path);
     const ph = rm.phases.filter(p => p.map === m.path);
@@ -139,6 +161,7 @@ export function managerView({ repo, repoDir, runs = [] }) {
     editable: true, editVia: scope.source === 'nexus' ? 'apply-gate' : 'repo-layer',
     maps: mapInfo, phases: rm.phases, layers: rm.layers, warnings: rm.warnings,
     summary: { ...rm.summary, maps: mapInfo.length, mine: rm.phases.filter(p => p.mine).length, runs: runs.length },
+    mapping,
   };
 }
 

@@ -187,3 +187,9 @@ spec:
 # counted open (HG6 of cli-data-code). The declutter's answers: SUPERSEDED · RETRACTED · RETIRED · FOLDED · DONE-ELSEWHERE
 # close a phase (status done, closedAs), LATER shelves it (status pending, shelf: true). NOT STARTED still wins (2026-09-19);
 # a word in prose never counts (2026-08-13). summary() adds roadmap, shelf and closed. test-loom-phasemap-status PS-013.
+
+## ADDENDUM 2026-10-15 — 0.60.63 PT1: a phase's specs
+loom/scanners/phasemap-map.js reads a phase's `specs:` list (key and list forms) beside `files:` and returns it as `specs` (the specs that own the phase). James: "i want the specs to tagged per phase". test-phase-specs-tag PT-01.
+
+## ADDENDUM 2026-10-15 — 0.60.64 PT2: a phase's systems include its files' owners
+_systemsOf: declared systems, plus lib/nexus-self/systems.js ownerOf of each file in `files:` ("(new)" stripped; globs skipped) → systemsFrom 'declared+files' with systemsFromFiles; no systems line but files → 'files'; neither → 'guessed' as before. James: "phases tags by system/nested repo". test-phase-specs-tag PT-05..07.

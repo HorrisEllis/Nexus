@@ -22,6 +22,7 @@ const FILES = [
     I('lib/nexus-self/store.js'),             // head(), loadSnapshot(), filesOf(), getBlob() — NEXUS's phasemaps
     I('lib/nexus-self/systems.js'),           // systemForLoomTag() — a system's own phases
     I('loom/scanners/phasemap-map.js'),       // parsePhasemapText() — the one phase parser
+    I('lib/phase-map-auto.js'),               // 0.60.65 MP2 — forMaps(), newKeys(), specsOfNexus(): every phase mapped in managerView
   ]],
   ['idearium/repo/living-spec.js', I('idearium/repo/living-spec.js'), [
     I('idearium/repo/nexus-self.js'),         // specsFor(), fileText() — a nexus system's spec/ from the immutable base

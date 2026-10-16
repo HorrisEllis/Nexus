@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * cos/app/cli.js — `cos app ...`: manage a project's versions from the command line (COSA1, 0.60.66). CLI first; the Windows app (COSA6) is a screen over this.
+ * cos/app/cli.js — `cos app ...`: manage a project's versions from the command line (COSA1, 0.60.87). CLI first; the Windows app (COSA6) is a screen over this.
  *   node cos/app/cli.js import <zip> [--sha256 hex] [--sums file] [--require-checksum] [--project p]
  *   node cos/app/cli.js inbox                     import every zip dropped in the inbox
  *   node cos/app/cli.js list [project]            versions, newest first
@@ -40,7 +40,7 @@ const RUNTIME = new Set(['switch', 'rollback', 'start', 'stop', 'running', 'logs
 /** run(argv, out) → exit code. Store commands are main(); the ones that start or stop processes are async. */
 async function run(argv = process.argv.slice(2), out = (s) => console.log(s)) {
   const { flags, pos } = parse(argv); const cmd = pos[0];
-  if (cmd === 'sh' || cmd === 'exec') {   // the COS command line (0.60.70): `cos sh [project]` is interactive, `cos exec <project> "npm run start:all"` is one line
+  if (cmd === 'sh' || cmd === 'exec') {   // the COS command line (0.60.91): `cos sh [project]` is interactive, `cos exec <project> "npm run start:all"` is one line
     const SH = require('./shell.js'); const root = flags.root || S.defaultRoot();
     if (cmd === 'sh') return SH.repl({ root, project: pos[1] || 'nexus' });
     if (!pos[1] || !pos[2]) { out('✗ exec needs <project> "<command line>"'); return 1; }

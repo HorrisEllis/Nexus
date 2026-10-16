@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/app/runtime.js — run a project's installed version, supervised by COS (COSA2 + COSA3, 0.60.67)
+ * cos/app/runtime.js — run a project's installed version, supervised by COS (COSA2 + COSA3, 0.60.88)
  * comp_id: cos.app.runtime
  * UUID: cos-app-runtime-v1-0000-2026-1016-jamesbrooks-001
  * Map: docs/2026-10-15-cos-app-phasemap.spec (COSA2_runtime_and_dependencies, COSA3_run_and_supervise)

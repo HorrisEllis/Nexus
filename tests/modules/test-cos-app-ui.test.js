@@ -1,5 +1,5 @@
 'use strict';
-// UI-01..10 (0.60.68 COSA6): the COS window, in jsdom with a fake window.cos (no Electron, no Playwright: AXIOMS 4.1). Draws what the controller says; every button is one call; errors in full.
+// UI-01..10 (0.60.89 COSA6): the COS window, in jsdom with a fake window.cos (no Electron, no Playwright: AXIOMS 4.1). Draws what the controller says; every button is one call; errors in full.
 // Plus CT-01..05: the controller is one exclusive operation per project over the real store/runtime/switch.
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path');

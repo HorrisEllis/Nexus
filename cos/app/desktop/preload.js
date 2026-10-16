@@ -1,5 +1,5 @@
 'use strict';
-// cos/app/desktop/preload.js — the only door between the COS window and the machine: named calls, nothing else. (COSA6, 0.60.68)
+// cos/app/desktop/preload.js — the only door between the COS window and the machine: named calls, nothing else. (COSA6, 0.60.89)
 const { contextBridge, ipcRenderer, webUtils } = require('electron');
 const call = (name) => (...a) => ipcRenderer.invoke('cos:' + name, ...a);
 contextBridge.exposeInMainWorld('cos', {

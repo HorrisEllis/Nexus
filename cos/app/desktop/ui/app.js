@@ -1,5 +1,5 @@
 'use strict';
-/* cos/app/desktop/ui/app.js — the COS window. Draws what the controller says (window.cos); decides nothing itself. (COSA6, 0.60.68)
+/* cos/app/desktop/ui/app.js — the COS window. Draws what the controller says (window.cos); decides nothing itself. (COSA6, 0.60.89)
  * James, 2026-10-16: "cos app for windows". Every button is one call; an error is shown in full, never as a vague "failed". */
 (function () {
   const $ = (s, r) => (r || document).querySelector(s);

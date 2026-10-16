@@ -1,5 +1,5 @@
 'use strict';
-// CA-01..13 (0.60.66 COSA1): COS as an application — the version store and zip import. Real zips (lib/zip.js), real folders in a temp root; no network, no Electron.
+// CA-01..13 (0.60.87 COSA1): COS as an application — the version store and zip import. Real zips (lib/zip.js), real folders in a temp root; no network, no Electron.
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), crypto = require('crypto');
 const Zip = require('../../lib/zip.js'); const S = require('../../cos/app/store.js'); const CLI = require('../../cos/app/cli.js');
 let passed = 0, failed = 0;

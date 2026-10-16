@@ -59,7 +59,6 @@ const CONTRACT_PATHS = {
   orchestrator: '/api/contract',
   diagnostic:   '/health',
   // Sovereign systems added 2026-06-27
-  eravos:         '/contract',
   ollama:         '/contract',
   copilot:        '/contract',
   'clear-glass':  '/contract',

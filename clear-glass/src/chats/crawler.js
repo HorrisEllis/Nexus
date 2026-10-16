@@ -1,6 +1,6 @@
 'use strict';
 /**
- * clear-glass/src/chats/crawler.js — drives lib/chat-crawl-plan.js: reads the chat list, visits one chat at a time, reports, saves (PI5, 0.60.63)
+ * clear-glass/src/chats/crawler.js — drives lib/chat-crawl-plan.js: reads the chat list, visits one chat at a time, reports, saves (PI5, 0.60.84)
  * comp_id: cg.chats.crawler
  * UUID: cg-chats-crawler-v1-0000-2026-1016-jamesbrooks-001
  * Map: docs/2026-10-15-personal-chat-import-phasemap.spec (PI5_the_crawler)

@@ -1,6 +1,6 @@
 'use strict';
 /**
- * clear-glass/src/releases/service.js — what Clear Glass knows about COS, and the two calls the bridge and the command use (COSA7, 0.60.72)
+ * clear-glass/src/releases/service.js — what Clear Glass knows about COS, and the two calls the bridge and the command use (COSA7, 0.60.93)
  * comp_id: clear-glass.releases.service
  * James, 2026-10-16: "auto updates from dropping in new zips, downloading it from clearglass."
  * COS's root is found the same way COS finds it (COS_APP_ROOT, else the platform default), so the inbox is the one COS watches.

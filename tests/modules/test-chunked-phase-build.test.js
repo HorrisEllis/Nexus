@@ -10,6 +10,7 @@
  *   CB-01  routing: auto chunks a build that starts on Ollama, not one that starts on a large agent; always / never
  *   CB-02  a two-file phase on Ollama is sent as two requests, each naming one file, each under 2400 chars, own session
  *   CB-03  the second request sees the first's file as written, with its exports
+ *   CB-03b each request carries what Nexus mapped for its own file (0.60.66 MP3)
  *   CB-04  every row of the run says chunk i of n and its file; the building row says why it was chunked
  *   CB-05  each file comes back as a proposal; the proof runs once, after the last chunk, on the whole phase
  *   CB-06  a first chunk that does not land stops the run, naming the chunk; the second is never sent; it is a fault
@@ -126,6 +127,16 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   await test('CB-03', 'the second request sees the first\'s file as written, with its exports', () => {
     assert.match(sent[1].message, new RegExp(`- ${ph.files[0].replace(/[.]/g, '\\.')} — written, exports add, list`));
     assert.match(sent[0].message, new RegExp(`- ${ph.files[1].replace(/[.]/g, '\\.')} — a later chunk; do not write it`));
+  });
+
+  // 0.60.66 MP3 — James: "The agent keeps having to find context, with tools. Need them all mapped."
+  await test('CB-03b', 'each request carries what Nexus mapped for its own file (the build-phase-map block), not the other\'s', () => {
+    sent.forEach((s, i) => {
+      assert.ok(s.message.includes('WHAT THIS PHASE TOUCHES'), `request ${i + 1} has no mapping block`);
+      assert.match(s.message, new RegExp(`^- ${ph.files[i].replace(/[.]/g, '\\.')}( \\(new\\))? — declared`, 'm'));
+      const block = s.message.slice(s.message.indexOf('WHAT THIS PHASE TOUCHES')).split('\n\n')[0];
+      assert.ok(!block.includes(ph.files[1 - i]), `request ${i + 1}'s mapping names only its own file`);
+    });
   });
 
   await test('CB-04', 'every row of the run says chunk i of n and its file; the building row says why it was chunked', () => {

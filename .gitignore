@@ -6,6 +6,8 @@ data/raid/input/
 data/raid/output/
 data/raid/ledger/
 data/loom/loom_events.buffer.jsonl
+# runtime usage logs (lib/economy): state, not code; a test run in a clean clone writes here
+data/economy/
 idearium/data/projects/
 idearium/data/specs/
 idearium/data/nodes/
@@ -22,3 +24,5 @@ idearium/repo/repos/
 copilot/data/worksets/
 # 0.60.28 — guardian's per-type node ledgers are runtime state (appended on every boot and test run), never code
 guardian/data/nodes/*/_ledger.jsonl
+# test-boot-log-fixes BL7 leaves a ledger store per run here: test residue, not code
+data/ledger-store/bl7-*/

@@ -2925,12 +2925,6 @@ function handleExtendedRoutes(req, res, url, method) {
   // hot-load routes removed — use GET/POST /api/system/hot-load on orchestrator
 
 
-  // ── Organism delivery queue — ERAVOS polls this to get newly-built organisms ──
-  // NEXUS builds an organism zip via /build, puts it here.
-  // ERAVOS polls /api/guardian/organism-queue every 5s.
-  // On pickup, ERAVOS fetches the zip and installs it live.
-  const _organismQueue = new Map(); // id → { id, zip, manifest, builtAt }
-
   // §dead-link fix 2026-06-29 — tv-ui's spotlight.js has been calling these
   // two routes since before this session; neither existed anywhere on
   // guardian. pollCFR() swallowed the failure silently (.catch(()=>null)),
@@ -2993,28 +2987,6 @@ function handleExtendedRoutes(req, res, url, method) {
       req2.write(payload); req2.end();
     }).catch(() => { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'invalid JSON body' })); });
     return;
-  }
-
-  if (method === 'GET' && url.pathname === '/api/guardian/organism-queue') {
-    const items = [..._organismQueue.values()].map(o => ({ id: o.id, label: o.label, builtAt: o.builtAt }));
-    pRes(res, 200, { ok: true, organisms: items });
-    return true;
-  }
-
-  if (method === 'GET' && url.pathname.startsWith('/api/guardian/organism-queue/') && url.pathname.endsWith('/zip')) {
-    const id = url.pathname.split('/')[4];
-    const item = _organismQueue.get(id);
-    if (!item) { pRes(res, 404, { ok: false, error: 'not found' }); return true; }
-    res.writeHead(200, { 'Content-Type': 'application/zip', 'Content-Length': item.zip.length });
-    res.end(item.zip);
-    return true;
-  }
-
-  if (method === 'POST' && url.pathname.startsWith('/api/guardian/organism-queue/') && url.pathname.endsWith('/ack')) {
-    const id = url.pathname.split('/')[4];
-    _organismQueue.delete(id);
-    pRes(res, 200, { ok: true });
-    return true;
   }
 
   // ── POST /build — THE BUILD ROUTE ──────────────────────────────────────────

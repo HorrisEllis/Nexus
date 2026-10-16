@@ -1,5 +1,5 @@
 'use strict';
-// PT-01..07 (0.60.64 PI5b): the crawler's three ports made of automations, run on the REAL automation engine against a fake chat site in jsdom (the same browserFn hook
+// PT-01..07 (0.60.85 PI5b): the crawler's three ports made of automations, run on the REAL automation engine against a fake chat site in jsdom (the same browserFn hook
 // Clear Glass sets; no Playwright). The site has a sidebar of chats and chat pages with messages; one page is a login wall, one a challenge.
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), path = require('path'), fs = require('fs'), os = require('os');

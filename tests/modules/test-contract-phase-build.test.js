@@ -7,12 +7,14 @@
  *   CP-01  a planned build runs as a .contract: a brick per planned file, the plan's import edge, a checkpoint per pass
  *   CP-02  the phase passes only through its integration (the proof run): proven → contract-complete
  *   CP-03  building again resumes from the checkpoints: no file is re-sent, only the integration re-checked
- *   CP-04  a changed plan rejects the old checkpoint (archived); a deliberately failed brick recovers on retry
+ *   CP-03b TL1a: built again, the saved plan is kept (the planner is not asked; nothing re-chunked, nothing re-sent)
+ *   CP-04  a changed plan (replan asked) rejects the old checkpoint (archived); a deliberately failed brick recovers on retry
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
 const http = require('http');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const ROOT = path.join(__dirname, '../..');
 
@@ -82,7 +84,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     dispatchedTotal++;
     if (/-plan\d+$/.test(a.session || '')) return { ok: true, text: '```json\n' + planOf() + '\n```', provider: 'claude', providerUsed: 'claude', elapsedMs: 3 };
     const file = (String(a.message).match(/^Write ONE file: (\S+)/m) || [])[1];
-    sent.push({ file, session: a.session });
+    sent.push({ file, session: a.session, brick: a.brick || null });
     if (file === ph.files[0] && failNotes > 0) { failNotes--; return { ok: false, error: 'deliberate failure — the model fell over' }; }
     const code = /test/.test(file) ? "'use strict';\nconst notes = require('../lib/notes.js');\nif (typeof notes.add !== 'function') throw new Error('add');\n"
       : "'use strict';\nconst _n = [];\nfunction add(args) { _n.push(args.text); return { ok: true }; }\nfunction list() { return { ok: true, notes: _n.slice() }; }\nmodule.exports = { add, list };\n";
@@ -93,7 +95,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   const db = await import(path.join(ROOT, 'idearium/lib/db.js'));
   const runRows = (runId) => db.loadTable('idearium_phase_runs').filter(r => r.runId === runId || r.buildRunId === runId);
   const settle = async (runId) => { for (let i = 0; i < 120; i++) { const rs = runRows(runId); if (rs.some(r => /^contract-(complete|incomplete)$/.test(r.state)) || rs.some(r => ['failed', 'plan-failed'].includes(r.state) && !r.chunk)) return rs; await wait(150); } return runRows(runId); };
-  const build = async () => { const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama' }); assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 400)); return settle((b.json.data || b.json).runId); };
+  const build = async (extra = {}) => { const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama', ...extra }); assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 400)); return settle((b.json.data || b.json).runId); };
   const states = (rs) => rs.map(r => `${r.state}${r.error ? `(${String(r.error).slice(0, 120)})` : ''}`).join(', ');
 
   let rows = [];
@@ -132,13 +134,29 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     sent.length = 0;
     const rs = await build();
     const c = rs.find(r => r.state === 'contract');
-    assert.ok(c && c.contractInfo.resumed && c.contractInfo.kept.length === 3 && !c.contractInfo.stale.length, JSON.stringify(c && c.contractInfo));
+    assert.ok(c && c.contractInfo.resumed && c.contractInfo.kept.length === 3 && !c.contractInfo.stale.length, JSON.stringify(c && c.contractInfo) + states(rs));
     assert.strictEqual(sent.length, 0, `files re-sent: ${sent.map(s => s.file).join(', ')}`);
     assert.ok(rs.some(r => r.state === 'contract-complete'), states(rs));
   });
-  await test('CP-04', 'a changed plan rejects the old checkpoint (archived, not deleted); a deliberately failed brick is retried and recovers', async () => {
-    sent.length = 0; variant = ' (a changed step)'; failNotes = 1;
+  // §TL1a 0.60.79 — James: "can we not have it chunk everytime it restarts. it needs to persist." A build started again
+  // with a planner that would now answer a different plan keeps the saved one: not planned, not re-chunked, resumed.
+  await test('CP-03b', 'TL1a: built again while the planner would plan differently: the saved plan is kept, the planner is not asked, nothing re-sent', async () => {
+    sent.length = 0; variant = ' (a planner that answers differently today)';
+    const before = dispatchedTotal;
     const rs = await build();
+    const kept = rs.find(r => r.state === 'planned' && r.kept);
+    assert.ok(kept && kept.keptFrom === 'contract' && /not planned again/.test(kept.planSummary), states(rs));
+    assert.ok(!rs.some(r => r.state === 'planning'), `the planner was asked: ${states(rs)}`);
+    const c = rs.find(r => r.state === 'contract');
+    assert.ok(c && c.contractInfo.resumed && !c.error, JSON.stringify(c));
+    assert.strictEqual(sent.length, 0, `files re-sent: ${sent.map(s => s.file).join(', ')}`);
+    assert.strictEqual(dispatchedTotal - before, 0, 'no agent call at all');
+    const saved = CG.load(c.contract).payload;
+    assert.ok(saved.plan && saved.plan.files.length === 2 && saved.phase_hash, 'the plan and the phase hash are on the contract');
+  });
+  await test('CP-04', 'a changed plan (replan asked) rejects the old checkpoint (archived, not deleted); a deliberately failed brick is retried and recovers', async () => {
+    sent.length = 0; variant = ' (a changed step)'; failNotes = 1;
+    const rs = await build({ replan: true });
     const c = rs.find(r => r.state === 'contract');
     assert.ok(c && !c.contractInfo.resumed && /rejected: the plan changed/.test(c.error || ''), JSON.stringify(c));
     const arch = (c.error.match(/archived at (\S+)\)/) || [])[1];
@@ -147,6 +165,11 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     const end = rs.find(r => /^contract-/.test(r.state));
     assert.strictEqual(end && end.state, 'contract-complete', states(rs) + JSON.stringify(end && end.audit));
     assert.ok(end.audit.bricks[0].attempts >= 2 || rs.some(r => r.state === 'failed' && r.chunk), 'the failure is on the record');
+    // §GW2 0.60.77 — the retry is the same brick: its attempts carry one brick key, so they resume one run whatever the chat
+    const tries = sent.filter(s => s.file === ph.files[0]);
+    assert.ok(tries.every(s => s.brick && s.brick === tries[0].brick), `one brick key across the retries: ${JSON.stringify(tries)}`);
+    // (a contract retry reuses the brick's chat session today; a new chat per attempt is GW0b, his open decision)
+    assert.ok(!sent.some(s => s.file !== ph.files[0] && s.brick === tries[0].brick), 'another file is another brick');
   });
 
   await test('CP-05', 'the route serves the audit (GET /phases/contract), the command row and the Plan panel show it', async () => {
@@ -156,6 +179,38 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(au && au.bricks.length === 2 && au.complete, JSON.stringify(au).slice(0, 400));
     assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8').includes("key: 'repo.contract'"));
     assert.ok(/contract audit —/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
+  });
+
+  // 0.60.75 GW3 — James: "each contract tracked through the system using the event ledger, tagging and each gate". The
+  // same real build, traced: the contract's own log, its checkpoints and this run's ledger moves, in time order, per brick
+  await test('CP-05b', 'GW3: ?trace=1 traces the contract end to end — every brick with its agent, files and moves; holes named, never filled', async () => {
+    const g = await R('GET', `/api/repos/${repoUuid}/phases/contract?phase=${encodeURIComponent(ph.key)}&map=${encodeURIComponent(map)}&trace=1`, {});
+    assert.strictEqual(g.status, 200, JSON.stringify(g.json).slice(0, 300));
+    const d = g.json.data || g.json, tr = d.trace;
+    assert.ok(tr && tr.bricks.length === 2, JSON.stringify(tr).slice(0, 300));
+    assert.ok(d.runId, 'the run it traced is named');
+    for (const b of tr.bricks) {
+      assert.strictEqual(b.status, 'PASSED', b.id);
+      assert.ok(b.files.length >= 1, `${b.id} names its file`);
+      assert.ok(b.agents.length >= 1, `${b.id} names who built it: ${JSON.stringify(b)}`);
+      assert.ok(tr.steps.some(s => s.gate === b.id && s.source === 'ledger' && /^brick-/.test(s.what)), `${b.id} has a ledger move`);
+      assert.ok(tr.steps.some(s => s.gate === b.id && s.source === 'checkpoint'), `${b.id} has a checkpoint`);
+    }
+    const ats = tr.steps.map(s => s.at || 0); assert.deepStrictEqual(ats, [...ats].sort((x, y) => x - y), 'oldest first');
+    for (const h of tr.holes) assert.ok(tr.bricks.some(b => b.id === h.gate) && h.what, JSON.stringify(h));
+    assert.ok(d.lines.length === tr.steps.length || d.lines.length === 200);
+    assert.ok(/ppTrace/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')), 'the Plan panel has the trace button');
+    // §GW2 0.60.77 — a brick's own run (the baton) is in the trace: written here as the repo agent writes it, keyed by the brick
+    process.env.RUN_STATE_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'cp-runstate-'));
+    const RSb = require(path.join(ROOT, 'lib/run-state.js'));
+    const bid = tr.bricks[0].id, key = `${map}::${ph.key}::${bid}`;
+    const r1 = RSb.begin({ repoUuid: repoUuid, session: 's1', goal: 'g', provider: 'ollama:q', brick: key });
+    RSb.step(r1.runId, { name: 'code_write', arguments: { path: tr.bricks[0].file }, ok: true });
+    RSb.begin({ repoUuid: repoUuid, session: 's2', goal: 'g + feedback', provider: 'chatgpt', brick: key });
+    const g2 = await R('GET', `/api/repos/${repoUuid}/phases/contract?phase=${encodeURIComponent(ph.key)}&map=${encodeURIComponent(map)}&trace=1`, {});
+    const b0 = ((g2.json.data || g2.json).trace.bricks || []).find(b => b.id === bid);
+    assert.ok(b0 && b0.run && b0.run.attempt === 2 && b0.run.providers.join(',') === 'ollama:q,chatgpt' && b0.run.changed.includes(tr.bricks[0].file), JSON.stringify(b0));
+    delete process.env.RUN_STATE_DIR;
   });
 
   // 0.60.27 AG1a — James: "as little as possible." The builds above, counted: each call's own row, tokens estimated at
@@ -189,7 +244,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     readyAnswer = { claude: { ready: false, why: 'claude needs a sign-in in its Clear Glass tab (test)' } };
     const before = dispatchedTotal;
     const sessions = []; const orig = RA.dispatch; RA.dispatch = async (a) => { sessions.push(a.session); return orig(a); };
-    const rows = await build();
+    const rows = await build({ replan: true });   // the planning path itself is under test: the saved plan is set aside (TL1a)
     RA.dispatch = orig;
     const started = rows.find(r => r.state === 'building');
     assert.ok(started && started.ready && started.ready.checked && started.ready.planner && started.ready.planner.use === null && /sign-in/.test(started.ready.planner.why), JSON.stringify(started && started.ready));
@@ -222,7 +277,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     readyAnswer = {};
     await R('POST', '/api/config', { key: 'routing.plan_code', value: 'never' });
     const before = dispatchedTotal; sent.length = 0;
-    rows = await build();
+    rows = await build({ replan: true });   // TL1a: planned again on purpose
     await R('POST', '/api/config', { key: 'routing.plan_code', value: 'auto' });
     assert.ok(!rows.some(r => r.state === 'planning'), `no planner was asked: ${states(rows)}`);
     assert.ok(rows.some(r => r.state === 'planned' && r.derived), `planned from the phase itself: ${states(rows)}`);

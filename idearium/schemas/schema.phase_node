@@ -115,3 +115,8 @@ payload:
       required: false
       enum: [key, list]
       description: "0.39.271 P2 - written as `  X1_slug:` (key) or `- id: X1` (list)"
+    kind:
+      type: string
+      required: false
+      enum: [decision]
+      description: "0.60.81 CV6 - an entry under a map's open_decisions:/decisions: block: a decision recorded in the map, not a phase to build"

@@ -19,7 +19,7 @@ const ROOT = path.join(__dirname, '../..');
 const { normalizeDeclarations: norm } = require(path.join(ROOT, 'lib/component-registry'));
 
 // §0.39.282 — bridge is retired (no bridge/ in the tree); intelligence declares its own set since the organs moved out of cortex.
-const SYSTEMS = ['architect', 'clear-glass', 'copilot', 'cortex', 'emerge', 'eravos', 'guardian', 'idearium', 'intelligence', 'loom', 'ollama'];
+const SYSTEMS = ['architect', 'clear-glass', 'copilot', 'cortex', 'emerge', 'guardian', 'idearium', 'intelligence', 'loom', 'ollama'];
 
 test('T-001', 'every system registry-components file normalizes to a non-empty component array', () => {
   for (const sys of SYSTEMS) {

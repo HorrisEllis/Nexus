@@ -1,16 +1,38 @@
-# 0.60.64 - 2026-10-16
+# 0.60.64 — 2026-10-15
 
-James: "build it."
+_Built on branch claude/brave-cori-eczug1 as 0.60.52; renumbered when merged with main, whose own 0.60.52 is a different release (CHANGELOG-0.60.52.md)._
 
-## What I read
-"It" = the Clear Glass side of the chat crawler (0.60.63 built the loop and left the page work). To confirm.
+James: "phases tags by system/nested repo"
+
+## What was there
+
+Each Nexus system is a nested repo inside Idearium's Nexus repo, and its Phases tab already shows the phases tagged
+for that system (the "<system>'s only" filter, on by default). But a phase's tags came either from a hand-written
+`systems:` line or from a guess at its prose. They could disagree with what the phase actually touches. WB0, for
+example, creates `lib/` files and edits a `cos/` spec, yet was tagged idearium / cortex / copilot.
 
 ## What changed
-- `clear-glass/src/chats/ports.js`: the crawler's page work is two automation workflows per account (read the chat list; read one chat), run by the real engine on the account's own session. Navigate, wait, scroll, read; nothing is typed, sent or clicked.
-- Each chat is filed into the existing chat ledger, only the turns it does not already hold. A half-loaded chat is never filed as ok (the chat scroll fails the visit). A login wall or captcha stops the account with the reason.
-- `clear-glass/src/chats/service.js`, `/cli/chats/crawl/*`, and the `chat-crawl` command: `chat-crawl start chatgpt:<id>`, `status`, `stop`. Refused while the account's switch is off; start and stop are a person's act.
 
-## Proof and honest limits
-- `test-chat-ports` PT-01..07 run the real automation engine against a fake chat site in jsdom: backfill to done, restart, novel-only, login and challenge stops, the service. `test-chat-crawler` 10/10, `test-chat-crawl-plan` 18/18, `test-net-routes` 24/24.
-- `test-cli-route-commands` CL-07 fails the same way without my change (it needs Guardian running).
-- NOT verified in real Clear Glass: ChatGPT's selectors, the account-to-session mapping, the sidebar being complete after scrolling. First check: one account, ten chats.
+- **Tagged by its files**: loom's phasemap reader tags a phase with the system that owns each file it names
+  (`lib/nexus-self/systems.js ownerOf`, the one owner of every path), beside its declared systems.
+  - Declared plus files → `systemsFrom: 'declared+files'`, with the added ones in `systemsFromFiles`.
+  - Files but no systems line → tagged from the files (`'files'`), no longer guessed from prose.
+- **Across all 1,390 phases** in every map: 429 move from guessed to file-owned tags; 72 declared phases gain a system.
+  Each of those now appears in the nested repo of the system it actually touches.
+- **On screen**: each phase card and the detail panel show its systems; the phase search matches them.
+- **The WARP / spec-framework map**: its systems lines now cover every file's owner (WB0 → core, idearium, cos), and
+  PT2 is added as a done phase.
+
+## Proof
+
+- `tests/modules/test-phase-specs-tag.test.js` 7/7. PT-05 (a phase editing `guardian/` is in guardian's repo) and
+  PT-06 (files beat guessing) fail on the old reader.
+- `test-loom-phasemap` 7/7. T-007 asserted the Emerge map's phases are exactly `'declared'`; it now accepts
+  `'declared+files'`, which is still declared, plus the files' owners.
+- Unchanged: phasemap-status 14/14, diagnosis-facts 10/10, phases-tab 5/5. test-nexus-self-and-cos-run is 24/30
+  with and without this change; two nexus-self suites need `js-yaml`, not installed in this container.
+
+## To confirm
+
+"Nested repo" was read as the per-system repos inside Idearium's Nexus repo (one per system in
+`lib/nexus-self/systems.js`).

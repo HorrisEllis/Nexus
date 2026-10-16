@@ -1,6 +1,6 @@
 'use strict';
 /**
- * clear-glass/src/releases/deliver.js — Clear Glass brings a Nexus release to COS's inbox (COSA7, 0.60.72)
+ * clear-glass/src/releases/deliver.js — Clear Glass brings a Nexus release to COS's inbox (COSA7, 0.60.93)
  * comp_id: clear-glass.releases.deliver
  * Map: docs/2026-10-15-cos-app-phasemap.spec (COSA7_clear_glass_delivers)
  *

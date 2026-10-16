@@ -23,12 +23,15 @@ import { spawnSync, spawn as spawnProc } from 'child_process';
 import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
+const WR = _require('../../lib/warp-rung.js');   // §WB1 0.60.73 — WARP around the agent the ladder and RAID chose (James: "Option 1")
 const _access = _require('../lib/access.cjs');   // §0.58.0 IA0 — who may act on Idearium
 // 0.60.27 AG1a — an agent call's tokens, estimated where it happens (lib/economy/tokens.js estimate-v1; no vendor tokenizer)
 const _tokEst = (t) => { try { return t ? _require('../../lib/economy/tokens.js').estimate(String(t)) : 0; } catch (_) { return 0; } };
 // §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
+// §0.60.67 SF4 — whether a collected spec is compiled at once (specs.compile_on_collect, specs.compile_into)
+try { _require('../../lib/spec-collect.js').setCompileSetting(() => { try { return { on: getIdeariumValue('specs.compile_on_collect') === true, into: getIdeariumValue('specs.compile_into') || '', template: getIdeariumValue('specs.default_template') || 'genesis' }; } catch (_) { return { on: false, into: '' }; } }); } catch (_) {}
 // §CT1 0.39.347 — the repo agent asks copilot's door with idearium's routing policy (routing.* config)
 try { _require('../../lib/repo-agent.js').setRoutingPolicySource(() => _routingPolicy()); } catch (_) {}
 
@@ -620,6 +623,16 @@ function _toolsBrief(r) {
 // 0.60.27 AG1a — every row, unmerged: _phaseRuns keeps one row per run (its latest state), and a count of agent calls
 // needs each call's own row (lib/phase-cost.js)
 function _phaseRows(repoUuid) { return loadTable('idearium_phase_runs').filter(r => r && r.repoUuid === repoUuid); }
+// §FN0/FN1 — the agent work funnel for a request in a repo: its own tree and maps (Nexus: the live tree and every phasemap)
+async function _funnelFor(repo, dir, request, intent = null) {
+  const PH = await import('../repo/phases.js');
+  const { maps, scope } = PH.mapsFor({ repo, repoDir: dir });
+  const NSx = _require('../../lib/nexus-self/systems.js'), AM = _require('../../lib/phase-map-auto.js'), WF = _require('../../lib/work-funnel.js');
+  const root = scope.source === 'nexus' ? NSx.ROOT : dir;
+  const f = WF.funnel({ request, intent, root, maps, specsOf: scope.source === 'nexus' ? AM.specsOfNexus(NSx.ROOT) : null });
+  return { scope: scope.label, ...f, lines: WF.lines(f) };
+}
+
 function _phaseRuns(repoUuid) {
   const by = new Map();
   for (const r of loadTable('idearium_phase_runs')) {
@@ -731,7 +744,7 @@ async function _phaseSetStatus(repo, { map, phase, status, force = false, reason
 // the call's own backend when there is no ladder ('ollama' when it names one), for shouldChunk
 function paramsOfBackend(backend, rungs) { return rungs.length ? null : backend || null; }
 
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '' }) {
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
   const node = view.phases.find(p => p.map === map && p.phase_key === phase);
@@ -785,7 +798,20 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // §0.39.362 CH2 — the compartment's charter (charter.spec at the repo root): its axioms, what must stay true, its end state
   let charterText = '';
   try { charterText = _require('../../lib/charter.js').requestText(_charterOf(target.uuid)); } catch (_) {}
-  const message = [req.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+  // §0.60.66 MP3 — James: "The agent keeps having to find context, with tools. Need them all mapped." What Nexus mapped for
+  // this phase (MP1/MP2: node.mapped) goes in its 'build-phase-map' prompt block (editable, Settings → Agents), so the agent
+  // starts with the files, exports, requires, used-by and specs instead of searching for them. Chunked: each file's own.
+  let phaseMapFor = () => '';
+  try {
+    const AM = _require('../../lib/phase-map-auto.js'); const PBm = _require('../../lib/repo-prompt-blocks.js');
+    const blocksPM = PBm.getBlocks(repo.uuid);
+    const exportsOf = AM.exportsOfTree(scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : dir);
+    phaseMapFor = (focus = null) => {
+      const t = AM.contextText(node.mapped, { focus, max: focus ? 500 : 900, exportsOf });
+      return t ? PBm.renderBuild(blocksPM.filter(b => b.id === 'build-phase-map'), { phasemap: t }).text : '';
+    };
+  } catch (_) { /* no mapping: the request is sent as before */ }
+  const message = [req.message, phaseMapFor(), charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
@@ -901,7 +927,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // or one chunk (one file, its own short request, its own sessions; ck = { chunk, chunks, file } on every row)
   // §0.60.0 PC1 — verify(code) -> { ok, missing }: a planned file is checked for the exports its plan names; bare: the
   // request goes alone (no retrieval context, no atlas) — a planned brief already holds everything the coder needs
-  const makeAttempt = ({ msg, files, ck = null, verify = null, bare = false }) => async (rg, ri, tryNo) => {
+  const makeAttempt = ({ msg, files, ck = null, verify = null, bare = false, brick = null }) => async (rg, ri, tryNo) => {
+    // §GW2 0.60.77 — the brick this attempt works on: its run state is the brick's (lib/run-state.js), whatever chat or agent
+    const brickKey = (brick || (ck && ck.brick)) ? `${map}::${phase}::${brick || ck.brick}` : null;
     const tag = ck ? `-c${ck.chunk}` : '';
     const session = ri <= 0 && tryNo === 1 ? `${runId}${tag}` : `${runId}${tag}-r${ri + 1}t${tryNo}`;
     // §0.60.0 RS1 — the repo is paused: the attempt waits here, said on the Plan, and goes on when it is played
@@ -930,7 +958,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
-    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, ...(bare ? { noContext: true } : {}) }); }
+    try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(brickKey ? { brick: brickKey } : {}), ...((typeof bare === 'function' ? bare(rg) : bare) ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -984,7 +1012,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const file = expectFiles[i];
       const ck = { chunk: i + 1, chunks: expectFiles.length, file };
       const cr = PH.chunkRequest({ phase: node, mapText, repo: target, file, index: i, files: expectFiles, done, depsDone });
-      const msg = [cr.message, charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
+      const msg = [cr.message, phaseMapFor(file), charterText, precedent.text, note ? `FROM JAMES: ${note}` : ''].filter(Boolean).join('\n\n');
       last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg, files: [file], ck }), onOutcome: makeOnOutcome(ck) });
       if (last.state !== 'replied') {
         appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-stopped`, ...base, ...ck, state: 'failed', chunkStopped: true, snapshot: commitId,
@@ -1003,6 +1031,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // (2) each planned file, in dependency order, is one bare request to the coder ladder (Ollama first): its exports,
   // imports and steps, nothing to infer; a file missing a planned export is incomplete and retried or climbed.
   // (3) the plan's conditions prove the phase when its map declares none. No usable plan → the phase is built as before.
+  // §TL1a 0.60.79 — the phase's saved contract (one per phase, kept across restarts) and what the phase said when planned
+  // (its words, files and note; not its status lines or comments, which the roadmap edits as the build moves)
+  const _safeId = (x) => String(x).replace(/[^A-Za-z0-9._-]+/g, '_');
+  const contractFile = path.join(IDEARIUM_DATA_DIR, 'phase-contracts', target.uuid, `${_safeId(map.split('/').pop().replace(/\.spec$/, ''))}.${_safeId(phase)}.contract`);
+  const phaseHash = (() => { try { return crypto.createHash('sha256').update(JSON.stringify({ body: String(PH.phaseContext({ phase: node, mapText }).body || '').split('\n').filter(l => !/^\s*(#|status(_\w+)?\s*:)/.test(l)).join('\n'), files: expectFiles, note: note || '' })).digest('hex').slice(0, 16); } catch (_) { return null; } })();
   const runPlanned = async () => {
     const PP = _require('../../lib/phase-plan.js');
     const ctx = PH.phaseContext({ phase: node, mapText });
@@ -1041,7 +1074,24 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const planner = planning.planner;   // 0.60.28 PF1 — null: no planner was ready, the plan is written without a model
     const pdp = planner ? { ...RA.routeFor(PRt.baseOf(planner)), provider: null } : null;
     let parsed = null, feedback = '', plannerError = null;
-    for (let n = 1; planner && n <= policy.planAttempts; n++) {
+    // §TL1a 0.60.79 — James: "can we not have it chunk everytime it restarts. it needs to persist. all data is meant to
+    // persist." A saved contract's plan is the plan: a build started again (a restart, a retry, ▶) reuses it and resumes
+    // its passed bricks, instead of asking the planner again (a new plan has a new hash, and the old checkpoints were
+    // archived with it). Planned again only when the phase changed since, or when asked (replan).
+    let keptPlan = null;
+    if (policy.contractBuild && !replan) {
+      try {
+        const candidates = allRuns.filter(r => r.state === 'planned' && r.plan && r.map === map && r.phase === phase).sort((a, b) => (b.ts || 0) - (a.ts || 0)).map(r => r.plan);
+        keptPlan = _require('../../cortex/core/raid/contract-adapters.js').savedPlan(contractFile, { phaseHash, candidates });
+      } catch (e) { keptPlan = { plan: null, why: `the saved plan could not be read: ${e.message}` }; }
+      if (keptPlan.plan) {
+        parsed = { ok: true, plan: keptPlan.plan, problems: [], warnings: [] };
+        appendRow('idearium_phase_runs', { uuid: `${runId}-plan-kept-planned`, ...base, state: 'planned', snapshot: commitId, provider: null, kept: true, keptFrom: keptPlan.from,
+          plan: keptPlan.plan, planSummary: `${PP.summary(keptPlan.plan)} — kept: ${keptPlan.why}, not planned again`, warnings: [], error: null, ts: Date.now() });
+        getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planned', snapshot: commitId, kept: true });
+      }
+    }
+    for (let n = 1; planner && !(keptPlan && keptPlan.plan) && n <= policy.planAttempts; n++) {
       const msg = PP.planPrompt({ phaseKey: phase, title: node.title, body: ctx.body, intent: note, files: expectFiles, registry, spec: specText,
         invariants: ctx.invariants, charter: [charterText, precedent.text].filter(Boolean).join('\n\n'), repoName: target.name, feedback,
         system, atlas, loom, reuse, lessons: learned.text, skeleton: (() => { try { return fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'registry-components.js')) && fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'interaction-contract.json')); } catch (_) { return false; } })() });
@@ -1049,7 +1099,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         grounding: { system, registry: registry.length, atlas: atlas.length, loom: loom.length, reuse: reuse.map(x => x.file), lessons: learned.text ? learned.text.split('\n').length : 0, notes: regNotes }, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planning', snapshot: commitId, provider: planner });
       let r;
-      try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-plan${n}`, maxToolErrors: policy.maxToolErrors || 0 }); }
+      try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-plan${n}`, maxToolErrors: policy.maxToolErrors || 0 }), { kind: 'phase-plan', provider: planner || null, key: `${target.uuid}\n${msg}`, mode: 'cache', fresh: n > 1 }); }
       catch (e) { r = { ok: false, error: e.message }; }
       if (!r || !r.ok) { plannerError = String((r && r.error) || 'the planner did not answer').slice(0, 400); break; }   // the planner itself is down: asking again will not help
       parsed = PP.parsePlan(r.text, { phaseFiles: expectFiles, registry, system, ownerOf: system ? _require('../../lib/nexus-self/systems.js').ownerOf : null });
@@ -1129,13 +1179,12 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const CA = _require('../../cortex/core/raid/contract-adapters.js');
     const root = _repoDiskDir(target.uuid);
     const mapBase = map.split('/').pop().replace(/\.spec$/, '');
-    const safe = (x) => String(x).replace(/[^A-Za-z0-9._-]+/g, '_');
-    const file = path.join(IDEARIUM_DATA_DIR, 'phase-contracts', target.uuid, `${safe(mapBase)}.${safe(phase)}.contract`);
+    const file = contractFile;
     fs.mkdirSync(path.dirname(file), { recursive: true });
     const inputs = root && fs.existsSync(path.join(root, map)) ? [{ id: 'phasemap', path: map, note: 'the phase as its map writes it' }] : [];
     let onDisk = false; try { onDisk = _require('../../lib/repo-inject.js').getMode(target.uuid) !== 'review'; } catch (_) {}
     const built = whole ? CA.fromWholePhase({ id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || '', inputs, message })   // §BR1 — no file named: the whole phase, one brick
-      : CA.fromPhasePlan(plan, { id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || plan.intent || '', inputs, onDisk, root });
+      : CA.fromPhasePlan(plan, { id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || plan.intent || '', inputs, onDisk, root, phaseHash });
     const opened = CA.openCheckpoint(file, built, { root });
     const L = opened.loaded, p = L.payload;
     p.failure = { retry_limit: 2, ...(p.failure || {}) };
@@ -1153,7 +1202,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const dispatch = async (hops, { gate, assessment = null }) => {
       if (whole && gate.id === 'work') {
         // §BR1 — the whole phase as one request to the ladder, as runWhole sent it — but as a brick: gated, checkpointed, classed
-        const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles }), onOutcome: makeOnOutcome() });
+        // §GW24 0.60.76 — James: "each gate holds the context, which can make tghe agents dumb." On a local model's rung the
+        // whole-phase brick goes lean: the phase and its map (MP3) only; the repo context stays with the gate, and the agent's
+        // tools fetch what it asks for. An agent's rung (ChatGPT, Claude…) gets the full context as before.
+        const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles, bare: (rg) => !!(rg && rg.base === 'ollama'), brick: gate.id }), onOutcome: makeOnOutcome() });
         if (out.dp) lastDp = out.dp;
         const ok = out.state === 'replied';
         return { ok, agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),
@@ -1173,8 +1225,16 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const cb = PP.chunkBrief({ plan, path: f, done, repoName: target.name, phaseKey: phase });
       // §GA1 0.60.44 — the gate found names its imports need that no dependency's exports cover: the dependencies' code goes
       // in the brief (trimmed), so the agent sees what it can actually import instead of guessing
-      const ctxNote = assessment && assessment.context.needs.length ? `\n\nCONTEXT — you import ${assessment.context.needs.join(', ')}, which no dependency exports yet. What the dependencies actually contain:\n${
-        assessment.deps.map(x => `--- ${x.file}\n${String(codeOf(x.file)).split('\n').slice(0, 120).join('\n')}`).join('\n')}` : '';
+      // §GW24 0.60.76 — one budget for this dispatch: what the first agent on its ladder has passed reliably (Boundaries,
+      // learned from every gate check; ~4 chars a token) less the brief, else LIMITS.context. The dependencies' code is ranked
+      // (the needed names' definitions first, then signatures) and cut to it; what was cut is recorded on the gate.
+      // (was: CONTEXT — you import ${assessment.context.needs.join(', ')} … up to 120 lines of every dependency, no total cap)
+      const ctx = assessment && assessment.context.needs.length ? (() => {
+        let learned = null; try { learned = _require('../../cortex/core/raid/contract-gates.js').Boundaries.budget(hops[0] && hops[0].provider, gate.kind || gate.type); } catch (_) { learned = null; }
+        const budget = learned ? Math.max(PP.LIMITS.contextMin, learned * 4 - cb.message.length) : PP.LIMITS.context;
+        return PP.contextNote({ needs: assessment.context.needs, deps: assessment.deps.map(x => ({ file: x.file, code: String(codeOf(x.file) || '') })), budget });
+      })() : null;
+      const ctxNote = ctx ? `\n\n${ctx.text}` : '';
       const msg = (gate.parent ? `${cb.message}\n\nDO ONLY THIS STEP NOW: ${(gate.actions || [])[0] || ''}\nKeep everything the file already has.` : cb.message) + ctxNote;
       const ck = { chunk: gate.parent ? `${i + 1}.${gate.id.split('.').pop()}` : i + 1, chunks: plan.order.length, file: f, planned: true, brick: gate.id };
       const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy,
@@ -1184,7 +1244,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const code = ok ? _landedCode(out.r, f) : '';
       const v = ok && !gate.parent ? PP.checkChunk(code, plan, f) : null;
       return { ok: ok && (!v || v.ok), agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),   /* §GT1a — the ladder was climbed to its end: an attempt spent */ ...(ok ? {} : { error: String((out.row && out.row.error) || out.state).slice(0, 400) }),
-        evidence: ok ? { [`${gate.id}.verified`]: v ? (v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}`) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)) } : {} };
+        evidence: { ...(ctx ? { [`${gate.id}.context`]: ctx.summary } : {}), ...(ok ? { [`${gate.id}.verified`]: v ? (v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}`) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)) } : {}) } };
     };
     const agentEx = CA.agentExecutor({ dispatch, route: () => (rungs.length ? rungs.map(r => ({ provider: r.provider, rung: r })) : [{ provider: provider || agent || backend || 'the call\'s own agent', rung: null }]) });
     const integrate = async () => {
@@ -1436,9 +1496,9 @@ async function _provePhase({ target, base, commitId, mapText, phase, message, di
       const fb = PR.feedbackMessage(run);
       appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-retry-${attempt}`, ...pbase, state: 'retrying', attempt, snapshot: commitId, error: `${run.total - run.met} condition(s) unmet — attempt ${attempt} of ${max}`, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.attempt.unmet', { ...pbase, attempt: attempt - 1, met: run.met, total: run.total, modes: run.modes });
-      let rr; try { rr = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: `${message}
+      let rr; try { const rd = await _agentDir(target.uuid); rr = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: `${message}
 
-${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}` }); }
+${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}` }), { kind: 'proof-repair', provider: dispatch.provider || dispatch.model || dispatch.agent || dispatch.backend || null, key: `${target.uuid}\n${message}\n${fb}`, mode: 'gate' }); }
       catch (e) { rr = { ok: false, error: e.message }; }
       if (!rr || !rr.ok) {
         appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt, snapshot: commitId, error: `attempt ${attempt} failed before it could be checked: ${String((rr && rr.error) || 'no reply').slice(0, 300)}`, proof: run && { met: run.met, total: run.total, modes: run.modes }, ts: Date.now() });
@@ -1505,7 +1565,7 @@ async function _reviewDraft({ r, state, absent, target, base, commitId, req, not
   const SH = _require('../../lib/shadow.js');
   const shadow = SH.declare({ step: 'phase.review', expects: { files: [...new Set([...files.map(f => f.path), ...(absent || [])])] }, subject: { repoUuid: target.uuid, map: base.map, phase: base.phase, runId: reviewRunId }, causedBy: `idearium.phases.build:${base.runId}` });
   let rr;
-  try { rr = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: text, provider: reviewer, layer: getRepoLayer(), session: reviewRunId }); }
+  try { const rd = await _agentDir(target.uuid); rr = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: text, provider: reviewer, layer: getRepoLayer(), session: reviewRunId }), { kind: 'draft-review', provider: reviewer || null, key: `${target.uuid}\n${text}`, mode: 'gate' }); }
   catch (e) { rr = { ok: false, error: e.message }; }
   let rstate = rr && rr.ok ? (rr.injects && rr.injects.blocked ? 'blocked' : 'reviewed') : 'failed';
   let rabsent = null;
@@ -2485,13 +2545,17 @@ const ROUTE_CAP = {
   'repo.worksurface': CAPS.READ_IDEAS, 'repo.worksurface.prove': CAPS.WRITE_IDEAS,
   'repo.versions.index': CAPS.READ_IDEAS, 'repo.versions.diff': CAPS.READ_IDEAS, 'repo.versions.tree': CAPS.READ_IDEAS,   // §0.60.7
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
-  'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS,   // §0.60.41 RN1
+  'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
   'checks.list': CAPS.READ_IDEAS, 'checks.run': CAPS.READ_IDEAS,   // §0.60.33 QA1 — the check catalogue; a run only reads and parses
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
+  'repo.surface.get': CAPS.READ_IDEAS, 'repo.surface.set': CAPS.WRITE_IDEAS,
+  'repo.code.edit': CAPS.WRITE_IDEAS, 'repo.code.assist': CAPS.WRITE_IDEAS,
+  'repo.runs.list': CAPS.READ_IDEAS, 'repo.runs.rewind': CAPS.WRITE_IDEAS,   // §CV3 0.60.81: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.81: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
+  'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,
@@ -2588,6 +2652,9 @@ const ROUTE_CAP = {
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
+  'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
+  'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
+  'raid.held': CAPS.READ_IDEAS, 'raid.held.unpark': CAPS.WRITE_IDEAS,   // §0.60.78 RT1
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,
@@ -2816,6 +2883,12 @@ function matchRoute(method, url) {
     // 0.60.14 — James: "a tool to request lines from a file to copy to the worksurface or a new file to edit so it can be tiny amounts of code"
     ['GET',    ['api','repos',    ':uuid','lines'],        'repo.lines'],          // ?path=&from=&to=
     ['POST',   ['api','repos',    ':uuid','lines','copy'], 'repo.lines.copy'],     // { path, from, to, toPath? }
+    ['GET',    ['api','repos',    ':uuid','surface'],      'repo.surface.get'],    // CE8: open file, picked lines, chunk, filters + pending, run
+    ['PUT',    ['api','repos',    ':uuid','surface'],      'repo.surface.set'],
+    ['POST',   ['api','repos',    ':uuid','code','edit'],   'repo.code.edit'],      // CE7 { path, edits:[{from,to,expect?,replacement}], checksum? }
+    ['POST',   ['api','repos',    ':uuid','code','assist'], 'repo.code.assist'],
+    ['GET',    ['api','repos',    ':uuid','runs'],          'repo.runs.list'],      // CV3 ?status= — the runs Nexus kept for this repo, newest first
+    ['POST',   ['api','repos',    ':uuid','runs',':runId','rewind'], 'repo.runs.rewind'],   // CV3 { dryRun? } — every file the run changed, back as it was before it    // CE7 { path, from, to, action, note?, backend?, agent?, provider?, model? }    // { open?, sel?: {from,to}, chunk?, filters?, by? }
     // §BUILT 2026-09-16 — nexus://repo/{repoUuid}/chunk/{chunkUuid}
     // (lib/nexus-uri.js's 'repo-chunk' route) needs to resolve a bare
     // chunkUuid to real content, and no existing route did that — the
@@ -2908,7 +2981,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','releases'],                 'repo.releases.list'],
     ['POST',   ['api','repos',    ':uuid','releases'],                 'repo.releases.create'],     // { version?, quote?, notes? }
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
-    ['POST',   ['api','releases','sync'],                              'releases.sync'],
+    ['POST',   ['api','releases','sync'],                              'releases.sync'],             // { all: true } → every release's commits
+    ['GET',    ['api','releases','changes'],                           'releases.changes'],          // §0.60.72 RN2 ?since=0.60.47 · &write=1
     ['POST',   ['api','repos',    ':uuid','history','import'],         'repo.history.import'],      // { zips:[{name, contentBase64}], dryRun, allowSecrets }
     // §0.60.7 PL4 — the import checks (lib/import-checks.js): GET reads them; POST also writes them as the repo's notes
     ['GET',    ['api','repos',    ':uuid','integrity'],                'repo.integrity'],
@@ -2927,11 +3001,13 @@ function matchRoute(method, url) {
     // §0.39.271 S1 — the living model: the repo's spec/ .spec files, parsed (?path= one file)
     ['GET',    ['api','repos',    ':uuid','living-spec'],           'repo.living-spec'],
     ['GET',    ['api','repos',    ':uuid','phases'],                'repo.phases.get'],
+    ['POST',   ['api','repos',    ':uuid','funnel'],                'repo.funnel'],   // §FN0 { request, intent? } → dependencies, spec, phase, chunks (no model)
     ['GET',    ['api','repos',    ':uuid','thread'],                'repo.thread'],   // §RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
     ['GET',    ['api','repos',    ':uuid','phases','cost'],         'repo.phases.cost'],       // 0.60.27 AG1a — agent calls and tokens per phase
     ['POST',   ['api','repos',    ':uuid','phases','map'],          'repo.phases.map'],        // 0.60.29 PM — map every phase to its files and dependencies
+    ['POST',   ['api','repos',    ':uuid','specs','compile'],       'repo.specs.compile'],     // 0.60.67 SF4 — a spec's T0/T1 files as proposed .inject nodes
     ['GET',    ['api','repos',    ':uuid','phases','map'],          'repo.phases.map.status'],
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
@@ -2977,6 +3053,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],
     ['GET',    ['api','repos',    ':uuid','notes'],     'repo.notes'],         // §0.60.6 — the repo's notes: ?q=&kind=&status=&tag=
     ['POST',   ['api','repos',    ':uuid','notes'],     'repo.notes.add'],     // §0.60.6 — { body, title?, kind?, tags?, pinned? }
+    ['GET',    ['api','my-projects'],                   'projects.overview'],
+    ['GET',    ['api','raid','held'],                   'raid.held'],          // §0.60.78 RT1 — cortex's officiator: the agents' wait, each staged drop's tries
+    ['POST',   ['api','raid','held','unpark'],          'raid.held.unpark'],   // §0.60.78 RT1 — { id? } clear one drop, or everything  // §0.60.74 COSA10 (not /api/projects: that is the zip shelf, project.list) — every project of his, sorted by what moved last: notes, phases, last activity
     ['GET',    ['api','notes'],                         'notes.list'],         // §0.60.6 — ?scope=all (default) | loose (on no repo) &q=&kind=&status=&tag=
     ['POST',   ['api','notes'],                         'notes.add'],          // §0.60.6 — a note on no repo, or { repoUuid }
     ['PATCH',  ['api','notes',':id'],                   'notes.update'],       // §0.60.6 — { body?, title?, kind?, tags?, status?, pinned?, repoUuid? }      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
@@ -4674,6 +4753,142 @@ async function handle(req, res, route, query, body) {
       if (!p || p.ok === false) return err(res, 400, (p && p.errors || ['could not propose']).join('; '));
       return ok(res, { path: toPath, from, to, lines: slice.length, inject: p.inject || p.node || p });
     }
+    // §CE8 — James: "so the cli can read the current worksurface in the code tab." The surface was the browser's CS object;
+    // now it is a node per repo (idearium/lib/surface-state.cjs). The tab writes it on change, the CLI reads and sets it, and
+    // a change from elsewhere goes out as idearium.surface.changed so the tab follows. GET adds what the surface shows but does
+    // not store: the picked lines' text, the proposals waiting, and the repo's latest run (lib/run-state.js).
+    case 'repo.surface.get': case 'repo.surface.set': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const SS = _require('../lib/surface-state.cjs');
+      let sf;
+      if (action === 'repo.surface.set') {
+        const patch = body || {};
+        if (patch.open) { const r = getRepoLayer().readTextFile(params.uuid, String(patch.open).replace(/^\/+/, '')); if (!r || r.error) return err(res, 404, `not a file in this repo: ${patch.open}`); }
+        try { sf = SS.set(params.uuid, patch, { by: patch.by || 'ui' }); } catch (e) { return err(res, 400, e.message); }
+        getIdeaOS().emit('idearium.surface.changed', { repoUuid: params.uuid, open: sf.open, sel: sf.sel, chunk: sf.chunk, by: sf.by, rev: sf.rev });
+      } else sf = SS.get(params.uuid);
+      const out = { ...sf, lines: null, pending: [], run: null };
+      if (sf.open && sf.sel) {
+        const r = getRepoLayer().readTextFile(params.uuid, sf.open);
+        if (r && !r.error && typeof r.content === 'string') { const all = r.content.split('\n'); const to = Math.min(all.length, sf.sel.to); out.lines = { from: sf.sel.from, to, total: all.length, text: all.slice(sf.sel.from - 1, to).join('\n') }; }
+      }
+      try { out.pending = _require('../../lib/repo-inject.js').list(params.uuid, { status: 'proposed', limit: 200 }).map(i => ({ uuid: i.uuid, path: i.path, op: i.op || 'write' })); } catch (_) {}
+      try { const r = _require('../../lib/run-state.js').list({ repoUuid: params.uuid })[0]; if (r) out.run = { runId: r.runId, goal: String(r.goal || '').slice(0, 240), status: r.status, attempt: r.attempt, steps: (r.steps || []).length, next: r.next || null, updatedAt: r.updatedAt }; } catch (_) {}
+      return ok(res, out);
+    }
+    // §CE7 0.60.81 — James: "add ai assisted coding using the chunking and line count tool for the ai to change lines at a
+    // time or a section." code.edit: an edit set checked against the file as it is NOW (lib/line-edit.js verifyText /
+    // applyText — a stale `expect` or an overlap refuses the whole set) becomes ONE proposal, so it lands on the work surface
+    // with Apply / Reject like any agent change. code.assist: the picked range (with a few lines around it) is handed to the
+    // repo's agent with the action; the agent returns only the replacement for that range, and Nexus builds the edit with
+    // expect = the range's text when it was read — the model never addresses lines itself. explain returns the text only.
+    case 'repo.code.edit': case 'repo.code.assist': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const LE = _require('../../lib/line-edit.js');
+      const rel = String(body.path || '').replace(/^\/+/, '');
+      if (!rel) return err(res, 400, 'path is required');
+      const cur = getRepoLayer().readTextFile(params.uuid, rel);
+      if (!cur || cur.error || typeof cur.content !== 'string') return err(res, 404, `not a file in this repo: ${rel}`);
+      const text = cur.content, total = text.split('\n').length;
+      const propose = (edits, extra) => {
+        const r = LE.applyText(text, edits);
+        if (!r.ok) return { status: 409, error: r.reason, failed: r.failedEdit || null };
+        if (r.content === text) return { status: 409, error: 'the edit changes nothing' };
+        const ranges = edits.map(e => [e.anchor.startLine, e.anchor.endLine]);
+        const p = _require('../../lib/repo-inject.js').propose({ layer: getRepoLayer(), repo, path: rel, content: r.content,
+          source: { kind: 'line-edit', ranges, checksumBefore: r.checksumBefore, checksumAfter: r.checksumAfter, ...extra } });
+        if (!p || p.ok === false) return { status: 400, error: ((p && p.errors) || ['could not propose']).join('; ') };
+        const inj = p.inject || p.node || p;
+        getIdeaOS().emit('idearium.edit.proposed', { repoUuid: params.uuid, path: rel, ranges, inject: inj.uuid || null, checksumBefore: r.checksumBefore, checksumAfter: r.checksumAfter, action: extra.action || null });
+        return { status: 200, inject: inj, ranges, checksumBefore: r.checksumBefore, checksumAfter: r.checksumAfter };
+      };
+      if (action === 'repo.code.edit') {
+        if (body.checksum && LE._checksum(text) !== String(body.checksum)) return err(res, 409, `${rel} changed since it was read (checksum ${body.checksum}, now ${LE._checksum(text)}) — read it again`);
+        const list = Array.isArray(body.edits) ? body.edits : [];
+        if (!list.length) return err(res, 400, 'edits: [{ from, to, expect?, replacement }] is required');
+        const edits = list.map(e => ({ anchor: { startLine: parseInt(e.from, 10), endLine: parseInt(e.to == null ? e.from : e.to, 10) }, ...(typeof e.expect === 'string' ? { expect: e.expect } : {}), replacement: e.replacement == null ? null : String(e.replacement) }));
+        const out = propose(edits, { action: body.action ? String(body.action).slice(0, 40) : 'edit', by: body.by ? String(body.by).slice(0, 40) : 'person', run: body.run || null });
+        if (out.status !== 200) return err(res, out.status, out.error, out.failed ? { failed: out.failed } : null);
+        return ok(res, { ok: true, path: rel, ...out });
+      }
+      // §FN1 0.60.95 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." This door
+      // runs the funnel first: its answers ride to the agent as context and come back with the reply. Not a block yet: a
+      // missing spec or phase is said, and making it first is FN2.
+      let fnl = null;
+      if (String(body.action || '') !== 'explain') { try { const dirF = _repoDiskDir(params.uuid); if (dirF) fnl = await _funnelFor(repo, dirF, `${body.action || 'change'} ${rel}${body.note ? `: ${String(body.note).slice(0, 400)}` : ''}`, 'change'); } catch (e) { fnl = { error: e.message }; } }
+      const fnlBlock = fnl && !fnl.error ? `WHERE THIS WORK SITS (Nexus mapped it; context only, do not repeat):\n${fnl.lines.filter(l => !/^intent /.test(l)).map(l => l.slice(0, 300)).join('\n')}` : null;
+      const ACTIONS = { change: 'Change these lines as the instructions say.', expand: 'Expand these lines: add what they are missing for their purpose.', refactor: 'Refactor these lines: the same behaviour, a better structure.', fix: 'Find the real fault in these lines and fix it.', document: 'Add or correct the comments for these lines; no behaviour change.', explain: 'Explain what these lines do and how they connect. Do not change them.' };
+      const act = ACTIONS[body.action] ? body.action : null;
+      if (!act) return err(res, 400, `action is one of ${Object.keys(ACTIONS).join(', ')}`);
+      const from = Math.max(1, parseInt(body.from, 10) || 0), to = Math.min(total, parseInt(body.to == null ? body.from : body.to, 10) || 0);
+      if (!from || to < from) return err(res, 400, `from and to: a range inside 1-${total}`);
+      const lines = text.split('\n'), num = (a, b) => lines.slice(a - 1, b).map((l, i) => `${String(a + i).padStart(5)}| ${l}`).join('\n');
+      const before = num(Math.max(1, from - 6), from - 1), after = num(to + 1, Math.min(total, to + 6));
+      const range = lines.slice(from - 1, to).join('\n');
+      const message = [`${ACTIONS[act]}`, body.note ? `FROM JAMES: ${String(body.note).slice(0, 2000)}` : null,
+        `File: ${rel} (${total} lines). The lines to work on are ${from}-${to}.`,
+        fnlBlock,
+        before ? `Before them (context only, do not repeat):\n${before}` : null, `THE LINES ${from}-${to}:\n${num(from, to)}`, after ? `After them (context only, do not repeat):\n${after}` : null,
+        act === 'explain' ? 'Answer in prose.' : `Reply with ONE fenced code block holding ONLY the new text that replaces lines ${from}-${to} (no line numbers, no file path, nothing outside the range). Write the whole replacement; it may be more or fewer lines.`,
+      ].filter(Boolean).join('\n\n');
+      const RA = _require('../../lib/repo-agent.js');
+      // §WB1 (merge 0.60.83) — a Code-tab range edit is a build path: WARP around the agent the person or the door chose; gate
+      // mode (asking again wants a new answer, so a reply is retained and learned from, never replayed)
+      const rd0 = await _agentDir(params.uuid);
+      const r = await WR.wrap(() => RA.dispatch({ repo, repoDir: rd0, message, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, model: body.model || null, noContext: true, layer: null, session: `assist-${rel}` }), { kind: 'code-range-edit', provider: body.provider || body.agent || body.model || body.backend || null, key: `${params.uuid}\n${message}`, mode: 'gate' });
+      const reply = String((r && (r.text || r.reply)) || '');
+      const who = (r && (r.providerUsed || r.provider)) || null;
+      if (!r || r.ok === false) return ok(res, { ok: false, error: (r && r.error) || 'no answer', provider: who, funnel: fnl });
+      if (act === 'explain') return ok(res, { ok: true, action: act, path: rel, from, to, reply, provider: who, funnel: fnl });
+      const m = /```[^\n]*\n([\s\S]*?)```/.exec(reply);
+      if (!m) return ok(res, { ok: false, error: 'the reply had no code block — nothing proposed', reply: reply.slice(0, 2000), provider: who, funnel: fnl });
+      const out = propose([{ anchor: { startLine: from, endLine: to }, expect: range, replacement: m[1].replace(/\n$/, '') }], { action: act, by: who || 'agent', provider: who, note: body.note ? String(body.note).slice(0, 300) : null });
+      if (out.status !== 200) return ok(res, { ok: false, error: out.error, reply: reply.slice(0, 2000), provider: who, funnel: fnl });
+      return ok(res, { ok: true, action: act, path: rel, from, to, provider: who, funnel: fnl, ...out });
+    }
+    // §CV3 0.60.81 — James: "rewind engine for each file." A file rewinds through repo.versions.restoreFile; a RUN rewinds
+    // here: every file the run changed (lib/run-state.js filesChanged, plus files named in the body) goes back to how it was at
+    // the last commit before the run started. A file the run created (absent then) is named and left, never deleted (§0.3).
+    // dryRun says what it would do. Each restore is its own labelled version (CV2), so the rewind is itself undoable.
+    case 'repo.runs.list': case 'repo.runs.rewind': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RS = _require('../../lib/run-state.js');
+      if (action === 'repo.runs.list') {
+        const runs = RS.list({ repoUuid: params.uuid, status: query.status || null }).slice(0, Math.min(200, parseInt(query.limit || '40', 10) || 40));
+        return ok(res, { repoUuid: params.uuid, runs: runs.map(r => ({ runId: r.runId, goal: String(r.goal || '').slice(0, 400), status: r.status, attempt: r.attempt, provider: r.provider || null, providers: r.providers || [],
+          brick: r.brick || null, session: r.session || null, steps: (r.steps || []).slice(-60), stepCount: r.stepCount || 0, filesRead: r.filesRead || [], filesChanged: r.filesChanged || [], events: r.events || [], next: r.next || null, note: r.note || null, startedAt: r.startedAt, updatedAt: r.updatedAt })) });
+      }
+      const run = RS.load(params.runId);
+      if (!run || run.repoUuid !== params.uuid) return err(res, 404, `no run ${params.runId} in this repo`);
+      const files = [...new Set([...(run.filesChanged || []), ...[].concat(body.paths || []).map(String)])];
+      if (!files.length) return err(res, 409, 'this run changed no file it recorded — nothing to rewind (name files with paths: [...])');
+      const { SNAPSHOT_SYSTEM, summarizeRepoSnapshots, snapshotBranch } = await import('../repo/snapshot.js');
+      const hist = await _versionium('GET', `/api/versionium/history?system=${encodeURIComponent(SNAPSHOT_SYSTEM)}&branch=${encodeURIComponent(snapshotBranch(params.uuid))}&n=1000`);
+      if (!hist.ok) return err(res, 502, hist.error);
+      const base = summarizeRepoSnapshots(hist.data.commits || [], params.uuid).find(c => (c.ts || 0) < (run.startedAt || 0));
+      if (!base) return err(res, 409, `no version from before this run started (${new Date(run.startedAt || 0).toISOString()}) — nothing to rewind to`);
+      const RH = _require('../../lib/repo-history.js');
+      const results = [];
+      for (const f of files) {
+        if (body.dryRun) { results.push({ path: f, to: base.commitId, done: false, dryRun: true }); continue; }
+        try {
+          await RH.restoreFile(_vcall, repo.uuid, base.commitId, f, async (p, buf) => {
+            const w = getRepoLayer().writeFile(repo.uuid, p, buf.toString('utf8'), { preserveWhitespace: true });
+            if (!w || w.error) throw new Error(`the repo did not take ${p}: ${w ? w.error : 'no answer'}`);
+          });
+          results.push({ path: f, to: base.commitId, done: true });
+        } catch (e) { results.push({ path: f, to: base.commitId, done: false, why: /404|not found|no such/i.test(e.message) ? 'not in that version — the run created it; left as it is' : e.message }); }
+      }
+      if (results.some(x => x.done)) {
+        await _require('../../lib/repo-versions.js').commitNow(repo.uuid, { kind: 'restore', run: run.runId, by: body.by || 'person', action: `rewind run to ${String(base.commitId).slice(0, 12)}` }).catch(() => null);
+        RS.note(run.runId, 'rewound', `${results.filter(x => x.done).length} file(s) back to ${String(base.commitId).slice(0, 12)}`);
+        getIdeaOS().emit('idearium.run.rewound', { repoUuid: repo.uuid, runId: run.runId, commitId: base.commitId, restored: results.filter(x => x.done).map(x => x.path), left: results.filter(x => !x.done).map(x => x.path) });
+      }
+      return ok(res, { ok: true, runId: run.runId, to: { commitId: base.commitId, ts: base.ts, message: base.message }, dryRun: !!body.dryRun, results });
+    }
     case 'repo.chunk.show': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo || !repo.specUuid) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -4884,9 +5099,19 @@ async function handle(req, res, route, query, body) {
         return ok(res, { release: r });
       } catch (e) { return err(res, e.status || 502, e.message, { code: e.code || null }); }
     }
+    // §0.60.72 RN2 — James: "tell me all the recent changes. i want a changelog for each change or diff." Every commit
+    // under the first release that contains it, written from git (lib/release-notes.js); ?since=<version> · ?write=1 → CHANGES.md
+    case 'releases.changes': {
+      try {
+        const N = _require('../../lib/release-notes.js'), R = _require('../../lib/nexus-releases.js');
+        const since = query.since || null;
+        if (query.write === '1') return ok(res, N.write({ since }));
+        return ok(res, { since, markdown: N.markdown(R.read(), { since }) });
+      } catch (e) { return err(res, 500, `release notes: ${e.message}`); }
+    }
     case 'releases.list': case 'releases.sync': {
       try {
-        if (action === 'releases.sync') return ok(res, await _require('../../lib/nexus-releases.js').sync(_vcall));
+        if (action === 'releases.sync') return ok(res, await _require('../../lib/nexus-releases.js').sync(_vcall, { commits: (body && body.all) ? 'all' : 'recent' }));
         const repository = query.repository || 'nexus';
         const d = await _vcall('GET', `/api/versionium/releases?${new URLSearchParams({ repository, n: String(parseInt(query.n, 10) || 1000) })}`);
         return ok(res, { repository, current: _require('../../lib/release-version.js').current().version, releases: d.releases || [] });
@@ -6766,6 +6991,7 @@ async function handle(req, res, route, query, body) {
             if (!w || w.error) throw Object.assign(new Error(`the repo did not take ${p}: ${w ? w.error : 'no answer'}`), { status: w && w.code === 'IMMUTABLE' ? 409 : 500 });
           };
           const r = await RH.restoreFile(_vcall, repo.uuid, body.commitId, body.path, write);
+          _require('../../lib/repo-versions.js').commitNow(repo.uuid, { kind: 'restore', path: r.path, by: body.by || 'person', action: `restore to ${String(r.commitId).slice(0, 12)}` }).catch(() => {});   // §CV2 its own version
           os.emit('idearium.repo.version.restored', { repoUuid: repo.uuid, commitId: r.commitId, path: r.path, sha256: r.sha256 });
           return ok(res, r);
         }
@@ -6845,6 +7071,35 @@ async function handle(req, res, route, query, body) {
         os.emit('idearium.note.updated', { id: n.id, repoUuid: n.repoUuid, kind: n.kind, status: n.status });
         return ok(res, { note: n });
       } catch (e) { return err(res, e.status || 500, e.message); }
+    }
+    // §COSA10 0.60.74 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." One row per
+    // project from what Nexus already keeps: notes counts, the phase roadmap, the last activity (idearium/lib/projects.cjs).
+    // §RT1 0.60.78 — what RAID's officiator holds back, read from cortex (it runs there); the My projects panel shows it
+    case 'raid.held': case 'raid.held.unpark': {
+      try {
+        const r = action === 'raid.held'
+          ? await _nexusClient.call('cortex', 'GET', '/api/raid/officiator', null, { timeout: 4000 })
+          : await _nexusClient.call('cortex', 'POST', '/api/raid/officiator/unpark', body && body.id ? { id: String(body.id) } : {}, { timeout: 4000 });
+        return ok(res, r);
+      } catch (e) { return err(res, 502, `cortex did not answer: ${e.message}`); }
+    }
+    case 'projects.overview': {
+      const PJ = _require('../lib/projects.cjs');
+      const RN = _require('../../lib/repo-notes.js');
+      const AL = _require('../../lib/activity-log/compartment.js');
+      const PH = await import('../repo/phases.js');
+      const RM = await import('../repo/roadmap.js');
+      const view = await PJ.overview({
+        repos: getRepoLayer().list({}) || [],
+        notesOf: (u) => RN.counts(u),
+        activityOf: (u) => (AL.list(u, { limit: 1 }).rows || [])[0] || null,
+        phasesOf: (r) => {
+          const dir = _repoDiskDir(r.uuid);
+          if (!dir) throw new Error('could not resolve the repo directory');
+          return RM.buildRoadmap({ projectId: r.uuid, maps: PH.mapsFor({ repo: r, repoDir: dir }).maps });
+        },
+      });
+      return ok(res, view);
     }
     case 'repo.activity': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -7435,9 +7690,13 @@ async function handle(req, res, route, query, body) {
       const hist = await _versionium('GET', `/api/versionium/history?system=${encodeURIComponent(SNAPSHOT_SYSTEM)}&branch=${encodeURIComponent(snapshotBranch(params.uuid))}&n=1000`);
       if (!hist.ok) return err(res, 502, hist.error);
       const all = summarizeRepoSnapshots(hist.data.commits || [], params.uuid);
-      const touched = all.filter(c => c.provenance && c.provenance.files.some(f => f.path === want))
-        .map(c => ({ ...c, op: c.provenance.files.find(f => f.path === want).op }));
-      return ok(res, { repoUuid: params.uuid, path: want, commits: touched, total: all.length, untracked: all.filter(c => !c.provenance).length });
+      let touched = all.filter(c => c.provenance && c.provenance.files.some(f => f.path === want))
+        .map(c => ({ ...c, op: c.provenance.files.find(f => f.path === want).op, labels: (c.provenance.labels || []).filter(l => !l.path || l.path === want) }));
+      // §CV4 0.60.81 — James: "full history tracked and tagged". ?tag=k:v (repeatable: all must match) over the commit's
+      // labels (CV2: kind, run, inject, by, action, provider); by: also matches who stands behind the commit
+      const tags = [].concat(query.tag || []).flatMap(t => String(t).split(',')).map(t => t.trim()).filter(Boolean).map(t => { const i = t.indexOf(':'); return i > 0 ? [t.slice(0, i), t.slice(i + 1)] : ['kind', t]; });
+      if (tags.length) touched = touched.filter(c => tags.every(([k, v]) => c.labels.some(l => String(l[k] || '') === v) || (k === 'by' && (c.provenance.by || []).includes(v))));
+      return ok(res, { repoUuid: params.uuid, path: want, commits: touched, total: all.length, untracked: all.filter(c => !c.provenance).length, ...(tags.length ? { tags: tags.map(t => t.join(':')) } : {}) });
     }
 
     case 'repo.snapshot.show': {
@@ -7472,13 +7731,45 @@ async function handle(req, res, route, query, body) {
     }
 
     // ── §0.39.271 P2/P3 — the Phases manager ───────────────────────────────
+    // §0.60.67 SF4 — James: "need the agents to use the spec compiler? like the yaml." A spec in the compiler's format, in this
+    // repo, compiled (T0/T1, zero tokens); every emitted file is a PROPOSED .inject — nothing written, nothing overwritten.
+    case 'repo.specs.compile': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const rel = String(body.path || '').trim();
+      if (!rel) return err(res, 400, 'path is required — the .spec file in this repo to compile');
+      const f = getRepoLayer().readFile(params.uuid, rel);
+      if (!f || f.error) return err(res, 404, `no file ${rel} in this repo`);
+      const SC = _require('../../lib/spec-collect.js');
+      if (!SC.isCompilerSpec(rel, f.content)) return err(res, 422, `${rel} is not in the spec compiler's format (its top key must be spec:)`);
+      const into = body.into != null ? String(body.into) : (getIdeariumValue('specs.compile_into') || '');
+      const r = await SC.compileToProposals({ layer: getRepoLayer(), repo, specPath: rel, content: f.content, into, template: body.template || null });   // 0.60.68 — genesis unless named
+      return r.ok ? ok(res, r) : err(res, 422, r.error);
+    }
+    // §FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." The four answers
+    // for a request, in his order, from this repo's own tree and maps (lib/work-funnel.js); read only, no model.
+    case 'repo.funnel': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body || !String(body.request || '').trim()) return err(res, 400, 'request is required');
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      const f = await _funnelFor(repo, dir, String(body.request), body.intent || null);
+      return ok(res, { repoUuid: params.uuid, ...f });
+    }
     case 'repo.phases.get': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
       const dir = _repoDiskDir(params.uuid);
       if (!dir) return err(res, 500, 'could not resolve repo directory');
       const PH = await import('../repo/phases.js');
-      return ok(res, PH.managerView({ repo, repoDir: dir, runs: _phaseRuns(params.uuid) }));
+      const view = PH.managerView({ repo, repoDir: dir, runs: _phaseRuns(params.uuid), seenFile: path.join(IDEARIUM_DATA_DIR, 'phase-map-auto', `${params.uuid}.json`) });
+      // §MP2 — the listener: a phase never seen before in this repo is announced with what it was mapped to
+      for (const k of (view.mapping && view.mapping.newPhases) || []) {
+        const ph = view.phases.find(p => `${p.map}::${p.phase_key}` === k);
+        try { getIdeaOS().emit('idearium.phase.mapped', { repoUuid: params.uuid, map: ph && ph.map, phase: ph && ph.phase_key, source: ph && ph.mapped && ph.mapped.source, files: ph && ph.mapped ? ph.mapped.files.map(f => f.path) : [] }); } catch (_) {}
+      }
+      return ok(res, view);
     }
     // §RS9 0.49.0 — James: "okay now the phases with the spec workshop. needs to be rebuilt, enterprise grade.
     // interconnected". The thread (idearium/repo/thread.js): one spec's blocks ⇄ the phases planned from them ⇄ their runs
@@ -7534,6 +7825,26 @@ async function handle(req, res, route, query, body) {
           const cmp = await CG.compare(L.payload, String(query.gate), { root: dirT || undefined,
             diff: async ({ from, files }) => { const out = {}; for (const f of files.slice(0, 8)) { try { out[f] = await RH.diff(_vcall, tgt, from, 'working', { path: f, working }); } catch (e) { out[f] = { error: e.message }; } } return out; } });
           return ok(res, { repoUuid: params.uuid, phase: query.phase, file, compare: cmp });
+        }
+        // §GW3 0.60.75 — ?trace=1: the contract traced end to end (cortex/core/raid/contract-trace.js): its own evidence log,
+        // its checkpoints, every row this run wrote to the ledger and RAID's queue row, in time order, per brick, holes named
+        if (query.trace) {
+          const CT = _require('../../cortex/core/raid/contract-trace.js');
+          const rows = run ? loadTable('idearium_phase_runs').filter(r => r.runId === run.runId) : [];
+          const qid = rows.map(r => r.raidQueueId).find(Boolean) || null;
+          let raid = null;
+          if (qid) { try { raid = _require('../../cortex/core/raid/contract-intake.js').listQueue().find(x => x.uuid === qid) || null; } catch (_) { raid = null; } }
+          const tr = CT.trace(L.payload, { runs: rows, raid });
+          // §GW2 0.60.77 — each brick's own run (lib/run-state.js, keyed by the brick): the baton every attempt and agent resumed
+          try {
+            const RSx = _require('../../lib/run-state.js');
+            for (const b of tr.bricks) {
+              const r0 = run ? RSx.load(RSx.runIdFor({ repoUuid: run.targetRepo || params.uuid, brick: `${run.map}::${run.phase}::${b.id}` })) : null;
+              if (r0) b.run = { attempt: r0.attempt, status: r0.status, providers: (r0.providers || []).map(x => x.provider).filter(Boolean), steps: r0.stepCount || 0,
+                read: (r0.filesRead || []).slice(-8), changed: (r0.filesChanged || []).slice(-8), note: r0.note || null };
+            }
+          } catch (_) { /* the trace stands without the runs */ }
+          return ok(res, { repoUuid: params.uuid, phase: query.phase, file, runId: run ? run.runId : null, raidQueueId: qid, trace: tr, lines: CT.lines(tr) });
         }
         // §GT2 0.60.42 — where the newest run stands, from its last gate move
         const lastMove = _phaseRuns(params.uuid).filter(r => r.phase === query.phase && r.progress && (!run || r.runId === run.runId)).sort((a, b) => (b.ts || 0) - (a.ts || 0))[0];
@@ -7772,7 +8083,7 @@ async function handle(req, res, route, query, body) {
         if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
         map = hits[0].map;
       }
-      const r = await _phaseBuild(repo, dir, { map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '' });
+      const r = await _phaseBuild(repo, dir, { map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
     }
@@ -7959,21 +8270,13 @@ async function handle(req, res, route, query, body) {
       if (!se) return err(res, 503, 'spec-engine not ready');
       // §FILE-TREE-FIRST 2026-09-21 — every COS archetype and blueprint is
       // offered alongside the spec-document templates, read live from cos/.
-      // §BUILT 2026-09-21 — eravos mods (real starting files, same shape
-      // as a COS archetype) offered the same way, read live from eravos/.
+      // (eravos mods were offered here behind ?include=eravos until 0.60.83, when ERAVOS was deleted)
       try {
         const FTP = _require('../../lib/file-tree-plan.js');
-        let cos = [], eros = [];
+        let cos = [];
         try { cos = FTP.listCosTemplates(); }
         catch (e) { console.warn(`[speceng.templates] COS templates unavailable: ${e.message}`); }
-        // §0.39.267 — James: "the eravos options need to be removed from this prompt." A new spec is a project,
-        // not an eravos mod; the mods stay reachable (?include=eravos) and specs already built from one still build.
-        const wantEravos = /(^|,)eravos(,|$)/.test(String((query && query.include) || ''));
-        if (wantEravos) {
-          try { eros = FTP.listEravosMods(); }
-          catch (e) { console.warn(`[speceng.templates] eravos mods unavailable: ${e.message}`); }
-        }
-        return ok(res, { templates: [...se.listTemplates(), ...cos, ...eros] });
+        return ok(res, { templates: [...se.listTemplates(), ...cos] });
       }
       catch (e) { return err(res, 500, e.message); }
     }
@@ -8134,8 +8437,8 @@ async function handle(req, res, route, query, body) {
         // template, or templateIds: [], still wins.
         const _named = Array.isArray(templateIds) ? templateIds : (templateId ? [templateId] : null);
         const allIds = _named !== null ? _named : (type === 'system' ? ['genesis'] : []);
-        // §BUILT 2026-09-21 — isFileTreeTemplate covers both real catalogs
-        // (COS archetypes/blueprints and eravos mods); an id from either
+        // §BUILT 2026-09-21 — isFileTreeTemplate covers the COS catalog
+        // (archetypes/blueprints; eravos mods until 0.60.83); an id from it
         // takes the file-tree path below, same as a COS-only id always did.
         const fileTreeIds = allIds.filter(id => FTP.isFileTreeTemplate(id));
         // §0.39.359 SB31 — genesis IS the skeleton's architecture (1.4.0's catalog is the nexus-system archetype): a spec

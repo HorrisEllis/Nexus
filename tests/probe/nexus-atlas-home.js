@@ -66,7 +66,7 @@ const freePort = () => new Promise((resolve) => { const s = net.createServer(); 
     P.case('inside a repo: Create, Build and the counters appear', inside.create && inside.build && inside.counters, inside);
     await pg.evaluate(() => toggleTabTree(true));
     const tree = await pg.evaluate(() => { const t = document.getElementById('tab-tree'); const top = [...t.children].map(c => (c.querySelector(':scope > .tt-head .tt-label') || c.querySelector(':scope > .tt-label') || {}).textContent).filter(Boolean);
-      return { top, nested: /work in this repo/.test(t.textContent) && /Eravos — organism canvas/.test(t.textContent) }; });
+      return { top, nested: /work in this repo/.test(t.textContent) && /Spec workshop/.test(t.textContent) }; });
     P.case('the navigator nests Create and Build under the open repo, not at its top level', !tree.top.includes('Create') && !tree.top.includes('Build') && tree.nested, tree);
     await pg.evaluate(() => toggleTabTree(false));
     // §0.39.264 — "expand it completely … each reference a link to either open the nested or file"

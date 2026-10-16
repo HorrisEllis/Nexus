@@ -100,7 +100,7 @@ function _phFiltered() {
     if (['planned', 'active', 'complete'].includes(f.status) && p.status !== f.status) return false;
     if (f.ready && !p.ready) return false;
     if (f.files && !(p.files || []).length) return false;   // 0.60.24 — James: "i can barely find any": the phases a build can start from
-    if (q && !`${p.phase_key} ${p.title} ${p.name || ''} ${p.map} ${(p.closes || []).join(' ')} ${(p.files || []).join(' ')} ${(p.blocks || []).join(' ')}`.toLowerCase().includes(q)) return false;
+    if (q && !`${p.phase_key} ${p.title} ${p.name || ''} ${p.map} ${(p.closes || []).join(' ')} ${(p.files || []).join(' ')} ${(p.specs || []).join(' ')} ${(p.systems || []).join(' ')} ${(p.blocks || []).join(' ')}`.toLowerCase().includes(q)) return false;
     return true;
   });
 }
@@ -151,7 +151,7 @@ function _phPaint() {
       </div>
     </div>`;
   const toolbar = `<div class="ph-tools">
-      <input type="text" placeholder="search id, name, map, block, closes, files…" value="${escapeHtml(f.q)}" oninput="phasesFilter('q',this.value)">
+      <input type="text" placeholder="search id, name, map, block, closes, files, specs, systems…" value="${escapeHtml(f.q)}" oninput="phasesFilter('q',this.value)">
       <select onchange="phasesFilter('status',this.value)">${[['all', 'every status'], ['open', 'not complete'], ['planned', 'planned'], ['active', 'active'], ['blocked', 'blocked'], ['complete', 'complete']].map(([v, l]) => `<option value="${v}" ${f.status === v ? 'selected' : ''}>${l}</option>`).join('')}</select>
       ${PHASES.spec ? '' : `<select onchange="phasesFilter('map',this.value)"><option value="all">every phasemap</option>${mapOpts}</select>`}
       ${d.scope.system ? `<label><input type="checkbox" ${f.mine ? 'checked' : ''} onchange="phasesFilter('mine',this.checked)"> ${escapeHtml(d.scope.system)}'s only</label>` : ''}
@@ -200,9 +200,9 @@ function _phCard(p) {
   const chips = blocks.slice(0, 3).map(b => `<span class="ph2-block ${stale.includes(b) ? 'stale' : ''}" title="${stale.includes(b) ? 'this block moved since the phase was planned' : 'a block of its spec'}">${stale.includes(b) ? '↻ ' : ''}${escapeHtml(b)}</span>`).join('') + (blocks.length > 3 ? `<span class="ph2-dim">+${blocks.length - 3}</span>` : '');
   const gates = step && step.gates && typeof _gateBar === 'function' ? _gateBar(step) : '';
   return `<div class="ph-card ph2-card st-${escapeHtml(p.status)} ${PHASES.open === p.uuid ? 'open' : ''} ${stale.length || (th && (th.specMoved || th.staleVia)) ? 'stale' : ''}" onclick="phasesOpen('${escapeHtml(p.uuid)}')" data-key="${escapeHtml(p.phase_key)}" title="${escapeHtml(p.map)}:${p.line}">
-    <div class="ph-card-top"><span class="ph-key" style="color:${_PH_STATUS_COLOR[p.status]}">${escapeHtml(_phKey(p))}</span>${PHASES.spec ? '' : `<span class="ph-map">${escapeHtml(_phShortMap(p.map))}</span>`}
+    <div class="ph-card-top"><span class="ph-key" style="color:${_PH_STATUS_COLOR[p.status]}">${escapeHtml(_phKey(p))}</span>${PHASES.spec ? '' : `<span class="ph-map">${escapeHtml(_phShortMap(p.map))}</span>`}${(p.systems || []).length ? `<span class="ph-map" title="the systems (nested repos) this phase belongs to — declared, plus the owner of every file it names">${escapeHtml(p.systems.join(' · '))}</span>` : ''}
       ${p.status !== 'complete' ? `<button class="ph-quick" title="snapshot, then the agent builds it (climbing the ladder)" ${PHASES.busy ? 'disabled' : ''} onclick="event.stopPropagation();phasesBuildQuick('${_phq(p.map)}','${_phq(p.phase_key)}')">▶</button>` : ''}</div>
-    <div class="ph-card-title">${escapeHtml(p.name || p.title)}</div>
+    <div class="ph-card-title">${p.kind === 'decision' ? '<span class="ph-decision" title="a decision recorded in the map, not a phase to build (CV6)">decision</span> ' : ''}${escapeHtml(p.name || p.title)}</div>
     ${blocks.length ? `<div class="ph2-blocks">${chips}</div>` : (PHASES.spec ? '<div class="ph2-dim">no link to its spec</div>' : '')}
     ${th && th.staleVia ? `<div class="ph2-warn" title="it depends on a phase whose block moved since it was planned">↻ via ${escapeHtml(String(th.staleVia).split('_')[0])}</div>` : ''}
     <div class="ph-card-foot">
@@ -297,7 +297,10 @@ function _phDetail(d, uuid) {
     ${th && th.staleVia ? `<div class="ph2-note warn">stale through ${escapeHtml(th.staleVia)} — it depends on a phase whose block moved since it was planned (§HP1)</div>` : ''}
     <div class="ph-d-row"><label>depends on</label><span>${p.depends_on.map(link).join(' ') || '—'}${(p.unresolved_deps || []).length ? ` <span style="color:var(--text3)">(not phases here: ${escapeHtml(p.unresolved_deps.join(', '))})</span>` : ''}</span></div>
     <div class="ph-d-row"><label>needed by</label><span>${dependents.map(x => link(x.uuid)).join(' ') || '—'}</span></div>
+    <div class="ph-d-row"><label>systems</label><span>${escapeHtml((p.systems || []).join(' · ') || '—')}</span></div>   <!-- 0.60.64 PT2: the nested repos it is tagged for -->
+    <div class="ph-d-row"><label>specs</label><span>${escapeHtml([...new Set([...(p.specs || []), ...((p.mapped && p.mapped.specs) || [])])].join(' · ') || '—')}</span></div>   <!-- 0.60.63 PT1: the specs that own this phase -->
     <div class="ph-d-row"><label>closes</label><span>${escapeHtml((p.closes || []).join(' ') || '—')}</span></div>
+    ${_phMappedHtml(p)}
     <div class="ph-d-sec">files · ${files.length}</div>
     <div class="ph2-files">${files.map(f => `<a href="#" class="ph2-file" title="open in the Code tab" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(f)}')` : ''};return false">${escapeHtml(f)}</a>`).join('') || '<span class="ph2-dim">—</span>'}</div>
     ${changes.length ? `<div class="ph-d-sec">changes waiting · ${changes.length}</div><div class="ph2-files">${changes.map(c => `<a href="#" class="ph2-file warn" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(c.path)}')` : ''};return false">${escapeHtml(c.op)} ${escapeHtml(c.path)} — ${escapeHtml(c.status)}</a>`).join('')}</div>` : ''}
@@ -305,6 +308,7 @@ function _phDetail(d, uuid) {
     <div class="ph-d-note">1 · a Versionium snapshot of ${nexus ? (d.scope.system ? `nexus/${escapeHtml(d.scope.system)}` : 'the system that owns its files') : 'this repo'} — nothing is sent without one<br>2 · the phase goes active<br>3 · the agent gets the phase, its blocks, its dependencies and the map's invariants — with no agent picked it climbs the escalation ladder</div>
     <div class="ph-d-row"><label>agent</label><select id="ph-build-provider"><option value="">the ladder (Settings → Routing)</option>${opts.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('')}</select></div>
     <textarea id="ph-build-note" rows="2" placeholder="anything to add for the agent (optional)"></textarea>
+    <label class="ph-d-note" title="0.60.79 TL1a: a build started again keeps its saved plan and resumes its passed bricks. Tick this to throw the plan away and plan the phase again (the old checkpoint is archived, never deleted)."><input type="checkbox" id="ph-build-replan"> plan it again (otherwise the saved plan is kept and the build resumes where it stopped)</label>
     <div class="action-row"><button class="action-btn" ${p.status === 'complete' || PHASES.busy ? 'disabled' : ''} onclick="phasesBuild('${_phq(p.map)}','${_phq(p.phase_key)}')">▶ snapshot + build</button>
       ${typeof openPlanPanel === 'function' ? `<button class="action-btn" onclick="openPlanPanel({ map: '${_phq(p.map)}'${run && run.runId ? `, focus: '${_phq(run.runId)}'` : ''} })">open in the Plan</button>` : ''}
       ${PHASES.thread && PHASES.spec === specOf && PHASES.thread.workshop && typeof openWorkshop === 'function' ? `<button class="action-btn" title="the spec workshop, at the section this phase was planned from" onclick="openWorkshop(null,'${_phq(PHASES.thread.workshop.uuid)}'${(p.blocks || [])[0] ? `,'${_phq(p.blocks[0])}'` : ''})">open in the workshop</button>` : ''}</div>
@@ -386,9 +390,10 @@ async function phasesBuild(map, phase) {
   const uuid = PHASES.uuid;
   const provider = (document.getElementById('ph-build-provider') || {}).value || null;
   const note = ((document.getElementById('ph-build-note') || {}).value || '').trim();
+  const replan = !!(document.getElementById('ph-build-replan') || {}).checked;   // 0.60.79 TL1a: off = the saved plan is kept
   PHASES.busy = true; _phPaint();
   try {
-    const r = await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase, provider, note }) }, 120000);
+    const r = await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase, provider, note, ...(replan ? { replan: true } : {}) }) }, 120000);
     toast(`${phase}: snapshot ${r.snapshot} taken · ${r.targetName}'s agent is building it${r.statusNote ? ` (status not changed: ${r.statusNote})` : ''}`, 'ok');
     // §HP6 0.55.0 — James: "the build surface is supposed to be showing in idearium." A build from the detail pane
     // opens the Plan panel on its run, as the card's build always did (RS10 dropped it here).
@@ -490,4 +495,19 @@ async function phasesMapRun() {
 function renderPhasesRefresh() {
   const repo = CURRENT_API_REPO; if (!repo) return;
   if (typeof renderRepoPhases === 'function') renderRepoPhases(repo, { keepScroll: true });
+}
+
+// §MP2 0.60.65 — what Nexus mapped this phase to, with no model: each file and why, what they require, who requires them,
+// the phases it waits on through shared files, and the specs that own them. James: "Need them all mapped."
+function _phMappedHtml(p) {
+  const m = p && p.mapped; if (!m) return '';
+  const link = (f, extra = '') => `<a href="#" class="ph2-file" title="${escapeHtml(extra || 'open in the Code tab')}" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(f)}')` : ''};return false">${escapeHtml(f)}</a>`;
+  const label = { declared: 'declared in the phase', evidence: 'mapped by Nexus from the phase\'s own words and the code', none: 'nothing in the phase names a file — left for an agent (Map phases)' }[m.source] || m.source;
+  const rows = [];
+  rows.push(`<div class="ph-d-sec">mapped · ${escapeHtml(label)}</div>`);
+  if (m.files.length) rows.push(`<div class="ph2-files">${m.files.map(f => link(f.path, `${f.why}${f.exists ? '' : ' — not on disk yet'}`)).join('')}</div>`);
+  if (m.requires.length) rows.push(`<div class="ph-d-row"><label>requires</label><span class="ph2-files">${m.requires.map(r => link(r.path, `required by ${r.by}`)).join('')}</span></div>`);
+  if (m.consumers.length) rows.push(`<div class="ph-d-row"><label>used by</label><span class="ph2-files">${m.consumers.map(c => link(c.path, `requires ${c.of} — a change can break it`)).join('')}</span></div>`);
+  if ((m.dependsOnInferred || []).length) rows.push(`<div class="ph-d-row"><label>waits on</label><span>${m.dependsOnInferred.map(d => `${escapeHtml(d.on)} <span class="ph2-dim">(both change ${escapeHtml(d.file)})</span>`).join(' · ')}</span></div>`);
+  return rows.join('\n');
 }

@@ -1,5 +1,5 @@
 'use strict';
-// JB-01..06 (0.60.64): the new ready-made jobs validate and RUN on the real automation engine with the network stubbed (GitHub, Ollama, Guardian, Clear Glass): they notify when they should and stay quiet when they should.
+// JB-01..06 (0.60.85): the new ready-made jobs validate and RUN on the real automation engine with the network stubbed (GitHub, Ollama, Guardian, Clear Glass): they notify when they should and stay quiet when they should.
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), path = require('path'), fs = require('fs');
 const ROOT = path.resolve(__dirname, '..', '..');

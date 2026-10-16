@@ -1,4 +1,4 @@
-# .github/workflows/cos-app.yml — COSA6 (0.60.68): the COS Windows application, built on Windows.
+# .github/workflows/cos-app.yml — COSA6 (0.60.89): the COS Windows application, built on Windows.
 # James (2026-10-16): "cos app for windows"
 #
 # COS is the small outer shell that runs and switches Nexus; it changes rarely and has its own version (cos/app/version.js), separate from Nexus's.
@@ -37,6 +37,7 @@ jobs:
         shell: bash
         run: |
           V=$(node -p "require('./cos/app/version.js').version")
+          case "$V" in [0-9]*.[0-9]*.[0-9]*) ;; *) echo "::error::cos/app/version.js gives no version (got '$V') — it must export { version: 'x.y.z' }"; exit 1 ;; esac
           echo "version=$V" >> "$GITHUB_OUTPUT"
           if git rev-parse -q --verify "refs/tags/cos-v$V" >/dev/null; then echo "tagged=yes" >> "$GITHUB_OUTPUT"; else echo "tagged=no" >> "$GITHUB_OUTPUT"; fi
           echo "COS $V"

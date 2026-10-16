@@ -552,3 +552,6 @@ spec:
   #   hash). files.json entries carry chunker + lineCount; a file chunked by another chunker version is re-chunked.
   # §20 events: intel:build:complete, intel:build:failed (idearium/repo/pipeline-events.js).
   # §38 mutation: /api/repos/:uuid/code/* writes go through .injects and RepoLayer, and are reindexed once per call.
+
+## ADDENDUM 2026-10-15 — 0.60.64 PT2: phases by nested repo
+# A system's nested repo lists every phase tagged for it, and a phase is now tagged for every system that owns a file it names (loom phasemap-map). The phase card and detail show its systems. James: "phases tags by system/nested repo".

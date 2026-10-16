@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/app/controller.js — what the COS window calls: one object over the store, runtime and switch (COSA6, 0.60.68)
+ * cos/app/controller.js — what the COS window calls: one object over the store, runtime and switch (COSA6, 0.60.89)
  * comp_id: cos.app.controller
  * UUID: cos-app-controller-v1-0000-2026-1016-jamesbrooks-001
  * Map: docs/2026-10-15-cos-app-phasemap.spec (COSA6_the_exe)
@@ -13,7 +13,7 @@
  */
 const Store = require('./store.js'); const Settings = require('./settings.js'); const RT = require('./runtime.js'); const SW = require('./switch.js'); const http = require('http');
 
-/** httpIdleProbe(project, run) — asks the running project's autopilot GET /idle (0.60.71). An older Nexus without it, or one that does not answer, is NOT idle, and the reason says which. */
+/** httpIdleProbe(project, run) — asks the running project's autopilot GET /idle (0.60.92). An older Nexus without it, or one that does not answer, is NOT idle, and the reason says which. */
 function httpIdleProbe(project, run, timeoutMs = 2500) {
   return new Promise((resolve) => {
     const req = http.get({ host: '127.0.0.1', port: run.statusPort, path: '/idle', timeout: timeoutMs }, (res) => {

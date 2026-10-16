@@ -65,7 +65,7 @@ open_decisions:
     coder_recommends: >-
       a. The Code tab already draws the Files tree and states; two trees of one repo is the drift the project keeps
       having (SH1, one home per concept). To confirm with James.
-    status: DECIDED - one tab (James, 2026-10-15: "yes one tab.")
+    status: 'DECIDED - one tab (James, 2026-10-15: "yes one tab.")'
   CE0b_batching:
     asked: "can one reply carry several tool calls?"
     coder_recommends: "no change to 'one call per reply'; teach the persona to use code_batch for reads. To confirm."
@@ -139,7 +139,7 @@ phases:
       idearium.provider.fallback. Each is shown in the Log view and sent to the activity log.
 
   CE6_one_tab:
-    status: OPEN (blocked by CE0_one_tab_or_two)
+    status: BUILT 0.60.82 (tests/modules/test-code-tab-merge.test.js MG-00, MG-10, MG-11)
     systems: [idearium]
     files: [idearium/ui/js/code-surface.js, idearium/ui/js/file-manage.js, idearium/ui/js/app.js]
     depends_on: [CE0_one_tab_or_two]
@@ -149,7 +149,7 @@ phases:
       functions are reused by the Code tab, the old tab is archived behind a redirect.
 
   CE7_ai_assisted_editing:
-    status: OPEN
+    status: BUILT 0.60.81 backend (test-code-tab-expand CX-01..03), 0.60.82 UI (test-code-tab-merge MG-13)
     systems: [idearium, core]
     files: [idearium/ui/js/code-surface.js, lib/line-edit.js, idearium/api/index.js, lib/agent-tools/tools]
     depends_on: [CE1_the_run_state, CE5_events]
@@ -161,7 +161,7 @@ phases:
       Edits land in the run state so a restart does not redo them.
 
   CE8_the_cli_reads_the_surface:
-    status: OPEN
+    status: BUILT 0.60.80 (tests/modules/test-code-surface-state.test.js)
     systems: [idearium]
     files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/code-surface.js, lib/run-state.js]
     depends_on: [CE5_events]
@@ -172,7 +172,7 @@ phases:
       Code tab see one surface. The agents' nexus.command tool gets the same rows (route-commands is the one table).
 
   CE9_the_panels:
-    status: OPEN
+    status: BUILT 0.60.82 (test-code-tab-merge MG-14, MG-15); the Clear Glass mesh mount not done (see addendum (c))
     systems: [idearium, clear-glass]
     files: [idearium/ui/js/repo-tasks.js, idearium/ui/js/repo-drawer-views.js, idearium/ui/js/code-surface.js, clear-glass/src/mesh/route-graph.js]
     depends_on: [CE5_events, CE4_reply_kind_and_tags]
@@ -200,7 +200,7 @@ phases:
     does: "CX1 (context from the dependencies: lines, spec, memory, loom impact) feeds CE2's header; CP1 (the contract panel) is a Code-tab panel next to the gates."
 
   CE12_proof_and_wiring:
-    status: OPEN
+    status: "DONE per slice: 0.60.80, 0.60.81, 0.60.82 (tests, loom wires, versions, CHANGELOGs, addenda)"
     systems: [core, loom]
     files: [tests/modules/run-all.js, loom/maps/*, docs/atlases/idearium-atlas.md, docs/SPEC-REGISTRY.spec, lib/version.js]
     depends_on: [CE1_the_run_state]
@@ -211,7 +211,7 @@ phases:
 
   # ── Added 2026-10-15 (second message): one menu for Manage + History, and versioning made universal ──────────────
   CV1_one_menu:
-    status: OPEN
+    status: BUILT 0.60.82 (test-code-tab-merge MG-12)
     systems: [idearium]
     files: [idearium/ui/js/file-manage.js, idearium/ui/js/file-versions.js, idearium/ui/js/code-surface.js]
     depends_on: [CE0_one_tab_or_two]
@@ -222,7 +222,7 @@ phases:
       see it, diff any two, restore one. The two modals today (file-manage.js, file-versions.js) share one data call.
 
   CV2_a_version_per_diff:
-    status: OPEN
+    status: BUILT 0.60.81 (test-code-tab-expand CX-04, CX-05)
     systems: [core, versionium, idearium]
     files: [lib/repo-versions.js, versionium/lib/files.js, versionium/lib/releases.js, lib/line-edit.js]
     depends_on: [CE7_ai_assisted_editing]
@@ -233,7 +233,7 @@ phases:
       still settle; the edit path commits at once. Named milestones keep using Versionium tag() (immovable names).
 
   CV3_file_rewind:
-    status: OPEN
+    status: BUILT 0.60.81 run rewind (CX-07), 0.60.82 UI (MG-14); a file restores from the Manage timeline (MG-12)
     systems: [idearium, versionium, clear-glass]
     files: [idearium/ui/js/file-versions.js, idearium/api/index.js, versionium/lib/files.js, lib/run-state.js]
     depends_on: [CV2_a_version_per_diff, CE1_the_run_state]
@@ -245,7 +245,7 @@ phases:
       bounded list, list / restore / clear), not its code.
 
   CV4_tagged_history:
-    status: OPEN
+    status: BUILT 0.60.81 (test-code-tab-expand CX-06, CX-08)
     systems: [idearium, versionium, core]
     files: [versionium/lib/files.js, idearium/api/index.js, idearium/cli/route-commands.js]
     depends_on: [CV2_a_version_per_diff]
@@ -267,7 +267,7 @@ phases:
       verify a tree against its hash, retention and compaction that never drops a tagged version, export.
 
   CV6_phases_in_idearium:
-    status: OPEN
+    status: "BUILT 0.60.82 (systems already read by PT1/PT2; open_decisions entries now kind: decision)"
     systems: [idearium, loom]
     files: [loom/scanners/phasemap-map.js, idearium/repo/thread.js, idearium/ui/js/phases.js]
     depends_on: []
@@ -287,17 +287,156 @@ not_verified:
 
 ## ADDENDUM 2026-10-15 - CE1-CE5 + CE10 built (0.60.50)
 
-James: "need the full pipeline working." (after pasting the CE1-CE5 + CE10 list)
+# James: "need the full pipeline working." (after pasting the CE1-CE5 + CE10 list)
 
-- Built: lib/run-state.js (the run node, resume on the same goal), the 'task-header' prompt block (editable in
-  Settings -> Agents), the reply.on_task step gate + lib/reply-kind.js, reply tags on .response nodes and Library rows
-  (kind, repo, session, run, step, attempt) with grouping, the run.* / guardian.reply.classified events, and the 'lost'
-  failure class that always falls back to the next provider.
-- Proof: tests/modules/test-run-state.test.js 27/27. The live reply that started this (job c2e60104, "What would you like
-  me to do with this material?") is blocked by the gate node in RS-20.
-- Not verified: no live run through ChatGPT yet. The Ollama loop does not get the task header (browser agents only).
-- Reading to confirm (the coder's, not James's decision): James wrote "no versions per file using versionium, only the
-  diff." The coder reads it as: file history shows the Versionium diffs/deltas, not whole-file versions. CV1 and CV3
-  are written for that reading and stay OPEN until he confirms.
-- Pre-existing, not caused by this: test-event-contracts EC-05 fails on main for idearium.repo.released and
-  versionium.released / versionium.tagged (undeclared).
+# - Built: lib/run-state.js (the run node, resume on the same goal), the 'task-header' prompt block (editable in
+#   Settings -> Agents), the reply.on_task step gate + lib/reply-kind.js, reply tags on .response nodes and Library rows
+#   (kind, repo, session, run, step, attempt) with grouping, the run.* / guardian.reply.classified events, and the 'lost'
+#   failure class that always falls back to the next provider.
+# - Proof: tests/modules/test-run-state.test.js 27/27. The live reply that started this (job c2e60104, "What would you like
+#   me to do with this material?") is blocked by the gate node in RS-20.
+# - Not verified: no live run through ChatGPT yet. The Ollama loop does not get the task header (browser agents only).
+# - Reading to confirm (the coder's, not James's decision): James wrote "no versions per file using versionium, only the
+#   diff." The coder reads it as: file history shows the Versionium diffs/deltas, not whole-file versions. CV1 and CV3
+#   are written for that reading and stay OPEN until he confirms.
+# - Pre-existing, not caused by this: test-event-contracts EC-05 fails on main for idearium.repo.released and
+#   versionium.released / versionium.tagged (undeclared).
+
+## ADDENDUM 2026-10-16 - the timeline and rewind are mapped in their own file
+# James: "can we do the code tab now? ... need a timeline with the checkpoints, and gates rewind points."
+# docs/2026-10-16-durable-work-timeline-phasemap.spec: TL4 (rewind to a gate) is CV3's 'undo this run', built once there;
+# TL5 (the timeline panel) is the first of CE9's panels. CE6 stays next for the Code tab (unblocked).
+## ADDENDUM 2026-10-16 - CE8 built: the CLI reads the Code tab's surface (0.60.80)
+# James: "tell me recent phases. can we do the code tab now?" CE8 was next in build_order after the 0.60.50 slice. It
+# serves his words from 2026-10-15: "so the cli can read the current worksurface in the code tab."
+# - Built:
+#   - idearium/lib/surface-state.cjs: one surface per repo, holding the open file, the picked lines, the chunk, the
+#     filters, who set it and a rev;
+#   - GET / PUT /api/repos/:uuid/surface. GET adds the picked lines' text, the proposals waiting, and the latest run
+#     (CE1);
+#   - the event idearium.surface.changed;
+#   - the commands `code surface | code open [--lines a-b] | code select`;
+#   - the tab publishes its surface, follows a change it did not make, and opens where it was left.
+# - Narrower than written (the coder's call; the rest is to come):
+#   - the surface does not carry the pending diffs' contents, only their paths and ids (`repo changes` has the diffs);
+#   - it carries the run as a summary, not the current step.
+# - Drift: none against CE1. The run comes from lib/run-state.js list(), not a second store.
+# - Proof: tests/modules/test-code-surface-state.test.js 6/6 (SS-10..12 in Clear Glass).
+# - Not verified: a live run on his machine.
+# - Still OPEN, in build order: CE7, CV2, CV4, CV3, CV1, CE9, CE6, CV5, CV6, CE11, CE12.
+# - Still to confirm with James: CE0b (batching), CV0 (what "universal" versioning covers), and the coder's reading of
+#   "no versions per file using versionium, only the diff" (addendum 2026-10-15).
+## ADDENDUM 2026-10-16 (b) - "all of it": the build plan for the rest of the Code tab (mapped before building)
+# James: "expand the code tab in repo. the file and code tab merge. all of it from the phases3"
+# - Context: he was shown CE8 built and the remaining phases in build order. He was asked whether to start CE7.
+# - What he decided:
+#   - build every remaining phase of this map;
+#   - merge Files into Code. This repeats his CE0 call ("yes one tab.").
+# - The coder's reading, to confirm:
+#   - "phases3" is read as "the phases", i.e. this map's open phases.
+#   - "all of it" is read as everything that does not wait on one of his open answers. CV5 waits on CV0, so it is mapped
+#     here but not built.
+# Grounding (§8.6), read 2026-10-16. What each phase composes from, and what it adds:
+# - **CE7** composes:
+#   - lib/line-edit.js (verify against the current text, apply atomically). It is bound to the Nexus root, so pure text
+#     forms verifyText / applyText are added and the root forms use them;
+#   - repo-inject propose (the one write path for an agent's change);
+#   - repo-agent dispatch (noContext, the picked hop), which records the run itself (CE1).
+#   - New: POST /api/repos/:uuid/code/edit (a checked line-edit set becomes a proposal) and POST
+#     /api/repos/:uuid/code/assist (a picked range plus an action; the model returns only the replacement for that range,
+#     and Nexus builds the edit with `expect` set to the current text, so a stale range is refused, never applied).
+#   - Commands: `code edit`, `code assist`.
+# - **CV2** composes lib/repo-versions.js. Commits settle after 1.5 s and already carry provenance (by, refs, files).
+#   - New: commitNow(repoUuid, labels). An applied proposal (CE7, Manage, an agent's change) and a restore each commit at
+#     once, with labels { kind: edit|manage|agent|restore|person, inject, run, checksum before/after }.
+#   - Bulk writes still settle. idearium/repo/snapshot.js projects the labels into history.
+# - **CV4** composes repo.history. New: ?tag=k:v filters on the labels (kind, run, by, inject); the command
+#   `repo history <repo> <path> [--tag k:v]`.
+# - **CV3** composes RH.restoreFile and RH.diff (already a per-file restore and a diff of any two versions).
+#   - New: POST /api/repos/:uuid/runs/:runId/rewind. It puts back every file in the run's filesChanged (CE1) as it was
+#     at the last commit before the run started; a file the run created is named, never deleted.
+#   - New: GET /api/repos/:uuid/runs (the repo's runs).
+#   - Commands: `repo runs`, `repo rewind-run`.
+# - **CV1** composes the Manage workbench (file-manage.js) and its history rail. The rail becomes one timeline, newest
+#   first:
+#   - the file's manage runs;
+#   - its commits with their labels (repo.history);
+#   - its Versionium versions.
+#   - Each version has diff (against now) and restore. file-versions.js stays as it is, a second entry to the same data
+#     (§0.3).
+# - **CE9** composes repo-tasks.js (tasks · log · control) and repo-drawer-views.js (versions · machine), which draw into
+#   #rt-views / #rt-list.
+#   - The Code tab gets a bottom panel with tabs: activity (as now), run (the run state, its steps, the agents tried, its
+#     gates on the plan step, and rewind), responses (the repo agent's exchanges, GET …/agent/history), and the Plan
+#     panel's views mounted in place.
+#   - One set of data, two mounts. When the Plan panel's activity section is open, the Code tab points to it rather than
+#     drawing a second copy with the same ids.
+# - **CE6** composes the Files tab's tree actions (filter, add, delete), its editor (save through POST …/file, the one
+#   write path) and Manage. In the Code tab:
+#   - the tree gets the filter, add file and delete;
+#   - the open file gets an edit mode (a textarea, save) and Manage (the same workbench, given the Code tab's file and
+#     picked lines).
+#   - The Files button is removed. setRepoSubtab('files') opens Code, so every deep link keeps working. The Files panel's
+#     DOM and renderApiRepoPanel stay (archived, §0.3), because other code still calls them.
+# - **CV6** is checked, not rebuilt. PT1 and PT2 (0.60.63–64) tag phases from their systems and files. This map's
+#   phases all declare `systems:`; the proof is the phasemap reader returning them.
+# - **CE11** is not here: it is CX1 + CP1 in docs/2026-10-15-automatic-tracking-phasemap.spec.
+# - **CE12** is done per slice: tests, loom wires, version, CHANGELOG.
+# Build order for these slices:
+# 1. Backend: CE7, then CV2, then CV4, then CV3.
+# 2. Commands.
+# 3. UI: CE6 first, because the merge gives the rest its home; then CE7's UI, CV1 and CE9.
+## ADDENDUM 2026-10-16 (c) - the rest built: CE6 · CE7 · CE9 · CV1 · CV2 · CV3 · CV4 · CV6 (0.60.81, 0.60.82)
+# James: "expand the code tab in repo. the file and code tab merge. all of it from the phases3"
+# Built to the plan in addendum (b), backend first (0.60.81), then the UI (0.60.82).
+# - **The Files tab is merged into Code.**
+#   - The button is gone. setRepoSubtab('files') and openApiRepoFile() open the Code tab, so every old link still lands.
+#   - The Files panel and its opener (openApiRepoFileInFiles) are kept, archived (§0.3).
+#   - The Code tab's tree gained the filter, + file and × delete (to .trash/).
+#   - The open file gained edit (save through POST …/file, so a save is a version) and "manage · history".
+# - **CV1: Manage and History are one menu.** Manage opens on the Code tab's file and its picked lines. Its rail is one
+#   timeline:
+#   - the file's manage runs;
+#   - the commits with their labels;
+#   - its versions.
+#   - Tag chips (edit · agent · manage · person · restore · revert) filter the timeline. Any version can be diffed with
+#     now or restored. file-versions.js stays as it was, a second door to the same data.
+# - **CE7, picked lines:** the right pane gains change · expand · refactor · fix · document · explain. These go to
+#   …/code/assist; the answer is a diff above the code.
+# - **CE9, the bottom panel**, with these tabs:
+#   - activity, as before;
+#   - runs: the route copilot gives; each run as a pipeline (goal → steps ✓/✗ → its state); the agents that tried it,
+#     what happened to it, the files read and changed; rewind (a dry run first);
+#   - responses: the repo agent's exchanges;
+#   - tasks · log · control · versions · machine: the Plan panel's own views, drawn in the Code tab through one resolver
+#     (repo-tasks.js _rtEl). One set of data, two mounts.
+# - **CV6:**
+#   - Every phase here already parsed with its declared systems (PT1/PT2).
+#   - Entries under `open_decisions:` / `decisions:` are now kind: decision (loom's reader, the roadmap node,
+#     schema.phase_node and a "decision" chip on the Phases tab).
+#   - A DECIDED decision reads as done. Nothing is dropped, so no count changes.
+# Narrower than written (the coder's calls, to confirm):
+# - CE9 says "one component, mounted in the Code tab and in the Clear Glass mesh panel". The Clear Glass mount is not
+#   built: the views are Idearium page scripts, and the mesh panel is Clear Glass's renderer. This is still open.
+# - CE9's "gates (every check, last result, evidence)" is shown as the current plan step's gate bar in the runs panel,
+#   not a list of every check. The full check list is still open.
+# - CE9's "Control: pause, resume, retry from step n, stop, send to another provider" is shown in two ways:
+#   - the control view (the repo's run controls and desktop, as the Plan panel has them);
+#   - run rewind.
+#   - "Retry from step n" and "send to another provider" have no route yet. Both are still open.
+# Still OPEN:
+# - CV5, which waits on CV0 (what "universal" covers).
+# - CE11 (automatic-tracking CX1 + CP1).
+# - To confirm with James: CE0b, CV0, and the coder's reading of "only the diff" (addendum 2026-10-15).
+# Proof:
+# - test-code-tab-expand 8/8 and test-code-tab-merge 7/7 (six driven in Clear Glass);
+# - test-code-tab 16/16, test-code-surface-state 6/6, test-build-surface 13/13, test-phases-tab 5/5,
+#   test-loom-phasemap 7/7, test-loom-phasemap-status 14/14.
+# - Pre-existing and unchanged: moce-roadmap's 3 failures, EC-05, and the stale probes repo-drawer-views-glass and
+#   repo-tasks-drawer-glass (all fail the same way without these changes).
+
+# ## ADDENDUM 2026-10-16 (d) — CE11's context half arrives through the agent work funnel (0.60.95)
+# James: "code tab?" The work panel (FN4 of docs/2026-10-16-agent-work-funnel-phasemap.spec) shows the open file's dependencies,
+# spec, phase and chunks; the range edit gives them to the agent first. CE11's contract half (CP1) stays open; the contract trace
+# (0.60.75) is in the Plan panel.
+

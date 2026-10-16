@@ -1,6 +1,6 @@
 'use strict';
 /**
- * clear-glass/src/chats/service.js — starts, stops and reports the chat crawler per account (PI5b, 0.60.64)
+ * clear-glass/src/chats/service.js — starts, stops and reports the chat crawler per account (PI5b, 0.60.85)
  * comp_id: cg.chats.service
  * UUID: cg-chats-service-v1-0000-2026-1016-jamesbrooks-001
  *

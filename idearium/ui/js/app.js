@@ -38,16 +38,12 @@
 // §0.39.263 — the idearium that served this page comes first: an idearium on
 // another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
 // 0.39.263 — served standalone (idearium's own port, not under the orchestrator's /ui/),
-// the Eravos canvas cannot resolve ../<system>/ against this server: use the orchestrator's (the Architect is idearium's own, 0.39.299).
+// a framed system could not resolve ../<system>/ against this server (the Architect is idearium's own, 0.39.299; Eravos deleted 0.60.83).
 // §0.39.271 — the two frames start at about:blank (data-src holds the relative path):
-// loading ../eravos/ before this ran was a 404 on :4800 on every page load.
 (() => {
   try {
     if (typeof location === 'undefined') return;
-    const underUi = /^\/ui\//.test(location.pathname);
-    const orch = `${location.protocol}//${location.hostname}:9000/ui`;
     const set = () => {
-      const e = document.getElementById('eravos-frame'); if (e) e.src = underUi ? e.dataset.src : `${orch}/eravos/`;
       // §0.39.299 AR4 — the Architect is idearium's own page (architect.html), served wherever idearium is: no orchestrator needed
       const a = document.getElementById('architect-frame'); if (a) a.src = a.dataset.src;
     };
@@ -501,7 +497,7 @@ function setView(v) {
 // §0.39.271 N1 — Create/Build open from the repo's own tab row; their views keep the
 // repo in view with one bar that leads back, so leaving the repo row never looks like
 // a second Idearium. The top bar stays Welcome + Repos.
-const NEST_VIEW_LABEL = { brainstorm: 'Create › Brainstorm', ideas: 'Create › Ideas', eravos: 'Build › Eravos — organism canvas', 'architect-build': 'Build › Architect', 'spec-wizard': 'Build › Spec Builder' };
+const NEST_VIEW_LABEL = { brainstorm: 'Create › Brainstorm', ideas: 'Create › Ideas', 'architect-build': 'Build › Architect', 'spec-wizard': 'Build › Spec Builder' };
 function _syncNestCtx(v) {
   const bar = document.getElementById('nest-ctx');
   if (!bar) return;
@@ -1404,9 +1400,8 @@ async function openNewSpecModal({ name = '', description = '', ideaUuid = null }
   const groups = [
     ['COS archetypes — one compartment, real starting files', templates.filter(t => t.source === 'cos-archetype')],
     ['COS blueprints — several roles, one directory each', templates.filter(t => t.source === 'cos-blueprint')],
-    // §0.39.267 — James: "the eravos options need to be removed from this prompt." The API no longer lists
-    // eravos mods here (GET /api/spec-engine/templates?include=eravos still does).
-    ['spec-document templates', templates.filter(t => !String(t.source || '').startsWith('cos-') && t.source !== 'eravos-mod')],
+    // §0.39.267 — James: "the eravos options need to be removed from this prompt." · 0.60.83: ERAVOS deleted, its mods with it.
+    ['spec-document templates', templates.filter(t => !String(t.source || '').startsWith('cos-'))],
   ].filter(([, list]) => list.length);
   wrap.innerHTML = groups.map(([title, list]) =>
     `<div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin:6px 0 2px">${escapeHtml(title)} · ${list.length}</div>` + list.map(row).join('')).join('');
@@ -1950,7 +1945,7 @@ function toggleCompartment(key) {
 // them under that repo instead of listing them at the top level.
 function _syncNestScope() {
   document.body.classList.toggle('in-repo', !!REPO_DETAIL_OPEN);
-  const nestViews = ['brainstorm', 'ideas', 'eravos', 'spec-wizard'];   // §0.39.300 WS3 — the pipeline's Architect is not a repo's: it opens with no repo open
+  const nestViews = ['brainstorm', 'ideas', 'spec-wizard'];   // §0.39.300 WS3 — the pipeline's Architect is not a repo's: it opens with no repo open
   if (!REPO_DETAIL_OPEN && nestViews.includes(((document.querySelector('.view.active') || {}).id || '').replace(/^view-/, ''))) setView('repo');
   if (typeof renderTabTree === 'function') renderTabTree();
 }
@@ -2023,6 +2018,7 @@ let CURRENT_REPO_SUBTAB = null;
 function setRepoSubtab(name) {
   if (name === 'roadmap' || name === 'phasemap') name = 'phases';   // §0.39.271 P4 — one tab now
   if (name === 'agent') name = 'code';   // §0.48.0 OS9 — the agent lives in the Code tab; its settings in Settings → Agents
+  if (name === 'files') name = 'code';   // §CE6 0.60.82 — James: "the file and code tab merge." One tab; every old link to Files lands in Code
   CURRENT_REPO_SUBTAB = name;
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));
@@ -2970,9 +2966,11 @@ async function renderRepoVersionium(repo) {
   const isNexusParent = repo.nexusSelf && repo.nexusSelf.role === 'parent';
   el.innerHTML = (isNexusParent ? `<div id="nx-versions"><div class="detail-empty">reading every system's versions…</div></div>` : '')
     + actions.replace('>snapshot<', isNexusParent ? '>snapshot the index only (NEXUS.md)<' : '>snapshot<')
+    + `<div id="rel-index"></div>`   // §0.60.72 RN3 releases and what landed in each (js/repo-releases.js)
     + `<div id="ver-index"></div>`   // §0.60.7 every version, compare any two, import history (js/repo-versions.js)
     + listBlock + `<div id="snap-detail"></div>`;
   if (typeof renderVersionIndex === 'function') renderVersionIndex(forUuid);
+  if (typeof renderReleases === 'function') renderReleases(repo);
   if (isNexusParent) renderNexusVersionium(forUuid, stale);
   if (SNAP_OPEN && SNAP_OPEN.repoUuid === forUuid && snaps.some(s => s.commitId === SNAP_OPEN.commitId)) {
     openRepoSnapshot(forUuid, SNAP_OPEN.commitId, snaps);
@@ -4649,7 +4647,9 @@ function _agentDetail(r) {
     const rows = [
       ...(I.injects || []).map(x => `<div style="padding-left:12px">${x.status === 'applied' ? '✎ wrote' : '◇ proposed'} <span style="cursor:pointer;text-decoration:underline" onclick="openInjectEditor('${escapeHtml(x.uuid)}')">${escapeHtml(x.path)}</span>${x.creates ? ' (new file)' : ''}` +
         `${x.addressedBy ? ` <span style="opacity:.55" title="${escapeHtml(x.evidence || '')}">— ${x.addressedBy === 'fence' ? 'path stated' : x.addressedBy === 'symbols' ? `matched ${escapeHtml(x.evidence || 'symbols')}` : 'agent placed it'}</span>` : ''}` +
-        `${x.applyError ? ` <span style="color:var(--bad,#f87171)">— not applied: ${escapeHtml(x.applyError)}</span>` : ''}</div>`),
+        `${x.applyError ? ` <span style="color:var(--bad,#f87171)">— not applied: ${escapeHtml(x.applyError)}</span>` : ''}` +
+        // 0.60.67 SF3/SF4 — a spec it collected: its modules and exports, the phase that asked, and Compile (proposals only)
+        `${x.spec ? `<div style="padding-left:24px;opacity:.8">spec collected${x.spec.name ? ` <b>${escapeHtml(x.spec.name)}</b>` : ''}: ${escapeHtml((x.spec.modules || []).map(m => `${m.id}(${(m.exports || []).join(', ')})`).join(' · ') || 'no modules')}${x.spec.phase ? ` <span style="opacity:.6">— for ${escapeHtml(x.spec.phase)}</span>` : ''} ${x.spec.compiling ? '<span style="opacity:.6">— compiling: its files arrive as proposals</span>' : `<button class="action-btn" style="font-size:9px;padding:0 6px" title="lay the spec out from its template — genesis by default (the nexus-system skeleton, its modules slotted in); every file is a proposal, nothing existing is overwritten" onclick="compileCollectedSpec('${escapeHtml(x.path)}', this)">compile</button>`}</div>` : ''}</div>`),
       ...(I.refused || []).map(x => `<div style="padding-left:12px;color:var(--bad,#f87171)">refused: ${escapeHtml(x.reason)}</div>`),
       ...(I.unresolved || []).map(x => `<div style="padding-left:12px;opacity:.65">not written: ${escapeHtml(x.reason)}</div>`),
       ...(I.commands ? [`<div style="padding-left:12px;opacity:.6">${I.commands} shell block${I.commands === 1 ? '' : 's'} — commands, not files</div>`] : []),
@@ -5203,7 +5203,16 @@ function _showIdeEditor(show) {
   document.getElementById('ide-editor').style.display = show ? '' : 'none';
 }
 
+// §CE6 0.60.82 — the Files tab merged into Code: a file opened anywhere (search, the atlas, Architect, a new file) opens in the
+// Code tab. The Files tab's own opener is kept below as openApiRepoFileInFiles (archived, §0.3), unreachable from the UI.
 async function openApiRepoFile(repoUuid, filePath) {
+  if (typeof csOpen === 'function') {
+    if (CURRENT_REPO_SUBTAB !== 'code') setRepoSubtab('code');
+    return csOpen(filePath);
+  }
+  return openApiRepoFileInFiles(repoUuid, filePath);
+}
+async function openApiRepoFileInFiles(repoUuid, filePath) {
   if (API_FILE_DIRTY && !confirm(`discard unsaved changes to ${ACTIVE_API_FILE}?`)) return;
   ACTIVE_API_FILE = filePath;
   API_FILE_DIRTY = false;
@@ -5673,35 +5682,7 @@ window.addEventListener('load', () => {
   setInterval(() => { if (CONNECTED) loadStats(); else nexusConnect(); }, 15000);
 });
 
-// ── 0.39.264 — a new Eravos organism starts here, as an idea or a spec ─────
-// James: "instead of download, it should create a idea or spec for a new
-// organism." Eravos (Build › Eravos, an iframe) posts { type:
-// 'nexus:organism.create', mode:'idea'|'spec', organism, text, tags }; only a
-// message from that frame is taken. The idea is made with Idearium's own API;
-// for 'spec' the New Spec dialog opens filled in and linked to the idea, so the
-// spec, its repo and its compartment are made exactly as any other spec's are.
-window.addEventListener('message', async (ev) => {
-  const d = ev.data;
-  if (!d || d.type !== 'nexus:organism.create') return;
-  const frame = document.getElementById('eravos-frame');
-  if (!frame || ev.source !== frame.contentWindow) { console.warn('[idearium] organism.create ignored: not from the Eravos frame'); return; }
-  const o = d.organism || {};
-  if (!/^[a-z0-9][a-z0-9-]*$/.test(String(o.id || ''))) { toast('Eravos sent an organism without a valid id', 'err'); return; }
-  try {
-    const r = await api('/api/ideas', { method: 'POST', body: JSON.stringify({ text: String(d.text || `ERAVOS ${d.kind || 'organism'}: ${o.label} (${o.id})`), tags: Array.isArray(d.tags) ? d.tags.slice(0, 12) : ['eravos', 'organism'] }) });
-    const idea = r.idea;
-    await loadIdeas();
-    if (d.mode === 'spec') {
-      await openNewSpecModal({ name: o.label || o.id, description: String(d.text || ''), ideaUuid: idea && idea.uuid });
-      toast(`${o.label || o.id}: idea made — finish the spec in the dialog`, 'ok');
-    } else {
-      setView('ideas');
-      if (idea) selectIdea(idea.uuid);
-      toast(`${o.label || o.id}: new idea in Create › Ideas`, 'ok');
-    }
-  } catch (e) { toast(`could not create the ${d.kind || 'organism'} idea: ${e.message}`, 'err'); }
-});
-
+// ── 0.39.264 → 0.60.83: the Eravos frame's "new organism" message handler was here; deleted with ERAVOS (James: "Delete it outright.").
 
 // ════════════════════════════════════════════════════
 // §0.39.284 W7 — THE REPO'S COMPONENT REGISTRY (Architect tab). James: "the architect tab should be the component
@@ -5919,4 +5900,17 @@ async function archWrite() {
   const repo = CURRENT_API_REPO; if (!repo) return;
   try { const r = await api(`/api/repos/${repo.uuid}/architecture`, { method: 'POST', body: '{}' }, 60000); toast(`registry written — ${r.stats.components} components, ${r.stats.wires} wires · nodes: ${r.nodes ? `${r.nodes.written} written, ${r.nodes.unchanged} unchanged, ${r.nodes.archived} archived` : '—'}`, 'ok'); }
   catch (e) { toast(`not written: ${e.message}`, 'err'); }
+}
+
+// 0.60.67 SF4 — James: "need the agents to use the spec compiler? like the yaml." Compile a collected spec: T0/T1, zero tokens;
+// each emitted file comes back as a proposed .inject (review it like any other), nothing existing is overwritten.
+async function compileCollectedSpec(specPath, btn) {
+  const uuid = (typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO) ? CURRENT_API_REPO.uuid : null;   // the Agent tab's repo, as openInjectEditor reads it
+  if (!uuid) { if (btn) btn.textContent = 'no repo open'; return; }
+  if (btn) { btn.disabled = true; btn.textContent = 'compiling…'; }
+  try {
+    const r = await fetch(`/api/repos/${encodeURIComponent(uuid)}/specs/compile`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ path: specPath }) });
+    const j = await r.json(); const d = j.data || j;
+    if (btn) btn.textContent = r.ok ? `${d.template || 'genesis'}: ${(d.proposed || []).length} proposed${(d.toBuild || []).length ? `, ${d.toBuild.length} to build` : ''}${(d.skipped || []).length ? `, ${d.skipped.length} skipped` : ''}` : `failed: ${String(d.error || j.error || r.status).slice(0, 80)}`;
+  } catch (e) { if (btn) btn.textContent = `failed: ${e.message}`; }
 }

@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/app/desktop/main.js — COS for Windows: the window, the tray, the inbox watcher (COSA6, 0.60.68)
+ * cos/app/desktop/main.js — COS for Windows: the window, the tray, the inbox watcher (COSA6, 0.60.89)
  * comp_id: cos.app.desktop.main
  * UUID: cos-app-desktop-main-v1-0000-2026-1016-jamesbrooks-001
  *
@@ -9,7 +9,7 @@
  * Thin on purpose: everything it does is cos/app/controller.js, which is store.js + runtime.js + switch.js, the same functions the command line calls.
  * Closing the window hides it to the tray (the project keeps running); Quit stops the projects COS started, so nothing is left running with no window to show it.
  * A zip dropped in the inbox folder (or on the window) is installed on its own; what happens next is update.policy (cos/app/settings.js): off = nothing, ask = offered (the default, never started without a click),
- * auto = switched only when verified, newer and the project is idle. Minimize goes to the taskbar like VMware (0.60.69); the window's size and place are remembered.
+ * auto = switched only when verified, newer and the project is idle. Minimize goes to the taskbar like VMware (0.60.90); the window's size and place are remembered.
  * Unverified until run on Windows: the tray, the single-instance lock, the file dialog, drag-and-drop paths.
  */
 const { app, BrowserWindow, Tray, Menu, dialog, ipcMain, nativeImage, Notification, shell } = require('electron');

@@ -135,6 +135,33 @@ async function run() {
   check('RS-43 the Library\'s index row carries reply_kind, run_id, step, attempt, repo_uuid and can be queried by run and kind', row && row.reply_kind === 'off-task' && /^repo-a__/.test(row.run_id) && row.repo_uuid === 'repo-a' && row.step === 5
     && idx.queryItems(root, { runId: row.run_id }).length === 1 && idx.queryItems(root, { replyKind: 'code' }).length === 0);
 
+  // §GW2 0.60.77 — James: "make each agent able to not need the same chat … so we could use a different chat or agent each gate"
+  // · "A brick is a chunk." A brick's run is the brick's: a retry with a new session and a goal changed by feedback, or another
+  // agent, resumes it. Without the brick key, each of these began a blank run (the steps below would be gone).
+  {
+    const RSb = require(path.join(ROOT, 'lib', 'run-state.js'));
+    const b1 = RSb.begin({ repoUuid: 'repo-b', session: 'run1-c1', goal: 'build lib/a.js', provider: 'ollama:q3b', brick: 'map::P1::b1.a.js' });
+    RSb.step(b1.runId, { name: 'code_read', arguments: { path: 'lib/dep.js' }, ok: true });
+    RSb.step(b1.runId, { name: 'code_write', arguments: { path: 'lib/a.js' }, ok: true });
+    RSb.finish(b1.runId, 'failed', 'missing export x');
+    const b2 = RSb.begin({ repoUuid: 'repo-b', session: 'run1-c1-r2t1', goal: 'build lib/a.js\n\nNOT met: export x', provider: 'chatgpt', brick: 'map::P1::b1.a.js' });
+    check('RS-50 a brick\'s retry in a new chat, with feedback in its goal, on another agent, RESUMES the brick\'s run (attempt 2, steps kept)',
+      b2.runId === b1.runId && b2.attempt === 2 && b2.resumed && b2.stepCount === 2 && b2.filesRead.includes('lib/dep.js') && b2.filesChanged.includes('lib/a.js'));
+    check('RS-51 the agents that tried it are listed, and the session is only a pointer to the newest chat',
+      JSON.stringify(b2.providers.map(x => x.provider)) === JSON.stringify(['ollama:q3b', 'chatgpt']) && b2.session === 'run1-c1-r2t1' && /NOT met/.test(b2.goal));
+    const hdr = RSb.header(b2.runId, 'You are on attempt {attempt}. Done so far: {done}. Last: {last}.');
+    check('RS-52 the baton: the header for the next attempt says the attempt, what was read and changed, and the last step', /attempt 2/.test(hdr) && /dep\.js/.test(hdr) && /a\.js/.test(hdr) && /code_write/.test(hdr));
+    const other = RSb.begin({ repoUuid: 'repo-b', session: 'run1-c2', goal: 'build lib/b.js', brick: 'map::P1::b2.b.js' });
+    check('RS-53 two bricks never share a run', other.runId !== b1.runId && other.attempt === 1);
+    const plain1 = RSb.begin({ repoUuid: 'repo-b', session: 's-x', goal: 'one task' });
+    const plain2 = RSb.begin({ repoUuid: 'repo-b', session: 's-y', goal: 'one task' });
+    check('RS-54 without a brick, runs stay keyed by session as before', plain1.runId !== plain2.runId && plain2.attempt === 1);
+    const ra = fs.readFileSync(path.join(ROOT, 'lib', 'repo-agent.js'), 'utf8'), api = fs.readFileSync(path.join(ROOT, 'idearium', 'api', 'index.js'), 'utf8');
+    check('RS-55 wired: the build passes the brick, the repo agent keys the run by it (the door fallback too), Ollama gets the baton header',
+      api.includes("...(brickKey ? { brick: brickKey } : {})") && ra.includes("goal: message, provider: providerOf({ backend, agent: agent || chosen }), brick })")
+      && ra.includes('maxToolErrors, phase, brick,') && ra.includes("if (_run && backend === 'ollama' && (_run.attempt || 1) > 1)"));
+  }
+
   fs.rmSync(TMP, { recursive: true, force: true });
   console.log(`\n${pass} passed, ${fail} failed\n`);
   process.exit(fail ? 1 : 0);

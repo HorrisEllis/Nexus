@@ -141,7 +141,8 @@ export function buildRoadmap({ projectId, maps = [] } = {}) {
         ...(p.shelf ? { shelf: true } : {}),   // §HP9 0.55.1 — the declutter's shelf: kept, never the queue
         unresolved_deps: unresolved, blocked_by: [], ready: false, layer: null,
         // §0.39.271 P2 — what the phase says it does, closes and touches (loom P1)
-        name: nm || null, closes: p.closes || [], files: p.files || [], systems: p.systems || [], blocks: p.blocks || [], form: p.form || 'key',   // §RS10 0.50.0 — the spec blocks it was planned from
+        name: nm || null, closes: p.closes || [], files: p.files || [], specs: p.specs || [], systems: p.systems || [], blocks: p.blocks || [], form: p.form || 'key', ...(p.kind === 'decision' ? { kind: 'decision' } : {}),   // §CV6 a decision, not a phase
+          // §RS10 0.50.0 — the spec blocks it was planned from
         _mapIdx: mapIdx,
       });
     }

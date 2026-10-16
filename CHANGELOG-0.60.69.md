@@ -1,15 +1,17 @@
-# 0.60.69 - 2026-10-16
+# 0.60.69 - 2026-10-15
 
-James: "being upgrade cos executable"  (read as: begin upgrading the COS exe; to confirm)
-After: "i want this almost like vmware. minimize to taskbar. auto updates from dropping in new zips, downloading it from clearglass. versions using versionium  in idearium"
+_Built on branch claude/code-tab-run-state-phasemap as 0.60.62; renumbered when merged with main, whose own 0.60.62 is a different release (CHANGELOG-0.60.62.md)._
 
-## What changed (COSA12 and the first slice of COSA13)
-- **Update policy:** `off | ask | auto`, default `ask`, in the window's header and `cos settings update.policy <value>`. A zip dropped on the window or into the inbox is installed; then:
-  - **off:** nothing else happens by itself.
-  - **ask:** the window offers the switch.
-  - **auto:** COS switches by itself ONLY when the checksum was verified, the version is newer than the current one, nothing else is running an operation on that project, and the project is idle. Otherwise it offers, or waits, and says why. It is the normal switch: preflight, data snapshot, health check, automatic rollback.
-- **COS has no idle signal from a running Nexus yet**, so with Nexus running, auto waits rather than guess. It is retried every 30 s once a signal exists. (The autopilot's `/status` carries no "a job is running" field; adding one is the next step.)
-- **Window like VMware:** minimize goes to the taskbar, close hides to the tray, size and position are remembered (`settings.json`, a damaged file is set aside with a warning, never silently reset), and a status strip shows each project, version and health, plus any release waiting.
+James: "should not rely on raid." (the red line in Run macro: "RAID denied dispatch: proof required, none supplied for 'chat'") · "also need that macro or automation template for the chatgpt listener/scraper"
+
+## What I found
+- Run macro sent every step out to Guardian (`/command`) and back into Clear Glass, with no `source`. RAID read that as an anonymous caller (`_default`, proof required) and denied it. The same route made macros depend on Guardian being up, to drive a browser that Clear Glass already owns.
+- The coder's reading of "should not rely on raid": a macro the person runs in Clear Glass should not go through RAID at all. Agents calling `browser_action` keep Guardian + RAID; that is the system deciding for itself (AXIOMS 5.2/9.1), not James clicking Run. To confirm.
+
+## What changed
+- `macro.run` takes an optional `runStep`; `macros:run` in `clear-glass/src/ipc/bridge.js` supplies the driver in process (`BA.driverCall` maps a step to the same payload Guardian built). A non-driver step (dom_query, url_listen) still takes the Guardian path and fails loud if it cannot.
+- Template **ChatGPT chats: read new ones to a file** (Automation): chat list from the sidebar, each chat not seen before opened, scrolled to the top, messages (role, id, text) saved as one JSON line per chat in `chatgpt-chats.jsonl`.
 
 ## Proof and honest limits
-`test-cos-app-update` ST-01..05, AU-01..09 (real zips and store, the switch faked); `test-cos-app-ui` UI-12..14 (jsdom). NOT built: Clear Glass downloading releases (COSA7), the Versionium record of every install/switch/rollback (COSA14), the autopilot idle signal. Windows behaviour (taskbar, tray, remembered position) is unverified. COS app version 0.2.0.
+- `test-macro` RS-01..03 (no browser_action call when runStep is given; a failing step stops with its error; driverCall mapping); `test-chatgpt-scrape-template` CGS-01..04. Template, automation and scroll tests still pass.
+- NOT verified in real Clear Glass: the Run dialog with a real tab, and ChatGPT's current selectors (`a[href^="/c/"]`, `[data-message-author-role]`). A chat already read is skipped even if it has new messages. Real drive-test pending.

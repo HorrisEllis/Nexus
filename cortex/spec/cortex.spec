@@ -309,3 +309,10 @@ spec:
 # cfr_tension_history 20k; NEXUS_TABLE_CAP_<TABLE>, 0 = none). Rows leaving by cap or by age are archived first —
 # one gzip member per batch appended to <store>/archive/<table>/<day>.jsonl.gz — and deleted only when the archive was
 # written. readArchive(jaa, table, day?) reads them back; compaction_log keeps a summary row per batch.
+
+# ## ADDENDUM 2026-10-16 — 0.60.78 RT1: the officiator classifies before it charges (cortex/core/raid/officiator.js 1.1.0)
+# James: "Next" (step 5, routing, of his order). An agent's silence is not the drop's failure: RAID's ranked candidates are walked;
+# only an answer with no contract is charged to the drop and learned (recordOutcome); no answer at all makes the agents wait
+# (persisted, doubling), never parks a drop. Parked drops get a daily try; parked()/unpark() replace hand edits of
+# officiator-attempts.json (cortex GET /api/raid/officiator, POST /api/raid/officiator/unpark).
+

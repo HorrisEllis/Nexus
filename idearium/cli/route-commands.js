@@ -94,10 +94,10 @@ export const SPEC = [
   // 0.60.8 — intent routing for reasoning (lib/reasoning-route.js)
   // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
   // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (lib/nexus-releases.js): James's words, the proof, the commit
-  { key: 'system.releases', repo: false, usage: 'releases [--sync] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog; --sync records any missing',
-    req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: {} } : { method: 'GET', path: '/api/releases' },
+  { key: 'system.releases', repo: false, usage: 'system releases [--sync [--all]] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog, its commits; --sync records any missing (with the newest 30 releases\' commits; --all: every release\'s)',
+    req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: a.flags.all ? { all: true } : {} } : { method: 'GET', path: '/api/releases' },
     print: (d, a, h) => {
-      if (a.flags.sync) { console.log(`  ${d.releases} releases: ${h.c.mint(`${d.recorded} recorded`)} · ${d.already} already · ${d.unpinned} without a git commit in this clone${d.refused && d.refused.length ? h.c.coral(` · ${d.refused.length} refused`) : ''}`); return; }
+      if (a.flags.sync) { console.log(`  ${d.releases} releases: ${h.c.mint(`${d.recorded} recorded`)} · ${d.already} already · ${d.unpinned} without a git commit in this clone${d.withCommits != null ? ` · ${d.withCommits} with their commits` : ''}${d.refused && d.refused.length ? h.c.coral(` · ${d.refused.length} refused`) : ''}`); return; }
       let l = d.releases || [];
       if (a.flags.version) l = l.filter(r => r.version === String(a.flags.version).replace(/^v/, ''));
       if (!l.length) { console.log(h.c.gray('  no releases in Versionium yet — idearium releases --sync')); return; }
@@ -105,8 +105,13 @@ export const SPEC = [
         console.log(`  ${h.c.mint(r.tag.padEnd(10))} ${h.c.dim(r.gitCommit ? r.gitCommit.slice(0, 7) : 'no commit')}  ${r.changelog ? h.c.dim(r.changelog) : ''}${r.version === d.current ? h.c.amber('  ← running') : ''}`);
         if (r.quote) console.log(`    ${h.c.sky(String(r.quote).slice(0, 180))}`);
         if (a.flags.version && r.notes) console.log(h.c.dim(`    ${r.notes}`));
+        if (a.flags.version && Array.isArray(r.commits)) for (const c of r.commits) console.log(`    ${h.c.dim(c.sha.slice(0, 8))} ${c.subject}  ${h.c.dim(`${c.files} file(s) +${c.added} −${c.removed}`)}`);
       }
     } },
+  // §0.60.72 RN2 — James: "tell me all the recent changes. i want a changelog for each change or diff." Written from git.
+  { key: 'system.changes', repo: false, usage: 'system changes [--since x.y.z] [--write]', about: 'every change since a release: each commit under the first release that contains it, with its files (written from git, not by hand); --write saves CHANGES.md',
+    req: (a) => ({ method: 'GET', path: `/api/releases/changes?${new URLSearchParams({ ...(a.flags.since ? { since: String(a.flags.since) } : {}), ...(a.flags.write ? { write: '1' } : {}) })}`, timeoutMs: 120000 }),
+    print: (d, a, h) => { if (d.out) { console.log(`  ${h.c.mint(d.out)} written (${d.bytes} bytes)`); return; } console.log(d.markdown); } },
   { key: 'system.version', repo: false, usage: 'version', about: 'the Nexus release (lib/version.js): its GitHub tag and zip name, whether every place that states it agrees (CK-253), and the module versions, labelled',
     req: () => ({ method: 'GET', path: '/api/version' }),
     print: (d, a, h) => { console.log(`  ${h.c.mint(`Nexus ${d.version}`)}${d.commit ? h.c.dim(`  ${d.commit}`) : ''}  ·  GitHub ${d.tag}  ·  zip ${d.zipName}`);
@@ -142,6 +147,46 @@ export const SPEC = [
     need: (a) => (a.args.length >= 3 ? null : '<path> <from> <to>'),
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/lines/copy`, body: { path: a.args[0], from: a.args[1], to: a.args[2], ...(a.flags.to ? { toPath: a.flags.to } : {}) } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.lines} lines → ${d.path} (on the work surface; apply to write it)`) },
+  // §CE8 — James: "so the cli can read the current worksurface in the code tab." One surface for the Code tab, the CLI and
+  // the agents (idearium/lib/surface-state.cjs): what is open, the picked lines and chunk, what waits, the run. Setting it
+  // from here moves the tab (idearium.surface.changed).
+  { key: 'code.surface', repo: true, usage: 'code surface <repo>', about: 'what the Code tab has open: the file, the picked lines (with their text), the chunk, the proposals waiting, the latest run',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/surface` }),
+    print: (d, a, h) => _printSurface(d, a, h) },
+  { key: 'code.open', repo: true, usage: 'code open <repo> <path> [--lines a-b]', about: 'open a file on the Code tab\'s surface (the tab follows), optionally with lines picked',
+    need: (a) => (a.args[0] ? null : '<path>'),
+    req: (a) => { const sel = _lines(a.flags.lines); if (sel && sel.error) return { error: sel.error }; return { method: 'PUT', path: `/api/repos/${a.repo.uuid}/surface`, body: { open: a.args[0], ...(sel ? { sel } : {}), by: 'cli' } }; },
+    print: (d, a, h) => _printSurface(d, a, h) },
+  { key: 'code.select', repo: true, usage: 'code select <repo> <from> [to] | --chunk <id> | --clear', about: 'pick lines (or a chunk) of the open file on the Code tab\'s surface; --clear unpicks',
+    need: (a) => (a.flags.clear || a.flags.chunk || a.args[0] ? null : '<from> [to], --chunk <id> or --clear'),
+    req: (a) => { const body = { by: 'cli' };
+      if (a.flags.clear) Object.assign(body, { sel: null, chunk: null });
+      else { if (a.flags.chunk && a.flags.chunk !== true) body.chunk = String(a.flags.chunk); if (a.args[0]) { const sel = _lines(`${a.args[0]}-${a.args[1] || a.args[0]}`); if (sel.error) return { error: sel.error }; body.sel = sel; } }
+      return { method: 'PUT', path: `/api/repos/${a.repo.uuid}/surface`, body }; },
+    print: (d, a, h) => _printSurface(d, a, h) },
+  // §CE7 0.60.81 — James: "ai assisted coding using the chunking and line count tool for the ai to change lines at a time or a
+  // section." A checked edit (expect must match the file now) and the agent on a picked range; both land as one proposal.
+  { key: 'code.edit', repo: true, usage: 'code edit <repo> <path> <from> <to> --with "<new text>" [--expect "<old text>"]', about: 'replace lines from..to with new text — checked against the file as it is now; lands as a proposal (apply writes it)',
+    need: (a) => (a.args.length >= 3 && typeof a.flags.with === 'string' ? null : '<path> <from> <to> --with "<text>"'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/code/edit`, body: { path: a.args[0], by: 'cli', edits: [{ from: a.args[1], to: a.args[2], replacement: a.flags.with, ...(typeof a.flags.expect === 'string' ? { expect: a.flags.expect } : {}) }] } }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.path} lines ${d.ranges.map(r => r.join('–')).join(', ')} → proposal ${h.c.gray((d.inject && d.inject.uuid) || '')} ${h.c.dim(`(${d.checksumBefore} → ${d.checksumAfter})`)}`) },
+  { key: 'code.assist', repo: true, usage: 'code assist <repo> <path> <from> <to> <change|expand|refactor|fix|document|explain> ["instructions"] [--provider p] [--model m]', about: 'hand lines from..to to the repo\'s agent with an action; its replacement for exactly those lines lands as a proposal (explain answers only)',
+    need: (a) => (a.args.length >= 4 ? null : '<path> <from> <to> <action>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/code/assist`, timeoutMs: 20 * 60000, body: { path: a.args[0], from: a.args[1], to: a.args[2], action: a.args[3], ...(a.args[4] ? { note: a.args.slice(4).join(' ') } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.model ? { model: a.flags.model } : {}) } }),
+    print: (d, a, h) => { if (!d.ok) { console.log(h.c.amber(`  ${d.error}`)); if (d.reply) console.log(h.c.dim(d.reply)); return; }
+      if (d.action === 'explain') { console.log(h.c.dim(`  ${d.provider || ''}`)); console.log(d.reply); return; }
+      console.log(`${h.c.mint('✓')} ${d.path} ${d.from}–${d.to} ${d.action} by ${d.provider || 'the agent'} → proposal ${h.c.gray((d.inject && d.inject.uuid) || '')}`); console.log(h.c.dim(`  idearium repo changes ${h.shortRepo(a.repo.uuid)}`)); } },
+  // §CV3 0.60.81 — James: "rewind engine for each file." The runs Nexus kept (CE1), and undoing one: every file it changed
+  // back as it was before it started (a file it created is named, not deleted).
+  { key: 'repo.runs', repo: true, usage: 'repo runs <repo> [--status running|done|failed]', about: 'the runs Nexus kept for this repo: goal, attempt, agents tried, steps, files read and changed',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/runs${qs(a.flags, ['status', 'limit'])}` }),
+    print: (d, a, h) => { const l = d.runs || []; if (!l.length) { console.log(h.c.gray('  no runs')); return; }
+      for (const r of l) console.log(`  ${ICON[r.status] || '·'} ${h.c.gray(r.runId)} ${h.c.dim(`${r.status} · attempt ${r.attempt} · ${r.stepCount} steps · ${r.filesChanged.length} changed · ${when(r.updatedAt)}`)}\n     ${String(r.goal).split('\n')[0].slice(0, 110)}`); } },
+  { key: 'repo.rewind-run', repo: true, usage: 'repo rewind-run <repo> <runId> [--dry]', about: 'put every file a run changed back as it was before the run (each restore is a version; --dry says what it would do)',
+    need: (a) => (a.args[0] ? null : '<runId> (idearium repo runs <repo>)'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/runs/${encodeURIComponent(a.args[0])}/rewind`, body: { by: 'cli', ...(a.flags.dry ? { dryRun: true } : {}) }, timeoutMs: 120000 }),
+    print: (d, a, h) => { console.log(h.c.dim(`  to ${String(d.to.commitId).slice(0, 12)} · ${when(d.to.ts)} · ${d.to.message || ''}${d.dryRun ? ' (dry run)' : ''}`));
+      for (const r of d.results || []) console.log(`  ${r.done ? h.c.mint('↶') : r.dryRun ? '·' : h.c.amber('○')} ${r.path}${r.why ? h.c.dim(`  — ${r.why}`) : ''}`); } },
   // 0.60.15 — .contract v2 (cortex/core/raid/contract-gates.js): executable contracts, gated step by step. Local: they read
   // and write the .contract file itself; completion is the evaluator's, never declared.
   { key: 'contract.new', repo: false, usage: 'contract new <id> <file.contract> [--what text] [--why text]', about: 'a new v2 contract (context → build → verify gates) to edit',
@@ -188,10 +233,12 @@ export const SPEC = [
     local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); return require('../../cortex/core/raid/contract-adapters.js').audit(L.payload); },
     print: (d, a, h) => { for (const b of d.bricks) console.log(`  ${(b.status === 'PASSED' ? h.c.mint : h.c.amber)(String(b.status).padEnd(7))} ${b.id}${b.file ? h.c.dim(` ${b.file}`) : ''}${b.agent ? h.c.dim(` · ${b.agent}`) : ''}${b.attempts ? h.c.dim(` · ${b.attempts} attempt(s)`) : ''}${b.blocked ? h.c.amber(` · ${b.blocked}`) : ''}`); console.log(h.c.dim(`  ${d.dependencies.length} dependencies · ${d.checkpoints.length} checkpoints · ${d.gates.length} gates`)); console.log(`  ${d.complete ? h.c.mint('complete') : h.c.amber('not complete')}: ${(d.why || []).join('; ')}`); } },
   // 0.60.39 GS1 — --gate <id>: that gate now against what passed (the evaluator's reasons, the commit it passed at, the diff since)
-  { key: 'repo.contract', repo: true, usage: 'repo contract <repo> <phase> [--map name] [--gate id]', about: 'a phase build\'s contract, audited: every brick (its agent, attempts, verification, the commit it passed at, a rewind), every dependency, checkpoint and gate; --gate compares one gate now against what passed',
+  { key: 'repo.contract', repo: true, usage: 'repo contract <repo> <phase> [--map name] [--gate id] [--trace]', about: 'a phase build\'s contract, audited: every brick (its agent, attempts, verification, the commit it passed at, a rewind), every dependency, checkpoint and gate; --gate compares one gate now against what passed',
     need: (a) => (a.args.length ? null : '<phase>'),
-    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/contract?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(a.flags.map)}` : ''}${a.flags.gate ? `&gate=${encodeURIComponent(a.flags.gate)}` : ''}` }),
-    print: (d, a, h) => { if (d.compare) { const c = d.compare; console.log(`  ${c.gate}: ${c.stale ? h.c.amber('STALE') : c.status}${c.commit ? h.c.dim(`  passed at ${c.commit}`) : h.c.dim('  no commit recorded')}`); for (const r of c.reasons || []) console.log(h.c.dim(`    · ${r}`)); for (const [f, dd] of Object.entries(c.diff || {})) { console.log(`  ${f}`); const pt = dd && dd.files && dd.files[0]; console.log(h.c.dim(pt && pt.patch ? String(pt.patch).split('\n').slice(0, 30).join('\n') : (dd && dd.error) || '    no change since it passed')); } return; } const au = d.audit; for (const b of au.bricks) console.log(`  ${(b.status === 'PASSED' ? h.c.mint : h.c.amber)(String(b.status).padEnd(7))} ${b.file || b.id}${b.agent ? h.c.dim(` · ${b.agent}`) : ''}${b.attempts ? h.c.dim(` · ${b.attempts} attempt(s)`) : ''}${b.tag ? h.c.dim(` · ${b.tag}`) : ''}${b.class && b.status !== 'PASSED' ? h.c.amber(` · ${b.class}`) : ''}${b.blocked ? h.c.amber(` · ${b.blocked}`) : ''}`); if (d.progress) console.log(h.c.dim(`  progress: ${d.progress.passed}/${d.progress.total} passed · ${d.progress.moves} moves${d.progress.last ? ` · last ${d.progress.last.gate} ${d.progress.last.status}` : ''}`)); console.log(h.c.dim(`  ${au.dependencies.length} dependencies · ${au.checkpoints.length} checkpoints · ${au.gates.length} gates · ${d.file}`)); console.log(`  ${au.complete ? h.c.mint('complete') : h.c.amber('not complete')}: ${(au.why || []).join('; ')}`); } },
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/contract?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(a.flags.map)}` : ''}${a.flags.gate ? `&gate=${encodeURIComponent(a.flags.gate)}` : ''}${a.flags.trace ? '&trace=1' : ''}` }),
+    // 0.60.75 GW3 --trace: the contract end to end, oldest first, then each brick and every hole in the record
+    print: (d, a, h) => { if (d.trace) { for (const l of d.lines || []) console.log(`  ${l}`); console.log(''); for (const b of d.trace.bricks) console.log(`  ${(b.status === 'PASSED' ? h.c.mint : h.c.amber)(String(b.status).padEnd(7))} ${b.id}${b.files.length ? h.c.dim(` ${b.files.join(', ')}`) : ''}${b.agents.length ? h.c.dim(` · ${b.agents.join(', ')}`) : ''}${b.commits.length ? h.c.dim(` · @${b.commits.map(c => String(c).slice(0, 12)).join(' @')}`) : ''}`); for (const x of d.trace.holes) console.log(`  ${h.c.amber('hole')} ${x.gate}: ${x.what}`); if (!d.trace.holes.length) console.log(h.c.dim('  no holes in the record')); return; }
+      if (d.compare) { const c = d.compare; console.log(`  ${c.gate}: ${c.stale ? h.c.amber('STALE') : c.status}${c.commit ? h.c.dim(`  passed at ${c.commit}`) : h.c.dim('  no commit recorded')}`); for (const r of c.reasons || []) console.log(h.c.dim(`    · ${r}`)); for (const [f, dd] of Object.entries(c.diff || {})) { console.log(`  ${f}`); const pt = dd && dd.files && dd.files[0]; console.log(h.c.dim(pt && pt.patch ? String(pt.patch).split('\n').slice(0, 30).join('\n') : (dd && dd.error) || '    no change since it passed')); } return; } const au = d.audit; for (const b of au.bricks) console.log(`  ${(b.status === 'PASSED' ? h.c.mint : h.c.amber)(String(b.status).padEnd(7))} ${b.file || b.id}${b.agent ? h.c.dim(` · ${b.agent}`) : ''}${b.attempts ? h.c.dim(` · ${b.attempts} attempt(s)`) : ''}${b.tag ? h.c.dim(` · ${b.tag}`) : ''}${b.class && b.status !== 'PASSED' ? h.c.amber(` · ${b.class}`) : ''}${b.blocked ? h.c.amber(` · ${b.blocked}`) : ''}`); if (d.progress) console.log(h.c.dim(`  progress: ${d.progress.passed}/${d.progress.total} passed · ${d.progress.moves} moves${d.progress.last ? ` · last ${d.progress.last.gate} ${d.progress.last.status}` : ''}`)); console.log(h.c.dim(`  ${au.dependencies.length} dependencies · ${au.checkpoints.length} checkpoints · ${au.gates.length} gates · ${d.file}`)); console.log(`  ${au.complete ? h.c.mint('complete') : h.c.amber('not complete')}: ${(au.why || []).join('; ')}`); } },
   // 0.60.29 PM — James: "All the phases need to be mapped to files and dependencies. With nexus and all projects."
   { key: 'repo.map-phases', repo: true, usage: 'repo map-phases <repo> [status] [--limit n] [--no-apply] [--done] [--untrusted]', about: 'map every phase that names no files to its files (an agent, scored first on phases whose files are known) and every phase to its dependencies (from the files); written into the phasemaps where missing',
     req: (a) => (a.args[0] === 'status' ? { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/map` }
@@ -199,6 +246,15 @@ export const SPEC = [
     print: (d, a, h) => {
       if (a.args[0] === 'status') { console.log(d.running ? h.c.amber(`  running — ${d.progress ? `${d.progress.step} ${d.progress.done}/${d.progress.of}` : 'starting'}`) : '  not running'); if (d.report) console.log(`  ${d.report.line}`); if (d.report && (d.report.skipped || []).length) console.log(h.c.dim(`  skipped: ${d.report.skipped.slice(0, 5).join(' · ')}`)); return; }
       console.log(h.c.mint(`  started on ${d.maps} map(s) — repo map-phases <repo> status shows its progress`));
+    } },
+  // 0.60.67 SF4 — James: "need the agents to use the spec compiler? like the yaml."
+  { key: 'repo.compile-spec', repo: true, usage: 'repo compile-spec <repo> <path.spec> [--into folder] [--template genesis|compiler|<id>]', about: 'lay out a .spec in the compiler\'s format from its template — genesis by default (the nexus-system skeleton, the spec\'s modules slotted in as components), or the compiler\'s TypeScript scaffold; every file is a proposed .inject, nothing existing is overwritten, component files are listed to build',
+    need: (a) => (a.args.length ? null : '<path.spec>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/specs/compile`, body: { path: a.args[0], ...(a.flags.into != null ? { into: String(a.flags.into) } : {}), ...(a.flags.template ? { template: String(a.flags.template) } : {}) } }),
+    print: (d, a, h) => {
+      console.log(h.c.mint(`  ${d.template || 'genesis'}: ${d.proposed.length} file(s) proposed`)); for (const p of d.proposed) console.log(`    + ${p.path}  ${h.c.dim(p.uuid)}`);
+      if ((d.toBuild || []).length) { console.log(`  ${d.toBuild.length} to build`); for (const x of d.toBuild) console.log(`    · ${x.path}  ${h.c.dim(String(x.purpose || '').slice(0, 140))}`); }
+      if (d.skipped.length) { console.log(h.c.amber(`  ${d.skipped.length} skipped`)); for (const x of d.skipped) console.log(`    - ${x.path}  ${h.c.dim(x.why)}`); }
     } },
   // 0.60.27 AG1a — "as little as possible", counted: agent calls (plan · code · review), local vs remote, tokens
   { key: 'repo.cost', repo: true, usage: 'repo cost <repo> [phase] [--map name]', about: 'what each phase cost in agent calls and tokens: plan, code and review calls, local vs remote, tokens in and out (estimated), per run',
@@ -261,6 +317,38 @@ export const SPEC = [
     need: (a) => (a.args[0] ? null : '<id>'),
     req: (a) => ({ method: 'PATCH', path: `/api/notes/${encodeURIComponent(a.args[0])}`, body: { status: 'done' } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} done: ${d.note.title}`) },
+  // FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." (lib/work-funnel.js)
+  { key: 'repo.funnel', repo: true, usage: 'repo funnel <repo> <request…> [--intent change|build|debug|spec]', about: 'the four answers for a request, in order — its dependencies, its spec, its phase, its chunks — or where it stops and why (no model)',
+    need: (a) => (a.args.length ? null : '<request…>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/funnel`, body: { request: a.args.join(' '), ...(a.flags.intent ? { intent: String(a.flags.intent) } : {}) } }),
+    print: (d, a, h) => { for (const l of d.lines || []) console.log(/^stopped/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); } },
+  // 0.60.78 RT1 — what RAID's officiator holds back (the agents' wait, each staged drop's tries and why) and clearing it
+  { key: 'raid.parked', repo: false, usage: 'raid parked', about: 'what the officiator holds back: the agents\' wait (no agent answered) and each staged drop\'s tries, why, and when it is tried next',
+    req: () => ({ system: 'cortex', method: 'GET', path: '/api/raid/officiator' }),
+    print: (d, a, h) => {
+      if (d.agents) console.log(`  ${h.c.amber('agents waiting')} until ${new Date(d.agents.until).toLocaleTimeString()} — ${d.agents.reason || ''}${(d.agents.tried || []).length ? h.c.dim(` (tried ${d.agents.tried.join(', ')})`) : ''}`);
+      for (const x of d.drops || []) console.log(`  ${x.parked ? h.c.amber('parked ') : h.c.dim('waiting')} ${x.id.slice(0, 12)}  ${x.n}/${d.maxAttempts} · next ${new Date(x.nextTry).toLocaleString()}${(x.tried || []).length ? h.c.dim(` · ${x.tried.join(', ')}`) : ''}\n          ${h.c.dim(String(x.reason || '').slice(0, 140))}`);
+      if (!d.agents && !(d.drops || []).length) console.log(h.c.gray('  nothing held back'));
+    } },
+  { key: 'raid.unpark', repo: false, usage: 'raid unpark [<drop id or prefix>]', about: 'clear what the officiator holds back: one drop (by id or its first characters), or everything (the agents\' wait included) — tried on the next tick',
+    req: (a) => ({ system: 'cortex', method: 'POST', path: '/api/raid/officiator/unpark', body: a.args[0] ? { id: a.args[0] } : {} }),
+    print: (d, a, h) => console.log(`${h.c.mint('✓')} cleared ${(d.cleared || []).length}: ${(d.cleared || []).map(x => x.slice(0, 12)).join(', ') || 'nothing was held back'}`) },
+  // 0.60.74 COSA10 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." Every project,
+  // newest activity first: questions and todos waiting, phases done/total, what is in progress or next (idearium/lib/projects.cjs)
+  { key: 'projects', repo: false, usage: 'projects', about: 'every project of yours on one list: what is waiting on you, what is next, what moved last',
+    req: () => ({ method: 'GET', path: '/api/my-projects' }),
+    print: (d, a, h) => {
+      const c = d.counts || {};
+      console.log(h.c.dim(`  ${c.projects || 0} projects · ${c.questions || 0} questions · ${c.todos || 0} todos · ${c.inProgress || 0} in progress`));
+      for (const p of d.projects || []) {
+        const when = p.lastActivity && p.lastActivity.ts ? new Date(p.lastActivity.ts).toISOString().slice(0, 10) : '—';
+        const ph = p.phases ? `${p.phases.complete}/${p.phases.total} phases` : 'no phasemap';
+        console.log(`  ${h.c.mint(p.name)}  ${h.c.dim(`${when} · ${ph}`)}`);
+        for (const x of p.attention || []) console.log(`      ${x}`);
+        for (const e of p.errors || []) console.log(`      ${h.c.amber('!')} ${e}`);
+      }
+      if (!(d.projects || []).length) console.log(h.c.gray('  no projects yet'));
+    } },
   // 0.60.5 — the component store from the command line and for every agent (lib/project-decompose.js)
   { key: 'components', repo: false, usage: 'components [--q words] [--limit n]', about: 'the component store: every stored component, or those matching words',
     req: (a) => ({ method: 'GET', path: `/api/components${a.flags.q ? `?q=${encodeURIComponent(a.flags.q)}&limit=${parseInt(a.flags.limit, 10) || 25}` : ''}` }),
@@ -295,10 +383,10 @@ export const SPEC = [
       }
       console.log(h.c.dim('\n  build one: idearium repo phase <repo> <phase> build'));
     } },
-  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task',
+  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again)',
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => (a.args[1] === 'build'
-      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}) }, timeoutMs: 120000 }
+      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}) }, timeoutMs: 120000 }
       : { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/runs?phase=${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => {
       if (a.args[1] === 'build') {
@@ -397,13 +485,13 @@ export const SPEC = [
       for (const f of d.emptyFiles || []) console.log(`  ${h.c.amber('○')} ${f}  ${h.c.dim('0 bytes')}`);
       console.log(h.c.dim(`\n  draft them: idearium repo blanks ${a.repo.name} complete`));
     } },
-  { key: 'repo.history', repo: true, usage: 'repo history <repo> <path>', about: 'the commits that touched one file — when, who, why (VR1), newest first',
+  { key: 'repo.history', repo: true, usage: 'repo history <repo> <path> [--tag kind:edit|run:id|by:who|inject:id]', about: 'the commits that touched one file — when, who, why (VR1), newest first; --tag filters by their labels (CV4)',
     need: (a) => (a.args[0] ? null : '<path>'),
-    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/history?path=${encodeURIComponent(a.args[0])}`, timeoutMs: 30000 }),
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/history?path=${encodeURIComponent(a.args[0])}${a.flags.tag && a.flags.tag !== true ? `&tag=${encodeURIComponent(a.flags.tag)}` : ''}`, timeoutMs: 30000 }),
     print: (d, a, h) => {
       const l = d.commits || [];
       if (!l.length) { console.log(h.c.gray(`  no commit names ${d.path}${d.untracked ? ` (${d.untracked} older commit(s) do not say what they touched)` : ''}`)); return; }
-      for (const c of l) console.log(`  ${h.c.amber(String(c.commitId).slice(0, 10))} ${h.c.dim(when(c.ts))} ${c.op === 'delete' ? h.c.coral('deleted') : 'changed'}  ${String(c.message || '').slice(0, 90)}${(c.provenance.refs || []).length ? h.c.dim(`  · ${c.provenance.refs.join(', ')}`) : ''}`);
+      for (const c of l) console.log(`  ${h.c.amber(String(c.commitId).slice(0, 10))} ${h.c.dim(when(c.ts))} ${c.op === 'delete' ? h.c.coral('deleted') : 'changed'}  ${String(c.message || '').slice(0, 90)}${(c.provenance.refs || []).length ? h.c.dim(`  · ${c.provenance.refs.join(', ')}`) : ''}${(c.labels || []).length ? h.c.dim(`  [${c.labels.map(l => [l.kind, l.action, l.by].filter(Boolean).join(' ')).join('; ')}]`) : ''}`);
     } },
   // §OP3 0.57.0 — James: "i prefer options over hard coded … anything high leverage, or that removes the need to understand code".
   // A system's options through Idearium's proxy (GET/POST /api/systems/:system/options → the system's own /api/options).
@@ -590,7 +678,7 @@ export const SPEC = [
   // §0.60.60 NP9 — James, 2026-10-15: "add support for snowflake, using cli, then you can add the commands to the agents, or make agent tools."
   // Routes and the Snowflake/Tor transport (clear-glass/src/net). Reading is open to agents; CHANGING a route or the transport is a person's act
   // (an agent that could remove a rule could quietly send his traffic direct), so personOnly refuses it for the nexus.command tool.
-  // §0.60.64 PI5b — James, 2026-10-16: "build it." The chat crawler (clear-glass/src/chats/): CLI first, then Settings. Starting it is a person's act.
+  // §0.60.85 PI5b — James, 2026-10-16: "build it." The chat crawler (clear-glass/src/chats/): CLI first, then Settings. Starting it is a person's act.
   { key: 'chat-crawl', repo: false, usage: 'chat-crawl <status|start|stop> [<provider:accountId>]', about: 'the personal-chat crawler: reads an account\'s chat list, then each chat once, then only new or changed ones; off until the account\'s switch is on in Settings > Chat capture',
     need: (a) => { const v = a.args[0] || 'status'; if ((v === 'start' || v === 'stop') && !a.args[1]) return '<provider:accountId> (like chatgpt:a1)'; return null; },
     personOnly: (a) => (['start', 'stop'].includes(a.args[0]) ? 'starting the crawler visits his own account\'s chats at volume: it is his call, per account. Ask him to run it or switch the account on in Settings > Chat capture.' : null),
@@ -725,6 +813,23 @@ function _clearGlass(method, path, body, timeoutMs) {
  * makeRouteCommands(h) -> { [key]: handler } — h: { api(method, path, body, timeoutMs), findRepo, shortRepo, die,
  * header, port, c: { sky, mint, amber, coral, violet, bold, dim, gray } }. One runner for every row of SPEC.
  */
+/** _lines('12-40') → { from, to } · '12' → { from: 12, to: 12 } · nothing → null · anything else → { error } */
+function _lines(v) {
+  if (v == null || v === true) return null;
+  const m = /^(\d+)(?:-(\d+))?$/.exec(String(v).trim());
+  if (!m) return { error: `lines as a-b (e.g. 12-40), not ${v}` };
+  const from = +m[1], to = +(m[2] || m[1]);
+  return from >= 1 ? { from: Math.min(from, to), to: Math.max(from, to) } : { error: 'lines start at 1' };
+}
+function _printSurface(d, a, h) {
+  if (!d.open) console.log(h.c.gray('  no file open'));
+  else console.log(`  ${h.c.bold(d.open)}${d.sel ? h.c.dim(`  lines ${d.sel.from}–${d.sel.to}`) : ''}${d.chunk ? h.c.dim(`  chunk ${d.chunk}`) : ''}`);
+  if (d.lines) console.log(d.lines.text.split('\n').map((l, i) => `${h.c.dim(String(d.lines.from + i).padStart(5))}  ${l}`).join('\n'));
+  if ((d.pending || []).length) { console.log(h.c.dim(`  ${d.pending.length} proposal${d.pending.length === 1 ? '' : 's'} waiting:`)); for (const p of d.pending.slice(0, 20)) console.log(`    ${ICON.proposed} ${p.op === 'delete' ? 'delete ' : ''}${p.path}  ${h.c.gray(p.uuid)}`); }
+  if (d.run) console.log(h.c.dim(`  run ${d.run.status} · attempt ${d.run.attempt} · ${d.run.steps} steps — ${d.run.goal}${d.run.next ? ` · next: ${d.run.next}` : ''}`));
+  console.log(h.c.dim(`  set by ${d.by || 'nobody yet'}${d.updatedAt ? ` · ${when(d.updatedAt)}` : ''} · rev ${d.rev || 0}`));
+}
+
 export function makeRouteCommands(h) {
   const out = {};
   for (const row of SPEC) {

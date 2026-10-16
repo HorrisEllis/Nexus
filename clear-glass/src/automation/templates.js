@@ -39,7 +39,7 @@ const TEMPLATES = [
       { type: 'log', config: { message: 'scrolled {{steps.Scroll.output.rounds}} steps via {{steps.Scroll.output.via}}; {{steps.Messages.output}} messages on the page ({{steps.Scroll.output.countBefore}} before)' } },
     ] },
 
-  // 0.60.62 — James, 2026-10-15: "also need that macro or automation template for the chatgpt listener/scraper"
+  // 0.60.69 — James, 2026-10-15: "also need that macro or automation template for the chatgpt listener/scraper"
   { id: 'chatgpt-scrape', name: 'ChatGPT chats: read new ones to a file', category: 'Browser',
     help: 'Opens ChatGPT, reads the chat list in the sidebar, then opens each chat NOT seen before, scrolls it to the top, and saves its messages (who said it, the text) as one line of JSON per chat. Run it by hand first on one chat (set Max chats to 1). A chat already read is skipped even if it has new messages since: that is the honest limit until the crawler tracks changes. The selectors are ChatGPT\'s today and can change; fix them here, not in code.',
     vars: { home: 'https://chatgpt.com/', chatLink: 'a[href^="/c/"]', messageSelector: '[data-message-author-role]', maxChats: '5', via: 'erosmancer', stepPx: '120', pauseMs: '700', stableRounds: '4' },
@@ -151,7 +151,7 @@ const TEMPLATES = [
       { id: 'n1', type: 'notify', config: { title: 'Mesh queue is backing up', body: 'More than 5 prompts are waiting.' } },
     ] },
 
-  // 0.60.64 — James, 2026-10-16: "can you make a bunch of jobs for me for clearglass." Each one answers something that actually went wrong or was asked for in this project's own logs.
+  // 0.60.85 — James, 2026-10-16: "can you make a bunch of jobs for me for clearglass." Each one answers something that actually went wrong or was asked for in this project's own logs.
   { id: 'nexus-release', name: 'New Nexus release is out', category: 'NEXUS',
     help: 'Every 6 hours, ask GitHub for the latest Nexus release and notify you when its version changes. (He was 17 releases behind because nothing told him.) Public releases only; a private repository needs a token header added on the Check step. The first run only remembers the version.',
     vars: { repo: 'HorrisEllis/nexus' },

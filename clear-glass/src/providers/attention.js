@@ -24,7 +24,8 @@
  */
 
 const MODULE_ID = 'clear-glass.provider-attention';
-const VERSION = '1.1.0';   // 1.1.0 (0.60.2): the COS window, Clear Glass's selector check, x/y/z anchors, accounts
+const VERSION = '1.3.0';   // 1.3.0 (0.60.71): picks use the Guardian picker (traverse one element at a time) · 1.2.0 (0.60.50, SP2): a pick records its semantic address and its role must fit the field · 1.1.0 (0.60.2): the COS window, Clear Glass's selector check, x/y/z anchors, accounts
+const ST = require('../page/semantic-tree.js');
 const SIGNIN_RE = /\/(login|log-in|signin|sign-in|sign_in|auth|authenticate|oauth|sso|u\/login)(\/|$|\?|#)/i;
 
 const TITLES = { signin: 'needs you to sign in', map: 'cannot find its chat', 'no-connect': 'is not connecting' };
@@ -86,7 +87,7 @@ function panelScript(rec = {}) {
     + '<div class="bd">'
     + (D.note ? '<div>' + esc(D.note) + '</div>' : '')
     + (signin ? '<div class="dim">Sign in on this page as you normally would; Nexus goes on by itself once the chat opens.' + (D.loginOptional ? ' ' + esc(D.provider) + ' also works signed out.' : '') + '</div>'
-      : '<div class="dim">Show Nexus the chat: pick the box you type in, the send button and a reply. Each pick is checked on this page by the Clear Glass selector check, saved in Guardian with where it sits (x, y, z), and used by the userscript on the next job.</div>')
+      : '<div class="dim">Show Nexus the chat: pick the box you type in, the send button and a reply. Click near it, then walk with ↑ ↓ ← → (or PARENT / CHILD / PREV / NEXT in the picker) to the exact element and press Enter. Each pick is checked on this page by the Clear Glass selector check, saved in Guardian with where it sits (x, y, z), and used by the userscript on the next job.</div>')
     + (D.accounts.length ? '<div class="row"><span class="dim">this sign-in is</span><select data-acct="1">' + D.accounts.map(a => '<option value="' + esc(a.id) + '"' + (a.id === D.account ? ' selected' : '') + '>' + esc(a.label || a.id) + '</option>').join('') + '</select>' + tb('capture', '', 'Save sign-in to vault', false) + '</div>' : '')
     + (D.last ? '<div class="last">' + esc(D.last) + '</div>' : '')
     + '</div></div>';
@@ -116,28 +117,11 @@ function panelScript(rec = {}) {
 }
 
 /**
- * pickerScript(key) — the element picker, as a page script returning
- *   Promise<{ xpath, selector, matched, url, tag, anchor } | { cancelled }>.
- * §0.60.2 — James: "have it use the actual element picker or guardian picker … mapped to the scripts injected for the
- * interaction field or the x y z coords for the elements." The pick gives the node (its xpath — what Clear Glass's
- * selector check, renderer/selector-check.js, takes) and where it sits: anchor { x, y, w, h, rx, ry (its centre as a
- * fraction of the viewport), z (its layer in the stack of elements at that point), zIndex, depth, tag, role }. The
- * selector here is only the fallback when the check finds no unique one; the anchor then tells the matches apart
- * (guardian/userscript-field-map.js).
+ * _pickHelpers(key) — the in-page helpers both picks share (cssEsc, unique, xpathOf, selectorOf, target, anchorOf), as
+ * source: the old picker (pickerScript) and the Guardian picker's field pick (describeScript) name an element the same way.
  */
-function pickerScript(key) {
-  const label = { input: 'the box you type in', send: 'the send button', resp: 'a reply from the agent' }[key] || key;
-  return `(() => new Promise((resolve) => {
-  const hint = document.createElement('div');
-  hint.setAttribute('style', 'position:fixed;z-index:2147483647;left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;border-radius:8px;background:#0b0d12;color:#e5e7ef;border:1px solid #38bdf8;font:12px system-ui,sans-serif;pointer-events:none');
-  hint.textContent = 'Pick — click ${label.replace(/'/g, "\\'")} · Esc cancels';
-  const hl = document.createElement('div');
-  hl.setAttribute('style', 'position:fixed;z-index:2147483646;pointer-events:none;border:2px solid #38bdf8;background:rgba(56,189,248,.12);border-radius:4px;transition:all .05s');
-  const tag = document.createElement('div');
-  tag.setAttribute('style', 'position:fixed;z-index:2147483647;pointer-events:none;padding:1px 6px;border-radius:4px;background:#38bdf8;color:#0b0d12;font:600 10px ui-monospace,monospace');
-  document.documentElement.append(hint, hl, tag);
-  let cur = null;
-  const cssEsc = (s) => (window.CSS && CSS.escape ? CSS.escape(s) : String(s).replace(/[^a-zA-Z0-9_-]/g, '\\\\$&'));
+function _pickHelpers(key) {
+  return `  const cssEsc = (s) => (window.CSS && CSS.escape ? CSS.escape(s) : String(s).replace(/[^a-zA-Z0-9_-]/g, '\\\\$&'));
   const unique = (sel) => { try { return document.querySelectorAll(sel).length === 1; } catch (_) { return false; } };
   const xpathOf = (el) => {
     if (el.id && !/\\d{4,}/.test(el.id)) { try { if (document.querySelectorAll('#' + cssEsc(el.id)).length === 1) return '//*[@id="' + el.id.replace(/"/g, '') + '"]'; } catch (_) {} }
@@ -168,9 +152,9 @@ function pickerScript(key) {
     return parts.join(' > ');
   };
   const target = (el) => '${key}' === 'send' ? (el.closest('button,[role="button"]') || el) : '${key}' === 'input' ? (el.closest('[contenteditable="true"],textarea,input') || el) : el;
-  const anchorOf = (el) => {
+  const anchorOf = (el, skip = []) => {
     const r = el.getBoundingClientRect(); const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    let stack = []; try { stack = document.elementsFromPoint(cx, cy).filter(x => x !== hl && x !== hint && x !== tag); } catch (_) {}
+    let stack = []; try { stack = document.elementsFromPoint(cx, cy).filter(x => !skip.includes(x) && !(x.id && String(x.id).startsWith('__g-'))); } catch (_) {}
     let z = stack.indexOf(el); if (z < 0) z = stack.findIndex(x => el.contains(x));
     let zIndex = 0, depth = 0;
     for (let n = el; n && n.nodeType === 1; n = n.parentElement) { depth++; if (!zIndex) { const zi = getComputedStyle(n).zIndex; if (zi && zi !== 'auto') zIndex = parseInt(zi, 10) || 0; } }
@@ -178,15 +162,67 @@ function pickerScript(key) {
       rx: +(cx / innerWidth).toFixed(4), ry: +(cy / innerHeight).toFixed(4), z, layer: z, zIndex, depth: depth - 1,
       vw: innerWidth, vh: innerHeight, dpr: window.devicePixelRatio || 1, scrollY: Math.round(scrollY), tag: el.tagName.toLowerCase(), role: el.getAttribute('role') || null };
   };
+`;
+}
+
+/**
+ * pickerScript(key) — the element picker, as a page script returning
+ *   Promise<{ xpath, selector, matched, url, tag, anchor } | { cancelled }>.
+ * §0.60.2 — James: "have it use the actual element picker or guardian picker … mapped to the scripts injected for the
+ * interaction field or the x y z coords for the elements." The pick gives the node (its xpath — what Clear Glass's
+ * selector check, renderer/selector-check.js, takes) and where it sits: anchor { x, y, w, h, rx, ry (its centre as a
+ * fraction of the viewport), z (its layer in the stack of elements at that point), zIndex, depth, tag, role }. The
+ * selector here is only the fallback when the check finds no unique one; the anchor then tells the matches apart
+ * (guardian/userscript-field-map.js).
+ */
+function pickerScript(key) {
+  const label = { input: 'the box you type in', send: 'the send button', resp: 'a reply from the agent' }[key] || key;
+  return `(() => new Promise((resolve) => {
+  const hint = document.createElement('div');
+  hint.setAttribute('style', 'position:fixed;z-index:2147483647;left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;border-radius:8px;background:#0b0d12;color:#e5e7ef;border:1px solid #38bdf8;font:12px system-ui,sans-serif;pointer-events:none');
+  hint.textContent = 'Pick — click ${label.replace(/'/g, "\\'")} · Esc cancels';
+  const hl = document.createElement('div');
+  hl.setAttribute('style', 'position:fixed;z-index:2147483646;pointer-events:none;border:2px solid #38bdf8;background:rgba(56,189,248,.12);border-radius:4px;transition:all .05s');
+  const tag = document.createElement('div');
+  tag.setAttribute('style', 'position:fixed;z-index:2147483647;pointer-events:none;padding:1px 6px;border-radius:4px;background:#38bdf8;color:#0b0d12;font:600 10px ui-monospace,monospace');
+  document.documentElement.append(hint, hl, tag);
+  let cur = null;
+${_pickHelpers(key)}
   const move = (e) => { const el = document.elementFromPoint(e.clientX, e.clientY); if (!el || el === hl || el === hint || el === tag) return; cur = target(el); const r = cur.getBoundingClientRect();
     Object.assign(hl.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
     tag.textContent = cur.tagName.toLowerCase() + ' · x ' + Math.round(r.left) + ' y ' + Math.round(r.top); Object.assign(tag.style, { left: r.left + 'px', top: Math.max(0, r.top - 16) + 'px' }); };
   const done = (out) => { removeEventListener('mousemove', move, true); removeEventListener('click', click, true); removeEventListener('keydown', keyd, true); hint.remove(); hl.remove(); tag.remove(); resolve(out); };
   const click = (e) => { e.preventDefault(); e.stopPropagation(); if (!cur) return; const selector = selectorOf(cur); let matched = 0; try { matched = document.querySelectorAll(selector).length; } catch (_) {}
-    done({ xpath: xpathOf(cur), selector, matched, url: location.href, tag: cur.tagName.toLowerCase(), anchor: anchorOf(cur) }); };
+    done({ xpath: xpathOf(cur), selector, matched, url: location.href, tag: cur.tagName.toLowerCase(), anchor: anchorOf(cur, [hl, hint, tag]) }); };
   const keyd = (e) => { if (e.key === 'Escape') { e.preventDefault(); done({ cancelled: true }); } };
   addEventListener('mousemove', move, true); addEventListener('click', click, true); addEventListener('keydown', keyd, true);
 }))()`;
+}
+
+const FIELD_LABELS = { input: 'the box you type in', send: 'the send button', resp: 'a reply from the agent' };
+/**
+ * guardianPickScript(key, pickerSource) — §0.60.71 James (2026-10-16): "when its asking me to pick the inputs or response,
+ * or what ever. its needs to use the guardian picker so i can traverse through the elements one at a time." The Guardian
+ * picker (renderer/guardian-picker.js) in its field mode: click near the element, walk the page one element at a time
+ * (↑ parent, ↓ child, ← → siblings, nearby chips; the arrow keys), USE or Enter. → Promise<{ xpath, tag, url } | { cancelled }>.
+ */
+function guardianPickScript(key, pickerSource) {
+  return `(() => { window.__gPickerNoAutostart = true;\n${pickerSource}\n;return window.__gPickerActive && window.__gPickerActive.pickField
+    ? window.__gPickerActive.pickField(${JSON.stringify(key)}, ${JSON.stringify(FIELD_LABELS[key] || key)})
+    : { cancelled: true, error: 'the Guardian picker did not start' }; })()`;
+}
+/** describeScript(xpath, key) — the element at an xpath, named the way a pick is: { xpath, selector, matched, url, tag, anchor } | null */
+function describeScript(xpath, key) {
+  return `(() => {
+  ${_pickHelpers(key)}
+  let el = null; try { el = document.evaluate(${JSON.stringify(String(xpath))}, document, null, 9, null).singleNodeValue; } catch (_) {}
+  if (!el || el.nodeType !== 1) return null;
+  const selector = selectorOf(el); let matched = 0; try { matched = document.querySelectorAll(selector).length; } catch (_) {}
+  return { xpath: xpathOf(el), selector, matched, url: location.href, tag: el.tagName.toLowerCase(), anchor: anchorOf(el), type: el.getAttribute('type') || null };
+})()`;
+}
+function _guardianPicker() {
+  try { return require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'renderer', 'guardian-picker.js'), 'utf8'); } catch (_) { return null; }
 }
 
 /**
@@ -199,6 +235,12 @@ function pickerScript(key) {
 async function checkPick(win, picked, key, checkerSource) {
   // §0.60.46 — James's run: "picked send: p.placeholder (1, by anchor)" — twice, before the real send button. The text
   // inside the input box was saved as the send button. A send pick must be something you press.
+  // §SP2 0.60.50 — the pick's role in the page's semantic tree (src/page/semantic-tree.js addressScript) must fit its
+  // field: a send is a button, an input a text box. Checked first: the role is what the page says the element IS.
+  const sem = picked.semantic;
+  if (sem && sem.exact && !ST.roleFits(key, sem.role)) {
+    return { selector: null, matched: 0, by: 'none', why: `that is ${sem.address} — a ${sem.role}, not ${key === 'send' ? 'a button' : 'a text box'}; pick the ${key === 'send' ? 'send button' : 'box you type in'} itself` };
+  }
   if (key === 'send') {
     const tag = String(picked.tag || '').toLowerCase(), role = String((picked.anchor && picked.anchor.role) || '').toLowerCase();
     if (!(tag === 'button' || role === 'button' || (tag === 'input' && /submit|button/i.test(String(picked.type || 'submit'))))) {
@@ -226,7 +268,8 @@ function _defaultChecker() {
   try { return require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'renderer', 'selector-check.js'), 'utf8'); } catch (_) { return null; }
 }
 
-function createAttentionHandler({ providerHost, assign, getProvider = null, accounts = () => null, checkerSource, signedOutWaitMs = 2500, log = () => {} } = {}) {
+function createAttentionHandler({ providerHost, assign, getProvider = null, accounts = () => null, checkerSource, pickerSource, signedOutWaitMs = 2500, log = () => {} } = {}) {
+  const guardianPicker = () => (pickerSource === undefined ? _guardianPicker() : pickerSource);
   const _active = new Map();   // window id -> { providerId, rec }
   const checker = checkerSource === undefined ? _defaultChecker() : checkerSource;
 
@@ -298,17 +341,31 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
           continue;
         }
         if (act.action === 'pick' && act.key) {
-          let picked;
-          try { picked = await win.webContents.executeJavaScript(pickerScript(act.key), true); } catch (e) { picked = { cancelled: true, error: e.message }; }
+          // §0.60.71 — the Guardian picker (traverse one element at a time); the old one-click picker only when it cannot run
+          let picked = null;
+          const gp = guardianPicker();
+          if (gp) {
+            try {
+              const g = await win.webContents.executeJavaScript(guardianPickScript(act.key, gp), true);
+              if (g && g.xpath) picked = await win.webContents.executeJavaScript(describeScript(g.xpath, act.key), true) || { cancelled: true, error: 'the element was gone when it was checked' };
+              else if (g && g.cancelled && !g.error) picked = { cancelled: true };
+              else log(`[attention] ${providerId} — the Guardian picker could not run (${(g && g.error) || 'no answer'}); the one-click picker is used`);
+            } catch (e) { log(`[attention] ${providerId} — the Guardian picker could not run (${e.message}); the one-click picker is used`); }
+          } else log(`[attention] ${providerId} — renderer/guardian-picker.js not found; the one-click picker is used`);
+          if (!picked) {
+            try { picked = await win.webContents.executeJavaScript(pickerScript(act.key), true); } catch (e) { picked = { cancelled: true, error: e.message }; }
+          }
           if (!picked || picked.cancelled) { rec = { ...rec, lastResult: `${act.key}: not picked${picked && picked.error ? ` (${picked.error})` : ''}` }; continue; }
+          // §SP2 — the semantic address beside the selector: what the field map falls back to when a class change breaks it
+          if (picked.xpath) { try { picked.semantic = await win.webContents.executeJavaScript(ST.addressScript(picked.xpath), true); } catch (e) { log(`[attention] ${providerId} — ${act.key}: no semantic address (${e.message}); the selector alone is kept`); } }
           const c = await checkPick(win, picked, act.key, checker);
           if (!c.selector) { rec = { ...rec, lastResult: `${act.key}: ${c.why} — pick it again` }; log(`[attention] ${providerId} — ${act.key} pick refused by the check: ${c.why}`); continue; }
-          const evidence = { matched: c.matched, url: picked.url, tag: picked.tag, xpath: picked.xpath || null, anchor: picked.anchor || null,
+          const evidence = { matched: c.matched, url: picked.url, tag: picked.tag, xpath: picked.xpath || null, anchor: picked.anchor || null, semantic: picked.semantic || null,
             uniqueBy: c.by, checkWhy: c.why || null, checkedAt: Date.now(), via: 'attention-panel' };
           const r = await assign({ provider: providerId, key: act.key, selector: c.selector, evidence });
           const at = picked.anchor ? ` at x ${picked.anchor.x} y ${picked.anchor.y} z ${picked.anchor.z}` : '';
           rec = { ...rec, lastResult: r && r.ok ? `${act.key} saved in Guardian: ${c.selector} (matches ${c.matched}${c.by === 'anchor' ? `, told apart by position${at}` : ''}${at && c.by !== 'anchor' ? `;${at}` : ''})` : `${act.key} refused: ${(r && r.error) || 'Guardian did not answer'} — ${c.selector}` };
-          log(`[attention] ${providerId} — picked ${act.key}: ${c.selector} (${c.matched}, by ${c.by})${at} → ${r && r.ok ? 'saved' : `refused: ${r && r.error}`}`);
+          log(`[attention] ${providerId} — picked ${act.key}: ${c.selector} (${c.matched}, by ${c.by})${at}${picked.semantic ? ` · ${picked.semantic.address}` : ''} → ${r && r.ok ? 'saved' : `refused: ${r && r.error}`}`);
         }
       }
     } finally { _active.delete(id); }
@@ -364,4 +421,4 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
   return { attend, state, MODULE_ID };
 }
 
-module.exports = { MODULE_ID, VERSION, panelScript, pickerScript, checkPick, createAttentionHandler, TITLES };
+module.exports = { MODULE_ID, VERSION, panelScript, pickerScript, guardianPickScript, describeScript, checkPick, createAttentionHandler, TITLES };

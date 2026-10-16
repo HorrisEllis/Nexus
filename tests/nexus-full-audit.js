@@ -68,10 +68,6 @@ const criticalFiles = [
   'lib/cfr/sigma.js', 'lib/cfr/ledger.js', 'lib/cfr/graph.js',
   'idearium/index.js', 'architect/service.js',
   'ui/home/index.html', 'ui/emerge-ide.html',
-  'ui/eravos/index.html', 'ui/eravos/catalog/catalog.js',
-  'ui/eravos/catalog/catalog-ui.js', 'ui/eravos/catalog/catalog.css',
-  'ui/eravos/pack/pack-loader.js', 'ui/eravos/bridge/nexus-bridge.js',
-  'ui/eravos/runtime/organism-factory.js', 'ui/eravos/kernel/kernel.js',
   '.mcp.json', 'docs/mcp.spec', 'docs/mcp-claude-desktop-config.json',
 ];
 
@@ -93,9 +89,6 @@ const jsFiles = [
   'lib/descriptor-projector.js', 'lib/cli-map.js',
   'intelligence/causal/anomaly.js', 'lib/cfr/sigma.js',
   'idearium/index.js', 'architect/service.js',
-  'ui/eravos/catalog/catalog.js', 'ui/eravos/catalog/catalog-ui.js',
-  'ui/eravos/pack/pack-loader.js', 'ui/eravos/bridge/nexus-bridge.js',
-  'ui/eravos/runtime/organism-factory.js', 'ui/eravos/kernel/kernel.js',
 ];
 
 jsFiles.forEach(f => t(`syntax: ${f}`, () => exists(f) ? syntaxOk(f) : 'MISSING'));
@@ -111,7 +104,6 @@ t('guardian has /build route (T2 gate)', () => read('guardian/server.js').includ
 t('guardian has /hot-load route (Phase 14/28)', () => read('guardian/server.js').includes("'/hot-load'"));
 t('guardian has /blueprint/compile (Phase 42)', () => read('guardian/server.js').includes("'/blueprint/compile'"));
 t('guardian has /autonomous/run (Phase 13)', () => read('guardian/server.js').includes("'/autonomous/run'"));
-t('guardian has organism-queue routes (ERAVOS bridge)', () => read('guardian/server.js').includes('organism-queue'));
 t('copilot has build intent', () => read('guardian/agents/co-pilot/index.js').includes("intent:'build'"));
 t('copilot has token-first _tryDataAnswer', () => read('guardian/agents/co-pilot/index.js').includes('_tryDataAnswer'));
 t('copilot grammar engine wired', () => read('guardian/agents/co-pilot/index.js').includes('_ensureGrammar'));
@@ -131,32 +123,7 @@ t('mcp-server has nexus_hot_load tool', () => read('lib/mcp-server.js').includes
 t('mcp-stdio imports mcp-server tools', () => read('lib/mcp-stdio.js').includes("require('../orchestrator/lib/mcp-server')"));
 t('self-heal excludes semantic gaps (Phase 24.3 fix)', () => read('cortex/self-heal/index.js').includes('SEMANTIC_GAP_TYPES'));
 
-// ── SECTION 4: ERAVOS system ──────────────────────────────────────────────────
-console.log('\n══ §4 ERAVOS SYSTEM ══\n');
-
-t('eravos index loads catalog.js', () => read('ui/eravos/index.html').includes('catalog/catalog.js'));
-t('eravos index loads catalog-ui.js', () => read('ui/eravos/index.html').includes('catalog-ui.js'));
-t('eravos index loads pack-loader.js', () => read('ui/eravos/index.html').includes('pack/pack-loader.js'));
-t('eravos index loads nexus-bridge.js', () => read('ui/eravos/index.html').includes('bridge/nexus-bridge.js'));
-t('eravos index has no inline catalog block', () => {
-  const h = read('ui/eravos/index.html');
-  // Should not have the old inline block
-  return !h.includes('const catalogOverlay') && !h.includes('function _openCatalog');
-});
-t('eravos CatalogUI.init called', () => read('ui/eravos/index.html').includes('CatalogUI.init'));
-t('eravos NexusBridge.start called', () => read('ui/eravos/index.html').includes('NexusBridge.start'));
-t('eravos zip routed through PackLoader', () => read('ui/eravos/index.html').includes('PackLoader.install'));
-t('catalog.js has register/list/search', () => {
-  const s = read('ui/eravos/catalog/catalog.js');
-  return s.includes('function register') && s.includes('function list') && s.includes('function search');
-});
-t('catalog-ui.js has open/close/toggle', () => {
-  const s = read('ui/eravos/catalog/catalog-ui.js');
-  return s.includes('function open') && s.includes('function close') && s.includes('function toggle');
-});
-t('pack-loader.js validates manifest', () => read('ui/eravos/pack/pack-loader.js').includes("required = ['manifest_version'"));
-t('nexus-bridge.js polls organism-queue', () => read('ui/eravos/bridge/nexus-bridge.js').includes('organism-queue'));
-t('organism-factory has register() (Phase 40 dynamic)', () => read('ui/eravos/runtime/organism-factory.js').includes('function register'));
+// ── SECTION 4: ERAVOS system — deleted 0.60.83 (James: "can you remove eravos?" · "Delete it outright."); its checks went with it.
 
 // ── SECTION 5: Home UI ────────────────────────────────────────────────────────
 console.log('\n══ §5 HOME UI ══\n');

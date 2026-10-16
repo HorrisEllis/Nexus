@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * scripts/build-cos-app.js — stage and build the COS Windows application (COSA6, 0.60.68)
+ * scripts/build-cos-app.js — stage and build the COS Windows application (COSA6, 0.60.89)
  * James, 2026-10-16: "cos app for windows"
  *
  *   node scripts/build-cos-app.js [--stage dir] [--stage-only]
@@ -17,6 +17,8 @@ const FILES = ['cos/app/store.js', 'cos/app/runtime.js', 'cos/app/switch.js', 'c
 
 function stage({ out = path.join(ROOT, 'dist', 'cos-app-stage'), root = ROOT } = {}) {
   const rootPkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')); const { version } = require(path.join(root, 'cos/app/version.js'));
+  // 0.60.96 — the first Windows build failed at electron-builder ('Please specify version') because cos/app/version.js had been emptied by a bad write: say it here, before an install
+  if (!/^\d+\.\d+\.\d+/.test(String(version || ''))) throw new Error(`cos/app/version.js gives no version (got ${JSON.stringify(version)}) — it must export { version: 'x.y.z' }`);
   fs.rmSync(out, { recursive: true, force: true }); fs.mkdirSync(out, { recursive: true });
   for (const f of FILES) { const dst = path.join(out, f); fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(path.join(root, f), dst); }
   const pkg = {

@@ -224,8 +224,6 @@ const ALL_KERNELS = [
     phase: 3, healthUrl: 'http://127.0.0.1:3747/health' },
   { name: 'diagnostic',   cmd: 'node', args: ['diagnostic/nexus-diagnostic.js'],
     critical: true, phase: 2, healthUrl: 'http://127.0.0.1:7825/health' },
-  { name: 'eravos',       cmd: 'node', args: ['eravos/server.js'],
-    phase: 3, healthUrl: 'http://127.0.0.1:3751/health' },
   // §NEW 2026-08-22 — intelligence/server.js. Built and live-tested this
   // session (4 real phases: cortex/intelligence + baseline/snapshot-
   // trigger + meta/cfr moved here, plus the new framework-builder). Needs
@@ -928,7 +926,7 @@ function _warpEmit(type, data) {
   catch (e) { console.error(`[warp:autopilot] emit failed for '${type}': ${e.message}`); }
 }
 
-// ── Idle signal (0.60.71) ───────────────────────────────────────────────────
+// ── Idle signal (0.60.92) ───────────────────────────────────────────────────
 // James, 2026-10-16: "do it" (the COS auto-update waits while Nexus is running because the autopilot had no way to say "nothing is in the middle of a job").
 // idle:true means: every kernel has settled (none starting or restarting) AND Guardian holds no job that is queued, pending, dispatched, started or responding.
 // It says WHY when it is not idle, and when it cannot tell (Guardian is up but did not answer) it says idle:false, never a guess. Read-only; GET /idle.

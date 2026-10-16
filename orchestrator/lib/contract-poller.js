@@ -12,7 +12,7 @@
 const { findStuck, markStuck, reportStuck, dispatch, STATUS } = require('../../lib/contract-queue');
 
 const POLL_INTERVAL_MS = parseInt(process.env.CONTRACT_POLL_MS || '15000');
-const KNOWN_SYSTEMS    = ['guardian','cortex','eravos','ollama','copilot','idearium','architect','emerge','bridge'];
+const KNOWN_SYSTEMS    = ['guardian','cortex','ollama','copilot','idearium','architect','emerge','bridge'];
 
 let _timer  = null;
 let _counts = { scanned: 0, stuck: 0, retried: 0 };

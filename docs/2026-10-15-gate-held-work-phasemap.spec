@@ -67,7 +67,7 @@ open_decisions:
       a: "The unit of work is the CONTRACT GATE (a brick). Step gates are checks run inside a brick's step (they stay as they are). The run state moves from 'one per chat session' to 'one per brick attempt', and the session is only a pointer."
       b: "Keep the run keyed to the session and add a contract link."
     coder_recommends: "a. It is what makes 'a different chat each gate' true: the state follows the brick, not the chat. b leaves the chat as the owner, which is the thing he wants removed (§2.2). To confirm with James."
-    status: OPEN
+    status: "DECIDED 2026-10-16 — a (the brick is the unit). James: \"Yes. It’s analysis. The bricks.\""
   GW0b_fresh_chat_policy:
     asked: "'make each agent able to not need the same chat' - when should a gate use a new chat?"
     options:
@@ -131,7 +131,7 @@ phases:
     proof: "a 3-gate contract where gate 1 runs on agent A and gate 2 on agent B with no shared history completes; the same with gate 2's agent given a different persona fails the check, proving the baton is what carried it"
 
   GW2_the_run_follows_the_gate:
-    status: OPEN
+    status: "PARTLY BUILT 0.60.77 — a brick's run keyed by the brick (lib/run-state.js), resumed by every retry, rung, fallback and chat; the baton header on Ollama too; each brick's run in the trace. Open: GW0b (when a gate opens a new chat), the packet as the one handoff (GW1)"
     systems: [core, cortex, copilot, guardian]
     files: [lib/run-state.js, cortex/core/raid/contract-gates.js, cortex/core/raid/contract-adapters.js, lib/repo-agent.js, copilot/server.js]
     depends_on: [GW1_the_baton, GW0_what_is_a_gate]
@@ -145,7 +145,7 @@ phases:
     proof: "kill the provider mid-brick: the next provider's first call is the next unread step; a fresh-chat policy still resumes the brick's steps; two bricks never share a run"
 
   GW3_a_contract_is_traced:
-    status: OPEN
+    status: "PARTLY BUILT 0.60.75 — the trace (cortex/core/raid/contract-trace.js, ?trace=1, repo contract --trace, the Plan panel). Open: contract:<id>/gate:<id> on ledger rows, bus events and file writes with before/after hashes"
     systems: [core, cortex, idearium, versionium, intelligence]
     files: [lib/component-ledger.js, cortex/core/raid/contract-gates.js, lib/run-state.js, guardian/lib/response-sink.js, lib/repo-versions.js, lib/ledger-fanin/]
     depends_on: [GW2_the_run_follows_the_gate]
@@ -447,18 +447,280 @@ not_verified:
 
 ## ADDENDUM 2026-10-15 - the phase census (docs/PHASE-CENSUS-2026-10-15.md): what this map duplicates
 
-James: "check all phases in nexus, over 1200, for any useful phases."
-The census read all 1472 phases (595 done, 872 pending). Several GW phases restate phases he already specced, in his words. They are
-NOT dropped (the GW text stays, §0.3); building them means building the older phase, and this map defers to it:
-- GW8 (failure mode field) is N14_failure_mode_field + FR1_failure_reports. GW3 (contract trace) is N15_contract_history + RQ21.
-- GW7 replay and GW16 branching are RS2_replay_rewind_branch (replay byte-identical, no model; rewind to a step; branch from a step).
-- GW11 (snapshot per gate) is RW1_rewind_engine_vm_snapshots, which says QMP savevm of the live machine. vm-control refuses that while the
-  repo is shared over 9p/vvfat (read in source), so GW14 (copy in) is what RW1 needs on Linux hosts - an addition to RW1, not a replacement.
-- GW1/GW2 build on RQ24_the_gate_transaction and RQ3 (a retry carries only the failing check's output).
-- CE10 overlaps R1 (guardian job-retry), not built. R1 retries the same tab; CE10 moves provider only when nothing was typed.
-- CE10 picks the next provider from the pipeline-routing chain (how the existing 'rest' fallback already works). ME5 makes RAID's _decide the
-  one chooser (§9.1); CE10 must move onto it when ME5 lands.
-New with no earlier phase found: GW4 (copilot dispatched through contract gates), GW5 (tool parity), GW12 (minimal layered environment), GW13/GW14
-(SSH door, copy-in), GW15 (every file tested, mutation), GW17 (friction per file), GW18 (bisect), GW19-GW21 (sandbox results, file actions,
-autonomy), GW22 (find before generate), GW23 (wire what exists). "New" means no phase with that name was found; it was not read phase by phase.
+# James: "check all phases in nexus, over 1200, for any useful phases."
+# The census read all 1472 phases (595 done, 872 pending). Several GW phases restate phases he already specced, in his words. They are
+# NOT dropped (the GW text stays, §0.3); building them means building the older phase, and this map defers to it:
+# - GW8 (failure mode field) is N14_failure_mode_field + FR1_failure_reports. GW3 (contract trace) is N15_contract_history + RQ21.
+# - GW7 replay and GW16 branching are RS2_replay_rewind_branch (replay byte-identical, no model; rewind to a step; branch from a step).
+# - GW11 (snapshot per gate) is RW1_rewind_engine_vm_snapshots, which says QMP savevm of the live machine. vm-control refuses that while the
+#   repo is shared over 9p/vvfat (read in source), so GW14 (copy in) is what RW1 needs on Linux hosts - an addition to RW1, not a replacement.
+# - GW1/GW2 build on RQ24_the_gate_transaction and RQ3 (a retry carries only the failing check's output).
+# - CE10 overlaps R1 (guardian job-retry), not built. R1 retries the same tab; CE10 moves provider only when nothing was typed.
+# - CE10 picks the next provider from the pipeline-routing chain (how the existing 'rest' fallback already works). ME5 makes RAID's _decide the
+#   one chooser (§9.1); CE10 must move onto it when ME5 lands.
+# New with no earlier phase found: GW4 (copilot dispatched through contract gates), GW5 (tool parity), GW12 (minimal layered environment), GW13/GW14
+# (SSH door, copy-in), GW15 (every file tested, mutation), GW17 (friction per file), GW18 (bisect), GW19-GW21 (sandbox results, file actions,
+# autonomy), GW22 (find before generate), GW23 (wire what exists). "New" means no phase with that name was found; it was not read phase by phase.
 
+
+## ADDENDUM 2026-10-16 — every system at the gate, and context that does not make the agent dumb (mapped, no code)
+
+# James (2026-10-16): "the pipeline. the gating. rewind engine, compartments, cos improvements for test envirements." ·
+# "more than that. look at the intelligence system, phases, diagnostic system, versionium, snapshots, raid, look at all of
+# them. reflection engine. hypothosis. adversarial agent, confidence, all of it. look at all of what would be important for
+# the gating. each gate holds the context, which can make tghe agents dumb."
+#
+# The coder's reading (to confirm): a gate is the one place that may hold EVERYTHING (the store); an agent is handed only
+# the projection one step needs (the baton, GW1), sized to that agent. Context the gate holds is not context the agent is
+# given. Read this way, his sentence is GW1's rule made explicit, and it extends GW6 from "on failure" to every moment.
+
+found_2026_10_16:
+  # read in the code, not remembered
+  uses_today: "cortex/core/raid/contract-gates.js (the brick scheduler) requires: pipeline-routing, phase-plan, model-door, import-checks, check-catalogue, agent-tools, fault-taxonomy, jaa-db. Idearium hands it versioning (GT2 tags), assessing (GA1) and the dispatch."
+  not_consulted_by_gates: "lib/reflection.js (decision scoring, low-satisfaction streaks open loops) · meta/confidence.js (weakest-link: one unevidenced item caps the whole) · intelligence/adversarial.js (two reasonings compared; a contradiction is a gap) · lib/diagnostic-report.js (a gap's report: CFR state, rfr2 traceToRoot = cause conditions, descendants = effects) · lib/replay-engine.js (snapshot before a decision, replay, compare) · cos/testenv (process or ephemeral-VM test runs for any repo) · the hypothesis node type (lib/node-schemas/schema.hypothesis; no tracker module found). meta/adversary-suite.js (6 attack classes on a compartment's result) is used only by the older contract-intake path, not by bricks."
+  where_context_piles_up:
+    planned_brick: "lean already: lib/phase-plan.js chunkBrief is budgeted (LIMITS.brief, trims purpose/steps/intent to fit) and dispatched bare (noContext). Keep."
+    whole_phase_brick: "BR1 (no file named) sends the whole phase message through the repo agent WITH its context blocks — the heaviest prompt in the pipeline, and the one a small model fails on."
+    ga1_context_note: "GA1 appends up to 120 lines of EVERY dependency's code with no total cap: a brick with 6 dependencies can grow by ~700 lines. Needs a budget and a ranking (the names it needs first)."
+    the_packet: "contract-gates packet() is small and structured, but it is not what the agent is sent (the brief is). Two shapes of the same handoff: GW1 must make the packet the one handoff."
+
+the_gate_moments:
+  # which system answers at which moment; each answer is stored on the gate (the store) and only its verdict, or the
+  # lines it names, reach the agent (the projection)
+  before_dispatch:
+    - "hypothesis: the gate states what it expects to be true when it passes (its pass_when as a hypothesis node) — scored later (reflection)"
+    - "mental simulation (emerge map MS1): the planned step against mined failure modes — 'likely to hit X' becomes one line in the brief, not the mode's history"
+    - "confidence: weakest-link over the gate's inputs (refs hashed, deps PASSED with evidence, assumptions); below a floor the gate asks for context (NEEDS_CONTEXT) instead of dispatching"
+    - "snapshot: Versionium tag before the attempt (GT2 does this) — the rewind point"
+  the_handoff:
+    - "the baton (GW1): packet + run state, budgeted per agent (CT1 Boundaries learn the size an agent passes); GA1's dependency code ranked by the names needed and cut to the budget"
+  after_reply:
+    - "verification: checks the gate owns (exports, imports, CK catalogue), then cos/testenv runs the file's tests (process; VM when present) in the gate's compartment"
+    - "adversarial: meta/adversary-suite on the result (edge-case, state, replay) for task gates; intelligence/adversarial compare when two agents answered the same gate (GW16)"
+    - "confidence of the PASS: weakest link over its evidence (a pass with an unevidenced condition is capped, said)"
+  on_failure:
+    - "classify (exists: classifyFailure) → fault-log + enrichGap (GW6)"
+    - "diagnostic report (lib/diagnostic-report.js) for a gate failed twice — cause conditions and effects, one paragraph to the next attempt, the full report on the gate"
+    - "replay/rewind: replay-engine / GW7 failure macro from the gate's snapshot"
+  after_settle:
+    - "reflection: the gate's outcome scores its hypothesis and the agent's decision (reflection streaks open a KNOWLEDGE/CAPABILITY loop) — the door learns (GW6)"
+
+proposed_phases:
+  GW24_the_gate_holds_the_agent_gets_a_projection:
+    status: "PARTLY BUILT 0.60.76 — GA1's dependency code ranked and cut to the learned budget (lib/phase-plan.js contextNote), the cut recorded on the gate; the whole-phase brick lean on an Ollama rung. Open: the brief and intelligence verdicts sharing the one budget; proof on a real small model"
+    depends_on: [GW1_the_baton]
+    files: [cortex/core/raid/contract-gates.js, idearium/api/index.js, lib/phase-plan.js]
+    does: "One budget per dispatch, from the agent's learned size (CT1): the brief, GA1's dependency code (ranked: the needed names' definitions first, then signatures, never whole files past the budget) and any intelligence verdicts share it. Whole-phase bricks go bare with the phase text cut to the budget, the repo context only when the agent asks for it (a tool, not a preload). Everything the gate gathered stays on the gate (inspectable in the contract panel)."
+    proof: "a brick with 6 dependencies sends ≤ its budget; the dropped lines are listed on the gate; a fixture small model passes a brick it failed with the unbudgeted note"
+  GW25_the_systems_at_the_gate_moments:
+    status: OPEN
+    depends_on: [GW24_the_gate_holds_the_agent_gets_a_projection, GW6_the_intelligence_system_on_every_gate]
+    does: "the_gate_moments above, each system behind one optional hook in schedule() (before / after / on failure / settle), each answer stored on the gate, its verdict ≤ one line into the baton; every hook can be off per run (cost), each said when skipped"
+    proof: "one contract run with every hook on: each gate shows its hypothesis, confidence, verification, adversarial findings and (on failure) diagnosis; the agent's prompts stay within budget"
+
+order_note: "pipeline-focus's critical path still holds: GW1 (baton) first — GW24 is GW1's budget, GW25 follows GW6. Nothing here before GW0's decision (a brick is the unit)."
+
+## ADDENDUM 2026-10-16 (b) — everything declares what it needs; drift against the contract retries or rewinds (mapped)
+
+# James (2026-10-16): "each spec, phase, chunk/gate needs to have dependancies, then the contract and the dependencies cna
+# be used to check for drift, if it fails, retry or rewind snapshot. so like everything has to create a dependancy, and the
+# dependencies per chunk, every gate needs to know what it needs. always map before anything."
+# His decision, recorded as his: dependencies are mandatory at every level (spec, phase, chunk, gate), and drift is checked
+# against the contract and its dependencies; on failure: retry, or rewind to the snapshot. The coder's part below is what
+# exists and what is missing.
+
+exists_2026_10_16:
+  - "a gate's `requires` are hashed when it passes; evaluate() makes it STALE when one changes or an upstream gate is no longer PASSED (cortex/core/raid/contract-gates.js) — the drift check, at gate level"
+  - "a FAILED gate rewinds to its pre-attempt snapshot after its retries (QA2, 0.60.43); a gate's exports recorded and re-checked on its dependents (GA1, 0.60.44: missing → the dependency reopens STALE)"
+  - "phases carry files and dependencies, automatically, in every repo (lib/phase-map-auto.js, MP1/MP2 0.60.65); specs are tagged per phase (PT1, 0.60.51)"
+missing:
+  - "a brick requires only the phasemap and the file it edits (contract-adapters fromPhasePlan): the files it imports or reads outside the plan (phase-map-auto requires) and the phase's owning spec(s) are not refs, so their drift is invisible"
+  - "a split brick's pieces inherit nothing beyond the parent's shared refs"
+  - "a spec declares no dependencies of its own (what other specs / components it builds on); spec drift (orchestrator/lib/spec-drift.js) compares versions and surfaces, not what a spec depends on"
+  - "STALE re-runs; there is no policy that chooses retry vs rewind by why the drift happened (a dependency changed → re-run; the gate's own output regressed → rewind)"
+
+proposed_phase:
+  GW26_everything_declares_what_it_needs:
+    status: OPEN
+    depends_on: [GW1_the_baton]
+    files: [cortex/core/raid/contract-adapters.js, lib/phase-map-auto.js, lib/capability-spec.js, orchestrator/lib/spec-drift.js, cortex/core/raid/contract-gates.js]
+    does: >-
+      (1) every brick's requires = phasemap + its file + the files it imports/reads (phase-map-auto one hop) + the owning
+      spec(s) of its phase; a split piece inherits its parent's requires plus its own. (2) a spec states `depends_on`
+      (specs, components) — drafted from what its files require (capability-spec measure), never invented — and spec
+      drift checks it. (3) a gate with no requires is refused at contract load (said), never run blind. (4) on drift:
+      a required ref changed → STALE → re-run with the change named in the baton; the gate's own verification regressed →
+      rewind to its snapshot, then retry; both recorded on the gate (GT2).
+    proof: "a fixture contract: changing an imported file STALEs exactly the bricks that import it; changing the phase's spec STALEs the phase; a gate with no requires is refused; a regression rewinds to the snapshot and the retry passes"
+
+order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 decides what a gate watches. Both after GW1."
+
+## ADDENDUM 2026-10-16 (c) — what the whole loop does for the pipeline (mapped, no code; no new phase)
+
+# James (2026-10-16): "all prerequisits/dependancies, need to be understood for each chunk, gates hold the context, snapshot
+# each gate, using contract and the dependancies as a checklist, reflection engine, logging failure mode each failure, using
+# the failiure mode field, like the the phases, rewind engine each step, each output, the rewind enegine creates macros for
+# reproducting or rconstructing from events, snapshots, and causal graph. what would that  do for the pipeline?
+# intelligrance system. raid learns overitime."
+#
+# Context: asked right after merging main (0.60.72), with WB1/WB2 (WARP on the 5 bypassing build paths) waiting on his
+# option 1 or 2. He asked what it would do; he did not ask to build it. Every clause already has a phase. Read in source
+# 2026-10-16, each clause → its owner (no parallel plan, §8.6):
+#   prerequisites/dependencies per chunk ...... GW26 (brick requires = phasemap + file + phase-map-auto one hop + owning spec)
+#   gates hold the context .................... GW1 (baton) + GW24 (the gate holds, the agent gets a budgeted projection)
+#   snapshot each gate ........................ GW11 = RW1 (code: GT2 tag, BUILT 0.60.42; environment: COS checkpoint, OPEN)
+#   contract + dependencies as a checklist .... GW26 (requires hashed, STALE on drift) + GW25 confidence (weakest link: an
+#                                               unevidenced item caps the pass). The checklist is the gate's pass_when +
+#                                               requires, each ticked with evidence; no new format.
+#   reflection engine ......................... GW25 after_settle: lib/reflection.js scores the gate's hypothesis; today no
+#                                               gate calls it (found_2026_10_16)
+#   failure mode logged on each failure ....... GW6 (classifyFailure BUILT 0.60.30 → fault-log + enrichGap, OPEN) and
+#                                               GW8 = N14_failure_mode_field (conditions counted across runs, OPEN).
+#                                               Coder's reading of "like the phases", to confirm: the failure_mode record
+#                                               carries the same fields a phase does (systems, files, depends_on, specs) so
+#                                               a failure is mapped exactly like a phase. Another reading: the phase's own
+#                                               failure_modes list. To confirm.
+#   rewind engine each step, each output ...... GW7 = RS2 (rewind to a step). AMENDS GW7: the replay unit is the gate, the
+#                                               rewind point is any recorded step inside it (run-state steps: each tool
+#                                               call and each reply), not only the gate boundary.
+#   macros from events, snapshots, causal graph GW7 + FM1-FM4 (cortex/self-heal/failure-mode-forensics.js already writes a
+#                                               .debug_macro from the causal chain; its schema says not yet playable)
+#   RAID learns over time ..................... GT1 BUILT (learns route only from capability failures, budget from
+#                                               capability + context; transient learns nothing) + GW6 (the door's next
+#                                               pick changes from real gate outcomes, OPEN)
+#
+# What it would do for the pipeline (the coder's answer, given to him): today a failed build is retried blind and the
+# lesson dies with the chat. With the loop, every failure becomes (1) a classified record with its conditions, (2) a
+# macro that reproduces it with no model, (3) a rewind point one step before it, and (4) a weight change in RAID for that
+# agent and gate kind. The second time the same failure shape appears, the pipeline avoids it before dispatch instead of
+# discovering it after. That is the measurable claim: repeat failures of one signature per 100 gates should fall over
+# time; if they do not, the loop is not learning, and the number says so (§0.1).
+#
+# Order unchanged: GW23 → GW3 → GW1 → GW2 ... (build_order above). Blocking decisions still his: GW0 (a brick is the unit,
+# coder recommends a) and GW0c (replay recorded + live, coder recommends a).
+
+# ## ADDENDUM 2026-10-16 (d) — GW0 decided: the brick is the unit
+# James (2026-10-16), answering "is a gate's work unit the brick? I recommend yes. It's what makes 'a different agent each gate'
+# true": "Yes. It’s analysis. The bricks."
+# Decided (his): option a. The unit of work is the contract gate, the brick. Step gates stay checks inside a brick's step. The run
+# state moves from one per chat session to one per brick attempt (GW2); the session is only a pointer.
+# To confirm: "It’s analysis." The coder reads it as agreeing that the analysis behind the recommendation holds. Another reading:
+# that a brick is (or includes) an analysis step, i.e. a brick analyses before it builds. Not acted on until he says which.
+# Unblocks: GW1 (the baton), GW2 (the run follows the gate), and GW3 (a contract traced) on the brick as the unit.
+
+# ## ADDENDUM 2026-10-16 (e) — GW3 first slice built (0.60.75)
+# Built: cortex/core/raid/contract-trace.js trace(p, { runs, raid }) joins what is already written (§7.6, no second record):
+# the contract's evidence_log, its checkpoints (input hashes, commit), every idearium_phase_runs row of the run (GT2 brick
+# moves: provider, class, commit, file), and RAID's queue row. Ordered oldest first, per brick: agents, files (a rewound one
+# too), commits, attempts. Holes named, never filled: a PASSED brick with no commit, a move with no agent, a brick that ran
+# by its state with no ledger move, a checkpoint commit on no move. Route GET /api/repos/:uuid/phases/contract?trace=1;
+# command `repo contract <repo> <phase> --trace`; the Plan panel's "trace" button on a contract row.
+# Not built yet (GW3 remains open for it): contract:<id> and gate:<id> written onto lib/component-ledger.js rows and bus
+# events (contractUuid is a column nobody passes), each file write with before and after hashes, the .response node per move.
+
+
+# ## ADDENDUM 2026-10-16 (f) — "It’s analysis" answered: a brick is a chunk
+# James (2026-10-16), after the coder marked "It’s analysis" as to confirm and offered two readings (agreement with the
+# reasoning, or a brick analyses before it builds): "A brick is a chunk. Like analysis."
+# His meaning, recorded as his: a brick is a chunk, the unit you get by breaking the work into parts, the way analysis breaks
+# a whole into its parts. Neither of the coder's readings was it; addendum (d)'s "to confirm" is answered here and (d) stays.
+# What it settles: "per chunk" and "per brick" are one unit everywhere in his asks. His "the dependencies per chunk, every
+# gate needs to know what it needs" (addendum (b), GW26) is per brick, and the trace (GW3) is per chunk.
+# Checked in source: build paths already agree. Since BR1 (0.60.38) every phase build runs as bricks, one planned file per
+# brick, unless routing.contract_build is off. The spec engine's "chunks" (a spec's sections, idearium/spec-engine) are a
+# different thing that shares the word. The coder reads his sentence as being about build work, not spec sections (to
+# confirm only if he means those too).
+
+# ## ADDENDUM 2026-10-16 (g) — GW24 first slice built (0.60.76)
+# James: "Let’s get this pipeline working" · "A brick is a chunk. Like analysis." · earlier: "each gate holds the context, which
+# can make tghe agents dumb."
+# Built: lib/phase-plan.js contextNote({ needs, deps, budget }) replaces GA1's note (up to 120 lines of every dependency, no total
+# cap). It is ranked: the definitions of the names the brick needs come first, then each dependency's signatures. It is cut to
+# one budget: the first agent's learned size (Boundaries.budget, ~4 chars a token) less the brief, else LIMITS.context 6000, never
+# below 1200. What was cut, and any name defined nowhere, is recorded on the gate as <gate>.context. Measured on a fixture: a needed
+# definition at line 151 now arrives, where GA1's 120-line cut never sent it.
+# Built: on an Ollama rung the whole-phase brick (a phase that names no files, BR1) goes with noContext. The phase and its
+# phase-map block (MP3) are sent; the repo context card, memory, atlas and checklist stay with the gate, and the agent's tools fetch
+# what it asks for. Agents' rungs are unchanged.
+# Not proven: a real small model passing a brick it failed before. That needs his run on the current release (pipeline-focus step 0).
+
+# ## ADDENDUM 2026-10-16 (h) — GW2 first slice built (0.60.77): the run follows the brick
+# James: "Step 4" · "A brick is a chunk." · from the map: "make each agent able to not need the same chat, like the gates, and nexus
+# hold the persistent data, so we could use a different chat or agent each gate".
+# Found (read in source and measured): each attempt of a brick began a blank run. A retry, a ladder rung or a fallback had its own
+# session or a goal changed by the gate's feedback, and run-state resumed only on the same session AND the same goal. So the
+# next attempt or agent knew nothing of what the last one read, changed or how it ended. The browser path's resumed-run header
+# (copilot tool-runtime makeNcpCallModel) also never ran on Ollama.
+# Measured, not assumed: the fail/rewind repeats in his screenshot are bounded. A scheduler run with a brick that always fails
+# stops at 3 failures + 3 rewinds (capability) or 6 failures (transient). His 3h phase is the lost-job case (a tab handed a job
+# did nothing). CE10 (0.60.50) handles it; he runs 0.60.44.
+# Built: lib/run-state.js 1.1.0. runIdFor/begin take `brick`, and a brick's run is resumed by every attempt (attempt + 1, steps
+# kept, goal updated, the agents that tried it listed; the session is a pointer). Idearium passes <map>::<phase>::<gate> on every
+# brick attempt (planned and whole-phase). lib/repo-agent.js keys the run by it, and both fallbacks (door, lost job) carry it.
+# On Ollama a resumed run gets the task header ahead of its prompt. The trace (?trace=1, the Plan's trace button) shows each
+# brick's run: attempt, who tried it, steps, files read and changed.
+# Open: GW0b (a new chat per gate kind; today a contract retry reuses the brick's session) and GW1's packet as the one handoff.
+
+
+# ## ADDENDUM 2026-10-16 (i) — everything the pipeline handles is a persistent node (his decision; mapped, no code)
+# James (2026-10-16), right after pasting the 2026-08-22 end-state vision back: ".inputs .outputs .reponses .contracts .chucks.
+# .deps its all persistent. all the data from ideariun, the agents."
+# His decision, recorded as his: every input sent to an agent, every output, response, contract, chunk and dependency set is
+# kept as a typed node (lib/node-export.js), for everything Idearium and the agents do.
+# Coder's reading (to confirm): one set per brick attempt, joined by the brick key (<map>::<phase>::<gate>, 0.60.77) and causedBy:
+# .input (exactly what was sent, its budget and what was cut) → .response (what the agent said) → .output (what landed: files, before
+# and after hashes, commit) on .contract / .chunk, with .deps (what the brick requires and imports). The trace (GW3) reads them.
+# Found 2026-10-16 (writers read in code, not schemas):
+#   .contract  written (contract-intake queue rows; contract-adapters v2 contracts)
+#   .chunk     written (idearium/lib/chunk-nodes.js, spec-engine chunks)
+#   .run       written (lib/run-state.js; per brick since 0.60.77)
+#   .response  partly: guardian/lib/response-sink.js writes one per browser-tab job; Ollama and copilot replies are not nodes
+#   .input     schema only (lib/node-schemas/schema.input), no writer
+#   .output    schema only (lib/node-schemas/schema.output), no writer
+#   .deps      no type at all: dependencies live inside a contract's gates (depends_on, requires) and the phase-map cache
+#
+# GW27_everything_is_a_node (proposed, OPEN; folds the open half of GW3: "the .response node per move, each file write with hashes"):
+#   does: a brick attempt writes .input before dispatch (prompt, brick key, budget, context cut), .response after (every backend, not
+#     only Guardian's), .output when it lands (files, before/after hashes, commit), and the brick's .deps once per plan (requires,
+#     depends_on, imports from phase-map-auto). Each causedBy the one before; each tagged contract:<id>, gate:<id>. A new `dep` schema
+#     beside the others. The trace lists them; nothing is a second record (§7.6: the nodes are the record the trace projects).
+#   proof: one real contract build leaves, per brick attempt, an .input, a .response and an .output linked by causedBy, and one .deps
+#     per brick; an Ollama attempt leaves a .response too; the trace names a missing one as a hole.
+
+# ## ADDENDUM 2026-10-16 (j) — GW27 widened: the whole node taxonomy, carried by the refactor tool (supersedes (i)'s scope; (i) stays)
+# James (2026-10-16), after (i) was mapped: "more than just those nodes. look at the ohases fube the refactor tool or featue" ·
+# "node taxonomy".
+# His direction, recorded as his: not six pipeline node types. Everything goes on the node taxonomy, and the refactor tool is
+# how a repo (Nexus included) gets there.
+# Read in the maps and code on 2026-10-16:
+#   the taxonomy exists: docs/2026-09-29-nex-node-store-phasemap.spec. N0 census (lib/nexstore/census.js →
+#     docs/nexstore-type-catalogue.yaml: 303 shapes, kinds record 148 · ledger 135 · ring 16 · snapshot 2 · edge 1 · lattice 1,
+#     0 unclassified, Guardian's node set the reference), N1 record+log (lib/nexstore/record.js, log.js: hash-chained, no write
+#     without causedBy) and N2 types+gates are DONE. N3–N18 and N24 ("No more json. Only yaml node types using and expanding the
+#     taxonomy.") are OPEN.
+#   the refactor tool is mapped and not built: docs/2026-10-13-projects-raid-and-gates-phasemap.spec RF0 (read the architecture
+#     against the taxonomy), RF1 (the migration as phases, "emit a node file per component"), RF2 (apply one phase at a time,
+#     snapshot first, tests after). lib/architecture-migrate.js does not exist. His decision_refactor_tool is still open:
+#     [A] proposal engine (coder's recommendation) · [B] one-pass rewriter · [C] report only.
+#   already built to lean on: idearium/repo/architecture.js architecture() + toNodes() (a repo's registry as Guardian's nodes:
+#     .component .hook .wire .event .command .contract .system); lib/project-decompose.js + lib/component-store.js.
+#   the pipeline's own units are missing from the taxonomy: phase, brick, dep, file (and run, which is written since 0.60.50 but the
+#     catalogue predates it). Dependencies are edges, and the catalogue holds one edge type in all.
+# Coder's reading (to confirm): GW27 writes its nodes through the NEX log (N1), not only as loose node files, so causedBy is
+# enforced by the store. New types go through the census and a schema each (the taxonomy grows, never a free-form file). After
+# "A brick is a chunk", the brick is the `chunk` type with a field saying build brick or spec section, rather than a second type.
+# To confirm with him.
+# Order proposed: (1) re-run the N0 census (the catalogue is from 0.39.300) and add phase · chunk(brick) · dep(edge) · file ·
+# input · output · run; (2) GW27 writes them per brick through the N1 log; (3) RF0 reads any repo against the taxonomy;
+# (4) RF1/RF2 move it, behind his decision_refactor_tool (A recommended); N24 and N10 retire the JSON writers the census finds.
+
+# ## ADDENDUM 2026-10-16 (k) — decided: the unit is the `chunk` node type; "brick" was his metaphor
+# James (2026-10-16), answering "since 'a brick is a chunk', make bricks the existing `chunk` type with a field saying build
+# brick or spec section, rather than a second type?": "Yes chunk type. When I said brick I was using a metaphor"
+# Decided (his): the taxonomy has one unit type, `chunk` (lib/node-schemas/schema.chunk, idearium/lib/chunk-nodes.js). A build
+# piece of a contract and a spec section are both chunks, told apart by a field. No `brick` node type is added. This settles
+# (j)'s "to confirm" on the type.
+# The coder's note: the code already says "brick" in many places (contract-gates comments, the BR1/BR2 phases, the run-state
+# brick key <map>::<phase>::<gate> of 0.60.77, the trace's per-brick view). Those stay as they are (§0.3, nothing rewritten). They
+# are read as his metaphor for a chunk. Where a chunk node is written (GW27), its kind field says which: build | spec_section.
+# Still open (his): decision_refactor_tool [A] proposal engine (coder recommends) · [B] one-pass rewriter · [C] report only.

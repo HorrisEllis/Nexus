@@ -135,7 +135,9 @@ const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const win = { id: 7, shown: 0, hidden: 0, destroyed: false, isDestroyed() { return this.destroyed; }, show() { this.shown++; }, hide() { this.hidden++; }, focus() {}, setSkipTaskbar() {}, setTitle() {},
       webContents: { executeJavaScript: async (code) => { calls.push(code.slice(0, 40)); return answers.shift(); }, getURL: () => 'https://claude.ai/new' } };
     const assigned = [];
-    const H = CA.createAttentionHandler({ providerHost: { windows: new Map([['claude', win]]), agentTabs: new Map(), start: async () => ({ ok: true }) }, assign: async (x) => { assigned.push(x); return { ok: true }; } });
+    // pickerSource: null — the one-click picker this fake window's answers script (0.60.71 picks use the Guardian picker
+    // first; its walk is tested on a real DOM in test-guardian-field-pick)
+    const H = CA.createAttentionHandler({ pickerSource: null, providerHost: { windows: new Map([['claude', win]]), agentTabs: new Map(), start: async () => ({ ok: true }) }, assign: async (x) => { assigned.push(x); return { ok: true }; } });
     const at = await H.attend('claude', { reason: 'map', note: 'cannot find the input' });
     await new Promise(r => setTimeout(r, 50));
     check('GA-07 Clear Glass shows the hidden tab, the panel, runs the picker, sends the pick to Guardian with its evidence, then hides',

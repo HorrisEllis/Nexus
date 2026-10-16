@@ -121,5 +121,5 @@ addendum_c:
   decided: "No shared-layer extraction now, no autopilot/co-pilot clients, no config editing, no per-system controls from this. CON0/CON1/CON3/CON4/CON8/CON9 stay mapped and OPEN, not cancelled. What is built is CON-lite."
   phase:
     CON_lite_command_line:
-      status: BUILT-0.60.70
+      status: BUILT-0.60.91
       built_note: "cos/app/shell.js, cos sh / cos exec, window pane; SH-01..12, UI-15..16. Limits: no stdin in the window pane; chains refused (test:all); Windows unverified."

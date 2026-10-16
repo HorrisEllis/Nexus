@@ -1,5 +1,5 @@
 'use strict';
-// CGS-01..04 (0.60.62): the ChatGPT chat reader template is wired so the engine can run it: the loop body is exactly the per-chat steps, fields use the DOM extractor's real syntax.
+// CGS-01..04 (0.60.69): the ChatGPT chat reader template is wired so the engine can run it: the loop body is exactly the per-chat steps, fields use the DOM extractor's real syntax.
 const assert = require('assert');
 const { TEMPLATES } = require('../../clear-glass/src/automation/templates.js');
 const DOM = require('../../clear-glass/src/automation/dom.js');

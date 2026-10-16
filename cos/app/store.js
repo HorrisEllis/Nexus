@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/app/store.js — COS as an application: the version store and zip import (COSA1, 0.60.66)
+ * cos/app/store.js — COS as an application: the version store and zip import (COSA1, 0.60.87)
  * comp_id: cos.app.store
  * UUID: cos-app-store-v1-0000-2026-1016-jamesbrooks-001
  * Map: docs/2026-10-15-cos-app-phasemap.spec (COSA1_version_store_and_import)

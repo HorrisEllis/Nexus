@@ -1,5 +1,5 @@
 'use strict';
-// RT-01..09 (0.60.67 COSA2+COSA3): COS starts a project's installed version with its own runtime, waits for it to be healthy, says why when it is not, and stops the whole tree.
+// RT-01..09 (0.60.88 COSA2+COSA3): COS starts a project's installed version with its own runtime, waits for it to be healthy, says why when it is not, and stops the whole tree.
 // Fake releases (a tiny autopilot.js) installed through the real store from real zips. Real processes, real sockets.
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), net = require('net');
 const Zip = require('../../lib/zip.js'); const Store = require('../../cos/app/store.js'); const RT = require('../../cos/app/runtime.js');

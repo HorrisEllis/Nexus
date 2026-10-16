@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/app/switch.js — switch a project to another installed version, and roll back when it does not come up (COSA4, 0.60.67)
+ * cos/app/switch.js — switch a project to another installed version, and roll back when it does not come up (COSA4, 0.60.88)
  * comp_id: cos.app.switch
  * UUID: cos-app-switch-v1-0000-2026-1016-jamesbrooks-001
  * Map: docs/2026-10-15-cos-app-phasemap.spec (COSA4_switch_and_rollback)

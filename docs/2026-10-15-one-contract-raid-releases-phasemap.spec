@@ -165,14 +165,14 @@ spec:
       proof: "a repo released twice: two tags, each release lists exactly its commits; Nexus's backfill has every release (243 at 0.60.34); restoring a release restores its tag's tree"
 
     RN2_changelog_from_the_commits:
-      status: OPEN
+      status: DONE (0.60.72)
       depends_on: [RN1_versionium_tags_and_releases]
       files: [lib/release-notes.js]
       does: "A release's changelog is written from what landed: his words (the version line), the files changed by system, the tests that ran, the gates that passed; nothing an agent claims. CHANGELOG-<version>.md is written from it (a readable copy)."
       proof: "a release's notes list exactly its commits' files; a claim with no commit behind it cannot appear"
 
     RN3_releases_in_idearium:
-      status: OPEN
+      status: DONE (0.60.72; the screen tested in jsdom, a look in Clear Glass awaits his run)
       depends_on: [RN2_changelog_from_the_commits]
       files: [idearium/ui/js/repo-versions.js, idearium/cli/route-commands.js]
       does: "The Versionium tab gains Releases: every version, newest first, its changelog, one click to its diff and files, and its work-surface revisions between releases. `repo releases`, `repo release <repo> [--version]`."
@@ -282,4 +282,16 @@ spec:
 # by a test here. (2) The GitHub workflow is left as it is: it runs on GitHub and cannot reach a local Versionium, so
 # "mirror" means both read lib/version.js — one source, two records — rather than the workflow asking Versionium.
 # UI: deferred to RN3 (the Releases view), the next phase — this phase has no screen yet.
+
+## ADDENDUM 2026-10-16 — RN2 and RN3 built (0.60.72)
+
+# James: "tell me all the recent changes. i want a changelog for each change or diff. i want it all syncd with git,
+# versionium, the zip. like lets tet idearium working". RN2: lib/release-notes.js (every commit under the first release
+# that contains it; CHANGES.md; Versionium releases carry commits + files). RN3: the Versionium tab's Releases
+# (idearium/ui/js/repo-releases.js), `system changes`, GET /api/releases/changes. Changed from the map: the notes are
+# not written INTO CHANGELOG-<v>.md (those stay the coder's write-up, not rewritten, §0.3); the commit record sits beside
+# them (Versionium, CHANGES.md, the screen). "the tests that ran, the gates that passed" are not in the notes yet: git
+# does not hold them; they wait on the gate tracking (GT2 tags) being read back per release — named, open.
+# Found and fixed with it: pinning by number alone (0.60.62 on the other session's commit), merges unread (0.60.63,
+# 0.60.64, 0.60.69 unpinned, said "shallow"), "// prev system:" lines unread.
 

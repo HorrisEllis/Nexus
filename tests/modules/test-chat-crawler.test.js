@@ -1,5 +1,5 @@
 'use strict';
-// CR-01..09 (0.60.63 PI5): the crawler runs the plan end to end against fake ports (no tab, no Electron): backfill to done, restart resume, catch-up, stops.
+// CR-01..09 (0.60.84 PI5): the crawler runs the plan end to end against fake ports (no tab, no Electron): backfill to done, restart resume, catch-up, stops.
 const assert = require('assert'); const S = require('../../lib/chat-crawl-settings.js'); const { Crawler } = require('../../clear-glass/src/chats/crawler.js');
 let pass = 0, fail = 0; const t = async (n, f) => { try { await f(); pass++; console.log('  PASS ' + n); } catch (e) { fail++; console.log('  FAIL ' + n + ' ' + e.message); } };
 const chats = (n, upd = 'a') => Array.from({ length: n }, (_, i) => ({ url: `https://c/${n - i}`, title: 'c' + (n - i), updated: upd + (n - i) }));

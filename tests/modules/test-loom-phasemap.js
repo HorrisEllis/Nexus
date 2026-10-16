@@ -50,13 +50,15 @@ test('T-006', 'a phase\'s own systems: line wins and is marked declared; every t
 test('T-007', 'only the systems in systems.js: every phase\'s systems are Idearium\'s; bySystem has no other key; a tag is answered for its system', () => {
   const NS = require('../../lib/nexus-self/systems.js');
   const all = pm.loadAll();
-  assert.strictEqual(NS.names().length, 16, 'the 15 of SY1 + cos (SY2, James: "Its own system (16th)")');
+  // ER1 (0.60.83, docs/2026-10-16-eravos-removal-phasemap.spec) — James: "can you remove eravos?" → "Delete it outright.": 16 − eravos
+  assert.strictEqual(NS.names().length, 15, 'the 15 of SY1 + cos (SY2, James: "Its own system (16th)") − eravos (ER1, deleted 0.60.83)');
+  assert.ok(!NS.names().includes('eravos'), 'eravos is gone (ER1)');
   assert.ok(NS.names().includes('cos'));
   const outside = all.phases.filter(p => p.systems.some(x => !NS.names().includes(x))).map(p => `${p.map}:${p.id} ${p.systems}`);
   assert.deepStrictEqual(outside, [], 'a phase on something that is not a system');
   assert.deepStrictEqual(Object.keys(all.bySystem).filter(k => !NS.names().includes(k)), []);
   const mine = all.phases.filter(p => /emerge-field-memory-build-phasemap/.test(p.map));
-  assert.ok(mine.length > 30 && mine.every(p => p.systemsFrom === 'declared'), 'the EMERGE map still declares every phase');
+  assert.ok(mine.length > 30 && mine.every(p => /^declared/.test(p.systemsFrom)), 'the EMERGE map still declares every phase (0.60.64 PT2: "declared+files" — declared, plus the owners of its files)');
   assert.ok((all.bySystem.core || []).some(p => p.id === 'EV0_contracts_for_every_system'), 'EV0 (cos, warp, emerge) is core\'s (warp, emerge)');
   assert.ok((all.bySystem.cos || []).some(p => p.id === 'EV0_contracts_for_every_system'), '… and COS\'s (SY2)');
   const cosMap = all.phases.filter(p => /cos-machines-phasemap/.test(p.map));
