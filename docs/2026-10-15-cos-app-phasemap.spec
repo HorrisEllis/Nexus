@@ -141,3 +141,18 @@ addendum_c:
       depends_on: [COSA6_the_exe, COSA9_idearium_sync]
       does: "CLI first: cos app state|pause|resume|checkpoint|checkpoints|rewind <project>, host projects through cos/app/switch.js, VM compartments through Idearium's existing routes. Then the window: VM-style pane per compartment (noVNC for VM, status+logs for host), control strip, checkpoint list with 'holds memory: yes/no'."
   question: "Are your compartments the QEMU desktops (real VM window), the host projects COS runs (Nexus), or both? I assumed both, VM first."
+
+# ADDENDUM 2026-10-16 (d): the nested containers already exist in Idearium; COS lists them, it does not create them
+addendum_d:
+  james: >-
+    "do it. then each systems nested container automatically." then "idearium has nested containers,"
+  reading: >-
+    Settled by his correction, to confirm: COS does not invent a container per system. Idearium's Nexus-self already has one (0.39.261, his words: "i want a nexus repo in idearium, that immutable with nested compartments per system so i can manage nexus from inside nexus"). COS discovers that tree and gives every node the COSA10 window and controls without anyone adding it by hand.
+  grounded: "idearium/repo/nexus-self.js ensureCompartments() (parent compartment 'nexus' + one child per entry of lib/nexus-self/systems.js SYSTEMS, 16 entries incl. core, components, cos; live dirs mounted read-only; networkIsolated), cos/spec/cos.spec (cos is the nested repo nexus/cos)."
+  phase:
+    COSA11_nested_tree:
+      status: OPEN
+      depends_on: [COSA9_idearium_sync, COSA10_compartment_window]
+      does: "COS reads the compartment tree from Idearium (parent -> systems), draws it as nested windows, and a new system in systems.js appears with no COS change. Each node shows its kind: has a process (port, health), has a VM desktop, or logical only (components, cos, core). Controls are enabled per kind."
+      proof: "adding an entry to SYSTEMS shows a new nested window after a refresh; a logical-only node shows no pause button and says why."
+  to_verify: "Whether these compartments have a VM desktop at all (repo.compartmentId set, vm-control reachable) or are logical + read-only mounts. Not yet checked against a running Idearium. If they have none, pause/checkpoint for a system means its kernel process (autopilot) and the data snapshot, not a VM."
