@@ -72,14 +72,17 @@ const MANAGE_ACTIONS_UI = MANAGE_GROUPS.flatMap(([, , acts]) => acts.map(([k, ic
 const MANAGE_READONLY = new Set(['review', 'explain']);
 const MANAGE = { action: 'iterate', hits: [], picked: new Set(), scope: 'file', provider: '', settings: null, runs: [] };
 
+// §CE6 0.60.81 — Manage opened from the Code tab works on the Code tab's file and its picked lines (code-surface.js CS)
+function _csManaged() { return typeof CURRENT_REPO_SUBTAB !== 'undefined' && CURRENT_REPO_SUBTAB === 'code' && typeof CS !== 'undefined' && CS.open && CS.open === ACTIVE_API_FILE; }
 function _editorSelectionLines() {
+  if (_csManaged()) return CS.sel ? { from: CS.sel.from, to: CS.sel.to || CS.sel.from } : null;
   const ta = document.getElementById('ide-editor');
   if (!ta || ta.style.display === 'none' || ta.selectionStart === ta.selectionEnd) return null;
   const before = ta.value.slice(0, ta.selectionStart), sel = ta.value.slice(ta.selectionStart, ta.selectionEnd);
   const from = before.split('\n').length;
   return { from, to: from + sel.replace(/\n$/, '').split('\n').length - 1 };
 }
-function _editorText() { const ta = document.getElementById('ide-editor'); return ta && typeof ta.value === 'string' ? ta.value : ''; }
+function _editorText() { if (_csManaged()) return CS.text || ''; const ta = document.getElementById('ide-editor'); return ta && typeof ta.value === 'string' ? ta.value : ''; }
 
 function openManagePanel() {
   const repo = CURRENT_API_REPO;
@@ -140,7 +143,8 @@ function openManagePanel() {
           </div>
         </div>
       </div>
-      <aside class="mg-rail"><h4>History of this file</h4><div id="mg-history"><div class="mg-empty">loading…</div></div></aside>
+      <aside class="mg-rail"><h4>History of this file <span class="mg-hint">runs · commits · versions</span></h4>
+        <div class="mg-tl-tags" id="mg-tl-tags"></div><div id="mg-history"><div class="mg-empty">loading…</div></div><div id="mg-diff" class="mg-diff"></div></aside>
     </div>
     <div class="mg-foot">
       <span class="mg-kbd">Esc to close · Ctrl+Enter to send</span><div class="mg-spacer"></div>
@@ -214,19 +218,68 @@ async function _manageLoadSide(repo, file) {
     if (sel && Array.isArray(s.providers)) sel.innerHTML = `<option value="">this repo's agent${s.provider ? ` (${escapeHtml(s.provider)})` : ''}</option>` + s.providers.filter(p => p !== 'auto').map(p => `<option value="${escapeHtml(p)}"${MANAGE.provider === p ? ' selected' : ''}>${escapeHtml(p)}</option>`).join('');
     managePipeline();
   } catch (_) { /* the list stays "this repo's agent" */ }
-  // this file's history: every manage run on it, newest first
+  // §CV1 0.60.81 — James: "that and manage and histry should be one menu i feel like." This file's whole timeline, newest
+  // first: its manage runs (state and reason), the commits that touched it with their labels (CV2: edit · manage · agent ·
+  // person · restore · revert, and by whom), and its Versionium versions. A commit and the version it made are one entry.
+  // Any version: diff it against the file now, or restore it (the restore is itself a version). Tags filter the list.
+  MANAGE.file = file; MANAGE.tag = MANAGE.tag || 'all';
   const el = document.getElementById('mg-history');
+  const [runsR, histR, versR] = await Promise.all([
+    api(`/api/repos/${repo.uuid}/phases/runs`, {}, 20000).catch(e => ({ error: e.message })),
+    api(`/api/repos/${repo.uuid}/history?path=${encodeURIComponent(file)}`, {}, 20000).catch(e => ({ error: e.message })),
+    api(`/api/repos/${repo.uuid}/file/versions?path=${encodeURIComponent(file)}`, {}, 20000).catch(e => ({ error: e.message })),
+  ]);
+  const runs = (runsR.runs || []).filter(x => x.map === `file:${file}` || (x.draftRunId && (runsR.runs || []).some(y => y.runId === x.draftRunId && y.map === `file:${file}`)));
+  MANAGE.runs = runs;
+  const byId = new Map();
+  for (const v of versR.versions || []) byId.set(v.commitId, { type: 'version', id: v.commitId, ts: v.wall || 0, kind: v.kind, message: v.message || '', sha: v.sha256 || '', labels: [], by: [] });
+  for (const c of histR.commits || []) { const o = byId.get(c.commitId) || { type: 'version', id: c.commitId, ts: c.ts || 0, kind: c.op === 'delete' ? 'deleted' : 'changed', message: c.message || '', sha: '' };
+    o.labels = c.labels || []; o.by = (c.provenance && c.provenance.by) || []; o.ts = o.ts || c.ts || 0; byId.set(c.commitId, o); }
+  MANAGE.timeline = [...runs.map(x => ({ type: 'run', ts: x.ts || 0, run: x })), ...byId.values()].sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  MANAGE.timelineNote = [runsR.error ? `runs: ${runsR.error}` : null, histR.error ? `commits: ${histR.error}` : null, versR.error ? `versions: ${versR.error}` : null].filter(Boolean).join(' · ');
+  if (el) _paintManageTimeline();
+}
+const MG_TAGS = ['all', 'runs', 'edit', 'agent', 'manage', 'person', 'restore', 'revert'];
+function _mgKindsOf(e) { return e.type === 'run' ? ['runs', 'manage'] : (e.labels || []).map(l => l.kind).filter(Boolean); }
+function manageTag(t) { MANAGE.tag = t; _paintManageTimeline(); }
+function _paintManageTimeline() {
+  const el = document.getElementById('mg-history'); if (!el) return;
+  const tl = MANAGE.timeline || [];
+  const tags = document.getElementById('mg-tl-tags');
+  if (tags) tags.innerHTML = MG_TAGS.map(t => { const n = t === 'all' ? tl.length : tl.filter(e => _mgKindsOf(e).includes(t)).length;
+    return n || t === 'all' ? `<button class="mg-tag${MANAGE.tag === t ? ' on' : ''}" onclick="manageTag('${t}')">${t} ${n}</button>` : ''; }).join('');
+  const list = MANAGE.tag === 'all' ? tl : tl.filter(e => _mgKindsOf(e).includes(MANAGE.tag));
+  const when = (ts) => ts ? new Date(ts).toLocaleString() : '';
+  el.innerHTML = (MANAGE.timelineNote ? `<div class="mg-empty">not read: ${escapeHtml(MANAGE.timelineNote)}</div>` : '') + (list.length ? list.slice(0, 80).map(e => {
+    if (e.type === 'run') { const x = e.run; return `<div class="mg-run s-${escapeHtml(x.state || '')}">
+        <div class="mg-t">◇ ${escapeHtml(String(x.phase || '').toLowerCase())} · ${escapeHtml(x.state || '')}</div>
+        <div class="mg-w">${when(x.ts)}${x.provider ? ` · ${escapeHtml(x.provider)}` : ''}${x.reviewer ? ` · reviewed by ${escapeHtml(x.reviewer)}` : ''}</div>
+        ${x.error ? `<div class="mg-e">${escapeHtml(String(x.error).slice(0, 220))}</div>` : ''}${x.absent && x.absent.length ? `<div class="mg-e">absent: ${escapeHtml(x.absent.join(', '))}</div>` : ''}</div>`; }
+    const kinds = (e.labels || []).map(l => [l.kind, l.action].filter(Boolean).join(' ')).filter(Boolean);
+    return `<div class="mg-run mg-ver"><div class="mg-t">● ${escapeHtml(kinds.join(' · ') || e.kind || 'version')}<span class="mg-id">${escapeHtml(String(e.id).slice(0, 10))}</span></div>
+      <div class="mg-w">${when(e.ts)}${(e.by || []).length ? ` · by ${escapeHtml(e.by.join(', '))}` : ''}</div>
+      ${e.message ? `<div class="mg-w">${escapeHtml(String(e.message).slice(0, 140))}</div>` : ''}
+      ${e.kind === 'deleted' ? '' : `<div class="mg-ver-acts"><button class="mg-btn mini" onclick="manageDiff('${escapeHtml(e.id)}')">diff with now</button><button class="mg-btn mini" onclick="manageRestore('${escapeHtml(e.id)}')">restore</button></div>`}</div>`;
+  }).join('') : `<div class="mg-empty">${MANAGE.tag === 'all' ? 'No runs, commits or versions of this file yet. Each manage run, each applied change (labelled by what made it) and each version lands here.' : `nothing tagged ${escapeHtml(MANAGE.tag)}`}</div>`);
+}
+async function manageDiff(commitId) {
+  const repo = CURRENT_API_REPO, box = document.getElementById('mg-diff'); if (!repo || !box || !MANAGE.file) return;
+  box.innerHTML = '<div class="mg-empty">reading the diff…</div>';
   try {
-    const r = await api(`/api/repos/${repo.uuid}/phases/runs`, {}, 20000);
-    const runs = (r.runs || []).filter(x => x.map === `file:${file}` || (x.draftRunId && (r.runs || []).some(y => y.runId === x.draftRunId && y.map === `file:${file}`)));
-    MANAGE.runs = runs;
-    if (!el) return;
-    el.innerHTML = runs.length ? runs.slice(0, 40).map(x => `<div class="mg-run s-${escapeHtml(x.state || '')}">
-        <div class="mg-t">${escapeHtml(String(x.phase || '').toLowerCase())} · ${escapeHtml(x.state || '')}</div>
-        <div class="mg-w">${x.ts ? new Date(x.ts).toLocaleString() : ''}${x.provider ? ` · ${escapeHtml(x.provider)}` : ''}${x.reviewer ? ` · reviewed by ${escapeHtml(x.reviewer)}` : ''}</div>
-        ${x.error ? `<div class="mg-e">${escapeHtml(String(x.error).slice(0, 220))}</div>` : ''}${x.absent && x.absent.length ? `<div class="mg-e">absent: ${escapeHtml(x.absent.join(', '))}</div>` : ''}</div>`).join('')
-      : '<div class="mg-empty">No manage runs on this file yet. Each one lands here with its state — replied, blocked, incomplete, reviewed — and the reason.</div>';
-  } catch (e) { if (el) el.innerHTML = `<div class="mg-empty">history unavailable: ${escapeHtml(e.message)}</div>`; }
+    const d = await api(`/api/repos/${repo.uuid}/versions/diff?a=${encodeURIComponent(commitId)}&b=working&path=${encodeURIComponent(MANAGE.file)}`, {}, 30000);
+    const f = (d.files || []).find(x => x.path === MANAGE.file) || (d.files || [])[0];
+    if (!f || f.status === 'same' || f.status === 'unchanged') { box.innerHTML = `<div class="mg-empty">${escapeHtml(String(commitId).slice(0, 10))} is the same as the file now</div>`; return; }
+    const patch = String(f.patch || '');
+    box.innerHTML = `<div class="mg-diff-head">${escapeHtml(String(commitId).slice(0, 10))} → now · ${escapeHtml(f.status || '')}</div><pre class="mg-diff-body">${patch ? patch.split('\n').map(l => `<span class="${l[0] === '+' ? 'mg-plus' : l[0] === '-' ? 'mg-minus' : ''}">${escapeHtml(l)}</span>`).join('\n') : 'no text patch (binary or too large)'}</pre>`;
+  } catch (e) { box.innerHTML = `<div class="mg-empty">diff unavailable: ${escapeHtml(e.message)}</div>`; }
+}
+async function manageRestore(commitId) {
+  const repo = CURRENT_API_REPO; if (!repo || !MANAGE.file) return;
+  if (!confirm(`Restore ${MANAGE.file} to ${String(commitId).slice(0, 10)}? The current content stays in history; the restore is a version of its own.`)) return;
+  try { await api(`/api/repos/${repo.uuid}/versions/restore-file`, { method: 'POST', body: JSON.stringify({ commitId, path: MANAGE.file, by: 'person' }) }, 60000); toast(`restored ${MANAGE.file}`, 'ok'); }
+  catch (e) { toast(`restore failed: ${e.message}`, 'err'); return; }
+  if (typeof csAfterChange === 'function') csAfterChange();
+  _manageLoadSide(repo, MANAGE.file);
 }
 function _paintManageHits() {
   const el = document.getElementById('mg-hits'); if (!el) return;

@@ -123,9 +123,15 @@ function _systemsOf(fields, body) {
 function parsePhasemapText(text, name) {
   const lines = String(text).split('\n');
   const out = [];
+  // §CV6 0.60.81 — an entry under a top-level `open_decisions:` / `decisions:` block is a DECISION, not a phase (the
+  // code-tab map's CE0 and CV0 were listed as pending phases). Still returned (no count changes), marked kind: 'decision';
+  // a decision whose status reads DECIDED is done.
+  let section = null;
     for (let i = 0; i < lines.length; i++) {
+      const top = lines[i].match(/^([A-Za-z_][\w-]*):/); if (top) section = top[1];
       const m = lines[i].match(PHASE_RE);
       if (!m) continue;
+      const isDecision = section === 'open_decisions' || section === 'decisions';
       const id = m[1];
       const rest = m[2] || '';
       // §FIXED 2026-09-19 (same pass as the two inversions below) — `near`
@@ -196,6 +202,7 @@ function parsePhasemapText(text, name) {
         : 'pending';
       const ans = sIdx === -1 ? null : _answerOf(near);   // §OR1 — the value's first word
       if (ans && ((status === 'pending' && !/\bNOT STARTED\b/i.test(near)) || ans.closedAs || ans.shelf)) status = ans.status;   // NOT STARTED still wins (the 2026-09-19 rule)
+      if (isDecision && /status:\s*["']?\s*DECIDED\b/.test(near)) status = 'done';   // §CV6
 
       // gather the phase's REAL full body for system tagging + depends_on —
       // §BUGFIX 2026-08-23, found while asking "what's next" against a
@@ -229,7 +236,7 @@ function parsePhasemapText(text, name) {
       const f = _fields(phaseLines.slice(1), _indent(lines[i]) + 2);
       const sys = _systemsOf(f, body);
       out.push({
-        id, map: name,
+        id, map: name, ...(isDecision ? { kind: 'decision' } : {}),
         title: id.replace(/_/g, ' '),
         status, ...(ans && ans.closedAs ? { closedAs: ans.closedAs } : {}), ...(ans && ans.shelf ? { shelf: true } : {}),
         systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom, ...(sys.systemsFromFiles ? { systemsFromFiles: sys.systemsFromFiles } : {}),

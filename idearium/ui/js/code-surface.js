@@ -31,6 +31,10 @@
 // §0.39.356 LS4 — James: "also the dom mutator/node anchor, or ollama or cpilot stream live into the worksurface panel and
 // code tab." Above activity, the agent writing (app.js agentLiveHtml / agentLivePaint — the Agent tab's feed state): an
 // Ollama model's text as it writes, or a browser agent's DOM mutations, its node anchor and its reply.
+//
+// §0.60.81 CE6 · CE7 · CE9 — James: "expand the code tab in repo. the file and code tab merge. all of it from the phases3".
+// The Files tab's work (filter, add, delete, edit by hand, Manage) and the bottom panels (runs, responses, tasks · log ·
+// control · versions · machine) live in code-tab-panels.js; this file calls them.
 // ════════════════════════════════════════════════════════════════════════════
 
 const CS = { uuid: null, overview: null, overviewError: null, open: null, text: null, textError: null, outline: null, outlineError: null,
@@ -64,6 +68,7 @@ async function renderRepoCode(repo) {
     api(`/api/repos/${repo.uuid}/agent`, {}, 15000).then(st => { CS.ident = st; }, e => { CS.ident = { error: e.message }; }).finally(() => here() && csPaint());
     // §CE8 — the surface is Nexus's (idearium/lib/surface-state.cjs): the tab opens where it was left, or where the CLI put it
     api(`/api/repos/${repo.uuid}/surface`, {}, 10000).then(sf => { if (here() && !CS.open && sf) csFollow(sf); }, () => {});
+    if (typeof cxPanelLoad === 'function') cxPanelLoad();   // §CE9 the bottom panel he left open
     api(`/api/repos/${repo.uuid}/agent/tool-events`, {}, 10000).then(r => { for (const e of r.events || []) csOnTool(e, { paint: false }); }, () => {}).finally(() => here() && csPaint());
     return;
   }
@@ -103,7 +108,7 @@ function codeSurfaceOnEvent(ev) {
   const t = ev && ev.type ? ev.type.replace(/^idearium\./, '') : '';
   if (t === 'surface.changed') { const p = ev.payload || {}; if (CS.uuid && p.repoUuid === CS.uuid && p.by !== 'ui' && CURRENT_REPO_SUBTAB === 'code') csFollow(p); return; }   // §CE8
   if (t === 'repo.agent.tool') { const p = ev.payload || {}; if (CS.uuid && p.repoUuid === CS.uuid) csOnTool(p); return; }   // §CT8 — live, no reload
-  if (!/^(repo\.(phase\.run|file\.manage|inject\.|deviation|prove\.|verify)|repo\.file|spec\.chunk|chunk\.)/.test(t)) return;
+  if (!/^(repo\.(phase\.run|file\.manage|inject\.|deviation|prove\.|verify|version\.)|repo\.file|spec\.chunk|chunk\.|edit\.|run\.)/.test(t)) return;   // §CE9 + edit.proposed, run.rewound, version.restored
   const repo = CURRENT_API_REPO; if (!repo || CS.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'code') return;
   const u = ev.payload && ev.payload.repoUuid; if (u && u !== repo.uuid) return;
   clearTimeout(_csEvT); _csEvT = setTimeout(csAfterChange, 500);
@@ -154,6 +159,7 @@ async function csAfterChange() {
   if (typeof loadFileStates === 'function') await loadFileStates(repo, { force: true });
   await Promise.all([CS.open ? csReadOpen(repo) : null, csLoadPlan(repo)]);
   csPaint();
+  if (typeof CX !== 'undefined' && (CX.panel === 'runs' || CX.panel === 'responses')) cxPanelLoad();   // §CE9
 }
 function csRepaint() { if (CURRENT_REPO_SUBTAB === 'code' && CURRENT_API_REPO && CS.uuid === CURRENT_API_REPO.uuid) csPaint(); }
 
@@ -167,7 +173,7 @@ function _csTree(repo) {
   const stateOf = (p) => (typeof fileStateOf === 'function' ? fileStateOf(p) : null);
   const liveFiles = _csLiveFiles();
   const isChanged = (p) => { const s = stateOf(p); return changed.has(p) || (s && (s.state !== 'committed' || s.pending || s.staged)); };
-  const files = CS.changedOnly ? all.filter(f => isChanged(f.path)) : all;
+  const files = (CS.changedOnly ? all.filter(f => isChanged(f.path)) : all).filter(f => typeof cxMatches !== 'function' || cxMatches(f.path));   // §CE6 the Files tab's filter
   const root = {};
   for (const f of files) {
     const parts = f.path.split('/'); let node = root, acc = '';
@@ -183,11 +189,14 @@ function _csTree(repo) {
     const fsm = typeof fileStateMark === 'function' ? fileStateMark(e.__path) : { cls: '', mark: '' };
     const diff = changed.has(e.__path) ? '<span class="cs-diffdot" title="the agent changed this file — its diff is waiting">●</span>' : '';
     const live = liveFiles.has(e.__path) ? '<span class="cs-livedot" title="the agent is working on this file now"></span>' : '';
-    return `<div class="cs-node cs-file${CS.open === e.__path ? ' on' : ''}${fsm.cls}${e.__pendingOnly ? ' cs-pending' : ''}" data-path="${escapeHtml(e.__path)}" onclick="csOpen('${_csq(e.__path)}')">${pad}<span class="cs-fname">${escapeHtml(name)}</span>${live}${diff}${fsm.mark}</div>`;
+    const del = (repo.localPath || repo.materializeDir) && !e.__pendingOnly ? `<span class="cs-del" title="delete (to .trash/)" onclick="event.stopPropagation();cxDeleteFile('${_csq(e.__path)}')">×</span>` : '';   // §CE6
+    return `<div class="cs-node cs-file${CS.open === e.__path ? ' on' : ''}${fsm.cls}${e.__pendingOnly ? ' cs-pending' : ''}" data-path="${escapeHtml(e.__path)}" onclick="csOpen('${_csq(e.__path)}')">${pad}<span class="cs-fname">${escapeHtml(name)}</span>${live}${diff}${fsm.mark}${del}</div>`;
   }).join('');
   const summary = typeof fileStatesSummary === 'function' ? fileStatesSummary() : '';
   return `<div class="cs-pane-head"><span>files</span><span class="cs-grow"></span>
+      <button class="cs-chip-btn" onclick="cxAddFile()" title="a new, empty file in this repo">+ file</button>
       <button class="cs-chip-btn${CS.changedOnly ? ' on' : ''}" onclick="CS.changedOnly=!CS.changedOnly;csPaint()" title="only files that differ from the last version or have a change waiting">changed only</button></div>
+    <div class="cs-filter-row"><input id="cs-filter" class="field-input cs-filter" placeholder="filter files…" value="${escapeHtml(typeof CX !== 'undefined' ? CX.filter : '')}" oninput="cxFilter(this.value)"></div>
     ${summary ? `<div class="cs-summary">${escapeHtml(summary)}</div>` : ''}
     <div class="cs-tree">${walk(root, 0) || `<div class="cs-empty">${CS.changedOnly ? 'no changes — every file is as in the last snapshot' : 'no files'}</div>`}</div>`;
 }
@@ -196,7 +205,8 @@ function csToggleDir(p) { if (CS.collapsed.has(p)) CS.collapsed.delete(p); else 
 // ── middle: search, the file, the changes ────────────────────────────────────────────────────────────
 async function csOpen(p, line = null) {
   const repo = CURRENT_API_REPO; if (!repo) return;
-  if (CS.open !== p) { CS.open = p; CS.text = null; CS.textError = null; CS.outline = null; CS.outlineError = null; CS.sel = null; CS.hist = null; }
+  if (CS.open !== p && typeof cxDirty === 'function' && cxDirty() && !confirm(`discard unsaved changes to ${CS.open}?`)) return;
+  if (CS.open !== p) { CS.open = p; CS.text = null; CS.textError = null; CS.outline = null; CS.outlineError = null; CS.sel = null; CS.hist = null; if (typeof CX !== 'undefined') { CX.editing = false; CX.draft = null; } }
   if (line) CS.sel = { from: line, to: line };
   CS.hits = null;
   csPaint();
@@ -314,6 +324,7 @@ function _csAgentHtml() {
   return `<div class="cs-pane-head"><span>agent</span><span class="cs-grow"></span><button class="cs-chip-btn" title="ask copilot again" onclick="csLoadRoute().then(csPaint)">↻</button></div>${ident}
     <div class="cs-who">${who}${first && !a.pinned && first.why ? `<div class="cs-dim">${escapeHtml(first.why)}</div>` : ''}</div>
     <label class="cs-pickrow">model <select id="cs-pick" onchange="CS.agent.pick=this.value">${opts}</select></label>
+    ${typeof _cxLinesHtml === 'function' ? _cxLinesHtml() : ''}
     <div class="cs-talk" id="cs-talk">${a.lines.map(l => `<div class="cs-msg cs-m-${escapeHtml(String(l.role).split(/[\s—]/)[0])}"><div class="cs-msg-text">${escapeHtml(l.text)}</div>${l.meta ? `<div class="cs-dim">${escapeHtml(l.meta)}</div>` : ''}</div>`).join('') || '<div class="cs-empty">ask about the open file or the picked lines — its changes land in the diffs, waiting for Apply</div>'}</div>
     <div class="cs-ctx">${ctx ? `context: <b>${escapeHtml(ctx)}</b>${CS.card && CS.card.card ? ` · ${escapeHtml(CS.card.card.qualifiedName || CS.card.card.name || '')}` : ''}` : 'no file open — the agent gets the repo'}</div>
     <textarea id="cs-ask" class="cs-ask" rows="3" placeholder="what to do — Ctrl+Enter asks · /help for commands" oninput="CS.agent.draft=this.value" onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))csAsk()">${escapeHtml(a.draft)}</textarea>
@@ -393,6 +404,7 @@ function csPaint() {
   const el = document.getElementById('repo-subtab-code'); const repo = CURRENT_API_REPO;
   if (!el || !repo || CS.uuid !== repo.uuid) return;
   const keep = document.getElementById('cs-code'); const scroll = keep ? keep.scrollTop : 0;
+  const ed = document.getElementById('cs-editor'); const edState = ed ? { a: ed.selectionStart, b: ed.selectionEnd, top: ed.scrollTop, focus: document.activeElement === ed } : null;   // §CE6
   const talk = document.getElementById('cs-talk');
   const o = CS.overview;
   const head = o ? `${o.files} files · ${o.chunks} chunks · ${o.lines} lines · writes: ${escapeHtml(o.repo.writeMode)}${o.repo.pendingProposals ? ` · <span class="cs-warn">${o.repo.pendingProposals} pending proposal(s)</span>` : ''}`
@@ -402,10 +414,13 @@ function csPaint() {
   const middle = CS.hits ? _csHits()
     : CS.open ? `<div class="cs-sec"><b>${escapeHtml(CS.open)}</b>${(() => { const s = typeof fileStateOf === 'function' ? fileStateOf(CS.open) : null; return s && s.state !== 'committed' ? ` <span class="cs-warn">${escapeHtml(s.state)}</span>` : ''; })()}
           ${CS.outline ? `<span class="cs-dim"> · ${(CS.outline.chunks || []).length} chunk${(CS.outline.chunks || []).length === 1 ? '' : 's'}</span>` : CS.outlineError ? `<span class="cs-dim"> · no chunk cards: ${escapeHtml(CS.outlineError)}</span>` : ''}
-          ${CS.sel ? `<span class="cs-dim"> · ${CS.sel.to !== CS.sel.from ? `lines ${CS.sel.from}–${CS.sel.to}` : `line ${CS.sel.from}`} picked (shift-click widens)</span>` : ''}<span class="cs-grow"></span><button class="cs-chip-btn" onclick="CS.open=null;CS.sel=null;csPaint()">close</button></div>
+          ${CS.sel ? `<span class="cs-dim"> · ${CS.sel.to !== CS.sel.from ? `lines ${CS.sel.from}–${CS.sel.to}` : `line ${CS.sel.from}`} picked (shift-click widens)</span>` : ''}<span class="cs-grow"></span>
+          <button class="cs-chip-btn${typeof CX !== 'undefined' && CX.editing ? ' on' : ''}" ${CS.text == null ? 'disabled' : ''} onclick="cxEdit(!CX.editing)" title="edit by hand; a save writes the file and is a version">edit</button>
+          <button class="cs-chip-btn" onclick="cxManage()" title="Manage and History, one menu: hand this file (or the picked lines) to the agent; every run, commit and version of it — diff, restore">manage · history</button>
+          <button class="cs-chip-btn" onclick="if(!cxDirty()||confirm('discard unsaved changes?')){CS.open=null;CS.sel=null;CX.editing=false;csPaint()}">close</button></div>
         ${_csHistLine()}
         ${mine.length ? `<div class="cs-diffs">${mine.map((f, i) => _wsCard(f, i)).join('')}</div>` : ''}
-        <div class="cs-code" id="cs-code">${_csCode()}</div>`
+        ${typeof CX !== 'undefined' && CX.editing ? _cxEditorHtml() : `<div class="cs-code" id="cs-code">${_csCode()}</div>`}`
     : `<div class="cs-sec">the agent's changes<span class="cs-grow"></span><button class="cs-chip-btn" title="reload" onclick="csAfterChange()">↻</button></div>
         ${wsErr ? `<div class="cs-empty cs-bad">could not read the changes: ${escapeHtml(wsErr)}</div>` : ''}
         ${_csChanges().length ? `<div class="cs-diffs">${_csChanges().map(_wsCard).join('')}</div>` : `<div class="cs-empty">${CS.loadingChanges ? 'reading the changes…' : 'no changes yet — what the agent writes shows here as a diff, and greyed in the files, until you apply it'}</div>`}`;
@@ -421,8 +436,10 @@ function csPaint() {
     </div>
     ${_csPlanStrip()}
     <div class="al cs-live" data-al="${escapeHtml(repo.uuid)}">${typeof agentLiveHtml === 'function' ? agentLiveHtml(repo.uuid) : ''}</div>
-    <div class="cs-activity" id="cs-activity">${_csActivity()}</div></div>`;
+    ${typeof cxPanelsHtml === 'function' ? cxPanelsHtml(`<div class="cs-activity" id="cs-activity">${_csActivity()}</div>`) : `<div class="cs-activity" id="cs-activity">${_csActivity()}</div>`}</div>`;
   const code = document.getElementById('cs-code'); if (code && scroll) code.scrollTop = scroll;
+  const ed2 = document.getElementById('cs-editor'); if (ed2 && edState) { ed2.scrollTop = edState.top; if (edState.focus) { ed2.focus(); ed2.setSelectionRange(edState.a, edState.b); } }
+  if (typeof cxAfterPaint === 'function') cxAfterPaint();
   const t2 = document.getElementById('cs-talk'); if (t2) t2.scrollTop = talk ? t2.scrollHeight : t2.scrollHeight;
   csPublish();
 }

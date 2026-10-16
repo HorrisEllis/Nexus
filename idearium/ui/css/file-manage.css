@@ -121,3 +121,16 @@
 .mg-shell ::-webkit-scrollbar-thumb:hover { background: var(--b2); }
 .mg-shell ::-webkit-scrollbar-track { background: transparent; }
 .mg-chip.st-saved { color: var(--mint); border-color: rgba(52,211,153,.3); }
+
+/* §0.60.81 CV1 — Manage and History, one menu: the file's timeline (runs · commits · versions), tags, diff, restore */
+.mg-tl-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 10px; }
+.mg-tag { background: none; border: 1px solid var(--b1); color: var(--text3); border-radius: 6px; padding: 2px 7px; font: 10px var(--mono); cursor: pointer; }
+.mg-tag.on { color: var(--text); border-color: var(--b2); background: rgba(255,255,255,.04); }
+.mg-ver::before { background: var(--sky); }
+.mg-id { margin-left: 6px; color: var(--text3); font-weight: 400; }
+.mg-ver-acts { display: flex; gap: 6px; margin-top: 5px; }
+.mg-btn.mini { padding: 3px 8px; border-radius: 6px; font-size: 10px; }
+.mg-diff { margin-top: 8px; }
+.mg-diff-head { font: 600 10px var(--mono); color: var(--text2); margin-bottom: 4px; }
+.mg-diff-body { margin: 0; max-height: 260px; overflow: auto; font: 10.5px/1.45 var(--mono); background: rgba(5,7,11,.4); border: 1px solid var(--b0); border-radius: 6px; padding: 6px 8px; white-space: pre; }
+.mg-plus { color: var(--mint); } .mg-minus { color: var(--coral); }

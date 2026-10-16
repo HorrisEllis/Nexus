@@ -978,6 +978,13 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **PUT** emits `idearium.surface.changed`; the Code tab follows a change it did not make, and opens where the surface was left.
 - **Commands:** `idearium code surface <repo>`, `code open <repo> <path> [--lines a-b]`, `code select <repo> <from> [to] | --chunk <id> | --clear` (agents: nexus.command).
 
+**The Code tab, Files merged in** (0.60.80–0.60.81, `idearium/ui/js/code-surface.js` + `code-tab-panels.js`). The Files button is gone; `setRepoSubtab('files')` and `openApiRepoFile()` open Code.
+- **Tree:** filter, + file, × delete (to .trash/); file states and waiting diffs as before.
+- **Open file:** edit by hand (save = POST …/file, a version), **manage · history** (one menu: the workbench plus the file's timeline of runs, labelled commits and versions; diff with now, restore).
+- **Picked lines:** change · expand · refactor · fix · document · explain → POST …/code/assist; the reply replaces exactly those lines as a proposal. POST …/code/edit takes a checked edit set directly (`code edit`).
+- **Bottom panel:** activity · runs (GET …/runs; rewind = POST …/runs/:id/rewind) · responses (GET …/agent/history) · tasks · log · control · versions · machine (the Plan panel's views, mounted here).
+- **Versions:** an applied diff, a restore and a rewind each commit at once with labels (`lib/repo-versions.js` commitNow); `GET …/history?tag=kind:edit` filters by them.
+
 **Routing & fallback** (0.39.286, `lib/pipeline-routing.js`). Every spec chunk is built along a route:
 - **Order:** the chosen agent, then the block's own fallback list (in `idearium/spec-engine/blocks.yaml`), then the global chain.
 - **Modes:** learned (the default since 0.39.287), fixed, chain, local-first, economy.

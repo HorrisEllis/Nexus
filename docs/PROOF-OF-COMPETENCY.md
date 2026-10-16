@@ -286,3 +286,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     his.
   - **Evidence:** `docs/2026-10-15-gate-held-work-phasemap.spec` addenda (d) and (f); `tests/modules/test-run-state.test.js`
     RS-50..55; `CHANGELOG-0.60.77.md`.
+- **2026-10-15 / 2026-10-16: "if theyre is going to be 2, i feel like code should only be whats being coded, that or consolidate them into one" · "yes one tab." · "the file and code tab merge."**
+  - **Context:** Idearium had two views of one repo's files: the Files tab (tree, editor, Manage, version history) and
+    the Code tab (tree, chunks, diffs, the agent). He named both ways out himself: a strict split, or one tab. The
+    coder recommended one tab. He chose it, then asked for every remaining phase of the map.
+  - **What it shows:** spotting duplicated state in a product and removing it, not decorating it. Two trees of the
+    same repo would drift. One tab kept every capability of both (filter, add, delete, edit, Manage, history). Every
+    old link still lands, through one redirect, and nothing was deleted.
+  - **Evidence:** `tests/modules/test-code-tab-merge.test.js` (7/7, six driven in Clear Glass);
+    `docs/2026-10-15-code-tab-run-state-phasemap.spec` addenda (b) and (c); `CHANGELOG-0.60.80.md`,
+    `CHANGELOG-0.60.81.md`.

@@ -139,7 +139,7 @@ phases:
       idearium.provider.fallback. Each is shown in the Log view and sent to the activity log.
 
   CE6_one_tab:
-    status: OPEN (blocked by CE0_one_tab_or_two)
+    status: BUILT 0.60.81 (tests/modules/test-code-tab-merge.test.js MG-00, MG-10, MG-11)
     systems: [idearium]
     files: [idearium/ui/js/code-surface.js, idearium/ui/js/file-manage.js, idearium/ui/js/app.js]
     depends_on: [CE0_one_tab_or_two]
@@ -149,7 +149,7 @@ phases:
       functions are reused by the Code tab, the old tab is archived behind a redirect.
 
   CE7_ai_assisted_editing:
-    status: OPEN
+    status: BUILT 0.60.80 backend (test-code-tab-expand CX-01..03), 0.60.81 UI (test-code-tab-merge MG-13)
     systems: [idearium, core]
     files: [idearium/ui/js/code-surface.js, lib/line-edit.js, idearium/api/index.js, lib/agent-tools/tools]
     depends_on: [CE1_the_run_state, CE5_events]
@@ -172,7 +172,7 @@ phases:
       Code tab see one surface. The agents' nexus.command tool gets the same rows (route-commands is the one table).
 
   CE9_the_panels:
-    status: OPEN
+    status: BUILT 0.60.81 (test-code-tab-merge MG-14, MG-15); the Clear Glass mesh mount not done (see addendum (c))
     systems: [idearium, clear-glass]
     files: [idearium/ui/js/repo-tasks.js, idearium/ui/js/repo-drawer-views.js, idearium/ui/js/code-surface.js, clear-glass/src/mesh/route-graph.js]
     depends_on: [CE5_events, CE4_reply_kind_and_tags]
@@ -200,7 +200,7 @@ phases:
     does: "CX1 (context from the dependencies: lines, spec, memory, loom impact) feeds CE2's header; CP1 (the contract panel) is a Code-tab panel next to the gates."
 
   CE12_proof_and_wiring:
-    status: OPEN
+    status: DONE per slice: 0.60.79, 0.60.80, 0.60.81 (tests, loom wires, versions, CHANGELOGs, addenda)
     systems: [core, loom]
     files: [tests/modules/run-all.js, loom/maps/*, docs/atlases/idearium-atlas.md, docs/SPEC-REGISTRY.spec, lib/version.js]
     depends_on: [CE1_the_run_state]
@@ -211,7 +211,7 @@ phases:
 
   # ── Added 2026-10-15 (second message): one menu for Manage + History, and versioning made universal ──────────────
   CV1_one_menu:
-    status: OPEN
+    status: BUILT 0.60.81 (test-code-tab-merge MG-12)
     systems: [idearium]
     files: [idearium/ui/js/file-manage.js, idearium/ui/js/file-versions.js, idearium/ui/js/code-surface.js]
     depends_on: [CE0_one_tab_or_two]
@@ -222,7 +222,7 @@ phases:
       see it, diff any two, restore one. The two modals today (file-manage.js, file-versions.js) share one data call.
 
   CV2_a_version_per_diff:
-    status: OPEN
+    status: BUILT 0.60.80 (test-code-tab-expand CX-04, CX-05)
     systems: [core, versionium, idearium]
     files: [lib/repo-versions.js, versionium/lib/files.js, versionium/lib/releases.js, lib/line-edit.js]
     depends_on: [CE7_ai_assisted_editing]
@@ -233,7 +233,7 @@ phases:
       still settle; the edit path commits at once. Named milestones keep using Versionium tag() (immovable names).
 
   CV3_file_rewind:
-    status: OPEN
+    status: BUILT 0.60.80 run rewind (CX-07), 0.60.81 UI (MG-14); a file restores from the Manage timeline (MG-12)
     systems: [idearium, versionium, clear-glass]
     files: [idearium/ui/js/file-versions.js, idearium/api/index.js, versionium/lib/files.js, lib/run-state.js]
     depends_on: [CV2_a_version_per_diff, CE1_the_run_state]
@@ -245,7 +245,7 @@ phases:
       bounded list, list / restore / clear), not its code.
 
   CV4_tagged_history:
-    status: OPEN
+    status: BUILT 0.60.80 (test-code-tab-expand CX-06, CX-08)
     systems: [idearium, versionium, core]
     files: [versionium/lib/files.js, idearium/api/index.js, idearium/cli/route-commands.js]
     depends_on: [CV2_a_version_per_diff]
@@ -267,7 +267,7 @@ phases:
       verify a tree against its hash, retention and compaction that never drops a tagged version, export.
 
   CV6_phases_in_idearium:
-    status: OPEN
+    status: BUILT 0.60.81 (systems already read by PT1/PT2; open_decisions entries now kind: decision)
     systems: [idearium, loom]
     files: [loom/scanners/phasemap-map.js, idearium/repo/thread.js, idearium/ui/js/phases.js]
     depends_on: []
@@ -390,3 +390,58 @@ Build order for these slices:
 1. Backend: CE7, then CV2, then CV4, then CV3.
 2. Commands.
 3. UI: CE6 first, because the merge gives the rest its home; then CE7's UI, CV1 and CE9.
+
+## ADDENDUM 2026-10-16 (c) - the rest built: CE6 · CE7 · CE9 · CV1 · CV2 · CV3 · CV4 · CV6 (0.60.80, 0.60.81)
+
+James: "expand the code tab in repo. the file and code tab merge. all of it from the phases3"
+
+Built to the plan in addendum (b), backend first (0.60.80), then the UI (0.60.81).
+
+- **The Files tab is merged into Code.**
+  - The button is gone. setRepoSubtab('files') and openApiRepoFile() open the Code tab, so every old link still lands.
+  - The Files panel and its opener (openApiRepoFileInFiles) are kept, archived (§0.3).
+  - The Code tab's tree gained the filter, + file and × delete (to .trash/).
+  - The open file gained edit (save through POST …/file, so a save is a version) and "manage · history".
+- **CV1: Manage and History are one menu.** Manage opens on the Code tab's file and its picked lines. Its rail is one
+  timeline:
+  - the file's manage runs;
+  - the commits with their labels;
+  - its versions.
+  - Tag chips (edit · agent · manage · person · restore · revert) filter the timeline. Any version can be diffed with
+    now or restored. file-versions.js stays as it was, a second door to the same data.
+- **CE7, picked lines:** the right pane gains change · expand · refactor · fix · document · explain. These go to
+  …/code/assist; the answer is a diff above the code.
+- **CE9, the bottom panel**, with these tabs:
+  - activity, as before;
+  - runs: the route copilot gives; each run as a pipeline (goal → steps ✓/✗ → its state); the agents that tried it,
+    what happened to it, the files read and changed; rewind (a dry run first);
+  - responses: the repo agent's exchanges;
+  - tasks · log · control · versions · machine: the Plan panel's own views, drawn in the Code tab through one resolver
+    (repo-tasks.js _rtEl). One set of data, two mounts.
+- **CV6:**
+  - Every phase here already parsed with its declared systems (PT1/PT2).
+  - Entries under `open_decisions:` / `decisions:` are now kind: decision (loom's reader, the roadmap node,
+    schema.phase_node and a "decision" chip on the Phases tab).
+  - A DECIDED decision reads as done. Nothing is dropped, so no count changes.
+
+Narrower than written (the coder's calls, to confirm):
+- CE9 says "one component, mounted in the Code tab and in the Clear Glass mesh panel". The Clear Glass mount is not
+  built: the views are Idearium page scripts, and the mesh panel is Clear Glass's renderer. This is still open.
+- CE9's "gates (every check, last result, evidence)" is shown as the current plan step's gate bar in the runs panel,
+  not a list of every check. The full check list is still open.
+- CE9's "Control: pause, resume, retry from step n, stop, send to another provider" is shown in two ways:
+  - the control view (the repo's run controls and desktop, as the Plan panel has them);
+  - run rewind.
+  - "Retry from step n" and "send to another provider" have no route yet. Both are still open.
+
+Still OPEN:
+- CV5, which waits on CV0 (what "universal" covers).
+- CE11 (automatic-tracking CX1 + CP1).
+- To confirm with James: CE0b, CV0, and the coder's reading of "only the diff" (addendum 2026-10-15).
+
+Proof:
+- test-code-tab-expand 8/8 and test-code-tab-merge 7/7 (six driven in Clear Glass);
+- test-code-tab 16/16, test-code-surface-state 6/6, test-build-surface 13/13, test-phases-tab 5/5,
+  test-loom-phasemap 7/7, test-loom-phasemap-status 14/14.
+- Pre-existing and unchanged: moce-roadmap's 3 failures, EC-05, and the stale probes repo-drawer-views-glass and
+  repo-tasks-drawer-glass (all fail the same way without these changes).

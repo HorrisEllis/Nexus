@@ -116,7 +116,12 @@ function _rtRow(t, depth = 0) {
 // §0.47.0 OS2 — James: "thats supposed to be a idearium feature. also needs to look like the rest of it like the plan
 // panel." No drawer of its own: these views live in the Plan panel's folded ACTIVITY section (plan-panel.js mounts
 // #rt-views / #rt-filters / #rt-list there), styled as the plan.
-function _rtDrawerOpen() { const d = document.getElementById('pp-log'), p = document.getElementById('plan-panel'); return !!(d && d.open && p && p.classList.contains('open')); }
+// §CE9 0.60.81 — James: "code tab needs all the activity, response ledger, etc." The same views mount in the Code tab's bottom
+// panel (code-tab-panels.js draws #cs-rt-views / #cs-rt-filters / #cs-rt-list). One set of data, two mounts: while the Code
+// tab's mount is on screen the views draw there; otherwise in the Plan panel's activity section, as before.
+function _rtCodeMount() { return typeof CURRENT_REPO_SUBTAB !== 'undefined' && CURRENT_REPO_SUBTAB === 'code' && document.getElementById('cs-rt-list') ? true : false; }
+function _rtEl(id) { return (_rtCodeMount() && document.getElementById(`cs-${id}`)) || document.getElementById(id); }
+function _rtDrawerOpen() { if (_rtCodeMount()) return true; const d = document.getElementById('pp-log'), p = document.getElementById('plan-panel'); return !!(d && d.open && p && p.classList.contains('open')); }
 
 function rtPaint() {
   _rtViews();
@@ -125,13 +130,13 @@ function rtPaint() {
   const more = typeof RT_MORE_VIEWS !== 'undefined' && RT_MORE_VIEWS.find(v => v[0] === RT_VIEW);   // §0.46.0 Phases · Versions · Machine
   if (more) return more[3]();
   const uuid = _rtCurrent();
-  const body = document.getElementById('rt-list');
+  const body = _rtEl('rt-list');
   if (!body || !uuid) return;
   let tree = _rtTree(uuid);
   const n = { all: tree.length, running: tree.filter(t => t.status === 'running' || (t.children || []).some(k => k.status === 'running')).length, failed: tree.filter(t => t.status === 'failed' || t.status === 'stale').length };
   if (RT_FILTER === 'running') tree = tree.filter(t => t.status === 'running' || (t.children || []).some(k => k.status === 'running'));
   if (RT_FILTER === 'failed') tree = tree.filter(t => t.status === 'failed' || t.status === 'stale');
-  const f = document.getElementById('rt-filters');
+  const f = _rtEl('rt-filters');
   if (f) f.innerHTML = ['all', 'running', 'failed'].map(k => `<button class="rt-f${RT_FILTER === k ? ' on' : ''}" onclick="rtFilter('${k}')">${k} ${n[k]}</button>`).join('');
   const keep = body.scrollTop;
   body.innerHTML = tree.length ? tree.map(t => _rtRow(t)).join('')
@@ -220,7 +225,7 @@ async function rtCtl(path, body, what) {
 }
 const _RT_PSTAT = { stable: 'rt-ok', running: 'rt-ok', online: 'rt-ok', starting: 'rt-prop', restarting: 'rt-prop', held: 'rt-stale', stopped: 'rt-stale', dormant: 'rt-dim', down: 'rt-bad', circuit_open: 'rt-bad' };
 function rtCtlPaint() {
-  const body = document.getElementById('rt-list'), f = document.getElementById('rt-filters');
+  const body = _rtEl('rt-list'), f = _rtEl('rt-filters');
   if (!body) return;
   if (f) f.innerHTML = `<button class="rt-f" onclick="rtCtlLoad()">↻ refresh</button>${RT_CTL.busy ? `<span class="rt-dim"><span class="rt-spin"></span> ${_rtEsc(RT_CTL.busy)}…</span>` : ''}`;
   const sys = RT_CTL.system || {}, d = RT_CTL.desktop || {}, cps = (RT_CTL.checkpoints && RT_CTL.checkpoints.checkpoints) || [];
@@ -256,7 +261,7 @@ async function rtRewind(tag, forUuid = null) {   // §SD1 0.56.0 — forUuid: fr
 }
 
 function _rtViews() {
-  const v = document.getElementById('rt-views');
+  const v = _rtEl('rt-views');
   const extra = typeof RT_MORE_VIEWS !== 'undefined' ? RT_MORE_VIEWS.map(x => [x[0], x[1]]) : [];
   if (v) v.innerHTML = [['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ...extra].map(([k, l]) => `<button class="rt-view${RT_VIEW === k ? ' on' : ''}" onclick="rtView('${k}')">${l}</button>`).join('');
 }
@@ -320,8 +325,8 @@ function _rtDetail(d) {
     `<div class="rt-step"><span class="rt-dim">${_rtEsc(k)}</span> ${_rtEsc(Array.isArray(v) ? v.map(x => typeof x === 'object' ? (x.name || JSON.stringify(x)) + (x.ok === false ? ' ✗' : '') : x).join(', ') : typeof v === 'object' ? JSON.stringify(v) : v)}</div>`).join('');
 }
 function rtLogPaint() {
-  const body = document.getElementById('rt-list');
-  const f = document.getElementById('rt-filters');
+  const body = _rtEl('rt-list');
+  const f = _rtEl('rt-filters');
   if (!body) return;
   const fc = RT_LOG.facets || { kinds: {}, actors: {}, total: 0 };
   if (f) f.innerHTML = [['', `all ${fc.total || 0}`], ...Object.entries(fc.kinds).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, `${k} ${n}`])]

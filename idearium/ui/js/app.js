@@ -2023,6 +2023,7 @@ let CURRENT_REPO_SUBTAB = null;
 function setRepoSubtab(name) {
   if (name === 'roadmap' || name === 'phasemap') name = 'phases';   // §0.39.271 P4 — one tab now
   if (name === 'agent') name = 'code';   // §0.48.0 OS9 — the agent lives in the Code tab; its settings in Settings → Agents
+  if (name === 'files') name = 'code';   // §CE6 0.60.81 — James: "the file and code tab merge." One tab; every old link to Files lands in Code
   CURRENT_REPO_SUBTAB = name;
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));
@@ -5207,7 +5208,16 @@ function _showIdeEditor(show) {
   document.getElementById('ide-editor').style.display = show ? '' : 'none';
 }
 
+// §CE6 0.60.81 — the Files tab merged into Code: a file opened anywhere (search, the atlas, Architect, a new file) opens in the
+// Code tab. The Files tab's own opener is kept below as openApiRepoFileInFiles (archived, §0.3), unreachable from the UI.
 async function openApiRepoFile(repoUuid, filePath) {
+  if (typeof csOpen === 'function') {
+    if (CURRENT_REPO_SUBTAB !== 'code') setRepoSubtab('code');
+    return csOpen(filePath);
+  }
+  return openApiRepoFileInFiles(repoUuid, filePath);
+}
+async function openApiRepoFileInFiles(repoUuid, filePath) {
   if (API_FILE_DIRTY && !confirm(`discard unsaved changes to ${ACTIVE_API_FILE}?`)) return;
   ACTIVE_API_FILE = filePath;
   API_FILE_DIRTY = false;
