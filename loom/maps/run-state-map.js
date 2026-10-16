@@ -46,7 +46,7 @@ const FILES = [
   ['clear-glass/src/contexts/google-signin.js', I('clear-glass/src/contexts/google-signin.js'), [I('clear-glass/src/contexts/session-headers.js'), I('clear-glass/src/fingerprint/firefox-version.js'), I('clear-glass/src/preload/google-signin.js')]],
   ['clear-glass/src/fingerprint/firefox-version.js', I('clear-glass/src/fingerprint/firefox-version.js'), []],   // §0.60.108 GS3: the Firefox version from Mozilla's calendar
   ['clear-glass/src/preload/google-signin.js', I('clear-glass/src/preload/google-signin.js'), []],   // §0.60.108 GS4: the sign-in page reads as Firefox, no debugger   // §0.60.106 GS1: Google's sign-in as Firefox, consistently
-  ['clear-glass/src/tls/helper.js', I('clear-glass/src/tls/helper.js'), []],   // §0.60.109 TL2: runs cg-tls-helper (clear-glass/tls-helper, Go + uTLS); its CA trust for personas
+  ['clear-glass/src/tls/helper.js', I('clear-glass/src/tls/helper.js'), []],   // §0.60.109 TLS2: runs cg-tls-helper (clear-glass/tls-helper, Go + uTLS); its CA trust for personas
   ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
 ];
 const CONSUMERS = [
@@ -58,9 +58,9 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/service.js'), '/cli/net/*: routes, resolve, bridge, transport start/stop/detect (0.60.60 NP9)'],
   [I('idearium/api/index.js'),                      I('lib/economy/tokens.js'), '_phaseBuild: breakdown() of what the agent is given (request, mapped files, charter, lessons, note) on the building row — the Plan\'s Context card (0.60.107 PS1)'],
   [I('idearium/api/index.js'),                      I('lib/ollama-activity.js'), '_contextOf: MAX, the num_ctx window Nexus gives Ollama — the Context card\'s window (0.60.107 PS1)'],
-  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/tls/helper.js'), 'boots TlsHelper on :7703 (in place of the Node proxy), its state → net service setTlsLayer, stopped at shutdown (0.60.109 TL2)'],
-  [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/tls/helper.js'), 'setCertificateVerifyProc(verifyProc()): a Firefox persona trusts only the layer CA\'s leaves; registers firefox:true (0.60.109 TL3)'],
-  [I('clear-glass/src/net/service.js'),             I('clear-glass/src/net/policy.js'), 'pacFor(…, { tlsPort }): a persona\'s direct https/wss through the TLS layer, DIRECT after (0.60.109 TL3)'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/tls/helper.js'), 'boots TlsHelper on :7703 (in place of the Node proxy), its state → net service setTlsLayer, stopped at shutdown (0.60.109 TLS2)'],
+  [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/tls/helper.js'), 'setCertificateVerifyProc(verifyProc()): a Firefox persona trusts only the layer CA\'s leaves; registers firefox:true (0.60.109 TLS3)'],
+  [I('clear-glass/src/net/service.js'),             I('clear-glass/src/net/policy.js'), 'pacFor(…, { tlsPort }): a persona\'s direct https/wss through the TLS layer, DIRECT after (0.60.109 TLS3)'],
   [I('clear-glass/src/main/index.js'),              I('clear-glass/src/contexts/google-signin.js'), "app 'session-created' → applySession; 'web-contents-created' → attach: every session and page, popups and webviews included (0.60.106 GS1)"],
   [I('clear-glass/src/fingerprint/engine.js'),      I('clear-glass/src/fingerprint/firefox-version.js'), 'ffPool(): current Firefox personas; getOrGenerate refreshes a stale stored UA (0.60.108 GS5)'],
   [I('clear-glass/src/page/semantic-tree.js'),      I('clear-glass/src/contexts/google-signin.js'), 'readAX: isSignin → page tree, no debugger on Google\'s sign-in (0.60.108 GS7)'],

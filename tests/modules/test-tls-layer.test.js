@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-tls-layer.test.js — TL1–TL3 (docs/2026-10-16-tls-layer-phasemap.spec), 0.60.109.
+ * tests/modules/test-tls-layer.test.js — TLS1–TLS3 (docs/2026-10-16-tls-layer-phasemap.spec), 0.60.109.
  * James: "fix it. i don't want the trouble again" — the Node TLS proxy (TLS inside TLS, no site could load) replaced by
  * cg-tls-helper (Go + uTLS): a Firefox persona is Firefox in its TLS handshake too, and the layer is never why a site fails.
  *

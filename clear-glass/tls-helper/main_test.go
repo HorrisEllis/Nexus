@@ -1,6 +1,6 @@
 package main
 
-// docs/2026-10-16-tls-layer-phasemap.spec TL1 — James: "fix it. i don't want the trouble again"
+// docs/2026-10-16-tls-layer-phasemap.spec TLS1 — James: "fix it. i don't want the trouble again"
 //   TH-1  a site sees Firefox's ClientHello (ffdhe groups and X25519MLKEM768, which Chrome's does not carry together), h2 through
 //   TH-2  a browser offering only http/1.1 (a WebSocket connection) gets http/1.1 end to end
 //   TH-3  a site whose certificate does not hold is refused — never retried, never passed

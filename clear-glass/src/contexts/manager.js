@@ -35,7 +35,7 @@ class ContextManager {
     const ses = session.fromPartition(`persist:agent-${id}`, { cache: true });
     applyCspBypass(ses);
     // 0.60.60 NP3 — routes (src/net): a no-op unless a rule applies to this window; never lets a routing error stop the window opening
-    // §0.60.109 TL3 — a Firefox persona routes its direct https/wss through the TLS layer (cg-tls-helper), so its handshake is
+    // §0.60.109 TLS3 — a Firefox persona routes its direct https/wss through the TLS layer (cg-tls-helper), so its handshake is
     // Firefox's too; it trusts that layer's local CA, and only for certificates that CA issued (src/tls/helper.js verifyProc).
     // James: "fix it. i don't want the trouble again"
     const firefox = /\bFirefox\//.test(this.fp.getOrGenerate(id).ua || '');

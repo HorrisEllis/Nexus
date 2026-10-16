@@ -2,7 +2,7 @@
 'use strict';
 /**
  * clear-glass/tls-helper/build.js — builds cg-tls-helper for each platform into bin/<os>-<arch>/, with SHA256SUMS.
- * Map: docs/2026-10-16-tls-layer-phasemap.spec (TL1). Needs Go (1.24+).
+ * Map: docs/2026-10-16-tls-layer-phasemap.spec (TLS1). Needs Go (1.24+).
  *
  * windows-amd64 and linux-amd64 are committed prebuilt, so James (Windows, running from the repo zip) needs no Go.
  * `node clear-glass/tls-helper/build.js` rebuilds those; `--all` adds macOS (arm64, amd64) and linux-arm64.

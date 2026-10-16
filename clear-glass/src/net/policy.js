@@ -151,7 +151,7 @@ function signinRoute(policy = {}, ctx = {}, transport = {}) {
 }
 
 /**
- * §0.60.109 TL3 — the TLS layer (cg-tls-helper, docs/2026-10-16-tls-layer-phasemap.spec). James: "fix it. i don't want the
+ * §0.60.109 TLS3 — the TLS layer (cg-tls-helper, docs/2026-10-16-tls-layer-phasemap.spec). James: "fix it. i don't want the
  * trouble again". layer = { tlsPort }: in a Firefox-persona session (ctx.firefox), an https/wss request whose route is
  * direct goes through the helper, so its TLS handshake is Firefox's too. "; DIRECT" after it: a helper that is down never
  * takes a site with it. A request routed elsewhere (a person's proxy, the transport, a block) keeps its route.

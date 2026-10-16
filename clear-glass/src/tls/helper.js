@@ -2,7 +2,7 @@
 /**
  * src/tls/helper.js — runs cg-tls-helper (clear-glass/tls-helper/), Clear Glass's TLS layer, and says what state it is in.
  * UUID: cg-tls-helper-host-v1-0000-2026-1016-jamesbrooks-001
- * Map: docs/2026-10-16-tls-layer-phasemap.spec (TL2)
+ * Map: docs/2026-10-16-tls-layer-phasemap.spec (TLS2)
  *
  * James, 2026-10-16: "fix it. i don't want the trouble again"
  *

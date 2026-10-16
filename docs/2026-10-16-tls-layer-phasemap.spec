@@ -30,19 +30,19 @@ design:
   - "One door: the routing PAC (src/net/policy.js) gains the layer. In a Firefox-persona session, a request whose route is direct goes through the helper; a request routed elsewhere (a person's proxy, the transport) keeps that route."
 
 phases:
-  TL1_helper:
+  TLS1_helper:
     status: BUILT 0.60.109
     systems: [clear-glass]
     files: [clear-glass/tls-helper/main.go, clear-glass/tls-helper/main_test.go, clear-glass/tls-helper/go.mod, clear-glass/tls-helper/build.js, clear-glass/tls-helper/bin/]
     does: "the Go helper as designed: Firefox ClientHello upstream with verification, a local CA, ALPN carried through, a byte relay, a standard-TLS retry, a /health line on stdout. Prebuilt for windows-amd64 and linux-amd64 (James runs Windows from the repo zip: no Go needed); build.js builds the rest."
     proof: "go test: the site sees Firefox's ClientHello (ffdhe groups Chrome does not send); h2 and http/1.1 through it; a site with a bad certificate is refused; the standard-TLS retry."
-  TL2_clear_glass_runs_it:
+  TLS2_clear_glass_runs_it:
     status: BUILT 0.60.109
     systems: [clear-glass]
     files: [clear-glass/src/tls/helper.js, clear-glass/src/main/index.js]
     does: "Start it on :7703 in place of the Node proxy, restart it on a crash (bounded), stop it at shutdown. status() gives its state, port, CA fingerprint, and the reason when it is unavailable. src/tls/proxy.js is superseded and kept (§0.3)."
     proof: "tests/modules/test-tls-layer.test.js: the real binary, end to end through Node."
-  TL3_personas_use_it:
+  TLS3_personas_use_it:
     status: BUILT 0.60.109
     systems: [clear-glass]
     files: [clear-glass/src/net/policy.js, clear-glass/src/net/service.js, clear-glass/src/contexts/manager.js]
@@ -53,3 +53,6 @@ open:
   - "The HTTP/2 fingerprint (SETTINGS values, pseudo-header order) stays Chromium's: the helper relays h2 frames as they are. Matching it means rewriting h2, which is not built and is said."
   - "Client certificates (rare) cannot pass through local interception."
   - "Not proven against a real bot wall from James's machine yet."
+
+## ADDENDUM 2026-10-16 — ids renamed at the merge with main
+- The phases were TL1–TL3 when built. Main's durable-work timeline map already uses TL0–TL3 (TL1 = GW27 = FN3, fa0260b). Renamed TLS1–TLS3 so one id names one thing. Nothing else changed.

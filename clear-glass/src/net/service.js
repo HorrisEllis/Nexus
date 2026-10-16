@@ -45,7 +45,7 @@ class NetService {
   }
   setPaths({ torPath, snowflakePath }) { this._save({ ...this.policy(), ...(torPath !== undefined ? { torPath } : {}), ...(snowflakePath !== undefined ? { snowflakePath } : {}) }); return { ok: true }; }
   resolve(req) { return Policy.resolve(this.policy(), req); }
-  /** §0.60.109 TL3 — setTlsLayer(port | null): the TLS layer is up on port (Firefox-persona sessions route through it), or down (they go direct). */
+  /** §0.60.109 TLS3 — setTlsLayer(port | null): the TLS layer is up on port (Firefox-persona sessions route through it), or down (they go direct). */
   setTlsLayer(port) { const v = port || null; if (v === (this.tlsLayer || null)) return Promise.resolve([]); this.tlsLayer = v; return this.reapplyAll(); }
   statusNote() { return 'Applied to registered agent windows only; provider and login windows are not routed yet. Leak test not built: nothing is shown as Verified.'; }
 
