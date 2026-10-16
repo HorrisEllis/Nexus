@@ -22,7 +22,6 @@
         "nexus_artifacts    — saved code artifacts",
         "nexus_ideas        — search Idearium",
         "nexus_save_idea    — save insight to Idearium",
-        "nexus_build_organism — describe an organism, get a FORGE build plan",
         "nexus_read_spec    — read a spec file by name"
       ]
     }

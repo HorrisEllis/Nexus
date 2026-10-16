@@ -429,64 +429,6 @@ const TOOLS = [
     },
   },
 
-  // ── Build ERAVOS organism from description ─────────────────────────────────
-  {
-    name: 'nexus_build_organism',
-    description: [
-      'Build a new ERAVOS organism from a natural language description.',
-      'Follows the FORGE protocol: spec → hostile review → build → zip output.',
-      'The description is routed through co-pilot which uses the build contract spec',
-      'to produce a conforming organism pack ready to drop into ERAVOS.',
-      'Returns a plan and next steps — full build requires FORGE phases.',
-    ].join(' '),
-    inputSchema: {
-      type: 'object',
-      properties: {
-        description: {
-          type: 'string',
-          description: 'Natural language description of the organism to build',
-        },
-        organism_type: {
-          type: 'string',
-          enum: ['audio', 'nexus', 'automation', 'cognitive', 'sensory', 'interface'],
-          description: 'Category of organism',
-          default: 'nexus',
-        },
-      },
-      required: ['description'],
-    },
-    handler: async ({ description, organism_type = 'nexus' }) => {
-      const prompt = [
-        `NEXUS FORGE — BUILD FROM DESCRIPTION`,
-        `Organism type: ${organism_type}`,
-        `Description: ${description}`,
-        ``,
-        `Before phase 3, produce:`,
-        `1. A complete organism spec (id, label, hooks, capabilities, config)`,
-        `2. Hostile review — every assumption named`,
-        `3. Build order (bottom-up: schema → engine → hooks → UI)`,
-        `4. File list for the zip`,
-        ``,
-        `Kernel target: ERAVOS 3.0.0`,
-        `No stubs. Surface all gaps. Follow eravos.nexus.build-contract.spec.`,
-      ].join('\n');
-
-      const r = await _post(`${OR_URL}/api/guardian/copilot/prompt`, {
-        prompt, channel: 'mcp', channelName: 'MCP Build Session',
-        contextOpts: { intent: `build organism: ${description}` },
-      }, 120000);
-
-      // Also save the description to Idearium for tracking
-      await _post(`${IDR_URL}/api/ideas`, {
-        text: `MCP organism build request: ${description}`,
-        tags: ['mcp', 'organism', 'build', organism_type],
-        compartment: 'mcp-builds',
-      }, 3000).catch(() => {});
-
-      return r?.text || 'Co-pilot unavailable for build planning.';
-    },
-  },
-
   // ── File read (repo navigation) ────────────────────────────────────────────
   {
     name: 'nexus_read_spec',

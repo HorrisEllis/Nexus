@@ -60,21 +60,25 @@ decisions:
 
 phases:
   COSA1_version_store_and_import:
-    status: OPEN
+    status: BUILT-0.60.87
+    built_note: "cos/app/store.js, cos/app/cli.js (node cos/app/cli.js import, inbox, list, status, remove), tests/modules/test-cos-app-store.test.js CA-01..13. Windows junction UNVERIFIED (Linux symlinks proven). No cos app entry in the compartment CLI yet."
     does: >-
       Layout under %LOCALAPPDATA%\COS\projects\<project>\: versions\<version>\, data\ (persistent), current, previous, state.json. Import a zip (file picker or drop into an Inbox folder that COS watches):
       read the VERSION file, verify the checksum when one is given, refuse path traversal and oversize, extract beside the others, junction data\ in. CLI first: cos app import|list|status.
     proof: "a zip with ../ entries is refused; a corrupt zip leaves nothing half-extracted; two versions sit side by side with one shared data folder; import of the same version twice is a no-op."
   COSA2_runtime_and_dependencies:
-    status: OPEN
+    status: BUILT-0.60.88
+    built_note: "cos/app/runtime.js preflight + bundled js-yaml via NODE_PATH; RT-01,07. Windows taskkill and ELECTRON_RUN_AS_NODE unverified."
     depends_on: [COSA1_version_store_and_import]
     does: "Pinned Node bundled; node_modules in a shared cache keyed by package-lock hash; npm ci --ignore-scripts; a preflight (Node version, required files, a boot check) before a version may be chosen."
   COSA3_run_and_supervise:
-    status: OPEN
+    status: BUILT-0.60.88
+    built_note: "cos/app/runtime.js start/stop/status/logs; RT-02..09. Windows taskkill and ELECTRON_RUN_AS_NODE unverified."
     depends_on: [COSA2_runtime_and_dependencies]
     does: "Start nexus/autopilot.js with NEXUS_DATA_ROOT set; wait for :7799/status; detect a port already in use and say which program holds it; graceful stop; rotated logs; tray status. CLI: cos app start|stop|status|logs."
   COSA4_switch_and_rollback:
-    status: OPEN
+    status: BUILT-0.60.88
+    built_note: "cos/app/switch.js; SW-01..10. Windows taskkill and ELECTRON_RUN_AS_NODE unverified."
     depends_on: [COSA3_run_and_supervise]
     does: "Stop, snapshot the data, point current at the new version, start, and require healthy within N seconds, else roll back to previous and restore the data snapshot, saying why. Keep the last K versions, prune older ones with a report."
     proof: "a version that fails its health check is rolled back automatically with its data restored; a version that passes stays; the failed one is kept for inspection."
@@ -82,11 +86,13 @@ phases:
     status: OPEN
     does: "lib/data-root.js, one honoured NEXUS_DATA_ROOT, replacing the 37 hardcoded data paths. Until done, COSA1's junction carries it. Test: a grep-based check that no module computes its own data folder."
   COSA6_the_exe:
-    status: OPEN
+    status: BUILT-0.60.89
+    built_note: "cos/app/controller.js, cos/app/desktop/*, scripts/build-cos-app.js, .github/workflows/cos-app.yml; UI-01..11, CT-01..05, BD-01..06. UNVERIFIED: the Windows build itself, tray, file dialog, drag-drop paths, junctions, taskkill. Unsigned exe (SmartScreen warns once). Clear Glass is not started by COS."
     depends_on: [COSA1_version_store_and_import]
     does: "Electron shell (tray, project list, versions, logs, Start/Stop/Switch/Rollback) built by a GitHub Actions Windows job with electron-builder (portable and installer), attached to the release with SHA256SUMS. Screens come after the CLI, per his order."
   COSA7_clear_glass_delivers:
-    status: OPEN
+    status: BUILT-0.60.93
+    built_note: "clear-glass/src/releases/deliver.js + service.js, nexus-release command, /cli/releases/*, job template, release.yml publishes SHA256SUMS; RD-01..13 against a local GitHub stand-in. NOT built: the NP16 quarantine (vault not built), a token setting. Not run against real GitHub."
     depends_on: [COSA1_version_store_and_import]
     does: "Clear Glass checks the releases, downloads the asset and checksum into COS's Inbox through the downloads pipeline (the NP16 quarantine applies), and tells COS. COS verifies and offers the switch; a setting allows auto-switch only while idle. Clear Glass never replaces itself."
   COSA8_other_projects:
@@ -145,3 +151,80 @@ addendum_b:
 # Open: Nexus's "next" is the first in-progress or ready phase over all of its maps; it should follow
 # docs/2026-10-15-pipeline-focus-phasemap.spec's order instead.
 
+# 2026-10-16 (merge) — two sessions each named a phase COSA10 the same day: COSA10_my_projects (above, built 0.60.74) and
+# COSA10_compartment_window (addendum c below, PR #91). Both are kept as written (§0.3); refer to them by their full keys.
+
+# ADDENDUM 2026-10-16 (c): each compartment is a VM-style window, with the rewind engine and system-state controls
+addendum_c:
+  james: >-
+    "on cos will be an electron app. what about integratoing idearium with cos" then "i want each compartment to be like the vm window, but with the rrewind engine and system state controls."
+  reading: >-
+    To confirm. "The vm window" = the compartment desktop built in 0.39.371 (VM1, "like full VMware style. Not actual VMware."). Each compartment in COS gets that same window: one pane per compartment showing it live, with the controls along its edge.
+    "Rewind engine" = the existing repo.run play/pause/rewind (0.60.0 RS1): pause, restore a version with a pre-restore snapshot verified against disk. "System state controls" = pause/resume/checkpoint/checkpoints/status.
+  grounded: "Reused, not rebuilt: POST /api/repos/:uuid/run/:op (pause|play|rewind {commitId}), /desktop/:op (pause|resume|checkpoint|rewind {tag}), /desktop/checkpoints, lib/cos-bridge.js desktopControl, cos/workspace/vm-control.js (QMP stop/cont/savevm), cos/app/switch.js snapshotData/restoreData."
+  coder_opinion: >-
+    One strip of controls, two honest meanings underneath. A VM compartment gets true state: pause freezes memory, a checkpoint is a live snapshot. A host project (Nexus run by COS, no VM) cannot: pause is suspending the process tree, a checkpoint is version + data snapshot, rewind is restore both and restart. The window must say which kind it is and what a checkpoint holds ("includes running memory" or "files and version only"). Same buttons, never a promise the layer cannot keep.
+  failure_modes:
+    - "A checkpoint that does not include memory shown the same as one that does (a lie by omission): label it."
+    - "Suspending a Windows process tree has no taskkill-like one-liner (needs NtSuspendProcess); unverified, may ship as stop/start only."
+    - "Rewind while a switch or import is running: refused with 'busy' (the controller already serialises per project)."
+    - "COS depends on Idearium for the VM path; with Idearium down, host-project controls must still work."
+  phase:
+    COSA10_compartment_window:
+      status: OPEN
+      depends_on: [COSA6_the_exe, COSA9_idearium_sync]
+      does: "CLI first: cos app state|pause|resume|checkpoint|checkpoints|rewind <project>, host projects through cos/app/switch.js, VM compartments through Idearium's existing routes. Then the window: VM-style pane per compartment (noVNC for VM, status+logs for host), control strip, checkpoint list with 'holds memory: yes/no'."
+  question: "Are your compartments the QEMU desktops (real VM window), the host projects COS runs (Nexus), or both? I assumed both, VM first."
+
+# ADDENDUM 2026-10-16 (d): the nested containers already exist in Idearium; COS lists them, it does not create them
+addendum_d:
+  james: >-
+    "do it. then each systems nested container automatically." then "idearium has nested containers,"
+  reading: >-
+    Settled by his correction, to confirm: COS does not invent a container per system. Idearium's Nexus-self already has one (0.39.261, his words: "i want a nexus repo in idearium, that immutable with nested compartments per system so i can manage nexus from inside nexus"). COS discovers that tree and gives every node the COSA10 window and controls without anyone adding it by hand.
+  grounded: "idearium/repo/nexus-self.js ensureCompartments() (parent compartment 'nexus' + one child per entry of lib/nexus-self/systems.js SYSTEMS, 16 entries incl. core, components, cos; live dirs mounted read-only; networkIsolated), cos/spec/cos.spec (cos is the nested repo nexus/cos)."
+  phase:
+    COSA11_nested_tree:
+      status: OPEN
+      depends_on: [COSA9_idearium_sync, COSA10_compartment_window]
+      does: "COS reads the compartment tree from Idearium (parent -> systems), draws it as nested windows, and a new system in systems.js appears with no COS change. Each node shows its kind: has a process (port, health), has a VM desktop, or logical only (components, cos, core). Controls are enabled per kind."
+      proof: "adding an entry to SYSTEMS shows a new nested window after a refresh; a logical-only node shows no pause button and says why."
+  to_verify: "Whether these compartments have a VM desktop at all (repo.compartmentId set, vm-control reachable) or are logical + read-only mounts. Not yet checked against a running Idearium. If they have none, pause/checkpoint for a system means its kernel process (autopilot) and the data snapshot, not a VM."
+
+# ADDENDUM 2026-10-16 (e): COS behaves like VMware: minimizes to the taskbar, updates itself from dropped or downloaded zips, versions recorded in Versionium through Idearium
+addendum_e:
+  james: >-
+    "i want this almost like vmware. minimize to taskbar. auto updates from dropping in new zips, downloading it from clearglass. versions using versionium  in idearium"
+  reading: >-
+    To confirm. (1) Window: a normal Windows window that minimizes to the taskbar like VMware Workstation; the tray stays as a second place, not the only one. (2) Updates: a zip dropped on the window or into the inbox, or one Clear Glass downloaded, installs by itself and, within a rule he sets, switches by itself. (3) Versions: each install, switch and rollback is a Versionium record made through Idearium, so the history of what ran when is Versionium's, not a second log in COS.
+  grounded:
+    window: "cos/app/desktop/main.js today hides to the tray on close and has no taskbar-minimize behaviour set; Electron minimizes to the taskbar by default, so the change is: closing still hides (VMware keeps VMs running), minimize goes to the taskbar, tray click restores. Quit stays the only thing that stops what COS started."
+    updates: "COSA1 inbox watcher already installs a dropped zip and offers the switch; COSA7 (Clear Glass downloads the asset and its checksum into the inbox through the downloads pipeline, NP16 quarantine applies, Clear Glass never replaces itself) is OPEN and unchanged."
+    versionium: "versionium/server.js is its own system on :3754 (VS1, 2026-09-02, his words: 'versionium is its own folder. it's system with a server.js. cli. api.'); Idearium's VR1 makes every repo change a commit; the repo routes /api/repos/:uuid/git/*, repo versions and repo diff exist."
+  coder_opinion: >-
+    Versionium holds the HISTORY and the metadata of a version (number, checksum, who/what installed it, when, the outcome, the rollback reason, a link to the data snapshot), not the 100s of MB of release files. The zips stay in COS's store, because COS must install and roll back with Idearium and Versionium down. Putting blobs in Versionium would make the supervisor depend on what it supervises. So: COS is the store, Versionium is the record and the diff, and COS queues events while Idearium is down and replays them in order (already in addendum_b).
+    Auto-switch is the risky word. A dropped zip that switches by itself can replace a running Nexus in the middle of a job. The rule I recommend: auto-INSTALL always (safe, nothing running changes), auto-SWITCH only when the running version is idle and the candidate's preflight passes, and every auto-switch is a normal switch (data snapshot first, health check, automatic rollback), so a bad one undoes itself. He sets it to off / ask / auto.
+  phase:
+    COSA12_vmware_window:
+      status: BUILT-0.60.90
+      built_note: "minimize to taskbar (Electron default, kept), close hides to tray, bounds remembered in settings.json, status strip; UI-12..14. Windows behaviour unverified."
+      depends_on: [COSA6_the_exe]
+      does: "Minimize to the taskbar, close hides to the tray, taskbar and tray both restore; window size, position and last selected project remembered; a status strip like VMware's (project, version, running/paused, health) always visible."
+      proof: "UI-tested in Clear Glass, never Playwright (docs/CLAUDE.md); Windows behaviour unverified until a Windows run."
+    COSA13_auto_update:
+      status: PARTIAL-0.60.90
+      built_note: "policy off|ask|auto, drop and inbox, auto only when verified+newer+idle; AU-01..09. 0.60.92: the autopilot idle signal exists (GET /idle) and COS asks it; a Nexus older than 0.60.92 has none, so auto waits for it. NOT built: Clear Glass download (COSA7)."
+      depends_on: [COSA1_version_store_and_import, COSA4_switch_and_rollback]
+      does: "Setting update.policy: off | ask | auto (default ask). auto-install on any arrival (drop, inbox, Clear Glass); auto-switch only when idle and preflight passes; notification says what happened and how to undo. Never installs a zip that fails the checksum or the NP16 quarantine."
+      proof: "a dropped zip installs with no click; with policy auto and an idle Nexus it switches and is healthy; with a crashing release it rolls itself back with the reason shown; with a job running it waits."
+    COSA14_versionium_record:
+      status: OPEN
+      depends_on: [COSA9_idearium_sync, COSA13_auto_update]
+      does: "Every install, switch, rollback and remove is written to Versionium through Idearium (the one write door, RAID is the only write authority), with checksum, outcome, reason and the data-snapshot reference; queued and replayed when Idearium is down. COS's version list can be shown from the record (Nexus's own history in Idearium's repo view), and `repo diff` between two Nexus releases works from it."
+      proof: "a switch while Idearium is down is recorded once, in order, after it returns; the record and COS's store agree (a test compares them); Idearium shows the switch and any rollback with its reason."
+  failure_modes:
+    - "Auto-switch during a running job: idle check plus the normal snapshot and rollback."
+    - "Record and store disagree (record says v2 running, store says v1): the test compares them and COS's store wins, the difference is reported, never silently fixed."
+    - "A release that downloads from Clear Glass is a stranger's zip: checksum and quarantine apply before install, same as a drop."
+    - "Taskbar/tray behaviour differs on Windows: unverified here."
+  question: "Is the update rule off / ask / auto with auto-switch only when idle, as I recommend? And do you want the Versionium record to also hold the release files (I advise no, for the reason above)?"

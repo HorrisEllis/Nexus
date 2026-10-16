@@ -37,7 +37,6 @@ const SYSTEMS = [
   { id:'bridge',       port:9999,  label:'Bridge',       icon:'⟁', color:'#8890bb' },
   { id:'architect',    port:3747,  label:'Architect',    icon:'▲', color:'#ff8844' },
   { id:'ollama',       port:3749,  label:'Ollama',       icon:'◆', color:'#44ddaa' },
-  { id:'eravos',       port:3751,  label:'Eravos',       icon:'◎', color:'#dd44aa' },
   { id:'loom',         port:3752,  label:'Loom',         icon:'⊕', color:'#44aadd' },
   { id:'emerge',       port:4242,  label:'Emerge IDE',   icon:'◆', color:'#44ddaa' },
 ];
@@ -258,7 +257,7 @@ function _renderCard(meta, contract, health) {
 function _abbrev(id) {
   const m = { orchestrator:'orch', guardian:'gd', cortex:'cx', idearium:'idr',
                bridge:'br', architect:'arch', emerge:'em', copilot:'cp',
-               ollama:'ol', eravos:'er', loom:'loom' };
+               ollama:'ol', loom:'loom' };
   return m[id] || id;
 }
 

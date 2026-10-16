@@ -69,4 +69,3 @@
 #ch-accent{font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);margin-left:4px}
 
 /* ── Canvas channel ─────────────────────────────────────── */
-#ch-canvas.active{display:flex;flex-direction:column;overflow:hidden}

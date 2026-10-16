@@ -186,7 +186,6 @@ const SYSTEMS = {
   // autopilot's own real optional flag for each, so a dormant/not-yet-
   // started one doesn't trip a false alarm the same way clear-glass's
   // own optional:true already prevents above.
-  eravos:      { port: 3751, dataDir: 'data/eravos',      healthPath: '/health', label: 'Eravos' },
   intelligence:{ port: 3753, dataDir: 'data/intelligence', healthPath: '/health', label: 'Intelligence' },
   'ollama-bridge':{ port: 3749, dataDir: 'data/ollama',    healthPath: '/health', label: 'Ollama Bridge', optional: true },
   copilot:     { port: 3750, dataDir: 'data/copilot',      healthPath: '/health', label: 'Co-pilot', optional: true },

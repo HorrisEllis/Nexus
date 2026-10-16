@@ -217,28 +217,9 @@ async function main() {
   const BAT = fs.readFileSync(path.join(ROOT, 'cos', 'testenv', 'setup-vm.bat'), 'utf8');
   check('setup-vm.bat: CRLF, installs QEMU with winget, then runs provision.js', /\r\n/.test(BAT) && /winget install --id SoftwareFreedomConservancy\.QEMU/.test(BAT) && /provision\.js/.test(BAT));
 
-  // ── Eravos: a new organism becomes an Idearium idea or spec (no download) ──
-  for (const [file, noun] of [['ui/eravos/catalog/catalog-ui.js', 'organism'], ['eravos/ui/catalog/catalog-ui.js', 'mod']]) {
-    const srcUi = fs.readFileSync(path.join(ROOT, file), 'utf8');
-    check(`${file}: no download scaffold; CREATE IDEA and CREATE SPEC instead`, !/DOWNLOAD SCAFFOLD|_download\(/.test(srcUi) && /CREATE IDEA/.test(srcUi) && /CREATE SPEC/.test(srcUi));
-    const posted = [];
-    const parent = { postMessage: (m, o) => posted.push({ m, o }) };
-    const ctx = { window: {}, document: {}, console, localStorage: { getItem: () => null }, URL, Blob: function () {} };
-    ctx.window = ctx; ctx.window.parent = parent;
-    vm.createContext(ctx); vm.runInContext(srcUi, ctx);
-    const o = { id: 'wave-shaper', label: 'Wave Shaper', what: 'shapes waves', icon: '◆', category: 'Custom' };
-    const r = await ctx.CatalogUI.createInIdearium('spec', o, { textContent: '' });
-    check(`${file}: inside Idearium the request goes to the parent page (Idearium makes it)`, r.handedOff && posted[0].m.type === 'nexus:organism.create' && posted[0].m.mode === 'spec' && posted[0].m.tags.includes(`${noun}:wave-shaper`) && /shapes waves/.test(posted[0].m.text));
-    // standalone: the page calls Idearium's API itself
-    const calls = [];
-    const ctx2 = { console, localStorage: { getItem: () => 'http://127.0.0.1:4999' }, URL, document: {} };
-    ctx2.window = ctx2; ctx2.window.parent = ctx2; ctx2.window.open = (u) => calls.push(['open', u]);
-    ctx2.fetch = async (u, opt) => { calls.push([u, JSON.parse(opt.body)]); return { ok: true, json: async () => (u.endsWith('/api/ideas') ? { ok: true, idea: { uuid: 'i-1' } } : { ok: true, uuid: 's-1' }) }; };
-    vm.createContext(ctx2); vm.runInContext(srcUi, ctx2);
-    await ctx2.CatalogUI.createInIdearium('spec', o, { textContent: '' });
-    check(`${file}: standalone it creates the idea, then the spec linked to it, then opens Idearium`, calls[0][0] === 'http://127.0.0.1:4999/api/ideas' && calls[1][0] === 'http://127.0.0.1:4999/api/spec-engine/specs' && calls[1][1].ideaUuid === 'i-1' && calls[2][0] === 'open');
-  }
-  check('Idearium: takes organism.create only from its Eravos frame, then opens the idea or the New Spec dialog', /nexus:organism\.create/.test(APP) && /ev\.source !== frame\.contentWindow/.test(APP) && /openNewSpecModal\(\{ name: o\.label/.test(APP));
+  // ── Eravos: its "new organism → Idearium idea or spec" checks were here; ERAVOS was deleted 0.60.83 (James: "can you
+  // remove eravos?" · "Delete it outright."). What stays true: Idearium no longer takes organism.create at all.
+  check('Idearium: no organism.create handler left (ERAVOS deleted 0.60.82)', !/nexus:organism\.create/.test(APP));
 
   // ── loom: every new component mapped WITH its real edges (docs/CLAUDE.md rule 3) ──
   const { mapCosTestenv, FILES } = require(path.join(ROOT, 'loom', 'maps', 'cos-testenv-map.js'));
@@ -255,7 +236,7 @@ async function main() {
     }
   }
   check('loom: every require() in the new files is a wire (none missing)', complete, why);
-  check('loom: the edges the scanner cannot see are wires too (spawn of provision.js, Eravos → Idearium)', decl.wire.some(x => /cos\.testenv\.provision--.*setup-job/.test(x.id)) && decl.wire.some(x => /idearium\.api--nexus\.ui\.eravos\.catalog/.test(x.id)));
+  check('loom: the edges the scanner cannot see are wires too (spawn of provision.js)', decl.wire.some(x => /cos\.testenv\.provision--.*setup-job/.test(x.id)));
   const BOOT = fs.readFileSync(path.join(ROOT, 'loom', 'bootstrap.js'), 'utf8');
   check('loom: bootstrap runs the map and excludes its files from the scan', /mapCosTestenv\(driver\)/.test(BOOT) && /maps\/cos-testenv-map'\)\.FILES/.test(BOOT));
 

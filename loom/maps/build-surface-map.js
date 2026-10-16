@@ -116,6 +116,7 @@ const FILES = [
   ['idearium/ui/login.html', I('idearium/ui/login.html'), [I('idearium/api/index.js')]],                   // HTTP access/me, access/login
   ['clear-glass/src/accounts/idearium-login.js', I('clear-glass/src/accounts/idearium-login.js'), [I('clear-glass/src/passwords/vault.js'), I('idearium/api/index.js')]],   // vault.get(origin); HTTP POST access/login
   ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/plan-panel.js')]],   // §CT5 openPlanPanel, _gateBar
+  ['idearium/ui/js/code-tab-panels.js', I('idearium/ui/js/code-tab-panels.js'), [I('idearium/api/index.js'), I('idearium/ui/js/code-surface.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/repo-drawer-views.js')]],   // §0.60.82 CE6 · CE7 · CE9: …/file, …/code/assist, …/runs, …/agent/history; openManagePanel; rtView mounted in the Code tab
 ];
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
@@ -173,6 +174,10 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/spec-document.js'), '§RS9 repo.thread — the document reader handed to thread()'],
   [I('idearium/repo/spec-plan.js'), I('lib/spec-document.js'), '§RS9 derivePlan / planPrompt cut by the blocks; BOOKKEEPING'],
   [I('idearium/ui/js/app.js'), I('idearium/ui/js/code-surface.js'), '§CT5 the SSE handler → codeSurfaceOnEvent; renderRepoCode for the Code subtab'],
+  [I('idearium/ui/js/code-surface.js'), I('idearium/ui/js/code-tab-panels.js'), '§0.60.81 CE6 tree filter/add/delete, edit mode, Manage; CE7 _cxLinesHtml; CE9 cxPanelsHtml / cxAfterPaint'],
+  [I('idearium/ui/js/app.js'), I('idearium/ui/js/code-surface.js'), '§0.60.81 CE6 setRepoSubtab(files) → code; openApiRepoFile → csOpen (the Files tab merged)'],
+  [I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/code-surface.js'), '§0.60.81 CE6/CV1 Manage reads the Code tab\'s file and lines (CS); its rail is the file timeline (…/history, …/file/versions, …/versions/diff, …/versions/restore-file)'],
+  [I('idearium/ui/js/repo-drawer-views.js'), I('idearium/ui/js/repo-tasks.js'), '§0.60.81 CE9 _rtEl: the views draw into the Code tab mount when it is on screen'],
   [I('idearium/api/index.js'), I('idearium/repo/run-reconcile.js'), '§HP2 _reconcileRuns at boot (interruptedRows)'],
   // 0.60.26 — what lean mode holds is stopped on purpose: the callers read it before retrying or loading a model
   [I('orchestrator/orchestrator.js'), I('lib/lean-mode.js'), '0.60.26 gap-relay isHeld: no reconnect to a held diagnostic'],

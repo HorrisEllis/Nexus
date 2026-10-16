@@ -333,3 +333,28 @@ detailed record:
   the intelligence system itself, contract-queue) — it still needs the actual
   sequencing built, and the P0 safety gate named in the earlier session's
   idearium-agent-pipeline.spec still needs to come first.
+
+---
+
+## Addendum, 2026-10-16 — where each thread stands, read in code (not rewritten; status only)
+
+James pasted this document back on 2026-10-16. Each thread was checked against the tree that day (files read, not phasemap claims).
+
+| Thread | Status | What is real | What is missing |
+|---|---|---|---|
+| 1 Loom file/system/seamId | partly | capability-map scanner keeps the source file internally (`_sourceFile`) | file, system, seamId as queryable component fields; `seamId` appears nowhere in loom/ |
+| 2 Code understanding | partly | `nexus_read_range` (numbered lines, MCP); agent screenshot tool (`clear-glass/browser.js`) | the DevTools console as an agent-readable event or tool |
+| 3 This session as a NEXUS agent | partly | `.mcp.json` gives Claude Code the Nexus tools; `lib/claude-code-backend.js` runs headless Claude Code as a backend | NEXUS cannot address an interactive session |
+| 4 Accounts, chat URLs, paintroller | built | per-account sessions (`profile-tabs.js`), account capture (`userscript-nexus-wake.js`), chat URL per delta, `seq` cursor (`userscript-chat-stream.js`) | the account as its own field on the chat ledger |
+| 5 Copilot acts on its own | partly | scheduler + triggers + self-model check | copilot schedules only when told; its reasoning never picks what to schedule |
+| 6 One arc per repo | partly | per-phase build as bricks through RAID, retries, trace, run per brick (0.60.73–0.60.78); P0 gate largely landed (`lib/intake.js` recordVerdict, promote) | nothing chains every phase of a repo automatically |
+| 7 Other domains | not built | — | no non-NEXUS domain schema |
+| 8 Copilot upstream of RAID | partly | `/build` → RAID intake; `/api/route` → model door | plain conversation does not pass RAID's decision (ME5) |
+| 9 Self-maintenance aggregation | partly | spec census, nexus-self, loom gaps, component ledger | one aggregator reading them together |
+| 10 Diagnose half (DOM/nerve) | partly | semantic page tree, `/nerve/snapshot` | the console feed (thread 2); no proof copilot's diagnosis reads these |
+| 11 Edge-case taxonomy | built | `fault-taxonomy.js`, `lib/edge-cases.js`, schema | coverage per component not measured |
+| 12 Contract id ↔ history | partly | contract uuid; `contractUuid` column in the component ledger; contract trace (0.60.75) | the trace does not read the component ledger by `contractUuid` |
+| 13 Bulk spec import | partly | one spec at a time (`spec.import`) | a bulk import |
+| 14 Firefox userscript | partly | wake-word + per-provider scripts | chat capture loads only inside Clear Glass ("absent under Tampermonkey") |
+
+Count: 2 built, 11 partly, 1 not built. The doc's own order still holds: thread 9, then 1, then 4's cursor (built). The pipeline work since (docs/2026-10-15-pipeline-focus-phasemap.spec) is thread 6.

@@ -216,21 +216,6 @@
       "_confirmed": "server.js:2500"
     },
     {
-      "method": "GET",
-      "path": "/api/guardian/organism-queue",
-      "_confirmed": "server.js:2515"
-    },
-    {
-      "method": "GET",
-      "path": "/api/guardian/organism-queue/:id/zip",
-      "_confirmed": "server.js:2521"
-    },
-    {
-      "method": "POST",
-      "path": "/api/guardian/organism-queue/:id/ack",
-      "_confirmed": "server.js:2530"
-    },
-    {
       "method": "POST",
       "path": "/build",
       "_confirmed": "server.js:2543"

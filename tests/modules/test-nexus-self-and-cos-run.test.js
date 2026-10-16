@@ -136,7 +136,7 @@ async function main() {
   });
 
   await test('NS-202', 'every autopilot kernel is a system; ownership is total and exclusive', () => {
-    for (const n of ['orchestrator', 'cortex', 'guardian', 'idearium', 'architect', 'diagnostic', 'eravos', 'intelligence', 'ollama-bridge', 'versionium', 'copilot', 'loom', 'clear-glass', 'core']) assert.ok(systems.get(n), n);
+    for (const n of ['orchestrator', 'cortex', 'guardian', 'idearium', 'architect', 'diagnostic', 'intelligence', 'ollama-bridge', 'versionium', 'copilot', 'loom', 'clear-glass', 'core']) assert.ok(systems.get(n), n);
     assert.strictEqual(systems.ownerOf('ollama/server.js'), 'ollama-bridge');
     assert.strictEqual(systems.ownerOf('lib/x.js'), 'core');
     assert.ok(systems.skipped('idearium/repo/repos', true) && systems.skipped('guardian/data', true));

@@ -70,7 +70,6 @@ function tune(n){
   if(chId==='ch-perplexity-agent'){const f=document.getElementById('perplexity-agent-iframe');if(f&&!f.src.endsWith('agents/perplexity/index.html'))f.src='/ui/agents/perplexity/index.html';}
   if(chId==='ch-causal'){cgLoad();}
   if(chId==='ch-conversations'){convLoad();}
-  if(chId==='ch-canvas'){const f=document.getElementById('canvas-iframe');if(f&&!f.src)f.src='http://127.0.0.1:3751/';}
   if(chId==='ch-emerge'){const f=document.getElementById('emerge-iframe');if(f&&!f.src)f.src='/ui/emerge-ide.html';}
 }
 

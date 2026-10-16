@@ -547,11 +547,6 @@
     <div id="conv-list" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:0 2px"></div>
   </div>
 
-  <!-- CH: CANVAS — ERAVOS spatial canvas with NEXUS organisms -->
-  <div class="ch" id="ch-canvas">
-    <iframe id="canvas-iframe" src="" style="width:100%;height:100%;border:none;background:#06060e" title="NEXUS Canvas"></iframe>
-  </div>
-
   <!-- CH: NERVE — CFR field mapped onto the live node graph -->
   <div class="ch" id="ch-nerve" style="padding:0;overflow:hidden;">
     <div id="nerve-root" style="position:relative;width:100%;height:100%;background:#08080d;">
@@ -771,7 +766,6 @@ const CH_META=[
   {id:'ch-nerve',     name:'NERVE',      accent:'Relational tension map', railLabel:'⬡ Nerve'},
   {id:'ch-causal',       name:'CAUSAL GRAPH', accent:'Event causality · CFR sigma · Live force graph', railLabel:'◈ Causal'},
   {id:'ch-conversations',name:'CONVERSATIONS',accent:'Co-pilot log · Intent · Model · Channel', railLabel:'⌂ Log'},
-  {id:'ch-canvas',       name:'CANVAS',       accent:'ERAVOS spatial canvas · NEXUS organisms · Wires', railLabel:'⬡ Canvas'},
   {id:'ch-emerge',       name:'EMERGE IDE',   accent:'Phase 28 · Hot-load · Spec-first · Build from inside', railLabel:'⚡ IDE'},
   {id:'ch-orch-full', name:'ORCHESTRATOR', accent:':9000 · Full UI', hidden:true},
   {id:'ch-gd-full',   name:'GUARDIAN',     accent:':7820 · Full UI', hidden:true},
@@ -890,7 +884,6 @@ function tune(n){
   if(chId==='ch-perplexity-agent'){const f=document.getElementById('perplexity-agent-iframe');if(f&&!f.src.endsWith('agents/perplexity/index.html'))f.src='../agents/perplexity/index.html';}
   if(chId==='ch-causal'){cgLoad();}
   if(chId==='ch-conversations'){convLoad();}
-  if(chId==='ch-canvas'){const f=document.getElementById('canvas-iframe');if(f&&!f.src)f.src='http://127.0.0.1:3751/';}
   if(chId==='ch-emerge'){const f=document.getElementById('emerge-iframe');if(f&&!f.src)f.src='../emerge/emerge-ide.html';}
 }
 
@@ -2058,22 +2051,11 @@ window.NEXUS_UI_STATE = {
   causalGraph: () => {
     try { return CG.getState(); } catch(_) { return null; }
   },
-  canvasOrganisms: () => {
-    try {
-      const iframe = document.getElementById('canvas-iframe');
-      if (!iframe?.contentWindow?.KERNEL) return [];
-      const reg = iframe.contentWindow.KERNEL.registry;
-      const result = [];
-      reg.forEach((org, id) => result.push({ id, label: org.config?.label || id, online: org.state?.online }));
-      return result;
-    } catch(_) { return []; }
-  },
   activeSpotlights: () => window._cpSpotlitEls?.map(el=>el.id)||[],
   snapshot: () => JSON.stringify({
     channel: window.NEXUS_UI_STATE.currentChannel(),
     health: window.NEXUS_UI_STATE.healthMap(),
     causal: window.NEXUS_UI_STATE.causalGraph(),
-    organisms: window.NEXUS_UI_STATE.canvasOrganisms(),
     ts: Date.now(),
   }),
 };

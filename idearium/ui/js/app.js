@@ -38,16 +38,12 @@
 // §0.39.263 — the idearium that served this page comes first: an idearium on
 // another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
 // 0.39.263 — served standalone (idearium's own port, not under the orchestrator's /ui/),
-// the Eravos canvas cannot resolve ../<system>/ against this server: use the orchestrator's (the Architect is idearium's own, 0.39.299).
+// a framed system could not resolve ../<system>/ against this server (the Architect is idearium's own, 0.39.299; Eravos deleted 0.60.83).
 // §0.39.271 — the two frames start at about:blank (data-src holds the relative path):
-// loading ../eravos/ before this ran was a 404 on :4800 on every page load.
 (() => {
   try {
     if (typeof location === 'undefined') return;
-    const underUi = /^\/ui\//.test(location.pathname);
-    const orch = `${location.protocol}//${location.hostname}:9000/ui`;
     const set = () => {
-      const e = document.getElementById('eravos-frame'); if (e) e.src = underUi ? e.dataset.src : `${orch}/eravos/`;
       // §0.39.299 AR4 — the Architect is idearium's own page (architect.html), served wherever idearium is: no orchestrator needed
       const a = document.getElementById('architect-frame'); if (a) a.src = a.dataset.src;
     };
@@ -501,7 +497,7 @@ function setView(v) {
 // §0.39.271 N1 — Create/Build open from the repo's own tab row; their views keep the
 // repo in view with one bar that leads back, so leaving the repo row never looks like
 // a second Idearium. The top bar stays Welcome + Repos.
-const NEST_VIEW_LABEL = { brainstorm: 'Create › Brainstorm', ideas: 'Create › Ideas', eravos: 'Build › Eravos — organism canvas', 'architect-build': 'Build › Architect', 'spec-wizard': 'Build › Spec Builder' };
+const NEST_VIEW_LABEL = { brainstorm: 'Create › Brainstorm', ideas: 'Create › Ideas', 'architect-build': 'Build › Architect', 'spec-wizard': 'Build › Spec Builder' };
 function _syncNestCtx(v) {
   const bar = document.getElementById('nest-ctx');
   if (!bar) return;
@@ -1404,9 +1400,8 @@ async function openNewSpecModal({ name = '', description = '', ideaUuid = null }
   const groups = [
     ['COS archetypes — one compartment, real starting files', templates.filter(t => t.source === 'cos-archetype')],
     ['COS blueprints — several roles, one directory each', templates.filter(t => t.source === 'cos-blueprint')],
-    // §0.39.267 — James: "the eravos options need to be removed from this prompt." The API no longer lists
-    // eravos mods here (GET /api/spec-engine/templates?include=eravos still does).
-    ['spec-document templates', templates.filter(t => !String(t.source || '').startsWith('cos-') && t.source !== 'eravos-mod')],
+    // §0.39.267 — James: "the eravos options need to be removed from this prompt." · 0.60.83: ERAVOS deleted, its mods with it.
+    ['spec-document templates', templates.filter(t => !String(t.source || '').startsWith('cos-'))],
   ].filter(([, list]) => list.length);
   wrap.innerHTML = groups.map(([title, list]) =>
     `<div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin:6px 0 2px">${escapeHtml(title)} · ${list.length}</div>` + list.map(row).join('')).join('');
@@ -1950,7 +1945,7 @@ function toggleCompartment(key) {
 // them under that repo instead of listing them at the top level.
 function _syncNestScope() {
   document.body.classList.toggle('in-repo', !!REPO_DETAIL_OPEN);
-  const nestViews = ['brainstorm', 'ideas', 'eravos', 'spec-wizard'];   // §0.39.300 WS3 — the pipeline's Architect is not a repo's: it opens with no repo open
+  const nestViews = ['brainstorm', 'ideas', 'spec-wizard'];   // §0.39.300 WS3 — the pipeline's Architect is not a repo's: it opens with no repo open
   if (!REPO_DETAIL_OPEN && nestViews.includes(((document.querySelector('.view.active') || {}).id || '').replace(/^view-/, ''))) setView('repo');
   if (typeof renderTabTree === 'function') renderTabTree();
 }
@@ -2023,6 +2018,7 @@ let CURRENT_REPO_SUBTAB = null;
 function setRepoSubtab(name) {
   if (name === 'roadmap' || name === 'phasemap') name = 'phases';   // §0.39.271 P4 — one tab now
   if (name === 'agent') name = 'code';   // §0.48.0 OS9 — the agent lives in the Code tab; its settings in Settings → Agents
+  if (name === 'files') name = 'code';   // §CE6 0.60.82 — James: "the file and code tab merge." One tab; every old link to Files lands in Code
   CURRENT_REPO_SUBTAB = name;
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));
@@ -5207,7 +5203,16 @@ function _showIdeEditor(show) {
   document.getElementById('ide-editor').style.display = show ? '' : 'none';
 }
 
+// §CE6 0.60.82 — the Files tab merged into Code: a file opened anywhere (search, the atlas, Architect, a new file) opens in the
+// Code tab. The Files tab's own opener is kept below as openApiRepoFileInFiles (archived, §0.3), unreachable from the UI.
 async function openApiRepoFile(repoUuid, filePath) {
+  if (typeof csOpen === 'function') {
+    if (CURRENT_REPO_SUBTAB !== 'code') setRepoSubtab('code');
+    return csOpen(filePath);
+  }
+  return openApiRepoFileInFiles(repoUuid, filePath);
+}
+async function openApiRepoFileInFiles(repoUuid, filePath) {
   if (API_FILE_DIRTY && !confirm(`discard unsaved changes to ${ACTIVE_API_FILE}?`)) return;
   ACTIVE_API_FILE = filePath;
   API_FILE_DIRTY = false;
@@ -5677,35 +5682,7 @@ window.addEventListener('load', () => {
   setInterval(() => { if (CONNECTED) loadStats(); else nexusConnect(); }, 15000);
 });
 
-// ── 0.39.264 — a new Eravos organism starts here, as an idea or a spec ─────
-// James: "instead of download, it should create a idea or spec for a new
-// organism." Eravos (Build › Eravos, an iframe) posts { type:
-// 'nexus:organism.create', mode:'idea'|'spec', organism, text, tags }; only a
-// message from that frame is taken. The idea is made with Idearium's own API;
-// for 'spec' the New Spec dialog opens filled in and linked to the idea, so the
-// spec, its repo and its compartment are made exactly as any other spec's are.
-window.addEventListener('message', async (ev) => {
-  const d = ev.data;
-  if (!d || d.type !== 'nexus:organism.create') return;
-  const frame = document.getElementById('eravos-frame');
-  if (!frame || ev.source !== frame.contentWindow) { console.warn('[idearium] organism.create ignored: not from the Eravos frame'); return; }
-  const o = d.organism || {};
-  if (!/^[a-z0-9][a-z0-9-]*$/.test(String(o.id || ''))) { toast('Eravos sent an organism without a valid id', 'err'); return; }
-  try {
-    const r = await api('/api/ideas', { method: 'POST', body: JSON.stringify({ text: String(d.text || `ERAVOS ${d.kind || 'organism'}: ${o.label} (${o.id})`), tags: Array.isArray(d.tags) ? d.tags.slice(0, 12) : ['eravos', 'organism'] }) });
-    const idea = r.idea;
-    await loadIdeas();
-    if (d.mode === 'spec') {
-      await openNewSpecModal({ name: o.label || o.id, description: String(d.text || ''), ideaUuid: idea && idea.uuid });
-      toast(`${o.label || o.id}: idea made — finish the spec in the dialog`, 'ok');
-    } else {
-      setView('ideas');
-      if (idea) selectIdea(idea.uuid);
-      toast(`${o.label || o.id}: new idea in Create › Ideas`, 'ok');
-    }
-  } catch (e) { toast(`could not create the ${d.kind || 'organism'} idea: ${e.message}`, 'err'); }
-});
-
+// ── 0.39.264 → 0.60.83: the Eravos frame's "new organism" message handler was here; deleted with ERAVOS (James: "Delete it outright.").
 
 // ════════════════════════════════════════════════════
 // §0.39.284 W7 — THE REPO'S COMPONENT REGISTRY (Architect tab). James: "the architect tab should be the component

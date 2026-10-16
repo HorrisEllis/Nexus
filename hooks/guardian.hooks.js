@@ -393,20 +393,6 @@ const GUARDIAN_HOOKS = [
     updatedAt: "2026-07-09T00:00:00Z"
   },
   {
-    id: "guardian-hook-api-guardian-organism-queue-get-0125",
-    name: "guardian-api-guardian-organism-queue-get",
-    intent: "Read guardian organism-queue (generated from code by scripts/generate-hooks.js — refine by hand)",
-    type: "api",
-    direction: "unidirectional",
-    from: { surface: "*", layer: 0 },
-    to: { surface: "guardian", layer: 1, port: 7820 },
-    config: { path: "/api/guardian/organism-queue", method: "GET" },
-    contract: { axioms: [], sideEffects: [], idempotent: true },
-    references: { files: ["guardian/server.js"] },
-    status: "active",
-    updatedAt: "2026-07-09T00:00:00Z"
-  },
-  {
     id: "guardian-hook-build-post-0126",
     name: "guardian-build-post",
     intent: "Write build (generated from code by scripts/generate-hooks.js — refine by hand)",
