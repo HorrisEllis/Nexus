@@ -195,6 +195,7 @@ function harness() {
     });
 
     await test('MG-14', 'runs: the route; each run a pipeline; opened, its files; rewind asks with a dry run first', async () => {
+      await page.click('.cs-vtab:has-text("runs")');   // 0.60.103 TB5: the bottom panels are the Runs view
       await page.click('.cx-tab:has-text("runs")');
       await page.waitForSelector('.cx-run');
       assert.deepStrictEqual(await page.$$eval('.cx-route .cx-hop', els => els.map(e => e.textContent)), ['ollama:big', 'gemini']);

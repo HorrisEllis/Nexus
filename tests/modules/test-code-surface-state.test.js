@@ -141,7 +141,7 @@ function harness() {
     const puts = () => page.evaluate(() => CALLS.filter(c => c.method === 'PUT' && c.p.endsWith('/surface')).map(c => c.body));
 
     await page.goto(pathToFileURL(harness()).href);
-    await page.evaluate(() => renderRepoCode(REPO));
+    await page.evaluate(() => { CS.view = 'files'; renderRepoCode(REPO); });
     await page.waitForSelector('.cs-file[data-path="src/a.js"]');
 
     await test('SS-10', 'opening a file and picking lines publishes the surface once it settles (by ui)', async () => {
