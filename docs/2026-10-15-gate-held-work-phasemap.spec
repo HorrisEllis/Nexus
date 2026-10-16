@@ -686,3 +686,30 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 #     beside the others. The trace lists them; nothing is a second record (§7.6: the nodes are the record the trace projects).
 #   proof: one real contract build leaves, per brick attempt, an .input, a .response and an .output linked by causedBy, and one .deps
 #     per brick; an Ollama attempt leaves a .response too; the trace names a missing one as a hole.
+
+# ## ADDENDUM 2026-10-16 (j) — GW27 widened: the whole node taxonomy, carried by the refactor tool (supersedes (i)'s scope; (i) stays)
+# James (2026-10-16), after (i) was mapped: "more than just those nodes. look at the ohases fube the refactor tool or featue" ·
+# "node taxonomy".
+# His direction, recorded as his: not six pipeline node types. Everything goes on the node taxonomy, and the refactor tool is
+# how a repo (Nexus included) gets there.
+# Read in the maps and code on 2026-10-16:
+#   the taxonomy exists: docs/2026-09-29-nex-node-store-phasemap.spec. N0 census (lib/nexstore/census.js →
+#     docs/nexstore-type-catalogue.yaml: 303 shapes, kinds record 148 · ledger 135 · ring 16 · snapshot 2 · edge 1 · lattice 1,
+#     0 unclassified, Guardian's node set the reference), N1 record+log (lib/nexstore/record.js, log.js: hash-chained, no write
+#     without causedBy) and N2 types+gates are DONE. N3–N18 and N24 ("No more json. Only yaml node types using and expanding the
+#     taxonomy.") are OPEN.
+#   the refactor tool is mapped and not built: docs/2026-10-13-projects-raid-and-gates-phasemap.spec RF0 (read the architecture
+#     against the taxonomy), RF1 (the migration as phases, "emit a node file per component"), RF2 (apply one phase at a time,
+#     snapshot first, tests after). lib/architecture-migrate.js does not exist. His decision_refactor_tool is still open:
+#     [A] proposal engine (coder's recommendation) · [B] one-pass rewriter · [C] report only.
+#   already built to lean on: idearium/repo/architecture.js architecture() + toNodes() (a repo's registry as Guardian's nodes:
+#     .component .hook .wire .event .command .contract .system); lib/project-decompose.js + lib/component-store.js.
+#   the pipeline's own units are missing from the taxonomy: phase, brick, dep, file (and run, which is written since 0.60.50 but the
+#     catalogue predates it). Dependencies are edges, and the catalogue holds one edge type in all.
+# Coder's reading (to confirm): GW27 writes its nodes through the NEX log (N1), not only as loose node files, so causedBy is
+# enforced by the store. New types go through the census and a schema each (the taxonomy grows, never a free-form file). After
+# "A brick is a chunk", the brick is the `chunk` type with a field saying build brick or spec section, rather than a second type.
+# To confirm with him.
+# Order proposed: (1) re-run the N0 census (the catalogue is from 0.39.300) and add phase · chunk(brick) · dep(edge) · file ·
+# input · output · run; (2) GW27 writes them per brick through the N1 log; (3) RF0 reads any repo against the taxonomy;
+# (4) RF1/RF2 move it, behind his decision_refactor_tool (A recommended); N24 and N10 retire the JSON writers the census finds.
