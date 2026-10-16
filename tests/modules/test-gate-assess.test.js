@@ -120,7 +120,9 @@ const run = (p, executors, onEvent = () => {}) => CG.schedule(p, { root: tmp, ex
     const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     assert.ok(api.includes('assessing: { read: codeOf }'));
     assert.ok(api.includes("const dispatch = async (hops, { gate, assessment = null }) => {"));
-    assert.ok(/CONTEXT — you import \$\{assessment\.context\.needs\.join/.test(api));
+    // §GW24 0.60.76 — the dependencies' code goes through PP.contextNote: ranked, cut to the agent's budget, the cut recorded
+    assert.ok(api.includes('PP.contextNote({ needs: assessment.context.needs'));
+    assert.ok(api.includes('[`${gate.id}.context`]: ctx.summary'));
   });
 
   fs.rmSync(tmp, { recursive: true, force: true });

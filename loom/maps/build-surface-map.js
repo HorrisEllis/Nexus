@@ -45,6 +45,15 @@ const FILES = [
   ['lib/spec-collect.js', I('lib/spec-collect.js'), [
     I('nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
   ]],
+  // 0.60.74 COSA10 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." Pure: its readers
+  // (notes counts, roadmap, last activity) are passed in by idearium/api projects.overview
+  ['idearium/lib/projects.cjs', I('idearium/lib/projects.cjs'), []],
+  // 0.60.73 WB1/WB2 — James chose option 1: WARP around the agent the ladder and RAID already chose (cache, axiom gate, retain)
+  ['lib/warp-rung.js', I('lib/warp-rung.js'), [
+    I('lib/seam/adapters/warp-cascade.js'),                     // require — createWarpDispatch (unifiedDispatch, one provider, one attempt)
+    I('warp/plugins/crystallizer-flatfile.js'),                 // require — the exact cache (data/warp/rung-crystals.json)
+    I('warp/dispatch/population.js'),                           // require — retention and promotion after 3 passing results
+  ]],
   // 0.60.28 PF1 — ready before run: Guardian's facts per agent, and the build's pure check over its ladder
   ['guardian/lib/provider-ready.js', I('guardian/lib/provider-ready.js'), []],
   ['lib/run-ready.js', I('lib/run-ready.js'), []],
@@ -76,6 +85,7 @@ const FILES = [
   ['idearium/repo/run-reconcile.js', I('idearium/repo/run-reconcile.js'), []],
   // §0.50.0 RS10 — the Phases tab on the thread: HTTP phases, thread, plan; plan-panel.js (_gateBar, _ledgerHtml, openPlanPanel); work-surface.js (wsOpenInCode)
   ['idearium/ui/js/phases.js', I('idearium/ui/js/phases.js'), [I('idearium/api/index.js'), I('idearium/ui/js/plan-panel.js'), I('idearium/ui/js/work-surface.js')]],
+  ['idearium/ui/js/projects.js', I('idearium/ui/js/projects.js'), [I('idearium/api/index.js'), I('idearium/ui/js/app.js')]],   // §0.60.74 COSA10 HTTP my-projects; enterRepoDetail/selectApiRepo, escapeHtml, api
   // §0.39.350 CT4 — Settings → Models: HTTP ollama/check, ollama/check/ask; idearium/api runs lib/ollama-check.js
   ['lib/ollama-check.js', I('lib/ollama-check.js'), []],
   ['idearium/ui/js/ollama-check.js', I('idearium/ui/js/ollama-check.js'), [I('idearium/api/index.js')]],
@@ -110,6 +120,25 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('cortex/core/raid/officiator.js'), I('cortex/core/raid/index.js'), '§RT1 0.60.78 decideForContract candidates walked; recordOutcome on an answer (never on a silence)'],
+  [I('cortex/boot.js'), I('cortex/core/raid/officiator.js'), '§RT1 0.60.78 GET /api/raid/officiator (parked) · POST /api/raid/officiator/unpark'],
+  [I('idearium/api/index.js'), I('cortex/boot.js'), '§RT1 0.60.78 HTTP raid.held / raid.held.unpark → cortex /api/raid/officiator'],
+  [I('idearium/ui/js/projects.js'), I('idearium/api/index.js'), '§RT1 0.60.78 HTTP GET /api/raid/held, POST /api/raid/held/unpark — the RAID intake line in My projects'],
+  [I('idearium/api/index.js'), I('lib/phase-plan.js'), '§GW24 0.60.76 PP.contextNote — the dependencies\' code ranked and cut to the budget'],
+  [I('idearium/api/index.js'), I('cortex/core/raid/contract-gates.js'), '§GW24 0.60.76 Boundaries.budget — the first agent\'s learned size sets the brick\'s context budget'],
+  [I('idearium/api/index.js'), I('cortex/core/raid/contract-trace.js'), '§GW3 0.60.75 repo.phases.contract ?trace=1 — trace(), lines()'],
+  [I('idearium/api/index.js'), I('cortex/core/raid/contract-intake.js'), '§GW3 0.60.75 ?trace=1 — listQueue(): RAID\'s row for the run'],
+  [I('idearium/ui/js/plan-panel.js'), I('idearium/api/index.js'), '§GW3 0.60.75 ppTrace — HTTP GET /phases/contract?trace=1'],
+  [I('idearium/api/index.js'), I('idearium/lib/projects.cjs'), '§COSA10 0.60.74 projects.overview: GET /api/my-projects'],
+  [I('idearium/api/index.js'), I('lib/repo-notes.js'), '§COSA10 0.60.74 projects.overview notesOf → counts()'],
+  [I('idearium/api/index.js'), I('lib/activity-log/compartment.js'), '§COSA10 0.60.74 projects.overview activityOf → list(u, {limit:1})'],
+  [I('idearium/api/index.js'), I('idearium/repo/roadmap.js'), '§COSA10 0.60.74 projects.overview phasesOf → buildRoadmap'],
+  [I('idearium/ui/js/projects.js'), I('idearium/api/index.js'), '§COSA10 0.60.74 HTTP GET /api/my-projects — the My projects button'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§COSA10 0.60.74 the projects row → GET /api/my-projects'],
+  [I('idearium/api/index.js'), I('lib/warp-rung.js'), '§WB1 0.60.73 WR.wrap: phase build (gate), planner (cache), proof repair (gate), draft review (gate)'],
+  [I('cortex/core/raid/officiator.js'), I('lib/warp-rung.js'), '§WB2 0.60.73 _synthesizeCore: cache mode, a reply that does not parse as a contract fails the hard axiom'],
+  [I('cortex/core/raid/contract-intake.js'), I('lib/warp-rung.js'), '§WB2 0.60.73 _realAgentExecutor: cache mode, a retry is fresh'],
+  [I('lib/build-paths.js'), I('lib/warp-rung.js'), '§WB1 0.60.73 the census counts a call inside WR.wrap as WARP (read as text, not required)'],
   [I('clear-glass/src/copilot/bridge.js'), I('lib/claude-code-backend.js'), '§0.59.14 _callClaudeCode → ask(): Claude Code as a co-pilot backend'],
   [I('idearium/cli/route-commands.js'), I('lib/nexus-read.js'), '§0.59.12 the log / file / grep rows (local)'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/main/index.js'), '§0.59.12 /cli/open → openOrFocus()'],

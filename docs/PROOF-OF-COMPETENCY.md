@@ -261,3 +261,28 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **Evidence:** `tests/modules/test-release-notes.test.js` (6/6); a live sync in the coder's container recorded 280
     releases, 208 with their commits; `CHANGES.md`; `CHANGELOG-0.60.72.md`.
 
+- **2026-10-16: "Option 1 (my recommendation): wrap each of those agent calls in WARP ... while the build ladder and RAID still choose which agent runs."**
+  - **Context:** a census (CK-255) found 5 build paths calling their agent directly, bypassing WARP. He was offered two
+    designs: wrap each call in WARP while RAID still chooses (option 1, the coder's recommendation), or hand agent choice
+    to WARP's own cascade (option 2). He took option 1.
+  - **What it shows:** keeping one authority per decision. Option 2 would have given the system a second router beside
+    RAID; option 1 adds WARP's cache and gates without moving who decides. Building it surfaced the limit of caching an
+    agentic build (its work is the files it writes, not its reply), which is why those paths retain but never replay.
+  - **Evidence:** `tests/modules/test-warp-rung.test.js` (7/7); `lib/build-paths.js` census: 0 bypasses (was 5),
+    CK-255 green; `CHANGELOG-0.60.73.md`.
+- **2026-10-16: "all the ones to help me make money, need to be done. heklp wirth overwhekm need to be done. that get the pipeline working need to e done. cos as a working test env need to be done."**
+  - **Context:** after a survey of 1,472 phases (872 open), maps that restated each other, and three sessions building
+    at once. He named the four outcomes that matter, and that the pipeline (intent, routing, chunking, gating) is vital.
+  - **What it shows:** prioritising by outcome rather than by feature. Four outcomes turned an open-ended backlog into
+    one ordered list of existing phases, with nothing new mapped. The first item, an overview of his own projects, was
+    built the same day. Building it surfaced a silent route collision, now guarded by a test.
+  - **Evidence:** `docs/2026-10-15-pipeline-focus-phasemap.spec` (addendum 2026-10-16); `tests/modules/test-projects-overview.test.js` (6/6); `CHANGELOG-0.60.74.md`.
+- **2026-10-16: "Yes. It’s analysis. The bricks." · "A brick is a chunk. Like analysis."**
+  - **Context:** asked whether a gate's unit of work is the brick. The coder offered two readings of "It's analysis";
+    he answered with neither, defining the term instead: a brick is a chunk, the part analysis breaks a whole into.
+  - **What it shows:** precise vocabulary as architecture. One word for one unit let three features land on the same
+    key the same day: the trace per brick (0.60.75), the context budget per brick (0.60.76), and the run that follows
+    the brick across agents and chats (0.60.77). Correcting the coder's reading instead of accepting it kept the record
+    his.
+  - **Evidence:** `docs/2026-10-15-gate-held-work-phasemap.spec` addenda (d) and (f); `tests/modules/test-run-state.test.js`
+    RS-50..55; `CHANGELOG-0.60.77.md`.

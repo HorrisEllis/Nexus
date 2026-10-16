@@ -1258,7 +1258,10 @@ async function _realAgentExecutor(queueRow) {
   // submitContract() resolves forAgent onto the QUEUE ROW itself
   // (contract.forAgent || opts.forAgent), never writing it back onto the
   // raw contract object. queueRow.forAgent is the real, resolved value.
-  const result = await dispatchToNcpAgent(queueRow.contract.content, { provider: queueRow.forAgent || 'auto' });
+  // §WB2 0.60.73 — WARP around the agent RAID resolved (James: "Option 1"). A retry (retryCount > 0) never reads the cache:
+  // the same input already failed its gate once.
+  const result = await require('../../../lib/warp-rung.js').wrap(() => dispatchToNcpAgent(queueRow.contract.content, { provider: queueRow.forAgent || 'auto' }),
+    { kind: 'raid-worker-brick', provider: queueRow.forAgent || 'auto', key: queueRow.contract.content, mode: 'cache', fresh: (queueRow.retryCount || 0) > 0 });
   if (!result || !result.ok) {
     throw new Error(`no real agent response available (forAgent=${queueRow.forAgent || 'auto'}) — guardian unreachable, no connected provider, or an empty response`);
   }

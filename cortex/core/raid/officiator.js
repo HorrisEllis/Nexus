@@ -37,7 +37,7 @@ const hatForge = require('../../../lib/hat-forge.js');
 const { submitContract } = require('./contract-intake.js');
 
 const MODULE_ID = 'raid-officiator';
-const VERSION   = '1.0.0';
+const VERSION   = '1.1.0';
 const INTERVAL_MS = parseInt(process.env.OFFICIATOR_INTERVAL_MS || '20000', 10);
 
 let _timer = null;
@@ -66,6 +66,20 @@ const _seen = new Set();
 // MAX_ATTEMPTS the drop is parked (said once), never sent again until its record is cleared.
 const BACKOFF_MS = parseInt(process.env.OFFICIATOR_BACKOFF_MS || String(10 * 60 * 1000), 10);
 const MAX_ATTEMPTS = parseInt(process.env.OFFICIATOR_MAX_ATTEMPTS || '4', 10);
+// §RT1 0.60.78 — James: "Next" (step 5 of his order: routing). His 0.60.44 log: 63 failed syntheses and 45 parked drops, all
+// "no real agent response (forAgent=ollama)", parked drops cleared only by hand-editing this file. Three causes, read here:
+//   1. an agent that did not answer was charged to the DROP (its attempts spent, then parked): the agent's failure, not the drop's
+//   2. no fallback: RAID picked the same slow agent every tick, and nothing told it otherwise
+//   3. parked was forever
+// Now (the GT1 rule, classify before learning): a drop walks RAID's ranked candidates (up to MAX_AGENTS); an agent that does
+// not answer is skipped for the next and teaches RAID nothing; one that answers with no contract counts against the drop and
+// teaches RAID (recordOutcome false); a success teaches it too. When no agent answers, no drop is charged: the officiator
+// waits (AGENT_BACKOFF_MS, doubling, capped), persisted beside the attempts. Parked drops get a daily try, and unpark() clears them.
+const MAX_AGENTS = parseInt(process.env.OFFICIATOR_MAX_AGENTS || '3', 10);
+const AGENT_BACKOFF_MS = parseInt(process.env.OFFICIATOR_AGENT_BACKOFF_MS || String(2 * 60 * 1000), 10);
+const PARKED_RETRY_MS = parseInt(process.env.OFFICIATOR_PARKED_RETRY_MS || String(24 * 3600 * 1000), 10);
+const AGENTS_KEY = '__agents';   // the attempts file's record of the agents' own wait (not a drop)
+const AGENT_FAILURE = /no real agent response|guardian unreachable|no connected provider|no available agent/i;
 const _fs = require('fs'), _path = require('path');
 function _attemptsFile() { return _path.join(_path.dirname(intake.INTAKE_DIR), 'officiator-attempts.json'); }
 function _readAttempts() { try { return JSON.parse(_fs.readFileSync(_attemptsFile(), 'utf8')) || {}; } catch (_) { return {}; } }
@@ -73,7 +87,8 @@ function _writeAttempts(a) { try { _fs.mkdirSync(_path.dirname(_attemptsFile()),
 /** due(rec, now) → may this drop be tried now (no record, or its backoff has passed and it is not parked) */
 function due(rec, now = Date.now()) {
   if (!rec || !rec.n) return true;
-  if (rec.n >= MAX_ATTEMPTS) return false;
+  // §RT1 0.60.78 — parked is not forever: a parked drop gets one more try a day (said), so nothing waits on a hand edit
+  if (rec.n >= MAX_ATTEMPTS) return now - (rec.at || 0) >= PARKED_RETRY_MS;
   return now - (rec.at || 0) >= Math.min(BACKOFF_MS * 2 ** (rec.n - 1), 24 * 3600 * 1000);
 }
 
@@ -163,22 +178,46 @@ function _agentFor(opts = {}, what = 'synthesize a contract from a staged artifa
 
 async function _synthesizeCore(prompt, opts = {}) {
   if (!opts.forAgent) { try { await require('./index.js').ready(); } catch (_) {} }   // §0.60.3 — health read in this process before RAID decides
-  const forAgent = _agentFor(opts);
-  if (!forAgent) return { ok: false, reason: 'RAID found no available agent to synthesize with' };
+  // §RT1 0.60.78 — RAID's ranked candidates, best first (an explicit forAgent: only that one)
+  let candidates = [], cluster = null;
+  if (opts.forAgent) candidates = [opts.forAgent];
+  else {
+    try { const d = require('./index.js').decideForContract({ intention: 'synthesize a contract from a staged artifact' }); cluster = d && d.cluster;
+      candidates = [...new Set([d && d.agent, ...((d && d.candidates) || []).map(c => c.name)].filter(Boolean))].slice(0, MAX_AGENTS); } catch (_) { candidates = []; }
+  }
+  const forAgent = candidates[0] || null;
+  if (!forAgent) return { ok: false, cls: 'agent', reason: 'RAID found no available agent to synthesize with' };
   const hat = hatForge.get('the_officiator');
   if (!hat) {
     return { ok: false, reason: 'the_officiator hat is not seeded — run lib/hat-seed.js\'s seedHats() first' };
   }
   const { dispatchToNcpAgent } = require('../../../copilot/lifeline.js');
-  const result = await dispatchToNcpAgent(prompt, { provider: forAgent });
-  if (!result || !result.ok) {
-    return { ok: false, reason: `no real agent response (forAgent=${forAgent}) — guardian unreachable or an empty response` };
+  // §WB2 0.60.73 — WARP around the agent RAID chose (James: "Option 1"): an identical prompt retained 3 times is served
+  // from WARP's cache; a reply that does not parse as a contract fails the hard axiom, so it is never retained or served.
+  const parses = [{ id: 'parses-as-contract', severity: 'hard', check: (e) => !!_parseSynthesizedContract(e.data.output) }];
+  const learn = (agent, ok) => { if (opts.forAgent) return; try { require('./index.js').recordOutcome(agent, cluster, ok); } catch (_) { /* learning never stops synthesis */ } };
+  const tried = [];
+  for (const agent of candidates) {
+    const result = await require('../../../lib/warp-rung.js').wrap(() => dispatchToNcpAgent(prompt, { provider: agent }), { kind: 'officiator-synthesis', provider: agent, key: prompt, mode: 'cache', axioms: parses, fresh: !!opts.fresh });
+    const unparsed = (result && result.warp && result.warp.source === 'rejected') || (result && result.ok && !_parseSynthesizedContract(result.text));
+    if (unparsed) {
+      // it answered, and the answer is no contract: the capability class — RAID learns, the next agent is tried
+      tried.push({ agent, cls: 'content', why: `the_officiator's real response could not be parsed as a real contract JSON object: ${(result.text || '').slice(0, 200)}` });
+      learn(agent, false);
+      continue;
+    }
+    if (!result || !result.ok) {
+      // it did not answer: transient — nothing is learned (GT1), the next agent is tried
+      tried.push({ agent, cls: 'agent', why: `no real agent response (forAgent=${agent}) — guardian unreachable or an empty response` });
+      continue;
+    }
+    learn(agent, true);
+    return { ok: true, synthesized: _parseSynthesizedContract(result.text), agent, tried };
   }
-  const synthesized = _parseSynthesizedContract(result.text);
-  if (!synthesized) {
-    return { ok: false, reason: `the_officiator's real response could not be parsed as a real contract JSON object: ${(result.text || '').slice(0, 200)}` };
-  }
-  return { ok: true, synthesized };
+  // every candidate failed: the drop's failure only if some agent answered (with no contract); else the agents' failure
+  const content = tried.find(x => x.cls === 'content');
+  const reason = content ? content.why : `no real agent response (tried ${tried.map(x => x.agent).join(', ')}) — guardian unreachable or an empty response`;
+  return { ok: false, cls: content ? 'content' : 'agent', reason, tried };
 }
 
 /**
@@ -258,9 +297,10 @@ async function synthesizeFromContext(contextText, opts = {}) {
 
 async function officiate(drop, opts = {}) {
   if (!opts.forAgent) { try { await require('./index.js').ready(); } catch (_) {} }   // §0.60.3
-  const forAgent = _agentFor(opts);
-  const core = await _synthesizeCore(_buildSynthesisPrompt(drop), { ...opts, forAgent });
+  // §RT1 0.60.78 — RAID's candidates are walked inside the core; only a caller's own forAgent pins one
+  const core = await _synthesizeCore(_buildSynthesisPrompt(drop), opts);
   if (!core.ok) return core;
+  const forAgent = opts.forAgent || core.agent || null;
   const synthesized = core.synthesized;
 
   const s = drop.summary || {};
@@ -313,30 +353,44 @@ async function tick() {
   try {
     const drops = intake.list().filter(d => d.state === intake.STATE.STAGED && !d.officiated);
     const attempts = _readAttempts();
-    let synthesized = 0, failed = 0, waiting = 0, parked = 0;
+    let synthesized = 0, failed = 0, waiting = 0, parked = 0, released = 0;
+    // §RT1 — records written before 0.60.78 charged an agent's silence to the drop: released (said), they were never the drop's
+    for (const [k, r] of Object.entries(attempts)) if (k !== AGENTS_KEY && r && AGENT_FAILURE.test(r.reason || '') && r.cls !== 'content') { delete attempts[k]; released++; }
+    if (released) { _writeAttempts(attempts); console.log(`[${MODULE_ID}] released ${released} drop(s) parked or waiting only because no agent answered — they are tried again`); }
+    // §RT1 — the agents' own wait: when none answered, nobody is asked again before it passes
+    const ag = attempts[AGENTS_KEY];
+    if (ag && ag.until && Date.now() < ag.until) return { ok: true, checked: drops.length, synthesized, failed, waiting: drops.length, parked, released, agentsWait: { until: ag.until, reason: ag.reason } };
     for (const drop of drops) {
       const id = drop.dropId || drop.id;
       if (!id || _seen.has(id)) continue;
       const rec = attempts[id];
       if (!due(rec)) { if (rec.n >= MAX_ATTEMPTS) parked++; else waiting++; continue; }
+      if (rec && rec.n >= MAX_ATTEMPTS) console.log(`[${MODULE_ID}] parked drop ${id.slice(0, 8)}: its daily try (${rec.reason || 'no reason kept'})`);
       const result = await officiate(drop);
       if (result.ok) {
-        _seen.add(id); synthesized++; if (rec) { delete attempts[id]; _writeAttempts(attempts); }
+        _seen.add(id); synthesized++;
+        if (rec || attempts[AGENTS_KEY]) { delete attempts[id]; delete attempts[AGENTS_KEY]; _writeAttempts(attempts); }
         console.log(`[${MODULE_ID}] synthesized contract ${result.queueId?.slice(0, 8)} from drop ${id.slice(0, 8)}`);
         continue;
       }
       failed++;
-      // no agent at all is not this drop's failure: no attempt is spent, and the rest wait for the next tick
-      if (/no available agent/.test(result.reason || '')) { console.warn(`[${MODULE_ID}] ${drops.length} drop(s) waiting: ${result.reason}`); break; }
+      // §RT1 — no agent answered (or none is available): not this drop's failure. No attempt is spent; the agents wait,
+      // doubling from AGENT_BACKOFF_MS up to an hour, and every drop waits with them (they would go to the same agents)
+      if (result.cls === 'agent' || (!result.cls && AGENT_FAILURE.test(result.reason || ''))) {
+        const k = ((attempts[AGENTS_KEY] && attempts[AGENTS_KEY].k) || 0) + 1;
+        const waitMs = Math.min(AGENT_BACKOFF_MS * 2 ** (k - 1), 3600 * 1000);
+        attempts[AGENTS_KEY] = { k, until: Date.now() + waitMs, reason: String(result.reason || '').slice(0, 200), tried: (result.tried || []).map(x => x.agent) };
+        _writeAttempts(attempts);
+        console.warn(`[${MODULE_ID}] no agent answered (${(result.tried || []).map(x => x.agent).join(', ') || 'none available'}); ${drops.length} drop(s) wait ${Math.round(waitMs / 60000)} min — no drop is charged`);
+        break;
+      }
       const n = ((rec && rec.n) || 0) + 1;
-      attempts[id] = { n, at: Date.now(), reason: String(result.reason || '').slice(0, 200) };
+      attempts[id] = { n, at: Date.now(), cls: 'content', reason: String(result.reason || '').slice(0, 200), tried: (result.tried || []).map(x => x.agent) };
       _writeAttempts(attempts);
-      if (n >= MAX_ATTEMPTS) { _seen.add(id); console.warn(`[${MODULE_ID}] drop ${id.slice(0, 8)} parked after ${n} failed tries (${result.reason}); clear it in ${_attemptsFile()} to try again`); }
+      if (n >= MAX_ATTEMPTS) console.warn(`[${MODULE_ID}] drop ${id.slice(0, 8)} parked after ${n} failed tries (${result.reason}); tried again daily, or now with \`idearium raid unpark ${id.slice(0, 8)}\``);
       else console.warn(`[${MODULE_ID}] synthesis failed for drop ${id.slice(0, 8)} (try ${n}/${MAX_ATTEMPTS}, next in ${Math.round(Math.min(BACKOFF_MS * 2 ** (n - 1), 864e5) / 60000)} min): ${result.reason}`);
-      // the agent did not answer: the other drops would go to the same agent now; they wait for the next tick
-      if (/no real agent response/.test(result.reason || '')) break;
     }
-    return { ok: true, checked: drops.length, synthesized, failed, waiting, parked };
+    return { ok: true, checked: drops.length, synthesized, failed, waiting, parked, released };
   } catch (e) {
     console.warn(`[${MODULE_ID}] tick failed, will retry next interval: ${e.message}`);
     return { ok: false, error: e.message };
@@ -353,8 +407,27 @@ function start(opts = {}) {
   console.log(`[${MODULE_ID}] v${VERSION} — listening for staged artifacts every ${intervalMs}ms`);
 }
 
+/** parked() → { drops: [{ id, n, parked, at, reason, tried, nextTry }], agents: the agents' wait or null } — what waits, and why */
+function parked() {
+  const a = _readAttempts();
+  const drops = Object.entries(a).filter(([k]) => k !== AGENTS_KEY).map(([id, r]) => ({ id, n: r.n || 0, parked: (r.n || 0) >= MAX_ATTEMPTS, at: r.at || null,
+    reason: r.reason || null, tried: r.tried || [], nextTry: (r.at || 0) + ((r.n || 0) >= MAX_ATTEMPTS ? PARKED_RETRY_MS : Math.min(BACKOFF_MS * 2 ** Math.max(0, (r.n || 1) - 1), 864e5)) }));
+  const ag = a[AGENTS_KEY];
+  return { file: _attemptsFile(), maxAttempts: MAX_ATTEMPTS, drops, agents: ag && ag.until && ag.until > Date.now() ? ag : null };
+}
+
+/** unpark(id | 'all') → { cleared: [...] } — a person or agent clears what waits; no hand edit of the attempts file */
+function unpark(which = 'all') {
+  const a = _readAttempts(); const cleared = [];
+  for (const k of Object.keys(a)) {
+    if (which === 'all' || k === which || (k !== AGENTS_KEY && which && k.startsWith(which))) { delete a[k]; cleared.push(k); _seen.delete(k); }
+  }
+  _writeAttempts(a);
+  return { cleared };
+}
+
 function stop() {
   if (_timer) { clearInterval(_timer); _timer = null; }
 }
 
-module.exports = { start, stop, tick, officiate, synthesizeFromContext, due, MAX_ATTEMPTS, MODULE_ID, VERSION };
+module.exports = { start, stop, tick, officiate, synthesizeFromContext, due, parked, unpark, MAX_ATTEMPTS, AGENTS_KEY, MODULE_ID, VERSION };

@@ -1234,7 +1234,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
              when nothing is open yet; collapses to a slim rail once you've
              entered a repo (see .repo-wrap.repo-open in CSS + exitRepoDetail()). -->
         <div class="repo-rail" id="repo-rail">
-          <div class="repo-rail-search"><input type="text" id="repo-rail-filter" placeholder="filter repos…" oninput="renderRepoLibrary()"></div>
+          <div class="repo-rail-search" style="display:flex;gap:6px"><input type="text" id="repo-rail-filter" placeholder="filter repos…" oninput="renderRepoLibrary()" style="flex:1"><button class="tb-btn" id="projects-btn" onclick="openProjects()" title="every project of yours: what is waiting on you, what is next, what moved last (0.60.74 COSA10)">My projects</button></div>
           <div class="repo-rail-body" id="repo-rail-body"></div>
         </div>
 
@@ -2582,6 +2582,7 @@ async function saveToIdearium(){
 <script src="js/agent-blocks.js"></script>
 <script src="js/nexus-atlas.js"></script>
 <script src="js/phases.js"></script>
+<script src="js/projects.js"></script>
 <script src="js/living-spec.js"></script>
 <script src="js/file-manage.js"></script>
 <script src="js/repo-environment.js"></script>

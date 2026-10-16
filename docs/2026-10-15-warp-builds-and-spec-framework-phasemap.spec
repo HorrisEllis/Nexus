@@ -44,7 +44,7 @@ phases:
   # Each phase: systems (declared, not guessed), files (real paths; "(new)" = to be created), depends_on, and specs —
   # the specs that own the behaviour it changes (each gets a dated ADDENDUM when the phase lands, §12.5).
   WB0_census:
-    status: DONE (0.60.67 — CK-255 red: 5 build paths bypass WARP)
+    status: "DONE (0.60.67 — CK-255 red: 5 build paths bypass WARP)"
     systems: [core, idearium, cos]
     files: [lib/build-paths.js (new), lib/checks/ck-255-warp-builds.js (new), lib/check-catalogue.js, cos/spec/check-catalogue.spec, tests/modules/test-build-paths.test.js (new)]
     depends_on: []
@@ -52,7 +52,7 @@ phases:
     does: "lib/build-paths.js: every build path, the call it makes, whether WARP is on it; CK-255 red while one bypasses WARP."
     proof: "today: red, naming phase build, whole-phase brick, officiator, RAID worker"
   WB1_warp_at_the_rung:
-    status: OPEN
+    status: "DONE (0.60.73) — lib/warp-rung.js; James chose option 1 (2026-10-16)"
     systems: [idearium, core]
     files: [idearium/api/index.js, idearium/spec-engine/warp-build-dispatch.js, lib/seam/adapters/warp-cascade.js, lib/repo-agent.js, lib/pipeline-routing.js, lib/warp-rung.js (new), tests/modules/test-warp-rung.test.js (new)]
     depends_on: [WB0_census]
@@ -60,7 +60,7 @@ phases:
     does: "lib/warp-rung.js wraps RA.dispatch in makeAttempt: cache/population lookup keyed by (repo, file, prompt hash), axiom gate on the injects, retain after the gate passes; the ladder unchanged."
     proof: "an identical brick retained 3x is served from WARP with no agent call; a reply failing an axiom never lands"
   WB2_raid_bricks_and_officiator_through_warp:
-    status: OPEN
+    status: "DONE (0.60.73) — CK-255 green on Nexus"
     systems: [cortex, copilot, core]
     files: [cortex/core/raid/contract-intake.js, cortex/core/raid/officiator.js, copilot/lifeline.js, lib/warp-rung.js, tests/modules/test-raid-officiator.js, tests/modules/test-lifeline-ollama-dispatch.test.js]
     depends_on: [WB1_warp_at_the_rung]
@@ -256,3 +256,20 @@ order: "WB0 → WB1 → WB2 (warp first: he asked 'make sure'); SF1 → SF2 → 
 # The spec-framework block gains a {template} line (spec-collect templateBrief) and meta.template: genesis in its example.
 # Coder's reading (to confirm): "use the templates" = the spec is laid out from Idearium's template catalog (genesis first),
 # not that the agent fills a template document's sections.
+
+## ADDENDUM 2026-10-16 — WB1/WB2 built (0.60.73): his decision, and what WARP can and cannot do for an agentic build
+# James (2026-10-16), choosing between the two options the coder put to him: "Option 1 (my recommendation): wrap each of
+# those agent calls in WARP (its cache, then the axiom gate, then keeping the result), while the build ladder and RAID still
+# choose which agent runs." He pasted option 1 back as his choice. Option 2 (WARP's cascade picks the agent) was not taken,
+# so RAID stays the one chooser (§9.1).
+# Built: lib/warp-rung.js wrap(call, {kind, provider, key, mode, axioms, fresh}) around the 5 bypassing calls: phase build,
+# proof repair and draft review (gate mode), the phase planner (cache mode, fresh on a re-plan), the officiator (cache mode,
+# hard axiom 'parses-as-contract'), the RAID worker brick (cache mode, fresh on a retry). One provider, one attempt: the ladder
+# owns retries. CK-255 green; test-warp-rung WR-01..07, test-build-paths BP-01..05 + BP-03b.
+# Found while building (read in source, 2026-10-16), and why gate mode exists: a repo-agent build's work is its side effects
+# (tool calls write files; injects land inside RA.dispatch). Replaying the reply text writes nothing, so a cache hit there would
+# be a lie. Gate mode retains (WARP learns the gate class) and never serves. Also found: no build caller passes WARP any axioms
+# (expand, codegen, spec-chunk build pass none), so WARP's axiom gate has been empty in practice; the officiator's parse check is
+# the first real one. Which axioms a build should carry is open (to ask him; the charter's axioms are a candidate).
+# Also fixed: this file did not parse as YAML (an unquoted status with ": " at WB0); BP-05 now covers it.
+

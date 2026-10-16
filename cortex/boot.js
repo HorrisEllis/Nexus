@@ -976,6 +976,18 @@ const server = http.createServer(async (req, res) => {
 
 
   // ── RAID ──────────────────────────────────────────────────────────────────
+  // §RT1 0.60.78 — what the officiator holds back, and why (the agents' wait, each drop's tries), and clearing it — the
+  // command `idearium raid parked` / `raid unpark` and Idearium's My projects read these; no hand edit of the attempts file
+  if (p === '/api/raid/officiator') {
+    json(res, 200, { ok: true, ...require('./core/raid/officiator.js').parked() });
+    return;
+  }
+  if (p === '/api/raid/officiator/unpark' && method === 'POST') {
+    const body = await readBody(req);
+    json(res, 200, { ok: true, ...require('./core/raid/officiator.js').unpark(body && body.id ? String(body.id) : 'all') });
+    return;
+  }
+
   if (p === '/api/raid/decide') {
     const intent = url.searchParams.get('intent') || '';
     const cfrCtx = { sigmaFloor: _field.entropy, regime: _field.regime };

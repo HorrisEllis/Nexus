@@ -23,6 +23,7 @@ import { spawnSync, spawn as spawnProc } from 'child_process';
 import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
+const WR = _require('../../lib/warp-rung.js');   // §WB1 0.60.73 — WARP around the agent the ladder and RAID chose (James: "Option 1")
 const _access = _require('../lib/access.cjs');   // §0.58.0 IA0 — who may act on Idearium
 // 0.60.27 AG1a — an agent call's tokens, estimated where it happens (lib/economy/tokens.js estimate-v1; no vendor tokenizer)
 const _tokEst = (t) => { try { return t ? _require('../../lib/economy/tokens.js').estimate(String(t)) : 0; } catch (_) { return 0; } };
@@ -916,7 +917,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // or one chunk (one file, its own short request, its own sessions; ck = { chunk, chunks, file } on every row)
   // §0.60.0 PC1 — verify(code) -> { ok, missing }: a planned file is checked for the exports its plan names; bare: the
   // request goes alone (no retrieval context, no atlas) — a planned brief already holds everything the coder needs
-  const makeAttempt = ({ msg, files, ck = null, verify = null, bare = false }) => async (rg, ri, tryNo) => {
+  const makeAttempt = ({ msg, files, ck = null, verify = null, bare = false, brick = null }) => async (rg, ri, tryNo) => {
+    // §GW2 0.60.77 — the brick this attempt works on: its run state is the brick's (lib/run-state.js), whatever chat or agent
+    const brickKey = (brick || (ck && ck.brick)) ? `${map}::${phase}::${brick || ck.brick}` : null;
     const tag = ck ? `-c${ck.chunk}` : '';
     const session = ri <= 0 && tryNo === 1 ? `${runId}${tag}` : `${runId}${tag}-r${ri + 1}t${tryNo}`;
     // §0.60.0 RS1 — the repo is paused: the attempt waits here, said on the Plan, and goes on when it is played
@@ -945,7 +948,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
-    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(bare ? { noContext: true } : {}) }); }
+    try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(brickKey ? { brick: brickKey } : {}), ...((typeof bare === 'function' ? bare(rg) : bare) ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -1064,7 +1067,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         grounding: { system, registry: registry.length, atlas: atlas.length, loom: loom.length, reuse: reuse.map(x => x.file), lessons: learned.text ? learned.text.split('\n').length : 0, notes: regNotes }, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planning', snapshot: commitId, provider: planner });
       let r;
-      try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-plan${n}`, maxToolErrors: policy.maxToolErrors || 0 }); }
+      try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-plan${n}`, maxToolErrors: policy.maxToolErrors || 0 }), { kind: 'phase-plan', provider: planner || null, key: `${target.uuid}\n${msg}`, mode: 'cache', fresh: n > 1 }); }
       catch (e) { r = { ok: false, error: e.message }; }
       if (!r || !r.ok) { plannerError = String((r && r.error) || 'the planner did not answer').slice(0, 400); break; }   // the planner itself is down: asking again will not help
       parsed = PP.parsePlan(r.text, { phaseFiles: expectFiles, registry, system, ownerOf: system ? _require('../../lib/nexus-self/systems.js').ownerOf : null });
@@ -1168,7 +1171,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const dispatch = async (hops, { gate, assessment = null }) => {
       if (whole && gate.id === 'work') {
         // §BR1 — the whole phase as one request to the ladder, as runWhole sent it — but as a brick: gated, checkpointed, classed
-        const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles }), onOutcome: makeOnOutcome() });
+        // §GW24 0.60.76 — James: "each gate holds the context, which can make tghe agents dumb." On a local model's rung the
+        // whole-phase brick goes lean: the phase and its map (MP3) only; the repo context stays with the gate, and the agent's
+        // tools fetch what it asks for. An agent's rung (ChatGPT, Claude…) gets the full context as before.
+        const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles, bare: (rg) => !!(rg && rg.base === 'ollama'), brick: gate.id }), onOutcome: makeOnOutcome() });
         if (out.dp) lastDp = out.dp;
         const ok = out.state === 'replied';
         return { ok, agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),
@@ -1188,8 +1194,16 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const cb = PP.chunkBrief({ plan, path: f, done, repoName: target.name, phaseKey: phase });
       // §GA1 0.60.44 — the gate found names its imports need that no dependency's exports cover: the dependencies' code goes
       // in the brief (trimmed), so the agent sees what it can actually import instead of guessing
-      const ctxNote = assessment && assessment.context.needs.length ? `\n\nCONTEXT — you import ${assessment.context.needs.join(', ')}, which no dependency exports yet. What the dependencies actually contain:\n${
-        assessment.deps.map(x => `--- ${x.file}\n${String(codeOf(x.file)).split('\n').slice(0, 120).join('\n')}`).join('\n')}` : '';
+      // §GW24 0.60.76 — one budget for this dispatch: what the first agent on its ladder has passed reliably (Boundaries,
+      // learned from every gate check; ~4 chars a token) less the brief, else LIMITS.context. The dependencies' code is ranked
+      // (the needed names' definitions first, then signatures) and cut to it; what was cut is recorded on the gate.
+      // (was: CONTEXT — you import ${assessment.context.needs.join(', ')} … up to 120 lines of every dependency, no total cap)
+      const ctx = assessment && assessment.context.needs.length ? (() => {
+        let learned = null; try { learned = _require('../../cortex/core/raid/contract-gates.js').Boundaries.budget(hops[0] && hops[0].provider, gate.kind || gate.type); } catch (_) { learned = null; }
+        const budget = learned ? Math.max(PP.LIMITS.contextMin, learned * 4 - cb.message.length) : PP.LIMITS.context;
+        return PP.contextNote({ needs: assessment.context.needs, deps: assessment.deps.map(x => ({ file: x.file, code: String(codeOf(x.file) || '') })), budget });
+      })() : null;
+      const ctxNote = ctx ? `\n\n${ctx.text}` : '';
       const msg = (gate.parent ? `${cb.message}\n\nDO ONLY THIS STEP NOW: ${(gate.actions || [])[0] || ''}\nKeep everything the file already has.` : cb.message) + ctxNote;
       const ck = { chunk: gate.parent ? `${i + 1}.${gate.id.split('.').pop()}` : i + 1, chunks: plan.order.length, file: f, planned: true, brick: gate.id };
       const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy,
@@ -1199,7 +1213,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const code = ok ? _landedCode(out.r, f) : '';
       const v = ok && !gate.parent ? PP.checkChunk(code, plan, f) : null;
       return { ok: ok && (!v || v.ok), agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),   /* §GT1a — the ladder was climbed to its end: an attempt spent */ ...(ok ? {} : { error: String((out.row && out.row.error) || out.state).slice(0, 400) }),
-        evidence: ok ? { [`${gate.id}.verified`]: v ? (v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}`) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)) } : {} };
+        evidence: { ...(ctx ? { [`${gate.id}.context`]: ctx.summary } : {}), ...(ok ? { [`${gate.id}.verified`]: v ? (v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}`) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)) } : {}) } };
     };
     const agentEx = CA.agentExecutor({ dispatch, route: () => (rungs.length ? rungs.map(r => ({ provider: r.provider, rung: r })) : [{ provider: provider || agent || backend || 'the call\'s own agent', rung: null }]) });
     const integrate = async () => {
@@ -1431,9 +1445,9 @@ async function _provePhase({ target, base, commitId, mapText, phase, message, di
       const fb = PR.feedbackMessage(run);
       appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-retry-${attempt}`, ...pbase, state: 'retrying', attempt, snapshot: commitId, error: `${run.total - run.met} condition(s) unmet — attempt ${attempt} of ${max}`, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.attempt.unmet', { ...pbase, attempt: attempt - 1, met: run.met, total: run.total, modes: run.modes });
-      let rr; try { rr = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: `${message}
+      let rr; try { const rd = await _agentDir(target.uuid); rr = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: `${message}
 
-${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}` }); }
+${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}` }), { kind: 'proof-repair', provider: dispatch.provider || dispatch.model || dispatch.agent || dispatch.backend || null, key: `${target.uuid}\n${message}\n${fb}`, mode: 'gate' }); }
       catch (e) { rr = { ok: false, error: e.message }; }
       if (!rr || !rr.ok) {
         appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt, snapshot: commitId, error: `attempt ${attempt} failed before it could be checked: ${String((rr && rr.error) || 'no reply').slice(0, 300)}`, proof: run && { met: run.met, total: run.total, modes: run.modes }, ts: Date.now() });
@@ -1500,7 +1514,7 @@ async function _reviewDraft({ r, state, absent, target, base, commitId, req, not
   const SH = _require('../../lib/shadow.js');
   const shadow = SH.declare({ step: 'phase.review', expects: { files: [...new Set([...files.map(f => f.path), ...(absent || [])])] }, subject: { repoUuid: target.uuid, map: base.map, phase: base.phase, runId: reviewRunId }, causedBy: `idearium.phases.build:${base.runId}` });
   let rr;
-  try { rr = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: text, provider: reviewer, layer: getRepoLayer(), session: reviewRunId }); }
+  try { const rd = await _agentDir(target.uuid); rr = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: text, provider: reviewer, layer: getRepoLayer(), session: reviewRunId }), { kind: 'draft-review', provider: reviewer || null, key: `${target.uuid}\n${text}`, mode: 'gate' }); }
   catch (e) { rr = { ok: false, error: e.message }; }
   let rstate = rr && rr.ok ? (rr.injects && rr.injects.blocked ? 'blocked' : 'reviewed') : 'failed';
   let rabsent = null;
@@ -2584,6 +2598,8 @@ const ROUTE_CAP = {
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
+  'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
+  'raid.held': CAPS.READ_IDEAS, 'raid.held.unpark': CAPS.WRITE_IDEAS,   // §0.60.78 RT1
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
   'repo.desktop.checkpoints': CAPS.READ_IDEAS, 'repo.desktop.control': CAPS.WRITE_IDEAS,
@@ -2975,6 +2991,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],
     ['GET',    ['api','repos',    ':uuid','notes'],     'repo.notes'],         // §0.60.6 — the repo's notes: ?q=&kind=&status=&tag=
     ['POST',   ['api','repos',    ':uuid','notes'],     'repo.notes.add'],     // §0.60.6 — { body, title?, kind?, tags?, pinned? }
+    ['GET',    ['api','my-projects'],                   'projects.overview'],
+    ['GET',    ['api','raid','held'],                   'raid.held'],          // §0.60.78 RT1 — cortex's officiator: the agents' wait, each staged drop's tries
+    ['POST',   ['api','raid','held','unpark'],          'raid.held.unpark'],   // §0.60.78 RT1 — { id? } clear one drop, or everything  // §0.60.74 COSA10 (not /api/projects: that is the zip shelf, project.list) — every project of his, sorted by what moved last: notes, phases, last activity
     ['GET',    ['api','notes'],                         'notes.list'],         // §0.60.6 — ?scope=all (default) | loose (on no repo) &q=&kind=&status=&tag=
     ['POST',   ['api','notes'],                         'notes.add'],          // §0.60.6 — a note on no repo, or { repoUuid }
     ['PATCH',  ['api','notes',':id'],                   'notes.update'],       // §0.60.6 — { body?, title?, kind?, tags?, status?, pinned?, repoUuid? }      // §0.39.368 AL1 — the repo's durable activity log: ?kind=&actor=&status=&q=&before=&limit=&facets=1
@@ -6854,6 +6873,35 @@ async function handle(req, res, route, query, body) {
         return ok(res, { note: n });
       } catch (e) { return err(res, e.status || 500, e.message); }
     }
+    // §COSA10 0.60.74 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." One row per
+    // project from what Nexus already keeps: notes counts, the phase roadmap, the last activity (idearium/lib/projects.cjs).
+    // §RT1 0.60.78 — what RAID's officiator holds back, read from cortex (it runs there); the My projects panel shows it
+    case 'raid.held': case 'raid.held.unpark': {
+      try {
+        const r = action === 'raid.held'
+          ? await _nexusClient.call('cortex', 'GET', '/api/raid/officiator', null, { timeout: 4000 })
+          : await _nexusClient.call('cortex', 'POST', '/api/raid/officiator/unpark', body && body.id ? { id: String(body.id) } : {}, { timeout: 4000 });
+        return ok(res, r);
+      } catch (e) { return err(res, 502, `cortex did not answer: ${e.message}`); }
+    }
+    case 'projects.overview': {
+      const PJ = _require('../lib/projects.cjs');
+      const RN = _require('../../lib/repo-notes.js');
+      const AL = _require('../../lib/activity-log/compartment.js');
+      const PH = await import('../repo/phases.js');
+      const RM = await import('../repo/roadmap.js');
+      const view = await PJ.overview({
+        repos: getRepoLayer().list({}) || [],
+        notesOf: (u) => RN.counts(u),
+        activityOf: (u) => (AL.list(u, { limit: 1 }).rows || [])[0] || null,
+        phasesOf: (r) => {
+          const dir = _repoDiskDir(r.uuid);
+          if (!dir) throw new Error('could not resolve the repo directory');
+          return RM.buildRoadmap({ projectId: r.uuid, maps: PH.mapsFor({ repo: r, repoDir: dir }).maps });
+        },
+      });
+      return ok(res, view);
+    }
     case 'repo.activity': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
       _repoActivity();   // wires the live broadcast on first use
@@ -7563,6 +7611,26 @@ async function handle(req, res, route, query, body) {
           const cmp = await CG.compare(L.payload, String(query.gate), { root: dirT || undefined,
             diff: async ({ from, files }) => { const out = {}; for (const f of files.slice(0, 8)) { try { out[f] = await RH.diff(_vcall, tgt, from, 'working', { path: f, working }); } catch (e) { out[f] = { error: e.message }; } } return out; } });
           return ok(res, { repoUuid: params.uuid, phase: query.phase, file, compare: cmp });
+        }
+        // §GW3 0.60.75 — ?trace=1: the contract traced end to end (cortex/core/raid/contract-trace.js): its own evidence log,
+        // its checkpoints, every row this run wrote to the ledger and RAID's queue row, in time order, per brick, holes named
+        if (query.trace) {
+          const CT = _require('../../cortex/core/raid/contract-trace.js');
+          const rows = run ? loadTable('idearium_phase_runs').filter(r => r.runId === run.runId) : [];
+          const qid = rows.map(r => r.raidQueueId).find(Boolean) || null;
+          let raid = null;
+          if (qid) { try { raid = _require('../../cortex/core/raid/contract-intake.js').listQueue().find(x => x.uuid === qid) || null; } catch (_) { raid = null; } }
+          const tr = CT.trace(L.payload, { runs: rows, raid });
+          // §GW2 0.60.77 — each brick's own run (lib/run-state.js, keyed by the brick): the baton every attempt and agent resumed
+          try {
+            const RSx = _require('../../lib/run-state.js');
+            for (const b of tr.bricks) {
+              const r0 = run ? RSx.load(RSx.runIdFor({ repoUuid: run.targetRepo || params.uuid, brick: `${run.map}::${run.phase}::${b.id}` })) : null;
+              if (r0) b.run = { attempt: r0.attempt, status: r0.status, providers: (r0.providers || []).map(x => x.provider).filter(Boolean), steps: r0.stepCount || 0,
+                read: (r0.filesRead || []).slice(-8), changed: (r0.filesChanged || []).slice(-8), note: r0.note || null };
+            }
+          } catch (_) { /* the trace stands without the runs */ }
+          return ok(res, { repoUuid: params.uuid, phase: query.phase, file, runId: run ? run.runId : null, raidQueueId: qid, trace: tr, lines: CT.lines(tr) });
         }
         // §GT2 0.60.42 — where the newest run stands, from its last gate move
         const lastMove = _phaseRuns(params.uuid).filter(r => r.phase === query.phase && r.progress && (!run || r.runId === run.runId)).sort((a, b) => (b.ts || 0) - (a.ts || 0))[0];

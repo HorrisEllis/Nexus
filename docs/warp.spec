@@ -458,3 +458,11 @@ v1_4_addendum:
 
 ## ADDENDUM 2026-10-15 — 0.60.67 WB0: which builds go through WARP, measured
 # lib/build-paths.js census (CK-255): through WARP — spec-chunk build (createWarpChunkDispatch; buildChunkWithAgent only when WARP cannot load), codegen plan, new-spec plan, expand. Not through WARP — the phase build (RA.dispatch in _phaseBuild), proof repair, draft review, the RAID worker brick and the officiator (copilot/lifeline dispatchToNcpAgent). James: "make sure all builds use warp." docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec WB1/WB2.
+
+## ADDENDUM 2026-10-16 — 0.60.73 WB1/WB2: every build goes through WARP (lib/warp-rung.js)
+# James: "Option 1 (my recommendation): wrap each of those agent calls in WARP (its cache, then the axiom gate, then keeping the result), while the build ladder and RAID still choose which agent runs." (his choice, 2026-10-16)
+# lib/warp-rung.js runs unifiedDispatch around a call whose agent is already chosen: one provider, one attempt (maxAttempts 1), no second chain.
+# mode cache: the reply is the result (planner, officiator, RAID worker) — served from the exact cache after promotion (3 passing results).
+# mode gate: the work is side effects (repo-agent builds write files through tools) — retained, never served; a replayed reply would write nothing.
+# fresh: a retry never reads the cache. reject(digest) invalidates a crystal a later check found bad. Store: <data root>/warp/rung-crystals.json.
+# Found: no build caller passed WARP any axioms before this; the officiator's 'parses-as-contract' is the first hard axiom on a build path.

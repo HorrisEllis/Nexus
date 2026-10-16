@@ -13,6 +13,7 @@ require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
 const http = require('http');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const ROOT = path.join(__dirname, '../..');
 
@@ -82,7 +83,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     dispatchedTotal++;
     if (/-plan\d+$/.test(a.session || '')) return { ok: true, text: '```json\n' + planOf() + '\n```', provider: 'claude', providerUsed: 'claude', elapsedMs: 3 };
     const file = (String(a.message).match(/^Write ONE file: (\S+)/m) || [])[1];
-    sent.push({ file, session: a.session });
+    sent.push({ file, session: a.session, brick: a.brick || null });
     if (file === ph.files[0] && failNotes > 0) { failNotes--; return { ok: false, error: 'deliberate failure — the model fell over' }; }
     const code = /test/.test(file) ? "'use strict';\nconst notes = require('../lib/notes.js');\nif (typeof notes.add !== 'function') throw new Error('add');\n"
       : "'use strict';\nconst _n = [];\nfunction add(args) { _n.push(args.text); return { ok: true }; }\nfunction list() { return { ok: true, notes: _n.slice() }; }\nmodule.exports = { add, list };\n";
@@ -147,6 +148,11 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     const end = rs.find(r => /^contract-/.test(r.state));
     assert.strictEqual(end && end.state, 'contract-complete', states(rs) + JSON.stringify(end && end.audit));
     assert.ok(end.audit.bricks[0].attempts >= 2 || rs.some(r => r.state === 'failed' && r.chunk), 'the failure is on the record');
+    // §GW2 0.60.77 — the retry is the same brick: its attempts carry one brick key, so they resume one run whatever the chat
+    const tries = sent.filter(s => s.file === ph.files[0]);
+    assert.ok(tries.every(s => s.brick && s.brick === tries[0].brick), `one brick key across the retries: ${JSON.stringify(tries)}`);
+    // (a contract retry reuses the brick's chat session today; a new chat per attempt is GW0b, his open decision)
+    assert.ok(!sent.some(s => s.file !== ph.files[0] && s.brick === tries[0].brick), 'another file is another brick');
   });
 
   await test('CP-05', 'the route serves the audit (GET /phases/contract), the command row and the Plan panel show it', async () => {
@@ -156,6 +162,38 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(au && au.bricks.length === 2 && au.complete, JSON.stringify(au).slice(0, 400));
     assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8').includes("key: 'repo.contract'"));
     assert.ok(/contract audit —/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
+  });
+
+  // 0.60.75 GW3 — James: "each contract tracked through the system using the event ledger, tagging and each gate". The
+  // same real build, traced: the contract's own log, its checkpoints and this run's ledger moves, in time order, per brick
+  await test('CP-05b', 'GW3: ?trace=1 traces the contract end to end — every brick with its agent, files and moves; holes named, never filled', async () => {
+    const g = await R('GET', `/api/repos/${repoUuid}/phases/contract?phase=${encodeURIComponent(ph.key)}&map=${encodeURIComponent(map)}&trace=1`, {});
+    assert.strictEqual(g.status, 200, JSON.stringify(g.json).slice(0, 300));
+    const d = g.json.data || g.json, tr = d.trace;
+    assert.ok(tr && tr.bricks.length === 2, JSON.stringify(tr).slice(0, 300));
+    assert.ok(d.runId, 'the run it traced is named');
+    for (const b of tr.bricks) {
+      assert.strictEqual(b.status, 'PASSED', b.id);
+      assert.ok(b.files.length >= 1, `${b.id} names its file`);
+      assert.ok(b.agents.length >= 1, `${b.id} names who built it: ${JSON.stringify(b)}`);
+      assert.ok(tr.steps.some(s => s.gate === b.id && s.source === 'ledger' && /^brick-/.test(s.what)), `${b.id} has a ledger move`);
+      assert.ok(tr.steps.some(s => s.gate === b.id && s.source === 'checkpoint'), `${b.id} has a checkpoint`);
+    }
+    const ats = tr.steps.map(s => s.at || 0); assert.deepStrictEqual(ats, [...ats].sort((x, y) => x - y), 'oldest first');
+    for (const h of tr.holes) assert.ok(tr.bricks.some(b => b.id === h.gate) && h.what, JSON.stringify(h));
+    assert.ok(d.lines.length === tr.steps.length || d.lines.length === 200);
+    assert.ok(/ppTrace/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')), 'the Plan panel has the trace button');
+    // §GW2 0.60.77 — a brick's own run (the baton) is in the trace: written here as the repo agent writes it, keyed by the brick
+    process.env.RUN_STATE_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'cp-runstate-'));
+    const RSb = require(path.join(ROOT, 'lib/run-state.js'));
+    const bid = tr.bricks[0].id, key = `${map}::${ph.key}::${bid}`;
+    const r1 = RSb.begin({ repoUuid: repoUuid, session: 's1', goal: 'g', provider: 'ollama:q', brick: key });
+    RSb.step(r1.runId, { name: 'code_write', arguments: { path: tr.bricks[0].file }, ok: true });
+    RSb.begin({ repoUuid: repoUuid, session: 's2', goal: 'g + feedback', provider: 'chatgpt', brick: key });
+    const g2 = await R('GET', `/api/repos/${repoUuid}/phases/contract?phase=${encodeURIComponent(ph.key)}&map=${encodeURIComponent(map)}&trace=1`, {});
+    const b0 = ((g2.json.data || g2.json).trace.bricks || []).find(b => b.id === bid);
+    assert.ok(b0 && b0.run && b0.run.attempt === 2 && b0.run.providers.join(',') === 'ollama:q,chatgpt' && b0.run.changed.includes(tr.bricks[0].file), JSON.stringify(b0));
+    delete process.env.RUN_STATE_DIR;
   });
 
   // 0.60.27 AG1a — James: "as little as possible." The builds above, counted: each call's own row, tokens estimated at
