@@ -48,6 +48,7 @@ const SUITES = [
   'test-step-gate.test.js',   // 0.39.282 N21 — every build step passes a gate (rule nodes); a refusal is blocked, never 'replied'; no empty file is written
   'test-run-state.test.js',   // 0.60.50 CE1–CE5 + CE10 — the run is kept by Nexus: resume, task header, reply-on-task gate, reply tags, lost-job fallback
   'test-code-surface-state.test.js',   // 0.60.79 CE8 — the Code tab's surface kept by Nexus: the CLI reads and sets it, the tab follows (Clear Glass)
+  'test-code-tab-expand.test.js',   // 0.60.80 CE7 · CV2 · CV4 · CV3 — line edits checked and proposed, the agent on a picked range, a version per diff, tagged history, run rewind
   'test-run-pipeline.test.js',   // 0.60.50 CE1 + CE10 through the real repo-agent dispatch: a run per goal, a lost tab moves to the next provider, resume
   'test-shadow.test.js',   // 0.39.282 N22 — a step's shadow (what must exist after it); every absence is a gap + a liminal item; manage/plan runs read incomplete
   'test-draft-review.test.js',   // 0.39.282 N23 — each chunk in a fresh chat; an Ollama draft is reviewed by a guardian agent in one plain conversation

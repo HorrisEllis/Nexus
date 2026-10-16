@@ -2499,7 +2499,9 @@ const ROUTE_CAP = {
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
   'checks.list': CAPS.READ_IDEAS, 'checks.run': CAPS.READ_IDEAS,   // §0.60.33 QA1 — the check catalogue; a run only reads and parses
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
-  'repo.surface.get': CAPS.READ_IDEAS, 'repo.surface.set': CAPS.WRITE_IDEAS,   // CE8: the Code tab's surface, one for the tab and the CLI
+  'repo.surface.get': CAPS.READ_IDEAS, 'repo.surface.set': CAPS.WRITE_IDEAS,
+  'repo.code.edit': CAPS.WRITE_IDEAS, 'repo.code.assist': CAPS.WRITE_IDEAS,
+  'repo.runs.list': CAPS.READ_IDEAS, 'repo.runs.rewind': CAPS.WRITE_IDEAS,   // §CV3 0.60.80: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.80: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
@@ -2830,7 +2832,11 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','lines'],        'repo.lines'],          // ?path=&from=&to=
     ['POST',   ['api','repos',    ':uuid','lines','copy'], 'repo.lines.copy'],     // { path, from, to, toPath? }
     ['GET',    ['api','repos',    ':uuid','surface'],      'repo.surface.get'],    // CE8: open file, picked lines, chunk, filters + pending, run
-    ['PUT',    ['api','repos',    ':uuid','surface'],      'repo.surface.set'],    // { open?, sel?: {from,to}, chunk?, filters?, by? }
+    ['PUT',    ['api','repos',    ':uuid','surface'],      'repo.surface.set'],
+    ['POST',   ['api','repos',    ':uuid','code','edit'],   'repo.code.edit'],      // CE7 { path, edits:[{from,to,expect?,replacement}], checksum? }
+    ['POST',   ['api','repos',    ':uuid','code','assist'], 'repo.code.assist'],
+    ['GET',    ['api','repos',    ':uuid','runs'],          'repo.runs.list'],      // CV3 ?status= — the runs Nexus kept for this repo, newest first
+    ['POST',   ['api','repos',    ':uuid','runs',':runId','rewind'], 'repo.runs.rewind'],   // CV3 { dryRun? } — every file the run changed, back as it was before it    // CE7 { path, from, to, action, note?, backend?, agent?, provider?, model? }    // { open?, sel?: {from,to}, chunk?, filters?, by? }
     // §BUILT 2026-09-16 — nexus://repo/{repoUuid}/chunk/{chunkUuid}
     // (lib/nexus-uri.js's 'repo-chunk' route) needs to resolve a bare
     // chunkUuid to real content, and no existing route did that — the
@@ -4717,6 +4723,108 @@ async function handle(req, res, route, query, body) {
       try { out.pending = _require('../../lib/repo-inject.js').list(params.uuid, { status: 'proposed', limit: 200 }).map(i => ({ uuid: i.uuid, path: i.path, op: i.op || 'write' })); } catch (_) {}
       try { const r = _require('../../lib/run-state.js').list({ repoUuid: params.uuid })[0]; if (r) out.run = { runId: r.runId, goal: String(r.goal || '').slice(0, 240), status: r.status, attempt: r.attempt, steps: (r.steps || []).length, next: r.next || null, updatedAt: r.updatedAt }; } catch (_) {}
       return ok(res, out);
+    }
+    // §CE7 0.60.80 — James: "add ai assisted coding using the chunking and line count tool for the ai to change lines at a
+    // time or a section." code.edit: an edit set checked against the file as it is NOW (lib/line-edit.js verifyText /
+    // applyText — a stale `expect` or an overlap refuses the whole set) becomes ONE proposal, so it lands on the work surface
+    // with Apply / Reject like any agent change. code.assist: the picked range (with a few lines around it) is handed to the
+    // repo's agent with the action; the agent returns only the replacement for that range, and Nexus builds the edit with
+    // expect = the range's text when it was read — the model never addresses lines itself. explain returns the text only.
+    case 'repo.code.edit': case 'repo.code.assist': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const LE = _require('../../lib/line-edit.js');
+      const rel = String(body.path || '').replace(/^\/+/, '');
+      if (!rel) return err(res, 400, 'path is required');
+      const cur = getRepoLayer().readTextFile(params.uuid, rel);
+      if (!cur || cur.error || typeof cur.content !== 'string') return err(res, 404, `not a file in this repo: ${rel}`);
+      const text = cur.content, total = text.split('\n').length;
+      const propose = (edits, extra) => {
+        const r = LE.applyText(text, edits);
+        if (!r.ok) return { status: 409, error: r.reason, failed: r.failedEdit || null };
+        if (r.content === text) return { status: 409, error: 'the edit changes nothing' };
+        const ranges = edits.map(e => [e.anchor.startLine, e.anchor.endLine]);
+        const p = _require('../../lib/repo-inject.js').propose({ layer: getRepoLayer(), repo, path: rel, content: r.content,
+          source: { kind: 'line-edit', ranges, checksumBefore: r.checksumBefore, checksumAfter: r.checksumAfter, ...extra } });
+        if (!p || p.ok === false) return { status: 400, error: ((p && p.errors) || ['could not propose']).join('; ') };
+        const inj = p.inject || p.node || p;
+        getIdeaOS().emit('idearium.edit.proposed', { repoUuid: params.uuid, path: rel, ranges, inject: inj.uuid || null, checksumBefore: r.checksumBefore, checksumAfter: r.checksumAfter, action: extra.action || null });
+        return { status: 200, inject: inj, ranges, checksumBefore: r.checksumBefore, checksumAfter: r.checksumAfter };
+      };
+      if (action === 'repo.code.edit') {
+        if (body.checksum && LE._checksum(text) !== String(body.checksum)) return err(res, 409, `${rel} changed since it was read (checksum ${body.checksum}, now ${LE._checksum(text)}) — read it again`);
+        const list = Array.isArray(body.edits) ? body.edits : [];
+        if (!list.length) return err(res, 400, 'edits: [{ from, to, expect?, replacement }] is required');
+        const edits = list.map(e => ({ anchor: { startLine: parseInt(e.from, 10), endLine: parseInt(e.to == null ? e.from : e.to, 10) }, ...(typeof e.expect === 'string' ? { expect: e.expect } : {}), replacement: e.replacement == null ? null : String(e.replacement) }));
+        const out = propose(edits, { action: body.action ? String(body.action).slice(0, 40) : 'edit', by: body.by ? String(body.by).slice(0, 40) : 'person', run: body.run || null });
+        if (out.status !== 200) return err(res, out.status, out.error, out.failed ? { failed: out.failed } : null);
+        return ok(res, { ok: true, path: rel, ...out });
+      }
+      const ACTIONS = { change: 'Change these lines as the instructions say.', expand: 'Expand these lines: add what they are missing for their purpose.', refactor: 'Refactor these lines: the same behaviour, a better structure.', fix: 'Find the real fault in these lines and fix it.', document: 'Add or correct the comments for these lines; no behaviour change.', explain: 'Explain what these lines do and how they connect. Do not change them.' };
+      const act = ACTIONS[body.action] ? body.action : null;
+      if (!act) return err(res, 400, `action is one of ${Object.keys(ACTIONS).join(', ')}`);
+      const from = Math.max(1, parseInt(body.from, 10) || 0), to = Math.min(total, parseInt(body.to == null ? body.from : body.to, 10) || 0);
+      if (!from || to < from) return err(res, 400, `from and to: a range inside 1-${total}`);
+      const lines = text.split('\n'), num = (a, b) => lines.slice(a - 1, b).map((l, i) => `${String(a + i).padStart(5)}| ${l}`).join('\n');
+      const before = num(Math.max(1, from - 6), from - 1), after = num(to + 1, Math.min(total, to + 6));
+      const range = lines.slice(from - 1, to).join('\n');
+      const message = [`${ACTIONS[act]}`, body.note ? `FROM JAMES: ${String(body.note).slice(0, 2000)}` : null,
+        `File: ${rel} (${total} lines). The lines to work on are ${from}-${to}.`,
+        before ? `Before them (context only, do not repeat):\n${before}` : null, `THE LINES ${from}-${to}:\n${num(from, to)}`, after ? `After them (context only, do not repeat):\n${after}` : null,
+        act === 'explain' ? 'Answer in prose.' : `Reply with ONE fenced code block holding ONLY the new text that replaces lines ${from}-${to} (no line numbers, no file path, nothing outside the range). Write the whole replacement; it may be more or fewer lines.`,
+      ].filter(Boolean).join('\n\n');
+      const RA = _require('../../lib/repo-agent.js');
+      const r = await RA.dispatch({ repo, repoDir: await _agentDir(params.uuid), message, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, model: body.model || null, noContext: true, layer: null, session: `assist-${rel}` });
+      const reply = String((r && (r.text || r.reply)) || '');
+      const who = (r && (r.providerUsed || r.provider)) || null;
+      if (!r || r.ok === false) return ok(res, { ok: false, error: (r && r.error) || 'no answer', provider: who });
+      if (act === 'explain') return ok(res, { ok: true, action: act, path: rel, from, to, reply, provider: who });
+      const m = /```[^\n]*\n([\s\S]*?)```/.exec(reply);
+      if (!m) return ok(res, { ok: false, error: 'the reply had no code block — nothing proposed', reply: reply.slice(0, 2000), provider: who });
+      const out = propose([{ anchor: { startLine: from, endLine: to }, expect: range, replacement: m[1].replace(/\n$/, '') }], { action: act, by: who || 'agent', provider: who, note: body.note ? String(body.note).slice(0, 300) : null });
+      if (out.status !== 200) return ok(res, { ok: false, error: out.error, reply: reply.slice(0, 2000), provider: who });
+      return ok(res, { ok: true, action: act, path: rel, from, to, provider: who, ...out });
+    }
+    // §CV3 0.60.80 — James: "rewind engine for each file." A file rewinds through repo.versions.restoreFile; a RUN rewinds
+    // here: every file the run changed (lib/run-state.js filesChanged, plus files named in the body) goes back to how it was at
+    // the last commit before the run started. A file the run created (absent then) is named and left, never deleted (§0.3).
+    // dryRun says what it would do. Each restore is its own labelled version (CV2), so the rewind is itself undoable.
+    case 'repo.runs.list': case 'repo.runs.rewind': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RS = _require('../../lib/run-state.js');
+      if (action === 'repo.runs.list') {
+        const runs = RS.list({ repoUuid: params.uuid, status: query.status || null }).slice(0, Math.min(200, parseInt(query.limit || '40', 10) || 40));
+        return ok(res, { repoUuid: params.uuid, runs: runs.map(r => ({ runId: r.runId, goal: String(r.goal || '').slice(0, 400), status: r.status, attempt: r.attempt, provider: r.provider || null, providers: r.providers || [],
+          brick: r.brick || null, session: r.session || null, steps: (r.steps || []).slice(-60), stepCount: r.stepCount || 0, filesRead: r.filesRead || [], filesChanged: r.filesChanged || [], events: r.events || [], next: r.next || null, note: r.note || null, startedAt: r.startedAt, updatedAt: r.updatedAt })) });
+      }
+      const run = RS.load(params.runId);
+      if (!run || run.repoUuid !== params.uuid) return err(res, 404, `no run ${params.runId} in this repo`);
+      const files = [...new Set([...(run.filesChanged || []), ...[].concat(body.paths || []).map(String)])];
+      if (!files.length) return err(res, 409, 'this run changed no file it recorded — nothing to rewind (name files with paths: [...])');
+      const { SNAPSHOT_SYSTEM, summarizeRepoSnapshots, snapshotBranch } = await import('../repo/snapshot.js');
+      const hist = await _versionium('GET', `/api/versionium/history?system=${encodeURIComponent(SNAPSHOT_SYSTEM)}&branch=${encodeURIComponent(snapshotBranch(params.uuid))}&n=1000`);
+      if (!hist.ok) return err(res, 502, hist.error);
+      const base = summarizeRepoSnapshots(hist.data.commits || [], params.uuid).find(c => (c.ts || 0) < (run.startedAt || 0));
+      if (!base) return err(res, 409, `no version from before this run started (${new Date(run.startedAt || 0).toISOString()}) — nothing to rewind to`);
+      const RH = _require('../../lib/repo-history.js');
+      const results = [];
+      for (const f of files) {
+        if (body.dryRun) { results.push({ path: f, to: base.commitId, done: false, dryRun: true }); continue; }
+        try {
+          await RH.restoreFile(_vcall, repo.uuid, base.commitId, f, async (p, buf) => {
+            const w = getRepoLayer().writeFile(repo.uuid, p, buf.toString('utf8'), { preserveWhitespace: true });
+            if (!w || w.error) throw new Error(`the repo did not take ${p}: ${w ? w.error : 'no answer'}`);
+          });
+          results.push({ path: f, to: base.commitId, done: true });
+        } catch (e) { results.push({ path: f, to: base.commitId, done: false, why: /404|not found|no such/i.test(e.message) ? 'not in that version — the run created it; left as it is' : e.message }); }
+      }
+      if (results.some(x => x.done)) {
+        await _require('../../lib/repo-versions.js').commitNow(repo.uuid, { kind: 'restore', run: run.runId, by: body.by || 'person', action: `rewind run to ${String(base.commitId).slice(0, 12)}` }).catch(() => null);
+        RS.note(run.runId, 'rewound', `${results.filter(x => x.done).length} file(s) back to ${String(base.commitId).slice(0, 12)}`);
+        getIdeaOS().emit('idearium.run.rewound', { repoUuid: repo.uuid, runId: run.runId, commitId: base.commitId, restored: results.filter(x => x.done).map(x => x.path), left: results.filter(x => !x.done).map(x => x.path) });
+      }
+      return ok(res, { ok: true, runId: run.runId, to: { commitId: base.commitId, ts: base.ts, message: base.message }, dryRun: !!body.dryRun, results });
     }
     case 'repo.chunk.show': {
       const repo = getRepoLayer().get(params.uuid);
@@ -6820,6 +6928,7 @@ async function handle(req, res, route, query, body) {
             if (!w || w.error) throw Object.assign(new Error(`the repo did not take ${p}: ${w ? w.error : 'no answer'}`), { status: w && w.code === 'IMMUTABLE' ? 409 : 500 });
           };
           const r = await RH.restoreFile(_vcall, repo.uuid, body.commitId, body.path, write);
+          _require('../../lib/repo-versions.js').commitNow(repo.uuid, { kind: 'restore', path: r.path, by: body.by || 'person', action: `restore to ${String(r.commitId).slice(0, 12)}` }).catch(() => {});   // §CV2 its own version
           os.emit('idearium.repo.version.restored', { repoUuid: repo.uuid, commitId: r.commitId, path: r.path, sha256: r.sha256 });
           return ok(res, r);
         }
@@ -7518,9 +7627,13 @@ async function handle(req, res, route, query, body) {
       const hist = await _versionium('GET', `/api/versionium/history?system=${encodeURIComponent(SNAPSHOT_SYSTEM)}&branch=${encodeURIComponent(snapshotBranch(params.uuid))}&n=1000`);
       if (!hist.ok) return err(res, 502, hist.error);
       const all = summarizeRepoSnapshots(hist.data.commits || [], params.uuid);
-      const touched = all.filter(c => c.provenance && c.provenance.files.some(f => f.path === want))
-        .map(c => ({ ...c, op: c.provenance.files.find(f => f.path === want).op }));
-      return ok(res, { repoUuid: params.uuid, path: want, commits: touched, total: all.length, untracked: all.filter(c => !c.provenance).length });
+      let touched = all.filter(c => c.provenance && c.provenance.files.some(f => f.path === want))
+        .map(c => ({ ...c, op: c.provenance.files.find(f => f.path === want).op, labels: (c.provenance.labels || []).filter(l => !l.path || l.path === want) }));
+      // §CV4 0.60.80 — James: "full history tracked and tagged". ?tag=k:v (repeatable: all must match) over the commit's
+      // labels (CV2: kind, run, inject, by, action, provider); by: also matches who stands behind the commit
+      const tags = [].concat(query.tag || []).flatMap(t => String(t).split(',')).map(t => t.trim()).filter(Boolean).map(t => { const i = t.indexOf(':'); return i > 0 ? [t.slice(0, i), t.slice(i + 1)] : ['kind', t]; });
+      if (tags.length) touched = touched.filter(c => tags.every(([k, v]) => c.labels.some(l => String(l[k] || '') === v) || (k === 'by' && (c.provenance.by || []).includes(v))));
+      return ok(res, { repoUuid: params.uuid, path: want, commits: touched, total: all.length, untracked: all.filter(c => !c.provenance).length, ...(tags.length ? { tags: tags.map(t => t.join(':')) } : {}) });
     }
 
     case 'repo.snapshot.show': {

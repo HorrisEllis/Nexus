@@ -193,6 +193,9 @@ module.exports = Object.freeze({
   IDEARIUM_REPO_INTEGRITY_CHECKED: { description: 'The import checks ran on a repo (parses, requires, npm, duplicates, secrets, files arrived); findings are its notes.', payloadShape: ['repoUuid', 'ok', 'failed', 'notes'], severity: 'info' },
   // §CE8 — the Code tab's surface (idearium/lib/surface-state.cjs), set by the tab, the CLI or an agent; the tab follows a change it did not make.
   IDEARIUM_SURFACE_CHANGED: { description: 'The Code tab\'s surface changed: the open file, the picked lines or chunk; by says who (ui, cli, agent).', payloadShape: ['repoUuid', 'open', 'sel', 'chunk', 'by', 'rev'], severity: 'info' },
+  // §CE7 / §CV3 0.60.80 — a line-edit set proposed (code.edit, code.assist), and a run rewound
+  IDEARIUM_EDIT_PROPOSED: { description: 'A checked line-edit set (from the person, the CLI or the agent working on picked lines) became one proposal: its ranges and the checksums before and after.', payloadShape: ['repoUuid', 'path', 'ranges', 'inject', 'checksumBefore', 'checksumAfter', 'action'], severity: 'info' },
+  IDEARIUM_RUN_REWOUND: { description: 'Every file a run changed went back to the version before the run; files it created are named and left.', payloadShape: ['repoUuid', 'runId', 'commitId', 'restored', 'left'], severity: 'notable' },
   IDEARIUM_NOTE_UPDATED: { description: 'A note changed: edited, pinned, done, archived or brought back.', payloadShape: ['id', 'repoUuid', 'kind', 'status'], severity: 'info' },
 });
 

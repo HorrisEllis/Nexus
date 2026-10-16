@@ -324,3 +324,69 @@ serves his words from 2026-10-15: "so the cli can read the current worksurface i
 - Still OPEN, in build order: CE7, CV2, CV4, CV3, CV1, CE9, CE6, CV5, CV6, CE11, CE12.
 - Still to confirm with James: CE0b (batching), CV0 (what "universal" versioning covers), and the coder's reading of
   "no versions per file using versionium, only the diff" (addendum 2026-10-15).
+
+## ADDENDUM 2026-10-16 (b) - "all of it": the build plan for the rest of the Code tab (mapped before building)
+
+James: "expand the code tab in repo. the file and code tab merge. all of it from the phases3"
+
+- Context: he was shown CE8 built and the remaining phases in build order. He was asked whether to start CE7.
+- What he decided:
+  - build every remaining phase of this map;
+  - merge Files into Code. This repeats his CE0 call ("yes one tab.").
+- The coder's reading, to confirm:
+  - "phases3" is read as "the phases", i.e. this map's open phases.
+  - "all of it" is read as everything that does not wait on one of his open answers. CV5 waits on CV0, so it is mapped
+    here but not built.
+
+Grounding (§8.6), read 2026-10-16. What each phase composes from, and what it adds:
+
+- **CE7** composes:
+  - lib/line-edit.js (verify against the current text, apply atomically). It is bound to the Nexus root, so pure text
+    forms verifyText / applyText are added and the root forms use them;
+  - repo-inject propose (the one write path for an agent's change);
+  - repo-agent dispatch (noContext, the picked hop), which records the run itself (CE1).
+  - New: POST /api/repos/:uuid/code/edit (a checked line-edit set becomes a proposal) and POST
+    /api/repos/:uuid/code/assist (a picked range plus an action; the model returns only the replacement for that range,
+    and Nexus builds the edit with `expect` set to the current text, so a stale range is refused, never applied).
+  - Commands: `code edit`, `code assist`.
+- **CV2** composes lib/repo-versions.js. Commits settle after 1.5 s and already carry provenance (by, refs, files).
+  - New: commitNow(repoUuid, labels). An applied proposal (CE7, Manage, an agent's change) and a restore each commit at
+    once, with labels { kind: edit|manage|agent|restore|person, inject, run, checksum before/after }.
+  - Bulk writes still settle. idearium/repo/snapshot.js projects the labels into history.
+- **CV4** composes repo.history. New: ?tag=k:v filters on the labels (kind, run, by, inject); the command
+  `repo history <repo> <path> [--tag k:v]`.
+- **CV3** composes RH.restoreFile and RH.diff (already a per-file restore and a diff of any two versions).
+  - New: POST /api/repos/:uuid/runs/:runId/rewind. It puts back every file in the run's filesChanged (CE1) as it was
+    at the last commit before the run started; a file the run created is named, never deleted.
+  - New: GET /api/repos/:uuid/runs (the repo's runs).
+  - Commands: `repo runs`, `repo rewind-run`.
+- **CV1** composes the Manage workbench (file-manage.js) and its history rail. The rail becomes one timeline, newest
+  first:
+  - the file's manage runs;
+  - its commits with their labels (repo.history);
+  - its Versionium versions.
+  - Each version has diff (against now) and restore. file-versions.js stays as it is, a second entry to the same data
+    (§0.3).
+- **CE9** composes repo-tasks.js (tasks · log · control) and repo-drawer-views.js (versions · machine), which draw into
+  #rt-views / #rt-list.
+  - The Code tab gets a bottom panel with tabs: activity (as now), run (the run state, its steps, the agents tried, its
+    gates on the plan step, and rewind), responses (the repo agent's exchanges, GET …/agent/history), and the Plan
+    panel's views mounted in place.
+  - One set of data, two mounts. When the Plan panel's activity section is open, the Code tab points to it rather than
+    drawing a second copy with the same ids.
+- **CE6** composes the Files tab's tree actions (filter, add, delete), its editor (save through POST …/file, the one
+  write path) and Manage. In the Code tab:
+  - the tree gets the filter, add file and delete;
+  - the open file gets an edit mode (a textarea, save) and Manage (the same workbench, given the Code tab's file and
+    picked lines).
+  - The Files button is removed. setRepoSubtab('files') opens Code, so every deep link keeps working. The Files panel's
+    DOM and renderApiRepoPanel stay (archived, §0.3), because other code still calls them.
+- **CV6** is checked, not rebuilt. PT1 and PT2 (0.60.63–64) tag phases from their systems and files. This map's
+  phases all declare `systems:`; the proof is the phasemap reader returning them.
+- **CE11** is not here: it is CX1 + CP1 in docs/2026-10-15-automatic-tracking-phasemap.spec.
+- **CE12** is done per slice: tests, loom wires, version, CHANGELOG.
+
+Build order for these slices:
+1. Backend: CE7, then CV2, then CV4, then CV3.
+2. Commands.
+3. UI: CE6 first, because the merge gives the rest its home; then CE7's UI, CV1 and CE9.
