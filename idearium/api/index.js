@@ -2480,7 +2480,7 @@ const ROUTE_CAP = {
   'repo.worksurface': CAPS.READ_IDEAS, 'repo.worksurface.prove': CAPS.WRITE_IDEAS,
   'repo.versions.index': CAPS.READ_IDEAS, 'repo.versions.diff': CAPS.READ_IDEAS, 'repo.versions.tree': CAPS.READ_IDEAS,   // §0.60.7
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
-  'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS,   // §0.60.41 RN1
+  'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
   'checks.list': CAPS.READ_IDEAS, 'checks.run': CAPS.READ_IDEAS,   // §0.60.33 QA1 — the check catalogue; a run only reads and parses
@@ -2904,7 +2904,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','releases'],                 'repo.releases.list'],
     ['POST',   ['api','repos',    ':uuid','releases'],                 'repo.releases.create'],     // { version?, quote?, notes? }
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
-    ['POST',   ['api','releases','sync'],                              'releases.sync'],
+    ['POST',   ['api','releases','sync'],                              'releases.sync'],             // { all: true } → every release's commits
+    ['GET',    ['api','releases','changes'],                           'releases.changes'],          // §0.60.72 RN2 ?since=0.60.47 · &write=1
     ['POST',   ['api','repos',    ':uuid','history','import'],         'repo.history.import'],      // { zips:[{name, contentBase64}], dryRun, allowSecrets }
     // §0.60.7 PL4 — the import checks (lib/import-checks.js): GET reads them; POST also writes them as the repo's notes
     ['GET',    ['api','repos',    ':uuid','integrity'],                'repo.integrity'],
@@ -4881,9 +4882,19 @@ async function handle(req, res, route, query, body) {
         return ok(res, { release: r });
       } catch (e) { return err(res, e.status || 502, e.message, { code: e.code || null }); }
     }
+    // §0.60.72 RN2 — James: "tell me all the recent changes. i want a changelog for each change or diff." Every commit
+    // under the first release that contains it, written from git (lib/release-notes.js); ?since=<version> · ?write=1 → CHANGES.md
+    case 'releases.changes': {
+      try {
+        const N = _require('../../lib/release-notes.js'), R = _require('../../lib/nexus-releases.js');
+        const since = query.since || null;
+        if (query.write === '1') return ok(res, N.write({ since }));
+        return ok(res, { since, markdown: N.markdown(R.read(), { since }) });
+      } catch (e) { return err(res, 500, `release notes: ${e.message}`); }
+    }
     case 'releases.list': case 'releases.sync': {
       try {
-        if (action === 'releases.sync') return ok(res, await _require('../../lib/nexus-releases.js').sync(_vcall));
+        if (action === 'releases.sync') return ok(res, await _require('../../lib/nexus-releases.js').sync(_vcall, { commits: (body && body.all) ? 'all' : 'recent' }));
         const repository = query.repository || 'nexus';
         const d = await _vcall('GET', `/api/versionium/releases?${new URLSearchParams({ repository, n: String(parseInt(query.n, 10) || 1000) })}`);
         return ok(res, { repository, current: _require('../../lib/release-version.js').current().version, releases: d.releases || [] });

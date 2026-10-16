@@ -2970,9 +2970,11 @@ async function renderRepoVersionium(repo) {
   const isNexusParent = repo.nexusSelf && repo.nexusSelf.role === 'parent';
   el.innerHTML = (isNexusParent ? `<div id="nx-versions"><div class="detail-empty">reading every system's versions…</div></div>` : '')
     + actions.replace('>snapshot<', isNexusParent ? '>snapshot the index only (NEXUS.md)<' : '>snapshot<')
+    + `<div id="rel-index"></div>`   // §0.60.72 RN3 releases and what landed in each (js/repo-releases.js)
     + `<div id="ver-index"></div>`   // §0.60.7 every version, compare any two, import history (js/repo-versions.js)
     + listBlock + `<div id="snap-detail"></div>`;
   if (typeof renderVersionIndex === 'function') renderVersionIndex(forUuid);
+  if (typeof renderReleases === 'function') renderReleases(repo);
   if (isNexusParent) renderNexusVersionium(forUuid, stale);
   if (SNAP_OPEN && SNAP_OPEN.repoUuid === forUuid && snaps.some(s => s.commitId === SNAP_OPEN.commitId)) {
     openRepoSnapshot(forUuid, SNAP_OPEN.commitId, snaps);
