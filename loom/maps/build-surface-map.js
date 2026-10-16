@@ -46,6 +46,8 @@ const FILES = [
     I('nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
   ]],
   // 0.60.94 FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." No model.
+  // §CV1 0.60.112 — a part of Nexus branched into its own Idearium repo (docs/2026-10-16-repo-carve-phasemap.spec)
+  ['lib/repo-carve.js', I('lib/repo-carve.js'), []],   // fs/path only: it reads Nexus's files; Idearium's repo.ingest makes the repo
   ['lib/work-funnel.js', I('lib/work-funnel.js'), [
     I('lib/phase-map-auto.js'),                                 // require — mapPhase / mapPhases / envFromTree (deps, owning specs, phases)
     I('lib/phase-files.js'),                                    // require — phasesOf (the repo's phases, with status)
@@ -128,6 +130,11 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('idearium/api/index.js'), I('lib/repo-carve.js'), '§CV1 0.60.112 repo.carve: POST /api/repos/carve — plan, build, then repo.ingest with Nexus as parent'],
+  [I('idearium/api/index.js'), I('lib/repo-notes.js'), '§CV1 0.60.112 repo.carve writes his words (quote) and the carve (decision) as notes on the new repo'],
+  [I('idearium/api/index.js'), I('lib/release-version.js'), '§CV1 0.60.112 repo.carve records the Nexus version and commit it was carved at'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§CV1 0.60.112 the repo.carve row → POST /api/repos/carve'],
+  [I('idearium/ui/js/projects.js'), I('idearium/api/index.js'), '§CV1 0.60.112 My projects → Branch from Nexus — HTTP POST /api/repos/carve (Preview, Create)'],
   [I('idearium/ui/js/code-tab-panels.js'), I('idearium/api/index.js'), '§FN4 0.60.95 cxWorkLoad — HTTP POST /api/repos/:uuid/funnel: the Code tab work panel'],
   [I('idearium/api/index.js'), I('lib/work-funnel.js'), '§FN1 0.60.95 repo.code.assist runs _funnelFor before the agent edits the picked lines'],
   [I('idearium/api/index.js'), I('lib/work-funnel.js'), '§FN0 0.60.94 repo.funnel: POST /api/repos/:uuid/funnel — the four answers for a request'],

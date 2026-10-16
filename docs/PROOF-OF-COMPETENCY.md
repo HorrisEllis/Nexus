@@ -100,6 +100,16 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-16: "look at rfr2. versionium. event ledgers. causal graph. cos test env. its a product?"** · then: "can you branch it into a idearium repo?"
+  - **Context:** months of separate systems (a version store, a causal toolkit, ledgers, a VM test environment). He
+    looked across them and asked whether together they are something people would pay for.
+  - **What it shows:** product thinking. He saw that pieces built to run his own system add up to one thing others
+    need: trust in what AI coding agents change, plus a way to undo it. Then he asked for it as its own project, not a
+    rewrite. The carve that followed measured, rather than guessed, how far it is from standing alone: 217 files,
+    15 systems.
+  - **Evidence:** `CHANGELOG-0.60.112.md`; `docs/2026-10-16-repo-carve-phasemap.spec`;
+    `tests/modules/test-repo-carve.test.js` CV-01..08.
+
 - **2026-10-16: "please fix this. the naming in github doesn't even match that..."**
   - **Context:** COS refused his GitHub downloads ("Nexus-main", "Nexus v0.60.110") because their folder names were
     not `<project>-<version>`. A fix for that was already on main (0.60.103), yet his COS still refused them.

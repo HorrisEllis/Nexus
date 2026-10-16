@@ -2824,6 +2824,7 @@ function matchRoute(method, url) {
     // in one request — see handler for why the existing zip-ingest code
     // (idearium/repo/watcher.js) isn't called as-is.
     ['POST',   ['api','repos','import'],  'repo.import-archive'],
+    ['POST',   ['api','repos','carve'],   'repo.carve'],   // §CV1 0.60.112 { name?, seeds | preset, dryRun? } → a part of Nexus as its own repo (lib/repo-carve.js)
     // ── Upload Project (§UPLOAD-PROJECT 2026-09-15) — the full prompt ->
     // temp compartment -> dropzone -> "Import Repository" -> manifest/
     // project.json/.git -> full repo page flow. A distinct namespace
@@ -7824,6 +7825,38 @@ async function handle(req, res, route, query, body) {
     }
     // §FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." The four answers
     // for a request, in his order, from this repo's own tree and maps (lib/work-funnel.js); read only, no model.
+    // §CV1 0.60.112 — James, 2026-10-16: "can you branch it into a idearium repo?" (the flight recorder: versionium, rfr2, the
+    // causal graph, the COS test env). A part of Nexus copied into its own repo with everything it requires; Nexus is its parent
+    // (fork lineage) and nothing in Nexus moves. Seeds are paths inside Nexus only; no other folder is read.
+    case 'repo.carve': {
+      const CV = _require('../../lib/repo-carve.js'), NSx = _require('../../lib/nexus-self/systems.js');
+      const preset = body && body.preset ? CV.PRESETS[String(body.preset).replace(/-/g, '_')] : null;
+      if (body && body.preset && !preset) return err(res, 400, `no preset "${body.preset}" (have: ${Object.keys(CV.PRESETS).join(', ')})`);
+      const seeds = preset ? preset.seeds : (Array.isArray(body && body.seeds) ? body.seeds : String((body && body.seeds) || '').split(/[\s,]+/).filter(Boolean));
+      const name = String((body && body.name) || (preset && preset.name) || '').trim();
+      if (!name) return err(res, 400, 'name is required (or a preset)');
+      const plan = CV.plan({ root: NSx.ROOT, seeds });
+      if (!plan.ok) return err(res, 400, plan.error);
+      const summary = { name, seeds: plan.seeds, files: plan.files.length, seeded: plan.seeded, pulledIn: plan.pulledIn, lines: plan.lines, bySystem: plan.bySystem,
+        npm: plan.npm, npmNamedOnly: plan.npmNamedOnly, missing: plan.missing, outsideSeeds: plan.files.filter(f => f.pulledBy && !plan.seeds.some(sd => f.path === sd || f.path.startsWith(`${sd}/`))).slice(0, 40) };
+      if (body && body.dryRun) return ok(res, { dryRun: true, ...summary });
+      let cur = {}; try { cur = _require('../../lib/release-version.js').current({ root: NSx.ROOT }); } catch (_) {}
+      const quote = String((body && body.quote) || '"can you branch it into a idearium repo?" (2026-10-16)');
+      const files = CV.build(plan, { root: NSx.ROOT, name, nexusVersion: cur.version || null, commit: cur.commit || null, quote, why: preset ? preset.why : null });
+      const nexus = getRepoLayer().list({}).find(r => r.nexusSelf && r.nexusSelf.role === 'parent') || null;
+      const made = getRepoLayer().ingest({ name, files, source: 'carve', parent: nexus ? nexus.uuid : null, description: preset ? preset.why : `carved from Nexus: ${plan.seeds.join(', ')}`, noIdea: true });
+      if (made.error) return err(res, 400, made.error);
+      const repo = made.repo || made;
+      const notes = [];
+      try {
+        const RN = _require('../../lib/repo-notes.js');
+        notes.push(RN.add({ repoUuid: repo.uuid, kind: 'quote', title: 'why this repo exists', body: `James: ${quote}`, source: 'carve' }));
+        notes.push(RN.add({ repoUuid: repo.uuid, kind: 'decision', title: 'carved from Nexus', source: 'carve',
+          body: `Copied from Nexus ${cur.version || ''} with everything it requires: ${plan.files.length} files (${plan.seeded} named, ${plan.pulledIn} pulled in) across ${Object.keys(plan.bySystem).length} systems. Nothing moved out of Nexus. CARVED.json says what pulled each file in. The name "${name}" is the coder's working name: to confirm.` }));
+      } catch (e) { notes.push({ error: `notes not written: ${e.message}` }); }
+      try { getIdeaOS().emit('idearium.repo.carved', { repoUuid: repo.uuid, name, files: plan.files.length, parent: nexus ? nexus.uuid : null }); } catch (_) {}
+      return ok(res, { repo, parent: nexus ? { uuid: nexus.uuid, name: nexus.name } : null, notes: notes.length, ...summary });
+    }
     case 'repo.funnel': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
