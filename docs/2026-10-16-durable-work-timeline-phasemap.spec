@@ -177,3 +177,12 @@ not_verified:
 # His principle, recorded as his decision: all data persists; anything hardcoded has to earn its place. The coder applies it
 # to the open maps: TL1/TL2 (the rest of this map) and IH1 (docs/2026-10-16-intent-hat-agent-chain-phasemap.spec, where the
 # hardcoded VERB_TO_HAT becomes .intent nodes) are the next places it bites.
+
+# ## ADDENDUM 2026-10-16 (b) — TL1 is the same work as GW27 and FN3: build it once (no phase dropped, §0.3)
+# James: "marge with main, if additive. then whats next?"
+# Found on main after the merge: three open phases write the same thing, a node file per piece of work the moment it exists:
+#   TL1 here (each chunk a .chunk as it arrives), GW27 in docs/2026-10-15-gate-held-work-phasemap.spec (.input before dispatch,
+#   .response after on every backend, .output when it lands, .deps per plan), FN3 in docs/2026-10-16-agent-work-funnel-phasemap.spec
+#   (the funnel's answers as nodes). The coder's recommendation, his call: GW27 is the owner (it has the widest taxonomy, his
+#   decision (k) on chunk kinds, and the trace already reads it); TL1 and FN3 are marked "see GW27" when it lands, and TL2 (resume
+#   at boot) reads those files. The 17-chunk loss is the .response half: an answer saved only when its final file lands.
