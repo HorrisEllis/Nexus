@@ -107,6 +107,8 @@
     }
     #__g-popup.listener-mode { border-color: rgba(204,68,255,0.3); border-top-color: #cc44ff; }
     #__g-popup.show { display: block; animation: g-popup-in 0.18s ease-out; }
+    #__g-popup.field-mode .__g-callto-only { display: none !important; }
+    #__g-popup.field-mode #__g-field-row { display: block !important; }
     @keyframes g-popup-in { from { opacity:0; transform: scale(0.96) translateY(6px); } to { opacity:1; transform: scale(1) translateY(0); } }
 
     #__g-popup-hdr {
@@ -254,8 +256,18 @@
         <div style="font:9px 'IBM Plex Mono',monospace;color:rgba(0,255,163,0.3);margin-bottom:3px;">NEARBY</div>
         <div id="__g-nearby-chips" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
       </div>
-      <div class="gf"><div class="gf-label">Label</div><input class="gf-input" id="__g-ct-label" placeholder="e.g. submit-btn" maxlength="60"/></div>
-      <div class="gf" id="__g-action-row">
+      <div class="gf" id="__g-field-row" style="display:none">
+        <div class="gf-label" id="__g-field-label">Field</div>
+        <div class="gf-val" id="__g-field-what">—</div>
+        <div style="font:9px 'IBM Plex Mono',monospace;color:rgba(0,255,163,0.4);margin-top:3px">↑ ↓ ← → move one element · Enter uses it · Esc cancels</div>
+        <div style="display:flex;gap:6px;margin-top:6px;">
+          <button class="gf-btn" id="__g-field-use">USE</button>
+          <button class="gf-btn" id="__g-field-repick">RE-PICK</button>
+          <button class="gf-btn" id="__g-field-cancel">CANCEL</button>
+        </div>
+      </div>
+      <div class="gf __g-callto-only"><div class="gf-label">Label</div><input class="gf-input" id="__g-ct-label" placeholder="e.g. submit-btn" maxlength="60"/></div>
+      <div class="gf __g-callto-only" id="__g-action-row">
         <div class="gf-label">Action</div>
         <select class="gf-input" id="__g-ct-action">
           <option value="click">click</option>
@@ -266,17 +278,17 @@
           <option value="screenshot">screenshot</option>
         </select>
       </div>
-      <div class="gf">
+      <div class="gf __g-callto-only">
         <div class="gf-label">Callto ID</div>
         <div id="__g-ct-id-row"><div id="__g-ct-id">—</div><button id="__g-ct-regen" title="Regenerate ID">↻</button></div>
       </div>
-      <div id="__g-popup-actions">
+      <div id="__g-popup-actions" class="__g-callto-only">
         <button class="gf-btn" id="__g-btn-agent" title="Hand this element (selector, text, page) to Claude Code and the agents — they read it with: idearium picks">→ CLAUDE CODE</button>
         <button class="gf-btn" id="__g-btn-copy" title="Copy the selector">⧉ COPY</button>
         <button class="gf-btn" id="__g-btn-listen">⦿ LISTEN</button>
         <button class="gf-btn" id="__g-btn-pick">RE-PICK</button>
       </div>
-      <div id="__g-popup-actions2" style="display:flex;gap:6px;margin-top:6px;">
+      <div id="__g-popup-actions2" class="__g-callto-only" style="display:flex;gap:6px;margin-top:6px;">
         <button class="gf-btn" id="__g-btn-add" title="Save as a callto in Clear Glass's index (Settings → Suite)">SAVE CALLTO</button>
         <button class="gf-btn" id="__g-btn-cancel">CLOSE</button>
       </div>
@@ -612,7 +624,9 @@
     escHint.className = 'show' + (mode === 'listener' ? ' listener-mode' : '');
     escHint.textContent = mode === 'listener'
       ? 'LISTEN MODE — click element  ·  ESC, right-click or click here to cancel'
-      : 'PICKING — click element to capture  ·  ESC, right-click or click here to cancel';
+      : mode === 'field' && _field
+        ? 'PICK ' + String(_field.label).toUpperCase() + ' — click near it, then ↑ ↓ ← → to move one element at a time  ·  ESC cancels'
+        : 'PICKING — click element to capture  ·  ESC, right-click or click here to cancel';
     document.body.style.cursor = 'crosshair';
 
     _pickerAbort = new AbortController();
@@ -666,6 +680,7 @@
         return;
       }
       stopPicker(true);
+      if (pickerMode === 'field' && _field) { _openFieldPopup(t, e.clientX, e.clientY); return; }
       try { window.__cg?.send('dom:event', { type: 'guardian.picker.picked', xpath: _currentFp.xpath, selector: _currentFp.selector, url: window.location.href }); } catch (_) {}  // 0.39.251 — Clear Glass selector-assign offer; no visual change
       openPopup(_currentFp, e.clientX, e.clientY);
     }, { signal: sig, capture: true });
@@ -691,6 +706,7 @@
     escHint.className = '';
     document.body.style.cursor = '';
     hideSel();
+    if (!silent && _field) _fieldDone({ cancelled: true });
     if (!silent) try { if (typeof URCK !== 'undefined') URCK.ingest('guardian.picker.stop', { url: window.location.href }, { source: 'content' }); } catch(_) {}
   }
 
@@ -775,7 +791,9 @@
   }
 
   function closeCalltoPopup(silent) {
-    popup.classList.remove('show', 'listener-mode');
+    if (_field) _fieldDone({ cancelled: true });
+    popup.classList.remove('show', 'listener-mode', 'field-mode');
+    hideSel();
     _currentFp         = null;
     _calltoId          = null;
     _linkType          = null;
@@ -1384,8 +1402,9 @@
     // Use the existing selection box (selBox) to highlight — not el.style
     const r = el.getBoundingClientRect();
     if (selBox) {
-      selBox.style.left   = (r.left   + window.scrollX) + 'px';
-      selBox.style.top    = (r.top    + window.scrollY) + 'px';
+      // §0.60.71 — selBox is position:fixed: viewport coordinates, no scroll offset (a scrolled page drew it off target)
+      selBox.style.left   = r.left + 'px';
+      selBox.style.top    = r.top  + 'px';
       selBox.style.width  = r.width  + 'px';
       selBox.style.height = r.height + 'px';
       selBox.style.display = 'block';
@@ -1393,6 +1412,7 @@
 
     // Nearby suggestions
     _renderNearbySuggestions(el);
+    if (_field) _fieldShow(el);
   }
 
   function _renderNearbySuggestions(el) {
@@ -1475,15 +1495,85 @@
   }
 
 
+  // ── Field pick (§0.60.71) ────────────────────────────────────────────
+  // James (2026-10-16): "when its asking me to pick the inputs or response, or what ever. its needs to use the guardian
+  // picker so i can traverse through the elements one at a time." Clear Glass's provider attention panel calls
+  // pickField('send', 'the send button'): click near the element, then walk the page one element at a time — the popup's
+  // ↑ PARENT / ↓ CHILD / ← PREV / → NEXT and NEARBY chips, or the arrow keys — and USE (or Enter) settles it. Resolves
+  // { xpath, tag, url } for the element settled on, or { cancelled }. The host checks it (selector, role, address).
+  let _field = null;   // { key, label, resolve }
+  function _fieldDescribe(el) {
+    const a = (n) => { try { return el.getAttribute(n) || ''; } catch (_) { return ''; } };
+    const tag = el.tagName.toLowerCase();
+    const ce = a('contenteditable');
+    const role = a('role') || (tag === 'button' ? 'button' : tag === 'textarea' || (tag === 'input' && !/^(button|submit|checkbox|radio)$/i.test(a('type'))) ? 'textbox'
+      : (ce === 'true' || ce === '' && el.hasAttribute('contenteditable') || el.isContentEditable === true) ? 'textbox' : tag === 'a' ? 'link' : '');
+    const name = (a('aria-label') || a('placeholder') || a('data-placeholder') || a('title') || (el.innerText || el.textContent || '')).replace(/\s+/g, ' ').trim().slice(0, 50);
+    return '<' + tag + '>' + (role ? ' · ' + role : '') + (name ? ' · "' + name + '"' : '');
+  }
+  function _fieldShow(el) {
+    const w = document.getElementById('__g-field-what'); if (w) w.textContent = _fieldDescribe(el);
+  }
+  function _fieldDone(out) {
+    const f = _field; _field = null;
+    popup.classList.remove('field-mode');
+    if (f) { try { f.resolve(out); } catch (_) {} }
+  }
+  function _openFieldPopup(t, cx, cy) {
+    openPopup(_currentFp, cx, cy);
+    popup.classList.add('field-mode');
+    document.getElementById('__g-popup-title').textContent = '◈ PICK ' + String(_field.label).toUpperCase();
+    document.getElementById('__g-field-label').textContent = String(_field.label);
+    document.getElementById('__g-field-use').textContent = 'USE AS ' + String(_field.key).toUpperCase();
+    _zoomTo(t);
+  }
+  function _fieldUse() {
+    if (!_field || !_currentEl) return;
+    const el = _currentEl;
+    _fieldDone({ xpath: getXPath(el), tag: el.tagName.toLowerCase(), url: window.location.href, traversed: true });
+    closeCalltoPopup(true);
+  }
+  function pickField(key, label) {
+    return new Promise((resolve) => {
+      if (_field) _fieldDone({ cancelled: true, why: 'a new pick started' });
+      closeCalltoPopup(true);
+      _field = { key: String(key || 'field'), label: String(label || key || 'the element'), resolve };
+      startPicker('field');
+    });
+  }
+  document.getElementById('__g-field-use').addEventListener('click', _fieldUse);
+  document.getElementById('__g-field-cancel').addEventListener('click', () => closeCalltoPopup());
+  document.getElementById('__g-field-repick').addEventListener('click', () => {
+    if (!_field) return;
+    popup.classList.remove('show', 'field-mode');
+    startPicker('field');
+  });
+  // the keys, while a field's popup is open: first, in the capture phase, so the page cannot take them
+  window.addEventListener('keydown', (e) => {
+    if (!_field || !popup.classList.contains('show')) return;
+    const cur = _currentEl; let to = null;
+    if (e.key === 'ArrowUp') to = cur && cur.parentElement && cur.parentElement !== document.body ? cur.parentElement : null;
+    else if (e.key === 'ArrowDown') to = cur && cur.firstElementChild;
+    else if (e.key === 'ArrowLeft') to = cur && cur.previousElementSibling;
+    else if (e.key === 'ArrowRight') to = cur && cur.nextElementSibling;
+    else if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); _fieldUse(); return; }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeCalltoPopup(); return; }
+    else return;
+    e.preventDefault(); e.stopPropagation();
+    if (to && !(to.id && to.id.startsWith('__g-'))) _zoomTo(to);
+  }, { capture: true, signal: _life.signal });
+
   // ── Real, host-facing control surface ───────────────────────────────
   // Matches the real, existing pattern the current, simpler PICKER_SCRIPT
   // already uses (window.__cgPicker.destroy()) — not a new mechanism.
   window.__gPickerActive = {
     startPick: () => startPicker('callto'),
     startListen: () => startPicker('listener'),
+    pickField,
     stop: () => stopPicker(),
     killswitch: () => triggerKillswitch('host', true),
     destroy() {
+      if (_field) _fieldDone({ cancelled: true, why: 'the picker was closed' });
       stopPicker(true); closeCalltoPopup(true); closeListenModal(); for (const [lid] of activeListeners) detachListenerDOM(lid); activeListeners.clear();
       _life.abort();   // §0.59.2 — and remove what this run made, so the next run starts clean
       for (const e of [STYLE, selBox, overlay, tip, escHint, toast, popup, listenModal]) { try { e.remove(); } catch (_) {} }
@@ -1494,5 +1584,6 @@
   // Global ESC already wired above via onGlobalEsc. Auto-start in pick mode
   // on injection — matches the current PICKER_SCRIPT's own real behavior
   // (starts picking immediately when injected via the context-menu action).
-  startPicker('callto');
+  // §0.60.71 — a host that wants a field pick (the provider attention panel) sets __gPickerNoAutostart and calls pickField
+  if (window.__gPickerNoAutostart) { window.__gPickerNoAutostart = false; } else startPicker('callto');
 })();

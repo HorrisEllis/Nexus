@@ -630,3 +630,15 @@ spec:
 # message on the job. Fixed: job-retry takes an attention hook and raises it (provider, reason 'map', job, agent, stage
 # reply_not_found) after first trying the transcript and the .response; Guardian wires it to the same raise.
 # Proof: test-reply-not-found-attention 3/3 (RA-01, RA-03 fail on the old code).
+
+## ADDENDUM 2026-10-16 — picks walk the page through the Guardian picker (0.60.71)
+
+# James: "actually wen its asking me to pick the inputs or response, or what ever. its needs to use the guardian picker so
+# i can traverse through the elements one at a time." Decided by him; the coder's part is where it lands. The attention
+# panel's Pick input / send / reply opens renderer/guardian-picker.js in a field mode (pickField(key, label)): click near
+# it, walk ↑ ↓ ← → (or PARENT / CHILD / PREV / NEXT / NEARBY), each step shown as <tag> · role · "name", USE / Enter.
+# attention.js describes the settled element with the helpers the one-click picker uses (_pickHelpers, one copy), then
+# checkPick, the role check and SP2's address run unchanged. The one-click picker stays as the said fallback. The callto
+# mode is unchanged (it starts unless the host sets __gPickerNoAutostart). Fixed with it: the highlight added the scroll
+# offset to a fixed-position box. test-guardian-field-pick 5/5 (jsdom; a live walk awaits his run).
+
