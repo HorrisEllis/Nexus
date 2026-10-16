@@ -49,12 +49,19 @@ const world = () => mk({ 'lib/a.js': A, 'tests/a.test.js': T, 'lib/unrelated.js'
     fs.mkdirSync(path.join(d, 'data')); await PE.gather({ path: 'lib/a.js', base: A, content: A + '// changed\n', root: d });
     assert.strictEqual(fs.readFileSync(path.join(d, 'lib/a.js'), 'utf8'), A); assert.ok(!fs.existsSync(path.join(d, 'data', 'leak.txt')));
   });
+  await test('PE-08b isolation at depth: a test that writes into sub/data (reached through a linked folder) writes to a copy; the fixture it reads there is present', async () => {
+    const d = mk({ 'lib/a.js': A, 'sys/data/fixture.txt': 'hello', 'sys/code.js': 'module.exports = 1;\n', 'tests/a.test.js': "const fs = require('fs'), p = require('path'); require('../lib/a.js'); const f = p.join(__dirname, '..', 'sys', 'data'); const ok = fs.readFileSync(p.join(f, 'fixture.txt'), 'utf8') === 'hello'; fs.writeFileSync(p.join(f, 'leak.txt'), 'x'); console.log(ok ? '1 passed, 0 failed' : '0 passed, 1 failed (fixture missing)'); process.exit(ok ? 0 : 1);\n" });
+    const ev = await PE.gather({ path: 'lib/a.js', base: A, content: A + '// c\n', root: d });
+    assert.strictEqual(ev.tests.results[0].verdict, 'passes'); assert.ok(!fs.existsSync(path.join(d, 'sys', 'data', 'leak.txt')), 'the real sys/data was written to');
+  });
   await test('PE-09 the shadow overlays the proposal: the test saw the NEW file (a sentinel the test reads back)', async () => {
     const d = mk({ 'lib/a.js': "module.exports = { v: 1 };\n", 'tests/a.test.js': "const v = require('../lib/a.js').v; console.log(v === 2 ? '1 passed, 0 failed' : '0 passed, 1 failed (v is ' + v + ')'); process.exit(v === 2 ? 0 : 1);\n" });
     const ev = await PE.gather({ path: 'lib/a.js', base: "module.exports = { v: 1 };\n", content: "module.exports = { v: 2 };\n", root: d });
     assert.strictEqual(ev.tests.results[0].verdict, 'fixed');
   });
   await test('PE-10 on the real tree: apply() refuses an agent proposal whose evidence has a regression; edit() clears evidence', async () => {
+    const listing = () => { const out = []; const w = (d, depth = 0) => { if (depth > 6) return; for (const e of fs.readdirSync(d, { withFileTypes: true })) { if (e.name === 'node_modules' || e.name === '.git') continue; const p = path.join(d, e.name); if (e.isDirectory()) { if (e.name === 'data') walkAll(p); else w(p, depth + 1); } } }; const walkAll = d => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walkAll(p); else { const st = fs.statSync(p); out.push(`${p}:${st.size}:${Math.floor(st.mtimeMs)}`); } } }; w(ROOTREAL); return out.sort().join('\n'); };
+    const dataBefore = listing();
     process.env.NEXUS_EVIDENCE = 'on';
     const real = fs.readFileSync(path.join(ROOTREAL, 'lib/hat-seed.js'), 'utf8');
     const layer = { readFile: (u, p) => p === 'lib/hat-seed.js' ? { content: real } : { error: 'no' }, writeFile() { throw new Error('must not write'); } };
@@ -66,6 +73,7 @@ const world = () => mk({ 'lib/a.js': A, 'tests/a.test.js': T, 'lib/unrelated.js'
     assert.ok(ev && ev.regressions >= 1, ev && ev.summary);
     const a = RI.apply(p.inject.uuid, { layer }); assert.strictEqual(a.ok, false); assert.strictEqual(a.regressed, true); assert.match(a.errors[0], /fail on this proposal — nothing applied/);
     const e = RI.edit(p.inject.uuid, real); assert.strictEqual(e.ok, true); assert.strictEqual(RI.get(p.inject.uuid).evidence, null);
+    assert.strictEqual(listing(), dataBefore, 'running the linked tests changed a real data folder');
   });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();
