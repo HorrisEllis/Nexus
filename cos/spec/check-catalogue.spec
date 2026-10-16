@@ -266,3 +266,8 @@ spec:
 
 ## ADDENDUM 2026-10-15 — CK-255 every build through WARP (0.60.67 WB0)
 # Catalogued and runnable: lib/checks/ck-255-warp-builds.js over lib/build-paths.js census. Red on Nexus today, naming 5 build paths and 6 call sites. James: "make sure all builds use warp."
+
+# ## ADDENDUM 2026-10-16 — CK-255 green on Nexus (0.60.73)
+# WB1/WB2 wrapped the five bypassing calls (phase-build, proof-repair, draft-review, officiator-synthesis, raid-worker-brick) in
+# lib/warp-rung.js; lib/build-paths.js 1.1.0 counts a call inside WR.wrap on the same line as WARP. A new direct call still fails
+# CK-255 (test-build-paths BP-03, BP-03b).

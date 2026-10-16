@@ -261,3 +261,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **Evidence:** `tests/modules/test-release-notes.test.js` (6/6); a live sync in the coder's container recorded 280
     releases, 208 with their commits; `CHANGES.md`; `CHANGELOG-0.60.72.md`.
 
+- **2026-10-16: "Option 1 (my recommendation): wrap each of those agent calls in WARP ... while the build ladder and RAID still choose which agent runs."**
+  - **Context:** a census (CK-255) found 5 build paths calling their agent directly, bypassing WARP. He was offered two
+    designs: wrap each call in WARP while RAID still chooses (option 1, the coder's recommendation), or hand agent choice
+    to WARP's own cascade (option 2). He took option 1.
+  - **What it shows:** keeping one authority per decision. Option 2 would have given the system a second router beside
+    RAID; option 1 adds WARP's cache and gates without moving who decides. Building it surfaced the limit of caching an
+    agentic build (its work is the files it writes, not its reply), which is why those paths retain but never replay.
+  - **Evidence:** `tests/modules/test-warp-rung.test.js` (7/7); `lib/build-paths.js` census: 0 bypasses (was 5),
+    CK-255 green; `CHANGELOG-0.60.73.md`.

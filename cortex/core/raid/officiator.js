@@ -170,7 +170,13 @@ async function _synthesizeCore(prompt, opts = {}) {
     return { ok: false, reason: 'the_officiator hat is not seeded — run lib/hat-seed.js\'s seedHats() first' };
   }
   const { dispatchToNcpAgent } = require('../../../copilot/lifeline.js');
-  const result = await dispatchToNcpAgent(prompt, { provider: forAgent });
+  // §WB2 0.60.73 — WARP around the agent RAID chose (James: "Option 1"): an identical prompt retained 3 times is served
+  // from WARP's cache; a reply that does not parse as a contract fails the hard axiom, so it is never retained or served.
+  const parses = [{ id: 'parses-as-contract', severity: 'hard', check: (e) => !!_parseSynthesizedContract(e.data.output) }];
+  const result = await require('../../../lib/warp-rung.js').wrap(() => dispatchToNcpAgent(prompt, { provider: forAgent }), { kind: 'officiator-synthesis', provider: forAgent, key: prompt, mode: 'cache', axioms: parses, fresh: !!opts.fresh });
+  if (result && result.warp && result.warp.source === 'rejected') {
+    return { ok: false, reason: `the_officiator's real response could not be parsed as a real contract JSON object: ${(result.text || '').slice(0, 200)}` };
+  }
   if (!result || !result.ok) {
     return { ok: false, reason: `no real agent response (forAgent=${forAgent}) — guardian unreachable or an empty response` };
   }

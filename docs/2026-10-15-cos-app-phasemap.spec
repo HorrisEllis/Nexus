@@ -114,3 +114,27 @@ addendum_b:
       does: "COS lists Idearium repos, shows versions/phasemap/notes, imports a repo's release as an installed version, reports run state back (started, healthy, rolled back) as repo activity, and queues events while Idearium is down. CLI first: cos app repos|sync|link <repo>."
       proof: "a switch while Idearium is down is queued and replayed once; COS still starts the last good version with Idearium off; a repo's activity log shows the switch and any rollback with its reason."
   question: "Which repo actions do you want from the app first: only version/run (list, switch, roll back), or also phasemap builds and notes? I recommend version/run first."
+
+# ## ADDENDUM 2026-10-16 — COS to manage his projects; a new Nexus hooks in on arrival (mapped, no code)
+# James (2026-10-16): "check everythign in nexu that can help pipeline, clearglass. cos for windows. automation and macros.
+# tell me whats the most important. i figure cos could be helpfui for managing my projects so im not so overwhelmed.
+# alos what if when i download the newest version of nexus whether on git and drag it into clearcos, or i download it in
+# clearglass, and aurtomatically open it in cos, it can hook into nexus systems."
+# Context: asked with his WB choice (option 1, built 0.60.73). Read in source the same day (two read-only surveys).
+# The coder's reading (to confirm):
+#   "managing my projects" = one overview of every repo: open todos/questions (lib/repo-notes.js counts), the next open phase
+#     (repo.phasemap), the last activity (repo.activity), sorted by what moved last. Everything it needs exists; no route-commands
+#     row lists repos (repo.list is a local idearium CLI call only), so agents cannot see it either. Proposed COSA10 below.
+#   "drag it into clearcos / download it in clearglass ... hook into nexus systems" = COSA7 (Clear Glass hands a release zip to
+#     COS) → COSA1 (version store + import; reuse lib/history-import-job.js and lib/zip-ingest.js, already a safe zip inbox) →
+#     COSA2/3 (install, start autopilot) on the SAME data root (COSA5) → COSA4 (switch, roll back; reuse lib/nexus-self/store.js
+#     checkout and apply.js rollback). Found: systems are found by fixed ports and entry files (nexus/autopilot.js ALL_KERNELS,
+#     lib/nexus-self/systems.js), not by registration, so "hooking in" is automatic once the new copy runs on the same data root
+#     and ports; the blocker is COSA5 (about 42 files compute <file>/../data themselves; recount 2026-10-16, the map said 37).
+# No decision of his is recorded here yet: COSA0 (shell, signing, update source) and the COSA9 question stay open.
+#
+# COSA10_my_projects (proposed, OPEN; depends on nothing):
+#   does: one route-commands row `projects` (and repo.list) reading GET /api/repos plus, per repo, notes counts, the first open
+#     phase and the last activity; Idearium shows it first; COSA9's `cos app repos` later calls the same row. Read-only.
+#   proof: three fixture repos sort by last activity; a repo with 2 open todos and an open phase shows both; an agent gets the
+#     same list through nexus.command.

@@ -23,6 +23,7 @@ import { spawnSync, spawn as spawnProc } from 'child_process';
 import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
+const WR = _require('../../lib/warp-rung.js');   // §WB1 0.60.73 — WARP around the agent the ladder and RAID chose (James: "Option 1")
 const _access = _require('../lib/access.cjs');   // §0.58.0 IA0 — who may act on Idearium
 // 0.60.27 AG1a — an agent call's tokens, estimated where it happens (lib/economy/tokens.js estimate-v1; no vendor tokenizer)
 const _tokEst = (t) => { try { return t ? _require('../../lib/economy/tokens.js').estimate(String(t)) : 0; } catch (_) { return 0; } };
@@ -945,7 +946,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
-    try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(bare ? { noContext: true } : {}) }); }
+    try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(bare ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -1064,7 +1065,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         grounding: { system, registry: registry.length, atlas: atlas.length, loom: loom.length, reuse: reuse.map(x => x.file), lessons: learned.text ? learned.text.split('\n').length : 0, notes: regNotes }, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planning', snapshot: commitId, provider: planner });
       let r;
-      try { r = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-plan${n}`, maxToolErrors: policy.maxToolErrors || 0 }); }
+      try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-plan${n}`, maxToolErrors: policy.maxToolErrors || 0 }), { kind: 'phase-plan', provider: planner || null, key: `${target.uuid}\n${msg}`, mode: 'cache', fresh: n > 1 }); }
       catch (e) { r = { ok: false, error: e.message }; }
       if (!r || !r.ok) { plannerError = String((r && r.error) || 'the planner did not answer').slice(0, 400); break; }   // the planner itself is down: asking again will not help
       parsed = PP.parsePlan(r.text, { phaseFiles: expectFiles, registry, system, ownerOf: system ? _require('../../lib/nexus-self/systems.js').ownerOf : null });
@@ -1431,9 +1432,9 @@ async function _provePhase({ target, base, commitId, mapText, phase, message, di
       const fb = PR.feedbackMessage(run);
       appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-retry-${attempt}`, ...pbase, state: 'retrying', attempt, snapshot: commitId, error: `${run.total - run.met} condition(s) unmet — attempt ${attempt} of ${max}`, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.attempt.unmet', { ...pbase, attempt: attempt - 1, met: run.met, total: run.total, modes: run.modes });
-      let rr; try { rr = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: `${message}
+      let rr; try { const rd = await _agentDir(target.uuid); rr = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: `${message}
 
-${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}` }); }
+${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}` }), { kind: 'proof-repair', provider: dispatch.provider || dispatch.model || dispatch.agent || dispatch.backend || null, key: `${target.uuid}\n${message}\n${fb}`, mode: 'gate' }); }
       catch (e) { rr = { ok: false, error: e.message }; }
       if (!rr || !rr.ok) {
         appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt, snapshot: commitId, error: `attempt ${attempt} failed before it could be checked: ${String((rr && rr.error) || 'no reply').slice(0, 300)}`, proof: run && { met: run.met, total: run.total, modes: run.modes }, ts: Date.now() });
@@ -1500,7 +1501,7 @@ async function _reviewDraft({ r, state, absent, target, base, commitId, req, not
   const SH = _require('../../lib/shadow.js');
   const shadow = SH.declare({ step: 'phase.review', expects: { files: [...new Set([...files.map(f => f.path), ...(absent || [])])] }, subject: { repoUuid: target.uuid, map: base.map, phase: base.phase, runId: reviewRunId }, causedBy: `idearium.phases.build:${base.runId}` });
   let rr;
-  try { rr = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: text, provider: reviewer, layer: getRepoLayer(), session: reviewRunId }); }
+  try { const rd = await _agentDir(target.uuid); rr = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: text, provider: reviewer, layer: getRepoLayer(), session: reviewRunId }), { kind: 'draft-review', provider: reviewer || null, key: `${target.uuid}\n${text}`, mode: 'gate' }); }
   catch (e) { rr = { ok: false, error: e.message }; }
   let rstate = rr && rr.ok ? (rr.injects && rr.injects.blocked ? 'blocked' : 'reviewed') : 'failed';
   let rabsent = null;
