@@ -277,3 +277,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     one ordered list of existing phases, with nothing new mapped. The first item, an overview of his own projects, was
     built the same day. Building it surfaced a silent route collision, now guarded by a test.
   - **Evidence:** `docs/2026-10-15-pipeline-focus-phasemap.spec` (addendum 2026-10-16); `tests/modules/test-projects-overview.test.js` (6/6); `CHANGELOG-0.60.74.md`.
+- **2026-10-16: "Yes. It’s analysis. The bricks." · "A brick is a chunk. Like analysis."**
+  - **Context:** asked whether a gate's unit of work is the brick. The coder offered two readings of "It's analysis";
+    he answered with neither, defining the term instead: a brick is a chunk, the part analysis breaks a whole into.
+  - **What it shows:** precise vocabulary as architecture. One word for one unit let three features land on the same
+    key the same day: the trace per brick (0.60.75), the context budget per brick (0.60.76), and the run that follows
+    the brick across agents and chats (0.60.77). Correcting the coder's reading instead of accepting it kept the record
+    his.
+  - **Evidence:** `docs/2026-10-15-gate-held-work-phasemap.spec` addenda (d) and (f); `tests/modules/test-run-state.test.js`
+    RS-50..55; `CHANGELOG-0.60.77.md`.

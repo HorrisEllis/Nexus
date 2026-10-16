@@ -493,6 +493,8 @@ async function ppTrace(btn, phase, map) {
   const tr = d.trace || { bricks: [], holes: [], counts: {} };
   box.innerHTML = `<div class="pp-against">${tr.counts.passed || 0}/${tr.counts.bricks || 0} bricks passed · ${tr.counts.steps || 0} steps · ${tr.counts.files || 0} files · ${tr.counts.commits || 0} commits${tr.holes.length ? ` · <span style="color:var(--amber)">${tr.holes.length} hole${tr.holes.length === 1 ? '' : 's'}</span>` : ' · no holes'}</div>`
     + tr.holes.map(x => `<div class="pp-against warn">hole · ${escapeHtml(x.gate || '')}: ${escapeHtml(x.what)}</div>`).join('')
+    // §GW2 0.60.77 — each brick's run: what every attempt and agent resumed (the baton)
+    + tr.bricks.filter(b => b.run).map(b => `<div class="pp-against">▪ ${escapeHtml(b.id)} — attempt ${b.run.attempt} · ${escapeHtml(b.run.status)}${b.run.providers.length ? ` · tried by ${escapeHtml([...new Set(b.run.providers)].join(' → '))}` : ''} · ${b.run.steps} step${b.run.steps === 1 ? '' : 's'}${b.run.read.length ? ` · read ${escapeHtml(b.run.read.join(', '))}` : ''}${b.run.changed.length ? ` · changed ${escapeHtml(b.run.changed.join(', '))}` : ''}${b.run.note ? ` — ${escapeHtml(b.run.note)}` : ''}</div>`).join('')
     + `<details class="pp-reply" open><summary>timeline</summary><pre>${escapeHtml((d.lines || []).join('\n'))}</pre></details>`;
 }
 

@@ -917,7 +917,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // or one chunk (one file, its own short request, its own sessions; ck = { chunk, chunks, file } on every row)
   // §0.60.0 PC1 — verify(code) -> { ok, missing }: a planned file is checked for the exports its plan names; bare: the
   // request goes alone (no retrieval context, no atlas) — a planned brief already holds everything the coder needs
-  const makeAttempt = ({ msg, files, ck = null, verify = null, bare = false }) => async (rg, ri, tryNo) => {
+  const makeAttempt = ({ msg, files, ck = null, verify = null, bare = false, brick = null }) => async (rg, ri, tryNo) => {
+    // §GW2 0.60.77 — the brick this attempt works on: its run state is the brick's (lib/run-state.js), whatever chat or agent
+    const brickKey = (brick || (ck && ck.brick)) ? `${map}::${phase}::${brick || ck.brick}` : null;
     const tag = ck ? `-c${ck.chunk}` : '';
     const session = ri <= 0 && tryNo === 1 ? `${runId}${tag}` : `${runId}${tag}-r${ri + 1}t${tryNo}`;
     // §0.60.0 RS1 — the repo is paused: the attempt waits here, said on the Plan, and goes on when it is played
@@ -946,7 +948,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
     let r;
-    try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...((typeof bare === 'function' ? bare(rg) : bare) ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
+    try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(brickKey ? { brick: brickKey } : {}), ...((typeof bare === 'function' ? bare(rg) : bare) ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -1172,7 +1174,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         // §GW24 0.60.76 — James: "each gate holds the context, which can make tghe agents dumb." On a local model's rung the
         // whole-phase brick goes lean: the phase and its map (MP3) only; the repo context stays with the gate, and the agent's
         // tools fetch what it asks for. An agent's rung (ChatGPT, Claude…) gets the full context as before.
-        const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles, bare: (rg) => !!(rg && rg.base === 'ollama') }), onOutcome: makeOnOutcome() });
+        const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy, attempt: makeAttempt({ msg: message, files: expectFiles, bare: (rg) => !!(rg && rg.base === 'ollama'), brick: gate.id }), onOutcome: makeOnOutcome() });
         if (out.dp) lastDp = out.dp;
         const ok = out.state === 'replied';
         return { ok, agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),
@@ -7607,6 +7609,15 @@ async function handle(req, res, route, query, body) {
           let raid = null;
           if (qid) { try { raid = _require('../../cortex/core/raid/contract-intake.js').listQueue().find(x => x.uuid === qid) || null; } catch (_) { raid = null; } }
           const tr = CT.trace(L.payload, { runs: rows, raid });
+          // §GW2 0.60.77 — each brick's own run (lib/run-state.js, keyed by the brick): the baton every attempt and agent resumed
+          try {
+            const RSx = _require('../../lib/run-state.js');
+            for (const b of tr.bricks) {
+              const r0 = run ? RSx.load(RSx.runIdFor({ repoUuid: run.targetRepo || params.uuid, brick: `${run.map}::${run.phase}::${b.id}` })) : null;
+              if (r0) b.run = { attempt: r0.attempt, status: r0.status, providers: (r0.providers || []).map(x => x.provider).filter(Boolean), steps: r0.stepCount || 0,
+                read: (r0.filesRead || []).slice(-8), changed: (r0.filesChanged || []).slice(-8), note: r0.note || null };
+            }
+          } catch (_) { /* the trace stands without the runs */ }
           return ok(res, { repoUuid: params.uuid, phase: query.phase, file, runId: run ? run.runId : null, raidQueueId: qid, trace: tr, lines: CT.lines(tr) });
         }
         // §GT2 0.60.42 — where the newest run stands, from its last gate move

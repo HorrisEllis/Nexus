@@ -131,7 +131,7 @@ phases:
     proof: "a 3-gate contract where gate 1 runs on agent A and gate 2 on agent B with no shared history completes; the same with gate 2's agent given a different persona fails the check, proving the baton is what carried it"
 
   GW2_the_run_follows_the_gate:
-    status: OPEN
+    status: "PARTLY BUILT 0.60.77 — a brick's run keyed by the brick (lib/run-state.js), resumed by every retry, rung, fallback and chat; the baton header on Ollama too; each brick's run in the trace. Open: GW0b (when a gate opens a new chat), the packet as the one handoff (GW1)"
     systems: [core, cortex, copilot, guardian]
     files: [lib/run-state.js, cortex/core/raid/contract-gates.js, cortex/core/raid/contract-adapters.js, lib/repo-agent.js, copilot/server.js]
     depends_on: [GW1_the_baton, GW0_what_is_a_gate]
@@ -643,4 +643,21 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 # phase-map block (MP3) are sent; the repo context card, memory, atlas and checklist stay with the gate, and the agent's tools fetch
 # what it asks for. Agents' rungs are unchanged.
 # Not proven: a real small model passing a brick it failed before. That needs his run on the current release (pipeline-focus step 0).
+
+# ## ADDENDUM 2026-10-16 (h) — GW2 first slice built (0.60.77): the run follows the brick
+# James: "Step 4" · "A brick is a chunk." · from the map: "make each agent able to not need the same chat, like the gates, and nexus
+# hold the persistent data, so we could use a different chat or agent each gate".
+# Found (read in source and measured): each attempt of a brick began a blank run. A retry, a ladder rung or a fallback had its own
+# session or a goal changed by the gate's feedback, and run-state resumed only on the same session AND the same goal. So the
+# next attempt or agent knew nothing of what the last one read, changed or how it ended. The browser path's resumed-run header
+# (copilot tool-runtime makeNcpCallModel) also never ran on Ollama.
+# Measured, not assumed: the fail/rewind repeats in his screenshot are bounded. A scheduler run with a brick that always fails
+# stops at 3 failures + 3 rewinds (capability) or 6 failures (transient). His 3h phase is the lost-job case (a tab handed a job
+# did nothing). CE10 (0.60.50) handles it; he runs 0.60.44.
+# Built: lib/run-state.js 1.1.0. runIdFor/begin take `brick`, and a brick's run is resumed by every attempt (attempt + 1, steps
+# kept, goal updated, the agents that tried it listed; the session is a pointer). Idearium passes <map>::<phase>::<gate> on every
+# brick attempt (planned and whole-phase). lib/repo-agent.js keys the run by it, and both fallbacks (door, lost job) carry it.
+# On Ollama a resumed run gets the task header ahead of its prompt. The trace (?trace=1, the Plan's trace button) shows each
+# brick's run: attempt, who tried it, steps, files read and changed.
+# Open: GW0b (a new chat per gate kind; today a contract retry reuses the brick's session) and GW1's packet as the one handoff.
 
