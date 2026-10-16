@@ -45,26 +45,39 @@
   function draw() {
     $('#root').textContent = state.root; const box = $('#projects'); box.textContent = '';
     for (const p of state.projects) box.appendChild(project(p));
+    const pol = $('#policy'); if (pol && state.settings) pol.value = state.settings.update.policy;
+    const run = state.projects.filter(p => p.run && p.run.running); $('#strip').textContent = state.projects.length ? state.projects.map(p => `${p.project} ${p.run && p.run.running ? (p.run.version + (p.run.healthy ? ' running' : ' NOT answering')) : (p.current || 'no version') + ' stopped'}${state.waiting && state.waiting[p.project] ? ' · ' + state.waiting[p.project] + ' waiting' : ''}`).join('  |  ') : 'no projects yet';
     $('#empty').hidden = state.projects.length > 0; $('#inbox-path').textContent = state.inbox.path;
   }
   async function refresh() { const s = await api().state(); if (s && s.ok !== false) { state = s; draw(); if (openLogs) showLogs(openLogs, true); } return s; }
   async function showLogs(name, quiet) { openLogs = name; const r = await api().logs(name); $('#logs-title').textContent = `${name}: ${r.file || 'no log yet'}`; $('#logs').textContent = r.text || ''; $('#logs-panel').hidden = false; if (!quiet) $('#logs').scrollTop = 1e9; }
 
+  /** policyBanner(arrival, outcome) — what the update policy did with a release that arrived. Said plainly, with the way back. */
+  function policyBanner(r, o) {
+    const what = `${r.project} ${r.version}`; const sw = [{ label: 'Switch to it now', primary: true, run: () => act(() => api().switchTo(r.project, r.version), `${r.project} is now ${r.version}.`) }, { label: 'Later' }];
+    const note = r.verified ? ' and verified' : ', but NOT verified (no checksum was found beside the zip)';
+    if (o.action === 'switched') banner(o.ok ? 'ok' : 'err', o.ok ? `${what} arrived and COS switched to it (update policy: auto). Roll back is one click if it is wrong.` : `${what} arrived; switching to it failed and was rolled back${o.result && o.result.error ? ': ' + o.result.error : ''}.`);
+    else if (o.action === 'waiting') banner('info', `${what} is installed${note}. Not switched yet: ${o.reason}.`, sw);
+    else if (o.action === 'none' && o.policy === 'off') banner('info', `${what} is installed${note}. Update policy is off: nothing switches by itself.`, sw);
+    else banner('info', `${what} is installed${note}. It has not been started.${o.reason ? ' (' + o.reason + ')' : ''}`, sw);
+  }
+
   async function importPath(path) {
     const r = await api().importPath(path); if (!r.ok) { banner('err', r.error); return r; }
     if (r.already) { banner('info', r.note); return r; }
-    banner('info', `${r.project} ${r.version} is installed${r.verified ? ' and verified' : ', but NOT verified (no checksum was found beside the zip)'}. It has not been started.`, [{ label: 'Switch to it now', primary: true, run: () => act(() => api().switchTo(r.project, r.version), `${r.project} is now ${r.version}.`) }, { label: 'Later' }]);
+    policyBanner(r, r.policy || { action: 'offer' });
     await refresh(); return r;
   }
 
   function wire() {
+    const pol = $('#policy'); if (pol) pol.addEventListener('change', async () => { const r = await api().setSetting('update.policy', pol.value); if (r && r.ok === false) banner('err', r.error); else banner('ok', `Update policy: ${pol.value}.`); await refresh(); });
     $('#btn-import').addEventListener('click', async () => { const r = await api().pickZip(); if (r && r.path) await importPath(r.path); });
     $('#btn-logs-close').addEventListener('click', () => { openLogs = null; $('#logs-panel').hidden = true; });
     let depth = 0; const show = (on) => { $('#drop').hidden = !on; };
     document.addEventListener('dragenter', (e) => { e.preventDefault(); depth++; show(true); }); document.addEventListener('dragover', (e) => e.preventDefault());
     document.addEventListener('dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) show(false); });
     document.addEventListener('drop', async (e) => { e.preventDefault(); depth = 0; show(false); for (const f of Array.from((e.dataTransfer && e.dataTransfer.files) || [])) { const p = api().pathFor(f); if (/\.zip$/i.test(p || f.name || '')) await importPath(p); else banner('err', `${f.name} is not a .zip`); } });
-    if (api().onEvent) api().onEvent((ev) => { if (ev.type === 'imported') banner('info', `${ev.project} ${ev.version} arrived in the inbox folder and is installed. It has not been started.`, [{ label: 'Switch to it now', primary: true, run: () => act(() => api().switchTo(ev.project, ev.version), `${ev.project} is now ${ev.version}.`) }, { label: 'Later' }]); refresh(); });
+    if (api().onEvent) api().onEvent((ev) => { if (ev.type === 'policy' && ev.action !== 'none') { policyBanner({ project: ev.project, version: ev.version, verified: true }, ev); refresh(); } else if (ev.type === 'settings') refresh(); });
     setInterval(refresh, 4000);
   }
   window.COSUI = { refresh, importPath, banner, showLogs, get state() { return state; } };

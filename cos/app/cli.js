@@ -27,8 +27,13 @@ function main(argv = process.argv.slice(2), out = (s) => console.log(s)) {
     const ps = S.list(root, pos[1] || null); say({ ok: true, projects: ps }, ps.length ? ps.map(p => `${p.project}  (current ${p.current || 'none'})  data ${p.data}\n` + p.versions.map(v => `  ${v.version.padEnd(10)} ${v.current ? 'current ' : v.previous ? 'previous' : '        '} ${v.verified ? 'verified  ' : 'unverified'} ${v.dataLinked ? 'data linked' : 'DATA NOT LINKED'}${v.present ? '' : '  (folder missing)'}`).join('\n')).join('\n') : 'no projects yet: drop a release zip in the inbox, or `import <zip>`');
   } else if (cmd === 'remove') {
     if (!pos[1] || !pos[2]) fail({ ok: false, error: 'remove needs <project> <version>' }); else { const r = S.remove(root, pos[1], pos[2]); if (!r.ok) fail(r); else say(r, `✓ moved to ${r.moved}`); }
+  } else if (cmd === 'settings') {
+    const St = require('./settings.js');
+    if (pos[1] && pos[2] === undefined) fail({ ok: false, error: 'settings <key> needs a value (settings update.policy ask)' });
+    else if (pos[1]) { const r = St.set(root, pos[1], pos[2]); if (!r.ok) fail(r); else say(r, `✓ ${pos[1]} = ${pos[2]}`); }
+    else { const l = St.load(root); say({ ok: true, ...l }, `update.policy = ${l.settings.update.policy}  (off | ask | auto)\nwindow ${l.settings.window.width}x${l.settings.window.height}${l.warning ? '\n! ' + l.warning : ''}`); }
   } else if (cmd === 'status') { const s = S.status(root); say({ ok: true, ...s }, `root ${s.root}\n${s.projects.length} project(s) · inbox ${s.inbox.pending} waiting (${s.inbox.path})`); }
-  else fail({ ok: false, error: `unknown command "${cmd}" (import, inbox, list, status, remove)` });
+  else fail({ ok: false, error: `unknown command "${cmd}" (import, inbox, list, status, remove, settings)` });
   return code;
 }
 const RUNTIME = new Set(['switch', 'rollback', 'start', 'stop', 'running', 'logs']);

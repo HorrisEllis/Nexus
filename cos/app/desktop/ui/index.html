@@ -10,8 +10,9 @@
 <body>
 <header>
   <div class="brand"><span class="logo">COS</span><span class="sub" id="root"></span></div>
-  <div class="actions"><button id="btn-import" class="primary">Import a release zip…</button></div>
+  <div class="actions"><label class="pol" title="What COS does with a release that arrives: off = nothing by itself · ask = installs, asks before switching · auto = installs, and switches only when it is safe (verified, newer, idle)">Updates <select id="policy"><option value="off">off</option><option value="ask">ask</option><option value="auto">auto</option></select></label> <button id="btn-import" class="primary">Import a release zip…</button></div>
 </header>
+<div id="strip" class="strip" role="status"></div>
 <div id="banners" aria-live="polite"></div>
 <main id="projects"></main>
 <section id="empty" hidden>

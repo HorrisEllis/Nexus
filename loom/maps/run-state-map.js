@@ -21,8 +21,9 @@ const FILES = [
   ['cos/app/store.js', I('cos/app/store.js'), [I('lib/zip.js')]],   // §0.60.66 COSA1
   ['cos/app/runtime.js', I('cos/app/runtime.js'), []],   // §0.60.67 COSA2/3
   ['cos/app/switch.js', I('cos/app/switch.js'), [I('cos/app/store.js'), I('cos/app/runtime.js')]],   // §0.60.67 COSA4
-  ['cos/app/controller.js', I('cos/app/controller.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/switch.js')]],   // §0.60.68 COSA6
-  ['cos/app/desktop/main.js', I('cos/app/desktop/main.js'), [I('cos/app/controller.js'), I('cos/app/store.js')]],
+  ['cos/app/settings.js', I('cos/app/settings.js'), []],   // §0.60.69 COSA12/13
+  ['cos/app/controller.js', I('cos/app/controller.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/switch.js'), I('cos/app/settings.js')]],   // §0.60.68 COSA6
+  ['cos/app/desktop/main.js', I('cos/app/desktop/main.js'), [I('cos/app/controller.js'), I('cos/app/store.js'), I('cos/app/settings.js')]],
   ['cos/app/desktop/preload.js', I('cos/app/desktop/preload.js'), []],
   ['cos/app/desktop/ui/app.js', I('cos/app/desktop/ui/app.js'), []],
   ['scripts/build-cos-app.js', I('scripts/build-cos-app.js'), [I('cos/app/controller.js'), I('lib/zip.js')]],

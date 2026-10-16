@@ -356,6 +356,7 @@ const SUITES = [
   'test-net-routes.test.js',          // 0.60.60 — net routes + Snowflake transport (CLI first): policy, fail-closed PAC, fake tor, agent read-only
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-cos-app-ui.test.js',          // 0.60.68 COSA6 — COS window (jsdom) and controller
+  'test-cos-app-update.test.js',      // 0.60.69 COSA12/13 — settings and the update policy
   'test-cos-app-build.test.js',       // 0.60.68 COSA6 — staging for the Windows build
   'test-cos-app-runtime.test.js',     // 0.60.67 COSA2/3 — start/stop/health of an installed version
   'test-cos-app-switch.test.js',      // 0.60.67 COSA4 — switch, snapshot, rollback

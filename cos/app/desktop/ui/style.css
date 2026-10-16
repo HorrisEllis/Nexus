@@ -34,3 +34,6 @@ td.act { text-align:right; white-space:nowrap; display:flex; gap:6px; justify-co
 .logs-head { display:flex; align-items:center; gap:10px; padding:8px 14px; border-bottom:1px solid var(--line); }
 #logs { margin:0; padding:10px 14px; overflow:auto; flex:1; font:12px/1.4 Consolas, monospace; color:#c9cde0; white-space:pre-wrap; }
 #drop { position:fixed; inset:0; background:rgba(13,14,20,.88); display:grid; place-items:center; z-index:9; font-size:20px; border:3px dashed var(--accent); }
+
+.pol{font-size:12px;color:var(--dim,#9aa0b4);margin-right:8px}.pol select{background:#171923;color:inherit;border:1px solid #2b2f40;border-radius:4px;padding:2px 4px}
+.strip{padding:4px 16px;font-size:12px;color:var(--dim,#9aa0b4);border-bottom:1px solid #1f2230;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

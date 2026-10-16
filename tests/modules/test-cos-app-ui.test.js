@@ -66,7 +66,7 @@ const click = (w, e) => e.dispatchEvent(new w.MouseEvent('click', { bubbles: tru
     const u = await boot(S([P()]), { importPath: async () => ({ ok: true, project: 'nexus', version: '0.60.69', verified: false }) }); await u.w.COSUI.importPath('C:\\x.zip'); assert.match(u.$('.banner.info').textContent, /NOT verified/);
     const u2 = await boot(S([P()]), { importPath: async () => ({ ok: false, error: 'checksum mismatch (SHA256SUMS): refused, nothing was extracted' }) }); await u2.w.COSUI.importPath('C:\\x.zip'); assert.match(u2.$('.banner.err').textContent, /checksum mismatch/);
     const u3 = await boot(S([P()])); const ev = new u3.w.Event('drop', { bubbles: true, cancelable: true }); ev.dataTransfer = { files: [{ name: 'notes.txt', path: 'C:\\notes.txt' }] }; u3.d.dispatchEvent(ev); await tick(); assert.match(u3.$('.banner.err').textContent, /notes\.txt is not a \.zip/);
-    const u4 = await boot(S([P()])); u4.ev({ type: 'imported', project: 'nexus', version: '0.60.70' }); await tick(); assert.match(u4.$('.banner.info').textContent, /0\.60\.70 arrived in the inbox folder and is installed\. It has not been started/);
+    const u4 = await boot(S([P()])); u4.ev({ type: 'policy', project: 'nexus', version: '0.60.70', action: 'offer', policy: 'ask' }); await tick(); assert.match(u4.$('.banner.info').textContent, /0\.60\.70 is installed.*It has not been started/);
   });
   await test('UI-11 Log opens the panel with the log text; Close hides it', async () => {
     const u = await boot(S([P()])); click(u.w, u.$('[data-act="logs"]')); await tick(); assert.strictEqual(u.$('#logs-panel').hidden, false); assert.match(u.$('#logs').textContent, /line two/); assert.match(u.$('#logs-title').textContent, /nexus: x\.log/);
@@ -78,6 +78,22 @@ const click = (w, e) => e.dispatchEvent(new w.MouseEvent('click', { bubbles: tru
   const free = () => new Promise(ok => { const s = net.createServer(); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => ok(p)); }); });
   const SERVER = `const http=require('http');require('js-yaml');http.createServer((q,r)=>r.end('{}')).listen(+process.env.AUTOPILOT_STATUS_PORT,'127.0.0.1');`;
   function zip(dir, v, main) { const t = `nexus-${v}`, f = path.join(dir, t + '.zip'); fs.writeFileSync(f, Zip.create([{ path: `${t}/VERSION`, data: Buffer.from(v + '\n') }, { path: `${t}/package.json`, data: Buffer.from('{"dependencies":{"js-yaml":"^4"}}') }, { path: `${t}/nexus/autopilot.js`, data: Buffer.from(main) }])); return f; }
+  await test('UI-12 the update policy: the select shows the stored value, changing it calls setSetting, and a refused value is shown in full', async () => {
+    const st = { ...S([P()]), settings: { update: { policy: 'auto' } } }; const u = await boot(st, { setSetting: async (k, v) => (v === 'off' ? { ok: false, error: 'update.policy cannot be changed right now' } : { ok: true }) });
+    assert.strictEqual(u.$('#policy').value, 'auto'); u.$('#policy').value = 'ask'; u.$('#policy').dispatchEvent(new u.w.Event('change', { bubbles: true })); await tick(); assert.match(u.$('#banners').textContent, /Update policy: ask/);
+    u.$('#policy').value = 'off'; u.$('#policy').dispatchEvent(new u.w.Event('change', { bubbles: true })); await tick(); assert.match(u.$('.banner.err').textContent, /cannot be changed right now/);
+  });
+  await test('UI-13 the status strip says each project, its version and whether it answers, and a release that is waiting', async () => {
+    const u = await boot({ ...S([P(), P({ project: 'other', current: '1.0.0', run: { running: false } })]), waiting: { nexus: '0.60.69' }, settings: { update: { policy: 'auto' } } });
+    const t = u.$('#strip').textContent; assert.match(t, /nexus 0\.60\.67 running/); assert.match(t, /other 1\.0\.0 stopped/); assert.match(t, /0\.60\.69 waiting/);
+  });
+  await test('UI-14 what the policy did is said plainly: switched, failed and rolled back, waiting with its reason, off', async () => {
+    const mk = async (policy, over) => { const u = await boot(S([P()]), { importPath: async () => ({ ok: true, project: 'nexus', version: '0.60.69', verified: true, policy }) }); await u.w.COSUI.importPath('C:\\x.zip'); return u.$('#banners').textContent; };
+    assert.match(await mk({ action: 'switched', ok: true }), /COS switched to it \(update policy: auto\).*Roll back/);
+    assert.match(await mk({ action: 'switched', ok: false, result: { error: 'did not answer in 60 s' } }), /failed and was rolled back: did not answer in 60 s/);
+    assert.match(await mk({ action: 'waiting', reason: 'nexus is running and COS has no idle signal from it yet' }), /Not switched yet: nexus is running and COS has no idle signal/);
+    assert.match(await mk({ action: 'none', policy: 'off' }), /Update policy is off: nothing switches by itself/);
+  });
   await test('CT-01 the controller: import, state, switch, state again, stop: the window\'s whole life on real files and processes', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-ct-')), dl = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-ctdl-')), port = await free(); const events = [];
     const c = new Controller({ root, opts: { statusPort: port, ports: [port], healthTimeoutMs: 6000, graceMs: 2000, pollMs: 100 }, onEvent: (e) => events.push(e.type + (e.version ? ':' + e.version : '')) });
