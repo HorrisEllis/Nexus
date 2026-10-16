@@ -713,3 +713,14 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 # Order proposed: (1) re-run the N0 census (the catalogue is from 0.39.300) and add phase · chunk(brick) · dep(edge) · file ·
 # input · output · run; (2) GW27 writes them per brick through the N1 log; (3) RF0 reads any repo against the taxonomy;
 # (4) RF1/RF2 move it, behind his decision_refactor_tool (A recommended); N24 and N10 retire the JSON writers the census finds.
+
+# ## ADDENDUM 2026-10-16 (k) — decided: the unit is the `chunk` node type; "brick" was his metaphor
+# James (2026-10-16), answering "since 'a brick is a chunk', make bricks the existing `chunk` type with a field saying build
+# brick or spec section, rather than a second type?": "Yes chunk type. When I said brick I was using a metaphor"
+# Decided (his): the taxonomy has one unit type, `chunk` (lib/node-schemas/schema.chunk, idearium/lib/chunk-nodes.js). A build
+# piece of a contract and a spec section are both chunks, told apart by a field. No `brick` node type is added. This settles
+# (j)'s "to confirm" on the type.
+# The coder's note: the code already says "brick" in many places (contract-gates comments, the BR1/BR2 phases, the run-state
+# brick key <map>::<phase>::<gate> of 0.60.77, the trace's per-brick view). Those stay as they are (§0.3, nothing rewritten). They
+# are read as his metaphor for a chunk. Where a chunk node is written (GW27), its kind field says which: build | spec_section.
+# Still open (his): decision_refactor_tool [A] proposal engine (coder recommends) · [B] one-pass rewriter · [C] report only.
