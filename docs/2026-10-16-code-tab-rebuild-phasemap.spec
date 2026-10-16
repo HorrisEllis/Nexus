@@ -135,3 +135,52 @@ addendum_a:
     - "Edge records for tool steps guess at 'who decided': the model chose the next tool call, so by = 'agent' for those, not a gate; only gates, RAID and rules are named as deciders."
     - "A control that acts on the wrong run (two runs live): every control carries runId + attempt + node id, and the command refuses a stale one."
   question: "Is this the right shape: a graph with four zoom levels (run, attempt, node, edge), and do you want the tool-call steps drawn as a collapsed group per run (my recommendation) or one node each?"
+
+# ADDENDUM 2026-10-16 (b): everything saves to Nexus, and agents ask Nexus first (recall before a tool call)
+addendum_b:
+  james: >-
+    "need everything to save to nexus. and for the agents to query that first, so they dont waster tokens on the same tool calls over and over"
+  context: "Said right after the Runs-tab graph map. It makes TB2-TB4 the first thing to build, ahead of the screens: it saves money on every run, and the Runs tab needs the records anyway. It closes a gap he named himself on 2026-09-08 (tool-call-listener.js header): \"persistent storage using cortex memory architectures, vector in the lib. reusing outputs.\""
+  grounded:
+    one_dispatch_point: "lib/agent-tools/index.js executeTool() (about line 81): every tool call in Nexus (~71 tools) passes through it, so a recall layer goes here once, not per tool."
+    what_it_records_now: "executeTool inserts tool_input and tool_output rows into event_log with the tool name, agent, intent, outcome and time: NOT the arguments and NOT the result. So the same code_search can be asked and paid for again and nothing remembers the answer."
+    what_already_exists: "lib/agent-tools/tool-call-listener.js: table guardian_tool_calls in JAA (so cortex's embedding/vector search applies), recordCall / recordResult, and findRecentResult(jaa, tool, args) with a 10-minute freshness window. Its own header says what it does NOT do: 'automatic interception/skipping of a tool call when a cached result exists ... it observes and makes reuse POSSIBLE; it doesn't yet enforce it.' It is also fed only by guardian.tool.called (browser agents reading tool calls out of the DOM), not by executeTool, so repo agents' calls (the code_* tools in the screenshot) are not in it."
+    run_state_has: "lib/run-state.js keeps the goal, the files read/changed and the last 60 steps; the task header's {done} placeholder already tells a resumed run what it did. That is per run; nothing answers 'did ANY run already ask this?'."
+  design:
+    recall_first_in_the_dispatcher: >-
+      Before tool.execute(), for a tool on the RECALLABLE allowlist, executeTool looks up (repo, tool, normalized arguments, state key). A valid exact hit returns the stored result at once, marked recalled { from run, at, ~tokens saved }, and the tool does not run. A miss runs the tool and records args + result through the one writer. An allowlist, not a blocklist: a tool is recallable only when someone has said it is read-only and its answer depends on a state Nexus can check.
+    state_key_not_a_clock: >-
+      The 10-minute window is a guess. Validity is the state the answer depends on: code_read on a file = that file's content hash; code_chunk/code_refs = the file(s) it covers; code_search/code_grep/code_map = the repo's index version plus its changed-file set; loom/atlas lookups = the registry version. Changed state = a different key = a miss, so a stale answer is never returned as fresh. A tool with no checkable state keeps the time window as an upper bound and says so.
+    agents_ask_nexus_first: >-
+      (1) The dispatcher does it silently for exact repeats (above). (2) A read-only tool `nexus_recall` is the one door for 'what does Nexus already hold': tool results from this and other runs of the repo, files read and changed, responses (.response nodes), gate outcomes, contracts, notes, the chat ledger for the repo, the recent event ledger. It answers compactly with where each came from and its age. (3) The task header (the editable 'task-header' block) gains one line telling the agent to call nexus_recall before searching or reading. (4) A near match (semantic, not exact) is offered as a hint, never substituted: 'a similar search at 04:21 returned these 3 files'.
+    save_everything: >-
+      Each kind is written once, through the writer that already owns it, and found again by nexus_recall and the Runs tab: tool calls + results (guardian_tool_calls, extended and also fed by executeTool; a result over a size cap is stored as a node file and referenced, never truncated silently), gate trail and edges (the job, TB7a), every run step (the run's jsonl, TB7b), responses (.response), contracts, logs. Append-only; archive, never delete.
+  phase:
+    TB3a_tool_calls_saved:
+      status: OPEN
+      depends_on: [TB2_persistence_audit]
+      does: "executeTool records { repoUuid, runId, agent, tool, args, argsHash, stateKey, result (or a node reference), ok, ms, tokensEst, ts } into guardian_tool_calls through tool-call-listener's writer. One table for browser agents and repo agents."
+      proof: "a repo agent's code_search is read back after a restart with its arguments and result; a browser agent's call lands in the same table."
+    TB4a_recall_in_the_dispatcher:
+      status: OPEN
+      depends_on: [TB3a_tool_calls_saved]
+      does: "The allowlist (first: code_read, code_chunk, code_refs, code_map, code_search, code_grep) with each tool's state key. Exact valid hit returns recalled; counts recall.hit / recall.miss / recall.stale as events. Never recalls an error result. Off switch per tool and globally (a setting, default on for the allowlist)."
+      proof: "the same code_read twice returns the second from Nexus without running the tool; editing the file between them makes the second a miss; a tool not on the allowlist always runs; a failed call is never recalled."
+    TB4b_nexus_recall_tool:
+      status: OPEN
+      depends_on: [TB3a_tool_calls_saved]
+      does: "The nexus_recall tool and its command row (agents and people get the same door), the task-header line, and the near-match hint."
+      proof: "an agent asking recall for a file it read in an earlier run gets that run's result with its age; an unrelated repo's results never appear (the key includes the repo)."
+    TB4c_measure:
+      status: OPEN
+      depends_on: [TB4a_recall_in_the_dispatcher]
+      does: "Tokens saved and calls avoided per run, per repo, overall; shown as 'recalled' nodes (their own edge kind) in the Runs tab, and as a number in the run header. 'As little as possible' becomes a count (docs/CLAUDE.md, agents)."
+  failure_modes:
+    - "A stale answer returned as fresh: the state key, and a test that edits a file between two identical calls."
+    - "A recalled result hides that the code changed in a way the key does not cover (a dependency file): the key for chunk/refs tools covers the files they read; where it cannot, the tool is not on the allowlist."
+    - "Recalling something an agent must re-do on purpose (it wants a fresh look): the call carries fresh:true, honoured and counted."
+    - "Cross-repo leakage: the repo is part of the key and of every nexus_recall query."
+    - "Secrets or private text stored in results: results are what the tool returned, with the same trust as a fresh call; secret-like keys masked as elsewhere, and nothing from personal-chat capture is written here (that has its own ledger and settings)."
+    - "A bigger table: size cap, node references for large results, and a retention decision (TB0): the recommendation is to keep, because they are the proof and the reuse source."
+  build_order_change: "TB2 -> TB3a -> TB4a -> TB4b -> TB4c first (backend, token savings from day one, no screen needed; the CLI shows hit/miss counts), then TB7a/TB7b (edges, every step), then the tab shell and the Runs tab. This reverses the earlier order (screens before reuse) because he named cost."
+  question: "Start with TB2 (the audit of what is saved where, as a table) and TB3a/TB4a (record every tool call with its arguments and result, then recall exact repeats first for the read-only code tools)? That touches the one dispatcher every tool uses, so it ships behind a setting and with the tests above."
