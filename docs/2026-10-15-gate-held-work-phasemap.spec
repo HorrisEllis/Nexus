@@ -447,20 +447,20 @@ not_verified:
 
 ## ADDENDUM 2026-10-15 - the phase census (docs/PHASE-CENSUS-2026-10-15.md): what this map duplicates
 
-James: "check all phases in nexus, over 1200, for any useful phases."
-The census read all 1472 phases (595 done, 872 pending). Several GW phases restate phases he already specced, in his words. They are
-NOT dropped (the GW text stays, §0.3); building them means building the older phase, and this map defers to it:
-- GW8 (failure mode field) is N14_failure_mode_field + FR1_failure_reports. GW3 (contract trace) is N15_contract_history + RQ21.
-- GW7 replay and GW16 branching are RS2_replay_rewind_branch (replay byte-identical, no model; rewind to a step; branch from a step).
-- GW11 (snapshot per gate) is RW1_rewind_engine_vm_snapshots, which says QMP savevm of the live machine. vm-control refuses that while the
-  repo is shared over 9p/vvfat (read in source), so GW14 (copy in) is what RW1 needs on Linux hosts - an addition to RW1, not a replacement.
-- GW1/GW2 build on RQ24_the_gate_transaction and RQ3 (a retry carries only the failing check's output).
-- CE10 overlaps R1 (guardian job-retry), not built. R1 retries the same tab; CE10 moves provider only when nothing was typed.
-- CE10 picks the next provider from the pipeline-routing chain (how the existing 'rest' fallback already works). ME5 makes RAID's _decide the
-  one chooser (§9.1); CE10 must move onto it when ME5 lands.
-New with no earlier phase found: GW4 (copilot dispatched through contract gates), GW5 (tool parity), GW12 (minimal layered environment), GW13/GW14
-(SSH door, copy-in), GW15 (every file tested, mutation), GW17 (friction per file), GW18 (bisect), GW19-GW21 (sandbox results, file actions,
-autonomy), GW22 (find before generate), GW23 (wire what exists). "New" means no phase with that name was found; it was not read phase by phase.
+# James: "check all phases in nexus, over 1200, for any useful phases."
+# The census read all 1472 phases (595 done, 872 pending). Several GW phases restate phases he already specced, in his words. They are
+# NOT dropped (the GW text stays, §0.3); building them means building the older phase, and this map defers to it:
+# - GW8 (failure mode field) is N14_failure_mode_field + FR1_failure_reports. GW3 (contract trace) is N15_contract_history + RQ21.
+# - GW7 replay and GW16 branching are RS2_replay_rewind_branch (replay byte-identical, no model; rewind to a step; branch from a step).
+# - GW11 (snapshot per gate) is RW1_rewind_engine_vm_snapshots, which says QMP savevm of the live machine. vm-control refuses that while the
+#   repo is shared over 9p/vvfat (read in source), so GW14 (copy in) is what RW1 needs on Linux hosts - an addition to RW1, not a replacement.
+# - GW1/GW2 build on RQ24_the_gate_transaction and RQ3 (a retry carries only the failing check's output).
+# - CE10 overlaps R1 (guardian job-retry), not built. R1 retries the same tab; CE10 moves provider only when nothing was typed.
+# - CE10 picks the next provider from the pipeline-routing chain (how the existing 'rest' fallback already works). ME5 makes RAID's _decide the
+#   one chooser (§9.1); CE10 must move onto it when ME5 lands.
+# New with no earlier phase found: GW4 (copilot dispatched through contract gates), GW5 (tool parity), GW12 (minimal layered environment), GW13/GW14
+# (SSH door, copy-in), GW15 (every file tested, mutation), GW17 (friction per file), GW18 (bisect), GW19-GW21 (sandbox results, file actions,
+# autonomy), GW22 (find before generate), GW23 (wire what exists). "New" means no phase with that name was found; it was not read phase by phase.
 
 
 ## ADDENDUM 2026-10-16 — every system at the gate, and context that does not make the agent dumb (mapped, no code)
@@ -554,3 +554,47 @@ proposed_phase:
     proof: "a fixture contract: changing an imported file STALEs exactly the bricks that import it; changing the phase's spec STALEs the phase; a gate with no requires is refused; a regression rewinds to the snapshot and the retry passes"
 
 order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 decides what a gate watches. Both after GW1."
+
+## ADDENDUM 2026-10-16 (c) — what the whole loop does for the pipeline (mapped, no code; no new phase)
+
+# James (2026-10-16): "all prerequisits/dependancies, need to be understood for each chunk, gates hold the context, snapshot
+# each gate, using contract and the dependancies as a checklist, reflection engine, logging failure mode each failure, using
+# the failiure mode field, like the the phases, rewind engine each step, each output, the rewind enegine creates macros for
+# reproducting or rconstructing from events, snapshots, and causal graph. what would that  do for the pipeline?
+# intelligrance system. raid learns overitime."
+#
+# Context: asked right after merging main (0.60.72), with WB1/WB2 (WARP on the 5 bypassing build paths) waiting on his
+# option 1 or 2. He asked what it would do; he did not ask to build it. Every clause already has a phase. Read in source
+# 2026-10-16, each clause → its owner (no parallel plan, §8.6):
+#   prerequisites/dependencies per chunk ...... GW26 (brick requires = phasemap + file + phase-map-auto one hop + owning spec)
+#   gates hold the context .................... GW1 (baton) + GW24 (the gate holds, the agent gets a budgeted projection)
+#   snapshot each gate ........................ GW11 = RW1 (code: GT2 tag, BUILT 0.60.42; environment: COS checkpoint, OPEN)
+#   contract + dependencies as a checklist .... GW26 (requires hashed, STALE on drift) + GW25 confidence (weakest link: an
+#                                               unevidenced item caps the pass). The checklist is the gate's pass_when +
+#                                               requires, each ticked with evidence; no new format.
+#   reflection engine ......................... GW25 after_settle: lib/reflection.js scores the gate's hypothesis; today no
+#                                               gate calls it (found_2026_10_16)
+#   failure mode logged on each failure ....... GW6 (classifyFailure BUILT 0.60.30 → fault-log + enrichGap, OPEN) and
+#                                               GW8 = N14_failure_mode_field (conditions counted across runs, OPEN).
+#                                               Coder's reading of "like the phases", to confirm: the failure_mode record
+#                                               carries the same fields a phase does (systems, files, depends_on, specs) so
+#                                               a failure is mapped exactly like a phase. Another reading: the phase's own
+#                                               failure_modes list. To confirm.
+#   rewind engine each step, each output ...... GW7 = RS2 (rewind to a step). AMENDS GW7: the replay unit is the gate, the
+#                                               rewind point is any recorded step inside it (run-state steps: each tool
+#                                               call and each reply), not only the gate boundary.
+#   macros from events, snapshots, causal graph GW7 + FM1-FM4 (cortex/self-heal/failure-mode-forensics.js already writes a
+#                                               .debug_macro from the causal chain; its schema says not yet playable)
+#   RAID learns over time ..................... GT1 BUILT (learns route only from capability failures, budget from
+#                                               capability + context; transient learns nothing) + GW6 (the door's next
+#                                               pick changes from real gate outcomes, OPEN)
+#
+# What it would do for the pipeline (the coder's answer, given to him): today a failed build is retried blind and the
+# lesson dies with the chat. With the loop, every failure becomes (1) a classified record with its conditions, (2) a
+# macro that reproduces it with no model, (3) a rewind point one step before it, and (4) a weight change in RAID for that
+# agent and gate kind. The second time the same failure shape appears, the pipeline avoids it before dispatch instead of
+# discovering it after. That is the measurable claim: repeat failures of one signature per 100 gates should fall over
+# time; if they do not, the loop is not learning, and the number says so (§0.1).
+#
+# Order unchanged: GW23 → GW3 → GW1 → GW2 ... (build_order above). Blocking decisions still his: GW0 (a brick is the unit,
+# coder recommends a) and GW0c (replay recorded + live, coder recommends a).
