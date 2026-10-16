@@ -2623,6 +2623,7 @@ const ROUTE_CAP = {
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
+  'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'raid.held': CAPS.READ_IDEAS, 'raid.held.unpark': CAPS.WRITE_IDEAS,   // §0.60.78 RT1
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
   'activity.all': CAPS.READ_IDEAS,   // §0.39.373 BO1
@@ -2970,6 +2971,7 @@ function matchRoute(method, url) {
     // §0.39.271 S1 — the living model: the repo's spec/ .spec files, parsed (?path= one file)
     ['GET',    ['api','repos',    ':uuid','living-spec'],           'repo.living-spec'],
     ['GET',    ['api','repos',    ':uuid','phases'],                'repo.phases.get'],
+    ['POST',   ['api','repos',    ':uuid','funnel'],                'repo.funnel'],   // §FN0 { request, intent? } → dependencies, spec, phase, chunks (no model)
     ['GET',    ['api','repos',    ':uuid','thread'],                'repo.thread'],   // §RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
@@ -7706,6 +7708,21 @@ async function handle(req, res, route, query, body) {
       const into = body.into != null ? String(body.into) : (getIdeariumValue('specs.compile_into') || '');
       const r = await SC.compileToProposals({ layer: getRepoLayer(), repo, specPath: rel, content: f.content, into, template: body.template || null });   // 0.60.68 — genesis unless named
       return r.ok ? ok(res, r) : err(res, 422, r.error);
+    }
+    // §FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." The four answers
+    // for a request, in his order, from this repo's own tree and maps (lib/work-funnel.js); read only, no model.
+    case 'repo.funnel': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body || !String(body.request || '').trim()) return err(res, 400, 'request is required');
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      const PH = await import('../repo/phases.js');
+      const { maps, scope } = PH.mapsFor({ repo, repoDir: dir });
+      const NSx = _require('../../lib/nexus-self/systems.js'), AM = _require('../../lib/phase-map-auto.js'), WF = _require('../../lib/work-funnel.js');
+      const root = scope.source === 'nexus' ? NSx.ROOT : dir;
+      const f = WF.funnel({ request: String(body.request), intent: body.intent || null, root, maps, specsOf: scope.source === 'nexus' ? AM.specsOfNexus(NSx.ROOT) : null });
+      return ok(res, { repoUuid: params.uuid, scope: scope.label, ...f, lines: WF.lines(f) });
     }
     case 'repo.phases.get': {
       const repo = getRepoLayer().get(params.uuid);

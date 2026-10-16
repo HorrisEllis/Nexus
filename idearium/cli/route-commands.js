@@ -317,6 +317,11 @@ export const SPEC = [
     need: (a) => (a.args[0] ? null : '<id>'),
     req: (a) => ({ method: 'PATCH', path: `/api/notes/${encodeURIComponent(a.args[0])}`, body: { status: 'done' } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} done: ${d.note.title}`) },
+  // FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." (lib/work-funnel.js)
+  { key: 'repo.funnel', repo: true, usage: 'repo funnel <repo> <request…> [--intent change|build|debug|spec]', about: 'the four answers for a request, in order — its dependencies, its spec, its phase, its chunks — or where it stops and why (no model)',
+    need: (a) => (a.args.length ? null : '<request…>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/funnel`, body: { request: a.args.join(' '), ...(a.flags.intent ? { intent: String(a.flags.intent) } : {}) } }),
+    print: (d, a, h) => { for (const l of d.lines || []) console.log(/^stopped/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); } },
   // 0.60.78 RT1 — what RAID's officiator holds back (the agents' wait, each staged drop's tries and why) and clearing it
   { key: 'raid.parked', repo: false, usage: 'raid parked', about: 'what the officiator holds back: the agents\' wait (no agent answered) and each staged drop\'s tries, why, and when it is tried next',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/raid/officiator' }),

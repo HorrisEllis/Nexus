@@ -38,7 +38,7 @@ found:
 
 phases:
   FN0_the_funnel_as_data:
-    status: OPEN
+    status: "BUILT 0.60.94 — lib/work-funnel.js, POST /api/repos/:uuid/funnel, `repo funnel`; test-work-funnel 8/8. The screen is FN4."
     systems: [core, idearium]
     files: [lib/work-funnel.js (new), lib/node-schemas/schema.funnel (new), tests/modules/test-work-funnel.test.js (new)]
     depends_on: []
@@ -104,3 +104,17 @@ open_decisions:
 # James: "What about .hats for the repo agents model. All physical." The funnel's agent is resolved through intent → hat → agent
 # (docs/2026-10-16-intent-hat-agent-chain-phasemap.spec); its hat and repo-agent model become node files there (IH6). FN3's answers
 # and IH6's hats are the same rule: nothing only in memory or the page.
+
+# ## ADDENDUM 2026-10-16 (b) — FN0 built (0.60.94); the pick was delegated
+# James (2026-10-16): "pickest the highest leverage, structural change. axioms in the docs are law"
+# The coder's pick under that delegation: FN0. It makes §3.3 (map before build) what every agent does by construction, and the
+# rest reads from it (FN1-FN4, GW27 nodes, IH6, the refactor tool). The refactor tool's decision was made the same way: [A]
+# (recorded in docs/2026-10-13-projects-raid-and-gates-phasemap.spec decision_refactor_tool).
+# Measured on Nexus itself (2026-10-16, 1 s for the whole tree and every phasemap):
+#   "change lib/run-state.js ..." → deps (its requires and 6 consumers) → specs → GW2 (open) → 5 chunks
+#   "fix the officiator ..." → cortex/core/raid/officiator.js (by its plain name) → cortex.spec first → RQ27 (open) → its chunks
+#   "build ... idearium/lib/projects.cjs" → stops at phase: no open phase maps it (COSA10 my_projects lives in a comment)
+#   "change the warp-rung ..." → stops at phase: only finished phases map it (WB1, WB2). A new phase comes first (FN2).
+# Found: a request is short, so a plain word that names one or two files counts ("the officiator"); MP1 skips those in long phase
+# bodies, where they were noise. Kept to requests only, behind a stop list.
+
