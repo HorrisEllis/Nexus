@@ -58,7 +58,7 @@ phases:
     proof: "on a fixture page: the send button is 'button \"Send prompt\"' whatever its classes; the tree of a long page fits the budget"
 
   SP2_semantic_addresses_for_the_field_map:
-    status: OPEN
+    status: DONE (0.60.70; tested in jsdom, a live pick awaits his run)
     depends_on: [SP1_semantic_page_tree]
     does: "the userscripts' field map (input / send / reply) gains a semantic address beside the selector; when the selector misses, the address finds it; the picker records both, and refuses a pick whose role does not fit its key (a 'send' must be a button)."
     proof: "with the selector broken by a class change, the address still finds the input and the send button"
@@ -104,3 +104,12 @@ drift_accounted:
 # drift resolves surface and missing gaps when the next check is green. Still to do (named): the gaps other modules write
 # raw — FR1 (failure reports) is the phase that maps contract failures; a sweep for every raw `insert('gaps'` is next.
 
+
+## ADDENDUM 2026-10-16 — SP2 built (0.60.70)
+
+# James: "alright." (SP2 first, then the gap sweep). The picker records each pick's semantic address (addressScript) and
+# refuses a pick whose role does not fit its field (roleFits: send a button, input a text box); Guardian's selector map
+# carries it (semantics); the field map resolves it through window.NexusSemantic when the selector misses — order:
+# selector → address → anchor point; a reply is the last node of its shape. Changed from the map: the reply is matched by
+# its address with every #n stripped (the newest reply is a new article). Next on this map: the gap-writer sweep (named in
+# the 2026-10-15 addendum), then CS2.
