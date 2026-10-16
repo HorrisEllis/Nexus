@@ -7,7 +7,8 @@
  *   CP-01  a planned build runs as a .contract: a brick per planned file, the plan's import edge, a checkpoint per pass
  *   CP-02  the phase passes only through its integration (the proof run): proven → contract-complete
  *   CP-03  building again resumes from the checkpoints: no file is re-sent, only the integration re-checked
- *   CP-04  a changed plan rejects the old checkpoint (archived); a deliberately failed brick recovers on retry
+ *   CP-03b TL1a: built again, the saved plan is kept (the planner is not asked; nothing re-chunked, nothing re-sent)
+ *   CP-04  a changed plan (replan asked) rejects the old checkpoint (archived); a deliberately failed brick recovers on retry
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -94,7 +95,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   const db = await import(path.join(ROOT, 'idearium/lib/db.js'));
   const runRows = (runId) => db.loadTable('idearium_phase_runs').filter(r => r.runId === runId || r.buildRunId === runId);
   const settle = async (runId) => { for (let i = 0; i < 120; i++) { const rs = runRows(runId); if (rs.some(r => /^contract-(complete|incomplete)$/.test(r.state)) || rs.some(r => ['failed', 'plan-failed'].includes(r.state) && !r.chunk)) return rs; await wait(150); } return runRows(runId); };
-  const build = async () => { const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama' }); assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 400)); return settle((b.json.data || b.json).runId); };
+  const build = async (extra = {}) => { const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama', ...extra }); assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 400)); return settle((b.json.data || b.json).runId); };
   const states = (rs) => rs.map(r => `${r.state}${r.error ? `(${String(r.error).slice(0, 120)})` : ''}`).join(', ');
 
   let rows = [];
@@ -133,13 +134,29 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     sent.length = 0;
     const rs = await build();
     const c = rs.find(r => r.state === 'contract');
-    assert.ok(c && c.contractInfo.resumed && c.contractInfo.kept.length === 3 && !c.contractInfo.stale.length, JSON.stringify(c && c.contractInfo));
+    assert.ok(c && c.contractInfo.resumed && c.contractInfo.kept.length === 3 && !c.contractInfo.stale.length, JSON.stringify(c && c.contractInfo) + states(rs));
     assert.strictEqual(sent.length, 0, `files re-sent: ${sent.map(s => s.file).join(', ')}`);
     assert.ok(rs.some(r => r.state === 'contract-complete'), states(rs));
   });
-  await test('CP-04', 'a changed plan rejects the old checkpoint (archived, not deleted); a deliberately failed brick is retried and recovers', async () => {
-    sent.length = 0; variant = ' (a changed step)'; failNotes = 1;
+  // §TL1a 0.60.79 — James: "can we not have it chunk everytime it restarts. it needs to persist." A build started again
+  // with a planner that would now answer a different plan keeps the saved one: not planned, not re-chunked, resumed.
+  await test('CP-03b', 'TL1a: built again while the planner would plan differently: the saved plan is kept, the planner is not asked, nothing re-sent', async () => {
+    sent.length = 0; variant = ' (a planner that answers differently today)';
+    const before = dispatchedTotal;
     const rs = await build();
+    const kept = rs.find(r => r.state === 'planned' && r.kept);
+    assert.ok(kept && kept.keptFrom === 'contract' && /not planned again/.test(kept.planSummary), states(rs));
+    assert.ok(!rs.some(r => r.state === 'planning'), `the planner was asked: ${states(rs)}`);
+    const c = rs.find(r => r.state === 'contract');
+    assert.ok(c && c.contractInfo.resumed && !c.error, JSON.stringify(c));
+    assert.strictEqual(sent.length, 0, `files re-sent: ${sent.map(s => s.file).join(', ')}`);
+    assert.strictEqual(dispatchedTotal - before, 0, 'no agent call at all');
+    const saved = CG.load(c.contract).payload;
+    assert.ok(saved.plan && saved.plan.files.length === 2 && saved.phase_hash, 'the plan and the phase hash are on the contract');
+  });
+  await test('CP-04', 'a changed plan (replan asked) rejects the old checkpoint (archived, not deleted); a deliberately failed brick is retried and recovers', async () => {
+    sent.length = 0; variant = ' (a changed step)'; failNotes = 1;
+    const rs = await build({ replan: true });
     const c = rs.find(r => r.state === 'contract');
     assert.ok(c && !c.contractInfo.resumed && /rejected: the plan changed/.test(c.error || ''), JSON.stringify(c));
     const arch = (c.error.match(/archived at (\S+)\)/) || [])[1];
@@ -227,7 +244,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     readyAnswer = { claude: { ready: false, why: 'claude needs a sign-in in its Clear Glass tab (test)' } };
     const before = dispatchedTotal;
     const sessions = []; const orig = RA.dispatch; RA.dispatch = async (a) => { sessions.push(a.session); return orig(a); };
-    const rows = await build();
+    const rows = await build({ replan: true });   // the planning path itself is under test: the saved plan is set aside (TL1a)
     RA.dispatch = orig;
     const started = rows.find(r => r.state === 'building');
     assert.ok(started && started.ready && started.ready.checked && started.ready.planner && started.ready.planner.use === null && /sign-in/.test(started.ready.planner.why), JSON.stringify(started && started.ready));
@@ -260,7 +277,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     readyAnswer = {};
     await R('POST', '/api/config', { key: 'routing.plan_code', value: 'never' });
     const before = dispatchedTotal; sent.length = 0;
-    rows = await build();
+    rows = await build({ replan: true });   // TL1a: planned again on purpose
     await R('POST', '/api/config', { key: 'routing.plan_code', value: 'auto' });
     assert.ok(!rows.some(r => r.state === 'planning'), `no planner was asked: ${states(rows)}`);
     assert.ok(rows.some(r => r.state === 'planned' && r.derived), `planned from the phase itself: ${states(rows)}`);

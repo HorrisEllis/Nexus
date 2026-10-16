@@ -308,6 +308,7 @@ function _phDetail(d, uuid) {
     <div class="ph-d-note">1 · a Versionium snapshot of ${nexus ? (d.scope.system ? `nexus/${escapeHtml(d.scope.system)}` : 'the system that owns its files') : 'this repo'} — nothing is sent without one<br>2 · the phase goes active<br>3 · the agent gets the phase, its blocks, its dependencies and the map's invariants — with no agent picked it climbs the escalation ladder</div>
     <div class="ph-d-row"><label>agent</label><select id="ph-build-provider"><option value="">the ladder (Settings → Routing)</option>${opts.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('')}</select></div>
     <textarea id="ph-build-note" rows="2" placeholder="anything to add for the agent (optional)"></textarea>
+    <label class="ph-d-note" title="0.60.79 TL1a: a build started again keeps its saved plan and resumes its passed bricks. Tick this to throw the plan away and plan the phase again (the old checkpoint is archived, never deleted)."><input type="checkbox" id="ph-build-replan"> plan it again (otherwise the saved plan is kept and the build resumes where it stopped)</label>
     <div class="action-row"><button class="action-btn" ${p.status === 'complete' || PHASES.busy ? 'disabled' : ''} onclick="phasesBuild('${_phq(p.map)}','${_phq(p.phase_key)}')">▶ snapshot + build</button>
       ${typeof openPlanPanel === 'function' ? `<button class="action-btn" onclick="openPlanPanel({ map: '${_phq(p.map)}'${run && run.runId ? `, focus: '${_phq(run.runId)}'` : ''} })">open in the Plan</button>` : ''}
       ${PHASES.thread && PHASES.spec === specOf && PHASES.thread.workshop && typeof openWorkshop === 'function' ? `<button class="action-btn" title="the spec workshop, at the section this phase was planned from" onclick="openWorkshop(null,'${_phq(PHASES.thread.workshop.uuid)}'${(p.blocks || [])[0] ? `,'${_phq(p.blocks[0])}'` : ''})">open in the workshop</button>` : ''}</div>
@@ -389,9 +390,10 @@ async function phasesBuild(map, phase) {
   const uuid = PHASES.uuid;
   const provider = (document.getElementById('ph-build-provider') || {}).value || null;
   const note = ((document.getElementById('ph-build-note') || {}).value || '').trim();
+  const replan = !!(document.getElementById('ph-build-replan') || {}).checked;   // 0.60.79 TL1a: off = the saved plan is kept
   PHASES.busy = true; _phPaint();
   try {
-    const r = await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase, provider, note }) }, 120000);
+    const r = await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase, provider, note, ...(replan ? { replan: true } : {}) }) }, 120000);
     toast(`${phase}: snapshot ${r.snapshot} taken · ${r.targetName}'s agent is building it${r.statusNote ? ` (status not changed: ${r.statusNote})` : ''}`, 'ok');
     // §HP6 0.55.0 — James: "the build surface is supposed to be showing in idearium." A build from the detail pane
     // opens the Plan panel on its run, as the card's build always did (RS10 dropped it here).

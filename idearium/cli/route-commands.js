@@ -338,10 +338,10 @@ export const SPEC = [
       }
       console.log(h.c.dim('\n  build one: idearium repo phase <repo> <phase> build'));
     } },
-  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task',
+  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again)',
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => (a.args[1] === 'build'
-      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}) }, timeoutMs: 120000 }
+      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}) }, timeoutMs: 120000 }
       : { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/runs?phase=${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => {
       if (a.args[1] === 'build') {

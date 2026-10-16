@@ -102,3 +102,8 @@ first_slice: "IH1 + IH5: .intent nodes that name their hat, resolved through to 
 not_verified:
   - "copilot/intents.js PATTERNS and reasoning-route reason_kinds were not read in full; the vocabularies list is from their headers and schema.intent."
   - "whether data/intents/ or any .intent node already exists on his machine (data/** is not in the repo)."
+
+# ## ADDENDUM 2026-10-16 (a) — his rule for this map
+# James: "all data  is meant to persist. hardcoded has to earn its place..."
+# Read for IH1: the VERB_TO_HAT table in lib/intent-hat-router.js does not earn its place as the authority; it stays only as
+# the seed for the .intent nodes and the fallback when none exists. To confirm that the fallback earns its place.
