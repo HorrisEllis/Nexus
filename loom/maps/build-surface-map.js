@@ -46,6 +46,10 @@ const FILES = [
     I('nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
   ]],
   // 0.60.94 FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." No model.
+  // §FR3 0.60.117 — undo any change, keeping later edits
+  ['versionium/lib/merge3.js', I('versionium/lib/merge3.js'), [
+    I('versionium/lib/text-diff.js'),                         // require — MAX_LCS_CELLS, the same size limit
+  ]],
   // §FR1 0.60.114 — one record per change an agent makes (docs/2026-10-16-repo-carve-phasemap.spec)
   ['lib/change-record.js', I('lib/change-record.js'), [
     I('versionium/lib/text-diff.js'),                         // require — the lines added and removed
@@ -135,6 +139,8 @@ const FILES = [
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
 const CONSUMERS = [
+  [I('lib/repo-inject.js'), I('versionium/lib/merge3.js'), '§FR3 0.60.117 revert({ merge }): undo a change keeping later edits (lazy require in _revertMerged)'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FR3 0.60.117 the repo.undo row → POST /api/repos/:uuid/injects/:id/revert'],
   [I('idearium/api/index.js'), I('lib/change-record.js'), '§FR1 0.60.114 repo.changes / repo.change.get: GET /api/repos/:uuid/changes(/:id) — the inject joined with activity, runs, versions'],
   [I('lib/repo-inject.js'), I('lib/repo-activity.js'), '§FR1 0.60.114 propose() keeps the task it was written in (current())'],
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FR1 0.60.114 the repo.record row → GET /api/repos/:uuid/changes(/:id)'],

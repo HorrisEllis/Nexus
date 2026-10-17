@@ -358,6 +358,11 @@ export const SPEC = [
       if (!(d.changes || []).length) { console.log('  no changes yet'); return; }
       for (const c of d.changes) console.log(`  ${c.id.slice(0, 8)}  ${String(c.status).padEnd(9)} ${c.path}${c.lines ? ` +${c.lines.added} −${c.lines.removed}` : ''}  ${c.agent || ''}${c.goal ? ` — ${String(c.goal).slice(0, 60)}` : ''}${c.landed.length ? `  @${c.landed[0]}` : ''}${c.holes.length ? h.c.amber(`  missing: ${c.holes.join(', ')}`) : ''}`);
     } },
+  // FR3 0.60.117 — undo any change an agent made, keeping later edits (versionium/lib/merge3.js); a clash is refused, named
+  { key: 'repo.undo', repo: true, usage: 'repo undo <repo> <change id> [--no-merge] [--force]', about: 'undo one change: what was there before is put back and every later edit is kept; if a later change touched the same lines, nothing changes and the lines are named. --no-merge refuses whenever the file moved on; --force discards later edits',
+    need: (a) => (a.args[0] ? null : '<change id>'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/injects/${encodeURIComponent(a.args[0])}/revert`, body: { ...(a.flags['no-merge'] ? { merge: false } : {}), ...(a.flags.force ? { force: true } : {}) } }),
+    print: (d, a, h) => { const n = d.inject || {}; console.log(`  ${h.c.green('undone')} ${n.path || ''}${d.merged ? ' — merged: the later edits were kept' : ''}`); } },
   // CV1 0.60.112 — James: "can you branch it into a idearium repo?" (lib/repo-carve.js): a part of Nexus as its own repo, Nexus its parent
   { key: 'repo.carve', repo: false, usage: 'repo carve <name> <path…> | repo carve --preset flight_recorder [--name n] [--cut optional|optional,lazy|none] [--verify] [--dry-run]', about: 'copy a part of Nexus (files or folders) into a new Idearium repo with everything it requires; says what pulled each file in, the npm it needs, and requires that resolve to nothing. Nothing in Nexus moves',
     need: (a) => (a.flags.preset || a.args.length >= 2 ? null : '<name> <path…> (or --preset flight_recorder)'),

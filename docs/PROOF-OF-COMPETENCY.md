@@ -100,6 +100,25 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-17: "Next and Merge."** (FR3: undo any change, keeping later edits)
+  - **Context:** the product's promise is undo. The existing revert could only undo the newest change, because any later
+    edit to the file blocked it.
+  - **What it shows:** finishing the promise at its hard edge. Undoing an older change while keeping newer work is
+    what makes the undo usable. Where it cannot be done safely (two changes on the same lines), the system refuses and
+    names the lines instead of guessing.
+  - **Evidence:** `CHANGELOG-0.60.117.md`; `versionium/lib/merge3.js`; `tests/modules/test-undo-any-change.test.js`
+    UN-01..06 (UN-02 is the phasemap's proof).
+
+- **2026-10-17: "Okay so where is the product being made? Or are we building the capability first, then branching?"** · then: "I agree, with the recommendation"
+  - **Context:** two product phases had been built inside Nexus on the coder's assumption, and nobody had decided where
+    the product lives.
+  - **What it shows:** asking the structural question at the right time. His question surfaced an undecided architecture
+    choice, and answering it honestly exposed a real defect: the branched copy was missing the very pieces just built.
+    The choice he made (build in Nexus, branch at each release, with a boundary that checks itself) avoids maintaining
+    two copies of the code.
+  - **Evidence:** `docs/2026-10-16-repo-carve-phasemap.spec` (`decision_where_the_product_is_built`);
+    `CHANGELOG-0.60.116.md`; `tests/modules/test-repo-carve.test.js` CV-13, CV-14.
+
 - **2026-10-17: "merge. then next phase."** (FR2: tested before it lands)
   - **Context:** the product promise is that an agent's change is tested before it lands. Checking that promise against
     the code showed it held only for Nexus's own files.

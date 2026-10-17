@@ -115,6 +115,8 @@ async function _carveRun(dryRun) {
       <div>by system: ${escapeHtml(sys)}</div>
       <div>npm: ${escapeHtml(Object.keys(d.npm || {}).join(', ') || 'none')}${(d.npmNamedOnly || []).length ? ` · named only: ${escapeHtml(d.npmNamedOnly.join(', '))}` : ''}</div>
       ${(d.missing || []).length ? `<div style="color:var(--amber,#d90)">${d.missing.length} require(s) resolve to nothing: ${escapeHtml(d.missing.slice(0, 3).map(m => `${m.from} → ${m.spec}`).join('; '))}</div>` : ''}
+      ${(d.mustMissing || []).length ? `<div style="color:var(--coral)">missing what the product must carry (Create refuses): ${escapeHtml(d.mustMissing.map(m => m.path).join(', '))}</div>` : ''}
+      ${(d.tagged || []).length ? `<div style="color:var(--text3)">tagged as part of the product: ${escapeHtml(d.tagged.join(', '))}</div>` : ''}
       ${v ? `<div style="color:${v.ok ? 'var(--mint)' : 'var(--amber,#d90)'}">${v.ok ? 'loads alone' : 'does NOT load alone'}: ${v.loaded}/${v.of} named files load in an empty folder${(v.failed || []).length ? ` · failed: ${escapeHtml(v.failed.map(f => `${f.path} (${f.error})`).join('; '))}` : ''}${(v.skipped || []).length ? ` · skipped ${escapeHtml(v.skipped.map(f => f.path).join(', '))}` : ''}</div>` : ''}
       ${(d.cut || []).length ? `<div>left out: ${(d.leftOut || []).length} ${escapeHtml(d.cut.join('/'))} link(s) the code runs without</div>` : ''}
       ${(d.tangle || []).length ? `<div style="color:var(--text3)">biggest links: ${escapeHtml(d.tangle.slice(0, 4).map(t => `${t.files} via ${t.from} → ${t.to} (${t.kind})`).join(' · '))}</div>` : ''}
