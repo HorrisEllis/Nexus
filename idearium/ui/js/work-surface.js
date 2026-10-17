@@ -147,8 +147,26 @@ function _wsFormingHtml(uuid) {
 /** repaint only the forming cards — every frame of the feed, never the whole surface */
 function wsLivePaint(uuid) {
   const el = document.getElementById('ws-forming');
-  if (!el || WSURF.uuid !== uuid) return;
-  el.innerHTML = _wsFormingHtml(uuid);
+  if (el && WSURF.uuid === uuid) el.innerHTML = _wsFormingHtml(uuid);
+  // §0.60.142 LV2 — the Code tab's slots too: Code › changes (every file it is writing) and the open file (only that one)
+  for (const s of document.querySelectorAll(`[data-ws-forming="${uuid}"]`)) s.innerHTML = _wsFormingHtml(uuid);
+  for (const s of document.querySelectorAll(`[data-ws-forming-file="${uuid}"]`)) s.innerHTML = wsFormingFileHtml(uuid, s.dataset.path);
+}
+/**
+ * §0.60.142 LV2 — James: "i want the agents work to stream live to the changes tab or when viewing the file in the files
+ * tab". The open file, as the agent is writing it: the whole of its block so far (not a tail), until it lands as a
+ * proposal (its card then shows the diff, as before). '' when the agent is not writing this file.
+ */
+function wsFormingFileHtml(uuid, path) {
+  const st = typeof AGENT_FEED !== 'undefined' ? AGENT_FEED.get(uuid) : null;
+  if (!st || !st.jobId || !st.text || !path) return '';
+  const b = wsFormingBlocks(st.text).filter(x => x.path === path || x.path.endsWith(`/${path}`) || path.endsWith(`/${x.path}`)).pop();
+  if (!b) return '';
+  const landed = ((WSURF.data && WSURF.data.files) || []).some(f => f.path === path && f.at && f.at >= (st.updated || 0) - 120000);
+  if (landed && !b.open) return '';
+  const lines = b.code.replace(/\n$/, '').split('\n');
+  return `<div class="ws-card ws-forming open cs-forming-file"><div class="ws-head"><span class="al-dot${st.generating ? ' on' : ''}"></span><span class="ws-name">${escapeHtml(st.provider || 'the agent')} is ${b.open ? 'writing this file' : 'done — it lands as a proposal'}</span><span class="ws-grow"></span><span class="ws-plus">${b.lines} line${b.lines === 1 ? '' : 's'}</span></div>
+    <div class="ws-diff cs-forming-code">${lines.map((l, i) => `<div class="ws-ln ws-add"><span class="ws-g"></span><span class="ws-g">${i + 1}</span><span class="ws-s">+</span><span class="ws-t">${escapeHtml(l) || ' '}</span></div>`).join('')}</div></div>`;
 }
 
 function wsToggle(p, wasOpen) {

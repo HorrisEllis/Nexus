@@ -445,10 +445,15 @@ function csPaint() {
           ${/\.html?$/i.test(CS.open) ? `<button class="cs-chip-btn" title="open this page in the UI editor (layers, styles, blocks, devices, undo); save writes it back as a version" onclick="window.open('/ui-editor.html?repo=${encodeURIComponent(repo.uuid)}&path=${encodeURIComponent(CS.open)}','_blank')">edit UI</button>` : ''}
           <button class="cs-chip-btn" onclick="if(!cxDirty()||confirm('discard unsaved changes?')){CS.open=null;CS.sel=null;CX.editing=false;csPaint()}">close</button></div>
         ${_csHistLine()}
+        <div data-ws-forming-file="${escapeHtml(repo.uuid)}" data-path="${escapeHtml(CS.open)}">${typeof wsFormingFileHtml === 'function' ? wsFormingFileHtml(repo.uuid, CS.open) : ''}</div>
         ${mine.length ? `<div class="cs-diffs">${mine.map((f, i) => _wsCard(f, i)).join('')}</div>` : ''}
         ${typeof CX !== 'undefined' && CX.editing ? _cxEditorHtml() : `<div class="cs-code" id="cs-code">${_csCode()}</div>`}`
     : `<div class="cs-empty">pick a file on the left, or search above. What the agent changed is under <b>changes</b>.</div>`;
-  const changesHtml = `<div class="cs-sec">the agent's changes<span class="cs-grow"></span><button class="cs-chip-btn" title="reload" onclick="csAfterChange()">↻</button></div>
+  // §0.60.142 LV2 — James: "i want the agents work to stream live to the changes tab". The agent at work first (its thinking,
+  // its reply as it is written: app.js agentLiveHtml) and each file it is writing as a card (work-surface.js), then what landed
+  const liveHtml = `<div class="al cs-live" data-al="${escapeHtml(repo.uuid)}">${typeof agentLiveHtml === 'function' ? agentLiveHtml(repo.uuid) : ''}</div>
+        <div class="cs-forming" data-ws-forming="${escapeHtml(repo.uuid)}">${typeof _wsFormingHtml === 'function' ? _wsFormingHtml(repo.uuid) : ''}</div>`;
+  const changesHtml = `${liveHtml}<div class="cs-sec">the agent's changes<span class="cs-grow"></span><button class="cs-chip-btn" title="reload" onclick="csAfterChange()">↻</button></div>
         ${wsErr ? `<div class="cs-empty cs-bad">could not read the changes: ${escapeHtml(wsErr)}</div>` : ''}
         ${_csChanges().length ? `<div class="cs-diffs">${_csChanges().map(_wsCard).join('')}</div>` : `<div class="cs-empty">${CS.loadingChanges ? 'reading the changes…' : 'no changes yet — what the agent writes shows here as a diff, and greyed in the files, until you apply it'}</div>`}`;
   const tabs = _csTabsHtml();

@@ -700,7 +700,7 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 /* §0.39.282 N25 — the Manage workbench is styled by css/file-manage.css (.mg-*). The old .manage-modal/.manage-act/.manage-hit rules (0.39.280) styled a modal that no longer exists; the class names stay on the new markup only as stable hooks for tests. */
 /* §0.39.280 BS11 — the plan panel and the build-start card */
 #plan-panel{position:fixed;top:90px;right:18px;width:420px;height:min(78vh,760px);min-width:300px;min-height:220px;resize:both;overflow:hidden;z-index:250;display:none;flex-direction:column;background:var(--nx-card);border:1px solid var(--nx-rim);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);font-family:var(--mono)}
-#plan-panel.open{display:flex}body.dock-col-on #plan-panel{right:min(calc(min(420px,46vw) + 44px),calc(100vw - 320px))}#plan-panel.wide{width:min(900px,92vw)}
+#plan-panel.open{display:flex}body.dock-col-on #plan-panel:not(.docked){right:min(calc(min(420px,46vw) + 44px),calc(100vw - 320px))}#plan-panel.docked{position:static;inset:auto;width:auto;height:auto;max-height:74vh;min-height:220px;resize:vertical;box-shadow:none;border:0;border-radius:0;z-index:auto}#dock-col .dk-plan{max-height:none}#dock-col #dk-plan-host{display:flex;flex-direction:column;min-height:0}#plan-panel.wide{width:min(900px,92vw)}
 /* §0.39.353 — the pulse .pp-g.cur (the current gate, BS11) always named and nothing defined; defined, it pulses */
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 /* §0.39.353 CT9 — the Plan's pull tab on the right edge while the panel is closed */

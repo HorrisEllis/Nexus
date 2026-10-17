@@ -161,7 +161,9 @@ function done() { console.log(`\n  agent-live: ${passed} passed, ${failed} faile
     const page = await browser.newPage();
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     await page.goto(pathToFileURL(path.join(dir, 'index.html')).href);
-    await page.evaluate(() => renderRepoCode(REPO));
+    // 0.60.142 LV2 — James: "i want the agents work to stream live to the changes tab": the live slot is in Code › changes
+    // (it was only in Code › plans since 0.60.107 PS3; this test had looked for it in the default view since)
+    await page.evaluate(() => { renderRepoCode(REPO); CS.view = 'changes'; csPaint(); });
     await page.waitForSelector('.cs-live[data-al="r1"] .al-head');
     await test('LS-04', 'Clear Glass: the model writing streams into the Code tab and the Plan\'s work surface; a guardian frame shows its anchor', async () => {
       assert.match(await page.textContent('.cs-live'), /the agent is not writing/, 'idle says so');
@@ -205,6 +207,34 @@ function done() { console.log(`\n  agent-live: ${passed} passed, ${failed} faile
       // another repo's frame paints nothing here
       await page.evaluate(() => _agentFeedIn({ repoUuid: 'r2', event: 'chunk', jobId: 'x', source: 'ollama', text: 'OTHER', fullLen: 5 }));
       assert.ok(!(await page.textContent('.cs-live')).includes('OTHER'));
+      assert.deepStrictEqual(errors, [], 'nothing threw');
+    });
+    // §0.60.142 LV1/LV2 — James: "i want to see all agent responses in realtime"
+    await test('LS-05', 'thinking streams before the reply; Code › changes shows each file as it is written; the open file streams as it is written', async () => {
+      // gemini thinks first: a chunk with thinking and no text yet (guardian passes it now)
+      await page.evaluate(() => {
+        _agentFeedIn({ repoUuid: 'r1', event: 'dispatched', jobId: 'gm-3', provider: 'gemini' });
+        _agentFeedIn({ repoUuid: 'r1', event: 'chunk', jobId: 'gm-3', provider: 'gemini', text: '', thinking: 'Reading the phase. The census needs a command row…', thinkingLen: 52, source: 'transcript', generating: true });
+      });
+      const live = await page.textContent('.cs-live');
+      assert.match(live, /thinking — its reply has not started/);
+      assert.match(live, /The census needs a command row/);
+      assert.match(await page.textContent('.cs-live .al-head'), /thinking 52ch/);
+      // then the reply, with a file in it: a forming card in Code › changes, live
+      await page.evaluate(() => _agentFeedIn({ repoUuid: 'r1', event: 'chunk', jobId: 'gm-3', provider: 'gemini', text: 'Here it is:\n```js src/a.js\nconst census = () => 1;\nmodule', thinking: 'Reading the phase. The census needs a command row…', source: 'transcript', generating: true }));
+      assert.ok(await page.$('.cs-forming[data-ws-forming="r1"] .ws-card.ws-forming.open'), 'a forming card for the file it is writing');
+      assert.match(await page.textContent('.cs-forming'), /a\.js[\s\S]*writing[\s\S]*const census/);
+      assert.ok(await page.$('.cs-live details.al-think-d'), 'once the reply has begun, the thinking folds away');
+      // the open file in Code › files streams as it is written, the whole of it, until it lands
+      await page.evaluate(() => { CS.view = 'files'; CS.open = 'src/a.js'; csPaint(); });
+      await page.waitForSelector('[data-ws-forming-file="r1"] .cs-forming-file');
+      assert.match(await page.textContent('[data-ws-forming-file="r1"]'), /gemini is writing this file[\s\S]*const census = \(\) => 1;/);
+      await page.evaluate(() => _agentFeedIn({ repoUuid: 'r1', event: 'chunk', jobId: 'gm-3', provider: 'gemini', text: '.exports = { census };\n```\n', source: 'transcript', generating: false }));
+      assert.match(await page.textContent('[data-ws-forming-file="r1"]'), /module\.exports = \{ census \};[\s\S]*|done — it lands as a proposal/);
+      assert.match(await page.textContent('[data-ws-forming-file="r1"]'), /done — it lands as a proposal/);
+      // another file open: nothing of a.js streams on it
+      await page.evaluate(() => { CS.open = 'src/other.js'; csPaint(); });
+      assert.strictEqual((await page.textContent('[data-ws-forming-file="r1"]')).trim(), '');
       assert.deepStrictEqual(errors, [], 'nothing threw');
     });
   } finally { await browser.close(); }

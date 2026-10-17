@@ -84,6 +84,9 @@
 .al-dot.on{background:var(--mint);box-shadow:0 0 8px var(--mint);animation:al-blink 1s ease-in-out infinite}
 @keyframes al-blink{50%{opacity:.25}}
 .al-text{margin:0;max-height:180px;overflow:auto;padding:6px 10px 8px;border-top:1px solid rgba(255,255,255,.05);white-space:pre-wrap;word-break:break-word;color:var(--text);font:10.5px/1.55 var(--mono);border-left:2px solid var(--mint)}
+.al-think-h{padding:4px 10px 0;font:9.5px var(--mono);color:var(--amber,#fbbf24);letter-spacing:.04em}   /* 0.60.142 LV1 — the model thinking before its reply */
+.al-think{margin:0;max-height:180px;overflow:auto;padding:6px 10px 8px;white-space:pre-wrap;word-break:break-word;color:var(--text3);font:italic 10.5px/1.55 var(--mono);border-left:2px solid var(--amber,#fbbf24)}
+.al-think-d{padding:2px 10px}.al-think-d summary{cursor:pointer;font:9.5px var(--mono);color:var(--text3)}
 .pp-live{margin:10px 0 6px}
 /* §0.47.0 OS3 — the open file's history, one quiet line (VR1: every change a commit, who and why) */
 .cs-hist{display:flex;align-items:center;gap:8px;min-width:0;padding:2px 2px 8px;font-size:10px;color:var(--text3)}
