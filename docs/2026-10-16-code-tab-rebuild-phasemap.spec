@@ -353,3 +353,33 @@ addendum_c:
 #   saved.
 # - The PC1 build reached attempt 12 across five agents and ended contract-incomplete with thin files. That belongs to
 #   the scale phasemap (plan + contract with remote coders).
+#
+# ADDENDUM 2026-10-17 (h) — LV1–LV4: the agent's work, live, where he is looking (0.60.142)
+# James (2026-10-17), with three screenshots of the Code tab (runs, plans, changes) and the Plan panel floating over it while
+# gemini built IM1: "modified a file but no where to be found. i want to see it live in the code tab. plan panel  isn't bonud
+# to the tab like the other. fix it please. like i want the agents work to stream live to the changes tab or when viewing the
+# file in the files tab, like i want to see all agent responses in realtime,"
+# What the screenshots showed: gemini "WRITING · 7287 mutations · no reply text read yet" for 4+ minutes, watching
+# model-response-text.processing-state-visible; Code › changes "no changes yet"; the Plan a floating window over the tab
+# while every other panel sits in the dock's column.
+# Found (read, not guessed):
+#   - Gemini thinks first: its thinking is in <model-thoughts>, its reply element stays empty until the thinking ends. The
+#     job's live stream (each userscript's transcript streamer, _txStreamTick) sends only the reply text, and guardian drops
+#     a chunk with no text (ncp-handler), so minutes of the agent's work never reached Idearium: nothing to show anywhere.
+#   - The live views exist (LS4 agentLiveHtml, WS2 forming cards) but only in Code › plans and the Plan panel: not in
+#     Code › changes, not on the open file.
+#   - The reply selector a person picks (◎) is stored verbatim and wins over the built-in lookup; a pick on Angular pages
+#     carries per-build classes (ng-tns-c3086213896-11), transient state classes (processing-state-visible) and the
+#     reply's position in that one chat (:nth-of-type(2)) — a selector that stops matching.
+# Phases (decided by his axioms where the how is open):
+#   LV1_thinking_streams: the transcript streamers send the assistant turn's thinking with its text (GUARDIAN_CHUNK
+#     thinking); guardian passes a chunk that has thinking but no text yet; the feed keeps both; the live views show the
+#     thinking (marked as thinking) until the reply begins. Five provider userscripts, one shape.
+#   LV2_live_in_changes_and_files: Code › changes opens with the live slot (the agent writing: provider, job, thinking,
+#     text) and the forming cards (each file it is writing, as it writes); the open file in Code › files shows the agent's
+#     version of THAT file as it is written, above the file, until it lands as a proposal.
+#   LV3_plan_docked: the Plan is a panel of the dock's column, first, like the others (bound to the Code tab and the rail);
+#     ⤢ still pops it out to a window when he wants one.
+#   LV4_stable_picks: a picked selector is stored without volatile parts (Angular ng-tns-/_ngcontent- classes, state
+#     classes like processing-state-*, *-visible, active/hover/focus, and the reply's :nth-of-type/:nth-child); read the
+#     same way, so a pick already saved on his PC is repaired without picking again.

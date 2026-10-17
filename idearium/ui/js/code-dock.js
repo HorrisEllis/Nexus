@@ -105,13 +105,22 @@ function dockFold(k) { if (DOCK.folded.has(k)) DOCK.folded.delete(k); else DOCK.
 function _dockPaintCol() {
   const col = document.getElementById('dock-col'); if (!col) return;
   const open = DOCK_PANELS.filter(([k]) => DOCK.open.has(k));
-  col.hidden = !open.length || !dockShown();
+  // §0.60.142 LV3 — the Plan, when open and not popped out, is the column's first panel: its element is moved in (its
+  // state, scroll and live paint go with it) and moved back to the page before the column is redrawn
+  const pp = document.getElementById('plan-panel');
+  const planDocked = !!(pp && pp.classList.contains('open') && !(typeof PLANP !== 'undefined' && PLANP.popout));
+  const ppBody = document.getElementById('pp-body'); const ppScroll = ppBody ? ppBody.scrollTop : 0;
+  if (pp && col.contains(pp)) document.body.appendChild(pp);
+  col.hidden = (!open.length && !planDocked) || !dockShown();
+  if (pp) { pp.classList.toggle('docked', planDocked && !col.hidden); if (planDocked) { pp.style.left = ''; pp.style.top = ''; pp.style.right = ''; } }
+  const dockBtn = document.getElementById('pp-dockbtn');
+  if (dockBtn) dockBtn.title = planDocked ? 'pop out to a window you can move (it docks back with this button)' : 'dock into the column with the other panels';
   // §0.60.123 PP3 — the Plan panel and the dock side by side, never one over the other (index.html body.dock-col-on)
   document.body.classList.toggle('dock-col-on', !col.hidden);
   if (col.hidden) { col.innerHTML = ''; return; }
   const keep = {}; for (const el of col.querySelectorAll('.dk-body')) keep[el.dataset.dock] = el.scrollTop;
   const argEl = document.getElementById('dk-tool-args'); const argDraft = argEl ? argEl.value : null;
-  col.innerHTML = open.map(([k, l, about]) => {
+  col.innerHTML = (planDocked ? '<section class="dk-panel dk-plan" data-dock="plan"><div id="dk-plan-host"></div></section>' : '') + open.map(([k, l, about]) => {
     const folded = DOCK.folded.has(k);
     return `<section class="dk-panel${folded ? ' folded' : ''}" data-dock="${k}">
       <header class="dk-head"><button class="dk-fold" onclick="dockFold('${k}')" title="${folded ? 'expand' : 'collapse'}">${folded ? '▸' : '▾'}</button>
@@ -121,6 +130,7 @@ function _dockPaintCol() {
       ${folded ? '' : `<div class="dk-body" data-dock="${k}">${DOCK.err[k] ? `<div class="dk-empty dk-bad">${_dockEsc(DOCK.err[k])}</div>` : ''}${_dockBody(k)}</div>`}
     </section>`;
   }).join('');
+  if (planDocked) { const host = document.getElementById('dk-plan-host'); if (host && pp) { host.appendChild(pp); const b = document.getElementById('pp-body'); if (b) b.scrollTop = ppScroll; } }
   for (const el of col.querySelectorAll('.dk-body')) if (keep[el.dataset.dock]) el.scrollTop = keep[el.dataset.dock];
   const a2 = document.getElementById('dk-tool-args'); if (a2 && argDraft != null) a2.value = argDraft;
 }

@@ -409,6 +409,7 @@ const SUITES = [
   'test-sync-off-thread.test.js',     // 0.60.124 SW1–SW3 — the self-sync's pipeline in its own thread; Guardian holds jobs behind a sign-in wall; COS map EPERM
   'test-phase-deps-gate.test.js',     // 0.60.125 DG1 — a phase build is refused while its depends_on are open (his decisions by their question); --anyway is the override
   'test-test-first.test.js',          // 0.60.141 TF2 — the phase's test is written first (by the planner, never the coder), seen failing, then shapes the plan and proves it
+  'test-live-everywhere.test.js',     // 0.60.142 LV1/LV4 — thinking streams before the reply (5 userscripts, guardian); picked selectors kept stable
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)
   'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person
   'test-language-checks.test.js',     // 0.60.101 — every language's own parser, at the gate

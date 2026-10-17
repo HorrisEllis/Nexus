@@ -4255,7 +4255,9 @@ function _agentFeedState(uuid) {
 function _agentFeedIn(p) {
   if (!p || !p.repoUuid) return;
   const st = _agentFeedState(p.repoUuid);
-  if (p.jobId && p.jobId !== st.jobId) { st.jobId = p.jobId; st.text = ''; st.textLen = 0; st.anchor = null; st.mutations = null; st.gate = null; }
+  if (p.jobId && p.jobId !== st.jobId) { st.jobId = p.jobId; st.text = ''; st.textLen = 0; st.anchor = null; st.mutations = null; st.gate = null; st.thinking = ''; st.thinkingLen = 0; }
+  // §0.60.142 LV1 — the model's thinking, streamed while its reply is still empty (gemini thinks for minutes): kept whole
+  if (typeof p.thinking === 'string' && p.thinking) { st.thinking = p.thinking.slice(-12000); st.thinkingLen = p.thinkingLen || p.thinking.length; }
   if (p.provider) st.provider = p.provider;
   if (p.anchor) st.anchor = p.anchor;
   if (p.mutations != null) st.mutations = p.mutations;
@@ -4286,7 +4288,7 @@ function _agentFeedIn(p) {
       p.event === 'complete' && p.chars ? `${p.chars}ch` : null].filter(Boolean).join(' · ');
   // A 'dom' pulse updates the live header; it is not worth a log row each second. Streamed chunks every 500 ms
   // show in the live text below, not as a row each.
-  if (!(p.event === 'progress' && p.stage === 'dom') && !(p.event === 'chunk' && (p.source === 'transcript' || p.source === 'ollama'))) {
+  if (!(p.event === 'progress' && p.stage === 'dom') && !(p.event === 'chunk' && (p.source === 'transcript' || p.source === 'ollama' || (!p.text && p.thinking)))) {
     st.rows.push({ ts: p.guardianTs || Date.now(), ev, detail, bad: p.event === 'error' || p.event === 'timeout' || (p.event === 'gate' && p.state === 'failed') });
     if (st.rows.length > AGENT_FEED_MAX) st.rows.splice(0, st.rows.length - AGENT_FEED_MAX);
   }
@@ -4338,8 +4340,10 @@ function agentLiveHtml(uuid) {
       ${st.provider ? `<span>${escapeHtml(st.provider)}</span>` : ''}<span class="al-dim">job ${escapeHtml(String(st.jobId).slice(0, 8))}</span>
       ${st.mutations != null ? `<span class="al-dim">mutations ${st.mutations}</span>` : ''}
       ${a ? `<span class="al-anchor" title="${escapeHtml(attrs)}">⌖ ${escapeHtml(a.path || a.tag || '')}</span>` : ''}
-      <span class="al-dim">${st.textLen || st.text.length}ch</span>
+      <span class="al-dim">${st.textLen || st.text.length}ch${st.thinkingLen ? ` · thinking ${st.thinkingLen}ch` : ''}</span>
       ${last ? `<span class="al-grow"></span><span class="al-dim${last.bad ? ' al-bad' : ''}">${escapeHtml(last.ev)}${last.detail ? ` · ${escapeHtml(last.detail)}` : ''}</span>` : ''}</div>
+    ${st.thinking && !st.text ? `<div class="al-think-h">thinking — its reply has not started</div><pre class="al-text al-think">${escapeHtml(st.thinking.slice(-6000))}</pre>` : ''}
+    ${st.thinking && st.text ? `<details class="al-think-d"><summary>its thinking · ${st.thinkingLen}ch</summary><pre class="al-think">${escapeHtml(st.thinking.slice(-6000))}</pre></details>` : ''}
     ${st.text ? `<pre class="al-text">${escapeHtml(st.text.slice(-6000))}</pre>` : ''}`;
 }
 function agentLivePaint(uuid) {

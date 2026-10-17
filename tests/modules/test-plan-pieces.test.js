@@ -184,8 +184,15 @@ function harness(planJson) {
       await page.waitForSelector('#dock-col .dk-panel[data-dock="changes"] .dk-focus');
       await page.waitForSelector('#dock-col .dk-panel[data-dock="outputs"] .ws-card');
       assert.deepStrictEqual(await page.evaluate(() => DOCK.focus), { file: 'src/c.js', runId: null, phase: 'KE1' });
+      // 0.60.142 LV3 — James: "plan panel isn't bonud to the tab like the other." The Plan is the dock column's first panel
+      // (was: a window beside the column, 0.60.123); popped out with ⧉, it is a window again, beside the column, never over it
+      assert.deepStrictEqual(await page.$$eval('#dock-col > .dk-panel', e => e.map(x => x.dataset.dock)).then(d => d.slice(0, 1)), ['plan'], 'the Plan is the column\'s first panel');
+      assert.ok(await page.$('#dock-col #dk-plan-host #plan-panel.docked #pp-body .pp-pieces'), 'its body, docked, with its pieces');
+      await page.evaluate(() => planDockToggle());
       const [pp, dc] = await page.evaluate(() => ['plan-panel', 'dock-col'].map(id => document.getElementById(id).getBoundingClientRect()).map(r => [r.left, r.right]));
-      assert.ok(pp[1] <= dc[0], `the Plan panel sits beside the dock, not over it (plan ${pp}, dock ${dc})`);
+      assert.ok(!(await page.$('#dock-col #plan-panel')) && pp[1] <= dc[0], `popped out: a window beside the dock, not over it (plan ${pp}, dock ${dc})`);
+      await page.evaluate(() => planDockToggle());
+      assert.ok(await page.$('#dock-col #plan-panel.docked'), 'docked again');
       assert.deepStrictEqual(await page.$$eval('#dock-col [data-dock="outputs"] .ws-card', e => e.map(x => x.dataset.path)), ['src/c.js'], 'only its file');
       const ch = await page.textContent('#dock-col .dk-panel[data-dock="changes"]');
       assert.ok(/from the Plan: src\/c\.js · KE1/.test(ch) && !/src\/a\.js/.test(ch), ch);

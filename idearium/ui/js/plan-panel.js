@@ -16,7 +16,7 @@
 //   start card    the repo's Home tab: "Start building" — its specs, each with Plan / Build next, and the plan.
 // ════════════════════════════════════════════════════════════════════════════
 
-const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), focus: null, wide: false, showDone: _ppShowDoneSaved(), logOpen: (() => { try { return localStorage.getItem('idearium.rt.open') === '1'; } catch (_) { return false; } })() };
+const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), focus: null, wide: false, popout: (() => { try { return localStorage.getItem('idearium.plan.popout') === '1'; } catch (_) { return false; } })(), showDone: _ppShowDoneSaved(), logOpen: (() => { try { return localStorage.getItem('idearium.rt.open') === '1'; } catch (_) { return false; } })() };
 // §CT7 0.39.352 — James: "the plan needs to only show current work." · "completely either need to clear or need a clear
 // complete button." Complete steps and complete sections fold into one line with their count (hidden, never deleted);
 // one click shows them; the choice is remembered in this browser.
@@ -44,6 +44,7 @@ function _planEl() {
       <select id="pp-map" class="pp-map" onchange="PLANP.map=this.value||null;loadPlanPanel()"></select>
       <span id="pp-run" class="pp-run"></span>
       <button class="pp-btn" title="take everything complete off the panel (kept in the ledger; restore brings it back)" onclick="planClearDone()">⌫ clear done</button>
+      <button class="pp-btn" id="pp-dockbtn" title="pop out to a window you can move (it docks back with this button)" onclick="planDockToggle()">⧉</button>
       <button class="pp-btn" title="wide" onclick="PLANP.wide=!PLANP.wide;document.getElementById('plan-panel').classList.toggle('wide',PLANP.wide)">⤢</button>
       <button class="pp-btn" title="close" onclick="closePlanPanel()">✕</button></div>
     <div class="pp-body" id="pp-body"></div>`;
@@ -51,7 +52,7 @@ function _planEl() {
   // drag by the header (a compartment you can move)
   const head = el.querySelector('#pp-head');
   head.addEventListener('mousedown', (e) => {
-    if (e.target.closest('button,select')) return;
+    if (e.target.closest('button,select') || el.classList.contains('docked')) return;   // docked: it sits in the column
     const r = el.getBoundingClientRect(); const dx = e.clientX - r.left, dy = e.clientY - r.top;
     const mv = (m) => { el.style.left = `${Math.max(0, Math.min(innerWidth - 80, m.clientX - dx))}px`; el.style.top = `${Math.max(0, Math.min(innerHeight - 40, m.clientY - dy))}px`; el.style.right = 'auto'; };
     const up = () => { removeEventListener('mousemove', mv); removeEventListener('mouseup', up); };
@@ -68,6 +69,14 @@ function openPlanPanel({ map = undefined, focus = null } = {}) {
   _planEl().classList.add('open');
   planTabSync();
   loadPlanPanel();
+}
+// §0.60.142 LV3 — James: "plan panel isn't bonud to the tab like the other." The Plan is the dock column's first panel
+// (code-dock.js _dockPaintCol moves this element into it), bound to the Code tab and the rail like the others; ⧉ pops it
+// out to a window and docks it back, remembered per browser.
+function planDockToggle() {
+  PLANP.popout = !PLANP.popout;
+  try { localStorage.setItem('idearium.plan.popout', PLANP.popout ? '1' : '0'); } catch (_) { /* a per-browser convenience */ }
+  planTabSync();
 }
 function closePlanPanel() { const el = document.getElementById('plan-panel'); if (el) el.classList.remove('open'); planTabSync(); }
 

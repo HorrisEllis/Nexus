@@ -524,3 +524,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     test independence works.
   - **Evidence:** `CHANGELOG-0.60.141.md`; `tests/modules/test-test-first.test.js` TF-03. On the real build route, the test
     asked for a function the plan lacked; the plan gained it, the coder built it, and the test proved the phase.
+- **2026-10-17: "i want to see all agent responses in realtime"**
+  - **Context:** an agent showed as writing for four minutes while every surface in the Code tab stayed empty. He asked
+    for the agent's work to be visible where he works: the Changes view and the open file.
+  - **What it shows:** treating observability as a requirement, not an extra. It surfaced a hidden failure. A model that
+    thinks before it answers produced nothing the system could show, so a working agent looked identical to a stuck one.
+  - **Evidence:** `CHANGELOG-0.60.142.md`; `tests/modules/test-live-everywhere.test.js` LV-02 runs Gemini's own streamer
+    and shows the thinking reaching the stream before the reply; `tests/modules/test-agent-live.test.js` LS-05 shows it in
+    the Code tab, in Clear Glass.
