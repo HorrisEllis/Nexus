@@ -189,6 +189,19 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **Context:** the map he directed ranks GT1 first: "0.60.18 showed that learning from unclassified failures poisons routing."
   - **What it shows:** prioritising the foundation every later build runs through over the next visible feature.
   - **Evidence:** `tests/modules/test-contract-adapters.test.js` GT-01..07. A planted failure of each type takes its own path, and only capability and context failures change routing or size limits. `CHANGELOG-0.60.30.md`.
+- **2026-10-13: "Do this task here: 'Build one Nexus phase to proven on this PC'" · "ask me for it again."**
+  - **Context:** after a day of fixes that had only run in tests, he asked for a real build. When the coder's first try
+    to use the Claude Code CLI as the agent was interrupted, he asked to be asked properly. Offered "test then build"
+    with the cost stated, he chose it.
+  - **What it shows:** he holds the work to proof, not to claims. Insisting on consent before an action that spends his
+    account's usage is the same judgment. The result is the first phase build ever to reach `proven` with a real agent.
+  - **Evidence:** phase NT1_notes, built in 50 seconds.
+    - A real Versionium snapshot came first (vtm-82eaa81b).
+    - Claude Code proposed `lib/notes.js` and `tests/notes.test.js`.
+    - The proof ran `node tests/notes.test.js` against the proposals: exit 0, 1 of 1 condition met.
+    - Recorded in the LIVE RUN note of `docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec`.
+
+    It ran on the cloud copy, not on his PC.
 
 - **2026-10-13: "can we work on inventing anything that will get this pipeline going. like why doesn't this work yet?"**
   - **Context:** after a day of fixes, he stopped asking for features and asked why the pipeline still failed. The
@@ -442,3 +455,15 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     he can check against results. The first slice of that rule is built: each brick goes to the agent with the best record
     on that kind of file.
   - **Evidence:** `CHANGELOG-0.60.119.md`; `tests/modules/test-agent-record.test.js` RA-01..05.
+- **2026-10-17: "each chunk/dependancy a piece of the progress indication. progress shows for each task with a full run history, and log to make it explicit. like the panels should remain interconnected. so strip the context from the plan panel since we have a dedicated one now."**
+  - **Context:** the Plan panel's bar showed six pipeline gates, the same for every phase. The Context card was drawn
+    twice, once in the Plan panel and once in the dock. He sent a sketch of the panel he wanted and asked for the panels
+    to work together, not side by side.
+  - **What it shows:**
+    - Progress measured in the units the work is actually made of: one segment per planned file, with its attempts,
+      its agent and what it depends on.
+    - Removing a duplicate instead of adding a feature.
+    - Asking for the panels to be connected is what exposed a real defect. The Plan panel sat on top of the dock, so a
+      click in one opened something unreachable behind it.
+  - **Evidence:** `CHANGELOG-0.60.123.md`; `tests/modules/test-plan-pieces.test.js` PP-01..04. PP-03 fails if the Plan
+    panel overlaps the dock column, and it found the overlap.

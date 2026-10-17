@@ -255,3 +255,57 @@ addendum_c:
 # DK3 built: the dock's Control panel — play / pause / rewind (POST /api/repos/:uuid/run/:op, lib/repo-run-state.js), what is
 # running, and who answers (POST /api/repos/:uuid/agent/settings). Proof: tests/modules/test-code-dock.test.js DK-18.
 
+
+# ADDENDUM 2026-10-17 (e): the Plan panel joins the dock — pieces as progress, every run's log, panels that point at
+# each other, no second Context.
+# James (with a screenshot of the Plan panel beside the dock): "check main. we aare way ahead. then look at the plan panel,
+# can you integrate it with the rest of the new panels? like this should be the plan panel (second image) each
+# chunk/dependancy a piece of the progress indication. progress shows for each task with a full run history, and log to
+# make it explicit. like the panels should remain interconnected. so strip the context from the plan panel since we have
+# a dedicated one now."
+#
+# What he was looking at:
+# - The Plan panel at 0.60.122 had three cards: Progress, Plan, Context.
+# - Each phase's bar showed six gates (mapped → snapshot → dispatched → replied → landed → closed), not its pieces.
+# - The dock (DK2) already draws the Context card in its own panel, with the same function (plan-panel.js _ppContext). The
+#   Plan panel showed it a second time.
+#
+# The coder's reading, to confirm:
+# - "chunk/dependency" means a piece in the sense of docs/2026-10-17-pieces-not-order-phasemap.spec: one per planned file,
+#   a contract brick, with what it uses.
+# - "full run history, and log" means every run of that phase, each opening to every row it wrote, in time order.
+#
+# Phases:
+# - PP1 pieces as progress. Each phase's bar is its pieces, one segment each, in the colour of its state:
+#   - pending, running, written (proposed), failed or proven, with the attempt count;
+#   - uses, from the plan's imports (lib/phase-plan.js depsOf) when a plan exists;
+#   - the pieces are the latest plan's files, else the phase's files:; a phase with neither shows one "whole phase" segment
+#     and says so.
+#   - Backend: idearium/repo/build-plan.js piecesOf (pure, over the raw rows it already gets since 0.60.27). The plan
+#     route carries steps[].pieces.
+# - PP2 run history and log. Expanding a phase lists every run, newest first: when, agents, how it ended, how long.
+#   - Each run opens to its log: every row in time order (state · piece · agent · note), together with the details the
+#     ledger already gives (route, plan, reply).
+#   - Backend: steps[].history, at most 12 runs and 80 rows each, said when cut.
+# - PP3 interconnected:
+#   - a piece opens the dock's Changes panel on its file;
+#   - a run opens the dock's Context panel on that run's context;
+#   - the dock's Context follows the run picked in the Plan;
+#   - one shared focus (DOCK.focus) the panels read.
+# - PP4 the Plan panel loses its Context card. The dock's Context panel is the one place; _ppContext stays as the dock's
+#   function (§0.3: moved, not lost).
+# - Delivery order: backend (build-plan piecesOf, history) → route (the plan route already serves steps) → no new command
+#   (repo plan already prints steps; it gains the pieces line) → UI (plan-panel.js, code-dock.js).
+#
+# ADDENDUM 2026-10-17 (f) — PP1–PP4 built (0.60.123); what the build found
+# - Drift from (e): "no new command" was wrong. No repo plan row existed. The new row is repo.plan (`repo plan <repo>
+#   [phase] [--map name]`, GET /api/repos/:uuid/plan): a glyph strip per phase; with a phase, its pieces and each run's log.
+# - Found by the Clear Glass test (PP-03), fixed: the Plan panel (z 250, right 18px) sat on top of the dock column
+#   (z 240, right 34px). A piece clicked in the Plan opened Changes underneath it, out of reach. Now
+#   code-dock.js _dockPaintCol sets body.dock-col-on and index.html moves the Plan panel left of the column. A panel he
+#   dragged keeps its own place.
+# - Found by test-code-tab CT-23, fixed: a step with no raw rows (an older server) lost its ledger's file links. _ppHistory
+#   falls back to the merged ledger, as before.
+# - Proof: tests/modules/test-plan-pieces.test.js 4/4 (PP-01 units, PP-02/PP-03 Clear Glass, PP-04 the row). Neighbours
+#   green: test-plan-sidebar 4/4, test-code-dock 10/10, test-code-tab 16/16, test-build-surface 13/13,
+#   test-plan-code-run-attention 40/40, test-phases-tab 5/5, test-step-gate 18/18.

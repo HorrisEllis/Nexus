@@ -84,6 +84,8 @@ const CONSUMERS = [
   [I('idearium/api/index.js'),                      I('lib/repo-agent.js'), 'POST /api/repos/:uuid/agent/tools/run and every procedure step: runTool() — copilot /api/tools/run with the repo\'s scope (0.60.118 DK1)'],
   [I('idearium/ui/js/code-surface.js'),             I('idearium/ui/js/ui-editor.js'), 'an open .html file → "edit UI" opens /ui-editor.html?repo=&path= (0.60.122 UE1)'],
   [I('idearium/ui/js/plan-panel.js'),               I('idearium/ui/js/code-dock.js'), 'planTabSync() → dockSync(): the Plan\'s tab is the dock rail\'s first (0.60.118 DK2)'],
+  [I('idearium/ui/js/plan-panel.js'),               I('idearium/ui/js/code-dock.js'), 'ppFocusPiece/ppFocusRun → dockFocus + dockToggle: a piece narrows Changes/Outputs, a run opens Context (0.60.123 PP3)'],
+  [I('idearium/ui/js/code-dock.js'),                I('idearium/ui/js/plan-panel.js'), '_ppContext(steps, { runId }) and openPlanPanel({ focus }): the run picked, and the way back (0.60.123 PP3)'],
   [I('idearium/ui/js/app.js'),                      I('idearium/ui/js/code-dock.js'), 'SSE idearium.repo.task → dockTaskIn (no fetch); refreshOnEvent → dockOnEvent (only open panels reload) (0.60.118 DK2)'],
   [I('idearium/api/index.js'),                      I('idearium/lib/surface-state.cjs'), 'GET / PUT /api/repos/:uuid/surface: get() / set(); a set emits idearium.surface.changed (0.60.79 CE8)'],
   [I('idearium/api/index.js'),                      I('lib/run-state.js'),  'list({ repoUuid })[0]: the repo\'s latest run on the surface (0.60.79 CE8)'],

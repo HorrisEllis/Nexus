@@ -307,6 +307,9 @@ function _emitFrictionChange(faultClass, result, meta = {}) {
       message: `'${faultClass}' crossed into FAILURE_MODE (friction ${result.row.friction}) — no more auto-attempts (docs/self-heal.spec level 4)`,
     });
     console.warn(`[${MODULE_ID}] '${faultClass}' entered FAILURE_MODE`);
+    // §0.60.123 MP — James: "failure modes are to prevent problems not solutionsn". Entering FAILURE_MODE is also written
+    // as a prevention (lib/prevention.js) — the record other systems read before heavy work — not only as a refusal here.
+    try { require('../../lib/prevention.js').record(faultClass, { level: 'failure_mode', why: meta.cause || 'friction accumulated', by: 'cortex.escalation' }); } catch (_) {}
   }
 }
 
