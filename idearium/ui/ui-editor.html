@@ -1,0 +1,39 @@
+<!doctype html>
+<!--
+  idearium/ui/ui-editor.html — THE UI EDITOR (UE0 + UE1, 0.60.122). Map: docs/2026-10-10-design-surface-phasemap.spec
+  (addendum 2026-10-17). James: "the ui editor is for editing uis, whether its electron, html, etc. ... we need a full
+  editor ... like full enterprise grade" · "always make effective use of what you already have."
+  The engine is GrapesJS 0.23.8 (BSD-3-Clause, vendor/grapesjs/LICENSE), served by Idearium itself: canvas, layers, style
+  manager, traits, blocks, device preview, undo/redo, code view. ?repo=<uuid>&path=<file.html> opens a repo's page; Save
+  writes it back through POST /api/repos/:uuid/file (versioned, undoable). The round trip is js/ui-editor-doc.js.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="js/access-guard.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI EDITOR</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="vendor/grapesjs/grapes.min.css">
+<style>
+  html,body{margin:0;height:100%;background:#0b0f17;color:#cbd5e1;font:12px ui-monospace,Menlo,Consolas,monospace}
+  #ue-top{display:flex;align-items:center;gap:10px;padding:6px 10px;border-bottom:1px solid #1f2937;background:#0f1522}
+  #ue-top b{color:#e2e8f0;letter-spacing:.08em}
+  #ue-file{color:#93c5fd}
+  #ue-state{color:#94a3b8;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #ue-state.bad{color:#f87171}#ue-state.ok{color:#34d399}
+  #ue-top button{background:#1e293b;border:1px solid #334155;color:#e2e8f0;border-radius:6px;padding:4px 10px;font:inherit;cursor:pointer}
+  #ue-top button:hover{border-color:#3b82f6}#ue-top button:disabled{opacity:.4;cursor:not-allowed}
+  #gjs{height:calc(100% - 37px)}
+</style>
+</head>
+<body>
+<div id="ue-top"><b>UI EDITOR</b><span id="ue-file">—</span><span id="ue-state">reading…</span>
+  <button id="ue-undo" title="undo (Ctrl+Z)">↶</button><button id="ue-redo" title="redo (Ctrl+Shift+Z)">↷</button>
+  <button id="ue-save" disabled title="write the page back into the repo (a version is kept; undoable)">save</button></div>
+<div id="gjs"></div>
+<script src="vendor/grapesjs/grapes.min.js"></script>
+<script src="js/ui-editor-doc.js"></script>
+<script src="js/ui-editor.js"></script>
+</body>
+</html>

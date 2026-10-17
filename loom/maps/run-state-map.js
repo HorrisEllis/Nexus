@@ -49,6 +49,8 @@ const FILES = [
   ['clear-glass/src/tls/helper.js', I('clear-glass/src/tls/helper.js'), []],   // §0.60.109 TLS2: runs cg-tls-helper (clear-glass/tls-helper, Go + uTLS); its CA trust for personas
   ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
   ['lib/repo-procedures.js', I('lib/repo-procedures.js'), [I('lib/node-export.js'), I('lib/run-state.js'), I('idearium/lib/data-dir.cjs')]],   // §0.60.118 DK1: .procedure files, replayed through an injected tool runner
+  ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
+  ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['idearium/ui/js/code-dock.js', I('idearium/ui/js/code-dock.js'), [I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/plan-panel.js')]],   // §0.60.118 DK2: the dock — _wsCard, _rtTree/_rtRow, _ppContext reused (page globals)
 ];
 const CONSUMERS = [
@@ -80,6 +82,7 @@ const CONSUMERS = [
   [I('idearium/api/index.js'),                      I('lib/run-state.js'),  'runIdFor({ brick }) + load(): each brick\'s run in the contract trace (0.60.77 GW2)'],
   [I('idearium/api/index.js'),                      I('lib/repo-procedures.js'), 'GET/POST /api/repos/:uuid/procedures, /from-run, /:id/replay, DELETE /:id: list/save/fromRun/replay/remove (0.60.118 DK1)'],
   [I('idearium/api/index.js'),                      I('lib/repo-agent.js'), 'POST /api/repos/:uuid/agent/tools/run and every procedure step: runTool() — copilot /api/tools/run with the repo\'s scope (0.60.118 DK1)'],
+  [I('idearium/ui/js/code-surface.js'),             I('idearium/ui/js/ui-editor.js'), 'an open .html file → "edit UI" opens /ui-editor.html?repo=&path= (0.60.122 UE1)'],
   [I('idearium/ui/js/plan-panel.js'),               I('idearium/ui/js/code-dock.js'), 'planTabSync() → dockSync(): the Plan\'s tab is the dock rail\'s first (0.60.118 DK2)'],
   [I('idearium/ui/js/app.js'),                      I('idearium/ui/js/code-dock.js'), 'SSE idearium.repo.task → dockTaskIn (no fetch); refreshOnEvent → dockOnEvent (only open panels reload) (0.60.118 DK2)'],
   [I('idearium/api/index.js'),                      I('idearium/lib/surface-state.cjs'), 'GET / PUT /api/repos/:uuid/surface: get() / set(); a set emits idearium.surface.changed (0.60.79 CE8)'],

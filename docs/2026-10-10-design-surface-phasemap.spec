@@ -155,3 +155,35 @@ spec:
         bus (fast enough for live edits); across systems nexus-bus (HTTP/SSE — fine for events, too slow for streaming
         pixels). A wire says which it uses.
       proof: "a wire added in the canvas appears in the registry; deleting the registry entry removes the wire from the canvas; an agent adds a wire by writing an entry and the canvas shows it"
+
+# ## ADDENDUM 2026-10-17 — the UI editor, full and enterprise grade, on a proven open-source engine (UE0-UE6)
+# James: "the ui editor is for editing uis, whether its electron, html, etc. can pull from outside sources but we need a full
+# editor like your design feature, or any of those you listed. like full enterprise grade" · and the standing rule the same day:
+# "always make effective use of what you already have."
+# His decisions, recorded as his: a full editor, enterprise grade; for any kind of UI (Electron, HTML, and others); outside
+# sources may be used.
+# The coder's reading, to confirm: Electron's UIs ARE web pages (HTML, CSS, JS in a renderer), so one web adapter covers
+# Electron, Idearium, Clear Glass's renderer and any repo's HTML. A native toolkit (Qt, WinForms, Swift UI) needs its own
+# adapter (DS4) and is not promised. Looking Glass's typed-data UI (docs/looking-glass/) would be its own adapter later.
+# Outside source, checked 2026-10-17: GrapesJS (npm grapesjs 0.23.8, licence BSD-3-Clause per npm and its README) — a full
+# web-builder framework: canvas, layer manager, style manager, traits, blocks, asset manager, device preview, undo/redo, code
+# view, a plugin API. One listing elsewhere said AGPL: the LICENSE file shipped in the package is checked when it is vendored.
+# Onlook (Apache-2.0) edits React apps and writes back to code, but is a desktop app, not an engine to embed. Craft.js and
+# Penpot: licences not confirmed in the search; not chosen.
+# What Nexus already has, used (his rule): the repo's file routes (read, write: versioned, undoable), the Code tab (where a
+# file is opened), the Guardian picker and Clear Glass driver (live pages), code-intel chunks (a CSS file's rules), DS0's
+# tokens (when built), the one door for agent edits (lib/repo-inject.js), Versionium (history).
+#   UE0_the_engine_vendored (BUILT 0.60.122): GrapesJS's built files copied into idearium/ui/vendor/grapesjs/ with its
+#     LICENSE and version, served by Idearium itself (offline, no CDN at runtime).
+#   UE1_open_edit_save_a_repo_page (BUILT 0.60.122; edits kept in a marked <style>, the page's stylesheets never rewritten): idearium/ui/ui-editor.html opens a repo's HTML file with its local
+#     stylesheets in the full editor; Save writes the body back into the same file (its head kept) and the CSS back into the
+#     one local stylesheet it links (or a marked <style> in its head), through POST /api/repos/:uuid/file (versioned). Opened
+#     from the Code tab with an "edit UI" button on an .html file.
+#   UE2_write_back_that_never_lies (OPEN): a page whose markup a script builds (most of Idearium) is not saved over: the edit
+#     goes to the repo's agent as {element, change, file} (DS2's pushback); a save that would drop markup GrapesJS did not
+#     parse is refused with what would be lost.
+#   UE3_live_pages (OPEN, = DS2): an open Electron or Clear Glass page: pick an element (Guardian picker), restyle it live,
+#     write the rule back to the stylesheet rule that matched it (code-intel's CSS chunks).
+#   UE4_tokens_in_the_style_manager (OPEN, needs DS0/DS1).
+#   UE5_the_agents_design_too (OPEN, = DS5): every editor action a command; an agent's restyle comes with before/after.
+#   UE6_more_adapters (OPEN, = DS4): SVG, Eravos mods, Looking Glass's typed data.

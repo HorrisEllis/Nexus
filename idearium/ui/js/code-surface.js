@@ -442,6 +442,7 @@ function csPaint() {
           ${CS.sel ? `<span class="cs-dim"> · ${CS.sel.to !== CS.sel.from ? `lines ${CS.sel.from}–${CS.sel.to}` : `line ${CS.sel.from}`} picked (shift-click widens)</span>` : ''}<span class="cs-grow"></span>
           <button class="cs-chip-btn${typeof CX !== 'undefined' && CX.editing ? ' on' : ''}" ${CS.text == null ? 'disabled' : ''} onclick="cxEdit(!CX.editing)" title="edit by hand; a save writes the file and is a version">edit</button>
           <button class="cs-chip-btn" onclick="cxManage()" title="Manage and History, one menu: hand this file (or the picked lines) to the agent; every run, commit and version of it — diff, restore">manage · history</button>
+          ${/\.html?$/i.test(CS.open) ? `<button class="cs-chip-btn" title="open this page in the UI editor (layers, styles, blocks, devices, undo); save writes it back as a version" onclick="window.open('/ui-editor.html?repo=${encodeURIComponent(repo.uuid)}&path=${encodeURIComponent(CS.open)}','_blank')">edit UI</button>` : ''}
           <button class="cs-chip-btn" onclick="if(!cxDirty()||confirm('discard unsaved changes?')){CS.open=null;CS.sel=null;CX.editing=false;csPaint()}">close</button></div>
         ${_csHistLine()}
         ${mine.length ? `<div class="cs-diffs">${mine.map((f, i) => _wsCard(f, i)).join('')}</div>` : ''}

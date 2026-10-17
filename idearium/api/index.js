@@ -9695,7 +9695,7 @@ export function startAPI() {
     // Node 22, not just this one request). existsSync-then-readFileSync is
     // also a TOCTOU race on its own (file can vanish between the two calls,
     // e.g. mid-deploy) — another real way this could throw uncaught.
-    if (req.method === 'GET' && (cleanUrl.startsWith('/js/') || cleanUrl.startsWith('/css/'))) {
+    if (req.method === 'GET' && (cleanUrl.startsWith('/js/') || cleanUrl.startsWith('/css/') || cleanUrl.startsWith('/vendor/'))) {   // /vendor/: the UI editor's engine (0.60.122 UE0)
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname, normalize } = await import('path');
@@ -9733,7 +9733,7 @@ export function startAPI() {
 
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html' || cleanUrl === '/login.html')) {   // §0.58.0 IA3 the sign-in page   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html' || cleanUrl === '/login.html' || cleanUrl === '/ui-editor.html')) {   // §0.60.122 UE1 the UI editor   // §0.58.0 IA3 the sign-in page   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');
