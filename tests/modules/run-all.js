@@ -391,6 +391,7 @@ const SUITES = [
   'test-vector-memory-embed-check.test.js', // 0.60.97 — the embed check, fixed for good
   'test-inject-screen.test.js',       // 0.60.98 — every proposal passes one screen at the door
   'test-repo-procedures.test.js',     // 0.60.118 DK1 — replayable procedures, .procedure files
+  'test-expectation-tests.test.js',   // TF1 (work in progress, not released) — a file's expectation from the plan, before the code
   'test-code-dock.test.js',           // 0.60.118 DK2 — the dock: separate panels on the right edge (Clear Glass)
   'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person
   'test-language-checks.test.js',     // 0.60.101 — every language's own parser, at the gate

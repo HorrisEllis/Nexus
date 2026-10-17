@@ -142,3 +142,35 @@ related:
     His layered editor ask (2026-10-17: editor > foreground > background UI > plumbing) is Looking Glass's convention stack
     (meta > interaction > app content > runtime > renderer > plumbing). Not mapped into Nexus here; see the coder's note in
     the chat of 2026-10-17 and docs/2026-10-10-design-surface-phasemap.spec DS1/DS2/DS8.
+
+# ## ADDENDUM 2026-10-17 (a) — tests first, structure first, nothing wasted (TF1-TF4)
+# James: "This is meant to be nonlinear. Using synthesis. Learning, compressing, creating higher leverage especially from gaps.
+# Need to get the chunking working. Intent mapping. It's working significantly better but the code it's outputting is terrible,
+# and it needs to learn. Nothing is wasted from failure or fault. Tests need to be first. Maybe prioritize nodes or chunks that
+# improve the expectations each file. Like focus on structure and architecture, bottom up."
+# His decisions, recorded as his: tests come first; every failure is kept and learned from; the pieces that improve a file's
+# expectations come first, structure and architecture bottom up; chunking and intent mapping are the work now.
+# Found (read 2026-10-17): a brick's only check is lib/phase-plan.js checkChunk, a regex for the planned export NAMES. A file
+# that does not load, requires what does not exist, or exports a non-function under a function's name passes it. Tests-first
+# is mapped as docs/2026-10-16-proposal-evidence-phasemap.spec PE6, not built. lib/proposal-evidence.js already runs a test in a
+# shadow copy of a tree with any files overlaid (shadow(root, overlays)), so a brick can be tested before anything is written.
+# Lessons are per phase only (docs/2026-10-16-reject-learn-retry-phasemap.spec open item).
+#   TF1_the_expectation_first (BUILT on the branch, NOT released, no version yet — James asked to stop and question it, 2026-10-17): from the held plan, before any code, Nexus writes each JS file's expectation test
+#     without a model: the module loads, every planned export exists, a planned function is a function and takes no more
+#     arguments than its signature. The brick passes only when that test passes in a shadow of the repo with the phase's files
+#     so far overlaid; its failing lines go back with the retry. An existing file's expectation is run before the build (seen
+#     failing first, or said to pass already). The text lives on the contract's evidence; nothing is written to the repo.
+#   TF2_behaviour_tests_by_another_hat (OPEN, = PE6): a different hat than the builder writes behaviour tests from each export's
+#     signature and does:, seen failing first; the builder gets them with its brief.
+#   TF3_lessons_across_phases (OPEN): every expectation failure is a fault keyed by layer and kind (not only by phase), so the
+#     next brick of that kind in any phase starts with what failed before (lib/phase-faults.js precedent widened).
+#   TF4_structure_first (OPEN, with PC2): pieces that fix expectations come first (schemas, signatures, the registry wiring, the
+#     expectation and behaviour tests), then the implementations, bottom up by layer.
+# ## ADDENDUM 2026-10-17 (b) — his pushback, recorded
+# James: "Don't just agree. I have no competence in coding. I'm just following my intuition"
+# The coder's answer, kept here so the next session sees it: his instincts match known practice (tests first = TDD; pieces checked
+# alone and resumed = Bazel/Nix-style builds; pure steps = SISO), but (1) a stateless piece still needs context, moved into the
+# brief, not removed; (2) any order moves the hard part to designing interfaces up front; (3) expectation tests catch shallow
+# faults only, not bad code; (4) the cause of "terrible code" is not known: no bad output has been read. Next step agreed as the
+# coder's proposal, his to confirm: read 3-5 real bad outputs from his machine, classify why each is bad, pick one fix, measure
+# retry success; no new maps until something works end to end. TF1 stays on the branch, unreleased, until then.

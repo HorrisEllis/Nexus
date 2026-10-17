@@ -9,6 +9,7 @@
  *   CP-03  building again resumes from the checkpoints: no file is re-sent, only the integration re-checked
  *   CP-03b TL1a: built again, the saved plan is kept (the planner is not asked; nothing re-chunked, nothing re-sent)
  *   CP-04  a changed plan (replan asked) rejects the old checkpoint (archived); a deliberately failed brick recovers on retry
+ *   CP-12  TF1: a brick that fails its expectation test (written from the plan) is retried with the failing lines
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -73,7 +74,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   const CG = require(path.join(ROOT, 'cortex/core/raid/contract-gates.js'));
   const realDispatch = RA.dispatch;
   await R('POST', '/api/config', { key: 'routing.planner', value: 'claude' });
-  const sent = []; let failNotes = 0, variant = '';
+  const sent = []; let failNotes = 0, variant = '', badNotes = 0;   // badNotes: CP-12 — notes.js names its exports but requires a file that does not exist
   const planOf = () => JSON.stringify({ system: null, read: ['the phase'], intent: 'notes', spec: [],
     files: [
       { path: ph.files[0], new: true, layer: 'engine', purpose: 'keeps notes', exports: [{ name: 'add' }, { name: 'list' }], imports: [], steps: [`keep notes in memory${variant}`] },
@@ -84,8 +85,9 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     dispatchedTotal++;
     if (/-plan\d+$/.test(a.session || '')) return { ok: true, text: '```json\n' + planOf() + '\n```', provider: 'claude', providerUsed: 'claude', elapsedMs: 3 };
     const file = (String(a.message).match(/^Write ONE file: (\S+)/m) || [])[1];
-    sent.push({ file, session: a.session, brick: a.brick || null });
+    sent.push({ file, session: a.session, brick: a.brick || null, message: String(a.message) });
     if (file === ph.files[0] && failNotes > 0) { failNotes--; return { ok: false, error: 'deliberate failure — the model fell over' }; }
+    if (file === ph.files[0] && badNotes > 0) { badNotes--; sent[sent.length - 1].bad = true; const t = `\`\`\`js ${file}\n'use strict';\nconst store = require('./store.js');\nfunction add(args) { return store.add(args); }\nfunction list() { return { ok: true, notes: [] }; }\nmodule.exports = { add, list };\n\`\`\`\n`; return { ok: true, text: t, injects: await RI.fromReply({ layer: a.layer, repo: a.repo, hat: null, text: t, repoDir: a.repoDir }), provider: 'ollama', providerUsed: 'ollama', elapsedMs: 5 }; }
     const code = /test/.test(file) ? "'use strict';\nconst notes = require('../lib/notes.js');\nif (typeof notes.add !== 'function') throw new Error('add');\n"
       : "'use strict';\nconst _n = [];\nfunction add(args) { _n.push(args.text); return { ok: true }; }\nfunction list() { return { ok: true, notes: _n.slice() }; }\nmodule.exports = { add, list };\n";
     const text = `\`\`\`js ${file}\n${code}\`\`\`\n`;
@@ -170,6 +172,24 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(tries.every(s => s.brick && s.brick === tries[0].brick), `one brick key across the retries: ${JSON.stringify(tries)}`);
     // (a contract retry reuses the brick's chat session today; a new chat per attempt is GW0b, his open decision)
     assert.ok(!sent.some(s => s.file !== ph.files[0] && s.brick === tries[0].brick), 'another file is another brick');
+  });
+
+  // §0.60.119 TF1 — James: "Tests need to be first." The expectation test, written from the plan before the code, catches what
+  // the name check could not (a file that names its exports but does not load), and the retry carries its failing lines.
+  // (This plan names exports without signatures, so only presence is checked: a function check needs a signature.)
+  await test('CP-12', 'TF1: a brick whose code fails its expectation test is retried with the failing lines, then passes', async () => {
+    sent.length = 0; variant = ' (expectations)'; badNotes = 1;
+    const rs = await build({ replan: true });
+    const tries = sent.filter(s => s.file === ph.files[0]);
+    assert.ok(tries.length >= 2 && tries[0].bad, `notes sent ${tries.length} times: ${JSON.stringify(tries.map(t => !!t.bad))}`);
+    assert.ok(/YOUR LAST ATTEMPT AT THIS FILE FAILED ITS CHECK/.test(tries[1].message) && /does not load: Cannot find module/.test(tries[1].message), tries[1].message.slice(-600));
+    const failedRow = rs.find(r => r.expectFailed);
+    assert.ok(failedRow && /failed its expectation test/.test(failedRow.error || ''), states(rs));
+    const end = rs.find(r => /^contract-/.test(r.state));
+    assert.strictEqual(end && end.state, 'contract-complete', states(rs));
+    const ev = CG.load(end.contract).payload.state.evidence;
+    const k = Object.keys(ev).find(x => /\.expect$/.test(x));
+    assert.ok(k && /^passed \d+ checks/.test(ev[k]), JSON.stringify(ev));
   });
 
   await test('CP-05', 'the route serves the audit (GET /phases/contract), the command row and the Plan panel show it', async () => {

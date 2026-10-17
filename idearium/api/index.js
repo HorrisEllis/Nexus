@@ -941,7 +941,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // or one chunk (one file, its own short request, its own sessions; ck = { chunk, chunks, file } on every row)
   // §0.60.0 PC1 — verify(code) -> { ok, missing }: a planned file is checked for the exports its plan names; bare: the
   // request goes alone (no retrieval context, no atlas) — a planned brief already holds everything the coder needs
-  const makeAttempt = ({ msg, files, ck = null, verify = null, bare = false, brick = null }) => async (rg, ri, tryNo) => {
+  // §0.60.119 TF1 — James: "Nothing is wasted from failure or fault." What the check said about the last try (an expectation
+  // test's failing lines, a missing export) goes with the next try on the same brick, instead of the same message again.
+  // carry: one box per brick, shared across the contract's own retries (each retry is a new dispatch), so the words survive.
+  const makeAttempt = ({ msg: msg0, files, ck = null, verify = null, bare = false, brick = null, carry = null }) => { const box = carry || { why: null }; return async (rg, ri, tryNo) => {
+    const msg = box.why ? `${msg0}\n\nYOUR LAST ATTEMPT AT THIS FILE FAILED ITS CHECK — fix exactly this, keep what was right:\n${box.why}` : msg0;
     // §GW2 0.60.77 — the brick this attempt works on: its run state is the brick's (lib/run-state.js), whatever chat or agent
     const brickKey = (brick || (ck && ck.brick)) ? `${map}::${phase}::${brick || ck.brick}` : null;
     const tag = ck ? `-c${ck.chunk}` : '';
@@ -987,13 +991,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     // so the ladder climbs instead of ending on prose.
     if (state === 'replied' && !PRt.changedAnything(r)) { state = 'incomplete'; unchanged = true; }
     // §0.60.0 PC1 — a planned file that came back without an export its plan names is not done: retried, or climbed
-    let missingExports = null;
+    let missingExports = null, verifyWhy = null;
     if (state === 'replied' && verify && files.length === 1) {
-      const v = verify(_landedCode(r, files[0]));
-      if (!v.ok) { state = 'incomplete'; missingExports = v.missing; }
+      const v = await verify(_landedCode(r, files[0]));   // §0.60.119 TF1 — may run the file's expectation test (async)
+      if (!v.ok) { state = 'incomplete'; missingExports = (v.missing || []).length ? v.missing : null; verifyWhy = v.why || null; }
+      box.why = v.ok ? null : (v.why || (v.missing && v.missing.length ? `${files[0]} came back without ${v.missing.join(', ')} — the plan says it exports ${v.missing.length === 1 ? 'it' : 'them'}` : null));
     }
-    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}), ...(missingExports ? { missingExports } : {}),
-      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : missingExports ? `${files[0]} came back without ${missingExports.join(', ')} — the plan says it exports ${missingExports.length === 1 ? 'it' : 'them'}` : null)),
+    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}), ...(missingExports ? { missingExports } : {}), ...(verifyWhy ? { expectFailed: true } : {}),
+      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : verifyWhy ? verifyWhy.slice(0, 900) : missingExports && missingExports.length ? `${files[0]} came back without ${missingExports.join(', ')} — the plan says it exports ${missingExports.length === 1 ? 'it' : 'them'}` : null)),
       // 0.60.27 — with no ladder a failed reply that does not name its agent was recorded with no provider (found by AG1a's
       // count: one failed call missing). The call's own agent is known: the backend it was sent to.
       provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || (dp && (dp.provider || (dp.backend === 'ollama' && dp.model ? `ollama:${dp.model}` : dp.backend))) || null,
@@ -1004,7 +1009,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     // §0.39.284 W3 — the tool calls of this run are kept on it, so the work surface can show what the agent used
     try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
     return { r, state, absent, dp, row, trigger: r && r.toolErrors ? 'tool-errors' : state };
-  };
+  }; };
   // each attempt recorded on the Plan; a climb says from what, to what, and why
   const makeOnOutcome = (ck = null) => async (out, { rung, index, tryNo, next, exhausted }) => {
     const tag = ck ? `-c${ck.chunk}` : '';
@@ -1212,6 +1217,33 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       try { const t = getRepoLayer().readTextFile(target.uuid, f); return t && !t.error ? String(t.content || '') : ''; } catch (_) { return ''; }
     };
     const brickOf = (f) => p.gates.find(g => g.file === f && !g.parent && g.type !== 'phase') || p.gates.find(g => g.file === f && g.type === 'phase' && g.id !== 'phase');
+    // §0.60.119 TF1 — James: "Tests need to be first." Each planned JS file's expectation test is written from the held plan
+    // before any code (lib/expectation-tests.js, no model) and a brick passes only when it passes: the module loads, its planned
+    // exports exist, a planned function is one. Run in a shadow of the repo with the phase's files so far and this proposal
+    // overlaid (nothing written to the repo). Its failing lines are the brick's error and go with the next try.
+    const EXT = _require('../../lib/expectation-tests.js');
+    const _overlaysFor = (f, code) => { const o = {}; for (const x of (plan && plan.order) || []) if (x !== f) { const c = codeOf(x); if (c) o[x] = c; } o[f] = code; return o; };
+    const _carry = new Map();   // file → { why }: what its last check said, kept across the contract's retries of that brick
+    const _carryFor = (f) => { if (!_carry.has(f)) _carry.set(f, { why: null }); return _carry.get(f); };
+    const _verified = new Map();   // file + code hash → its verdict: the climb's check and the brick's are one run, not two
+    const verifyBrick = async (code, f) => {
+      const v = PP.checkChunk(code, plan, f);
+      if (!v.ok) return v;
+      if (!plan || !EXT.forFile(plan, f)) return v;
+      const key = `${f}\n${crypto.createHash('sha256').update(String(code || '')).digest('hex')}`;
+      if (_verified.has(key)) return _verified.get(key);
+      let r; try { r = await EXT.run({ root, plan, path: f, overlays: _overlaysFor(f, code) }); } catch (e) { r = { ok: true, ran: false, why: `the expectation could not run: ${e.message}` }; }
+      const out = r.ok ? { ...v, expect: r } : { ok: false, missing: [], expect: r, why: EXT.feedback(r, f) };
+      _verified.set(key, out);
+      return out;
+    };
+    // seen failing first (or passing already): an existing file's expectation against the tree as it is, before the build
+    if (plan && !whole && root) {
+      for (const f of plan.order.filter(x => EXT.forFile(plan, x) && (() => { try { return fs.existsSync(path.join(root, x)); } catch (_) { return false; } })()).slice(0, 6)) {
+        const g = brickOf(f); if (!g || (p.state.evidence || {})[`${g.id}.expect.before`]) continue;
+        try { const b = await EXT.baseline({ root, plan, path: f }); if (b.ran) { p.state.evidence = p.state.evidence || {}; p.state.evidence[`${g.id}.expect.before`] = b.ok ? 'passes already' : `fails: ${b.failed.slice(0, 3).join(' | ')}`; } } catch (_) {}
+      }
+    }
     let lastDp = paramsOf(rungs[0] || null);
     const dispatch = async (hops, { gate, assessment = null }) => {
       if (whole && gate.id === 'work') {
@@ -1252,13 +1284,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const msg = (gate.parent ? `${cb.message}\n\nDO ONLY THIS STEP NOW: ${(gate.actions || [])[0] || ''}\nKeep everything the file already has.` : cb.message) + ctxNote;
       const ck = { chunk: gate.parent ? `${i + 1}.${gate.id.split('.').pop()}` : i + 1, chunks: plan.order.length, file: f, planned: true, brick: gate.id };
       const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy,
-        attempt: makeAttempt({ msg, files: [f], ck, verify: gate.parent ? null : (code) => PP.checkChunk(code, plan, f), bare: true }), onOutcome: makeOnOutcome(ck) });
+        attempt: makeAttempt({ msg, files: [f], ck, verify: gate.parent ? null : (code) => verifyBrick(code, f), bare: true, carry: gate.parent ? null : _carryFor(f) }), onOutcome: makeOnOutcome(ck) });
       if (out.dp) lastDp = out.dp;
       const ok = out.state === 'replied';
       const code = ok ? _landedCode(out.r, f) : '';
-      const v = ok && !gate.parent ? PP.checkChunk(code, plan, f) : null;
+      const v = ok && !gate.parent ? await verifyBrick(code, f) : null;   // §0.60.119 TF1 — names and the expectation test
       return { ok: ok && (!v || v.ok), agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),   /* §GT1a — the ladder was climbed to its end: an attempt spent */ ...(ok ? {} : { error: String((out.row && out.row.error) || out.state).slice(0, 400) }),
-        evidence: { ...(ctx ? { [`${gate.id}.context`]: ctx.summary } : {}), ...(ok ? { [`${gate.id}.verified`]: v ? (v.ok ? 'ok — every planned export present' : `missing ${v.missing.join(', ')}`) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)) } : {}) } };
+        evidence: { ...(ctx ? { [`${gate.id}.context`]: ctx.summary } : {}), ...(ok ? { [`${gate.id}.verified`]: v ? (v.ok ? (v.expect && v.expect.ran ? `ok — every planned export present; its expectation test passed (${v.expect.checks} checks)` : 'ok — every planned export present') : (v.why ? `failed its expectation — ${(v.expect && v.expect.failed || []).slice(0, 3).join(' | ') || 'see the error'}` : `missing ${v.missing.join(', ')}`)) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)),
+          ...(v && v.expect ? { [`${gate.id}.expect`]: v.expect.ran ? (v.expect.ok ? `passed ${v.expect.checks} checks (test ${v.expect.hash})` : `failed: ${v.expect.failed.slice(0, 4).join(' | ')}`) : `not run: ${v.expect.why}` } : {}) } : {}) } };
     };
     const agentEx = CA.agentExecutor({ dispatch, route: () => (rungs.length ? rungs.map(r => ({ provider: r.provider, rung: r })) : [{ provider: provider || agent || backend || 'the call\'s own agent', rung: null }]) });
     const integrate = async () => {
