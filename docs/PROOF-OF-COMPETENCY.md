@@ -100,6 +100,15 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-17: "Okay. Keep going."** (FR4a: the flight recorder on its own)
+  - **Context:** a product has to run without the system it was built in. This is the first time the flight recorder
+    did, from a copy carved out of Nexus.
+  - **What it shows:** his product boundary (2026-10-17) paying off on the first real use. Testing from the copy, not
+    from Nexus, found two defects a test inside Nexus would not have shown: data lost on exit, and a missing file. A
+    third, which also affected Idearium, was fixed for both.
+  - **Evidence:** `CHANGELOG-0.60.118.md`; `products/flight-recorder/`; `tests/modules/test-flight-recorder-standalone.test.js`
+    FS-01..06.
+
 - **2026-10-17: "Next and Merge."** (FR3: undo any change, keeping later edits)
   - **Context:** the product's promise is undo. The existing revert could only undo the newest change, because any later
     edit to the file blocked it.

@@ -975,4 +975,12 @@ function _uuid() {
   return `${t.slice(0,8)}-${t.slice(8,12)}-4${r.slice(0,3)}-${(8+Math.random()*4|0).toString(16)}${r.slice(4,7)}-${r.slice(7,19)}${c}`;
 }
 
-module.exports = { JaaStore };
+// §FR4 0.60.118 — a short-lived command (products/flight-recorder/bin) ends with process.exit(), which the signal handlers above
+// never see: every table it wrote stayed an unflushed buffer (its versions and activity were lost). It calls this first.
+function flushAllStores() {
+  let n = 0;
+  for (const s of _liveStores) { try { s.flushAll(); n++; } catch (e) { console.error('[jaa] flush failed for a store:', e.message); } }
+  return n;
+}
+
+module.exports = { JaaStore, flushAllStores };

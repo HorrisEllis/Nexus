@@ -34,13 +34,20 @@
     "versionium/lib/engine.js",
     "cos/testenv/index.js",
     "intelligence/rfr2/index.js",
-    "versionium/lib/merge3.js"
+    "versionium/lib/merge3.js",
+    "products/flight-recorder/bin/flight-recorder.js",
+    "products/flight-recorder/lib/project.js",
+    "products/flight-recorder/lib/versions.js",
+    "lib/repo-activity.js",
+    "lib/activity-log/compartment.js",
+    "guardian/jaa-store.js",
+    "versionium/lib/files.js"
   ],
   "phases": {
     "FR1_one_record_per_change": "built 0.60.114",
     "FR2_tested_before_it_lands": "built 0.60.115",
     "FR3_undo_any_change": "built 0.60.117",
-    "FR4_stands_alone": "mapped",
+    "FR4_stands_alone": "FR4a built 0.60.118 (the command); FR4b open (server and page)",
     "FR5_the_demo": "mapped"
   }
 }

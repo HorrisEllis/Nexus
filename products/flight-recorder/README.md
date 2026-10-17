@@ -35,5 +35,21 @@ The phases are in `docs/2026-10-16-repo-carve-phasemap.spec`.
 | FR1 | one record per change (`lib/change-record.js`) | built 0.60.114 |
 | FR2 | tested before it lands (`lib/proposal-evidence.js` gatherBatch, `lib/code-edit.js` promoteTested) | built 0.60.115 |
 | FR3 | undo any change, keeping later edits (`versionium/lib/merge3.js`, `repo-inject` revert merge) | built 0.60.117 |
-| FR4 | stands alone: its own install, start, record and undo | mapped |
+| FR4 | stands alone: FR4a the command (`bin/flight-recorder.js`, state in `<project>/.flight-recorder/`) built 0.60.118; FR4b a server and page | partly built |
 | FR5 | the demo: the refactor tool on a real repo, recorded end to end | mapped |
+
+## Using it on its own (FR4a)
+
+Run these from a project folder. Nothing else is needed: no Idearium, no Versionium server, no Nexus checkout. A copy branched
+from Nexus is enough.
+
+    node products/flight-recorder/bin/flight-recorder.js init
+    node products/flight-recorder/bin/flight-recorder.js propose lib/a.js --from new-a.js --agent the_builder --why "add g"
+    node products/flight-recorder/bin/flight-recorder.js test <id>       # its linked tests, before and after, in this project
+    node products/flight-recorder/bin/flight-recorder.js apply <id>      # refused if it broke a test; becomes a version
+    node products/flight-recorder/bin/flight-recorder.js show <id>       # the record: what, who, why, checked, landed, undo
+    node products/flight-recorder/bin/flight-recorder.js undo <id>       # what was there before comes back; later edits are kept
+    node products/flight-recorder/bin/flight-recorder.js list | versions
+
+Everything it keeps is in `<project>/.flight-recorder/`: the changes, the versions, the activity and the runs. That folder
+holds its own `.gitignore`.
