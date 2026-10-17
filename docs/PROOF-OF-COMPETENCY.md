@@ -478,3 +478,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     Each fix has a measured result.
   - **Evidence:** `CHANGELOG-0.60.124.md`; `tests/modules/test-sync-off-thread.test.js` SW-02 measures the event loop
     held 4,183 ms inline and 15 ms with the fix, on 447 files.
+- **2026-10-17: "the drawbridge for each compartment for each system, the only way to interact between systems. using the api routes, and cli interface. ui floats ontop"**
+  - **Context:** asked for the debugging systems (cfr, rfr2, sigma, friction, tension) to be wired. He then asked for the
+    wiring itself to have one shape: each system's registry as its contract, its event bus and its handshake.
+  - **What it shows:** a design held consistently over time. The same architecture is already written in the COS
+    archetype, in his words (`cos/archetype/nexus-system/lib/handoff.js`: "each system hands the file off to the target
+    system, using the registry and handshake verification…"). Asked about wiring months later, he arrived at it again
+    without being shown it. The cost, said: no existing system was built that way, so 532 crossings between systems now
+    have to be moved.
+  - **Evidence:** `CHANGELOG-0.60.126.md`; `tests/modules/test-system-boundary.test.js` SB-01..08; the measured baseline
+    `contracts/drawbridge-baseline.json`.

@@ -393,6 +393,7 @@ const SUITES = [
   'test-inject-screen.test.js',       // 0.60.98 — every proposal passes one screen at the door
   'test-repo-procedures.test.js',     // 0.60.118 DK1 — replayable procedures, .procedure files
   'test-expectation-tests.test.js',   // 0.60.119 TF1 — a file's expectation from the plan, before the code
+  'test-system-boundary.test.js',   // 0.60.126 DB1 — every require() across a system boundary, and the ratchet that only shrinks
   'test-code-dock.test.js',           // 0.60.118 DK2 — the dock: separate panels on the right edge (Clear Glass)
   'test-plan-pieces.test.js',         // 0.60.123 PP1–PP4 — the Plan's bar is its pieces; every run with its log; a piece/run points the dock (Clear Glass)
   'test-prevention.test.js',          // 0.60.123 MP — a memory crisis recorded becomes a prevention: heavy work waits for headroom; Ollama unloads when idle

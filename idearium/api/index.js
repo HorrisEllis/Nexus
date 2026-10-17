@@ -2770,6 +2770,7 @@ const ROUTE_CAP = {
   'system.lean': CAPS.READ_IDEAS, 'system.lean.set': CAPS.ADMIN,   // 0.60.20 lean mode
   'system.version': CAPS.READ_IDEAS,   // 0.60.34 VR1 — the one release version
   'system.prevention.clear': CAPS.ADMIN,   // 0.60.123 MP
+  'system.drawbridge': CAPS.READ_IDEAS,   // 0.60.126 DB1 — the crossings between systems, and the ratchet
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
   'accounts.profiles': CAPS.READ_IDEAS,   // 0.60.32 PF1 — every account tab and its lane
@@ -3056,6 +3057,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','lean'],   'system.lean'],        // 0.60.20 — lean mode: what is held, saved for the next boot
     ['GET',    ['api','version'],         'system.version'],     // 0.60.34 VR1 — the release (lib/version.js), where it is stated, the module versions labelled
     ['POST',   ['api','system','prevention','clear'], 'system.prevention.clear'],   // 0.60.123 MP — a person ends a prevention early
+    ['GET',    ['api','system','drawbridge'], 'system.drawbridge'],   // 0.60.126 DB1 — every require() that crosses a system boundary; ?new=1 the ratchet's drift only
     ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
     ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
     ['GET',    ['api','repos',    ':uuid','run'],            'repo.run'],           // §0.60.0 RS1 — the repo's run state: playing | paused
@@ -5277,6 +5279,14 @@ async function handle(req, res, route, query, body) {
       const cur = R.current();
       return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
         modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
+    }
+    case 'system.drawbridge': {   // 0.60.126 DB1 (docs/2026-10-17-system-drawbridge-phasemap.spec)
+      const SB = _require('../../lib/system-boundary.js');
+      const root = path.dirname(_require.resolve('../../package.json'));
+      const ck = SB.check({ root });
+      if (query && (query.new === '1' || query.new === 'true')) return ok(res, { check: ck });
+      const cs = SB.census({ root });
+      return ok(res, { census: { files: cs.files, total: cs.total, byKind: cs.byKind, pairs: cs.pairs.slice(0, 60) }, check: { ok: ck.ok, counts: ck.counts, added: ck.added.slice(0, 40), closed: ck.closed.slice(0, 40), why: ck.why } });
     }
     case 'system.prevention.clear': {
       const cls = String((body && body.cls) || 'memory_pressure');

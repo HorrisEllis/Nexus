@@ -724,3 +724,10 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 # brick key <map>::<phase>::<gate> of 0.60.77, the trace's per-brick view). Those stay as they are (§0.3, nothing rewritten). They
 # are read as his metaphor for a chunk. Where a chunk node is written (GW27), its kind field says which: build | spec_section.
 # Still open (his): decision_refactor_tool [A] proposal engine (coder recommends) · [B] one-pass rewriter · [C] report only.
+#
+# ADDENDUM 2026-10-17 — GW23 (wire what exists) is carried by the drawbridge map
+# James: "lets work on wiring everything together. i want to eventually have the component registry for each system be the
+# interaction contract and event bus, with handshake verification ... the only way to interact between systems."
+# docs/2026-10-17-system-drawbridge-phasemap.spec DB6 does GW23 through the drawbridge, debugging systems first (cfr, rfr2,
+# sigma, friction, tension as capabilities with routes and commands). DB1 (0.60.126) is the census GW23 asked for, kept
+# as a ratchet (contracts/drawbridge-baseline.json). GW23 stays OPEN until DB6 lands.
