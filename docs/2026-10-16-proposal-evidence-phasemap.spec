@@ -41,3 +41,28 @@ limits:
 # gather() defaulted to Nexus's tree for every change, including other repos' changes: they are now tested in their own repo's
 # folder (repo-inject setEvidenceRoot; Nexus changes keep Nexus's tree; a repo with no folder is not tested, said). Evidence is
 # kept on a staged change too. shadow() takes several overlays, and gatherBatch() tests a staged batch together; promote uses it.
+
+## ADDENDUM 2026-10-16 (b): the two open decisions, answered by ChatGPT's advice, pasted by James
+# James pasted ChatGPT's answer to decisions_open with no words of his own. It is recorded as the direction taken, TO CONFIRM:
+# he did not say yes or no. The coder's earlier recommendation for PE6 (the officiator writes the tests) is SUPERSEDED by it below; the earlier text stays (§0.3).
+decisions:
+  debug_two_layers:
+    asked: "Is 'debug' the diagnostic system (:7825) or the Debug tab in Idearium?"
+    chosen_to_confirm: "Both, as different layers, mapped independently and then joined through their real interfaces. The diagnostic system (:7825) holds signals, logs, error records and debugging operations. The Debug tab is how a person inspects and drives them, and consumes the diagnostic system's outputs rather than re-implementing debugging logic. The join shows whether the tab is a true control surface over :7825 or has functions of its own. PE8 learns from the diagnostic system's records; the tab only shows them."
+    adds: "PE9 inventory lists 'signal is aborted without reason' as an UNRESOLVED failure with evidence and reproduction status (reproduced / not reproduced). The message is not assumed to name the root cause."
+  pe6_test_writer:
+    asked: "PE6: the officiator hat (coder's recommendation) or a new hat?"
+    chosen_to_confirm: "A dedicated test-writer hat, separate from the officiator, for independence: the agent that designs the implementation must not write the tests from the same assumptions. The test writer never declares its own tests sufficient."
+    split:
+      contract_and_acceptance: "the contract / specification process"
+      write_tests_from_contract: "test-writer hat"
+      run_on_unmodified_baseline: "evidence runner (lib/proposal-evidence.js)"
+      confirm_tests_detect_the_missing_behaviour: "officiator or an independent validation stage"
+      run_on_proposed_implementation: "evidence runner"
+      judge_evidence_against_acceptance: "officiator"
+      apply_or_reject: "the existing approval workflow"
+    rules:
+      - "Tests are written BEFORE the implementation, run against the baseline, and must fail for the intended missing behaviour."
+      - "A baseline failure is not proof of a good test. The officiator tells an expected ASSERTION failure from an invalid environment (broken infrastructure, missing dependency); only the first counts."
+      - "PE6 extends the PE2/PE3 evidence model and feeds the same comparison engine and records PE7 uses for tested_by edges. No second QA pipeline that answers 'is it correct' on its own."
+sequence: "map existing test / QA / QC / debug / comparison capability (PE1, PE7 inventory) -> test-writer contract and independence rules -> contract-derived tests before implementation -> validate they detect the missing behaviour -> feed the common evidence and comparison model."
