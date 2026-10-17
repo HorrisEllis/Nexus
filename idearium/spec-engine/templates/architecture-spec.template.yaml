@@ -114,3 +114,15 @@ rules:
   - "a system hands work only to what its registry knows: its modules (module nodes), its parent, the peers in its config"
   - "a command takes a handoff kind by declaring accepts; the contract lists every kind the system accepts"
   - "a module is a system: the same skeleton, laid out from the parent's template/, carrying the template so it can nest further; the parent knows it by one module node and meets it only through its contract and handoffs"
+# ── ADDENDUM 2026-10-17 (0.60.126–0.60.130) — the existing systems toward this shape ─────────────────────────────────────
+# James, 2026-10-17: "look at the architecture spec in idearium. thats the point of using the component registry as the spine
+#   that way its easy to move them around and use it as a map." The shape above is unchanged: a new system laid out from this
+#   template gets all of it. What the systems that predate the template now have, and where it lives (the kernel serves every
+#   existing system until each is laid out in its own compartment):
+#   - its node registry: lib/node-registry.js (the template's lib/listener.js + lib/node-index.js + jaa-store.js, for a system
+#     not made from the template) — its nodes in <system>/data/nodes, indexed into <system>/data/node-index with every change
+#   - its relations as nodes: lib/system-nodes.js writes .wire nodes and the .system node's depends_on / consumed_by
+#   - its registry checked against its source, and its crossings counted: lib/drawbridge-registry.js, lib/system-boundary.js
+#   - its tunnel and heartbeat: lib/system-registry.js tunnel() / heartbeat()
+#   docs/architecture-spec/architecture-spec.spec addendum 2026-10-17 has the census; docs/2026-10-17-system-drawbridge-
+#   phasemap.spec and sovereign-node P33 have the phases.

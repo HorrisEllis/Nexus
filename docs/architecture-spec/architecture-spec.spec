@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        architecture-spec
-    version:     0.11.1
+    version:     0.12.0   # 0.12.0 2026-10-17: addendum — the registry as the drawbridge; NODE_SYSTEM begun (P33a)
     extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.3.0 — the default template of a system spec since 0.39.286; since 1.3.0 the architecture of the system template, section by section (Domain 0a)
     foundation:  TBD — no runtime exists yet, unassigned until first real implementation
     port:        TBD — no runtime process exists yet
@@ -548,3 +548,56 @@ spec:
 #   <system>/data/options-ledger.jsonl  every change, with who made it
 #   GET/POST <system>/api/options  how anything else reads and changes them (JSON writes only)
 # Guardian is the first system (0.57.0). Idearium's config-core is the same shape and stays as it is.
+
+# ── ADDENDUM 2026-10-17 (0.60.126–0.60.130) — the registry as the drawbridge; NODE_SYSTEM begun (additive) ─────────────
+# James, 2026-10-17: "i want to eventually have the component registry for each system be the interaction contract and event
+#   bus, with handshake verification. basically the spine of each system, like looms component registry but as the
+#   drawbridge for each compartment for each system, the only way to interact between systems. using the api routes, and cli
+#   interface. ui floats ontop" · "yes, interaction contract and event bus and queue and dependancy and wiring harness and
+#   spine and the only way to interact between the systems using the api routes and the cli interface, with a handshake
+#   verification for the ui and handoffs for contracts and nodes, etc for tracking, debugging, making the ui disposable,
+#   soveriegn. cos is the isolated compartment for each system using the regisry as a drawbridge" · "each system is
+#   soveriegn and self contained. use the compartments to isolated each system, integrate the system-registry.js as the
+#   tunnel or drawbridge?" · "all system relevant files should stay with the system. the data nodes should reflect guardians
+#   nodes but in relation to the system they are for." · "each system, reads, writes, and manages its nodes. each system has
+#   a database for each index of nodes with all the history. listener, schemas for all the  node types, the database. nodes
+#   for all persistant data. ... thats the point of using the component registry as the spine that way its easy to move them
+#   around and use it as a map. ... all of this and more is phased already."
+#
+# Additive to THE_STACK and NODE_SYSTEM (addendum 2026-10-10). His decisions, as rules:
+#   DRAWBRIDGE — a system's registry is its interaction contract, event bus, queue, dependency graph, wiring harness and
+#     spine. Systems reach each other only through it: the API routes and the CLI (sovereign-node P13 handshake; the UI has a
+#     handshake too, so it stays disposable). Read by the coder as "the routes and commands are the contract"; whether a call
+#     inside one process may use the same contract without HTTP is to confirm.
+#   SOVEREIGN_COMPARTMENT — each system is self-contained, isolated in its own COS compartment, its registry the drawbridge.
+#   FILES_WITH_THEIR_SYSTEM — a file that serves one system lives in that system's folder (a compartment holds only its folder).
+#   THE_TUNNEL — lib/system-registry.js (his 2026-09-06 "need a system registry.") is the one answer to "where is system X and
+#     how is it reached": its runtime, its declared routes, the commands that reach them, its toasts, its heartbeat over its
+#     own health route.
+#   NODES_IN_RELATION — a system's nodes name their system, and its relations are nodes (.wire per system it depends on).
+#
+# Built against THE_STACK (docs/2026-10-17-system-drawbridge-phasemap.spec; sovereign-node P33):
+#   the census and ratchet    lib/system-boundary.js (DB1): every require() across a system boundary; contracts/
+#                             drawbridge-baseline.json holds the system-to-system and lib/-upward ones (552) and may only shrink
+#   declared vs source        lib/drawbridge-registry.js (DB9/DB10): a system's registry against its source, the negative space
+#                             through lib/shadow.js (declared routes not served; files reached past the drawbridge)
+#   the tunnel                lib/system-registry.js tunnel()/heartbeat() (DB13/DB14)
+#   nodes in relation         lib/system-nodes.js: meta.system on every node; .wire nodes; depends_on/consumed_by (DB18)
+#   node registry, any system lib/node-registry.js (P33a): guardian's per-file rules as an instance per system, indexed into
+#                             <system>/data/node-index (nodes_<type> + nodes_<type>_ledger, all the history), with the listener;
+#                             every system's nodes indexed into its own store at the boot sync
+#   the kernel's store        guardian/jaa-store.js moved to lib/jaa-store.js (the old path re-exports it)
+#
+# Found 2026-10-17, against the tree (THE_STACK per system; eravos was removed 2026-10-16, so 15 systems where the 2026-10-10
+# census counted 16 — the counts below keep its row as missing to stay comparable):
+#   interaction-contract.json  15 of 16 (eravos gone)
+#   event-taxonomy.js           8 of 16 — unchanged (missing: architect, clear-glass, diagnostic, idearium, loom, ollama, warp)
+#   registry-components.js     11 of 16 (cos, diagnostic, orchestrator, warp, and eravos, have none)
+#   data/nodes/                13 of 16
+#   node registry              the LISTENER runs in 1 (guardian); every system's nodes are now INDEXED into its own store at boot
+#                              (P33a); each system starting its own listener is P33b, open
+#   guardian's own index        lives in the central cortex store, not guardian's (P33b moves it)
+#   capability events           only 4 registries declare events (clear-glass, copilot, ollama, versionium); no event/ node
+#                              exists anywhere — SB22 / P36 open
+#   crossings                   297 system to system, 255 lib/ reaching up into a system, 531 systems using lib/ (DB1)
+#   declared routes             27 of 544 not served by their source; 15 of 109 CLI commands reach a route some registry declares
