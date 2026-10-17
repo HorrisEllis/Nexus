@@ -146,6 +146,17 @@ value and proof of compentancy with quotes and explicit context."
 - His working style, architecture principles and coding language live in `skills/james-brooks/SKILL.md`, which loads
   through `.claude/skills/james-brooks`. Read it at the start of a session.
 
+## Use what you already have (2026-10-17)
+
+James: "always make effective use of what you already have."
+
+Said after a day in which the coder named outside editors from memory instead of using his Clear Glass search-engine tool,
+and read the tree with grep instead of the Nexus tools this file lists first. The rule, as his:
+- Before building, and before answering from memory, use what Nexus already has: its tools (`mcp__nexus__*`, the one
+  command table), its records (the run log, the change records, the ledgers, the notes), its stores, and its existing
+  components. Rule 2 (reuse before build) covers code; this covers the coder's own way of working too.
+- When something new is built, say what existing piece it stands on, and why nothing existing could do it.
+
 ## Leverage (2026-10-07)
 
 James: "remember to use as little tokens for as much leverage and power as possible. invent around contraints if it fits
