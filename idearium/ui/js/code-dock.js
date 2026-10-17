@@ -32,7 +32,7 @@ const DOCK_PANELS = [
   ['control', 'Control', 'play, pause, rewind; which agent answers'],
 ];
 const DOCK_IDS = DOCK_PANELS.map(p => p[0]);
-const DOCK = { uuid: null, open: new Set(), folded: new Set(), data: {}, err: {}, loading: new Set(), toolArg: null, toolOut: {}, toolQ: '', busy: new Set(), timer: null };
+const DOCK = { uuid: null, open: new Set(), folded: new Set(), data: {}, err: {}, loading: new Set(), toolArg: null, toolOut: {}, toolQ: '', busy: new Set(), timer: null, focus: null };
 (function _dockPrefs() {
   try { const o = JSON.parse(localStorage.getItem('idearium.dock.open') || '[]'); for (const k of o) if (DOCK_IDS.includes(k)) DOCK.open.add(k); } catch (_) {}
   try { const f = JSON.parse(localStorage.getItem('idearium.dock.folded') || '[]'); for (const k of f) if (DOCK_IDS.includes(k)) DOCK.folded.add(k); } catch (_) {}
@@ -106,6 +106,8 @@ function _dockPaintCol() {
   const col = document.getElementById('dock-col'); if (!col) return;
   const open = DOCK_PANELS.filter(([k]) => DOCK.open.has(k));
   col.hidden = !open.length || !dockShown();
+  // §0.60.123 PP3 — the Plan panel and the dock side by side, never one over the other (index.html body.dock-col-on)
+  document.body.classList.toggle('dock-col-on', !col.hidden);
   if (col.hidden) { col.innerHTML = ''; return; }
   const keep = {}; for (const el of col.querySelectorAll('.dk-body')) keep[el.dataset.dock] = el.scrollTop;
   const argEl = document.getElementById('dk-tool-args'); const argDraft = argEl ? argEl.value : null;
@@ -183,13 +185,29 @@ async function dockLoad(k) {
 }
 
 // ── the bodies ────────────────────────────────────────────────────────────────────────────────────────────────
+// ── §0.60.123 PP3 — James: "like the panels should remain interconnected." One focus the panels read: a piece picked in
+// the Plan narrows Changes and Outputs to its file; a run picked there shows its own context. Said on each panel, cleared
+// with one click; not saved (a view of now, not a preference).
+function dockFocus(f) {
+  DOCK.focus = f && (f.file || f.runId) ? { file: f.file || null, runId: f.runId || null, phase: f.phase || null } : null;
+  if (!DOCK.uuid) DOCK.uuid = (_dockRepo() || {}).uuid || null;
+  _dockPaintCol();
+}
+function _dockFocusBar(k) {
+  const f = DOCK.focus; if (!f) return '';
+  if ((k === 'changes' || k === 'outputs') && f.file) return `<div class="dk-focus">from the Plan: <b>${_dockEsc(f.file)}</b>${f.phase ? ` · ${_dockEsc(f.phase)}` : ''} <a href="#" onclick="dockFocus(null);return false">show all</a></div>`;
+  if (k === 'context' && f.runId) return `<div class="dk-focus">from the Plan: run <b>${_dockEsc(f.runId)}</b> <a href="#" onclick="dockFocus(null);return false">the live one</a></div>`;
+  return '';
+}
+const _dockMatch = (x, file) => !file || (x && (x.path === file || x.file === file || x.relPath === file));
 function _dockBody(k) {
   const d = DOCK.data[k];
   if (k === 'tasks') return _dockTasks();
   if (!d) return `<div class="dk-empty">${DOCK.loading.has(k) ? 'reading…' : 'not read yet'}</div>`;
-  if (k === 'outputs') return _dockOutputs(d);
-  if (k === 'changes') return _dockChanges(d);
-  if (k === 'context') return typeof _ppContext === 'function' ? _ppContext(d.steps) : '<div class="dk-empty">the Context card is not loaded (plan-panel.js)</div>';
+  const file = DOCK.focus && DOCK.focus.file;
+  if (k === 'outputs') return _dockFocusBar(k) + _dockOutputs(file ? { ...d, proposals: (d.proposals || []).filter(x => _dockMatch(x, file)), recent: (d.recent || []).filter(x => _dockMatch(x, file)) } : d);
+  if (k === 'changes') return _dockFocusBar(k) + _dockChanges(file ? { ...d, files: (d.files || []).filter(x => _dockMatch(x, file)), records: (d.records || []).filter(x => _dockMatch(x, file)) } : d);
+  if (k === 'context') return _dockFocusBar(k) + (typeof _ppContext === 'function' ? _ppContext(d.steps, { runId: DOCK.focus && DOCK.focus.runId }) : '<div class="dk-empty">the Context card is not loaded (plan-panel.js)</div>');
   if (k === 'tools') return _dockTools(d);
   if (k === 'control') return _dockControl(d);
   return '';

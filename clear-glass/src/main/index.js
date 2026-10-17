@@ -1336,7 +1336,13 @@ async function bootstrap() {
       : `[ClearGlass] agent facts: ${rr.error} — running on the ${rr.from} cache ${String(rr.hash).slice(0, 12)}`);
   } catch (e) { console.warn(`[ClearGlass] agent facts refresh failed: ${e.message}`); }
   const autoBootSetting = require('../providers/registry').autoBootList(process.env.CG_AUTOBOOT_PROVIDERS, nexusOptions.get().autoStartOnBoot);
-  if (autoBootSetting === 'none' || autoBootSetting === '') {
+  // §0.60.123 MP — a hidden pre-warmed provider window is a whole renderer. After a memory crisis without headroom it is
+  // not opened ahead of time: a job opens its tab when it comes (0.60.25).
+  let _prewarmHold = null;
+  try { const h = require('../../../lib/prevention.js').heavyAllowedHere('clear-glass'); _prewarmHold = h.ok ? null : h.why; } catch (_) {}
+  if (_prewarmHold && !(autoBootSetting === 'none' || autoBootSetting === '')) {
+    console.log(`[ClearGlass] NCP auto-boot: held — ${_prewarmHold}; a provider's tab opens when its first job comes`);
+  } else if (autoBootSetting === 'none' || autoBootSetting === '') {
     console.log('[ClearGlass] NCP auto-boot: skipped (lazy-only — providers start on first real use). Set CG_AUTOBOOT_PROVIDERS to pre-warm specific providers.');
   } else {
     const only = autoBootSetting === 'all' ? null : autoBootSetting.split(',').map(s => s.trim()).filter(Boolean);
@@ -1635,7 +1641,17 @@ async function bootstrap() {
 
   // 14.4. ErosmancerOS — started with Clear Glass, then pointed at its DevTools port (non-fatal, not awaited:
   // the wire below must answer autopilot's health probe on :7704 without waiting for tsx to compile)
-  if (process.env.EROS_AUTOSTART !== '0') {
+  // §0.60.123 MP — James: "can we fix the memory issue … failure modes are to prevent problems". ErosmancerOS (node + tsx)
+  // is not part of a build: lean mode holds it, and so does a recent memory crisis without headroom (lib/prevention.js).
+  // POST :7702/eros-supervisor/start still starts it on demand.
+  let _erosHold = null;
+  try {
+    const lean = require('../../../lib/lean-mode.js').read();
+    const h = require('../../../lib/prevention.js').heavyAllowedHere('clear-glass');
+    _erosHold = lean.on ? 'lean mode is on' : !h.ok ? h.why : null;
+  } catch (_) { _erosHold = null; }
+  if (_erosHold) console.log(`[ClearGlass/Eros] not started — ${_erosHold} (it starts on demand: POST :7702/eros-supervisor/start)`);
+  else if (process.env.EROS_AUTOSTART !== '0') {
     erosSupervisor = new ErosSupervisor({ port: EROS_PORT, cdpPort: CG_CDP_PORT });
     erosSupervisor.start().catch(err => console.warn(`[ClearGlass/Eros] start failed (non-fatal): ${err.message}`));
   }

@@ -587,3 +587,72 @@ phasemap:
 # own remote (origin = https://github.com/HorrisEllis/Nexus.git); sign-in, when the repo needs it, is Git for Windows'
 # credential manager (a browser sign-in once, then remembered). The release zip (scripts/release-zip.js) stays for
 # anyone without git. Found by its test: porcelain status lines were trimmed, cutting the first file name — fixed.
+## ADDENDUM 2026-10-13 — the live build runs in the cloud copy; the order for full scale
+
+# James: "can we fix the memory issue. all of the resource optimization as possible. also failure modes are to prevent
+# problems not solutionsn" · "Do this task here: 'Build one Nexus phase to proven on this PC'" · "ask me for it again.
+# also the refactor toolprocess. all the idearium, agents, raid, clearglass, guardian improvements to get this coding
+# full nexus sized and complxity code."
+#
+# The coder asked two things. He chose:
+# - "Yes, test then build (Recommended)": Claude Code's CLI on the cloud machine is the agent Nexus builds with (the
+#   claude-code backend, lib/claude-code-backend.js). One test call answered ($0.003); then Nexus runs there and builds
+#   one phase to proven. This cloud machine is not his PC, and that is said. It is the nearest real run available
+#   from here.
+# - "Prove one build, then scale (Recommended)":
+#   1. the live build, and the memory work;
+#   2. then the scale-up mapped as one phasemap: the refactor tool (RF0–RF2), context for big repos, RAID routing,
+#      Clear Glass and Guardian throughput;
+#   3. then built in that order.
+#
+# Memory, his reading of failure modes (the coder's notes, to be mapped as MP when the build is proven):
+# - Today the memory_pressure failure mode only records the problem. At 'critical', cortex forces its own GC (it freed
+#   1.5MB of 45MB in his log), raises friction, and refuses healing once in FAILURE_MODE. Nothing lowers the load.
+# - Only one background job yields to pressure (the copilot probe, resource-monitor backgroundAllowed). These run
+#   regardless of memory:
+#   - the loom registry refresh at every boot (~4 min, its own process);
+#   - the nexus-self sync every 10 min (~24 s over ~2,300 files);
+#   - the table compactors;
+#   - the hidden pre-warmed ChatGPT window;
+#   - Eros (Clear Glass starts it, outside lean mode).
+# - His rule, as the coder reads it (to confirm): a failure mode that has happened becomes a prevention. Its record
+#   changes what runs next time, before the condition returns, not after.
+#
+# LIVE RUN (2026-10-13 20:12–20:13 UTC, cloud copy, his "Yes, test then build"): the first phase build to reach
+# proven with a real agent.
+# - Setup:
+#   - real Versionium (snapshot vtm-82eaa81b) and real Idearium (the in-process API, sandboxed data);
+#   - a project created through Idearium's own expand flow;
+#   - phase NT1_notes, files: [lib/notes.js, tests/notes.test.js];
+#   - agent: Claude Code's CLI through lib/claude-code-backend.js.
+# - Rows:
+#   1. building, with "planning: no Ollama model on the ladder to code the plan — the phase is built as before";
+#   2. replied (claude-code), both planned files proposed, ~508 tokens in and ~1,503 out;
+#   3. -proof proven, against the proposed code: `node tests/notes.test.js` → exit 0; +49 lines for 1 check.
+# - The code is real: lib/notes.js validates its input; the test adds two notes, checks their order and distinct ids,
+#   and checks that empty text is refused. The files wait as proposals: review mode, Apply is his.
+# - Found for the scale-up: plan → contract (one file per request) only runs when an Ollama model can code the plan.
+#   With only a remote coder (claude-code), a phase goes whole. That is fine for two files and is the wrong shape for
+#   Nexus-sized phases. It goes first in the scale phasemap.
+#
+# ADDENDUM 2026-10-17 — MP built (0.60.123): a failure mode that has happened becomes a prevention
+# James (2026-10-13): "can we fix the memory issue. all of the resource optimization as possible. also failure modes are
+# to prevent problems not solutionsn". He chose "Prove one build, then scale"; the build was proven (above), so MP.
+# - lib/prevention.js holds the record: record(cls), active(cls), heavyAllowed({ sample, level }), heavyAllowedHere(name).
+#   While a memory_pressure record is fresh (24h), heavy work needs 30% free memory, not merely "not critical".
+# - Who records:
+#   - lib/resource-monitor.js, on a transition to critical;
+#   - cortex/self-heal/escalation.js, on entering FAILURE_MODE (by fault class).
+# - Who asks first:
+#   - the nexus-self sync (idearium _guardedSync);
+#   - the officiator tick;
+#   - the loom refresh (nexus/autopilot.js: skipped when the registry is under 12h old, deferred 60s after boot, then it
+#     waits for headroom);
+#   - Eros and the hidden NCP prewarm window (clear-glass/src/main/index.js: held under lean mode or prevention; Eros
+#     can still be started on demand).
+# - Ollama: ollama/lib/idle-unload.js unloads an idle loaded model (keep_alive:0) while memory is pressed.
+# - Seen and cleared by a person: Settings → the lean card (POST /api/system/prevention/clear), and `system prevention`.
+# - Re-tagged 0.60.30 → 0.60.123: main had used 0.60.30 for GT1 while this waited.
+# - Proof: tests/modules/test-prevention.test.js 8/8 (PV-00..07). The record lives in data/prevention.json, never
+#   committed. Tests write it to the sandbox (NEXUS_PREVENTION_DIR).
+# - Not yet proven on his PC: the numbers from his 0.60.23 log (15.4% → 0.1% free in four minutes) need a run there.

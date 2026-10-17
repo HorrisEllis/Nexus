@@ -2760,6 +2760,7 @@ const ROUTE_CAP = {
   'repo.run': CAPS.READ_IDEAS, 'repo.run.control': CAPS.WRITE_IDEAS,   // §0.60.0 RS1 — play · pause · rewind   // §0.39.371 VM1
   'system.lean': CAPS.READ_IDEAS, 'system.lean.set': CAPS.ADMIN,   // 0.60.20 lean mode
   'system.version': CAPS.READ_IDEAS,   // 0.60.34 VR1 — the one release version
+  'system.prevention.clear': CAPS.ADMIN,   // 0.60.123 MP
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
   'accounts.profiles': CAPS.READ_IDEAS,   // 0.60.32 PF1 — every account tab and its lane
@@ -3045,6 +3046,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','accounts','rest'],   'accounts.rest'],
     ['GET',    ['api','system','lean'],   'system.lean'],        // 0.60.20 — lean mode: what is held, saved for the next boot
     ['GET',    ['api','version'],         'system.version'],     // 0.60.34 VR1 — the release (lib/version.js), where it is stated, the module versions labelled
+    ['POST',   ['api','system','prevention','clear'], 'system.prevention.clear'],   // 0.60.123 MP — a person ends a prevention early
     ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
     ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
     ['GET',    ['api','repos',    ':uuid','run'],            'repo.run'],           // §0.60.0 RS1 — the repo's run state: playing | paused
@@ -5267,6 +5269,11 @@ async function handle(req, res, route, query, body) {
       return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
         modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
     }
+    case 'system.prevention.clear': {
+      const cls = String((body && body.cls) || 'memory_pressure');
+      const done = _require('../../lib/prevention.js').clear(cls);
+      return done ? ok(res, { cleared: cls }) : err(res, 404, `no prevention for ${cls}`);
+    }
     case 'system.lean':
     case 'system.lean.set': {
       const LM = _require('../../lib/lean-mode.js');
@@ -5276,7 +5283,10 @@ async function handle(req, res, route, query, body) {
       const running = (n) => !!(st && st.kernels && st.kernels[n] && !['held', 'stopped', 'dormant'].includes(st.kernels[n].status));
       if (action === 'system.lean') {
         const saved = LM.read({ root });
-        return ok(res, { ...saved, supervisor: !!(st && st.kernels), services: saved.hold.map(n => ({ name: n, running: running(n) })) });
+        // 0.60.123 MP — the failure modes that are preventing now (lib/prevention.js) and whether heavy work may run
+        const PV = _require('../../lib/prevention.js');
+        return ok(res, { ...saved, supervisor: !!(st && st.kernels), services: saved.hold.map(n => ({ name: n, running: running(n) })),
+          prevention: Object.entries(PV.all()).filter(([, v]) => v.active).map(([cls, v]) => ({ cls, ...v })), heavy: PV.heavyAllowedHere('idearium') });
       }
       const on = !!(body && (body.on === true || body.on === 'on' || body.on === 'true'));
       const saved = LM.write(on, { root, by: (body && body.actor) || 'person' });
@@ -10065,7 +10075,13 @@ export function startAPI() {
       // machine was at 5-10% free memory (Ollama then failed to load its model, and Idearium itself crashed). Under memory
       // pressure the sync waits for the next round; the first pass is also pushed back so boot is not competing with it.
       const _lowMem = () => { try { const os = require('os'); return os.freemem() / os.totalmem() < (parseFloat(process.env.NEXUS_SELF_MIN_FREE) || 0.2); } catch (_) { return false; } };
-      const _guardedSync = () => { if (_lowMem()) { console.log('[idearium/nexus-self] sync skipped — free memory is under 20%; it runs on the next round'); return; } _nexusSelfSync({}); };
+      // §0.60.123 MP — and after a memory crisis (lib/prevention.js) it waits for real headroom, not just "under 20%"
+      const _guardedSync = () => {
+        if (_lowMem()) { console.log('[idearium/nexus-self] sync skipped — free memory is under 20%; it runs on the next round'); return; }
+        const h = _require('../../lib/prevention.js').heavyAllowedHere('idearium');
+        if (!h.ok) { console.log(`[idearium/nexus-self] sync waits — ${h.why}; it runs on the next round`); return; }
+        _nexusSelfSync({});
+      };
       const first = setTimeout(_guardedSync, parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 60000);
       const t = setInterval(_guardedSync, every);
       if (first.unref) first.unref();

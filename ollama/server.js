@@ -107,6 +107,8 @@ server.listen(PORT, async () => {
   console.log(`[ollama-bridge] :${PORT} — ollama ${state.ollamaOnline ? 'online' : 'offline'} at ${config.OLLAMA_HOST}`);
   setTimeout(register, 1000);
   pump();
+  // 0.60.123 MP — under memory pressure, an idle loaded model is unloaded (ollama/lib/idle-unload.js)
+  try { require('./lib/idle-unload.js').startIdleUnload({ state, config }); } catch (e) { console.warn(`[ollama-bridge] idle-unload not started: ${e.message}`); }
 });
 
 setInterval(async () => {

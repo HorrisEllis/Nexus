@@ -263,19 +263,19 @@ function _planPaint() {
   const task = (s) => {
     const done = s.status === 'complete' || s.status === 'done';
     const key = `${s.map}::${s.key}`;
-    const open = PLANP.open.has(key) || (PLANP.focus && s.run && s.run.runId === PLANP.focus);
+    const open = PLANP.open.has(key) || (PLANP.focus && ((s.run && s.run.runId === PLANP.focus) || (s.history && s.history.runs.some(r => r.runId === PLANP.focus))));   // §0.60.123 PP3 — any of its runs
     return `<div class="pp-task ${done ? 'done' : ''} ${s.current ? 'cur' : ''}">
       <div class="pp-row" onclick="planToggle('${escapeHtml(key)}')">
         <span class="pp-mark">${done ? '✓' : s.current ? '◌' : s.failed ? '!' : '○'}</span>
         <span class="pp-name">${escapeHtml(s.title)}</span>
-        ${s.layer ? `<span class="pp-layer">${escapeHtml(s.layer)}</span>` : ''}${_gateBar(s)}
+        ${s.layer ? `<span class="pp-layer">${escapeHtml(s.layer)}</span>` : ''}${_ppPieces(s)}
       </div>
       ${_ppTimes(s)}
       ${s.failed && !done ? `<div class="pp-why" title="${escapeHtml(s.failed.error || s.failed.state)}">${escapeHtml(s.failed.state)}${s.failed.error ? ` — ${escapeHtml(String(s.failed.error).slice(0, 160))}` : ''}</div>` : ''}
       ${open ? `<div class="pp-detail"><div class="pp-meta">${escapeHtml(s.key)} · ${escapeHtml(String(s.map).split('/').pop())} · gate: ${escapeHtml(s.gate || 'all passed')}${s.failed ? ` · <span style="color:var(--coral)">${escapeHtml(s.failed.state)}: ${escapeHtml(s.failed.error || '')}</span>` : ''}</div>
         ${s.cost ? `<div class="pp-against" title="${escapeHtml(`${s.cost.runs} run(s) · tokens: ${s.cost.method || 'estimate'} — 0.60.27 AG1a: agents used as little as possible, counted`)}">agents: ${escapeHtml(s.cost.line)}</div>` : ''}
         ${done ? '' : `<button class="pp-go" onclick="event.stopPropagation();planBuild('${escapeHtml(s.map)}','${escapeHtml(s.key)}')">▶ build</button>`}
-        ${_ledgerHtml(s.ledger || [])}</div>` : ''}
+        ${_ppPieceList(s)}${_ppHistory(s)}</div>` : ''}
     </div>`;
   };
   // §0.60.107 PS2 — James: "Can you make something like the sidebar, for contexT? can you strip the plan panel to just the
@@ -316,14 +316,58 @@ function _planPaint() {
         + _ppDoneLine(done.length, `step${done.length === 1 ? '' : 's'}`) + (PLANP.showDone ? done.map(task).join('') : '')
         + (cleared ? `<button class="pp-donefold" onclick="planRestoreDone()" title="bring the cleared steps back">⌫ ${cleared} cleared — restore</button>` : '')
         + (shelf ? `<div class="pp-shelfnote" title="the declutter's LATER — kept in their maps, not the queue">${shelf} on the shelf</div>` : '');
-    })()}`)}
-    ${_ppCard('context', 'Context', '', _ppContext(steps))}`;
+    })()}`)}`;
+  // §0.60.123 PP4 — James: "strip the context from the plan panel since we have a dedicated one now." The dock's Context
+  // panel draws it (code-dock.js, with this file's _ppContext); a run's "context" button opens it on that run.
   PLANP.focus = null;
   // (§0.47.0 OS2 rtMounted here: the activity views moved to the Code tab's bottom panel, 0.60.107 PS3)
   planTabSync();   // §CT9 — the tab's count follows the plan
   ppRunLoad();     // §0.60.0 RS1 — ▶ / ⏸ / ⏮ for the repo, beside the plan
   // (§0.39.284 W3 the work surface was drawn here: it is Code › changes now, one place — 0.60.107 PS3)
 }
+// ── §0.60.123 PP1–PP3 — James: "each chunk/dependancy a piece of the progress indication. progress shows for each task
+// with a full run history, and log to make it explicit. like the panels should remain interconnected."
+// A phase's bar is its pieces (build-plan.js piecesOf: one per planned file, its state, attempts, agent, what it uses);
+// expanded, the pieces and every run with its log (historyOf). A piece points the dock's Changes and Outputs at its file;
+// a run points the dock's Context at that run (code-dock.js dockFocus).
+const _PP_PC_GLYPH = { pending: '·', running: '◌', written: '◆', failed: '✗', proven: '✓', done: '✓' };
+const _ppQ = (x) => escapeHtml(String(x == null ? '' : x).replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
+function _ppPieceTip(p) { return `${p.path} — ${p.state}${p.attempts ? ` · ${p.attempts} attempt${p.attempts === 1 ? '' : 's'}` : ''}${p.agent ? ` · ${p.agent}` : ''}${(p.uses || []).length ? ` · uses ${p.uses.join(', ')}` : ''}${p.why ? ` · ${p.why}` : ''}`; }
+function _ppPieces(s) {
+  const pcs = s.pieces || [];
+  if (!pcs.length) return _gateBar(s);
+  const ok = pcs.filter(p => p.state === 'proven' || p.state === 'done').length;
+  return `<span class="pp-pcount" title="pieces proven or done, of all — ${escapeHtml(s.piecesFrom || '')}">${ok}/${pcs.length}</span><div class="pp-pieces${s.open ? ' live' : ''}" title="${pcs.length} piece${pcs.length === 1 ? '' : 's'} from ${escapeHtml(s.piecesFrom || '')} — click one for its changes">${pcs.map(p => `<span class="pp-pc st-${escapeHtml(p.state)}" title="${escapeHtml(_ppPieceTip(p))}" onclick="event.stopPropagation();ppFocusPiece('${_ppQ(s.key)}','${_ppQ(p.path)}')"></span>`).join('')}</div>`;
+}
+function _ppPieceList(s) {
+  const pcs = s.pieces || []; if (!pcs.length) return '';
+  return `<div class="pp-sec">pieces · from ${escapeHtml(s.piecesFrom || '')}</div><div class="pp-pclist">${pcs.map(p => `<div class="pp-pcrow st-${escapeHtml(p.state)}" onclick="event.stopPropagation();ppFocusPiece('${_ppQ(s.key)}','${_ppQ(p.path)}')" title="open its changes in the dock"><span class="pp-pcg">${_PP_PC_GLYPH[p.state] || '?'}</span><span class="pp-pcp">${escapeHtml(p.path)}</span><span class="pp-pcs">${escapeHtml(p.state)}${p.attempts ? ` · ${p.attempts}×` : ''}${p.agent ? ` · ${escapeHtml(p.agent)}` : ''}</span>${(p.uses || []).length ? `<span class="pp-pcu">uses ${escapeHtml(p.uses.join(', '))}</span>` : ''}${p.why ? `<span class="pp-pcw">${escapeHtml(p.why)}</span>` : ''}</div>`).join('')}</div>`;
+}
+function _ppHistory(s) {
+  const h = s.history || { runs: [] };
+  if (!h.runs.length) return _ledgerHtml(s.ledger || []);   // no raw rows (an older server): the merged ledger, as before
+  const byRun = new Map((s.ledger || []).map(l => [l.runId, l]));
+  return `<div class="pp-sec">runs · ${h.runs.length}${h.more ? ` of ${h.runs.length + h.more}` : ''}</div>` + h.runs.map((r, i) => {
+    const merged = byRun.get(r.runId);
+    const dur = r.startedAt && r.endedAt ? _ppSpan(r.endedAt - r.startedAt) : '';
+    return `<details class="pp-run"${(i === 0 && s.open) || PLANP.focus === r.runId ? ' open' : ''}><summary><span class="pp-led-t">${escapeHtml(_ppWhen(r.startedAt))}</span><span class="pp-led-s st-${escapeHtml(r.end)}">${escapeHtml(r.end)}</span><span class="pp-led-d">${escapeHtml(r.agents.join(' → ') || 'no agent')}${dur ? ` · ${escapeHtml(dur)}` : ''} · ${r.total} row${r.total === 1 ? '' : 's'}</span><button class="pp-runctx" title="what this run's agent was given — the dock's Context panel" onclick="event.preventDefault();event.stopPropagation();ppFocusRun('${_ppQ(r.runId)}')">context</button></summary>
+      ${merged ? _ledgerHtml([merged]) : ''}
+      <div class="pp-log">${r.cut ? `<div class="pp-log-cut">… ${r.cut} earlier row${r.cut === 1 ? '' : 's'} not shown</div>` : ''}${r.log.map(l => `<div class="pp-log-r st-${escapeHtml(l.state)}"><span class="pp-log-t">${escapeHtml(l.ts ? new Date(l.ts).toLocaleTimeString([], { hour12: false }) : '')}</span><span class="pp-log-s">${l.part ? `${escapeHtml(l.part)} · ` : ''}${escapeHtml(l.state)}</span><span class="pp-log-f">${escapeHtml(l.file || '')}</span><span class="pp-log-a">${escapeHtml(l.provider || '')}${l.rung ? ` r${l.rung}` : ''}${l.attempt ? ` t${l.attempt}` : ''}</span><span class="pp-log-n">${escapeHtml(l.note || '')}</span></div>`).join('')}</div></details>`;
+  }).join('') + (h.more ? `<div class="pp-log-cut">${h.more} older run${h.more === 1 ? '' : 's'} not shown — repo plan &lt;repo&gt; ${escapeHtml(s.key)} lists them</div>` : '');
+}
+/** a piece → the dock's Changes and Outputs, on its file */
+function ppFocusPiece(phase, path) {
+  if (typeof dockFocus !== 'function') return;
+  dockFocus({ file: path === '(whole phase)' ? null : path, phase });
+  if (typeof dockToggle === 'function') { dockToggle('changes', true); dockToggle('outputs', true); }
+}
+/** a run → the dock's Context, on that run */
+function ppFocusRun(runId) {
+  if (typeof dockFocus !== 'function') return;
+  dockFocus({ runId });
+  if (typeof dockToggle === 'function') dockToggle('context', true);
+}
+
 // ── §0.60.107 PS2/PS3 — the cards, the Context card, and what moved to its own panel ─────────────────────────────────
 const _PP_FOLD_KEY = 'idearium.plan.fold';
 function _ppFolded() { try { return new Set(JSON.parse(localStorage.getItem(_PP_FOLD_KEY) || '[]')); } catch (_) { return new Set(); } }
@@ -349,22 +393,28 @@ const _PP_CTX_COLOR = { request: 'var(--accent,#3b82f6)', mapped: 'var(--mint,#3
  * request, the mapped files, the charter, the lessons, his note), each as tokens and a share, against the model's window
  * when Nexus knows it. Read from the run's 'building' row (idearium/api _phaseBuild, lib/economy/tokens.js breakdown).
  */
-function _ppContext(steps) {
+function _ppContext(steps, { runId = null } = {}) {
   let pick = null;
   for (const s of steps || []) for (const l of s.ledger || []) {
     if (!l.context) continue;
+    // §0.60.123 PP3 — a run picked in the Plan: that run's context, whatever else is live
+    if (runId && l.runId === runId) { pick = { s, l, live: s.current || l.state === 'building', chosen: true }; break; }
+    if (runId && pick && pick.chosen) continue;
     const live = s.current || l.state === 'building';
     if (!pick || (live && !pick.live) || (live === pick.live && (l.ts || 0) > (pick.l.ts || 0))) pick = { s, l, live };
   }
-  if (!pick) return '<div class="pp-empty">no build has recorded its context yet — the next ▶ build shows here what its agent is given</div>';
+  if (!pick) return `${runId ? `<div class="pp-empty">run ${escapeHtml(runId)} recorded no context.</div>` : ''}<div class="pp-empty">no build has recorded its context yet — the next ▶ build shows here what its agent is given</div>`;
   const c = pick.l.context;
+  // §0.60.123 PP3 — the run asked for, or why another is shown; and the way back to that run in the Plan
+  const asked = runId && !pick.chosen ? `<div class="pp-empty">run ${escapeHtml(runId)} recorded no context — showing the ${pick.live ? 'live' : 'latest'} one</div>` : '';
+  const back = pick.l.runId && typeof openPlanPanel === 'function' ? ` <button class="pp-runctx" title="this run in the Plan: its pieces and its log" onclick="openPlanPanel({ focus: '${_ppQ(pick.l.runId)}' })">in the Plan</button>` : '';
   const head = c.window ? `<div class="pp-ctx-h"><b>${c.pct}% used</b><span>${_ppTok(c.used)} / ${_ppTok(c.window)}</span></div>`
     : `<div class="pp-ctx-h"><b>~${_ppTok(c.used)} tokens</b><span title="Nexus knows the window for Ollama only (the num_ctx it sets); this agent's is not known here">window not known</span></div>`;
   const base = c.window || c.used || 1;
   const bar = `<div class="pp-ctx-bar">${c.parts.map(p => `<span style="width:${(p.tokens / base) * 100}%;background:${_PP_CTX_COLOR[p.id] || 'var(--text3)'}" title="${escapeHtml(p.label)} ${p.tokens}"></span>`).join('')}</div>`;
   const rows = c.parts.map(p => `<div class="pp-ctx-row"><span class="pp-ctx-sw" style="background:${_PP_CTX_COLOR[p.id] || 'var(--text3)'}"></span><span class="pp-ctx-l">${escapeHtml(p.label)}</span><span class="pp-ctx-n">${_ppTok(p.tokens)}</span><span class="pp-ctx-p">${(c.window ? (p.tokens / c.window) * 100 : p.share * 100).toFixed(1)}%</span></div>`).join('')
     + (c.window ? `<div class="pp-ctx-row pp-ctx-free"><span class="pp-ctx-sw"></span><span class="pp-ctx-l">free</span><span class="pp-ctx-n">${_ppTok(c.free)}</span><span class="pp-ctx-p">${(100 - c.pct).toFixed(1)}%</span></div>` : '');
-  return `${head}${bar}<div class="pp-ctx-rows">${rows}</div><div class="pp-ctx-for">${pick.live ? 'building now' : 'last build'} · ${escapeHtml(pick.s.title || pick.s.key)}${pick.l.provider ? ` · ${escapeHtml(pick.l.provider)}` : ''} · ${escapeHtml(_ppWhen(pick.l.ts))} <span title="${escapeHtml(c.method || '')}: no vendor tokenizer is bundled">· estimated</span></div>`;
+  return `${asked}${head}${bar}<div class="pp-ctx-rows">${rows}</div><div class="pp-ctx-for">${pick.live ? 'building now' : 'last build'} · ${escapeHtml(pick.s.title || pick.s.key)}${pick.l.provider ? ` · ${escapeHtml(pick.l.provider)}` : ''} · ${escapeHtml(_ppWhen(pick.l.ts))} <span title="${escapeHtml(c.method || '')}: no vendor tokenizer is bundled">· estimated</span>${back}</div>`;
 }
 /** the proposals are Code › changes; the charter, agents and jobs panels are the Code tab's bottom bar */
 function ppOpenChanges() { if (typeof setRepoSubtab === 'function' && CURRENT_REPO_SUBTAB !== 'code') setRepoSubtab('code'); if (typeof csView === 'function') csView('changes'); }

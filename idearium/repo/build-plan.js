@@ -73,6 +73,95 @@ export function timesOf(phase, runs = [], now = Date.now()) {
   };
 }
 
+// ── §0.60.123 PP1/PP2 — James: "each chunk/dependancy a piece of the progress indication. progress shows for each task
+// with a full run history, and log to make it explicit." Pure, over the raw rows buildPlan already gets (0.60.27).
+let _RW = null, _PPL = null;
+try { _RW = _req('../../lib/run-watch.js'); } catch (_) { _RW = null; }
+try { _PPL = _req('../../lib/phase-plan.js'); } catch (_) { _PPL = null; }
+const _FAIL = new Set(['failed', 'incomplete', 'blocked']);
+const _MOVING = new Set(['retrying', 'escalating']);
+const _baseRun = (id) => String(id || '').replace(/-(review|proof)$/, '');
+const _cut = (s, n) => { s = String(s == null ? '' : s); return s.length > n ? `${s.slice(0, n - 1)}…` : s; };
+
+/**
+ * piecesOf(phase, rows) → { pieces: [{ path, state, attempts, agent, uses, why, at }], from, open }
+ *   the pieces: the latest plan's files, else the phase's files:; neither → one 'whole phase' piece (from: 'whole')
+ *   state: pending · running · written (proposed or written) · failed · proven · done (the phase is complete)
+ *   uses: what the piece imports among the others (lib/phase-plan.js depsOf over the latest plan)
+ */
+export function piecesOf(phase = {}, rows = []) {
+  const rs = [...(rows || [])].sort((a, b) => (a.ts || 0) - (b.ts || 0));
+  const planRow = [...rs].reverse().find(r => r.state === 'planned' && r.plan && Array.isArray(r.plan.files) && r.plan.files.length);
+  let paths = planRow ? planRow.plan.files.map(f => f.path).filter(Boolean) : [];
+  let from = planRow ? (planRow.derived ? 'the plan Nexus wrote' : 'the plan') : 'the phase\'s files';
+  if (!paths.length) paths = [...new Set((phase.files || []).map(f => String(f).split(/[\s(]/)[0]).filter(f => f && /[\w-]\.[\w]+$/.test(f)))];
+  const whole = !paths.length;
+  if (whole) { paths = ['(whole phase)']; from = 'whole'; }
+  let deps = new Map();
+  if (planRow && _PPL) { try { deps = _PPL.depsOf(planRow.plan); } catch (_) { deps = new Map(); } }
+  const P = new Map(paths.map(p => [p, { path: p, state: 'pending', attempts: 0, agent: null, uses: (deps.get && deps.get(p)) || [], why: null, at: null }]));
+  const touch = (pc, st, r) => { pc.state = st; pc.at = r.ts || pc.at; if (r.provider) pc.agent = r.provider; if (st === 'failed') pc.why = _cut(r.error || r.state, 200); if (st === 'written') pc.why = null; };
+  for (const r of rs) {
+    if (/-proof$/.test(r.runId || '')) continue;
+    const injected = (r.injects && r.injects.injected) || [];
+    if (whole) {
+      const pc = P.get('(whole phase)');
+      if (r.state === 'replied' && r.provider) { pc.attempts++; touch(pc, injected.length ? 'written' : 'failed', r); }
+      else if (_FAIL.has(r.state) && r.provider) { pc.attempts++; touch(pc, 'failed', r); }
+      else if (_MOVING.has(r.state) || r.state === 'building') touch(pc, 'running', r);
+      continue;
+    }
+    if (r.file && P.has(r.file)) {
+      const pc = P.get(r.file);
+      if (r.state === 'replied' && r.provider) { pc.attempts++; touch(pc, 'written', r); }
+      else if (_FAIL.has(r.state) && r.provider) { pc.attempts++; touch(pc, 'failed', r); }
+      else if (_MOVING.has(r.state)) touch(pc, 'running', r);
+      continue;
+    }
+    if (r.provider && (r.state === 'replied' || _FAIL.has(r.state))) {   // a whole-phase attempt: what it brought back, what it left out
+      const absent = new Set(r.absent || []);
+      for (const [p, pc] of P) {
+        if (injected.includes(p)) { pc.attempts++; touch(pc, 'written', r); }
+        else if (absent.has(p) || (_FAIL.has(r.state) && pc.state !== 'written')) { pc.attempts++; touch(pc, 'failed', r); }
+      }
+    }
+  }
+  // the proof: a proven run after the last write proves what was written; a complete phase is done
+  const proofs = rs.filter(r => /-proof$/.test(r.runId || '') && ['proven', 'unproven', 'no-proof'].includes(r.state));
+  const lastProof = proofs[proofs.length - 1];
+  for (const pc of P.values()) {
+    if (lastProof && lastProof.state === 'proven' && pc.state === 'written' && (lastProof.ts || 0) >= (pc.at || 0)) pc.state = 'proven';
+    if ((phase.status === 'complete' || phase.status === 'done') && pc.state !== 'proven') pc.state = 'done';
+  }
+  // a run still open: what has not landed in it is running
+  let open = false;
+  if (_RW && rs.length) {
+    const runs = [..._RW.runsOf(rs.filter(r => !/-(review|proof)$/.test(r.runId || ''))).values()].sort((a, b) => (b.last.ts || 0) - (a.last.ts || 0));
+    const latest = runs[0];
+    open = !!(latest && !_RW.isFinal(latest) && latest.last.state !== 'paused');
+    if (open) for (const pc of P.values()) if (pc.state === 'pending' || (pc.state === 'failed' && (pc.at || 0) < (latest.rows[0].ts || 0))) pc.state = 'running';
+  }
+  return { pieces: [...P.values()], from, open };
+}
+
+/** historyOf(rows) → every run of the phase, newest first, each with its log (every row in time order); cut and said */
+export function historyOf(rows = [], { maxRuns = 12, maxRows = 80 } = {}) {
+  const by = new Map();
+  for (const r of rows || []) { if (!r || !r.runId) continue; const k = _baseRun(r.runId); if (!by.has(k)) by.set(k, []); by.get(k).push(r); }
+  const runs = [...by.entries()].map(([runId, rs]) => {
+    rs.sort((a, b) => (a.ts || 0) - (b.ts || 0));
+    const last = rs[rs.length - 1];
+    const proof = [...rs].reverse().find(r => /-proof$/.test(r.runId || ''));
+    const agents = [...new Set(rs.map(r => r.provider || r.reviewer).filter(Boolean))];
+    return { runId, startedAt: rs[0].ts || null, endedAt: last.ts || null, end: proof ? proof.state : last.state, agents, total: rs.length,
+      cut: rs.length > maxRows ? rs.length - maxRows : 0,
+      log: rs.slice(-maxRows).map(r => ({ ts: r.ts || null, state: r.state, part: /-review$/.test(r.runId || '') ? 'review' : /-proof$/.test(r.runId || '') ? 'proof' : null,
+        provider: r.provider || r.reviewer || null, file: r.file || null, rung: r.rung || null, attempt: r.attempt || null,
+        note: _cut(r.error || r.note || r.planSummary || (r.ready && r.ready.line) || (r.injects && (r.injects.injected || []).length ? `wrote ${(r.injects.injected || []).join(', ')}` : ''), 240) })) };
+  }).sort((a, b) => (b.endedAt || 0) - (a.endedAt || 0));
+  return { runs: runs.slice(0, maxRuns), more: Math.max(0, runs.length - maxRuns) };
+}
+
 export function buildPlan({ phases = [], runs = [], rows = null, order = null, now = Date.now() } = {}) {
   // 0.60.27 AG1a — the cost counts every call's own row (rows, unmerged); merged runs (one row per run) undercount
   const rowsBy = new Map();
@@ -93,6 +182,8 @@ export function buildPlan({ phases = [], runs = [], rows = null, order = null, n
     return {
       key: p.phase_key, uuid: p.uuid || null, map: p.map, title: p.title || p.name || p.phase_key, layer: p.layer || null, status: p.status, ...(p.shelf ? { shelf: true } : {}),
       ...g, runs: rs.length, times,
+      // §0.60.123 PP1/PP2 — its pieces (the progress) and every run with its log
+      ...(() => { const raw = rowsBy.get(`${p.map}::${p.phase_key}`) || []; const pc = piecesOf(p, raw); return { pieces: pc.pieces, piecesFrom: pc.from, open: pc.open, history: historyOf(raw) }; })(),
       ...(_PC && (rowsBy.get(`${p.map}::${p.phase_key}`) || []).length ? (() => { const c = _PC.costOf(rowsBy.get(`${p.map}::${p.phase_key}`)); return c.calls ? { cost: { calls: c.calls, byRole: c.byRole, local: c.local, remote: c.remote, tokensIn: c.tokensIn, tokensOut: c.tokensOut, runs: c.runs.length, method: c.method, line: _PC.line(c) } } : {}; })() : {}),
       ledger: rs.slice().reverse().map(r => ({ ts: r.ts, startedAt: r.startedAt || null, runId: r.runId, ...(r.chunk ? { chunk: r.chunk, chunks: r.chunks, file: r.file || null } : {}), state: r.state, snapshot: r.snapshot || null, provider: r.provider || null, ...(r.route ? { route: r.route } : {}), ...(r.precedent ? { precedent: r.precedent } : {}), ...(r.context ? { context: r.context } : {}), ...(r.against ? { against: r.against, overlaid: r.overlaid || [], againstNote: r.againstNote || null, leverage: r.leverage || null } : {}), ...(r.rung ? { rung: r.rung, rungs: r.rungs, attempt: r.attempt } : {}),
         // §0.60.0 PC1/PC2 — plan, then code: what the planner read and mapped, why a plan was refused, what a coder dropped

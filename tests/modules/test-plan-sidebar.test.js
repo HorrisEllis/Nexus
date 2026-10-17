@@ -7,9 +7,11 @@
  *   PS-01  lib/economy/tokens.js breakdown: each part's tokens and share, used, free, % of the window; no window → null
  *          (said, not guessed); empty parts left out
  *   PS-02  the build records it: _phaseBuild puts `context` on the 'building' row; buildPlan passes it to the step's ledger
- *   PS-03  the Plan panel, driven in Clear Glass: three cards in order (Progress, Plan, Context); Context shows "x% used",
- *          a bar and one row per part, for the phase building now; the proposals are one line; no work surface, no
- *          activity section, no charter editor, no jobs, no agents in the panel; a fold is remembered
+ *   PS-03  the Plan panel, driven in Clear Glass: two cards (Progress, Plan) — 0.60.123 PP4, James: "strip the context
+ *          from the plan panel since we have a dedicated one now" (it was three, with Context, at 0.60.107); the context
+ *          card's content is still checked, as the dock's Context panel draws it (_ppContext): "x% used", a bar and one
+ *          row per part, for the phase building now; the proposals are one line; no work surface, no activity section,
+ *          no charter editor, no jobs, no agents in the panel; a fold is remembered
  *   PS-04  what left is its own panel: charter, agents (with the repo's lessons) and jobs in the Code tab's bottom bar;
  *          the activity views open there (rtToggleDrawer)
  * No engine on the machine: the browser part is SKIPPED, said, never passed.
@@ -112,14 +114,17 @@ function harness() {
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     await page.goto(pathToFileURL(harness()).href);
     await page.evaluate(() => { try { localStorage.clear(); } catch (_) {} openPlanPanel(); });
-    await page.waitForSelector('#pp-body .pp-card[data-card="context"] .pp-ctx-row');
+    await page.waitForSelector('#pp-body .pp-card[data-card="plan"]');
+    // the Context card's content, as the dock's Context panel draws it (0.60.123 PP4: not in the Plan panel any more)
+    await page.evaluate(() => { const d = document.createElement('div'); d.id = 'ctx-probe'; d.innerHTML = _ppContext(PLAN.steps); document.body.appendChild(d); });
 
-    await test('PS-03', 'three cards (Progress, Plan, Context); Context like the sidebar; the rest gone from the panel; folds remembered', async () => {
-      assert.deepStrictEqual(await page.$$eval('#pp-body > .pp-card', els => els.map(e => e.dataset.card)), ['progress', 'plan', 'context']);
-      const ctx = await page.$eval('.pp-card[data-card="context"]', e => e.textContent);
+    await test('PS-03', 'two cards (Progress, Plan) — the Context card is the dock\'s now (0.60.123 PP4); its content still like the sidebar; the rest gone from the panel; folds remembered', async () => {
+      assert.deepStrictEqual(await page.$$eval('#pp-body > .pp-card', els => els.map(e => e.dataset.card)), ['progress', 'plan']);
+      assert.strictEqual(await page.$('#pp-body .pp-ctx-row'), null, 'no context rows in the Plan panel');
+      const ctx = await page.$eval('#ctx-probe', e => e.textContent);
       assert.ok(/18\.3% used/.test(ctx) && /3\.0k \/ 16k/.test(ctx), ctx);
-      assert.deepStrictEqual(await page.$$eval('.pp-card[data-card="context"] .pp-ctx-l', els => els.map(e => e.textContent)), ['phase request', 'mapped files', 'charter', 'lessons (went wrong before)', 'free']);
-      assert.strictEqual(await page.$$eval('.pp-ctx-bar span', els => els.length), 4);
+      assert.deepStrictEqual(await page.$$eval('#ctx-probe .pp-ctx-l', els => els.map(e => e.textContent)), ['phase request', 'mapped files', 'charter', 'lessons (went wrong before)', 'free']);
+      assert.strictEqual(await page.$$eval('#ctx-probe .pp-ctx-bar span', els => els.length), 4);
       assert.ok(/building now · IH1 intent nodes point at hats · ollama/.test(ctx), 'the phase building now, not the last finished one');
       const prog = await page.$eval('.pp-card[data-card="progress"]', e => e.textContent);
       assert.ok(/1\/3 phases done/.test(prog) && /3 proposals waiting — open in Code › changes/.test(prog) && /end state 1\/2/.test(prog), prog);

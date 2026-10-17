@@ -299,6 +299,23 @@ export const SPEC = [
       if ((d.toBuild || []).length) { console.log(`  ${d.toBuild.length} to build`); for (const x of d.toBuild) console.log(`    · ${x.path}  ${h.c.dim(String(x.purpose || '').slice(0, 140))}`); }
       if (d.skipped.length) { console.log(h.c.amber(`  ${d.skipped.length} skipped`)); for (const x of d.skipped) console.log(`    - ${x.path}  ${h.c.dim(x.why)}`); }
     } },
+  // §0.60.123 PP1/PP2 — the plan as the Plan panel shows it: each phase's pieces (its progress), or one phase's runs and their logs
+  { key: 'repo.plan', repo: true, usage: 'repo plan <repo> [phase] [--map name]', about: 'the build plan: each phase with its pieces (one per planned file: pending, running, written, failed, proven) — or one phase with every run and its log',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/plan${a.flags.map ? `?map=${encodeURIComponent(a.flags.map)}` : ''}` }),
+    print: (d, a, h) => {
+      const glyph = { pending: '·', running: '◌', written: '◆', failed: '✗', proven: '✓', done: '✓' };
+      const steps = (d.steps || []).filter(s => !a.args[0] || s.key === a.args[0] || String(s.key).startsWith(`${a.args[0]}_`));
+      for (const s of steps) {
+        const pcs = s.pieces || [];
+        console.log(`  ${String(s.key).padEnd(28)} ${pcs.map(p => glyph[p.state] || '?').join('')}  ${h.c.dim(`${pcs.filter(p => ['proven', 'done'].includes(p.state)).length}/${pcs.length} pieces · ${s.status}`)}`);
+        if (!a.args[0]) continue;
+        for (const p of pcs) console.log(h.c.dim(`    ${(glyph[p.state] || '?')} ${p.path} · ${p.state}${p.attempts ? ` · ${p.attempts} attempt(s)` : ''}${p.agent ? ` · ${p.agent}` : ''}${p.uses.length ? ` · uses ${p.uses.join(', ')}` : ''}${p.why ? ` · ${p.why}` : ''}`));
+        for (const r of (s.history && s.history.runs) || []) {
+          console.log(`    run ${r.runId} · ${new Date(r.startedAt).toLocaleString()} · ${r.end} · ${r.agents.join(', ') || 'no agent'}`);
+          for (const l of r.log) console.log(h.c.dim(`      ${new Date(l.ts).toLocaleTimeString()} ${l.part ? `${l.part} ` : ''}${l.state}${l.file ? ` ${l.file}` : ''}${l.provider ? ` · ${l.provider}` : ''}${l.note ? ` — ${l.note}` : ''}`));
+        }
+      }
+    } },
   // 0.60.27 AG1a — "as little as possible", counted: agent calls (plan · code · review), local vs remote, tokens
   { key: 'repo.cost', repo: true, usage: 'repo cost <repo> [phase] [--map name]', about: 'what each phase cost in agent calls and tokens: plan, code and review calls, local vs remote, tokens in and out (estimated), per run',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/cost${a.args[0] ? `?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(a.flags.map)}` : ''}` : ''}` }),
@@ -311,6 +328,10 @@ export const SPEC = [
     req: (a) => (a.args[0] ? { method: 'POST', path: '/api/system/lean', body: { on: a.args[0] === 'on', actor: 'command' } } : { method: 'GET', path: '/api/system/lean' }),
     print: (d, a, h) => { console.log(`  lean ${d.on ? h.c.mint('on') : h.c.amber('off')} · ${d.hold.join(', ')}`); for (const r of d.results || d.services || []) console.log(h.c.dim(`    ${r.name} ${r.running != null ? (r.running ? 'running' : 'stopped') : (r.ok ? r.status || 'ok' : `failed: ${r.error}`)}`)); if (d.note) console.log(h.c.dim(`  ${d.note}`)); } },
   // 0.60.25 — the account fallback chain per provider (same as Idearium → Settings → Routing → Accounts)
+  // 0.60.123 MP — James: "failure modes are to prevent problems". What is being prevented now, and why
+  { key: 'system.prevention', repo: false, usage: 'system prevention [clear <fault class>]', about: 'the failure modes preventing now (a memory crisis makes heavy work wait for headroom for a day), and whether heavy work may run; clear ends one early',
+    req: (a) => (a.args[0] === 'clear' ? { method: 'POST', path: '/api/system/prevention/clear', body: { cls: a.args[1] || 'memory_pressure' } } : { method: 'GET', path: '/api/system/lean' }),
+    print: (d, a, h) => { if (d.cleared) { console.log(h.c.mint(`  cleared ${d.cleared}`)); return; } for (const p of d.prevention || []) console.log(`  ${h.c.amber(p.cls)} since ${new Date(p.since).toLocaleString()} · ${p.count}× · until ${new Date(p.until).toLocaleString()} ${h.c.dim(p.why || '')}`); if (!(d.prevention || []).length) console.log(h.c.mint('  nothing is being prevented')); if (d.heavy) console.log(h.c.dim(`  heavy work: ${d.heavy.ok ? 'may run' : 'waits'} — ${d.heavy.why}`)); } },
   // 0.60.28 PF1 — ready before run: what a phase build reads before its first agent call
   { key: 'providers.ready', repo: false, usage: 'providers ready', about: 'can each browser agent take a job now, and if not why: a sign-in wall, every account resting, a usage limit, a reply waiting on your ◎ pick',
     req: () => ({ method: 'GET', path: '/api/providers/ready' }),

@@ -42,6 +42,7 @@ const INTERVAL_MS = parseInt(process.env.OFFICIATOR_INTERVAL_MS || '20000', 10);
 
 let _timer = null;
 let _running = false;
+let _heldSaid = false;
 // §HONEST, IN-MEMORY DEDUP — a drop this process has already turned
 // into a contract (or tried and gave up on) is never reconsidered
 // within this process's own lifetime. Not persisted: a restart re-
@@ -349,6 +350,12 @@ async function officiate(drop, opts = {}) {
 
 async function tick() {
   if (_running) return { skipped: true, reason: 'previous tick still in flight' };
+  // §0.60.123 MP — synthesis asks an agent: it waits while memory is not ok, or after a crisis without headroom
+  if (!process.env.NEXUS_TEST_SANDBOX) {
+    const h = require('../../../lib/prevention.js').heavyAllowedHere('officiator');
+    if (!h.ok) { if (!_heldSaid) { _heldSaid = true; console.log(`[${MODULE_ID}] waiting — ${h.why}`); } return { skipped: true, reason: h.why }; }
+    _heldSaid = false;
+  }
   _running = true;
   try {
     const drops = intake.list().filter(d => d.state === intake.STATE.STAGED && !d.officiated);

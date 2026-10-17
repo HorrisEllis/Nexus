@@ -1910,6 +1910,24 @@ function _runDiagnosticOnStall(kernel, phase) {
 // (confirmed in James's real boot logs) — the same real mechanism that
 // currently reports "0 systems" will correctly report the real counts
 // once this background run finishes, with zero added boot latency.
+// §0.60.123 MP — James: "can we fix the memory issue … failure modes are to prevent problems". The refresh is a ~4 min
+// process of its own, started at every boot while the services are loading. Now: a registry younger than
+// LOOM_REFRESH_MAX_AGE_H (12 h) is not rebuilt; otherwise it waits until memory has headroom (lib/prevention.js —
+// stricter after a recent crisis), re-checking every 5 min, and says why it waits.
+const LOOM_REFRESH_MAX_AGE_MS = (parseFloat(process.env.LOOM_REFRESH_MAX_AGE_H) || 12) * 3600 * 1000;
+function _refreshLoomRegistryWhenAllowed(tries = 0) {
+  let age = Infinity;
+  try { age = Date.now() - fs.statSync(path.join(ROOT, 'loom', 'data', 'registry.json')).mtimeMs; } catch (_) {}
+  if (age < LOOM_REFRESH_MAX_AGE_MS) { _log(`loom registry is ${Math.round(age / 3600000 * 10) / 10} h old — not rebuilt at this boot (rebuilt when older than ${LOOM_REFRESH_MAX_AGE_MS / 3600000} h)`); return; }
+  let h = { ok: true, why: '' };
+  try { h = require('../lib/prevention.js').heavyAllowed({ sample: _resourceMonitor.current(), level: _resourceMonitor.level() }); } catch (_) {}
+  if (!h.ok) {
+    if (tries === 0) _log(`loom registry refresh waits — ${h.why}; re-checked every 5 min`);
+    const t = setTimeout(() => _refreshLoomRegistryWhenAllowed(tries + 1), 5 * 60 * 1000); if (t.unref) t.unref();
+    return;
+  }
+  _refreshLoomRegistry();
+}
 function _refreshLoomRegistry() {
   const { spawn } = require('child_process');
   _log('refreshing loom/data/registry.json in the background (real runtime ~4 min; boot does not wait for this) ...');
@@ -1923,7 +1941,8 @@ function _refreshLoomRegistry() {
 }
 
 function start() {
-  _refreshLoomRegistry();
+  // §0.60.123 MP — first look a minute after boot (the services load first), then only if old and memory allows
+  { const t = setTimeout(() => _refreshLoomRegistryWhenAllowed(0), 60 * 1000); if (t.unref) t.unref(); }
   _log(`autopilot starting — supervising: ${KERNELS.map(k => k.name).join(', ')}`);
   KERNELS.forEach((kernel, i) => {
     _initState(kernel.name);

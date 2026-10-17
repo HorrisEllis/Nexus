@@ -95,7 +95,12 @@ const FILES = [
   ['idearium/repo/spec-plan.js', I('idearium/repo/spec-plan.js'), [
     I('loom/scanners/phasemap-map.js'),                         // parsePhasemapText — the one phasemap parser
   ]],
-  ['idearium/repo/build-plan.js', I('idearium/repo/build-plan.js'), []],
+  ['idearium/repo/build-plan.js', I('idearium/repo/build-plan.js'), [
+    I('lib/run-watch.js'), I('lib/phase-plan.js'),              // §0.60.123 PP1/PP2 createRequire — runsOf/isFinal (an open run), depsOf (what a piece uses)
+  ]],
+  // §0.60.123 MP — a failure mode that happened becomes a prevention; heavy work asks before it starts
+  ['lib/prevention.js', I('lib/prevention.js'), [I('lib/resource-monitor.js'), I('lib/test-sandbox.js')]],   // heavyAllowedHere → shared monitor; fileOf → sandbox.ensure
+  ['ollama/lib/idle-unload.js', I('ollama/lib/idle-unload.js'), [I('ollama/lib/model-inventory.js'), I('lib/prevention.js')]],
   ['idearium/api/build-surface.js', I('idearium/api/build-surface.js'), [
     I('idearium/repo/file-state.js'), I('idearium/repo/deviation.js'), I('idearium/repo/spec-plan.js'), I('idearium/repo/build-plan.js'),
     I('idearium/repo/snapshot-files.js'), I('idearium/repo/snapshot.js'), I('idearium/repo/phases.js'),   // import()
@@ -239,6 +244,14 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/phase-plan.js'), '0.60.28 PF2 derivePlan when no planner is ready or it failed'],
   [I('idearium/api/index.js'), I('idearium/repo/phase-mapping.js'), '0.60.29 PM POST/GET /phases/map (await import) — runMapping'],
   [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), '0.60.29 PM HTTP POST/GET /api/repos/:uuid/phases/map — the Phases tab button'],
+  // §0.60.123 MP — who records a prevention, and who asks heavyAllowed before heavy work
+  [I('lib/resource-monitor.js'), I('lib/prevention.js'), '0.60.123 MP a critical transition records memory_pressure (lazy require)'],
+  [I('cortex/self-heal/escalation.js'), I('lib/prevention.js'), '0.60.123 MP justEnteredFailureMode → record(faultClass)'],
+  [I('idearium/api/index.js'), I('lib/prevention.js'), '0.60.123 MP _guardedSync heavyAllowedHere; GET /system/lean prevention; POST /system/prevention/clear'],
+  [I('clear-glass/src/main/index.js'), I('lib/prevention.js'), '0.60.123 MP Eros and the NCP prewarm held under prevention'],
+  [I('cortex/core/raid/officiator.js'), I('lib/prevention.js'), '0.60.123 MP the tick asks heavyAllowedHere'],
+  [I('nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],
+  [I('ollama/server.js'), I('ollama/lib/idle-unload.js'), '0.60.123 MP startIdleUnload after listen (keep_alive:0 on idle)'],
 ];
 
 function mapBuildSurface(driver) {
