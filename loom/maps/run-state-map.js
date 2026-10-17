@@ -52,7 +52,6 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
-  ['idearium/lib/projects-folder.cjs', I('idearium/lib/projects-folder.cjs'), [I('lib/zip.js'), I('idearium/lib/data-dir.cjs')]],   // §0.60.139 COSA14 his projects folder
   ['lib/system-shape.js', I('lib/system-shape.js'), []],   // §0.60.138 does a system match genesis, role by role
   ['diagnostic/cli.js', I('diagnostic/cli.js'), [I('diagnostic/registry-components.js'), I('diagnostic/config.js')]],   // §0.60.138 diagnostic's genesis cli
   ['diagnostic/server.js', I('diagnostic/server.js'), [I('diagnostic/nexus-diagnostic.js')]],   // §0.60.138 diagnostic's genesis entry
@@ -78,8 +77,6 @@ const CONSUMERS = [
   [I('copilot/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
   [I('loom/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
   [I('clear-glass/src/main/index.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
-  [I('idearium/api/index.js'),                    I('idearium/lib/projects-folder.cjs'), '§0.60.139 COSA14 GET/POST /api/my-projects/folder, POST …/import (through repo.import-archive)'],
-  [I('idearium/ui/js/projects.js'),               I('idearium/lib/projects-folder.cjs'), '§0.60.139 My projects → Projects folder (over the routes)'],
   [I('idearium/api/index.js'),                    I('lib/system-shape.js'), '§0.60.138 GET /api/system/shape'],
   [I('diagnostic/nexus-diagnostic.js'),           I('diagnostic/config.js'), '§0.60.138 its port from its config'],
   [I('loom/server.js'),                           I('loom/templates/cos-compartment.js'), '§0.60.134 GET /api/compartments[/:system], POST /api/compartments/apply'],

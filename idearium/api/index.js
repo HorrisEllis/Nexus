@@ -2759,7 +2759,6 @@ const ROUTE_CAP = {
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
-  'projects.folder': CAPS.READ_IDEAS, 'projects.folder.set': CAPS.WRITE_IDEAS, 'projects.folder.import': CAPS.WRITE_IDEAS,   // 0.60.139 COSA14
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
   'repo.carve': CAPS.WRITE_IDEAS,   // §CV1 0.60.112 — makes a repo
@@ -3189,9 +3188,6 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','notes'],     'repo.notes'],         // §0.60.6 — the repo's notes: ?q=&kind=&status=&tag=
     ['POST',   ['api','repos',    ':uuid','notes'],     'repo.notes.add'],     // §0.60.6 — { body, title?, kind?, tags?, pinned? }
     ['GET',    ['api','my-projects'],                   'projects.overview'],
-    ['GET',    ['api','my-projects','folder'],          'projects.folder'],         // 0.60.139 COSA14 — his projects folder, scanned: every project, its group, its markers, what came in already
-    ['POST',   ['api','my-projects','folder'],          'projects.folder.set'],     // 0.60.139 COSA14 — set the folder {root}, then the scan
-    ['POST',   ['api','my-projects','folder','import'], 'projects.folder.import'],  // 0.60.139 COSA14 — bring projects in {paths}: each zipped from disk and imported through repo.import-archive
     ['GET',    ['api','raid','held'],                   'raid.held'],          // §0.60.78 RT1 — cortex's officiator: the agents' wait, each staged drop's tries
     ['POST',   ['api','raid','held','unpark'],          'raid.held.unpark'],   // §0.60.78 RT1 — { id? } clear one drop, or everything  // §0.60.74 COSA10 (not /api/projects: that is the zip shelf, project.list) — every project of his, sorted by what moved last: notes, phases, last activity
     ['GET',    ['api','notes'],                         'notes.list'],         // §0.60.6 — ?scope=all (default) | loose (on no repo) &q=&kind=&status=&tag=
@@ -7325,50 +7321,6 @@ async function handle(req, res, route, query, body) {
           : await _nexusClient.call('cortex', 'POST', '/api/raid/officiator/unpark', body && body.id ? { id: String(body.id) } : {}, { timeout: 4000 });
         return ok(res, r);
       } catch (e) { return err(res, 502, `cortex did not answer: ${e.message}`); }
-    }
-    case 'projects.folder':
-    case 'projects.folder.set': {   // 0.60.139 COSA14 — James: "these are all my projects i have so far. way more. in some folders. i was hoping to use idearium and cos to manage them"
-      const PF = _require('../lib/projects-folder.cjs');
-      let st = PF.readState();
-      if (action === 'projects.folder.set') {
-        const root = String((body && body.root) || '').trim();
-        if (!root) return err(res, 400, 'root required: the folder that holds his projects (e.g. D:\\Projects)');
-        if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) return err(res, 404, `no folder at ${root} on this machine`);
-        st = PF.writeState({ ...st, root: path.resolve(root), setAt: new Date().toISOString() });
-      }
-      if (!st.root) return ok(res, { root: null, said: 'no projects folder set yet: POST /api/my-projects/folder { root }, or `projects folder <dir>`' });
-      const r = PF.scan(st.root, { depth: Number((query && query.depth) || 3) || 3 });
-      if (!r.ok) return err(res, 404, r.error);
-      const repos = getRepoLayer().list({}) || [];
-      for (const p of r.projects) {
-        const rec = st.imported && st.imported[p.path];
-        const live = rec && repos.find(x => x.uuid === rec.uuid && x.status !== 'archived');
-        p.imported = live ? { uuid: live.uuid, name: live.name, at: rec.at } : null;
-      }
-      return ok(res, { ...r, imported: r.projects.filter(p => p.imported).length });
-    }
-    case 'projects.folder.import': {   // 0.60.139 COSA14 — each project zipped from his disk and brought in through the zip import (one door)
-      const PF = _require('../lib/projects-folder.cjs');
-      const cfg = _require('../../lib/project-import.config.js');
-      const st = PF.readState();
-      const paths = Array.isArray(body && body.paths) ? body.paths.map(String) : [];
-      if (!paths.length) return err(res, 400, 'paths required: the project folders to bring in (from GET /api/my-projects/folder)');
-      if (!st.root) return err(res, 409, 'no projects folder set: set it first (POST /api/my-projects/folder { root })');
-      const results = [];
-      for (const p of paths.slice(0, 50)) {
-        const abs = path.resolve(p);
-        if (!(abs === st.root || abs.startsWith(st.root + path.sep))) { results.push({ path: p, ok: false, error: `not inside the projects folder ${st.root}` }); continue; }
-        const z = PF.zipFolder(abs, { skipDirs: cfg.ZIP.skipDirs || PF.DEFAULT_SKIP, maxFiles: cfg.ZIP.maxFiles, maxTotalBytes: cfg.ZIP.maxTotalBytes });
-        if (!z.ok) { results.push({ path: p, ok: false, error: z.error }); continue; }
-        const name = path.basename(abs);
-        const r = await _callRoute('repo.import-archive', {}, { name, filename: `${name}.zip`, contentBase64: z.buf.toString('base64') });
-        if (!r.ok || !r.repo) { results.push({ path: p, ok: false, error: r.error || `the import answered ${r.status}` }); continue; }
-        try { getRepoLayer().annotate(r.repo.uuid, { sourcePath: abs }); } catch (_) {}
-        const now = PF.readState(); now.imported = { ...(now.imported || {}), [abs]: { uuid: r.repo.uuid, at: new Date().toISOString() } }; PF.writeState(now);
-        results.push({ path: p, ok: true, repo: { uuid: r.repo.uuid, name: r.repo.name }, files: z.files, skipped: z.skippedCount, pipeline: r.pipeline ? r.pipeline.state : null });
-      }
-      if (paths.length > 50) results.push({ ok: false, error: `${paths.length - 50} more not brought in: at most 50 per request (ask again for the rest)` });
-      return ok(res, { results, brought: results.filter(x => x.ok).length });
     }
     case 'projects.overview': {
       const PJ = _require('../lib/projects.cjs');
