@@ -118,7 +118,21 @@ phases:
       /changes/:id, `repo changes [id]`, the Code tab's "changes" panel.
     proof: "a fixture inject proposed inside a task, applied, committed: its record joins all of it; an old inject without a task is matched by path and time and says so; a missing commit is a hole, named"
   FR2_tested_before_it_lands:
-    status: MAPPED
+    status: "BUILT 0.60.115 — test-tested-before-lands 5/5"
+    james: '"merge. then next phase." (2026-10-17)'
+    found: >-
+      Most of it existed: lib/proposal-evidence.js runs a change's linked tests twice in a shadow copy (before, after) and
+      apply() refuses a regression. Two real gaps: (1) every change was tested in NEXUS's tree (gather's default root), so a
+      repo's src/x.js found no test and a carved repo's lib/zip.js ran Nexus's own tests on Nexus's own file; (2) a staged
+      change's evidence was thrown away (attachEvidence kept it only while 'proposed', and code-edit stages at once), so
+      promote applied a staged batch untested — and each file was only ever tested alone.
+    built_as: >-
+      repo-inject setEvidenceRoot (Idearium: the repo's folder; a Nexus change keeps Nexus's tree; no folder → not tested,
+      said); staged changes keep their evidence; proposal-evidence shadow() with several overlays and gatherBatch() (the
+      union of every file's linked tests, once on the tree as it is, once with the whole batch in place); code-edit
+      promoteTested() refuses a regressing batch (nothing applied) and notes the batch on each change; POST code/promote uses
+      it (409 + batch); the record and the changes panel say where it was tested and the batch's result. The COS testenv's
+      VM path (a repo's own npm test / pytest) is not used yet: the shadow is a process sandbox, said.
     depends_on: [FR1_one_record_per_change]
     does: >-
       lib/code-edit.js stage → the repo's tests in a COS test environment (cos/testenv: a process, or a throwaway VM) →

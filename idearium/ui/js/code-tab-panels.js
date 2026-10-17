@@ -171,6 +171,7 @@ function _cxWork() {
     ${step(1, 'dependencies', dep, !!d)}${step(2, 'spec', spec, !!s)}${step(3, 'phase', ph, !!p)}${step(4, 'chunks', ch || '', !!(f.chunks || []).length)}${stop}
     <div class="cs-dim cx-note">the agent is given this before it edits the picked lines (FN1); what is missing is said, and made first once FN2 lands</div></div>`;
 }
+// §FR2 0.60.114 — each row also says where it was tested (the repo's tree or Nexus's) and its staged batch's test.
 // §FR1 0.60.114 — James: "next" (the flight recorder's first piece). Each change an agent made to this repo, one record each:
 // what, who, why, checked, where it landed, undo; a row opens its whole record (GET …/changes/:id); missing links are said.
 async function cxChangesLoad(repo) {
@@ -196,7 +197,7 @@ function _cxChanges() {
     return `<div class="cx-change${open ? ' cx-change-open' : ''}" data-id="${escapeHtml(c.id)}" onclick="cxChangeOpen('${escapeHtml(c.id)}')">
       <div><span class="cx-change-st cx-st-${escapeHtml(c.status)}">${escapeHtml(c.status)}</span> <code>${escapeHtml(c.path)}</code>${c.lines ? ` <span class="cs-dim">+${c.lines.added} −${c.lines.removed}</span>` : ''} <span class="cs-dim">${escapeHtml(c.agent || '')}</span></div>
       ${c.goal ? `<div class="cs-dim">${escapeHtml(String(c.goal).slice(0, 140))}${c.runHow && c.runHow !== 'task' ? ` (${escapeHtml(c.runHow)})` : ''}</div>` : ''}
-      <div class="cs-dim">${c.checked ? `checked ${c.checked.testsRan}/${c.checked.testsLinked}, ${c.checked.regressions} regressed · ` : ''}${c.landed.length ? `version ${escapeHtml(c.landed[0])} · ` : ''}${c.undo ? 'can be undone' : 'no undo'}${c.holes.length ? ` · <span class="cs-bad">missing ${escapeHtml(c.holes.join(', '))}</span>` : ''}</div>${det}</div>`;
+      <div class="cs-dim">${c.checked ? (c.checked.skipped && !c.checked.testsRan ? `<span class="cs-bad">not tested</span> · ` : `checked ${c.checked.testsRan}/${c.checked.testsLinked}, ${c.checked.regressions} regressed${c.checked.where ? ` in ${c.checked.where === 'nexus' ? "Nexus's tree" : "the repo's tree"}` : ''} · `) : ''}${c.batch ? `batch of ${c.batch.files}: ${c.batch.ran}/${c.batch.linked}, ${c.batch.regressions} regressed · ` : ''}${c.landed.length ? `version ${escapeHtml(c.landed[0])} · ` : ''}${c.undo ? 'can be undone' : 'no undo'}${c.holes.length ? ` · <span class="cs-bad">missing ${escapeHtml(c.holes.join(', '))}</span>` : ''}</div>${det}</div>`;
   }).join('');
   return `<div class="cx-changes">${rows}</div>`;
 }

@@ -52,6 +52,9 @@ const FILES = [
 const CONSUMERS = [
   [I('lib/step-gate.js'),                           I('lib/checks/ck-248-toolchain.js'), 'checkText(): the code.write gate parses every language the table knows with that language\'s own tool; a missing tool is not a pass (0.60.77)'],
   [I('lib/proposal-evidence.js'),                   I('lib/checks/ck-248-toolchain.js'), 'compare(): syntax status per file — checked, or NOT checked and why (0.60.77)'],
+  [I('lib/code-edit.js'),                           I('lib/proposal-evidence.js'), '§FR2 0.60.115 promoteTested(): gatherBatch — a staged batch tested together in the repo\'s own tree before promote'],
+  [I('idearium/repo/code-api.js'),                  I('lib/code-edit.js'), '§FR2 0.60.115 POST code/promote → promoteTested (409 with the batch on a regression)'],
+  [I('idearium/api/index.js'),                      I('lib/repo-inject.js'), '§FR2 0.60.115 setEvidenceRoot(): a change is tested in its own repo\'s folder, not Nexus\'s tree'],
   [I('lib/repo-inject.js'),                         I('lib/proposal-evidence.js'), 'attachEvidence()/evidenceNow(): an agent\'s proposal is compared and its linked tests run on the file as it is and as proposed; apply() refuses a regression (0.60.75 PE3)'],
   [I('lib/repo-inject.js'),                         I('lib/step-gate.js'), '_screen(): the code.write gate and the collapse/shrink guards at propose() and edit(), whoever calls (0.60.74)'],
   [I('idearium/api/index.js'),                      I('lib/proposal-evidence.js'), '_rejectionContext(): a rejected proposal\'s evidence goes to the agent and into the retry note (0.60.75 PE4)'],

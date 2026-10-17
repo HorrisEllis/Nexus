@@ -100,6 +100,14 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-17: "merge. then next phase."** (FR2: tested before it lands)
+  - **Context:** the product promise is that an agent's change is tested before it lands. Checking that promise against
+    the code showed it held only for Nexus's own files.
+  - **What it shows:** keeping the claim honest. Two gaps the system's own tests did not show were found by reading the
+    code against the claim: other repos' changes were tested against Nexus, and staged batches were never tested. Both
+    are closed, and a test now proves the subtle case: a change that looks broken file by file but is correct as a batch.
+  - **Evidence:** `CHANGELOG-0.60.115.md`; `tests/modules/test-tested-before-lands.test.js` TB-01..05.
+
 - **2026-10-16: "next"** (FR1, the flight recorder's first piece)
   - **Context:** the coder proposed an order (FR1 one record per change, then tested before it lands, undo, standalone,
     the demo) and named FR1 as its pick. He said go.
