@@ -100,6 +100,15 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-17: "Next and Merge."** (FR3: undo any change, keeping later edits)
+  - **Context:** the product's promise is undo. The existing revert could only undo the newest change, because any later
+    edit to the file blocked it.
+  - **What it shows:** finishing the promise at its hard edge. Undoing an older change while keeping newer work is
+    what makes the undo usable. Where it cannot be done safely (two changes on the same lines), the system refuses and
+    names the lines instead of guessing.
+  - **Evidence:** `CHANGELOG-0.60.117.md`; `versionium/lib/merge3.js`; `tests/modules/test-undo-any-change.test.js`
+    UN-01..06 (UN-02 is the phasemap's proof).
+
 - **2026-10-17: "Okay so where is the product being made? Or are we building the capability first, then branching?"** · then: "I agree, with the recommendation"
   - **Context:** two product phases had been built inside Nexus on the coder's assumption, and nobody had decided where
     the product lives.

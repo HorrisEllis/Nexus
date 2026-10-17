@@ -6801,7 +6801,7 @@ async function handle(req, res, route, query, body) {
       // action on the wrong compartment.
       const owned = () => { const n = RI.get(params.id); return n && n.repoUuid === params.uuid ? n : null; };
       const done = (r, okExtra = {}) => r.ok ? ok(res, { ...r, ...okExtra })
-        : err(res, r.conflict ? 409 : 400, (r.errors || ['failed']).join('; '), { conflict: !!r.conflict });
+        : err(res, r.conflict ? 409 : 400, (r.errors || ['failed']).join('; '), { conflict: !!r.conflict, ...(r.merge ? { merge: r.merge } : {}) });
       switch (action) {
         case 'repo.inject.list':
           return ok(res, { repoUuid: params.uuid, mode: RI.modeFor(repo), approval: !!repo.nexusSelf, injects: RI.list(params.uuid, { status: query.status || null }) });
@@ -6856,7 +6856,8 @@ async function handle(req, res, route, query, body) {
           }
         case 'repo.inject.revert': {
           if (!owned()) return err(res, 404, `inject not found in this repo: ${params.id}`);
-          const r = RI.revert(params.id, { layer, force: !!body.force });
+          // §FR3 0.60.117 — undo keeps later edits (a three-way merge) unless the caller says merge: false
+          const r = RI.revert(params.id, { layer, force: !!body.force, merge: body.merge !== false });
           if (r.ok) os.emit('idearium.repo.inject.reverted', { repoUuid: params.uuid, inject: params.id, path: r.inject.path });
           if (r.ok && r.gate) {
             os.emit('idearium.nexus-self.rollback', { system: r.gate.system, applyId: r.inject.applyId, snapshot: r.gate.snapshot, inject: params.id });

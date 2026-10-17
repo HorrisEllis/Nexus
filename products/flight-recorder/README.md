@@ -34,6 +34,6 @@ The phases are in `docs/2026-10-16-repo-carve-phasemap.spec`.
 |---|---|---|
 | FR1 | one record per change (`lib/change-record.js`) | built 0.60.114 |
 | FR2 | tested before it lands (`lib/proposal-evidence.js` gatherBatch, `lib/code-edit.js` promoteTested) | built 0.60.115 |
-| FR3 | undo any change, keeping later edits | mapped |
+| FR3 | undo any change, keeping later edits (`versionium/lib/merge3.js`, `repo-inject` revert merge) | built 0.60.117 |
 | FR4 | stands alone: its own install, start, record and undo | mapped |
 | FR5 | the demo: the refactor tool on a real repo, recorded end to end | mapped |

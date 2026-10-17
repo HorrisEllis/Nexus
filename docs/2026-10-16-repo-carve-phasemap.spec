@@ -165,7 +165,7 @@ phases:
       promote only when they pass; the result is part of the record. promote already rolls back all-or-nothing.
     proof: "a change that breaks a test is staged, tested, refused, and the repo is unchanged; one that passes lands"
   FR3_undo_any_change:
-    status: OPEN
+    status: "BUILT 0.60.117 — test-undo-any-change 6/6 (UN-06 the Undo button in Clear Glass)"
     depends_on: [FR1_one_record_per_change]
     james: '"Next and Merge." (2026-10-17)'
     found:

@@ -21,7 +21,7 @@
 // Nothing here stores anything; every number is read from a route.
 // ════════════════════════════════════════════════════════════════════════════
 
-const CX = { filter: '', editing: false, draft: null, panel: 'activity', runs: null, runsError: null, resp: null, respError: null, openRuns: new Set(), work: null, workError: null, workFor: null, changes: null, changesError: null, changeOpen: null, change: null };
+const CX = { filter: '', editing: false, draft: null, panel: 'activity', runs: null, runsError: null, resp: null, respError: null, openRuns: new Set(), work: null, workError: null, workFor: null, changes: null, changesError: null, changeOpen: null, change: null, changeMsg: null };
 try { const v = localStorage.getItem('idearium.cs.panel'); if (v) CX.panel = v; } catch (_) {}
 
 // ── CE6: the tree's actions ──────────────────────────────────────────────────────────────────────────
@@ -179,6 +179,17 @@ async function cxChangesLoad(repo) {
   catch (e) { CX.changes = []; CX.changesError = (e.data && e.data.error) || e.message; }
   if (CX.panel === 'changes') _cxPaintPanel();
 }
+// §FR3 0.60.117 — Undo from the record: the change's own lines are reversed and every later edit kept; a clash says which lines
+async function cxChangeUndo(id, reject = false) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  if (!reject && typeof confirm === 'function' && !confirm('Undo this change? What was there before it is put back; later edits are kept.')) return;
+  try {
+    const r = await api(`/api/repos/${repo.uuid}/injects/${encodeURIComponent(id)}/${reject ? 'reject' : 'revert'}`, { method: 'POST', body: JSON.stringify({}) }, 30000);
+    CX.changeMsg = { id, bad: false, text: reject ? 'rejected' : (r.merged ? 'undone — the later edits were kept' : 'undone') };
+  } catch (e) { CX.changeMsg = { id, bad: true, text: (e.data && e.data.error) || e.message }; }
+  await cxChangesLoad(repo);
+  if (CX.changeOpen === id) cxChangeOpen(id);
+}
 async function cxChangeOpen(id) {
   const repo = CURRENT_API_REPO; if (!repo) return;
   CX.changeOpen = id; CX.change = null;
@@ -193,11 +204,14 @@ function _cxChanges() {
   if (!list.length) return '<div class="cs-empty">no changes yet: each file an agent writes shows here, with who, why, what was checked and its undo</div>';
   const rows = list.map(c => {
     const open = CX.changeOpen === c.id;
-    const det = open ? `<div class="cx-change-detail">${CX.change ? (CX.change.lines || []).map(l => `<div class="${/^missing/.test(l) ? 'cs-bad' : ''}">${escapeHtml(l)}</div>`).join('') : '<div class="cs-dim">reading…</div>'}</div>` : '';
+    const act = c.status === 'applied' ? `<button class="tb-btn cx-change-undo" onclick="event.stopPropagation();cxChangeUndo('${escapeHtml(c.id)}')">Undo</button>`
+      : (c.status === 'proposed' || c.status === 'staged') ? `<button class="tb-btn cx-change-undo" onclick="event.stopPropagation();cxChangeUndo('${escapeHtml(c.id)}', true)">Reject</button>` : '';
+    const msg = CX.changeMsg && CX.changeMsg.id === c.id ? `<div class="${CX.changeMsg.bad ? 'cs-bad' : 'cs-dim'}">${escapeHtml(CX.changeMsg.text)}</div>` : '';
+    const det = open ? `<div class="cx-change-detail">${CX.change ? (CX.change.lines || []).map(l => `<div class="${/^missing/.test(l) ? 'cs-bad' : ''}">${escapeHtml(l)}</div>`).join('') : '<div class="cs-dim">reading…</div>'}${act}</div>` : '';
     return `<div class="cx-change${open ? ' cx-change-open' : ''}" data-id="${escapeHtml(c.id)}" onclick="cxChangeOpen('${escapeHtml(c.id)}')">
       <div><span class="cx-change-st cx-st-${escapeHtml(c.status)}">${escapeHtml(c.status)}</span> <code>${escapeHtml(c.path)}</code>${c.lines ? ` <span class="cs-dim">+${c.lines.added} −${c.lines.removed}</span>` : ''} <span class="cs-dim">${escapeHtml(c.agent || '')}</span></div>
       ${c.goal ? `<div class="cs-dim">${escapeHtml(String(c.goal).slice(0, 140))}${c.runHow && c.runHow !== 'task' ? ` (${escapeHtml(c.runHow)})` : ''}</div>` : ''}
-      <div class="cs-dim">${c.checked ? (c.checked.skipped && !c.checked.testsRan ? `<span class="cs-bad">not tested</span> · ` : `checked ${c.checked.testsRan}/${c.checked.testsLinked}, ${c.checked.regressions} regressed${c.checked.where ? ` in ${c.checked.where === 'nexus' ? "Nexus's tree" : "the repo's tree"}` : ''} · `) : ''}${c.batch ? `batch of ${c.batch.files}: ${c.batch.ran}/${c.batch.linked}, ${c.batch.regressions} regressed · ` : ''}${c.landed.length ? `version ${escapeHtml(c.landed[0])} · ` : ''}${c.undo ? 'can be undone' : 'no undo'}${c.holes.length ? ` · <span class="cs-bad">missing ${escapeHtml(c.holes.join(', '))}</span>` : ''}</div>${det}</div>`;
+      <div class="cs-dim">${c.checked ? (c.checked.skipped && !c.checked.testsRan ? `<span class="cs-bad">not tested</span> · ` : `checked ${c.checked.testsRan}/${c.checked.testsLinked}, ${c.checked.regressions} regressed${c.checked.where ? ` in ${c.checked.where === 'nexus' ? "Nexus's tree" : "the repo's tree"}` : ''} · `) : ''}${c.batch ? `batch of ${c.batch.files}: ${c.batch.ran}/${c.batch.linked}, ${c.batch.regressions} regressed · ` : ''}${c.landed.length ? `version ${escapeHtml(c.landed[0])} · ` : ''}${c.undo ? 'can be undone' : 'no undo'}${c.holes.length ? ` · <span class="cs-bad">missing ${escapeHtml(c.holes.join(', '))}</span>` : ''}</div>${msg}${det}</div>`;
   }).join('');
   return `<div class="cx-changes">${rows}</div>`;
 }
