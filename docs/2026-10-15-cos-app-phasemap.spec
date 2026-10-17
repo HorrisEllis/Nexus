@@ -265,3 +265,13 @@ addendum_e:
 #   does. The folder is read, never changed. Routes GET/POST /api/my-projects/folder, POST /api/my-projects/folder/import;
 #   commands `projects folder [<dir>]`, `projects import <path…>`; My projects → "Projects folder" in Idearium.
 #   Open: COSA15 — a project's own runs and versions in COS (start, stop, its branches), as Nexus's are.
+#
+# ADDENDUM 2026-10-17 (b) — who brings his projects in
+# Context: the coder's summary of 0.60.139 told him how to point Idearium at D:\Projects and said the scan was tested only on a
+# test folder. James, 2026-10-17: "no. ill import them" · "no with the idearium. make it a feature if you want to do that"
+# - Decided (his): he imports his projects himself, with Idearium. The coder does not import them for him.
+# - The folder scan stays what 0.60.139 built: a feature of Idearium (My projects → "Projects folder", the routes and commands
+#   above), run by him. Nothing was imported by the coder; the coder has no access to D:\Projects.
+# - Reading, to confirm: "make it a feature if you want to do that" is read as "the folder scan belongs in Idearium as its own
+#   feature, not a one-off the coder runs" — which is how it was built. If he meant something more (a separate feature page,
+#   a watch on the folder), that is open.
