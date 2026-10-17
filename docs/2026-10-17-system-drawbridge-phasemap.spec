@@ -6,7 +6,7 @@ spec:
     release:  "0.60.126 (DB1)"
     uuid:     nexus-system-drawbridge-phasemap-v1-0000-2026-1017-jamesbrooks-001
     owner:    "lib (the census and the drawbridge) · every system with a registry-components.js · orchestrator (the handshake) · loom (the self-model)"
-    status:   "MAPPED 2026-10-17. DB1 BUILT 0.60.126 (the census and the ratchet). DB9/DB10 PARTLY BUILT 0.60.127. DB13 BUILT, DB14 PARTLY BUILT 0.60.128. DB18 BUILT, DB17 census 0.60.129. DB0a-DB0c are his to decide; DB2-DB8 OPEN."
+    status:   "MAPPED 2026-10-17. DB1 BUILT 0.60.126 (the census and the ratchet). DB9/DB10 PARTLY BUILT 0.60.127. DB13 BUILT, DB14 PARTLY BUILT 0.60.128. DB18 BUILT, DB17 census 0.60.129. P33a (sovereign-node P33) BUILT 0.60.130. DB0a-DB0c are his to decide; DB2-DB8 OPEN."
     voice: >-
       The ideas, the direction and the calls are James's. `james:` is his, verbatim. `does:` is the coder's reading, his to
       correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -299,3 +299,60 @@ spec:
       3, intelligence 3, loom 2, others 1 each). They were added to the baseline as seen_late, with that reason; they are not
       new drift. Found because homes() said lib/system-registry.js is used only by cli, while idearium's API uses it."
   build_order_c: [DB17 moves (hooks/ and service/ first: 12 files named per system), DB16, DB15, DB14, DB11]
+
+  # ── ADDENDUM 2026-10-17 (d) — each system reads, writes and manages its nodes; this is phased already ──
+  # James, 2026-10-17: "each system, reads, writes, and manages its nodes. each system has a database for each index of nodes
+  # with all the history. listener, schemas for all the  node types, the database. nodes for all persistant data. look at the
+  # node taxonomy in lib, as a baseline. using nodes as a way to make the system explicit. look at the architecture spec in
+  # idearium.
+  # thats the point of using the component registry as the spine that way its easy to move them around and use it as a map.
+  # look at all of the specs for nodes, each tool, command and route has its events. expand capabilities through the nodes.
+  # all of this and more is phased already."
+  addendum_d:
+    decided:
+      - "Each system reads, writes and manages its own nodes, with a database per node index holding all the history, a
+        listener, and schemas for every node type. All persistent data is nodes. Nodes make the system explicit."
+      - "The registry is the spine BECAUSE it lets components move and serves as the map."
+      - "Each tool, command and route has its events. Capabilities expand through nodes."
+      - "His instruction: this is phased already, so the existing phases are the plan, not this map."
+    owned_by_existing_phases:
+      - "docs/2026-09-11-sovereign-node-architecture-phasemap.spec (addendum 2026-10-10): P33 every system runs its node
+        registry; P36 an event ledger per registry (= DB4 here); P37 the UI floats on the registry (= DB7/DB12); P38 every
+        graph has its route, command and node; P35 Copilot reads, edits and creates nodes; P3 schemas; P8 per-system
+        registry (= DB16); P13 handshake (= DB5)."
+      - "docs/2026-09-29-nex-node-store-phasemap.spec: invariants I0-I9 (everything that persists is a node; one store per
+        system); N6 time/history; N8 one writer per system; N17 data moves to its owning system (= DB17); N24 YAML node types."
+      - "docs/2026-10-05-build-from-the-spec-phasemap.spec: SB20 each system owns its own; SB22 capability → command → events
+        as nodes."
+      - "docs/architecture-spec/architecture-spec.spec addendum 2026-10-10: NODE_SYSTEM, STORE_IS_A_NODE, THE_STACK (UI →
+        contract → registry by module → bus → event ledger per registry → node registry → own store); its census: node
+        registry running in 1 of 16 systems."
+      - "idearium/spec-engine/templates/architecture-spec.template.yaml and cos/archetype/nexus-system: the target shape,
+        built once as a template, used by no existing system."
+      - "NODE-TAXONOMY.md (repo root, not lib/ — the coder's correction of 'in lib'): 39 slots; per-system
+        <system>/spec/<system>.node-taxonomy.md in 13 systems."
+    this_map_from_here: "DB phases that duplicate an owning phase above are carried by it; DB13/DB17/DB18 stay (built here).
+      New work names the owning phase id first."
+    found_d:
+      - "guardian/jaa-store.js is the shared store (cortex, idearium, clear-glass, intelligence, copilot, versionium and cli
+        require it) living inside guardian: a kernel file in one system's folder, the inverse of DB17. 0.60.130 moves it to
+        lib/jaa-store.js, with guardian/jaa-store.js left as a one-line re-export."
+      - "The adapter JaaStore → node-index (query aliased to all) is written three times: intelligence/lib/domain-nodes.js,
+        copilot/lib/inject-config.js, versionium/lib/store.js. lib/node-registry.js holds it once; the three stay until each
+        moves onto it (reported, not removed: §0.3)."
+      - "guardian/lib/node-registry.js, the one live registry, indexes into the CENTRAL cortex store, not guardian's own."
+      - "74 files under */data/node-index are tracked in git with no writer in the tree (an old run's state)."
+  P33_slices:
+    P33a_a_registry_for_any_system:
+      status: "BUILT 0.60.130"
+      does: >-
+        lib/node-registry.js createNodeRegistry({ system }): Guardian's proven per-file logic (parse, type check, schema
+        check, ledger line, index, bus event) as an instance any system can run over <system>/data/nodes, indexed into the
+        system's OWN store <system>/data/node-index (lib/jaa-store.js): a nodes_<type> table per index and a
+        nodes_<type>_ledger with all the history. scan() indexes now; start() adds the listener (fs.watch per type folder).
+        lib/system-nodes.js sync() scans each system it writes into that system's own store (not guardian, which runs its
+        own registry). GET /api/system/nodes/:system[?type&id], `system nodes <system> [<type> [<id>]]`.
+    P33b_each_system_runs_its_listener:
+      status: OPEN
+      does: "Each system's own server starts its registry's listener at boot, so the system manages its nodes in its own
+        process (sovereign). Guardian moves onto the factory, indexed into guardian's own store."

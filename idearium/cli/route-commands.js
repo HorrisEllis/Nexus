@@ -325,6 +325,15 @@ export const SPEC = [
     } },
   // 0.60.20 — lean mode, the same switch as Idearium → Settings → Routing (every agent has it through nexus.command)
   // 0.60.126 DB1 — the crossings between systems: what the drawbridge must become the only way for (docs/2026-10-17-system-drawbridge-phasemap.spec)
+  // 0.60.130 P33a — a system's own node database: each index with all its history
+  { key: 'system.nodes', repo: false, usage: 'system nodes <system> [<type> [<id>]]', about: 'a system\'s own node database (<system>/data/node-index): each node type with its files, its index and its history; with a type, its nodes; with an id, that node and every change it went through',
+    req: (a) => ({ method: 'GET', path: `/api/system/nodes/${encodeURIComponent(a.args[0] || '')}${a.args[1] ? `?type=${encodeURIComponent(a.args[1])}${a.args[2] ? `&id=${encodeURIComponent(a.args[2])}` : ''}` : ''}` }),
+    print: (d, a, h) => {
+      if (d.history) { console.log(`  ${d.system} · ${d.type}/${d.id} ${d.node ? '' : h.c.amber('(not in the index)')}`); for (const x of d.history) console.log(`  ${new Date(x.ts).toLocaleString()}  ${x.action}`); return; }
+      if (d.nodes) { for (const n of d.nodes) console.log(`  ${n.id}  ${h.c.dim(n.summary || '')}`); console.log(h.c.dim(`  ${d.nodes.length} ${d.type} node(s) in ${d.system}'s index`)); return; }
+      console.log(`  ${d.system} · nodes ${d.nodesDir} · database ${d.store || h.c.amber('none yet')}`); if (d.said) console.log(h.c.amber(`  ${d.said}`));
+      for (const [t, v] of Object.entries(d.types || {})) console.log(`  ${t.padEnd(18)} ${String(v.files).padStart(5)} files · ${String(v.indexed).padStart(5)} indexed · ${String(v.history).padStart(6)} history ${v.files !== v.indexed ? h.c.amber('· not all indexed') : ''}`);
+    } },
   // 0.60.129 DB17 — "all system relevant files should stay with the system": which files in lib/, hooks/, service/ … belong to one system
   { key: 'system.homes', repo: false, usage: 'system homes [<system>]', about: 'files in the shared folders (lib/, hooks/, service/, contracts/ …) that belong to one system: used only by it, or named for it in hooks/ and service/. A census: nothing moves',
     req: (a) => ({ method: 'GET', path: `/api/system/homes${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
