@@ -174,3 +174,13 @@ related:
 # faults only, not bad code; (4) the cause of "terrible code" is not known: no bad output has been read. Next step agreed as the
 # coder's proposal, his to confirm: read 3-5 real bad outputs from his machine, classify why each is bad, pick one fix, measure
 # retry success; no new maps until something works end to end. TF1 stays on the branch, unreleased, until then.
+# ## ADDENDUM 2026-10-17 (c) — his decision after his mentor's review: stateless dropped; Nexus holds the complexity
+# James: "I talked to my mentor. He told me the good, bad and ugly. Too personal, too big. But very impressive that it runs at
+# 400000 lines. And the ideas are solid. Stateless was an idea but I don't understand it, lignore it. Need nexus to hold as
+# much of the complexity as possible, and let the right agent for the job, be in charge."
+# His decisions, recorded as his: (1) "stateless" is dropped as a goal (this map's stateless framing is superseded; the pieces,
+# their checks and the restart re-check stay as mapped, they do not depend on it); (2) Nexus holds as much of the complexity
+# as possible (the gate keeps the context, the plan, the checks, the history: GW1/GW2/GW24, the run state, the contract);
+# (3) the right agent for the job is in charge of the job (routing: RAID chooses, docs/2026-10-09-one-model-engine-phasemap.spec
+# ME5, one chooser). His mentor's review, as he reported it: too personal, too big; impressive that it runs at ~400,000 lines
+# (the Code tab's index counted 400,954 lines in his screenshot of 2026-10-16); the ideas are solid.
