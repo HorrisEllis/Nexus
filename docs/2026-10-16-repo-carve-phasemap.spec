@@ -41,6 +41,15 @@ found:
     nexus_parent: "the repo whose nexusSelf.role is 'parent' (lib/nexus-self) is Nexus in Idearium"
 
 decisions:
+  question_a_repo_to_track_it_all:
+    date: 2026-10-17
+    james: '"In clearglass I was thinking of using a repo to keep track of it all. What do you think?"'
+    reading: >-
+      The coder's reading (to confirm): an Idearium repo, opened in Clear Glass, as the flight recorder's home for
+      tracking — its phases, notes, decisions and each release's branched copy as a version — while the code stays built in
+      Nexus (his 2026-10-17 decision). The coder's view: yes, and it can be the first real user of the product (the repo's
+      own changes recorded, tested and undoable); the one rule is that code is edited in Nexus, not in that repo, or the two
+      fork. Not decided.
   decision_where_the_product_is_built:
     date: 2026-10-17
     james: '"Okay so where is the product being made? Or are we building the capability first, then branching?" · then: "I agree, with the recommendation"'
@@ -183,12 +192,27 @@ phases:
       edits"). The revert route opts in (body.merge, default on); the changes panel gets Undo; `repo undo <repo> <id>`.
     proof: "three changes to one file, the middle one undone: the first and third kept, all three in the history; a later change on the same lines refuses with the region"
   FR4_stands_alone:
-    status: MAPPED
-    depends_on: [CV2_untangle_with_rf0]
+    status: "PARTLY BUILT 0.60.118 — FR4a built (test-flight-recorder-standalone 6/6, run from a carved copy); FR4b (server and page) open"
+    found_while_building:
+      - "a short-lived command ends with process.exit(), which guardian/jaa-store.js's signal flush never sees: versions and activity were buffered and lost — jaa-store now exports flushAllStores(), the command calls it"
+      - "evidence read the file as it was through a layer remembered only in the process that proposed the change; in another process (the command, Idearium after a restart) the base was null and every test read as 'fixed' — attachEvidence/evidenceNow take a layer"
+      - "the product's own code loaded Nexus files through a computed path, which the branch tool cannot follow: the first carved copy lacked lib/repo-activity.js (FS-02). The product now uses plain relative requires"
+      - "a later edit on the line right after the undone one is a clash (as in git's merge): said with the lines, not merged"
+
+    depends_on: [CV2_untangle_with_rf0, PB1_the_product_boundary]
+    james: '"Okay. Keep going." (2026-10-17)'
+    found:
+      # read in code, 2026-10-17
+      stores: "every store the product uses is placed by an env var read at load: NEXUS_INJECT_DIR (changes), JAA_DATA_DIR (activity, settings), RUN_STATE_DIR (runs), VERSIONIUM_DATA_DIR (versions and file blobs) — so a standalone tool points them all into the project before it loads anything"
+      versions_in_process: "versionium/lib/engine.js commit() and versionium/lib/files.js plan()/record() work without the Versionium server; a repo snapshot is a commit with system 'idearium.repo' and state.repository, then record() attaches the files (deltas)"
+      layer: "the changes code takes a repo layer (readTextFile, writeTextFile, deleteTextFile, refresh); over a plain folder that is a few lines (the tests already use one)"
     does: >-
-      The carved repo runs as its own thing: Versionium's server and one small API/CLI over FR1-FR3, its own package.json,
-      no Nexus checkout needed. CV2b already proves it loads; this proves it runs.
-    proof: "a fresh folder: npm install, start, record a change, undo it"
+      FR4a — products/flight-recorder/bin/flight-recorder.js: a command over any project folder, state in
+      <project>/.flight-recorder/ (changes, versions, activity, runs). init · propose <path> (--from <file> or stdin, --agent)
+      · list · show <id> (the FR1 record) · test <id> (FR2 evidence in the project) · apply <id> · undo <id> (FR3, keeping
+      later edits) · versions. Every apply and undo is a version (versionium in-process). No Idearium, no server, no Nexus
+      checkout: it runs from a carved copy. FR4b (open) — a small server and page over the same commands.
+    proof: "carve the product into an empty folder; from there, on a fixture project: propose, test, apply, show (with its version), a second change, undo the first keeping the second, versions"
   FR5_the_demo:
     status: MAPPED
     depends_on: [FR2_tested_before_it_lands, FR3_undo_any_change]

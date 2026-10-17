@@ -46,6 +46,18 @@ const FILES = [
     I('nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
   ]],
   // 0.60.94 FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." No model.
+  // §FR4a 0.60.118 — the flight recorder on its own (products/flight-recorder)
+  ['products/flight-recorder/bin/flight-recorder.js', I('products/flight-recorder/bin/flight-recorder.js'), [
+    I('products/flight-recorder/lib/project.js'), I('products/flight-recorder/lib/versions.js'),
+    I('lib/run-state.js'), I('lib/repo-activity.js'), I('lib/activity-log/compartment.js'),   // require (lazy) — --why, show
+  ]],
+  ['products/flight-recorder/lib/project.js', I('products/flight-recorder/lib/project.js'), [
+    I('lib/repo-inject.js'), I('lib/code-edit.js'), I('lib/change-record.js'), I('lib/proposal-evidence.js'), I('lib/repo-versions.js'),
+    I('guardian/jaa-store.js'),                                   // require — flushAllStores before the command exits
+  ]],
+  ['products/flight-recorder/lib/versions.js', I('products/flight-recorder/lib/versions.js'), [
+    I('versionium/lib/engine.js'), I('versionium/lib/files.js'), I('versionium/lib/store.js'),   // in-process versions
+  ]],
   // §FR3 0.60.117 — undo any change, keeping later edits
   ['versionium/lib/merge3.js', I('versionium/lib/merge3.js'), [
     I('versionium/lib/text-diff.js'),                         // require — MAX_LCS_CELLS, the same size limit
