@@ -45,7 +45,7 @@ const { sigma, mean }    = require('../intelligence/baseline');
 // actually being declared. This diagnostic makes that check periodic and
 // automatic instead of something someone has to think to run by hand.
 const { LoomDriver } = require('../loom/schema/index.js');
-const WireIntegrity = require('./wire-integrity');
+const WireIntegrity = require('./lib/wire-integrity');
 // ── Meta layer: telemetry codec replaces hand-rolled stats where available ────
 let _metaTelemetry = null;
 function _getMetaTel() {
@@ -106,7 +106,7 @@ function _getDiagEngines() {
 
 const ROOT    = path.join(__dirname, '..');
 
-const PORT    = 7825;
+const PORT    = require('./config.js').load().port;   // §0.60.138 genesis: diagnostic.config.json, DIAGNOSTIC_PORT over it (was the literal 7825)
 const PID_FILE = path.join(ROOT, 'data/diagnostic/diagnostic.pid');
 
 function uid() { return crypto.randomUUID(); }
@@ -365,7 +365,7 @@ function startService() {
   // is a gap naming the system and its last beat. A system that announces itself and is not in SYSTEMS is adopted —
   // watched from its first beat, with no file edited. SYSTEMS keeps only what the registry cannot say (a data dir
   // that is not data/<id>, a name that pulses under another: pulseAs).
-  const PW = require('../lib/pulse-watch.js');
+  const PW = require('./lib/pulse-watch.js');
   const _pulseAs = (name) => (SYSTEMS[name] && SYSTEMS[name].pulseAs) || name;
   const _aliasOf = new Map(Object.entries(SYSTEMS).filter(([, c]) => c.pulseAs).map(([n, c]) => [c.pulseAs, n]));
   function _adopt(id, port) {
@@ -1264,7 +1264,7 @@ function startService() {
         // findable without being noise.
         let contract = null;
         try {
-          contract = require('../lib/diagnostic-contract').create({
+          contract = require('./lib/diagnostic-contract').create({
             gapUuid: gap.uuid, gapType: gap.type, system: gap.system || null,
             tags: ['diagnostic.escalation', raidDecision.agent],
             detail: `escalated gap, severity ${gap.severity || 'unspecified'}`,
@@ -1313,7 +1313,7 @@ function startService() {
               try {
                 const d = JSON.parse(b);
                 if (contract?.uuid && d.jobId) {
-                  try { require('../lib/diagnostic-contract').dispatched(contract.uuid, { agent: raidDecision.agent, jobId: d.jobId }); } catch (_) {}
+                  try { require('./lib/diagnostic-contract').dispatched(contract.uuid, { agent: raidDecision.agent, jobId: d.jobId }); } catch (_) {}
                 }
                 resolve(d.jobId || d.ok);
               } catch { resolve(false); }

@@ -334,6 +334,14 @@ export const SPEC = [
       if (d.compartments) { d.compartments.forEach(one); console.log(h.c.dim(`  ready to move in: ${(d.ready || []).join(', ') || '—'}`)); return; }
       one(d); for (const c of [...d.cos.intent.endState, ...d.cos.intent.conditions]) console.log(h.c.dim(`    ${c.says}`)); for (const m of d.mounts) console.log(h.c.dim(`    mount ${m.mode} ${m.path} — ${m.why}`));
     } },
+  // 0.60.138 — "the diagnostic needs to be a real system matching genasis": does each system match genesis, role by role
+  { key: 'system.shape', repo: false, usage: 'system shape [<system>]', about: 'does each system match genesis (the skeleton cos/archetype/nexus-system): every role — entry, cli, config, compartment, registry, contract, events, schemas, spec, node taxonomy, handshake, tests, its nodes — filled by its own file or by the kernel (store, node index, listener, heartbeat, boundary), or missing',
+    req: (a) => ({ method: 'GET', path: `/api/system/shape${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
+    print: (d, a, h) => {
+      if (d.roles) { console.log(`  ${d.system} · ${d.matches ? h.c.mint('matches genesis') : h.c.amber(`missing ${d.missing.length}`)} · ${d.own} own · ${d.kernel} from the kernel`); for (const r of d.roles) console.log(`  ${(r.status === 'missing' ? h.c.amber : r.status === 'own' ? h.c.mint : h.c.dim)(r.status.padEnd(8))} ${r.role.padEnd(14)} ${h.c.dim(r.file || r.want || '')}`); return; }
+      for (const s of d.systems || []) console.log(`  ${(s.matches ? h.c.mint('matches  ') : h.c.amber('missing ' + s.missing.length))} ${s.system.padEnd(16)} ${h.c.dim(s.missing.join(' '))}`);
+      console.log(h.c.dim(`  matching genesis: ${(d.matches || []).join(', ') || '—'}`));
+    } },
   // 0.60.133 IM1 — "need to get the systems soveriegn again": which systems are, and what stands in each one's way
   { key: 'system.sovereign', repo: false, usage: 'system sovereign [<system>]', about: 'which systems are sovereign (nothing they require is in another system\'s folder; lib/ is the kernel) and, for each that is not, what is in the way: its data kept in cortex\'s store, a shared primitive in another system, or another system\'s capability required as a file',
     req: (a) => ({ method: 'GET', path: `/api/system/sovereign${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),

@@ -147,7 +147,7 @@ const nexusBus       = (() => { try { return require('../nexus/nexus-bus');     
 const nexusQuery     = (() => { try { return require('../nexus/nexus-query');         } catch(e) { return null; } })();
 const nexusKnowledge = (() => { try { return require('../nexus/nexus-knowledge');     } catch(e) { return null; } })();
 const nexusCFR       = (() => { try { return require('../nexus/nexus-cfr-influence'); } catch(e) { return null; } })();
-const nexusHealLoop  = (() => { try { return require('../diagnostic/nexus-heal-loop');     } catch(e) { return null; } })();
+const nexusHealLoop  = (() => { try { return require('../diagnostic/lib/heal-loop');     } catch(e) { return null; } })();
 try { ({ spawn: spawnChild } = require('child_process')); } catch(e) { spawnChild = null; }
 
 const PORT    = parseInt(process.env.ORCHESTRATOR_PORT || '9000');

@@ -46,7 +46,7 @@ const AP   = fs.readFileSync(path.join(ROOT, 'nexus', 'autopilot.js'), 'utf8');
   // §PR2 0.39.328 — James: "remove the polling then. need the systems to anounce themselves." The probe-then-registry
   // design these four held (0.39.258–0.39.327) is replaced: the pulse decides, and no system's health path is probed.
   await test('HA-001', 'the diagnostic takes liveness from the pulse (lib/pulse-watch.js, fed by orchestrator\'s /sse)', () => {
-    assert.ok(/require\('\.\.\/lib\/pulse-watch\.js'\)/.test(DIAG), 'the pulse watch');
+    assert.ok(/require\('\.\/lib\/pulse-watch\.js'\)/.test(DIAG), 'the pulse watch (diagnostic/lib/pulse-watch.js since 0.60.138)');
     assert.ok(/http\.get\('http:\/\/127\.0\.0\.1:9000\/sse'/.test(DIAG), 'listens to the beats');
     assert.ok(/const online = PULSE\.isOnline\(_pulseAs\(name\)\)/.test(DIAG), 'online is the pulse');
   });

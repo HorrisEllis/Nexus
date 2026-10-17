@@ -1,0 +1,7 @@
+{
+  "system": "diagnostic",
+  "port": 7825,
+  "heartbeatMs": 30000,
+  "dataDir": "data",
+  "note": "diagnostic's own configuration (genesis: <system>.config.json, read by config.js; the environment wins: DIAGNOSTIC_PORT, DIAGNOSTIC_HEARTBEAT_MS)"
+}

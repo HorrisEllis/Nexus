@@ -20,7 +20,7 @@
  *   state()                              every system: online, lastBeat, interval, open gap
  * A late beat after a gap clears it (recovered). One mechanism, the expectations WARP 2 already has (EM2).
  */
-const { Engine } = require('../warp/core/Engine.js');
+const { Engine } = require('../../warp/core/Engine.js');
 
 const MODULE_ID = 'nexus.lib.pulse-watch';
 const VERSION = '1.0.0';

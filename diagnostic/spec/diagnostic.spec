@@ -107,3 +107,26 @@ spec:
 # after 60 s. A system that announces itself is adopted (SYSTEMS gains it; a baseline monitor; no file edited).
 # SYSTEMS keeps only what the registry cannot say: a data dir not at data/<id>, pulseAs (clear-glass → nexus-wire,
 # forge-shell → orchestrator), optional. GET /pulse shows the watch. Open: PR4 deviation quickens the pulse; PR5 repair.
+
+# ── ADDENDUM 2026-10-17 (0.60.136–0.60.138) — one system with the healer; the genesis shape ───────────────────────
+# James, 2026-10-17: "diagnostic and nexus healer should be one system." · "and the diagnostic needs to be a real system
+# matching genasis."
+# This spec moved here from docs/diagnostic.spec (git mv, history kept): FILES_WITH_THEIR_SYSTEM. Its registry row had said
+# "✗ DRIFTED — describes a registry-components.js and handshake that don't exist in code". Both exist now:
+#   registry-components.js   the healer's 5 rows + the contract's 30 routes (read from interaction-contract.json)
+#   contracts/handshake.js   laid out from the genesis skeleton (cos/archetype/nexus-system/contracts/handshake.js)
+# The rest of genesis's shape, 0.60.138:
+#   server.js                the entry (starts nexus-diagnostic.js's service; autopilot still starts that file directly)
+#   cli.js                   every registry command against its own running service; status/stop/gaps/audit unchanged
+#   config.js + diagnostic.config.json   port 7825 and heartbeat from the file, DIAGNOSTIC_PORT / _HEARTBEAT_MS over it
+#   compartment.json         its COS compartment, nexus-self-diagnostic (entry server.js, health /health)
+#   event-taxonomy.js        its 13 events in ET1 shape, each a real broadcast in nexus-diagnostic.js
+#   spec/diagnostic.spec, spec/diagnostic.node-taxonomy.md, spec/healer.*
+#   lib/                     its components: heal-loop.js (was nexus-heal-loop.js), wire-integrity.js, and pulse-watch.js,
+#                            diagnostic-contract.js (moved from lib/: used only by diagnostic, DB17)
+#   healer/                  the healer (api, cli), served under /healer
+#   tests/                   test-pulse-watch.test.js and shape.test.js
+# The skeleton's node index, listener, store and heartbeat roles are the kernel's (decision D1, by his axioms):
+# lib/node-registry.js, lib/jaa-store.js, lib/system-store.js, lib/system-registry.js heartbeat. `system shape diagnostic`
+# (lib/system-shape.js) checks every role.
+# Not sovereign yet: 10 crossings out (cortex's database 1, capabilities 9 — RAID, CFR, the gap engine, loom's schema).

@@ -1,0 +1,9 @@
+{
+  "name": "diagnostic",
+  "archetype": "nexus-system",
+  "runtimeId": "node",
+  "entry": "server.js",
+  "healthCheck": { "path": "/health", "expectedStatus": 200 },
+  "compartment": "nexus-self-diagnostic",
+  "note": "genesis 1.5.0's compartment.json: the COS compartment it runs in (loom/templates/cos-compartment.js describes it in full: GET /api/compartments/diagnostic on loom)"
+}

@@ -1040,7 +1040,7 @@ spec:
     | `diagnostic-engines.spec` | 1.0.0 | — | not yet checked against live code this pass |
     | `diagnostic-fixes.spec` | 1.0.0 | — | not yet checked against live code this pass |
     | `diagnostic-phase-map.spec` | 1.0.0 | — | not yet checked against live code this pass |
-    | `diagnostic.spec` | 1.0.0 | 2026-06-28 | ✗ DRIFTED — describes a registry-components.js and handshake that don't exist in code. Flagged, not fixed (code gap, not a doc fix). |
+    | `diagnostic/spec/diagnostic.spec` (moved from docs/ 0.60.138) | 1.1.0 + addendum 2026-10-17 | 2026-06-28 | ✓ the registry-components.js and handshake it described exist (0.60.136/0.60.138); diagnostic matches genesis (`system shape diagnostic`). The row before: ✗ DRIFTED — describes a registry-components.js and handshake that don't exist in code. Flagged, not fixed (code gap, not a doc fix). |
     | `emerge.spec` | 1.0.0 | 2026-06-28 | ⚠ PARTIAL — described routes not found in live registry. Mechanical sync only. |
     | `eravos.spec` | 3.0.0 | 2026-06-28 | ✓ written fresh session 3 — no prior spec existed, generated from the live exported module. DELETED 2026-10-16 (0.60.83) with ERAVOS. |
     | `erosmancer.spec` | 1.0.0 | — | not yet checked against live code this pass |

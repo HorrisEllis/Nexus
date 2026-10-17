@@ -35,7 +35,7 @@ async function test(id, name, fn) {
 const hook = (id, component_id, type, direction) => ({ id, component_id, type, direction });
 
 async function main() {
-  const WI = require('../../diagnostic/wire-integrity');
+  const WI = require('../../diagnostic/lib/wire-integrity')   /* 0.60.138 diagnostic/lib */;
 
   // A slice of the real graph from James's log: a test file's require-graph
   // hook, a root file's export, and three named contract hooks.

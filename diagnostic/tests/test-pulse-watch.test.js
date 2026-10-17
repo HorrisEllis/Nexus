@@ -14,7 +14,7 @@
  */
 const assert = require('assert');
 const path = require('path');
-const { createPulseWatch, parseSse } = require(path.join(__dirname, '../../lib/pulse-watch.js'));
+const { createPulseWatch, parseSse } = require(path.join(__dirname, '../lib/pulse-watch.js')   /* 0.60.138: pulse-watch is diagnostic's (diagnostic/lib) */);
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) {

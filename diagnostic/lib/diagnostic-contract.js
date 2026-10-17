@@ -21,14 +21,14 @@
 // service/nexus-diagnostic.js's §23.10 comment for why "diagnose_and_repair"
 // as a job command name has never meant the second half actually runs.
 
-const { jaaDB, uid } = require('../cortex/memory/jaa-db');
+const { jaaDB, uid } = require('../../cortex/memory/jaa-db');
 
 const MODULE_ID = 'diagnostic-contract';
 const VERSION   = '1.0.0';
 
 function _ledger(action, status, contract, detail) {
   try {
-    require('./component-ledger').write({
+    require('../../lib/component-ledger').write({
       system: 'diagnostic', component: 'lib.diagnostic-contract',
       action, status, tags: [contract.gapType, contract.system].filter(Boolean),
       detail, causedBy: contract.gapUuid, contractUuid: contract.uuid,

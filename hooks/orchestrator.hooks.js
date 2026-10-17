@@ -43,7 +43,7 @@ const HOOKS = [
     to: { surface: "orchestrator", layer: 1, port: 9000 },
     config: { path: "/api/nexus/heal", method: "POST" },
     contract: { axioms: ["1.2"], sideEffects: ["classifies gap", "builds repairSpec", "may dispatch to architect"], idempotent: false, methodEnforced: true },
-    references: { files: ["diagnostic/nexus-heal-loop.js", "lib/gap-relay.js"] },
+    references: { files: ["diagnostic/lib/heal-loop.js", "lib/gap-relay.js"] },
     status: "active",
     updatedAt: "2026-07-09T00:00:00Z"
   },

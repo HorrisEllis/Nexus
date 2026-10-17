@@ -91,6 +91,9 @@
   "cos/siso/index.js -> warp/core/Event.js",
   "cos/siso/index.js -> warp/core/Stream.js",
   "cos/siso/index.js -> warp/core/StreamLog.js",
+  "diagnostic/lib/diagnostic-contract.js -> cortex/memory/jaa-db.js",
+  "diagnostic/lib/heal-loop.js -> cortex/core/raid/index.js",
+  "diagnostic/lib/pulse-watch.js -> warp/core/Engine.js",
   "diagnostic/nexus-diagnostic.js -> cortex/healer/index",
   "diagnostic/nexus-diagnostic.js -> cortex/memory/jaa-db.js",
   "diagnostic/nexus-diagnostic.js -> cortex/self-heal/fault-taxonomy.js",
@@ -100,7 +103,6 @@
   "diagnostic/nexus-diagnostic.js -> intelligence/gap/predicate.js",
   "diagnostic/nexus-diagnostic.js -> intelligence/telemetry-codec/index.js",
   "diagnostic/nexus-diagnostic.js -> loom/schema/index.js",
-  "diagnostic/nexus-heal-loop.js -> cortex/core/raid/index.js",
   "emerge/core/history.js -> intelligence/rfr2/identity/index.js",
   "emerge/core/history.js -> intelligence/rfr2/time/index.js",
   "emerge/core/level.js -> intelligence/rfr2/identity/index.js",
@@ -350,7 +352,6 @@
   "lib/diagnostic-causal.js -> intelligence/relational-field.js",
   "lib/diagnostic-causal.js -> intelligence/snapshot-trigger.js",
   "lib/diagnostic-causal.js -> loom/scanners/capability-map.js",
-  "lib/diagnostic-contract.js -> cortex/memory/jaa-db.js",
   "lib/diagnostic-report.js -> cortex/memory/jaa-db.js",
   "lib/diagnostic-report.js -> intelligence/index.js",
   "lib/diagnostic-report.js -> intelligence/rfr2/causality/index.js",
@@ -400,7 +401,6 @@
   "lib/project-container.js -> cos/host/index.js",
   "lib/project-import.config.js -> cortex/memory/jaa-db.js",
   "lib/project-import.config.js -> idearium/lib/config-core.cjs",
-  "lib/pulse-watch.js -> warp/core/Engine.js",
   "lib/reflection.js -> cortex/memory/jaa-db.js",
   "lib/reflection.js -> intelligence/bda/kernel.js",
   "lib/reflection.js -> intelligence/gap/predicate.js",
@@ -517,7 +517,7 @@
   "orchestrator/orchestrator.js -> cortex/memory/table-compactor.js",
   "orchestrator/orchestrator.js -> cortex/memory/table-deduplicator.js",
   "orchestrator/orchestrator.js -> cortex/memory/tiers.js",
-  "orchestrator/orchestrator.js -> diagnostic/nexus-heal-loop.js",
+  "orchestrator/orchestrator.js -> diagnostic/lib/heal-loop.js",
   "orchestrator/orchestrator.js -> guardian/api-dispatch.js",
   "orchestrator/orchestrator.js -> intelligence/cfr/ledger.js",
   "orchestrator/orchestrator.js -> meta/index.js",
@@ -596,6 +596,25 @@
     "nexus-healer/api/index.js -> cortex/memory/jaa-db.js",
     "nexus-healer/api/index.js -> intelligence/rfr2/forge/index.js",
     "versionium/lib/store.js -> guardian/jaa-store.js"
+   ]
+  }
+ ],
+ "renamed": [
+  {
+   "release": "0.60.138",
+   "date": "2026-10-17",
+   "why": "diagnostic to the genesis shape: nexus-heal-loop.js -> lib/heal-loop.js; lib/pulse-watch.js and lib/diagnostic-contract.js (used only by diagnostic, DB17) -> diagnostic/lib/. The same crossings under their new paths; two were lib/ reaching up and are now diagnostic's own.",
+   "from": [
+    "diagnostic/nexus-heal-loop.js -> cortex/core/raid/index.js",
+    "lib/diagnostic-contract.js -> cortex/memory/jaa-db.js",
+    "lib/pulse-watch.js -> warp/core/Engine.js",
+    "orchestrator/orchestrator.js -> diagnostic/nexus-heal-loop.js"
+   ],
+   "to": [
+    "diagnostic/lib/diagnostic-contract.js -> cortex/memory/jaa-db.js",
+    "diagnostic/lib/heal-loop.js -> cortex/core/raid/index.js",
+    "diagnostic/lib/pulse-watch.js -> warp/core/Engine.js",
+    "orchestrator/orchestrator.js -> diagnostic/lib/heal-loop.js"
    ]
   }
  ]

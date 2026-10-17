@@ -52,6 +52,9 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  ['lib/system-shape.js', I('lib/system-shape.js'), []],   // §0.60.138 does a system match genesis, role by role
+  ['diagnostic/cli.js', I('diagnostic/cli.js'), [I('diagnostic/registry-components.js'), I('diagnostic/config.js')]],   // §0.60.138 diagnostic's genesis cli
+  ['diagnostic/server.js', I('diagnostic/server.js'), [I('diagnostic/nexus-diagnostic.js')]],   // §0.60.138 diagnostic's genesis entry
   ['loom/templates/cos-compartment.js', I('loom/templates/cos-compartment.js'), [I('lib/system-registry.js'), I('lib/system-boundary.js'), I('lib/cos-bridge.js')]],   // §0.60.134 the template for each system's COS compartment
   ['lib/system-store.js', I('lib/system-store.js'), [I('lib/jaa-store.js')]],   // §0.60.133 IM6: a system's own database, its tables brought home from cortex's once
   ['lib/node-registry.js', I('lib/node-registry.js'), [I('lib/jaa-store.js'), I('lib/node-index.js'), I('lib/node-export.js'), I('lib/node-schemas.js')]],   // §0.60.130 P33a: any system's node registry into its own store, with the history and the listener
@@ -74,6 +77,8 @@ const CONSUMERS = [
   [I('copilot/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
   [I('loom/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
   [I('clear-glass/src/main/index.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('idearium/api/index.js'),                    I('lib/system-shape.js'), '§0.60.138 GET /api/system/shape'],
+  [I('diagnostic/nexus-diagnostic.js'),           I('diagnostic/config.js'), '§0.60.138 its port from its config'],
   [I('loom/server.js'),                           I('loom/templates/cos-compartment.js'), '§0.60.134 GET /api/compartments[/:system], POST /api/compartments/apply'],
   [I('diagnostic/healer/api/index.js'),           I('lib/system-store.js'), '§0.60.133/0.60.136 healer_proposals in diagnostic\'s own store (was cortex/memory/jaa-db.js, then nexus-healer\'s)'],
   [I('diagnostic/healer/api/index.js'),           I('lib/system-registry.js'), '§0.60.133 the tunnel: where intelligence is, to ask its forge route'],

@@ -30,7 +30,7 @@
 
 const http = require('http');
 const { randomUUID } = require('crypto');
-const nexusConfig = require('../lib/nexus-config');
+const nexusConfig = require('../../lib/nexus-config');
 
 function _healCfg() {
   // config wins; env vars are a fallback only if the config block is absent
@@ -125,7 +125,7 @@ async function _dispatchToGuardian(gap, repairSpec, provider = 'claude') {
   }
   if (live.requireRaidApproval) {
     let raid;
-    try { raid = require('../cortex/core/raid'); } catch (_) { raid = null; }
+    try { raid = require('../../cortex/core/raid'); } catch (_) { raid = null; }
     if (raid && typeof raid._decide === 'function') {
       const decision = raid._decide(
         { intent: repairSpec.intent || repairSpec.name, preferredAgent: provider },
