@@ -52,7 +52,7 @@ spec:
           lib -> cos 82) is then a defect: those modules belong to the system they reach into, or the call goes through the
           drawbridge."
         - "system: everything crosses the drawbridge, lib/ included. 1,547 calls to move, most of them for no gain."
-      status: OPEN
+      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D1: lib/ is the kernel, mounted read-only (§5.9, §0.5, §10.1, §5.14); see docs/2026-10-17-decisions-by-the-axioms.spec"
     DB0b_in_process_or_http:
       question: "When two systems run in the same process, does a crossing go over HTTP (the API route) or in-process through
         the same contract?"
@@ -62,7 +62,7 @@ spec:
           the record are the same either way; only the hop differs. HTTP for everything adds a network hop to calls made
           thousands of times a run."
         - "HTTP always: the API route is the only door, as he said ('using the api routes, and cli interface')."
-      status: OPEN
+      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D2: routes and CLI between systems, in-process within one; one contract (§5.10, §5.11, §5.14); see docs/2026-10-17-decisions-by-the-axioms.spec"
       pushback: "His words name the API routes and the CLI as the way. The coder reads that as 'the contract IS the routes and
         commands', not 'every call must be an HTTP request'. To confirm."
     DB0c_how_it_is_enforced:
@@ -73,7 +73,7 @@ spec:
           contracts/event-contract-baseline.json already uses for events."
         - "observe only: count and show, enforce later."
         - "refuse now: any crossing outside the drawbridge throws. Breaks Nexus today."
-      status: OPEN (the ratchet is built because it observes and stops new drift without changing any call; he can turn it off)
+      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D3: the ratchet (§0.4, §1.2, §3.1); see docs/2026-10-17-decisions-by-the-axioms.spec"
 
   # ── Phases, bottom-up ───────────────────────────────────────────────────────
   phases:

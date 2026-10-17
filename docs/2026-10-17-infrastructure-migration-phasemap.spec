@@ -61,18 +61,18 @@ spec:
       options:
         - "untrack all data/** (coder's recommendation): his rule 'NEVER commit data/**' as written; the nodes regenerate at boot (lib/system-nodes.js) and the databases are each system's own."
         - "keep data/nodes tracked (they are declarations: capability, command, system), untrack the rest (indexes, ledgers, stores)."
-      status: OPEN
+      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D4: projections untracked in IM2; other data only after a backup outside git (§10.2, §0.3, §2.2); see docs/2026-10-17-decisions-by-the-axioms.spec"
     IM0b_root_files:
       question: "336 CHANGELOGs at the repo root: move them to docs/changelogs/ (scripts/release-zip.js and the release workflow read CHANGELOG-<version>.md at the root and would follow), or keep them where they are?"
       options: ["move, the release reads the new place (coder's recommendation)", "keep at the root"]
-      status: OPEN
+      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D5: to docs/changelogs/, the release reads both (FILES_WITH_THEIR_SYSTEM, §0.3, §0.5); see docs/2026-10-17-decisions-by-the-axioms.spec"
     IM0c_tests_with_their_system:
       question: "The template gives each system its own tests/. Move each system's tests into it (tests/modules/run-all.js runs them where they are), or keep the one central folder?"
       options: ["with their system, as the template says — follows FILES_WITH_THEIR_SYSTEM (coder's recommendation)", "central, as today"]
-      status: OPEN
+      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D6: with their system as it migrates; contract tests stay central (§5.9, §4.1); see docs/2026-10-17-decisions-by-the-axioms.spec"
     IM0d_lib_is_the_kernel:
       question: "DB0a, again, because the migration depends on it: lib/ is the shared kernel mounted into every compartment (coder's recommendation), or a system behind routes?"
-      status: OPEN (docs/2026-10-17-system-drawbridge-phasemap.spec DB0a)
+      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D1: the kernel; see docs/2026-10-17-decisions-by-the-axioms.spec"
 
   # ── Phases, bottom-up ───────────────────────────────────────────────────────
   phases:
@@ -142,7 +142,7 @@ spec:
   decisions_added:
     IM0e_what_is_a_primitive:
       question: "Which building blocks are the kernel's (every system uses them) rather than one system's capability? The coder's list: nexus/nexus-bus.js, nexus/nexus-connect.js, warp/core/*, warp/index.js, siso/*, hooks/index.js. RAID, CFR, RFR2, gap and baseline are read as capabilities (cortex's, intelligence's), reached through their routes."
-      status: OPEN
+      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D7: no state, no lifecycle, no data type owned = primitive (§5.9, §10.1, §5.1, §8.3); see docs/2026-10-17-decisions-by-the-axioms.spec"
   # ── ADDENDUM 2026-10-17 (b) — the compartment template ─────────────────────
   # James, 2026-10-17: "and you know i mean cos compartment right? make a template for it now that loom holds"
   # IM5's gate is now physical: loom/templates/cos-compartment.js (0.60.134) gives each system's compartment a seal that is

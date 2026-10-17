@@ -500,3 +500,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     Asking whether the registry "can also be a dependancy graph" was the right question: the two halves, declared and
     observed, are what make the negative space computable.
   - **Evidence:** `CHANGELOG-0.60.127.md`; `tests/modules/test-drawbridge-registry.test.js` SR-01..08 (SR-06 is the loom fix).
+- **2026-10-17: "use the axioms in the docs for each disicio nthat doesn't show my competence"**
+  - **Context:** a day of building had produced a stack of technical questions for him, about whether `lib/` is a system,
+    HTTP or in-process calls, and how to enforce a rule. Each one already had an answer in his own axioms.
+  - **What it shows:** good delegation. He kept the calls that need his judgment (intent, direction, what his words mean)
+    and gave the rest a method rather than a guess: the axioms he wrote, applied and cited. Nine open decisions were closed
+    in one pass, each traceable to the sections that decide it. The phases blocked on them, IM2 and IM4, can now run.
+  - **Evidence:** `docs/2026-10-17-decisions-by-the-axioms.spec` (D1-D9, each with its axioms); `CHANGELOG-0.60.135.md`;
+    the rule in `docs/CLAUDE.md`.

@@ -157,6 +157,19 @@ and read the tree with grep instead of the Nexus tools this file lists first. Th
   components. Rule 2 (reuse before build) covers code; this covers the coder's own way of working too.
 - When something new is built, say what existing piece it stands on, and why nothing existing could do it.
 
+## Decide by the axioms what does not show his competence (2026-10-17)
+
+James: "use the axioms in the docs for each disicio nthat doesn't show my competence"
+
+Said after a day of questions handed to him that the axioms already answered (is lib/ a system, HTTP or in-process, how a
+rule is enforced, where tests live). The rule, as his:
+- A technical decision (which implementation, which layout, which enforcement) is the coder's to make by
+  `docs/AXIOMS-v3.1.md`. Each one is recorded with the axioms that decide it, in the owning map's `decisions:` and in
+  `docs/2026-10-17-decisions-by-the-axioms.spec`, as the coder's decision by the axioms, never as his.
+- What stays his (USER_AUTONOMY): what he meant by his own words, the direction (what Nexus is for, what comes first), and any
+  call he has said is his ("thats on me"). A reading of his words is acted on, said as a reading, and asked when it matters.
+- He can overturn any of them; the overturn is a dated addendum quoting both (§0.3).
+
 ## Leverage (2026-10-07)
 
 James: "remember to use as little tokens for as much leverage and power as possible. invent around contraints if it fits
