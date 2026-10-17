@@ -184,3 +184,64 @@ addendum_b:
     - "A bigger table: size cap, node references for large results, and a retention decision (TB0): the recommendation is to keep, because they are the proof and the reuse source."
   build_order_change: "TB2 -> TB3a -> TB4a -> TB4b -> TB4c first (backend, token savings from day one, no screen needed; the CLI shows hit/miss counts), then TB7a/TB7b (edges, every step), then the tab shell and the Runs tab. This reverses the earlier order (screens before reuse) because he named cost."
   question: "Start with TB2 (the audit of what is saved where, as a table) and TB3a/TB4a (record every tool call with its arguments and result, then recall exact repeats first for the read-only code tools)? That touches the one dispatcher every tool uses, so it ships behind a setting and with the tests above."
+
+# ADDENDUM 2026-10-17 (c): the dock — separate panels on the right edge, each its own tab, open all of them or none
+addendum_c:
+  james: >-
+    "i want the code tab better. like you have on the right. outputs for proposals and artifacts. changes  for the
+    worksurface and workspace. background tasks for anything else running in the repo. i want the panels completely
+    seperate from each other, collapasable, organized and updated in real time. maybe buttons for agent tools, for the repo,
+    to execute. replayable proceedures? i love the context panel they need to be sperated panels though, bot just a space,
+    but tabs on the collapsable panels. like how you click the tab on the right of the screen. i want to eb able to open all
+    of them, or none of them."
+  context: >-
+    Said looking at the Code tab after 0.60.107 (the Plan panel as Progress · Plan · Context cards, opened by the PLAN tab on
+    the right edge of the screen). "like you have on the right" read as that edge tab. His decisions, recorded as his: each
+    panel is its own panel with its own edge tab; any number open at once, all or none; collapsible; real time; panels:
+    outputs (proposals + artifacts), changes (work surface + workspace), background tasks, context, agent tools with
+    replayable procedures.
+  reading: >-
+    The coder's reading, to confirm: (1) the dock holds the panels as a column on the right; each open panel is a section with
+    a header (collapse, close) and the column scrolls; the edge rail keeps a tab per panel, lit when open. (2) The Plan panel
+    keeps its own floating window and tab; Context, which was a card inside it, is also its own dock panel (the card stays,
+    §0.3). (3) "artifacts" = the code blocks Guardian's artifact store saved from replies (GET guardian /artifacts), shown
+    beside the repo's proposals. (4) "workspace" = the repo's file states against its last version (uncommitted), next to the
+    work surface (the agent's proposals and staged changes) and the change records (FR1). (5) Which panels are open is a
+    per-browser view preference (localStorage), the one thing the rule allows there; procedures are files.
+  grounded:
+    - "the edge tab: idearium/ui/js/plan-panel.js planTabSync (#plan-tab, fixed right, vertical label, live dot)"
+    - "proposals: GET /api/repos/:uuid/worksurface (work-surface.js _wsCard: diff, Apply / Reject)"
+    - "file states: GET /api/repos/:uuid/files/state (file-manage.js); change records: GET /api/repos/:uuid/changes (FR1)"
+    - "tasks: GET /api/repos/:uuid/tasks + SSE idearium.repo.task (repo-tasks.js rtIn, _rtTree, _rtRow)"
+    - "context: plan-panel.js _ppContext(steps) over GET /api/repos/:uuid/plan"
+    - "tools: GET /api/repos/:uuid/agent/tools (lib/repo-agent.js listTools via copilot /api/tools/list); a tool runs through
+      copilot POST /api/tools/run (repo-agent _runTool, scope enforced) — no route lets a person run one from the page yet"
+    - "a run's tool calls: lib/run-state.js steps { name, arg } — arg is JSON cut at 110 chars, so a step whose arg does not
+      parse cannot be replayed exactly; said, never guessed"
+  phase:
+    DK1_procedures_backend:
+      status: 'BUILT 0.60.118 (tests/modules/test-repo-procedures.test.js 7/7; test-code-dock DK-01)'
+      systems: [core, idearium]
+      files: [lib/repo-procedures.js (new), lib/repo-agent.js, idearium/api/index.js, idearium/cli/route-commands.js, tests/modules/test-repo-procedures.test.js (new)]
+      does: >-
+        A procedure is a file: <idearium data>/procedures/<repo>/<id>.procedure (node-export envelope): name, steps [{ tool,
+        args }], made from (a run, or by hand), runs [{ at, ok, results }]. save, list, get, remove (archived, never deleted),
+        fromRun (the run's steps whose arguments are whole; the cut ones named), replay (each step through the one tool door,
+        in order; stops at the first failure and says which). Routes: GET/POST /api/repos/:uuid/procedures, POST
+        .../procedures/:id/replay, POST .../procedures/from-run, POST .../agent/tools/run (one tool, as a person). Command rows:
+        repo tool run, repo procedures, repo procedure save|replay|from-run.
+      proof: "a procedure saved from a run replays its steps in order through an injected tool runner; a failing step stops it and is named; the file survives a reload of the module"
+    DK2_the_dock:
+      status: 'BUILT 0.60.118 (tests/modules/test-code-dock.test.js DK-10..17, driven in Clear Glass)'
+      depends_on: [DK1_procedures_backend]
+      systems: [idearium]
+      files: [idearium/ui/js/code-dock.js (new), idearium/ui/index.html, idearium/ui/js/code-surface.js, idearium/ui/js/repo-tasks.js, tests/modules/test-code-dock.test.js (new)]
+      does: >-
+        The edge rail (under the PLAN tab): one tab per panel (outputs, changes, tasks, context, tools), each with a count or a
+        live dot. A click opens or closes that panel only; 'all' and 'none' at the rail's foot. Open panels stack in the dock
+        column, each with a header (collapse ▾ / ▸, close ×). Real time: tasks from idearium.repo.task, outputs and changes
+        from the inject / file / phase events the Code tab already hears; only open panels repaint. Tools: the repo's tools as
+        buttons grouped by kind, each opening its arguments as JSON and running it; procedures listed with replay, and "save
+        the last run as a procedure".
+      proof: "driven in Clear Glass: open all, close all, open two, collapse one; a task event updates the tasks panel without a fetch; a tool button runs through the route; a procedure replays"
+  question: "Is the dock a column on the right with the panels stacked (my reading), or should each panel float on its own like the Plan window?"

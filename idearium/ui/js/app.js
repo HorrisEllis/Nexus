@@ -181,7 +181,7 @@ function openSSE() {
         // it would bury the event log and trigger refreshes for nothing).
         if (ev && ev.type === 'idearium.repo.agent.feed') { _agentFeedIn(ev.payload || {}); return; }
         // §0.39.366 — a repo's background task changed: to its Tasks panel only (several a second while an agent runs)
-        if (ev && ev.type === 'idearium.repo.task') { if (typeof rtIn === 'function') rtIn(ev.payload || {}); return; }
+        if (ev && ev.type === 'idearium.repo.task') { if (typeof rtIn === 'function') rtIn(ev.payload || {}); if (typeof dockTaskIn === 'function') dockTaskIn(ev.payload || {}); return; }   // §0.60.118 DK2 the dock's tasks panel too
         if (ev && ev.type === 'idearium.repo.activity') { if (typeof rtLogIn === 'function') rtLogIn(ev.payload || {}); return; }   // §0.39.369 AL2
         appendEventLog(ev); refreshOnEvent(ev);
       }
@@ -210,6 +210,7 @@ function refreshOnEvent(ev) {
   if (typeof fileStatesOnEvent === 'function') fileStatesOnEvent(ev);   // §0.39.280 BS8
   if (typeof planPanelOnEvent === 'function') planPanelOnEvent(ev);     // §0.39.280 BS11
   if (typeof codeSurfaceOnEvent === 'function') codeSurfaceOnEvent(ev); // §0.39.351 CT5 — the Code tab follows the Plan
+  if (typeof dockOnEvent === 'function') dockOnEvent(ev);               // §0.60.118 DK2 — the dock's open panels follow
   if (t.startsWith('idea.'))   { loadIdeas(); }
   if (t.startsWith('workbench.') && typeof loadCompartment === 'function') { loadCompartment(); }
   if (t.startsWith('gap.'))    { loadGaps(); }

@@ -156,6 +156,13 @@ const COMPONENTS = [
   _comp('ollama.models',           'GET',   '/api/ollama/models',                     "Ollama's installed models via the ollama bridge (502 with the reason when unreachable) — the Agent tab's model dropdown", { tags: ['agent', 'ollama'] }),
   // 0.39.257 — the Agent tab's /tools, /debug, /graph (lib/repo-agent.js listTools / debugReport, lib/repo-context.js)
   _comp('repo.agent.tools',        'GET',   '/api/repos/:uuid/agent/tools',           "Copilot's tool catalog marked with this compartment's scope (all by default, or project); ?q= search", { tags: ['agent', 'tools'] }),
+  _comp('repo.agent.tools.run',    'POST',  '/api/repos/:uuid/agent/tools/run',       "Run one tool as a person, through the agent's door with this repo's scope (0.60.118 DK1)", { tags: ['agent', 'tools'] }),
+  _comp('repo.artifacts',          'GET',   '/api/repos/:uuid/artifacts',             "Recent code artifacts from Guardian's store, for the Code tab's outputs panel (not yet repo-scoped, said)", { tags: ['agent', 'outputs'] }),
+  _comp('repo.procedures.list',    'GET',   '/api/repos/:uuid/procedures',            "The repo's replayable procedures (.procedure files)", { tags: ['agent', 'tools'] }),
+  _comp('repo.procedures.save',    'POST',  '/api/repos/:uuid/procedures',            "Save tool calls as a procedure { name, steps: [{ tool, args }] }", { tags: ['agent', 'tools'] }),
+  _comp('repo.procedures.fromRun', 'POST',  '/api/repos/:uuid/procedures/from-run',   "A run's tool calls as a procedure; cut arguments named, never guessed", { tags: ['agent', 'tools'] }),
+  _comp('repo.procedures.replay',  'POST',  '/api/repos/:uuid/procedures/:id/replay', "Replay a procedure in order; the first failure stops it and is named", { tags: ['agent', 'tools'] }),
+  _comp('repo.procedures.remove',  'DELETE','/api/repos/:uuid/procedures/:id',        "Archive a procedure (never deleted)", { tags: ['agent', 'tools'] }),
   _comp('repo.agent.debug',        'POST',  '/api/repos/:uuid/agent/debug',           'What is wrong, from the systems: syntax, unresolved imports, recent failures, the intelligence system', { tags: ['agent', 'debug'] }),
   _comp('repo.agent.graph',        'GET',   '/api/repos/:uuid/agent/graph',           'The project map from graph.json, or one file\'s connections (?file=)', { tags: ['agent', 'graph'] }),
   _comp('repo.agent.export',        'POST',  '/api/repos/:uuid/agent/export',       'Materialise this compartment agent as portable .hat + .repo_agent node files', { tags: ['agent'] }),

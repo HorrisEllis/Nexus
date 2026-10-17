@@ -78,6 +78,8 @@ function planTabSync() {
   let t = document.getElementById('plan-tab');
   const panel = document.getElementById('plan-panel');
   const inRepo = typeof CURRENT_API_REPO !== 'undefined' && !!CURRENT_API_REPO && [...document.querySelectorAll('.repo-subtab-btn')].some(b => b.offsetParent !== null);
+  // §0.60.118 DK2 — with the dock on the page, the Plan's tab is the dock rail's first tab (one rail on the right edge, not two)
+  if (typeof dockSync === 'function') { dockSync(); if (t) t.hidden = true; return; }
   const show = inRepo && !(panel && panel.classList.contains('open'));
   if (!show) { if (t) t.hidden = true; return; }
   if (!t) {

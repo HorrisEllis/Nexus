@@ -192,6 +192,10 @@ module.exports = Object.freeze({
   IDEARIUM_REPO_VERSION_RESTORED: { description: 'One file was put back as it was at a version; the write is itself versioned.', payloadShape: ['repoUuid', 'commitId', 'path', 'sha256'], severity: 'info' },
   IDEARIUM_REPO_INTEGRITY_CHECKED: { description: 'The import checks ran on a repo (parses, requires, npm, duplicates, secrets, files arrived); findings are its notes.', payloadShape: ['repoUuid', 'ok', 'failed', 'notes'], severity: 'info' },
   // §CE8 — the Code tab's surface (idearium/lib/surface-state.cjs), set by the tab, the CLI or an agent; the tab follows a change it did not make.
+  // §0.60.118 DK1 — the Code tab's tools panel and procedures (idearium/api/index.js)
+  IDEARIUM_REPO_TOOL_RAN: { description: 'A person ran one tool for a repo from the Code tab (the agent\'s door, the repo\'s scope).', payloadShape: ['repoUuid', 'name', 'ok', 'ms', 'by'], severity: 'info' },
+  IDEARIUM_REPO_PROCEDURE_SAVED: { description: 'A procedure (tool calls kept to replay) was saved for a repo, by hand or from a run.', payloadShape: ['repoUuid', 'id', 'steps', 'fromRun'], severity: 'info' },
+  IDEARIUM_REPO_PROCEDURE_REPLAYED: { description: 'A procedure was replayed in order; stoppedAt names the step that failed.', payloadShape: ['repoUuid', 'id', 'ok', 'steps', 'stoppedAt'], severity: 'info' },
   IDEARIUM_SURFACE_CHANGED: { description: 'The Code tab\'s surface changed: the open file, the picked lines or chunk; by says who (ui, cli, agent).', payloadShape: ['repoUuid', 'open', 'sel', 'chunk', 'by', 'rev'], severity: 'info' },
   // §CE7 / §CV3 0.60.81 — a line-edit set proposed (code.edit, code.assist), and a run rewound
   IDEARIUM_EDIT_PROPOSED: { description: 'A checked line-edit set (from the person, the CLI or the agent working on picked lines) became one proposal: its ranges and the checksums before and after.', payloadShape: ['repoUuid', 'path', 'ranges', 'inject', 'checksumBefore', 'checksumAfter', 'action'], severity: 'info' },

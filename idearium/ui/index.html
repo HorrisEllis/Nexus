@@ -709,6 +709,51 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 #plan-tab .pp-tab-label{writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase;color:var(--text)}
 #plan-tab .pp-tab-n{writing-mode:vertical-rl;transform:rotate(180deg);color:var(--text3);font-weight:400}
 #plan-tab .pp-tab-dot{width:6px;height:6px;border-radius:50%;background:var(--sky);animation:pulse 1.2s ease-in-out infinite}
+/* §0.60.118 DK2 — the dock (idearium/ui/js/code-dock.js): a tab per panel on the right edge, the open ones stacked beside it */
+#dock-rail{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:249;display:flex;flex-direction:column;gap:4px;align-items:stretch}
+#dock-rail[hidden],#dock-col[hidden]{display:none}
+#dock-rail .dk-tab{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 5px 9px 6px;background:var(--nx-card,var(--bg2));border:1px solid var(--nx-rim,rgba(255,255,255,.12));border-right:0;border-radius:8px 0 0 8px;color:var(--text2);font:600 10px var(--mono);letter-spacing:.08em;cursor:pointer;box-shadow:-6px 0 18px rgba(0,0,0,.35);transition:padding-right .15s,color .15s,background .15s}
+#dock-rail .dk-tab:hover{color:var(--text);padding-right:9px}
+#dock-rail .dk-tab.on{color:var(--text);background:var(--nx-card-hi,rgba(59,130,246,.18));border-color:var(--accent,#3b82f6)}
+#dock-rail .dk-l{writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase}
+#dock-rail .dk-n{writing-mode:vertical-rl;transform:rotate(180deg);color:var(--text3);font-weight:400}
+#dock-rail .dk-n.warn{color:var(--amber,#fbbf24)}
+.dk-dot{width:6px;height:6px;border-radius:50%;background:var(--sky,#38bdf8);animation:pulse 1.2s ease-in-out infinite;display:inline-block}
+#dock-rail .dk-foot{display:flex;flex-direction:column;gap:2px;margin-top:4px}
+#dock-rail .dk-all{background:none;border:1px solid var(--nx-rim,rgba(255,255,255,.12));border-right:0;border-radius:6px 0 0 6px;color:var(--text3);font:9px var(--mono);padding:4px 3px;cursor:pointer}
+#dock-rail .dk-all:hover{color:var(--text)}
+#dock-col{position:fixed;top:90px;right:34px;bottom:14px;width:min(420px,46vw);z-index:240;display:flex;flex-direction:column;gap:8px;overflow-y:auto;font-family:var(--mono);padding-right:2px}
+#dock-col .dk-panel{flex:0 0 auto;display:flex;flex-direction:column;max-height:70vh;background:var(--nx-card,var(--bg2));border:1px solid var(--nx-rim,rgba(255,255,255,.12));border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,.45);overflow:hidden}
+#dock-col .dk-panel.folded{max-height:none}
+#dock-col .dk-head{display:flex;align-items:center;gap:6px;padding:7px 9px;border-bottom:1px solid var(--nx-rim,rgba(255,255,255,.08));font-size:11px;color:var(--text)}
+#dock-col .dk-panel.folded .dk-head{border-bottom:0}
+#dock-col .dk-about{color:var(--text3);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#dock-col .dk-grow{flex:1}
+#dock-col .dk-n{color:var(--text3);font-size:10px}#dock-col .dk-n.warn{color:var(--amber,#fbbf24)}
+#dock-col .dk-fold,#dock-col .dk-x{background:none;border:0;color:var(--text3);cursor:pointer;font:12px var(--mono);padding:0 3px}
+#dock-col .dk-fold:hover,#dock-col .dk-x:hover{color:var(--text)}
+#dock-col .dk-body{overflow-y:auto;padding:8px 10px;font-size:11px;color:var(--text2);min-height:40px}
+#dock-col .dk-sec{margin:8px 0 4px;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+#dock-col .dk-sec:first-child{margin-top:0}
+#dock-col .dk-empty{color:var(--text3);font-size:11px;padding:4px 0}
+#dock-col .dk-bad{color:var(--coral,#f87171)}
+#dock-col .dk-dim{color:var(--text3)}
+#dock-col .dk-row{padding:3px 0;border-bottom:1px dashed rgba(255,255,255,.05);word-break:break-all}
+#dock-col .dk-row a{color:var(--text)}
+#dock-col .dk-why{display:inline}
+#dock-col .dk-st{display:inline-block;min-width:58px;font-size:9px;text-transform:uppercase;color:var(--text3)}
+#dock-col .st-modified,#dock-col .st-proposed,#dock-col .st-staged,#dock-col .st-running{color:var(--amber,#fbbf24)}
+#dock-col .st-new,#dock-col .st-applied,#dock-col .st-done,#dock-col .st-committed{color:var(--mint,#34d399)}
+#dock-col .st-deleted,#dock-col .st-rejected,#dock-col .st-failed,#dock-col .st-reverted{color:var(--coral,#f87171)}
+#dock-col .dk-art summary{cursor:pointer;padding:3px 0}#dock-col .dk-art pre,#dock-col .dk-out{max-height:240px;overflow:auto;background:rgba(0,0,0,.25);padding:6px;border-radius:6px;font-size:10px;white-space:pre-wrap}
+#dock-col .dk-btns{display:flex;flex-wrap:wrap;gap:4px}
+#dock-col .dk-tool{background:rgba(255,255,255,.04);border:1px solid var(--nx-rim,rgba(255,255,255,.12));border-radius:6px;color:var(--text2);font:10px var(--mono);padding:3px 6px;cursor:pointer}
+#dock-col .dk-tool:hover{color:var(--text);border-color:var(--accent,#3b82f6)}#dock-col .dk-tool.off{opacity:.4;cursor:not-allowed}
+#dock-col .dk-run textarea{width:100%;box-sizing:border-box;background:rgba(0,0,0,.3);color:var(--text);border:1px solid var(--nx-rim,rgba(255,255,255,.12));border-radius:6px;font:11px var(--mono);padding:6px}
+#dock-col .dk-acts{display:flex;gap:6px;margin:5px 0;flex-wrap:wrap}#dock-col .dk-acts .action-btn{font-size:10px;padding:3px 8px}
+#dock-col .dk-proc{padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.06)}
+#dock-col .dk-mini{background:none;border:1px solid var(--nx-rim,rgba(255,255,255,.12));border-radius:5px;color:var(--text2);font:9px var(--mono);padding:1px 5px;cursor:pointer}
+#dock-col .dk-q{width:100%;box-sizing:border-box;font-size:11px;margin-bottom:4px}
 .pp-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07);cursor:move;user-select:none}
 .pp-title{font:600 13px system-ui,sans-serif;color:var(--nx-bright)}.pp-sub{font-size:10px;color:var(--text3)}.pp-grow{flex:1}
 .pp-map{max-width:150px;background:var(--nx-card2);color:var(--text2);border:1px solid rgba(255,255,255,.1);border-radius:6px;font:10px var(--mono);padding:2px 4px}
@@ -2604,6 +2649,7 @@ async function saveToIdearium(){
 <script src="js/agent-options.js"></script>   <!-- §0.47.0 OS4 every agent option in the Agent tab; its proposals (OS7) -->
 <script src="js/code-surface.js"></script>
 <script src="js/code-tab-panels.js"></script>   <!-- §0.60.81 CE6 · CE7 · CE9 — the Files tab's work, the picked lines with an action, the bottom panels -->   <!-- §0.39.349 CT3 — the Code tab is the work surface -->
+<script src="js/code-dock.js"></script>   <!-- §0.60.118 DK2 — the dock: outputs · changes · tasks · context · tools, each its own panel and edge tab -->
 <script src="js/file-versions.js"></script>
 <script src="js/components-panel.js"></script>
 <script src="js/repo-versions.js"></script>

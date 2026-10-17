@@ -2598,6 +2598,7 @@ const ROUTE_CAP = {
   'repo.lines': CAPS.READ_IDEAS, 'repo.lines.copy': CAPS.WRITE_IDEAS,   // 0.60.14
   'repo.surface.get': CAPS.READ_IDEAS, 'repo.surface.set': CAPS.WRITE_IDEAS,
   'repo.code.edit': CAPS.WRITE_IDEAS, 'repo.code.assist': CAPS.WRITE_IDEAS,
+  'repo.artifacts': CAPS.READ_IDEAS, 'repo.agent.tools.run': CAPS.WRITE_IDEAS, 'repo.procedures.list': CAPS.READ_IDEAS, 'repo.procedures.save': CAPS.WRITE_IDEAS, 'repo.procedures.fromRun': CAPS.WRITE_IDEAS, 'repo.procedures.replay': CAPS.WRITE_IDEAS, 'repo.procedures.remove': CAPS.WRITE_IDEAS,   // §0.60.118 DK1
   'repo.runs.list': CAPS.READ_IDEAS, 'repo.runs.rewind': CAPS.WRITE_IDEAS, 'repo.lessons': CAPS.READ_IDEAS,   // §0.60.105 RL4
     // §CV3 0.60.81: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.81: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
   'canvas.list': CAPS.READ_IDEAS, 'canvas.show': CAPS.READ_IDEAS, 'canvas.create': CAPS.WRITE_IDEAS, 'canvas.tool.add': CAPS.WRITE_IDEAS,   // §0.60.104 CN3   // §CV3 0.60.80: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.80: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
@@ -3126,6 +3127,14 @@ function matchRoute(method, url) {
     ['DELETE', ['api','repos',    ':uuid','agent','history'], 'repo.agent.history.clear'],
     // 0.39.257 — /tools (the catalog, marked with this compartment's scope) and /debug (what is wrong, from the systems)
     ['GET',    ['api','repos',    ':uuid','agent','tools'],   'repo.agent.tools'],
+    // §0.60.118 DK1 — a tool run by a person from the Code tab's tools panel, and the repo's replayable procedures
+    ['POST',   ['api','repos',    ':uuid','agent','tools','run'],     'repo.agent.tools.run'],
+    ['GET',    ['api','repos',    ':uuid','procedures'],              'repo.procedures.list'],
+    ['POST',   ['api','repos',    ':uuid','procedures'],              'repo.procedures.save'],
+    ['POST',   ['api','repos',    ':uuid','procedures','from-run'],   'repo.procedures.fromRun'],
+    ['POST',   ['api','repos',    ':uuid','procedures',':id','replay'], 'repo.procedures.replay'],
+    ['DELETE', ['api','repos',    ':uuid','procedures',':id'],        'repo.procedures.remove'],
+    ['GET',    ['api','repos',    ':uuid','artifacts'],               'repo.artifacts'],   // §0.60.118 DK2 — the dock's outputs panel
     ['POST',   ['api','repos',    ':uuid','agent','debug'],   'repo.agent.debug'],
     ['GET',    ['api','repos',    ':uuid','agent','graph'],   'repo.agent.graph'],
     ['GET',    ['api','repos',    ':uuid','agent','memory'],  'repo.agent.memory.list'],
@@ -7260,6 +7269,63 @@ async function handle(req, res, route, query, body) {
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
       const r = await _require('../../lib/repo-agent.js').listTools({ repo, q: query.q || '' });
       return r.ok ? ok(res, r) : err(res, 502, r.error);
+    }
+    // §0.60.118 DK1 — James: "maybe buttons for agent tools, for the repo, to execute. replayable proceedures?" A person runs a
+    // tool through the agent's own door (copilot /api/tools/run, this repo's scope); a procedure is a .procedure file of tool
+    // calls replayed in order through that same door (lib/repo-procedures.js). Each run is said on the bus.
+    case 'repo.agent.tools.run': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body.name) return err(res, 400, 'name (the tool) is required');
+      const t0 = Date.now();
+      const r = await _require('../../lib/repo-agent.js').runTool({ repo, name: String(body.name), args: body.args || {}, repoDir: _repoDiskDir(params.uuid) });
+      getIdeaOS().emit('idearium.repo.tool.ran', { repoUuid: repo.uuid, name: String(body.name), ok: !!(r && r.ok !== false && !r.error), ms: Date.now() - t0, by: 'person' });
+      return ok(res, { repoUuid: repo.uuid, name: String(body.name), ms: Date.now() - t0, result: r });
+    }
+    // §0.60.118 DK2 — the outputs panel: code blocks Guardian's artifact store saved from replies (guardian GET /artifacts, the
+    // one owner). Guardian keeps them by chat, not by repo: these are the most recent ones, said so (repoScoped: false), until a
+    // reply's artifacts carry the repo they were for.
+    case 'repo.artifacts': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const lim = Math.min(parseInt(query.limit || '20', 10) || 20, 100);
+      try {
+        const d = await _nexusClient.get('guardian', `/artifacts?limit=${lim}${query.q ? `&q=${encodeURIComponent(String(query.q))}` : ''}`, { timeout: 8000 });
+        const arts = ((d && d.artifacts) || []).map(a => ({ hash: a.hash, name: a.name || null, lang: a.lang || null, ts: a.ts || null, chat_url: a.chat_url || null, direction: a.direction || null, lines: String(a.content || '').split('\n').length, preview: String(a.content || '').slice(0, 600) }));
+        return ok(res, { repoUuid: params.uuid, repoScoped: false, artifacts: arts });
+      } catch (e) { return err(res, 502, `guardian (:7820) could not be asked for artifacts: ${e.message}`); }
+    }
+    case 'repo.procedures.list': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      return ok(res, { repoUuid: params.uuid, procedures: _require('../../lib/repo-procedures.js').list(params.uuid) });
+    }
+    case 'repo.procedures.save': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const r = _require('../../lib/repo-procedures.js').save({ repoUuid: params.uuid, name: body.name, steps: body.steps, from: { kind: 'hand' } });
+      if (!r.ok) return err(res, 400, r.error);
+      getIdeaOS().emit('idearium.repo.procedure.saved', { repoUuid: params.uuid, id: r.procedure.id, steps: r.procedure.steps.length });
+      return ok(res, r);
+    }
+    case 'repo.procedures.fromRun': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body.runId) return err(res, 400, 'runId is required');
+      const r = _require('../../lib/repo-procedures.js').fromRun({ repoUuid: params.uuid, runId: String(body.runId), name: body.name || null });
+      if (!r.ok) return err(res, 400, r.error, { cut: r.cut || [] });
+      getIdeaOS().emit('idearium.repo.procedure.saved', { repoUuid: params.uuid, id: r.procedure.id, steps: r.procedure.steps.length, fromRun: String(body.runId) });
+      return ok(res, r);
+    }
+    case 'repo.procedures.replay': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RA = _require('../../lib/repo-agent.js'), dir = _repoDiskDir(params.uuid);
+      const r = await _require('../../lib/repo-procedures.js').replay(params.uuid, params.id, { by: body.by || 'person', runTool: (name, args) => RA.runTool({ repo, name, args, repoDir: dir }) });
+      if (!r.run && !r.ok) return err(res, 404, r.error);
+      getIdeaOS().emit('idearium.repo.procedure.replayed', { repoUuid: params.uuid, id: params.id, ok: r.ok, steps: r.run.results.length, stoppedAt: r.run.stoppedAt || null });
+      return ok(res, r);
+    }
+    case 'repo.procedures.remove': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const r = _require('../../lib/repo-procedures.js').remove(params.uuid, params.id);
+      return r.ok ? ok(res, r) : err(res, 404, r.error);
     }
     // 0.39.257 — /graph [file]: the project map, or one file's connections — the same text the agent's context gets.
     case 'repo.agent.graph': {

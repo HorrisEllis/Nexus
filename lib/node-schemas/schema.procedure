@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-schema-procedure
+type: schema
+id: procedure
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: idearium
+tags: []
+exported_at: 1792195200000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/repo-procedures.js (0.60.118, DK1 of docs/2026-10-16-code-tab-rebuild-phasemap.spec addendum_c). James, 2026-10-17:
+    "maybe buttons for agent tools, for the repo, to execute. replayable proceedures?" One .procedure file per procedure under
+    <idearium data>/procedures/<repo>/, written atomically; removing one archives it.
+  fields:
+    id:
+      type: string
+      required: true
+      description: real, proc-<time>-<random>
+    repoUuid:
+      type: string
+      required: true
+      description: real, the repo whose tools it runs
+    name:
+      type: string
+      required: true
+      description: real, what the person called it (or 'from run - <goal>')
+    steps:
+      type: array
+      required: true
+      description: real, [{ tool, args }] in order; args is an object
+    from:
+      type: object
+      required: true
+      description: real, { kind - run | hand, runId? }
+    runs:
+      type: array
+      required: true
+      description: real, the last 30 replays [{ at, ok, by, results [{ tool, ok, error?, summary? }], stoppedAt?, of? }]
+    runCount:
+      type: number
+      required: true
+      description: real, every replay counted (runs keeps the last 30)
+    createdAt:
+      type: number
+      required: true
+      description: real
+    updatedAt:
+      type: number
+      required: true
+      description: real

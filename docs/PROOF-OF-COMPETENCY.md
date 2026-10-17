@@ -417,3 +417,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **What it shows:** reviewing evidence over status. A gate that checked names but not substance was found from one look
     at a diff, and is now closed at the one door every proposal passes.
   - **Evidence:** `CHANGELOG-0.60.110.md`; `tests/modules/test-inject-screen.test.js` IS-10..14.
+- **2026-10-17: "i want the panels completely seperate from each other, collapasable, organized and updated in real time ... i want to eb able to open all of them, or none of them."**
+  - **Context:** he was looking at the Code tab and the Plan panel's three cards. Instead of asking for more features, he
+    specified the interaction model: separate panels, each with its own edge tab, any number open, live, plus replayable
+    procedures.
+  - **What it shows:** interface design by composition. Five panels that each reuse an existing renderer, one rail, and
+    one rule for real time (only open panels reload, on their own events). The replayable procedures turn ad-hoc tool
+    calls into reusable, persisted recipes.
+  - **Evidence:** `CHANGELOG-0.60.118.md`; `tests/modules/test-code-dock.test.js` (driven in Clear Glass);
+    `lib/repo-procedures.js`.

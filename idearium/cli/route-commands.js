@@ -41,6 +41,24 @@ export const SPEC = [
     print: (d, a, h) => { const s = d.settings || d; h.header(`${a.repo.name} — its agent`); for (const k of ['provider', 'backend', 'injectMode', 'toolScope', 'ollamaModel']) if (s[k] != null) console.log(`  ${k.padEnd(12)} ${h.c.bold(String(s[k]))}`); if (s.providers) console.log(h.c.dim(`  providers: ${s.providers.join(' · ')}`)); console.log(''); } },
 
   // ── what its agent proposed ───────────────────────────────────────────────────────────────────────────────────────
+  // §0.60.118 DK1 — James: "maybe buttons for agent tools, for the repo, to execute. replayable proceedures?" The same as the
+  // Code tab's tools panel: one tool through the agent's door (this repo's scope), and .procedure files replayed in order.
+  { key: 'repo.tool', repo: true, usage: 'repo tool <repo> <tool-name> [--args \'{"path":"README.md"}\']', about: 'run one agent tool for this repo, as a person (the agent\'s door, the repo\'s scope)',
+    need: (a) => (a.args[0] ? null : '<tool-name>'),
+    req: (a) => { let args = {}; try { args = a.flags.args ? JSON.parse(String(a.flags.args)) : {}; } catch (_) { args = { __bad: String(a.flags.args) }; } return { method: 'POST', path: `/api/repos/${a.repo.uuid}/agent/tools/run`, body: { name: a.args[0], args }, timeoutMs: 60000 }; },
+    print: (d, a, h) => { const r = d.result || {}; console.log(`${r.ok === false || r.error ? h.c.coral('✗') : h.c.mint('✓')} ${d.name} ${h.c.dim(`${d.ms} ms`)}`); console.log(String(JSON.stringify(r.result !== undefined ? r.result : r, null, 2)).slice(0, 4000)); } },
+  { key: 'repo.procedures', repo: true, usage: 'repo procedures <repo>', about: 'the repo\'s replayable procedures (tool calls kept as .procedure files)',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/procedures` }),
+    print: (d, a, h) => { const l = d.procedures || []; if (!l.length) { console.log(h.c.gray('  no procedures — `repo procedure <repo> from-run <runId>` keeps a run\'s tool calls')); return; } for (const p of l) { const last = (p.runs || []).slice(-1)[0]; console.log(`  ${p.id}  ${p.name}  ${h.c.dim(`${p.steps.length} steps · ${p.runCount || 0} runs${last ? ` · last ${last.ok ? 'ok' : `stopped at ${last.stoppedAt}`}` : ''}`)}`); } } },
+  { key: 'repo.procedure', repo: true, usage: 'repo procedure <repo> replay <id> | from-run <runId> [--name "…"] | remove <id>', about: 'replay a procedure in order (the first failure stops it), keep a run\'s tool calls as one, or archive one',
+    need: (a) => (['replay', 'from-run', 'remove'].includes(a.args[0]) && a.args[1] ? null : 'replay <id> | from-run <runId> | remove <id>'),
+    req: (a) => a.args[0] === 'replay' ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/procedures/${encodeURIComponent(a.args[1])}/replay`, body: {}, timeoutMs: 600000 }
+      : a.args[0] === 'remove' ? { method: 'DELETE', path: `/api/repos/${a.repo.uuid}/procedures/${encodeURIComponent(a.args[1])}` }
+      : { method: 'POST', path: `/api/repos/${a.repo.uuid}/procedures/from-run`, body: { runId: a.args[1], ...(a.flags.name ? { name: String(a.flags.name) } : {}) } },
+    print: (d, a, h) => {
+      if (d.run) { console.log(`${d.ok ? h.c.mint('✓ replayed') : h.c.coral(`✗ stopped at step ${d.run.stoppedAt} of ${d.run.of}`)} ${d.procedure.name}`); for (const r of d.run.results) console.log(`  ${r.ok ? h.c.mint('✓') : h.c.coral('✗')} ${r.tool}${r.error ? h.c.coral(` — ${r.error}`) : ''}`); return; }
+      if (d.procedure) { console.log(`${h.c.mint('✓ saved')} ${d.procedure.id} ${d.procedure.name} ${h.c.dim(`${d.procedure.steps.length} steps`)}`); if ((d.cut || []).length) console.log(h.c.amber(`  left out (their arguments were cut when the run kept them): ${d.cut.map(c => `#${c.n} ${c.tool}`).join(', ')}`)); return; }
+      console.log(d.archived ? `archived: ${d.archived}` : JSON.stringify(d)); } },
   { key: 'repo.changes', repo: true, usage: 'repo changes <repo> [--status proposed|applied|…] [--prove]', about: 'the agent\'s proposals; --prove checks them on a scratch copy against the charter',
     req: (a) => a.flags.prove ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/worksurface/prove`, body: {}, timeoutMs: 600000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/injects${qs(a.flags, ['status'])}` },
     print: (d, a, h) => {
