@@ -16,8 +16,8 @@ async function openProjects() {
   el.innerHTML = _projectsFrame('<div style="padding:16px;color:var(--text3);font-family:var(--mono);font-size:11px">reading your projects…</div>');
   try {
     const d = await api('/api/my-projects');
-    el.innerHTML = _projectsFrame('<div id="projects-carve"></div>' + _projectsHtml(d) + '<div id="projects-raid"></div>');
-    _projectsRaid();
+    el.innerHTML = _projectsFrame('<div id="projects-carve"></div><div id="projects-folder"></div>' + _projectsHtml(d) + '<div id="projects-raid"></div>');
+    _projectsRaid(); _projectsFolder();
   } catch (e) {
     el.innerHTML = _projectsFrame(`<div style="padding:16px;color:var(--coral);font-family:var(--mono);font-size:11px">could not read projects: ${escapeHtml(e.message)}</div>`);
   }
@@ -30,6 +30,7 @@ function _projectsFrame(inner) {
     <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--b0,#222)">
       <div style="flex:1;font-weight:600">My projects</div>
       <button class="tb-btn" onclick="_carveOpen()" title="copy a part of Nexus into its own repo, with everything it requires">Branch from Nexus</button>
+      <button class="tb-btn" onclick="_projectsFolder(true)" title="the folder on this machine that holds your projects — Idearium reads it, never changes it">Projects folder</button>
       <button class="tb-btn" onclick="openProjects()" title="read again">Refresh</button>
       <button class="tb-btn" onclick="closeProjects()">Close</button>
     </div>${inner}</div>`;
@@ -124,3 +125,42 @@ async function _carveRun(dryRun) {
       ${!dryRun && d.repo && d.repo.uuid ? `<div><button class="tb-btn" onclick="_openProject('${escapeHtml(d.repo.uuid)}')">Open the repo</button></div>` : ''}`;
   } catch (e) { out.innerHTML = `<span style="color:var(--coral)">could not carve: ${escapeHtml(e.message)}</span>`; }
 }
+
+// ── 0.60.139 COSA14 — his projects folder. James, 2026-10-17: "these are all my projects i have so far. way more. in some
+// folders. i was hoping to use idearium and cos to manage them". The folder is read, never changed: each project picked is
+// zipped from disk and brought in through the same import as an uploaded zip (POST /api/my-projects/folder/import).
+async function _projectsFolder(edit) {
+  const box = document.getElementById('projects-folder'); if (!box) return;
+  const mono = 'font-family:var(--mono);font-size:10px;color:var(--text3)';
+  const ask = (root) => { box.innerHTML = `<div style="padding:10px 14px;border-bottom:1px solid var(--b0,#222);display:flex;gap:6px;align-items:center">
+      <span style="${mono}">projects folder</span><input id="pf-root" value="${escapeHtml(root || '')}" placeholder="D:\\Projects" style="flex:1">
+      <button class="tb-btn" onclick="_projectsFolderSet()">Scan</button></div>`; };
+  let d; try { d = await api('/api/my-projects/folder', {}, 120000); } catch (e) { box.innerHTML = `<div style="padding:8px 14px;${mono};color:var(--coral)">projects folder: ${escapeHtml(e.message)}</div>`; return; }
+  if (!d.root || edit === true) { ask(d.root); if (!d.root) return; if (edit === true) return; }
+  const rows = (d.projects || []).map(p => `<label style="display:flex;gap:8px;align-items:baseline;padding:3px 14px;${p.imported ? 'opacity:.6' : ''}">
+      <input type="checkbox" class="pf-pick" value="${escapeHtml(p.path)}" ${p.imported ? 'disabled' : ''}>
+      <span style="min-width:44px;${mono};color:${p.imported ? 'var(--mint)' : p.weak ? 'var(--text3)' : 'var(--amber,#d90)'}">${p.imported ? 'in' : p.weak ? 'files' : 'new'}</span>
+      <span style="${p.group ? 'padding-left:12px;' : ''}">${escapeHtml(p.name)}</span>
+      <span style="${mono}">${escapeHtml(p.group ? p.group + ' · ' : '')}${escapeHtml(p.markers.join(', '))}${p.size ? ` · ${p.size.files}${p.size.capped ? '+' : ''} files` : ''}</span></label>`).join('');
+  const nr = (d.notRecognized || []).length ? `<div style="padding:4px 14px;${mono}">not projects: ${(d.notRecognized || []).map(n => escapeHtml(n.rel)).join(', ')}</div>` : '';
+  box.innerHTML = `<div style="padding:10px 0;border-bottom:1px solid var(--b0,#222)">
+      <div style="display:flex;gap:8px;align-items:center;padding:0 14px 6px"><span style="flex:1;${mono}">${escapeHtml(d.root)} · ${d.counts.projects} projects · ${d.counts.groups} group folders · ${d.imported} in Idearium</span>
+        <button class="tb-btn" onclick="_projectsFolder(true)">Change</button><button class="tb-btn" onclick="_projectsFolderImport()">Bring in the ticked</button></div>
+      <div style="max-height:260px;overflow:auto">${rows || `<div style="padding:8px 14px;${mono}">no projects found under it</div>`}</div>${nr}
+      <div id="pf-out" style="padding:4px 14px;${mono}">${window._pfLast || ''}</div></div>`;
+  window._pfLast = '';
+}
+async function _projectsFolderSet() {
+  const root = (document.getElementById('pf-root') || {}).value || '';
+  try { await api('/api/my-projects/folder', { method: 'POST', body: JSON.stringify({ root: root.trim() }) }, 120000); } catch (e) { alert(`projects folder: ${e.message}`); return; }
+  _projectsFolder();
+}
+async function _projectsFolderImport() {
+  const paths = [...document.querySelectorAll('.pf-pick:checked')].map(x => x.value);
+  const out = document.getElementById('pf-out'); if (!paths.length) { if (out) out.textContent = 'tick the projects to bring in'; return; }
+  if (out) out.textContent = `bringing in ${paths.length} project(s)… each is zipped from disk, imported, chunked and indexed (a big one takes minutes)`;
+  let d; try { d = await api('/api/my-projects/folder/import', { method: 'POST', body: JSON.stringify({ paths }) }, 60 * 60000); } catch (e) { if (out) out.textContent = `not brought in: ${e.message}`; return; }
+  window._pfLast = (d.results || []).map(r => r.ok ? `in: ${escapeHtml(r.repo.name)} (${r.files} files${r.skipped ? `, ${r.skipped} skipped` : ''})` : `<span style="color:var(--coral)">not: ${escapeHtml(String(r.path || ''))} — ${escapeHtml(r.error)}</span>`).join('<br>');
+  openProjects();   // the new repos are in the list below; the result stays shown above it
+}
+

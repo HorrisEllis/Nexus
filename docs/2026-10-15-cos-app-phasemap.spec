@@ -250,3 +250,18 @@ addendum_e:
 # every version stated inside, and the folder's when it has one, must agree. The project is package.json's name, else the folder's.
 # Root cause of the delay: the 0.60.103 store fix never reached an exe, because COS stayed 0.1.0 and cos-app.yml only watched
 # version.js. COS is now 0.1.1, the workflow watches every file the exe is built from, and a change without a bump fails, said.
+#
+# ADDENDUM 2026-10-17 — his projects folder (COSA14), and COS that says it is out of date
+# James, 2026-10-17, with screenshots of COS refusing a release zip and of D:\Projects (38 folders, more inside some): "also can
+# you fix cos for me? the zip doesn't have nested folders anymore. these are all my projects i have so far. way more. in some
+# folders. i was hoping to use idearium and cos to manage them"
+# - COS: his COS was 0.1.0; the root-layout zip has been read since COS 0.1.1 (cos-v0.1.1, 2026-10-16). COS 0.1.2 (Nexus
+#   0.60.137) says when a newer COS is out (cos/app/app-update.js); Clear Glass's delivery picks the newest v<x.y.z>, not the
+#   repo's "latest" (a cos-v release had been it).
+# - COSA14_his_projects_folder (BUILT 0.60.139): idearium/lib/projects-folder.cjs scans the folder he names (projects by their
+#   markers, also inside group folders; a folder of files is a project too, marked weak; an empty folder is said), and brings the
+#   ones he ticks into Idearium — each zipped from his disk with the import's own skip rules and caps and imported through
+#   repo.import-archive, the same door as an uploaded zip, so each gets its repo, chunks, index and COS container as any import
+#   does. The folder is read, never changed. Routes GET/POST /api/my-projects/folder, POST /api/my-projects/folder/import;
+#   commands `projects folder [<dir>]`, `projects import <path…>`; My projects → "Projects folder" in Idearium.
+#   Open: COSA15 — a project's own runs and versions in COS (start, stop, its branches), as Nexus's are.
