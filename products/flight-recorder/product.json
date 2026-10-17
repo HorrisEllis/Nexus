@@ -1,0 +1,26 @@
+{
+  "name": "flight-recorder",
+  "status": "in Nexus (decided 2026-10-17); branched out at each release with `repo carve --preset flight-recorder`",
+  "james": "\"look at rfr2. versionium. event ledgers. causal graph. cos test env. its a product?\" (2026-10-16) · \"I agree, with the recommendation\" (2026-10-17, on building it inside Nexus with a real boundary)",
+  "reading": "The coder's reading, to confirm: an undo button and flight recorder for AI coding agents. Every change an agent makes is tested before it lands, kept as a version you can compare and put back, recorded with what caused it, and replayable.",
+  "why": "an undo button and flight recorder for AI coding agents: tested before it lands, versioned, recorded with its cause, undoable",
+  "map": "docs/2026-10-16-repo-carve-phasemap.spec",
+  "cut": ["optional"],
+  "seeds": [
+    "products/flight-recorder",
+    "versionium", "intelligence/rfr2", "intelligence/causal", "cos/testenv", "cos/compartment",
+    "lib/code-edit.js", "lib/repo-history.js", "lib/repo-inject.js", "lib/repo-versions.js", "lib/activity-log", "lib/diagnostic-causal.js"
+  ],
+  "must": [
+    "lib/change-record.js", "lib/proposal-evidence.js", "lib/test-map.js", "lib/run-state.js",
+    "lib/repo-inject.js", "lib/code-edit.js", "lib/repo-versions.js", "versionium/lib/text-diff.js", "versionium/lib/engine.js",
+    "cos/testenv/index.js", "intelligence/rfr2/index.js"
+  ],
+  "phases": {
+    "FR1_one_record_per_change": "built 0.60.114",
+    "FR2_tested_before_it_lands": "built 0.60.115",
+    "FR3_undo_any_change": "mapped",
+    "FR4_stands_alone": "mapped",
+    "FR5_the_demo": "mapped"
+  }
+}

@@ -7837,21 +7837,26 @@ async function handle(req, res, route, query, body) {
     // §CV2 0.60.113 — the untangle step: how each link loads, cut what the code runs without, and prove the carve loads alone
     case 'repo.carve': {
       const CV = _require('../../lib/repo-carve.js'), NSx = _require('../../lib/nexus-self/systems.js');
-      const preset = body && body.preset ? CV.PRESETS[String(body.preset).replace(/-/g, '_')] : null;
-      if (body && body.preset && !preset) return err(res, 400, `no preset "${body.preset}" (have: ${Object.keys(CV.PRESETS).join(', ')})`);
+      // §PB1 0.60.116 — a preset is a product: products/<name>/product.json plus every file tagged `Product: <name>`
+      const preset = body && body.preset ? CV.preset(String(body.preset), NSx.ROOT) : null;
+      if (body && body.preset && !preset) return err(res, 400, `no product "${body.preset}" (have: ${Object.keys(CV.products(NSx.ROOT)).join(', ') || 'none'})`);
+      if (preset && preset.error) return err(res, 400, preset.error);
       const seeds = preset ? preset.seeds : (Array.isArray(body && body.seeds) ? body.seeds : String((body && body.seeds) || '').split(/[\s,]+/).filter(Boolean));
       const name = String((body && body.name) || (preset && preset.name) || '').trim();
       if (!name) return err(res, 400, 'name is required (or a preset)');
       // §CV2a 0.60.113 — cut: leave out requires the code runs without ('optional': inside a try; 'lazy': inside a function, said
       // as a risk); the preset carries its own. verify: load the carve alone (always, when a repo is made)
       const cut = body && body.cut != null ? (Array.isArray(body.cut) ? body.cut : String(body.cut).split(/[\s,+]+/).filter(Boolean)) : (preset && preset.cut) || [];
-      const plan = CV.plan({ root: NSx.ROOT, seeds, cut });
+      const plan = CV.plan({ root: NSx.ROOT, seeds, cut, must: (preset && preset.must) || [] });
       if (!plan.ok) return err(res, 400, plan.error);
       const verified = (body && (body.verify || !body.dryRun)) ? CV.verify(plan, { root: NSx.ROOT }) : null;
       const summary = { name, seeds: plan.seeds, files: plan.files.length, seeded: plan.seeded, pulledIn: plan.pulledIn, lines: plan.lines, bySystem: plan.bySystem,
         npm: plan.npm, npmNamedOnly: plan.npmNamedOnly, missing: plan.missing, cut: plan.cut, leftOut: plan.leftOut, tangle: plan.tangle.slice(0, 12), verified,
+        mustMissing: plan.mustMissing || [], tagged: (preset && preset.tagged) || [],
         outsideSeeds: plan.files.filter(f => f.pulledBy && !plan.seeds.some(sd => f.path === sd || f.path.startsWith(`${sd}/`))).slice(0, 40) };
       if (body && body.dryRun) return ok(res, { dryRun: true, ...summary });
+      // §PB1 — a copy that lacks a file its product must carry is not made (the 0.60.112–115 copies lacked FR1's and FR2's files)
+      if (plan.mustMissing && plan.mustMissing.length) return err(res, 409, `the copy lacks what ${preset ? preset.name : 'the product'} must carry: ${plan.mustMissing.map(m => `${m.path}${m.leftOutBy ? ` (left out by the cut, from ${m.leftOutBy})` : ''}`).join(', ')} — seed it, or tag it \`Product: ${preset ? preset.name : '<name>'}\``, { mustMissing: plan.mustMissing });
       let cur = {}; try { cur = _require('../../lib/release-version.js').current({ root: NSx.ROOT }); } catch (_) {}
       const quote = String((body && body.quote) || '"can you branch it into a idearium repo?" (2026-10-16)');
       const files = CV.build(plan, { root: NSx.ROOT, name, nexusVersion: cur.version || null, commit: cur.commit || null, quote, why: preset ? preset.why : null, verified });

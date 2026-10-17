@@ -40,6 +40,22 @@ found:
     notes: "lib/repo-notes.js add({ repoUuid, body, kind }) — kinds include quote and decision"
     nexus_parent: "the repo whose nexusSelf.role is 'parent' (lib/nexus-self) is Nexus in Idearium"
 
+decisions:
+  decision_where_the_product_is_built:
+    date: 2026-10-17
+    james: '"Okay so where is the product being made? Or are we building the capability first, then branching?" · then: "I agree, with the recommendation"'
+    context: >-
+      FR1 and FR2 had been built into Nexus itself on the coder's working assumption, never put to him. Checking it, the
+      coder found its own earlier claim wrong: the branched copy did not carry lib/change-record.js (FR1) or lib/run-state.js,
+      and the optional cut dropped lib/test-map.js (FR2 would find no tests) — the preset was a hand-written seed list that
+      went stale. Options on the table: (A) keep building in Nexus, branch each release; (B) build in the branched repo
+      (standalone sooner, but it forks at once and every fix is made twice); the coder's recommendation (A with a boundary):
+      keep building in Nexus, but make the product's edge real — products/flight-recorder/ with a manifest, its own entry
+      point (FR4) and README; the carve reads the manifest; a product file declares itself in its header; a check fails when
+      something the product needs is missing from the copy.
+    chosen: "A with a boundary (the coder's recommendation), his: \"I agree, with the recommendation\""
+    changed: "PB1 below; lib/repo-carve.js presets come from products/*/product.json; product files tagged in their headers"
+
 phases:
   CV1_carve_backend_route_command_ui:
     status: "BUILT 0.60.112 — test-repo-carve 8/8; preset flight_recorder 217 files (63 named, 154 pulled in), 15 systems, carved in 0.8 s"
@@ -92,6 +108,16 @@ phases:
 
   # The flight recorder as a product: the coder's reading of "its a product?", mapped, nothing built. Each phase reuses what
   # already exists; none is a second system beside it (§8.6).
+  PB1_the_product_boundary:
+    status: "BUILT 0.60.116 — test-repo-carve 14/14 (CV-13, CV-14); the flight recorder 173 files / 9 systems, nothing missing, 61/61 load alone"
+    depends_on: [CV2_untangle_with_rf0]
+    does: >-
+      products/flight-recorder/product.json (name, his words, the coder's reading, seeds, cut, the files it must carry) and
+      README.md; lib/repo-carve.js reads presets from products/*/product.json (the hard-coded list moves there, kept whole);
+      a file that is part of a product says so in its header (`Product: flight-recorder`) and the carve adds every tagged
+      file as a seed, so a new piece cannot be forgotten; plan() reports any `must` file missing from the copy, the route
+      refuses to make a repo that lacks one, and a test holds the preset to it.
+    proof: "the flight recorder's carve carries change-record, run-state, test-map and proposal-evidence; untagging or cutting one fails the check"
   FR1_one_record_per_change:
     status: "BUILT 0.60.114 — test-change-record 6/6 (CR-06 the panel in Clear Glass)"
     found_while_building:

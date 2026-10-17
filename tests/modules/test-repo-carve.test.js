@@ -8,6 +8,7 @@
  *   CV-05..06  POST /api/repos/carve through the real router: dry run, then a real repo with its files, CARVED.json and notes
  *   CV-07      the command row
  *   CV-08      the UI (projects.js) driven in Clear Glass against a stubbed api(); no engine → SKIPPED, said
+ *   CV-13..14  0.60.116 PB1: a product is its manifest and its tagged files; a missing must-file is named; the flight recorder carries all
  *   CV-09..12  0.60.113 CV2: how each link loads, the tangle, the cut, the load check (verify), the preset through the route
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -186,6 +187,42 @@ put('lib/unrelated.js', 'module.exports = 2;\n');
     assert.ok((full.data || full).files > d.files, 'keeping every link carries more');
   });
   fs.rmSync(t2, { recursive: true, force: true });
+
+  // §PB1 0.60.116 — James: "I agree, with the recommendation" (the product is built in Nexus, with a real boundary)
+  await test('CV-13', 'a product is its manifest plus every file tagged as part of it; a must-file the copy lacks is named, with the link that cut it', async () => {
+    const t3 = fs.mkdtempSync(path.join(os.tmpdir(), 'carve-prod-'));
+    const put3 = (rel, text) => { fs.mkdirSync(path.dirname(path.join(t3, rel)), { recursive: true }); fs.writeFileSync(path.join(t3, rel), text); };
+    put3('products/gizmo/product.json', JSON.stringify({ name: 'gizmo', cut: ['optional'], seeds: ['core'], must: ['lib/map.js', 'lib/record.js'] }));
+    put3('core/a.js', "let m = null; try { m = require('../lib/map.js'); } catch (_) {}\nmodule.exports = m;\n");
+    put3('lib/map.js', 'module.exports = 1;\n');
+    put3('lib/record.js', "/**\n * lib/record.js — the record\n * Product: gizmo   (a note after the name)\n */\nmodule.exports = 2;\n");
+    put3('lib/other.js', "// Product: something-else\nmodule.exports = 3;\n");
+    assert.deepStrictEqual(Object.keys(CV.products(t3)), ['gizmo']);
+    const P = CV.preset('gizmo', t3);
+    assert.deepStrictEqual(P.tagged, ['lib/record.js'], 'tagged files are found; another product\'s are not');
+    const p = CV.plan({ root: t3, seeds: P.seeds, cut: P.cut, must: P.must });
+    assert.ok(p.files.some(f => f.path === 'lib/record.js'), 'a tagged file is carried without being listed');
+    assert.deepStrictEqual(p.mustMissing, [{ path: 'lib/map.js', leftOutBy: 'core/a.js' }], 'the optional cut dropped a must-file: named, with its link');
+    put3('lib/map.js', "// Product: gizmo\nmodule.exports = 1;\n");
+    const q = CV.plan({ root: t3, seeds: CV.preset('gizmo', t3).seeds, cut: ['optional'], must: P.must });
+    assert.deepStrictEqual(q.mustMissing, [], 'tagging it carries it');
+    put3('products/broken/product.json', '{ nope');
+    assert.match(CV.preset('broken', t3).error, /does not parse/);
+    fs.rmSync(t3, { recursive: true, force: true });
+  });
+
+  await test('CV-14', 'the flight recorder over Nexus: its manifest, its tagged FR1/FR2 files, nothing it must carry missing, and it loads alone', async () => {
+    const P = CV.preset('flight-recorder', ROOT);
+    for (const f of ['lib/change-record.js', 'lib/proposal-evidence.js', 'lib/test-map.js', 'lib/run-state.js']) assert.ok(P.tagged.includes(f), `${f} is tagged`);
+    const p = CV.plan({ root: ROOT, seeds: P.seeds, cut: P.cut, must: P.must });
+    assert.deepStrictEqual(p.mustMissing, [], JSON.stringify(p.mustMissing));
+    const v = CV.verify(p, { root: ROOT });
+    assert.ok(v.ok, JSON.stringify(v.failed));
+    const r = await api._route('POST', '/api/repos/carve', { preset: 'flight-recorder', dryRun: true });
+    const d = r.json.data || r.json;
+    assert.deepStrictEqual(d.mustMissing, []); assert.ok(d.tagged.includes('lib/change-record.js'));
+    assert.strictEqual((await api._route('POST', '/api/repos/carve', { preset: 'no-such-product' })).status, 400);
+  });
 
   await test('CV-07', 'the command: repo carve, with --preset and --dry-run', async () => {
     const rc = require(path.join(ROOT, 'idearium/cli/route-commands.js'));
