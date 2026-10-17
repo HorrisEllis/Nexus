@@ -139,12 +139,23 @@ phases:
       promote only when they pass; the result is part of the record. promote already rolls back all-or-nothing.
     proof: "a change that breaks a test is staged, tested, refused, and the repo is unchanged; one that passes lands"
   FR3_undo_any_change:
-    status: MAPPED
+    status: OPEN
     depends_on: [FR1_one_record_per_change]
+    james: '"Next and Merge." (2026-10-17)'
+    found:
+      # read in code, 2026-10-17
+      revert: "lib/repo-inject.js revert() writes `before` back, but REFUSES when the file changed since the change was applied (sha check) — so the newest change can be undone and any earlier one cannot, without force, which discards every later edit"
+      recorded: "a revert already becomes its own version (repo-versions commitNow kind 'revert') and activity row; the FR1 record shows it"
+      merge: "no three-way merge exists anywhere in Nexus (searched: three-way, merge3, diff3); versionium/lib/text-diff.js has diff and a strict apply"
     does: >-
-      Undo from the record: the version before it, put back (Versionium restore, lib/repo-history.js), itself recorded as a
-      change. RFR2 clip/context replay the events up to that point (clip has no consumer yet: this would be the first).
-    proof: "three agent changes, the middle one undone, the other two kept, all three still in the history"
+      versionium/lib/merge3.js: a line-based three-way merge (base, ours, theirs) on versionium's own LCS limits; a region
+      both sides changed differently is a conflict, returned with its lines, never resolved by guessing. repo-inject
+      revert({ merge: true }): when the file changed after the change, undo = merge3(base = what the change wrote, ours =
+      the file now, theirs = what was there before): the change's own lines are reversed, every later edit kept; a
+      conflict refuses with the regions named. A created file that was edited later is not deleted (it would lose those
+      edits): refused, said. The undo is recorded as its own change (version kind revert; history says "merged with later
+      edits"). The revert route opts in (body.merge, default on); the changes panel gets Undo; `repo undo <repo> <id>`.
+    proof: "three changes to one file, the middle one undone: the first and third kept, all three in the history; a later change on the same lines refuses with the region"
   FR4_stands_alone:
     status: MAPPED
     depends_on: [CV2_untangle_with_rf0]
