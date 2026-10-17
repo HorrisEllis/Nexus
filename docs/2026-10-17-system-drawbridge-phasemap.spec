@@ -52,7 +52,7 @@ spec:
           lib -> cos 82) is then a defect: those modules belong to the system they reach into, or the call goes through the
           drawbridge."
         - "system: everything crosses the drawbridge, lib/ included. 1,547 calls to move, most of them for no gain."
-      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D1: lib/ is the kernel, mounted read-only (§5.9, §0.5, §10.1, §5.14); see docs/2026-10-17-decisions-by-the-axioms.spec"
+      status: "DECIDED 2026-10-17 by his axioms (applied by the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D1: lib/ is the kernel, mounted read-only (§5.9, §0.5, §10.1, §5.14); see docs/2026-10-17-decisions-by-the-axioms.spec"
     DB0b_in_process_or_http:
       question: "When two systems run in the same process, does a crossing go over HTTP (the API route) or in-process through
         the same contract?"
@@ -62,7 +62,7 @@ spec:
           the record are the same either way; only the hop differs. HTTP for everything adds a network hop to calls made
           thousands of times a run."
         - "HTTP always: the API route is the only door, as he said ('using the api routes, and cli interface')."
-      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D2: routes and CLI between systems, in-process within one; one contract (§5.10, §5.11, §5.14); see docs/2026-10-17-decisions-by-the-axioms.spec"
+      status: "DECIDED 2026-10-17 by his axioms (applied by the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D2: routes and CLI between systems, in-process within one; one contract (§5.10, §5.11, §5.14); see docs/2026-10-17-decisions-by-the-axioms.spec"
       pushback: "His words name the API routes and the CLI as the way. The coder reads that as 'the contract IS the routes and
         commands', not 'every call must be an HTTP request'. To confirm."
     DB0c_how_it_is_enforced:
@@ -73,7 +73,7 @@ spec:
           contracts/event-contract-baseline.json already uses for events."
         - "observe only: count and show, enforce later."
         - "refuse now: any crossing outside the drawbridge throws. Breaks Nexus today."
-      status: "DECIDED 2026-10-17 by the axioms (the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D3: the ratchet (§0.4, §1.2, §3.1); see docs/2026-10-17-decisions-by-the-axioms.spec"
+      status: "DECIDED 2026-10-17 by his axioms (applied by the coder, under his rule \"use the axioms in the docs for each disicio nthat doesn't show my competence\") — D3: the ratchet (§0.4, §1.2, §3.1); see docs/2026-10-17-decisions-by-the-axioms.spec"
 
   # ── Phases, bottom-up ───────────────────────────────────────────────────────
   phases:
@@ -356,3 +356,14 @@ spec:
       status: "BUILT 0.60.131 — James: \"do it. what other systems?\" 12 systems start their listener at boot; guardian on the shared registry and its own store; one writer per database (N8)"
       does: "Each system's own server starts its registry's listener at boot, so the system manages its nodes in its own
         process (sovereign). Guardian moves onto the factory, indexed into guardian's own store."
+
+  # ── ADDENDUM 2026-10-17 (e) — diagnostic and the healer, one system ──────────────
+  # James, 2026-10-17: "diagnostic and nexus healer should be one system."
+  # His decision. The coder's reading of how, by the axioms: the healer joins diagnostic (diagnostic runs, under autopilot at
+  # :7825, and holds the heal loop; nexus-healer never ran). The name "diagnostic" is a reading, to confirm. Built 0.60.136:
+  # nexus-healer moved under diagnostic/ (healer/api, healer/cli, schemas, spec, registry), served under /healer, its data in
+  # diagnostic's own store; diagnostic gains its first registry (healer rows + its contract's routes, read from the contract).
+  # Effect on this map: there is one fewer system; DB16's list loses nexus-healer and diagnostic now has a registry.
+  merged:
+    nexus_healer_into_diagnostic: { date: 2026-10-17, release: 0.60.136, his_words: "diagnostic and nexus healer should be one system.", archive: _archive/2026-10-17-nexus-healer-into-diagnostic/ }
+

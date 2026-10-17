@@ -38,7 +38,7 @@ test('SR-04 negative space, absent: a declared route the source does not serve i
   for (const a of r.negative.absent.routes) assert.ok(a.route && /does not serve/.test(a.why));
 });
 test('SR-05 a system with no registry says so; a folder that is not a system is refused with the list', () => {
-  const d = SR.registryOf('diagnostic');
+  const d = SR.registryOf('orchestrator');   // 0.60.136: diagnostic has a registry now (the healer joined it)
   assert.ok(d.ok && /no registry-components\.js/.test(d.negative.extra.no_registry));
   const x = SR.registryOf('not-a-system');
   assert.strictEqual(x.ok, false); assert.ok(/not a system/.test(x.error));

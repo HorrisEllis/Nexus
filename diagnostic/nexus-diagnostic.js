@@ -1698,6 +1698,14 @@ function startService() {
 
     if (req.method === 'OPTIONS') { res.writeHead(204, CORS); res.end(); return; }
 
+    // §0.60.136 — James, 2026-10-17: "diagnostic and nexus healer should be one system." The healer is diagnostic's: its
+    // proposals (propose, list, evaluate through intelligence's forge route, merge, archive) are served here, under /healer.
+    if (url.pathname === '/healer' || url.pathname.startsWith('/healer/')) {
+      try { if (await require('./healer/api/index.js').handle(req, res, { prefix: '/healer' })) return; }
+      catch (e) { res.writeHead(500, CORS); res.end(JSON.stringify({ ok: false, error: `healer: ${e.message}` })); return; }
+      res.writeHead(404, CORS); res.end(JSON.stringify({ ok: false, error: 'no healer route there (GET/POST /healer/proposals, POST /healer/proposals/:id/{evaluate,merge,archive})' })); return;
+    }
+
     // §LEDGER-WIRE 2026-08-17 — canonical ledger stream, component-ledger
     // schema, for machine consumers. /events below is unchanged: it is the
     // UI's stream and carries a looser shape that its readers already parse

@@ -170,6 +170,13 @@ rule is enforced, where tests live). The rule, as his:
   call he has said is his ("thats on me"). A reading of his words is acted on, said as a reading, and asked when it matters.
 - He can overturn any of them; the overturn is a dated addendum quoting both (§0.3).
 
+**Corrected the same day.** James: "no, this is my system. come to me for problems, else use the axioms. continue with each
+system." The first version above recorded these as "the coder's decision by the axioms, never as his". That framing is
+wrong, and is superseded here (the first version is kept, §0.3). The axioms are his, so a decision they make is his system
+deciding by its own law. The coder applies them and cites them, and the record says "decided by his axioms". What comes
+to him is a **problem**: something the axioms do not settle, a conflict between them, a failure, or a cost he would want
+to know about before it is paid. Everything else proceeds.
+
 ## Leverage (2026-10-07)
 
 James: "remember to use as little tokens for as much leverage and power as possible. invent around contraints if it fits

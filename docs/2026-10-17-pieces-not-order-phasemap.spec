@@ -54,11 +54,11 @@ decisions:
       yes, against their declared interface (the manifest's signatures): its brief carries those signatures, never their code.
       A piece waits only when it needs a real value another piece produces (data, a generated file), and that edge is named
       in the manifest. To confirm.
-    status: "DECIDED 2026-10-17 by the axioms (the coder) — D8: yes, against declared interfaces (§5.10, §5.14, §3.1) — his answer was \"[No preference]\"; see docs/2026-10-17-decisions-by-the-axioms.spec"
+    status: "DECIDED 2026-10-17 by his axioms (applied by the coder) — D8: yes, against declared interfaces (§5.10, §5.14, §3.1) — his answer was \"[No preference]\"; see docs/2026-10-17-decisions-by-the-axioms.spec"
   PC0b_first_kinds:
     asked: "which purposes are the first piece kinds?"
     coder_recommends: "spec_section, function, test, wire (registry/loom), doc. The spec workshop already cuts by section. To confirm."
-    status: "DECIDED 2026-10-17 by the axioms (the coder) — D9: spec_section, function, test, wire, doc (§16.4, §0.5) — his answer was \"[No preference]\"; see docs/2026-10-17-decisions-by-the-axioms.spec"
+    status: "DECIDED 2026-10-17 by his axioms (applied by the coder) — D9: spec_section, function, test, wire, doc (§16.4, §0.5) — his answer was \"[No preference]\"; see docs/2026-10-17-decisions-by-the-axioms.spec"
   PC0c_who_cuts:
     asked: "who writes the point (the manifest)?"
     coder_recommends: "Nexus without a model where the phase maps (phase-map-auto, derivePlan), a reasoning agent only where it cannot, and James when he chooses (his control). To confirm."

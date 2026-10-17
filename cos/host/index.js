@@ -39,6 +39,7 @@ const {
   DestroyCompartmentGate,
   AdvanceWorkPhaseGate,
   SetIntentGate,
+  SetRuntimeGate,
   VerifyCompartmentGate,
 } = require('./gates/compartment.js');
 
@@ -122,6 +123,7 @@ function createHost(opts = {}) {
   bus.register(new DestroyCompartmentGate());
   bus.register(new AdvanceWorkPhaseGate());
   bus.register(new SetIntentGate());          // §2026-10-07 a compartment's intent
+  bus.register(new SetRuntimeGate());         // §0.60.136 what a compartment's start spawns
   bus.register(new VerifyCompartmentGate());
 
   //    Process lifecycle

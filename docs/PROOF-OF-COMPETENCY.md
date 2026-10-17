@@ -508,3 +508,10 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     in one pass, each traceable to the sections that decide it. The phases blocked on them, IM2 and IM4, can now run.
   - **Evidence:** `docs/2026-10-17-decisions-by-the-axioms.spec` (D1-D9, each with its axioms); `CHANGELOG-0.60.135.md`;
     the rule in `docs/CLAUDE.md`.
+- **2026-10-17: "diagnostic and nexus healer should be one system."**
+  - **Context:** the census had just named nexus-healer the first sovereign system, and the coder was moving it into its own
+    compartment.
+  - **What it shows:** finding a boundary from what each part is for, rather than from how the folders are laid out. The
+    healer proposes fixes for what diagnostic finds, and diagnostic already held the heal loop. The merge also exposed that
+    the healer had never run: nothing started its port. As part of diagnostic, it runs.
+  - **Evidence:** `CHANGELOG-0.60.136.md`. Diagnostic booted for real and served `/healer/proposals`.

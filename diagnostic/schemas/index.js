@@ -1,5 +1,6 @@
 'use strict';
-// nexus-healer/schemas/index.js — nexus-healer's own, fully sovereign schema registry.
+// diagnostic/schemas/index.js — diagnostic's own schema registry (nexus-healer's, moved with it 0.60.136; it held
+// healer_proposal and the generated node types).
 //
 // §CORRECTED 2026-09-12 — James: "relevant individual node schemas per
 // system. Each system is sovereign remember that." The prior version of

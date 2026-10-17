@@ -129,7 +129,8 @@ test('IOM-010', 'ports: intelligence is known to orchestrator; nexus-healer no l
   const cfg = JSON.parse(read('orchestrator/orchestrator.config.json'));
   assert.strictEqual(cfg.ports.intelligence, 3753);
   assert.ok(/intelligence:\s*\{\s*port:\s*3753/.test(read('orchestrator/orchestrator.js')), 'orchestrator SYS map missing intelligence');
-  const healer = read('nexus-healer/api/index.js').match(/NEXUS_HEALER_PORT \|\| '(\d+)'/)[1];
+  const healer = read('diagnostic/healer/api/index.js')   // 0.60.136 the healer is diagnostic's
+.match(/NEXUS_HEALER_PORT \|\| '(\d+)'/)[1];
   const intel = require(path.join(ROOT, 'intelligence/config.js')).PORT;
   assert.notStrictEqual(parseInt(healer, 10), intel, 'nexus-healer and intelligence must not share a default port');
 });

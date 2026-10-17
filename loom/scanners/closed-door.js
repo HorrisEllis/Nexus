@@ -47,7 +47,7 @@ const MODULE_ID = 'loom.scanner.closed-door';
 const DEFAULT_SCAN_DIRS = [
   'cortex', 'cos', 'warp', 'guardian', 'idearium', 'copilot', 'bridge',
   'orchestrator', 'hooks', 'lib', 'meta', 'loom', 'emerge', 'ollama',
-  'service', 'clear-glass/src', 'nexus-healer',
+  'service', 'clear-glass/src', 'diagnostic',   // §0.60.136 nexus-healer is part of diagnostic now
 ];
 
 // Files known, by hand, this session, to be real despite zero require()

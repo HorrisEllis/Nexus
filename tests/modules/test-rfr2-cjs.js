@@ -165,10 +165,12 @@ const EXPECTED_EXPORTS = {
     assert.strictEqual(typeof ForgePatchRecord, 'object');
   });
 
-  await test('T-job2b-nexus-healer-migrated', 'nexus-healer/api/index.js points at the new rfr2 location, not the old causal-nexus path', () => {
+  // 0.60.133: the healer asks for forge through intelligence's route (it requires no file of intelligence's); 0.60.136: the
+  // healer is diagnostic's (James: "diagnostic and nexus healer should be one system."), at diagnostic/healer/api/index.js
+  await test('T-job2b-nexus-healer-migrated', 'the healer reaches forge through intelligence\'s route, not the old causal-nexus path and not by requiring forge', () => {
     const fs = require('fs');
-    const src = fs.readFileSync(require.resolve('../../nexus-healer/api/index.js'), 'utf8');
-    assert.ok(/require\(['"]\.\.\/\.\.\/intelligence\/rfr2\/forge\/index\.js['"]\)/.test(src), 'must require intelligence/rfr2/forge/index.js');
+    const src = fs.readFileSync(require.resolve('../../diagnostic/healer/api/index.js'), 'utf8');
+    assert.ok(src.includes('/api/intelligence/rfr2/forge/patch') && !/require\(['"][./]*intelligence\/rfr2\/forge/.test(src), 'must ask intelligence\'s forge route, not require forge');
     assert.ok(!/require\(['"]\.\.\/\.\.\/meta\/causal-nexus/.test(src), 'must not still require anything from meta/causal-nexus');
   });
 

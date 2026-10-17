@@ -67,7 +67,7 @@ const SYSTEMS = Object.freeze({
   'architect': 'architect',
   'copilot': 'copilot',
   'bridge': 'bridge',
-  'nexus-healer': 'nexus-healer',
+  'diagnostic': 'diagnostic',   // §0.60.136 nexus-healer joined diagnostic: its registry is diagnostic/registry-components.js
   // §0.60.127 DB9 — read by lib/system-registry.js and found missing: both have a registry-components.js that loom never read
   'intelligence': 'intelligence',
   'versionium': 'versionium',

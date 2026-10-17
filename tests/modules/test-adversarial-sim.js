@@ -241,7 +241,7 @@ test('AS-016', '§5.1 EVERY interaction contract carries a uuid and version — 
   // verified at all, so the gated handshake S4 depends on would have had
   // nothing to check against for those systems.
   const missing = [];
-  for (const sys of ['bridge', 'cortex', 'guardian', 'idearium', 'architect', 'sentinel', 'nexus-healer']) {
+  for (const sys of ['bridge', 'cortex', 'guardian', 'idearium', 'architect', 'sentinel', 'diagnostic']) {   // 0.60.136 nexus-healer joined diagnostic
     const p = path.join(ROOT, sys, 'interaction-contract.json');
     if (!fs.existsSync(p)) continue;
     const c = JSON.parse(fs.readFileSync(p, 'utf8'));

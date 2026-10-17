@@ -28,6 +28,7 @@ const HOST = Object.freeze({
   COMPARTMENT_WORK_PHASE_ADVANCED: 'host:compartment:work-phase-advanced',
   // §2026-10-07 — a compartment's intent (foundation/intent.js): set, and verified against its end state
   COMPARTMENT_INTENT_SET: 'host:compartment:intent-set',
+  COMPARTMENT_RUNTIME_SET: 'host:compartment:runtime-set',   // 0.60.136 — a compartment's runtime and entry (what start spawns)
   COMPARTMENT_VERIFIED:   'host:compartment:verified',
   COMPARTMENTS_LISTED:   'host:compartments:listed',
 

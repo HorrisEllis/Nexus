@@ -109,7 +109,7 @@ const MODULE_CLI = {
   // discoverable instead of requiring a person to already know the
   // file tree.
   '/cos':      path.join(ROOT, 'cos/cli/index.js'),
-  '/healer':   path.join(ROOT, 'nexus-healer/cli/index.js'),
+  '/healer':   path.join(ROOT, 'diagnostic/healer/cli/index.js'),   // §0.60.136 the healer is diagnostic's
 };
 
 function passthrough(cliPath, restArgs) {

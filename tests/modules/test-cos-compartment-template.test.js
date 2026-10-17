@@ -26,14 +26,14 @@ test('CT-02 the same compartments nexus-self makes (nexus-self-<system> under ne
   const m = T.compartmentFor('cortex');
   assert.deepStrictEqual([m.cos.name, m.cos.parent], ['nexus-self-cortex', 'nexus-self']);
 });
-test('CT-03 COS verifies the end state for real: nexus-healer (sovereign) meets it, cortex (not yet) does not', () => {
-  const ok = I.verify(T.compartmentFor('nexus-healer').cos.intent, REPO);
+test('CT-03 COS verifies the end state for real: sentinel (sovereign) meets it, cortex (not yet) does not', () => {
+  const ok = I.verify(T.compartmentFor('sentinel').cos.intent, REPO);
   assert.deepStrictEqual([ok.endState.met, ok.endState.total], [1, 1], JSON.stringify(ok.endState.results));
   const no = I.verify(T.compartmentFor('cortex').cos.intent, REPO);
   assert.deepStrictEqual([no.endState.met, no.endState.total], [0, 1]);
 });
 test('CT-04 the seal: ready only when sovereign; until then the blockers are named and its folder is mounted read-only', () => {
-  const h = T.compartmentFor('nexus-healer'), c = T.compartmentFor('cortex');
+  const h = T.compartmentFor('sentinel'), c = T.compartmentFor('cortex');
   assert.ok(h.seal.ready && h.mounts[0].mode === 'rw');
   assert.ok(!c.seal.ready && c.mounts[0].mode === 'ro' && c.seal.blockers && (c.seal.blockers.data + c.seal.blockers.primitive + c.seal.blockers.capability) > 0);
   for (const m of [h, c]) assert.deepStrictEqual(m.mounts.map(x => x.path), [`${m.system}/`, 'lib/', 'node_modules/'], 'its folder and the kernel, nothing of another system');
@@ -61,6 +61,25 @@ test('CT-07 the template reaches up into no system (it reads only the kernel), s
   const out = SB.scan({ root: REPO }).crossings.filter(c => c.from === 'loom/templates/cos-compartment.js' && c.kind !== 'kernel');
   assert.deepStrictEqual(out, []);
   assert.ok(SB.check({ root: REPO }).ok);
+});
+test('CT-08 COS sets what a compartment\'s start spawns through its own gate: a known runtime and an entry that exists, or refused with why', () => {
+  const cb = require('../../lib/cos-bridge.js');
+  const { HOST } = require('../../cos/foundation/event-contracts.js');
+  const src = fs.readFileSync(path.join(REPO, 'lib/cos-bridge.js'), 'utf8');
+  assert.ok(src.includes(`'${HOST.COMPARTMENT_RUNTIME_SET}'`) && src.includes(`'${HOST.COMPARTMENT_ERROR}'`), 'the bridge listens for the event names COS declares');
+  const made = cb.createCompartment({ name: cb.uniqueName('ct-runtime-probe'), purpose: 'CT-08', networkIsolated: true });
+  assert.ok(made.ok, made.error);
+  const name = made.compartment.name;
+  try {
+    const bad = cb.setRuntime(name, { runtimeId: 'no-such-runtime', entryFile: path.join(REPO, 'loom/server.js') });
+    assert.ok(!bad.ok && /not one COS knows/.test(bad.error), JSON.stringify(bad));
+    const gone = cb.setRuntime(name, { runtimeId: 'node', entryFile: path.join(REPO, 'no/such/file.js') });
+    assert.ok(!gone.ok && /does not exist/.test(gone.error));
+    const ok = cb.setRuntime(name, { runtimeId: 'node', entryFile: path.join(REPO, 'loom/server.js'), envVars: { LOOM_PORT: '0' } });
+    assert.ok(ok.ok, ok.error);
+    const c = cb.getCompartment(name);
+    assert.deepStrictEqual([c.runtimeId, c.entryFile, c.envVars.LOOM_PORT], ['node', path.join(REPO, 'loom/server.js'), '0']);
+  } finally { cb.destroyCompartment && cb.destroyCompartment(name); }
 });
 
 (async () => {

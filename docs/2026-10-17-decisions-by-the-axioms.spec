@@ -5,7 +5,7 @@ spec:
     date:     2026-10-17
     release:  "0.60.135"
     uuid:     nexus-decisions-by-the-axioms-v1-0000-2026-1017-jamesbrooks-001
-    status:   "DECIDED 2026-10-17 by the axioms (the coder applied them; each decision names the axioms it follows)"
+    status:   "DECIDED 2026-10-17 by his axioms (the coder applied them; each names its sections) — attribution corrected by addendum (a)"
     origin: >-
       James, 2026-10-17: "use the axioms in the docs for each disicio nthat doesn't show my competence"
     rule: >-
@@ -108,3 +108,12 @@ spec:
     - "PC0c — who writes the point (the manifest): he said \"thats on me\"."
     - "What he meant, wherever the coder wrote a reading of his words 'to confirm': UE7 (UI elements from image sites), 'in relation to the system they are for', 'now that loom holds', 'first principles nexus'. Readings are acted on, said as readings, and never recorded as his decisions."
     - "Direction: what comes next, and what Nexus is for."
+
+  # ── ADDENDUM 2026-10-17 (a) — whose decisions these are ───────────────────────
+  # James, 2026-10-17: "no, this is my system. come to me for problems, else use the axioms. continue with each system."
+  # The rule above said each decision is "the coder's, made by the axioms — never written as his". He corrected it, and the
+  # earlier wording is kept here (§0.3). The axioms (docs/AXIOMS-v3.1.md) are his, so D1-D9 are his system deciding by its
+  # own law; the coder applied them and names the sections. What goes to him: problems. That means something the axioms do
+  # not settle, two axioms in conflict, a failure, or a cost he would want to know about first.
+  attribution: "decided by his axioms (docs/AXIOMS-v3.1.md), applied by the coder, 2026-10-17"
+

@@ -29,6 +29,7 @@ const ENTRIES = [
   [EC.HOST.COMPARTMENT_WORK_PHASE_ADVANCED, e("A compartment moved to its next work phase.", ["compartmentId", "name", "workPhase", "compartment"], 'info')],
   ["host:compartment:set-intent", e("A compartment was given its intent: its end state, the conditions it holds, its axioms.", ["name", "intent", "store", "sysmap"], 'info')],
   [EC.HOST.COMPARTMENT_INTENT_SET, e("A compartment's intent was set.", ["compartmentId", "name", "intent", "compartment"], 'notable')],
+  [EC.HOST.COMPARTMENT_RUNTIME_SET, e("A compartment's runtime was set: what its start spawns (runtime, entry, args, env names).", ["compartmentId", "name", "runtimeId", "entryFile", "compartment"], 'notable')],
   ["host:compartment:verify", e("A compartment was asked to check itself against its intent.", ["name", "store", "sysmap"], 'info')],
   [EC.HOST.COMPARTMENT_VERIFIED, e("A compartment was checked against its intent: how much of its end state is reached, whether its conditions hold.", ["compartmentId", "name", "status", "compartment"], 'notable')],
   [EC.HOST.COMPARTMENT_ERROR, e("A compartment operation failed, and why.", ["operation", "reason"], 'failure')],

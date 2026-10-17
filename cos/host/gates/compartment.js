@@ -424,6 +424,30 @@ class SetIntentGate extends Gate {
   }
 }
 
+// Handles: 'host:compartment:set-runtime' — Input: { name, runtimeId, entryFile, entryArgs, envVars, store, sysmap }
+// Emits: runtime-set | error. §0.60.136 — James, 2026-10-17: "and you know i mean cos compartment right?" · "continue with each
+// system". What a compartment's start spawns: a runtime COS knows and an entry file that exists (absolute). Refused whole, with
+// the reason, otherwise. The env holds names and values the system needs; secrets come from the vault at spawn, never here.
+class SetRuntimeGate extends Gate {
+  constructor() { super('host:compartment:set-runtime'); }
+  transform(event, stream) {
+    const { name, runtimeId, entryFile, entryArgs = [], envVars = {}, store, sysmap } = event.data;
+    const fail = (reason) => stream.emit(new Event(HOST.COMPARTMENT_ERROR, { operation: 'set-runtime', reason }));
+    const comp = store.getCompartmentByName(name) || store.getCompartment(name);
+    if (!comp) return fail(`compartment "${name}" not found`);
+    const { RUNTIME_IDS } = require('../../foundation/runtime-enum.js');
+    if (!RUNTIME_IDS.includes(runtimeId)) return fail(`runtime "${runtimeId}" is not one COS knows (${RUNTIME_IDS.join(', ')})`);
+    const fsx = require('fs'), px = require('path');
+    if (!entryFile || !px.isAbsolute(entryFile)) return fail('entryFile must be an absolute path');
+    if (!fsx.existsSync(entryFile)) return fail(`entryFile ${entryFile} does not exist`);
+    if (!Array.isArray(entryArgs) || entryArgs.some(a => typeof a !== 'string')) return fail('entryArgs must be a list of strings');
+    if (!envVars || typeof envVars !== 'object' || Object.values(envVars).some(v => typeof v !== 'string')) return fail('envVars must map names to strings');
+    const updated = Object.assign({}, comp, { runtimeId, entryFile, entryArgs, envVars, updatedAt: Date.now() });
+    store.setCompartment(updated); store.flushSync(); sysmap.upsertCompartment(updated);
+    stream.emit(new Event(HOST.COMPARTMENT_RUNTIME_SET, { compartmentId: updated.id, name: updated.name, runtimeId, entryFile, compartment: updated }));
+  }
+}
+
 // Handles: 'host:compartment:verify' — Input: { name, store, sysmap } — Emits: verified | error
 class VerifyCompartmentGate extends Gate {
   constructor() { super('host:compartment:verify'); }
@@ -440,6 +464,7 @@ class VerifyCompartmentGate extends Gate {
 
 module.exports = {
   SetIntentGate,
+  SetRuntimeGate,
   VerifyCompartmentGate,
   CreateCompartmentGate,
   StartCompartmentGate,

@@ -27,7 +27,7 @@ test('ST-03 the tunnel: where it runs, the routes its registry declares, and the
   for (const c of t.commands) assert.ok(t.routes.some(r => `${r.method} ${r.path}` === c.route), c.route);
 });
 test('ST-04 what is missing is said: no registry, no toasts declared, no compartment', () => {
-  const d = SYS.tunnel('diagnostic', { commands: SPEC });
+  const d = SYS.tunnel('orchestrator', { commands: SPEC });   // 0.60.136: diagnostic has a registry now
   assert.ok(d.ok && d.registry === null);
   assert.ok(d.said.some(x => /no registry-components\.js/.test(x)));
   assert.ok(d.said.some(x => /no toasts/.test(x)));
