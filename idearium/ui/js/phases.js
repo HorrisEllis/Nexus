@@ -393,7 +393,7 @@ async function phasesBuild(map, phase) {
   const replan = !!(document.getElementById('ph-build-replan') || {}).checked;   // 0.60.79 TL1a: off = the saved plan is kept
   PHASES.busy = true; _phPaint();
   try {
-    const r = await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase, provider, note, ...(replan ? { replan: true } : {}) }) }, 120000);
+    const r = await phaseBuildPost(uuid, { map, phase, provider, note, ...(replan ? { replan: true } : {}) });   // §0.60.125 DG1 — plan-panel.js
     toast(`${phase}: snapshot ${r.snapshot} taken · ${r.targetName}'s agent is building it${r.statusNote ? ` (status not changed: ${r.statusNote})` : ''}`, 'ok');
     // §HP6 0.55.0 — James: "the build surface is supposed to be showing in idearium." A build from the detail pane
     // opens the Plan panel on its run, as the card's build always did (RS10 dropped it here).
@@ -435,7 +435,7 @@ async function phasesBuildQuick(map, phase) {
   const uuid = PHASES.uuid; if (!uuid || PHASES.busy) return;
   PHASES.busy = true;
   try {
-    const r = await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase }) }, 120000);
+    const r = await phaseBuildPost(uuid, { map, phase });   // §0.60.125 DG1 — plan-panel.js
     toast(`${phase}: snapshot ${r.snapshot} taken · ${r.targetName}'s agent is building it`, 'ok');
     if (typeof openPlanPanel === 'function') openPlanPanel({ map, focus: r.runId });
   } catch (e) { toast(`${phase} not built: ${e.message}`, 'err'); }
