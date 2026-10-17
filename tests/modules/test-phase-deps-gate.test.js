@@ -68,7 +68,8 @@ phases:
     assert.deepStrictEqual([bad.checked, bad.open.length], [false, 0]); assert.ok(bad.why);
     assert.ok(/S2_top waits on D0_kinds \(a decision still OPEN: "which kinds first\?"\); S1_mid \(OPEN\)/.test(G.line(g, 'S2_top')), G.line(g, 'S2_top'));
     const real = G.openDeps({ phase: 'PC1_the_point_first', mapText: fs.readFileSync(path.join(ROOT, 'docs/2026-10-17-pieces-not-order-phasemap.spec'), 'utf8') });
-    assert.deepStrictEqual(real.open.map(o => o.key), ['PC0b_first_kinds', 'PC0c_who_cuts'], 'the phase that cost twelve attempts');
+    // 0.60.135: PC0b was decided by his axioms (D9, status DECIDED …) — the gate reads that; PC0c stays his ("thats on me")
+    assert.deepStrictEqual(real.open.map(o => o.key), ['PC0c_who_cuts'], 'the phase that cost twelve attempts waits on what is still open');
   });
 
   await test('DG-02', 'the real router: 409 DEPS_OPEN with the question, no run; anyway passes the gate', async () => {

@@ -272,6 +272,8 @@ const SCHEMA = {
     plan_attempts:       { default: 2, min: 1, max: 5, copilot_writable: true, type: 'number' },
     // 0.60.18 EX0 — a held plan runs as a .contract through the scheduler (off: the planned files one after another)
     contract_build:      { default: 'on', enum: ['on', 'off'], copilot_writable: true, type: 'string' },
+    // 0.60.141 TF2 — James: "needs to build a test first then use that to shape expectation and conditions." require: no usable test written first → not built · prefer: built anyway, said · off
+    test_first:          { default: 'require', enum: ['require', 'prefer', 'off'], copilot_writable: true, type: 'string' },
     contract_depth:      { default: 3, min: 1, max: 8, copilot_writable: true, type: 'number' },   // §BR2 0.60.40 — how deep a brick may split
     contract_concurrency: { default: 2, min: 1, max: 8, copilot_writable: true, type: 'number' },
   },

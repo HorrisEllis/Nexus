@@ -101,8 +101,21 @@ export function piecesOf(phase = {}, rows = []) {
   if (planRow && _PPL) { try { deps = _PPL.depsOf(planRow.plan); } catch (_) { deps = new Map(); } }
   const P = new Map(paths.map(p => [p, { path: p, state: 'pending', attempts: 0, agent: null, uses: (deps.get && deps.get(p)) || [], why: null, at: null }]));
   const touch = (pc, st, r) => { pc.state = st; pc.at = r.ts || pc.at; if (r.provider) pc.agent = r.provider; if (st === 'failed') pc.why = _cut(r.error || r.state, 200); if (st === 'written') pc.why = null; };
+  // §0.60.141 TF2 — the test written first is a piece, first in the bar: written when it was seen failing and shaped the
+  // plan, failed when no usable test came; its piece is proven with the phase (its run is the first condition)
+  const tf = rs.filter(r => r.state === 'test-first' && r.file && ['shaped', 'refused', 'invalid', 'no-answer'].includes(r.step));
+  if (tf.length && !whole) {
+    const tp = tf[tf.length - 1].file;
+    { const own = P.get(tp) || { path: tp, state: 'pending', attempts: 0, agent: null, uses: [], why: null, at: null }; const rest = [...P].filter(([k]) => k !== tp); P.clear(); P.set(tp, own); for (const [k, v] of rest) P.set(k, v); }   // first, always
+    const pc = P.get(tp);
+    for (const r of tf.filter(x => x.file === tp)) {
+      pc.attempts += r.step === 'shaped' || r.step === 'invalid' ? 1 : 0; pc.at = r.ts || pc.at; if (r.provider) pc.agent = r.provider;
+      if (r.step === 'shaped') { pc.state = 'written'; pc.why = null; } else { pc.state = 'failed'; pc.why = _cut(r.error || r.note || r.step, 200); }
+    }
+  }
   for (const r of rs) {
     if (/-proof$/.test(r.runId || '')) continue;
+    if (r.state === 'test-first') continue;
     const injected = (r.injects && r.injects.injected) || [];
     if (whole) {
       const pc = P.get('(whole phase)');

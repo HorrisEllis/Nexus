@@ -251,3 +251,33 @@ related:
 # Note 2026-10-17, read after merging main: 0.60.123 PP1–PP4 (another session) already draws the Plan's bar as its pieces, one per
 # chunk and dependency. PC8 is therefore an extension of PP1 (the approval colours, and "fulfilled only when approved"), not a second
 # card. Before PC8 is built, read PP1's code and extend it (rule 2, reuse before build). The version is open; 0.60.123 is taken.
+#
+# ADDENDUM 2026-10-17 (c2) — TF2: the test is written first, and it shapes the expectations and the conditions
+# James (2026-10-17), after PC1's twelve-attempt run and the depends_on gate: "needs to build a test first then use that to
+# shape expectation and conditions."
+# His direction, as his: a phase build writes its test before any code, and that test becomes what the code is held to: the
+# expectations (what each file must provide) and the conditions (what proves the phase). It confirms TF2 (OPEN since addendum
+# a) and docs/2026-10-16-proposal-evidence-phasemap.spec PE6 (MAPPED), and narrows them to one slice built now.
+# Stands on, by the axioms (§8.6 reuse):
+#   - lib/expectation-tests.js (TF1): the structural checks, and the way it runs a test in a shadow of the repo;
+#   - lib/proposal-evidence.js shadow + runOne: run a test with any files overlaid, nothing written to the repo;
+#   - the plan's conditions (kind tests): the proof run already proves against the proposed code with the proposals overlaid;
+#   - repo-inject propose: the test lands as a proposal like any agent's file, so he sees it, and the proof uses it.
+# Phases (decided by his axioms where his words leave the how open; what comes to him is a problem):
+#   TF2a_test_first (lib/test-first.js, pure + run):
+#     brief: the test writer gets the phase (does, proof), the plan's files with their exports and signatures, and the rules:
+#       one runnable node file, node:assert only, require each planned module by its path, call the planned exports
+#       as their signatures say, assert the phase's proof, no network, no services.
+#     validate: the test is run in a shadow with NO implementation (only the test overlaid). It must fail for the missing
+#       behaviour (the planned module not found, a planned export missing or not a function, an assertion), never for
+#       itself (a syntax error, a name it never defined, a module neither planned nor present). A test that already passes
+#       proves nothing for new behaviour: refused. Invalid → the writer is asked once more with what was wrong.
+#     shape: what the test requires and calls becomes the expectation. A name it calls on a planned module that the plan
+#       does not export is added to that file's exports (the test is the authority). The test's run becomes the FIRST
+#       condition ("<test> passes"). Each code brick's brief carries the test text.
+#   TF2b_wired: idearium _phaseBuild, after the plan holds and before the contract: test written by the planner (the agent
+#     that plans, never the coder that implements: independence, PE6), validated, proposed (repo-inject), plan shaped,
+#     then the contract runs on the shaped plan. No planner ready → skipped, said, and TF1's expectations still hold.
+#     Every step is a run row (state test-first: written, invalid, refused, shaped), so the Plan's run log shows it.
+#   Limits, said: the test is as good as its writer (PE6 rule: the writer never declares its own test sufficient; the person
+#   sees it as a proposal); one test file per phase in this slice; the phase passes only when that test passes in the proof.

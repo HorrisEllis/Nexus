@@ -323,6 +323,15 @@ export const SPEC = [
       if (d.cost) { console.log(`  ${d.phase}: ${d.line}`); for (const r of d.cost.runs) console.log(h.c.dim(`    ${r.runId} · ${r.calls} call(s) · ${Object.entries(r.byAgent).map(([k, v]) => `${k} ×${v}`).join(', ')} · ~${r.tokensIn} in / ~${r.tokensOut} out`)); if (d.cost.method) console.log(h.c.dim(`  tokens: ${d.cost.method}`)); return; }
       console.log(`  all phases: ${d.line}`); for (const p of d.phases) console.log(`  ${String(p.phase).padEnd(12)} ${h.c.dim(p.line)}`);
     } },
+  // 0.60.141 TF2 — the routing policy and its switches (Settings → Routing): agents read and set what a person does, e.g.
+  // `system routing test_first prefer` (James: "needs to build a test first then use that to shape expectation and conditions.")
+  { key: 'system.routing', repo: false, usage: 'system routing [<key> <value>]', about: 'the build routing policy (planner, contract_build, test_first, ladder…), or set one switch: routing.<key> = <value>',
+    req: (a) => (a.args[0] ? { method: 'POST', path: '/api/config', body: { key: `routing.${String(a.args[0]).replace(/^routing\./, '')}`, value: a.args.slice(1).join(' '), actor: 'command' } } : { method: 'GET', path: '/api/routing' }),
+    print: (d, a, h) => {
+      if (a.args[0]) { console.log(`  routing.${String(a.args[0]).replace(/^routing\./, '')} = ${a.args.slice(1).join(' ')} ${h.c.dim('saved')}`); return; }
+      const p = (d && (d.policy || (d.data && d.data.policy))) || {};
+      for (const [k, v] of Object.entries(p)) if (v == null || typeof v !== 'object') console.log(`  ${String(k).padEnd(22)} ${v}`);
+    } },
   // 0.60.20 — lean mode, the same switch as Idearium → Settings → Routing (every agent has it through nexus.command)
   // 0.60.126 DB1 — the crossings between systems: what the drawbridge must become the only way for (docs/2026-10-17-system-drawbridge-phasemap.spec)
   // 0.60.134 — the template for each system's COS compartment, held by loom (reached through loom's own routes)

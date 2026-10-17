@@ -1168,7 +1168,53 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'plan-failed', snapshot: commitId });
       return policy.contractBuild ? runContract(null, null, { whole: true }) : (chunking.chunk ? runChunked() : runWhole());
     }
-    const plan = parsed.plan;
+    let plan = parsed.plan;
+    // §0.60.141 TF2 — James: "needs to build a test first then use that to shape expectation and conditions." Before any code,
+    // the planner (the agent that plans, never the coder that implements: PE6 independence) writes the phase's test; it is
+    // run with no implementation in a shadow of the repo and must fail for the missing behaviour, never for itself
+    // (lib/test-first.js validate); then it shapes the plan: names it calls join their file's exports, its run is the first
+    // condition, and every code brick's brief carries it. It lands as a proposal like any agent's file. routing.test_first:
+    // require (default: a writer that cannot give a usable test in two tries stops the build) · prefer · off. A kept plan
+    // that was already shaped keeps its test. No writer ready → said, and TF1's expectations still hold.
+    if (policy.testFirst !== 'off' && !plan.testFirst) {
+      const TF = _require('../../lib/test-first.js');
+      const testPath = TF.pathFor(plan, phase);
+      const tfRow = (step, extra = {}) => {
+        appendRow('idearium_phase_runs', { uuid: `${runId}-tf-${step}-${Date.now().toString(36)}`, ...base, state: 'test-first', step, file: testPath, snapshot: commitId, error: null, ...extra, ts: Date.now() });
+        getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'test-first', step, snapshot: commitId });
+      };
+      if (!planner) tfRow('skipped', { note: `no test writer was ready (the planner writes the test, never the coder) — ${planning.why || 'no planner'}; TF1's expectations still hold` });
+      else {
+        let fb = '', got = null, lastWhy = null;
+        for (let n = 1; n <= 2 && !got; n++) {
+          const msg = TF.brief({ plan, phaseKey: phase, does: ctx.does, proof: ctx.proof, testPath, repoName: target.name, feedback: fb });
+          tfRow('writing', { provider: planner, attempt: n, promptChars: msg.length, tokensIn: _tokEst(msg) });
+          let r; try { const rd = await _agentDir(target.uuid); r = await RA.dispatch({ repo: target, repoDir: rd, message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-tf${n}`, maxToolErrors: policy.maxToolErrors || 0 }); }
+          catch (e) { r = { ok: false, error: e.message }; }
+          if (!r || !r.ok) { lastWhy = `the test writer (${planner}) did not answer: ${String((r && r.error) || 'no reply').slice(0, 200)}`; tfRow('no-answer', { provider: planner, attempt: n, error: lastWhy }); break; }
+          const code = TF.extract(r.text);
+          if (!code) { fb = lastWhy = 'the reply had no code block'; tfRow('invalid', { provider: planner, attempt: n, note: fb }); continue; }
+          const v = await TF.validate({ root: _repoDiskDir(target.uuid), plan, testPath, code });
+          if (v.verdict === 'fails-as-expected' || v.verdict === 'not-run') got = { code, v };
+          else { fb = lastWhy = `${v.verdict}: ${v.why}`; tfRow('invalid', { provider: planner, attempt: n, note: lastWhy, tail: v.tail || null }); }
+        }
+        if (got) {
+          const sh = TF.shape(plan, { testPath, code: got.code, verdict: got.v.why });
+          plan = sh.plan;
+          let prop = null;
+          try { prop = _require('../../lib/repo-inject.js').propose({ layer: getRepoLayer(), repo: target, path: testPath, content: got.code, source: { kind: 'agent', role: 'test-writer', provider: planner, runId, phase, map } }); }
+          catch (e) { prop = { ok: false, errors: [e.message] }; }
+          tfRow('shaped', { provider: planner, testFirst: { path: testPath, added: sh.added, proposal: prop && prop.ok ? prop.inject.uuid : null },
+            note: `${testPath} written first · ${got.v.verdict === 'not-run' ? got.v.why : `seen failing: ${got.v.why}`} · ${sh.added.length ? `it calls ${sh.added.map(a => `${a.file} ${a.name}`).join(', ')}, which the plan lacked — added` : 'the plan already exports what it calls'} · its run is the first condition${prop && prop.ok ? '' : ` · not proposed: ${((prop && prop.errors) || []).join('; ')}`}` });
+        } else if (policy.testFirst === 'require') {
+          const why = `not built: no usable test was written first (${lastWhy || 'no answer'}) — routing.test_first is require; prefer builds without it`;
+          tfRow('refused', { provider: planner, error: why });
+          appendRow('idearium_phase_runs', { uuid: `${runId}-tf-stopped`, ...base, state: 'failed', snapshot: commitId, error: why, ts: Date.now() });
+          getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'failed', snapshot: commitId });
+          return { state: 'failed', error: why, stopped: true };
+        } else tfRow('without', { provider: planner, note: `no usable test (${lastWhy || 'no answer'}) — built anyway (routing.test_first: prefer); TF1's expectations still hold` });
+      }
+    }
     // the plan is written for a small model: Ollama first — in the order the coders' records on planned files say — the
     // agents as its fallback
     const co = PL.orderCoders(PRt.coderRungs(rungs), allRuns);
@@ -1181,7 +1227,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const file = plan.order[i];
       const ck = { chunk: i + 1, chunks: plan.order.length, file, planned: true };
       const cb = PP.chunkBrief({ plan, path: file, done, repoName: target.name, phaseKey: phase });
-      last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg: cb.message, files: [file], ck, verify: (code) => PP.checkChunk(code, plan, file), bare: true }), onOutcome: makeOnOutcome(ck) });
+      last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg: cb.message + _require('../../lib/test-first.js').note(plan), files: [file], ck, verify: (code) => PP.checkChunk(code, plan, file), bare: true }), onOutcome: makeOnOutcome(ck) });
       if (last.state !== 'replied') {
         appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-stopped`, ...base, ...ck, state: 'failed', chunkStopped: true, snapshot: commitId,
           error: `planned file ${ck.chunk} of ${ck.chunks} (${file}) did not land — the run stops here; ${done.length ? `${done.map(d => d.path).join(', ')} came back` : 'nothing came back'}`, ts: Date.now() });
@@ -1294,7 +1340,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         return PP.contextNote({ needs: assessment.context.needs, deps: assessment.deps.map(x => ({ file: x.file, code: String(codeOf(x.file) || '') })), budget });
       })() : null;
       const ctxNote = ctx ? `\n\n${ctx.text}` : '';
-      const msg = (gate.parent ? `${cb.message}\n\nDO ONLY THIS STEP NOW: ${(gate.actions || [])[0] || ''}\nKeep everything the file already has.` : cb.message) + ctxNote;
+      const msg = (gate.parent ? `${cb.message}\n\nDO ONLY THIS STEP NOW: ${(gate.actions || [])[0] || ''}\nKeep everything the file already has.` : cb.message) + ctxNote + _require('../../lib/test-first.js').note(plan);   // §0.60.141 TF2 — the test written first
       // §RA1 — James: "let the right agent for the job, be in charge." The kind of job is the file this brick builds; its
       // ladder is ordered by how each agent has done on that kind (lib/agent-record.js, from the run log), else by size, else
       // as configured. A person's pick (an agent or provider given for this build) is never reordered.

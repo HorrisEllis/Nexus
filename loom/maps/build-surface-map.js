@@ -98,6 +98,8 @@ const FILES = [
   ['idearium/repo/build-plan.js', I('idearium/repo/build-plan.js'), [
     I('lib/run-watch.js'), I('lib/phase-plan.js'),              // §0.60.123 PP1/PP2 createRequire — runsOf/isFinal (an open run), depsOf (what a piece uses)
   ]],
+  // §0.60.141 TF2 — the phase's test is written first and shapes the plan
+  ['lib/test-first.js', I('lib/test-first.js'), [I('lib/proposal-evidence.js')]],   // validate: shadow + runOne
   // §0.60.125 DG1 — a phase is not built while what it depends on is open
   ['lib/phase-deps-gate.js', I('lib/phase-deps-gate.js'), []],   // require('js-yaml') only
   // §0.60.124 SW1 — the import pipeline in its own thread (the self-sync no longer holds idearium)
@@ -258,6 +260,9 @@ const CONSUMERS = [
   [I('ollama/server.js'), I('ollama/lib/idle-unload.js'), '0.60.123 MP startIdleUnload after listen (keep_alive:0 on idle)'],
   [I('idearium/repo/import-pipeline.js'), I('idearium/repo/import-pipeline-worker.js'), '0.60.124 SW1 runImportPipelineOffThread — new Worker(new URL(./import-pipeline-worker.js))'],
   [I('idearium/repo/nexus-self.js'), I('idearium/repo/import-pipeline.js'), '0.60.124 SW1 _syncSystem + parent: await runImportPipelineOffThread'],
+  [I('idearium/api/index.js'), I('lib/test-first.js'), '0.60.141 TF2 runPlanned: brief → validate → shape before the contract; note() on every code brief'],
+  [I('idearium/api/index.js'), I('lib/repo-inject.js'), '0.60.141 TF2 the test written first lands as a proposal (source.role test-writer)'],
+  [I('idearium/ui/settings.html'), I('idearium/api/index.js'), '0.60.141 TF2 POST /api/config routing.test_first (require | prefer | off)'],
   [I('idearium/api/index.js'), I('lib/phase-deps-gate.js'), '0.60.125 DG1 _phaseBuild: openDeps → 409 DEPS_OPEN unless anyway'],
   [I('idearium/ui/js/phases.js'), I('idearium/ui/js/plan-panel.js'), '0.60.125 DG1 phaseBuildPost — the one door for every ▶ build'],
   [I('guardian/server.js'), I('guardian/lib/provider-login.js'), '0.60.124 SW2 flushQueuedJobs asks holdsJobs(provider); a reported sign-in flushes'],
