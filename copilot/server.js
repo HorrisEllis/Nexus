@@ -2865,6 +2865,9 @@ function register() {
 // what it exports.
 if (require.main === module) {
 server.listen(PORT, () => {
+  // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+  // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+  try { require('../lib/node-registry.js').startForSystem('copilot', { bus: _copilotBus }); } catch (e) { console.warn(`[copilot] node registry: ${e.message}`); }
   console.log(`[copilot] :${PORT} — v${VERSION} — P73/P103/P110/P112/AX-008 wired`);
   setTimeout(register, 1000);
   setTimeout(_connectCortexStream, 2000);

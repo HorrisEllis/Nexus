@@ -226,6 +226,9 @@ function start() {
   announceToRaid();
   routes.startLatticeFeed();
   server.listen(PORT, () => {
+    // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+    // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+    try { require('../lib/node-registry.js').startForSystem('intelligence', { bus: nexusBus }); } catch (e) { console.warn(`[intelligence] node registry: ${e.message}`); }
     console.log(`[intelligence] :${PORT} — v1.0.0 — cognition + system-health layer online`);
     // §BUILT — real heartbeat/pulse, matching every other sovereign system's
     // established pattern exactly (see versionium/server.js, loom/server.js,

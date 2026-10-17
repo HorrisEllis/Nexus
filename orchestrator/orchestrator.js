@@ -3021,6 +3021,9 @@ if (nexusBus) {
 
 const BIND_HOST = process.env.NEXUS_BIND_HOST || '127.0.0.1'; // §REMOTE-15
 server.listen(PORT, BIND_HOST, async () => {
+  // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+  // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+  try { require('../lib/node-registry.js').startForSystem('orchestrator', { bus: nexusBus }); } catch (e) { console.warn(`[orc] node registry: ${e.message}`); }
   // §0.39.271 X1 — every system's capability/command/system nodes regenerated from the tree
   // (lib/system-nodes.js). Idempotent: unchanged nodes are not rewritten. Off the request
   // path, never fatal.

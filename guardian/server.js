@@ -885,7 +885,10 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
   setTimeout(() => {
     try { const r = require('../lib/system-nodes.js').sync({ only: ['guardian'] }); console.log(`[guardian] nodes: ${JSON.stringify(r.systems.guardian ? { written: r.systems.guardian.written, commands: r.systems.guardian.commands } : {})} · hats/agents ${r.guardian ? r.guardian.written + ' written, ' + r.guardian.unchanged + ' unchanged' : 'skipped'}${r.errors.length ? ' · ' + r.errors.join('; ') : ''}`); }
     catch (e) { console.warn(`[guardian] node sync failed (non-fatal): ${e.message}`); }
-    try { require('./lib/node-registry.js').start({}); } catch (e) { console.warn(`[guardian] node registry did not start (non-fatal): ${e.message}`); }
+    // §0.60.131 P33b — Guardian onto the shared node registry (lib/node-registry.js): the same per-file rules its own
+    // guardian/lib/node-registry.js had, now indexed into guardian/data/node-index (its OWN store; the old one wrote the
+    // central cortex store) and announced on the bus. guardian/lib/node-registry.js is kept (test-node-index.js uses it).
+    try { require('../lib/node-registry.js').startForSystem('guardian', { bus: require('../nexus/nexus-bus.js'), delayMs: 0 }); } catch (e) { console.warn(`[guardian] node registry did not start (non-fatal): ${e.message}`); }
   }, 3000);
   // Mesh subsystem relocated 2026-09-03 to clear-glass/src/network/
   // (James: "DNS/firewall/crypto/host-rotation/reverse-proxy maybe

@@ -5302,7 +5302,7 @@ async function handle(req, res, route, query, body) {
         for (const t of fs.readdirSync(path.join(root, folder, 'data', 'nodes'), { withFileTypes: true }).filter(e => e.isDirectory() && e.name !== '_archive')) types[t.name] = { files: fs.readdirSync(path.join(root, folder, 'data', 'nodes', t.name)).filter(f => !f.startsWith('.') && f !== '_ledger.jsonl').length, indexed: 0, history: 0 };
         return ok(res, { system: folder, nodesDir: `${folder}/data/nodes`, store: null, types, said: `${folder} has no node database yet: the next node sync (at boot) writes ${folder}/data/node-index` });
       }
-      const reg = NR.createNodeRegistry({ system: folder, root });
+      const reg = NR.createNodeRegistry({ system: folder, root, fresh: true });   // a reader in another process: read from disk now
       if (query && query.type && query.id) return ok(res, { system: folder, type: query.type, id: query.id, node: reg.get(query.type, query.id), history: reg.history(query.type, query.id) });
       if (query && query.type) return ok(res, { system: folder, type: query.type, nodes: reg.list(query.type).map(n => ({ id: n.id, summary: n.summary || null, updatedAt: n.updatedAt || null })) });
       return ok(res, reg.stats());
@@ -9894,6 +9894,9 @@ export function startAPI() {
   server.listen(PORT, BINDING, async () => {
     // ESM: use createRequire for CJS modules
     const _require = createRequire(import.meta.url);
+    // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+    // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+    try { _require('../../lib/node-registry.js').startForSystem('idearium', { bus: { emit: (e, d) => getIdeaOS().emit(e, d) } }); } catch (e) { console.warn(`[idearium/api] node registry: ${e.message}`); }
     // §CT8 0.39.352 — copilot reports each tool call of a repo agent here, as it happens (the Code tab's live activity)
     try { _require('../../lib/repo-agent.js').setToolEventSink(`http://127.0.0.1:${PORT}`); } catch (e) { console.warn(`[idearium/api] live tool events not wired: ${e.message}`); }
     try { const n = _reconcileRuns().length; if (n) console.log(`[idearium/api] ${n} run(s) left in flight by the last process — marked interrupted`); } catch (e) { console.warn(`[idearium/api] runs not reconciled: ${e.message}`); }

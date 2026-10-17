@@ -78,6 +78,38 @@ test('NR-08 the route and command: GET /api/system/nodes/:system answers per typ
   const row = SPEC.find(r => r.key === 'system.nodes');
   assert.strictEqual(row.req({ args: ['cortex', 'capability', 'cortex.health'], flags: {} }).path, '/api/system/nodes/cortex?type=capability&id=cortex.health');
 });
+test('NR-09 P33b: every system with its own process starts its own listener at boot, with its bus where it has one', () => {
+  const wired = { 'orchestrator/orchestrator.js': 'orchestrator', 'cortex/boot.js': 'cortex', 'guardian/server.js': 'guardian', 'idearium/api/index.js': 'idearium',
+    'architect/service.js': 'architect', 'diagnostic/nexus-diagnostic.js': 'diagnostic', 'intelligence/server.js': 'intelligence', 'ollama/server.js': 'ollama',
+    'versionium/server.js': 'versionium', 'copilot/server.js': 'copilot', 'loom/server.js': 'loom', 'clear-glass/src/main/index.js': 'clear-glass' };
+  for (const [f, sys] of Object.entries(wired)) assert.ok(fs.readFileSync(path.join(REPO, f), 'utf8').includes(`startForSystem('${sys}'`), `${f} starts ${sys}'s node registry`);
+  assert.ok(!/require\('\.\/lib\/node-registry\.js'\)\.start\(/.test(fs.readFileSync(path.join(REPO, 'guardian/server.js'), 'utf8')), 'guardian no longer starts its old registry');
+});
+test('NR-10 one writer per database (N8): a system with its own process owns its database; the boot sync leaves it alone', async () => {
+  assert.strictEqual(NR.ownsItsDatabase('cortex'), true);
+  assert.strictEqual(NR.ownsItsDatabase('emerge'), false);
+  const r2 = fs.mkdtempSync(path.join(os.tmpdir(), 'nr-own-'));
+  for (const sys of ['cortex', 'emerge']) {
+    fs.mkdirSync(path.join(r2, sys), { recursive: true });
+    fs.writeFileSync(path.join(r2, sys, 'registry-components.js'), `module.exports = [{ id: '${sys}.ping', namespace: '${sys}', name: 'ping', version: '1.0.0', route: { method: 'GET', path: '/ping' } }];\n`);
+  }
+  const SN = require('../../lib/system-nodes.js');
+  const out = await quiet(async () => SN.sync({ root: r2, agents: false }));
+  assert.ok(out.systems.emerge.index && !out.systems.emerge.index.error, 'emerge (no process) is indexed by the sync');
+  assert.strictEqual(out.systems.cortex.index, undefined, 'cortex (its own process) is not: its listener is the one writer');
+  assert.ok(fs.existsSync(path.join(r2, 'emerge/data/node-index')) && !fs.existsSync(path.join(r2, 'cortex/data/node-index')));
+  fs.rmSync(r2, { recursive: true, force: true });
+});
+test('NR-11 startForSystem: skipped in a test process (the real tree is not touched) and says why; forced, it starts and listens', async () => {
+  const h = NR.startForSystem('alpha', { root });
+  assert.ok(h.skipped && /test process/.test(h.skipped));
+  const lines = [];
+  const f = NR.startForSystem('alpha', { root, force: true, delayMs: 0, log: (m) => lines.push(m) });
+  for (let i = 0; i < 40 && !f.started; i++) await wait(25);
+  f.stop();
+  assert.ok(f.started, JSON.stringify({ lines, error: f.error }));
+  assert.ok(/\[alpha\] node registry: .* listening on \d+ type folder/.test(lines[0]) && /no bus/.test(lines[0]), lines[0]);
+});
 
 (async () => {
   for (const [n, f] of tests) { try { await f(); passed++; console.log(`  ✓ ${n}`); } catch (e) { failed++; console.log(`  ✗ ${n}\n    ${e.message}`); } }

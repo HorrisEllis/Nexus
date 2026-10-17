@@ -682,6 +682,9 @@ function register() {
 }
 
 server.listen(PORT, () => {
+  // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+  // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+  try { require('../lib/node-registry.js').startForSystem('loom'); } catch (e) { console.warn(`[loom] node registry: ${e.message}`); }
   console.log(`[loom] :${PORT} — v${VERSION} — component/hook/wire/seam registry + contracts`);
   setTimeout(register, 1000);
 });

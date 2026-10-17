@@ -714,6 +714,9 @@ async function boot() {
   });
 
   server.listen(PORT, '127.0.0.1', () => {
+    // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+    // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+    try { require('../lib/node-registry.js').startForSystem('architect', { bus: { emit: (e, d) => busEmit(e, d) } }); } catch (e) { console.warn(`[architect] node registry: ${e.message}`); }
     console.log(`[architect] ONLINE :${PORT}`);
     jaa.insert('event_log', { type: 'architect.booted', payload: { port: PORT, version: '3.0.0', hooks: registry.summary() }, source: 'service', ts: Date.now() });
     busEmit('architect.booted', { port: PORT, version: '3.0.0', hooks: registry.summary() });

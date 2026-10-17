@@ -596,7 +596,8 @@ spec:
 #   data/nodes/                13 of 16
 #   node registry              the LISTENER runs in 1 (guardian); every system's nodes are now INDEXED into its own store at boot
 #                              (P33a); each system starting its own listener is P33b, open
-#   guardian's own index        lives in the central cortex store, not guardian's (P33b moves it)
+#                              — 0.60.131 P33b: the listener runs in 12 (every system with its own process), one writer per store
+#   guardian's own index        lives in the central cortex store, not guardian's (P33b moves it) — moved, 0.60.131
 #   capability events           only 4 registries declare events (clear-glass, copilot, ollama, versionium); no event/ node
 #                              exists anywhere — SB22 / P36 open
 #   crossings                   297 system to system, 255 lib/ reaching up into a system, 531 systems using lib/ (DB1)

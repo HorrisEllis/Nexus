@@ -99,6 +99,9 @@ server.on('error', (e) => {
 });
 
 server.listen(PORT, () => {
+  // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+  // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+  try { require('../lib/node-registry.js').startForSystem('versionium'); } catch (e) { console.warn(`[versionium] node registry: ${e.message}`); }
   console.log(`[versionium] :${PORT} — sovereign causal version control active`);
   setTimeout(register, 1000);
 

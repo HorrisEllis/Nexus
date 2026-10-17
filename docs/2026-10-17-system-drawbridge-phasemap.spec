@@ -6,7 +6,7 @@ spec:
     release:  "0.60.126 (DB1)"
     uuid:     nexus-system-drawbridge-phasemap-v1-0000-2026-1017-jamesbrooks-001
     owner:    "lib (the census and the drawbridge) · every system with a registry-components.js · orchestrator (the handshake) · loom (the self-model)"
-    status:   "MAPPED 2026-10-17. DB1 BUILT 0.60.126 (the census and the ratchet). DB9/DB10 PARTLY BUILT 0.60.127. DB13 BUILT, DB14 PARTLY BUILT 0.60.128. DB18 BUILT, DB17 census 0.60.129. P33a (sovereign-node P33) BUILT 0.60.130. DB0a-DB0c are his to decide; DB2-DB8 OPEN."
+    status:   "MAPPED 2026-10-17. DB1 BUILT 0.60.126 (the census and the ratchet). DB9/DB10 PARTLY BUILT 0.60.127. DB13 BUILT, DB14 PARTLY BUILT 0.60.128. DB18 BUILT, DB17 census 0.60.129. P33a (sovereign-node P33) BUILT 0.60.130, P33b 0.60.131. DB0a-DB0c are his to decide; DB2-DB8 OPEN."
     voice: >-
       The ideas, the direction and the calls are James's. `james:` is his, verbatim. `does:` is the coder's reading, his to
       correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -353,6 +353,6 @@ spec:
         lib/system-nodes.js sync() scans each system it writes into that system's own store (not guardian, which runs its
         own registry). GET /api/system/nodes/:system[?type&id], `system nodes <system> [<type> [<id>]]`.
     P33b_each_system_runs_its_listener:
-      status: OPEN
+      status: "BUILT 0.60.131 — James: \"do it. what other systems?\" 12 systems start their listener at boot; guardian on the shared registry and its own store; one writer per database (N8)"
       does: "Each system's own server starts its registry's listener at boot, so the system manages its nodes in its own
         process (sovereign). Guardian moves onto the factory, indexed into guardian's own store."

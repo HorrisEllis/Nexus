@@ -1167,6 +1167,9 @@ async function bootstrap() {
   // §FN2 0.59.0 — every bus event passes the attention record (src/page/attention.js), which keeps only where each window's
   // attention is (page changes, the interaction field). Served at /cli/attention; Nexus Nerve reads it.
   { const att = require('../page/attention').shared(); bus.on('*', (ev) => { try { att.note(ev.type, ev.data); } catch (_) {} }); }
+  // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." Clear Glass's node registry: its listener over
+  // clear-glass/data/nodes, indexed into clear-glass/data/node-index with every change, its node events on this SISO bus.
+  try { require('../../../lib/node-registry.js').startForSystem('clear-glass', { bus: { emit: (e, d) => emit(e, d) } }); } catch (e) { console.warn(`[ClearGlass] node registry: ${e.message}`); }
 
   // 0.1 Network subsystem — §RETIRED 2026-09-06, James: "DNS/firewall/
   // crypto/host-rotation is redundant and should be deleted." Only

@@ -60,6 +60,18 @@ const FILES = [
 ];
 const CONSUMERS = [
   [I('idearium/api/index.js'),                    I('lib/system-boundary.js'), '§DB1 0.60.126 GET /api/system/drawbridge → census() + check() (lazy require in the case)'],
+  [I('orchestrator/orchestrator.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('cortex/boot.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('guardian/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('idearium/api/index.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('architect/service.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('diagnostic/nexus-diagnostic.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('intelligence/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('ollama/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('versionium/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('copilot/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('loom/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('clear-glass/src/main/index.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
   [I('lib/system-nodes.js'),                      I('lib/node-registry.js'), '§P33a 0.60.130 sync(): each system scanned into its own store (guardian runs its own)'],
   [I('idearium/api/index.js'),                    I('lib/node-registry.js'), '§P33a 0.60.130 GET /api/system/nodes/:system'],
   [I('guardian/jaa-store.js'),                    I('lib/jaa-store.js'), '§0.60.130 the old path re-exports the moved store'],

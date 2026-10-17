@@ -1337,6 +1337,9 @@ function _pollOrchestrator() {
 }
 
 server.listen(PORT, '127.0.0.1', () => {
+  // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+  // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+  try { require('../lib/node-registry.js').startForSystem('cortex', { bus }); } catch (e) { console.warn(`[cortex] node registry: ${e.message}`); }
   console.log(`[cortex] :${PORT} — v${VERSION} — memory+cfr+raid+intelligence active`);
   setTimeout(_register, 1500);
   setInterval(_pollOrchestrator, 5000);

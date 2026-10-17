@@ -202,7 +202,7 @@ const write = (dir, p, c) => { fs.mkdirSync(path.dirname(path.join(dir, p)), { r
     for (const n of ap.nodes.filter(x => x.type === 'agent')) for (const k of ['name', 'intent', 'commands', 'personality']) assert.ok(k in n.payload, k);
     const reg = require(path.join(ROOT, 'guardian/lib/node-registry.js'));
     assert.ok(reg.GUARDIAN_NODE_TYPES.includes('hat') && reg.GUARDIAN_NODE_TYPES.includes('agent'));
-    assert.ok(/require\('\.\/lib\/node-registry\.js'\)\.start\(/.test(read('guardian/server.js')));
+    assert.ok(/startForSystem\('guardian'/.test(read('guardian/server.js')), 'guardian boots its registry — since 0.60.131 P33b the shared lib/node-registry.js, into its own store');
   });
   await t('X3 the orchestrator serves GET /api/nodes, /api/nodes/:type, /api/nodes/:type/:id and POST /api/nodes/sync', () => {
     const src = read('orchestrator/orchestrator.js');

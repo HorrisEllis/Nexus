@@ -1015,7 +1015,7 @@ spec:
   phases_added_2026_10_10:
     P33_every_system_runs_its_node_registry:
       systems: [core, cortex, guardian, idearium, copilot, intelligence, versionium, cos, loom, orchestrator, architect, diagnostic, eravos, clear-glass, ollama, emerge, warp]
-      status: "PARTLY BUILT 0.60.130 — P33a: lib/node-registry.js (any system, its own store, all the history, the listener); every system's nodes indexed into its own store at the boot sync. OPEN: P33b, each system starts its own listener in its own process; guardian onto the factory and its own store; the .store node."
+      status: "PARTLY BUILT 0.60.131 — P33a (0.60.130) lib/node-registry.js; P33b (0.60.131) every system with its own process starts its own listener at boot (orchestrator, cortex, guardian, idearium, architect, diagnostic, intelligence, ollama, versionium, copilot, loom, clear-glass), guardian onto the shared registry and its own store, one writer per database (the boot sync indexes only cos, emerge, nexus-healer, sentinel, warp). OPEN: the .store node; the systems with no data/nodes (they need a registry first, P8)."
       addendum_2026_10_17: >-
         James, 2026-10-17: "each system, reads, writes, and manages its nodes. each system has a database for each index of
         nodes with all the history. listener, schemas for all the  node types, the database. nodes for all persistant data.

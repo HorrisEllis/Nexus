@@ -2452,6 +2452,9 @@ function startService() {
   });
 
   server.listen(PORT, '127.0.0.1', () => {
+    // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+    // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+    try { require('../lib/node-registry.js').startForSystem('diagnostic', { bus: { emit: (e, d) => broadcast({ type: e, ...d, ts: Date.now() }) } }); } catch (e) { console.warn(`[nexus-diagnostic] node registry: ${e.message}`); }
     console.log(`[nexus-diagnostic] running :${PORT} pid=${process.pid}`);
     console.log(`[nexus-diagnostic] monitoring: ${Object.keys(SYSTEMS).join(', ')}`);
     ico.ledger.append('boot', { type: 'service.start', port: PORT, pid: process.pid, ts: Date.now() });

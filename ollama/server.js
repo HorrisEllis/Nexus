@@ -103,6 +103,9 @@ function register() {
 }
 
 server.listen(PORT, async () => {
+  // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
+  // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
+  try { require('../lib/node-registry.js').startForSystem('ollama'); } catch (e) { console.warn(`[ollama-bridge] node registry: ${e.message}`); }
   await checkOllama();
   console.log(`[ollama-bridge] :${PORT} — ollama ${state.ollamaOnline ? 'online' : 'offline'} at ${config.OLLAMA_HOST}`);
   setTimeout(register, 1000);
