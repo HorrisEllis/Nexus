@@ -64,6 +64,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   const RA = require(path.join(ROOT, 'lib/repo-agent.js'));
   const RI = require(path.join(ROOT, 'lib/repo-inject.js'));
   await R('POST', '/api/config', { key: 'routing.planner', value: 'claude' });
+  await R('POST', '/api/config', { key: 'routing.test_first', value: 'off' });   // 0.60.141 TF2 has its own test (test-test-first); this one tests the build without it
   let calls = 0, halfWrites = 1;
   RA.dispatch = async (a) => {
     calls++;

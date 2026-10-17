@@ -74,6 +74,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   const CG = require(path.join(ROOT, 'cortex/core/raid/contract-gates.js'));
   const realDispatch = RA.dispatch;
   await R('POST', '/api/config', { key: 'routing.planner', value: 'claude' });
+  await R('POST', '/api/config', { key: 'routing.test_first', value: 'off' });   // 0.60.141 TF2 has its own test (test-test-first); this one tests the build without it
   const sent = []; let failNotes = 0, variant = '', badNotes = 0;   // badNotes: CP-12 — notes.js names its exports but requires a file that does not exist
   const planOf = () => JSON.stringify({ system: null, read: ['the phase'], intent: 'notes', spec: [],
     files: [
