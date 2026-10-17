@@ -35,3 +35,9 @@ limits:
   - "Only tests directly linked to the file run (a break only visible through a consumer's consumer is not found); at most 6 tests, 60 s each."
   - "A test that needs data/ or a running service fails both times and is 'already-failing': it neither clears nor blames the proposal."
   - "Passing tests show the change did not break what those tests check; they do not prove the change is right."
+
+# ## ADDENDUM 2026-10-17 (0.60.115): tested in the change's own tree; a batch tested together (FR2)
+# James: "merge. then next phase." (FR2 of docs/2026-10-16-repo-carve-phasemap.spec)
+# gather() defaulted to Nexus's tree for every change, including other repos' changes: they are now tested in their own repo's
+# folder (repo-inject setEvidenceRoot; Nexus changes keep Nexus's tree; a repo with no folder is not tested, said). Evidence is
+# kept on a staged change too. shadow() takes several overlays, and gatherBatch() tests a staged batch together; promote uses it.

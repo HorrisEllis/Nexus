@@ -337,12 +337,15 @@ function staged(ctx) {
 }
 
 /** promote(ctx) — { commitId | injects, force } → the staged batch applied, all-or-nothing (lib/code-edit.js promote). */
-function promote(ctx) {
+// §FR2 0.60.114 — the batch is tested together in the repo's own folder first (lib/code-edit.js promoteTested); a regression
+// refuses it (409, nothing applied) and the test is on each change's record
+async function promote(ctx) {
   const b = ctx.body || {};
-  const r = CE().promote({ layer: ctx.layer, RI: RI(), repo: ctx.repo, injects: Array.isArray(b.injects) ? b.injects : null, commitId: b.commitId || null, approvedBy: b.approvedBy || 'promote', force: bool(b.force) });
-  if (!r.ok) return bad(r.conflict ? 409 : 400, (r.errors || ['promote failed']).join('; '), { rolledBack: r.rolledBack || [] });
+  const r = await CE().promoteTested({ layer: ctx.layer, RI: RI(), repo: ctx.repo, injects: Array.isArray(b.injects) ? b.injects : null, commitId: b.commitId || null, approvedBy: b.approvedBy || 'promote', force: bool(b.force),
+    root: ctx.repo.nexusSelf ? null : (ctx.dir || null), run: b.test !== false });
+  if (!r.ok) return bad(r.regressed || r.conflict ? 409 : 400, (r.errors || ['promote failed']).join('; '), { rolledBack: r.rolledBack || [], ...(r.batch ? { batch: r.batch } : {}) });
   for (const f of r.files) ctx.emit && ctx.emit('idearium.repo.code.changed', { repoUuid: ctx.uuid, path: f.path, op: f.op, status: 'applied', inject: f.inject, promoted: b.commitId || true });
-  return ok({ ok: true, promoted: r.files, ...(r.warning ? { warning: r.warning } : {}) });
+  return ok({ ok: true, promoted: r.files, ...(r.batch ? { batch: r.batch } : {}), ...(r.warning ? { warning: r.warning } : {}) });
 }
 
 /**

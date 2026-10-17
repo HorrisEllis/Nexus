@@ -7,6 +7,7 @@
  *   CR-03  an inject from before tasks were kept: its run matched by path and time, SAID as matched; no run → a hole
  *   CR-04  applied with no version naming it, no evidence: each missing link is a hole, named; a reverted one cannot be undone again
  *   CR-05  GET /api/repos/:uuid/changes and /changes/:id through the real router; the command row (repo record); command keys unique
+ *   CR-07  FR2: where it was tested, old evidence from Nexus's tree a hole, the batch line
  *   CR-06  the Code tab's changes panel in Clear Glass against a stubbed api(); no engine → SKIPPED, said
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -53,7 +54,7 @@ const NEW = 'const a = 2;\nconst b = 3;\nmodule.exports = { a, b };\n';
   const base = { uuid: 'i-1', repoUuid: 'r1', path: 'lib/a.js', op: 'write', status: 'applied', hatName: 'the_builder', agentId: 'h1', source: { kind: 'agent' },
     content: NEW, before: 'const a = 1;\nmodule.exports = a;\n', creates: false, approvedBy: 'james', createdAt: 1000, appliedAt: 2000,
     task: { id: 'task-1', hat: 'the_builder', provider: 'ollama', model: 'qwen', session: 'sess-1', runId: null, title: 'make b' },
-    evidence: { tests: { ran: 2, linked: 2 }, regressions: 0, at: 1500 },
+    evidence: { root: 'repo', tests: { ran: 2, linked: 2 }, regressions: 0, at: 1500 },
     history: [{ at: 1000, event: 'proposed' }, { at: 1500, event: 'evidence — 2/2 linked tests run, 0 regressed' }, { at: 2000, event: 'applied' }] };
   const runs = [{ runId: 'r1__sess-1', repoUuid: 'r1', goal: 'add b to a', attempt: 2, provider: 'ollama', status: 'done', filesChanged: ['lib/a.js'], startedAt: 500, updatedAt: 2500 }];
   const activity = [
@@ -67,7 +68,7 @@ const NEW = 'const a = 2;\nconst b = 3;\nmodule.exports = { a, b };\n';
     assert.deepStrictEqual(r.what.lines, { added: 3, removed: 2 });
     assert.deepStrictEqual([r.who.agent, r.who.provider, r.who.model, r.who.approvedBy], ['the_builder', 'ollama', 'qwen', 'james']);
     assert.deepStrictEqual([r.why.run.runId, r.why.run.goal, r.why.run.attempt, r.why.run.how], ['r1__sess-1', 'add b to a', 2, 'task']);
-    assert.deepStrictEqual(r.checked, { testsRan: 2, testsLinked: 2, regressions: 0, at: 1500 });
+    assert.deepStrictEqual(r.checked, { testsRan: 2, testsLinked: 2, regressions: 0, at: 1500, where: 'repo' });
     assert.deepStrictEqual(r.landed.map(c => [c.commitId, c.kind]), [['c-77', 'agent']], 'only the commit that names it');
     assert.deepStrictEqual(r.timeline.map(t => t.what), ['proposed', 'evidence — 2/2 linked tests run, 0 regressed', 'applied', 'version c-77']);
     assert.strictEqual(r.undo.possible, true); assert.match(r.undo.how, /writes back the content it replaced/); assert.match(r.undo.route, /injects\/i-1\/revert$/);
@@ -93,6 +94,17 @@ const NEW = 'const a = 2;\nconst b = 3;\nmodule.exports = { a, b };\n';
     const p = CR.record({ ...base, status: 'proposed', before: null }, { activity: [], runs, base: 'const a = 1;\nmodule.exports = a;\n' });
     assert.match(p.undo.how, /reject it/); assert.deepStrictEqual(p.what.lines, { added: 3, removed: 2 }, 'a proposal is counted against the file as it is');
     assert.ok(CR.record({ ...base, status: 'proposed', before: null }, { runs }).holes.some(h => h.what === 'lines'), 'no base given: the lines are a hole');
+  });
+
+  await test('CR-07', 'FR2: evidence from before 0.60.114 (tested in Nexus\'s tree) is a hole for a repo\'s change; a batch test is shown', async () => {
+    const old = CR.record({ ...base, evidence: { tests: { ran: 2, linked: 2 }, regressions: 0 } }, { activity, runs });
+    assert.strictEqual(old.checked.where, 'nexus');
+    assert.ok(old.holes.some(h => h.what === 'checked' && /Nexus's tree, not this repo's/.test(h.why)));
+    assert.ok(!CR.record({ ...base, target: { live: true }, evidence: { tests: { ran: 1, linked: 1 }, regressions: 0 } }, { activity, runs }).holes.length, 'a Nexus change tested in Nexus is right');
+    const b = CR.record({ ...base, batch: { files: 3, linked: 4, ran: 4, regressions: 0, fixed: 1, root: 'repo' } }, { activity, runs });
+    assert.ok(CR.lines(b).some(l => /^batch: tested with 3 file\(s\) together, 4\/4 linked tests, 0 regressed/.test(l)));
+    const none = CR.record({ ...base, evidence: { root: null, tests: { ran: 0, linked: 0, skipped: 'not tested: this repo has no folder on disk to test the change in' }, regressions: 0 } }, { activity, runs });
+    assert.ok(CR.lines(none).some(l => /^checked: not tested: this repo has no folder/.test(l)));
   });
 
   const api = await import('../../idearium/api/index.js');
@@ -136,7 +148,7 @@ const NEW = 'const a = 2;\nconst b = 3;\nmodule.exports = { a, b };\n';
   const CALLS = []; const CURRENT_API_REPO = { uuid: 'r1' };
   function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
   async function api(p) { CALLS.push(p);
-    if (p.startsWith('/api/repos/r1/changes?')) return { changes: [{ id: 'i-1', path: 'lib/a.js', op: 'write', status: 'applied', lines: { added: 3, removed: 2 }, agent: 'the_builder', provider: 'ollama', goal: 'add b to a', runHow: 'task', checked: { testsRan: 2, testsLinked: 2, regressions: 0 }, landed: ['c-77'], undo: true, holes: [] },
+    if (p.startsWith('/api/repos/r1/changes?')) return { changes: [{ id: 'i-1', path: 'lib/a.js', op: 'write', status: 'applied', lines: { added: 3, removed: 2 }, agent: 'the_builder', provider: 'ollama', goal: 'add b to a', runHow: 'task', checked: { testsRan: 2, testsLinked: 2, regressions: 0, where: 'repo' }, batch: { files: 2, ran: 2, linked: 2, regressions: 0 }, landed: ['c-77'], undo: true, holes: [] },
       { id: 'i-2', path: 'lib/old.js', op: 'write', status: 'applied', lines: null, agent: 'old_hat', goal: 'old goal', runHow: 'matched by path and time', checked: null, landed: [], undo: true, holes: ['task', 'version'] }] };
     if (p === '/api/repos/r1/changes/i-2') return { change: { id: 'i-2' }, lines: ['i-2 write lib/old.js — applied', 'missing version: it was applied but no version commit names it'] };
     throw new Error('unexpected ' + p); }
@@ -150,7 +162,7 @@ const NEW = 'const a = 2;\nconst b = 3;\nmodule.exports = { a, b };\n';
           await page.evaluate(() => cxChangesLoad(CURRENT_API_REPO));
           await page.waitForSelector('.cx-change[data-id="i-2"]');
           const rows = await page.$$eval('.cx-change', els => els.map(e => e.textContent.replace(/\s+/g, ' ').trim()));
-          assert.ok(/applied lib\/a\.js \+3 −2 the_builder/.test(rows[0]) && /add b to a/.test(rows[0]) && /checked 2\/2, 0 regressed · version c-77 · can be undone/.test(rows[0]), rows[0]);
+          assert.ok(/applied lib\/a\.js \+3 −2 the_builder/.test(rows[0]) && /add b to a/.test(rows[0]) && /checked 2\/2, 0 regressed in the repo's tree · batch of 2: 2\/2, 0 regressed · version c-77 · can be undone/.test(rows[0]), rows[0]);
           assert.ok(/\(matched by path and time\)/.test(rows[1]) && /missing task, version/.test(rows[1]), rows[1]);
           await page.click('.cx-change[data-id="i-2"]');
           await page.waitForFunction(() => /no version commit names it/.test((document.querySelector('.cx-change-detail') || {}).textContent || ''));

@@ -292,6 +292,8 @@ function appendRow(table, row) {
 // §0.40.0 VR1 — every change to a repo's files settles into one versionium commit (lib/repo-versions.js), through the
 // same repo snapshot a person takes; only the changed files are sent. Setting versions.every_change (default on).
 try {
+  // §FR2 0.60.114 — a change is tested in the tree it belongs to: this repo's folder (a Nexus change keeps Nexus's tree)
+  try { _require('../../lib/repo-inject.js').setEvidenceRoot((n) => { const r = getRepoLayer().get(n.repoUuid); return r && r.nexusSelf ? (r.materializeDir || _repoDiskDir(n.repoUuid)) : _repoDiskDir(n.repoUuid); }); } catch (_) {}
   const RV = _require('../../lib/repo-versions.js');
   RV.setCommitter(async ({ repoUuid, message, causedBy, provenance }) => {
     let on = true; try { on = getIdeariumValue('versions.every_change') !== false; } catch (_) {}
@@ -7890,6 +7892,7 @@ async function handle(req, res, route, query, body) {
       const changes = injects.map(i => CR.record(RI.get(i.uuid) || i, { activity, runs })).filter(Boolean)
         .map(r => ({ id: r.id, path: r.path, op: r.op, status: r.status, at: r.at, lines: r.what.lines, agent: r.who.agent, provider: r.who.provider,
           goal: r.why.run ? r.why.run.goal : (r.why.task ? r.why.task.title : null), runHow: r.why.run ? r.why.run.how : null, checked: r.checked,
+          batch: r.batch ? { files: r.batch.files, ran: r.batch.ran, linked: r.batch.linked, regressions: r.batch.regressions } : null,   // §FR2 0.60.114
           landed: r.landed.map(c => c.commitId), undo: r.undo.possible, holes: r.holes.map(h => h.what) }));
       return ok(res, { repoUuid: params.uuid, changes, count: changes.length });
     }
