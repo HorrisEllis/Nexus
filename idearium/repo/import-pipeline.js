@@ -46,6 +46,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { Worker } from 'worker_threads';   // 0.60.124 SW1 — runImportPipelineOffThread
 import { writeRepositoryNode } from './repo-node.js';
 
 const MODULE_ID = 'idearium/repo/import-pipeline';
@@ -595,6 +596,31 @@ export function runImportPipeline(repo, repoDir, opts = {}) {
   if (r.state === 'FAULT') emit('repository:import:failed', { error: r.error || 'see verification tiers' });
   else emit('repository:import:ready', { state: r.state, chunks: r.chunks?.count ?? null });
   return r;
+}
+
+/**
+ * runImportPipelineOffThread(repo, repoDir, opts) → Promise of the same result, run in a worker thread
+ * (import-pipeline-worker.js) so a big repo never holds idearium's event loop — 0.60.124 SW1, James's 0.60.122 log
+ * (idearium silent 34 s during the self-sync). A worker that cannot start runs it here instead, and the result says so
+ * (offThread: false, offThreadWhy). Events reach opts.onEvent as messages.
+ */
+export function runImportPipelineOffThread(repo, repoDir, opts = {}) {
+  const { onEvent, ...rest } = opts;
+  const inline = (why) => ({ ...runImportPipeline(repo, repoDir, opts), offThread: false, offThreadWhy: why });
+  return new Promise((resolve) => {
+    let w, settled = false;
+    const done = (v) => { if (settled) return; settled = true; resolve(v); };
+    try {
+      w = new Worker(new URL('./import-pipeline-worker.js', import.meta.url), { workerData: { repo: JSON.parse(JSON.stringify(repo)), repoDir, opts: { ...rest, events: typeof onEvent === 'function' } } });
+    } catch (e) { return done(inline(`the worker did not start: ${e.message}`)); }
+    w.on('message', (m) => {
+      if (m && m.event && typeof onEvent === 'function') { try { onEvent(m.event); } catch (_) {} }
+      else if (m && m.result) done({ ...m.result, offThread: true });
+      else if (m && m.error) done({ repository: repo.uuid, state: 'FAULT', error: m.error, offThread: true });
+    });
+    w.on('error', (e) => done({ repository: repo.uuid, state: 'FAULT', error: `pipeline thread: ${e.message}`, offThread: true }));
+    w.on('exit', (code) => done({ repository: repo.uuid, state: 'FAULT', error: `pipeline thread exited (${code}) before its result`, offThread: true }));
+  });
 }
 
 function _runImportPipeline(repo, repoDir, emit, opts = {}) {

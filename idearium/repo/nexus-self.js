@@ -26,7 +26,7 @@
 import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
-import { runImportPipeline } from './import-pipeline.js';
+import { runImportPipeline, runImportPipelineOffThread } from './import-pipeline.js';
 import { flushTables } from '../lib/db.js';
 
 const require = createRequire(import.meta.url);
@@ -198,7 +198,8 @@ async function _syncSystem(rl, se, { system, snap, compartment = null, parentRep
   await tick();
 
   let pipeline = null;
-  try { pipeline = runImportPipeline(rl.get(repoUuid), mat.dir, { runtimeProof: false, lazyTests: false, onEvent }); }
+  // §0.60.124 SW1 — in its own thread: core's 24 s pipeline held idearium silent (James's 0.60.122 log)
+  try { pipeline = await runImportPipelineOffThread(rl.get(repoUuid), mat.dir, { runtimeProof: false, lazyTests: false, onEvent }); }
   catch (e) { pipeline = { state: 'FAULT', error: e.message }; }
   step('pipeline');
 
@@ -301,7 +302,7 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
     if (parent) {
       const pm = rl.materialize(parent.uuid);
       // indexed like every repo (0.39.263), so it can be a versionium version too
-      if (pm && pm.dir) { try { runImportPipeline(rl.get(parent.uuid), pm.dir, { runtimeProof: false, lazyTests: false }); } catch (_) {} }
+      if (pm && pm.dir) { try { await runImportPipelineOffThread(rl.get(parent.uuid), pm.dir, { runtimeProof: false, lazyTests: false }); } catch (_) {} }
       rl.annotate(parent.uuid, { immutable: true, nexusSelf: { role: 'parent', hash: parentHash, snapshot: snap.hash, children: repoBySystem, syncedAt: Date.now() } });
     }
   }

@@ -309,3 +309,47 @@ addendum_c:
 # - Proof: tests/modules/test-plan-pieces.test.js 4/4 (PP-01 units, PP-02/PP-03 Clear Glass, PP-04 the row). Neighbours
 #   green: test-plan-sidebar 4/4, test-code-dock 10/10, test-code-tab 16/16, test-build-surface 13/13,
 #   test-plan-code-run-attention 40/40, test-phases-tab 5/5, test-step-gate 18/18.
+#
+# ADDENDUM 2026-10-17 (g) — SW1–SW3 (0.60.124): what his 0.60.122 boot log showed
+# What he sent: three screenshots and the full log of `npm run start:all` (0.60.122, a fresh download), with no words.
+# The screenshots:
+#   1. the Plan panel over the Code tab's changes;
+#   2. the same with it closed;
+#   3. Home with all six dock panels open, every one at "reading…", and Home at "loading the Nexus atlas…".
+# The coder's reading (to confirm): fix what the log shows is broken, root causes first, as with his earlier logs
+# ("next. fix anything you can.").
+#
+# Found in the log:
+# - SW1, idearium silent during the self-sync.
+#   - Evidence: "'idearium' missed its heartbeat — silent 17s", then "[watchdog] idearium → OFFLINE" for 34 s, then
+#     25 s more ten minutes later.
+#   - Each silence matches the self-sync's import pipeline. idearium/repo/import-pipeline.js is synchronous end to end:
+#     core is 2,556 files, 24 s at boot and 5.9 s after a one-file change (CHANGELOG.md, written by the orchestrator
+#     at boot).
+#   - While it ran, idearium answered nothing:
+#     - the dock's panels stayed at "reading…";
+#     - RAID's intake logged "idearium unreachable or refused";
+#     - versionium's /cfr/field calls timed out.
+#   - Fixed: runImportPipelineOffThread runs the same pipeline in a worker thread (import-pipeline-worker.js).
+#     nexus-self.js uses it for every system and for the parent index.
+#   - Measured on 447 files of lib/: inline the loop was held 4,183 ms; in the thread, 15 ms. Same result
+#     (tests/modules/test-sync-off-thread.test.js SW-01, SW-02).
+#   - Open: the versions step (18 s in his second sync) still builds its payload on the main thread.
+# - SW2, Guardian's flush loop into a sign-in page.
+#   - Evidence: "claude needs a sign-in … its jobs wait", then "flushing 1 queued jobs → claude" every 3 s for five
+#     minutes, with §FLAPPING. Each flush dispatched the job; the tab opened the job's chat, the site sent it back to
+#     sign-in, and the tab reconnected.
+#   - Fixed: guardian/lib/provider-login.js holdsJobs. A fresh wall (under 5 minutes) holds the queue, said once; a
+#     reported sign-in flushes it.
+# - SW3, COS's system map.
+#   - Evidence: about thirty "[system-map] persist failed: EPERM … rename" lines in 5 s, from idearium and the
+#     orchestrator writing the same file on Windows.
+#   - Fixed: the rename is retried, then the file is written in place, and that is said once a minute.
+#
+# Seen and not changed here:
+# - His copy was 0.60.122, so the 0.60.123 memory work (MP) was not running in it: Eros started, and memory went
+#   critical at 13:25 and 13:46.
+# - The claude reply-selector drift was handled by its own flow: he picked the reply with ◎ at 14:07 and the map was
+#   saved.
+# - The PC1 build reached attempt 12 across five agents and ended contract-incomplete with thin files. That belongs to
+#   the scale phasemap (plan + contract with remote coders).

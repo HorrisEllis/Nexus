@@ -318,7 +318,21 @@ class SystemMap {
       const json = JSON.stringify({ ...this._map, generatedAt: Date.now() }, null, 2);
       const tmp  = `${this._file}.${process.pid}.${Math.random().toString(36).slice(2, 8)}.tmp`;   // §0.59.6 — one shared .tmp raced between processes (idearium + ollama-bridge: ENOENT on rename)
       fs.writeFileSync(tmp, json, 'utf8');
-      try { fs.renameSync(tmp, this._file); } catch (e) { try { fs.unlinkSync(tmp); } catch (_) {} throw e; }
+      // §0.60.124 SW3 — James's 0.60.122 log: ~30 "persist failed: EPERM … rename" in 5 s. On Windows a rename onto a
+      // file another process (idearium, orchestrator) is renaming or reading at that instant is refused for a moment.
+      // Retried; still refused → written in place (the content is whole JSON either way); said once a minute, not per write.
+      let lastErr = null;
+      for (let i = 0; i < 4; i++) {
+        try { fs.renameSync(tmp, this._file); lastErr = null; break; }
+        catch (e) { lastErr = e; if (!['EPERM', 'EACCES', 'EBUSY'].includes(e.code)) break; try { Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 15 * (i + 1)); } catch (_) {} }
+      }
+      if (lastErr) {
+        try { fs.unlinkSync(tmp); } catch (_) {}
+        if (!['EPERM', 'EACCES', 'EBUSY'].includes(lastErr.code)) throw lastErr;
+        fs.writeFileSync(this._file, json, 'utf8');
+        const now = Date.now();
+        if (!SystemMap._saidLocked || now - SystemMap._saidLocked > 60000) { SystemMap._saidLocked = now; console.warn(`[system-map] ${lastErr.code} renaming onto ${path.basename(this._file)} (another process holds it) — written in place instead; said once a minute`); }
+      }
     } catch (err) {
       console.error('[system-map] persist failed:', err.message);
     }

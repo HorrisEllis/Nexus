@@ -11,4 +11,11 @@ function blockedReason(provider) {
   const r = get(provider);
   return r && r.state === 'wall' ? `${provider} needs you to sign in — open its tab in Clear Glass (${r.text || 'sign-in page'}); the job waits and runs once you have` : null;
 }
-module.exports = { set, get, all, blockedReason };
+/**
+ * §0.60.124 SW2 — holdsJobs(provider) → the wall record while queued jobs must wait for it, else null. A fresh wall holds
+ * (dispatching into a sign-in page sends the tab back to sign-in and reconnects it: James's 3-second flush loop); a wall
+ * older than HOLD_MS does not, so an "ok" that never arrived cannot strand a job.
+ */
+const HOLD_MS = 5 * 60 * 1000;
+function holdsJobs(provider, now = Date.now()) { const r = get(provider); return r && r.state === 'wall' && now - (r.at || 0) < HOLD_MS ? r : null; }
+module.exports = { set, get, all, blockedReason, holdsJobs, HOLD_MS };

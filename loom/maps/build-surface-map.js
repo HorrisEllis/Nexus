@@ -98,6 +98,8 @@ const FILES = [
   ['idearium/repo/build-plan.js', I('idearium/repo/build-plan.js'), [
     I('lib/run-watch.js'), I('lib/phase-plan.js'),              // §0.60.123 PP1/PP2 createRequire — runsOf/isFinal (an open run), depsOf (what a piece uses)
   ]],
+  // §0.60.124 SW1 — the import pipeline in its own thread (the self-sync no longer holds idearium)
+  ['idearium/repo/import-pipeline-worker.js', I('idearium/repo/import-pipeline-worker.js'), [I('idearium/repo/import-pipeline.js')]],   // import { runImportPipeline }
   // §0.60.123 MP — a failure mode that happened becomes a prevention; heavy work asks before it starts
   ['lib/prevention.js', I('lib/prevention.js'), [I('lib/resource-monitor.js'), I('lib/test-sandbox.js')]],   // heavyAllowedHere → shared monitor; fileOf → sandbox.ensure
   ['ollama/lib/idle-unload.js', I('ollama/lib/idle-unload.js'), [I('ollama/lib/model-inventory.js'), I('lib/prevention.js')]],
@@ -252,6 +254,9 @@ const CONSUMERS = [
   [I('cortex/core/raid/officiator.js'), I('lib/prevention.js'), '0.60.123 MP the tick asks heavyAllowedHere'],
   [I('nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],
   [I('ollama/server.js'), I('ollama/lib/idle-unload.js'), '0.60.123 MP startIdleUnload after listen (keep_alive:0 on idle)'],
+  [I('idearium/repo/import-pipeline.js'), I('idearium/repo/import-pipeline-worker.js'), '0.60.124 SW1 runImportPipelineOffThread — new Worker(new URL(./import-pipeline-worker.js))'],
+  [I('idearium/repo/nexus-self.js'), I('idearium/repo/import-pipeline.js'), '0.60.124 SW1 _syncSystem + parent: await runImportPipelineOffThread'],
+  [I('guardian/server.js'), I('guardian/lib/provider-login.js'), '0.60.124 SW2 flushQueuedJobs asks holdsJobs(provider); a reported sign-in flushes'],
 ];
 
 function mapBuildSurface(driver) {
