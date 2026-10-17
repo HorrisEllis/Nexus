@@ -228,3 +228,26 @@ related:
 #     - plan-panel.js phaseBuildPost is the one door every ▶ build uses; it shows what waits and asks before building
 #       anyway.
 #   - With this, PC1 is refused until PC0b and PC0c are decided.
+#
+# ## ADDENDUM 2026-10-17 (e) — every chunk a contract, shown; nothing fulfilled until approved (PC7, PC8)
+# James: "with the progress screen, i want each chunk shown as a empty dependancy, then red for rejected and green for approved,
+# red needs to be rerun, route to another model, or agent, until it can get approved. each chunk is also a contract, nothing is
+# fullfilled until its approved."
+# His decisions, recorded as his: each chunk is a contract; the progress screen shows every chunk from the start (empty, a
+# dependency not built yet), red when rejected, green when approved; a red chunk is rerun on another model or agent until it is
+# approved; nothing is fulfilled until it is approved.
+# Found (read 2026-10-17): a phase's contract already has a brick per chunk with its dependencies, and GT1 already skips an agent
+# that failed a brick (`<brick>.exclude`). Three gaps: (1) in review mode a contract went 'contract-complete' while its proposals
+# still waited for him (his screenshot of 2026-10-16: a placeholder marked contract-complete); (2) a rejection retried the phase,
+# but since 0.60.79 keeps the saved plan the rejected brick's PASSED checkpoint was kept, so it would NOT have been rebuilt (the
+# coder's own regression, found here, not seen live); (3) the progress card shows phases, not chunks.
+#   PC7_rejected_is_rerun_elsewhere (OPEN — mapped, not built yet): a rejection re-opens exactly the rejected file's brick on the contract
+#     (READY, a fresh budget, the old attempts kept in its history), with his reason and the failure modes as its feedback, and
+#     the agent that built it excluded, so the retry builds that brick again on another agent. Passed bricks stay passed.
+#   PC8_every_chunk_shown_fulfilled_only_when_approved (OPEN — mapped, not built yet): GET .../phases/contract returns each brick's approval:
+#     empty (not built yet, waiting on its dependencies), building, built (waiting for him), approved, rejected, failed; the
+#     contract is fulfilled only when every brick is approved (review mode: its proposal applied; auto mode: its checks passed
+#     and it landed). The Plan's Progress card draws the current phase's chunks as cells in that colour.
+# Note 2026-10-17, read after merging main: 0.60.123 PP1–PP4 (another session) already draws the Plan's bar as its pieces, one per
+# chunk and dependency. PC8 is therefore an extension of PP1 (the approval colours, and "fulfilled only when approved"), not a second
+# card. Before PC8 is built, read PP1's code and extend it (rule 2, reuse before build). The version is open; 0.60.123 is taken.

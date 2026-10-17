@@ -187,3 +187,10 @@ spec:
 #   UE4_tokens_in_the_style_manager (OPEN, needs DS0/DS1).
 #   UE5_the_agents_design_too (OPEN, = DS5): every editor action a command; an agent's restyle comes with before/after.
 #   UE6_more_adapters (OPEN, = DS4): SVG, Eravos mods, Looking Glass's typed data.
+# ## ADDENDUM 2026-10-17 (b) — UE3 next; UI elements from image sites (UE7, to confirm)
+# James: "yes, and like ui elements from image sites you know what i mean?" (yes = UE3, live pages, next).
+#   UE7_elements_from_image_sites (OPEN, reading to confirm): the coder's reading — a UI seen on an image site (a screenshot of a
+#     card, a nav bar, a form) becomes an editable element: Clear Glass grabs the image (its search-engine tool finds it), a
+#     vision-capable agent (the right agent for the job: RA1 routing) turns it into HTML + CSS, and it lands in the editor as a
+#     BLOCK, a proposal he places and edits, never applied by itself. Images are pictures, not code: the result is a draft to
+#     correct, said on the block. Licence: an image on a site is someone's design; the block is marked with its source URL.
