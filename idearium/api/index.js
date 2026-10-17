@@ -2771,6 +2771,7 @@ const ROUTE_CAP = {
   'system.version': CAPS.READ_IDEAS,   // 0.60.34 VR1 — the one release version
   'system.prevention.clear': CAPS.ADMIN,   // 0.60.123 MP
   'system.drawbridge': CAPS.READ_IDEAS,   // 0.60.126 DB1 — the crossings between systems, and the ratchet
+  'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
   'accounts.profiles': CAPS.READ_IDEAS,   // 0.60.32 PF1 — every account tab and its lane
@@ -3058,6 +3059,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','version'],         'system.version'],     // 0.60.34 VR1 — the release (lib/version.js), where it is stated, the module versions labelled
     ['POST',   ['api','system','prevention','clear'], 'system.prevention.clear'],   // 0.60.123 MP — a person ends a prevention early
     ['GET',    ['api','system','drawbridge'], 'system.drawbridge'],   // 0.60.126 DB1 — every require() that crosses a system boundary; ?new=1 the ratchet's drift only
+    ['GET',    ['api','system','registry'], 'system.registry'],   // 0.60.127 DB9 — every system and the crossings between them: the dependency graph
+    ['GET',    ['api','system','registry',':system'], 'system.registry.one'],   // 0.60.127 DB9/DB10 — one system's generated registry: declared, observed, negative space
+    ['POST',   ['api','system','registry',':system','settle'], 'system.registry.settle'],   // 0.60.127 DB10 — the shadow settled: each absence a gap
     ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
     ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
     ['GET',    ['api','repos',    ':uuid','run'],            'repo.run'],           // §0.60.0 RS1 — the repo's run state: playing | paused
@@ -5279,6 +5283,14 @@ async function handle(req, res, route, query, body) {
       const cur = R.current();
       return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
         modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
+    }
+    case 'system.registry':
+    case 'system.registry.one':
+    case 'system.registry.settle': {   // 0.60.127 DB9 + DB10 (docs/2026-10-17-system-drawbridge-phasemap.spec, addendum a)
+      const SR = _require('../../lib/system-registry.js');
+      if (action === 'system.registry') return ok(res, SR.graph({}));
+      const r = action === 'system.registry.settle' ? SR.settle(String(params.system || '')) : SR.registryOf(String(params.system || ''));
+      return r.ok ? ok(res, r) : err(res, 404, r.error);
     }
     case 'system.drawbridge': {   // 0.60.126 DB1 (docs/2026-10-17-system-drawbridge-phasemap.spec)
       const SB = _require('../../lib/system-boundary.js');

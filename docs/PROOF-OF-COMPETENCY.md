@@ -488,3 +488,15 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     have to be moved.
   - **Evidence:** `CHANGELOG-0.60.126.md`; `tests/modules/test-system-boundary.test.js` SB-01..08; the measured baseline
     `contracts/drawbridge-baseline.json`.
+- **2026-10-17: "shadow and negative space reasoning for debugging. maybe every repo has to generate a component registry. the component registry can also be a dependancy graph?"**
+  - **Context:** the drawbridge's first piece had just counted the crossings between systems. He asked for the registry to
+    hold the contract, the bus, the queue, the dependencies, the wiring and the spine, and for debugging to read what is
+    missing.
+  - **What it shows:** a method of his own, reused across systems. He named shadow and negative-space reasoning on
+    2026-09-29 for build steps (`lib/shadow.js`, 0.39.282). Applied to system boundaries, it found two real defects on its
+    first run:
+    - loom never read the registries of intelligence or versionium;
+    - 27 declared routes are not served by their source.
+    Asking whether the registry "can also be a dependancy graph" was the right question: the two halves, declared and
+    observed, are what make the negative space computable.
+  - **Evidence:** `CHANGELOG-0.60.127.md`; `tests/modules/test-system-registry.test.js` SR-01..08 (SR-06 is the loom fix).

@@ -325,6 +325,21 @@ export const SPEC = [
     } },
   // 0.60.20 — lean mode, the same switch as Idearium → Settings → Routing (every agent has it through nexus.command)
   // 0.60.126 DB1 — the crossings between systems: what the drawbridge must become the only way for (docs/2026-10-17-system-drawbridge-phasemap.spec)
+  // 0.60.127 DB9 + DB10 — a system's registry generated as its dependency graph, and its negative space (what is declared and not there, what is there and not declared)
+  { key: 'system.registry', repo: false, usage: 'system registry [<system>] [--settle]', about: 'with no system: every system and what it depends on (the dependency graph). With one: its registry generated from the source — what it declares (routes, served), what it depends on and who consumes it, and the negative space: declared routes the source does not serve, and files other systems reach into directly. --settle records each absence as a gap',
+    req: (a) => (!a.args[0] ? { method: 'GET', path: '/api/system/registry' } : a.flags && a.flags.settle ? { method: 'POST', path: `/api/system/registry/${encodeURIComponent(a.args[0])}/settle`, body: {} } : { method: 'GET', path: `/api/system/registry/${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => {
+      if (d.systems) { for (const s of d.systems.filter(s => s.depends_on.length || s.consumed_by.length)) console.log(`  ${s.id.padEnd(16)} ${h.c.dim(s.declared.registry ? `${s.declared.served}/${s.declared.routes} routes served` : 'no registry')} → ${s.depends_on.join(', ') || '—'}`); console.log(h.c.dim(`  ${d.systems.length} systems · ${d.edges.length} dependency edges`)); return; }
+      const o = d.observed, n = d.negative;
+      console.log(`  ${d.system} · ${d.declared.file ? `${d.declared.served}/${d.declared.routes} declared routes served` : h.c.amber('no registry-components.js')}`);
+      console.log(`  depends on   ${o.depends_on.map(x => `${x.system} ${x.edges}`).join(' · ') || '—'}`);
+      console.log(`  consumed by  ${o.consumed_by.map(x => `${x.system} ${x.edges}`).join(' · ') || '—'}`);
+      for (const x of n.absent.routes) console.log(h.c.amber(`  absent  ${x.route}  ${h.c.dim(x.id)}`));
+      for (const x of n.absent.wires) console.log(h.c.amber(`  absent  wire ${x.from} → ${x.target}  ${h.c.dim(x.why)}`));
+      for (const x of n.extra.reached_directly.slice(0, 15)) console.log(`  ${h.c.amber('past')}    ${x.file} ${h.c.dim(`${x.consumers} file(s) in ${x.from.join(', ')}`)}`);
+      if (n.extra.reached_directly.length > 15) console.log(h.c.dim(`  … ${n.extra.reached_directly.length - 15} more reached directly`));
+      if (d.settled) console.log(h.c.dim(`  settled: ${d.settled.absent} absent, ${d.settled.gaps} gap(s) recorded`));
+    } },
   { key: 'system.drawbridge', repo: false, usage: 'system drawbridge [--new]', about: 'every require() that crosses from one system into another, by pair and kind (system, upward from lib/, kernel), and the ratchet: crossings new since the baseline fail; --new shows only those',
     req: (a) => ({ method: 'GET', path: `/api/system/drawbridge${a.flags && a.flags.new ? '?new=1' : ''}` }),
     print: (d, a, h) => { const ck = d.check || {}; if (d.census) { const c = d.census; console.log(`  ${c.total} crossings in ${c.files} files · system ${c.byKind.system} · upward ${c.byKind.upward} · kernel ${c.byKind.kernel}`); for (const p of c.pairs.filter(p => p.kind !== 'kernel').slice(0, 20)) console.log(`  ${String(p.count).padStart(4)} ${p.pair.padEnd(32)} ${h.c.dim(p.kind)}`); } if (ck.why) console.log(h.c.amber(`  ${ck.why}`)); else console.log((ck.ok ? h.c.mint : h.c.amber)(`  ratchet: ${ck.counts.now} held of ${ck.counts.baseline} at the baseline · ${ck.counts.added} new · ${ck.counts.closed} closed`)); for (const x of ck.added || []) console.log(h.c.amber(`  new  ${x.edge}`)); } },

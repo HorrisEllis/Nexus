@@ -68,6 +68,9 @@ const SYSTEMS = Object.freeze({
   'copilot': 'copilot',
   'bridge': 'bridge',
   'nexus-healer': 'nexus-healer',
+  // §0.60.127 DB9 — read by lib/system-registry.js and found missing: both have a registry-components.js that loom never read
+  'intelligence': 'intelligence',
+  'versionium': 'versionium',
 });
 
 function _cmpVersion(a, b) {
