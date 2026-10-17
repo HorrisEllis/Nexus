@@ -507,18 +507,6 @@ export const SPEC = [
     print: (d, a, h) => console.log(`${h.c.mint('✓')} cleared ${(d.cleared || []).length}: ${(d.cleared || []).map(x => x.slice(0, 12)).join(', ') || 'nothing was held back'}`) },
   // 0.60.74 COSA10 — James: "i figure cos could be helpfui for managing my projects so im not so overwhelmed." Every project,
   // newest activity first: questions and todos waiting, phases done/total, what is in progress or next (idearium/lib/projects.cjs)
-  // 0.60.139 COSA14 — his projects folder: "these are all my projects i have so far. way more. in some folders."
-  { key: 'projects.folder', repo: false, usage: 'projects folder [<dir>]', about: 'his projects folder: set it (once), then every project under it — also inside group folders — with what marks it, its size, and whether it is in Idearium already. Read only: nothing in the folder is changed',
-    req: (a) => (a.args[0] ? { method: 'POST', path: '/api/my-projects/folder', body: { root: a.args.join(' ') }, timeoutMs: 120000 } : { method: 'GET', path: '/api/my-projects/folder', timeoutMs: 120000 }),
-    print: (d, a, h) => {
-      if (!d.root) { console.log(h.c.amber(`  ${d.said}`)); return; }
-      console.log(`  ${d.root} · ${d.counts.projects} projects · ${d.counts.groups} group folders · ${d.imported} in Idearium`);
-      for (const p of d.projects) console.log(`  ${(p.imported ? h.c.mint('in    ') : p.weak ? h.c.dim('files ') : h.c.amber('new   '))} ${p.rel.padEnd(40)} ${h.c.dim(`${p.markers.join(', ')}${p.size ? ` · ${p.size.files}${p.size.capped ? '+' : ''} files` : ''}`)}`);
-      for (const n of d.notRecognized || []) console.log(h.c.dim(`  ·      ${n.rel} — ${n.why}`));
-    } },
-  { key: 'projects.import', repo: false, usage: 'projects import <path> [<path> …]', about: 'bring projects from his projects folder into Idearium, each zipped from disk and imported the way an uploaded zip is (its own repo, chunked, indexed); the folder itself is never changed',
-    req: (a) => ({ method: 'POST', path: '/api/my-projects/folder/import', body: { paths: a.args }, timeoutMs: 30 * 60000 }),
-    print: (d, a, h) => { for (const r of d.results || []) console.log(`  ${(r.ok ? h.c.mint('in    ') : h.c.amber('not   '))} ${String(r.path || '').padEnd(48)} ${h.c.dim(r.ok ? `${r.repo.name} · ${r.files} files${r.skipped ? ` · ${r.skipped} skipped` : ''}` : r.error)}`); console.log(h.c.dim(`  ${d.brought} brought in`)); } },
   { key: 'projects', repo: false, usage: 'projects', about: 'every project of yours on one list: what is waiting on you, what is next, what moved last',
     req: () => ({ method: 'GET', path: '/api/my-projects' }),
     print: (d, a, h) => {

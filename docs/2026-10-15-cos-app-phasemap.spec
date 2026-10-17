@@ -265,3 +265,29 @@ addendum_e:
 #   does. The folder is read, never changed. Routes GET/POST /api/my-projects/folder, POST /api/my-projects/folder/import;
 #   commands `projects folder [<dir>]`, `projects import <path…>`; My projects → "Projects folder" in Idearium.
 #   Open: COSA15 — a project's own runs and versions in COS (start, stop, its branches), as Nexus's are.
+#
+# ADDENDUM 2026-10-17 (b) — who brings his projects in
+# Context: the coder's summary of 0.60.139 told him how to point Idearium at D:\Projects and said the scan was tested only on a
+# test folder. James, 2026-10-17: "no. ill import them" · "no with the idearium. make it a feature if you want to do that"
+# - Decided (his): he imports his projects himself, with Idearium. The coder does not import them for him.
+# - The folder scan stays what 0.60.139 built: a feature of Idearium (My projects → "Projects folder", the routes and commands
+#   above), run by him. Nothing was imported by the coder; the coder has no access to D:\Projects.
+# - Reading, to confirm: "make it a feature if you want to do that" is read as "the folder scan belongs in Idearium as its own
+#   feature, not a one-off the coder runs" — which is how it was built. If he meant something more (a separate feature page,
+#   a watch on the folder), that is open.
+#
+# ADDENDUM 2026-10-17 (c) — sync first; the projects folder out of Idearium until then (0.60.140)
+# James, 2026-10-17, after addendum (b) read his "make it a feature" as already done: "im saying add a sync feature to idearium.
+# remove it from idearium unntil then"
+# - Decided (his): Idearium gets a SYNC feature. Until it exists, the projects-folder feature (COSA14, 0.60.139) is not in
+#   Idearium. Addendum (b) is kept and superseded here (§0.3): the coder's reading there was wrong.
+# - Done (0.60.140): idearium/lib/projects-folder.cjs and its test archived to _archive/2026-10-17-projects-folder-until-sync/;
+#   the routes, the two commands, the UI section, the run-all row and the loom wires removed. COSA14 status: ARCHIVED.
+# - COSA16_idearium_sync (OPEN, mapped, not built):
+#     reading, to confirm: a project in Idearium stays in step with its folder on his disk. He picks the folder; Idearium
+#     brings in what changed (new files, edits, removals said, never silent) as a new version of that repo, not a new repo.
+#     His folder is not written unless he asks for that direction.
+#     substrate (§8.6): the archived scan and zip; repo.import-archive; the repo's versions (`repo versions`, `repo diff`).
+#     open questions for him, only if the axioms do not settle them: one-way (disk → Idearium) or both ways; on demand or
+#     watched.
+#     order (his rule): backend, route, command, UI, in one phase.

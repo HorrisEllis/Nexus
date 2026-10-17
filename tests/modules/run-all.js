@@ -402,7 +402,6 @@ const SUITES = [
   'test-cos-compartment-template.test.js',   // 0.60.134 — the template for each system's COS compartment, held by loom
   'test-cos-app-self-update.test.js',   // 0.60.137 COS 0.1.2 — COS says when a newer COS is out
   'test-system-shape.test.js',   // 0.60.138 — does each system match genesis, role by role
-  'test-projects-folder.test.js',   // 0.60.139 COSA14 — his projects folder, found and brought into Idearium
   '../../diagnostic/tests/shape.test.js',   // 0.60.138 — diagnostic is a genesis system (its own test, D6)
   'test-code-dock.test.js',           // 0.60.118 DK2 — the dock: separate panels on the right edge (Clear Glass)
   'test-plan-pieces.test.js',         // 0.60.123 PP1–PP4 — the Plan's bar is its pieces; every run with its log; a piece/run points the dock (Clear Glass)
