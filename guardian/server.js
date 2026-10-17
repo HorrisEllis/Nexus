@@ -532,9 +532,22 @@ async function writeToNexus(job) {
 // guardian/lib/ncp-handler.js (createNCPMessageHandler). Wired further
 // down, right after `jaa` exists — see that call site's comment for why.
 
+const _wallSaid = new Map();
 function flushQueuedJobs(provider) {
   const queued = pendingQueue.get(provider) || [];
   if (!queued.length) return;
+  // §0.60.124 SW2 — James's 0.60.122 log: "claude needs a sign-in … its jobs wait", then "flushing 1 queued jobs →
+  // claude" every 3 s for 5 minutes, and §FLAPPING. Each flush dispatched the job, the tab opened the job's chat, the
+  // site sent it back to sign-in, the tab reconnected, and the next connect flushed again. Behind a fresh sign-in wall
+  // the jobs stay queued (said once); a sign-in reported ok flushes them (POST /api/provider/login), and a wall older
+  // than 5 minutes no longer holds them, so a lost "ok" cannot strand a job.
+  try {
+    const rec = require('./lib/provider-login.js').holdsJobs(provider);
+    if (rec) {
+      if (_wallSaid.get(provider) !== rec.at) { _wallSaid.set(provider, rec.at); console.warn(`[guardian] ${queued.length} queued job(s) for ${provider} held — its tab is at a sign-in page; they go when it reports signed in`); }
+      return;
+    }
+  } catch (_) {}
   pendingQueue.delete(provider);
   // Start any pending SEAM queues for this provider
   const seamItems = queued.filter(j => j._seamQueue);
@@ -3142,7 +3155,7 @@ function handleExtendedRoutes(req, res, url, method) {
       else bus.emit('guardian.provider.login_state', rec);
       // §0.60.0 GA1 — a wall (or signed out) is shown to the person; ok clears it
       if (state === 'wall' || state === 'signed-out') _providerAttention().raise({ provider, reason: 'signin', url: rec.url, note: rec.text || `${provider} is signed out` }).catch(() => {});
-      else if (state === 'ok') _providerAttention().clear(provider);
+      else if (state === 'ok') { _providerAttention().clear(provider); try { flushQueuedJobs(provider); } catch (_) {} }   // §0.60.124 SW2 — signed in: what waited goes now
       return json(res, 200, { ok: true, ...rec });
     }).catch(e => json(res, 400, { ok: false, error: e.message }));
     return true;   // §0.39.282 handled (async): a bare return fell through to the 404 fallback

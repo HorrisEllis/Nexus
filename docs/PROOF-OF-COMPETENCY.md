@@ -467,3 +467,14 @@ New entries go at the top: date, his words, context, what it shows, evidence.
       click in one opened something unreachable behind it.
   - **Evidence:** `CHANGELOG-0.60.123.md`; `tests/modules/test-plan-pieces.test.js` PP-01..04. PP-03 fails if the Plan
     panel overlaps the dock column, and it found the overlap.
+- **2026-10-17: three screenshots and a full boot log, no words.**
+  - **Context:** after merging 0.60.123 he ran a fresh copy. Instead of describing what looked wrong, he sent the
+    evidence: the screens as he saw them, and the whole log beside them.
+  - **What it shows:** reporting a failure with complete evidence. The log let three root causes be found without a
+    single guess:
+    - the self-sync holding Idearium silent;
+    - Guardian's flush loop into a sign-in page;
+    - a Windows rename race.
+    Each fix has a measured result.
+  - **Evidence:** `CHANGELOG-0.60.124.md`; `tests/modules/test-sync-off-thread.test.js` SW-02 measures the event loop
+    held 4,183 ms inline and 15 ms with the fix, on 447 files.
