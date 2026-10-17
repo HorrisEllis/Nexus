@@ -449,10 +449,26 @@ async function ppAgentsLoad(el) {
   body.innerHTML = PLANP.agentsHtml;
 }
 function planToggle(key) { if (PLANP.open.has(key)) PLANP.open.delete(key); else PLANP.open.add(key); _planPaint(); }
+// §0.60.125 DG1 — James chose "Refuse, say why": a build refused because its depends_on are still open (DEPS_OPEN) says
+// what it waits on — his decisions by their question — and asks before building anyway (the run records the override).
+// One door for every ▶ build (the Plan, the Phases tab's card and detail pane).
+async function phaseBuildPost(uuid, body) {
+  const go = (b) => api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify(b) }, 120000);
+  try { return await go(body); }
+  catch (e) {
+    if (!(e.detail && e.detail.code === 'DEPS_OPEN')) throw e;
+    const open = e.detail.open || [];
+    const list = open.map(o => `• ${o.key} — ${o.kind === 'decision' ? `your decision, still ${o.status}${o.asked ? `: "${o.asked}"` : ''}` : `a phase not done yet (${o.status})`}`).join('\n');
+    if (!confirm(`${body.phase} depends on what is still open:\n\n${list}\n\nBuild it anyway? The run records that it was built with these open.`)) {
+      const x = new Error(`waits on ${open.map(o => o.key).join(', ')}`); x.held = true; throw x;
+    }
+    return await go({ ...body, anyway: true });
+  }
+}
 async function planBuild(map, phase) {
   const repo = CURRENT_API_REPO; if (!repo) return;
   try {
-    const r = await api(`/api/repos/${repo.uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase }) }, 120000);
+    const r = await phaseBuildPost(repo.uuid, { map, phase });
     toast(`${phase}: snapshot ${r.snapshot} · the agent is building it`, 'ok'); PLANP.focus = r.runId; PLANP.open.add(`${map}::${phase}`);
   } catch (e) { toast(`${phase} not built: ${e.message}`, 'err'); }
   loadPlanPanel();

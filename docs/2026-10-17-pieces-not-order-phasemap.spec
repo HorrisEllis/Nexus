@@ -205,3 +205,26 @@ related:
 #     feedback seeds the retry carry, so the failing lines survive a restart.
 #   Next after RA1, unchanged from the coder's list: his bad outputs read and classified; ME5 (one chooser) for the rest of
 #     Nexus's routing.
+#
+# ADDENDUM 2026-10-17 (b) — his answers on PC0a–PC0c, and the deps gate (DG1, 0.60.125)
+# The context: PC1_the_point_first had been built anyway, by ▶ build on his PC (0.60.122). The run reached attempt 12
+# across five agents and ended contract-incomplete. Gemini left lib/phase-manifest.js, which requires a module that is
+# not there (./schema.contract), and a spec/phase-manifest.spec. He pasted that proposal. The coder recommended rejecting
+# both. The coder named the cause: PC1 depends on PC0a, PC0b and PC0c, which are still OPEN, and ▶ build did not check
+# depends_on. Four questions were asked; his answers, verbatim:
+# - PC0a (may a piece be built before the pieces it uses exist?): "[No preference]". It stays OPEN.
+# - PC0b (which purposes are the first piece kinds?): "[No preference]". It stays OPEN.
+# - PC0c (who writes the point, the manifest?): "thats what the agent proposed. do not impliment. thats on me".
+#   - Coder's reading, to confirm: the manifest, and the PC1 proposal Gemini made, are his to write and to decide. The
+#     coder does not implement PC1 or the manifest, and does not apply or reject that proposal for him.
+#   - PC0c stays OPEN until he says otherwise.
+# - Should a phase build be refused while its depends_on are still open (an open decision or an unfinished phase)?
+#   - His answer: "Refuse, say why (Recommended)". The recommendation was the coder's; the choice is his.
+#   - Built as DG1:
+#     - lib/phase-deps-gate.js is the gate;
+#     - idearium _phaseBuild refuses with 409 DEPS_OPEN, naming each open decision by its question;
+#     - anyway: true is the override, and it is recorded on the run as depsOverride;
+#     - `repo phase <repo> <phase> build --anyway` gives agents the same override;
+#     - plan-panel.js phaseBuildPost is the one door every ▶ build uses; it shows what waits and asks before building
+#       anyway.
+#   - With this, PC1 is refused until PC0b and PC0c are decided.

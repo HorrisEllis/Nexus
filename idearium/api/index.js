@@ -746,7 +746,7 @@ async function _phaseSetStatus(repo, { map, phase, status, force = false, reason
 // the call's own backend when there is no ladder ('ollama' when it names one), for shouldChunk
 function paramsOfBackend(backend, rungs) { return rungs.length ? null : backend || null; }
 
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false }) {
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
   const node = view.phases.find(p => p.map === map && p.phase_key === phase);
@@ -754,6 +754,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   if (node.status === 'complete') return { ok: false, status: 409, error: `${phase} is already complete`, extra: { code: 'ALREADY_COMPLETE' } };
   const { maps, scope } = PH.mapsFor({ repo, repoDir: dir });
   const mapText = (maps.find(m => m.path === map) || {}).text || '';
+  // §0.60.125 DG1 — James chose "Refuse, say why": a phase whose depends_on are still open (a decision not taken, a phase
+  // not complete) is not built. PC1 was built twelve times by five agents while his three decisions were open. anyway:
+  // true is his override, said on the run.
+  let depsGate = null;
+  try { depsGate = _require('../../lib/phase-deps-gate.js').openDeps({ phase, mapText, phases: view.phases }); } catch (e) { depsGate = { open: [], unknown: [], checked: false, why: e.message }; }
+  if (depsGate.open.length && !anyway) {
+    return { ok: false, status: 409, error: `not built: ${_require('../../lib/phase-deps-gate.js').line(depsGate, phase)}`, extra: { code: 'DEPS_OPEN', open: depsGate.open, unknown: depsGate.unknown } };
+  }
 
   // which repo builds it: this one, or for all of NEXUS the system that owns the files it names
   let target = repo;
@@ -776,7 +784,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   }
   const runStartTs = Date.now();
   const runId = `phrun-${runStartTs.toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
-  const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title };
+  const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title,
+    ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}) };   // §0.60.125 DG1 — built anyway: what was still open, on every row
 
   // (1) snapshot first — never write without one
   const snap = await _commitRepoSnapshotFor(target.uuid, { message: `before phase ${phase} (${map.split('/').pop()})`, causedBy: `idearium.phases.build:${runId}` });
@@ -8361,7 +8370,7 @@ async function handle(req, res, route, query, body) {
         if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
         map = hits[0].map;
       }
-      const r = await _phaseBuild(repo, dir, { map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true });
+      const r = await _phaseBuild(repo, dir, { map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
     }
