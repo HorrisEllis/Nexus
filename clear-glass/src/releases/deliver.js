@@ -6,7 +6,7 @@
  *
  * James, 2026-10-16: "auto updates from dropping in new zips, downloading it from clearglass."
  *
- * check(): ask GitHub which release is latest and which asset is the zip (nexus-<version>.zip) and its SHA256SUMS.
+ * check(): ask GitHub which Nexus release is newest (the highest v<x.y.z>: COS's cos-v releases share the repo) and which asset is the zip (nexus-<version>.zip) and its SHA256SUMS.
  * deliver(): if that version is not already installed or already in the inbox, download the zip into the inbox: to a .part file first, hashed as it streams, size-capped,
  * compared with the published checksum; only a zip that matches is renamed into place (the LAST step, so COS's inbox watcher never sees half a file), with
  * <zip>.sha256 beside it so COS shows it as verified. A checksum mismatch deletes the download and says so. No published checksum: the zip is still delivered, reported
@@ -26,11 +26,19 @@ const headers = (token) => ({ Accept: 'application/vnd.github+json', 'User-Agent
 /** check({ repo, fetch, apiBase, token }) → { ok, tag, version, zip:{name,url,size}, sums:{url}|null, page } | { ok:false, error } */
 async function check({ repo = 'HorrisEllis/nexus', fetch = globalThis.fetch, apiBase = API, token = null } = {}) {
   if (typeof fetch !== 'function') return { ok: false, error: 'no fetch available' };
-  let res; try { res = await fetch(`${apiBase}/repos/${repo}/releases/latest`, { headers: headers(token) }); } catch (e) { return { ok: false, error: `could not reach GitHub: ${e.message}` }; }
+  let res; try { res = await fetch(`${apiBase}/repos/${repo}/releases?per_page=100`, { headers: headers(token) }); } catch (e) { return { ok: false, error: `could not reach GitHub: ${e.message}` }; }
   if (res.status === 404) return { ok: false, error: `${repo} has no published release (or it is private: a token is needed)` };
   if (res.status === 403 || res.status === 429) return { ok: false, error: `GitHub refused (${res.status}): rate limited. Try later.` };
   if (!res.ok) return { ok: false, error: `GitHub answered ${res.status}` };
   let j; try { j = await res.json(); } catch (_) { return { ok: false, error: 'GitHub answered with something that is not JSON' }; }
+  // 0.60.137 — the list, not /releases/latest: COS's own releases (cos-v0.1.x) share this repo, and "latest" is whichever was
+  // published last (cos-v0.1.1 came 3 minutes after v0.60.111 on 2026-10-16, and this refused it as "not a version"). The newest
+  // Nexus release is the highest v<x.y.z> that is neither a draft nor a prerelease.
+  if (Array.isArray(j)) {
+    const nexus = j.filter(r => r && !r.draft && !r.prerelease && /^v\d+\.\d+\.\d+$/.test(r.tag_name || '')).sort((a, b) => cmpVer(b.tag_name.slice(1), a.tag_name.slice(1)));
+    if (!nexus.length) { const seen = j.filter(r => r && !r.draft).map(r => `"${String(r.tag_name).slice(0, 40)}"`).slice(0, 3); return { ok: false, error: seen.length ? `${repo} has no Nexus release: ${seen.join(', ')} ${seen.length > 1 ? 'are' : 'is'} not a version (v<x.y.z>)` : `${repo} has no published release (or it is private: a token is needed)` }; }
+    j = nexus[0];
+  }
   const version = String(j.tag_name || '').replace(/^v/, ''); if (!/^\d+\.\d+\.\d+$/.test(version)) return { ok: false, error: `the latest release tag "${j.tag_name}" is not a version` };
   const assets = Array.isArray(j.assets) ? j.assets : []; const z = assets.find(a => a.name === `nexus-${version}.zip`); const s = assets.find(a => a.name === 'SHA256SUMS');
   if (!z) return { ok: false, error: `release ${j.tag_name} has no nexus-${version}.zip asset`, version };

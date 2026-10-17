@@ -68,6 +68,12 @@ class Controller {
   /** retryWaiting() — called on a timer: a release that was waiting for its project to go idle is applied once it is */
   async retryWaiting() { const out = []; for (const [project, version] of Array.from(this.waiting)) out.push(await this.applyPolicy({ ok: true, project, version, verified: true })); return out; }
   /** state() → what the window draws: every project with its versions and whether it is running and healthy right now */
+  /** appUpdate() — is a newer COS out? (cos/app/app-update.js; checked at most once an hour, the answer kept meanwhile) */
+  async appUpdate({ fetch } = {}) {
+    if (this._appUpd && Date.now() - this._appUpd.at < 3600000) return this._appUpd.r;
+    const r = await require('./app-update.js').checkApp({ current: require('./version.js').version, ...(fetch ? { fetch } : {}) });
+    this._appUpd = { at: Date.now(), r }; return r;
+  }
   async state() {
     const s = this.store.status(this.root);
     const projects = []; for (const p of s.projects) { const run = await this.rt.status(this.root, p.project); projects.push({ ...p, run, busy: this.busy.get(p.project) || null }); }

@@ -102,5 +102,12 @@
     setInterval(refresh, 4000);
   }
   window.COSUI = { shRun, refresh, importPath, banner, showLogs, get state() { return state; } };
-  wire(); refresh();
+  // 0.1.2 — say when a newer COS is out (COS updates the projects it runs, not itself): its version, and the release page
+  async function appUpdate() {
+    try {
+      const u = api().appUpdate ? await api().appUpdate() : null;
+      if (u && u.ok && u.newer) banner('info', `COS ${u.latest} is out — this is COS ${u.current}. Install it to get its fixes (download the installer from the release page; your projects and their versions are kept).`, [{ label: 'Open the release page', primary: true, run: () => api().openRelease(u.page) }]);
+    } catch (_) { /* no network: nothing to say */ }
+  }
+  wire(); refresh(); appUpdate();
 })();

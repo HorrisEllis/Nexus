@@ -11,9 +11,11 @@ const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
 async function gh(over = {}) {
   const cfg = { version: '0.60.72', tag: null, sums: 'ok', slow: false, apiStatus: 200, bodyOverride: null, ...over }; const zip = cfg.zip || mkzip(cfg.version); const name = `nexus-${cfg.version}.zip`; let port;
   const srv = http.createServer((q, r) => {
-    if (q.url === '/repos/o/r/releases/latest') { if (cfg.apiStatus !== 200) { r.writeHead(cfg.apiStatus); return r.end('{}'); } r.writeHead(200, { 'Content-Type': 'application/json' }); if (cfg.bodyOverride) return r.end(cfg.bodyOverride);
+    const isList = q.url === '/repos/o/r/releases?per_page=100';   // 0.60.137: check() reads the list (COS's cos-v releases share the repo)
+    if (q.url === '/repos/o/r/releases/latest' || isList) { if (cfg.apiStatus !== 200) { r.writeHead(cfg.apiStatus); return r.end('{}'); } r.writeHead(200, { 'Content-Type': 'application/json' }); if (cfg.bodyOverride) return r.end(cfg.bodyOverride);
       const assets = cfg.noAsset ? [] : [{ name, browser_download_url: `http://127.0.0.1:${port}/dl/${name}`, size: cfg.lieSize ? 10 : zip.length }, ...(cfg.sums === 'none' ? [] : [{ name: 'SHA256SUMS', browser_download_url: `http://127.0.0.1:${port}/dl/SHA256SUMS` }])];
-      return r.end(JSON.stringify({ tag_name: cfg.tag || 'v' + cfg.version, html_url: 'http://x/rel', assets })); }
+      const rel = { tag_name: cfg.tag || 'v' + cfg.version, html_url: 'http://x/rel', assets };
+      return r.end(JSON.stringify(isList ? [...(cfg.extra || []), rel] : rel)); }
     if (q.url === '/dl/SHA256SUMS') { if (cfg.sums === 'broken') { r.writeHead(500); return r.end('no'); } r.writeHead(200); return r.end(`${cfg.sums === 'wrong' ? 'a'.repeat(64) : sha(zip)}  ${name}\n`); }
     if (q.url === `/dl/${name}`) { r.writeHead(200, cfg.noLen ? {} : { 'Content-Length': zip.length }); if (!cfg.slow) return r.end(zip); r.write(zip.subarray(0, 10)); cfg.onMid && cfg.onMid(); return setTimeout(() => r.end(zip.subarray(10)), 400); }
     r.writeHead(404); r.end();
@@ -21,6 +23,11 @@ async function gh(over = {}) {
   return { cfg, zip, name, base: `http://127.0.0.1:${port}`, close: () => srv.close() };
 }
 (async () => {
+  await test('RD-00 a COS release published after the Nexus one (cos-v0.1.1, 3 minutes after v0.60.111 on 2026-10-16) is not taken for Nexus; a draft or a lower version is not either', async () => {
+    const g = await gh({ extra: [{ tag_name: 'cos-v0.1.2', assets: [] }, { tag_name: 'v0.60.9', assets: [] }, { tag_name: 'v0.60.200', draft: true, assets: [] }] });
+    const c = await D.check({ repo: 'o/r', apiBase: g.base }); g.close();
+    assert.ok(c.ok, JSON.stringify(c)); assert.strictEqual(c.version, '0.60.72');
+  });
   await test('RD-01 check: reads the latest release: version without the v, the zip asset, the SHA256SUMS asset', async () => { const g = await gh(); const c = await D.check({ repo: 'o/r', apiBase: g.base }); assert.ok(c.ok); assert.strictEqual(c.version, '0.60.72'); assert.strictEqual(c.zip.name, 'nexus-0.60.72.zip'); assert.ok(c.sums); g.close(); });
   await test('RD-02 deliver, verified: the zip and its .sha256 land in the inbox, COS\'s real store imports it as VERIFIED, no .part left', async () => {
     const g = await gh(); const inbox = tmp(); const r = await D.deliver({ repo: 'o/r', inbox, apiBase: g.base }); g.close();

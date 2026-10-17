@@ -69,6 +69,9 @@ function watchInbox() {
 function ipc() {
   const h = (name, fn) => ipcMain.handle('cos:' + name, async (_e, ...a) => { try { return await fn(...a); } catch (e) { return { ok: false, error: e.message }; } });
   h('state', () => ctl.state());
+  // 0.1.2 — a newer COS: the check, and the release page opened in the browser (only a github.com release page of this repo)
+  h('appUpdate', () => ctl.appUpdate());
+  h('openRelease', (url) => { if (typeof url !== 'string' || !/^https:\/\/github\.com\/HorrisEllis\/[Nn]exus\/releases\/tag\/cos-v\d+\.\d+\.\d+$/.test(url)) return { ok: false, error: 'not a COS release page' }; shell.openExternal(url); return { ok: true }; });
   h('pickZip', async () => { const r = await dialog.showOpenDialog(win, { title: 'Pick a release zip', properties: ['openFile'], filters: [{ name: 'Release zip', extensions: ['zip'] }] }); return r.canceled ? {} : { path: r.filePaths[0] }; });
   h('importPath', async (p) => { if (typeof p !== 'string' || !/\.zip$/i.test(p)) return { ok: false, error: 'that is not a .zip file' }; const r = ctl.importZip(p); if (r.ok && !r.already) r.policy = await ctl.applyPolicy(r); return r; });
   // the command line: one console, one command at a time; it returns at once and streams output as events (sh.data), then sh.exit with the code
