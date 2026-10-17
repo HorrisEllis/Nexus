@@ -108,5 +108,24 @@ const ri = fs.readFileSync(path.join(ROOT, 'lib/repo-inject.js'), 'utf8');
 check('AR-42 a collapsed reply and an undone agent change are logged from repo-inject', /mode: 'reply-collapse'/.test(ri) && (ri.match(/_undoneFault\(n, '(reverted|rejected)'/g) || []).length === 3);
 check('AR-43 the Plan shows a run\'s precedent and each agent\'s faults', /function _ppPrecedent\(p\)/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')) && /_ppFaultRow/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
 
+// §RA1 — the right agent for each kind of job: scored per kind of file, the ladder ordered by kind when there is enough of it
+{
+  const R = [];
+  let n = 0;
+  const att = (provider, file, state, extra = {}) => { const runId = `ra-${++n}`; R.push({ runId, state: 'building', promptChars: 2000, ts: n * 10 }, { runId, state, provider, file, planned: true, ts: n * 10 + 1, ...(state === 'replied' ? { injects: { injected: [file] } } : {}), ...extra }); };
+  // ollama:7b lands code but fails tests; gemini lands tests but fails code
+  for (let i = 0; i < 3; i++) { att('ollama:7b', 'lib/a.js', 'replied'); att('ollama:7b', 'tests/a.test.js', 'incomplete', { expectFailed: true }); att('gemini', 'tests/a.test.js', 'replied'); att('gemini', 'lib/b.js', 'failed', { error: 'empty reply' }); }
+  const rec = AR.record(R);
+  check('RA-01 kindOf: a test file and a code file by their path; a row\'s own kind wins', AR.kindOf({ file: 'tests/a.test.js' }) === 'test.js' && AR.kindOf({ file: 'lib/x.mjs' }) === 'code.mjs' && AR.kindOf({ file: 'lib/x.js', kind: 'wire.js' }) === 'wire.js' && AR.kindOf({}) === null);
+  check('RA-02 each agent is scored per kind', rec.providers['ollama:7b'].kinds['code.js'].score > 0.7 && rec.providers['ollama:7b'].kinds['test.js'].score < 0.3 && rec.providers.gemini.kinds['test.js'].score > 0.7, JSON.stringify(rec.providers['ollama:7b'].kinds));
+  const rungs = [{ provider: 'ollama:7b' }, { provider: 'gemini' }];
+  const forTest = AR.orderLadder(rungs, rec, { promptChars: 2000, kind: 'test.js' });
+  const forCode = AR.orderLadder(rungs, rec, { promptChars: 2000, kind: 'code.js' });
+  check('RA-03 a test brick goes to the agent that lands tests; a code brick to the one that lands code', forTest.rungs[0].provider === 'gemini' && forCode.rungs[0].provider === 'ollama:7b', JSON.stringify([forTest.why, forCode.why]));
+  check('RA-04 the reason names the kind', /test\.js/.test(forTest.why[0].why), forTest.why[0].why);
+  const unknown = AR.orderLadder(rungs, rec, { promptChars: 2000, kind: 'code.py' });
+  check('RA-05 a kind with no record falls back to size, then overall (no guess)', !/code\.py/.test(unknown.why.map(w => w.why).join(' ')));
+}
+
 console.log(`\n  ${pass} passed, ${fail} failed\n`);
 process.exitCode = fail ? 1 : 0;

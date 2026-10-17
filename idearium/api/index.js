@@ -1223,6 +1223,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     // overlaid (nothing written to the repo). Its failing lines are the brick's error and go with the next try.
     const EXT = _require('../../lib/expectation-tests.js');
     const _overlaysFor = (f, code) => { const o = {}; for (const x of (plan && plan.order) || []) if (x !== f) { const c = codeOf(x); if (c) o[x] = c; } o[f] = code; return o; };
+    // §RA1 — what every agent has done on each kind of file, read once per build from the run log (one record, nothing stored)
+    const ARx = _require('../../lib/agent-record.js');
+    let agentRec = null;
+    try { const undone = _require('../../lib/repo-inject.js').list(null, { limit: 5000 }).filter(n => n.status === 'reverted' || n.status === 'rejected'); agentRec = ARx.record(loadTable('idearium_phase_runs'), { injects: undone }); } catch (_) { agentRec = null; }
     const _carry = new Map();   // file → { why }: what its last check said, kept across the contract's retries of that brick
     const _carryFor = (f) => { if (!_carry.has(f)) _carry.set(f, { why: null }); return _carry.get(f); };
     const _verified = new Map();   // file + code hash → its verdict: the climb's check and the brick's are one run, not two
@@ -1245,7 +1249,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       }
     }
     let lastDp = paramsOf(rungs[0] || null);
-    const dispatch = async (hops, { gate, assessment = null }) => {
+    const dispatch = async (hops, { gate, assessment = null, feedback = null }) => {
       if (whole && gate.id === 'work') {
         // §BR1 — the whole phase as one request to the ladder, as runWhole sent it — but as a brick: gated, checkpointed, classed
         // §GW24 0.60.76 — James: "each gate holds the context, which can make tghe agents dumb." On a local model's rung the
@@ -1282,15 +1286,26 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       })() : null;
       const ctxNote = ctx ? `\n\n${ctx.text}` : '';
       const msg = (gate.parent ? `${cb.message}\n\nDO ONLY THIS STEP NOW: ${(gate.actions || [])[0] || ''}\nKeep everything the file already has.` : cb.message) + ctxNote;
-      const ck = { chunk: gate.parent ? `${i + 1}.${gate.id.split('.').pop()}` : i + 1, chunks: plan.order.length, file: f, planned: true, brick: gate.id };
-      const out = await PRt.climb({ rungs: hops.map(h => h.rung).filter(Boolean), policy,
-        attempt: makeAttempt({ msg, files: [f], ck, verify: gate.parent ? null : (code) => verifyBrick(code, f), bare: true, carry: gate.parent ? null : _carryFor(f) }), onOutcome: makeOnOutcome(ck) });
+      // §RA1 — James: "let the right agent for the job, be in charge." The kind of job is the file this brick builds; its
+      // ladder is ordered by how each agent has done on that kind (lib/agent-record.js, from the run log), else by size, else
+      // as configured. A person's pick (an agent or provider given for this build) is never reordered.
+      const kind = ARx.kindOf({ file: f });
+      const ck = { chunk: gate.parent ? `${i + 1}.${gate.id.split('.').pop()}` : i + 1, chunks: plan.order.length, file: f, planned: true, brick: gate.id, kind };
+      let order = hops.map(h => h.rung).filter(Boolean), chosen = null;
+      if (agentRec && order.length > 1 && !agent && !provider) {
+        try { const o = ARx.orderLadder(order, agentRec, { promptChars: msg.length, kind, minRecords: policy.learnMinRecords >= 1 ? Math.min(policy.learnMinRecords, 3) : 2 }); order = o.rungs; chosen = `${o.changed ? 'reordered' : 'kept'} for ${kind}: ${o.why.map(w => `${w.provider} ${w.why}`).join('; ')}`.slice(0, 600); } catch (_) { chosen = null; }
+      }
+      // the contract's own persisted feedback (written when this brick last failed) seeds the retry carry: it survives a restart
+      const box = gate.parent ? null : _carryFor(f);
+      if (box && !box.why && feedback) box.why = String(feedback).slice(0, 1200);
+      const out = await PRt.climb({ rungs: order, policy,
+        attempt: makeAttempt({ msg, files: [f], ck, verify: gate.parent ? null : (code) => verifyBrick(code, f), bare: true, carry: box }), onOutcome: makeOnOutcome(ck) });
       if (out.dp) lastDp = out.dp;
       const ok = out.state === 'replied';
       const code = ok ? _landedCode(out.r, f) : '';
       const v = ok && !gate.parent ? await verifyBrick(code, f) : null;   // §0.60.119 TF1 — names and the expectation test
       return { ok: ok && (!v || v.ok), agent: (out.row && out.row.provider) || hops[0].provider, ...(out.state === 'failed' || out.state === 'skipped' ? { transient: true } : {}), ...(out.exhausted ? { exhausted: true } : {}),   /* §GT1a — the ladder was climbed to its end: an attempt spent */ ...(ok ? {} : { error: String((out.row && out.row.error) || out.state).slice(0, 400) }),
-        evidence: { ...(ctx ? { [`${gate.id}.context`]: ctx.summary } : {}), ...(ok ? { [`${gate.id}.verified`]: v ? (v.ok ? (v.expect && v.expect.ran ? `ok — every planned export present; its expectation test passed (${v.expect.checks} checks)` : 'ok — every planned export present') : (v.why ? `failed its expectation — ${(v.expect && v.expect.failed || []).slice(0, 3).join(' | ') || 'see the error'}` : `missing ${v.missing.join(', ')}`)) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)),
+        evidence: { ...(ctx ? { [`${gate.id}.context`]: ctx.summary } : {}), ...(chosen ? { [`${gate.id}.chosen`]: chosen } : {}), ...(ok ? { [`${gate.id}.verified`]: v ? (v.ok ? (v.expect && v.expect.ran ? `ok — every planned export present; its expectation test passed (${v.expect.checks} checks)` : 'ok — every planned export present') : (v.why ? `failed its expectation — ${(v.expect && v.expect.failed || []).slice(0, 3).join(' | ') || 'see the error'}` : `missing ${v.missing.join(', ')}`)) : 'ok — the step landed', [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(code)),
           ...(v && v.expect ? { [`${gate.id}.expect`]: v.expect.ran ? (v.expect.ok ? `passed ${v.expect.checks} checks (test ${v.expect.hash})` : `failed: ${v.expect.failed.slice(0, 4).join(' | ')}`) : `not run: ${v.expect.why}` } : {}) } : {}) } };
     };
     const agentEx = CA.agentExecutor({ dispatch, route: () => (rungs.length ? rungs.map(r => ({ provider: r.provider, rung: r })) : [{ provider: provider || agent || backend || 'the call\'s own agent', rung: null }]) });

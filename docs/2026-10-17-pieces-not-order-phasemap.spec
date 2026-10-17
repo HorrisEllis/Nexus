@@ -155,7 +155,7 @@ related:
 # is mapped as docs/2026-10-16-proposal-evidence-phasemap.spec PE6, not built. lib/proposal-evidence.js already runs a test in a
 # shadow copy of a tree with any files overlaid (shadow(root, overlays)), so a brick can be tested before anything is written.
 # Lessons are per phase only (docs/2026-10-16-reject-learn-retry-phasemap.spec open item).
-#   TF1_the_expectation_first (BUILT on the branch, NOT released, no version yet — James asked to stop and question it, 2026-10-17): from the held plan, before any code, Nexus writes each JS file's expectation test
+#   TF1_the_expectation_first (BUILT 0.60.119; held on the branch while he questioned the direction, released with RA1): from the held plan, before any code, Nexus writes each JS file's expectation test
 #     without a model: the module loads, every planned export exists, a planned function is a function and takes no more
 #     arguments than its signature. The brick passes only when that test passes in a shadow of the repo with the phase's files
 #     so far overlaid; its failing lines go back with the retry. An existing file's expectation is run before the build (seen
@@ -184,3 +184,24 @@ related:
 # (3) the right agent for the job is in charge of the job (routing: RAID chooses, docs/2026-10-09-one-model-engine-phasemap.spec
 # ME5, one chooser). His mentor's review, as he reported it: too personal, too big; impressive that it runs at ~400,000 lines
 # (the Code tab's index counted 400,954 lines in his screenshot of 2026-10-16); the ideas are solid.
+# ## ADDENDUM 2026-10-17 (d) — the next phase: RA1, the right agent for each kind of brick (his rule from (c), first slice)
+# James: "Using the crystallization memory? Let's just continue where we were, integrate anything new into the work we were
+# doing and start the next phase"
+# Where we were: TF1 (a brick passes only when its expectation test passes; the retry carries the failing lines), on the branch.
+# What is new: his rule "let the right agent for the job, be in charge" (c). The coder's answer on crystallization memory, said
+# plainly: Nexus has two. WARP's crystallizer keeps verified outputs by digest; builds run it in gate mode (kept, never served
+# back, since a build's work is the files it writes, 0.60.73), so it cannot pick an agent. Intelligence's pattern
+# crystallisation finds patterns in events; nothing reads it for routing. The record that can pick an agent is the run log
+# itself (idearium_phase_runs: who built which file and how it ended), already read by lib/agent-record.js. One record, no
+# second store (§7.6). To confirm whether he meant one of the two crystal stores specifically.
+# Found: the ladder is ordered once per phase by request SIZE (lib/agent-record.js orderLadder: small/medium/large); every
+# brick of a contract then climbs the same order, whatever the file. A test file and an engine file get the same agent first.
+# The contract's own persisted feedback (contract-gates: `<brick>.feedback`, written when a brick fails) never reached
+# Idearium's dispatch, so TF1's retry carry was in memory only.
+#   RA1_the_right_agent_per_kind (BUILT 0.60.119): each attempt row carries its brick's kind (code.js, test.js, code.mjs ...); the
+#     agent record scores every agent per kind (landed, proven, undone, and now a failed expectation test count against it);
+#     each brick's ladder is ordered by that kind's record when there is enough of it (else by size, else as configured),
+#     and the order and its reason go on the brick's evidence. A person's pick is never reordered. The contract's persisted
+#     feedback seeds the retry carry, so the failing lines survive a restart.
+#   Next after RA1, unchanged from the coder's list: his bad outputs read and classified; ME5 (one chooser) for the rest of
+#     Nexus's routing.

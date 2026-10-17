@@ -183,6 +183,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     const tries = sent.filter(s => s.file === ph.files[0]);
     assert.ok(tries.length >= 2 && tries[0].bad, `notes sent ${tries.length} times: ${JSON.stringify(tries.map(t => !!t.bad))}`);
     assert.ok(/YOUR LAST ATTEMPT AT THIS FILE FAILED ITS CHECK/.test(tries[1].message) && /does not load: Cannot find module/.test(tries[1].message), tries[1].message.slice(-600));
+    assert.ok(rs.some(r => r.kind === 'code.js' && r.file === ph.files[0]), 'RA1: each attempt row names its kind of job');
     const failedRow = rs.find(r => r.expectFailed);
     assert.ok(failedRow && /failed its expectation test/.test(failedRow.error || ''), states(rs));
     const end = rs.find(r => /^contract-/.test(r.state));

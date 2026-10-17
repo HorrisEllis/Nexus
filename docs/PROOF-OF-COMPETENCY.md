@@ -426,3 +426,10 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     calls into reusable, persisted recipes.
   - **Evidence:** `CHANGELOG-0.60.118.md`; `tests/modules/test-code-dock.test.js` (driven in Clear Glass);
     `lib/repo-procedures.js`.
+- **2026-10-17: "Need nexus to hold as much of the complexity as possible, and let the right agent for the job, be in charge."**
+  - **Context:** after his mentor's review ("too personal, too big", the ideas solid). He dropped an idea he did not
+    understand (stateless pieces) and kept the rule he could judge.
+  - **What it shows:** taking criticism and narrowing scope. He did not defend the idea he couldn't explain; he kept a rule
+    he can check against results. The first slice of that rule is built: each brick goes to the agent with the best record
+    on that kind of file.
+  - **Evidence:** `CHANGELOG-0.60.119.md`; `tests/modules/test-agent-record.test.js` RA-01..05.
