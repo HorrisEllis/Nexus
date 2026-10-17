@@ -396,6 +396,7 @@ const SUITES = [
   'test-system-boundary.test.js',   // 0.60.126 DB1 — every require() across a system boundary, and the ratchet that only shrinks
   'test-drawbridge-registry.test.js',   // 0.60.127 DB9/DB10 — a system's registry as its dependency graph, and its negative space
   'test-system-tunnel.test.js',   // 0.60.128 DB13/DB14 — his lib/system-registry.js as the tunnel: routes, commands, toasts, heartbeat over routes
+  'test-system-node-relations.test.js',   // 0.60.129 DB18 — a system's nodes in relation to it: meta.system, .wire per dependency
   'test-code-dock.test.js',           // 0.60.118 DK2 — the dock: separate panels on the right edge (Clear Glass)
   'test-plan-pieces.test.js',         // 0.60.123 PP1–PP4 — the Plan's bar is its pieces; every run with its log; a piece/run points the dock (Clear Glass)
   'test-prevention.test.js',          // 0.60.123 MP — a memory crisis recorded becomes a prevention: heavy work waits for headroom; Ollama unloads when idle

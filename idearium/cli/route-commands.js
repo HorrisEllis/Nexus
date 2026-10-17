@@ -325,6 +325,10 @@ export const SPEC = [
     } },
   // 0.60.20 — lean mode, the same switch as Idearium → Settings → Routing (every agent has it through nexus.command)
   // 0.60.126 DB1 — the crossings between systems: what the drawbridge must become the only way for (docs/2026-10-17-system-drawbridge-phasemap.spec)
+  // 0.60.129 DB17 — "all system relevant files should stay with the system": which files in lib/, hooks/, service/ … belong to one system
+  { key: 'system.homes', repo: false, usage: 'system homes [<system>]', about: 'files in the shared folders (lib/, hooks/, service/, contracts/ …) that belong to one system: used only by it, or named for it in hooks/ and service/. A census: nothing moves',
+    req: (a) => ({ method: 'GET', path: `/api/system/homes${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
+    print: (d, a, h) => { console.log(`  ${d.moves} of ${d.files} files in shared folders belong to one system · ${d.unused.length} are required by nothing (by a static path)`); if (!a.args[0]) console.log(h.c.dim(`  ${Object.entries(d.byHome).sort((x, y) => y[1].length - x[1].length).map(([k, v]) => `${k} ${v.length}`).join(' · ')}`)); for (const m of (a.args[0] ? d.list : d.list.slice(0, 25))) console.log(`  ${m.file.padEnd(48)} → ${h.c.mint(m.home)} ${h.c.dim(m.why)}`); } },
   // 0.60.128 DB13 + DB14 — his lib/system-registry.js as the tunnel: through it the CLI, the routes, the toasts, and the heartbeat over routes
   { key: 'system.tunnel', repo: false, usage: 'system tunnel [<system>]', about: 'the tunnel into each system (lib/system-registry.js): where it runs, the routes it declares, the commands that reach them, its toasts and compartment, and what is missing; with a system, its heartbeat asked over its own health route',
     req: (a) => ({ method: 'GET', path: a.args[0] ? `/api/system/tunnel/${encodeURIComponent(a.args[0])}` : '/api/system/tunnel' }),

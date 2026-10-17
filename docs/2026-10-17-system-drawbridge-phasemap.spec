@@ -6,7 +6,7 @@ spec:
     release:  "0.60.126 (DB1)"
     uuid:     nexus-system-drawbridge-phasemap-v1-0000-2026-1017-jamesbrooks-001
     owner:    "lib (the census and the drawbridge) · every system with a registry-components.js · orchestrator (the handshake) · loom (the self-model)"
-    status:   "MAPPED 2026-10-17. DB1 BUILT 0.60.126 (the census and the ratchet). DB9/DB10 PARTLY BUILT 0.60.127. DB13 BUILT, DB14 PARTLY BUILT 0.60.128. DB0a-DB0c are his to decide; DB2-DB8 OPEN."
+    status:   "MAPPED 2026-10-17. DB1 BUILT 0.60.126 (the census and the ratchet). DB9/DB10 PARTLY BUILT 0.60.127. DB13 BUILT, DB14 PARTLY BUILT 0.60.128. DB18 BUILT, DB17 census 0.60.129. DB0a-DB0c are his to decide; DB2-DB8 OPEN."
     voice: >-
       The ideas, the direction and the calls are James's. `james:` is his, verbatim. `does:` is the coder's reading, his to
       correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -257,3 +257,45 @@ spec:
       open_question: "Which folders are systems. The coder's reading: contracts, hooks, service, components and
         architecture-spec are parts of other systems; ui and tablet are faces on routes; lib is DB0a."
   build_order_b: [DB13, DB14, DB16 (cos first), DB15, DB11, DB3, DB12]
+
+  # ── ADDENDUM 2026-10-17 (c) — files stay with their system; nodes in relation to their system ──
+  # Context: 0.60.128 had just made his lib/system-registry.js the tunnel, and the coder had listed what comes next.
+  # James, 2026-10-17: "all system relevant files should stay with the system.
+  # the data nodes should reflect guardians nodes but in relation to the system they are for."
+  addendum_c:
+    decided:
+      - "A file that serves one system lives in that system's folder (his words: 'all system relevant files should stay with
+        the system'). It follows from his 'sovereign and self contained' (addendum b): a compartment can only hold what is in
+        its folder."
+      - "Each system's data nodes are in Guardian's shape (data/nodes/<type>/<id>.<type>, lib/node-export.js's envelope) and
+        carry their relation to the system they are for."
+    exists_for_it:
+      - "lib/system-nodes.js (0.39.271 X1-X3, his 'exactly like gaurdian where all data, commands, etc are physical node
+        types') already writes every system's capability, command and system nodes into <system>/data/nodes, regenerated at
+        boot by the orchestrator. What was missing: every node said system: null, and no node held the system's relations."
+    reading_to_confirm: >-
+      'In relation to the system they are for' is read by the coder as: each node names its system, and the system's
+      dependencies are nodes too (one .wire per system it depends on, with the file edges behind it; the .system node says
+      what it depends on and who consumes it). Another reading: each node names the other systems IT touches (a command
+      node naming the systems its handler reaches). Only the first is built; the second needs DB4's bus. To confirm.
+  phases_added_c:
+    DB17_files_stay_with_their_system:
+      status: "PARTLY BUILT 0.60.129 — the census: lib/system-boundary.js homes(), GET /api/system/homes, `system homes
+        [<system>]`. OPEN: the moves, one system at a time, each a proposal: the file moves into its system and leaves a
+        one-line re-export at the old path, so nothing that requires it breaks, then the re-export goes when the ratchet
+        shows no one uses it."
+      measured: "0.60.129: 495 files in the shared folders (lib, hooks, service, contracts, components, architecture-spec,
+        seams). 93 belong to one system: used only by it, or named for it in hooks/ or service/ (idearium 34, copilot 14,
+        guardian 9, cortex 9, nexus 5, clear-glass 4, orchestrator 4, cli 3, others 1-2). 58 are required by nothing through a
+        static path. Those are not dead without a check:
+        tools and entry scripts are loaded by name."
+    DB18_nodes_in_relation_to_their_system:
+      status: "BUILT 0.60.129 — lib/system-nodes.js: meta.system on every node; .wire nodes (GENERATED_TYPES + wire) from
+        DB1; the .system node holds depends_on and consumed_by. A wire that stops holding is archived, not deleted.
+        Regenerated at boot (orchestrator), so the nodes on his machine update on the next start; data/** is not committed."
+  found_c:
+    - "DB1's pattern missed `_require(...)`: idearium reaches other systems through createRequire, and \\brequire needs a word
+      boundary that `_require` lacks. 22 crossings had always been there and were unseen (idearium to cos 6, cortex 5, ollama
+      3, intelligence 3, loom 2, others 1 each). They were added to the baseline as seen_late, with that reason; they are not
+      new drift. Found because homes() said lib/system-registry.js is used only by cli, while idearium's API uses it."
+  build_order_c: [DB17 moves (hooks/ and service/ first: 12 files named per system), DB16, DB15, DB14, DB11]

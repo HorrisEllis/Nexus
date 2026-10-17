@@ -58,6 +58,8 @@ const FILES = [
 ];
 const CONSUMERS = [
   [I('idearium/api/index.js'),                    I('lib/system-boundary.js'), '§DB1 0.60.126 GET /api/system/drawbridge → census() + check() (lazy require in the case)'],
+  [I('lib/system-nodes.js'),                      I('lib/system-boundary.js'), '§DB18 0.60.129 plan(): the .wire nodes and depends_on/consumed_by from scan() (lazy require)'],
+  [I('idearium/api/index.js'),                    I('lib/system-boundary.js'), '§DB17 0.60.129 GET /api/system/homes → homes()'],
   [I('idearium/api/index.js'),                    I('lib/system-registry.js'), '§DB13/DB14 0.60.128 GET /api/system/tunnel[/:name], /api/system/heartbeat (commands handed in from idearium/cli/route-commands.js SPEC)'],
   [I('idearium/api/index.js'),                    I('lib/drawbridge-registry.js'), '§DB9/DB10 0.60.127 GET /api/system/registry[/:system], POST …/:system/settle (lazy require in the case)'],
   [I('tests/modules/test-system-boundary.test.js'), I('lib/system-boundary.js'), '§DB1 0.60.126 SB-06: the ratchet over Nexus itself'],

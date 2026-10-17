@@ -16,9 +16,10 @@ put('alpha/own.js', "module.exports = 2;\n");
 put('beta/b.js', "import a from '../alpha/a.js';\nconst z = require('../alpha/a.js');\n");
 put('tests/t.js', "require('../alpha/a.js');\n");
 put('docs/d.js', "require('../alpha/a.js');\n");
+put('hooks/beta.hooks.js', "module.exports = {};\n");
 
 test('SB-01 a system is a top-level folder; tests, docs and data are not systems', () => {
-  assert.deepStrictEqual(SB.systems(root), ['alpha', 'beta', 'lib']);
+  assert.deepStrictEqual(SB.systems(root), ['alpha', 'beta', 'hooks', 'lib']);
 });
 test('SB-02 each crossing is found once per file pair and named by kind: system, upward (lib/ into a system), kernel (a system using lib/)', () => {
   const s = SB.scan({ root });
@@ -64,14 +65,31 @@ test('SB-07 the route, its access, and the command row are all there', () => {
   assert.ok(row, 'command row');
   assert.strictEqual(row.req({ args: [], flags: { new: true } }).path, '/api/system/drawbridge?new=1');
 });
+test('SB-09 a lazy _require(...) is a crossing too (idearium reaches other systems that way)', () => {
+  put('beta/lazy.js', "const _require = require('module').createRequire(__filename); function f() { return _require('../alpha/own.js'); }\n");
+  assert.ok(SB.scan({ root }).crossings.some(c => c.from === 'beta/lazy.js' && c.to === 'alpha/own.js'));
+  fs.unlinkSync(path.join(root, 'beta/lazy.js'));
+});
+test('SB-10 homes: a lib/ file used only by one system belongs to it; hooks/<system>.hooks.js belongs to its system; a kernel file used by two does not', () => {
+  put('lib/only-alpha.js', "module.exports = 3;\n");
+  put('alpha/uses.js', "require('../lib/only-alpha.js'); require('../lib/atom.js');\n");
+  put('beta/uses.js', "require('../lib/atom.js');\n");
+  const h = SB.homes({ root });
+  const of = (f) => (h.list.find(x => x.file === f) || {}).home || null;
+  assert.strictEqual(of('lib/only-alpha.js'), 'alpha');
+  assert.strictEqual(of('hooks/beta.hooks.js'), 'beta');
+  assert.strictEqual(of('lib/atom.js'), null);
+});
 test('SB-08 the route is served: GET /api/system/drawbridge answers with the census and the ratchet', async () => {
   const keep = { log: console.log, warn: console.warn, info: console.info, error: console.error };
   console.log = console.warn = console.info = console.error = () => {};
-  let g; try { const api = await import(path.join(REPO, 'idearium/api/index.js')); g = await api._route('GET', '/api/system/drawbridge'); } finally { Object.assign(console, keep); }
+  let g; try { const api = await import(path.join(REPO, 'idearium/api/index.js')); g = await api._route('GET', '/api/system/drawbridge'); var hm = await api._route('GET', '/api/system/homes?system=idearium'); } finally { Object.assign(console, keep); }
   const d = g.json.data || g.json;
   assert.strictEqual(g.status, 200, JSON.stringify(g.json).slice(0, 300));
   assert.ok(d.census.total > 0 && d.census.byKind.system > 0, JSON.stringify(d.census).slice(0, 200));
   assert.strictEqual(d.check.ok, true);
+  const hd = hm.json.data || hm.json;
+  assert.strictEqual(hm.status, 200); assert.ok(hd.moves > 0 && hd.list.every(x => x.home === 'idearium'), JSON.stringify(hd).slice(0, 200));
 });
 
 (async () => {

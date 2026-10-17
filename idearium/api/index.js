@@ -2771,6 +2771,7 @@ const ROUTE_CAP = {
   'system.version': CAPS.READ_IDEAS,   // 0.60.34 VR1 — the one release version
   'system.prevention.clear': CAPS.ADMIN,   // 0.60.123 MP
   'system.drawbridge': CAPS.READ_IDEAS,   // 0.60.126 DB1 — the crossings between systems, and the ratchet
+  'system.homes': CAPS.READ_IDEAS,   // 0.60.129 DB17
   'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
   'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
@@ -3060,6 +3061,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','version'],         'system.version'],     // 0.60.34 VR1 — the release (lib/version.js), where it is stated, the module versions labelled
     ['POST',   ['api','system','prevention','clear'], 'system.prevention.clear'],   // 0.60.123 MP — a person ends a prevention early
     ['GET',    ['api','system','drawbridge'], 'system.drawbridge'],   // 0.60.126 DB1 — every require() that crosses a system boundary; ?new=1 the ratchet's drift only
+    ['GET',    ['api','system','homes'], 'system.homes'],   // 0.60.129 DB17 — files in shared folders that belong to one system (a census: nothing moves)
     ['GET',    ['api','system','tunnel'], 'system.tunnel'],   // 0.60.128 DB13 — every system's tunnel: where it runs, its routes, the commands that reach it, its toasts
     ['GET',    ['api','system','tunnel',':name'], 'system.tunnel.one'],   // 0.60.128 DB13/DB14 — one system's tunnel, with its heartbeat asked over its health route
     ['GET',    ['api','system','heartbeat'], 'system.heartbeat'],   // 0.60.128 DB14 — every system asked over its health route: up, degraded, down
@@ -5287,6 +5289,11 @@ async function handle(req, res, route, query, body) {
       const cur = R.current();
       return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
         modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
+    }
+    case 'system.homes': {   // 0.60.129 DB17 — James: "all system relevant files should stay with the system."
+      const SB = _require('../../lib/system-boundary.js');
+      const h = SB.homes({ root: path.dirname(_require.resolve('../../package.json')) });
+      return ok(res, { ...h, list: query && query.system ? h.list.filter(x => x.home === query.system) : h.list });
     }
     case 'system.tunnel':
     case 'system.tunnel.one':
