@@ -19,6 +19,7 @@
  *          DK-15 tasks in real time: an idearium.repo.task event repaints the panel and the rail with no fetch
  *          DK-16 tools: a tool button opens its arguments; run sends it through the route; a procedure replays
  *          DK-17 an event for another repo changes nothing; an inject event reloads only the open panels it concerns
+ *          DK-18 (DK3) control: the repo's run shown and paused; the agent that answers picked
  * No engine on the machine: the browser part is SKIPPED, said, never passed.
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -52,6 +53,8 @@ function harness() {
   const CALLS = [];
   const REPO = { uuid: 'r1', name: 'daw', files: [{ path: 'src/a.js' }] };
   let CURRENT_API_REPO = REPO, CURRENT_REPO_SUBTAB = 'code';
+  let RUN = { state: 'playing', since: null };
+  let SETTINGS = { provider: 'auto', providers: ['ollama', 'chatgpt', 'claude'], toolScope: 'all', toolScopes: ['all', 'project'], injectMode: 'review', modes: ['review', 'auto', 'off'] };
   let PROCS = [{ id: 'proc-1', name: 'read the readme', steps: [{ tool: 'idearium.code_read.tool', args: { path: 'README.md' } }], runs: [], runCount: 0 }];
   function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
   const TOASTS = []; function toast(m, k) { TOASTS.push([m, k]); }
@@ -69,6 +72,10 @@ function harness() {
     if (/\\/procedures\\/proc-1\\/replay$/.test(p)) { PROCS[0].runCount = 1; PROCS[0].runs = [{ ok: true, results: [{ tool: 'idearium.code_read.tool', ok: true }] }]; return { ok: true, procedure: { id: 'proc-1', name: 'read the readme' }, run: { ok: true, results: [{ tool: 'idearium.code_read.tool', ok: true }] } }; }
     if (p.endsWith('/procedures') && opts && opts.method === 'POST') { const b = JSON.parse(opts.body); PROCS.push({ id: 'proc-2', name: b.name, steps: b.steps, runs: [], runCount: 0 }); return { ok: true, procedure: PROCS[1] }; }
     if (p.endsWith('/procedures')) return { procedures: PROCS };
+    if (p.endsWith('/repos/r1/run/pause')) { RUN = { state: 'paused', since: 3, by: 'person', snapshot: 'abc123def456' }; return { ok: true }; }
+    if (p.endsWith('/repos/r1/run')) return { run: RUN, desktop: null, running: [{ id: 't1', kind: 'phase', title: 'phase KE1 build' }] };
+    if (p.endsWith('/agent/settings') && opts && opts.method === 'POST') { const b = JSON.parse(opts.body); SETTINGS = { ...SETTINGS, ...b }; return { ok: true }; }
+    if (p.endsWith('/agent/settings')) return SETTINGS;
     if (p.endsWith('/agent/tools/run')) return { name: 'idearium.code_read.tool', ms: 12, result: { ok: true, result: { content: '# hello' } } };
     return {};
   }
@@ -143,7 +150,7 @@ function harness() {
     const opened = () => page.$$eval('#dock-col .dk-panel', els => els.map(e => e.dataset.dock));
 
     await test('DK-10', 'the rail: the Plan\'s tab and one tab per panel; the Plan\'s own pull tab is hidden (one rail)', async () => {
-      assert.deepStrictEqual(await page.$$eval('#dock-rail .dk-tab', els => els.map(e => e.dataset.dock)), ['plan', 'outputs', 'changes', 'tasks', 'context', 'tools']);
+      assert.deepStrictEqual(await page.$$eval('#dock-rail .dk-tab', els => els.map(e => e.dataset.dock)), ['plan', 'outputs', 'changes', 'tasks', 'context', 'tools', 'control']);
       assert.strictEqual(await page.evaluate(() => { const t = document.getElementById('plan-tab'); return !t || t.hidden; }), true);
       assert.strictEqual(await page.evaluate(() => document.getElementById('dock-col').hidden), true, 'none open: no column');
     });
@@ -153,8 +160,8 @@ function harness() {
       assert.deepStrictEqual(await opened(), ['changes']);
       await page.click('#dock-rail .dk-all:has-text("all")');
       await page.waitForSelector('#dock-col .dk-panel[data-dock="tools"]');
-      assert.deepStrictEqual(await opened(), ['outputs', 'changes', 'tasks', 'context', 'tools']);
-      assert.strictEqual(await page.$$eval('#dock-rail .dk-tab.on', e => e.length), 5);
+      assert.deepStrictEqual(await opened(), ['outputs', 'changes', 'tasks', 'context', 'tools', 'control']);
+      assert.strictEqual(await page.$$eval('#dock-rail .dk-tab.on', e => e.length), 6);
       await page.click('#dock-rail .dk-all:has-text("none")');
       assert.deepStrictEqual(await opened(), []);
       assert.strictEqual(await page.evaluate(() => DOCK.open.size), 0);
@@ -229,6 +236,18 @@ function harness() {
       const paths = await page.evaluate((n) => CALLS.slice(n).map(c => c.p), before);
       assert.ok(paths.some(p => p.endsWith('/worksurface')) && paths.some(p => p.endsWith('/files/state')), paths.join(' '));
       assert.ok(!paths.some(p => p.endsWith('/plan')), 'context is closed: not read');
+      assert.deepStrictEqual(errors, []);
+    });
+    await test('DK-18', 'control: the run shown and paused through POST /run/pause; the agent picked through POST /agent/settings', async () => {
+      await page.evaluate(() => dockToggle('control', true));
+      await page.waitForSelector('#dock-col .dk-panel[data-dock="control"] .dk-sel');
+      assert.ok(/playing/.test(await page.textContent('#dock-col .dk-panel[data-dock="control"]')) && /phase KE1 build/.test(await page.textContent('#dock-col .dk-panel[data-dock="control"]')));
+      await page.click('#dock-col .dk-panel[data-dock="control"] .action-btn:has-text("pause")');
+      await page.waitForFunction(() => /paused/.test(document.querySelector('#dock-col .dk-panel[data-dock="control"]').textContent) && /abc123def456/.test(document.querySelector('#dock-col .dk-panel[data-dock="control"]').textContent));
+      assert.ok(await page.$('#dock-rail .dk-tab[data-dock="control"] .dk-n.warn'), 'the rail shows the repo is paused');
+      await page.selectOption('#dock-col .dk-panel[data-dock="control"] .dk-sel[data-key="provider"]', 'chatgpt');
+      await page.waitForFunction(() => CALLS.some(c => /\/agent\/settings$/.test(c.p) && c.method === 'POST'));
+      assert.deepStrictEqual(await page.evaluate(() => CALLS.filter(c => /\/agent\/settings$/.test(c.p) && c.method === 'POST').pop().body), { provider: 'chatgpt' });
       assert.deepStrictEqual(errors, []);
     });
   } finally { await browser.close(); }

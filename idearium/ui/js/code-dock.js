@@ -1,6 +1,7 @@
 // ════════════════════════════════════════════════════════════════════════════
 // §THE DOCK — idearium/ui/js/code-dock.js (0.60.118 DK2)
 // UUID: nexus-idearium-ui-code-dock-v1-0000-2026-1017-jamesbrooks-001
+// §DK3 (2026-10-17): the Control panel — James: "like yours but with a control panel."
 // Map: docs/2026-10-16-code-tab-rebuild-phasemap.spec (addendum_c DK2_the_dock)
 //
 // James, 2026-10-17: "i want the code tab better. like you have on the right. outputs for proposals and artifacts. changes
@@ -27,6 +28,8 @@ const DOCK_PANELS = [
   ['tasks', 'Tasks', 'everything else running in the repo'],
   ['context', 'Context', 'what the agent building is given'],
   ['tools', 'Tools', 'the repo\'s agent tools and procedures'],
+  // §DK3 2026-10-17 — James: "like yours but with a control panel." The repo's run (play, pause, rewind) and who answers.
+  ['control', 'Control', 'play, pause, rewind; which agent answers'],
 ];
 const DOCK_IDS = DOCK_PANELS.map(p => p[0]);
 const DOCK = { uuid: null, open: new Set(), folded: new Set(), data: {}, err: {}, loading: new Set(), toolArg: null, toolOut: {}, toolQ: '', busy: new Set(), timer: null };
@@ -72,6 +75,7 @@ function _dockBadge(k) {
   if (k === 'changes') { const n = d.changed || 0; return n ? `<span class="dk-n">${n}</span>` : ''; }
   if (k === 'tools') { const n = (d.procedures || []).length; return n ? `<span class="dk-n">${n}</span>` : ''; }
   if (k === 'context' && d.live) return '<span class="dk-dot"></span>';
+  if (k === 'control' && d.run && d.run.state === 'paused') return '<span class="dk-n warn">⏸</span>';
   return '';
 }
 function _dockPaintRail() {
@@ -159,6 +163,9 @@ async function dockLoad(k) {
       const plan = await api(`/api/repos/${uuid}/plan`, {}, 30000);
       const steps = (plan && plan.steps) || [];
       DOCK.data.context = { steps, live: steps.some(s => (s.ledger || []).some(l => l.context && (s.current || l.state === 'building'))) };
+    } else if (k === 'control') {
+      const [run, st] = await Promise.all([api(`/api/repos/${uuid}/run`, {}, 15000), api(`/api/repos/${uuid}/agent/settings`, {}, 15000).catch(e => ({ error: e.message }))]);
+      DOCK.data.control = { run: (run && run.run) || {}, desktop: run && run.desktop, running: (run && run.running) || [], settings: st && !st.error ? st : null, settingsError: st && st.error ? st.error : null };
     } else if (k === 'tools') {
       const [tl, pr, rn] = await Promise.all([
         api(`/api/repos/${uuid}/agent/tools`, {}, 15000).catch(e => ({ error: e.message })),
@@ -184,6 +191,7 @@ function _dockBody(k) {
   if (k === 'changes') return _dockChanges(d);
   if (k === 'context') return typeof _ppContext === 'function' ? _ppContext(d.steps) : '<div class="dk-empty">the Context card is not loaded (plan-panel.js)</div>';
   if (k === 'tools') return _dockTools(d);
+  if (k === 'control') return _dockControl(d);
   return '';
 }
 function _dockOutputs(d) {
@@ -227,6 +235,40 @@ function _dockTools(d) {
   const list = d.toolsError ? `<div class="dk-empty dk-bad">tools: ${_dockEsc(d.toolsError)}</div>`
     : [...groups.entries()].map(([g, ts]) => `<div class="dk-sec">${_dockEsc(g)} · ${ts.length}</div><div class="dk-btns">${ts.map(t => `<button class="dk-tool${t.inScope === false ? ' off' : ''}" ${t.inScope === false ? 'disabled title="outside this repo\'s tool scope"' : `title="${_dockEsc(t.summary || t.name)}"`} onclick="dockPickTool('${_dockQ(t.name)}')">${_dockEsc(t.name.replace(/^idearium\./, '').replace(/\.tool$/, ''))}</button>`).join('')}</div>`).join('') || '<div class="dk-empty">no tool matches</div>';
   return `${runner}${procs}<div class="dk-sec">tools${d.scope ? ` · scope ${_dockEsc(d.scope)}` : ''}</div><input class="field-input dk-q" placeholder="find a tool" value="${_dockEsc(DOCK.toolQ)}" oninput="DOCK.toolQ=this.value;clearTimeout(DOCK.qT);DOCK.qT=setTimeout(()=>{_dockPaintOne('tools');const i=document.querySelector('.dk-q');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length);}},250)">${list}`;
+}
+
+// ── §DK3 the control panel: the repo's run (lib/repo-run-state.js through POST /run/:op) and the agent's settings ─────────────
+function _dockControl(d) {
+  const r = d.run || {};
+  const paused = r.state === 'paused';
+  const b = (op, label, title) => `<button class="action-btn" ${DOCK.busy.has('run') ? 'disabled' : ''} title="${_dockEsc(title)}" onclick="dockRun('${op}')">${label}</button>`;
+  const run = `<div class="dk-sec">the repo's work</div>
+    <div class="dk-row"><span class="dk-st st-${paused ? 'staged' : 'done'}">${paused ? 'paused' : 'playing'}</span>${paused && r.since ? `<span class="dk-dim">since ${_dockWhen(r.since)}${r.by ? ` · by ${_dockEsc(r.by)}` : ''}${r.reason ? ` · ${_dockEsc(r.reason)}` : ''}</span>` : '<span class="dk-dim">agent calls, phase attempts and spec chunks start as they come</span>'}</div>
+    ${r.snapshot ? `<div class="dk-dim">rewind point: version <code>${_dockEsc(String(r.snapshot).slice(0, 12))}</code>${r.checkpoint ? ` · desktop checkpoint ${_dockEsc(r.checkpoint)}` : ''}</div>` : ''}
+    <div class="dk-acts">${paused ? b('play', '▶ play', 'everything waiting goes on where it stopped') : b('pause', '⏸ pause', 'a version is taken first; work in flight finishes its step, nothing new starts')}${b('rewind', '⏮ rewind', 'put the repo back to its rewind point (the pause snapshot) — asks first')}</div>
+    <div class="dk-dim">${d.running.length ? `${d.running.length} running now: ${d.running.slice(0, 4).map(t => _dockEsc(t.title || t.kind)).join(' · ')}` : 'nothing running now'}${d.desktop ? ` · desktop ${_dockEsc(d.desktop)}` : ''}</div>`;
+  const st = d.settings;
+  const sel = (key, opts, cur) => `<select class="field-input dk-sel" data-key="${key}" onchange="dockSetting('${key}', this.value)">${opts.map(o => `<option value="${_dockEsc(o)}"${o === cur ? ' selected' : ''}>${_dockEsc(o)}</option>`).join('')}</select>`;
+  const agent = d.settingsError ? `<div class="dk-empty dk-bad">agent settings: ${_dockEsc(d.settingsError)}</div>` : st ? `<div class="dk-sec">who answers</div>
+    ${st.settingsFrom ? `<div class="dk-dim">these settings belong to the original repo (${_dockEsc(st.settingsFrom)}): change them there</div>` : ''}
+    <div class="dk-row"><span class="dk-st">agent</span>${sel('provider', [...new Set(['auto', ...(st.providers || []).map(p => typeof p === 'string' ? p : p.id || p.name)].filter(Boolean))], st.provider)}${st.provider === 'ollama' && st.ollamaModel ? `<span class="dk-dim"> · ${_dockEsc(st.ollamaModel)}</span>` : ''}</div>
+    <div class="dk-row"><span class="dk-st">tools</span>${sel('toolScope', st.toolScopes || ['all', 'project'], st.toolScope)}</div>
+    <div class="dk-row"><span class="dk-st">its code</span>${sel('injectMode', st.modes || ['review'], st.injectMode)}<span class="dk-dim"> review: you apply · auto: lands when its checks pass</span></div>` : '';
+  return run + agent;
+}
+async function dockRun(op) {
+  const repo = _dockRepo(); if (!repo) return;
+  if (op === 'rewind' && !confirm('Rewind this repo to its rewind point? Its files go back to that version (the rewind is itself a version: nothing is lost).')) return;
+  DOCK.busy.add('run'); _dockPaintOne('control');
+  try { await api(`/api/repos/${repo.uuid}/run/${op}`, { method: 'POST', body: JSON.stringify({ by: 'person', reason: 'from the Code tab control panel' }) }, 120000); toast(`${op} — done`, 'ok'); }
+  catch (e) { toast(`${op} refused: ${e.message}`, 'err'); }
+  DOCK.busy.delete('run'); dockLoad('control');
+}
+async function dockSetting(key, value) {
+  const repo = _dockRepo(); if (!repo) return;
+  try { await api(`/api/repos/${repo.uuid}/agent/settings`, { method: 'POST', body: JSON.stringify({ [key]: value }) }, 15000); toast(`${key}: ${value}`, 'ok'); }
+  catch (e) { toast(`${key} not changed: ${e.message}`, 'err'); }
+  dockLoad('control');
 }
 
 // ── tools and procedures: every one through a route (the agent's door, the repo's scope) ──────────────────────────
@@ -298,6 +340,7 @@ const _DOCK_EV = [
   [/^repo\.(inject\.|file\.|edit\.|worksurface)|^repo\.version\.|^edit\./, ['outputs', 'changes']],
   [/^repo\.phase\.run|^repo\.prove\.|^run\./, ['context', 'outputs', 'changes']],
   [/^repo\.(procedure\.|tool\.ran)/, ['tools']],
+  [/^repo\.run\b|^repo\.agent\.settings/, ['control']],
 ];
 /** an Idearium event (app.js refreshOnEvent): reload only the open panels it concerns, once per burst */
 function dockOnEvent(ev) {

@@ -245,3 +245,13 @@ addendum_c:
         the last run as a procedure".
       proof: "driven in Clear Glass: open all, close all, open two, collapse one; a task event updates the tasks panel without a fetch; a tool button runs through the route; a procedure replays"
   question: "Is the dock a column on the right with the panels stacked (my reading), or should each panel float on its own like the Plan window?"
+
+# ADDENDUM 2026-10-17 (d): DK3, the Control panel — built 0.60.121
+# James: "like yours but with a control panel." (looking at Claude Code's right-hand panels) · then: "ide, then use clearglass
+# with the search engine tool for the ui editor ui?" — his order, recorded as his: the IDE (this Code tab) first, then the UI
+# editor, its UI found through Clear Glass's search-engine tool (lib/agent-tools/tools/clear-glass/search-engine.js) rather than
+# designed from nothing. The coder's note: existing open-source visual editors are the candidates to find and compare first
+# (licence checked before anything is reused).
+# DK3 built: the dock's Control panel — play / pause / rewind (POST /api/repos/:uuid/run/:op, lib/repo-run-state.js), what is
+# running, and who answers (POST /api/repos/:uuid/agent/settings). Proof: tests/modules/test-code-dock.test.js DK-18.
+

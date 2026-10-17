@@ -82,7 +82,11 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, stdio: ['ignore', 'pipe
     const back = R.fromFiles(files);
     assert.deepStrictEqual([back.version, back.nexus], [V, true], 'Idearium reads the same version back');
     const list = execFileSync('unzip', ['-Z1', out.zip], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).split('\n').filter(Boolean);
-    assert.ok(list.every(p => p.startsWith(`nexus-${V}/`)), 'every path under nexus-<version>/');
+    // 2026-10-17 — James: "the zips need to match the release, and no nest folders": the files sit at the zip's root
+    assert.ok(list.includes('VERSION') && list.includes('package.json') && list.includes('lib/version.js'), 'VERSION and the project at the root');
+    assert.ok(!list.some(p => p.startsWith(`nexus-${V}/`)), 'no folder around the files');
+    const CS = require(path.join(ROOT, 'cos/app/store.js'));
+    if (typeof CS.inspect === 'function') { const ins = CS.inspect(out.zip); assert.ok(ins.ok && ins.version === V && ins.top === '', JSON.stringify({ ok: ins.ok, error: ins.error, version: ins.version, top: ins.top })); }
     assert.ok(!list.some(p => /\/node_modules\//.test(p)), 'tracked files only');
   });
 

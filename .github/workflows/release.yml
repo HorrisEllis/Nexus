@@ -3,8 +3,8 @@
 #
 # When main's release changes (lib/version.js system), and on demand: the versions must agree (package.json, the
 # changelog — CK-253), then the release is published once: tag v<version> on that commit, release "Nexus <version>",
-# its notes CHANGELOG-<version>.md, its asset nexus-<version>.zip (every path under nexus-<version>/, a VERSION file
-# inside). A version already tagged is left alone. Built by scripts/release-zip.js, which runs the same way locally.
+# its notes CHANGELOG-<version>.md, its asset nexus-<version>.zip (the files at the zip's root, no folder around them, a
+# VERSION file at the root; 2026-10-17: "the zips need to match the release, and no nest folders"). A version already tagged is left alone. Built by scripts/release-zip.js, which runs the same way locally.
 name: release
 
 on:
