@@ -27,7 +27,7 @@
  * cortex's own jaaDB module for exactly that reason — see that file's
  * own comment. Only versionium's true OWN tables move here.
  */
-const { JaaStore } = require('../../guardian/jaa-store');
+const { JaaStore } = require('../../lib/jaa-store.js');
 const crypto = require('crypto');
 const config = require('../config.js');
 

@@ -33,7 +33,29 @@ function _matchPath(pattern, pathname, paramNames, args) {
 // stubs. Deliberately scoped: merge/archive stay stubs — actually
 // committing a change (or explicit, permanent archival) is real, separate
 // work, not rushed into the same turn that wired hypothesis generation.
-const { jaaDB } = require('../../cortex/memory/jaa-db.js');
+// §0.60.133 — James: "need to get the systems soveriegn again like we were talking about." nexus-healer's data is its own:
+// healer_proposals lives in nexus-healer/data/jaa (lib/system-store.js), brought home once from cortex's store (the rows
+// there are kept, not removed). Before, this required cortex/memory/jaa-db.js and kept its table inside cortex.
+const jaaDB = require('../../lib/system-store.js').openStore('nexus-healer', { tables: ['healer_proposals'], migrate: [{ table: 'healer_proposals' }] });
+
+// Forge is intelligence's: asked for through intelligence's route, found through the tunnel (lib/system-registry.js), never
+// by requiring intelligence/rfr2/forge. A forge that cannot be reached is said, never faked.
+function _forgePatch(src, instruction, moduleName) {
+  const rec = require('../../lib/system-registry.js').get('intelligence');
+  const port = rec && rec.port;
+  if (!port) return Promise.resolve({ error: { message: 'intelligence is not in the system registry: no route to its forge' } });
+  const payload = JSON.stringify({ src, instruction, moduleName });
+  return new Promise((resolve) => {
+    const req = http.request({ host: '127.0.0.1', port, path: '/api/intelligence/rfr2/forge/patch', method: 'POST', timeout: 10 * 60000,
+      headers: { 'content-type': 'application/json', 'content-length': Buffer.byteLength(payload) } }, (res) => {
+      let s = ''; res.on('data', (c) => { s += c; });
+      res.on('end', () => { try { const d = JSON.parse(s); resolve(d.ok ? d : { ...d, error: { message: d.error || `intelligence answered ${res.statusCode}` } }); } catch (e) { resolve({ error: { message: `intelligence answered ${res.statusCode} with no JSON` } }); } });
+    });
+    req.on('timeout', () => { req.destroy(new Error('no answer from intelligence in 10 minutes')); });
+    req.on('error', (e) => resolve({ error: { message: `intelligence's forge route could not be reached: ${e.message}` } }));
+    req.end(payload);
+  });
+}
 
 async function dispatch(opId, args) {
   switch (opId) {
@@ -82,13 +104,9 @@ async function dispatch(opId, args) {
       // tree (2026-07-21 audit), causal-nexus is the near-dead ancestor.
       // Functionally identical (harvested verbatim, only the module
       // system changed), so this is a path update, not a behavior change.
-      let forge;
-      try { forge = require('../../intelligence/rfr2/forge/index.js'); }
-      catch (e) { return { ok: false, error: `forge module unavailable: ${e.message}` }; }
-
       let rec;
       try {
-        rec = await forge.forgePatch(moduleSrc, { instruction: proposal.text }, { moduleName: args.targetFile });
+        rec = await _forgePatch(moduleSrc, proposal.text, args.targetFile);   // §0.60.133 through intelligence's route
       } catch (e) {
         return { ok: false, error: `forge dispatch failed: ${e.message}` };
       }

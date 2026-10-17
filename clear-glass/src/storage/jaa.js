@@ -51,7 +51,7 @@ function store() {
   const dir = _dir();
   if (_store && _storeDir === dir) return _store;
   if (_store) { try { _store.close(); } catch (_) {} }
-  const { JaaStore } = require('../../../guardian/jaa-store.js');
+  const { JaaStore } = require('../../../lib/jaa-store.js');
   fs.mkdirSync(dir, { recursive: true });
   _store = new JaaStore(dir, { settings: false });
   _storeDir = dir;

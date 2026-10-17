@@ -8,19 +8,15 @@
   "architect/service.js -> intelligence/alk/index.js",
   "architect/service.js -> intelligence/cfr/index.js",
   "architect/service.js -> nexus/nexus-connect.js",
-  "clear-glass/src/cookies/vault.js -> guardian/jaa-store.js",
   "clear-glass/src/copilot/bridge.js -> copilot/lib/nexus-ask.js",
   "clear-glass/src/copilot/bridge.js -> ollama/ollama-runtime.js",
   "clear-glass/src/downloads/artifact-chat-index.js -> cos/cli/commands/archetype.js",
   "clear-glass/src/downloads/artifact-chat-index.js -> cos/cli/commands/create.js",
   "clear-glass/src/downloads/artifact-chat-index.js -> cos/cli/commands/snapshot.js",
   "clear-glass/src/downloads/artifact-chat-index.js -> cos/host/index.js",
-  "clear-glass/src/downloads/artifact-chat-index.js -> guardian/jaa-store.js",
   "clear-glass/src/mesh/agent-mesh.js -> copilot/lifeline.js",
-  "clear-glass/src/passwords/vault.js -> guardian/jaa-store.js",
   "clear-glass/src/plugins/schema.js -> cos/foundation/hook-schema.js",
   "clear-glass/src/releases/service.js -> cos/app/store.js",
-  "clear-glass/src/storage/jaa.js -> guardian/jaa-store.js",
   "clear-glass/wire/nexus-wire.js -> orchestrator/lib/pulse.js",
   "cli/axiom.js -> copilot/axiom-manager.js",
   "cli/boot-systems.js -> nexus/nexus-connect.js",
@@ -53,7 +49,6 @@
   "copilot/lib/capabilities.js -> loom/scanners/capability-map.js",
   "copilot/lib/grammar-router.js -> cortex/memory/jaa-db.js",
   "copilot/lib/grammar-router.js -> orchestrator/lib/grammar-misfire-tracker.js",
-  "copilot/lib/inject-config.js -> guardian/jaa-store.js",
   "copilot/lib/intent-learning.js -> cortex/memory/jaa-db.js",
   "copilot/lib/nexus-awareness.js -> loom/scanners/capability-map.js",
   "copilot/lib/person-model/index.js -> cortex/memory/jaa-db.js",
@@ -88,7 +83,6 @@
   "cortex/core/raid/index.js -> intelligence/cfr/sigma.js",
   "cortex/core/raid/officiator.js -> copilot/lifeline.js",
   "cortex/memory/causal-lookup.js -> intelligence/cfr/graph.js",
-  "cortex/memory/jaa-db.js -> guardian/jaa-store.js",
   "cortex/self-heal/escalation.js -> intelligence/telemetry-codec/engines.js",
   "cortex/snapshot/index.js -> versionium/lib/snapshot.js",
   "cortex/tools/materialize-cli.js -> loom/scanners/capability-map.js",
@@ -199,7 +193,6 @@
   "intelligence/gap/predicate.js -> nexus/nexus-bus.js",
   "intelligence/index.js -> cortex/memory/jaa-db.js",
   "intelligence/index.js -> nexus/nexus-bus.js",
-  "intelligence/lib/domain-nodes.js -> guardian/jaa-store.js",
   "intelligence/liminal-space/index.js -> cortex/memory/jaa-db.js",
   "intelligence/routes.js -> nexus/nexus-bus.js",
   "intelligence/server.js -> cortex/memory/jaa-db.js",
@@ -380,7 +373,6 @@
   "lib/ledger-fanin/boot.js -> intelligence/lattice/associative-lattice.js",
   "lib/ledger-fanin/boot.js -> intelligence/lattice/fanin-listener.js",
   "lib/ledger-fanin/boot.js -> intelligence/snapshot-trigger.js",
-  "lib/ledger-store.js -> guardian/jaa-store.js",
   "lib/loom-map.js -> loom/schema/driver.js",
   "lib/migrate-ledger-per-system.js -> cortex/memory/jaa-db.js",
   "lib/nerve/index.js -> hooks/index.js",
@@ -396,7 +388,6 @@
   "lib/nexus-self/branch.js -> cos/playground/branch.js",
   "lib/nexus-self/store.js -> idearium/lib/data-dir.cjs",
   "lib/node-index.js -> cortex/memory/jaa-db.js",
-  "lib/node-index.js -> guardian/jaa-store.js",
   "lib/open-loop-taxonomy.js -> intelligence/gap/predicate.js",
   "lib/opportunity/draft.js -> clear-glass/src/autofill/proposal.js",
   "lib/opportunity/store.js -> cortex/memory/jaa-db.js",
@@ -482,8 +473,6 @@
   "meta/index.js -> intelligence/spatial/index.js",
   "meta/index.js -> intelligence/telemetry-codec/index.js",
   "meta/index.js -> intelligence/topo-kernel/index.js",
-  "nexus-healer/api/index.js -> cortex/memory/jaa-db.js",
-  "nexus-healer/api/index.js -> intelligence/rfr2/forge/index.js",
   "nexus/autopilot.js -> cortex/memory/jaa-db.js",
   "nexus/autopilot.js -> intelligence/cfr/field.js",
   "nexus/autopilot.js -> warp/core/Axiom.js",
@@ -551,7 +540,6 @@
   "versionium/lib/migrate-idearium-snapshots.js -> cortex/memory/jaa-db.js",
   "versionium/lib/migrate-legacy-data.js -> cortex/memory/jaa-db.js",
   "versionium/lib/snapshot.js -> cortex/memory/jaa-db.js",
-  "versionium/lib/store.js -> guardian/jaa-store.js",
   "versionium/server.js -> nexus/nexus-connect.js",
   "warp/adapters/emerge-field.js -> emerge/core/index.js"
  ],
@@ -588,5 +576,27 @@
    "idearium/repo/roadmap.js -> loom/scanners/phasemap-map.js",
    "idearium/spec-engine/index.js -> warp/core/index.js"
   ]
- }
+ },
+ "closed": [
+  {
+   "release": "0.60.133",
+   "date": "2026-10-17",
+   "count": 12,
+   "why": "the 9 requires of guardian/jaa-store.js now require lib/jaa-store.js; nexus-healer keeps its data in its own store and asks intelligence for forge through its route",
+   "edges": [
+    "clear-glass/src/cookies/vault.js -> guardian/jaa-store.js",
+    "clear-glass/src/downloads/artifact-chat-index.js -> guardian/jaa-store.js",
+    "clear-glass/src/passwords/vault.js -> guardian/jaa-store.js",
+    "clear-glass/src/storage/jaa.js -> guardian/jaa-store.js",
+    "copilot/lib/inject-config.js -> guardian/jaa-store.js",
+    "cortex/memory/jaa-db.js -> guardian/jaa-store.js",
+    "intelligence/lib/domain-nodes.js -> guardian/jaa-store.js",
+    "lib/ledger-store.js -> guardian/jaa-store.js",
+    "lib/node-index.js -> guardian/jaa-store.js",
+    "nexus-healer/api/index.js -> cortex/memory/jaa-db.js",
+    "nexus-healer/api/index.js -> intelligence/rfr2/forge/index.js",
+    "versionium/lib/store.js -> guardian/jaa-store.js"
+   ]
+  }
+ ]
 }

@@ -30,7 +30,7 @@
  */
 
 const path = require('path');
-const { JaaStore } = require('../../guardian/jaa-store');
+const { JaaStore } = require('../../lib/jaa-store.js');
 
 // §SANDBOX 2026-08-18 — the store is now relocatable, which it was not.
 //

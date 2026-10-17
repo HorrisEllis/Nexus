@@ -33,7 +33,7 @@ const path = require('path');
 const nodeExport = require('../../lib/node-export.js');
 const nodeIndex = require('../../lib/node-index.js');
 const nodeSchemas = require('../../lib/node-schemas.js');
-const { JaaStore } = require('../../guardian/jaa-store.js');
+const { JaaStore } = require('../../lib/jaa-store.js');
 
 const MODULE_ID = 'copilot-inject-config';
 const NODES_DIR = path.join(__dirname, '..', 'data', 'nodes', 'inject_rule');

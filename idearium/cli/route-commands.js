@@ -325,6 +325,16 @@ export const SPEC = [
     } },
   // 0.60.20 — lean mode, the same switch as Idearium → Settings → Routing (every agent has it through nexus.command)
   // 0.60.126 DB1 — the crossings between systems: what the drawbridge must become the only way for (docs/2026-10-17-system-drawbridge-phasemap.spec)
+  // 0.60.133 IM1 — "need to get the systems soveriegn again": which systems are, and what stands in each one's way
+  { key: 'system.sovereign', repo: false, usage: 'system sovereign [<system>]', about: 'which systems are sovereign (nothing they require is in another system\'s folder; lib/ is the kernel) and, for each that is not, what is in the way: its data kept in cortex\'s store, a shared primitive in another system, or another system\'s capability required as a file',
+    req: (a) => ({ method: 'GET', path: `/api/system/sovereign${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
+    print: (d, a, h) => {
+      for (const r of d.systems || []) {
+        console.log(`  ${(r.sovereign ? h.c.mint('sovereign') : h.c.amber('not yet  '))} ${r.system.padEnd(16)} ${h.c.dim(`out ${r.out} · in ${r.in} · kernel ${r.kernel}`)}${r.sovereign ? '' : h.c.dim(`  — data ${r.blockers.data} · primitive ${r.blockers.primitive} · capability ${r.blockers.capability}`)}`);
+        if (r.list) for (const [k, xs] of Object.entries(r.list)) for (const x of xs) console.log(h.c.dim(`      ${k.padEnd(10)} ${x.from} → ${x.to}`));
+      }
+      console.log(h.c.dim(`  ${(d.sovereign || []).length} sovereign: ${(d.sovereign || []).join(', ') || '—'}`));
+    } },
   // 0.60.130 P33a — a system's own node database: each index with all its history
   { key: 'system.nodes', repo: false, usage: 'system nodes <system> [<type> [<id>]]', about: 'a system\'s own node database (<system>/data/node-index): each node type with its files, its index and its history; with a type, its nodes; with an id, that node and every change it went through',
     req: (a) => ({ method: 'GET', path: `/api/system/nodes/${encodeURIComponent(a.args[0] || '')}${a.args[1] ? `?type=${encodeURIComponent(a.args[1])}${a.args[2] ? `&id=${encodeURIComponent(a.args[2])}` : ''}` : ''}` }),

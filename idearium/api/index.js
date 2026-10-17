@@ -2772,6 +2772,7 @@ const ROUTE_CAP = {
   'system.prevention.clear': CAPS.ADMIN,   // 0.60.123 MP
   'system.drawbridge': CAPS.READ_IDEAS,   // 0.60.126 DB1 — the crossings between systems, and the ratchet
   'system.homes': CAPS.READ_IDEAS,   // 0.60.129 DB17
+  'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
   'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
@@ -3063,6 +3064,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','system','prevention','clear'], 'system.prevention.clear'],   // 0.60.123 MP — a person ends a prevention early
     ['GET',    ['api','system','drawbridge'], 'system.drawbridge'],   // 0.60.126 DB1 — every require() that crosses a system boundary; ?new=1 the ratchet's drift only
     ['GET',    ['api','system','homes'], 'system.homes'],
+    ['GET',    ['api','system','sovereign'], 'system.sovereign'],   // 0.60.133 IM1 — which systems are sovereign, and what stands in each one's way (?system=)
     ['GET',    ['api','system','nodes',':system'], 'system.nodes'],   // 0.60.130 P33a — a system's own node database: per type, its files, its index, its history; ?type= lists, &id= one node's history   // 0.60.129 DB17 — files in shared folders that belong to one system (a census: nothing moves)
     ['GET',    ['api','system','tunnel'], 'system.tunnel'],   // 0.60.128 DB13 — every system's tunnel: where it runs, its routes, the commands that reach it, its toasts
     ['GET',    ['api','system','tunnel',':name'], 'system.tunnel.one'],   // 0.60.128 DB13/DB14 — one system's tunnel, with its heartbeat asked over its health route
@@ -5306,6 +5308,10 @@ async function handle(req, res, route, query, body) {
       if (query && query.type && query.id) return ok(res, { system: folder, type: query.type, id: query.id, node: reg.get(query.type, query.id), history: reg.history(query.type, query.id) });
       if (query && query.type) return ok(res, { system: folder, type: query.type, nodes: reg.list(query.type).map(n => ({ id: n.id, summary: n.summary || null, updatedAt: n.updatedAt || null })) });
       return ok(res, reg.stats());
+    }
+    case 'system.sovereign': {   // 0.60.133 IM1 — James: "need to get the systems soveriegn again like we were talking about."
+      const SB = _require('../../lib/system-boundary.js');
+      return ok(res, SB.sovereignty({ root: path.dirname(_require.resolve('../../package.json')), system: (query && query.system) || null }));
     }
     case 'system.homes': {   // 0.60.129 DB17 — James: "all system relevant files should stay with the system."
       const SB = _require('../../lib/system-boundary.js');

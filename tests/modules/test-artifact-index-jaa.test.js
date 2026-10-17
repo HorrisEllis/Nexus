@@ -29,7 +29,7 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
   await test('JX-01', 'the index module no longer requires better-sqlite3 anywhere', () => {
     const src = fs.readFileSync(path.join(ROOT, 'clear-glass/src/downloads/artifact-chat-index.js'), 'utf8').replace(/\/\/.*$|\/\*[\s\S]*?\*\//gm, '');
     assert.ok(!/require\(['"]better-sqlite3['"]\)/.test(src) && !/_openDb|\.prepare\(/.test(src));
-    assert.ok(/require\('\.\.\/\.\.\/\.\.\/guardian\/jaa-store\.js'\)/.test(src));
+    assert.ok(/require\('\.\.\/\.\.\/\.\.\/(guardian|lib)\/jaa-store\.js'\)/.test(src) /* 0.60.133: the store is lib/jaa-store.js (guardian's path re-exports it) */);
   });
 
   // Replies written before the index existed (all of them, on James's machine).

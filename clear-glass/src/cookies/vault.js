@@ -78,7 +78,7 @@ class CookieVault {
   /** The JAA store; opened (and legacy files imported) on first use. */
   _jaa() {
     if (this._store) return this._store;
-    const { JaaStore } = require('../../../guardian/jaa-store.js');
+    const { JaaStore } = require('../../../lib/jaa-store.js');
     fs.mkdirSync(this.dir, { recursive: true });
     this._store = new JaaStore(path.join(this.dir, 'jaa'), { tables: [T_SNAP, T_ACCT], settings: false });
     const imported = this._importLegacyFiles();

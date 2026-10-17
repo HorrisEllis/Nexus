@@ -28,7 +28,7 @@ const SECRET = 'sk-ant-sid01-VERY-SECRET-VALUE';
   await test('VJ-01', 'no better-sqlite3 anywhere in the vault; storage is guardian/jaa-store.js', () => {
     const src = fs.readFileSync(path.join(ROOT, 'clear-glass/src/cookies/vault.js'), 'utf8').replace(/\/\/.*$|\/\*[\s\S]*?\*\//gm, '');
     assert.ok(!/better-sqlite3|this\.db\b|\.prepare\(/.test(src));
-    assert.ok(/require\('\.\.\/\.\.\/\.\.\/guardian\/jaa-store\.js'\)/.test(src));
+    assert.ok(/require\('\.\.\/\.\.\/\.\.\/(guardian|lib)\/jaa-store\.js'\)/.test(src) /* 0.60.133: the store is lib/jaa-store.js (guardian's path re-exports it) */);
   });
 
   await test('VJ-02', 'writes land in <vault>/jaa as two JAA tables, encrypted — the cookie value is nowhere on disk in the clear', async () => {

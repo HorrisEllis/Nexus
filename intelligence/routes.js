@@ -258,6 +258,7 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
     '/api/intelligence/rfr2/stats', '/api/intelligence/rfr2/query',
     '/api/intelligence/rfr2/trace', '/api/intelligence/rfr2/descendants',
     '/api/intelligence/rfr2/children',
+    '/api/intelligence/rfr2/forge/patch',   // 0.60.133 — forge offered through the contract (nexus-healer reached in for its file)
     // §0.39.300 SY2 — gap synthesis (intelligence/synthesis): Nexus's own gaps, read as one set, ranked by leverage
     '/api/intelligence/synthesis', '/api/intelligence/synthesis/run', '/api/intelligence/synthesis/ingest',
     '/api/intelligence/synthesis/history', '/api/intelligence/synthesis/fill', '/api/intelligence/synthesis/themes',
@@ -654,6 +655,18 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
     }
 
     // ── RFR2 — live per-process causal kernel + relationship traversal ─────
+    // §0.60.133 — James: "need to get the systems soveriegn again like we were talking about." Forge is intelligence's: other
+    // systems ask for a patch here (their registry knows this route), never by requiring intelligence/rfr2/forge themselves.
+    if (pathname === '/api/intelligence/rfr2/forge/patch') {
+      if (method !== 'POST') { json(405, { ok: false, error: 'POST { src, instruction, moduleName }' }); return true; }
+      if (typeof body.src !== 'string' || !body.instruction) { json(400, { ok: false, error: 'src (the module text) and instruction are required' }); return true; }
+      try {
+        const rec = await require('./rfr2/forge/index.js').forgePatch(body.src, { instruction: body.instruction }, { moduleName: body.moduleName || null });
+        const error = rec && rec.error ? (rec.error.message || String(rec.error)) : null;
+        json(200, { ...rec, ok: !error, ...(error ? { error } : {}) });
+      } catch (e) { json(500, { ok: false, error: `forge dispatch failed: ${e.message}` }); }
+      return true;
+    }
     if (pathname === '/api/intelligence/rfr2/stats') {
       ensureRFR2Live();
       const k = getRFR2Kernel();

@@ -398,6 +398,7 @@ const SUITES = [
   'test-system-tunnel.test.js',   // 0.60.128 DB13/DB14 — his lib/system-registry.js as the tunnel: routes, commands, toasts, heartbeat over routes
   'test-system-node-relations.test.js',   // 0.60.129 DB18 — a system's nodes in relation to it: meta.system, .wire per dependency
   'test-node-registry-system.test.js',   // 0.60.130 P33a — any system's node registry: its own database, all the history, the listener
+  'test-sovereign-systems.test.js',   // 0.60.133 IM1/IM5/IM6 — a system made sovereign: its own store, another reached through its route; the census
   'test-code-dock.test.js',           // 0.60.118 DK2 — the dock: separate panels on the right edge (Clear Glass)
   'test-plan-pieces.test.js',         // 0.60.123 PP1–PP4 — the Plan's bar is its pieces; every run with its log; a piece/run points the dock (Clear Glass)
   'test-prevention.test.js',          // 0.60.123 MP — a memory crisis recorded becomes a prevention: heavy work waits for headroom; Ollama unloads when idle

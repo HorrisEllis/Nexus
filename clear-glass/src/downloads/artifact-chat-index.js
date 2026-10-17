@@ -60,7 +60,7 @@ const _stores = new Map();   // indexDir -> JaaStore
 function _store(p) {
   let st = _stores.get(p.indexDir);
   if (!st) {
-    const { JaaStore } = require('../../../guardian/jaa-store.js');
+    const { JaaStore } = require('../../../lib/jaa-store.js');
     st = new JaaStore(p.indexDir, { tables: [INDEX_TABLE], settings: false });
     _stores.set(p.indexDir, st);
   }

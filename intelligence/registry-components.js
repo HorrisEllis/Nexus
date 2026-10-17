@@ -87,4 +87,5 @@ module.exports = [
   _c('rfr2.trace',   'GET', '/api/intelligence/rfr2/trace',       'RFR2 relationship traversal — trace an event to its causal root', {tags:['rfr2']}),
   _c('rfr2.descendants','GET','/api/intelligence/rfr2/descendants','RFR2 relationship traversal — all events caused by this one', {tags:['rfr2']}),
   _c('rfr2.children','GET', '/api/intelligence/rfr2/children',    'RFR2 relationship traversal — direct children of an event', {tags:['rfr2']}),
+  _c('rfr2.forge.patch','POST','/api/intelligence/rfr2/forge/patch','RFR2 forge — a minimal targeted patch for a module {src, instruction, moduleName}, routed through RAID (0.60.133: offered through the contract)', {tags:['rfr2','forge']}),
 ];

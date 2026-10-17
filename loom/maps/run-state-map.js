@@ -52,6 +52,7 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  ['lib/system-store.js', I('lib/system-store.js'), [I('lib/jaa-store.js')]],   // §0.60.133 IM6: a system's own database, its tables brought home from cortex's once
   ['lib/node-registry.js', I('lib/node-registry.js'), [I('lib/jaa-store.js'), I('lib/node-index.js'), I('lib/node-export.js'), I('lib/node-schemas.js')]],   // §0.60.130 P33a: any system's node registry into its own store, with the history and the listener
   ['lib/jaa-store.js', I('lib/jaa-store.js'), []],   // §0.60.130: moved from guardian/jaa-store.js (re-exported there) — the kernel's store
   ['lib/system-registry.js', I('lib/system-registry.js'), [I('lib/component-registry.js'), I('lib/cos-bridge.js')]],   // §0.60.128 DB13/DB14: his 2026-09-06 runtime registry, extended as the tunnel (tunnel/heartbeat/tunnels); reads each system's registry-components.js by path (the registry is the door)
@@ -72,6 +73,9 @@ const CONSUMERS = [
   [I('copilot/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
   [I('loom/server.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
   [I('clear-glass/src/main/index.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
+  [I('nexus-healer/api/index.js'),                I('lib/system-store.js'), '§0.60.133 healer_proposals in its own store (was cortex/memory/jaa-db.js)'],
+  [I('nexus-healer/api/index.js'),                I('lib/system-registry.js'), '§0.60.133 the tunnel: where intelligence is, to ask its forge route'],
+  [I('idearium/api/index.js'),                    I('lib/system-boundary.js'), '§IM1 0.60.133 GET /api/system/sovereign → sovereignty()'],
   [I('lib/system-nodes.js'),                      I('lib/node-registry.js'), '§P33a 0.60.130 sync(): each system scanned into its own store (guardian runs its own)'],
   [I('idearium/api/index.js'),                    I('lib/node-registry.js'), '§P33a 0.60.130 GET /api/system/nodes/:system'],
   [I('guardian/jaa-store.js'),                    I('lib/jaa-store.js'), '§0.60.130 the old path re-exports the moved store'],

@@ -78,7 +78,7 @@ class PasswordVault {
     const dir = path.join(this.dir, 'jaa');
     const open = () => {
       // One store per directory per process: two vaults on the same dir must see each other's writes.
-      if (!_stores.has(dir)) _stores.set(dir, new (require('../../../guardian/jaa-store.js').JaaStore)(dir, { settings: false }));
+      if (!_stores.has(dir)) _stores.set(dir, new (require('../../../lib/jaa-store.js').JaaStore)(dir, { settings: false }));
       return _stores.get(dir);
     };
     return (this._jaa = new JaaRows('passwords', { legacyFile: this.path, store: open }));

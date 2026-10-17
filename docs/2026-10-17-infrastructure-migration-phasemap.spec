@@ -6,7 +6,7 @@ spec:
     release:  "0.60.132 (mapped)"
     uuid:     nexus-infrastructure-migration-phasemap-v1-0000-2026-1017-jamesbrooks-001
     owner:    "every system · lib (the kernel) · cos (the compartments) · the specs (architecture-spec, genesis, the system template)"
-    status:   "MAPPED 2026-10-17, nothing built. His words: 'Soon' — after the templates (0.60.132). IM0 is his to decide first."
+    status:   "MAPPED 2026-10-17. IM1 BUILT 0.60.133; IM5 begun (nexus-healer sovereign); IM6 its tool built (lib/system-store.js). His words: 'Soon' — after the templates (0.60.132). IM0 is his to decide first."
     voice: >-
       The ideas, the direction and the calls are James's. `james:` is his, verbatim. `does:` is the coder's reading, his to
       correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -127,3 +127,20 @@ spec:
       does: "The UI reads each system's contract (routes, toasts, events) and keeps nothing of its own: disposable."
 
   build_order: [IM0 (his), IM1, IM2, IM3, IM4, IM5 (per system), IM6, IM7]
+
+  # ── ADDENDUM 2026-10-17 (a) — begun ──────────────────────────────────────────
+  # James, 2026-10-17: "need to get the systems soveriegn again like we were talking about"
+  # IM0a-d are not answered yet. Built only what needs none of them, treating lib/ as the kernel (IM0d, the coder's
+  # recommendation, said, not his decision):
+  #   IM1 BUILT 0.60.133 — `system sovereign [<system>]`: each blocker named data / primitive / capability. The primitive
+  #       list (nexus-bus, nexus-connect, warp/core, warp/index, siso, hooks/index) is the coder's reading, his to confirm (IM0e).
+  #   IM6's tool BUILT 0.60.133 — lib/system-store.js: a system's own store, its tables brought home from cortex's once
+  #       (the rows there kept, archived later in IM2).
+  #   IM5 begun 0.60.133 — nexus-healer sovereign: its data home, forge through intelligence's route (new: POST
+  #       /api/intelligence/rfr2/forge/patch). Ratchet 552 → 540.
+  #   Next in IM5's order with the fewest blockers: cockpit (1 data), warp (1 capability), emerge (5), architect (6).
+  decisions_added:
+    IM0e_what_is_a_primitive:
+      question: "Which building blocks are the kernel's (every system uses them) rather than one system's capability? The coder's list: nexus/nexus-bus.js, nexus/nexus-connect.js, warp/core/*, warp/index.js, siso/*, hooks/index.js. RAID, CFR, RFR2, gap and baseline are read as capabilities (cortex's, intelligence's), reached through their routes."
+      status: OPEN
+
