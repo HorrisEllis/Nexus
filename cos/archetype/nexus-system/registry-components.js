@@ -47,4 +47,7 @@ module.exports = {
     },
     // ── the idea's components slot in below ──
   ],
+  // the events a person should see, declared here so the UI reads them from the contract and keeps no list of its own
+  // (James, 2026-10-17: "making the ui disposable, soveriegn"): [{ event: '{{slug}}.x.done', level: 'ok'|'warn'|'err', text }]
+  toasts: [],
 };

@@ -30,12 +30,12 @@ const INTENT = {
   'lib/bus.js': ['the_one_way_an_event_moves', 'Ledger first, then listeners; an event no node declares is still delivered and marked undeclared.'],
   'lib/node-index.js': ['index_the_nodes_in_jaa_tables', 'Domain 2d: nodes_<type> per type, nodes_<type>_ledger history; refuses a node that fails its schema; rebuildable from the files alone.'],
   'lib/listener.js': ['a_dropped_node_goes_live', 'Watches data/nodes, reindexes, emits <system>.node.changed, rewrites each capability bundle (references, never copies).'],
-  'lib/heartbeat.js': ['the_pulse', 'Domain 10: <system>.heartbeat on an interval with uptime, node counts and refused nodes — an index behind its files shows as drift.'],
+  'lib/heartbeat.js': ['the_pulse', 'Domain 10: <system>.heartbeat on an interval with uptime, node counts, refused nodes and the system\'s own checks (a require outside its folder) — an index behind its files shows as drift.'],
   'contracts/handshake.js': ['verify_another_systems_contract', 'Same id, compatible version, the resources needed, the hash last seen — before one system calls another.'],
   'lib/commands.js': ['run_command_nodes_through_the_registry', 'A command names its capability; the registry names the component and file; the command\'s events are emitted after it runs.'],
   'lib/system.js': ['boot', 'Config, schemas, store, ledger, bus, node index, listener, heartbeat, and the component-shape check. server.js and cli.js both start here.'],
   'lib/core.js': ['the_core_component', 'Component <system>.core, capability <system>.core.observe: status and nodes — the system reporting on itself.'],
-  'server.js': ['serve_the_route_nodes', '/health, /contract, /nodes/:type[/:id], and every route node — a new route is a node, this file does not change.'],
+  'server.js': ['serve_the_route_nodes', '/health, /contract (with the toasts the registry declares), /nodes/:type[/:id], and every route node — a new route is a node, this file does not change.'],
   'cli.js': ['run_the_command_nodes', 'node cli.js <command> [--flag value] — the same command nodes the routes run.'],
   'spec/<system>.spec': ['the_living_spec', 'identity, context, file_structure, modules, components, generated — the architecture template\'s sections; grows with the system.'],
   'spec/<system>.node-taxonomy.md': ['the_node_types', 'Each node type, what it is and its required fields.'],
@@ -43,6 +43,8 @@ const INTENT = {
   // §0.60.1 — the drawbridge and the recursion
   'lib/handoff.js': ['hand_work_to_another_system_as_a_verified_file', 'Registry + handshake + schema checked before anything moves; refused = a receipt saying why. Queued in the target\'s input/, taken to processing/, done/ or failed/ with why; the receipt back in the sender\'s output/; processing/ recovered at boot.'],
   'lib/modules.js': ['a_module_is_a_system', 'Lays out template/ again under modules/<slug>/ — the same skeleton one level down, carrying the template so it can nest further; registers it as one module node; boots it with its own code.'],
+  // §0.60.132 — sovereign: the system holds only its own folder
+  'lib/boundary.js': ['the_system_holds_only_its_own_folder', 'Every relative require() resolved; one that leaves the folder is named, and the heartbeat reports it. Other systems are reached through their contract, never their files.'],
   'template/nexus-system.template.json': ['the_template_this_system_came_from', 'Every skeleton file with its placeholders written [[key]], so the system can lay out modules of its own (lib/modules.js) — the same architecture on every level.'],
 };
 const EXTRA = {   // reads that are not a require(): files read at run time

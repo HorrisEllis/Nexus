@@ -114,6 +114,13 @@ rules:
   - "a system hands work only to what its registry knows: its modules (module nodes), its parent, the peers in its config"
   - "a command takes a handoff kind by declaring accepts; the contract lists every kind the system accepts"
   - "a module is a system: the same skeleton, laid out from the parent's template/, carrying the template so it can nest further; the parent knows it by one module node and meets it only through its contract and handoffs"
+  # 2026-10-17 (genesis 1.5.0) — James: "the drawbridge for each compartment for each system, the only way to interact between systems" · "each system is soveriegn and self contained" · "all system relevant files should stay with the system"
+  - "the registry is the interaction contract, the event bus, the queue, the dependency graph, the wiring harness and the spine: systems reach each other only through it — routes, the CLI, handoffs — with a handshake, the UI's too"
+  - "a system is self-contained: it requires no file outside its own folder (lib/boundary.js), runs in its own COS compartment, and its heartbeat reports a require that leaves it"
+  - "a file that serves one system lives in that system's folder; what every system uses is the kernel's"
+  - "every node names its system, and its relations to other systems are nodes too, so the registry is also the dependency graph"
+  - "the toasts a person should see are declared in the registry (toasts:) and served in the contract; the UI keeps no list of its own"
+  - "the system's own process is the one writer of its node database; anything else reads it, or asks through the contract"
 # ── ADDENDUM 2026-10-17 (0.60.126–0.60.130) — the existing systems toward this shape ─────────────────────────────────────
 # James, 2026-10-17: "look at the architecture spec in idearium. thats the point of using the component registry as the spine
 #   that way its easy to move them around and use it as a map." The shape above is unchanged: a new system laid out from this

@@ -11,6 +11,7 @@ const { Bus } = require('./bus.js');
 const { NodeIndex } = require('./node-index.js');
 const { Listener } = require('./listener.js');
 const { Heartbeat } = require('./heartbeat.js');
+const boundary = require('./boundary.js');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -42,7 +43,10 @@ function boot({ root = ROOT, watch = false, beat = false, ledgerSession } = {}) 
   const ctx = { root, system, config: cfg, registry, store, ledger, bus, index };
   ctx.listener = new Listener({ root, system, index, bus, pollMs: cfg.listener && cfg.listener.pollMs });
   ctx.listener.sync();
-  ctx.heartbeat = new Heartbeat({ system, index, bus, intervalMs: cfg.heartbeatMs });
+  // sovereign: the system holds only its own folder; a require that leaves it is a problem the heartbeat reports
+  ctx.boundary = () => boundary.outside(root);
+  ctx.heartbeat = new Heartbeat({ system, index, bus, intervalMs: cfg.heartbeatMs,
+    checks: [() => ctx.boundary().map(o => `${o.file} requires ${o.requires}: outside this system (reach another system through its contract)`)] });
   ctx.shape = () => shape(ctx);
   if (watch) ctx.listener.start();
   if (beat) ctx.heartbeat.start();

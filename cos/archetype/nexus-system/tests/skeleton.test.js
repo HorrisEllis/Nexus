@@ -22,6 +22,13 @@ const get = (port, p) => new Promise((resolve, reject) => http.get({ host: '127.
   const ctx = boot();
   assert.deepStrictEqual(ctx.index.problems, [], 'every seed node matches its schema');
   assert.deepStrictEqual(ctx.shape(), [], 'every component has a capability, a command and events');
+  // sovereign: nothing in the system requires a file outside its own folder; the heartbeat says so when one does
+  assert.deepStrictEqual(ctx.boundary(), [], 'the system holds only its own folder');
+  assert.ok(ctx.heartbeat.snapshot().ok, 'the heartbeat is clean');
+  const leak = ['module.exports = req', "uire('../../else", "where.js');\n"].join('');   // built, so this test's own source holds no such require
+  fs.writeFileSync(path.join(ctx.root, 'lib', 'leak.probe.js'), leak);
+  try { assert.ok(ctx.heartbeat.snapshot().problems.some(p => /leak\.probe\.js requires \.\.\/\.\.\/elsewhere\.js: outside this system/.test(p)), 'a require that leaves the folder is a problem the heartbeat reports'); }
+  finally { fs.unlinkSync(path.join(ctx.root, 'lib', 'leak.probe.js')); }
   assert.ok(ctx.index.get('bundle', '{{slug}}.core.observe'), 'the listener wrote the capability bundle');
   const st = await commands.run(ctx, 'status');
   assert.strictEqual(st.system, '{{slug}}');
@@ -94,6 +101,7 @@ const get = (port, p) => new Promise((resolve, reject) => http.get({ host: '127.
     const hs = await commands.run(ctx, 'handoffs');
     assert.ok(hs.output.some(h => h.id === sent.id && h.state === 'done') && hs.peers['probe-part'] === 'module', 'the handoffs, by folder, and the peers the registry gives');
     assert.ok((await get(port, '/contract')).json.resources.some(r => r.method === 'POST' && r.path === '/handoff'), 'the drawbridge is in the contract');
+    assert.ok(Array.isArray((await get(port, '/contract')).json.toasts), 'the contract carries the toasts the registry declares');
     child.stop();
   } finally {
     fs.unlinkSync(env.nodePath(ctx.root, 'route', '{{slug}}.probe'));

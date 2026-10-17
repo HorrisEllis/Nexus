@@ -26,7 +26,9 @@ function contract(ctx) {
   const routes = ctx.index.list('route').map(r => ({ method: r.method, path: r.path, command: r.command }));
   // the handoff kinds this system takes: every command node that declares accepts
   const accepts = [...new Set(ctx.index.list('command').flatMap(c => (Array.isArray(c.accepts) ? c.accepts : c.accepts ? [c.accepts] : [])))].sort();
-  return { ...base, resources: [...base.resources, ...routes], accepts };
+  // the toasts the registry declares: the UI shows what the system says, from here (it keeps no list of its own)
+  const toasts = Array.isArray(ctx.registry.toasts) ? ctx.registry.toasts : [];
+  return { ...base, resources: [...base.resources, ...routes], accepts, toasts };
 }
 
 function _body(req) {
