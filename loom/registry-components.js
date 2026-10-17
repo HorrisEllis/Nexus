@@ -61,6 +61,10 @@ module.exports = [
   _c('templates',         'GET',  '/api/templates',          'Available scaffold templates'),
 
   // ── Roadmap (LP3 — what each system is BECOMING, not just what it is) ───
+  // §0.60.134 — the template for each system's COS compartment, held by loom
+  _c('compartments',       'GET',  '/api/compartments',         'Every system\'s COS compartment from the template: cos config + intent, runtime, mounts, drawbridge, store, seal', { tags: ['cos'] }),
+  _c('compartments.system','GET',  '/api/compartments/:system', 'One system\'s compartment from the template, and what COS holds for it now', { tags: ['cos'] }),
+  _c('compartments.apply', 'POST', '/api/compartments/apply',   'Write each system\'s intent onto its existing nexus-self-<system> compartment {system?}', { tags: ['cos', 'write'] }),
   _c('phasemap',          'GET',  '/api/phasemap',           'Every phase across every phasemap, tagged by system + status'),
   _c('phasemap.system',   'GET',  '/api/phasemap/:system',   'One system\'s roadmap — done/pending phase breakdown', { tags: ['analysis'] }),
 

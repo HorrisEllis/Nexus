@@ -143,4 +143,9 @@ spec:
     IM0e_what_is_a_primitive:
       question: "Which building blocks are the kernel's (every system uses them) rather than one system's capability? The coder's list: nexus/nexus-bus.js, nexus/nexus-connect.js, warp/core/*, warp/index.js, siso/*, hooks/index.js. RAID, CFR, RFR2, gap and baseline are read as capabilities (cortex's, intelligence's), reached through their routes."
       status: OPEN
+  # ── ADDENDUM 2026-10-17 (b) — the compartment template ─────────────────────
+  # James, 2026-10-17: "and you know i mean cos compartment right? make a template for it now that loom holds"
+  # IM5's gate is now physical: loom/templates/cos-compartment.js (0.60.134) gives each system's compartment a seal that is
+  # ready only when the system is sovereign, and an intent COS verifies with the same check. Redundant, found here, for IM2:
+  # cli/compartments.js (nexus.compartment/1 manifests, a third copy of the crossing scanner).
 

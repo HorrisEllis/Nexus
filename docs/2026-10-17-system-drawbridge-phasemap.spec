@@ -193,7 +193,7 @@ spec:
         no receipt), and used but never declared (a crossing, an undeclared event). Each absence is a gap and a liminal item,
         so intelligence (cfr, rfr2, sigma) reasons over what did not happen at a boundary. This is the debugging he asked for.
     DB11_cos_compartment_per_system:
-      status: OPEN
+      status: "PARTLY BUILT 0.60.134 — James: \"and you know i mean cos compartment right? make a template for it now that loom holds\". loom/templates/cos-compartment.js: each system's compartment (the nexus-self-<system> his 0.39.261 made) with a checkable intent (end state: sovereign), mounts, drawbridge, stores, and a seal ready only when sovereign; served by loom (/api/compartments). OPEN: moving a sealed system in (its process run inside, its folder read-write) — nexus-healer first."
       does: >-
         Each system runs in its own COS compartment (lib/cos-bridge.js), and its registry is its drawbridge: routes, CLI,
         handoffs. It comes after DB6, because a system cannot be isolated while other systems still require() its files.

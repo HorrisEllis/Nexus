@@ -325,6 +325,15 @@ export const SPEC = [
     } },
   // 0.60.20 — lean mode, the same switch as Idearium → Settings → Routing (every agent has it through nexus.command)
   // 0.60.126 DB1 — the crossings between systems: what the drawbridge must become the only way for (docs/2026-10-17-system-drawbridge-phasemap.spec)
+  // 0.60.134 — the template for each system's COS compartment, held by loom (reached through loom's own routes)
+  { key: 'system.compartment', repo: false, usage: 'system compartment [<system>] [--apply]', about: 'each system\'s COS compartment from loom\'s template (nexus-self-<system>): its intent (end state: sovereign; conditions; the genesis axioms), runtime, mounts (its folder, the kernel read-only), drawbridge, store, and its seal — ready only when it is sovereign; --apply writes the intents onto the compartments COS holds',
+    req: (a) => (a.flags && a.flags.apply ? { system: 'loom', method: 'POST', path: '/api/compartments/apply', body: a.args[0] ? { system: a.args[0] } : {} } : { system: 'loom', method: 'GET', path: a.args[0] ? `/api/compartments/${encodeURIComponent(a.args[0])}` : '/api/compartments' }),
+    print: (d, a, h) => {
+      if (d.results) { for (const r of d.results) console.log(`  ${(r.ok ? h.c.mint('applied') : h.c.amber('not yet'))} ${String(r.system).padEnd(16)} ${h.c.dim(r.compartment || '')} ${h.c.dim(r.said || r.error || (r.seal ? 'seal ready' : 'seal open'))}`); return; }
+      const one = (m) => console.log(`  ${(m.seal.ready ? h.c.mint('ready ') : h.c.amber('open  '))} ${m.system.padEnd(16)} ${h.c.dim(m.cos.name)}  ${h.c.dim(m.seal.why)}${m.live ? h.c.dim(m.live.exists ? ' · in COS' : ' · ' + m.live.said) : ''}`);
+      if (d.compartments) { d.compartments.forEach(one); console.log(h.c.dim(`  ready to move in: ${(d.ready || []).join(', ') || '—'}`)); return; }
+      one(d); for (const c of [...d.cos.intent.endState, ...d.cos.intent.conditions]) console.log(h.c.dim(`    ${c.says}`)); for (const m of d.mounts) console.log(h.c.dim(`    mount ${m.mode} ${m.path} — ${m.why}`));
+    } },
   // 0.60.133 IM1 — "need to get the systems soveriegn again": which systems are, and what stands in each one's way
   { key: 'system.sovereign', repo: false, usage: 'system sovereign [<system>]', about: 'which systems are sovereign (nothing they require is in another system\'s folder; lib/ is the kernel) and, for each that is not, what is in the way: its data kept in cortex\'s store, a shared primitive in another system, or another system\'s capability required as a file',
     req: (a) => ({ method: 'GET', path: `/api/system/sovereign${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
