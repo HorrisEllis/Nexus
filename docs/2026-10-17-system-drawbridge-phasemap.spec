@@ -6,7 +6,7 @@ spec:
     release:  "0.60.126 (DB1)"
     uuid:     nexus-system-drawbridge-phasemap-v1-0000-2026-1017-jamesbrooks-001
     owner:    "lib (the census and the drawbridge) · every system with a registry-components.js · orchestrator (the handshake) · loom (the self-model)"
-    status:   "MAPPED 2026-10-17. DB1 BUILT 0.60.126 (the census and the ratchet). DB9/DB10 PARTLY BUILT 0.60.127. DB0a-DB0c are his to decide; DB2-DB8 OPEN."
+    status:   "MAPPED 2026-10-17. DB1 BUILT 0.60.126 (the census and the ratchet). DB9/DB10 PARTLY BUILT 0.60.127. DB13 BUILT, DB14 PARTLY BUILT 0.60.128. DB0a-DB0c are his to decide; DB2-DB8 OPEN."
     voice: >-
       The ideas, the direction and the calls are James's. `james:` is his, verbatim. `does:` is the coder's reading, his to
       correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -205,3 +205,55 @@ spec:
         anything the registry does not declare is refused and shown. The UI holds no state and no logic of its own, so it can
         be thrown away and rebuilt (disposable); the system runs without it (sovereign).
   build_order_a: [DB9 (Nexus's systems first, from DB1), DB10, DB2, DB6 (debugging systems), DB3, DB4, DB5, DB12, DB7, DB11]
+
+  # ── ADDENDUM 2026-10-17 (b) — sovereign systems; his system-registry.js is the tunnel ──
+  # Context: the coder had counted 12 systems with a registry and 17 without, and asked whether to draft the missing ones.
+  # James, 2026-10-17: "okay each system needs one right?" · then: "each system is soveriegn and self contained. use the
+  # compartments to isolated each system, integrate the system-registry.js as the tunnel or drawbridge? then through that
+  # access the command line interface, and routes in the api and toasts, the heartbeat system for status of the system using
+  # routes?"
+  addendum_b:
+    decided:
+      - "Each system needs a registry (his 'each system needs one right?', answered yes by the coder)."
+      - "Each system is sovereign and self-contained, isolated in its own COS compartment (DB11, now his decision)."
+      - "lib/system-registry.js (his 2026-09-06 module) is the tunnel: the one place a system is reached. Through it: the CLI,
+        the API routes, the toasts, and the heartbeat, with status read over routes."
+    reading_to_confirm: >-
+      The coder reads 'the tunnel or drawbridge' as: lib/system-registry.js stays the one answer to 'where is system X and
+      how do I reach it' (it already merges port, health URL, phase, data dir and version for 14 systems), and is extended with
+      what each system offers (its routes from registry-components.js, the commands that reach it, the toasts it declares)
+      and how it is (its heartbeat, read from its health route). lib/drawbridge-registry.js (0.60.127) stays the source-side
+      check that feeds it (declared vs what the source holds). Two modules, one registry: the runtime face and the source face.
+    exists_for_it:
+      - "lib/system-registry.js build/get/list: 14 systems, each { name, port, healthUrl, healthPath, phase, critical,
+        optional, onDemand, dataDir, label, version, sources }, from autopilot ALL_KERNELS, diagnostic SYSTEMS and
+        VERSION.services, read from source text so nothing is started; drift between the three reported."
+      - "Heartbeat: lib/heartbeat.js (beats, BPM, 3 missed = degraded, 10 = dead) and lib/pulse-watch.js."
+      - "Toasts: idearium/ui/js/app.js decides which event names toast, in the UI's own code; no system declares its toasts."
+      - "Compartments: lib/cos-bridge.js createCompartment / mountPath / listCompartments / tree."
+  phases_added_b:
+    DB13_the_tunnel:
+      status: "BUILT 0.60.128 (read side)"
+      does: >-
+        lib/system-registry.js gains tunnel(name): the system's runtime entry plus what it offers — its declared routes
+        (registry-components.js), the command rows that reach those routes (idearium/cli/route-commands.js), and its toasts
+        (DB15) — and heartbeat(name): its health route called, with status (up, degraded, down), latency and why. GET
+        /api/system/tunnel[/:name], `system tunnel [<name>]`. The read side only: a call THROUGH the tunnel is DB3.
+    DB14_heartbeat_over_routes:
+      status: "PARTLY BUILT 0.60.128 — one probe per call through its health route. OPEN: lib/heartbeat.js beating every
+        system from the registry, its degraded/dead events on the bus, kept across restarts."
+    DB15_toasts_declared:
+      status: OPEN
+      does: >-
+        A system declares in its registry which of its events a person should see (toasts: [{ event, level, text }]). The UI
+        toasts what the registry says instead of a list in app.js, so the UI holds no knowledge of its own (disposable).
+    DB16_a_registry_for_each_system:
+      status: OPEN
+      does: >-
+        A registry drafted for every system that has none (cos, nexus, warp, orchestrator, meta, siso, cli, cockpit,
+        diagnostic, auth, mesh; then remote-desktop, emergence, jaa, erosmancer, sentinel, security) from its source: the
+        routes it serves, its commands and events (idearium/repo/architecture.js readers), and the files other systems reach
+        into today (DB1) as its first capabilities. Drafts are proposals, his to accept.
+      open_question: "Which folders are systems. The coder's reading: contracts, hooks, service, components and
+        architecture-spec are parts of other systems; ui and tablet are faces on routes; lib is DB0a."
+  build_order_b: [DB13, DB14, DB16 (cos first), DB15, DB11, DB3, DB12]

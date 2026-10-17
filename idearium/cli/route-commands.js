@@ -325,6 +325,21 @@ export const SPEC = [
     } },
   // 0.60.20 — lean mode, the same switch as Idearium → Settings → Routing (every agent has it through nexus.command)
   // 0.60.126 DB1 — the crossings between systems: what the drawbridge must become the only way for (docs/2026-10-17-system-drawbridge-phasemap.spec)
+  // 0.60.128 DB13 + DB14 — his lib/system-registry.js as the tunnel: through it the CLI, the routes, the toasts, and the heartbeat over routes
+  { key: 'system.tunnel', repo: false, usage: 'system tunnel [<system>]', about: 'the tunnel into each system (lib/system-registry.js): where it runs, the routes it declares, the commands that reach them, its toasts and compartment, and what is missing; with a system, its heartbeat asked over its own health route',
+    req: (a) => ({ method: 'GET', path: a.args[0] ? `/api/system/tunnel/${encodeURIComponent(a.args[0])}` : '/api/system/tunnel' }),
+    print: (d, a, h) => {
+      if (d.systems) { for (const t of d.systems) console.log(`  ${t.name.padEnd(22)} ${h.c.dim(t.runtime && t.runtime.port ? `:${t.runtime.port}` : 'no port').padEnd(8)} ${String(t.routes.length).padStart(4)} routes · ${String(t.commands.length).padStart(3)} commands ${t.said.length ? h.c.amber('· ' + t.said.length + ' missing') : ''}`); console.log(h.c.dim(`  ${d.commands.through_a_declared_route} of ${d.commands.total} commands reach a declared route; ${d.commands.undeclared.length} reach routes no registry declares`)); return; }
+      const hb = d.heartbeat || {};
+      console.log(`  ${d.name} · ${(hb.status === 'up' ? h.c.mint : h.c.amber)(hb.status || '?')} ${h.c.dim(hb.why || '')}${hb.ms != null ? h.c.dim(` (${hb.ms} ms)`) : ''}`);
+      if (d.runtime) console.log(h.c.dim(`  port ${d.runtime.port || '—'} · ${d.runtime.healthUrl || 'no health route'} · v${d.runtime.version || '?'} · data ${d.runtime.dataDir || '—'}`));
+      console.log(`  ${d.routes.length} routes declared${d.registry ? ` in ${d.registry.file}` : ''} · ${d.commands.length} commands reach them`);
+      for (const c of d.commands.slice(0, 12)) console.log(h.c.dim(`    ${c.command}  →  ${c.route}`));
+      for (const x of d.said) console.log(h.c.amber(`  ${x}`));
+    } },
+  { key: 'system.heartbeat', repo: false, usage: 'system heartbeat', about: 'every system asked over its own health route, now: up, degraded (answered badly or slowly), down, with why',
+    req: () => ({ method: 'GET', path: '/api/system/heartbeat' }),
+    print: (d, a, h) => { for (const b of d.systems || []) console.log(`  ${(b.status === 'up' ? h.c.mint : h.c.amber)(b.status.padEnd(8))} ${b.name.padEnd(22)} ${h.c.dim(`${b.ms != null ? b.ms + ' ms · ' : ''}${b.why}`)}`); console.log(h.c.dim(`  ${d.up} of ${(d.systems || []).length} up`)); } },
   // 0.60.127 DB9 + DB10 — a system's registry generated as its dependency graph, and its negative space (what is declared and not there, what is there and not declared)
   { key: 'system.registry', repo: false, usage: 'system registry [<system>] [--settle]', about: 'with no system: every system and what it depends on (the dependency graph). With one: its registry generated from the source — what it declares (routes, served), what it depends on and who consumes it, and the negative space: declared routes the source does not serve, and files other systems reach into directly. --settle records each absence as a gap',
     req: (a) => (!a.args[0] ? { method: 'GET', path: '/api/system/registry' } : a.flags && a.flags.settle ? { method: 'POST', path: `/api/system/registry/${encodeURIComponent(a.args[0])}/settle`, body: {} } : { method: 'GET', path: `/api/system/registry/${encodeURIComponent(a.args[0])}` }),

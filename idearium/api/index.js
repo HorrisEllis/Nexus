@@ -2771,6 +2771,7 @@ const ROUTE_CAP = {
   'system.version': CAPS.READ_IDEAS,   // 0.60.34 VR1 — the one release version
   'system.prevention.clear': CAPS.ADMIN,   // 0.60.123 MP
   'system.drawbridge': CAPS.READ_IDEAS,   // 0.60.126 DB1 — the crossings between systems, and the ratchet
+  'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
   'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
@@ -3059,6 +3060,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','version'],         'system.version'],     // 0.60.34 VR1 — the release (lib/version.js), where it is stated, the module versions labelled
     ['POST',   ['api','system','prevention','clear'], 'system.prevention.clear'],   // 0.60.123 MP — a person ends a prevention early
     ['GET',    ['api','system','drawbridge'], 'system.drawbridge'],   // 0.60.126 DB1 — every require() that crosses a system boundary; ?new=1 the ratchet's drift only
+    ['GET',    ['api','system','tunnel'], 'system.tunnel'],   // 0.60.128 DB13 — every system's tunnel: where it runs, its routes, the commands that reach it, its toasts
+    ['GET',    ['api','system','tunnel',':name'], 'system.tunnel.one'],   // 0.60.128 DB13/DB14 — one system's tunnel, with its heartbeat asked over its health route
+    ['GET',    ['api','system','heartbeat'], 'system.heartbeat'],   // 0.60.128 DB14 — every system asked over its health route: up, degraded, down
     ['GET',    ['api','system','registry'], 'system.registry'],   // 0.60.127 DB9 — every system and the crossings between them: the dependency graph
     ['GET',    ['api','system','registry',':system'], 'system.registry.one'],   // 0.60.127 DB9/DB10 — one system's generated registry: declared, observed, negative space
     ['POST',   ['api','system','registry',':system','settle'], 'system.registry.settle'],   // 0.60.127 DB10 — the shadow settled: each absence a gap
@@ -5283,6 +5287,20 @@ async function handle(req, res, route, query, body) {
       const cur = R.current();
       return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
         modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
+    }
+    case 'system.tunnel':
+    case 'system.tunnel.one':
+    case 'system.heartbeat': {   // 0.60.128 DB13 + DB14 (docs/2026-10-17-system-drawbridge-phasemap.spec, addendum b): his lib/system-registry.js as the tunnel
+      const SYS = _require('../../lib/system-registry.js');
+      if (action === 'system.heartbeat') {
+        const beats = await Promise.all(SYS.list().map(s => SYS.heartbeat(s.name)));
+        return ok(res, { at: new Date().toISOString(), up: beats.filter(b => b.status === 'up').length, systems: beats });
+      }
+      const { SPEC } = await import('../cli/route-commands.js');
+      if (action === 'system.tunnel') return ok(res, SYS.tunnels({ commands: SPEC }));
+      const t = SYS.tunnel(String(params.name || ''), { commands: SPEC });
+      if (!t.ok) return err(res, 404, t.error);
+      return ok(res, { ...t, heartbeat: await SYS.heartbeat(t.name) });
     }
     case 'system.registry':
     case 'system.registry.one':

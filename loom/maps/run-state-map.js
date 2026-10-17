@@ -52,11 +52,13 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  ['lib/system-registry.js', I('lib/system-registry.js'), [I('lib/component-registry.js'), I('lib/cos-bridge.js')]],   // §0.60.128 DB13/DB14: his 2026-09-06 runtime registry, extended as the tunnel (tunnel/heartbeat/tunnels); reads each system's registry-components.js by path (the registry is the door)
   ['lib/drawbridge-registry.js', I('lib/drawbridge-registry.js'), [I('lib/system-boundary.js'), I('loom/scanners/capability-map.js'), I('lib/shadow.js')]],   // §0.60.127 DB9/DB10: a system's registry generated as its dependency graph; the negative space through lib/shadow.js   // §0.60.126 DB1: every require() across a system boundary; the ratchet holds contracts/drawbridge-baseline.json
   ['idearium/ui/js/code-dock.js', I('idearium/ui/js/code-dock.js'), [I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/plan-panel.js')]],   // §0.60.118 DK2: the dock — _wsCard, _rtTree/_rtRow, _ppContext reused (page globals)
 ];
 const CONSUMERS = [
   [I('idearium/api/index.js'),                    I('lib/system-boundary.js'), '§DB1 0.60.126 GET /api/system/drawbridge → census() + check() (lazy require in the case)'],
+  [I('idearium/api/index.js'),                    I('lib/system-registry.js'), '§DB13/DB14 0.60.128 GET /api/system/tunnel[/:name], /api/system/heartbeat (commands handed in from idearium/cli/route-commands.js SPEC)'],
   [I('idearium/api/index.js'),                    I('lib/drawbridge-registry.js'), '§DB9/DB10 0.60.127 GET /api/system/registry[/:system], POST …/:system/settle (lazy require in the case)'],
   [I('tests/modules/test-system-boundary.test.js'), I('lib/system-boundary.js'), '§DB1 0.60.126 SB-06: the ratchet over Nexus itself'],
   [I('lib/step-gate.js'),                           I('lib/checks/ck-248-toolchain.js'), 'checkText(): the code.write gate parses every language the table knows with that language\'s own tool; a missing tool is not a pass (0.60.77)'],
