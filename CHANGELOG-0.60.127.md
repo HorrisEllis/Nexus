@@ -37,7 +37,7 @@ there.
 
 ## Built: DB9 + DB10
 
-`lib/system-registry.js` composes three existing pieces and adds no new scanner:
+`lib/drawbridge-registry.js` composes three existing pieces and adds no new scanner:
 - **The declared half** is each system's `registry-components.js`, checked against its source by loom
   (`loom/scanners/capability-map.js`).
 - **The observed half** is DB1's crossings: what each system depends on, and who consumes it.
@@ -62,9 +62,23 @@ Command: `system registry [<system>] [--settle]`.
   for one file. It now resolves the real file. `contracts/drawbridge-baseline.json` was rewritten the same day it was
   made: 532 edges became 530, because 2 were the same edge under two names. That is the only change in it.
 
+## A mistake, said
+
+The first commit of this release (5e514f2) wrote this module as `lib/system-registry.js`, which overwrote a file of the same
+name: his 2026-09-06 "need a system registry." That module merges the running kernels' ports, health URLs and versions from
+autopilot, diagnostic and `lib/version.js`, and `cli/compartments.js` and `copilot/server.js` use it. Its test,
+`test-system-registry.js`, went from passing to 0 of 9.
+
+The full suite found it before anything reached main. It is restored byte for byte from main, and this module is now
+`lib/drawbridge-registry.js`. The coder had not checked that the name was free: rule 2 (reuse before build) and §0.3
+(nothing lost).
+
+That module is also the runtime half of the registry he described: which systems are up, on which port, at which
+version. DB5 (the handshake for every system) composes it rather than building another.
+
 ## Proof
 
-- `tests/modules/test-system-registry.test.js`: SR-01..08 pass. SR-07 calls the real routes. SR-08 settles cortex into
+- `tests/modules/test-drawbridge-registry.test.js`: SR-01..08 pass. SR-07 calls the real routes. SR-08 settles cortex into
   the test sandbox, never into the real data.
 - `test-system-boundary` SB-01..08 still pass, as do the loom tests (loom-map 19, capability-registry 8, the phasemap
   tests and clear-glass-gig 7).

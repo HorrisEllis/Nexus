@@ -339,6 +339,7 @@
   "lib/diagnostic-report.js -> cortex/memory/jaa-db.js",
   "lib/diagnostic-report.js -> intelligence/index.js",
   "lib/diagnostic-report.js -> intelligence/rfr2/causality/index.js",
+  "lib/drawbridge-registry.js -> loom/scanners/capability-map.js",
   "lib/edge-cases.js -> cortex/memory/jaa-db.js",
   "lib/end-state.js -> cortex/memory/jaa-db.js",
   "lib/execution-pipeline.js -> cos/playground/index.js",
@@ -432,7 +433,6 @@
   "lib/system-control.js -> copilot/lib/self-model.js",
   "lib/system-control.js -> cortex/memory/jaa-db.js",
   "lib/system-control.js -> guardian/clear-glass-bridge.js",
-  "lib/system-registry.js -> loom/scanners/capability-map.js",
   "lib/tool-index.js -> cortex/memory/jaa-db.js",
   "lib/triggers.js -> copilot/lib/self-model.js",
   "lib/triggers.js -> cortex/memory/jaa-db.js",
@@ -532,5 +532,9 @@
   "versionium/lib/store.js -> guardian/jaa-store.js",
   "versionium/server.js -> nexus/nexus-connect.js",
   "warp/adapters/emerge-field.js -> emerge/core/index.js"
- ]
+ ],
+ "added_by_the_drawbridge_itself": {
+  "edge": "lib/drawbridge-registry.js -> loom/scanners/capability-map.js",
+  "why": "DB9 (0.60.127) reads the declared half through loom's capability map: an upward crossing it added itself. It moves when DB3 (the drawbridge) lands, through loom's route."
+ }
 }

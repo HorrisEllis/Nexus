@@ -499,4 +499,4 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     - 27 declared routes are not served by their source.
     Asking whether the registry "can also be a dependancy graph" was the right question: the two halves, declared and
     observed, are what make the negative space computable.
-  - **Evidence:** `CHANGELOG-0.60.127.md`; `tests/modules/test-system-registry.test.js` SR-01..08 (SR-06 is the loom fix).
+  - **Evidence:** `CHANGELOG-0.60.127.md`; `tests/modules/test-drawbridge-registry.test.js` SR-01..08 (SR-06 is the loom fix).

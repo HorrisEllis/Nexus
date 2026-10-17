@@ -5287,7 +5287,7 @@ async function handle(req, res, route, query, body) {
     case 'system.registry':
     case 'system.registry.one':
     case 'system.registry.settle': {   // 0.60.127 DB9 + DB10 (docs/2026-10-17-system-drawbridge-phasemap.spec, addendum a)
-      const SR = _require('../../lib/system-registry.js');
+      const SR = _require('../../lib/drawbridge-registry.js');
       if (action === 'system.registry') return ok(res, SR.graph({}));
       const r = action === 'system.registry.settle' ? SR.settle(String(params.system || '')) : SR.registryOf(String(params.system || ''));
       return r.ok ? ok(res, r) : err(res, 404, r.error);

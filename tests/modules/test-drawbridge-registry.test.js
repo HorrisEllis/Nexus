@@ -5,7 +5,7 @@
 const assert = require('assert'), fs = require('fs'), path = require('path');
 require('../../lib/test-sandbox.js').ensure();   // settle records gaps: into a sandbox, never the real data/
 const REPO = path.resolve(__dirname, '..', '..');
-const SR = require('../../lib/system-registry.js');
+const SR = require('../../lib/drawbridge-registry.js');
 let passed = 0, failed = 0; const tests = [];
 const test = (n, f) => tests.push([n, f]);
 const quiet = async (fn) => { const k = { log: console.log, warn: console.warn, info: console.info, error: console.error }; console.log = console.warn = console.info = console.error = () => {}; try { return await fn(); } finally { Object.assign(console, k); } };
