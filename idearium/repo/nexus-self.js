@@ -710,7 +710,8 @@ export function resolveWith(idx, refs, repoOf = () => null) {
   const out = {};
   const sysHit = (s) => ({ kind: 'system', system: s.name, repoUuid: repoOf(s.name), path: null });
   const fileHit = (p) => { const h = idx.byPath.get(p); return { kind: /\.md$/i.test(p) ? 'doc' : 'file', system: h.system, repoUuid: repoOf(h.system), path: p }; };
-  for (const raw of (refs || []).slice(0, 2000)) {
+  // §0.60.153 — the README atlas carries every file of every system (about 4,500 references); each is one map lookup
+  for (const raw of (refs || []).slice(0, 20000)) {
     let r = String(raw).trim().replace(/^[`'"(]+|[`'",.;:)]+$/g, '').replace(/:\d+(:\d+)?$/, '');
     let hit = null;
     const port = /^:(\d{2,5})$/.exec(String(raw).trim());

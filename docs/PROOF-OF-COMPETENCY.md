@@ -592,3 +592,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     one place.
   - **Evidence:** `CHANGELOG-0.60.146.md`; `tests/modules/test-work-journal.test.js` WJ-05. A reply linked to its chat
     ledger turn is never copied, and is read back from the chat ledger after a restart.
+- **2026-10-18: "have a full section of for each of the 15 systems, each module and all the files … use all the changelogs"**
+  - **Context:** he asked for the README to hold everything, built from the record rather than written from memory.
+  - **What it shows:** documentation as a projection of the system, not a second copy of it. The inventory regenerates from
+    the tree, the phasemaps and the release notes, so it cannot drift. Building it also exposed a defect: the atlas page
+    resolved only its first 2,000 references.
+  - **Evidence:** `CHANGELOG-0.60.153.md`; `tests/modules/test-readme-generate.test.js` (every file of the 15 systems is named,
+    every phase is counted, and the README stays under 512 KiB); `tests/modules/test-nexus-atlas-refs.test.js` 49/49, where it
+    had 4 failing before.

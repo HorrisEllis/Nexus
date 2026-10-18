@@ -123,6 +123,9 @@ const FILES = [
   ['idearium/repo/build-plan.js', I('idearium/repo/build-plan.js'), [
     I('lib/run-watch.js'), I('lib/phase-plan.js'),              // §0.60.123 PP1/PP2 createRequire — runsOf/isFinal (an open run), depsOf (what a piece uses)
   ]],
+  // §0.60.153 — the README's generated half (every system, module and file; every phase; the data; Idearium; every release)
+  ['lib/readme-generate.js', I('lib/readme-generate.js'), [I('lib/atlas-generate.js'), I('lib/nexus-self/systems.js'), I('loom/scanners/phasemap-map.js'), I('lib/context-atlas.js'), I('lib/node-export.js')]],
+  [I('scripts/generate-atlases.js'), I('lib/readme-generate.js'), '0.60.153 generate() before syncReadme: the atlas, then README.md'],
   // §0.60.145 TL2a — a gate's context, and its kept reply reused instead of asking again
   ['lib/gate-context.js', I('lib/gate-context.js'), [I('lib/work-journal.js'), I('lib/run-state.js'), I('lib/repo-agent.js')]],   // gates/get/reusable/mark · load/runIdFor · findLate/adoptLate
   // §0.60.143 TL1b — the agent's reply and thinking on disk as they stream
