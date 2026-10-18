@@ -98,6 +98,8 @@ const FILES = [
   ['idearium/repo/build-plan.js', I('idearium/repo/build-plan.js'), [
     I('lib/run-watch.js'), I('lib/phase-plan.js'),              // §0.60.123 PP1/PP2 createRequire — runsOf/isFinal (an open run), depsOf (what a piece uses)
   ]],
+  // §0.60.145 TL2a — a gate's context, and its kept reply reused instead of asking again
+  ['lib/gate-context.js', I('lib/gate-context.js'), [I('lib/work-journal.js'), I('lib/run-state.js'), I('lib/repo-agent.js')]],   // gates/get/reusable/mark · load/runIdFor · findLate/adoptLate
   // §0.60.143 TL1b — the agent's reply and thinking on disk as they stream
   ['lib/work-journal.js', I('lib/work-journal.js'), [I('lib/node-export.js')]],   // wrap/toYaml/importFromFile (.response)
   // §0.60.141 TF2 — the phase's test is written first and shapes the plan
@@ -262,6 +264,8 @@ const CONSUMERS = [
   [I('ollama/server.js'), I('ollama/lib/idle-unload.js'), '0.60.123 MP startIdleUnload after listen (keep_alive:0 on idle)'],
   [I('idearium/repo/import-pipeline.js'), I('idearium/repo/import-pipeline-worker.js'), '0.60.124 SW1 runImportPipelineOffThread — new Worker(new URL(./import-pipeline-worker.js))'],
   [I('idearium/repo/nexus-self.js'), I('idearium/repo/import-pipeline.js'), '0.60.124 SW1 _syncSystem + parent: await runImportPipelineOffThread'],
+  [I('idearium/api/index.js'), I('lib/gate-context.js'), '0.60.145 TL2a makeAttempt: note(context) in the message; reuse() before dispatch (judged by the run log); handled() after; GET agent/feed?gate= context'],
+  [I('lib/gate-context.js'), I('clear-glass/src/downloads/artifact-chat-index.js'), '0.60.145 TL2a through repo-agent findLate/adoptLate: the reply read from Clear Glass\'s Responses index'],
   [I('lib/repo-agent.js'), I('lib/repo-activity.js'), '0.60.144 TL1c RAct.run({ brick }): the task carries its contract gate'],
   [I('idearium/api/index.js'), I('lib/repo-activity.js'), '0.60.144 TL1c feed() returns the task a frame belongs to (by its job first); its brick goes to the journal'],
   [I('idearium/api/index.js'), I('lib/work-journal.js'), '0.60.143 TL1b _journal: guardian onFeed + POST agent/stream record each frame; GET agent/feed list/get'],

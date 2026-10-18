@@ -104,6 +104,9 @@ export const SPEC = [
           for (const t of g.attempts) console.log(h.c.dim(`      ${t.attempt}. ${t.status.padEnd(10)} ${String(t.jobId).slice(0, 18)} ${t.provider || ''} · reply ${t.textLen}ch · thinking ${t.thinkingLen}ch`));
         }
         if (d.ungated) console.log(h.c.dim(`\n  ${d.ungated} job(s) with no gate known (a chat, or a reply from before 0.60.144)`));
+        // §0.60.145 TL2a — one gate: what its next attempt is told, and what it would reuse
+        if (d.note) console.log(h.c.dim(`\n  what its next attempt is told:\n  ${d.note.replace(/\n/g, '\n  ')}`));
+        if (d.reusable) console.log(h.c.amber(`\n  ↺ its next attempt reuses job ${d.reusable.jobId} (${d.reusable.inflight ? 'still being written — waited for' : 'finished'}) instead of asking again`));
         return;
       }
       const head = (j) => `${j.status === 'error' || j.status === 'timeout' || j.status === 'stale' ? h.c.coral(j.status) : j.status === 'complete' ? h.c.mint(j.status) : h.c.sky(j.status)} ${h.c.dim(String(j.jobId).slice(0, 24))} ${j.provider || ''} ${h.c.dim(`reply ${j.textLen}ch · thinking ${j.thinkingLen}ch · ${new Date(j.updatedAt).toISOString().slice(0, 19)}`)}`;

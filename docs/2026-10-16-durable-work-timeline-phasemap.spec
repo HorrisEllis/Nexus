@@ -225,3 +225,37 @@ not_verified:
 # Proof: test-work-journal WJ-04 (real router, a restart, two gates at once), WJ-03 (Clear Glass).
 # Still open: the key is the brick id, b<n>.<file>, which is positional — DBG1 (docs/2026-10-18-debugging-product-phasemap.spec)
 # names it for what it is; a reply that came back with no task running (late, after its task ended) is kept, ungated, and said.
+
+# ## ADDENDUM 2026-10-18 (f) — TL2a: a gate's context, and its contract, job and reply reused across a restart (mapped, then built 0.60.145)
+# James, 2026-10-18: "alright the gates need context. needs persistence, needs to survive restarts, reuse contracts, jobs and
+# responses."
+# Read in code first (§8.6). What a gate already keeps across a restart:
+#   contract — the plan, the passed gates and their hashes, re-run only when STALE (contract-gates openCheckpoint; savedPlan, TL1a);
+#   the failure — what the gate's last check said is on the contract and seeds the next try (feedback → the carry box, TF1);
+#   the steps — run-state per brick (tool calls, files read and changed, attempt), header to a tool-loop agent (GW2);
+#   the replies — every attempt per gate (work-journal, TL1b/c).
+# What it lacked:
+#   context — the next attempt was not told what the attempts before it wrote, or thought, or which files they changed (only the
+#     check's words), and an agent without the tool loop never saw the run-state at all;
+#   reuse — a gate whose reply was finished (or still being written in its tab) when Idearium stopped was asked again from
+#     nothing on the next build: a second job, the first reply wasted.
+# Mapped:
+#   TL2a-1 lib/gate-context.js context(repo, brick) and note(): from the stores above, one block — each attempt before (agent,
+#     how it ended), the files changed, the last reply's tail, its thinking's tail — carried in the gate's next message (size-capped).
+#   TL2a-2 reuse: before an attempt dispatches, the gate's newest job that no attempt handled is reused — finished: its reply is
+#     adopted (repo-agent findLate + adoptLate: the same _finish a dispatch runs, idempotent per responseId); still being
+#     written: waited for, then adopted. Each attempt marks the gate's jobs handled when it ends (work-journal mark), so a reply
+#     is never used twice. Guardian replies only: an Ollama reply is not in the Responses index (said, not reused).
+#   TL2a-3 the route, the command and the screen say it: GET agent/feed?gate= returns the context; the run row says "reused".
+# Built 0.60.145 as mapped: lib/gate-context.js (context, note, reuse, handled), work-journal mark()/reusable(), makeAttempt wired
+# (the note in the message; reuse before dispatch, with the run log as a second witness so a reply journaled before handled marks
+# existed is not taken twice; the gate's jobs marked handled after); GET agent/feed?gate= returns the note and what would be
+# reused; `repo feed --gate`; the Plan's run row says "↺ reused". Proof: tests/modules/test-gate-context.test.js 6/6.
+# Contracts were already reused across restarts (savedPlan, checkpoints, STALE re-runs, TL1a): nothing changed there.
+# Found while building, his to decide (a problem, not a technical call): James, 2026-10-18: "its also in clearglass, cleardriver".
+#   Clear Glass already keeps every chat's reply and thinking as it streams (clear-glass/src/downloads/chat-ledger.js, 0.39.278:
+#   <downloads root>/ledgers/<chatKey>.jsonl, append-only, beside the .response files). lib/work-journal.js (0.60.143) keeps the
+#   same stream again, per job and gate, on Idearium's side — built without reading the ledger first (§8.6 missed). Two records
+#   of one stream. The coder's recommendation: keep the journal as the per-gate INDEX (job, gate, attempt, handled, status) and
+#   make the ledger the text's one home — the journal points at the ledger's chatKey and turn, and reads the reply from it;
+#   reuse falls back to the ledger when Guardian's .response is missing. TL2a-4, open until he says.

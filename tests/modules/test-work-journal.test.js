@@ -130,6 +130,9 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
     assert.strictEqual(gt.brick, brick);
     assert.deepStrictEqual(gt.attempts.map(a => [a.attempt, a.jobId, a.status, a.runId]), [[1, 'gj-1', 'error', 'phrun-wj1-aa11'], [2, 'gj-2', 'complete', 'phrun-wj1-aa11']]);
     assert.strictEqual(WJ.get(RU, 'gj-1').text, 'const census = (', 'the failed attempt\'s reply is kept too');
+    // §0.60.145 TL2a — one gate's route also says what its next attempt is told, and what it would reuse
+    assert.match(g.json.note, /THIS GATE BEFORE[\s\S]*2 attempt\(s\)/);
+    assert.strictEqual(g.json.reusable, null, 'these replies are Ollama\'s: not in the Responses index, so never reused (said in the map)');
     const ph = await quiet(() => RAPI._route('GET', `/api/repos/${RU}/agent/feed?gate=${encodeURIComponent('docs/m-phasemap.spec::P1_census')}`));
     assert.strictEqual(ph.json.gates.length, 1, 'a phase prefix finds its gates');
     assert.ok(g.json.ungated >= 1, 'the chat job (oj-1) has no gate, and is counted apart');
