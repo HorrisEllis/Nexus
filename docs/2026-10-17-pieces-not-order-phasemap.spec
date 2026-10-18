@@ -281,3 +281,26 @@ related:
 #     Every step is a run row (state test-first: written, invalid, refused, shaped), so the Plan's run log shows it.
 #   Limits, said: the test is as good as its writer (PE6 rule: the writer never declares its own test sufficient; the person
 #   sees it as a proposal); one test file per phase in this slice; the phase passes only when that test passes in the proof.
+#
+# ## ADDENDUM 2026-10-18 (f) — a dependency graph before every phase (DG2, 0.60.147)
+# James, 2026-10-18: "each phase, has to have a dependany graph before executing."
+# His rule, recorded as his. Context: the night before, IM1 had run ten attempts on four agents without one. The coder had also
+# shipped FR6 without one, and the boundary ratchet caught the crossing it added. DG1 (0.60.125) checked only that a phase's
+# depends_on were closed. Nothing required the phase to have a graph: idearium's build used the mapping as context when there
+# was one, and "the request is sent as before" when there was none.
+# Built as DG2:
+#   - lib/phase-graph.js graphFor() assembles the graph from what exists:
+#       - MP1's mapping: changes, uses, used-by and specs, plus phases inferred through shared files;
+#       - DG1's depends_on;
+#       - the boundary census: the system of each file by its own rule (boundarySystemOf); crossings marked as already in the
+#         baseline, or new.
+#   - idearium _phaseBuild refuses a phase with no graph: 409 NO_GRAPH, with the remedy.
+#       - `anyway` does not pass it. That is the coder's reading of "has to have". To confirm.
+#   - The graph is written before the build, to <idearium data>/phase-graphs/<repo>/<phase>-<hash>.json. Its hash and file go
+#     on every row of the run.
+#   - GET /api/repos/:uuid/phases/graph; `repo phase-graph <repo> <phase>`.
+#   - The Phases tab's detail pane shows the graph (idearium/ui/js/phase-graph-view.js, css/phase-graph-view.css).
+#   - plan-panel phaseBuildPost holds NO_GRAPH with its remedy and never offers "anyway" for it.
+# The coder's own rule: docs/CLAUDE.md "A dependency graph before every phase".
+# Proof: test-phase-graph 5/5 (PG-03 through the real router; PG-05 in Clear Glass). DG1's own suite stays 3/3. Every suite that
+# builds a phase shows the same result as on 0.60.142.

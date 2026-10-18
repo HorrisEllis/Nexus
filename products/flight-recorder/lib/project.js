@@ -86,6 +86,9 @@ function open(dir, { create = false } = {}) {
 }
 
 /** flush() — write every store this process touched to disk (a command ends with process.exit, which skips the stores' own flush) */
-function flush() { if (!_open) return 0; try { return require('../../../guardian/jaa-store.js').flushAllStores(); } catch (_) { return 0; } }
+// §FR6 0.60.144 — the store's own home since 0.60.130 is lib/jaa-store.js (guardian/jaa-store.js is a re-export kept for old
+// requirers). Reached through the old path inside a try, the carve read it as optional and cut it, so the copy lacked a file
+// the product must carry and test-flight-recorder-standalone failed 0/6 on 0.60.142.
+function flush() { if (!_open) return 0; try { return require('../../../lib/jaa-store.js').flushAllStores(); } catch (_) { return 0; } }
 
 module.exports = { VERSION, ROOT, HOME, open, files, flush, _env };

@@ -259,6 +259,7 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
     '/api/intelligence/rfr2/trace', '/api/intelligence/rfr2/descendants',
     '/api/intelligence/rfr2/children',
     '/api/intelligence/rfr2/forge/patch',   // 0.60.133 — forge offered through the contract (nexus-healer reached in for its file)
+    '/api/intelligence/cfr/delta',          // 0.60.146 — CFR's delta offered through the contract (lib/flight-data.js reached in for its file)
     // §0.39.300 SY2 — gap synthesis (intelligence/synthesis): Nexus's own gaps, read as one set, ranked by leverage
     '/api/intelligence/synthesis', '/api/intelligence/synthesis/run', '/api/intelligence/synthesis/ingest',
     '/api/intelligence/synthesis/history', '/api/intelligence/synthesis/fill', '/api/intelligence/synthesis/themes',
@@ -657,6 +658,18 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
     // ── RFR2 — live per-process causal kernel + relationship traversal ─────
     // §0.60.133 — James: "need to get the systems soveriegn again like we were talking about." Forge is intelligence's: other
     // systems ask for a patch here (their registry knows this route), never by requiring intelligence/rfr2/forge themselves.
+    // §0.60.146 — James, 2026-10-17: "we need to add this all to nexus, there is boundaries mapping it". FR6 (0.60.144) required
+    // intelligence/cfr/delta.js from lib/ — an upward crossing the drawbridge ratchet caught (540 → 541). CFR is intelligence's
+    // capability (decision D7/IM0e), so its delta is offered here: pairs of events in, { tension, friction, slope } per pair out.
+    if (pathname === '/api/intelligence/cfr/delta') {
+      if (method !== 'POST') { json(405, { ok: false, error: 'POST { pairs: [[prev, curr], …] }' }); return true; }
+      const pairs = Array.isArray(body && body.pairs) ? body.pairs : null;
+      if (!pairs) { json(400, { ok: false, error: 'pairs is required: [[prev, curr], …] (events: { type, ts, payload })' }); return true; }
+      if (pairs.length > 5000) { json(413, { ok: false, error: `at most 5000 pairs per call (got ${pairs.length})` }); return true; }
+      const { computeDelta } = require('./cfr/delta.js');
+      json(200, { ok: true, deltas: pairs.map(p => (Array.isArray(p) && p[1] ? computeDelta(p[0] || null, p[1]) : null)) });
+      return true;
+    }
     if (pathname === '/api/intelligence/rfr2/forge/patch') {
       if (method !== 'POST') { json(405, { ok: false, error: 'POST { src, instruction, moduleName }' }); return true; }
       if (typeof body.src !== 'string' || !body.instruction) { json(400, { ok: false, error: 'src (the module text) and instruction are required' }); return true; }

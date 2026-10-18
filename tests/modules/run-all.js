@@ -27,6 +27,8 @@ const SUITES = [
   'test-undo-any-change.test.js',         // 0.60.117 FR3 — undo any change, keeping later edits (merge3, route, command, Clear Glass Undo)
   'test-tested-before-lands.test.js',     // 0.60.115 FR2 — tested in its own tree; a staged batch tested together before it lands
   'test-change-record.test.js',           // 0.60.114 FR1 — one record per change an agent makes (join, holes, route, command, Clear Glass panel)
+  'test-flight-data.test.js',             // 0.60.144 FR6 — each agent run read whole (his IM1 run: stuck, the shared failure, the waste), route, command, Clear Glass panel
+  'test-failure-modes.test.js',          // 0.60.146 FMR2/FMR3 — every failure reaches cortex's one writer by route; the report; the Debug tab in Clear Glass
   'test-repo-carve.test.js',              // 0.60.112 CV1 — a part of Nexus as its own Idearium repo (closure, route, command, Clear Glass UI)
   'test-work-funnel.test.js',             // 0.60.94 FN0 — dependencies, spec, phase, chunks, in his order; each stop planted
   'test-spec-pipeline.test.js',           // 0.60.66 SF1-SF3 — intent blocks, the spec framework, the spec gate + collector (phase-tagged)
@@ -403,11 +405,13 @@ const SUITES = [
   'test-cos-app-self-update.test.js',   // 0.60.137 COS 0.1.2 — COS says when a newer COS is out
   'test-system-shape.test.js',   // 0.60.138 — does each system match genesis, role by role
   '../../diagnostic/tests/shape.test.js',   // 0.60.138 — diagnostic is a genesis system (its own test, D6)
+  '../../diagnostic/tests/causality.test.js',   // 0.60.146 FMR0 — how much of each ledger names its cause (diagnostic's own test, D6)
   'test-code-dock.test.js',           // 0.60.118 DK2 — the dock: separate panels on the right edge (Clear Glass)
   'test-plan-pieces.test.js',         // 0.60.123 PP1–PP4 — the Plan's bar is its pieces; every run with its log; a piece/run points the dock (Clear Glass)
   'test-prevention.test.js',          // 0.60.123 MP — a memory crisis recorded becomes a prevention: heavy work waits for headroom; Ollama unloads when idle
   'test-sync-off-thread.test.js',     // 0.60.124 SW1–SW3 — the self-sync's pipeline in its own thread; Guardian holds jobs behind a sign-in wall; COS map EPERM
   'test-phase-deps-gate.test.js',     // 0.60.125 DG1 — a phase build is refused while its depends_on are open (his decisions by their question); --anyway is the override
+  'test-phase-graph.test.js',             // 0.60.147 DG2 — a phase has a dependency graph before it executes (gate, route, command, Phases tab in Clear Glass)
   'test-test-first.test.js',          // 0.60.141 TF2 — the phase's test is written first (by the planner, never the coder), seen failing, then shapes the plan and proves it
   'test-live-everywhere.test.js',     // 0.60.142 LV1/LV4 — thinking streams before the reply (5 userscripts, guardian); picked selectors kept stable
   'test-work-journal.test.js',        // 0.60.143 TL1b — the agent's reply and thinking on disk as they stream; back after a reload or restart

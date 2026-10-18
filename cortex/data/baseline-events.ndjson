@@ -9540,3 +9540,4 @@
 {"type":"health.ok","latencyMs":0,"error":false,"ts":1790369978121,"_ts":1790369978121}
 {"type":"health.ok","latencyMs":0,"error":false,"ts":1790369978729,"_ts":1790369978729}
 {"type":"health.ok","latencyMs":0,"error":false,"ts":1790369979241,"_ts":1790369979241}
+{"type":"health.fail","latencyMs":0,"error":true,"ts":1792342507390,"_ts":1792342507390}

@@ -1,0 +1,8 @@
+/* idearium/ui/css/phase-graph-view.css — DG2 0.60.147: a phase's dependency graph (idearium/ui/js/phase-graph-view.js). Own file per
+   UI area (his rule); shared tokens only. */
+.pg-slot { margin-top: 6px; }
+.pg-line { font-family: var(--mono); font-size: 10px; padding: 1px 0; white-space: pre-wrap; word-break: break-word; }
+.pg-ok { color: var(--mint, #5fd38d); }
+.pg-bad { color: var(--coral, #ff6b6b); }
+.pg-warn { color: var(--warn, #f0b35a); }
+.pg-dim { color: var(--t3, #778); font-family: var(--mono); font-size: 10px; }
