@@ -1,5 +1,5 @@
 {
- "generatedAt": 1792155815775,
+ "generatedAt": 1792343080560,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -927,7 +927,7 @@
    ],
    "listens": []
   },
-  "nexus.diagnostic.nexus-heal-loop": {
+  "nexus.diagnostic.lib.heal-loop": {
    "emits": [
     "heal-loop.error",
     "heal-loop.result",
@@ -1196,6 +1196,28 @@
    ],
    "listens": []
   },
+  "nexus.idearium.ui.vendor.grapesjs.grapes.min": {
+   "emits": [],
+   "listens": [
+    "change:changesCount",
+    "change:componentHovered",
+    "change:condition",
+    "change:currentView",
+    "change:dataResolver",
+    "change:device",
+    "change:lastTarget",
+    "change:maximumStackLength",
+    "change:open",
+    "change:provider",
+    "change:ready",
+    "change:selectedLayer",
+    "change:toolbar",
+    "change:zoom",
+    "frame:scroll",
+    "loaded:all",
+    "rte:disable"
+   ]
+  },
   "nexus.intelligence.telemetry-codec.adapter": {
    "emits": [
     "tc.coherence.update",
@@ -1316,6 +1338,15 @@
     "contract-registry.violation.flagged"
    ],
    "listens": []
+  },
+  "nexus.lib.cos-bridge": {
+   "emits": [
+    "host:compartment:set-runtime"
+   ],
+   "listens": [
+    "host:compartment:error",
+    "host:compartment:runtime-set"
+   ]
   },
   "nexus.lib.ess": {
    "emits": [
@@ -1896,6 +1927,12 @@
     "ico:ledger:fork"
    ]
   },
+  "nexus.tests.modules.test-live-everywhere.test": {
+   "emits": [],
+   "listens": [
+    "guardian.job.chunk"
+   ]
+  },
   "nexus.tests.modules.test-live-stream-and-gates.test": {
    "emits": [
     "guardian.job.dispatched",
@@ -2014,6 +2051,12 @@
    "listens": [
     "step.blocked",
     "step.passed"
+   ]
+  },
+  "nexus.tests.modules.test-work-journal.test": {
+   "emits": [],
+   "listens": [
+    "guardian.job.chunk"
    ]
   },
   "nexus.tests.modules.tool-call-listener.test": {
@@ -4647,26 +4690,26 @@
   },
   "heal-loop.error": {
    "emitters": [
-    "nexus.diagnostic.nexus-heal-loop"
+    "nexus.diagnostic.lib.heal-loop"
    ],
    "listeners": []
   },
   "heal-loop.result": {
    "emitters": [
-    "nexus.diagnostic.nexus-heal-loop"
+    "nexus.diagnostic.lib.heal-loop"
    ],
    "listeners": []
   },
   "heal-loop.skipped": {
    "emitters": [
-    "nexus.diagnostic.nexus-heal-loop"
+    "nexus.diagnostic.lib.heal-loop"
    ],
    "listeners": []
   },
   "nexus-bus.system.booted": {
    "emitters": [],
    "listeners": [
-    "nexus.diagnostic.nexus-heal-loop"
+    "nexus.diagnostic.lib.heal-loop"
    ]
   },
   "kernel.booted": {
@@ -5012,7 +5055,10 @@
     "nexus.guardian.lib.response-sink",
     "nexus.tests.modules.test-guardian-mesh-client"
    ],
-   "listeners": []
+   "listeners": [
+    "nexus.tests.modules.test-live-everywhere.test",
+    "nexus.tests.modules.test-work-journal.test"
+   ]
   },
   "guardian.job.complete": {
    "emitters": [
@@ -5248,6 +5294,108 @@
    ],
    "listeners": []
   },
+  "change:changesCount": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:componentHovered": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:condition": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:currentView": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:dataResolver": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:device": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:lastTarget": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:maximumStackLength": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:open": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:provider": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:ready": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:selectedLayer": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:toolbar": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "change:zoom": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "frame:scroll": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "loaded:all": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
+  "rte:disable": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.ui.vendor.grapesjs.grapes.min"
+   ]
+  },
   "tc.coherence.update": {
    "emitters": [
     "nexus.intelligence.telemetry-codec.adapter"
@@ -5442,6 +5590,24 @@
     "nexus.lib.contract-registry-writer"
    ],
    "listeners": []
+  },
+  "host:compartment:set-runtime": {
+   "emitters": [
+    "nexus.lib.cos-bridge"
+   ],
+   "listeners": []
+  },
+  "host:compartment:error": {
+   "emitters": [],
+   "listeners": [
+    "nexus.lib.cos-bridge"
+   ]
+  },
+  "host:compartment:runtime-set": {
+   "emitters": [],
+   "listeners": [
+    "nexus.lib.cos-bridge"
+   ]
   },
   "ess:bind": {
    "emitters": [

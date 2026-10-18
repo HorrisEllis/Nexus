@@ -67,6 +67,11 @@ function nxMarkdown(md) {
       out.push(`<h${n} class="nx-h nx-h${n}"${ref}>${_nxInline(text)}</h${n}>`); i++; continue;
     }
     if (/^\s*(---+|\*\*\*+)\s*$/.test(line)) { out.push('<hr class="nx-hr">'); i++; continue; }
+    // §0.60.147 — a fold, as GitHub renders it: the README's generated inventory (lib/readme-generate.js) opens module by module
+    if (/^\s*<details>\s*$/.test(line)) { out.push('<details class="nx-fold">'); i++; continue; }
+    if (/^\s*<\/details>\s*$/.test(line)) { out.push('</details>'); i++; continue; }
+    const sm = /^\s*<summary>(.*)<\/summary>\s*$/.exec(line);
+    if (sm) { out.push(`<summary>${_nxInline(sm[1])}</summary>`); i++; continue; }
     if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < src.length && /^\s*\|[\s:|-]+\|\s*$/.test(src[i + 1])) {
       const head = cells(line); i += 2; const rows = [];
       while (i < src.length && /^\s*\|.*\|\s*$/.test(src[i])) rows.push(cells(src[i++]));
@@ -83,7 +88,7 @@ function nxMarkdown(md) {
       out.push(`<${ordered ? 'ol' : 'ul'} class="nx-list">${buf.map(b => `<li>${_nxInline(b)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`); continue;
     }
     if (!line.trim()) { i++; continue; }
-    const buf = []; while (i < src.length && src[i].trim() && !/^(#{1,6}\s|```|\s*\||\s*>|\s*([-*]|\d+\.)\s|\s*---+\s*$)/.test(src[i])) buf.push(src[i++]);
+    const buf = []; while (i < src.length && src[i].trim() && !/^(#{1,6}\s|```|\s*\||\s*>|\s*([-*]|\d+\.)\s|\s*---+\s*$|\s*<\/?details>|\s*<summary>)/.test(src[i])) buf.push(src[i++]);
     if (!buf.length) buf.push(src[i++]);
     out.push(`<p class="nx-p">${_nxInline(buf.join(' '))}</p>`);
   }

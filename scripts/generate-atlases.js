@@ -17,5 +17,9 @@ for (const x of r) console.log(`  ${x.changed ? '✎' : '·'} ${x.atlas.padEnd(4
 console.log(`[generate-atlases] ${r.filter(x => x.changed).length}/${r.length} atlases rewritten in ${Date.now() - t0} ms`);
 // 0.59.12 — James: "In the git, can you copy the atlas to use as the readme? In the GitHub." The repo's front page is the
 // NEXUS atlas; the old README (an Emergence-era design, marked superseded) is kept in _archive/.
+// 0.60.147 — James: "can you update and expand the read me … a full section of for each of the 15 systems, each module and all the
+// files … all the phases … the data structure … all the idearium work … use all the changelogs". The README's generated half.
+const RG = require('../lib/readme-generate.js').generate();
+console.log(`  ✎ docs/atlases/nexus-atlas.md  inventory: ${RG.files} files, ${RG.releases} release notes, ${RG.chars} chars`);
 const readme = G.syncReadme();
 console.log(`  ${readme.changed ? '✎' : '·'} README.md ← docs/atlases/nexus-atlas.md`);
