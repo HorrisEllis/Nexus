@@ -62,6 +62,31 @@ const FILES = [
   ['versionium/lib/merge3.js', I('versionium/lib/merge3.js'), [
     I('versionium/lib/text-diff.js'),                         // require — MAX_LCS_CELLS, the same size limit
   ]],
+  // §DG2 0.60.147 — James, 2026-10-18: "each phase, has to have a dependany graph before executing."
+  ['lib/phase-graph.js', I('lib/phase-graph.js'), [
+    I('lib/system-boundary.js'),                              // require (lazy) — systems() and readBaseline(): the census's own rule
+  ]],
+  ['idearium/ui/js/phase-graph-view.js', I('idearium/ui/js/phase-graph-view.js'), [I('idearium/api/index.js')]],   // HTTP GET /api/repos/:uuid/phases/graph
+  // §FMR0/FMR2/FMR3 0.60.146 — every failure reaches the .failure_mode record; its report; causality measured
+  // (docs/2026-10-17-failure-mode-report-phasemap.spec)
+  ['cortex/self-heal/failure-intake.js', I('cortex/self-heal/failure-intake.js'), [
+    I('cortex/memory/jaa-db.js'),                             // require — failure_modes: the one insert, dedup by signature
+    I('cortex/self-heal/failure-mode-forensics.js'),          // require (lazy) — enrichFailureMode on a new row
+  ]],
+  ['cortex/self-heal/failure-report.js', I('cortex/self-heal/failure-report.js'), [
+    I('cortex/memory/fix-map.js'),                            // require (lazy) — lookupFix: fixes on record for the signature
+  ]],
+  ['lib/failure-post.js', I('lib/failure-post.js'), [
+    I('lib/nexus-client.js'),                                 // require (lazy) — postDurable('cortex', '/api/failure-modes'): by route
+  ]],
+  ['diagnostic/lib/causality.js', I('diagnostic/lib/causality.js'), []],   // fs/path only: reads every system's ledger files
+  ['idearium/ui/js/debug-failures.js', I('idearium/ui/js/debug-failures.js'), [I('idearium/api/index.js')]],   // HTTP GET /api/repos/:uuid/failure-modes(/:id)
+  // §FR6 0.60.144 — each run read whole: ladder, cost, faults, wasted, friction, tension, verdict (docs/2026-10-16-repo-carve-phasemap.spec)
+  ['lib/flight-data.js', I('lib/flight-data.js'), [
+    I('lib/run-watch.js'),                                    // require — runsOf / isFinal: the run and whether it ended
+    I('lib/phase-cost.js'),                                   // require — costOf / isCall / tokensOf: calls and tokens
+    I('lib/phase-faults.js'),                                 // require — modeOf: each failed attempt's failure mode
+  ]],
   // §FR1 0.60.114 — one record per change an agent makes (docs/2026-10-16-repo-carve-phasemap.spec)
   ['lib/change-record.js', I('lib/change-record.js'), [
     I('versionium/lib/text-diff.js'),                         // require — the lines added and removed
@@ -168,6 +193,25 @@ const FILES = [
 const CONSUMERS = [
   [I('lib/repo-inject.js'), I('versionium/lib/merge3.js'), '§FR3 0.60.117 revert({ merge }): undo a change keeping later edits (lazy require in _revertMerged)'],
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FR3 0.60.117 the repo.undo row → POST /api/repos/:uuid/injects/:id/revert'],
+  [I('idearium/api/index.js'), I('lib/phase-graph.js'), '§DG2 0.60.147 _phaseBuild refuses NO_GRAPH and writes the graph before the build; repo.phases.graph: GET /api/repos/:uuid/phases/graph'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§DG2 0.60.147 the repo.phase-graph row → GET /api/repos/:uuid/phases/graph'],
+  [I('idearium/ui/js/phases.js'), I('idearium/ui/js/phase-graph-view.js'), '§DG2 0.60.147 the detail pane → pgSlot(p): the dependency graph section'],
+  [I('idearium/ui/js/plan-panel.js'), I('idearium/api/index.js'), '§DG2 0.60.147 phaseBuildPost: NO_GRAPH held with its remedy, never offered "anyway"'],
+  [I('cortex/self-heal/index.js'), I('cortex/self-heal/failure-intake.js'), '§FMR2 0.60.146 _enterFailureMode writes through write(): one insert into failure_modes'],
+  [I('cortex/boot.js'), I('cortex/self-heal/failure-intake.js'), '§FMR2 0.60.146 POST /api/failure-modes record(); GET list(); GET /:id get()'],
+  [I('cortex/boot.js'), I('cortex/self-heal/failure-report.js'), '§FMR3 0.60.146 GET /api/failure-modes/:id/report — report(), lines()'],
+  [I('cortex/boot.js'), I('lib/nerve/index.js'), '§FMR2 0.60.146 the view stamped on a new failure: getSnapshot() windows (view, never evidence)'],
+  [I('lib/cos-run.js'), I('lib/failure-post.js'), '§FMR2 0.60.146 a failed COS run → post(fromCosRun()) with its compact debug report'],
+  [I('idearium/api/index.js'), I('lib/failure-post.js'), '§FMR2 0.60.146 appendRow: a phase run ending unlanded → post(fromPhaseRun(row, flight))'],
+  [I('lib/failure-post.js'), I('cortex/boot.js'), '§FMR2 0.60.146 HTTP POST /api/failure-modes (lib/nexus-client.js postDurable; buffered when cortex is down)'],
+  [I('idearium/api/index.js'), I('cortex/boot.js'), '§FMR3 0.60.146 repo.failures / repo.failure.get → HTTP GET cortex /api/failure-modes(/:id/report)'],
+  [I('idearium/ui/js/app.js'), I('idearium/ui/js/debug-failures.js'), '§FMR3 0.60.146 renderRepoDebug → dfMount(el, repo): the failure modes section'],
+  [I('diagnostic/nexus-diagnostic.js'), I('diagnostic/lib/causality.js'), '§FMR0 0.60.146 GET /causality — measure(), compare() with the high-water mark'],
+  [I('idearium/cli/route-commands.js'), I('cortex/boot.js'), '§FMR3 0.60.146 failure.list / failure.show → HTTP cortex /api/failure-modes(/:id/report)'],
+  [I('idearium/cli/route-commands.js'), I('diagnostic/nexus-diagnostic.js'), '§FMR0 0.60.146 system.causality → HTTP diagnostic GET /causality'],
+  [I('idearium/api/index.js'), I('intelligence/routes.js'), '§0.60.146 repo.flight: CFR delta by route — POST /api/intelligence/cfr/delta through lib/nexus-client.js (the drawbridge, not a require)'],
+  [I('idearium/api/index.js'), I('lib/flight-data.js'), '§FR6 0.60.144 repo.flight / repo.flight.get: GET /api/repos/:uuid/flight(/:runId) — the phase-run rows read as flights'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FR6 0.60.144 the repo.flight row → GET /api/repos/:uuid/flight(/:runId)'],
   [I('idearium/api/index.js'), I('lib/change-record.js'), '§FR1 0.60.114 repo.changes / repo.change.get: GET /api/repos/:uuid/changes(/:id) — the inject joined with activity, runs, versions'],
   [I('lib/repo-inject.js'), I('lib/repo-activity.js'), '§FR1 0.60.114 propose() keeps the task it was written in (current())'],
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FR1 0.60.114 the repo.record row → GET /api/repos/:uuid/changes(/:id)'],

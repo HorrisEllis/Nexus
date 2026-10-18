@@ -234,3 +234,17 @@ not_verified:
   - "docs/rfr2.spec and the eight intelligence/rfr2 modules were named from the index, not read through; DBG2 reads them before it calls them"
   - "lib/replay-engine.js and clear-glass/src/rewind/engine.js: whether either holds anything TL4 should reuse was not read"
   - "whether a guardian job's meta reaches every frame it emits (DBG1 depends on it) was not traced"
+
+# ## ADDENDUM 2026-10-18 (a) — a second debugging-product map exists: two contracts, kept (docs/CLAUDE.md rule 4)
+# His same request ("can we spec the product for debugging … should the chunks, contracts, phases, dependancies all have
+# syncronized ids or uuids, also in relation to the job …") was answered twice, by two sessions working from 0.60.142:
+#   docs/2026-10-17-debugging-product-phasemap.spec (his line, released there as 0.60.143, renumbered 0.60.147 at the merge) —
+#     DP0a-e; D10 ids kept and referenced, D11 one gap door, D12 a case is a contract; its phases went on to be built on that line:
+#     flight data (FR6), the failure-mode report (docs/2026-10-17-failure-mode-report-phasemap.spec, FMR0/FMR3), DG2 the phase graph.
+#   this map (2026-10-18, main) — DBG0a-c; D13 synchronized by a derived key (written as D10), D14 dependency edges are gap evidence
+#     (written as D11); nothing built.
+# Where they agree: no one shared uuid; every gap through lib/gap-field.js (his D11 is the door D14's gaps go through); a case
+# joins what already exists, never a second store. Where they differ: how a chunk is named and kept (his D10: a chunk keeps its
+# id across a move, links are typed <kind>:<id> references; D13: a chunk's key is what it is, <repo>/<map>::<phase>::<chunk>).
+# The built work is on his line's map; this map's DBG4 (dependency gaps) and DBG1 (the key) are the parts it adds. Which naming
+# stands is his to say (docs/2026-10-17-decisions-by-the-axioms.spec, merge note).

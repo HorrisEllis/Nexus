@@ -592,9 +592,16 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── Failure modes ────────────────────────────────────────────────────────
-  if (p === '/api/failure-modes') {
+  // §FMR2 0.60.146 — one answer per path (§10.3): this GET keeps `modes` exactly as before (the provider userscripts read it:
+  // guardian/userscript-claude.js, guardian/nexus-hey-claude.user.js) and adds `failureModes`, the list the commands read.
+  // POST /api/failure-modes (the intake) and /api/failure-modes/:id(/report) are answered below.
+  if (p === '/api/failure-modes' && method !== 'POST') {
     const rows = jaaDB.tail('failure_modes', 20);
-    json(res, 200, { ok: true, modes: rows });
+    const FI = require('./self-heal/failure-intake.js');
+    const all = FI.list({ status: url.searchParams.get('status') || null, faultClass: url.searchParams.get('class') || null, repoUuid: url.searchParams.get('repo') || null, limit: parseInt(url.searchParams.get('limit'), 10) || 100 });
+    json(res, 200, { ok: true, modes: rows, failureModes: all.map(r => ({ uuid: r.uuid, faultClass: r.faultClass, where: r.where || r.source || null, system: r.system || null,
+      summary: r.summary || null, occurrences: r.occurrences || 1, status: r.status || 'open', via: r.via || 'ladder', firstSeenAt: r.firstSeenAt || r.enteredAt || null,
+      lastSeenAt: r.lastSeenAt || r.enteredAt || null, hasMacro: !!r.debugMacroUuid, hasChain: !!(r.root || (r.conditions && r.conditions.length)) })), count: all.length });
     return;
   }
 
@@ -1032,6 +1039,40 @@ const server = http.createServer(async (req, res) => {
 
   if (p === '/api/raid/health') {
     json(res, 200, { ok: true, health: _raidHealth, transports: _raidTransport, regime: _field.regime });
+    return;
+  }
+
+  // ── Failure modes (FMR2/FMR3 0.60.146) ───────────────────────────────────
+  // James, 2026-10-17: "failure mode report thats also a macro to import into a cos test env." · "do it. … we need to add this
+  // all to nexus, there is boundaries mapping it". Every failure reaches the .failure_mode record through its one writer
+  // (self-heal/failure-intake.js), by this route — other systems post here, they never require cortex's files.
+  if (p === '/api/failure-modes' && method === 'POST') {
+    const b = await readBody(req);
+    let view = null;
+    try {
+      const n = require('../lib/nerve/index.js').getSnapshot();
+      view = { label: 'view — what was on screen (Nerve); never evidence of a cause', regime: n.regime || null,
+        windows: (n.windows || []).slice(0, 12).map(w => ({ agentId: w.agentId, idle: !!w.idle, url: w.url || (w.focus && w.focus.url) || null,
+          field: w.focus && w.focus.field ? { targets: w.focus.field.count || (w.focus.field.targets || []).length || null } : null,
+          spotlight: w.focus && w.focus.spotlight ? w.focus.spotlight : null, pointer: w.focus && w.focus.pointer ? w.focus.pointer : null })) };
+    } catch (_) { view = null; }
+    const context = { cfrAtEntry: { ..._field, at: Date.now() }, viewAtEntry: view,
+      env: { nexus: (() => { try { return require('../lib/version.js').system; } catch (_) { return null; } })(), node: process.version, platform: process.platform } };
+    const r = require('./self-heal/failure-intake.js').record(b || {}, { context });
+    json(res, r.ok ? 200 : 400, r);
+    return;
+  }
+  if (p.startsWith('/api/failure-modes/') && method === 'GET') {
+    const [id, sub] = p.slice('/api/failure-modes/'.length).split('/');
+    const fm = require('./self-heal/failure-intake.js').get(decodeURIComponent(id));
+    if (!fm) { json(res, 404, { ok: false, error: `no failure mode ${id}` }); return; }
+    if (sub === 'report') {
+      const R = require('./self-heal/failure-report.js');
+      const rep = await R.report(fm);
+      json(res, 200, { ok: true, report: rep, lines: R.lines(rep) });
+      return;
+    }
+    json(res, 200, { ok: true, failureMode: fm });
     return;
   }
 

@@ -305,3 +305,11 @@ spec:
       warnings, correct files, correct jaaDB index rows. One real mistake
       (rm -rf briefly deleted 37 pre-existing node files) caught via git
       status and restored via git checkout before anything was committed.
+
+# ── ADDENDUM 2026-10-17 (0.60.146) — CFR's delta offered through the contract ──────────────────────────────────────
+# James, 2026-10-17: "we need to add this all to nexus, there is boundaries mapping it"
+# FR6 (0.60.144, lib/flight-data.js) required intelligence/cfr/delta.js from lib/: an upward crossing the drawbridge ratchet
+# caught (540 → 541; test-system-boundary SB-06 and SB-08 failed). CFR is intelligence's capability (decision D7/IM0e), so
+# POST /api/intelligence/cfr/delta { pairs: [[prev, curr], …] } → { deltas: [{ tension, friction, slope }] } (at most 5000 pairs),
+# in routes.js OWNED and registry-components.js (intelligence.cfr.delta). Idearium's flight route calls it through
+# lib/nexus-client.js; intelligence down → the flight says tension is unavailable. The ratchet is back at 540.

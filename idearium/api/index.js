@@ -283,10 +283,21 @@ import { interruptedRows as _interruptedRows } from '../repo/run-reconcile.js'; 
 // §0.39.361 AR2 — James: "Failure modes and faults are still first class data." Every phase-run row that is a fault
 // (no snapshot, failed and why, wrote nothing, missed files, blocked, tool errors, unproven, every rung tried) is also
 // its own fault_log record (lib/phase-faults.js → lib/fault-log.js logFault), here where every such row is written.
+function _postPhaseFailure(row, client = null) {
+  const FP = _require('../../lib/failure-post.js');
+  if (!FP.phaseRunFailed(row)) return;
+  const base = String(row.runId || '').replace(/-(review|proof)$/, '');
+  let flight = null;
+  try { flight = _require('../../lib/flight-data.js').flight(loadTable('idearium_phase_runs').filter(r => r && String(r.runId || '').replace(/-(review|proof)$/, '') === base)); } catch (_) {}
+  return FP.post(FP.fromPhaseRun(row, flight), client ? { client } : {});
+}
 function appendRow(table, row) {
   const out = _appendRowRaw(table, row);
   if (table === 'idearium_phase_runs') { try { _require('../../lib/phase-faults.js').log(row); } catch (_) { /* a fault that cannot be logged never fails the build */ } }
   if (table === 'idearium_phase_runs') { try { _repoActivity().phaseRow(row); } catch (_) { /* §0.39.366 — the background tasks panel never fails a build */ } }
+  // §FMR2 0.60.146 — a phase run that ends without landing reaches the .failure_mode record (cortex, by its route), with its
+  // flight (lib/flight-data.js): STUCK runs arrive under the failure mode their agents shared. Fire-and-forget.
+  if (table === 'idearium_phase_runs') { try { _postPhaseFailure(row); } catch (_) { /* reporting a failure never fails a build */ } }
   return out;
 }
 // §0.40.0 VR1 — every change to a repo's files settles into one versionium commit (lib/repo-versions.js), through the
@@ -632,6 +643,23 @@ function _toolsBrief(r) {
 // latest row of each runId is the run.
 // 0.60.27 AG1a — every row, unmerged: _phaseRuns keeps one row per run (its latest state), and a count of agent calls
 // needs each call's own row (lib/phase-cost.js)
+// §0.60.146 FR6 — CFR's delta from intelligence, by route (the drawbridge): pairs in, a lookup out; null when it is not reached.
+async function _cfrDeltaFor(pairs) {
+  if (!pairs || !pairs.length) return null;
+  const key = (p, c) => `${p.type}|${p.ts}|${c.type}|${c.ts}`;
+  try {
+    const r = await _nexusClient.post('intelligence', '/api/intelligence/cfr/delta', { pairs: pairs.slice(0, 5000) }, { timeout: 5000 });
+    if (!r || !Array.isArray(r.deltas)) return null;
+    const m = new Map(); pairs.slice(0, 5000).forEach(([p, c], i) => { if (r.deltas[i]) m.set(key(p, c), r.deltas[i]); });
+    return (p, c) => m.get(key(p, c)) || null;
+  } catch (_) { return null; }
+}
+// the phase-run rows grouped per run (a run's -review and -proof rows with it), as lib/flight-data.js groups them
+function _groupRunRows(rows) {
+  const by = new Map();
+  for (const r of rows) { if (!r || !r.runId) continue; const k = String(r.runId).replace(/-(review|proof)$/, ''); if (!by.has(k)) by.set(k, []); by.get(k).push(r); }
+  return by;
+}
 function _phaseRows(repoUuid) { return loadTable('idearium_phase_runs').filter(r => r && r.repoUuid === repoUuid); }
 // §FN0/FN1 — the agent work funnel for a request in a repo: its own tree and maps (Nexus: the live tree and every phasemap)
 async function _funnelFor(repo, dir, request, intent = null) {
@@ -770,6 +798,27 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   if (depsGate.open.length && !anyway) {
     return { ok: false, status: 409, error: `not built: ${_require('../../lib/phase-deps-gate.js').line(depsGate, phase)}`, extra: { code: 'DEPS_OPEN', open: depsGate.open, unknown: depsGate.unknown } };
   }
+  // §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing." The graph (lib/phase-graph.js)
+  // is assembled from the phase's mapping (MP1), DG1's view of its depends_on and the boundary census's systems; with none, the
+  // phase is not built (no override: his "has to have"), and the refusal says how to give it one. With one, it is written as a
+  // file before anything runs, and its hash goes on every row of the run.
+  let phaseGraph = null;
+  try {
+    const PG = _require('../../lib/phase-graph.js');
+    const nexus = scope.source === 'nexus';
+    const groot = nexus ? _require('../../lib/nexus-self/systems.js').ROOT : dir;
+    phaseGraph = PG.graphFor({ phase, map, mapped: node.mapped || null, mapText, depsGate, systemOf: nexus ? PG.boundarySystemOf(groot) : null, baselineEdges: nexus ? PG.baselineEdges(groot) : null });
+  } catch (e) { phaseGraph = { ready: false, missing: [`the graph could not be built: ${e.message}`], remedy: null }; }
+  if (!phaseGraph.ready) {
+    return { ok: false, status: 409, error: `not built: ${phase} has no dependency graph — ${phaseGraph.missing.join('; ')}${phaseGraph.remedy ? `. ${phaseGraph.remedy}` : ''}`, extra: { code: 'NO_GRAPH', missing: phaseGraph.missing, remedy: phaseGraph.remedy } };
+  }
+  let phaseGraphFile = null;
+  try {
+    const gdir = path.join(IDEARIUM_DATA_DIR, 'phase-graphs', repo.uuid);
+    fs.mkdirSync(gdir, { recursive: true });
+    phaseGraphFile = path.join(gdir, `${String(phase).replace(/[^\w.-]+/g, '_')}-${phaseGraph.hash}.json`);
+    fs.writeFileSync(phaseGraphFile, JSON.stringify({ ...phaseGraph, writtenAt: Date.now() }, null, 2));
+  } catch (e) { return { ok: false, status: 500, error: `not built: the dependency graph could not be written before the build (${e.message})`, extra: { code: 'NO_GRAPH' } }; }
 
   // which repo builds it: this one, or for all of NEXUS the system that owns the files it names
   let target = repo;
@@ -793,7 +842,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const runStartTs = Date.now();
   const runId = `phrun-${runStartTs.toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title,
-    ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}) };   // §0.60.125 DG1 — built anyway: what was still open, on every row
+    ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}),   // §0.60.125 DG1 — built anyway: what was still open, on every row
+    graphHash: phaseGraph.hash, graphFile: phaseGraphFile ? path.relative(IDEARIUM_DATA_DIR, phaseGraphFile).replace(/\\/g, '/') : null };   // §0.60.147 DG2 — the graph it was built against
 
   // (1) snapshot first — never write without one
   const snap = await _commitRepoSnapshotFor(target.uuid, { message: `before phase ${phase} (${map.split('/').pop()})`, causedBy: `idearium.phases.build:${runId}` });
@@ -2201,6 +2251,7 @@ function _reconcileRuns({ bootAt = _BOOT_AT, now = Date.now() } = {}) {
   return rows;
 }
 export function _reconcileRunsForTest(opts) { return _reconcileRuns(opts); }
+export function _postPhaseFailureForTest(row, client) { return _postPhaseFailure(row, client); }   // §FMR2 0.60.146
 export function _agentAskForTest(prompt, opts) { return _agentAsk(prompt, opts); }   // §CT1 — its test drives the real route walk
 export function _learnFromRejectionForTest(repo, n, reason, opts) { return _learnFromRejection(repo, n, reason, opts); }   // §0.60.105 RL2
 export function _verdictForTest(chunk, kind, ok, cls, why) { const by = _builtBy(chunk); _verdict(by, kind, ok, cls, why); return by; }   // §CT2
@@ -2737,6 +2788,7 @@ const ROUTE_CAP = {
   'canvas.list': CAPS.READ_IDEAS, 'canvas.show': CAPS.READ_IDEAS, 'canvas.create': CAPS.WRITE_IDEAS, 'canvas.tool.add': CAPS.WRITE_IDEAS,   // §0.60.104 CN3   // §CV3 0.60.80: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.80: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
+  'repo.phases.graph': CAPS.READ_IDEAS,   // §0.60.147 DG2 — reads only
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
@@ -2838,6 +2890,8 @@ const ROUTE_CAP = {
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
+  'repo.flight': CAPS.READ_IDEAS, 'repo.flight.get': CAPS.READ_IDEAS, 'repo.failures': CAPS.READ_IDEAS, 'repo.failure.get': CAPS.READ_IDEAS,   // §FMR3 0.60.146 reads only
+    // §FR6 0.60.144 — reads only: each run read whole (lib/flight-data.js)
   'repo.carve': CAPS.WRITE_IDEAS,   // §CV1 0.60.112 — makes a repo
   'raid.held': CAPS.READ_IDEAS, 'raid.held.unpark': CAPS.WRITE_IDEAS,   // §0.60.78 RT1
   'repo.activity': CAPS.READ_IDEAS,   // §0.39.368 AL1
@@ -3215,6 +3269,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','funnel'],                'repo.funnel'],   // §FN0 { request, intent? } → dependencies, spec, phase, chunks (no model)
     ['GET',    ['api','repos',    ':uuid','thread'],                'repo.thread'],   // §RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
+    ['GET',    ['api','repos',    ':uuid','phases','graph'],        'repo.phases.graph'],   // §0.60.147 DG2 a phase's dependency graph (?map&phase)
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
     ['GET',    ['api','repos',    ':uuid','phases','cost'],         'repo.phases.cost'],       // 0.60.27 AG1a — agent calls and tokens per phase
     ['POST',   ['api','repos',    ':uuid','phases','map'],          'repo.phases.map'],        // 0.60.29 PM — map every phase to its files and dependencies
@@ -3302,6 +3357,10 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','architecture'],          'repo.architecture.write'],   // §0.39.284 W3 — changed files as diffs + tools
     ['GET',    ['api','repos',    ':uuid','changes'],               'repo.changes'],        // §FR1 0.60.114 one record per change (lib/change-record.js)
     ['GET',    ['api','repos',    ':uuid','changes',':id'],         'repo.change.get'],
+    ['GET',    ['api','repos',    ':uuid','flight'],                'repo.flight'],         // §FR6 0.60.144 every run: landed, stuck, what it cost, what was wasted
+    ['GET',    ['api','repos',    ':uuid','flight',':runId'],       'repo.flight.get'],     // §FR6 0.60.144 one run read whole
+    ['GET',    ['api','repos',    ':uuid','failure-modes'],         'repo.failures'],       // §FMR3 0.60.146 the repo's failure modes, from cortex by route
+    ['GET',    ['api','repos',    ':uuid','failure-modes',':id'],   'repo.failure.get'],    // §FMR3 0.60.146 one failure mode's report, from cortex by route
     ['GET',    ['api','repos',    ':uuid','injects'],               'repo.inject.list'],
     ['POST',   ['api','repos',    ':uuid','injects'],               'repo.inject.create'],
     ['GET',    ['api','repos',    ':uuid','injects',':id'],         'repo.inject.get'],
@@ -8218,6 +8277,49 @@ async function handle(req, res, route, query, body) {
           landed: r.landed.map(c => c.commitId), undo: r.undo.possible, holes: r.holes.map(h => h.what) }));
       return ok(res, { repoUuid: params.uuid, changes, count: changes.length });
     }
+    // §FR6 0.60.144 — James: "we need to continue building the flight recorder. look at rfr2, and cfr for friction and tension."
+    // Each run read whole from the rows it already wrote: the ladder of agents, its cost, its faults, what was spent on attempts
+    // that never landed, friction (failed / total) and CFR tension step to step, and a verdict. A projection; nothing stored.
+    // §0.60.146 — CFR's delta through intelligence's route (POST /api/intelligence/cfr/delta), never a require across the boundary.
+    // One call per request, every step at once; intelligence down → null, and the flight says tension is unavailable (§1.2).
+    case 'repo.flight':
+    case 'repo.flight.get': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const FD = _require('../../lib/flight-data.js');
+      const rows = _phaseRows(params.uuid);
+      if (action === 'repo.flight.get') {
+        const id = String(params.runId).replace(/-(review|proof)$/, '');
+        const mine = rows.filter(r => r && String(r.runId || '').replace(/-(review|proof)$/, '') === id);
+        if (!mine.length) return err(res, 404, `no run ${params.runId} in this repo`);
+        const f = FD.flight(mine, { delta: await _cfrDeltaFor(FD.transitions(mine)) });
+        return ok(res, { flight: f, lines: FD.lines(f) });
+      }
+      const limit = Math.max(1, Math.min(200, parseInt(query.limit, 10) || 30));
+      const s = FD.summary(rows, { delta: await _cfrDeltaFor([..._groupRunRows(rows).values()].flatMap(rs => FD.transitions(rs))) });
+      const flights = s.flights.slice(0, limit).map(f => ({ runId: f.runId, phase: f.phase, map: f.map, verdict: f.verdict, why: f.why, landed: f.landed,
+        ended: f.ended, attempts: f.attempts, wallMs: f.wallMs, ladder: f.ladder.map(a => a.agent), calls: f.cost.calls, wasted: f.wasted,
+        friction: f.friction, tension: f.tensionKnown ? f.tension.max : null, startedAt: f.startedAt }));
+      const { flights: _all, ...totals } = s;
+      return ok(res, { repoUuid: params.uuid, totals, lines: FD.summaryLines(s), flights, count: s.runs });
+    }
+    // §FMR3 0.60.146 — James: "failure mode report thats also a macro to import into a cos test env." The repo's failure modes
+    // and one report, read from cortex by its route (lib/nexus-client.js): the Debug tab asks Idearium, Idearium asks cortex.
+    // Nexus's own repo (nexus-self) sees every failure mode; another repo, those that name it. Cortex down → said, not empty.
+    case 'repo.failures':
+    case 'repo.failure.get': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      try {
+        if (action === 'repo.failure.get') {
+          const r = await _nexusClient.get('cortex', `/api/failure-modes/${encodeURIComponent(params.id)}/report`, { timeout: 8000 });
+          return ok(res, { report: r.report, lines: r.lines || [] });
+        }
+        const self = !!repo.nexusSelf;   // a Nexus system as a repo (idearium/repo/nexus-self.js)
+        const r = await _nexusClient.get('cortex', `/api/failure-modes?limit=${Math.max(1, Math.min(200, parseInt(query.limit, 10) || 50))}${self ? '' : `&repo=${encodeURIComponent(params.uuid)}`}`, { timeout: 8000 });
+        return ok(res, { repoUuid: params.uuid, scope: self ? 'all of Nexus' : 'this repo', failureModes: r.failureModes || [], count: r.count || 0 });
+      } catch (e) { return err(res, 503, `cortex did not answer: ${e.message}`); }
+    }
     case 'repo.funnel': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -8226,6 +8328,27 @@ async function handle(req, res, route, query, body) {
       if (!dir) return err(res, 500, 'could not resolve repo directory');
       const f = await _funnelFor(repo, dir, String(body.request), body.intent || null);
       return ok(res, { repoUuid: params.uuid, ...f });
+    }
+    // §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing." The graph a build would
+    // be refused without, readable before any build: what it changes, uses and is used by, the systems, the crossings, what it waits on.
+    case 'repo.phases.graph': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      if (!query.phase) return err(res, 400, 'phase is required (?phase=<key>[&map=<path>])');
+      const PH = await import('../repo/phases.js');
+      const view = PH.managerView({ repo, repoDir: dir, runs: [] });
+      const node = view.phases.find(p => p.phase_key === String(query.phase) && (!query.map || p.map === String(query.map)));
+      if (!node) return err(res, 404, `no phase ${query.phase}${query.map ? ` in ${query.map}` : ''}`);
+      const { maps, scope } = PH.mapsFor({ repo, repoDir: dir });
+      const mapText = (maps.find(m => m.path === node.map) || {}).text || '';
+      const PG = _require('../../lib/phase-graph.js');
+      let depsGate = null; try { depsGate = _require('../../lib/phase-deps-gate.js').openDeps({ phase: node.phase_key, mapText, phases: view.phases }); } catch (_) {}
+      const nexus = scope.source === 'nexus';
+      const groot = nexus ? _require('../../lib/nexus-self/systems.js').ROOT : dir;
+      const g = PG.graphFor({ phase: node.phase_key, map: node.map, mapped: node.mapped || null, mapText, depsGate, systemOf: nexus ? PG.boundarySystemOf(groot) : null, baselineEdges: nexus ? PG.baselineEdges(groot) : null });
+      return ok(res, { graph: g, lines: PG.lines(g) });
     }
     case 'repo.phases.get': {
       const repo = getRepoLayer().get(params.uuid);

@@ -118,17 +118,53 @@ spec:
   attribution: "decided by his axioms (docs/AXIOMS-v3.1.md), applied by the coder, 2026-10-17"
 
 
-  # ── ADDENDUM 2026-10-18 (b) — D10 and D11, from the debugging product map ─────────
+  # ── ADDENDUM 2026-10-17 (b) — the debugging product: ids, the gap door, the case ──────────────────────────────
+  # James, 2026-10-17: "should the chunks, contracts, phases, dependancies all have syncronized ids or uuids, also in
+  # relation to the job." Asked as a question; the axioms answer it. Mapped in docs/2026-10-17-debugging-product-phasemap.spec.
+  decided_b:
+    D10_ids_are_kept_and_referenced:
+      was: "DP0c (docs/2026-10-17-debugging-product-phasemap.spec ids_and_the_job)"
+      chosen: >-
+        No shared uuid across chunks, contracts, phases, runs and changes. Each keeps its own id, minted once and never
+        changed, and links are typed references <kind>:<id> written where the link is made. The job (a run) carries the
+        phase, contract and case it serves; a change carries its run and attempt. A chunk keeps its id across a move (IDS1).
+      axioms:
+        - "§5.1 — a UUID that never changes: today a chunk's id changes when its file moves (the path is in the key)."
+        - "§10.3 — competing truth layers: lib/change-record.js matching a run 'by path and time' is a second, guessed truth beside the real link."
+        - "§17.5 — every output answers from what, against which spec and version: only a reference chain answers it."
+    D11_one_gap_door:
+      was: "DP0d"
+      chosen: "Every gap is written through lib/gap-field.js report(). The 34 direct jaa.insert('gaps') calls in 26 files move onto it one file at a time, behind a ratchet that fails on a new one."
+      axioms:
+        - "§10.1 — one write authority per data type."
+        - "§17.7 — never fix the symptom twice needs an honest occurrence count; a direct insert skips the dedup that counts."
+        - "§1.2 — the move changes no reader silently: each file's readers are checked before it moves."
+    D12_a_case_is_a_contract:
+      was: "DP0e"
+      chosen: "A debugging case is a .contract v2 (cortex/core/raid/contract-gates.js) whose gates are the stages; no case store, no new format. Its status is computed from its gates, never set."
+      axioms:
+        - "§8.6 / §16.5 — contract-gates already evaluates gated work with evidence and invalidation; a second engine would be redundancy."
+        - "§0.5 — complexity must earn its existence."
+  stays_his_b:
+    - "DP0a — one product or two (debugging beside Flight Recorder, or Flight Recorder's next phases): direction."
+    - "DP0b — its name."
+  # ── ADDENDUM 2026-10-18 (b) — D13 and D14 (written as D10/D11), from the debugging product map of 2026-10-18 ─────────
   # James, 2026-10-17: "should the chunks, contracts, phases, dependancies all have syncronized ids or uuids, also in relation
   # to the job. also what about using the dependencies to map gaps in codebases or repose, files or code"
   # Both are technical, and his axioms settle them. Full text, ids as found in code, and the phases that build them:
   # docs/2026-10-18-debugging-product-phasemap.spec (DBG0a, DBG0b; DBG1, DBG4).
-  # D10_synchronized_by_a_key (= DBG0a): synchronized by a shared derived KEY, not one shared uuid. What a thing IS (phase,
+  # D13_synchronized_by_a_key (= DBG0a; written as D10 before the merge): synchronized by a shared derived KEY, not one shared uuid. What a thing IS (phase,
   #   chunk, contract, dependency edge) is keyed by its place in the map, <repo>/<map>::<phase>[::<chunk>]. What HAPPENS (job,
   #   attempt, change, commit, event) keeps its own random id and carries that key plus its attempt. A chunk is named for what it
   #   is, never its position (b<n> becomes an alias). Axioms: §10.1, §5.14, §1.1, §7.6; identity (the check catalogue's
   #   primitive); PC2.
-  # D11_dependencies_are_gap_evidence (= DBG0b): yes. Every dependency edge whose far end is missing, or does not provide what
+  # D14_dependencies_are_gap_evidence (= DBG0b; written as D11 before the merge): yes. Every dependency edge whose far end is missing, or does not provide what
   #   is used, is a gap, found deterministically; orphans are said, never deleted. All go through lib/gap-field.js report(). Axioms:
   #   deterministic first, §8.6, §1.2, the one gap door, §0.5.
   # Stays his: DBG0c, which product the debugger is (direction).
+  # MERGE NOTE 2026-10-18 — two lines answered the same question. His line (another session, 2026-10-17, uploaded as nexus.zip)
+  # decided D10 'ids are kept and referenced' (typed <kind>:<id> references; a chunk keeps its id across a move), D11 'one gap
+  # door' and D12 'a case is a contract'. This session (2026-10-18) decided D13 'synchronized by a derived key' (a chunk named
+  # for what it is, <repo>/<map>::<phase>::<chunk>) and D14 'dependency edges are gap evidence'. Both say: no one shared uuid.
+  # They differ on how a chunk is named and kept. Two contracts, kept, not collapsed (docs/CLAUDE.md rule 4); which one stands
+  # is his to say. D11 and D14 do not conflict: D14's gaps go through D11's one door.

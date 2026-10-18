@@ -1776,6 +1776,23 @@ function startService() {
       return;
     }
 
+    // §FMR0 0.60.146 — James: "do it. … we need to add this all to nexus, there is boundaries mapping it". How much of each
+    // system's ledger names its cause (causedBy) — what RFR2 can walk for a failure report. Read from the ledger files (no
+    // require into any system); the high-water mark per system is diagnostic's own data, and a fall is named (the ratchet).
+    if (url.pathname === '/causality') {
+      try {
+        const C = require('./lib/causality.js');
+        const m = C.measure({ root: ROOT, system: url.searchParams.get('system') || null });
+        const hwFile = path.join(require('./config.js').load().dataDir, 'causality-highwater.json');
+        let hw = {}; try { hw = JSON.parse(fs.readFileSync(hwFile, 'utf8')); } catch (_) {}
+        const cmp = C.compare(m, hw);
+        try { fs.mkdirSync(path.dirname(hwFile), { recursive: true }); fs.writeFileSync(hwFile, JSON.stringify(cmp.highWater, null, 2)); } catch (_) {}
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, ...m, fell: cmp.fell, highWater: cmp.highWater, lines: C.lines(m, cmp) }));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: e.message })); }
+      return;
+    }
+
     // §PR2 0.39.328 — what the pulse watch sees: every system that announced, its last beat, its open gap
     if (url.pathname === '/pulse') {
       res.writeHead(200, { 'Content-Type': 'application/json' });

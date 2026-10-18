@@ -220,3 +220,92 @@ phases:
       RF2 (the refactor tool applied one phase at a time) on a messy real repo (MASTERMIND), recorded end to end: each step a
       record, tested before it lands, any step undone. The thing to show someone.
     proof: "the recording: diff, tests green, undo, in the Versionium tab"
+
+# ── ADDENDUM 2026-10-17 (FR6–FR10) — the flight recorder continued ─────────────────────────────────────────────
+# James, 2026-10-17: "we need to continue building the flight recorder. look at rfr2, and cfr for friction and tension.
+# versionium, cos test envirenements and branching for benchmarks. compartemtns to sandbox. how much did it cost to build lang
+# graph and how does mine compare?" · just before, on its value: "no im saying to once proven, email them and tell them i could
+# save them money on repair costs" · with his autopilot log of the IM1 build (ten attempts, four providers, ending
+# contract-incomplete) and a screenshot of the Code tab showing that run failed and "no changes yet".
+# The coder's reading, to confirm: "repair costs" have to be measured from what the runs already record, so the next piece is
+# reading each run whole (FR6), and the rest of his list (rfr2, benchmark branches, compartments) is mapped after it.
+fr_addendum_2026_10_17:
+  found_while_reading:
+    - "test-flight-recorder-standalone failed 0/6 on 0.60.142, and test-repo-carve CV-14 1/14: products/flight-recorder/lib/project.js
+      reached guardian/jaa-store.js (a re-export since 0.60.130) inside a try, so the carve read it as optional and cut it, and the
+      copy lacked a file product.json says it must carry. Fixed 0.60.144: project.js requires lib/jaa-store.js; product.json must
+      names lib/jaa-store.js (was guardian/jaa-store.js, superseded, said here). 6/6 and 14/14."
+    - "lib/pipeline-routing.js classify() filed guardian's two real timeout messages ('the caller stopped waiting after 295 s',
+      'no completion within 900000ms') as 'unknown'. In his IM1 run those were most of the failures, so the fault log could not
+      see its commonest mode. Fixed 0.60.144."
+    - "His IM1 log, read as a flight: gemini ×2, chatgpt ×2 and claude each timed out (the caller waits 295 s; Gemini thinks for
+      minutes first, 0.60.142's own finding); deepseek then wrote a NEW lib/system-census.js, which the phase forbids ('No new
+      scanner'), for a phase the same map's addendum says was BUILT 0.60.133 (`system sovereign`). The phase block still said
+      OPEN. Three agents failing the same way pointed at the brief, not the agents; that is what FR6's verdict now says."
+    - "the classifier and CFR's delta were reached inside a try (lib/phase-faults.js, lib/flight-data.js's first draft): a carved
+      copy cut them and read every fault 'unknown'. Both are plain requires now (neither has top-level requires of its own)."
+  FR6_flight_data:
+    status: "BUILT 0.60.144 — test-flight-data 7/7 (FD-07 the panel in Clear Glass)"
+    stands_on: "lib/run-watch.js runsOf/isFinal · lib/phase-cost.js costOf · lib/phase-faults.js modeOf · intelligence/cfr/delta.js
+      computeDelta · the idearium_phase_runs rows every phase build writes. Nothing existing read a run whole: phase-cost counts it,
+      phase-faults names each failure, run-watch finds stalls; none says landed or stuck, what was wasted, or why."
+    built_as: >-
+      lib/flight-data.js (Product: flight-recorder): flight(rows) → the ladder of agents in order, cost, faults by mode, landed or
+      not, wasted (every call of a run that never landed; in one that did, the calls that failed — calls, tokens, minutes),
+      friction (the diagnostic's definition: failed / total agent calls), tension (CFR's delta step to step; its latency friction
+      saturates for agent calls over 30 s and is not used, said), and a verdict: landed · stuck · crashed · turbulent · flying.
+      STUCK when the same failure mode comes back from two or more different agents (§17.7: the brief or the phase, not the
+      agent). summary(rows) → the share of calls spent on attempts that never landed, the recurring modes, each agent's record.
+      GET /api/repos/:uuid/flight(/:runId), `repo flight <repo> [<run>]`, the Code tab's "flight" panel
+      (idearium/ui/js/code-tab-flight.js + css/code-tab-flight.css). Part of the product: carved and run from the copy.
+    proof: "his IM1 run as the fixture: STUCK, ladder gemini → chatgpt → claude → deepseek, timeout shared by 3 agents, 7 of 7 calls
+      wasted, 62 min; a run that landed after one failure: only that call wasted; the route through the real router; the panel in
+      Clear Glass; the carved copy classifies timeouts."
+  FR7_the_causal_record:
+    status: OPEN
+    owned_with: "FM1 (docs/2026-10-05-failure-reproduction-phasemap.spec: every ledger into rfr2)"
+    does: >-
+      Each run and each change ingested into an RFR2 kernel with edges typed at ingestion (causal/explicit where the link is
+      recorded: phase → run → attempt → change → test → version), so `trace` walks from a failing test or a bad version back to
+      the change, the attempt, the agent and the brief, and a missing link is observational, never walked (rule C-1). Needs the
+      ids of docs/2026-10-17-debugging-product-phasemap.spec ids_and_the_job (IDS3: a change carries run:@attempt).
+  FR8_branches_for_benchmarks:
+    status: OPEN
+    owned_with: "GW16 (docs/2026-10-15-gate-held-work-phasemap.spec: parallel branches for benchmarking)"
+    james: '"branching for benchmarks"'
+    does: >-
+      The same brief to N agents (or N approaches), each in its own branch (lib/shadow-space.js: a COS workspace worktree, tests run
+      inside it, merged fast-forward only). Each branch is a flight (FR6) and its changes are records (FR1) tested before landing
+      (FR2): the comparison is landed or not, calls, tokens, minutes, friction, regressions, diff size. The winner merges; the
+      others are kept as branches (archived, §0.3). The results feed each agent's record, so routing learns which agent lands which
+      kind of phase (GW6). This is the number for his pitch: the same task, what each agent cost to land.
+  FR9_sandboxed_in_compartments:
+    status: OPEN
+    owned_with: "FR2's own note ('the COS testenv's VM path is not used yet: the shadow is a process sandbox, said'); GW13/GW14"
+    james: '"compartemtns to sandbox"'
+    does: >-
+      FR2's evidence runs through cos/testenv in auto mode: a throwaway VM (an ephemeral qcow2 overlay, no network after install)
+      when one is available, else the process sandbox, and the record says which ran and why. A branch of FR8 runs in its own
+      compartment the same way, so N agents cannot touch each other's files or the real tree.
+    not_verified: "that QEMU and the base image work on his Windows host (setup-vm.bat exists; an earlier setup was stuck)."
+  FR10_stop_the_ladder:
+    status: OPEN
+    depends_on: [FR6_flight_data]
+    does: >-
+      When a flight turns STUCK, the phase build stops climbing the ladder and opens a debugging case
+      (docs/2026-10-17-debugging-product-phasemap.spec DP5) with the flight as its evidence, instead of the next rung. On his IM1
+      log's own timeline the rule fires at minute 15, when chatgpt timed out the way gemini had: the 5 calls after it and about 47
+      of the run's 62 minutes would not have been spent (a reading of the log, not a run).
+    pushback: "a stop rule can stop a run that would have landed on the next rung. The rule only fires on the same mode from
+      different agents, and the case it opens offers a retry with a changed brief; to be measured on his runs before it is on by
+      default."
+  FR5_the_demo_note: "FR5 now records FR6's numbers for the run it shows: what landed, what was wasted, before and after."
+  build_order_fr: [FR6, FR10, FR8, FR9, FR7, FR5]
+  build_order_reason: >-
+    §16.1, nearest gap first. FR6 is the measure everything after is judged by. FR10 is small and saves the most at once (his log).
+    FR8 needs FR6 to compare branches and is his benchmark ask; FR9 hardens FR8's isolation and needs his host checked. FR7 needs
+    the ids work (IDS3). FR5 shows all of it.
+  # ADDENDUM 2026-10-17 (0.60.146): FR6 crossed a system boundary (lib/flight-data.js required intelligence/cfr/delta.js). Fixed:
+  # flight(rows, { delta }) takes CFR's delta from the caller; Idearium's flight route gets it from POST /api/intelligence/cfr/delta
+  # through lib/nexus-client.js; no delta -> "tension unavailable", said. intelligence/cfr/delta.js left product.json's must list
+  # (a carved Flight Recorder reports tension unavailable until it can reach an intelligence). test-flight-data 9/9 (FD-08, FD-09).

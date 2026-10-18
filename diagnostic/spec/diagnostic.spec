@@ -130,3 +130,12 @@ spec:
 # lib/node-registry.js, lib/jaa-store.js, lib/system-store.js, lib/system-registry.js heartbeat. `system shape diagnostic`
 # (lib/system-shape.js) checks every role.
 # Not sovereign yet: 10 crossings out (cortex's database 1, capabilities 9 — RAID, CFR, the gap engine, loom's schema).
+
+# ── ADDENDUM 2026-10-17 (0.60.146) — causality measured (FMR0) ──────────────────────────────────────────────────────
+# James, 2026-10-17: "do it. … we need to add this all to nexus, there is boundaries mapping it"
+# lib/causality.js: per system, the share of ledger rows that name their cause (causedBy) and how many resolve to a row read —
+# what RFR2 can walk for a failure report. Reads the ledger files every system writes (no require into any system), each from
+# its last 2 MB. GET /causality[?system=], declared in interaction-contract.json (so in its registry); `system causality`.
+# A share only rises: the high-water mark is diagnostic's own data (causality-highwater.json), a fall is named.
+# config.js: DIAGNOSTIC_DATA_DIR over the file, like the port. Measured on the tree at 0.60.145: 72 of 1,467 rows (4.9%) name
+# a cause, and none of the 72 resolves to a row in any ledger read. Proof: diagnostic/tests/causality.test.js 4/4.

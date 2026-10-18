@@ -12,7 +12,7 @@ function load(root = __dirname) {
     system: file.system || 'diagnostic',
     port: num(process.env.DIAGNOSTIC_PORT, num(file.port, 7825)),
     heartbeatMs: num(process.env.DIAGNOSTIC_HEARTBEAT_MS, num(file.heartbeatMs, 30000)),
-    dataDir: path.join(root, file.dataDir || 'data'),
+    dataDir: process.env.DIAGNOSTIC_DATA_DIR ? path.resolve(process.env.DIAGNOSTIC_DATA_DIR) : path.join(root, file.dataDir || 'data'),   // §0.60.146: the environment over the file, like port (a test's server keeps its state out of the tree)
   };
 }
 
