@@ -124,8 +124,14 @@ const FILES = [
     I('lib/run-watch.js'), I('lib/phase-plan.js'),              // §0.60.123 PP1/PP2 createRequire — runsOf/isFinal (an open run), depsOf (what a piece uses)
   ]],
   // §0.60.153 — the README's generated half (every system, module and file; every phase; the data; Idearium; every release)
-  ['lib/readme-generate.js', I('lib/readme-generate.js'), [I('lib/atlas-generate.js'), I('lib/nexus-self/systems.js'), I('loom/scanners/phasemap-map.js'), I('lib/context-atlas.js'), I('lib/node-export.js')]],
+  ['lib/readme-generate.js', I('lib/readme-generate.js'), [I('lib/atlas-generate.js'), I('lib/nexus-self/systems.js'), I('lib/context-atlas.js'), I('lib/node-export.js')]],   // §0.60.156 the phases are handed in, no longer required from loom (SB-06)
   [I('scripts/generate-atlases.js'), I('lib/readme-generate.js'), '0.60.153 generate() before syncReadme: the atlas, then README.md'],
+  [I('scripts/generate-atlases.js'), I('loom/scanners/phasemap-map.js'), '0.60.156 loadAll() handed to generate({ phasemaps })'],
+  // §0.60.156 GM5 — context as a SISO stream: every source in the table asked at once, the residue named
+  ['lib/context-sources.js', I('lib/context-sources.js'), [I('lib/context-atlas.js'), I('lib/component-store.js'), I('lib/gate-context.js'), I('lib/vector-memory.js'), I('lib/nexus-client.js')]],   // the rows' asks; intelligence and cortex by route
+  ['lib/context-stream.js', I('lib/context-stream.js'), [I('lib/context-sources.js'), I('siso/index.js'), I('lib/context-atlas.js')]],   // rows · Event/Gate/Stream/StreamLog (import()) · qtokens
+  [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
+  [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
   // §0.60.145 TL2a — a gate's context, and its kept reply reused instead of asking again
   ['lib/gate-context.js', I('lib/gate-context.js'), [I('lib/work-journal.js'), I('lib/run-state.js'), I('lib/repo-agent.js')]],   // gates/get/reusable/mark · load/runIdFor · findLate/adoptLate
   // §0.60.143 TL1b — the agent's reply and thinking on disk as they stream

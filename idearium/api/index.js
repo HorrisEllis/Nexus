@@ -1024,7 +1024,21 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const gateKey = brickKey || `${map}::${phase}::${ck && ck.file ? `file.${ck.file}` : 'phase'}`;
     let gateNote = '';
     { try { const GCx = _require('../../lib/gate-context.js'); gateNote = GCx.note(await GCx.context(target.uuid, gateKey)); } catch (_) { gateNote = ''; } }
-    const msg = (box.why ? `${msg0}\n\nYOUR LAST ATTEMPT AT THIS FILE FAILED ITS CHECK — fix exactly this, keep what was right:\n${box.why}` : msg0) + (gateNote ? `\n\n${gateNote}` : '');
+    // §0.60.156 GM5 — James: "it needs to be non linear and agnostic" · "look at siso". What Nexus already holds for this gate,
+    // found once per gate by the context stream (lib/context-stream.js): every source in lib/context-sources.js asked at once,
+    // what none of them covered named in the note. The gate's own ledger is already in gateNote, so it is not asked twice.
+    // NEXUS_CONTEXT_STREAM=0 turns it off.
+    if (box.streamNote === undefined) {
+      box.streamNote = '';
+      if (process.env.NEXUS_CONTEXT_STREAM !== '0') try {
+        const CSx = _require('../../lib/context-stream.js');
+        const want = files.length ? files : [phase];
+        const found = await CSx.find({ text: `${phase} ${want.join(' ')}`, need: want, gate: gateKey, repoUuid: target.uuid }, { sources: ['atlas', 'components', 'vector', 'intuition', 'lattice', 'fulfilled'], timeoutMs: 2500 });
+        box.streamNote = CSx.note(found, { budget: 1600 });
+      } catch (_) { box.streamNote = ''; }
+    }
+    const streamNote = box.streamNote;
+    const msg = (box.why ? `${msg0}\n\nYOUR LAST ATTEMPT AT THIS FILE FAILED ITS CHECK — fix exactly this, keep what was right:\n${box.why}` : msg0) + (gateNote ? `\n\n${gateNote}` : '') + (streamNote ? `\n\n${streamNote}` : '');
     const tag = ck ? `-c${ck.chunk}` : '';
     const session = ri <= 0 && tryNo === 1 ? `${runId}${tag}` : `${runId}${tag}-r${ri + 1}t${tryNo}`;
     // §0.60.0 RS1 — the repo is paused: the attempt waits here, said on the Plan, and goes on when it is played
@@ -3486,6 +3500,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','context',  'search'],                        'context.search'],
     ['GET',    ['api','context',  'get'],                           'context.get'],
     ['GET',    ['api','repos',    ':uuid','context'],               'repo.context.search'],
+    // §0.60.156 GM5 — the context stream (lib/context-stream.js): every source asked at once, the residue named
+    ['POST',   ['api','context',  'find'],                          'context.find'],
+    ['POST',   ['api','repos',    ':uuid','context','find'],        'repo.context.find'],
+    ['GET',    ['api','context',  'sources'],                       'context.sources'],
     // 0.39.253 — Ollama's installed models, for the Agent tab's ollama dropdown
     ['GET',    ['api','ollama',   'models'],                        'ollama.models'],
     // §REPO-AGENT-NODE 2026-09-20 — the agent as portable node files.
@@ -9697,6 +9715,25 @@ async function handle(req, res, route, query, body) {
       }
       const r = await _require('../../lib/context-atlas.js').search(q, { sources, limit: Math.min(parseInt(query.limit, 10) || 20, 100), repoDir, repoUuid });
       return r.ok ? ok(res, r) : err(res, 400, r.error);
+    }
+    // ── 0.60.156 GM5 — the context stream ───────────────────────────────
+    case 'context.sources':
+      return ok(res, { sources: _require('../../lib/context-sources.js').rows().map(({ ask, ...r }) => ({ ...r, asks: typeof ask === 'function' })) });
+    case 'context.find': case 'repo.context.find': {
+      const b = body || {};
+      const text = String(b.text || b.q || '').trim();
+      const need = Array.isArray(b.need) ? b.need.map(String).filter(Boolean) : [];
+      if (!text && !need.length) return err(res, 400, 'text or need required');
+      let repoUuid = null, repoDir = null;
+      if (action === 'repo.context.find') {
+        const repo = getRepoLayer().get(params.uuid);
+        if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+        repoUuid = params.uuid; repoDir = _repoDiskDir(params.uuid);
+      }
+      const CSx = _require('../../lib/context-stream.js');
+      const r = await CSx.find({ text, need, gate: b.gate || null, repoUuid, repoDir, refs: Array.isArray(b.refs) ? b.refs : [] },
+        { sources: Array.isArray(b.sources) && b.sources.length ? b.sources : null, timeoutMs: Math.min(parseInt(b.timeoutMs, 10) || 4000, 20000) });
+      return r.ok ? ok(res, { ...r, note: CSx.note(r) }) : err(res, 400, r.error);
     }
     case 'context.get': {
       const r = _require('../../lib/context-atlas.js').get(query.source, query.id);

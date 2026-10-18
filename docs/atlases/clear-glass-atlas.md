@@ -804,7 +804,7 @@ Full real chain traced and patched this pass, five files, not one:
 4 code file(s).
 
 - `clear-glass/src/driver/glass.js` (460 lines)  
-  exports chromium, launch, engine, Browser, Page, PAGE_LIB · tested by `tests/modules/test-agent-live.test.js`, `tests/modules/test-canvas-compartments.test.js` +22
+  exports chromium, launch, engine, Browser, Page, PAGE_LIB · tested by `tests/modules/test-agent-live.test.js`, `tests/modules/test-canvas-compartments.test.js` +23
 - `clear-glass/src/driver/index.js` (925 lines) — ClearDriver — NEXUS sovereign browser automation No Playwright. No Puppeteer. Own the primitives.  
   requires 5 · required by 3 · emits driver.error, driver.network.blocked, driver.network.intercepted, driver.recording +8
 - `clear-glass/src/driver/page-resolver.js` (41 lines) — the ONE place that turns an agentId into the webContents of the page the agent lives in. 2026-09-19.  

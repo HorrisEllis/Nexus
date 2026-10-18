@@ -105,7 +105,7 @@ spec:
         edge typed and timestamped. POST /api/intelligence/lattice/neighbours. Nothing is copied: the registries stay the truth.
       pushback: "Time adjacency joins everything that happened near each other. It is useful as context and useless as cause; the edge kind travels with every answer so a report never reads a temporal edge as causal."
     GM5_the_context_ladder:
-      status: OPEN
+      status: "BUILT 0.60.156 as the stream of addendum (b) — lib/context-stream.js on siso/, lib/context-sources.js (the table: atlas, components, ledger, vector, intuition, lattice, fulfilled, agent-tools, build), POST /api/context/find and /api/repos/:uuid/context/find, GET /api/context/sources, `context find` / `context sources`, the agent's /find, and every gate's attempt carries the stream's note (idearium/api makeAttempt). The lattice and fulfilled rows are asked and answer 'failed' with their phase until GM4 and GM3 serve their routes; said, not faked. Test: tests/modules/test-context-stream.test.js 5/5. Was: OPEN"
       superseded_by: "addendum (b) 2026-10-18 — a stream, not a ladder: every source asked at once, any source can join. The id is kept (§0.3); the text below is the first design, kept."
       depends_on: []
       depends_on_first_design: [GM3_the_fulfilled_contract_index, GM4_the_node_lattice]

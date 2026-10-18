@@ -1,5 +1,5 @@
 {
- "generatedAt": 1792343080560,
+ "generatedAt": 1792346804668,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -1840,6 +1840,19 @@
    "listens": [
     "gap.found",
     "job.done"
+   ]
+  },
+  "nexus.tests.modules.test-context-stream.test": {
+   "emits": [],
+   "listens": [
+    "t.absent",
+    "t.broken",
+    "t.build",
+    "t.lattice",
+    "t.ledger",
+    "t.model",
+    "t.reuse",
+    "t.vector"
    ]
   },
   "nexus.tests.modules.test-cookie-vault-ipc-roundtrip": {
@@ -6769,6 +6782,54 @@
    "emitters": [],
    "listeners": [
     "nexus.tests.modules.test-consumer-registry"
+   ]
+  },
+  "t.absent": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-context-stream.test"
+   ]
+  },
+  "t.broken": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-context-stream.test"
+   ]
+  },
+  "t.build": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-context-stream.test"
+   ]
+  },
+  "t.lattice": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-context-stream.test"
+   ]
+  },
+  "t.ledger": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-context-stream.test"
+   ]
+  },
+  "t.model": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-context-stream.test"
+   ]
+  },
+  "t.reuse": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-context-stream.test"
+   ]
+  },
+  "t.vector": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-context-stream.test"
    ]
   },
   "nexus:cookie-request": {
