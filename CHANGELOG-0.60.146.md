@@ -56,6 +56,56 @@ addendum (g).
   Earlier in this session the coder called them "failing on main" without checking whose change broke them. That was
   wrong: they were the coder's.
 
+## "is that all added to the pipeline?"
+
+James asked this once the ledger was built.
+
+- **The contract builds already had it.** `routing.contract_build` is on by default, and every brick goes through
+  `makeAttempt` with its gate. So contract builds already got the gate context, the reuse and the contract ledger.
+- **The other builds did not.** With the contract switched off, the whole-phase build and the file-by-file build
+  dispatched with no gate.
+  - **Fixed:** each of those attempts now has a gate key, `<map>::<phase>::file.<file>`, or `::phase` for the whole phase.
+    The dispatch names it, so its replies land in its contract's ledger and its next attempt carries the context and
+    reuses a reply already paid for.
+  - Only a real brick keys the brick's run state, as before.
+- **CI runs no tests.** `.github/workflows/release.yml` builds and checks the release zip; `cos-app.yml` builds the COS app.
+  The tests are registered in `tests/modules/run-all.js` and run locally. Whether CI should run them is his call (below).
+
+## The drawbridge, kept
+
+The first version of the ledger required Clear Glass's code directly (`lib/work-journal.js` →
+`clear-glass/src/downloads/chat-ledger.js`). That is a new crossing between systems, and his drawbridge rule forbids it.
+`test-system-boundary` SB-06 caught it.
+
+Now a linked reply's text is read through Clear Glass's own route, `GET :7701/cli/downloads/ledgers/:chatKey`
+(`clear-glass/src/ipc/bridge.js`), with the new async `read()`. If Clear Glass is not reachable, the reply reads
+"chat-ledger (Clear Glass not reachable)", and the text is never filled in from elsewhere. SB-06 and SB-08 pass again.
+
+## The full suite, compared
+
+Totals: 6579 passed, 98 failed (32 of them known gaps), and 2 files crashed.
+
+Every one of the 35 files with a failure was run on its own, both here and on main before today's four releases
+(`6e00a448`):
+
+| what | files |
+|---|---|
+| fail the same way before today | 31 |
+| failed only here: fixed in this release | `test-system-boundary` (the crossing above) |
+| failed only here: an intermittent run, passes when rerun | `test-cos-compartment-template` |
+| failed only here: caused by a state file in this container | `test-agent-facts` GA-01, `test-route-eligibility` RE-07 |
+
+About that state file: `guardian/data/nodes/provider/_ledger.jsonl` is ignored by git and dated 13 October. Both tests read
+every file in that folder as YAML, so a JSON-lines file breaks them. With the file moved aside, both pass, and it was put
+back unchanged.
+
+Already failing before today, reported here, not fixed:
+
+- **The flight recorder carve** (FS-01 to FS-06, CV-14): it leaves out `guardian/jaa-store.js`, which
+  `products/flight-recorder/lib/project.js` needs.
+- **The atlas references.**
+- **Version sync:** 17 failures.
+
 ## Proof
 
 | test | result |
@@ -72,6 +122,10 @@ addendum (g).
 | `test-nexus-wake` | 34/34 |
 | `test-agent-live` | 5/5 |
 | `test-live-everywhere` | 3/3 |
+| `test-system-boundary` | 10/10 |
+| `test-qa2-real-run` | 5/5 |
+| `test-test-first` | 5/5 |
+| `test-repo-agent-late` | 17/17 |
 
 What WJ-05 checks:
 

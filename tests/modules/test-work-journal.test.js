@@ -162,6 +162,16 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
 
   await test('WJ-05', 'one record: the contract ledger, the chat ledger as the text\'s home, moves, old folders, guardian passes it on', async () => {
     const CL = require(path.join(ROOT, 'clear-glass/src/downloads/chat-ledger.js'));
+    // Clear Glass's own route, served from its real chat ledger (clear-glass/src/ipc/bridge.js GET /cli/downloads/ledgers/:chatKey):
+    // the journal reads another system's ledger through its route only (the drawbridge)
+    const http = require('http');
+    const cg = http.createServer((req, res) => {
+      const m = req.url.match(/^\/cli\/downloads\/ledgers\/([^?]+)/);
+      const c = m ? CL.readChat({ chatKey: decodeURIComponent(m[1]) }) : null;
+      res.writeHead(c ? 200 : 404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(c ? { ok: true, chat: c } : { ok: false }));
+    });
+    await new Promise(r => cg.listen(0, '127.0.0.1', r));
+    process.env.CLEAR_GLASS_URL = `http://127.0.0.1:${cg.address().port}`;
     const repo = 'r5', brick = 'docs/x-phasemap.spec::P5_one::b1.one.js';
     CL.applyDelta({ provider: 'gemini', chatId: 'c5', agentId: `repo-${repo}`, seq: 1, generating: true, turns: [{ i: 0, role: 'user', text: 'Build phase P5_one' }, { i: 1, role: 'assistant', text: 'Here', thinking: 'Reading' }] });
     const base = { repoUuid: repo, jobId: 'k-1', provider: 'gemini', source: 'transcript', brick, chatId: 'c5', turn: 1 };
@@ -178,8 +188,12 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
     await new Promise(x => setTimeout(x, 300));
     assert.ok(!fs.readFileSync(path.join(WJ.dir(), repo, cf), 'utf8').includes('"t":"text"'), 'the turn was there: nothing written after the check');
     WJ._reset();   // a restart
-    const back = WJ.get(repo, 'k-1');
+    const kept = WJ.get(repo, 'k-1');
+    assert.deepStrictEqual([kept.text, kept.textFrom], ['', 'chat-ledger (not read)'], 'this ledger holds no copy');
+    const back = await WJ.read(repo, 'k-1');
     assert.deepStrictEqual([back.status, back.text, back.thinking, back.textFrom], ['complete', 'Here it is: one()', 'Reading the phase', 'chat-ledger']);
+    const src0 = fs.readFileSync(path.join(ROOT, 'lib/work-journal.js'), 'utf8');
+    assert.ok(!/require\([^)]*clear-glass/.test(src0), 'no require of Clear Glass\'s code: its route only');
     // a turn the chat ledger does not have (a tab outside Clear Glass): written once, here
     WJ.record({ ...base, jobId: 'k-2', turn: 3, event: 'chunk', text: 'outside reply', fullLen: 13 });
     WJ.record({ ...base, jobId: 'k-2', turn: 3, event: 'complete' });
@@ -187,7 +201,12 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
     const t2 = fs.readFileSync(path.join(WJ.dir(), repo, cf), 'utf8').trim().split('\n').map(JSON.parse).filter(l => l.t === 'text' && l.jobId === 'k-2');
     assert.strictEqual(t2.length, 1); assert.strictEqual(t2[0].set, 'outside reply'); assert.match(t2[0].why, /does not hold this turn/);
     WJ._reset();
-    assert.strictEqual(WJ.get(repo, 'k-2').text, 'outside reply');
+    assert.strictEqual((await WJ.read(repo, 'k-2')).text, 'outside reply');
+    // Clear Glass not reachable: said, never filled
+    process.env.CLEAR_GLASS_URL = 'http://127.0.0.1:9'; WJ._reset();
+    const down = await WJ.read(repo, 'k-1');
+    assert.deepStrictEqual([down.text, down.textFrom], ['', 'chat-ledger (Clear Glass not reachable)']);
+    process.env.CLEAR_GLASS_URL = `http://127.0.0.1:${cg.address().port}`;
     // a job whose gate becomes known moves into its contract's ledger
     WJ.record({ repoUuid: repo, jobId: 'k-3', source: 'ollama', provider: 'ollama', event: 'chunk', text: 'abc', fullLen: 3 });
     WJ.record({ repoUuid: repo, jobId: 'k-3', source: 'ollama', provider: 'ollama', event: 'chunk', text: 'def', fullLen: 6, brick });
@@ -224,6 +243,7 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
       h({ type: 'GUARDIAN_CHUNK', jobId: 'k-9', text: 'Hi', full: 'Hi', chatId: 'c5', turn: 1, chatUrl: 'u', source: 'transcript' });
       assert.deepStrictEqual([seen[0].chatId, seen[0].turn], ['c5', 1]);
     } finally { console.log = l; console.warn = w; }
+    cg.close();
     for (const f of ['chatgpt', 'claude', 'deepseek', 'gemini', 'perplexity']) assert.ok(/chatId: \(chat && chat\.chatId\) \|\| null, turn: _txLastTurn/.test(fs.readFileSync(path.join(ROOT, `guardian/userscript-${f}.js`), 'utf8')), `${f} sends its chat id and turn`);
   });
 

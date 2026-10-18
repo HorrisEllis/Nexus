@@ -55,7 +55,7 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
     const run = RS.begin({ repoUuid: REPO.uuid, goal: 'Build phase P1_census', brick });
     RS.step(run.runId, { name: 'code_write', arguments: { path: 'lib/census.js' }, ok: true });
     WJ._reset();   // a restart: nothing in memory
-    const c = GC.context(REPO.uuid, brick);
+    const c = await GC.context(REPO.uuid, brick);
     assert.deepStrictEqual(c.attempts.map(a => [a.attempt, a.jobId, a.handled]), [[1, 'a-1', 'failed'], [2, 'a-2', 'incomplete']]);
     assert.deepStrictEqual(c.files, ['lib/census.js']);
     const n = GC.note(c);
@@ -63,7 +63,7 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
     assert.match(n, /THIS GATE BEFORE/); assert.match(n, /2 attempt\(s\): 1\. chatgpt failed; 2\. chatgpt incomplete/);
     assert.match(n, /files already changed at this gate: lib\/census\.js/); assert.match(n, /code_write/);
     assert.match(n, /module\.exports = \{ census \};$/, 'the last reply\'s tail');
-    assert.strictEqual(GC.note(GC.context(REPO.uuid, 'nowhere::P::b9.x.js')), '', 'no history: nothing');
+    assert.strictEqual(GC.note(await GC.context(REPO.uuid, 'nowhere::P::b9.x.js')), '', 'no history: nothing');
   });
 
   await test('GC-02', 'a finished reply no attempt handled is reused once, from the real Responses index', async () => {
@@ -104,12 +104,16 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
     const src = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     const a = src.indexOf('const makeAttempt = ('), b = src.indexOf('const makeOnOutcome = (');
     const body = src.slice(a, b);
-    assert.ok(/gateNote = GCx\.note\(GCx\.context\(target\.uuid, brickKey\)\)/.test(body), 'the note from the gate\'s context');
+    assert.ok(/gateNote = GCx\.note\(await GCx\.context\(target\.uuid, gateKey\)\)/.test(body), 'the note from the gate\'s context');
     assert.ok(/\+ \(gateNote \? `\\n\\n\$\{gateNote\}` : ''\)/.test(body), 'carried in the message');
     const ru = body.indexOf("gate-context.js').reuse("), dsp = body.indexOf('if (!r) try {');
     assert.ok(ru > 0 && dsp > ru, 'reuse is tried before a dispatch, which runs only without a reused reply');
     assert.ok(/judged: \(j\) => _phaseRows\(base\.repoUuid\)/.test(body), 'the run log is the second witness');
-    assert.ok(/gate-context\.js'\)\.handled\(target\.uuid, brickKey/.test(body), 'the gate\'s jobs marked handled');
+    assert.ok(/gate-context\.js'\)\.handled\(target\.uuid, gateKey/.test(body), 'the gate\'s jobs marked handled');
+    // §0.60.146 — every build path has a gate: a contract's brick, else its file, else the whole phase (routing.contract_build off)
+    assert.ok(/const gateKey = brickKey \|\| `\$\{map\}::\$\{phase\}::\$\{ck && ck\.file \? `file\.\$\{ck\.file\}` : 'phase'\}`/.test(body), 'a gate for every path');
+    assert.ok(/\.\.\.\(brickKey \? \{ brick: brickKey \} : \{ gate: gateKey \}\)/.test(body), 'the dispatch names it');
+    assert.ok(/brick: o\.brick \|\| o\.gate \|\| null/.test(fs.readFileSync(path.join(ROOT, 'lib/repo-agent.js'), 'utf8')), 'the task carries it, so its replies go in the contract ledger');
     assert.ok(/\.\.\.\(reused \? \{ reused \} : \{\}\)/.test(body), 'the run row says reused');
   });
 

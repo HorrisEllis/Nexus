@@ -288,3 +288,8 @@ not_verified:
 # turn). And three pins the coder broke in 0.60.142-0.60.144 without running their suites (test-agent-feed AF-09, AF-11;
 # test-live-stream-and-gates GS-10) — updated to the lines as they are, their intent kept.
 # Proof: test-work-journal 5/5 (WJ-05 one record), test-gate-context 6/6.
+# Then, 2026-10-18 — James: "is that all added to the pipeline?" The contract builds (routing.contract_build on, the default) had it;
+# the builds outside the contract (the whole phase, or its files one by one) had no gate. Fixed in 0.60.146: each attempt has a
+# gateKey (<map>::<phase>::file.<file>, or ::phase); the dispatch names it (gate), the task carries it, the contract ledger, context
+# and reuse follow. And the drawbridge: the chat ledger is read through Clear Glass's route, not its code (SB-06 caught it).
+# CI runs no tests (release.yml checks the zip); whether it should is his call.
