@@ -600,3 +600,16 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **Evidence:** `CHANGELOG-0.60.153.md`; `tests/modules/test-readme-generate.test.js` (every file of the 15 systems is named,
     every phase is counted, and the README stays under 512 KiB); `tests/modules/test-nexus-atlas-refs.test.js` 49/49, where it
     had 4 failing before.
+
+- **2026-10-18 — 0.60.154: he caught a ladder in a design that was meant to be associative.**
+  - **His words:** "it needs to be non linear and agnostic" · "look at siso".
+  - **Context:** the coder had mapped context-finding as six rungs in a fixed order, with every store named in code. He
+    pointed back at his own foundation instead of at a patch.
+  - **What it shows:** systems design, keeping one primitive across the whole stack. The fix needed nothing new. SISO's
+    Event → Gate → Stream already gives:
+    - fan-out by signature;
+    - residue for what nothing answers;
+    - order coming from cost, not sequence.
+    Any store can join as a table row.
+  - **Evidence:** `docs/2026-10-18-gate-memory-phasemap.spec` addendum (b); `CHANGELOG-0.60.154.md`; every phase graph ready,
+    with no new crossing.
