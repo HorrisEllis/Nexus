@@ -113,7 +113,9 @@ function harness() {
     const page = await browser.newPage();
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     await page.goto(pathToFileURL(harness()).href);
-    await page.evaluate(() => { try { localStorage.clear(); } catch (_) {} openPlanPanel(); });
+    // §0.60.158 — the page reads its saved state at load (before 0.60.158 Clear Glass's host shared one profile across runs, so
+    // another test's state arrived here; each launch has its own now). Kept as a guard: what the page restored is reset with the clear
+    await page.evaluate(() => { try { localStorage.clear(); } catch (_) {} if (typeof RT_VIEW !== 'undefined') RT_VIEW = 'tasks'; if (typeof CX !== 'undefined') CX.panel = 'activity'; openPlanPanel(); });
     await page.waitForSelector('#pp-body .pp-card[data-card="plan"]');
     // the Context card's content, as the dock's Context panel draws it (0.60.123 PP4: not in the Plan panel any more)
     await page.evaluate(() => { const d = document.createElement('div'); d.id = 'ctx-probe'; d.innerHTML = _ppContext(PLAN.steps); document.body.appendChild(d); });

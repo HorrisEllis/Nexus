@@ -101,7 +101,9 @@ const oks = (kind, provider, n) => Array.from({ length: n }, () => ({ jobType: k
     const S = require(path.join(ROOT, 'lib/node-schemas.js'));
     const NE = require(path.join(ROOT, 'lib/node-export.js'));
     const A = require(path.join(ROOT, 'guardian/lib/agent-facts.js'));
-    for (const f of fs.readdirSync(A.dir())) {
+    // §0.60.158 — the provider nodes, as agent-facts.js itself reads them (.provider): the node registry keeps its ledger
+    // (_ledger.jsonl) in the same folder once a node sync has run, and that file is not a node
+    for (const f of fs.readdirSync(A.dir()).filter(f => f.endsWith('.provider'))) {
       const d = NE.importFromFile(path.join(A.dir(), f));
       assert.ok(Array.isArray(d.payload.tools) && d.payload.tools.every(t => E.TOOLS.includes(t)) && d.payload.contextTokens > 0, f);
       assert.ok(S.checkPayload('provider', d.payload).ok, f);

@@ -162,3 +162,17 @@ spec:
 # - Registration: contract-gates (owed since 0.60.15), contract-adapters, model-door and phase-plan are now in
 #   loom/maps/raid-events-and-tools-map.js with their real edges, plus idearium/api as their consumer.
 
+# ## ADDENDUM 2026-10-18 — the gates, solid (0.60.158)
+# James, 2026-10-18: "Need to get the gates solid." The coder probed cortex/core/raid/contract-gates.js (CT0's executable
+# contract) for a gate or a contract that reads done when it is not. Six holes, each proven on the code first, each closed:
+#   H1 an outcome condition that was not { gate } was never looked at: a contract completed with its done_when unmet
+#   H2 a gate whose required file was deleted after it passed stayed PASSED (only a changed hash made it STALE)
+#   H6 an invariant stayed 'verified' after its gate went stale: verified once, verified forever
+#   H3 an invariant checked by a file or by evidence could never be verified (only a gate check set it)
+#   H4 a condition naming CK-006 or CK-008 could never pass: this file kept its own list of the import checks (three of five)
+#   H5 a match that was not a regex threw out of check()
+# Now: holds(cond) reads whether a condition holds NOW (a gate by its current status, a file or evidence directly);
+# completion() asks it of every invariant and every outcome condition; a test or catalogue check named there holds only as
+# verifyOutcome() last ran it. The import checks are the catalogue's list. Test: tests/modules/test-gates-solid.test.js 7/7;
+# test-contract-gates 20/20 unchanged.
+

@@ -158,7 +158,8 @@ async function run() {
     check('RS-54 without a brick, runs stay keyed by session as before', plain1.runId !== plain2.runId && plain2.attempt === 1);
     const ra = fs.readFileSync(path.join(ROOT, 'lib', 'repo-agent.js'), 'utf8'), api = fs.readFileSync(path.join(ROOT, 'idearium', 'api', 'index.js'), 'utf8');
     check('RS-55 wired: the build passes the brick, the repo agent keys the run by it (the door fallback too), Ollama gets the baton header',
-      api.includes("...(brickKey ? { brick: brickKey } : {})") && ra.includes("goal: message, provider: providerOf({ backend, agent: agent || chosen }), brick })")
+      // §0.60.158 — since 0.60.146 a build with no brick names its gate instead ({ gate: gateKey }); the brick is passed as before
+      api.includes("...(brickKey ? { brick: brickKey } : { gate: gateKey })") && ra.includes("goal: message, provider: providerOf({ backend, agent: agent || chosen }), brick })")
       && ra.includes('maxToolErrors, phase, brick,') && ra.includes("if (_run && backend === 'ollama' && (_run.attempt || 1) > 1)"));
   }
 

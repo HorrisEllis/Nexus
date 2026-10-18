@@ -26,9 +26,9 @@
  *     { exists: <path> }               the file is there
  *     { evidence: <key>, match? }      recorded evidence under that key (and, given, matching the regex)
  *     { gate: <id> }                   that gate is PASSED
- *     { check: CK-001|CK-002|CK-060, path? }   lib/import-checks.js over a folder — clean passes
- *     { check: CK-230|CK-233|CK-248, … }        §QA1 lib/check-catalogue.js runners (a step's shadow settled; nothing on
- *                                              the deny list; every file passes its language's own parser)
+ *     { check: CK-nnn, path? }         a catalogue check (lib/check-catalogue.js): the import checks run over a folder
+ *                                      (lib/import-checks.js — CK-001, 002, 006, 008, 060), every other check by its
+ *                                      runner (lib/checks/); a check with no runner is unverifiable, never a pass
  *   Anything else (a free sentence) is `unverifiable`: reported, never counted as proof.
  *
  *   Gate states: BLOCKED · READY · RUNNING · PASSED · FAILED · STALE. SKIPPED only for a gate marked optional by its
@@ -120,16 +120,19 @@ function checkCondition(c, { root, state, runTest }) {
   if (c.evidence) {
     const v = state.evidence && state.evidence[c.evidence];
     if (v === undefined || v === null || v === '') return { ok: false, verifiable: true, reason: `no evidence recorded for "${c.evidence}"` };
-    if (c.match && !new RegExp(c.match).test(String(v))) return { ok: false, verifiable: true, reason: `evidence "${c.evidence}" does not match /${c.match}/` };
+    // §0.60.158 (gates solid, H5) — a match that is not a regex is the contract's mistake: said, never a throw out of check()
+    let re = null; if (c.match) { try { re = new RegExp(c.match); } catch (e) { return { ok: false, verifiable: false, reason: `unverifiable: match /${c.match}/ is not a regular expression (${e.message})` }; } }
+    if (re && !re.test(String(v))) return { ok: false, verifiable: true, reason: `evidence "${c.evidence}" does not match /${c.match}/` };
     return { ok: true, verifiable: true, evidence: { [c.evidence]: String(v).slice(0, 200) } };
   }
   if (c.gate) { const s = state.gates && state.gates[c.gate] && state.gates[c.gate].status; return { ok: s === 'PASSED', verifiable: true, evidence: s === 'PASSED' ? { gate: c.gate } : null, reason: s === 'PASSED' ? null : `gate ${c.gate} is ${s || 'not run'}` }; }
   if (c.check) {
     const id = String(c.check).toUpperCase();
-    if (['CK-001', 'CK-002', 'CK-060'].includes(id)) return { ok: false, verifiable: true, async: true, check: id, dir: path.join(root, c.path || '.') };
-    // §QA1 0.60.33 — every other check with a runner (lib/check-catalogue.js: CK-230 shadow, CK-233 deny list, CK-248 each
-    // language's own toolchain); without one it stays unverifiable — never a pass
+    // §QA1 0.60.33 — every other check with a runner (lib/check-catalogue.js); without one it stays unverifiable — never a pass.
+    // §0.60.158 (gates solid, H4) — which checks lib/import-checks.js runs is the catalogue's list, not a second one kept here:
+    // this file named three of its five, so a condition { check: CK-006 } or CK-008 could never pass
     let CC = null; try { CC = require(path.join(DEFAULT_ROOT, 'lib/check-catalogue.js')); } catch (_) { CC = null; }
+    if ((CC && CC.runnable(id) === 'import-checks') || ['CK-001', 'CK-002', 'CK-060'].includes(id)) return { ok: false, verifiable: true, async: true, check: id, dir: path.join(root, c.path || '.') };
     if (!CC || CC.runnable(id) !== 'runner') return { ok: false, verifiable: false, reason: `unverifiable: ${id} has no executable check here yet (lib/check-catalogue.js runners: ${CC ? CC.summary().runners.join(', ') : 'not loaded'}; lib/import-checks.js: CK-001, CK-002, CK-060)` };
     const r = CC.run(id, c, { root });
     return { ok: !!r.ok, verifiable: r.verifiable !== false, evidence: r.ok ? (r.evidence || { check: id }) : null, reason: r.ok ? null : r.reason };
@@ -170,7 +173,11 @@ function evaluate(p, { root = DEFAULT_ROOT } = {}) {
       s = 'STALE'; reasons.push(...((st.reasons || []).length ? st.reasons : ['invalidated; re-verify']));
       changed.forEach(r => staleRefs.includes(r) || staleRefs.push(r));
     } else if (st.status === 'PASSED') {
-      if (changed.length) { s = 'STALE'; reasons.push(`changed since it passed: ${changed.join(', ')}`); changed.forEach(r => staleRefs.includes(r) || staleRefs.push(r)); }
+      // §0.60.158 (gates solid, H2) — a ref this gate proved against and that is gone now is a change too: the pass was about
+      // a file that no longer exists (before, `changed` needed the file to exist, so a deleted ref left the gate PASSED)
+      const gone = (g.requires || []).filter(r => st.hashes && st.hashes[r] && !now[r]);
+      if (gone.length) { s = 'STALE'; reasons.push(`gone since it passed: ${gone.join(', ')}`); gone.forEach(r => staleRefs.includes(r) || staleRefs.push(r)); }
+      else if (changed.length) { s = 'STALE'; reasons.push(`changed since it passed: ${changed.join(', ')}`); changed.forEach(r => staleRefs.includes(r) || staleRefs.push(r)); }
       else if (upstream.length) { s = 'STALE'; reasons.push(`upstream is no longer passed: ${upstream.join(', ')}`); }
       else s = 'PASSED';
     } else if (missing.length) { s = 'BLOCKED'; reasons.push(`refs missing: ${missing.join(', ')}`); }
@@ -182,24 +189,66 @@ function evaluate(p, { root = DEFAULT_ROOT } = {}) {
     status[g.id] = s;
     p.state.gates[g.id] = { ...st, status: s, reasons: reasons.length ? reasons : (s === 'PASSED' ? [] : st.reasons || []) };
   }
-  const c = completion(p, status);
+  const c = completion(p, status, { root });
   return { legacy: false, valid: !problems.length, problems, gates: gates.map(g => ({ id: g.id, type: g.type, status: status[g.id], reasons: p.state.gates[g.id].reasons || [] })), stale: staleRefs, complete: c.complete, why: c.why };
 }
 
-/** completion(payload, status) — derived only from gate results, gaps and invariant checks; never declared */
-function completion(p, status) {
+/**
+ * holds(cond, …) — does a condition hold NOW, without running anything: a gate by its current status, a file or a piece of
+ * evidence read directly. A test or a catalogue check is work, so it holds only as verifyOutcome() last recorded it.
+ * §0.60.158 (gates solid) — James, 2026-10-18: "Need to get the gates solid." Three ways a contract read complete when it was
+ * not: a done_when that was not a gate was never looked at (H1); an invariant stayed 'verified' after its gate went stale (H6);
+ * and an invariant checked by anything but a gate could never be verified at all (H3).
+ */
+function _key(c) { return JSON.stringify(c); }
+function holds(c, { p, status, root }) {
+  if (!c || typeof c !== 'object') return { ok: false, why: `${JSON.stringify(c)} names no check — unverifiable` };
+  if (c.gate) return status[c.gate] === 'PASSED' ? { ok: true } : { ok: false, why: `needs gate ${c.gate} (${status[c.gate] || 'not a gate'})` };
+  if (c.exists || c.evidence) { const r = checkCondition(c, { root, state: p.state, runTest: () => ({ code: 1, tail: '' }) }); return r.ok ? { ok: true } : { ok: false, why: r.reason }; }
+  if (c.test || c.check) {
+    const v = p.state.verified && p.state.verified[_key(c)];
+    return v && v.ok ? { ok: true } : { ok: false, why: v ? `${c.test || c.check} failed when last verified: ${v.reason || '?'}` : `${c.test || c.check} not verified yet (verifyOutcome runs it)` };
+  }
+  return { ok: false, why: `${JSON.stringify(c)} names no check — unverifiable` };
+}
+
+/** completion(payload, status, { root }) — derived only from gate results, gaps, invariants and the outcome; never declared */
+function completion(p, status, { root = DEFAULT_ROOT } = {}) {
   const why = [];
   for (const g of p.gates || []) if (!g.optional && status[g.id] !== 'PASSED') why.push(`gate ${g.id} is ${status[g.id]}`);
   for (const x of p.gaps || []) if (!x.resolved && (x.blocks || []).length) why.push(`gap ${x.id} is open`);
   for (const inv of p.invariants || []) {
-    if (!inv.check) why.push(`invariant ${inv.id} has no check — unverified`);
-    else if (!(p.state.invariants && p.state.invariants[inv.id] === 'verified')) why.push(`invariant ${inv.id} not verified`);
+    if (!inv.check) { why.push(`invariant ${inv.id} has no check — unverified`); continue; }
+    const h = holds(inv.check, { p, status, root });
+    if (!h.ok) why.push(`invariant ${inv.id} not verified: ${h.why}`);
   }
   for (const d of (p.outcome && p.outcome.done_when) || []) {
-    if (!d || typeof d !== 'object') { why.push(`outcome condition ${JSON.stringify(d)} names no check — unverifiable`); continue; }
-    if (d.gate && status[d.gate] !== 'PASSED') why.push(`outcome needs gate ${d.gate}`);
+    const h = holds(d, { p, status, root });
+    if (!h.ok) why.push(`outcome condition not met: ${h.why}`);
   }
-  return { complete: why.length === 0, why: why.length ? why : ['every mandatory gate passed against current inputs; no blocking gap; every invariant verified'] };
+  return { complete: why.length === 0, why: why.length ? why : ['every mandatory gate passed against current inputs; no blocking gap; every invariant and outcome condition holds'] };
+}
+
+/**
+ * verifyOutcome(payload, { root, runTest }) → { verified: [{ condition, ok, reason }] } — runs the tests and catalogue checks the
+ * outcome and the invariants name (the work completion() will not do), and records each result in payload.state.verified.
+ */
+async function verifyOutcome(p, { root = DEFAULT_ROOT, runTest = _runTest } = {}) {
+  p.state = p.state || {}; p.state.verified = p.state.verified || {};
+  const conds = [...((p.outcome && p.outcome.done_when) || []), ...(p.invariants || []).map(i => i.check)].filter(c => c && typeof c === 'object' && (c.test || c.check));
+  const out = [];
+  for (const c of conds) {
+    let r = checkCondition(c, { root, state: p.state, runTest });
+    if (r.async) {
+      const IC = require(path.join(DEFAULT_ROOT, 'lib/import-checks.js'));
+      const res = await IC.run({ repo: null, dir: r.dir });
+      const one = res.checks.find(x => x.id === r.check);
+      r = { ok: !!(one && one.ok), reason: one && one.ok ? null : `${r.check} found ${one ? one.count : '?'}` };
+    }
+    p.state.verified[_key(c)] = { ok: !!r.ok, reason: r.ok ? null : (r.reason || 'failed'), at: Date.now() };
+    out.push({ condition: c, ok: !!r.ok, reason: r.ok ? null : r.reason });
+  }
+  return { verified: out };
 }
 
 /**
@@ -704,5 +753,5 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
   return { rounds: maxRounds, log, complete: e3.complete, why: e3.why, blocked: aside() };
 }
 
-module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, check, packet, scaffold, record, checkCondition, compare, unitsOf, depthOf,
+module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, holds, verifyOutcome, check, packet, scaffold, record, checkCondition, compare, unitsOf, depthOf,
   packetTokens, Boundaries, shouldSplit, split, schedule, assess, classifyFailure, FAILURE_CLASSES };

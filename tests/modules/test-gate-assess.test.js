@@ -119,7 +119,8 @@ const run = (p, executors, onEvent = () => {}) => CG.schedule(p, { root: tmp, ex
   await test('GA-05', 'wired: Idearium hands the gate its code view and the brief carries the dependencies\' code', () => {
     const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     assert.ok(api.includes('assessing: { read: codeOf }'));
-    assert.ok(api.includes("const dispatch = async (hops, { gate, assessment = null }) => {"));
+    // §0.60.158 — the signature grew (feedback, 0.60.105's retry note); the pin is on what this test is about: the gate and its assessment
+    assert.ok(/const dispatch = async \(hops, \{ gate, assessment = null(, [^}]*)? \}\) => \{/.test(api));
     // §GW24 0.60.76 — the dependencies' code goes through PP.contextNote: ranked, cut to the agent's budget, the cut recorded
     assert.ok(api.includes('PP.contextNote({ needs: assessment.context.needs'));
     assert.ok(api.includes('[`${gate.id}.context`]: ctx.summary'));
