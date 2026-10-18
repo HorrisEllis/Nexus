@@ -61,6 +61,7 @@ spec:
     GM0c_what_a_record_holds:
       status: "DECIDED by his axioms (§10.3 one truth, §17.5 provenance) — references and hashes, never copies: the packet's hash and the ids of each retrieved piece with its source and score; the response's node id; the verdict and evidence are already in the contract. A copy would be a second truth that drifts."
     GM0d_the_ladder_order:
+      superseded_by: "addendum (b) 2026-10-18 — his \"it needs to be non linear and agnostic\" · \"look at siso\". No fixed order: inside-out survives as cost, not sequence (the costly sources answer only the residue)."
       status: "DECIDED by his rule (docs/CLAUDE.md: deterministic first, a model last; his 'everything reused from the inside out, then build only when necessary') — exact fulfilled contract → lattice neighbours → crystals/intuition → vector memory → the agent's own tools → a build. Each rung says what it found and stops the ladder when it is enough."
 
   phases:
@@ -105,8 +106,11 @@ spec:
       pushback: "Time adjacency joins everything that happened near each other. It is useful as context and useless as cause; the edge kind travels with every answer so a report never reads a temporal edge as causal."
     GM5_the_context_ladder:
       status: OPEN
-      depends_on: [GM3_the_fulfilled_contract_index, GM4_the_node_lattice]
-      files: [lib/context-ladder.js, lib/vector-memory.js, lib/context-atlas.js]
+      superseded_by: "addendum (b) 2026-10-18 — a stream, not a ladder: every source asked at once, any source can join. The id is kept (§0.3); the text below is the first design, kept."
+      depends_on: []
+      depends_on_first_design: [GM3_the_fulfilled_contract_index, GM4_the_node_lattice]
+      files: [lib/context-stream.js, lib/context-sources.js, lib/context-atlas.js, lib/vector-memory.js]
+      files_first_design: [lib/context-ladder.js, lib/vector-memory.js, lib/context-atlas.js]
       james: '"intuition to find context if needed" · "everything reused from the inside out, then build only when necessary"'
       does: >-
         lib/context-ladder.js (a kernel primitive: it reaches cortex and intelligence by their routes, lib/nexus-client.js):
@@ -139,8 +143,9 @@ spec:
       files: [idearium/cli/route-commands.js, lib/agent-tools/tool-catalog.js]
       does: "`gate show <id>`, `contracts find <text>`, `context find <request>` as command rows; the repo agent's context tool climbs the ladder before searching on its own, so 'the tools the agents use' come back with what Nexus already knew."
 
-  build_order: [GM0a (his), GM4, GM1, GM3, GM5, GM7, GM2, GM6, GM8]
-  build_order_reason: >-
+  build_order: "none — addendum (b): pieces in any order, held back only by a real depends_on. Free now: GM4, GM5. Then GM1 (after GM0a, his), GM3, GM7, GM2, GM6, GM8 as each one's depends_on is met."
+  build_order_first_design: [GM0a (his), GM4, GM1, GM3, GM5, GM7, GM2, GM6, GM8]
+  build_order_reason_first_design: >-
     GM4 needs no decision and every later rung reads it. GM1 waits only on where the records live (GM0a). GM3 and GM5 are the
     reuse he asked for; GM7 shows it; GM2 makes restarts free once records exist; GM6 comes after the index and the causal gate,
     so crystals are earned. Commands with each phase (order of delivery); GM8 collects the rest.
@@ -173,3 +178,54 @@ spec:
 #   lib/gate-context.js — a gate's context in its next attempt, and its finished or in-flight reply reused once (0.60.145)
 # GM1 (the .gate record) and GM2 (restarts from records) build on these, not beside them (§8.6): the .gate record's timeline is
 # the contract ledger's lines for that gate; "restarts from records" is gate-context reuse plus the contract's checkpoints.
+
+# ## ADDENDUM 2026-10-18 (b) — not a ladder: a stream. Non-linear, and agnostic to where context comes from
+# James, 2026-10-18, after the map above (and the merge) were shown to him: "it needs to be non linear and agnostic" · then
+# "look at siso".
+# What he was looking at: GM5 as mapped is a ladder — six rungs climbed in a fixed order (exact → lattice → crystals → vectors →
+# tools → build), each rung named in code, stopping when "enough". GM0d fixed that order, and the build order was one line.
+# The coder's reading, to confirm: "non linear" — no fixed order of sources, and no fixed order of building; "agnostic" — the
+# finder does not know which stores exist, which system a piece comes from, or what type a node is; "look at siso" — the shape
+# is already his foundation: Event → Gate → Stream (siso/Stream.js, siso/Gate.js, siso/Event.js; siso/ is a primitive anyone may
+# require, lib/system-boundary.js PRIMITIVES). His precedent for the same words: docs/2026-10-17-pieces-not-order-phasemap.spec,
+# "The point is first. That's the point. It's not linear. Like a torrent downloads."
+#
+# GM5, redesigned on SISO (supersedes GM5's ladder and GM0d's order; both kept above):
+#   - The request is an Event: context.request { gate, refs, text, need: [what the gate must know] }. The need is the point,
+#     named first (the torrent file); the pieces fill it in any order.
+#   - A source is a Gate keyed by its own signature, registered in lib/context-sources.js — a table, not code in the finder.
+#     Each row: { signature, system, route, cost: 'free' | 'model' | 'build', kinds }. The fulfilled index (GM3), the node lattice
+#     (GM4), intuition/crystals, vector memory, context-atlas, the contract ledger (lib/work-journal.js), the component store —
+#     and any later store — join by adding a row. The finder names none of them. That is the agnostic part.
+#   - Fan-out without breaking SISO's law (one signature, one gate; collision a hard error): the request gate emits one
+#     context.ask.<signature> per registered source. A source that is named but not registered here stays in pending[] —
+#     residue, said in the answer ("asked, nobody home"), never faked (§1.2).
+#   - Every source answers with context.piece { from, system, kind, id, score, covers: [need items], at } — provenance on every
+#     piece (§17.5), references not copies (GM0c). kind is the lattice's edge kind (causal | wire | reference | temporal |
+#     resembles | exact) and travels with the piece, so a temporal piece is never read as a cause (GM4's pushback).
+#   - No order, but not careless: inside-out (his "everything reused from the inside out, then build only when necessary")
+#     survives as COST, not sequence. All free sources are asked at once. The need items no piece covers are the residue; only
+#     the residue is asked of a 'model' source (the agent's own tools), and only what is still uncovered becomes a build. "Build
+#     only when necessary" is then a fact the stream can show: the build is asked exactly the residue.
+#   - Sources are async (routes, through lib/nexus-client.js); SISO's core loop is synchronous. A source gate starts its call and
+#     emits its pieces into the stream when they arrive (the Runner pattern, the JAA StateGate shape); the stream's sampleHere()
+#     is the cross-section the gate record (GM1) and the panel (GM7) read — the flow is ongoing, the answer is a look at it.
+#   - The StreamLog observes every ask and every piece; it is the record GM1 points at (refs and hashes, not the text).
+#   files: lib/context-stream.js (the request gate, the fan-out, the residue — on siso/index.js), lib/context-sources.js (the
+#   table). lib/context-atlas.js and lib/vector-memory.js become sources by row, not by a rung in code.
+#   proof: a fixture stream with three fake sources answering out of order (and one registered source absent) gives the same
+#   covered set every time, lists the absent one as residue, and asks the 'model' source only the uncovered need items; a fourth
+#   source added by one table row is asked without a line of the finder changed.
+#
+# The build order, non-linear (supersedes the one-line build_order; the first one kept): pieces in any order, held back only by a
+# real depends_on. GM5 no longer waits on GM3 or GM4 — they are sources that plug in when they exist, so GM5's depends_on is []
+# (kept as depends_on_first_design). Free now: GM4, GM5. GM1 waits on GM0a (his); GM3 on GM1; GM7 on GM1 and GM5; GM2 on GM1;
+# GM6 on GM3 and FMR10; GM8 on GM5 and GM7.
+# Decided by his axioms, not asked: siso/ (not Clear Glass's copy) is the stream, because siso/ is the shared primitive and
+# clear-glass/siso is Clear Glass's own (lib requiring it would be a crossing, test-system-boundary SB-06); siso/ is ESM, so
+# lib/context-stream.js loads it with import() — reuse over a third copy (§8.6, §0.3).
+# To confirm with him: that "non linear" means the source order and the build order, and "agnostic" means sources by table.
+# If he meant something else (agnostic to the model, or to the repo), this addendum is the coder's reading, and is kept.
+# Graphs run after this addendum (lib/phase-graph.js, files as named, 0.60.154): GM1 f401e7c1 · GM2 f34e9e78 · GM3 8ba6f400 ·
+# GM4 1482ea96 · GM5 52e0d272 (lib only) · GM6 62ad7956 · GM7 e00e370b · GM8 af6848ec — every phase ready, no new crossing.
+# GM5's sources stay agnostic by route: a row names a route, never a require of another system's file.
