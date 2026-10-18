@@ -312,6 +312,9 @@ if (!process.env.NEXUS_TEST_SANDBOX) {
   }, 20000);
   if (t.unref) t.unref();
 }
+// §0.60.143 TL1b — James: "We need persistent data look at the last commit." Every frame of a repo agent's reply (guardian's and
+// Ollama's) is kept on disk as it streams (lib/work-journal.js), so a reload or a restart shows the reply and the thinking so far.
+function _journal(frame) { try { _require('../../lib/work-journal.js').record(frame); } catch (e) { console.warn(`[idearium] work-journal: ${e.message}`); } }
 // §0.39.366 — a compartment's background tasks (lib/repo-activity.js): every change broadcast as idearium.repo.task; the
 // history before this process from the compartment's own exchange log
 let _repoActivityMod = null;
@@ -2803,6 +2806,7 @@ const ROUTE_CAP = {
   'repo.thread': CAPS.READ_IDEAS,   // §RS9
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
+  'repo.agent.feed': CAPS.READ_IDEAS,   // §0.60.143 TL1b
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
@@ -3244,6 +3248,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','nexus','tape'],          'nexus.tape'],         // §0.46.0 — the Ollama tape's runs, for the UI (idearium ollama tape)
     ['GET',    ['api','nexus','tape',':run'],   'nexus.tape.run'],     // §0.46.0 — one run's macro      // §0.39.373 BO1 — every compartment's activity log at once, each row with its repo's name (BrainOS)
     ['POST',   ['api','repos',    ':uuid','agent','stream'],  'repo.agent.stream'],      // §0.39.356 LS3 — copilot sends what the model writes, as it writes it
+    ['GET',    ['api','repos',    ':uuid','agent','feed'],    'repo.agent.feed'],        // §0.60.143 TL1b — the replies as they streamed, from disk
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
     ['GET',    ['api','repos',    ':uuid','agent','history'], 'repo.agent.history'],
@@ -7405,15 +7410,29 @@ async function handle(req, res, route, query, body) {
       if (!body || !EVENTS.includes(body.event) || !body.jobId) return err(res, 400, `event (${EVENTS.join(' | ')}) and jobId are required`);
       const model = body.model ? String(body.model).slice(0, 120) : null;
       try { _repoActivity().feed({ repoUuid: params.uuid, event: body.event, jobId: String(body.jobId), provider: model ? `ollama · ${model}` : 'ollama', session: body.session || null, fullLen: Number(body.fullLen) || 0, chars: Number(body.chars) || 0, ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}) }); } catch (_) {}
-      getIdeaOS().broadcast('idearium.repo.agent.feed', {
+      const ofp = {
         repoUuid: params.uuid, event: body.event, jobId: String(body.jobId).slice(0, 120), source: 'ollama',
         provider: model ? `ollama · ${model}` : 'ollama', model, session: body.session ? String(body.session).slice(0, 120) : null,
         ...(typeof body.text === 'string' ? { text: body.text.slice(-20000) } : {}),
         ...(Number(body.fullLen) > 0 ? { fullLen: Number(body.fullLen) } : {}),
         ...(Number(body.chars) > 0 ? { chars: Number(body.chars) } : {}),
         ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}),
-      });
+      };
+      _journal(ofp);   // §0.60.143 TL1b — on disk as it streams
+      getIdeaOS().broadcast('idearium.repo.agent.feed', ofp);
       return ok(res, { ok: true });
+    }
+    case 'repo.agent.feed': {
+      // §0.60.143 TL1b — the agent's replies as they streamed, read back from disk (lib/work-journal.js): ?job=<id> for one,
+      // with its timeline; else the newest ?limit jobs
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      const WJ = _require('../../lib/work-journal.js');
+      const q = query || {};
+      if (q.job) {
+        const j = WJ.get(params.uuid, String(q.job), { timeline: true });
+        return j ? ok(res, { ok: true, repoUuid: params.uuid, job: j }) : err(res, 404, `no journal for job ${q.job} in this repo`);
+      }
+      return ok(res, { ok: true, repoUuid: params.uuid, dir: WJ.dir(), ...WJ.list(params.uuid, { limit: Number(q.limit) || 20 }) });
     }
     case 'repo.agent.tool.events': {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -10163,6 +10182,7 @@ export function startAPI() {
           connectGuardianStream(se, { onFeed: (ev) => {
             const fp = { repoUuid: ev.data.agentId.slice('repo-'.length), event: ev.type.slice('guardian.job.'.length), guardianTs: ev.ts, ...ev.data };
             try { _repoActivity().feed(fp); } catch (_) {}   // §0.39.366 — onto the background task it belongs to
+            _journal(fp);   // §0.60.143 TL1b — on disk as it streams
             os.broadcast('idearium.repo.agent.feed', fp);
           } });
         }

@@ -8,6 +8,8 @@ data/raid/ledger/
 data/loom/loom_events.buffer.jsonl
 # runtime usage logs (lib/economy): state, not code; a test run in a clean clone writes here
 data/economy/
+# 0.60.143 TL1b — lib/work-journal.js: each agent reply as it streams (state, never code)
+data/work/
 idearium/data/projects/
 idearium/data/specs/
 idearium/data/nodes/
