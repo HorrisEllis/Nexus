@@ -367,3 +367,8 @@ spec:
   merged:
     nexus_healer_into_diagnostic: { date: 2026-10-17, release: 0.60.136, his_words: "diagnostic and nexus healer should be one system.", archive: _archive/2026-10-17-nexus-healer-into-diagnostic/ }
 
+  # ── ADDENDUM 2026-10-18 (c) — DB3 and DB5's first instance: the compartment terminal ─────────────────────────────────
+  # James, 2026-10-18: "Use the component registry as a tunnel into the CLI interface for the terminal in Linux. As an
+  # interaction contract with handshake verification." Mapped in docs/2026-10-18-compartment-environment-phasemap.spec: CE3
+  # builds DB3's cross() and DB5's handshake for one capability (a compartment's shell), end to end; COS gets its own route
+  # (CE1a, DB11's sovereignty applied to COS). DB3/DB5 stay open for every other system.

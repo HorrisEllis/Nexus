@@ -731,3 +731,8 @@ order_note_b: "GW26 sits beside GW24: GW24 decides what an agent is given, GW26 
 # docs/2026-10-17-system-drawbridge-phasemap.spec DB6 does GW23 through the drawbridge, debugging systems first (cfr, rfr2,
 # sigma, friction, tension as capabilities with routes and commands). DB1 (0.60.126) is the census GW23 asked for, kept
 # as a ratchet (contracts/drawbridge-baseline.json). GW23 stays OPEN until DB6 lands.
+
+  # ── ADDENDUM 2026-10-18 — GW13 the sandbox door is mapped with the compartment terminal ──────────────────────────────
+  # The agents' half (sandbox.exec/put/get, a key per compartment, egress per D17) is one door with his terminal:
+  # docs/2026-10-18-compartment-environment-phasemap.spec CE2 (compartment.exec declared), CE3 (the handshake), CE7 (the agents'
+  # tool). GW13 builds there, not beside it.

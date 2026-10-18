@@ -229,3 +229,13 @@ spec:
 # Graphs run after this addendum (lib/phase-graph.js, files as named, 0.60.154): GM1 f401e7c1 · GM2 f34e9e78 · GM3 8ba6f400 ·
 # GM4 1482ea96 · GM5 52e0d272 (lib only) · GM6 62ad7956 · GM7 e00e370b · GM8 af6848ec — every phase ready, no new crossing.
 # GM5's sources stay agnostic by route: a row names a route, never a require of another system's file.
+
+# ## ADDENDUM 2026-10-18 (c) — GM0a, his answer in progress
+# Asked "what is 'the precommit compartment'?" James, 2026-10-18: "Pre commit should be the raid compartment right?" · then,
+# asked what the coder thought: "What do you think? Like all of the work is supposed to be stored in the compartment. The
+# contract creates a compartment becomes the end state of the compartment." The coder's reading, to confirm: RAID (the one
+# writer) creates a compartment per contract; the contract's outcome is the compartment's end state (one record, the charter
+# is the contract's done_when); all the contract's work lives in it (the .gate records, the contract ledger, references to the
+# responses, the staged changes); "pre-commit" is the compartment before its end state is met and approved, then promoted.
+# Still his: one compartment per map or per phase (asked; carried as CE0a of the compartment-environment map). GM1 maps into
+# the compartment once that is answered.
