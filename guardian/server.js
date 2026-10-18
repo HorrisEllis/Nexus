@@ -315,7 +315,10 @@ const _LOG_MAX  = config.SISO_LOG_MAX;
 // the running length, never `full` — the whole reply again on every chunk.
 const _FEED_KEYS = ['jobId', 'provider', 'agentId', 'stage', 'how', 'reason', 'error', 'gate', 'status', 'chars',
   'transport', 'chatUrl', 'anchor', 'mutations', 'generating', 'waitedMs', 'retry', 'needsUser',
-  'reset', 'source', 'state', 'label', 'detail', 'fix'];   // 0.39.256 — chunk reset/source; guardian.job.gate frames (lib/gate-trail.js)
+  'reset', 'source', 'state', 'label', 'detail', 'fix',   // 0.39.256 — chunk reset/source; guardian.job.gate frames (lib/gate-trail.js)
+  // §0.60.146 — the model's thinking (0.60.142 LV1 streamed it into the chunk, but this list dropped it: it never reached idearium),
+  // and the chat ledger turn the reply is written in (Clear Glass's chat ledger is its text's one record)
+  'thinkingLen', 'chatId', 'turn'];
 function _feedFrame(frame, type, data) {
   if (!type || !type.startsWith('guardian.job.') || !data || typeof data !== 'object') return frame;
   try {
@@ -324,6 +327,7 @@ function _feedFrame(frame, type, data) {
     // A reset chunk is the whole reply so far (0.39.256): keep its live end, which is what the Agent tab shows.
     if (typeof data.text === 'string' && type === 'guardian.job.chunk') d.text = data.reset ? data.text.slice(-8000) : data.text.slice(0, 2000);
     if (typeof data.full === 'string') d.fullLen = data.full.length;
+    if (typeof data.thinking === 'string' && data.thinking && type === 'guardian.job.chunk') d.thinking = data.thinking.slice(-12000);
     if (!d.agentId && d.jobId) { try { const j = jobs.get(d.jobId); if (j && j.agentId) d.agentId = j.agentId; } catch (_) { /* jobs not initialised yet during early boot */ } }
     return { ...frame, data: d };
   } catch (_) { return frame; }

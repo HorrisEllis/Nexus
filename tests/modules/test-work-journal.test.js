@@ -13,6 +13,11 @@
  *   WJ-04  per gate (0.60.144 TL1c — James: "You got it persistent per gate"): a phase build's task carries its contract gate
  *          (<map>::<phase>::<gate>); every frame of its reply is filed under that gate, through the real router; two attempts
  *          at one gate come back in order, after a restart; a phase prefix finds every gate of it; a chat stays ungated, said
+ *   WJ-05  one record (0.60.146 — James: "okay only one record. maybe use it as a contract ledger for each contract."): a gate's
+ *          jobs are in its contract's ledger; a browser agent's reply linked to its Clear Glass chat ledger turn is never copied and
+ *          is read back from there after a restart; a turn the chat ledger lacks is written once; a job whose gate becomes known
+ *          moves into its contract's ledger; a 0.60.143 job folder is still read; guardian's /events and ncp-handler pass the
+ *          thinking, chatId and turn on (the thinking had been dropped at /events since 0.60.142)
  *   WJ-03  Clear Glass: a page opened after the reply was written shows it again ("restored from disk"), its thinking too;
  *          a live frame after that wins
  */
@@ -36,6 +41,8 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
 
 (async () => {
   process.env.WORK_JOURNAL_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'wj-'));
+  process.env.CG_LEDGER_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), 'wj-cg-'));   // Clear Glass's chat ledger, sandboxed
+  process.env.WORK_JOURNAL_VERIFY_MS = '120';
   const WJ = require(path.join(ROOT, 'lib/work-journal.js'));
 
   await test('WJ-01', 'thinking, then the reply as it grows; on disk; back after a restart; ended stays ended; stale said', () => {
@@ -48,19 +55,18 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
     assert.strictEqual(v.text, 'Here it is:\nconst a = 1;');
     v = WJ.record({ ...f, event: 'chunk', text: 'const a = 1;' });                // a repeat of the tail
     assert.strictEqual(v.text, 'Here it is:\nconst a = 1;');
-    const d = path.join(WJ.dir(), 'r1', 'g-1');
-    const mtime = fs.statSync(path.join(d, 'reply.response')).mtimeMs;
+    // §0.60.146 — one append-only ledger: a job with no gate is in the repo's agent ledger
+    const lf = path.join(WJ.dir(), 'r1', 'agent.ledger.jsonl');
+    const n0 = fs.readFileSync(lf, 'utf8').split('\n').filter(Boolean).length;
     WJ.record({ ...f, event: 'progress', stage: 'dom', mutations: 40 });
-    assert.strictEqual(fs.statSync(path.join(d, 'reply.response')).mtimeMs, mtime, 'a dom pulse writes nothing new');
+    assert.strictEqual(fs.readFileSync(lf, 'utf8').split('\n').filter(Boolean).length, n0, 'a dom pulse writes nothing new');
     WJ.record({ ...f, event: 'gate', label: 'reply read', state: 'passed' });
     WJ.record({ ...f, event: 'complete', chars: 24 });
     WJ.record({ ...f, event: 'chunk', text: 'late' });
-    const nx = require(path.join(ROOT, 'lib/node-export.js'));
-    const env = nx.importFromFile(path.join(d, 'reply.response'));
-    assert.strictEqual(env.type, 'response'); assert.ok(env.tags.includes('job:g-1'));
-    const lines = fs.readFileSync(path.join(d, 'timeline.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
-    assert.deepStrictEqual(lines.map(l => l.event), ['dispatched', 'chunk', 'chunk', 'chunk', 'chunk', 'gate', 'complete', 'chunk'], 'one line per event, no dom pulse');
-    assert.ok(!lines.some(l => 'text' in l), 'no text in the timeline (it is in the node)');
+    const lines = fs.readFileSync(lf, 'utf8').trim().split('\n').map(JSON.parse);
+    assert.deepStrictEqual(lines.filter(l => l.t === 'frame').map(l => l.event), ['dispatched', 'chunk', 'chunk', 'chunk', 'chunk', 'gate', 'complete', 'chunk'], 'one frame per event, no dom pulse');
+    assert.ok(!lines.some(l => l.t === 'frame' && 'text' in l), 'no text in a frame');
+    assert.ok(lines.some(l => l.t === 'text' && l.add === ':\nconst a = 1;' && l.at === 10), 'the reply as deltas (no chat ledger holds it: this tab is not linked)');
     WJ._reset();   // a restart: nothing in memory
     const back = WJ.get('r1', 'g-1', { timeline: true });
     assert.strictEqual(back.status, 'complete', 'a late chunk never reopens an ended job');
@@ -135,6 +141,11 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
     assert.strictEqual(g.json.reusable, null, 'these replies are Ollama\'s: not in the Responses index, so never reused (said in the map)');
     const ph = await quiet(() => RAPI._route('GET', `/api/repos/${RU}/agent/feed?gate=${encodeURIComponent('docs/m-phasemap.spec::P1_census')}`));
     assert.strictEqual(ph.json.gates.length, 1, 'a phase prefix finds its gates');
+    // §0.60.146 — the contract's own ledger through the route
+    const cl = await quiet(() => RAPI._route('GET', `/api/repos/${RU}/agent/feed?contract=${encodeURIComponent('docs/m-phasemap.spec::P1_census')}`));
+    assert.strictEqual(cl.status, 200, JSON.stringify(cl.json).slice(0, 200));
+    assert.deepStrictEqual(cl.json.ledger.jobs.map(j => j.jobId), ['gj-1', 'gj-2']);
+    assert.strictEqual((await quiet(() => RAPI._route('GET', `/api/repos/${RU}/agent/feed?contract=nope::P`))).status, 404);
     assert.ok(g.json.ungated >= 1, 'the chat job (oj-1) has no gate, and is counted apart');
     assert.deepStrictEqual(WJ.list(RU, { brick }).jobs.map(j => j.jobId), ['gj-2', 'gj-1'], 'list by gate, newest first');
     // two gates at once, guardian frames (a job, no session): each job stays with the task that took it
@@ -147,6 +158,93 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
     gated = { job: { ...WJ.get(RU, 'gj-2', { timeline: true }), thinking: 'The census needs a command row.', thinkingLen: 31 }, gates: g.json };
     const RC = await import(pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href);
     assert.strictEqual(RC.SPEC.find(r => r.key === 'repo.feed').req({ repo: { uuid: 'u' }, args: [], flags: { gate: brick } }).path, `/api/repos/u/agent/feed?gate=${encodeURIComponent(brick)}`);
+  });
+
+  await test('WJ-05', 'one record: the contract ledger, the chat ledger as the text\'s home, moves, old folders, guardian passes it on', async () => {
+    const CL = require(path.join(ROOT, 'clear-glass/src/downloads/chat-ledger.js'));
+    // Clear Glass's own route, served from its real chat ledger (clear-glass/src/ipc/bridge.js GET /cli/downloads/ledgers/:chatKey):
+    // the journal reads another system's ledger through its route only (the drawbridge)
+    const http = require('http');
+    const cg = http.createServer((req, res) => {
+      const m = req.url.match(/^\/cli\/downloads\/ledgers\/([^?]+)/);
+      const c = m ? CL.readChat({ chatKey: decodeURIComponent(m[1]) }) : null;
+      res.writeHead(c ? 200 : 404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(c ? { ok: true, chat: c } : { ok: false }));
+    });
+    await new Promise(r => cg.listen(0, '127.0.0.1', r));
+    process.env.CLEAR_GLASS_URL = `http://127.0.0.1:${cg.address().port}`;
+    const repo = 'r5', brick = 'docs/x-phasemap.spec::P5_one::b1.one.js';
+    CL.applyDelta({ provider: 'gemini', chatId: 'c5', agentId: `repo-${repo}`, seq: 1, generating: true, turns: [{ i: 0, role: 'user', text: 'Build phase P5_one' }, { i: 1, role: 'assistant', text: 'Here', thinking: 'Reading' }] });
+    const base = { repoUuid: repo, jobId: 'k-1', provider: 'gemini', source: 'transcript', brick, chatId: 'c5', turn: 1 };
+    WJ.record({ ...base, event: 'dispatched' });
+    WJ.record({ ...base, event: 'chunk', text: 'Here', fullLen: 4, thinking: 'Reading' });
+    CL.applyDelta({ provider: 'gemini', chatId: 'c5', seq: 2, generating: false, settled: true, turns: [{ i: 1, role: 'assistant', text: 'Here it is: one()', thinking: 'Reading the phase' }] });
+    WJ.record({ ...base, event: 'chunk', text: 'Here it is: one()', fullLen: 17, thinking: 'Reading the phase' });
+    WJ.record({ ...base, event: 'complete' });
+    const cf = fs.readdirSync(path.join(WJ.dir(), repo)).find(n => n.endsWith('.ledger.jsonl') && n.includes('P5_one'));
+    assert.ok(cf, 'one ledger for the contract');
+    const ls = fs.readFileSync(path.join(WJ.dir(), repo, cf), 'utf8').trim().split('\n').map(JSON.parse);
+    assert.ok(ls.some(l => l.t === 'link' && l.chatKey === 'gemini:c5' && l.turn === 1), 'linked to its chat ledger turn');
+    assert.ok(!ls.some(l => l.t === 'text' || l.t === 'think'), 'no copy of the reply or the thinking: the chat ledger holds them');
+    await new Promise(x => setTimeout(x, 300));
+    assert.ok(!fs.readFileSync(path.join(WJ.dir(), repo, cf), 'utf8').includes('"t":"text"'), 'the turn was there: nothing written after the check');
+    WJ._reset();   // a restart
+    const kept = WJ.get(repo, 'k-1');
+    assert.deepStrictEqual([kept.text, kept.textFrom], ['', 'chat-ledger (not read)'], 'this ledger holds no copy');
+    const back = await WJ.read(repo, 'k-1');
+    assert.deepStrictEqual([back.status, back.text, back.thinking, back.textFrom], ['complete', 'Here it is: one()', 'Reading the phase', 'chat-ledger']);
+    const src0 = fs.readFileSync(path.join(ROOT, 'lib/work-journal.js'), 'utf8');
+    assert.ok(!/require\([^)]*clear-glass/.test(src0), 'no require of Clear Glass\'s code: its route only');
+    // a turn the chat ledger does not have (a tab outside Clear Glass): written once, here
+    WJ.record({ ...base, jobId: 'k-2', turn: 3, event: 'chunk', text: 'outside reply', fullLen: 13 });
+    WJ.record({ ...base, jobId: 'k-2', turn: 3, event: 'complete' });
+    await new Promise(x => setTimeout(x, 400));
+    const t2 = fs.readFileSync(path.join(WJ.dir(), repo, cf), 'utf8').trim().split('\n').map(JSON.parse).filter(l => l.t === 'text' && l.jobId === 'k-2');
+    assert.strictEqual(t2.length, 1); assert.strictEqual(t2[0].set, 'outside reply'); assert.match(t2[0].why, /does not hold this turn/);
+    WJ._reset();
+    assert.strictEqual((await WJ.read(repo, 'k-2')).text, 'outside reply');
+    // Clear Glass not reachable: said, never filled
+    process.env.CLEAR_GLASS_URL = 'http://127.0.0.1:9'; WJ._reset();
+    const down = await WJ.read(repo, 'k-1');
+    assert.deepStrictEqual([down.text, down.textFrom], ['', 'chat-ledger (Clear Glass not reachable)']);
+    process.env.CLEAR_GLASS_URL = `http://127.0.0.1:${cg.address().port}`;
+    // a job whose gate becomes known moves into its contract's ledger
+    WJ.record({ repoUuid: repo, jobId: 'k-3', source: 'ollama', provider: 'ollama', event: 'chunk', text: 'abc', fullLen: 3 });
+    WJ.record({ repoUuid: repo, jobId: 'k-3', source: 'ollama', provider: 'ollama', event: 'chunk', text: 'def', fullLen: 6, brick });
+    const agentL = fs.readFileSync(path.join(WJ.dir(), repo, 'agent.ledger.jsonl'), 'utf8');
+    assert.ok(/"t":"moved","ts":\d+,"jobId":"k-3"/.test(agentL), 'the agent ledger says where it went');
+    WJ._reset();
+    const k3 = WJ.get(repo, 'k-3', { timeline: true });
+    assert.deepStrictEqual([k3.text, k3.brick, k3.timeline.length], ['abcdef', brick, 2]);
+    const led = WJ.ledger(repo, brick);
+    assert.deepStrictEqual(led.jobs.map(j => j.jobId), ['k-1', 'k-2', 'k-3'], 'the contract\'s ledger, replayed: its jobs in order');
+    assert.strictEqual(WJ.gates(repo, { brick }).gates[0].attempts.length, 3);
+    // a job folder written by 0.60.143 is still read (§0.3)
+    const nx = require(path.join(ROOT, 'lib/node-export.js'));
+    const old = path.join(WJ.dir(), repo, 'old-1'); fs.mkdirSync(old, { recursive: true });
+    fs.writeFileSync(path.join(old, 'reply.response'), nx.toYaml(nx.wrap('response', 'old-1', { jobId: 'old-1', repoUuid: repo, status: 'complete', text: 'kept from before', textLen: 16, startedAt: 1, updatedAt: 1 })));
+    WJ._reset();
+    assert.strictEqual(WJ.get(repo, 'old-1').text, 'kept from before');
+    assert.ok(WJ.list(repo, { limit: 50 }).jobs.some(j => j.jobId === 'old-1'));
+    // guardian passes the thinking, the chat id and the turn on (/events dropped the thinking since 0.60.142)
+    const src = fs.readFileSync(path.join(ROOT, 'guardian/server.js'), 'utf8');
+    const fa = src.indexOf('const _FEED_KEYS'), fb = src.indexOf('class SISOStream');
+    const ctx = { jobs: { get: () => ({ agentId: 'repo-r5' }) } }; require('vm').createContext(ctx);
+    require('vm').runInContext(`${src.slice(fa, fb)}\nthis._feedFrame = _feedFrame;`, ctx);
+    const fr = ctx._feedFrame({ seq: 1 }, 'guardian.job.chunk', { jobId: 'k-9', text: '', thinking: 'thinking…', thinkingLen: 9, chatId: 'c5', turn: 1, chatUrl: 'https://gemini.google.com/app/c5' });
+    assert.deepStrictEqual([fr.data.thinking, fr.data.thinkingLen, fr.data.chatId, fr.data.turn, fr.data.agentId], ['thinking…', 9, 'c5', 1, 'repo-r5']);
+    const { createNCPMessageHandler } = require(path.join(ROOT, 'guardian/lib/ncp-handler.js'));
+    const { EventEmitter } = require('events'); const bus = new EventEmitter(); const jobs = new Map([['k-9', { id: 'k-9', provider: 'gemini', status: 'delivered' }]]);
+    const l = console.log, w = console.warn; console.log = () => {}; console.warn = () => {};
+    try {
+      const h = createNCPMessageHandler({ nc: null, ncp: { updateClient() {}, push() {}, pushTab() { return true; }, handleHeartbeat() {} }, bus, jaa: { insert() {}, query: () => [] }, jobs,
+        updateJob: (id, p) => Object.assign(jobs.get(id), p), cockpitBroadcast() {}, physQueue: { logConversation() {} }, baseline: { observe() {} }, evLedger: null, activeQueues: new Map(),
+        extractCodeBlocks: () => [], extractToolCallsFromDOM: () => [], findActiveSeamCompartment: () => null });
+      const seen = []; bus.on('guardian.job.chunk', d => seen.push(d));
+      h({ type: 'GUARDIAN_CHUNK', jobId: 'k-9', text: 'Hi', full: 'Hi', chatId: 'c5', turn: 1, chatUrl: 'u', source: 'transcript' });
+      assert.deepStrictEqual([seen[0].chatId, seen[0].turn], ['c5', 1]);
+    } finally { console.log = l; console.warn = w; }
+    cg.close();
+    for (const f of ['chatgpt', 'claude', 'deepseek', 'gemini', 'perplexity']) assert.ok(/chatId: \(chat && chat\.chatId\) \|\| null, turn: _txLastTurn/.test(fs.readFileSync(path.join(ROOT, `guardian/userscript-${f}.js`), 'utf8')), `${f} sends its chat id and turn`);
   });
 
   // ── WJ-03 the page, in Clear Glass ──

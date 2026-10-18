@@ -4271,7 +4271,7 @@ async function _agentFeedRestore(uuid) {
   if (!st || !job || (st.jobId && (st.jobId !== job.jobId || st.text))) return;   // live frames win
   Object.assign(st, { jobId: job.jobId, provider: job.provider, text: job.text || '', textLen: job.textLen || 0, thinking: job.thinking || '', thinkingLen: job.thinkingLen || 0,
     generating: job.generating && job.status === 'responding', gate: job.gate || null, mutations: job.mutations, restored: job.status, updated: job.updatedAt || 0,
-    brick: job.brick || null, attempt: job.attempt || null });
+    brick: job.brick || null, attempt: job.attempt || null, textFrom: job.textFrom || null });
   st.rows = (job.timeline || []).filter(e => e.event !== 'chunk' && !(e.event === 'progress' && e.stage === 'dom')).slice(-AGENT_FEED_MAX).map(e => ({
     ts: e.ts, ev: e.event === 'gate' ? `gate ${e.label || e.gate || ''} · ${e.state || ''}` : e.stage ? `${e.event}:${e.stage}` : e.event,
     detail: [e.detail, e.how, e.reason, e.error].filter(Boolean).join(' · '), bad: e.event === 'error' || e.event === 'timeout' || (e.event === 'gate' && e.state === 'failed') }));
@@ -4369,7 +4369,7 @@ function agentLiveHtml(uuid) {
   return `<div class="al-head"><span class="al-dot${st.generating ? ' on' : ''}"></span><b>${st.generating ? 'writing' : 'idle'}</b>
       ${st.provider ? `<span>${escapeHtml(st.provider)}</span>` : ''}<span class="al-dim">job ${escapeHtml(String(st.jobId).slice(0, 8))}</span>
       ${st.brick ? `<span class="al-dim" data-brick="${escapeHtml(st.brick)}" title="${escapeHtml(st.brick)}">gate ${escapeHtml(st.brick.split('::').slice(1).join(' · '))}${st.attempt ? ` · attempt ${st.attempt.n} of ${st.attempt.of}` : ''}</span>` : ''}
-      ${st.restored ? `<span class="al-dim" data-restored="${escapeHtml(st.restored)}">restored from disk · ${escapeHtml(st.restored)}</span>` : ''}
+      ${st.restored ? `<span class="al-dim" data-restored="${escapeHtml(st.restored)}">restored from disk · ${escapeHtml(st.restored)}${st.textFrom === 'chat-ledger' ? ' · read from Clear Glass\'s chat ledger' : ''}</span>` : ''}
       ${st.mutations != null ? `<span class="al-dim">mutations ${st.mutations}</span>` : ''}
       ${a ? `<span class="al-anchor" title="${escapeHtml(attrs)}">⌖ ${escapeHtml(a.path || a.tag || '')}</span>` : ''}
       <span class="al-dim">${st.textLen || st.text.length}ch${st.thinkingLen ? ` · thinking ${st.thinkingLen}ch` : ''}</span>

@@ -144,7 +144,7 @@ function agentFeed() {
   const src = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
   const grab = (name) => { const m = src.match(new RegExp(`^function ${name}\\([\\s\\S]*?\\n\\}\\n`, 'm')); if (!m) throw new Error(`no ${name}`); return m[0]; };
   const consts = src.match(/^const AGENT_FEED = new Map\(\);.*\n^const AGENT_FEED_MAX = \d+;/m)[0];
-  return new Function(`const escapeHtml = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]); let CURRENT_API_REPO = null; function _agentFeedPaint() {}
+  return new Function(`const escapeHtml = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]); let CURRENT_API_REPO = null; function _agentFeedPaint() {} async function _agentFeedRestore() {}   /* §0.60.143 — the page reads a repo's newest job back from disk (test-work-journal WJ-03); this test is about live frames */
     ${consts}\n${grab('_agentFeedState')}\n${grab('_agentFeedIn')}\n${grab('_agentFeedHtml')}
     return { _agentFeedIn, _agentFeedHtml, _agentFeedState };`)();
 }

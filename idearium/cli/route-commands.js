@@ -94,9 +94,14 @@ export const SPEC = [
 
   // ── what is happening, and what happened ──────────────────────────────────────────────────────────────────────────
   // §0.60.143 TL1b — James: "We need persistent data look at the last commit." The agent's replies as they streamed, from disk
-  { key: 'repo.feed', repo: true, usage: 'repo feed <repo> [<job id>] [--gate <map>::<phase>[::<gate>]] [--gates] [--limit n]', about: 'the agent\'s replies and thinking as they streamed, kept on disk: newest jobs, one job with its timeline, or per contract gate every attempt',
-    req: (a) => ({ method: 'GET', path: a.flags.gate ? `/api/repos/${a.repo.uuid}/agent/feed?gate=${encodeURIComponent(a.flags.gate)}` : a.flags.gates ? `/api/repos/${a.repo.uuid}/agent/feed?gates=1` : a.args[0] ? `/api/repos/${a.repo.uuid}/agent/feed?job=${encodeURIComponent(a.args[0])}` : `/api/repos/${a.repo.uuid}/agent/feed?limit=${Number(a.flags.limit) || 20}` }),
+  { key: 'repo.feed', repo: true, usage: 'repo feed <repo> [<job id>] [--gate <map>::<phase>[::<gate>]] [--gates] [--contract <map>::<phase>] [--limit n]', about: 'the agent\'s replies and thinking as they streamed, kept on disk: newest jobs, one job with its timeline, or per contract gate every attempt',
+    req: (a) => ({ method: 'GET', path: a.flags.contract ? `/api/repos/${a.repo.uuid}/agent/feed?contract=${encodeURIComponent(a.flags.contract)}` : a.flags.gate ? `/api/repos/${a.repo.uuid}/agent/feed?gate=${encodeURIComponent(a.flags.gate)}` : a.flags.gates ? `/api/repos/${a.repo.uuid}/agent/feed?gates=1` : a.args[0] ? `/api/repos/${a.repo.uuid}/agent/feed?job=${encodeURIComponent(a.args[0])}` : `/api/repos/${a.repo.uuid}/agent/feed?limit=${Number(a.flags.limit) || 20}` }),
     print: (d, a, h) => {
+      if (d.ledger) {   // §0.60.146 — one contract's ledger
+        console.log(`  ${h.c.sky(d.ledger.contract)}  ${h.c.dim(`${d.ledger.jobs.length} job(s) · ${d.ledger.lines} line(s) · ${d.ledger.file}`)}`);
+        for (const j of d.ledger.jobs) console.log(h.c.dim(`    ${String(j.brick || '').split('::').pop().padEnd(22)} ${j.status.padEnd(10)} ${String(j.jobId).slice(0, 18)} ${j.provider || ''} · reply ${j.textLen}ch (${j.textFrom})${j.handled ? ` · handled ${j.handled.state || ''}` : ''}`));
+        return;
+      }
       if (d.gates) {   // §0.60.144 TL1c — per gate
         if (!d.gates.length) { console.log(h.c.gray(`  no reply kept under a gate${d.ungated ? ` (${d.ungated} without one)` : ''}`)); return; }
         for (const g of d.gates) {

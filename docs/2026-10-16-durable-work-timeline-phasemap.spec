@@ -259,3 +259,37 @@ not_verified:
 #   of one stream. The coder's recommendation: keep the journal as the per-gate INDEX (job, gate, attempt, handled, status) and
 #   make the ledger the text's one home — the journal points at the ledger's chatKey and turn, and reads the reply from it;
 #   reuse falls back to the ledger when Guardian's .response is missing. TL2a-4, open until he says.
+
+# ## ADDENDUM 2026-10-18 (g) — TL2a-4 decided (his): one record; the journal becomes a ledger per contract (mapped, then built 0.60.146)
+# James, 2026-10-18, answering TL2a-4 (the coder had recommended: the journal as the per-gate index, Clear Glass's chat ledger
+# as the text's one home): "okay only one record. maybe use it as a contract ledger for each contract."
+# His decision: one record of a reply, not two. And the journal is used as a ledger for each contract.
+# The coder's reading of the details, to confirm:
+#   one ledger per contract — data/work/<repo>/<map>::<phase>.ledger.jsonl (safe-named), append-only like the chat ledger; a job
+#     with no gate (an Agent tab chat) goes in the repo's agent.ledger.jsonl. Lines: job (its gate, attempt, run, session,
+#     provider, and the chat ledger turn it is written in: chatKey + turn), frame (event, lengths, gate state — no text), text
+#     (only when no other record holds it), end, handled.
+#   the text has one home — a browser agent's reply and thinking: Clear Glass's chat ledger (the page writes it there as it
+#     streams; the job carries chatId + turn, so it is read from there and never written here). When the job ends and that turn
+#     is not in the chat ledger (a tab outside Clear Glass), the reply is written once here instead. An Ollama reply has no chat
+#     ledger: its exact deltas are this ledger's text lines.
+#   guardian's .response (the Responses index) stays guardian's own record of the job's answer, read by reuse (§10.1: each
+#     system writes its own); it is not copied here.
+#   nothing lost (§0.3): the per-job folders written by 0.60.143-145 (data/work/<repo>/<job>/reply.response) are still read.
+# Needs: the five userscripts send chatId and turn on GUARDIAN_CHUNK; guardian's ncp-handler passes them (and chatUrl) on.
+# Built 0.60.146 as mapped. lib/work-journal.js 2.0.0: one append-only ledger per contract (jobs.index.json a rebuildable
+# projection); a linked reply's text and thinking are read from Clear Glass's chat ledger and never written here; a turn the chat
+# ledger lacks is written once, 3 s after the job ends; a job whose gate becomes known moves (a 'moved' line, then a snapshot in
+# the contract's ledger); 0.60.143 folders still read. GET agent/feed?contract=, `repo feed --contract`; a restored reply says
+# "read from Clear Glass's chat ledger". The five userscripts send chatId + turn (chatgpt/claude 10.12.4, deepseek/gemini 10.10.4,
+# perplexity 10.9.4); ncp-handler passes them on.
+# Found while building: guardian/server.js _FEED_KEYS (the /events whitelist) dropped `thinking` — 0.60.142's streamed thinking
+# reached guardian's bus but never Idearium; its tests checked each side, not the hop. Fixed here (thinking, thinkingLen, chatId,
+# turn). And three pins the coder broke in 0.60.142-0.60.144 without running their suites (test-agent-feed AF-09, AF-11;
+# test-live-stream-and-gates GS-10) — updated to the lines as they are, their intent kept.
+# Proof: test-work-journal 5/5 (WJ-05 one record), test-gate-context 6/6.
+# Then, 2026-10-18 — James: "is that all added to the pipeline?" The contract builds (routing.contract_build on, the default) had it;
+# the builds outside the contract (the whole phase, or its files one by one) had no gate. Fixed in 0.60.146: each attempt has a
+# gateKey (<map>::<phase>::file.<file>, or ::phase); the dispatch names it (gate), the task carries it, the contract ledger, context
+# and reuse follow. And the drawbridge: the chat ledger is read through Clear Glass's route, not its code (SB-06 caught it).
+# CI runs no tests (release.yml checks the zip); whether it should is his call.
