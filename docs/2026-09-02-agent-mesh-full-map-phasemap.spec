@@ -215,7 +215,7 @@ spec:
         before assuming this is actually load-bearing.
 
     AM6_raid_contract_gate_before_dispatch:
-      status: OPEN — depends on AM1
+      status: "BUILT — the gating census 2026-10-18 (docs/2026-10-18-gating-census-phasemap.spec): cortex/core/raid/contract-intake.js §AM6-CLOSED, at RAID's choke point (processNext) rather than guardian createJob. Was: OPEN — depends on AM1"
       depends_on: [AM1_raid_intent_contracts_per_agent]
       does: >
         Once AM1's real per-agent contract schema exists, guardian's

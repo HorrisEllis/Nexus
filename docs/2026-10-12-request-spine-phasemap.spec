@@ -618,7 +618,7 @@ spec:
 
     RQ24_the_gate_transaction:
       layer: library
-      status: OPEN
+      status: "FOLDED into GT1 (DONE 0.60.30) and GS1 (0.60.39: commit at a pass, rewind on a fail — cortex/core/raid/contract-gates.js) — the gating census 2026-10-18. Left over, carried by the census's layer 2: gate:<id> file tags, a Revert on the chunk card, an irreversible step refused while versionium is down. Was: OPEN"
       james: '"each gate, tags, updates the progress in idearium, backs up on success, then can revert upon failure"'
       depends_on: [RQ21, RQ23, RQ2, RQ10]
       files: [lib/chunk-verify.js, lib/repo-inject.js (revert exists), versionium/lib/engine.js (commit, restore, createBranch), cortex/core/raid/index.js (verify() becomes the tail of the gate), cortex/core/raid/contract-intake.js (onFail), lib/replay-engine.js]

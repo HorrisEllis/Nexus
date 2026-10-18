@@ -74,41 +74,41 @@ open_decisions:
       a: "Per gate kind, in Settings (his): continue | new chat | any provider. Default: new chat for build/verify bricks, continue for a brick's own retries."
       b: "Always a new chat per gate."
     coder_recommends: "a. A new chat per gate re-pays the persona prompt each time; a retry inside one brick is cheaper in the same chat. His setting, not mine (Settings -> Agents, editable like the task header). To confirm."
-    status: OPEN
+    status: "DECIDED 2026-10-18 by his axioms (D15, docs/2026-10-17-decisions-by-the-axioms.spec addendum c): coder_recommends, as written. Was: OPEN"
   GW0c_replay_mode:
     asked: "'a completely reproducible macro' - what is replayed?"
     options:
       a: "Both, by flag. recorded: every model reply is played back from the record, so the run is exactly reproducible without a model. live: the same packets are sent to an agent again, to compare agents."
       b: "recorded only."
     coder_recommends: "a. Recorded is the reproducible one (and the regression test). Live is 'rewind engine to replicate agents'. Same recording, two modes. To confirm."
-    status: OPEN
+    status: "DECIDED 2026-10-18 by his axioms (D16, docs/2026-10-17-decisions-by-the-axioms.spec addendum c): coder_recommends, as written. Was: OPEN"
   GW0e_sandbox_egress:
     asked: "the agents' test environment has full access - should it reach the network?"
     options:
       a: "Default deny; an allowlist per compartment (package registries, the repo's own hosts). Open egress is a per-run switch he sets."
       b: "Open by default."
     coder_recommends: "a. A sandbox the agents own completely should still not be able to reach his accounts or leak a secret (§5.9). Deny is one switch to flip; a leak is not undoable (§0.3). To confirm."
-    status: OPEN
+    status: "DECIDED 2026-10-18 by his axioms (D17, docs/2026-10-17-decisions-by-the-axioms.spec addendum c): coder_recommends, as written. Was: OPEN"
   GW0f_mutation_testing:
     asked: "'each file needs meticulous testing' - how far?"
     options:
       a: "Per file: its tests run, its exports each exercised, hostile inputs (§12.1), and mutation checks (flip a line; a test must fail - §12.2) as an opt-in tier because it multiplies run time."
       b: "Tests run and exports exercised only."
     coder_recommends: "a, mutation opt-in per run and on by default only for files a gate just changed. To confirm."
-    status: OPEN
+    status: "DECIDED 2026-10-18 by his axioms (D18, docs/2026-10-17-decisions-by-the-axioms.spec addendum c): coder_recommends, as written. Was: OPEN"
   GW0g_parallel_limit:
     asked: "'parallel branching for benchmarking and comparing' - how many at once?"
     coder_recommends: "A cap read from the resource monitor (free memory and cores) at dispatch, never a fixed number; his Settings value is the ceiling. To confirm."
-    status: OPEN
+    status: "DECIDED 2026-10-18 by his axioms (D19, docs/2026-10-17-decisions-by-the-axioms.spec addendum c): coder_recommends, as written. Was: OPEN"
 
   GW0h_minimal_default:
     asked: "minimal environment - what is the default for a repo with no detected need?"
     coder_recommends: "base + the one runtime plan() finds; display none; no desktop account, no extras. The wizard's extras default becomes empty (reversing DK1's default); the repo desktop stays one tick away. To confirm."
-    status: OPEN
+    status: "DECIDED 2026-10-18 by his axioms (D20, docs/2026-10-17-decisions-by-the-axioms.spec addendum c): coder_recommends, as written. Was: OPEN"
   GW0i_find_order:
     asked: "search as the index for intents - in what order does an agent look?"
     coder_recommends: "own component store and the code index first (they are free and already trusted), then package registries and code hosts through APIs, then image/UI sites, then the open web. Stop at the first adequate hit. To confirm."
-    status: OPEN
+    status: "DECIDED 2026-10-18 by his axioms (D21, docs/2026-10-17-decisions-by-the-axioms.spec addendum c): coder_recommends, as written. Was: OPEN"
   GW0d_listener_question:
     asked: "carried from 0.60.50: the listener 'cant detect any specs'. Needs James's failing log, and whether 'full inject' means per-stage framework text or Clear Glass injecting once (CG1)."
     status: OPEN - unanswered
