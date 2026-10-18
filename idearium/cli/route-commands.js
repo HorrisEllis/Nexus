@@ -94,9 +94,18 @@ export const SPEC = [
 
   // ── what is happening, and what happened ──────────────────────────────────────────────────────────────────────────
   // §0.60.143 TL1b — James: "We need persistent data look at the last commit." The agent's replies as they streamed, from disk
-  { key: 'repo.feed', repo: true, usage: 'repo feed <repo> [<job id>] [--limit n]', about: 'the agent\'s replies and thinking as they streamed, kept on disk: newest jobs, or one job with its timeline',
-    req: (a) => ({ method: 'GET', path: a.args[0] ? `/api/repos/${a.repo.uuid}/agent/feed?job=${encodeURIComponent(a.args[0])}` : `/api/repos/${a.repo.uuid}/agent/feed?limit=${Number(a.flags.limit) || 20}` }),
+  { key: 'repo.feed', repo: true, usage: 'repo feed <repo> [<job id>] [--gate <map>::<phase>[::<gate>]] [--gates] [--limit n]', about: 'the agent\'s replies and thinking as they streamed, kept on disk: newest jobs, one job with its timeline, or per contract gate every attempt',
+    req: (a) => ({ method: 'GET', path: a.flags.gate ? `/api/repos/${a.repo.uuid}/agent/feed?gate=${encodeURIComponent(a.flags.gate)}` : a.flags.gates ? `/api/repos/${a.repo.uuid}/agent/feed?gates=1` : a.args[0] ? `/api/repos/${a.repo.uuid}/agent/feed?job=${encodeURIComponent(a.args[0])}` : `/api/repos/${a.repo.uuid}/agent/feed?limit=${Number(a.flags.limit) || 20}` }),
     print: (d, a, h) => {
+      if (d.gates) {   // §0.60.144 TL1c — per gate
+        if (!d.gates.length) { console.log(h.c.gray(`  no reply kept under a gate${d.ungated ? ` (${d.ungated} without one)` : ''}`)); return; }
+        for (const g of d.gates) {
+          console.log(`  ${h.c.sky(g.brick)}  ${h.c.dim(`${g.attempts.length} attempt(s) · last ${g.last.status} · ${g.last.provider || ''}`)}`);
+          for (const t of g.attempts) console.log(h.c.dim(`      ${t.attempt}. ${t.status.padEnd(10)} ${String(t.jobId).slice(0, 18)} ${t.provider || ''} · reply ${t.textLen}ch · thinking ${t.thinkingLen}ch`));
+        }
+        if (d.ungated) console.log(h.c.dim(`\n  ${d.ungated} job(s) with no gate known (a chat, or a reply from before 0.60.144)`));
+        return;
+      }
       const head = (j) => `${j.status === 'error' || j.status === 'timeout' || j.status === 'stale' ? h.c.coral(j.status) : j.status === 'complete' ? h.c.mint(j.status) : h.c.sky(j.status)} ${h.c.dim(String(j.jobId).slice(0, 24))} ${j.provider || ''} ${h.c.dim(`reply ${j.textLen}ch · thinking ${j.thinkingLen}ch · ${new Date(j.updatedAt).toISOString().slice(0, 19)}`)}`;
       if (d.job) {
         const j = d.job; console.log(`  ${head(j)}`);

@@ -10,6 +10,9 @@
  *          ended job; a job with no frame for 15 min reads stale
  *   WJ-02  through idearium's real router: Ollama frames (POST agent/stream) land in the journal; GET agent/feed lists the
  *          newest, ?job= gives one with its timeline, an unknown job 404s; guardian's feed door journals too; the command
+ *   WJ-04  per gate (0.60.144 TL1c — James: "You got it persistent per gate"): a phase build's task carries its contract gate
+ *          (<map>::<phase>::<gate>); every frame of its reply is filed under that gate, through the real router; two attempts
+ *          at one gate come back in order, after a restart; a phase prefix finds every gate of it; a chat stays ungated, said
  *   WJ-03  Clear Glass: a page opened after the reply was written shows it again ("restored from disk"), its thinking too;
  *          a live frame after that wins
  */
@@ -74,7 +77,7 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
     assert.strictEqual(WJ.record({ event: 'chunk', text: 'x' }), null, 'no repo or job: nothing');
   });
 
-  let listed = null, one = null;
+  let listed = null, one = null, RU = null, RAPI = null, gated = null;
   await test('WJ-02', 'the real router: Ollama frames journaled; GET agent/feed lists and reads one; guardian\'s door; the command', async () => {
     const api = await quiet(() => import(path.join(ROOT, 'idearium/api/index.js')));
     const L = api.getRepoLayer();
@@ -98,11 +101,49 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
     assert.strictEqual((await quiet(() => api._route('GET', `/api/repos/${u}/agent/feed?job=nope`))).status, 404);
     listed = l.json; one = g.json;
     const src = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
-    assert.ok(/_repoActivity\(\)\.feed\(fp\);[^\n]*\n\s*_journal\(fp\);/.test(src), 'guardian\'s feed door (lib/guardian-stream.cjs onFeed) journals each frame');
+    assert.ok(/task = _repoActivity\(\)\.feed\(fp\);[^\n]*\n\s*_journal\(fp, task\);/.test(src), 'guardian\'s feed door (lib/guardian-stream.cjs onFeed) journals each frame, with its task');
+    RU = u; RAPI = api;
     const RC = await import(pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href);
     const row = RC.SPEC.find(r => r.key === 'repo.feed');
     assert.strictEqual(row.req({ repo: { uuid: 'u' }, args: ['oj-1'], flags: {} }).path, '/api/repos/u/agent/feed?job=oj-1');
     assert.strictEqual(RC.SPEC.filter(r => r.key === 'repo.feed').length, 1, 'one row');
+  });
+
+  await test('WJ-04', 'per gate: each attempt\'s reply filed under its contract gate, in order, after a restart; a chat stays ungated', async () => {
+    assert.ok(RU, 'WJ-02 made the repo');
+    const RAct = require(path.join(ROOT, 'lib/repo-activity.js'));
+    const brick = 'docs/m-phasemap.spec::P1_census::b1.census.js';
+    const attempt = async (n, session, text, ok) => {
+      const t = RAct.begin({ repoUuid: RU, session, message: `Build phase P1_census (try ${n})`, provider: 'ollama', brick });
+      for (const b of [{ event: 'dispatched', jobId: `gj-${n}`, session }, { event: 'chunk', jobId: `gj-${n}`, session, text, fullLen: text.length }, { event: ok ? 'complete' : 'error', jobId: `gj-${n}`, session }]) {
+        const r = await quiet(() => RAPI._route('POST', `/api/repos/${RU}/agent/stream`, b)); assert.strictEqual(r.status, 200);
+      }
+      RAct.end(t, { ok, text });
+    };
+    await attempt(1, 'phrun-wj1-aa11-c1', 'const census = (', false);
+    await attempt(2, 'phrun-wj1-aa11-c1-r1t2', 'const census = () => 1;', true);
+    WJ._reset();   // a restart
+    const g = await quiet(() => RAPI._route('GET', `/api/repos/${RU}/agent/feed?gate=${encodeURIComponent(brick)}`));
+    assert.strictEqual(g.status, 200, JSON.stringify(g.json).slice(0, 200));
+    assert.strictEqual(g.json.gates.length, 1);
+    const gt = g.json.gates[0];
+    assert.strictEqual(gt.brick, brick);
+    assert.deepStrictEqual(gt.attempts.map(a => [a.attempt, a.jobId, a.status, a.runId]), [[1, 'gj-1', 'error', 'phrun-wj1-aa11'], [2, 'gj-2', 'complete', 'phrun-wj1-aa11']]);
+    assert.strictEqual(WJ.get(RU, 'gj-1').text, 'const census = (', 'the failed attempt\'s reply is kept too');
+    const ph = await quiet(() => RAPI._route('GET', `/api/repos/${RU}/agent/feed?gate=${encodeURIComponent('docs/m-phasemap.spec::P1_census')}`));
+    assert.strictEqual(ph.json.gates.length, 1, 'a phase prefix finds its gates');
+    assert.ok(g.json.ungated >= 1, 'the chat job (oj-1) has no gate, and is counted apart');
+    assert.deepStrictEqual(WJ.list(RU, { brick }).jobs.map(j => j.jobId), ['gj-2', 'gj-1'], 'list by gate, newest first');
+    // two gates at once, guardian frames (a job, no session): each job stays with the task that took it
+    const tA = RAct.begin({ repoUuid: RU, session: 'phrun-wj2-bb22-c1', message: 'gate A', brick: 'm::P2::b1.a.js' });
+    assert.strictEqual(RAct.feed({ repoUuid: RU, event: 'dispatched', jobId: 'gA' }).id, tA.id);
+    const tB = RAct.begin({ repoUuid: RU, session: 'phrun-wj2-bb22-c2', message: 'gate B', brick: 'm::P2::b2.b.js' });
+    assert.strictEqual(RAct.feed({ repoUuid: RU, event: 'dispatched', jobId: 'gB' }).id, tB.id, 'a new job goes to the task with none');
+    assert.strictEqual(RAct.feed({ repoUuid: RU, event: 'chunk', jobId: 'gA', text: 'a' }).brick, 'm::P2::b1.a.js', 'a later frame of job A is still gate A');
+    RAct.end(tA, { ok: true }); RAct.end(tB, { ok: true });
+    gated = { job: { ...WJ.get(RU, 'gj-2', { timeline: true }), thinking: 'The census needs a command row.', thinkingLen: 31 }, gates: g.json };
+    const RC = await import(pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href);
+    assert.strictEqual(RC.SPEC.find(r => r.key === 'repo.feed').req({ repo: { uuid: 'u' }, args: [], flags: { gate: brick } }).path, `/api/repos/u/agent/feed?gate=${encodeURIComponent(brick)}`);
   });
 
   // ── WJ-03 the page, in Clear Glass ──
@@ -110,14 +151,15 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
   const fa = APP.indexOf('const AGENT_FEED = new Map();'), fb = APP.indexOf('function _agentTranscript(uuid) {');
   const css = fs.readFileSync(path.join(UI, 'css', 'code-surface.css'), 'utf8');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'wj-ui-'));
-  const job = { ...(one && one.job), thinking: 'The census needs a command row.', thinkingLen: 31 };
+  const job = gated ? gated.job : { ...(one && one.job), thinking: 'The census needs a command row.', thinkingLen: 31 };
+  const top = { jobs: [job] }, GATES = gated ? gated.gates : { gates: [] };
   fs.writeFileSync(path.join(dir, 'index.html'), `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>
 <div class="cs-live" data-al="r1"></div>
 <script>
   let CURRENT_API_REPO = { uuid: 'r1' };
   function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
-  const LISTED = ${JSON.stringify(listed || { jobs: [] })}, ONE = ${JSON.stringify({ job })};
-  async function api(p) { return p.includes('job=') ? ONE : LISTED; }
+  const LISTED = ${JSON.stringify(top)}, ONE = ${JSON.stringify({ job })}, GATES = ${JSON.stringify(GATES)};
+  async function api(p) { return p.includes('gate=') ? GATES : p.includes('job=') ? ONE : LISTED; }
   ${APP.slice(fa, fb)}
 </script></body></html>`);
   const glass = require('../../clear-glass/src/driver/glass.js');
@@ -131,12 +173,13 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
     const page = await browser.newPage();
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     await page.goto(pathToFileURL(path.join(dir, 'index.html')).href);
-    await test('WJ-03', 'Clear Glass: a page opened after the reply shows it again, restored from disk; a live frame then wins', async () => {
+    await test('WJ-03', 'Clear Glass: a page opened after the reply shows it again, restored from disk, with its gate and attempt; a live frame then wins', async () => {
       await page.evaluate(() => agentLivePaint('r1'));
       await page.waitForSelector('.cs-live [data-restored]');
       const t = await page.textContent('.cs-live');
-      assert.match(t, /restored from disk · responding/);
-      assert.match(t, /function census\(\) \{\}/, 'the reply so far');
+      assert.match(t, /restored from disk · complete/);
+      assert.match(t, /const census = \(\) => 1;/, 'the reply');
+      assert.match(t, /gate P1_census · b1\.census\.js · attempt 2 of 2/, 'its gate, and which attempt');
       assert.match(t, /its thinking · 31ch/, 'its thinking, folded');
       await page.evaluate(() => _agentFeedIn({ repoUuid: 'r1', event: 'chunk', jobId: 'oj-2', source: 'ollama', provider: 'ollama', text: 'NEW', fullLen: 3, generating: true }));
       const t2 = await page.textContent('.cs-live');
