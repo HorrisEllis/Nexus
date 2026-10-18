@@ -1,0 +1,12 @@
+/* renderer/settings/sections/network.css — Network (Tor · Snowflake transport)
+ * 0.60.160 — James: "can you add snowflake to the ui." Every rule is scoped to
+ * body[data-area="network"] (set by core.js when the area is shown) so nothing here
+ * restyles another area. */
+body[data-area="network"] .net-paths,
+body[data-area="network"] .net-bridge { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; padding: 10px 0 2px; }
+body[data-area="network"] .net-paths .field,
+body[data-area="network"] .net-bridge .field { flex: 1 1 240px; }
+body[data-area="network"] .net-bridge .field { flex-basis: 420px; }
+body[data-area="network"] .net-rules { display: flex; flex-direction: column; gap: 6px; }
+body[data-area="network"] .warn-box { margin-top: 10px; padding: 8px 10px; border-radius: 8px; font-size: 13px;
+  background: color-mix(in srgb, var(--warn, #c90) 12%, transparent); color: var(--warn, #c90); }
