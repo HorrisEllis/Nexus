@@ -635,3 +635,11 @@ spec:
 
 ## ADDENDUM 2026-10-15 — 0.60.68 specs laid out from the templates, genesis by default
 # Setting specs.default_template (default genesis). POST /api/repos/:uuid/specs/compile takes template; `repo compile-spec --template`. The spec-framework prompt block carries {template}. James: "Use the templates. The genesis by default." test-spec-pipeline SP-08..08c.
+
+# ── ADDENDUM 2026-10-18 (0.60.147) — a dependency graph before every phase (DG2) ─────────────────────────────────
+# James, 2026-10-18: "each phase, has to have a dependany graph before executing."
+# _phaseBuild: after DG1 (depends_on closed), lib/phase-graph.js graphFor() assembles the phase's graph from its mapping (MP1),
+# DG1's view and the boundary census. With none: 409 NO_GRAPH, the remedy said, no run; `anyway` does not pass it. With one: it is
+# written to <data>/phase-graphs/<repo>/<phase>-<hash>.json before anything runs, and graphHash / graphFile go on every run row.
+# GET /api/repos/:uuid/phases/graph?phase&map · `repo phase-graph` · the Phases tab's detail pane (js/phase-graph-view.js).
+# Map: docs/2026-10-17-pieces-not-order-phasemap.spec addendum (f). Proof: tests/modules/test-phase-graph.test.js 5/5.

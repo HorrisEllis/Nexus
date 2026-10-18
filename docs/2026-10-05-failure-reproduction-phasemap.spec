@@ -102,3 +102,14 @@ spec:
         intelligence system reads the reports (patterns across failures, CFR); the diagnostic's repair (PR5) is proven
         by the macro.
       proof: "driven in Clear Glass: a report shows the chain and its macro; reproduce runs it in a compartment and says reproduced or not"
+
+  # ── ADDENDUM 2026-10-17 — joined in docs/2026-10-17-failure-mode-report-phasemap.spec ──────────────────────────
+  # James, 2026-10-17: "failure mode report thats also a macro to import into a cos test env. nexus nerve, spotlight and
+  # interaction field for debugging." · "lets do it. map it all, be thorough. there is probably more lurking around nexus
+  # that is useful"
+  # Found while mapping: this map never named cortex/self-heal/failure-mode-forensics.js, which since 2026-09-12 writes
+  # .failure_mode and .debug_macro nodes (his words then: "make a .failure_mode and .macro to replicate the bug"), and it
+  # planned lib/failure-macro.js beside them — two plans for one thing (§10.3). Joined, nothing here removed (§0.3):
+  #   FM1 → FMR1 (carried as is)   FM2 → FMR4: the macro IS the .debug_macro, made executable; lib/failure-macro.js is not built
+  #   FM3 → FMR5 (replay routes) + FMR6 (the run in COS)   FM4 → FMR3 (the report) + FMR8 (the screen)
+  # The roadmap 'later' of the 2026-10-09 declutter is lifted by his "lets do it" for these phases.

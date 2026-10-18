@@ -122,7 +122,7 @@ async function cxAssist(action) {
 
 // ── CE9: the bottom panel ────────────────────────────────────────────────────────────────────────────
 // §0.60.107 PS3 — charter · agents · jobs left the Plan panel for panels of their own here (James: "make the rest theyre own panel")
-const CX_PANELS = [['activity', 'activity'], ['work', 'work'], ['changes', 'changes'], ['runs', 'runs'], ['responses', 'responses'], ['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ['versions', 'versions'], ['machine', 'machine'], ['charter', 'charter'], ['agents', 'agents'], ['jobs', 'jobs']];
+const CX_PANELS = [['activity', 'activity'], ['work', 'work'], ['changes', 'changes'], ['flight', 'flight'], ['runs', 'runs'], ['responses', 'responses'], ['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ['versions', 'versions'], ['machine', 'machine'], ['charter', 'charter'], ['agents', 'agents'], ['jobs', 'jobs']];
 const CX_PLAN = new Set(['charter', 'agents', 'jobs']);
 const CX_RT = new Set(['tasks', 'log', 'control', 'versions', 'machine']);
 function cxPanel(k) {
@@ -138,6 +138,7 @@ function cxPanelLoad() {
   const repo = CURRENT_API_REPO; if (!repo) return;
   if (CX.panel === 'work') return cxWorkLoad(repo);
   if (CX.panel === 'changes') return cxChangesLoad(repo);
+  if (CX.panel === 'flight' && typeof cxFlightLoad === 'function') return cxFlightLoad(repo);   // §FR6 0.60.144 code-tab-flight.js
   if (CX.panel === 'runs') return cxRunsLoad(repo);
   if (CX.panel === 'responses') return cxRespLoad(repo);
   if (CX_PLAN.has(CX.panel)) return cxPlanLoad(repo);
@@ -302,6 +303,7 @@ function _cxPanelBody() {
   if (CX.panel === 'activity') return '';
   if (CX.panel === 'work') return _cxWork();
   if (CX.panel === 'changes') return _cxChanges();
+  if (CX.panel === 'flight') return typeof _cxFlight === 'function' ? _cxFlight() : '<div class="cs-empty cs-bad">the flight panel did not load (js/code-tab-flight.js)</div>';   // §FR6 0.60.144
   if (CX_PLAN.has(CX.panel)) {
     if (typeof PLANP === 'undefined' || !PLANP.data) return CX.planError ? `<div class="cs-empty cs-bad">could not read the plan: ${escapeHtml(CX.planError)}</div>` : '<div class="cs-empty">reading the plan…</div>';
     if (CX.panel === 'charter') return ppCharterPanelHtml();

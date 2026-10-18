@@ -1,5 +1,15 @@
 # diagnostic — Not Confirmed As a Standalone System
 
+> **CORRECTION 2026-10-17 (0.60.143), read this first.** What follows below was true when it was written and is kept (§0.3),
+> but it is no longer true. Since 0.60.136–0.60.138 diagnostic is a real system in genesis shape: `diagnostic/server.js`,
+> `cli.js`, `config.js` + `diagnostic.config.json` (port 7825), `registry-components.js` (the healer's rows + its contract's
+> routes), `interaction-contract.json`, `event-taxonomy.js`, `compartment.json`, `spec/diagnostic.spec`, `lib/`
+> (heal-loop, pulse-watch, wire-integrity, diagnostic-contract), `healer/` and `tests/`. The `:7825` question below is
+> answered: it is `diagnostic/nexus-diagnostic.js`, which serves /friction, /tension, /tension/edges, /engines, /cfr/*,
+> /gaps, /self-heal, /trace/:id and more. Its friction and sigma math come from `intelligence/cfr` and
+> `intelligence/baseline.js`. Found while mapping docs/2026-10-17-debugging-product-phasemap.spec.
+
+
 > **status: unresolved** · no central `diagnostic.spec` found this session · real pieces exist scattered across at least two other systems
 
 ---

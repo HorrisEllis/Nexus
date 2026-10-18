@@ -532,3 +532,30 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **Evidence:** `CHANGELOG-0.60.142.md`; `tests/modules/test-live-everywhere.test.js` LV-02 runs Gemini's own streamer
     and shows the thinking reaching the stream before the reply; `tests/modules/test-agent-live.test.js` LS-05 shows it in
     the Code tab, in Clear Glass.
+- **2026-10-17: "should the chunks, contracts, phases, dependancies all have syncronized ids or uuids, also in relation to the job."**
+  - **Context:** while asking for the debugging product to be specced, he asked whether every kind of record should share
+    ids with the job that produced it.
+  - **What it shows:** data-model thinking, aimed at the right seam. The code shows the cost of the gap he named.
+    `lib/change-record.js` falls back to matching a change to its run "by path and time (said as matched, never as
+    known)", because a change, a run and a phase do not carry each other's ids. Also, a chunk's id changes when its file
+    moves.
+  - **Evidence:** `docs/2026-10-17-debugging-product-phasemap.spec` `ids_and_the_job` (each id measured in the 0.60.142
+    tree); decision D10 in `docs/2026-10-17-decisions-by-the-axioms.spec`. The answer kept his intent, links between
+    every record and the job, but not one shared uuid, for the reasons recorded there.
+- **2026-10-17: "once proven, email them and tell them i could save them money on repair costs"**
+  - **Context:** asked what Flight Recorder is worth, he went straight to the buyer's question: what it saves. The coder read
+    that as a demand for a measured number, so the next phase measures repair cost from what the runs already record. FR6
+    (flight data) is the result.
+  - **What it shows:** commercial judgment that sets the engineering order. The claim had to be checkable before it was
+    made. It also shows debugging from a real log: his IM1 run, read whole, shows three agents failing the same way. That
+    points at the brief, not the agents, and the code now says so on its own.
+  - **Evidence:** `CHANGELOG-0.60.144.md`; `tests/modules/test-flight-data.test.js` (his IM1 run is the fixture: STUCK,
+    7 of 7 calls wasted, 62 min); the same release fixed Flight Recorder's standalone command (0/6 → 6/6).
+- **2026-10-17: "we need to add this all to nexus, there is boundaries mapping it"**
+  - **Context:** asked to build the failure-mode report, he reminded the coder that Nexus has a boundary census. Checking it
+    first showed that the coder's own release of an hour earlier (FR6) had added a crossing: kernel code reaching up into
+    intelligence. The ratchet went from 540 to 541, and two boundary tests failed.
+  - **What it shows:** architectural governance that holds. His rule (systems cross only by route, enforced by a ratchet)
+    caught a real defect the coder had shipped, before anything was built on top of it.
+  - **Evidence:** `CHANGELOG-0.60.146.md`; `tests/modules/test-system-boundary.test.js` SB-06/SB-08 (failing on 0.60.144,
+    passing on 0.60.146); `tests/modules/test-flight-data.test.js` FD-09; `tests/modules/test-failure-modes.test.js` FM-07.

@@ -37,6 +37,11 @@ The phases are in `docs/2026-10-16-repo-carve-phasemap.spec`.
 | FR3 | undo any change, keeping later edits (`versionium/lib/merge3.js`, `repo-inject` revert merge) | built 0.60.117 |
 | FR4 | stands alone: FR4a the command (`bin/flight-recorder.js`, state in `<project>/.flight-recorder/`) built 0.60.118; FR4b a server and page | partly built |
 | FR5 | the demo: the refactor tool on a real repo, recorded end to end | mapped |
+| FR6 | flight data: each agent run read whole — the agents it tried, cost, faults, what was wasted, friction and tension, landed or stuck (`lib/flight-data.js`, `repo flight`, the Code tab's flight panel) | built 0.60.144 |
+| FR7 | the causal record: runs and changes in RFR2 with typed edges, traced back from a failing test | mapped |
+| FR8 | branches for benchmarks: the same brief to several agents, each branch measured by FR6, the winner merged | mapped |
+| FR9 | sandboxed in COS compartments: FR2's tests in a throwaway VM when one is available | mapped |
+| FR10 | stop the ladder: a STUCK run opens a debugging case instead of trying the next agent | mapped |
 
 ## Using it on its own (FR4a)
 

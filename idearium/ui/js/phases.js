@@ -301,6 +301,7 @@ function _phDetail(d, uuid) {
     <div class="ph-d-row"><label>specs</label><span>${escapeHtml([...new Set([...(p.specs || []), ...((p.mapped && p.mapped.specs) || [])])].join(' · ') || '—')}</span></div>   <!-- 0.60.63 PT1: the specs that own this phase -->
     <div class="ph-d-row"><label>closes</label><span>${escapeHtml((p.closes || []).join(' ') || '—')}</span></div>
     ${_phMappedHtml(p)}
+    ${typeof pgSlot === 'function' ? pgSlot(p) : ''}   <!-- §0.60.147 DG2: the dependency graph a build is refused without (js/phase-graph-view.js) -->
     <div class="ph-d-sec">files · ${files.length}</div>
     <div class="ph2-files">${files.map(f => `<a href="#" class="ph2-file" title="open in the Code tab" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(f)}')` : ''};return false">${escapeHtml(f)}</a>`).join('') || '<span class="ph2-dim">—</span>'}</div>
     ${changes.length ? `<div class="ph-d-sec">changes waiting · ${changes.length}</div><div class="ph2-files">${changes.map(c => `<a href="#" class="ph2-file warn" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(c.path)}')` : ''};return false">${escapeHtml(c.op)} ${escapeHtml(c.path)} — ${escapeHtml(c.status)}</a>`).join('')}</div>` : ''}

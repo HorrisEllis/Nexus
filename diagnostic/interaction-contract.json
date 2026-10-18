@@ -2,7 +2,7 @@
   "id": "diagnostic-v1",
   "version": "1.0.0",
   "namespace": "diagnostic",
-  "_built_2026_09_13": "IC10 (docs/2026-08-30-interaction-contract-context-phasemap.spec) \u2014 'pull nexus-diagnostic.js out of its monolith into its own system folder.' The move to diagnostic/ already happened; this file was the missing sovereign-convention piece (every other real system \u2014 architect, guardian, cortex, idearium, sentinel, nexus-healer \u2014 has one). Routes below are verified directly against diagnostic/nexus-diagnostic.js's real url.pathname checks, not the file's own header comment, which understates the real surface (7 routes claimed, 31 real) \u2014 the same class of drift already found and fixed once this session for guardian/interaction-contract.json.",
+  "_built_2026_09_13": "IC10 (docs/2026-08-30-interaction-contract-context-phasemap.spec) — 'pull nexus-diagnostic.js out of its monolith into its own system folder.' The move to diagnostic/ already happened; this file was the missing sovereign-convention piece (every other real system — architect, guardian, cortex, idearium, sentinel, nexus-healer — has one). Routes below are verified directly against diagnostic/nexus-diagnostic.js's real url.pathname checks, not the file's own header comment, which understates the real surface (7 routes claimed, 31 real) — the same class of drift already found and fixed once this session for guardian/interaction-contract.json.",
   "ports": {
     "http": 7825
   },
@@ -190,6 +190,11 @@
       "method": "POST",
       "path": "/healer/proposals/:id/archive",
       "description": "Mark a proposal as rejected (stub, said)"
+    },
+    {
+      "method": "GET",
+      "path": "/causality",
+      "description": "FMR0 (0.60.146): the share of each system's ledger rows that name their cause (causedBy), and how many resolve — what RFR2 can walk for a failure report; ?system= for one; a fall below the high-water mark is named"
     }
   ],
   "_merged_2026_10_17": "James: \"diagnostic and nexus healer should be one system.\" nexus-healer moved into diagnostic/healer/ (0.60.136); its routes are served here under /healer. Its old contract is kept at _archive/2026-10-17-nexus-healer-into-diagnostic/."

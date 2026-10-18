@@ -461,10 +461,14 @@ function planToggle(key) { if (PLANP.open.has(key)) PLANP.open.delete(key); else
 // §0.60.125 DG1 — James chose "Refuse, say why": a build refused because its depends_on are still open (DEPS_OPEN) says
 // what it waits on — his decisions by their question — and asks before building anyway (the run records the override).
 // One door for every ▶ build (the Plan, the Phases tab's card and detail pane).
+// §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing." A build refused for having no
+// dependency graph is never offered "build anyway" (his "has to have"); the message says how to give the phase one.
+function _noGraphHeld(e) { const x = new Error(`no dependency graph — ${(e.detail.missing || []).join('; ')}${e.detail.remedy ? `. ${e.detail.remedy}` : ''}`); x.held = true; return x; }
 async function phaseBuildPost(uuid, body) {
   const go = (b) => api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify(b) }, 120000);
   try { return await go(body); }
   catch (e) {
+    if (e.detail && e.detail.code === 'NO_GRAPH') throw _noGraphHeld(e);   // §0.60.147 DG2
     if (!(e.detail && e.detail.code === 'DEPS_OPEN')) throw e;
     const open = e.detail.open || [];
     const list = open.map(o => `• ${o.key} — ${o.kind === 'decision' ? `your decision, still ${o.status}${o.asked ? `: "${o.asked}"` : ''}` : `a phase not done yet (${o.status})`}`).join('\n');

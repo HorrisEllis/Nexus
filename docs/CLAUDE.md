@@ -217,6 +217,27 @@ additions stay with ollama. then make sure the agents have accesss"
 - Agents get every capability a person gets, through the one command tool — check the repo agent's tool scope, not
   just the table.
 
+## A dependency graph before every phase (2026-10-18)
+
+James: "each phase, has to have a dependany graph before executing."
+
+This binds the system and the coder alike:
+- **Nexus refuses it (DG2, 0.60.147).** `lib/phase-graph.js` assembles a phase's graph:
+  - from the phase's mapping (`lib/phase-map-auto.js`): the files it changes, what they use, and who uses them (what a change
+    can break);
+  - from its `depends_on` (DG1);
+  - from the boundary census (`lib/system-boundary.js`): the systems it touches, and every edge that crosses between systems,
+    marked as already in the ratchet's baseline, or new.
+
+  ▶ build refuses a phase without a graph (409 NO_GRAPH), and there is no "anyway" for it. The graph is written to a file
+  before anything runs, and its hash goes on every row of the run. Read one with `repo phase-graph <repo> <phase>`, or in the
+  Phases tab.
+- **The coder runs it first, every phase.** Before writing code for a phase, run its graph and read it:
+  - a phase with no graph gets one first: name its files in the map;
+  - a NEW CROSSING in the graph is designed out (a route, or the file moves to its system) before any code is written.
+
+  Why: on 2026-10-17 the coder shipped FR6 without a graph, and the boundary ratchet caught the crossing an hour later.
+
 ## Evidence discipline (§0.1, §1.1)
 
 - Evidence over memory. Verify against the actual file/behavior before asserting.

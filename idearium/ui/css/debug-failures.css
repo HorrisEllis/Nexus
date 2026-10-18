@@ -1,0 +1,13 @@
+/* idearium/ui/css/debug-failures.css — FMR3 0.60.146: the Debug tab's failure modes (idearium/ui/js/debug-failures.js). Own file per
+   UI area (his rule); shared tokens only. */
+.df-row { padding: 6px 8px; border-bottom: 1px solid var(--b0, #222); cursor: pointer; font-size: 11px; }
+.df-row:hover, .df-open { background: var(--bg2, rgba(255,255,255,.03)); }
+.df-class { font-family: var(--mono); font-size: 10px; padding: 0 4px; border-radius: 3px; border: 1px solid var(--coral, #ff6b6b); color: var(--coral, #ff6b6b); }
+.df-recur { font-family: var(--mono); font-size: 10px; color: var(--warn, #f0b35a); }
+.df-report { margin-top: 6px; border-left: 2px solid var(--b1, #333); padding-left: 8px; cursor: default; }
+.df-sec { margin: 4px 0; }
+.df-sec-t { font-size: 11px; color: var(--t1, #cdd); }
+.df-from { font-family: var(--mono); font-size: 9px; color: var(--t3, #778); }
+.df-val { margin: 2px 0 0; font-family: var(--mono); font-size: 10px; white-space: pre-wrap; max-height: 220px; overflow: auto; }
+.df-hole-t { font-family: var(--mono); font-size: 10px; color: var(--t3, #889); }
+.df-view { border-left: 2px dashed var(--accent, #6cb6ff); padding-left: 6px; }

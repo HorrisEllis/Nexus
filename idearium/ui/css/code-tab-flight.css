@@ -1,0 +1,12 @@
+/* idearium/ui/css/code-tab-flight.css — FR6 0.60.144: the Code tab's flight panel (idearium/ui/js/code-tab-flight.js). Own file per
+   UI area (his rule); shared tokens only. */
+.fl-totals { padding: 6px 8px; font-family: var(--mono); font-size: 10px; border-bottom: 1px solid var(--b1, #333); color: var(--t1, #cdd); }
+.fl-run { padding: 6px 8px; border-bottom: 1px solid var(--b0, #222); cursor: pointer; font-size: 11px; }
+.fl-run:hover, .fl-run-open { background: var(--bg2, rgba(255,255,255,.03)); }
+.fl-v { font-family: var(--mono); font-size: 10px; padding: 0 4px; border-radius: 3px; border: 1px solid var(--b1, #333); text-transform: uppercase; }
+.fl-v-landed { color: var(--ok, #5fd38d); border-color: currentColor; }
+.fl-v-stuck, .fl-v-crashed { color: var(--bad, #ff6b6b); border-color: currentColor; }
+.fl-v-turbulent { color: var(--warn, #f0b35a); border-color: currentColor; }
+.fl-v-flying { color: var(--accent, #6cb6ff); border-color: currentColor; }
+.fl-why { margin-top: 2px; color: var(--warn, #f0b35a); font-size: 10px; }
+.fl-detail { margin-top: 4px; padding: 4px 6px; font-family: var(--mono); font-size: 10px; border-left: 2px solid var(--b1, #333); white-space: pre-wrap; }

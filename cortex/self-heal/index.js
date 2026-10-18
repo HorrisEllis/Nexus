@@ -247,7 +247,8 @@ function _enterFailureMode(gapType, gapUuid, existing) {
     uuid: uid(), faultClass: gapType, gapUuid, friction: existing?.friction ?? 1.0,
     enteredAt: Date.now(), source: MODULE_ID,
   };
-  try { jaaDB.insert('failure_modes', entry); }
+  // §FMR2 0.60.146 — the one insert into failure_modes is failure-intake.js write() (§10.1); the ladder's row is unchanged
+  try { require('./failure-intake.js').write(entry); }
   catch (e) { console.warn(`[${MODULE_ID}] failure_modes write failed: ${e.message}`); }
   if (_bus) _bus.emit('cortex.self-heal.failure_mode', {
     gapType, gapUuid, level: 4,

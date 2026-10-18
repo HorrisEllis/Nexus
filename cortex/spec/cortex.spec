@@ -316,3 +316,24 @@ spec:
 # (persisted, doubling), never parks a drop. Parked drops get a daily try; parked()/unpark() replace hand edits of
 # officiator-attempts.json (cortex GET /api/raid/officiator, POST /api/raid/officiator/unpark).
 
+
+## ADDENDUM 2026-10-17 (0.60.146) — every failure reaches the .failure_mode record; its report (FMR2, FMR3)
+# James, 2026-10-17: "failure mode report thats also a macro to import into a cos test env. nexus nerve, spotlight and
+# interaction field for debugging." · "do it. did you spec it out. we need to add this all to nexus, there is boundaries mapping it"
+# Map: docs/2026-10-17-failure-mode-report-phasemap.spec. Found: failure_modes was written only by the self-heal ladder, so all 9
+# .failure_mode nodes on his machine were memory_pressure with no cause chain.
+#   self-heal/failure-intake.js   the ONE insert into failure_modes (§10.1); the ladder's _enterFailureMode writes through it,
+#                                 its row unchanged. record(): dedup by signature <faultClass>::<where> while open, occurrences
+#                                 counted (§17.7); a new row is enriched by failure-mode-forensics.js with the anchor it came with.
+#   self-heal/failure-report.js   report(fm): sections, each naming its source; a missing one is a hole, named. Hypotheses only
+#                                 for named failure modes (CK-185), each with its separating experiment. Nerve's view is a section
+#                                 labelled "view, not evidence" (Nerve's own invariant).
+#   routes   POST /api/failure-modes (the intake; the route stamps cortex's CFR field, Nerve's windows and the environment on a new
+#            row) · GET /api/failure-modes — the existing route kept: `modes` exactly as before (read by
+#            guardian/userscript-claude.js and guardian/nexus-hey-claude.user.js), `failureModes` added (?status ?class ?repo
+#            ?limit) · GET /api/failure-modes/:id · GET /api/failure-modes/:id/report. Declared in registry-components.js and
+#            interaction-contract.json.
+# Other systems post through lib/failure-post.js (lib/nexus-client.js postDurable — by route, buffered when cortex is down):
+# lib/cos-run.js (a failed run, with its debug report) and idearium/api (a phase run ending contract-incomplete, unproven,
+# stalled, refused, or failed with every rung tried — with its flight). Proof: tests/modules/test-failure-modes.test.js 9/9.
+# Open: a contract gate FAILED, an uncaught error (lib/error-log.js), Clear Glass's error capture — not posting yet (FMR2).

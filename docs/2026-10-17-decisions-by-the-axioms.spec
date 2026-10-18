@@ -117,3 +117,34 @@ spec:
   # not settle, two axioms in conflict, a failure, or a cost he would want to know about first.
   attribution: "decided by his axioms (docs/AXIOMS-v3.1.md), applied by the coder, 2026-10-17"
 
+
+  # ── ADDENDUM 2026-10-17 (b) — the debugging product: ids, the gap door, the case ──────────────────────────────
+  # James, 2026-10-17: "should the chunks, contracts, phases, dependancies all have syncronized ids or uuids, also in
+  # relation to the job." Asked as a question; the axioms answer it. Mapped in docs/2026-10-17-debugging-product-phasemap.spec.
+  decided_b:
+    D10_ids_are_kept_and_referenced:
+      was: "DP0c (docs/2026-10-17-debugging-product-phasemap.spec ids_and_the_job)"
+      chosen: >-
+        No shared uuid across chunks, contracts, phases, runs and changes. Each keeps its own id, minted once and never
+        changed, and links are typed references <kind>:<id> written where the link is made. The job (a run) carries the
+        phase, contract and case it serves; a change carries its run and attempt. A chunk keeps its id across a move (IDS1).
+      axioms:
+        - "§5.1 — a UUID that never changes: today a chunk's id changes when its file moves (the path is in the key)."
+        - "§10.3 — competing truth layers: lib/change-record.js matching a run 'by path and time' is a second, guessed truth beside the real link."
+        - "§17.5 — every output answers from what, against which spec and version: only a reference chain answers it."
+    D11_one_gap_door:
+      was: "DP0d"
+      chosen: "Every gap is written through lib/gap-field.js report(). The 34 direct jaa.insert('gaps') calls in 26 files move onto it one file at a time, behind a ratchet that fails on a new one."
+      axioms:
+        - "§10.1 — one write authority per data type."
+        - "§17.7 — never fix the symptom twice needs an honest occurrence count; a direct insert skips the dedup that counts."
+        - "§1.2 — the move changes no reader silently: each file's readers are checked before it moves."
+    D12_a_case_is_a_contract:
+      was: "DP0e"
+      chosen: "A debugging case is a .contract v2 (cortex/core/raid/contract-gates.js) whose gates are the stages; no case store, no new format. Its status is computed from its gates, never set."
+      axioms:
+        - "§8.6 / §16.5 — contract-gates already evaluates gated work with evidence and invalidation; a second engine would be redundancy."
+        - "§0.5 — complexity must earn its existence."
+  stays_his_b:
+    - "DP0a — one product or two (debugging beside Flight Recorder, or Flight Recorder's next phases): direction."
+    - "DP0b — its name."

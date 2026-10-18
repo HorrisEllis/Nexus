@@ -371,6 +371,19 @@ export const SPEC = [
       for (const [t, v] of Object.entries(d.types || {})) console.log(`  ${t.padEnd(18)} ${String(v.files).padStart(5)} files · ${String(v.indexed).padStart(5)} indexed · ${String(v.history).padStart(6)} history ${v.files !== v.indexed ? h.c.amber('· not all indexed') : ''}`);
     } },
   // 0.60.129 DB17 — "all system relevant files should stay with the system": which files in lib/, hooks/, service/ … belong to one system
+  // §FMR2/FMR3 0.60.146 — James: "failure mode report thats also a macro to import into a cos test env." · "do it."
+  { key: 'failure.list', repo: false, usage: 'failure list [--open] [--class <fault class>] [--limit n]', about: 'every failure mode Nexus recorded (cortex): what failed, where, how often, whether it has a cause chain and a macro yet',
+    req: (a) => ({ system: 'cortex', method: 'GET', path: `/api/failure-modes?limit=${parseInt(a.flags.limit, 10) || 30}${a.flags.open ? '&status=open' : ''}${a.flags.class ? `&class=${encodeURIComponent(String(a.flags.class))}` : ''}` }),
+    print: (d, a, h) => { const l = d.failureModes || []; if (!l.length) { console.log(h.c.gray('  no failure modes recorded')); return; }
+      for (const f of l) console.log(`  ${h.c.gray(String(f.uuid).slice(0, 8))} ${String(f.faultClass).padEnd(18)} ${f.where || ''} ${h.c.dim(`${f.occurrences}× · ${f.via}${f.hasChain ? ' · chain' : ''}${f.hasMacro ? ' · macro' : ''}`)}${f.occurrences >= 2 ? h.c.amber('  recurring') : ''}`); } },
+  { key: 'failure.show', repo: false, usage: 'failure show <id>', about: 'one failure mode as its report: what failed, the conditions that led to it and the holes in that chain, ripple/wave/tidal, sigma, the CFR field, how often and fixes on record, candidate causes with the experiment that separates them, what was on screen (a view, never evidence), the environment, its macro',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ system: 'cortex', method: 'GET', path: `/api/failure-modes/${encodeURIComponent(a.args[0])}/report` }),
+    print: (d, a, h) => { for (const l of d.lines || []) console.log(/: — /.test(l) ? `  ${h.c.dim(l)}` : `  ${l}`); } },
+  // §FMR0 0.60.146 — how much of each system's ledger can be walked for a cause (diagnostic/lib/causality.js)
+  { key: 'system.causality', repo: false, usage: 'system causality [<system>]', about: 'the share of each system\'s ledger rows that name their cause (causedBy) and how many of those resolve to a row that exists: what a failure report can trace. A share only rises; a fall is named',
+    req: (a) => ({ system: 'diagnostic', method: 'GET', path: `/causality${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
+    print: (d, a, h) => { for (const l of d.lines || []) console.log(/^FELL/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); } },
   { key: 'system.homes', repo: false, usage: 'system homes [<system>]', about: 'files in the shared folders (lib/, hooks/, service/, contracts/ …) that belong to one system: used only by it, or named for it in hooks/ and service/. A census: nothing moves',
     req: (a) => ({ method: 'GET', path: `/api/system/homes${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
     print: (d, a, h) => { console.log(`  ${d.moves} of ${d.files} files in shared folders belong to one system · ${d.unused.length} are required by nothing (by a static path)`); if (!a.args[0]) console.log(h.c.dim(`  ${Object.entries(d.byHome).sort((x, y) => y[1].length - x[1].length).map(([k, v]) => `${k} ${v.length}`).join(' · ')}`)); for (const m of (a.args[0] ? d.list : d.list.slice(0, 25))) console.log(`  ${m.file.padEnd(48)} → ${h.c.mint(m.home)} ${h.c.dim(m.why)}`); } },
@@ -480,6 +493,16 @@ export const SPEC = [
       if (!(d.changes || []).length) { console.log('  no changes yet'); return; }
       for (const c of d.changes) console.log(`  ${c.id.slice(0, 8)}  ${String(c.status).padEnd(9)} ${c.path}${c.lines ? ` +${c.lines.added} −${c.lines.removed}` : ''}  ${c.agent || ''}${c.goal ? ` — ${String(c.goal).slice(0, 60)}` : ''}${c.landed.length ? `  @${c.landed[0]}` : ''}${c.holes.length ? h.c.amber(`  missing: ${c.holes.join(', ')}`) : ''}`);
     } },
+  // §FR6 0.60.144 — James: "we need to continue building the flight recorder. look at rfr2, and cfr for friction and tension."
+  { key: 'repo.flight', repo: true, usage: 'repo flight <repo> [<run id>] [--limit n]', about: 'each agent run read whole: landed or stuck and why, the ladder of agents it climbed, what it cost, what was spent on attempts that never landed, friction and tension. With no run: every run, and the share of calls wasted',
+    req: (a) => (a.args[0]
+      ? { method: 'GET', path: `/api/repos/${a.repo.uuid}/flight/${encodeURIComponent(a.args[0])}` }
+      : { method: 'GET', path: `/api/repos/${a.repo.uuid}/flight?limit=${parseInt(a.flags.limit, 10) || 30}` }),
+    print: (d, a, h) => {
+      if (d.flight) { for (const l of d.lines || []) console.log(/^STUCK|^CRASHED|^TURBULENT/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); return; }
+      for (const l of d.lines || []) console.log(`  ${l}`);
+      for (const f of d.flights || []) console.log(`  ${String(f.verdict).padEnd(9)} ${h.c.gray(f.runId)} ${f.phase || ''} ${h.c.dim(`${f.calls} call(s) · ${f.wasted.calls} wasted · ${(f.ladder || []).join(' → ')}`)}${f.why && f.verdict !== 'landed' ? `\n     ${String(f.why).slice(0, 140)}` : ''}`);
+    } },
   // FR3 0.60.117 — undo any change an agent made, keeping later edits (versionium/lib/merge3.js); a clash is refused, named
   { key: 'repo.undo', repo: true, usage: 'repo undo <repo> <change id> [--no-merge] [--force]', about: 'undo one change: what was there before is put back and every later edit is kept; if a later change touched the same lines, nothing changes and the lines are named. --no-merge refuses whenever the file moved on; --force discards later edits',
     need: (a) => (a.args[0] ? null : '<change id>'),
@@ -564,6 +587,11 @@ export const SPEC = [
       }
       console.log(h.c.dim('\n  build one: idearium repo phase <repo> <phase> build'));
     } },
+  // §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing."
+  { key: 'repo.phase-graph', repo: true, usage: 'repo phase-graph <repo> <phase> [--map name]', about: 'a phase\'s dependency graph, the one a build is refused without: the files it changes, what they use, who uses them (what a change can break), the systems, any crossing between systems, what it waits on, its specs',
+    need: (a) => (a.args[0] ? null : '<phase>'),
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/graph?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(String(a.flags.map))}` : ''}` }),
+    print: (d, a, h) => { for (const l of d.lines || []) console.log(/^(NEW CROSSING|  missing)|NO DEPENDENCY GRAPH/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); } },
   { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again)',
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => (a.args[1] === 'build'

@@ -60,4 +60,9 @@ module.exports = [
   _c('store.report',          'GET',  '/api/store',                    'The store by its files: base, append segments, cap, archive (0.45.0 CM3)'),
   _c('tags.list',             'GET',  '/api/tags',                     'All tags in memory'),
   _c('tags.add',              'POST', '/api/tags',                     'Add tag'),
+  // ── Failure modes (FMR2/FMR3 0.60.146) ─────────────────────────────────
+  _c('failure-modes.record',  'POST', '/api/failure-modes',            'A failure reaches the .failure_mode record through its one writer: {faultClass, where, source, system, summary, anchor, evidence} — the same failure again counts an occurrence', {tags:['failure-mode']}),
+  _c('failure-modes.list',    'GET',  '/api/failure-modes',            'Every failure mode, newest first (?status=open, ?class=, ?limit=)', {tags:['failure-mode']}),
+  _c('failure-modes.get',     'GET',  '/api/failure-modes/:id',        'One failure mode, its row as recorded', {tags:['failure-mode']}),
+  _c('failure-modes.report',  'GET',  '/api/failure-modes/:id/report', 'Its report: what failed, the chain and its holes, compound class, sigma, recurrence, hypotheses, environment — each section from its source', {tags:['failure-mode']}),
 ];

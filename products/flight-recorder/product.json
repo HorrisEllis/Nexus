@@ -1,7 +1,7 @@
 {
   "name": "flight-recorder",
   "status": "in Nexus (decided 2026-10-17); branched out at each release with `repo carve --preset flight-recorder`",
-  "james": "\"look at rfr2. versionium. event ledgers. causal graph. cos test env. its a product?\" (2026-10-16) \u00b7 \"I agree, with the recommendation\" (2026-10-17, on building it inside Nexus with a real boundary)",
+  "james": "\"look at rfr2. versionium. event ledgers. causal graph. cos test env. its a product?\" (2026-10-16) · \"I agree, with the recommendation\" (2026-10-17, on building it inside Nexus with a real boundary)",
   "reading": "The coder's reading, to confirm: an undo button and flight recorder for AI coding agents. Every change an agent makes is tested before it lands, kept as a version you can compare and put back, recorded with what caused it, and replayable.",
   "why": "an undo button and flight recorder for AI coding agents: tested before it lands, versioned, recorded with its cause, undoable",
   "map": "docs/2026-10-16-repo-carve-phasemap.spec",
@@ -40,14 +40,19 @@
     "products/flight-recorder/lib/versions.js",
     "lib/repo-activity.js",
     "lib/activity-log/compartment.js",
-    "guardian/jaa-store.js",
-    "versionium/lib/files.js"
+    "lib/jaa-store.js",
+    "versionium/lib/files.js",
+    "lib/flight-data.js",
+    "lib/phase-cost.js",
+    "lib/phase-faults.js",
+    "lib/run-watch.js"
   ],
   "phases": {
     "FR1_one_record_per_change": "built 0.60.114",
     "FR2_tested_before_it_lands": "built 0.60.115",
     "FR3_undo_any_change": "built 0.60.117",
     "FR4_stands_alone": "FR4a built 0.60.118 (the command); FR4b open (server and page)",
-    "FR5_the_demo": "mapped"
+    "FR5_the_demo": "mapped",
+    "FR6_flight_data": "built 0.60.144"
   }
 }
