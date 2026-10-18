@@ -627,3 +627,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     The same work turned out to be mapped many times over. The gate record was mapped four times, the rewind five times and the
     precommit gate four times.
   - **Evidence:** `docs/2026-10-18-gating-census-phasemap.spec`; test PM-INLINE; `CHANGELOG-0.60.155.md`.
+
+- **2026-10-18 — 0.60.156: his call to "look at siso" became the design.**
+  - **What was built:** context-finding as Event → Gate → Stream. Every source is asked at once, and what nothing answers is
+    residue. A new store joins by adding one table row.
+  - **Credit:** SISO is credited to Jonathan Bailey in `siso/spec/siso.spec`. The call to build this subsystem on it, unchanged,
+    was James's.
+  - **What it shows:** keeping one foundation across the whole stack, so a new part compounds on it rather than standing beside
+    it.
+  - **Evidence:** `tests/modules/test-context-stream.test.js`. Three arrival orders give one answer, and a fourth source joins
+    with no line of the finder changed.

@@ -535,7 +535,7 @@ Not expanded further — this session did not read `loom/server.js` or `package.
   exports mapAgentMemory, FILES, BOUNDARY_EXPORTS, CONSUMERS, BOUNDARY_IMPORTS · requires 1 · required by 1
 - `loom/maps/build-context-map.js` (85 lines) — 0.39.308–309: what a build agent is sent about the file it writes (lib/build-context.js) and the editable build blocks that send it, mapped into LOOM one component per FILE with every REAL edge as…  
   exports mapBuildContext, FILES, CONSUMERS, BOUNDARY_IMPORTS · requires 1 · required by 1
-- `loom/maps/build-surface-map.js` (383 lines) — 0.39.280: docs/2026-09-29-build-surface-phasemap.spec mapped into LOOM, one component per FILE with every REAL edge as a wire. Mirrors loom/maps/chat-ledger-map.js.  
+- `loom/maps/build-surface-map.js` (389 lines) — 0.39.280: docs/2026-09-29-build-surface-phasemap.spec mapped into LOOM, one component per FILE with every REAL edge as a wire. Mirrors loom/maps/chat-ledger-map.js.  
   exports mapBuildSurface, FILES, CONSUMERS · requires 1 · required by 1
 - `loom/maps/chat-ledger-map.js` (69 lines) — 0.39.278: the live chat ledger (Clear Glass download manager), the page-side stream that feeds it, and the co-pilot pane's kept conversation, mapped into LOOM one component per FILE with every REAL  
   exports mapChatLedger, FILES, CONSUMERS · requires 1 · required by 1
@@ -589,7 +589,7 @@ Not expanded further — this session did not read `loom/server.js` or `package.
 - `loom/scanners/mock-data-finder.js` (126 lines)  
   exports scan, PATTERNS · requires 1 · required by 1 · tested by `tests/modules/test-mock-data-finder.js`
 - `loom/scanners/phasemap-map.js` (563 lines) — the PHASEMAP layer of loom's self-model James: "consolidate all the phasemaps, split them by system, add it as an  
-  exports loadAll, parsePhasemapText, isPhasemapFile, forSystem, summary, persistHistory +5 · requires 0 · required by 10 · tested by `loom/test/phasemap-map.test.js`, `tests/modules/test-loom-phasemap-status.js`
+  exports loadAll, parsePhasemapText, isPhasemapFile, forSystem, summary, persistHistory +5 · requires 0 · required by 11 · tested by `loom/test/phasemap-map.test.js`, `tests/modules/test-loom-phasemap-status.js`
 - `loom/scanners/source-map.js` (381 lines)  
   exports scanTree, mapSource, eventMap, eventsOf, idFor, stripNonCode +4 · requires 0 · required by 17 · tested by `tests/modules/test-component-store.test.js`, `tests/modules/test-dangling-hooks-and-idearium-load.test.js` +1
 - `loom/scanners/spec-map.js` (247 lines)  

@@ -41,7 +41,7 @@ spec:
   layers:
     L0_the_record_tells_the_truth:  "DONE 0.60.155 — the scanner fix, the stale statuses, the id-collision finding, D15–D23."
     L1_primitives_no_decision:
-      - "GM5 the context stream — lib/context-stream.js + lib/context-sources.js on siso/ (gate-memory addendum b)"
+      - "GM5 the context stream — DONE 0.60.156: lib/context-stream.js + lib/context-sources.js on siso/ (gate-memory addendum b), wired into every gate"
       - "GM4 the node lattice — intelligence/lattice/node-lattice.js; and node indexes for the five systems the route says have 'no database yet' (cortex, diagnostic, idearium, orchestrator, sentinel)"
       - "LM0 loom wires with stable ids — ids from their endpoints (loom/scanners/source-map.js:301 still numbers them)"
       - "GW5 tool parity — the capability-diff test and the gate rows (run.status, gate.packet, contract.trace) in route-commands"
@@ -67,3 +67,9 @@ spec:
       depends_on: [GC0_the_census]
       files: [lib/context-stream.js, lib/context-sources.js, intelligence/lattice/node-lattice.js, loom/scanners/source-map.js, idearium/cli/route-commands.js, lib/check-catalogue.js]
       does: "L1, piece by piece, each its own release with its test; order inside the layer is free."
+
+  # ── ADDENDUM 2026-10-18 (a) — 0.60.156: GM5 built; a regression of the coder's found and fixed on the way ─────────────
+  # GM5 (layer 1) is built and wired: every gate's attempt now carries what the context stream found. Running the boundary test
+  # for it found SB-06 red on main: lib/readme-generate.js (0.60.153, the coder's) required loom/scanners/phasemap-map.js, a lib →
+  # loom crossing. Fixed by handing the phases in from scripts/generate-atlases.js (no system); test-system-boundary 10/10 (SB-08,
+  # also red on main, passes with it).

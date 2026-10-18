@@ -19,7 +19,7 @@ console.log(`[generate-atlases] ${r.filter(x => x.changed).length}/${r.length} a
 // NEXUS atlas; the old README (an Emergence-era design, marked superseded) is kept in _archive/.
 // 0.60.147 — James: "can you update and expand the read me … a full section of for each of the 15 systems, each module and all the
 // files … all the phases … the data structure … all the idearium work … use all the changelogs". The README's generated half.
-const RG = require('../lib/readme-generate.js').generate();
+const RG = require('../lib/readme-generate.js').generate({ phasemaps: require('../loom/scanners/phasemap-map.js').loadAll() });
 console.log(`  ✎ docs/atlases/nexus-atlas.md  inventory: ${RG.files} files, ${RG.releases} release notes, ${RG.chars} chars`);
 const readme = G.syncReadme();
 console.log(`  ${readme.changed ? '✎' : '·'} README.md ← docs/atlases/nexus-atlas.md`);

@@ -272,6 +272,20 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<file.contract>'),
     local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); const r = C.evaluate(L.payload); if (!r.legacy) C.save(a.args[0], L); return r; },
     print: (d, a, h) => { if (d.legacy) { console.log(h.c.dim(`  ${d.why}`)); return; } for (const p of d.problems || []) console.log(h.c.amber(`  ! ${p}`)); for (const g of d.gates) console.log(`  ${(g.status === 'PASSED' ? h.c.mint : g.status === 'READY' ? (x) => x : h.c.amber)(g.status.padEnd(8))} ${g.id.padEnd(16)} ${h.c.dim(g.type)}${g.reasons.length ? h.c.dim(`  — ${g.reasons.join('; ')}`) : ''}`); console.log(`  ${d.complete ? h.c.mint('complete') : h.c.amber('not complete')}: ${d.why.join('; ')}`); } },
+  // §0.60.156 GM5 — the context stream: every source in lib/context-sources.js asked at once; what none covered is named
+  { key: 'context.find', repo: false, usage: 'context find <text> [--need=a|b|c] [--repo=<uuid>] [--gate=<map::phase::brick>] [--sources=atlas,vector]', about: 'what Nexus already holds for a request — every context source asked at once (non-linear), each piece with its source and kind; the need nothing covered is named, and is all a build would be asked',
+    need: (a) => (a.args.length || a.flags.need ? null : '<text>'),
+    req: (a) => ({ method: 'POST', path: a.flags.repo ? `/api/repos/${encodeURIComponent(a.flags.repo)}/context/find` : '/api/context/find', timeoutMs: 60000,
+      body: { text: a.args.join(' '), ...(a.flags.need ? { need: String(a.flags.need).split('|').map(x => x.trim()).filter(Boolean) } : {}), ...(a.flags.gate ? { gate: String(a.flags.gate) } : {}), ...(a.flags.sources ? { sources: String(a.flags.sources).split(',').map(x => x.trim()).filter(Boolean) } : {}) } }),
+    print: (d, a, h) => {
+      console.log(`  ${h.c.mint(`${d.pieces.length} piece(s)`)} · covered ${d.covered.length}/${d.request.need.length}${d.residue.need.length ? h.c.amber(` · not found: ${d.residue.need.join(' · ')}`) : ''}`);
+      for (const p of d.pieces.slice(0, 15)) console.log(`  ${h.c.dim(`[${p.from} ${p.kind} ${p.score.toFixed(2)}]`)} ${p.id}  ${h.c.dim(p.text.replace(/\s+/g, ' ').slice(0, 140))}`);
+      for (const f of d.residue.failed) console.log(h.c.amber(`  ✗ ${f.source}: ${f.why}${f.phase ? ` (built by ${f.phase})` : ''}`));
+      if (d.residue.absent.length) console.log(h.c.dim(`  asked, nobody home: ${d.residue.absent.join(', ')}`));
+    } },
+  { key: 'context.sources', repo: false, usage: 'context sources', about: 'the context stream\'s sources: each row\'s signature, system, cost (free | model | build) and kinds — joining is a row, never a line in the finder',
+    req: () => ({ method: 'GET', path: '/api/context/sources' }),
+    print: (d, a, h) => { for (const r of d.sources) console.log(`  ${r.signature.padEnd(12)} ${r.system.padEnd(13)} ${r.cost.padEnd(6)} ${h.c.dim((r.kinds || []).join(','))}${r.phase ? h.c.amber(`  (built by ${r.phase})`) : ''}  ${h.c.dim(r.about || '')}`); } },
   { key: 'contract.packet', repo: false, usage: 'contract packet <file.contract> <gate>', about: 'the smallest context one gate needs (its refs resolved, upstream evidence, its gaps) — what an agent is handed',
     need: (a) => (a.args.length >= 2 ? null : '<file.contract> <gate>'),
     local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); return C.packet(C.load(a.args[0]).payload, a.args[1]); },

@@ -614,7 +614,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 
 - `idearium/api/build-surface.js` (405 lines)  
   exports filesState, deviationRecalc, deviationGet, afterVersion, afterFileChange, environmentGet +8 · requires 12 · required by 1
-- `idearium/api/index.js` (10453 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ Idearium HTTP API — idearium/api/index.js ║  
+- `idearium/api/index.js` (10490 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ Idearium HTTP API — idearium/api/index.js ║  
   exports _setAgentAsk, _reconcileRunsForTest, _postPhaseFailureForTest, _agentAskForTest, _learnFromRejectionForTest, _verdictForTest +10 · requires 91 · required by 26
 
 #### `idearium/cli/`
@@ -623,7 +623,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 
 - `idearium/cli/index.js` (1308 lines)  
   requires 5 · required by 0 · emits idearium.gap.ignore, idearium.gap.open, idearium.gap.resolve, idearium.idea.archive +6
-- `idearium/cli/route-commands.js` (1118 lines) — §0.39.374: every capability is a command. James: "That was fantastic. Everything needs to be available as commands."  
+- `idearium/cli/route-commands.js` (1132 lines) — §0.39.374: every capability is a command. James: "That was fantastic. Everything needs to be available as commands."  
   exports SPEC, ASK, makeRouteCommands, renderText, helpLines · requires 11 · required by 4 · tested by `diagnostic/tests/causality.test.js`, `tests/modules/test-cos-compartment-template.test.js` +6
 - `idearium/cli/store-chatter.js` (11 lines) — §0.39.374: imported FIRST by idearium/cli/index.js (ES modules run their imports in order, before the importing module's own code). The store prints "[jaa] Loaded N rows …" (and IdeaOS,…
 
@@ -850,7 +850,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 - `idearium/ui/js/agent-blocks.js` (101 lines) — // idearium/ui/js/agent-blocks.js — Settings → Agents → "what the agent is sent". 0.39.258. // James: "not to inject anything into it that i cant edit in the agent settings." Every block of the…  
   requires 0 · required by 1
 - `idearium/ui/js/agent-options.js` (82 lines) — §0.48.0 OS8: every agent setting, in Settings → Agents. Map: docs/2026-10-07-idearium-one-surface-phasemap.spec (OS8_settings_agents_holds_every_agent_option)
-- `idearium/ui/js/app.js` (5955 lines) — // ════════════════════════════════════════════════════ // STARFIELD CANVAS — twinkling stars (Van Gogh / synthwave reference, dialed  
+- `idearium/ui/js/app.js` (5965 lines) — // ════════════════════════════════════════════════════ // STARFIELD CANVAS — twinkling stars (Van Gogh / synthwave reference, dialed  
   requires 5 · required by 7
 - `idearium/ui/js/arch-canvas.js` (669 lines)
 - `idearium/ui/js/code-dock.js` (384 lines) — // ════════════════════════════════════════════════════════════════════════════ // §THE DOCK — idearium/ui/js/code-dock.js (0.60.118 DK2)  

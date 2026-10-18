@@ -4822,6 +4822,7 @@ const AGENT_CLI_HELP = [
   '  /graph [file]                 how the project connects; with a file, what it imports and what imports it',
   '  /context on|off               include this project\'s code and graph with your questions (on by default)',
   '  /recall <words>               search EVERY memory system and graph (chats, fixes, gaps, learned facts, specs, changelogs, this graph)',
+  '  /find <words>                 every context source asked at once (the context stream): each piece with its source and kind, what none covered named',
   '  /atlas                        where NEXUS keeps memory: every table with its size and the tool that reads it',
   '',
   'RUN & CHECK',
@@ -4928,6 +4929,15 @@ async function agentCommand(line) {
         const r = await api(`/api/repos/${uuid}/context?q=${encodeURIComponent(arg)}&limit=15`);
         _cli(uuid, r.hits.length ? r.hits.map(h => `[${h.source}${h.id ? ' ' + String(h.id).slice(0, 40) : ''}] ${h.snippet}`).join('\n\n') : `nothing matched "${arg}" (searched ${r.searched.length} sources)`,
           `${r.total} match(es) across ${Object.keys(r.bySource).length} source(s)`); break;
+      }
+      // §0.60.156 GM5 — the context stream: every source asked at once; what none covered is named (lib/context-stream.js)
+      case 'find': {
+        if (!arg) { _cli(uuid, 'usage: /find <words> — every context source asked at once; e.g. /find contract ledger per gate'); break; }
+        const r = await api(`/api/repos/${uuid}/context/find`, { method: 'POST', body: JSON.stringify({ text: arg }) }, 60000);
+        const lines = r.pieces.slice(0, 15).map(p => `[${p.from} ${p.kind} ${p.score.toFixed(2)}] ${p.id}\n  ${p.text.replace(/\s+/g, ' ').slice(0, 200)}`);
+        for (const f of r.residue.failed) lines.push(`✗ ${f.source}: ${f.why}${f.phase ? ` (built by ${f.phase})` : ''}`);
+        if (r.residue.absent.length) lines.push(`asked, nobody home: ${r.residue.absent.join(', ')}`);
+        _cli(uuid, lines.join('\n\n') || 'nothing found', `${r.pieces.length} piece(s) from ${new Set(r.pieces.map(p => p.from)).size} source(s) · covered ${r.covered.length}/${r.request.need.length}${r.residue.need.length ? ` · not found: ${r.residue.need.join(' · ')}` : ''}`); break;
       }
       case 'atlas': {
         const d = await api('/api/context/directory');
