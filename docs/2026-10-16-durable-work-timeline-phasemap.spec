@@ -211,3 +211,17 @@ not_verified:
 # Not done, said: TL2 (resume at boot — the next request carrying what was written) does not read the journal yet; the journal
 # is per guardian/Ollama job, not yet tied to a work id across a phase's attempts (the id question in
 # docs/2026-10-18-debugging-product-phasemap.spec); lib/repo-activity.js's tasks are still memory plus the exchange log.
+
+# ## ADDENDUM 2026-10-18 (e) — TL1c built (0.60.144): kept per gate
+# James, 2026-10-18, after 0.60.143: "You got it persistent per gate"
+# The coder's reading, to confirm: that the reply should persist per gate (the contract's brick), not only per job — the unit a
+# build resumes at since GW2 (0.60.77: "use a different chat or agent each gate"). As 0.60.143 stood, it was not: a guardian
+# frame carries only its jobId, and a gate's jobId reaches Idearium only after the reply.
+# Built: the task a frame is picked onto (lib/repo-activity.js) carries its brick (<map>::<phase>::<gate>, from repo-agent's
+# dispatch); the journal files each reply under it with its phase run; work-journal gates() gives every attempt at a gate in
+# order, failed attempts included; GET agent/feed?gate= (a <map>::<phase> prefix for a whole phase) / ?gates=1; `repo feed
+# --gate|--gates`; the live header shows the gate and the attempt. Fixed: a frame with no session went to the newest running
+# task, so concurrent gates could swap replies; it now goes to the task that took its job, else one with no job yet.
+# Proof: test-work-journal WJ-04 (real router, a restart, two gates at once), WJ-03 (Clear Glass).
+# Still open: the key is the brick id, b<n>.<file>, which is positional — DBG1 (docs/2026-10-18-debugging-product-phasemap.spec)
+# names it for what it is; a reply that came back with no task running (late, after its task ended) is kept, ungated, and said.

@@ -4261,11 +4261,17 @@ async function _agentFeedRestore(uuid) {
     const d = await api(`/api/repos/${encodeURIComponent(uuid)}/agent/feed?limit=1`);
     const top = (d.jobs || [])[0]; if (!top) return;
     job = (await api(`/api/repos/${encodeURIComponent(uuid)}/agent/feed?job=${encodeURIComponent(top.jobId)}`)).job || top;
+    // §0.60.144 TL1c — a reply under a gate: which attempt of that gate it was
+    if (job.brick) {
+      const g = ((await api(`/api/repos/${encodeURIComponent(uuid)}/agent/feed?gate=${encodeURIComponent(job.brick)}`)).gates || []).find(x => x.brick === job.brick);
+      if (g) { const a = g.attempts.find(x => x.jobId === job.jobId); job.attempt = { n: a ? a.attempt : g.attempts.length, of: g.attempts.length }; }
+    }
   } catch (_) { return; }   // no journal (an older Idearium, or none yet): the live feed is all there is
   const st = AGENT_FEED.get(uuid);
   if (!st || !job || (st.jobId && (st.jobId !== job.jobId || st.text))) return;   // live frames win
   Object.assign(st, { jobId: job.jobId, provider: job.provider, text: job.text || '', textLen: job.textLen || 0, thinking: job.thinking || '', thinkingLen: job.thinkingLen || 0,
-    generating: job.generating && job.status === 'responding', gate: job.gate || null, mutations: job.mutations, restored: job.status, updated: job.updatedAt || 0 });
+    generating: job.generating && job.status === 'responding', gate: job.gate || null, mutations: job.mutations, restored: job.status, updated: job.updatedAt || 0,
+    brick: job.brick || null, attempt: job.attempt || null });
   st.rows = (job.timeline || []).filter(e => e.event !== 'chunk' && !(e.event === 'progress' && e.stage === 'dom')).slice(-AGENT_FEED_MAX).map(e => ({
     ts: e.ts, ev: e.event === 'gate' ? `gate ${e.label || e.gate || ''} · ${e.state || ''}` : e.stage ? `${e.event}:${e.stage}` : e.event,
     detail: [e.detail, e.how, e.reason, e.error].filter(Boolean).join(' · '), bad: e.event === 'error' || e.event === 'timeout' || (e.event === 'gate' && e.state === 'failed') }));
@@ -4278,7 +4284,8 @@ function _agentFeedIn(p) {
   if (!p || !p.repoUuid) return;
   const st = _agentFeedState(p.repoUuid);
   st.restored = null;
-  if (p.jobId && p.jobId !== st.jobId) { st.jobId = p.jobId; st.text = ''; st.textLen = 0; st.anchor = null; st.mutations = null; st.gate = null; st.thinking = ''; st.thinkingLen = 0; }
+  if (p.jobId && p.jobId !== st.jobId) { st.jobId = p.jobId; st.text = ''; st.textLen = 0; st.anchor = null; st.mutations = null; st.gate = null; st.thinking = ''; st.thinkingLen = 0; st.brick = null; st.attempt = null; }
+  if (p.brick) st.brick = p.brick;   // §0.60.144 TL1c — the contract gate this reply works on
   // §0.60.142 LV1 — the model's thinking, streamed while its reply is still empty (gemini thinks for minutes): kept whole
   if (typeof p.thinking === 'string' && p.thinking) { st.thinking = p.thinking.slice(-12000); st.thinkingLen = p.thinkingLen || p.thinking.length; }
   if (p.provider) st.provider = p.provider;
@@ -4361,6 +4368,7 @@ function agentLiveHtml(uuid) {
   const attrs = a && a.attrs ? Object.entries(a.attrs).map(([k, v]) => `${k}=${v}`).join(' ') : '';
   return `<div class="al-head"><span class="al-dot${st.generating ? ' on' : ''}"></span><b>${st.generating ? 'writing' : 'idle'}</b>
       ${st.provider ? `<span>${escapeHtml(st.provider)}</span>` : ''}<span class="al-dim">job ${escapeHtml(String(st.jobId).slice(0, 8))}</span>
+      ${st.brick ? `<span class="al-dim" data-brick="${escapeHtml(st.brick)}" title="${escapeHtml(st.brick)}">gate ${escapeHtml(st.brick.split('::').slice(1).join(' · '))}${st.attempt ? ` · attempt ${st.attempt.n} of ${st.attempt.of}` : ''}</span>` : ''}
       ${st.restored ? `<span class="al-dim" data-restored="${escapeHtml(st.restored)}">restored from disk · ${escapeHtml(st.restored)}</span>` : ''}
       ${st.mutations != null ? `<span class="al-dim">mutations ${st.mutations}</span>` : ''}
       ${a ? `<span class="al-anchor" title="${escapeHtml(attrs)}">⌖ ${escapeHtml(a.path || a.tag || '')}</span>` : ''}

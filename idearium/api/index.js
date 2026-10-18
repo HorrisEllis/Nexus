@@ -314,7 +314,12 @@ if (!process.env.NEXUS_TEST_SANDBOX) {
 }
 // §0.60.143 TL1b — James: "We need persistent data look at the last commit." Every frame of a repo agent's reply (guardian's and
 // Ollama's) is kept on disk as it streams (lib/work-journal.js), so a reload or a restart shows the reply and the thinking so far.
-function _journal(frame) { try { _require('../../lib/work-journal.js').record(frame); } catch (e) { console.warn(`[idearium] work-journal: ${e.message}`); } }
+// §0.60.144 TL1c — James: "You got it persistent per gate". A guardian frame carries only its job; the task it was picked onto
+// (lib/repo-activity.js feed) knows the gate (brick), the phase run and the session, so the reply is filed under its gate too.
+function _journal(frame, task = null) {
+  const f = task ? { ...frame, brick: frame.brick || task.brick || null, runId: frame.runId || task.runId || null, session: frame.session || task.session || null, taskId: task.id || null } : frame;
+  try { _require('../../lib/work-journal.js').record(f); } catch (e) { console.warn(`[idearium] work-journal: ${e.message}`); }
+}
 // §0.39.366 — a compartment's background tasks (lib/repo-activity.js): every change broadcast as idearium.repo.task; the
 // history before this process from the compartment's own exchange log
 let _repoActivityMod = null;
@@ -7409,7 +7414,7 @@ async function handle(req, res, route, query, body) {
       const EVENTS = ['dispatched', 'chunk', 'complete', 'error', 'timeout'];
       if (!body || !EVENTS.includes(body.event) || !body.jobId) return err(res, 400, `event (${EVENTS.join(' | ')}) and jobId are required`);
       const model = body.model ? String(body.model).slice(0, 120) : null;
-      try { _repoActivity().feed({ repoUuid: params.uuid, event: body.event, jobId: String(body.jobId), provider: model ? `ollama · ${model}` : 'ollama', session: body.session || null, fullLen: Number(body.fullLen) || 0, chars: Number(body.chars) || 0, ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}) }); } catch (_) {}
+      let task = null; try { task = _repoActivity().feed({ repoUuid: params.uuid, event: body.event, jobId: String(body.jobId), provider: model ? `ollama · ${model}` : 'ollama', session: body.session || null, fullLen: Number(body.fullLen) || 0, chars: Number(body.chars) || 0, ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}) }); } catch (_) {}
       const ofp = {
         repoUuid: params.uuid, event: body.event, jobId: String(body.jobId).slice(0, 120), source: 'ollama',
         provider: model ? `ollama · ${model}` : 'ollama', model, session: body.session ? String(body.session).slice(0, 120) : null,
@@ -7418,8 +7423,8 @@ async function handle(req, res, route, query, body) {
         ...(Number(body.chars) > 0 ? { chars: Number(body.chars) } : {}),
         ...(typeof body.generating === 'boolean' ? { generating: body.generating } : {}),
       };
-      _journal(ofp);   // §0.60.143 TL1b — on disk as it streams
-      getIdeaOS().broadcast('idearium.repo.agent.feed', ofp);
+      _journal(ofp, task);   // §0.60.143 TL1b — on disk as it streams; §0.60.144 TL1c — under its gate
+      getIdeaOS().broadcast('idearium.repo.agent.feed', task && task.brick ? { ...ofp, brick: task.brick, runId: task.runId || null } : ofp);
       return ok(res, { ok: true });
     }
     case 'repo.agent.feed': {
@@ -7432,6 +7437,8 @@ async function handle(req, res, route, query, body) {
         const j = WJ.get(params.uuid, String(q.job), { timeline: true });
         return j ? ok(res, { ok: true, repoUuid: params.uuid, job: j }) : err(res, 404, `no journal for job ${q.job} in this repo`);
       }
+      // §0.60.144 TL1c — per gate: ?gate=<map>::<phase>::<gate> (or <map>::<phase> for every gate of a phase), ?gates=1 all
+      if (q.gate || q.gates) return ok(res, { ok: true, repoUuid: params.uuid, ...WJ.gates(params.uuid, { brick: q.gate ? String(q.gate) : null }) });
       return ok(res, { ok: true, repoUuid: params.uuid, dir: WJ.dir(), ...WJ.list(params.uuid, { limit: Number(q.limit) || 20 }) });
     }
     case 'repo.agent.tool.events': {
@@ -10181,9 +10188,9 @@ export function startAPI() {
           // §FEED 0.39.244 — a repo agent's guardian job, live, to the Agent tab (SSE only).
           connectGuardianStream(se, { onFeed: (ev) => {
             const fp = { repoUuid: ev.data.agentId.slice('repo-'.length), event: ev.type.slice('guardian.job.'.length), guardianTs: ev.ts, ...ev.data };
-            try { _repoActivity().feed(fp); } catch (_) {}   // §0.39.366 — onto the background task it belongs to
-            _journal(fp);   // §0.60.143 TL1b — on disk as it streams
-            os.broadcast('idearium.repo.agent.feed', fp);
+            let task = null; try { task = _repoActivity().feed(fp); } catch (_) {}   // §0.39.366 — onto the background task it belongs to
+            _journal(fp, task);   // §0.60.143 TL1b — on disk as it streams; §0.60.144 TL1c — under its gate
+            os.broadcast('idearium.repo.agent.feed', task && task.brick ? { ...fp, brick: task.brick, runId: task.runId || null } : fp);
           } });
         }
         // §RECONCILE 2026-09-21 — adopt any spec with no repo into a

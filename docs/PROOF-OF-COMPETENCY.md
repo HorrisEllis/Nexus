@@ -540,3 +540,10 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     restart took on 2026-10-16. He named it from the commit before he had seen it happen there.
   - **Evidence:** `CHANGELOG-0.60.143.md`; `tests/modules/test-work-journal.test.js`. WJ-01 drops memory and reads the
     reply and thinking back byte-identical; WJ-03 shows it on a freshly opened page in Clear Glass.
+- **2026-10-18: "You got it persistent per gate"**
+  - **Context:** the release before kept every agent reply on disk, but per job. He pointed at the unit the work resumes at.
+  - **What it shows:** knowing the unit of recovery. Since 0.60.77 a build resumes per gate, on whatever chat or agent is
+    free, so a reply kept per job could not be found again where it was needed. Checking it also exposed a real defect:
+    two gates building at once could file each other's replies.
+  - **Evidence:** `CHANGELOG-0.60.144.md`; `tests/modules/test-work-journal.test.js` WJ-04 runs two attempts at one gate
+    through the real router, then a restart, then two gates at once.
