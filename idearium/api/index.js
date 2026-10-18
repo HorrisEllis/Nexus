@@ -962,9 +962,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // test's failing lines, a missing export) goes with the next try on the same brick, instead of the same message again.
   // carry: one box per brick, shared across the contract's own retries (each retry is a new dispatch), so the words survive.
   const makeAttempt = ({ msg: msg0, files, ck = null, verify = null, bare = false, brick = null, carry = null }) => { const box = carry || { why: null }; return async (rg, ri, tryNo) => {
-    const msg = box.why ? `${msg0}\n\nYOUR LAST ATTEMPT AT THIS FILE FAILED ITS CHECK — fix exactly this, keep what was right:\n${box.why}` : msg0;
     // §GW2 0.60.77 — the brick this attempt works on: its run state is the brick's (lib/run-state.js), whatever chat or agent
     const brickKey = (brick || (ck && ck.brick)) ? `${map}::${phase}::${brick || ck.brick}` : null;
+    // §0.60.145 TL2a — James: "the gates need context. needs persistence, needs to survive restarts, reuse contracts, jobs and
+    // responses." What the attempts before this one at this gate wrote, thought and changed (lib/gate-context.js, from the
+    // journal and the brick's run state — both on disk), carried in this attempt's message, after any restart, on any agent.
+    let gateNote = '';
+    if (brickKey) { try { const GCx = _require('../../lib/gate-context.js'); gateNote = GCx.note(GCx.context(target.uuid, brickKey)); } catch (_) { gateNote = ''; } }
+    const msg = (box.why ? `${msg0}\n\nYOUR LAST ATTEMPT AT THIS FILE FAILED ITS CHECK — fix exactly this, keep what was right:\n${box.why}` : msg0) + (gateNote ? `\n\n${gateNote}` : '');
     const tag = ck ? `-c${ck.chunk}` : '';
     const session = ri <= 0 && tryNo === 1 ? `${runId}${tag}` : `${runId}${tag}-r${ri + 1}t${tryNo}`;
     // §0.60.0 RS1 — the repo is paused: the attempt waits here, said on the Plan, and goes on when it is played
@@ -992,8 +997,18 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     }
     const shadow = files.length ? SH.declare({ step: 'phase.build', expects: { files }, subject: { repoUuid: target.uuid, map, phase, runId: session }, causedBy: `idearium.phases.build:${runId}` }) : null;
     const dp = paramsOf(rg);
-    let r;
-    try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(brickKey ? { brick: brickKey } : {}), ...((typeof bare === 'function' ? bare(rg) : bare) ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
+    let r, reused = null;
+    // §0.60.145 TL2a — a reply this gate already paid for is not asked for again: the gate's newest guardian job that no attempt
+    // handled (finished, or still being written when Idearium stopped) is adopted instead of a new dispatch
+    if (brickKey) {
+      try {
+        const rd0 = await _agentDir(target.uuid);
+        const ru = await _require('../../lib/gate-context.js').reuse({ repo: target, brick: brickKey, message: msg, repoDir: rd0, layer: getRepoLayer(), ...(policy.reuseWaitMs != null ? { waitMs: policy.reuseWaitMs } : {}),
+          judged: (j) => _phaseRows(base.repoUuid).some(x => x.map === map && x.phase === phase && x.brick === (brick || ck.brick) && (x.ts || 0) >= (j.startedAt || 0) && ['replied', 'incomplete', 'blocked', 'failed'].includes(x.state)) });
+        if (ru && ru.r) { r = ru.r; reused = { jobId: ru.jobId, provider: ru.provider || null, waitedMs: ru.waitedMs || 0 }; }
+      } catch (e) { console.warn(`[idearium] gate reuse ${brickKey}: ${e.message} — asked again`); }
+    }
+    if (!r) try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(brickKey ? { brick: brickKey } : {}), ...((typeof bare === 'function' ? bare(rg) : bare) ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
     catch (e) { if (shadow) SH.drop(shadow); throw e; }
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -1014,7 +1029,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       if (!v.ok) { state = 'incomplete'; missingExports = (v.missing || []).length ? v.missing : null; verifyWhy = v.why || null; }
       box.why = v.ok ? null : (v.why || (v.missing && v.missing.length ? `${files[0]} came back without ${v.missing.join(', ')} — the plan says it exports ${v.missing.length === 1 ? 'it' : 'them'}` : null));
     }
-    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}), ...(missingExports ? { missingExports } : {}), ...(verifyWhy ? { expectFailed: true } : {}),
+    // §0.60.145 TL2a — every job of this gate so far has now been judged: never reused again
+    if (brickKey) { try { _require('../../lib/gate-context.js').handled(target.uuid, brickKey, { by: session, state }); } catch (_) {} }
+    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(reused ? { reused } : {}), ...(gateNote ? { gateContext: gateNote.length } : {}), ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}), ...(missingExports ? { missingExports } : {}), ...(verifyWhy ? { expectFailed: true } : {}),
       error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : verifyWhy ? verifyWhy.slice(0, 900) : missingExports && missingExports.length ? `${files[0]} came back without ${missingExports.join(', ')} — the plan says it exports ${missingExports.length === 1 ? 'it' : 'them'}` : null)),
       // 0.60.27 — with no ladder a failed reply that does not name its agent was recorded with no provider (found by AG1a's
       // count: one failed call missing). The call's own agent is known: the backend it was sent to.
@@ -7438,7 +7455,12 @@ async function handle(req, res, route, query, body) {
         return j ? ok(res, { ok: true, repoUuid: params.uuid, job: j }) : err(res, 404, `no journal for job ${q.job} in this repo`);
       }
       // §0.60.144 TL1c — per gate: ?gate=<map>::<phase>::<gate> (or <map>::<phase> for every gate of a phase), ?gates=1 all
-      if (q.gate || q.gates) return ok(res, { ok: true, repoUuid: params.uuid, ...WJ.gates(params.uuid, { brick: q.gate ? String(q.gate) : null }) });
+      if (q.gate || q.gates) {
+        const out = { ok: true, repoUuid: params.uuid, ...WJ.gates(params.uuid, { brick: q.gate ? String(q.gate) : null }) };
+        // §0.60.145 TL2a — one gate: what its next attempt will be told, and the reply it would reuse instead of asking again
+        if (q.gate && out.gates.length === 1) { const GCx = _require('../../lib/gate-context.js'); const c = GCx.context(params.uuid, out.gates[0].brick); out.context = c; out.note = GCx.note(c); out.reusable = WJ.reusable(params.uuid, out.gates[0].brick); }
+        return ok(res, out);
+      }
       return ok(res, { ok: true, repoUuid: params.uuid, dir: WJ.dir(), ...WJ.list(params.uuid, { limit: Number(q.limit) || 20 }) });
     }
     case 'repo.agent.tool.events': {

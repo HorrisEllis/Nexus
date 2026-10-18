@@ -411,6 +411,7 @@ const SUITES = [
   'test-test-first.test.js',          // 0.60.141 TF2 — the phase's test is written first (by the planner, never the coder), seen failing, then shapes the plan and proves it
   'test-live-everywhere.test.js',     // 0.60.142 LV1/LV4 — thinking streams before the reply (5 userscripts, guardian); picked selectors kept stable
   'test-work-journal.test.js',        // 0.60.143 TL1b — the agent's reply and thinking on disk as they stream; back after a reload or restart
+  'test-gate-context.test.js',        // 0.60.145 TL2a — a gate's context from what was kept; its finished or in-flight reply reused, once
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)
   'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person
   'test-language-checks.test.js',     // 0.60.101 — every language's own parser, at the gate

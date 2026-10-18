@@ -170,7 +170,8 @@ export function historyOf(rows = [], { maxRuns = 12, maxRows = 80 } = {}) {
       cut: rs.length > maxRows ? rs.length - maxRows : 0,
       log: rs.slice(-maxRows).map(r => ({ ts: r.ts || null, state: r.state, part: /-review$/.test(r.runId || '') ? 'review' : /-proof$/.test(r.runId || '') ? 'proof' : null,
         provider: r.provider || r.reviewer || null, file: r.file || null, rung: r.rung || null, attempt: r.attempt || null,
-        note: _cut(r.error || r.note || r.planSummary || (r.ready && r.ready.line) || (r.injects && (r.injects.injected || []).length ? `wrote ${(r.injects.injected || []).join(', ')}` : ''), 240) })) };
+        // §0.60.145 TL2a — the row says when the gate's kept reply was reused instead of asking again, and when its context went with it
+        note: _cut((r.reused ? `reused job ${String(r.reused.jobId).slice(0, 12)}'s reply${r.reused.waitedMs ? ` (waited ${Math.round(r.reused.waitedMs / 1000)} s for it)` : ''} — not asked again · ` : '') + (r.gateContext ? `carried this gate's context (${r.gateContext}ch) · ` : '') + (r.error || r.note || r.planSummary || (r.ready && r.ready.line) || (r.injects && (r.injects.injected || []).length ? `wrote ${(r.injects.injected || []).join(', ')}` : '')), 240), ...(r.reused ? { reused: true } : {}) })) };
   }).sort((a, b) => (b.endedAt || 0) - (a.endedAt || 0));
   return { runs: runs.slice(0, maxRuns), more: Math.max(0, runs.length - maxRuns) };
 }

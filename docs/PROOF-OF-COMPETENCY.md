@@ -547,3 +547,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     two gates building at once could file each other's replies.
   - **Evidence:** `CHANGELOG-0.60.144.md`; `tests/modules/test-work-journal.test.js` WJ-04 runs two attempts at one gate
     through the real router, then a restart, then two gates at once.
+- **2026-10-18: "the gates need context ... reuse contracts, jobs and responses" · "its also in clearglass, cleardriver"**
+  - **Context:** replies were kept per gate, but no gate used them. He named what a gate needs: its history as context, and
+    reuse of the work already paid for, across restarts.
+  - **What it shows:** two things.
+    - **Treating paid-for work as an asset.** A reply that finished while the system was down is now adopted rather than
+      bought again.
+    - **Knowing his own system's map better than the coder that day.** He pointed out that Clear Glass already keeps the
+      stream, which exposed a duplicate store the coder had built (0.60.143).
+  - **Evidence:** `CHANGELOG-0.60.145.md`; `tests/modules/test-gate-context.test.js` GC-02 and GC-03, which reuse a finished
+    and an in-flight reply from the real Responses index; the duplicate is named in the TL map, addendum (f), as TL2a-4.
