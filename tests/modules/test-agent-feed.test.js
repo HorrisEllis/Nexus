@@ -101,7 +101,9 @@ const until = async (fn, ms = 3000) => { const t = Date.now() + ms; while (!fn()
     const prog = (src.match(/bus\.emit\('guardian\.job\.progress', \{ jobId: msg\.jobId[^\n]*/) || [''])[0];
     for (const f of ['stage: msg.stage', 'how: msg.how', 'chatUrl: msg.chatUrl', 'anchor: msg.anchor || null', 'mutations: msg.mutations ?? null', 'generating: msg.generating ?? null']) assert.ok(prog.includes(f), `progress carries ${f}`);
     // 0.39.256 — the chunk also carries generating, reset and source (the 500 ms transcript streamer)
-    assert.ok(/bus\.emit\('guardian\.job\.chunk', \{ jobId, text, full, provider, anchor: msg\.anchor \|\| null, mutations: msg\.mutations \?\? null, generating: msg\.generating \?\? null, reset: !!msg\.reset, source: msg\.source \|\| null \}\)/.test(src));
+    // 0.60.142 added the thinking and 0.60.146 the chat ledger turn (chatId, turn) to the same emit: the pin is the fields, not the line
+    const chunk = (src.match(/bus\.emit\('guardian\.job\.chunk', \{ jobId, text, full, provider,[^\n]*/) || [''])[0];
+    for (const f of ['anchor: msg.anchor || null', 'mutations: msg.mutations ?? null', 'generating: msg.generating ?? null', 'reset: !!msg.reset', 'source: msg.source || null']) assert.ok(chunk.includes(f), `chunk carries ${f}`);;
   });
 
   // idearium: guardian-stream against a stub guardian /events.
@@ -126,7 +128,8 @@ const until = async (fn, ms = 3000) => { const t = Date.now() + ms; while (!fn()
   await test('AF-11', 'idearium wires onFeed to os.broadcast (SSE only, not the ledger) as idearium.repo.agent.feed', () => {
     const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     // §0.39.366 — onFeed also hands the frame to the repo's background tasks (lib/repo-activity.js) before broadcasting it
-    assert.ok(/connectGuardianStream\(se, \{ onFeed: \(ev\) => \{[\s\S]{0,400}?os\.broadcast\('idearium\.repo\.agent\.feed', fp\)/.test(api));
+    // 0.60.143/0.60.144 — the frame is also kept in the journal, and goes out with its gate when its task has one
+    assert.ok(/connectGuardianStream\(se, \{ onFeed: \(ev\) => \{[\s\S]{0,700}?os\.broadcast\('idearium\.repo\.agent\.feed', [^\n]*\bfp\b/.test(api));
     const core = fs.readFileSync(path.join(ROOT, 'idearium/index.js'), 'utf8');
     const b = core.slice(core.indexOf('  broadcast(type, payload = {}) {'), core.indexOf('  addSSEClient(res) {'));
     assert.ok(/this\._broadcast\(ev\)/.test(b) && !/_evLedger|this\.stream\.emit/.test(b));

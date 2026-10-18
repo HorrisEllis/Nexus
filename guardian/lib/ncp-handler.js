@@ -162,7 +162,7 @@ function createNCPMessageHandler(deps) {
         // word): passed on, so the agent's work shows while it thinks (James: "i want to see all agent responses in realtime")
         if (jobId && !text && typeof msg.thinking === 'string' && msg.thinking) {
           updateJob(jobId, { status: 'responding', lastChunk: Date.now() });
-          bus.emit('guardian.job.chunk', { jobId, text: '', full: msg.full || '', provider, thinking: msg.thinking, thinkingLen: msg.thinkingLen || msg.thinking.length, generating: msg.generating ?? null, source: msg.source || null });
+          bus.emit('guardian.job.chunk', { jobId, text: '', full: msg.full || '', provider, ...(msg.chatId ? { chatId: msg.chatId, turn: msg.turn ?? null, chatUrl: msg.chatUrl || null } : {}), thinking: msg.thinking, thinkingLen: msg.thinkingLen || msg.thinking.length, generating: msg.generating ?? null, source: msg.source || null });
           break;
         }
         if (jobId && text) {
@@ -174,7 +174,7 @@ function createNCPMessageHandler(deps) {
           // of the old string anywhere in the codebase, safe rename.
           updateJob(jobId, { status: 'responding', lastChunk: Date.now() });
           // 0.39.256 — reset: this chunk replaces the reply so far (a re-render, not a continuation); source: 'transcript' when the userscript's 500 ms transcript streamer sent it
-          bus.emit('guardian.job.chunk', { jobId, text, full, provider, anchor: msg.anchor || null, mutations: msg.mutations ?? null, generating: msg.generating ?? null, reset: !!msg.reset, source: msg.source || null, ...(typeof msg.thinking === 'string' && msg.thinking ? { thinking: msg.thinking, thinkingLen: msg.thinkingLen || msg.thinking.length } : {}) });
+          bus.emit('guardian.job.chunk', { jobId, text, full, provider, ...(msg.chatId ? { chatId: msg.chatId, turn: msg.turn ?? null, chatUrl: msg.chatUrl || null } : {}), anchor: msg.anchor || null, mutations: msg.mutations ?? null, generating: msg.generating ?? null, reset: !!msg.reset, source: msg.source || null, ...(typeof msg.thinking === 'string' && msg.thinking ? { thinking: msg.thinking, thinkingLen: msg.thinkingLen || msg.thinking.length } : {}) });
           cockpitBroadcast({ type: 'job.chunk', jobId, text, full, provider, ts: Date.now() });
 
           // ── Stream to cortex: batch before writing ────────────────────────

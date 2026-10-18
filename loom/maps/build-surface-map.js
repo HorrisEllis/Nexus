@@ -101,7 +101,7 @@ const FILES = [
   // §0.60.145 TL2a — a gate's context, and its kept reply reused instead of asking again
   ['lib/gate-context.js', I('lib/gate-context.js'), [I('lib/work-journal.js'), I('lib/run-state.js'), I('lib/repo-agent.js')]],   // gates/get/reusable/mark · load/runIdFor · findLate/adoptLate
   // §0.60.143 TL1b — the agent's reply and thinking on disk as they stream
-  ['lib/work-journal.js', I('lib/work-journal.js'), [I('lib/node-export.js')]],   // wrap/toYaml/importFromFile (.response)
+  ['lib/work-journal.js', I('lib/work-journal.js'), [I('lib/node-export.js'), I('clear-glass/src/downloads/chat-ledger.js')]],   // §0.60.146 the contract ledger: legacy .response folders read (node-export); a linked reply's text read from Clear Glass's chat ledger (readChat, chatKeyOf)
   // §0.60.141 TF2 — the phase's test is written first and shapes the plan
   ['lib/test-first.js', I('lib/test-first.js'), [I('lib/proposal-evidence.js')]],   // validate: shadow + runOne
   // §0.60.125 DG1 — a phase is not built while what it depends on is open
@@ -264,6 +264,7 @@ const CONSUMERS = [
   [I('ollama/server.js'), I('ollama/lib/idle-unload.js'), '0.60.123 MP startIdleUnload after listen (keep_alive:0 on idle)'],
   [I('idearium/repo/import-pipeline.js'), I('idearium/repo/import-pipeline-worker.js'), '0.60.124 SW1 runImportPipelineOffThread — new Worker(new URL(./import-pipeline-worker.js))'],
   [I('idearium/repo/nexus-self.js'), I('idearium/repo/import-pipeline.js'), '0.60.124 SW1 _syncSystem + parent: await runImportPipelineOffThread'],
+  [I('guardian/server.js'), I('guardian/lib/ncp-handler.js'), '0.60.146 /events _FEED_KEYS: thinking, thinkingLen, chatId, turn pass through (the thinking had been dropped since 0.60.142)'],
   [I('idearium/api/index.js'), I('lib/gate-context.js'), '0.60.145 TL2a makeAttempt: note(context) in the message; reuse() before dispatch (judged by the run log); handled() after; GET agent/feed?gate= context'],
   [I('lib/gate-context.js'), I('clear-glass/src/downloads/artifact-chat-index.js'), '0.60.145 TL2a through repo-agent findLate/adoptLate: the reply read from Clear Glass\'s Responses index'],
   [I('lib/repo-agent.js'), I('lib/repo-activity.js'), '0.60.144 TL1c RAct.run({ brick }): the task carries its contract gate'],

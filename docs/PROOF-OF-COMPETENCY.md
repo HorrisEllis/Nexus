@@ -557,3 +557,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
       stream, which exposed a duplicate store the coder had built (0.60.143).
   - **Evidence:** `CHANGELOG-0.60.145.md`; `tests/modules/test-gate-context.test.js` GC-02 and GC-03, which reuse a finished
     and an in-flight reply from the real Responses index; the duplicate is named in the TL map, addendum (f), as TL2a-4.
+- **2026-10-18: "okay only one record. maybe use it as a contract ledger for each contract."**
+  - **Context:** a duplicate store had been found: two records of the same reply stream, one in Clear Glass and one in
+    Idearium. The coder recommended making one an index into the other.
+  - **What it shows:** single source of truth as a rule, not a preference. He also gave the remaining record a structural
+    home, the contract, the same unit that holds the gates, checkpoints and plan, so a contract's work can be read back in
+    one place.
+  - **Evidence:** `CHANGELOG-0.60.146.md`; `tests/modules/test-work-journal.test.js` WJ-05. A reply linked to its chat
+    ledger turn is never copied, and is read back from the chat ledger after a restart.

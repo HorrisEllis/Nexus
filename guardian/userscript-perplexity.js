@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — Perplexity v10.0
 // @namespace    nexus.guardian.perplexity
-// @version      10.9.3
+// @version      10.9.4
 // @description  Guardian v10 — Perplexity: protocol parity with Claude/ChatGPT/Gemini
 //               v10 (NCP handshake, IndexedDB kernel, SHA-256 dedup, tab-claim, SEAM
 //               jobs, intelligence injection, usage detection) built around
@@ -29,7 +29,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'perplexity';
-const VERSION     = '10.9.3';
+const VERSION     = '10.9.4';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
@@ -367,6 +367,7 @@ function _txStreamKick() {
 // §0.60.142 LV1 — the assistant turn's thinking, read with its text: a model that thinks first (gemini's <model-thoughts>)
 // shows nothing in its reply for minutes; the thinking is streamed meanwhile (James: "i want to see all agent responses in realtime")
 let _txLastThinking = '';
+let _txLastTurn = null;   // §0.60.146 — which turn of the chat the reply is (Clear Glass's chat ledger holds its text there)
 function _txReplyFor(job, messages) {
   let seen = 0;
   for (let i = 0; i < messages.length; i++) {
@@ -376,6 +377,7 @@ function _txReplyFor(job, messages) {
     if (job.head && !String(m.text).replace(/\s+/g, ' ').includes(job.head)) continue;
     const next = messages[i + 1];
     _txLastThinking = next && next.role === 'assistant' ? String(next.thinking || '') : '';
+    _txLastTurn = next && next.role === 'assistant' ? i + 1 : null;
     return next && next.role === 'assistant' ? String(next.text) : '';
   }
   return null;   // this job's turn is not on the page yet
@@ -395,7 +397,7 @@ function _txStreamTick() {
   job.sent = text;
   let generating = null;
   try { generating = !!_isGenerating(); } catch (_) {}
-  send({ type:'GUARDIAN_CHUNK', jobId: job.jobId, text: delta, full: text, reset: !grows, source: 'transcript', generating, provider: PROVIDER, chatUrl: location.href, ...(thinking ? { thinking: thinking.slice(-12000), thinkingLen: thinking.length } : {}), ts: Date.now() });
+  send({ type:'GUARDIAN_CHUNK', jobId: job.jobId, text: delta, full: text, reset: !grows, source: 'transcript', generating, provider: PROVIDER, chatUrl: location.href, chatId: (chat && chat.chatId) || null, turn: _txLastTurn, ...(thinking ? { thinking: thinking.slice(-12000), thinkingLen: thinking.length } : {}), ts: Date.now() });
 }
 
 // §ANCHOR 0.39.244 — James: "the cli in the agents tab needs to have a live feed of the

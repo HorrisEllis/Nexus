@@ -7454,6 +7454,11 @@ async function handle(req, res, route, query, body) {
         const j = WJ.get(params.uuid, String(q.job), { timeline: true });
         return j ? ok(res, { ok: true, repoUuid: params.uuid, job: j }) : err(res, 404, `no journal for job ${q.job} in this repo`);
       }
+      // §0.60.146 TL2a-4 — James: "maybe use it as a contract ledger for each contract." ?contract=<map>::<phase>: its ledger, replayed
+      if (q.contract) {
+        const led = WJ.ledger(params.uuid, String(q.contract));
+        return led ? ok(res, { ok: true, repoUuid: params.uuid, ledger: led }) : err(res, 404, `no ledger for contract ${q.contract} in this repo`);
+      }
       // §0.60.144 TL1c — per gate: ?gate=<map>::<phase>::<gate> (or <map>::<phase> for every gate of a phase), ?gates=1 all
       if (q.gate || q.gates) {
         const out = { ok: true, repoUuid: params.uuid, ...WJ.gates(params.uuid, { brick: q.gate ? String(q.gate) : null }) };
