@@ -380,7 +380,7 @@ Cortex is 78 files in 13 modules, entry `cortex/boot.js`, port 3748, spec `corte
 
 </details>
 
-27 release notes name a file of cortex: 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
+28 release notes name a file of cortex: 0.60.157., 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:cortex:end -->
 
@@ -1176,7 +1176,7 @@ The cognition layer, consolidated from three places that had no single home. `in
 <!-- generated:readme:system:intelligence:start -->
 #### intelligence: every module and every file
 
-Intelligence is 127 files in 37 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
+Intelligence is 128 files in 37 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
 
 <details>
 <summary>`intelligence/` · 18 files</summary>
@@ -1289,10 +1289,11 @@ Intelligence is 127 files in 37 modules, entry `intelligence/server.js`, port 37
 </details>
 
 <details>
-<summary>`intelligence/lattice/` · 2 files</summary>
+<summary>`intelligence/lattice/` · 3 files</summary>
 
 - `intelligence/lattice/associative-lattice.js`
 - `intelligence/lattice/fanin-listener.js`
+- `intelligence/lattice/node-lattice.js`
 
 </details>
 
@@ -1527,7 +1528,7 @@ Intelligence is 127 files in 37 modules, entry `intelligence/server.js`, port 37
 
 </details>
 
-14 release notes name a file of intelligence: 0.60.150., 0.60.148., 0.60.133., 0.60.131., 0.60.127., 0.39.330., 0.39.321., 0.39.300., 0.39.252., 0.39.236., 0.39.182., 0.39.181., 0.39.173., 0.39.172.. Each is in the version history below, in his words.
+15 release notes name a file of intelligence: 0.60.157., 0.60.150., 0.60.148., 0.60.133., 0.60.131., 0.60.127., 0.39.330., 0.39.321., 0.39.300., 0.39.252., 0.39.236., 0.39.182., 0.39.181., 0.39.173., 0.39.172.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:intelligence:end -->
 
@@ -2009,7 +2010,7 @@ Loom is 80 files in 14 modules, entry `loom/server.js`, port 3752, spec `loom/sp
 
 </details>
 
-48 release notes name a file of loom: 0.60.156., 0.60.155., 0.60.153., 0.60.150., 0.60.143., 0.60.134., 0.60.131., 0.60.127., 0.60.126., 0.60.118., 0.60.80., 0.60.72., 0.60.63., 0.60.41., 0.60.7., 0.60.5., 0.60.4., 0.59.11., 0.53.0., 0.49.0., 0.44.0., 0.39.367., 0.39.359., 0.39.349., 0.39.334., 0.39.332., 0.39.330., 0.39.329., 0.39.313., 0.39.310., 0.39.305., 0.39.302., 0.39.298., 0.39.281., 0.39.280., 0.39.278., 0.39.275., 0.39.273., 0.39.271., 0.39.269., and 8 older. Each is in the version history below, in his words.
+49 release notes name a file of loom: 0.60.157., 0.60.156., 0.60.155., 0.60.153., 0.60.150., 0.60.143., 0.60.134., 0.60.131., 0.60.127., 0.60.126., 0.60.118., 0.60.80., 0.60.72., 0.60.63., 0.60.41., 0.60.7., 0.60.5., 0.60.4., 0.59.11., 0.53.0., 0.49.0., 0.44.0., 0.39.367., 0.39.359., 0.39.349., 0.39.334., 0.39.332., 0.39.330., 0.39.329., 0.39.313., 0.39.310., 0.39.305., 0.39.302., 0.39.298., 0.39.281., 0.39.280., 0.39.278., 0.39.275., 0.39.273., 0.39.271., and 9 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:loom:end -->
 
@@ -3220,7 +3221,7 @@ Cos is 307 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 
 </details>
 
-49 release notes name a file of cos: 0.60.151., 0.60.149., 0.60.148., 0.60.137., 0.60.136., 0.60.134., 0.60.132., 0.60.130., 0.60.126., 0.60.111., 0.60.105., 0.60.104., 0.60.103., 0.60.101., 0.60.96., 0.60.91., 0.60.89., 0.60.88., 0.60.87., 0.60.67., 0.60.33., 0.60.19., 0.60.12., 0.60.6., 0.60.5., 0.60.1., 0.59.6., 0.59.2., 0.39.375., 0.39.371., 0.39.370., 0.39.367., 0.39.363., 0.39.359., 0.39.344., 0.39.330., 0.39.293., 0.39.284., 0.39.282., 0.39.281., and 9 older. Each is in the version history below, in his words.
+50 release notes name a file of cos: 0.60.157., 0.60.151., 0.60.149., 0.60.148., 0.60.137., 0.60.136., 0.60.134., 0.60.132., 0.60.130., 0.60.126., 0.60.111., 0.60.105., 0.60.104., 0.60.103., 0.60.101., 0.60.96., 0.60.91., 0.60.89., 0.60.88., 0.60.87., 0.60.67., 0.60.33., 0.60.19., 0.60.12., 0.60.6., 0.60.5., 0.60.1., 0.59.6., 0.59.2., 0.39.375., 0.39.371., 0.39.370., 0.39.367., 0.39.363., 0.39.359., 0.39.344., 0.39.330., 0.39.293., 0.39.284., 0.39.282., and 10 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:cos:end -->
 
@@ -3231,7 +3232,7 @@ Everything no kernel owns. Core has no port and no entry: its code runs inside w
 <!-- generated:readme:system:core:start -->
 #### core: every module and every file
 
-Core is 2612 files in 48 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
+Core is 2620 files in 48 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
 
 <details>
 <summary>the files at the top of the tree · 18 files</summary>
@@ -3988,7 +3989,7 @@ Core is 2612 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/` · 273 files</summary>
+<summary>`lib/` · 274 files</summary>
 
 - `lib/account-identity-index.js`
 - `lib/account-registry.js`
@@ -4145,6 +4146,7 @@ Core is 2612 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/nexus-releases.js`
 - `lib/nexus-uri.js`
 - `lib/nexus-wake-events.js`
+- `lib/node-edges.js`
 - `lib/node-export.js`
 - `lib/node-index-watcher.js`
 - `lib/node-index.js`
@@ -4405,15 +4407,19 @@ Core is 2612 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/checks/` · 7 files</summary>
+<summary>`lib/checks/` · 11 files</summary>
 
-- `lib/checks/ck-230-shadow.js` — CK-230 "expected but absent" (cos/spec/check-catalogue.spec, family shadow). component_id:…
-- `lib/checks/ck-233-deny.js` — CK-233 "forbidden things absent" (cos/spec/check-catalogue.spec, family negative-space). component_id:…
-- `lib/checks/ck-247-decomposition.js` — CK-247 "depth-bounded decomposition" (cos/spec/check-catalogue.spec, recursion). component_id:…
-- `lib/checks/ck-248-toolchain.js` — CK-248 "the language's own toolchain" (cos/spec/check-catalogue.spec, family languages). component_id:…
-- `lib/checks/ck-253-versions.js` — CK-253 "versions agree" (cos/spec/check-catalogue.spec, family relationships). component_id:…
-- `lib/checks/ck-254-surface.js` — CK-254 spec surface: a capability's code exposes what its spec promises, no more, no less. component_id:…
-- `lib/checks/ck-255-warp-builds.js` — CK-255 "every build goes through WARP" (cos/spec/check-catalogue.spec). component_id:…
+- `lib/checks/ck-230-shadow.js`
+- `lib/checks/ck-231-half-states.js`
+- `lib/checks/ck-233-deny.js`
+- `lib/checks/ck-237-verifiable.js`
+- `lib/checks/ck-239-two-ends.js`
+- `lib/checks/ck-247-decomposition.js`
+- `lib/checks/ck-248-toolchain.js`
+- `lib/checks/ck-252-primitive.js`
+- `lib/checks/ck-253-versions.js`
+- `lib/checks/ck-254-surface.js`
+- `lib/checks/ck-255-warp-builds.js`
 
 </details>
 
@@ -4840,7 +4846,7 @@ Core is 2612 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`tests/` · 764 files</summary>
+<summary>`tests/` · 766 files</summary>
 
 - `tests/audit-results.json`
 - `tests/brutal.test.js`
@@ -5101,6 +5107,7 @@ Core is 2612 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-chatgpt-scrape-template.test.js`
 - `tests/modules/test-check-catalogue.test.js`
 - `tests/modules/test-checklist-workset.test.js`
+- `tests/modules/test-checks-layer-one.test.js`
 - `tests/modules/test-chunk-build-orchestrator.js`
 - `tests/modules/test-chunked-phase-build.test.js`
 - `tests/modules/test-claude-code-backend.test.js`
@@ -5334,6 +5341,7 @@ Core is 2612 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-nexus-wake.js`
 - `tests/modules/test-no-compartment-label.test.js`
 - `tests/modules/test-node-export.js`
+- `tests/modules/test-node-lattice.test.js`
 - `tests/modules/test-node-registry-system.test.js`
 - `tests/modules/test-node-schemas.js`
 - `tests/modules/test-observability-map.js`
@@ -5773,9 +5781,9 @@ Core is 2612 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>the release notes · 361 files (each is in the version history below, in his words)</summary>
+<summary>the release notes · 362 files (each is in the version history below, in his words)</summary>
 
-`CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
+`CHANGELOG-0.60.157.md` · `CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
 
 </details>
 
@@ -5907,7 +5915,7 @@ Everything below is written by `lib/readme-generate.js` from the tree as it is a
 
 ### Every phase
 
-Every phase of every phasemap, 1691 phases across 136 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 675 are done, 10 in progress and 1006 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
+Every phase of every phasemap, 1691 phases across 136 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 677 are done, 10 in progress and 1004 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
 
 <details>
 <summary>`docs/snapshot-trigger-phasemap.spec` · 2 · 0 done, 0 in progress, 2 pending</summary>
@@ -6302,12 +6310,12 @@ Every phase of every phasemap, 1691 phases across 136 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-18-gate-memory-phasemap.spec` · 8 · 1 done, 0 in progress, 7 pending</summary>
+<summary>`docs/2026-10-18-gate-memory-phasemap.spec` · 8 · 2 done, 0 in progress, 6 pending</summary>
 
 - **GM1_the_gate_record** · pending
 - **GM2_restarts_resume_from_records** · pending
 - **GM3_the_fulfilled_contract_index** · pending
-- **GM4_the_node_lattice** · pending
+- **GM4_the_node_lattice** · done
 - **GM5_the_context_ladder** · done
 - **GM6_crystallized_from_what_was_approved** · pending
 - **GM7_the_context_panel_per_gate** · pending
@@ -6839,7 +6847,7 @@ Every phase of every phasemap, 1691 phases across 136 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-13-projects-raid-and-gates-phasemap.spec` · 21 · 7 done, 0 in progress, 14 pending</summary>
+<summary>`docs/2026-10-13-projects-raid-and-gates-phasemap.spec` · 21 · 8 done, 0 in progress, 13 pending</summary>
 
 - **NT0_notes** · done
 - **PL0_his_projects_imported_for_real** · done
@@ -6861,7 +6869,7 @@ Every phase of every phasemap, 1691 phases across 136 maps, read by the one phas
 - **CK0_the_catalogue_written** · done
 - **CK1_the_catalogue_runs** · pending
 - **WF0_workflows** · pending
-- **LM0_loom_wires_have_stable_ids** · pending
+- **LM0_loom_wires_have_stable_ids** · done
 
 </details>
 
@@ -8554,10 +8562,10 @@ The ledgers. What happened is append-only: each ledger keeps its rows in order a
 
 ### All the Idearium work
 
-Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and builds, and the Code tab where the agents work. Everything it can do is a route on :4800, served by `idearium/api/index.js`, and every route a person uses is also a command row in `idearium/cli/route-commands.js`, so every agent can do it through the one command tool. Read from the route table itself: 393 routes, and 122 command rows. Its files, module by module, are under its own section above; what each release did to it is in the version history below.
+Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and builds, and the Code tab where the agents work. Everything it can do is a route on :4800, served by `idearium/api/index.js`, and every route a person uses is also a command row in `idearium/cli/route-commands.js`, so every agent can do it through the one command tool. Read from the route table itself: 395 routes, and 124 command rows. Its files, module by module, are under its own section above; what each release did to it is in the version history below.
 
 <details>
-<summary>the routes · 393, grouped by path</summary>
+<summary>the routes · 395, grouped by path</summary>
 
 - **/** — GET /
 - **/api/access** — GET /me · POST /login · POST /logout · GET /keys · POST /keys · POST /keys/:id/revoke
@@ -8582,6 +8590,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/git** — POST /clone
 - **/api/history** — GET /import · POST /import · PUT /import/upload
 - **/api/ideas** — GET / · POST / · GET /:uuid/workbench · POST /:uuid/workbench/admit · POST /:uuid/workbench · GET /:uuid · PATCH /:uuid · DELETE /:uuid · POST /:uuid/tension · POST /:uuid/link · POST /:uuid/spec · POST /:uuid/phase · POST /:uuid/progress
+- **/api/lattice** — POST /neighbours
 - **/api/my-projects** — GET /
 - **/api/nexus** — GET /store · GET /tape · GET /tape/:run
 - **/api/notes** — GET / · POST / · PATCH /:id
@@ -8668,7 +8677,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/spec-engine** — GET /warp-status · GET /templates · GET /specs · POST /specs · POST /import · POST /specs/:uuid/promote · POST /wizard · GET /context · GET /specs/:uuid · POST /specs/:uuid/build · POST /specs/:uuid/codegen · POST /specs/:uuid/chunk/:chunkUuid/complete · POST /specs/:uuid/chunk/:chunkUuid/fail · POST /specs/:uuid/chunk/:chunkUuid/agent · POST /specs/:uuid/warp-primitives · POST /specs/:uuid/archive · DELETE /specs/:uuid · POST /specs/:uuid/restore · POST /specs/:uuid/expand · GET /specs/:uuid/promote
 - **/api/specs** — GET / · POST / · GET /:uuid · PATCH /:uuid · POST /:uuid/check · POST /:uuid/build · GET /:uuid/export · DELETE /:uuid
 - **/api/stats** — GET /
-- **/api/system** — GET /lean · POST /prevention/clear · GET /drawbridge · GET /homes · GET /sovereign · GET /shape · GET /nodes/:system · GET /tunnel · GET /tunnel/:name · GET /heartbeat · GET /registry · GET /registry/:system · POST /registry/:system/settle · POST /lean
+- **/api/system** — GET /lean · POST /prevention/clear · GET /drawbridge · GET /homes · GET /sovereign · GET /shape · GET /nodes · GET /nodes/:system · GET /tunnel · GET /tunnel/:name · GET /heartbeat · GET /registry · GET /registry/:system · POST /registry/:system/settle · POST /lean
 - **/api/systems** — GET /:system/options · POST /:system/options
 - **/api/version** — GET /
 - **/api/void** — GET / · POST /idea · POST /ideas · GET /idea/:uuid · POST /idea/:uuid · POST /idea/:uuid/echo · POST /idea/:uuid/spec · POST /collide · POST /echo/:id · POST /spark/:uuid/idea
@@ -8680,7 +8689,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 </details>
 
 <details>
-<summary>the command rows · 122 (every agent has them through nexus.command)</summary>
+<summary>the command rows · 124 (every agent has them through nexus.command)</summary>
 
 - **repo ask "" [--provider claude-code|ollama|chatgpt|…] [--model m]** — talk to the agent wearing the repo's hat (its code lands as proposals)
 - **repo agent [--provider p] [--inject review|auto|off] [--scope s] [--model m]** — who wears the hat, and how its code lands
@@ -8714,6 +8723,8 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **canvas add-tool "" [--sound]** — a tool on a canvas: its own nested COS compartment, from his tool template, linked into the canvas
 - **contract new [--what text] [--why text]** — a new v2 contract (context → build → verify gates) to edit
 - **contract gates** — every gate and its state (BLOCKED · READY · PASSED · FAILED · STALE), and whether the contract is complete — and why not
+- **lattice neighbours [--kinds=causal,reference,temporal] [--window=ms] [--limit=n]** — the nodes joined to a node (or to what the words find), each edge typed — causal, wire, reference, or temporal (when they happened, never a cause)
+- **lattice nodes** — the node lattice: how many nodes and edges of each kind, which systems were read and which could not be
 - **context find [--need=a|b|c] [--repo=] [--gate=] [--sources=atlas,vector]** — what Nexus already holds for a request — every context source asked at once (non-linear), each piece with its source and kind; the need nothing…
 - **context sources** — the context stream's sources: each row's signature, system, cost (free | model | build) and kinds — joining is a row, never a line in the finder
 - **contract packet** — the smallest context one gate needs (its refs resolved, upstream evidence, its gaps) — what an agent is handed
@@ -8810,11 +8821,12 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 
 ### Every release, in his words
 
-Every release note in the tree, 361 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
+Every release note in the tree, 362 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
 
 <details>
-<summary>0.60.x · 153 releases · 0.60.0. to 0.60.156.</summary>
+<summary>0.60.x · 154 releases · 0.60.0. to 0.60.157.</summary>
 
+- **0.60.157.** — 2026-10-18 — James: "associative lattice, every data node, is a node in the associative lattice, interconnected by the timestamp and cuasal graph." — built: The node lattice · Delivered in order · Measured on this tree
 - **0.60.156.** — 2026-10-18 — James: "it needs to be non linear and agnostic" — built: The context stream · Delivered in order · Fixed on the way: a regression of the coder's
 - **0.60.155.** — 2026-10-18 — James: "okay lets finish the gating, or next steps. look at all of the phases that mention gates." — built: Layer 0: the record tells the truth · One of each, where several maps mapped the same thing · Decided by his axioms (D15–D23)
 - **0.60.154.** — 2026-10-18 — James: "it needs to be non linear and agnostic" — built: The coder's reading, to confirm · GM5 redesigned on SISO (addendum b) · Kept, and superseded

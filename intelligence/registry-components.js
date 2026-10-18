@@ -38,6 +38,9 @@ module.exports = [
   _c('rca',          'GET',  '/api/intelligence/rca',              'Root cause analysis entries over open gaps'),
   _c('query',        'GET',  '/api/intelligence/query',            'Unified query surface: what is happening with <about>'),
   _c('lattice',      'GET',  '/api/intelligence/lattice',          'System associative lattice: co-activation neighbours/clusters'),
+  // §0.60.157 GM4 — every data node of every system, one lattice, edges typed (causal · wire · reference · temporal)
+  _c('lattice.neighbours', 'POST', '/api/intelligence/lattice/neighbours', 'Node lattice: the nodes joined to a node, refs or text, each edge typed and timestamped', {tags:['lattice','gate-memory']}),
+  _c('lattice.nodes', 'GET', '/api/intelligence/lattice/nodes', 'Node lattice: how many nodes and edges, which systems were read', {tags:['lattice','gate-memory']}),
   // §0.39.300 SY2 — gap synthesis (intelligence/synthesis): Nexus's own gaps as one set, ranked by leverage
   _c('synthesis',          'GET',  '/api/intelligence/synthesis',          'Gap synthesis: every gap Nexus writes down (phasemaps, known gaps, markers, loom, the gap table, pushed gaps), clustered and ranked by leverage', {tags:['synthesis','gaps'], params:['q','system','limit']}),
   _c('synthesis.run',      'POST', '/api/intelligence/synthesis/run',      'Run the gap synthesis now (kept as a run)', {tags:['synthesis','gaps']}),

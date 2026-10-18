@@ -17,6 +17,10 @@ const e = (description, payloadShape, severity) => ({ description, payloadShape,
 
 const ENTRIES = [
   // ── host — compartment lifecycle, the map, hooks (the CLI's request host:x:verb, the gate's result x:verbed) ────
+  // §0.60.157 — the app controller's own events (cos/app/controller.js), emitted and never declared (EC-05, red on main)
+  ["op.start", e("A project operation began; the project is busy until it ends.", ["project", "what"], 'info')],
+  ["op.done", e("A project operation ended, ok or not.", ["project", "what", "ok"], 'info')],
+  ["auto.switch", e("The controller switched a project to a version on its own (its policy, once the project was idle).", ["project", "version", "ok"], 'notable')],
   ["host:compartment:create", e("A compartment was asked to be created (CLI \u2192 CreateCompartmentGate).", ["name", "purpose", "runtimeId", "networkIsolated", "parentId", "store", "sysmap"], 'info')],
   [EC.HOST.COMPARTMENT_CREATED, e("A compartment was created: its id, slug and runtime.", ["compartmentId", "name", "slug", "runtimeId", "compartment"], 'notable')],
   ["host:compartment:start", e("A compartment was asked to start (CLI or a watchdog action).", ["name", "store", "sysmap"], 'info')],

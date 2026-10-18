@@ -42,4 +42,15 @@ module.exports = Object.freeze({
     payloadShape: ['sigma', 'regime'],
     severity: 'notable',
   },
+  // §0.60.157 — emitted by routes/versionium.js and never declared (test-event-contracts EC-05, red on main)
+  VERSIONIUM_TAGGED: {
+    description: 'A tag was set on a repository\'s commit (POST /api/versionium/tags): its name, the commit, and the git commit it maps to.',
+    payloadShape: ['repository', 'name', 'commitId', 'gitCommit'],
+    severity: 'info',
+  },
+  VERSIONIUM_RELEASED: {
+    description: 'A release was recorded (POST /api/versionium/releases): its version and tag, and the commit it points at.',
+    payloadShape: ['repository', 'version', 'tag', 'commitId', 'gitCommit'],
+    severity: 'notable',
+  },
 });

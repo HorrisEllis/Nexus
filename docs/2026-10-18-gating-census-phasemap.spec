@@ -42,8 +42,8 @@ spec:
     L0_the_record_tells_the_truth:  "DONE 0.60.155 — the scanner fix, the stale statuses, the id-collision finding, D15–D23."
     L1_primitives_no_decision:
       - "GM5 the context stream — DONE 0.60.156: lib/context-stream.js + lib/context-sources.js on siso/ (gate-memory addendum b), wired into every gate"
-      - "GM4 the node lattice — intelligence/lattice/node-lattice.js; and node indexes for the five systems the route says have 'no database yet' (cortex, diagnostic, idearium, orchestrator, sentinel)"
-      - "LM0 loom wires with stable ids — ids from their endpoints (loom/scanners/source-map.js:301 still numbers them)"
+      - "GM4 the node lattice — DONE 0.60.157: intelligence/lattice/node-lattice.js; and node indexes for the five systems the route says have 'no database yet' (cortex, diagnostic, idearium, orchestrator, sentinel)"
+      - "DONE 0.60.157: LM0 loom wires with stable ids — ids from their endpoints (loom/scanners/source-map.js:301 still numbers them)"
       - "GW5 tool parity — the capability-diff test and the gate rows (run.status, gate.packet, contract.trace) in route-commands"
       - "QA1 the catalogue runs — the runners for CK-231, 234–246, 249–252"
       - "RD0/RD1 RAID's own contract and commands — /api/raid/status in the interaction contract, HEAL_REQUESTED in the taxonomy, raid status/queue/decide rows"
@@ -73,3 +73,7 @@ spec:
   # for it found SB-06 red on main: lib/readme-generate.js (0.60.153, the coder's) required loom/scanners/phasemap-map.js, a lib →
   # loom crossing. Fixed by handing the phases in from scripts/generate-atlases.js (no system); test-system-boundary 10/10 (SB-08,
   # also red on main, passes with it).
+  # ── ADDENDUM 2026-10-18 (b) — 0.60.157: GM4 and LM0 built; the three red-on-main tests green ──────────────────────────
+  # GM4: intelligence/lattice/node-lattice.js (1,491 nodes, 14 systems, typed edges). LM0: stable wire ids and an idempotent
+  # bootstrap. BP-01 (the coder's TF2 outside WARP), PB-05 (a fixture counted as code) and LM-07 (a stale pin) fixed at their
+  # causes. Left in layer 1: GW5 (it waits on GW1's remainder, so it moves to layer 2), QA1, RD0/RD1.

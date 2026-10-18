@@ -42,8 +42,25 @@ function _isOrderingReject(r) {
   return !r.ok && r.reason === 'axiom-rejected' && Array.isArray(r.failures) &&
          r.failures.length > 0 && r.failures.every(f => DEFERRABLE.has(f.axiomId));
 }
+// §0.60.157 LM0 — a bootstrap over the registry it wrote before must change nothing (LM0's proof). It did not: every record
+// that still exists was re-declared, hard-rejected by loom.unique-id, and counted as a failure (6,333 on 2026-10-18, exit 1),
+// so a real failure was buried in thousands of false ones. A re-declaration identical to the stored record is UNCHANGED; one
+// that differs REPLACES it (the source changed). Only a rejection for any other reason is a failure.
+const _same = (stored, payload) => Object.keys(payload).every(k => JSON.stringify(stored[k]) === JSON.stringify(payload[k]));
+const _redeclared = { unchanged: 0, replaced: 0 };
+const _numbered = [];   // §0.60.157 LM0 — the numbered scan wires, read before they are pruned (see the carry below)
+function _isDuplicate(r) { return !r.ok && Array.isArray(r.failures) && r.failures.length > 0 && r.failures.every(f => f.axiomId === 'loom.unique-id'); }
 driver.declare = function (kind, payload) {
-  const r = _declare(kind, payload);
+  let r = _declare(kind, payload);
+  if (_isDuplicate(r) && payload && payload.id) {
+    const stored = driver.registry.all(kind)[payload.id];
+    if (stored && _same(stored, payload)) { _redeclared.unchanged++; return { ok: true, unchanged: true, stored }; }
+    if (stored) {
+      driver.registry.removeWhere((k, rec) => k === kind && rec.id === payload.id);
+      r = _declare(kind, payload);
+      if (r.ok) { _redeclared.replaced++; return { ...r, replaced: true }; }
+    }
+  }
   if (_isOrderingReject(r)) _deferred.push({ kind, payload });
   return r;
 };
@@ -204,10 +221,14 @@ console.log(`  boundary .export hooks for hand-mapped files required by the tree
   // first, so an event that stopped being emitted or heard leaves the registry instead of dangling, and
   // loom.unique-id does not reject the fresh declaration of one that still exists.
   const scanEvent = (rec) => typeof rec.uuid === 'string' && rec.uuid.startsWith('nexus-loom-scan-') && rec.type === 'event';
+  // §0.60.157 LM0 — a require() wire's id was its position in the scan (source.wire.<n>.<from>--<to>); it is its endpoints now,
+  // so the numbered ones are superseded by the same edge under its stable id, re-derived below from the source
+  const numberedWire = (rec) => /^source\.wire\.\d+\./.test(String(rec.id)) && typeof rec.uuid === 'string' && rec.uuid.startsWith('nexus-loom-scan-wire-');
+  for (const w of Object.values(driver.registry.all('wire'))) if (numberedWire(w)) _numbered.push(w);
   const r1 = driver.registry.removeWhere((kind, rec) =>
     (kind === 'component' && staleComps.has(rec.id)) ||
     (kind === 'hook' && (staleComps.has(rec.component_id) || scanEvent(rec))) ||
-    (kind === 'wire' && scanEvent(rec)));
+    (kind === 'wire' && (scanEvent(rec) || numberedWire(rec))));
   const hooksLeft = driver.registry.all('hook');
   const r2 = driver.registry.removeWhere((kind, rec) =>
     kind === 'wire' && (!hooksLeft[rec.from_hook_id] || !hooksLeft[rec.to_hook_id]));
@@ -375,6 +396,34 @@ if (mappedSpec.failures.length) { console.log(`  FAILURES: ${mappedSpec.failures
 // exist now does. Replay what was parked purely for arriving too early.
 console.log('\nreplaying deferred declarations (ordering, not absence)...\n');
 const drained = drainDeferred();
+
+// §0.60.157 LM0 — carry, don't lose (§0.3). A numbered scan wire whose edge no map or scan re-derived this run is carried
+// under its stable id, but only when the source still proves it: the requiring file still requires the other. An edge
+// between hand-mapped files lived only as a numbered wire (the scan skips them, and their maps had not declared it): 16 on
+// 2026-10-18, 15 of them real (clear-glass/src/main's requires, model-door → pipeline-routing …), one gone from the source
+// (lib/readme-generate.js no longer requires loom's phasemap scanner, 0.60.156) — that one is dropped, and said.
+const carried = { carried: 0, gone: [] };
+{
+  const fs = require('fs'), path = require('path'), ROOT_DIR = path.join(__dirname, '..');
+  const fileOf = new Map();
+  try { for (const f of require('child_process').execSync('git ls-files', { cwd: ROOT_DIR, encoding: 'utf8' }).split('\n')) if (/\.(c|m)?js$/.test(f)) fileOf.set(idFor(f), f); } catch (_) {}
+  const reqs = (file) => { try { return [...fs.readFileSync(path.join(ROOT_DIR, file), 'utf8').matchAll(/(?:require|import)\s*\(?\s*['"](\.{1,2}\/[^'"]+)['"]/g)].map(m => m[1]); } catch (_) { return []; } };
+  const resolves = (fromFile, spec, toFile) => { const base = path.posix.normalize(path.posix.join(path.posix.dirname(fromFile), spec)).replace(/\.(c|m)?js$/, ''); const t = toFile.replace(/\.(c|m)?js$/, ''); return base === t || base === t.replace(/\/index$/, ''); };
+  const have = new Set(Object.values(driver.registry.all('wire')).map(w => `${w.from_hook_id}>${w.to_hook_id}`));
+  const hooks = driver.registry.all('hook');
+  for (const w of _numbered) {
+    const key = `${w.from_hook_id}>${w.to_hook_id}`;
+    if (have.has(key)) continue;
+    const dep = String(w.from_hook_id).replace(/\.export$/, ''), user = String(w.to_hook_id).replace(/\.import$/, '');
+    const uf = fileOf.get(user), df = fileOf.get(dep);
+    const proven = uf && df && reqs(uf).some(sp => resolves(uf, sp, df));
+    if (!proven || !hooks[w.from_hook_id] || !hooks[w.to_hook_id]) { carried.gone.push(`${dep} → ${user}${!uf || !df ? ' (file not found)' : !proven ? ' (no longer required)' : ' (a hook is gone)'}`); continue; }
+    const r = _declare('wire', { id: `source.wire.${dep}--${user}`, from_hook_id: w.from_hook_id, to_hook_id: w.to_hook_id, intent: `${user} requires ${dep}`, type: 'direct-call',
+      uuid: `nexus-loom-scan-wire-${require('crypto').createHash('sha256').update(`${dep}--${user}`).digest('hex').slice(0, 16)}-v2` });
+    if (r.ok) { carried.carried++; have.add(key); } else carried.gone.push(`${dep} → ${user} (${(r.failures || []).map(f => f.axiomId).join(', ') || r.reason})`);
+  }
+  console.log(`  carried from the numbered wires (LM0): ${carried.carried}; dropped, the source no longer proves them: ${carried.gone.length}${carried.gone.length ? ' — ' + carried.gone.slice(0, 8).join('; ') : ''}`);
+}
 console.log(`  declared on retry: ${drained.resolved} (${drained.passes} pass(es))`);
 console.log(`  STILL UNRESOLVED:  ${drained.unresolved.length} — real missing endpoints, not ordering`);
 for (const d of drained.unresolved.slice(0, 20)) {
@@ -389,5 +438,6 @@ if (drained.unresolved.length > 20) {
 // still reflects it.
 failures = Math.max(0, failures - drained.resolved);
 
+console.log(`  re-declared: ${_redeclared.unchanged} unchanged, ${_redeclared.replaced} replaced (LM0 — a second bootstrap changes nothing)`);
 console.log(`\nWritten to: loom/data/registry.json\n`);
 if (failures > 0) process.exit(1);

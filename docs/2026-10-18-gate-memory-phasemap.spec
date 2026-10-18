@@ -93,7 +93,7 @@ spec:
         refs still hash the same (a changed ref makes the hit STALE, contract-gates' own rule). The component store gains
         'approved' on what it holds, from this index.
     GM4_the_node_lattice:
-      status: OPEN
+      status: "BUILT 0.60.157 — intelligence/lattice/node-lattice.js over lib/node-edges.js (each node's edge projection, read from its file), through Idearium's GET /api/system/nodes (the systems that keep nodes) and /api/system/nodes/:system?edges=1 (database or not: the five 'no database yet' are read). Edges: causal (causedBy names a node), wire (.wire from/to), reference (a node names another's id, also inside a sentence; ids under 6 chars and names shared by more than 8 nodes are not references), temporal (happened within the window — the payload's own time, never an export time: a batch export would join hundreds of unrelated nodes). POST /api/intelligence/lattice/neighbours, GET /api/intelligence/lattice/nodes, Idearium's POST /api/lattice/neighbours, `lattice neighbours` / `lattice nodes`, the agent's /lattice; the context stream's lattice row now answers. Measured on this tree: 1,491 nodes in 14 systems, 1,176 reference edges, 0 causal (no node names a cause that is another node yet — FMR0/IDS3 grow it), 0 wire (no .wire node files in this tree), 322 nodes with their own time. Test: tests/modules/test-node-lattice.test.js 4/4. Was: OPEN"
       depends_on: []
       files: [intelligence/lattice/node-lattice.js, intelligence/routes.js, intelligence/registry-components.js]
       james: '"associative lattice, every data node, is a node in the associative lattice, interconnected by the timestamp and cuasal graph"'

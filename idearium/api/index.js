@@ -1283,7 +1283,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         for (let n = 1; n <= 2 && !got; n++) {
           const msg = TF.brief({ plan, phaseKey: phase, does: ctx.does, proof: ctx.proof, testPath, repoName: target.name, feedback: fb });
           tfRow('writing', { provider: planner, attempt: n, promptChars: msg.length, tokensIn: _tokEst(msg) });
-          let r; try { const rd = await _agentDir(target.uuid); r = await RA.dispatch({ repo: target, repoDir: rd, message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-tf${n}`, maxToolErrors: policy.maxToolErrors || 0 }); }
+          // §0.60.157 — inside WARP like every build path (James, 2026-10-15: "make sure all builds use warp"); TF2 (0.60.141, the
+          // coder's) called the agent outside it, and BP-01 caught it. A retry (n > 1) is asked fresh, as the plan's is.
+          let r; try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-tf${n}`, maxToolErrors: policy.maxToolErrors || 0 }), { kind: 'phase-test-first', provider: planner || null, key: `${target.uuid}\n${msg}`, mode: 'cache', fresh: n > 1 }); }
           catch (e) { r = { ok: false, error: e.message }; }
           if (!r || !r.ok) { lastWhy = `the test writer (${planner}) did not answer: ${String((r && r.error) || 'no reply').slice(0, 200)}`; tfRow('no-answer', { provider: planner, attempt: n, error: lastWhy }); break; }
           const code = TF.extract(r.text);
@@ -2920,6 +2922,9 @@ const ROUTE_CAP = {
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
+  'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
+  'context.find': CAPS.READ_IDEAS, 'repo.context.find': CAPS.READ_IDEAS, 'context.sources': CAPS.READ_IDEAS,   // 0.60.156 GM5 — reads only
+  'lattice.neighbours': CAPS.READ_IDEAS,   // 0.60.157 GM4 — reads only
   'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
   'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
@@ -3212,6 +3217,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','homes'], 'system.homes'],
     ['GET',    ['api','system','sovereign'], 'system.sovereign'],
     ['GET',    ['api','system','shape'], 'system.shape'],   // 0.60.138 — does each system match genesis: every role, its own file, the kernel, or missing (?system=)   // 0.60.133 IM1 — which systems are sovereign, and what stands in each one's way (?system=)
+    ['GET',    ['api','system','nodes'], 'system.nodes.list'],   // 0.60.157 GM4 — every system that keeps nodes (a data/nodes folder), for the node lattice
     ['GET',    ['api','system','nodes',':system'], 'system.nodes'],   // 0.60.130 P33a — a system's own node database: per type, its files, its index, its history; ?type= lists, &id= one node's history   // 0.60.129 DB17 — files in shared folders that belong to one system (a census: nothing moves)
     ['GET',    ['api','system','tunnel'], 'system.tunnel'],   // 0.60.128 DB13 — every system's tunnel: where it runs, its routes, the commands that reach it, its toasts
     ['GET',    ['api','system','tunnel',':name'], 'system.tunnel.one'],   // 0.60.128 DB13/DB14 — one system's tunnel, with its heartbeat asked over its health route
@@ -3504,6 +3510,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','context',  'find'],                          'context.find'],
     ['POST',   ['api','repos',    ':uuid','context','find'],        'repo.context.find'],
     ['GET',    ['api','context',  'sources'],                       'context.sources'],
+    // §0.60.157 GM4 — the node lattice is intelligence's; the UI asks it through Idearium (lib/nexus-client.js)
+    ['POST',   ['api','lattice',  'neighbours'],                    'lattice.neighbours'],
     // 0.39.253 — Ollama's installed models, for the Agent tab's ollama dropdown
     ['GET',    ['api','ollama',   'models'],                        'ollama.models'],
     // §REPO-AGENT-NODE 2026-09-20 — the agent as portable node files.
@@ -5451,11 +5459,19 @@ async function handle(req, res, route, query, body) {
       return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
         modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
     }
+    case 'system.nodes.list': {   // 0.60.157 GM4 — the systems that keep nodes, by folder, read from disk now
+      const root = path.dirname(_require.resolve('../../package.json'));
+      const systems = fs.readdirSync(root, { withFileTypes: true }).filter(e => e.isDirectory() && !e.name.startsWith('.') && e.name !== 'node_modules' && fs.existsSync(path.join(root, e.name, 'data', 'nodes'))).map(e => e.name).sort();
+      return ok(res, { systems });
+    }
     case 'system.nodes': {   // 0.60.130 P33a — James: "each system has a database for each index of nodes with all the history."
       const SR = _require('../../lib/system-registry.js'), NR = _require('../../lib/node-registry.js');
       const root = path.dirname(_require.resolve('../../package.json'));
       const sys = String(params.system || ''), folder = SR.folderOf(sys) || sys;
       if (!fs.existsSync(path.join(root, folder, 'data', 'nodes'))) return err(res, 404, `${sys} has no data/nodes folder`);
+      // §0.60.157 GM4 — ?edges=1: each node's edge projection (lib/node-edges.js), read from its file, with or without a node
+      // database — what the node lattice (intelligence/lattice/node-lattice.js) reads, by this route, never the files
+      if (query && (query.edges === '1' || query.edges === 'true')) { const r = _require('../../lib/node-edges.js').readSystem(path.join(root, folder)); return ok(res, { system: folder, ...r, count: r.nodes.length }); }
       if (!fs.existsSync(path.join(root, folder, 'data', 'node-index'))) {   // a read creates nothing: no database yet is said
         const types = {};
         for (const t of fs.readdirSync(path.join(root, folder, 'data', 'nodes'), { withFileTypes: true }).filter(e => e.isDirectory() && e.name !== '_archive')) types[t.name] = { files: fs.readdirSync(path.join(root, folder, 'data', 'nodes', t.name)).filter(f => !f.startsWith('.') && f !== '_ledger.jsonl').length, indexed: 0, history: 0 };
@@ -7412,7 +7428,10 @@ async function handle(req, res, route, query, body) {
       let root;
       if (b.repo) { const repo = getRepoLayer().get(b.repo); if (!repo) return err(res, 404, `repo not found: ${b.repo}`); root = _repoDiskDir(repo.uuid); }
       const cond = { ...(b.path ? { path: String(b.path) } : {}), ...(b.step ? { step: String(b.step) } : {}), ...(b.only ? { only: b.only } : {}), ...(b.files ? { files: b.files } : {}), ...(b.max ? { max: Number(b.max) } : {}) };
-      const r = CC.run(params.id, cond, root ? { root } : {});
+      // §0.60.157 CK-231 — the run rows are Idearium's table, so Idearium hands them in (lib does not reach into a system's table)
+      const ctx = { ...(root ? { root } : {}), ...(String(params.id).toUpperCase() === 'CK-231' ? { rows: loadTable('idearium_phase_runs').filter(r => r && (!b.repo || r.repoUuid === b.repo || r.targetRepo === b.repo)) } : {}) };
+      if (b.stallMs) cond.stallMs = Number(b.stallMs);
+      const r = CC.run(params.id, cond, ctx);
       return ok(res, { ...r, entry: CC.get(params.id) });
     }
     case 'route.assess': {
@@ -9715,6 +9734,11 @@ async function handle(req, res, route, query, body) {
       }
       const r = await _require('../../lib/context-atlas.js').search(q, { sources, limit: Math.min(parseInt(query.limit, 10) || 20, 100), repoDir, repoUuid });
       return r.ok ? ok(res, r) : err(res, 400, r.error);
+    }
+    // ── 0.60.157 GM4 — the node lattice, intelligence's, by its route ─────
+    case 'lattice.neighbours': {
+      try { return ok(res, await _require('../../lib/nexus-client.js').post('intelligence', '/api/intelligence/lattice/neighbours', body || {}, { timeout: 30000 })); }
+      catch (e) { return err(res, 502, `the node lattice (intelligence) did not answer: ${e.message}`); }
     }
     // ── 0.60.156 GM5 — the context stream ───────────────────────────────
     case 'context.sources':

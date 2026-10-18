@@ -132,6 +132,20 @@ const FILES = [
   ['lib/context-stream.js', I('lib/context-stream.js'), [I('lib/context-sources.js'), I('siso/index.js'), I('lib/context-atlas.js')]],   // rows · Event/Gate/Stream/StreamLog (import()) · qtokens
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
+  // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files
+  ['lib/node-edges.js', I('lib/node-edges.js'), [I('lib/node-export.js')]],   // importFromFile — each node read from its file
+  ['intelligence/lattice/node-lattice.js', I('intelligence/lattice/node-lattice.js'), [I('lib/nexus-client.js')]],   // Idearium's GET /api/system/nodes(/:system?edges=1)
+  [I('intelligence/routes.js'), I('intelligence/lattice/node-lattice.js'), '0.60.157 POST /api/intelligence/lattice/neighbours · GET /api/intelligence/lattice/nodes'],
+  [I('idearium/api/index.js'), I('lib/node-edges.js'), '0.60.157 GET /api/system/nodes/:system?edges=1'],
+  // §0.60.157 QA1 — four more catalogue checks run (the gating census, layer 1)
+  ['lib/checks/ck-231-half-states.js', I('lib/checks/ck-231-half-states.js'), [I('lib/run-watch.js')]],   // stalled/runsOf — one definition of ended
+  ['lib/checks/ck-237-verifiable.js', I('lib/checks/ck-237-verifiable.js'), [I('lib/node-export.js')]],
+  ['lib/checks/ck-239-two-ends.js', I('lib/checks/ck-239-two-ends.js'), []],
+  ['lib/checks/ck-252-primitive.js', I('lib/checks/ck-252-primitive.js'), []],
+  [I('lib/check-catalogue.js'), I('lib/checks/ck-231-half-states.js'), '0.60.157 RUNNERS CK-231'],
+  [I('lib/check-catalogue.js'), I('lib/checks/ck-237-verifiable.js'), '0.60.157 RUNNERS CK-237'],
+  [I('lib/check-catalogue.js'), I('lib/checks/ck-239-two-ends.js'), '0.60.157 RUNNERS CK-239'],
+  [I('lib/check-catalogue.js'), I('lib/checks/ck-252-primitive.js'), '0.60.157 RUNNERS CK-252'],
   // §0.60.145 TL2a — a gate's context, and its kept reply reused instead of asking again
   ['lib/gate-context.js', I('lib/gate-context.js'), [I('lib/work-journal.js'), I('lib/run-state.js'), I('lib/repo-agent.js')]],   // gates/get/reusable/mark · load/runIdFor · findLate/adoptLate
   // §0.60.143 TL1b — the agent's reply and thinking on disk as they stream

@@ -649,7 +649,7 @@ Full real chain traced and patched this pass, five files, not one:
 
 1 code file(s).
 
-- `clear-glass/src/event-taxonomy.js` (166 lines) — (userscript // errors). Every event below is copied from the actual real emit()  
+- `clear-glass/src/event-taxonomy.js` (174 lines) — (userscript // errors). Every event below is copied from the actual real emit()  
   requires 0 · required by 1 · tested by `tests/modules/clear-glass-gig.test.js`
 
 #### `clear-glass/src/accounts/`
@@ -791,7 +791,7 @@ Full real chain traced and patched this pass, five files, not one:
 - `clear-glass/src/downloads/adapter.js` (82 lines) — src/downloads/adapter.js — will-download wiring for agent sessions Same session.on('will-download', ...) shape download-capture.js  
   exports attach · requires 1 · required by 1 · emits downloads.completed
 - `clear-glass/src/downloads/artifact-chat-index.js` (563 lines)  
-  exports MODULE_ID, COMPARTMENT_NAME, ensureCompartment, recordResponse, queryItems, rebuildIndexFromResponses +12 · requires 8 · required by 10 · tested by `tests/modules/test-agent-memory.test.js`, `tests/modules/test-code-artifact.js` +1
+  exports MODULE_ID, COMPARTMENT_NAME, ensureCompartment, recordResponse, queryItems, rebuildIndexFromResponses +12 · requires 7 · required by 10 · tested by `tests/modules/test-agent-memory.test.js`, `tests/modules/test-code-artifact.js` +1
 - `clear-glass/src/downloads/chat-ledger.js` (221 lines)  
   exports MODULE_ID, VERSION, chatKeyOf, applyDelta, appendTurn, readChat +3 · requires 1 · required by 3
 - `clear-glass/src/downloads/intake-bridge.js` (106 lines)  
@@ -856,7 +856,7 @@ Full real chain traced and patched this pass, five files, not one:
 - `clear-glass/src/ipc/agent-routes.js` (152 lines)  
   exports MODULE_ID, VERSION, install, buildState · requires 1 · required by 2 · tested by `tests/modules/clear-glass-agent-surface.test.js`
 - `clear-glass/src/ipc/bridge.js` (2209 lines) — src/ipc/bridge.js — SISO-native IPC Bridge NEXUS commands arrive as HTTP POST /cmd → become SISO Events → bus.emit()  
-  requires 26 · required by 4 · emits guardian.listener.command-result, guardian.listener.copilot-answer, guardian.listener.copilot-panel, guardian.listener.direct-file-write +6 · hears dom:event
+  requires 25 · required by 4 · emits guardian.listener.command-result, guardian.listener.copilot-answer, guardian.listener.copilot-panel, guardian.listener.direct-file-write +6 · hears dom:event
 - `clear-glass/src/ipc/handler-registry.js` (94 lines)  
   exports MODULE_ID, VERSION, DENIED, install, register, list +3 · requires 0 · required by 1
 
@@ -876,7 +876,7 @@ Full real chain traced and patched this pass, five files, not one:
 - `clear-glass/src/macros/recorder-script.js` (58 lines) — the page-side recorder, as a script string (MR1, 0.60.57) James, 2026-10-15: "this is wrong... needs to start recording a macro node file." The old recorder kept its events in window.__cgRecording  
   exports INSTALL, DRAIN · requires 0 · required by 1
 - `clear-glass/src/macros/recording.js` (138 lines) — src/macros/recording.js — recorded page events → macro steps (pure) component_id: cg.macros.recording  
-  exports recordingToSteps, describeStep, SENSITIVE · requires 0 · required by 2
+  exports recordingToSteps, describeStep, SENSITIVE · requires 0 · required by 1
 
 #### `clear-glass/src/main/`
 
@@ -1082,7 +1082,7 @@ Full real chain traced and patched this pass, five files, not one:
 1 code file(s).
 
 - `clear-glass/src/storage/jaa.js` (146 lines) — src/storage/jaa.js — Clear Glass's one database component_id: cg.storage.jaa  
-  exports store, setDir, JaaKV, JaaRows, CG_DIR · requires 2 · required by 8 · tested by `clear-glass/test/storage-jaa.test.js`, `clear-glass/test/webextensions.test.js`
+  exports store, setDir, JaaKV, JaaRows, CG_DIR · requires 1 · required by 8 · tested by `clear-glass/test/storage-jaa.test.js`, `clear-glass/test/webextensions.test.js`
 
 #### `clear-glass/src/tls/`
 
