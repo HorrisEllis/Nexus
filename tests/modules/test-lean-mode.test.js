@@ -29,7 +29,9 @@ try {
     /\['api','system','lean'\]/.test(api) && /\/control\/\$\{encodeURIComponent\(n\)\}\/\$\{on \? 'stop' : 'start'\}/.test(api) && /id="lean-card"/.test(ui) && /data-lean=/.test(ui) && cmd.includes("key: 'system.lean'"));
   check('LM-06 a phase build is never reworded first', /!\/\^phrun-\/\.test\(String\(session \|\| ''\)\)/.test(fs.readFileSync(path.join(ROOT, 'lib/repo-agent.js'), 'utf8')));
   check('LM-07 a rejected agent proposal is said to the agent in its chat (no run left waiting on a tool result)',
-    /_tellAgentRejected\(repo, r\.inject/.test(api) && /was REJECTED by James/.test(api) && /body\.tell !== false/.test(api));
+    // §0.60.157 — since 0.60.105 RL2 the agent is told through _learnFromRejection (told, then learned from), which calls
+    // _tellAgentRejected when tell is on; the pin followed the old direct call and went stale, the behaviour did not
+    /_learnFromRejection\(repo, r\.inject, [^)]*\{ tell: body\.tell !== false/.test(api) && /if \(tell\) \{\s*const told = await \(deps\.tell \|\| _tellAgentRejected\)\(repo, n,/.test(api) && /was REJECTED by James/.test(api));
 } catch (e) { fail++; console.log(`  ✗ threw: ${e.stack}`); }
 finally { if (prev === undefined) delete process.env.NEXUS_DATA_ROOT; else process.env.NEXUS_DATA_ROOT = prev; fs.rmSync(tmp, { recursive: true, force: true }); }
 console.log(`\n${pass} passed, ${fail} failed`);

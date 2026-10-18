@@ -138,7 +138,7 @@ Isolated sandboxes with their own process, network and runtime boundary, persist
 
 3 code · 2 other file(s).
 
-- `cos/event-taxonomy.js` (189 lines) — // cos/event-taxonomy.js — every event COS emits, in the ET1 shape (lib/event-taxonomy-pattern.js). // component_id: cos.event-taxonomy  
+- `cos/event-taxonomy.js` (193 lines) — // cos/event-taxonomy.js — every event COS emits, in the ET1 shape (lib/event-taxonomy-pattern.js). // component_id: cos.event-taxonomy  
   requires 1 · required by 0
 - `cos/kernel.js` (471 lines) — @param {object} opts @param {string} opts.id Unique compartment ID  
   exports Compartment, STATE, BIRTH_GATES · requires 0 · required by 1
@@ -826,7 +826,7 @@ Isolated sandboxes with their own process, network and runtime boundary, persist
 - `cos/runtime/register.mjs` (7 lines) — // cos/runtime/register.mjs — installs resolve-hook.mjs (node --import). // module.register exists from Node 20.6; on an older Node the run proceeds
 - `cos/runtime/resolve-hook.mjs` (26 lines) — // cos/runtime/resolve-hook.mjs — ESM resolution fallback for COS runs. // UUID: cos-runtime-resolve-hook-v1-0000-2026-0926-001  
   exports resolve
-- `cos/runtime/run.js` (326 lines) — COS's JS runtime: run node code from a branch or a workspace with dependency resolution, isolation and port shifting, without  
+- `cos/runtime/run.js` (328 lines) — COS's JS runtime: run node code from a branch or a workspace with dependency resolution, isolation and port shifting, without  
   exports capabilities, runNode, runEnv, nodeArgsFor, syntaxCheck, resolveDeps +7 · requires 1 · required by 2 · tested by `tests/modules/test-nexus-self-and-cos-run.test.js`
 - `cos/runtime/syntax-check.cjs` (71 lines) — parse every file given on stdin (JSON array of absolute paths) WITHOUT running any of it, and print one JSON result.
 

@@ -245,6 +245,7 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
     '/api/intelligence/context', '/api/intelligence/intuition', '/api/intelligence/mastermind',
     '/api/intelligence/mastermind/patterns', '/api/intelligence/adversarial', '/api/intelligence/rca',
     '/api/intelligence/query', '/api/intelligence/lattice', '/api/intelligence/crystals',
+    '/api/intelligence/lattice/neighbours', '/api/intelligence/lattice/nodes',   // §0.60.157 GM4 — the node lattice
     // §BUILT — newly-wired submodule routes
     '/api/intelligence/liminal/analyze',
     '/api/intelligence/gap/status', '/api/intelligence/gap/hunt',
@@ -349,6 +350,20 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
 
     if (pathname === '/api/intelligence/rca') {
       json(200, { ok: true, rca: buildRCA(parseInt(sp.get('limit') || '5', 10)) });
+      return true;
+    }
+
+    // §0.60.157 GM4 — James: "associative lattice, every data node, is a node in the associative lattice, interconnected by the
+    // timestamp and cuasal graph." Every system's nodes, read through Idearium's route; edges typed (lattice/node-lattice.js).
+    if (pathname === '/api/intelligence/lattice/neighbours' || pathname === '/api/intelligence/lattice/nodes') {
+      const b = body || {};
+      try {
+        const L = await require('./lattice/node-lattice.js').get({ ttlMs: b.fresh ? 0 : 60000 });
+        if (pathname === '/api/intelligence/lattice/nodes') { json(200, { ok: true, ...L.stats() }); return true; }
+        const r = L.neighbours({ node: b.node || sp.get('node') || null, refs: Array.isArray(b.refs) ? b.refs : [], text: b.text || sp.get('text') || '',
+          kinds: Array.isArray(b.kinds) && b.kinds.length ? b.kinds : null, window: parseInt(b.window, 10) || 60000, limit: Math.min(parseInt(b.limit, 10) || 20, 200) });
+        json(200, { ok: true, ...r, stats: L.stats() });
+      } catch (e) { json(503, { ok: false, error: `the node lattice could not be built: ${e.message}` }); }
       return true;
     }
 

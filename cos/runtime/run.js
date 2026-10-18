@@ -240,7 +240,9 @@ function pkgName(spec) { const p = spec.split('/'); return spec.startsWith('@') 
  */
 function resolveDeps(dir, { files: only = null } = {}) {
   // §0.39.355 PB5 — an archived file is kept for history and never loaded: its imports are not checked
-  const files = (only || _walk(dir)).filter(f => (JS_EXT.has(path.extname(f)) || TS_EXT.has(path.extname(f))) && !/(^|\/)_archive\//.test(f));
+  // §0.60.157 — a fixtures/ folder holds inputs a test reads as text (a file as an agent proposed it, kept to replay the screen),
+  // not code that runs: its imports are not this tree's to resolve, like _archive/ (PB-05 counted three from one fixture)
+  const files = (only || _walk(dir)).filter(f => (JS_EXT.has(path.extname(f)) || TS_EXT.has(path.extname(f))) && !/(^|\/)_archive\//.test(f) && !/(^|\/)fixtures\//.test(f));
   const bare = new Map();         // name -> { name, via, files:Set }
   const brokenRelative = [];
   const builtins = new Set([...builtinModules, ...builtinModules.map(m => `node:${m}`)]);

@@ -272,6 +272,19 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<file.contract>'),
     local: (a) => { const C = require('../../cortex/core/raid/contract-gates.js'); const L = C.load(a.args[0]); const r = C.evaluate(L.payload); if (!r.legacy) C.save(a.args[0], L); return r; },
     print: (d, a, h) => { if (d.legacy) { console.log(h.c.dim(`  ${d.why}`)); return; } for (const p of d.problems || []) console.log(h.c.amber(`  ! ${p}`)); for (const g of d.gates) console.log(`  ${(g.status === 'PASSED' ? h.c.mint : g.status === 'READY' ? (x) => x : h.c.amber)(g.status.padEnd(8))} ${g.id.padEnd(16)} ${h.c.dim(g.type)}${g.reasons.length ? h.c.dim(`  — ${g.reasons.join('; ')}`) : ''}`); console.log(`  ${d.complete ? h.c.mint('complete') : h.c.amber('not complete')}: ${d.why.join('; ')}`); } },
+  // §0.60.157 GM4 — the node lattice (intelligence): every data node of every system, edges typed
+  { key: 'lattice.neighbours', repo: false, usage: 'lattice neighbours <node-id | words> [--kinds=causal,reference,temporal] [--window=ms] [--limit=n]', about: 'the nodes joined to a node (or to what the words find), each edge typed — causal, wire, reference, or temporal (when they happened, never a cause)',
+    need: (a) => (a.args.length ? null : '<node-id | words>'),
+    req: (a) => { const q = a.args.join(' '); return { system: 'intelligence', method: 'POST', path: '/api/intelligence/lattice/neighbours', timeoutMs: 60000,
+      body: { ...(/\s/.test(q) ? { text: q } : { node: q, text: q }), ...(a.flags.kinds ? { kinds: String(a.flags.kinds).split(',').map(x => x.trim()) } : {}), ...(a.flags.window ? { window: parseInt(a.flags.window, 10) } : {}), ...(a.flags.limit ? { limit: parseInt(a.flags.limit, 10) } : {}) } }; },
+    print: (d, a, h) => {
+      console.log(`  ${h.c.mint(`${d.neighbours.length} neighbour(s)`)} of ${d.seeds.length} seed(s)${h.c.dim(`  · lattice ${d.stats.nodes} nodes, ${d.stats.edges.reference} reference / ${d.stats.edges.causal} causal / ${d.stats.edges.wire} wire edges`)}`);
+      for (const n of d.neighbours) console.log(`  ${h.c.dim(`[${n.kind} ${n.score}]`)} ${n.key}  ${h.c.dim(String(n.text).slice(0, 100))}`);
+      for (const f of d.stats.systems.failed) console.log(h.c.amber(`  ✗ ${f.system}: ${f.why}`));
+    } },
+  { key: 'lattice.nodes', repo: false, usage: 'lattice nodes', about: 'the node lattice: how many nodes and edges of each kind, which systems were read and which could not be',
+    req: () => ({ system: 'intelligence', method: 'GET', path: '/api/intelligence/lattice/nodes' }),
+    print: (d, a, h) => { console.log(`  ${d.nodes} nodes · edges ${JSON.stringify(d.edges)} · ${d.timed} with their own time · ${d.dangling} causes naming no node`); console.log(h.c.dim(`  read: ${d.systems.read.join(', ')}`)); for (const f of d.systems.failed) console.log(h.c.amber(`  ✗ ${f.system}: ${f.why}`)); } },
   // §0.60.156 GM5 — the context stream: every source in lib/context-sources.js asked at once; what none covered is named
   { key: 'context.find', repo: false, usage: 'context find <text> [--need=a|b|c] [--repo=<uuid>] [--gate=<map::phase::brick>] [--sources=atlas,vector]', about: 'what Nexus already holds for a request — every context source asked at once (non-linear), each piece with its source and kind; the need nothing covered is named, and is all a build would be asked',
     need: (a) => (a.args.length || a.flags.need ? null : '<text>'),

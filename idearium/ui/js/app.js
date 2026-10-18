@@ -4823,6 +4823,7 @@ const AGENT_CLI_HELP = [
   '  /context on|off               include this project\'s code and graph with your questions (on by default)',
   '  /recall <words>               search EVERY memory system and graph (chats, fixes, gaps, learned facts, specs, changelogs, this graph)',
   '  /find <words>                 every context source asked at once (the context stream): each piece with its source and kind, what none covered named',
+  '  /lattice <node | words>       the nodes joined to it in the node lattice, each edge typed (causal, wire, reference, temporal)',
   '  /atlas                        where NEXUS keeps memory: every table with its size and the tool that reads it',
   '',
   'RUN & CHECK',
@@ -4929,6 +4930,14 @@ async function agentCommand(line) {
         const r = await api(`/api/repos/${uuid}/context?q=${encodeURIComponent(arg)}&limit=15`);
         _cli(uuid, r.hits.length ? r.hits.map(h => `[${h.source}${h.id ? ' ' + String(h.id).slice(0, 40) : ''}] ${h.snippet}`).join('\n\n') : `nothing matched "${arg}" (searched ${r.searched.length} sources)`,
           `${r.total} match(es) across ${Object.keys(r.bySource).length} source(s)`); break;
+      }
+      // §0.60.157 GM4 — the node lattice (intelligence, through Idearium): what is joined to a node, each edge typed
+      case 'lattice': {
+        if (!arg) { _cli(uuid, 'usage: /lattice <node-id | words> — the nodes joined to it: causal, wire, reference, temporal'); break; }
+        const r = await api('/api/lattice/neighbours', { method: 'POST', body: JSON.stringify(/\s/.test(arg) ? { text: arg } : { node: arg, text: arg }) }, 60000);
+        const lines = r.neighbours.map(n => `[${n.kind} ${n.score}] ${n.key}${n.text && n.text !== n.id ? `\n  ${String(n.text).slice(0, 180)}` : ''}`);
+        for (const f of r.stats.systems.failed) lines.push(`✗ ${f.system}: ${f.why}`);
+        _cli(uuid, lines.join('\n') || 'nothing joined to it', `${r.neighbours.length} neighbour(s) of ${r.seeds.length} seed(s) · lattice ${r.stats.nodes} nodes`); break;
       }
       // §0.60.156 GM5 — the context stream: every source asked at once; what none covered is named (lib/context-stream.js)
       case 'find': {

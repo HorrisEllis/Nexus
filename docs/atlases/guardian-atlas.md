@@ -311,7 +311,7 @@ Not confirmed.
 - `guardian/guardian-api.js` (466 lines) — Canonical Guardian v8 API Connector Single source of truth for all HTTP communication with guardian/server.js.  
   exports GuardianAPI, getGuardian
 - `guardian/jaa-store.js` (6 lines) — // guardian/jaa-store.js — moved to lib/jaa-store.js (0.60.130): the store cortex, idearium, clear-glass, intelligence, copilot, // versionium and the CLI all use is the kernel's, not guardian's…  
-  requires 0 · required by 7 · tested by `tests/modules/test-adversarial-sim.js`, `tests/modules/test-bus-subscriptions.js` +6
+  requires 0 · required by 4 · tested by `tests/modules/test-adversarial-sim.js`, `tests/modules/test-bus-subscriptions.js` +6
 - `guardian/nexus-hey-claude.user.js` (2745 lines) — // ==UserScript== // @name Guardian — Claude v10.0
 - `guardian/options.js` (57 lines) — guardian's options (OP1, docs/2026-10-10-shape-of-nexus-phasemap.spec). The first system on lib/options.js. Every default is the value the code used before this file; every env var it names still…  
   exports SCHEMA, options, get · requires 1 · required by 7

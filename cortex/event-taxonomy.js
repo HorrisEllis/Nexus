@@ -30,4 +30,7 @@ module.exports = Object.freeze({
   CORTEX_SELF_HEAL_EMERGENCY_GC: { description: 'Self-heal forced a garbage collection under memory pressure, and how much it freed.', payloadShape: ['faultClass', 'freedBytes', 'ts'], severity: 'warning' },
   ESCALATION_FRICTION_INCREASED: { description: 'A fault class recurred: its friction rose, possibly into a higher band.', payloadShape: ['faultClass', 'newFric', 'band', 'cause', 'count'], severity: 'warning' },
   ESCALATION_FAILURE_MODE: { description: 'A fault class\'s friction reached the failure-mode band: it is now a recorded failure mode.', payloadShape: ['faultClass', 'friction', 'cause', 'gapUuid', 'message'], severity: 'failure' },
+  // §0.60.157 RD0 — asked for, not yet a fix: emitted by self-heal's escalation (memory pressure) and by RAID's contract intake
+  // (a contract that failed with no retry left); the escalation ladder hears it (cortex/self-heal/escalation.js)
+  HEAL_REQUESTED: { description: 'Something asked self-heal to act: a gap of a type, with its body and, when it has one, the gap or contract it came from.', payloadShape: ['gapType', 'gapUuid', 'body', 'modulePath'], severity: 'warning' },
 });

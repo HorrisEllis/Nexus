@@ -94,7 +94,7 @@ phasemap:
         today). CK-241 checks that the three agree.
       proof: "two hats on one provider answer from two accounts in two tabs at once; a job for hat A never lands in hat B's tab"
     QA1_the_catalogue_runs:
-      status: "PARTLY DONE 0.60.33 — lib/check-catalogue.js serves the catalogue; runners CK-230 (shadow), CK-233 (deny list), CK-248 (every language's toolchain); contract gates run them; test-check-catalogue QA-01..07. Open: the other section-13 checks (CK-231, 234–252) and RQ18's test/attack intents"
+      status: "PARTLY DONE 0.60.33; 0.60.157 (the gating census, layer 1) adds runners CK-231 half-states (rows handed in by Idearium's checks route), CK-237 every condition names a machine check, CK-239 every loom edge has two ends, CK-252 every check names its primitive — each red on a planted defect (tests/modules/test-checks-layer-one.test.js); 11 runners now. Before: lib/check-catalogue.js serves the catalogue; runners CK-230 (shadow), CK-233 (deny list), CK-248 (every language's toolchain); contract gates run them; test-check-catalogue QA-01..07. Open: the other section-13 checks (CK-231, 234–252) and RQ18's test/attack intents"
       folds: [CK1_the_catalogue_runs, RQ1_the_verifier_library, RQ18_test_and_attack_intents]
       does: >-
         lib/check-catalogue.js serves cos/spec/check-catalogue.spec: 119 checks; section 13 is his 2026-10-13 list of

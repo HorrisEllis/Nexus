@@ -43,6 +43,10 @@ module.exports = Object.freeze({
   IDEARIUM_REPO_CHARTER_SET: { description: "A repo's charter was saved: its axioms, conditions and end state.", payloadShape: ['repoUuid', 'axioms', 'conditions', 'endState'], severity: 'notable' },
   IDEARIUM_REPO_CHARTER_CHECKED: { description: "A repo's end state was checked (after a proven phase, or by hand): how many of its checks are met.", payloadShape: ['repoUuid', 'met', 'total', 'against'], severity: 'info' },
   IDEARIUM_REPO_TASK: { description: "One of a repo's background tasks changed: an agent wearing its hat started, moved on (a feed event, a tool call, a rung) or ended (lib/repo-activity.js).", payloadShape: ['repoUuid', 'task'], severity: 'info' },
+  // §0.60.157 — emitted and never declared (test-event-contracts EC-05, red on main); payloads read at the emit sites
+  IDEARIUM_PHASE_MAPPED: { description: "A phase's files were mapped (lib/phase-map-auto.js): which files it changes and where that came from.", payloadShape: ['repoUuid', 'map', 'phase', 'source', 'files'], severity: 'info' },
+  IDEARIUM_REPO_CARVED: { description: 'A repo was carved out of another (CV1): its name, how many files, and the repo it came from.', payloadShape: ['repoUuid', 'name', 'files', 'parent'], severity: 'notable' },
+  IDEARIUM_REPO_RELEASED: { description: 'A repo released a version: its tag and the commit it points at.', payloadShape: ['repoUuid', 'version', 'tag', 'commitId'], severity: 'notable' },
   IDEARIUM_REPO_ACTIVITY: { description: "A row was written to a repo's activity log (lib/activity-log.js): a task, a phase-run row, a proposal's event, a fault.", payloadShape: ['repoUuid', 'row'], severity: 'info' },
   // ── EV0: every other event idearium emits ──────────────────────────────────────────────────────────────────────
   IDEARIUM_IDEA_CREATE: { description: "An idea was asked to be created (API, CLI or the Void).", payloadShape: ["text", "tags", "compartment", "source", "void"], severity: 'info' },

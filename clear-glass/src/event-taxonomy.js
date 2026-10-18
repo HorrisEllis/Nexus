@@ -162,4 +162,12 @@ module.exports = Object.freeze({
     payloadShape: ['title', 'warnings', 'ts'],
     severity: 'info',
   },
+  // §0.60.157 — emitted and never declared (test-event-contracts EC-05, red on main): the chat crawler (src/chats/crawler.js)
+  // and the TLS layer's state (src/main/index.js); payloads read at the emit sites
+  CRAWL_LIST: { description: 'The crawler read an account\'s chat list: how many it saw and queued, whether it needs more, where it stopped.', payloadShape: ['account', 'seen', 'queued', 'needMore', 'anchor'], severity: 'info' },
+  CRAWL_LIST_FAILED: { description: 'The crawler could not read an account\'s chat list and paused, with the reason.', payloadShape: ['account', 'reason'], severity: 'warning' },
+  CRAWL_BACKFILL_SKIPPED: { description: 'The backfill had nothing new to queue for an account.', payloadShape: ['account', 'chats'], severity: 'info' },
+  CRAWL_VISIT: { description: 'The crawler opened a chat to file it, and why.', payloadShape: ['account', 'url', 'why'], severity: 'info' },
+  CRAWL_VISITED: { description: 'The crawler finished a chat: what kind of page it was, whether it was new, whether it paused.', payloadShape: ['account', 'url', 'kind', 'newData', 'paused'], severity: 'info' },
+  TLS_LAYER_STATE: { description: 'The TLS layer (cg-tls-helper) changed state: running on its port, or down with why — sessions then go direct, said.', payloadShape: ['state', 'port', 'why', 'bin', 'caFingerprint', 'restarts'], severity: 'notable' },
 });

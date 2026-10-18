@@ -293,12 +293,13 @@ function mapSource(driver, FILES) {
     }
   }
 
-  let wireN = 0;
+  // §0.60.157 LM0 — a wire's id is its endpoints, never its position in the scan: a number made one new file renumber every
+  // wire after it, and a bootstrap then added ~2,300 duplicates under new ids (the 34,000-line registry diff of 2026-10-13)
+  const _wireUuid = (from, to) => `nexus-loom-scan-wire-${require('crypto').createHash('sha256').update(`${from}--${to}`).digest('hex').slice(0, 16)}-v2`;
   for (const [, id, requires] of FILES) {
     for (const dep of requires) {
-      wireN++;
       const r = driver.declare('wire', {
-        id: `source.wire.${wireN}.${dep}--${id}`,
+        id: `source.wire.${dep}--${id}`,
         from_hook_id: `${dep}.export`, to_hook_id: `${id}.import`,
         // §SB1 2026-08-14 — this scanner was found to be the real source of
         // the "intent is null on every sample wire" finding: it never set
@@ -310,7 +311,7 @@ function mapSource(driver, FILES) {
         // types this session catalogued (http/event/ipc/sse/direct-call).
         intent: `${id} requires ${dep}`,
         type: 'direct-call',
-        uuid: `nexus-loom-scan-wire-${wireN}-v1-0000-2026-0804-001`,
+        uuid: _wireUuid(dep, id),
       });
       (r.ok ? results.wires : results.failures).push({ from: dep, to: id, r, declaredHere: declaredHere.has(dep) });
     }

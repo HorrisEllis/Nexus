@@ -266,7 +266,7 @@ spec:
       layer: library
       systems: [cortex]
       component: cortex.raid
-      status: "OPEN"
+      status: "PARTLY BUILT 0.60.157 (the gating census) — /api/raid/status, /api/raid/officiator and /api/raid/officiator/unpark declared in cortex/interaction-contract.json; HEAL_REQUESTED declared in cortex/event-taxonomy.js. Open: decide reading its POST body; the contract lifecycle on the bus; cortex/core/raid/event-taxonomy.js and cortex/event-taxonomy.js are two vocabularies (surfaced, not collapsed). Was: OPEN"
       james: '"raid needs routes and cli commands, events, connects to the interaction contract."'
       files: [cortex/interaction-contract.json, cortex/registry-components.js, cortex/event-taxonomy.js, cortex/core/raid/contract-intake.js, cortex/boot.js]
       does: >-
@@ -369,7 +369,7 @@ spec:
       layer: library
       systems: [loom]
       component: loom.scanners.source-map
-      status: "OPEN"
+      status: "BUILT 0.60.157 (the gating census, layer 1) — a wire's id is its endpoints (source.wire.<from>--<to>, uuid from their hash); the numbered scan wires are pruned as superseded; a re-declaration identical to the stored record is UNCHANGED, one that differs REPLACES it, so a bootstrap over its own registry no longer reports every existing record as a failure (6,333 on 2026-10-18). Was: OPEN"
       james: '"what aboiut 34000 lines? can you check that for me?"'
       files: [loom/scanners/source-map.js, loom/bootstrap.js]
       does: >-

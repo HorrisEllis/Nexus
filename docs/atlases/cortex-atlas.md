@@ -206,7 +206,7 @@ Not confirmed.
 - `cortex/config.js` (22 lines) — real, distinct config, not inline constants scattered across cortex/boot.js. Matches the pattern established by  
   exports PORT, OR_URL, GD_URL, OL_URL, IN_PORT · requires 0 · required by 2
 - `cortex/cortex-v2.js` (1375 lines) — // ── core/cortex-v2.js ───────────────────────────────────────────────────────── // CORTEX v2 — full NEXUS CLI
-- `cortex/event-taxonomy.js` (34 lines) — // cortex/event-taxonomy.js — every event cortex emits, in the ET1 shape (lib/event-taxonomy-pattern.js). // component_id: cortex.event-taxonomy
+- `cortex/event-taxonomy.js` (37 lines) — // cortex/event-taxonomy.js — every event cortex emits, in the ET1 shape (lib/event-taxonomy-pattern.js). // component_id: cortex.event-taxonomy
 - `cortex/personas.js` (123 lines) — Personality profiles for Copilot §GAP CLOSED 2026-07-07 — forge.spec's "personalities" piece, confirmed  
   exports PersonaStore, DEFAULT_PERSONAS
 - `cortex/push-recall.js` (304 lines)  

@@ -192,6 +192,21 @@
       "method": "GET",
       "path": "/api/failure-modes/:id/report",
       "description": "FMR3: its report"
+    },
+    {
+      "method": "GET",
+      "path": "/api/raid/status",
+      "description": "RAID's engine now: version, health, learned weights, the field's regime (0.39.282; declared 0.60.157 RD0)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/raid/officiator",
+      "description": "The officiator: what it holds and why (declared 0.60.157 RD0)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/raid/officiator/unpark",
+      "description": "Unpark what the officiator held (declared 0.60.157 RD0)"
     }
   ]
 }

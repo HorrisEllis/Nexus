@@ -175,7 +175,7 @@ Not confirmed.
 
 - `versionium/config.js` (52 lines) — real, distinct config, matching ollama/config.js's and intelligence/config.js's exact established pattern: one file, every  
   exports ORCH_URL, SIGMA_THRESH, AUTOCOMMIT_COOLDOWN_MS, POLL_MS, FILE_KEYFRAME_INTERVAL, FILE_DELTA_MAX_RATIO +3 · requires 0 · required by 6
-- `versionium/event-taxonomy.js` (46 lines) — // versionium/event-taxonomy.js — real event vocabulary for the sovereign // Versionium system. Conforms to lib/event-taxonomy-pattern.js's ET1
+- `versionium/event-taxonomy.js` (57 lines) — // versionium/event-taxonomy.js — real event vocabulary for the sovereign // Versionium system. Conforms to lib/event-taxonomy-pattern.js's ET1
 - `versionium/registry-components.js` (51 lines) — versionium/registry-components.js  
   exports systemId, version, port, label, purpose, components +2
 - `versionium/server.js` (173 lines)  
