@@ -168,3 +168,33 @@ spec:
   # for what it is, <repo>/<map>::<phase>::<chunk>) and D14 'dependency edges are gap evidence'. Both say: no one shared uuid.
   # They differ on how a chunk is named and kept. Two contracts, kept, not collapsed (docs/CLAUDE.md rule 4); which one stands
   # is his to say. D11 and D14 do not conflict: D14's gaps go through D11's one door.
+
+  # ── ADDENDUM 2026-10-18 (c) — D15–D23, from the gating census (docs/2026-10-18-gating-census-phasemap.spec) ─────────────
+  # James, 2026-10-18: "okay lets finish the gating, or next steps. look at all of the phases that mention gates." · "need to get
+  # them done bottom up. really need it all working." The census found nine questions that were left open with a recommendation
+  # waiting on a yes, each technical, each settled by his axioms. Under his rule of 2026-10-17 ("come to me for problems, else use
+  # the axioms"), they are decided by his axioms. Each owning map's status now reads DECIDED and points here. He can overturn
+  # any one by an addendum that quotes both (§0.3).
+  #   D15 = GW0b_fresh_chat_policy: a, a per-gate-kind setting (continue | new chat | any provider), default new chat for build and
+  #         verify bricks and continue for a brick's own retries. USER_AUTONOMY (the setting is his, editable); §2.2 the state follows
+  #         the brick, not the chat (his GW0 "The bricks"); leverage, a retry re-pays no persona prompt.
+  #   D16 = GW0c_replay_mode: a, both modes from one recording, by flag. recorded is the exact replay and the regression test (§12.2);
+  #         live re-sends the same packets to compare agents. One record (§10.3).
+  #   D17 = GW0e_sandbox_egress: a, default deny with an allowlist per compartment; open egress is a per-run switch he sets. §5.9
+  #         secrets never leave; REVERSIBILITY (a leak cannot be undone, a deny is one switch).
+  #   D18 = GW0f_mutation_testing: a, per file: its tests, its exports exercised, hostile inputs (§12.1); mutation as an opt-in tier,
+  #         on by default only for files a gate just changed (§12.2, cost bounded).
+  #   D19 = GW0g_parallel_limit: a cap read from the resource monitor at dispatch (free memory, cores), his Settings value the
+  #         ceiling, never a fixed number. lib/prevention.js's memory rule (MP); USER_AUTONOMY for the ceiling.
+  #   D20 = GW0h_minimal_default: base + the one runtime plan() finds, display none, no extras; the repo desktop one tick away.
+  #         Deterministic first, the least that works (his "as little as possible").
+  #   D21 = GW0i_find_order: own component store and code index first, then registries and code hosts by API, then image/UI sites,
+  #         then the open web; stop at the first adequate hit. §8.6 reuse before build, his "everything reused from the inside out"
+  #         — as COST, not a fixed walk, the same law as GM5 addendum (b): the free sources are asked together, the costly ones
+  #         only for the residue.
+  #   D22 = TL0a_unit_of_the_timeline: a, one timeline per piece of work; the repo's line is a view over them, no second record
+  #         (§10.3 one truth).
+  #   D23 = TL0b_rewind_scope: the files back to the checkpoint's commit and the work's state (later chunks pending, the gate open
+  #         again); later entries kept and marked superseded; the rewind is itself an entry. REVERSIBILITY, §0.3.
+  # Still his, not decided here: GM0a (what "the precommit compartment" means: his words), GW0d (needs his failing log), and
+  # D10 vs D13 (above).

@@ -200,7 +200,9 @@ function parsePhasemapText(text, name) {
         : /status:\s*[>|]?-?\s*["']?\s*DONE\b/.test(near) ? 'done'
         : /IN PROGRESS|STARTED|\bpartial\b/i.test(near) ? 'in-progress'
         : 'pending';
-      const ans = sIdx === -1 ? null : _answerOf(near);   // §OR1 — the value's first word
+      // §0.60.155 — a phase written inline (`PE3: {status: BUILT-0.60.75, …}`) has no status: line of its own, so its status was
+      // never read and 6 built phases (PE1-PE4, MB1, MB5) showed pending (found by the gating census, docs/2026-10-18-gating-census-phasemap.spec).
+      const ans = sIdx === -1 && !/\{\s*status:/.test(rest) ? null : _answerOf(near);   // §OR1 — the value's first word
       if (ans && ((status === 'pending' && !/\bNOT STARTED\b/i.test(near)) || ans.closedAs || ans.shelf)) status = ans.status;   // NOT STARTED still wins (the 2026-09-19 rule)
       if (isDecision && /status:\s*["']?\s*DECIDED\b/.test(near)) status = 'done';   // §CV6
 

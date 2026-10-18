@@ -48,14 +48,14 @@ decisions:
       a: "per piece of work (a spec being written, a phase build, a contract): its chunks, checkpoints and gates."
       b: "per repo: every piece of work in the repo on one line."
     coder_recommends: "a, stored per piece of work; b is a view over every a in the repo (no second record). To confirm."
-    status: OPEN
+    status: "DECIDED 2026-10-18 by his axioms (D22, docs/2026-10-17-decisions-by-the-axioms.spec addendum c): coder_recommends, as written. Was: OPEN"
   TL0b_rewind_scope:
     asked: "what does rewinding to a gate put back?"
     coder_recommends: >-
       the files (to the commit the checkpoint holds) and the work's state (chunks after the point go back to pending; the
       gate is open again). Later entries are kept and marked superseded, never deleted (§0.3). The rewind is itself an
       entry. To confirm.
-    status: OPEN
+    status: "DECIDED 2026-10-18 by his axioms (D23, docs/2026-10-17-decisions-by-the-axioms.spec addendum c): coder_recommends, as written. Was: OPEN"
 
   TL0_find_the_loss:
     status: 'OPEN (a question for James, not a build — an agent cannot read his log or his screen; moved here 2026-10-16, see addendum c)'

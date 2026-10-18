@@ -613,3 +613,17 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     Any store can join as a table row.
   - **Evidence:** `docs/2026-10-18-gate-memory-phasemap.spec` addendum (b); `CHANGELOG-0.60.154.md`; every phase graph ready,
     with no new crossing.
+
+- **2026-10-18 — 0.60.155: "bottom up" applied to the record itself.**
+  - **His words:** "look at all of the phases that mention gates" · "need to get them done bottom up. really need it all
+    working."
+  - **Context:** 75 open gate phases across 20 maps.
+  - **What it shows:** failure-mode thinking. Checking the claims against the code, rather than trusting the status lines,
+    found that the status record was wrong:
+    - a scanner defect hid six built phases;
+    - four phases were stale;
+    - CHANGELOG hits under the same id came from other maps' phases.
+
+    The same work turned out to be mapped many times over. The gate record was mapped four times, the rewind five times and the
+    precommit gate four times.
+  - **Evidence:** `docs/2026-10-18-gating-census-phasemap.spec`; test PM-INLINE; `CHANGELOG-0.60.155.md`.

@@ -70,4 +70,8 @@ test('T-007', 'only the systems in systems.js: every phase\'s systems are Ideari
   assert.strictEqual(pm.forSystem('raid').system, 'cortex');
   assert.strictEqual(pm.forSystem('__no_such_system_xyz__').total, 0, 'a name that is no system and no tag answers empty, not core');
 });
+test('PM-INLINE', 'a phase written inline ({status: BUILT-…}) reads its status (0.60.155, the gating census)', () => {
+  const ps = pm.parsePhasemapText(['phases:', '  X1_a: {status: BUILT-0.60.75, what: "x"}', '  X2_b: {status: MAPPED, what: "y"}', '  X3_c: {status: SUPERSEDED, what: "z"}'].join('\n'), 'i');
+  assert.deepStrictEqual(ps.map(p => [p.id, p.status]), [['X1_a', 'done'], ['X2_b', 'pending'], ['X3_c', 'done']]);
+});
 console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);

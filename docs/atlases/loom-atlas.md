@@ -588,7 +588,7 @@ Not expanded further — this session did not read `loom/server.js` or `package.
   exports loadAll, forSystem, summary, findEvent, MODULE_ID, VERSION · requires 1 · required by 1
 - `loom/scanners/mock-data-finder.js` (126 lines)  
   exports scan, PATTERNS · requires 1 · required by 1 · tested by `tests/modules/test-mock-data-finder.js`
-- `loom/scanners/phasemap-map.js` (561 lines) — the PHASEMAP layer of loom's self-model James: "consolidate all the phasemaps, split them by system, add it as an  
+- `loom/scanners/phasemap-map.js` (563 lines) — the PHASEMAP layer of loom's self-model James: "consolidate all the phasemaps, split them by system, add it as an  
   exports loadAll, parsePhasemapText, isPhasemapFile, forSystem, summary, persistHistory +5 · requires 0 · required by 10 · tested by `loom/test/phasemap-map.test.js`, `tests/modules/test-loom-phasemap-status.js`
 - `loom/scanners/source-map.js` (381 lines)  
   exports scanTree, mapSource, eventMap, eventsOf, idFor, stripNonCode +4 · requires 0 · required by 17 · tested by `tests/modules/test-component-store.test.js`, `tests/modules/test-dangling-hooks-and-idearium-load.test.js` +1

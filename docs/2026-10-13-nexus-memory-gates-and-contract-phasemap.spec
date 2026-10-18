@@ -84,7 +84,7 @@ spec:
       builds_on: "versionium (snapshots, history import, 0.60.7) · repo notes · the ledgers · nodes"
       does: "A checkpoint per passed gate (a Versionium snapshot + the contract's state), so work resumes from the last passed block after any crash, restart or provider switch. A census of what a repo keeps where, and what does not persist yet."
     CX0_context_from_dependencies:
-      status: "OPEN"
+      status: "SUPERSEDED by CX1 (one build of context-from-dependencies; GA1 0.60.44 fetches a dependency excerpt today) — the gating census 2026-10-18. Was: OPEN"
       james: '"mapping, gathering context from the dependancies"'
       builds_on: "lib/component-store.js closure · loom wires · lib/project-decompose.js"
       does: "A block's context is its dependencies' contracts (exports, signatures) from the component store and loom — not their files."
@@ -93,7 +93,7 @@ spec:
       james: '"all the phases from today and yesterday that will idearium working"'
       does: "The open phases of 2026-10-12/13 that make Idearium work end to end, in order — request spine (RQ), projects (PL1, PL5), identities (ID1, TB1), then CT0 → GT0 → MEM0 — run as a contract through the pipeline itself."
     PF0_profiles_linked_to_hats:
-      status: "OPEN — mapped as ID1 in docs/2026-10-13-identities-tabs-and-automation-phasemap.spec; his 0.60.13 session hub is its base"
+      status: "FOLDED into ID1 (one phase, not two) — the gating census 2026-10-18. Was: OPEN — mapped as ID1 in docs/2026-10-13-identities-tabs-and-automation-phasemap.spec; his 0.60.13 session hub is its base"
       james: '"profiles in clearlgas that can link to hats. multiaccunt setup in clearglass, using porofiles?"'
     CT2_ingestion_as_contracts:
       status: "OPEN"
