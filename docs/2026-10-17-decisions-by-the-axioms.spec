@@ -117,3 +117,18 @@ spec:
   # not settle, two axioms in conflict, a failure, or a cost he would want to know about first.
   attribution: "decided by his axioms (docs/AXIOMS-v3.1.md), applied by the coder, 2026-10-17"
 
+
+  # ── ADDENDUM 2026-10-18 (b) — D10 and D11, from the debugging product map ─────────
+  # James, 2026-10-17: "should the chunks, contracts, phases, dependancies all have syncronized ids or uuids, also in relation
+  # to the job. also what about using the dependencies to map gaps in codebases or repose, files or code"
+  # Both are technical, and his axioms settle them. Full text, ids as found in code, and the phases that build them:
+  # docs/2026-10-18-debugging-product-phasemap.spec (DBG0a, DBG0b; DBG1, DBG4).
+  # D10_synchronized_by_a_key (= DBG0a): synchronized by a shared derived KEY, not one shared uuid. What a thing IS (phase,
+  #   chunk, contract, dependency edge) is keyed by its place in the map, <repo>/<map>::<phase>[::<chunk>]. What HAPPENS (job,
+  #   attempt, change, commit, event) keeps its own random id and carries that key plus its attempt. A chunk is named for what it
+  #   is, never its position (b<n> becomes an alias). Axioms: §10.1, §5.14, §1.1, §7.6; identity (the check catalogue's
+  #   primitive); PC2.
+  # D11_dependencies_are_gap_evidence (= DBG0b): yes. Every dependency edge whose far end is missing, or does not provide what
+  #   is used, is a gap, found deterministically; orphans are said, never deleted. All go through lib/gap-field.js report(). Axioms:
+  #   deterministic first, §8.6, §1.2, the one gap door, §0.5.
+  # Stays his: DBG0c, which product the debugger is (direction).

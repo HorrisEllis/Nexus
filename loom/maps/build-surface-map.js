@@ -98,6 +98,8 @@ const FILES = [
   ['idearium/repo/build-plan.js', I('idearium/repo/build-plan.js'), [
     I('lib/run-watch.js'), I('lib/phase-plan.js'),              // §0.60.123 PP1/PP2 createRequire — runsOf/isFinal (an open run), depsOf (what a piece uses)
   ]],
+  // §0.60.143 TL1b — the agent's reply and thinking on disk as they stream
+  ['lib/work-journal.js', I('lib/work-journal.js'), [I('lib/node-export.js')]],   // wrap/toYaml/importFromFile (.response)
   // §0.60.141 TF2 — the phase's test is written first and shapes the plan
   ['lib/test-first.js', I('lib/test-first.js'), [I('lib/proposal-evidence.js')]],   // validate: shadow + runOne
   // §0.60.125 DG1 — a phase is not built while what it depends on is open
@@ -260,6 +262,9 @@ const CONSUMERS = [
   [I('ollama/server.js'), I('ollama/lib/idle-unload.js'), '0.60.123 MP startIdleUnload after listen (keep_alive:0 on idle)'],
   [I('idearium/repo/import-pipeline.js'), I('idearium/repo/import-pipeline-worker.js'), '0.60.124 SW1 runImportPipelineOffThread — new Worker(new URL(./import-pipeline-worker.js))'],
   [I('idearium/repo/nexus-self.js'), I('idearium/repo/import-pipeline.js'), '0.60.124 SW1 _syncSystem + parent: await runImportPipelineOffThread'],
+  [I('idearium/api/index.js'), I('lib/work-journal.js'), '0.60.143 TL1b _journal: guardian onFeed + POST agent/stream record each frame; GET agent/feed list/get'],
+  [I('idearium/ui/js/app.js'), I('idearium/api/index.js'), '0.60.143 TL1b _agentFeedRestore: GET /api/repos/:uuid/agent/feed (the newest job, its timeline)'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '0.60.143 TL1b repo feed → GET /api/repos/:uuid/agent/feed'],
   [I('idearium/ui/js/code-surface.js'), I('idearium/ui/js/work-surface.js'), '0.60.142 LV2 Code › changes and the open file: _wsFormingHtml, wsFormingFileHtml (live, from the feed)'],
   [I('idearium/ui/js/code-surface.js'), I('idearium/ui/js/app.js'), '0.60.142 LV2 agentLiveHtml in Code › changes: the agent writing and thinking'],
   [I('idearium/ui/js/code-dock.js'), I('idearium/ui/js/plan-panel.js'), '0.60.142 LV3 the Plan docked as the column\'s first panel (#plan-panel moved in; PLANP.popout, planDockToggle)'],

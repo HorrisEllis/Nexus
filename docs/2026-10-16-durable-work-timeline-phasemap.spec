@@ -192,3 +192,22 @@ not_verified:
 # screen and log lost his 17 chunks; only he has that, so an agent can search the repo forever and change nothing. The coder
 # had written it as a phase. Moved, unchanged, under decisions: (the scanner marks entries there kind: decision, which no build
 # picks). TL1 no longer waits on it. His answer still goes there.
+
+# ## ADDENDUM 2026-10-18 (d) — TL1b built (0.60.143): the agent's reply and thinking are on disk as they stream
+# James, 2026-10-18: "We need persistent data look at the last commit." (The last commit was 0.60.142 LV1–LV4, which streamed
+# the agent's thinking and reply into Code › changes and the open file.)
+# Found (read in code): every live frame lived only in the page (idearium/ui/js/app.js AGENT_FEED) and in lib/repo-activity.js's
+# in-memory tasks. guardian/lib/response-sink.js writes the .response node only when the reply ENDS. So a reload, an Idearium
+# restart or a Clear Glass close mid-reply lost the reply and the thinking so far. That is the .response half named in addendum
+# (b), the same loss as TL0's 17 chunks, on the path he was looking at.
+# Built (TL1's first slice, for the agent-reply path; the spec-writing path and GW27's .input/.output stay open):
+#   lib/work-journal.js — data/work/<repo>/<job>/reply.response (a .response node, rewritten atomically, tmp + rename, on every
+#   frame that changes it; a dom pulse is not a write) and timeline.jsonl (append-only, one line per event, no text).
+#   Both feed doors record (guardian's onFeed in idearium/api/index.js, Ollama's POST /api/repos/:uuid/agent/stream).
+#   GET /api/repos/:uuid/agent/feed[?job=&limit=] · `repo feed <repo> [job]` · the page restores the newest job when it opens
+#   ("restored from disk · <status>"), and a live frame wins. An open job with no frame for 15 min reads 'stale', never 'live'.
+# Proof: tests/modules/test-work-journal.test.js 3/3 (WJ-01 the reply and thinking back byte-identical after a restart; WJ-03
+# the page in Clear Glass).
+# Not done, said: TL2 (resume at boot — the next request carrying what was written) does not read the journal yet; the journal
+# is per guardian/Ollama job, not yet tied to a work id across a phase's attempts (the id question in
+# docs/2026-10-18-debugging-product-phasemap.spec); lib/repo-activity.js's tasks are still memory plus the exchange log.

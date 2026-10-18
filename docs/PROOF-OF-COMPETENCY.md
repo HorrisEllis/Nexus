@@ -532,3 +532,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **Evidence:** `CHANGELOG-0.60.142.md`; `tests/modules/test-live-everywhere.test.js` LV-02 runs Gemini's own streamer
     and shows the thinking reaching the stream before the reply; `tests/modules/test-agent-live.test.js` LS-05 shows it in
     the Code tab, in Clear Glass.
+- **2026-10-18: "We need persistent data look at the last commit."**
+  - **Context:** the release before had just made the agent's work visible live. He looked at what it had shipped and saw
+    that live is not the same as kept.
+  - **What it shows:** reviewing his own release for its failure mode rather than its feature. A stream that exists only
+    in memory looks right until a reload, and then it is gone. This is the same class of loss as the 17 spec chunks a
+    restart took on 2026-10-16. He named it from the commit before he had seen it happen there.
+  - **Evidence:** `CHANGELOG-0.60.143.md`; `tests/modules/test-work-journal.test.js`. WJ-01 drops memory and reads the
+    reply and thinking back byte-identical; WJ-03 shows it on a freshly opened page in Clear Glass.

@@ -563,6 +563,11 @@
     },
     {
       "method": "GET",
+      "path": "/api/repos/:uuid/agent/feed",
+      "_action": "repo.agent.feed"
+    },
+    {
+      "method": "GET",
       "path": "/api/workshop/templates",
       "_action": "workshop.templates"
     },

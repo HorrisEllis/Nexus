@@ -4249,12 +4249,35 @@ const AGENT_TRANSCRIPT = new Map(); // repoUuid -> [{ role, text, meta }]
 const AGENT_FEED = new Map();   // repoUuid -> { rows: [], anchor, mutations, generating, jobId, provider, text, textLen, updated }
 const AGENT_FEED_MAX = 120;
 function _agentFeedState(uuid) {
-  if (!AGENT_FEED.has(uuid)) AGENT_FEED.set(uuid, { rows: [], anchor: null, mutations: null, generating: null, jobId: null, provider: null, text: '', textLen: 0, updated: 0 });
+  if (!AGENT_FEED.has(uuid)) { AGENT_FEED.set(uuid, { rows: [], anchor: null, mutations: null, generating: null, jobId: null, provider: null, text: '', textLen: 0, updated: 0 }); _agentFeedRestore(uuid); }
   return AGENT_FEED.get(uuid);
+}
+// §0.60.143 TL1b — James: "We need persistent data look at the last commit." The feed above lived only in this page: a reload or a
+// restart lost the reply and the thinking so far. Idearium now keeps every frame on disk (lib/work-journal.js); the first time
+// this page looks at a repo it reads the newest job back, unless a live frame has already arrived.
+async function _agentFeedRestore(uuid) {
+  let job = null;
+  try {
+    const d = await api(`/api/repos/${encodeURIComponent(uuid)}/agent/feed?limit=1`);
+    const top = (d.jobs || [])[0]; if (!top) return;
+    job = (await api(`/api/repos/${encodeURIComponent(uuid)}/agent/feed?job=${encodeURIComponent(top.jobId)}`)).job || top;
+  } catch (_) { return; }   // no journal (an older Idearium, or none yet): the live feed is all there is
+  const st = AGENT_FEED.get(uuid);
+  if (!st || !job || (st.jobId && (st.jobId !== job.jobId || st.text))) return;   // live frames win
+  Object.assign(st, { jobId: job.jobId, provider: job.provider, text: job.text || '', textLen: job.textLen || 0, thinking: job.thinking || '', thinkingLen: job.thinkingLen || 0,
+    generating: job.generating && job.status === 'responding', gate: job.gate || null, mutations: job.mutations, restored: job.status, updated: job.updatedAt || 0 });
+  st.rows = (job.timeline || []).filter(e => e.event !== 'chunk' && !(e.event === 'progress' && e.stage === 'dom')).slice(-AGENT_FEED_MAX).map(e => ({
+    ts: e.ts, ev: e.event === 'gate' ? `gate ${e.label || e.gate || ''} · ${e.state || ''}` : e.stage ? `${e.event}:${e.stage}` : e.event,
+    detail: [e.detail, e.how, e.reason, e.error].filter(Boolean).join(' · '), bad: e.event === 'error' || e.event === 'timeout' || (e.event === 'gate' && e.state === 'failed') }));
+  st.rows.push({ ts: Date.now(), ev: 'restored', detail: `from disk — ${job.status} · reply ${job.textLen || 0}ch${job.thinkingLen ? ` · thinking ${job.thinkingLen}ch` : ''}`, bad: job.status === 'stale' });
+  if (CURRENT_API_REPO && CURRENT_API_REPO.uuid === uuid) _agentFeedPaint(uuid);
+  if (typeof agentLivePaint === 'function') agentLivePaint(uuid);
+  if (typeof wsLivePaint === 'function') wsLivePaint(uuid);
 }
 function _agentFeedIn(p) {
   if (!p || !p.repoUuid) return;
   const st = _agentFeedState(p.repoUuid);
+  st.restored = null;
   if (p.jobId && p.jobId !== st.jobId) { st.jobId = p.jobId; st.text = ''; st.textLen = 0; st.anchor = null; st.mutations = null; st.gate = null; st.thinking = ''; st.thinkingLen = 0; }
   // §0.60.142 LV1 — the model's thinking, streamed while its reply is still empty (gemini thinks for minutes): kept whole
   if (typeof p.thinking === 'string' && p.thinking) { st.thinking = p.thinking.slice(-12000); st.thinkingLen = p.thinkingLen || p.thinking.length; }
@@ -4338,6 +4361,7 @@ function agentLiveHtml(uuid) {
   const attrs = a && a.attrs ? Object.entries(a.attrs).map(([k, v]) => `${k}=${v}`).join(' ') : '';
   return `<div class="al-head"><span class="al-dot${st.generating ? ' on' : ''}"></span><b>${st.generating ? 'writing' : 'idle'}</b>
       ${st.provider ? `<span>${escapeHtml(st.provider)}</span>` : ''}<span class="al-dim">job ${escapeHtml(String(st.jobId).slice(0, 8))}</span>
+      ${st.restored ? `<span class="al-dim" data-restored="${escapeHtml(st.restored)}">restored from disk · ${escapeHtml(st.restored)}</span>` : ''}
       ${st.mutations != null ? `<span class="al-dim">mutations ${st.mutations}</span>` : ''}
       ${a ? `<span class="al-anchor" title="${escapeHtml(attrs)}">⌖ ${escapeHtml(a.path || a.tag || '')}</span>` : ''}
       <span class="al-dim">${st.textLen || st.text.length}ch${st.thinkingLen ? ` · thinking ${st.thinkingLen}ch` : ''}</span>
