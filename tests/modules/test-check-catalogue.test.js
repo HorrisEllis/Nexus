@@ -44,7 +44,7 @@ const cond = (c) => CG.checkCondition(c, { root: ROOT, state: { evidence: {}, ga
   await test('QA-01', 'the catalogue loads; runnable ones marked; no runner is never a pass', () => {
     const s = CC.summary();
     assert.strictEqual(s.total, 122);   // 119 + CK-253 versions agree (0.60.34) + CK-254 spec surface (0.60.49) + CK-255 every build through WARP (0.60.67)
-    assert.deepStrictEqual(s.runners, ['CK-230', 'CK-233', 'CK-247', 'CK-248', 'CK-253', 'CK-254', 'CK-255']);   // CK-247: 0.60.40 BR2 · CK-255: 0.60.67 WB0
+    assert.deepStrictEqual(s.runners, ['CK-230', 'CK-233', 'CK-247', 'CK-248', 'CK-253', 'CK-254', 'CK-255', 'CK-231', 'CK-237', 'CK-239', 'CK-252']);   // CK-247: 0.60.40 BR2 · CK-255: 0.60.67 WB0 · CK-231/237/239/252: 0.60.157 (the gating census; the coder's release did not move this pin, 0.60.158 does)
     for (const id of ['CK-230', 'CK-233', 'CK-248']) assert.strictEqual(CC.get(id).runnable, 'runner', id);
     assert.strictEqual(CC.get('CK-060').runnable, 'import-checks');
     const r = CC.run('CK-234');

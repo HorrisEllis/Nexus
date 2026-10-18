@@ -637,3 +637,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     it.
   - **Evidence:** `tests/modules/test-context-stream.test.js`. Three arrival orders give one answer, and a fourth source joins
     with no line of the finder changed.
+
+- **2026-10-18 — 0.60.158: "solid" taken as a claim to attack, not a status to report.**
+  - **His words:** "Need to get the gates solid."
+  - **Context:** the gate tests were mostly green.
+  - **What it shows:** failure-mode thinking. Probing the gate machinery for ways a contract could read done when it is not found
+    three false completes that no green test had caught. Two more conditions could never pass, and one input threw.
+  - **Evidence:** `tests/modules/test-gates-solid.test.js` holds one case per hole. Each was demonstrated on the code before the
+    fix.

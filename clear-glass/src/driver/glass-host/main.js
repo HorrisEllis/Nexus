@@ -22,6 +22,11 @@
  */
 const { app, BrowserWindow } = require('electron');
 
+// §0.60.158 — each launch its own profile (GLASS_PROFILE, a fresh temp folder from glass.js, removed on quit). Without it every
+// host shared Electron's default userData, so a page's localStorage leaked from one test into the next: test-plan-sidebar's
+// PS-04 and test-code-tab-merge passed or failed by which test ran before them (James: "Need to get the gates solid.")
+if (process.env.GLASS_PROFILE) { try { app.setPath('userData', process.env.GLASS_PROFILE); } catch (_) {} }
+
 const pages = new Map();
 let seq = 0;
 const out = (o) => process.stdout.write('§G ' + JSON.stringify(o) + '\n');

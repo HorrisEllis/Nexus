@@ -33,6 +33,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { spawn } = require('child_process');
 const EventEmitter = require('events');
 
@@ -72,7 +73,9 @@ function glassTransport(bin) {
   const args = [HOST_DIR, '--no-sandbox'];
   const headless = process.platform === 'linux' && !process.env.DISPLAY;
   if (headless) args.unshift('--ozone-platform=headless', '--disable-gpu');
-  const env = { ...process.env, GLASS_OFFSCREEN: headless ? '1' : '' };
+  // §0.60.158 — a fresh profile per launch, as the Chromium transport already has: no page state carries from one run to the next
+  const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'glass-host-'));
+  const env = { ...process.env, GLASS_OFFSCREEN: headless ? '1' : '', GLASS_PROFILE: profile };
   delete env.ELECTRON_RUN_AS_NODE;
   const child = spawn(bin, args, { stdio: ['pipe', 'pipe', 'pipe'], env });
   const pending = new Map(); let seq = 0; let buf = ''; let stderr = '';
@@ -92,6 +95,7 @@ function glassTransport(bin) {
   });
   child.stderr.on('data', (c) => { stderr = (stderr + c).slice(-4000); });
   child.on('exit', (code) => {
+    try { fs.rmSync(profile, { recursive: true, force: true }); } catch (_) {}
     readyReject(new Error(`Clear Glass host exited (${code}) before ready: ${stderr.split('\n').filter(l => !/dbus|ANGLE|EGL|gl_display|viz_main/.test(l)).slice(-5).join(' | ')}`));
     for (const p of pending.values()) p.reject(new Error('Clear Glass host exited'));
     pending.clear();
@@ -108,7 +112,7 @@ function glassTransport(bin) {
 
 function chromiumTransport(bin) {
   const events = new EventEmitter();
-  const os = require('os');
+  // (os: required at the top since 0.60.158)
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'glass-chromium-'));
   const child = spawn(bin, ['--headless=new', '--no-sandbox', '--disable-gpu', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
   let ws, seq = 0; const pending = new Map(); const sessions = new Map();

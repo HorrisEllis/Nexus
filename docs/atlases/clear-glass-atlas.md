@@ -803,7 +803,7 @@ Full real chain traced and patched this pass, five files, not one:
 
 4 code file(s).
 
-- `clear-glass/src/driver/glass.js` (460 lines)  
+- `clear-glass/src/driver/glass.js` (464 lines)  
   exports chromium, launch, engine, Browser, Page, PAGE_LIB · tested by `tests/modules/test-agent-live.test.js`, `tests/modules/test-canvas-compartments.test.js` +23
 - `clear-glass/src/driver/index.js` (925 lines) — ClearDriver — NEXUS sovereign browser automation No Playwright. No Puppeteer. Own the primitives.  
   requires 5 · required by 3 · emits driver.error, driver.network.blocked, driver.network.intercepted, driver.recording +8
@@ -816,7 +816,7 @@ Full real chain traced and patched this pass, five files, not one:
 
 1 code · 1 other file(s).
 
-- `clear-glass/src/driver/glass-host/main.js` (82 lines) — Clear Glass's engine, run as a page host for glass.js. §0.39.263 — James: "playright? no what is that for? litterally have clearglas".
+- `clear-glass/src/driver/glass-host/main.js` (87 lines) — Clear Glass's engine, run as a page host for glass.js. §0.39.263 — James: "playright? no what is that for? litterally have clearglas".
 - other: `clear-glass/src/driver/glass-host/package.json`
 
 #### `clear-glass/src/eros/`

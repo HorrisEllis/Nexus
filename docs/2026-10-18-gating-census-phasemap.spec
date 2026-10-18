@@ -77,3 +77,10 @@ spec:
   # GM4: intelligence/lattice/node-lattice.js (1,491 nodes, 14 systems, typed edges). LM0: stable wire ids and an idempotent
   # bootstrap. BP-01 (the coder's TF2 outside WARP), PB-05 (a fixture counted as code) and LM-07 (a stale pin) fixed at their
   # causes. Left in layer 1: GW5 (it waits on GW1's remainder, so it moves to layer 2), QA1, RD0/RD1.
+  # ── ADDENDUM 2026-10-18 (c) — 0.60.158: the gates, solid ──────────────────────────────────────────────────────────────
+  # James: "Need to get the gates solid." Bottom of the stack first: the gate machinery itself (contract-gates.js) — six holes,
+  # three of them false completes, closed (nexus-memory-gates map addendum). Then every gate-related test run alone (51 files):
+  # seven red, each fixed at its cause — QA-01 (the coder's 0.60.157 runners unpinned), GA-05 and RS-55 (pins the code had
+  # outgrown), PS-04 (a page state Clear Glass's engine keeps across runs), RE-07 (the registry's ledger read as a node), GL
+  # (load only), NS-003/012 (known gaps, listed).
+

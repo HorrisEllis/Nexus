@@ -233,8 +233,8 @@ Not confirmed.
   exports VERSION, doorRoute, agentExecutor, planHash, fromPhasePlan, fromWholePhase +3 · requires 3 · required by 2
 - `cortex/core/raid/contract-boundary.js` (200 lines)  
   exports resolveBoundary, listBoundaries, REGISTRY
-- `cortex/core/raid/contract-gates.js` (709 lines)  
-  exports VERSION, STATES, load, save, validate, evaluate +17 · requires 3 · required by 4
+- `cortex/core/raid/contract-gates.js` (758 lines)  
+  exports VERSION, STATES, load, save, validate, evaluate +19 · requires 3 · required by 4
 - `cortex/core/raid/contract-intake.js` (1607 lines) — // cortex/core/raid/contract-intake.js — real RAID input queue + compartment- // per-contract dispatch. UUID: nexus-raid-contract-intake-v1-0000-2026-0828-001  
   exports runContract, progress, gateBefore, registerExecutors, submitV2, legacyToV2 +19 · requires 4 · required by 6 · tested by `tests/modules/contract-intake-dependency-graph.test.js`, `tests/modules/contract-intake-tangible-file.test.js` +5
 - `cortex/core/raid/contract-trace.js` (89 lines) — GW3: a contract traced end to end, one ordered story per brick. James, 2026-10-15: "each contract tracked through the system using the event ledger, tagging and each gate, the  

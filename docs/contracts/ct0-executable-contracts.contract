@@ -120,28 +120,28 @@ payload:
           - exists: cortex/core/raid/contract-intake.js
           - exists: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
         hashes:
-          v1: 7fc352e1a2ca7a5eb52676c6357f6f8f5b633cc3492bb437ff73fa3e3f095282
-          phasemap: a4ebc1b028355a0c12d5c18fc0ecf7b57783fdbe1860be34b5ba937889befd95
-        at: 1792067862941
-        attempts: 14
+          v1: ca8e8d3fbf4a2aeb4460fd15e9e07d95e864961415cc792434c8a00a962878ad
+          phasemap: e9142d704d1c71e07c2cfdb6921935e658c52170a51dada400c33a9cc0c4f455
+        at: 1792361234693
+        attempts: 15
       evaluator:
         status: PASSED
         reasons: []
         evidence:
           - exists: cortex/core/raid/contract-gates.js
         hashes:
-          evaluator: 0309d62967ef3f8d01cbf84959ab6aa4d969c7e60c72507ca2fe9d119644fae1
-        at: 1792067862946
-        attempts: 14
+          evaluator: 5fd7485284099c7b79959388e7e8e2145d4d5990f775635df658f7c13f5b9fbe
+        at: 1792361234696
+        attempts: 15
       commands:
         status: PASSED
         reasons: []
         evidence:
           - exists: idearium/cli/route-commands.js
         hashes:
-          commands: fa8fba958960acf2f75117d371362a5dc723e539fdaab32f67a842249d59ac28
-        at: 1792067862949
-        attempts: 14
+          commands: 8a8ad2f0ea3c8449ff1958a2e3698bb169b95097251b5626a7b3125ecfb603a4
+        at: 1792361234698
+        attempts: 15
       verify:
         status: PASSED
         reasons: []
@@ -150,22 +150,23 @@ payload:
             exit: 0
             tail: ' | 20 passed, 0 failed'
         hashes:
-          evaluator: 0309d62967ef3f8d01cbf84959ab6aa4d969c7e60c72507ca2fe9d119644fae1
-          commands: fa8fba958960acf2f75117d371362a5dc723e539fdaab32f67a842249d59ac28
+          evaluator: 5fd7485284099c7b79959388e7e8e2145d4d5990f775635df658f7c13f5b9fbe
+          commands: 8a8ad2f0ea3c8449ff1958a2e3698bb169b95097251b5626a7b3125ecfb603a4
           tests: 0f74b995a8746f3801e07cf1c7e69c2801304be449a46b58a1beefd481daf522
-        at: 1792067863564
-        attempts: 14
+        at: 1792361235172
+        attempts: 15
       self-host:
         status: PASSED
         reasons: []
         evidence:
           - gate: verify
         hashes:
-          evaluator: 0309d62967ef3f8d01cbf84959ab6aa4d969c7e60c72507ca2fe9d119644fae1
-        at: 1792067863566
-        attempts: 14
+          evaluator: 5fd7485284099c7b79959388e7e8e2145d4d5990f775635df658f7c13f5b9fbe
+        at: 1792361235174
+        attempts: 15
     evidence: {}
     invariants:
       INV-compat: verified
       INV-evidence: verified
       INV-invalidate: verified
+    verified: {}
