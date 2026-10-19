@@ -710,3 +710,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     first-priority data" discipline. The fix reused the existing retry machine rather than adding a scheduler, and its safety
     (never auto-retry a real failure) is the part that got the test.
   - **Evidence:** `tests/modules/test-economy-resume.test.js` (AB 5/5); `CHANGELOG-0.60.165.md`.
+
+- **2026-10-19 — 0.60.166 (CT1): his "cos to work for test env" was reuse, not a build.**
+  - **His words:** "then we need cos to work for test env." · "do not add apis."
+  - **Context:** COS already had a real isolated runner (process sandbox + an optional VM), but it was wired only to the manual
+    Run menu — the automated gate ran tests on the host. The direction named the exact missing wire.
+  - **What it shows:** knowing the system already had the capability and asking for it to be connected, not rebuilt — "use what
+    you already have." The coder also stated the honest limit (no KVM here → process isolation, not a VM) rather than overclaiming.
+  - **Evidence:** `tests/modules/test-cos-run-target.test.js` (CT 5/5, real sandbox runs incl. a clean-env leak check); `CHANGELOG-0.60.166.md`.

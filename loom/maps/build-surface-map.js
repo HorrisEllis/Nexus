@@ -75,6 +75,10 @@ const FILES = [
   ['lib/project-registry.js', I('lib/project-registry.js'), [
     I('lib/component-store.js'),                              // require — put(): store each built file with its resolved require edges
   ]],
+  // §CT1 0.60.166 — James: "then we need cos to work for test env." The gate's test runs in COS's process sandbox.
+  ['cos/testenv/run-target.js', I('cos/testenv/run-target.js'), [
+    I('cos/testenv/index.js'),                               // require — TE.run (process backend) → SandboxRunner: clean env, timeout, output cap
+  ]],
   // §FMR0/FMR2/FMR3 0.60.146 — every failure reaches the .failure_mode record; its report; causality measured
   // (docs/2026-10-17-failure-mode-report-phasemap.spec)
   ['cortex/self-heal/failure-intake.js', I('cortex/self-heal/failure-intake.js'), [
