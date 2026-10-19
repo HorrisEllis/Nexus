@@ -427,6 +427,7 @@ const SUITES = [
   'test-project-registry.test.js',    // 0.60.164 CR1 — the contract build wires every built file into the project's component store with resolved edges (the spine)
   'test-economy-resume.test.js',    // 0.60.165 AB1 — a build that exhausted only on time-bound holds (economy/rate-limit/no-RAM) is retried when the slot frees; never a real failure
   'test-cos-run-target.test.js',     // 0.60.166 CT1 — the gate's test runs inside COS's process sandbox (clean env, timeout, output cap); portable, no KVM needed
+  'test-tf-already-done.test.js',      // 0.60.167 — a phase whose files already exist is not stuck forever on test_first:require (TF.decide: passes-already+exists = already satisfied)
   'test-readme-generate.test.js',    // 0.60.153 — the README: every system, module and file; every phase; the data; Idearium; every release; under 512 KiB
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)
   'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person
