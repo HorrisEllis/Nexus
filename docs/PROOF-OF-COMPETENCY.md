@@ -645,3 +645,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     three false completes that no green test had caught. Two more conditions could never pass, and one input threw.
   - **Evidence:** `tests/modules/test-gates-solid.test.js` holds one case per hole. Each was demonstrated on the code before the
     fix.
+
+- **2026-10-18 — 0.60.160: the missing UI step, found by his own eye.**
+  - **His words:** "can you add snowflake to the ui. it doesn't show up as a plugin."
+  - **Context:** the Tor-with-Snowflake transport had backend, routes and a CLI, but its UI step had never been built, so it was
+    invisible in the app. He noticed the gap from the UI, which is exactly the order-of-delivery rule he set ("build the ui").
+  - **What it shows:** his order of delivery catches exactly this — a capability that is real but unreachable because its last
+    step was skipped. Naming it "not a plugin" was also right: it's a transport, and forcing it into the plugins list would have
+    mixed two kinds of thing.
+  - **Evidence:** `tests/modules/test-cg-network-ui.test.js` (driven in Clear Glass, against the real net service); `CHANGELOG-0.60.160.md`.

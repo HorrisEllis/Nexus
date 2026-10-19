@@ -101,6 +101,7 @@ const CONSUMERS = [
   [I('lib/repo-inject.js'),                         I('lib/step-gate.js'), '_screen(): the code.write gate and the collapse/shrink guards at propose() and edit(), whoever calls (0.60.74)'],
   [I('idearium/api/index.js'),                      I('lib/proposal-evidence.js'), '_rejectionContext(): a rejected proposal\'s evidence goes to the agent and into the retry note (0.60.75 PE4)'],
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/service.js'), '/cli/net/*: routes, resolve, bridge, transport start/stop/detect (0.60.60 NP9)'],
+  [I('clear-glass/renderer/settings/sections/network.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.160 Settings → Network: the Tor·Snowflake transport UI, over /cli/net/* (James: "add snowflake to the ui")'],
   [I('idearium/api/index.js'),                      I('lib/economy/tokens.js'), '_phaseBuild: breakdown() of what the agent is given (request, mapped files, charter, lessons, note) on the building row — the Plan\'s Context card (0.60.107 PS1)'],
   [I('idearium/api/index.js'),                      I('lib/ollama-activity.js'), '_contextOf: MAX, the num_ctx window Nexus gives Ollama — the Context card\'s window (0.60.107 PS1)'],
   [I('clear-glass/src/main/index.js'),              I('clear-glass/src/tls/helper.js'), 'boots TlsHelper on :7703 (in place of the Node proxy), its state → net service setTlsLayer, stopped at shutdown (0.60.109 TLS2)'],
