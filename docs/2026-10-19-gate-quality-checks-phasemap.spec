@@ -1,5 +1,11 @@
 # Gate quality checks — the test file gates the build, on SISO (2026-10-19)
 
+> SUPERSEDED-and-kept (§0.3) 2026-10-19 by docs/2026-10-19-solid-build-foundation-phasemap.spec. This map ran the gate's
+> test on the HOST; the superseding map runs it IN COS (the process sandbox) and after dynamic chunking, and places the
+> quality layer (GQ1–GQ4) in the larger local-first foundation (model-fit routing, dynamic chunking, the project registry
+> spine, autobuild + resume). Kept verbatim below as the earlier reading.
+
+
 James, 2026-10-19: "need quality checks per gate, using the test file and anything else we can. each chunk uses a dag?
 the core foundation needs to be solid before t can build naything else. gate should use siso or warp logic"
 
