@@ -187,7 +187,7 @@ phases:
 
   AB1_autobuild_loop_and_resume:
     layer: automation
-    status: OPEN
+    status: BUILT 2026-10-19 (0.60.165, economy-resume slice)
     depends_on: [GQ2_brick_gate_runs_the_test, GQ4_phase_gate_keeps_the_test, MF1_model_fit_routing]
     axioms: [§3.4, §1.1, §12.1, §0.3]
     blocks: ["autobuild"]

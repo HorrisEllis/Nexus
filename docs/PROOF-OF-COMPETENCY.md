@@ -700,3 +700,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     (contract builds never joined the store — looking-glass had no registry) and closed it by reuse.
   - **Evidence:** `tests/modules/test-project-registry.test.js` (CR 5/5); `CHANGELOG-0.60.164.md`; the bundle's missing
     `component.json`/graph; `lib/project-registry.js` wired into loom.
+
+- **2026-10-19 — 0.60.165 (AB1): he was right that it doesn't resume, against the coder's first claim.**
+  - **His words:** "fix the economy time out also like retries when the time runs out." · "i dont think it resumes."
+  - **Context:** the coder had earlier told him a rate-limited phase "resumes once a slot frees." Checked against the code, it
+    does not — a hold over 30 s is cancelled, the ladder exhausts, and the phase goes terminal with no retry path and no setting.
+    His instinct corrected a wrong claim.
+  - **What it shows:** trusting his own read of the system over the coder's reassurance — exactly the "failure modes are
+    first-priority data" discipline. The fix reused the existing retry machine rather than adding a scheduler, and its safety
+    (never auto-retry a real failure) is the part that got the test.
+  - **Evidence:** `tests/modules/test-economy-resume.test.js` (AB 5/5); `CHANGELOG-0.60.165.md`.
