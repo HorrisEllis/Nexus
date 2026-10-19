@@ -975,6 +975,27 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'refused', snapshot: commitId });
           return { ok: false, status: 409, error: `not built: ${why}`, extra: { code: 'NOT_READY', ready } };
         }
+        // §MF1 0.60.163 — leave off local rungs that cannot fit free memory NOW (per-model, not just the coarse level),
+        // so the ladder is chosen among models that will actually load. A skip, not an attempt; the per-rung check below
+        // stays as a safety net (RAM moves between here and dispatch). James: "ollama first … as long as local and free
+        // can handle it" (3700X/16GB/GTX 1650). docs/2026-10-19-solid-build-foundation-phasemap.spec MF1.
+        try {
+          const om = await _ollamaModels();
+          const RM = _require('../../lib/resource-monitor.js'); const smp = RM.sample();
+          const fits = (model) => RM.fitsModel({ model, bytes: om.sizes ? om.sizes[model] : null, loaded: om.loaded || [], sample: smp });
+          const bf = PRt.byFit(rungs, { fits });
+          if (bf.skipped.length) {
+            rungs = bf.rungs;
+            rungsSkipped = [...rungsSkipped, ...bf.skipped];
+            ladderFrom = `${ladderFrom} — won't fit memory: ${bf.skipped.map(d => `${d.provider} (${d.why})`).join('; ')}`;
+            if (!rungs.length) {
+              const why = `no agent on the ladder can take a job now — every local model is too big for free memory: ${bf.skipped.map(d => d.why).join('; ')}`;
+              appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', snapshot: commitId, ready, rungsSkipped, error: why, ts: Date.now() });
+              getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'refused', snapshot: commitId });
+              return { ok: false, status: 409, error: `not built: ${why}`, extra: { code: 'NOT_READY', memory: true, ready } };
+            }
+          }
+        } catch (_) { /* the fit pre-filter could not run — the per-rung dispatch check still guards each hop */ }
       }
     }
   } catch (e) { ready = { checked: false, line: `readiness not checked: ${e.message}`, dropped: [], moved: [], planner: null, notes: [] }; }
