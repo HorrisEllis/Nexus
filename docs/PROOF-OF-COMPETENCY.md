@@ -677,3 +677,15 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     one: the fix was three new node types on the store that already existed, not a new store (reuse before build, §8.6).
   - **Evidence:** `tests/modules/test-pipeline-nodes.test.js` (PN 4/4); `CHANGELOG-0.60.162.md`; the addendum on
     `docs/2026-09-29-nex-node-store-phasemap.spec`.
+
+- **2026-10-19 — 0.60.163 (MF1): he set the constraint that made the design correct.**
+  - **His words:** "ollama first, but nexus should be learning… as long as local and free can handle it." · "do not add apis. i
+    dont have money for that." · (hardware) "3700x 16gb of ram gtx 1650."
+  - **Context:** the build was leaning on rate-limited browser agents and churning on out-of-memory local models. He named the
+    real constraint — no paid APIs, a small local box — and the architecture principle: dumb components + a smart spine, so a small
+    local model can carry the volume and guardian is reserved for reasoning.
+  - **What it shows:** constraint-first systems thinking. The "no APIs, small box" limit isn't a compromise he settled for — it's
+    what forces the right design (dynamic chunking + registry spine + model-fit so local is viable). He also corrected the coder's
+    over-absolutism ("complex reasoning needs guardian") — tier-matching, not local-purism.
+  - **Evidence:** `tests/modules/test-model-fit-ladder.test.js` (MF 5/5); `CHANGELOG-0.60.163.md`; the bottom-up foundation map
+    `docs/2026-10-19-solid-build-foundation-phasemap.spec`.

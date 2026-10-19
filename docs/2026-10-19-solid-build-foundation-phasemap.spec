@@ -61,7 +61,7 @@ phases:
 
   MF1_model_fit_routing:
     layer: foundation
-    status: OPEN
+    status: BUILT 2026-10-19 (0.60.163)
     depends_on: []
     axioms: [§3.1, §1.1, §1.3, §0.3]
     blocks: ["model_fit"]
