@@ -88,6 +88,12 @@ class ClearDriver {
       case 'at':             return this._at(agentId, args);
       case 'spotlight':      return this._spotlight(agentId, args);
       case 'pointer':        return this._pointer(agentId, args);
+      // §0.60.175 PM5 — the page map (src/page/page-session.js): blocks → chunks → a map that learns → intent → targets
+      case 'pageMap':        return this._page('map', agentId, args);
+      case 'pageFind':       return this._page('find', agentId, args);
+      case 'pageChunks':     return this._page('chunks', agentId, args);
+      case 'pageScrape':     return this._page('scrape', agentId, args);
+      case 'pageOutcome':    return this._pageSession().outcome({ agentId, ...args });
       default:
         throw new Error(`Unknown driver action: ${action}`);
     }
@@ -805,6 +811,22 @@ class ClearDriver {
   // own path), after a spotlight on the target so James sees what is about to be pressed. The last field per agent is
   // kept so "pointer n:3" needs no second read.
   _fieldMaps() { return this.__fieldMaps || (this.__fieldMaps = new Map()); }
+  // §0.60.175 PM5/PM6 — one page session per driver: per window the last map; page-memory (~/.clear-glass/page-maps) learns per
+  // site; 'page.map' goes on the bus so attention keeps the window's feel for Nerve (and Ollama through Nerve's bridge)
+  _pageSession() {
+    if (!this.__pageSession) {
+      const PS = require('../page/page-session');
+      this.__pageSession = PS.createPageSession({ memory: require('../page/page-memory').shared(), emit: (type, data) => { try { this.sse.emit(type, data); } catch (_) {} } });
+    }
+    return this.__pageSession;
+  }
+  /** §0.60.175 PM7 — main/index.js hands every dom.mutations here; a live-mapped window is mapped again once it settles */
+  pageMutated(agentId) { return this.__pageSession ? this.__pageSession.poke(agentId) : false; }
+  async _page(what, agentId, args = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    return this._pageSession()[what]({ agentId, ...args, evalJs: (code) => this._evalJs(wc, code) });
+  }
   _pointerAt() { return this.__pointerAt || (this.__pointerAt = new Map()); }
 
   async _field(agentId, { overlay = false, grid, max, offscreen, limit, all } = {}) {

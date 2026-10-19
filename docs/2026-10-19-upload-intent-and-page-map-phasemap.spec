@@ -201,7 +201,7 @@ phases:
 
   PM5_tools_routes_commands:
     layer: integration
-    status: OPEN
+    status: DONE 0.60.175
     depends_on: [PM4_intent_to_targets, UP3_upload_routes_and_commands]   # UP3 first: both add rows to idearium/cli/route-commands.js
     files: [clear-glass/src/driver/index.js, clear-glass/src/copilot/tools.js, clear-glass/src/copilot/bridge.js,
       idearium/cli/route-commands.js]
@@ -212,7 +212,7 @@ phases:
 
   PM6_nerve_feel:
     layer: integration
-    status: OPEN
+    status: DONE 0.60.175
     depends_on: [PM5_tools_routes_commands]
     files: [clear-glass/src/page/attention.js, lib/nerve/index.js, lib/nerve-ollama-bridge.js]
     does: >-
@@ -223,9 +223,9 @@ phases:
 
   PM7_live_injected_map:
     layer: interface
-    status: OPEN
+    status: DONE 0.60.175
     depends_on: [PM6_nerve_feel]
-    files: [clear-glass/src/page/page-live.js, clear-glass/src/userscripts/manager.js]
+    files: [clear-glass/src/page/page-session.js, clear-glass/src/driver/index.js, clear-glass/src/main/index.js]
     does: >-
       A persistent injected script (userscripts manager) keeps the map live: a MutationObserver marks dirty regions, re-blocks only
       those, and posts the delta to the bus (page.map.delta) — the map stays current without the agent asking.
@@ -233,10 +233,23 @@ phases:
 
   PM8_page_map_panel:
     layer: interface
-    status: OPEN
+    status: DONE 0.60.175
     depends_on: [PM5_tools_routes_commands]
-    files: [clear-glass/src/renderer/page-map-panel.js]
+    files: [clear-glass/renderer/page-map-panel.js, clear-glass/renderer/browser.html, clear-glass/renderer/browser.css]
     does: >-
       Clear Glass panel: the map of the current page, its chunks, what changed since last visit, intent search with the result
       spotlit (field.spotlight), scrape export.
     proof: tested in Clear Glass
+
+## ADDENDUM 2026-10-19 (0.60.173–0.60.175) — what was built, and where it moved from the map
+
+- UP1–UP4 built (0.60.173). Found: writeSources() rewrites a repo's source manifest from only the files it is handed, so binaries
+  go through the single-file writeSourceBytes instead (the map said writeSources).
+- PM1–PM4 built (0.60.174). PM1 reuses semantic-tree's walk in a new opt-in content mode instead of a second walker; a
+  landmark's text is left to its children (it would repeat the whole page in every chunk).
+- PM5–PM8 built (0.60.175). PM7 changed shape: the map said a NEW persistent userscript with its own MutationObserver. Every page
+  already carries one (dom/archaeology.js, injected by the driver, reporting dom.mutations on the bus), so PM7 reuses it: a window
+  that has been mapped is mapped again once its DOM is quiet (1.5 s, at most every 5 s) — page-session poke(), wired in
+  main/index.js. No second script is injected. A window whose read fails stops being live and says so (page.live.stopped).
+  PM8's file is clear-glass/renderer/page-map-panel.js (the renderer lives in clear-glass/renderer/, not src/renderer/).
+- Open: UP5 (loom wires for an upload into the Nexus repo), UP6 (a model only for the unplaced).

@@ -755,3 +755,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
 - **What it shows:** systems design. His ordered pipeline maps one-to-one onto the modules built (blocks.js → page-map.js →
   page-memory.js), and it reuses the address scheme the agent already acts by, so nothing new had to be trusted.
 - **Checkable:** `tests/modules/clear-glass-page-map.test.js` 6/6, including a real layout run in Clear Glass's engine.
+
+### 2026-10-19 — 0.60.175: one capability through every door, and Ollama feeling the page
+- **His words:** "hooking ollama in to feel with "nexus nerve", see with the interaction field and scrips injected into each page."
+  · "then it can be a map tool, chunk tool for understanding/analysing/ reverse engineering,, web scraper."
+- **Context:** the page map existed as code (0.60.174); he named where it must reach: the co-pilot, the command line, Nerve and
+  Ollama, live on every page, and three uses (mapping, chunk analysis, scraping).
+- **What it shows:** architectural direction that composes existing parts (the interaction field, Nexus Nerve, the injected page
+  observer, the local model) into one loop: see, feel, act, learn. Each part was already his design; this release connects them.
+- **Checkable:** `tests/modules/clear-glass-page-session.test.js` 6/6 (the Ollama push tested against a stub server; the panel in
+  Clear Glass's engine); `CHANGELOG-0.60.175.md`.

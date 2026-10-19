@@ -22,7 +22,7 @@ function createAttention({ now = () => Date.now() } = {}) {
   const wins = new Map();   // agentId → { agentId, url, lastMutation, mutationCount, field, spotlight, pointer, lastAt }
   const picks = [];         // §0.59.2 — elements handed to the agents from the Guardian picker (→ CLAUDE CODE), newest last
   const MAX_PICKS = 25;
-  const win = (id) => { if (!wins.has(id)) wins.set(id, { agentId: id, url: null, lastMutation: 0, mutationCount: 0, field: null, spotlight: null, pointer: null, lastAt: 0 }); return wins.get(id); };
+  const win = (id) => { if (!wins.has(id)) wins.set(id, { agentId: id, url: null, lastMutation: 0, mutationCount: 0, field: null, spotlight: null, pointer: null, page: null, lastAt: 0 }); return wins.get(id); };
 
   /** note(type, data) — fed every Clear Glass bus event; keeps only what says where attention is */
   function note(type, data = {}) {
@@ -43,6 +43,11 @@ function createAttention({ now = () => Date.now() } = {}) {
       return true;
     }
     if (type === 'field.map') { const w = win(id); w.field = { targets: +data.targets || 0, url: data.url || null, overlay: !!data.overlay, at: t }; if (data.url) w.url = data.url; w.lastAt = t; return true; }
+    // §0.60.175 PM6 — James: "hooking ollama in to feel with "nexus nerve"". The page map's read of this window: its site, what
+    // changed since the last visit, in words (page-session words()), and the map's first lines — Nerve carries it as focus.page.
+    if (type === 'page.map') { const w = win(id); w.page = { site: data.site || null, title: data.title || null, blocks: +data.blocks || 0, visits: data.visits ?? null,
+      new: +data.new || 0, changed: +data.changed || 0, gone: +data.gone || 0, feel: data.feel || '', lines: Array.isArray(data.lines) ? data.lines.slice(0, 6) : [], at: t }; if (data.url) w.url = data.url; w.lastAt = t; return true; }
+    if (type === 'page.outcome') { const w = win(id); if (w.page) w.page.lastOutcome = { intent: data.intent || null, id: data.id || null, ok: data.ok !== false, at: t }; w.lastAt = t; return true; }
     if (type === 'field.spotlight') { const w = win(id); w.spotlight = data.off ? null : { label: data.label || null, n: data.n ?? null, selector: data.selector || null, ok: data.ok !== false, at: t }; w.lastAt = t; return true; }
     if (type === 'field.pointer') { const w = win(id); w.pointer = { do: data.do || 'click', x: data.x, y: data.y, n: data.n ?? null, name: data.name || null, covered: !!data.covered, via: data.via || 'native', at: t }; w.lastAt = t; return true; }
     return false;
@@ -55,7 +60,7 @@ function createAttention({ now = () => Date.now() } = {}) {
     return [...wins.values()].sort((a, b) => b.lastAt - a.lastAt).map(w => ({
       agentId: w.agentId, lastMutation: w.lastMutation || null, msSinceLastMutation: w.lastMutation ? t - w.lastMutation : null,
       mutationCount: w.mutationCount, idle: t - w.lastAt > WINDOW_IDLE_MS,
-      focus: { url: w.url, field: w.field, spotlight: w.spotlight, pointer: w.pointer, at: w.lastAt },
+      focus: { url: w.url, field: w.field, spotlight: w.spotlight, pointer: w.pointer, page: w.page, at: w.lastAt },
     }));
   }
 

@@ -994,6 +994,7 @@ CoPilotBridge.DRIVER_ACTIONS = new Set([
   'reload', 'cookies.get', 'cookies.set', 'cookies.clear', 'storage.get', 'storage.set', 'network.block',
   'network.intercept', 'picker.enable', 'picker.disable', 'inject', 'record.start', 'record.stop', 'readPage', 'readTree', 'resolve',
   'field', 'fieldOff', 'at', 'spotlight', 'pointer',   // 0.39.279 — the interaction field (src/page/field.js)
+  'pageMap', 'pageFind', 'pageChunks', 'pageScrape', 'pageOutcome',   // 0.60.175 PM5 — the page map (src/page/page-session.js)
 ]);
 
 module.exports = CoPilotBridge;

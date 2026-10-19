@@ -1167,6 +1167,9 @@ async function bootstrap() {
   // §FN2 0.59.0 — every bus event passes the attention record (src/page/attention.js), which keeps only where each window's
   // attention is (page changes, the interaction field). Served at /cli/attention; Nexus Nerve reads it.
   { const att = require('../page/attention').shared(); bus.on('*', (ev) => { try { att.note(ev.type, ev.data); } catch (_) {} }); }
+  // §0.60.175 PM7 — the DOM observer injected into every page (dom/archaeology.js) reports dom.mutations; a window whose page map is
+  // live is mapped again once it settles (src/page/page-session.js poke), so the map — and Nerve, and Ollama — follow the page.
+  bus.on('*', (ev) => { try { if (ev.type === 'dom.mutations' && ev.data && ev.data.agentId && driver && driver.pageMutated) driver.pageMutated(ev.data.agentId); } catch (_) {} });
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." Clear Glass's node registry: its listener over
   // clear-glass/data/nodes, indexed into clear-glass/data/node-index with every change, its node events on this SISO bus.
   try { require('../../../lib/node-registry.js').startForSystem('clear-glass', { bus: { emit: (e, d) => emit(e, d) } }); } catch (e) { console.warn(`[ClearGlass] node registry: ${e.message}`); }

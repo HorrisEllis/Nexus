@@ -866,6 +866,25 @@ export const SPEC = [
       const rows = d.results || [d];
       for (const r of rows) console.log(`  ${r.ok === false ? h.c.coral('✗') : h.c.mint('✓')} ${(r.provider || a.args[0] || '').padEnd(11)} ${r.action || ''}${r.accountId ? h.c.dim(`  as ${r.accountId}`) : ''}${r.why || r.error ? h.c.dim(`  ${r.why || r.error}`) : ''}`);
     } },
+  // §0.60.175 PM5 — James: "parse the dom, index each element as blocks … synthesize a fucking map in relation to the weboage to use as a
+  // map or reference point for inputs from the cli or the intent. learns over time." Same route as `field` (POST /cli/driver).
+  { key: 'page', repo: false, usage: 'page [--on <window>] [--max n]', about: 'the page map of a Clear Glass window: regions, forms (fields, required, submit), actions and headings as short lines, and what changed since the last visit to this kind of page (it learns per site)',
+    req: (a) => _fieldReq(a, { action: 'pageMap', ...(a.flags.max ? { maxBlocks: +a.flags.max } : {}) }),
+    print: (d, a, h) => { const m = d.result || {}; console.log(h.c.dim(`  ${d.agentId} · ${m.site || m.url || ''} · ${(m.stats && m.stats.blocks) || 0} blocks · visit ${m.visits || 1} · ${m.feel || ''}`)); for (const l of m.lines || []) console.log(`  ${l}`); if (m.note) console.log(h.c.amber(`  ${m.note}`)); console.log(h.c.dim('\n  next: idearium page find <intent…> · idearium page chunks [query] · idearium page scrape')); } },
+  { key: 'page.find', repo: false, usage: 'page find <intent…> [--on <window>] [--fresh]', about: 'intent → the blocks on the page to act on, ranked, each with its selector, address, centre (x,y) and why (words, kind, covered, stable here, worked before)',
+    need: (a) => (a.args.length ? null : '<intent> (e.g. "type my email", "click apply")'),
+    req: (a) => _fieldReq(a, { action: 'pageFind', intent: a.args.join(' '), fresh: !!a.flags.fresh }),
+    print: (d, a, h) => { const r = d.result || {}; console.log(h.c.dim(`  ${r.site || ''} · "${r.intent}"${(r.verbs || []).length ? ` · wants ${r.verbs.join('/')}` : ''}`)); (r.targets || []).forEach((t, i) => console.log(`  ${i === 0 ? h.c.mint('→') : ' '} ${h.c.bold(`${t.role}${t.name ? ` "${t.name}"` : ''}`)}  ${h.c.dim(`${t.cx != null ? `(${t.cx},${t.cy}) ` : ''}${t.selector || ''}  ${t.score}`)}\n      ${h.c.dim(`${t.id} · ${t.why.join(' · ')}`)}`)); if (!(r.targets || []).length) console.log(h.c.dim('  (nothing matches)')); console.log(h.c.dim(`\n  after acting: idearium page outcome "${r.intent}" <id> ok|fail`)); } },
+  { key: 'page.outcome', repo: false, usage: 'page outcome <intent> <block-id> ok|fail [--on <window>]', about: 'tell the page map what happened when a found block was acted on — it learns for this intent on this kind of page',
+    need: (a) => (a.args.length >= 3 ? null : '<intent> <block-id> ok|fail'),
+    req: (a) => _fieldReq(a, { action: 'pageOutcome', intent: a.args.slice(0, -2).join(' '), id: a.args[a.args.length - 2], ok: !/^(fail|failed|no|false|0)$/i.test(a.args[a.args.length - 1]) }),
+    print: (d, a, h) => { const r = d.result || {}; console.log(r.ok ? h.c.mint(`  learned: "${r.intent}" → ${r.blockId} (${r.score > 0 ? '+' : ''}${r.score})`) : h.c.amber(`  ${r.why}`)); } },
+  { key: 'page.chunks', repo: false, usage: 'page chunks [query…] [--on <window>] [--max-chars n]', about: 'the page as chunks of text by section — or only the chunks a query hits (reading, analysing, reverse engineering)',
+    req: (a) => _fieldReq(a, { action: 'pageChunks', ...(a.args.length ? { query: a.args.join(' ') } : {}), ...(a.flags['max-chars'] ? { maxChars: +a.flags['max-chars'] } : {}) }),
+    print: (d, a, h) => { const r = d.result || {}; for (const c of r.chunks || []) { console.log(h.c.bold(`  ${c.id} ${c.title}`) + h.c.dim(`  ${c.blocks.length} block(s)`)); console.log(String(c.text || '').split('\n').slice(0, 8).map(l => `    ${l}`).join('\n')); } if (!(r.chunks || []).length) console.log(h.c.dim('  (no chunks)')); } },
+  { key: 'page.scrape', repo: false, usage: 'page scrape [--json] [--on <window>] [--out file]', about: 'the whole page as markdown by section (or --json: blocks + chunks + map) — the web scraper; --out writes it to a file',
+    req: (a) => _fieldReq(a, { action: 'pageScrape', format: a.flags.json ? 'json' : 'md' }),
+    print: (d, a, h) => { const r = d.result || {}; const text = r.markdown != null ? r.markdown : JSON.stringify(r, null, 2); if (a.flags.out && a.flags.out !== true) { require('fs').writeFileSync(String(a.flags.out), text); console.log(h.c.mint(`  written: ${a.flags.out} (${text.length} chars)`)); } else console.log(text); } },
   { key: 'field.windows', repo: false, usage: 'field windows', about: 'what the field is doing in each Clear Glass window: its last map, spotlight and pointer, and how lately the page changed',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/attention' }),
     print: (d, a, h) => _printWindows(d.windows || [], h) },
