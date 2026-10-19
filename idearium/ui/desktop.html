@@ -17,15 +17,15 @@
   html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font:13px/1.4 system-ui, sans-serif; }
   :root { color-scheme: dark; }
   body { padding-top:var(--chrome-h, 0px); }
-  header { display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--panel); border-bottom:1px solid var(--line); }
-  header h1 { font-size:14px; margin:0; font-weight:600; }
-  .pill { font:11px ui-monospace, monospace; padding:2px 8px; border-radius:999px; border:1px solid var(--line); color:var(--dim); }
+  header { display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--panel); border-bottom:1px solid var(--line); flex-wrap:wrap; position:relative; z-index:2; }   /* 0.60.168: wraps and the screen follows its real height (it used to sit at a fixed 44px and paint over the wrapped header) */
+  header h1 { font-size:14px; margin:0; font-weight:600; white-space:nowrap; }
+  .pill { white-space:nowrap; font:11px ui-monospace, monospace; padding:2px 8px; border-radius:999px; border:1px solid var(--line); color:var(--dim); }
   .pill.ok { color:var(--ok); border-color:var(--ok); } .pill.warn { color:var(--warn); border-color:var(--warn); } .pill.bad { color:var(--bad); border-color:var(--bad); }
   .spacer { flex:1; }
   button { background:#1b2030; color:var(--text); border:1px solid var(--line); border-radius:6px; padding:5px 10px; cursor:pointer; font:inherit; }
   button:hover { border-color:var(--accent); }
-  #screen { position:absolute; top:calc(var(--chrome-h, 0px) + 44px); left:0; right:0; bottom:0; }
-  #msg { position:absolute; inset:calc(var(--chrome-h, 0px) + 44px) 0 0 0; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--dim); padding:24px; white-space:pre-line; pointer-events:none; }
+  #screen { position:absolute; top:calc(var(--chrome-h, 0px) + var(--head-h, 44px)); left:0; right:0; bottom:0; z-index:1; }
+  #msg { position:absolute; inset:calc(var(--chrome-h, 0px) + var(--head-h, 44px)) 0 0 0; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--dim); padding:24px; white-space:pre-line; pointer-events:none; }
 </style>
 </head>
 <body>
@@ -35,6 +35,7 @@
   <span id="state" class="pill">connecting</span>
   <span id="info" class="pill"></span>
   <span id="login" class="pill" title="The VM's desktop account (Settings → Environment & desktop: user / password). Click to copy the password." style="display:none;cursor:pointer"></span>
+  <span id="ssh" class="pill" title="Terminal access: ssh into the VM (loopback only). Click to copy the command." style="display:none;cursor:pointer"></span>
   <span class="spacer"></span>
   <button id="start" title="Boot this repo's VM (its disk is a branch of the original's when it has one)">Start VM</button>
   <button id="cad" title="Send Ctrl+Alt+Del">Ctrl+Alt+Del</button>
@@ -73,8 +74,24 @@
       $login.title = `The VM's desktop account (Settings → Environment & desktop: user / password). ${s.login.applied === 'set' ? 'Applied through the guest agent.' : s.login.applied || ''} Click to copy the password.`;
       $login.onclick = () => { try { navigator.clipboard.writeText(s.login.password); } catch (_) {} };
     } else if (s.login && s.login.applied) { $login.style.display = ''; $login.textContent = `login: ${s.login.applied}`; }
-    $info.textContent = [s.branchedFrom ? `disk: branch of ${s.branchedFrom}` : null, s.repoIn && s.repoIn.startsWith('/') ? `files: ${s.repoIn}` : s.repoIn === 'pending' ? 'copying files…' : null, s.accel ? `accel ${s.accel}${s.accelFallback ? ` (${s.accelFallback.from} failed)` : ''}` : null, s.repoIn === 'failed' ? `files: failed — ${s.repoError || ''}` : null].filter(Boolean).join(' · ');
+    const f = s.accelFallback;
+    const accelText = !s.accel ? null : !f ? `accel ${s.accel}` : f.to === f.from ? `accel ${s.accel} (safe mode: 1st try failed)` : `accel ${s.accel} (${f.from} failed${f.rung === 'tcg' ? ' — software is slow' : ''})`;
+    $info.textContent = [s.branchedFrom ? `disk: branch of ${s.branchedFrom}` : null, s.repoIn && s.repoIn.startsWith('/') ? `files: ${s.repoIn}` : s.repoIn === 'pending' ? 'copying files…' : null, accelText, s.repoIn === 'failed' ? `files: failed — ${s.repoError || ''}` : null].filter(Boolean).join(' · ');
+    // 0.60.168 — what QEMU said when a try died, one hover away (the pill only says THAT it failed)
+    $info.title = (s.accelTried || []).map(t => `${t.rung} (${t.accel}) died: ${t.reason}`).join('\n') || (f ? f.reason : '');
+    // 0.60.168 — "access": the terminal way in, with the desktop login (sshd listens on the host's loopback only)
+    const $ssh = document.getElementById('ssh');
+    if (s.ports && s.ports.sshPort) {
+      const user = (s.login && s.login.user) || 'nexus', cmd = `ssh -p ${s.ports.sshPort} ${user}@127.0.0.1`;
+      $ssh.style.display = ''; $ssh.textContent = cmd; $ssh.onclick = () => { try { navigator.clipboard.writeText(cmd); } catch (_) {} };
+    }
   }
+
+  // 0.60.168 — the screen starts under the header's real height (it wraps in a narrow window), so the buttons are never
+  // painted over and the pointer never lands on the header while it is over the desktop
+  const $head = document.querySelector('header');
+  const sizeHead = () => document.documentElement.style.setProperty('--head-h', `${$head.offsetHeight}px`);
+  sizeHead(); try { new ResizeObserver(sizeHead).observe($head); } catch (_) { window.addEventListener('resize', sizeHead); }
 
   let RFB = null, rfb = null, fit = true;
   async function connect() {
