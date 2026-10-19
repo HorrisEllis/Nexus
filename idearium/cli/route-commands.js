@@ -344,6 +344,20 @@ export const SPEC = [
   // 0.60.172 DG3 — James: "every phasemap phase needs extensive dag, that needs to start being standard."
   { key: 'repo.phases.dag', repo: true, usage: 'repo dag <repo> [phase] [--map path] [--cross]', about: "the whole dependency DAG of the repo's phasemaps (cycles, dangling depends_on, phases with no depends_on line, layers, ready, critical path, file conflicts) — or one phase's place in it",
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/dag?${a.args[0] ? `phase=${encodeURIComponent(a.args[0])}&` : ''}${a.flags.map ? `map=${encodeURIComponent(a.flags.map)}&` : ''}${a.flags.cross ? 'cross=1' : ''}` }) },
+  // §0.60.173 UP3 — James: "upload zip with an intent, have it map to nexus using a tool, then ask me with the option to edit the location"
+  { key: 'repo.upload', repo: true, usage: 'repo upload <repo> <zip> --intent "what these files are for"', about: 'upload a zip into a repo with an intent: every file is placed against the repo (its folders, its systems, who requires what, his earlier answers) and the upload WAITS for his answer — nothing is written yet',
+    need: (a) => (!a.args.length ? '<zip>' : !a.flags.intent ? '--intent "what these files are for"' : null),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/uploads`, body: { name: require('path').basename(a.args[0]), intent: String(a.flags.intent), contentBase64: require('fs').readFileSync(a.args[0]).toString('base64') } }),
+    print: (d, a, h) => _printUpload(d, h) },
+  { key: 'repo.uploads', repo: true, usage: 'repo uploads <repo> [upload-id]', about: 'the uploads waiting for his answer (and the answered ones), or one upload with every file\'s proposed place, why, its system and registry neighbours',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/uploads${a.args[0] ? `/${encodeURIComponent(a.args[0])}` : ''}` }),
+    print: (d, a, h) => { if (d.plan) return _printUpload(d, h); for (const u of d.uploads || []) console.log(`  ${u.state === 'needs-you' ? h.c.amber('⚑ needs you') : h.c.dim('answered  ')}  ${u.uuid}  ${u.name}  ${h.c.dim(`${(u.stats && u.stats.files) || 0} file(s) · "${u.intent}"`)}`); if (!(d.uploads || []).length) console.log(h.c.dim('  (no uploads)')); if ((d.rules || []).length) console.log(h.c.dim(`  learned from his answers: ${d.rules.length} rule(s)`)); } },
+  { key: 'repo.upload-answer', repo: true, usage: 'repo upload-answer <repo> <upload-id> [--to "from=path,from=path"] [--skip "from,from"] [--no-apply]', about: 'his answer to an upload: keep the proposed places, move files (--to), skip some (--skip); only then is anything written (text through the proposal door, binaries through the source layer). His moves are learned',
+    need: (a) => (a.args.length ? null : '<upload-id>'),
+    req: (a) => { const rows = []; for (const kv of String(a.flags.to || '').split(',').map(s => s.trim()).filter(Boolean)) { const i = kv.indexOf('='); if (i > 0) rows.push({ from: kv.slice(0, i), to: kv.slice(i + 1) }); }
+      for (const f of String(a.flags.skip || '').split(',').map(s => s.trim()).filter(Boolean)) rows.push({ from: f, skip: true });
+      return { method: 'POST', path: `/api/repos/${a.repo.uuid}/uploads/${encodeURIComponent(a.args[0])}/answer`, body: { rows, apply: !a.flags['no-apply'] } }; },
+    print: (d, a, h) => { console.log(`  ${h.c.mint(`${d.written} written`)} · ${(d.skipped || []).length} skipped${(d.errors || []).length ? ` · ${h.c.coral(`${d.errors.length} failed`)}` : ''}`); for (const r of d.results || []) console.log(`  ${r.ok ? '✓' : h.c.coral('✗')} ${r.from} → ${r.to}${r.edited ? h.c.dim(' (his path)') : ''}${r.error ? h.c.coral(`  ${r.error}`) : r.note ? h.c.dim(`  ${r.note}`) : ''}`); for (const s of d.skipped || []) console.log(h.c.dim(`  – ${s.from}: ${s.why}`)); } },
   // 0.60.29 PM — James: "All the phases need to be mapped to files and dependencies. With nexus and all projects."
   { key: 'repo.map-phases', repo: true, usage: 'repo map-phases <repo> [status] [--limit n] [--no-apply] [--done] [--untrusted]', about: 'map every phase that names no files to its files (an agent, scored first on phases whose files are known) and every phase to its dependencies (from the files); written into the phasemaps where missing',
     req: (a) => (a.args[0] === 'status' ? { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/map` }
@@ -1049,6 +1063,23 @@ function _fieldReq(a, payload) {
   return { system: 'clear-glass', method: 'POST', path: '/cli/driver', timeoutMs: 30000, body: { agentId: a.flags.on && a.flags.on !== true ? String(a.flags.on) : 'default', ...payload } };
 }
 function _ago(ts) { if (!ts) return 'never'; const s = Math.round((Date.now() - ts) / 1000); return s < 60 ? `${s}s ago` : s < 3600 ? `${Math.round(s / 60)}m ago` : `${Math.round(s / 3600)}h ago`; }
+// §0.60.173 UP3 — one upload as he answers it: where each file would go, why, how sure, its system, and what it touches
+function _printUpload(d, h) {
+  const p = d.plan || {}; const st = p.stats || {};
+  console.log(`  ${d.state === 'needs-you' ? h.c.amber('⚑ needs you') : h.c.dim(d.state || '')}  ${d.uuid}  ${d.name || ''}  ${h.c.dim(`"${d.intent || ''}"`)}`);
+  console.log(h.c.dim(`  ${st.files || 0} file(s): ${st.create || 0} new · ${st.replace || 0} replace · ${st.identical || 0} identical · ${st.learned || 0} by his earlier answers${st.conflicts ? ` · ${st.conflicts} conflict(s)` : ''}${p.strip && p.strip.wrapper ? ` · wrapper "${p.strip.wrapper}/" stripped` : ''}${(p.intentSystems || []).length ? ` · the intent names ${p.intentSystems.join(', ')}` : ''}`));
+  for (const r of p.rows || []) {
+    const sure = r.confidence >= 0.8 ? h.c.mint : r.confidence >= 0.5 ? h.c.amber : h.c.coral;
+    console.log(`  ${sure(r.action.padEnd(9))} ${r.from} → ${h.c.bold(r.to)}  ${h.c.dim(`[${r.system}${r.systemExists ? '' : ' (new system)'}] ${r.why} ${Math.round(r.confidence * 100)}%`)}${r.conflict ? h.c.coral(`  same path as ${r.conflict}`) : ''}`);
+    if (r.risk) console.log(h.c.amber(`      ${r.risk}`));
+    for (const w of r.warnings || []) console.log(h.c.amber(`      ${w}`));
+    if ((r.requiredBy || []).length) console.log(h.c.dim(`      required by ${r.requiredBy.slice(0, 4).join(', ')}${r.requiredBy.length > 4 ? ` +${r.requiredBy.length - 4}` : ''}`));
+    if ((r.alternatives || []).length) console.log(h.c.dim(`      or: ${r.alternatives.slice(0, 3).map(x => `${x.to} (${x.why})`).join(' · ')}`));
+  }
+  for (const s of p.skipped || []) console.log(h.c.dim(`  – ${s.from}: ${s.why}`));
+  if (d.state === 'needs-you') console.log(h.c.dim(`\n  next: idearium repo upload-answer <repo> ${d.uuid}  [--to "from=path"] [--skip "from"]`));
+}
+
 function _printWindows(ws, h) {
   if (!ws.length) { console.log(h.c.dim('  no window has used the field or changed lately')); return; }
   for (const w of ws) {

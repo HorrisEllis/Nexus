@@ -341,3 +341,10 @@ phases:
     does: >-
       UI3 made concrete: Idea → Notes → Spec → Phases → Code in one thread. A note/idea runs through lib/work-funnel.js; it shows the
       phases and files it became (and they link back); promoting an idea writes the phasemap phase with its dependency graph (DG2).
+
+## ADDENDUM 2026-10-19 — PR1/PR2 superseded-and-kept by the page map
+James, 2026-10-19: "parse the dom, index each element as blocks, then download into a index to chunk, then synthesize a fucking map
+in relation to the weboage to use as a map or reference point for inputs from the cli or the intent. learns over time."
+PR1_page_reader and PR2_autofill_and_copilot_read_first stay here as the earlier, shorter reading (§0.3). The work is mapped as
+PM1–PM8 of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec (blocks, index + chunks, a per-site map that learns, intent →
+targets, tools, Nerve feel, live injected map, panel). PR2's "autofill reads the page first" rides PM4's find() once it lands.

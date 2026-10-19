@@ -2941,6 +2941,7 @@ const ROUTE_CAP = {
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
   'repo.phases.graph': CAPS.READ_IDEAS,
+  'repo.uploads.list': CAPS.READ_IDEAS, 'repo.uploads.get': CAPS.READ_IDEAS, 'repo.uploads.create': CAPS.WRITE_IDEAS, 'repo.uploads.answer': CAPS.WRITE_IDEAS,   // §0.60.173 UP3
   'repo.phases.dag': CAPS.READ_IDEAS,   // §0.60.172 DG3 — reads only   // §0.60.147 DG2 — reads only
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
@@ -3427,6 +3428,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','thread'],                'repo.thread'],   // §RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
     ['GET',    ['api','repos',    ':uuid','phases','graph'],        'repo.phases.graph'],
+    ['GET',    ['api','repos',    ':uuid','uploads'],               'repo.uploads.list'],     // §0.60.173 UP3 open uploads first, his learned rules
+    ['POST',   ['api','repos',    ':uuid','uploads'],               'repo.uploads.create'],   // §0.60.173 UP3 { name, intent, contentBase64 } → planned, waits as needs-you
+    ['GET',    ['api','repos',    ':uuid','uploads',':id'],         'repo.uploads.get'],
+    ['POST',   ['api','repos',    ':uuid','uploads',':id','answer'],'repo.uploads.answer'],   // §0.60.173 UP3 { rows:[{from, to?, skip?}], apply? } → written where he said
     ['GET',    ['api','repos',    ':uuid','phases','dag'],          'repo.phases.dag'],     // §0.60.172 DG3 the whole DAG of the repo's phasemaps (?phase&map for one slice, ?cross=1 for cross-map file conflicts)   // §0.60.147 DG2 a phase's dependency graph (?map&phase)
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
     ['GET',    ['api','repos',    ':uuid','phases','cost'],         'repo.phases.cost'],       // 0.60.27 AG1a — agent calls and tokens per phase
@@ -8542,6 +8547,80 @@ async function handle(req, res, route, query, body) {
       const dag = PD.build(maps.map(m => ({ path: m.path, text: m.text || '' })), { mapped: mb, crossMapConflicts: query.cross === '1' });
       if (query.phase) { const sl = PD.slice(dag, query.map ? `${query.map}::${query.phase}` : String(query.phase)); if (!sl) return err(res, 404, `no phase ${query.phase} in this repo's DAG`); return ok(res, { slice: sl, lines: PD.lines(sl), problems: PD.problems(dag, sl.key) }); }
       return ok(res, { stats: dag.stats, hash: dag.hash, cycles: dag.cycles, dangling: dag.dangling, undeclared: dag.undeclared, layers: dag.layers, ready: dag.ready, critical: dag.critical, conflicts: dag.conflicts.slice(0, 200), edges: dag.edges });
+    }
+    // §0.60.173 UP3 — James, 2026-10-19: "upload zip with an intent, have it map to nexus using a tool, then ask me with the option to
+    // edit the location and where they go in relation to the system or the registry." A zip is planned (lib/upload-placement.js, no
+    // model) and WAITS as needs-you; only his answer writes: text through repo-inject (the one door), binaries through the source
+    // layer's single-file write. His edits are learned (UP2) and read first on the next upload.
+    case 'repo.uploads.create': case 'repo.uploads.list': case 'repo.uploads.get': case 'repo.uploads.answer': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const UPL = _require('../../lib/upload-placement.js');
+      const T = 'idearium_uploads';
+      const mine = () => loadTable(T).filter(r => r.repoUuid === params.uuid);
+      const answerOf = (id) => mine().filter(r => r.kind === 'upload-answer' && r.uploadUuid === id).sort((a, b) => b.ts - a.ts)[0] || null;
+      const rulesOf = () => (mine().filter(r => r.kind === 'upload-rules').sort((a, b) => b.ts - a.ts)[0] || {}).rules || [];
+      const view = (u) => { const a = answerOf(u.uuid); return { ...u, state: a ? 'answered' : 'needs-you', answer: a }; };
+      const brief = (u) => ({ uuid: u.uuid, name: u.name, intent: u.intent, ts: u.ts, state: u.state, stats: u.plan && u.plan.stats });
+      const find = () => mine().find(r => r.kind === 'upload' && r.uuid === params.id) || null;
+      const unzip = (buf) => { const cfg = _require('../../lib/project-import.config.js'); const { extractZipToFiles } = _require('../../lib/zip-ingest.js');
+        return extractZipToFiles({ ...cfg.ZIP, buf }); };
+      if (action === 'repo.uploads.list') {
+        const all = mine().filter(r => r.kind === 'upload').map(view).sort((a, b) => (a.state === 'needs-you' ? 0 : 1) - (b.state === 'needs-you' ? 0 : 1) || b.ts - a.ts);
+        return ok(res, { open: all.filter(u => u.state === 'needs-you').map(brief), uploads: all.map(brief), rules: rulesOf() });
+      }
+      if (action === 'repo.uploads.get') { const u = find(); return u ? ok(res, view(u)) : err(res, 404, `no upload ${params.id} in this repo`); }
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      if (action === 'repo.uploads.create') {
+        const intent = String(body.intent || '').trim();
+        if (!intent) return err(res, 400, 'intent is required — say what these files are for (it is how they are placed, and it is kept with the upload)');
+        const buf = body.contentBase64 ? Buffer.from(String(body.contentBase64), 'base64') : null;
+        if (!buf || !buf.length) return err(res, 400, 'contentBase64 (the zip) is required');
+        const ex = unzip(buf);
+        if (!ex.ok) return err(res, 400, `not a readable zip: ${ex.error}`);
+        const plan = UPL.plan({ files: ex.realFiles, intent, tree: UPL.treeFromDir(dir), learned: rulesOf() });
+        const uuid = `upload-${Date.now().toString(36)}-${crypto.randomBytes(3).toString('hex')}`;
+        const stash = path.join(IDEARIUM_DATA_DIR, 'uploads', params.uuid);
+        try { fs.mkdirSync(stash, { recursive: true }); fs.writeFileSync(path.join(stash, `${uuid}.zip`), buf); }
+        catch (e) { return err(res, 500, `could not keep the zip: ${e.message}`); }
+        const row = { uuid, kind: 'upload', repoUuid: params.uuid, name: String(body.name || 'upload.zip').slice(0, 200), intent, ts: Date.now(), bytes: buf.length,
+          zip: path.join(stash, `${uuid}.zip`), plan, omitted: (ex.omitted || []).slice(0, 200) };
+        appendRow(T, row);
+        try { getIdeaOS().emit('idearium.upload.staged', { repoUuid: params.uuid, upload: uuid, files: plan.stats.files, intent }); } catch (_) {}
+        return ok(res, view(row));
+      }
+      // repo.uploads.answer
+      const u = find();
+      if (!u) return err(res, 404, `no upload ${params.id} in this repo`);
+      if (answerOf(u.uuid)) return err(res, 409, `${u.uuid} is already answered — upload the zip again to place it again`);
+      const edits = Array.isArray(body.rows) ? body.rows : [];
+      const a = UPL.answer(u.plan, edits);
+      if (!a.ok) return err(res, 400, a.errors.join('; '), { errors: a.errors });
+      let ex; try { ex = unzip(fs.readFileSync(u.zip)); } catch (e) { return err(res, 410, `the kept zip is gone: ${e.message}`); }
+      if (!ex.ok) return err(res, 410, `the kept zip no longer reads: ${ex.error}`);
+      const bytesOf = new Map(ex.realFiles.map(f => [String(f.path).replace(/\\/g, '/').replace(/^\.\/+/, ''), f]));
+      const RI = _require('../../lib/repo-inject.js');
+      const layer = getRepoLayer();
+      const results = [];
+      for (const w of a.writes) {
+        const f = bytesOf.get(w.from);
+        if (!f) { results.push({ ...w, ok: false, error: 'not in the kept zip' }); continue; }
+        if (w.binary) { const r = layer.writeSourceBytes(params.uuid, w.to, f.buffer); results.push({ ...w, via: 'source-bytes', ok: !!r.ok, ...(r.ok ? {} : { error: r.error }) }); continue; }
+        const p = RI.propose({ layer, repo, hat: null, path: w.to, content: f.buffer.toString('utf8'), source: { kind: 'person', via: 'upload', upload: u.uuid, intent: u.intent } });
+        if (!p.ok) { results.push({ ...w, ok: false, error: (p.errors || ['propose failed']).join('; ') }); continue; }
+        if (repo.nexusSelf || body.apply === false) { results.push({ ...w, ok: true, inject: p.inject.uuid, status: p.inject.status, note: repo.nexusSelf ? 'the live Nexus tree: waiting at the approval gate' : 'proposed (apply: false)' }); continue; }
+        const ap = RI.apply(p.inject.uuid, { layer, approvedBy: 'james (upload answer)' });
+        results.push({ ...w, ok: !!ap.ok, inject: p.inject.uuid, status: ap.ok ? ap.inject.status : 'proposed', ...(ap.ok ? {} : { error: (ap.errors || ['apply failed']).join('; ') }) });
+      }
+      const before = rulesOf();
+      const rules = UPL.learn(u.plan, edits, before);
+      if (JSON.stringify(rules) !== JSON.stringify(before)) appendRow(T, { uuid: `upload-rules-${params.uuid}-${Date.now().toString(36)}`, kind: 'upload-rules', repoUuid: params.uuid, rules, ts: Date.now() });
+      const errors = results.filter(r => !r.ok).map(r => `${r.to}: ${r.error}`);
+      appendRow(T, { uuid: `${u.uuid}-answer`, kind: 'upload-answer', uploadUuid: u.uuid, repoUuid: params.uuid, ts: Date.now(), edits, results, skipped: a.skipped, errors });
+      if (results.some(r => r.ok)) _deviationAfter(params.uuid, 'files');
+      try { getIdeaOS().emit('idearium.upload.answered', { repoUuid: params.uuid, upload: u.uuid, written: results.filter(r => r.ok).length, skipped: a.skipped.length, errors: errors.length }); } catch (_) {}
+      return ok(res, { upload: u.uuid, written: results.filter(r => r.ok).length, results, skipped: a.skipped, learned: rules.length, errors });
     }
     case 'repo.phases.get': {
       const repo = getRepoLayer().get(params.uuid);

@@ -734,3 +734,14 @@ New entries go at the top: date, his words, context, what it shows, evidence.
 - **Checkable:** tests/modules/test-verify-first.test.js 10/10; CHANGELOG-0.60.171.md.
 - **Skill shown:** treating the AI agent as a component with a contract — asking it what it needs, recording that as data, and checking its work with no model in the loop.
 
+
+### 2026-10-19 — 0.60.173: an upload that asks before it writes
+- **His words:** "upload zip with an intent, have it map to nexus using a tool, then ask me with the option to edit the location
+  and where they go in relation to the system or the registry. like i want to try to make something that can do what you can".
+- **Context:** Idearium could only turn a zip into a NEW repo. He asked for the step a careful engineer takes with a handed-over
+  zip (read it, decide where each file belongs and what it touches, then confirm) to become a tool his system runs, with him as
+  the one who confirms.
+- **What it shows:** product judgment about trust. The tool proposes, he decides, and only his answer writes. His corrections
+  become rules, so the tool improves from his decisions, not a model's.
+- **Checkable:** `tests/modules/test-upload-placement.test.js` 4/4 (the router writes nothing until answered; his moved file is
+  placed by his rule on the next upload); `CHANGELOG-0.60.173.md`.

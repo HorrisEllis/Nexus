@@ -175,3 +175,9 @@ phases:
       "automatically map ideas to nexus": each idea is mapped (no model first: names, files, components, phases it mentions; a local
       model only when that finds nothing) to the systems, components and phases it touches; unmapped ideas are listed, never dropped.
     proof: on Nexus's own notes, the share mapped and the unmapped list, measured
+
+## ADDENDUM 2026-10-19 — FM1's upload: a zip with an intent is its own door
+James, 2026-10-19: "i want to be able to upload files to idearium repos. upload zip with an intent, have it map to nexus using a
+tool, then ask me with the option to edit the location and where they go in relation to the system or the registry."
+Mapped and built as UP1–UP4 of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec. FM1 keeps loose-file drag-in, detect and
+rename/move/archive; when it lands, its upload uses the same placement (lib/upload-placement.js) and the same answer route.

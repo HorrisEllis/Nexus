@@ -52,6 +52,8 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  ['lib/upload-placement.js', I('lib/upload-placement.js'), []],   // §0.60.173 UP1/UP2 a zip's files placed against a repo (strip, exists, same bytes, folders, intent, his learned rules); requires/requiredBy
+  ['idearium/ui/js/upload-intent.js', I('idearium/ui/js/upload-intent.js'), [I('idearium/ui/js/code-tab-panels.js')]],   // §0.60.173 UP4 the Code tab's upload panel (page globals: CX, _cxPaintPanel, api)
   ['lib/phase-dag.js', I('lib/phase-dag.js'), [I('loom/scanners/phasemap-map.js')]],   // §0.60.172 DG3 the whole DAG of every phasemap
   ['lib/verify-first.js', I('lib/verify-first.js'), [I('lib/phase-plan.js'), I('cos/testenv/run-target.js')]],   // §0.60.171 VF1 a file checked as it is, no model, before any agent
   ['lib/coder-brief.js', I('lib/coder-brief.js'), [I('lib/verify-first.js')]],   // §0.60.171 CB1 Gemini's five-part brief with AXIOMS v3.1
@@ -70,6 +72,10 @@ const FILES = [
   ['idearium/ui/js/code-dock.js', I('idearium/ui/js/code-dock.js'), [I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/plan-panel.js')]],   // §0.60.118 DK2: the dock — _wsCard, _rtTree/_rtRow, _ppContext reused (page globals)
 ];
 const CONSUMERS = [
+  [I('idearium/api/index.js'), I('lib/upload-placement.js'), '§0.60.173 UP3 repo.uploads.{create,list,get,answer}: plan → needs-you; his answer → repo-inject propose/apply (text) and writeSourceBytes (binaries); learn()'],
+  [I('idearium/api/index.js'), I('lib/zip-ingest.js'), '§0.60.173 UP3 the uploaded zip read with the importer\'s own bounds (project-import.config ZIP)'],
+  [I('idearium/api/index.js'), I('lib/repo-inject.js'), '§0.60.173 UP3 an upload\'s text files land through propose() and apply() — the one door'],
+  [I('idearium/ui/js/code-tab-panels.js'), I('idearium/ui/js/upload-intent.js'), '§0.60.173 UP4 the upload panel: cxUploadLoad / _cxUpload (page globals, loaded by index.html — not a require)'],
   [I('idearium/api/index.js'), I('lib/phase-dag.js'), '§0.60.172 DG3 build gate (DAG_INVALID), slice on the phase graph, repo.phases.graph lines, repo.phases.dag route'],
   [I('idearium/cli/route-commands.js'), I('lib/phase-dag.js'), '§0.60.172 DG3 `repo dag <repo> [phase]` through the route'],
   [I('idearium/api/index.js'), I('lib/verify-first.js'), '§0.60.171 VF1 runPlanned file loop + runContract brick dispatch: check() before the ladder; an existing test reused only when it proves the files'],
