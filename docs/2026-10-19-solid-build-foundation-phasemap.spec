@@ -93,7 +93,7 @@ phases:
 
   CR1_project_registry_spine:
     layer: library
-    status: OPEN
+    status: BUILT 2026-10-19 (0.60.164)
     depends_on: []
     axioms: [§3.1, §8.6, §1.3, §0.3]
     blocks: ["project_registry"]

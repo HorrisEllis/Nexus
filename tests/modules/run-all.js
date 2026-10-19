@@ -424,6 +424,7 @@ const SUITES = [
   'test-cg-gig-autofill.test.js',     // 0.60.161 GA1 — co-pilot fills the Fiverr gig editor (the engine, not a chat); written gig, else draft from profile+offer, else ask
   'test-pipeline-nodes.test.js',      // 0.60.162 — the pipeline is persistent: derivePlan names each phase's files (DG2), and phase/graph/gate are node-export types
   'test-model-fit-ladder.test.js',    // 0.60.163 MF1 — the ladder leaves off local models that can't fit free RAM up front (byFit/fittingModels); ollama-first on a small box
+  'test-project-registry.test.js',    // 0.60.164 CR1 — the contract build wires every built file into the project's component store with resolved edges (the spine)
   'test-readme-generate.test.js',    // 0.60.153 — the README: every system, module and file; every phase; the data; Idearium; every release; under 512 KiB
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)
   'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person

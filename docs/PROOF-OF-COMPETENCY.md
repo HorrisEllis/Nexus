@@ -689,3 +689,14 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     over-absolutism ("complex reasoning needs guardian") — tier-matching, not local-purism.
   - **Evidence:** `tests/modules/test-model-fit-ladder.test.js` (MF 5/5); `CHANGELOG-0.60.163.md`; the bottom-up foundation map
     `docs/2026-10-19-solid-build-foundation-phasemap.spec`.
+
+- **2026-10-19 — 0.60.164 (CR1): his one-line architecture principle was the fix.**
+  - **His words:** "the component registry is vital for each project becuase its the spine that makes components dumb."
+  - **Context:** the coder had proposed splitting large files to fit local models (DC1). Mapping it showed the contract splitter
+    can't chunk a single file (its children would overwrite the same path). James's principle pointed at the real lever: you make
+    components small by decomposing against the registry spine, not by splitting files mid-build.
+  - **What it shows:** a correct architecture intuition that redirected the build. The registry isn't bookkeeping — it's what
+    lets a small free local model carry the work (dumb components), which is the whole local-first bet. The coder found the gap
+    (contract builds never joined the store — looking-glass had no registry) and closed it by reuse.
+  - **Evidence:** `tests/modules/test-project-registry.test.js` (CR 5/5); `CHANGELOG-0.60.164.md`; the bundle's missing
+    `component.json`/graph; `lib/project-registry.js` wired into loom.

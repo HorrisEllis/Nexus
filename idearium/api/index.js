@@ -1550,6 +1550,20 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const res = viaRaid.result;
     const au = CA.audit(p, { root });
     const state = res.complete ? 'contract-complete' : 'contract-incomplete';
+    // §CR1 0.60.164 — James: "the component registry is vital for each project becuase its the spine that makes components
+    // dumb." The contract build path never joined the component store, so a contract-built project had no registry/spine.
+    // On complete, every built file joins the project's component store with its resolved require edges (lib/project-registry
+    // → lib/component-store put) — the same store the legacy chunk path uses. §1.2 non-fatal: the build is unaffected if it fails.
+    if (res.complete) {
+      try {
+        const reg = _require('../../lib/project-registry.js').wireBuilt({
+          project: target.name || (target.nexusSelf && target.nexusSelf.system) || target.uuid, repoUuid: target.uuid, phase,
+          files: (plan && plan.order) || [], read: codeOf, agent: lastDp && (lastDp.agent || lastDp.provider) || null });
+        appendRow('idearium_phase_runs', { uuid: `${runId}-registry`, ...cbase, state: 'registry', snapshot: commitId,
+          registry: reg, error: reg.standalone.length ? `wired ${reg.stored} component(s), ${reg.resolved} edge(s); isolated (no wire): ${reg.standalone.join(', ')}` : null, ts: Date.now() });
+        getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state: 'registry', snapshot: commitId, registry: reg });
+      } catch (e) { console.warn(`[idearium] CR1 registry wiring failed (non-fatal, the build is unaffected): ${e.message}`); }
+    }
     appendRow('idearium_phase_runs', { uuid: `${runId}-${state}`, ...cbase, state, snapshot: commitId, error: res.complete ? null : (res.why || []).slice(0, 4).join('; '),
       raidQueueId: viaRaid.queueId, failedBricks: viaRaid.failedBricks || [],
       audit: { bricks: au.bricks, dependencies: au.dependencies, checkpoints: au.checkpoints.length, gates: au.gates, splits: au.splits, blocked: res.blocked || [], failed: res.failed || [], rounds: res.rounds }, ts: Date.now() });
