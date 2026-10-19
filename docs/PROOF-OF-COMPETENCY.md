@@ -664,3 +664,16 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     there, not a rebuild — the leverage he asks for.
   - **Evidence:** `tests/modules/test-cg-gig-autofill.test.js`; `CHANGELOG-0.60.161.md`; the map for the learn-loop he also asked
     for, `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec`.
+
+- **2026-10-19 — 0.60.162: he read a stall to the gate, and named the missing taxonomy.**
+  - **His words:** "the red error in the second image." · "look at the node taxonomy at .spec" · "yes it should all be
+    persistent."
+  - **Context:** a build was stalling with a red DG2 error. The gate (his own rule, "each phase has to have a dependency graph")
+    was correct; the fallback planner behind it wrote every phase with no files, so the graph could never be built — the plan
+    "landed" but could not run. He also pointed straight at the real durability gap: the pipeline's units (phase, graph, gate)
+    were not node types, so they did not survive a restart.
+  - **What it shows:** two kinds of systems judgment at once. First, trusting the gate and looking past it to the plan — the
+    failure was upstream of where it surfaced. Second, seeing that "make it persistent" is a taxonomy question, not a storage
+    one: the fix was three new node types on the store that already existed, not a new store (reuse before build, §8.6).
+  - **Evidence:** `tests/modules/test-pipeline-nodes.test.js` (PN 4/4); `CHANGELOG-0.60.162.md`; the addendum on
+    `docs/2026-09-29-nex-node-store-phasemap.spec`.

@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-schema-phase
+type: schema
+id: phase
+context: 'lib/node-schemas shared registry. Added 0.60.162 (James 2026-10-19 — it should all be persistent; look at the node taxonomy).'
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1792972800000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: 'lib/pipeline-nodes.js phaseNode() — one node per phasemap phase so the Phases tab, the build gate and a restart read the same phase.'
+  fields:
+    id:
+      type: string
+      required: true
+      description: 'the phase id, e.g. SP0_format'
+    map:
+      type: string
+      required: true
+      description: 'the phasemap file this phase is in'
+    repo:
+      type: string
+      required: false
+      description: 'the repo uuid the phasemap belongs to'
+    layer:
+      type: string
+      required: false
+      description: 'foundation, library, api, cli, automation or ui'
+    status:
+      type: string
+      required: false
+      description: 'OPEN, building or done'
+    files:
+      type: array
+      required: false
+      description: 'the paths this phase creates or changes (what its graph is built from)'
+    depends_on:
+      type: array
+      required: false
+      description: 'the phases this one waits on'
+    blocks:
+      type: array
+      required: false
+      description: 'the spec block ids this phase builds'
+    spec:
+      type: string
+      required: false
+      description: 'the spec this phase helps build'
+    graph:
+      type: string
+      required: false
+      description: 'the hash of this phase dependency graph node'

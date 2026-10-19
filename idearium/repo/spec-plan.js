@@ -182,6 +182,24 @@ function _layerOf(key, text) {
   return hits >= 3 ? best : 'library';
 }
 const _snake = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 40) || 'part';
+// §0.60.162 — James: "it should all be persistent." A derived phase named no file, so DG2 (a graph before every phase) refused
+// the whole build. Each phase must create at least one file. Use paths the spec itself names in the phase's sections; else a
+// convention from the phase's layer and name, so the graph exists and the agent writes that file.
+const _LAYER_DIR = { foundation: 'lib', library: 'lib', api: 'api', cli: 'cli', automation: 'automation', ui: 'ui' };
+const _FILE_RE = /\b([\w.-]+\/[\w./-]+\.(?:c?js|mjs|ts|tsx|jsx|py|go|rs|java|rb|php|css|html|json|sh|sql|yaml|yml))\b/g;
+function _pathsIn(text) {
+  const out = []; const seen = new Set(); let m;
+  const re = new RegExp(_FILE_RE.source, 'g');
+  while ((m = re.exec(String(text || ''))) && out.length < 8) { const p = m[1].replace(/^\.\//, ''); if (!seen.has(p) && !/node_modules|\.spec$/.test(p)) { seen.add(p); out.push(p); } }
+  return out;
+}
+function _filesForPhase(grp, pid, layer) {
+  const named = []; const seen = new Set();
+  for (const s of grp) for (const p of _pathsIn(`${s.title || ''}\n${s.text || ''}`)) if (!seen.has(p)) { seen.add(p); named.push(p); }
+  if (named.length) return named.slice(0, 6);
+  const dir = _LAYER_DIR[layer] || 'src';
+  return [`${dir}/${_snake(grp[0].key)}.js`];   // one new file per phase, named from its section (the agent creates it)
+}
 const _oneLine = (s, n = 220) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, n);
 const _q = (s) => JSON.stringify(String(s));
 
@@ -275,6 +293,7 @@ export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(
       const first = titled ? _oneLine(String(grp[0].text).replace(/^#+\s.*$/m, '').split(/(?<=[.!?])\s/)[0], 200) : _oneLine(grp[0].text.split('\n').slice(1).join(' '), 200);
       const does = titled ? `${grp.map(s => s.title).join(' · ')}${first ? ` — ${first}` : ''} (${lines})` : `Build what the spec states in ${lines}${first ? ` — ${first}` : ''}.`;
       phases.push({ id: pid, layer: L, depends_on: deps, sections: keys, title: titled ? grp.map(s => s.title).join(' · ') : null, does,
+        files: _filesForPhase(grp, pid, L),   // §DG2 — a phase names the file(s) it creates, so lib/phase-graph.js can build its graph and build does not refuse NO_GRAPH
         proof: `A test that proves ${keys.join(', ')} as the spec states it, against the real code (no mock): §1.1, §12.1.` });
       prevInLayer = pid;
     }
@@ -305,7 +324,7 @@ export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(
       `      axioms: [${_AXIOMS_BY_LAYER[p.layer].join(', ')}]`,
       '      blocks:',
       ...p.sections.map(s => `        - ${JSON.stringify(s)}`),
-      '      files: []',
+      `      files: [${(p.files || []).join(', ')}]`,
       '      does: >-',
       `        ${p.does}`,
       '      proof: >-',

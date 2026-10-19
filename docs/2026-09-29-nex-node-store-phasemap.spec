@@ -543,3 +543,30 @@ spec:
     - "A storage engine's bugs are in crash recovery and fsync behaviour (Windows differs from Linux). N1's crash test runs on every platform the system ships on before anything adopts it."
     - "In-memory indexes hold to roughly a few million nodes per system; past that, on-disk indexes are a later map, not this one."
     - "Scope: this touches every system's data. That is why adoption is last, one adopter at a time, each behind its own API and suites (I7)."
+
+## ADDENDUM 2026-10-19 (0.60.162) — phase, graph and gate join the node taxonomy
+
+James, 2026-10-19: "look at the node taxonomy at .spec" · "yes it should all be persistent." · "need to get the pipeline working."
+
+Context: the build pipeline's own units were not in the taxonomy. `lib/node-export.js` `KNOWN_TYPES` had `chunk`, `run`,
+`step_gate`, `contract`, `response` — but not the phasemap phase, its DG2 dependency graph, or a contract's gate. So a plan's
+phases, a phase's graph (`lib/phase-graph.js graphFor()`) and its gates lived in memory or in loose JSON under
+`data/phase-graphs/…` and did not survive a restart, did not show in the store, and could not be read as a dag per
+phase/contract/spec/chunk — which is what he asked to be persistent.
+
+Decided (by his axioms — §0.3 lose nothing, §1.1 evidence over memory, §8.6 reuse before build): add the three types rather
+than a second store. Reuse: the same `node-export` envelope, schema and index every other type already uses.
+
+- **New types** `phase`, `graph`, `gate` (`lib/node-schemas/schema.phase`, `schema.graph`, `schema.gate`; added to
+  `KNOWN_TYPES`), auto-loaded and validated by `lib/node-schemas.js checkPayload`.
+- **Builders** `lib/pipeline-nodes.js`: `phaseNode` (id `map::id`), `graphNode` (id `kind:for:hash`, from `graphFor()`),
+  `gateNode` (id the gate key), plus `writeNode` (writes the finished envelope; overwrite is correct — a `.graph` is
+  hash-immutable, a `.phase`/`.gate` records a lifecycle, as `idearium/lib/chunk-nodes.js §OVERWRITE IS CORRECT`).
+- **Persisted by the build** at the DG2 point (`idearium/api/index.js`): the graph and the phase it is for are written as
+  nodes alongside the loose JSON — §1.2 non-fatal.
+
+Also fixed the same release (the red DG2 error he screenshotted): `idearium/repo/spec-plan.js derivePlan` wrote every derived
+phase with `files: []`, which DG2 rightly refuses ("it names no file it changes … mapping source: none"); it now names each
+phase's files (the spec's own paths, else a layer/name convention), so `mapPhase` reads them `declared` and the graph is ready.
+
+Proof: `tests/modules/test-pipeline-nodes.test.js` PN 4/4. See `CHANGELOG-0.60.162.md`.
