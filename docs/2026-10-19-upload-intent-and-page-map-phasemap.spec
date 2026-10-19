@@ -156,7 +156,7 @@ phases:
 
   PM1_blocks:
     layer: library
-    status: OPEN
+    status: DONE 0.60.174
     depends_on: []
     files: [clear-glass/src/page/blocks.js, tests/modules/clear-glass-page-map.test.js]
     does: >-
@@ -168,7 +168,7 @@ phases:
 
   PM2_index_and_chunks:
     layer: library
-    status: OPEN
+    status: DONE 0.60.174
     depends_on: [PM1_blocks]
     files: [clear-glass/src/page/page-map.js, tests/modules/clear-glass-page-map.test.js]
     does: >-
@@ -179,7 +179,7 @@ phases:
 
   PM3_synthesized_map_that_learns:
     layer: library
-    status: OPEN
+    status: DONE 0.60.174
     depends_on: [PM2_index_and_chunks]
     files: [clear-glass/src/page/page-map.js, clear-glass/src/page/page-memory.js, tests/modules/clear-glass-page-map.test.js]
     does: >-
@@ -190,7 +190,7 @@ phases:
 
   PM4_intent_to_targets:
     layer: library
-    status: OPEN
+    status: DONE 0.60.174
     depends_on: [PM3_synthesized_map_that_learns]
     files: [clear-glass/src/page/page-map.js, clear-glass/src/page/page-memory.js]
     does: >-

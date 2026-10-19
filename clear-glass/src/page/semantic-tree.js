@@ -59,7 +59,10 @@ function _inPageTree(opts) {
   const LM = ['banner', 'navigation', 'main', 'complementary', 'contentinfo', 'search', 'form', 'region', 'dialog', 'alertdialog'];
   const CT = ['article', 'log', 'feed'];
   const ACT = ['button', 'link', 'textbox', 'searchbox', 'combobox', 'checkbox', 'radio', 'switch', 'tab', 'menuitem', 'menuitemcheckbox', 'menuitemradio', 'option', 'slider', 'spinbutton', 'listbox'];
-  const KEEP = new Set(LM.concat(CT, ['heading'], ACT));
+  // §0.60.174 PM1 — content mode (o.content): the page map's blocks are this same walk, widened to what a page SAYS (paragraphs,
+  // lists, tables, images, code, quotes, text-bearing boxes), each with its box, z and text — one address rule for both.
+  const CONTENT = o.content ? ['paragraph', 'list', 'table', 'img', 'figure', 'code', 'blockquote', 'text'] : [];
+  const KEEP = new Set(LM.concat(CT, ['heading'], ACT, CONTENT));
   const PATH = new Set(LM.concat(CT));
   const doc = document;
   const clip = (s) => { const t = String(s || '').replace(/\s+/g, ' ').trim(); return t.length > (o.maxName || 80) ? t.slice(0, (o.maxName || 80) - 1) + '…' : t; };
@@ -94,6 +97,15 @@ function _inPageTree(opts) {
     if (t === 'footer') return el.closest('article,aside,main,nav,section') ? null : 'contentinfo';
     if (t === 'form') return (el.getAttribute('aria-label') || el.getAttribute('aria-labelledby') || el.getAttribute('name')) ? 'form' : 'form';
     if (t === 'section') return (el.getAttribute('aria-label') || el.getAttribute('aria-labelledby')) ? 'region' : null;
+    if (o.content) {
+      if (t === 'p') return 'paragraph'; if (t === 'ul' || t === 'ol' || t === 'dl') return 'list'; if (t === 'table') return 'table';
+      if (t === 'img' || t === 'svg' && el.getAttribute('aria-label')) return 'img'; if (t === 'figure') return 'figure';
+      if (t === 'pre') return 'code'; if (t === 'blockquote') return 'blockquote';
+      if (t === 'div' || t === 'span' || t === 'td' || t === 'li' || t === 'dd') {
+        let own = 0; for (const c of el.childNodes) if (c.nodeType === 3) own += c.textContent.trim().length;
+        if (own >= (o.minText || 24) && !(el.parentElement && el.parentElement.closest('p,pre,blockquote,table,ul,ol,dl'))) return 'text';
+      }
+    }
     return null;
   };
   const byIds = (ids) => ids.split(/\s+/).map(id => doc.getElementById(id)).filter(Boolean).map(e => e.textContent).join(' ');
@@ -154,6 +166,23 @@ function _inPageTree(opts) {
         if (st.length) n.states = st;
         if (['textbox', 'searchbox', 'combobox', 'spinbutton', 'slider'].includes(role)) { const v = el.value != null && el.tagName !== 'DIV' ? el.value : el.textContent; if (v) n.value = clip(v); }
         if (ACT.includes(role) || role === 'article') n.selector = selectorFor(el);
+        if (o.content) {
+          n.tag = el.tagName.toLowerCase();
+          if (!n.selector) n.selector = selectorFor(el);
+          const tx = String(el.innerText != null && el.innerText !== '' ? el.innerText : el.textContent || '').replace(/\s+/g, ' ').trim();
+          if (tx && !PATH.has(role)) n.text = tx.length > (o.maxText || 300) ? tx.slice(0, (o.maxText || 300) - 1) + '…' : tx;
+          try {
+            const r = el.getBoundingClientRect();
+            if (r && (r.width || r.height)) {
+              n.box = { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) };
+              const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+              if (cx < 0 || cy < 0 || cx > window.innerWidth || cy > window.innerHeight) n.z = -1;
+              else if (doc.elementsFromPoint) { const st2 = doc.elementsFromPoint(cx, cy); const k = st2.findIndex(e => e === el || el.contains(e)); n.z = k < 0 ? null : st2.slice(0, k).filter(e => !e.contains(el)).length; }
+            }
+          } catch (_) {}
+          const at = {}; for (const a of ['href', 'src', 'type', 'name', 'placeholder', 'action', 'method']) { const v = el.getAttribute(a); if (v) at[a] = String(v).slice(0, 200); }
+          if (Object.keys(at).length) n.attrs = at;
+        }
         nodes.push(n);
         if (tgt) { if (el === tgt) exact = n; else if (el.contains(tgt)) within = n; }
         nextParent = n.i;

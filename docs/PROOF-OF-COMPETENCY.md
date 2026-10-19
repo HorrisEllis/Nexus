@@ -745,3 +745,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   become rules, so the tool improves from his decisions, not a model's.
 - **Checkable:** `tests/modules/test-upload-placement.test.js` 4/4 (the router writes nothing until answered; his moved file is
   placed by his rule on the next upload); `CHANGELOG-0.60.173.md`.
+
+### 2026-10-19 — 0.60.174: the page as a map that learns
+- **His words:** "parse the dom, index each element as blocks, then download into a index to chunk, then synthesize a fucking map
+  in relation to the weboage to use as a map or reference point for inputs from the cli or the intent. learns over time."
+- **Context:** Clear Glass could already see what was actionable (the semantic tree) and where it was (the interaction field), but
+  every visit started from nothing and the page's content was invisible to the agent. He specified the pipeline in order: blocks,
+  index, chunks, a synthesized map, a reference for intent, and learning.
+- **What it shows:** systems design. His ordered pipeline maps one-to-one onto the modules built (blocks.js → page-map.js →
+  page-memory.js), and it reuses the address scheme the agent already acts by, so nothing new had to be trusted.
+- **Checkable:** `tests/modules/clear-glass-page-map.test.js` 6/6, including a real layout run in Clear Glass's engine.
