@@ -819,6 +819,16 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     phaseGraphFile = path.join(gdir, `${String(phase).replace(/[^\w.-]+/g, '_')}-${phaseGraph.hash}.json`);
     fs.writeFileSync(phaseGraphFile, JSON.stringify({ ...phaseGraph, writtenAt: Date.now() }, null, 2));
   } catch (e) { return { ok: false, status: 500, error: `not built: the dependency graph could not be written before the build (${e.message})`, extra: { code: 'NO_GRAPH' } }; }
+  // §0.60.162 — James, 2026-10-19: "it should all be persistent." The graph (and the phase it is for) are also written
+  // as nodes (lib/pipeline-nodes.js → .graph / .phase), so a plan, its graph and its gates survive a restart, show in the
+  // store, and the dag can be read per phase/contract/spec/chunk — not only as the loose json above. §1.2: non-fatal.
+  try {
+    const PN = _require('../../lib/pipeline-nodes.js');
+    const ndir = path.join(IDEARIUM_DATA_DIR, 'nodes');
+    PN.writeNode(PN.graphNode({ ...phaseGraph, for: phase }, { repo: repo.uuid, kind: 'phase' }), ndir);
+    PN.writeNode(PN.phaseNode({ id: phase, map, repo: repo.uuid, layer: node.layer || null,
+      files: node.files || [], depends_on: node.depends_on || [], spec: node.spec || null, graph: phaseGraph.hash }), ndir);
+  } catch (e) { console.warn(`[idearium] §1.2 pipeline node write failed (non-fatal, the build is unaffected): ${e.message}`); }
 
   // which repo builds it: this one, or for all of NEXUS the system that owns the files it names
   let target = repo;

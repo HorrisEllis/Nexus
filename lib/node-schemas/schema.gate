@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-schema-gate
+type: schema
+id: gate
+context: 'lib/node-schemas shared registry. Added 0.60.162 (GM1, docs/2026-10-18-gate-memory-phasemap.spec). A contract gate durable record, kept per gate.'
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1792972800000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: 'cortex/core/raid gate records (GM1) — written at every gate transition, references and hashes never copies.'
+  fields:
+    gate:
+      type: string
+      required: true
+      description: 'the gate key: map, phase and brick/file/phase'
+    contract:
+      type: string
+      required: false
+      description: 'the contract id this gate belongs to'
+    repo:
+      type: string
+      required: false
+      description: 'the repo uuid'
+    status:
+      type: string
+      required: true
+      description: 'BLOCKED, READY, RUNNING, PASSED, FAILED, STALE or SKIPPED'
+    packetHash:
+      type: string
+      required: false
+      description: 'the hash of the context packet the gate was given'
+    context:
+      type: array
+      required: false
+      description: 'each piece given: kind, id, source, score (references, not copies)'
+    response:
+      type: string
+      required: false
+      description: 'the response node id the agent returned'
+    evidence:
+      type: array
+      required: false
+      description: 'what proved the verdict'
+    at:
+      type: object
+      required: false
+      description: 'a timestamp per transition'
+    attempts:
+      type: number
+      required: false
+      description: 'how many times this gate has run'

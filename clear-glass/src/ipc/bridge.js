@@ -477,6 +477,11 @@ class IpcBridge {
       const r = await this._gigFill({ gig: req.body?.gig, agentId: req.body?.agentId || 'default', minConfidence: req.body?.minConfidence || 'medium' });
       res.status(r.error ? (r.error === 'dom bridge unavailable' ? 503 : 400) : 200).json(r);
     });
+    // §GA1 0.60.161 — one door for the co-pilot's "fill this in for me": use the written gig, else write from profile+offer, else ask
+    this.app.post('/cli/autofill/gig/autofill', async (req, res) => {
+      const r = await this._gigAutofill({ agentId: req.body?.agentId || 'default', offer: req.body?.offer || '', profileId: req.body?.profileId || null, minConfidence: req.body?.minConfidence || 'medium' });
+      res.status(r.ok ? 200 : (r.error === 'dom bridge unavailable' ? 503 : (r.needsGig ? 200 : 400))).json(r);
+    });
     this.app.post('/cli/autofill/fill', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
       try {
@@ -1423,6 +1428,7 @@ class IpcBridge {
       return require('../autofill/gig.js').detectGig(this.dom, gig, { agentId });
     });
     ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
+    ipcMain.handle('autofill:gig:autofill', async (e, p = {}) => this._gigAutofill(p));   // §GA1 — the co-pilot's one door
     // 2026-10-12 — a gig FILE (.gig.json, the shape parseGig reads) → the same gig, held to Fiverr's limits like a written one.
     // Reads and checks only: nothing is saved, typed or published.
     // 2026-10-12 — a gig as a .gig file (YAML, its limits written beside each field), or an empty template to fill in
@@ -1801,13 +1807,46 @@ class IpcBridge {
     if (!text) return { ok: false, error: 'co-pilot returned no text' };
     const r = G.parseGig(text);
     if (!r.ok) return r;
+    try { this.autofillStore.setLastGig(r.gig); } catch (_) {}   // §GA1a — the panel and the co-pilot fill the same gig
     this.postEvent('autofill.gig.drafted', { profileId, title: r.gig.title, tags: r.gig.tags.length, packages: Object.keys(r.gig.packages).length, warnings: r.warnings.length, ts: Date.now() });
     return { ok: true, gig: r.gig, warnings: r.warnings, parts: G.gigParts(r.gig), text: G.gigText(r.gig) };
+  }
+  // §GA1 0.60.161 — James, 2026-10-19: "yes." One door the co-pilot calls for "fill this in for me" on a Fiverr gig page, so it
+  // runs the engine instead of chatting (the screenshot). Either, its choice (GA0a): a gig already written is used; else, given
+  // an `offer`, one is written from the active Fiverr profile and kept; else a clear one-line ask comes back, never prose.
+  async _gigAutofill({ agentId = 'default', offer = '', profileId = null, minConfidence = 'medium' } = {}) {
+    if (!this.dom) return { ok: false, error: 'dom bridge unavailable' };
+    let gig = null;
+    try { gig = this.autofillStore && this.autofillStore.getLastGig(); } catch (_) { gig = null; }
+    let drafted = false, warnings = [];
+    if (!gig || !gig.title) {
+      if (!String(offer || '').trim()) {
+        // not a chat: a definite ask the co-pilot relays, naming the two ways to give it a gig
+        const profiles = (this.autofillStore && this.autofillStore.listProfiles && this.autofillStore.listProfiles()) || [];
+        return { ok: false, needsGig: true, error: 'No gig is written yet. Say in one line what this gig offers (I will write it from your Fiverr profile, then fill), or write it in Settings → Autofill → Fiverr gigs first.', haveProfile: profiles.length > 0 };
+      }
+      const pid = profileId || this._fiverrProfileId();
+      if (!pid) return { ok: false, needsGig: true, error: 'No Fiverr autofill profile to write the gig from. Add one in Settings → Autofill, then try again.' };
+      const d = await this._gigDraft({ profileId: pid, offer, agentId });
+      if (!d.ok) return d;
+      gig = d.gig; drafted = true; warnings = d.warnings || [];
+    }
+    const r = await this._gigFill({ gig, agentId, minConfidence });
+    if (r.error) return { ok: false, error: r.error };
+    return { ok: true, drafted, warnings, title: gig.title, ...r };
+  }
+  // the profile a Fiverr gig is written from: one labelled/keyed fiverr, else the only profile, else none (said by the caller)
+  _fiverrProfileId() {
+    const list = (this.autofillStore && this.autofillStore.listProfiles && this.autofillStore.listProfiles()) || [];
+    if (!list.length) return null;
+    const fiverr = list.find(p => /fiverr/i.test(`${p.label || ''} ${p.id || ''}`));
+    return (fiverr || (list.length === 1 ? list[0] : null) || null)?.id || null;
   }
   // Fill: types the matched parts into the gig editor open in a tab. Never saves, never publishes.
   async _gigFill({ gig, agentId = 'default', minConfidence = 'medium' } = {}) {
     if (!this.dom) return { error: 'dom bridge unavailable' };
     if (!gig || !gig.title) return { error: 'write the gig first' };
+    try { if (this.autofillStore) this.autofillStore.setLastGig(gig); } catch (_) {}   // §GA1a
     let r;
     try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence }); }
     catch (err) { return { error: err.message }; }

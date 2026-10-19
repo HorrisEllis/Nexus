@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-schema-graph
+type: schema
+id: graph
+context: 'lib/node-schemas shared registry. Added 0.60.162 — a phase/contract/spec/chunk dependency graph as a persisted node (DG2).'
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1792972800000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: 'lib/phase-graph.js graphFor() builds it; lib/pipeline-nodes.js graphNode() persists it (was a loose JSON file). The dag per contract, phase, spec, chunk points here.'
+  fields:
+    for:
+      type: string
+      required: true
+      description: 'what the graph is of: a phase id, a contract id, a spec, or a chunk id'
+    kind:
+      type: string
+      required: true
+      description: 'phase, contract, spec or chunk'
+    repo:
+      type: string
+      required: false
+      description: 'the repo uuid'
+    hash:
+      type: string
+      required: true
+      description: 'the graph stable hash (same inputs, same hash)'
+    nodes:
+      type: array
+      required: true
+      description: 'one entry per file: path, role (changes, uses or used-by), exists, system'
+    edges:
+      type: array
+      required: false
+      description: 'requires edges between the files: from, to, kind'
+    crossings:
+      type: array
+      required: false
+      description: 'edges that cross a system boundary (said, not refused here)'
+    ready:
+      type: boolean
+      required: false
+      description: 'true when the graph has at least one file it changes'

@@ -67,6 +67,10 @@ const FILES = [
     I('lib/system-boundary.js'),                              // require (lazy) — systems() and readBaseline(): the census's own rule
   ]],
   ['idearium/ui/js/phase-graph-view.js', I('idearium/ui/js/phase-graph-view.js'), [I('idearium/api/index.js')]],   // HTTP GET /api/repos/:uuid/phases/graph
+  // §0.60.162 — James, 2026-10-19: "yes it should all be persistent." The pipeline's units as node-export types (.phase .graph .gate)
+  ['lib/pipeline-nodes.js', I('lib/pipeline-nodes.js'), [
+    I('lib/node-export.js'),                                  // require — wrap/validate/toYaml the envelope, and KNOWN_TYPES
+  ]],
   // §FMR0/FMR2/FMR3 0.60.146 — every failure reaches the .failure_mode record; its report; causality measured
   // (docs/2026-10-17-failure-mode-report-phasemap.spec)
   ['cortex/self-heal/failure-intake.js', I('cortex/self-heal/failure-intake.js'), [
@@ -217,6 +221,7 @@ const CONSUMERS = [
   [I('lib/repo-inject.js'), I('versionium/lib/merge3.js'), '§FR3 0.60.117 revert({ merge }): undo a change keeping later edits (lazy require in _revertMerged)'],
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FR3 0.60.117 the repo.undo row → POST /api/repos/:uuid/injects/:id/revert'],
   [I('idearium/api/index.js'), I('lib/phase-graph.js'), '§DG2 0.60.147 _phaseBuild refuses NO_GRAPH and writes the graph before the build; repo.phases.graph: GET /api/repos/:uuid/phases/graph'],
+  [I('idearium/api/index.js'), I('lib/pipeline-nodes.js'), '§0.60.162 _phaseBuild writes the graph and its phase as .graph/.phase nodes at the DG2 point (require, §1.2 non-fatal)'],
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§DG2 0.60.147 the repo.phase-graph row → GET /api/repos/:uuid/phases/graph'],
   [I('idearium/ui/js/phases.js'), I('idearium/ui/js/phase-graph-view.js'), '§DG2 0.60.147 the detail pane → pgSlot(p): the dependency graph section'],
   [I('idearium/ui/js/plan-panel.js'), I('idearium/api/index.js'), '§DG2 0.60.147 phaseBuildPost: NO_GRAPH held with its remedy, never offered "anyway"'],

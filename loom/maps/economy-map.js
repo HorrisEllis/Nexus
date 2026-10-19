@@ -59,6 +59,10 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('guardian/server.js'), 'economy.get / economy.set / economy.view → HTTP :7820/api/economy*'],
   [I('clear-glass/src/mesh/automation-engine.js'), I('clear-glass/src/driver/index.js'), "_erosInput → browserFn → driver.exec pointer via 'eros'"],
   [I('clear-glass/renderer/settings/sections/eros.js'), I('clear-glass/src/main/index.js'), 'HTTP /eros/tabs|nodes|execute|replay (workbench)'],
+  // §GA1 0.60.161 — the co-pilot fills the Fiverr gig editor through the engine (James: "need help with the autofill for fiverr")
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.161 autofill.gig -> /cli/autofill/gig/autofill (_gigAutofill)'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig.js'), '_gigAutofill/_gigFill/_gigDraft: write and fill a Fiverr gig'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/store.js'), '0.60.161 GA1a getLastGig/setLastGig: the panel and the co-pilot fill the same gig'],
   [I('clear-glass/src/main/index.js'), I('erosmancer/erosmancer-os/src/api/server.ts'), '_proxyEros: /eros/* → /api/*'],
 ];
 

@@ -143,7 +143,10 @@ const TOOLS = [
   { name: 'opportunity.cycle', cat: 'nexus',   desc: 'Fetch job sources, score against the profile, shortlist, draft the top ones', params: { draft: 'number?' } },
   { name: 'opportunity.list', cat: 'nexus',    desc: 'List opportunities by stage', params: { stage: 'string?', limit: 'number?' } },
   { name: 'opportunity.capture', cat: 'nexus', desc: 'Capture the job/gig on the current page into the pipeline', params: { agentId: 'string?' } },
-  { name: 'opportunity.prepare', cat: 'nexus', desc: 'Open the application page and fill it (autofill + answer bank + drafts) — stops before submit', params: { id: 'string' } },
+  // §GA1 0.60.161 — James: "need help with the autofill for fiverr." / "yes." Fill the Fiverr GIG EDITOR open in the current tab.
+  // This is the tool for "fill this in for me" on a gig-creation page — NOT opportunity.prepare (that fills job applications).
+  { name: 'autofill.gig',     cat: 'nexus',    desc: 'Fill the Fiverr gig editor open in this tab. Uses the gig already written; if none, writes one from the active Fiverr profile and your one-line offer, then fills. Never saves or publishes. Give `offer` (one line of what the gig offers) when no gig is written yet.', params: { offer: 'string?', profileId: 'string?', minConfidence: 'string?', agentId: 'string?' } },
+  { name: 'opportunity.prepare', cat: 'nexus', desc: 'Open the application page and fill it (autofill + answer bank + drafts) — stopsbefore submit', params: { id: 'string' } },
 ];
 
 // Build tool registry by name for fast lookup
