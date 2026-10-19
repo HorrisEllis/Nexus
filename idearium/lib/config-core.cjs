@@ -178,6 +178,13 @@ const SCHEMA = {
     on_stall:        { default: 'retry', enum: ['retry', 'close'], copilot_writable: true, type: 'string' },
     retry_on_reject: { default: true, copilot_writable: true, type: 'boolean' },
     auto_retries:    { default: 2, min: 0, max: 10, copilot_writable: true, type: 'number' },
+    // §AB1 0.60.165 — James: "fix the economy time out also like retries when the time runs out." A build that exhausted ONLY on
+    // time-bound holds (a provider economy/rate limit, or no local model fit free RAM) is built again once the hold clears —
+    // never a run with a real failure. on_economy: retry | close; economy_retry_minutes: how long to let the slot free first;
+    // economy_retries: the daily cap (higher than a stall — the hold lifts on its own).
+    on_economy:          { default: 'retry', enum: ['retry', 'close'], copilot_writable: true, type: 'string' },
+    economy_retry_minutes: { default: 5, min: 1, max: 240, copilot_writable: true, type: 'number' },
+    economy_retries:     { default: 4, min: 0, max: 20, copilot_writable: true, type: 'number' },
     // 0.60.29 PM — James: "All the phases need to be mapped to files and dependencies. With nexus and all projects."
     // The agent that maps phases is first scored on phases whose files are known; its files are written only when its
     // precision reaches map_min_precision on map_min_scored phases (idearium/repo/phase-mapping.js). Done phases too: map_done.

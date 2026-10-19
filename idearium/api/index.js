@@ -1638,7 +1638,7 @@ async function _autoRetry(info, kind, note) {
   if (!repo || !info.map || !info.phase) return { ok: false, why: 'the run names no repo, map or phase' };
   const nth = RW.retriesFor(rows, { phase: info.phase, kind }) + 1;
   note = `${note}\n(This is ${kind} retry ${nth} of ${limit} for ${info.phase} today.${kind === 'reject' && nth > 1 ? ' Your earlier attempt(s) were also rejected: do not repeat them.' : ''})`;
-  said('auto-retry', `${kind === 'reject' ? 'rejected' : 'stalled'} — building ${info.phase} again (${nth}/${limit}): ${String(note).split('\n')[0].slice(0, 300)}`);
+  said('auto-retry', `${kind === 'reject' ? 'rejected' : kind === 'economy' ? 'held by a limit' : 'stalled'} — building ${info.phase} again (${nth}/${limit}): ${String(note).split('\n')[0].slice(0, 300)}`);
   try { const r = await _phaseBuild(repo, _repoDiskDir(repo.uuid), { map: info.map, phase: info.phase, note }); return { ok: !!r.ok, run: r.data || null, error: r.error || null }; }
   catch (e) { return { ok: false, error: e.message }; }
 }
@@ -1654,6 +1654,14 @@ async function _watchRuns() {
     try { _require('../../lib/gap-field.js').report({ type: 'phase.run.stalled', body: `${s.phase}: ${why}`, source: `idearium:${s.repoUuid}:${s.phase}`, domain: 'idearium', severity: 'medium', meta: { runId: s.runId, kind: s.kind } }); } catch (_) {}
     // only a recent stall is retried: an old run that never closed (from before the watchdog) is closed, not rebuilt
     if (s.kind === 'build' && s.idleMs < 2 * 3600 * 1000 && _cfg('repos.on_stall', 'retry') === 'retry') await _autoRetry(s, 'stall', `the previous run stalled after "${s.state}"; start over, smaller steps`).catch(() => {});
+  }
+  // §AB1 0.60.165 — James: "fix the economy time out also like retries when the time runs out." · "i dont think it resumes."
+  // A build that ended terminal ONLY on time-bound holds (a provider's economy/rate limit, or no local model fit free RAM) is
+  // retried once the hold has had time to clear — never a run with any hard failure (economyHeld guards that). Reuses _autoRetry.
+  if (_cfg('repos.on_economy', 'retry') === 'retry') {
+    const heldMs = Math.max(60000, Number(_cfg('repos.economy_retry_minutes', 5)) * 60000);
+    const eh = RW.economyHeld(loadTable('idearium_phase_runs'), { heldMs });
+    for (const e of eh) await _autoRetry(e, 'economy', `the previous run was held by a provider limit or no local model fit free memory; the slot should be free now — building ${e.phase} again`).catch(() => {});
   }
   return st;
 }
