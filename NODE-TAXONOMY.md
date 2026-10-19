@@ -107,3 +107,11 @@ own running list (`spec`, `nex`, `clips`, `synthesis`, `input`, `output`,
 esoteric types belonging to other subsystems (`meta/crystal-lattice.js` /
 `intelligence/liminal-space` / `intelligence/lattice` / guardian's own
 `SHARED_TYPES`), is exactly 32.
+
+## ADDENDUM 2026-10-19 (0.60.170 RC3) — a node's file name is fileIdOf(id)
+James, 2026-10-19: "files names must remain consistent." His log: "ENOENT … idearium\data\nodes\phase:SP5_title:<hash>.graph".
+A node id may hold characters Windows refuses in a file name (`:` in .graph and .phase ids). `lib/node-export.js fileIdOf(id)`
+maps < > : " / \ | ? * and control characters to `~`; the envelope keeps the real id; every writer (exportToFile, pipeline-nodes
+writeNode) and the registry's removal check use the one mapping. An id without those characters is its own file name, so no node
+written before moves. Pipeline nodes go into their type's folder (nodes/graph/, nodes/phase/). Map:
+docs/2026-10-19-pipeline-root-causes-phasemap.spec RC3.

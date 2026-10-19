@@ -114,7 +114,7 @@ function start(opts = {}) {
     _scanExisting(type);
 
     try {
-      const watcher = fs.watch(dir, (event, filename) => {
+      const watcher = require('../../lib/safe-watch.js').watch(dir, (event, filename) => {
         if (!filename) return;
         const key = `${dir}::${filename}`;
         const now = Date.now();

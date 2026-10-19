@@ -718,3 +718,19 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **What it shows:** knowing the system already had the capability and asking for it to be connected, not rebuilt — "use what
     you already have." The coder also stated the honest limit (no KVM here → process isolation, not a VM) rather than overclaiming.
   - **Evidence:** `tests/modules/test-cos-run-target.test.js` (CT 5/5, real sandbox runs incl. a clean-env leak check); `CHANGELOG-0.60.166.md`.
+
+### 2026-10-19 — 0.60.170: "we need to fix the pipeline though. like i said."
+- **Context.** His boot log for the day: orchestrator and Guardian restarting on a file-watcher error, idearium silent for ~100 s
+  at each boot, node writes failing, and agent replies landing as files named "Gemini said tests/…". He asked for the pipeline to
+  be fixed before new features, and named the target: "files names must remain consistent."
+- **The call, his:** fix the foundation first. **The coder's part:** finding the four causes in the code and the fixes.
+- **Checkable:** `tests/modules/test-pipeline-root-causes.test.js` 6/6; a 12,000-node rescan measured 10.2 s before and 0.95 s
+  after on the same machine (CHANGELOG-0.60.170.md). Not yet confirmed on his Windows machine.
+- **Skill shown:** reading a production log for causes rather than symptoms, and ordering work foundation-first.
+
+### 2026-10-19 — 0.60.171: verify first; the agent briefed the way it asked
+- **His idea:** "agents to check previous chunks as is and only change if they don't match conditions", then "prioritize gemini … specify the axioms … i want gemini to code at his best" — he asked Gemini itself what it needs and handed its answer over as the spec for the brief.
+- **Coder's part:** the check (lib/verify-first.js), the five-part brief (lib/coder-brief.js), the self-model store (lib/agent-self-model.js).
+- **Checkable:** tests/modules/test-verify-first.test.js 10/10; CHANGELOG-0.60.171.md.
+- **Skill shown:** treating the AI agent as a component with a contract — asking it what it needs, recording that as data, and checking its work with no model in the loop.
+

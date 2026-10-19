@@ -36,6 +36,7 @@
  * §M1 init(cfg) + stop(). Debounced so editor/copy multi-writes fire once.
  */
 
+import { watch as __safeWatch } from '../../lib/safe-watch.js';   // §0.60.170 RC1 — a watcher error never takes the process down
 import fs from 'fs';
 import path from 'path';
 import { execFileSync } from 'child_process';
@@ -57,7 +58,7 @@ export class RepoWatcher {
 
   init() {
     fs.mkdirSync(this.dropDir, { recursive: true });
-    this._watcher = fs.watch(this.dropDir, (evt, filename) => {
+    this._watcher = __safeWatch(this.dropDir, (evt, filename) => {
       if (!filename) return;
       const lower = filename.toLowerCase();
       if (!WATCHED_EXTS.some(ext => lower.endsWith(ext))) return;

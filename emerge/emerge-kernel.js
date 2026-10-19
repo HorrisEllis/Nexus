@@ -530,7 +530,7 @@ function writeOutput(inputPath, data) {
 
 function watchIO() {
   console.log(`[kernel] watching ${IO}`);
-  fs.watch(IO, (event, filename) => {
+  require('../lib/safe-watch.js').watch(IO, (event, filename) => {
     if (!filename) return;
     const fp  = path.join(IO, filename);
     const ext = path.extname(filename).toLowerCase();

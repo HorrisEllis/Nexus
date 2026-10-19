@@ -52,6 +52,12 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  ['lib/phase-dag.js', I('lib/phase-dag.js'), [I('loom/scanners/phasemap-map.js')]],   // §0.60.172 DG3 the whole DAG of every phasemap
+  ['lib/verify-first.js', I('lib/verify-first.js'), [I('lib/phase-plan.js'), I('cos/testenv/run-target.js')]],   // §0.60.171 VF1 a file checked as it is, no model, before any agent
+  ['lib/coder-brief.js', I('lib/coder-brief.js'), [I('lib/verify-first.js')]],   // §0.60.171 CB1 Gemini's five-part brief with AXIOMS v3.1
+  ['lib/agent-self-model.js', I('lib/agent-self-model.js'), []],   // §0.60.171 SM1 each agent's model of itself; interrogation → proposals
+  ['lib/safe-watch.js', I('lib/safe-watch.js'), []],   // §0.60.170 RC1: an fs.watch whose async EPERM cannot take the process down; re-arms
+  ['lib/path-guard.js', I('lib/path-guard.js'), []],   // §0.60.170 RC4: a file name from an agent's reply is checked (chat label, cut short, prose) before it is written
   ['lib/system-shape.js', I('lib/system-shape.js'), []],   // §0.60.138 does a system match genesis, role by role
   ['diagnostic/cli.js', I('diagnostic/cli.js'), [I('diagnostic/registry-components.js'), I('diagnostic/config.js')]],   // §0.60.138 diagnostic's genesis cli
   ['diagnostic/server.js', I('diagnostic/server.js'), [I('diagnostic/nexus-diagnostic.js')]],   // §0.60.138 diagnostic's genesis entry
@@ -64,6 +70,27 @@ const FILES = [
   ['idearium/ui/js/code-dock.js', I('idearium/ui/js/code-dock.js'), [I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/plan-panel.js')]],   // §0.60.118 DK2: the dock — _wsCard, _rtTree/_rtRow, _ppContext reused (page globals)
 ];
 const CONSUMERS = [
+  [I('idearium/api/index.js'), I('lib/phase-dag.js'), '§0.60.172 DG3 build gate (DAG_INVALID), slice on the phase graph, repo.phases.graph lines, repo.phases.dag route'],
+  [I('idearium/cli/route-commands.js'), I('lib/phase-dag.js'), '§0.60.172 DG3 `repo dag <repo> [phase]` through the route'],
+  [I('idearium/api/index.js'), I('lib/verify-first.js'), '§0.60.171 VF1 runPlanned file loop + runContract brick dispatch: check() before the ladder; an existing test reused only when it proves the files'],
+  [I('idearium/api/index.js'), I('lib/coder-brief.js'), '§0.60.171 CB1 compose() is the brief of every file/brick sent to a coder'],
+  [I('idearium/api/index.js'), I('lib/pipeline-routing.js'), '§0.60.171 CB2 preferFirst() after the learned order (both build paths)'],
+  [I('idearium/api/index.js'), I('lib/path-guard.js'), '§0.60.171 RC4b repairTree() at the start of a phase build'],
+  [I('orchestrator/orchestrator.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 UI hotswap watcher and auth hotswap watcher'],
+  [I('guardian/lib/node-registry.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 a watcher per node type folder'],
+  [I('lib/node-registry.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 every system\'s node listener'],
+  [I('lib/node-index-watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('lib/queue.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the input folder watcher'],
+  [I('lib/ico.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('auth/index.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 policy and client-key watchers'],
+  [I('architecture-spec/registry/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('cos/foundation/file-browser.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('diagnostic/nexus-diagnostic.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the ledger folder watcher'],
+  [I('emerge/emerge-kernel.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('idearium/repo/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 (ESM import) the drop folder watcher'],
+  [I('lib/repo-inject.js'), I('lib/path-guard.js'), '§0.60.170 RC4 propose(): check(path, { exists }) before anything else; a change is kept as pathNote'],
+  [I('lib/pipeline-nodes.js'), I('lib/node-export.js'), '§0.60.170 RC3 writeNode names the file with fileIdOf (Windows-safe)'],
+  [I('lib/node-registry.js'), I('lib/node-export.js'), '§0.60.170 RC3 removal matches a file by fileIdOf(id); RC2 one index map per type per scan'],
   [I('idearium/api/index.js'),                    I('lib/system-boundary.js'), '§DB1 0.60.126 GET /api/system/drawbridge → census() + check() (lazy require in the case)'],
   [I('orchestrator/orchestrator.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
   [I('cortex/boot.js'), I('lib/node-registry.js'), '§P33b 0.60.131 startForSystem at boot: this system\'s own node listener, its own store'],
