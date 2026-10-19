@@ -1311,6 +1311,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       if (!planner) tfRow('skipped', { note: `no test writer was ready (the planner writes the test, never the coder) — ${planning.why || 'no planner'}; TF1's expectations still hold` });
       else {
         let fb = '', got = null, lastWhy = null;
+        // §0.60.167 — James: "been stuck on that phase for hours." A phase whose files ALREADY EXIST on disk cannot produce a
+        // failing test (fail-first is for new code), so test_first:require looped SP5_title forever. If the work is already
+        // there, a passing test is a valid regression test and the phase is already satisfied — never refuse it.
+        const _diskDir = _repoDiskDir(target.uuid);
+        const alreadyDone = (() => { try { const fl = (plan.order && plan.order.length) ? plan.order : plan.files.map(f => f.path); return fl.length > 0 && fl.every(p => { try { return fs.existsSync(path.join(_diskDir, p)); } catch (_) { return false; } }); } catch (_) { return false; } })();
         for (let n = 1; n <= 2 && !got; n++) {
           const msg = TF.brief({ plan, phaseKey: phase, does: ctx.does, proof: ctx.proof, testPath, repoName: target.name, feedback: fb });
           tfRow('writing', { provider: planner, attempt: n, promptChars: msg.length, tokensIn: _tokEst(msg) });
@@ -1321,8 +1326,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           if (!r || !r.ok) { lastWhy = `the test writer (${planner}) did not answer: ${String((r && r.error) || 'no reply').slice(0, 200)}`; tfRow('no-answer', { provider: planner, attempt: n, error: lastWhy }); break; }
           const code = TF.extract(r.text);
           if (!code) { fb = lastWhy = 'the reply had no code block'; tfRow('invalid', { provider: planner, attempt: n, note: fb }); continue; }
-          const v = await TF.validate({ root: _repoDiskDir(target.uuid), plan, testPath, code });
-          if (v.verdict === 'fails-as-expected' || v.verdict === 'not-run') got = { code, v };
+          const v = await TF.validate({ root: _diskDir, plan, testPath, code });
+          const d = TF.decide(v.verdict, { alreadyDone });
+          if (d === 'accept' || d === 'accept-already') got = { code, v, already: d === 'accept-already' };
           else { fb = lastWhy = `${v.verdict}: ${v.why}`; tfRow('invalid', { provider: planner, attempt: n, note: lastWhy, tail: v.tail || null }); }
         }
         if (got) {
@@ -1331,15 +1337,18 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           let prop = null;
           try { prop = _require('../../lib/repo-inject.js').propose({ layer: getRepoLayer(), repo: target, path: testPath, content: got.code, source: { kind: 'agent', role: 'test-writer', provider: planner, runId, phase, map } }); }
           catch (e) { prop = { ok: false, errors: [e.message] }; }
+          const seen = got.already ? 'the phase is already satisfied: the test passes against the code already present — kept as a regression test' : got.v.verdict === 'not-run' ? got.v.why : `seen failing: ${got.v.why}`;
           tfRow('shaped', { provider: planner, testFirst: { path: testPath, added: sh.added, proposal: prop && prop.ok ? prop.inject.uuid : null },
-            note: `${testPath} written first · ${got.v.verdict === 'not-run' ? got.v.why : `seen failing: ${got.v.why}`} · ${sh.added.length ? `it calls ${sh.added.map(a => `${a.file} ${a.name}`).join(', ')}, which the plan lacked — added` : 'the plan already exports what it calls'} · its run is the first condition${prop && prop.ok ? '' : ` · not proposed: ${((prop && prop.errors) || []).join('; ')}`}` });
-        } else if (policy.testFirst === 'require') {
+            note: `${testPath} written first · ${seen} · ${sh.added.length ? `it calls ${sh.added.map(a => `${a.file} ${a.name}`).join(', ')}, which the plan lacked — added` : 'the plan already exports what it calls'} · its run is the first condition${prop && prop.ok ? '' : ` · not proposed: ${((prop && prop.errors) || []).join('; ')}`}` });
+        } else if (policy.testFirst === 'require' && !alreadyDone) {
           const why = `not built: no usable test was written first (${lastWhy || 'no answer'}) — routing.test_first is require; prefer builds without it`;
           tfRow('refused', { provider: planner, error: why });
           appendRow('idearium_phase_runs', { uuid: `${runId}-tf-stopped`, ...base, state: 'failed', snapshot: commitId, error: why, ts: Date.now() });
           getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'failed', snapshot: commitId });
           return { state: 'failed', error: why, stopped: true };
-        } else tfRow('without', { provider: planner, note: `no usable test (${lastWhy || 'no answer'}) — built anyway (routing.test_first: prefer); TF1's expectations still hold` });
+        } else tfRow('without', { provider: planner, note: alreadyDone
+          ? `the phase's files already exist and no failing test is possible — built without a new test (already satisfied); TF1's expectations and the files' own checks still hold`
+          : `no usable test (${lastWhy || 'no answer'}) — built anyway (routing.test_first: prefer); TF1's expectations still hold` });
       }
     }
     // the plan is written for a small model: Ollama first — in the order the coders' records on planned files say — the
