@@ -140,6 +140,15 @@ class AutofillStore {
     return Object.values(this.data.profiles || {}).sort((a, b) => a.createdAt - b.createdAt);
   }
 
+  // §GA1a 0.60.161 — James, 2026-10-19: "yes." The last gig written (Settings 'Write the gig', or the co-pilot tool) is kept
+  // as one JAA row, so the Settings panel and the co-pilot fill the SAME gig. One writer; a read elsewhere is read-only.
+  _gigRow() { return this._gigJaa || (this._gigJaa = new JaaRows('cg_autofill_last_gig', {})); }
+  getLastGig() { try { const r = this._gigRow().load(); return (r && r[0] && r[0].gig) || null; } catch (_) { return null; } }
+  setLastGig(gig) {
+    try { this._gigRow().replaceAll(gig && gig.title ? [{ id: 'last', gig, at: Date.now() }] : []); return true; }
+    catch (_) { return false; }
+  }
+
   getProfile(id) {
     return this.data.profiles?.[id] || null;
   }

@@ -421,6 +421,7 @@ const SUITES = [
   'test-checks-layer-one.test.js',    // 0.60.157 QA1 — CK-231, CK-237, CK-239, CK-252 run; each red on a planted defect
   'test-gates-solid.test.js',         // 0.60.158 — six holes in contract-gates, each proven then closed (three false completes)
   'test-cg-network-ui.test.js',       // 0.60.160 — Settings → Network: the Tor·Snowflake transport UI, driven in Clear Glass over the real net service
+  'test-cg-gig-autofill.test.js',     // 0.60.161 GA1 — co-pilot fills the Fiverr gig editor (the engine, not a chat); written gig, else draft from profile+offer, else ask
   'test-readme-generate.test.js',    // 0.60.153 — the README: every system, module and file; every phase; the data; Idearium; every release; under 512 KiB
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)
   'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person

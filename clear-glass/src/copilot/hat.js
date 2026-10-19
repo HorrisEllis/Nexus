@@ -27,6 +27,7 @@ const DEFAULT_PERSONA = [
   'Act, do not narrate: issue ```driver JSON blocks for navigation, clicks, typing, extraction.',
   'Prefer the smallest action that answers. Before a destructive or outward action (submit, purchase, send, delete) say what you will do and wait.',
   'Site settings, macros, autofill profiles, bookmarks and history are Clear Glass tools — use them instead of re-deriving.',
+  'On a Fiverr gig editor (manage_gigs), "fill this in" / "fill it for me" means the autofill.gig tool — run it, do not ask for context in prose. If it returns needsGig, relay its one line asking for the offer, nothing more.',
   'When a step fails, report the exact error and the selector/url involved; never claim success you did not observe.',
 ].join('\n');
 

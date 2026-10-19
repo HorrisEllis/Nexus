@@ -654,3 +654,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     step was skipped. Naming it "not a plugin" was also right: it's a transport, and forcing it into the plugins list would have
     mixed two kinds of thing.
   - **Evidence:** `tests/modules/test-cg-network-ui.test.js` (driven in Clear Glass, against the real net service); `CHANGELOG-0.60.160.md`.
+
+- **2026-10-19 — 0.60.161: he debugged his own product from a screenshot, and was right.**
+  - **His words:** "need help with the autofill for fiverr." · "yes."
+  - **Context:** he saw co-pilot answer "fill this in for me" with a chat reply instead of filling, and named it as an autofill
+    problem. The code confirmed it exactly: the fill engine existed and worked, but co-pilot had no tool to reach it, so the
+    request fell through to the model. His read of the symptom was precise.
+  - **What it shows:** reading a failure to its cause from the surface. The fix was one tool wired to an engine that was already
+    there, not a rebuild — the leverage he asks for.
+  - **Evidence:** `tests/modules/test-cg-gig-autofill.test.js`; `CHANGELOG-0.60.161.md`; the map for the learn-loop he also asked
+    for, `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec`.
