@@ -71,6 +71,10 @@ const FILES = [
   ['lib/pipeline-nodes.js', I('lib/pipeline-nodes.js'), [
     I('lib/node-export.js'),                                  // require — wrap/validate/toYaml the envelope, and KNOWN_TYPES
   ]],
+  // §CR1 0.60.164 — James: "the component registry is vital for each project becuase its the spine that makes components dumb."
+  ['lib/project-registry.js', I('lib/project-registry.js'), [
+    I('lib/component-store.js'),                              // require — put(): store each built file with its resolved require edges
+  ]],
   // §FMR0/FMR2/FMR3 0.60.146 — every failure reaches the .failure_mode record; its report; causality measured
   // (docs/2026-10-17-failure-mode-report-phasemap.spec)
   ['cortex/self-heal/failure-intake.js', I('cortex/self-heal/failure-intake.js'), [
@@ -222,6 +226,7 @@ const CONSUMERS = [
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§FR3 0.60.117 the repo.undo row → POST /api/repos/:uuid/injects/:id/revert'],
   [I('idearium/api/index.js'), I('lib/phase-graph.js'), '§DG2 0.60.147 _phaseBuild refuses NO_GRAPH and writes the graph before the build; repo.phases.graph: GET /api/repos/:uuid/phases/graph'],
   [I('idearium/api/index.js'), I('lib/pipeline-nodes.js'), '§0.60.162 _phaseBuild writes the graph and its phase as .graph/.phase nodes at the DG2 point (require, §1.2 non-fatal)'],
+  [I('idearium/api/index.js'), I('lib/project-registry.js'), '§CR1 0.60.164 on contract-complete, wireBuilt stores every built file in the project component store with resolved edges (the spine)'],
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§DG2 0.60.147 the repo.phase-graph row → GET /api/repos/:uuid/phases/graph'],
   [I('idearium/ui/js/phases.js'), I('idearium/ui/js/phase-graph-view.js'), '§DG2 0.60.147 the detail pane → pgSlot(p): the dependency graph section'],
   [I('idearium/ui/js/plan-panel.js'), I('idearium/api/index.js'), '§DG2 0.60.147 phaseBuildPost: NO_GRAPH held with its remedy, never offered "anyway"'],
