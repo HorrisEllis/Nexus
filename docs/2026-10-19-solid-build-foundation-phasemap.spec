@@ -110,7 +110,7 @@ phases:
 
   CT1_cos_test_runner:
     layer: library
-    status: OPEN
+    status: BUILT 2026-10-19 (0.60.166)
     depends_on: []
     axioms: [§3.4, §1.1, §12.1, §0.3]
     blocks: ["cos_test_runner"]

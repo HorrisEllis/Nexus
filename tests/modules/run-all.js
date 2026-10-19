@@ -426,6 +426,7 @@ const SUITES = [
   'test-model-fit-ladder.test.js',    // 0.60.163 MF1 — the ladder leaves off local models that can't fit free RAM up front (byFit/fittingModels); ollama-first on a small box
   'test-project-registry.test.js',    // 0.60.164 CR1 — the contract build wires every built file into the project's component store with resolved edges (the spine)
   'test-economy-resume.test.js',    // 0.60.165 AB1 — a build that exhausted only on time-bound holds (economy/rate-limit/no-RAM) is retried when the slot frees; never a real failure
+  'test-cos-run-target.test.js',     // 0.60.166 CT1 — the gate's test runs inside COS's process sandbox (clean env, timeout, output cap); portable, no KVM needed
   'test-readme-generate.test.js',    // 0.60.153 — the README: every system, module and file; every phase; the data; Idearium; every release; under 512 KiB
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)
   'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person
