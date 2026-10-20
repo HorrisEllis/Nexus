@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-adblock-phasemap.spec::AB1_engine
+type: phase
+id: docs_2026-10-21-adblock-phasemap.spec::AB1_engine
+context: pipeline phase AB1_engine of docs/2026-10-21-adblock-phasemap.spec
+intent: null
+summary: AB1_engine (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792500829717
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792500829717
+lastSeenAt: 1792500829717
+fingerprint: null
+payload:
+  id: AB1_engine
+  map: docs/2026-10-21-adblock-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.183
+  files:
+    - clear-glass/src/adblock/engine.js
+  depends_on:
+    - AB0_engine_in_core
+  blocks:
+    - MOD-ABK-ENGINE
+  spec: clear-glass/spec/adblock.spec
+  graph: ce7213dcdf797a4c

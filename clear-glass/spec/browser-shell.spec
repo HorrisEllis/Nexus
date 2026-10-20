@@ -151,6 +151,14 @@ spec:
       behavioral_contracts: ["only the fields Firefox gives override"]
       error_paths: ["save failure logged"]
 
+    - id: IF-SITE-SETTINGS
+      name: site-settings
+      path: clear-glass/src/site-settings/store.js
+      description: "Per-origin settings (zoomFactor, contentFilter, permissions); the store page zoom keeps its factor in (BS14)."
+      exports: ["get(url, key)", "set(url, key, value)", "deleteKey(url, key)", "listOrigins()"]
+      behavioral_contracts: ["keys are origins"]
+      error_paths: ["bad url → undefined / false"]
+
   modules:
 
     - id: MOD-BSH-FIREFOX
@@ -361,6 +369,197 @@ spec:
       behavioral_contracts: ["no rule changes what an element does"]
       error_paths: ["none: CSS only"]
       acceptance: ["Clear Glass: the mic sits inside the composer; the route toggles are one segmented row"]
+
+    - id: MOD-BSH-AUTO-CONTEXT
+      name: auto-context
+      uuid: nexus-cg-bsh-auto-context-v1-0000-2026-1021-003
+      path: clear-glass/src/copilot/context-need.js
+      phase: BS12_context_automatic
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "can you have the dom, cookies, and picks buttons migrated into copilot so he does it automatically when he needs
+        it." need(message, { picks, pickedAt, now }) decides per message, deterministically (no model asked): the page (DOM) when the
+        message is about the page — this page/site/form, here, read, summarise, click, fill, find, a field or button, prices, plans;
+        the picks when there are some and the message points at them (this, that, it, picked, selected, element) or they were picked in
+        the last two minutes; a cookie summary when it is about signing in (logged in/out, session, account, cookie, expired) — names, domain,
+        expiry and whether it looks like a sign-in cookie, never a value. The bridge applies it in send(); the pane's three chips go
+        (the Cookies chip never did anything: ctxCookies was toggled and never read). /ctx dom|picks|cookies on still forces one.
+        Each reply says what was attached, so the choice is visible.
+      deps: [{ name: copilot-cli }]
+      exports: ["need(message, { picks, pickedAt, now }) → { dom, picks, cookies, why[] }", "cookieSummary(cookies, url) → { count, signIn[], soonest }"]
+      gate_pipeline: ["GATE-AC-001: forced by /ctx", "GATE-AC-002: page words", "GATE-AC-003: picks pointed at or fresh", "GATE-AC-004: sign-in words"]
+      behavioral_contracts: ["pure and deterministic", "a cookie value is never read into the summary"]
+      error_paths: ["no session or no URL → no cookie summary, said in why"]
+      acceptance: ["'summarise this page' → dom; 'what is 2+2' → nothing; 'fill this in' with a pick → dom+picks; 'am I logged in' → cookies"]
+
+    - id: MOD-BSH-PLUGIN-SETTINGS
+      name: plugin-settings
+      uuid: nexus-cg-bsh-plugin-settings-v1-0000-2026-1021-004
+      path: clear-glass/renderer/shell/extensions.js
+      phase: BS13_plugin_settings
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "make it so i can click on them t ochange their settings." Every plugin row in the 🧩 panel (and a pinned
+        plugin's icon) opens that plugin's page in the same panel: back, icon, name, version, the switch; what it does; its author and
+        permissions; its commands; its own settings when it has them; and "Open in Settings" for plugins whose settings live in a Settings
+        section (manifest settingsSection). A plugin gives settings through a new contribution type, `settings`: the host emits its
+        signature with { op: get|set|action, key, value, page, requestId } and the plugin returns one plugin:settings event carrying a
+        view — fields of kind toggle, select, text, textarea, list (items with on/remove), action, info, and an optional summary (a big
+        number and its label). The bridge's plugins:settings waits for that one event (3 s), so the protocol stays event-only (COS-4).
+      deps: [{ name: plugin-host }, { name: shell }]
+      exports: ["contribution type 'settings'", "PluginHost.list() → + author, permissions, settings (signature|null), settingsSection", "plugins:settings IPC { id, op, key, value, page } → { ok, view }", "CGExtensions.openPlugin(id)"]
+      gate_pipeline: ["GATE-PS-001: row click → page", "GATE-PS-002: settings contribution → view", "GATE-PS-003: set/action → new view", "GATE-PS-004: no contribution → about, permissions, commands"]
+      behavioral_contracts: ["the switch and pin keep working from the row", "a field's label and values are text, never HTML"]
+      error_paths: ["no answer in 3 s → the page says the plugin did not answer", "a plugin that is off → its page says so and offers the switch"]
+      acceptance: ["Clear Glass: clicking the Ad Blocker row shows its lists and the switch; clicking a list's switch calls plugins:settings set"]
+
+    - id: MOD-BSH-ZOOM-CORE
+      name: zoom-core
+      uuid: nexus-cg-bsh-zoom-core-v1-0000-2026-1021-004
+      path: clear-glass/src/core/zoom.js
+      phase: BS14_zoom_core
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "migrate page zoom to the core of clearglass." Page zoom was in two places: the window (browser.js applyZoom,
+        +0.1 steps, saved per site from the renderer) and the Page Zoom plugin (driver.exec zoom, its own +0.1 and 0.25–5 bounds, never
+        saved, never shown in the address bar). One core module now: Firefox's steps (30 50 67 80 90 100 110 120 133 150 170 200 240 300
+        %), step(f, dir), clamp, and createZoom({ siteSettings }) that sets a page's factor, saves it per site and restores it when the
+        page navigates. The window (zoom:set / zoom:step / zoom:restore IPC), the driver's zoom action (agents) and the shortcuts all go
+        through it. The plugin is archived (plugins/_archive/zoom-0.60.182), not deleted (§0.3); its three commands are the ☰ menu's zoom
+        row and Ctrl +/−/0, which were always core.
+      deps: [{ name: site-settings }]
+      exports: ["STEPS", "step(factor, dir) → factor", "clamp(f)", "createZoom({ siteSettings }) → { set(wc, f, { persist }), step(wc, dir), reset(wc), restore(wc) }", "zoom:set|step|restore IPC → { factor }"]
+      gate_pipeline: ["GATE-ZM-001: step on Firefox's ladder", "GATE-ZM-002: clamp 0.3–3", "GATE-ZM-003: persist per site", "GATE-ZM-004: restore on navigate"]
+      behavioral_contracts: ["one ladder for the window, the shortcuts and agents", "100% is stored as no setting (deleteKey), not as 1"]
+      error_paths: ["no webContents → { ok:false } said", "bad url → not saved, still applied"]
+      acceptance: ["step(1,'in') = 1.1, step(1.1,'out') = 1, step(3,'in') = 3, step(0.95,'in') = 1", "set then restore on the same site gives the saved factor"]
+
+    - id: MOD-BSH-CTXMENU
+      name: context-menu
+      uuid: nexus-cg-bsh-ctxmenu-v1-0000-2026-1021-004
+      path: clear-glass/renderer/shell/ctxmenu.js
+      phase: BS15_context_menu
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "moright click menu needs to be redone in the same themeand in relation to the mouse is way of f onthe right
+        clicskk". Redrawn like Firefox's in the window's theme: a row of Back / Forward / Reload / Bookmark icons on top, then what the
+        click was on — a link (open in new tab, copy link, the plugins' link rows such as Snowflake), an image (open, copy address, save),
+        a selection (copy, search the web for it, ask Co-pilot), a field (undo, cut, copy, paste, select all) — then the page and Clear
+        Glass rows that were there (every 0.60.182 data-action kept), each with a drawn icon and its shortcut. The toolbar's own
+        right-click shows only the toolbar rows. Position: the point comes from the main process (screen.getCursorScreenPoint() less the
+        window's content bounds, in the window's CSS pixels), which is where the mouse is whatever the page zoom, the display scale or
+        the webview's place; params.x/y are the fallback. The menu opens down-right of the pointer and flips left or up at the edges, as
+        a native menu does.
+      deps: [{ name: shell }]
+      exports: ["window.CGCtxMenu.open({ x, y, params, chrome })", "window:cursor IPC → { x, y, scale }", "place(x, y, w, h, vw, vh) → { left, top }"]
+      gate_pipeline: ["GATE-CM-001: point from the cursor", "GATE-CM-002: sections by what was clicked", "GATE-CM-003: flip at edges", "GATE-CM-004: old actions kept"]
+      behavioral_contracts: ["every data-action browser.js handles is still reachable", "labels are text, never HTML (a link or selection is data)"]
+      error_paths: ["the cursor IPC fails → params.x/y plus the webview's offset, as before"]
+      acceptance: ["place() flips at the right and bottom edges", "Clear Glass: a link right-click shows the link rows; the toolbar's shows only the toolbar rows; the menu's corner sits at the point given"]
+
+    - id: MOD-BSH-PLUGIN-FIELDS
+      name: plugin-import-fields
+      uuid: nexus-cg-bsh-plugin-fields-v1-0000-2026-1021-005
+      path: clear-glass/renderer/shell/extensions.js
+      phase: BS16_import_fields
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        Two field kinds for a plugin's page, so a plugin can take files without touching a dialog itself: `import` (buttons "Import file…" /
+        "Import folder…"; the shell opens the system picker through plugins:pick in the main process and sends the chosen paths as
+        set(key, { paths })) and `add` (a text box and a button: set(key, text)). plugins:pick { kind: file|folder, title, multi } → { paths }
+        | { canceled }. The plugin never sees the dialog, only the paths a person chose.
+      deps: [{ name: plugin-host }, { name: shell }]
+      exports: ["field { type: 'import', accept: ['file','folder'] }", "field { type: 'add', placeholder, button }", "plugins:pick IPC", "ClearGlass.plugins.pick(kind, opts)"]
+      gate_pipeline: ["GATE-PF-001: picker in main", "GATE-PF-002: paths to the plugin"]
+      behavioral_contracts: ["canceled sends nothing", "a path is shown as text"]
+      error_paths: ["no window → { ok:false } said"]
+      acceptance: ["Clear Glass: Import folder… on the Ad Blocker page sends set('import', { paths })"]
+
+    - id: MOD-BSH-APPMENU
+      name: app-menu
+      uuid: nexus-cg-bsh-appmenu-v1-0000-2026-1021-006
+      path: clear-glass/renderer/shell/menus.js
+      phase: BS17_menu_consolidated
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers. and remove the
+        bookmarks from the menuconsolidate the menu, use playwright to test each ui feature in the menu. use the library for the bookmarks, context
+        menu for the clearglass ui like the last 2 images, but matching the them eand dynamic to the click  v. the right clikc on dom is still not
+        accuraate. still missing snowflake from tghe ocntext menu"
+        The ☰ menu becomes one model (APP in menus.js), drawn icons, Firefox's groups: new tab / window / Snowflake; the account; Bookmarks
+        (opens the Library on bookmarks — the list is no longer in the menu), History, Downloads, Library; Plugins and Add-ons, Site Settings,
+        Background Tabs, Import from Firefox; Print, Find, Zoom; the unpinned tools under More tools; Customize Toolbar, Settings. Duplicates
+        between the old hand-written rows and the model are gone; every row's target is checked by a test that clicks each one in Clear Glass.
+        Reading, to confirm: "use playwright" — Clear Glass's own driver (its Playwright-shaped API) runs the tests, because his rule of
+        2026-10-05 says UI is tested in Clear Glass, never Playwright (AXIOMS §4.1, CG-001b).
+      deps: [{ name: shell }]
+      exports: ["CGMenus.app() → rows", "CGMenus.appMenuHTML()", "CGMenus.wire(panel, close)"]
+      gate_pipeline: ["GATE-AM-001: one model", "GATE-AM-002: no bookmark list", "GATE-AM-003: every row runs"]
+      behavioral_contracts: ["every 0.60.184 data-action reachable (downloads, site-settings, history, library, bgtabs, customize-toolbar)", "icons drawn, not emoji"]
+      error_paths: ["a row whose target is missing is not drawn and is logged"]
+      acceptance: ["Clear Glass: each ☰ row clicked does what it says (a call recorded or a panel open); no Bookmarks list in the menu"]
+
+    - id: MOD-BSH-CHROME-CTX
+      name: chrome-context-menus
+      uuid: nexus-cg-bsh-chrome-ctx-v1-0000-2026-1021-006
+      path: clear-glass/renderer/shell/ctxmenu.js
+      phase: BS18_chrome_context_menus
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        Firefox's menus for Clear Glass's own UI, in the window's theme, chosen by where the click landed (zoneOf(target)): a tab (New Tab,
+        Reload Tab, Duplicate Tab, Bookmark Tab…, Move to Background, Close Tab, Close Other Tabs, Reopen Closed Tab), the tab strip (New Tab,
+        Reopen Closed Tab), a bookmark (Open, Open in New Tab, Open in New Agent Window, Edit Bookmark…, Copy Link, Delete), the bookmarks bar
+        (Open All Bookmarks, Add Bookmark…, Manage Bookmarks), the address bar (Undo, Cut, Copy, Paste, Paste and Go, Select All), the toolbar
+        (Unpin, Customize Toolbar…); all but the address bar end with Menu Bar ✓, Bookmarks Toolbar ▸ (Always / Only on New Tab / Never) and
+        Customize Toolbar…. A submenu opens beside its row and flips at the edge. Firefox's Add Folder / Add Separator / Select All Tabs /
+        vertical tabs are not offered: the bookmark store has no folders and the tabs share one page, said here.
+      deps: [{ name: shell }, { name: bookmarks-store }]
+      exports: ["zoneOf(target) → 'tab'|'tabstrip'|'bookmark'|'bookmarks'|'urlbar'|'toolbar'", "CGCtxMenu.openChrome({ zone, x, y, target })", "bookmarksBar(mode) 'always'|'newtab'|'never'"]
+      gate_pipeline: ["GATE-CC-001: zone from the click", "GATE-CC-002: rows for the zone", "GATE-CC-003: submenu placed and flipped"]
+      behavioral_contracts: ["the page's own menu (MOD-BSH-CTXMENU) is unchanged", "the toolbar visibility choice is kept across restarts"]
+      error_paths: ["a row whose action is missing is not drawn"]
+      acceptance: ["Clear Glass: a tab right-click shows the tab rows; the bookmarks bar shows its rows; a bookmark's Delete removes it; Bookmarks Toolbar ▸ Never hides the bar"]
+
+    - id: MOD-BSH-CTX-POINT
+      name: context-point
+      uuid: nexus-cg-bsh-ctx-point-v1-0000-2026-1021-006
+      path: clear-glass/src/preload/webview-bridge.js
+      phase: BS19_ctx_point_from_page
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        "the right clikc on dom is still not accuraate". 0.60.183 asked the main process for the cursor (screen DIPs less the content bounds),
+        which goes wrong where Windows' per-monitor scaling and the window's frame disagree. Now the page itself says where: the webview's
+        preload listens for contextmenu (capture) and sends its clientX/clientY to the host (sendToHost 'cg:ctx-point'); the window adds the
+        webview's place and multiplies by the page zoom — CSS pixels on both sides, so no OS scaling enters. The main-process pointer is the
+        fallback (a click in a cross-origin frame the preload does not run in), params.x/y the last. The menu records which it used
+        (data-source) and both points, for the next screenshot. "still missing snowflake from tghe ocntext menu": the Snowflake plugin adds
+        "Open this page with Snowflake" for a page right-click (its link row was there only on links).
+      deps: [{ name: shell }]
+      exports: ["sendToHost('cg:ctx-point', { x, y, t })", "pagePoint(rect, point, zoom) → { x, y }", "snowflake context-menu-item when:'page'"]
+      gate_pipeline: ["GATE-CP2-001: page point fresh (< 1 s)", "GATE-CP2-002: pointer", "GATE-CP2-003: params"]
+      behavioral_contracts: ["the page cannot send any other channel through this", "a stale point is never used"]
+      error_paths: ["no page point → the pointer, said in data-source"]
+      acceptance: ["pagePoint at zoom 1.5 gives rect + 1.5 × client", "Clear Glass: a page point sent before the menu event places the menu there; a page right-click lists Snowflake"]
+
+    - id: MOD-BSH-BOOKMARK-ACCOUNTS
+      name: bookmark-site-accounts
+      uuid: nexus-cg-bsh-bookmark-accounts-v1-0000-2026-1021-006
+      path: clear-glass/src/accounts/for-site.js
+      phase: BS20_bookmark_site_accounts
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers". Reading, to confirm: the
+        bookmark dialog offers the accounts that are signed in to THIS site — each Clear Glass account has its own session
+        (persist:agent-acct-<id>); forSite(url) reads that session's cookies for the site's domain (names only, never values) and calls an
+        account "signed in" when it holds a sign-in-looking cookie (the same test as context-need's cookieSummary), "has visited" when it
+        holds others. A provider's account counts for its provider's own site only (claude.ai → the claude-linked accounts). The window's own
+        sign-in is always offered ("This window (as now)"). The rest are under "Other accounts", not first.
+      deps: [{ name: shell }]
+      exports: ["forSite({ url, accounts, cookiesFor, providers, current }) → { site, accounts: [{ id, label, state: 'signed-in'|'visited'|'provider'|'none', cookies, who }] }", "accounts:forSite IPC"]
+      gate_pipeline: ["GATE-BA-001: read each account's cookies for the domain", "GATE-BA-002: classify", "GATE-BA-003: this site's first"]
+      behavioral_contracts: ["no cookie value is read into the result", "an account's session is only read, never changed"]
+      error_paths: ["a session that cannot be read → state 'none' with the reason"]
+      acceptance: ["an account with a session cookie for news.com is 'signed-in' for news.com and 'none' for other.org; a claude account is 'provider' for claude.ai only; the dialog lists this site's accounts first"]
 
   events:
     shell:

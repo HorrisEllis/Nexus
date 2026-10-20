@@ -162,3 +162,127 @@ agents reachable only through a menu row whose panel showed every agent as Start
     does: "The co-pilot pane on the same system: segmented route, readable messages, one composer with the mic inside."
     proof: test-browser-shell BST-09 (shots in Clear Glass)
 
+## Addendum 2026-10-21 (0.60.181): "maybe just copilot"
+
+James, of the 0.60.180 pane's four-way switch: "i still hate it. maybe just copilot". BS11's pane becomes Co-pilot only (copilot-cli.js
+fixedBackend 'copilot': no switch, Settings' default does not move it, no route line; /backend still typed). The floating CLI (BS6) keeps the
+three-way switch, which was its own ask. Reading, to confirm: "just copilot" = the pane only, not the floating CLI. 0.60.180's segmented
+switch in the pane is superseded and kept in the history (CHANGELOG-0.60.180.md).
+
+## Addendum 2026-10-21 (0.60.182): the context chips move into Co-pilot
+
+James, 2026-10-21: "can you have the dom, cookies, and picks buttons migrated into copilot so he does it automatically when he needs it."
+Found first: the Cookies chip did nothing (ctxCookies toggled, never read). Co-pilot already has page tools (readPage, pageMap, dom.query)
+and cookies.health, so the decision can live in the bridge: deterministic first, no model asked.
+
+  BS12_context_automatic:
+    layer: integration
+    status: DONE 0.60.182
+    depends_on: [BS11_copilot_pane]
+    files: [clear-glass/src/copilot/context-need.js, clear-glass/src/copilot/bridge.js, clear-glass/renderer/browser.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-AUTO-CONTEXT]
+    does: "need() per message picks page / picks / cookie summary; the bridge attaches them; the chips go; /ctx still forces; each reply says what was attached."
+    proof: test-browser-shell BST-12
+
+
+## Addendum 2026-10-21 (0.60.183): plugin pages, zoom in the core, the right-click menu
+
+James, 2026-10-21, with three screenshots (the 🧩 panel, the ⬇ panel, a right-click menu drawn far from the pointer): "can you make a full
+adblocker and make it so i can click on them t ochange their settings. migrate page zoom to the core of clearglass. moright click menu needs
+to be redone in the same themeand in relation to the mouse is way of f onthe right clicskk"
+The adblocker is its own map (docs/2026-10-21-adblock-phasemap.spec, spec clear-glass/spec/adblock.spec). Found first: zoom lived twice
+(browser.js applyZoom and the Page Zoom plugin's driver.exec path, with different bounds, the plugin's never saved). The menu's point was
+params.x/y plus the webview's offset, which is in the page's coordinates, not the window's, whenever the page is zoomed or the display is
+scaled; the 0.39.265 clamp could not fix that. Reading, to confirm: "click on them" = every plugin row in the 🧩 panel.
+
+  BS13_plugin_settings:
+    layer: integration
+    status: DONE 0.60.183
+    depends_on: [BS4_extensions]
+    files: [clear-glass/src/plugins/contribution-types.js, clear-glass/src/plugins/host.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/shell/extensions.js, clear-glass/renderer/shell/shell.css]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-PLUGIN-SETTINGS]
+    does: "The `settings` contribution type and plugins:settings; each plugin row opens its page (about, permissions, commands, its fields, Open in Settings)."
+    proof: test-browser-shell BST-13
+
+  BS14_zoom_core:
+    layer: integration
+    status: DONE 0.60.183
+    depends_on: [BS2_shell_rebuild]
+    files: [clear-glass/src/core/zoom.js, clear-glass/src/driver/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/browser.js, clear-glass/src/main/index.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-ZOOM-CORE]
+    does: "One zoom in the core on Firefox's ladder, saved and restored per site, for the window, the shortcuts and agents; the plugin archived."
+    proof: test-browser-shell BST-14
+
+  BS15_context_menu:
+    layer: surface
+    status: DONE 0.60.183
+    depends_on: [BS8_design_system]
+    files: [clear-glass/renderer/shell/ctxmenu.js, clear-glass/renderer/browser.html, clear-glass/renderer/browser.js, clear-glass/renderer/shell/shell.css, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-CTXMENU]
+    does: "Firefox's menu in the window's theme, sections by what was clicked, placed at the real pointer and flipped at the edges."
+    proof: test-browser-shell BST-15
+
+
+## Addendum 2026-10-21 (0.60.184): files into a plugin's page
+
+  BS16_import_fields:
+    layer: integration
+    status: DONE 0.60.184
+    depends_on: [BS13_plugin_settings]
+    files: [clear-glass/renderer/shell/extensions.js, clear-glass/renderer/shell/shell.css, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-PLUGIN-FIELDS]
+    does: "Field kinds import (system picker in main via plugins:pick, paths to the plugin) and add (text + button)."
+    proof: test-browser-shell BST-16
+
+
+## Addendum 2026-10-21 (0.60.185): one ☰ menu, Firefox's menus for the UI, the page's own point, bookmarks by the site's account
+
+James, 2026-10-21: "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers. and remove the bookmarks from the menuconsolidate the menu, use playwright to test each ui feature in the menu. use the library for the bookmarks, context menu for the clearglass ui like the last 2 images, but matching the them eand dynamic to the click  v. the right clikc on dom is still not accuraate. still missing snowflake from tghe ocntext menu"
+With five screenshots: the ☰ menu (its bookmarks list), Settings → Network (EPERM on Reinstall), the bookmark dialog listing provider
+accounts, and Firefox's bookmarks-toolbar and tab-strip menus. Readings, to confirm: "use playwright" is run in Clear Glass (his rule,
+AXIOMS §4.1); "the account being used for the relative site" is the accounts signed in to that site (BS20).
+
+  BS17_menu_consolidated:
+    layer: surface
+    status: DONE 0.60.185
+    depends_on: [BS3_menus]
+    files: [clear-glass/renderer/shell/menus.js, clear-glass/renderer/browser.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-APPMENU]
+    does: "The ☰ menu from one model with drawn icons; the bookmarks list gone (Bookmarks opens the Library); each row clicked in Clear Glass."
+    proof: test-browser-shell BST-17
+
+  BS18_chrome_context_menus:
+    layer: surface
+    status: DONE 0.60.185
+    depends_on: [BS15_context_menu, BS17_menu_consolidated]
+    files: [clear-glass/renderer/shell/ctxmenu.js, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html, clear-glass/renderer/shell/shell.css]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-CHROME-CTX]
+    does: "Menus for a tab, the tab strip, a bookmark, the bookmarks bar, the address bar and the toolbar, with submenus; the bookmarks toolbar's Always / New Tab / Never kept."
+    proof: test-browser-shell BST-18
+
+  BS19_ctx_point_from_page:
+    layer: integration
+    status: DONE 0.60.185
+    depends_on: [BS15_context_menu]
+    files: [clear-glass/src/preload/webview-bridge.js, clear-glass/renderer/browser.js, clear-glass/renderer/shell/ctxmenu.js, clear-glass/plugins/snowflake/index.js, clear-glass/plugins/snowflake/manifest.json]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-CTX-POINT]
+    does: "The page's own contextmenu point (CSS px × page zoom + the webview's place) first; the pointer and params as fallbacks; Snowflake's page row."
+    proof: test-browser-shell BST-19
+
+  BS20_bookmark_site_accounts:
+    layer: integration
+    status: DONE 0.60.185
+    depends_on: [BS2_shell_rebuild]
+    files: [clear-glass/src/accounts/for-site.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/browser.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-BOOKMARK-ACCOUNTS]
+    does: "accounts:forSite reads each account session's cookies for the site (names only); the dialog lists the accounts signed in to this site first."
+    proof: test-browser-shell BST-20

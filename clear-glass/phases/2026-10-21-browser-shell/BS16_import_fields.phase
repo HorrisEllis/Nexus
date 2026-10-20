@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+context: pipeline phase BS16_import_fields of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS16_import_fields (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792502099146
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502099146
+lastSeenAt: 1792502099146
+fingerprint: null
+payload:
+  id: BS16_import_fields
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.184
+  files:
+    - clear-glass/renderer/shell/extensions.js
+    - clear-glass/renderer/shell/shell.css
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+  depends_on:
+    - BS13_plugin_settings
+  blocks:
+    - MOD-BSH-PLUGIN-FIELDS
+  spec: clear-glass/spec/browser-shell.spec
+  graph: 598249e869f9e7b4

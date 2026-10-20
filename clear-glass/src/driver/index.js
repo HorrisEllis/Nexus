@@ -276,23 +276,25 @@ class ClearDriver {
   // Clamped to Chromium's own real supported range (0.25–5.0, the same
   // bounds Chrome's own UI enforces) — checked directly against
   // Electron's docs before picking these numbers, not guessed.
+  // BS14 (0.60.183) — James: "migrate page zoom to the core of clearglass." The ladder, the clamp and the per-site store are core
+  // (src/core/zoom.js), shared with the window and its shortcuts; this action is how an agent reaches them. modes as before:
+  // 'set' (factor), 'in', 'out', 'reset'. `zoomed: true` lets the window's address-bar readout follow (browser.js, driver.result).
   async _zoom(agentId, { mode = 'reset', factor } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
-    const ZOOM_MIN = 0.25, ZOOM_MAX = 5.0, ZOOM_STEP = 0.1;
-    const current = wc.getZoomFactor();
-    let next;
+    const z = require('../core/zoom').zoom();
+    let r;
     switch (mode) {
-      case 'set':   next = typeof factor === 'number' ? factor : current; break;
-      case 'in':    next = current + ZOOM_STEP; break;
-      case 'out':   next = current - ZOOM_STEP; break;
-      case 'reset': next = 1.0; break;
+      case 'set':   r = z.set(wc, typeof factor === 'number' ? factor : z.current(wc)); break;
+      case 'in':    r = z.step(wc, 'in'); break;
+      case 'out':   r = z.step(wc, 'out'); break;
+      case 'reset': r = z.reset(wc); break;
       default: throw new Error(`Unknown zoom mode: ${mode}`);
     }
-    next = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, next));
-    wc.setZoomFactor(next);
-    return { agentId, factor: next };
+    if (!r.ok) throw new Error(r.error);
+    return { agentId, factor: r.factor, zoomed: true };
   }
+
 
   // ── Find in Page ──────────────────────────────────────────────────────
   // §NEW 2026-08-24 — real gap named in CLEAR-GLASS-FULL-CHROME-MAP-

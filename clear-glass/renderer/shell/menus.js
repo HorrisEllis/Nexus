@@ -27,7 +27,8 @@
     settings: (area) => cg().window.openSettings(area),
     edit: (op) => { const a = document.activeElement; const inShell = a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA') && a.id !== 'wv';
       if (inShell) return document.execCommand(op); const w = S().wv; if (w && typeof w[op] === 'function') w[op](); },
-    toggleBar: (id) => { const el = $(id); if (el) el.style.display = el.style.display === 'none' ? '' : 'none'; },
+    // BS18 (0.60.185): the bookmarks toolbar has Firefox's three modes (CGShell.bookmarksBar); this toggles Always ↔ Never
+    toggleBar: (id) => { if (id === 'bookmarks-bar' && S().bookmarksBar) return S().bookmarksBar(S().bookmarksBar() === 'never' ? 'always' : 'never'); const el = $(id); if (el) el.style.display = el.style.display === 'none' ? '' : 'none'; },
     menuBar: () => { keepBar = !keepBar; try { localStorage.setItem(KEY, keepBar ? '1' : '0'); } catch (_) {} showBar(keepBar); },
     extensions: () => window.CGExtensions && window.CGExtensions.open(),
     downloads: () => window.CGDownloads && window.CGDownloads.open(),
@@ -57,7 +58,7 @@
     ] },
     { id: 'view', label: 'View', items: [
       { label: 'Menu Bar', ico: '☰', act: ['menuBar'], checked: () => keepBar },
-      { label: 'Bookmarks Toolbar', ico: '★', act: ['toggleBar', 'bookmarks-bar'], checked: () => $('bookmarks-bar') && $('bookmarks-bar').style.display !== 'none' },
+      { label: 'Bookmarks Toolbar', ico: '★', act: ['toggleBar', 'bookmarks-bar'], checked: () => (S().bookmarksBar ? S().bookmarksBar() !== 'never' : $('bookmarks-bar') && $('bookmarks-bar').style.display !== 'none') },
       { label: 'Co-pilot Sidebar', ico: '✦', click: 'copilot-toggle' },
       { label: 'Floating CLI', kbd: 'Ctrl+Shift+Space', ico: '›_', act: ['floatCli'] },
       '-',
@@ -97,20 +98,32 @@
     ] },
   ];
 
-  // the ☰ menu's extra rows, Firefox's order; browser.js's own rows (Downloads, History, Library, Site settings, Background tabs, the
-  // bookmarks list, the tool rows, Customize) stay where browser.js draws them
+  // BS17 (0.60.185) — James: "remove the bookmarks from the menuconsolidate the menu ... use the library for the bookmarks". The ☰ menu is this
+  // one model now (it was this model plus rows browser.js wrote by hand, and a bookmarks list): Firefox's groups, drawn icons; Bookmarks opens
+  // the Library on its bookmarks. `da` keeps each 0.60.184 row's data-action (§0.3). The unpinned tools (browser.js) go under More tools.
   const APP_TOP = [
-    { label: 'New Tab', kbd: 'Ctrl+T', ico: '＋', run: 'newTab' },
-    { label: 'New Window', kbd: 'Ctrl+N', ico: '🗗', act: ['newWindow'] },
-    { label: 'Open Page with Snowflake', ico: '❄', act: ['snowflakePage'] },
+    { label: 'New Tab', kbd: 'Ctrl+T', icon: 'plus', run: 'newTab' },
+    { label: 'New Window', kbd: 'Ctrl+N', icon: 'window', act: ['newWindow'] },
+    { label: 'Open Page with Snowflake', icon: 'snow', act: ['snowflakePage'] },
   ];
   const APP_MID = [
-    { label: 'Plugins and Add-ons', kbd: 'Ctrl+Shift+A', ico: '🧩', act: ['extensions'] },
-    { label: 'Import from Firefox…', ico: '🦊', act: ['settings', 'import'] },
-    { label: 'Print…', kbd: 'Ctrl+P', ico: '🖨', run: 'print' },
-    { label: 'Find in Page…', kbd: 'Ctrl+F', ico: '🔍', run: 'find' },
+    { label: 'Bookmarks', icon: 'star', run: 'library', arg: 'bookmarks', da: 'bookmarks' },
+    { label: 'History', kbd: 'Ctrl+H', icon: 'history', run: 'history', da: 'history' },
+    { label: 'Downloads', kbd: 'Ctrl+J', icon: 'download', run: 'library', arg: 'downloads', da: 'downloads' },
+    { label: 'Library', icon: 'folder', run: 'library', da: 'library' },
+    '-',
+    { label: 'Plugins and Add-ons', kbd: 'Ctrl+Shift+A', icon: 'plugins', act: ['extensions'] },
+    { label: 'Site Settings', icon: 'shield', run: 'siteSettings', da: 'site-settings' },
+    { label: 'Background Tabs', icon: 'layers', run: 'bgTabs', da: 'bgtabs' },
+    { label: 'Import from Firefox…', icon: 'external', act: ['settings', 'import'] },
+    '-',
+    { label: 'Print…', kbd: 'Ctrl+P', icon: 'print', run: 'print' },
+    { label: 'Find in Page…', kbd: 'Ctrl+F', icon: 'search', run: 'find' },
     { zoom: true },
-    { label: 'Settings', kbd: 'Ctrl+,', ico: '⚙', click: 'btn-settings' },
+  ];
+  const APP_END = [
+    { label: 'Customize Toolbar…', icon: 'pin', run: 'customize', da: 'customize-toolbar' },
+    { label: 'Settings', kbd: 'Ctrl+,', icon: 'settings', click: 'btn-settings' },
   ];
 
   const targetOk = (it) => !it.click || !!$(it.click);
@@ -171,16 +184,22 @@
   // ── the ☰ menu's rows (browser.js puts them in its panel and calls wire()) ──
   function row(it) {
     if (it.zoom) return `<div class="am-zoom"><span class="lbl">Zoom</span><button class="menu-zoom-btn" data-am-zoom="out" aria-label="Zoom out">−</button><span class="am-zoom-pct">${(S().zoomPct && S().zoomPct()) || 100}%</span><button class="menu-zoom-btn" data-am-zoom="in" aria-label="Zoom in">+</button><button class="menu-zoom-btn" data-am-zoom="reset" title="Actual size">⤢</button></div>`;
+    if (it === '-') return '<div class="menu-sep"></div>';
     if (!targetOk(it)) return '';
-    return `<div class="menu-item" data-am="${esc(it.label)}"><span class="mb-ico">${esc(it.ico || '')}</span>${esc(it.label)}${it.kbd ? `<span class="menu-kbd">${esc(it.kbd)}</span>` : ''}</div>`;
+    const ico = it.icon ? `<span class="mb-ico" data-icon="${esc(it.icon)}" data-icon-size="16"></span>` : `<span class="mb-ico">${esc(it.ico || '')}</span>`;
+    return `<div class="menu-item" role="menuitem" data-am="${esc(it.label)}"${it.da ? ` data-action="${esc(it.da)}"` : ''}>${ico}<span class="menu-lbl">${esc(it.label)}</span>${it.kbd ? `<span class="menu-kbd">${esc(it.kbd)}</span>` : ''}</div>`;
   }
-  function appMenuHTML(part) { return (part === 'top' ? APP_TOP : APP_MID).map(row).join(''); }
+  const PARTS = { top: () => APP_TOP, mid: () => APP_MID, end: () => APP_END };
+  function appMenuHTML(part) { return (PARTS[part] || PARTS.mid)().map(row).join(''); }
   function wire(panel, close) {
-    const all = [...APP_TOP, ...APP_MID];
-    panel.querySelectorAll('[data-am]').forEach(el => el.addEventListener('click', () => { const it = all.find(x => x.label === el.dataset.am); close && close(); if (it) run(it); }));
+    const all = [...APP_TOP, ...APP_MID, ...APP_END].filter(x => x && x.label);
+    if (window.CGIcons) window.CGIcons.apply(panel);
+    // BS17 (0.60.185): run after this click has finished — a panel the row opens (Plugins and Add-ons) was being closed by the same click's
+    // outside-click handler, found by clicking every row in Clear Glass
+    panel.querySelectorAll('[data-am]').forEach(el => el.addEventListener('click', () => { const it = all.find(x => x.label === el.dataset.am); close && close(); if (it) setTimeout(() => run(it), 0); }));
     panel.querySelectorAll('[data-am-zoom]').forEach(el => el.addEventListener('click', (e) => { e.stopPropagation(); S().zoom && S().zoom(el.dataset.amZoom); const p = panel.querySelector('.am-zoom-pct'); if (p && S().zoomPct) p.textContent = `${S().zoomPct()}%`; }));
   }
 
-  window.CGMenus = { model: () => MODEL, app: () => ({ top: APP_TOP, mid: APP_MID }), run, appMenuHTML, wire, mountMenuBar, showBar, ACT };
+  window.CGMenus = { model: () => MODEL, app: () => ({ top: APP_TOP, mid: APP_MID, end: APP_END }), run, appMenuHTML, wire, mountMenuBar, showBar, ACT };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountMenuBar); else mountMenuBar();
 })();

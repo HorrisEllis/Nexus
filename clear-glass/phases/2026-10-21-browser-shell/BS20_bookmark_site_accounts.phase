@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS20_bookmark_site_accounts
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS20_bookmark_site_accounts
+context: pipeline phase BS20_bookmark_site_accounts of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS20_bookmark_site_accounts (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792502099149
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502099149
+lastSeenAt: 1792502099149
+fingerprint: null
+payload:
+  id: BS20_bookmark_site_accounts
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.185
+  files:
+    - clear-glass/src/accounts/for-site.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+    - clear-glass/renderer/browser.js
+  depends_on:
+    - BS2_shell_rebuild
+  blocks:
+    - MOD-BSH-BOOKMARK-ACCOUNTS
+  spec: clear-glass/spec/browser-shell.spec
+  graph: 17041ebd38f3c392

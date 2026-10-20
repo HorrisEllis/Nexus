@@ -337,7 +337,7 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
           const sw = accounts && accounts();
           let r;
           try { r = sw ? await sw.capture(providerId, act.account) : { ok: false, error: 'the account vault is not running' }; } catch (e) { r = { ok: false, error: e.message }; }
-          rec = { ...rec, lastResult: r.ok ? `sign-in saved to the vault as ${r.accountId}: ${r.cookies} cookie(s) on ${r.sites.length} site(s)` : `not saved: ${r.error}` };
+          rec = { ...rec, lastResult: r.ok ? `sign-in saved to the vault as ${r.accountId}: ${r.cookies} cookie(s) on ${r.sites.length} site(s)${r.logins ? `, and the login you typed (password vault, same account)` : ''}` : `not saved: ${r.error}` };   // PW3 (0.60.186)
           continue;
         }
         if (act.action === 'pick' && act.key) {

@@ -1,0 +1,243 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF8_host_import:b02e6f7310f9be5f
+type: graph
+id: phase:SF8_host_import:b02e6f7310f9be5f
+context: dependency graph of phase SF8_host_import
+intent: null
+summary: 30 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792502100080
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502100080
+lastSeenAt: 1792502100080
+fingerprint: null
+payload:
+  for: SF8_host_import
+  kind: phase
+  repo: null
+  hash: b02e6f7310f9be5f
+  nodes:
+    - path: clear-glass/plugins/snowflake/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/plugins/snowflake/manifest.json
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings/sections/network.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/host-import.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/import.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/kill-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/net/host-import.js
+      to: clear-glass/src/adblock/import.js
+      kind: requires
+    - from: clear-glass/plugins/snowflake/index.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2527b07c5dc17a5a
+    layer: 4
+    deps:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+    dependents: []
+    upstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF4_https_only
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2527b07c5dc17a5a · layer 4
+      - 'depends on (2): SF6_surface, BS16_import_fields · all upstream 10'
+      - 'needed by (0): —'

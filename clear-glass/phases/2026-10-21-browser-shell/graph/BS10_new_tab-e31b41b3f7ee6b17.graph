@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792496355629
+exported_at: 1792502099140
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792496355629
-lastSeenAt: 1792496355629
+firstSeenAt: 1792502099140
+lastSeenAt: 1792502099140
 fingerprint: null
 payload:
   for: BS10_new_tab
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: b658b15d67be924d
+    dagHash: 2527b07c5dc17a5a
     layer: 3
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
@@ -42,6 +42,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG b658b15d67be924d · layer 3
+      - DAG 2527b07c5dc17a5a · layer 3
       - 'depends on (1): BS9_agents_hub · all upstream 3'
       - 'needed by (0): —'

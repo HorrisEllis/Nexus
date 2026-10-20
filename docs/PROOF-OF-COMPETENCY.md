@@ -100,6 +100,24 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-21: "can you make a full adblocker ... migrate page zoom to the core of clearglass. moright click menu needs to be redone ... in
+  relation to the mouse"** (0.60.183)
+  - **Context:** the blocker was 16 hard-coded domains. Zoom lived in two places with different rules. The right-click menu had been
+    "fixed" twice before (2026-09-21, 0.39.265) and was still off in his screenshot.
+  - **What it shows:**
+    - **Product judgement.** He asked for "full", which set the bar at the standard filter lists with their exceptions and options, not a
+      longer hand list. That bar is why the engine reads EasyList's real syntax.
+    - **Systems sense.** "Migrate to the core" named a duplication the code had hidden: two zoom implementations with different bounds,
+      one of which never saved.
+    - **Testing by his own eye.** His screenshot of a misplaced menu is what led to the real cause. The point was in the page's
+      coordinates, so it went wrong whenever the page was zoomed or the display scaled. Two earlier patches had only treated the symptom.
+  - **Evidence:**
+    - `CHANGELOG-0.60.183.md`;
+    - `clear-glass/src/adblock/engine.js`, run against the real EasyList, EasyPrivacy and uBlock lists: 114k blocking rules, about 40 µs a
+      request;
+    - `tests/modules/test-adblock.test.js` ABK-01..11;
+    - `tests/modules/test-browser-shell.test.js` BST-13..15: the menu's corner lands on the pointer in Clear Glass.
+
 - **2026-10-17: "Okay. Keep going."** (FR4a: the flight recorder on its own)
   - **Context:** a product has to run without the system it was built in. This is the first time the flight recorder
     did, from a copy carved out of Nexus.

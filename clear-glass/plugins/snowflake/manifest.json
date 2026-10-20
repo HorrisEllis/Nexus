@@ -1,17 +1,17 @@
 {
   "id": "1ae1de17-a78a-4714-ab07-8b5e300e05fd",
   "name": "snowflake",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "displayName": "Snowflake",
   "icon": "❄",
-  "description": "Open a link through the Tor·Snowflake transport (NP11/NP12 of docs/2026-10-15-clear-glass-network-posture-phasemap.spec). Right-click a link → 'Open link with Snowflake' opens it in a new window whose session is forced through the transport and fails closed. The routing, policy table and transport process stay in Clear Glass's core (src/net); this plugin is the surface: disable it and the menu row goes away, and nothing is ever routed direct as a result.",
+  "description": "Open a link through the Tor·Snowflake transport (NP11/NP12 of docs/2026-10-15-clear-glass-network-posture-phasemap.spec). Right-click a link → 'Open link with Snowflake' opens it in a new window whose session is forced through the transport and fails closed. The routing, policy table and transport process stay in Clear Glass's core (src/net); this plugin is the surface: disable it and the menu row goes away, and nothing is ever routed direct as a result. Its page (click it in the 🧩 panel) imports host lists — a file or a folder — as sites that always go through Snowflake, adds one site, and removes a list; the rules are core's, and a site already routed another way is left as it was.",
   "author": "James Brooks (Erosmancer)",
   "entryPoint": "index.js",
   "permissions": {
     "network": true,
     "domStorage": false,
     "webRequest": false,
-    "hostFs": false,
+    "hostFs": true,
     "process": true
   },
   "contributes": {
@@ -22,7 +22,21 @@
         "icon": "❄",
         "label": "Open link with Snowflake",
         "when": "link"
+      },
+      {
+        "signature": "plugin:1ae1de17-a78a-4714-ab07-8b5e300e05fd:open-page",
+        "handler": "openPage",
+        "icon": "❄",
+        "label": "Open this page with Snowflake",
+        "when": "page"
+      }
+    ],
+    "settings": [
+      {
+        "signature": "plugin:1ae1de17-a78a-4714-ab07-8b5e300e05fd:settings",
+        "handler": "settings"
       }
     ]
-  }
+  },
+  "settingsSection": "network"
 }

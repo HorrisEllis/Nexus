@@ -108,8 +108,16 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     contextItems: (when) => ipcRenderer.invoke('plugins:contextItems', { when }),   // §0.60.169 — rows plugins add to the right-click menu
     disable: (id) => ipcRenderer.invoke('plugins:disable', { id }),
     enable:  (id) => ipcRenderer.invoke('plugins:enable', { id }),   // BS4 (0.60.179)
+    settings: (id, op, key, value, page) => ipcRenderer.invoke('plugins:settings', { id, op, key, value, page }),   // BS13 (0.60.183) — a plugin's page
+    pick:     (kind, opts = {}) => ipcRenderer.invoke('plugins:pick', { kind, ...opts }),   // BS16 (0.60.184) — files or a folder for a plugin's page
   },
 
+  // ── Page zoom — BS14 (0.60.183), src/core/zoom.js: one ladder, saved per site; id = the page's webContents id ──
+  zoom: {
+    step:    (id, dir) => ipcRenderer.invoke('zoom:step', { id, dir }),
+    set:     (id, factor, persist = true) => ipcRenderer.invoke('zoom:set', { id, factor, persist }),
+    restore: (id) => ipcRenderer.invoke('zoom:restore', { id }),
+  },
   // ── WebExtensions — §BUILT 2026-09-26 (src/plugins/webextensions.js) ──
   webext: {
     list:       ()                          => ipcRenderer.invoke('webext:list'),
@@ -171,6 +179,13 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   // ── Passwords — §NEW 2026-08-24 ─────────────────────────────────────────
   passwords: {
     list:   ()   => ipcRenderer.invoke('passwords:list'),
+    // PW4 (0.60.186): the window's side of websites using the password manager — never a password, only what to offer and which login to fill
+    save:      (wcId, origin, username, accountId) => ipcRenderer.invoke('passwords:save', { wcId, origin, username, accountId }),
+    dismiss:   (wcId, origin, never) => ipcRenderer.invoke('passwords:dismiss', { wcId, origin, never }),
+    forPage:   (wcId) => ipcRenderer.invoke('passwords:forPage', { wcId }),
+    fillPage:  (wcId, id) => ipcRenderer.invoke('passwords:fillPage', { wcId, id }),
+    onOffer:   (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('passwords:offer', f); return () => ipcRenderer.removeListener('passwords:offer', f); },
+    onAvailable: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('passwords:available', f); return () => ipcRenderer.removeListener('passwords:available', f); },
     delete: (id) => ipcRenderer.invoke('passwords:delete', { id }),
   },
 
@@ -191,6 +206,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   // ── Accounts (real, per-agentKey identity — §PHASE-3 2026-08-23) ──────
   accounts: {
     list:        ()                    => ipcRenderer.invoke('accounts:list'),
+    forSite: (url, current) => ipcRenderer.invoke('accounts:forSite', { url, current }),   // BS20 (0.60.185) — the accounts signed in to a site
     get:         (id)                  => ipcRenderer.invoke('accounts:get', { id }),
     create:      (payload)             => ipcRenderer.invoke('accounts:create', payload),
     update:      (id, updates)         => ipcRenderer.invoke('accounts:update', { id, updates }),
@@ -272,6 +288,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
 
   // ── Host window controls ────────────────────────────────────────────────
   window: {
+    cursor:       () => ipcRenderer.invoke('window:cursor'),   // BS15 (0.60.183) — the pointer, in this window's CSS pixels (the right-click menu's place)
     minimize:     (agentId) => ipcRenderer.invoke('window:minimize', { agentId }),
     hide:         (agentId) => ipcRenderer.invoke('window:hide',     { agentId }),
     maximize:     (agentId) => ipcRenderer.invoke('window:maximize', { agentId }),

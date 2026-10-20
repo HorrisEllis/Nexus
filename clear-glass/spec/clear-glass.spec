@@ -706,3 +706,33 @@ spec:
 # store and one Library. Changed: Firefox's ⬇ toolbar panel returns as a view of that same store (cg.downloads.list) plus the Snowflake
 # quarantine, and "Show all downloads" opens the Library. Reading (to confirm): "like firefox" includes Firefox's downloads panel.
 
+
+# ═══ ADDENDUM 2026-10-21 (0.60.183) — a full content blocker; plugin pages; zoom in the core; the right-click menu at the pointer ═══
+# James, 2026-10-21: "can you make a full adblocker and make it so i can click on them t ochange their settings. migrate page zoom to the core
+# of clearglass. moright click menu needs to be redone in the same themeand in relation to the mouse is way of f onthe right clicskk"
+# - The adblocker plugin's 16-domain list is superseded by src/adblock (spec clear-glass/spec/adblock.spec); the plugin stays its surface and
+#   its isBlocked() keeps the 0.60.x contract over the built-in list (§0.3).
+# - Plugin contribution types gain `settings` (a plugin's page in the 🧩 panel; event-only, one plugin:settings reply). host.list() adds
+#   author, permissions, settings, settingsSection. webrequest-adapter.js sends resourceType, pageUrl and tabId with each request.
+# - Page zoom moves out of the plugin set into the core (src/core/zoom.js); the Page Zoom plugin is archived in plugins/_archive.
+# - #ctx-menu is redrawn and placed at the pointer reported by window:cursor; the 2026-09-21 / 0.39.265 positioning notes in browser.js are
+#   kept as history (they described params.x/y + the webview offset, which is now the fallback).
+# Spec detail: clear-glass/spec/browser-shell.spec MOD-BSH-PLUGIN-SETTINGS, MOD-BSH-ZOOM-CORE, MOD-BSH-CTXMENU.
+
+# ═══ ADDENDUM 2026-10-21 (0.60.184) — his own lists: the blocker imports files, folders, host lists and list URLs; Snowflake imports host lists ═══
+# James, 2026-10-21: "Needs filters. you'll be able to import folders and host lists. Same with the Snowflake plugin."
+# - src/adblock/import.js (adblock.spec MOD-ABK-IMPORT); src/net/host-import.js (snowflake.spec MOD-SF-HOST-IMPORT): a host list's sites become
+#   origin rules via transport, tagged list:<name>, added through policy.addRule (collisions kept, named). NetService gains addRoutes/removeRoutes.
+# - Plugin pages gain field kinds import and add (browser-shell.spec MOD-BSH-PLUGIN-FIELDS); the picker runs in main (plugins:pick).
+# - The adblocker and Snowflake manifests now say hostFs: true — they read files a person chose.
+
+# ═══ ADDENDUM 2026-10-21 (0.60.185) — one ☰ menu; Firefox's menus for the UI; the page's own right-click point; bookmarks by the site's account ═══
+# James: "remove the bookmarks from the menuconsolidate the menu ... context menu for the clearglass ui like the last 2 images ... the right clikc
+# on dom is still not accuraate. still missing snowflake". Supersedes, keeping (§0.3): 0.60.183's cursor-first menu point (now the fallback);
+# the ☰ bookmarks list (now the Library); the toolbar's right-click on #ctx-menu (now its own menu). Detail: browser-shell.spec BS17–BS20.
+
+# ═══ ADDENDUM 2026-10-21 (0.60.186) — websites use the password manager; a login belongs to the account the cookie vault keeps ═══
+# James: "can you have websites use the passowrd manager and hook it into the cookie vault or store what ever it uses." Spec: passwords.spec.
+# Superseded and kept (§0.3): the passwords plugin's 2026-08-24 userscript (autofilled the one saved login without asking; agent windows only)
+# — its code stays in plugins/passwords/index.js, no longer contributed. PasswordVault records gain accountId. account-switch capture() takes
+# onCaptured. A page script (src/preload/passwords.js) runs on every session; Snowflake compartments are refused in main.

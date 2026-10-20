@@ -38,7 +38,7 @@ const T_TAB = 'provider_tab_account';
 const { isAuthCookie } = require('../cookies/session-hub');
 const _siteOf = (host) => String(host || '').replace(/^\./, '').split('.').slice(-2).join('.');
 
-function createAccountSwitch({ providerHost, vault, options, getProvider = () => null, sessionFor, hold = () => () => {}, log = () => {}, now = Date.now, reloadWaitMs = 20000 } = {}) {
+function createAccountSwitch({ providerHost, vault, options, getProvider = () => null, sessionFor, hold = () => () => {}, log = () => {}, now = Date.now, reloadWaitMs = 20000, onCaptured = null } = {}) {
   if (!providerHost || !vault || !options || typeof sessionFor !== 'function') throw new Error('account-switch needs providerHost, vault, options and sessionFor');
   const _chain = new Map();   // provider -> the switch in flight (one at a time per provider)
 
@@ -84,7 +84,9 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     if (makeCurrent) _setCurrent(provider, acct, 'captured');
     try { options.recordSession && options.recordSession(acct, provider, { capturedAt: now(), cookieCount: r.count, sites: r.sites.slice(0, 20), via: 'provider-tab' }); } catch (_) {}
     log(`[account-switch] ${provider} — the tab's sign-in saved as ${acct}: ${r.count} cookie(s) on ${r.sites.length} site(s)`);
-    return { ok: true, provider, accountId: acct, cookies: r.count, sites: r.sites };
+    // PW3 (0.60.186) — the login typed on that page goes with the cookies, as the same account (the password vault, its own records)
+    let logins = 0; try { if (onCaptured) { const lr = onCaptured({ provider, accountId: acct, sites: r.sites }); logins = (lr && lr.saved && lr.saved.length) || 0; } } catch (_) {}
+    return { ok: true, provider, accountId: acct, cookies: r.count, sites: r.sites, logins };
   }
 
   async function _use(provider, accountId, { reason = null, reload = true } = {}) {

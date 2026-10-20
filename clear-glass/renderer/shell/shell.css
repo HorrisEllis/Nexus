@@ -181,9 +181,26 @@ body.cg-shell .menu-zoom-btn:hover { background: var(--pane-3); }
 .sh-findbar #find-count { font: 10px var(--mono); color: var(--ink-dim); min-width: 44px; text-align: center; }
 .sh-findbar button { background: none; border: 0; color: var(--ink-dim); width: 24px; height: 24px; border-radius: var(--r-s); }
 .sh-findbar button:hover { background: var(--pane-3); color: var(--ink-hi); }
-body.cg-shell #ctx-menu { background: var(--raised); border: 1px solid var(--edge-hi); border-radius: var(--r-m); box-shadow: var(--shadow); padding: 5px; min-width: 230px; }
-body.cg-shell .ctx-item { border-radius: var(--r-s); padding: 6px 10px; font-size: 12px; color: var(--ink); }
-body.cg-shell .ctx-item:hover { background: color-mix(in srgb, var(--cyan) 8%, transparent); color: var(--ink-hi); }
+/* BS15 (0.60.183) — the right-click menu, Firefox's shape in the window's theme: a navigation row, groups split by hairlines, drawn icons,
+   shortcuts right-aligned; it grows out of the pointer's corner (ctxmenu.js sets transform-origin when it flips at an edge) */
+body.cg-shell :is(#ctx-menu, .cg-cmenu) { background: var(--raised); border: 1px solid var(--edge-hi); border-radius: var(--r-l); box-shadow: var(--shadow); padding: 4px; min-width: 248px; max-width: 340px;
+  font: var(--t-s)/1.3 var(--sans); color: var(--ink); backdrop-filter: blur(14px); user-select: none; }
+body.cg-shell :is(#ctx-menu, .cg-cmenu).visible { display: block; animation: ctx-in .11s cubic-bezier(.2,.8,.2,1); }
+@keyframes ctx-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+body.cg-shell #ctx-menu .ctx-group[hidden] { display: none; }
+body.cg-shell #ctx-menu .ctx-group { padding: 3px 0; }
+body.cg-shell #ctx-menu .ctx-group:not(.first) { border-top: 1px solid var(--edge); }
+body.cg-shell #ctx-menu .ctx-nav { display: flex; justify-content: space-between; padding: 2px 4px 5px; }
+body.cg-shell #ctx-menu .ctx-navbtn { flex: 1; height: 32px; border: 0; border-radius: var(--r-s); background: transparent; color: var(--ink-dim); display: grid; place-items: center; cursor: default; }
+body.cg-shell #ctx-menu .ctx-navbtn:hover { background: var(--hover); color: var(--ink-hi); }
+body.cg-shell #ctx-menu .ctx-label { padding: 6px 10px 3px; font: 600 10px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); }
+body.cg-shell .ctx-item { display: flex; align-items: center; gap: 10px; border-radius: var(--r-s); padding: 0 10px; height: 30px; margin: 0 2px; font-size: var(--t-s); color: var(--ink); cursor: default; }
+body.cg-shell .ctx-item .ci-ico { width: 16px; height: 16px; flex: none; display: grid; place-items: center; color: var(--ink-dim); font-size: 13px; }
+body.cg-shell .ctx-item .ci-label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.cg-shell .ctx-item kbd { font: 11px var(--sans); color: var(--ink-faint); background: none; border: 0; padding: 0; }
+body.cg-shell .ctx-item:hover, body.cg-shell .ctx-item.kb { background: color-mix(in srgb, var(--cyan) 10%, transparent); color: var(--ink-hi); }
+body.cg-shell .ctx-item:hover .ci-ico, body.cg-shell .ctx-item.kb .ci-ico { color: var(--cyan); }
+body.cg-shell .ctx-item.disabled { opacity: .38; pointer-events: none; }
 body.cg-shell .ctx-item.sep { background: var(--edge); margin: 4px; padding: 0; height: 1px; border: 0; }
 body.cg-shell #copilot-pane { background: var(--surface); border-left: 1px solid var(--edge); }
 body.cg-shell #us-list { flex: 1; overflow-y: auto; }
@@ -265,3 +282,72 @@ body.cg-shell #toolbar-editor-panel, body.cg-shell #options-panel, body.cg-shell
 .ag-acts .sh-btn.start { background: transparent; border-color: color-mix(in srgb, var(--cyan) 45%, transparent); color: var(--cyan); }
 .ag-acts .sh-btn.start:hover { background: var(--accent-soft); }
 .sh-pin .cg-ico { width: 15px; height: 15px; }
+
+/* BS13 (0.60.183) — a plugin's page in the 🧩 panel. James: "make it so i can click on them t ochange their settings." */
+.sh-ext-row[data-id] { cursor: default; }
+.sh-ext-row[data-id]:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+#sh-extensions-panel { max-height: min(78vh, 680px); overflow-y: auto; width: 380px; }
+.sh-pop .sh-pop-head.ps-head { display: grid; grid-template-columns: 28px 28px minmax(0,1fr) 40px; align-items: center; gap: 8px; }
+.ps-back { width: 28px; height: 28px; border-radius: var(--r-s); border: 0; background: transparent; color: var(--ink-dim); display: grid; place-items: center; }
+.ps-back:hover { background: var(--hover); color: var(--ink-hi); }
+.ps-name { font: 600 var(--t-m) var(--sans); color: var(--ink-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none; letter-spacing: 0; }
+.ps-ver { font: 11px var(--sans); color: var(--ink-faint); text-transform: none; letter-spacing: 0; }
+.ps-body { padding: 4px 2px 2px; }
+.ps-summary { display: flex; align-items: baseline; gap: 8px; padding: 12px 10px 10px; margin: 2px 0 6px; border-radius: var(--r-m); background: color-mix(in srgb, var(--cyan) 7%, transparent); border: 1px solid color-mix(in srgb, var(--cyan) 22%, transparent); }
+.ps-big { font: 650 28px/1 var(--sans); color: var(--cyan); font-variant-numeric: tabular-nums; }
+.ps-small { font: 12px var(--sans); color: var(--ink-dim); }
+.ps-note { margin: 4px 6px 8px; padding: 7px 10px; border-radius: var(--r-s); font: 12px var(--sans); color: var(--ink); background: var(--pane-2); border-left: 2px solid var(--cyan); }
+.ps-note[hidden] { display: none; }
+.ps-field { padding: 8px 10px; }
+.ps-field + .ps-field { border-top: 1px solid color-mix(in srgb, var(--edge) 60%, transparent); }
+.ps-toggle, .ps-info { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ps-label { font: 500 12.5px var(--sans); color: var(--ink-hi); }
+.ps-help { font: 11.5px/1.4 var(--sans); color: var(--ink-faint); margin-top: 2px; font-weight: 400; }
+.ps-value { font: 12px var(--sans); color: var(--ink-dim); text-align: right; font-variant-numeric: tabular-nums; }
+.ps-btn { height: 30px; padding: 0 14px; border-radius: var(--r-s); border: 1px solid var(--edge-hi); background: var(--pane-2); color: var(--ink); font: 500 12px var(--sans); }
+.ps-btn:hover { background: var(--pane-3); }
+.ps-btn.primary { background: var(--cyan); border-color: var(--cyan); color: var(--void); font-weight: 600; }
+.ps-btn:disabled { opacity: .6; }
+select.ps-select, .ps-input { width: 100%; margin-top: 6px; box-sizing: border-box; border-radius: var(--r-s); border: 1px solid var(--edge); background: var(--void); color: var(--ink-hi); font: 12px var(--mono); padding: 7px 9px; }
+textarea.ps-input { min-height: 84px; resize: vertical; line-height: 1.45; }
+select.ps-select:focus, .ps-input:focus { outline: 0; border-color: var(--cyan); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 12%, transparent); }
+.ps-list { margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
+.ps-item { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: var(--r-s); }
+.ps-item:hover { background: var(--pane-2); }
+.ps-itxt { flex: 1; min-width: 0; }
+.ps-ilabel { font: 12.5px var(--sans); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ps-isub { font: 11px/1.35 var(--sans); color: var(--ink-faint); margin-top: 1px; overflow-wrap: anywhere; }
+.ps-rm { width: 24px; height: 24px; border: 0; border-radius: var(--r-s); background: transparent; color: var(--ink-dim); display: grid; place-items: center; }
+.ps-rm:hover { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
+.ps-sec { padding: 6px 2px 2px; border-top: 1px solid var(--edge); margin-top: 6px; }
+.ps-desc { font: 12px/1.5 var(--sans); color: var(--ink-dim); padding: 2px 10px 6px; }
+.ps-meta { font: 11.5px var(--sans); color: var(--ink-faint); padding: 0 10px 6px; }
+.ps-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 10px 6px; }
+.ps-chip { height: 20px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 10px; border: 1px solid var(--edge); font: 500 10.5px var(--sans); color: var(--ink-dim); }
+/* BS16 (0.60.184) — files into a plugin's page */
+.ps-acts { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.ps-addrow { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+.ps-addrow .ps-input { margin-top: 0; flex: 1; }
+.ps-info.long { display: block; }
+.ps-info.long .ps-value { text-align: left; margin-top: 3px; line-height: 1.45; }
+/* BS20 (0.60.185) — the bookmark dialog: this site's accounts first, the rest folded */
+.bk-dialog .bk-group { font: 600 10px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); padding: 8px 4px 4px; }
+.bk-dialog .bk-more > summary { cursor: default; font: 12px var(--sans); color: var(--ink-dim); padding: 6px 4px; list-style: none; }
+.bk-dialog .bk-more > summary::before { content: '▸ '; }
+.bk-dialog .bk-more[open] > summary::before { content: '▾ '; }
+
+/* BS18 (0.60.185) — the menus for Clear Glass's own UI (tabs, bookmarks, address bar, toolbar): the page menu's look, built per click */
+.cg-cmenu { position: fixed; z-index: 10000; display: none; }
+.cg-cmenu.visible { display: block; }
+body.cg-shell .cg-cmenu .ctx-item[aria-checked="true"] .ci-ico { color: var(--cyan); }
+body.cg-shell .cg-cmenu .ci-sub { color: var(--ink-faint); font-size: 15px; line-height: 1; }
+body.cg-shell .cg-cmenu .ctx-item.has-sub:hover .ci-sub { color: var(--ink-hi); }
+#menu-agent-identity-target:empty + .menu-sep { display: none; }   /* BS17: no doubled line when the window has no account slot */
+/* PW4 (0.60.186) — the key in the address bar and its panel */
+body.cg-shell #btn-pw { position: relative; color: var(--ink-dim); background: transparent; border: 0; width: 30px; height: 28px; border-radius: var(--r-s); display: grid; place-items: center; padding: 0; flex-shrink: 0; }
+body.cg-shell #btn-pw[hidden] { display: none; }
+body.cg-shell #btn-pw:hover { background: var(--hover); color: var(--ink-hi); }
+body.cg-shell #btn-pw.pending { color: var(--cyan); }
+body.cg-shell #btn-pw .sh-badge { top: 0; right: 0; }
+.sh-pw-panel .pw-acts { padding: 6px 10px 4px; }
+.sh-pw-panel .ps-field .ps-input, .sh-pw-panel .ps-field select.ps-select { margin-top: 5px; }

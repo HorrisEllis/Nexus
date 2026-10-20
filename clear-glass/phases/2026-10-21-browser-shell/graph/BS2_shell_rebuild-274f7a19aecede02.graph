@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792496355618
+exported_at: 1792502099131
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792496355618
-lastSeenAt: 1792496355618
+firstSeenAt: 1792502099131
+lastSeenAt: 1792502099131
 fingerprint: null
 payload:
   for: BS2_shell_rebuild
@@ -31,7 +31,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: b658b15d67be924d
+    dagHash: 2527b07c5dc17a5a
     layer: 0
     deps: []
     dependents:
@@ -40,10 +40,24 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS14_zoom_core
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS20_bookmark_site_accounts
     upstream: []
     downstream:
+      - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
+      - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
+      - docs/2026-10-21-adblock-phasemap.spec::AB5_import
       - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
       - docs/2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS12_context_automatic
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS14_zoom_core
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS17_menu_consolidated
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS18_chrome_context_menus
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS19_ctx_point_from_page
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS20_bookmark_site_accounts
       - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
@@ -51,6 +65,7 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
       - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF8_host_import
     blockedBy: []
     unlocks:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
@@ -58,12 +73,15 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS14_zoom_core
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS20_bookmark_site_accounts
     conflicts: []
     dangling: []
     lines:
-      - DAG b658b15d67be924d · layer 0
+      - DAG 2527b07c5dc17a5a · layer 0
       - 'depends on (0): —'
       - >-
-        needed by (5): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
-        BS8_design_system · all downstream 9 · finishing it unlocks BS3_menus, BS4_extensions,
-        BS5_downloads_panel, BS6_float_cli, BS8_design_system
+        needed by (7): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
+        BS8_design_system, BS14_zoom_core, BS20_bookmark_site_accounts · all downstream 22 ·
+        finishing it unlocks BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
+        BS8_design_system, BS14_zoom_core, BS20_bookmark_site_accounts

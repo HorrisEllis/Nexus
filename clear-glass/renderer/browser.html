@@ -70,6 +70,7 @@
         <button data-zoom="reset" class="menu-zoom-btn sh-zoom-reset" title="Reset (Ctrl+0)">Reset</button>
       </div>
     </div>
+    <button id="btn-pw" class="url-bar-bookmark-btn sh-pw" title="Saved logins for this site" aria-label="Saved logins" data-icon="key" data-icon-size="16" hidden><span class="sh-badge" hidden></span></button>   <!-- PW4 (0.60.186) -->
     <button id="btn-bookmark" class="status-bookmark-btn url-bar-bookmark-btn" title="Bookmark this page (Ctrl+D)" aria-label="Bookmark this page" data-icon="star" data-icon-size="17">★</button>
   </div>
   <div id="url-bar-resize-handle" title="Drag to resize · double-click to reset"></div>
@@ -108,6 +109,7 @@
 <div id="site-settings-panel" class="sh-pop" style="display:none;"></div>
 <div id="history-panel" class="sh-pop" style="display:none;"></div>
 <div id="agent-mesh-panel" class="sh-pop sh-pop-narrow" style="display:none;"></div>
+<div id="sh-pw-panel" class="sh-pop sh-pw-panel" style="display:none;" role="dialog" aria-label="Saved logins"></div>
 <div id="sh-extensions-panel" class="sh-pop sh-ext-panel" style="display:none;" role="dialog" aria-label="Plugins and add-ons"></div>
 <div id="sh-downloads-panel" class="sh-pop sh-dl-panel" style="display:none;" role="dialog" aria-label="Downloads"></div>
 <div id="sh-agents-panel" class="sh-pop sh-agents-panel" style="display:none;" role="dialog" aria-label="Guardian agents"></div>
@@ -140,15 +142,15 @@
     </div>
     <div id="copilot-route" aria-label="Co-pilot route"></div>
     <div id="copilot-messages">
-      <div class="msg assistant">Co-pilot. I can see this page's DOM, navigate, pick elements, and build onto Clear Glass. I answer through the NEXUS co-pilot, or Ollama / a Guardian agent directly when it is down. What would you like to do?</div>
+      <div class="msg assistant">Ask me about this page, or tell me what to do on it.</div>
     </div>
     <div id="copilot-input-wrap">
-      <div id="copilot-context-bar">
+      <div id="copilot-context-bar" hidden><!-- BS12 (0.60.182): Co-pilot decides what to attach; the chips stay only as /ctx overrides -->
         <span class="ctx-tag active" id="ctx-dom"  title="Include DOM context">DOM</span>
         <span class="ctx-tag"        id="ctx-picks" title="Include picked elements">Picks</span>
         <span class="ctx-tag"        id="ctx-cookies" title="Include cookie info">Cookies</span>
       </div>
-      <textarea id="copilot-textarea" placeholder="Ask Co-pilot… /help for commands · ↑↓ history · Tab completes" rows="3"></textarea>
+      <textarea id="copilot-textarea" placeholder="Ask Co-pilot…  (/help for commands)" rows="3"></textarea>
       <button id="copilot-mic-btn" title="Voice input (local, offline speech-to-text)" aria-label="Voice input" data-icon="mic">🎤</button>
       <button id="copilot-send">Send ↵</button>
     </div>
@@ -228,24 +230,64 @@
   </div>
 </div>
 
-<div id="ctx-menu" role="menu">
-  <div class="ctx-item" data-action="unpin" style="display:none;">📌 Unpin from toolbar</div>
-  <div class="ctx-item sep" data-action="unpin-sep" style="display:none;"></div>
-  <div class="ctx-item" data-action="customize-toolbar" style="display:none;">🧰 Customize Toolbar…</div>
-  <div class="ctx-item sep" data-action="customize-toolbar-sep" style="display:none;"></div>
-  <div id="ctx-plugin-items"></div>
-  <div class="ctx-item" data-action="bookmark">★ Bookmark this page</div>
-  <div class="ctx-item" data-action="snapshot">📍 Rewind snapshot</div>
-  <div class="ctx-item" data-action="pick">◎ Pick element</div>
-  <div class="ctx-item" data-action="answer-question">✨ Answer this question</div>
-  <div class="ctx-item sep"></div>
-  <div class="ctx-item" data-action="copilot-page">✦ Ask Co-pilot about this page</div>
-  <div class="ctx-item" data-action="tokens">⛏ Scan page tokens</div>
-  <div class="ctx-item sep"></div>
-  <div class="ctx-item" data-action="bg-tab">⬡ Move to background tab</div>
-  <div class="ctx-item" data-action="new-agent">＋ Open in new agent</div>
-  <div class="ctx-item" data-action="find">🔍 Find in page</div>
-  <div class="ctx-item" data-action="print">🖨 Print page</div>
+<!-- BS15 (0.60.183) — James: "moright click menu needs to be redone in the same themeand in relation to the mouse". Firefox's order: the
+     navigation row, then what was clicked (link, image, selection, field), then the page and Clear Glass. renderer/shell/ctxmenu.js shows the
+     groups that apply and places the menu at the pointer. Every 0.60.182 data-action is kept (§0.3). -->
+<div id="ctx-menu" role="menu" aria-label="Page menu">
+  <div class="ctx-nav ctx-group" data-when="bare">
+    <button class="ctx-navbtn" data-action="nav-back" data-icon="back" data-icon-size="17" title="Back (Alt+←)" aria-label="Back"></button>
+    <button class="ctx-navbtn" data-action="nav-forward" data-icon="forward" data-icon-size="17" title="Forward (Alt+→)" aria-label="Forward"></button>
+    <button class="ctx-navbtn" data-action="nav-reload" data-icon="reload" data-icon-size="17" title="Reload (Ctrl+R)" aria-label="Reload"></button>
+    <button class="ctx-navbtn" data-action="bookmark" data-icon="star" data-icon-size="17" title="Bookmark this page (Ctrl+D)" aria-label="Bookmark this page"></button>
+  </div>
+  <div class="ctx-group" data-when="chrome">
+    <div class="ctx-item" role="menuitem" data-action="unpin" style="display:none;"><span class="ci-ico" data-icon="pin" data-icon-size="16"></span><span class="ci-label">Unpin from toolbar</span></div>
+    <div class="ctx-item sep" data-action="unpin-sep" style="display:none;"></div>
+    <div class="ctx-item" role="menuitem" data-action="customize-toolbar" style="display:none;"><span class="ci-ico" data-icon="settings" data-icon-size="16"></span><span class="ci-label">Customize toolbar…</span></div>
+    <div class="ctx-item sep" data-action="customize-toolbar-sep" style="display:none;"></div>
+  </div>
+  <div class="ctx-group" data-when="link">
+    <div class="ctx-item" role="menuitem" data-action="link-tab"><span class="ci-ico" data-icon="plus" data-icon-size="16"></span><span class="ci-label">Open link in new tab</span></div>
+    <div class="ctx-item" role="menuitem" data-action="link-agent"><span class="ci-ico" data-icon="window" data-icon-size="16"></span><span class="ci-label">Open link in new agent window</span></div>
+    <div class="ctx-item" role="menuitem" data-action="link-copy"><span class="ci-ico" data-icon="link" data-icon-size="16"></span><span class="ci-label">Copy link</span></div>
+    <div class="ctx-item" role="menuitem" data-action="link-copilot"><span class="ci-ico" data-icon="sparkle" data-icon-size="16"></span><span class="ci-label">Ask Co-pilot about this link</span></div>
+  </div>
+  <div class="ctx-group" data-when="plugins"><div id="ctx-plugin-items"></div></div>
+  <div class="ctx-group" data-when="image">
+    <div class="ctx-item" role="menuitem" data-action="image-tab"><span class="ci-ico" data-icon="image" data-icon-size="16"></span><span class="ci-label">Open image in new tab</span></div>
+    <div class="ctx-item" role="menuitem" data-action="image-copy"><span class="ci-ico" data-icon="link" data-icon-size="16"></span><span class="ci-label">Copy image link</span></div>
+    <div class="ctx-item" role="menuitem" data-action="image-save"><span class="ci-ico" data-icon="download" data-icon-size="16"></span><span class="ci-label">Save image…</span></div>
+  </div>
+  <div class="ctx-group" data-when="selection">
+    <div class="ctx-item" role="menuitem" data-action="sel-copy"><span class="ci-ico" data-icon="copy" data-icon-size="16"></span><span class="ci-label">Copy</span><kbd>Ctrl+C</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="sel-search"><span class="ci-ico" data-icon="search" data-icon-size="16"></span><span class="ci-label">Search the web</span></div>
+    <div class="ctx-item" role="menuitem" data-action="sel-copilot"><span class="ci-ico" data-icon="sparkle" data-icon-size="16"></span><span class="ci-label">Ask Co-pilot about this</span></div>
+  </div>
+  <div class="ctx-group" data-when="editable">
+    <div class="ctx-item" role="menuitem" data-action="edit-undo"><span class="ci-ico" data-icon="undo" data-icon-size="16"></span><span class="ci-label">Undo</span><kbd>Ctrl+Z</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="edit-cut"><span class="ci-ico" data-icon="cut" data-icon-size="16"></span><span class="ci-label">Cut</span><kbd>Ctrl+X</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="edit-copy"><span class="ci-ico" data-icon="copy" data-icon-size="16"></span><span class="ci-label">Copy</span><kbd>Ctrl+C</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="edit-paste"><span class="ci-ico" data-icon="paste" data-icon-size="16"></span><span class="ci-label">Paste</span><kbd>Ctrl+V</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="edit-selectall"><span class="ci-ico" data-icon="select" data-icon-size="16"></span><span class="ci-label">Select all</span><kbd>Ctrl+A</kbd></div>
+  </div>
+  <div class="ctx-group" data-when="bare">
+    <div class="ctx-item" role="menuitem" data-action="select-all"><span class="ci-ico" data-icon="select" data-icon-size="16"></span><span class="ci-label">Select all</span><kbd>Ctrl+A</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="find"><span class="ci-ico" data-icon="search" data-icon-size="16"></span><span class="ci-label">Find in page…</span><kbd>Ctrl+F</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="print"><span class="ci-ico" data-icon="print" data-icon-size="16"></span><span class="ci-label">Print…</span><kbd>Ctrl+P</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="view-source"><span class="ci-ico" data-icon="code" data-icon-size="16"></span><span class="ci-label">View page source</span><kbd>Ctrl+U</kbd></div>
+  </div>
+  <div class="ctx-group" data-when="page">
+    <div class="ctx-label">Clear Glass</div>
+    <div class="ctx-item" role="menuitem" data-action="copilot-page"><span class="ci-ico" data-icon="sparkle" data-icon-size="16"></span><span class="ci-label">Ask Co-pilot about this page</span></div>
+    <div class="ctx-item" role="menuitem" data-action="answer-question"><span class="ci-ico" data-icon="eye" data-icon-size="16"></span><span class="ci-label">Answer this question</span></div>
+    <div class="ctx-item" role="menuitem" data-action="pick"><span class="ci-ico" data-icon="target" data-icon-size="16"></span><span class="ci-label">Pick element</span></div>
+    <div class="ctx-item" role="menuitem" data-action="snapshot"><span class="ci-ico" data-icon="camera" data-icon-size="16"></span><span class="ci-label">Rewind snapshot</span></div>
+    <div class="ctx-item" role="menuitem" data-action="tokens"><span class="ci-ico" data-icon="token" data-icon-size="16"></span><span class="ci-label">Scan page tokens</span></div>
+  </div>
+  <div class="ctx-group" data-when="page">
+    <div class="ctx-item" role="menuitem" data-action="bg-tab"><span class="ci-ico" data-icon="layers" data-icon-size="16"></span><span class="ci-label">Move to background tab</span></div>
+    <div class="ctx-item" role="menuitem" data-action="new-agent"><span class="ci-ico" data-icon="window" data-icon-size="16"></span><span class="ci-label">Open this page in a new agent window</span></div>
+  </div>
 </div>
 
 <div id="page-map-panel" role="dialog" aria-label="Page map">
@@ -405,6 +447,8 @@
 <script src="shell/downloads.js"></script>
 <script src="shell/agents.js"></script>
 <script src="shell/newtab.js"></script>
+<script src="shell/ctxmenu.js"></script>
+<script src="shell/passwords.js"></script>
 <script src="shell/shell.js"></script>
 </body>
 </html>

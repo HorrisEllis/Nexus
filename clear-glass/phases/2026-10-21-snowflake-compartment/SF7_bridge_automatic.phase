@@ -7,11 +7,11 @@ intent: null
 summary: SF7_bridge_automatic (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792496356542
+exported_at: 1792502100078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792496356542
-lastSeenAt: 1792496356542
+firstSeenAt: 1792502100078
+lastSeenAt: 1792502100078
 fingerprint: null
 payload:
   id: SF7_bridge_automatic
@@ -29,4 +29,4 @@ payload:
   blocks:
     - MOD-SF-AUTO-BRIDGE
   spec: clear-glass/spec/snowflake.spec
-  graph: 1fb57e40a95cf705
+  graph: 130bca196028d7d7

@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AB1_engine:20cef4608d9b1787
+type: graph
+id: phase:AB1_engine:20cef4608d9b1787
+context: dependency graph of phase AB1_engine
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792499729358
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792499729358
+lastSeenAt: 1792499729358
+fingerprint: null
+payload:
+  for: AB1_engine
+  kind: phase
+  repo: null
+  hash: 20cef4608d9b1787
+  nodes:
+    - path: clear-glass/src/adblock/engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/plugins/adblocker/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/lists.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/adblock/engine.js
+      kind: requires
+    - from: clear-glass/src/adblock/lists.js
+      to: clear-glass/src/adblock/engine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: e95f3baa40b53a58
+    layer: 1
+    deps:
+      - docs/2026-10-21-adblock-phasemap.spec::AB0_engine_in_core
+    dependents:
+      - docs/2026-10-21-adblock-phasemap.spec::AB2_lists
+    upstream:
+      - docs/2026-10-21-adblock-phasemap.spec::AB0_engine_in_core
+    downstream:
+      - docs/2026-10-21-adblock-phasemap.spec::AB2_lists
+      - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
+      - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-adblock-phasemap.spec::AB2_lists
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG e95f3baa40b53a58 · layer 1
+      - 'depends on (1): AB0_engine_in_core'
+      - 'needed by (1): AB2_lists · all downstream 3 · finishing it unlocks AB2_lists'

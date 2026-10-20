@@ -125,3 +125,32 @@ with no line on this machine, Start now asks the Tor Project's builtin list itse
     does: "ensureBridge before every start: a hand-set line kept; else the first local line; else the Tor Project's builtin; source recorded and shown. Network leads with one status card; manual fields under Advanced."
     proof: test-snowflake SFW-09, SFW-10 (Settings → Network in Clear Glass)
 
+
+## Addendum 2026-10-21 (0.60.184): host lists through Snowflake
+
+James, 2026-10-21: "you'll be able to import folders and host lists. Same with the Snowflake plugin." Reading, to confirm: a host list (or a
+folder of them) = the sites that always go through Snowflake, as origin rules in the one routing table (the policy's collision rule kept).
+
+  SF8_host_import:
+    layer: integration
+    status: DONE 0.60.184
+    depends_on: [SF6_surface, BS16_import_fields]
+    files: [clear-glass/src/net/host-import.js, clear-glass/plugins/snowflake/index.js, clear-glass/plugins/snowflake/manifest.json, clear-glass/src/ipc/bridge.js, idearium/cli/route-commands.js, clear-glass/renderer/settings/sections/network.js]
+    spec: clear-glass/spec/snowflake.spec
+    blocks: [MOD-SF-HOST-IMPORT]
+    does: "hostsOf + importHosts (origin rules via transport, tagged by list, collisions skipped and named); the Snowflake plugin's page; /cli/net/routes/import and /lists; net import (person-only); Settings → Network Import host list…"
+    proof: test-snowflake SFW-11
+
+## Addendum 2026-10-21 (0.60.185): Reinstall while tor is running
+
+His screenshot: "Reinstall / update" → EPERM on the bundle folder, the transport stuck at "Connecting… 0%".
+
+  SF9_install_in_use:
+    layer: library
+    status: DONE 0.60.185
+    depends_on: [SF7_bridge_automatic]
+    files: [clear-glass/src/net/installer.js]
+    spec: clear-glass/spec/snowflake.spec
+    blocks: [MOD-SF-INSTALL-IN-USE]
+    does: "A bundle folder in use is left in place; the new install goes beside it and the record points there; the old is pruned when free."
+    proof: test-snowflake SFW-12

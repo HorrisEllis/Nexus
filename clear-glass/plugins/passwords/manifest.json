@@ -1,10 +1,10 @@
 {
   "id": "d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a",
   "name": "passwords",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "displayName": "Password Manager",
   "icon": "🔑",
-  "description": "Real gap named directly in CLEAR-GLASS-FULL-CHROME-MAP-2026-08-23.md's §7: 'Zero real code anywhere. Genuinely new — credential storage, autofill detection, a real UI.' Encrypted vault (src/passwords/vault.js, AES-256-GCM, same pattern as the real cookie vault) + a real login-form detector (userscript, auto-injected everywhere) + real autofill composing the vault with driver.exec eval.",
+  "description": "Websites use it like Firefox's: when you sign in, it offers to save the login (Save / Not now / Never for this site), fills it when you come back, and lists a site's logins under the key in the address bar. A saved login is tied to the account whose sign-in the cookie vault keeps — \"Save sign-in to vault\" saves both. Passwords are encrypted with the vault's sealed key and never reach the browser window. Click it to turn saving or filling off and see the sites you said never for.",
   "author": "James Brooks (Erosmancer)",
   "entryPoint": "index.js",
   "permissions": {
@@ -14,17 +14,12 @@
     "hostFs": false
   },
   "contributes": {
-    "userscript": [
+    "settings": [
       {
-        "signature": "plugin:d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a:form-detector",
-        "handler": "getFormDetectorUserscript"
-      }
-    ],
-    "page-detector": [
-      {
-        "signature": "plugin:d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a:form-detected",
-        "handler": "onFormDetected"
+        "signature": "plugin:d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a:settings",
+        "handler": "settings"
       }
     ]
-  }
+  },
+  "settingsSection": "privacy"
 }

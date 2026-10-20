@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792496355621
+exported_at: 1792502099134
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792496355621
-lastSeenAt: 1792496355621
+firstSeenAt: 1792502099134
+lastSeenAt: 1792502099134
 fingerprint: null
 payload:
   for: BS4_extensions
@@ -144,23 +144,33 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: b658b15d67be924d
+    dagHash: 2527b07c5dc17a5a
     layer: 1
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
     dependents:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
     upstream:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
     downstream:
+      - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
+      - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
+      - docs/2026-10-21-adblock-phasemap.spec::AB5_import
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
       - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF8_host_import
     blockedBy: []
     unlocks:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
     conflicts: []
     dangling: []
     lines:
-      - DAG b658b15d67be924d · layer 1
+      - DAG 2527b07c5dc17a5a · layer 1
       - 'depends on (1): BS2_shell_rebuild'
-      - 'needed by (1): BS6_float_cli · all downstream 2 · finishing it unlocks BS6_float_cli'
+      - >-
+        needed by (2): BS6_float_cli, BS13_plugin_settings · all downstream 8 · finishing it unlocks
+        BS6_float_cli, BS13_plugin_settings

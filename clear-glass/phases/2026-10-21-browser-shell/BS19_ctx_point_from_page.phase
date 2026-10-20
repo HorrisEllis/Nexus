@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS19_ctx_point_from_page
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS19_ctx_point_from_page
+context: pipeline phase BS19_ctx_point_from_page of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS19_ctx_point_from_page (integration) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792502099148
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502099148
+lastSeenAt: 1792502099148
+fingerprint: null
+payload:
+  id: BS19_ctx_point_from_page
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.185
+  files:
+    - clear-glass/src/preload/webview-bridge.js
+    - clear-glass/renderer/browser.js
+    - clear-glass/renderer/shell/ctxmenu.js
+    - clear-glass/plugins/snowflake/index.js
+    - clear-glass/plugins/snowflake/manifest.json
+  depends_on:
+    - BS15_context_menu
+  blocks:
+    - MOD-BSH-CTX-POINT
+  spec: clear-glass/spec/browser-shell.spec
+  graph: c852821cbea10b9d

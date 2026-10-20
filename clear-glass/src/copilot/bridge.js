@@ -106,15 +106,34 @@ class CoPilotBridge {
       hat: typeof hat === 'boolean' ? hat : s.copilotWearHat !== false };
   }
 
-  async send({ message, agentId = 'default', domContext, systemExtra, requestId, backend, agent, hat, noDom }) {
+  async send({ message, agentId = 'default', domContext, systemExtra, requestId, backend, agent, hat, noDom, autoContext = false, picks = [], pickedAt = 0, force = {}, pageUrl = '', partition = '' }) {
     const msgId = requestId || randomUUID();
     const route = this._route({ backend, agent, hat });
     this.sse.emit('copilot.thinking', { msgId, agentId, route, ts: Date.now() });
+
+    // BS12 (0.60.182) — James: "migrated into copilot so he does it automatically when he needs it". With autoContext the caller sends
+    // no chips' state: need() decides per message (page, picks, a cookie summary), deterministic, before any model is asked.
+    let attached = null;
+    if (autoContext) {
+      const n = require('./context-need').need(message, { picks, pickedAt, force });
+      attached = { dom: false, picks: false, cookies: false, why: n.why };
+      noDom = !n.dom;
+      if (n.picks && picks.length) { systemExtra = (systemExtra ? systemExtra + '\n' : '') + `\n## Picked Elements\n${JSON.stringify(picks, null, 2).slice(0, 1500)}`; attached.picks = true; }
+      if (n.cookies && pageUrl && /^https?:/.test(pageUrl)) {
+        try {
+          const { session } = require('electron');
+          const ses = partition ? session.fromPartition(partition) : session.defaultSession;
+          const sum = require('./context-need').cookieSummary(await ses.cookies.get({ url: pageUrl }), pageUrl);
+          systemExtra = (systemExtra ? systemExtra + '\n' : '') + `\n## Sign-in cookies for ${pageUrl} (names and expiry only)\n${JSON.stringify(sum)}`; attached.cookies = true;
+        } catch (e) { attached.why.push(`cookies: not read (${e.message})`); }
+      }
+    }
 
     // Live DOM context unless the caller (or the setting) turned it off
     if (!domContext && !noDom && this.settings.get().copilotDomContext !== false && this._domGet) {
       try { domContext = await this._domGet(agentId); } catch (_) {}
     }
+    if (attached) attached.dom = !!domContext;
     const persona = require('./hat').personaFor(route.hat);
     if (persona) systemExtra = persona + (systemExtra ? '\n\n' + systemExtra : '');
 
@@ -256,7 +275,7 @@ class CoPilotBridge {
     this._ingestToNexus({ type: 'clear-glass.copilot.exchange',
       agentId, msgId, prompt: message.slice(0, 100), ts: Date.now() });
 
-    return { text, commands: allCommands, results, executed: autoRun, msgId, route: { ...route, modelUsed: result.modelUsed || null } };
+    return { text, commands: allCommands, results, executed: autoRun, msgId, route: { ...route, modelUsed: result.modelUsed || null }, ...(attached ? { attached } : {}) };
   }
 
   // §0.39.280 BS17 — navigate, then read what is there (title, url, the interaction field's targets as text)

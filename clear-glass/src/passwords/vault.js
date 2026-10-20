@@ -99,7 +99,8 @@ class PasswordVault {
    * rotated), not duplicated — real, matches every real browser's
    * password-manager behavior.
    */
-  save(origin, username, password) {
+  // PW1 (0.60.186): opts.accountId — the Clear Glass account this login belongs to (its sign-in cookies are in the cookie vault)
+  save(origin, username, password, { accountId } = {}) {
     if (!origin || !username || typeof password !== 'string') {
       throw new Error('PasswordVault.save requires origin, username, and password');
     }
@@ -114,13 +115,14 @@ class PasswordVault {
     const existing = this.entries.find(e => e.origin === normalized && e.username === username);
     if (existing) {
       existing.encrypted = encrypted;
+      if (accountId !== undefined) existing.accountId = accountId || null;
       existing.updatedAt = Date.now();
       this._persist();
       return this._publicShape(existing);
     }
     const record = {
       id: `pw-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      origin: normalized, username, encrypted,
+      origin: normalized, username, encrypted, accountId: accountId || null,
       createdAt: Date.now(), updatedAt: Date.now(),
     };
     this.entries.push(record);
@@ -133,7 +135,7 @@ class PasswordVault {
     const normalized = normalizeOrigin(origin) || origin;
     return this.entries
       .filter(e => e.origin === normalized)
-      .map(e => ({ id: e.id, origin: e.origin, username: e.username, password: this._decrypt(e.encrypted) }));
+      .map(e => ({ id: e.id, origin: e.origin, username: e.username, accountId: e.accountId || null, password: this._decrypt(e.encrypted) }));
   }
 
   /** list() -> [{id, origin, username, createdAt, updatedAt}] — NEVER decrypts. */
@@ -150,7 +152,7 @@ class PasswordVault {
   }
 
   _publicShape(e) {
-    return { id: e.id, origin: e.origin, username: e.username, createdAt: e.createdAt, updatedAt: e.updatedAt };
+    return { id: e.id, origin: e.origin, username: e.username, accountId: e.accountId || null, createdAt: e.createdAt, updatedAt: e.updatedAt };
   }
 
   _deriveKey(passphrase) {

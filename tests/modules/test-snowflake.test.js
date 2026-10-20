@@ -173,6 +173,54 @@ console.log('\ntest-snowflake — Snowflake end to end: detect, bridge lines, th
     assert.ok(tool.parameters.properties.action.enum.includes('check'));
   });
 
+  await test('SFW-12', 'Reinstall while tor is running: a folder that cannot be removed is left; the new install goes beside it; other errors still throw', () => {
+    const { TorInstaller } = require(CG('src/net/installer.js'));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sfw-inst-')); const final = path.join(dir, 'tor-expert-bundle-15.0.25-windows-x86_64');
+    fs.mkdirSync(final); fs.writeFileSync(path.join(final, 'tor.exe'), 'running');
+    const mk = () => { const t = path.join(dir, `.extract-${Math.random()}`); fs.mkdirSync(t); fs.writeFileSync(path.join(t, 'tor.exe'), 'new'); return t; };
+    const locked = { ...fs, rmSync: (p, o) => { if (p === final) { const e = new Error(`EPERM, Permission denied: ${p}`); e.code = 'EPERM'; throw e; } return fs.rmSync(p, o); } };
+    const inst = new TorInstaller({ fs: locked, dir, now: () => 1700000000000 });
+    const used = inst._place(mk(), final);
+    assert.strictEqual(used, `${final}-1700000000000`); assert.strictEqual(fs.readFileSync(path.join(used, 'tor.exe'), 'utf8'), 'new');
+    assert.strictEqual(fs.readFileSync(path.join(final, 'tor.exe'), 'utf8'), 'running', 'the running one is untouched');
+    const free = new TorInstaller({ fs, dir, now: () => 1 }); assert.strictEqual(free._place(mk(), final), final, 'a free folder is replaced in place');
+    const odd = new TorInstaller({ fs: { ...fs, rmSync: () => { const e = new Error('disk gone'); e.code = 'EIO'; throw e; } }, dir, now: () => 2 });
+    assert.throws(() => odd._place(mk(), final), /disk gone/);
+  });
+
+  await test('SFW-11', 'host lists through Snowflake: read from files and folders; one origin rule each, tagged; collisions kept; listed and removed as one; the plugin page', async () => {
+    const HI = require(CG('src/net/host-import.js'));
+    assert.deepStrictEqual(HI.hostsOf('# c\n0.0.0.0 a.com\n127.0.0.1 localhost\nb.org # x\n||c.net^\nhttps://d.io/p\n1.2.3.4\nnot a host\na.com\n*.e.com'), ['a.com', 'b.org', 'c.net', 'd.io', 'e.com']);
+    const svc = new NetService({ store: store(), host: { status: () => ({ state: 'stopped' }), on() {}, d: {} } });
+    svc.addRoute({ id: 'mine', via: 'direct', match: { origin: 'b.org' } });
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sfw-hl-')); put(dir, 'tor-sites.txt', 'a.com\nb.org\nc.net'); put(dir, 'more/hosts', '0.0.0.0 x.org\n0.0.0.0 y.org'); put(dir, 'logo.png', 'x');
+    const r = HI.importPaths(svc, [dir]);
+    const by = Object.fromEntries(r.results.map(x => [path.basename(x.file), x]));
+    assert.strictEqual(by['tor-sites.txt'].added, 2); assert.deepStrictEqual(by['tor-sites.txt'].skipped.collision.map(c => c.host), ['b.org'], 'his direct rule for b.org is kept');
+    assert.strictEqual(by.hosts.added, 2); assert.ok(r.skipped.some(s => /logo\.png$/.test(s.path) && s.why === 'not a list file'));
+    assert.strictEqual(svc.routes().rules.find(x => x.id === 'mine').via, 'direct');
+    assert.strictEqual(HI.importPaths(svc, [path.join(dir, 'tor-sites.txt')]).results[0].added, 0, 'twice adds nothing twice');
+    const ls = HI.lists(svc); assert.deepStrictEqual(ls.map(l => [l.list, l.via, l.hosts]).sort(), [['hosts', 'transport', 2], ['tor-sites.txt', 'transport', 2]]);
+    assert.strictEqual(require(CG('src/net/policy.js')).resolve(svc.policy(), { url: 'https://www.a.com/x' }).via, 'transport', 'a sub-domain of a listed site goes through Snowflake');
+    assert.deepStrictEqual(HI.removeList(svc, 'hosts'), { ok: true, removed: 2 }); assert.strictEqual(svc.routes().rules.length, 3);
+    // the plugin's page writes the same table (core's rules, the policy's collision rule)
+    const NS = require(CG('src/net/service.js')); const one = NS.service(); one.bindStore(store());
+    const P = require(CG('plugins/snowflake/index.js'));
+    const v = P.settings({ op: 'get', requestId: 'g' }).data.view;
+    assert.deepStrictEqual(v.fields.map(f => f.key || f.type), ['info', 'hostlists', 'via', 'hosts', 'site']);
+    const add = P.settings({ op: 'set', key: 'site', value: 'https://news.example/', requestId: 's' }).data;
+    assert.ok(/1 added/.test(add.note), add.note); assert.strictEqual(add.view.fields[1].items[0].label, 'added by hand');
+    P.settings({ op: 'set', key: 'via', value: 'block' });
+    P.settings({ op: 'set', key: 'hosts', value: { paths: [path.join(dir, 'tor-sites.txt')] } });
+    assert.ok(one.routes().rules.some(x => x.via === 'block' && x.note === 'list:tor-sites.txt'), 'the chosen way is used');
+    const rm = P.settings({ op: 'set', key: 'hostlists', value: { id: 'added by hand\u0000transport', remove: true } }).data;
+    assert.ok(/1 rule removed/.test(rm.note) && !one.routes().rules.some(x => x.note === 'list:added by hand'));
+    P.settings({ op: 'set', key: 'via', value: 'transport' });
+    const row = require(path.join(ROOT, 'idearium/cli/route-commands.js')).SPEC.find(x => x.key === 'net');
+    assert.ok(row.personOnly({ args: ['import'] }) && row.personOnly({ args: ['unlist'] }) && !row.personOnly({ args: ['lists'] }), 'changing routes stays his');
+    const mf = JSON.parse(fs.readFileSync(CG('plugins/snowflake/manifest.json'), 'utf8')); assert.ok(mf.contributes.settings && mf.settingsSection === 'network');
+  });
+
   await test('SFW-09', 'the bridge set up automatically: a set line kept; else a local line; else the Tor Project; nothing invented', async () => {
     const L = (src) => ({ line: LINE_A, source: src, path: `/x/${src}` });
     const a = new NetService({ store: store({ bridgeLine: LINE_B, bridgeSource: { kind: 'hand' } }) });

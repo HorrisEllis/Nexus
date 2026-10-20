@@ -34,6 +34,19 @@ class NetService {
 
   routes() { return { ok: true, default: this.policy().default, rules: this.policy().rules }; }
   addRoute(rule) { const r = Policy.addRule(this.policy(), rule); if (!r.ok) return r; this._save(r.policy); this.reapplyAll().catch(() => {}); return { ok: true, rule: r.rule, note: this.statusNote() }; }
+  // SF8 (0.60.184): many rules in one save and one re-apply (a host list); each still goes through the policy's own addRule (collisions refused)
+  addRoutes(rules = []) {
+    let p = this.policy(); const added = [], refused = [];
+    for (const rule of rules) { const r = Policy.addRule(p, rule); if (r.ok) { p = r.policy; added.push(r.rule.id); } else refused.push({ id: rule.id, origin: rule.match && rule.match.origin, error: r.error }); }
+    if (added.length) { this._save(p); this.reapplyAll().catch(() => {}); }
+    return { ok: true, added, refused, note: this.statusNote() };
+  }
+  removeRoutes(ids = []) {
+    const drop = new Set(ids); const p = this.policy(); const before = (p.rules || []).length;
+    const rules = (p.rules || []).filter(r => !drop.has(r.id));
+    if (rules.length !== before) { this._save({ ...p, rules }); this.reapplyAll().catch(() => {}); }
+    return { ok: true, removed: before - rules.length };
+  }
   removeRoute(id) { const r = Policy.removeRule(this.policy(), id); if (!r.ok) return r; this._save(r.policy); this.reapplyAll().catch(() => {}); return { ok: true, removed: id }; }
   setDefault(via) {
     if (!Policy.parseVia(via)) return { ok: false, error: 'default must be direct, block, transport, socks5://host:port or http://host:port' };

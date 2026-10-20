@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-adblock-phasemap.spec::AB3_wiring
+type: phase
+id: docs_2026-10-21-adblock-phasemap.spec::AB3_wiring
+context: pipeline phase AB3_wiring of docs/2026-10-21-adblock-phasemap.spec
+intent: null
+summary: AB3_wiring (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792500829720
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792500829720
+lastSeenAt: 1792500829720
+fingerprint: null
+payload:
+  id: AB3_wiring
+  map: docs/2026-10-21-adblock-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.183
+  files:
+    - clear-glass/plugins/adblocker/index.js
+    - clear-glass/plugins/adblocker/manifest.json
+    - clear-glass/src/plugins/webrequest-adapter.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - AB2_lists
+    - BS13_plugin_settings
+  blocks:
+    - MOD-ABK-WIRING
+  spec: clear-glass/spec/adblock.spec
+  graph: f21a76a58142b5cf

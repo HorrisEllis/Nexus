@@ -83,7 +83,7 @@
   let picks = [];
   let domPanelVisible = false;
   let copilotVisible  = true;
-  let ctxDom     = true;
+  let ctxDom     = false;   // BS12 (0.60.182): these now mean "always" (/ctx … on); by default Co-pilot decides per message
   let ctxPicks   = false;
   let ctxCookies = false;
   let es; // EventSource — assigned in connectSSE(), referenced throughout
@@ -390,6 +390,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   }
 
   // ── Navigation ─────────────────────────────────────────────────────
+  // the one search engine the address bar uses; the right-click menu's "Search the web for …" uses it too (BS15)
+  function searchUrl(q) { return `https://www.google.com/search?q=${encodeURIComponent(String(q || '').trim())}`; }
   function normalizeUrl(input) {
     let url = input.trim();
     if (!url) return '';
@@ -403,7 +405,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       } else if (url.includes('.')) {
         url = 'https://' + url;
       } else {
-        url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+        url = searchUrl(url);
       }
     }
     return url;
@@ -508,7 +510,9 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     }
 
     render();
-    return { tabs, get activeId(){ return activeId; }, newTab, closeTab, reopenClosed, setUrl, setTitle, setLoading, render, switchTo };
+    // BS18 (0.60.185): what the tab's right-click menu needs — the live list (closeTab reassigns `tabs`) and Close Other Tabs
+    function closeOthers(id) { const keep = tabs.find(t => t.id === id); if (!keep) return; tabs.filter(t => t.id !== id && t.url && t.url !== 'about:blank').forEach(t => { closedStack.push({ url: t.url, title: t.title }); if (closedStack.length > 10) closedStack.shift(); }); tabs = [keep]; switchTo(id); }
+    return { tabs, list: () => tabs, get activeId(){ return activeId; }, newTab, closeTab, closeOthers, reopenClosed, setUrl, setTitle, setLoading, render, switchTo };
   })();
 
   document.getElementById('btn-new-tab').addEventListener('click', () => _tabs.newTab());
@@ -747,7 +751,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   wv.addEventListener('ipc-message', (e) => {
     if (e.channel === 'dom:pick-result') {
       const pick = { ...e.args[0], pickId: 'pick-' + Date.now(), name: `pick-${picks.length + 1}` };
-      picks.push(pick);
+      picks.push(pick); window.__cgLastPickAt = Date.now();
       renderPicks();
       picksPanel.classList.add('visible');
       pickerActive = false;
@@ -916,6 +920,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   const _ctxChip = { dom: 'ctx-dom', picks: 'ctx-picks', cookies: 'ctx-cookies' };
   const cli = window.CGCopilotCLI ? window.CGCopilotCLI.create({
     cg, agentId, wv, normalizeUrl, navigate,
+    fixedBackend: 'copilot',   // 0.60.181 — James: "maybe just copilot" (the four-way switch lives in the floating CLI)
     print: (role, text) => addMsg(role, text),
     getCtx: () => ({ dom: ctxDom, picks: ctxPicks, cookies: ctxCookies }),
     setCtx: (what, on) => {
@@ -1019,20 +1024,20 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     addMsg('thinking', '⋯');
 
     // Build context
+    // BS12 (0.60.182) — James: "can you have the dom, cookies, and picks buttons migrated into copilot so he does it automatically when he
+    // needs it." No chips: Co-pilot (src/copilot/context-need.js in the bridge) decides per message what to attach. /ctx … on still forces one.
     let domContext = null;
     if (ctxDom) {
       try {
         domContext = await wv.executeJavaScript('window.__cgDomMesh?.getTree(3)', true);
       } catch {}
     }
-
     let systemExtra = '';
-    if (ctxPicks && picks.length) {
-      systemExtra += `\n## Picked Elements\n${JSON.stringify(picks, null, 2).slice(0, 1000)}`;
-    }
+    let pageUrl = ''; try { pageUrl = wv.getURL(); } catch (_) {}
+    const autoCtx = { autoContext: true, picks: picks.slice(-10), pickedAt: window.__cgLastPickAt || 0, force: { dom: ctxDom, picks: ctxPicks, cookies: ctxCookies }, pageUrl, partition: wv.getAttribute('partition') || '' };
 
     try {
-      const res = await cg.copilot.send({ message: text, agentId, domContext, systemExtra, noDom: !ctxDom, ...(cli ? cli.route() : {}) });
+      const res = await cg.copilot.send({ message: text, agentId, domContext, systemExtra, ...autoCtx, ...(cli ? cli.route() : {}) });
       removeThinking();
 
       addMsg('assistant', formatReply(res.text), true);
@@ -1044,6 +1049,9 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       // (CoPilotBridge.send). This loop used to re-run every one through
       // cg.driver.exec, so each copilot click/type happened twice. With
       // auto-run off they come back unexecuted and the CLI proposes them.
+      if (res.attached && (res.attached.dom || res.attached.picks || res.attached.cookies)) {   // BS12: what Co-pilot chose to look at, said
+        addMsg('route', `looked at: ${[res.attached.dom && 'the page', res.attached.picks && 'your picks', res.attached.cookies && 'sign-in cookies'].filter(Boolean).join(' · ')}`);
+      }
       if (res.executed === false && cli) cli.propose(res.commands || []);
     } catch (err) {
       removeThinking();
@@ -1306,7 +1314,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     // ── DOM picks ─────────────────────────────────────────────────────
     es.addEventListener('dom.picked', (e) => {
       const d = JSON.parse(e.data);
-      picks.push(d);
+      picks.push(d); window.__cgLastPickAt = Date.now();
       renderPicks();
     });
 
@@ -1314,6 +1322,10 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     es.addEventListener('driver.error', (e) => {
       const d = JSON.parse(e.data);
       addMsg('assistant', `Driver error [${d.action}]: ${d.error}`);
+    });
+    // BS14 (0.60.183) — an agent zoomed this page through the core: the address bar's readout follows
+    es.addEventListener('driver.result', (e) => {
+      try { const d = JSON.parse(e.data); const r = d && d.result; if (r && r.zoomed && (!r.agentId || r.agentId === agentId)) { _zoomFactor = r.factor; _updateZoomUi(); } } catch (_) {}
     });
 
     // ── Guardian listener → Co-pilot panel — §2026-08-28, James: "co-pilot
@@ -1503,6 +1515,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     document.getElementById('btn-new-tab')?.after(b);
   });
 
+  const _bkById = new Map();
   async function loadBookmarks() {
     try {
       const bks = await _visibleBookmarks();
@@ -1517,14 +1530,15 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         if (bk.snapshotId) { const st = document.createElement('span'); st.className = 'bk-state'; st.textContent = '\u23EE'; btn.appendChild(st); }
         btn.appendChild(document.createTextNode(bk.title || bk.url));
         btn.addEventListener('click', () => openBookmark(bk));
+        btn.dataset.bid = bk.id; _bkById.set(bk.id, bk);   // BS18: the bookmark a right-click lands on
         list.appendChild(btn);
       });
     } catch (_) {}
   }
 
   // The ★ dialog — title, the account check list, "remember page state".
-  async function openBookmarkDialog() {
-    const url = wv.getURL(), title = wv.getTitle();
+  async function openBookmarkDialog(o = {}) {   // BS18 (0.60.185): o.url / o.title — a bookmark on the bar edited from its right-click menu
+    const url = o.url || wv.getURL(), title = o.title || wv.getTitle();
     if (!url || url === 'about:blank') return;
     document.getElementById('bk-dialog')?.remove();
     const [accounts, all] = await Promise.all([_accounts(true), cg.bookmarks.list({ agentId }).catch(() => [])]);
@@ -1546,8 +1560,25 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       o.addEventListener('click', () => { chosen = id || null; paint(); stateNote(); });
       return o;
     };
+    // BS20 (0.60.185) — James: "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers."
+    // The accounts signed in to THIS site come first (each account's own session, read for this site's cookies — names only); the rest
+    // are folded under "Other accounts". Reading, to confirm.
     acctList.append(opt(null, 'No account', 'opens in whichever window you click it'));
-    accounts.forEach(a => acctList.append(opt(a.id, a.label, (a.agentKeys || []).join(', ') + (a.id === myAccountId ? ' \u00B7 this window' : ''))));
+    let site = null;
+    try { site = await cg.accounts.forSite(url, myAccountId); } catch (_) { site = null; }
+    const STATE = { 'signed-in': 'signed in here', provider: 'this site\u2019s provider account', visited: 'has visited' };
+    const subOf = (x) => [STATE[x.state], x.who, x.state === 'signed-in' && x.signInCookies.length ? x.signInCookies.slice(0, 2).join(', ') : null, x.state === 'visited' ? `${x.cookies} cookie${x.cookies === 1 ? '' : 's'}` : null, x.current ? 'this window' : null].filter(Boolean).join(' \u00B7 ');
+    if (site && site.ok) {
+      const here = site.accounts.filter(x => x.state !== 'none' || x.current || x.id === chosen);
+      const rest = site.accounts.filter(x => !here.includes(x));
+      acctList.append(el('div', { className: 'bk-group', textContent: here.length ? `Signed in to ${site.site}` : `No account is signed in to ${site.site}` }));
+      here.forEach(x => acctList.append(opt(x.id, x.label, subOf(x))));
+      if (rest.length) {
+        const more = el('details', { className: 'bk-more' }, el('summary', { textContent: `Other accounts (${rest.length})` }));
+        rest.forEach(x => more.append(opt(x.id, x.label, (x.current ? 'this window' : 'not signed in here'))));
+        acctList.append(more);
+      }
+    } else accounts.forEach(a => acctList.append(opt(a.id, a.label, (a.agentKeys || []).join(', ') + (a.id === myAccountId ? ' \u00B7 this window' : ''))));
     const stateIn = el('input', { type: 'checkbox', checked: !!(existing && existing.snapshotId) });
     const note = el('div', { className: 'bk-note' });
     const stateNote = () => { note.textContent = chosen && chosen !== myAccountId
@@ -1607,8 +1638,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       popover.style.display = (popover.style.display === 'none') ? 'block' : 'none';
     });
     popover.querySelectorAll('[data-zoom]').forEach(b => b.addEventListener('click', () => {
-      if (b.dataset.zoom === 'in') applyZoom(_zoomFactor + 0.1);
-      else if (b.dataset.zoom === 'out') applyZoom(_zoomFactor - 0.1);
+      if (b.dataset.zoom === 'in') zoomStep('in');
+      else if (b.dataset.zoom === 'out') zoomStep('out');
       else applyZoom(1.0);
     }));
     document.addEventListener('click', (e) => {
@@ -1666,19 +1697,28 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     if (popoverPct) popoverPct.textContent = pct;
     if (btn) btn.style.display = (_zoomFactor === 1.0) ? 'none' : 'flex';
   }
-  function applyZoom(factor, persist = true) {
-    _zoomFactor = Math.round(Math.min(3, Math.max(0.25, factor)) * 100) / 100;
+  // BS14 (0.60.183) — James: "migrate page zoom to the core of clearglass." The ladder (Firefox's), the clamp and the per-site store are
+  // core now (src/core/zoom.js, reached through cg.zoom); this window only shows the result. Without the core (an old preload, a test
+  // stub) it falls back to the 0.60.182 local path, said in the console once.
+  const _wcId = () => { try { return wv.getWebContentsId(); } catch (_) { return null; } };
+  const _zoomCore = () => !!(window.ClearGlass && window.ClearGlass.zoom && _wcId() != null);   // checked on the real API: cg's proxy answers every name
+  let _zoomFallbackSaid = false;
+  function _zoomShow(r) { if (r && r.ok !== false && typeof r.factor === 'number') { _zoomFactor = r.factor; _updateZoomUi(); } return r; }
+  function _zoomLocal(factor, persist) {
+    if (!_zoomFallbackSaid) { _zoomFallbackSaid = true; console.warn('[zoom] core zoom not reachable; zooming in the window only'); }
+    _zoomFactor = Math.round(Math.min(3, Math.max(0.3, factor)) * 100) / 100;
     try { wv.setZoomFactor(_zoomFactor); } catch (_) {}
     _updateZoomUi();
-    if (persist) {
-      try {
-        const url = wv.getURL();
-        if (url) {
-          _zoomOrigin = new URL(url).origin;
-          cg.siteSettings.set(url, 'zoomFactor', _zoomFactor).catch(() => {});
-        }
-      } catch (_) {}
-    }
+    if (persist) { try { const url = wv.getURL(); if (url) { _zoomOrigin = new URL(url).origin; cg.siteSettings.set(url, 'zoomFactor', _zoomFactor).catch(() => {}); } } catch (_) {} }
+  }
+  function applyZoom(factor, persist = true) {
+    if (!_zoomCore()) return _zoomLocal(factor, persist);
+    try { _zoomOrigin = new URL(wv.getURL()).origin; } catch (_) {}
+    return cg.zoom.set(_wcId(), factor, persist).then(_zoomShow).catch(() => _zoomLocal(factor, persist));
+  }
+  function zoomStep(dir) {
+    if (!_zoomCore()) return _zoomLocal(_zoomFactor + (dir === 'in' ? 0.1 : -0.1), true);
+    return cg.zoom.step(_wcId(), dir).then(_zoomShow).catch(() => _zoomLocal(_zoomFactor + (dir === 'in' ? 0.1 : -0.1), true));
   }
   // Loads (and applies) the saved zoom for whatever origin the webview
   // is currently on. Guarded by _zoomOrigin so an in-page navigation
@@ -1689,9 +1729,10 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     try { url = wv.getURL(); origin = url ? new URL(url).origin : null; } catch (_) { return; }
     if (!origin || origin === _zoomOrigin) return;
     _zoomOrigin = origin;
+    if (_zoomCore()) { try { _zoomShow(await cg.zoom.restore(_wcId())); return; } catch (_) {} }
     let saved = 1.0;
     try { saved = (await cg.siteSettings.get(url, 'zoomFactor')) ?? 1.0; } catch (_) {}
-    applyZoom(saved, false);
+    _zoomLocal(saved, false);
   }
 
   // §MERGED 2026-08-30 — James: "remove the command pallet and move
@@ -1835,49 +1876,23 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     const rect = (e.currentTarget || e.target).getBoundingClientRect();
     panel.style.top = `${rect.bottom + 4}px`;
     panel.style.right = `${window.innerWidth - rect.right}px`;
-    // BS3 (0.60.179) — Firefox's ☰ order: new tab / window / Snowflake first, then bookmarks and the panels, then add-ons, import,
-    // print, find, zoom and Settings (renderer/shell/menus.js), then the tools and Customize. The rows below keep their own handlers.
+    // BS17 (0.60.185) — James: "remove the bookmarks from the menuconsolidate the menu ... use the library for the bookmarks". One model
+    // (renderer/shell/menus.js): Bookmarks opens the Library; the bookmarks list that was here is gone. The 0.60.184 rows' data-actions are on
+    // the model's rows; their handlers are the model's. The hand-written rows and the 2026-09-25 note about them are in git history (§0.3).
     const _am = window.CGMenus;
     panel.innerHTML = `
-      ${_am ? _am.appMenuHTML('top') + '<div class="menu-sep"></div>' : ''}
+      ${_am.appMenuHTML('top')}
+      <div class="menu-sep"></div>
       <div id="menu-agent-identity-target"></div>
       <div class="menu-sep"></div>
-      <div class="menu-section">
-        <div class="menu-section-label">Bookmarks</div>
-        <div id="menu-bookmarks-list"><div style="padding:6px 4px;color:var(--text-dim,#999);font-size:11px">loading…</div></div>
-      </div>
+      ${_am.appMenuHTML('mid')}
+      ${_renderToolMenuRows() /* its own separator and "Tools" heading, nothing when every tool is pinned */}
       <div class="menu-sep"></div>
-      <div class="menu-item" data-action="downloads">⬇ Downloads <span class="menu-kbd">Ctrl+J</span></div>
-      <div class="menu-item" data-action="site-settings">🛡 Site Settings</div>
-      <div class="menu-item" data-action="history">🕐 History</div>
-      <div class="menu-item" data-action="library">📚 Library</div>
-      <div class="menu-item" data-action="bgtabs">⬡ Background Tabs</div>
-      <!-- §REMOVED 2026-09-25 — this used to be a hardcoded "☰ Settings"
-           row that actually opened the Nexus Options panel (openOptionsPanel,
-           same destination as the btn-options toolbar button), not the real
-           Settings window. It duplicated btn-options's own row below
-           (_renderToolMenuRows renders "☰ Nexus Options" once that button
-           is unpinned) under a DIFFERENT, colliding label — the real cause
-           of James finding two different things both called "Settings"
-           doing two different things. Deleted rather than relabeled: the
-           real Nexus Options access already exists via the toolbar button
-           and its Tools row here; a real, single, unambiguous "Settings"
-           entry (→ cg.window.openSettings(), the actual Settings window)
-           now lives at btn-settings, in this same Tools row list. -->
-      ${_am ? '<div class="menu-sep"></div>' + _am.appMenuHTML('mid') : ''}
-      <div class="menu-sep"></div>
-      <div class="menu-section-label">More tools</div>
-      ${_renderToolMenuRows()}
-      <div class="menu-sep"></div>
-      <div class="menu-item" data-action="customize-toolbar">🧰 Customize Toolbar…</div>
+      ${_am.appMenuHTML('end')}
     `;
     panel.style.display = 'block';
     _wireToolMenuRows(panel);
-    if (_am) _am.wire(panel, () => { panel.style.display = 'none'; });
-    panel.querySelector('[data-action="customize-toolbar"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openToolbarEditor();
-    });
+    _am.wire(panel, () => { panel.style.display = 'none'; });
 
     // Move the real, unchanged agent/identity elements into the now-open
     // menu. Same nodes — appendChild relocates, it doesn't clone, so
@@ -1887,54 +1902,6 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     const target = document.getElementById('menu-agent-identity-target');
     if (slot && target) { target.appendChild(slot); slot.style.display = ''; }
 
-    panel.querySelector('[data-action="downloads"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openLibrary('downloads');
-    });
-    panel.querySelector('[data-action="site-settings"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openPanelFromMenu('site-settings-panel', _renderSiteSettingsPanel);
-    });
-    panel.querySelector('[data-action="history"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openPanelFromMenu('history-panel', () => _renderHistoryPanel(''));
-    });
-    // §LIBRARY 0.39.240 → 0.39.241 — James: "also needs to be clearglass library... added to
-    // the 3 lines menu", then "the settings ui but with the library". Same window as
-    // the tray entry and Ctrl+J: openLibraryWindow() in src/main/index.js.
-    panel.querySelector('[data-action="library"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openLibrary();
-    });
-    panel.querySelector('[data-action="bgtabs"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openPanelFromMenu('bgtabs-panel', _renderBgTabsPanel);
-    });
-    const listEl = document.getElementById('menu-bookmarks-list');
-    try {
-      const list = await _visibleBookmarks();
-      if (!list || !list.length) {
-        listEl.innerHTML = '<div style="padding:6px 4px;color:var(--text-dim,#999);font-size:11px">No bookmarks yet — click the ★ in the search bar to add one.</div>';
-        return;
-      }
-      listEl.innerHTML = list.map(b => `
-        <div style="display:flex;align-items:center;gap:6px;padding:6px 4px;border-bottom:1px solid var(--border,#333)">
-          <span data-visit="${b.id}" style="flex:1;cursor:pointer;font-size:11px;color:var(--text,#ccc);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${b.url.replace(/"/g,'&quot;')}">${(b.title || b.url).replace(/</g,'&lt;')}</span>
-          <span data-remove="${b.id}" style="cursor:pointer;opacity:.5;font-size:12px" title="Remove">✕</span>
-        </div>`).join('');
-      listEl.querySelectorAll('[data-visit]').forEach(el => el.addEventListener('click', async () => {
-        const bk = list.find(b => b.id === el.dataset.visit);
-        if (bk) { panel.style.display = 'none'; await openBookmark(bk); }
-      }));
-      listEl.querySelectorAll('[data-remove]').forEach(el => el.addEventListener('click', async (ev) => {
-        ev.stopPropagation();
-        await cg.bookmarks.remove({ id: el.dataset.remove, agentId });
-        el.closest('div').remove();
-        loadBookmarks?.();
-      }));
-    } catch (err) {
-      listEl.innerHTML = `<div style="padding:6px 4px;color:#ff6b6b;font-size:11px">Error: ${err.message}</div>`;
-    }
   });
   document.addEventListener('click', (e) => {
     const panel = document.getElementById('bookmark-mgr-panel');
@@ -1958,8 +1925,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // setZoomFactor() the menu's own +/− buttons use — one implementation.
   window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey || e.metaKey)) return;
-    if (e.key === '=' || e.key === '+') { e.preventDefault(); applyZoom(_zoomFactor + 0.1); }
-    else if (e.key === '-') { e.preventDefault(); applyZoom(_zoomFactor - 0.1); }
+    if (e.key === '=' || e.key === '+') { e.preventDefault(); zoomStep('in'); }
+    else if (e.key === '-') { e.preventDefault(); zoomStep('out'); }
     else if (e.key === '0') { e.preventDefault(); applyZoom(1.0); }
   });
 
@@ -1982,7 +1949,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   wv.addEventListener('wheel', (e) => {
     if (!(e.ctrlKey || e.metaKey)) return;
     e.preventDefault();
-    applyZoom(_zoomFactor + (e.deltaY < 0 ? 0.1 : -0.1));
+    zoomStep(e.deltaY < 0 ? 'in' : 'out');
   }, { passive: false });
 
   window.addEventListener('keydown', (e) => {
@@ -2078,8 +2045,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     'page.forward':   () => { if (wv.canGoForward()) wv.goForward(); },
     'page.find':      () => openFindBar(),
     'page.print':     () => cg.driver.exec({ action: 'print', agentId }),
-    'page.zoomIn':    () => applyZoom(_zoomFactor + 0.1),
-    'page.zoomOut':   () => applyZoom(_zoomFactor - 0.1),
+    'page.zoomIn':    () => zoomStep('in'),
+    'page.zoomOut':   () => zoomStep('out'),
     'page.zoomReset': () => applyZoom(1.0),
     'page.address':   () => { urlBar.focus(); urlBar.select(); },
     'page.fullscreen':() => cg.window.fullscreen(agentId),
@@ -3252,11 +3219,17 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     }) || null;
   }
 
-  function showCtxMenu(x, y) {
+  // BS15 (0.60.183) — what the last page right-click was on (link, image, selection, field); renderer/shell/ctxmenu.js reads it
+  let ctxParams = {};
+  function showCtxMenu(x, y, { chrome = false, page = null } = {}) {
     ctxMenu.querySelector('[data-action="unpin"]').style.display = ctxPinTarget ? '' : 'none';
     ctxMenu.querySelector('[data-action="unpin-sep"]').style.display = ctxPinTarget ? '' : 'none';
     ctxMenu.querySelector('[data-action="customize-toolbar"]').style.display = ctxIsChrome ? '' : 'none';
-    ctxMenu.querySelector('[data-action="customize-toolbar-sep"]').style.display = ctxIsChrome ? '' : 'none';
+    ctxMenu.querySelector('[data-action="customize-toolbar-sep"]').style.display = 'none';
+    if (window.CGCtxMenu) {
+      const pluginRows = ctxMenu.querySelectorAll('#ctx-plugin-items .ctx-item').length;
+      return window.CGCtxMenu.open(ctxMenu, { x, y, params: chrome ? {} : ctxParams, chrome, pluginRows, page });
+    }
     // §0.39.265 — clamp to the menu's real, measured size (it grows with
     // its rows) instead of a guessed 180×220, and never to a NaN position.
     ctxMenu.classList.add('visible');
@@ -3265,34 +3238,88 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     ctxMenu.style.left = Math.max(4, Math.min(px, window.innerWidth - w - 4)) + 'px';
     ctxMenu.style.top  = Math.max(4, Math.min(py, window.innerHeight - h - 4)) + 'px';
   }
-  function hideCtxMenu() { ctxMenu.classList.remove('visible'); }
+  function hideCtxMenu() { ctxMenu.classList.remove('visible'); ctxMenu.querySelectorAll('.kb').forEach(r => r.classList.remove('kb')); }
 
   document.addEventListener('click', hideCtxMenu);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideCtxMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideCtxMenu(); else if (window.CGCtxMenu) window.CGCtxMenu.keys(ctxMenu, e); });
+  window.addEventListener('blur', hideCtxMenu);
+  wv.addEventListener('focus', hideCtxMenu);   // a click back into the page closes it, as a native menu does
 
-  // Right-click on chrome bar or webview area
-  document.getElementById('chrome').addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    ctxPinTarget = _findPinnedCommandAt(e.target);
-    ctxIsChrome = true;
-    ctxLinkURL = null; renderPluginCtxItems([]);
-    ctxPageXY = null; // a chrome-bar right-click has no page point
-    showCtxMenu(e.clientX, e.clientY);
-  });
+  // BS18 (0.60.185) — James: "context menu for the clearglass ui like the last 2 images, but matching the them eand dynamic to the click".
+  // A right-click on the window's own UI (tabs, the tab strip, the toolbar, the address bar, the bookmarks bar or a bookmark) opens the menu
+  // Firefox has there (renderer/shell/ctxmenu.js openChrome); the actions are here, where the tabs, bookmarks and toolbar live.
+  // Bookmarks toolbar: Always / Only on New Tab / Never (Firefox's three), kept per window profile in localStorage.
+  let _barMode = 'always'; try { _barMode = localStorage.getItem('cg.bookmarksBar') || 'always'; } catch (_) {}
+  const _isBlank = () => { try { const u = wv.getURL(); return !u || u === 'about:blank'; } catch (_) { return true; } };
+  function applyBookmarksBar() { const bar = document.getElementById('bookmarks-bar'); if (!bar) return; bar.style.display = _barMode === 'never' || (_barMode === 'newtab' && !_isBlank()) ? 'none' : ''; }
+  function setBookmarksBar(mode) { if (!['always', 'newtab', 'never'].includes(mode)) return; _barMode = mode; try { localStorage.setItem('cg.bookmarksBar', mode); } catch (_) {} applyBookmarksBar(); }
+  for (const ev of ['did-navigate', 'did-start-loading', 'did-stop-loading']) wv.addEventListener(ev, applyBookmarksBar);
+  applyBookmarksBar();
+  const _tid = (ctx) => { const el = ctx.target && ctx.target.closest && ctx.target.closest('.tab-item'); return el ? parseInt(el.dataset.tid, 10) : _tabs.activeId; };
+  const _tab = (ctx) => _tabs.list().find(t => t.id === _tid(ctx)) || {};
+  const _bk = (ctx) => { const el = ctx.target && ctx.target.closest && ctx.target.closest('.bk-btn'); return el ? _bkById.get(el.dataset.bid) : null; };
+  const _copyText = (t, what) => navigator.clipboard.writeText(t).then(() => window.CGShellUI && window.CGShellUI.toast(`${what} copied`)).catch(err => toast(`Copy failed: ${err.message}`, 'error', 5000));
+  const _edit = (cmd) => () => { urlBar.focus(); try { if (!document.execCommand(cmd)) throw new Error(`${cmd} was refused`); } catch (err) { toast(`${cmd}: ${err.message}`, 'error', 4000); } };
+  const _paste = async (go) => {
+    urlBar.focus(); let text = null;
+    try { text = await navigator.clipboard.readText(); } catch (_) { try { document.execCommand('paste'); } catch (_) {} }
+    if (text != null) { const a = urlBar.selectionStart || 0, b = urlBar.selectionEnd || 0; urlBar.value = urlBar.value.slice(0, a) + text + urlBar.value.slice(b); }
+    if (go && urlBar.value.trim()) navigate(normalizeUrl(urlBar.value));
+  };
+  const CHROME_ACTS = {
+    newTab: () => _tabs.newTab(), reopenClosed: () => _tabs.reopenClosed(),
+    reloadTab: (ctx) => { const id = _tid(ctx); if (id !== _tabs.activeId) _tabs.switchTo(id); else wv.reload(); },
+    duplicateTab: (ctx) => _tabs.newTab(_tab(ctx).url),
+    bookmarkTab: (ctx) => { const t = _tab(ctx); if (t.id !== _tabs.activeId) _tabs.switchTo(t.id); openBookmarkDialog({ url: t.url, title: t.title }); },
+    bgTab: (ctx) => { const t = _tab(ctx); if (t.url && t.url !== 'about:blank') cg.bgTabs.open({ agentId: agentId + '-bg', url: t.url }).then(() => addMsg('assistant', `Moved to background tab: ${t.url}`)).catch(err => toast(err.message, 'error')); },
+    closeTab: (ctx) => _tabs.closeTab(_tid(ctx)), closeOthers: (ctx) => _tabs.closeOthers(_tid(ctx)),
+    bmOpen: (ctx) => { const b = _bk(ctx); if (b) openBookmark(b); },
+    bmOpenTab: (ctx) => { const b = _bk(ctx); if (b) _tabs.newTab(b.url); },
+    bmOpenWindow: (ctx) => { const b = _bk(ctx); if (b) cg.window.open({ agentId: undefined, url: b.url }); },
+    bmEdit: (ctx) => { const b = _bk(ctx); if (b) openBookmarkDialog({ url: b.url, title: b.title }); },
+    bmCopy: (ctx) => { const b = _bk(ctx); if (b) _copyText(b.url, 'Link'); },
+    bmDelete: async (ctx) => { const b = _bk(ctx); if (!b) return; await cg.bookmarks.remove({ id: b.id, agentId }).catch(err => toast(err.message, 'error')); loadBookmarks(); },
+    openAll: () => { const all = [..._bkById.values()]; if (!all.length) return; all.slice(0, 20).forEach(b => _tabs.newTab(b.url)); if (all.length > 20) toast(`Opened the first 20 of ${all.length} bookmarks`, 'info', 4000); },
+    addBookmark: () => openBookmarkDialog(), manageBookmarks: () => _openLibrary('bookmarks'),
+    editUndo: _edit('undo'), editCut: _edit('cut'), editCopy: _edit('copy'), editSelectAll: () => { urlBar.focus(); urlBar.select(); },
+    editPaste: () => _paste(false), editPasteGo: () => _paste(true),
+    menuBar: () => window.CGMenus && window.CGMenus.ACT.menuBar(), isMenuBar: () => { const m = document.getElementById('menubar'); return !!m && !m.hidden; },
+    barMode: () => _barMode, barAlways: () => setBookmarksBar('always'), barNewTab: () => setBookmarksBar('newtab'), barNever: () => setBookmarksBar('never'),
+    customize: () => _openToolbarEditor(),
+    canUnpin: (ctx) => !!_findPinnedCommandAt(ctx.target),
+    unpin: (ctx) => { const c = _findPinnedCommandAt(ctx.target); if (!c) return; const next = currentPinned.filter(id => id !== c.id);
+      cg.options.set({ pinnedToolbarButtons: next }).then(() => { applyToolbarPins(next); addMsg('assistant', `Unpinned ${c.label} from the toolbar.`); }).catch(err => addMsg('assistant', `Failed to unpin: ${err.message}`)); },
+  };
+  for (const id of ['tab-bar', 'chrome', 'bookmarks-bar']) {
+    const host = document.getElementById(id); if (!host) continue;
+    host.addEventListener('contextmenu', (e) => {
+      e.preventDefault(); e.stopPropagation(); hideCtxMenu();
+      ctxPinTarget = _findPinnedCommandAt(e.target); ctxIsChrome = true; ctxLinkURL = null; ctxPageXY = null; ctxParams = {};
+      if (window.CGCtxMenu && window.CGCtxMenu.openChrome) window.CGCtxMenu.openChrome({ x: e.clientX, y: e.clientY, target: e.target, acts: CHROME_ACTS });
+      else { renderPluginCtxItems([]); showCtxMenu(e.clientX, e.clientY, { chrome: true }); }
+    });
+  }
 
   // §0.60.169 NP11 — rows plugins contribute to the menu. Built with textContent (a plugin's label is data, never HTML).
   function renderPluginCtxItems(items) {
     const host = document.getElementById('ctx-plugin-items'); if (!host) return;
     host.textContent = '';
+    const GLYPH = { '❄': 'snow', '🛡': 'shield', '🔑': 'key', '🔒': 'lock' };   // BS15: a plugin's glyph drawn in the menu's icon set when there is one
     for (const it of items) {
       const row = document.createElement('div');
-      row.className = 'ctx-item'; row.dataset.action = 'plugin-item'; row.dataset.sig = it.id;
-      row.textContent = `${it.icon ? it.icon + ' ' : ''}${it.label}`;
-      host.appendChild(row);
+      row.className = 'ctx-item'; row.setAttribute('role', 'menuitem'); row.dataset.action = 'plugin-item'; row.dataset.sig = it.id;
+      const ico = document.createElement('span'); ico.className = 'ci-ico';
+      const drawn = window.CGIcons && GLYPH[it.icon] && window.CGIcons.svg(GLYPH[it.icon], { size: 16 });
+      if (drawn) ico.innerHTML = drawn; else ico.textContent = it.icon || '';
+      const lab = document.createElement('span'); lab.className = 'ci-label'; lab.textContent = it.label;
+      row.append(ico, lab); host.appendChild(row);
     }
-    if (items.length) { const sep = document.createElement('div'); sep.className = 'ctx-item sep'; host.appendChild(sep); }
   }
 
+  // BS19 (0.60.185) — the page's own right-click point, sent by the webview's preload just before Electron's context-menu event
+  let ctxPagePoint = null;
+  wv.addEventListener('ipc-message', (e) => { if (e.channel === 'cg:ctx-point' && e.args && e.args[0]) ctxPagePoint = { ...e.args[0], at: Date.now() }; });
+  const _freshPagePoint = () => (ctxPagePoint && Date.now() - ctxPagePoint.at < 1000 ? ctxPagePoint : null);
   wv.addEventListener('context-menu', async (e) => {
     e.preventDefault();
     ctxPinTarget = null; // page content is never a pinned toolbar command
@@ -3312,12 +3339,20 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     // carries the point as e.params.x / e.params.y; e.x / e.y are undefined,
     // so left/top became "NaNpx", which the browser ignores, and the menu sat
     // at its default top-left corner. Read params (e.x kept as a fallback).
+    // BS15 (0.60.183) — still off when the page is zoomed or the display scaled: params.x/y are the PAGE's coordinates. The menu now asks
+    // the main process where the pointer is (CGCtxMenu.open → window:cursor); the sum below is only the fallback.
     const r = wv.getBoundingClientRect();
     const p = e.params || e;
+    ctxParams = p;
     ctxPageXY = { x: p.x, y: p.y };
     ctxLinkURL = /^https?:\/\//i.test(p.linkURL || '') ? p.linkURL : null;
-    renderPluginCtxItems(await cg.plugins.contextItems(ctxLinkURL ? 'link' : 'page').catch(() => []));
-    showCtxMenu(r.left + p.x, r.top + p.y);
+    // BS19 (0.60.185): Snowflake (and any plugin) rows for a page and, on a link, for the link too
+    const _items = await cg.plugins.contextItems(ctxLinkURL ? 'link' : 'page').catch(() => []);
+    renderPluginCtxItems(Array.isArray(_items) ? _items : []);
+    if (!_freshPagePoint()) await new Promise(res => setTimeout(res, 60));   // the preload's point may land a moment after the event
+    const pp = _freshPagePoint(); ctxPagePoint = null;
+    const page = pp && window.CGCtxMenu ? window.CGCtxMenu.pagePoint(wv.getBoundingClientRect(), pp, _zoomFactor) : null;
+    showCtxMenu(r.left + p.x, r.top + p.y, { page });
   });
 
   ctxMenu.addEventListener('click', async (e) => {
@@ -3325,7 +3360,30 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     if (!action) return;
     hideCtxMenu();
 
+    const _copy = (text, what) => navigator.clipboard.writeText(text).then(() => window.CGShellUI && window.CGShellUI.toast(`${what} copied`)).catch(err => addMsg('assistant', `Copy failed: ${err.message}`));
+    const _askCopilot = (text) => { copilotVisible = true; copilotPane.classList.remove('hidden'); copilotToggle.classList.add('active'); copilotInput.value = text; copilotInput.focus(); };
+    if (e.target.closest('.disabled')) return;
     switch (action) {
+      // BS15 (0.60.183) — the rows Firefox has that this menu did not
+      case 'nav-back':     if (wv.canGoBack()) wv.goBack(); break;
+      case 'nav-forward':  if (wv.canGoForward()) wv.goForward(); break;
+      case 'nav-reload':   wv.reload(); break;
+      case 'link-tab':     if (ctxLinkURL) window.CGShell.newTab(ctxLinkURL); break;
+      case 'link-agent':   if (ctxLinkURL) cg.window.open({ agentId: undefined, url: ctxLinkURL }); break;
+      case 'link-copy':    if (ctxLinkURL) _copy(ctxLinkURL, 'Link'); break;
+      case 'link-copilot': if (ctxLinkURL) _askCopilot(`What is behind this link? ${ctxLinkURL}`); break;
+      case 'image-tab':    if (ctxParams.srcURL) window.CGShell.newTab(ctxParams.srcURL); break;
+      case 'image-copy':   if (ctxParams.srcURL) _copy(ctxParams.srcURL, 'Image link'); break;
+      case 'image-save':   if (ctxParams.srcURL) wv.downloadURL(ctxParams.srcURL); break;
+      case 'sel-copy':     wv.copy(); break;
+      case 'sel-search':   if (ctxParams.selectionText) window.CGShell.newTab(searchUrl(ctxParams.selectionText)); break;
+      case 'sel-copilot':  if (ctxParams.selectionText) _askCopilot(`“${String(ctxParams.selectionText).trim().slice(0, 2000)}”\n\nExplain this.`); break;
+      case 'edit-undo':    wv.undo(); break;
+      case 'edit-cut':     wv.cut(); break;
+      case 'edit-copy':    wv.copy(); break;
+      case 'edit-paste':   wv.paste(); break;
+      case 'edit-selectall': case 'select-all': wv.selectAll(); break;
+      case 'view-source':  { const u = wv.getURL(); if (/^https?:/i.test(u)) window.CGShell.newTab('view-source:' + u); break; }
       case 'plugin-item': {
         // §0.60.169 NP11 — a plugin's row: fire its signature with the link (or page) it was opened on; the plugin's own Gate does the rest and tells the person by toast
         const sig = e.target.closest('[data-sig]')?.dataset.sig; if (!sig) break;
@@ -3538,11 +3596,12 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     cg, agentId, wv, navigate, normalizeUrl,
     newTab: (url) => _tabs.newTab(url), closeTab: () => _tabs.closeTab(_tabs.activeId), reopenClosed: () => _tabs.reopenClosed(),
     find: () => openFindBar(), print: () => cg.driver.exec({ action: 'print', agentId }),
-    zoom: (d) => applyZoom(d === 'in' ? _zoomFactor + 0.1 : d === 'out' ? _zoomFactor - 0.1 : 1.0), zoomPct: () => Math.round(_zoomFactor * 100),
+    zoom: (d) => (d === 'in' || d === 'out') ? zoomStep(d) : applyZoom(1.0), zoomPct: () => Math.round(_zoomFactor * 100),
     history: () => _openPanelFromMenu('history-panel', () => _renderHistoryPanel('')),
     siteSettings: () => _openPanelFromMenu('site-settings-panel', _renderSiteSettingsPanel),
     bgTabs: () => _openPanelFromMenu('bgtabs-panel', _renderBgTabsPanel),
     library: (area) => _openLibrary(area), customize: () => _openToolbarEditor(),
+    bookmarksBar: (mode) => { if (mode) setBookmarksBar(mode); return _barMode; },   // BS18 (0.60.185)
   };
 
   // BS11 (0.60.180) — the mic's three states as drawn icons (the composer hides text glyphs)

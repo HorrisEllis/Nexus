@@ -1375,6 +1375,7 @@ async function bootstrap() {
   // 8.95. Site settings — §NEW 2026-08-24, real gap named in
   // CLEAR-GLASS-FULL-CHROME-MAP-2026-08-23.md's §4.
   siteSettings = new SiteSettingsStore();
+  try { require('../core/zoom').zoom({ siteSettings }); } catch (e) { console.warn(`[zoom] per-site zoom not kept: ${e.message}`); }   // BS14 (0.60.183) — page zoom is core
   siteSettings.load();
 
   // 8.955. History — §GAP CLOSED 2026-08-30, real IPC-only registry
@@ -1407,6 +1408,18 @@ async function bootstrap() {
   // 8.97. Passwords — §NEW 2026-08-24, real gap named in the same map's §7.
   passwordVault = new PasswordVault();
   passwordVault.load();
+  // PW1/PW3 (0.60.186) — James: "can you have websites use the passowrd manager and hook it into the cookie vault or store what ever it uses."
+  // The password service over this vault, and its page script on every session (provider tabs and account windows included); the window is told
+  // what to offer, never the password. Off with the Password Manager plugin; never in a Snowflake compartment.
+  try {
+    require('../passwords/service').service({ vault: passwordVault, dir: app.getPath('userData'), log: (m) => console.warn(m) });
+    const pw = require('./passwords-wiring').attach({ app, ipcMain, webContents: require('electron').webContents,
+      service: () => require('../passwords/service').service(),
+      isActive: () => !pluginHost || (pluginHost.list() || []).some(p => p.name === 'passwords' && p.state === 'active'),
+      isCompartment: (ses) => require('../net/compartment').isCompartment(ses),
+      preloadPath: path.join(__dirname, '../preload/passwords.js'), log: (m) => console.warn(m) });
+    pw.register(session.defaultSession);
+  } catch (err) { console.error('[ClearGlass/Passwords] websites cannot use the password manager:', err.message); }
 
   // 8.971. §0.58.0 IA4 — James: "app password style login in idearium from clearglass panel". If an Idearium app
   // password is saved (Passwords, for http://127.0.0.1:4800), sign in with it now so every panel showing Idearium is
@@ -1559,7 +1572,18 @@ async function bootstrap() {
   } catch (err) {
     console.error('[ClearGlass/WebExtensions] host failed to start:', err.message);
   }
-  const BUILTIN_PLUGINS = ['adblocker', 'captcha-pause', 'guardian-listeners', 'zoom', 'permissions', 'passwords', 'snowflake'];
+  // BS14 (0.60.183) — 'zoom' left the list: page zoom is core (src/core/zoom.js); the plugin is archived in plugins/_archive/zoom-0.60.182
+  const BUILTIN_PLUGINS = ['adblocker', 'captcha-pause', 'guardian-listeners', 'permissions', 'passwords', 'snowflake'];
+  // AB2 (0.60.183) — James: "can you make a full adblocker". The blocker's one service: the built-in and cached lists load now (no network
+  // needed); lists older than four days update in the background through Electron's net.fetch. The plugin and /cli/adblock reach it here.
+  try {
+    const ab = require('../adblock/lists').service({ dir: path.join(app.getPath('userData'), 'adblock'), sites: siteSettings,
+      fetch: (url) => require('electron').net.fetch(url, { cache: 'no-store' }), log: (m) => console.warn(m) });
+    const v = ab.start();
+    console.log(`[ClearGlass/Adblock] ${v.network} blocking and ${v.cosmetic} hiding rules loaded`);
+    const due = ab.due();
+    if (due.length) setTimeout(() => { for (const id of due) ab.update(id).then(r => console.log(`[ClearGlass/Adblock] ${id}: ${r.ok ? 'updated' : r.results[0].error}`)).catch(() => {}); }, 15000);
+  } catch (err) { console.error('[ClearGlass/Adblock] service failed to start:', err.message); }
   for (const dir of BUILTIN_PLUGINS) {
     try {
       const manifest = require(`../../plugins/${dir}/manifest.json`);
@@ -2113,6 +2137,11 @@ function acctSwitch() {
     sessionFor: (id) => sessionHub().sessionFor(id),
     hold: (id) => sessionHub().hold(id),
     log: (m) => console.log(m),
+    // PW3 (0.60.186): "Save sign-in to vault" also keeps the login just typed on that provider's site, as the same account
+    onCaptured: ({ provider, accountId }) => {
+      try { const p = require('../providers/registry').getProvider(provider) || {}; const svc = require('../passwords/service').service(); if (!svc) return { saved: [] };
+        return svc.linkPending([p.url, ...((p.hosts || []).map(h => `https://${h}`))].filter(Boolean), accountId); } catch (e) { console.warn(`[passwords] login not linked: ${e.message}`); return { saved: [] }; }
+    },
   }));
 }
 
@@ -2797,6 +2826,17 @@ app.on('web-contents-created', (_e, contents) => {
   try { require('../net/compartment').onContents(contents); } catch (e) { console.warn(`[compartment] WebRTC not restricted: ${e.message}`); }   // SF3 — no UDP around the proxy in a routed window
   try { if (require('../net/compartment').isCompartment(contents.session)) { const q = require('../net/service').service().quarantine; if (q) q.watch(contents, contents.session.__cgPartition); } } catch (e) { console.warn(`[quarantine] magnets not watched: ${e.message}`); }   // CD5 — magnets caught, never opened
   try { CompartmentWindow.attach(contents); } catch (_) {}   // §0.39.280 — idearium's desktop / settings pop-outs
+  // AB3 (0.60.183) — element hiding: the leftover ad boxes are hidden on each page load, unless the Ad Blocker plugin is off or the site allowed
+  try {
+    if (contents.getType() === 'webview' || contents.getType() === 'window') contents.on('dom-ready', () => {
+      try {
+        const ab = require('../adblock/lists').service(); if (!ab) return;
+        const on = (pluginHost?.list() || []).some(p => p.name === 'adblocker' && p.state === 'active'); if (!on) return;
+        const url = contents.getURL(); if (!/^https?:/i.test(url)) return;
+        const css = ab.cosmetics(url); if (css) contents.insertCSS(css, { cssOrigin: 'user' }).catch(() => {});
+      } catch (_) {}
+    });
+  } catch (_) {}
   // §0.59.5 — James: "All I'm going to do. Is open this chat in clearglass. Then you should be able to talk to nexus right now."
   // A watched chat page (option nexusChat.urls; Claude Code on the web by default): its `nexus> …` lines run, read-only, and
   // the answer is typed back as the next message (src/page/nexus-chat.js).

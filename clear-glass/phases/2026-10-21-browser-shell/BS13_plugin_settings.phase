@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
+context: pipeline phase BS13_plugin_settings of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS13_plugin_settings (integration) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792502099143
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502099143
+lastSeenAt: 1792502099143
+fingerprint: null
+payload:
+  id: BS13_plugin_settings
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.183
+  files:
+    - clear-glass/src/plugins/contribution-types.js
+    - clear-glass/src/plugins/host.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+    - clear-glass/renderer/shell/extensions.js
+    - clear-glass/renderer/shell/shell.css
+  depends_on:
+    - BS4_extensions
+  blocks:
+    - MOD-BSH-PLUGIN-SETTINGS
+  spec: clear-glass/spec/browser-shell.spec
+  graph: 1e5c8fe7ff5bb197

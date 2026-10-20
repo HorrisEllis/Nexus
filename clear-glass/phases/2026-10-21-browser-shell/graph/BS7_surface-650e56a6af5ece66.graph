@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792496355626
+exported_at: 1792502099137
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792496355626
-lastSeenAt: 1792496355626
+firstSeenAt: 1792502099137
+lastSeenAt: 1792502099137
 fingerprint: null
 payload:
   for: BS7_surface
@@ -180,7 +180,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: b658b15d67be924d
+    dagHash: 2527b07c5dc17a5a
     layer: 3
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS1_firefox_import
@@ -200,6 +200,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG b658b15d67be924d · layer 3
+      - DAG 2527b07c5dc17a5a · layer 3
       - 'depends on (3): BS1_firefox_import, BS3_menus, BS6_float_cli · all upstream 6'
       - 'needed by (0): —'

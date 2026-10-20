@@ -72,6 +72,10 @@
  *                          request that hangs should still let the page
  *                          load; a permission request that hangs should
  *                          default to denied, not granted.
+ *   settings            — BS13 (0.60.183). James, 2026-10-21: "make it so i can click on them t ochange their settings." The plugin's
+ *                          page in the 🧩 panel: the handler takes { op: get|set|action, key, value, page, requestId } and returns one
+ *                          plugin:settings event carrying a view (fields: toggle, select, text, textarea, list, action, info; an
+ *                          optional summary). Event-only like every other type; ipc/bridge.js's plugins:settings waits for that event.
  */
 
 function frozenEnum(values) {
@@ -89,6 +93,7 @@ const CLEAR_GLASS_CONTRIBUTION_TYPE = frozenEnum([
   'context-menu-item',
   'userscript',
   'permission-filter',
+  'settings',
 ]);
 
 module.exports = { CLEAR_GLASS_CONTRIBUTION_TYPE };

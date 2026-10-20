@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792496356534
+exported_at: 1792502100066
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792496356534
-lastSeenAt: 1792496356534
+firstSeenAt: 1792502100066
+lastSeenAt: 1792502100066
 fingerprint: null
 payload:
   for: SF2_bridge_sources
@@ -41,7 +41,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: b658b15d67be924d
+    dagHash: 2527b07c5dc17a5a
     layer: 0
     deps: []
     dependents:
@@ -55,6 +55,8 @@ payload:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF8_host_import
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF9_install_in_use
     blockedBy: []
     unlocks:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
@@ -63,8 +65,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG b658b15d67be924d · layer 0
+      - DAG 2527b07c5dc17a5a · layer 0
       - 'depends on (0): —'
       - >-
-        needed by (3): SF1_honest_detection, SF6_surface, SF7_bridge_automatic · all downstream 5 ·
+        needed by (3): SF1_honest_detection, SF6_surface, SF7_bridge_automatic · all downstream 7 ·
         finishing it unlocks SF1_honest_detection, SF6_surface, SF7_bridge_automatic

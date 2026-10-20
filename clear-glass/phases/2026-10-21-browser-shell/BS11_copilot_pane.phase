@@ -7,11 +7,11 @@ intent: null
 summary: BS11_copilot_pane (surface) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792496355630
+exported_at: 1792502099141
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792496355630
-lastSeenAt: 1792496355630
+firstSeenAt: 1792502099141
+lastSeenAt: 1792502099141
 fingerprint: null
 payload:
   id: BS11_copilot_pane
