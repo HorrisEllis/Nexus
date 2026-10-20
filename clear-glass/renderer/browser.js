@@ -916,6 +916,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   const _ctxChip = { dom: 'ctx-dom', picks: 'ctx-picks', cookies: 'ctx-cookies' };
   const cli = window.CGCopilotCLI ? window.CGCopilotCLI.create({
     cg, agentId, wv, normalizeUrl, navigate,
+    fixedBackend: 'copilot',   // 0.60.181 — James: "maybe just copilot" (the four-way switch lives in the floating CLI)
     print: (role, text) => addMsg(role, text),
     getCtx: () => ({ dom: ctxDom, picks: ctxPicks, cookies: ctxCookies }),
     setCtx: (what, on) => {

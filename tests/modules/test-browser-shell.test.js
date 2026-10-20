@@ -259,6 +259,9 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       const ratio = await page.evaluate(() => document.getElementById('url-bar-wrap').getBoundingClientRect().width / document.getElementById('chrome').getBoundingClientRect().width);
       assert.ok(ratio > 0.45, `the address bar takes most of the row (${ratio.toFixed(2)})`);
       assert.strictEqual(await page.$eval('#bookmarks-bar', e => getComputedStyle(e).display), 'none', 'an empty bookmarks strip is hidden');
+      // 0.60.181 — James: "maybe just copilot": the pane has no route switch; the floating CLI keeps it
+      assert.strictEqual(await page.$eval('#copilot-route', e => e.hidden && e.children.length === 0), true, 'the pane is Co-pilot only');
+      assert.ok(/fixedBackend: 'copilot'/.test(fs.readFileSync(CG('renderer/browser.js'), 'utf8')) && !/fixedBackend/.test(fs.readFileSync(CG('renderer/float-cli.js'), 'utf8')));
       assert.deepStrictEqual(errors, []); await page.close();
     });
 

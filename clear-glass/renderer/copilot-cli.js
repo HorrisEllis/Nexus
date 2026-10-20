@@ -52,13 +52,16 @@
   const ALIASES = { '?': 'help', h: 'help', st: 'status', b: 'backend', a: 'agent', be: 'backend', p: 'persona', hist: 'history', cls: 'clear', s: 'site', m: 'macro', diag: 'diagnose' };
   const COMMANDS = ['help', 'nexus', 'status', 'backend', 'agent', 'hat', 'forge', 'persona', 'ctx', 'run', 'go', 'back', 'forward', 'reload', 'site', 'macro', 'cookies', 'build', 'diagnose', 'history', 'clear', 'settings', 'new'];
 
-  function create({ cg, agentId, wv, print, getCtx, setCtx, sendMessage, clearMessages, normalizeUrl, navigate }) {
-    const state = { backend: 'copilot', agent: 'claude', hat: true, pending: [], history: [], pos: -1, historyMax: 200, hatName: 'clear_glass', autoRun: true, showRoute: true };
+  // fixedBackend (0.60.181): James, 2026-10-21, of the pane's four-way switch: "i still hate it. maybe just copilot" — the pane passes
+  // 'copilot': no switch is drawn, Settings' default does not move it, no route line under replies. /backend still works when typed.
+  function create({ cg, agentId, wv, print, getCtx, setCtx, sendMessage, clearMessages, normalizeUrl, navigate, fixedBackend = null }) {
+    const state = { backend: fixedBackend || 'copilot', agent: 'claude', hat: true, pending: [], history: [], pos: -1, historyMax: 200, hatName: 'clear_glass', autoRun: true, showRoute: true };
     const HIST_KEY = `cg.copilot.history.${agentId}`;
     try { state.history = JSON.parse(sessionStorage.getItem(HIST_KEY) || '[]'); } catch (_) {}
 
     // ── route bar (the TV menu's toggle + dropdown, and the hat chip) ────
-    const bar = document.getElementById('copilot-route');
+    const bar = fixedBackend ? null : document.getElementById('copilot-route');
+    if (fixedBackend) { const b0 = document.getElementById('copilot-route'); if (b0) { b0.replaceChildren(); b0.hidden = true; } }
     let btns = {}, agentSel = null, hatChip = null;
     if (bar) {
       bar.replaceChildren();
@@ -99,12 +102,12 @@
       try {
         const s = await cg.api.get();
         if (s) {
-          if (BACKENDS.includes(s.copilotBackend)) state.backend = s.copilotBackend;
+          if (!fixedBackend && BACKENDS.includes(s.copilotBackend)) state.backend = s.copilotBackend;
           if (AGENTS.includes(s.copilotAgent)) state.agent = s.copilotAgent;
           state.hat = s.copilotWearHat !== false;
           state.autoRun = s.copilotAutoRunCommands !== false;
           state.historyMax = Number(s.copilotHistoryMax) || 200;
-          state.showRoute = s.copilotShowRoute !== false;
+          state.showRoute = fixedBackend ? false : s.copilotShowRoute !== false;
         }
       } catch (_) {}
       try { const h = await cg.copilot.hat(); if (h && h.name) state.hatName = h.name; } catch (_) {}

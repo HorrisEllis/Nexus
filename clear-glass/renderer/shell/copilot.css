@@ -46,3 +46,7 @@ body.cg-shell #copilot-mic-btn:hover { background: var(--hover); color: var(--in
 body.cg-shell #copilot-send { grid-area: send; height: 32px; padding: 0 14px; border: 0; border-radius: var(--r-s); background: var(--cyan); color: var(--void); font: 600 var(--t-s) var(--sans); display: inline-flex; align-items: center; gap: 6px; }
 body.cg-shell #copilot-send:hover { background: color-mix(in srgb, var(--cyan) 85%, white); }
 body.cg-shell #copilot-mic-btn.rec { color: var(--bad); background: color-mix(in srgb, var(--bad) 14%, transparent); }
+
+/* 0.60.181 — "maybe just copilot": the pane is Co-pilot only — no route switch, no backend chip */
+body.cg-shell #copilot-route[hidden] { display: none; }
+body.cg-shell #copilot-model { display: none; }

@@ -162,3 +162,10 @@ agents reachable only through a menu row whose panel showed every agent as Start
     does: "The co-pilot pane on the same system: segmented route, readable messages, one composer with the mic inside."
     proof: test-browser-shell BST-09 (shots in Clear Glass)
 
+## Addendum 2026-10-21 (0.60.181): "maybe just copilot"
+
+James, of the 0.60.180 pane's four-way switch: "i still hate it. maybe just copilot". BS11's pane becomes Co-pilot only (copilot-cli.js
+fixedBackend 'copilot': no switch, Settings' default does not move it, no route line; /backend still typed). The floating CLI (BS6) keeps the
+three-way switch, which was its own ask. Reading, to confirm: "just copilot" = the pane only, not the floating CLI. 0.60.180's segmented
+switch in the pane is superseded and kept in the history (CHANGELOG-0.60.180.md).
+
