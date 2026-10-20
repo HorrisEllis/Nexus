@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792497857570
+exported_at: 1792499730285
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792497857570
-lastSeenAt: 1792497857570
+firstSeenAt: 1792499730285
+lastSeenAt: 1792499730285
 fingerprint: null
 payload:
   for: BS2_shell_rebuild
@@ -31,7 +31,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7af3dad11fc8b982
+    dagHash: e95f3baa40b53a58
     layer: 0
     deps: []
     dependents:
@@ -40,11 +40,17 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS14_zoom_core
     upstream: []
     downstream:
+      - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
+      - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
       - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
       - docs/2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
       - docs/2026-10-21-browser-shell-phasemap.spec::BS12_context_automatic
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS14_zoom_core
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
       - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
@@ -59,12 +65,13 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS14_zoom_core
     conflicts: []
     dangling: []
     lines:
-      - DAG 7af3dad11fc8b982 · layer 0
+      - DAG e95f3baa40b53a58 · layer 0
       - 'depends on (0): —'
       - >-
-        needed by (5): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
-        BS8_design_system · all downstream 10 · finishing it unlocks BS3_menus, BS4_extensions,
-        BS5_downloads_panel, BS6_float_cli, BS8_design_system
+        needed by (6): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
+        BS8_design_system, BS14_zoom_core · all downstream 15 · finishing it unlocks BS3_menus,
+        BS4_extensions, BS5_downloads_panel, BS6_float_cli, BS8_design_system, BS14_zoom_core

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-adblock-phasemap.spec::AB0_engine_in_core
+type: phase
+id: docs_2026-10-21-adblock-phasemap.spec::AB0_engine_in_core
+context: pipeline phase AB0_engine_in_core of docs/2026-10-21-adblock-phasemap.spec
+intent: null
+summary: AB0_engine_in_core (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792499729333
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792499729333
+lastSeenAt: 1792499729333
+fingerprint: null
+payload:
+  id: AB0_engine_in_core
+  map: docs/2026-10-21-adblock-phasemap.spec
+  repo: null
+  layer: null
+  status: DECIDED
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 00894718c2cca324

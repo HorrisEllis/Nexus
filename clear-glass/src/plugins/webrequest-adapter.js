@@ -105,8 +105,11 @@ function attachContentFilters(session, bus, { signatures, timeoutMs = 3000, exem
       }
     });
 
+    // AB3 (0.60.183): the request's type, its page and its tab, so a filter can judge third-party and resource-type rules and count per tab
+    let pageUrl = null; try { pageUrl = details.resourceType === 'mainFrame' ? details.url : _pageUrlOf(details); } catch (_) {}
+    const tabId = details.webContentsId != null ? details.webContentsId : (details.webContents && typeof details.webContents.id === 'number' ? details.webContents.id : null);
     for (const sig of signatures) {
-      bus.emit(new Event(sig, { url: details.url, requestId }));
+      bus.emit(new Event(sig, { url: details.url, requestId, resourceType: details.resourceType || 'other', pageUrl, tabId }));
     }
   });
 

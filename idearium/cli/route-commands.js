@@ -1002,6 +1002,20 @@ export const SPEC = [
       if (d.ok === false) { console.log(`${h.c.amber('✗')} ${d.error || 'failed'}`); return; }
       if (d.action) { console.log(d.action === 'delivered' ? `  delivered ${d.version} (${(d.bytes / 1048576).toFixed(1)} MB) · ${d.reason}` : `  nothing to do: ${d.reason}`); return; }
       console.log(`  latest ${d.latest}${d.publishesChecksum ? '' : ' (publishes no SHA256SUMS)'} · COS has ${d.installed.length ? d.installed.join(', ') : 'nothing'}${d.current ? ` (current ${d.current})` : ''} · inbox ${d.inboxPending} waiting\n  a fetch would: ${d.would}`); } },
+  // AB4 (0.60.183) — James, 2026-10-21: "can you make a full adblocker". The blocker's lists, sites and switch; `rules` (his own filters) is his.
+  { key: 'adblock', repo: false, usage: 'adblock <status|on|off|lists|list <id> on|off|update [id|all]|allow <site>|disallow <site>|check <url> [page]|rules "<filters>">',
+    about: 'Clear Glass content blocker: status and rule counts, turn it on/off, choose filter lists (easylist, easyprivacy, peter-lowe, ublock, annoyances, cookies, builtin), update them, allow a site, test a URL. Rules are person-only.',
+    personOnly: (a) => (a.args[0] === 'rules' ? 'his own filters are his to write: ask him (idearium adblock rules …, or the Ad Blocker page in the 🧩 panel)' : null),
+    build: (a) => {
+      const v = String(a.args[0] || 'status');
+      if (v === 'on' || v === 'off') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/enabled', body: { on: v === 'on' } };
+      if (v === 'list') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/list', body: { id: String(a.args[1] || ''), on: String(a.args[2] || 'on') !== 'off' }, timeoutMs: 120000 };
+      if (v === 'update') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/update', body: { id: String(a.args[1] || 'all') }, timeoutMs: 180000 };
+      if (v === 'allow' || v === 'disallow') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/allow', body: { site: String(a.args[1] || ''), on: v === 'allow' } };
+      if (v === 'check') return { system: 'clear-glass', method: 'GET', path: `/cli/adblock/check?url=${encodeURIComponent(String(a.args[1] || ''))}&page=${encodeURIComponent(String(a.args[2] || ''))}` };
+      if (v === 'rules') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/rules', body: { text: a.args.slice(1).join(' ').replace(/\\n/g, '\n'), person: true } };
+      return { system: 'clear-glass', method: 'GET', path: '/cli/adblock/status' };
+    } },
   // BS7 (0.60.179) — James: "can you build a import for firefox profiles and cookies for clearglass.?" Listing is open; importing is his (cookies are sign-ins).
   { key: 'firefox', repo: false, usage: 'firefox <profiles|import [profile name or folder] [--no-cookies] [--bookmarks] [--persona] [--into default|ncp-<provider>]>',
     about: 'Firefox profiles on this machine, and a real import into Clear Glass: cookies (into the everyday session or a provider tab), bookmarks, and the profile\'s user agent',

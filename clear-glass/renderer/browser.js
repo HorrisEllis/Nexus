@@ -390,6 +390,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   }
 
   // ── Navigation ─────────────────────────────────────────────────────
+  // the one search engine the address bar uses; the right-click menu's "Search the web for …" uses it too (BS15)
+  function searchUrl(q) { return `https://www.google.com/search?q=${encodeURIComponent(String(q || '').trim())}`; }
   function normalizeUrl(input) {
     let url = input.trim();
     if (!url) return '';
@@ -403,7 +405,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       } else if (url.includes('.')) {
         url = 'https://' + url;
       } else {
-        url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+        url = searchUrl(url);
       }
     }
     return url;
@@ -1319,6 +1321,10 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       const d = JSON.parse(e.data);
       addMsg('assistant', `Driver error [${d.action}]: ${d.error}`);
     });
+    // BS14 (0.60.183) — an agent zoomed this page through the core: the address bar's readout follows
+    es.addEventListener('driver.result', (e) => {
+      try { const d = JSON.parse(e.data); const r = d && d.result; if (r && r.zoomed && (!r.agentId || r.agentId === agentId)) { _zoomFactor = r.factor; _updateZoomUi(); } } catch (_) {}
+    });
 
     // ── Guardian listener → Co-pilot panel — §2026-08-28, James: "co-pilot
     //    panel inside of clearglass ui." Real, local-only link target
@@ -1611,8 +1617,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       popover.style.display = (popover.style.display === 'none') ? 'block' : 'none';
     });
     popover.querySelectorAll('[data-zoom]').forEach(b => b.addEventListener('click', () => {
-      if (b.dataset.zoom === 'in') applyZoom(_zoomFactor + 0.1);
-      else if (b.dataset.zoom === 'out') applyZoom(_zoomFactor - 0.1);
+      if (b.dataset.zoom === 'in') zoomStep('in');
+      else if (b.dataset.zoom === 'out') zoomStep('out');
       else applyZoom(1.0);
     }));
     document.addEventListener('click', (e) => {
@@ -1670,19 +1676,28 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     if (popoverPct) popoverPct.textContent = pct;
     if (btn) btn.style.display = (_zoomFactor === 1.0) ? 'none' : 'flex';
   }
-  function applyZoom(factor, persist = true) {
-    _zoomFactor = Math.round(Math.min(3, Math.max(0.25, factor)) * 100) / 100;
+  // BS14 (0.60.183) — James: "migrate page zoom to the core of clearglass." The ladder (Firefox's), the clamp and the per-site store are
+  // core now (src/core/zoom.js, reached through cg.zoom); this window only shows the result. Without the core (an old preload, a test
+  // stub) it falls back to the 0.60.182 local path, said in the console once.
+  const _wcId = () => { try { return wv.getWebContentsId(); } catch (_) { return null; } };
+  const _zoomCore = () => !!(window.ClearGlass && window.ClearGlass.zoom && _wcId() != null);   // checked on the real API: cg's proxy answers every name
+  let _zoomFallbackSaid = false;
+  function _zoomShow(r) { if (r && r.ok !== false && typeof r.factor === 'number') { _zoomFactor = r.factor; _updateZoomUi(); } return r; }
+  function _zoomLocal(factor, persist) {
+    if (!_zoomFallbackSaid) { _zoomFallbackSaid = true; console.warn('[zoom] core zoom not reachable; zooming in the window only'); }
+    _zoomFactor = Math.round(Math.min(3, Math.max(0.3, factor)) * 100) / 100;
     try { wv.setZoomFactor(_zoomFactor); } catch (_) {}
     _updateZoomUi();
-    if (persist) {
-      try {
-        const url = wv.getURL();
-        if (url) {
-          _zoomOrigin = new URL(url).origin;
-          cg.siteSettings.set(url, 'zoomFactor', _zoomFactor).catch(() => {});
-        }
-      } catch (_) {}
-    }
+    if (persist) { try { const url = wv.getURL(); if (url) { _zoomOrigin = new URL(url).origin; cg.siteSettings.set(url, 'zoomFactor', _zoomFactor).catch(() => {}); } } catch (_) {} }
+  }
+  function applyZoom(factor, persist = true) {
+    if (!_zoomCore()) return _zoomLocal(factor, persist);
+    try { _zoomOrigin = new URL(wv.getURL()).origin; } catch (_) {}
+    return cg.zoom.set(_wcId(), factor, persist).then(_zoomShow).catch(() => _zoomLocal(factor, persist));
+  }
+  function zoomStep(dir) {
+    if (!_zoomCore()) return _zoomLocal(_zoomFactor + (dir === 'in' ? 0.1 : -0.1), true);
+    return cg.zoom.step(_wcId(), dir).then(_zoomShow).catch(() => _zoomLocal(_zoomFactor + (dir === 'in' ? 0.1 : -0.1), true));
   }
   // Loads (and applies) the saved zoom for whatever origin the webview
   // is currently on. Guarded by _zoomOrigin so an in-page navigation
@@ -1693,9 +1708,10 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     try { url = wv.getURL(); origin = url ? new URL(url).origin : null; } catch (_) { return; }
     if (!origin || origin === _zoomOrigin) return;
     _zoomOrigin = origin;
+    if (_zoomCore()) { try { _zoomShow(await cg.zoom.restore(_wcId())); return; } catch (_) {} }
     let saved = 1.0;
     try { saved = (await cg.siteSettings.get(url, 'zoomFactor')) ?? 1.0; } catch (_) {}
-    applyZoom(saved, false);
+    _zoomLocal(saved, false);
   }
 
   // §MERGED 2026-08-30 — James: "remove the command pallet and move
@@ -1962,8 +1978,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // setZoomFactor() the menu's own +/− buttons use — one implementation.
   window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey || e.metaKey)) return;
-    if (e.key === '=' || e.key === '+') { e.preventDefault(); applyZoom(_zoomFactor + 0.1); }
-    else if (e.key === '-') { e.preventDefault(); applyZoom(_zoomFactor - 0.1); }
+    if (e.key === '=' || e.key === '+') { e.preventDefault(); zoomStep('in'); }
+    else if (e.key === '-') { e.preventDefault(); zoomStep('out'); }
     else if (e.key === '0') { e.preventDefault(); applyZoom(1.0); }
   });
 
@@ -1986,7 +2002,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   wv.addEventListener('wheel', (e) => {
     if (!(e.ctrlKey || e.metaKey)) return;
     e.preventDefault();
-    applyZoom(_zoomFactor + (e.deltaY < 0 ? 0.1 : -0.1));
+    zoomStep(e.deltaY < 0 ? 'in' : 'out');
   }, { passive: false });
 
   window.addEventListener('keydown', (e) => {
@@ -2082,8 +2098,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     'page.forward':   () => { if (wv.canGoForward()) wv.goForward(); },
     'page.find':      () => openFindBar(),
     'page.print':     () => cg.driver.exec({ action: 'print', agentId }),
-    'page.zoomIn':    () => applyZoom(_zoomFactor + 0.1),
-    'page.zoomOut':   () => applyZoom(_zoomFactor - 0.1),
+    'page.zoomIn':    () => zoomStep('in'),
+    'page.zoomOut':   () => zoomStep('out'),
     'page.zoomReset': () => applyZoom(1.0),
     'page.address':   () => { urlBar.focus(); urlBar.select(); },
     'page.fullscreen':() => cg.window.fullscreen(agentId),
@@ -3256,11 +3272,17 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     }) || null;
   }
 
-  function showCtxMenu(x, y) {
+  // BS15 (0.60.183) — what the last page right-click was on (link, image, selection, field); renderer/shell/ctxmenu.js reads it
+  let ctxParams = {};
+  function showCtxMenu(x, y, { chrome = false } = {}) {
     ctxMenu.querySelector('[data-action="unpin"]').style.display = ctxPinTarget ? '' : 'none';
     ctxMenu.querySelector('[data-action="unpin-sep"]').style.display = ctxPinTarget ? '' : 'none';
     ctxMenu.querySelector('[data-action="customize-toolbar"]').style.display = ctxIsChrome ? '' : 'none';
-    ctxMenu.querySelector('[data-action="customize-toolbar-sep"]').style.display = ctxIsChrome ? '' : 'none';
+    ctxMenu.querySelector('[data-action="customize-toolbar-sep"]').style.display = 'none';
+    if (window.CGCtxMenu) {
+      const pluginRows = ctxMenu.querySelectorAll('#ctx-plugin-items .ctx-item').length;
+      return window.CGCtxMenu.open(ctxMenu, { x, y, params: chrome ? {} : ctxParams, chrome, pluginRows });
+    }
     // §0.39.265 — clamp to the menu's real, measured size (it grows with
     // its rows) instead of a guessed 180×220, and never to a NaN position.
     ctxMenu.classList.add('visible');
@@ -3269,10 +3291,12 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     ctxMenu.style.left = Math.max(4, Math.min(px, window.innerWidth - w - 4)) + 'px';
     ctxMenu.style.top  = Math.max(4, Math.min(py, window.innerHeight - h - 4)) + 'px';
   }
-  function hideCtxMenu() { ctxMenu.classList.remove('visible'); }
+  function hideCtxMenu() { ctxMenu.classList.remove('visible'); ctxMenu.querySelectorAll('.kb').forEach(r => r.classList.remove('kb')); }
 
   document.addEventListener('click', hideCtxMenu);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideCtxMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideCtxMenu(); else if (window.CGCtxMenu) window.CGCtxMenu.keys(ctxMenu, e); });
+  window.addEventListener('blur', hideCtxMenu);
+  wv.addEventListener('focus', hideCtxMenu);   // a click back into the page closes it, as a native menu does
 
   // Right-click on chrome bar or webview area
   document.getElementById('chrome').addEventListener('contextmenu', (e) => {
@@ -3281,20 +3305,24 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     ctxIsChrome = true;
     ctxLinkURL = null; renderPluginCtxItems([]);
     ctxPageXY = null; // a chrome-bar right-click has no page point
-    showCtxMenu(e.clientX, e.clientY);
+    ctxParams = {};
+    showCtxMenu(e.clientX, e.clientY, { chrome: true });
   });
 
   // §0.60.169 NP11 — rows plugins contribute to the menu. Built with textContent (a plugin's label is data, never HTML).
   function renderPluginCtxItems(items) {
     const host = document.getElementById('ctx-plugin-items'); if (!host) return;
     host.textContent = '';
+    const GLYPH = { '❄': 'snow', '🛡': 'shield', '🔑': 'key', '🔒': 'lock' };   // BS15: a plugin's glyph drawn in the menu's icon set when there is one
     for (const it of items) {
       const row = document.createElement('div');
-      row.className = 'ctx-item'; row.dataset.action = 'plugin-item'; row.dataset.sig = it.id;
-      row.textContent = `${it.icon ? it.icon + ' ' : ''}${it.label}`;
-      host.appendChild(row);
+      row.className = 'ctx-item'; row.setAttribute('role', 'menuitem'); row.dataset.action = 'plugin-item'; row.dataset.sig = it.id;
+      const ico = document.createElement('span'); ico.className = 'ci-ico';
+      const drawn = window.CGIcons && GLYPH[it.icon] && window.CGIcons.svg(GLYPH[it.icon], { size: 16 });
+      if (drawn) ico.innerHTML = drawn; else ico.textContent = it.icon || '';
+      const lab = document.createElement('span'); lab.className = 'ci-label'; lab.textContent = it.label;
+      row.append(ico, lab); host.appendChild(row);
     }
-    if (items.length) { const sep = document.createElement('div'); sep.className = 'ctx-item sep'; host.appendChild(sep); }
   }
 
   wv.addEventListener('context-menu', async (e) => {
@@ -3316,8 +3344,11 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     // carries the point as e.params.x / e.params.y; e.x / e.y are undefined,
     // so left/top became "NaNpx", which the browser ignores, and the menu sat
     // at its default top-left corner. Read params (e.x kept as a fallback).
+    // BS15 (0.60.183) — still off when the page is zoomed or the display scaled: params.x/y are the PAGE's coordinates. The menu now asks
+    // the main process where the pointer is (CGCtxMenu.open → window:cursor); the sum below is only the fallback.
     const r = wv.getBoundingClientRect();
     const p = e.params || e;
+    ctxParams = p;
     ctxPageXY = { x: p.x, y: p.y };
     ctxLinkURL = /^https?:\/\//i.test(p.linkURL || '') ? p.linkURL : null;
     renderPluginCtxItems(await cg.plugins.contextItems(ctxLinkURL ? 'link' : 'page').catch(() => []));
@@ -3329,7 +3360,30 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     if (!action) return;
     hideCtxMenu();
 
+    const _copy = (text, what) => navigator.clipboard.writeText(text).then(() => window.CGShellUI && window.CGShellUI.toast(`${what} copied`)).catch(err => addMsg('assistant', `Copy failed: ${err.message}`));
+    const _askCopilot = (text) => { copilotVisible = true; copilotPane.classList.remove('hidden'); copilotToggle.classList.add('active'); copilotInput.value = text; copilotInput.focus(); };
+    if (e.target.closest('.disabled')) return;
     switch (action) {
+      // BS15 (0.60.183) — the rows Firefox has that this menu did not
+      case 'nav-back':     if (wv.canGoBack()) wv.goBack(); break;
+      case 'nav-forward':  if (wv.canGoForward()) wv.goForward(); break;
+      case 'nav-reload':   wv.reload(); break;
+      case 'link-tab':     if (ctxLinkURL) window.CGShell.newTab(ctxLinkURL); break;
+      case 'link-agent':   if (ctxLinkURL) cg.window.open({ agentId: undefined, url: ctxLinkURL }); break;
+      case 'link-copy':    if (ctxLinkURL) _copy(ctxLinkURL, 'Link'); break;
+      case 'link-copilot': if (ctxLinkURL) _askCopilot(`What is behind this link? ${ctxLinkURL}`); break;
+      case 'image-tab':    if (ctxParams.srcURL) window.CGShell.newTab(ctxParams.srcURL); break;
+      case 'image-copy':   if (ctxParams.srcURL) _copy(ctxParams.srcURL, 'Image link'); break;
+      case 'image-save':   if (ctxParams.srcURL) wv.downloadURL(ctxParams.srcURL); break;
+      case 'sel-copy':     wv.copy(); break;
+      case 'sel-search':   if (ctxParams.selectionText) window.CGShell.newTab(searchUrl(ctxParams.selectionText)); break;
+      case 'sel-copilot':  if (ctxParams.selectionText) _askCopilot(`“${String(ctxParams.selectionText).trim().slice(0, 2000)}”\n\nExplain this.`); break;
+      case 'edit-undo':    wv.undo(); break;
+      case 'edit-cut':     wv.cut(); break;
+      case 'edit-copy':    wv.copy(); break;
+      case 'edit-paste':   wv.paste(); break;
+      case 'edit-selectall': case 'select-all': wv.selectAll(); break;
+      case 'view-source':  { const u = wv.getURL(); if (/^https?:/i.test(u)) window.CGShell.newTab('view-source:' + u); break; }
       case 'plugin-item': {
         // §0.60.169 NP11 — a plugin's row: fire its signature with the link (or page) it was opened on; the plugin's own Gate does the rest and tells the person by toast
         const sig = e.target.closest('[data-sig]')?.dataset.sig; if (!sig) break;
@@ -3542,7 +3596,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     cg, agentId, wv, navigate, normalizeUrl,
     newTab: (url) => _tabs.newTab(url), closeTab: () => _tabs.closeTab(_tabs.activeId), reopenClosed: () => _tabs.reopenClosed(),
     find: () => openFindBar(), print: () => cg.driver.exec({ action: 'print', agentId }),
-    zoom: (d) => applyZoom(d === 'in' ? _zoomFactor + 0.1 : d === 'out' ? _zoomFactor - 0.1 : 1.0), zoomPct: () => Math.round(_zoomFactor * 100),
+    zoom: (d) => (d === 'in' || d === 'out') ? zoomStep(d) : applyZoom(1.0), zoomPct: () => Math.round(_zoomFactor * 100),
     history: () => _openPanelFromMenu('history-panel', () => _renderHistoryPanel('')),
     siteSettings: () => _openPanelFromMenu('site-settings-panel', _renderSiteSettingsPanel),
     bgTabs: () => _openPanelFromMenu('bgtabs-panel', _renderBgTabsPanel),

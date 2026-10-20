@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-adblock-phasemap.spec::AB2_lists
+type: phase
+id: docs_2026-10-21-adblock-phasemap.spec::AB2_lists
+context: pipeline phase AB2_lists of docs/2026-10-21-adblock-phasemap.spec
+intent: null
+summary: AB2_lists (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792499729359
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792499729359
+lastSeenAt: 1792499729359
+fingerprint: null
+payload:
+  id: AB2_lists
+  map: docs/2026-10-21-adblock-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.183
+  files:
+    - clear-glass/src/adblock/lists.js
+  depends_on:
+    - AB1_engine
+  blocks:
+    - MOD-ABK-LISTS
+  spec: clear-glass/spec/adblock.spec
+  graph: 48ec7173619ce759

@@ -185,3 +185,43 @@ and cookies.health, so the decision can live in the bridge: deterministic first,
     does: "need() per message picks page / picks / cookie summary; the bridge attaches them; the chips go; /ctx still forces; each reply says what was attached."
     proof: test-browser-shell BST-12
 
+
+## Addendum 2026-10-21 (0.60.183): plugin pages, zoom in the core, the right-click menu
+
+James, 2026-10-21, with three screenshots (the 🧩 panel, the ⬇ panel, a right-click menu drawn far from the pointer): "can you make a full
+adblocker and make it so i can click on them t ochange their settings. migrate page zoom to the core of clearglass. moright click menu needs
+to be redone in the same themeand in relation to the mouse is way of f onthe right clicskk"
+The adblocker is its own map (docs/2026-10-21-adblock-phasemap.spec, spec clear-glass/spec/adblock.spec). Found first: zoom lived twice
+(browser.js applyZoom and the Page Zoom plugin's driver.exec path, with different bounds, the plugin's never saved). The menu's point was
+params.x/y plus the webview's offset, which is in the page's coordinates, not the window's, whenever the page is zoomed or the display is
+scaled; the 0.39.265 clamp could not fix that. Reading, to confirm: "click on them" = every plugin row in the 🧩 panel.
+
+  BS13_plugin_settings:
+    layer: integration
+    status: DONE 0.60.183
+    depends_on: [BS4_extensions]
+    files: [clear-glass/src/plugins/contribution-types.js, clear-glass/src/plugins/host.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/shell/extensions.js, clear-glass/renderer/shell/shell.css]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-PLUGIN-SETTINGS]
+    does: "The `settings` contribution type and plugins:settings; each plugin row opens its page (about, permissions, commands, its fields, Open in Settings)."
+    proof: test-browser-shell BST-13
+
+  BS14_zoom_core:
+    layer: integration
+    status: DONE 0.60.183
+    depends_on: [BS2_shell_rebuild]
+    files: [clear-glass/src/core/zoom.js, clear-glass/src/driver/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/browser.js, clear-glass/src/main/index.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-ZOOM-CORE]
+    does: "One zoom in the core on Firefox's ladder, saved and restored per site, for the window, the shortcuts and agents; the plugin archived."
+    proof: test-browser-shell BST-14
+
+  BS15_context_menu:
+    layer: surface
+    status: DONE 0.60.183
+    depends_on: [BS8_design_system]
+    files: [clear-glass/renderer/shell/ctxmenu.js, clear-glass/renderer/browser.html, clear-glass/renderer/browser.js, clear-glass/renderer/shell/shell.css, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-CTXMENU]
+    does: "Firefox's menu in the window's theme, sections by what was clicked, placed at the real pointer and flipped at the edges."
+    proof: test-browser-shell BST-15

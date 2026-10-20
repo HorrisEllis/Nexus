@@ -33,6 +33,7 @@ const SPECS = [
   { spec: 'docs/pipeline.spec', map: null },
   { spec: 'clear-glass/spec/snowflake.spec', map: 'docs/2026-10-21-snowflake-compartment-phasemap.spec' },   // 0.60.178
   { spec: 'clear-glass/spec/compartment-downloads.spec', map: 'docs/2026-10-21-compartment-downloads-phasemap.spec' },   // 0.60.179
+  { spec: 'clear-glass/spec/adblock.spec', map: 'docs/2026-10-21-adblock-phasemap.spec' },   // 0.60.183
   { spec: 'clear-glass/spec/browser-shell.spec', map: 'docs/2026-10-21-browser-shell-phasemap.spec' },   // 0.60.179   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
 ];
 

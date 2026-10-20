@@ -706,3 +706,15 @@ spec:
 # store and one Library. Changed: Firefox's ⬇ toolbar panel returns as a view of that same store (cg.downloads.list) plus the Snowflake
 # quarantine, and "Show all downloads" opens the Library. Reading (to confirm): "like firefox" includes Firefox's downloads panel.
 
+
+# ═══ ADDENDUM 2026-10-21 (0.60.183) — a full content blocker; plugin pages; zoom in the core; the right-click menu at the pointer ═══
+# James, 2026-10-21: "can you make a full adblocker and make it so i can click on them t ochange their settings. migrate page zoom to the core
+# of clearglass. moright click menu needs to be redone in the same themeand in relation to the mouse is way of f onthe right clicskk"
+# - The adblocker plugin's 16-domain list is superseded by src/adblock (spec clear-glass/spec/adblock.spec); the plugin stays its surface and
+#   its isBlocked() keeps the 0.60.x contract over the built-in list (§0.3).
+# - Plugin contribution types gain `settings` (a plugin's page in the 🧩 panel; event-only, one plugin:settings reply). host.list() adds
+#   author, permissions, settings, settingsSection. webrequest-adapter.js sends resourceType, pageUrl and tabId with each request.
+# - Page zoom moves out of the plugin set into the core (src/core/zoom.js); the Page Zoom plugin is archived in plugins/_archive.
+# - #ctx-menu is redrawn and placed at the pointer reported by window:cursor; the 2026-09-21 / 0.39.265 positioning notes in browser.js are
+#   kept as history (they described params.x/y + the webview offset, which is now the fallback).
+# Spec detail: clear-glass/spec/browser-shell.spec MOD-BSH-PLUGIN-SETTINGS, MOD-BSH-ZOOM-CORE, MOD-BSH-CTXMENU.

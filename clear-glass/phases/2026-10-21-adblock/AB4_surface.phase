@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-adblock-phasemap.spec::AB4_surface
+type: phase
+id: docs_2026-10-21-adblock-phasemap.spec::AB4_surface
+context: pipeline phase AB4_surface of docs/2026-10-21-adblock-phasemap.spec
+intent: null
+summary: AB4_surface (surface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792499729362
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792499729362
+lastSeenAt: 1792499729362
+fingerprint: null
+payload:
+  id: AB4_surface
+  map: docs/2026-10-21-adblock-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.183
+  files:
+    - clear-glass/src/ipc/bridge.js
+    - idearium/cli/route-commands.js
+    - lib/agent-tools/tools/clear-glass/adblock.js
+  depends_on:
+    - AB3_wiring
+  blocks:
+    - MOD-ABK-SURFACE
+  spec: clear-glass/spec/adblock.spec
+  graph: c9c24c363b6af3aa

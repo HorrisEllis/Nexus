@@ -297,6 +297,17 @@ class IpcBridge {
       return res.text();
     };
     const _netRoute = (fn) => async (req, res) => { try { res.json(await fn(req.body || {}, req.query || {})); } catch (e) { res.json({ ok: false, error: e.message }); } };
+    // AB4 (0.60.183) — the content blocker for agents and the `adblock` command (spec clear-glass/spec/adblock.spec MOD-ABK-SURFACE).
+    // His own filters (rules) are a person's act: the route takes them only with person:true, which the command row sets and the tool never does.
+    const _ab = () => { const s = require('../adblock/lists').service(); if (!s) throw new Error('the blocker is not running'); return s; };
+    const _abView = () => { const v = _ab().state(); return { ok: true, enabled: v.enabled, network: v.network, cosmetic: v.cosmetic, allowed: v.allowed, lists: v.lists.map(l => ({ id: l.id, title: l.title, on: l.on, loaded: l.loaded, rules: l.rules, skipped: l.skipped, updatedAt: l.updatedAt, error: l.error })) }; };
+    this.app.get('/cli/adblock/status',  _netRoute(() => _abView()));
+    this.app.post('/cli/adblock/enabled', _netRoute((b) => ({ ..._ab().setEnabled(b.on !== false), ..._abView() })));
+    this.app.post('/cli/adblock/list',    _netRoute(async (b) => { const r = _ab().setList(String(b.id || ''), b.on !== false); if (r.ok && r.needsUpdate) await _ab().update(b.id); return { ...r, ..._abView() }; }));
+    this.app.post('/cli/adblock/update',  _netRoute((b) => _ab().update(b.id || 'all')));
+    this.app.post('/cli/adblock/allow',   _netRoute((b) => { const site = /^https?:\/\//i.test(String(b.site || '')) ? b.site : `https://${b.site}`; return _ab().allow(site, b.on !== false); }));
+    this.app.post('/cli/adblock/rules',   _netRoute((b) => b.person === true ? _ab().setCustom(String(b.text || '')) : { ok: false, error: 'his own filters are his to write (idearium adblock rules …, or the Ad Blocker page in the 🧩 panel)' }));
+    this.app.get('/cli/adblock/check',    _netRoute((b, q) => ({ ok: true, ..._ab().engine.match({ url: String(q.url || ''), type: String(q.type || 'script'), pageUrl: String(q.page || '') }) })));
     this.app.get('/cli/net/status',   _netRoute(() => ({ ..._net().status(), detect: _netHost().detect() })));
     this.app.get('/cli/net/routes',   _netRoute(() => _net().routes()));
     this.app.post('/cli/net/routes',  _netRoute((b) => _net().addRoute(b)));
@@ -1380,6 +1391,33 @@ class IpcBridge {
       try { return require('../plugins/context-items.js').listContextItems(d && d.when); }
       catch (err) { return []; }
     });
+    // BS14 (0.60.183) — page zoom is core (src/core/zoom.js): the window asks for a step, a factor or the site's saved zoom, by its page's id
+    const _zoomWc = (id) => { const { webContents } = require('electron'); const wc = webContents.fromId(Number(id)); if (!wc || wc.isDestroyed()) throw new Error('no such page'); return wc; };
+    const _zoomDo = (fn) => async (e, d = {}) => { try { return fn(require('../core/zoom').zoom(), _zoomWc(d.id), d); } catch (err) { return { ok: false, error: err.message }; } };
+    ipcMain.handle('zoom:step',    _zoomDo((z, wc, d) => z.step(wc, d.dir === 'out' ? 'out' : 'in')));
+    ipcMain.handle('zoom:set',     _zoomDo((z, wc, d) => z.set(wc, d.factor, { persist: d.persist !== false })));
+    ipcMain.handle('zoom:restore', _zoomDo((z, wc) => z.restore(wc)));
+    // BS15 (0.60.183) — where the pointer is, in the asking window's CSS pixels: the right-click menu opens there whatever the page zoom,
+    // the display scale or where the webview sits (Electron's params.x/y are the page's own coordinates)
+    ipcMain.handle('window:cursor', async (e) => {
+      try {
+        const { screen, BrowserWindow } = require('electron');
+        const win = BrowserWindow.fromWebContents(e.sender); if (!win) return { ok: false, error: 'no window' };
+        const pt = screen.getCursorScreenPoint(); const b = win.getContentBounds();
+        const zf = e.sender.getZoomFactor ? e.sender.getZoomFactor() : 1;
+        return { ok: true, x: (pt.x - b.x) / zf, y: (pt.y - b.y) / zf };
+      } catch (err) { return { ok: false, error: err.message }; }
+    });
+    // BS13 (0.60.183) — a plugin's page: emit its settings signature, wait for the one plugin:settings event answering this request (3 s)
+    ipcMain.handle('plugins:settings', async (e, { id, op = 'get', key, value, page } = {}) => {
+      try {
+        const p = (this.pluginHost?.list() || []).find(x => x.id === id || x.name === id);
+        if (!p) return { ok: false, error: `no plugin '${id}'` };
+        if (p.state !== 'active') return { ok: false, error: 'this plugin is off', off: true };
+        if (!p.settings) return { ok: true, view: null };
+        return await this._askPlugin(p.settings, { op, key, value, page: page || {} }, 'plugin:settings', op === 'action' || key === 'lists' ? 120000 : 3000);
+      } catch (err) { return { ok: false, error: err.message }; }
+    });
     ipcMain.handle('plugins:list', async () => {
       try { return this.pluginHost?.list() || []; }
       catch (err) { return { ok: false, error: err.message }; }
@@ -2347,6 +2385,20 @@ class IpcBridge {
       } catch (err) { res.status(500).json({ ok: false, error: err.message }); }
     });
     this.app.get('/providers/attention', (req, res) => res.json({ ok: true, open: attention().state() }));
+  }
+
+  /** _askPlugin(signature, data, replyType, timeoutMs) — emit a plugin's signature with a requestId and resolve with the one reply event (BS13) */
+  _askPlugin(signature, data, replyType, timeoutMs = 3000) {
+    const { getBus, Event } = require('../core/bus.js');
+    const bus = getBus(); const requestId = `ask-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    return new Promise((resolve) => {
+      let done = false;
+      const finish = (r) => { if (done) return; done = true; clearTimeout(t); try { off(); } catch (_) {} try { offErr(); } catch (_) {} resolve(r); };
+      const off = bus.on(replyType, (ev) => { if (ev.data && ev.data.requestId === requestId) finish({ ok: true, ...ev.data }); });
+      const offErr = bus.on('plugin:error', (ev) => { if (ev.data && ev.data.signature === signature) finish({ ok: false, error: ev.data.error }); });
+      const t = setTimeout(() => finish({ ok: false, error: 'the plugin did not answer' }), timeoutMs);
+      bus.emit(new Event(signature, { ...data, requestId }));
+    });
   }
 
   async stop() {

@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792497857573
+exported_at: 1792499730287
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792497857573
-lastSeenAt: 1792497857573
+firstSeenAt: 1792499730287
+lastSeenAt: 1792499730287
 fingerprint: null
 payload:
   for: BS4_extensions
@@ -144,23 +144,30 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7af3dad11fc8b982
+    dagHash: e95f3baa40b53a58
     layer: 1
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
     dependents:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
     upstream:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
     downstream:
+      - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
+      - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
       - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
     blockedBy: []
     unlocks:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
     conflicts: []
     dangling: []
     lines:
-      - DAG 7af3dad11fc8b982 · layer 1
+      - DAG e95f3baa40b53a58 · layer 1
       - 'depends on (1): BS2_shell_rebuild'
-      - 'needed by (1): BS6_float_cli · all downstream 2 · finishing it unlocks BS6_float_cli'
+      - >-
+        needed by (2): BS6_float_cli, BS13_plugin_settings · all downstream 5 · finishing it unlocks
+        BS6_float_cli, BS13_plugin_settings

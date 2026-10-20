@@ -1,10 +1,10 @@
 {
   "id": "8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f",
   "name": "adblocker",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "displayName": "Ad Blocker",
   "icon": "🛡",
-  "description": "Blocks known ad/tracker domains via session.webRequest.onBeforeRequest — the independent path from CLEAR-GLASS-CAPABILITY-BREAKDOWN-2026-08-23.md's §Genuine gaps ('can be built independently as a filter list + webRequest.onBeforeRequest blocker'), not gated on web-extension support.",
+  "description": "Blocks ads and trackers with the standard filter lists (EasyList, EasyPrivacy, Peter Lowe's; uBlock filters, annoyances and cookie banners when you turn them on), hides the empty ad boxes left on the page, and lets you allow a site in one click. Click it to choose lists, update them, add your own filters and see what it blocked on this page. The engine is Clear Glass's (src/adblock); this plugin is how you reach it.",
   "author": "James Brooks (Erosmancer)",
   "entryPoint": "index.js",
   "permissions": {
@@ -19,6 +19,13 @@
         "signature": "plugin:8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f:filter-request",
         "handler": "filterRequest"
       }
+    ],
+    "settings": [
+      {
+        "signature": "plugin:8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f:settings",
+        "handler": "settings"
+      }
     ]
-  }
+  },
+  "settingsSection": "sites"
 }

@@ -20,6 +20,9 @@
  *   BST-10  0.60.180 the Guardian hub: real state per agent, Start/Open/Stop, the running badge, the tools; the old panel reads running
  *   BST-12  0.60.182 context decided by Co-pilot per message (page / picks / sign-in cookies); the chips gone; /ctx still forces
  *   BST-11  0.60.180 the start page over a blank tab: search, agent cards, bookmarks; hidden once the tab navigates
+ *   BST-13  0.60.183 a plugin's page: clicking its row in the 🧩 panel opens about, permissions, its fields; a field's change asks the plugin
+ *   BST-14  0.60.183 page zoom in the core: Firefox's ladder, saved per site (100% = no row), restored on navigate; the driver and the window use it
+ *   BST-15  0.60.183 the right-click menu: groups by what was clicked, placed at the pointer the main process reports, flipped at the edges
  */
 require('../../lib/test-sandbox.js').ensure();
 process.removeAllListeners('warning'); process.on('warning', (w) => { if (w.name !== 'ExperimentalWarning') console.warn(w.message); });   // node:sqlite says it is experimental
@@ -37,6 +40,7 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'bst-'));
 const put = (root, p, s) => { fs.mkdirSync(path.dirname(path.join(root, p)), { recursive: true }); fs.writeFileSync(path.join(root, p), s); };
 const NOW = Date.UTC(2026, 9, 21);
+const SHOTS = process.env.BST_SHOTS || os.tmpdir();   // screenshots for the person, outside the repo
 
 function firefoxHome() {
   const home = tmp(); const ff = path.join(home, '.mozilla', 'firefox');
@@ -135,15 +139,16 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
     const Bus = require(CG('src/core/bus.js')); try { Bus.getBus(); } catch (_) { Bus.createBus(); }
     const { PluginHost } = require(CG('src/plugins/host.js'));
     const host = new PluginHost();
-    host.install(require(CG('plugins/zoom/manifest.json')), require(CG('plugins/zoom/index.js')));
-    const id = require(CG('plugins/zoom/manifest.json')).id;
+    // 0.60.183: the Page Zoom plugin is archived (zoom is core, BS14); it is still a valid plugin with commands, so the host's mechanics are proven on it
+    host.install(require(CG('plugins/_archive/zoom-0.60.182/manifest.json')), require(CG('plugins/_archive/zoom-0.60.182/index.js')));
+    const id = require(CG('plugins/_archive/zoom-0.60.182/manifest.json')).id;
     const before = host.list().find(p => p.id === id);
     assert.strictEqual(before.icon, '🔍'); assert.ok(before.commands.length >= 1 && before.commands[0].signature);
     host.disable(id); assert.strictEqual(host.list().find(p => p.id === id).state, 'disabled');
     host.enable(id);
     const after = host.list().find(p => p.id === id);
     assert.deepStrictEqual([after.state, after.contributions], ['active', before.contributions]);
-    for (const d of fs.readdirSync(CG('plugins'))) assert.ok(require(CG(`plugins/${d}/manifest.json`)).icon, `${d} has an icon`);
+    for (const d of fs.readdirSync(CG('plugins')).filter(d => !d.startsWith('_'))) assert.ok(require(CG(`plugins/${d}/manifest.json`)).icon, `${d} has an icon`);
     assert.ok(/_keepPluginState\(id, true\)/.test(fs.readFileSync(CG('src/ipc/bridge.js'), 'utf8')));
     assert.ok(/disabledPlugins \|\| \[\]\)\) \{\s*try \{ pluginHost\.disable\(id\)/.test(fs.readFileSync(CG('src/main/index.js'), 'utf8')), 'applied at boot');
   });
@@ -173,6 +178,40 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
     assert.strictEqual(lin.protected, false, 'Linux says it cannot hide from capture');
     const src = fs.readFileSync(CG('src/main/float-cli.js'), 'utf8');
     assert.ok(!/executeJavaScript|insertCSS/.test(src), 'nothing is put into a page');
+  });
+
+  await test('BST-14', 'zoom in the core: Firefox\'s ladder; saved per site (100% leaves no row); restored; the driver and the window go through it', () => {
+    const Z = require(CG('src/core/zoom.js'));
+    assert.deepStrictEqual([Z.step(1, 'in'), Z.step(1.1, 'out'), Z.step(3, 'in'), Z.step(0.95, 'in'), Z.step(0.3, 'out'), Z.step(1.25, 'out'), Z.clamp(9), Z.clamp('x')], [1.1, 1, 3, 1, 0.3, 1.2, 3, 1]);
+    const data = {}; const o = (u) => new URL(u).origin;
+    const sites = { get: (u, k) => (data[o(u)] || {})[k], set: (u, k, v) => { data[o(u)] = { ...(data[o(u)] || {}), [k]: v }; return true; }, deleteKey: (u, k) => { delete (data[o(u)] || {})[k]; return true; } };
+    let url = 'https://news.com/a', f = 1; const wc = { setZoomFactor: (x) => { f = x; }, getZoomFactor: () => f, getURL: () => url };
+    const z = Z.createZoom({ siteSettings: sites });
+    assert.deepStrictEqual([z.step(wc, 'in').factor, z.step(wc, 'in').factor], [1.1, 1.2]);
+    assert.strictEqual(data['https://news.com'].zoomFactor, 1.2);
+    url = 'https://other.com/'; assert.strictEqual(z.restore(wc).factor, 1);
+    url = 'https://news.com/b'; assert.strictEqual(z.restore(wc).factor, 1.2, 'restored on the same site');
+    z.reset(wc); assert.strictEqual(data['https://news.com'].zoomFactor, undefined, '100% is no setting');
+    assert.deepStrictEqual(z.set(null, 2), { ok: false, error: 'no page to zoom' });
+    const drv = fs.readFileSync(CG('src/driver/index.js'), 'utf8'); assert.ok(/require\('\.\.\/core\/zoom'\)\.zoom\(\)/.test(drv) && /zoomed: true/.test(drv));
+    const bjs = fs.readFileSync(CG('renderer/browser.js'), 'utf8'); assert.ok(/cg\.zoom\.step\(_wcId\(\), dir\)/.test(bjs) && !/applyZoom\(_zoomFactor [+-] 0\.1\)/.test(bjs), 'the window steps through the core');
+    const main = fs.readFileSync(CG('src/main/index.js'), 'utf8'); assert.ok(!/BUILTIN_PLUGINS = \[[^\]]*'zoom'/.test(main) && fs.existsSync(CG('plugins/_archive/zoom-0.60.182/manifest.json')) && !fs.existsSync(CG('plugins/zoom')), 'the plugin archived, not loaded');
+  });
+
+  await test('BST-15a', 'the right-click menu\'s place: down-right of the point, flipped at the right and bottom edges, never off the window', () => {
+    const M = require(CG('renderer/shell/ctxmenu.js'));
+    assert.deepStrictEqual(M.place(100, 100, 250, 300, 1280, 800), { left: 101, top: 101, flipX: false, flipY: false });
+    assert.deepStrictEqual(M.place(1200, 100, 250, 300, 1280, 800), { left: 949, top: 101, flipX: true, flipY: false });
+    assert.deepStrictEqual(M.place(100, 700, 250, 300, 1280, 800), { left: 101, top: 399, flipX: false, flipY: true });
+    assert.deepStrictEqual(M.place(NaN, 50, 250, 900, 1280, 800), { left: 4, top: 4, flipX: false, flipY: true });
+    assert.deepStrictEqual(M.contextOf({ linkURL: 'https://a.com', mediaType: 'image', srcURL: 'https://a.com/i.png', selectionText: ' hi ' }, { pluginRows: 1 }), { page: true, bare: false, link: true, image: true, selection: true, editable: false, plugins: true });
+    assert.strictEqual(M.contextOf({}).bare, true, 'nothing particular: the navigation row and page rows');
+    assert.deepStrictEqual(M.contextOf({}, { chrome: true }), { chrome: true });
+    const html = fs.readFileSync(CG('renderer/browser.html'), 'utf8');
+    const old = ['unpin', 'unpin-sep', 'customize-toolbar', 'customize-toolbar-sep', 'bookmark', 'snapshot', 'pick', 'answer-question', 'copilot-page', 'tokens', 'bg-tab', 'new-agent', 'find', 'print'];
+    for (const a of old) assert.ok(html.includes(`data-action="${a}"`), `0.60.182 action kept: ${a}`);
+    const bjs = fs.readFileSync(CG('renderer/browser.js'), 'utf8');
+    for (const a of [...html.matchAll(/data-action="([\w-]+)"/g)].map(m => m[1]).filter(a => !/-sep$/.test(a))) assert.ok(bjs.includes(`case '${a}'`), `browser.js handles ${a}`);
   });
 
   await test('BST-12', 'context decided by Co-pilot: page / picks / sign-in cookies per message; no value in the cookie summary; chips gone', () => {
@@ -304,6 +343,64 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       for (const t of ['Agent mesh', 'Pick an element', 'Guardian scripts', 'Accounts and profiles']) assert.ok(tools.includes(t), t);
       const src = fs.readFileSync(CG('renderer/browser.js'), 'utf8');
       assert.ok(!/\$\{p\.hosted \?/.test(src), 'nothing reads hosted alone (the host sends running)');
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
+    await test('BST-13', 'a plugin\'s page in Clear Glass: its row opens about, permissions and its fields; a list switch asks the plugin', async () => {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 860 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      const view = { summary: { value: '37', label: 'blocked on this page' }, fields: [
+        { key: 'enabled', type: 'toggle', label: 'Block ads and trackers', value: true },
+        { key: 'site', type: 'toggle', label: 'Block on news.com', value: true },
+        { type: 'info', label: 'Rules in use', value: '112,781 blocking · 24,365 hiding' },
+        { key: 'lists', type: 'list', label: 'Filter lists', items: [{ id: 'easylist', label: 'EasyList', on: true, sub: 'Ads · 80,868 rules · updated 2 h ago' }, { id: 'ublock', label: 'uBlock filters', on: false, sub: 'uBlock Origin’s own fixes' }] },
+        { key: 'update', type: 'action', label: 'Update lists now', kind: 'primary' },
+        { key: 'custom', type: 'textarea', label: 'My filters', value: '', placeholder: '||ads.example.com^' },
+        { key: 'allowed', type: 'list', label: 'Allowed sites', items: [{ id: 'https://bank.com', label: 'https://bank.com', remove: true }] }] };
+      await page.addInitScript(initScript({ answers: {
+        'plugins.list': [{ id: 'a', name: 'adblocker', displayName: 'Ad Blocker', version: '2.0.0', description: 'Blocks ads and trackers with the standard filter lists.', icon: '🛡', state: 'active', commands: [], author: 'James Brooks (Erosmancer)', permissions: { webRequest: true, network: false }, settings: 'plugin:a:settings', settingsSection: 'sites' },
+          { id: 'p', name: 'passwords', displayName: 'Passwords', version: '1.0.0', description: 'Saved logins.', icon: '🔑', state: 'active', commands: [], permissions: {}, settings: null, settingsSection: 'privacy' }],
+        'plugins.settings': { ok: true, view }, 'options.get': { pinnedPlugins: ['a'] }, 'toolbar.commands': [], 'bookmarks.list': [], 'webext.list': { extensions: [] } } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForFunction(() => { const b = document.querySelector('#sh-ext-pinned [data-plugin="a"] .sh-badge'); return b && !b.hidden; }, null, { timeout: 8000 });
+      assert.strictEqual(await page.innerText('#sh-ext-pinned [data-plugin="a"] .sh-badge'), '37', 'the count on the pinned shield');
+      await page.click('#btn-extensions'); await page.waitForSelector('#sh-extensions-panel .sh-ext-row[data-id="a"]');
+      await page.click('#sh-extensions-panel .sh-ext-row[data-id="a"] .sh-ext-name');
+      await page.waitForSelector('#sh-extensions-panel .ps-summary');
+      const t = await page.innerText('#sh-extensions-panel');
+      for (const w of ['Ad Blocker', '37', 'Block ads and trackers', 'EasyList', 'Update lists now', 'My filters', 'https://bank.com', 'Sees requests', 'Open Site settings in Settings']) assert.ok(t.includes(w), `${w} in: ${t}`);
+      await page.screenshot({ path: path.join(SHOTS, 'bst13-adblock-page.png') });
+      await page.click('#sh-extensions-panel .ps-item:has-text("uBlock filters") .tog'); await page.waitForTimeout(250);
+      const call = await page.evaluate(() => window.__cgCalls.filter(c => c.key === 'plugins.settings' && c.args[1] === 'set').pop());
+      assert.deepStrictEqual(call.args.slice(0, 4), ['a', 'set', 'lists', { id: 'ublock', on: true }], JSON.stringify(call.args));
+      await page.click('#sh-extensions-panel .ps-back'); await page.waitForSelector('#sh-extensions-panel .sh-ext-row[data-id="p"]');
+      await page.click('#sh-extensions-panel .sh-ext-row[data-id="p"] .sh-ext-desc'); await page.waitForSelector('#sh-extensions-panel .ps-about');
+      const tp = await page.innerText('#sh-extensions-panel'); assert.ok(tp.includes('Passwords') && tp.includes('No special permissions') && tp.includes('Open Privacy in Settings'), tp);
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
+    await test('BST-15', 'the right-click menu in Clear Glass: at the pointer, link and plugin rows on a link, toolbar rows on the toolbar', async () => {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 800 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'window.cursor': { ok: true, x: 640, y: 300 }, 'plugins.contextItems': [{ id: 'sig-snow', label: 'Open link with Snowflake', icon: '❄', when: 'link' }],
+        'plugins.list': [], 'options.get': {}, 'toolbar.commands': [], 'bookmarks.list': [] } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#btn-back svg');
+      await page.evaluate(() => { const ev = new Event('context-menu'); ev.params = { x: 10, y: 10, linkURL: 'https://example.com/a', selectionText: '', isEditable: false, mediaType: 'none' }; document.getElementById('wv').dispatchEvent(ev); });
+      await page.waitForFunction(() => document.getElementById('ctx-menu').classList.contains('visible') && document.getElementById('ctx-menu').dataset.source, null, { timeout: 5000 });
+      const at = await page.$eval('#ctx-menu', m => ({ left: parseInt(m.style.left), top: parseInt(m.style.top), source: m.dataset.source, groups: [...m.querySelectorAll('.ctx-group')].filter(g => !g.hidden).map(g => g.dataset.when) }));
+      assert.deepStrictEqual([at.left, at.top, at.source], [641, 301, 'pointer'], 'its corner at the pointer the main process reported, not params.x/y: ' + JSON.stringify(at));
+      assert.deepStrictEqual([...new Set(at.groups)], ['link', 'plugins', 'page'], at.groups.join(','));
+      const rows = await page.$$eval('#ctx-menu .ctx-group:not([hidden]) .ctx-item', els => els.filter(e => e.style.display !== 'none').map(e => e.textContent.trim()));
+      assert.ok(rows.includes('Open link in new tab') && rows.includes('Open link with Snowflake') && rows.includes('Ask Co-pilot about this page'), rows.join(' | '));
+      assert.ok(await page.$eval('#ctx-menu', m => [...m.querySelectorAll('.ctx-group:not([hidden]) .ci-ico')].every(i => i.querySelector('svg'))), 'every row draws its icon');
+      await page.screenshot({ path: path.join(SHOTS, 'bst15-context-menu.png') });
+      await page.click('#ctx-menu [data-action="link-copilot"]'); await page.waitForTimeout(150);   // (the tab rows need a real <webview>, which this engine has not)
+      assert.strictEqual(await page.$eval('#ctx-menu', m => m.classList.contains('visible')), false, 'a row closes it');
+      assert.ok((await page.$eval('#copilot-textarea', t => t.value)).includes('https://example.com/a'), 'the link row acted on the link clicked');
+      await page.click('#chrome', { button: 'right', position: { x: 600, y: 20 } }); await page.waitForTimeout(200);
+      const chrome = await page.$eval('#ctx-menu', m => ({ groups: [...m.querySelectorAll('.ctx-group')].filter(g => !g.hidden).map(g => g.dataset.when), left: parseInt(m.style.left), top: parseInt(m.style.top) }));
+      assert.deepStrictEqual(chrome.groups, ['chrome'], 'the toolbar shows only the toolbar rows: ' + JSON.stringify(chrome));
+      const top = await page.$eval('#chrome', e => Math.round(e.getBoundingClientRect().top));
+      assert.deepStrictEqual([chrome.left, chrome.top], [601, top + 21], 'a toolbar right-click is placed at its own event point: ' + JSON.stringify(chrome));
       assert.deepStrictEqual(errors, []); await page.close();
     });
 

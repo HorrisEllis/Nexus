@@ -355,14 +355,18 @@ class Page extends EventEmitter {
     }
   }
 
-  async click(sel, { timeout = 30000 } = {}) {
+  // §0.60.183 — button: 'left' | 'right' | 'middle' (a right press raises contextmenu, as the input system does); position: { x, y } inside
+  // the element instead of its centre (the right-click menu's test clicks the toolbar at a known point)
+  async click(sel, { timeout = 30000, button = 'left', position = null } = {}) {
     await this.waitForSelector(sel, { timeout });
     const box = await this._q(`const el = G.all(sel).find(G.visible); el.scrollIntoView({ block: 'center', inline: 'center' });
       // an inline element that wraps has several line boxes; the centre of its bounding box can fall between them
       const r = [...el.getClientRects()].find(b => b.width > 0 && b.height > 0) || el.getBoundingClientRect();
-      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };`, sel);
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2, left: r.left, top: r.top };`, sel);
+    const x = position ? box.left + position.x : box.x, y = position ? box.top + position.y : box.y;
+    const mask = { left: 1, right: 2, middle: 4 }[button] || 1;
     for (const type of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
-      await this._send('Input.dispatchMouseEvent', { type, x: box.x, y: box.y, button: type === 'mouseMoved' ? 'none' : 'left', buttons: type === 'mousePressed' ? 1 : 0, clickCount: type === 'mouseMoved' ? 0 : 1 });
+      await this._send('Input.dispatchMouseEvent', { type, x, y, button: type === 'mouseMoved' ? 'none' : button, buttons: type === 'mousePressed' ? mask : 0, clickCount: type === 'mouseMoved' ? 0 : 1 });
     }
   }
   // §0.39.357 — a double-click, as the input system makes it: two press/release pairs, the second with clickCount 2

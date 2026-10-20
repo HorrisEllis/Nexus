@@ -355,6 +355,9 @@ class PluginHost {
       state: r.state, contributions: r.registeredSignatures, error: r.error || null,
       // BS4: what a pinned icon can run (its toolbar commands), Firefox's extension popup
       commands: ((r.manifest.contributes || {})['toolbar-command'] || []).map(c => ({ signature: c.signature, label: c.label || c.signature, icon: c.icon || null })),
+      // BS13 (0.60.183): what its page shows — author, permissions, its settings contribution, and the Settings section that holds the rest
+      author: r.manifest.author || null, permissions: r.manifest.permissions || {},
+      settings: (((r.manifest.contributes || {}).settings || [])[0] || {}).signature || null, settingsSection: r.manifest.settingsSection || null,
     }));
   }
 

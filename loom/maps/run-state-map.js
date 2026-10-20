@@ -51,7 +51,14 @@ const FILES = [
   ['clear-glass/src/net/qbittorrent.js', I('clear-glass/src/net/qbittorrent.js'), []],   // §0.60.179 CD3 the verified torrent hand-off (MR12)
   ['clear-glass/src/net/kill-switch.js', I('clear-glass/src/net/kill-switch.js'), []],   // §0.60.179 CD4 kill on disconnect
   ['clear-glass/src/import/firefox.js', I('clear-glass/src/import/firefox.js'), []],   // §0.60.179 BS1 Firefox profiles, cookies, bookmarks, persona (node:sqlite)
-  ['clear-glass/src/main/float-cli.js', I('clear-glass/src/main/float-cli.js'), []],   // §0.60.179 BS6 the floating CLI's own content-protected window
+  ['clear-glass/src/main/float-cli.js', I('clear-glass/src/main/float-cli.js'), []],
+  ['clear-glass/src/adblock/engine.js', I('clear-glass/src/adblock/engine.js'), []],   // §0.60.183 AB1 filter lists parsed, requests matched, element hiding (pure)
+  ['clear-glass/src/adblock/lists.js', I('clear-glass/src/adblock/lists.js'), [I('clear-glass/src/adblock/engine.js')]],   // §0.60.183 AB2 the lists, state, store; the one service
+  ['clear-glass/plugins/adblocker/index.js', I('clear-glass/plugins/adblocker/index.js'), [I('clear-glass/src/adblock/engine.js'), I('clear-glass/src/adblock/lists.js')]],   // §0.60.183 AB3 the Ad Blocker plugin asks the service
+  ['clear-glass/src/core/zoom.js', I('clear-glass/src/core/zoom.js'), []],   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
+  ['clear-glass/renderer/shell/ctxmenu.js', I('clear-glass/renderer/shell/ctxmenu.js'), []],   // §0.60.183 BS15 the right-click menu: rows by what was clicked, placed at the pointer
+  ['clear-glass/src/copilot/context-need.js', I('clear-glass/src/copilot/context-need.js'), []],   // §0.60.182 BS12 what a message needs from the page (wired late, 0.60.183)
+  ['lib/agent-tools/tools/clear-glass/adblock.js', I('lib/agent-tools/tools/clear-glass/adblock.js'), [I('lib/agent-tools/tools/clear-glass/net.js')]],   // §0.60.183 AB4 the blocker for agents   // §0.60.179 BS6 the floating CLI's own content-protected window
   ['clear-glass/renderer/shell/menus.js', I('clear-glass/renderer/shell/menus.js'), []],   // §0.60.179 BS3 menu bar + ☰ from one model
   ['clear-glass/renderer/shell/extensions.js', I('clear-glass/renderer/shell/extensions.js'), []],   // §0.60.179 BS4 🧩 plugins with icons
   ['clear-glass/renderer/shell/downloads.js', I('clear-glass/renderer/shell/downloads.js'), []],   // §0.60.179 BS5 ⬇ panel (the Library's store + the quarantine)
@@ -235,6 +242,19 @@ const CONSUMERS = [
   [I('clear-glass/renderer/shell/extensions.js'),  I('clear-glass/renderer/shell/icons.js'), '§0.60.180 BS8 plugin icons drawn by window.CGIcons.plugin (page global)'],
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/service.js'), '§0.60.180 SF7 _ensureBridge before every start (service.ensureBridge)'],
   [I('clear-glass/renderer/float-cli.js'),          I('clear-glass/renderer/copilot-cli.js'), '§0.60.179 BS6 CGCopilotCLI.create: the route bar, slash commands, history (page global)'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/adblock/lists.js'), '§0.60.183 AB2 service() started at boot; due lists updated; cosmetics inserted on dom-ready (AB3)'],
+  [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/adblock/lists.js'), '§0.60.183 AB4 /cli/adblock/* (lazy require)'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/plugins/adblocker/index.js'), '§0.60.183 AB3 BUILTIN_PLUGINS installs the Ad Blocker (content-filter + settings)'],
+  [I('clear-glass/src/plugins/webrequest-adapter.js'), I('clear-glass/plugins/adblocker/index.js'), '§0.60.183 AB3 emits the content-filter signature with resourceType, pageUrl, tabId (bus, not require)'],
+  [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/plugins/host.js'), '§0.60.183 BS13 plugins:settings: list() finds the settings signature; _askPlugin waits for plugin:settings'],
+  [I('clear-glass/renderer/shell/extensions.js'),  I('clear-glass/src/preload/index.js'), '§0.60.183 BS13 ClearGlass.plugins.settings (the plugin page) — IPC, not require'],
+  [I('clear-glass/src/driver/index.js'),            I('clear-glass/src/core/zoom.js'), '§0.60.183 BS14 the zoom action goes through zoom()'],
+  [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/core/zoom.js'), '§0.60.183 BS14 zoom:step|set|restore'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/core/zoom.js'), '§0.60.183 BS14 zoom({ siteSettings }) at boot'],
+  [I('clear-glass/renderer/browser.js'),            I('clear-glass/renderer/shell/ctxmenu.js'), '§0.60.183 BS15 window.CGCtxMenu.open/keys (page global)'],
+  [I('clear-glass/renderer/shell/ctxmenu.js'),      I('clear-glass/src/preload/index.js'), '§0.60.183 BS15 ClearGlass.window.cursor → window:cursor (IPC)'],
+  [I('clear-glass/src/copilot/bridge.js'),          I('clear-glass/src/copilot/context-need.js'), '§0.60.182 BS12 need() and cookieSummary() per message'],
+  [I('lib/agent-tools/index.js'),                   I('lib/agent-tools/tools/clear-glass/adblock.js'), '§0.60.183 AB4 registerTool(clear_glass_adblock)'],
 ];
 
 function mapRunState(driver) { return declareMap(driver, { key: 'run-state', uuidTag: '2026-1015-050', files: FILES, consumers: CONSUMERS }); }

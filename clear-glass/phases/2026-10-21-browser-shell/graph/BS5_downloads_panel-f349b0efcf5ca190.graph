@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792497857574
+exported_at: 1792499730288
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792497857574
-lastSeenAt: 1792497857574
+firstSeenAt: 1792499730288
+lastSeenAt: 1792499730288
 fingerprint: null
 payload:
   for: BS5_downloads_panel
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7af3dad11fc8b982
+    dagHash: e95f3baa40b53a58
     layer: 4
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
@@ -48,6 +48,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 7af3dad11fc8b982 · layer 4
+      - DAG e95f3baa40b53a58 · layer 4
       - 'depends on (2): BS2_shell_rebuild, CD5_surface · all upstream 8'
       - 'needed by (0): —'

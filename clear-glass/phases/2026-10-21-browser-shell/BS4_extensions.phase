@@ -7,11 +7,11 @@ intent: null
 summary: BS4_extensions (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792497857573
+exported_at: 1792499730288
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792497857573
-lastSeenAt: 1792497857573
+firstSeenAt: 1792499730288
+lastSeenAt: 1792499730288
 fingerprint: null
 payload:
   id: BS4_extensions

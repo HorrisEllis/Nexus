@@ -108,8 +108,15 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     contextItems: (when) => ipcRenderer.invoke('plugins:contextItems', { when }),   // §0.60.169 — rows plugins add to the right-click menu
     disable: (id) => ipcRenderer.invoke('plugins:disable', { id }),
     enable:  (id) => ipcRenderer.invoke('plugins:enable', { id }),   // BS4 (0.60.179)
+    settings: (id, op, key, value, page) => ipcRenderer.invoke('plugins:settings', { id, op, key, value, page }),   // BS13 (0.60.183) — a plugin's page
   },
 
+  // ── Page zoom — BS14 (0.60.183), src/core/zoom.js: one ladder, saved per site; id = the page's webContents id ──
+  zoom: {
+    step:    (id, dir) => ipcRenderer.invoke('zoom:step', { id, dir }),
+    set:     (id, factor, persist = true) => ipcRenderer.invoke('zoom:set', { id, factor, persist }),
+    restore: (id) => ipcRenderer.invoke('zoom:restore', { id }),
+  },
   // ── WebExtensions — §BUILT 2026-09-26 (src/plugins/webextensions.js) ──
   webext: {
     list:       ()                          => ipcRenderer.invoke('webext:list'),
@@ -272,6 +279,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
 
   // ── Host window controls ────────────────────────────────────────────────
   window: {
+    cursor:       () => ipcRenderer.invoke('window:cursor'),   // BS15 (0.60.183) — the pointer, in this window's CSS pixels (the right-click menu's place)
     minimize:     (agentId) => ipcRenderer.invoke('window:minimize', { agentId }),
     hide:         (agentId) => ipcRenderer.invoke('window:hide',     { agentId }),
     maximize:     (agentId) => ipcRenderer.invoke('window:maximize', { agentId }),

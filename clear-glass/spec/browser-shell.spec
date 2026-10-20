@@ -151,6 +151,14 @@ spec:
       behavioral_contracts: ["only the fields Firefox gives override"]
       error_paths: ["save failure logged"]
 
+    - id: IF-SITE-SETTINGS
+      name: site-settings
+      path: clear-glass/src/site-settings/store.js
+      description: "Per-origin settings (zoomFactor, contentFilter, permissions); the store page zoom keeps its factor in (BS14)."
+      exports: ["get(url, key)", "set(url, key, value)", "deleteKey(url, key)", "listOrigins()"]
+      behavioral_contracts: ["keys are origins"]
+      error_paths: ["bad url → undefined / false"]
+
   modules:
 
     - id: MOD-BSH-FIREFOX
@@ -383,6 +391,71 @@ spec:
       behavioral_contracts: ["pure and deterministic", "a cookie value is never read into the summary"]
       error_paths: ["no session or no URL → no cookie summary, said in why"]
       acceptance: ["'summarise this page' → dom; 'what is 2+2' → nothing; 'fill this in' with a pick → dom+picks; 'am I logged in' → cookies"]
+
+    - id: MOD-BSH-PLUGIN-SETTINGS
+      name: plugin-settings
+      uuid: nexus-cg-bsh-plugin-settings-v1-0000-2026-1021-004
+      path: clear-glass/renderer/shell/extensions.js
+      phase: BS13_plugin_settings
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "make it so i can click on them t ochange their settings." Every plugin row in the 🧩 panel (and a pinned
+        plugin's icon) opens that plugin's page in the same panel: back, icon, name, version, the switch; what it does; its author and
+        permissions; its commands; its own settings when it has them; and "Open in Settings" for plugins whose settings live in a Settings
+        section (manifest settingsSection). A plugin gives settings through a new contribution type, `settings`: the host emits its
+        signature with { op: get|set|action, key, value, page, requestId } and the plugin returns one plugin:settings event carrying a
+        view — fields of kind toggle, select, text, textarea, list (items with on/remove), action, info, and an optional summary (a big
+        number and its label). The bridge's plugins:settings waits for that one event (3 s), so the protocol stays event-only (COS-4).
+      deps: [{ name: plugin-host }, { name: shell }]
+      exports: ["contribution type 'settings'", "PluginHost.list() → + author, permissions, settings (signature|null), settingsSection", "plugins:settings IPC { id, op, key, value, page } → { ok, view }", "CGExtensions.openPlugin(id)"]
+      gate_pipeline: ["GATE-PS-001: row click → page", "GATE-PS-002: settings contribution → view", "GATE-PS-003: set/action → new view", "GATE-PS-004: no contribution → about, permissions, commands"]
+      behavioral_contracts: ["the switch and pin keep working from the row", "a field's label and values are text, never HTML"]
+      error_paths: ["no answer in 3 s → the page says the plugin did not answer", "a plugin that is off → its page says so and offers the switch"]
+      acceptance: ["Clear Glass: clicking the Ad Blocker row shows its lists and the switch; clicking a list's switch calls plugins:settings set"]
+
+    - id: MOD-BSH-ZOOM-CORE
+      name: zoom-core
+      uuid: nexus-cg-bsh-zoom-core-v1-0000-2026-1021-004
+      path: clear-glass/src/core/zoom.js
+      phase: BS14_zoom_core
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "migrate page zoom to the core of clearglass." Page zoom was in two places: the window (browser.js applyZoom,
+        +0.1 steps, saved per site from the renderer) and the Page Zoom plugin (driver.exec zoom, its own +0.1 and 0.25–5 bounds, never
+        saved, never shown in the address bar). One core module now: Firefox's steps (30 50 67 80 90 100 110 120 133 150 170 200 240 300
+        %), step(f, dir), clamp, and createZoom({ siteSettings }) that sets a page's factor, saves it per site and restores it when the
+        page navigates. The window (zoom:set / zoom:step / zoom:restore IPC), the driver's zoom action (agents) and the shortcuts all go
+        through it. The plugin is archived (plugins/_archive/zoom-0.60.182), not deleted (§0.3); its three commands are the ☰ menu's zoom
+        row and Ctrl +/−/0, which were always core.
+      deps: [{ name: site-settings }]
+      exports: ["STEPS", "step(factor, dir) → factor", "clamp(f)", "createZoom({ siteSettings }) → { set(wc, f, { persist }), step(wc, dir), reset(wc), restore(wc) }", "zoom:set|step|restore IPC → { factor }"]
+      gate_pipeline: ["GATE-ZM-001: step on Firefox's ladder", "GATE-ZM-002: clamp 0.3–3", "GATE-ZM-003: persist per site", "GATE-ZM-004: restore on navigate"]
+      behavioral_contracts: ["one ladder for the window, the shortcuts and agents", "100% is stored as no setting (deleteKey), not as 1"]
+      error_paths: ["no webContents → { ok:false } said", "bad url → not saved, still applied"]
+      acceptance: ["step(1,'in') = 1.1, step(1.1,'out') = 1, step(3,'in') = 3, step(0.95,'in') = 1", "set then restore on the same site gives the saved factor"]
+
+    - id: MOD-BSH-CTXMENU
+      name: context-menu
+      uuid: nexus-cg-bsh-ctxmenu-v1-0000-2026-1021-004
+      path: clear-glass/renderer/shell/ctxmenu.js
+      phase: BS15_context_menu
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "moright click menu needs to be redone in the same themeand in relation to the mouse is way of f onthe right
+        clicskk". Redrawn like Firefox's in the window's theme: a row of Back / Forward / Reload / Bookmark icons on top, then what the
+        click was on — a link (open in new tab, copy link, the plugins' link rows such as Snowflake), an image (open, copy address, save),
+        a selection (copy, search the web for it, ask Co-pilot), a field (undo, cut, copy, paste, select all) — then the page and Clear
+        Glass rows that were there (every 0.60.182 data-action kept), each with a drawn icon and its shortcut. The toolbar's own
+        right-click shows only the toolbar rows. Position: the point comes from the main process (screen.getCursorScreenPoint() less the
+        window's content bounds, in the window's CSS pixels), which is where the mouse is whatever the page zoom, the display scale or
+        the webview's place; params.x/y are the fallback. The menu opens down-right of the pointer and flips left or up at the edges, as
+        a native menu does.
+      deps: [{ name: shell }]
+      exports: ["window.CGCtxMenu.open({ x, y, params, chrome })", "window:cursor IPC → { x, y, scale }", "place(x, y, w, h, vw, vh) → { left, top }"]
+      gate_pipeline: ["GATE-CM-001: point from the cursor", "GATE-CM-002: sections by what was clicked", "GATE-CM-003: flip at edges", "GATE-CM-004: old actions kept"]
+      behavioral_contracts: ["every data-action browser.js handles is still reachable", "labels are text, never HTML (a link or selection is data)"]
+      error_paths: ["the cursor IPC fails → params.x/y plus the webview's offset, as before"]
+      acceptance: ["place() flips at the right and bottom edges", "Clear Glass: a link right-click shows the link rows; the toolbar's shows only the toolbar rows; the menu's corner sits at the point given"]
 
   events:
     shell:
