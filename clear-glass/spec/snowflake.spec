@@ -71,7 +71,7 @@ spec:
         type: hard
         enforced_by: [GATE-SF-FIELDS]
       - id: SF-007
-        description: "Asking the Tor Project for its builtin bridges is a person's explicit act, says that it contacts bridges.torproject.org directly, and is never automatic."
+        description: "Asking the Tor Project for its builtin bridges says that it contacts bridges.torproject.org directly. Superseded 2026-10-21 by his 'need to have the bridge setup automatically': it is now asked automatically when no local line exists, and the page says so."
         type: hard
         enforced_by: [GATE-SF-OPT-IN]
 
@@ -290,6 +290,26 @@ spec:
       behavioral_contracts: ["the page never shows a stored bridge line back in full; a found line is shown so he can see what he is choosing"]
       error_paths: ["bridge :7702 unreachable → the pane says so"]
       acceptance: ["Clear Glass driver (glass.js) on Settings → Network: Programs shows paths; Find lists candidates; the switch and Check answer"]
+
+    - id: MOD-SF-AUTO-BRIDGE
+      name: sf-auto-bridge
+      uuid: nexus-cg-sf-auto-bridge-v1-0000-2026-1021-002
+      path: clear-glass/src/net/service.js
+      phase: SF7_bridge_automatic
+      map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+      description: >-
+        James, 2026-10-21: "need to have the bridge setup automatically." ensureBridge({ local, builtin }) runs before every start (the
+        Start button, net start, Open with Snowflake): with no line set it takes the first real line found on this machine (Tor Browser,
+        the bundle, the package example); with none it asks the Tor Project's builtin list (his words now make that automatic — it
+        contacts bridges.torproject.org directly, and the page says so); the line used and its source are recorded and shown. A line he
+        set by hand is never replaced. Settings → Network leads with one status card (state, exit, Start/Stop) and keeps the manual
+        fields under "Advanced".
+      deps: [{ name: net-service }, { name: sf-bridge-sources }]
+      exports: ["NetService.ensureBridge({ local, builtin }) → { ok, source, path } | { ok:false, error }", "status().bridgeSource"]
+      gate_pipeline: ["GATE-AB-001: line set → keep", "GATE-AB-002: local", "GATE-AB-003: builtin", "GATE-AB-004: record source"]
+      behavioral_contracts: ["never invents a line", "never overwrites a hand-set line"]
+      error_paths: ["no source answers → start refuses with what was tried, in order"]
+      acceptance: ["no line + a local one → used, source tor-browser; no local → builtin asked; a hand-set line kept"]
 
   events:
     net:

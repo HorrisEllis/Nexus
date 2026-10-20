@@ -7,6 +7,8 @@
   renderer/browser.html — the Clear Glass browser window. BS2 (0.60.179), clear-glass/spec/browser-shell.spec MOD-BSH-SHELL.
   James, 2026-10-21: "rebuild the front end renderer.html completely enterprise grade, same theme as the setting, make it dynamic like
   firefox. liek a whole toolbar menu. addons or plugins built with little icons like firefox."
+  0.60.180 (BS8–BS11): James, "omg this looks bad. enterprise grade, production quality. outliar level ui" — drawn icons (shell/icons.js),
+  the Guardian agents hub, a start page, the co-pilot pane redrawn.
   Rebuilt like Firefox in Settings' own palette (cos-theme.css, as Settings loads it) with the layout in shell/shell.css, loaded last. Every element id of the 0.60.178 window is kept, because
   browser.js wires each one by id; the 0.60.178 file, with its full history of comments, is archived at
   _archive/clear-glass/renderer/browser-0.60.178.html. New here: the menu bar (#menubar, BS3), home and site identity, pinned plugin
@@ -25,6 +27,7 @@
 <link rel="stylesheet" href="cos-theme.css"><!-- 0.60.5 — the Compartment-OS palette, the one Settings loads too -->
 <link rel="stylesheet" href="selector-assign/selector-assign.css">
 <link rel="stylesheet" href="shell/shell.css">
+<link rel="stylesheet" href="shell/copilot.css"><!-- BS11 the co-pilot pane on the same system -->
 </head>
 <body class="cg-shell">
 
@@ -34,26 +37,26 @@
 <!-- ═══ Tab strip ═══ -->
 <div id="tab-bar" class="sh-tabstrip">
   <div id="tab-list" class="sh-tabs" role="tablist"></div>
-  <button id="btn-new-tab" class="sh-icon sh-newtab" title="New tab (Ctrl+T)" aria-label="New tab">+</button>
+  <button id="btn-new-tab" class="sh-icon sh-newtab" title="New tab (Ctrl+T)" aria-label="New tab" data-icon="plus">+</button>
   <div class="sh-drag"></div>
   <div class="chrome-group cos-ctl sh-winctl">
-    <button class="nav-btn" id="btn-minimize" title="Minimize to Taskbar" aria-label="Minimize">–</button>
-    <button class="nav-btn" id="btn-maximize" title="Maximize" aria-label="Maximize">⛶</button>
-    <button class="nav-btn sh-close" id="btn-close-tray" title="Close to Tray" aria-label="Close">✕</button>
+    <button class="nav-btn" id="btn-minimize" title="Minimize to Taskbar" aria-label="Minimize" data-icon="minimize" data-icon-size="16">–</button>
+    <button class="nav-btn" id="btn-maximize" title="Maximize" aria-label="Maximize" data-icon="maximize" data-icon-size="14">⛶</button>
+    <button class="nav-btn sh-close" id="btn-close-tray" title="Close to Tray" aria-label="Close" data-icon="close" data-icon-size="16">✕</button>
   </div>
 </div>
 
 <!-- ═══ Navigation toolbar ═══ -->
 <div id="chrome" class="sh-navbar" role="toolbar" aria-label="Navigation">
   <div class="chrome-group sh-navgroup">
-    <button class="nav-btn sh-icon" id="btn-back"    title="Back (Alt+←)" aria-label="Back">←</button>
-    <button class="nav-btn sh-icon" id="btn-forward" title="Forward (Alt+→)" aria-label="Forward">→</button>
-    <button class="nav-btn sh-icon" id="btn-reload"  title="Reload (F5)" aria-label="Reload">↻</button>
-    <button class="nav-btn sh-icon" id="btn-home"    title="Home" aria-label="Home">⌂</button>
+    <button class="nav-btn sh-icon" id="btn-back"    title="Back (Alt+←)" aria-label="Back" data-icon="back">←</button>
+    <button class="nav-btn sh-icon" id="btn-forward" title="Forward (Alt+→)" aria-label="Forward" data-icon="forward">→</button>
+    <button class="nav-btn sh-icon" id="btn-reload"  title="Reload (F5)" aria-label="Reload" data-icon="reload">↻</button>
+    <button class="nav-btn sh-icon" id="btn-home"    title="Home" aria-label="Home" data-icon="home">⌂</button>
   </div>
 
   <div id="url-bar-wrap" class="sh-urlbar">
-    <button id="sh-identity" class="sh-identity" title="Site information" aria-label="Site information"><span class="sh-lock">🔒</span></button>
+    <button id="sh-identity" class="sh-identity" title="Site information" aria-label="Site information"><span class="sh-lock"></span></button>
     <div id="url-bar-grip" title="Drag to move the search bar · double-click to put it back" aria-label="Move search bar">⋮⋮</div>
     <input id="url-bar" type="text" placeholder="Search or enter address" spellcheck="false" autocomplete="off" aria-label="Address">
     <button id="btn-zoom" class="url-bar-zoom-btn" title="Zoom" style="display:none;">
@@ -67,7 +70,7 @@
         <button data-zoom="reset" class="menu-zoom-btn sh-zoom-reset" title="Reset (Ctrl+0)">Reset</button>
       </div>
     </div>
-    <button id="btn-bookmark" class="status-bookmark-btn url-bar-bookmark-btn" title="Bookmark this page (Ctrl+D)" aria-label="Bookmark this page">★</button>
+    <button id="btn-bookmark" class="status-bookmark-btn url-bar-bookmark-btn" title="Bookmark this page (Ctrl+D)" aria-label="Bookmark this page" data-icon="star" data-icon-size="17">★</button>
   </div>
   <div id="url-bar-resize-handle" title="Drag to resize · double-click to reset"></div>
 
@@ -81,14 +84,16 @@
   <div class="chrome-divider" id="tools-divider-r" style="display:none;"></div>
 
   <!-- BS4 — plugins pinned to the toolbar, as their icons; the 🧩 button opens every plugin with a switch and a pin -->
+  <!-- BS9 — Guardian's agents in one place: each NCP agent with its state and Start/Show/Stop, and the Guardian tools -->
+  <button class="nav-btn sh-icon" id="btn-agents" title="Guardian agents" aria-label="Guardian agents" aria-haspopup="true" data-icon="agents">AI<span class="sh-badge" hidden></span></button>
   <div class="chrome-group sh-ext-pinned" id="sh-ext-pinned" aria-label="Pinned plugins"></div>
-  <button class="nav-btn sh-icon" id="btn-extensions" title="Plugins and add-ons" aria-label="Plugins and add-ons" aria-haspopup="true">🧩</button>
+  <button class="nav-btn sh-icon" id="btn-extensions" title="Plugins and add-ons" aria-label="Plugins and add-ons" aria-haspopup="true" data-icon="plugins">🧩</button>
   <!-- BS5 — downloads, with the Snowflake quarantine -->
-  <button class="nav-btn sh-icon" id="btn-downloads" title="Downloads (Ctrl+Shift+Y)" aria-label="Downloads" aria-haspopup="true">⬇<span class="sh-ring" hidden></span></button>
-  <button id="copilot-toggle" class="active sh-icon" title="Co-pilot" aria-label="Co-pilot">✦</button>
+  <button class="nav-btn sh-icon" id="btn-downloads" title="Downloads (Ctrl+Shift+Y)" aria-label="Downloads" aria-haspopup="true" data-icon="download">⬇<span class="sh-ring" hidden></span></button>
+  <button id="copilot-toggle" class="active sh-icon" title="Co-pilot" aria-label="Co-pilot" data-icon="sparkle">✦</button>
   <!-- BS6 — the floating CLI: its own window, invisible to screen capture, never part of the page -->
-  <button class="nav-btn sh-icon" id="btn-float-cli" title="Floating CLI (Ctrl+Shift+Space) — hidden from screen recording" aria-label="Floating CLI">›_</button>
-  <button class="nav-btn sh-icon sh-hamburger" id="bookmark-mgr-btn" title="Open application menu" aria-label="Application menu" aria-haspopup="true">☰</button>
+  <button class="nav-btn sh-icon" id="btn-float-cli" title="Floating CLI (Ctrl+Shift+Space) — hidden from screen recording" aria-label="Floating CLI" data-icon="terminal">›_</button>
+  <button class="nav-btn sh-icon sh-hamburger" id="bookmark-mgr-btn" title="Open application menu" aria-label="Application menu" aria-haspopup="true" data-icon="menu">☰</button>
   <div class="chrome-spacer"></div>
 </div>
 
@@ -105,6 +110,7 @@
 <div id="agent-mesh-panel" class="sh-pop sh-pop-narrow" style="display:none;"></div>
 <div id="sh-extensions-panel" class="sh-pop sh-ext-panel" style="display:none;" role="dialog" aria-label="Plugins and add-ons"></div>
 <div id="sh-downloads-panel" class="sh-pop sh-dl-panel" style="display:none;" role="dialog" aria-label="Downloads"></div>
+<div id="sh-agents-panel" class="sh-pop sh-agents-panel" style="display:none;" role="dialog" aria-label="Guardian agents"></div>
 
 <!-- ═══ Status strip ═══ -->
 <div id="status-strip" class="sh-status">
@@ -121,6 +127,8 @@
 <div id="layout">
   <div id="webview-wrap">
     <div id="load-bar"></div>
+    <!-- BS10 — the start page, drawn by the shell over a blank tab (never inside a site's page) -->
+    <section id="sh-newtab" class="sh-newtab-page" hidden aria-label="New tab"></section>
     <webview id="wv" src="about:blank" allowpopups webpreferences="contextIsolation=yes"></webview>
   </div>
 
@@ -393,9 +401,12 @@
 <script src="browser.js"></script>
 <script src="gig-panel.js"></script>
 <script src="page-map-panel.js"></script>
+<script src="shell/icons.js"></script>
 <script src="shell/menus.js"></script>
 <script src="shell/extensions.js"></script>
 <script src="shell/downloads.js"></script>
+<script src="shell/agents.js"></script>
+<script src="shell/newtab.js"></script>
 <script src="shell/shell.js"></script>
 </body>
 </html>

@@ -583,10 +583,10 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       if (optProvList) {
         optProvList.innerHTML = providers.map(p => `
           <div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
-            <span style="width:8px;height:8px;border-radius:50%;background:${p.hosted ? 'var(--green)' : 'var(--text-dim)'};flex-shrink:0;"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:${(p.running || p.hosted) ? 'var(--green)' : 'var(--text-dim)'};flex-shrink:0;"></span>
             <span style="flex:1;font-size:11px;">${p.name}</span>
-            <button class="opt-link-btn prov-opt-btn" data-id="${p.id}" data-hosted="${p.hosted}">
-              ${p.hosted ? 'Active ✓' : 'Start'}
+            <button class="opt-link-btn prov-opt-btn" data-id="${p.id}" data-hosted="${!!(p.running || p.hosted)}">
+              ${(p.running || p.hosted) ? 'Active ✓' : 'Start'}
             </button>
           </div>`).join('');
         optProvList.querySelectorAll('.prov-opt-btn').forEach(btn => {
@@ -2458,14 +2458,14 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         const item = document.createElement('div');
         item.className = 'prov-item';
         item.innerHTML = `
-          <div class="prov-dot ${p.hosted ? 'active' : ''}"></div>
+          <div class="prov-dot ${p.running || p.hosted ? 'active' : ''}"></div>
           <span class="prov-name">${p.name}</span>
-          <button class="prov-btn ${p.hosted ? 'active' : ''}" data-id="${p.id}">
-            ${p.hosted ? 'Show' : 'Start'}
-          </button>`;
+          <button class="prov-btn ${p.running || p.hosted ? 'active' : ''}" data-id="${p.id}">
+            ${p.running || p.hosted ? 'Show' : 'Start'}
+          </button>`;   // BS9 (0.60.180): the host sends running (never hosted), so every agent read as Start
         item.querySelector('button').addEventListener('click', async (e) => {
           e.stopPropagation();
-          if (p.hosted) {
+          if (p.running || p.hosted) {
             await cg.providers.show(p.id);
           } else {
             addMsg('assistant', `Starting ${p.name} provider...`);

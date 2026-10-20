@@ -108,3 +108,20 @@ phases:
       Routes, `net` verbs (bridges, builtin, use, https-only, check), agent read scope (bridges, check), and Settings → Network:
       real program paths, Find bridge line, Ask the Tor Project (opt-in, said), HTTPS-only switch, Check the circuit.
     proof: test-snowflake SFW-07 (field names pinned), SFW-08 (the page driven in Clear Glass's engine against a stub bridge)
+
+## Addendum 2026-10-21 (0.60.180): the bridge set up automatically
+
+James, 2026-10-21 (with a screenshot of Settings → Network asking for a bridge line): "need to have the bridge setup automatically."
+This supersedes the coder's 0.60.178 call that asking the Tor Project is only ever his button (SF-007, kept and marked superseded in the spec):
+with no line on this machine, Start now asks the Tor Project's builtin list itself, and the page says it does.
+
+  SF7_bridge_automatic:
+    layer: integration
+    status: DONE 0.60.180
+    depends_on: [SF2_bridge_sources, SF6_surface]
+    files: [clear-glass/src/net/service.js, clear-glass/src/ipc/bridge.js, clear-glass/renderer/settings/sections/network.js]
+    spec: clear-glass/spec/snowflake.spec
+    blocks: [MOD-SF-AUTO-BRIDGE]
+    does: "ensureBridge before every start: a hand-set line kept; else the first local line; else the Tor Project's builtin; source recorded and shown. Network leads with one status card; manual fields under Advanced."
+    proof: test-snowflake SFW-09, SFW-10 (Settings → Network in Clear Glass)
+

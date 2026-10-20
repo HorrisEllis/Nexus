@@ -50,7 +50,8 @@
     let u = null; try { u = new URL(url); } catch (_) {}
     const secure = u && (u.protocol === 'https:' || u.protocol === 'file:' || u.protocol === 'about:');
     b.classList.toggle('routed', routed); b.classList.toggle('insecure', !!u && !secure);
-    b.querySelector('.sh-lock').textContent = routed ? '❄' : secure || !u ? '🔒' : '⚠';
+    const ic = routed ? 'snow' : secure || !u ? 'lock' : 'warn'; const holder = b.querySelector('.sh-lock');
+    if (window.CGIcons) holder.innerHTML = window.CGIcons.svg(ic, { size: 15 }); else holder.textContent = routed ? '❄' : secure || !u ? '🔒' : '⚠';
     b.title = routed ? 'Snowflake window: this page goes through Tor over Snowflake, in a session that is wiped when the window closes'
       : !u ? 'Site information' : secure ? `Secure connection to ${u.hostname || u.protocol}` : `Not secure: ${u.hostname} is sent without encryption`;
   }

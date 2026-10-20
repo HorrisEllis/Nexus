@@ -39,9 +39,31 @@ class NetService {
     if (!Policy.parseVia(via)) return { ok: false, error: 'default must be direct, block, transport, socks5://host:port or http://host:port' };
     this._save({ ...this.policy(), default: via }); this.reapplyAll().catch(() => {}); return { ok: true, default: via };
   }
-  setBridge(line) {
+  setBridge(line, source = { kind: 'hand' }) {
     if (!/^(Bridge\s+)?snowflake\s+\S+/i.test(String(line || ''))) return { ok: false, error: 'that is not a Snowflake bridge line (it starts with "snowflake ")' };
-    this._save({ ...this.policy(), bridgeLine: String(line).trim() }); return { ok: true, set: true };
+    this._save({ ...this.policy(), bridgeLine: String(line).trim(), bridgeSource: { ...source, at: Date.now() } }); return { ok: true, set: true };
+  }
+  /**
+   * SF7 (0.60.180) — James, 2026-10-21: "need to have the bridge setup automatically." Before every start: a line already set (by hand or
+   * earlier) is kept; else the first real line on this machine (Tor Browser, the bundle, the package example); else the Tor Project's
+   * builtin list (it contacts bridges.torproject.org directly; Settings says so). Never invents a line; the source is recorded.
+   */
+  async ensureBridge({ local, builtin } = {}) {
+    const p = this.policy();
+    if (p.bridgeLine) return { ok: true, kept: true, source: (p.bridgeSource && p.bridgeSource.kind) || 'set' };
+    const tried = [];
+    try {
+      const r = typeof local === 'function' ? local() : { lines: [] };
+      const c = (r.lines || [])[0];
+      if (c) { this.setBridge(c.line, { kind: c.source, path: c.path, auto: true }); return { ok: true, source: c.source, path: c.path }; }
+      tried.push('no line on this machine (Tor Browser, the installed bundle, the snowflake-client package)');
+    } catch (e) { tried.push(`local: ${e.message}`); }
+    try {
+      const r = typeof builtin === 'function' ? await builtin() : { ok: false, error: 'not available' };
+      if (r.ok && r.lines && r.lines[0]) { const c = r.lines[0]; this.setBridge(c.line, { kind: c.source, path: c.path, auto: true }); return { ok: true, source: c.source, path: c.path }; }
+      tried.push(`the Tor Project: ${r.error || 'no Snowflake line'}`);
+    } catch (e) { tried.push(`the Tor Project: ${e.message}`); }
+    return { ok: false, error: `no Snowflake bridge line could be set up automatically — ${tried.join('; ')}. Install Tor Browser, or use Automatic setup.`, tried };
   }
   setPaths({ torPath, snowflakePath }) { this._save({ ...this.policy(), ...(torPath !== undefined ? { torPath } : {}), ...(snowflakePath !== undefined ? { snowflakePath } : {}) }); return { ok: true }; }
   /**
@@ -62,7 +84,7 @@ class NetService {
       upd({ phase: 'configuring', pct: 94, message: 'Pointing the transport at the new programs…' });
       this.setPaths({ torPath: r.torPath, snowflakePath: r.snowflakePath });
       const had = !!this.policy().bridgeLine; let bridge = had ? 'kept' : 'none';
-      if (!had && r.bridgeLines && r.bridgeLines.length) { this.setBridge(r.bridgeLines[0]); bridge = 'from-bundle'; }
+      if (!had && r.bridgeLines && r.bridgeLines.length) { this.setBridge(r.bridgeLines[0], { kind: 'bundle', auto: true }); bridge = 'from-bundle'; }
       let restarted = false;
       if (this._host) {
         upd({ phase: 'restarting', pct: 97, message: 'Restarting the transport…' });
@@ -96,7 +118,7 @@ class NetService {
   useBridge(n) {
     const c = (this._found || [])[Number(n) - 1];
     if (!c) return { ok: false, error: `no found line ${n}: run "net bridges" (or Find bridge line) first` };
-    const r = this.setBridge(c.line); return r.ok ? { ok: true, source: c.source, path: c.path } : r;
+    const r = this.setBridge(c.line, { kind: c.source, path: c.path }); return r.ok ? { ok: true, source: c.source, path: c.path } : r;
   }
   setHttpsOnly(on) { this._save({ ...this.policy(), httpsOnly: !!on }); return { ok: true, httpsOnly: !!on }; }
   async checkCircuit({ fetchVia } = {}) {
@@ -158,7 +180,7 @@ class NetService {
 
   status() {
     const p = this.policy(); const t = this._host ? this._host.status() : { state: 'stopped', progress: 0, socksPort: null };
-    return { ok: true, default: p.default, rules: p.rules.length, transport: t, bridgeLine: p.bridgeLine ? 'set' : null, httpsOnly: p.httpsOnly !== false, lastCheck: this._lastCheck || null, onDisconnect: p.compartmentOnDisconnect || 'kill_tabs', kills: this.killSwitch ? this.killSwitch.records() : [], qbit: p.qbit ? { url: p.qbit.url, user: p.qbit.user || '', password: !!this._qbitPass } : null, quarantined: this.quarantine ? this.quarantine.list().filter(x => ['quarantined', 'in_progress'].includes(x.state)).length : 0, sessions: [...this.sessions.keys()], collisions: Policy.conflicts(p.rules), verified: false, verifiedWhy: 'the leak test (NP5) is not built yet', note: this.statusNote() };
+    return { ok: true, default: p.default, rules: p.rules.length, transport: t, bridgeLine: p.bridgeLine ? 'set' : null, bridgeSource: p.bridgeLine ? (p.bridgeSource || { kind: 'set' }) : null, httpsOnly: p.httpsOnly !== false, lastCheck: this._lastCheck || null, onDisconnect: p.compartmentOnDisconnect || 'kill_tabs', kills: this.killSwitch ? this.killSwitch.records() : [], qbit: p.qbit ? { url: p.qbit.url, user: p.qbit.user || '', password: !!this._qbitPass } : null, quarantined: this.quarantine ? this.quarantine.list().filter(x => ['quarantined', 'in_progress'].includes(x.state)).length : 0, sessions: [...this.sessions.keys()], collisions: Policy.conflicts(p.rules), verified: false, verifiedWhy: 'the leak test (NP5) is not built yet', note: this.statusNote() };
   }
 
   /** register(partition, ses, ctx) — remember a session and apply to it now. */
