@@ -290,6 +290,78 @@ spec:
       error_paths: ["no profile found → the places looked are listed"]
       acceptance: ["Settings → Import in Clear Glass lists a stub profile and posts the import with the chosen parts"]
 
+    - id: MOD-BSH-DESIGN
+      name: design-system
+      uuid: nexus-cg-bsh-design-v1-0000-2026-1021-002
+      path: clear-glass/renderer/shell/icons.js
+      phase: BS8_design_system
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21 (after seeing 0.60.179): "omg this looks bad. enterprise grade, production quality. outliar level ui" ·
+        "need to have it nice and clear." One icon set drawn for Clear Glass (24-unit grid, 1.75 stroke, round caps — the Lucide/Firefox
+        Proton manner), set on every toolbar button by data-icon so the glyph never depends on the OS's emoji font; a type scale, spacing
+        scale and elevation scale in shell.css on Settings' palette; the address bar given the row (Firefox: it takes the free width) with
+        the host emphasised; the bookmarks toolbar hidden while it is empty.
+      deps: [{ name: shell }]
+      exports: ["window.CGIcons.svg(name) → string", "window.CGIcons.apply(root)", "ICONS"]
+      gate_pipeline: ["GATE-DS-001: every data-icon has a drawing", "GATE-DS-002: applied once, idempotent", "GATE-DS-003: aria-label kept"]
+      behavioral_contracts: ["an icon is decoration: each button keeps its aria-label and title", "no network, no font file"]
+      error_paths: ["an unknown icon name → the button keeps its text, logged"]
+      acceptance: ["Clear Glass: no emoji glyph left on the navigation toolbar; every toolbar button draws an svg"]
+
+    - id: MOD-BSH-AGENTS
+      name: agents-hub
+      uuid: nexus-cg-bsh-agents-v1-0000-2026-1021-002
+      path: clear-glass/renderer/shell/agents.js
+      phase: BS9_agents_hub
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "access to all guardian agent stuff." One toolbar button (with the running count) opens the Guardian hub: each
+        NCP agent (registry name and colour) with its real state from providers.list (running, status, health, account), Start / Show /
+        Stop, and the window's Guardian tools in one place — agent mesh and its queue, Guardian userscripts, the element picker that
+        assigns provider selectors, accounts and profile tabs (Settings → Providers). Also fixes the NCP Providers panel, which read
+        p.hosted while the host sends running, so every agent showed Start.
+      deps: [{ name: shell }, { name: browser-js }]
+      exports: ["window.CGAgents.open()", "window.CGAgents.count()"]
+      gate_pipeline: ["GATE-AG-001: providers.list", "GATE-AG-002: per agent state + actions", "GATE-AG-003: tools rows click existing elements"]
+      behavioral_contracts: ["Start/Show/Stop call cg.providers.*, the same calls the old panel made", "a running agent is never shown as Start"]
+      error_paths: ["providers.list fails → the hub says Guardian's provider host is not reachable"]
+      acceptance: ["Clear Glass: a running agent shows Show and Stop with its status; a stopped one Start; the count badge equals running agents"]
+
+    - id: MOD-BSH-NEWTAB
+      name: new-tab-page
+      uuid: nexus-cg-bsh-newtab-v1-0000-2026-1021-002
+      path: clear-glass/renderer/shell/newtab.js
+      phase: BS10_new_tab
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        The black about:blank becomes a start page, drawn by the shell over the page area while the tab is blank (never injected into a
+        site): a search box that navigates like the address bar, the Guardian agents as cards (start or open in one click), bookmarks as
+        tiles, and the Snowflake state with "Open with Snowflake". It hides the moment the tab navigates.
+      deps: [{ name: shell }, { name: agents-hub }]
+      exports: ["window.CGNewTab.show()", "window.CGNewTab.hide()"]
+      gate_pipeline: ["GATE-NT-001: blank → show", "GATE-NT-002: navigate → hide", "GATE-NT-003: content from cg and :7702 only"]
+      behavioral_contracts: ["lives in the shell's DOM, not the page's", "Enter in its search box is the address bar's navigate"]
+      error_paths: [":7702 unreachable → the Snowflake card says so"]
+      acceptance: ["Clear Glass: a blank tab shows the search box, agent cards and bookmark tiles; typing a URL navigates"]
+
+    - id: MOD-BSH-COPILOT-SKIN
+      name: copilot-skin
+      uuid: nexus-cg-bsh-copilot-skin-v1-0000-2026-1021-002
+      path: clear-glass/renderer/shell/copilot.css
+      phase: BS11_copilot_pane
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        The co-pilot pane redrawn on the same system: a header with the model, the route as one segmented control, messages as readable
+        sans text with the user's on the right, the context chips and the mic inside one composer with Send. CSS only over the existing
+        ids and classes; no behaviour changes.
+      deps: [{ name: shell }]
+      exports: ["renderer/shell/copilot.css"]
+      gate_pipeline: ["GATE-CP-001: ids unchanged", "GATE-CP-002: composer layout"]
+      behavioral_contracts: ["no rule changes what an element does"]
+      error_paths: ["none: CSS only"]
+      acceptance: ["Clear Glass: the mic sits inside the composer; the route toggles are one segmented row"]
+
   events:
     shell:
       - "import.firefox.done { profile, cookies, bookmarks }"

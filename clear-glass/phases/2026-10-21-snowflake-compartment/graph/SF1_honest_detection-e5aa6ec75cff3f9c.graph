@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF1_honest_detection:e5aa6ec75cff3f9c
+type: graph
+id: phase:SF1_honest_detection:e5aa6ec75cff3f9c
+context: dependency graph of phase SF1_honest_detection
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792496356536
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792496356536
+lastSeenAt: 1792496356536
+fingerprint: null
+payload:
+  for: SF1_honest_detection
+  kind: phase
+  repo: null
+  hash: e5aa6ec75cff3f9c
+  nodes:
+    - path: clear-glass/src/net/service.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/transport-host.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/kill-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/policy.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/qbittorrent.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/quarantine.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/policy.js
+      kind: requires
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/quarantine.js
+      kind: requires
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/qbittorrent.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: b658b15d67be924d
+    layer: 1
+    deps:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
+    dependents:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    upstream:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
+    downstream:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG b658b15d67be924d · layer 1
+      - 'depends on (1): SF2_bridge_sources'
+      - >-
+        needed by (3): SF3_page_in_the_compartment, SF5_circuit_check, SF6_surface · all downstream
+        4 · finishing it unlocks SF3_page_in_the_compartment, SF5_circuit_check, SF6_surface

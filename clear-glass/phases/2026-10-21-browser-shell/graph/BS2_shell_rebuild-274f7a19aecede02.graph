@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792481795197
+exported_at: 1792496355618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792481795197
-lastSeenAt: 1792481795197
+firstSeenAt: 1792496355618
+lastSeenAt: 1792496355618
 fingerprint: null
 payload:
   for: BS2_shell_rebuild
@@ -31,7 +31,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 0c4fb6c30abee07a
+    dagHash: b658b15d67be924d
     layer: 0
     deps: []
     dependents:
@@ -39,25 +39,31 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
     upstream: []
     downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
       - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
       - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
     blockedBy: []
     unlocks:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
     conflicts: []
     dangling: []
     lines:
-      - DAG 0c4fb6c30abee07a · layer 0
+      - DAG b658b15d67be924d · layer 0
       - 'depends on (0): —'
       - >-
-        needed by (4): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli · all
-        downstream 5 · finishing it unlocks BS3_menus, BS4_extensions, BS5_downloads_panel,
-        BS6_float_cli
+        needed by (5): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
+        BS8_design_system · all downstream 9 · finishing it unlocks BS3_menus, BS4_extensions,
+        BS5_downloads_panel, BS6_float_cli, BS8_design_system

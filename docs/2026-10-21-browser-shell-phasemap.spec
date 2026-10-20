@@ -113,3 +113,52 @@ phases:
     blocks: [MOD-BSH-SURFACE]
     does: "Routes, the `firefox` command (import person-only), the agent's profile list, Settings → Import, the old Options row made real."
     proof: test-browser-shell BST-08 (Settings → Import in Clear Glass)
+
+## Addendum 2026-10-21 (0.60.180): his verdict on 0.60.179, and the design pass it asks for
+
+James, 2026-10-21, after the screenshots: "show me the ui. lets design it" · "need to have it nice and clear. access to all guardian agent
+stuff. need to have the bridge setup automatically." · "omg this looks bad. enterprise grade, production quality. outliar level ui"
+What was wrong, by the coder's own read of the shots: emoji for icons (they differ per OS and read as a prototype), a narrow address bar,
+a black void for a new tab, an empty bookmarks strip, a co-pilot pane in the older mono style with a grey bar for the mic, and Guardian's
+agents reachable only through a menu row whose panel showed every agent as Start (it read p.hosted; the host sends running).
+
+  BS8_design_system:
+    layer: surface
+    status: DONE 0.60.180
+    depends_on: [BS2_shell_rebuild]
+    files: [clear-glass/renderer/shell/icons.js, clear-glass/renderer/shell/shell.css, clear-glass/renderer/browser.html]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-DESIGN]
+    does: "One drawn icon set on every toolbar button; type, spacing and elevation scales; the address bar takes the row; empty bookmarks bar hidden."
+    proof: test-browser-shell BST-09
+
+  BS9_agents_hub:
+    layer: surface
+    status: DONE 0.60.180
+    depends_on: [BS8_design_system]
+    files: [clear-glass/renderer/shell/agents.js, clear-glass/renderer/browser.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-AGENTS]
+    does: "The Guardian hub: every NCP agent with its real state and Start/Show/Stop, plus mesh, queue, userscripts, picker, accounts; the old panel's running bug fixed."
+    proof: test-browser-shell BST-10
+
+  BS10_new_tab:
+    layer: surface
+    status: DONE 0.60.180
+    depends_on: [BS9_agents_hub]
+    files: [clear-glass/renderer/shell/newtab.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-NEWTAB]
+    does: "A start page over a blank tab: search, agent cards, bookmark tiles, Snowflake."
+    proof: test-browser-shell BST-11
+
+  BS11_copilot_pane:
+    layer: surface
+    status: DONE 0.60.180
+    depends_on: [BS8_design_system]
+    files: [clear-glass/renderer/shell/copilot.css]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-COPILOT-SKIN]
+    does: "The co-pilot pane on the same system: segmented route, readable messages, one composer with the mic inside."
+    proof: test-browser-shell BST-09 (shots in Clear Glass)
+

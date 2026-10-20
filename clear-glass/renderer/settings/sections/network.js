@@ -34,7 +34,7 @@
   section({
     id: 'network', group: 'System', icon: '❄', label: 'Network',
     keywords: 'tor snowflake transport bridge proxy socks anonymity privacy egress route via block direct censorship pluggable',
-    blurb: 'How browsing sessions reach the outside. The Tor-with-Snowflake transport is off and configured by you; without a bridge line it does not start.',
+    blurb: 'How browsing sessions reach the outside. Tor over Snowflake is off until you start it; starting installs what is missing and sets up the bridge by itself.',
     async render({ rerender }) {
       let s, routes, qr;
       try { [s, routes, qr] = await Promise.all([api('/cli/net/status'), api('/cli/net/routes'), api('/cli/net/quarantine').catch(() => ({ items: [] }))]); }
@@ -55,8 +55,9 @@
         running
           ? btn('Stop', () => api('/cli/net/transport', { method: 'POST', body: { action: 'stop' } }).then(rerender), 'danger')
           : btn('Start', async () => {
-              if (!haveBins) return toast('tor and a Snowflake client must be found first');
-              if (!s.bridgeLine && !det.bridgeLine) return toast('set a Snowflake bridge line first — Find bridge line, below');
+              // SF7 (0.60.180): no programs → the one-button install first; a missing bridge line is set up by the start itself
+              if (!haveBins) { toast('Installing Tor and the Snowflake client first…'); return api('/cli/net/setup', { method: 'POST', body: {} }).then(rerender).catch(fail); }
+              toast(s.bridgeLine || det.bridgeLine ? 'Starting…' : 'Setting up the bridge and starting…');
               return api('/cli/net/transport', { method: 'POST', body: { action: 'start' } }).then(rerender).catch(fail);
             }, 'primary'));
 
@@ -144,7 +145,7 @@
           toggle(s.httpsOnly !== false, (on) => api('/cli/net/https-only', { method: 'POST', body: { on } }).then(() => toast(on ? 'HTTPS only: on' : 'HTTPS only: off'))),
           chip(s.httpsOnly !== false ? 'on' : 'off', s.httpsOnly !== false ? 'ok' : 'warn')),
         row('Circuit', checkText, chip(!check ? 'unchecked' : check.ok && check.isTor ? 'through Tor' : 'not confirmed', !check ? '' : check.ok && check.isTor ? 'ok' : 'err'),
-          btn('Check the circuit', () => api('/cli/net/check', { method: 'POST', body: {} }).then(rerender).catch(fail))),
+          null),
         h('p', { class: 'blurb', text: 'The circuit check shows where traffic exits; it is not the leak test (NP5), so nothing here is marked Verified.' }),
       ] });
 
@@ -198,10 +199,28 @@
         s.collisions ? h('p', { class: 'warn-box', text: `${s.collisions} rule(s) overlap — the most specific wins.` }) : null,
       ] });
 
+      // ── SF7 (0.60.180): one clear status card first; the programs and the bridge line under Advanced ─────────────────────
+      // James, 2026-10-21: "need to have it nice and clear." · "need to have the bridge setup automatically."
+      const SRC = { 'tor-browser': 'from Tor Browser', bundle: 'from the installed bundle', 'system-example': 'from the snowflake-client package', 'tor-project-builtin': 'from the Tor Project', hand: 'set by you', set: 'set' };
+      const bs = s.bridgeSource;
+      const check0 = s.lastCheck;
+      const heroState = t.state === 'ready' ? 'Connected' : t.state === 'bootstrapping' || t.state === 'starting' ? `Connecting… ${t.progress || 0}%` : t.state === 'failed' ? 'Stopped by an error' : 'Off';
+      const hero = h('div', { class: `net-hero ${t.state === 'ready' ? 'on' : t.state === 'failed' ? 'bad' : running ? 'busy' : ''}` },
+        h('div', { class: 'net-hero-ico', text: '❄' }),
+        h('div', { class: 'net-hero-main' },
+          h('div', { class: 'net-hero-state', text: heroState }),
+          h('div', { class: 'net-hero-facts' },
+            h('span', { text: `Bridge: ${bs ? `${SRC[bs.kind] || bs.kind}${bs.auto ? ' (automatic)' : ''}` : 'set up automatically when you start'}` }),
+            h('span', { text: `Programs: ${haveBins ? 'found' : 'installed automatically when you start'}` }),
+            check0 && check0.ok ? h('span', { text: check0.isTor ? `Exit: ${check0.ip} (through Tor)` : `Exit: ${check0.ip} — NOT through Tor` }) : null,
+            t.state === 'failed' && t.error ? h('span', { class: 'err', text: t.error }) : null)),
+        h('div', { class: 'net-hero-acts' }, stateRow.querySelector('.acts') ? [...stateRow.querySelector('.acts').children].filter(x => x.tagName === 'BUTTON') : [],
+          t.state === 'ready' ? btn('Check the circuit', () => api('/cli/net/check', { method: 'POST', body: {} }).then(rerender).catch(fail)) : null));
+      const advanced = h('details', { class: 'net-advanced' }, h('summary', { text: 'Advanced — the programs, the bridge line, automatic setup' }), setupPane, needs);
+      if (!haveBins || t.state === 'failed') advanced.open = true;
       return [
-        pane({ title: 'Tor · Snowflake', sub: 'A bridge that reaches Tor where Tor is blocked, by looking like an ordinary WebRTC call. Adds no cryptography of its own; it gives a session anonymity and censorship-resistance. Isolated: its own wiped-on-stop data dir, ports on 127.0.0.1 only, no Nexus secrets in its environment.', body: stateRow }),
-        setupPane,
-        needs,
+        pane({ title: 'Tor · Snowflake', sub: 'Reaches Tor where Tor is blocked, by looking like an ordinary video call. Start does the rest: it installs what is missing and sets up the bridge.', body: hero }),
+        advanced,
         windowPane,
         compPane,
         routing,

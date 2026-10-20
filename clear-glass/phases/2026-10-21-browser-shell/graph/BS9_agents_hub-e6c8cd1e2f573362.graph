@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS9_agents_hub:e6c8cd1e2f573362
+type: graph
+id: phase:BS9_agents_hub:e6c8cd1e2f573362
+context: dependency graph of phase BS9_agents_hub
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792496355628
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792496355628
+lastSeenAt: 1792496355628
+fingerprint: null
+payload:
+  for: BS9_agents_hub
+  kind: phase
+  repo: null
+  hash: e6c8cd1e2f573362
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/agents.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: b658b15d67be924d
+    layer: 2
+    deps:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+    dependents:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
+    upstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG b658b15d67be924d · layer 2
+      - 'depends on (1): BS8_design_system · all upstream 2'
+      - 'needed by (1): BS10_new_tab · finishing it unlocks BS10_new_tab'

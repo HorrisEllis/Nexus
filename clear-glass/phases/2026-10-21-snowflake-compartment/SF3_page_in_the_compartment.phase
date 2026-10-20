@@ -7,11 +7,11 @@ intent: null
 summary: SF3_page_in_the_compartment (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792479326398
+exported_at: 1792496356538
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792479326398
-lastSeenAt: 1792479326398
+firstSeenAt: 1792496356538
+lastSeenAt: 1792496356538
 fingerprint: null
 payload:
   id: SF3_page_in_the_compartment

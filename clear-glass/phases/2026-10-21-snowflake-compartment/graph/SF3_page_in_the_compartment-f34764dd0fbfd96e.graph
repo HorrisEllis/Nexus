@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792479326398
+exported_at: 1792496356538
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792479326398
-lastSeenAt: 1792479326398
+firstSeenAt: 1792496356538
+lastSeenAt: 1792496356538
 fingerprint: null
 payload:
   for: SF3_page_in_the_compartment
@@ -151,7 +151,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 4a650886a07d5f1b
+    dagHash: b658b15d67be924d
     layer: 2
     deps:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
@@ -164,12 +164,13 @@ payload:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF4_https_only
     downstream:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
     blockedBy: []
     unlocks:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
     conflicts: []
     dangling: []
     lines:
-      - DAG 4a650886a07d5f1b · layer 2
+      - DAG b658b15d67be924d · layer 2
       - 'depends on (2): SF1_honest_detection, SF4_https_only · all upstream 3'
-      - 'needed by (1): SF6_surface · finishing it unlocks SF6_surface'
+      - 'needed by (1): SF6_surface · all downstream 2 · finishing it unlocks SF6_surface'

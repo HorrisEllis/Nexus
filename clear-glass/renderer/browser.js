@@ -583,10 +583,10 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       if (optProvList) {
         optProvList.innerHTML = providers.map(p => `
           <div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
-            <span style="width:8px;height:8px;border-radius:50%;background:${p.hosted ? 'var(--green)' : 'var(--text-dim)'};flex-shrink:0;"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:${(p.running || p.hosted) ? 'var(--green)' : 'var(--text-dim)'};flex-shrink:0;"></span>
             <span style="flex:1;font-size:11px;">${p.name}</span>
-            <button class="opt-link-btn prov-opt-btn" data-id="${p.id}" data-hosted="${p.hosted}">
-              ${p.hosted ? 'Active ✓' : 'Start'}
+            <button class="opt-link-btn prov-opt-btn" data-id="${p.id}" data-hosted="${!!(p.running || p.hosted)}">
+              ${(p.running || p.hosted) ? 'Active ✓' : 'Start'}
             </button>
           </div>`).join('');
         optProvList.querySelectorAll('.prov-opt-btn').forEach(btn => {
@@ -1128,12 +1128,12 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     _micRecorder.onstop = async () => {
       stream.getTracks().forEach(t => t.stop());
       _micRecording = false;
-      copilotMicBtn.textContent = '🎤';
+      _setMic('mic');
       copilotMicBtn.title = 'Voice input (real, local, offline speech-to-text)';
 
       const blob = new Blob(_micChunks, { type: 'audio/webm' });
       const arrayBuffer = await blob.arrayBuffer();
-      copilotMicBtn.textContent = '⏳';
+      _setMic('busy');
       try {
         const result = await cg.speech.transcribeBuffer(new Uint8Array(arrayBuffer), 'webm');
         if (result?.error) {
@@ -1146,11 +1146,11 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       } catch (err) {
         addMsg('assistant', `Voice input error: ${err.message}`);
       }
-      copilotMicBtn.textContent = '🎤';
+      _setMic('mic');
     };
     _micRecorder.start();
     _micRecording = true;
-    copilotMicBtn.textContent = '⏹';
+    _setMic('stop');
     copilotMicBtn.title = 'Click to stop recording';
   });
 
@@ -1386,7 +1386,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   document.getElementById('btn-mesh')?.addEventListener('click', async (e) => {
     const panel = document.getElementById('agent-mesh-panel');
     if (panel.style.display !== 'none') { panel.style.display = 'none'; return; }
-    const rect = e.target.getBoundingClientRect();
+    const rect = (e.currentTarget || e.target).getBoundingClientRect();
     panel.style.top = `${rect.bottom + 4}px`;
     panel.style.right = `${window.innerWidth - rect.right}px`;
     panel.innerHTML = '<div style="padding:8px;color:var(--text-dim,#999);font-size:11px">loading…</div>';
@@ -1421,7 +1421,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   });
   document.addEventListener('click', (e) => {
     const panel = document.getElementById('agent-mesh-panel');
-    if (panel && panel.style.display !== 'none' && !panel.contains(e.target) && e.target.id !== 'btn-mesh') panel.style.display = 'none';
+    if (panel && panel.style.display !== 'none' && !panel.contains(e.target) && !(e.target.closest && e.target.closest('#btn-mesh'))) panel.style.display = 'none';   // 0.60.180: the button now holds an svg
   });
 
   // ── Diag button ────────────────────────────────────────────────────
@@ -1567,7 +1567,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     paint(); stateNote(); titleIn.focus(); titleIn.select();
 
     const close = () => { box.remove(); document.removeEventListener('mousedown', outside, true); };
-    const outside = (e) => { if (!box.contains(e.target) && e.target.id !== 'btn-bookmark') close(); };
+    const outside = (e) => { if (!box.contains(e.target) && !(e.target.closest && e.target.closest('#btn-bookmark'))) close(); };
     setTimeout(() => document.addEventListener('mousedown', outside, true), 0);
     box.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); if (e.key === 'Enter' && e.target === titleIn) save.click(); });
     cancel.addEventListener('click', close);
@@ -1832,7 +1832,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   document.getElementById('bookmark-mgr-btn').addEventListener('click', async (e) => {
     const panel = document.getElementById('bookmark-mgr-panel');
     if (panel.style.display !== 'none') { panel.style.display = 'none'; return; }
-    const rect = e.target.getBoundingClientRect();
+    const rect = (e.currentTarget || e.target).getBoundingClientRect();
     panel.style.top = `${rect.bottom + 4}px`;
     panel.style.right = `${window.innerWidth - rect.right}px`;
     // BS3 (0.60.179) — Firefox's ☰ order: new tab / window / Snowflake first, then bookmarks and the panels, then add-ons, import,
@@ -1938,7 +1938,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   });
   document.addEventListener('click', (e) => {
     const panel = document.getElementById('bookmark-mgr-panel');
-    if (panel.style.display !== 'none' && !panel.contains(e.target) && e.target.id !== 'bookmark-mgr-btn') {
+    if (panel.style.display !== 'none' && !panel.contains(e.target) && !(e.target.closest && e.target.closest('#bookmark-mgr-btn'))) {   // 0.60.180: a click on the drawn icon is a click on the button
       // Put the real agent/identity elements back into their hidden home
       // before closing, so they're not silently lost from the DOM if the
       // menu is never reopened before the next reference to them.
@@ -2458,14 +2458,14 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         const item = document.createElement('div');
         item.className = 'prov-item';
         item.innerHTML = `
-          <div class="prov-dot ${p.hosted ? 'active' : ''}"></div>
+          <div class="prov-dot ${p.running || p.hosted ? 'active' : ''}"></div>
           <span class="prov-name">${p.name}</span>
-          <button class="prov-btn ${p.hosted ? 'active' : ''}" data-id="${p.id}">
-            ${p.hosted ? 'Show' : 'Start'}
-          </button>`;
+          <button class="prov-btn ${p.running || p.hosted ? 'active' : ''}" data-id="${p.id}">
+            ${p.running || p.hosted ? 'Show' : 'Start'}
+          </button>`;   // BS9 (0.60.180): the host sends running (never hosted), so every agent read as Start
         item.querySelector('button').addEventListener('click', async (e) => {
           e.stopPropagation();
-          if (p.hosted) {
+          if (p.running || p.hosted) {
             await cg.providers.show(p.id);
           } else {
             addMsg('assistant', `Starting ${p.name} provider...`);
@@ -2904,7 +2904,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; return ctx.measureText(t || input.placeholder || '').width; };
     function fit() {
       const cs = getComputedStyle(input), pad = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0) + 24;
-      if (!wrap.dataset.manual) wrap.style.flex = `0 0 ${Math.round(Math.min(room() - offset, Math.max(MIN, textW(input.value) + pad + 40)))}px`;
+      if (!wrap.dataset.manual) wrap.style.flex = `0 0 ${Math.round(Math.min(room() - offset, Math.max(MIN, room() * 0.62, textW(input.value) + pad + 40)))}px`;   // BS8 (0.60.180): starts at most of the row, as Firefox's does; still grows and drags
       applyOffset(offset);
     }
     function applyOffset(px) {
@@ -3544,4 +3544,11 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     bgTabs: () => _openPanelFromMenu('bgtabs-panel', _renderBgTabsPanel),
     library: (area) => _openLibrary(area), customize: () => _openToolbarEditor(),
   };
+
+  // BS11 (0.60.180) — the mic's three states as drawn icons (the composer hides text glyphs)
+  function _setMic(kind) {
+    const b = document.getElementById('copilot-mic-btn'); if (!b) return;
+    const name = kind === 'stop' ? 'stop' : kind === 'busy' ? 'history' : 'mic';
+    if (window.CGIcons) { b.innerHTML = window.CGIcons.svg(name, { size: 18 }); b.classList.toggle('rec', kind === 'stop'); } else b.textContent = kind === 'stop' ? '⏹' : kind === 'busy' ? '⏳' : '🎤';
+  }
 })();

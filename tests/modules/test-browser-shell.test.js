@@ -16,6 +16,9 @@
  *   BST-07  the window in Clear Glass's engine: one toolbar row, ☰ in Firefox's order, 🧩 with icons, switch and pin, ⬇ with the quarantine,
  *           Alt shows the menu bar, no page error
  *   BST-08  Settings → Import in Clear Glass's engine against a stub :7702
+ *   BST-09  0.60.180 design: drawn icons on every toolbar button, no emoji; the address bar takes the row; empty bookmarks strip hidden
+ *   BST-10  0.60.180 the Guardian hub: real state per agent, Start/Open/Stop, the running badge, the tools; the old panel reads running
+ *   BST-11  0.60.180 the start page over a blank tab: search, agent cards, bookmarks; hidden once the tab navigates
  */
 require('../../lib/test-sandbox.js').ensure();
 process.removeAllListeners('warning'); process.on('warning', (w) => { if (w.name !== 'ExperimentalWarning') console.warn(w.message); });   // node:sqlite says it is experimental
@@ -107,7 +110,7 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
     const html = fs.readFileSync(CG('renderer/browser.html'), 'utf8');
     assert.ok(!/<script(?![^>]*\bsrc=)[^>]*>/.test(html), 'no inline script'); assert.ok(/script-src 'self';/.test(html));
     const links = [...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m => m[1]);
-    assert.ok(links.indexOf('cos-theme.css') > links.indexOf('browser.css') && links.indexOf('shell/shell.css') === links.length - 1, links.join(' '));
+    assert.ok(links.indexOf('cos-theme.css') > links.indexOf('browser.css') && links.indexOf('shell/shell.css') > links.indexOf('cos-theme.css') && links.slice(links.indexOf('shell/shell.css')).every(l => l.startsWith('shell/')), links.join(' '));   // 0.60.180: shell.css then copilot.css, last
     assert.ok(/<link rel="stylesheet" href="cos-theme.css">/.test(fs.readFileSync(CG('renderer/settings.html'), 'utf8')), 'the palette Settings loads');
     const css = fs.readFileSync(CG('renderer/shell/shell.css'), 'utf8');
     assert.ok(!/#00f5ff|rgba\(0,\s*245/.test(css), 'no colour of its own: the palette is Settings\'');
@@ -218,15 +221,15 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
         'downloads.list': [{ id: 'd1', filename: 'a.zip', state: 'completed', bytes: 1048576, savePath: '/x/a.zip' }] } }));
       await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
       await page.waitForSelector('#sh-ext-pinned button');
-      assert.strictEqual(await page.$eval('#chrome', e => Math.round(e.getBoundingClientRect().height)), 44, 'one toolbar row');
-      assert.strictEqual(await page.innerText('#sh-ext-pinned'), '🔍', 'the pinned plugin\'s icon');
+      assert.strictEqual(await page.$eval('#chrome', e => Math.round(e.getBoundingClientRect().height)), 48, 'one toolbar row (48px, BS8)');
+      assert.strictEqual(await page.$eval('#sh-ext-pinned button', b => !!b.querySelector('svg') && b.title), 'Zoom', 'the pinned plugin, as its drawn icon (0.60.180)');
       await page.click('#bookmark-mgr-btn'); await page.waitForSelector('#bookmark-mgr-panel [data-am="New Tab"]');
       const order = await page.$$eval('#bookmark-mgr-panel .menu-item', els => els.map(e => e.textContent.replace(/\s+/g, ' ').trim()));
       const at = (t) => order.findIndex(x => x.replace(/^[^A-Za-z]+/, '').startsWith(t));
       assert.ok(at('New Tab') === 0 && at('Downloads') > at('New Window') && at('Plugins and Add-ons') > at('History') && at('Settings') > at('Find in Page') && at('Customize Toolbar') === order.length - 1, order.join(' | '));
       await page.click('#btn-extensions'); await page.waitForSelector('#sh-extensions-panel .sh-ext-row');
       assert.strictEqual(await page.$eval('#bookmark-mgr-panel', e => e.style.display), 'none', 'one popover at a time');
-      assert.deepStrictEqual(await page.$$eval('#sh-extensions-panel .sh-ext-ico', els => els.map(e => e.textContent)), ['🔍', '🛡']);
+      assert.deepStrictEqual(await page.$$eval('#sh-extensions-panel .sh-ext-ico', els => els.map(e => !!e.querySelector('svg'))), [true, true], 'drawn plugin icons');
       await page.click('#sh-extensions-panel .sh-ext-row[data-id="a"] [data-tog]'); await page.waitForTimeout(200);
       assert.ok(await page.evaluate(() => window.__cgCalls.some(c => c.key === 'plugins.enable' && c.args[0] === 'a')), 'the switch turns it on');
       await page.click('#sh-extensions-panel .sh-ext-row[data-id="a"] [data-pin]'); await page.waitForTimeout(200);
@@ -241,6 +244,58 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       assert.strictEqual(await page.$eval('#menubar', e => e.hidden), false, 'a lone Alt shows the menu bar');
       assert.deepStrictEqual(await page.$$eval('#menubar .mb-top', els => els.map(e => e.textContent)), ['File', 'Edit', 'View', 'History', 'Bookmarks', 'Tools', 'Help']);
       assert.ok(await page.$('.mb-drop .mb-item'), 'File is open');
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
+    await test('BST-09', 'design: every toolbar button draws an icon (no emoji glyph left on the bar); the address bar takes the row', async () => {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'providers.list': [], 'toolbar.commands': [], 'bookmarks.list': [], 'plugins.list': [], 'options.get': {} } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#btn-back svg');
+      const bare = await page.$$eval('#chrome > button, #chrome .sh-navgroup > button, #tab-bar button', els => els.filter(e => !e.querySelector('svg') && e.offsetParent).map(e => e.id || e.textContent));
+      assert.deepStrictEqual(bare, [], 'buttons without a drawing: ' + bare.join(', '));
+      const emoji = await page.$eval('#chrome', e => [...e.querySelectorAll('button')].filter(b => b.offsetParent && /[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/u.test(b.textContent)).map(b => b.id));
+      assert.deepStrictEqual(emoji, [], 'emoji left: ' + emoji.join(', '));
+      const ratio = await page.evaluate(() => document.getElementById('url-bar-wrap').getBoundingClientRect().width / document.getElementById('chrome').getBoundingClientRect().width);
+      assert.ok(ratio > 0.45, `the address bar takes most of the row (${ratio.toFixed(2)})`);
+      assert.strictEqual(await page.$eval('#bookmarks-bar', e => getComputedStyle(e).display), 'none', 'an empty bookmarks strip is hidden');
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
+    await test('BST-10', 'Guardian hub: running agents show Open and Stop, the rest Start; the badge counts running; the old panel reads running', async () => {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'providers.list': [{ id: 'claude', name: 'Claude', color: '#cc785c', running: true, status: 'injected', health: 100 }, { id: 'gemini', name: 'Gemini', color: '#4285f4', running: false }, { id: 'deepseek', name: 'DeepSeek', color: '#4d6bfe', running: false, status: 'crashed' }],
+        'mesh.list': { queueDepth: 3 }, 'toolbar.commands': [], 'bookmarks.list': [], 'plugins.list': [], 'options.get': {}, 'providers.start': { ok: true } } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForFunction(() => document.querySelector('#btn-agents .sh-badge') && !document.querySelector('#btn-agents .sh-badge').hidden, null, { timeout: 8000 });
+      assert.strictEqual(await page.innerText('#btn-agents .sh-badge'), '1');
+      await page.click('#btn-agents'); await page.waitForSelector('#sh-agents-panel .ag-card');
+      const cards = await page.$$eval('#sh-agents-panel .ag-card', els => els.map(e => [e.dataset.id, [...e.querySelectorAll('[data-act]')].map(b => b.dataset.act).join('+'), e.querySelector('.ag-state').textContent.trim()]));
+      assert.deepStrictEqual(cards.map(c => c.slice(0, 2)), [['claude', 'show+stop'], ['gemini', 'start'], ['deepseek', 'start']]);
+      assert.ok(/Crashed/.test(cards[2][2]) && /queue 3/.test(await page.innerText('#sh-agents-panel .ag-sum')));
+      await page.click('#sh-agents-panel .ag-card[data-id="gemini"] [data-act="start"]'); await page.waitForTimeout(150);
+      assert.ok(await page.evaluate(() => window.__cgCalls.some(c => c.key === 'providers.start' && c.args[0] === 'gemini')));
+      const tools = await page.$$eval('#sh-agents-panel .ag-tool b', els => els.map(e => e.textContent));
+      for (const t of ['Agent mesh', 'Pick an element', 'Guardian scripts', 'Accounts and profiles']) assert.ok(tools.includes(t), t);
+      const src = fs.readFileSync(CG('renderer/browser.js'), 'utf8');
+      assert.ok(!/\$\{p\.hosted \?/.test(src), 'nothing reads hosted alone (the host sends running)');
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
+    await test('BST-11', 'start page: a blank tab shows search, agent cards and bookmarks; navigating hides it; its search navigates', async () => {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'providers.list': [{ id: 'claude', name: 'Claude', color: '#cc785c', running: true }], 'toolbar.commands': [], 'plugins.list': [], 'options.get': {},
+        'bookmarks.list': [{ id: 'b1', url: 'https://github.com', title: 'GitHub', agentId: 't' }] } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#sh-newtab .nt-agent');
+      assert.strictEqual(await page.$eval('#sh-newtab', e => e.hidden), false);
+      assert.deepStrictEqual([await page.innerText('#sh-newtab .nt-agent-name'), await page.innerText('#sh-newtab .nt-tile-name')], ['Claude', 'GitHub']);
+      assert.strictEqual(await page.$eval('#sh-newtab', e => e.closest('#webview-wrap') !== null && !e.closest('webview')), true, 'in the shell, not the page');
+      await page.evaluate(() => { window.__nav = []; window.CGShell.navigate = (u) => window.__nav.push(u); });
+      await page.fill('#nt-q', 'github.com'); await page.evaluate(() => document.querySelector('#sh-newtab .nt-search').requestSubmit()); await page.waitForTimeout(100);
+      assert.deepStrictEqual(await page.evaluate(() => window.__nav), ['https://github.com']);
+      await page.evaluate(() => window.CGNewTab.sync('https://example.com/'));
+      assert.strictEqual(await page.$eval('#sh-newtab', e => e.hidden), true, 'gone once the tab goes somewhere');
       assert.deepStrictEqual(errors, []); await page.close();
     });
 

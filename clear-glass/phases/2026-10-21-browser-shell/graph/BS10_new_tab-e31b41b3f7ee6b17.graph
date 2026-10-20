@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS10_new_tab:e31b41b3f7ee6b17
+type: graph
+id: phase:BS10_new_tab:e31b41b3f7ee6b17
+context: dependency graph of phase BS10_new_tab
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792496355629
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792496355629
+lastSeenAt: 1792496355629
+fingerprint: null
+payload:
+  for: BS10_new_tab
+  kind: phase
+  repo: null
+  hash: e31b41b3f7ee6b17
+  nodes:
+    - path: clear-glass/renderer/shell/newtab.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: b658b15d67be924d
+    layer: 3
+    deps:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
+    dependents: []
+    upstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG b658b15d67be924d · layer 3
+      - 'depends on (1): BS9_agents_hub · all upstream 3'
+      - 'needed by (0): —'

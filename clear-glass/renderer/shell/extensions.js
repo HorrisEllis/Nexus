@@ -27,7 +27,7 @@
   function drawPinned(plugins) {
     const box = $('sh-ext-pinned'); if (!box) return;
     box.replaceChildren(...plugins.filter(p => pinned.has(p.id)).map(p => {
-      const b = document.createElement('button'); b.className = `nav-btn sh-icon${p.state === 'active' ? '' : ' off'}`; b.textContent = p.icon || '🧩';
+      const b = document.createElement('button'); b.className = `nav-btn sh-icon${p.state === 'active' ? '' : ' off'}`; const ic = window.CGIcons && window.CGIcons.plugin(p); if (ic) b.innerHTML = ic; else b.textContent = p.icon || '🧩';
       b.title = `${p.displayName || p.name}${p.state === 'active' ? '' : ' (off)'}`; b.setAttribute('aria-label', b.title); b.dataset.plugin = p.id;
       b.addEventListener('click', (e) => { e.stopPropagation(); openPopup(b, p); });
       return b;
@@ -38,7 +38,7 @@
   function openPopup(anchor, p) {
     const pop = $('sh-extensions-panel');
     const cmds = (p.commands || []);
-    pop.innerHTML = `<div class="sh-pop-head"><span class="sh-ext-ico">${esc(p.icon)}</span><span>${esc(p.displayName || p.name)}</span><span class="sh-grow"></span></div>
+    pop.innerHTML = `<div class="sh-pop-head"><span class="sh-ext-ico">${(window.CGIcons && window.CGIcons.plugin(p, { size: 18 })) || esc(p.icon)}</span><span>${esc(p.displayName || p.name)}</span><span class="sh-grow"></span></div>
       ${p.state !== 'active' ? '<div class="sh-empty">This plugin is off.</div>' : cmds.length ? cmds.map((c, i) => `<button class="sh-link" data-cmd="${i}">${esc(c.icon || '•')}&nbsp;&nbsp;${esc(c.label)}</button>`).join('') : `<div class="sh-empty">${esc(p.description || 'It works in the background; nothing to press.')}</div>`}
       <div class="sh-pop-foot"><button class="sh-link" data-all>🧩&nbsp;&nbsp;All plugins and add-ons…</button></div>`;
     pop.querySelectorAll('[data-cmd]').forEach(el => el.addEventListener('click', async () => {
@@ -54,9 +54,9 @@
     const { plugins, web } = await load();
     const rows = plugins.map(p => `
       <div class="sh-ext-row${p.state === 'active' ? '' : ' off'}" data-id="${esc(p.id)}">
-        <span class="sh-ext-ico" aria-hidden="true">${esc(p.icon || '🧩')}</span>
+        <span class="sh-ext-ico" aria-hidden="true">${(window.CGIcons && window.CGIcons.plugin(p, { size: 18 })) || esc(p.icon || '🧩')}</span>
         <div><div class="sh-ext-name">${esc(p.displayName || p.name)}</div><div class="sh-ext-desc" title="${esc(p.description)}">${esc(p.description || '')}</div>${p.error ? `<div class="sh-ext-err">${esc(p.error)}</div>` : ''}</div>
-        <button class="sh-pin${pinned.has(p.id) ? ' on' : ''}" data-pin title="${pinned.has(p.id) ? 'Unpin from toolbar' : 'Pin to toolbar'}" aria-label="Pin">📌</button>
+        <button class="sh-pin${pinned.has(p.id) ? ' on' : ''}" data-pin title="${pinned.has(p.id) ? 'Unpin from toolbar' : 'Pin to toolbar'}" aria-label="Pin">${window.CGIcons ? window.CGIcons.svg('pin', { size: 15 }) : '📌'}</button>
         <button class="tog" role="switch" aria-checked="${p.state === 'active'}" data-tog aria-label="${p.state === 'active' ? 'Turn off' : 'Turn on'} ${esc(p.displayName || p.name)}"></button>
       </div>`).join('');
     const webRows = web.map(w => `
@@ -66,7 +66,7 @@
         <span></span>
         <button class="tog" role="switch" aria-checked="${!!w.enabled}" data-webtog aria-label="Turn ${w.enabled ? 'off' : 'on'} ${esc(w.name || w.id)}"></button>
       </div>`).join('');
-    pop.innerHTML = `<div class="sh-pop-head">🧩 <span>Plugins and add-ons</span><span class="sh-grow"></span></div>
+    pop.innerHTML = `<div class="sh-pop-head">${window.CGIcons ? window.CGIcons.svg('plugins') : ''}<span>Plugins and add-ons</span><span class="sh-grow"></span></div>
       ${rows || '<div class="sh-empty">No plugins installed.</div>'}
       ${web.length ? `<div class="sh-group">WebExtensions</div>${webRows}` : ''}
       <div class="sh-pop-foot"><button class="sh-link" data-manage>⚙&nbsp;&nbsp;Manage plugins and WebExtensions…</button></div>`;

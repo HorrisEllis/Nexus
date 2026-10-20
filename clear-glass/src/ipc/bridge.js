@@ -283,6 +283,8 @@ class IpcBridge {
       return host;
     };
     const _quarantine = () => { _netHost(); return _net().quarantine; };
+    // SF7 (0.60.180) — before any start: keep a set line, else a local one, else the Tor Project's builtin list
+    const _ensureBridge = () => { const host = _netHost(); return _net().ensureBridge({ local: _bridgeLocal, builtin: () => require('../net/bridge-sources').builtin({}) }).then(r => { if (r.ok && host.d) host.d.config = _net()._config(); return r; }); };
     // SF2 (0.60.178) — real bridge lines on this machine; the installer's bundle folder is one of the places looked in
     const _bridgeLocal = () => require('../net/bridge-sources').local({ bundleDir: require('path').join(require('electron').app.getPath('userData'), 'net', 'bundle') });
     // SF5 (0.60.178) — fetch through the transport only: an in-memory session whose one proxy rule is the transport's SOCKS port (names resolved by tor)
@@ -305,7 +307,7 @@ class IpcBridge {
     this.app.post('/cli/net/paths',   _netRoute((b) => _net().setPaths({ torPath: b.torPath, snowflakePath: b.snowflakePath })));
     this.app.post('/cli/net/transport', _netRoute(async (b) => {
       const host = _netHost();
-      if (b.action === 'start') return host.start();
+      if (b.action === 'start') { const eb = await _ensureBridge(); if (!eb.ok) return eb; return host.start(); }   // SF7: the bridge set up automatically
       if (b.action === 'stop') return host.stop({ wipe: !!b.wipe });
       if (b.action === 'detect') return { ok: true, ...host.detect() };
       return { ok: false, error: 'action must be start, stop or detect' };
@@ -317,7 +319,7 @@ class IpcBridge {
       if (!/^https?:$/.test(u.protocol)) return { ok: false, error: `only http and https links can be opened this way (got ${u.protocol})` };
       const host = _netHost();
       if (host.status().state !== 'ready') {
-        if (!['starting', 'bootstrapping'].includes(host.status().state)) { const r = await host.start(); if (!r.ok) return { ok: false, error: `the transport cannot start: ${r.error}. Set it up under Settings → Network.` }; }
+        if (!['starting', 'bootstrapping'].includes(host.status().state)) { const eb = await _ensureBridge(); if (!eb.ok) return { ok: false, error: eb.error }; const r = await host.start(); if (!r.ok) return { ok: false, error: `the transport cannot start: ${r.error}. Set it up under Settings → Network.` }; }
         const t0 = Date.now();
         while (host.status().state !== 'ready') {
           if (host.status().state === 'failed' || host.status().state === 'stopped') return { ok: false, error: `the transport did not come up (${host.status().error || host.status().state})` };
