@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS11_copilot_pane:caad6884da55762a
+type: graph
+id: phase:BS11_copilot_pane:caad6884da55762a
+context: dependency graph of phase BS11_copilot_pane
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792496355630
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792496355630
+lastSeenAt: 1792496355630
+fingerprint: null
+payload:
+  for: BS11_copilot_pane
+  kind: phase
+  repo: null
+  hash: caad6884da55762a
+  nodes:
+    - path: clear-glass/renderer/shell/copilot.css
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: b658b15d67be924d
+    layer: 2
+    deps:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+    dependents: []
+    upstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG b658b15d67be924d · layer 2
+      - 'depends on (1): BS8_design_system · all upstream 2'
+      - 'needed by (0): —'

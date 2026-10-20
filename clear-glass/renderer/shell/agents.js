@@ -51,7 +51,7 @@
             <div class="ag-state"><span class="ag-dot ${kind}"></span>${esc(label)}${p.running && typeof p.health === 'number' ? ` · health ${Math.round(p.health)}` : ''}</div></div>
           <div class="ag-acts">${p.running
             ? `<button class="sh-btn primary" data-act="show" title="Bring its tab forward">${I('eye', 14)}Open</button><button class="sh-btn" data-act="stop" title="Stop ${esc(p.name)}" aria-label="Stop ${esc(p.name)}">${I('stop', 14)}</button>`
-            : `<button class="sh-btn primary" data-act="start">${I('play', 14)}Start</button>`}</div>
+            : `<button class="sh-btn start" data-act="start">${I('play', 14)}Start</button>`}</div>
         </div>`; }).join('');
     const running = (providers || []).filter(p => p.running).length;
     pop.innerHTML = `

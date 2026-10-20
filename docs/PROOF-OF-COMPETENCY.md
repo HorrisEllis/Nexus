@@ -829,3 +829,15 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   into a page); `tests/modules/test-compartment-downloads.test.js` CDT-02 (never the persistent store) and CDT-04 (one kill per unasked
   drop; a deliberate stop never kills).
 
+### 2026-10-21 — 0.60.180: he rejected a release that passed its tests, and he was right
+- **His words:** "omg this looks bad. enterprise grade, production quality. outliar level ui" · "access to all guardian agent stuff. need
+  to have the bridge setup automatically."
+- **Context:** 0.60.179 passed every test, and he still turned it down from the screenshots. He also sent a screenshot of his running app,
+  where every Guardian agent showed "Start".
+- **What it shows:** product judgment that tests don't measure. Green tests had not caught that the window looked like a prototype. His
+  screenshot also exposed a real defect: the agent panel read `hosted` while the host sends `running`, so a running agent could never
+  show as running. That fix, the Guardian hub he asked for, and the automatic bridge came straight from what he looked at. Holding the
+  work to "production quality" after it passed is the standard that caught them.
+- **Checkable:** `tests/modules/test-browser-shell.test.js` BST-10 (a running agent shows Open/Stop; nothing reads `hosted` alone);
+  `tests/modules/test-snowflake.test.js` SFW-09; `CHANGELOG-0.60.180.md`.
+

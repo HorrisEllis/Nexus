@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
+type: phase
+id: docs_2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
+context: pipeline phase SF7_bridge_automatic of docs/2026-10-21-snowflake-compartment-phasemap.spec
+intent: null
+summary: SF7_bridge_automatic (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792496356542
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792496356542
+lastSeenAt: 1792496356542
+fingerprint: null
+payload:
+  id: SF7_bridge_automatic
+  map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.180
+  files:
+    - clear-glass/src/net/service.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/renderer/settings/sections/network.js
+  depends_on:
+    - SF2_bridge_sources
+    - SF6_surface
+  blocks:
+    - MOD-SF-AUTO-BRIDGE
+  spec: clear-glass/spec/snowflake.spec
+  graph: 1fb57e40a95cf705

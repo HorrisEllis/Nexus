@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
+context: pipeline phase BS11_copilot_pane of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS11_copilot_pane (surface) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792496355630
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792496355630
+lastSeenAt: 1792496355630
+fingerprint: null
+payload:
+  id: BS11_copilot_pane
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.180
+  files:
+    - clear-glass/renderer/shell/copilot.css
+  depends_on:
+    - BS8_design_system
+  blocks:
+    - MOD-BSH-COPILOT-SKIN
+  spec: clear-glass/spec/browser-shell.spec
+  graph: caad6884da55762a

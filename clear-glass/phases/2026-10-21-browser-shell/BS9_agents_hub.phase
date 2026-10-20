@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
+context: pipeline phase BS9_agents_hub of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS9_agents_hub (surface) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792496355628
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792496355628
+lastSeenAt: 1792496355628
+fingerprint: null
+payload:
+  id: BS9_agents_hub
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.180
+  files:
+    - clear-glass/renderer/shell/agents.js
+    - clear-glass/renderer/browser.js
+  depends_on:
+    - BS8_design_system
+  blocks:
+    - MOD-BSH-AGENTS
+  spec: clear-glass/spec/browser-shell.spec
+  graph: e6c8cd1e2f573362

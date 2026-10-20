@@ -56,7 +56,7 @@
       <div class="sh-ext-row${p.state === 'active' ? '' : ' off'}" data-id="${esc(p.id)}">
         <span class="sh-ext-ico" aria-hidden="true">${(window.CGIcons && window.CGIcons.plugin(p, { size: 18 })) || esc(p.icon || '🧩')}</span>
         <div><div class="sh-ext-name">${esc(p.displayName || p.name)}</div><div class="sh-ext-desc" title="${esc(p.description)}">${esc(p.description || '')}</div>${p.error ? `<div class="sh-ext-err">${esc(p.error)}</div>` : ''}</div>
-        <button class="sh-pin${pinned.has(p.id) ? ' on' : ''}" data-pin title="${pinned.has(p.id) ? 'Unpin from toolbar' : 'Pin to toolbar'}" aria-label="Pin">📌</button>
+        <button class="sh-pin${pinned.has(p.id) ? ' on' : ''}" data-pin title="${pinned.has(p.id) ? 'Unpin from toolbar' : 'Pin to toolbar'}" aria-label="Pin">${window.CGIcons ? window.CGIcons.svg('pin', { size: 15 }) : '📌'}</button>
         <button class="tog" role="switch" aria-checked="${p.state === 'active'}" data-tog aria-label="${p.state === 'active' ? 'Turn off' : 'Turn on'} ${esc(p.displayName || p.name)}"></button>
       </div>`).join('');
     const webRows = web.map(w => `

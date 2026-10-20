@@ -58,6 +58,9 @@ const FILES = [
   ['clear-glass/renderer/shell/shell.js', I('clear-glass/renderer/shell/shell.js'), []],   // §0.60.179 BS2/BS6 popovers, identity, shortcuts, float CLI button
   ['clear-glass/renderer/float-cli.js', I('clear-glass/renderer/float-cli.js'), []],   // §0.60.179 BS6 the floating CLI page
   ['clear-glass/src/driver/cg-stub.js', I('clear-glass/src/driver/cg-stub.js'), []],   // §0.60.179 test-only window.ClearGlass from the preload's namespaces
+  ['clear-glass/renderer/shell/icons.js', I('clear-glass/renderer/shell/icons.js'), []],   // §0.60.180 BS8 the drawn icon set (no emoji, no font)
+  ['clear-glass/renderer/shell/agents.js', I('clear-glass/renderer/shell/agents.js'), []],   // §0.60.180 BS9 Guardian's agents in one place
+  ['clear-glass/renderer/shell/newtab.js', I('clear-glass/renderer/shell/newtab.js'), []],   // §0.60.180 BS10 the start page over a blank tab
   ['lib/agent-tools/tools/clear-glass/firefox.js', I('lib/agent-tools/tools/clear-glass/firefox.js'), [I('lib/agent-tools/tools/clear-glass/net.js')]],   // §0.60.179 BS7 profiles listed for agents
   ['idearium/lib/surface-state.cjs', I('idearium/lib/surface-state.cjs'), [I('idearium/lib/data-dir.cjs')]],   // §0.60.80 CE8: the Code tab's surface, one for the tab, the CLI and agents
   ['cos/archetype/eravos.js', I('cos/archetype/eravos.js'), []],   // §0.60.104 CN1/CN2: his ERAVOS canvas, tools and domains as COS archetypes (read from cos/archetype/eravos-*/)
@@ -227,6 +230,10 @@ const CONSUMERS = [
   [I('lib/agent-tools/index.js'),                   I('lib/agent-tools/tools/clear-glass/firefox.js'), '§0.60.179 BS7 registerTool(clear_glass_firefox)'],
   [I('clear-glass/renderer/browser.js'),            I('clear-glass/renderer/shell/menus.js'), '§0.60.179 BS3 the ☰ menu draws window.CGMenus rows (page globals, loaded by browser.html — not a require)'],
   [I('clear-glass/renderer/shell/downloads.js'),    I('clear-glass/src/ipc/bridge.js'), '§0.60.179 BS5 /cli/net/quarantine* over :7702 (HTTP, not a require)'],
+  [I('clear-glass/renderer/shell/agents.js'),      I('clear-glass/src/ipc/bridge.js'), '§0.60.180 BS9 providers:list/start/stop/show and mesh:list over IPC (cg.providers, cg.mesh — not a require)'],
+  [I('clear-glass/renderer/shell/newtab.js'),      I('clear-glass/renderer/shell/agents.js'), '§0.60.180 BS10 the agent cards read window.CGAgents.list (page global)'],
+  [I('clear-glass/renderer/shell/extensions.js'),  I('clear-glass/renderer/shell/icons.js'), '§0.60.180 BS8 plugin icons drawn by window.CGIcons.plugin (page global)'],
+  [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/service.js'), '§0.60.180 SF7 _ensureBridge before every start (service.ensureBridge)'],
   [I('clear-glass/renderer/float-cli.js'),          I('clear-glass/renderer/copilot-cli.js'), '§0.60.179 BS6 CGCopilotCLI.create: the route bar, slash commands, history (page global)'],
 ];
 

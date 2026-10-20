@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS8_design_system:45800c467fe1ee6c
+type: graph
+id: phase:BS8_design_system:45800c467fe1ee6c
+context: dependency graph of phase BS8_design_system
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792496355627
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792496355627
+lastSeenAt: 1792496355627
+fingerprint: null
+payload:
+  for: BS8_design_system
+  kind: phase
+  repo: null
+  hash: 45800c467fe1ee6c
+  nodes:
+    - path: clear-glass/renderer/browser.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/icons.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/shell.css
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: b658b15d67be924d
+    layer: 1
+    deps:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+    dependents:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
+    upstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG b658b15d67be924d · layer 1
+      - 'depends on (1): BS2_shell_rebuild'
+      - >-
+        needed by (2): BS9_agents_hub, BS11_copilot_pane · all downstream 3 · finishing it unlocks
+        BS9_agents_hub, BS11_copilot_pane

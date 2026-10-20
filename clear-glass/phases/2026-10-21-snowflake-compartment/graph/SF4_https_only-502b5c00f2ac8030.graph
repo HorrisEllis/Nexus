@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792479326397
+exported_at: 1792496356537
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792479326397
-lastSeenAt: 1792479326397
+firstSeenAt: 1792496356537
+lastSeenAt: 1792496356537
 fingerprint: null
 payload:
   for: SF4_https_only
@@ -59,7 +59,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 4a650886a07d5f1b
+    dagHash: b658b15d67be924d
     layer: 0
     deps: []
     dependents:
@@ -69,6 +69,7 @@ payload:
     downstream:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
     blockedBy: []
     unlocks:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
@@ -76,8 +77,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 4a650886a07d5f1b · layer 0
+      - DAG b658b15d67be924d · layer 0
       - 'depends on (0): —'
       - >-
-        needed by (2): SF3_page_in_the_compartment, SF6_surface · finishing it unlocks
-        SF3_page_in_the_compartment, SF6_surface
+        needed by (2): SF3_page_in_the_compartment, SF6_surface · all downstream 3 · finishing it
+        unlocks SF3_page_in_the_compartment, SF6_surface

@@ -15,7 +15,8 @@
  *           gives the page that partition and forces it at attach; the webview accepts it
  *   SFW-06  circuit check: refused while the transport is down; IsTor and IP read; a failure kept and said
  *   SFW-07  the UI reads the fields the backend sends (his screenshot's root cause); command and agent scopes for the new verbs
- *   SFW-08  the real Settings → Network page in Clear Glass's engine (glass.js) against a stub :7702: paths with sources, Find → Use, switch
+ *   SFW-08  the real Settings → Network page in Clear Glass's engine (glass.js) against a stub :7702: the status card, then paths with sources, Find → Use, switch
+ *   SFW-09  0.60.180 the bridge set up automatically (his "need to have the bridge setup automatically"): kept / local / Tor Project / refused with what was tried
  * No Electron, tor or network here: Electron objects are fakes; the live path is checked on his machine with the Clear Glass driver.
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -172,6 +173,25 @@ console.log('\ntest-snowflake — Snowflake end to end: detect, bridge lines, th
     assert.ok(tool.parameters.properties.action.enum.includes('check'));
   });
 
+  await test('SFW-09', 'the bridge set up automatically: a set line kept; else a local line; else the Tor Project; nothing invented', async () => {
+    const L = (src) => ({ line: LINE_A, source: src, path: `/x/${src}` });
+    const a = new NetService({ store: store({ bridgeLine: LINE_B, bridgeSource: { kind: 'hand' } }) });
+    let asked = 0;
+    assert.deepStrictEqual(await a.ensureBridge({ local: () => ({ lines: [L('tor-browser')] }), builtin: async () => { asked++; return { ok: true, lines: [L('tor-project-builtin')] }; } }), { ok: true, kept: true, source: 'hand' });
+    assert.strictEqual(a.policy().bridgeLine, LINE_B, 'a hand-set line is never replaced'); assert.strictEqual(asked, 0);
+    const b = new NetService({ store: store() });
+    const rb = await b.ensureBridge({ local: () => ({ lines: [L('tor-browser')] }), builtin: async () => { asked++; return { ok: false }; } });
+    assert.deepStrictEqual([rb.ok, rb.source, b.policy().bridgeLine, b.status().bridgeSource.kind, b.status().bridgeSource.auto, asked], [true, 'tor-browser', LINE_A, 'tor-browser', true, 0]);
+    const c = new NetService({ store: store() });
+    const rc = await c.ensureBridge({ local: () => ({ lines: [] }), builtin: async () => ({ ok: true, lines: [L('tor-project-builtin')] }) });
+    assert.deepStrictEqual([rc.ok, rc.source], [true, 'tor-project-builtin']);
+    const d = new NetService({ store: store() });
+    const rd = await d.ensureBridge({ local: () => ({ lines: [] }), builtin: async () => ({ ok: false, error: 'blocked' }) });
+    assert.ok(!rd.ok && /no line on this machine/.test(rd.error) && /blocked/.test(rd.error) && d.policy().bridgeLine == null, rd.error);
+    const br = fs.readFileSync(CG('src/ipc/bridge.js'), 'utf8');
+    assert.ok(/action === 'start'\) \{ const eb = await _ensureBridge\(\)/.test(br) && /const eb = await _ensureBridge\(\); if \(!eb\.ok\) return \{ ok: false, error: eb\.error \}; const r = await host\.start\(\)/.test(br), 'every start path sets the bridge up first');
+  });
+
   // ── SFW-08 the real Settings → Network page, in Clear Glass's engine (never Playwright), against a stub :7702 bridge ──
   await (async () => {
     const glass = require(CG('src/driver/glass.js'));
@@ -200,17 +220,21 @@ console.log('\ntest-snowflake — Snowflake end to end: detect, bridge lines, th
     catch (e) { srv.close(); console.log(`  - SFW-08 SKIPPED: Clear Glass's engine (${eng.kind}) could not start (${e.message.split('\n')[0]})`); return; }
     console.log(`  · driven by Clear Glass (clear-glass/src/driver/glass.js), engine: ${eng.kind}`);
     try {
-      await test('SFW-08', 'Settings → Network in Clear Glass: real program paths and sources; Find lists a line with Use; HTTPS-only switch; Check', async () => {
+      await test('SFW-08', 'Settings → Network in Clear Glass: the status card first; under Advanced the real program paths and sources, Find → Use; HTTPS-only switch', async () => {
         const page = await browser.newPage(); const errors = [];
         page.on('pageerror', e => errors.push(e.message));
         await page.addInitScript(() => { const fn = () => Promise.resolve({}); window.ClearGlass = new Proxy({}, { get: () => new Proxy(fn, { get: () => fn }) }); });
         await page.goto(require('url').pathToFileURL(CG('renderer/settings.html')).href + '#network');
-        await page.waitForSelector('text=Programs', { timeout: 15000 });
+        await page.waitForSelector('.net-hero', { timeout: 15000 });
+        // SF7 (0.60.180): one status card first; the programs and bridge line live under Advanced (closed when the programs are found)
+        const heroTxt = await page.innerText('.net-hero');
+        assert.ok(/Off/.test(heroTxt) && /set up automatically when you start/.test(heroTxt) && /Start/.test(heroTxt), heroTxt);
+        await page.click('.net-advanced > summary'); await page.waitForTimeout(150);
         const body = await page.evaluate(() => document.body.innerText);
         assert.ok(body.includes('/usr/bin/tor (on PATH)'), 'tor path and where it came from');
         assert.ok(/lyrebird \(from Tor Browser\)/.test(body), 'the Snowflake client from Tor Browser');
         assert.ok(!body.includes('Not detected on PATH') && !body.includes('Not found on PATH'), 'the screenshot\'s contradiction is gone');
-        assert.ok(body.includes('HTTPS only') && body.includes('Check the circuit') && body.includes('Ask the Tor Project'));
+        assert.ok(body.includes('HTTPS only') && body.includes('Ask the Tor Project'));
         await page.click('button:has-text("Find bridge line")');
         await page.waitForSelector('.net-found button:has-text("Use")', { timeout: 10000 });
         assert.ok((await page.evaluate(() => document.querySelector('.net-found').innerText)).includes('Tor Browser'));

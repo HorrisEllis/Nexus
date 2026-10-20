@@ -34,7 +34,7 @@
   section({
     id: 'network', group: 'System', icon: '❄', label: 'Network',
     keywords: 'tor snowflake transport bridge proxy socks anonymity privacy egress route via block direct censorship pluggable',
-    blurb: 'How browsing sessions reach the outside. The Tor-with-Snowflake transport is off and configured by you; without a bridge line it does not start.',
+    blurb: 'How browsing sessions reach the outside. Tor over Snowflake is off until you start it; starting installs what is missing and sets up the bridge by itself.',
     async render({ rerender }) {
       let s, routes, qr;
       try { [s, routes, qr] = await Promise.all([api('/cli/net/status'), api('/cli/net/routes'), api('/cli/net/quarantine').catch(() => ({ items: [] }))]); }
@@ -145,7 +145,7 @@
           toggle(s.httpsOnly !== false, (on) => api('/cli/net/https-only', { method: 'POST', body: { on } }).then(() => toast(on ? 'HTTPS only: on' : 'HTTPS only: off'))),
           chip(s.httpsOnly !== false ? 'on' : 'off', s.httpsOnly !== false ? 'ok' : 'warn')),
         row('Circuit', checkText, chip(!check ? 'unchecked' : check.ok && check.isTor ? 'through Tor' : 'not confirmed', !check ? '' : check.ok && check.isTor ? 'ok' : 'err'),
-          btn('Check the circuit', () => api('/cli/net/check', { method: 'POST', body: {} }).then(rerender).catch(fail))),
+          null),
         h('p', { class: 'blurb', text: 'The circuit check shows where traffic exits; it is not the leak test (NP5), so nothing here is marked Verified.' }),
       ] });
 

@@ -1386,7 +1386,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   document.getElementById('btn-mesh')?.addEventListener('click', async (e) => {
     const panel = document.getElementById('agent-mesh-panel');
     if (panel.style.display !== 'none') { panel.style.display = 'none'; return; }
-    const rect = e.target.getBoundingClientRect();
+    const rect = (e.currentTarget || e.target).getBoundingClientRect();
     panel.style.top = `${rect.bottom + 4}px`;
     panel.style.right = `${window.innerWidth - rect.right}px`;
     panel.innerHTML = '<div style="padding:8px;color:var(--text-dim,#999);font-size:11px">loading…</div>';
@@ -1421,7 +1421,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   });
   document.addEventListener('click', (e) => {
     const panel = document.getElementById('agent-mesh-panel');
-    if (panel && panel.style.display !== 'none' && !panel.contains(e.target) && e.target.id !== 'btn-mesh') panel.style.display = 'none';
+    if (panel && panel.style.display !== 'none' && !panel.contains(e.target) && !(e.target.closest && e.target.closest('#btn-mesh'))) panel.style.display = 'none';   // 0.60.180: the button now holds an svg
   });
 
   // ── Diag button ────────────────────────────────────────────────────
@@ -1567,7 +1567,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     paint(); stateNote(); titleIn.focus(); titleIn.select();
 
     const close = () => { box.remove(); document.removeEventListener('mousedown', outside, true); };
-    const outside = (e) => { if (!box.contains(e.target) && e.target.id !== 'btn-bookmark') close(); };
+    const outside = (e) => { if (!box.contains(e.target) && !(e.target.closest && e.target.closest('#btn-bookmark'))) close(); };
     setTimeout(() => document.addEventListener('mousedown', outside, true), 0);
     box.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); if (e.key === 'Enter' && e.target === titleIn) save.click(); });
     cancel.addEventListener('click', close);
@@ -1832,7 +1832,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   document.getElementById('bookmark-mgr-btn').addEventListener('click', async (e) => {
     const panel = document.getElementById('bookmark-mgr-panel');
     if (panel.style.display !== 'none') { panel.style.display = 'none'; return; }
-    const rect = e.target.getBoundingClientRect();
+    const rect = (e.currentTarget || e.target).getBoundingClientRect();
     panel.style.top = `${rect.bottom + 4}px`;
     panel.style.right = `${window.innerWidth - rect.right}px`;
     // BS3 (0.60.179) — Firefox's ☰ order: new tab / window / Snowflake first, then bookmarks and the panels, then add-ons, import,
@@ -1938,7 +1938,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   });
   document.addEventListener('click', (e) => {
     const panel = document.getElementById('bookmark-mgr-panel');
-    if (panel.style.display !== 'none' && !panel.contains(e.target) && e.target.id !== 'bookmark-mgr-btn') {
+    if (panel.style.display !== 'none' && !panel.contains(e.target) && !(e.target.closest && e.target.closest('#bookmark-mgr-btn'))) {   // 0.60.180: a click on the drawn icon is a click on the button
       // Put the real agent/identity elements back into their hidden home
       // before closing, so they're not silently lost from the DOM if the
       // menu is never reopened before the next reference to them.

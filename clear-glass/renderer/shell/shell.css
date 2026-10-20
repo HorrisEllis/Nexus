@@ -147,7 +147,7 @@ body.cg-shell .menu-zoom-btn:hover { background: var(--pane-3); }
 
 /* ── Extensions panel (BS4) ───────────────────────────────────────────── */
 .sh-ext-panel { width: 360px; }
-.sh-ext-row { display: grid; grid-template-columns: 32px 1fr auto auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: var(--r-m); }
+.sh-ext-row { display: grid; grid-template-columns: 32px minmax(0,1fr) 28px 40px; gap: 10px; align-items: center; padding: 8px 10px; border-radius: var(--r-m); }
 .sh-ext-row:hover { background: var(--pane-2); }
 .sh-ext-ico { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 17px; background: linear-gradient(135deg, color-mix(in srgb, var(--cyan) 14%, transparent), color-mix(in srgb, var(--violet) 18%, transparent)); border: 1px solid var(--edge); }
 .sh-ext-row.off .sh-ext-ico { filter: grayscale(1); opacity: .5; }
@@ -204,7 +204,7 @@ body.cg-shell #toolbar-editor-panel, body.cg-shell #options-panel, body.cg-shell
 .sh-badge[hidden] { display: none; }
 
 /* the Guardian agents hub */
-.sh-agents-panel { width: 420px; padding: 8px; }
+.sh-agents-panel { width: 440px; padding: 8px; max-height: calc(100vh - 104px); }
 .ag-sum { font: 500 var(--t-xs) var(--sans); color: var(--ink-dim); }
 .ag-cards { display: flex; flex-direction: column; gap: 4px; }
 .ag-card { display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center; padding: 8px 10px; border-radius: var(--r-m); transition: background .12s; }
@@ -260,3 +260,8 @@ body.cg-shell #toolbar-editor-panel, body.cg-shell #options-panel, body.cg-shell
 .nt-card > div { flex: 1; min-width: 0; } .nt-card b { display: block; font-size: var(--t-m); color: var(--ink-hi); }
 .nt-card small { display: block; font-size: var(--t-xs); color: var(--ink-dim); }
 .nt-card-ico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: var(--violet); background: color-mix(in srgb, var(--violet) 14%, transparent); }
+
+.ag-acts .sh-btn:not(.primary) { background: transparent; }
+.ag-acts .sh-btn.start { background: transparent; border-color: color-mix(in srgb, var(--cyan) 45%, transparent); color: var(--cyan); }
+.ag-acts .sh-btn.start:hover { background: var(--accent-soft); }
+.sh-pin .cg-ico { width: 15px; height: 15px; }

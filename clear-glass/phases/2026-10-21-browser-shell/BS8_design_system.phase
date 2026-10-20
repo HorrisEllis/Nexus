@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+context: pipeline phase BS8_design_system of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS8_design_system (surface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792496355627
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792496355627
+lastSeenAt: 1792496355627
+fingerprint: null
+payload:
+  id: BS8_design_system
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.180
+  files:
+    - clear-glass/renderer/shell/icons.js
+    - clear-glass/renderer/shell/shell.css
+    - clear-glass/renderer/browser.html
+  depends_on:
+    - BS2_shell_rebuild
+  blocks:
+    - MOD-BSH-DESIGN
+  spec: clear-glass/spec/browser-shell.spec
+  graph: 45800c467fe1ee6c
