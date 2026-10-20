@@ -1128,12 +1128,12 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     _micRecorder.onstop = async () => {
       stream.getTracks().forEach(t => t.stop());
       _micRecording = false;
-      copilotMicBtn.textContent = '🎤';
+      _setMic('mic');
       copilotMicBtn.title = 'Voice input (real, local, offline speech-to-text)';
 
       const blob = new Blob(_micChunks, { type: 'audio/webm' });
       const arrayBuffer = await blob.arrayBuffer();
-      copilotMicBtn.textContent = '⏳';
+      _setMic('busy');
       try {
         const result = await cg.speech.transcribeBuffer(new Uint8Array(arrayBuffer), 'webm');
         if (result?.error) {
@@ -1146,11 +1146,11 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       } catch (err) {
         addMsg('assistant', `Voice input error: ${err.message}`);
       }
-      copilotMicBtn.textContent = '🎤';
+      _setMic('mic');
     };
     _micRecorder.start();
     _micRecording = true;
-    copilotMicBtn.textContent = '⏹';
+    _setMic('stop');
     copilotMicBtn.title = 'Click to stop recording';
   });
 
@@ -2904,7 +2904,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; return ctx.measureText(t || input.placeholder || '').width; };
     function fit() {
       const cs = getComputedStyle(input), pad = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0) + 24;
-      if (!wrap.dataset.manual) wrap.style.flex = `0 0 ${Math.round(Math.min(room() - offset, Math.max(MIN, textW(input.value) + pad + 40)))}px`;
+      if (!wrap.dataset.manual) wrap.style.flex = `0 0 ${Math.round(Math.min(room() - offset, Math.max(MIN, room() * 0.62, textW(input.value) + pad + 40)))}px`;   // BS8 (0.60.180): starts at most of the row, as Firefox's does; still grows and drags
       applyOffset(offset);
     }
     function applyOffset(px) {
@@ -3544,4 +3544,11 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     bgTabs: () => _openPanelFromMenu('bgtabs-panel', _renderBgTabsPanel),
     library: (area) => _openLibrary(area), customize: () => _openToolbarEditor(),
   };
+
+  // BS11 (0.60.180) — the mic's three states as drawn icons (the composer hides text glyphs)
+  function _setMic(kind) {
+    const b = document.getElementById('copilot-mic-btn'); if (!b) return;
+    const name = kind === 'stop' ? 'stop' : kind === 'busy' ? 'history' : 'mic';
+    if (window.CGIcons) { b.innerHTML = window.CGIcons.svg(name, { size: 18 }); b.classList.toggle('rec', kind === 'stop'); } else b.textContent = kind === 'stop' ? '⏹' : kind === 'busy' ? '⏳' : '🎤';
+  }
 })();

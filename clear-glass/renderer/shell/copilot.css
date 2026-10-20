@@ -1,0 +1,48 @@
+/* renderer/shell/copilot.css — the co-pilot pane on the window's system (BS11, 0.60.180). Spec: clear-glass/spec/browser-shell.spec
+ * MOD-BSH-COPILOT-SKIN. James, 2026-10-21: "enterprise grade, production quality. outliar level ui".
+ * CSS only, over the ids and classes browser.js and copilot-cli.js already use; nothing here changes what an element does.
+ */
+body.cg-shell #copilot-pane { width: var(--copilot-w, 360px); background: var(--surface); border-left: 1px solid var(--edge); display: flex; flex-direction: column; }
+body.cg-shell #copilot-header { height: 48px; padding: 0 10px 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--edge); background: transparent; }
+body.cg-shell #copilot-header h2 { font: 600 var(--t-m) var(--sans); letter-spacing: 0; text-transform: none; color: var(--ink-hi); margin: 0; flex: 1; }
+body.cg-shell #copilot-model { font: 500 var(--t-xs) var(--mono); color: var(--ink-dim); padding: 3px 8px; border-radius: 10px; background: var(--hover); }
+body.cg-shell #copilot-clear { width: 28px; height: 28px; border: 0; border-radius: var(--r-s); background: transparent; color: var(--ink-dim); }
+body.cg-shell #copilot-clear:hover { background: var(--hover); color: var(--ink-hi); }
+
+/* who answers: one segmented control, the hat chip beside it */
+body.cg-shell #copilot-route { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--edge); }
+body.cg-shell #copilot-route .cr-toggle { height: 28px; padding: 0 11px; margin: 0; border: 0; border-radius: 0; background: color-mix(in srgb, var(--ink) 4%, transparent); color: var(--ink-dim);
+  font: 500 var(--t-xs) var(--sans); text-transform: capitalize; box-shadow: inset 0 0 0 1px var(--edge); }
+body.cg-shell #copilot-route .cr-toggle:first-child { border-radius: 8px 0 0 8px; }
+body.cg-shell #copilot-route .cr-toggle:nth-child(4), body.cg-shell #copilot-route .cr-toggle:last-of-type { border-radius: 0 8px 8px 0; }
+body.cg-shell #copilot-route .cr-toggle + .cr-toggle { margin-left: -8px; }
+body.cg-shell #copilot-route .cr-toggle:hover { color: var(--ink-hi); background: var(--hover); }
+body.cg-shell #copilot-route .cr-toggle.on { color: var(--void); background: var(--cyan); box-shadow: none; position: relative; z-index: 1; }
+body.cg-shell #copilot-route .cr-agent { height: 28px; border-radius: 8px; border: 1px solid var(--edge); background: var(--void); color: var(--ink); font-size: var(--t-xs); padding: 0 8px; }
+body.cg-shell #copilot-route .cr-hat { height: 26px; padding: 0 10px; border-radius: 13px; font: 500 var(--t-xs) var(--sans); }
+
+/* messages: readable sans text; the person's on the right */
+body.cg-shell #copilot-messages { flex: 1; overflow-y: auto; padding: 14px 14px 8px; display: flex; flex-direction: column; gap: 10px; }
+body.cg-shell #copilot-messages .msg { max-width: 92%; font: var(--t-s)/1.55 var(--sans); color: var(--ink); padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--ink) 4%, transparent);
+  border: 1px solid var(--edge); white-space: pre-wrap; word-break: break-word; }
+body.cg-shell #copilot-messages .msg.user { align-self: flex-end; background: color-mix(in srgb, var(--cyan) 13%, transparent); border-color: color-mix(in srgb, var(--cyan) 30%, transparent); color: var(--ink-hi); border-bottom-right-radius: 4px; }
+body.cg-shell #copilot-messages .msg.assistant { align-self: flex-start; border-bottom-left-radius: 4px; }
+body.cg-shell #copilot-messages .msg.route, body.cg-shell #copilot-messages .msg.cli { background: transparent; border: 0; padding: 0 4px; font: var(--t-xs) var(--mono); color: var(--ink-faint); }
+body.cg-shell #copilot-messages .msg.thinking { background: transparent; border: 0; color: var(--ink-dim); font-style: normal; }
+
+/* one composer: context chips, the text, then mic and Send on one row */
+body.cg-shell #copilot-input-wrap { margin: 8px 12px 12px; padding: 8px; border-radius: var(--r-l); border: 1px solid var(--edge-hi); background: var(--void);
+  display: grid; grid-template-columns: 1fr auto auto; grid-template-areas: "ctx ctx ctx" "text text text" ". mic send"; gap: 6px; align-items: center; transition: border-color .14s, box-shadow .14s; }
+body.cg-shell #copilot-input-wrap:focus-within { border-color: var(--cyan); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 12%, transparent); }
+body.cg-shell #copilot-context-bar { grid-area: ctx; display: flex; gap: 6px; padding: 0; margin: 0; border: 0; }
+body.cg-shell .ctx-tag { height: 22px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 11px; font: 500 var(--t-xs) var(--sans); color: var(--ink-dim);
+  background: transparent; border: 1px solid var(--edge); cursor: default; }
+body.cg-shell .ctx-tag.active { color: var(--cyan); border-color: color-mix(in srgb, var(--cyan) 40%, transparent); background: var(--accent-soft); }
+body.cg-shell #copilot-textarea { grid-area: text; width: 100%; min-height: 52px; max-height: 180px; resize: none; border: 0; outline: 0; background: transparent; color: var(--ink-hi);
+  font: var(--t-s)/1.5 var(--sans); padding: 4px 4px 2px; box-shadow: none; }
+body.cg-shell #copilot-textarea::placeholder { color: var(--ink-faint); }
+body.cg-shell #copilot-mic-btn { grid-area: mic; width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--r-s); background: transparent; color: var(--ink-dim); display: grid; place-items: center; font-size: 0; }
+body.cg-shell #copilot-mic-btn:hover { background: var(--hover); color: var(--ink-hi); }
+body.cg-shell #copilot-send { grid-area: send; height: 32px; padding: 0 14px; border: 0; border-radius: var(--r-s); background: var(--cyan); color: var(--void); font: 600 var(--t-s) var(--sans); display: inline-flex; align-items: center; gap: 6px; }
+body.cg-shell #copilot-send:hover { background: color-mix(in srgb, var(--cyan) 85%, white); }
+body.cg-shell #copilot-mic-btn.rec { color: var(--bad); background: color-mix(in srgb, var(--bad) 14%, transparent); }
