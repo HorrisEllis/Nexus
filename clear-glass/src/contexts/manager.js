@@ -24,7 +24,7 @@ class ContextManager {
   }
 
   // ── Context lifecycle ─────────────────────────────────────────────────
-  async create({ agentId, profileOptions = {}, url } = {}) {
+  async create({ agentId, profileOptions = {}, url, via } = {}) {
     const id = agentId || uuidv4();
     if (this.contexts.has(id)) return this.contexts.get(id);
 
@@ -32,15 +32,29 @@ class ContextManager {
     const profile = this.fp.getOrGenerate(id);
 
     // Isolated Chromium session partition
-    const ses = session.fromPartition(`persist:agent-${id}`, { cache: true });
+    // SF3 (0.60.178) — a window opened through a route (via) is a compartment: an in-memory partition its page shares (main passes it to the
+    // <webview>), the engine's own clean UA instead of a persona, WebRTC kept on the proxy, HTTPS-only (src/net/compartment.js)
+    const comp = via ? require('../net/compartment') : null;
+    const partition = comp ? comp.partitionFor(id) : `persist:agent-${id}`;
+    const ses = session.fromPartition(partition, { cache: true });
     applyCspBypass(ses);
+    if (comp) {
+      const net = require('../net/service').service();
+      comp.harden(ses, { httpsOnly: () => net.policy().httpsOnly !== false });
+      ses.__cgPartition = partition;   // CD5 — so a webContents on it knows its compartment (quarantine.watch)
+      try { net.register(partition, ses, { provider: null, caller: 'person-tab', firefox: false, via }).catch(() => {}); } catch (_) { /* routing is optional */ }
+      const ctx = { id, uuid: uuidv4(), profile, session: ses, partition, compartment: true, health: { score: 100, errors: 0, requests: 0, lastCheck: Date.now() }, createdAt: Date.now(), url: url || 'about:blank' };
+      this.contexts.set(id, ctx);
+      this.sse.emit('context.created', { agentId: id, uuid: ctx.uuid, ua: ses.getUserAgent(), compartment: true, ts: Date.now() });
+      return ctx;   // no persona headers, no cookie-vault snapshots: nothing of this window is written to disk
+    }
     // 0.60.60 NP3 — routes (src/net): a no-op unless a rule applies to this window; never lets a routing error stop the window opening
     // §0.60.109 TLS3 — a Firefox persona routes its direct https/wss through the TLS layer (cg-tls-helper), so its handshake is
     // Firefox's too; it trusts that layer's local CA, and only for certificates that CA issued (src/tls/helper.js verifyProc).
     // James: "fix it. i don't want the trouble again"
     const firefox = /\bFirefox\//.test(this.fp.getOrGenerate(id).ua || '');
     if (firefox) { try { ses.setCertificateVerifyProc(require('../tls/helper').verifyProc()); } catch (e) { console.warn(`[contexts] TLS layer trust not set on ${id}: ${e.message}`); } }
-    try { require('../net/service').service().register(`persist:agent-${id}`, ses, { provider: null, caller: 'person-tab', firefox }).catch(() => {}); } catch (_) { /* routing is optional */ }
+    try { require('../net/service').service().register(`persist:agent-${id}`, ses, { provider: null, caller: 'person-tab', firefox, ...(via ? { via } : {}) }).catch(() => {}); } catch (_) { /* routing is optional */ }
 
     // Apply user agent
     ses.setUserAgent(profile.ua);
@@ -144,6 +158,13 @@ class ContextManager {
     const ctx = this.contexts.get(agentId);
     if (!ctx) return;
 
+    if (ctx.compartment) {   // SF3 — nothing kept: unrouted, storage cleared, no vault snapshot
+      try { require('../net/service').service().unregister(ctx.partition); } catch (_) {}
+      await require('../net/compartment').dispose(ctx.session).catch(() => {});
+      this.contexts.delete(agentId);
+      this.sse.emit('context.destroyed', { agentId, compartment: true, ts: Date.now() });
+      return;
+    }
     // Final cookie snapshot before destruction
     await this.vault.snapshot(agentId, ctx.session).catch(() => {});
 
@@ -207,6 +228,8 @@ class ContextManager {
   // modes: 'firefox' | 'chrome' | 'safari' | 'edge'
   async switchFingerprint({ agentId, mode = 'firefox', options = {} }) {
     const ctx = await this.ensureContext(agentId);
+    // SF3 — a compartment keeps the engine's own identity; a persona on it would be a Chromium claiming to be something else, over Tor
+    if (ctx.compartment) return { agentId, mode: 'chromium', ua: ctx.session.getUserAgent(), refused: 'a routed (Snowflake) window keeps its ordinary Chromium identity' };
 
     let profile;
     if (mode === 'firefox') {

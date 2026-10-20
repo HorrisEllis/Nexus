@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+type: phase
+id: docs_2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+context: pipeline phase SF6_surface of docs/2026-10-21-snowflake-compartment-phasemap.spec
+intent: null
+summary: SF6_surface (surface) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792479326401
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792479326401
+lastSeenAt: 1792479326401
+fingerprint: null
+payload:
+  id: SF6_surface
+  map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.178
+  files:
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/renderer/settings/sections/network.js
+    - idearium/cli/route-commands.js
+    - lib/agent-tools/tools/clear-glass/net.js
+  depends_on:
+    - SF1_honest_detection
+    - SF2_bridge_sources
+    - SF3_page_in_the_compartment
+    - SF4_https_only
+    - SF5_circuit_check
+  blocks:
+    - MOD-SF-SURFACE
+  spec: clear-glass/spec/snowflake.spec
+  graph: dfa1169546059591

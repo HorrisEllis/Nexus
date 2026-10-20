@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS2_shell_rebuild:274f7a19aecede02
+type: graph
+id: phase:BS2_shell_rebuild:274f7a19aecede02
+context: dependency graph of phase BS2_shell_rebuild
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792481795197
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795197
+lastSeenAt: 1792481795197
+fingerprint: null
+payload:
+  for: BS2_shell_rebuild
+  kind: phase
+  repo: null
+  hash: 274f7a19aecede02
+  nodes:
+    - path: clear-glass/renderer/browser.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/shell.css
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 0c4fb6c30abee07a
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+    upstream: []
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 0c4fb6c30abee07a · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (4): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli · all
+        downstream 5 · finishing it unlocks BS3_menus, BS4_extensions, BS5_downloads_panel,
+        BS6_float_cli

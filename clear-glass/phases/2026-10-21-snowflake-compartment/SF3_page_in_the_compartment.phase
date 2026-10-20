@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+type: phase
+id: docs_2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+context: pipeline phase SF3_page_in_the_compartment of docs/2026-10-21-snowflake-compartment-phasemap.spec
+intent: null
+summary: SF3_page_in_the_compartment (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792479326398
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792479326398
+lastSeenAt: 1792479326398
+fingerprint: null
+payload:
+  id: SF3_page_in_the_compartment
+  map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.178
+  files:
+    - clear-glass/src/net/compartment.js
+    - clear-glass/src/contexts/manager.js
+    - clear-glass/src/main/index.js
+    - clear-glass/renderer/browser.js
+  depends_on:
+    - SF1_honest_detection
+    - SF4_https_only
+  blocks:
+    - MOD-SF-COMPARTMENT
+  spec: clear-glass/spec/snowflake.spec
+  graph: f34764dd0fbfd96e

@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS1_firefox_import:d3c52db1223874d1
+type: graph
+id: phase:BS1_firefox_import:d3c52db1223874d1
+context: dependency graph of phase BS1_firefox_import
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792481795196
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795196
+lastSeenAt: 1792481795196
+fingerprint: null
+payload:
+  for: BS1_firefox_import
+  kind: phase
+  repo: null
+  hash: d3c52db1223874d1
+  nodes:
+    - path: clear-glass/src/import/firefox.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/import/firefox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 0c4fb6c30abee07a
+    layer: 1
+    deps:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS0_cookie_target
+    dependents:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+    upstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS0_cookie_target
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 0c4fb6c30abee07a · layer 1
+      - 'depends on (1): BS0_cookie_target'
+      - 'needed by (1): BS7_surface · finishing it unlocks BS7_surface'

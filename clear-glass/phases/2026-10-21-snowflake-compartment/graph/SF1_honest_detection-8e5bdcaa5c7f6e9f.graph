@@ -1,0 +1,88 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF1_honest_detection:8e5bdcaa5c7f6e9f
+type: graph
+id: phase:SF1_honest_detection:8e5bdcaa5c7f6e9f
+context: dependency graph of phase SF1_honest_detection
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792479326396
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792479326396
+lastSeenAt: 1792479326396
+fingerprint: null
+payload:
+  for: SF1_honest_detection
+  kind: phase
+  repo: null
+  hash: 8e5bdcaa5c7f6e9f
+  nodes:
+    - path: clear-glass/src/net/service.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/transport-host.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/policy.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/policy.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 4a650886a07d5f1b
+    layer: 1
+    deps:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
+    dependents:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    upstream:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
+    downstream:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 4a650886a07d5f1b · layer 1
+      - 'depends on (1): SF2_bridge_sources'
+      - >-
+        needed by (3): SF3_page_in_the_compartment, SF5_circuit_check, SF6_surface · finishing it
+        unlocks SF3_page_in_the_compartment, SF5_circuit_check, SF6_surface

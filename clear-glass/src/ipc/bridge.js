@@ -24,7 +24,7 @@ const {
 } = require('../screen-qa/detector.js');
 
 class IpcBridge {
-  constructor({ port, sse, ctxMgr, vault, apiSettings, urlListener, mesh, diag, fp, options, minimizeFn, hideFn, openFn, maximizeFn, openSettingsFn, closeSettingsFn, openLibraryFn, closeLibraryFn, bookmarks, rewind, providerHost, userscripts, siteSettings, downloads, passwordVault, speech, macroTool, errorCapture, copilot, postEvent, pluginHost, history, autofillStore, dom, loginPortal, driver, webExtensions }) {
+  constructor({ port, sse, ctxMgr, vault, apiSettings, urlListener, mesh, diag, fp, options, minimizeFn, hideFn, openFn, closeCompartmentsFn, maximizeFn, openSettingsFn, closeSettingsFn, openLibraryFn, closeLibraryFn, bookmarks, rewind, providerHost, userscripts, siteSettings, downloads, passwordVault, speech, macroTool, errorCapture, copilot, postEvent, pluginHost, history, autofillStore, dom, loginPortal, driver, webExtensions }) {
     this.port        = port;
     this.sse         = sse;
     this.errorCapture = errorCapture;
@@ -40,6 +40,7 @@ class IpcBridge {
     this.minimizeFn  = minimizeFn;
     this.hideFn      = hideFn;
     this.openFn      = openFn;
+    this.closeCompartmentsFn = closeCompartmentsFn;   // CD4 (0.60.179) — the kill switch closes routed windows through this
     this.maximizeFn  = maximizeFn;
     this.openSettingsFn = openSettingsFn;
     this.closeSettingsFn = closeSettingsFn;
@@ -267,7 +268,31 @@ class IpcBridge {
       const { app } = require('electron');
       const which = (n) => { for (const d of String(process.env.PATH || '').split(path.delimiter)) { for (const ext of (process.platform === 'win32' ? ['.exe', ''] : [''])) { const f = path.join(d, n + ext); try { if (fs.statSync(f).isFile()) return f; } catch (_) { /* next */ } } } return null; };
       const pickPort = () => new Promise((ok, no) => { const s = net.createServer(); s.once('error', no); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => ok(p)); }); });
-      return svc.host({ spawn: require('child_process').spawn, fs, dir: path.join(app.getPath('userData'), 'net'), which, pickPort, now: Date.now });
+      // SF1 (0.60.178) — a Tor Browser install counts as found (its tor and its Snowflake client), after a saved path and PATH
+      const locate = () => require('../net/bridge-sources').local({ examples: [] }).torBrowser;
+      const host = svc.host({ spawn: require('child_process').spawn, fs, dir: path.join(app.getPath('userData'), 'net'), which, locate, pickPort, now: Date.now });
+      // CD4 (0.60.179) — kill on disconnect, armed once with the host: an unasked drop runs the rung (kill_tabs by default)
+      if (!svc.killSwitch) {
+        const { emit: busEmit } = require('../core/bus');
+        const quarantine = svc.ensureQuarantine({ dir: path.join(app.getPath('userData'), 'net', 'quarantine'), emit: busEmit });
+        const { KillSwitch } = require('../net/kill-switch');
+        const ks = new KillSwitch({ host, quarantine, rung: () => svc.policy().compartmentOnDisconnect || 'kill_tabs', closeWindows: () => (this.closeCompartmentsFn ? this.closeCompartmentsFn() : []),
+          qbit: () => svc.qbit(), handedHashes: () => svc.handedHashes(), emit: (t, d) => { try { busEmit(t, d); } catch (_) {} } });
+        ks.arm(); svc.useCompartmentParts({ killSwitch: ks });
+      }
+      return host;
+    };
+    const _quarantine = () => { _netHost(); return _net().quarantine; };
+    // SF2 (0.60.178) — real bridge lines on this machine; the installer's bundle folder is one of the places looked in
+    const _bridgeLocal = () => require('../net/bridge-sources').local({ bundleDir: require('path').join(require('electron').app.getPath('userData'), 'net', 'bundle') });
+    // SF5 (0.60.178) — fetch through the transport only: an in-memory session whose one proxy rule is the transport's SOCKS port (names resolved by tor)
+    const _fetchVia = async (url, socksPort) => {
+      const { session } = require('electron');
+      const ses = session.fromPartition('cg-netcheck');
+      await ses.setProxy({ proxyRules: `socks5://127.0.0.1:${socksPort}`, proxyBypassRules: '<-loopback>' });
+      const res = await ses.fetch(url, { signal: AbortSignal.timeout(45000), cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status} from ${new URL(url).host}`);
+      return res.text();
     };
     const _netRoute = (fn) => async (req, res) => { try { res.json(await fn(req.body || {}, req.query || {})); } catch (e) { res.json({ ok: false, error: e.message }); } };
     this.app.get('/cli/net/status',   _netRoute(() => ({ ..._net().status(), detect: _netHost().detect() })));
@@ -285,6 +310,77 @@ class IpcBridge {
       if (b.action === 'detect') return { ok: true, ...host.detect() };
       return { ok: false, error: 'action must be start, stop or detect' };
     }));
+    // §0.60.169 — James, 2026-10-19: "right click on links to open with snowflake." Opens the URL in a NEW window whose session is forced through the transport
+    // (no rules, fail closed). The transport is started first if it is configured but off, and waited for (up to 90 s); if it cannot come up nothing is opened.
+    this._netOpenVia = async (rawUrl) => {
+      let u; try { u = new URL(String(rawUrl || '')); } catch (_) { return { ok: false, error: 'that is not a link' }; }
+      if (!/^https?:$/.test(u.protocol)) return { ok: false, error: `only http and https links can be opened this way (got ${u.protocol})` };
+      const host = _netHost();
+      if (host.status().state !== 'ready') {
+        if (!['starting', 'bootstrapping'].includes(host.status().state)) { const r = await host.start(); if (!r.ok) return { ok: false, error: `the transport cannot start: ${r.error}. Set it up under Settings → Network.` }; }
+        const t0 = Date.now();
+        while (host.status().state !== 'ready') {
+          if (host.status().state === 'failed' || host.status().state === 'stopped') return { ok: false, error: `the transport did not come up (${host.status().error || host.status().state})` };
+          if (Date.now() - t0 > 90000) return { ok: false, error: 'the transport is still connecting after 90 s; try again in a moment' };
+          await new Promise(r => setTimeout(r, 400));
+        }
+      }
+      const agentId = `snow-${require('crypto').randomUUID()}`;
+      await this.openFn?.({ agentId, url: u.href, via: 'transport' });
+      return { ok: true, agentId, url: u.href };
+    };
+    this.app.post('/cli/net/open', _netRoute((b) => this._netOpenVia(b.url)));
+    // §0.60.169 NP11 — the Snowflake plugin's menu row asks for this on the bus ('net.open'); the answer is a toast in the window that asked
+    try {
+      const { getBus, Event } = require('../core/bus.js');
+      const toast = (agentId, msg, type) => getBus().emit(new Event('driver.exec', { action: 'toast', agentId, msg, type, durationMs: type === 'warn' ? 7000 : 3500 }));
+      getBus().on('net.open', async (ev) => {
+        const { url, agentId = 'default' } = ev.data || {};
+        toast(agentId, 'Opening through Snowflake…', 'info');
+        const r = await this._netOpenVia(url).catch(err => ({ ok: false, error: err.message }));
+        if (!r.ok) toast(agentId, `Could not open through Snowflake: ${r.error}`, 'warn');
+      });
+    } catch (err) { console.warn(`[net] the net.open listener was not bound: ${err.message}`); }
+    // §0.60.168 — James, 2026-10-19: "a setup button ... fully automatic download and install then restart." Starts src/net/installer.js in the background; the page polls /setup/status.
+    this.app.post('/cli/net/setup', _netRoute((b) => {
+      const fs = require('fs'), path = require('path'); const { app } = require('electron');
+      const { TorInstaller } = require('../net/installer'); _netHost();   // make sure the transport host exists, so the setup can restart it
+      return _net().setupStart({ installer: new TorInstaller({ fs, dir: path.join(app.getPath('userData'), 'net', 'bundle') }), force: !!b.force, allowUnverified: !!b.allowUnverified });
+    }));
+    this.app.get('/cli/net/setup/status', _netRoute(() => _net().setupStatus()));
+    this.app.get('/cli/net/bridge/find',    _netRoute(() => _net().findBridges({ local: _bridgeLocal })));
+    this.app.post('/cli/net/bridge/builtin', _netRoute(() => _net().builtinBridges({ builtin: () => require('../net/bridge-sources').builtin({}) })));
+    this.app.post('/cli/net/bridge/use',    _netRoute((b) => _net().useBridge(b.n)));
+    this.app.post('/cli/net/https-only',    _netRoute((b) => _net().setHttpsOnly(b.on !== false && b.on !== 'off')));
+    this.app.post('/cli/net/check',         _netRoute(() => { _netHost(); return _net().checkCircuit({ fetchVia: _fetchVia }); }));
+    // BS1/BS7 (0.60.179) — Firefox import, for real (src/import/firefox.js). Cookies go into the everyday session (Electron's default, where an
+    // ordinary window's page loads) or a provider tab's; never into a Snowflake compartment. No cookie value leaves this route.
+    const _ffSession = (into) => {
+      const { session } = require('electron');
+      if (!into || into === 'default') return session.defaultSession;
+      if (/^ncp-[\w-]{1,40}$/.test(into)) return session.fromPartition(`persist:${into}`);
+      throw new Error('into must be default or ncp-<provider> (Snowflake windows never take imported cookies)');
+    };
+    this.app.get('/cli/firefox/profiles', _netRoute(() => ({ ok: true, ...require('../import/firefox').profiles() })));
+    this.app.post('/cli/firefox/import', _netRoute(async (b) => {
+      const FX = require('../import/firefox');
+      const { profiles } = FX.profiles();
+      const want = String(b.profile || '').trim();
+      const prof = !want ? (profiles.find(p => p.isDefault) || profiles[0]) : profiles.find(p => p.name === want || p.path === want) || (require('fs').existsSync(want) ? { name: require('path').basename(want), path: want } : null);
+      if (!prof) return { ok: false, error: want ? `no Firefox profile "${want}"` : 'no Firefox profile found on this machine' };
+      const rep = await FX.run({ profile: prof, cookies: b.cookies !== false, bookmarks: !!b.bookmarks, persona: !!b.persona, into: b.into || 'default',
+        session: b.cookies !== false ? _ffSession(b.into) : null, store: this.bookmarks, fingerprint: this.fp, agentId: b.agentId || 'default' });
+      try { require('../core/bus').emit('import.firefox.done', { profile: rep.profile, cookies: rep.cookies && rep.cookies.imported, bookmarks: rep.bookmarks && rep.bookmarks.added }); } catch (_) {}
+      return { ok: rep.errors.length === 0 || !!(rep.cookies || rep.bookmarks || rep.persona), ...rep };
+    }));
+    // CD5 (0.60.179) — the compartment's download manager, magnets, the kill rung and the qBittorrent hand-off
+    this.app.get('/cli/net/quarantine',           _netRoute(() => ({ ok: true, items: _quarantine().list(), onDisconnect: _net().policy().compartmentOnDisconnect || 'kill_tabs', kills: _net().killSwitch ? _net().killSwitch.records() : [] })));
+    this.app.post('/cli/net/quarantine/release',  _netRoute((b) => _quarantine().release(String(b.id || ''), this.options?.get()?.downloadDirectory || require('electron').app.getPath('downloads'))));
+    this.app.post('/cli/net/quarantine/discard',  _netRoute((b) => _quarantine().discard(String(b.id || ''))));
+    this.app.post('/cli/net/magnet/handoff',      _netRoute((b) => { _quarantine(); return _net().handoff(String(b.id || '')); }));
+    this.app.post('/cli/net/on-disconnect',       _netRoute((b) => _net().setOnDisconnect(String(b.rung || ''))));
+    this.app.post('/cli/net/qbit',                _netRoute((b) => _net().setQbit({ url: b.url, user: b.user, pass: b.pass })));
+    this.app.post('/cli/net/qbit/check',          _netRoute(() => { _netHost(); return _net().checkQbit(); }));
     this.app.post('/cli/net/test', _netRoute(() => ({ ok: false, error: 'the leak test is not built yet (NP5). No route is shown as verified until it is.' })));
     // §0.60.85 PI5b — James, 2026-10-16: "build it." The chat crawler (src/chats/): /cli/chats/crawl/* -> idearium `chat-crawl` command. Off until the account's switch is on.
     let _crawl = null;
@@ -1189,7 +1285,7 @@ class IpcBridge {
     ipcMain.handle('window:hide',     async (e, d) => { this.hideFn?.(d);     emit('window.hide', d);     return { ok: true }; });
     ipcMain.handle('window:open',     async (e, d) => { await this.openFn?.(d); emit('window.open', d); return { agentId: d?.agentId, opened: true }; });
     ipcMain.handle('window:maximize', async (e, d) => { this.maximizeFn?.(d); return { ok: true }; });
-    ipcMain.handle('window:openSettings',  async () => { this.openSettingsFn?.();  return { ok: true }; });
+    ipcMain.handle('window:openSettings',  async (e, d = {}) => { this.openSettingsFn?.(d && d.area);  return { ok: true }; });   // BS3: optional section
     ipcMain.handle('window:closeSettings', async () => { this.closeSettingsFn?.(); return { ok: true }; });
     // §LIBRARY 0.39.241 — the Library window (renderer/library.html); area picks its section.
     ipcMain.handle('window:openLibrary',  async (e, d) => this.openLibraryFn ? this.openLibraryFn(d && d.area) : { ok: false, error: 'library window not wired' });
@@ -1277,6 +1373,11 @@ class IpcBridge {
     // strings) so the settings section built on this is named "Plugins",
     // not "Extensions and themes" — never claims theme support that
     // doesn't exist.
+    // §0.60.169 NP11 — the menu rows plugins contribute (src/plugins/context-items.js): { when:'link'|'page' } -> [{ id, label, icon, when, pluginId }]
+    ipcMain.handle('plugins:contextItems', async (e, d) => {
+      try { return require('../plugins/context-items.js').listContextItems(d && d.when); }
+      catch (err) { return []; }
+    });
     ipcMain.handle('plugins:list', async () => {
       try { return this.pluginHost?.list() || []; }
       catch (err) { return { ok: false, error: err.message }; }
@@ -1297,9 +1398,16 @@ class IpcBridge {
         : { title: 'Choose a packed extension', properties: ['openFile'], filters: [{ name: 'Chrome extension', extensions: ['crx', 'zip'] }] });
       return r.canceled || !r.filePaths.length ? { ok: true, canceled: true } : { ok: true, path: r.filePaths[0] };
     }));
+    // BS4 (0.60.179) — off stays off: the choice is kept in options.disabledPlugins and applied at boot (main/index.js)
+    const _keepPluginState = (id, off) => { try { const cur = new Set(this.options?.get()?.disabledPlugins || []); off ? cur.add(id) : cur.delete(id); this.options?.set({ disabledPlugins: [...cur] }); } catch (_) {} };
     ipcMain.handle('plugins:disable', async (e, { id } = {}) => {
       if (typeof id !== 'string') return { ok: false, error: 'id is required' };
-      try { this.pluginHost?.disable(id); return { ok: true }; }
+      try { this.pluginHost?.disable(id); _keepPluginState(id, true); return { ok: true }; }
+      catch (err) { return { ok: false, error: err.message }; }
+    });
+    ipcMain.handle('plugins:enable', async (e, { id } = {}) => {
+      if (typeof id !== 'string') return { ok: false, error: 'id is required' };
+      try { this.pluginHost?.enable(id); _keepPluginState(id, false); return { ok: true }; }
       catch (err) { return { ok: false, error: err.message }; }
     });
 

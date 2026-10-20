@@ -1,0 +1,180 @@
+/* renderer/shell/shell.css — the browser window in the Settings theme, laid out like Firefox. BS2 (0.60.179),
+ * clear-glass/spec/browser-shell.spec MOD-BSH-SHELL.
+ * James, 2026-10-21: "rebuild the front end renderer.html completely enterprise grade, same theme as the setting, make it dynamic like
+ * firefox."
+ * Loaded LAST: browser.css, then cos-theme.css (the Compartment-OS palette Settings also loads — his 0.60.5 "i like those. theyre
+ * beautiful."), then this. So the window and Settings share one palette, by the same two files; this adds only layout and surfaces.
+ * Three rows like Firefox: tab strip, navigation toolbar, bookmarks toolbar; the menu bar above them when shown. One popover style (.sh-pop).
+ */
+:root {
+  /* the palette is Settings' own: settings.css's names, retuned by cos-theme.css (loaded just before this file, as Settings loads it).
+     Only what the window adds is defined here. */
+  --pane-3: color-mix(in srgb, var(--ink) 9%, transparent);
+  --sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Cascadia Mono", Consolas, "SF Mono", monospace;
+  --r-s: 6px; --r-m: 10px; --r-l: 14px;
+  --tabs-h: 38px; --nav-h: 44px; --bm-h: 30px;
+  --surface: var(--bg-1); --surface-2: var(--bg-2); --raised: color-mix(in srgb, var(--bg-3) 70%, var(--bg-1));
+  --shadow: 0 12px 32px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.35);
+  --chrome-h: var(--nav-h);
+}
+
+body.cg-shell {
+  background: radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb, var(--violet) 8%, transparent), transparent 60%), var(--void);
+  color: var(--ink); font: 13px/1.45 var(--sans); -webkit-font-smoothing: antialiased;
+}
+body.cg-shell :focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 4px; }
+.sh-dim { color: var(--ink-dim); } .sh-pad { padding: 8px; display: block; font-size: 11px; }
+.sh-grow { flex: 1; } .sh-mono { font: 11px var(--mono); color: var(--cyan); }
+.sh-note { font-size: 11px; color: var(--ink-dim); margin: 0 0 8px; } .sh-row { display: flex; gap: 8px; align-items: center; } .sh-col { flex-direction: column; align-items: stretch !important; }
+.sh-flat { background: none; border: 0; color: var(--ink-dim); cursor: pointer; font-size: 12px; } .sh-flat:hover { color: var(--ink-hi); }
+.sh-mini { background: var(--surface-2); color: var(--ink-dim); border: 1px solid var(--edge); font-size: 10px; border-radius: 4px; height: 22px; padding: 0 4px; }
+@media (prefers-reduced-motion: reduce) { body.cg-shell * { transition: none !important; animation: none !important; } }
+
+/* ── Menu bar (BS3) ───────────────────────────────────────────────────── */
+.sh-menubar { display: flex; align-items: center; height: 26px; padding: 0 6px; background: var(--void); border-bottom: 1px solid var(--edge); -webkit-app-region: drag; flex-shrink: 0; }
+.sh-menubar[hidden] { display: none; }
+.sh-menubar > .mb-top { -webkit-app-region: no-drag; background: none; border: 0; color: var(--ink); font: 12px var(--sans); padding: 3px 9px; border-radius: var(--r-s); cursor: default; }
+.sh-menubar > .mb-top:hover, .sh-menubar > .mb-top.open, .sh-menubar > .mb-top:focus-visible { background: var(--pane-3); color: var(--ink-hi); }
+.mb-drop { position: fixed; z-index: 1200; min-width: 240px; padding: 5px; background: var(--raised); border: 1px solid var(--edge-hi); border-radius: var(--r-m); box-shadow: var(--shadow); }
+.mb-item { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: var(--r-s); color: var(--ink); font-size: 12px; cursor: default; white-space: nowrap; }
+.mb-item:hover, .mb-item.focus { background: color-mix(in srgb, var(--cyan) 10%, transparent); color: var(--ink-hi); }
+.mb-item .mb-ico { width: 18px; text-align: center; color: var(--ink-dim); }
+.mb-item .mb-kbd { margin-left: auto; padding-left: 24px; color: var(--ink-faint); font: 11px var(--mono); }
+.mb-item.check::before { content: "✓"; position: absolute; margin-left: -2px; color: var(--cyan); }
+.mb-sep { height: 1px; background: var(--edge); margin: 5px 4px; }
+
+/* ── Tab strip ────────────────────────────────────────────────────────── */
+#tab-bar.sh-tabstrip { display: flex; align-items: flex-end; height: var(--tabs-h); padding: 0 6px 0 8px; gap: 2px; background: var(--void); border-bottom: 1px solid var(--edge); flex-shrink: 0; overflow: hidden; }
+.sh-tabs { display: flex; align-items: flex-end; gap: 3px; flex: 0 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; height: 100%; padding-top: 5px; }
+.sh-tabs::-webkit-scrollbar { display: none; }
+.sh-tabs .tab-item { display: flex; align-items: center; gap: 7px; height: 32px; padding: 0 8px 0 11px; min-width: 96px; max-width: 220px; flex: 0 1 220px;
+  border-radius: var(--r-m) var(--r-m) 0 0; background: transparent; color: var(--ink-dim); font-size: 12px; cursor: default; position: relative; border: 1px solid transparent; border-bottom: 0; transition: background .12s, color .12s; }
+.sh-tabs .tab-item:hover { background: var(--pane-2); color: var(--ink); }
+.sh-tabs .tab-item.active { background: var(--surface); color: var(--ink-hi); border-color: var(--edge-hi); box-shadow: inset 0 2px 0 var(--cyan); }
+.sh-tabs .tab-item.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--surface); }
+.sh-tabs .tab-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sh-tabs .tab-favicon { width: 16px; height: 16px; flex-shrink: 0; border-radius: 3px; object-fit: contain; }
+.sh-tabs .tab-favicon-none { background: linear-gradient(135deg, color-mix(in srgb, var(--cyan) 35%, transparent), color-mix(in srgb, var(--violet) 35%, transparent)); opacity: .55; }
+.sh-tabs .tab-spin { width: 14px; height: 14px; flex-shrink: 0; border-radius: 50%; border: 2px solid var(--cyan); border-top-color: transparent; animation: spin .6s linear infinite; }
+.sh-tabs .tab-close { width: 20px; height: 20px; display: grid; place-items: center; border-radius: 5px; font-size: 11px; opacity: .55; flex-shrink: 0; }
+.sh-tabs .tab-close:hover { opacity: 1; background: var(--pane-3); color: var(--ink-hi); }
+.sh-newtab { width: 30px; height: 30px; margin-bottom: 2px; border-radius: var(--r-s); font-size: 18px; }
+.sh-drag { flex: 1; align-self: stretch; -webkit-app-region: drag; }
+.sh-winctl { align-self: center; -webkit-app-region: no-drag; display: flex; gap: 2px; }
+.sh-winctl .nav-btn { width: 34px; height: 28px; border-radius: var(--r-s); }
+.sh-winctl .sh-close:hover { background: var(--bad); color: #fff; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Navigation toolbar ───────────────────────────────────────────────── */
+#chrome.sh-navbar { height: var(--nav-h); padding: 0 8px; gap: 4px; background: var(--surface); border-bottom: 1px solid var(--edge); -webkit-app-region: no-drag; }
+.sh-navgroup { display: flex; gap: 2px; }
+body.cg-shell .nav-btn, body.cg-shell .sh-icon, body.cg-shell #copilot-toggle {
+  width: 32px; height: 32px; display: inline-grid; place-items: center; padding: 0; border: 0; border-radius: var(--r-s);
+  background: transparent; color: var(--ink); font-size: 15px; line-height: 1; cursor: default; position: relative; transition: background .12s, color .12s; }
+body.cg-shell .nav-btn:hover, body.cg-shell .sh-icon:hover, body.cg-shell #copilot-toggle:hover { background: var(--pane-3); color: var(--ink-hi); }
+body.cg-shell .nav-btn:active, body.cg-shell .sh-icon:active { background: color-mix(in srgb, var(--ink) 12%, transparent); transform: none; }
+body.cg-shell .nav-btn:disabled { opacity: .35; }
+body.cg-shell #copilot-toggle.active { color: var(--cyan); background: color-mix(in srgb, var(--cyan) 8%, transparent); }
+body.cg-shell .sh-icon[aria-expanded="true"] { background: color-mix(in srgb, var(--cyan) 12%, transparent); color: var(--cyan); }
+#btn-float-cli { font: 600 12px var(--mono); letter-spacing: -.5px; }
+#btn-float-cli.on { color: var(--violet); background: color-mix(in srgb, var(--violet) 14%, transparent); }
+.sh-ring { position: absolute; inset: 5px; border-radius: 50%; border: 2px solid var(--cyan); border-right-color: transparent; animation: spin 1s linear infinite; pointer-events: none; }
+.sh-ring[hidden] { display: none; }
+
+/* the address bar: one rounded field with the identity button inside on the left and zoom/★ inside on the right (Firefox) */
+#url-bar-wrap.sh-urlbar { height: 34px; margin: 0 6px; padding: 0 4px; gap: 2px; background: var(--void); border: 1px solid var(--edge); border-radius: var(--r-m); transition: border-color .12s, box-shadow .12s; }
+#url-bar-wrap.sh-urlbar:focus-within { border-color: var(--cyan); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 10%, transparent); }
+body.cg-shell #url-bar { height: 32px; border: 0; background: transparent; padding: 0 6px; box-shadow: none; font: 13px var(--sans); color: var(--ink-hi); }
+body.cg-shell #url-bar:focus { border: 0; box-shadow: none; }
+#url-bar-grip { color: var(--ink-faint); font-size: 10px; padding: 0 2px; cursor: grab; }
+.sh-identity { width: 28px; height: 26px; border: 0; border-radius: var(--r-s); background: transparent; color: var(--ink-dim); font-size: 12px; display: grid; place-items: center; flex-shrink: 0; }
+.sh-identity:hover { background: var(--pane-3); }
+.sh-identity.insecure .sh-lock { filter: grayscale(1); opacity: .55; }
+.sh-identity.routed { color: var(--violet); }
+body.cg-shell .url-bar-bookmark-btn { width: 28px; height: 26px; border-radius: var(--r-s); font-size: 14px; color: var(--ink-dim); position: static; transform: none; flex-shrink: 0; display: grid; place-items: center; }
+body.cg-shell .url-bar-bookmark-btn:hover { background: var(--pane-3); color: var(--warn); }
+body.cg-shell .url-bar-zoom-btn { position: static; transform: none; flex-shrink: 0; height: 22px; padding: 0 8px; border-radius: 11px; border: 1px solid var(--edge-hi); background: var(--pane-2); color: var(--ink); font: 11px var(--sans); }
+.sh-pop-zoom { top: 38px; right: 6px; position: absolute; }
+.sh-zoom-reset { margin-left: auto; font-size: 10px; }
+.sh-ext-pinned { display: flex; gap: 2px; } .sh-ext-pinned:empty { display: none; }
+.sh-ext-pinned .sh-icon { font-size: 15px; }
+.sh-ext-pinned .sh-icon.off { opacity: .35; }
+.chrome-spacer { display: none; }
+
+/* ── Bookmarks toolbar ────────────────────────────────────────────────── */
+#bookmarks-bar.sh-bookmarks { height: var(--bm-h); padding: 0 8px; background: var(--surface); border-bottom: 1px solid var(--edge); }
+
+/* ── Status strip (kept hidden, as before) ────────────────────────────── */
+.sh-status-url { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Popovers: one style for every panel the toolbar opens ───────────── */
+.sh-pop { position: absolute; top: calc(var(--tabs-h) + var(--nav-h) + 4px); right: 8px; z-index: 1000; width: 340px; max-height: min(560px, calc(100vh - 120px)); overflow-y: auto;
+  background: var(--raised); border: 1px solid var(--edge-hi); border-radius: var(--r-l); box-shadow: var(--shadow); padding: 6px; color: var(--ink); }
+.sh-pop-narrow { width: 240px; }
+.sh-pop .sh-pop-head { display: flex; align-items: center; gap: 8px; padding: 8px 10px 10px; border-bottom: 1px solid var(--edge); margin: -2px -2px 6px; font-weight: 600; color: var(--ink-hi); }
+.sh-pop .sh-pop-head .sh-grow { flex: 1; }
+.sh-pop .sh-pop-foot { border-top: 1px solid var(--edge); margin-top: 6px; padding-top: 6px; }
+.sh-pop .sh-link { display: block; width: 100%; text-align: left; background: none; border: 0; color: var(--ink); padding: 8px 10px; border-radius: var(--r-s); font: 12px var(--sans); }
+.sh-pop .sh-link:hover { background: color-mix(in srgb, var(--cyan) 8%, transparent); color: var(--ink-hi); }
+.sh-pop .sh-group { font: 600 10px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); padding: 8px 10px 4px; }
+.sh-pop .sh-empty { color: var(--ink-dim); font-size: 12px; padding: 10px; }
+
+/* the ☰ app menu (browser.js fills it; Firefox's order from shell/menus.js) */
+.sh-appmenu { width: 330px; padding: 6px; }
+body.cg-shell .menu-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: var(--r-s); font-size: 12.5px; color: var(--ink); cursor: default; }
+body.cg-shell .menu-item:hover { background: color-mix(in srgb, var(--cyan) 8%, transparent); color: var(--ink-hi); }
+body.cg-shell .menu-item .menu-kbd { float: none; margin-left: auto; color: var(--ink-faint); font: 11px var(--mono); }
+body.cg-shell .menu-sep { height: 1px; background: var(--edge); margin: 5px 4px; }
+body.cg-shell .menu-section-label { font: 600 10px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); padding: 6px 10px 2px; }
+.menu-zoom-row { display: flex; align-items: center; gap: 4px; padding: 4px 6px; }
+body.cg-shell .menu-zoom-btn { min-width: 30px; height: 26px; border-radius: var(--r-s); border: 1px solid var(--edge); background: var(--pane); color: var(--ink); }
+body.cg-shell .menu-zoom-btn:hover { background: var(--pane-3); }
+.sh-appmenu .am-zoom { display: flex; align-items: center; gap: 6px; padding: 4px 10px; font-size: 12.5px; }
+.sh-appmenu .am-zoom span.lbl { flex: 1; }
+
+/* ── Extensions panel (BS4) ───────────────────────────────────────────── */
+.sh-ext-panel { width: 360px; }
+.sh-ext-row { display: grid; grid-template-columns: 32px 1fr auto auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: var(--r-m); }
+.sh-ext-row:hover { background: var(--pane-2); }
+.sh-ext-ico { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 17px; background: linear-gradient(135deg, color-mix(in srgb, var(--cyan) 14%, transparent), color-mix(in srgb, var(--violet) 18%, transparent)); border: 1px solid var(--edge); }
+.sh-ext-row.off .sh-ext-ico { filter: grayscale(1); opacity: .5; }
+.sh-ext-name { font-size: 12.5px; color: var(--ink-hi); } .sh-ext-desc { font-size: 11px; color: var(--ink-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 210px; }
+.sh-ext-err { font-size: 11px; color: var(--bad); }
+.sh-pin { width: 26px; height: 26px; border: 0; border-radius: var(--r-s); background: transparent; color: var(--ink-faint); font-size: 13px; }
+.sh-pin { filter: grayscale(1); opacity: .35; } .sh-pin:hover { background: var(--pane-3); opacity: .8; } .sh-pin.on { filter: none; opacity: 1; }
+.tog { width: 34px; height: 20px; border-radius: 10px; border: 1px solid var(--edge-hi); background: var(--pane-2); position: relative; padding: 0; }
+.tog::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--ink-dim); transition: left .15s, background .15s; }
+.tog[aria-checked="true"] { background: color-mix(in srgb, var(--cyan) 22%, transparent); border-color: var(--cyan); }
+.tog[aria-checked="true"]::after { left: 16px; background: var(--cyan); }
+
+/* ── Downloads panel (BS5) ────────────────────────────────────────────── */
+.sh-dl-panel { width: 380px; }
+.sh-dl-row { display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: var(--r-m); }
+.sh-dl-row:hover { background: var(--pane-2); }
+.sh-dl-ico { font-size: 18px; text-align: center; }
+.sh-dl-name { font-size: 12.5px; color: var(--ink-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sh-dl-meta { font-size: 11px; color: var(--ink-dim); }
+.sh-dl-acts { display: flex; gap: 4px; }
+.sh-btn { height: 26px; padding: 0 10px; border-radius: var(--r-s); border: 1px solid var(--edge-hi); background: var(--pane-2); color: var(--ink); font: 11.5px var(--sans); }
+.sh-btn:hover { background: var(--pane-3); color: var(--ink-hi); }
+.sh-btn.primary, .opt-link-btn.sh-primary { border-color: var(--cyan); color: var(--cyan); background: color-mix(in srgb, var(--cyan) 8%, transparent); }
+.sh-btn.danger { color: var(--bad); }
+.sh-q-note { font-size: 11px; color: var(--ink-dim); padding: 0 10px 6px; }
+
+/* ── Find bar, context menu, panels: same surfaces ───────────────────── */
+.sh-findbar { position: absolute; top: calc(var(--tabs-h) + var(--nav-h) + 4px); right: 12px; z-index: 1100; display: none; align-items: center; gap: 4px; padding: 5px 6px;
+  background: var(--raised); border: 1px solid var(--edge-hi); border-radius: var(--r-m); box-shadow: var(--shadow); }
+.sh-findbar input { background: var(--void); border: 1px solid var(--edge); color: var(--ink); border-radius: var(--r-s); padding: 4px 8px; font-size: 12px; width: 180px; }
+.sh-findbar #find-count { font: 10px var(--mono); color: var(--ink-dim); min-width: 44px; text-align: center; }
+.sh-findbar button { background: none; border: 0; color: var(--ink-dim); width: 24px; height: 24px; border-radius: var(--r-s); }
+.sh-findbar button:hover { background: var(--pane-3); color: var(--ink-hi); }
+body.cg-shell #ctx-menu { background: var(--raised); border: 1px solid var(--edge-hi); border-radius: var(--r-m); box-shadow: var(--shadow); padding: 5px; min-width: 230px; }
+body.cg-shell .ctx-item { border-radius: var(--r-s); padding: 6px 10px; font-size: 12px; color: var(--ink); }
+body.cg-shell .ctx-item:hover { background: color-mix(in srgb, var(--cyan) 8%, transparent); color: var(--ink-hi); }
+body.cg-shell .ctx-item.sep { background: var(--edge); margin: 4px; padding: 0; height: 1px; border: 0; }
+body.cg-shell #copilot-pane { background: var(--surface); border-left: 1px solid var(--edge); }
+body.cg-shell #us-list { flex: 1; overflow-y: auto; }
+body.cg-shell #opt-providers-list { display: flex; flex-direction: column; gap: 6px; }
+body.cg-shell #dom-refresh, body.cg-shell #dom-stream-btn { width: 22px; height: 22px; font-size: 11px; }
+body.cg-shell #toolbar-editor-panel, body.cg-shell #options-panel, body.cg-shell #us-editor-panel { border-radius: var(--r-l); border-color: var(--edge-hi); background: var(--raised); box-shadow: var(--shadow); }

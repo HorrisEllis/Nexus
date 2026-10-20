@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-data-layout-phasemap.spec::DL0_data_census
+type: phase
+id: docs_2026-10-21-data-layout-phasemap.spec::DL0_data_census
+context: pipeline phase DL0_data_census of docs/2026-10-21-data-layout-phasemap.spec
+intent: null
+summary: DL0_data_census (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792478240941
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240941
+lastSeenAt: 1792478240941
+fingerprint: null
+payload:
+  id: DL0_data_census
+  map: docs/2026-10-21-data-layout-phasemap.spec
+  repo: null
+  layer: foundation
+  status: DONE 0.60.177
+  files:
+    - lib/data-clearup.js
+    - docs/atlases/data-census.md
+  depends_on: []
+  blocks:
+    - MOD-DATA-CENSUS
+  spec: docs/data-layout.spec
+  graph: 64f85579f51044f8

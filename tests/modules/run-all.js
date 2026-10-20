@@ -377,6 +377,9 @@ const SUITES = [
   'test-gate-assess.test.js', // 0.60.44 GA1 — the gate assesses dependencies and context before it spends
   'test-cg-attention-focus.test.js', // 0.60.45 — the provider tab stops fighting the person (focus, sign-in, Escape)
   'test-net-routes.test.js',          // 0.60.60 — net routes + Snowflake transport (CLI first): policy, fail-closed PAC, fake tor, agent read-only
+  'test-snowflake.test.js',           // 0.60.178 — SF1–SF6: Snowflake end to end (detect, bridge lines, compartment, HTTPS-only, circuit check)
+  'test-compartment-downloads.test.js',   // 0.60.179 — CD1–CD5: magnets caught, downloads quarantined, verified qBittorrent hand-off, kill on disconnect
+  'test-browser-shell.test.js',          // 0.60.179 — BS1–BS7: Firefox import, the window like Firefox, plugin icons, the floating CLI (in Clear Glass)
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
   'test-cos-app-ui.test.js',          // 0.60.89 COSA6 — COS window (jsdom) and controller
@@ -436,6 +439,7 @@ const SUITES = [
   'clear-glass-page-session.test.js',   // 0.60.175 PM5-PM8 — the page map as driver actions, co-pilot tools and commands; attention → Nerve → Ollama feel; live re-map; the panel in Clear Glass
   'test-substrate-spec.test.js',        // 0.60.176 — docs/substrate.spec, docs/belief-loop.spec, emerge SPEC_COMPILER compile at full depth, tied to their phases; emerge build order topological
   'test-phase-specs.test.js',           // 0.60.176 PS1 — each phase specced again with its DAG and related files beside its owner; drift checked
+  'test-data-clearup.test.js',          // 0.60.177 DL0/DL1 — every data file placed by docs/data-layout.spec; moved by hash with a manifest; rolled back byte for byte
   'test-readme-generate.test.js',    // 0.60.153 — the README: every system, module and file; every phase; the data; Idearium; every release; under 512 KiB
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)
   'test-proposal-evidence.test.js',   // 0.60.99 — a proposal is tested before it reaches a person

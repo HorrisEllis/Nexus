@@ -198,3 +198,25 @@ spec:
   #         again); later entries kept and marked superseded; the rewind is itself an entry. REVERSIBILITY, §0.3.
   # Still his, not decided here: GM0a (what "the precommit compartment" means: his words), GW0d (needs his failing log), and
   # D10 vs D13 (above).
+
+# ═══ ADDENDUM 2026-10-21 (0.60.178) — Snowflake (docs/2026-10-21-snowflake-compartment-phasemap.spec), decided by his axioms ═══
+  #   D24 = SF3 routed window storage: in memory (cg-snow-<id>), cleared on close, no vault snapshot. REVERSIBILITY is not at stake
+  #         (nothing of his is lost: it was never his data), §1.2 fail closed and his 2026-10-15 "run it in a compartment isolated".
+  #   D25 = SF3 identity: the engine's own Chromium UA, no persona, in routed windows. TRUTH_OVER_COHERENCE (a window that says what
+  #         it is), and his "make it look as nromal as it can": one consistent identity is what looks ordinary on the wire.
+  #   D26 = SF4 HTTPS-only default: on, his switch. USER_AUTONOMY (his to turn off) and §1.2 (no cleartext past the exit by default).
+  #         The reading of "optional encryption" behind it is marked to confirm in the map.
+  #   D27 = SF2 the Tor Project's builtin list: his button only, never automatic. USER_AUTONOMY: the ask is visible to his network.
+  # His call, not decided here: whether ordinary agent windows move their page into their own session (it moves sign-ins).
+
+# ═══ ADDENDUM 2026-10-21 (0.60.179) — compartment downloads and the browser shell, decided by his axioms ═══
+  #   D28 = CD0_magnet_client: qBittorrent through its Web API, verified per hand-off. §0.1 (the client's proxy is read, not assumed),
+  #         MR12 (fail closed). No torrent engine inside Clear Glass.
+  #   D29 = CD2 quarantine index in its own folder, never the persistent downloads store. The routed window's purpose (nothing of it on
+  #         disk beyond what he chose to download) and §1.2.
+  #   D30 = BS0_cookie_target: everyday session by default, a provider tab by choice, never a Snowflake window. USER_AUTONOMY; the
+  #         compartment's purpose.
+  #   D31 = BS2 palette: Settings' as rendered (settings.css + cos-theme.css, his 0.60.5 look), not settings.css's raw colours.
+  #         TRUTH_OVER_COHERENCE: "the same theme as the setting" is what Settings shows.
+  # His call, not decided here: the kill rung default reading (kill_tabs) is a reading, to confirm.
+

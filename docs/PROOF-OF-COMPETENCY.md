@@ -791,3 +791,41 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   build order wasn't topological) and a lost spec (`spec-parser.spec`), both now written down.
 - **Checkable:** `docs/substrate.spec`, `docs/belief-loop.spec`, `tests/modules/test-substrate-spec.test.js` 3/3,
   `tests/modules/test-phase-specs.test.js` 4/4; `node emerge/compiler/phase-specs.js <map> --check`.
+
+### 2026-10-21 — 0.60.177: a data migration that can be undone
+- **His words:** "migrate relevant data to relavant systems. make one repo folder in idearium, no data folder in the root." · "make a
+  file clearup tool, for safely moving and mapping tools."
+- **Context:** state from every system had collected in one root folder (122 tracked files in the repo, 755 in his live data), and
+  about 100 code files built those paths by hand. He asked for the move, and for a tool that does it safely, before any of it was done.
+- **What it shows:** operational judgment. He asked for the safety tool first, rather than a bulk move. The tool maps before it moves
+  (the code that still names each path), refuses to move what isn't rewired, and was proven on his real data by a full apply and a
+  byte-for-byte rollback.
+- **Checkable:** `tests/modules/test-data-clearup.test.js` 5/5; `docs/atlases/data-census.md`; `docs/data-layout.spec`.
+
+### 2026-10-21 — 0.60.178: a screenshot that led to the real leak
+- **His words:** "can you get snowflake working. connected to the compartment? optional encryption." · "make it look as nromal as it
+  can."
+- **Context:** he sent a screenshot of a Settings page that contradicted itself: programs marked found, and "Not detected on PATH"
+  beside them. He asked about the compartment specifically, not just "make it work".
+- **What it shows:** failure-mode thinking and a good question. "connected to the compartment?" was the right question to ask. The
+  page of a Snowflake window was not in the routed session at all: Electron puts a `<webview>` with no partition in the default
+  session, so only the window frame went through Tor. The screenshot's contradiction was a second, separate bug (the page read
+  field names the backend never sent). His two questions found both.
+- **Checkable:** `tests/modules/test-snowflake.test.js` 8/8 (SFW-05 pins the partition being forced at `will-attach-webview`; SFW-07
+  pins the field names); `clear-glass/spec/snowflake.spec`; `CHANGELOG-0.60.178.md`.
+
+### 2026-10-21 — 0.60.179: privacy decided by separation, not by a promise
+- **His words:** "kill on disconnect." · "isolated from the dom, i dont want any screen recording to be able to see anything but the dom"
+- **Context:** he asked for a CLI that floats over the page, and for Snowflake windows to die when their connection drops. The obvious
+  build injects the CLI into the page. That is exactly what a site's session-replay recorder captures.
+- **What it shows:** threat modelling in plain words. He named two different observers in one sentence: the page's DOM, and the screen
+  recorder. The design answers each one:
+  - the CLI is a separate window, so no page script can read it;
+  - that window is excluded from OS capture.
+
+  "Kill on disconnect" carries his 2026-10-15 rule that a protected route fails closed. Together these are why the quarantine keeps its
+  own index: the main download history would have kept every URL fetched over Tor.
+- **Checkable:** `tests/modules/test-browser-shell.test.js` BST-06 (protection is set before the window is shown; nothing is injected
+  into a page); `tests/modules/test-compartment-downloads.test.js` CDT-02 (never the persistent store) and CDT-04 (one kill per unasked
+  drop; a deliberate stop never kills).
+

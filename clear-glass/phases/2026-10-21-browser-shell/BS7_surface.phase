@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS7_surface
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS7_surface
+context: pipeline phase BS7_surface of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS7_surface (surface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792481795203
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795203
+lastSeenAt: 1792481795203
+fingerprint: null
+payload:
+  id: BS7_surface
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.179
+  files:
+    - clear-glass/renderer/settings/sections/import.js
+    - idearium/cli/route-commands.js
+    - lib/agent-tools/tools/clear-glass/firefox.js
+  depends_on:
+    - BS1_firefox_import
+    - BS3_menus
+    - BS6_float_cli
+  blocks:
+    - MOD-BSH-SURFACE
+  spec: clear-glass/spec/browser-shell.spec
+  graph: 650e56a6af5ece66

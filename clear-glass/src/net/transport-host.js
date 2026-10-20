@@ -10,7 +10,8 @@
  *   - control by cookie file inside that directory (no password in a config, none in the process list)
  *   - an empty environment: no Nexus secrets leak into the child
  *   - killed with the app; restarted with backoff if it dies by itself; never restarted after a deliberate stop
- * It needs two programs it does not ship: `tor` and a Snowflake client (snowflake-client / the Tor pluggable transport). Detect them, or set their paths.
+ * It needs two programs it does not ship: `tor` and a Snowflake client (snowflake-client, or lyrebird in current Tor releases). Detect them (PATH, then a
+ * Tor Browser install, SF1 0.60.178), install them (installer.js), or set their paths.
  * It also needs a Snowflake BRIDGE LINE from the Tor Project (Tor Browser ships the current one). The line changes over time, so this code does not
  * carry one: set it with `net bridge <line>`. Without it, start() refuses and says so.
  */
@@ -49,11 +50,23 @@ class TransportHost extends EventEmitter {
   _set(state, extra = {}) { this.state = state; Object.assign(this, extra); this.emit('state', this.status()); }
   status() { return { state: this.state, progress: this.progress, error: this.error, socksPort: this.state === 'ready' ? this.socksPort : null, controlPort: this.controlPort, restarts: this.restarts, dir: this._runDir }; }
 
+  /**
+   * detect() → Detection (clear-glass/spec/snowflake.spec, SF1 0.60.178): each program's path and where it came from — set (a saved path),
+   * path (found on PATH: snowflake-client, snowflake or lyrebird, which speaks Snowflake in current Tor releases) or tor-browser (an install
+   * found by d.locate(), src/net/bridge-sources.js). The bridge line is reported as 'set', never sent back.
+   */
   detect() {
-    const c = this.d.config || {};
-    const tor = c.torPath || this.d.which('tor'); const snow = c.snowflakePath || this.d.which('snowflake-client');
-    return { tor: tor || null, snowflake: snow || null, bridgeLine: c.bridgeLine ? 'set' : null,
-      missing: [!tor && 'tor', !snow && 'snowflake-client', !c.bridgeLine && 'a Snowflake bridge line (net bridge <line>)'].filter(Boolean) };
+    const c = this.d.config || {}; const which = this.d.which || (() => null);
+    let tb = null; const tbOnce = () => { if (tb === null) { try { tb = (this.d.locate && this.d.locate()) || false; } catch (e) { tb = false; (this.d.log || console.warn)(`[net] Tor Browser lookup failed: ${e.message}`); } } return tb || {}; };
+    const pick = (set, names, tbKey) => {
+      if (set) return [set, 'set'];
+      for (const n of names) { const p = which(n); if (p) return [p, 'path']; }
+      const t = tbOnce()[tbKey]; return t ? [t, 'tor-browser'] : [null, null];
+    };
+    const [tor, torFrom] = pick(c.torPath, ['tor'], 'tor');
+    const [snow, snowflakeFrom] = pick(c.snowflakePath, ['snowflake-client', 'snowflake', 'lyrebird'], 'snowflake');
+    return { tor, snowflake: snow, torFrom, snowflakeFrom, bridgeLine: c.bridgeLine ? 'set' : null,
+      missing: [!tor && 'tor', !snow && 'a Snowflake client (snowflake-client or lyrebird)', !c.bridgeLine && 'a Snowflake bridge line (net bridges, then net use <n>)'].filter(Boolean) };
   }
 
   async start() {
@@ -73,7 +86,10 @@ class TransportHost extends EventEmitter {
       this.socksPort = await this.d.pickPort(); this.controlPort = await this.d.pickPort();
       const rc = path.join(this._runDir, 'torrc');
       fs.writeFileSync(rc, torrc({ dataDir: this._runDir, socksPort: this.socksPort, controlPort: this.controlPort, snowflakePath: det.snowflake, bridgeLine: this.d.config.bridgeLine }), { mode: 0o600 });
-      const child = this.d.spawn(det.tor, ['-f', rc], { env: {}, stdio: ['ignore', 'pipe', 'pipe'], detached: false });
+      // an empty environment (no Nexus secrets), except on Linux the folder tor sits in as its library path: the Expert Bundle and Tor Browser
+      // ship tor's own libraries beside it, and without this it cannot load them (SF1, 0.60.178)
+      const env = (this.d.platform || process.platform) === 'linux' ? { LD_LIBRARY_PATH: path.dirname(det.tor) } : {};
+      const child = this.d.spawn(det.tor, ['-f', rc], { env, stdio: ['ignore', 'pipe', 'pipe'], detached: false });
       this.child = child;
       const onLine = (buf) => {
         for (const line of String(buf).split(/\r?\n/)) {

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+type: phase
+id: docs_2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+context: pipeline phase DL2_one_resolver of docs/2026-10-21-data-layout-phasemap.spec
+intent: null
+summary: DL2_one_resolver (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792478240944
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240944
+lastSeenAt: 1792478240944
+fingerprint: null
+payload:
+  id: DL2_one_resolver
+  map: docs/2026-10-21-data-layout-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/data-home.js
+    - lib/test-sandbox.js
+  depends_on:
+    - DL1_clearup_tool
+  blocks:
+    - MOD-DATA-HOME
+  spec: docs/data-layout.spec
+  graph: db5711605437e8fc

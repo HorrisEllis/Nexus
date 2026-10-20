@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+type: phase
+id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+context: pipeline phase CD3_verified_handoff of docs/2026-10-21-compartment-downloads-phasemap.spec
+intent: null
+summary: CD3_verified_handoff (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792481794291
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481794291
+lastSeenAt: 1792481794291
+fingerprint: null
+payload:
+  id: CD3_verified_handoff
+  map: docs/2026-10-21-compartment-downloads-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.179
+  files:
+    - clear-glass/src/net/qbittorrent.js
+  depends_on:
+    - CD0_magnet_client
+    - CD1_magnet_parse
+  blocks:
+    - MOD-CDL-QBIT
+  spec: clear-glass/spec/compartment-downloads.spec
+  graph: b1f1f8ce8c648a8f

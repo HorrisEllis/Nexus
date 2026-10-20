@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
+type: phase
+id: docs_2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
+context: pipeline phase DL3_rewire_writers of docs/2026-10-21-data-layout-phasemap.spec
+intent: null
+summary: DL3_rewire_writers (integration) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792478240946
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240946
+lastSeenAt: 1792478240946
+fingerprint: null
+payload:
+  id: DL3_rewire_writers
+  map: docs/2026-10-21-data-layout-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/data-home.js
+    - diagnostic/nexus-diagnostic.js
+    - guardian/
+    - lib/ledger-writer.js
+    - lib/ledger-store.js
+    - lib/vector-memory.js
+  depends_on:
+    - DL2_one_resolver
+    - SS1_system_store_adoption
+  blocks:
+    - MOD-REWIRE
+  spec: docs/data-layout.spec
+  graph: 370d1616ff8d75f4

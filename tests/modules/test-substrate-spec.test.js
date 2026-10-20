@@ -29,6 +29,11 @@ const SPECS = [
   { spec: 'docs/substrate.spec', map: 'docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec' },
   { spec: 'docs/belief-loop.spec', map: 'docs/2026-10-20-belief-loop-phasemap.spec' },
   { spec: 'emerge/SPEC_COMPILER.spec', map: null },
+  { spec: 'docs/data-layout.spec', map: 'docs/2026-10-21-data-layout-phasemap.spec' },   // 2026-10-21
+  { spec: 'docs/pipeline.spec', map: null },
+  { spec: 'clear-glass/spec/snowflake.spec', map: 'docs/2026-10-21-snowflake-compartment-phasemap.spec' },   // 0.60.178
+  { spec: 'clear-glass/spec/compartment-downloads.spec', map: 'docs/2026-10-21-compartment-downloads-phasemap.spec' },   // 0.60.179
+  { spec: 'clear-glass/spec/browser-shell.spec', map: 'docs/2026-10-21-browser-shell-phasemap.spec' },   // 0.60.179   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
 ];
 
 console.log('\ntest-substrate-spec — full specs compile at full depth and stay tied to their phases');
@@ -51,7 +56,8 @@ test('SS-02', 'spec ↔ phases: every module has its phase; every phase names it
   for (const s of SPECS.filter(x => x.map)) {
     const spec = load(s.spec);
     const mods = new Map(spec.modules.map(m => [m.id, m]));
-    const phases = PF.phasesOf(fs.readFileSync(path.join(ROOT, s.map), 'utf8'), s.map);
+    // a decision (it carries chosen:) is a DAG node phases depend on, not a phase: it builds no module (0.60.179)
+    const phases = PF.phasesOf(fs.readFileSync(path.join(ROOT, s.map), 'utf8'), s.map).filter(p => !/^\s+chosen:/m.test(p.body));
     const ids = new Set(phases.map(p => p.id));
     for (const m of spec.modules) assert.ok(ids.has(m.phase), `${s.spec} ${m.id} names phase ${m.phase}, not in ${s.map}`);
     const built = new Set();

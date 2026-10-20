@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-snowflake-compartment-phasemap.spec::SF4_https_only
+type: phase
+id: docs_2026-10-21-snowflake-compartment-phasemap.spec::SF4_https_only
+context: pipeline phase SF4_https_only of docs/2026-10-21-snowflake-compartment-phasemap.spec
+intent: null
+summary: SF4_https_only (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792479326397
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792479326397
+lastSeenAt: 1792479326397
+fingerprint: null
+payload:
+  id: SF4_https_only
+  map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.178
+  files:
+    - clear-glass/src/net/https-only.js
+    - clear-glass/src/plugins/webrequest-adapter.js
+  depends_on: []
+  blocks:
+    - MOD-SF-HTTPS-ONLY
+  spec: clear-glass/spec/snowflake.spec
+  graph: 502b5c00f2ac8030

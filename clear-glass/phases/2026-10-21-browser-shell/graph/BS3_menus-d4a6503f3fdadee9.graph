@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS3_menus:d4a6503f3fdadee9
+type: graph
+id: phase:BS3_menus:d4a6503f3fdadee9
+context: dependency graph of phase BS3_menus
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792481795198
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795198
+lastSeenAt: 1792481795198
+fingerprint: null
+payload:
+  for: BS3_menus
+  kind: phase
+  repo: null
+  hash: d4a6503f3fdadee9
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/menus.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 0c4fb6c30abee07a
+    layer: 1
+    deps:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+    dependents:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+    upstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 0c4fb6c30abee07a · layer 1
+      - 'depends on (1): BS2_shell_rebuild'
+      - 'needed by (1): BS7_surface · finishing it unlocks BS7_surface'

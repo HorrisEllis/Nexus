@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+context: pipeline phase BS5_downloads_panel of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS5_downloads_panel (surface) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792481795201
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795201
+lastSeenAt: 1792481795201
+fingerprint: null
+payload:
+  id: BS5_downloads_panel
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.179
+  files:
+    - clear-glass/renderer/shell/downloads.js
+  depends_on:
+    - BS2_shell_rebuild
+    - CD5_surface
+  blocks:
+    - MOD-BSH-DOWNLOADS
+  spec: clear-glass/spec/browser-shell.spec
+  graph: f349b0efcf5ca190

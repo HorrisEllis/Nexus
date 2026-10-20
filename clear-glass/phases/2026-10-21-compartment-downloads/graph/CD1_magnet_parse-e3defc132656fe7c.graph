@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CD1_magnet_parse:e3defc132656fe7c
+type: graph
+id: phase:CD1_magnet_parse:e3defc132656fe7c
+context: dependency graph of phase CD1_magnet_parse
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792481794288
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481794288
+lastSeenAt: 1792481794288
+fingerprint: null
+payload:
+  for: CD1_magnet_parse
+  kind: phase
+  repo: null
+  hash: e3defc132656fe7c
+  nodes:
+    - path: clear-glass/src/net/magnet.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/quarantine.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/quarantine.js
+      to: clear-glass/src/net/magnet.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 0c4fb6c30abee07a
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+    upstream: []
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 0c4fb6c30abee07a · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): CD2_quarantine_downloads, CD3_verified_handoff · all downstream 5 · finishing
+        it unlocks CD2_quarantine_downloads, CD3_verified_handoff

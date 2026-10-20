@@ -3,6 +3,7 @@
   "name": "passwords",
   "version": "1.0.0",
   "displayName": "Password Manager",
+  "icon": "🔑",
   "description": "Real gap named directly in CLEAR-GLASS-FULL-CHROME-MAP-2026-08-23.md's §7: 'Zero real code anywhere. Genuinely new — credential storage, autofill detection, a real UI.' Encrypted vault (src/passwords/vault.js, AES-256-GCM, same pattern as the real cookie vault) + a real login-form detector (userscript, auto-injected everywhere) + real autofill composing the vault with driver.exec eval.",
   "author": "James Brooks (Erosmancer)",
   "entryPoint": "index.js",

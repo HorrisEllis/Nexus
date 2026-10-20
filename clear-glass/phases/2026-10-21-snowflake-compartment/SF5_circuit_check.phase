@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+type: phase
+id: docs_2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+context: pipeline phase SF5_circuit_check of docs/2026-10-21-snowflake-compartment-phasemap.spec
+intent: null
+summary: SF5_circuit_check (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792479326400
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792479326400
+lastSeenAt: 1792479326400
+fingerprint: null
+payload:
+  id: SF5_circuit_check
+  map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.178
+  files:
+    - clear-glass/src/net/service.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - SF1_honest_detection
+  blocks:
+    - MOD-SF-CIRCUIT-CHECK
+  spec: clear-glass/spec/snowflake.spec
+  graph: f8487134f916abcc

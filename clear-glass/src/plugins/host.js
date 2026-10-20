@@ -68,6 +68,7 @@ const { gate } = require('../gates/index.js'); // real, already-exported factory
 const { validateManifest, PluginSchemaError } = require('./schema.js');
 const { WarpSpine } = require('../../../lib/warp-bus.js');
 const { registerPluginCommand, unregisterPluginCommand } = require('../toolbar/commands.js');
+const { registerContextItem, unregisterContextItem } = require('./context-items.js');   // §0.60.169 — the display half of 'context-menu-item'
 
 const PLUGIN_STATE = Object.freeze({
   INSTALLING: 'installing',
@@ -136,7 +137,7 @@ class PluginHost {
       throw new PluginHostError(`plugin '${manifest.id}' is already installed`);
     }
 
-    const record = { manifest, state: PLUGIN_STATE.INSTALLING, registeredSignatures: [] };
+    const record = { manifest, module: pluginModule, state: PLUGIN_STATE.INSTALLING, registeredSignatures: [] };   // module kept so enable() can register again (BS4)
     this.plugins.set(manifest.id, record);
 
     try {
@@ -256,6 +257,12 @@ class PluginHost {
       });
     }
 
+    if (type === 'context-menu-item') {
+      // §0.60.169 NP11 — the display entry goes to the context-item registry (the renderer lists it when the menu opens); the Gate registered
+      // below is what a click reaches (plugins:invoke emits the signature). Both are removed together in _deregister().
+      registerContextItem({ id: entry.signature, label: entry.label || manifest.displayName, icon: entry.icon, when: entry.when, pluginId: manifest.id });
+    }
+
     // §ASYNC — a pause-resume-gate handler (captcha-pause's real use
     // case: poll, wait for a human, then respond) cannot return
     // synchronously. Handled the same way every existing async gate in
@@ -304,6 +311,7 @@ class PluginHost {
     // (unregisterPluginCommand returns false if not found, by design —
     // "a caller disabling an already-gone command is not an error").
     unregisterPluginCommand(signature);
+    unregisterContextItem(signature);   // §0.60.169 — same for a context-menu-item's row
   }
 
   disable(pluginId) {
@@ -311,6 +319,26 @@ class PluginHost {
     if (!record) throw new PluginHostError(`plugin '${pluginId}' is not installed`);
     for (const sig of record.registeredSignatures) this._deregister(sig);
     record.state = PLUGIN_STATE.DISABLED;
+    return record;
+  }
+
+  /**
+   * enable(pluginId) — BS4 (0.60.179). The other half of disable(): a disabled plugin's contributions are registered again from the
+   * manifest and module install() kept. A registration that throws unwinds the ones made, the plugin stays disabled, the error is kept.
+   */
+  enable(pluginId) {
+    const record = this.plugins.get(pluginId);
+    if (!record) throw new PluginHostError(`plugin '${pluginId}' is not installed`);
+    if (record.state === PLUGIN_STATE.ACTIVE) return record;
+    record.registeredSignatures = [];
+    try {
+      for (const [type, entries] of Object.entries(record.manifest.contributes)) for (const entry of entries) this._registerContribution(record.manifest, type, entry, record.module, record);
+      record.state = PLUGIN_STATE.ACTIVE; record.error = null;
+    } catch (err) {
+      for (const sig of record.registeredSignatures) this._deregister(sig);
+      record.registeredSignatures = []; record.state = PLUGIN_STATE.DISABLED; record.error = err.message;
+      throw err;
+    }
     return record;
   }
 
@@ -322,7 +350,11 @@ class PluginHost {
     return [...this.plugins.values()].map(r => ({
       id: r.manifest.id, name: r.manifest.name, version: r.manifest.version,
       displayName: r.manifest.displayName, description: r.manifest.description,
-      state: r.state, contributions: r.registeredSignatures,
+      // BS4 (0.60.179): the plugin's own glyph for the extensions panel and the toolbar (else its first contribution's)
+      icon: r.manifest.icon || Object.values(r.manifest.contributes || {}).flat().map(c => c && c.icon).find(Boolean) || '🧩',
+      state: r.state, contributions: r.registeredSignatures, error: r.error || null,
+      // BS4: what a pinned icon can run (its toolbar commands), Firefox's extension popup
+      commands: ((r.manifest.contributes || {})['toolbar-command'] || []).map(c => ({ signature: c.signature, label: c.label || c.signature, icon: c.icon || null })),
     }));
   }
 

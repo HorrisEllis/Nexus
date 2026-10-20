@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+context: pipeline phase BS2_shell_rebuild of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS2_shell_rebuild (surface) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792481795197
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795197
+lastSeenAt: 1792481795197
+fingerprint: null
+payload:
+  id: BS2_shell_rebuild
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.179
+  files:
+    - clear-glass/renderer/browser.html
+    - clear-glass/renderer/shell/shell.css
+  depends_on: []
+  blocks:
+    - MOD-BSH-SHELL
+  spec: clear-glass/spec/browser-shell.spec
+  graph: 274f7a19aecede02

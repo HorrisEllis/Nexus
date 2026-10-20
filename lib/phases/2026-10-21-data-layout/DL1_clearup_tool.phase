@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
+type: phase
+id: docs_2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
+context: pipeline phase DL1_clearup_tool of docs/2026-10-21-data-layout-phasemap.spec
+intent: null
+summary: DL1_clearup_tool (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792478240943
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240943
+lastSeenAt: 1792478240943
+fingerprint: null
+payload:
+  id: DL1_clearup_tool
+  map: docs/2026-10-21-data-layout-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.177
+  files:
+    - lib/data-clearup.js
+    - tests/modules/test-data-clearup.test.js
+  depends_on:
+    - DL0_data_census
+  blocks:
+    - MOD-CLEARUP
+  spec: docs/data-layout.spec
+  graph: 372de2334482d8f2
