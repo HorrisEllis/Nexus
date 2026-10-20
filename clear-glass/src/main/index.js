@@ -1408,6 +1408,18 @@ async function bootstrap() {
   // 8.97. Passwords — §NEW 2026-08-24, real gap named in the same map's §7.
   passwordVault = new PasswordVault();
   passwordVault.load();
+  // PW1/PW3 (0.60.186) — James: "can you have websites use the passowrd manager and hook it into the cookie vault or store what ever it uses."
+  // The password service over this vault, and its page script on every session (provider tabs and account windows included); the window is told
+  // what to offer, never the password. Off with the Password Manager plugin; never in a Snowflake compartment.
+  try {
+    require('../passwords/service').service({ vault: passwordVault, dir: app.getPath('userData'), log: (m) => console.warn(m) });
+    const pw = require('./passwords-wiring').attach({ app, ipcMain, webContents: require('electron').webContents,
+      service: () => require('../passwords/service').service(),
+      isActive: () => !pluginHost || (pluginHost.list() || []).some(p => p.name === 'passwords' && p.state === 'active'),
+      isCompartment: (ses) => require('../net/compartment').isCompartment(ses),
+      preloadPath: path.join(__dirname, '../preload/passwords.js'), log: (m) => console.warn(m) });
+    pw.register(session.defaultSession);
+  } catch (err) { console.error('[ClearGlass/Passwords] websites cannot use the password manager:', err.message); }
 
   // 8.971. §0.58.0 IA4 — James: "app password style login in idearium from clearglass panel". If an Idearium app
   // password is saved (Passwords, for http://127.0.0.1:4800), sign in with it now so every panel showing Idearium is
@@ -2125,6 +2137,11 @@ function acctSwitch() {
     sessionFor: (id) => sessionHub().sessionFor(id),
     hold: (id) => sessionHub().hold(id),
     log: (m) => console.log(m),
+    // PW3 (0.60.186): "Save sign-in to vault" also keeps the login just typed on that provider's site, as the same account
+    onCaptured: ({ provider, accountId }) => {
+      try { const p = require('../providers/registry').getProvider(provider) || {}; const svc = require('../passwords/service').service(); if (!svc) return { saved: [] };
+        return svc.linkPending([p.url, ...((p.hosts || []).map(h => `https://${h}`))].filter(Boolean), accountId); } catch (e) { console.warn(`[passwords] login not linked: ${e.message}`); return { saved: [] }; }
+    },
   }));
 }
 

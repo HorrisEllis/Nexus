@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-passwords-phasemap.spec::PW4_surface
+type: phase
+id: docs_2026-10-21-passwords-phasemap.spec::PW4_surface
+context: pipeline phase PW4_surface of docs/2026-10-21-passwords-phasemap.spec
+intent: null
+summary: PW4_surface (surface) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792502644698
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502644698
+lastSeenAt: 1792502644698
+fingerprint: null
+payload:
+  id: PW4_surface
+  map: docs/2026-10-21-passwords-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.186
+  files:
+    - clear-glass/renderer/shell/passwords.js
+    - clear-glass/renderer/browser.html
+    - clear-glass/renderer/shell/shell.css
+    - clear-glass/plugins/passwords/index.js
+    - clear-glass/plugins/passwords/manifest.json
+  depends_on:
+    - PW3_wiring
+    - BS13_plugin_settings
+  blocks:
+    - MOD-PW-SHELL
+  spec: clear-glass/spec/passwords.spec
+  graph: 3c20d9cd7701c3e2

@@ -1,0 +1,103 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PW1_service:0fb18010d2b4dadf
+type: graph
+id: phase:PW1_service:0fb18010d2b4dadf
+context: dependency graph of phase PW1_service
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792502644693
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502644693
+lastSeenAt: 1792502644693
+fingerprint: null
+payload:
+  for: PW1_service
+  kind: phase
+  repo: null
+  hash: 0fb18010d2b4dadf
+  nodes:
+    - path: clear-glass/src/passwords/service.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/passwords/vault.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/plugins/passwords/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/storage-jaa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/security/vault-key.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/store.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/passwords/vault.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/passwords/vault.js
+      to: clear-glass/src/site-settings/store.js
+      kind: requires
+    - from: clear-glass/src/passwords/vault.js
+      to: clear-glass/src/security/vault-key.js
+      kind: requires
+    - from: clear-glass/src/passwords/vault.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: clear-glass/plugins/passwords/index.js
+      to: clear-glass/src/passwords/service.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/passwords/service.js
+      kind: requires
+    - from: clear-glass/test/storage-jaa.test.js
+      to: clear-glass/src/passwords/vault.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: ddefc239ccae28e0
+    layer: 1
+    deps:
+      - docs/2026-10-21-passwords-phasemap.spec::PW0_where_passwords_live
+    dependents:
+      - docs/2026-10-21-passwords-phasemap.spec::PW2_page
+    upstream:
+      - docs/2026-10-21-passwords-phasemap.spec::PW0_where_passwords_live
+    downstream:
+      - docs/2026-10-21-passwords-phasemap.spec::PW2_page
+      - docs/2026-10-21-passwords-phasemap.spec::PW3_wiring
+      - docs/2026-10-21-passwords-phasemap.spec::PW4_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-passwords-phasemap.spec::PW2_page
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG ddefc239ccae28e0 · layer 1
+      - 'depends on (1): PW0_where_passwords_live'
+      - 'needed by (1): PW2_page · all downstream 3 · finishing it unlocks PW2_page'

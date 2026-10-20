@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-passwords-phasemap.spec::PW3_wiring
+type: phase
+id: docs_2026-10-21-passwords-phasemap.spec::PW3_wiring
+context: pipeline phase PW3_wiring of docs/2026-10-21-passwords-phasemap.spec
+intent: null
+summary: PW3_wiring (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792502644696
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502644696
+lastSeenAt: 1792502644696
+fingerprint: null
+payload:
+  id: PW3_wiring
+  map: docs/2026-10-21-passwords-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.186
+  files:
+    - clear-glass/src/main/passwords-wiring.js
+    - clear-glass/src/main/index.js
+    - clear-glass/src/providers/account-switch.js
+    - clear-glass/src/preload/index.js
+  depends_on:
+    - PW2_page
+  blocks:
+    - MOD-PW-MAIN
+  spec: clear-glass/spec/passwords.spec
+  graph: 7f2131c31f53703e

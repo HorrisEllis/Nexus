@@ -343,3 +343,11 @@ body.cg-shell .cg-cmenu .ctx-item[aria-checked="true"] .ci-ico { color: var(--cy
 body.cg-shell .cg-cmenu .ci-sub { color: var(--ink-faint); font-size: 15px; line-height: 1; }
 body.cg-shell .cg-cmenu .ctx-item.has-sub:hover .ci-sub { color: var(--ink-hi); }
 #menu-agent-identity-target:empty + .menu-sep { display: none; }   /* BS17: no doubled line when the window has no account slot */
+/* PW4 (0.60.186) — the key in the address bar and its panel */
+body.cg-shell #btn-pw { position: relative; color: var(--ink-dim); background: transparent; border: 0; width: 30px; height: 28px; border-radius: var(--r-s); display: grid; place-items: center; padding: 0; flex-shrink: 0; }
+body.cg-shell #btn-pw[hidden] { display: none; }
+body.cg-shell #btn-pw:hover { background: var(--hover); color: var(--ink-hi); }
+body.cg-shell #btn-pw.pending { color: var(--cyan); }
+body.cg-shell #btn-pw .sh-badge { top: 0; right: 0; }
+.sh-pw-panel .pw-acts { padding: 6px 10px 4px; }
+.sh-pw-panel .ps-field .ps-input, .sh-pw-panel .ps-field select.ps-select { margin-top: 5px; }

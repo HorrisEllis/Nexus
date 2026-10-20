@@ -1,5 +1,11 @@
 'use strict';
 /**
+ * PW4 (0.60.186) — James, 2026-10-21: "can you have websites use the passowrd manager and hook it into the cookie vault or store what ever it
+ * uses." Websites now reach the password manager through a page script on every session (src/preload/passwords.js) and core's service
+ * (src/passwords/service.js); this plugin is the switch (off → no capture, no fill) and its page (settings below). The 2026-08-24 userscript
+ * path below — a detector that autofilled without asking, and a save handler no manifest entry reached — is no longer contributed; kept (§0.3).
+ */
+/**
  * plugins/passwords/index.js — real userscript + page-detector +
  * toolbar-command contributions.
  *
@@ -134,4 +140,27 @@ async function promptSavePassword(data, ctx) {
   return { type: 'plugin:passwords:saved', data: { url: captured.url } };
 }
 
-module.exports = { getFormDetectorUserscript, onFormDetected, promptSavePassword };
+// PW4 (0.60.186): the plugin's page — offer to save, fill automatically, the sites said never for, how many logins are kept
+function settings(data = {}) {
+  const reply = (view, extra = {}) => ({ type: 'plugin:settings', data: { requestId: data.requestId, view, ...extra } });
+  let svc = null; try { svc = require('../../src/passwords/service').service(); } catch (_) {}
+  if (!svc) return reply({ fields: [{ type: 'info', label: 'Not running', value: 'The password manager starts with Clear Glass.' }] });
+  const { op = 'get', key, value } = data;
+  let note = null;
+  if (op === 'set') {
+    if (key === 'offer' || key === 'autofill') svc.setPref(key, !!value);
+    else if (key === 'never' && value && value.remove) { svc.setPref('never-remove', value.id); note = `${value.id} can be offered again`; }
+  }
+  const p = svc.prefs();
+  return reply({
+    fields: [
+      { key: 'offer', type: 'toggle', label: 'Offer to save logins', help: 'When a site’s sign-in form is sent, ask whether to save it.', value: p.offer },
+      { key: 'autofill', type: 'toggle', label: 'Fill logins automatically', help: 'Only when one login is saved for the exact site; otherwise pick it under the key in the address bar.', value: p.autofill },
+      { key: 'never', type: 'list', label: 'Never save for', empty: 'No site.', items: p.never.map(o => ({ id: o, label: o, remove: true })) },
+      { type: 'info', label: 'Where they are kept', value: 'Encrypted with the vault’s sealed key, each tied to the account whose sign-in the cookie vault keeps. Settings → Privacy lists them.' },
+    ],
+  }, note ? { note } : {});
+}
+
+module.exports = {
+  settings, getFormDetectorUserscript, onFormDetected, promptSavePassword };

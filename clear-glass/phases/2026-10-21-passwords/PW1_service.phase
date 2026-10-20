@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-passwords-phasemap.spec::PW1_service
+type: phase
+id: docs_2026-10-21-passwords-phasemap.spec::PW1_service
+context: pipeline phase PW1_service of docs/2026-10-21-passwords-phasemap.spec
+intent: null
+summary: PW1_service (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792502644693
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502644693
+lastSeenAt: 1792502644693
+fingerprint: null
+payload:
+  id: PW1_service
+  map: docs/2026-10-21-passwords-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.186
+  files:
+    - clear-glass/src/passwords/service.js
+    - clear-glass/src/passwords/vault.js
+  depends_on:
+    - PW0_where_passwords_live
+  blocks:
+    - MOD-PW-SERVICE
+  spec: clear-glass/spec/passwords.spec
+  graph: 0fb18010d2b4dadf

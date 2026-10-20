@@ -59,6 +59,10 @@ const FILES = [
   ['clear-glass/src/net/host-import.js', I('clear-glass/src/net/host-import.js'), [I('clear-glass/src/adblock/import.js')]],   // §0.60.184 SF8 host lists as routes through Snowflake
   ['clear-glass/plugins/snowflake/index.js', I('clear-glass/plugins/snowflake/index.js'), [I('clear-glass/src/net/service.js'), I('clear-glass/src/net/host-import.js')]],   // §0.60.184 SF8 the Snowflake plugin's page
   ['clear-glass/src/accounts/for-site.js', I('clear-glass/src/accounts/for-site.js'), [I('clear-glass/src/copilot/context-need.js')]],   // §0.60.185 BS20 the accounts signed in to a site
+  ['clear-glass/src/passwords/service.js', I('clear-glass/src/passwords/service.js'), []],   // §0.60.186 PW1 pending logins, offers, exact-origin fill, linkPending (vault passed in)
+  ['clear-glass/src/preload/passwords.js', I('clear-glass/src/preload/passwords.js'), []],   // §0.60.186 PW2 the page script on every session
+  ['clear-glass/src/main/passwords-wiring.js', I('clear-glass/src/main/passwords-wiring.js'), []],   // §0.60.186 PW3 pages ↔ service ↔ window
+  ['clear-glass/renderer/shell/passwords.js', I('clear-glass/renderer/shell/passwords.js'), []],   // §0.60.186 PW4 the key and its panel
   ['clear-glass/src/core/zoom.js', I('clear-glass/src/core/zoom.js'), []],   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
   ['clear-glass/renderer/shell/ctxmenu.js', I('clear-glass/renderer/shell/ctxmenu.js'), []],   // §0.60.183 BS15 the right-click menu: rows by what was clicked, placed at the pointer
   ['clear-glass/src/copilot/context-need.js', I('clear-glass/src/copilot/context-need.js'), []],   // §0.60.182 BS12 what a message needs from the page (wired late, 0.60.183)
@@ -259,6 +263,12 @@ const CONSUMERS = [
   [I('clear-glass/renderer/shell/ctxmenu.js'),      I('clear-glass/src/preload/index.js'), '§0.60.183 BS15 ClearGlass.window.cursor → window:cursor (IPC)'],
   [I('clear-glass/src/copilot/bridge.js'),          I('clear-glass/src/copilot/context-need.js'), '§0.60.182 BS12 need() and cookieSummary() per message'],
   [I('lib/agent-tools/index.js'),                   I('lib/agent-tools/tools/clear-glass/adblock.js'), '§0.60.183 AB4 registerTool(clear_glass_adblock)'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/passwords/service.js'), '§0.60.186 PW1 service({ vault: passwordVault }) at boot; onCaptured → linkPending'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/main/passwords-wiring.js'), '§0.60.186 PW3 attach() — the page script on every session, the IPC'],
+  [I('clear-glass/src/main/passwords-wiring.js'),   I('clear-glass/src/preload/passwords.js'), '§0.60.186 PW3 registerPreloadScript(preloadPath); pw:form / pw:capture / pw:fill (IPC, not a require)'],
+  [I('clear-glass/src/passwords/service.js'),       I('clear-glass/src/passwords/vault.js'), '§0.60.186 PW1 the PasswordVault passed in: save(…, { accountId }), get'],
+  [I('clear-glass/src/providers/account-switch.js'), I('clear-glass/src/passwords/service.js'), '§0.60.186 PW3 capture() → onCaptured (injected by main) → linkPending'],
+  [I('clear-glass/renderer/shell/passwords.js'),    I('clear-glass/src/preload/index.js'), '§0.60.186 PW4 ClearGlass.passwords.save|dismiss|forPage|fillPage|onOffer|onAvailable (IPC)'],
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/accounts/for-site.js'), '§0.60.185 BS20 accounts:forSite (lazy require; each account session read for the site)'],
   [I('clear-glass/renderer/browser.js'),            I('clear-glass/src/preload/webview-bridge.js'), '§0.60.185 BS19 the page sends cg:ctx-point (sendToHost → the webview ipc-message event), not a require'],
   [I('clear-glass/renderer/browser.js'),            I('clear-glass/renderer/shell/menus.js'), '§0.60.185 BS17 window.CGMenus.appMenuHTML/wire builds the ☰ menu (page global)'],

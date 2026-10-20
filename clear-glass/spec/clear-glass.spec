@@ -730,3 +730,9 @@ spec:
 # James: "remove the bookmarks from the menuconsolidate the menu ... context menu for the clearglass ui like the last 2 images ... the right clikc
 # on dom is still not accuraate. still missing snowflake". Supersedes, keeping (§0.3): 0.60.183's cursor-first menu point (now the fallback);
 # the ☰ bookmarks list (now the Library); the toolbar's right-click on #ctx-menu (now its own menu). Detail: browser-shell.spec BS17–BS20.
+
+# ═══ ADDENDUM 2026-10-21 (0.60.186) — websites use the password manager; a login belongs to the account the cookie vault keeps ═══
+# James: "can you have websites use the passowrd manager and hook it into the cookie vault or store what ever it uses." Spec: passwords.spec.
+# Superseded and kept (§0.3): the passwords plugin's 2026-08-24 userscript (autofilled the one saved login without asking; agent windows only)
+# — its code stays in plugins/passwords/index.js, no longer contributed. PasswordVault records gain accountId. account-switch capture() takes
+# onCaptured. A page script (src/preload/passwords.js) runs on every session; Snowflake compartments are refused in main.

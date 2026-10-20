@@ -381,6 +381,7 @@ const SUITES = [
   'test-compartment-downloads.test.js',   // 0.60.179 — CD1–CD5: magnets caught, downloads quarantined, verified qBittorrent hand-off, kill on disconnect
   'test-browser-shell.test.js',          // 0.60.179 — BS1–BS7: Firefox import, the window like Firefox, plugin icons, the floating CLI (in Clear Glass)
   'test-adblock.test.js',                // 0.60.183 AB1–AB4 — a full content blocker: real lists, exceptions, options, element hiding, per-site allow, its page
+  'test-passwords.test.js',              // 0.60.186 PW1–PW4 — websites use the password manager; a login belongs to the account the cookie vault keeps
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
   'test-cos-app-ui.test.js',          // 0.60.89 COSA6 — COS window (jsdom) and controller

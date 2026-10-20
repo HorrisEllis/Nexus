@@ -179,6 +179,13 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   // ── Passwords — §NEW 2026-08-24 ─────────────────────────────────────────
   passwords: {
     list:   ()   => ipcRenderer.invoke('passwords:list'),
+    // PW4 (0.60.186): the window's side of websites using the password manager — never a password, only what to offer and which login to fill
+    save:      (wcId, origin, username, accountId) => ipcRenderer.invoke('passwords:save', { wcId, origin, username, accountId }),
+    dismiss:   (wcId, origin, never) => ipcRenderer.invoke('passwords:dismiss', { wcId, origin, never }),
+    forPage:   (wcId) => ipcRenderer.invoke('passwords:forPage', { wcId }),
+    fillPage:  (wcId, id) => ipcRenderer.invoke('passwords:fillPage', { wcId, id }),
+    onOffer:   (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('passwords:offer', f); return () => ipcRenderer.removeListener('passwords:offer', f); },
+    onAvailable: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('passwords:available', f); return () => ipcRenderer.removeListener('passwords:available', f); },
     delete: (id) => ipcRenderer.invoke('passwords:delete', { id }),
   },
 
