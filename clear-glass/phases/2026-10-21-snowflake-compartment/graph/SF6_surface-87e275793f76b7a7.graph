@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500830471
+exported_at: 1792502100076
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500830471
-lastSeenAt: 1792500830471
+firstSeenAt: 1792502100076
+lastSeenAt: 1792502100076
 fingerprint: null
 payload:
   for: SF6_surface
@@ -203,7 +203,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2527b07c5dc17a5a
     layer: 3
     deps:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
@@ -223,6 +223,7 @@ payload:
     downstream:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF8_host_import
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF9_install_in_use
     blockedBy: []
     unlocks:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
@@ -230,10 +231,10 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 3
+      - DAG 2527b07c5dc17a5a · layer 3
       - >-
         depends on (5): SF1_honest_detection, SF2_bridge_sources, SF3_page_in_the_compartment,
         SF4_https_only, SF5_circuit_check
       - >-
-        needed by (2): SF7_bridge_automatic, SF8_host_import · finishing it unlocks
-        SF7_bridge_automatic, SF8_host_import
+        needed by (2): SF7_bridge_automatic, SF8_host_import · all downstream 3 · finishing it
+        unlocks SF7_bridge_automatic, SF8_host_import

@@ -475,6 +475,92 @@ spec:
       error_paths: ["no window → { ok:false } said"]
       acceptance: ["Clear Glass: Import folder… on the Ad Blocker page sends set('import', { paths })"]
 
+    - id: MOD-BSH-APPMENU
+      name: app-menu
+      uuid: nexus-cg-bsh-appmenu-v1-0000-2026-1021-006
+      path: clear-glass/renderer/shell/menus.js
+      phase: BS17_menu_consolidated
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers. and remove the
+        bookmarks from the menuconsolidate the menu, use playwright to test each ui feature in the menu. use the library for the bookmarks, context
+        menu for the clearglass ui like the last 2 images, but matching the them eand dynamic to the click  v. the right clikc on dom is still not
+        accuraate. still missing snowflake from tghe ocntext menu"
+        The ☰ menu becomes one model (APP in menus.js), drawn icons, Firefox's groups: new tab / window / Snowflake; the account; Bookmarks
+        (opens the Library on bookmarks — the list is no longer in the menu), History, Downloads, Library; Plugins and Add-ons, Site Settings,
+        Background Tabs, Import from Firefox; Print, Find, Zoom; the unpinned tools under More tools; Customize Toolbar, Settings. Duplicates
+        between the old hand-written rows and the model are gone; every row's target is checked by a test that clicks each one in Clear Glass.
+        Reading, to confirm: "use playwright" — Clear Glass's own driver (its Playwright-shaped API) runs the tests, because his rule of
+        2026-10-05 says UI is tested in Clear Glass, never Playwright (AXIOMS §4.1, CG-001b).
+      deps: [{ name: shell }]
+      exports: ["CGMenus.app() → rows", "CGMenus.appMenuHTML()", "CGMenus.wire(panel, close)"]
+      gate_pipeline: ["GATE-AM-001: one model", "GATE-AM-002: no bookmark list", "GATE-AM-003: every row runs"]
+      behavioral_contracts: ["every 0.60.184 data-action reachable (downloads, site-settings, history, library, bgtabs, customize-toolbar)", "icons drawn, not emoji"]
+      error_paths: ["a row whose target is missing is not drawn and is logged"]
+      acceptance: ["Clear Glass: each ☰ row clicked does what it says (a call recorded or a panel open); no Bookmarks list in the menu"]
+
+    - id: MOD-BSH-CHROME-CTX
+      name: chrome-context-menus
+      uuid: nexus-cg-bsh-chrome-ctx-v1-0000-2026-1021-006
+      path: clear-glass/renderer/shell/ctxmenu.js
+      phase: BS18_chrome_context_menus
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        Firefox's menus for Clear Glass's own UI, in the window's theme, chosen by where the click landed (zoneOf(target)): a tab (New Tab,
+        Reload Tab, Duplicate Tab, Bookmark Tab…, Move to Background, Close Tab, Close Other Tabs, Reopen Closed Tab), the tab strip (New Tab,
+        Reopen Closed Tab), a bookmark (Open, Open in New Tab, Open in New Agent Window, Edit Bookmark…, Copy Link, Delete), the bookmarks bar
+        (Open All Bookmarks, Add Bookmark…, Manage Bookmarks), the address bar (Undo, Cut, Copy, Paste, Paste and Go, Select All), the toolbar
+        (Unpin, Customize Toolbar…); all but the address bar end with Menu Bar ✓, Bookmarks Toolbar ▸ (Always / Only on New Tab / Never) and
+        Customize Toolbar…. A submenu opens beside its row and flips at the edge. Firefox's Add Folder / Add Separator / Select All Tabs /
+        vertical tabs are not offered: the bookmark store has no folders and the tabs share one page, said here.
+      deps: [{ name: shell }, { name: bookmarks-store }]
+      exports: ["zoneOf(target) → 'tab'|'tabstrip'|'bookmark'|'bookmarks'|'urlbar'|'toolbar'", "CGCtxMenu.openChrome({ zone, x, y, target })", "bookmarksBar(mode) 'always'|'newtab'|'never'"]
+      gate_pipeline: ["GATE-CC-001: zone from the click", "GATE-CC-002: rows for the zone", "GATE-CC-003: submenu placed and flipped"]
+      behavioral_contracts: ["the page's own menu (MOD-BSH-CTXMENU) is unchanged", "the toolbar visibility choice is kept across restarts"]
+      error_paths: ["a row whose action is missing is not drawn"]
+      acceptance: ["Clear Glass: a tab right-click shows the tab rows; the bookmarks bar shows its rows; a bookmark's Delete removes it; Bookmarks Toolbar ▸ Never hides the bar"]
+
+    - id: MOD-BSH-CTX-POINT
+      name: context-point
+      uuid: nexus-cg-bsh-ctx-point-v1-0000-2026-1021-006
+      path: clear-glass/src/preload/webview-bridge.js
+      phase: BS19_ctx_point_from_page
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        "the right clikc on dom is still not accuraate". 0.60.183 asked the main process for the cursor (screen DIPs less the content bounds),
+        which goes wrong where Windows' per-monitor scaling and the window's frame disagree. Now the page itself says where: the webview's
+        preload listens for contextmenu (capture) and sends its clientX/clientY to the host (sendToHost 'cg:ctx-point'); the window adds the
+        webview's place and multiplies by the page zoom — CSS pixels on both sides, so no OS scaling enters. The main-process pointer is the
+        fallback (a click in a cross-origin frame the preload does not run in), params.x/y the last. The menu records which it used
+        (data-source) and both points, for the next screenshot. "still missing snowflake from tghe ocntext menu": the Snowflake plugin adds
+        "Open this page with Snowflake" for a page right-click (its link row was there only on links).
+      deps: [{ name: shell }]
+      exports: ["sendToHost('cg:ctx-point', { x, y, t })", "pagePoint(rect, point, zoom) → { x, y }", "snowflake context-menu-item when:'page'"]
+      gate_pipeline: ["GATE-CP2-001: page point fresh (< 1 s)", "GATE-CP2-002: pointer", "GATE-CP2-003: params"]
+      behavioral_contracts: ["the page cannot send any other channel through this", "a stale point is never used"]
+      error_paths: ["no page point → the pointer, said in data-source"]
+      acceptance: ["pagePoint at zoom 1.5 gives rect + 1.5 × client", "Clear Glass: a page point sent before the menu event places the menu there; a page right-click lists Snowflake"]
+
+    - id: MOD-BSH-BOOKMARK-ACCOUNTS
+      name: bookmark-site-accounts
+      uuid: nexus-cg-bsh-bookmark-accounts-v1-0000-2026-1021-006
+      path: clear-glass/src/accounts/for-site.js
+      phase: BS20_bookmark_site_accounts
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers". Reading, to confirm: the
+        bookmark dialog offers the accounts that are signed in to THIS site — each Clear Glass account has its own session
+        (persist:agent-acct-<id>); forSite(url) reads that session's cookies for the site's domain (names only, never values) and calls an
+        account "signed in" when it holds a sign-in-looking cookie (the same test as context-need's cookieSummary), "has visited" when it
+        holds others. A provider's account counts for its provider's own site only (claude.ai → the claude-linked accounts). The window's own
+        sign-in is always offered ("This window (as now)"). The rest are under "Other accounts", not first.
+      deps: [{ name: shell }]
+      exports: ["forSite({ url, accounts, cookiesFor, providers, current }) → { site, accounts: [{ id, label, state: 'signed-in'|'visited'|'provider'|'none', cookies, who }] }", "accounts:forSite IPC"]
+      gate_pipeline: ["GATE-BA-001: read each account's cookies for the domain", "GATE-BA-002: classify", "GATE-BA-003: this site's first"]
+      behavioral_contracts: ["no cookie value is read into the result", "an account's session is only read, never changed"]
+      error_paths: ["a session that cannot be read → state 'none' with the reason"]
+      acceptance: ["an account with a session cookie for news.com is 'signed-in' for news.com and 'none' for other.org; a claude account is 'provider' for claude.ai only; the dialog lists this site's accounts first"]
+
   events:
     shell:
       - "import.firefox.done { profile, cookies, bookmarks }"

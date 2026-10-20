@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500831206
+exported_at: 1792502099134
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831206
-lastSeenAt: 1792500831206
+firstSeenAt: 1792502099134
+lastSeenAt: 1792502099134
 fingerprint: null
 payload:
   for: BS4_extensions
@@ -144,7 +144,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2527b07c5dc17a5a
     layer: 1
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
@@ -169,7 +169,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 1
+      - DAG 2527b07c5dc17a5a · layer 1
       - 'depends on (1): BS2_shell_rebuild'
       - >-
         needed by (2): BS6_float_cli, BS13_plugin_settings · all downstream 8 · finishing it unlocks

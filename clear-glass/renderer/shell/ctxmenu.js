@@ -24,6 +24,13 @@
     return { left: Math.round(left), top: Math.round(top), flipX, flipY };
   }
 
+  /** pagePoint(rect, point, zoom) → the page's own right-click point in this window's CSS pixels (BS19: CSS on both sides, no OS scaling) */
+  function pagePoint(rect, point, zoom = 1) {
+    if (!rect || !point || !Number.isFinite(point.x) || !Number.isFinite(point.y)) return null;
+    const z = Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
+    return { x: rect.left + point.x * z, y: rect.top + point.y * z };
+  }
+
   /** contextOf(params, chrome) → which groups apply */
   function contextOf(params = {}, { chrome = false, pluginRows = 0 } = {}) {
     if (chrome) return { chrome: true };
@@ -57,11 +64,13 @@
   }
 
   /** open(menu, { x, y, params, chrome, pluginRows, usePointer }) — show the rows that apply, at the pointer */
-  async function open(menu, { x, y, params = {}, chrome = false, pluginRows = 0, usePointer = !chrome } = {}) {
+  async function open(menu, { x, y, params = {}, chrome = false, pluginRows = 0, page = null, usePointer = !chrome && !page } = {}) {
     prepare(menu, contextOf(params, { chrome, pluginRows }), params);
     if (root.CGIcons) root.CGIcons.apply(menu);
-    let px = x, py = y, source = 'event';
-    if (usePointer) { const p = await pointer(); if (p) { px = p.x; py = p.y; source = 'pointer'; } }
+    let px = x, py = y, source = chrome ? 'event' : 'params';
+    if (page) { px = page.x; py = page.y; source = 'page'; }   // BS19: the page's own point first
+    else if (usePointer) { const p = await pointer(); if (p) { px = p.x; py = p.y; source = 'pointer'; } }
+    menu.dataset.points = JSON.stringify({ used: source, page, params: chrome ? null : { x, y } });   // for the next screenshot: what was used, what else was known
     menu.style.visibility = 'hidden'; menu.classList.add('visible');
     const w = menu.offsetWidth || 240, h = menu.offsetHeight || 300;
     const at = place(px, py, w, h, root.innerWidth, root.innerHeight);
@@ -85,7 +94,113 @@
     return false;
   }
 
-  const api = { place, contextOf, prepare, open, pointer, keys };
+  // ── BS18 (0.60.185): Firefox's menus for Clear Glass's own UI ─────────────────────────────────────────────────────────────────────────
+  // James, 2026-10-21: "context menu for the clearglass ui like the last 2 images, but matching the them eand dynamic to the click". Which menu
+  // is decided by where the click landed (zoneOf); each row names an action the window (browser.js) supplies in `acts`, so a row whose action is
+  // missing is not drawn. Not offered, said: Add Folder / Add Separator (the bookmark store has no folders), Select All Tabs and vertical tabs
+  // (one page is shared by the tabs).
+  function zoneOf(t) {
+    if (!t || !t.closest) return 'toolbar';
+    if (t.closest('.tab-item')) return 'tab';
+    if (t.closest('#tab-bar')) return 'tabstrip';
+    if (t.closest('#bookmarks-list .bk-btn')) return 'bookmark';
+    if (t.closest('#bookmarks-bar')) return 'bookmarks';
+    if (t.closest('#url-bar')) return 'urlbar';
+    return 'toolbar';
+  }
+  const BAR = [
+    { label: 'Menu Bar', act: 'menuBar', checked: 'isMenuBar' },
+    { label: 'Bookmarks Toolbar', sub: [
+      { label: 'Always Show', act: 'barAlways', radio: 'barMode', value: 'always' },
+      { label: 'Only Show on New Tab', act: 'barNewTab', radio: 'barMode', value: 'newtab' },
+      { label: 'Never Show', act: 'barNever', radio: 'barMode', value: 'never' }] },
+    '-',
+    { label: 'Customize Toolbar…', icon: 'pin', act: 'customize' },
+  ];
+  function chromeRows(zone) {
+    switch (zone) {
+      case 'tab': return [
+        { label: 'New Tab', icon: 'plus', kbd: 'Ctrl+T', act: 'newTab' }, '-',
+        { label: 'Reload Tab', icon: 'reload', kbd: 'Ctrl+R', act: 'reloadTab' }, { label: 'Duplicate Tab', icon: 'copy', act: 'duplicateTab' },
+        { label: 'Bookmark Tab…', icon: 'star', act: 'bookmarkTab' }, { label: 'Move to Background Tab', icon: 'layers', act: 'bgTab' }, '-',
+        { label: 'Close Tab', icon: 'close', kbd: 'Ctrl+W', act: 'closeTab' }, { label: 'Close Other Tabs', act: 'closeOthers' },
+        { label: 'Reopen Closed Tab', icon: 'history', kbd: 'Ctrl+Shift+T', act: 'reopenClosed' }, '-', ...BAR];
+      case 'tabstrip': return [
+        { label: 'New Tab', icon: 'plus', kbd: 'Ctrl+T', act: 'newTab' }, { label: 'Reopen Closed Tab', icon: 'history', kbd: 'Ctrl+Shift+T', act: 'reopenClosed' }, '-', ...BAR];
+      case 'bookmark': return [
+        { label: 'Open', act: 'bmOpen' }, { label: 'Open in New Tab', icon: 'plus', act: 'bmOpenTab' }, { label: 'Open in New Agent Window', icon: 'window', act: 'bmOpenWindow' }, '-',
+        { label: 'Edit Bookmark…', icon: 'star', act: 'bmEdit' }, { label: 'Copy Link', icon: 'link', act: 'bmCopy' }, { label: 'Delete Bookmark', icon: 'close', act: 'bmDelete' }, '-',
+        { label: 'Open All Bookmarks', act: 'openAll' }, { label: 'Manage Bookmarks', icon: 'folder', act: 'manageBookmarks' }, '-', ...BAR];
+      case 'bookmarks': return [
+        { label: 'Open All Bookmarks', act: 'openAll' }, '-',
+        { label: 'Add Bookmark…', icon: 'star', kbd: 'Ctrl+D', act: 'addBookmark' }, { label: 'Manage Bookmarks', icon: 'folder', act: 'manageBookmarks' }, '-', ...BAR];
+      case 'urlbar': return [
+        { label: 'Undo', icon: 'undo', kbd: 'Ctrl+Z', act: 'editUndo' }, '-',
+        { label: 'Cut', icon: 'cut', kbd: 'Ctrl+X', act: 'editCut' }, { label: 'Copy', icon: 'copy', kbd: 'Ctrl+C', act: 'editCopy' },
+        { label: 'Paste', icon: 'paste', kbd: 'Ctrl+V', act: 'editPaste' }, { label: 'Paste and Go', act: 'editPasteGo' }, '-',
+        { label: 'Select All', icon: 'select', kbd: 'Ctrl+A', act: 'editSelectAll' }];
+      default: return [{ label: 'Unpin from Toolbar', icon: 'pin', act: 'unpin', when: 'canUnpin' }, ...BAR];
+    }
+  }
+
+  let chromeEl = null, subEl = null;
+  function closeChrome() { if (subEl) subEl.remove(); subEl = null; if (chromeEl) chromeEl.remove(); chromeEl = null; }
+  function drawRows(box, rows, acts, ctx) {
+    let lastSep = true;
+    for (const it of rows) {
+      if (it === '-') { if (!lastSep) { box.append(Object.assign(document.createElement('div'), { className: 'ctx-item sep' })); lastSep = true; } continue; }
+      if (it.when && !(acts[it.when] && acts[it.when](ctx))) continue;
+      if (!it.sub && typeof acts[it.act] !== 'function') continue;
+      const row = document.createElement('div'); row.className = 'ctx-item'; row.setAttribute('role', 'menuitem'); if (it.act) row.dataset.chrome = it.act;
+      const ico = document.createElement('span'); ico.className = 'ci-ico';
+      const on = it.checked ? !!(acts[it.checked] && acts[it.checked](ctx)) : it.radio ? (acts[it.radio] && acts[it.radio](ctx)) === it.value : null;
+      if (on !== null) { row.setAttribute(it.radio ? 'aria-checked' : 'aria-checked', String(on)); if (on) ico.dataset.icon = 'check'; }
+      else if (it.icon) ico.dataset.icon = it.icon;
+      ico.dataset.iconSize = '16';
+      const lab = document.createElement('span'); lab.className = 'ci-label'; lab.textContent = it.label;
+      row.append(ico, lab);
+      if (it.kbd) { const k = document.createElement('kbd'); k.textContent = it.kbd; row.append(k); }
+      if (it.sub) {
+        const ch = document.createElement('span'); ch.className = 'ci-sub'; ch.textContent = '›'; row.append(ch); row.classList.add('has-sub');
+        const show = () => openSub(row, it.sub, acts, ctx);
+        row.addEventListener('mouseenter', show); row.addEventListener('click', (e) => { e.stopPropagation(); show(); });
+      } else {
+        row.addEventListener('mouseenter', () => { if (subEl && !subEl.contains(row)) { subEl.remove(); subEl = null; } });
+        row.addEventListener('click', (e) => { e.stopPropagation(); closeChrome(); try { acts[it.act](ctx); } catch (err) { console.warn(`[ctxmenu] ${it.label}: ${err.message}`); } });
+      }
+      box.append(row); lastSep = false;
+    }
+    while (box.lastChild && box.lastChild.classList.contains('sep')) box.lastChild.remove();
+    if (root.CGIcons) root.CGIcons.apply(box);
+  }
+  function openSub(row, rows, acts, ctx) {
+    if (subEl) subEl.remove();
+    subEl = document.createElement('div'); subEl.className = 'cg-cmenu cg-cmenu-sub visible'; subEl.setAttribute('role', 'menu');
+    drawRows(subEl, rows, acts, ctx); document.body.append(subEl);
+    const r = row.getBoundingClientRect(); const w = subEl.offsetWidth, h = subEl.offsetHeight;
+    let left = r.right - 2; if (left + w > root.innerWidth - GAP) left = r.left - w + 2;
+    const top = Math.max(GAP, Math.min(r.top - 4, root.innerHeight - h - GAP));
+    subEl.style.left = Math.max(GAP, left) + 'px'; subEl.style.top = top + 'px';
+  }
+  /** openChrome({ x, y, target, acts }) → { zone, rows } — the menu for where the click landed, at the click */
+  function openChrome({ x, y, target, acts = {} } = {}) {
+    closeChrome();
+    const zone = zoneOf(target); const ctx = { zone, target };
+    chromeEl = document.createElement('div'); chromeEl.id = 'ctx-chrome-menu'; chromeEl.className = 'cg-cmenu visible'; chromeEl.setAttribute('role', 'menu'); chromeEl.dataset.zone = zone;
+    drawRows(chromeEl, chromeRows(zone), acts, ctx);
+    if (!chromeEl.childElementCount) { chromeEl = null; return { zone, rows: 0 }; }
+    chromeEl.style.visibility = 'hidden'; document.body.append(chromeEl);
+    const at = place(x, y, chromeEl.offsetWidth || 240, chromeEl.offsetHeight || 200, root.innerWidth, root.innerHeight);
+    chromeEl.style.left = at.left + 'px'; chromeEl.style.top = at.top + 'px'; chromeEl.style.visibility = '';
+    return { zone, rows: chromeEl.querySelectorAll('.ctx-item:not(.sep)').length, ...at };
+  }
+  if (root && root.document) {
+    root.document.addEventListener('click', (e) => { if (chromeEl && !chromeEl.contains(e.target) && !(subEl && subEl.contains(e.target))) closeChrome(); });
+    root.document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeChrome(); });
+    root.addEventListener('blur', closeChrome);
+  }
+
+  const api = { place, pagePoint, contextOf, prepare, open, pointer, keys, zoneOf, chromeRows, openChrome, closeChrome };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (root && root.document) root.CGCtxMenu = api;
 })(typeof window !== 'undefined' ? window : globalThis);

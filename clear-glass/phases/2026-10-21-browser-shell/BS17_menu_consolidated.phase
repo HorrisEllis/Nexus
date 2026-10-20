@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS17_menu_consolidated
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS17_menu_consolidated
+context: pipeline phase BS17_menu_consolidated of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS17_menu_consolidated (surface) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792502099146
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502099146
+lastSeenAt: 1792502099146
+fingerprint: null
+payload:
+  id: BS17_menu_consolidated
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.185
+  files:
+    - clear-glass/renderer/shell/menus.js
+    - clear-glass/renderer/browser.js
+  depends_on:
+    - BS3_menus
+  blocks:
+    - MOD-BSH-APPMENU
+  spec: clear-glass/spec/browser-shell.spec
+  graph: f5d69e62d20f3d9c

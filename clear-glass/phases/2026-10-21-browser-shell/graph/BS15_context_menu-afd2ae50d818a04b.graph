@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500831217
+exported_at: 1792502099145
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831217
-lastSeenAt: 1792500831217
+firstSeenAt: 1792502099145
+lastSeenAt: 1792502099145
 fingerprint: null
 payload:
   for: BS15_context_menu
@@ -152,20 +152,28 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2527b07c5dc17a5a
     layer: 2
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
-    dependents: []
+    dependents:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS18_chrome_context_menus
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS19_ctx_point_from_page
     upstream:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
-    downstream: []
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS18_chrome_context_menus
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS19_ctx_point_from_page
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS18_chrome_context_menus
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS19_ctx_point_from_page
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 2
+      - DAG 2527b07c5dc17a5a · layer 2
       - 'depends on (1): BS8_design_system · all upstream 2'
-      - 'needed by (0): —'
+      - >-
+        needed by (2): BS18_chrome_context_menus, BS19_ctx_point_from_page · finishing it unlocks
+        BS18_chrome_context_menus, BS19_ctx_point_from_page

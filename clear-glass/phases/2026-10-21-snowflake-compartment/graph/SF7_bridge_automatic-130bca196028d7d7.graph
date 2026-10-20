@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500830472
+exported_at: 1792502100078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500830472
-lastSeenAt: 1792500830472
+firstSeenAt: 1792502100078
+lastSeenAt: 1792502100078
 fingerprint: null
 payload:
   for: SF7_bridge_automatic
@@ -154,12 +154,13 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2527b07c5dc17a5a
     layer: 4
     deps:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
-    dependents: []
+    dependents:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF9_install_in_use
     upstream:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
@@ -167,12 +168,14 @@ payload:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF4_https_only
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
-    downstream: []
+    downstream:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF9_install_in_use
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF9_install_in_use
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 4
+      - DAG 2527b07c5dc17a5a · layer 4
       - 'depends on (2): SF2_bridge_sources, SF6_surface · all upstream 6'
-      - 'needed by (0): —'
+      - 'needed by (1): SF9_install_in_use · finishing it unlocks SF9_install_in_use'

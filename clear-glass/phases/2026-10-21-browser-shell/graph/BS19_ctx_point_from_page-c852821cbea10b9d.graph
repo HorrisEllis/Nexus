@@ -1,0 +1,77 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS19_ctx_point_from_page:c852821cbea10b9d
+type: graph
+id: phase:BS19_ctx_point_from_page:c852821cbea10b9d
+context: dependency graph of phase BS19_ctx_point_from_page
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792502099148
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502099148
+lastSeenAt: 1792502099148
+fingerprint: null
+payload:
+  for: BS19_ctx_point_from_page
+  kind: phase
+  repo: null
+  hash: c852821cbea10b9d
+  nodes:
+    - path: clear-glass/plugins/snowflake/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/plugins/snowflake/manifest.json
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/ctxmenu.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/preload/webview-bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/host-import.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/plugins/snowflake/index.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/plugins/snowflake/index.js
+      to: clear-glass/src/net/host-import.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2527b07c5dc17a5a
+    layer: 3
+    deps:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
+    dependents: []
+    upstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2527b07c5dc17a5a · layer 3
+      - 'depends on (1): BS15_context_menu · all upstream 3'
+      - 'needed by (0): —'

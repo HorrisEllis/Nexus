@@ -333,6 +333,24 @@ spec:
       error_paths: ["over 5,000 hosts in one import → the first 5,000, the rest counted and said (each host is a PAC condition)"]
       acceptance: ["hosts-file, domain and ||host^ lines → hosts; comments, IPs and localhost dropped", "import twice → no duplicates", "a host routed direct already → skipped as collision, named", "removeList removes only that list's rules"]
 
+    - id: MOD-SF-INSTALL-IN-USE
+      name: install-in-use
+      uuid: nexus-cg-sf-install-in-use-v1-0000-2026-1021-003
+      path: clear-glass/src/net/installer.js
+      phase: SF9_install_in_use
+      map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+      description: >-
+        His screenshot of Settings → Network (2026-10-21): "Reinstall / update" failed with EPERM on the bundle folder while the transport
+        showed "Connecting… 0%". On Windows a folder whose tor.exe is running cannot be removed, and the install removed it before renaming
+        the new one into its place. Now a folder that cannot be removed is left alone and the new install goes beside it (a dated name); the
+        record points at the new one, the old is pruned when it is free, and the transport is restarted onto the new files as before.
+      deps: [{ name: installer }]
+      exports: ["TorInstaller.install(...) → { ok, folder }", "_place(tmp, final) → folder actually used"]
+      gate_pipeline: ["GATE-SF-IU-001: remove the old if free", "GATE-SF-IU-002: else beside it"]
+      behavioral_contracts: ["a half-finished folder is never an install (rename last, as before)"]
+      error_paths: ["the rename itself fails → the error, the old install untouched"]
+      acceptance: ["a final folder whose removal throws EPERM → the install lands at <final>-<time> and the record points there"]
+
   events:
     net:
       - "net.bridge.found { count, sources }"

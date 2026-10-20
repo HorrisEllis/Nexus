@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500831203
+exported_at: 1792502099131
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831203
-lastSeenAt: 1792500831203
+firstSeenAt: 1792502099131
+lastSeenAt: 1792502099131
 fingerprint: null
 payload:
   for: BS2_shell_rebuild
@@ -31,7 +31,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2527b07c5dc17a5a
     layer: 0
     deps: []
     dependents:
@@ -41,6 +41,7 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
       - docs/2026-10-21-browser-shell-phasemap.spec::BS14_zoom_core
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS20_bookmark_site_accounts
     upstream: []
     downstream:
       - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
@@ -53,6 +54,10 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS14_zoom_core
       - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
       - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS17_menu_consolidated
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS18_chrome_context_menus
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS19_ctx_point_from_page
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS20_bookmark_site_accounts
       - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
@@ -69,12 +74,14 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
       - docs/2026-10-21-browser-shell-phasemap.spec::BS14_zoom_core
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS20_bookmark_site_accounts
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 0
+      - DAG 2527b07c5dc17a5a · layer 0
       - 'depends on (0): —'
       - >-
-        needed by (6): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
-        BS8_design_system, BS14_zoom_core · all downstream 18 · finishing it unlocks BS3_menus,
-        BS4_extensions, BS5_downloads_panel, BS6_float_cli, BS8_design_system, BS14_zoom_core
+        needed by (7): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
+        BS8_design_system, BS14_zoom_core, BS20_bookmark_site_accounts · all downstream 22 ·
+        finishing it unlocks BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
+        BS8_design_system, BS14_zoom_core, BS20_bookmark_site_accounts

@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500831215
+exported_at: 1792502099143
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831215
-lastSeenAt: 1792500831215
+firstSeenAt: 1792502099143
+lastSeenAt: 1792502099143
 fingerprint: null
 payload:
   for: BS13_plugin_settings
@@ -159,7 +159,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2527b07c5dc17a5a
     layer: 2
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
@@ -182,7 +182,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 2
+      - DAG 2527b07c5dc17a5a · layer 2
       - 'depends on (1): BS4_extensions · all upstream 2'
       - >-
         needed by (2): AB3_wiring, BS16_import_fields · all downstream 5 · finishing it unlocks

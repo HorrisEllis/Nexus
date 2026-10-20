@@ -7,11 +7,11 @@ intent: null
 summary: BS13_plugin_settings (integration) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792500831215
+exported_at: 1792502099143
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831215
-lastSeenAt: 1792500831215
+firstSeenAt: 1792502099143
+lastSeenAt: 1792502099143
 fingerprint: null
 payload:
   id: BS13_plugin_settings

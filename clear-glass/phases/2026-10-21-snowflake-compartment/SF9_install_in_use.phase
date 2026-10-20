@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-snowflake-compartment-phasemap.spec::SF9_install_in_use
+type: phase
+id: docs_2026-10-21-snowflake-compartment-phasemap.spec::SF9_install_in_use
+context: pipeline phase SF9_install_in_use of docs/2026-10-21-snowflake-compartment-phasemap.spec
+intent: null
+summary: SF9_install_in_use (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792502100082
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502100082
+lastSeenAt: 1792502100082
+fingerprint: null
+payload:
+  id: SF9_install_in_use
+  map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.185
+  files:
+    - clear-glass/src/net/installer.js
+  depends_on:
+    - SF7_bridge_automatic
+  blocks:
+    - MOD-SF-INSTALL-IN-USE
+  spec: clear-glass/spec/snowflake.spec
+  graph: 0f35a722345fb09e

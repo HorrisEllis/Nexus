@@ -183,9 +183,9 @@ body.cg-shell .menu-zoom-btn:hover { background: var(--pane-3); }
 .sh-findbar button:hover { background: var(--pane-3); color: var(--ink-hi); }
 /* BS15 (0.60.183) — the right-click menu, Firefox's shape in the window's theme: a navigation row, groups split by hairlines, drawn icons,
    shortcuts right-aligned; it grows out of the pointer's corner (ctxmenu.js sets transform-origin when it flips at an edge) */
-body.cg-shell #ctx-menu { background: var(--raised); border: 1px solid var(--edge-hi); border-radius: var(--r-l); box-shadow: var(--shadow); padding: 4px; min-width: 248px; max-width: 340px;
+body.cg-shell :is(#ctx-menu, .cg-cmenu) { background: var(--raised); border: 1px solid var(--edge-hi); border-radius: var(--r-l); box-shadow: var(--shadow); padding: 4px; min-width: 248px; max-width: 340px;
   font: var(--t-s)/1.3 var(--sans); color: var(--ink); backdrop-filter: blur(14px); user-select: none; }
-body.cg-shell #ctx-menu.visible { display: block; animation: ctx-in .11s cubic-bezier(.2,.8,.2,1); }
+body.cg-shell :is(#ctx-menu, .cg-cmenu).visible { display: block; animation: ctx-in .11s cubic-bezier(.2,.8,.2,1); }
 @keyframes ctx-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
 body.cg-shell #ctx-menu .ctx-group[hidden] { display: none; }
 body.cg-shell #ctx-menu .ctx-group { padding: 3px 0; }
@@ -330,3 +330,16 @@ select.ps-select:focus, .ps-input:focus { outline: 0; border-color: var(--cyan);
 .ps-addrow .ps-input { margin-top: 0; flex: 1; }
 .ps-info.long { display: block; }
 .ps-info.long .ps-value { text-align: left; margin-top: 3px; line-height: 1.45; }
+/* BS20 (0.60.185) — the bookmark dialog: this site's accounts first, the rest folded */
+.bk-dialog .bk-group { font: 600 10px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); padding: 8px 4px 4px; }
+.bk-dialog .bk-more > summary { cursor: default; font: 12px var(--sans); color: var(--ink-dim); padding: 6px 4px; list-style: none; }
+.bk-dialog .bk-more > summary::before { content: '▸ '; }
+.bk-dialog .bk-more[open] > summary::before { content: '▾ '; }
+
+/* BS18 (0.60.185) — the menus for Clear Glass's own UI (tabs, bookmarks, address bar, toolbar): the page menu's look, built per click */
+.cg-cmenu { position: fixed; z-index: 10000; display: none; }
+.cg-cmenu.visible { display: block; }
+body.cg-shell .cg-cmenu .ctx-item[aria-checked="true"] .ci-ico { color: var(--cyan); }
+body.cg-shell .cg-cmenu .ci-sub { color: var(--ink-faint); font-size: 15px; line-height: 1; }
+body.cg-shell .cg-cmenu .ctx-item.has-sub:hover .ci-sub { color: var(--ink-hi); }
+#menu-agent-identity-target:empty + .menu-sep { display: none; }   /* BS17: no doubled line when the window has no account slot */

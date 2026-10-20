@@ -1,0 +1,72 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF9_install_in_use:0f35a722345fb09e
+type: graph
+id: phase:SF9_install_in_use:0f35a722345fb09e
+context: dependency graph of phase SF9_install_in_use
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792502100082
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792502100082
+lastSeenAt: 1792502100082
+fingerprint: null
+payload:
+  for: SF9_install_in_use
+  kind: phase
+  repo: null
+  hash: 0f35a722345fb09e
+  nodes:
+    - path: clear-glass/src/net/installer.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/releases/deliver.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/installer.js
+      to: clear-glass/src/releases/deliver.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/installer.js
+      kind: requires
+    - from: clear-glass/src/net/bridge-sources.js
+      to: clear-glass/src/net/installer.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2527b07c5dc17a5a
+    layer: 5
+    deps:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
+    dependents: []
+    upstream:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF4_https_only
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2527b07c5dc17a5a · layer 5
+      - 'depends on (1): SF7_bridge_automatic · all upstream 7'
+      - 'needed by (0): —'

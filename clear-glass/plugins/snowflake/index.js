@@ -63,4 +63,8 @@ function settings(data = {}) {
   return reply();
 }
 
-module.exports = { openLink, settings };
+// BS19 (0.60.185) — James: "still missing snowflake from tghe ocntext menu". A page right-click (not on a link) offers the page itself; the
+// window sends the page's URL, and the same core path opens it (net.open), so nothing about routing changes.
+const openPage = openLink;
+
+module.exports = { openLink, openPage, settings };

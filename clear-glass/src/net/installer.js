@@ -261,8 +261,7 @@ class TorInstaller {
       let lines = []; const cfg = findFile(fs, tmp, 'pt_config.json'); if (cfg) { try { lines = bridgeLines(fs.readFileSync(cfg, 'utf8')); } catch (_) { /* no lines */ } }
 
       const relTor = path.relative(tmp, torPathTmp), relSnow = path.relative(tmp, snowTmp);   // taken BEFORE the rename: where inside the folder each one is
-      const final = path.join(dir, `tor-expert-bundle-${version}-${plat}`);
-      fs.rmSync(final, { recursive: true, force: true }); fs.renameSync(tmp, final); tmp = null;   // LAST: only a finished folder is ever an install
+      const final = this._place(tmp, path.join(dir, `tor-expert-bundle-${version}-${plat}`)); tmp = null;   // LAST: only a finished folder is ever an install
       const rec = { version, platform: plat, folder: final, torPath: path.join(final, relTor), snowflakePath: path.join(final, relSnow), sha256: dl.sha256, verified, source: dl.url, installedAt: new Date(this.d.now()).toISOString(), bridgeLines: lines };
       fs.writeFileSync(this._installedFile(), JSON.stringify(rec, null, 2));
       this._prune(final);
@@ -276,6 +275,19 @@ class TorInstaller {
   }
 
   _summary(r) { return { version: r.version, platform: r.platform, torPath: r.torPath, snowflakePath: r.snowflakePath, bridgeLines: r.bridgeLines || [], verified: !!r.verified, source: r.source }; }
+
+  /** _place(tmp, final) → the folder used. SF9 (0.60.185): on Windows a folder whose tor.exe is running cannot be removed (EPERM/EBUSY — his
+   *  "Reinstall / update" screenshot). Then the old one is left alone and the new install goes beside it; _prune removes the old once it is free. */
+  _place(tmp, final) {
+    const { fs } = this.d;
+    try { fs.rmSync(final, { recursive: true, force: true }); }
+    catch (e) {
+      if (!['EPERM', 'EBUSY', 'EACCES', 'ENOTEMPTY'].includes(e.code)) throw e;
+      final = `${final}-${this.d.now()}`;
+    }
+    fs.renameSync(tmp, final);
+    return final;
+  }
 
   /** _prune(keep) — older bundle folders are removed once a newer one is in place (never the one just made). */
   _prune(keep) {

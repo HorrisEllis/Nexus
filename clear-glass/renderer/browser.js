@@ -510,7 +510,9 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     }
 
     render();
-    return { tabs, get activeId(){ return activeId; }, newTab, closeTab, reopenClosed, setUrl, setTitle, setLoading, render, switchTo };
+    // BS18 (0.60.185): what the tab's right-click menu needs — the live list (closeTab reassigns `tabs`) and Close Other Tabs
+    function closeOthers(id) { const keep = tabs.find(t => t.id === id); if (!keep) return; tabs.filter(t => t.id !== id && t.url && t.url !== 'about:blank').forEach(t => { closedStack.push({ url: t.url, title: t.title }); if (closedStack.length > 10) closedStack.shift(); }); tabs = [keep]; switchTo(id); }
+    return { tabs, list: () => tabs, get activeId(){ return activeId; }, newTab, closeTab, closeOthers, reopenClosed, setUrl, setTitle, setLoading, render, switchTo };
   })();
 
   document.getElementById('btn-new-tab').addEventListener('click', () => _tabs.newTab());
@@ -1513,6 +1515,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     document.getElementById('btn-new-tab')?.after(b);
   });
 
+  const _bkById = new Map();
   async function loadBookmarks() {
     try {
       const bks = await _visibleBookmarks();
@@ -1527,14 +1530,15 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         if (bk.snapshotId) { const st = document.createElement('span'); st.className = 'bk-state'; st.textContent = '\u23EE'; btn.appendChild(st); }
         btn.appendChild(document.createTextNode(bk.title || bk.url));
         btn.addEventListener('click', () => openBookmark(bk));
+        btn.dataset.bid = bk.id; _bkById.set(bk.id, bk);   // BS18: the bookmark a right-click lands on
         list.appendChild(btn);
       });
     } catch (_) {}
   }
 
   // The ★ dialog — title, the account check list, "remember page state".
-  async function openBookmarkDialog() {
-    const url = wv.getURL(), title = wv.getTitle();
+  async function openBookmarkDialog(o = {}) {   // BS18 (0.60.185): o.url / o.title — a bookmark on the bar edited from its right-click menu
+    const url = o.url || wv.getURL(), title = o.title || wv.getTitle();
     if (!url || url === 'about:blank') return;
     document.getElementById('bk-dialog')?.remove();
     const [accounts, all] = await Promise.all([_accounts(true), cg.bookmarks.list({ agentId }).catch(() => [])]);
@@ -1556,8 +1560,25 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       o.addEventListener('click', () => { chosen = id || null; paint(); stateNote(); });
       return o;
     };
+    // BS20 (0.60.185) — James: "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers."
+    // The accounts signed in to THIS site come first (each account's own session, read for this site's cookies — names only); the rest
+    // are folded under "Other accounts". Reading, to confirm.
     acctList.append(opt(null, 'No account', 'opens in whichever window you click it'));
-    accounts.forEach(a => acctList.append(opt(a.id, a.label, (a.agentKeys || []).join(', ') + (a.id === myAccountId ? ' \u00B7 this window' : ''))));
+    let site = null;
+    try { site = await cg.accounts.forSite(url, myAccountId); } catch (_) { site = null; }
+    const STATE = { 'signed-in': 'signed in here', provider: 'this site\u2019s provider account', visited: 'has visited' };
+    const subOf = (x) => [STATE[x.state], x.who, x.state === 'signed-in' && x.signInCookies.length ? x.signInCookies.slice(0, 2).join(', ') : null, x.state === 'visited' ? `${x.cookies} cookie${x.cookies === 1 ? '' : 's'}` : null, x.current ? 'this window' : null].filter(Boolean).join(' \u00B7 ');
+    if (site && site.ok) {
+      const here = site.accounts.filter(x => x.state !== 'none' || x.current || x.id === chosen);
+      const rest = site.accounts.filter(x => !here.includes(x));
+      acctList.append(el('div', { className: 'bk-group', textContent: here.length ? `Signed in to ${site.site}` : `No account is signed in to ${site.site}` }));
+      here.forEach(x => acctList.append(opt(x.id, x.label, subOf(x))));
+      if (rest.length) {
+        const more = el('details', { className: 'bk-more' }, el('summary', { textContent: `Other accounts (${rest.length})` }));
+        rest.forEach(x => more.append(opt(x.id, x.label, (x.current ? 'this window' : 'not signed in here'))));
+        acctList.append(more);
+      }
+    } else accounts.forEach(a => acctList.append(opt(a.id, a.label, (a.agentKeys || []).join(', ') + (a.id === myAccountId ? ' \u00B7 this window' : ''))));
     const stateIn = el('input', { type: 'checkbox', checked: !!(existing && existing.snapshotId) });
     const note = el('div', { className: 'bk-note' });
     const stateNote = () => { note.textContent = chosen && chosen !== myAccountId
@@ -1855,49 +1876,23 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     const rect = (e.currentTarget || e.target).getBoundingClientRect();
     panel.style.top = `${rect.bottom + 4}px`;
     panel.style.right = `${window.innerWidth - rect.right}px`;
-    // BS3 (0.60.179) — Firefox's ☰ order: new tab / window / Snowflake first, then bookmarks and the panels, then add-ons, import,
-    // print, find, zoom and Settings (renderer/shell/menus.js), then the tools and Customize. The rows below keep their own handlers.
+    // BS17 (0.60.185) — James: "remove the bookmarks from the menuconsolidate the menu ... use the library for the bookmarks". One model
+    // (renderer/shell/menus.js): Bookmarks opens the Library; the bookmarks list that was here is gone. The 0.60.184 rows' data-actions are on
+    // the model's rows; their handlers are the model's. The hand-written rows and the 2026-09-25 note about them are in git history (§0.3).
     const _am = window.CGMenus;
     panel.innerHTML = `
-      ${_am ? _am.appMenuHTML('top') + '<div class="menu-sep"></div>' : ''}
+      ${_am.appMenuHTML('top')}
+      <div class="menu-sep"></div>
       <div id="menu-agent-identity-target"></div>
       <div class="menu-sep"></div>
-      <div class="menu-section">
-        <div class="menu-section-label">Bookmarks</div>
-        <div id="menu-bookmarks-list"><div style="padding:6px 4px;color:var(--text-dim,#999);font-size:11px">loading…</div></div>
-      </div>
+      ${_am.appMenuHTML('mid')}
+      ${_renderToolMenuRows() /* its own separator and "Tools" heading, nothing when every tool is pinned */}
       <div class="menu-sep"></div>
-      <div class="menu-item" data-action="downloads">⬇ Downloads <span class="menu-kbd">Ctrl+J</span></div>
-      <div class="menu-item" data-action="site-settings">🛡 Site Settings</div>
-      <div class="menu-item" data-action="history">🕐 History</div>
-      <div class="menu-item" data-action="library">📚 Library</div>
-      <div class="menu-item" data-action="bgtabs">⬡ Background Tabs</div>
-      <!-- §REMOVED 2026-09-25 — this used to be a hardcoded "☰ Settings"
-           row that actually opened the Nexus Options panel (openOptionsPanel,
-           same destination as the btn-options toolbar button), not the real
-           Settings window. It duplicated btn-options's own row below
-           (_renderToolMenuRows renders "☰ Nexus Options" once that button
-           is unpinned) under a DIFFERENT, colliding label — the real cause
-           of James finding two different things both called "Settings"
-           doing two different things. Deleted rather than relabeled: the
-           real Nexus Options access already exists via the toolbar button
-           and its Tools row here; a real, single, unambiguous "Settings"
-           entry (→ cg.window.openSettings(), the actual Settings window)
-           now lives at btn-settings, in this same Tools row list. -->
-      ${_am ? '<div class="menu-sep"></div>' + _am.appMenuHTML('mid') : ''}
-      <div class="menu-sep"></div>
-      <div class="menu-section-label">More tools</div>
-      ${_renderToolMenuRows()}
-      <div class="menu-sep"></div>
-      <div class="menu-item" data-action="customize-toolbar">🧰 Customize Toolbar…</div>
+      ${_am.appMenuHTML('end')}
     `;
     panel.style.display = 'block';
     _wireToolMenuRows(panel);
-    if (_am) _am.wire(panel, () => { panel.style.display = 'none'; });
-    panel.querySelector('[data-action="customize-toolbar"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openToolbarEditor();
-    });
+    _am.wire(panel, () => { panel.style.display = 'none'; });
 
     // Move the real, unchanged agent/identity elements into the now-open
     // menu. Same nodes — appendChild relocates, it doesn't clone, so
@@ -1907,54 +1902,6 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     const target = document.getElementById('menu-agent-identity-target');
     if (slot && target) { target.appendChild(slot); slot.style.display = ''; }
 
-    panel.querySelector('[data-action="downloads"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openLibrary('downloads');
-    });
-    panel.querySelector('[data-action="site-settings"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openPanelFromMenu('site-settings-panel', _renderSiteSettingsPanel);
-    });
-    panel.querySelector('[data-action="history"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openPanelFromMenu('history-panel', () => _renderHistoryPanel(''));
-    });
-    // §LIBRARY 0.39.240 → 0.39.241 — James: "also needs to be clearglass library... added to
-    // the 3 lines menu", then "the settings ui but with the library". Same window as
-    // the tray entry and Ctrl+J: openLibraryWindow() in src/main/index.js.
-    panel.querySelector('[data-action="library"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openLibrary();
-    });
-    panel.querySelector('[data-action="bgtabs"]').addEventListener('click', () => {
-      panel.style.display = 'none';
-      _openPanelFromMenu('bgtabs-panel', _renderBgTabsPanel);
-    });
-    const listEl = document.getElementById('menu-bookmarks-list');
-    try {
-      const list = await _visibleBookmarks();
-      if (!list || !list.length) {
-        listEl.innerHTML = '<div style="padding:6px 4px;color:var(--text-dim,#999);font-size:11px">No bookmarks yet — click the ★ in the search bar to add one.</div>';
-        return;
-      }
-      listEl.innerHTML = list.map(b => `
-        <div style="display:flex;align-items:center;gap:6px;padding:6px 4px;border-bottom:1px solid var(--border,#333)">
-          <span data-visit="${b.id}" style="flex:1;cursor:pointer;font-size:11px;color:var(--text,#ccc);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${b.url.replace(/"/g,'&quot;')}">${(b.title || b.url).replace(/</g,'&lt;')}</span>
-          <span data-remove="${b.id}" style="cursor:pointer;opacity:.5;font-size:12px" title="Remove">✕</span>
-        </div>`).join('');
-      listEl.querySelectorAll('[data-visit]').forEach(el => el.addEventListener('click', async () => {
-        const bk = list.find(b => b.id === el.dataset.visit);
-        if (bk) { panel.style.display = 'none'; await openBookmark(bk); }
-      }));
-      listEl.querySelectorAll('[data-remove]').forEach(el => el.addEventListener('click', async (ev) => {
-        ev.stopPropagation();
-        await cg.bookmarks.remove({ id: el.dataset.remove, agentId });
-        el.closest('div').remove();
-        loadBookmarks?.();
-      }));
-    } catch (err) {
-      listEl.innerHTML = `<div style="padding:6px 4px;color:#ff6b6b;font-size:11px">Error: ${err.message}</div>`;
-    }
   });
   document.addEventListener('click', (e) => {
     const panel = document.getElementById('bookmark-mgr-panel');
@@ -3274,14 +3221,14 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
 
   // BS15 (0.60.183) — what the last page right-click was on (link, image, selection, field); renderer/shell/ctxmenu.js reads it
   let ctxParams = {};
-  function showCtxMenu(x, y, { chrome = false } = {}) {
+  function showCtxMenu(x, y, { chrome = false, page = null } = {}) {
     ctxMenu.querySelector('[data-action="unpin"]').style.display = ctxPinTarget ? '' : 'none';
     ctxMenu.querySelector('[data-action="unpin-sep"]').style.display = ctxPinTarget ? '' : 'none';
     ctxMenu.querySelector('[data-action="customize-toolbar"]').style.display = ctxIsChrome ? '' : 'none';
     ctxMenu.querySelector('[data-action="customize-toolbar-sep"]').style.display = 'none';
     if (window.CGCtxMenu) {
       const pluginRows = ctxMenu.querySelectorAll('#ctx-plugin-items .ctx-item').length;
-      return window.CGCtxMenu.open(ctxMenu, { x, y, params: chrome ? {} : ctxParams, chrome, pluginRows });
+      return window.CGCtxMenu.open(ctxMenu, { x, y, params: chrome ? {} : ctxParams, chrome, pluginRows, page });
     }
     // §0.39.265 — clamp to the menu's real, measured size (it grows with
     // its rows) instead of a guessed 180×220, and never to a NaN position.
@@ -3298,16 +3245,60 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   window.addEventListener('blur', hideCtxMenu);
   wv.addEventListener('focus', hideCtxMenu);   // a click back into the page closes it, as a native menu does
 
-  // Right-click on chrome bar or webview area
-  document.getElementById('chrome').addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    ctxPinTarget = _findPinnedCommandAt(e.target);
-    ctxIsChrome = true;
-    ctxLinkURL = null; renderPluginCtxItems([]);
-    ctxPageXY = null; // a chrome-bar right-click has no page point
-    ctxParams = {};
-    showCtxMenu(e.clientX, e.clientY, { chrome: true });
-  });
+  // BS18 (0.60.185) — James: "context menu for the clearglass ui like the last 2 images, but matching the them eand dynamic to the click".
+  // A right-click on the window's own UI (tabs, the tab strip, the toolbar, the address bar, the bookmarks bar or a bookmark) opens the menu
+  // Firefox has there (renderer/shell/ctxmenu.js openChrome); the actions are here, where the tabs, bookmarks and toolbar live.
+  // Bookmarks toolbar: Always / Only on New Tab / Never (Firefox's three), kept per window profile in localStorage.
+  let _barMode = 'always'; try { _barMode = localStorage.getItem('cg.bookmarksBar') || 'always'; } catch (_) {}
+  const _isBlank = () => { try { const u = wv.getURL(); return !u || u === 'about:blank'; } catch (_) { return true; } };
+  function applyBookmarksBar() { const bar = document.getElementById('bookmarks-bar'); if (!bar) return; bar.style.display = _barMode === 'never' || (_barMode === 'newtab' && !_isBlank()) ? 'none' : ''; }
+  function setBookmarksBar(mode) { if (!['always', 'newtab', 'never'].includes(mode)) return; _barMode = mode; try { localStorage.setItem('cg.bookmarksBar', mode); } catch (_) {} applyBookmarksBar(); }
+  for (const ev of ['did-navigate', 'did-start-loading', 'did-stop-loading']) wv.addEventListener(ev, applyBookmarksBar);
+  applyBookmarksBar();
+  const _tid = (ctx) => { const el = ctx.target && ctx.target.closest && ctx.target.closest('.tab-item'); return el ? parseInt(el.dataset.tid, 10) : _tabs.activeId; };
+  const _tab = (ctx) => _tabs.list().find(t => t.id === _tid(ctx)) || {};
+  const _bk = (ctx) => { const el = ctx.target && ctx.target.closest && ctx.target.closest('.bk-btn'); return el ? _bkById.get(el.dataset.bid) : null; };
+  const _copyText = (t, what) => navigator.clipboard.writeText(t).then(() => window.CGShellUI && window.CGShellUI.toast(`${what} copied`)).catch(err => toast(`Copy failed: ${err.message}`, 'error', 5000));
+  const _edit = (cmd) => () => { urlBar.focus(); try { if (!document.execCommand(cmd)) throw new Error(`${cmd} was refused`); } catch (err) { toast(`${cmd}: ${err.message}`, 'error', 4000); } };
+  const _paste = async (go) => {
+    urlBar.focus(); let text = null;
+    try { text = await navigator.clipboard.readText(); } catch (_) { try { document.execCommand('paste'); } catch (_) {} }
+    if (text != null) { const a = urlBar.selectionStart || 0, b = urlBar.selectionEnd || 0; urlBar.value = urlBar.value.slice(0, a) + text + urlBar.value.slice(b); }
+    if (go && urlBar.value.trim()) navigate(normalizeUrl(urlBar.value));
+  };
+  const CHROME_ACTS = {
+    newTab: () => _tabs.newTab(), reopenClosed: () => _tabs.reopenClosed(),
+    reloadTab: (ctx) => { const id = _tid(ctx); if (id !== _tabs.activeId) _tabs.switchTo(id); else wv.reload(); },
+    duplicateTab: (ctx) => _tabs.newTab(_tab(ctx).url),
+    bookmarkTab: (ctx) => { const t = _tab(ctx); if (t.id !== _tabs.activeId) _tabs.switchTo(t.id); openBookmarkDialog({ url: t.url, title: t.title }); },
+    bgTab: (ctx) => { const t = _tab(ctx); if (t.url && t.url !== 'about:blank') cg.bgTabs.open({ agentId: agentId + '-bg', url: t.url }).then(() => addMsg('assistant', `Moved to background tab: ${t.url}`)).catch(err => toast(err.message, 'error')); },
+    closeTab: (ctx) => _tabs.closeTab(_tid(ctx)), closeOthers: (ctx) => _tabs.closeOthers(_tid(ctx)),
+    bmOpen: (ctx) => { const b = _bk(ctx); if (b) openBookmark(b); },
+    bmOpenTab: (ctx) => { const b = _bk(ctx); if (b) _tabs.newTab(b.url); },
+    bmOpenWindow: (ctx) => { const b = _bk(ctx); if (b) cg.window.open({ agentId: undefined, url: b.url }); },
+    bmEdit: (ctx) => { const b = _bk(ctx); if (b) openBookmarkDialog({ url: b.url, title: b.title }); },
+    bmCopy: (ctx) => { const b = _bk(ctx); if (b) _copyText(b.url, 'Link'); },
+    bmDelete: async (ctx) => { const b = _bk(ctx); if (!b) return; await cg.bookmarks.remove({ id: b.id, agentId }).catch(err => toast(err.message, 'error')); loadBookmarks(); },
+    openAll: () => { const all = [..._bkById.values()]; if (!all.length) return; all.slice(0, 20).forEach(b => _tabs.newTab(b.url)); if (all.length > 20) toast(`Opened the first 20 of ${all.length} bookmarks`, 'info', 4000); },
+    addBookmark: () => openBookmarkDialog(), manageBookmarks: () => _openLibrary('bookmarks'),
+    editUndo: _edit('undo'), editCut: _edit('cut'), editCopy: _edit('copy'), editSelectAll: () => { urlBar.focus(); urlBar.select(); },
+    editPaste: () => _paste(false), editPasteGo: () => _paste(true),
+    menuBar: () => window.CGMenus && window.CGMenus.ACT.menuBar(), isMenuBar: () => { const m = document.getElementById('menubar'); return !!m && !m.hidden; },
+    barMode: () => _barMode, barAlways: () => setBookmarksBar('always'), barNewTab: () => setBookmarksBar('newtab'), barNever: () => setBookmarksBar('never'),
+    customize: () => _openToolbarEditor(),
+    canUnpin: (ctx) => !!_findPinnedCommandAt(ctx.target),
+    unpin: (ctx) => { const c = _findPinnedCommandAt(ctx.target); if (!c) return; const next = currentPinned.filter(id => id !== c.id);
+      cg.options.set({ pinnedToolbarButtons: next }).then(() => { applyToolbarPins(next); addMsg('assistant', `Unpinned ${c.label} from the toolbar.`); }).catch(err => addMsg('assistant', `Failed to unpin: ${err.message}`)); },
+  };
+  for (const id of ['tab-bar', 'chrome', 'bookmarks-bar']) {
+    const host = document.getElementById(id); if (!host) continue;
+    host.addEventListener('contextmenu', (e) => {
+      e.preventDefault(); e.stopPropagation(); hideCtxMenu();
+      ctxPinTarget = _findPinnedCommandAt(e.target); ctxIsChrome = true; ctxLinkURL = null; ctxPageXY = null; ctxParams = {};
+      if (window.CGCtxMenu && window.CGCtxMenu.openChrome) window.CGCtxMenu.openChrome({ x: e.clientX, y: e.clientY, target: e.target, acts: CHROME_ACTS });
+      else { renderPluginCtxItems([]); showCtxMenu(e.clientX, e.clientY, { chrome: true }); }
+    });
+  }
 
   // §0.60.169 NP11 — rows plugins contribute to the menu. Built with textContent (a plugin's label is data, never HTML).
   function renderPluginCtxItems(items) {
@@ -3325,6 +3316,10 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     }
   }
 
+  // BS19 (0.60.185) — the page's own right-click point, sent by the webview's preload just before Electron's context-menu event
+  let ctxPagePoint = null;
+  wv.addEventListener('ipc-message', (e) => { if (e.channel === 'cg:ctx-point' && e.args && e.args[0]) ctxPagePoint = { ...e.args[0], at: Date.now() }; });
+  const _freshPagePoint = () => (ctxPagePoint && Date.now() - ctxPagePoint.at < 1000 ? ctxPagePoint : null);
   wv.addEventListener('context-menu', async (e) => {
     e.preventDefault();
     ctxPinTarget = null; // page content is never a pinned toolbar command
@@ -3351,8 +3346,13 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     ctxParams = p;
     ctxPageXY = { x: p.x, y: p.y };
     ctxLinkURL = /^https?:\/\//i.test(p.linkURL || '') ? p.linkURL : null;
-    renderPluginCtxItems(await cg.plugins.contextItems(ctxLinkURL ? 'link' : 'page').catch(() => []));
-    showCtxMenu(r.left + p.x, r.top + p.y);
+    // BS19 (0.60.185): Snowflake (and any plugin) rows for a page and, on a link, for the link too
+    const _items = await cg.plugins.contextItems(ctxLinkURL ? 'link' : 'page').catch(() => []);
+    renderPluginCtxItems(Array.isArray(_items) ? _items : []);
+    if (!_freshPagePoint()) await new Promise(res => setTimeout(res, 60));   // the preload's point may land a moment after the event
+    const pp = _freshPagePoint(); ctxPagePoint = null;
+    const page = pp && window.CGCtxMenu ? window.CGCtxMenu.pagePoint(wv.getBoundingClientRect(), pp, _zoomFactor) : null;
+    showCtxMenu(r.left + p.x, r.top + p.y, { page });
   });
 
   ctxMenu.addEventListener('click', async (e) => {
@@ -3601,6 +3601,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     siteSettings: () => _openPanelFromMenu('site-settings-panel', _renderSiteSettingsPanel),
     bgTabs: () => _openPanelFromMenu('bgtabs-panel', _renderBgTabsPanel),
     library: (area) => _openLibrary(area), customize: () => _openToolbarEditor(),
+    bookmarksBar: (mode) => { if (mode) setBookmarksBar(mode); return _barMode; },   // BS18 (0.60.185)
   };
 
   // BS11 (0.60.180) — the mic's three states as drawn icons (the composer hides text glyphs)

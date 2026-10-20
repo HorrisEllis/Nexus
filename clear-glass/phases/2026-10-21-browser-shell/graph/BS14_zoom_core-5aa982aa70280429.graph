@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500831216
+exported_at: 1792502099144
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831216
-lastSeenAt: 1792500831216
+firstSeenAt: 1792502099144
+lastSeenAt: 1792502099144
 fingerprint: null
 payload:
   for: BS14_zoom_core
@@ -152,7 +152,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2527b07c5dc17a5a
     layer: 1
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
@@ -165,6 +165,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 1
+      - DAG 2527b07c5dc17a5a · layer 1
       - 'depends on (1): BS2_shell_rebuild'
       - 'needed by (0): —'

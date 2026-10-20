@@ -140,8 +140,10 @@ async function main() {
   // ── browser.js: ☰ and the key go to the window; the old dropdown is gone ──
   const BROWSER = fs.readFileSync(path.join(R, 'browser.js'), 'utf8');
   const BHTML = fs.readFileSync(path.join(R, 'browser.html'), 'utf8');
-  check('the ☰ menu still has a Library row', /<div class="menu-item" data-action="library">📚 Library<\/div>/.test(BROWSER));
-  check('…Library opens the window; Downloads opens it at Downloads', /data-action="library"\]'\)\.addEventListener\('click'[\s\S]{0,120}_openLibrary\(\)/.test(BROWSER) && /data-action="downloads"\]'\)\.addEventListener\('click'[\s\S]{0,120}_openLibrary\('downloads'\)/.test(BROWSER));
+  // 0.60.185 (BS17): the ☰ rows are one model in renderer/shell/menus.js; BST-17 clicks each in Clear Glass. The contract is unchanged.
+  const MENUS = fs.readFileSync(path.join(ROOT, 'clear-glass', 'renderer', 'shell', 'menus.js'), 'utf8');
+  check('the ☰ menu still has a Library row', /\{ label: 'Library', icon: 'folder', run: 'library', da: 'library' \}/.test(MENUS) && /appMenuHTML\('mid'\)/.test(BROWSER));
+  check('…Library opens the window; Downloads opens it at Downloads', /label: 'Downloads'[^}]*run: 'library', arg: 'downloads'/.test(MENUS) && /library: \(area\) => _openLibrary\(area\)/.test(BROWSER));
   check('…a failure to open is shown, not swallowed', /Could not open the Library: \$\{err\.message\}/.test(BROWSER));
   // 0.60.179 (BS5) — the rule kept is "one download store, one Library": the old dropdown stays gone, and the Firefox-style ⬇ panel
   // (renderer/shell/downloads.js) reads the same store (cg.downloads.list) and sends "Show all downloads" to the Library.

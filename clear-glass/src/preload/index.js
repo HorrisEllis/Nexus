@@ -199,6 +199,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   // ── Accounts (real, per-agentKey identity — §PHASE-3 2026-08-23) ──────
   accounts: {
     list:        ()                    => ipcRenderer.invoke('accounts:list'),
+    forSite: (url, current) => ipcRenderer.invoke('accounts:forSite', { url, current }),   // BS20 (0.60.185) — the accounts signed in to a site
     get:         (id)                  => ipcRenderer.invoke('accounts:get', { id }),
     create:      (payload)             => ipcRenderer.invoke('accounts:create', payload),
     update:      (id, updates)         => ipcRenderer.invoke('accounts:update', { id, updates }),

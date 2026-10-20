@@ -725,3 +725,8 @@ spec:
 #   origin rules via transport, tagged list:<name>, added through policy.addRule (collisions kept, named). NetService gains addRoutes/removeRoutes.
 # - Plugin pages gain field kinds import and add (browser-shell.spec MOD-BSH-PLUGIN-FIELDS); the picker runs in main (plugins:pick).
 # - The adblocker and Snowflake manifests now say hostFs: true — they read files a person chose.
+
+# ═══ ADDENDUM 2026-10-21 (0.60.185) — one ☰ menu; Firefox's menus for the UI; the page's own right-click point; bookmarks by the site's account ═══
+# James: "remove the bookmarks from the menuconsolidate the menu ... context menu for the clearglass ui like the last 2 images ... the right clikc
+# on dom is still not accuraate. still missing snowflake". Supersedes, keeping (§0.3): 0.60.183's cursor-first menu point (now the fallback);
+# the ☰ bookmarks list (now the Library); the toolbar's right-click on #ctx-menu (now its own menu). Detail: browser-shell.spec BS17–BS20.

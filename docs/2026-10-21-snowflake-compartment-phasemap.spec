@@ -140,3 +140,17 @@ folder of them) = the sites that always go through Snowflake, as origin rules in
     blocks: [MOD-SF-HOST-IMPORT]
     does: "hostsOf + importHosts (origin rules via transport, tagged by list, collisions skipped and named); the Snowflake plugin's page; /cli/net/routes/import and /lists; net import (person-only); Settings → Network Import host list…"
     proof: test-snowflake SFW-11
+
+## Addendum 2026-10-21 (0.60.185): Reinstall while tor is running
+
+His screenshot: "Reinstall / update" → EPERM on the bundle folder, the transport stuck at "Connecting… 0%".
+
+  SF9_install_in_use:
+    layer: library
+    status: DONE 0.60.185
+    depends_on: [SF7_bridge_automatic]
+    files: [clear-glass/src/net/installer.js]
+    spec: clear-glass/spec/snowflake.spec
+    blocks: [MOD-SF-INSTALL-IN-USE]
+    does: "A bundle folder in use is left in place; the new install goes beside it and the record points there; the old is pruned when free."
+    proof: test-snowflake SFW-12

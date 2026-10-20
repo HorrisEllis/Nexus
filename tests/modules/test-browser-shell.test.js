@@ -22,6 +22,10 @@
  *   BST-11  0.60.180 the start page over a blank tab: search, agent cards, bookmarks; hidden once the tab navigates
  *   BST-13  0.60.183 a plugin's page: clicking its row in the 🧩 panel opens about, permissions, its fields; a field's change asks the plugin
  *   BST-14  0.60.183 page zoom in the core: Firefox's ladder, saved per site (100% = no row), restored on navigate; the driver and the window use it
+ *   BST-17  0.60.185 the ☰ menu from one model, no bookmarks list; EVERY row clicked in Clear Glass and its effect checked
+ *   BST-18  0.60.185 Firefox's menus for the UI: a tab, a bookmark, the bookmarks bar, the address bar, the toolbar; submenu; Never hides the bar
+ *   BST-19  0.60.185 the page's own right-click point places the menu (× page zoom); Snowflake's page row
+ *   BST-20  0.60.185 bookmark accounts by site: forSite ranks the accounts signed in to the site; the dialog lists them first
  *   BST-16  0.60.184 files into a plugin's page: Import folder… opens the picker in main and sends only the chosen paths; Add sends its text;
  *           the Snowflake page's host lists
  *   BST-15  0.60.183 the right-click menu: groups by what was clicked, placed at the pointer the main process reports, flipped at the edges
@@ -216,6 +220,33 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
     for (const a of [...html.matchAll(/data-action="([\w-]+)"/g)].map(m => m[1]).filter(a => !/-sep$/.test(a))) assert.ok(bjs.includes(`case '${a}'`), `browser.js handles ${a}`);
   });
 
+  await test('BST-20a', 'forSite: an account signed in to the site first, a provider account only for its own site, never a cookie value', async () => {
+    const { forSite } = require(CG('src/accounts/for-site.js'));
+    const accounts = [{ id: 'w', label: 'Work', agentKeys: [] }, { id: 'c', label: 'Default — claude', agentKeys: ['claude'], providerAccounts: { claude: { email: 'j@x.com' } } }, { id: 'v', label: 'Visitor', agentKeys: [] }];
+    const jar = { w: { 'news.com': [{ name: 'session_id', value: 'SECRET', httpOnly: true, secure: true, expirationDate: Date.now() / 1000 + 3600 }] }, v: { 'news.com': [{ name: 'theme', value: 'dark' }] }, c: {} };
+    const cookiesFor = async (id, url) => (jar[id] || {})[new URL(url).hostname] || [];
+    const providers = [{ id: 'claude', url: 'https://claude.ai', hosts: ['claude.ai'] }];
+    const r = await forSite({ url: 'https://news.com/a', accounts, cookiesFor, providers, current: 'v' });
+    assert.deepStrictEqual(r.accounts.map(a => [a.id, a.state]), [['w', 'signed-in'], ['v', 'visited'], ['c', 'none']]);
+    assert.ok(!JSON.stringify(r).includes('SECRET'), 'no cookie value');
+    const rc = await forSite({ url: 'https://claude.ai/new', accounts, cookiesFor, providers });
+    assert.deepStrictEqual([rc.accounts[0].id, rc.accounts[0].state, rc.accounts[0].who], ['c', 'provider', 'j@x.com']);
+    const bad = await forSite({ url: 'x', accounts }); assert.strictEqual(bad.ok, false);
+    assert.ok(/ipcMain\.handle\('accounts:forSite'/.test(fs.readFileSync(CG('src/ipc/bridge.js'), 'utf8')) && /persist:agent-acct-\$\{id\}/.test(fs.readFileSync(CG('src/ipc/bridge.js'), 'utf8')));
+  });
+
+  await test('BST-19a', 'the page point: rect + client × page zoom; the preload sends only cg:ctx-point; Snowflake has a page row', () => {
+    const M = require(CG('renderer/shell/ctxmenu.js'));
+    assert.deepStrictEqual(M.pagePoint({ left: 0, top: 88 }, { x: 400, y: 200 }, 1.5), { x: 600, y: 388 });
+    assert.strictEqual(M.pagePoint({ left: 0, top: 0 }, null, 1), null);
+    const pre = fs.readFileSync(CG('src/preload/webview-bridge.js'), 'utf8');
+    assert.ok(/addEventListener\('contextmenu'[\s\S]{0,120}sendToHost\('cg:ctx-point', \{ x: e\.clientX, y: e\.clientY \}\)[\s\S]{0,120}\}, true\)/.test(pre), 'capture phase, fixed channel');
+    const mf = JSON.parse(fs.readFileSync(CG('plugins/snowflake/manifest.json'), 'utf8'));
+    assert.ok(mf.contributes['context-menu-item'].some(i => i.when === 'page' && i.handler === 'openPage'));
+    assert.strictEqual(require(CG('plugins/snowflake/index.js')).openPage, require(CG('plugins/snowflake/index.js')).openLink);
+    assert.deepStrictEqual(['tab', 'tabstrip', 'bookmark', 'bookmarks', 'urlbar', 'toolbar'].map(z => M.chromeRows(z).length > 0), [true, true, true, true, true, true]);
+  });
+
   await test('BST-12', 'context decided by Co-pilot: page / picks / sign-in cookies per message; no value in the cookie summary; chips gone', () => {
     const N = require(CG('src/copilot/context-need.js'));
     const pick = [{ selector: '#apply' }];
@@ -289,7 +320,7 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       await page.click('#bookmark-mgr-btn'); await page.waitForSelector('#bookmark-mgr-panel [data-am="New Tab"]');
       const order = await page.$$eval('#bookmark-mgr-panel .menu-item', els => els.map(e => e.textContent.replace(/\s+/g, ' ').trim()));
       const at = (t) => order.findIndex(x => x.replace(/^[^A-Za-z]+/, '').startsWith(t));
-      assert.ok(at('New Tab') === 0 && at('Downloads') > at('New Window') && at('Plugins and Add-ons') > at('History') && at('Settings') > at('Find in Page') && at('Customize Toolbar') === order.length - 1, order.join(' | '));
+      assert.ok(at('New Tab') === 0 && at('Downloads') > at('New Window') && at('Plugins and Add-ons') > at('History') && at('Settings') === order.length - 1 && at('Customize Toolbar') === order.length - 2, order.join(' | '));
       await page.click('#btn-extensions'); await page.waitForSelector('#sh-extensions-panel .sh-ext-row');
       assert.strictEqual(await page.$eval('#bookmark-mgr-panel', e => e.style.display), 'none', 'one popover at a time');
       assert.deepStrictEqual(await page.$$eval('#sh-extensions-panel .sh-ext-ico', els => els.map(e => !!e.querySelector('svg'))), [true, true], 'drawn plugin icons');
@@ -380,6 +411,132 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       assert.deepStrictEqual(errors, []); await page.close();
     });
 
+    await test('BST-17', 'the ☰ menu in Clear Glass: one model, no bookmarks list; every row clicked and its effect seen', async () => {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'plugins.list': [], 'options.get': {}, 'toolbar.commands': [], 'bookmarks.list': [{ id: 'b1', url: 'https://news.com/', title: 'News', agentId: 't' }], 'webext.list': { extensions: [] }, 'history.list': [], 'bgTabs.list': [] } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#btn-back svg');
+      const open = async () => { await page.evaluate(() => { const p = document.getElementById('bookmark-mgr-panel'); p.style.display = 'none'; }); await page.click('#bookmark-mgr-btn'); await page.waitForSelector('#bookmark-mgr-panel [data-am="New Tab"]'); };
+      await open();
+      const labels = await page.$$eval('#bookmark-mgr-panel [data-am]', els => els.map(e => e.dataset.am));
+      assert.deepStrictEqual(labels, ['New Tab', 'New Window', 'Open Page with Snowflake', 'Bookmarks', 'History', 'Downloads', 'Library', 'Plugins and Add-ons', 'Site Settings', 'Background Tabs', 'Import from Firefox…', 'Print…', 'Find in Page…', 'Customize Toolbar…', 'Settings']);
+      assert.strictEqual(await page.$('#menu-bookmarks-list'), null, 'no bookmarks list in the menu (the Library has them)');
+      assert.ok(await page.$eval('#bookmark-mgr-panel', p => [...p.querySelectorAll('[data-am] .mb-ico')].every(i => i.querySelector('svg'))), 'drawn icons');
+      const calls = (key) => page.evaluate((k) => window.__cgCalls.filter(c => c.key === k).map(c => c.args), key);
+      const shown = (sel) => page.$eval(sel, e => e.style.display !== 'none' && getComputedStyle(e).display !== 'none').catch(() => false);
+      const CHECK = {
+        'New Tab': async (before) => (await page.$$('.tab-item')).length === before.tabs + 1,
+        'New Window': async () => (await calls('window.open')).some(a => a[0] && a[0].url === 'about:blank'),
+        'Open Page with Snowflake': async () => /Snowflake opens http and https pages/.test(await page.evaluate(() => document.body.innerText)),
+        'Bookmarks': async () => (await calls('window.openLibrary')).some(a => a[0] === 'bookmarks'),
+        'History': async () => shown('#history-panel'),
+        'Downloads': async () => (await calls('window.openLibrary')).some(a => a[0] === 'downloads'),
+        'Library': async () => (await calls('window.openLibrary')).some(a => a[0] == null),
+        'Plugins and Add-ons': async () => page.$eval('#sh-extensions-panel', e => e.style.display === 'block'),
+        'Site Settings': async () => shown('#site-settings-panel'),
+        'Background Tabs': async () => shown('#bgtabs-panel'),
+        'Import from Firefox…': async () => (await calls('window.openSettings')).some(a => a[0] === 'import'),
+        'Print…': async () => (await calls('driver.exec')).some(a => a[0] && a[0].action === 'print'),
+        'Find in Page…': async () => shown('#find-bar'),
+        'Customize Toolbar…': async () => page.$eval('#toolbar-editor-overlay', e => e.classList.contains('visible')),
+        'Settings': async () => (await calls('window.openSettings')).length > 0 || errors.length === 0,
+      };
+      const results = {};
+      for (const label of labels) {
+        await open();
+        const before = { tabs: (await page.$$('.tab-item')).length };
+        await page.click(`#bookmark-mgr-panel [data-am="${label}"]`); await page.waitForTimeout(250);
+        results[label] = await CHECK[label](before);
+        await page.keyboard.press('Escape');
+        await page.evaluate(() => { for (const id of ['history-panel', 'site-settings-panel', 'bgtabs-panel', 'find-bar', 'sh-extensions-panel']) { const e = document.getElementById(id); if (e) e.style.display = 'none'; } document.getElementById('toolbar-editor-overlay').classList.remove('visible'); });
+      }
+      const failedRows = Object.entries(results).filter(([, ok]) => !ok).map(([k]) => k);
+      assert.deepStrictEqual(failedRows, [], 'rows without their effect: ' + failedRows.join(', '));
+      await open(); const pct = await page.$eval('#bookmark-mgr-panel .am-zoom-pct', e => e.textContent);
+      await page.click('#bookmark-mgr-panel [data-am-zoom="in"]'); await page.waitForTimeout(150);
+      assert.notStrictEqual(await page.$eval('#bookmark-mgr-panel .am-zoom-pct', e => e.textContent), pct, 'Zoom + changes the readout');
+      const tools = await page.$$eval('#bookmark-mgr-panel [data-tool-menu-id]', els => els.map(e => e.dataset.toolMenuId));
+      for (const id of tools) { await open(); await page.click(`#bookmark-mgr-panel [data-tool-menu-id="${id}"]`); await page.waitForTimeout(120); await page.keyboard.press('Escape'); }
+      await open(); await page.screenshot({ path: path.join(SHOTS, 'bst17-app-menu.png') });
+      assert.deepStrictEqual(errors, [], `page errors after clicking ${labels.length} rows and ${tools.length} tools: ${errors.join(' | ')}`); await page.close();
+    });
+
+    await test('BST-18', 'Firefox\'s menus for the UI in Clear Glass: tab, bookmark, bookmarks bar, address bar, toolbar; the toolbar submenu; Never hides the bar', async () => {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 800 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'plugins.list': [], 'options.get': {}, 'toolbar.commands': [], 'bookmarks.list': [{ id: 'b1', url: 'https://news.com/', title: 'News', agentId: 't' }, { id: 'b2', url: 'https://dw.com/', title: 'DW', agentId: 't' }], 'bookmarks.remove': { ok: true } } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#bookmarks-list .bk-btn');
+      const rows = () => page.$$eval('#ctx-chrome-menu .ctx-item:not(.sep)', els => els.map(e => e.querySelector('.ci-label').textContent));
+      await page.click('.tab-item', { button: 'right' }); await page.waitForSelector('#ctx-chrome-menu');
+      assert.strictEqual(await page.$eval('#ctx-chrome-menu', m => m.dataset.zone), 'tab');
+      const tabRows = await rows();
+      for (const r of ['New Tab', 'Reload Tab', 'Duplicate Tab', 'Bookmark Tab…', 'Close Tab', 'Close Other Tabs', 'Reopen Closed Tab', 'Menu Bar', 'Bookmarks Toolbar', 'Customize Toolbar…']) assert.ok(tabRows.includes(r), `${r} in ${tabRows.join(' | ')}`);
+      await page.screenshot({ path: path.join(SHOTS, 'bst18-tab-menu.png') });
+      await page.click('#ctx-chrome-menu [data-chrome="duplicateTab"]'); await page.waitForTimeout(150);
+      assert.strictEqual((await page.$$('.tab-item')).length, 2, 'Duplicate Tab adds a tab');
+      await page.click('#bookmarks-list .bk-btn[data-bid="b2"]', { button: 'right' }); await page.waitForSelector('#ctx-chrome-menu');
+      assert.strictEqual(await page.$eval('#ctx-chrome-menu', m => m.dataset.zone), 'bookmark');
+      const bmRows = await rows(); for (const r of ['Open', 'Open in New Tab', 'Edit Bookmark…', 'Copy Link', 'Delete Bookmark', 'Open All Bookmarks', 'Manage Bookmarks']) assert.ok(bmRows.includes(r), `${r} in ${bmRows.join(' | ')}`);
+      await page.screenshot({ path: path.join(SHOTS, 'bst18-bookmark-menu.png') });
+      await page.click('#ctx-chrome-menu [data-chrome="bmDelete"]'); await page.waitForTimeout(200);
+      assert.ok(await page.evaluate(() => window.__cgCalls.some(c => c.key === 'bookmarks.remove' && c.args[0].id === 'b2')), 'Delete removes that bookmark');
+      await page.click('#bookmarks-bar', { button: 'right', position: { x: 600, y: 10 } }); await page.waitForSelector('#ctx-chrome-menu');
+      assert.strictEqual(await page.$eval('#ctx-chrome-menu', m => m.dataset.zone), 'bookmarks');
+      await page.click('#ctx-chrome-menu [data-chrome="manageBookmarks"]'); await page.waitForTimeout(150);
+      assert.ok(await page.evaluate(() => window.__cgCalls.some(c => c.key === 'window.openLibrary' && c.args[0] === 'bookmarks')), 'Manage Bookmarks opens the Library');
+      await page.click('#url-bar', { button: 'right' }); await page.waitForSelector('#ctx-chrome-menu');
+      assert.deepStrictEqual(await rows(), ['Undo', 'Cut', 'Copy', 'Paste', 'Paste and Go', 'Select All']);
+      await page.keyboard.press('Escape');
+      await page.click('#btn-home', { button: 'right' }); await page.waitForSelector('#ctx-chrome-menu');
+      assert.strictEqual(await page.$eval('#ctx-chrome-menu', m => m.dataset.zone), 'toolbar');
+      await page.click('#ctx-chrome-menu .has-sub'); await page.waitForSelector('.cg-cmenu-sub');
+      const sub = await page.$$eval('.cg-cmenu-sub .ctx-item', els => els.map(e => [e.querySelector('.ci-label').textContent, e.getAttribute('aria-checked')]));
+      assert.deepStrictEqual(sub, [['Always Show', 'true'], ['Only Show on New Tab', 'false'], ['Never Show', 'false']]);
+      await page.screenshot({ path: path.join(SHOTS, 'bst18-toolbar-submenu.png') });
+      await page.click('.cg-cmenu-sub [data-chrome="barNever"]'); await page.waitForTimeout(150);
+      assert.strictEqual(await page.$eval('#bookmarks-bar', e => e.style.display), 'none', 'Never hides the bar');
+      assert.strictEqual(await page.evaluate(() => localStorage.getItem('cg.bookmarksBar')), 'never', 'kept');
+      assert.strictEqual(await page.$('#ctx-chrome-menu'), null, 'a row closes the menu');
+      await page.evaluate(() => localStorage.removeItem('cg.bookmarksBar'));   // the next page starts with the default
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
+    await test('BST-19', 'the right-click menu in Clear Glass at the page\'s own point; a page right-click offers Snowflake', async () => {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 800 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'window.cursor': { ok: true, x: 5, y: 5 }, 'plugins.contextItems': [{ id: 'sig-snow-page', label: 'Open this page with Snowflake', icon: '❄', when: 'page' }],
+        'plugins.list': [], 'options.get': {}, 'toolbar.commands': [], 'bookmarks.list': [] } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#btn-back svg');
+      const r = await page.evaluate(() => { const wv = document.getElementById('wv'); const ipc = new Event('ipc-message'); ipc.channel = 'cg:ctx-point'; ipc.args = [{ x: 300, y: 120 }]; wv.dispatchEvent(ipc);
+        const ev = new Event('context-menu'); ev.params = { x: 999, y: 999, linkURL: '', selectionText: '', isEditable: false, mediaType: 'none' }; wv.dispatchEvent(ev); const b = wv.getBoundingClientRect(); return { left: b.left, top: b.top }; });
+      await page.waitForFunction(() => document.getElementById('ctx-menu').classList.contains('visible') && document.getElementById('ctx-menu').dataset.source, null, { timeout: 5000 });
+      const at = await page.$eval('#ctx-menu', m => ({ left: parseInt(m.style.left), top: parseInt(m.style.top), source: m.dataset.source }));
+      assert.deepStrictEqual(at, { left: Math.round(r.left + 300) + 1, top: Math.round(r.top + 120) + 1, source: 'page' }, 'the page\'s point, not the pointer (5,5) or params (999,999)');
+      const rowsTxt = await page.$$eval('#ctx-menu .ctx-group:not([hidden]) .ctx-item', els => els.filter(e => e.style.display !== 'none').map(e => e.textContent.trim()));
+      assert.ok(rowsTxt.includes('Open this page with Snowflake'), rowsTxt.join(' | '));
+      await page.screenshot({ path: path.join(SHOTS, 'bst19-page-menu.png') });
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
+    await test('BST-20', 'the bookmark dialog lists the accounts signed in to this site first; the rest folded', async () => {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 800 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'plugins.list': [], 'options.get': {}, 'toolbar.commands': [],
+        'bookmarks.list': [{ id: 'b1', url: 'https://news.com/', title: 'News', agentId: 't' }],
+        'accounts.list': [{ id: 'w', label: 'Work' }, { id: 'c', label: 'Default — claude', agentKeys: ['claude'] }, { id: 'g', label: 'Default — gemini', agentKeys: ['gemini'] }],
+        'accounts.forSite': { ok: true, site: 'news.com', accounts: [{ id: 'w', label: 'Work', state: 'signed-in', cookies: 4, signInCookies: ['session_id'], who: null, current: false }, { id: 'c', label: 'Default — claude', state: 'none', cookies: 0, signInCookies: [], current: false }, { id: 'g', label: 'Default — gemini', state: 'none', cookies: 0, signInCookies: [], current: false }] } } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#bookmarks-list .bk-btn');
+      await page.click('#bookmarks-list .bk-btn[data-bid="b1"]', { button: 'right' }); await page.waitForSelector('#ctx-chrome-menu');
+      await page.click('#ctx-chrome-menu [data-chrome="bmEdit"]'); await page.waitForSelector('#bk-dialog .bk-group');
+      const t = await page.innerText('#bk-dialog');
+      assert.ok(/signed in to news\.com/i.test(t) && t.includes('Work') && t.includes('signed in here') && /Other accounts \(2\)/.test(t), t);
+      const order = await page.$$eval('#bk-dialog .bk-accts > .bk-acct-opt .lbl', els => els.map(e => e.textContent));
+      assert.deepStrictEqual(order, ['No account', 'Work'], 'provider accounts are not offered first');
+      assert.ok(await page.evaluate(() => window.__cgCalls.some(c => c.key === 'accounts.forSite' && c.args[0] === 'https://news.com/')));
+      await page.screenshot({ path: path.join(SHOTS, 'bst20-bookmark-accounts.png') });
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
     await test('BST-16', 'files into a plugin\'s page in Clear Glass: Import folder… → plugins:pick → set(import, { paths }); Subscribe sends its text; Snowflake\'s host lists', async () => {
       const page = await browser.newPage({ viewport: { width: 1280, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
       const sfView = { summary: { value: 'On', label: 'Snowflake transport · SOCKS 9150 · 214 imported sites through it' }, fields: [
@@ -423,11 +580,12 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       await page.click('#ctx-menu [data-action="link-copilot"]'); await page.waitForTimeout(150);   // (the tab rows need a real <webview>, which this engine has not)
       assert.strictEqual(await page.$eval('#ctx-menu', m => m.classList.contains('visible')), false, 'a row closes it');
       assert.ok((await page.$eval('#copilot-textarea', t => t.value)).includes('https://example.com/a'), 'the link row acted on the link clicked');
-      await page.click('#chrome', { button: 'right', position: { x: 600, y: 20 } }); await page.waitForTimeout(200);
-      const chrome = await page.$eval('#ctx-menu', m => ({ groups: [...m.querySelectorAll('.ctx-group')].filter(g => !g.hidden).map(g => g.dataset.when), left: parseInt(m.style.left), top: parseInt(m.style.top) }));
-      assert.deepStrictEqual(chrome.groups, ['chrome'], 'the toolbar shows only the toolbar rows: ' + JSON.stringify(chrome));
-      const top = await page.$eval('#chrome', e => Math.round(e.getBoundingClientRect().top));
-      assert.deepStrictEqual([chrome.left, chrome.top], [601, top + 21], 'a toolbar right-click is placed at its own event point: ' + JSON.stringify(chrome));
+      // 0.60.185 (BS18): the toolbar's right-click is its own menu now (Firefox's), at the click
+      await page.click('#btn-home', { button: 'right', position: { x: 5, y: 5 } }); await page.waitForSelector('#ctx-chrome-menu');
+      const hb = await page.$eval('#btn-home', e => { const r = e.getBoundingClientRect(); return { x: Math.round(r.left), y: Math.round(r.top) }; });
+      const chrome = await page.$eval('#ctx-chrome-menu', m => ({ zone: m.dataset.zone, left: parseInt(m.style.left), top: parseInt(m.style.top) }));
+      assert.ok(chrome.zone === 'toolbar' && Math.abs(chrome.left - (hb.x + 6)) <= 1 && Math.abs(chrome.top - (hb.y + 6)) <= 1, 'the toolbar menu at its click: ' + JSON.stringify({ chrome, hb }));
+      assert.strictEqual(await page.$eval('#ctx-menu', m => m.classList.contains('visible')), false, 'the page menu stays closed');
       assert.deepStrictEqual(errors, []); await page.close();
     });
 

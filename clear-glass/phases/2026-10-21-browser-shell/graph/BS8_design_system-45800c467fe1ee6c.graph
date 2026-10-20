@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500831211
+exported_at: 1792502099139
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831211
-lastSeenAt: 1792500831211
+firstSeenAt: 1792502099139
+lastSeenAt: 1792502099139
 fingerprint: null
 payload:
   for: BS8_design_system
@@ -35,7 +35,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2527b07c5dc17a5a
     layer: 1
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
@@ -50,6 +50,8 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
       - docs/2026-10-21-browser-shell-phasemap.spec::BS12_context_automatic
       - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS18_chrome_context_menus
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS19_ctx_point_from_page
       - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
     blockedBy: []
     unlocks:
@@ -59,8 +61,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 1
+      - DAG 2527b07c5dc17a5a · layer 1
       - 'depends on (1): BS2_shell_rebuild'
       - >-
-        needed by (3): BS9_agents_hub, BS11_copilot_pane, BS15_context_menu · all downstream 5 ·
+        needed by (3): BS9_agents_hub, BS11_copilot_pane, BS15_context_menu · all downstream 7 ·
         finishing it unlocks BS9_agents_hub, BS11_copilot_pane, BS15_context_menu

@@ -48,3 +48,10 @@ contextBridge.exposeInMainWorld('__cg', {
     ipcRenderer.sendToHost(channel, data);
   },
 });
+
+// BS19 (0.60.185) — James: "the right clikc on dom is still not accuraate". The page says where it was right-clicked, in its own CSS pixels;
+// the window adds the webview's place and the page zoom (CSS on both sides, so no OS display scaling enters). Capture phase, so a page that
+// stops the event's propagation still reports it. Only this one fixed channel; the page cannot choose what is sent.
+window.addEventListener('contextmenu', (e) => {
+  try { ipcRenderer.sendToHost('cg:ctx-point', { x: e.clientX, y: e.clientY }); } catch (_) { /* the host falls back to the pointer */ }
+}, true);

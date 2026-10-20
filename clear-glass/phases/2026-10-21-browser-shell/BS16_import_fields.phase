@@ -7,11 +7,11 @@ intent: null
 summary: BS16_import_fields (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792500831218
+exported_at: 1792502099146
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831218
-lastSeenAt: 1792500831218
+firstSeenAt: 1792502099146
+lastSeenAt: 1792502099146
 fingerprint: null
 payload:
   id: BS16_import_fields

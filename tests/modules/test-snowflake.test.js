@@ -173,6 +173,21 @@ console.log('\ntest-snowflake — Snowflake end to end: detect, bridge lines, th
     assert.ok(tool.parameters.properties.action.enum.includes('check'));
   });
 
+  await test('SFW-12', 'Reinstall while tor is running: a folder that cannot be removed is left; the new install goes beside it; other errors still throw', () => {
+    const { TorInstaller } = require(CG('src/net/installer.js'));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sfw-inst-')); const final = path.join(dir, 'tor-expert-bundle-15.0.25-windows-x86_64');
+    fs.mkdirSync(final); fs.writeFileSync(path.join(final, 'tor.exe'), 'running');
+    const mk = () => { const t = path.join(dir, `.extract-${Math.random()}`); fs.mkdirSync(t); fs.writeFileSync(path.join(t, 'tor.exe'), 'new'); return t; };
+    const locked = { ...fs, rmSync: (p, o) => { if (p === final) { const e = new Error(`EPERM, Permission denied: ${p}`); e.code = 'EPERM'; throw e; } return fs.rmSync(p, o); } };
+    const inst = new TorInstaller({ fs: locked, dir, now: () => 1700000000000 });
+    const used = inst._place(mk(), final);
+    assert.strictEqual(used, `${final}-1700000000000`); assert.strictEqual(fs.readFileSync(path.join(used, 'tor.exe'), 'utf8'), 'new');
+    assert.strictEqual(fs.readFileSync(path.join(final, 'tor.exe'), 'utf8'), 'running', 'the running one is untouched');
+    const free = new TorInstaller({ fs, dir, now: () => 1 }); assert.strictEqual(free._place(mk(), final), final, 'a free folder is replaced in place');
+    const odd = new TorInstaller({ fs: { ...fs, rmSync: () => { const e = new Error('disk gone'); e.code = 'EIO'; throw e; } }, dir, now: () => 2 });
+    assert.throws(() => odd._place(mk(), final), /disk gone/);
+  });
+
   await test('SFW-11', 'host lists through Snowflake: read from files and folders; one origin rule each, tagged; collisions kept; listed and removed as one; the plugin page', async () => {
     const HI = require(CG('src/net/host-import.js'));
     assert.deepStrictEqual(HI.hostsOf('# c\n0.0.0.0 a.com\n127.0.0.1 localhost\nb.org # x\n||c.net^\nhttps://d.io/p\n1.2.3.4\nnot a host\na.com\n*.e.com'), ['a.com', 'b.org', 'c.net', 'd.io', 'e.com']);

@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500831213
+exported_at: 1792502099141
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831213
-lastSeenAt: 1792500831213
+firstSeenAt: 1792502099141
+lastSeenAt: 1792502099141
 fingerprint: null
 payload:
   for: BS11_copilot_pane
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2527b07c5dc17a5a
     layer: 2
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
@@ -44,6 +44,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 2
+      - DAG 2527b07c5dc17a5a · layer 2
       - 'depends on (1): BS8_design_system · all upstream 2'
       - 'needed by (1): BS12_context_automatic · finishing it unlocks BS12_context_automatic'

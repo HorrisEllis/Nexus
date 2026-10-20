@@ -238,3 +238,51 @@ scaled; the 0.39.265 clamp could not fix that. Reading, to confirm: "click on th
     blocks: [MOD-BSH-PLUGIN-FIELDS]
     does: "Field kinds import (system picker in main via plugins:pick, paths to the plugin) and add (text + button)."
     proof: test-browser-shell BST-16
+
+
+## Addendum 2026-10-21 (0.60.185): one ☰ menu, Firefox's menus for the UI, the page's own point, bookmarks by the site's account
+
+James, 2026-10-21: "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers. and remove the bookmarks from the menuconsolidate the menu, use playwright to test each ui feature in the menu. use the library for the bookmarks, context menu for the clearglass ui like the last 2 images, but matching the them eand dynamic to the click  v. the right clikc on dom is still not accuraate. still missing snowflake from tghe ocntext menu"
+With five screenshots: the ☰ menu (its bookmarks list), Settings → Network (EPERM on Reinstall), the bookmark dialog listing provider
+accounts, and Firefox's bookmarks-toolbar and tab-strip menus. Readings, to confirm: "use playwright" is run in Clear Glass (his rule,
+AXIOMS §4.1); "the account being used for the relative site" is the accounts signed in to that site (BS20).
+
+  BS17_menu_consolidated:
+    layer: surface
+    status: DONE 0.60.185
+    depends_on: [BS3_menus]
+    files: [clear-glass/renderer/shell/menus.js, clear-glass/renderer/browser.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-APPMENU]
+    does: "The ☰ menu from one model with drawn icons; the bookmarks list gone (Bookmarks opens the Library); each row clicked in Clear Glass."
+    proof: test-browser-shell BST-17
+
+  BS18_chrome_context_menus:
+    layer: surface
+    status: DONE 0.60.185
+    depends_on: [BS15_context_menu, BS17_menu_consolidated]
+    files: [clear-glass/renderer/shell/ctxmenu.js, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html, clear-glass/renderer/shell/shell.css]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-CHROME-CTX]
+    does: "Menus for a tab, the tab strip, a bookmark, the bookmarks bar, the address bar and the toolbar, with submenus; the bookmarks toolbar's Always / New Tab / Never kept."
+    proof: test-browser-shell BST-18
+
+  BS19_ctx_point_from_page:
+    layer: integration
+    status: DONE 0.60.185
+    depends_on: [BS15_context_menu]
+    files: [clear-glass/src/preload/webview-bridge.js, clear-glass/renderer/browser.js, clear-glass/renderer/shell/ctxmenu.js, clear-glass/plugins/snowflake/index.js, clear-glass/plugins/snowflake/manifest.json]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-CTX-POINT]
+    does: "The page's own contextmenu point (CSS px × page zoom + the webview's place) first; the pointer and params as fallbacks; Snowflake's page row."
+    proof: test-browser-shell BST-19
+
+  BS20_bookmark_site_accounts:
+    layer: integration
+    status: DONE 0.60.185
+    depends_on: [BS2_shell_rebuild]
+    files: [clear-glass/src/accounts/for-site.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/browser.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-BOOKMARK-ACCOUNTS]
+    does: "accounts:forSite reads each account session's cookies for the site (names only); the dialog lists the accounts signed in to this site first."
+    proof: test-browser-shell BST-20

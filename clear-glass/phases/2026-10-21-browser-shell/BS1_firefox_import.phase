@@ -7,11 +7,11 @@ intent: null
 summary: BS1_firefox_import (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792500831202
+exported_at: 1792502099130
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500831202
-lastSeenAt: 1792500831202
+firstSeenAt: 1792502099130
+lastSeenAt: 1792502099130
 fingerprint: null
 payload:
   id: BS1_firefox_import

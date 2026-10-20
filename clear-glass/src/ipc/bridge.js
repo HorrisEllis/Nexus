@@ -1475,6 +1475,16 @@ class IpcBridge {
     // (per James's own "all backend first, ui after backend is done" —
     // no renderer panel wired to these yet, that's item 6's UI half).
     ipcMain.handle('accounts:list',       async ()    => this.options?.listAccounts());
+    // BS20 (0.60.185) — James: "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers."
+    // Each account's own session is read for the site's cookies (names only) and the accounts are ranked: signed in here first.
+    ipcMain.handle('accounts:forSite', async (e, { url, current } = {}) => {
+      try {
+        const { session } = require('electron');
+        return await require('../accounts/for-site').forSite({ url, current, accounts: this.options?.listAccounts() || [],
+          providers: require('../providers/registry').listProviders(),
+          cookiesFor: (id, u) => session.fromPartition(`persist:agent-acct-${id}`).cookies.get({ url: u }) });
+      } catch (err) { return { ok: false, error: err.message, accounts: [] }; }
+    });
     ipcMain.handle('accounts:get',        async (e, d) => this.options?.getAccount(d.id));
     ipcMain.handle('accounts:create',     async (e, d) => this.options?.createAccount(d));
     ipcMain.handle('accounts:update',     async (e, d) => this.options?.updateAccount(d.id, d.updates));
