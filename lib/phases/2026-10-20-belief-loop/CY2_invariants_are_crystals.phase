@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+context: pipeline phase CY2_invariants_are_crystals of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: CY2_invariants_are_crystals (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303343
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303343
+lastSeenAt: 1792456303343
+fingerprint: null
+payload:
+  id: CY2_invariants_are_crystals
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/crystal.js
+    - clear-glass/src/page/page-memory.js
+    - lib/upload-placement.js
+    - lib/core/invariant.js
+  depends_on:
+    - CY0_one_crystal_schema
+    - IV2_invariant_miner
+    - CY1_lifecycle_and_injection
+  blocks:
+    - MOD-CRYSTAL-SOURCES
+  spec: docs/belief-loop.spec
+  graph: 62464b4cfa1cd75a

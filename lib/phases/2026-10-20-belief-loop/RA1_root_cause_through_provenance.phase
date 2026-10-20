@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+context: pipeline phase RA1_root_cause_through_provenance of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: RA1_root_cause_through_provenance (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303355
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303355
+lastSeenAt: 1792456303355
+fingerprint: null
+payload:
+  id: RA1_root_cause_through_provenance
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/root-cause.js
+    - intelligence/routes.js
+  depends_on:
+    - PV1_provenance_on_every_claim
+    - TV1_traversal_primitive
+    - EW1_evidence_record_and_weights
+    - RA0_rca_says_what_it_does
+  blocks:
+    - MOD-ROOT-CAUSE
+  spec: docs/belief-loop.spec
+  graph: 6ad2a67f26a85c69

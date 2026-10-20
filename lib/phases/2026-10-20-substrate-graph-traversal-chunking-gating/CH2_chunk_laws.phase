@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH2_chunk_laws
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH2_chunk_laws
+context: >-
+  pipeline phase CH2_chunk_laws of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: CH2_chunk_laws (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416769
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416769
+lastSeenAt: 1792456416769
+fingerprint: null
+payload:
+  id: CH2_chunk_laws
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - tests/modules/test-chunk-laws.test.js
+  depends_on:
+    - CH1_strategies_behind_the_contract
+  blocks:
+    - MOD-CHUNK-LAWS
+  spec: docs/substrate.spec
+  graph: e5eb2024e856cead

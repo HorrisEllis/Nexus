@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+context: >-
+  pipeline phase GW2_gates_at_every_level of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: GW2_gates_at_every_level (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416775
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416775
+lastSeenAt: 1792456416775
+fingerprint: null
+payload:
+  id: GW2_gates_at_every_level
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/core/gate.js
+    - cortex/core/raid/contract-gates.js
+    - idearium/api/index.js
+  depends_on:
+    - GW1_gate_primitive
+    - CH1_strategies_behind_the_contract
+    - DK1_dynamic_chunking
+    - CH3_chunk_inspector
+  blocks:
+    - MOD-GATE-LEVELS
+  spec: docs/substrate.spec
+  graph: b10b437f7e757cde

@@ -1,0 +1,150 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CY1_lifecycle_and_injection:f9114a7b5b7207b8
+type: graph
+id: phase:CY1_lifecycle_and_injection:f9114a7b5b7207b8
+context: dependency graph of phase CY1_lifecycle_and_injection
+intent: null
+summary: 11 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792456303341
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303341
+lastSeenAt: 1792456303341
+fingerprint: null
+payload:
+  for: CY1_lifecycle_and_injection
+  kind: phase
+  repo: null
+  hash: f9114a7b5b7207b8
+  nodes:
+    - path: cortex/cortex-v2.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/memory/tiers.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/crystal.js
+      role: changes
+      exists: false
+      system: lib
+    - path: cli/dedup.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cortex/memory/decay.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/table-compactor.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: orchestrator/lib/sigma-compaction.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-sigma-compaction.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-table-compactor.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cli/dedup.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: cortex/memory/decay.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: cortex/memory/table-compactor.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: orchestrator/lib/sigma-compaction.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: tests/modules/test-sigma-compaction.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: tests/modules/test-table-compactor.js
+      to: cortex/memory/tiers.js
+      kind: requires
+  crossings:
+    - from: cli/dedup.js
+      to: cortex/memory/tiers.js
+      fromSystem: cli
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: orchestrator/lib/sigma-compaction.js
+      to: cortex/memory/tiers.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: cortex/memory/tiers.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 7583ffef0c495b95
+    layer: 7
+    deps:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
+      - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+    dependents:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+    upstream:
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+      - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+      - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+    downstream:
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+    blockedBy:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
+      - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 7583ffef0c495b95 · layer 7 · ON THE CRITICAL PATH · blocked by CY0_one_crystal_schema,
+        CF1_confidence_from_evidence
+      - 'depends on (2): CY0_one_crystal_schema, CF1_confidence_from_evidence · all upstream 14'
+      - 'needed by (2): CY2_invariants_are_crystals, CY3_belief_panel · all downstream 3'

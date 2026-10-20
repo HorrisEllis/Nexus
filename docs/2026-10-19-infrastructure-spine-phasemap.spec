@@ -336,3 +336,13 @@ phases:
       roll-up, his words linked from the quote ledger). The 376 root changelogs move under docs/changelogs/ (IN1) and stop being
       hand-written.
     proof: the 0.60.172 changelog rendered from entries matches the hand-written one's facts
+
+## ADDENDUM 2026-10-20 — PN1's layout in use for spec'd maps (PS1)
+James, 2026-10-20: "specs, then phases then specced again with dag and related files for it, look at the handoff"
+emerge/compiler/phase-specs.js (docs/substrate.spec MOD-PHASE-SPECS, 0.60.176) writes PN1's layout for any map whose phases name a
+spec: <owner>/phases/<map-id>/<phase>.phase (authored) + graph/<phase>-<hash>.graph (derived, with the DAG slice — pipeline-nodes
+graphNode now keeps it). Done for the two 2026-10-20 maps. PN1 proper (all 149+ maps, the ownership report, PN2/PN3 reading nodes
+first) stays open; this is its first real use.
+Found: the boundary ratchet (tests/modules/test-system-boundary.test.js SB-06) is red since the 0.60.170–172 overlay: lib/phase-dag.js →
+loom/scanners/phasemap-map.js and lib/verify-first.js → cos/testenv/run-target.js are new upward crossings (lib reaching into a
+system). Not fixed here; each needs a route or a move (§5.9).

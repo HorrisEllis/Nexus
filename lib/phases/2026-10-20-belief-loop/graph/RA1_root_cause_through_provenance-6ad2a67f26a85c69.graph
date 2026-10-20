@@ -1,0 +1,192 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RA1_root_cause_through_provenance:6ad2a67f26a85c69
+type: graph
+id: phase:RA1_root_cause_through_provenance:6ad2a67f26a85c69
+context: dependency graph of phase RA1_root_cause_through_provenance
+intent: null
+summary: 18 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792456303355
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303355
+lastSeenAt: 1792456303355
+fingerprint: null
+payload:
+  for: RA1_root_cause_through_provenance
+  kind: phase
+  repo: null
+  hash: 6ad2a67f26a85c69
+  nodes:
+    - path: intelligence/routes.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/root-cause.js
+      role: changes
+      exists: false
+      system: lib
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: tests/modules/intuition-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk-perception/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/anomaly.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/routes.js
+      to: intelligence/intuition.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/gap/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/anomaly.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk-perception/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/intuition-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/mastermind-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/routes.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 7583ffef0c495b95
+    layer: 6
+    deps:
+      - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA0_rca_says_what_it_does
+    dependents:
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+    upstream:
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+      - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA0_rca_says_what_it_does
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+    downstream:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+    blockedBy:
+      - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA0_rca_says_what_it_does
+    unlocks:
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 7583ffef0c495b95 · layer 6 · blocked by PV1_provenance_on_every_claim,
+        TV1_traversal_primitive, EW1_evidence_record_and_weights, RA0_rca_says_what_it_does
+      - >-
+        depends on (4): PV1_provenance_on_every_claim, TV1_traversal_primitive,
+        EW1_evidence_record_and_weights, RA0_rca_says_what_it_does · all upstream 14
+      - >-
+        needed by (2): RA2_learned_source_trust, CY3_belief_panel · finishing it unlocks
+        RA2_learned_source_trust

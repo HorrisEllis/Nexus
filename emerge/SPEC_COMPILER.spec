@@ -185,6 +185,39 @@ spec:
         - missing description → use empty string (not error)
         - over budget → log warning, return full prompt anyway
 
+    # §2026-10-20 — written because kg-builder.js cites "spec-parser.spec §MOD-KG-BUILDER" and that file is not in the tree
+    # (lost). James, 2026-10-20: "everything needs  to be speccced before built,so it can be rebuilt if lost." This is the
+    # module's contract as the code implements it, plus one correction (build order), specced here before the code changed.
+    - id:    MOD-KG-BUILDER
+      name:  kg-builder
+      uuid:  spec-compiler-kg-builder-v1-0000-0001
+      description: >
+        Transforms a ParsedSpec into a KnowledgeGraph as a SISO stream: kg.build → BuildNodesGate → BuildEdgesGate → ScoreGate →
+        BlastRadiusGate → kg.complete. Nodes: modules, events, schemas, interfaces; a dep naming nothing declared becomes a BLACK
+        node. Edges: depends_on (module deps), produces / consumes (module event lists). Score: specDepth per node (NAME 0.1,
+        DESCRIPTION 0.2, EXPORTS 0.3, GATES 0.5, CONTRACTS 0.7, ERROR_PATHS 0.85, FULL 1.0 when error paths are present and every
+        explicit schema_ref resolves; schemas by field count ≥8 FULL, ≥4 CONTRACTS); effectiveSpecDepth = min with referenced schemas.
+      exports:
+        - "build(parsedSpec, { logLevel }) → { ok, graph, log }"
+        - "graph.getNode(id) · getNodeByName(name) · getNodesByKind(kind) · getBlackNodes() · getBlastRadius(id) · getGaps() · getChunk(id) · getChain(id)"
+        - "graph.getBuildOrder() → KGNode[] (non-BLACK) — foundations first"
+      gate_pipeline:
+        - "GATE-KG-001: parsedSpec → BuildNodesGate → nodes (modules, events, schemas, interfaces, BLACK refs)"
+        - "GATE-KG-002: nodes → BuildEdgesGate → depends_on / produces / consumes edges"
+        - "GATE-KG-003: nodes + edges → ScoreGate → specDepth, effectiveSpecDepth, generationReadiness, confidence"
+        - "GATE-KG-004: graph → BlastRadiusGate → blastRadius and gaps per node"
+      behavioral_contracts:
+        - "same parsedSpec → same graph (deterministic)"
+        - "getBuildOrder() is a TOPOLOGICAL order of the depends_on edges (Kahn): a node comes after every node it depends on;
+          among nodes ready at the same time, lower generationReadiness first, then fewer deps, then id. A cycle's members follow
+          the acyclic part in the same tiebreak order (the invariants engine reports the cycle). Before 2026-10-20 it sorted by
+          readiness then dep count only, which put a dependent before its foundation whenever the foundation was more ready
+          (a chain longer than two, or an interface with full depth) — INV-007 then reported false build-order violations."
+      error_paths:
+        - "a module with no id or name → skipped, counted in the log"
+        - "a dep naming nothing declared → BLACK node (specDepth 0), never a throw"
+        - "cyclic depends_on → build order still total; cycle reported by the invariants engine"
+
   events:
     compiler:
       - "compiler.t0.emitted { outputDir, emittedCount, skippedCount, moduleCount }"

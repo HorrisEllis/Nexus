@@ -52,6 +52,7 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  ['emerge/compiler/phase-specs.js', I('emerge/compiler/phase-specs.js'), [I('emerge/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
   ['lib/upload-placement.js', I('lib/upload-placement.js'), []],   // §0.60.173 UP1/UP2 a zip's files placed against a repo (strip, exists, same bytes, folders, intent, his learned rules); requires/requiredBy
   ['idearium/ui/js/upload-intent.js', I('idearium/ui/js/upload-intent.js'), [I('idearium/ui/js/code-tab-panels.js')]],   // §0.60.173 UP4 the Code tab's upload panel (page globals: CX, _cxPaintPanel, api)
   ['lib/phase-dag.js', I('lib/phase-dag.js'), [I('loom/scanners/phasemap-map.js')]],   // §0.60.172 DG3 the whole DAG of every phasemap
@@ -72,6 +73,12 @@ const FILES = [
   ['idearium/ui/js/code-dock.js', I('idearium/ui/js/code-dock.js'), [I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/plan-panel.js')]],   // §0.60.118 DK2: the dock — _wsCard, _rtTree/_rtRow, _ppContext reused (page globals)
 ];
 const CONSUMERS = [
+  [I('emerge/compiler/phase-specs.js'), I('emerge/compiler/kg-builder.js'), '§0.60.176 PS1 specIds(): what a spec declares, through emerge\'s own knowledge-graph build'],
+  [I('emerge/compiler/phase-specs.js'), I('lib/phase-dag.js'), '§0.60.176 PS1 the whole DAG and each phase\'s slice'],
+  [I('emerge/compiler/phase-specs.js'), I('lib/phase-graph.js'), '§0.60.176 PS1 graphFor(): files with roles and crossings'],
+  [I('emerge/compiler/phase-specs.js'), I('lib/phase-map-auto.js'), '§0.60.176 PS1 mapPhase() over envFromTree()'],
+  [I('emerge/compiler/phase-specs.js'), I('lib/pipeline-nodes.js'), '§0.60.176 PS1 phaseNode / graphNode (graphNode now keeps the dag slice)'],
+  [I('emerge/compiler/phase-specs.js'), I('lib/phase-plan.js'), '§0.60.176 PS1 targetSystem(): the owner of each phase'],
   [I('idearium/api/index.js'), I('lib/upload-placement.js'), '§0.60.173 UP3 repo.uploads.{create,list,get,answer}: plan → needs-you; his answer → repo-inject propose/apply (text) and writeSourceBytes (binaries); learn()'],
   [I('idearium/api/index.js'), I('lib/zip-ingest.js'), '§0.60.173 UP3 the uploaded zip read with the importer\'s own bounds (project-import.config ZIP)'],
   [I('idearium/api/index.js'), I('lib/repo-inject.js'), '§0.60.173 UP3 an upload\'s text files land through propose() and apply() — the one door'],

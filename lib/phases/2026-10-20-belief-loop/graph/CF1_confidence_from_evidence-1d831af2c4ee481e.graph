@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CF1_confidence_from_evidence:1d831af2c4ee481e
+type: graph
+id: phase:CF1_confidence_from_evidence:1d831af2c4ee481e
+context: dependency graph of phase CF1_confidence_from_evidence
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792456303351
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303351
+lastSeenAt: 1792456303351
+fingerprint: null
+payload:
+  for: CF1_confidence_from_evidence
+  kind: phase
+  repo: null
+  hash: 1d831af2c4ee481e
+  nodes:
+    - path: lib/confidence.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 7583ffef0c495b95
+    layer: 6
+    deps:
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+    dependents:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+      - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+    upstream:
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+      - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+    downstream:
+      - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+    blockedBy:
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 7583ffef0c495b95 · layer 6 · ON THE CRITICAL PATH · blocked by
+        EW1_evidence_record_and_weights
+      - 'depends on (1): EW1_evidence_record_and_weights · all upstream 12'
+      - >-
+        needed by (3): CY1_lifecycle_and_injection, AV1_adversarial_review, CY3_belief_panel · all
+        downstream 5

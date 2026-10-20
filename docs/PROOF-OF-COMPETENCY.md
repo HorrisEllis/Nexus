@@ -779,3 +779,15 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   `nexus_rca` always answers "unresolved", `ask-full` never injects a belief, and crystals duplicate instead of accumulating support.
 - **Checkable:** `docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec`,
   `docs/2026-10-20-belief-loop-phasemap.spec`; run lib/phase-dag.js over docs/.
+
+### 2026-10-20 — 0.60.176: specs before code, so the system can be rebuilt
+- **His words:** "everything needs  to be speccced before built,so it can be rebuilt if lost. … specs, then phases then specced again
+  with dag and related files for it, look at the handoff" · "look in emerge"
+- **Context:** the coder had offered phasemaps (plans). He rejected plans as the contract and set the order himself: a full spec, then
+  phases, then each phase specified again with its dependency graph and related files. He then pointed at the place in his own system
+  where the format already existed: emerge's spec compiler.
+- **What it shows:** specification discipline, and knowing his own architecture. The format he pointed to comes with a measurable
+  definition of fully specified (specDepth 1.0 per module, checked by the compiler). Writing to it found a real compiler defect (the
+  build order wasn't topological) and a lost spec (`spec-parser.spec`), both now written down.
+- **Checkable:** `docs/substrate.spec`, `docs/belief-loop.spec`, `tests/modules/test-substrate-spec.test.js` 3/3,
+  `tests/modules/test-phase-specs.test.js` 4/4; `node emerge/compiler/phase-specs.js <map> --check`.

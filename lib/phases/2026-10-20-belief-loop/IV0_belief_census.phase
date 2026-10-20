@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::IV0_belief_census
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::IV0_belief_census
+context: pipeline phase IV0_belief_census of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: IV0_belief_census (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303344
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303344
+lastSeenAt: 1792456303344
+fingerprint: null
+payload:
+  id: IV0_belief_census
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - docs/atlases/belief-census.md
+  depends_on: []
+  blocks:
+    - MOD-BELIEF-CENSUS
+  spec: docs/belief-loop.spec
+  graph: fd2dad21f04787eb

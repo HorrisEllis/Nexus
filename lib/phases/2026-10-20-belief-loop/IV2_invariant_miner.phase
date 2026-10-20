@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::IV2_invariant_miner
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::IV2_invariant_miner
+context: pipeline phase IV2_invariant_miner of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: IV2_invariant_miner (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303347
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303347
+lastSeenAt: 1792456303347
+fingerprint: null
+payload:
+  id: IV2_invariant_miner
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/core/invariant.js
+  depends_on:
+    - IV1_invariant_kinds
+    - TV1_traversal_primitive
+  blocks:
+    - MOD-INVARIANT-MINER
+  spec: docs/belief-loop.spec
+  graph: e5b3488a69c7b78e

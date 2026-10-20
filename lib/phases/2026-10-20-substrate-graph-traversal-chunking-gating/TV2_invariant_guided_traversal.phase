@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
+context: >-
+  pipeline phase TV2_invariant_guided_traversal of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: TV2_invariant_guided_traversal (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416765
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416765
+lastSeenAt: 1792456416765
+fingerprint: null
+payload:
+  id: TV2_invariant_guided_traversal
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/core/traverse.js
+  depends_on:
+    - TV1_traversal_primitive
+    - IV2_invariant_miner
+    - TV3_traversal_as_context
+  blocks:
+    - MOD-TRAVERSE-GUIDED
+  spec: docs/substrate.spec
+  graph: e197883cad031a55

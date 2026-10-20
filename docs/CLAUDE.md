@@ -278,3 +278,18 @@ unnderstand, and it would be immensly stable." Map: docs/2026-10-19-infrastructu
   template, reusable node type or spec file — built from it, checked against it.
 - Adapters grow only when a second real adapter needs a method; the boundary is proven (NT1) before breadth.
 
+
+## ADDENDUM 2026-10-20 — specs, then phases, then each phase specced again (his rule)
+James, 2026-10-20: "not phasemaps. full specs to build them. everything needs  to be speccced before built,so it can be rebuilt if
+lost. can you do that? what about specs, then phases then specced again with dag and related files for it, look at the handoff"
+The order, for every new capability:
+1. **A full spec** in emerge's module format (emerge/SPEC_COMPILER.spec is the reference): schemas with fields and validity rules;
+   interfaces for everything it stands on, with their real exports; modules with path, exports (signatures), gate pipeline,
+   behavioral contracts, error paths and acceptance. It must compile in emerge/compiler/kg-builder.js with every module and schema
+   at specDepth 1.0, no BLACK node, and the invariants engine valid — the bar for "can be rebuilt if lost". Examples:
+   docs/substrate.spec, docs/belief-loop.spec. Checked by tests/modules/test-substrate-spec.test.js.
+2. **Phases** in a phasemap, each naming `spec:` and the module ids it builds in `blocks:` (DAG-checked, lib/phase-dag.js).
+3. **Each phase specced again**: `node emerge/compiler/phase-specs.js <map>` writes <owner>/phases/<map-id>/<phase>.phase (what is
+   authored) and graph/<phase>-<hash>.graph (its related files with roles, crossings, and its slice of the whole DAG), beside the
+   system that owns it (the handoff's PN1 layout). `--check` reports drift.
+Only then is code written, and a phase's code is built against its .phase, its .graph and its spec modules.

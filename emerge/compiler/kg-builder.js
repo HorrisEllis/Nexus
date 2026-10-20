@@ -467,13 +467,32 @@ class AssembleGate extends Gate {
           // So edge.from's position in sort should be higher
           if (depCount.has(edge.from)) depCount.set(edge.from, (depCount.get(edge.from) ?? 0) + 1);
         }
-        return nonBlack.sort((a, b) => {
+        const tiebreak = (a, b) => {
           // Primary: lower readiness first (foundations first)
           const rDiff = a.generationReadiness - b.generationReadiness;
           if (Math.abs(rDiff) > 0.001) return rDiff;
-          // Tiebreaker: fewer deps first (more foundational)
-          return (depCount.get(a.id) ?? 0) - (depCount.get(b.id) ?? 0);
-        });
+          // Tiebreaker: fewer deps first (more foundational), then id (deterministic)
+          return ((depCount.get(a.id) ?? 0) - (depCount.get(b.id) ?? 0)) || String(a.id).localeCompare(String(b.id));
+        };
+        // §2026-10-20 (SPEC_COMPILER.spec MOD-KG-BUILDER) — a topological order (Kahn) with the old sort as the tiebreak among
+        // nodes ready together. The sort alone put a dependent before its foundation whenever the foundation was more ready
+        // (chains longer than two, fully specced interfaces), and INV-007 reported false build-order violations.
+        const byId = new Map(nonBlack.map(n => [n.id, n]));
+        const waits = new Map(nonBlack.map(n => [n.id, new Set()]));
+        const after = new Map(nonBlack.map(n => [n.id, []]));
+        for (const edge of edges) {
+          if (edge.kind !== 'depends_on' || !byId.has(edge.from) || !byId.has(edge.to) || edge.from === edge.to) continue;
+          waits.get(edge.from).add(edge.to); after.get(edge.to).push(edge.from);
+        }
+        const out = [], done = new Set();
+        let ready = nonBlack.filter(n => waits.get(n.id).size === 0).sort(tiebreak);
+        while (ready.length) {
+          const n = ready.shift(); out.push(n); done.add(n.id);
+          for (const d of after.get(n.id)) { const w = waits.get(d); w.delete(n.id); if (w.size === 0 && !done.has(d)) ready.push(byId.get(d)); }
+          ready.sort(tiebreak);
+        }
+        // a cycle's members: after the acyclic part, in the tiebreak order (the invariants engine names the cycle)
+        return out.concat(nonBlack.filter(n => !done.has(n.id)).sort(tiebreak));
       },
     };
 

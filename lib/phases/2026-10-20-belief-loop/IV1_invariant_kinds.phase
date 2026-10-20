@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
+context: pipeline phase IV1_invariant_kinds of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: IV1_invariant_kinds (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303346
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303346
+lastSeenAt: 1792456303346
+fingerprint: null
+payload:
+  id: IV1_invariant_kinds
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/core/invariant.js
+    - lib/node-schemas/schema.invariant
+  depends_on:
+    - IV0_belief_census
+    - GR1_graph_primitive
+  blocks:
+    - MOD-INVARIANT
+  spec: docs/belief-loop.spec
+  graph: 99ee52c0b443d589

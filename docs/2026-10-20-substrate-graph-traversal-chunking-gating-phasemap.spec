@@ -97,6 +97,8 @@ phases:
     status: OPEN
     depends_on: []
     files: [lib/graph-census.js, docs/atlases/graph-census.md]
+    spec: docs/substrate.spec
+    blocks: [MOD-GRAPH-CENSUS]
     does: >-
       Every graph in Nexus, read from the tree, not memory: its nodes, edge kinds, store, writers, readers, size on James's data, and
       what its edges rest on (discovered, declared, unknown). Route + `graph census` command.
@@ -107,6 +109,8 @@ phases:
     status: OPEN
     depends_on: [GR0_graph_census, NC1_neutral_core_boundary, NM1_one_name_per_file]
     files: [lib/core/graph.js, lib/node-schemas/schema.block, lib/node-schemas/schema.edge, lib/node-schemas/schema.observation]
+    spec: docs/substrate.spec
+    blocks: [MOD-GRAPH]
     does: >-
       The primitives, with schemas (NC0 schema rule): Block { id (registry id where one exists), kind, address, signature, domain }
       · Edge { from, to, relation, evidence: discovered(adapter) | declared(by) | unknown, ts } · Observation { scope, at, blocks,
@@ -120,6 +124,8 @@ phases:
     depends_on: [GR1_graph_primitive, AD1_adapter_contract]
     files: [lib/core/views/loom.js, lib/core/views/requires.js, lib/core/views/phases.js, lib/core/views/causal.js,
       lib/core/views/lattice.js, lib/core/views/page.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-GRAPH-VIEWS]
     does: >-
       Read-only adapters projecting the existing graphs into GR1's shape: loom registry, require-graph, phase-dag, cfr causal graph,
       lattice_edges, Clear Glass page blocks. No store moves (SB_D1). A view says what it cannot see (e.g. a require built from a
@@ -131,6 +137,8 @@ phases:
     status: OPEN
     depends_on: [GR2_graph_views, TV1_traversal_primitive, TB1_toolbox]
     files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/graph-panel.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-GRAPH-QUERY]
     does: >-
       One door over every view: neighbours, path between two blocks, impact (who is reached), pattern match (a small motif language).
       Route, `graph …` commands, and a Graph section in the Toolbox.
@@ -141,6 +149,8 @@ phases:
     status: OPEN
     depends_on: [GR1_graph_primitive]
     files: [lib/core/traverse.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-TRAVERSE]
     does: >-
       walk(view, start, { direction, relations, depth, budget, order }) — deterministic order, cycle safe, budgeted; the cut is said
       (what was not visited and why). phase-dag slice(), loom impact and causal-lookup become callers of it, their results unchanged.
@@ -151,6 +161,8 @@ phases:
     status: OPEN
     depends_on: [TV1_traversal_primitive, IV2_invariant_miner, TV3_traversal_as_context]   # TV3 first: both change lib/core/traverse.js
     files: [lib/core/traverse.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-TRAVERSE-GUIDED]
     does: >-
       Traversal that learns where to look: a scope whose stable invariants all hold is checked by them (cheap) and not descended;
       the walk spends its budget where an invariant broke. "using invariants to learn overtime" applied to looking.
@@ -161,6 +173,8 @@ phases:
     status: OPEN
     depends_on: [TV1_traversal_primitive, CH1_strategies_behind_the_contract]
     files: [lib/core/traverse.js, lib/chunk-glyph.js, lib/coder-brief.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-TRAVERSE-CONTEXT]
     does: >-
       An agent's context is a traversal, not a dump: from the task's blocks, walk to what they use and what uses them, project each
       as its glyph, stop at the token budget — the brief says what was cut.
@@ -171,6 +185,8 @@ phases:
     status: OPEN
     depends_on: [GR1_graph_primitive]
     files: [lib/core/chunk.js, lib/node-schemas/schema.chunk]
+    spec: docs/substrate.spec
+    blocks: [MOD-CHUNK]
     does: >-
       The eight chunkers, each named for what it is (strategy, format, retry policy, state machine). One contract:
       chunk(input, { domain, budget, purpose }) → chunks that are blocks: they cover the input exactly once, in order (R5), carry a
@@ -183,6 +199,8 @@ phases:
     depends_on: [CH0_chunk_census_and_contract, AD1_adapter_contract]
     files: [lib/core/chunk.js, lib/code-intel/chunker.js, lib/chunker/index.js, clear-glass/src/page/page-map.js,
       cortex/core/raid/contract-adapters.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-CHUNK-STRATEGIES]
     does: >-
       code (code-intel), documents (lib/chunker), pages (page-map), contract bricks (contract-adapters) as strategies behind the one
       contract — wrapped, behaviour unchanged. emerge/chunk stays a payload format; chunk-lifecycle stays a state machine.
@@ -193,6 +211,8 @@ phases:
     status: OPEN
     depends_on: [CH1_strategies_behind_the_contract]
     files: [tests/modules/test-chunk-laws.test.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-CHUNK-LAWS]
     does: >-
       One law suite run over every strategy: coverage exactly once, order, stable keys when content is inserted above, budget
       respected or forced-and-said, glyph present. A strategy that breaks a law is reported by name.
@@ -203,6 +223,8 @@ phases:
     status: OPEN
     depends_on: [CH1_strategies_behind_the_contract, TB1_toolbox, GR3_graph_query_surface]   # GR3 first: both add routes and commands
     files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/chunk-inspector.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-CHUNK-INSPECTOR]
     does: >-
       See how anything is chunked: pick a file, a spec, a page or a contract → its chunks, keys, sizes, glyphs; `chunk <path>`.
     proof: tested in Clear Glass
@@ -212,6 +234,8 @@ phases:
     status: OPEN
     depends_on: [CH1_strategies_behind_the_contract, DC1_dynamic_chunk_at_plan, MF1_model_fit_routing]
     files: [lib/core/chunk.js, cortex/core/raid/contract-adapters.js, cortex/core/raid/contract-gates.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-DYNAMIC-CHUNK]
     does: >-
       Chunk size decided by the consumer and the proof (SB_D4): before dispatch, units are sized to the routed model's learned
       budget (boundaries.budget; DC1 is the brick instance of this); after a gate fails, the unit is split along what failed (the
@@ -224,6 +248,8 @@ phases:
     status: OPEN
     depends_on: [DK1_dynamic_chunking]
     files: [lib/core/chunk.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-GRANULARITY]
     does: >-
       Count outcomes per (domain, chunk kind, size band, model) → the size that passes first time; read first by DK1. Counts, not a
       model (decision D4 of the upload/page map); written as crystals once the belief loop has them (CY2).
@@ -234,6 +260,8 @@ phases:
     status: OPEN
     depends_on: []
     files: [lib/gate-census.js, docs/atlases/gate-census.md]
+    spec: docs/substrate.spec
+    blocks: [MOD-GATE-CENSUS]
     does: >-
       Every gate in Nexus: what it guards, its verdict shape, whether it records evidence and provenance, whether it can say unknown,
       what overrides it ("anyway") and who may. Joined to cos/spec/check-catalogue.spec's checks.
@@ -244,6 +272,8 @@ phases:
     status: OPEN
     depends_on: [GW0_gate_census, GR1_graph_primitive, docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream]   # GQ1 is defined in two maps; this names the live one
     files: [lib/core/gate.js, lib/node-schemas/schema.verdict]
+    spec: docs/substrate.spec
+    blocks: [MOD-GATE]
     does: >-
       gate(subject, checks) → { verdict: pass | fail | unknown, evidence: [{ check, result, evidence kind, provenance }], residue }
       on SISO's Event→Gate→Stream (GQ1 is its quality instance); emits gate.passed / gate.blocked / gate.unknown on nexus-bus
@@ -255,6 +285,8 @@ phases:
     status: OPEN
     depends_on: [GW1_gate_primitive, CH1_strategies_behind_the_contract, DK1_dynamic_chunking, CH3_chunk_inspector]   # DK1 and CH3 first: shared contract-gates.js / api
     files: [lib/core/gate.js, cortex/core/raid/contract-gates.js, idearium/api/index.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-GATE-LEVELS]
     does: >-
       chunk → brick → file → phase → map → release: each level's gate composes its children's verdicts with its own checks; a phase
       passes only when its chunks did and its proof ran; unknown below makes unknown above (never pass). "gating at every
@@ -266,11 +298,33 @@ phases:
     status: OPEN
     depends_on: [GW2_gates_at_every_level, TB1_toolbox]
     files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/gate-panel.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-GATE-PANEL]
     does: >-
       For any run, phase or release: its gate tree, each verdict with its evidence and residue; `gates <run|phase>`.
     proof: tested in Clear Glass
+
+  PS1_phase_specs:
+    layer: library
+    status: OPEN
+    depends_on: []
+    files: [emerge/compiler/phase-specs.js, lib/pipeline-nodes.js, lib/node-schemas/schema.graph, tests/modules/test-phase-specs.test.js]
+    spec: docs/substrate.spec
+    blocks: [MOD-PHASE-SPECS]
+    does: >-
+      His order (2026-10-20): "specs, then phases then specced again with dag and related files for it". For every phase: its
+      blocks resolved in its spec's knowledge graph, its files mapped (changes, uses, used-by), its graph with its DAG slice, written
+      as <owner>/phases/<map-id>/<phase>.phase + .graph (handoff PN1's layout). graphNode keeps the dag slice (it dropped it).
+    proof: every phase of the two 2026-10-20 maps has a .phase and .graph; blocks all resolve; a second run reports no drift
 
 ## First milestone (smallest proof of the idea)
 
 GR0 + GW0 (the two censuses — cheap, and they make every later claim checkable) → GR1 → TV1 with phase-dag slice() as its first caller
 → CH0 with code-intel and page-map as its first two strategies. Two domains through one shape before any breadth (NC0's NT1 rule).
+
+## ADDENDUM 2026-10-20 — built from a full spec now; each phase specced again
+James, 2026-10-20: "not phasemaps. full specs to build them. everything needs  to be speccced before built,so it can be rebuilt if
+lost. … specs, then phases then specced again with dag and related files for it, look at the handoff"
+The build contract is docs/substrate.spec (emerge module format; every module at specDepth 1.0). Each phase above now names `spec:` and the
+module ids it builds in `blocks:`. Each phase is specced again as <owner>/phases/2026-10-20-substrate-graph-traversal-chunking-gating/<phase>.phase and its
+graph/<phase>-<hash>.graph (related files with roles, crossings, the DAG slice), written by emerge/compiler/phase-specs.js.

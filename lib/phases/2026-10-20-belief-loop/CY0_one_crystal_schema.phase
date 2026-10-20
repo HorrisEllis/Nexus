@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
+context: pipeline phase CY0_one_crystal_schema of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: CY0_one_crystal_schema (foundation) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303338
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303338
+lastSeenAt: 1792456303338
+fingerprint: null
+payload:
+  id: CY0_one_crystal_schema
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/crystal.js
+    - lib/node-schemas/schema.crystal
+    - meta/crystal-lattice.js
+    - intelligence/liminal-space/index.js
+  depends_on: []
+  blocks:
+    - MOD-CRYSTAL
+  spec: docs/belief-loop.spec
+  graph: 6952ccb2f43c4c04

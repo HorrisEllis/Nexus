@@ -103,6 +103,8 @@ phases:
     status: OPEN
     depends_on: []
     files: [orchestrator/lib/mcp-server.js, intelligence/routes.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-RCA-HONEST]
     does: >-
       Today, first, small: nexus_rca and /api/intelligence/rca stop presenting "unresolved" as a finding. A gap with no analysis says
       "no root cause analysis has run for this gap" and names what evidence exists for it (its causal neighbours, its events). The
@@ -114,6 +116,8 @@ phases:
     status: OPEN
     depends_on: []
     files: [lib/crystal.js, lib/node-schemas/schema.crystal, meta/crystal-lattice.js, intelligence/liminal-space/index.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-CRYSTAL]
     does: >-
       One schema (the CLI's: statement, kind, scope, state, confidence, stabilityScore, fragility, supportCount, crossLaneCount,
       contradictionScore, sourceUuids, evidence refs, provenance, promotedAt) and one writer lib/crystal.js (upsert by statement +
@@ -127,6 +131,8 @@ phases:
     status: OPEN
     depends_on: [CY0_one_crystal_schema, CF1_confidence_from_evidence]
     files: [lib/crystal.js, cortex/memory/tiers.js, cortex/cortex-v2.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-CRYSTAL-LIFECYCLE]
     does: >-
       candidate → stable → decaying → dissolved, and re-opened by a contradiction; decay by staleness and by counterexamples (the
       crystal tier stops being never-decay for beliefs; the evidence rows stay long-term). ask-full injects stable crystals — the
@@ -138,6 +144,8 @@ phases:
     status: OPEN
     depends_on: [CY0_one_crystal_schema, IV2_invariant_miner, CY1_lifecycle_and_injection]   # CY1 first: both change lib/crystal.js
     files: [lib/crystal.js, clear-glass/src/page/page-memory.js, lib/upload-placement.js, lib/core/invariant.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-CRYSTAL-SOURCES]
     does: >-
       Mined invariants are written as crystals; page-memory's stability and intent outcomes, and the upload rules learned from his
       answers, become crystal sources (their stores stay, read as views) — one belief store, many producers. VP4's "crystal" tier
@@ -149,6 +157,8 @@ phases:
     status: OPEN
     depends_on: []
     files: [docs/atlases/belief-census.md]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-BELIEF-CENSUS]
     does: >-
       Every store that already learns by counting (crystals ×3 schemas, lattice_edges, page-memory, upload rules, learned budgets,
       agent-build-learning, bep_patterns, interstitial_spaces, warp crystals): what it counts, its scope, whether it decays, who reads
@@ -160,6 +170,8 @@ phases:
     status: OPEN
     depends_on: [IV0_belief_census, GR1_graph_primitive]
     files: [lib/core/invariant.js, lib/node-schemas/schema.invariant]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-INVARIANT]
     does: >-
       A small, fixed set of invariant kinds over GR1 blocks and edges — exists · stable (address/signature) · cardinality · relation
       (contains / requires / never-crosses) · order · shape (a value's type) · outcome (intent → target works) — each checked against
@@ -171,6 +183,8 @@ phases:
     status: OPEN
     depends_on: [IV1_invariant_kinds, TV1_traversal_primitive]
     files: [lib/core/invariant.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-INVARIANT-MINER]
     does: >-
       From the observation log: candidate invariants with minimum support AND varied contexts (two sightings never make a belief);
       scope lifting (one page → /jobs/:id → every site; one file → module → system → every repo); counterexamples kept, never
@@ -182,6 +196,8 @@ phases:
     status: OPEN
     depends_on: [GR1_graph_primitive, NM1_one_name_per_file]
     files: [lib/provenance.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-PROVENANCE]
     does: >-
       §17.5 for every claim, verdict and crystal: who (agent, model, hat, or James — idea-provenance's rule), from what (spec,
       prompt digest, inputs), when, against which version, through which gate. Joined from the records that already exist (change
@@ -193,6 +209,8 @@ phases:
     status: OPEN
     depends_on: [GW1_gate_primitive, PV1_provenance_on_every_claim]
     files: [lib/evidence.js, lib/node-schemas/schema.evidence]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-EVIDENCE]
     does: >-
       Every gate verdict and observation becomes evidence for a claim: { claim, kind: executed | static | declared | agent-claim |
       wording, domain, source, ts, provenance }. Weight = kind (an executed test > a static check > a declaration > an agent's say-so
@@ -205,6 +223,8 @@ phases:
     status: OPEN
     depends_on: [EW1_evidence_record_and_weights]
     files: [lib/confidence.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-CONFIDENCE]
     does: >-
       VP1, as written by him: one score per claim from its evidence only, each part named; reproduced adversarial findings lower it;
       no evidence → "unscored". Every place with its own confidence (lifeline wording, liminal's average, crystal averages) reads this
@@ -217,6 +237,8 @@ phases:
     status: OPEN
     depends_on: [CF1_confidence_from_evidence, GW1_gate_primitive]
     files: [lib/adversarial-review.js, meta/adversary-suite.js, intelligence/adversarial.js, copilot/lifeline.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-ADVERSARIAL-REVIEW]
     does: >-
       VP2, as written by him: a claim (a built component, a stable crystal before promotion) is sent through lifeline to agents other
       than its author, independently (agent-council's rule), to break it — attack classes from adversary-suite; reasoning claims
@@ -230,6 +252,8 @@ phases:
     status: OPEN
     depends_on: [PV1_provenance_on_every_claim, TV1_traversal_primitive, EW1_evidence_record_and_weights, RA0_rca_says_what_it_does]
     files: [lib/root-cause.js, intelligence/routes.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-ROOT-CAUSE]
     does: >-
       When a gap opens or a gate fails: walk the causal graph back (cfr graph, phase runs, change records) to the beliefs and
       evidence that let the failure through, then to their sources. Writes gap.root_cause as a chain (failure ← change ← belief ←
@@ -242,6 +266,8 @@ phases:
     status: OPEN
     depends_on: [RA1_root_cause_through_provenance]
     files: [lib/evidence.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-SOURCE-TRUST]
     does: >-
       RCA outcomes adjust the trust term of EW1 per source (an agent, a model, a check, a domain): a source on the chain of a failure
       loses trust; a source whose evidence held gains it; decays toward neutral; every change explained by the RCA that caused it.
@@ -252,6 +278,8 @@ phases:
     status: OPEN
     depends_on: [EW1_evidence_record_and_weights, GR2_graph_views, AD2_javascript_adapter, PRC1_phase_reality_check]
     files: [lib/cross-domain.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-CROSS-DOMAIN]
     does: >-
       His focal-point rule generalized: a claim is "verified" only when two independent domains agree. First pairs: DOM ↔ code (a
       button's request hits a route that exists and is served), docs ↔ code (a phase marked done has its files and passing proof —
@@ -263,6 +291,8 @@ phases:
     status: OPEN
     depends_on: [XD1_cross_domain_verification, CY2_invariants_are_crystals]
     files: [lib/borrowing.js, lib/node-schemas/schema.correspondence]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-BORROWING]
     does: >-
       A correspondence table (form ↔ function: field ↔ parameter, required ↔ non-optional, submit ↔ call · page region ↔ module ·
       navigation ↔ imports · this repo ↔ another repo) lets a crystal from one domain be proposed in another as a candidate with zero
@@ -276,6 +306,8 @@ phases:
     status: OPEN
     depends_on: [CY1_lifecycle_and_injection, CF1_confidence_from_evidence, RA1_root_cause_through_provenance, TB1_toolbox]
     files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/belief-panel.js]
+    spec: docs/belief-loop.spec
+    blocks: [MOD-BELIEF-PANEL]
     does: >-
       In the Toolbox: crystals by state with their confidence parts, evidence, provenance chain and counterexamples; RCA chains; the
       proposed principles, each with promote / reject — his decision, recorded with his words (BL_D6). `beliefs`, `belief <id>`,
@@ -286,3 +318,10 @@ phases:
 
 RA0 (the RCA tool stops overstating — today) → CY0 (one crystal schema, support accumulates) → EW1 + CF1 on gate verdicts that already
 exist (proposal-evidence, verify-first, build-verify) → CY1 (stable crystals actually injected). Then PV1 → RA1 → RA2 closes the loop.
+
+## ADDENDUM 2026-10-20 — built from a full spec now; each phase specced again
+James, 2026-10-20: "not phasemaps. full specs to build them. everything needs  to be speccced before built,so it can be rebuilt if
+lost. … specs, then phases then specced again with dag and related files for it, look at the handoff"
+The build contract is docs/belief-loop.spec (emerge module format; every module at specDepth 1.0). Each phase above now names `spec:` and the
+module ids it builds in `blocks:`. Each phase is specced again as <owner>/phases/2026-10-20-belief-loop/<phase>.phase and its
+graph/<phase>-<hash>.graph (related files with roles, crossings, the DAG slice), written by emerge/compiler/phase-specs.js.

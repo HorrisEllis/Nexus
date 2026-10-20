@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+context: >-
+  pipeline phase CH0_chunk_census_and_contract of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: CH0_chunk_census_and_contract (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416767
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416767
+lastSeenAt: 1792456416767
+fingerprint: null
+payload:
+  id: CH0_chunk_census_and_contract
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/core/chunk.js
+    - lib/node-schemas/schema.chunk
+  depends_on:
+    - GR1_graph_primitive
+  blocks:
+    - MOD-CHUNK
+  spec: docs/substrate.spec
+  graph: 181bf3005c9def9a

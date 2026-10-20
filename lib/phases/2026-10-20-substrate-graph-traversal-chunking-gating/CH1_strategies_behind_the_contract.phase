@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+context: >-
+  pipeline phase CH1_strategies_behind_the_contract of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: CH1_strategies_behind_the_contract (library) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416768
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416768
+lastSeenAt: 1792456416768
+fingerprint: null
+payload:
+  id: CH1_strategies_behind_the_contract
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/core/chunk.js
+    - lib/code-intel/chunker.js
+    - lib/chunker/index.js
+    - clear-glass/src/page/page-map.js
+    - cortex/core/raid/contract-adapters.js
+  depends_on:
+    - CH0_chunk_census_and_contract
+    - AD1_adapter_contract
+  blocks:
+    - MOD-CHUNK-STRATEGIES
+  spec: docs/substrate.spec
+  graph: a5858d41e5ad4b6b

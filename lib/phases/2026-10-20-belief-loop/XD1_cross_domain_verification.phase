@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+context: pipeline phase XD1_cross_domain_verification of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: XD1_cross_domain_verification (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303357
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303357
+lastSeenAt: 1792456303357
+fingerprint: null
+payload:
+  id: XD1_cross_domain_verification
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/cross-domain.js
+  depends_on:
+    - EW1_evidence_record_and_weights
+    - GR2_graph_views
+    - AD2_javascript_adapter
+    - PRC1_phase_reality_check
+  blocks:
+    - MOD-CROSS-DOMAIN
+  spec: docs/belief-loop.spec
+  graph: b5b39aa978305a84
