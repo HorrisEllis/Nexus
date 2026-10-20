@@ -225,3 +225,16 @@ scaled; the 0.39.265 clamp could not fix that. Reading, to confirm: "click on th
     blocks: [MOD-BSH-CTXMENU]
     does: "Firefox's menu in the window's theme, sections by what was clicked, placed at the real pointer and flipped at the edges."
     proof: test-browser-shell BST-15
+
+
+## Addendum 2026-10-21 (0.60.184): files into a plugin's page
+
+  BS16_import_fields:
+    layer: integration
+    status: DONE 0.60.184
+    depends_on: [BS13_plugin_settings]
+    files: [clear-glass/renderer/shell/extensions.js, clear-glass/renderer/shell/shell.css, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-PLUGIN-FIELDS]
+    does: "Field kinds import (system picker in main via plugins:pick, paths to the plugin) and add (text + button)."
+    proof: test-browser-shell BST-16

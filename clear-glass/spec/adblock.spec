@@ -212,6 +212,28 @@ spec:
       error_paths: ["Clear Glass not running → ok:false said"]
       acceptance: ["the row builds the right request for each verb", "the tool answers ok:false when :7702 is down"]
 
+    - id: MOD-ABK-IMPORT
+      name: adblock-import
+      uuid: nexus-cg-adblock-import-v1-0000-2026-1021-002
+      path: clear-glass/src/adblock/import.js
+      phase: AB5_import
+      map: docs/2026-10-21-adblock-phasemap.spec
+      description: >-
+        James, 2026-10-21, after 0.60.183: "Needs filters. you'll be able to import folders and host lists. Same with the Snowflake plugin."
+        Reading, to confirm: his own lists come in beside the catalogue — a filter file, a whole folder of them, a host list (hosts-file
+        lines or one domain per line), or a list's URL kept updated. detectFormat(text) tells Adblock Plus syntax, a hosts file and a plain
+        domain list apart (a domain list's bare lines become ||host^; in ABP syntax a bare word stays the substring rule it is). sources(paths)
+        reads files and folders (folders to two levels, list-like files only: .txt .list .hosts .conf .rules .abp or no extension; at most 200
+        files and 20 MB each; anything else is named and skipped). The service keeps each import as its own list (a copy under
+        <userData>/adblock/lists, so moving the original loses nothing), with its switch, count, update (re-read the file, or fetch the URL)
+        and remove.
+      deps: [{ name: adblock-engine }, { name: adblock-lists }]
+      exports: ["detectFormat(text) → 'abp'|'hosts'|'domains'", "sources(paths, { fs }) → { files: { path, name, text }[], skipped: { path, why }[] }", "service.importPaths(paths)", "service.addUrl(url, title)", "service.removeList(id)", "/cli/adblock/import { paths | url }", "adblock import <file|folder|url>"]
+      gate_pipeline: ["GATE-ABK-IMP-READ: list-like files only, sizes capped", "GATE-ABK-IMP-FORMAT: abp | hosts | domains", "GATE-ABK-IMP-KEEP: a copy kept, its own list"]
+      behavioral_contracts: ["an import is a list of its own: on, off, update, remove", "a file that parses to no rule is refused, said"]
+      error_paths: ["missing path → skipped with why", "a URL that is not a list → refused like a catalogue list"]
+      acceptance: ["a folder with an ABP list, a hosts file, a domain list and a .png → three lists, the image named as skipped", "a domain list blocks sub.example.com", "remove drops its rules", "addUrl downloads and updates like the catalogue"]
+
   events:
     adblock:
       - "adblock.updated { id, rules, skipped, error }"

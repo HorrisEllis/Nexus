@@ -718,3 +718,10 @@ spec:
 # - #ctx-menu is redrawn and placed at the pointer reported by window:cursor; the 2026-09-21 / 0.39.265 positioning notes in browser.js are
 #   kept as history (they described params.x/y + the webview offset, which is now the fallback).
 # Spec detail: clear-glass/spec/browser-shell.spec MOD-BSH-PLUGIN-SETTINGS, MOD-BSH-ZOOM-CORE, MOD-BSH-CTXMENU.
+
+# ═══ ADDENDUM 2026-10-21 (0.60.184) — his own lists: the blocker imports files, folders, host lists and list URLs; Snowflake imports host lists ═══
+# James, 2026-10-21: "Needs filters. you'll be able to import folders and host lists. Same with the Snowflake plugin."
+# - src/adblock/import.js (adblock.spec MOD-ABK-IMPORT); src/net/host-import.js (snowflake.spec MOD-SF-HOST-IMPORT): a host list's sites become
+#   origin rules via transport, tagged list:<name>, added through policy.addRule (collisions kept, named). NetService gains addRoutes/removeRoutes.
+# - Plugin pages gain field kinds import and add (browser-shell.spec MOD-BSH-PLUGIN-FIELDS); the picker runs in main (plugins:pick).
+# - The adblocker and Snowflake manifests now say hostFs: true — they read files a person chose.

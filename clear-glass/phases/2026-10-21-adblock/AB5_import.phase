@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-adblock-phasemap.spec::AB5_import
+type: phase
+id: docs_2026-10-21-adblock-phasemap.spec::AB5_import
+context: pipeline phase AB5_import of docs/2026-10-21-adblock-phasemap.spec
+intent: null
+summary: AB5_import (library) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792500829723
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792500829723
+lastSeenAt: 1792500829723
+fingerprint: null
+payload:
+  id: AB5_import
+  map: docs/2026-10-21-adblock-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.184
+  files:
+    - clear-glass/src/adblock/import.js
+    - clear-glass/src/adblock/engine.js
+    - clear-glass/src/adblock/lists.js
+    - clear-glass/plugins/adblocker/index.js
+    - clear-glass/src/ipc/bridge.js
+    - idearium/cli/route-commands.js
+    - lib/agent-tools/tools/clear-glass/adblock.js
+  depends_on:
+    - AB4_surface
+    - BS16_import_fields
+  blocks:
+    - MOD-ABK-IMPORT
+  spec: clear-glass/spec/adblock.spec
+  graph: 8bd5bbcc7bc580a9

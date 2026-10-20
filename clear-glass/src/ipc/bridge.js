@@ -263,6 +263,7 @@ class IpcBridge {
       svc.bindStore({ get: () => this.options?.get().netPolicy || null, set: (v) => this.options?.set({ netPolicy: v }) });
       return svc;
     };
+    try { _net(); } catch (_) {}   // SF8 (0.60.184): bound at start, so the Snowflake plugin's page reads and writes the same routing table
     const _netHost = () => {
       const svc = _net(); const fs = require('fs'), path = require('path'), net = require('net');
       const { app } = require('electron');
@@ -307,7 +308,15 @@ class IpcBridge {
     this.app.post('/cli/adblock/update',  _netRoute((b) => _ab().update(b.id || 'all')));
     this.app.post('/cli/adblock/allow',   _netRoute((b) => { const site = /^https?:\/\//i.test(String(b.site || '')) ? b.site : `https://${b.site}`; return _ab().allow(site, b.on !== false); }));
     this.app.post('/cli/adblock/rules',   _netRoute((b) => b.person === true ? _ab().setCustom(String(b.text || '')) : { ok: false, error: 'his own filters are his to write (idearium adblock rules …, or the Ad Blocker page in the 🧩 panel)' }));
+    // AB5 (0.60.184) — his own lists: paths (files or folders), a list's URL, or text
+    this.app.post('/cli/adblock/import', _netRoute(async (b) => b.url ? _ab().addUrl(String(b.url), b.title) : b.text ? _ab().importText(String(b.text), b.title || 'pasted list') : _ab().importPaths([].concat(b.paths || b.path || []))));
+    this.app.post('/cli/adblock/remove', _netRoute((b) => _ab().removeList(String(b.id || ''))));
     this.app.get('/cli/adblock/check',    _netRoute((b, q) => ({ ok: true, ..._ab().engine.match({ url: String(q.url || ''), type: String(q.type || 'script'), pageUrl: String(q.page || '') }) })));
+    // SF8 (0.60.184) — host lists through Snowflake: { paths } (files or folders) or { text }, via transport by default; listed and removed as one
+    const _hl = () => require('../net/host-import');
+    this.app.post('/cli/net/routes/import', _netRoute((b) => { const via = b.via || 'transport'; if (b.text) return _hl().importHosts(_net(), _hl().hostsOf(String(b.text)), { via, list: b.list || 'pasted' }); return _hl().importPaths(_net(), [].concat(b.paths || b.path || []), { via, list: b.list || null }); }));
+    this.app.get('/cli/net/routes/lists', _netRoute(() => ({ ok: true, lists: _hl().lists(_net()).map(({ ids, ...l }) => l) })));
+    this.app.post('/cli/net/routes/lists/rm', _netRoute((b) => _hl().removeList(_net(), String(b.list || ''))));
     this.app.get('/cli/net/status',   _netRoute(() => ({ ..._net().status(), detect: _netHost().detect() })));
     this.app.get('/cli/net/routes',   _netRoute(() => _net().routes()));
     this.app.post('/cli/net/routes',  _netRoute((b) => _net().addRoute(b)));
@@ -1408,6 +1417,17 @@ class IpcBridge {
         return { ok: true, x: (pt.x - b.x) / zf, y: (pt.y - b.y) / zf };
       } catch (err) { return { ok: false, error: err.message }; }
     });
+    // BS16 (0.60.184) — a plugin's page takes files: the system picker opens here, in main; only the chosen paths go to the plugin
+    ipcMain.handle('plugins:pick', async (e, { kind = 'file', title, multi = true } = {}) => {
+      try {
+        const { dialog, BrowserWindow } = require('electron');
+        const win = BrowserWindow.fromWebContents(e.sender);
+        const r = await dialog.showOpenDialog(win, kind === 'folder'
+          ? { title: title || 'Choose a folder', properties: ['openDirectory', ...(multi ? ['multiSelections'] : [])] }
+          : { title: title || 'Choose files', properties: ['openFile', ...(multi ? ['multiSelections'] : [])], filters: [{ name: 'Lists', extensions: ['txt', 'list', 'hosts', 'conf', 'rules', 'abp', 'filters', 'lst'] }, { name: 'All files', extensions: ['*'] }] });
+        return r.canceled || !r.filePaths.length ? { ok: true, canceled: true } : { ok: true, paths: r.filePaths };
+      } catch (err) { return { ok: false, error: err.message }; }
+    });
     // BS13 (0.60.183) — a plugin's page: emit its settings signature, wait for the one plugin:settings event answering this request (3 s)
     ipcMain.handle('plugins:settings', async (e, { id, op = 'get', key, value, page } = {}) => {
       try {
@@ -1415,7 +1435,7 @@ class IpcBridge {
         if (!p) return { ok: false, error: `no plugin '${id}'` };
         if (p.state !== 'active') return { ok: false, error: 'this plugin is off', off: true };
         if (!p.settings) return { ok: true, view: null };
-        return await this._askPlugin(p.settings, { op, key, value, page: page || {} }, 'plugin:settings', op === 'action' || key === 'lists' ? 120000 : 3000);
+        return await this._askPlugin(p.settings, { op, key, value, page: page || {} }, 'plugin:settings', op === 'action' || ['lists', 'url', 'import', 'hosts', 'site'].includes(key) ? 120000 : 3000);
       } catch (err) { return { ok: false, error: err.message }; }
     });
     ipcMain.handle('plugins:list', async () => {

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792499729333
+exported_at: 1792500829689
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792499729333
-lastSeenAt: 1792499729333
+firstSeenAt: 1792500829689
+lastSeenAt: 1792500829689
 fingerprint: null
 payload:
   for: AB0_engine_in_core
@@ -23,7 +23,7 @@ payload:
   crossings: []
   ready: false
   dag:
-    dagHash: e95f3baa40b53a58
+    dagHash: 412d78d99de5f927
     layer: 0
     deps: []
     dependents:
@@ -34,13 +34,14 @@ payload:
       - docs/2026-10-21-adblock-phasemap.spec::AB2_lists
       - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
       - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
+      - docs/2026-10-21-adblock-phasemap.spec::AB5_import
     blockedBy: []
     unlocks:
       - docs/2026-10-21-adblock-phasemap.spec::AB1_engine
     conflicts: []
     dangling: []
     lines:
-      - DAG e95f3baa40b53a58 · layer 0
+      - DAG 412d78d99de5f927 · layer 0
       - 'depends on (0): —'
-      - 'needed by (1): AB1_engine · all downstream 4 · finishing it unlocks AB1_engine'
+      - 'needed by (1): AB1_engine · all downstream 5 · finishing it unlocks AB1_engine'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

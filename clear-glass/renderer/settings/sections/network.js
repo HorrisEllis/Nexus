@@ -185,7 +185,23 @@
       const defSel = select(VIAS, def);
       defSel.addEventListener('change', () => api('/cli/net/default', { method: 'POST', body: { via: defSel.value } }).then(() => { toast(`Default: ${defSel.value}`); rerender(); }).catch(e => { defSel.value = def; fail(e); }));
 
-      const rules = (routes && routes.rules) || [];
+      // SF8 (0.60.184) — James: "you'll be able to import folders and host lists. Same with the Snowflake plugin." An imported list's hosts are
+      // shown as one row per list (a list can hold thousands), with Remove list; the import buttons open the system picker in main.
+      const hl = await api('/cli/net/routes/lists').catch(() => ({ lists: [] }));
+      const rules = ((routes && routes.rules) || []).filter(r => !/^list:/.test(r.note || ''));
+      const listRows = (hl.lists || []).map(l => row(l.list, `${l.hosts.toLocaleString('en')} site${l.hosts === 1 ? '' : 's'} · ${l.sample.join(', ')}${l.hosts > l.sample.length ? '…' : ''}`,
+        chip(l.via === 'transport' ? 'via Snowflake' : l.via, l.via === 'block' ? 'err' : l.via === 'transport' ? 'warn' : ''),
+        btn('Remove list', () => api('/cli/net/routes/lists/rm', { method: 'POST', body: { list: l.list } }).then(r => { toast(`${l.list}: ${r.removed} removed`); rerender(); }).catch(fail), 'sm')));
+      const hlVia = select(['transport', 'direct', 'block'], 'transport');
+      const importHosts = (kind) => async () => {
+        const cgx = window.ClearGlass; if (!cgx || !cgx.plugins || !cgx.plugins.pick) return fail(new Error('the file picker needs Clear Glass'));
+        const r = await cgx.plugins.pick(kind, { title: 'Import a host list' }); if (!r || r.canceled || !(r.paths || []).length) return;
+        try {
+          const out = await api('/cli/net/routes/import', { method: 'POST', body: { paths: r.paths, via: hlVia.value } });
+          const added = (out.results || []).reduce((a, x) => a + x.added, 0), coll = (out.results || []).reduce((a, x) => a + x.skipped.collision.length, 0);
+          toast(`${added} site${added === 1 ? '' : 's'} added${coll ? ` · ${coll} already routed another way, kept` : ''}${(out.skipped || []).length ? ` · ${out.skipped.length} file(s) skipped` : ''}`); rerender();
+        } catch (e) { fail(e); }
+      };
       const ruleRows = rules.length ? rules.map(r => row(
         `${r.match && (r.match.urlPattern || r.match.origin || r.match.provider || r.match.caller) || 'any'}`,
         `via ${r.via}${r.match && r.match.provider ? ` · provider ${r.match.provider}` : ''}`,
@@ -196,6 +212,9 @@
       const routing = pane({ title: 'Routing', sub: s.statusNote || 'Applied to registered agent windows only.', body: [
         row('Default', 'What a session does when no rule matches it', defSel),
         h('div', { class: 'net-rules' }, ruleRows),
+        listRows.length ? h('div', { class: 'net-rules' }, listRows) : null,
+        row('Import a host list', 'A hosts file, a list of domains or a folder of them: each site always goes the way chosen here. Through Snowflake, they do not load while it is off (fail closed). A site you already routed is left as it was.',
+          h('div', { class: 'acts' }, hlVia, btn('Import file…', importHosts('file'), 'sm'), btn('Import folder…', importHosts('folder'), 'sm'))),
         s.collisions ? h('p', { class: 'warn-box', text: `${s.collisions} rule(s) overlap — the most specific wins.` }) : null,
       ] });
 

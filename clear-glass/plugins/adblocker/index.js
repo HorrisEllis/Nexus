@@ -54,10 +54,13 @@ function _view(svc, page = {}) {
   if (host) fields.push({ key: 'site', type: 'toggle', label: `Block on ${host}`, help: 'Off allows this site (Settings → Site settings keeps the same list).', value: !svc.isAllowed(page.url) });
   fields.push({ type: 'info', label: 'Rules in use', value: `${st.network.toLocaleString('en')} blocking · ${st.cosmetic.toLocaleString('en')} hiding` });
   fields.push({ key: 'lists', type: 'list', label: 'Filter lists', items: st.lists.map(l => ({
-    id: l.id, label: l.title, on: !!l.on,
+    id: l.id, label: l.title, on: !!l.on, remove: !!l.imported,
     sub: [l.about, l.on ? (l.loaded ? `${(l.rules || 0).toLocaleString('en')} rules` : 'not downloaded yet') : null, l.url && l.on ? ago(l.updatedAt, now) : null, l.skipped ? `${l.skipped} skipped` : null, l.error ? `last update failed: ${l.error}` : null].filter(Boolean).join(' · '),
   })) });
   fields.push({ key: 'update', type: 'action', label: 'Update lists now', kind: 'primary' });
+  // AB5 (0.60.184) — James: "Needs filters. you'll be able to import folders and host lists."
+  fields.push({ key: 'import', type: 'import', label: 'Add your own lists', accept: ['file', 'folder'], help: 'A filter list, a hosts file or a list of domains — or a whole folder of them. Each becomes a list above that you can switch off or remove.' });
+  fields.push({ key: 'url', type: 'add', label: 'Subscribe to a list by its address', placeholder: 'https://…/list.txt', button: 'Subscribe' });
   fields.push({ key: 'custom', type: 'textarea', label: 'My filters', placeholder: '||ads.example.com^\nexample.com##.banner', value: st.custom || '', help: 'Adblock Plus / uBlock syntax, one per line. Saved when you leave the box.' });
   fields.push({ key: 'allowed', type: 'list', label: 'Allowed sites', empty: 'No site is allowed.', items: st.allowed.map(o => ({ id: o, label: o, remove: true })) });
   if (tab.last.length) fields.push({ key: 'recent', type: 'list', label: 'Blocked on this page', items: tab.last.slice(-6).reverse().map((b, i) => ({ id: String(i), label: b.url, sub: b.rule })) });
@@ -76,6 +79,13 @@ function settings(data = {}) {
   if (op === 'set') {
     if (key === 'enabled') { svc.setEnabled(!!value); _enabled = !!value; }
     else if (key === 'site') svc.allow(page.url, !value);
+    else if (key === 'lists' && value && value.id && value.remove) { const r = svc.removeList(value.id); note = r.ok ? 'List removed' : r.error; }
+    else if (key === 'import' && value && Array.isArray(value.paths)) {
+      const r = svc.importPaths(value.paths);
+      const ok = r.lists.filter(l => l.ok);
+      note = `${ok.length ? `Added ${ok.map(l => `${l.title} (${l.rules.toLocaleString('en')} rules${l.format !== 'abp' ? `, ${l.format}` : ''})`).join(', ')}` : 'Nothing added'}${r.skipped.length ? ` · skipped: ${r.skipped.slice(0, 4).map(x => `${require('path').basename(x.path)} (${x.why})`).join(', ')}${r.skipped.length > 4 ? ` and ${r.skipped.length - 4} more` : ''}` : ''}`;
+    }
+    else if (key === 'url' && value) return svc.addUrl(String(value)).then(r => reply(_view(svc, page), { note: r.ok ? `Subscribed: ${r.rules.toLocaleString('en')} rules` : `Not added: ${r.error}` }));
     else if (key === 'lists' && value && value.id) {
       const r = svc.setList(value.id, !!value.on);
       if (r.needsUpdate) return svc.update(value.id).then(u => reply(_view(svc, page), { note: u.ok ? `${value.id} downloaded` : `${value.id}: ${u.results[0].error}` }));

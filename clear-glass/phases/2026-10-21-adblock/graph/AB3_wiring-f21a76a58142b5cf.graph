@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792499729360
+exported_at: 1792500829720
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792499729360
-lastSeenAt: 1792499729360
+firstSeenAt: 1792500829720
+lastSeenAt: 1792500829720
 fingerprint: null
 payload:
   for: AB3_wiring
@@ -151,7 +151,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: e95f3baa40b53a58
+    dagHash: 412d78d99de5f927
     layer: 3
     deps:
       - docs/2026-10-21-adblock-phasemap.spec::AB2_lists
@@ -167,12 +167,13 @@ payload:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
     downstream:
       - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
+      - docs/2026-10-21-adblock-phasemap.spec::AB5_import
     blockedBy: []
     unlocks:
       - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
     conflicts: []
     dangling: []
     lines:
-      - DAG e95f3baa40b53a58 · layer 3
+      - DAG 412d78d99de5f927 · layer 3
       - 'depends on (2): AB2_lists, BS13_plugin_settings · all upstream 6'
-      - 'needed by (1): AB4_surface · finishing it unlocks AB4_surface'
+      - 'needed by (1): AB4_surface · all downstream 2 · finishing it unlocks AB4_surface'

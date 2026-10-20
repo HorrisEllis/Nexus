@@ -71,3 +71,19 @@ phases:
     blocks: [MOD-ABK-SURFACE]
     does: "/cli/adblock/* routes, the adblock command row, the clear_glass_adblock agent tool; the UI is the 🧩 panel page (BS13) and the count on the shield."
     proof: test-adblock ABK-11; test-browser-shell BST-13 (the page in Clear Glass)
+
+## Addendum 2026-10-21 (0.60.184): his own lists
+
+James, 2026-10-21, after 0.60.183: "Needs filters. you'll be able to import folders and host lists. Same with the Snowflake plugin."
+Reading, to confirm: "needs filters" = bring his own filter lists in (a file, a folder of them, a host list, a list's URL), not only the
+catalogue. The Snowflake half is SF8 of docs/2026-10-21-snowflake-compartment-phasemap.spec; the picker and the field kinds are BS16.
+
+  AB5_import:
+    layer: library
+    status: DONE 0.60.184
+    depends_on: [AB4_surface, BS16_import_fields]
+    files: [clear-glass/src/adblock/import.js, clear-glass/src/adblock/engine.js, clear-glass/src/adblock/lists.js, clear-glass/plugins/adblocker/index.js, clear-glass/src/ipc/bridge.js, idearium/cli/route-commands.js, lib/agent-tools/tools/clear-glass/adblock.js]
+    spec: clear-glass/spec/adblock.spec
+    blocks: [MOD-ABK-IMPORT]
+    does: "Files, folders, host lists and list URLs become lists of their own (copy kept; on/off, update, remove); the page's Import and Add fields; /cli/adblock/import; adblock import."
+    proof: test-adblock ABK-12, ABK-13

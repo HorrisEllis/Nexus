@@ -134,7 +134,9 @@ function parseCosmetic(line) {
 }
 
 /** parseList(text) → { network, cosmetic, skipped: { why: n }, lines } */
-function parseList(text, { source = '' } = {}) {
+// AB5 (0.60.184): a plain domain list (one host per line) reads its bare lines as ||host^; in ABP syntax a bare word stays a substring rule
+const BARE_HOST = /^(?:\*\.)?([a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+)\.?$/i;
+function parseList(text, { source = '', format = 'abp' } = {}) {
   const network = [], cosmetic = [], skipped = {};
   const skip = (why) => { skipped[why] = (skipped[why] || 0) + 1; };
   let lines = 0;
@@ -145,6 +147,11 @@ function parseList(text, { source = '' } = {}) {
     const hosts = /^(?:0\.0\.0\.0|127\.0\.0\.1|::1?|::)\s+([^\s#]+)/.exec(line);
     if (hosts) { const h = hosts[1].toLowerCase(); if (h === 'localhost' || h === '0.0.0.0' || h.endsWith('.localdomain') || h === 'local') continue; const r = parseNetwork(`||${h}^`); r.rule ? network.push(Object.assign(r.rule, { source })) : skip(r.skip); continue; }
     if (line.startsWith('#') && !line.startsWith('##') && !line.startsWith('#@#')) continue;   // a hosts-file comment
+    if (format !== 'abp') {
+      const b = BARE_HOST.exec(line.replace(/\s+#.*$/, ''));
+      if (b) { const r = parseNetwork(`||${b[1].toLowerCase()}^`); r.rule ? network.push(Object.assign(r.rule, { source })) : skip(r.skip); continue; }
+      if (!/^(?:\|\||@@|\||\/)/.test(line) && !/#[@?$%]?#/.test(line)) { skip('not-a-host'); continue; }   // a host list's odd line is not a substring rule
+    }
     const c = parseCosmetic(line);
     if (c) { c.rule ? cosmetic.push(Object.assign(c.rule, { source })) : skip(c.skip); continue; }
     const n = parseNetwork(line);
@@ -268,4 +275,4 @@ class Engine {
   }
 }
 
-module.exports = { parseList, parseNetwork, parseCosmetic, Engine, siteOf, patternToRegex, tokenOf };
+module.exports = { BARE_HOST, parseList, parseNetwork, parseCosmetic, Engine, siteOf, patternToRegex, tokenOf };

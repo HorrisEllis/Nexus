@@ -55,6 +55,9 @@ const FILES = [
   ['clear-glass/src/adblock/engine.js', I('clear-glass/src/adblock/engine.js'), []],   // §0.60.183 AB1 filter lists parsed, requests matched, element hiding (pure)
   ['clear-glass/src/adblock/lists.js', I('clear-glass/src/adblock/lists.js'), [I('clear-glass/src/adblock/engine.js')]],   // §0.60.183 AB2 the lists, state, store; the one service
   ['clear-glass/plugins/adblocker/index.js', I('clear-glass/plugins/adblocker/index.js'), [I('clear-glass/src/adblock/engine.js'), I('clear-glass/src/adblock/lists.js')]],   // §0.60.183 AB3 the Ad Blocker plugin asks the service
+  ['clear-glass/src/adblock/import.js', I('clear-glass/src/adblock/import.js'), [I('clear-glass/src/adblock/engine.js')]],   // §0.60.184 AB5 his own lists: files, folders, host lists
+  ['clear-glass/src/net/host-import.js', I('clear-glass/src/net/host-import.js'), [I('clear-glass/src/adblock/import.js')]],   // §0.60.184 SF8 host lists as routes through Snowflake
+  ['clear-glass/plugins/snowflake/index.js', I('clear-glass/plugins/snowflake/index.js'), [I('clear-glass/src/net/service.js'), I('clear-glass/src/net/host-import.js')]],   // §0.60.184 SF8 the Snowflake plugin's page
   ['clear-glass/src/core/zoom.js', I('clear-glass/src/core/zoom.js'), []],   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
   ['clear-glass/renderer/shell/ctxmenu.js', I('clear-glass/renderer/shell/ctxmenu.js'), []],   // §0.60.183 BS15 the right-click menu: rows by what was clicked, placed at the pointer
   ['clear-glass/src/copilot/context-need.js', I('clear-glass/src/copilot/context-need.js'), []],   // §0.60.182 BS12 what a message needs from the page (wired late, 0.60.183)
@@ -255,6 +258,10 @@ const CONSUMERS = [
   [I('clear-glass/renderer/shell/ctxmenu.js'),      I('clear-glass/src/preload/index.js'), '§0.60.183 BS15 ClearGlass.window.cursor → window:cursor (IPC)'],
   [I('clear-glass/src/copilot/bridge.js'),          I('clear-glass/src/copilot/context-need.js'), '§0.60.182 BS12 need() and cookieSummary() per message'],
   [I('lib/agent-tools/index.js'),                   I('lib/agent-tools/tools/clear-glass/adblock.js'), '§0.60.183 AB4 registerTool(clear_glass_adblock)'],
+  [I('clear-glass/src/adblock/lists.js'),           I('clear-glass/src/adblock/import.js'), '§0.60.184 AB5 importPaths / addUrl: detectFormat, sources'],
+  [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/host-import.js'), '§0.60.184 SF8 /cli/net/routes/import, /lists, /lists/rm (lazy require)'],
+  [I('clear-glass/src/net/host-import.js'),         I('clear-glass/src/net/service.js'), '§0.60.184 SF8 addRoutes / removeRoutes / routes() on the service passed in (not a require)'],
+  [I('clear-glass/renderer/settings/sections/network.js'), I('clear-glass/src/preload/index.js'), '§0.60.184 SF8 ClearGlass.plugins.pick for Import a host list (IPC)'],
 ];
 
 function mapRunState(driver) { return declareMap(driver, { key: 'run-state', uuidTag: '2026-1015-050', files: FILES, consumers: CONSUMERS }); }

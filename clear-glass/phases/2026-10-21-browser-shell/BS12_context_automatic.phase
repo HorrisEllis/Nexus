@@ -7,11 +7,11 @@ intent: null
 summary: BS12_context_automatic (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792499730295
+exported_at: 1792500831214
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792499730295
-lastSeenAt: 1792499730295
+firstSeenAt: 1792500831214
+lastSeenAt: 1792500831214
 fingerprint: null
 payload:
   id: BS12_context_automatic

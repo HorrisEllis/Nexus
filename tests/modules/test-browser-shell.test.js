@@ -22,6 +22,8 @@
  *   BST-11  0.60.180 the start page over a blank tab: search, agent cards, bookmarks; hidden once the tab navigates
  *   BST-13  0.60.183 a plugin's page: clicking its row in the 🧩 panel opens about, permissions, its fields; a field's change asks the plugin
  *   BST-14  0.60.183 page zoom in the core: Firefox's ladder, saved per site (100% = no row), restored on navigate; the driver and the window use it
+ *   BST-16  0.60.184 files into a plugin's page: Import folder… opens the picker in main and sends only the chosen paths; Add sends its text;
+ *           the Snowflake page's host lists
  *   BST-15  0.60.183 the right-click menu: groups by what was clicked, placed at the pointer the main process reports, flipped at the edges
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -375,6 +377,31 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       await page.click('#sh-extensions-panel .ps-back'); await page.waitForSelector('#sh-extensions-panel .sh-ext-row[data-id="p"]');
       await page.click('#sh-extensions-panel .sh-ext-row[data-id="p"] .sh-ext-desc'); await page.waitForSelector('#sh-extensions-panel .ps-about');
       const tp = await page.innerText('#sh-extensions-panel'); assert.ok(tp.includes('Passwords') && tp.includes('No special permissions') && tp.includes('Open Privacy in Settings'), tp);
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
+    await test('BST-16', 'files into a plugin\'s page in Clear Glass: Import folder… → plugins:pick → set(import, { paths }); Subscribe sends its text; Snowflake\'s host lists', async () => {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      const sfView = { summary: { value: 'On', label: 'Snowflake transport · SOCKS 9150 · 214 imported sites through it' }, fields: [
+        { type: 'info', label: 'How it works', value: 'Sites on these lists always go through Snowflake. When Snowflake is off they do not load (fail closed).' },
+        { key: 'hostlists', type: 'list', label: 'Host lists', items: [{ id: 'news.txt\u0000transport', label: 'news.txt', sub: '212 sites · through Snowflake · bbc.com, dw.com, rferl.org…', remove: true }, { id: 'added by hand\u0000transport', label: 'added by hand', sub: '2 sites · through Snowflake · signal.org, torproject.org', remove: true }] },
+        { key: 'via', type: 'select', label: 'Imported sites go', value: 'transport', options: [{ value: 'transport', label: 'Through Snowflake' }, { value: 'direct', label: 'Direct (never through Snowflake)' }, { value: 'block', label: 'Blocked' }] },
+        { key: 'hosts', type: 'import', label: 'Import a host list', accept: ['file', 'folder'], help: 'A hosts file, a list of domains, ||host^ lines or URLs — or a folder of them. Each file becomes one list.' },
+        { key: 'site', type: 'add', label: 'Add a site', placeholder: 'example.com', button: 'Add' }] };
+      await page.addInitScript(initScript({ answers: {
+        'plugins.list': [{ id: 's', name: 'snowflake', displayName: 'Snowflake', version: '1.1.0', description: 'Open a link through the Tor·Snowflake transport.', icon: '❄', state: 'active', commands: [], permissions: { network: true, process: true, hostFs: true }, settings: 'plugin:s:settings', settingsSection: 'network' }],
+        'plugins.settings': { ok: true, view: sfView, note: null }, 'plugins.pick': { ok: true, paths: ['/home/james/lists'] }, 'options.get': {}, 'toolbar.commands': [], 'bookmarks.list': [], 'webext.list': { extensions: [] } } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.click('#btn-extensions'); await page.waitForSelector('#sh-extensions-panel .sh-ext-row[data-id="s"]');
+      await page.click('#sh-extensions-panel .sh-ext-row[data-id="s"] .sh-ext-name'); await page.waitForSelector('#sh-extensions-panel .ps-acts');
+      const t = await page.innerText('#sh-extensions-panel');
+      for (const w of ['news.txt', '212 sites', 'Import file…', 'Import folder…', 'Through Snowflake', 'Open Network in Settings']) assert.ok(t.includes(w), `${w} in: ${t}`);
+      await page.screenshot({ path: path.join(SHOTS, 'bst16-snowflake-page.png') });
+      await page.click('#sh-extensions-panel .ps-btn:has-text("Import folder…")'); await page.waitForTimeout(300);
+      const calls = await page.evaluate(() => window.__cgCalls.filter(c => c.key === 'plugins.pick' || (c.key === 'plugins.settings' && c.args[1] === 'set')).map(c => [c.key, c.args[0], c.args[1], c.args[2], c.args[3]]));
+      assert.deepStrictEqual(calls.slice(0, 2), [['plugins.pick', 'folder', { title: 'Import a host list' }, null, null], ['plugins.settings', 's', 'set', 'hosts', { paths: ['/home/james/lists'] }]], JSON.stringify(calls));
+      await page.fill('#sh-extensions-panel .ps-addrow .ps-input', 'signal.org'); await page.keyboard.press('Enter'); await page.waitForTimeout(250);
+      assert.ok(await page.evaluate(() => window.__cgCalls.some(c => c.key === 'plugins.settings' && c.args[2] === 'site' && c.args[3] === 'signal.org')), 'Add sends its text');
       assert.deepStrictEqual(errors, []); await page.close();
     });
 

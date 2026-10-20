@@ -109,6 +109,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     disable: (id) => ipcRenderer.invoke('plugins:disable', { id }),
     enable:  (id) => ipcRenderer.invoke('plugins:enable', { id }),   // BS4 (0.60.179)
     settings: (id, op, key, value, page) => ipcRenderer.invoke('plugins:settings', { id, op, key, value, page }),   // BS13 (0.60.183) — a plugin's page
+    pick:     (kind, opts = {}) => ipcRenderer.invoke('plugins:pick', { kind, ...opts }),   // BS16 (0.60.184) — files or a folder for a plugin's page
   },
 
   // ── Page zoom — BS14 (0.60.183), src/core/zoom.js: one ladder, saved per site; id = the page's webContents id ──

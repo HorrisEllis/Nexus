@@ -7,11 +7,11 @@ intent: null
 summary: AB2_lists (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792499729359
+exported_at: 1792500829718
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792499729359
-lastSeenAt: 1792499729359
+firstSeenAt: 1792500829718
+lastSeenAt: 1792500829718
 fingerprint: null
 payload:
   id: AB2_lists
@@ -26,4 +26,4 @@ payload:
   blocks:
     - MOD-ABK-LISTS
   spec: clear-glass/spec/adblock.spec
-  graph: 48ec7173619ce759
+  graph: 403ef9771243dd1b

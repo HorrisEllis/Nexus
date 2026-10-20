@@ -14,6 +14,9 @@
  *   ABK-09  the plugin: filterRequest asks the service (type, page, tab); the 0.60.x isBlocked contract; settings get/set/action
  *   ABK-10  webrequest-adapter sends resourceType, pageUrl and tabId; plugins:settings's _askPlugin returns the plugin's view over the bus
  *   ABK-11  surface: the `adblock` row's requests; rules are person-only; the agent tool refuses rules
+ *   ABK-12  0.60.184 his own lists: a folder (ABP list, hosts file, domain list, an image skipped); each a list of its own; update re-reads,
+ *           a gone original keeps the copy; remove; a list URL subscribed and updated like the catalogue
+ *   ABK-13  0.60.184 the page: Import and Subscribe fields; set import { paths } → lists added and said; remove from the list; the row and tool verbs
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -205,6 +208,55 @@ function fakeSites() {
     const src = fs.readFileSync(CG('src/ipc/bridge.js'), 'utf8');
     for (const r of ['status', 'enabled', 'list', 'update', 'allow', 'rules', 'check']) assert.ok(src.includes(`'/cli/adblock/${r}'`), r);
     assert.ok(/b\.person === true \? _ab\(\)\.setCustom/.test(src), 'the route writes rules only for a person');
+  });
+
+  await test('ABK-12', 'his own lists: a folder of files, host and domain lists; each its own list; update, a gone original, remove; a URL', async () => {
+    const I = require(CG('src/adblock/import.js'));
+    assert.deepStrictEqual(['[Adblock Plus 2.0]\n||a^', '0.0.0.0 a.com\n0.0.0.0 b.com', 'a.com\nb.org\n# c\nsub.c.net', '||a.com^\n##.x'].map(I.detectFormat), ['abp', 'hosts', 'domains', 'abp']);
+    const p = parseList('a.com\nb.org # note\nnot a host\n||c.net^', { format: 'domains' });
+    assert.deepStrictEqual([p.network.map(r => r.raw), p.skipped], [['||a.com^', '||b.org^', '||c.net^'], { 'not-a-host': 1 }]);
+    const src = tmp(); const w = (n, t) => { fs.mkdirSync(path.dirname(path.join(src, n)), { recursive: true }); fs.writeFileSync(path.join(src, n), t); };
+    w('mine.txt', '[Adblock Plus 2.0]\n||mine.com^\n##.mine-ad'); w('sub/hosts', '0.0.0.0 h1.com\n0.0.0.0 h2.com'); w('doms.list', 'd1.com\nd2.net'); w('logo.png', 'x'); w('a/b/c/deep.txt', '||deep.com^');
+    const s = L.createService({ dir: tmp() }); s.start();
+    const r = s.importPaths([src]);
+    assert.deepStrictEqual(r.lists.map(l => [l.title, l.format, l.rules]).sort(), [['doms.list', 'domains', 2], ['hosts', 'hosts', 2], ['mine.txt', 'abp', 2]]);
+    assert.deepStrictEqual(r.skipped.map(x => [path.basename(x.path), x.why]).sort(), [['b', 'deeper than two folders'], ['logo.png', 'not a list file']]);
+    const blocked = (u) => s.match({ url: u, type: 'script', pageUrl: 'https://q.com/' }).block;
+    assert.deepStrictEqual([blocked('https://cdn.d2.net/x'), blocked('https://h1.com/'), blocked('https://mine.com/')], [true, true, true]);
+    assert.ok(s.cosmetics('https://q.com/').includes('.mine-ad'));
+    const doms = r.lists.find(l => l.title === 'doms.list');
+    fs.writeFileSync(path.join(src, 'doms.list'), 'd1.com\nd2.net\nd3.org'); const u = await s.update(doms.id);
+    assert.ok(u.ok && blocked('https://d3.org/'), 'update re-reads the file');
+    fs.unlinkSync(path.join(src, 'doms.list')); const u2 = await s.update(doms.id);
+    assert.strictEqual(u2.results[0].error, 'the original file is gone; the copy is kept'); assert.ok(blocked('https://d3.org/'), 'the copy still blocks');
+    const st = s.state().lists.find(l => l.id === doms.id); assert.ok(st.imported && st.loaded);
+    assert.deepStrictEqual(s.removeList(doms.id), { ok: true, removed: doms.id }); assert.strictEqual(blocked('https://d1.com/'), false);
+    assert.strictEqual(s.removeList('easylist').ok, false, 'a catalogue list is turned off, not removed');
+    const empty = s.importPaths([path.join(src, 'nothing-here')]); assert.deepStrictEqual(empty.skipped, [{ path: path.join(src, 'nothing-here'), why: 'not found' }]);
+    const s2 = L.createService({ dir: tmp(), fetch: async () => ({ ok: true, text: async () => '! Title: Mine\n||sub-only.com^' }) }); s2.start();
+    const a = await s2.addUrl('https://lists.example/mine.txt'); assert.ok(a.ok && a.rules === 1);
+    assert.ok(s2.state().lists.some(l => l.imported && l.url === 'https://lists.example/mine.txt'));
+    assert.ok(s2.due().length >= 3 && (await s2.update('all')).results.some(x => x.id === a.id && x.ok), 'updated with the rest');
+    assert.strictEqual((await s2.addUrl('ftp://x/y')).ok, false);
+  });
+
+  await test('ABK-13', 'the page: Import and Subscribe; imports said; a list removed from its row; the row and tool verbs', async () => {
+    const P = require(CG('plugins/adblocker/index.js'));
+    const src = tmp(); fs.writeFileSync(path.join(src, 'tor-ads.txt'), 'ads1.com\nads2.com'); fs.writeFileSync(path.join(src, 'pic.png'), 'x');
+    const g = P.settings({ op: 'get', page: {} }).data.view;
+    const imp = g.fields.find(f => f.key === 'import'), url = g.fields.find(f => f.key === 'url');
+    assert.deepStrictEqual([imp.type, imp.accept, url.type], ['import', ['file', 'folder'], 'add']);
+    const r = P.settings({ op: 'set', key: 'import', value: { paths: [src] }, page: {} }).data;
+    assert.ok(/Added tor-ads\.txt \(2 rules, domains\)/.test(r.note) && /pic\.png \(not a list file\)/.test(r.note), r.note);
+    const item = r.view.fields.find(f => f.key === 'lists').items.find(i => i.label === 'tor-ads.txt');
+    assert.ok(item.on && item.remove, 'its own switch and ×');
+    const gone = P.settings({ op: 'set', key: 'lists', value: { id: item.id, remove: true }, page: {} }).data;
+    assert.strictEqual(gone.note, 'List removed'); assert.ok(!gone.view.fields.find(f => f.key === 'lists').items.some(i => i.label === 'tor-ads.txt'));
+    const { SPEC } = require(path.join(ROOT, 'idearium/cli/route-commands.js')); const row = SPEC.find(x => x.key === 'adblock');
+    assert.deepStrictEqual(row.build({ args: ['import', 'https://x.org/l.txt'], flags: {} }).body, { url: 'https://x.org/l.txt', title: undefined });
+    assert.deepStrictEqual(row.build({ args: ['import', '/tmp/lists'], flags: {} }).body, { paths: ['/tmp/lists'] });
+    const mf = JSON.parse(fs.readFileSync(CG('plugins/adblocker/manifest.json'), 'utf8')); assert.strictEqual(mf.permissions.hostFs, true, 'it reads files he chooses: said in its permissions');
+    const bsrc = fs.readFileSync(CG('src/ipc/bridge.js'), 'utf8'); assert.ok(bsrc.includes("'/cli/adblock/import'") && bsrc.includes("ipcMain.handle('plugins:pick'"));
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

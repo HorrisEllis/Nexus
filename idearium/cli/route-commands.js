@@ -1003,7 +1003,7 @@ export const SPEC = [
       if (d.action) { console.log(d.action === 'delivered' ? `  delivered ${d.version} (${(d.bytes / 1048576).toFixed(1)} MB) · ${d.reason}` : `  nothing to do: ${d.reason}`); return; }
       console.log(`  latest ${d.latest}${d.publishesChecksum ? '' : ' (publishes no SHA256SUMS)'} · COS has ${d.installed.length ? d.installed.join(', ') : 'nothing'}${d.current ? ` (current ${d.current})` : ''} · inbox ${d.inboxPending} waiting\n  a fetch would: ${d.would}`); } },
   // AB4 (0.60.183) — James, 2026-10-21: "can you make a full adblocker". The blocker's lists, sites and switch; `rules` (his own filters) is his.
-  { key: 'adblock', repo: false, usage: 'adblock <status|on|off|lists|list <id> on|off|update [id|all]|allow <site>|disallow <site>|check <url> [page]|rules "<filters>">',
+  { key: 'adblock', repo: false, usage: 'adblock <status|on|off|lists|list <id> on|off|update [id|all]|import <file|folder|url> [--title T]|remove <id>|allow <site>|disallow <site>|check <url> [page]|rules "<filters>">',
     about: 'Clear Glass content blocker: status and rule counts, turn it on/off, choose filter lists (easylist, easyprivacy, peter-lowe, ublock, annoyances, cookies, builtin), update them, allow a site, test a URL. Rules are person-only.',
     personOnly: (a) => (a.args[0] === 'rules' ? 'his own filters are his to write: ask him (idearium adblock rules …, or the Ad Blocker page in the 🧩 panel)' : null),
     build: (a) => {
@@ -1012,6 +1012,9 @@ export const SPEC = [
       if (v === 'list') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/list', body: { id: String(a.args[1] || ''), on: String(a.args[2] || 'on') !== 'off' }, timeoutMs: 120000 };
       if (v === 'update') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/update', body: { id: String(a.args[1] || 'all') }, timeoutMs: 180000 };
       if (v === 'allow' || v === 'disallow') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/allow', body: { site: String(a.args[1] || ''), on: v === 'allow' } };
+      // AB5 (0.60.184) — his own lists: a file, a folder, or a list's URL; `remove <id>` drops one
+      if (v === 'import') { const src = a.args.slice(1).join(' '); return /^https?:\/\//i.test(src) ? { system: 'clear-glass', method: 'POST', path: '/cli/adblock/import', body: { url: src, title: a.flags.title ? String(a.flags.title) : undefined }, timeoutMs: 120000 } : { system: 'clear-glass', method: 'POST', path: '/cli/adblock/import', body: { paths: [require('path').resolve(src)] }, timeoutMs: 120000 }; }
+      if (v === 'remove') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/remove', body: { id: String(a.args[1] || '') } };
       if (v === 'check') return { system: 'clear-glass', method: 'GET', path: `/cli/adblock/check?url=${encodeURIComponent(String(a.args[1] || ''))}&page=${encodeURIComponent(String(a.args[2] || ''))}` };
       if (v === 'rules') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/rules', body: { text: a.args.slice(1).join(' ').replace(/\\n/g, '\n'), person: true } };
       return { system: 'clear-glass', method: 'GET', path: '/cli/adblock/status' };
@@ -1039,10 +1042,10 @@ export const SPEC = [
       if (d.persona) console.log(`  persona   ${d.persona.userAgent ? 'user agent applied' : 'no user agent override'}${d.persona.languages ? ` · languages ${d.persona.languages}` : ''}`);
       for (const e of d.errors || []) console.log(h.c.amber(`  ${e}`));
     } },
-  { key: 'net', repo: false, usage: 'net <status|routes|resolve <url>|add <id> --via V [--provider p] [--url pattern] [--origin host] [--caller c] [--protocols https,wss] [--on-failure block]|rm <id>|default <via>|start|stop [--wipe]|detect|bridge <line>|bridges|builtin|use <n>|https-only on|off|check|quarantine|release <id>|discard <id>|handoff <id>|on-disconnect block|kill_tabs|kill_compartment|qbit [check] [--url U] [--user U] [--pass P]|paths --tor P --snowflake P|test>',
+  { key: 'net', repo: false, usage: 'net <status|routes|lists|import <file|folder> [--via transport|direct|block] [--list name]|unlist <name>|resolve <url>|add <id> --via V [--provider p] [--url pattern] [--origin host] [--caller c] [--protocols https,wss] [--on-failure block]|rm <id>|default <via>|start|stop [--wipe]|detect|bridge <line>|bridges|builtin|use <n>|https-only on|off|check|quarantine|release <id>|discard <id>|handoff <id>|on-disconnect block|kill_tabs|kill_compartment|qbit [check] [--url U] [--user U] [--pass P]|paths --tor P --snowflake P|test>',
     about: 'network routes and the Snowflake transport: which way each request goes (direct, block, transport, socks5://h:p), per provider, url, site or caller; start/stop the transport; fail closed',
     need: (a) => { const v = a.args[0] || 'status'; if (v === 'resolve' && !a.args[1]) return '<url>'; if (v === 'add' && (!a.args[1] || !a.flags.via)) return '<id> --via direct|block|transport|socks5://host:port'; if (v === 'rm' && !a.args[1]) return '<id>'; if (v === 'default' && !a.args[1]) return '<via>'; if (v === 'bridge' && !a.args[1]) return '<snowflake bridge line>'; if (v === 'use' && !a.args[1]) return '<n> (a number from net bridges)'; if (v === 'https-only' && !['on', 'off'].includes(a.args[1])) return 'on|off'; if (['release', 'discard', 'handoff'].includes(v) && !a.args[1]) return '<id> (from net quarantine)'; if (v === 'on-disconnect' && !['block', 'kill_tabs', 'kill_compartment'].includes(a.args[1])) return 'block|kill_tabs|kill_compartment'; return null; },
-    personOnly: (a) => (['add', 'rm', 'default', 'start', 'stop', 'bridge', 'paths', 'use', 'https-only', 'builtin', 'release', 'discard', 'handoff', 'on-disconnect', 'qbit'].includes(a.args[0]) ? 'changing routes or the transport (or asking the Tor Project for bridges, which contacts it directly) is a person\'s act: an agent that could remove a rule could send his traffic direct. Ask him to run it.' : null),
+    personOnly: (a) => (['add', 'rm', 'import', 'unlist', 'default', 'start', 'stop', 'bridge', 'paths', 'use', 'https-only', 'builtin', 'release', 'discard', 'handoff', 'on-disconnect', 'qbit'].includes(a.args[0]) ? 'changing routes or the transport (or asking the Tor Project for bridges, which contacts it directly) is a person\'s act: an agent that could remove a rule could send his traffic direct. Ask him to run it.' : null),
     req: (a) => {
       const v = a.args[0] || 'status'; const f = a.flags; const cg = (method, path, body, timeoutMs) => ({ system: 'clear-glass', method, path, ...(body ? { body } : {}), ...(timeoutMs ? { timeoutMs } : {}) });
       if (v === 'status') return cg('GET', '/cli/net/status');
@@ -1050,6 +1053,10 @@ export const SPEC = [
       if (v === 'resolve') return cg('POST', '/cli/net/resolve', { url: a.args[1], provider: f.provider, caller: f.caller });
       if (v === 'add') return cg('POST', '/cli/net/routes', { id: a.args[1], via: String(f.via), match: { ...(f.provider ? { provider: String(f.provider) } : {}), ...(f.url ? { urlPattern: String(f.url) } : {}), ...(f.origin ? { origin: String(f.origin) } : {}), ...(f.caller ? { caller: String(f.caller) } : {}) }, ...(f.protocols ? { protocols: String(f.protocols).split(',') } : {}), ...(f['on-failure'] ? { onFailure: String(f['on-failure']) } : {}), ...(f.incognito ? { incognito: true } : {}), ...(f.note ? { note: String(f.note) } : {}) });
       if (v === 'rm') return cg('POST', '/cli/net/routes/rm', { id: a.args[1] });
+      // SF8 (0.60.184) — a host list (file or folder) as sites routed one way, transport unless --via says; `lists`, `unlist <name>`
+      if (v === 'import') return { ...cg('POST', '/cli/net/routes/import', { paths: [require('path').resolve(a.args.slice(1).join(' '))], via: f.via ? String(f.via) : 'transport', ...(f.list ? { list: String(f.list) } : {}) }), timeoutMs: 120000 };
+      if (v === 'lists') return cg('GET', '/cli/net/routes/lists');
+      if (v === 'unlist') return cg('POST', '/cli/net/routes/lists/rm', { list: a.args.slice(1).join(' ') });
       if (v === 'default') return cg('POST', '/cli/net/default', { via: a.args[1] });
       if (v === 'start' || v === 'stop' || v === 'detect') return cg('POST', '/cli/net/transport', { action: v, wipe: !!f.wipe }, 30000);
       if (v === 'bridge') return cg('POST', '/cli/net/bridge', { line: a.args.slice(1).join(' ') });

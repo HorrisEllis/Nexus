@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792499730296
+exported_at: 1792500831215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792499730296
-lastSeenAt: 1792499730296
+firstSeenAt: 1792500831215
+lastSeenAt: 1792500831215
 fingerprint: null
 payload:
   for: BS13_plugin_settings
@@ -159,24 +159,31 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: e95f3baa40b53a58
+    dagHash: 412d78d99de5f927
     layer: 2
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
     dependents:
       - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
     upstream:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
     downstream:
       - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
       - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
+      - docs/2026-10-21-adblock-phasemap.spec::AB5_import
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF8_host_import
     blockedBy: []
     unlocks:
       - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
     conflicts: []
     dangling: []
     lines:
-      - DAG e95f3baa40b53a58 · layer 2
+      - DAG 412d78d99de5f927 · layer 2
       - 'depends on (1): BS4_extensions · all upstream 2'
-      - 'needed by (1): AB3_wiring · all downstream 2 · finishing it unlocks AB3_wiring'
+      - >-
+        needed by (2): AB3_wiring, BS16_import_fields · all downstream 5 · finishing it unlocks
+        AB3_wiring, BS16_import_fields

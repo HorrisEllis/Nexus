@@ -163,13 +163,37 @@
       const row = el('div', `ps-field ps-${f.type}`);
       const lab = () => { const l = el('div', 'ps-label', f.label); if (f.help) l.append(el('div', 'ps-help', f.help)); return l; };
       if (f.type === 'toggle') { const t = tog(f.value, f.label); t.addEventListener('click', (e) => { e.stopPropagation(); t.setAttribute('aria-checked', String(t.getAttribute('aria-checked') !== 'true')); ask('set', f.key, t.getAttribute('aria-checked') === 'true'); }); row.append(lab(), t); }
-      else if (f.type === 'info') { row.append(el('div', 'ps-label', f.label), el('div', 'ps-value', f.value)); }
+      else if (f.type === 'info') { if (String(f.value || '').length > 48) row.classList.add('long'); row.append(el('div', 'ps-label', f.label), el('div', 'ps-value', f.value)); }
       else if (f.type === 'action') { const b = el('button', `ps-btn${f.kind === 'primary' ? ' primary' : ''}`, f.label); b.addEventListener('click', async (e) => { e.stopPropagation(); b.disabled = true; b.textContent = 'Working…'; await ask('action', f.key); b.disabled = false; b.textContent = f.label; }); row.append(b); }
       else if (f.type === 'select') { const sel = el('select', 'ps-select'); for (const o of f.options || []) { const op = el('option', '', o.label); op.value = o.value; if (o.value === f.value) op.selected = true; sel.append(op); } sel.addEventListener('change', () => ask('set', f.key, sel.value)); row.append(lab(), sel); }
       else if (f.type === 'text' || f.type === 'textarea') {
         const inp = el(f.type === 'text' ? 'input' : 'textarea', 'ps-input'); inp.value = f.value || ''; if (f.placeholder) inp.placeholder = f.placeholder; inp.spellcheck = false;
         let was = inp.value; inp.addEventListener('blur', () => { if (inp.value !== was) { was = inp.value; ask('set', f.key, inp.value); } });
         inp.addEventListener('click', (e) => e.stopPropagation()); row.append(lab(), inp);
+      } else if (f.type === 'import') {
+        // BS16 (0.60.184): the system picker runs in main (plugins:pick); the plugin gets only the paths a person chose
+        const acts = el('div', 'ps-acts');
+        for (const kind of f.accept || ['file']) {
+          const b = el('button', 'ps-btn', kind === 'folder' ? 'Import folder…' : 'Import file…');
+          b.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const r = await cg().plugins.pick(kind, { title: f.label }).catch(err => ({ ok: false, error: err.message }));
+            if (!r || r.ok === false) return say(`Could not open the picker: ${r && r.error}`);
+            if (r.canceled || !(r.paths || []).length) return;
+            b.disabled = true; b.textContent = 'Reading…'; say(`Reading ${r.paths.length === 1 ? r.paths[0] : r.paths.length + ' items'}…`);
+            await ask('set', f.key, { paths: r.paths }); b.disabled = false; b.textContent = kind === 'folder' ? 'Import folder…' : 'Import file…';
+          });
+          acts.append(b);
+        }
+        row.append(lab(), acts);
+      } else if (f.type === 'add') {
+        const wrap = el('div', 'ps-addrow'); const inp = el('input', 'ps-input'); inp.placeholder = f.placeholder || ''; inp.spellcheck = false;
+        const b = el('button', 'ps-btn', f.button || 'Add');
+        const go = async () => { const v = inp.value.trim(); if (!v) return; b.disabled = true; say(`${f.button || 'Adding'}: ${v}…`); const r = await ask('set', f.key, v); b.disabled = false; if (r) inp.value = ''; };
+        b.addEventListener('click', (e) => { e.stopPropagation(); go(); });
+        inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+        inp.addEventListener('click', (e) => e.stopPropagation());
+        wrap.append(inp, b); row.append(lab(), wrap);
       } else if (f.type === 'list') {
         row.append(lab()); const ul = el('div', 'ps-list');
         if (!(f.items || []).length) ul.append(el('div', 'ps-help', f.empty || 'Nothing here.'));

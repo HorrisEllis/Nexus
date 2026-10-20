@@ -457,6 +457,24 @@ spec:
       error_paths: ["the cursor IPC fails → params.x/y plus the webview's offset, as before"]
       acceptance: ["place() flips at the right and bottom edges", "Clear Glass: a link right-click shows the link rows; the toolbar's shows only the toolbar rows; the menu's corner sits at the point given"]
 
+    - id: MOD-BSH-PLUGIN-FIELDS
+      name: plugin-import-fields
+      uuid: nexus-cg-bsh-plugin-fields-v1-0000-2026-1021-005
+      path: clear-glass/renderer/shell/extensions.js
+      phase: BS16_import_fields
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        Two field kinds for a plugin's page, so a plugin can take files without touching a dialog itself: `import` (buttons "Import file…" /
+        "Import folder…"; the shell opens the system picker through plugins:pick in the main process and sends the chosen paths as
+        set(key, { paths })) and `add` (a text box and a button: set(key, text)). plugins:pick { kind: file|folder, title, multi } → { paths }
+        | { canceled }. The plugin never sees the dialog, only the paths a person chose.
+      deps: [{ name: plugin-host }, { name: shell }]
+      exports: ["field { type: 'import', accept: ['file','folder'] }", "field { type: 'add', placeholder, button }", "plugins:pick IPC", "ClearGlass.plugins.pick(kind, opts)"]
+      gate_pipeline: ["GATE-PF-001: picker in main", "GATE-PF-002: paths to the plugin"]
+      behavioral_contracts: ["canceled sends nothing", "a path is shown as text"]
+      error_paths: ["no window → { ok:false } said"]
+      acceptance: ["Clear Glass: Import folder… on the Ad Blocker page sends set('import', { paths })"]
+
   events:
     shell:
       - "import.firefox.done { profile, cookies, bookmarks }"

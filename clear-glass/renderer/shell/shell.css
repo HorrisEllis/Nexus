@@ -308,9 +308,9 @@ body.cg-shell #toolbar-editor-panel, body.cg-shell #options-panel, body.cg-shell
 .ps-btn:hover { background: var(--pane-3); }
 .ps-btn.primary { background: var(--cyan); border-color: var(--cyan); color: var(--void); font-weight: 600; }
 .ps-btn:disabled { opacity: .6; }
-.ps-select, .ps-input { width: 100%; margin-top: 6px; box-sizing: border-box; border-radius: var(--r-s); border: 1px solid var(--edge); background: var(--void); color: var(--ink-hi); font: 12px var(--mono); padding: 7px 9px; }
+select.ps-select, .ps-input { width: 100%; margin-top: 6px; box-sizing: border-box; border-radius: var(--r-s); border: 1px solid var(--edge); background: var(--void); color: var(--ink-hi); font: 12px var(--mono); padding: 7px 9px; }
 textarea.ps-input { min-height: 84px; resize: vertical; line-height: 1.45; }
-.ps-input:focus, .ps-select:focus { outline: 0; border-color: var(--cyan); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 12%, transparent); }
+select.ps-select:focus, .ps-input:focus { outline: 0; border-color: var(--cyan); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 12%, transparent); }
 .ps-list { margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
 .ps-item { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: var(--r-s); }
 .ps-item:hover { background: var(--pane-2); }
@@ -324,3 +324,9 @@ textarea.ps-input { min-height: 84px; resize: vertical; line-height: 1.45; }
 .ps-meta { font: 11.5px var(--sans); color: var(--ink-faint); padding: 0 10px 6px; }
 .ps-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 10px 6px; }
 .ps-chip { height: 20px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 10px; border: 1px solid var(--edge); font: 500 10.5px var(--sans); color: var(--ink-dim); }
+/* BS16 (0.60.184) — files into a plugin's page */
+.ps-acts { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.ps-addrow { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+.ps-addrow .ps-input { margin-top: 0; flex: 1; }
+.ps-info.long { display: block; }
+.ps-info.long .ps-value { text-align: left; margin-top: 3px; line-height: 1.45; }

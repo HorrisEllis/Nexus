@@ -311,6 +311,28 @@ spec:
       error_paths: ["no source answers → start refuses with what was tried, in order"]
       acceptance: ["no line + a local one → used, source tor-browser; no local → builtin asked; a hand-set line kept"]
 
+    - id: MOD-SF-HOST-IMPORT
+      name: host-import
+      uuid: nexus-cg-sf-host-import-v1-0000-2026-1021-002
+      path: clear-glass/src/net/host-import.js
+      phase: SF8_host_import
+      map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+      description: >-
+        James, 2026-10-21: "you'll be able to import folders and host lists. Same with the Snowflake plugin." Reading, to confirm: a host list
+        (or a folder of them) becomes the sites that always go through Snowflake — one origin rule each in the routing table, via transport
+        by default (direct or block can be chosen), tagged with the list's name so the list is removed as one. hostsOf(text) reads hosts-file
+        lines, plain domains, ||host^ lines and URLs; drops comments, IPs, localhost and duplicates. importHosts(service, hosts, { via, list })
+        adds through service.addRoute, so the policy's collision rule still decides (a host already routed another way is skipped and
+        named, never overwritten). The Snowflake plugin gains its page (MOD-BSH-PLUGIN-SETTINGS): the transport's state, the imported lists
+        with their host counts, import file / folder, add one site, remove a list. Settings → Network's Routing pane gets "Import host
+        list…". Changing routes stays a person's act (the `net import` row is person-only, as `net add` is).
+      deps: [{ name: net-service }]
+      exports: ["hostsOf(text) → string[]", "importHosts(service, hosts, { via, list }) → { added, skipped: { collision[], invalid, duplicate } }", "lists(service) → { list, via, hosts }[]", "removeList(service, list) → { removed }", "/cli/net/routes/import { paths | text, via, list }", "/cli/net/routes/lists", "net import <file|folder> [--via transport|direct|block] [--list name]"]
+      gate_pipeline: ["GATE-SF-HI-PARSE: hosts only", "GATE-SF-HI-COLLIDE: the policy's collision rule", "GATE-SF-HI-PERSON: person-only"]
+      behavioral_contracts: ["a rule is never overwritten by an import", "rule ids are hl-<list>-<host>, so an import twice adds nothing twice"]
+      error_paths: ["over 5,000 hosts in one import → the first 5,000, the rest counted and said (each host is a PAC condition)"]
+      acceptance: ["hosts-file, domain and ||host^ lines → hosts; comments, IPs and localhost dropped", "import twice → no duplicates", "a host routed direct already → skipped as collision, named", "removeList removes only that list's rules"]
+
   events:
     net:
       - "net.bridge.found { count, sources }"

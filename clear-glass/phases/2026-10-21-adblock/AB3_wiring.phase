@@ -7,11 +7,11 @@ intent: null
 summary: AB3_wiring (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792499729360
+exported_at: 1792500829720
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792499729360
-lastSeenAt: 1792499729360
+firstSeenAt: 1792500829720
+lastSeenAt: 1792500829720
 fingerprint: null
 payload:
   id: AB3_wiring
