@@ -195,3 +195,10 @@ spec:
     - "VP1: the proven threshold (default proposed 0.8) and VP4's N (default proposed 3, WARP's own promote-after-3) — his call."
     - "VP3: may the repo lens's hypotheses be shown in the repo's Settings → Agent pane, or only in copilot's person model?"
     - "VP6: Debian for every test environment even when it means a 10–40 minute first setup, or the process sandbox until the VM is set up?"
+
+## ADDENDUM 2026-10-20 — VP1, VP2, VP4 (belief half), VP5 superseded-and-kept by the belief loop
+James, 2026-10-20: "adversarial system. confidence scoring. evidence weighing and provenance root causal analysi" · "spec it."
+His 2026-10-05 phases are joined into one loop in docs/2026-10-20-belief-loop-phasemap.spec: VP1 → CF1_confidence_from_evidence,
+VP2 → AV1_adversarial_review, VP4's crystal tier → CY2_invariants_are_crystals, VP5 → PV1_provenance_on_every_claim. Their words and
+proofs are carried over unchanged; these phases stay here as the earlier reading (§0.3). VP3 (the repo model of the user) and VP6
+stay open here.

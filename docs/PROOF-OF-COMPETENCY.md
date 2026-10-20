@@ -765,3 +765,17 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   observer, the local model) into one loop: see, feel, act, learn. Each part was already his design; this release connects them.
 - **Checkable:** `tests/modules/clear-glass-page-session.test.js` 6/6 (the Ollama push tested against a stub server; the panel in
   Clear Glass's engine); `CHANGELOG-0.60.175.md`.
+
+### 2026-10-20 — the substrate and the belief loop, specified from his design
+- **His words:** "i want to map the traversal agnostically, using invarants overtime, primitives, and principles" · "the
+  persistent memory, graphs, cross domain verification and borrowing" · "adversarial system. confidence scoring. evidence weighing
+  and provenance root causal analysi" · "spec it."
+- **Context:** Nexus already held his earlier designs for each piece: crystals and liminal-space's "The intersection IS the
+  verification" (cross-level confirmation), verified primitives (2026-10-05: confidence, adversaries, provenance), the universal block
+  primitive (2026-09-03). He asked for them to be specified as one system.
+- **What it shows:** systems design and specification. Two maps (37 phases, 11 decisions) that check clean against all of Nexus's
+  maps in the phase DAG (no cycles, nothing dangling, no unordered shared files). They reuse ten graphs, eight chunkers and twelve gates
+  rather than rebuilding them. The specification work also surfaced three defects in the record, each written down:
+  `nexus_rca` always answers "unresolved", `ask-full` never injects a belief, and crystals duplicate instead of accumulating support.
+- **Checkable:** `docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec`,
+  `docs/2026-10-20-belief-loop-phasemap.spec`; run lib/phase-dag.js over docs/.
