@@ -362,6 +362,28 @@ spec:
       error_paths: ["none: CSS only"]
       acceptance: ["Clear Glass: the mic sits inside the composer; the route toggles are one segmented row"]
 
+    - id: MOD-BSH-AUTO-CONTEXT
+      name: auto-context
+      uuid: nexus-cg-bsh-auto-context-v1-0000-2026-1021-003
+      path: clear-glass/src/copilot/context-need.js
+      phase: BS12_context_automatic
+      map: docs/2026-10-21-browser-shell-phasemap.spec
+      description: >-
+        James, 2026-10-21: "can you have the dom, cookies, and picks buttons migrated into copilot so he does it automatically when he needs
+        it." need(message, { picks, pickedAt, now }) decides per message, deterministically (no model asked): the page (DOM) when the
+        message is about the page — this page/site/form, here, read, summarise, click, fill, find, a field or button, prices, plans;
+        the picks when there are some and the message points at them (this, that, it, picked, selected, element) or they were picked in
+        the last two minutes; a cookie summary when it is about signing in (logged in/out, session, account, cookie, expired) — names, domain,
+        expiry and whether it looks like a sign-in cookie, never a value. The bridge applies it in send(); the pane's three chips go
+        (the Cookies chip never did anything: ctxCookies was toggled and never read). /ctx dom|picks|cookies on still forces one.
+        Each reply says what was attached, so the choice is visible.
+      deps: [{ name: copilot-cli }]
+      exports: ["need(message, { picks, pickedAt, now }) → { dom, picks, cookies, why[] }", "cookieSummary(cookies, url) → { count, signIn[], soonest }"]
+      gate_pipeline: ["GATE-AC-001: forced by /ctx", "GATE-AC-002: page words", "GATE-AC-003: picks pointed at or fresh", "GATE-AC-004: sign-in words"]
+      behavioral_contracts: ["pure and deterministic", "a cookie value is never read into the summary"]
+      error_paths: ["no session or no URL → no cookie summary, said in why"]
+      acceptance: ["'summarise this page' → dom; 'what is 2+2' → nothing; 'fill this in' with a pick → dom+picks; 'am I logged in' → cookies"]
+
   events:
     shell:
       - "import.firefox.done { profile, cookies, bookmarks }"

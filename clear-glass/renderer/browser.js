@@ -83,7 +83,7 @@
   let picks = [];
   let domPanelVisible = false;
   let copilotVisible  = true;
-  let ctxDom     = true;
+  let ctxDom     = false;   // BS12 (0.60.182): these now mean "always" (/ctx … on); by default Co-pilot decides per message
   let ctxPicks   = false;
   let ctxCookies = false;
   let es; // EventSource — assigned in connectSSE(), referenced throughout
@@ -747,7 +747,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   wv.addEventListener('ipc-message', (e) => {
     if (e.channel === 'dom:pick-result') {
       const pick = { ...e.args[0], pickId: 'pick-' + Date.now(), name: `pick-${picks.length + 1}` };
-      picks.push(pick);
+      picks.push(pick); window.__cgLastPickAt = Date.now();
       renderPicks();
       picksPanel.classList.add('visible');
       pickerActive = false;
@@ -1020,20 +1020,20 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     addMsg('thinking', '⋯');
 
     // Build context
+    // BS12 (0.60.182) — James: "can you have the dom, cookies, and picks buttons migrated into copilot so he does it automatically when he
+    // needs it." No chips: Co-pilot (src/copilot/context-need.js in the bridge) decides per message what to attach. /ctx … on still forces one.
     let domContext = null;
     if (ctxDom) {
       try {
         domContext = await wv.executeJavaScript('window.__cgDomMesh?.getTree(3)', true);
       } catch {}
     }
-
     let systemExtra = '';
-    if (ctxPicks && picks.length) {
-      systemExtra += `\n## Picked Elements\n${JSON.stringify(picks, null, 2).slice(0, 1000)}`;
-    }
+    let pageUrl = ''; try { pageUrl = wv.getURL(); } catch (_) {}
+    const autoCtx = { autoContext: true, picks: picks.slice(-10), pickedAt: window.__cgLastPickAt || 0, force: { dom: ctxDom, picks: ctxPicks, cookies: ctxCookies }, pageUrl, partition: wv.getAttribute('partition') || '' };
 
     try {
-      const res = await cg.copilot.send({ message: text, agentId, domContext, systemExtra, noDom: !ctxDom, ...(cli ? cli.route() : {}) });
+      const res = await cg.copilot.send({ message: text, agentId, domContext, systemExtra, ...autoCtx, ...(cli ? cli.route() : {}) });
       removeThinking();
 
       addMsg('assistant', formatReply(res.text), true);
@@ -1045,6 +1045,9 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       // (CoPilotBridge.send). This loop used to re-run every one through
       // cg.driver.exec, so each copilot click/type happened twice. With
       // auto-run off they come back unexecuted and the CLI proposes them.
+      if (res.attached && (res.attached.dom || res.attached.picks || res.attached.cookies)) {   // BS12: what Co-pilot chose to look at, said
+        addMsg('route', `looked at: ${[res.attached.dom && 'the page', res.attached.picks && 'your picks', res.attached.cookies && 'sign-in cookies'].filter(Boolean).join(' · ')}`);
+      }
       if (res.executed === false && cli) cli.propose(res.commands || []);
     } catch (err) {
       removeThinking();
@@ -1307,7 +1310,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     // ── DOM picks ─────────────────────────────────────────────────────
     es.addEventListener('dom.picked', (e) => {
       const d = JSON.parse(e.data);
-      picks.push(d);
+      picks.push(d); window.__cgLastPickAt = Date.now();
       renderPicks();
     });
 

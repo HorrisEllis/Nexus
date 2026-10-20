@@ -33,7 +33,7 @@
     '  /hat [on|off]                   show the hat, or wear/remove it for this window',
     '  /forge                          create the clear_glass hat if it has none',
     '  /persona <text>                 replace the hat\'s persona (hat forge update)',
-    '  /ctx dom|picks|cookies [on|off] what each message carries',
+    '  /ctx dom|picks|cookies [on|off] force one on (Co-pilot decides by itself otherwise)',
     '  /run <n> | /run all             run a proposed command (when auto-run is off)',
     '  /go <url>  /back  /forward  /reload',
     '  /site [key [value|--delete]]    this site\'s settings',

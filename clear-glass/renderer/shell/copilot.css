@@ -50,3 +50,7 @@ body.cg-shell #copilot-mic-btn.rec { color: var(--bad); background: color-mix(in
 /* 0.60.181 — "maybe just copilot": the pane is Co-pilot only — no route switch, no backend chip */
 body.cg-shell #copilot-route[hidden] { display: none; }
 body.cg-shell #copilot-model { display: none; }
+
+/* BS12 (0.60.182) — no chips: Co-pilot decides what to look at, and says it under the reply */
+body.cg-shell #copilot-context-bar[hidden] { display: none; }
+body.cg-shell #copilot-input-wrap { grid-template-areas: "text text text" ". mic send"; }

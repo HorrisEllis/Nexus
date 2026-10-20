@@ -169,3 +169,19 @@ fixedBackend 'copilot': no switch, Settings' default does not move it, no route 
 three-way switch, which was its own ask. Reading, to confirm: "just copilot" = the pane only, not the floating CLI. 0.60.180's segmented
 switch in the pane is superseded and kept in the history (CHANGELOG-0.60.180.md).
 
+## Addendum 2026-10-21 (0.60.182): the context chips move into Co-pilot
+
+James, 2026-10-21: "can you have the dom, cookies, and picks buttons migrated into copilot so he does it automatically when he needs it."
+Found first: the Cookies chip did nothing (ctxCookies toggled, never read). Co-pilot already has page tools (readPage, pageMap, dom.query)
+and cookies.health, so the decision can live in the bridge: deterministic first, no model asked.
+
+  BS12_context_automatic:
+    layer: integration
+    status: DONE 0.60.182
+    depends_on: [BS11_copilot_pane]
+    files: [clear-glass/src/copilot/context-need.js, clear-glass/src/copilot/bridge.js, clear-glass/renderer/browser.js]
+    spec: clear-glass/spec/browser-shell.spec
+    blocks: [MOD-BSH-AUTO-CONTEXT]
+    does: "need() per message picks page / picks / cookie summary; the bridge attaches them; the chips go; /ctx still forces; each reply says what was attached."
+    proof: test-browser-shell BST-12
+

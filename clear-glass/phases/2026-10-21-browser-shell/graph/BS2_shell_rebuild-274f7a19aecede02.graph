@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792496355618
+exported_at: 1792497857570
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792496355618
-lastSeenAt: 1792496355618
+firstSeenAt: 1792497857570
+lastSeenAt: 1792497857570
 fingerprint: null
 payload:
   for: BS2_shell_rebuild
@@ -31,7 +31,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: b658b15d67be924d
+    dagHash: 7af3dad11fc8b982
     layer: 0
     deps: []
     dependents:
@@ -44,6 +44,7 @@ payload:
     downstream:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
       - docs/2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS12_context_automatic
       - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
       - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
@@ -61,9 +62,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG b658b15d67be924d · layer 0
+      - DAG 7af3dad11fc8b982 · layer 0
       - 'depends on (0): —'
       - >-
         needed by (5): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
-        BS8_design_system · all downstream 9 · finishing it unlocks BS3_menus, BS4_extensions,
+        BS8_design_system · all downstream 10 · finishing it unlocks BS3_menus, BS4_extensions,
         BS5_downloads_panel, BS6_float_cli, BS8_design_system

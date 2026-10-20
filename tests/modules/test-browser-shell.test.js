@@ -18,6 +18,7 @@
  *   BST-08  Settings → Import in Clear Glass's engine against a stub :7702
  *   BST-09  0.60.180 design: drawn icons on every toolbar button, no emoji; the address bar takes the row; empty bookmarks strip hidden
  *   BST-10  0.60.180 the Guardian hub: real state per agent, Start/Open/Stop, the running badge, the tools; the old panel reads running
+ *   BST-12  0.60.182 context decided by Co-pilot per message (page / picks / sign-in cookies); the chips gone; /ctx still forces
  *   BST-11  0.60.180 the start page over a blank tab: search, agent cards, bookmarks; hidden once the tab navigates
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -172,6 +173,27 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
     assert.strictEqual(lin.protected, false, 'Linux says it cannot hide from capture');
     const src = fs.readFileSync(CG('src/main/float-cli.js'), 'utf8');
     assert.ok(!/executeJavaScript|insertCSS/.test(src), 'nothing is put into a page');
+  });
+
+  await test('BST-12', 'context decided by Co-pilot: page / picks / sign-in cookies per message; no value in the cookie summary; chips gone', () => {
+    const N = require(CG('src/copilot/context-need.js'));
+    const pick = [{ selector: '#apply' }];
+    const t = (m, o) => { const r = N.need(m, o); return [r.dom, r.picks, r.cookies]; };
+    assert.deepStrictEqual(t('summarise this page'), [true, false, false]);
+    assert.deepStrictEqual(t('what is 2 + 2?'), [false, false, false], 'not about the page: nothing attached');
+    assert.deepStrictEqual(t('fill this in with my details', { picks: pick }), [true, true, false]);
+    assert.deepStrictEqual(t('why does the button not work', { picks: pick, pickedAt: Date.now() - 30000 }), [true, true, false], 'picked moments ago');
+    assert.deepStrictEqual(t('tell me a joke', { picks: pick, pickedAt: Date.now() - 600000 }), [false, false, false], 'old picks not pointed at');
+    assert.deepStrictEqual(t('am I logged in here?'), [true, false, true]);
+    assert.deepStrictEqual(t('/help'), [false, false, false]);
+    assert.deepStrictEqual(t('hello', { force: { dom: true } }), [true, false, false], '/ctx dom on still forces');
+    const sum = N.cookieSummary([{ name: '__Secure-session', value: 'SECRET-VALUE', domain: '.x.com', httpOnly: true, secure: true, expirationDate: Date.now() / 1000 + 7200 }, { name: 'theme', value: 'dark', domain: 'x.com' }], 'https://x.com/');
+    assert.ok(!JSON.stringify(sum).includes('SECRET-VALUE') && !JSON.stringify(sum).includes('dark'), 'no cookie value');
+    assert.deepStrictEqual([sum.count, sum.signIn.map(c => c.name), sum.soonest.expiresInHours], [2, ['__Secure-session'], 2]);
+    const br = fs.readFileSync(CG('src/copilot/bridge.js'), 'utf8'); const js = fs.readFileSync(CG('renderer/browser.js'), 'utf8');
+    assert.ok(/if \(autoContext\) \{[\s\S]{0,200}context-need'\)\.need\(message/.test(br), 'the bridge decides');
+    assert.ok(/autoContext: true/.test(js) && /let ctxDom\s+= false;/.test(js), 'the pane asks it to; DOM is not forced by default');
+    assert.ok(/<div id="copilot-context-bar" hidden>/.test(fs.readFileSync(CG('renderer/browser.html'), 'utf8')), 'the chips are gone (ids kept)');
   });
 
   // ── in Clear Glass's engine ──
