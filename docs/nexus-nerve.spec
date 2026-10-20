@@ -382,3 +382,15 @@ spec:
 # a window's field is in use and says the last act in the HUD; each node has a transparent labelled button, so the
 # interaction field (which cannot number a canvas) numbers the nodes, and `idearium field point <n>` presses one (it says
 # that node's state — nothing more). `idearium nerve` prints the snapshot.
+
+## ADDENDUM 2026-10-19 (0.60.175 PM6) — Ollama feels the page, in words
+James, 2026-10-19: "interaction field, nexus nerve, hooking ollama in to feel with "nexus nerve", see with the interaction field
+and scrips injected into each page."
+- The coder's reading (to confirm): "feel" = Ollama's standing context carries WHAT changed on the page, not only that the DOM moved.
+- Clear Glass's page map (src/page/page-session.js) emits page.map with the window's site, what changed since the last visit to this
+  kind of page in words ("+1 (textbox "Postcode"), 2 gone") and the map's first lines. attention.js keeps it as the window's
+  focus.page; Nerve copies focus as before (no change to lib/nerve/index.js); lib/nerve-ollama-bridge.js pushes a window's page
+  line when its map was read again since the last push — once, not again while nothing changed.
+- A mapped window stays live: the DOM observer every page already carries (dom/archaeology.js) reports dom.mutations, and the
+  window is mapped again once it settles — so the feel follows the page without an agent asking.
+- attention-non-truth holds: the feel is a projection for attention; no decision is derived from it here.

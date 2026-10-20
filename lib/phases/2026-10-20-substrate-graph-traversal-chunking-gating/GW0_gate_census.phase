@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
+context: >-
+  pipeline phase GW0_gate_census of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: GW0_gate_census (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416773
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416773
+lastSeenAt: 1792456416773
+fingerprint: null
+payload:
+  id: GW0_gate_census
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/gate-census.js
+    - docs/atlases/gate-census.md
+  depends_on: []
+  blocks:
+    - MOD-GATE-CENSUS
+  spec: docs/substrate.spec
+  graph: '0475656455782995'

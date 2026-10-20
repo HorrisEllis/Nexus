@@ -141,7 +141,7 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
     assert.ok(r.ok, JSON.stringify(r));
     assert.strictEqual(r.branchedFrom, 'original');
     assert.strictEqual(made[0][6], path.resolve(W.desktopDisk(originState)), 'the overlay is backed by the original\'s disk');
-    assert.deepStrictEqual(r.ports, { display: 7, vncPort: 5907, wsPort: 5707 });
+    assert.deepStrictEqual(r.ports, { display: 7, vncPort: 5907, wsPort: 5707, sshPort: 2207 });   // 0.60.168: sshPort reaches the status, so the viewer can say how to get in by terminal
     assert.strictEqual(r.state, 'booting');
     await new Promise(res => setTimeout(res, 20));
     const s = W.desktopStatus('c-branch');
@@ -242,26 +242,55 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
     assert.match(app, /extras: \['desktop'\] \}/); assert.match(app, /class="vm-setup-extra" value="desktop"/);
   });
 
-  await t('WS-13', '0.39.280: a VM that dies at once on whpx is retried once in software (tcg) and said; a second death is reported with QEMU\'s words', async () => {
+  await t('WS-13', '0.39.280 → 0.60.168: a VM that dies at once on whpx is retried on whpx in safe mode (conservative CPU, kernel-irqchip=off), THEN in software (tcg); every death is kept with QEMU\'s words; a death in software is reported', async () => {
     const F = fakes();
-    F.q.buildQemuArgs = (cfg) => ({ args: ['-accel', String(cfg.accelerator)], qga: { transport: 'tcp', port: 1 }, vncDisplayNum: 9, accel: cfg.accelerator || 'whpx', cfg });
+    F.q.buildQemuArgs = (cfg) => ({ args: ['-accel', String(cfg.accelerator), String(cfg.cpu), String(!!cfg.irqchipOff)], qga: { transport: 'tcp', port: 1 }, vncDisplayNum: 9, accel: cfg.accelerator || 'whpx', cfg });
     const r = W.startDesktop({ compartmentId: 'c-whpx', stateRoot: path.join(tmp, 'c-whpx'), baseImage: path.join(tmp, 'orig.qcow2'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: (a) => fs.writeFileSync(a[a.length - 1], 'ov') });
     assert.ok(r.ok && r.accel === 'whpx');
+    assert.deepStrictEqual(r.ports, { display: 9, vncPort: 5909, wsPort: 5709, sshPort: 2209 });
     F.spawned[0].p.stderr.emit('data', 'qemu: WHPX: Failed to emulate MMIO access\n');
     F.spawned[0].p.emit('exit', 1);
-    assert.strictEqual(F.spawned.length, 2, 'retried once');
-    assert.deepStrictEqual(F.spawned[1].args, ['-accel', 'tcg']);
+    assert.strictEqual(F.spawned.length, 2, 'retried');
+    assert.deepStrictEqual(F.spawned[1].args, ['-accel', 'whpx', 'qemu64,+ssse3,+sse4.1,+sse4.2,+popcnt', 'true'], 'rung 2: still hardware, safe CPU, kernel-irqchip=off');
     let s = W.desktopStatus('c-whpx');
-    assert.strictEqual(s.state, 'running');
-    assert.deepStrictEqual([s.accel, s.accelFallback.from, /WHPX/.test(s.accelFallback.reason)], ['tcg', 'whpx', true]);
-    F.spawned[1].p.stderr.emit('data', 'qemu: could not open disk\n');
+    assert.deepStrictEqual([s.accel, s.state, s.accelFallback.rung], ['whpx', 'running', 'whpx-safe']);
+    F.spawned[1].p.stderr.emit('data', 'qemu: WHPX: injection failed\n');
     F.spawned[1].p.emit('exit', 1);
-    assert.strictEqual(F.spawned.length, 2, 'never a third try');
+    assert.strictEqual(F.spawned.length, 3, 'then software');
+    assert.deepStrictEqual(F.spawned[2].args, ['-accel', 'tcg', 'qemu64,+ssse3,+sse4.1,+sse4.2,+popcnt', 'false']);
+    s = W.desktopStatus('c-whpx');
+    assert.deepStrictEqual([s.accel, s.accelFallback.from, s.accelFallback.rung], ['tcg', 'whpx', 'tcg']);
+    assert.deepStrictEqual(s.accelTried.map(t => t.rung), ['first', 'whpx-safe'], 'both deaths kept');
+    assert.ok(s.accelTried.every(t => /WHPX/.test(t.reason)));
+    F.spawned[2].p.stderr.emit('data', 'qemu: could not open disk\n');
+    F.spawned[2].p.emit('exit', 1);
+    assert.strictEqual(F.spawned.length, 3, 'never a fourth try');
     s = W.desktopStatus('c-whpx');
     assert.deepStrictEqual([s.state, s.exitCode], ['stopped', 1]);
     assert.match(s.error, /could not open disk/);
     const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/desktop.html'), 'utf8');
     assert.match(page, /async function whyUnreachable\(\)/, 'the viewer asks why instead of only saying unreachable');
+  });
+
+  await t('WS-13b', '0.60.168: a hardware accelerator other than whpx (kvm/hvf) goes straight to software; software never retries; the viewer shows the ssh way in and sizes the screen under its real header; qemu args: whpx safe mode and tcg cache', async () => {
+    const F = fakes();
+    F.q.buildQemuArgs = (cfg) => ({ args: ['-accel', String(cfg.accelerator)], qga: { transport: 'tcp', port: 1 }, vncDisplayNum: 3, accel: cfg.accelerator || 'kvm', cfg });
+    W.startDesktop({ compartmentId: 'c-kvm', stateRoot: path.join(tmp, 'c-kvm'), baseImage: path.join(tmp, 'orig.qcow2'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: (a) => fs.writeFileSync(a[a.length - 1], 'ov') });
+    F.spawned[0].p.emit('exit', 1);
+    assert.deepStrictEqual(F.spawned[1].args, ['-accel', 'tcg']);
+    F.spawned[1].p.emit('exit', 1);
+    assert.strictEqual(F.spawned.length, 2);
+    const real = require(path.join(ROOT, 'cos/compartment/qemu-runtime.js'));
+    const base = { disk: 'd.qcow2', ramMB: 1024, cpus: 1, machineType: 'q35', network: 'none', headless: true, vmStateDir: path.join(tmp, 'qs'), guestAgent: false };
+    const w = real.buildQemuArgs({ ...base, accelerator: 'whpx', irqchipOff: true }, 'comp-w', 'n').args;
+    assert.ok(w.includes('q35,accel=whpx,kernel-irqchip=off'), 'whpx safe mode');
+    const w0 = real.buildQemuArgs({ ...base, accelerator: 'whpx' }, 'comp-w', 'n').args;
+    assert.ok(w0.includes('q35,accel=whpx'), 'whpx as before when not asked');
+    const t0 = real.buildQemuArgs({ ...base, accelerator: 'tcg' }, 'comp-w', 'n').args;
+    assert.ok(t0.includes('tcg,tb-size=512'), 'a bigger translation cache under software');
+    assert.ok(t0.includes('usb-tablet'), 'the absolute pointer (0.60.12) is still there');
+    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/desktop.html'), 'utf8');
+    assert.match(page, /id="ssh"/); assert.match(page, /--head-h/); assert.match(page, /ResizeObserver\(sizeHead\)/);
   });
 
   await t('WS-14', '0.39.280 BS14: git errors are git\'s own error lines, never its CRLF warnings; a CRLF-configured git makes the branch without warnings', () => {

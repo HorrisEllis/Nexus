@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH3_chunk_inspector
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH3_chunk_inspector
+context: >-
+  pipeline phase CH3_chunk_inspector of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: CH3_chunk_inspector (interface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416770
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416770
+lastSeenAt: 1792456416770
+fingerprint: null
+payload:
+  id: CH3_chunk_inspector
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/chunk-inspector.js
+  depends_on:
+    - CH1_strategies_behind_the_contract
+    - TB1_toolbox
+    - GR3_graph_query_surface
+  blocks:
+    - MOD-CHUNK-INSPECTOR
+  spec: docs/substrate.spec
+  graph: 99f25ae95f99935d

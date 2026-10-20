@@ -1446,7 +1446,7 @@ function startService() {
     const ledgerDir = path.join(ROOT, cfg.dataDir || cfg.ledgerDir || 'data');
     fs.mkdirSync(ledgerDir, { recursive: true });
     try {
-      fs.watch(ledgerDir, { recursive: true }, (event, filename) => {
+      require('../lib/safe-watch.js').watch(ledgerDir, { recursive: true }, (event, filename) => {
         if (!filename || !filename.endsWith('.ndjson')) return;
         // Debounce — only process once per 500ms per system
         clearTimeout(monitors[name]._watchDebounce);

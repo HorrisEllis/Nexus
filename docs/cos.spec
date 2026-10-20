@@ -398,3 +398,11 @@ spec:
 # cos/testenv/environment.js (BS4): check(repoDir) — downloaded / configured / VM, the install plan, and options() —
 # the environment option catalogue. Proven by tests/modules/test-cos-workspace.test.js WS-13, WS-14 and
 # tests/modules/test-build-surface.test.js BS4-*.
+
+# ── ADDENDUM 2026-10-19 (0.60.168) — the desktop's accelerator ladder, and the way in by terminal ──
+# James: "can you fix the cos envirement? i can't control it or access it." The 0.39.280 rule above (one retry, in software)
+# is superseded, and kept: startDesktop climbs whpx → whpx safe mode (qemu64+ssse3/sse4.1/sse4.2/popcnt, kernel-irqchip=off)
+# → tcg (tb-size 512); kvm/hvf → tcg. desktopStatus() carries accelFallback { from, to, rung, reason } and accelTried [{ rung,
+# accel, reason }], and ports.sshPort (2200+N, loopback only). The viewer shows the ssh command. The compartment's own shape
+# (loom/templates/cos-compartment.js: intent, mounts, drawbridge, seal) is unchanged. Proven by tests/modules/test-cos-workspace.test.js
+# WS-13 and WS-13b; no VM was booted in the release environment.

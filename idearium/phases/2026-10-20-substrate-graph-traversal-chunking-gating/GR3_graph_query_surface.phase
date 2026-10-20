@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR3_graph_query_surface
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR3_graph_query_surface
+context: >-
+  pipeline phase GR3_graph_query_surface of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: GR3_graph_query_surface (interface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416763
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416763
+lastSeenAt: 1792456416763
+fingerprint: null
+payload:
+  id: GR3_graph_query_surface
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/graph-panel.js
+  depends_on:
+    - GR2_graph_views
+    - TV1_traversal_primitive
+    - TB1_toolbox
+  blocks:
+    - MOD-GRAPH-QUERY
+  spec: docs/substrate.spec
+  graph: d0e57a5baa382165

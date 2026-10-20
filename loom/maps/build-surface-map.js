@@ -207,6 +207,13 @@ const FILES = [
   // §0.59.0 FN1–FN3 — the interaction field as commands, Nexus Nerve seeing it: Clear Glass's per-window attention record
   // (pure; fed from the bus by main/index.js, served at /cli/attention by ipc/agent-routes.js)
   ['clear-glass/src/page/attention.js', I('clear-glass/src/page/attention.js'), []],
+  // §0.60.174 PM1–PM4 — the page map: blocks (semantic-tree's walk in content mode) → index + chunks → a synthesized map → intent
+  // → targets; page-memory counts visits and outcomes per site so the map learns (docs/2026-10-19-upload-intent-and-page-map-phasemap.spec)
+  ['clear-glass/src/page/blocks.js', I('clear-glass/src/page/blocks.js'), [I('clear-glass/src/page/semantic-tree.js')]],
+  ['clear-glass/src/page/page-map.js', I('clear-glass/src/page/page-map.js'), []],
+  ['clear-glass/src/page/page-memory.js', I('clear-glass/src/page/page-memory.js'), []],
+  ['clear-glass/src/page/page-session.js', I('clear-glass/src/page/page-session.js'), [I('clear-glass/src/page/blocks.js'), I('clear-glass/src/page/page-map.js')]],   // §0.60.175 PM5–PM7 per window: map/find/chunks/scrape/outcome; live re-map; 'page.map' with the feel
+  ['clear-glass/renderer/page-map-panel.js', I('clear-glass/renderer/page-map-panel.js'), []],   // §0.60.175 PM8 the panel beside the page (window.cg.driver.exec)
   // §0.59.3 the Fiverr panel in the browser: cg.autofill.gig / gigFill / gigToIdearium (preload → ipc/bridge.js → src/autofill/gig.js; Idearium through lib/nexus-client)
   // §0.59.4 a Guardian listener runs the Nexus commands it hears, through the one command tool
   // §0.59.5 a watched chat page talks to Nexus: main/index.js attaches it to every web-contents; it runs through lib/listener-commands.js
@@ -294,6 +301,14 @@ const CONSUMERS = [
   [I('guardian/lib/job-retry.js'), I('guardian/options.js'), '§OP1 retry.max_attempts, first_wait_ms, busy_first_wait_ms'],
   [I('guardian/server.js'), I('guardian/options.js'), '§OP1 GET/POST /api/options'],
   [I('idearium/api/index.js'), I('guardian/server.js'), '§OP2 HTTP /api/systems/:system/options → the system\'s /api/options'],
+  [I('clear-glass/src/page/page-session.js'), I('clear-glass/src/page/blocks.js'), '§0.60.175 PM5 map() reads pageScript() in the window and normalize()s it'],
+  [I('clear-glass/src/page/page-session.js'), I('clear-glass/src/page/page-map.js'), '§0.60.175 PM5 chunk / synthesize / find / search / toMarkdown / toJSON'],
+  [I('clear-glass/src/driver/index.js'), I('clear-glass/src/page/page-session.js'), '§0.60.175 PM5 pageMap/pageFind/pageChunks/pageScrape/pageOutcome; pageMutated → poke (PM7)'],
+  [I('clear-glass/src/driver/index.js'), I('clear-glass/src/page/page-memory.js'), '§0.60.175 PM5 shared() — the per-site memory the session learns into'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/driver/index.js'), '§0.60.175 PM7 bus dom.mutations → driver.pageMutated(agentId) (the observer dom/archaeology.js injects)'],
+  [I('lib/nerve-ollama-bridge.js'), I('lib/nerve/index.js'), '§0.60.175 PM6 getSnapshot() windows[].focus.page → the feel pushed to Ollama\'s standing context'],
+  [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/agent-routes.js'), '§0.60.175 PM5 HTTP POST /cli/driver (pageMap, pageFind, pageChunks, pageScrape, pageOutcome) — `idearium page …`'],
+  [I('clear-glass/src/page/blocks.js'), I('clear-glass/src/page/semantic-tree.js'), '§0.60.174 PM1 pageScript() is semantic-tree.pageScript({ content: true }) — one address rule for blocks and the tree'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/page/attention.js'), '§FN2 bus.on(\'*\') → attention.note(type, data)'],
   [I('clear-glass/src/ipc/agent-routes.js'), I('clear-glass/src/page/attention.js'), '§FN2 GET /cli/attention → shared().windows()'],
   [I('lib/nerve/index.js'), I('clear-glass/src/ipc/agent-routes.js'), '§FN2 HTTP GET :7702/cli/attention → each window\'s focus in the snapshot'],

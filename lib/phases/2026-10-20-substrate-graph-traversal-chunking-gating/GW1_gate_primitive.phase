@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+context: >-
+  pipeline phase GW1_gate_primitive of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: GW1_gate_primitive (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416773
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416773
+lastSeenAt: 1792456416773
+fingerprint: null
+payload:
+  id: GW1_gate_primitive
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/core/gate.js
+    - lib/node-schemas/schema.verdict
+  depends_on:
+    - GW0_gate_census
+    - GR1_graph_primitive
+    - GQ1_quality_stream
+  blocks:
+    - MOD-GATE
+  spec: docs/substrate.spec
+  graph: 0fa8b100c09c9d93

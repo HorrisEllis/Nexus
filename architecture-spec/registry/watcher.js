@@ -67,7 +67,7 @@ function createWatcher({ nodesDir, checkFns, onChange = () => {} }) {
       const typeDir = path.join(nodesDir, type);
       if (!fs.existsSync(typeDir)) fs.mkdirSync(typeDir, { recursive: true });
       for (const f of fs.readdirSync(typeDir)) _processFile(type, path.join(typeDir, f));
-      const w = fs.watch(typeDir, (_evt, filename) => {
+      const w = require('../../lib/safe-watch.js').watch(typeDir, (_evt, filename) => {
         if (filename) _processFile(type, path.join(typeDir, filename));
       });
       watchers.push(w);

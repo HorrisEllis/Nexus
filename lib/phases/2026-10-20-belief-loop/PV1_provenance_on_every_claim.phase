@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+context: pipeline phase PV1_provenance_on_every_claim of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: PV1_provenance_on_every_claim (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303348
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303348
+lastSeenAt: 1792456303348
+fingerprint: null
+payload:
+  id: PV1_provenance_on_every_claim
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/provenance.js
+  depends_on:
+    - GR1_graph_primitive
+    - NM1_one_name_per_file
+  blocks:
+    - MOD-PROVENANCE
+  spec: docs/belief-loop.spec
+  graph: 67737d326ae34da8

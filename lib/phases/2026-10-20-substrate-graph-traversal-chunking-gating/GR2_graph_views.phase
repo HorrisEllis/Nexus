@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+context: >-
+  pipeline phase GR2_graph_views of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: GR2_graph_views (library) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416761
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416761
+lastSeenAt: 1792456416761
+fingerprint: null
+payload:
+  id: GR2_graph_views
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/core/views/loom.js
+    - lib/core/views/requires.js
+    - lib/core/views/phases.js
+    - lib/core/views/causal.js
+    - lib/core/views/lattice.js
+    - lib/core/views/page.js
+  depends_on:
+    - GR1_graph_primitive
+    - AD1_adapter_contract
+  blocks:
+    - MOD-GRAPH-VIEWS
+  spec: docs/substrate.spec
+  graph: 371086c0f14c49a2

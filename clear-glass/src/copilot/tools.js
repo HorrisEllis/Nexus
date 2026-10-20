@@ -24,6 +24,12 @@ const TOOLS = [
   { name: 'at',               cat: 'field',    desc: 'What is under a point, top layer first', params: { x: 'number', y: 'number' } },
   { name: 'spotlight',        cat: 'field',    desc: 'Show James what you are looking at: a ring + label on target n / selector / x,y,w,h (off:true clears)', params: { n: 'number?', selector: 'string?', label: 'string?' } },
   { name: 'fieldOff',         cat: 'field',    desc: 'Remove the drawn field and spotlight', params: {} },
+  // ── The page map (0.60.175) — the page as blocks, chunks and a map that learns per site; intent → the block to act on ──
+  { name: 'pageMap',          cat: 'page',     desc: 'Map the page: regions, forms (fields, required, submit), actions, headings as short lines; what changed since the last visit to this kind of page', params: { maxBlocks: 'number?' } },
+  { name: 'pageFind',         cat: 'page',     desc: 'Intent → the blocks to act on, ranked, each with selector, address, centre (cx,cy) and why (words, kind, covered, stable, worked before)', params: { intent: 'string', fresh: 'boolean?' } },
+  { name: 'pageOutcome',      cat: 'page',     desc: 'Tell the map what happened when you acted on a pageFind target (ok true/false) — it learns per site', params: { intent: 'string', id: 'string', ok: 'boolean' } },
+  { name: 'pageChunks',       cat: 'page',     desc: 'The page as chunks of text by section (or only the chunks a query hits) — for reading, analysing, reverse engineering', params: { query: 'string?', maxChars: 'number?' } },
+  { name: 'pageScrape',       cat: 'page',     desc: 'The whole page as markdown by section (format md) or blocks + chunks + map (format json)', params: { format: 'string?' } },
   // ── Browser ────────────────────────────────────────────────────────────
   { name: 'navigate',         cat: 'browser',  desc: 'Navigate to URL', params: { url: 'string', agentId: 'string?' } },
   { name: 'click',            cat: 'browser',  desc: 'Click element by selector or coords', params: { selector: 'string?', x: 'number?', y: 'number?' } },

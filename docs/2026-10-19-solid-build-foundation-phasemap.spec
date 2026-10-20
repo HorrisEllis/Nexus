@@ -245,3 +245,12 @@ phases:
     proof: >-
       a Clear Glass test (clear-glass/src/driver/glass.js) — the panel reads the current autobuild config, toggles
       auto-advance and resume-on-fault, and the change round-trips through /api/config.
+
+## ADDENDUM 2026-10-20 — DC1 generalized; GQ1 named in two maps
+James, 2026-10-20: "spec it. the chunking system. can you also spec the graphs, traversal, dynamic chunking, gating,"
+- DC1_dynamic_chunk_at_plan stays here as the contract-brick instance; DK1_dynamic_chunking of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec depends on it and generalizes it (size by the consumer's
+  learned budget AND split along what a gate failed), with DK2 learning the granularity by counting.
+- Found: GQ1_quality_stream is defined both here and in docs/2026-10-19-gate-quality-checks-phasemap.spec (superseded by this map), so
+  a bare `GQ1_quality_stream` in a depends_on is ambiguous and reads as dangling. The new maps name it as
+  `docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream`. Both definitions kept (§0.3).

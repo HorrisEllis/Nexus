@@ -363,6 +363,17 @@
   <div class="ctx-item" data-action="print">🖨 Print page</div>
 </div>
 
+<!-- §0.60.175 PM8 — James: "synthesize a fucking map in relation to the weboage to use as a map or reference point for inputs from
+     the cli or the intent. learns over time." The page map beside the page. Behaviour: page-map-panel.js. -->
+<div id="page-map-panel" role="dialog" aria-label="Page map">
+  <div class="pm-headbar"><span>▦ PAGE MAP</span><button id="pm-close" title="Close">✕</button></div>
+  <div id="pm-head" class="pm-headinfo"></div>
+  <div class="pm-row"><input id="pm-intent" placeholder="intent — e.g. type my email · click apply · (or a query for chunks)"><button id="pm-find" class="pm-main">Find</button></div>
+  <div class="pm-row"><button id="pm-map">Map</button><button id="pm-chunks">Chunks</button><button id="pm-scrape" title="the page as markdown, copied">Scrape</button></div>
+  <div id="pm-status" class="pm-status"></div>
+  <div id="pm-out"></div>
+</div>
+
 <!-- §0.59.3 Fiverr — James: "fiverr … i need serious help … its built somewhere but not in the browser.html". The gig
      writer (src/autofill/gig.js) had only a Settings screen; this is it beside the page. Behaviour: gig-panel.js. -->
 <div id="gig-panel" role="dialog" aria-label="Fiverr gigs">
@@ -495,6 +506,7 @@
        unrelated feature that happens to share the "Agent Mesh" label). -->
   <button class="nav-btn" id="mesh-picker-btn" data-tool-id="mesh-picker" data-tool-label="Agent Mesh" data-tool-icon="◈" title="Agent Mesh">◈</button>
   <button class="nav-btn" id="btn-mesh" data-tool-id="mesh" data-tool-label="Agent Mesh" data-tool-icon="⬡" title="Agent Mesh">⬡</button>
+  <button class="nav-btn" id="btn-page-map" data-tool-id="page-map" data-tool-label="Page map" data-tool-icon="▦" title="Page map — the page as blocks and a map that learns; find what to act on for an intent; chunks; scrape">▦</button>   <!-- §0.60.175 PM8 -->
   <button class="nav-btn" id="btn-gig" data-tool-id="gig" data-tool-label="Fiverr gigs" data-tool-icon="✦" title="Fiverr — write a gig, fill the page, turn an order into a build">✦</button>   <!-- §0.59.3 -->
   <button class="nav-btn" id="btn-diag" data-tool-id="diag" data-tool-label="Diagnostics" data-tool-icon="⚕" title="Diagnostics">⚕</button>
   <!-- §ADDED 2026-09-25 — real backing element for src/toolbar/commands.js's
@@ -557,6 +569,7 @@
 <script src="selector-assign/selector-assign.js"></script>
 <script src="copilot-cli.js"></script>
 <script src="browser.js"></script>
-<script src="gig-panel.js"></script>   <!-- §0.59.3 Fiverr in the browser -->
+<script src="gig-panel.js"></script>
+<script src="page-map-panel.js"></script>   <!-- §0.60.175 PM8 the page map -->   <!-- §0.59.3 Fiverr in the browser -->
 </body>
 </html>

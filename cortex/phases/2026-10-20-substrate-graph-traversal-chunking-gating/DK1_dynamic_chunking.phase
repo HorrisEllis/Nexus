@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+context: >-
+  pipeline phase DK1_dynamic_chunking of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: DK1_dynamic_chunking (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416771
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416771
+lastSeenAt: 1792456416771
+fingerprint: null
+payload:
+  id: DK1_dynamic_chunking
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/core/chunk.js
+    - cortex/core/raid/contract-adapters.js
+    - cortex/core/raid/contract-gates.js
+  depends_on:
+    - CH1_strategies_behind_the_contract
+    - DC1_dynamic_chunk_at_plan
+    - MF1_model_fit_routing
+  blocks:
+    - MOD-DYNAMIC-CHUNK
+  spec: docs/substrate.spec
+  graph: 2e1c9985830b2941

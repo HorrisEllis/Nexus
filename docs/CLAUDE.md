@@ -256,3 +256,40 @@ and uncertain.
 *If you are an AI reading this at the start of a session: these five rules are not
 suggestions. Map first, reuse first, wire the registry, addend the specs, lose
 nothing. Then build.*
+
+## ADDENDUM 2026-10-19 (0.60.172 DG3) — every phase has its place in the whole DAG
+James, 2026-10-19: "every phasemap phase needs extensive dag, that needs to start being standard."
+The standard for every phase of every phasemap (Nexus's and every repo's):
+- a `depends_on:` line — `[]` when it depends on nothing; a phase with none is reported as undeclared;
+- every name in it resolves to a phase or a decision in some map (no prose, no typos) — else it is dangling and not built;
+- no cycles — a phase in one is not built;
+- its `files:` named, so same-file phases with no order between them are seen.
+lib/phase-dag.js checks all of it across all maps; `repo dag <repo> [phase]` and GET /api/repos/:uuid/phases/dag show it; the
+build refuses DAG_INVALID (anyway overrides, said on the run). DG1 (open depends_on) and DG2 (the phase's own graph) still hold.
+
+## ADDENDUM 2026-10-19 (decision NC0) — neutral core, adapters, explicit evidence, a schema for everything reusable
+James, 2026-10-19: "the components in the component registry can be any language. for idearium to build any project, anyone can
+unnderstand, and it would be immensly stable." Map: docs/2026-10-19-infrastructure-spine-phasemap.spec (NC0 addendum).
+- **Migration rule:** new features depend on the neutral contract (lib/core/*, lib/adapters/contract.js), never import JS-specific
+  verification or scanning (node --check, exportsOf, the require scanner) directly. Existing JS paths move behind the JS adapter.
+- **Evidence rule:** every edge and verdict says where it came from — discovered (which adapter), declared (by whom) or unknown.
+  Unknown stays unknown; it never counts as proof of completeness.
+- **Schema rule:** reusable or deterministic code that is architectural, stores memory or data, or keeps consistency has a schema,
+  template, reusable node type or spec file — built from it, checked against it.
+- Adapters grow only when a second real adapter needs a method; the boundary is proven (NT1) before breadth.
+
+
+## ADDENDUM 2026-10-20 — specs, then phases, then each phase specced again (his rule)
+James, 2026-10-20: "not phasemaps. full specs to build them. everything needs  to be speccced before built,so it can be rebuilt if
+lost. can you do that? what about specs, then phases then specced again with dag and related files for it, look at the handoff"
+The order, for every new capability:
+1. **A full spec** in emerge's module format (emerge/SPEC_COMPILER.spec is the reference): schemas with fields and validity rules;
+   interfaces for everything it stands on, with their real exports; modules with path, exports (signatures), gate pipeline,
+   behavioral contracts, error paths and acceptance. It must compile in emerge/compiler/kg-builder.js with every module and schema
+   at specDepth 1.0, no BLACK node, and the invariants engine valid — the bar for "can be rebuilt if lost". Examples:
+   docs/substrate.spec, docs/belief-loop.spec. Checked by tests/modules/test-substrate-spec.test.js.
+2. **Phases** in a phasemap, each naming `spec:` and the module ids it builds in `blocks:` (DAG-checked, lib/phase-dag.js).
+3. **Each phase specced again**: `node emerge/compiler/phase-specs.js <map>` writes <owner>/phases/<map-id>/<phase>.phase (what is
+   authored) and graph/<phase>-<hash>.graph (its related files with roles, crossings, and its slice of the whole DAG), beside the
+   system that owns it (the handoff's PN1 layout). `--check` reports drift.
+Only then is code written, and a phase's code is built against its .phase, its .graph and its spec modules.

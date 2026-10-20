@@ -257,6 +257,13 @@ function _archiveOverlay(disk) {
   return { to };
 }
 
+/** the ports a session reports: the screen (VNC + websocket) and the guest's sshd on the host's loopback (0.60.168 — sshPort
+ *  was in desktopPorts since 0.60.12 but never reached the status, so no viewer could say how to get in by terminal) */
+function _portsOf(built, compartmentId) {
+  const d = built.vncDisplayNum;
+  return { display: d, vncPort: 5900 + d, wsPort: 5700 + d, sshPort: 2200 + d };
+}
+
 /**
  * startDesktop({ compartmentId, name, workDir, stateRoot, originStateRoot, baseImage, ramMB, cpus, network })
  *   -> { ok, state: 'booting'|'running', compartmentId, disk, backing, ports, reused } | { ok:false, error }
@@ -309,10 +316,20 @@ function startDesktop({ compartmentId, name = 'repo', workDir, stateRoot, origin
   // that dies at once never serves its screen. The one launch below is watched: an exit within EARLY_EXIT_MS on a
   // hardware accelerator (whpx / hvf / kvm — whpx refuses some CPU models and machines) is retried ONCE in software
   // (tcg, cpu qemu64+) and said (accelFallback, with the first attempt's stderr); anything else is reported as it is.
-  const launch = (accelerator, cpu) => {
-    const built = q.buildQemuArgs({ ...vmConfig, accelerator, cpu }, compartmentId, `desktop-${String(compartmentId).slice(0, 8)}`);
+  const SAFE_CPU = 'qemu64,+ssse3,+sse4.1,+sse4.2,+popcnt';
+  const launch = (accelerator, cpu, extra = {}) => {
+    const built = q.buildQemuArgs({ ...vmConfig, accelerator, cpu, ...extra }, compartmentId, `desktop-${String(compartmentId).slice(0, 8)}`);
     const proc = spawn(bin, built.args, { stdio: ['ignore', 'ignore', 'pipe'], windowsHide: true });
     return { built, proc };
+  };
+  // 0.60.168 — James: "can you fix the cos envirement? i can't control it or access it." The screenshot said "accel tcg
+  // (whpx failed)": one failed hardware launch dropped straight to software, where an XFCE desktop is too slow to steer.
+  // The ladder is now: the hardware accelerator as it was → the SAME accelerator with a conservative CPU model and
+  // kernel-irqchip=off (WHPX's usual cure) → software (tcg). Every rung that died is kept (accelTried) with QEMU's words.
+  const ladderNext = (sess) => {
+    if (sess.accel === 'tcg') return null;
+    if (sess.accel === 'whpx' && sess.rung === 'first') return { rung: 'whpx-safe', accel: 'whpx', cpu: SAFE_CPU, extra: { irqchipOff: true } };
+    return { rung: 'tcg', accel: 'tcg', cpu: SAFE_CPU, extra: {} };
   };
   let first;
   try { first = launch(null, vmConfig.cpu); }
@@ -320,23 +337,28 @@ function startDesktop({ compartmentId, name = 'repo', workDir, stateRoot, origin
   const { built } = first;
   const sess = { compartmentId, name, disk, backing, branchedFrom: backing === originDisk ? 'original' : 'base', startedAt: Date.now(), exited: null,
     stderr: '', repoIn: workDir ? 'pending' : 'none', repoError: null, login: login && /^[a-z_][a-z0-9_-]{0,31}$/.test(String(login.user || '')) ? { user: String(login.user), password: String(login.password || ''), applied: 'pending' }
-      : (login && login.user ? { user: null, password: null, applied: `refused: '${String(login.user).slice(0, 40)}' is not a valid login name` } : null), accel: built.accel, accelFallback: null,
-    ports: { display: built.vncDisplayNum, vncPort: 5900 + built.vncDisplayNum, wsPort: 5700 + built.vncDisplayNum }, proc: first.proc, built };
+      : (login && login.user ? { user: null, password: null, applied: `refused: '${String(login.user).slice(0, 40)}' is not a valid login name` } : null), accel: built.accel, accelFallback: null, accelTried: [], rung: 'first',
+    ports: _portsOf(built, compartmentId), proc: first.proc, built };
   const watch = (proc, canRetry) => {
     if (proc.stderr && proc.stderr.on) proc.stderr.on('data', d => { if (sess.stderr.length < 20000) sess.stderr += d; });
     if (!proc.on) return;
     proc.on('exit', (code) => {
       if (sess.proc !== proc) return;
       const early = Date.now() - sess.startedAt < EARLY_EXIT_MS;
-      if (canRetry && early && !sess.stopping && sess.accel !== 'tcg') {
+      const next = canRetry && early && !sess.stopping ? ladderNext(sess) : null;
+      if (next) {
         const why = sess.stderr.trim().split('\n').slice(-3).join(' ') || `exit ${code}`;
         try {
-          const again = launch('tcg', 'qemu64,+ssse3,+sse4.1,+sse4.2,+popcnt');
-          sess.accelFallback = { from: sess.accel, to: 'tcg', reason: why.slice(0, 400) };
-          sess.accel = 'tcg'; sess.stderr = ''; sess.startedAt = Date.now(); sess.proc = again.proc; sess.built = again.built;
-          watch(again.proc, false);
+          const again = launch(next.accel, next.cpu, next.extra);
+          const from = sess.accelFallback ? sess.accelFallback.from : sess.accel;
+          sess.accelTried.push({ rung: sess.rung, accel: sess.accel, reason: why.slice(0, 400) });
+          sess.rung = next.rung;
+          sess.accelFallback = { from, to: next.accel, rung: next.rung, reason: why.slice(0, 400) };
+          sess.accel = next.accel; sess.stderr = ''; sess.startedAt = Date.now(); sess.proc = again.proc; sess.built = again.built;
+          sess.ports = _portsOf(again.built, compartmentId);
+          watch(again.proc, next.rung !== 'tcg');   // tcg is the last rung: a death there is reported as it is
           return;
-        } catch (_) { /* fall through: report the first exit */ }
+        } catch (_) { /* fall through: report the exit */ }
       }
       sess.exited = code === null ? -1 : code;
     });
@@ -377,7 +399,7 @@ function desktopStatus(compartmentId) {
   const s = _sessions.get(compartmentId);
   if (!s) return { compartmentId, state: 'none', ports: desktopFor(compartmentId) };
   const state = s.exited !== null ? 'stopped' : (s.repoIn === 'pending' ? 'booting' : 'running');
-  return { compartmentId, state, ports: s.ports, disk: s.disk, backing: s.backing, branchedFrom: s.branchedFrom, accel: s.accel, accelFallback: s.accelFallback || null, repoIn: s.repoIn,
+  return { compartmentId, state, ports: s.ports, disk: s.disk, backing: s.backing, branchedFrom: s.branchedFrom, accel: s.accel, accelFallback: s.accelFallback || null, accelTried: s.accelTried || [], repoIn: s.repoIn,
     repoError: s.repoError, login: s.login || null, startedAt: s.startedAt, exitCode: s.exited, error: s.exited !== null && s.exited !== 0 ? s.stderr.trim().split('\n').slice(-3).join(' ') : null };
 }
 

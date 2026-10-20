@@ -798,6 +798,19 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   if (depsGate.open.length && !anyway) {
     return { ok: false, status: 409, error: `not built: ${_require('../../lib/phase-deps-gate.js').line(depsGate, phase)}`, extra: { code: 'DEPS_OPEN', open: depsGate.open, unknown: depsGate.unknown } };
   }
+  // §0.60.172 DG3 — James, 2026-10-19: "every phasemap phase needs extensive dag, that needs to start being standard." The whole
+  // DAG of every phasemap of this repo (lib/phase-dag.js): a phase in a cycle, or whose depends_on names no phase anywhere, is not
+  // built (anyway: true overrides, said). Its slice (upstream, downstream, layer, critical path, unlocks, file conflicts) goes on
+  // its graph below, so the run rows, the node and the agent see where the phase sits in the whole.
+  let dagSlice = null;
+  try {
+    const PD = _require('../../lib/phase-dag.js');
+    const mappedBy = {}; for (const p of view.phases || []) if (p.mapped) mappedBy[`${p.map}::${p.phase_key}`] = p.mapped;
+    const dag = PD.build(maps.map(m => ({ path: m.path, text: m.text || '' })), { mapped: mappedBy });
+    dagSlice = PD.slice(dag, `${map}::${phase}`);
+    const probs = PD.problems(dag, `${map}::${phase}`).filter(x => !/is not in any phasemap/.test(x));
+    if (probs.length && !anyway) return { ok: false, status: 409, error: `not built: ${phase} — ${probs.join('; ')}`, extra: { code: 'DAG_INVALID', problems: probs, dag: dagSlice } };
+  } catch (e) { dagSlice = { error: `the DAG could not be built: ${e.message}` }; }
   // §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing." The graph (lib/phase-graph.js)
   // is assembled from the phase's mapping (MP1), DG1's view of its depends_on and the boundary census's systems; with none, the
   // phase is not built (no override: his "has to have"), and the refusal says how to give it one. With one, it is written as a
@@ -809,6 +822,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const groot = nexus ? _require('../../lib/nexus-self/systems.js').ROOT : dir;
     phaseGraph = PG.graphFor({ phase, map, mapped: node.mapped || null, mapText, depsGate, systemOf: nexus ? PG.boundarySystemOf(groot) : null, baselineEdges: nexus ? PG.baselineEdges(groot) : null });
   } catch (e) { phaseGraph = { ready: false, missing: [`the graph could not be built: ${e.message}`], remedy: null }; }
+  if (phaseGraph && dagSlice) phaseGraph.dag = dagSlice;   // §0.60.172 DG3 — the phase's place in the whole
   if (!phaseGraph.ready) {
     return { ok: false, status: 409, error: `not built: ${phase} has no dependency graph — ${phaseGraph.missing.join('; ')}${phaseGraph.remedy ? `. ${phaseGraph.remedy}` : ''}`, extra: { code: 'NO_GRAPH', missing: phaseGraph.missing, remedy: phaseGraph.remedy } };
   }
@@ -825,9 +839,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   try {
     const PN = _require('../../lib/pipeline-nodes.js');
     const ndir = path.join(IDEARIUM_DATA_DIR, 'nodes');
-    PN.writeNode(PN.graphNode({ ...phaseGraph, for: phase }, { repo: repo.uuid, kind: 'phase' }), ndir);
+    // §0.60.170 RC3 — into the type's own folder (nodes/graph/, nodes/phase/), where the node registry listens; at the root they
+    // were never indexed. File names go through node-export fileIdOf (the ':' in a graph id is refused by Windows).
+    PN.writeNode(PN.graphNode({ ...phaseGraph, for: phase }, { repo: repo.uuid, kind: 'phase' }), path.join(ndir, 'graph'));
     PN.writeNode(PN.phaseNode({ id: phase, map, repo: repo.uuid, layer: node.layer || null,
-      files: node.files || [], depends_on: node.depends_on || [], spec: node.spec || null, graph: phaseGraph.hash }), ndir);
+      files: node.files || [], depends_on: node.depends_on || [], spec: node.spec || null, graph: phaseGraph.hash }), path.join(ndir, 'phase'));
   } catch (e) { console.warn(`[idearium] §1.2 pipeline node write failed (non-fatal, the build is unaffected): ${e.message}`); }
 
   // which repo builds it: this one, or for all of NEXUS the system that owns the files it names
@@ -1315,7 +1331,28 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         // failing test (fail-first is for new code), so test_first:require looped SP5_title forever. If the work is already
         // there, a passing test is a valid regression test and the phase is already satisfied — never refuse it.
         const _diskDir = _repoDiskDir(target.uuid);
+        // §0.60.171 RC4b — names written under a chat label or cut short before the guard existed leave the tree (archived, §0.3)
+        try { const rep = _require('../../lib/path-guard.js').repairTree(_diskDir); if (rep.moved.length) tfRow('repaired', { note: `${rep.moved.length} file(s) with a chat label or a cut-short name moved out of the tree (archived, not deleted): ${rep.moved.map(m => `${m.from} → ${m.to}`).join('; ').slice(0, 900)}` }); } catch (_) {}
         const alreadyDone = (() => { try { const fl = (plan.order && plan.order.length) ? plan.order : plan.files.map(f => f.path); return fl.length > 0 && fl.every(p => { try { return fs.existsSync(path.join(_diskDir, p)); } catch (_) { return false; } }); } catch (_) { return false; } })();
+        // §0.60.171 VF1 — James: "check previous chunks as is and only change if they don't match conditions." When the
+        // phase's files AND its test are already on disk, the test is not written again (his log: steps 2–4 asked Gemini for
+        // it on every attempt, each behind a 15 s gap); the existing test is the frozen one, and verify-first runs it below.
+        // Reused only when it PROVES the files already there (every code file passes verify-first with it): a scaffold or stub
+        // test, or one the code fails, is not a frozen test — then the planner writes one as before.
+        let existingTest = null;
+        if (alreadyDone) {
+          try {
+            const t = path.join(_diskDir, testPath);
+            if (fs.existsSync(t)) {
+              const VF0 = _require('../../lib/verify-first.js');
+              const codeFiles = ((plan.order && plan.order.length) ? plan.order : plan.files.map(f => f.path)).filter(p => p !== testPath);
+              let allPass = codeFiles.length > 0;
+              for (const f of codeFiles) { const v = await VF0.check({ root: _diskDir, file: f, plan, testPath }); if (v.verdict !== 'pass') { allPass = false; break; } }
+              if (allPass) existingTest = fs.readFileSync(t, 'utf8');
+            }
+          } catch (_) { existingTest = null; }
+        }
+        if (existingTest != null) got = { code: existingTest, v: { verdict: 'existing', why: `${testPath} is already on disk` }, already: true, existing: true };
         for (let n = 1; n <= 2 && !got; n++) {
           const msg = TF.brief({ plan, phaseKey: phase, does: ctx.does, proof: ctx.proof, testPath, repoName: target.name, feedback: fb });
           tfRow('writing', { provider: planner, attempt: n, promptChars: msg.length, tokensIn: _tokEst(msg) });
@@ -1335,9 +1372,12 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           const sh = TF.shape(plan, { testPath, code: got.code, verdict: got.v.why });
           plan = sh.plan;
           let prop = null;
+          if (got.existing) prop = { ok: true, inject: { uuid: null }, existing: true };   // §0.60.171 — already on disk: nothing to propose
+          else {
           try { prop = _require('../../lib/repo-inject.js').propose({ layer: getRepoLayer(), repo: target, path: testPath, content: got.code, source: { kind: 'agent', role: 'test-writer', provider: planner, runId, phase, map } }); }
           catch (e) { prop = { ok: false, errors: [e.message] }; }
-          const seen = got.already ? 'the phase is already satisfied: the test passes against the code already present — kept as a regression test' : got.v.verdict === 'not-run' ? got.v.why : `seen failing: ${got.v.why}`;
+          }
+          const seen = got.existing ? `${testPath} was already on disk — used as the frozen test, not written again (verify-first runs it against each file)` : got.already ? 'the phase is already satisfied: the test passes against the code already present — kept as a regression test' : got.v.verdict === 'not-run' ? got.v.why : `seen failing: ${got.v.why}`;
           tfRow('shaped', { provider: planner, testFirst: { path: testPath, added: sh.added, proposal: prop && prop.ok ? prop.inject.uuid : null },
             note: `${testPath} written first · ${seen} · ${sh.added.length ? `it calls ${sh.added.map(a => `${a.file} ${a.name}`).join(', ')}, which the plan lacked — added` : 'the plan already exports what it calls'} · its run is the first condition${prop && prop.ok ? '' : ` · not proposed: ${((prop && prop.errors) || []).join('; ')}`}` });
         } else if (policy.testFirst === 'require' && !alreadyDone) {
@@ -1354,7 +1394,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     // the plan is written for a small model: Ollama first — in the order the coders' records on planned files say — the
     // agents as its fallback
     const co = PL.orderCoders(PRt.coderRungs(rungs), allRuns);
-    rungs = co.rungs;
+    rungs = PRt.preferFirst(co.rungs, policy);   // §0.60.171 CB2 — James: "prioritize gemini" (routing.prefer_coder / prefer_over)
     if (co.changed) appendRow('idearium_phase_runs', { uuid: `${runId}-coders`, ...base, state: 'routed', snapshot: commitId, coderOrder: rungs.map(x => x.provider), error: null, note: co.why, ts: Date.now() });
     const generated = plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${plan.derived ? 'Nexus, without a model (the phase\'s proof and files)' : planner} (the phase's plan)` } : null;
     if (policy.contractBuild) return runContract(plan, generated);
@@ -1363,7 +1403,24 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const file = plan.order[i];
       const ck = { chunk: i + 1, chunks: plan.order.length, file, planned: true };
       const cb = PP.chunkBrief({ plan, path: file, done, repoName: target.name, phaseKey: phase });
-      last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg: cb.message + _require('../../lib/test-first.js').note(plan), files: [file], ck, verify: (code) => PP.checkChunk(code, plan, file), bare: true }), onOutcome: makeOnOutcome(ck) });
+      // §0.60.171 VF1 — the file as it is, checked with no model first: pass → hands off (no agent asked); fail → the agent gets
+      // exactly what failed; shallow (no test to run) → the agent gets the existing code and may return it unchanged
+      const VF = _require('../../lib/verify-first.js'), CB = _require('../../lib/coder-brief.js');
+      const _root = _repoDiskDir(target.uuid);
+      const _tp = (plan.testFirst && plan.testFirst.path) || _require('../../lib/test-first.js').pathFor(plan, phase);
+      let vf = null;
+      try { vf = await VF.check({ root: _root, file, plan, testPath: _tp }); } catch (e) { vf = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
+      appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-vf`, ...base, ...ck, state: vf.verdict === 'pass' ? 'verified' : 'verify-first', verdict: vf.verdict, snapshot: commitId,
+        checks: vf.checks, note: vf.verdict === 'pass' ? `${file} meets its conditions as it is — no agent asked` : vf.verdict === 'missing' ? `${file} is new — built` : `${file} ${vf.verdict}: ${(vf.checks || []).filter(c => c.ok === false).map(c => c.name).join(', ') || 'no test to prove it'}`, error: null, ts: Date.now() });
+      if (vf.verdict === 'pass') {
+        let ex = []; try { ex = PP.exportsOf(fs.readFileSync(path.join(_root, file), 'utf8')); } catch (_) {}
+        done.push({ path: file, exports: ex, verified: true });
+        last = last || { state: 'replied', r: null, dp: {}, verified: true };
+        continue;
+      }
+      let _existing = null; if (vf.verdict !== 'missing') { try { _existing = fs.readFileSync(path.join(_root, file), 'utf8'); } catch (_) {} }
+      const _msg = CB.compose({ base: cb.message + _require('../../lib/test-first.js').note(plan), plan, file, root: _root, existing: _existing, vf: vf.verdict === 'missing' ? null : vf, testPath: _tp });
+      last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg: _msg, files: [file], ck, verify: (code) => PP.checkChunk(code, plan, file), bare: true }), onOutcome: makeOnOutcome(ck) });
       if (last.state !== 'replied') {
         appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-stopped`, ...base, ...ck, state: 'failed', chunkStopped: true, snapshot: commitId,
           error: `planned file ${ck.chunk} of ${ck.chunks} (${file}) did not land — the run stops here; ${done.length ? `${done.map(d => d.path).join(', ')} came back` : 'nothing came back'}`, ts: Date.now() });
@@ -1372,7 +1429,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       }
       done.push({ path: file, exports: PP.exportsOf(_landedCode(last.r, file)) });
     }
-    return { ...last, chunked: true, generated: plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${plan.derived ? 'Nexus, without a model' : planner} (the phase's plan)` } : null };
+    if (!last) last = { state: 'replied', r: null, dp: {}, verified: true };
+    return { ...last, dp: last.dp || {}, chunked: true, generated: plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${plan.derived ? 'Nexus, without a model' : planner} (the phase's plan)` } : null };
   };
   // 0.60.18 EX0e — James: "wire Idearium's phase build through the contract scheduler... make the first real phase build
   // produce an auditable record of every brick, dependency, checkpoint and gate." A held plan runs as a .contract
@@ -1482,15 +1540,31 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       // as configured. A person's pick (an agent or provider given for this build) is never reordered.
       const kind = ARx.kindOf({ file: f });
       const ck = { chunk: gate.parent ? `${i + 1}.${gate.id.split('.').pop()}` : i + 1, chunks: plan.order.length, file: f, planned: true, brick: gate.id, kind };
+      // §0.60.171 VF1 — the brick's file as it is, checked with no model before any agent: pass → hands off, recorded as verified
+      let vfr = null, msgV = msg;
+      if (!gate.parent) {
+        const VF = _require('../../lib/verify-first.js'), CB = _require('../../lib/coder-brief.js');
+        const tp = (plan.testFirst && plan.testFirst.path) || _require('../../lib/test-first.js').pathFor(plan, phase);
+        try { vfr = await VF.check({ root, file: f, plan, testPath: tp }); } catch (e) { vfr = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
+        appendRow('idearium_phase_runs', { uuid: `${runId}-${gate.id}-vf-${Date.now().toString(36)}`, ...base, ...ck, state: vfr.verdict === 'pass' ? 'verified' : 'verify-first', verdict: vfr.verdict, checks: vfr.checks, snapshot: commitId,
+          note: vfr.verdict === 'pass' ? `${f} meets its conditions as it is — no agent asked` : vfr.verdict === 'missing' ? `${f} is new — built` : `${f} ${vfr.verdict}: ${(vfr.checks || []).filter(c => c.ok === false).map(c => c.name).join(', ') || 'no test to prove it'}`, error: null, ts: Date.now() });
+        if (vfr.verdict === 'pass') {
+          const cur = String(codeOf(f) || '');
+          return { ok: true, agent: 'verify-first', evidence: { [`${gate.id}.verified`]: `ok — met its conditions as it is (${vfr.checks.map(c => c.name).join(', ')}); no agent asked`, [`${gate.id}.exports`]: JSON.stringify(PP.exportsOf(cur)) } };
+        }
+        let existing = null; if (vfr.verdict !== 'missing') existing = codeOf(f);
+        msgV = CB.compose({ base: msg, plan, file: f, root, existing, vf: vfr.verdict === 'missing' ? null : vfr, testPath: tp });
+      }
       let order = hops.map(h => h.rung).filter(Boolean), chosen = null;
       if (agentRec && order.length > 1 && !agent && !provider) {
-        try { const o = ARx.orderLadder(order, agentRec, { promptChars: msg.length, kind, minRecords: policy.learnMinRecords >= 1 ? Math.min(policy.learnMinRecords, 3) : 2 }); order = o.rungs; chosen = `${o.changed ? 'reordered' : 'kept'} for ${kind}: ${o.why.map(w => `${w.provider} ${w.why}`).join('; ')}`.slice(0, 600); } catch (_) { chosen = null; }
+        try { const o = ARx.orderLadder(order, agentRec, { promptChars: msgV.length, kind, minRecords: policy.learnMinRecords >= 1 ? Math.min(policy.learnMinRecords, 3) : 2 }); order = o.rungs; chosen = `${o.changed ? 'reordered' : 'kept'} for ${kind}: ${o.why.map(w => `${w.provider} ${w.why}`).join('; ')}`.slice(0, 600); } catch (_) { chosen = null; }
       }
       // the contract's own persisted feedback (written when this brick last failed) seeds the retry carry: it survives a restart
       const box = gate.parent ? null : _carryFor(f);
       if (box && !box.why && feedback) box.why = String(feedback).slice(0, 1200);
+      if (!agent && !provider) order = PRt.preferFirst(order, policy);   // §0.60.171 CB2 — gemini first (a person's pick is never reordered)
       const out = await PRt.climb({ rungs: order, policy,
-        attempt: makeAttempt({ msg, files: [f], ck, verify: gate.parent ? null : (code) => verifyBrick(code, f), bare: true, carry: box }), onOutcome: makeOnOutcome(ck) });
+        attempt: makeAttempt({ msg: msgV, files: [f], ck, verify: gate.parent ? null : (code) => verifyBrick(code, f), bare: true, carry: box }), onOutcome: makeOnOutcome(ck) });
       if (out.dp) lastDp = out.dp;
       const ok = out.state === 'replied';
       const code = ok ? _landedCode(out.r, f) : '';
@@ -2866,7 +2940,9 @@ const ROUTE_CAP = {
   'canvas.list': CAPS.READ_IDEAS, 'canvas.show': CAPS.READ_IDEAS, 'canvas.create': CAPS.WRITE_IDEAS, 'canvas.tool.add': CAPS.WRITE_IDEAS,   // §0.60.104 CN3   // §CV3 0.60.80: a repo's runs (lib/run-state.js); undo one run   // §CE7 0.60.80: a checked line-edit set → a proposal; a picked range handed to the agent   // CE8: the Code tab's surface, one for the tab and the CLI
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
-  'repo.phases.graph': CAPS.READ_IDEAS,   // §0.60.147 DG2 — reads only
+  'repo.phases.graph': CAPS.READ_IDEAS,
+  'repo.uploads.list': CAPS.READ_IDEAS, 'repo.uploads.get': CAPS.READ_IDEAS, 'repo.uploads.create': CAPS.WRITE_IDEAS, 'repo.uploads.answer': CAPS.WRITE_IDEAS,   // §0.60.173 UP3
+  'repo.phases.dag': CAPS.READ_IDEAS,   // §0.60.172 DG3 — reads only   // §0.60.147 DG2 — reads only
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
@@ -3351,7 +3427,12 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','funnel'],                'repo.funnel'],   // §FN0 { request, intent? } → dependencies, spec, phase, chunks (no model)
     ['GET',    ['api','repos',    ':uuid','thread'],                'repo.thread'],   // §RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
-    ['GET',    ['api','repos',    ':uuid','phases','graph'],        'repo.phases.graph'],   // §0.60.147 DG2 a phase's dependency graph (?map&phase)
+    ['GET',    ['api','repos',    ':uuid','phases','graph'],        'repo.phases.graph'],
+    ['GET',    ['api','repos',    ':uuid','uploads'],               'repo.uploads.list'],     // §0.60.173 UP3 open uploads first, his learned rules
+    ['POST',   ['api','repos',    ':uuid','uploads'],               'repo.uploads.create'],   // §0.60.173 UP3 { name, intent, contentBase64 } → planned, waits as needs-you
+    ['GET',    ['api','repos',    ':uuid','uploads',':id'],         'repo.uploads.get'],
+    ['POST',   ['api','repos',    ':uuid','uploads',':id','answer'],'repo.uploads.answer'],   // §0.60.173 UP3 { rows:[{from, to?, skip?}], apply? } → written where he said
+    ['GET',    ['api','repos',    ':uuid','phases','dag'],          'repo.phases.dag'],     // §0.60.172 DG3 the whole DAG of the repo's phasemaps (?phase&map for one slice, ?cross=1 for cross-map file conflicts)   // §0.60.147 DG2 a phase's dependency graph (?map&phase)
     ['GET',    ['api','repos',    ':uuid','phases','contract'],     'repo.phases.contract'],   // 0.60.18 EX0f
     ['GET',    ['api','repos',    ':uuid','phases','cost'],         'repo.phases.cost'],       // 0.60.27 AG1a — agent calls and tokens per phase
     ['POST',   ['api','repos',    ':uuid','phases','map'],          'repo.phases.map'],        // 0.60.29 PM — map every phase to its files and dependencies
@@ -8447,7 +8528,99 @@ async function handle(req, res, route, query, body) {
       const nexus = scope.source === 'nexus';
       const groot = nexus ? _require('../../lib/nexus-self/systems.js').ROOT : dir;
       const g = PG.graphFor({ phase: node.phase_key, map: node.map, mapped: node.mapped || null, mapText, depsGate, systemOf: nexus ? PG.boundarySystemOf(groot) : null, baselineEdges: nexus ? PG.baselineEdges(groot) : null });
-      return ok(res, { graph: g, lines: PG.lines(g) });
+      // §0.60.172 DG3 — and where it sits in the whole DAG of the repo's phasemaps
+      let dl = []; try { const PD = _require('../../lib/phase-dag.js'); const mb = {}; for (const p of view.phases || []) if (p.mapped) mb[`${p.map}::${p.phase_key}`] = p.mapped;
+        const dag = PD.build(maps.map(m => ({ path: m.path, text: m.text || '' })), { mapped: mb }); g.dag = PD.slice(dag, `${node.map}::${node.phase_key}`); dl = PD.lines(g.dag); } catch (e) { dl = [`DAG: could not be built (${e.message})`]; }
+      return ok(res, { graph: g, lines: [...PG.lines(g), ...dl] });
+    }
+    case 'repo.phases.dag': {
+      // §0.60.172 DG3 — the whole DAG of a repo's phasemaps: stats, cycles, dangling, undeclared, layers, ready, critical path
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      const PH = await import('../repo/phases.js');
+      const view = PH.managerView({ repo, repoDir: dir, runs: [] });
+      const { maps } = PH.mapsFor({ repo, repoDir: dir });
+      const PD = _require('../../lib/phase-dag.js');
+      const mb = {}; for (const p of view.phases || []) if (p.mapped) mb[`${p.map}::${p.phase_key}`] = p.mapped;
+      const dag = PD.build(maps.map(m => ({ path: m.path, text: m.text || '' })), { mapped: mb, crossMapConflicts: query.cross === '1' });
+      if (query.phase) { const sl = PD.slice(dag, query.map ? `${query.map}::${query.phase}` : String(query.phase)); if (!sl) return err(res, 404, `no phase ${query.phase} in this repo's DAG`); return ok(res, { slice: sl, lines: PD.lines(sl), problems: PD.problems(dag, sl.key) }); }
+      return ok(res, { stats: dag.stats, hash: dag.hash, cycles: dag.cycles, dangling: dag.dangling, undeclared: dag.undeclared, layers: dag.layers, ready: dag.ready, critical: dag.critical, conflicts: dag.conflicts.slice(0, 200), edges: dag.edges });
+    }
+    // §0.60.173 UP3 — James, 2026-10-19: "upload zip with an intent, have it map to nexus using a tool, then ask me with the option to
+    // edit the location and where they go in relation to the system or the registry." A zip is planned (lib/upload-placement.js, no
+    // model) and WAITS as needs-you; only his answer writes: text through repo-inject (the one door), binaries through the source
+    // layer's single-file write. His edits are learned (UP2) and read first on the next upload.
+    case 'repo.uploads.create': case 'repo.uploads.list': case 'repo.uploads.get': case 'repo.uploads.answer': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const UPL = _require('../../lib/upload-placement.js');
+      const T = 'idearium_uploads';
+      const mine = () => loadTable(T).filter(r => r.repoUuid === params.uuid);
+      const answerOf = (id) => mine().filter(r => r.kind === 'upload-answer' && r.uploadUuid === id).sort((a, b) => b.ts - a.ts)[0] || null;
+      const rulesOf = () => (mine().filter(r => r.kind === 'upload-rules').sort((a, b) => b.ts - a.ts)[0] || {}).rules || [];
+      const view = (u) => { const a = answerOf(u.uuid); return { ...u, state: a ? 'answered' : 'needs-you', answer: a }; };
+      const brief = (u) => ({ uuid: u.uuid, name: u.name, intent: u.intent, ts: u.ts, state: u.state, stats: u.plan && u.plan.stats });
+      const find = () => mine().find(r => r.kind === 'upload' && r.uuid === params.id) || null;
+      const unzip = (buf) => { const cfg = _require('../../lib/project-import.config.js'); const { extractZipToFiles } = _require('../../lib/zip-ingest.js');
+        return extractZipToFiles({ ...cfg.ZIP, buf }); };
+      if (action === 'repo.uploads.list') {
+        const all = mine().filter(r => r.kind === 'upload').map(view).sort((a, b) => (a.state === 'needs-you' ? 0 : 1) - (b.state === 'needs-you' ? 0 : 1) || b.ts - a.ts);
+        return ok(res, { open: all.filter(u => u.state === 'needs-you').map(brief), uploads: all.map(brief), rules: rulesOf() });
+      }
+      if (action === 'repo.uploads.get') { const u = find(); return u ? ok(res, view(u)) : err(res, 404, `no upload ${params.id} in this repo`); }
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      if (action === 'repo.uploads.create') {
+        const intent = String(body.intent || '').trim();
+        if (!intent) return err(res, 400, 'intent is required — say what these files are for (it is how they are placed, and it is kept with the upload)');
+        const buf = body.contentBase64 ? Buffer.from(String(body.contentBase64), 'base64') : null;
+        if (!buf || !buf.length) return err(res, 400, 'contentBase64 (the zip) is required');
+        const ex = unzip(buf);
+        if (!ex.ok) return err(res, 400, `not a readable zip: ${ex.error}`);
+        const plan = UPL.plan({ files: ex.realFiles, intent, tree: UPL.treeFromDir(dir), learned: rulesOf() });
+        const uuid = `upload-${Date.now().toString(36)}-${crypto.randomBytes(3).toString('hex')}`;
+        const stash = path.join(IDEARIUM_DATA_DIR, 'uploads', params.uuid);
+        try { fs.mkdirSync(stash, { recursive: true }); fs.writeFileSync(path.join(stash, `${uuid}.zip`), buf); }
+        catch (e) { return err(res, 500, `could not keep the zip: ${e.message}`); }
+        const row = { uuid, kind: 'upload', repoUuid: params.uuid, name: String(body.name || 'upload.zip').slice(0, 200), intent, ts: Date.now(), bytes: buf.length,
+          zip: path.join(stash, `${uuid}.zip`), plan, omitted: (ex.omitted || []).slice(0, 200) };
+        appendRow(T, row);
+        try { getIdeaOS().emit('idearium.upload.staged', { repoUuid: params.uuid, upload: uuid, files: plan.stats.files, intent }); } catch (_) {}
+        return ok(res, view(row));
+      }
+      // repo.uploads.answer
+      const u = find();
+      if (!u) return err(res, 404, `no upload ${params.id} in this repo`);
+      if (answerOf(u.uuid)) return err(res, 409, `${u.uuid} is already answered — upload the zip again to place it again`);
+      const edits = Array.isArray(body.rows) ? body.rows : [];
+      const a = UPL.answer(u.plan, edits);
+      if (!a.ok) return err(res, 400, a.errors.join('; '), { errors: a.errors });
+      let ex; try { ex = unzip(fs.readFileSync(u.zip)); } catch (e) { return err(res, 410, `the kept zip is gone: ${e.message}`); }
+      if (!ex.ok) return err(res, 410, `the kept zip no longer reads: ${ex.error}`);
+      const bytesOf = new Map(ex.realFiles.map(f => [String(f.path).replace(/\\/g, '/').replace(/^\.\/+/, ''), f]));
+      const RI = _require('../../lib/repo-inject.js');
+      const layer = getRepoLayer();
+      const results = [];
+      for (const w of a.writes) {
+        const f = bytesOf.get(w.from);
+        if (!f) { results.push({ ...w, ok: false, error: 'not in the kept zip' }); continue; }
+        if (w.binary) { const r = layer.writeSourceBytes(params.uuid, w.to, f.buffer); results.push({ ...w, via: 'source-bytes', ok: !!r.ok, ...(r.ok ? {} : { error: r.error }) }); continue; }
+        const p = RI.propose({ layer, repo, hat: null, path: w.to, content: f.buffer.toString('utf8'), source: { kind: 'person', via: 'upload', upload: u.uuid, intent: u.intent } });
+        if (!p.ok) { results.push({ ...w, ok: false, error: (p.errors || ['propose failed']).join('; ') }); continue; }
+        if (repo.nexusSelf || body.apply === false) { results.push({ ...w, ok: true, inject: p.inject.uuid, status: p.inject.status, note: repo.nexusSelf ? 'the live Nexus tree: waiting at the approval gate' : 'proposed (apply: false)' }); continue; }
+        const ap = RI.apply(p.inject.uuid, { layer, approvedBy: 'james (upload answer)' });
+        results.push({ ...w, ok: !!ap.ok, inject: p.inject.uuid, status: ap.ok ? ap.inject.status : 'proposed', ...(ap.ok ? {} : { error: (ap.errors || ['apply failed']).join('; ') }) });
+      }
+      const before = rulesOf();
+      const rules = UPL.learn(u.plan, edits, before);
+      if (JSON.stringify(rules) !== JSON.stringify(before)) appendRow(T, { uuid: `upload-rules-${params.uuid}-${Date.now().toString(36)}`, kind: 'upload-rules', repoUuid: params.uuid, rules, ts: Date.now() });
+      const errors = results.filter(r => !r.ok).map(r => `${r.to}: ${r.error}`);
+      appendRow(T, { uuid: `${u.uuid}-answer`, kind: 'upload-answer', uploadUuid: u.uuid, repoUuid: params.uuid, ts: Date.now(), edits, results, skipped: a.skipped, errors });
+      if (results.some(r => r.ok)) _deviationAfter(params.uuid, 'files');
+      try { getIdeaOS().emit('idearium.upload.answered', { repoUuid: params.uuid, upload: u.uuid, written: results.filter(r => r.ok).length, skipped: a.skipped.length, errors: errors.length }); } catch (_) {}
+      return ok(res, { upload: u.uuid, written: results.filter(r => r.ok).length, results, skipped: a.skipped, learned: rules.length, errors });
     }
     case 'repo.phases.get': {
       const repo = getRepoLayer().get(params.uuid);

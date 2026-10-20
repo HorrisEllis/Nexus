@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+context: pipeline phase AV1_adversarial_review of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: AV1_adversarial_review (service) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303353
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303353
+lastSeenAt: 1792456303353
+fingerprint: null
+payload:
+  id: AV1_adversarial_review
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: service
+  status: OPEN
+  files:
+    - lib/adversarial-review.js
+    - meta/adversary-suite.js
+    - intelligence/adversarial.js
+    - copilot/lifeline.js
+  depends_on:
+    - CF1_confidence_from_evidence
+    - GW1_gate_primitive
+  blocks:
+    - MOD-ADVERSARIAL-REVIEW
+  spec: docs/belief-loop.spec
+  graph: 4309464edd8b01e4

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+context: pipeline phase CF1_confidence_from_evidence of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: CF1_confidence_from_evidence (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303351
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303351
+lastSeenAt: 1792456303351
+fingerprint: null
+payload:
+  id: CF1_confidence_from_evidence
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/confidence.js
+  depends_on:
+    - EW1_evidence_record_and_weights
+  blocks:
+    - MOD-CONFIDENCE
+  spec: docs/belief-loop.spec
+  graph: 1d831af2c4ee481e

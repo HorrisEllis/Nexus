@@ -1,0 +1,100 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CY2_invariants_are_crystals:62464b4cfa1cd75a
+type: graph
+id: phase:CY2_invariants_are_crystals:62464b4cfa1cd75a
+context: dependency graph of phase CY2_invariants_are_crystals
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792456303343
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303343
+lastSeenAt: 1792456303343
+fingerprint: null
+payload:
+  for: CY2_invariants_are_crystals
+  kind: phase
+  repo: null
+  hash: 62464b4cfa1cd75a
+  nodes:
+    - path: clear-glass/src/page/page-memory.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/core/invariant.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/crystal.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/upload-placement.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/upload-placement.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 7583ffef0c495b95
+    layer: 8
+    deps:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
+      - docs/2026-10-20-belief-loop-phasemap.spec::IV2_invariant_miner
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+    dependents:
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+    upstream:
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+      - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+      - docs/2026-10-20-belief-loop-phasemap.spec::IV0_belief_census
+      - docs/2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
+      - docs/2026-10-20-belief-loop-phasemap.spec::IV2_invariant_miner
+      - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+    downstream:
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+    blockedBy:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
+      - docs/2026-10-20-belief-loop-phasemap.spec::IV2_invariant_miner
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 7583ffef0c495b95 · layer 8 · ON THE CRITICAL PATH · blocked by CY0_one_crystal_schema,
+        IV2_invariant_miner, CY1_lifecycle_and_injection
+      - >-
+        depends on (3): CY0_one_crystal_schema, IV2_invariant_miner, CY1_lifecycle_and_injection ·
+        all upstream 19
+      - 'needed by (1): BW1_borrowing'

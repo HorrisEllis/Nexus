@@ -337,3 +337,13 @@ spec:
 # lib/cos-run.js (a failed run, with its debug report) and idearium/api (a phase run ending contract-incomplete, unproven,
 # stalled, refused, or failed with every rung tried — with its flight). Proof: tests/modules/test-failure-modes.test.js 9/9.
 # Open: a contract gate FAILED, an uncaught error (lib/error-log.js), Clear Glass's error capture — not posting yet (FMR2).
+
+# ── ADDENDUM 2026-10-20 — crystals: three producers, one table, the read schema never written ──
+# James, 2026-10-20: "look at the crystalization memory"
+# Read in the tree: meta/crystal-lattice.js, intelligence/liminal-space and warp's crystallizer all call their output crystals;
+# the first two share the JAA `crystals` table with different schemas. cortex-v2's `crystal show` and `ask-full` read a third
+# schema (statement, state, supportCount, crossLaneCount, contradictionScore …) that no producer writes — so ask-full's
+# "ESTABLISHED BELIEFS" (state === 'stable') is always empty. crystal-lattice re-crystallizes the same signature as new rows
+# (support never accumulates; counts are in memory). Crystals are in the never-decay tier, so "decaying" cannot happen.
+# Mapped, not fixed: docs/2026-10-20-belief-loop-phasemap.spec CY0 (one schema, support accumulates) and CY1 (lifecycle, decay,
+# injection). Nothing removed.

@@ -832,7 +832,7 @@ function watchUIDirs() {
 
   for (const { system, dir } of WATCH_DIRS) {
     try {
-      fs.watch(dir, { recursive: true }, (event, filename) => {
+      require('../lib/safe-watch.js').watch(dir, { recursive: true }, (event, filename) => {
         if (!filename) return;
         const ext = path.extname(filename).toLowerCase();
         if (!['.html', '.js', '.css', '.json'].includes(ext)) return;
@@ -3117,7 +3117,7 @@ try {
   _authMod.init();
   // Watch auth/index.js itself for hotswap
   const _authFile = require.resolve('../auth/index');
-  fs.watch(_authFile, () => {
+  require('../lib/safe-watch.js').watch(_authFile, () => {
     setTimeout(() => {
       try {
         delete require.cache[_authFile];

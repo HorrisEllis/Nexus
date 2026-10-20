@@ -1,0 +1,23 @@
+/* idearium/ui/css/upload-intent.css — UP4 0.60.173: the Code tab's upload panel (idearium/ui/js/upload-intent.js). Own file per UI
+   area (his rule); shared tokens only. */
+.up-form { padding: 6px 8px; border-bottom: 1px solid var(--b1, #333); font-size: 11px; }
+.up-form > div { margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.up-intent { flex: 1; min-width: 220px; }
+.up-list { padding: 4px 8px; display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--b0, #222); }
+.up-chip { font-size: 10px; padding: 1px 6px; border: 1px solid var(--b1, #333); border-radius: 10px; cursor: pointer; }
+.up-chip-on { border-color: var(--accent, #6cb6ff); }
+.up-sum { padding: 6px 8px; font-size: 11px; border-bottom: 1px solid var(--b0, #222); }
+.up-row { padding: 5px 8px; border-bottom: 1px solid var(--b0, #222); font-size: 11px; }
+.up-skip { opacity: .45; }
+.up-head { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.up-edit { display: flex; gap: 6px; align-items: center; margin: 3px 0; flex-wrap: wrap; }
+.up-to { flex: 1; min-width: 240px; font-family: var(--mono); font-size: 11px; }
+.up-to-fixed { font-family: var(--mono); margin: 3px 0; }
+.up-act { font-family: var(--mono); font-size: 10px; padding: 0 4px; border-radius: 3px; border: 1px solid currentColor; text-transform: uppercase; }
+.up-create { color: var(--ok, #5fd38d); } .up-replace { color: var(--warn, #f0b35a); } .up-identical { color: var(--t2, #889); }
+.up-sys { font-family: var(--mono); font-size: 10px; padding: 0 4px; background: var(--bg2, rgba(255,255,255,.05)); border-radius: 3px; }
+.up-newsys { color: var(--warn, #f0b35a); }
+.up-hi { color: var(--ok, #5fd38d); } .up-mid { color: var(--warn, #f0b35a); } .up-lo { color: var(--bad, #ff6b6b); }
+.up-warn { color: var(--warn, #f0b35a); font-size: 10px; }
+.up-go { padding: 6px 8px; }
+.up-res { padding: 6px 8px; font-size: 11px; }

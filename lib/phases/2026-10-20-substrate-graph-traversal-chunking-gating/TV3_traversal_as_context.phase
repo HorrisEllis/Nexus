@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV3_traversal_as_context
+type: phase
+id: docs_2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV3_traversal_as_context
+context: >-
+  pipeline phase TV3_traversal_as_context of
+  docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+intent: null
+summary: TV3_traversal_as_context (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792456416766
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456416766
+lastSeenAt: 1792456416766
+fingerprint: null
+payload:
+  id: TV3_traversal_as_context
+  map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/core/traverse.js
+    - lib/chunk-glyph.js
+    - lib/coder-brief.js
+  depends_on:
+    - TV1_traversal_primitive
+    - CH1_strategies_behind_the_contract
+  blocks:
+    - MOD-TRAVERSE-CONTEXT
+  spec: docs/substrate.spec
+  graph: 8a5009bb03465d08

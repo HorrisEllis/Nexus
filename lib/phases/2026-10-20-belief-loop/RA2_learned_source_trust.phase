@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+type: phase
+id: docs_2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+context: pipeline phase RA2_learned_source_trust of docs/2026-10-20-belief-loop-phasemap.spec
+intent: null
+summary: RA2_learned_source_trust (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792456303356
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792456303356
+lastSeenAt: 1792456303356
+fingerprint: null
+payload:
+  id: RA2_learned_source_trust
+  map: docs/2026-10-20-belief-loop-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/evidence.js
+  depends_on:
+    - RA1_root_cause_through_provenance
+  blocks:
+    - MOD-SOURCE-TRUST
+  spec: docs/belief-loop.spec
+  graph: 96f3facc75253f80

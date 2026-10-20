@@ -718,3 +718,76 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - **What it shows:** knowing the system already had the capability and asking for it to be connected, not rebuilt — "use what
     you already have." The coder also stated the honest limit (no KVM here → process isolation, not a VM) rather than overclaiming.
   - **Evidence:** `tests/modules/test-cos-run-target.test.js` (CT 5/5, real sandbox runs incl. a clean-env leak check); `CHANGELOG-0.60.166.md`.
+
+### 2026-10-19 — 0.60.170: "we need to fix the pipeline though. like i said."
+- **Context.** His boot log for the day: orchestrator and Guardian restarting on a file-watcher error, idearium silent for ~100 s
+  at each boot, node writes failing, and agent replies landing as files named "Gemini said tests/…". He asked for the pipeline to
+  be fixed before new features, and named the target: "files names must remain consistent."
+- **The call, his:** fix the foundation first. **The coder's part:** finding the four causes in the code and the fixes.
+- **Checkable:** `tests/modules/test-pipeline-root-causes.test.js` 6/6; a 12,000-node rescan measured 10.2 s before and 0.95 s
+  after on the same machine (CHANGELOG-0.60.170.md). Not yet confirmed on his Windows machine.
+- **Skill shown:** reading a production log for causes rather than symptoms, and ordering work foundation-first.
+
+### 2026-10-19 — 0.60.171: verify first; the agent briefed the way it asked
+- **His idea:** "agents to check previous chunks as is and only change if they don't match conditions", then "prioritize gemini … specify the axioms … i want gemini to code at his best" — he asked Gemini itself what it needs and handed its answer over as the spec for the brief.
+- **Coder's part:** the check (lib/verify-first.js), the five-part brief (lib/coder-brief.js), the self-model store (lib/agent-self-model.js).
+- **Checkable:** tests/modules/test-verify-first.test.js 10/10; CHANGELOG-0.60.171.md.
+- **Skill shown:** treating the AI agent as a component with a contract — asking it what it needs, recording that as data, and checking its work with no model in the loop.
+
+
+### 2026-10-19 — 0.60.173: an upload that asks before it writes
+- **His words:** "upload zip with an intent, have it map to nexus using a tool, then ask me with the option to edit the location
+  and where they go in relation to the system or the registry. like i want to try to make something that can do what you can".
+- **Context:** Idearium could only turn a zip into a NEW repo. He asked for the step a careful engineer takes with a handed-over
+  zip (read it, decide where each file belongs and what it touches, then confirm) to become a tool his system runs, with him as
+  the one who confirms.
+- **What it shows:** product judgment about trust. The tool proposes, he decides, and only his answer writes. His corrections
+  become rules, so the tool improves from his decisions, not a model's.
+- **Checkable:** `tests/modules/test-upload-placement.test.js` 4/4 (the router writes nothing until answered; his moved file is
+  placed by his rule on the next upload); `CHANGELOG-0.60.173.md`.
+
+### 2026-10-19 — 0.60.174: the page as a map that learns
+- **His words:** "parse the dom, index each element as blocks, then download into a index to chunk, then synthesize a fucking map
+  in relation to the weboage to use as a map or reference point for inputs from the cli or the intent. learns over time."
+- **Context:** Clear Glass could already see what was actionable (the semantic tree) and where it was (the interaction field), but
+  every visit started from nothing and the page's content was invisible to the agent. He specified the pipeline in order: blocks,
+  index, chunks, a synthesized map, a reference for intent, and learning.
+- **What it shows:** systems design. His ordered pipeline maps one-to-one onto the modules built (blocks.js → page-map.js →
+  page-memory.js), and it reuses the address scheme the agent already acts by, so nothing new had to be trusted.
+- **Checkable:** `tests/modules/clear-glass-page-map.test.js` 6/6, including a real layout run in Clear Glass's engine.
+
+### 2026-10-19 — 0.60.175: one capability through every door, and Ollama feeling the page
+- **His words:** "hooking ollama in to feel with "nexus nerve", see with the interaction field and scrips injected into each page."
+  · "then it can be a map tool, chunk tool for understanding/analysing/ reverse engineering,, web scraper."
+- **Context:** the page map existed as code (0.60.174); he named where it must reach: the co-pilot, the command line, Nerve and
+  Ollama, live on every page, and three uses (mapping, chunk analysis, scraping).
+- **What it shows:** architectural direction that composes existing parts (the interaction field, Nexus Nerve, the injected page
+  observer, the local model) into one loop: see, feel, act, learn. Each part was already his design; this release connects them.
+- **Checkable:** `tests/modules/clear-glass-page-session.test.js` 6/6 (the Ollama push tested against a stub server; the panel in
+  Clear Glass's engine); `CHANGELOG-0.60.175.md`.
+
+### 2026-10-20 — the substrate and the belief loop, specified from his design
+- **His words:** "i want to map the traversal agnostically, using invarants overtime, primitives, and principles" · "the
+  persistent memory, graphs, cross domain verification and borrowing" · "adversarial system. confidence scoring. evidence weighing
+  and provenance root causal analysi" · "spec it."
+- **Context:** Nexus already held his earlier designs for each piece: crystals and liminal-space's "The intersection IS the
+  verification" (cross-level confirmation), verified primitives (2026-10-05: confidence, adversaries, provenance), the universal block
+  primitive (2026-09-03). He asked for them to be specified as one system.
+- **What it shows:** systems design and specification. Two maps (37 phases, 11 decisions) that check clean against all of Nexus's
+  maps in the phase DAG (no cycles, nothing dangling, no unordered shared files). They reuse ten graphs, eight chunkers and twelve gates
+  rather than rebuilding them. The specification work also surfaced three defects in the record, each written down:
+  `nexus_rca` always answers "unresolved", `ask-full` never injects a belief, and crystals duplicate instead of accumulating support.
+- **Checkable:** `docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec`,
+  `docs/2026-10-20-belief-loop-phasemap.spec`; run lib/phase-dag.js over docs/.
+
+### 2026-10-20 — 0.60.176: specs before code, so the system can be rebuilt
+- **His words:** "everything needs  to be speccced before built,so it can be rebuilt if lost. … specs, then phases then specced again
+  with dag and related files for it, look at the handoff" · "look in emerge"
+- **Context:** the coder had offered phasemaps (plans). He rejected plans as the contract and set the order himself: a full spec, then
+  phases, then each phase specified again with its dependency graph and related files. He then pointed at the place in his own system
+  where the format already existed: emerge's spec compiler.
+- **What it shows:** specification discipline, and knowing his own architecture. The format he pointed to comes with a measurable
+  definition of fully specified (specDepth 1.0 per module, checked by the compiler). Writing to it found a real compiler defect (the
+  build order wasn't topological) and a lost spec (`spec-parser.spec`), both now written down.
+- **Checkable:** `docs/substrate.spec`, `docs/belief-loop.spec`, `tests/modules/test-substrate-spec.test.js` 3/3,
+  `tests/modules/test-phase-specs.test.js` 4/4; `node emerge/compiler/phase-specs.js <map> --check`.

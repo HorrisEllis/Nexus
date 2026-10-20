@@ -320,7 +320,11 @@ function buildQemuArgs(vmConfig, compartmentId, name) {
   const args = [];
 
   args.push('-name', `cos-${name}`);
-  args.push('-machine', `${vmConfig.machineType},accel=${accel}`);
+  // 0.60.168 — WHPX: kernel-irqchip=off is the setting QEMU's own docs and the WHPX bug reports give for the "Failed to emulate
+  // MMIO access" / early-exit failures (the desktop retry ladder in cos/workspace tries it before falling to software).
+  // TCG: a bigger translation cache (tb-size, MiB) is the cheap speed-up for a desktop under software emulation.
+  args.push('-machine', `${vmConfig.machineType},accel=${accel}${accel === 'whpx' && vmConfig.irqchipOff ? ',kernel-irqchip=off' : ''}`);
+  if (accel === 'tcg') args.push('-accel', `tcg,tb-size=${Number(vmConfig.tcgTbSizeMB) > 0 ? Number(vmConfig.tcgTbSizeMB) : 512}`);
   args.push('-m', String(vmConfig.ramMB));
   args.push('-smp', String(vmConfig.cpus));
   // §0.39.264 — optional CPU model. Test VMs use 'max': every feature the

@@ -276,7 +276,7 @@ class FileBrowser {
   startWatch() {
     if (this._watcher) return;
     try {
-      this._watcher = fs.watch(
+      this._watcher = require('../../lib/safe-watch.js').watch(
         this._layer.root,
         { recursive: true },
         (eventType, filename) => {

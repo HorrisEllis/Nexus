@@ -45,3 +45,7 @@ payload:
       type: boolean
       required: false
       description: 'true when the graph has at least one file it changes'
+    dag:
+      type: object
+      required: false
+      description: 'the phase-dag slice: upstream, downstream, blockedBy, unlocks, conflicts, dagHash (2026-10-20 PS1)'
