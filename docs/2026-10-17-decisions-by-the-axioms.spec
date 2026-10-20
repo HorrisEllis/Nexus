@@ -198,3 +198,13 @@ spec:
   #         again); later entries kept and marked superseded; the rewind is itself an entry. REVERSIBILITY, §0.3.
   # Still his, not decided here: GM0a (what "the precommit compartment" means: his words), GW0d (needs his failing log), and
   # D10 vs D13 (above).
+
+# ═══ ADDENDUM 2026-10-21 (0.60.178) — Snowflake (docs/2026-10-21-snowflake-compartment-phasemap.spec), decided by his axioms ═══
+  #   D24 = SF3 routed window storage: in memory (cg-snow-<id>), cleared on close, no vault snapshot. REVERSIBILITY is not at stake
+  #         (nothing of his is lost: it was never his data), §1.2 fail closed and his 2026-10-15 "run it in a compartment isolated".
+  #   D25 = SF3 identity: the engine's own Chromium UA, no persona, in routed windows. TRUTH_OVER_COHERENCE (a window that says what
+  #         it is), and his "make it look as nromal as it can": one consistent identity is what looks ordinary on the wire.
+  #   D26 = SF4 HTTPS-only default: on, his switch. USER_AUTONOMY (his to turn off) and §1.2 (no cleartext past the exit by default).
+  #         The reading of "optional encryption" behind it is marked to confirm in the map.
+  #   D27 = SF2 the Tor Project's builtin list: his button only, never automatic. USER_AUTONOMY: the ask is visible to his network.
+  # His call, not decided here: whether ordinary agent windows move their page into their own session (it moves sign-ins).

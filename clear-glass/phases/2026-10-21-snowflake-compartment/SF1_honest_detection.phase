@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
+type: phase
+id: docs_2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
+context: pipeline phase SF1_honest_detection of docs/2026-10-21-snowflake-compartment-phasemap.spec
+intent: null
+summary: SF1_honest_detection (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792479326396
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792479326396
+lastSeenAt: 1792479326396
+fingerprint: null
+payload:
+  id: SF1_honest_detection
+  map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.178
+  files:
+    - clear-glass/src/net/transport-host.js
+    - clear-glass/src/net/service.js
+  depends_on:
+    - SF2_bridge_sources
+  blocks:
+    - MOD-SF-DETECT
+  spec: clear-glass/spec/snowflake.spec
+  graph: 8e5bdcaa5c7f6e9f

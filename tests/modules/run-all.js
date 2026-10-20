@@ -377,6 +377,7 @@ const SUITES = [
   'test-gate-assess.test.js', // 0.60.44 GA1 — the gate assesses dependencies and context before it spends
   'test-cg-attention-focus.test.js', // 0.60.45 — the provider tab stops fighting the person (focus, sign-in, Escape)
   'test-net-routes.test.js',          // 0.60.60 — net routes + Snowflake transport (CLI first): policy, fail-closed PAC, fake tor, agent read-only
+  'test-snowflake.test.js',           // 0.60.178 — SF1–SF6: Snowflake end to end (detect, bridge lines, compartment, HTTPS-only, circuit check)
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
   'test-cos-app-ui.test.js',          // 0.60.89 COSA6 — COS window (jsdom) and controller

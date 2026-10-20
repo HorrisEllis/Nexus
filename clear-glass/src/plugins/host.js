@@ -68,6 +68,7 @@ const { gate } = require('../gates/index.js'); // real, already-exported factory
 const { validateManifest, PluginSchemaError } = require('./schema.js');
 const { WarpSpine } = require('../../../lib/warp-bus.js');
 const { registerPluginCommand, unregisterPluginCommand } = require('../toolbar/commands.js');
+const { registerContextItem, unregisterContextItem } = require('./context-items.js');   // §0.60.169 — the display half of 'context-menu-item'
 
 const PLUGIN_STATE = Object.freeze({
   INSTALLING: 'installing',
@@ -256,6 +257,12 @@ class PluginHost {
       });
     }
 
+    if (type === 'context-menu-item') {
+      // §0.60.169 NP11 — the display entry goes to the context-item registry (the renderer lists it when the menu opens); the Gate registered
+      // below is what a click reaches (plugins:invoke emits the signature). Both are removed together in _deregister().
+      registerContextItem({ id: entry.signature, label: entry.label || manifest.displayName, icon: entry.icon, when: entry.when, pluginId: manifest.id });
+    }
+
     // §ASYNC — a pause-resume-gate handler (captcha-pause's real use
     // case: poll, wait for a human, then respond) cannot return
     // synchronously. Handled the same way every existing async gate in
@@ -304,6 +311,7 @@ class PluginHost {
     // (unregisterPluginCommand returns false if not found, by design —
     // "a caller disabling an already-gone command is not an error").
     unregisterPluginCommand(signature);
+    unregisterContextItem(signature);   // §0.60.169 — same for a context-menu-item's row
   }
 
   disable(pluginId) {

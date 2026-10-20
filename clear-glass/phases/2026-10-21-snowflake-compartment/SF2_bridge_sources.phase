@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
+type: phase
+id: docs_2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
+context: pipeline phase SF2_bridge_sources of docs/2026-10-21-snowflake-compartment-phasemap.spec
+intent: null
+summary: SF2_bridge_sources (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792479326394
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792479326394
+lastSeenAt: 1792479326394
+fingerprint: null
+payload:
+  id: SF2_bridge_sources
+  map: docs/2026-10-21-snowflake-compartment-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.178
+  files:
+    - clear-glass/src/net/bridge-sources.js
+  depends_on: []
+  blocks:
+    - MOD-SF-BRIDGE-SOURCES
+  spec: clear-glass/spec/snowflake.spec
+  graph: ea5b5eea6b68382f

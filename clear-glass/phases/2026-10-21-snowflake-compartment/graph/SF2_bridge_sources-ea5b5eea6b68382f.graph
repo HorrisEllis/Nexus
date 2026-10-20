@@ -1,0 +1,67 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF2_bridge_sources:ea5b5eea6b68382f
+type: graph
+id: phase:SF2_bridge_sources:ea5b5eea6b68382f
+context: dependency graph of phase SF2_bridge_sources
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792479326394
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792479326394
+lastSeenAt: 1792479326394
+fingerprint: null
+payload:
+  for: SF2_bridge_sources
+  kind: phase
+  repo: null
+  hash: ea5b5eea6b68382f
+  nodes:
+    - path: clear-glass/src/net/bridge-sources.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/installer.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/bridge-sources.js
+      to: clear-glass/src/net/installer.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 4a650886a07d5f1b
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    upstream: []
+    downstream:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 4a650886a07d5f1b · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): SF1_honest_detection, SF6_surface · all downstream 4 · finishing it unlocks
+        SF1_honest_detection, SF6_surface

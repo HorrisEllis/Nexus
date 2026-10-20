@@ -30,7 +30,8 @@ const SPECS = [
   { spec: 'docs/belief-loop.spec', map: 'docs/2026-10-20-belief-loop-phasemap.spec' },
   { spec: 'emerge/SPEC_COMPILER.spec', map: null },
   { spec: 'docs/data-layout.spec', map: 'docs/2026-10-21-data-layout-phasemap.spec' },   // 2026-10-21
-  { spec: 'docs/pipeline.spec', map: null },   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
+  { spec: 'docs/pipeline.spec', map: null },
+  { spec: 'clear-glass/spec/snowflake.spec', map: 'docs/2026-10-21-snowflake-compartment-phasemap.spec' },   // 0.60.178   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
 ];
 
 console.log('\ntest-substrate-spec — full specs compile at full depth and stay tied to their phases');

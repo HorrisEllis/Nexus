@@ -73,6 +73,11 @@ function validatePermissions(perms, manifest) {
       throw new PluginSchemaError(`permissions.${field}`, 'is required and must be an explicit boolean (COS-11)', manifest);
     }
   }
+  // §0.60.169 NP12 — `process`: the plugin runs or drives a child process (the Snowflake/Tor transport). Optional so the six existing manifests stay valid,
+  // but when it is there it is an explicit boolean, never inferred.
+  if (perms.process !== undefined && typeof perms.process !== 'boolean') {
+    throw new PluginSchemaError('permissions.process', 'when present must be an explicit boolean (COS-11)', manifest);
+  }
 }
 
 // ─── contributes ────────────────────────────────────────────────────────────
@@ -103,6 +108,11 @@ function validateContributes(contributes, manifest) {
       }
       if (typeof entry.handler !== 'string') {
         throw new PluginSchemaError(`contributes.${type}[]`, 'entry.handler must name an exported function in the plugin module', manifest);
+      }
+      if (type === 'context-menu-item') {
+        // §0.60.169 — a menu row needs words to show, and a place to show them
+        if (typeof entry.label !== 'string' || !entry.label) throw new PluginSchemaError('contributes.context-menu-item[].label', 'is required: the text of the menu row', manifest);
+        if (entry.when !== undefined && !['link', 'page'].includes(entry.when)) throw new PluginSchemaError('contributes.context-menu-item[].when', "must be 'link' or 'page' when present", manifest);
       }
       if (type === 'userscript' && entry.linkTarget !== undefined) {
         // §NEW 2026-08-24 — validated against the REAL shape

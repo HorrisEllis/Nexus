@@ -1002,10 +1002,10 @@ export const SPEC = [
       if (d.ok === false) { console.log(`${h.c.amber('✗')} ${d.error || 'failed'}`); return; }
       if (d.action) { console.log(d.action === 'delivered' ? `  delivered ${d.version} (${(d.bytes / 1048576).toFixed(1)} MB) · ${d.reason}` : `  nothing to do: ${d.reason}`); return; }
       console.log(`  latest ${d.latest}${d.publishesChecksum ? '' : ' (publishes no SHA256SUMS)'} · COS has ${d.installed.length ? d.installed.join(', ') : 'nothing'}${d.current ? ` (current ${d.current})` : ''} · inbox ${d.inboxPending} waiting\n  a fetch would: ${d.would}`); } },
-  { key: 'net', repo: false, usage: 'net <status|routes|resolve <url>|add <id> --via V [--provider p] [--url pattern] [--origin host] [--caller c] [--protocols https,wss] [--on-failure block]|rm <id>|default <via>|start|stop [--wipe]|detect|bridge <line>|paths --tor P --snowflake P|test>',
+  { key: 'net', repo: false, usage: 'net <status|routes|resolve <url>|add <id> --via V [--provider p] [--url pattern] [--origin host] [--caller c] [--protocols https,wss] [--on-failure block]|rm <id>|default <via>|start|stop [--wipe]|detect|bridge <line>|bridges|builtin|use <n>|https-only on|off|check|paths --tor P --snowflake P|test>',
     about: 'network routes and the Snowflake transport: which way each request goes (direct, block, transport, socks5://h:p), per provider, url, site or caller; start/stop the transport; fail closed',
-    need: (a) => { const v = a.args[0] || 'status'; if (v === 'resolve' && !a.args[1]) return '<url>'; if (v === 'add' && (!a.args[1] || !a.flags.via)) return '<id> --via direct|block|transport|socks5://host:port'; if (v === 'rm' && !a.args[1]) return '<id>'; if (v === 'default' && !a.args[1]) return '<via>'; if (v === 'bridge' && !a.args[1]) return '<snowflake bridge line>'; return null; },
-    personOnly: (a) => (['add', 'rm', 'default', 'start', 'stop', 'bridge', 'paths'].includes(a.args[0]) ? 'changing routes or the transport is a person\'s act: an agent that could remove a rule could send his traffic direct. Ask him to run it.' : null),
+    need: (a) => { const v = a.args[0] || 'status'; if (v === 'resolve' && !a.args[1]) return '<url>'; if (v === 'add' && (!a.args[1] || !a.flags.via)) return '<id> --via direct|block|transport|socks5://host:port'; if (v === 'rm' && !a.args[1]) return '<id>'; if (v === 'default' && !a.args[1]) return '<via>'; if (v === 'bridge' && !a.args[1]) return '<snowflake bridge line>'; if (v === 'use' && !a.args[1]) return '<n> (a number from net bridges)'; if (v === 'https-only' && !['on', 'off'].includes(a.args[1])) return 'on|off'; return null; },
+    personOnly: (a) => (['add', 'rm', 'default', 'start', 'stop', 'bridge', 'paths', 'use', 'https-only', 'builtin'].includes(a.args[0]) ? 'changing routes or the transport (or asking the Tor Project for bridges, which contacts it directly) is a person\'s act: an agent that could remove a rule could send his traffic direct. Ask him to run it.' : null),
     req: (a) => {
       const v = a.args[0] || 'status'; const f = a.flags; const cg = (method, path, body, timeoutMs) => ({ system: 'clear-glass', method, path, ...(body ? { body } : {}), ...(timeoutMs ? { timeoutMs } : {}) });
       if (v === 'status') return cg('GET', '/cli/net/status');
@@ -1017,6 +1017,11 @@ export const SPEC = [
       if (v === 'start' || v === 'stop' || v === 'detect') return cg('POST', '/cli/net/transport', { action: v, wipe: !!f.wipe }, 30000);
       if (v === 'bridge') return cg('POST', '/cli/net/bridge', { line: a.args.slice(1).join(' ') });
       if (v === 'paths') return cg('POST', '/cli/net/paths', { ...(f.tor ? { torPath: String(f.tor) } : {}), ...(f.snowflake ? { snowflakePath: String(f.snowflake) } : {}) });
+      if (v === 'bridges') return cg('GET', '/cli/net/bridge/find');   // SF2 (0.60.178): real lines found on this machine, numbered
+      if (v === 'builtin') return cg('POST', '/cli/net/bridge/builtin', {}, 30000);
+      if (v === 'use') return cg('POST', '/cli/net/bridge/use', { n: Number(a.args[1]) });
+      if (v === 'https-only') return cg('POST', '/cli/net/https-only', { on: a.args[1] === 'on' });
+      if (v === 'check') return cg('POST', '/cli/net/check', {}, 60000);   // SF5: does the circuit exit through Tor (check.torproject.org)
       if (v === 'test') return cg('POST', '/cli/net/test', {});
       return cg('GET', '/cli/net/status');
     },
@@ -1026,6 +1031,8 @@ export const SPEC = [
       if (v === 'status') { const t = d.transport || {}; console.log(`  default ${d.default} · ${d.rules} rule${d.rules === 1 ? '' : 's'} · transport ${t.state}${t.state === 'bootstrapping' ? ` ${t.progress}%` : ''}${t.socksPort ? ` (socks 127.0.0.1:${t.socksPort})` : ''}${t.error ? h.c.amber(`  ${t.error}`) : ''}`); const m = (d.detect || {}).missing || []; if (m.length) console.log(h.c.dim(`  to start the transport, still needed: ${m.join(', ')}`)); console.log(h.c.dim(`  ${d.verifiedWhy ? 'not verified: ' + d.verifiedWhy : ''}\n  ${d.note || ''}`)); return; }
       if (v === 'routes') { console.log(`  default → ${d.default}`); for (const r of d.rules || []) console.log(`  ${r.id.padEnd(18)} ${r.via.padEnd(22)} ${Object.entries(r.match).map(([k, x]) => `${k}=${x}`).join(' ')}${r.protocols ? ` [${r.protocols.join(',')}]` : ''}`); if (!(d.rules || []).length) console.log(h.c.dim('  no rules: nothing is routed, everything goes direct')); return; }
       if (v === 'resolve') { console.log(d.ok ? `  ${a.args[1]} → ${d.via}   ${h.c.dim(d.why)}` : `  ${h.c.amber('collision')}: ${d.why}`); return; }
+      if (v === 'bridges' || v === 'builtin') { for (const c of d.lines || []) console.log(`  ${String(c.n).padStart(2)}  ${c.source.padEnd(20)} ${c.line.slice(0, 70)}${c.line.length > 70 ? '…' : ''}\n      ${h.c.dim(c.path || '')}`); if (!(d.lines || []).length) console.log(h.c.dim('  no Snowflake bridge line on this machine: install Tor Browser, run net setup, or ask the Tor Project with net builtin')); else console.log(h.c.dim('  net use <n> sets one')); if (d.torBrowser) console.log(h.c.dim(`  Tor Browser at ${d.torBrowser.dir}`)); return; }
+      if (v === 'check') { console.log(d.ok ? (d.isTor ? `${h.c.mint('✓')} exits through Tor (${d.ip})` : `${h.c.amber('✗')} NOT through Tor: check.torproject.org saw ${d.ip}`) : `${h.c.amber('✗')} ${d.error}`); return; }
       console.log(`${h.c.mint('✓')} ${JSON.stringify(d).slice(0, 300)}`);
     } },
 ];

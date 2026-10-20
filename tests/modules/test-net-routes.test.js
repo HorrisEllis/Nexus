@@ -101,7 +101,7 @@ const BRIDGE = 'snowflake 192.0.2.3:80 FINGERPRINT fingerprint=X url=https://bro
     const m = mkHost(); await m.h.start();
     const rc = Object.values(m.fsOps.files)[0].c;
     assert.ok(/SocksPort 127\.0\.0\.1:\d+/.test(rc) && /ControlPort 127\.0\.0\.1:\d+/.test(rc) && /CookieAuthentication 1/.test(rc) && /UseBridges 1/.test(rc) && /ClientTransportPlugin snowflake exec \/usr\/bin\/snowflake-client/.test(rc));
-    assert.ok(!/0\.0\.0\.0|HashedControlPassword/.test(rc)); assert.deepStrictEqual(m.spawned[0].opts.env, {});
+    assert.ok(!/0\.0\.0\.0|HashedControlPassword/.test(rc)); assert.deepStrictEqual(m.spawned[0].opts.env, process.platform === 'linux' ? { LD_LIBRARY_PATH: path.dirname(m.spawned[0].cmd) } : {});   // SF1 0.60.178: on Linux only tor's own folder, for its bundled libraries
     assert.strictEqual(m.fsOps.dirs[0][1].mode, 0o700);
   });
   await test('NR-12 a bridge line that is not Snowflake is rejected', () => { assert.throws(() => torrc({ dataDir: '/d', socksPort: 1, controlPort: 2, snowflakePath: '/s', bridgeLine: 'obfs4 1.2.3.4:5 ABC' }), /snowflake/); });

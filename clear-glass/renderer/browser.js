@@ -106,7 +106,8 @@
   if (wvPreload) wv.setAttribute('preload', wvPreload);
   // §0.39.265 — automation pages run in their own session (persist:automation)
   const wvPartition = params.get('wvPartition') || '';
-  if (wvPartition && /^persist:[\w-]{1,60}$/.test(wvPartition)) wv.setAttribute('partition', wvPartition);
+  // SF3 (0.60.178) — or a routed window's in-memory compartment (cg-snow-<id>), so the page shares the shell's routed session
+  if (wvPartition && (/^persist:[\w-]{1,60}$/.test(wvPartition) || /^cg-snow-[\w-]{1,64}$/.test(wvPartition))) wv.setAttribute('partition', wvPartition);
 
   // §NEW 2026-07-04: main process navigates this window in place when the
   // orchestrator's wire /open call targets the already-open default window
@@ -3231,6 +3232,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // via wv.executeJavaScript, so it needs the page's own numbers, not
   // the window-adjusted ones.
   let ctxPageXY = null;
+  // §0.60.169 — the http(s) link the last page right-click landed on, or null (drives "Open link with Snowflake")
+  let ctxLinkURL = null;
 
   function _findPinnedCommandAt(target) {
     return TOOLBAR_COMMANDS.find(c => {
@@ -3263,11 +3266,25 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     e.preventDefault();
     ctxPinTarget = _findPinnedCommandAt(e.target);
     ctxIsChrome = true;
+    ctxLinkURL = null; renderPluginCtxItems([]);
     ctxPageXY = null; // a chrome-bar right-click has no page point
     showCtxMenu(e.clientX, e.clientY);
   });
 
-  wv.addEventListener('context-menu', (e) => {
+  // §0.60.169 NP11 — rows plugins contribute to the menu. Built with textContent (a plugin's label is data, never HTML).
+  function renderPluginCtxItems(items) {
+    const host = document.getElementById('ctx-plugin-items'); if (!host) return;
+    host.textContent = '';
+    for (const it of items) {
+      const row = document.createElement('div');
+      row.className = 'ctx-item'; row.dataset.action = 'plugin-item'; row.dataset.sig = it.id;
+      row.textContent = `${it.icon ? it.icon + ' ' : ''}${it.label}`;
+      host.appendChild(row);
+    }
+    if (items.length) { const sep = document.createElement('div'); sep.className = 'ctx-item sep'; host.appendChild(sep); }
+  }
+
+  wv.addEventListener('context-menu', async (e) => {
     e.preventDefault();
     ctxPinTarget = null; // page content is never a pinned toolbar command
     ctxIsChrome = false;
@@ -3289,6 +3306,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     const r = wv.getBoundingClientRect();
     const p = e.params || e;
     ctxPageXY = { x: p.x, y: p.y };
+    ctxLinkURL = /^https?:\/\//i.test(p.linkURL || '') ? p.linkURL : null;
+    renderPluginCtxItems(await cg.plugins.contextItems(ctxLinkURL ? 'link' : 'page').catch(() => []));
     showCtxMenu(r.left + p.x, r.top + p.y);
   });
 
@@ -3298,6 +3317,12 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     hideCtxMenu();
 
     switch (action) {
+      case 'plugin-item': {
+        // §0.60.169 NP11 — a plugin's row: fire its signature with the link (or page) it was opened on; the plugin's own Gate does the rest and tells the person by toast
+        const sig = e.target.closest('[data-sig]')?.dataset.sig; if (!sig) break;
+        cg.plugins.invoke(sig, { url: ctxLinkURL || wv.getURL(), agentId }).catch(err => addMsg('assistant', `Plugin action failed: ${err.message}`));
+        break;
+      }
       case 'customize-toolbar': {
         _openToolbarEditor();
         break;

@@ -324,3 +324,20 @@ addendum_f:
       depends_on: [NP1_compartment]
       does: "clear-glass/src/vault/container.js (chunked AEAD, manifest, lock/unlock, crypto-shred), a `vault` CLI first (create, status, put, get, ls, release, shred, lock), then the Library and Settings; NP2 then stores proxy credentials in it, and NP16's quarantine lives in it."
       proof: "tests: tamper, reorder, truncate and wrong-key all fail; refuses to open on a legacy-key fallback; shred makes every blob unreadable even if the files remain; lock zeroes the key; a 0-byte and a multi-chunk file round-trip."
+
+# ═══ ADDENDUM 2026-10-21 (0.60.178) — Snowflake working end to end; NP1/NP4 for routed windows ═══
+addendum_2026_10_21:
+  james: "can you get snowflake working. connected to the compartment? optional encryption. Can you look in domains of cyber security and all technololgy. find any way to improve snowflake plugin, and make it look as nromal as it can."
+  map: "docs/2026-10-21-snowflake-compartment-phasemap.spec (SF1–SF6), spec clear-glass/spec/snowflake.spec"
+  found: >-
+    NP3 was applied to the window shell only: an agent window's page loads in a <webview> with no partition (the default session), so
+    "Open link with Snowflake" routed the frame and not the page. Settings → Network read field names the backend never sent.
+  changes_here:
+    NP1_compartment: "a routed window is now one in-memory session for shell and page (SF3), forced at will-attach-webview; reading of 'compartment' kept: the isolated transport."
+    NP4_webrtc: "DONE for routed windows (SF3): disable_non_proxied_udp on every webContents of a compartment session. Other windows: open."
+    NP5_leak_test: "still OPEN. SF5 adds a circuit check (check.torproject.org) that shows the exit; it is not the leak test and marks nothing Verified."
+    encryption: "reading of 'optional encryption' (to confirm): HTTPS-only for routed windows, on by default, his switch (SF4). The 2026-10-15 pushback on a home-made cipher stands; NP19 (at-rest container) stays OPEN."
+  problem_for_him: >-
+    Ordinary agent windows have the same webview gap: route rules and personas reach their shell, not their page. Fixing it moves
+    their cookies and sign-ins to a new session, so it is his call before it is built.
+

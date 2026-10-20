@@ -40,6 +40,12 @@ const FILES = [
   ['clear-glass/src/net/transport-host.js', I('clear-glass/src/net/transport-host.js'), []],   // §0.60.60 NP1
   ['clear-glass/src/net/service.js', I('clear-glass/src/net/service.js'), [I('clear-glass/src/net/policy.js'), I('clear-glass/src/net/transport-host.js')]],
   ['lib/agent-tools/tools/clear-glass/net.js', I('lib/agent-tools/tools/clear-glass/net.js'), []],   // §0.60.60 NP9: read-only agent view
+  ['clear-glass/src/net/installer.js', I('clear-glass/src/net/installer.js'), [I('clear-glass/src/releases/deliver.js')]],   // §0.60.168 Tor Expert Bundle setup (his upload, mapped 0.60.178)
+  ['clear-glass/src/net/bridge-sources.js', I('clear-glass/src/net/bridge-sources.js'), [I('clear-glass/src/net/installer.js')]],   // §0.60.178 SF2 real bridge lines (Tor Browser, bundle, package example; Tor Project only when asked)
+  ['clear-glass/src/net/https-only.js', I('clear-glass/src/net/https-only.js'), []],   // §0.60.178 SF4 his "optional encryption" (reading): http upgraded or refused in routed windows
+  ['clear-glass/src/net/compartment.js', I('clear-glass/src/net/compartment.js'), []],   // §0.60.178 SF3 a routed window is one in-memory compartment, page and shell
+  ['clear-glass/src/plugins/context-items.js', I('clear-glass/src/plugins/context-items.js'), []],   // §0.60.169 the display half of 'context-menu-item' (his upload, mapped 0.60.178)
+  ['clear-glass/plugins/snowflake/index.js', I('clear-glass/plugins/snowflake/index.js'), []],   // §0.60.169 NP11/NP12 "Open link with Snowflake": emits net.open on the bus, decides nothing
   ['idearium/lib/surface-state.cjs', I('idearium/lib/surface-state.cjs'), [I('idearium/lib/data-dir.cjs')]],   // §0.60.80 CE8: the Code tab's surface, one for the tab, the CLI and agents
   ['cos/archetype/eravos.js', I('cos/archetype/eravos.js'), []],   // §0.60.104 CN1/CN2: his ERAVOS canvas, tools and domains as COS archetypes (read from cos/archetype/eravos-*/)
   ['lib/canvas-compartments.js', I('lib/canvas-compartments.js'), [I('lib/cos-bridge.js'), I('lib/file-tree-plan.js'), I('cos/archetype/eravos.js')]],   // §0.60.104 CN3: a canvas compartment, each tool nested
@@ -191,6 +197,13 @@ const CONSUMERS = [
   [I('guardian/lib/response-sink.js'),              I('lib/reply-kind.js'), 'kind: tag on every response node (0.60.50 CE4)'],
   [I('clear-glass/src/downloads/artifact-chat-index.js'), I('lib/run-state.js'),  'Library index rows carry run_id / step / attempt (0.60.50 CE4)'],
   [I('clear-glass/src/downloads/artifact-chat-index.js'), I('lib/reply-kind.js'), 'Library index rows carry reply_kind (0.60.50 CE4)'],
+  [I('clear-glass/src/net/compartment.js'),         I('clear-glass/src/net/https-only.js'), '§0.60.178 SF3/SF4 harden() attaches HTTPS-only to the compartment session (lazy require)'],
+  [I('clear-glass/src/contexts/manager.js'),        I('clear-glass/src/net/compartment.js'), '§0.60.178 SF3 create({ via }): partitionFor + harden, register under that partition; destroy() disposes (lazy require)'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/net/compartment.js'), '§0.60.178 SF3 openAgentWindow({ via }): page and shell on the compartment partition, forced at will-attach-webview; onContents() WebRTC policy (lazy require)'],
+  [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/bridge-sources.js'), '§0.60.178 SF1/SF2 locate() for detect, /cli/net/bridge/find and /bridge/builtin (lazy require)'],
+  [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/installer.js'), '§0.60.168 /cli/net/setup: TorInstaller (lazy require)'],
+  [I('clear-glass/src/plugins/webrequest-adapter.js'), I('clear-glass/src/net/https-only.js'), '§0.60.178 SF4 runs ses.__cgPreRequest (set by https-only.attach) before any content filter — a session property, not a require'],
+  [I('clear-glass/plugins/snowflake/index.js'),     I('clear-glass/src/ipc/bridge.js'), '§0.60.169 net.open on the bus, answered by bridge._netOpenVia (the bus, not a require)'],
 ];
 
 function mapRunState(driver) { return declareMap(driver, { key: 'run-state', uuidTag: '2026-1015-050', files: FILES, consumers: CONSUMERS }); }

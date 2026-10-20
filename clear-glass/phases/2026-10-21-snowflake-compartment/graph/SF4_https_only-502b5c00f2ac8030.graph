@@ -1,0 +1,83 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF4_https_only:502b5c00f2ac8030
+type: graph
+id: phase:SF4_https_only:502b5c00f2ac8030
+context: dependency graph of phase SF4_https_only
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792479326397
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792479326397
+lastSeenAt: 1792479326397
+fingerprint: null
+payload:
+  for: SF4_https_only
+  kind: phase
+  repo: null
+  hash: 502b5c00f2ac8030
+  nodes:
+    - path: clear-glass/src/net/https-only.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/plugins/webrequest-adapter.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/compartment.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/content-filter-exempt.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/plugins/webrequest-adapter.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/net/compartment.js
+      to: clear-glass/src/net/https-only.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/plugins/webrequest-adapter.js
+      kind: requires
+    - from: clear-glass/test/content-filter-exempt.test.js
+      to: clear-glass/src/plugins/webrequest-adapter.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 4a650886a07d5f1b
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    upstream: []
+    downstream:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+      - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 4a650886a07d5f1b · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): SF3_page_in_the_compartment, SF6_surface · finishing it unlocks
+        SF3_page_in_the_compartment, SF6_surface

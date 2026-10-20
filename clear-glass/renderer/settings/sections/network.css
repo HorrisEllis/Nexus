@@ -10,3 +10,9 @@ body[data-area="network"] .net-bridge .field { flex-basis: 420px; }
 body[data-area="network"] .net-rules { display: flex; flex-direction: column; gap: 6px; }
 body[data-area="network"] .warn-box { margin-top: 10px; padding: 8px 10px; border-radius: 8px; font-size: 13px;
   background: color-mix(in srgb, var(--warn, #c90) 12%, transparent); color: var(--warn, #c90); }
+body[data-area="network"] .net-bar { height: 8px; border-radius: 4px; margin: 10px 0 4px; overflow: hidden;
+  background: color-mix(in srgb, currentColor 14%, transparent); }
+body[data-area="network"] .net-bar > i { display: block; height: 100%; width: 0; border-radius: 4px; background: var(--accent, #5b9cff); transition: width .25s ease; }
+body[data-area="network"] .net-bar[data-state="ok"] > i { background: var(--ok, #3b9); }
+body[data-area="network"] .net-bar[data-state="err"] > i { background: var(--err, #d55); }
+body[data-area="network"] .net-setup-msg.err { color: var(--err, #d55); }

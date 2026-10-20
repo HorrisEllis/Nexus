@@ -62,6 +62,9 @@ function attachContentFilters(session, bus, { signatures, timeoutMs = 3000, exem
   const { Event } = require('../core/bus.js');
 
   session.webRequest.onBeforeRequest((details, callback) => {
+    // SF4 (0.60.178): a gate that must run before any filter (net/https-only.js sets it on routed windows). This listener replaces any
+    // earlier one on the session, so the gate is read from the session here rather than lost.
+    if (typeof session.__cgPreRequest === 'function') { const pre = session.__cgPreRequest(details); if (pre) { callback(pre); return; } }
     if (exempt) {
       let skip = false;
       try { const page = _pageUrlOf(details); skip = !!(page && exempt(page)); } catch (_) {}

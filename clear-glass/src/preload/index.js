@@ -105,6 +105,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     // §NEW 2026-09-25 — list()/disable() wired to the real, already-
     // existing pluginHost methods (see bridge.js's plugins:list handler).
     list:    ()   => ipcRenderer.invoke('plugins:list'),
+    contextItems: (when) => ipcRenderer.invoke('plugins:contextItems', { when }),   // §0.60.169 — rows plugins add to the right-click menu
     disable: (id) => ipcRenderer.invoke('plugins:disable', { id }),
   },
 

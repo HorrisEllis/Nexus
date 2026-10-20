@@ -267,7 +267,20 @@ class IpcBridge {
       const { app } = require('electron');
       const which = (n) => { for (const d of String(process.env.PATH || '').split(path.delimiter)) { for (const ext of (process.platform === 'win32' ? ['.exe', ''] : [''])) { const f = path.join(d, n + ext); try { if (fs.statSync(f).isFile()) return f; } catch (_) { /* next */ } } } return null; };
       const pickPort = () => new Promise((ok, no) => { const s = net.createServer(); s.once('error', no); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => ok(p)); }); });
-      return svc.host({ spawn: require('child_process').spawn, fs, dir: path.join(app.getPath('userData'), 'net'), which, pickPort, now: Date.now });
+      // SF1 (0.60.178) — a Tor Browser install counts as found (its tor and its Snowflake client), after a saved path and PATH
+      const locate = () => require('../net/bridge-sources').local({ examples: [] }).torBrowser;
+      return svc.host({ spawn: require('child_process').spawn, fs, dir: path.join(app.getPath('userData'), 'net'), which, locate, pickPort, now: Date.now });
+    };
+    // SF2 (0.60.178) — real bridge lines on this machine; the installer's bundle folder is one of the places looked in
+    const _bridgeLocal = () => require('../net/bridge-sources').local({ bundleDir: require('path').join(require('electron').app.getPath('userData'), 'net', 'bundle') });
+    // SF5 (0.60.178) — fetch through the transport only: an in-memory session whose one proxy rule is the transport's SOCKS port (names resolved by tor)
+    const _fetchVia = async (url, socksPort) => {
+      const { session } = require('electron');
+      const ses = session.fromPartition('cg-netcheck');
+      await ses.setProxy({ proxyRules: `socks5://127.0.0.1:${socksPort}`, proxyBypassRules: '<-loopback>' });
+      const res = await ses.fetch(url, { signal: AbortSignal.timeout(45000), cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status} from ${new URL(url).host}`);
+      return res.text();
     };
     const _netRoute = (fn) => async (req, res) => { try { res.json(await fn(req.body || {}, req.query || {})); } catch (e) { res.json({ ok: false, error: e.message }); } };
     this.app.get('/cli/net/status',   _netRoute(() => ({ ..._net().status(), detect: _netHost().detect() })));
@@ -285,6 +298,49 @@ class IpcBridge {
       if (b.action === 'detect') return { ok: true, ...host.detect() };
       return { ok: false, error: 'action must be start, stop or detect' };
     }));
+    // §0.60.169 — James, 2026-10-19: "right click on links to open with snowflake." Opens the URL in a NEW window whose session is forced through the transport
+    // (no rules, fail closed). The transport is started first if it is configured but off, and waited for (up to 90 s); if it cannot come up nothing is opened.
+    this._netOpenVia = async (rawUrl) => {
+      let u; try { u = new URL(String(rawUrl || '')); } catch (_) { return { ok: false, error: 'that is not a link' }; }
+      if (!/^https?:$/.test(u.protocol)) return { ok: false, error: `only http and https links can be opened this way (got ${u.protocol})` };
+      const host = _netHost();
+      if (host.status().state !== 'ready') {
+        if (!['starting', 'bootstrapping'].includes(host.status().state)) { const r = await host.start(); if (!r.ok) return { ok: false, error: `the transport cannot start: ${r.error}. Set it up under Settings → Network.` }; }
+        const t0 = Date.now();
+        while (host.status().state !== 'ready') {
+          if (host.status().state === 'failed' || host.status().state === 'stopped') return { ok: false, error: `the transport did not come up (${host.status().error || host.status().state})` };
+          if (Date.now() - t0 > 90000) return { ok: false, error: 'the transport is still connecting after 90 s; try again in a moment' };
+          await new Promise(r => setTimeout(r, 400));
+        }
+      }
+      const agentId = `snow-${require('crypto').randomUUID()}`;
+      await this.openFn?.({ agentId, url: u.href, via: 'transport' });
+      return { ok: true, agentId, url: u.href };
+    };
+    this.app.post('/cli/net/open', _netRoute((b) => this._netOpenVia(b.url)));
+    // §0.60.169 NP11 — the Snowflake plugin's menu row asks for this on the bus ('net.open'); the answer is a toast in the window that asked
+    try {
+      const { getBus, Event } = require('../core/bus.js');
+      const toast = (agentId, msg, type) => getBus().emit(new Event('driver.exec', { action: 'toast', agentId, msg, type, durationMs: type === 'warn' ? 7000 : 3500 }));
+      getBus().on('net.open', async (ev) => {
+        const { url, agentId = 'default' } = ev.data || {};
+        toast(agentId, 'Opening through Snowflake…', 'info');
+        const r = await this._netOpenVia(url).catch(err => ({ ok: false, error: err.message }));
+        if (!r.ok) toast(agentId, `Could not open through Snowflake: ${r.error}`, 'warn');
+      });
+    } catch (err) { console.warn(`[net] the net.open listener was not bound: ${err.message}`); }
+    // §0.60.168 — James, 2026-10-19: "a setup button ... fully automatic download and install then restart." Starts src/net/installer.js in the background; the page polls /setup/status.
+    this.app.post('/cli/net/setup', _netRoute((b) => {
+      const fs = require('fs'), path = require('path'); const { app } = require('electron');
+      const { TorInstaller } = require('../net/installer'); _netHost();   // make sure the transport host exists, so the setup can restart it
+      return _net().setupStart({ installer: new TorInstaller({ fs, dir: path.join(app.getPath('userData'), 'net', 'bundle') }), force: !!b.force, allowUnverified: !!b.allowUnverified });
+    }));
+    this.app.get('/cli/net/setup/status', _netRoute(() => _net().setupStatus()));
+    this.app.get('/cli/net/bridge/find',    _netRoute(() => _net().findBridges({ local: _bridgeLocal })));
+    this.app.post('/cli/net/bridge/builtin', _netRoute(() => _net().builtinBridges({ builtin: () => require('../net/bridge-sources').builtin({}) })));
+    this.app.post('/cli/net/bridge/use',    _netRoute((b) => _net().useBridge(b.n)));
+    this.app.post('/cli/net/https-only',    _netRoute((b) => _net().setHttpsOnly(b.on !== false && b.on !== 'off')));
+    this.app.post('/cli/net/check',         _netRoute(() => { _netHost(); return _net().checkCircuit({ fetchVia: _fetchVia }); }));
     this.app.post('/cli/net/test', _netRoute(() => ({ ok: false, error: 'the leak test is not built yet (NP5). No route is shown as verified until it is.' })));
     // §0.60.85 PI5b — James, 2026-10-16: "build it." The chat crawler (src/chats/): /cli/chats/crawl/* -> idearium `chat-crawl` command. Off until the account's switch is on.
     let _crawl = null;
@@ -1277,6 +1333,11 @@ class IpcBridge {
     // strings) so the settings section built on this is named "Plugins",
     // not "Extensions and themes" — never claims theme support that
     // doesn't exist.
+    // §0.60.169 NP11 — the menu rows plugins contribute (src/plugins/context-items.js): { when:'link'|'page' } -> [{ id, label, icon, when, pluginId }]
+    ipcMain.handle('plugins:contextItems', async (e, d) => {
+      try { return require('../plugins/context-items.js').listContextItems(d && d.when); }
+      catch (err) { return []; }
+    });
     ipcMain.handle('plugins:list', async () => {
       try { return this.pluginHost?.list() || []; }
       catch (err) { return { ok: false, error: err.message }; }

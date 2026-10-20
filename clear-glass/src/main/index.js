@@ -1559,7 +1559,7 @@ async function bootstrap() {
   } catch (err) {
     console.error('[ClearGlass/WebExtensions] host failed to start:', err.message);
   }
-  const BUILTIN_PLUGINS = ['adblocker', 'captcha-pause', 'guardian-listeners', 'zoom', 'permissions', 'passwords'];
+  const BUILTIN_PLUGINS = ['adblocker', 'captcha-pause', 'guardian-listeners', 'zoom', 'permissions', 'passwords', 'snowflake'];
   for (const dir of BUILTIN_PLUGINS) {
     try {
       const manifest = require(`../../plugins/${dir}/manifest.json`);
@@ -2217,7 +2217,7 @@ async function openOrFocus({ url, agentId } = {}) {
   return { ok: true, agentId: aid, url, opened: true };
 }
 
-async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank' } = {}) {
+async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank', via } = {}) {
   if (windows.has(agentId)) {
     windows.get(agentId).show();
     return windows.get(agentId);
@@ -2229,15 +2229,21 @@ async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank' } =
   // ctxMgr.create() sets the UA + accept headers on the partition session.
   let partition = `persist:agent-${agentId}`;
   let spoofScript = '';
-  if (ctxMgr) {
+  // SF3 (0.60.178) — a routed window (via) is a compartment: shell and page share its in-memory partition, and it has no persona spoof
+  // script (src/net/compartment.js). Without a context manager nothing can harden it, so it is not opened (fail closed, never direct).
+  const Compartment = via ? require('../net/compartment') : null;
+  if (Compartment) {
+    if (!ctxMgr) throw new Error('routed windows need the context manager; not opened');
+    partition = (await ctxMgr.create({ agentId, url, via })).partition;
+  } else if (ctxMgr) {
     try {
-      await ctxMgr.create({ agentId, url });
+      await ctxMgr.create({ agentId, url, via });
       spoofScript = fp?.generateSpoofScript?.(agentId) || '';
     } catch(e) {
       console.warn(`[ClearGlass] context create failed for ${agentId}:`, e.message);
     }
   }
-  await _restoreAccountWindow(agentId, partition);
+  if (!Compartment) await _restoreAccountWindow(agentId, partition);
 
   // §NEW 2026-08-24 — the other half of the same gap James caught
   // ("as plugins right?"): the adblocker plugin was genuinely installed
@@ -2333,8 +2339,12 @@ async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank' } =
     query: {
       agentId, ssePort: SSE_PORT, ipcPort: IPC_PORT, url: url || '',
       wvPreload: 'file://' + path.join(__dirname, '../preload/webview-bridge.js'),
+      ...(Compartment ? { wvPartition: partition, via } : {}),   // SF3 — the page goes in the compartment, not the default session
     },
   });
+  // the attribute alone is not trusted: whatever the renderer did, the guest is attached to the compartment's session here (fail closed)
+  if (Compartment) win.webContents.on('will-attach-webview', (_e, webPreferences, params) => { webPreferences.partition = partition; if (params) params.partition = partition; });
+  if (Compartment) win.on('closed', () => { ctxMgr.destroy(agentId).catch(e => console.warn(`[compartment] ${agentId} not cleared: ${e.message}`)); });
 
   win.on('maximize',   () => emit('window.maximized', { agentId, maximized: true }));
   win.on('unmaximize', () => emit('window.maximized', { agentId, maximized: false }));
@@ -2753,6 +2763,7 @@ app.on('web-contents-created', (_e, contents) => {
     event.preventDefault();
     try { _runShortcut(action, accel, owner); } catch (e) { console.warn(`[shortcuts] ${accel} → ${action} failed: ${e.message}`); }
   });
+  try { require('../net/compartment').onContents(contents); } catch (e) { console.warn(`[compartment] WebRTC not restricted: ${e.message}`); }   // SF3 — no UDP around the proxy in a routed window
   try { CompartmentWindow.attach(contents); } catch (_) {}   // §0.39.280 — idearium's desktop / settings pop-outs
   // §0.59.5 — James: "All I'm going to do. Is open this chat in clearglass. Then you should be able to talk to nexus right now."
   // A watched chat page (option nexusChat.urls; Claude Code on the web by default): its `nexus> …` lines run, read-only, and

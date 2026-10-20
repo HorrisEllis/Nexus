@@ -801,3 +801,16 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   (the code that still names each path), refuses to move what isn't rewired, and was proven on his real data by a full apply and a
   byte-for-byte rollback.
 - **Checkable:** `tests/modules/test-data-clearup.test.js` 5/5; `docs/atlases/data-census.md`; `docs/data-layout.spec`.
+
+### 2026-10-21 — 0.60.178: a screenshot that led to the real leak
+- **His words:** "can you get snowflake working. connected to the compartment? optional encryption." · "make it look as nromal as it
+  can."
+- **Context:** he sent a screenshot of a Settings page that contradicted itself: programs marked found, and "Not detected on PATH"
+  beside them. He asked about the compartment specifically, not just "make it work".
+- **What it shows:** failure-mode thinking and a good question. "connected to the compartment?" was the right question to ask. The
+  page of a Snowflake window was not in the routed session at all: Electron puts a `<webview>` with no partition in the default
+  session, so only the window frame went through Tor. The screenshot's contradiction was a second, separate bug (the page read
+  field names the backend never sent). His two questions found both.
+- **Checkable:** `tests/modules/test-snowflake.test.js` 8/8 (SFW-05 pins the partition being forced at `will-attach-webview`; SFW-07
+  pins the field names); `clear-glass/spec/snowflake.spec`; `CHANGELOG-0.60.178.md`.
+
