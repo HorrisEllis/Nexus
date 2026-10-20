@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-data-layout-phasemap.spec::DL6_cortex_server
+type: phase
+id: docs_2026-10-21-data-layout-phasemap.spec::DL6_cortex_server
+context: pipeline phase DL6_cortex_server of docs/2026-10-21-data-layout-phasemap.spec
+intent: null
+summary: DL6_cortex_server (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792478240950
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240950
+lastSeenAt: 1792478240950
+fingerprint: null
+payload:
+  id: DL6_cortex_server
+  map: docs/2026-10-21-data-layout-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cortex/server.js
+    - cortex/boot.js
+    - cortex/cortex-v2.js
+    - orchestrator/orchestrator.js
+  depends_on:
+    - DL1_clearup_tool
+  blocks:
+    - MOD-CORTEX-SERVER
+  spec: docs/data-layout.spec
+  graph: 1ac803216ae293ca

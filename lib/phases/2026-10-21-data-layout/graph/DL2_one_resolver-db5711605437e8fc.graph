@@ -1,0 +1,142 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DL2_one_resolver:db5711605437e8fc
+type: graph
+id: phase:DL2_one_resolver:db5711605437e8fc
+context: dependency graph of phase DL2_one_resolver
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792478240944
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240944
+lastSeenAt: 1792478240944
+fingerprint: null
+payload:
+  for: DL2_one_resolver
+  kind: phase
+  repo: null
+  hash: db5711605437e8fc
+  nodes:
+    - path: lib/data-home.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/test-sandbox.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/workset.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/foundation/constants.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/lib/code-artifact.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/data-dir.cjs
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/alk/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/chat-logger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: copilot/lib/workset.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/foundation/constants.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/lib/data-dir.cjs
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/component-store.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 9d788036d22d64e6
+    layer: 2
+    deps:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
+    dependents:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
+      - docs/2026-10-21-data-layout-phasemap.spec::DL4_one_repo_folder
+    upstream:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL0_data_census
+      - docs/2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
+    downstream:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
+      - docs/2026-10-21-data-layout-phasemap.spec::DL4_one_repo_folder
+      - docs/2026-10-21-data-layout-phasemap.spec::DL5_memory_in_cortex
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL4_one_repo_folder
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 9d788036d22d64e6 · layer 2 · ready
+      - 'depends on (1): DL1_clearup_tool · all upstream 2'
+      - >-
+        needed by (2): DL3_rewire_writers, DL4_one_repo_folder · all downstream 3 · finishing it
+        unlocks DL4_one_repo_folder

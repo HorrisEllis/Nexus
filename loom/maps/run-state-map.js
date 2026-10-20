@@ -52,6 +52,7 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  ['lib/data-clearup.js', I('lib/data-clearup.js'), []],   // §0.60.177 DL0/DL1 census + clear-up tool; its rules are docs/data-layout.spec ownership: (read at run time, not a require)
   ['emerge/compiler/phase-specs.js', I('emerge/compiler/phase-specs.js'), [I('emerge/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
   ['lib/upload-placement.js', I('lib/upload-placement.js'), []],   // §0.60.173 UP1/UP2 a zip's files placed against a repo (strip, exists, same bytes, folders, intent, his learned rules); requires/requiredBy
   ['idearium/ui/js/upload-intent.js', I('idearium/ui/js/upload-intent.js'), [I('idearium/ui/js/code-tab-panels.js')]],   // §0.60.173 UP4 the Code tab's upload panel (page globals: CX, _cxPaintPanel, api)

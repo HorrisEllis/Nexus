@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-data-layout-phasemap.spec::DL5_memory_in_cortex
+type: phase
+id: docs_2026-10-21-data-layout-phasemap.spec::DL5_memory_in_cortex
+context: pipeline phase DL5_memory_in_cortex of docs/2026-10-21-data-layout-phasemap.spec
+intent: null
+summary: DL5_memory_in_cortex (integration) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792478240949
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240949
+lastSeenAt: 1792478240949
+fingerprint: null
+payload:
+  id: DL5_memory_in_cortex
+  map: docs/2026-10-21-data-layout-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cortex/memory/index.js
+    - lib/vector-memory.js
+    - lib/local-vector-index.js
+    - lib/agent-memory.js
+    - lib/repo-hat-memory.js
+  depends_on:
+    - DL3_rewire_writers
+  blocks:
+    - MOD-MEMORY-IN-CORTEX
+  spec: docs/data-layout.spec
+  graph: 59082cf7b07d2717

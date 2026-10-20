@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-data-layout-phasemap.spec::DL4_one_repo_folder
+type: phase
+id: docs_2026-10-21-data-layout-phasemap.spec::DL4_one_repo_folder
+context: pipeline phase DL4_one_repo_folder of docs/2026-10-21-data-layout-phasemap.spec
+intent: null
+summary: DL4_one_repo_folder (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792478240947
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240947
+lastSeenAt: 1792478240947
+fingerprint: null
+payload:
+  id: DL4_one_repo_folder
+  map: docs/2026-10-21-data-layout-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - idearium/repo/repo-home.js
+    - idearium/repo/index.js
+  depends_on:
+    - DL2_one_resolver
+  blocks:
+    - MOD-REPO-HOME
+  spec: docs/data-layout.spec
+  graph: 60343e03dda1be5f

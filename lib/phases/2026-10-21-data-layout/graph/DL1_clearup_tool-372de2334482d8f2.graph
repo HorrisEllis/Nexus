@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DL1_clearup_tool:372de2334482d8f2
+type: graph
+id: phase:DL1_clearup_tool:372de2334482d8f2
+context: dependency graph of phase DL1_clearup_tool
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792478240942
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240942
+lastSeenAt: 1792478240942
+fingerprint: null
+payload:
+  for: DL1_clearup_tool
+  kind: phase
+  repo: null
+  hash: 372de2334482d8f2
+  nodes:
+    - path: lib/data-clearup.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-data-clearup.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-data-clearup.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 9d788036d22d64e6
+    layer: 1
+    deps:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL0_data_census
+    dependents:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+      - docs/2026-10-21-data-layout-phasemap.spec::DL6_cortex_server
+    upstream:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL0_data_census
+    downstream:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+      - docs/2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
+      - docs/2026-10-21-data-layout-phasemap.spec::DL4_one_repo_folder
+      - docs/2026-10-21-data-layout-phasemap.spec::DL5_memory_in_cortex
+      - docs/2026-10-21-data-layout-phasemap.spec::DL6_cortex_server
+      - docs/2026-10-21-data-layout-phasemap.spec::DL7_cortex_snapshot_out
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+      - docs/2026-10-21-data-layout-phasemap.spec::DL6_cortex_server
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 9d788036d22d64e6 · layer 1
+      - 'depends on (1): DL0_data_census'
+      - >-
+        needed by (2): DL2_one_resolver, DL6_cortex_server · all downstream 6 · finishing it unlocks
+        DL2_one_resolver, DL6_cortex_server

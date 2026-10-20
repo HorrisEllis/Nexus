@@ -791,3 +791,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   build order wasn't topological) and a lost spec (`spec-parser.spec`), both now written down.
 - **Checkable:** `docs/substrate.spec`, `docs/belief-loop.spec`, `tests/modules/test-substrate-spec.test.js` 3/3,
   `tests/modules/test-phase-specs.test.js` 4/4; `node emerge/compiler/phase-specs.js <map> --check`.
+
+### 2026-10-21 — 0.60.177: a data migration that can be undone
+- **His words:** "migrate relevant data to relavant systems. make one repo folder in idearium, no data folder in the root." · "make a
+  file clearup tool, for safely moving and mapping tools."
+- **Context:** state from every system had collected in one root folder (122 tracked files in the repo, 755 in his live data), and
+  about 100 code files built those paths by hand. He asked for the move, and for a tool that does it safely, before any of it was done.
+- **What it shows:** operational judgment. He asked for the safety tool first, rather than a bulk move. The tool maps before it moves
+  (the code that still names each path), refuses to move what isn't rewired, and was proven on his real data by a full apply and a
+  byte-for-byte rollback.
+- **Checkable:** `tests/modules/test-data-clearup.test.js` 5/5; `docs/atlases/data-census.md`; `docs/data-layout.spec`.

@@ -1,0 +1,275 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DL7_cortex_snapshot_out:af1c908b9a84788d
+type: graph
+id: phase:DL7_cortex_snapshot_out:af1c908b9a84788d
+context: dependency graph of phase DL7_cortex_snapshot_out
+intent: null
+summary: 27 node(s), 9 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792478240951
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792478240951
+lastSeenAt: 1792478240951
+fingerprint: null
+payload:
+  for: DL7_cortex_snapshot_out
+  kind: phase
+  repo: null
+  hash: af1c908b9a84788d
+  nodes:
+    - path: cortex/snapshot/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: orchestrator/lib/autonomous-loop.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/self-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: service/guardian-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/autonomous-loop.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/snapshot-integrity.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-snapshot-migration.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/pipeline.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/lib/snapshot.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: cortex/snapshot/index.js
+      to: versionium/lib/snapshot.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/spec-parser.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: lib/self-build-loop.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: tests/modules/snapshot-integrity.test.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: tests/modules/test-versionium-snapshot-migration.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: tests/pipeline.test.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+    - from: tests/modules/autonomous-loop.test.js
+      to: orchestrator/lib/autonomous-loop.js
+      kind: requires
+  crossings:
+    - from: cortex/snapshot/index.js
+      to: versionium/lib/snapshot.js
+      fromSystem: cortex
+      toSystem: versionium
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/compartment-engine.js
+      to: cortex/snapshot/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/self-build-loop.js
+      to: cortex/snapshot/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: cortex/snapshot/index.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      fromSystem: service
+      toSystem: guardian
+      kind: system
+      known: true
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: cli
+      toSystem: orchestrator
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 9d788036d22d64e6
+    layer: 3
+    deps:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL6_cortex_server
+    dependents: []
+    upstream:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL0_data_census
+      - docs/2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
+      - docs/2026-10-21-data-layout-phasemap.spec::DL6_cortex_server
+    downstream: []
+    blockedBy:
+      - docs/2026-10-21-data-layout-phasemap.spec::DL6_cortex_server
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 9d788036d22d64e6 · layer 3 · blocked by DL6_cortex_server
+      - 'depends on (1): DL6_cortex_server · all upstream 3'
+      - 'needed by (0): —'
