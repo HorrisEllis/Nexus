@@ -287,8 +287,8 @@ spec:
 
     - id: IF-BOUNDARIES
       name: learned-budgets
-      path: lib/boundaries.js
-      description: "Learned per-provider token budgets (what contract-adapters reads as boundaries.budget)."
+      path: cortex/core/raid/contract-gates.js
+      description: "Learned per-provider token budgets: the Boundaries object in cortex/core/raid/contract-gates.js (budget = 75th percentile of passes, capped below the first failure size; corrected 2026-10-20, it was declared as lib/boundaries.js, which does not exist)."
       exports: ["budget(provider, kind) → number | null"]
       behavioral_contracts: ["a budget is a prediction learned from outcomes"]
       error_paths: ["no budget yet → null (the brick goes to the largest learned budget first, said)"]
