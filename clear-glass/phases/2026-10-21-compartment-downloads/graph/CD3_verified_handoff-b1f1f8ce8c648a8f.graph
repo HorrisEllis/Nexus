@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CD3_verified_handoff:b1f1f8ce8c648a8f
+type: graph
+id: phase:CD3_verified_handoff:b1f1f8ce8c648a8f
+context: dependency graph of phase CD3_verified_handoff
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792481794291
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481794291
+lastSeenAt: 1792481794291
+fingerprint: null
+payload:
+  for: CD3_verified_handoff
+  kind: phase
+  repo: null
+  hash: b1f1f8ce8c648a8f
+  nodes:
+    - path: clear-glass/src/net/qbittorrent.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/qbittorrent.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 0c4fb6c30abee07a
+    layer: 1
+    deps:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_magnet_client
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+    dependents:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+    upstream:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_magnet_client
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 0c4fb6c30abee07a · layer 1
+      - 'depends on (2): CD0_magnet_client, CD1_magnet_parse'
+      - >-
+        needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks
+        CD4_kill_on_disconnect

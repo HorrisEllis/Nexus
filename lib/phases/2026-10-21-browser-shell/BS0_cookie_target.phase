@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS0_cookie_target
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS0_cookie_target
+context: pipeline phase BS0_cookie_target of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS0_cookie_target (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792481795174
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795174
+lastSeenAt: 1792481795174
+fingerprint: null
+payload:
+  id: BS0_cookie_target
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: null
+  status: DECIDED
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4849b9f58d06e1fb

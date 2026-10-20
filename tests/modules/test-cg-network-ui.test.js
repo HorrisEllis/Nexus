@@ -119,7 +119,7 @@ const toasts = () => $$('#toasts .toast').map(t => t.textContent);
 
   await test('NW-04', 'the default posture and a route rule go through the real service and show in the UI', async () => {
     await render();
-    const sel = $('#main select'); assert.ok(sel, 'the default select');
+    const sel = $$('#main select').find(x => [...x.options].some(o => o.value === 'direct')); assert.ok(sel, 'the default select');   // 0.60.179: the On-disconnect select now comes first
     sel.value = 'block'; sel.dispatchEvent(new w.Event('change')); await tick(60);
     assert.strictEqual(svc.routes().default, 'block', 'the real service took the default');
     const r = svc.addRoute({ id: 'ex-test', match: { urlPattern: 'https://example.test/*' }, via: 'transport' });

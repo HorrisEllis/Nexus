@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--
+  renderer/float-cli.html — the floating CLI (BS6, 0.60.179), clear-glass/spec/browser-shell.spec MOD-BSH-FLOAT-CLI.
+  James, 2026-10-21: "make a beautiful cli like the floating menu button 3-way cli. isolated from the dom, i dont want any screen
+  recording to be able to see anything but the dom,"
+  Its own window (src/main/float-cli.js): not in the page, so no page script reads it; content-protected, so screen capture leaves it out.
+  The round button is the TV menu's (ui/tv-shell/menu.js); the route bar is copilot-cli.js's own (ollama | copilot | guardian | claude-code).
+-->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://127.0.0.1:*; img-src 'self' data:">
+<title>Clear Glass CLI</title>
+<link rel="stylesheet" href="cos-theme.css">
+<link rel="stylesheet" href="float-cli.css">
+</head>
+<body>
+  <section id="panel" aria-label="Nexus CLI">
+    <header id="fc-head">
+      <span class="fc-mark" aria-hidden="true">›_</span>
+      <div class="fc-title"><b>Nexus</b> CLI<span id="fc-where" class="fc-where"></span></div>
+      <span class="fc-grow"></span>
+      <span id="fc-shield" class="fc-shield" title=""></span>
+      <button id="fc-min" class="fc-ghost" title="Collapse to the button" aria-label="Collapse">▾</button>
+      <button id="fc-close" class="fc-ghost" title="Hide (Ctrl+Shift+Space)" aria-label="Hide">✕</button>
+    </header>
+    <div id="copilot-route" aria-label="Who answers"></div>
+    <div id="fc-log" role="log" aria-live="polite"></div>
+    <form id="fc-form" autocomplete="off">
+      <span class="fc-prompt" aria-hidden="true">nexus›</span>
+      <textarea id="fc-input" rows="1" spellcheck="false" placeholder="ask anything, or /help" aria-label="Command"></textarea>
+      <button id="fc-send" type="submit" title="Send (Enter)" aria-label="Send">↵</button>
+    </form>
+  </section>
+  <button id="fab" title="Nexus CLI" aria-label="Open the Nexus CLI"><span>›_</span></button>
+  <script src="copilot-cli.js"></script>
+  <script src="float-cli.js"></script>
+</body>
+</html>

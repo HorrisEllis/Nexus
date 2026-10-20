@@ -1002,10 +1002,33 @@ export const SPEC = [
       if (d.ok === false) { console.log(`${h.c.amber('✗')} ${d.error || 'failed'}`); return; }
       if (d.action) { console.log(d.action === 'delivered' ? `  delivered ${d.version} (${(d.bytes / 1048576).toFixed(1)} MB) · ${d.reason}` : `  nothing to do: ${d.reason}`); return; }
       console.log(`  latest ${d.latest}${d.publishesChecksum ? '' : ' (publishes no SHA256SUMS)'} · COS has ${d.installed.length ? d.installed.join(', ') : 'nothing'}${d.current ? ` (current ${d.current})` : ''} · inbox ${d.inboxPending} waiting\n  a fetch would: ${d.would}`); } },
-  { key: 'net', repo: false, usage: 'net <status|routes|resolve <url>|add <id> --via V [--provider p] [--url pattern] [--origin host] [--caller c] [--protocols https,wss] [--on-failure block]|rm <id>|default <via>|start|stop [--wipe]|detect|bridge <line>|bridges|builtin|use <n>|https-only on|off|check|paths --tor P --snowflake P|test>',
+  // BS7 (0.60.179) — James: "can you build a import for firefox profiles and cookies for clearglass.?" Listing is open; importing is his (cookies are sign-ins).
+  { key: 'firefox', repo: false, usage: 'firefox <profiles|import [profile name or folder] [--no-cookies] [--bookmarks] [--persona] [--into default|ncp-<provider>]>',
+    about: 'Firefox profiles on this machine, and a real import into Clear Glass: cookies (into the everyday session or a provider tab), bookmarks, and the profile\'s user agent',
+    personOnly: (a) => (a.args[0] === 'import' ? 'importing Firefox cookies brings in his sign-ins: a person\'s act. Ask him to run it.' : null),
+    req: (a) => {
+      const v = a.args[0] || 'profiles'; const f = a.flags;
+      if (v === 'import') return { system: 'clear-glass', method: 'POST', path: '/cli/firefox/import', body: { profile: a.args.slice(1).join(' '), cookies: !f['no-cookies'], bookmarks: !!f.bookmarks, persona: !!f.persona, into: f.into ? String(f.into) : 'default' }, timeoutMs: 120000 };
+      return { system: 'clear-glass', method: 'GET', path: '/cli/firefox/profiles' };
+    },
+    print: (d, a, h) => {
+      if (d.ok === false && !d.cookies) { console.log(`${h.c.amber('✗')} ${d.error || (d.errors || []).join('; ') || 'failed'}`); return; }
+      if ((a.args[0] || 'profiles') === 'profiles') {
+        for (const p of d.profiles || []) console.log(`  ${p.isDefault ? h.c.mint('●') : ' '} ${p.name.padEnd(24)} ${['cookies', 'places', 'prefs'].filter(k => p.has && p.has[k]).join(' ')}\n      ${h.c.dim(p.path)}`);
+        if (!(d.profiles || []).length) console.log(h.c.dim(`  no Firefox profile found; looked in:\n    ${(d.looked || []).join('\n    ')}`));
+        return;
+      }
+      const c = d.cookies, b = d.bookmarks;
+      console.log(`${h.c.mint('✓')} ${d.profile} → ${d.into}`);
+      if (c) console.log(`  cookies   ${c.imported} of ${c.read} imported · skipped: ${Object.entries(c.skipped).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(', ') || 'none'}`);
+      if (b) console.log(`  bookmarks ${b.added} added, ${b.existing} already there`);
+      if (d.persona) console.log(`  persona   ${d.persona.userAgent ? 'user agent applied' : 'no user agent override'}${d.persona.languages ? ` · languages ${d.persona.languages}` : ''}`);
+      for (const e of d.errors || []) console.log(h.c.amber(`  ${e}`));
+    } },
+  { key: 'net', repo: false, usage: 'net <status|routes|resolve <url>|add <id> --via V [--provider p] [--url pattern] [--origin host] [--caller c] [--protocols https,wss] [--on-failure block]|rm <id>|default <via>|start|stop [--wipe]|detect|bridge <line>|bridges|builtin|use <n>|https-only on|off|check|quarantine|release <id>|discard <id>|handoff <id>|on-disconnect block|kill_tabs|kill_compartment|qbit [check] [--url U] [--user U] [--pass P]|paths --tor P --snowflake P|test>',
     about: 'network routes and the Snowflake transport: which way each request goes (direct, block, transport, socks5://h:p), per provider, url, site or caller; start/stop the transport; fail closed',
-    need: (a) => { const v = a.args[0] || 'status'; if (v === 'resolve' && !a.args[1]) return '<url>'; if (v === 'add' && (!a.args[1] || !a.flags.via)) return '<id> --via direct|block|transport|socks5://host:port'; if (v === 'rm' && !a.args[1]) return '<id>'; if (v === 'default' && !a.args[1]) return '<via>'; if (v === 'bridge' && !a.args[1]) return '<snowflake bridge line>'; if (v === 'use' && !a.args[1]) return '<n> (a number from net bridges)'; if (v === 'https-only' && !['on', 'off'].includes(a.args[1])) return 'on|off'; return null; },
-    personOnly: (a) => (['add', 'rm', 'default', 'start', 'stop', 'bridge', 'paths', 'use', 'https-only', 'builtin'].includes(a.args[0]) ? 'changing routes or the transport (or asking the Tor Project for bridges, which contacts it directly) is a person\'s act: an agent that could remove a rule could send his traffic direct. Ask him to run it.' : null),
+    need: (a) => { const v = a.args[0] || 'status'; if (v === 'resolve' && !a.args[1]) return '<url>'; if (v === 'add' && (!a.args[1] || !a.flags.via)) return '<id> --via direct|block|transport|socks5://host:port'; if (v === 'rm' && !a.args[1]) return '<id>'; if (v === 'default' && !a.args[1]) return '<via>'; if (v === 'bridge' && !a.args[1]) return '<snowflake bridge line>'; if (v === 'use' && !a.args[1]) return '<n> (a number from net bridges)'; if (v === 'https-only' && !['on', 'off'].includes(a.args[1])) return 'on|off'; if (['release', 'discard', 'handoff'].includes(v) && !a.args[1]) return '<id> (from net quarantine)'; if (v === 'on-disconnect' && !['block', 'kill_tabs', 'kill_compartment'].includes(a.args[1])) return 'block|kill_tabs|kill_compartment'; return null; },
+    personOnly: (a) => (['add', 'rm', 'default', 'start', 'stop', 'bridge', 'paths', 'use', 'https-only', 'builtin', 'release', 'discard', 'handoff', 'on-disconnect', 'qbit'].includes(a.args[0]) ? 'changing routes or the transport (or asking the Tor Project for bridges, which contacts it directly) is a person\'s act: an agent that could remove a rule could send his traffic direct. Ask him to run it.' : null),
     req: (a) => {
       const v = a.args[0] || 'status'; const f = a.flags; const cg = (method, path, body, timeoutMs) => ({ system: 'clear-glass', method, path, ...(body ? { body } : {}), ...(timeoutMs ? { timeoutMs } : {}) });
       if (v === 'status') return cg('GET', '/cli/net/status');
@@ -1022,6 +1045,12 @@ export const SPEC = [
       if (v === 'use') return cg('POST', '/cli/net/bridge/use', { n: Number(a.args[1]) });
       if (v === 'https-only') return cg('POST', '/cli/net/https-only', { on: a.args[1] === 'on' });
       if (v === 'check') return cg('POST', '/cli/net/check', {}, 60000);   // SF5: does the circuit exit through Tor (check.torproject.org)
+      if (v === 'quarantine') return cg('GET', '/cli/net/quarantine');   // CD5 (0.60.179): what routed windows downloaded, and the magnets they met
+      if (v === 'release') return cg('POST', '/cli/net/quarantine/release', { id: a.args[1] });
+      if (v === 'discard') return cg('POST', '/cli/net/quarantine/discard', { id: a.args[1] });
+      if (v === 'handoff') return cg('POST', '/cli/net/magnet/handoff', { id: a.args[1] }, 30000);
+      if (v === 'on-disconnect') return cg('POST', '/cli/net/on-disconnect', { rung: a.args[1] });
+      if (v === 'qbit') return a.args[1] === 'check' ? cg('POST', '/cli/net/qbit/check', {}, 30000) : cg('POST', '/cli/net/qbit', { ...(f.url ? { url: String(f.url) } : {}), ...(f.user !== undefined ? { user: String(f.user) } : {}), ...(f.pass !== undefined ? { pass: String(f.pass) } : {}) });
       if (v === 'test') return cg('POST', '/cli/net/test', {});
       return cg('GET', '/cli/net/status');
     },
@@ -1032,6 +1061,7 @@ export const SPEC = [
       if (v === 'routes') { console.log(`  default → ${d.default}`); for (const r of d.rules || []) console.log(`  ${r.id.padEnd(18)} ${r.via.padEnd(22)} ${Object.entries(r.match).map(([k, x]) => `${k}=${x}`).join(' ')}${r.protocols ? ` [${r.protocols.join(',')}]` : ''}`); if (!(d.rules || []).length) console.log(h.c.dim('  no rules: nothing is routed, everything goes direct')); return; }
       if (v === 'resolve') { console.log(d.ok ? `  ${a.args[1]} → ${d.via}   ${h.c.dim(d.why)}` : `  ${h.c.amber('collision')}: ${d.why}`); return; }
       if (v === 'bridges' || v === 'builtin') { for (const c of d.lines || []) console.log(`  ${String(c.n).padStart(2)}  ${c.source.padEnd(20)} ${c.line.slice(0, 70)}${c.line.length > 70 ? '…' : ''}\n      ${h.c.dim(c.path || '')}`); if (!(d.lines || []).length) console.log(h.c.dim('  no Snowflake bridge line on this machine: install Tor Browser, run net setup, or ask the Tor Project with net builtin')); else console.log(h.c.dim('  net use <n> sets one')); if (d.torBrowser) console.log(h.c.dim(`  Tor Browser at ${d.torBrowser.dir}`)); return; }
+      if (v === 'quarantine') { for (const q of d.items || []) console.log(`  ${q.id.padEnd(18)} ${q.kind.padEnd(7)} ${String(q.state).padEnd(12)} ${q.filename}${q.via ? h.c.dim(`  via ${q.via}`) : ''}`); if (!(d.items || []).length) console.log(h.c.dim('  nothing quarantined')); console.log(h.c.dim(`  on disconnect: ${d.onDisconnect}${(d.kills || []).length ? ` · last kill ${new Date(d.kills[0].at).toLocaleString()} (${d.kills[0].rung})` : ''}`)); return; }
       if (v === 'check') { console.log(d.ok ? (d.isTor ? `${h.c.mint('✓')} exits through Tor (${d.ip})` : `${h.c.amber('✗')} NOT through Tor: check.torproject.org saw ${d.ip}`) : `${h.c.amber('✗')} ${d.error}`); return; }
       console.log(`${h.c.mint('✓')} ${JSON.stringify(d).slice(0, 300)}`);
     } },

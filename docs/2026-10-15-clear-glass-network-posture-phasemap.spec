@@ -341,3 +341,12 @@ addendum_2026_10_21:
     Ordinary agent windows have the same webview gap: route rules and personas reach their shell, not their page. Fixing it moves
     their cookies and sign-ins to a new session, so it is his call before it is built.
 
+# ═══ ADDENDUM 2026-10-21 (0.60.179) — NP7, NP15, NP16 built for Snowflake windows ═══
+addendum_2026_10_21_b:
+  james: "add magnet link handling, download manage for the compartment. kill on disconnect."
+  map: "docs/2026-10-21-compartment-downloads-phasemap.spec (CD1–CD5), spec clear-glass/spec/compartment-downloads.spec"
+  changes_here:
+    NP16_quarantine_pipeline: "BUILT for routed windows (CD2): quarantine under <userData>/net/quarantine, release with a sha256 check, discard archived; its index lives in the quarantine, not the persistent downloads store. Scanning (type/zip-bomb checks) and the encrypted container (NP19) stay OPEN."
+    NP15_kill_switch: "BUILT for routed windows (CD4): kill_tabs (default, reading of 'kill on disconnect', to confirm) and kill_compartment enforced on an unasked drop; freeze (NP17) stays OPEN."
+    NP7_p2p: "MAGNETS ONLY (CD1/CD3), under MR12: caught and listed in routed windows, handed to qBittorrent only when its own settings show peers through a non-Tor proxy or a bound interface. No torrent engine in Clear Glass."
+

@@ -208,3 +208,15 @@ spec:
   #         The reading of "optional encryption" behind it is marked to confirm in the map.
   #   D27 = SF2 the Tor Project's builtin list: his button only, never automatic. USER_AUTONOMY: the ask is visible to his network.
   # His call, not decided here: whether ordinary agent windows move their page into their own session (it moves sign-ins).
+
+# ═══ ADDENDUM 2026-10-21 (0.60.179) — compartment downloads and the browser shell, decided by his axioms ═══
+  #   D28 = CD0_magnet_client: qBittorrent through its Web API, verified per hand-off. §0.1 (the client's proxy is read, not assumed),
+  #         MR12 (fail closed). No torrent engine inside Clear Glass.
+  #   D29 = CD2 quarantine index in its own folder, never the persistent downloads store. The routed window's purpose (nothing of it on
+  #         disk beyond what he chose to download) and §1.2.
+  #   D30 = BS0_cookie_target: everyday session by default, a provider tab by choice, never a Snowflake window. USER_AUTONOMY; the
+  #         compartment's purpose.
+  #   D31 = BS2 palette: Settings' as rendered (settings.css + cos-theme.css, his 0.60.5 look), not settings.css's raw colours.
+  #         TRUTH_OVER_COHERENCE: "the same theme as the setting" is what Settings shows.
+  # His call, not decided here: the kill rung default reading (kill_tabs) is a reading, to confirm.
+

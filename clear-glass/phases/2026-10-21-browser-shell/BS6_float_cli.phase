@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+context: pipeline phase BS6_float_cli of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS6_float_cli (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792481795202
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795202
+lastSeenAt: 1792481795202
+fingerprint: null
+payload:
+  id: BS6_float_cli
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.179
+  files:
+    - clear-glass/src/main/float-cli.js
+    - clear-glass/renderer/float-cli.html
+    - clear-glass/renderer/float-cli.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - BS2_shell_rebuild
+    - BS4_extensions
+  blocks:
+    - MOD-BSH-FLOAT-CLI
+  spec: clear-glass/spec/browser-shell.spec
+  graph: c0fd47f327b73e8c

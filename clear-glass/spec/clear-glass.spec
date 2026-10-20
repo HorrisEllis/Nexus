@@ -695,3 +695,14 @@ spec:
 # so a person at the CLI and every agent through nexus.command have the field. The driver now emits field.pointer for
 # every pointer act (as field.map and field.spotlight were). src/page/attention.js keeps, per window, page changes and the
 # field's last map, spotlight and pointer (fed from the bus by main/index.js, bus.on('*')); GET /cli/attention serves it.
+
+# ═══ ADDENDUM 2026-10-21 (0.60.179) — the browser window rebuilt like Firefox; one download store, a ⬇ panel over it ═══
+# James, 2026-10-21: "rebuild the front end renderer.html completely enterprise grade, same theme as the setting, make it dynamic like
+# firefox. liek a whole toolbar menu. addons or plugins built with little icons like firefox."
+# Spec: clear-glass/spec/browser-shell.spec; map docs/2026-10-21-browser-shell-phasemap.spec. The window keeps every 0.60.178 id; the
+# 0.60.178 file is archived at _archive/clear-glass/renderer/browser-0.60.178.html.
+# Supersedes, and keeps (§0.3), 0.39.241's "the ☰ Downloads dropdown retired" — that was the coder's consolidation when James asked for
+# the Library window ("need control j to popout a window like the screenshot... the settings ui but with the library"). Kept: one download
+# store and one Library. Changed: Firefox's ⬇ toolbar panel returns as a view of that same store (cg.downloads.list) plus the Snowflake
+# quarantine, and "Show all downloads" opens the Library. Reading (to confirm): "like firefox" includes Firefox's downloads panel.
+

@@ -24,7 +24,7 @@ const {
 } = require('../screen-qa/detector.js');
 
 class IpcBridge {
-  constructor({ port, sse, ctxMgr, vault, apiSettings, urlListener, mesh, diag, fp, options, minimizeFn, hideFn, openFn, maximizeFn, openSettingsFn, closeSettingsFn, openLibraryFn, closeLibraryFn, bookmarks, rewind, providerHost, userscripts, siteSettings, downloads, passwordVault, speech, macroTool, errorCapture, copilot, postEvent, pluginHost, history, autofillStore, dom, loginPortal, driver, webExtensions }) {
+  constructor({ port, sse, ctxMgr, vault, apiSettings, urlListener, mesh, diag, fp, options, minimizeFn, hideFn, openFn, closeCompartmentsFn, maximizeFn, openSettingsFn, closeSettingsFn, openLibraryFn, closeLibraryFn, bookmarks, rewind, providerHost, userscripts, siteSettings, downloads, passwordVault, speech, macroTool, errorCapture, copilot, postEvent, pluginHost, history, autofillStore, dom, loginPortal, driver, webExtensions }) {
     this.port        = port;
     this.sse         = sse;
     this.errorCapture = errorCapture;
@@ -40,6 +40,7 @@ class IpcBridge {
     this.minimizeFn  = minimizeFn;
     this.hideFn      = hideFn;
     this.openFn      = openFn;
+    this.closeCompartmentsFn = closeCompartmentsFn;   // CD4 (0.60.179) — the kill switch closes routed windows through this
     this.maximizeFn  = maximizeFn;
     this.openSettingsFn = openSettingsFn;
     this.closeSettingsFn = closeSettingsFn;
@@ -269,8 +270,19 @@ class IpcBridge {
       const pickPort = () => new Promise((ok, no) => { const s = net.createServer(); s.once('error', no); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => ok(p)); }); });
       // SF1 (0.60.178) — a Tor Browser install counts as found (its tor and its Snowflake client), after a saved path and PATH
       const locate = () => require('../net/bridge-sources').local({ examples: [] }).torBrowser;
-      return svc.host({ spawn: require('child_process').spawn, fs, dir: path.join(app.getPath('userData'), 'net'), which, locate, pickPort, now: Date.now });
+      const host = svc.host({ spawn: require('child_process').spawn, fs, dir: path.join(app.getPath('userData'), 'net'), which, locate, pickPort, now: Date.now });
+      // CD4 (0.60.179) — kill on disconnect, armed once with the host: an unasked drop runs the rung (kill_tabs by default)
+      if (!svc.killSwitch) {
+        const { emit: busEmit } = require('../core/bus');
+        const quarantine = svc.ensureQuarantine({ dir: path.join(app.getPath('userData'), 'net', 'quarantine'), emit: busEmit });
+        const { KillSwitch } = require('../net/kill-switch');
+        const ks = new KillSwitch({ host, quarantine, rung: () => svc.policy().compartmentOnDisconnect || 'kill_tabs', closeWindows: () => (this.closeCompartmentsFn ? this.closeCompartmentsFn() : []),
+          qbit: () => svc.qbit(), handedHashes: () => svc.handedHashes(), emit: (t, d) => { try { busEmit(t, d); } catch (_) {} } });
+        ks.arm(); svc.useCompartmentParts({ killSwitch: ks });
+      }
+      return host;
     };
+    const _quarantine = () => { _netHost(); return _net().quarantine; };
     // SF2 (0.60.178) — real bridge lines on this machine; the installer's bundle folder is one of the places looked in
     const _bridgeLocal = () => require('../net/bridge-sources').local({ bundleDir: require('path').join(require('electron').app.getPath('userData'), 'net', 'bundle') });
     // SF5 (0.60.178) — fetch through the transport only: an in-memory session whose one proxy rule is the transport's SOCKS port (names resolved by tor)
@@ -341,6 +353,34 @@ class IpcBridge {
     this.app.post('/cli/net/bridge/use',    _netRoute((b) => _net().useBridge(b.n)));
     this.app.post('/cli/net/https-only',    _netRoute((b) => _net().setHttpsOnly(b.on !== false && b.on !== 'off')));
     this.app.post('/cli/net/check',         _netRoute(() => { _netHost(); return _net().checkCircuit({ fetchVia: _fetchVia }); }));
+    // BS1/BS7 (0.60.179) — Firefox import, for real (src/import/firefox.js). Cookies go into the everyday session (Electron's default, where an
+    // ordinary window's page loads) or a provider tab's; never into a Snowflake compartment. No cookie value leaves this route.
+    const _ffSession = (into) => {
+      const { session } = require('electron');
+      if (!into || into === 'default') return session.defaultSession;
+      if (/^ncp-[\w-]{1,40}$/.test(into)) return session.fromPartition(`persist:${into}`);
+      throw new Error('into must be default or ncp-<provider> (Snowflake windows never take imported cookies)');
+    };
+    this.app.get('/cli/firefox/profiles', _netRoute(() => ({ ok: true, ...require('../import/firefox').profiles() })));
+    this.app.post('/cli/firefox/import', _netRoute(async (b) => {
+      const FX = require('../import/firefox');
+      const { profiles } = FX.profiles();
+      const want = String(b.profile || '').trim();
+      const prof = !want ? (profiles.find(p => p.isDefault) || profiles[0]) : profiles.find(p => p.name === want || p.path === want) || (require('fs').existsSync(want) ? { name: require('path').basename(want), path: want } : null);
+      if (!prof) return { ok: false, error: want ? `no Firefox profile "${want}"` : 'no Firefox profile found on this machine' };
+      const rep = await FX.run({ profile: prof, cookies: b.cookies !== false, bookmarks: !!b.bookmarks, persona: !!b.persona, into: b.into || 'default',
+        session: b.cookies !== false ? _ffSession(b.into) : null, store: this.bookmarks, fingerprint: this.fp, agentId: b.agentId || 'default' });
+      try { require('../core/bus').emit('import.firefox.done', { profile: rep.profile, cookies: rep.cookies && rep.cookies.imported, bookmarks: rep.bookmarks && rep.bookmarks.added }); } catch (_) {}
+      return { ok: rep.errors.length === 0 || !!(rep.cookies || rep.bookmarks || rep.persona), ...rep };
+    }));
+    // CD5 (0.60.179) — the compartment's download manager, magnets, the kill rung and the qBittorrent hand-off
+    this.app.get('/cli/net/quarantine',           _netRoute(() => ({ ok: true, items: _quarantine().list(), onDisconnect: _net().policy().compartmentOnDisconnect || 'kill_tabs', kills: _net().killSwitch ? _net().killSwitch.records() : [] })));
+    this.app.post('/cli/net/quarantine/release',  _netRoute((b) => _quarantine().release(String(b.id || ''), this.options?.get()?.downloadDirectory || require('electron').app.getPath('downloads'))));
+    this.app.post('/cli/net/quarantine/discard',  _netRoute((b) => _quarantine().discard(String(b.id || ''))));
+    this.app.post('/cli/net/magnet/handoff',      _netRoute((b) => { _quarantine(); return _net().handoff(String(b.id || '')); }));
+    this.app.post('/cli/net/on-disconnect',       _netRoute((b) => _net().setOnDisconnect(String(b.rung || ''))));
+    this.app.post('/cli/net/qbit',                _netRoute((b) => _net().setQbit({ url: b.url, user: b.user, pass: b.pass })));
+    this.app.post('/cli/net/qbit/check',          _netRoute(() => { _netHost(); return _net().checkQbit(); }));
     this.app.post('/cli/net/test', _netRoute(() => ({ ok: false, error: 'the leak test is not built yet (NP5). No route is shown as verified until it is.' })));
     // §0.60.85 PI5b — James, 2026-10-16: "build it." The chat crawler (src/chats/): /cli/chats/crawl/* -> idearium `chat-crawl` command. Off until the account's switch is on.
     let _crawl = null;
@@ -1245,7 +1285,7 @@ class IpcBridge {
     ipcMain.handle('window:hide',     async (e, d) => { this.hideFn?.(d);     emit('window.hide', d);     return { ok: true }; });
     ipcMain.handle('window:open',     async (e, d) => { await this.openFn?.(d); emit('window.open', d); return { agentId: d?.agentId, opened: true }; });
     ipcMain.handle('window:maximize', async (e, d) => { this.maximizeFn?.(d); return { ok: true }; });
-    ipcMain.handle('window:openSettings',  async () => { this.openSettingsFn?.();  return { ok: true }; });
+    ipcMain.handle('window:openSettings',  async (e, d = {}) => { this.openSettingsFn?.(d && d.area);  return { ok: true }; });   // BS3: optional section
     ipcMain.handle('window:closeSettings', async () => { this.closeSettingsFn?.(); return { ok: true }; });
     // §LIBRARY 0.39.241 — the Library window (renderer/library.html); area picks its section.
     ipcMain.handle('window:openLibrary',  async (e, d) => this.openLibraryFn ? this.openLibraryFn(d && d.area) : { ok: false, error: 'library window not wired' });
@@ -1358,9 +1398,16 @@ class IpcBridge {
         : { title: 'Choose a packed extension', properties: ['openFile'], filters: [{ name: 'Chrome extension', extensions: ['crx', 'zip'] }] });
       return r.canceled || !r.filePaths.length ? { ok: true, canceled: true } : { ok: true, path: r.filePaths[0] };
     }));
+    // BS4 (0.60.179) — off stays off: the choice is kept in options.disabledPlugins and applied at boot (main/index.js)
+    const _keepPluginState = (id, off) => { try { const cur = new Set(this.options?.get()?.disabledPlugins || []); off ? cur.add(id) : cur.delete(id); this.options?.set({ disabledPlugins: [...cur] }); } catch (_) {} };
     ipcMain.handle('plugins:disable', async (e, { id } = {}) => {
       if (typeof id !== 'string') return { ok: false, error: 'id is required' };
-      try { this.pluginHost?.disable(id); return { ok: true }; }
+      try { this.pluginHost?.disable(id); _keepPluginState(id, true); return { ok: true }; }
+      catch (err) { return { ok: false, error: err.message }; }
+    });
+    ipcMain.handle('plugins:enable', async (e, { id } = {}) => {
+      if (typeof id !== 'string') return { ok: false, error: 'id is required' };
+      try { this.pluginHost?.enable(id); _keepPluginState(id, false); return { ok: true }; }
       catch (err) { return { ok: false, error: err.message }; }
     });
 

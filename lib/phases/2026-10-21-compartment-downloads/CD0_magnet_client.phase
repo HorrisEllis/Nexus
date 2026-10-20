@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-compartment-downloads-phasemap.spec::CD0_magnet_client
+type: phase
+id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD0_magnet_client
+context: pipeline phase CD0_magnet_client of docs/2026-10-21-compartment-downloads-phasemap.spec
+intent: null
+summary: CD0_magnet_client (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792481794254
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481794254
+lastSeenAt: 1792481794254
+fingerprint: null
+payload:
+  id: CD0_magnet_client
+  map: docs/2026-10-21-compartment-downloads-phasemap.spec
+  repo: null
+  layer: null
+  status: DECIDED
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f1be54eff1795969

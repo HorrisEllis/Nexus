@@ -1,0 +1,4 @@
+/* renderer/settings/sections/import.css — Import from Firefox (BS7, 0.60.179). Scoped to body[data-area="import"]. */
+body[data-area="import"] .imp-profile { cursor: pointer; border-radius: var(--r-m); border: 1px solid transparent; }
+body[data-area="import"] .imp-profile[aria-checked="true"] { border-color: var(--cyan); background: rgba(0,245,255,.05); }
+body[data-area="import"] .imp-acts { display: flex; justify-content: flex-end; padding-top: 6px; }

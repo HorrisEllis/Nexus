@@ -137,7 +137,7 @@ class PluginHost {
       throw new PluginHostError(`plugin '${manifest.id}' is already installed`);
     }
 
-    const record = { manifest, state: PLUGIN_STATE.INSTALLING, registeredSignatures: [] };
+    const record = { manifest, module: pluginModule, state: PLUGIN_STATE.INSTALLING, registeredSignatures: [] };   // module kept so enable() can register again (BS4)
     this.plugins.set(manifest.id, record);
 
     try {
@@ -322,6 +322,26 @@ class PluginHost {
     return record;
   }
 
+  /**
+   * enable(pluginId) — BS4 (0.60.179). The other half of disable(): a disabled plugin's contributions are registered again from the
+   * manifest and module install() kept. A registration that throws unwinds the ones made, the plugin stays disabled, the error is kept.
+   */
+  enable(pluginId) {
+    const record = this.plugins.get(pluginId);
+    if (!record) throw new PluginHostError(`plugin '${pluginId}' is not installed`);
+    if (record.state === PLUGIN_STATE.ACTIVE) return record;
+    record.registeredSignatures = [];
+    try {
+      for (const [type, entries] of Object.entries(record.manifest.contributes)) for (const entry of entries) this._registerContribution(record.manifest, type, entry, record.module, record);
+      record.state = PLUGIN_STATE.ACTIVE; record.error = null;
+    } catch (err) {
+      for (const sig of record.registeredSignatures) this._deregister(sig);
+      record.registeredSignatures = []; record.state = PLUGIN_STATE.DISABLED; record.error = err.message;
+      throw err;
+    }
+    return record;
+  }
+
   list() {
     // §EXPANDED 2026-09-25 — displayName/description added for
     // plugins:list's real consumer (settings/sections/plugins.js). Both
@@ -330,7 +350,11 @@ class PluginHost {
     return [...this.plugins.values()].map(r => ({
       id: r.manifest.id, name: r.manifest.name, version: r.manifest.version,
       displayName: r.manifest.displayName, description: r.manifest.description,
-      state: r.state, contributions: r.registeredSignatures,
+      // BS4 (0.60.179): the plugin's own glyph for the extensions panel and the toolbar (else its first contribution's)
+      icon: r.manifest.icon || Object.values(r.manifest.contributes || {}).flat().map(c => c && c.icon).find(Boolean) || '🧩',
+      state: r.state, contributions: r.registeredSignatures, error: r.error || null,
+      // BS4: what a pinned icon can run (its toolbar commands), Firefox's extension popup
+      commands: ((r.manifest.contributes || {})['toolbar-command'] || []).map(c => ({ signature: c.signature, label: c.label || c.signature, icon: c.icon || null })),
     }));
   }
 

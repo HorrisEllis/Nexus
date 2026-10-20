@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CD0_magnet_client:f1be54eff1795969
+type: graph
+id: phase:CD0_magnet_client:f1be54eff1795969
+context: dependency graph of phase CD0_magnet_client
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792481794254
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481794254
+lastSeenAt: 1792481794254
+fingerprint: null
+payload:
+  for: CD0_magnet_client
+  kind: phase
+  repo: null
+  hash: f1be54eff1795969
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 0c4fb6c30abee07a
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+    upstream: []
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 0c4fb6c30abee07a · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): CD3_verified_handoff · all downstream 4 · finishing it unlocks
+        CD3_verified_handoff
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

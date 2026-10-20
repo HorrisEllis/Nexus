@@ -11,7 +11,7 @@
 const Policy = require('./policy');
 const { TransportHost } = require('./transport-host');
 
-const EMPTY = () => ({ default: 'direct', rules: [], bridgeLine: null, torPath: null, snowflakePath: null, httpsOnly: true });   // httpsOnly: SF4 (0.60.178), on unless he turns it off
+const EMPTY = () => ({ default: 'direct', rules: [], bridgeLine: null, torPath: null, snowflakePath: null, httpsOnly: true, compartmentOnDisconnect: 'kill_tabs', qbit: null });   // httpsOnly: SF4 (0.60.178); compartmentOnDisconnect + qbit: CD4/CD3 (0.60.179)
 
 class NetService {
   constructor({ store, host, log = console.warn } = {}) {
@@ -111,6 +111,46 @@ class NetService {
     } catch (e) { this._lastCheck = { ok: false, isTor: null, ip: null, at, error: e.message }; }
     return this._lastCheck;
   }
+  /**
+   * CD2–CD4 (0.60.179, clear-glass/spec/compartment-downloads.spec). The quarantine and kill switch are made by ipc/bridge.js (they need
+   * Electron's userData) and handed in with useCompartmentParts(). The qBittorrent password is kept in memory only: a credential in the
+   * plain policy file is what NP2 refuses until the encrypted container (NP19) exists. Without one, qBittorrent's "bypass authentication
+   * for clients on localhost" is the way, and Settings says so.
+   */
+  ensureQuarantine({ dir, emit } = {}) {
+    if (!this.quarantine) { const { Quarantine } = require('./quarantine'); this.quarantine = new Quarantine({ dir, emit, log: this.log }); }
+    return this.quarantine;
+  }
+  useCompartmentParts({ quarantine, killSwitch } = {}) { if (quarantine) this.quarantine = quarantine; if (killSwitch) this.killSwitch = killSwitch; }
+  setOnDisconnect(rung) {
+    const { RUNGS } = require('./kill-switch');
+    if (!RUNGS.includes(rung)) return { ok: false, error: `on-disconnect must be ${RUNGS.join(', ')}` };
+    this._save({ ...this.policy(), compartmentOnDisconnect: rung }); return { ok: true, compartmentOnDisconnect: rung };
+  }
+  setQbit({ url, user, pass } = {}) {
+    if (url !== undefined && url !== null && !/^https?:\/\/[^\s/]+/.test(String(url))) return { ok: false, error: 'the qBittorrent Web UI address looks like http://127.0.0.1:8080' };
+    const cur = this.policy().qbit || {};
+    this._save({ ...this.policy(), qbit: url === null ? null : { url: url || cur.url || 'http://127.0.0.1:8080', user: user !== undefined ? String(user || '') : (cur.user || '') } });
+    if (pass !== undefined) this._qbitPass = String(pass || '');
+    this._qbit = null; return { ok: true, qbit: this.policy().qbit, password: this._qbitPass ? 'held in memory until Clear Glass closes' : 'none (localhost bypass)' };
+  }
+  qbit({ fetch } = {}) {
+    const c = this.policy().qbit; if (!c) return null;
+    if (!this._qbit) { const { QBit } = require('./qbittorrent'); this._qbit = new QBit({ url: c.url, user: c.user, pass: this._qbitPass || '', ...(fetch ? { fetch } : {}) }); }
+    return this._qbit;
+  }
+  _torPorts() { const t = this._host ? this._host.status() : {}; return t.socksPort ? [t.socksPort] : []; }
+  async checkQbit() { const q = this.qbit(); if (!q) return { ok: false, why: 'no qBittorrent connection set (net qbit --url …)' }; return q.check({ torPorts: this._torPorts() }); }
+  async handoff(id) {
+    const q = this.quarantine && this.quarantine.get(id);
+    if (!q) return { ok: false, error: `no quarantined item ${id}` };
+    if (q.kind !== 'magnet') return { ok: false, error: `${id} is a file, not a magnet` };
+    const c = this.qbit(); if (!c) return { ok: false, error: 'no qBittorrent connection set: Settings → Network → Torrents, or net qbit --url http://127.0.0.1:8080' };
+    const r = await c.add(q.magnet, { torPorts: this._torPorts() });
+    if (r.ok) this.quarantine.mark(id, { handedTo: 'qbittorrent', state: 'handed-off', hash: r.hash, via: r.path });
+    return r;
+  }
+  handedHashes() { return this.quarantine ? this.quarantine.list().filter(x => x.handedTo === 'qbittorrent' && x.hash).map(x => x.hash) : []; }
   resolve(req) { return Policy.resolve(this.policy(), req); }
   /** §0.60.109 TLS3 — setTlsLayer(port | null): the TLS layer is up on port (Firefox-persona sessions route through it), or down (they go direct). */
   setTlsLayer(port) { const v = port || null; if (v === (this.tlsLayer || null)) return Promise.resolve([]); this.tlsLayer = v; return this.reapplyAll(); }
@@ -118,7 +158,7 @@ class NetService {
 
   status() {
     const p = this.policy(); const t = this._host ? this._host.status() : { state: 'stopped', progress: 0, socksPort: null };
-    return { ok: true, default: p.default, rules: p.rules.length, transport: t, bridgeLine: p.bridgeLine ? 'set' : null, httpsOnly: p.httpsOnly !== false, lastCheck: this._lastCheck || null, sessions: [...this.sessions.keys()], collisions: Policy.conflicts(p.rules), verified: false, verifiedWhy: 'the leak test (NP5) is not built yet', note: this.statusNote() };
+    return { ok: true, default: p.default, rules: p.rules.length, transport: t, bridgeLine: p.bridgeLine ? 'set' : null, httpsOnly: p.httpsOnly !== false, lastCheck: this._lastCheck || null, onDisconnect: p.compartmentOnDisconnect || 'kill_tabs', kills: this.killSwitch ? this.killSwitch.records() : [], qbit: p.qbit ? { url: p.qbit.url, user: p.qbit.user || '', password: !!this._qbitPass } : null, quarantined: this.quarantine ? this.quarantine.list().filter(x => ['quarantined', 'in_progress'].includes(x.state)).length : 0, sessions: [...this.sessions.keys()], collisions: Policy.conflicts(p.rules), verified: false, verifiedWhy: 'the leak test (NP5) is not built yet', note: this.statusNote() };
   }
 
   /** register(partition, ses, ctx) — remember a session and apply to it now. */

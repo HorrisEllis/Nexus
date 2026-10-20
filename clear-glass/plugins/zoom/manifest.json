@@ -3,6 +3,7 @@
   "name": "zoom",
   "version": "1.0.0",
   "displayName": "Page Zoom",
+  "icon": "🔍",
   "description": "Real gap named directly in CLEAR-GLASS-FULL-CHROME-MAP-2026-08-23.md's §8: 'Zero real code. Electron's webContents.setZoomFactor() is a real, built-in API this could wire to directly — genuinely small, scoped, buildable gap.' Wired via a new real driver.exec 'zoom' action (src/driver/index.js) using the actual native Chromium zoom API, not a CSS hack.",
   "author": "James Brooks (Erosmancer)",
   "entryPoint": "index.js",

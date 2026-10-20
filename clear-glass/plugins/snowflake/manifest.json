@@ -3,6 +3,7 @@
   "name": "snowflake",
   "version": "1.0.0",
   "displayName": "Snowflake",
+  "icon": "❄",
   "description": "Open a link through the Tor·Snowflake transport (NP11/NP12 of docs/2026-10-15-clear-glass-network-posture-phasemap.spec). Right-click a link → 'Open link with Snowflake' opens it in a new window whose session is forced through the transport and fails closed. The routing, policy table and transport process stay in Clear Glass's core (src/net); this plugin is the surface: disable it and the menu row goes away, and nothing is ever routed direct as a result.",
   "author": "James Brooks (Erosmancer)",
   "entryPoint": "index.js",

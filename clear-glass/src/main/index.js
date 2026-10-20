@@ -1573,6 +1573,12 @@ async function bootstrap() {
       console.error(`[ClearGlass/Plugins] FAILED to install '${dir}': ${err.message}`);
     }
   }
+  // BS6 (0.60.179) — the floating CLI: a content-protected child window per browser window (src/main/float-cli.js)
+  try { require('./float-cli').register({ ipcMain, BrowserWindow }); } catch (err) { console.warn(`[float-cli] not registered: ${err.message}`); }
+  // BS4 (0.60.179) — a plugin he turned off stays off after a restart
+  for (const id of (nexusOptions?.get()?.disabledPlugins || [])) {
+    try { pluginHost.disable(id); console.log(`[ClearGlass/Plugins] kept off: ${id}`); } catch (err) { console.warn(`[ClearGlass/Plugins] could not keep ${id} off: ${err.message}`); }
+  }
 
   // Wire copilot to bus + dom after gates are registered
   if (copilot?.wire) {
@@ -1685,6 +1691,7 @@ async function bootstrap() {
     minimizeFn:  minimizeAgentWindow,
     hideFn:      hideAgentWindow,
     openFn:      openAgentWindow,
+    closeCompartmentsFn: closeCompartmentWindows,   // CD4 (0.60.179)
     maximizeFn:  maximizeAgentWindow,
     openSettingsFn: openSettingsWindow,
     closeSettingsFn: closeSettingsWindow,
@@ -2217,6 +2224,17 @@ async function openOrFocus({ url, agentId } = {}) {
   return { ok: true, agentId: aid, url, opened: true };
 }
 
+// CD4 (0.60.179) — the routed windows the kill switch closes on a drop
+const _compartmentWindows = new Set();
+function closeCompartmentWindows() {
+  const closed = [];
+  for (const id of [..._compartmentWindows]) {
+    const w = windows.get(id); _compartmentWindows.delete(id);
+    if (w && !w.isDestroyed()) { try { w.destroy(); closed.push(id); } catch (e) { console.warn(`[kill-switch] ${id} not closed: ${e.message}`); } }
+  }
+  return closed;
+}
+
 async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank', via } = {}) {
   if (windows.has(agentId)) {
     windows.get(agentId).show();
@@ -2295,7 +2313,15 @@ async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank', vi
   // not just provider chat tabs (download-capture.js's attach() is only
   // ever called for persist:ncp-<id> partitions — checked directly,
   // confirmed a real, separate gap for regular browsing downloads).
-  if (downloads) {
+  // CD2/CD5 (0.60.179) — a compartment's downloads go to its quarantine, never the Downloads folder or the persistent downloads store
+  if (Compartment) {
+    try {
+      const { emit: busEmit } = require('../core/bus');
+      require('../net/service').service().ensureQuarantine({ dir: path.join(app.getPath('userData'), 'net', 'quarantine'), emit: busEmit })
+        .attach(session.fromPartition(partition), partition);
+      _compartmentWindows.add(agentId);
+    } catch (err) { throw new Error(`routed window not opened: its quarantine could not be armed (${err.message})`); }   // fail closed
+  } else if (downloads) {
     try {
       const { attach: attachDownloads } = require('../downloads/adapter');
       attachDownloads({
@@ -2620,8 +2646,13 @@ function listBackgroundTabs() {
 //    re-created, with a real close path the renderer can call ────────────
 let settingsWin = null;
 
-function openSettingsWindow() {
-  if (settingsWin && !settingsWin.isDestroyed()) { settingsWin.show(); settingsWin.focus(); return; }
+function openSettingsWindow(area) {
+  // BS3 (0.60.179) — a menu item can open Settings at its section (Import, Network, Plugins…): settings.html#<area>
+  const hash = /^[\w-]{1,40}$/.test(String(area || '')) ? String(area) : null;
+  if (settingsWin && !settingsWin.isDestroyed()) {
+    if (hash) settingsWin.webContents.executeJavaScript(`location.hash = ${JSON.stringify('#' + hash)}`).catch(() => {});
+    settingsWin.show(); settingsWin.focus(); return;
+  }
   settingsWin = new BrowserWindow({
     // §2026-09-23 — rebuilt Settings (rail + sections) needs room; still usable narrow (responsive CSS).
     width: 1180, height: 820, minWidth: 640, minHeight: 480, backgroundColor: '#08080d',
@@ -2633,7 +2664,7 @@ function openSettingsWindow() {
     },
     title: 'Clear Glass — Settings',
   });
-  settingsWin.loadFile(path.join(__dirname, '../../renderer/settings.html'));
+  settingsWin.loadFile(path.join(__dirname, '../../renderer/settings.html'), hash ? { hash } : undefined);
   settingsWin.on('closed', () => { settingsWin = null; });
   settingsWin.on('show', () => _touchAutopilotIfOpen());
 }
@@ -2764,6 +2795,7 @@ app.on('web-contents-created', (_e, contents) => {
     try { _runShortcut(action, accel, owner); } catch (e) { console.warn(`[shortcuts] ${accel} → ${action} failed: ${e.message}`); }
   });
   try { require('../net/compartment').onContents(contents); } catch (e) { console.warn(`[compartment] WebRTC not restricted: ${e.message}`); }   // SF3 — no UDP around the proxy in a routed window
+  try { if (require('../net/compartment').isCompartment(contents.session)) { const q = require('../net/service').service().quarantine; if (q) q.watch(contents, contents.session.__cgPartition); } } catch (e) { console.warn(`[quarantine] magnets not watched: ${e.message}`); }   // CD5 — magnets caught, never opened
   try { CompartmentWindow.attach(contents); } catch (_) {}   // §0.39.280 — idearium's desktop / settings pop-outs
   // §0.59.5 — James: "All I'm going to do. Is open this chat in clearglass. Then you should be able to talk to nexus right now."
   // A watched chat page (option nexusChat.urls; Claude Code on the web by default): its `nexus> …` lines run, read-only, and

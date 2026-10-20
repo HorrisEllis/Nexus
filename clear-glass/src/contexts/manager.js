@@ -41,6 +41,7 @@ class ContextManager {
     if (comp) {
       const net = require('../net/service').service();
       comp.harden(ses, { httpsOnly: () => net.policy().httpsOnly !== false });
+      ses.__cgPartition = partition;   // CD5 — so a webContents on it knows its compartment (quarantine.watch)
       try { net.register(partition, ses, { provider: null, caller: 'person-tab', firefox: false, via }).catch(() => {}); } catch (_) { /* routing is optional */ }
       const ctx = { id, uuid: uuidv4(), profile, session: ses, partition, compartment: true, health: { score: 100, errors: 0, requests: 0, lastCheck: Date.now() }, createdAt: Date.now(), url: url || 'about:blank' };
       this.contexts.set(id, ctx);

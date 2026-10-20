@@ -36,8 +36,8 @@
     keywords: 'tor snowflake transport bridge proxy socks anonymity privacy egress route via block direct censorship pluggable',
     blurb: 'How browsing sessions reach the outside. The Tor-with-Snowflake transport is off and configured by you; without a bridge line it does not start.',
     async render({ rerender }) {
-      let s, routes;
-      try { [s, routes] = await Promise.all([api('/cli/net/status'), api('/cli/net/routes')]); }
+      let s, routes, qr;
+      try { [s, routes, qr] = await Promise.all([api('/cli/net/status'), api('/cli/net/routes'), api('/cli/net/quarantine').catch(() => ({ items: [] }))]); }
       catch (e) { return [pane({ title: 'Network', body: h('div', { class: 'err-box', text: e.message }) })]; }
 
       const t = s.transport || { state: 'stopped' };
@@ -145,7 +145,37 @@
           chip(s.httpsOnly !== false ? 'on' : 'off', s.httpsOnly !== false ? 'ok' : 'warn')),
         row('Circuit', checkText, chip(!check ? 'unchecked' : check.ok && check.isTor ? 'through Tor' : 'not confirmed', !check ? '' : check.ok && check.isTor ? 'ok' : 'err'),
           btn('Check the circuit', () => api('/cli/net/check', { method: 'POST', body: {} }).then(rerender).catch(fail))),
-        h('p', { class: 'blurb', text: 'The circuit check shows where traffic exits; it is not the leak test (NP5), so nothing here is marked Verified. Downloads from these windows still go to the normal Downloads folder (quarantine is NP16, open).' }),
+        h('p', { class: 'blurb', text: 'The circuit check shows where traffic exits; it is not the leak test (NP5), so nothing here is marked Verified.' }),
+      ] });
+
+      // ── CD4/CD5 (0.60.179): on disconnect, downloads in quarantine, magnets and the torrent hand-off ─────────────
+      const RUNG_TEXT = { block: 'Block — the window stays open and loads nothing until the transport is back', kill_tabs: 'Close the windows — every Snowflake window closes, its downloads are cancelled and its torrents stopped', kill_compartment: 'Close and wipe — as above, then the transport is stopped with its data wiped, and the quarantine is wiped' };
+      const rungSel = select(['kill_tabs', 'block', 'kill_compartment'], s.onDisconnect || 'kill_tabs');
+      rungSel.addEventListener('change', () => api('/cli/net/on-disconnect', { method: 'POST', body: { rung: rungSel.value } }).then(() => { toast(`On disconnect: ${rungSel.value}`); rerender(); }).catch(fail));
+      const lastKill = (s.kills || [])[0];
+      const items = ((qr && qr.items) || []).filter(q => q.state !== 'released' && q.state !== 'discarded');
+      const qRows = items.length ? items.map(q => row(`${q.kind === 'magnet' ? '🧲' : '📄'} ${q.filename}`,
+        `${q.state}${q.bytes ? ` · ${(q.bytes / 1048576).toFixed(1)} MB` : ''}${q.via ? ` · via ${q.via}` : ''}${q.sha256 ? ` · sha256 ${q.sha256.slice(0, 12)}…` : ''}`,
+        q.kind === 'file' && q.state === 'quarantined' ? btn('Release', () => api('/cli/net/quarantine/release', { method: 'POST', body: { id: q.id } }).then(r => { toast(`Released to ${r.path}`); rerender(); }).catch(fail), 'sm') : null,
+        q.kind === 'magnet' && q.state === 'quarantined' ? btn('Send to qBittorrent', () => api('/cli/net/magnet/handoff', { method: 'POST', body: { id: q.id } }).then(r => { toast(`Added (${r.path})`); rerender(); }).catch(fail), 'sm') : null,
+        q.kind === 'magnet' ? btn('Copy', () => navigator.clipboard.writeText(q.url).then(() => toast('Magnet copied')), 'sm') : null,
+        btn('Discard', () => api('/cli/net/quarantine/discard', { method: 'POST', body: { id: q.id } }).then(rerender).catch(fail), 'sm')))
+        : [h('p', { class: 'blurb', text: 'Nothing in quarantine. What a Snowflake window downloads lands here, not in Downloads, until you release it; magnet links it meets are listed here and never opened.' })];
+      const qb = s.qbit || {};
+      const qbUrl = h('input', { type: 'text', placeholder: 'http://127.0.0.1:8080', value: qb.url || '' });
+      const qbUser = h('input', { type: 'text', placeholder: 'user (empty with localhost bypass)', value: qb.user || '' });
+      const qbPass = h('input', { type: 'password', placeholder: qb.password ? 'held in memory' : 'password (kept in memory only)', value: '' });
+      const qbOut = h('p', { class: 'blurb net-qbit-out', text: '' });
+      const compPane = pane({ title: 'Snowflake downloads', sub: 'Downloads and magnet links from Snowflake windows, and what happens when the connection drops.', body: [
+        row('On disconnect', RUNG_TEXT[s.onDisconnect || 'kill_tabs'] + (lastKill ? ` · last: ${new Date(lastKill.at).toLocaleString()} (${lastKill.rung}, ${lastKill.closed.length} window(s))` : ''), rungSel),
+        h('div', { class: 'net-quarantine' }, qRows),
+        h('div', { class: 'net-qbit' },
+          row('Torrents (qBittorrent)', 'A magnet is sent only after qBittorrent\'s own settings show its peer traffic going through a SOCKS5/HTTP proxy that is not Tor, or bound to your VPN interface. Tor is refused: it carries TCP only, and the Tor Project asks that BitTorrent not use it.'),
+          field('Web UI address', qbUrl), field('User', qbUser), field('Password', qbPass, 'Not saved to disk: kept until Clear Glass closes. With "Bypass authentication for clients on localhost" on in qBittorrent, leave it empty.'),
+          h('div', { class: 'acts' },
+            btn('Save', () => api('/cli/net/qbit', { method: 'POST', body: { url: qbUrl.value.trim() || null, user: qbUser.value, ...(qbPass.value ? { pass: qbPass.value } : {}) } }).then(() => { toast('Saved'); rerender(); }).catch(fail)),
+            btn('Check qBittorrent', () => api('/cli/net/qbit/check', { method: 'POST', body: {} }).then(r => { qbOut.textContent = `✓ ${r.path}`; qbOut.className = 'blurb net-qbit-out ok'; }).catch(e => { qbOut.textContent = `✗ ${e.message}`; qbOut.className = 'blurb net-qbit-out err'; }))),
+          qbOut),
       ] });
 
       // ── routing: the default posture and the rules ───────────────────────────
@@ -173,6 +203,7 @@
         setupPane,
         needs,
         windowPane,
+        compPane,
         routing,
       ];
     },

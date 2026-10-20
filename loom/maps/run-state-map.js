@@ -46,6 +46,19 @@ const FILES = [
   ['clear-glass/src/net/compartment.js', I('clear-glass/src/net/compartment.js'), []],   // §0.60.178 SF3 a routed window is one in-memory compartment, page and shell
   ['clear-glass/src/plugins/context-items.js', I('clear-glass/src/plugins/context-items.js'), []],   // §0.60.169 the display half of 'context-menu-item' (his upload, mapped 0.60.178)
   ['clear-glass/plugins/snowflake/index.js', I('clear-glass/plugins/snowflake/index.js'), []],   // §0.60.169 NP11/NP12 "Open link with Snowflake": emits net.open on the bus, decides nothing
+  ['clear-glass/src/net/magnet.js', I('clear-glass/src/net/magnet.js'), []],   // §0.60.179 CD1 a magnet link parsed, pure
+  ['clear-glass/src/net/quarantine.js', I('clear-glass/src/net/quarantine.js'), [I('clear-glass/src/net/magnet.js')]],   // §0.60.179 CD2 the compartment's download manager
+  ['clear-glass/src/net/qbittorrent.js', I('clear-glass/src/net/qbittorrent.js'), []],   // §0.60.179 CD3 the verified torrent hand-off (MR12)
+  ['clear-glass/src/net/kill-switch.js', I('clear-glass/src/net/kill-switch.js'), []],   // §0.60.179 CD4 kill on disconnect
+  ['clear-glass/src/import/firefox.js', I('clear-glass/src/import/firefox.js'), []],   // §0.60.179 BS1 Firefox profiles, cookies, bookmarks, persona (node:sqlite)
+  ['clear-glass/src/main/float-cli.js', I('clear-glass/src/main/float-cli.js'), []],   // §0.60.179 BS6 the floating CLI's own content-protected window
+  ['clear-glass/renderer/shell/menus.js', I('clear-glass/renderer/shell/menus.js'), []],   // §0.60.179 BS3 menu bar + ☰ from one model
+  ['clear-glass/renderer/shell/extensions.js', I('clear-glass/renderer/shell/extensions.js'), []],   // §0.60.179 BS4 🧩 plugins with icons
+  ['clear-glass/renderer/shell/downloads.js', I('clear-glass/renderer/shell/downloads.js'), []],   // §0.60.179 BS5 ⬇ panel (the Library's store + the quarantine)
+  ['clear-glass/renderer/shell/shell.js', I('clear-glass/renderer/shell/shell.js'), []],   // §0.60.179 BS2/BS6 popovers, identity, shortcuts, float CLI button
+  ['clear-glass/renderer/float-cli.js', I('clear-glass/renderer/float-cli.js'), []],   // §0.60.179 BS6 the floating CLI page
+  ['clear-glass/src/driver/cg-stub.js', I('clear-glass/src/driver/cg-stub.js'), []],   // §0.60.179 test-only window.ClearGlass from the preload's namespaces
+  ['lib/agent-tools/tools/clear-glass/firefox.js', I('lib/agent-tools/tools/clear-glass/firefox.js'), [I('lib/agent-tools/tools/clear-glass/net.js')]],   // §0.60.179 BS7 profiles listed for agents
   ['idearium/lib/surface-state.cjs', I('idearium/lib/surface-state.cjs'), [I('idearium/lib/data-dir.cjs')]],   // §0.60.80 CE8: the Code tab's surface, one for the tab, the CLI and agents
   ['cos/archetype/eravos.js', I('cos/archetype/eravos.js'), []],   // §0.60.104 CN1/CN2: his ERAVOS canvas, tools and domains as COS archetypes (read from cos/archetype/eravos-*/)
   ['lib/canvas-compartments.js', I('lib/canvas-compartments.js'), [I('lib/cos-bridge.js'), I('lib/file-tree-plan.js'), I('cos/archetype/eravos.js')]],   // §0.60.104 CN3: a canvas compartment, each tool nested
@@ -204,6 +217,17 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/installer.js'), '§0.60.168 /cli/net/setup: TorInstaller (lazy require)'],
   [I('clear-glass/src/plugins/webrequest-adapter.js'), I('clear-glass/src/net/https-only.js'), '§0.60.178 SF4 runs ses.__cgPreRequest (set by https-only.attach) before any content filter — a session property, not a require'],
   [I('clear-glass/plugins/snowflake/index.js'),     I('clear-glass/src/ipc/bridge.js'), '§0.60.169 net.open on the bus, answered by bridge._netOpenVia (the bus, not a require)'],
+  [I('clear-glass/src/net/service.js'),             I('clear-glass/src/net/quarantine.js'), '§0.60.179 CD2 ensureQuarantine (lazy require)'],
+  [I('clear-glass/src/net/service.js'),             I('clear-glass/src/net/qbittorrent.js'), '§0.60.179 CD3 qbit() (lazy require)'],
+  [I('clear-glass/src/net/service.js'),             I('clear-glass/src/net/kill-switch.js'), '§0.60.179 CD4 setOnDisconnect RUNGS (lazy require)'],
+  [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/net/kill-switch.js'), '§0.60.179 CD4 armed with the transport host (lazy require)'],
+  [I('clear-glass/src/ipc/bridge.js'),              I('clear-glass/src/import/firefox.js'), '§0.60.179 BS7 /cli/firefox/profiles and /import (lazy require)'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/main/float-cli.js'), '§0.60.179 BS6 register() of the floating CLI IPC'],
+  [I('clear-glass/src/main/index.js'),              I('clear-glass/src/net/service.js'), '§0.60.179 CD2 a compartment window gets the quarantine; magnets watched (lazy require)'],
+  [I('lib/agent-tools/index.js'),                   I('lib/agent-tools/tools/clear-glass/firefox.js'), '§0.60.179 BS7 registerTool(clear_glass_firefox)'],
+  [I('clear-glass/renderer/browser.js'),            I('clear-glass/renderer/shell/menus.js'), '§0.60.179 BS3 the ☰ menu draws window.CGMenus rows (page globals, loaded by browser.html — not a require)'],
+  [I('clear-glass/renderer/shell/downloads.js'),    I('clear-glass/src/ipc/bridge.js'), '§0.60.179 BS5 /cli/net/quarantine* over :7702 (HTTP, not a require)'],
+  [I('clear-glass/renderer/float-cli.js'),          I('clear-glass/renderer/copilot-cli.js'), '§0.60.179 BS6 CGCopilotCLI.create: the route bar, slash commands, history (page global)'],
 ];
 
 function mapRunState(driver) { return declareMap(driver, { key: 'run-state', uuidTag: '2026-1015-050', files: FILES, consumers: CONSUMERS }); }

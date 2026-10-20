@@ -143,7 +143,11 @@ async function main() {
   check('the ☰ menu still has a Library row', /<div class="menu-item" data-action="library">📚 Library<\/div>/.test(BROWSER));
   check('…Library opens the window; Downloads opens it at Downloads', /data-action="library"\]'\)\.addEventListener\('click'[\s\S]{0,120}_openLibrary\(\)/.test(BROWSER) && /data-action="downloads"\]'\)\.addEventListener\('click'[\s\S]{0,120}_openLibrary\('downloads'\)/.test(BROWSER));
   check('…a failure to open is shown, not swallowed', /Could not open the Library: \$\{err\.message\}/.test(BROWSER));
-  check('the Downloads dropdown it replaces is gone (no second download manager)', !/_renderDownloadsPanel/.test(BROWSER) && !/downloads-panel/.test(BHTML) && !/downloads-panel/.test(BROWSER));
+  // 0.60.179 (BS5) — the rule kept is "one download store, one Library": the old dropdown stays gone, and the Firefox-style ⬇ panel
+  // (renderer/shell/downloads.js) reads the same store (cg.downloads.list) and sends "Show all downloads" to the Library.
+  const SHDL = fs.readFileSync(path.join(ROOT, 'clear-glass', 'renderer', 'shell', 'downloads.js'), 'utf8');
+  check('the Downloads dropdown it replaced is gone; the ⬇ panel is a view of the same store that opens the Library (no second download manager)',
+    !/_renderDownloadsPanel/.test(BROWSER) && !/id="downloads-panel"/.test(BHTML) && /cg\(\)\.downloads\.list\(/.test(SHDL) && /library\('downloads'\)/.test(SHDL) && !/new DownloadsStore|downloads\/store/.test(SHDL));
   check('ui/library/ is retired — one Library', !fs.existsSync(path.join(ROOT, 'ui', 'library')));
 
   // ── jsdom: the list-search mode really filters and keeps the area ─────

@@ -107,6 +107,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     list:    ()   => ipcRenderer.invoke('plugins:list'),
     contextItems: (when) => ipcRenderer.invoke('plugins:contextItems', { when }),   // §0.60.169 — rows plugins add to the right-click menu
     disable: (id) => ipcRenderer.invoke('plugins:disable', { id }),
+    enable:  (id) => ipcRenderer.invoke('plugins:enable', { id }),   // BS4 (0.60.179)
   },
 
   // ── WebExtensions — §BUILT 2026-09-26 (src/plugins/webextensions.js) ──
@@ -275,7 +276,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     hide:         (agentId) => ipcRenderer.invoke('window:hide',     { agentId }),
     maximize:     (agentId) => ipcRenderer.invoke('window:maximize', { agentId }),
     open:         (payload) => ipcRenderer.invoke('window:open',     payload),
-    openSettings: ()        => ipcRenderer.invoke('window:openSettings'),
+    openSettings: (area)    => ipcRenderer.invoke('window:openSettings', { area }),   // BS3 (0.60.179): settings.html#<area>
     closeSettings:()        => ipcRenderer.invoke('window:closeSettings'),
     openLibrary:  (area)    => ipcRenderer.invoke('window:openLibrary', { area }),   // §LIBRARY 0.39.241 — renderer/library.html
     closeLibrary: ()        => ipcRenderer.invoke('window:closeLibrary'),
@@ -399,6 +400,17 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     open:  (payload)  => ipcRenderer.invoke('bgtab:open',  payload),
     close: (agentId)  => ipcRenderer.invoke('bgtab:close', { agentId }),
     list:  ()         => ipcRenderer.invoke('bgtab:list'),
+  },
+
+  // ── Floating CLI (BS6, 0.60.179) — its own window, excluded from screen capture; see src/main/float-cli.js ──
+  floatCli: {
+    toggle:  ()          => ipcRenderer.invoke('floatcli:toggle'),
+    size:    (expanded)  => ipcRenderer.invoke('floatcli:size', { expanded }),
+    hide:    ()          => ipcRenderer.invoke('floatcli:hide'),
+    nav:     (op, url)   => ipcRenderer.invoke('floatcli:nav', { op, url }),
+    url:     (url)       => ipcRenderer.send('floatcli:url', { url }),
+    onNav:   (cb)        => { const f = (_e, d) => cb(d); ipcRenderer.on('floatcli:nav', f); return () => ipcRenderer.removeListener('floatcli:nav', f); },
+    onState: (cb)        => { const f = (_e, d) => cb(d); ipcRenderer.on('floatcli:state', f); return () => ipcRenderer.removeListener('floatcli:state', f); },
   },
 
   // ── Event listener ───────────────────────────────────────────────────

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+type: phase
+id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+context: pipeline phase CD2_quarantine_downloads of docs/2026-10-21-compartment-downloads-phasemap.spec
+intent: null
+summary: CD2_quarantine_downloads (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792481794290
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481794290
+lastSeenAt: 1792481794290
+fingerprint: null
+payload:
+  id: CD2_quarantine_downloads
+  map: docs/2026-10-21-compartment-downloads-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.179
+  files:
+    - clear-glass/src/net/quarantine.js
+  depends_on:
+    - CD1_magnet_parse
+  blocks:
+    - MOD-CDL-QUARANTINE
+  spec: clear-glass/spec/compartment-downloads.spec
+  graph: 3d4f0cd284c268ef

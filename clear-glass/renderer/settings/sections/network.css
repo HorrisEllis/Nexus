@@ -16,3 +16,10 @@ body[data-area="network"] .net-bar > i { display: block; height: 100%; width: 0;
 body[data-area="network"] .net-bar[data-state="ok"] > i { background: var(--ok, #3b9); }
 body[data-area="network"] .net-bar[data-state="err"] > i { background: var(--err, #d55); }
 body[data-area="network"] .net-setup-msg.err { color: var(--err, #d55); }
+
+/* CD5 (0.60.179) — Snowflake downloads: quarantine rows, the qBittorrent block and its verify line */
+body[data-area="network"] .net-quarantine { display: flex; flex-direction: column; gap: 2px; margin: 6px 0 10px; }
+body[data-area="network"] .net-qbit { border-top: 1px solid var(--edge); padding-top: 10px; display: grid; gap: 8px; }
+body[data-area="network"] .net-qbit .acts { display: flex; gap: 8px; }
+body[data-area="network"] .net-qbit-out.ok { color: var(--ok); }
+body[data-area="network"] .net-qbit-out.err { color: var(--bad); }

@@ -814,3 +814,18 @@ New entries go at the top: date, his words, context, what it shows, evidence.
 - **Checkable:** `tests/modules/test-snowflake.test.js` 8/8 (SFW-05 pins the partition being forced at `will-attach-webview`; SFW-07
   pins the field names); `clear-glass/spec/snowflake.spec`; `CHANGELOG-0.60.178.md`.
 
+### 2026-10-21 — 0.60.179: privacy decided by separation, not by a promise
+- **His words:** "kill on disconnect." · "isolated from the dom, i dont want any screen recording to be able to see anything but the dom"
+- **Context:** he asked for a CLI that floats over the page, and for Snowflake windows to die when their connection drops. The obvious
+  build injects the CLI into the page. That is exactly what a site's session-replay recorder captures.
+- **What it shows:** threat modelling in plain words. He named two different observers in one sentence: the page's DOM, and the screen
+  recorder. The design answers each one:
+  - the CLI is a separate window, so no page script can read it;
+  - that window is excluded from OS capture.
+
+  "Kill on disconnect" carries his 2026-10-15 rule that a protected route fails closed. Together these are why the quarantine keeps its
+  own index: the main download history would have kept every URL fetched over Tor.
+- **Checkable:** `tests/modules/test-browser-shell.test.js` BST-06 (protection is set before the window is shown; nothing is injected
+  into a page); `tests/modules/test-compartment-downloads.test.js` CDT-02 (never the persistent store) and CDT-04 (one kill per unasked
+  drop; a deliberate stop never kills).
+

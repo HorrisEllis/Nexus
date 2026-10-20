@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+type: phase
+id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+context: pipeline phase CD1_magnet_parse of docs/2026-10-21-compartment-downloads-phasemap.spec
+intent: null
+summary: CD1_magnet_parse (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792481794288
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481794288
+lastSeenAt: 1792481794288
+fingerprint: null
+payload:
+  id: CD1_magnet_parse
+  map: docs/2026-10-21-compartment-downloads-phasemap.spec
+  repo: null
+  layer: foundation
+  status: DONE 0.60.179
+  files:
+    - clear-glass/src/net/magnet.js
+  depends_on: []
+  blocks:
+    - MOD-CDL-MAGNET
+  spec: clear-glass/spec/compartment-downloads.spec
+  graph: e3defc132656fe7c

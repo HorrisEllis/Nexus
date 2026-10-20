@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS3_menus
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS3_menus
+context: pipeline phase BS3_menus of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS3_menus (surface) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792481795198
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795198
+lastSeenAt: 1792481795198
+fingerprint: null
+payload:
+  id: BS3_menus
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: surface
+  status: DONE 0.60.179
+  files:
+    - clear-glass/renderer/shell/menus.js
+    - clear-glass/renderer/browser.js
+  depends_on:
+    - BS2_shell_rebuild
+  blocks:
+    - MOD-BSH-MENUS
+  spec: clear-glass/spec/browser-shell.spec
+  graph: d4a6503f3fdadee9

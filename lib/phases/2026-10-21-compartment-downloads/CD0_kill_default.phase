@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-compartment-downloads-phasemap.spec::CD0_kill_default
+type: phase
+id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD0_kill_default
+context: pipeline phase CD0_kill_default of docs/2026-10-21-compartment-downloads-phasemap.spec
+intent: null
+summary: CD0_kill_default (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792481794257
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481794257
+lastSeenAt: 1792481794257
+fingerprint: null
+payload:
+  id: CD0_kill_default
+  map: docs/2026-10-21-compartment-downloads-phasemap.spec
+  repo: null
+  layer: null
+  status: DECIDED
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 11d4f021a24dcb20

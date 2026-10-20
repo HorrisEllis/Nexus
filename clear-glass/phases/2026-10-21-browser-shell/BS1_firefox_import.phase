@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-browser-shell-phasemap.spec::BS1_firefox_import
+type: phase
+id: docs_2026-10-21-browser-shell-phasemap.spec::BS1_firefox_import
+context: pipeline phase BS1_firefox_import of docs/2026-10-21-browser-shell-phasemap.spec
+intent: null
+summary: BS1_firefox_import (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792481795196
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481795196
+lastSeenAt: 1792481795196
+fingerprint: null
+payload:
+  id: BS1_firefox_import
+  map: docs/2026-10-21-browser-shell-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.179
+  files:
+    - clear-glass/src/import/firefox.js
+  depends_on:
+    - BS0_cookie_target
+  blocks:
+    - MOD-BSH-FIREFOX
+  spec: clear-glass/spec/browser-shell.spec
+  graph: d3c52db1223874d1

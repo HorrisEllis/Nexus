@@ -1,0 +1,66 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CD2_quarantine_downloads:3d4f0cd284c268ef
+type: graph
+id: phase:CD2_quarantine_downloads:3d4f0cd284c268ef
+context: dependency graph of phase CD2_quarantine_downloads
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792481794289
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792481794289
+lastSeenAt: 1792481794289
+fingerprint: null
+payload:
+  for: CD2_quarantine_downloads
+  kind: phase
+  repo: null
+  hash: 3d4f0cd284c268ef
+  nodes:
+    - path: clear-glass/src/net/quarantine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/magnet.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/quarantine.js
+      to: clear-glass/src/net/magnet.js
+      kind: requires
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/quarantine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 0c4fb6c30abee07a
+    layer: 1
+    deps:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+    dependents:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+    upstream:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 0c4fb6c30abee07a · layer 1
+      - 'depends on (1): CD1_magnet_parse'
+      - >-
+        needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks
+        CD4_kill_on_disconnect
