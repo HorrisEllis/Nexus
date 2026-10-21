@@ -41,6 +41,7 @@ function fakeTree() {
   w('docs/atlases/nexus-atlas.md', '# NEXUS\n\n### guardian\n\n**own atlas:** `guardian-atlas.md` · `guardian/lib/node-registry.js` · port `:7820`\n');
   w('docs/atlases/guardian-atlas.md', '# guardian — atlas\n');
   w('docs/atlases/ollama-atlas.md', '# ollama\n');
+  w('docs/atlases/big-atlas.md', '# BIG\n' + 'a line of the atlas, plain text.\n'.repeat(10000));   // 0.60.193 — ≈330 KB, over the 200 KB chunk limit
   return live;
 }
 
@@ -88,6 +89,9 @@ async function main() {
     fs.writeFileSync(path.join(live, 'docs/atlases/nexus-atlas.md'), '# CHANGED LIVE\n');
     assert.ok(NS.fileText('docs/atlases/nexus-atlas.md').content.startsWith('# NEXUS'));
     assert.ok(NS.fileText('nope.md').error);
+    // 0.60.193 — his Home tab showed "docs/atlases/nexus-atlas.md is binary": a read used the 200 KB chunk limit as its size limit
+    const big = NS.fileText('docs/atlases/big-atlas.md');
+    assert.ok(!big.error && big.content.startsWith('# BIG') && big.content.length > 300000, big.error || 'read whole');
   });
 
   await test('AT-004', 'the idearium API routes the atlas, resolve and file actions before :system', () => {

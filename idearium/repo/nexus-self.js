@@ -43,10 +43,13 @@ const tick = () => new Promise(r => setImmediate(r));
 const compName = (system) => `${PARENT_COMPARTMENT}-${system}`;
 const repoName = (system) => `${PARENT_REPO}/${system}`;
 
-function _isText(rel, buf) {
+// 0.60.193 — the chunk limit (MAX_TEXT_BYTES) decides what is chunked into a system repo, not what can be READ: fileText() used it too,
+// so docs/atlases/nexus-atlas.md (≈550 KB) showed "is binary" on the Home tab. A read-only read allows READ_MAX_BYTES and says "too large".
+const READ_MAX_BYTES = 8 * 1024 * 1024;
+function _isText(rel, buf, max = MAX_TEXT_BYTES) {
   const ext = path.extname(rel).toLowerCase();
   if (!TEXT_EXT.has(ext)) return false;
-  if (buf.length > MAX_TEXT_BYTES) return false;
+  if (buf.length > max) return false;
   const { _isProbablyText } = require('../../lib/zip-ingest.js');
   return _isProbablyText(buf) && buf.toString('utf8').trim().length > 0;
 }
@@ -677,7 +680,8 @@ export function fileText(relPath) {
   const hit = _index(snap).byPath.get(rel);
   if (!hit) return { error: `${rel} is not in snapshot ${snap.hash.slice(0, 12)}` };
   const buf = store.getBlob(hit.sha);
-  if (!_isText(rel, buf)) return { error: `${rel} is binary` };
+  if (buf.length > READ_MAX_BYTES) return { error: `${rel} is too large to show (${Math.round(buf.length / 1024)} KB, over ${READ_MAX_BYTES / 1048576} MB)` };
+  if (!_isText(rel, buf, READ_MAX_BYTES)) return { error: `${rel} is binary` };
   return { path: rel, system: hit.system, content: buf.toString('utf8'), bytes: hit.size, snapshot: snap.hash };
 }
 
