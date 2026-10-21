@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX4_agents_layer
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX4_agents_layer
+context: pipeline phase BX4_agents_layer of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX4_agents_layer (surface) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792576313730
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792576313730
+lastSeenAt: 1792576313730
+fingerprint: null
+payload:
+  id: BX4_agents_layer
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: surface
+  status: PLANNED
+  files:
+    - idearium/ui/js/flow-agents.js
+  depends_on:
+    - BX3_flow_canvas
+  blocks:
+    - MOD-BX-AGENTS
+  spec: docs/brainos-in-idearium.spec
+  graph: a877f16582b136ef

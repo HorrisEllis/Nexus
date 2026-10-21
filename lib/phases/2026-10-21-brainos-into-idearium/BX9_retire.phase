@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX9_retire
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX9_retire
+context: pipeline phase BX9_retire of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX9_retire (surface) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792576313736
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792576313736
+lastSeenAt: 1792576313736
+fingerprint: null
+payload:
+  id: BX9_retire
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: surface
+  status: PLANNED
+  files:
+    - ui/brainos/index.html
+    - clear-glass/src/main/index.js
+    - tests/known-gaps.yaml
+    - loom/maps/run-state-map.js
+  depends_on:
+    - BX0b_retire_brainos_page
+    - BX6_pipeline_edit
+    - BX7_automation
+    - BX8_dock_panels
+  blocks:
+    - MOD-BX-RETIRE
+  spec: docs/brainos-in-idearium.spec
+  graph: 2bc31a1a8b772044

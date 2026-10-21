@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX10_float
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX10_float
+context: pipeline phase BX10_float of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX10_float (surface) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792576313737
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792576313737
+lastSeenAt: 1792576313737
+fingerprint: null
+payload:
+  id: BX10_float
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: surface
+  status: PLANNED
+  files:
+    - ui/brainos-float/brainos-float.js
+    - ui/brainos-float/brainos-float.css
+  depends_on:
+    - BX0c_float
+    - BX2_flow_sources
+  blocks:
+    - MOD-BX-FLOAT
+  spec: docs/brainos-in-idearium.spec
+  graph: 02d52a8059874ada

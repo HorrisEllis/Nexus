@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX8_dock_panels
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX8_dock_panels
+context: pipeline phase BX8_dock_panels of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX8_dock_panels (surface) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792576313734
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792576313734
+lastSeenAt: 1792576313734
+fingerprint: null
+payload:
+  id: BX8_dock_panels
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: surface
+  status: PLANNED
+  files:
+    - idearium/ui/js/code-dock.js
+  depends_on:
+    - BX4_agents_layer
+  blocks:
+    - MOD-BX-DOCK
+  spec: docs/brainos-in-idearium.spec
+  graph: 13df1648e45b6aa2

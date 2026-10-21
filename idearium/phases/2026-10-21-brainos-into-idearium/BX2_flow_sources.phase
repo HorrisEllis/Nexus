@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+context: pipeline phase BX2_flow_sources of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX2_flow_sources (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792576313728
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792576313728
+lastSeenAt: 1792576313728
+fingerprint: null
+payload:
+  id: BX2_flow_sources
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: library
+  status: PLANNED
+  files:
+    - idearium/lib/flow-sources.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - BX1_census
+  blocks:
+    - MOD-BX-SOURCES
+  spec: docs/brainos-in-idearium.spec
+  graph: 37e364e91aef63f4

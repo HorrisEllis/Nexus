@@ -1,0 +1,244 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BX7_automation:6615544c90e45a2a
+type: graph
+id: phase:BX7_automation:6615544c90e45a2a
+context: dependency graph of phase BX7_automation
+intent: null
+summary: 28 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792576313733
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792576313733
+lastSeenAt: 1792576313733
+fingerprint: null
+payload:
+  for: BX7_automation
+  kind: phase
+  repo: null
+  hash: 6615544c90e45a2a
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/lib/autobuild.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/ui/js/code-automation.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-undo-any-change.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/copilot-adapter/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/core/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/spatial/lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/core/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/copilot-adapter/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-undo-any-change.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      fromSystem: service
+      toSystem: idearium
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: d4da862a3ea7b19e
+    layer: 5
+    deps:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX5_node_controls
+    dependents:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX9_retire
+    upstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0a_where_it_lands
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX5_node_controls
+    downstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX9_retire
+    blockedBy:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX5_node_controls
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG d4da862a3ea7b19e · layer 5 · blocked by BX5_node_controls
+      - 'depends on (1): BX5_node_controls · all upstream 5'
+      - 'needed by (1): BX9_retire'
