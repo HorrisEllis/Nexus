@@ -104,11 +104,11 @@ async function main() {
     delete process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS;
   });
 
-  await test('GS-04b', '0.60.191 — a typed job that idles out completes from its ended stream (the node anchor) instead of failing; never re-sent', async () => {
+  await test('GS-04b', '0.60.191 — a typed job that idles out completes from its answer (answerFirst; the chat ledger: test-stream-fallback SF-03) instead of failing; never re-sent', async () => {
     process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS = '50';
     const done = [];
     const { d, add, jobs, pushed } = makeDispatcher({ pickupMs: 5000, completionTimeoutMs: 40, extra: {
-      answerFirst: (j) => (j.id === 'j-stream' ? { text: 'the reply the DOM mutator read', source: 'stream', anchor: { path: 'div.markdown' } } : null),
+      answerFirst: (j) => (j.id === 'j-stream' ? { text: 'the reply the DOM mutator read', source: 'transcript' } : null),
       completeWith: (j, text, chatUrl, source) => { done.push({ id: j.id, text, source }); jobs.get(j.id).status = 'complete'; },
     } });
     add({ id: 'j-stream', provider: 'chatgpt', command: 'ask', prompt: 'hi' });
@@ -117,7 +117,7 @@ async function main() {
     await sleep(70);
     assert.strictEqual(jobs.get('j-stream').status, 'awaiting_transcript');
     await sleep(80);
-    assert.deepStrictEqual(done, [{ id: 'j-stream', text: 'the reply the DOM mutator read', source: 'stream' }]);
+    assert.deepStrictEqual(done, [{ id: 'j-stream', text: 'the reply the DOM mutator read', source: 'transcript' }]);
     assert.strictEqual(jobs.get('j-stream').status, 'complete');
     assert.strictEqual(pushed.filter(p => p.jobId === 'j-stream').length, 1, 'sent once, never twice');
     delete process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS;

@@ -1,95 +1,122 @@
 'use strict';
 /**
- * tests/modules/test-stream-fallback.test.js — the stream as a fallback route (0.60.191).
- * Map: docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec (R1, invariant I1 — addendum 2026-10-21).
- * James, 2026-10-21: "im saying to use those as fallback routes. node anchor, dom mutator. I love the way idearium tabs are and way it
- * shows me whats being said from the agents in real time."
+ * tests/modules/test-stream-fallback.test.js — the stream as a fallback route, read from Clear Glass's download manager (0.60.192).
+ * Map: docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec (R1, invariant I1 — addenda 2026-10-21).
+ * James, 2026-10-21: "im saying to use those as fallback routes. node anchor, dom mutator." · "look in clearglass download manager".
+ * His 0.39.278 chat ledger (clear-glass/src/downloads/chat-ledger.js) already keeps every chat as the page's DOM mutator streams it; 0.60.191
+ * built a second copy of that stream in guardian's .response nodes, and 0.60.192 removed it to read his.
  *
- *   SF-01  the DOM mutator's chunks keep the reply so far in the job's .response node as 'partial', with its node anchor; throttled;
- *          never written over a 'complete' node
- *   SF-02  the page stops generating: a quiet stream is marked ended; a stream still moving is not
- *   SF-03  job-retry's answerFirst: a complete node, then the chat transcript, then an ENDED stream — a stream still open never stops
- *          a re-send; synthesize() reports the stream as status 'partial' with its anchor
- *   SF-04  the real NCP handler: GUARDIAN_CHUNK keeps it, the 'dom' pulse with generating:false ends it
+ *   SF-01  lib/chat-ledger-client reaches Clear Glass's IPC port (7702, where the ledger routes are), not 7701 (its SSE port —
+ *          where lib/work-journal.js pointed, so its reads failed outside the tests); chat()/list() read a REAL ledger through the
+ *          route paths the bridge serves; unreachable → null, absent → false
+ *   SF-02  chat-transcripts ledgerReplyFor: the job's prompt matched to its turn in the ledger, its reply returned — only once the page
+ *          stopped generating; a chat still generating, or a prompt in no chat, gives null
+ *   SF-03  the dispatcher: a typed job that idled out (a dead tab) completes from the chat ledger when answerFirst finds nothing; a
+ *          re-send asks the ledger first; never typed twice
+ *   SF-04  0.60.191's copy is gone: guardian keeps no second stream; the reads go through the route, never Clear Glass's code
  */
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'sf-nodes-'));
-process.env.GUARDIAN_RESPONSE_NODES_DIR = DIR;
+const http = require('http');
+const LEDGER_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), 'sf-ledger-'));
+process.env.CG_LEDGER_ROOT = LEDGER_ROOT;
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
 const ROOT = path.join(__dirname, '..', '..');
-const S = require(path.join(ROOT, 'guardian/lib/response-sink.js'));
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) {
   try { await fn(); console.log(`  ✓ ${id} ${desc}`); passed++; }
   catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.stack ? e.stack.split('\n').slice(0, 5).join('\n    ') : e.message}`); failed++; }
 }
-const ANCHOR = { path: 'div.markdown:nth-of-type(3)', attrs: { 'data-message-author-role': 'assistant' } };
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const PROMPT = 'Write the storage module for the shop, with tests';
 
 (async () => {
-  console.log('\n⬡  the stream as a fallback route\n');
-  let t = 1000; const now = () => t;
+  console.log('\n⬡  the stream as a fallback route — read from the download manager\n');
+  // Clear Glass's own ledger module writes the ledgers; a server answers on the bridge's two route paths with its readers
+  const LED = require(path.join(ROOT, 'clear-glass/src/downloads/chat-ledger.js'));
+  const srv = http.createServer((req, res) => {
+    const u = new URL(req.url, 'http://x');
+    const send = (code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
+    if (u.pathname === '/cli/downloads/ledgers') return send(200, { ok: true, ledgers: LED.listLedgers({ provider: u.searchParams.get('provider') || undefined, agentId: u.searchParams.get('agentId') || undefined, limit: u.searchParams.get('limit') }).map(({ file, ...x }) => x) });
+    const m = u.pathname.match(/^\/cli\/downloads\/ledgers\/(.+)$/);
+    if (m) { const c = LED.readChat({ chatKey: decodeURIComponent(m[1]) }); return c ? send(200, { ok: true, chat: c }) : send(404, { ok: false }); }
+    send(404, {});
+  });
+  await new Promise(r => srv.listen(0, '127.0.0.1', r));
+  const C = require(path.join(ROOT, 'lib/chat-ledger-client.js'));
 
-  await test('SF-01', 'chunks keep the reply so far as a partial .response with its anchor; throttled; never over a complete node', () => {
-    assert.ok(S.streamNode('job-a', { full: 'Hello', provider: 'claude', anchor: ANCHOR }, { now }).ok);
-    let n = S.readNode('job-a');
-    assert.deepStrictEqual([n.status, n.text, n.source, n.anchor.path], ['partial', 'Hello', 'stream', ANCHOR.path]);
-    t += 200; assert.ok(S.streamNode('job-a', { full: 'Hello, wor', provider: 'claude', anchor: ANCHOR }, { now }).throttled, 'a burst is not a write each');
-    t += 2000; S.streamNode('job-a', { full: 'Hello, world.', provider: 'claude', anchor: ANCHOR }, { now });
-    assert.strictEqual(S.readNode('job-a').text, 'Hello, world.');
-    S.writeNode({ jobId: 'job-c', provider: 'claude', status: 'complete', text: 'the final answer' });
-    t += 2000; const r = S.streamNode('job-c', { full: 'the fin', provider: 'claude' }, { now });
-    assert.ok(!r.ok && /complete/.test(r.skipped) && S.readNode('job-c').text === 'the final answer', 'a complete node is never downgraded');
+  await test('SF-01', 'the client reaches the IPC port (7702), reads a real ledger through the bridge\'s routes; unreachable → null, absent → false', async () => {
+    const saved = { ...process.env }; delete process.env.CLEAR_GLASS_URL; delete process.env.CLEARGL_IPC_PORT; delete process.env.CLEAR_GLASS_PORT;
+    assert.strictEqual(C.url(), 'http://127.0.0.1:7702');
+    process.env.CLEAR_GLASS_URL = saved.CLEAR_GLASS_URL;
+    const WJ = require(path.join(ROOT, 'lib/work-journal.js'));
+    assert.ok(!/7701/.test(fs.readFileSync(path.join(ROOT, 'lib/work-journal.js'), 'utf8').match(/function _cgUrl\(\)[^\n]*/)[0]), 'work-journal no longer aims at the SSE port');
+    assert.ok(WJ);
+    process.env.CLEAR_GLASS_URL = 'http://127.0.0.1:9';
+    assert.strictEqual(await C.chat('chatgpt:x', { timeoutMs: 500 }), null, 'not reachable → null');
+    process.env.CLEAR_GLASS_URL = `http://127.0.0.1:${srv.address().port}`;
+    assert.ok(LED.applyDelta({ provider: 'chatgpt', chatId: 'c1', url: 'https://chatgpt.com/c/c1', agentId: 'repo-shop', generating: false, settled: true,
+      turns: [{ i: 0, role: 'user', text: PROMPT }, { i: 1, role: 'assistant', text: 'Here is lib/storage.js and its test.' }] }).ok);
+    assert.strictEqual(await C.chat('chatgpt:nope'), false, 'reachable, absent → false');
+    const c = await C.chat('chatgpt:c1');
+    assert.deepStrictEqual([c.turns.length, c.turns[1].text, c.generating], [2, 'Here is lib/storage.js and its test.', false]);
+    assert.deepStrictEqual((await C.list({ provider: 'chatgpt' })).map(r => r.chatKey), ['chatgpt:c1']);
   });
 
-  await test('SF-02', 'the page stops generating: a quiet stream is marked ended; a moving one is not', () => {
-    t += 1000; S.streamNode('job-b', { full: 'still typing', provider: 'gemini' }, { now });
-    t += 500; assert.strictEqual(S.endStream('job-b', {}, { now }).skipped, 'still streaming');
-    t += 3500; assert.ok(S.endStream('job-b', { anchor: ANCHOR }, { now }).ok);
-    const n = S.readNode('job-b');
-    assert.deepStrictEqual([n.status, n.streamEnded, n.text, n.anchor.path], ['partial', true, 'still typing', ANCHOR.path]);
-    assert.strictEqual(S.endStream('job-none', {}, { now }).skipped, 'no open stream');
+  const CT = require(path.join(ROOT, 'guardian/lib/chat-transcripts.js'));
+  const { EventEmitter } = require('events');
+  const ct = CT.createChatTranscripts({ bus: new EventEmitter(), jobs: new Map(), ncp: {}, root: () => LEDGER_ROOT });
+
+  await test('SF-02', 'ledgerReplyFor: the job\'s turn in the ledger, its reply — only once the page stopped generating', async () => {
+    const job = { id: 'j1', provider: 'chatgpt', agentId: 'repo-shop', prompt: PROMPT };
+    assert.deepStrictEqual(await ct.ledgerReplyFor(job), { text: 'Here is lib/storage.js and its test.', chatUrl: 'https://chatgpt.com/c/c1', chatKey: 'chatgpt:c1', source: 'chat-ledger' });
+    LED.applyDelta({ provider: 'gemini', chatId: 'g1', generating: true, settled: false, turns: [{ i: 0, role: 'user', text: PROMPT }, { i: 1, role: 'assistant', text: 'Here is lib/sto' }] });
+    assert.strictEqual(await ct.ledgerReplyFor({ ...job, provider: 'gemini', agentId: null }), null, 'still generating: not an answer');
+    assert.strictEqual(await ct.ledgerReplyFor({ ...job, prompt: 'a prompt no chat holds, long enough' }), null);
   });
 
-  await test('SF-03', 'answerFirst: complete node, then transcript, then an ENDED stream; an open stream never stops a re-send', () => {
-    const { createJobRetry } = require(path.join(ROOT, 'guardian/lib/job-retry.js'));
-    let transcript = null;
-    const R = createJobRetry({ jobs: new Map(), updateJob() {}, dispatchJob() {}, complete() {}, readResponse: S.readNode, replyFor: () => transcript, log: { log() {}, warn() {} } });
-    assert.deepStrictEqual(R.answerFirst({ id: 'job-b' }), { text: 'still typing', source: 'stream', anchor: ANCHOR });
-    transcript = { text: 'from the chat log', chatUrl: 'https://x' };
-    assert.strictEqual(R.answerFirst({ id: 'job-b' }).source, 'transcript', 'the finished record first');
-    transcript = null;
-    assert.strictEqual(R.answerFirst({ id: 'job-a' }), null, 'job-a\'s stream never ended: re-sending stays allowed');
-    assert.strictEqual(R.answerFirst({ id: 'job-c' }).source, 'response-node');
-    const syn = S.synthesize('job-b', {});
-    assert.deepStrictEqual([syn.source, syn.status, syn.streamEnded, syn.anchor.path], ['stream', 'partial', true, ANCHOR.path]);
+  await test('SF-03', 'the dispatcher: a dead tab\'s job completes from the chat ledger; a re-send asks it first; never typed twice', async () => {
+    process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS = '50';
+    const { createDispatcher } = require(path.join(ROOT, 'guardian/lib/dispatcher.js'));
+    const jobs = new Map(), pushed = [], done = [];
+    const bus = new EventEmitter();
+    const updateJob = (id, p) => { const j = jobs.get(id); if (!j) return null; Object.assign(j, p); return j; };
+    const d = createDispatcher({ updateJob, bus, pendingQueue: new Map(), cockpitBroadcast: () => {},
+      ncp: { isConnected: () => true, push: () => 1, pushActive: (p, payload) => { pushed.push(payload); return 1; } },
+      dispatchToMistral: () => Promise.resolve(), dispatchToDeepseek: () => Promise.resolve(),
+      pingTimeoutMs: 10, pickupMs: 5000, completionTimeoutMs: 40, getJob: (id) => jobs.get(id),
+      answerFirst: () => null, answerFromLedger: (j) => ct.ledgerReplyFor(j),
+      completeWith: (j, text, chatUrl, source) => { done.push({ id: j.id, text, source }); jobs.get(j.id).status = 'complete'; } });
+    jobs.set('j-dead', { id: 'j-dead', provider: 'chatgpt', agentId: 'repo-shop', command: 'ask', prompt: PROMPT, status: 'pending' });
+    await d._doDispatch(jobs.get('j-dead'));
+    Object.assign(jobs.get('j-dead'), { status: 'delivered_confirmed', confirmedAt: Date.now() });
+    await sleep(70);
+    assert.strictEqual(jobs.get('j-dead').status, 'awaiting_transcript');
+    await sleep(150);
+    assert.deepStrictEqual(done, [{ id: 'j-dead', text: 'Here is lib/storage.js and its test.', source: 'chat-ledger' }]);
+    assert.strictEqual(pushed.filter(p => p.jobId === 'j-dead').length, 1, 'typed once');
+    jobs.set('j-again', { id: 'j-again', provider: 'chatgpt', agentId: 'repo-shop', command: 'ask', prompt: PROMPT, status: 'pending', attempts: [{ kind: 'no-reply' }] });
+    await d._doDispatch(jobs.get('j-again'));
+    assert.strictEqual(done[1] && done[1].source, 'chat-ledger', 'a re-send found its answer in the ledger');
+    assert.strictEqual(pushed.filter(p => p.jobId === 'j-again').length, 0, 'never typed');
+    delete process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS;
   });
 
-  await test('SF-04', 'the real NCP handler: GUARDIAN_CHUNK keeps it; the dom pulse with generating:false ends it', async () => {
-    const { createNCPMessageHandler } = require(path.join(ROOT, 'guardian/lib/ncp-handler.js'));
-    const { EventEmitter } = require('events');
-    const jobs = new Map([['job-n', { id: 'job-n', provider: 'chatgpt', status: 'dispatched' }]]);
-    const noop = () => {};
-    const h = createNCPMessageHandler({ nc: null, ncp: {}, bus: new EventEmitter(), jaa: {}, jobs, updateJob: (id, p) => jobs.set(id, { ...jobs.get(id), ...p }),
-      cockpitBroadcast: noop, physQueue: {}, baseline: {}, evLedger: null, activeQueues: new Map(), extractCodeBlocks: () => [], extractToolCallsFromDOM: () => [],
-      findActiveSeamCompartment: () => null });
-    const handle = typeof h === 'function' ? h : (h.handle || h._handleNCPMessage || h.handleNCPMessage);
-    assert.strictEqual(typeof handle, 'function', `handler shape: ${Object.keys(h || {})}`);
-    await handle({ type: 'GUARDIAN_CHUNK', jobId: 'job-n', text: 'Plan: one', full: 'Plan: one', anchor: ANCHOR, chatUrl: 'https://chatgpt.com/c/1' });
-    let n = S.readNode('job-n');
-    assert.deepStrictEqual([n.status, n.text, n.provider, n.anchor.path, n.chatUrl], ['partial', 'Plan: one', 'chatgpt', ANCHOR.path, 'https://chatgpt.com/c/1']);
-    await handle({ type: 'GUARDIAN_PROGRESS', jobId: 'job-n', stage: 'dom', generating: false, anchor: ANCHOR });
-    assert.ok(!S.readNode('job-n').streamEnded, 'a chunk a moment ago: not ended yet');
-    await new Promise(r => setTimeout(r, 3200));
-    await handle({ type: 'GUARDIAN_PROGRESS', jobId: 'job-n', stage: 'dom', generating: false, anchor: ANCHOR });
-    n = S.readNode('job-n');
-    assert.deepStrictEqual([n.status, n.streamEnded], ['partial', true]);
+  await test('SF-04', '0.60.191\'s copy is gone; guardian reads the ledger through the route, never Clear Glass\'s code', () => {
+    const S = require(path.join(ROOT, 'guardian/lib/response-sink.js'));
+    assert.strictEqual(S.streamNode, undefined); assert.strictEqual(S.endStream, undefined);
+    const ncp = fs.readFileSync(path.join(ROOT, 'guardian/lib/ncp-handler.js'), 'utf8');
+    assert.ok(!/streamNode|endStream/.test(ncp), 'no second stream kept');
+    const src = fs.readFileSync(path.join(ROOT, 'guardian/lib/chat-transcripts.js'), 'utf8');
+    assert.ok(!/require\([^)]*chat-ledger\.js/.test(src) && /lib\/chat-ledger-client\.js/.test(src), 'through the route');
+    const srvSrc = fs.readFileSync(path.join(ROOT, 'guardian/server.js'), 'utf8');
+    assert.ok(/answerFromLedger: \(job\) => \(_chatTranscriptsRef \? _chatTranscriptsRef\.ledgerReplyFor\(job\)/.test(srvSrc), 'wired in guardian');
   });
 
-  fs.rmSync(DIR, { recursive: true, force: true });
+  srv.close(); fs.rmSync(LEDGER_ROOT, { recursive: true, force: true });
   console.log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

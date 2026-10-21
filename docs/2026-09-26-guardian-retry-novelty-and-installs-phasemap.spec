@@ -105,3 +105,25 @@ James, 2026-10-21: "im saying to use those as fallback routes. node anchor, dom 
   failing, so a dead tab's ended stream completes it. Proof: test-guardian-stack-sim GS-04b.
 - **Proof:** tests/modules/test-stream-fallback SF-01..04, including the real NCP handler. The neighbouring Guardian tests are unchanged
   (test-guardian-job-correlation 2, test-options 1 and test-system-record-discipline 1 fail the same on the tree before).
+
+## ADDENDUM 2026-10-21 (0.60.192) — the stream is read from his download manager; 0.60.191's copy removed
+
+James, 2026-10-21: "look in clearglass download manager"
+- **What he saw.** His 0.39.278 idea already keeps the stream: clear-glass/src/downloads/chat-ledger.js, one append-only ledger per chat,
+  written live by the page's DOM mutator (guardian/userscript-chat-stream.js), with `generating` on every line. His words then: "use the
+  download manager in clearglass for the chat ledgers … live streams the dom mutation live to the download manager, that way we don't lose
+  progress". 0.60.191 built a second copy of that stream in guardian's .response nodes instead of reading his. That broke §8.6 (reuse
+  before build).
+- **Removed** as a true duplicate (§0.3: the only removable thing is a true duplicate, and the drop is reported). response-sink
+  streamNode/endStream and their calls in ncp-handler are gone; both files are byte-identical to before 0.60.191. answerFirst's stream
+  step is gone.
+- **Built in its place:**
+  - guardian/lib/chat-transcripts.js `ledgerReplyFor(job)` replays the job's chats from his ledger through Clear Glass's own route
+    (lib/chat-ledger-client.js, the drawbridge rule), matches the job's prompt to its turn as replyFor does, and takes the reply only once
+    the page stopped generating (RC5);
+  - the dispatcher asks it after answerFirst finds nothing: before a re-send, and before failing a typed job whose tab died. It is wired
+    at guardian/server.js beside answerFirst.
+- **Found on the way.** lib/work-journal.js (0.60.146) read the same ledger at :7701, which is Clear Glass's SSE port, so every read
+  outside the tests failed and contract ledgers said "chat-ledger (not read)". Both readers now use the one client on the IPC port, 7702.
+- **Proof:** tests/modules/test-stream-fallback SF-01..04, against Clear Glass's real chat-ledger.js on the bridge's route paths. The
+  neighbouring tests are unchanged, and the boundary ratchet shows no new crossing.

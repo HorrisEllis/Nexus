@@ -326,7 +326,29 @@ function createChatTranscripts({ bus, jobs, ncp, complete, rootFn, index, log = 
     return null;
   }
 
-  return { record, attach, route, learnJobChat, chatFor, rememberAgentChat, replyFor, stats };
+  /**
+   * ledgerReplyFor(job) -> Promise<{ text, chatUrl, chatKey, source:'chat-ledger' } | null> — 0.60.192. James, 2026-10-21: "im saying to use
+   * those as fallback routes. node anchor, dom mutator." · "look in clearglass download manager". replyFor reads the SETTLED transcript
+   * versions; under them Clear Glass's download manager keeps every chat live as the page's DOM mutator streams it (chat-ledger.js,
+   * his 0.39.278). When no settled version holds the reply, the ledger may: the job's chats (its agent's, its provider's), newest first,
+   * replayed through Clear Glass's own route (lib/chat-ledger-client.js), the job's prompt matched to its turn as replyFor does — taken
+   * only when the page has stopped generating (RC5: a reply read mid-stream is not an answer).
+   */
+  async function ledgerReplyFor(job, { chats = 3, client = null } = {}) {
+    if (!job || typeof job.prompt !== 'string') return null;
+    const C = client || require('../../lib/chat-ledger-client.js');
+    const rows = await C.list({ provider: job.provider || null, agentId: job.agentId || null, limit: chats });
+    for (const row of rows || []) {
+      if (row.generating) continue;
+      const chat = await C.chat(row.chatKey);
+      if (!chat || chat.generating || !Array.isArray(chat.turns)) continue;
+      const m = matchJobs(chat.turns, [job])[0];
+      if (m && m.reply) return { text: m.reply, chatUrl: chat.url || row.url || null, chatKey: row.chatKey, source: 'chat-ledger' };
+    }
+    return null;
+  }
+
+  return { record, attach, route, learnJobChat, chatFor, rememberAgentChat, replyFor, ledgerReplyFor, stats };
 }
 
 module.exports = { createChatTranscripts, chatPathOf, matchJobs, resumableChatUrl, newChatUrl, isNewChatUrl, MODULE_ID, VERSION };

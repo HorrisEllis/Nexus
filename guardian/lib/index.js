@@ -44,7 +44,7 @@ const wireDispatchPoolRelease = require('./dispatch-pool-bridge');
  * this file does not create a bus or an NCP server, those stay owned by
  * server.js's boot sequence exactly as before.
  */
-function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL, postEvent, ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, accountRouting, useAccount, openProfile }) {
+function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL, postEvent, ladder, completeFromMesh, chatFor, answerFirst, answerFromLedger, erosType, completeWith, economy, accountRouting, useAccount, openProfile }) {
   for (const [name, v] of Object.entries({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL })) {
     if (!v) throw new Error(`[guardian/lib] wireGuardianCore missing required dependency: ${name}`);
   }
@@ -59,7 +59,7 @@ function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL,
     updateJob: jobStore.updateJob, bus, ncp, pendingQueue, cockpitBroadcast,
     dispatchToMistral: providerRouter._dispatchToMistral,
     dispatchToDeepseek: providerRouter._dispatchToDeepseek,
-    ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith,   // 0.39.265 — late-bound, see server.js
+    ladder, completeFromMesh, chatFor, answerFirst, answerFromLedger, erosType, completeWith,   // 0.39.265 — late-bound, see server.js
     economy,   // 0.39.281 — guardian/lib/economy-guard.js (optional)
     getJob: (id) => jobStore.jobs.get(id),   // §HP14–HP16 0.55.2 — the job as it is now, not the pool's copy
     accountRouting, useAccount, openProfile,   // §PF1 0.60.32

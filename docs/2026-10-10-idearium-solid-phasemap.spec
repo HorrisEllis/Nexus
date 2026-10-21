@@ -407,3 +407,9 @@ whats being said from the agents in real time."
 - **His praise of Idearium's tabs and real-time feed** is the style the BrainOS rebuild follows (BX0a): the Flow view draws in the same
   tabs and the same live feed.
 - **The order in the addendum above stands:** SD6, SD4 with ME5, SD10, SD8.
+
+## ADDENDUM 2026-10-21 (c, 0.60.192) — the fallback reads his download manager
+
+James, 2026-10-21: "look in clearglass download manager". Addendum (b)'s second store is superseded and removed: the stream was already kept
+by his 0.39.278 chat ledger. The fallback reads it now (docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec, addendum
+0.60.192).

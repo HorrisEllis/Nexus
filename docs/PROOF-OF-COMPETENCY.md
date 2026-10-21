@@ -893,3 +893,16 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `tests/modules/test-approval-chain.test.js` APC-01..06;
   - `CHANGELOG-0.60.190.md`;
   - `docs/2026-10-21-approval-chain-phasemap.spec`, whose ground-truth table shows what held before and what didn't.
+
+### 2026-10-21 — 0.60.192: four words that caught a duplicate
+- **His words:** "look in clearglass download manager"
+- **Context:** the coder had just shipped 0.60.191: Guardian kept a copy of each reply's stream so a lost reply could be recovered. He
+  knew his own system well enough to see that the stream already had a home. It was his 0.39.278 design: the download manager keeps a
+  live, append-only ledger of every chat, written by the page's DOM mutator.
+- **What it shows:** command of his own architecture three weeks and 100+ releases after he designed it, and the reuse-before-build
+  discipline applied to the coder's work, not only taught to it. Following his pointer also found a real bug: the contract ledger had read
+  that same ledger at the wrong port since 0.60.146, so it never got the reply text.
+- **Checkable:**
+  - `CHANGELOG-0.60.192.md`;
+  - `tests/modules/test-stream-fallback.test.js` SF-01..04;
+  - `git diff 0e922f29 -- guardian/lib/response-sink.js` is empty: the duplicate is fully removed.

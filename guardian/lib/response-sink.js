@@ -147,8 +147,6 @@ function writeNode(rec, sinks = {}) {
       ...(rec.prompt ? { prompt: String(rec.prompt).slice(0, 4000) } : {}),
       ...(rec.command ? { command: rec.command } : {}),
       ...(rec.chatUrl ? { chatUrl: rec.chatUrl } : {}),
-      ...(rec.anchor ? { anchor: rec.anchor } : {}),             // 0.60.191 — where in the page the reply was read (the node anchor)
-      ...(rec.streamEnded ? { streamEnded: true, endedAt: rec.endedAt || Date.now() } : {}),
       ts: rec.ts || Date.now(),
     };
     const filePath = nodeExport.exportToFile('response', rec.jobId, payload, {
@@ -161,36 +159,6 @@ function writeNode(rec, sinks = {}) {
   } catch (e) {
     return { ok: false, detail: e.message };
   }
-}
-
-// ── the stream as a fallback route (0.60.191) ──────────────────────────────
-// James, 2026-10-21: "im saying to use those as fallback routes. node anchor, dom mutator. I love the way idearium tabs are and way it
-// shows me whats being said from the agents in real time." What the DOM mutator streams from the reply's node anchor (GUARDIAN_CHUNK's
-// full text) reached Idearium's tabs live and was kept nowhere a recovery could read: a job whose complete never arrived lost the reply
-// he had watched being written. Kept now in the job's own .response node as 'partial' (never over a 'complete' one), with its anchor;
-// when the page says it stopped generating and the stream is quiet, the node is marked streamEnded — job-retry's answerFirst takes such
-// a node before it re-sends anything (R1/I1), and synthesize() reports it as status 'partial' with the anchor it was read from.
-const STREAM_EVERY_MS = 1500, STREAM_GROWTH = 400, STREAM_QUIET_MS = 3000;
-const _stream = new Map();   // jobId -> { at, len, lastChunk }
-function streamNode(jobId, { full, provider = 'unknown', agentId = null, anchor = null, chatUrl = null } = {}, { now = Date.now } = {}) {
-  if (!jobId || !full || !String(full).trim()) return { ok: false, skipped: 'no text' };
-  const t = now(); const st = _stream.get(jobId) || { at: 0, len: 0, lastChunk: 0 };
-  st.lastChunk = t; _stream.set(jobId, st);
-  if (st.at && t - st.at < STREAM_EVERY_MS && String(full).length - st.len < STREAM_GROWTH) return { ok: true, throttled: true };   // the first chunk always writes
-  const cur = readNode(jobId);
-  if (cur && cur.status && cur.status !== 'partial') return { ok: false, skipped: `already ${cur.status}` };   // never over a terminal node
-  st.at = t; st.len = String(full).length;
-  if (_stream.size > 500) _stream.delete(_stream.keys().next().value);
-  return writeNode({ jobId, provider, agentId, status: 'partial', text: String(full), source: 'stream', anchor, chatUrl, ts: t }, { stream: 'kept from the DOM mutator\'s chunks' });
-}
-/** endStream(jobId) — the page reported it stopped generating; a partial node with text whose stream has been quiet is marked ended */
-function endStream(jobId, { anchor = null } = {}, { now = Date.now } = {}) {
-  const cur = readNode(jobId);
-  if (!cur || cur.status !== 'partial' || !String(cur.text || '').trim() || cur.streamEnded) return { ok: false, skipped: 'no open stream' };
-  const st = _stream.get(jobId);
-  if (st && now() - st.lastChunk < STREAM_QUIET_MS) return { ok: false, skipped: 'still streaming' };
-  _stream.delete(jobId);
-  return writeNode({ ...cur, anchor: anchor || cur.anchor || null, streamEnded: true, endedAt: now(), ts: now() }, cur.sinks || {});
 }
 
 /** readNode(jobId) -> the real payload, or null. */
@@ -527,9 +495,8 @@ function synthesize(jobId, deps = {}) {
   // 2. the .response node — the durable primary
   const node = readNode(jobId);
   if (node && node.text) {
-    return { ok: true, found: true, source: node.source === 'stream' ? 'stream' : 'node', jobId, response: node.text,
-      provider: node.provider, status: node.status, chars: node.chars, contentHash: node.contentHash,
-      ...(node.anchor ? { anchor: node.anchor } : {}), ...(node.status === 'partial' ? { streamEnded: !!node.streamEnded } : {}) };
+    return { ok: true, found: true, source: 'node', jobId, response: node.text,
+      provider: node.provider, status: node.status, chars: node.chars, contentHash: node.contentHash };
   }
 
   // 3/4. JAA — artifacts row, then chat_log, both real tables already written
@@ -590,6 +557,6 @@ function synthesize(jobId, deps = {}) {
 
 module.exports = {
   deliver, synthesize,
-  writeNode, readNode, streamNode, endStream,   // 0.60.191 the stream as a fallback route writeLedger, postToDownloads, emitToStream,
+  writeNode, readNode, writeLedger, postToDownloads, emitToStream,
   NODES_DIR, DOWNLOADS_PENDING, MODULE_ID, VERSION, flushPendingDownloads,
 };
