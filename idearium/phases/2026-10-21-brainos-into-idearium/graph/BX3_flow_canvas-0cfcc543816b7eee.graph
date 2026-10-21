@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792576313729
+exported_at: 1792576465240
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792576313729
-lastSeenAt: 1792576313729
+firstSeenAt: 1792576465240
+lastSeenAt: 1792576465240
 fingerprint: null
 payload:
   for: BX3_flow_canvas

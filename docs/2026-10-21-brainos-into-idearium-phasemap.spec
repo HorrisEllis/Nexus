@@ -1,3 +1,32 @@
+  BX0b_retire_brainos_page:
+    status: DECIDED
+    question: >-
+      When the Code tab reaches every BrainOS feature (the census, BX1), is ui/brainos archived and Clear Glass's "⬡ BrainOS" row pointed at
+      the Code tab's Flow view — or do both stay?
+    chosen: >-
+      His, 2026-10-21, asked with the two options (archive it — the coder's recommendation — or keep both): "Archive it". Archived, not
+      deleted, once the census shows every feature reached; the menu row opens Code → Flow.
+
+  BX0c_float:
+    status: DECIDED
+    question: >-
+      The BrainOS float (a Clear Glass overlay, 10 tabs, its own blue look): rebuild it in Idearium's style on the same data, or retire it?
+    chosen: >-
+      His, 2026-10-21, offered "rebuild it" or "retire it (the coder's lean)": "What if we rebuilt it into a small widget for clearglass
+      provider pages, dynamic to provider? Either that or retire it." His idea: a small widget on Clear Glass's provider pages (claude.ai,
+      chatgpt.com, gemini, perplexity, deepseek …) whose contents follow the provider it sits on. The coder's reading, to confirm, of "dynamic
+      to provider": that provider's agent node and health, its queue and current job, the account the tab runs as, its userscript, and the
+      route it belongs to — the float's AGENTS/JOBS/USERSCRIPTS tabs narrowed to one provider; the rest of the float retires into the Code tab
+      and Clear Glass's panels. BX10 builds the widget; the old float is archived with ui/brainos.
+
+  BX0d_order_against_the_pipeline:
+    status: DECIDED
+    question: Order against the open pipeline work.
+    chosen: >-
+      His, 2026-10-21, offered three orders: "Fixes, then graph (Recommended)". The root causes first (RC5 where "Gemini said" enters file
+      paths; RC6 the unowned Ollama job every ~90 s), then BX1–BX3 (the pipeline as a graph), then BX5 (PC1's controls) and BX7 (AB1's
+      auto-advance) as the graph's controls, then the rest.
+
 # BrainOS rebuilt in Idearium's style and brought into the Code tab: the pipeline as a live graph, the mesh, the editor, automation (2026-10-21)
 
 origin: >-
@@ -171,8 +200,8 @@ phases:
     layer: surface
     status: PLANNED
     depends_on: [BX0c_float, BX2_flow_sources]
-    files: [ui/brainos-float/brainos-float.js, ui/brainos-float/brainos-float.css]
+    files: [clear-glass/src/providers/provider-widget.js, clear-glass/renderer/provider-widget.html, ui/brainos-float/brainos-float.js]
     spec: docs/brainos-in-idearium.spec
     blocks: [MOD-BX-FLOAT]
-    does: "Per his BX0c: the float rebuilt on Idearium's tokens and flow-sources, or retired into the Code tab and Clear Glass's panels."
-    proof: its tabs' functions reachable either way
+    does: "His BX0c: a small widget on Clear Glass's provider pages, its contents following the provider (agent node and health, queue and job, account, userscript, route); the old float archived."
+    proof: on a claude.ai tab the widget shows claude's node, job and account; on a non-provider page it is absent

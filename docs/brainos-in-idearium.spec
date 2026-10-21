@@ -304,20 +304,23 @@ spec:
       acceptance: ["census all reached; the menu row opens :4800 Code → Flow"]
 
     - id: MOD-BX-FLOAT
-      name: brainos-float
+      name: provider-widget
       uuid: nexus-bx-float-v1-0000-2026-1021-001
-      path: ui/brainos-float/brainos-float.js
+      path: clear-glass/src/providers/provider-widget.js
       phase: BX10_float
       map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
       description: >-
-        The float (Clear Glass overlay: AGENTS, PIPELINE, JOBS, USERSCRIPTS, AUTOMATION, NODES, MESH JOBS, MACROS, AUTOFILL, SITES) — his call
-        (BX0c): rebuilt on Idearium's tokens and fed by flow-sources, or retired into the Code tab and Clear Glass's own panels.
+        His call (BX0c, 2026-10-21): "What if we rebuilt it into a small widget for clearglass provider pages, dynamic to provider? Either that
+        or retire it." A small widget on Clear Glass's provider pages (outside the page's DOM, like the floating CLI), its contents following the
+        provider of the tab — reading, to confirm: that provider's agent node and health, its queue and current job, the account the tab runs
+        as, its userscript (on/off, redeploy), the route it sits in. Fed by flow-sources. The old float (ui/brainos-float) is archived with
+        ui/brainos; its other tabs have homes in the Code tab and Clear Glass's panels (census).
       deps: [{ name: flow-sources }]
-      exports: ["either the restyled float or its archive"]
+      exports: ["widgetFor(provider) → view", "mount on provider tabs"]
       gate_pipeline: ["GATE-BX-STYLE", "GATE-BX-PARITY"]
-      behavioral_contracts: ["its tabs' functions reachable either way"]
-      error_paths: ["none beyond the census"]
-      acceptance: ["per his choice"]
+      behavioral_contracts: ["only on a provider's own page; never injected into the page's DOM"]
+      error_paths: ["the provider host down → the widget says so"]
+      acceptance: ["on a claude.ai tab: claude's node, job and account; absent on a non-provider page"]
 
   events:
     flow:

@@ -7,11 +7,11 @@ intent: null
 summary: BX5_node_controls (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792576313731
+exported_at: 1792576465243
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792576313731
-lastSeenAt: 1792576313731
+firstSeenAt: 1792576465243
+lastSeenAt: 1792576465243
 fingerprint: null
 payload:
   id: BX5_node_controls

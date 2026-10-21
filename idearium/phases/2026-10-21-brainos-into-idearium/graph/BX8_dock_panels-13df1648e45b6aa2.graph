@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792576313734
+exported_at: 1792576465246
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792576313734
-lastSeenAt: 1792576313734
+firstSeenAt: 1792576465246
+lastSeenAt: 1792576465246
 fingerprint: null
 payload:
   for: BX8_dock_panels

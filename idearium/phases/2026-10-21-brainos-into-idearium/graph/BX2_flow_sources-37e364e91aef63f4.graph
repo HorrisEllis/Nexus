@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792576313727
+exported_at: 1792576465239
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792576313727
-lastSeenAt: 1792576313727
+firstSeenAt: 1792576465239
+lastSeenAt: 1792576465239
 fingerprint: null
 payload:
   for: BX2_flow_sources
