@@ -922,3 +922,18 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `tests/modules/test-pipeline-root-causes.test.js` RC-16 (all four parts hashed on a real indexed repo) and RC-18 (the build's gate
     reads the registry, not atlas.json);
   - `docs/2026-10-19-infrastructure-spine-phasemap.spec` IN3a, with his decision quoted.
+
+### 2026-10-21 — 0.60.199: a roadmap that imported itself
+- **His words:** "so i can import a project and have it continue? Like the one uploaded"
+- **Context:** MASTERMIND, his Electron app (v0.1.50), came with a roadmap he had kept before Nexus could read one:
+  - `phases.json`: 16 phases with state, percent and what blocks what;
+  - `PHASEMAP.md`: an exit criterion per phase ("P1 exit: a node of every registered type round-trips through the vault with
+    provenance intact"), a critical-path tree, and dated follow-ups that were "stopped deliberately, not forgotten".
+- **What it shows:** specification and dependency thinking in his own project, months earlier. The roadmap was precise enough that a
+  program could turn it into a dependency graph with no guessing:
+  - 16 phases, no cycles, no dangling references;
+  - the critical path agreed with the JSON;
+  - the one place the tree and the prose differ (P3-UI "unblocked by anything") was marked in his own words.
+- **Checkable:**
+  - `CHANGELOG-0.60.199.md` (the real run's numbers);
+  - `tests/modules/test-roadmap-import.test.js` RI-01 (built on MASTERMIND's shape).

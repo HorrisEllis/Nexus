@@ -651,3 +651,38 @@ spec:
 # - Fix: the chunk limit still decides what is chunked into a system repo. A read-only read allows 8 MB, and anything over that is said as
 #   "too large to show", never "binary".
 # - Proof: test-nexus-atlas-and-glass AT-003 reads a 330 KB atlas whole. It failed with the very message from his screenshot before the fix.
+
+# ── ADDENDUM 2026-10-21 (0.60.199) — an imported project continues from its own roadmap (SD17) ──
+# James, uploading MASTERMIND-v0_1_50: "so i can import a project and have it continue? Like the one uploaded" · "yes."
+# - Before: a repo's plan was read only from *-phasemap.spec. A project that came with its own roadmap (MASTERMIND: phasemap/phases.json
+#   and PHASEMAP.md) showed "no phases", and nothing could continue it.
+# - Now: idearium/repo/roadmap-import.js finds phases.json / roadmap.json / PHASEMAP.md / ROADMAP.md (one per folder) and writes
+#   <folder>/roadmap-phasemap.spec. Each phase keeps:
+#   - the project's own id; P3-UI becomes P3u, because loom's parser needs an id before the underscore, and source_id keeps the original;
+#   - its state and percent (status done | in-progress | pending, with source_state and progress beside it);
+#   - its edges: blocks and depends_on from the JSON, plus the chains of the markdown's "Critical path" tree. Each edge is named in
+#     depends_from with the file it came from, and a tree line marked "unblocked" gets no edge;
+#   - its exit criterion, as proof.
+#   Files are unknown (the source names none); "⇄ map files & dependencies" fills them. What cannot be an edge (a block naming no
+#   phase, a cycle) is said in meta.said. The map is parsed back by loom before it is written.
+# - Doors: GET /api/repos/:uuid/roadmaps; POST …/roadmaps/import {dir?, replace?} (409 EXISTS without replace); `repo roadmaps`,
+#   `repo roadmap-import`; the Phases tab offers it in its empty state and in the rail ("roadmap not imported yet" · ⇣ import).
+# - Proof: tests/modules/test-roadmap-import.test.js RI-01..05 (RI-05 in Clear Glass). MASTERMIND's real roadmap gives 16 phases, 4 done,
+#   no DAG problem, and next P0 (9 phases wait on it).
+
+# ── ADDENDUM 2026-10-21 (0.60.200) — what Idearium needed to work on MASTERMIND (SD18) ──
+# James: "i just want you to add what idearium needs to work on mastermind."
+# Found by driving his MASTERMIND-v0_1_50 zip through the real API in the test sandbox; each line is a stop that run hit, and its fix.
+# - The import: a zip whose files all sit under one folder (MASTERMIND's mm9/) lands at the repo's root. lib/zip-ingest.js has
+#   stripWrapper, on for project-import.finalize and repo.import-archive only; finalize answers `wrapper`.
+# - The roadmap import:
+#   - candidates are counted (rankRoadmaps): one that names no phase is left out and listed in `ignored`; the JSON-backed one is primary
+#     and is taken when no folder is named;
+#   - an edge names its source file by its bare name, because a path in a phase's text is read as a file the phase changes;
+#   - the files a section names (with an extension) are carried as named_in_source, for the file mapper to find with no model.
+# - Proof: "tests pass" with no package.json test script runs the project's own runner (tests/run-all.js, test/run-all.js, tests/run.js,
+#   test/run.js, tests/index.js, test/index.js) and says which; with none, "no test runner" is said.
+# - Import checks (lib/import-checks.js): each note line is cut at 400 characters and each body at 19,000, pointing at the full list. One
+#   note the store refuses is listed in `failed`; the other checks' notes are still written.
+# - Proof: tests/modules/test-mastermind-ready.test.js MR-01..04. The real run gives 1,371 files at the root, 16 phases, P1's graph
+#   from evidence, and a build that reaches the agent ladder.

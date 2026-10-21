@@ -6,7 +6,7 @@
 
 version 1.0.0
 fork_of genesis 1.5.0
-// 1.0.0 (2026-10-21, NEXUS 0.60.199): James, after asking how genesis works and whether it is valuable: "can you add to a fork of
+// 1.0.0 (2026-10-21, parked — not released; a delta, while he decides full copy or delta): James, after asking how genesis works and whether it is valuable: "can you add to a fork of
 // genesis spec, its contained in a isolated sandbox using the component registry as a drawbridge, and tunnel into the compartment,
 // the bridge, and interaction contract."
 //

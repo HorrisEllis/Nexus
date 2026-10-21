@@ -39,6 +39,7 @@ export const MODULE_ID = 'nexus-idearium-repo-proof-run-v1-0000-2026-1002-jamesb
 export const KINDS = Object.freeze(['file', 'command', 'tests', 'page']);
 export const REPORT_FILE = 'proof/PROOF-REPORT.md';
 export const RUNS_DIR = '.nexus/proof-runs';
+const RUNNER_FILES = ['tests/run-all.js', 'test/run-all.js', 'tests/run.js', 'test/run.js', 'tests/index.js', 'test/index.js'];   // 0.60.200 — a project's own runner, when package.json has no test script
 export const LIMITS = Object.freeze({ conditions: 60, says: 300, output: 4000, commandMs: 120000, startMs: 60000 });
 
 const CAUSE = {
@@ -150,8 +151,15 @@ async function _check(repoDir, c, app) {
     if (k.kind === 'tests' && !cmd) {
       let pkg = null; try { pkg = JSON.parse(fs.readFileSync(path.join(repoDir, 'package.json'), 'utf8')); } catch (_) {}
       const script = pkg && pkg.scripts && pkg.scripts.test;
-      if (!script || /no test specified/.test(script)) return unmet('no_tests', 'package.json has no test script.');
-      cmd = 'npm test --silent';
+      if (script && !/no test specified/.test(script)) cmd = 'npm test --silent';
+      else {
+        // 0.60.200 — James: "i just want you to add what idearium needs to work on mastermind." MASTERMIND has no test script; its
+        // suites run as `node tests/run-all.js` (51 run, 3 skipped for electron, exit 0). A project's own runner, when it has one,
+        // is its tests: run that, and say which.
+        const runner = RUNNER_FILES.find(f => fs.existsSync(path.join(repoDir, f)));
+        if (!runner) return unmet('no_tests', `package.json has no test script, and there is no test runner (${RUNNER_FILES.join(', ')}).`);
+        cmd = `node ${runner}`;
+      }
     }
     const r = await _sh(cmd, { cwd: repoDir, timeoutMs: Math.min(Number(k.timeoutMs) || LIMITS.commandMs, LIMITS.commandMs) });
     const shown = `\`${cmd}\` → ${r.timedOut ? 'timed out' : `exit ${r.code}`} in ${(r.ms / 1000).toFixed(1)}s`;

@@ -353,6 +353,49 @@ spec:
         plan run lands only its phasemap: any other file in its reply is said in the run ("the agent answered with code,
         not a plan — not proposed"), never proposed.
       proof: "the loop with a tab that answers the plan with code: the plan is derived, no proposal comes from the plan run, the run says why"
+    SD17_an_imported_project_continues:
+      layer: backend
+      systems: [idearium]
+      status: "DONE 0.60.199 — test-roadmap-import RI-01..05 (RI-05 in Clear Glass); MASTERMIND's real roadmap: 16 phases"
+      james: '"so i can import a project and have it continue? Like the one uploaded" · then "yes." (2026-10-21, MASTERMIND-v0_1_50)'
+      depends_on: []
+      files: [idearium/repo/roadmap-import.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, loom/maps/one-idearium-map.js]
+      does: >-
+        A project brings its own roadmap; Idearium reads only *-phasemap.spec, so an imported project shows nothing to continue.
+        MASTERMIND (his Electron app) carries phasemap/phases.json (P0–P14: state, percent, blocks) and PHASEMAP.md (each phase's
+        exit criterion, a critical-path tree with chains the JSON leaves out). The importer finds such a roadmap, turns it into a
+        Nexus phasemap beside it (the project's ids kept where the parser allows, its state as status, its percent kept, blocks and
+        critical-path chains as depends_on, each edge saying which file it came from, the exit criterion as proof), round-trips it
+        through loom's parser before writing, and writes it through the same writer as an added phase. Files are not named by the
+        source: unknown, filled by "map files & dependencies". Backend → GET/POST /api/repos/:uuid/roadmaps[/import] → `repo
+        roadmaps`, `repo roadmap-import` → the Phases rail ("roadmap not imported yet" · import).
+      decided_by_the_axioms: >-
+        His "stop adding phases" (addendum 2026-10-21) is kept: this phase is his own request of the same day, and it serves the finish
+        line he named ("diagnosing and fixing itself and projects in idearium"): a project that cannot continue cannot be fixed in
+        Idearium. §8.6: roadmap.js addPhase's shape and round-trip, _phaseWrite, the thread's spec rail are reused; §0.3: an existing
+        imported map is never overwritten without replace, and every write is a repo version.
+      proof: "MASTERMIND's real roadmap imports to 15 phases that loom parses, with P1 next on the critical path; a fixture in the test"
+    SD18_mastermind_ready:
+      layer: backend
+      systems: [idearium]
+      status: "DONE 0.60.200 — test-mastermind-ready MR-01..04; MASTERMIND driven through the real API to its first agent call"
+      james: '"i just want you to add what idearium needs to work on mastermind." (2026-10-21)'
+      depends_on: [SD17_an_imported_project_continues]
+      files: [lib/zip-ingest.js, idearium/api/index.js, idearium/repo/roadmap-import.js, idearium/repo/proof-run.js, lib/import-checks.js]
+      does: >-
+        Mapped by running it, as recorded here after the run: his MASTERMIND-v0_1_50 zip driven through Idearium's real API in the
+        test sandbox (import → index → roadmap → registry → graph → build), every stop a finding. (1) every path began mm9/ (the zip's
+        one wrapping folder) — the project imports strip a lone wrapper and say it; (2) nine roadmap-named files and the import refused
+        to choose — each counted, the empty left out and said, the JSON-backed one primary; (3) P1's graph said it changes
+        phasemap/phases.json — the importer's own evidence lines named the roadmap by path; they name it by its bare name now; (4) P1
+        then had no graph with no model — the files PHASEMAP.md names under each phase are carried as named_in_source (8 of 16 phases),
+        so P1 maps to schemas/node.schema.json and schemas/edge.schema.json with no model; (5) proof could not run its tests — no test
+        script, its suites run as node tests/run-all.js — the project's own runner is used and said; (6) its integrity notes never
+        landed — one note over 20,000 characters stopped them all — lines and bodies are cut, and one failed note no longer stops the rest.
+      decided_by_the_axioms: >-
+        §0.1 evidence over memory: the gaps are the ones a real run of his project showed, not a guess. §8.6: each fix is in the
+        module that owned the gap. §0.3 / §1.2: the wrapper, the ignored roadmaps and a failed note are said, never silent.
+      proof: "MR-01..04 on fixtures with MASTERMIND's shape; the real run: 1,371 files at the root, 16 phases, P1 graph from evidence, build to the agent ladder"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"
