@@ -357,3 +357,38 @@ registry."
 - **It agrees with what is partly built.** DB9 generates a registry per system (lib/drawbridge-registry.js `registryOf(system)`, 0.60.127),
   and P33 is "every system runs its node registry". When the spine is built through Idearium, IN3 and DB9 build to this.
 - **Order unchanged.** His priority is Idearium solid first (docs/2026-10-10-idearium-solid-phasemap.spec, addendum 2026-10-21).
+
+## ADDENDUM 2026-10-21 — his decision: the registry a build stands on is the spine, the event bus, the interaction contract and the component registry
+
+James, 2026-10-21. SP5 was refused for a missing atlas.json; he asked "what does it need an atlas for?", then "shouldn't that be the
+component registry. architecture tab". The coder built 0.60.197 (the snapshot records the registry as well) and asked whether the
+registry should replace the atlas as what a build requires. His answer: "yes, the registry should be the spine, event bus, interaction
+contract, and component registry."
+- **His decision.** A build requires the registry, not the atlas. The registry is four things, one record:
+  1. the **component registry**: every file a component (id, layer, type, exports);
+  2. the **spine**: the wires between components (require edges);
+  3. the **event bus**: every event, who emits it and who consumes it;
+  4. the **interaction contract**: what each component serves to the outside (routes, CLI commands). Ports and health checks, which
+     docs/INTERACTION_CONTRACTS.md also names per system, are not read from a repo's code today; said, not invented.
+- **Grounding (§8.6, read from the code).** idearium/repo/architecture.js already extracts all four from the code-intel cards:
+  components, wires, events with emittedBy/consumedBy, routes and cli. The planner already reads it (idearium/api/index.js
+  `PP.registryOf({ architecture, … })`). Nothing in the build reads atlas.json; the planner's "atlas" is README text. The gate
+  demanded a file the build never uses.
+- **What stays.** atlas.json is still recorded on every snapshot (§0.3), and snapshots that are not a build (every change, VR1;
+  import baselines) keep their existing gate, so older repos keep their history.
+- It is IN3 ("the registry is the spine") made concrete at the repo scale. IN3 for Nexus's own systems stays open, per system (his
+  decision earlier today: each system its own registry, one shape).
+
+phases:
+
+  IN3a_build_stands_on_the_registry:
+    layer: library
+    status: DONE 0.60.198 — test-pipeline-root-causes RC-16, RC-18
+    depends_on: []
+    files: [idearium/repo/snapshot.js, idearium/api/index.js, idearium/ui/js/app.js]
+    spec: idearium/spec/idearium.repo-snapshot.spec
+    does: >-
+      registryVersion carries the four parts, each with its own sha256 and counts (components, spine, eventBus, contract) and one
+      overall hash. A phase build requires it: no registry → the import pipeline runs once (0.60.196), the snapshot is taken again;
+      still none → refused NO_REGISTRY, said on the run. The Versionium list shows the four counts.
+    proof: RC-16 (an unindexed repo gets a registry with all four parts), RC-18 (the build gate reads registryVersion, not atlas.json)

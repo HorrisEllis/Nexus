@@ -161,3 +161,15 @@ an atlas for?" · then: "shouldn't that be the component registry. architecture 
   what the build reasons over — built; (b) make the registry, not the atlas, the thing the build requires. The coder's reading is (a);
   (b) is "to confirm" with him. Both come from the same indexing step, so the gate's outcome is the same today.
 - The NOT_INDEXED message now names what is missing (atlas, chunk index, component registry) and that a build indexes it itself.
+
+## ADDENDUM 2026-10-21 — 0.60.198 (IN3a): his decision — a build stands on the registry, recorded as its four parts
+James, 2026-10-21, answering the coder's question whether the registry should replace the atlas as what a build requires: "yes, the
+registry should be the spine, event bus, interaction contract, and component registry."
+- This supersedes the 0.60.197 reading (above, kept): the registry is not only recorded, it is what a phase build requires.
+- `registryVersion.parts`: `components` (file, id, layer, type, exports), `spine` (require wires), `eventBus` (each event with who emits
+  and who consumes it), `contract` (routes and CLI commands), each with its own sha256; `registryVersion.sha256` is over the four.
+  Modules' text is read from the repo directory (under 400 KB each) for routes, CLI and events, as the Architect tab does.
+- The build (idearium/api/index.js): a snapshot with no registry, or NOT_INDEXED, runs the import pipeline once and snapshots again;
+  still no registry → refused `NO_REGISTRY`, with the reason, on the run. atlas.json is still recorded; non-build snapshots keep their
+  existing gate (older repos' every-change history unaffected).
+- The NOT_INDEXED text keeps "has not been through the import pipeline" (test-mco3-versionium-tab reads it; 0.60.197 had dropped it).

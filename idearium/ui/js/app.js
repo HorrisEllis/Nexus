@@ -2973,7 +2973,9 @@ async function renderRepoVersionium(repo) {
         ${s.gitCommit ? badge('git ' + _short(s.gitCommit, 7), 'var(--text3)') : ''}
         ${s.verification ? badge('verify ' + s.verification, s.verification === 'passed' ? 'var(--mint)' : 'var(--coral)') : ''}
         ${s.files ? badge(s.files.count + ' files kept', 'var(--text3)') : ''}
-        ${s.registry ? badge(`registry ${s.registry.components} · ${s.registry.wires} wires · ${_short(s.registry.sha256, 8)}`, 'var(--text3)') : ''}
+        ${s.registry ? badge(s.registry.parts
+          ? `registry ${_short(s.registry.sha256, 8)}: ${s.registry.parts.components.count} components · spine ${s.registry.parts.spine.wires} · bus ${s.registry.parts.eventBus.events} events · contract ${s.registry.parts.contract.routes} routes, ${s.registry.parts.contract.cli} cli`
+          : `registry ${s.registry.components} · ${s.registry.wires} wires · ${_short(s.registry.sha256, 8)}`, 'var(--text3)') : ''}
         ${s.tests ? badge('tests ' + s.tests, s.tests === 'passed' ? 'var(--mint)' : s.tests === 'failed' ? 'var(--coral)' : 'var(--text3)') : ''}
       </div></div>`;
   };

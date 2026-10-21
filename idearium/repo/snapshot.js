@@ -159,18 +159,41 @@ function atlasField(repoDir) {
   };
 }
 
-// 0.60.197 — James, of the atlas the snapshot pins: "shouldn't that be the component registry. architecture tab". The registry is
-// the Architect tab's (idearium/repo/architecture.js over lib/code-intel's cards): its components and their wires, what the planner
-// reads. Its identity is the sha256 of those components and wires, so a snapshot says which registry the build stood on.
+// 0.60.197 — James, of the atlas the snapshot pins: "shouldn't that be the component registry. architecture tab". 0.60.198 — his
+// decision: "yes, the registry should be the spine, event bus, interaction contract, and component registry." The registry is the
+// Architect tab's (idearium/repo/architecture.js over lib/code-intel's cards, each module's text read for routes, CLI and events) and
+// what the planner reads. It is recorded as its four parts, each with its own sha256, and one hash over all four; a phase build
+// requires it (docs/2026-10-19-infrastructure-spine-phasemap.spec IN3a). Ports and health checks are not read from code: not claimed.
+const REGISTRY_READ_MAX = 400000;
 function registryField(repoDir) {
   let intel;
   try { intel = _require('../../lib/code-intel/index.js').load(repoDir); } catch (e) { return unavailable(`code-intel not loadable: ${e.message}`); }
-  const a = architecture(intel);
+  const root = path.resolve(repoDir);
+  const readFile = (rel) => {
+    const abs = path.resolve(root, rel);
+    if (!abs.startsWith(root + path.sep)) return null;
+    try { const st = fs.statSync(abs); return st.isFile() && st.size < REGISTRY_READ_MAX ? fs.readFileSync(abs, 'utf8') : null; } catch (_) { return null; }
+  };
+  const a = architecture(intel, { readFile });
   if (a.error) return unavailable(`no component registry — ${a.error}`);
-  const shape = { components: a.components.map(c => [c.file, c.id, c.layer, c.type, [...(c.exports || [])].sort()]), wires: a.wires.map(w => [w.from, w.to, w.relation]).sort() };
+  const parts = {
+    components: a.components.map(c => [c.file, c.id, c.layer, c.type, [...(c.exports || [])].sort()]),
+    spine:      a.wires.filter(w => w.relation === 'requires').map(w => [w.from, w.to]).sort(),
+    eventBus:   a.events.map(e => [e.name, e.emittedBy, e.consumedBy]),
+    contract:   [...a.routes.map(r => ['route', r.file, JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== 'component' && k !== 'file')))]),
+                 ...a.cli.map(c => ['cli', c.file, c.verb])].sort((x, y) => (x.join('\0') < y.join('\0') ? -1 : 1)),
+  };
+  const hashed = Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, sha256(JSON.stringify(v))]));
   return {
-    available: true, source: 'idearium/repo/architecture.js over indexes/cards.json',
-    identity: 'sha256 of the registry\'s components and wires', sha256: sha256(JSON.stringify(shape)),
+    available: true, source: 'idearium/repo/architecture.js over indexes/cards.json and each module\'s text',
+    identity: 'sha256 over the four parts\' hashes (components, spine, eventBus, contract)',
+    sha256: sha256(JSON.stringify(hashed)),
+    parts: {
+      components: { sha256: hashed.components, count: a.stats.components, orphans: a.stats.orphans, breaches: a.stats.breaches },
+      spine:      { sha256: hashed.spine, wires: parts.spine.length },
+      eventBus:   { sha256: hashed.eventBus, events: a.stats.events, wires: a.wires.length - parts.spine.length },
+      contract:   { sha256: hashed.contract, routes: a.stats.routes, cli: a.stats.cli },
+    },
     components: a.stats.components, wires: a.stats.wires, orphans: a.stats.orphans, breaches: a.stats.breaches,
   };
 }
@@ -292,7 +315,7 @@ export function buildSnapshotRecord({ repo, repoDir, now = Date.now() } = {}) {
   if (!repo || !repo.uuid) return { ok: false, code: 'NO_REPO', error: 'repo record with a uuid is required' };
   if (!repoDir || !fs.existsSync(repoDir)) return { ok: false, code: 'NO_DIR', error: `repo directory does not exist: ${repoDir}` };
   if (!fs.existsSync(path.join(repoDir, 'atlas.json'))) {
-    return { ok: false, code: 'NOT_INDEXED', error: 'repo has not been indexed: no atlas, chunk index or component registry yet (no atlas.json) — run POST /api/repos/:uuid/chunk first; a phase build does this itself (0.60.196)' };
+    return { ok: false, code: 'NOT_INDEXED', error: 'repo has not been through the import pipeline: no atlas, chunk index or component registry yet (no atlas.json) — run POST /api/repos/:uuid/chunk first; a phase build does this itself (0.60.196)' };
   }
   const filesIdx = readJson(path.join(repoDir, 'indexes', 'files.json'));
   const mustRecord = {
@@ -465,7 +488,7 @@ export function summarizeRepoSnapshots(rows, repoUuid) {
         gitCommit: m.gitCommit?.available ? m.gitCommit.commit : null,   // records from before 0.39.263 only
         verification: m.verificationState?.available ? m.verificationState.status : null,
         tests: m.testState?.available ? m.testState.status : null,
-        registry: m.registryVersion?.available ? { sha256: m.registryVersion.sha256, components: m.registryVersion.components, wires: m.registryVersion.wires } : null,   // 0.60.197
+        registry: m.registryVersion?.available ? { sha256: m.registryVersion.sha256, components: m.registryVersion.components, wires: m.registryVersion.wires, parts: m.registryVersion.parts || null } : null,   // 0.60.197; parts 0.60.198
         // MCO-B: has a file layer (a restore may be possible), and how big. Whether
         // the layer was actually recorded is checked by restore, not assumed here.
         files: r.state.files ? { count: r.state.files.fileCount, bytes: r.state.files.totalBytes } : null,
