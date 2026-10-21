@@ -79,6 +79,7 @@ const SUITES = [
   'test-genesis-sandboxed.test.js', // DB19 (parked) — a fork of genesis: sealed sandbox, the registry the drawbridge, three tunnels (compartment, bridge, contract)
   'test-roadmap-import.test.js', // 0.60.199 SD17 — a project's own roadmap (phases.json / PHASEMAP.md) imported as a phasemap, so it continues; RI-05 in Clear Glass
   'test-mastermind-ready.test.js', // 0.60.200 SD18 — what Idearium needed to work on MASTERMIND: wrapper folder, primary roadmap, the project's own test runner, integrity notes that fit
+  'test-any-project-tests.test.js', // 0.60.201 — "do the tests pass" for any project: npm, its own runner, Gradle, Maven, pytest, Cargo, Go, make; a missing tool said
   'test-cos-mount-idempotent.test.js',   // 0.39.282 N28 — one COS host per process; an identical remount is a no-op (idearium OFFLINE every 10 min: 34 s → 2 ms)
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272

@@ -18,6 +18,7 @@
  *   RC-16  0.60.196: a build of a repo with no index indexes it first, then snapshots (his upload timed out before indexing)
  *   RC-17  0.60.196: the upload dialog finds an import that outran its wait, closes, and indexes
  *   RC-18  0.60.198 (IN3a, his decision): a build requires the registry — spine, event bus, interaction contract, components
+ *   RC-19  0.60.201: a wait that runs out is said plainly (his "signal is aborted without reason"); the upload start waits 60 s
  *   RC-11  RC7 (0.60.188): every run names its starter — the gate's keyed caller (access), a declared door (person:ui, person:cli,
  *          agent:<name>), the watchdog (system), or unknown; an agent's build is agent:<name> whatever the row sent, and a
  *          listener that hears five build lines in one reply builds five phases, each recorded as agent:listener
@@ -326,6 +327,19 @@ const tmp = (n) => fs.mkdtempSync(path.join(os.tmpdir(), `rc-${n}-`));
     assert.ok(gate.indexOf('runImportPipeline(') < gate.indexOf("code: 'NO_REGISTRY'"), 'indexes once before refusing');
     const SNAP = fs.readFileSync(path.join(ROOT, 'idearium/repo/snapshot.js'), 'utf8');
     assert.ok(/'registryVersion',/.test(SNAP), 'a must-record key');
+  });
+
+  await test('RC-19', 'a wait that runs out says which call, how long, and why it may be busy — never "signal is aborted"; the upload start waits 60 s', async () => {
+    const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
+    const ft = app.match(/async function fetchTimeout\(url, opts=\{\}, ms=5000\) \{[\s\S]*?\n\}\n/)[0];
+    const ap = app.match(/async function api\(path, opts=\{\}, timeoutMs=6000\) \{[\s\S]*?\n\}\n/)[0];
+    // a fetch that never answers until its signal aborts, as a busy Idearium does
+    const fetch = (url, o) => new Promise((_, rej) => o.signal.addEventListener('abort', () => rej(Object.assign(new Error('signal is aborted without reason'), { name: 'AbortError' }))));
+    const run = new Function('fetch', 'API_BASE', `${ft}\n${ap}\nreturn api;`)(fetch, 'http://127.0.0.1:4800');
+    let err = null; try { await run('/api/project-import/start', { method: 'POST', body: '{}' }, 50); } catch (e) { err = e; }
+    assert.ok(err && err.name === 'AbortError' && err.timedOut, String(err));
+    assert.ok(/^Idearium did not answer POST \/api\/project-import\/start within 0s — it may be busy/.test(err.message) && !/signal is aborted/.test(err.message), err.message);
+    assert.ok(/api\('\/api\/project-import\/start', \{ method: 'POST', body: JSON\.stringify\(\{ name, goal \}\) \}, 60000\)/.test(app), 'the start waits 60 s');
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

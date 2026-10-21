@@ -156,7 +156,17 @@ function setConnUI(state, base) {
 
 async function api(path, opts={}, timeoutMs=6000) {
   if (!API_BASE) throw new Error('not connected to nexus');
-  const r = await fetchTimeout(API_BASE + path, { headers:{'Content-Type':'application/json'}, ...opts }, timeoutMs);
+  let r;
+  try { r = await fetchTimeout(API_BASE + path, { headers:{'Content-Type':'application/json'}, ...opts }, timeoutMs); }
+  catch (e) {
+    // 0.60.201 — James's screenshot: "could not start: signal is aborted without reason". The browser's words for a wait that ran out
+    // say nothing; the wait, the call and the likely cause are said instead (the error keeps name AbortError for callers that check it).
+    if (e && (e.name === 'AbortError' || /abort/i.test(e.message || ''))) {
+      const x = new Error(`Idearium did not answer ${(opts.method || 'GET').toUpperCase()} ${path.split('?')[0]} within ${Math.round(timeoutMs / 1000)}s — it may be busy (a sync, an import, or low memory); try again in a moment`);
+      x.name = 'AbortError'; x.timedOut = true; throw x;
+    }
+    throw e;
+  }
   let data = {};
   try { data = await r.json(); } catch(_) {}
   if (!r.ok || data.ok === false) {
@@ -1498,7 +1508,9 @@ async function submitUploadProjectStart() {
   if (!goal) return toast('a goal is required — it becomes the end-state', 'err');
 
   try {
-    const res = await api('/api/project-import/start', { method: 'POST', body: JSON.stringify({ name, goal }) });
+    // 0.60.201 — the compartment is created here (COS: a directory, a manifest, the state store); 6 s was not enough while Idearium
+    // synced Nexus at boot (118 s on his machine) under memory pressure
+    const res = await api('/api/project-import/start', { method: 'POST', body: JSON.stringify({ name, goal }) }, 60000);
     UP_CONTAINER_UUID = res.containerUuid;
     UP_COMPARTMENT_ID = res.compartmentId || null;
     document.getElementById('up-container-note').textContent =
