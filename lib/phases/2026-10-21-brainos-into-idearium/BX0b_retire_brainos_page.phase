@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX0b_retire_brainos_page
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX0b_retire_brainos_page
+context: pipeline phase BX0b_retire_brainos_page of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX0b_retire_brainos_page (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792585108749
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108749
+lastSeenAt: 1792585108749
+fingerprint: null
+payload:
+  id: BX0b_retire_brainos_page
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: null
+  status: DECIDED
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d48fbcc54cf4612c

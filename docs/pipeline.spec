@@ -427,3 +427,15 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — compiles this spec at full depth"
     - "tests/modules/test-plan-conflict.test.js — his test, the contract for MOD-PLAN-CONFLICT / -ASK / -UI"
+
+# ADDENDUM 2026-10-21 (0.60.189, RC7) — the run record names its starter
+# James, 2026-10-21: "It built 5 phases in a row."
+# - Every idearium_phase_runs row carries startedBy { who, whence }, with whence one of:
+#   - access: the gate's keyed caller;
+#   - declared: person:ui | person:ui:retry | person:ui:workshop | person:cli | agent:<name>;
+#   - system: watchdog:<kind>;
+#   - unknown.
+# - Set by _phaseBuild from _starter(req, body) on POST …/phases/build and …/spec/build, and by _autoRetry for the watchdog.
+#   build-plan.js historyOf carries it onto each run.
+# - A listener's build is agent:listener: lib/listener-commands.js runs up to 5 lines per reply through the agent command tool.
+#   Map: docs/2026-10-19-pipeline-root-causes-phasemap.spec RC7.

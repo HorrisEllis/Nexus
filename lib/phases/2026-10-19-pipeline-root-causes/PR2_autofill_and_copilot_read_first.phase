@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::PR2_autofill_and_copilot_read_first
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::PR2_autofill_and_copilot_read_first
+context: >-
+  pipeline phase PR2_autofill_and_copilot_read_first of
+  docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: PR2_autofill_and_copilot_read_first (integration) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384309
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384309
+lastSeenAt: 1792587384309
+fingerprint: null
+payload:
+  id: PR2_autofill_and_copilot_read_first
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files: []
+  depends_on:
+    - PR1_page_reader
+  blocks: []
+  spec: null
+  graph: b4ddc2d39aad8dc7

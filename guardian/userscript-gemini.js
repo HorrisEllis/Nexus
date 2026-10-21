@@ -471,9 +471,12 @@ function _replyText(el) {
       else if (out.includes(code)) out = out.replace(code, fenced);
       else out += '\n\n' + fenced;
     }
-  } catch (_) { return full.trim(); }
-  return out.trim();
+  } catch (_) { return _noSpeaker(full).trim(); }
+  return _noSpeaker(out).trim();
 }
+// RC5 (0.60.187) — Gemini puts a screen-reader line "Gemini said" before each reply; innerText carries it into the reply and from there
+// into file names ("Gemini said tests/…"). Removed here, at the page, and again server-side (lib/path-guard.js stripSpeaker).
+function _noSpeaker(t) { return String(t || '').replace(/^\s*(?:Gemini|You)\s+said\s*[:\-–—]?\s*(?:\r?\n|$)/i, ''); }
 
 function findResponseEl() {
   const msgs = document.querySelectorAll('.model-response-text, .response-content, [data-testid="response"]');

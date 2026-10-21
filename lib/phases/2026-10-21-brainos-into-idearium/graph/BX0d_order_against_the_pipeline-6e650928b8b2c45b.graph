@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BX0d_order_against_the_pipeline:6e650928b8b2c45b
+type: graph
+id: phase:BX0d_order_against_the_pipeline:6e650928b8b2c45b
+context: dependency graph of phase BX0d_order_against_the_pipeline
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792585108751
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108751
+lastSeenAt: 1792585108751
+fingerprint: null
+payload:
+  for: BX0d_order_against_the_pipeline
+  kind: phase
+  repo: null
+  hash: 6e650928b8b2c45b
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 7445d07c6feed39f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 7445d07c6feed39f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

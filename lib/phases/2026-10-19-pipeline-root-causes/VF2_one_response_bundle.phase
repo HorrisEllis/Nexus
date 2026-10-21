@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF2_one_response_bundle
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF2_one_response_bundle
+context: pipeline phase VF2_one_response_bundle of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: VF2_one_response_bundle (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384287
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384287
+lastSeenAt: 1792587384287
+fingerprint: null
+payload:
+  id: VF2_one_response_bundle
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/verify-first.js
+    - lib/repo-hat.js
+  depends_on:
+    - VF1_verify_first
+  blocks: []
+  spec: null
+  graph: 48017c6b7737540e

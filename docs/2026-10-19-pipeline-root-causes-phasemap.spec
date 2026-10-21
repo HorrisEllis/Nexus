@@ -90,7 +90,7 @@ phases:
 
   RC5_find_where_the_label_enters:
     layer: foundation
-    status: OPEN
+    status: DONE 0.60.187 (see the addendum at the end)
     depends_on: [RC4_agent_file_names_guarded]
     files: [guardian/lib/chat-transcripts.js, guardian/lib/code-artifact.js, cortex/core/raid/officiator.js]
     does: >-
@@ -295,12 +295,27 @@ phases:
 
   RC6_unowned_ollama_load:
     layer: foundation
-    status: OPEN
+    status: DONE 0.60.187 (see the addendum at the end)
     depends_on: []
     does: >-
       His log, 20:32–21:52: an Ollama "ask" of 293 chars (num_ctx 5120) every ~90 s, each running 85–147 s on qwen2.5-coder:7b,
       with no repo or caller named — the model stays loaded and free memory sits near the halt line. Find the caller (not found
       in this session), and make the bridge refuse a job that names no owner (§1.2: traceable to a cause).
+
+  RC7_every_run_names_its_starter:
+    layer: foundation
+    status: DONE 0.60.189 (see the addendum at the end)
+    depends_on: [RC6_unowned_ollama_load]
+    files: [idearium/api/index.js, idearium/api/build-surface.js, lib/agent-tools/tools/nexus/command.js, idearium/cli/route-commands.js, idearium/ui/js/plan-panel.js, idearium/ui/js/repo-tasks.js, idearium/ui/js/living-spec.js, idearium/ui/js/workshop.js]
+    does: >-
+      James, 2026-10-21: "It built 5 phases in a row." The code has no path that builds a different phase unasked: every UI build is a
+      click, the watchdog only rebuilds the same phase, and the spec's "Build next" is one phase per press. But an agent can call
+      `repo phase build` / `spec build` (neither is the person's alone), and a run row records repo, map, phase and graph, never
+      who started it, so what he saw cannot be traced (§1.2, EXPLAINABILITY). Every run row carries startedBy {who, whence}:
+      whence 'access' (the keyed caller the gate passed), 'declared' (the caller says: person:ui, person:cli, agent:<name>),
+      'system' (watchdog:<kind>), or 'unknown' — never guessed (NC0's evidence rule). Shown on the run in the Plan panel and in
+      `repo runs`.
+    proof: test-pipeline-root-causes RC-11 (every door sets it; an agent's call is agent:<name> whatever the row sent; unknown stays unknown)
 
   MEM1_cortex_keeps_the_books:
     layer: foundation
@@ -348,3 +363,80 @@ in relation to the weboage to use as a map or reference point for inputs from th
 PR1_page_reader and PR2_autofill_and_copilot_read_first stay here as the earlier, shorter reading (§0.3). The work is mapped as
 PM1–PM8 of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec (blocks, index + chunks, a per-site map that learns, intent →
 targets, tools, Nerve feel, live injected map, panel). PR2's "autofill reads the page first" rides PM4's find() once it lands.
+
+
+## Addendum 2026-10-21 (0.60.187): RC5 and RC6 found and fixed at the cause
+
+James, 2026-10-21, asked the order (fixes first, or the BrainOS move): "Fixes, then graph (Recommended)".
+
+RC5 — where "Gemini said" entered a path. lib/repo-inject.js fromReply, the "agent names the path" branch: a code block with no path the
+code could read was resolved by asking the agent "Reply with ONE line only: the path", and the FIRST LINE of the answer was taken as the
+path. The answer was Gemini's page text read with innerText, which starts with the page's screen-reader line "Gemini said" — so
+"Gemini said tests/sp5-title.test.js" (or, split across lines, "Gemini said") became the target. _safeRelative only refused absolute and
+"..". The cut names ("tests/sp5-title.") were answers read mid-stream: replyFor took the newest transcript version with no settled check.
+No regex cut them. Fixed: lib/path-guard.js stripSpeaker (a leading speaker line only) and pathAnswer (one complete path: no spaces, no
+prose, a full extension, not ending in a dot or dash, else null); fromReply uses pathAnswer; chat-transcripts.matchJobs strips the label
+from every reply it hands on; replyFor skips a transcript still settling or generating (the rule _completeFromTranscript already kept);
+the Gemini userscript strips its own label at the page. RC4's guard at propose() stays as the second door.
+
+RC6 — the unowned Ollama load. diagnostic/nexus-diagnostic.js _escalateHighSeverityGaps: a 30 s sweep sent open high-severity gaps to the
+bridge (POST :3749/api/jobs) with no intent, model, maxTokens or owner, so the bridge logged "bridge job … (ask)" and gave it the 4096-token
+answer budget (293 chars + 4096 + 256 → num_ctx 5120: his log's numbers exactly). It marked a gap 'investigating' through its own
+in-process JaaStore copy (and with a bare uuid where the store wants a filter), which cortex never saw, so the gap came back open; its
+5-minute cooldown lived in memory and was lost on restart. The bridge runs one job at a time, so the backlog ran back to back (his
+"every ~90 s" is the 85–147 s run time), and the model never idled long enough to unload. Fixed: the bridge refuses a job naming no owner
+(componentId, agentId, repoUuid, sessionId or meta.source — every other caller in the tree already names one) and puts the owner in its
+log line; 'diagnose' is a background intent (gives way to foreground work); the escalation names itself (componentId
+diagnostic.escalation, intent diagnose, maxTokens 1024, record false), sends at most one Ollama escalation per sweep, keeps a six-hour
+cooldown on disk (data/diagnostic/escalated.json), and sets a gap's status through cortex's new POST /api/gaps/status (cortex owns the
+table — MEM1's direction). Reading, to confirm on his machine: that the ~90 s ask stops (his activity log should show
+"for diagnostic.escalation" at most once per sweep, deferred while a build runs).
+
+Proof: test-pipeline-root-causes RC-07..RC-10 (RC-09 drives the bridge's real handler).
+
+
+## ADDENDUM 2026-10-21 (0.60.188) — two silent gaps in the DAG's reader, found by the census
+
+James, 2026-10-21: "go ahead with the census"
+
+The CNS1 census (docs/2026-10-21-brainos-into-idearium-phasemap.spec) read every phase in every map and found the shared phasemap parser
+silently skipping phases (§1.2). That parser is loom/scanners/phasemap-map.js, which DG1, DG2 and DG3 all read through.
+- PHASE_RE allowed one to three capitals and only digits before `_`. COSA1_…, MR3b_…, TB7a_… and the BX0a-style decisions were not
+  phases, and a depends_on naming them was "dangling".
+- Fixed:
+  - up to five capitals, and one lowercase letter after the number;
+  - an indent-2 lowercase key (`  decisions:` under `spec:`) is a section;
+  - lib/phase-dag.js keeps a decision a decision when the parser also returns it.
+- Whole DAG: phases 1900 → 1925, decisions as read by phase-dag 77 → 98, dangling 25 → 17. test-phase-dag 8/8, test-loom-phasemap 8/8,
+  test-loom-phasemap-status 14/14.
+- A build that DG3 refused as dangling on one of these ids now reaches DG1. If the id is an open decision there, the refusal is "open
+  dependency", which is the true reason.
+
+
+## ADDENDUM 2026-10-21 (0.60.189, RC7) — every run names who started it
+
+James, 2026-10-21: "It built 5 phases in a row. I think I see what you mean but there are way more idearium phases than that."
+- **Traced in the code.** No path builds a different phase unasked:
+  - every UI ▶ build is one click (the Plan, the Phases tab, the spec's "Build next", the workshop, the retry button);
+  - the run watchdog rebuilds only the same phase.
+
+  A **listener**, though (lib/listener-commands.js, his 0.59.4 design: "Use the listener to have you use a command"), runs up to 5
+  command lines per reply it hears (MAX_PER_EVENT = 5), through the agent command tool. `repo phase <p> build` is not the person's
+  alone, so one AI reply holding five build lines builds five phases in a row. RC-11 drives that exact path. An agent calling the
+  command tool does the same.
+- **Why it could not be traced.** A run row named repo, map, phase and graph, never who started it.
+- **Built.** Every run row carries `startedBy { who, whence }`:
+  - `access`: the keyed caller the gate passed;
+  - `declared`: person:ui, person:ui:retry, person:ui:workshop, person:cli, or agent:<name>. The agent command tool overrides
+    whatever the row sent, so a listener is `agent:listener`;
+  - `system`: watchdog:<kind>;
+  - `unknown`: never guessed.
+
+  It shows on each run in the Plan panel ("by …", "by ?" for a run from before this release) and in `repo phase <repo> <phase>`.
+- **Proof:**
+  - test-pipeline-root-causes RC-11 (11/11);
+  - test-plan-pieces PP-02 in Clear Glass (the label);
+  - test-cm3-commands CM3-01 and test-phases-tab PT-04, updated for the body that now carries the door.
+- **Open, his to judge (USER_AUTONOMY).** Whether a build may start from text a listener hears in a chat. Today it may, by his
+  0.59.4 design. The record now says when it did; it does not change the rule.
+- This map's phases are now each specced (emerge/compiler/phase-specs.js): 58 files beside their owners, written for the first time.

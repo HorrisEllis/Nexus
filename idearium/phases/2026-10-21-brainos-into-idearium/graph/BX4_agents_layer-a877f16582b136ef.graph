@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BX4_agents_layer:a877f16582b136ef
+type: graph
+id: phase:BX4_agents_layer:a877f16582b136ef
+context: dependency graph of phase BX4_agents_layer
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792585108779
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108779
+lastSeenAt: 1792585108779
+fingerprint: null
+payload:
+  for: BX4_agents_layer
+  kind: phase
+  repo: null
+  hash: a877f16582b136ef
+  nodes:
+    - path: idearium/ui/js/flow-agents.js
+      role: changes
+      exists: false
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 7445d07c6feed39f
+    layer: 4
+    deps:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+    dependents:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX6_pipeline_edit
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX8_dock_panels
+    upstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0a_where_it_lands
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+    downstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX6_pipeline_edit
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX8_dock_panels
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX9_retire
+    blockedBy:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+    unlocks:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX6_pipeline_edit
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX8_dock_panels
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 7445d07c6feed39f · layer 4 · blocked by BX3_flow_canvas
+      - 'depends on (1): BX3_flow_canvas · all upstream 4'
+      - >-
+        needed by (2): BX6_pipeline_edit, BX8_dock_panels · all downstream 3 · finishing it unlocks
+        BX6_pipeline_edit, BX8_dock_panels

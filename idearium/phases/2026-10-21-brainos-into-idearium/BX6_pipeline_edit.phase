@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX6_pipeline_edit
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX6_pipeline_edit
+context: pipeline phase BX6_pipeline_edit of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX6_pipeline_edit (surface) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792585108781
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108781
+lastSeenAt: 1792585108781
+fingerprint: null
+payload:
+  id: BX6_pipeline_edit
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: surface
+  status: PLANNED
+  files:
+    - idearium/ui/js/flow-edit.js
+  depends_on:
+    - BX4_agents_layer
+  blocks:
+    - MOD-BX-EDIT
+  spec: docs/brainos-in-idearium.spec
+  graph: a7874d45d8fbf5a0

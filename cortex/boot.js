@@ -570,6 +570,18 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── Gaps ─────────────────────────────────────────────────────────────────
+  // RC6 (0.60.187): another system changes a gap's status through cortex, which owns the gaps table — the diagnostic service used to
+  // write its own in-process copy of the store, which this process never saw, so an escalated gap stayed 'open' and was sent again.
+  if (p === '/api/gaps/status' && method === 'POST') {
+    const body = await readBody(req);
+    const key = body.uuid || body.id; const status = String(body.status || '');
+    if (!key || !status) { json(res, 400, { ok: false, error: 'uuid (or id) and status required' }); return; }
+    const row = jaaDB.query('gaps', g => g.uuid === key || g.id === key, 1)[0];
+    if (!row) { json(res, 404, { ok: false, error: `no gap ${key}` }); return; }
+    jaaDB.update('gaps', row.id ? { id: row.id } : { uuid: row.uuid }, { status, [`${status}At`]: Date.now(), ...(body.by ? { statusBy: String(body.by) } : {}) });
+    json(res, 200, { ok: true, uuid: row.uuid || row.id, status });
+    return;
+  }
   if (p === '/api/gaps') {
     if (method === 'POST') {
       const body = await readBody(req);

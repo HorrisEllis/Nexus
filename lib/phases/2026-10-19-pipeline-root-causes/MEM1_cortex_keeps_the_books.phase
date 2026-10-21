@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::MEM1_cortex_keeps_the_books
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::MEM1_cortex_keeps_the_books
+context: pipeline phase MEM1_cortex_keeps_the_books of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: MEM1_cortex_keeps_the_books (foundation) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384307
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384307
+lastSeenAt: 1792587384307
+fingerprint: null
+payload:
+  id: MEM1_cortex_keeps_the_books
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: foundation
+  status: DECISION (his words, to confirm)
+  files: []
+  depends_on:
+    - SS1_system_store_adoption
+  blocks: []
+  spec: null
+  graph: 945fb1de062e2087

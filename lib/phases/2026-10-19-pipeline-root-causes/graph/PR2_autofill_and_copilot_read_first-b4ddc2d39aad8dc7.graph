@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PR2_autofill_and_copilot_read_first:b4ddc2d39aad8dc7
+type: graph
+id: phase:PR2_autofill_and_copilot_read_first:b4ddc2d39aad8dc7
+context: dependency graph of phase PR2_autofill_and_copilot_read_first
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792587384309
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384309
+lastSeenAt: 1792587384309
+fingerprint: null
+payload:
+  for: PR2_autofill_and_copilot_read_first
+  kind: phase
+  repo: null
+  hash: b4ddc2d39aad8dc7
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 34f3ae8f0ecbc7b5
+    layer: 1
+    deps:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::PR1_page_reader
+    dependents: []
+    upstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::PR1_page_reader
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::PR1_page_reader
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 34f3ae8f0ecbc7b5 · layer 1 · blocked by PR1_page_reader
+      - 'depends on (1): PR1_page_reader'
+      - 'needed by (0): —'

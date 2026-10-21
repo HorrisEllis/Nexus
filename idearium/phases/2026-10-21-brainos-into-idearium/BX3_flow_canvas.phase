@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+context: pipeline phase BX3_flow_canvas of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX3_flow_canvas (surface) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792585108779
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108779
+lastSeenAt: 1792585108779
+fingerprint: null
+payload:
+  id: BX3_flow_canvas
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: surface
+  status: PLANNED
+  files:
+    - idearium/ui/js/flow-canvas.js
+    - idearium/ui/css/flow.css
+    - idearium/ui/js/code-surface.js
+    - idearium/ui/index.html
+  depends_on:
+    - BX2_flow_sources
+  blocks:
+    - MOD-BX-CANVAS
+  spec: docs/brainos-in-idearium.spec
+  graph: 0cfcc543816b7eee

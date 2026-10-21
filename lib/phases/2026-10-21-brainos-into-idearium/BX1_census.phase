@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
+context: pipeline phase BX1_census of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX1_census (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792585108767
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108767
+lastSeenAt: 1792585108767
+fingerprint: null
+payload:
+  id: BX1_census
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: foundation
+  status: PLANNED
+  files:
+    - docs/brainos-feature-census.md
+  depends_on:
+    - BX0a_where_it_lands
+  blocks:
+    - MOD-BX-CENSUS
+  spec: docs/brainos-in-idearium.spec
+  graph: 94187d8db6335e81

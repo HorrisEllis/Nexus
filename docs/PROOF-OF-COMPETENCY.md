@@ -859,3 +859,22 @@ New entries go at the top: date, his words, context, what it shows, evidence.
 - **Checkable:** `tests/modules/test-browser-shell.test.js` BST-10 (a running agent shows Open/Stop; nothing reads `hosted` alone);
   `tests/modules/test-snowflake.test.js` SFW-09; `CHANGELOG-0.60.180.md`.
 
+
+### 2026-10-21 — 0.60.188: he corrected the coder with what he had seen, and asked for the truth before the picture
+- **His words:** "Follow the axioms in docs. Use them as law, and for every decision. It built 5 phases in a row. I think I see what you
+  mean but there are way more idearium phases than that." · "go ahead with the census"
+- **Context:** the coder had said a build does not move on to the next phase by itself. He had watched it build five in a row. He also
+  saw that the five were a small part of a much larger body of open phases. The next planned work was a graph of the pipeline. A census
+  was put first, because a graph drawn from maps with wrong statuses would show a false pipeline.
+- **What it shows:** two kinds of judgment.
+  - **Evidence.** He treated what he had seen as evidence against the coder's claim, and the coder recorded it as such.
+  - **Order.** He ordered the work so that truth comes first: the census, then the graph.
+
+  The census then showed something nobody had known. Not one phase was built but still marked open. The maps' "done" lines are honest,
+  and the real gap is 206 open phases with nothing that names them as built. It also found the shared phase parser silently skipping
+  25 phases and decisions, and fixed it at the cause.
+- **Checkable:**
+  - `tests/modules/test-phase-census.test.js` PCN-01..06;
+  - `docs/idearium-phase-census.md`, with every verdict's evidence;
+  - `CHANGELOG-0.60.188.md`;
+  - `node -e "console.log(require('./lib/phase-dag').build(...).stats)"`: phases 1900 → 1925.

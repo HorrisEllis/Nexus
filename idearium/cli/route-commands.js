@@ -344,6 +344,10 @@ export const SPEC = [
   // 0.60.172 DG3 — James: "every phasemap phase needs extensive dag, that needs to start being standard."
   { key: 'repo.phases.dag', repo: true, usage: 'repo dag <repo> [phase] [--map path] [--cross]', about: "the whole dependency DAG of the repo's phasemaps (cycles, dangling depends_on, phases with no depends_on line, layers, ready, critical path, file conflicts) — or one phase's place in it",
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/dag?${a.args[0] ? `phase=${encodeURIComponent(a.args[0])}&` : ''}${a.flags.map ? `map=${encodeURIComponent(a.flags.map)}&` : ''}${a.flags.cross ? 'cross=1' : ''}` }) },
+  // 0.60.188 CNS1 — James: "It built 5 phases in a row. I think I see what you mean but there are way more idearium phases than that." · "go ahead with the census"
+  { key: 'phases.census', usage: 'phases census [--system idearium] [--open]', about: "every phase of Nexus's phasemaps judged against its evidence (commits that name it and touched its code, release lines, its files, its proof's tests and ids): done, partly, mentioned, not-built, no-files, deferred, superseded — and the open ones bottom-up. Deterministic, no model",
+    req: (a) => ({ method: 'GET', path: `/api/phases/census?system=${encodeURIComponent(a.flags.system || 'idearium')}` }),
+    print: (d, a, h) => { console.log(`  ${d.total} phases · ${Object.entries(d.counts).map(([k, v]) => `${k} ${v}`).join(' · ')}${d.shallow ? h.c.amber(' · SHALLOW history') : ''}`); if (a.flags.open) d.order.forEach((k, i) => console.log(h.c.dim(`  ${String(i + 1).padStart(3)}. ${k.replace(/^docs\//, '')}`))); else console.log(h.c.dim(`  ${d.order.length} open, bottom-up: --open lists them · docs/idearium-phase-census.md is the full table`)); } },
   // §0.60.173 UP3 — James: "upload zip with an intent, have it map to nexus using a tool, then ask me with the option to edit the location"
   { key: 'repo.upload', repo: true, usage: 'repo upload <repo> <zip> --intent "what these files are for"', about: 'upload a zip into a repo with an intent: every file is placed against the repo (its folders, its systems, who requires what, his earlier answers) and the upload WAITS for his answer — nothing is written yet',
     need: (a) => (!a.args.length ? '<zip>' : !a.flags.intent ? '--intent "what these files are for"' : null),
@@ -671,7 +675,7 @@ export const SPEC = [
   { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again)',
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => (a.args[1] === 'build'
-      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}), ...(a.flags.anyway ? { anyway: true } : {}) }, timeoutMs: 120000 }
+      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { startedBy: 'person:cli', phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}), ...(a.flags.anyway ? { anyway: true } : {}) }, timeoutMs: 120000 }
       : { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/runs?phase=${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => {
       if (a.args[1] === 'build') {
@@ -682,7 +686,7 @@ export const SPEC = [
       }
       const runs = (d.runs || []).slice().sort((x, y) => (x.ts || 0) - (y.ts || 0));
       if (!runs.length) { console.log(h.c.gray(`  ${a.args[0]} has never run — idearium repo phase ${a.repo.name} ${a.args[0]} build`)); return; }
-      for (const r of runs) console.log(`  ${h.c.dim(when(r.ts))} ${r.state === 'failed' || r.state === 'blocked' ? h.c.coral(r.state) : r.state === 'complete' || r.state === 'proved' ? h.c.mint(r.state) : h.c.sky(r.state || '?')}  ${h.c.dim(r.provider || '')}${r.error ? `  ${String(r.error).slice(0, 140)}` : ''}`);
+      for (const r of runs) console.log(`  ${h.c.dim(when(r.ts))} ${r.state === 'failed' || r.state === 'blocked' ? h.c.coral(r.state) : r.state === 'complete' || r.state === 'proved' ? h.c.mint(r.state) : h.c.sky(r.state || '?')}  ${h.c.dim(r.provider || '')}${r.startedBy ? h.c.dim(` · by ${r.startedBy.who}${r.startedBy.whence === 'declared' ? '' : ` (${r.startedBy.whence})`}`) : ''}${r.error ? `  ${String(r.error).slice(0, 140)}` : ''}`);
     } },
   // 0.60.7 — the same command, now the whole index (lib/repo-history.js): VR1's commits are its snapshots; backups,
   // staging, imported history and the work surface's revisions beside them. --kind snapshot is the old list.

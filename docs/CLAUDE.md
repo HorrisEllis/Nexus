@@ -293,3 +293,13 @@ The order, for every new capability:
    authored) and graph/<phase>-<hash>.graph (its related files with roles, crossings, and its slice of the whole DAG), beside the
    system that owns it (the handoff's PN1 layout). `--check` reports drift.
 Only then is code written, and a phase's code is built against its .phase, its .graph and its spec modules.
+
+
+## ADDENDUM 2026-10-21 — the axioms are law, for every decision
+James, 2026-10-21, after three questions were put to him about the BrainOS plan and the coder said "nothing moves on to the next ready
+phase" without his run in hand: "Follow the axioms in docs. Use them as law, and for every decision. It built 5 phases in a row. I think I
+see what you mean but there are way more idearium phases than that."
+- Every decision cites the axioms that decide it (docs/AXIOMS-v3.1.md), in the owning map's `decisions:`; a question goes to him only when
+  the axioms do not settle it, they conflict, or it is his by USER_AUTONOMY (what he meant, the direction) — and then with the axioms named.
+- What he reports seeing is evidence (§0.0 truth is supreme, §0.1 evidence over memory). When the code seems to say otherwise, the gap is
+  traced, not argued.

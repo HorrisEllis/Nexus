@@ -10,6 +10,14 @@
  *   RC-04  node-export fileIdOf: a ':' id is written under a Windows-safe name, round-trips, and the registry removes it by file
  *   RC-05  path-guard: "Gemini said tests/x.test.js" → tests/x.test.js; "tests/x." → the one existing file, else refused; prose refused
  *   RC-06  repo-inject propose() refuses a cut-short name with the reason, and records what the guard changed
+ *   RC-07  RC5 (0.60.187): the speaker label is stripped where a reply is read and where an answer becomes a path; one complete path or none
+ *   RC-08  RC5: a transcript still being written is not taken as an answer (replyFor); the Gemini page strips its own label
+ *   RC-09  RC6 (0.60.187): the Ollama bridge refuses an ownerless job and names the owner in its log line; diagnose is background work
+ *   RC-10  RC6: the diagnostic escalation names itself, asks for less, sends one per sweep, keeps its cooldown on disk, and sets the
+ *          gap's status through cortex (POST /api/gaps/status), which owns the table
+ *   RC-11  RC7 (0.60.188): every run names its starter — the gate's keyed caller (access), a declared door (person:ui, person:cli,
+ *          agent:<name>), the watchdog (system), or unknown; an agent's build is agent:<name> whatever the row sent, and a
+ *          listener that hears five build lines in one reply builds five phases, each recorded as agent:listener
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -118,6 +126,88 @@ const tmp = (n) => fs.mkdtempSync(path.join(os.tmpdir(), `rc-${n}-`));
     assert.strictEqual(r.ok, false); assert.ok(/cut short/.test(r.errors[0]), r.errors[0]);
     const src = fs.readFileSync(path.join(ROOT, 'lib/repo-inject.js'), 'utf8');
     assert.ok(/require\('\.\/path-guard\.js'\)/.test(src) && /pathNote: opts\.pathNote/.test(src));
+  });
+
+  await test('RC-07', 'RC5: the label is stripped where a reply is read and where it becomes a path; one complete path or none', async () => {
+    const PG = require(path.join(ROOT, 'lib/path-guard.js'));
+    const cases = { 'Gemini said tests/sp5-title.test.js': 'tests/sp5-title.test.js', 'Gemini said\ntests/sp5-title.test.js': 'tests/sp5-title.test.js',
+      'tests/sp5-title.': null, 'tests/sp5-title-test.': null, 'Here is the file: lib/x.js': null, 'NEW src/a.js': 'src/a.js', 'ChatGPT said:\n\nNEW tests/a.test.js': 'tests/a.test.js' };
+    for (const [a, want] of Object.entries(cases)) assert.strictEqual(PG.pathAnswer(a).path, want, a);
+    assert.strictEqual(PG.stripSpeaker('As Claude said earlier, x'), 'As Claude said earlier, x', 'only a leading label');
+    const { matchJobs } = require(path.join(ROOT, 'guardian/lib/chat-transcripts.js'));
+    const prompt = 'Reply with ONE line only: the path of the file this code belongs in.';
+    const m = matchJobs([{ role: 'user', text: prompt }, { role: 'assistant', text: 'Gemini said\ntests/sp5-title.test.js' }], [{ id: 'j1', prompt, ts: 1 }]);
+    assert.strictEqual(m[0].reply, 'tests/sp5-title.test.js', 'the transcript reply carries no label');
+    const RI = require(path.join(ROOT, 'lib/repo-inject.js'));
+    const src = fs.readFileSync(path.join(ROOT, 'lib/repo-inject.js'), 'utf8');
+    assert.ok(/PG\.pathAnswer\(answer\)\.path/.test(src) && RI.fromReply, 'fromReply takes only a complete path from the agent');
+  });
+
+  await test('RC-08', 'RC5: replyFor skips a transcript still being written; the Gemini page strips its own label', () => {
+    const src = fs.readFileSync(path.join(ROOT, 'guardian/lib/chat-transcripts.js'), 'utf8');
+    assert.ok(/if \(st\.settled === false \|\| st\.generating === true\) continue;/.test(src));
+    const us = fs.readFileSync(path.join(ROOT, 'guardian/userscript-gemini.js'), 'utf8');
+    const fn = us.slice(us.indexOf('function _noSpeaker')); const noSpeaker = new Function(`${fn.slice(0, fn.indexOf('}') + 1)}; return _noSpeaker;`)();
+    assert.strictEqual(noSpeaker('Gemini said\nHere it is'), 'Here it is'); assert.strictEqual(noSpeaker('Plain reply'), 'Plain reply');
+  });
+
+  await test('RC-09', 'RC6: the bridge refuses an ownerless job and names the owner in its log; diagnose is background', async () => {
+    const { state } = require(path.join(ROOT, 'ollama/lib/state.js')); state.ollamaOnline = true;
+    const D = require(path.join(ROOT, 'ollama/lib/dispatch.js')); const pump = D.pump; D.pump = () => {};
+    const { handle } = require(path.join(ROOT, 'ollama/routes/jobs.js'));
+    const { Readable } = require('stream');
+    const call = async (body) => { const req = Readable.from([JSON.stringify(body)]); let code = 0, out = ''; const res = { writeHead: (c) => { code = c; }, setHeader() {}, end: (b) => { out = b; }, statusCode: 0 };
+      await handle(req, res, { method: 'POST', url: '/api/jobs', pathname: '/api/jobs' }); return { code: code || res.statusCode, body: JSON.parse(out || '{}') }; };
+    const none = await call({ prompt: 'NEXUS DIAGNOSTIC ESCALATION\nGap: x' });
+    assert.strictEqual(none.code, 400); assert.ok(/name its owner/.test(none.body.error));
+    const before = state.queue.length;
+    const ok = await call({ prompt: 'p', componentId: 'diagnostic.escalation', intent: 'diagnose' });
+    assert.ok(ok.body.ok !== false, JSON.stringify(ok.body)); const job = state.queue[state.queue.length - 1];
+    assert.strictEqual(state.queue.length, before + 1); assert.strictEqual(job.owner, 'diagnostic.escalation');
+    assert.strictEqual((await call({ prompt: 'p', meta: { source: 'guardian-mistral' } })).body.ok !== false, true, 'meta.source names an owner');
+    state.queue.length = before; D.pump = pump;
+    const dsrc = fs.readFileSync(path.join(ROOT, 'ollama/lib/dispatch.js'), 'utf8');
+    assert.ok(/job\.owner \? ` for \$\{job\.owner\}`/.test(dsrc) && /BACKGROUND_INTENTS = new Set\(\['adversarial-probe', 'diagnose'\]\)/.test(dsrc));
+  });
+
+  await test('RC-10', 'RC6: the escalation names itself, asks for less, one per sweep, cooldown on disk, status through cortex', () => {
+    const src = fs.readFileSync(path.join(ROOT, 'diagnostic/nexus-diagnostic.js'), 'utf8');
+    assert.ok(/componentId: 'diagnostic\.escalation', intent: 'diagnose', maxTokens: 1024/.test(src));
+    assert.ok(/if \(ollamaSent >= 1\) break;/.test(src) && /ESC_COOLDOWN_MS = 6 \* 3600 \* 1000/.test(src) && /_saveEscalated\(\)/.test(src));
+    assert.ok(/_gapStatusViaCortex\(gap, 'investigating'\)/.test(src) && !/jaaDB\.update\('gaps', gap\.uuid/.test(src), 'no private store write');
+    const cx = fs.readFileSync(path.join(ROOT, 'cortex/boot.js'), 'utf8');
+    assert.ok(/p === '\/api\/gaps\/status' && method === 'POST'/.test(cx) && /jaaDB\.update\('gaps', row\.id \? \{ id: row\.id \} : \{ uuid: row\.uuid \}/.test(cx));
+    const { numCtxFor } = require(path.join(ROOT, 'lib/ollama-activity.js'));
+    assert.deepStrictEqual([numCtxFor(293, 4096).numCtx, numCtxFor(293, 1024).numCtx], [5120, 4096], 'his log\'s 5120 came from the 4096-token default; 1024 tokens sits at the 4096 floor');
+  });
+
+  await test('RC-11', 'RC7: every run names its starter; an agent or a listener is recorded as itself, unknown stays unknown', async () => {
+    const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
+    const fn = api.match(/function _starter\(req, body\) \{[\s\S]*?\n\}/)[0];
+    const _starter = new Function(`${fn}; return _starter;`)();
+    assert.deepStrictEqual(_starter({ access: { who: { hat: 'copilot' } } }, { startedBy: 'person:ui' }), { who: 'copilot', whence: 'access' }, 'the gate\'s caller beats a declaration');
+    assert.deepStrictEqual(_starter({}, { startedBy: 'person:ui' }), { who: 'person:ui', whence: 'declared' });
+    assert.deepStrictEqual(_starter({}, {}), { who: 'unknown', whence: 'unknown' }, 'never guessed as the person');
+    assert.ok(/startedBy: startedBy \|\| \{ who: 'unknown', whence: 'unknown' \}/.test(api), 'on every row of a run');
+    assert.ok(/retryKind: kind, startedBy: \{ who: `watchdog:\$\{kind\}`, whence: 'system' \}/.test(api) && /phase: info\.phase, note, startedBy: \{ who: `watchdog:/.test(api), 'the watchdog names itself');
+    assert.ok(/_phaseBuild\(repo, dir, \{ startedBy: _starter\(req, body\)/.test(api) && /BS\.specBuild\(d, u, \{ \.\.\.\(body \|\| \{\}\), startedBy: _starter\(req, body\) \}\)/.test(api), 'both build routes');
+    for (const [f, rx] of [['idearium/ui/js/plan-panel.js', /startedBy: 'person:ui', \.\.\.b/], ['idearium/ui/js/repo-tasks.js', /startedBy: 'person:ui:retry'/], ['idearium/ui/js/living-spec.js', /startedBy: 'person:ui'/], ['idearium/ui/js/workshop.js', /startedBy: 'person:ui:workshop'/], ['idearium/cli/index.js', /startedBy: 'person:cli', path: specPath/], ['idearium/repo/build-plan.js', /startedBy: starter/]])
+      assert.ok(rx.test(fs.readFileSync(path.join(ROOT, f), 'utf8')), `${f} declares its door`);
+    // the real agent tool and the real listener, with only the HTTP call stubbed
+    const C = require(path.join(ROOT, 'lib/agent-tools/tools/idearium/code.js'));
+    const real = C._call; const posts = [];
+    C._call = async (method, p, body) => (method === 'GET' && p === '/api/repos' ? { repos: [{ uuid: 'r-1', name: 'nexus' }] } : (posts.push({ p, body }), { ok: true, runId: `run-${posts.length}` }));
+    try {
+      const { command } = require(path.join(ROOT, 'lib/agent-tools/tools/nexus/command.js'));
+      await command.execute({ action: 'run', command: 'repo phase', repo: 'nexus', args: ['A1_x', 'build'] }, { agent: 'copilot' });
+      assert.deepStrictEqual([posts[0].p, posts[0].body.startedBy], ['/api/repos/r-1/phases/build', 'agent:copilot'], 'the row said person:cli; the tool knows it is an agent');
+      const L = require(path.join(ROOT, 'lib/listener-commands.js'));
+      const heard = await L.createRunner({ tool: command }).hear('chat-1', ['A1_a', 'A2_b', 'A3_c', 'A4_d', 'A5_e'].map(p => `nexus> repo phase nexus ${p} build`).join('\n'));
+      const built = posts.slice(1);
+      assert.strictEqual(heard.length, 5);
+      assert.deepStrictEqual(built.map(x => x.body.phase), ['A1_a', 'A2_b', 'A3_c', 'A4_d', 'A5_e'], 'one reply, five builds in a row');
+      assert.ok(built.every(x => x.body.startedBy === 'agent:listener'), 'each recorded as the listener');
+    } finally { C._call = real; }
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

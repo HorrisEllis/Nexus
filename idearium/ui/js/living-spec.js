@@ -223,7 +223,7 @@ async function specBuildPhase(phase) {
   const repo = CURRENT_API_REPO; if (!repo || !LSPEC.path) return;
   LSBUILD.busy = true; document.getElementById('ls-build').innerHTML = _lsBuildHtml();
   try {
-    const r = await api(`/api/repos/${repo.uuid}/spec/build`, { method: 'POST', body: JSON.stringify({ path: LSPEC.path, phase }) }, 120000);
+    const r = await api(`/api/repos/${repo.uuid}/spec/build`, { method: 'POST', body: JSON.stringify({ startedBy: 'person:ui', path: LSPEC.path, phase }) }, 120000);
     toast(`${r.phase} (${r.layer}): snapshot ${String(r.snapshot).slice(0, 12)} · ${r.targetName}'s agent is building it`, 'ok');
     if (typeof openPlanPanel === 'function') openPlanPanel({ map: r.mapPath, focus: r.runId });
   } catch (e) { toast(`not built: ${e.message}`, 'err'); }

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::DG4_nexus_maps_meet_the_standard
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::DG4_nexus_maps_meet_the_standard
+context: >-
+  pipeline phase DG4_nexus_maps_meet_the_standard of
+  docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: DG4_nexus_maps_meet_the_standard (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384304
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384304
+lastSeenAt: 1792587384304
+fingerprint: null
+payload:
+  id: DG4_nexus_maps_meet_the_standard
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - DG3_the_whole_dag
+  blocks: []
+  spec: null
+  graph: 8326c3166e4620ea

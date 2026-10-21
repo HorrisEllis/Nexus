@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BX1_census:94187d8db6335e81
+type: graph
+id: phase:BX1_census:94187d8db6335e81
+context: dependency graph of phase BX1_census
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792585108767
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108767
+lastSeenAt: 1792585108767
+fingerprint: null
+payload:
+  for: BX1_census
+  kind: phase
+  repo: null
+  hash: 94187d8db6335e81
+  nodes:
+    - path: docs/brainos-feature-census.md
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 7445d07c6feed39f
+    layer: 1
+    deps:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0a_where_it_lands
+    dependents:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+    upstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0a_where_it_lands
+    downstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX10_float
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX4_agents_layer
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX5_node_controls
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX6_pipeline_edit
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX7_automation
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX8_dock_panels
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX9_retire
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 7445d07c6feed39f · layer 1 · ready
+      - 'depends on (1): BX0a_where_it_lands'
+      - 'needed by (1): BX2_flow_sources · all downstream 9 · finishing it unlocks BX2_flow_sources'

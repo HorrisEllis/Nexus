@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::CNS1_phase_census
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::CNS1_phase_census
+context: pipeline phase CNS1_phase_census of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: CNS1_phase_census (foundation) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792585108776
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108776
+lastSeenAt: 1792585108776
+fingerprint: null
+payload:
+  id: CNS1_phase_census
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: foundation
+  status: >-
+    DONE 0.60.188 — lib/phase-census.js, `phases census`, GET /api/phases/census,
+    docs/idearium-phase-census.md; test-phase-census PCN-01..06
+  files:
+    - lib/phase-census.js
+    - idearium/cli/route-commands.js
+    - idearium/api/index.js
+    - docs/idearium-phase-census.md
+  depends_on:
+    - BX0e_true_map_first
+  blocks:
+    - MOD-BX-PHASE-CENSUS
+  spec: docs/brainos-in-idearium.spec
+  graph: ee838c5e542aa524

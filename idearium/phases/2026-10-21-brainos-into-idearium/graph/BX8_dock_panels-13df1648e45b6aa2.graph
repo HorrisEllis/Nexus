@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BX8_dock_panels:13df1648e45b6aa2
+type: graph
+id: phase:BX8_dock_panels:13df1648e45b6aa2
+context: dependency graph of phase BX8_dock_panels
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792585108783
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108783
+lastSeenAt: 1792585108783
+fingerprint: null
+payload:
+  for: BX8_dock_panels
+  kind: phase
+  repo: null
+  hash: 13df1648e45b6aa2
+  nodes:
+    - path: idearium/ui/js/code-dock.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 7445d07c6feed39f
+    layer: 5
+    deps:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX4_agents_layer
+    dependents:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX9_retire
+    upstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0a_where_it_lands
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX4_agents_layer
+    downstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX9_retire
+    blockedBy:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX4_agents_layer
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 7445d07c6feed39f · layer 5 · blocked by BX4_agents_layer
+      - 'depends on (1): BX4_agents_layer · all upstream 5'
+      - 'needed by (1): BX9_retire'

@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BX0c_float:46828bfaac71f296
+type: graph
+id: phase:BX0c_float:46828bfaac71f296
+context: dependency graph of phase BX0c_float
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792585108750
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108750
+lastSeenAt: 1792585108750
+fingerprint: null
+payload:
+  for: BX0c_float
+  kind: phase
+  repo: null
+  hash: 46828bfaac71f296
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 7445d07c6feed39f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX10_float
+    upstream: []
+    downstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX10_float
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 7445d07c6feed39f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): BX10_float'

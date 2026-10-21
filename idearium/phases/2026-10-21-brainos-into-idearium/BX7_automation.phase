@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX7_automation
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX7_automation
+context: pipeline phase BX7_automation of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX7_automation (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792585108783
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108783
+lastSeenAt: 1792585108783
+fingerprint: null
+payload:
+  id: BX7_automation
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: integration
+  status: PLANNED
+  files:
+    - idearium/ui/js/code-automation.js
+    - idearium/lib/autobuild.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - BX5_node_controls
+  blocks:
+    - MOD-BX-AUTOMATION
+  spec: docs/brainos-in-idearium.spec
+  graph: 6615544c90e45a2a

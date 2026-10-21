@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BX0e_true_map_first:c6c11a0fa8ed74f3
+type: graph
+id: phase:BX0e_true_map_first:c6c11a0fa8ed74f3
+context: dependency graph of phase BX0e_true_map_first
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792585108752
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108752
+lastSeenAt: 1792585108752
+fingerprint: null
+payload:
+  for: BX0e_true_map_first
+  kind: phase
+  repo: null
+  hash: c6c11a0fa8ed74f3
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 7445d07c6feed39f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::CNS1_phase_census
+    upstream: []
+    downstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::CNS1_phase_census
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::CNS1_phase_census
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 7445d07c6feed39f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): CNS1_phase_census · finishing it unlocks CNS1_phase_census'

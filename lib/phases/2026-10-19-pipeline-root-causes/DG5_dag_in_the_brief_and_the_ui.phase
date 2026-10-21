@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::DG5_dag_in_the_brief_and_the_ui
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::DG5_dag_in_the_brief_and_the_ui
+context: >-
+  pipeline phase DG5_dag_in_the_brief_and_the_ui of
+  docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: DG5_dag_in_the_brief_and_the_ui (interface) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384304
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384304
+lastSeenAt: 1792587384304
+fingerprint: null
+payload:
+  id: DG5_dag_in_the_brief_and_the_ui
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files: []
+  depends_on:
+    - DG3_the_whole_dag
+  blocks: []
+  spec: null
+  graph: 7c64f9ae4e29eb6a

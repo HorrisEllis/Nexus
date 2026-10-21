@@ -155,7 +155,7 @@ function harness() {
       await page.evaluate(() => { CURRENT_REPO_SUBTAB = 'phases'; });
       await page.click('.ph2-card[data-key="SH1_storage"] .ph-quick');
       await page.waitForFunction(() => CALLS.some(c => /\/phases\/build$/.test(c.p)));
-      assert.deepStrictEqual(await page.evaluate(() => CALLS.find(c => /\/phases\/build$/.test(c.p)).body), { map: 'docs/shop-phasemap.spec', phase: 'SH1_storage' });
+      assert.deepStrictEqual(await page.evaluate(() => CALLS.find(c => /\/phases\/build$/.test(c.p)).body), { startedBy: 'person:ui', map: 'docs/shop-phasemap.spec', phase: 'SH1_storage' });   // 0.60.188 RC7
       await page.evaluate(() => { CURRENT_REPO_SUBTAB = 'phases'; closePlanPanel(); _phPaint(); });
       await page.click('.ph2-fold');
       assert.ok(await page.$$eval('.ph2-card[data-key="SH0_schema"]', e => e.length) === 1, 'the complete one shown');

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX5_node_controls
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX5_node_controls
+context: pipeline phase BX5_node_controls of docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX5_node_controls (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792585108781
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108781
+lastSeenAt: 1792585108781
+fingerprint: null
+payload:
+  id: BX5_node_controls
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: integration
+  status: PLANNED
+  files:
+    - idearium/lib/phase-controls.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/flow-canvas.js
+  depends_on:
+    - BX3_flow_canvas
+  blocks:
+    - MOD-BX-CONTROLS
+  spec: docs/brainos-in-idearium.spec
+  graph: 8af169be49d40dc5

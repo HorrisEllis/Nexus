@@ -782,7 +782,16 @@ async function _phaseSetStatus(repo, { map, phase, status, force = false, reason
 // the call's own backend when there is no ladder ('ollama' when it names one), for shouldChunk
 function paramsOfBackend(backend, rungs) { return rungs.length ? null : backend || null; }
 
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false }) {
+// 0.60.188 RC7 — James, 2026-10-21: "It built 5 phases in a row." A run row named its repo, map, phase and graph, never who started it, so
+// what he saw could not be traced (§1.2). Every run now carries startedBy { who, whence }: 'access' (the keyed caller the gate passed),
+// 'declared' (the caller says so: person:ui, person:cli, agent:<name>), 'system' (watchdog:<kind>), or 'unknown' — never guessed (NC0).
+function _starter(req, body) {
+  const w = req && req.access && req.access.who;
+  if (w && (w.hat || w.label)) return { who: String(w.hat || w.label), whence: 'access' };
+  const d = body && typeof body.startedBy === 'string' ? body.startedBy.trim().slice(0, 80) : '';
+  return d ? { who: d, whence: 'declared' } : { who: 'unknown', whence: 'unknown' };
+}
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, startedBy = null }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
   const node = view.phases.find(p => p.map === map && p.phase_key === phase);
@@ -868,6 +877,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const runStartTs = Date.now();
   const runId = `phrun-${runStartTs.toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title,
+    startedBy: startedBy || { who: 'unknown', whence: 'unknown' },   // 0.60.188 RC7 — who started this run, on every row
     ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}),   // §0.60.125 DG1 — built anyway: what was still open, on every row
     graphHash: phaseGraph.hash, graphFile: phaseGraphFile ? path.relative(IDEARIUM_DATA_DIR, phaseGraphFile).replace(/\\/g, '/') : null };   // §0.60.147 DG2 — the graph it was built against
 
@@ -1706,7 +1716,7 @@ async function _autoRetry(info, kind, note) {
   const RW = _require('../../lib/run-watch.js');
   const rows = loadTable('idearium_phase_runs');
   const limit = RW.limitFor(kind, (k) => _cfg(k, undefined));   // 0.60.78: a rejection has its own cap (repos.reject_retries, 3); a stall keeps repos.auto_retries (2)
-  const base = { runId: `auto-${Date.now().toString(36)}`, repoUuid: info.repoUuid, targetRepo: info.targetRepo, map: info.map, phase: info.phase, retryKind: kind };
+  const base = { runId: `auto-${Date.now().toString(36)}`, repoUuid: info.repoUuid, targetRepo: info.targetRepo, map: info.map, phase: info.phase, retryKind: kind, startedBy: { who: `watchdog:${kind}`, whence: 'system' } };
   const said = (state, error) => { appendRow('idearium_phase_runs', { uuid: `${base.runId}-${state}`, ...base, state, error, retryOf: info.runId || null, ts: Date.now() }); getIdeaOS().emit('idearium.repo.phase.run', { ...base, state }); };
   if (!(limit > 0)) return { ok: false, why: 'repos.auto_retries is 0' };
   if (RW.retriesFor(rows, { phase: info.phase, kind }) >= limit) {
@@ -1722,7 +1732,7 @@ async function _autoRetry(info, kind, note) {
   const nth = RW.retriesFor(rows, { phase: info.phase, kind }) + 1;
   note = `${note}\n(This is ${kind} retry ${nth} of ${limit} for ${info.phase} today.${kind === 'reject' && nth > 1 ? ' Your earlier attempt(s) were also rejected: do not repeat them.' : ''})`;
   said('auto-retry', `${kind === 'reject' ? 'rejected' : kind === 'economy' ? 'held by a limit' : 'stalled'} — building ${info.phase} again (${nth}/${limit}): ${String(note).split('\n')[0].slice(0, 300)}`);
-  try { const r = await _phaseBuild(repo, _repoDiskDir(repo.uuid), { map: info.map, phase: info.phase, note }); return { ok: !!r.ok, run: r.data || null, error: r.error || null }; }
+  try { const r = await _phaseBuild(repo, _repoDiskDir(repo.uuid), { map: info.map, phase: info.phase, note, startedBy: { who: `watchdog:${kind}`, whence: 'system' } }); return { ok: !!r.ok, run: r.data || null, error: r.error || null }; }
   catch (e) { return { ok: false, error: e.message }; }
 }
 async function _watchRuns() {
@@ -2927,6 +2937,7 @@ const ROUTE_CAP = {
   'repo.worksurface': CAPS.READ_IDEAS, 'repo.worksurface.prove': CAPS.WRITE_IDEAS,
   'repo.versions.index': CAPS.READ_IDEAS, 'repo.versions.diff': CAPS.READ_IDEAS, 'repo.versions.tree': CAPS.READ_IDEAS,   // §0.60.7
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
+  'phases.census': CAPS.READ_IDEAS,   // 0.60.188 CNS1 — reads only
   'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
@@ -3403,6 +3414,7 @@ function matchRoute(method, url) {
     // §0.60.41 RN1 — releases in Versionium (versionium/lib/releases.js): a repo's, and Nexus's own
     ['GET',    ['api','repos',    ':uuid','releases'],                 'repo.releases.list'],
     ['POST',   ['api','repos',    ':uuid','releases'],                 'repo.releases.create'],     // { version?, quote?, notes? }
+    ['GET',    ['api','phases','census'],                              'phases.census'],            // 0.60.188 CNS1 ?system=idearium — every phase judged against its evidence
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
     ['POST',   ['api','releases','sync'],                              'releases.sync'],             // { all: true } → every release's commits
     ['GET',    ['api','releases','changes'],                           'releases.changes'],          // §0.60.72 RN2 ?since=0.60.47 · &write=1
@@ -5585,6 +5597,12 @@ async function handle(req, res, route, query, body) {
         if (query.write === '1') return ok(res, N.write({ since }));
         return ok(res, { since, markdown: N.markdown(R.read(), { since }) });
       } catch (e) { return err(res, 500, `release notes: ${e.message}`); }
+    }
+    case 'phases.census': {
+      // 0.60.188 CNS1 — every phase of Nexus's maps judged against commits, releases, files and proof (lib/phase-census.js); the
+      // per-phase evidence stays in the answer so the UI and agents can show why a verdict was given
+      try { const c = _require('../../lib/phase-census.js').census({ root: _require('../../lib/nexus-self/systems.js').ROOT, system: String(query.system || 'idearium') }); return ok(res, c); }
+      catch (e) { return err(res, 500, `census failed: ${e.message}`); }
     }
     case 'releases.list': case 'releases.sync': {
       try {
@@ -8806,7 +8824,7 @@ async function handle(req, res, route, query, body) {
         : action === 'repo.environment.setup' ? await BS.environmentSetup(d, u)
         : action === 'repo.spec.plan.get' ? await BS.specPlanGet(d, u, query.path)
         : action === 'repo.spec.plan' ? await BS.specPlan(d, u, body || {})
-        : action === 'repo.spec.build' ? await BS.specBuild(d, u, body || {})
+        : action === 'repo.spec.build' ? await BS.specBuild(d, u, { ...(body || {}), startedBy: _starter(req, body) })   // 0.60.188 RC7
         : action === 'repo.plan' ? await (async () => {
             const pr = await BS.plan(d, u, { map: query.map || null });
             // §0.39.362 CH5 — the compartment's end state: its progress, when its charter names one
@@ -8948,7 +8966,7 @@ async function handle(req, res, route, query, body) {
         if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
         map = hits[0].map;
       }
-      const r = await _phaseBuild(repo, dir, { map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true });
+      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
     }

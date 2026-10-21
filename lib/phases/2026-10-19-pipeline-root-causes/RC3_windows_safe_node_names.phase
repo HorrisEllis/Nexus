@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC3_windows_safe_node_names
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC3_windows_safe_node_names
+context: pipeline phase RC3_windows_safe_node_names of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: RC3_windows_safe_node_names (foundation) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384280
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384280
+lastSeenAt: 1792587384280
+fingerprint: null
+payload:
+  id: RC3_windows_safe_node_names
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: foundation
+  status: BUILT 2026-10-19 (0.60.170)
+  files:
+    - lib/node-export.js
+    - lib/pipeline-nodes.js
+    - lib/node-registry.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 26a266c4495e09d0

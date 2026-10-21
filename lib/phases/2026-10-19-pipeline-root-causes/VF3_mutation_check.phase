@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF3_mutation_check
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF3_mutation_check
+context: pipeline phase VF3_mutation_check of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: VF3_mutation_check (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384288
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384288
+lastSeenAt: 1792587384288
+fingerprint: null
+payload:
+  id: VF3_mutation_check
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/mutation-check.js
+  depends_on:
+    - VF1_verify_first
+  blocks: []
+  spec: null
+  graph: a28ce7f9bc7982e8

@@ -44,7 +44,8 @@ function _grow(job, d, kind) {
 // §0.39.364 — background intents give way to foreground work: one Ollama, one model in memory at a time. A probe that
 // lands while a repo agent's tool loop runs swaps the agent's model out and back (James's log: a 3b probe at 23 s in
 // the middle of a phase build). Deferred, not queued: the probe's own schedule tries again.
-const BACKGROUND_INTENTS = new Set(['adversarial-probe']);
+// RC6 (0.60.187): 'diagnose' — the diagnostic service's gap escalations — is background work too
+const BACKGROUND_INTENTS = new Set(['adversarial-probe', 'diagnose']);
 
 async function dispatchJob(job) {
   if (BACKGROUND_INTENTS.has(job.intent)) {
@@ -79,7 +80,7 @@ async function dispatchJob(job) {
   const cascade = ({ event }) => runCascade({
     providers: ['ollama'],
     maxAttempts: 1,
-    generate: () => callOllamaRaw(model, event.data.prompt, job.maxTokens, job.timeoutMs, `bridge job ${String(job.uuid).slice(0, 8)}${job.intent ? ` (${job.intent})` : ''}${job.sessionId ? ` for ${job.sessionId}` : ''}`,   // §0.39.266 — whose job it is, in the activity log
+    generate: () => callOllamaRaw(model, event.data.prompt, job.maxTokens, job.timeoutMs, `bridge job ${String(job.uuid).slice(0, 8)}${job.intent ? ` (${job.intent})` : ''}${job.owner ? ` for ${job.owner}` : job.sessionId ? ` for ${job.sessionId}` : ''}`,   // §0.39.266 — whose job it is, in the activity log
       { onDelta: (d, kind) => _grow(job, d, kind) }),
     validate: (output) => ({ ok: true, output }), // hard-axiom filtering happens in unifiedDispatch itself
   }).then(r => ({ ok: r.ok, output: r.output, attempts: r.attempts }));
