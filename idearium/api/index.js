@@ -925,7 +925,35 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   _emitLedger('idearium.phase.run.started', { runId, repoUuid: repo.uuid, map, phase, title: node.title || null, startedBy: base.startedBy, causedBy: base.startedBy.who });   // 0.60.190 APV4
 
   // (1) snapshot first — never write without one
-  const snap = await _commitRepoSnapshotFor(target.uuid, { message: `before phase ${phase} (${map.split('/').pop()})`, causedBy: `idearium.phases.build:${runId}` });
+  const snapBody = { message: `before phase ${phase} (${map.split('/').pop()})`, causedBy: `idearium.phases.build:${runId}` };
+  let snap = await _commitRepoSnapshotFor(target.uuid, snapBody);
+  // 0.60.196 — James, of looking-glass-bundle-v0_4: "what does it need an atlas for?" The snapshot pins the atlas, chunk index and
+  // graph the build reads, so a repo with files and no index cannot be snapshotted. His upload timed out in the browser after the
+  // files landed, so the indexing the dialog starts afterwards never ran. The repo's files are on disk: the build runs the same
+  // import pipeline POST /api/repos/:uuid/chunk runs, says so on the run, and tries the snapshot once more.
+  // 0.60.198 — his decision: "yes, the registry should be the spine, event bus, interaction contract, and component registry." What a build
+  // stands on is that registry (the snapshot's registryVersion: the Architect tab's components, wires, events, routes and CLI — what the
+  // planner reads), not atlas.json, which nothing in the build reads (IN3a, docs/2026-10-19-infrastructure-spine-phasemap.spec).
+  const _noRegistry = (s) => s.ok ? !(s.data.record && s.data.record.mustRecord && s.data.record.mustRecord.registryVersion && s.data.record.mustRecord.registryVersion.available)
+    : !!(s.extra && s.extra.code === 'NOT_INDEXED');
+  if (_noRegistry(snap)) {
+    const dir = _repoDiskDir(target.uuid);
+    let state = null, why = null;
+    try {
+      const os = getIdeaOS();
+      const pipeline = dir ? runImportPipeline(getRepoLayer().get(target.uuid), dir, { onEvent: makeBusForwarder((type, payload) => os.emit(type, payload)) }) : null;
+      state = pipeline ? pipeline.state : null; why = pipeline ? (pipeline.error || null) : 'could not resolve the repo directory';
+      if (pipeline && pipeline.state !== 'FAULT') os.emit('idearium.repo.chunk.done', { repoUuid: target.uuid, name: target.name, state, fileCount: (target.files || []).length, chunkCount: null });
+    } catch (e) { why = e.message; }
+    appendRow('idearium_phase_runs', { uuid: `${runId}-indexed`, ...base, state: 'indexed', error: why, pipeline: state,
+      reason: snap.ok ? `no registry: ${(snap.data.record.mustRecord.registryVersion || {}).reason || 'not recorded'}` : 'not indexed', ts: Date.now() });
+    snap = await _commitRepoSnapshotFor(target.uuid, snapBody);
+    if (snap.ok && _noRegistry(snap)) {
+      const reason = (snap.data.record.mustRecord.registryVersion || {}).reason || 'not recorded';
+      appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', snapshot: snap.data.commitId, error: `no registry: ${reason}`, ts: Date.now() });
+      return { ok: false, status: 409, error: `not built: the repo has no component registry to build on (spine, event bus, interaction contract, components) — ${reason}`, extra: { code: 'NO_REGISTRY', snapshot: snap.data.commitId } };
+    }
+  }
   if (!snap.ok) {
     appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', error: `no snapshot: ${snap.error}`, ts: Date.now() });
     return { ok: false, status: snap.status === 409 ? 409 : 502, error: `not built: the Versionium snapshot before it failed — ${snap.error}`, extra: { code: 'NO_SNAPSHOT', snapshotCode: snap.extra?.code || null } };

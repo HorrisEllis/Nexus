@@ -906,3 +906,19 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `CHANGELOG-0.60.192.md`;
   - `tests/modules/test-stream-fallback.test.js` SF-01..04;
   - `git diff 0e922f29 -- guardian/lib/response-sink.js` is empty: the duplicate is fully removed.
+
+### 2026-10-21 — 0.60.198: "what does it need an atlas for?" — a question that removed a false requirement
+- **His words:** "what does it need an atlas for?" · "shouldn't that be the component registry. architecture tab" · "yes, the registry
+  should be the spine, event bus, interaction contract, and component registry."
+- **Context:** a build of his real test case (looking-glass-bundle-v0_4) was refused because the repo had no atlas.json. The coder's first
+  fix made the build index the repo itself. He asked the deeper question instead: why that file at all? Read from the code, nothing in a
+  build used atlas.json. What the planner reads is the component registry the Architect tab shows. He then defined what the registry is,
+  in four parts.
+- **What it shows:** systems design. He questioned a requirement instead of satisfying it, pointed to the structure that actually carries
+  the system (the registry the planner reads), and named its parts (components, spine, event bus, interaction contract). Each part
+  already existed in the code, so his definition matched the system as built.
+- **Checkable:**
+  - `CHANGELOG-0.60.198.md`;
+  - `tests/modules/test-pipeline-root-causes.test.js` RC-16 (all four parts hashed on a real indexed repo) and RC-18 (the build's gate
+    reads the registry, not atlas.json);
+  - `docs/2026-10-19-infrastructure-spine-phasemap.spec` IN3a, with his decision quoted.
