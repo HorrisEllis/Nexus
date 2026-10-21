@@ -440,3 +440,28 @@ James, 2026-10-21: "It built 5 phases in a row. I think I see what you mean but 
 - **Open, his to judge (USER_AUTONOMY).** Whether a build may start from text a listener hears in a chat. Today it may, by his
   0.59.4 design. The record now says when it did; it does not change the rule.
 - This map's phases are now each specced (emerge/compiler/phase-specs.js): 58 files beside their owners, written for the first time.
+
+## ADDENDUM 2026-10-21 (0.60.194) — SP5 "title.js": why it kept failing, all of a sudden
+
+James, 2026-10-21, with three screenshots of SP5 (LOOKING-GLASS-BUNDLE-V0_4) and his boot log: "its having so much issue with the title.js.
+nothing has fixed it. sp_5." · "why all of a sudden? with the clearglass?"
+
+Four causes, traced from his log and screenshots:
+1. **ChatGPT moved its chats to /uc/<id>** (his log: chatgpt.com/uc/6ad8ebba-…). Every reader keyed on /c/:
+   - the userscript's chatId() read 'home', so the chat stream (the download manager's chat ledger) dropped the chat;
+   - the transcript reader's resumable URL and Clear Glass's chat ports did not match it either.
+
+   ChatGPT's reply was then found nowhere: "no-reply-element", then "needs-you". This is the "all of a sudden".
+   **Fixed:** /c/ or /uc/ in all three places; userscript 10.12.5 (RC-13).
+2. **A junk test from before RC5 blocked the Apply.** `looking-glass-bundle-v0_4/Gemini said tests/sp5-title.test.js` stayed in the tree.
+   RC4b's repairTree ran only inside the test-first branch, and a build that resumes its saved plan never enters it.
+   **Fixed:** every phase build repairs the tree after its snapshot. The names are archived, never deleted (RC-12).
+3. **The proposal is genuinely wrong, and the gate was right to refuse it.**
+   - ChatGPT's title.js lowercases, splits on whitespace and capitalises, but never trims.
+   - ' looking glass ' becomes ' Looking Glass ', and both tests expect 'Looking Glass'.
+   - The regression gate refused it ("2 linked tests that pass on the current file fail on this proposal"). That is the system working.
+4. **Claude's tab was signed out by claude.ai itself** (logout?involuntary=1). No account-switch line appears in his log, and that module
+   logs every switch and sign-out, so Clear Glass did not clear it. The fix is signing in once in the Claude tab.
+
+Also in his log, said and not changed: free memory at 16–18%, so the Ollama rungs were left off ("won't fit memory") and the ladder used
+browser agents only.

@@ -18,6 +18,10 @@
  *   RC-11  RC7 (0.60.188): every run names its starter — the gate's keyed caller (access), a declared door (person:ui, person:cli,
  *          agent:<name>), the watchdog (system), or unknown; an agent's build is agent:<name> whatever the row sent, and a
  *          listener that hears five build lines in one reply builds five phases, each recorded as agent:listener
+ *   RC-12  0.60.194: every phase build repairs the tree after its snapshot — a build that resumes its saved plan too (SP5's
+ *          "Gemini said tests/sp5-title.test.js" survived because the repair ran only inside the test-first branch)
+ *   RC-13  0.60.194: ChatGPT's /uc/<id> chats are chats — the userscript's chatId, the transcript reader's resumable URL and Clear
+ *          Glass's chat ports read them (as 'home', every /uc/ chat was dropped by the chat ledger and the reply recovery)
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -208,6 +212,40 @@ const tmp = (n) => fs.mkdtempSync(path.join(os.tmpdir(), `rc-${n}-`));
       assert.deepStrictEqual(built.map(x => x.body.phase), ['A1_a', 'A2_b', 'A3_c', 'A4_d', 'A5_e'], 'one reply, five builds in a row');
       assert.ok(built.every(x => x.body.startedBy === 'agent:listener'), 'each recorded as the listener');
     } finally { C._call = real; }
+  });
+
+  await test('RC-12', 'every phase build repairs the tree after its snapshot, resumed plans too; a label folder is archived, never deleted', () => {
+    const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
+    const snapAt = api.indexOf('// (1) snapshot first — never write without one');
+    const repairAt = api.indexOf("const rep = _require('../../lib/path-guard.js').repairTree(_repoDiskDir(target.uuid));");
+    const tfAt = api.indexOf("if (policy.testFirst !== 'off' && !plan.testFirst)");
+    assert.ok(snapAt > 0 && repairAt > snapAt && repairAt < tfAt, 'after the snapshot, before (and outside) the test-first branch');
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'rc12-'));
+    fs.mkdirSync(path.join(root, 'looking-glass/Gemini said tests'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'looking-glass/Gemini said tests/sp5-title.test.js'), 'x');
+    fs.mkdirSync(path.join(root, 'looking-glass/tests'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'looking-glass/tests/sp5-title.test.js'), 'kept');
+    const PG = require(path.join(ROOT, 'lib/path-guard.js'));
+    const r = PG.repairTree(root);
+    assert.deepStrictEqual(r.moved.map(m => m.from), ['looking-glass/Gemini said tests']);
+    assert.ok(!fs.existsSync(path.join(root, 'looking-glass/Gemini said tests')) && fs.existsSync(path.join(root, 'looking-glass/tests/sp5-title.test.js')));
+    assert.ok(fs.existsSync(path.join(root, r.moved[0].to, 'sp5-title.test.js')), 'archived, not deleted');
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+
+  await test('RC-13', 'ChatGPT\'s /uc/<id> chats are chats: the userscript\'s chatId, the resumable URL, Clear Glass\'s chat ports', () => {
+    const us = fs.readFileSync(path.join(ROOT, 'guardian/userscript-chatgpt.js'), 'utf8');
+    const fnSrc = us.match(/function chatId\(\) \{[\s\S]*?\n\}/)[0];
+    const chatIdAt = (pathname) => new Function('location', `${fnSrc}; return chatId();`)({ pathname });
+    assert.deepStrictEqual([chatIdAt('/uc/6ad8ebba-aa74-83ea-8bed-ee7f4b94f7a6'), chatIdAt('/c/WEB%3Aabc'), chatIdAt('/')], ['6ad8ebba-aa74-83ea-8bed-ee7f4b94f7a6', 'WEB:abc', 'home']);
+    assert.ok(/@version\s+10\.12\.5/.test(us) && /const VERSION\s+= '10\.12\.5'/.test(us), 'the userscript version moved, so Clear Glass loads the new one');
+    const CT = require(path.join(ROOT, 'guardian/lib/chat-transcripts.js'));
+    assert.strictEqual(CT.resumableChatUrl('chatgpt', 'https://chatgpt.com/uc/6ad8ebba-aa74-83ea-8bed-ee7f4b94f7a6'), 'https://chatgpt.com/uc/6ad8ebba-aa74-83ea-8bed-ee7f4b94f7a6');
+    assert.strictEqual(CT.resumableChatUrl('chatgpt', 'https://chatgpt.com/c/6ab92781-aaaa'), 'https://chatgpt.com/c/6ab92781-aaaa');
+    const ports = fs.readFileSync(path.join(ROOT, 'clear-glass/src/chats/ports.js'), 'utf8');
+    const idSrc = ports.match(/const _chatId = \(url\) => \{[^\n]*\};/)[0];
+    const _chatId = new Function(`${idSrc}; return _chatId;`)();
+    assert.deepStrictEqual([_chatId('https://chatgpt.com/uc/6ad8ebba-aa74'), _chatId('https://chatgpt.com/c/6ab92781-aaaa')], ['6ad8ebba-aa74', '6ab92781-aaaa']);
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

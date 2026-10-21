@@ -913,6 +913,15 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     return { ok: false, status: snap.status === 409 ? 409 : 502, error: `not built: the Versionium snapshot before it failed — ${snap.error}`, extra: { code: 'NO_SNAPSHOT', snapshotCode: snap.extra?.code || null } };
   }
   const commitId = snap.data.commitId;
+  // 0.60.194 — James, of SP5: "its having so much issue with the title.js. nothing has fixed it." RC4b promised repairTree() at the start of
+  // a phase build, but it ran only inside the test-first branch, and a build that resumes its saved plan skips that branch: SP5's
+  // "Gemini said tests/sp5-title.test.js" (written before RC5) stayed in the tree and became one of the two tests blocking his Apply.
+  // Every build now repairs first, after the snapshot (the names are archived under .nexus/archive and kept in the snapshot, §0.3).
+  try {
+    const rep = _require('../../lib/path-guard.js').repairTree(_repoDiskDir(target.uuid));
+    if (rep.moved.length) appendRow('idearium_phase_runs', { uuid: `${runId}-repaired-${Date.now().toString(36)}`, ...base, state: 'repaired', snapshot: commitId, error: null,
+      note: `${rep.moved.length} file(s) with a chat label or a cut-short name moved out of the tree before building: ${rep.moved.map(m => m.from).slice(0, 5).join(', ')}`, moved: rep.moved, ts: Date.now() });
+  } catch (_) { /* a repair that cannot run never stops the build; the guard at the write door still holds */ }
 
   // (2) active (a map that will not take the edit is reported, not fatal)
   let statusNote = null;
