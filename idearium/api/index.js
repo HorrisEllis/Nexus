@@ -815,6 +815,24 @@ function _emitLedger(type, payload = {}) {
     .then((r) => { if (r && r.buffered) _ledgerOut.buffered++; else if (r && r.ok) _ledgerOut.sent++; else { _ledgerOut.failed++; _ledgerOut.lastError = (r && r.error) || 'not written'; } })
     .catch((e) => { _ledgerOut.failed++; _ledgerOut.lastError = e.message; });
 }
+// 0.60.195 — James, of SP5: "did it not capture response from chatgtp." · "looking glaass is a test spec. rral spec test caser". His log:
+// "[shadow] phase.build: 1 expected thing(s) absent — lib/title.js" right after Gemini's reply landed looking-glass-bundle-v0_4/lib/title.js.
+// An imported bundle keeps its files under its own folder, and its map names them from that folder: the map's lib/title.js IS the repo's
+// looking-glass-bundle-v0_4/lib/title.js. The exact match called Gemini's delivered file absent, so every working attempt climbed the
+// ladder and was thrown away. A delivered path counts as the expected one when it is the expected path under the map's own root folder
+// (the first segment of a nested map's path), or under exactly one top-level folder when the expected path has a folder of its own —
+// never a bare file-name match, so a stray index.js elsewhere is still not the file.
+function _underMapRoot(mapPath, expected, delivered) {
+  const want = new Set(expected || []);
+  const root = String(mapPath || '').includes('/') ? `${String(mapPath).split('/')[0]}/` : null;
+  return (delivered || []).map((p) => {
+    if (want.has(p)) return p;
+    const cut = p.indexOf('/'); if (cut <= 0) return p;
+    const rest = p.slice(cut + 1);
+    // under the map's own root folder, or under one top-level folder when the expected path has a folder of its own (lib/title.js)
+    return want.has(rest) && (p.startsWith(root || '\0') || rest.includes('/')) ? rest : p;
+  });
+}
 async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, startedBy = null }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
@@ -1176,7 +1194,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     let absent = null, unchanged = false;
     if (shadow) {
       if (state !== 'replied') SH.drop(shadow);
-      else { const got = SH.settle(shadow, { files: ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
+      else { const got = SH.settle(shadow, { files: _underMapRoot(map, files, ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean)) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
     }
     // §0.39.355 PB2 — James: "it needs to actually build it". A build whose reply changed no file (nothing written,
     // staged or proposed, by a fenced block or a code_edit / code_write / code_batch call) did not build: incomplete,

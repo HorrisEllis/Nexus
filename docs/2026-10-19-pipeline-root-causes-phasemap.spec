@@ -465,3 +465,23 @@ Four causes, traced from his log and screenshots:
 
 Also in his log, said and not changed: free memory at 16–18%, so the Ollama rungs were left off ("won't fit memory") and the ladder used
 browser agents only.
+
+## ADDENDUM 2026-10-21 (0.60.195) — Looking Glass is the pipeline's real test case; two more causes in SP5
+
+James, 2026-10-21: "okay bvut did it not capture response from chatgtp." · "looking glaass is a test spec. rral spec test caser"
+- **His framing, recorded as his.** looking-glass-bundle-v0_4 is the real test case for the pipeline. When it fails, the pipeline is what is
+  being tested; the spec is not at fault.
+- **No, ChatGPT's reply was not captured.** The Code tab's job bar showed `chatgpt job b833e855 … 0ch · no-reply-element`, and Guardian ended
+  the job at needs-you. The /uc/ fix (0.60.194) lets the chat stream and the transcript record ChatGPT chats again. A needs-you job stays
+  a transcript candidate (chat-transcripts _candidates takes any job not complete), so its transcript now completes it.
+- **The proposal "by chatgpt" was Gemini's.** It is stamped 9:43:34, before the ChatGPT job existed (16:43:34.976 UTC). The work surface
+  took a run's provider from its last row, and the 'escalating' row names the next rung. Fixed: each path is credited to the agent whose
+  reply brought it (RC-15).
+- **Why nothing fixed SP5.** His log: "[shadow] phase.build: 1 expected thing(s) absent — lib/title.js". Gemini's reply landed
+  looking-glass-bundle-v0_4/lib/title.js; an imported bundle keeps its files under its own folder, and the map names them from there. The
+  shadow's exact match called the delivered file absent, so every attempt that worked climbed the ladder and was discarded.
+  Fixed: `_underMapRoot` counts the delivered path as the expected one in two cases:
+  - it is under the map's root folder;
+  - it is under exactly one top-level folder, and the expected path has a folder of its own.
+
+  A bare file name never matches (RC-14).
