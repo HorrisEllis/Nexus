@@ -643,3 +643,11 @@ spec:
 # written to <data>/phase-graphs/<repo>/<phase>-<hash>.json before anything runs, and graphHash / graphFile go on every run row.
 # GET /api/repos/:uuid/phases/graph?phase&map · `repo phase-graph` · the Phases tab's detail pane (js/phase-graph-view.js).
 # Map: docs/2026-10-17-pieces-not-order-phasemap.spec addendum (f). Proof: tests/modules/test-phase-graph.test.js 5/5.
+
+# ── ADDENDUM 2026-10-21 (0.60.193) — the nexus Home reads its atlas whole ──
+# His screenshot of NEXUS/CORE Home: "docs/atlases/nexus-atlas.md is binary" where the atlas should render.
+# - Cause: idearium/repo/nexus-self.js fileText() used the 200 KB chunk limit (MAX_TEXT_BYTES) as its size limit and named anything over it
+#   "binary". The atlas has been ~490–550 KB for weeks.
+# - Fix: the chunk limit still decides what is chunked into a system repo. A read-only read allows 8 MB, and anything over that is said as
+#   "too large to show", never "binary".
+# - Proof: test-nexus-atlas-and-glass AT-003 reads a 330 KB atlas whole. It failed with the very message from his screenshot before the fix.

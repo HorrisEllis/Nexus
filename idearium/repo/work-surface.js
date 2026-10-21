@@ -49,11 +49,16 @@ export function runsOf(rows) {
   const by = new Map();
   for (const r of rows || []) {
     if (!r || !r.runId) continue;
-    const cur = by.get(r.runId) || { runId: r.runId, phase: r.phase, map: r.map, title: r.title || null, state: null, startedAt: null, endedAt: null, injected: [], tools: [], provider: null, error: null, ts: 0 };
+    const cur = by.get(r.runId) || { runId: r.runId, phase: r.phase, map: r.map, title: r.title || null, state: null, startedAt: null, endedAt: null, injected: [], broughtBy: {}, tools: [], provider: null, error: null, ts: 0 };
     if (r.state === 'building' || r.state === 'reviewing') cur.startedAt = r.ts;
     else { cur.endedAt = r.ts; }
     if ((r.ts || 0) >= cur.ts) { cur.state = r.state; cur.ts = r.ts || 0; if (r.error !== undefined) cur.error = r.error; }
-    if (r.injects && Array.isArray(r.injects.injected)) cur.injected = [...new Set([...cur.injected, ...r.injects.injected])];
+    if (r.injects && Array.isArray(r.injects.injected)) {
+      cur.injected = [...new Set([...cur.injected, ...r.injects.injected])];
+      // 0.60.195 — James: "did it not capture response from chatgtp." The card said "by chatgpt" for Gemini's title.js: the run's
+      // provider is its LAST row's, and the 'escalating' row names the NEXT rung. Each path keeps the agent whose reply brought it.
+      if (r.provider) for (const p of r.injects.injected) cur.broughtBy[p] = r.provider;
+    }
     if (Array.isArray(r.draftFiles)) cur.injected = [...new Set([...cur.injected, ...r.draftFiles])];
     if (Array.isArray(r.tools)) cur.tools = r.tools;
     if (r.provider) cur.provider = r.provider;
@@ -101,7 +106,7 @@ export function workSurface({ injects = [], runs: rows = [], readCurrent = () =>
       added: c.added, removed: c.removed, lines: _lines(after), diff,
       unchanged: !diff, by: n.hatName || (n.source && n.source.kind) || null,
       at: n.appliedAt || n.createdAt || null, staged: !!(n.source && n.source.staged) || n.status === 'staged',
-      run: run ? { runId: run.runId, phase: run.phase, state: run.state, provider: run.provider || null } : null,
+      run: run ? { runId: run.runId, phase: run.phase, state: run.state, provider: (run.broughtBy && run.broughtBy[n.path]) || run.provider || null } : null,
       undone: n.status === 'reverted' || n.status === 'rejected', now,
       history: earlier.length,
       actions: n.status === 'proposed' ? ['apply', 'reject'] : n.status === 'applied' ? ['revert'] : n.status === 'staged' ? ['promote', 'reject'] : [],
