@@ -485,3 +485,23 @@ James, 2026-10-21: "okay bvut did it not capture response from chatgtp." · "loo
   - it is under exactly one top-level folder, and the expected path has a folder of its own.
 
   A bare file name never matches (RC-14).
+
+## ADDENDUM 2026-10-21 (0.60.196) — the upload that outran its wait; a build no longer refuses a repo for having no index
+
+James, 2026-10-21, with screenshots of the upload dialog left on "looking-glass-bundle-v0_4.zip — ready" and SP5's build refused:
+"now its not working, i clicked the phases to build it and got: ... the import project ui needs to close when it's complete. "10:57
+AMrefused no snapshot: repo has not been through the import pipeline (no atlas.json) — run POST /api/repos/:uuid/chunk first" what does
+it need an atlas for?"
+- **What the atlas is for.** The Versionium snapshot taken before every build (never write without one) records which atlas, chunk index
+  and graph the build reads its context from (idearium/repo/snapshot.js buildSnapshotRecord, mustRecord). A repo with files and no index
+  has nothing to pin, so the snapshot refused, and the build with it.
+- **Why the repo had no index.** "— ready" without a size is the text the dialog resets to when finalize throws. Its wait was 30 s; the
+  server finished the import after the browser stopped waiting (the repo is in his list, 55 files). The indexing the dialog starts after a
+  finished import (POST /api/repos/:uuid/chunk) never ran.
+- **Fixed, both ends.**
+  - The build: on NOT_INDEXED it runs the same import pipeline POST /chunk runs, in the repo's own directory, writes an `indexed` row on
+    the run (§1.2, said, with the pipeline's state), and takes the snapshot again. Any other snapshot failure still refuses.
+  - The dialog: waits 120 s. If that runs out, it looks for the repo carrying the compartment the upload opened (every 3 s, one minute);
+    found, it closes, opens the repo and indexes it. A real failure shows its reason in the drop zone, never "ready".
+- Proof: test-pipeline-root-causes RC-16 (an unindexed repo is refused, the pipeline runs, the snapshot record builds) and RC-17 (a source
+  check of the dialog; not driven in Clear Glass, said).

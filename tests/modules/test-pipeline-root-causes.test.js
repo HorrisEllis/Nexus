@@ -15,6 +15,8 @@
  *   RC-09  RC6 (0.60.187): the Ollama bridge refuses an ownerless job and names the owner in its log line; diagnose is background work
  *   RC-10  RC6: the diagnostic escalation names itself, asks for less, sends one per sweep, keeps its cooldown on disk, and sets the
  *          gap's status through cortex (POST /api/gaps/status), which owns the table
+ *   RC-16  0.60.196: a build of a repo with no index indexes it first, then snapshots (his upload timed out before indexing)
+ *   RC-17  0.60.196: the upload dialog finds an import that outran its wait, closes, and indexes
  *   RC-11  RC7 (0.60.188): every run names its starter — the gate's keyed caller (access), a declared door (person:ui, person:cli,
  *          agent:<name>), the watchdog (system), or unknown; an agent's build is agent:<name> whatever the row sent, and a
  *          listener that hears five build lines in one reply builds five phases, each recorded as agent:listener
@@ -276,6 +278,34 @@ const tmp = (n) => fs.mkdtempSync(path.join(os.tmpdir(), `rc-${n}-`));
     const ws = WS.workSurface({ injects: [{ uuid: 'i1', path: 'looking-glass-bundle-v0_4/lib/title.js', op: 'write', status: 'proposed', content: 'a\n', createdAt: t + 1, history: [] }],
       runs: rows, readCurrent: () => '', unifiedDiff: () => '@@ -0,0 +1 @@\n+a' });
     assert.strictEqual(ws.files[0].run.provider, 'gemini', JSON.stringify(ws.files[0].run));
+  });
+
+  await test('RC-16', 'a build of a repo with files and no index runs the import pipeline, says so on the run, then snapshots', async () => {
+    const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
+    const at = api.indexOf("if (!snap.ok && snap.extra && snap.extra.code === 'NOT_INDEXED')");
+    assert.ok(at > api.indexOf('// (1) snapshot first — never write without one') && at < api.indexOf("state: 'refused', error: `no snapshot: ${snap.error}`"), 'before the refusal');
+    assert.ok(/state: 'indexed', error: why, pipeline: state/.test(api), 'the run says it indexed');
+    // the mechanism, for real: his case — files on disk, no atlas.json
+    const SNAP = await import(pathToFileURL(path.join(ROOT, 'idearium/repo/snapshot.js')).href);
+    const { runImportPipeline } = await import(pathToFileURL(path.join(ROOT, 'idearium/repo/import-pipeline.js')).href);
+    const dir = tmp('rc16');
+    fs.mkdirSync(path.join(dir, 'lib'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'lib/title.js'), "'use strict';\nmodule.exports = (s) => String(s).trim();\n");
+    const repo = { uuid: 'rc16-repo', name: 'looking-glass-bundle-v0_4', files: [{ path: 'lib/title.js', content: fs.readFileSync(path.join(dir, 'lib/title.js'), 'utf8') }] };
+    assert.strictEqual(SNAP.buildSnapshotRecord({ repo, repoDir: dir }).code, 'NOT_INDEXED');
+    const p = await quiet(() => runImportPipeline(repo, dir));
+    assert.notStrictEqual(p.state, 'FAULT', p.error);
+    assert.ok(SNAP.buildSnapshotRecord({ repo, repoDir: dir }).ok, 'snapshot-able now');
+    // dir is left in the OS temp: the lazy L6 pass writes into it after the test returns
+  });
+
+  await test('RC-17', 'the upload dialog waits 120s, and an import that outran the wait is found by its compartment and opened', () => {
+    const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
+    const fin = app.slice(app.indexOf('async function submitUploadProjectImport'), app.indexOf('async function chunkRepoWithProgress'));
+    assert.ok(/deferChunking: true \}\),\n    \}, 120000\);/.test(fin), '120s, not 30s');
+    assert.ok(/r\.compartmentId === UP_COMPARTMENT_ID/.test(fin) && /UP_COMPARTMENT_ID = res\.compartmentId/.test(app), 'found by the compartment the start opened');
+    assert.ok(fin.indexOf('if (!res) {') < fin.indexOf('closeUploadProjectModal();') && fin.indexOf('closeUploadProjectModal();') < fin.indexOf('chunkRepoWithProgress(repo.uuid'), 'found → closed, opened, indexed');
+    assert.ok(!/— ready`;\n    return;/.test(fin), 'a failure never resets to "ready"');
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

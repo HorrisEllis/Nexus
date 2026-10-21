@@ -1425,6 +1425,7 @@ function closeNewSpecModal() { document.getElementById('new-spec-modal').classLi
 // ════════════════════════════════════════════════════
 let UP_CONTAINER_UUID = null;
 let UP_STAGED_FILE = null;
+let UP_COMPARTMENT_ID = null;   // 0.60.196 — the repo the import makes carries it; how a finished import is found after a timeout
 
 async function openUploadProjectModal() {
   if (!CONNECTED) { toast('not connected to nexus', 'err'); return; }
@@ -1499,6 +1500,7 @@ async function submitUploadProjectStart() {
   try {
     const res = await api('/api/project-import/start', { method: 'POST', body: JSON.stringify({ name, goal }) });
     UP_CONTAINER_UUID = res.containerUuid;
+    UP_COMPARTMENT_ID = res.compartmentId || null;
     document.getElementById('up-container-note').textContent =
       `compartment ${res.compartmentId ? res.compartmentId.slice(0, 8) : '—'} open · intent: ${res.intent?.domain || '?'}.${res.intent?.verb || '?'}`;
     document.getElementById('up-step-prompt').style.display = 'none';
@@ -1537,7 +1539,7 @@ async function submitUploadProjectImport() {
   }
 
   document.getElementById('up-drop-text').textContent = 'unzipping into the compartment…';
-  let res;
+  let res, failure = null;
   try {
     // §RESEQUENCED 2026-09-20 — deferChunking:true. finalize now returns as
     // soon as the files are really on disk; chunking happens after you are
@@ -1545,11 +1547,27 @@ async function submitUploadProjectImport() {
     // the server default — this flag is what opts in.
     res = await api(`/api/project-import/${UP_CONTAINER_UUID}/finalize`, {
       method: 'POST', body: JSON.stringify({ filename: UP_STAGED_FILE.name, contentBase64, deferChunking: true }),
-    }, 30000);
+    }, 120000);
   } catch (e) {
+    failure = e.message;
+    // 0.60.196 — James: "the import project ui needs to close when it's complete." The browser stopped waiting at 30s while the
+    // server went on and made the repo; the dialog reset to "ready" and the indexing below never ran. A wait that ran out is not a
+    // failure until the repo list says so: the repo carrying this compartment is the import, finished.
+    if (e.name === 'AbortError' || /abort/i.test(e.message || '')) {
+      document.getElementById('up-drop-text').textContent = 'still working on the server — looking for the repo…';
+      let landed = null;
+      for (let i = 0; i < 20 && !landed && UP_COMPARTMENT_ID; i++) {
+        await new Promise(r => setTimeout(r, 3000));
+        try { landed = ((await api('/api/repos')).repos || []).find(r => r.compartmentId === UP_COMPARTMENT_ID) || null; } catch (_) {}
+      }
+      if (landed) res = { repo: landed, fileCount: (landed.files || []).length, git: {}, late: true };
+    }
+  }
+  if (!res) {
+    const e = { message: failure && !/abort/i.test(failure) ? failure : 'the server did not answer and no repo from this upload appeared' };
     toast(`import did not reach the declared end-state: ${e.message}`, 'err');
     btn.disabled = false; if (zone) zone.classList.remove('drag');
-    document.getElementById('up-drop-text').textContent = `${UP_STAGED_FILE.name} — ready`;
+    document.getElementById('up-drop-text').textContent = `${UP_STAGED_FILE.name} — not imported: ${e.message}`;
     return;
   }
 
@@ -1561,7 +1579,7 @@ async function submitUploadProjectImport() {
 
   closeUploadProjectModal();
   const repo = res.repo;
-  UP_CONTAINER_UUID = null; UP_STAGED_FILE = null;
+  UP_CONTAINER_UUID = null; UP_STAGED_FILE = null; UP_COMPARTMENT_ID = null;
   document.getElementById('up-file-input').value = '';
 
   // The new repo was created after this session's last API_REPOS load —

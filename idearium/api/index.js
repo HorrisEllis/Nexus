@@ -925,7 +925,24 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   _emitLedger('idearium.phase.run.started', { runId, repoUuid: repo.uuid, map, phase, title: node.title || null, startedBy: base.startedBy, causedBy: base.startedBy.who });   // 0.60.190 APV4
 
   // (1) snapshot first — never write without one
-  const snap = await _commitRepoSnapshotFor(target.uuid, { message: `before phase ${phase} (${map.split('/').pop()})`, causedBy: `idearium.phases.build:${runId}` });
+  const snapBody = { message: `before phase ${phase} (${map.split('/').pop()})`, causedBy: `idearium.phases.build:${runId}` };
+  let snap = await _commitRepoSnapshotFor(target.uuid, snapBody);
+  // 0.60.196 — James, of looking-glass-bundle-v0_4: "what does it need an atlas for?" The snapshot pins the atlas, chunk index and
+  // graph the build reads, so a repo with files and no index cannot be snapshotted. His upload timed out in the browser after the
+  // files landed, so the indexing the dialog starts afterwards never ran. The repo's files are on disk: the build runs the same
+  // import pipeline POST /api/repos/:uuid/chunk runs, says so on the run, and tries the snapshot once more.
+  if (!snap.ok && snap.extra && snap.extra.code === 'NOT_INDEXED') {
+    const dir = _repoDiskDir(target.uuid);
+    let state = null, why = null;
+    try {
+      const os = getIdeaOS();
+      const pipeline = dir ? runImportPipeline(getRepoLayer().get(target.uuid), dir, { onEvent: makeBusForwarder((type, payload) => os.emit(type, payload)) }) : null;
+      state = pipeline ? pipeline.state : null; why = pipeline ? (pipeline.error || null) : 'could not resolve the repo directory';
+      if (pipeline && pipeline.state !== 'FAULT') os.emit('idearium.repo.chunk.done', { repoUuid: target.uuid, name: target.name, state, fileCount: (target.files || []).length, chunkCount: null });
+    } catch (e) { why = e.message; }
+    appendRow('idearium_phase_runs', { uuid: `${runId}-indexed`, ...base, state: 'indexed', error: why, pipeline: state, ts: Date.now() });
+    snap = await _commitRepoSnapshotFor(target.uuid, snapBody);
+  }
   if (!snap.ok) {
     appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', error: `no snapshot: ${snap.error}`, ts: Date.now() });
     return { ok: false, status: snap.status === 409 ? 409 : 502, error: `not built: the Versionium snapshot before it failed — ${snap.error}`, extra: { code: 'NO_SNAPSHOT', snapshotCode: snap.extra?.code || null } };
