@@ -3034,6 +3034,7 @@ const ROUTE_CAP = {
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
   'repo.phases.graph': CAPS.READ_IDEAS,
   'repo.uploads.list': CAPS.READ_IDEAS, 'repo.uploads.get': CAPS.READ_IDEAS, 'repo.uploads.create': CAPS.WRITE_IDEAS, 'repo.uploads.answer': CAPS.WRITE_IDEAS,   // §0.60.173 UP3
+  'repo.roadmaps': CAPS.READ_IDEAS, 'repo.roadmaps.import': CAPS.WRITE_IDEAS,   // 0.60.199 SD17 — a project's own roadmap, imported
   'repo.phases.dag': CAPS.READ_IDEAS,   // §0.60.172 DG3 — reads only   // §0.60.147 DG2 — reads only
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
@@ -3535,6 +3536,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','phases','map'],          'repo.phases.map.status'],
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
+    ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
+    ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
     ['POST',   ['api','repos',    ':uuid','expand'],                'repo.expand'],   // §0.39.360 SB42–SB44
     // §0.39.280 — the build surface (docs/2026-09-29-build-surface-phasemap.spec BS7; logic in api/build-surface.js)
@@ -8895,6 +8898,32 @@ async function handle(req, res, route, query, body) {
       if (!w.ok) return err(res, w.status || 500, w.error, { code: w.code || 'WRITE_FAILED' });
       getIdeaOS().emit('idearium.repo.roadmap.updated', { repoUuid: params.uuid, map: mapPath, phase: add.id, added: true, via: w.via });
       return ok(res, { repoUuid: params.uuid, map: mapPath, id: add.id, via: w.via, applyId: w.applyId || null });
+    }
+    // 0.60.199 SD17 — James: "so i can import a project and have it continue? Like the one uploaded". A project's own roadmap
+    // (phases.json / PHASEMAP.md / ROADMAP.md) read into a Nexus phasemap beside it (idearium/repo/roadmap-import.js), written through
+    // the same writer as an added phase. An imported map is never replaced without replace:true (§0.3).
+    case 'repo.roadmaps': case 'repo.roadmaps.import': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      const PH = await import('../repo/phases.js');
+      const RIm = await import('../repo/roadmap-import.js');
+      const { maps, scope, snapshot } = PH.mapsFor({ repo, repoDir: dir });
+      const found = RIm.findRoadmaps((repo.files || []).map(f => f.path)).map(r => ({ ...r, imported: maps.some(m => m.path === r.target) }));
+      if (action === 'repo.roadmaps') return ok(res, { repoUuid: params.uuid, roadmaps: found });
+      if (scope.source === 'nexus') return err(res, 400, 'Nexus\'s own phases are already phasemaps; the import is for a project\'s roadmap');
+      const pick = body.dir != null ? found.find(r => r.dir === String(body.dir)) : (found.length === 1 ? found[0] : null);
+      if (!pick) return err(res, found.length ? 400 : 404, found.length ? `this repo has ${found.length} roadmaps — name one (dir): ${found.map(r => r.dir || '.').join(', ')}` : 'no roadmap in this repo (phases.json, roadmap.json, PHASEMAP.md or ROADMAP.md)', { code: found.length ? 'WHICH_ROADMAP' : 'NO_ROADMAP' });
+      if (pick.imported && body.replace !== true) return err(res, 409, `${pick.target} already exists — imported before; replace:true imports it again over it (the old one stays in the repo's versions)`, { code: 'EXISTS', map: pick.target });
+      const readOf = (p) => { if (!p) return null; const r = getRepoLayer().readTextFile(params.uuid, p); return r && !r.error && typeof r.content === 'string' ? r.content : null; };
+      let im;
+      try { im = RIm.importRoadmap({ json: readOf(pick.json), md: readOf(pick.md), name: pick.target.split('/').pop().replace(/\.spec$/, ''), source: { json: pick.json, md: pick.md } }); }
+      catch (e) { if (e instanceof RIm.RoadmapImportError) return err(res, 400, e.message, { code: e.code }); throw e; }
+      const w = await _phaseWrite(repo, scope, pick.target, im.text, snapshot, `import roadmap ${[pick.json, pick.md].filter(Boolean).join(' + ')}`);
+      if (!w.ok) return err(res, w.status || 500, w.error, { code: w.code || 'WRITE_FAILED' });
+      getIdeaOS().emit('idearium.repo.roadmap.updated', { repoUuid: params.uuid, map: pick.target, imported: im.phases.length, from: [pick.json, pick.md].filter(Boolean), via: w.via });
+      return ok(res, { repoUuid: params.uuid, map: pick.target, from: [pick.json, pick.md].filter(Boolean), phases: im.phases.length,
+        done: im.phases.filter(p => p.status === 'done').length, next: im.next.slice(0, 5), said: im.said, via: w.via });
     }
     // §0.39.281 EC8 — the economy, from guardian (the one owner)
     case 'economy.get': case 'economy.set': case 'economy.view': {

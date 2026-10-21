@@ -353,6 +353,28 @@ spec:
         plan run lands only its phasemap: any other file in its reply is said in the run ("the agent answered with code,
         not a plan — not proposed"), never proposed.
       proof: "the loop with a tab that answers the plan with code: the plan is derived, no proposal comes from the plan run, the run says why"
+    SD17_an_imported_project_continues:
+      layer: backend
+      systems: [idearium]
+      status: "DONE 0.60.199 — test-roadmap-import RI-01..05 (RI-05 in Clear Glass); MASTERMIND's real roadmap: 16 phases"
+      james: '"so i can import a project and have it continue? Like the one uploaded" · then "yes." (2026-10-21, MASTERMIND-v0_1_50)'
+      depends_on: []
+      files: [idearium/repo/roadmap-import.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, loom/maps/one-idearium-map.js]
+      does: >-
+        A project brings its own roadmap; Idearium reads only *-phasemap.spec, so an imported project shows nothing to continue.
+        MASTERMIND (his Electron app) carries phasemap/phases.json (P0–P14: state, percent, blocks) and PHASEMAP.md (each phase's
+        exit criterion, a critical-path tree with chains the JSON leaves out). The importer finds such a roadmap, turns it into a
+        Nexus phasemap beside it (the project's ids kept where the parser allows, its state as status, its percent kept, blocks and
+        critical-path chains as depends_on, each edge saying which file it came from, the exit criterion as proof), round-trips it
+        through loom's parser before writing, and writes it through the same writer as an added phase. Files are not named by the
+        source: unknown, filled by "map files & dependencies". Backend → GET/POST /api/repos/:uuid/roadmaps[/import] → `repo
+        roadmaps`, `repo roadmap-import` → the Phases rail ("roadmap not imported yet" · import).
+      decided_by_the_axioms: >-
+        His "stop adding phases" (addendum 2026-10-21) is kept: this phase is his own request of the same day, and it serves the finish
+        line he named ("diagnosing and fixing itself and projects in idearium"): a project that cannot continue cannot be fixed in
+        Idearium. §8.6: roadmap.js addPhase's shape and round-trip, _phaseWrite, the thread's spec rail are reused; §0.3: an existing
+        imported map is never overwritten without replace, and every write is a repo version.
+      proof: "MASTERMIND's real roadmap imports to 15 phases that loom parses, with P1 next on the critical path; a fixture in the test"
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"

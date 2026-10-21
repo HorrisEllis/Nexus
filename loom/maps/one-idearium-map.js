@@ -29,6 +29,10 @@ const FILES = [
     I('lib/nexus-self/systems.js'),           // names(), get() — each system's primary spec
   ]],
   ['lib/cos-debug-report.js', I('lib/cos-debug-report.js'), []],
+  // 0.60.199 SD17 — a project's own roadmap imported as a phasemap; checked by loom's own parser before it is returned
+  ['idearium/repo/roadmap-import.js', I('idearium/repo/roadmap-import.js'), [
+    I('loom/scanners/phasemap-map.js'),       // parsePhasemapText() — the import must read back the same (createRequire)
+  ]],
   ['lib/system-nodes.js', I('lib/system-nodes.js'), [
     I('lib/node-export.js'),                  // wrap/exportToFile/importFromFile — the one envelope
     'nexus.guardian.command-index',           // SERVED: guardian/server.js's dispatch
@@ -44,6 +48,7 @@ const FILES = [
 // under their comp_ids (nexus.guardian.command-index, nexus.ollama.command-index), not path ids, with no hooks.
 const BOUNDARY_EXPORTS = [
   I('idearium/repo/phases.js'), I('idearium/repo/living-spec.js'), I('lib/cos-debug-report.js'),
+  I('idearium/repo/roadmap-import.js'),   // 0.60.199 SD17 — reached only by await import() from idearium/api
   'nexus.idearium.repo.roadmap', 'nexus.idearium.repo.nexus-self', 'nexus.lib.repo-agent-node',
   'nexus.guardian.command-index', 'nexus.ollama.command-index',
   // §0.39.283 N30 — cli/import-history.js is run as a child process, never require()d, so nothing gave it an export hook
@@ -68,6 +73,7 @@ const BOUNDARY_EXPORTS = [
 const CONSUMERS = [
   ['nexus.idearium.api', I('idearium/repo/proof-run.js'),  'idearium/api/index.js repo.deliver.* — the delivery checker (await import)'],
   ['nexus.idearium.api', I('idearium/repo/phases.js'),      'idearium/api/index.js repo.phases.* (await import)'],
+  ['nexus.idearium.api', I('idearium/repo/roadmap-import.js'), 'idearium/api/index.js repo.roadmaps / repo.roadmaps.import — findRoadmaps, importRoadmap (await import); written by _phaseWrite'],
   ['nexus.idearium.api', I('idearium/repo/living-spec.js'), 'idearium/api/index.js repo.living-spec (await import)'],
   ['nexus.idearium.api', I('lib/cos-debug-report.js'),      'idearium/api/index.js repo.run — failures keep their compact debug report'],
   ['nexus.idearium.api', I('lib/nexus-self/apply.js'),      'idearium/api/index.js _phaseWrite — a nexus phase edit goes through the apply gate'],

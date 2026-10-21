@@ -147,7 +147,7 @@ const TEMPLATES = Object.freeze([
     seedSection: 'meta',
   },
   {
-    // 0.60.199 — James, 2026-10-21: "can you add to a fork of genesis spec, its contained in a isolated sandbox using the component
+    // parked 2026-10-21 (not released) — James, 2026-10-21: "can you add to a fork of genesis spec, its contained in a isolated sandbox using the component
     // registry as a drawbridge, and tunnel into the compartment, the bridge, and interaction contract." The fork holds only what it
     // adds (fork_of genesis 1.5.0); readSeed gives it genesis first, so a spec started from it has both.
     id:          'genesis-sandboxed',
@@ -305,7 +305,7 @@ function readSeed(id) {
   const p = path.join(TEMPLATES_ROOT, tpl.seedFile);
   try {
     const text = fs.readFileSync(p, 'utf8');
-    // 0.60.199 — a fork (`fork_of <template id> <version>`) holds only its additions: its base comes first, then the fork
+    // parked 2026-10-21 — a fork (`fork_of <template id> <version>`) holds only its additions: its base comes first, then the fork
     const fork = text.match(/^fork_of\s+(\S+)\s+(\S+)/m);
     if (fork && fork[1] !== id) {
       const base = readSeed(fork[1]);

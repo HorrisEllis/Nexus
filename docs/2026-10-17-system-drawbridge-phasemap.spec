@@ -396,7 +396,7 @@ spec:
       - "genesis's lib/handoff.js, contracts/handshake.js, interaction-contract.json + GET /contract, lib/commands.js."
   phases_added_f:
     DB19_genesis_sandboxed_fork:
-      status: "DONE 0.60.199 — test-genesis-sandboxed GSB-01..04"
+      status: "PARKED — built 2026-10-21 as a delta (fork_of genesis 1.5.0), test-genesis-sandboxed GSB-01..04 passing; he then said \"i asked for a fork\": a full copy or this delta is his to confirm, and he turned to Idearium building any project"
       depends_on: [DB13_the_tunnel]
       files: [idearium/spec-engine/templates/genesis-sandboxed.spec, idearium/spec-engine/templates.js]
       does: >-
