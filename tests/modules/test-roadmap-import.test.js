@@ -6,7 +6,8 @@
  * The fixture has MASTERMIND's shape (phasemap/phases.json + PHASEMAP.md), cut down; the full roadmap's run is in CHANGELOG-0.60.199.md.
  *
  *   RI-01  phases.json + PHASEMAP.md → one phasemap: ids kept (P3-UI → P3u, source_id kept), state → status, percent kept, blocks
- *          and critical-path chains as depends_on each naming its file, an "unblocked" line given no edge, exit → proof; loom
+ *          and critical-path chains as depends_on each naming its file, an "unblocked" line given no edge, exit → proof, the files
+ *          a section names (never the roadmap itself, never a slash-list) as named_in_source for the mapper (0.60.200); loom
  *          reads it back and the DAG has no problem; the next phase is the one most wait on
  *   RI-02  what cannot be an edge is said, never dropped silently: a block naming no phase, a cycle in the source
  *   RI-03  through the real API: listed as not imported → imported (written into the repo) → the Phases route reads its phases →
@@ -41,6 +42,7 @@ const PHASES_JSON = JSON.stringify({ version: 3, updated: '2026-08-17', thesis: 
 const PHASEMAP_MD = [
   '# PHASEMAP — v3', '',
   '## P1 — SUBSTRATE · the node envelope and the event log · **schemas done, storage not**', '',
+  '| `schemas/node.schema.json` — provenance required | **done** |', '| the event log, one per `EXPR/POSTURE` stream | not started |', '| see `phasemap/phases.json` | |', '',
   '> **P1 exit:** a node of every registered type round-trips through the vault', '> with provenance intact.', '',
   '## P3-UI — THE LATTICE INTERFACE · **done**', '',
   '## Critical path', '', '```',
@@ -66,8 +68,14 @@ const PHASEMAP_MD = [
     assert.deepStrictEqual(['P0', 'P1', 'P3-UI', 'P8'].map(k => by[k].status), ['in-progress', 'in-progress', 'done', 'pending']);
     assert.ok(/progress: 99/.test(r.text) && /source_state: "partial · schemas done, storage not"/.test(r.text), 'percent and the source\'s own state words');
     assert.deepStrictEqual(by.P10.dependsOn, [by.P8.id], 'P8 → P10 comes only from the critical path');
-    assert.ok(by.P10.evidence[0].startsWith('phasemap/PHASEMAP.md critical path'), by.P10.evidence[0]);
-    assert.ok(by.P1.evidence[0] === 'phasemap/phases.json: P0 blocks P1');
+    assert.ok(by.P10.evidence[0].startsWith('PHASEMAP.md critical path'), by.P10.evidence[0]);
+    assert.ok(by.P1.evidence[0] === 'phases.json: P0 blocks P1');
+    // 0.60.200 — the only paths in a phase are the files its section names: never the roadmap itself, never a slash-list
+    const PF = require(path.join(ROOT, 'lib/phase-files.js'));
+    const named = Object.fromEntries(L.parsePhasemapText(r.text, 'roadmap-phasemap').map(ph => [ph.id.split('_')[0], PF.candidates(r.text.split('\n').slice(ph.line, ph.bodyEnd).join('\n')).map(c => c.path)]));
+    assert.deepStrictEqual(named.P1, ['schemas/node.schema.json'], JSON.stringify(named));
+    assert.ok(Object.entries(named).every(([k, v]) => k === 'P1' ? true : !v.length), JSON.stringify(named));
+    assert.ok(/IMPORTED .* from phasemap\/phases\.json \+ phasemap\/PHASEMAP\.md/.test(r.text), 'the full paths, once, in meta');
     assert.deepStrictEqual(by['P3-UI'].dependsOn, [], 'the tree puts it under P1, its line says unblocked: no edge');
     assert.ok(/proof: "a node of every registered type round-trips through the vault with provenance intact\."/.test(r.text), 'exit criterion, both lines');
     assert.strictEqual(L.parsePhasemapText(r.text, 'roadmap-phasemap').length, 7);

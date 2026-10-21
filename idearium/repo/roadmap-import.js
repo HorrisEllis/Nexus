@@ -54,6 +54,26 @@ export function findRoadmaps(paths = []) {
     .sort((a, b) => a.dir.localeCompare(b.dir));
 }
 
+/**
+ * rankRoadmaps(found, read) — 0.60.200: MASTERMIND holds nine files with roadmap names (its phasemap/, docs/PHASEMAP.md, and
+ * Roadmap.md files inside archived folders under unintegrated/). Each is parsed and counted; one that yields no phase is not a
+ * roadmap (left out, said in `ignored`). The primary is the one with a JSON roadmap (machine-kept state), then the most phases,
+ * then the shallowest folder; it is what an import with no folder named takes.
+ */
+export function rankRoadmaps(found = [], read = () => null) {
+  const kept = [], ignored = [];
+  for (const r of found) {
+    let n = 0, why = null;
+    try { const J = r.json ? parsePhasesJson(read(r.json) || '') : null; const M = r.md ? parseRoadmapMd(read(r.md) || '') : null;
+      n = new Set([...(J ? J.items : []), ...(M ? M.items : [])].map(i => i.srcId)).size; }
+    catch (e) { why = e.message; }
+    if (n) kept.push({ ...r, phases: n }); else ignored.push({ dir: r.dir, files: [r.json, r.md].filter(Boolean), why: why || 'names no phase' });
+  }
+  const depth = (d) => (d ? d.split('/').length : 0);
+  kept.sort((a, b) => (!!b.json - !!a.json) || (b.phases - a.phases) || (depth(a.dir) - depth(b.dir)) || a.dir.localeCompare(b.dir));
+  return { roadmaps: kept.map((r, i) => ({ ...r, primary: i === 0 })), ignored };
+}
+
 /** parsePhasesJson(text) — { phases: [...] } or a bare array; any item without an id is skipped and counted */
 export function parsePhasesJson(text) {
   let j; try { j = JSON.parse(text); } catch (e) { throw new RoadmapImportError('BAD_JSON', `the roadmap JSON does not parse: ${e.message}`); }
@@ -80,10 +100,13 @@ export function parseRoadmapMd(text) {
     if (h) {
       const parts = h[2].split('·').map(x => x.trim());
       const bold = (h[2].match(/\*\*([^*]+)\*\*/) || [])[1] || null;
-      cur = { srcId: h[1], name: parts[0].replace(/\*\*/g, '').trim(), subtitle: parts.slice(1).filter(x => !/^\*\*/.test(x)).join(' · ') || null, stateText: bold, exit: null };
+      cur = { srcId: h[1], name: parts[0].replace(/\*\*/g, '').trim(), subtitle: parts.slice(1).filter(x => !/^\*\*/.test(x)).join(' · ') || null, stateText: bold, exit: null, paths: [] };
       items.push(cur); continue;
     }
     if (/^##\s/.test(l)) { cur = null; continue; }
+    // 0.60.200 — the files a section names (`schemas/node.schema.json`): carried as named_in_source, so the file mapper finds them
+    // as evidence with no model (MASTERMIND's sections name files for 8 of its 16 phases)
+    if (cur) for (const m of l.matchAll(/`([A-Za-z0-9_.\-]+(?:\/[A-Za-z0-9_.\-]+)+)`/g)) if (/\.[A-Za-z0-9]+$/.test(m[1].split('/').pop()) && !cur.paths.includes(m[1]) && cur.paths.length < 12) cur.paths.push(m[1]);   // a file: its last part has an extension (not `EXPR/POSTURE/GAZE`)
     const ex = cur && l.match(/^>\s*\*\*\s*[A-Z0-9-]+\s+exit:?\s*\*\*\s*(.*)$/i);
     if (ex) { cur.exit = ex[1].trim(); continue; }
     if (cur && cur.exit && /^>\s*/.test(l) && l.replace(/^>\s*/, '').trim()) cur.exit += ' ' + l.replace(/^>\s*/, '').trim();
@@ -144,9 +167,13 @@ export function importRoadmap({ json = null, md = null, name = 'roadmap', source
   const order = []; const byId = new Map();
   const touch = (srcId) => { if (!byId.has(srcId)) { byId.set(srcId, { srcId, deps: new Map() }); order.push(srcId); } return byId.get(srcId); };
   for (const it of (J ? J.items : [])) Object.assign(touch(it.srcId), { name: it.name, note: it.note, state: it.state, pct: it.pct, fromJson: true, jsonDeps: it.dependsOn, blocks: it.blocks });
-  for (const it of (M ? M.items : [])) { const e = touch(it.srcId); e.mdName = it.name; e.subtitle = it.subtitle; e.stateText = it.stateText; e.exit = it.exit; e.fromMd = true; }
+  for (const it of (M ? M.items : [])) { const e = touch(it.srcId); e.mdName = it.name; e.subtitle = it.subtitle; e.stateText = it.stateText; e.exit = it.exit; e.paths = it.paths || []; e.fromMd = true; }
   if (!order.length) throw new RoadmapImportError('NO_PHASES', 'neither file names a phase');
-  const jsonFile = source.json || 'the roadmap JSON', mdFile = source.md || 'the roadmap markdown';
+  // an edge names its file by its bare name: a path in a phase's text is read as a file the phase changes (lib/phase-files.js
+  // candidates), and the roadmap is not what a phase builds (0.60.200 — MASTERMIND's P1 was mapped to phasemap/phases.json).
+  // The full paths are in the map's meta (status), outside every phase.
+  const base = (p) => String(p).split('/').pop();
+  const jsonFile = source.json ? base(source.json) : 'the roadmap JSON', mdFile = source.md ? base(source.md) : 'the roadmap markdown';
   const add = (to, from, why) => { const e = byId.get(to); if (!e || !byId.has(from) || from === to) return false; if (!e.deps.has(from)) e.deps.set(from, why); return true; };
   for (const e of byId.values()) {
     for (const t of e.blocks || []) if (!add(t, e.srcId, `${jsonFile}: ${e.srcId} blocks ${t}`)) said.push(`${jsonFile}: ${e.srcId} blocks ${t}, which is not a phase — not an edge`);
@@ -175,6 +202,7 @@ export function importRoadmap({ json = null, md = null, name = 'roadmap', source
     return { id: ids.get(srcId), srcId, status: _status(e.state, e.pct, e.stateText), pct: e.pct ?? null,
       dependsOn: [...e.deps.keys()].map(d => ids.get(d)), evidence: [...e.deps.values()] };
   });
+  const sources = [source.json, source.md].filter(Boolean);
   const block = (p) => {
     const e = byId.get(p.srcId);
     const out = [`    ${p.id}:`, `      status: ${p.status}`];
@@ -184,12 +212,14 @@ export function importRoadmap({ json = null, md = null, name = 'roadmap', source
     if (p.pct != null) out.push(`      progress: ${p.pct}`);
     out.push(`      depends_on: [${p.dependsOn.join(', ')}]`);
     if (p.evidence.length) { out.push('      depends_from:'); for (const w of p.evidence) out.push(`        - ${_yamlStr(w)}`); }
+    // the roadmap's own files are never a phase's (a phase does not build its plan)
+    const named = (e.paths || []).filter(x => !(sources.includes(x) || /(^|\/)(phases|roadmap)\.json$|(^|\/)(phasemap|phase-map|roadmap)\.md$/i.test(x)));
+    if (named.length) out.push(`      named_in_source: [${named.join(', ')}]`);
     out.push('      does: >-', `        ${_esc(e.note || [e.mdName, e.subtitle].filter(Boolean).join(' — ') || e.name || p.srcId)}`);
     if (e.exit) out.push(`      proof: ${_yamlStr(e.exit)}`);
     out.push('');
     return out.join('\n');
   };
-  const sources = [source.json, source.md].filter(Boolean);
   const head = [
     'spec:', '  meta:',
     `    name:    ${name}`,

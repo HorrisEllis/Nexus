@@ -669,3 +669,20 @@ spec:
 #   `repo roadmap-import`; the Phases tab offers it in its empty state and in the rail ("roadmap not imported yet" · ⇣ import).
 # - Proof: tests/modules/test-roadmap-import.test.js RI-01..05 (RI-05 in Clear Glass). MASTERMIND's real roadmap gives 16 phases, 4 done,
 #   no DAG problem, and next P0 (9 phases wait on it).
+
+# ── ADDENDUM 2026-10-21 (0.60.200) — what Idearium needed to work on MASTERMIND (SD18) ──
+# James: "i just want you to add what idearium needs to work on mastermind."
+# Found by driving his MASTERMIND-v0_1_50 zip through the real API in the test sandbox; each line is a stop that run hit, and its fix.
+# - The import: a zip whose files all sit under one folder (MASTERMIND's mm9/) lands at the repo's root. lib/zip-ingest.js has
+#   stripWrapper, on for project-import.finalize and repo.import-archive only; finalize answers `wrapper`.
+# - The roadmap import:
+#   - candidates are counted (rankRoadmaps): one that names no phase is left out and listed in `ignored`; the JSON-backed one is primary
+#     and is taken when no folder is named;
+#   - an edge names its source file by its bare name, because a path in a phase's text is read as a file the phase changes;
+#   - the files a section names (with an extension) are carried as named_in_source, for the file mapper to find with no model.
+# - Proof: "tests pass" with no package.json test script runs the project's own runner (tests/run-all.js, test/run-all.js, tests/run.js,
+#   test/run.js, tests/index.js, test/index.js) and says which; with none, "no test runner" is said.
+# - Import checks (lib/import-checks.js): each note line is cut at 400 characters and each body at 19,000, pointing at the full list. One
+#   note the store refuses is listed in `failed`; the other checks' notes are still written.
+# - Proof: tests/modules/test-mastermind-ready.test.js MR-01..04. The real run gives 1,371 files at the root, 16 phases, P1's graph
+#   from evidence, and a build that reaches the agent ladder.

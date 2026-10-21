@@ -4927,6 +4927,7 @@ async function handle(req, res, route, query, body) {
       // COS-container work, restored here rather than left silently
       // dropped.
       const extraction = extractZipToFiles({
+        stripWrapper:     true,   // 0.60.200 — a project zipped inside one folder (MASTERMIND's mm9/) lands at the repo's root
         buf,
         maxFiles:         cfg.ZIP.maxFiles,
         maxBytesPerFile:  cfg.ZIP.maxBytesPerFile,
@@ -5079,6 +5080,7 @@ async function handle(req, res, route, query, body) {
       // extraction with no realFiles/writeSources call, found while
       // merging forward.
       const extraction = extractZipToFiles({
+        stripWrapper:     true,   // 0.60.200 — a project zipped inside one folder (MASTERMIND's mm9/) lands at the repo's root
         buf,
         maxFiles:         cfg.ZIP.maxFiles,
         maxBytesPerFile:  cfg.ZIP.maxBytesPerFile,
@@ -5241,6 +5243,7 @@ async function handle(req, res, route, query, body) {
         sourceFailed: sources ? sources.failed : [],
         files: checklist2.files, graph: checklist2.graph,
         omittedCount: omitted.length, omitted: omitted.slice(0, 50),
+        wrapper: extraction.wrapper || null,   // 0.60.200 — the one top folder dropped from every path
         containerFileCount: ingested.fileCount, containerRoot: ingested.root,
         stats, pipeline,
       });
@@ -8909,13 +8912,15 @@ async function handle(req, res, route, query, body) {
       const PH = await import('../repo/phases.js');
       const RIm = await import('../repo/roadmap-import.js');
       const { maps, scope, snapshot } = PH.mapsFor({ repo, repoDir: dir });
-      const found = RIm.findRoadmaps((repo.files || []).map(f => f.path)).map(r => ({ ...r, imported: maps.some(m => m.path === r.target) }));
-      if (action === 'repo.roadmaps') return ok(res, { repoUuid: params.uuid, roadmaps: found });
+      const readOf = (p) => { if (!p) return null; const r = getRepoLayer().readTextFile(params.uuid, p); return r && !r.error && typeof r.content === 'string' ? r.content : null; };
+      // 0.60.200 — every candidate parsed and counted: one naming no phase is left out (said); the primary is taken when none is named
+      const ranked = RIm.rankRoadmaps(RIm.findRoadmaps((repo.files || []).map(f => f.path)), readOf);
+      const found = ranked.roadmaps.map(r => ({ ...r, imported: maps.some(m => m.path === r.target) }));
+      if (action === 'repo.roadmaps') return ok(res, { repoUuid: params.uuid, roadmaps: found, ignored: ranked.ignored });
       if (scope.source === 'nexus') return err(res, 400, 'Nexus\'s own phases are already phasemaps; the import is for a project\'s roadmap');
-      const pick = body.dir != null ? found.find(r => r.dir === String(body.dir)) : (found.length === 1 ? found[0] : null);
+      const pick = body.dir != null ? found.find(r => r.dir === String(body.dir)) : (found.find(r => r.primary) || null);
       if (!pick) return err(res, found.length ? 400 : 404, found.length ? `this repo has ${found.length} roadmaps — name one (dir): ${found.map(r => r.dir || '.').join(', ')}` : 'no roadmap in this repo (phases.json, roadmap.json, PHASEMAP.md or ROADMAP.md)', { code: found.length ? 'WHICH_ROADMAP' : 'NO_ROADMAP' });
       if (pick.imported && body.replace !== true) return err(res, 409, `${pick.target} already exists — imported before; replace:true imports it again over it (the old one stays in the repo's versions)`, { code: 'EXISTS', map: pick.target });
-      const readOf = (p) => { if (!p) return null; const r = getRepoLayer().readTextFile(params.uuid, p); return r && !r.error && typeof r.content === 'string' ? r.content : null; };
       let im;
       try { im = RIm.importRoadmap({ json: readOf(pick.json), md: readOf(pick.md), name: pick.target.split('/').pop().replace(/\.spec$/, ''), source: { json: pick.json, md: pick.md } }); }
       catch (e) { if (e instanceof RIm.RoadmapImportError) return err(res, 400, e.message, { code: e.code }); throw e; }
