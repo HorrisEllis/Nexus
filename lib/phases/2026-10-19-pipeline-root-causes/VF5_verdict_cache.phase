@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF5_verdict_cache
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF5_verdict_cache
+context: pipeline phase VF5_verdict_cache of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: VF5_verdict_cache (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384291
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384291
+lastSeenAt: 1792587384291
+fingerprint: null
+payload:
+  id: VF5_verdict_cache
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/verify-first.js
+  depends_on:
+    - VF1_verify_first
+  blocks: []
+  spec: null
+  graph: 3f619ac10014ebb3

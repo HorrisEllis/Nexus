@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::SS3_nodes_are_the_data
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::SS3_nodes_are_the_data
+context: pipeline phase SS3_nodes_are_the_data of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: SS3_nodes_are_the_data (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384295
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384295
+lastSeenAt: 1792587384295
+fingerprint: null
+payload:
+  id: SS3_nodes_are_the_data
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/node-registry.js
+    - lib/node-schemas.js
+  depends_on:
+    - SS2_every_system_home
+  blocks: []
+  spec: null
+  graph: 42d3b5c93b4e3d49

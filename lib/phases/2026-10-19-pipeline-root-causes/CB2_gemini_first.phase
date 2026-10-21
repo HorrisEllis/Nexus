@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::CB2_gemini_first
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::CB2_gemini_first
+context: pipeline phase CB2_gemini_first of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: CB2_gemini_first (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384301
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384301
+lastSeenAt: 1792587384301
+fingerprint: null
+payload:
+  id: CB2_gemini_first
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 2026-10-19 (0.60.171)
+  files:
+    - lib/pipeline-routing.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8a828fa8e92f645c

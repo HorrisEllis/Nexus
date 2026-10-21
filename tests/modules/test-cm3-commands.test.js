@@ -21,7 +21,7 @@ function fakeRes() { const r = { code: 0, body: null, writeHead(c) { r.code = c;
   await test('CM3-01', 'the rows exist: repo phasemap, repo phase (runs | build), repo versions, store, ollama tape — and their requests', async () => {
     for (const k of ['repo.phasemap', 'repo.phase', 'repo.versions', 'store', 'ollama.tape']) assert.ok(row(k), `no row ${k}`);
     const repo = { uuid: 'u1', name: 'grove' };
-    assert.deepStrictEqual(row('repo.phase').req({ repo, args: ['BL9', 'build'], flags: { provider: 'ollama' } }).body, { phase: 'BL9', provider: 'ollama' });
+    assert.deepStrictEqual(row('repo.phase').req({ repo, args: ['BL9', 'build'], flags: { provider: 'ollama' } }).body, { startedBy: 'person:cli', phase: 'BL9', provider: 'ollama' });   // 0.60.188 RC7 — the CLI declares its door
     assert.strictEqual(row('repo.phase').req({ repo, args: ['BL9'], flags: {} }).path, '/api/repos/u1/phases/runs?phase=BL9');
     assert.strictEqual(row('repo.phase').need({ args: [] }), '<phase>');
     assert.deepStrictEqual(row('store').req({ args: [], flags: {} }), { system: 'cortex', method: 'GET', path: '/api/store' });

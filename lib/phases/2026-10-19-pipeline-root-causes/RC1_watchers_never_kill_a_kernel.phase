@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
+context: >-
+  pipeline phase RC1_watchers_never_kill_a_kernel of
+  docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: RC1_watchers_never_kill_a_kernel (foundation) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384276
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384276
+lastSeenAt: 1792587384276
+fingerprint: null
+payload:
+  id: RC1_watchers_never_kill_a_kernel
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: foundation
+  status: BUILT 2026-10-19 (0.60.170)
+  files:
+    - lib/safe-watch.js
+    - orchestrator/orchestrator.js
+    - guardian/lib/node-registry.js
+    - lib/node-registry.js
+    - lib/node-index-watcher.js
+    - lib/queue.js
+    - lib/ico.js
+    - auth/index.js
+    - architecture-spec/registry/watcher.js
+    - cos/foundation/file-browser.js
+    - diagnostic/nexus-diagnostic.js
+    - emerge/emerge-kernel.js
+    - idearium/repo/watcher.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5dd01d2da36edeb7

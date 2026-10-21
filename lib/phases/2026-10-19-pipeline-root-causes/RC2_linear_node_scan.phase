@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC2_linear_node_scan
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC2_linear_node_scan
+context: pipeline phase RC2_linear_node_scan of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: RC2_linear_node_scan (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384278
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384278
+lastSeenAt: 1792587384278
+fingerprint: null
+payload:
+  id: RC2_linear_node_scan
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: foundation
+  status: BUILT 2026-10-19 (0.60.170)
+  files:
+    - lib/node-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 77759fcaf402a194

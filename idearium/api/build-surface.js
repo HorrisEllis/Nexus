@@ -292,7 +292,7 @@ export async function specBuild(deps, uuid, body) {
   if (!m.v.ok) return bad(422, `${m.mapPath} is not a valid bottom-up map: ${m.v.problems.slice(0, 3).join('; ')}`, { code: 'PLAN_INVALID', problems: m.v.problems });
   const target = body.phase ? m.v.phases.find(p => p.id === body.phase || p.key === body.phase) : m.SP.nextReady(m.v.phases);
   if (!target) return bad(409, body.phase ? `no phase ${body.phase} in ${m.mapPath}` : `nothing ready to build in ${m.mapPath} — every phase is done or waiting on one that is not`, { code: body.phase ? 'NOT_FOUND' : 'NOTHING_READY' });
-  const b = await deps.phaseBuild(r.repo, r.dir, { map: m.mapPath, phase: target.id, provider: body.provider || null, note: body.note || '' });
+  const b = await deps.phaseBuild(r.repo, r.dir, { map: m.mapPath, phase: target.id, provider: body.provider || null, note: body.note || '', startedBy: body.startedBy && typeof body.startedBy === 'object' ? body.startedBy : null });   // 0.60.188 RC7
   if (!b.ok) return bad(b.status, b.error, b.extra || {});
   return ok({ ...b.data, phase: target.id, layer: target.layer, mapPath: m.mapPath });
 }

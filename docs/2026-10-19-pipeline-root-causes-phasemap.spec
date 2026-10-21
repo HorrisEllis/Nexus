@@ -302,6 +302,21 @@ phases:
       with no repo or caller named — the model stays loaded and free memory sits near the halt line. Find the caller (not found
       in this session), and make the bridge refuse a job that names no owner (§1.2: traceable to a cause).
 
+  RC7_every_run_names_its_starter:
+    layer: foundation
+    status: DONE 0.60.189 (see the addendum at the end)
+    depends_on: [RC6_unowned_ollama_load]
+    files: [idearium/api/index.js, idearium/api/build-surface.js, lib/agent-tools/tools/nexus/command.js, idearium/cli/route-commands.js, idearium/ui/js/plan-panel.js, idearium/ui/js/repo-tasks.js, idearium/ui/js/living-spec.js, idearium/ui/js/workshop.js]
+    does: >-
+      James, 2026-10-21: "It built 5 phases in a row." The code has no path that builds a different phase unasked: every UI build is a
+      click, the watchdog only rebuilds the same phase, and the spec's "Build next" is one phase per press. But an agent can call
+      `repo phase build` / `spec build` (neither is the person's alone), and a run row records repo, map, phase and graph, never
+      who started it, so what he saw cannot be traced (§1.2, EXPLAINABILITY). Every run row carries startedBy {who, whence}:
+      whence 'access' (the keyed caller the gate passed), 'declared' (the caller says: person:ui, person:cli, agent:<name>),
+      'system' (watchdog:<kind>), or 'unknown' — never guessed (NC0's evidence rule). Shown on the run in the Plan panel and in
+      `repo runs`.
+    proof: test-pipeline-root-causes RC-11 (every door sets it; an agent's call is agent:<name> whatever the row sent; unknown stays unknown)
+
   MEM1_cortex_keeps_the_books:
     layer: foundation
     status: DECISION (his words, to confirm)
@@ -396,3 +411,32 @@ silently skipping phases (§1.2). That parser is loom/scanners/phasemap-map.js, 
   test-loom-phasemap-status 14/14.
 - A build that DG3 refused as dangling on one of these ids now reaches DG1. If the id is an open decision there, the refusal is "open
   dependency", which is the true reason.
+
+
+## ADDENDUM 2026-10-21 (0.60.189, RC7) — every run names who started it
+
+James, 2026-10-21: "It built 5 phases in a row. I think I see what you mean but there are way more idearium phases than that."
+- **Traced in the code.** No path builds a different phase unasked:
+  - every UI ▶ build is one click (the Plan, the Phases tab, the spec's "Build next", the workshop, the retry button);
+  - the run watchdog rebuilds only the same phase.
+
+  A **listener**, though (lib/listener-commands.js, his 0.59.4 design: "Use the listener to have you use a command"), runs up to 5
+  command lines per reply it hears (MAX_PER_EVENT = 5), through the agent command tool. `repo phase <p> build` is not the person's
+  alone, so one AI reply holding five build lines builds five phases in a row. RC-11 drives that exact path. An agent calling the
+  command tool does the same.
+- **Why it could not be traced.** A run row named repo, map, phase and graph, never who started it.
+- **Built.** Every run row carries `startedBy { who, whence }`:
+  - `access`: the keyed caller the gate passed;
+  - `declared`: person:ui, person:ui:retry, person:ui:workshop, person:cli, or agent:<name>. The agent command tool overrides
+    whatever the row sent, so a listener is `agent:listener`;
+  - `system`: watchdog:<kind>;
+  - `unknown`: never guessed.
+
+  It shows on each run in the Plan panel ("by …", "by ?" for a run from before this release) and in `repo phase <repo> <phase>`.
+- **Proof:**
+  - test-pipeline-root-causes RC-11 (11/11);
+  - test-plan-pieces PP-02 in Clear Glass (the label);
+  - test-cm3-commands CM3-01 and test-phases-tab PT-04, updated for the body that now carries the door.
+- **Open, his to judge (USER_AUTONOMY).** Whether a build may start from text a listener hears in a chat. Today it may, by his
+  0.59.4 design. The record now says when it did; it does not change the rule.
+- This map's phases are now each specced (emerge/compiler/phase-specs.js): 58 files beside their owners, written for the first time.

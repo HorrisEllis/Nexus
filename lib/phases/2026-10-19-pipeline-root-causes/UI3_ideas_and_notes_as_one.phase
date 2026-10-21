@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::UI3_ideas_and_notes_as_one
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::UI3_ideas_and_notes_as_one
+context: pipeline phase UI3_ideas_and_notes_as_one of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: UI3_ideas_and_notes_as_one (interface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384299
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384299
+lastSeenAt: 1792587384299
+fingerprint: null
+payload:
+  id: UI3_ideas_and_notes_as_one
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - lib/repo-notes.js
+    - lib/work-funnel.js
+    - idearium/ui/js/repo-notes.js
+  depends_on:
+    - VF1_verify_first
+  blocks: []
+  spec: null
+  graph: a5b53b729416888e

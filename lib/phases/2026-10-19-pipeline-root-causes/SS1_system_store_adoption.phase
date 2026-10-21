@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+context: pipeline phase SS1_system_store_adoption of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: SS1_system_store_adoption (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384292
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384292
+lastSeenAt: 1792587384292
+fingerprint: null
+payload:
+  id: SS1_system_store_adoption
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/system-store.js
+    - guardian/server.js
+  depends_on:
+    - RC1_watchers_never_kill_a_kernel
+  blocks: []
+  spec: null
+  graph: ad8ef05a560160bc

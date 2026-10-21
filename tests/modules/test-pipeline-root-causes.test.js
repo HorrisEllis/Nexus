@@ -15,6 +15,9 @@
  *   RC-09  RC6 (0.60.187): the Ollama bridge refuses an ownerless job and names the owner in its log line; diagnose is background work
  *   RC-10  RC6: the diagnostic escalation names itself, asks for less, sends one per sweep, keeps its cooldown on disk, and sets the
  *          gap's status through cortex (POST /api/gaps/status), which owns the table
+ *   RC-11  RC7 (0.60.188): every run names its starter — the gate's keyed caller (access), a declared door (person:ui, person:cli,
+ *          agent:<name>), the watchdog (system), or unknown; an agent's build is agent:<name> whatever the row sent, and a
+ *          listener that hears five build lines in one reply builds five phases, each recorded as agent:listener
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -176,6 +179,35 @@ const tmp = (n) => fs.mkdtempSync(path.join(os.tmpdir(), `rc-${n}-`));
     assert.ok(/p === '\/api\/gaps\/status' && method === 'POST'/.test(cx) && /jaaDB\.update\('gaps', row\.id \? \{ id: row\.id \} : \{ uuid: row\.uuid \}/.test(cx));
     const { numCtxFor } = require(path.join(ROOT, 'lib/ollama-activity.js'));
     assert.deepStrictEqual([numCtxFor(293, 4096).numCtx, numCtxFor(293, 1024).numCtx], [5120, 4096], 'his log\'s 5120 came from the 4096-token default; 1024 tokens sits at the 4096 floor');
+  });
+
+  await test('RC-11', 'RC7: every run names its starter; an agent or a listener is recorded as itself, unknown stays unknown', async () => {
+    const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
+    const fn = api.match(/function _starter\(req, body\) \{[\s\S]*?\n\}/)[0];
+    const _starter = new Function(`${fn}; return _starter;`)();
+    assert.deepStrictEqual(_starter({ access: { who: { hat: 'copilot' } } }, { startedBy: 'person:ui' }), { who: 'copilot', whence: 'access' }, 'the gate\'s caller beats a declaration');
+    assert.deepStrictEqual(_starter({}, { startedBy: 'person:ui' }), { who: 'person:ui', whence: 'declared' });
+    assert.deepStrictEqual(_starter({}, {}), { who: 'unknown', whence: 'unknown' }, 'never guessed as the person');
+    assert.ok(/startedBy: startedBy \|\| \{ who: 'unknown', whence: 'unknown' \}/.test(api), 'on every row of a run');
+    assert.ok(/retryKind: kind, startedBy: \{ who: `watchdog:\$\{kind\}`, whence: 'system' \}/.test(api) && /phase: info\.phase, note, startedBy: \{ who: `watchdog:/.test(api), 'the watchdog names itself');
+    assert.ok(/_phaseBuild\(repo, dir, \{ startedBy: _starter\(req, body\)/.test(api) && /BS\.specBuild\(d, u, \{ \.\.\.\(body \|\| \{\}\), startedBy: _starter\(req, body\) \}\)/.test(api), 'both build routes');
+    for (const [f, rx] of [['idearium/ui/js/plan-panel.js', /startedBy: 'person:ui', \.\.\.b/], ['idearium/ui/js/repo-tasks.js', /startedBy: 'person:ui:retry'/], ['idearium/ui/js/living-spec.js', /startedBy: 'person:ui'/], ['idearium/ui/js/workshop.js', /startedBy: 'person:ui:workshop'/], ['idearium/cli/index.js', /startedBy: 'person:cli', path: specPath/], ['idearium/repo/build-plan.js', /startedBy: starter/]])
+      assert.ok(rx.test(fs.readFileSync(path.join(ROOT, f), 'utf8')), `${f} declares its door`);
+    // the real agent tool and the real listener, with only the HTTP call stubbed
+    const C = require(path.join(ROOT, 'lib/agent-tools/tools/idearium/code.js'));
+    const real = C._call; const posts = [];
+    C._call = async (method, p, body) => (method === 'GET' && p === '/api/repos' ? { repos: [{ uuid: 'r-1', name: 'nexus' }] } : (posts.push({ p, body }), { ok: true, runId: `run-${posts.length}` }));
+    try {
+      const { command } = require(path.join(ROOT, 'lib/agent-tools/tools/nexus/command.js'));
+      await command.execute({ action: 'run', command: 'repo phase', repo: 'nexus', args: ['A1_x', 'build'] }, { agent: 'copilot' });
+      assert.deepStrictEqual([posts[0].p, posts[0].body.startedBy], ['/api/repos/r-1/phases/build', 'agent:copilot'], 'the row said person:cli; the tool knows it is an agent');
+      const L = require(path.join(ROOT, 'lib/listener-commands.js'));
+      const heard = await L.createRunner({ tool: command }).hear('chat-1', ['A1_a', 'A2_b', 'A3_c', 'A4_d', 'A5_e'].map(p => `nexus> repo phase nexus ${p} build`).join('\n'));
+      const built = posts.slice(1);
+      assert.strictEqual(heard.length, 5);
+      assert.deepStrictEqual(built.map(x => x.body.phase), ['A1_a', 'A2_b', 'A3_c', 'A4_d', 'A5_e'], 'one reply, five builds in a row');
+      assert.ok(built.every(x => x.body.startedBy === 'agent:listener'), 'each recorded as the listener');
+    } finally { C._call = real; }
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

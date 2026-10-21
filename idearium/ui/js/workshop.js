@@ -624,7 +624,7 @@ async function build(phase) {
   if (!PIPE) return; step3Busy = true;
   step(3, 'run', `A SNAPSHOT, THEN THE AGENT BUILDS ${phase || (PIPE.plan && PIPE.plan.next) || 'THE NEXT PHASE'}`); acts([]);
   try {
-    const r = await api(`/api/repos/${enc(PIPE.repo)}/spec/build`, { path: PIPE.path, ...(phase ? { phase } : {}) }, 120000);
+    const r = await api(`/api/repos/${enc(PIPE.repo)}/spec/build`, { startedBy: 'person:ui:workshop', path: PIPE.path, ...(phase ? { phase } : {}) }, 120000);
     step(3, 'done', `${r.phase} (${String(r.layer || '').toUpperCase()}) · BUILDING`);
     pmsg(`${r.phase} IS BUILDING — SNAPSHOT ${String(r.snapshot || '').slice(0, 12)}${r.targetName ? `, ${String(r.targetName).toUpperCase()}'S AGENT` : ''}. FOLLOW IT IN IDEARIUM'S PLAN PANEL; THE NEXT PHASE IS READY WHEN THIS ONE IS DONE.`, 'ok');
     acts([OPEN_ACT(), { label: 'REFRESH THE PHASES', go: async () => { try { phasesStage(await api(`/api/repos/${enc(PIPE.repo)}/spec/plan?path=${enc(PIPE.path)}`, undefined, 30000)); } catch (e) { toast(e.message, true); } } }, { label: 'BACK TO THE SPEC', go: closePipe }]);

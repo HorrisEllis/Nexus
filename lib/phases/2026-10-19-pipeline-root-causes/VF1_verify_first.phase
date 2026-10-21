@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+context: pipeline phase VF1_verify_first of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: VF1_verify_first (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384284
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384284
+lastSeenAt: 1792587384284
+fingerprint: null
+payload:
+  id: VF1_verify_first
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: library
+  status: BUILT 2026-10-19 (0.60.171)
+  files:
+    - lib/verify-first.js
+    - idearium/api/index.js
+    - lib/test-first.js
+    - lib/expectation-tests.js
+  depends_on:
+    - RC4_agent_file_names_guarded
+  blocks: []
+  spec: null
+  graph: 58454d1b9f24ee04

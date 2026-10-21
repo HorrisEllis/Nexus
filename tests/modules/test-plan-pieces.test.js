@@ -37,7 +37,7 @@ const T0 = Date.now() - 3600 * 1000;
 const PLAN = { files: [{ path: 'src/a.js', imports: [] }, { path: 'src/b.js', imports: ['./a.js'] }, { path: 'src/c.js', imports: [] }] };
 // one phase, two runs: run-1 wrote a, failed b, proved; run-2 (open) is on c
 const ROWS = [
-  { runId: 'run-1', map: 'm', phase: 'KE1', state: 'building', ts: T0 + 1 },
+  { runId: 'run-1', map: 'm', phase: 'KE1', state: 'building', ts: T0 + 1, startedBy: { who: 'agent:listener', whence: 'declared' } },   // 0.60.188 RC7 — run-2 has none: an older run
   { runId: 'run-1', map: 'm', phase: 'KE1', state: 'planned', ts: T0 + 2, plan: PLAN },
   { runId: 'run-1', map: 'm', phase: 'KE1', state: 'replied', ts: T0 + 3, file: 'src/a.js', provider: 'ollama', rung: 1, attempt: 1, injects: { injected: ['src/a.js'] } },
   { runId: 'run-1', map: 'm', phase: 'KE1', state: 'failed', ts: T0 + 4, file: 'src/b.js', provider: 'claude-code', error: 'missing export run' },
@@ -177,6 +177,8 @@ function harness(planJson) {
       assert.deepStrictEqual(logs, [1, 6]);
       const t = await page.$$eval('#pp-body .pp-run', els => els[1].textContent);
       assert.ok(/review · reviewed/.test(t) && /proof · proven/.test(t) && /missing export run/.test(t) && /ollama → claude-code → chatgpt/.test(t), t);
+      // 0.60.188 RC7 — who started each run, on its line; a run from before RC7 says it does not know
+      assert.deepStrictEqual(await page.$$eval('#pp-body .pp-run .pp-by', els => els.map(e => e.textContent)), ['by ?', 'by agent:listener']);
     });
 
     await test('PP-03', 'a piece points Changes and Outputs at its file; "show all" clears; a run\'s context opens the dock on it', async () => {

@@ -675,7 +675,7 @@ export const SPEC = [
   { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again)',
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => (a.args[1] === 'build'
-      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}), ...(a.flags.anyway ? { anyway: true } : {}) }, timeoutMs: 120000 }
+      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { startedBy: 'person:cli', phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}), ...(a.flags.anyway ? { anyway: true } : {}) }, timeoutMs: 120000 }
       : { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/runs?phase=${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => {
       if (a.args[1] === 'build') {
@@ -686,7 +686,7 @@ export const SPEC = [
       }
       const runs = (d.runs || []).slice().sort((x, y) => (x.ts || 0) - (y.ts || 0));
       if (!runs.length) { console.log(h.c.gray(`  ${a.args[0]} has never run — idearium repo phase ${a.repo.name} ${a.args[0]} build`)); return; }
-      for (const r of runs) console.log(`  ${h.c.dim(when(r.ts))} ${r.state === 'failed' || r.state === 'blocked' ? h.c.coral(r.state) : r.state === 'complete' || r.state === 'proved' ? h.c.mint(r.state) : h.c.sky(r.state || '?')}  ${h.c.dim(r.provider || '')}${r.error ? `  ${String(r.error).slice(0, 140)}` : ''}`);
+      for (const r of runs) console.log(`  ${h.c.dim(when(r.ts))} ${r.state === 'failed' || r.state === 'blocked' ? h.c.coral(r.state) : r.state === 'complete' || r.state === 'proved' ? h.c.mint(r.state) : h.c.sky(r.state || '?')}  ${h.c.dim(r.provider || '')}${r.startedBy ? h.c.dim(` · by ${r.startedBy.who}${r.startedBy.whence === 'declared' ? '' : ` (${r.startedBy.whence})`}`) : ''}${r.error ? `  ${String(r.error).slice(0, 140)}` : ''}`);
     } },
   // 0.60.7 — the same command, now the whole index (lib/repo-history.js): VR1's commits are its snapshots; backups,
   // staging, imported history and the work surface's revisions beside them. --kind snapshot is the old list.

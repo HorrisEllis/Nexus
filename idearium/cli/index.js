@@ -737,7 +737,7 @@ const COMMANDS = {
     if (!prefix || !specPath) die('usage: idearium repo build <repo> <spec path> [--phase <id>] [--provider <p>]');
     const repo = _findRepo(prefix);
     try {
-      const res = await _localApi('POST', `/api/repos/${repo.uuid}/spec/build`, { path: specPath, phase: flags.phase || null, provider: flags.provider || null });
+      const res = await _localApi('POST', `/api/repos/${repo.uuid}/spec/build`, { startedBy: 'person:cli', path: specPath, phase: flags.phase || null, provider: flags.provider || null });
       const d = res.data || res;
       console.log(`${sky('→')} building ${bold(d.phase)} (${d.layer}) of ${d.mapPath}${d.runId ? ` — run ${d.runId}` : ''}`);
     } catch (e) { die(`build failed (is idearium running on :${IDEARIUM_PORT}?): ${e.message}`); }

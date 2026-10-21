@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::UI2_version_in_code
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::UI2_version_in_code
+context: pipeline phase UI2_version_in_code of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: UI2_version_in_code (interface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384298
+lastSeenAt: 1792587384298
+fingerprint: null
+payload:
+  id: UI2_version_in_code
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/ui/js/repo-versions.js
+    - idearium/ui/js/code-surface.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a31a39722f93b060

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::SS4_seal_into_compartments
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::SS4_seal_into_compartments
+context: pipeline phase SS4_seal_into_compartments of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: SS4_seal_into_compartments (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384296
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384296
+lastSeenAt: 1792587384296
+fingerprint: null
+payload:
+  id: SS4_seal_into_compartments
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - loom/templates/cos-compartment.js
+    - lib/system-boundary.js
+  depends_on:
+    - SS3_nodes_are_the_data
+  blocks: []
+  spec: null
+  graph: 369aaef9557e2030

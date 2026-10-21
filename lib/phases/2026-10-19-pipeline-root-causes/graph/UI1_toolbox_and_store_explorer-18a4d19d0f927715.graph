@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UI1_toolbox_and_store_explorer:18a4d19d0f927715
+type: graph
+id: phase:UI1_toolbox_and_store_explorer:18a4d19d0f927715
+context: dependency graph of phase UI1_toolbox_and_store_explorer
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792587384297
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384297
+lastSeenAt: 1792587384297
+fingerprint: null
+payload:
+  for: UI1_toolbox_and_store_explorer
+  kind: phase
+  repo: null
+  hash: 18a4d19d0f927715
+  nodes:
+    - path: idearium/ui/js/repo-toolbox.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: lib/store-explorer.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 34f3ae8f0ecbc7b5
+    layer: 2
+    deps:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+    dependents: []
+    upstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 34f3ae8f0ecbc7b5 · layer 2 · blocked by SS1_system_store_adoption
+      - 'depends on (1): SS1_system_store_adoption · all upstream 2'
+      - 'needed by (0): —'

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::UI1_toolbox_and_store_explorer
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::UI1_toolbox_and_store_explorer
+context: >-
+  pipeline phase UI1_toolbox_and_store_explorer of
+  docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: UI1_toolbox_and_store_explorer (interface) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384297
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384297
+lastSeenAt: 1792587384297
+fingerprint: null
+payload:
+  id: UI1_toolbox_and_store_explorer
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - lib/store-explorer.js
+    - idearium/ui/js/repo-toolbox.js
+  depends_on:
+    - SS1_system_store_adoption
+  blocks: []
+  spec: null
+  graph: 18a4d19d0f927715

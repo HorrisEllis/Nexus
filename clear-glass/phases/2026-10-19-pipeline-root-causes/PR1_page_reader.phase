@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::PR1_page_reader
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::PR1_page_reader
+context: pipeline phase PR1_page_reader of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: PR1_page_reader (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384308
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384308
+lastSeenAt: 1792587384308
+fingerprint: null
+payload:
+  id: PR1_page_reader
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - clear-glass/src/page/semantic-tree.js
+    - lib/page-reader.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1b941aeeae85b18a

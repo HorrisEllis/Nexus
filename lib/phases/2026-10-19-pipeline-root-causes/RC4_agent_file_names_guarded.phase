@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+context: pipeline phase RC4_agent_file_names_guarded of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: RC4_agent_file_names_guarded (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384281
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384281
+lastSeenAt: 1792587384281
+fingerprint: null
+payload:
+  id: RC4_agent_file_names_guarded
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: foundation
+  status: BUILT 2026-10-19 (0.60.170)
+  files:
+    - lib/path-guard.js
+    - lib/repo-inject.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 771ccf0a4d65cb41

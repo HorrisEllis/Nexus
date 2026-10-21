@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::CB1_coder_brief
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::CB1_coder_brief
+context: pipeline phase CB1_coder_brief of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: CB1_coder_brief (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384300
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384300
+lastSeenAt: 1792587384300
+fingerprint: null
+payload:
+  id: CB1_coder_brief
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 2026-10-19 (0.60.171)
+  files:
+    - lib/coder-brief.js
+  depends_on:
+    - VF1_verify_first
+  blocks: []
+  spec: null
+  graph: 1d43c7e9fcfca2cd

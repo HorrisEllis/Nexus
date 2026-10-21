@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF4_second_opinion_on_need
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF4_second_opinion_on_need
+context: pipeline phase VF4_second_opinion_on_need of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: VF4_second_opinion_on_need (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792587384289
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792587384289
+lastSeenAt: 1792587384289
+fingerprint: null
+payload:
+  id: VF4_second_opinion_on_need
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/verify-first.js
+    - lib/agent-record.js
+  depends_on:
+    - VF2_one_response_bundle
+    - VF3_mutation_check
+  blocks: []
+  spec: null
+  graph: 9c8416f249e1db5c
