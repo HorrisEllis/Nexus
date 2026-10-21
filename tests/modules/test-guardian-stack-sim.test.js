@@ -29,7 +29,7 @@ function makeBus() {
     off: (name, fn) => { listeners.get(name)?.delete(fn); },
   };
 }
-function makeDispatcher({ pickupMs = 60, completionTimeoutMs = 60000, pushReturns = 1, tabs = undefined } = {}) {
+function makeDispatcher({ pickupMs = 60, completionTimeoutMs = 60000, pushReturns = 1, tabs = undefined, extra = {} } = {}) {
   const { createDispatcher } = require('../../guardian/lib/dispatcher.js');
   const jobs = new Map(), bus = makeBus(), pendingQueue = new Map(), pushed = [];
   const updateJob = (id, patch) => { const j = jobs.get(id); if (!j) return null; Object.assign(j, patch); return j; };
@@ -37,7 +37,7 @@ function makeDispatcher({ pickupMs = 60, completionTimeoutMs = 60000, pushReturn
     updateJob, bus, pendingQueue, cockpitBroadcast: () => {},
     ncp: { isConnected: () => true, push: () => pushReturns, pushActive: (p, payload) => { pushed.push(payload); return pushReturns; }, ...(tabs ? { getTabs: () => tabs } : {}) },
     dispatchToMistral: () => Promise.resolve(), dispatchToDeepseek: () => Promise.resolve(),
-    pingTimeoutMs: 10, pickupMs, completionTimeoutMs, getJob: (id) => jobs.get(id),
+    pingTimeoutMs: 10, pickupMs, completionTimeoutMs, getJob: (id) => jobs.get(id), ...extra,
   });
   return { d, jobs, bus, pendingQueue, pushed, add: (j) => { jobs.set(j.id, { status: 'pending', ...j }); return jobs.get(j.id); } };
 }
@@ -101,6 +101,25 @@ async function main() {
     await sleep(70);
     assert.strictEqual(u.jobs.get('j-untyped').status, 'queued');
     assert.ok((u.pendingQueue.get('chatgpt') || []).some(j => j.id === 'j-untyped'));
+    delete process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS;
+  });
+
+  await test('GS-04b', '0.60.191 — a typed job that idles out completes from its ended stream (the node anchor) instead of failing; never re-sent', async () => {
+    process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS = '50';
+    const done = [];
+    const { d, add, jobs, pushed } = makeDispatcher({ pickupMs: 5000, completionTimeoutMs: 40, extra: {
+      answerFirst: (j) => (j.id === 'j-stream' ? { text: 'the reply the DOM mutator read', source: 'stream', anchor: { path: 'div.markdown' } } : null),
+      completeWith: (j, text, chatUrl, source) => { done.push({ id: j.id, text, source }); jobs.get(j.id).status = 'complete'; },
+    } });
+    add({ id: 'j-stream', provider: 'chatgpt', command: 'ask', prompt: 'hi' });
+    await d._doDispatch(jobs.get('j-stream'));
+    Object.assign(jobs.get('j-stream'), { status: 'delivered_confirmed', confirmedAt: Date.now() });
+    await sleep(70);
+    assert.strictEqual(jobs.get('j-stream').status, 'awaiting_transcript');
+    await sleep(80);
+    assert.deepStrictEqual(done, [{ id: 'j-stream', text: 'the reply the DOM mutator read', source: 'stream' }]);
+    assert.strictEqual(jobs.get('j-stream').status, 'complete');
+    assert.strictEqual(pushed.filter(p => p.jobId === 'j-stream').length, 1, 'sent once, never twice');
     delete process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS;
   });
 

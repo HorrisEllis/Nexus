@@ -173,6 +173,8 @@ function createNCPMessageHandler(deps) {
           // complete). Checked first: zero real strict-equality readers
           // of the old string anywhere in the codebase, safe rename.
           updateJob(jobId, { status: 'responding', lastChunk: Date.now() });
+          // 0.60.191 — James: "use those as fallback routes. node anchor, dom mutator": the reply so far, kept where a recovery reads it
+          if (full) { try { require('./response-sink.js').streamNode(jobId, { full, provider, agentId: (jobs.get(jobId) || {}).agentId || null, anchor: msg.anchor || null, chatUrl: msg.chatUrl || null }); } catch (_) { /* keeping the stream never stops it */ } }
           // 0.39.256 — reset: this chunk replaces the reply so far (a re-render, not a continuation); source: 'transcript' when the userscript's 500 ms transcript streamer sent it
           bus.emit('guardian.job.chunk', { jobId, text, full, provider, ...(msg.chatId ? { chatId: msg.chatId, turn: msg.turn ?? null, chatUrl: msg.chatUrl || null } : {}), anchor: msg.anchor || null, mutations: msg.mutations ?? null, generating: msg.generating ?? null, reset: !!msg.reset, source: msg.source || null, ...(typeof msg.thinking === 'string' && msg.thinking ? { thinking: msg.thinking, thinkingLen: msg.thinkingLen || msg.thinking.length } : {}) });
           cockpitBroadcast({ type: 'job.chunk', jobId, text, full, provider, ts: Date.now() });
@@ -635,6 +637,8 @@ function createNCPMessageHandler(deps) {
           if (msg.stage === 'resuming-chat') updateJob(jobId, { resumingChatAt: Date.now(), resumeChatUrl: msg.how || null });
           else if (jobs.get(jobId).resumingChatAt) updateJob(jobId, { resumingChatAt: null });
         }
+        // 0.60.191 — the page says it stopped generating: a quiet stream's partial node is marked ended (job-retry's answerFirst reads it)
+        if (jobId && msg.stage === 'dom' && msg.generating === false) { try { require('./response-sink.js').endStream(jobId, { anchor: msg.anchor || null }); } catch (_) {} }
         // 0.39.244 — anchor/mutations/generating: the page's own evidence (the node read, how much it changed)
         bus.emit('guardian.job.progress', { jobId: msg.jobId, provider, stage: msg.stage, how: msg.how, chatUrl: msg.chatUrl, anchor: msg.anchor || null, mutations: msg.mutations ?? null, generating: msg.generating ?? null });
         break;

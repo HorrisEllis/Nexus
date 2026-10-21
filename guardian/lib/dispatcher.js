@@ -148,6 +148,14 @@ function createDispatcher(deps) {
       const t = setTimeout(() => {
         const j = (typeof getJob === 'function' && getJob(job.id)) || job;
         if (!j || j.status !== 'awaiting_transcript') return;
+        // 0.60.191 — James: "use those as fallback routes. node anchor, dom mutator." Before calling the reply lost: its answer anywhere
+        // (complete .response, transcript, or the stream the DOM mutator read at its node anchor once the page stopped generating)
+        const found = typeof answerFirst === 'function' ? answerFirst(j) : null;
+        if (found && typeof completeWith === 'function') {
+          console.log(`[guardian] ${job.id}: no completion came, but its answer exists (${found.source}) — completed from it`);
+          completeWith(j, found.text, found.chatUrl || null, found.source);
+          return;
+        }
         const error = `${reason}; the prompt was typed into the ${job.provider} chat and no reply came back — not sent again: if the reply is on the page, pick it with ◎`;
         updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason: error, error, needsYou: 'pick the reply with ◎ — the prompt is not sent again' });
         bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'no_reply' });

@@ -89,3 +89,19 @@ spec:
     - id: X1
       name: records — loom map wires, spec addenda, lib/version.js, CHANGELOG-0.39.265.md, commit
       depends_on: [T1]
+
+## ADDENDUM 2026-10-21 (0.60.191) — R1/I1: the stream is the last place answerFirst looks
+
+James, 2026-10-21: "im saying to use those as fallback routes. node anchor, dom mutator."
+- **I1 now reads:** a retry never re-sends a job whose answer is already on disk (.response, complete), in its chat transcript, or in its
+  ended stream.
+- **The ended stream.** guardian/lib/response-sink.js streamNode keeps the DOM mutator's chunks (GUARDIAN_CHUNK's full text, with the reply's
+  node anchor) in the job's .response node as 'partial'. It never writes over a complete node, and it writes at most once per 1.5 s or 400
+  new characters. endStream marks the node ended when the page's 'dom' pulse says generating:false and no chunk has come for 3 s.
+- **The order.** job-retry answerFirst reads job → complete node → transcript → ended stream. The transcript comes first because it is the
+  finished record; the stream may trail the page by a chunk.
+- **What does not change.** A stream still open never stops a re-send.
+- **The dead tab.** guardian/lib/dispatcher.js: a typed job that idled out with no completion and no transcript asks answerFirst before
+  failing, so a dead tab's ended stream completes it. Proof: test-guardian-stack-sim GS-04b.
+- **Proof:** tests/modules/test-stream-fallback SF-01..04, including the real NCP handler. The neighbouring Guardian tests are unchanged
+  (test-guardian-job-correlation 2, test-options 1 and test-system-record-discipline 1 fail the same on the tree before).

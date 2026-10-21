@@ -24,6 +24,8 @@
  *                               2. its .response node (guardian/lib/response-sink.js readNode) — the .job's link
  *                               3. its chat transcript (chat-transcripts replyFor: the prompt as a user turn,
  *                                  answered by the next assistant turn — "chat logs")
+ *                               4. (0.60.191) its streamed reply: the .response node kept 'partial' from the DOM
+ *                                  mutator's chunks at the reply's node anchor, once the page said it stopped generating
  *                             Found → the job completes from it through the normal completion handler, never
  *                             re-sent. The vector store is NOT used to decide this: a similar question is not
  *                             the same job, and answering one job with another's reply would be a guess.
@@ -107,6 +109,12 @@ function createJobRetry({ jobs, updateJob, bus, pool, dispatchJob, complete, rea
     try {
       const r = replyFor(job);
       if (r && String(r.text || '').trim()) return { text: r.text, source: 'transcript', chatUrl: r.chatUrl || null };
+    } catch (_) {}
+    // 0.60.191 — last, the stream as a fallback route: what the DOM mutator read at the reply's node anchor, once the page said it stopped
+    // generating (the transcript first: it is the finished record; the stream may trail the page by a chunk)
+    try {
+      const node = readResponse(job.id);
+      if (node && node.status === 'partial' && node.streamEnded && String(node.text || '').trim()) return { text: node.text, source: 'stream', anchor: node.anchor || null };
     } catch (_) {}
     return null;
   }
