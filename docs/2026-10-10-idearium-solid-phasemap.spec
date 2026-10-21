@@ -357,3 +357,34 @@ spec:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"
     - "NEXUS changing NEXUS from inside — SB3/SB5 (path steps 2–3), after the checks above hold"
+
+## ADDENDUM 2026-10-21 — his priority: Idearium solid first, no new phases
+
+James, 2026-10-21: "Okay we need to get the architecture fixed. in compartments and the spin built. Do you think this is the most important
+direction?" … "need to stop adding more phases and get idearium solid, actually thats priority, once we do that, we have have the system build
+itself, and then begin on diagnosing and fixing itself and projects in idearium"
+
+- **His decision.** Stop adding phases. Idearium solid is the priority. Then Nexus builds itself, then diagnoses and fixes itself and the
+  projects in Idearium. This map's `solid_means` is the finish line.
+- **The coder's answer to his question, to confirm.** The spine is not first: docs/2026-10-19-infrastructure-spine-phasemap.spec has every
+  phase OPEN, and the drawbridge's DB2–DB8 are OPEN. It is the largest refactor in the tree, across every system, and exactly the work Nexus
+  should build through Idearium once Idearium holds. Building it by hand first delays the loop he wants.
+- **Where each ask of the same message lands, with no new phase:**
+
+  | His ask | Already built | Lands in |
+  |---|---|---|
+  | the page-mapping tool that ids each element, as an agent tool | yes, 0.60.174–175: clear-glass/src/page/blocks.js gives each block a stable id; agents reach it through `page`, `page find`, `page chunks`, `page scrape`, `page outcome` (route-commands rows → nexus.command and MCP nexus_command) | SD8: a typed tool beside the rows |
+  | the DOM mutator | archaeology.js observes and mutates; the agent tool `clear_glass_dom_archaeology` only queries, and there is no /dom/mutate route | SD8: an agent can see and fix a tab |
+  | the .response nodes | two stores with one extension (guardian/data/nodes/response and Clear Glass's responses/ with index.db), reconciled by nothing | SD10: the evidence the gate reads |
+  | the download manager | CD1–CD5 done (0.60.179) | proven against fakes only; proved live in his run of the solid checks |
+  | a verification tool for agents (chat logs, .response, contracts, memory) | the pieces exist: response-sink synthesize(), job-retry's three checks, contract-gates verifyOutcome, agent-notes and agent memory; no one tool joins them | SD10: the adversarial gate, its evidence half |
+  | the README and the system atlases | regenerated 2026-10-21: the 15 atlases and nexus-atlas from a fresh loom bootstrap | README.md is held back: see below |
+
+- **README.md is held at its last version.** Regenerated, it is 553 KB, and GitHub stops rendering a README over 512 KiB (RG-02). His 0.60.147
+  ask, that the README names every file, every phase and every release (RG-01), and GitHub rendering it can no longer both hold. Asked of
+  him; the regenerated atlas is docs/atlases/nexus-atlas.md.
+- **Order, by his axioms (§3.1 bottom-up, §16.1 close the nearest gap):**
+  1. SD6 (an idea logged, asked, expanded) and SD4 with ME5 (a failed agent hands the job on): the two `solid_means` checks still open.
+  2. SD10 (the gate, with its evidence tool) and SD8 (the page and DOM tools): what a self-building loop needs to trust an agent's work.
+  3. Each check proven by tests/sim/fake-tab.js, then once by him in Clear Glass.
+  4. Then Nexus builds the spine (IN, DB) through Idearium, and the diagnostic loop begins.
