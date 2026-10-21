@@ -396,6 +396,17 @@ spec:
         §0.1 evidence over memory: the gaps are the ones a real run of his project showed, not a guess. §8.6: each fix is in the
         module that owned the gap. §0.3 / §1.2: the wrapper, the ignored roadmaps and a failed note are said, never silent.
       proof: "MR-01..04 on fixtures with MASTERMIND's shape; the real run: 1,371 files at the root, 16 phases, P1 graph from evidence, build to the agent ladder"
+  # ── SD18 addendum 2026-10-21 (0.60.201) — for any project, not only his ──
+  # James, with a screenshot of the upload dialog ("could not start: signal is aborted without reason") and his boot log: "okay, remember
+  # this is for any project. not just mmine". Two things, each for every project:
+  # - The upload's first step (the compartment) waited 6 s; his log shows Idearium busy with its boot-time sync of Nexus (118 s, one
+  #   OFFLINE) at 10–17 % free memory. It waits 60 s now, and any wait that runs out says which call, how long, and that Idearium may
+  #   be busy (idearium/ui/js/app.js api()), never "signal is aborted". test-pipeline-root-causes RC-19.
+  # - 0.60.200's proof fallback knew Node runners only. "Do the tests pass" now reads the project's way from what it holds: an npm
+  #   test script, its own runner, Gradle (wrapper or build), Maven, pytest, Cargo, Go, a Makefile test target; a way whose tool is not
+  #   installed is said (tool_missing), never counted as failing tests (idearium/repo/proof-run.js testWayOf). test-any-project-tests.
+  # The build path's other JavaScript-only gates (test-first, verify-first, the coder brief) are the language profiles: AD1–AD2,
+  # docs/2026-10-19-infrastructure-spine-phasemap.spec, next on his "any project" line.
   not_here:
     - "a pinned agent's next rung — ME5 (one chooser), the one-model-engine map"
     - "the void feeding the workshop — WK4 (path step 2), after SD6"

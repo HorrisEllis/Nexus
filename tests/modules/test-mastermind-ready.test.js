@@ -75,7 +75,7 @@ async function test(id, desc, fn) {
     assert.ok(!bad.run.results[0].met, 'a failing runner fails');
     fs.rmSync(path.join(dir, 'tests'), { recursive: true });
     const none = await P.runProof({ repoDir: dir, write: false, conditions: [{ says: 'All tests pass', check: { kind: 'tests' } }] });
-    assert.ok(!none.run.results[0].met && /no test runner/.test(JSON.stringify(none.run.results[0])), JSON.stringify(none.run.results[0]));
+    assert.ok(!none.run.results[0].met && /no way to run this project's tests was found/.test(JSON.stringify(none.run.results[0])), JSON.stringify(none.run.results[0]));   // 0.60.201: any project's ways listed
   });
 
   await test('MR-04', 'a large project\'s integrity notes fit; one that cannot be written does not stop the rest', () => {

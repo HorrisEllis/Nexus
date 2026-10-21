@@ -686,3 +686,12 @@ spec:
 #   note the store refuses is listed in `failed`; the other checks' notes are still written.
 # - Proof: tests/modules/test-mastermind-ready.test.js MR-01..04. The real run gives 1,371 files at the root, 16 phases, P1's graph
 #   from evidence, and a build that reaches the agent ladder.
+
+# ── ADDENDUM 2026-10-21 (0.60.201) — any project's tests; a busy Idearium said plainly ──
+# James: "okay, remember this is for any project. not just mmine"
+# - Proof's "tests" condition, with no command given, reads the project's way (idearium/repo/proof-run.js testWayOf): an npm test script,
+#   its own runner, Gradle (wrapper or build), Maven, pytest, Cargo, Go, a Makefile test target. The first match wins; a missing tool is
+#   unmet `tool_missing`; finding no way is unmet `no_tests`, with the ways listed.
+# - The UI's api() turns a wait that ran out into "Idearium did not answer <METHOD> <path> within Ns — it may be busy …" (name AbortError
+#   kept). The upload start waits 60 s.
+# - Proof: test-any-project-tests AP-01..03; test-pipeline-root-causes RC-19.
