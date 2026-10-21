@@ -52,7 +52,7 @@ const _payload = (e) => (e && typeof e === 'object' && typeof e.type === 'string
 
 function createDispatcher(deps) {
   const { updateJob, bus, ncp, pendingQueue, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek, pingTimeoutMs, completionTimeoutMs,
-          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy, getJob, pickupMs, accountRouting, useAccount, usageOf, openProfile } = deps;   // §0.60.2: optional accountRouting (lib/account-routing.js) + useAccount(provider, accountId, job) — the tab switched to the routed account before the job is typed   // §HP14/HP16 0.55.2: optional getJob(id) — the job as it is now; pickupMs — the pickup watch   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
+          ladder, completeFromMesh, chatFor, answerFirst, answerFromLedger, erosType, completeWith, economy, getJob, pickupMs, accountRouting, useAccount, usageOf, openProfile } = deps;   // §0.60.2: optional accountRouting (lib/account-routing.js) + useAccount(provider, accountId, job) — the tab switched to the routed account before the job is typed   // §HP14/HP16 0.55.2: optional getJob(id) — the job as it is now; pickupMs — the pickup watch   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
   for (const [name, fn] of Object.entries({ updateJob, bus, ncp, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek })) {
     if (!fn) throw new Error(`[dispatcher] missing required dependency: ${name}`);
   }
@@ -145,9 +145,21 @@ function createDispatcher(deps) {
       updateJob(job.id, { status: 'awaiting_transcript', awaitingSince: Date.now(), awaitReason: reason });
       console.warn(`[guardian] ${job.id} → ${job.provider}: ${reason} — the prompt was already typed; not sent again, waiting up to ${Math.round(graceMs / 1000)}s for the chat transcript`);
       bus.emit('guardian.job.progress', { jobId: job.id, provider: job.provider, stage: 'awaiting-transcript', how: `${reason} — the prompt was typed, so it is not sent again; waiting for the chat transcript`, ts: Date.now() });
-      const t = setTimeout(() => {
+      const t = setTimeout(async () => {
         const j = (typeof getJob === 'function' && getJob(job.id)) || job;
         if (!j || j.status !== 'awaiting_transcript') return;
+        // 0.60.191/0.60.192 — James: "use those as fallback routes. node anchor, dom mutator." · "look in clearglass download manager".
+        // Before calling the reply lost: its answer anywhere — the job, its complete .response, a settled transcript, then Clear
+        // Glass's live chat ledger (the DOM mutator's stream, kept by the download manager), once the page stopped generating
+        let found = typeof answerFirst === 'function' ? answerFirst(j) : null;
+        if (!found && typeof answerFromLedger === 'function') { try { found = await answerFromLedger(j); } catch (_) { found = null; } }
+        const now = (typeof getJob === 'function' && getJob(job.id)) || j;
+        if (!now || now.status !== 'awaiting_transcript') return;   // completed (or cancelled) while the ledger was read
+        if (found && typeof completeWith === 'function') {
+          console.log(`[guardian] ${job.id}: no completion came, but its answer exists (${found.source}) — completed from it`);
+          completeWith(j, found.text, found.chatUrl || null, found.source);
+          return;
+        }
         const error = `${reason}; the prompt was typed into the ${job.provider} chat and no reply came back — not sent again: if the reply is on the page, pick it with ◎`;
         updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason: error, error, needsYou: 'pick the reply with ◎ — the prompt is not sent again' });
         bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error, gate: 'no_reply' });
@@ -582,7 +594,8 @@ function createDispatcher(deps) {
     // §0.39.265 — a re-sent job first checks whether its answer already exists (its .response node, its chat
     // transcript): found → completed from it, never typed again (guardian/lib/job-retry.js answerFirst).
     if ((job.attempts && job.attempts.length) || job._timeoutRetries) {
-      const found = typeof answerFirst === 'function' ? answerFirst(job) : null;
+      let found = typeof answerFirst === 'function' ? answerFirst(job) : null;
+      if (!found && typeof answerFromLedger === 'function') { try { found = await answerFromLedger(job); } catch (_) { found = null; } }   // 0.60.192 the chat ledger
       if (found && typeof completeWith === 'function') {
         console.log(`[guardian] ${job.id}: answer already exists (${found.source}) — completed from it, not re-sent`);
         completeWith(job, found.text, found.chatUrl || null, found.source);

@@ -24,6 +24,8 @@
  *                               2. its .response node (guardian/lib/response-sink.js readNode) — the .job's link
  *                               3. its chat transcript (chat-transcripts replyFor: the prompt as a user turn,
  *                                  answered by the next assistant turn — "chat logs")
+ *                             (0.60.192) and after these, the dispatcher reads Clear Glass's live chat ledger (the DOM mutator's
+ *                             stream, kept by the download manager — chat-transcripts ledgerReplyFor), async, once the page stopped
  *                             Found → the job completes from it through the normal completion handler, never
  *                             re-sent. The vector store is NOT used to decide this: a similar question is not
  *                             the same job, and answering one job with another's reply would be a guess.

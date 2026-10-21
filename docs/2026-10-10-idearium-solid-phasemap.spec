@@ -388,3 +388,28 @@ itself, and then begin on diagnosing and fixing itself and projects in idearium"
   2. SD10 (the gate, with its evidence tool) and SD8 (the page and DOM tools): what a self-building loop needs to trust an agent's work.
   3. Each check proven by tests/sim/fake-tab.js, then once by him in Clear Glass.
   4. Then Nexus builds the spine (IN, DB) through Idearium, and the diagnostic loop begins.
+
+## ADDENDUM 2026-10-21 (b, 0.60.191) — "fallback routes": his correction of the reading above
+
+James, 2026-10-21: "im saying to use those as fallback routes. node anchor, dom mutator. I love the way idearium tabs are and way it shows me
+whats being said from the agents in real time."
+- **What was misread.** The addendum above filed the DOM mutator and the .response nodes as features for SD8 and SD10. He meant them as
+  fallback routes: when the primary capture misses a reply, recover it from what the DOM mutator read at the reply's node anchor. That is
+  the stream his 0.39.244 feed ("a live feed of the dom mutation/node anchor") shows live in Idearium's tabs. The earlier reading is kept
+  (§0.3) and superseded here.
+- **Found.** Guardian broadcast each chunk and kept only a timestamp, plus batches cut to 2,000 characters for cortex. The full text and
+  its anchor were kept nowhere a recovery reads, so a job whose complete never arrived lost the reply he had watched being written.
+- **Built (0.60.191, in Guardian's retry map R1, invariant I1, with no new phase):**
+  - the job's .response node holds the stream as 'partial', with its anchor;
+  - the DOM mutator's 'dom' pulse with generating:false marks a quiet stream ended;
+  - job-retry's answerFirst reads, in order: the complete node, the chat transcript, then the ended stream, before it ever re-sends;
+  - synthesize() reports the stream with its anchor.
+- **His praise of Idearium's tabs and real-time feed** is the style the BrainOS rebuild follows (BX0a): the Flow view draws in the same
+  tabs and the same live feed.
+- **The order in the addendum above stands:** SD6, SD4 with ME5, SD10, SD8.
+
+## ADDENDUM 2026-10-21 (c, 0.60.192) — the fallback reads his download manager
+
+James, 2026-10-21: "look in clearglass download manager". Addendum (b)'s second store is superseded and removed: the stream was already kept
+by his 0.39.278 chat ledger. The fallback reads it now (docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec, addendum
+0.60.192).

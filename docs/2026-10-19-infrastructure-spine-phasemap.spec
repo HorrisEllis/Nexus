@@ -346,3 +346,14 @@ first) stays open; this is its first real use.
 Found: the boundary ratchet (tests/modules/test-system-boundary.test.js SB-06) is red since the 0.60.170–172 overlay: lib/phase-dag.js →
 loom/scanners/phasemap-map.js and lib/verify-first.js → cos/testenv/run-target.js are new upward crossings (lib reaching into a
 system). Not fixed here; each needs a route or a move (§5.9).
+
+## ADDENDUM 2026-10-21 — his decision: each system uses its own component registry
+
+James, 2026-10-21, after the coder answered that the spine should come after Idearium is solid: "each system will use its own component
+registry."
+- **His decision.** Not one central registry that every system writes into: each system owns its own component registry, in one shared
+  shape. It sharpens IN3 ("one registry shape"), which the coder had read as one registry. The shape stays shared; the instance is per
+  system. Loom, architect and the build read across them.
+- **It agrees with what is partly built.** DB9 generates a registry per system (lib/drawbridge-registry.js `registryOf(system)`, 0.60.127),
+  and P33 is "every system runs its node registry". When the spine is built through Idearium, IN3 and DB9 build to this.
+- **Order unchanged.** His priority is Idearium solid first (docs/2026-10-10-idearium-solid-phasemap.spec, addendum 2026-10-21).

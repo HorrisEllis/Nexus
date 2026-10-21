@@ -722,6 +722,8 @@ const {
   chatFor: (job) => (_chatTranscriptsRef ? _chatTranscriptsRef.chatFor(job) : null),
   // 0.39.265 — late-bound like chatFor: the retry module and the Eros typist are created further down
   answerFirst: (job) => (_jobRetryRef ? _jobRetryRef.answerFirst(job) : null),
+  // 0.60.192 — James: "look in clearglass download manager": the live chat ledger, read when answerFirst finds nothing (late-bound like chatFor)
+  answerFromLedger: (job) => (_chatTranscriptsRef ? _chatTranscriptsRef.ledgerReplyFor(job) : Promise.resolve(null)),
   erosType: (job) => _erosTypist.type(job),
   completeWith: (job, text, chatUrl, source) => _completeJobWith(job, text, chatUrl, source),
   economy: _economyGuard,   // §0.39.281 EC6
