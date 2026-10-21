@@ -205,3 +205,25 @@ phases:
     blocks: [MOD-BX-FLOAT]
     does: "His BX0c: a small widget on Clear Glass's provider pages, its contents following the provider (agent node and health, queue and job, account, userscript, route); the old float archived."
     proof: on a claude.ai tab the widget shows claude's node, job and account; on a non-provider page it is absent
+
+
+## Addendum 2026-10-21: the true map before the graph (decided by his axioms)
+
+James, 2026-10-21: "Follow the axioms in docs. Use them as law, and for every decision. It built 5 phases in a row. I think I see what you
+mean but there are way more idearium phases than that."
+Measured the same day (phase-dag over every docs/*-phasemap.spec): 1,899 phases; 556 are Idearium's (56 maps); 281 say done, 275 do not.
+Of the 275, by a read-only census (files declared vs on disk, the proof's test file, the phase id in any release record):
+~113 are named in no release and have no complete file set — not built; ~162 have their id in some release line, but short ids repeat
+across maps ("CT1", "TB1"), so each needs its own check. The maps' status lines have drifted from the code.
+
+decisions:
+  BX0e_true_map_first:
+    status: DECIDED
+    question: What comes next after RC5/RC6 — the Flow graph (BX1–BX3) or the truth of Idearium's 556 phases?
+    chosen: >-
+      Decided by his axioms: §3.3 (map before build — "the map names what exists, what's missing, and what's drifted"), §12.5 (the living
+      spec documents drift), §16.1 (close the nearest gap), §3.1 (bottom-up). A graph drawn from maps whose statuses are wrong shows a false
+      pipeline. So next: a census of every Idearium phase — built, partly, not built, superseded — each with its evidence (the commit or
+      changelog that names its map and id, the files, the test), drift corrected by dated status addenda (§0.3, nothing rewritten), and the
+      open ones ordered bottom-up by DAG layer. That census is BX1's data and the graph's source. His "Fixes, then graph" stands; this is the
+      map the graph needs.
