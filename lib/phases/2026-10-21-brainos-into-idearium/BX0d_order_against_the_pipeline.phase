@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX0d_order_against_the_pipeline
+type: phase
+id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX0d_order_against_the_pipeline
+context: >-
+  pipeline phase BX0d_order_against_the_pipeline of
+  docs/2026-10-21-brainos-into-idearium-phasemap.spec
+intent: null
+summary: BX0d_order_against_the_pipeline (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792585108751
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792585108751
+lastSeenAt: 1792585108751
+fingerprint: null
+payload:
+  id: BX0d_order_against_the_pipeline
+  map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+  repo: null
+  layer: null
+  status: DECIDED
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6e650928b8b2c45b

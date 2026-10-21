@@ -52,7 +52,9 @@ const SYSTEMS = NS.names();   // the 15, exported for readers that list them
 // 529 phases matched before, 543 after; the 14 added are exactly the MCO-A..G
 // phases of the two overhaul phasemaps and nothing else. The underscore is still
 // load-bearing (the drift-dict guard above): bare `MCO-A:` does not match.
-const PHASE_RE = /^\s{2,6}([A-Z]{1,3}(?:\d+|-[A-Z0-9]+)_[A-Za-z0-9_]*):(.*)$/;   // P1_, AP1_, RR1_, SS0_, LP1_, MCO-A_ — the underscore is load-bearing
+// 0.60.188 CNS1 — up to five capitals and a letter after the digit: COSA1_… (8 phases of the cos-app map) and MR3b_… were silently not
+// phases (§1.2) because the prefix stopped at three letters and the number at its digits. The census found them.
+const PHASE_RE = /^\s{2,6}([A-Z]{1,5}(?:\d+[a-z]?|-[A-Z0-9]+)_[A-Za-z0-9_]*):(.*)$/;   // P1_, AP1_, RR1_, SS0_, LP1_, MCO-A_, COSA1_, MR3b_ — the underscore is load-bearing
 const PHASEMAP_FILE_RES = [/phase-?map.*\.spec$/, /phase-map\.spec$/];
 /** isPhasemapFile(basename) — the one definition of "this file is a phasemap". */
 function isPhasemapFile(name) { return PHASEMAP_FILE_RES.some(re => re.test(name)); }
@@ -128,7 +130,8 @@ function parsePhasemapText(text, name) {
   // a decision whose status reads DECIDED is done.
   let section = null;
     for (let i = 0; i < lines.length; i++) {
-      const top = lines[i].match(/^([A-Za-z_][\w-]*):/); if (top) section = top[1];
+      // 0.60.188 — a map nested under `spec:` keeps its blocks at indent 2 (`  decisions:`, `  phases:`); a lowercase key there is a section too
+      const top = lines[i].match(/^([A-Za-z_][\w-]*):/) || lines[i].match(/^ {2}([a-z_][\w-]*):\s*$/); if (top) section = top[1];
       const m = lines[i].match(PHASE_RE);
       if (!m) continue;
       const isDecision = section === 'open_decisions' || section === 'decisions';

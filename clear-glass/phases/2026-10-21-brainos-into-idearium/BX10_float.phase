@@ -7,11 +7,11 @@ intent: null
 summary: BX10_float (surface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792576465248
+exported_at: 1792585108785
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792576465248
-lastSeenAt: 1792576465248
+firstSeenAt: 1792585108785
+lastSeenAt: 1792585108785
 fingerprint: null
 payload:
   id: BX10_float

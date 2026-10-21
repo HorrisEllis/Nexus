@@ -92,6 +92,19 @@ spec:
       behavioral_contracts: ["no row may be home 'retired' without his word"]
       error_paths: ["a feature with no row → GATE-BX-PARITY fails"]
 
+    - id: PhaseVerdict
+      name: PhaseVerdict
+      description: "One phase's census verdict with its evidence."
+      fields:
+        id:        "string — the phase id"
+        map:       "string — its phasemap"
+        layer:     "number|null — its DAG layer (null in a cycle)"
+        declared:  "string — the status line as written"
+        verdict:   "done | built-undeclared | partly | not-built | superseded | no-files"
+        evidence:  "{ commits: sha[], releases: string[], files: { declared, present }, proof: { tests[], present[], idsFound[] } }"
+      behavioral_contracts: ["every verdict other than done/superseded cites what was and was not found"]
+      error_paths: ["a map that does not parse → its phases skipped, named in the census"]
+
   interfaces:
 
     - id: IF-PHASE-DAG
@@ -162,6 +175,30 @@ spec:
       behavioral_contracts: ["written from the code, each row citing file:line"]
       error_paths: ["a feature found later → a row added, not dropped"]
       acceptance: ["a test lists BrainOS's tabs/actions from ui/brainos/*.js and finds each in the census"]
+
+    - id: MOD-BX-PHASE-CENSUS
+      name: phase-census
+      uuid: nexus-bx-phase-census-v1-0000-2026-1021-002
+      path: lib/phase-census.js
+      phase: CNS1_phase_census
+      map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+      description: >-
+        James, 2026-10-21: "Follow the axioms in docs. Use them as law, and for every decision. It built 5 phases in a row. I think I see
+        what you mean but there are way more idearium phases than that." · "go ahead with the census". Deterministic (no model): every
+        phase of every map (lib/phase-dag.js), filtered by system, judged against evidence — the commits that NAME the phase (its full id,
+        or its short id together with its map's name or one of its declared files) and touch its declared non-doc files; the release
+        records (CHANGELOG-*.md, lib/version.js lines) naming it; its declared files on disk; the proof's test file and the test ids the
+        proof names, present in that file. Verdicts: done (declared), built-undeclared (strong evidence: a naming commit that touched its
+        files AND its proof test present with its ids), partly (some evidence, not all), not-built (none), superseded (declared), no-files
+        (cannot be judged until the map names its files — DG3). Short ids repeat across maps, so a short id alone is never evidence.
+        Open phases are ordered bottom-up by DAG layer (§3.1). Output: JSON and a generated markdown census (§6.1: generated from proof).
+      deps: [{ name: phase-dag }]
+      schema_refs: [PhaseVerdict]
+      exports: ["census({ root, system, gitLog, releases }) → { phases: PhaseVerdict[], counts, order }", "markdown(census) → string", "`phases census [--system s]` command row", "GET /api/phases/census"]
+      gate_pipeline: ["GATE-PC-001: id evidence never from a short id alone", "GATE-PC-002: verdict names its evidence", "GATE-PC-003: deterministic, no model"]
+      behavioral_contracts: ["the same tree gives the same census", "a verdict without evidence is not-built or no-files, never built"]
+      error_paths: ["no git history (shallow clone) → said in the census header; commit evidence marked unavailable"]
+      acceptance: ["a phase whose full id is in a commit that touched its file and whose proof test holds its ids → built-undeclared; a short id in an unrelated map's commit → not counted"]
 
     - id: MOD-BX-SOURCES
       name: flow-sources
@@ -334,3 +371,14 @@ spec:
       - { id: GATE-BX-REAL, name: nothing-moves-unless, severity: high, check: "no animation without a data change; data-motion honoured", on_failure: "build failure" }
       - { id: GATE-BX-PARITY, name: nothing-lost, severity: fatal, check: "every census row reached before ui/brainos is archived", on_failure: "not retired" }
       - { id: GATE-BX-STYLE, name: idearium-style, severity: high, check: "flow css uses --nx-*/--ac-* tokens only; no Eravos palette", on_failure: "build failure" }
+
+# ## ADDENDUM 2026-10-21 (0.60.188) — MOD-BX-PHASE-CENSUS built
+#
+# James, 2026-10-21: "go ahead with the census"
+# - Built as specced: lib/phase-census.js, the `phases census [--system s] [--open]` row, GET /api/phases/census, and
+#   docs/idearium-phase-census.md generated from it.
+# - Verdicts gained `mentioned` and `deferred`, beside done, partly, not-built, no-files and superseded:
+#   - `mentioned`: a release table, a question or a test id names the phase, but no build is shown.
+#   - `deferred`: the map says LATER, by decision, so it is not open work.
+# - The evidence rules were tightened after false hits on the real tree. They are recorded in the map's CNS1 addendum.
+# - Result: 733 phases, 0 built-but-marked-open, 321 open bottom-up.

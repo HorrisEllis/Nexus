@@ -7,11 +7,11 @@ intent: null
 summary: BX7_automation (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792576465245
+exported_at: 1792585108783
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792576465245
-lastSeenAt: 1792576465245
+firstSeenAt: 1792585108783
+lastSeenAt: 1792585108783
 fingerprint: null
 payload:
   id: BX7_automation

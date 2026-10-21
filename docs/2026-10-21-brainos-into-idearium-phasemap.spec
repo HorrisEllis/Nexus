@@ -1,32 +1,3 @@
-  BX0b_retire_brainos_page:
-    status: DECIDED
-    question: >-
-      When the Code tab reaches every BrainOS feature (the census, BX1), is ui/brainos archived and Clear Glass's "⬡ BrainOS" row pointed at
-      the Code tab's Flow view — or do both stay?
-    chosen: >-
-      His, 2026-10-21, asked with the two options (archive it — the coder's recommendation — or keep both): "Archive it". Archived, not
-      deleted, once the census shows every feature reached; the menu row opens Code → Flow.
-
-  BX0c_float:
-    status: DECIDED
-    question: >-
-      The BrainOS float (a Clear Glass overlay, 10 tabs, its own blue look): rebuild it in Idearium's style on the same data, or retire it?
-    chosen: >-
-      His, 2026-10-21, offered "rebuild it" or "retire it (the coder's lean)": "What if we rebuilt it into a small widget for clearglass
-      provider pages, dynamic to provider? Either that or retire it." His idea: a small widget on Clear Glass's provider pages (claude.ai,
-      chatgpt.com, gemini, perplexity, deepseek …) whose contents follow the provider it sits on. The coder's reading, to confirm, of "dynamic
-      to provider": that provider's agent node and health, its queue and current job, the account the tab runs as, its userscript, and the
-      route it belongs to — the float's AGENTS/JOBS/USERSCRIPTS tabs narrowed to one provider; the rest of the float retires into the Code tab
-      and Clear Glass's panels. BX10 builds the widget; the old float is archived with ui/brainos.
-
-  BX0d_order_against_the_pipeline:
-    status: DECIDED
-    question: Order against the open pipeline work.
-    chosen: >-
-      His, 2026-10-21, offered three orders: "Fixes, then graph (Recommended)". The root causes first (RC5 where "Gemini said" enters file
-      paths; RC6 the unowned Ollama job every ~90 s), then BX1–BX3 (the pipeline as a graph), then BX5 (PC1's controls) and BX7 (AB1's
-      auto-advance) as the graph's controls, then the rest.
-
 # BrainOS rebuilt in Idearium's style and brought into the Code tab: the pipeline as a live graph, the mesh, the editor, automation (2026-10-21)
 
 origin: >-
@@ -84,25 +55,50 @@ decisions:
       (BX-001). Controls are command rows first (order of delivery). He can overturn this by an addendum.
 
   BX0b_retire_brainos_page:
-    status: OPEN
+    status: DECIDED
     question: >-
       When the Code tab reaches every BrainOS feature (the census, BX1), is ui/brainos archived and Clear Glass's "⬡ BrainOS" row pointed at
       the Code tab's Flow view — or do both stay?
     options: ["archive it (the coder's recommendation: one place, nothing lost by the census)", "keep both"]
+    chosen: >-
+      His, 2026-10-21, asked with the two options (archive it — the coder's recommendation — or keep both): "Archive it". Archived, not
+      deleted, once the census shows every feature reached; the menu row opens Code → Flow.
 
   BX0c_float:
-    status: OPEN
+    status: DECIDED
     question: >-
       The BrainOS float (a Clear Glass overlay, 10 tabs, its own blue look): rebuild it in Idearium's style on the same data, or retire it into
       the Code tab and Clear Glass's own panels (agents hub, 🧩, ⬇)?
     options: ["rebuild it (keeps a compact overlay over any page)", "retire it (the coder's lean: most of its tabs now have homes in Clear Glass's shell)"]
+    chosen: >-
+      His, 2026-10-21, offered "rebuild it" or "retire it (the coder's lean)": "What if we rebuilt it into a small widget for clearglass
+      provider pages, dynamic to provider? Either that or retire it." His idea: a small widget on Clear Glass's provider pages (claude.ai,
+      chatgpt.com, gemini, perplexity, deepseek …) whose contents follow the provider it sits on. The coder's reading, to confirm, of "dynamic
+      to provider": that provider's agent node and health, its queue and current job, the account the tab runs as, its userscript, and the
+      route it belongs to — the float's AGENTS/JOBS/USERSCRIPTS tabs narrowed to one provider; the rest of the float retires into the Code tab
+      and Clear Glass's panels. BX10 builds the widget; the old float is archived with ui/brainos.
 
   BX0d_order_against_the_pipeline:
-    status: OPEN
+    status: DECIDED
     question: >-
       Order against the open pipeline work. The coder's recommendation: the root causes first (RC5, RC6 — they make runs wrong or noisy), then
       BX1–BX3 (seeing the pipeline as a graph is DG5's UI and makes the rest checkable), then BX5 (PC1's controls) and BX7 (AB1's auto-advance)
       as the graph's controls, then the rest.
+    chosen: >-
+      His, 2026-10-21, offered three orders: "Fixes, then graph (Recommended)". The root causes first (RC5 where "Gemini said" enters file
+      paths; RC6 the unowned Ollama job every ~90 s), then BX1–BX3 (the pipeline as a graph), then BX5 (PC1's controls) and BX7 (AB1's
+      auto-advance) as the graph's controls, then the rest.
+
+  BX0e_true_map_first:
+    status: DECIDED
+    question: What comes next after RC5/RC6 — the Flow graph (BX1–BX3) or the truth of Idearium's 556 phases?
+    chosen: >-
+      Decided by his axioms: §3.3 (map before build — "the map names what exists, what's missing, and what's drifted"), §12.5 (the living
+      spec documents drift), §16.1 (close the nearest gap), §3.1 (bottom-up). A graph drawn from maps whose statuses are wrong shows a false
+      pipeline. So next: a census of every Idearium phase — built, partly, not built, superseded — each with its evidence (the commit or
+      changelog that names its map and id, the files, the test), drift corrected by dated status addenda (§0.3, nothing rewritten), and the
+      open ones ordered bottom-up by DAG layer. That census is BX1's data and the graph's source. His "Fixes, then graph" stands; this is the
+      map the graph needs.
 
 phases:
 
@@ -115,6 +111,16 @@ phases:
     blocks: [MOD-BX-CENSUS]
     does: "CT0's census of the Code tab, extended to every BrainOS feature, each with its proposed home; his merge choice recorded (CT0's decision)."
     proof: a test reads ui/brainos's tabs and actions and finds each in the census
+
+  CNS1_phase_census:
+    layer: foundation
+    status: DONE 0.60.188 — lib/phase-census.js, `phases census`, GET /api/phases/census, docs/idearium-phase-census.md; test-phase-census PCN-01..06
+    depends_on: [BX0e_true_map_first]
+    files: [lib/phase-census.js, idearium/cli/route-commands.js, idearium/api/index.js, docs/idearium-phase-census.md]
+    spec: docs/brainos-in-idearium.spec
+    blocks: [MOD-BX-PHASE-CENSUS]
+    does: "Every Idearium phase judged against its evidence (naming commits that touched its files, release records, files, proof tests); drift corrected by dated addenda; open phases ordered bottom-up."
+    proof: test-phase-census PCN-01..; docs/idearium-phase-census.md generated from it
 
   BX2_flow_sources:
     layer: library
@@ -216,14 +222,39 @@ Of the 275, by a read-only census (files declared vs on disk, the proof's test f
 ~113 are named in no release and have no complete file set — not built; ~162 have their id in some release line, but short ids repeat
 across maps ("CT1", "TB1"), so each needs its own check. The maps' status lines have drifted from the code.
 
-decisions:
-  BX0e_true_map_first:
-    status: DECIDED
-    question: What comes next after RC5/RC6 — the Flow graph (BX1–BX3) or the truth of Idearium's 556 phases?
-    chosen: >-
-      Decided by his axioms: §3.3 (map before build — "the map names what exists, what's missing, and what's drifted"), §12.5 (the living
-      spec documents drift), §16.1 (close the nearest gap), §3.1 (bottom-up). A graph drawn from maps whose statuses are wrong shows a false
-      pipeline. So next: a census of every Idearium phase — built, partly, not built, superseded — each with its evidence (the commit or
-      changelog that names its map and id, the files, the test), drift corrected by dated status addenda (§0.3, nothing rewritten), and the
-      open ones ordered bottom-up by DAG layer. That census is BX1's data and the graph's source. His "Fixes, then graph" stands; this is the
-      map the graph needs.
+(BX0e is in the decisions above.)
+
+
+## ADDENDUM 2026-10-21 (0.60.188, CNS1) — the census, run
+
+James, 2026-10-21: "It built 5 phases in a row. I think I see what you mean but there are way more idearium phases than that." · "go ahead
+with the census"
+
+The rough count above ("~113 not built, ~162 with their id in some release line") is superseded by the census and kept (§0.3). It was read
+from short ids, which repeat across maps. The census (lib/phase-census.js, on the full git history of 802 commits, unshallowed) judges 733
+phases whose map is Idearium's or that name an idearium/ file or the idearium system:
+- done 330 · partly 12 · mentioned 11 · not-built 206 · no-files 92 · deferred 82 (LATER) — 321 open, ordered bottom-up in
+  docs/idearium-phase-census.md (layer 0: 86, layer 1: 80, layer 2: 48 …).
+- **Built but marked open: 0.** No phase has a commit that names it and touched its code, with its files present and its proof test
+  holding its ids, while its map says no more than "open". The 12 partly-built phases are the 12 whose maps already say PARTLY. So the maps'
+  done-lines do not undercount. Drift runs the other way: 206 open phases that nothing names as built, and 92 that name no files (DG3).
+  No status addendum is owed to any map.
+- Evidence rules, each one written after a false hit on the real tree:
+  - A short id alone is never evidence. "UI1" named I1 under a plain substring test.
+  - An id that two maps share needs its own map named in the record.
+  - Mapping is not building. 35a44a9951 "Map the whole build pipeline (SB8–SB14)" touched idearium/spec-engine/index.js (a version bump).
+    69bcf9e1ed has "Mapped next: … SD0–SD9".
+  - A release line citing the map is not a build. CHANGELOG-0.60.130 lists P33… as what the map already holds.
+  - A map that says what is left ("OPEN — … left here: …") is not overruled.
+- Found and fixed at the cause (§1.2), because the census showed them:
+  - loom/scanners/phasemap-map.js PHASE_RE stopped at three capitals and at the digits. The 8 COSA phases, MR3b, TB7a–TB7d, GT1a, PI3b,
+    DT4b, CT1b, GA1a and the BX0a-style decision ids were silently not read. Now up to five capitals and one letter after the digit.
+  - A map nested under `spec:` keeps `  decisions:` at indent 2; it now counts as a section, so its entries stay decisions.
+  - lib/phase-dag.js no longer lets a parsed entry overwrite a decision node.
+  - Whole DAG: phases 1900 → 1925, dangling 25 → 17.
+  - test-moce-roadmap's 3 failures and test-readme-generate RG-01 were red before this change and are unchanged by it.
+- His answers to BX0b/BX0c/BX0d had been written above this map's title, outside any block, while the decisions block the parser reads
+  still said OPEN. They are merged into that block (status DECIDED, his words as `chosen:`, the questions and options kept). The copy above
+  the title was a true duplicate and is dropped. This is reported, not silent (§0.3).
+- Order of delivery: backend, route, and command row are built. The screen is BX2/BX3's Flow view, which draws the census per phase. It is
+  deferred to those phases and said here.

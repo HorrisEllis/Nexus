@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792576465239
+exported_at: 1792585108777
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792576465239
-lastSeenAt: 1792576465239
+firstSeenAt: 1792585108777
+lastSeenAt: 1792585108777
 fingerprint: null
 payload:
   for: BX2_flow_sources
@@ -215,7 +215,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: d4da862a3ea7b19e
+    dagHash: 7445d07c6feed39f
     layer: 2
     deps:
       - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
@@ -238,11 +238,12 @@ payload:
       - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
     unlocks:
       - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX10_float
     conflicts: []
     dangling: []
     lines:
-      - DAG d4da862a3ea7b19e · layer 2 · blocked by BX1_census
+      - DAG 7445d07c6feed39f · layer 2 · blocked by BX1_census
       - 'depends on (1): BX1_census · all upstream 2'
       - >-
         needed by (2): BX3_flow_canvas, BX10_float · all downstream 8 · finishing it unlocks
-        BX3_flow_canvas
+        BX3_flow_canvas, BX10_float

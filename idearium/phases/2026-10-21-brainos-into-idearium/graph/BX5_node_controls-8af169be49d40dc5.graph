@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792576465243
+exported_at: 1792585108781
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792576465243
-lastSeenAt: 1792576465243
+firstSeenAt: 1792585108781
+lastSeenAt: 1792585108781
 fingerprint: null
 payload:
   for: BX5_node_controls
@@ -219,7 +219,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: d4da862a3ea7b19e
+    dagHash: 7445d07c6feed39f
     layer: 4
     deps:
       - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
@@ -240,6 +240,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG d4da862a3ea7b19e · layer 4 · blocked by BX3_flow_canvas
+      - DAG 7445d07c6feed39f · layer 4 · blocked by BX3_flow_canvas
       - 'depends on (1): BX3_flow_canvas · all upstream 4'
       - 'needed by (1): BX7_automation · all downstream 2 · finishing it unlocks BX7_automation'

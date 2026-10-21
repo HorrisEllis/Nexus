@@ -2927,6 +2927,7 @@ const ROUTE_CAP = {
   'repo.worksurface': CAPS.READ_IDEAS, 'repo.worksurface.prove': CAPS.WRITE_IDEAS,
   'repo.versions.index': CAPS.READ_IDEAS, 'repo.versions.diff': CAPS.READ_IDEAS, 'repo.versions.tree': CAPS.READ_IDEAS,   // §0.60.7
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
+  'phases.census': CAPS.READ_IDEAS,   // 0.60.188 CNS1 — reads only
   'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
@@ -3403,6 +3404,7 @@ function matchRoute(method, url) {
     // §0.60.41 RN1 — releases in Versionium (versionium/lib/releases.js): a repo's, and Nexus's own
     ['GET',    ['api','repos',    ':uuid','releases'],                 'repo.releases.list'],
     ['POST',   ['api','repos',    ':uuid','releases'],                 'repo.releases.create'],     // { version?, quote?, notes? }
+    ['GET',    ['api','phases','census'],                              'phases.census'],            // 0.60.188 CNS1 ?system=idearium — every phase judged against its evidence
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
     ['POST',   ['api','releases','sync'],                              'releases.sync'],             // { all: true } → every release's commits
     ['GET',    ['api','releases','changes'],                           'releases.changes'],          // §0.60.72 RN2 ?since=0.60.47 · &write=1
@@ -5585,6 +5587,12 @@ async function handle(req, res, route, query, body) {
         if (query.write === '1') return ok(res, N.write({ since }));
         return ok(res, { since, markdown: N.markdown(R.read(), { since }) });
       } catch (e) { return err(res, 500, `release notes: ${e.message}`); }
+    }
+    case 'phases.census': {
+      // 0.60.188 CNS1 — every phase of Nexus's maps judged against commits, releases, files and proof (lib/phase-census.js); the
+      // per-phase evidence stays in the answer so the UI and agents can show why a verdict was given
+      try { const c = _require('../../lib/phase-census.js').census({ root: _require('../../lib/nexus-self/systems.js').ROOT, system: String(query.system || 'idearium') }); return ok(res, c); }
+      catch (e) { return err(res, 500, `census failed: ${e.message}`); }
     }
     case 'releases.list': case 'releases.sync': {
       try {

@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792576465247
+exported_at: 1792585108784
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792576465247
-lastSeenAt: 1792576465247
+firstSeenAt: 1792585108784
+lastSeenAt: 1792585108784
 fingerprint: null
 payload:
   for: BX9_retire
@@ -151,7 +151,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: d4da862a3ea7b19e
+    dagHash: 7445d07c6feed39f
     layer: 6
     deps:
       - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0b_retire_brainos_page
@@ -172,7 +172,6 @@ payload:
       - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX8_dock_panels
     downstream: []
     blockedBy:
-      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0b_retire_brainos_page
       - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX6_pipeline_edit
       - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX7_automation
       - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX8_dock_panels
@@ -181,8 +180,8 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG d4da862a3ea7b19e · layer 6 · blocked by BX0b_retire_brainos_page, BX6_pipeline_edit,
-        BX7_automation, BX8_dock_panels
+        DAG 7445d07c6feed39f · layer 6 · blocked by BX6_pipeline_edit, BX7_automation,
+        BX8_dock_panels
       - >-
         depends on (4): BX0b_retire_brainos_page, BX6_pipeline_edit, BX7_automation, BX8_dock_panels
         · all upstream 10

@@ -378,3 +378,21 @@ table — MEM1's direction). Reading, to confirm on his machine: that the ~90 s 
 "for diagnostic.escalation" at most once per sweep, deferred while a build runs).
 
 Proof: test-pipeline-root-causes RC-07..RC-10 (RC-09 drives the bridge's real handler).
+
+
+## ADDENDUM 2026-10-21 (0.60.188) — two silent gaps in the DAG's reader, found by the census
+
+James, 2026-10-21: "go ahead with the census"
+
+The CNS1 census (docs/2026-10-21-brainos-into-idearium-phasemap.spec) read every phase in every map and found the shared phasemap parser
+silently skipping phases (§1.2). That parser is loom/scanners/phasemap-map.js, which DG1, DG2 and DG3 all read through.
+- PHASE_RE allowed one to three capitals and only digits before `_`. COSA1_…, MR3b_…, TB7a_… and the BX0a-style decisions were not
+  phases, and a depends_on naming them was "dangling".
+- Fixed:
+  - up to five capitals, and one lowercase letter after the number;
+  - an indent-2 lowercase key (`  decisions:` under `spec:`) is a section;
+  - lib/phase-dag.js keeps a decision a decision when the parser also returns it.
+- Whole DAG: phases 1900 → 1925, decisions as read by phase-dag 77 → 98, dangling 25 → 17. test-phase-dag 8/8, test-loom-phasemap 8/8,
+  test-loom-phasemap-status 14/14.
+- A build that DG3 refused as dangling on one of these ids now reaches DG1. If the id is an open decision there, the refusal is "open
+  dependency", which is the true reason.
