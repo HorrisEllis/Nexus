@@ -295,7 +295,11 @@ const tmp = (n) => fs.mkdtempSync(path.join(os.tmpdir(), `rc-${n}-`));
     assert.strictEqual(SNAP.buildSnapshotRecord({ repo, repoDir: dir }).code, 'NOT_INDEXED');
     const p = await quiet(() => runImportPipeline(repo, dir));
     assert.notStrictEqual(p.state, 'FAULT', p.error);
-    assert.ok(SNAP.buildSnapshotRecord({ repo, repoDir: dir }).ok, 'snapshot-able now');
+    const rec = SNAP.buildSnapshotRecord({ repo, repoDir: dir });
+    assert.ok(rec.ok, 'snapshot-able now');
+    // 0.60.197 — "shouldn't that be the component registry. architecture tab": the snapshot names the registry the planner reads
+    const reg = rec.record.mustRecord.registryVersion;
+    assert.ok(reg.available && /^[0-9a-f]{64}$/.test(reg.sha256) && reg.components >= 1, JSON.stringify(reg));
     // dir is left in the OS temp: the lazy L6 pass writes into it after the test returns
   });
 

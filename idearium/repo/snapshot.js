@@ -35,6 +35,9 @@ import path from 'path';
 import crypto from 'crypto';
 import { readLazyVerification } from './verify-lazy.js';
 import { collectFiles, treeHashOf } from './snapshot-files.js';
+import { createRequire } from 'module';
+import { architecture } from './architecture.js';
+const _require = createRequire(import.meta.url);
 
 export const MODULE_ID = 'nexus-idearium-repo-snapshot-v1-0000-2026-0920-jamesbrooks-001';
 export const SCHEMA_VERSION = '1.0.0';
@@ -54,6 +57,7 @@ export const STATE_KIND = 'repo-snapshot';
 export const MUST_RECORD = Object.freeze([
   'sourceHash', 'versionCommit', 'atlasVersion', 'chunkIndexVersion', 'graphVersion',
   'dependencyState', 'environment', 'testState', 'verificationState',
+  'registryVersion',   // 0.60.197 — the component registry (the Architect tab) the build's planner reads
 ]);
 
 const MAX_LISTED = 50; // cap on failed-file lists carried in a record
@@ -152,6 +156,22 @@ function atlasField(repoDir) {
     identity: 'sha256 of atlas.json (the file declares no version)',
     sha256: id.sha256, generatedAt: j.ok ? (j.value.generatedAt ?? null) : null,
     fileCount: j.ok ? (j.value.fileCount ?? null) : null,
+  };
+}
+
+// 0.60.197 — James, of the atlas the snapshot pins: "shouldn't that be the component registry. architecture tab". The registry is
+// the Architect tab's (idearium/repo/architecture.js over lib/code-intel's cards): its components and their wires, what the planner
+// reads. Its identity is the sha256 of those components and wires, so a snapshot says which registry the build stood on.
+function registryField(repoDir) {
+  let intel;
+  try { intel = _require('../../lib/code-intel/index.js').load(repoDir); } catch (e) { return unavailable(`code-intel not loadable: ${e.message}`); }
+  const a = architecture(intel);
+  if (a.error) return unavailable(`no component registry — ${a.error}`);
+  const shape = { components: a.components.map(c => [c.file, c.id, c.layer, c.type, [...(c.exports || [])].sort()]), wires: a.wires.map(w => [w.from, w.to, w.relation]).sort() };
+  return {
+    available: true, source: 'idearium/repo/architecture.js over indexes/cards.json',
+    identity: 'sha256 of the registry\'s components and wires', sha256: sha256(JSON.stringify(shape)),
+    components: a.stats.components, wires: a.stats.wires, orphans: a.stats.orphans, breaches: a.stats.breaches,
   };
 }
 
@@ -272,7 +292,7 @@ export function buildSnapshotRecord({ repo, repoDir, now = Date.now() } = {}) {
   if (!repo || !repo.uuid) return { ok: false, code: 'NO_REPO', error: 'repo record with a uuid is required' };
   if (!repoDir || !fs.existsSync(repoDir)) return { ok: false, code: 'NO_DIR', error: `repo directory does not exist: ${repoDir}` };
   if (!fs.existsSync(path.join(repoDir, 'atlas.json'))) {
-    return { ok: false, code: 'NOT_INDEXED', error: 'repo has not been through the import pipeline (no atlas.json) — run POST /api/repos/:uuid/chunk first' };
+    return { ok: false, code: 'NOT_INDEXED', error: 'repo has not been indexed: no atlas, chunk index or component registry yet (no atlas.json) — run POST /api/repos/:uuid/chunk first; a phase build does this itself (0.60.196)' };
   }
   const filesIdx = readJson(path.join(repoDir, 'indexes', 'files.json'));
   const mustRecord = {
@@ -285,6 +305,7 @@ export function buildSnapshotRecord({ repo, repoDir, now = Date.now() } = {}) {
     environment:       environmentField(repo),
     testState:         testField(repoDir),
     verificationState: verificationField(repoDir),
+    registryVersion:   registryField(repoDir),
   };
   return {
     ok: true,
@@ -444,6 +465,7 @@ export function summarizeRepoSnapshots(rows, repoUuid) {
         gitCommit: m.gitCommit?.available ? m.gitCommit.commit : null,   // records from before 0.39.263 only
         verification: m.verificationState?.available ? m.verificationState.status : null,
         tests: m.testState?.available ? m.testState.status : null,
+        registry: m.registryVersion?.available ? { sha256: m.registryVersion.sha256, components: m.registryVersion.components, wires: m.registryVersion.wires } : null,   // 0.60.197
         // MCO-B: has a file layer (a restore may be possible), and how big. Whether
         // the layer was actually recorded is checked by restore, not assumed here.
         files: r.state.files ? { count: r.state.files.fileCount, bytes: r.state.files.totalBytes } : null,

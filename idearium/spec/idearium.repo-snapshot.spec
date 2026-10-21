@@ -148,3 +148,16 @@ commitRepoSnapshot() takes `provenance` and records it on the snapshot record as
 { by: [...], refs: ['task-…', 'inject:…'], files: [{ path, op }], checkpoint, since, at }. It is optional; every existing
 caller passes nothing and is unchanged. A failed commit is kept pending and retried — never dropped.
 Setting: versions.every_change (default on).
+
+## ADDENDUM 2026-10-21 — 0.60.196 / 0.60.197: a build indexes an unindexed repo; the record names the component registry
+James, 2026-10-21, after SP5 was refused "no snapshot: repo has not been through the import pipeline (no atlas.json)": "what does it need
+an atlas for?" · then: "shouldn't that be the component registry. architecture tab"
+- 0.60.196: a phase build that meets NOT_INDEXED runs the import pipeline itself and snapshots again (pipeline-root-causes map, same date).
+- 0.60.197: mustRecord gains a tenth key, `registryVersion`: the component registry the Architect tab shows and the planner reads
+  (idearium/repo/architecture.js over lib/code-intel's cards). Identity is the sha256 of its components (file, id, layer, type, exports)
+  and wires (from, to, relation), with the counts of components, wires, orphans and breaches. Unindexed → available:false with the reason.
+  summarizeRepoSnapshots carries it as `registry`; the Versionium list shows "registry N · W wires · <hash>".
+- The atlas is still recorded (§0.3: nothing dropped). His question reads two ways: (a) record the registry as well, so a snapshot names
+  what the build reasons over — built; (b) make the registry, not the atlas, the thing the build requires. The coder's reading is (a);
+  (b) is "to confirm" with him. Both come from the same indexing step, so the gate's outcome is the same today.
+- The NOT_INDEXED message now names what is missing (atlas, chunk index, component registry) and that a build indexes it itself.
