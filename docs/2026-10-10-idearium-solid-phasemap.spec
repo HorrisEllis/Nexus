@@ -396,6 +396,26 @@ spec:
         §0.1 evidence over memory: the gaps are the ones a real run of his project showed, not a guess. §8.6: each fix is in the
         module that owned the gap. §0.3 / §1.2: the wrapper, the ignored roadmaps and a failed note are said, never silent.
       proof: "MR-01..04 on fixtures with MASTERMIND's shape; the real run: 1,371 files at the root, 16 phases, P1 graph from evidence, build to the agent ladder"
+    SD19_a_refusal_goes_back_to_its_agent:
+      layer: backend
+      systems: [idearium]
+      status: "DONE 0.60.202 — test-refusal-sendback RS-01..03 (RS-03 in Clear Glass)"
+      james: '"need a retry or automatically ask for the fix if possible, or a tool or something" · "still didn\'t work." · "that error needs to be fixed." (2026-10-21, SP5 title.js)'
+      depends_on: [SD18_mastermind_ready]
+      files: [idearium/api/index.js, idearium/ui/js/app.js, idearium/ui/js/work-surface.js, idearium/ui/index.html]
+      does: >-
+        SP5's title.js was refused three times: each Gemini attempt changed the error message tests/sp5-title.test.js checks
+        (/Input must be a string/), and the agent never saw which test or what it expected, so each try rewrote the line again. Now
+        an agent's proposal the regression gate refuses is rejected with the refusal as its reason (the failing tests, expected and
+        actual) and goes through the same path as his Reject (_learnFromRejection: told, lesson kept, the phase built again within
+        repos.reject_retries). The answer says it was sent back; repos.retry_on_refusal:false or sendBack:false leaves it to him; a
+        person's own change is untouched. The toasts: an identical message is counted (×N), never stacked; a long one shows its first
+        line, the whole on hover — his screen held five copies of one refusal.
+      decided_by_the_axioms: >-
+        §8.6: the retry he asked for existed behind Reject (RL2, 0.60.105); the refusal now reaches it. REVERSIBILITY / §0.3: the
+        proposal is rejected, not deleted, and stays in history; the retries are bounded by the existing daily cap. USER_AUTONOMY: a
+        switch turns it off, and a person's own change is never sent anywhere.
+      proof: "RS-01 through the real API (refused → rejected with the failing test → sent back; a second click sends nothing); RS-02, RS-02b; RS-03 in Clear Glass"
   # ── SD18 addendum 2026-10-21 (0.60.201) — for any project, not only his ──
   # James, with a screenshot of the upload dialog ("could not start: signal is aborted without reason") and his boot log: "okay, remember
   # this is for any project. not just mmine". Two things, each for every project:

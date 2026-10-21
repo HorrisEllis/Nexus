@@ -7393,7 +7393,7 @@ async function handle(req, res, route, query, body) {
       // action on the wrong compartment.
       const owned = () => { const n = RI.get(params.id); return n && n.repoUuid === params.uuid ? n : null; };
       const done = (r, okExtra = {}) => r.ok ? ok(res, { ...r, ...okExtra })
-        : err(res, r.conflict ? 409 : 400, (r.errors || ['failed']).join('; '), { conflict: !!r.conflict, ...(r.merge ? { merge: r.merge } : {}) });
+        : err(res, r.conflict ? 409 : 400, (r.errors || ['failed']).join('; '), { conflict: !!r.conflict, ...(r.merge ? { merge: r.merge } : {}), ...(r.sentBack ? { sentBack: true } : {}), ...(r.regressed ? { regressed: true } : {}) });
       switch (action) {
         case 'repo.inject.list':
           return ok(res, { repoUuid: params.uuid, mode: RI.modeFor(repo), approval: !!repo.nexusSelf, injects: RI.list(params.uuid, { status: query.status || null }) });
@@ -7424,6 +7424,24 @@ async function handle(req, res, route, query, body) {
         case 'repo.inject.apply': {
           if (!owned()) return err(res, 404, `inject not found in this repo: ${params.id}`);
           const r = RI.apply(params.id, { layer, force: !!body.force, approvedBy: body.approvedBy || 'idearium' });
+          // 0.60.202 — James, after three refusals of SP5's title.js: "need a retry or automatically ask for the fix if possible". The
+          // gate refused an agent's proposal because tests that pass on the current file fail on it; the agent never saw which, so
+          // each attempt rewrote the line again. The proposal goes back to its agent the way his Reject does (_learnFromRejection:
+          // told, the lesson kept, the phase built again within repos.reject_retries), with the failing tests, expected and actual,
+          // as the reason. Said in the answer; repos.retry_on_refusal:false leaves it to him; the rejected proposal stays in history.
+          if (!r.ok && r.regressed && body.sendBack !== false && _cfg('repos.retry_on_refusal', true) !== false) {
+            const inj = RI.get ? RI.get(params.id) : null;
+            if (inj && inj.source && inj.source.kind === 'agent' && inj.status === 'proposed') {
+              const why = `Apply was refused: ${String((r.errors || [])[0] || '').split('\n')[0]}\nThe failing test(s), with what they expect and what your version gave:\n${(r.evidence && r.evidence.summary) || ''}\nKeep the behaviour these tests check exactly (their messages and values); change only what the phase asks.`;
+              const rj = RI.reject(params.id, { reason: why });
+              if (rj.ok) {
+                _learnFromRejection(repo, rj.inject || inj, why, { tell: true, retry: true }).catch(() => {});
+                os.emit('idearium.repo.inject.sent-back', { repoUuid: params.uuid, inject: params.id, path: inj.path, agent: inj.hatName || null });
+                r.errors = [`${(r.errors || [])[0] || 'refused'}`.replace(/ Reject it, or apply with force if you accept the break\./, ''), `Sent back to ${inj.hatName || 'its agent'} with the failing test(s): the proposal is rejected and the phase is being built again (repos.retry_on_refusal).`];
+                r.sentBack = true;
+              }
+            }
+          }
           if (r.ok) os.emit('idearium.repo.inject.applied', { repoUuid: params.uuid, inject: params.id, path: r.inject.path });
           if (r.ok) { let ce = null; try { ce = RI.changeEntry(r.inject); } catch (_) {} _emitLedger('idearium.change.approved', { repoUuid: params.uuid, inject: params.id, path: r.inject.path, entry: ce, causedBy: ce && ce.run }); }   // 0.60.190 APV4
           if (r.ok) _deviationAfter(params.uuid, 'files');

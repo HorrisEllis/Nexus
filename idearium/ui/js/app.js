@@ -5652,11 +5652,25 @@ async function diffWithPrevious(uuid) {
 function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function toast(msg, type='ok') {
   const area = document.getElementById('toast-area');
+  // 0.60.202 — James, with five copies of one refusal over his screen: "that error needs to be fixed." A message already showing is
+  // counted (×N) instead of stacked again; a long one shows its first line, the whole of it on hover (title).
+  const full = String(msg == null ? '' : msg);
+  const first = full.split('\n')[0];
+  const shown = first.length > 260 ? `${first.slice(0, 259)}…` : (full.includes('\n') ? `${first} …` : first);
+  const same = [...area.children].find(d => d.dataset && d.dataset.full === full && d.classList.contains(type));
+  if (same) {
+    const n = Number(same.dataset.n || 1) + 1; same.dataset.n = String(n);
+    same.textContent = `${shown}  ×${n}`;
+    clearTimeout(same._t); same._t = setTimeout(() => same.remove(), 2800);
+    return;
+  }
   const div = document.createElement('div');
   div.className = `toast ${type}`;
-  div.textContent = msg;
+  div.dataset.full = full; div.dataset.n = '1';
+  div.textContent = shown;
+  if (shown !== full) div.title = full;
   area.appendChild(div);
-  setTimeout(()=>div.remove(), 2800);
+  div._t = setTimeout(()=>div.remove(), 2800);
 }
 
 // §BUILT 2026-09-20 — James: "the ui needs to use a toast to show progress

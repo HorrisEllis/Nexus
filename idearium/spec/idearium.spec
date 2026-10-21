@@ -695,3 +695,14 @@ spec:
 # - The UI's api() turns a wait that ran out into "Idearium did not answer <METHOD> <path> within Ns — it may be busy …" (name AbortError
 #   kept). The upload start waits 60 s.
 # - Proof: test-any-project-tests AP-01..03; test-pipeline-root-causes RC-19.
+
+# ── ADDENDUM 2026-10-21 (0.60.202) — a refused proposal goes back to its agent (SD19) ──
+# James: "need a retry or automatically ask for the fix if possible, or a tool or something" · "that error needs to be fixed."
+# - POST /api/repos/:uuid/injects/:id/apply: when an agent's proposal is refused because linked tests that pass on the current file
+#   fail on it, it is rejected with the refusal (the failing tests, expected and actual) as its reason, and _learnFromRejection runs
+#   (the agent is told, the lesson kept, the phase built again within repos.reject_retries). The error answer says so, with
+#   detail.sentBack:true and detail.regressed:true. repos.retry_on_refusal:false or body.sendBack:false turns it off.
+# - UI: toast() counts an identical message (×N) and shows a long one's first line (the whole on hover); wsAct shows a sent-back
+#   refusal as a warning.
+# - Found, not changed: an Apply clicked before the background evidence finishes is not checked against the tests.
+# - Proof: tests/modules/test-refusal-sendback.test.js RS-01..03.
