@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-approval-chain-phasemap.spec::APV3_changelog_read
+type: phase
+id: docs_2026-10-21-approval-chain-phasemap.spec::APV3_changelog_read
+context: pipeline phase APV3_changelog_read of docs/2026-10-21-approval-chain-phasemap.spec
+intent: null
+summary: APV3_changelog_read (api) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792595037304
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792595037304
+lastSeenAt: 1792595037304
+fingerprint: null
+payload:
+  id: APV3_changelog_read
+  map: docs/2026-10-21-approval-chain-phasemap.spec
+  repo: null
+  layer: api
+  status: DONE 0.60.190 — test-approval-chain APC-04, APC-06
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/repo-drawer-views.js
+  depends_on:
+    - APV2_commit_carries_it
+  blocks:
+    - MOD-APV-READ
+  spec: docs/approval-chain.spec
+  graph: 4b56ad2bdd0f2cad

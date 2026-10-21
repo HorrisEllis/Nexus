@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+type: phase
+id: docs_2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+context: pipeline phase APV2_commit_carries_it of docs/2026-10-21-approval-chain-phasemap.spec
+intent: null
+summary: APV2_commit_carries_it (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792595037302
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792595037302
+lastSeenAt: 1792595037302
+fingerprint: null
+payload:
+  id: APV2_commit_carries_it
+  map: docs/2026-10-21-approval-chain-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.190 — test-approval-chain APC-02, APC-03
+  files:
+    - lib/repo-versions.js
+    - lib/repo-inject.js
+    - idearium/repo/snapshot.js
+    - idearium/api/index.js
+  depends_on:
+    - APV1_change_entry
+    - RC7_every_run_names_its_starter
+  blocks:
+    - MOD-APV-COMMIT
+  spec: docs/approval-chain.spec
+  graph: ddcc8eb6b64febdc

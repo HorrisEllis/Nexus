@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:APV1_change_entry:ac405a9ed94958e7
+type: graph
+id: phase:APV1_change_entry:ac405a9ed94958e7
+context: dependency graph of phase APV1_change_entry
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792594638621
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792594638621
+lastSeenAt: 1792594638621
+fingerprint: null
+payload:
+  for: APV1_change_entry
+  kind: phase
+  repo: null
+  hash: ac405a9ed94958e7
+  nodes:
+    - path: lib/change-entry.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 035c035515349513
+    layer: 1
+    deps:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV0_one_record
+    dependents:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV5_wired_in_loom
+    upstream:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV0_one_record
+    downstream:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV3_changelog_read
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV4_emit_on_the_ledger
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV5_wired_in_loom
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV5_wired_in_loom
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 035c035515349513 · layer 1 · ready
+      - 'depends on (1): APV0_one_record'
+      - >-
+        needed by (2): APV2_commit_carries_it, APV5_wired_in_loom · all downstream 4 · finishing it
+        unlocks APV2_commit_carries_it, APV5_wired_in_loom

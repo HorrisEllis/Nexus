@@ -433,6 +433,7 @@ const SUITES = [
   'test-economy-resume.test.js',    // 0.60.165 AB1 — a build that exhausted only on time-bound holds (economy/rate-limit/no-RAM) is retried when the slot frees; never a real failure
   'test-cos-run-target.test.js',     // 0.60.166 CT1 — the gate's test runs inside COS's process sandbox (clean env, timeout, output cap); portable, no KVM needed
   'test-tf-already-done.test.js',      // 0.60.167 — a phase whose files already exist is not stuck forever on test_first:require (TF.decide: passes-already+exists = already satisfied)
+  'test-approval-chain.test.js',  // 0.60.190 APV — an approved change: its entry in the Versionium commit of its diff, the change log route/row/drawer, the orchestrator's ledger
   'test-phase-census.test.js',  // 0.60.188 CNS1 — every phase judged against its evidence; short ids, mapping commits and map citations are not evidence
   'test-pipeline-root-causes.test.js',  // 0.60.170 RC1-RC4 — watcher EPERM never kills a kernel; linear node scan; Windows-safe node names; agent file names guarded
   'test-verify-first.test.js',          // 0.60.171 VF1 CB1 CB2 SM1 RC4b — check as it is before any agent; Gemini's five-part brief with the axioms; gemini first; agent self-models; labelled files archived

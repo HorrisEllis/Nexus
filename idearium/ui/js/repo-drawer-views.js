@@ -22,6 +22,12 @@ async function rtVersionsLoad() {
   catch (e) { RT_MORE.err.versions = e.message; }
   if (RT_VIEW === 'versions' && _rtDrawerOpen()) rtVersionsPaint();
 }
+// 0.60.190 APV3 — James: "the diff snapshotted in versionium with a change log when approved." Each commit's change-log entries, read
+// from the commit itself (APV0: one record): what was approved or reverted, by whom, from which run and who started it
+function _rmChangelog(c) {
+  const es = (c.provenance && c.provenance.changelog) || [];
+  return es.map(e => `<div class="rt-cl ${e.status === 'reverted' ? 'rv' : ''}" title="${_rtEsc(`inject ${e.inject || '?'}${e.why ? ` — ${e.why}` : ''}`)}">${e.status === 'reverted' ? '↺' : '✓'} ${_rtEsc(e.title)}${e.run ? ` <span class="rt-dim">· run ${_rtEsc(String(e.run).slice(0, 14))}${e.startedBy ? ` by ${_rtEsc(e.startedBy.who)}` : ''}</span>` : ''}</div>`).join('');
+}
 function rtVersionsPaint() {
   const body = _rtEl('rt-list'); if (!body) return;
   const all = (RT_MORE.versions && RT_MORE.versions.snapshots) || [];
@@ -29,7 +35,7 @@ function rtVersionsPaint() {
   const f = RT_MORE.file, l = f ? all.filter(c => c.provenance && c.provenance.files.some(x => x.path === f)) : all;
   _rmFilters(`<button class="rt-f" onclick="rtVersionsLoad()">↻</button>${f ? `<button class="rt-f on" title="show every commit" onclick="RT_MORE.file=null;rtVersionsPaint()">${_rtEsc(f.split('/').pop())} ✕</button>` : ''}<span class="rt-dim">${l.length} commit(s)</span>`);
   if (!RT_MORE.versions) { body.innerHTML = _rmErr('versions') || '<div class="rt-empty">reading versionium…</div>'; return; }
-  body.innerHTML = _rmErr('versions') + (l.length ? l.slice(0, 200).map(c => `<div class="rt-proc"><span class="rt-run" title="${_rtEsc(c.commitId)}">${_rtEsc(String(c.commitId).slice(0, 8))}</span> <span class="rt-dim">${_rmWhen(c.ts)}</span> <span class="rt-vmsg">${_rtEsc(String(c.message || '').slice(0, 110))}</span>${c.provenance && (c.provenance.files || []).length ? `<span class="rt-dim">${c.provenance.files.map(x => _rtEsc(x.path.split('/').pop())).slice(0, 4).join(' · ')}</span>` : ''}</div>`).join('')
+  body.innerHTML = _rmErr('versions') + (l.length ? l.slice(0, 200).map(c => `<div class="rt-proc"><span class="rt-run" title="${_rtEsc(c.commitId)}">${_rtEsc(String(c.commitId).slice(0, 8))}</span> <span class="rt-dim">${_rmWhen(c.ts)}</span> <span class="rt-vmsg">${_rtEsc(String(c.message || '').slice(0, 110))}</span>${c.provenance && (c.provenance.files || []).length ? `<span class="rt-dim">${c.provenance.files.map(x => _rtEsc(x.path.split('/').pop())).slice(0, 4).join(' · ')}</span>` : ''}${_rmChangelog(c)}</div>`).join('')
     : '<div class="rt-empty">no commits yet — the next file change makes the first</div>');
 }
 
