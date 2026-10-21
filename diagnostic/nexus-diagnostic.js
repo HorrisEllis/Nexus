@@ -1111,7 +1111,18 @@ function startService() {
   }
 
   // ── Escalation bridge — calls escalation ladder for persistent gaps ──────────
-  const _escalationCooldown = new Map(); // gapKey → last escalated ts
+  // RC6 (0.60.187): the cooldown is kept on disk (a restart used to forget it and send every open gap again) and is six hours,
+  // not five minutes; the gap's status goes through cortex (POST /api/gaps/status), which owns the gaps table.
+  const ESC_COOLDOWN_MS = 6 * 3600 * 1000;
+  const _escFile = require('path').join(process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data'), 'diagnostic', 'escalated.json');
+  const _escalationCooldown = new Map((() => { try { return Object.entries(JSON.parse(require('fs').readFileSync(_escFile, 'utf8'))); } catch (_) { return []; } })());
+  const _saveEscalated = () => { try { const now = Date.now(); const keep = [..._escalationCooldown].filter(([, t]) => now - t < ESC_COOLDOWN_MS); require('fs').mkdirSync(require('path').dirname(_escFile), { recursive: true }); require('fs').writeFileSync(_escFile, JSON.stringify(Object.fromEntries(keep))); } catch (_) {} };
+  const _gapStatusViaCortex = (gap, status) => new Promise(resolve => {
+    const b = JSON.stringify({ uuid: gap.uuid || gap.id, status, by: 'diagnostic.escalation' });
+    const r = http.request({ hostname: '127.0.0.1', port: 3748, path: '/api/gaps/status', method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(b) }, timeout: 3000 },
+      res => { res.resume(); resolve(res.statusCode === 200); });
+    r.on('error', () => resolve(false)); r.on('timeout', () => { r.destroy(); resolve(false); }); r.write(b); r.end();
+  });
   let _warnedMissingContractModule = false; // §23.20 — warn once, not every sweep
   // §23.18 — "the system needs to prioritize guardian and cortex more than
   // anything when it comes to diagnosing the system." gap-loop's own
@@ -1179,7 +1190,9 @@ function startService() {
       }
     }
 
+    let ollamaSent = 0;   // RC6: one local-model escalation per sweep — Ollama runs one job at a time, so more only queue behind each other
     for (const gap of gaps) {
+      if (ollamaSent >= 1) break;
       // §23.7 — skip gaps in terminal or investigating states
       // This is the primary fix for the 300-job flood:
       // gaps that are already being investigated should NOT be re-dispatched
@@ -1195,7 +1208,7 @@ function startService() {
 
       // Skip gaps already escalated in the last 5 minutes
       const lastEsc = _escalationCooldown.get(gap.uuid) || 0;
-      if (Date.now() - lastEsc < 300000) continue;
+      if (Date.now() - lastEsc < ESC_COOLDOWN_MS) continue;   // RC6: six hours, kept across restarts
 
       // §23.7 — check if the gap predicate is still true before dispatching
       // If the predicate is now false, run closure verifier instead of re-dispatching
@@ -1278,7 +1291,10 @@ function startService() {
           }
         }
 
+        // RC6 (0.60.187) — named, background, small: James's log showed these as an ownerless "ask" every ~90 s for an hour on
+        // qwen2.5-coder:7b with a 4096-token answer budget (num_ctx 5120), keeping the model loaded near the memory halt line.
         const jobPayload = JSON.stringify({
+          componentId: 'diagnostic.escalation', intent: 'diagnose', maxTokens: 1024, record: false,
           command:  'diagnose_and_repair',
           provider: raidDecision.agent,
           prompt:   _buildDiagnosticPrompt(gap),
@@ -1399,13 +1415,13 @@ function startService() {
               // The bucket is saturated — this individual gap can't be
               // usefully re-attempted until a human or a forge patch
               // clears it. Mark it so, don't re-fetch it every sweep.
-              jaaDB.update('gaps', gap.uuid, { status: 'failure_mode', failureModeAt: Date.now() });
+              await _gapStatusViaCortex(gap, 'failure_mode');   // RC6 (0.60.187): through cortex, which owns the table
             } else {
               // A real escalation attempt happened (levels 0-3.5) — same
               // 'investigating' convention the successful-dispatch branch
               // already uses, so the existing TTL/predicate sweep picks it
               // up the same way.
-              jaaDB.update('gaps', gap.uuid, { status: 'investigating', investigatingAt: Date.now() });
+              await _gapStatusViaCortex(gap, 'investigating');   // RC6 (0.60.187): through cortex, which owns the table
             }
           } catch(_) {}
         } catch(e) {
@@ -1423,13 +1439,13 @@ function startService() {
         // does not re-dispatch it. The gap stays investigating until the
         // closure verifier runs (after guardian.job.complete) and either
         // resolves it or marks it open for retry.
-        try {
-          const jaaDB = require('../cortex/memory/jaa-db').jaaDB;
-          jaaDB.update('gaps', gap.uuid, { status: 'investigating', investigatingAt: Date.now() });
-        } catch(_) {}
+        // RC6 (0.60.187): through cortex, which owns the table. The in-process copy this used to write (a JaaStore of its own, and
+        // a bare uuid where the store wants a filter) never reached cortex, so the gap came back 'open' and was sent again.
+        if (!(await _gapStatusViaCortex(gap, 'investigating'))) console.warn(`[diagnostic] gap ${gap.uuid || gap.id}: cortex did not take 'investigating'; the six-hour cooldown holds it instead`);
+        if (raidDecision?.agent === 'ollama') ollamaSent++;
       }
 
-      _escalationCooldown.set(gap.uuid, Date.now());
+      _escalationCooldown.set(gap.uuid, Date.now()); _saveEscalated();
     }
   }
 

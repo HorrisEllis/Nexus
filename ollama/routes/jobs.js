@@ -29,6 +29,12 @@ async function handle(req, res, { method, url, pathname }) {
   if (method === 'POST' && pathname === '/api/jobs') {
     const body = await readBody(req);
     if (!body.prompt) { json(res, 400, { ok: false, error: 'prompt required' }); return true; }
+    // RC6 (0.60.187) — James's log: an "ask" every ~90 s for an hour with no repo or caller named, keeping the model loaded near the
+    // memory halt line. It was the diagnostic service's gap escalation, which named nobody. A job now names its owner — componentId,
+    // agentId, repoUuid, sessionId or meta.source — or is refused (§1.2: traceable to a cause). Every caller in the tree already does.
+    const owner = (body.componentId && body.componentId !== 'ollama.jobs.dispatch' && body.componentId)
+      || (body.meta && body.meta.source) || body.agentId || (body.repoUuid && `repo ${body.repoUuid}`) || (body.sessionId && `session ${body.sessionId}`) || null;
+    if (!owner) { json(res, 400, { ok: false, error: 'a job must name its owner (componentId, agentId, repoUuid, sessionId or meta.source) — an ownerless job cannot be traced (RC6)' }); return true; }
     if (!state.ollamaOnline) { json(res, 503, { ok: false, error: 'Ollama host unreachable' }); return true; }
 
     // A job can reference an uploadId from POST /api/upload; the file's
@@ -53,6 +59,8 @@ async function handle(req, res, { method, url, pathname }) {
       requestId:   body.requestId   || crypto.randomUUID(),
       sessionId:   body.sessionId   || null,
       intent:      body.intent      || 'ask',
+      owner,                                    // RC6: who asked, shown in the activity log
+      meta:        body.meta && typeof body.meta === 'object' ? body.meta : null,
       // §0.39.269 — who is remembering this exchange (lib/agent-memory.js): the job is recorded to the download
       // manager under this agent when it completes. record:false opts out (a probe, a throwaway call).
       agentId:       body.agentId       || null,

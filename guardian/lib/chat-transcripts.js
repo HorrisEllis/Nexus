@@ -103,7 +103,8 @@ function matchJobs(messages, candidates) {
       if (u.t.includes(p) || (p.length > 450 && u.t.includes(head) && u.t.includes(tail))) {
         taken.add(u.i);
         const next = msgs[u.i + 1];
-        out.push({ job, index: u.i, reply: next && next.role === 'assistant' && _norm(next.text) ? next.text : null });
+        // RC5 (0.60.187): the page's speaker label ("Gemini said") is not part of the reply
+        out.push({ job, index: u.i, reply: next && next.role === 'assistant' && _norm(next.text) ? require('../../lib/path-guard').stripSpeaker(next.text) : null });
         break;
       }
     }
@@ -315,6 +316,10 @@ function createChatTranscripts({ bus, jobs, ncp, complete, rootFn, index, log = 
       const raw = it && it.raw;
       const messages = raw && (raw.messages || (raw.chat && raw.chat.messages));
       if (!Array.isArray(messages)) continue;
+      // RC5 (0.60.187): a transcript still being written is not an answer — the cut names ("tests/sp5-title.") were replies read
+      // mid-stream. The same rule _completeFromTranscript keeps (settled, not generating).
+      const st = raw.chat || raw;
+      if (st.settled === false || st.generating === true) continue;
       const m = matchJobs(messages, [job])[0];
       if (m && m.reply) return { text: m.reply, chatUrl: raw.url || null, chatKey: row.chatKey || null };
     }
