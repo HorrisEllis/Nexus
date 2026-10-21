@@ -98,7 +98,8 @@ const FILES = [
   ['lib/coder-brief.js', I('lib/coder-brief.js'), [I('lib/verify-first.js')]],   // §0.60.171 CB1 Gemini's five-part brief with AXIOMS v3.1
   ['lib/agent-self-model.js', I('lib/agent-self-model.js'), []],   // §0.60.171 SM1 each agent's model of itself; interrogation → proposals
   ['lib/safe-watch.js', I('lib/safe-watch.js'), []],   // §0.60.170 RC1: an fs.watch whose async EPERM cannot take the process down; re-arms
-  ['lib/phase-census.js', I('lib/phase-census.js'), [I('lib/phase-dag.js')]],   // 0.60.188 CNS1 every phase judged against its evidence (commits, releases, files, proof)
+  ['lib/phase-census.js', I('lib/phase-census.js'), [I('lib/phase-dag.js')]],
+  ['lib/change-entry.js', I('lib/change-entry.js'), [I('lib/nexus-self/inject-gate.js')]],   // 0.60.190 APV1 an approved change's change-log entry (it rides on its Versionium commit)   // 0.60.188 CNS1 every phase judged against its evidence (commits, releases, files, proof)
   ['lib/path-guard.js', I('lib/path-guard.js'), []],   // §0.60.170 RC4: a file name from an agent's reply is checked (chat label, cut short, prose) before it is written
   ['lib/system-shape.js', I('lib/system-shape.js'), []],   // §0.60.138 does a system match genesis, role by role
   ['diagnostic/cli.js', I('diagnostic/cli.js'), [I('diagnostic/registry-components.js'), I('diagnostic/config.js')]],   // §0.60.138 diagnostic's genesis cli
@@ -128,6 +129,10 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/coder-brief.js'), '§0.60.171 CB1 compose() is the brief of every file/brick sent to a coder'],
   [I('idearium/api/index.js'), I('lib/pipeline-routing.js'), '§0.60.171 CB2 preferFirst() after the learned order (both build paths)'],
   [I('idearium/api/index.js'), I('lib/phase-census.js'), '0.60.188 CNS1 GET /api/phases/census'],
+  [I('lib/repo-inject.js'), I('lib/change-entry.js'), '0.60.190 APV2 an approved/reverted inject\'s entry, noted on its commit or queued for the gate\'s sync commit'],
+  [I('idearium/api/index.js'), I('lib/repo-inject.js'), '0.60.190 APV2 setRunResolver (run → phase, map, startedBy); takeGateEntries/returnGateEntries on the sync commit; changeEntry for the ledger'],
+  [I('idearium/api/index.js'), I('lib/repo-versions.js'), '0.60.190 APV4 setOnCommit → idearium.version.commit on the orchestrator\'s ledger'],
+  [I('idearium/api/index.js'), I('lib/nexus-client.js'), '0.60.190 APV4 _emitLedger → postDurable(orchestrator, /api/ledger); drainBuffer every minute'],
   [I('idearium/cli/route-commands.js'), I('lib/phase-census.js'), '0.60.188 CNS1 `phases census` through the route'],
   [I('idearium/api/index.js'), I('lib/path-guard.js'), '§0.60.171 RC4b repairTree() at the start of a phase build'],
   [I('orchestrator/orchestrator.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 UI hotswap watcher and auth hotswap watcher'],

@@ -88,3 +88,7 @@
 #plan-panel .pp-log .rt-act:hover{color:var(--text)}
 .pp-why{padding:0 0 4px 22px;font-size:9.5px;color:var(--coral);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #plan-panel .pp-log .rt-vmsg{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}
+/* 0.60.190 APV3 — a commit's change-log entries, on their own lines under it */
+#plan-panel .pp-log .rt-proc:has(.rt-cl){flex-wrap:wrap}
+#plan-panel .pp-log .rt-cl{flex-basis:100%;padding:2px 0 0 14px;font-size:10px;color:var(--mint,var(--text));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#plan-panel .pp-log .rt-cl.rv{color:var(--coral,var(--text2))}

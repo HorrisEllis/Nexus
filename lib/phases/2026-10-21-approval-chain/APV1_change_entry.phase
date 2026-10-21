@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
+type: phase
+id: docs_2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
+context: pipeline phase APV1_change_entry of docs/2026-10-21-approval-chain-phasemap.spec
+intent: null
+summary: APV1_change_entry (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792595037298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792595037298
+lastSeenAt: 1792595037298
+fingerprint: null
+payload:
+  id: APV1_change_entry
+  map: docs/2026-10-21-approval-chain-phasemap.spec
+  repo: null
+  layer: foundation
+  status: DONE 0.60.190 — test-approval-chain APC-01
+  files:
+    - lib/change-entry.js
+  depends_on:
+    - APV0_one_record
+  blocks:
+    - MOD-APV-ENTRY
+  spec: docs/approval-chain.spec
+  graph: 84ec3e73d291c157

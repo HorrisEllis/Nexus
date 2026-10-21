@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-approval-chain-phasemap.spec::APV0_one_record
+type: phase
+id: docs_2026-10-21-approval-chain-phasemap.spec::APV0_one_record
+context: pipeline phase APV0_one_record of docs/2026-10-21-approval-chain-phasemap.spec
+intent: null
+summary: APV0_one_record (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792595037265
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792595037265
+lastSeenAt: 1792595037265
+fingerprint: null
+payload:
+  id: APV0_one_record
+  map: docs/2026-10-21-approval-chain-phasemap.spec
+  repo: null
+  layer: null
+  status: DECIDED
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c7db4af169df85e4

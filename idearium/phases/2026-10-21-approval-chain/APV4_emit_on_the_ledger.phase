@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-approval-chain-phasemap.spec::APV4_emit_on_the_ledger
+type: phase
+id: docs_2026-10-21-approval-chain-phasemap.spec::APV4_emit_on_the_ledger
+context: pipeline phase APV4_emit_on_the_ledger of docs/2026-10-21-approval-chain-phasemap.spec
+intent: null
+summary: APV4_emit_on_the_ledger (api) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792595037306
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792595037306
+lastSeenAt: 1792595037306
+fingerprint: null
+payload:
+  id: APV4_emit_on_the_ledger
+  map: docs/2026-10-21-approval-chain-phasemap.spec
+  repo: null
+  layer: api
+  status: DONE 0.60.190 — test-approval-chain APC-05
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - lib/nexus-client.js
+  depends_on:
+    - APV2_commit_carries_it
+  blocks:
+    - MOD-APV-EMIT
+  spec: docs/approval-chain.spec
+  graph: cedb2fe875e7db6e

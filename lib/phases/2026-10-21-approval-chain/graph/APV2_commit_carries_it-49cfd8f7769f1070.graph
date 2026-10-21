@@ -1,0 +1,256 @@
+envelope: 1
+uuid: nexus-export-graph-phase:APV2_commit_carries_it:49cfd8f7769f1070
+type: graph
+id: phase:APV2_commit_carries_it:49cfd8f7769f1070
+context: dependency graph of phase APV2_commit_carries_it
+intent: null
+summary: 28 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792594638636
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792594638636
+lastSeenAt: 1792594638636
+fingerprint: null
+payload:
+  for: APV2_commit_carries_it
+  kind: phase
+  repo: null
+  hash: 49cfd8f7769f1070
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/repo-inject.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-inject-screen.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-proposal-evidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/path-guard.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/step-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/lib/merge3.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: lib/repo-versions.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/repo-versions.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/nexus-self/inject-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/path-guard.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: versionium/lib/merge3.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/phase-faults.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-inject-screen.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-proposal-evidence.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/index.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: versionium/lib/merge3.js
+      fromSystem: lib
+      toSystem: versionium
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 035c035515349513
+    layer: 2
+    deps:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC7_every_run_names_its_starter
+    dependents:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV3_changelog_read
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV4_emit_on_the_ledger
+    upstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC6_unowned_ollama_load
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC7_every_run_names_its_starter
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV0_one_record
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
+    downstream:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV3_changelog_read
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV4_emit_on_the_ledger
+    blockedBy:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
+    unlocks:
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV3_changelog_read
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV4_emit_on_the_ledger
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 035c035515349513 · layer 2 · blocked by APV1_change_entry
+      - 'depends on (2): APV1_change_entry, RC7_every_run_names_its_starter · all upstream 4'
+      - >-
+        needed by (2): APV3_changelog_read, APV4_emit_on_the_ledger · finishing it unlocks
+        APV3_changelog_read, APV4_emit_on_the_ledger

@@ -1,5 +1,5 @@
 {
- "generatedAt": 1792367952069,
+ "generatedAt": 1792597923926,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -43,15 +43,6 @@
    ],
    "listens": [
     "site-settings.result"
-   ]
-  },
-  "nexus.clear-glass.plugins.zoom": {
-   "emits": [
-    "driver.exec"
-   ],
-   "listens": [
-    "driver.error",
-    "driver.result"
    ]
   },
   "nexus.clear-glass.renderer.browser": {
@@ -284,19 +275,23 @@
   },
   "nexus.clear-glass.src.ipc.bridge": {
    "emits": [
+    "driver.exec",
     "guardian.listener.command-result",
     "guardian.listener.copilot-answer",
     "guardian.listener.copilot-panel",
     "guardian.listener.direct-file-write",
     "guardian.listener.ollama-answer",
     "guardian.listener.route.error",
+    "import.firefox.done",
     "provider.attention",
     "window.hide",
     "window.minimize",
     "window.open"
    ],
    "listens": [
-    "dom:event"
+    "dom:event",
+    "net.open",
+    "plugin:error"
    ]
   },
   "nexus.clear-glass.src.main": {
@@ -384,7 +379,11 @@
   "nexus.clear-glass.src.preload": {
    "emits": [],
    "listens": [
+    "floatcli:nav",
+    "floatcli:state",
     "options:changed",
+    "passwords:available",
+    "passwords:offer",
     "shortcut:action"
    ]
   },
@@ -1780,6 +1779,12 @@
    ],
    "listens": []
   },
+  "nexus.tests.modules.test-adblock.test": {
+   "emits": [],
+   "listens": [
+    "plugin:test:seen"
+   ]
+  },
   "nexus.tests.modules.test-back-and-forth.test": {
    "emits": [
     "guardian.job.complete",
@@ -1968,6 +1973,13 @@
    "listens": [
     "cortex.orion.classified"
    ]
+  },
+  "nexus.tests.modules.test-passwords.test": {
+   "emits": [
+    "pw:capture",
+    "pw:form"
+   ],
+   "listens": []
   },
   "nexus.tests.modules.test-pf1-stalls.test": {
    "emits": [
@@ -2169,7 +2181,7 @@
     "nexus.clear-glass.plugins.guardian-listeners",
     "nexus.clear-glass.plugins.passwords",
     "nexus.clear-glass.plugins.permissions",
-    "nexus.clear-glass.plugins.zoom"
+    "nexus.clear-glass.src.ipc.bridge"
    ],
    "listeners": []
   },
@@ -2199,8 +2211,7 @@
     "nexus.clear-glass.src.gates"
    ],
    "listeners": [
-    "nexus.clear-glass.plugins.passwords",
-    "nexus.clear-glass.plugins.zoom"
+    "nexus.clear-glass.plugins.passwords"
    ]
   },
   "passwords.result": {
@@ -2223,16 +2234,6 @@
    ],
    "listeners": [
     "nexus.clear-glass.plugins.permissions"
-   ]
-  },
-  "driver.error": {
-   "emitters": [
-    "nexus.clear-glass.src.driver",
-    "nexus.clear-glass.src.gates",
-    "nexus.clear-glass.test.watchdog.test"
-   ],
-   "listeners": [
-    "nexus.clear-glass.plugins.zoom"
    ]
   },
   "cg:navigate": {
@@ -2500,6 +2501,14 @@
    "emitters": [
     "nexus.clear-glass.src.downloads.adapter",
     "nexus.clear-glass.test.downloads-intake-bridge.test"
+   ],
+   "listeners": []
+  },
+  "driver.error": {
+   "emitters": [
+    "nexus.clear-glass.src.driver",
+    "nexus.clear-glass.src.gates",
+    "nexus.clear-glass.test.watchdog.test"
    ],
    "listeners": []
   },
@@ -3235,6 +3244,12 @@
    ],
    "listeners": []
   },
+  "import.firefox.done": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ],
+   "listeners": []
+  },
   "provider.attention": {
    "emitters": [
     "nexus.clear-glass.src.ipc.bridge"
@@ -3258,6 +3273,20 @@
     "nexus.clear-glass.src.ipc.bridge"
    ],
    "listeners": []
+  },
+  "net.open": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ]
+  },
+  "plugin:error": {
+   "emitters": [
+    "nexus.clear-glass.src.plugins.host"
+   ],
+   "listeners": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ]
   },
   "bgtab.closed": {
    "emitters": [
@@ -3473,12 +3502,6 @@
    ],
    "listeners": []
   },
-  "plugin:error": {
-   "emitters": [
-    "nexus.clear-glass.src.plugins.host"
-   ],
-   "listeners": []
-  },
   "plugins:killswitch.fullstop": {
    "emitters": [
     "nexus.clear-glass.src.plugins.host"
@@ -3509,7 +3532,31 @@
     "nexus.clear-glass.src.plugins.webrequest-adapter"
    ]
   },
+  "floatcli:nav": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.preload"
+   ]
+  },
+  "floatcli:state": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.preload"
+   ]
+  },
   "options:changed": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.preload"
+   ]
+  },
+  "passwords:available": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.preload"
+   ]
+  },
+  "passwords:offer": {
    "emitters": [],
    "listeners": [
     "nexus.clear-glass.src.preload"
@@ -6737,6 +6784,12 @@
    ],
    "listeners": []
   },
+  "plugin:test:seen": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-adblock.test"
+   ]
+  },
   "guardian.provider.disconnected": {
    "emitters": [
     "nexus.tests.modules.test-back-and-forth.test",
@@ -6939,6 +6992,18 @@
    "listeners": [
     "nexus.tests.modules.test-manifest-phase1.test"
    ]
+  },
+  "pw:capture": {
+   "emitters": [
+    "nexus.tests.modules.test-passwords.test"
+   ],
+   "listeners": []
+  },
+  "pw:form": {
+   "emitters": [
+    "nexus.tests.modules.test-passwords.test"
+   ],
+   "listeners": []
   },
   "forge.patch.proposed": {
    "emitters": [

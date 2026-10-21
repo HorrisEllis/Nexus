@@ -878,3 +878,18 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `docs/idearium-phase-census.md`, with every verdict's evidence;
   - `CHANGELOG-0.60.188.md`;
   - `node -e "console.log(require('./lib/phase-dag').build(...).stats)"`: phases 1900 → 1925.
+
+### 2026-10-21 — 0.60.190: he asked for the system to hang together, and named where to look
+- **His words:** "make sure it's all interconnected, changes are logged and the diff snapshotted in versionium with a change log when
+  approved. what about an api route or the pulse emission system"
+- **Context:** this came right after the run record began naming who started each run. He didn't ask for one feature. He asked for an
+  approval to be followed through every system that should know about it. He named three of them: the version store, a route, and his
+  own event spine.
+- **What it shows:** systems thinking. The check against the code found that two of his five asks already held (logging, and Versionium
+  commits on approval). Three did not: a change log, a route to read it, and the event spine. He also pointed at the pulse system, his
+  own 0.39.173 design, as the place events belong. Following that led to a silent gap nobody had noticed: the durable buffer for events
+  sent while a system is down had never been drained, so buffered failure reports never arrived.
+- **Checkable:**
+  - `tests/modules/test-approval-chain.test.js` APC-01..06;
+  - `CHANGELOG-0.60.190.md`;
+  - `docs/2026-10-21-approval-chain-phasemap.spec`, whose ground-truth table shows what held before and what didn't.

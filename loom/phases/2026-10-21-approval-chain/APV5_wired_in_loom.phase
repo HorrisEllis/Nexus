@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-21-approval-chain-phasemap.spec::APV5_wired_in_loom
+type: phase
+id: docs_2026-10-21-approval-chain-phasemap.spec::APV5_wired_in_loom
+context: pipeline phase APV5_wired_in_loom of docs/2026-10-21-approval-chain-phasemap.spec
+intent: null
+summary: APV5_wired_in_loom (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792595037307
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792595037307
+lastSeenAt: 1792595037307
+fingerprint: null
+payload:
+  id: APV5_wired_in_loom
+  map: docs/2026-10-21-approval-chain-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.190 — test-run-state, test-loom-map
+  files:
+    - loom/maps/run-state-map.js
+  depends_on:
+    - APV1_change_entry
+  blocks:
+    - MOD-APV-WIRES
+  spec: docs/approval-chain.spec
+  graph: 73a4e2239e5435a3
