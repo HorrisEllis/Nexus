@@ -405,6 +405,13 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
       await page.waitForSelector('#sh-newtab .nt-agents .sh-empty');
       assert.match(await page.textContent('#sh-newtab .nt-agents'), /trying again/);
+      // 0.60.213 — James: "get rid of that border in the search": focused, the input draws no ring of its own; the field's glow shows focus
+      await page.evaluate(() => { const q = document.getElementById('nt-q'); q.focus(); });
+      await page.keyboard.press('a');
+      const ring = await page.evaluate(() => { const q = document.getElementById('nt-q'); const f = q.closest('.nt-search'); return { input: getComputedStyle(q).outlineStyle, field: getComputedStyle(f).boxShadow }; });
+      assert.strictEqual(ring.input, 'none', 'no ring inside the search field');
+      assert.ok(ring.field && ring.field !== 'none', 'the field itself still shows focus');
+      if (process.env.BST_SHOT) await page.screenshot({ path: process.env.BST_SHOT });
       assert.ok(!/Guardian's provider host/.test(await page.textContent('#sh-newtab')), 'the message names what failed, not Guardian');
       await page.evaluate(() => { window.ClearGlass.providers.list = async () => [{ id: 'claude', name: 'Claude', color: '#d97757', running: false }, { id: 'chatgpt', name: 'ChatGPT', running: true }]; });
       await page.waitForSelector('#sh-newtab .nt-agent[data-id="chatgpt"]', { timeout: 8000 });
