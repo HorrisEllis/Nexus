@@ -253,7 +253,8 @@ class PluginHost {
       registerPluginCommand({
         id: entry.signature, icon: entry.icon || '⬢', label: entry.label || manifest.displayName,
         group: entry.group || manifest.displayName, pinnable: true, defaultPinned: false,
-        pluginId: manifest.id,
+        pluginId: manifest.id, pluginName: manifest.name || null,   // 0.60.210 — the ☰ menu and Customize toolbar draw the plugin's own icon by its name
+        ...(entry.glyph ? { glyph: entry.glyph } : {}), desc: entry.desc || `${manifest.displayName || manifest.name || 'A plugin'}: ${entry.label || ''}`.trim(),
       });
     }
 

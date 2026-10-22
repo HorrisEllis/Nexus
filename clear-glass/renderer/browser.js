@@ -1759,66 +1759,98 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // Clicking a row forwards to the real underlying button's real click
   // handler via activateToolbarCommand rather than reimplementing what
   // any of these tools do.
+  // 0.60.210 — James: "customize toolbar and those toolbar links, and customize toolbar need to be rebuilt for  the new ui, they are cheap and
+  // crappy, and look bad." The Tools rows are the ☰ menu's own rows now (drawn icon, label), each with a pin button that puts the tool on the
+  // toolbar; the heading carries "Edit" (Customize toolbar). Styles: shell/toolbar.css. The rows still run the tool's real button.
+  const _tEsc = (v) => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  // a plugin's command draws its plugin's icon (renderer/shell/icons.js PLUGIN), else the plugin drawing; a glyph only when nothing is drawn
+  const _glyphOf = (c) => c.glyph || (c.pluginId ? ((window.CGIcons && window.CGIcons.PLUGIN && window.CGIcons.PLUGIN[c.pluginName]) || 'plugins') : null);
+  // a command with no toolbar button of its own (a pure action, or a plugin command with no element) runs once; it is never pinned
+  const _isAction = (c) => !c.id || (!!c.pluginId && !document.getElementById(c.id));
+  const _tIco = (c, size = 16) => (_glyphOf(c) ? `<span class="mb-ico" data-icon="${_tEsc(_glyphOf(c))}" data-icon-size="${size}"></span>` : `<span class="mb-ico">${_tEsc(c.icon || '')}</span>`);
   function _renderToolMenuRows() {
-    const unpinned = TOOLBAR_COMMANDS.filter(c => c.id && c.pinnable && !currentPinned.includes(c.id));
+    // a tool the menu already has a row for (Settings) is not listed twice
+    const inMenu = new Set(['btn-settings']);
+    const unpinned = TOOLBAR_COMMANDS.filter(c => c.id && (c.pinnable || c.pluginId) && !currentPinned.includes(c.id) && !inMenu.has(c.id));
     if (!unpinned.length) return '';
-    const rows = unpinned.map(c => `
-      <div class="menu-item tool-row" data-tool-menu-id="${c.id}">
-        <span class="tool-row-icon">${c.icon}</span><span>${c.label}</span>
-      </div>`).join('');
-    return `<div class="menu-sep"></div><div class="menu-section"><div class="menu-section-label">Tools</div>${rows}</div>`;
+    const rows = unpinned.map(c => `<div class="menu-item am-tool" role="menuitem" data-tool-menu-id="${_tEsc(c.id)}" title="${_tEsc(c.desc || c.label)}">${_tIco(c)}<span class="menu-lbl">${_tEsc(c.label)}</span>${_isAction(c) ? '' : `<button class="am-pin" data-tool-pin="${_tEsc(c.id)}" title="Pin to the toolbar" aria-label="Pin ${_tEsc(c.label)} to the toolbar" data-icon="pin" data-icon-size="14"></button>`}</div>`).join('');
+    return `<div class="menu-sep"></div><div class="am-tools-head"><span class="menu-section-label">Tools</span><button class="am-tools-edit" data-tool-edit title="Customize toolbar">Edit</button></div>${rows}`;
+  }
+  function _pinTools(ids) {
+    return cg.options.set({ pinnedToolbarButtons: ids }).then(() => applyToolbarPins(ids)).catch(err => { toast(`The toolbar was not saved: ${err.message}`, 'error', 5000); throw err; });
   }
   function _wireToolMenuRows(panel) {
     panel.querySelectorAll('[data-tool-menu-id]').forEach(row => {
-      row.addEventListener('click', () => {
+      row.addEventListener('click', (e) => {
+        if (e.target.closest && e.target.closest('[data-tool-pin]')) return;
         const cmd = TOOLBAR_COMMANDS.find(c => c.id === row.dataset.toolMenuId);
-        if (cmd) activateToolbarCommand(cmd);
         panel.style.display = 'none';
+        if (cmd) activateToolbarCommand(cmd);
       });
     });
+    panel.querySelectorAll('[data-tool-pin]').forEach(btn => btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.toolPin, cmd = TOOLBAR_COMMANDS.find(c => c.id === id);
+      _pinTools([...currentPinned.filter(x => x !== id), id]).then(() => {
+        const row = btn.closest('[data-tool-menu-id]'); if (row) row.remove();
+        if (!panel.querySelector('[data-tool-menu-id]')) panel.querySelectorAll('.am-tools-head').forEach(h => { const sep = h.previousElementSibling; if (sep && sep.classList.contains('menu-sep')) sep.remove(); h.remove(); });
+        toast(`${cmd ? cmd.label : id} is on the toolbar`, 'success', 2500);
+      }).catch(() => {});
+    }));
+    panel.querySelectorAll('[data-tool-edit]').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); panel.style.display = 'none'; _openToolbarEditor(); }));
   }
 
-  // ── Toolbar editor ("need a toolbar editor", now also the ex-palette's
-  //    home — "move everything to the customize toolbar menu") ─────────
+  // ── Customize toolbar (0.60.210 rebuild): a preview, the two lists with what each tool does, pin / unpin on every row, run-once actions ──
+  function _teRow(cmd, zone) {
+    const onBar = zone === 'toolbar';
+    const row = document.createElement('div');
+    row.className = 'te-row'; row.draggable = true; row.dataset.toolId = cmd.id;
+    row.innerHTML = `<span class="te-ico">${_glyphOf(cmd) ? `<span data-icon="${_tEsc(_glyphOf(cmd))}" data-icon-size="18"></span>` : _tEsc(cmd.icon || '')}</span>
+      <span class="te-txt"><span class="te-lbl">${_tEsc(cmd.label)}</span><span class="te-desc">${_tEsc(cmd.desc || cmd.group || '')}</span></span>
+      <button class="te-move" data-te-move title="${onBar ? 'Move it to the ☰ menu' : 'Pin it to the toolbar'}" aria-label="${onBar ? `Move ${_tEsc(cmd.label)} to the menu` : `Pin ${_tEsc(cmd.label)} to the toolbar`}"><span data-icon="${onBar ? 'menu' : 'pin'}" data-icon-size="13"></span>${onBar ? 'Unpin' : 'Pin'}</button>`;
+    row.querySelector('[data-te-move]').addEventListener('click', (e) => { e.stopPropagation(); _teMove(cmd.id, onBar ? 'menu' : 'toolbar'); });
+    return row;
+  }
+  function _teMove(id, zone) {
+    const cmd = TOOLBAR_COMMANDS.find(c => c.id === id); if (!cmd) return;
+    const old = document.querySelector(`#toolbar-editor-panel .te-row[data-tool-id="${CSS.escape(id)}"]`);
+    const row = _teRow(cmd, zone);
+    document.getElementById(zone === 'toolbar' ? 'te-drop-toolbar' : 'te-drop-menu').appendChild(row);
+    if (old) old.remove();
+    _teRefresh();
+  }
+  function _teRefresh() {
+    const bar = document.getElementById('te-drop-toolbar'), menu = document.getElementById('te-drop-menu');
+    document.getElementById('te-count-toolbar').textContent = bar.children.length;
+    document.getElementById('te-count-menu').textContent = menu.children.length;
+    const pv = document.getElementById('te-preview-icons');
+    pv.innerHTML = [...bar.children].map(r => { const c = TOOLBAR_COMMANDS.find(x => x.id === r.dataset.toolId) || {}; return `<span class="te-pv" title="${_tEsc(c.label)}">${_glyphOf(c) ? `<span data-icon="${_tEsc(_glyphOf(c))}" data-icon-size="17"></span>` : _tEsc(c.icon || '')}</span>`; }).join('');
+    if (window.CGIcons) window.CGIcons.apply(document.getElementById('toolbar-editor-panel'));
+  }
   function _renderToolbarEditorActions() {
-    // Palette-only commands: no `id` (pure `action`) or a plugin command
-    // with no backing DOM element at all — these never had a toolbar
-    // button to drag, so they're a click-to-run list, not a drop zone.
-    const actions = TOOLBAR_COMMANDS.filter(c => !c.id || (c.pluginId && !document.getElementById(c.id)));
+    // run-once commands: no button of their own (a pure action, or a plugin command with no element) — buttons, not draggable rows
+    const actions = TOOLBAR_COMMANDS.filter(_isAction);
     const list = document.getElementById('te-actions-list');
-    if (!actions.length) { list.innerHTML = '<div class="te-zone-drop:empty"></div>'; return; }
-    list.innerHTML = actions.map((c, i) => `
-      <div class="te-action-row" data-action-index="${i}">
-        <span class="te-chip-icon">${c.icon}</span>
-        <span class="te-action-label">${c.label}</span>
-        <span class="te-action-group">${c.group}</span>
-      </div>`).join('');
-    list.querySelectorAll('[data-action-index]').forEach(row => {
-      row.addEventListener('click', () => activateToolbarCommand(actions[+row.dataset.actionIndex]));
-    });
+    list.innerHTML = actions.map((c, i) => `<button class="te-act" data-action-index="${i}" title="${_tEsc(c.desc || c.label)}">${_glyphOf(c) ? `<span data-icon="${_tEsc(_glyphOf(c))}" data-icon-size="15"></span>` : `<span>${_tEsc(c.icon || '')}</span>`}${_tEsc(c.label)}</button>`).join('');
+    list.querySelectorAll('[data-action-index]').forEach(b => b.addEventListener('click', () => activateToolbarCommand(actions[+b.dataset.actionIndex])));
   }
   function _openToolbarEditor() {
     const overlay = document.getElementById('toolbar-editor-overlay');
     const dropToolbar = document.getElementById('te-drop-toolbar');
     const dropMenu = document.getElementById('te-drop-menu');
-    dropToolbar.innerHTML = '';
-    dropMenu.innerHTML = '';
-    TOOLBAR_COMMANDS.filter(c => c.id && c.pinnable).forEach(cmd => {
-      const chip = document.createElement('div');
-      chip.className = 'te-chip';
-      chip.draggable = true;
-      chip.dataset.toolId = cmd.id;
-      chip.innerHTML = `<span class="te-chip-icon">${cmd.icon}</span><span>${cmd.label}</span>`;
-      (currentPinned.includes(cmd.id) ? dropToolbar : dropMenu).appendChild(chip);
-    });
+    dropToolbar.innerHTML = ''; dropMenu.innerHTML = '';
+    const tools = TOOLBAR_COMMANDS.filter(c => c.id && c.pinnable && !_isAction(c));
+    // the toolbar list in the order it is pinned; the menu list in the registry's order
+    for (const id of currentPinned) { const c = tools.find(x => x.id === id); if (c) dropToolbar.appendChild(_teRow(c, 'toolbar')); }
+    for (const c of tools) if (!currentPinned.includes(c.id)) dropMenu.appendChild(_teRow(c, 'menu'));
     _renderToolbarEditorActions();
+    _teRefresh();
     overlay.classList.add('visible');
   }
   function _closeToolbarEditor() {
     document.getElementById('toolbar-editor-overlay').classList.remove('visible');
-    // Whatever the toolbar drop zone currently contains when the editor
-    // closes IS the new pin set — read straight back off the real DOM
-    // rather than tracking a parallel state object that could drift.
+    // Whatever the toolbar list holds when the editor closes IS the new pin set — read straight back off the real DOM rather than tracking
+    // a parallel state object that could drift.
     const pinned = Array.from(document.getElementById('te-drop-toolbar').children).map(c => c.dataset.toolId);
     cg.options.set({ pinnedToolbarButtons: pinned })
       .then(() => applyToolbarPins(pinned))
@@ -1827,12 +1859,12 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   (function _wireToolbarEditorDragDrop() {
     const zones = [document.getElementById('te-drop-toolbar'), document.getElementById('te-drop-menu')];
     document.addEventListener('dragstart', (e) => {
-      if (!e.target.classList?.contains('te-chip')) return;
+      if (!e.target.classList?.contains('te-row')) return;
       e.dataTransfer.setData('text/plain', e.target.dataset.toolId);
       e.target.classList.add('dragging');
     });
     document.addEventListener('dragend', (e) => {
-      if (e.target.classList?.contains('te-chip')) e.target.classList.remove('dragging');
+      if (e.target.classList?.contains('te-row')) e.target.classList.remove('dragging');
     });
     zones.forEach(zone => {
       zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
@@ -1841,8 +1873,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         e.preventDefault();
         zone.classList.remove('drag-over');
         const id = e.dataTransfer.getData('text/plain');
-        const chip = document.querySelector(`.te-chip[data-tool-id="${id}"]`);
-        if (chip) zone.appendChild(chip);
+        if (id) _teMove(id, zone.dataset.zone);
       });
     });
   })();
@@ -2677,6 +2708,12 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         node.style.display = isPinned ? '' : 'none';
       }
     });
+    // 0.60.210 — the movable tools follow the order they were pinned in (Customize toolbar shows that order); copilot-toggle and
+    // btn-bookmark have fixed places in the chrome bar and are not moved
+    for (const id of currentPinned) {
+      const n = id === 'picker-btn' ? document.getElementById('tool-picker-group') : document.getElementById(id);
+      if (n && n.parentElement === toolbarSlot) toolbarSlot.appendChild(n);
+    }
     const hasPins = toolbarSlot.children.length > 0;
     toolbarSlot.style.display = hasPins ? 'flex' : 'none';
     document.getElementById('tools-divider-l').style.display = hasPins ? '' : 'none';
