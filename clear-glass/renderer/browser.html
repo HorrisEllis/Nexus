@@ -389,6 +389,8 @@
 
 <!-- tools that live in the ☰ menu until pinned (applyToolbarPins in browser.js moves the same nodes onto the bar) -->
 <div id="toolbar-overflow-slot" style="display:none;">
+  <!-- 0.60.211 zoom controls on the toolbar (core zoom; pinned from Customize toolbar) -->
+  <div id="zoom-controls" class="tb-zoom" role="group" aria-label="Zoom"><button class="nav-btn" data-tz="out" data-icon="minus" title="Zoom out (Ctrl+−)" aria-label="Zoom out">−</button><button class="tb-zoom-pct" data-tz="reset" id="tz-pct" title="Reset to 100% (Ctrl+0)">100%</button><button class="nav-btn" data-tz="in" data-icon="plus" title="Zoom in (Ctrl++)" aria-label="Zoom in">+</button></div>
   <button class="nav-btn" id="btn-rewind" data-icon="undo" data-tool-id="rewind" data-tool-label="Rewind Session" data-tool-icon="⏮" title="Rewind session">⏮</button>
   <button class="nav-btn" id="btn-providers" data-icon="link" data-tool-id="providers" data-tool-label="NCP Providers" data-tool-icon="⟳" title="NCP Providers">⟳</button>
   <button class="nav-btn" id="btn-userscripts" data-tool-id="userscripts" data-tool-label="Userscripts" data-tool-icon="✎" title="Userscripts">✎</button>

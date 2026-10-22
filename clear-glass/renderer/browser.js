@@ -1696,7 +1696,12 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     if (btnPct) btnPct.textContent = pct;
     if (popoverPct) popoverPct.textContent = pct;
     if (btn) btn.style.display = (_zoomFactor === 1.0) ? 'none' : 'flex';
+    const tz = document.getElementById('tz-pct'); if (tz) tz.textContent = pct;   // 0.60.211 the toolbar's zoom controls
   }
+  // 0.60.211 — the toolbar's zoom controls: the same core zoom as the shortcuts, the address bar and the ☰ menu
+  document.querySelectorAll('#zoom-controls [data-tz]').forEach(b => b.addEventListener('click', (e) => {
+    e.stopPropagation(); const d = b.dataset.tz; if (d === 'reset') applyZoom(1.0); else zoomStep(d);
+  }));
   // BS14 (0.60.183) — James: "migrate page zoom to the core of clearglass." The ladder (Firefox's), the clamp and the per-site store are
   // core now (src/core/zoom.js, reached through cg.zoom); this window only shows the result. Without the core (an old preload, a test
   // stub) it falls back to the 0.60.182 local path, said in the console once.
@@ -1770,7 +1775,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   const _tIco = (c, size = 16) => (_glyphOf(c) ? `<span class="mb-ico" data-icon="${_tEsc(_glyphOf(c))}" data-icon-size="${size}"></span>` : `<span class="mb-ico">${_tEsc(c.icon || '')}</span>`);
   function _renderToolMenuRows() {
     // a tool the menu already has a row for (Settings) is not listed twice
-    const inMenu = new Set(['btn-settings']);
+    const inMenu = new Set(['btn-settings', 'zoom-controls']);   // the menu has its own Settings and Zoom rows
     const unpinned = TOOLBAR_COMMANDS.filter(c => c.id && (c.pinnable || c.pluginId) && !currentPinned.includes(c.id) && !inMenu.has(c.id));
     if (!unpinned.length) return '';
     const rows = unpinned.map(c => `<div class="menu-item am-tool" role="menuitem" data-tool-menu-id="${_tEsc(c.id)}" title="${_tEsc(c.desc || c.label)}">${_tIco(c)}<span class="menu-lbl">${_tEsc(c.label)}</span>${_isAction(c) ? '' : `<button class="am-pin" data-tool-pin="${_tEsc(c.id)}" title="Pin to the toolbar" aria-label="Pin ${_tEsc(c.label)} to the toolbar" data-icon="pin" data-icon-size="14"></button>`}</div>`).join('');

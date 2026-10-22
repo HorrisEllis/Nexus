@@ -595,4 +595,14 @@ spec:
   #   Done. Every 0.60.178 id is kept; the superseded rules left browser.css (git history, §0.3). The movable tools now follow the pinned order.
   # - Proof: tests/modules/test-browser-shell.test.js BST-21 in Clear Glass (drawn icons in the bar, the menu and the editor; the menu's pin;
   #   Pin / Unpin, counts, preview; Done saves the list in order). 26/26.
+  # ## ADDENDUM 2026-10-22 (0.60.211) — zoom controls on the toolbar; the start page's agents read again
+  # James, 2026-10-22: "can you integrate that into clearglass, its a basic funcaiton of any browser." · "why remove the agents from new tab?"
+  # - Zoom has been core since BS14 (src/core/zoom.js; the plugin archived in plugins/_archive/zoom-0.60.182, not in BUILTIN_PLUGINS). The zoom
+  #   commands 0.60.210's notes named came from the test fixture's archived plugin, not his install — said here. What zoom lacked as a browser
+  #   function was a place on the toolbar: 'zoom-controls' (− level +, the level resets) is a pinnable built-in tool on the same core zoom as the
+  #   shortcuts, the address bar's level and the ☰ menu's Zoom row; the menu does not list it under Tools a second time.
+  # - Nothing removed the start page's agents (newtab.js unchanged since 0.60.180). It read the list once; a read that failed early, or came
+  #   back empty, said "Guardian's provider host is not answering" — wrong too, the list is Clear Glass's own — until another new tab. It now
+  #   says what failed and reads the agents again every 3 s while open, that section only (the search box and open panels are left alone).
+  # - Proof: test-browser-shell BST-22 and BST-23 in Clear Glass; 28/28.
 
