@@ -120,7 +120,10 @@ function fixture(port) {
     assert.ok(last && last.met === 4 && last.results.length === 8);
     assert.ok(run.files && run.files.report === 'proof/PROOF-REPORT.md' && /\.nexus\/proof-runs\//.test(run.files.run));
     const writes = []; const viaLayer = await P.runProof({ repoDir: dir, write: true, writer: (rel, text) => { writes.push(rel); }, conditions: [{ says: 'readme', check: { kind: 'file', path: 'README.md' } }] });
-    assert.deepStrictEqual(writes.map(w => w.replace(/proof-runs\/\d[^/]*\.json$/, 'proof-runs/<time>.json')), ['proof/PROOF-REPORT.md', '.nexus/proof-runs/<time>.json', '.nexus/proof-runs/latest.json'], 'a writer gets the report, the run and latest');
+    // 0.60.205 L4 — a writer (the repo's store, where every file becomes a spec chunk) gets the two fixed names only; the per-run
+    // history goes to the disk beside the repo (James's Looking Glass spec grew 35 → 65 chunks in an evening, one per run)
+    assert.deepStrictEqual(writes, ['proof/PROOF-REPORT.md', '.nexus/proof-runs/latest.json'], 'a writer gets the report and latest');
+    assert.ok(viaLayer.run.files && fs.existsSync(path.join(dir, viaLayer.run.files.run)), 'the run itself is on disk');
     const failingWriter = await P.runProof({ repoDir: dir, write: true, writer: () => ({ error: 'read-only' }), conditions: [{ says: 'readme', check: { kind: 'file', path: 'README.md' } }] });
     assert.match(failingWriter.run.writeError, /read-only/); assert.ok(!failingWriter.run.files, 'no claim of files that were not written');
     const ready = P.reportText({ subject: 'X', finishedAt: Date.now(), verdict: 'ready', met: 1, total: 1, results: [{ says: 'a', met: true, evidence: 'ok' }] });

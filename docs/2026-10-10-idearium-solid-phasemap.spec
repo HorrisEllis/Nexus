@@ -439,6 +439,29 @@ spec:
         USER_AUTONOMY: the off-phase file is his call (a proposal), never applied or dropped for him. REVERSIBILITY / §0.3: nothing is
         deleted; a duplicate drop is kept, marked, and points at the contract it repeats.
       proof: "SM-01..05: pinned-Ollama ladder (fits / won't fit / critical), off-phase hold in land(), officiator dedup over real drops"
+    SD21_what_his_run_log_showed:
+      layer: backend
+      systems: [idearium, copilot, guardian, lib]
+      status: "DONE 0.60.205 — test-log-fixes LF-01..06; test-proof-run PR-05 updated to the new store rule"
+      james: '"show me idearium improvements that would help the most from the phases" · "the log fixes also. start them" (2026-10-22, with his 0.60.201 run log)'
+      depends_on: [SD20_a_starved_machine_does_not_spin]
+      files: [copilot/adversarial.js, guardian/server.js, guardian/lib/provider-login.js, lib/shadow.js, idearium/repo/proof-run.js, lib/repo-inject.js, idearium/repo/nexus-self.js, idearium/api/index.js]
+      does: >-
+        Six fixes read from his run log. L1: the background probe asked only the memory level before loading qwen2.5-coder:7b, and
+        its own load drove memory critical every ten minutes; it now asks whether the model fits (fitsModel, MF1) and defers. L2: a
+        build's job sent to claude sat 295 s behind claude's sign-in page; behind a wall a build's job (session …-phrun-…) or
+        background work is sent back with the wall as its reason so the ladder climbs, a person's job still waits. L3: the
+        shadow's absent line labels files, events and conditions (an unmet condition read like a missing file). L4: a proof run's
+        per-run history stays out of the repo's store (each one became a spec chunk). L5: when the building phase asked for one
+        file and a reply has one unaddressed block of a fitting language, it goes there and no "which file?" job is sent. L6: the
+        Nexus sync reads memory before each system and leaves the rest for the next round.
+      not_yet: "the claude tab reconnecting every ~9 s for an hour while signed out (its cause not traced from the log); raid-contract repos from the officiator (fewer since 0.60.203)"
+      decided_by_the_axioms: >-
+        §8.6: each fix routes into what exists (fitsModel, SD3's priority and the phrun session, shadow's settle, the proof writer,
+        expectPhase, the sync's guard). §0.1 / §0.0: L3 was first read by the coder as a sentence treated as a file; the code showed
+        an unmet condition, and the fix is the label, said here. §1.2: every deferral, send-back and pause is logged with why.
+        USER_AUTONOMY: a job a person is waiting on is never sent away from a sign-in.
+      proof: "LF-01..06; test-proof-run 7/7; shadow, starved-machine, refusal-sendback, nexus-self suites unchanged"
   # ── SD18 addendum 2026-10-21 (0.60.201) — for any project, not only his ──
   # James, with a screenshot of the upload dialog ("could not start: signal is aborted without reason") and his boot log: "okay, remember
   # this is for any project. not just mmine". Two things, each for every project:

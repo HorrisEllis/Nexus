@@ -133,6 +133,14 @@ async function pingBoth(prompt, stream = []) {
   return { intuition: iResult, analysis: aResult, contradiction, verdict };
 }
 
+// 0.60.205 L1 — the model the probe would load (the bridge's active default) against free memory now. Unknown → tried.
+async function _probeModelFits() {
+  const d = await require('../lib/nexus-client.js').get('ollama', '/api/models', { timeout: 3000 }).catch(() => null);
+  if (!d || !Array.isArray(d.models)) return { fits: true, why: 'Ollama did not answer — not checked' };
+  const model = d.active || null;
+  return require('../lib/resource-monitor.js').fitsModel({ model, bytes: model && d.sizes ? d.sizes[model] : null, loaded: d.loaded || [] });
+}
+
 // ── Run full adversarial pass ─────────────────────────────────────────────────
 async function run(stream = []) {
   if (_running) return { skipped: true, reason: 'already running' };
@@ -146,6 +154,18 @@ async function run(stream = []) {
       return { skipped: true, reason: `memory ${mon.level()}` };
     }
   } catch (_) { /* no monitor: run as before */ }
+  // 0.60.205 L1 — James: "the log fixes also. start them". His 0.60.201 log: memory was ok when each probe started, then the
+  // probe's own qwen2.5-coder:7b load drove it critical (00:25:29 critical → probe done 00:26:32; 00:35:29 → 00:36:37;
+  // 00:45:40 → 00:46:26). The level said yes; the model did not fit. The probe now asks the same per-model check the build
+  // uses (lib/resource-monitor.js fitsModel, MF1) and is deferred when its model would not fit free memory.
+  try {
+    const f = await _probeModelFits();
+    if (f && f.fits === false) {
+      _skipped = (_skipped || 0) + 1;
+      if (_skipped === 1 || _skipped % 6 === 0) console.log(`[copilot/adversarial] probe deferred — ${f.why} (${_skipped} deferred so far)`);
+      return { skipped: true, reason: f.why };
+    }
+  } catch (_) { /* the check could not run: the level check above still held */ }
   // §0.60.26 — lean mode means only what a build needs runs (lib/lean-mode.js). James's 0.60.23 log: with lean on, the
   // probe still loaded qwen2.5-coder:7b for 60–85s every ten minutes, the same model the build was waiting on.
   try {
@@ -252,4 +272,4 @@ function stop() {
 
 function lastResults() { return _results.slice(0, 5); }
 
-module.exports = { run, pingIntuition, pingAnalysis, pingBoth, start, stop, lastResults, _normalizeCopilotAnswer, INTERVAL_MS };
+module.exports = { _probeModelFits, run, pingIntuition, pingAnalysis, pingBoth, start, stop, lastResults, _normalizeCopilotAnswer, INTERVAL_MS };

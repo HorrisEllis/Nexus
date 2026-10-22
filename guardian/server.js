@@ -537,6 +537,27 @@ async function writeToNexus(job) {
 // down, right after `jaa` exists — see that call site's comment for why.
 
 const _wallSaid = new Map();
+// 0.60.205 L2 — James: "the log fixes also. start them". His 0.60.201 log: SP5's build climbed to claude, the claude tab opened
+// on a sign-in page, and the job was held there 295 s ("cancelled — the caller stopped waiting") before the build moved on to
+// deepseek, which wrote the file in 8 s. Behind a sign-in wall a job a person is waiting on (anything not a build) still waits
+// for the person to sign in; a build or background job (normal / low) has another agent to go to, so it fails now with the
+// wall as its reason and the build's ladder climbs (ME5: a failed agent hands the job on). Said once per wall.
+function _releaseBehindWall(provider, why) {
+  const queued = pendingQueue.get(provider) || [];
+  const keep = [], released = [];
+  for (const q of queued) {
+    const job = jobs.get(q.id) || q;
+    // a build's job (its session is repo-agent-<repo>-phrun-…: a phase run with a ladder) or background work (normal / low)
+    if (q._seamQueue || !require('./lib/provider-login.js').releasableBehindWall(job)) { keep.push(q); continue; }
+    const error = `${provider} needs a sign-in in its Clear Glass tab (${why || 'sign-in page'}) — not waited on: this job has other agents to go to`;
+    try { updateJob(job.id, { status: 'error', error, failedAt: Date.now(), gate: 'signin' }); } catch (_) {}
+    try { bus.emit('guardian.job.error', { jobId: job.id, error, provider }); } catch (_) {}
+    released.push(job.id);
+  }
+  if (keep.length) pendingQueue.set(provider, keep); else pendingQueue.delete(provider);
+  if (released.length) console.warn(`[guardian] ${released.length} build job(s) for ${provider} sent back — ${provider} is behind a sign-in page; a job a person waits on stays`);
+  return released;
+}
 function flushQueuedJobs(provider) {
   const queued = pendingQueue.get(provider) || [];
   if (!queued.length) return;
@@ -548,7 +569,9 @@ function flushQueuedJobs(provider) {
   try {
     const rec = require('./lib/provider-login.js').holdsJobs(provider);
     if (rec) {
-      if (_wallSaid.get(provider) !== rec.at) { _wallSaid.set(provider, rec.at); console.warn(`[guardian] ${queued.length} queued job(s) for ${provider} held — its tab is at a sign-in page; they go when it reports signed in`); }
+      _releaseBehindWall(provider, rec.text || rec.url);
+      const left = (pendingQueue.get(provider) || []).length;
+      if (left && _wallSaid.get(provider) !== rec.at) { _wallSaid.set(provider, rec.at); console.warn(`[guardian] ${left} queued job(s) for ${provider} held — its tab is at a sign-in page; they go when it reports signed in`); }
       return;
     }
   } catch (_) {}
@@ -3164,6 +3187,7 @@ function handleExtendedRoutes(req, res, url, method) {
       else bus.emit('guardian.provider.login_state', rec);
       // §0.60.0 GA1 — a wall (or signed out) is shown to the person; ok clears it
       if (state === 'wall' || state === 'signed-out') _providerAttention().raise({ provider, reason: 'signin', url: rec.url, note: rec.text || `${provider} is signed out` }).catch(() => {});
+      if (state === 'wall') { try { _releaseBehindWall(provider, rec.text || rec.url); } catch (_) {} }   // 0.60.205 L2
       else if (state === 'ok') { _providerAttention().clear(provider); try { flushQueuedJobs(provider); } catch (_) {} }   // §0.60.124 SW2 — signed in: what waited goes now
       return json(res, 200, { ok: true, ...rec });
     }).catch(e => json(res, 400, { ok: false, error: e.message }));

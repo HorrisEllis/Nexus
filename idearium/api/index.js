@@ -10359,7 +10359,7 @@ function _startBuildQueuePoller(port) {
 
 // §0.39.261 — one Nexus-repo sync at a time; later callers share the running one.
 let _nexusSelfSyncing = null, _nexusSelfLast = null, _nexusSelfStartedNow = null;
-function _nexusSelfSync({ only = null, force = false } = {}) {
+function _nexusSelfSync({ only = null, force = false, shouldPause = null } = {}) {
   if (_nexusSelfSyncing) { _nexusSelfStartedNow = null; return _nexusSelfSyncing; }
   _nexusSelfSyncing = (async () => {
     try {
@@ -10368,7 +10368,7 @@ function _nexusSelfSync({ only = null, force = false } = {}) {
       const NS = await import('../repo/nexus-self.js');
       const os = getIdeaOS();
       const r = await NS.sync(getRepoLayer(), se, {
-        only, force, log: (m) => console.log(m),
+        only, force, shouldPause, log: (m) => console.log(m),
         onSystem: (x) => { try { os.broadcast('idearium.nexus-self.sync', { system: x.system, status: x.status, error: x.error || null }); } catch (_) {} },
         // 0.39.263 — each repo's history lives in versionium (branch repo-<uuid>), not in a .git
         commitVersion: async ({ repo, system, snapshot }) => {
@@ -10893,13 +10893,14 @@ export function startAPI() {
         if (_lowMem()) { console.log('[idearium/nexus-self] sync skipped — free memory is under 20%; it runs on the next round'); return; }
         const h = _require('../../lib/prevention.js').heavyAllowedHere('idearium');
         if (!h.ok) { console.log(`[idearium/nexus-self] sync waits — ${h.why}; it runs on the next round`); return; }
-        _nexusSelfSync({});
+        // 0.60.205 L6 — and between systems: a sync that starts with headroom stops when memory goes, the rest next round
+        _nexusSelfSync({ shouldPause: () => { if (_lowMem()) return 'free memory is under 20%'; const hh = _require('../../lib/prevention.js').heavyAllowedHere('idearium'); return hh.ok ? null : hh.why; } });
       };
       const first = setTimeout(_guardedSync, parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 60000);
       const t = setInterval(_guardedSync, every);
       if (first.unref) first.unref();
       if (t.unref) t.unref();
-      console.log(`[idearium/nexus-self] Nexus repo sync scheduled — first in ${Math.round((parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 20000) / 1000)}s, then every ${Math.round(every / 60000)} min`);
+      console.log(`[idearium/nexus-self] Nexus repo sync scheduled — first in ${Math.round((parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 60000) / 1000)}s, then every ${Math.round(every / 60000)} min`);
     }
   });
 

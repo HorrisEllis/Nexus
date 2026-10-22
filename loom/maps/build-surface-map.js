@@ -364,6 +364,10 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/pipeline-routing.js'), 'SD20 0.60.203 _phaseBuild pinnedLadder: Settings pins Ollama → the pin, then the chain\'s agents'],
   [I('idearium/api/index.js'), I('lib/repo-inject.js'), 'SD20 0.60.203 _phaseBuild expectPhase(target, { phase, files }) — released when the run ends'],
   [I('lib/code-edit.js'), I('lib/repo-inject.js'), 'SD20 0.60.203 commit: RI.outOfPhase holds an agent\'s off-phase file as a proposal'],
+  // SD21 0.60.205 — what his run log showed
+  [I('copilot/adversarial.js'), I('lib/nexus-client.js'), 'SD21 0.60.205 L1 _probeModelFits: GET ollama /api/models (active, sizes, loaded)'],
+  [I('copilot/adversarial.js'), I('lib/resource-monitor.js'), 'SD21 0.60.205 L1 fitsModel before the probe loads its model'],
+  [I('guardian/server.js'), I('guardian/lib/provider-login.js'), 'SD21 0.60.205 L2 _releaseBehindWall: releasableBehindWall(job) — a build job leaves a sign-in wall'],
   [I('ollama/server.js'), I('ollama/lib/idle-unload.js'), '0.60.123 MP startIdleUnload after listen (keep_alive:0 on idle)'],
   [I('idearium/repo/import-pipeline.js'), I('idearium/repo/import-pipeline-worker.js'), '0.60.124 SW1 runImportPipelineOffThread — new Worker(new URL(./import-pipeline-worker.js))'],
   [I('idearium/repo/nexus-self.js'), I('idearium/repo/import-pipeline.js'), '0.60.124 SW1 _syncSystem + parent: await runImportPipelineOffThread'],
