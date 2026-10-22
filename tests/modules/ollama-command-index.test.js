@@ -12,6 +12,9 @@
 // count changes too — it can't silently go stale the way a fixed
 // number would.
 'use strict';
+// 0.60.209 — the sandbox first: this starts ollama/server.js, whose boot brings Ollama's data home (lib/data-home.js atBoot). Run on its
+// own, without run-all's sandbox, it moved this tree's real data/ollama files — the child must inherit a sandbox.
+require('../../lib/test-sandbox.js').ensure();
 const { spawn } = require('child_process');
 const path = require('path');
 const http = require('http');
