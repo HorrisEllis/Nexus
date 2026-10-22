@@ -111,7 +111,7 @@ const NODE_DIRS = [
 
 // §0.2.0 — idearium's _ensureCompartment() names: idearium-repo-<8hex>, idearium-idea-<8hex>.
 const COMPARTMENT_NAME = /^idearium-(repo|idea)-/;
-const JOBS_DIR = process.env.GUARDIAN_JOBS_DIR || path.join(ROOT, 'data', 'guardian', 'jobs');
+const JOBS_DIR = process.env.GUARDIAN_JOBS_DIR || require('../lib/data-home.js').home('guardian', 'jobs');
 const LIVE_PORTS = { idearium: 4800, guardian: 7820 };
 
 const TREE_DIRS = [

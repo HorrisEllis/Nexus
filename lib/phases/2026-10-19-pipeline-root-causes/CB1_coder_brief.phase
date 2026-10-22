@@ -7,11 +7,11 @@ intent: null
 summary: CB1_coder_brief (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792587384300
+exported_at: 1792653394709
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792587384300
-lastSeenAt: 1792587384300
+firstSeenAt: 1792653394709
+lastSeenAt: 1792653394709
 fingerprint: null
 payload:
   id: CB1_coder_brief

@@ -56,7 +56,7 @@ phases:
 
   DL2_one_resolver:
     layer: library
-    status: OPEN
+    status: "DONE 0.60.207 — test-data-home DH-01..06 (DH-06 in Clear Glass)"
     depends_on: [DL1_clearup_tool]
     files: [lib/data-home.js, lib/test-sandbox.js]
     spec: docs/data-layout.spec
@@ -65,10 +65,17 @@ phases:
       lib/data-home.js: home / ledger / nodes / memory paths under each system, sandbox-aware. Route + command (`data census`,
       `data plan`, `data apply`, `data rollback`) and a Toolbox section for the clear-up tool.
     proof: every kind resolves under its system; a sandboxed process resolves under the sandbox
+    built: >-
+      0.60.207, James 2026-10-22: "start the data migration. look at the phases, any migrating data to the respective systems, and make each system responsible for it's own data." lib/data-home.js resolves home/ledger/nodes/memory
+      under each system (the sandbox in a test). Each system's entry calls atBoot(system) first: bringHome moves the root data/ files
+      the ownership table gives it through the clear-up tool (manifest first, sha256, rollback); a file whose old path code still names
+      waits and is listed; his calls are never moved; the record is <system>/data/.home.json; a boot with the same release and the same
+      waiting paths reads nothing. Route GET/POST /api/data/home[/:system], POST /api/data/rollback; `data home`, `data rollback`; the
+      Data view in the settings console. The Toolbox the spec named does not exist; the settings console is where it went (said).
 
   DL3_rewire_writers:
     layer: integration
-    status: OPEN
+    status: "IN PROGRESS — guardian rewired 0.60.208 (lib/data-home.js REWIRED); next versionium, ollama, architect, loom, clear-glass …; the shared data/ledger/ (15 refs) is its own step"
     depends_on: [DL2_one_resolver, SS1_system_store_adoption]
     files: [lib/data-home.js, diagnostic/nexus-diagnostic.js, guardian/, lib/ledger-writer.js, lib/ledger-store.js, lib/vector-memory.js]
     spec: docs/data-layout.spec
@@ -123,3 +130,11 @@ phases:
     does: >-
       The 9 callers of the cortex/snapshot shim reach versionium through its route; the shim archived.
     proof: no cortex/snapshot require; the boundary ratchet adds nothing
+
+# ── ADDENDUM 2026-10-22 (0.60.207) — DL2 built; the migration's order from here ──
+# James, 2026-10-22: "start the data migration. look at the phases, any migrating data to the respective systems, and make each system responsible for it's own data."
+# - DL2 done (see the phase). On a pull, each system brings home what nothing names any more, at its own boot; today that is little:
+#   the census still finds code naming every owner's root path, diagnostic/nexus-diagnostic.js among them (it names every system's).
+# - Order from here, decided by his axioms (§5.9 the owner holds its data, §3.3 one system end to end before breadth): SS1 (Guardian:
+#   its tables out of cortex's store into its own, docs/2026-10-19-pipeline-root-causes-phasemap.spec) then DL3 per owner, each owner's
+#   tables (SS2) and files (DL3) in one step, ordered by fewest refs: versionium, ollama, architect, loom, clear-glass, …

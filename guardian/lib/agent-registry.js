@@ -19,7 +19,7 @@ const path = require('path');
 const MODULE_ID = 'guardian.agent-registry';
 const SEED = require('./agent-registry.seed.json');
 
-function createAgentRegistry({ dir = process.env.GUARDIAN_AGENTS_DIR || path.join(__dirname, '../../data/guardian/agents'), now = Date.now, accountAuthority = null } = {}) {
+function createAgentRegistry({ dir = process.env.GUARDIAN_AGENTS_DIR || require('../../lib/data-home.js').home('guardian', 'agents'), now = Date.now, accountAuthority = null } = {}) {
   const file = path.join(dir, 'agents.json');
   let overrides = {};
   try { overrides = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (_) { overrides = {}; }

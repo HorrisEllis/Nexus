@@ -1,4 +1,6 @@
 'use strict';
+// 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come home first (lib/data-home.js).
+require('../lib/data-home.js').atBoot('versionium');
 /**
  * versionium/server.js — Sovereign Versionium
  * UUID: nexus-versionium-server-v1-0000-2026-0902-jamesbrooks-001

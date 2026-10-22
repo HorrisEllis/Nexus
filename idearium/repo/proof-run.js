@@ -262,8 +262,13 @@ export async function runProof({ repoDir, conditions, start = null, subject = nu
     const file = `${RUNS_DIR}/${new Date(startedAt).toISOString().replace(/[:.]/g, '-')}.json`;
     run.files = { report: REPORT_FILE, run: file };
     try {
-      for (const [rel, text] of [[REPORT_FILE, reportText(run)], [file, JSON.stringify(run, null, 2)], [LATEST_FILE, JSON.stringify(run, null, 2)]]) {
-        const w = await put(rel, text);
+      // 0.60.205 L4 — James: "the log fixes also. start them". His Looking Glass spec went from 35 chunks to 65 in one evening: every
+      // proof run put a new timestamped file into the repo's store, and the store makes each file a spec chunk. The report and
+      // latest.json keep one name (overwritten, one chunk each); the per-run history goes to the disk beside the repo only — every
+      // outcome is also a row in idearium_phase_runs, so nothing is lost.
+      const disk = _diskWriter(repoDir);
+      for (const [rel, text, to] of [[REPORT_FILE, reportText(run), put], [file, JSON.stringify(run, null, 2), writer ? disk : put], [LATEST_FILE, JSON.stringify(run, null, 2), put]]) {
+        const w = await to(rel, text);
         if (w && w.error) throw new Error(`${rel}: ${w.error}`);
       }
     } catch (e) { run.writeError = e.message; delete run.files; }

@@ -32,7 +32,7 @@ function sanitizeFilename(name) {
 }
 
 function createAutoUploader({ uploadDir, port = parseInt(process.env.GUARDIAN_DZ_PORT || '7822') } = {}) {
-  const dir = uploadDir || path.join(__dirname, '..', 'data', 'guardian', 'input');
+  const dir = uploadDir || require('../lib/data-home.js').home('guardian', 'input');
   fs.mkdirSync(dir, { recursive: true });
 
   return {

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792587384309
+exported_at: 1792653394719
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792587384309
-lastSeenAt: 1792587384309
+firstSeenAt: 1792653394719
+lastSeenAt: 1792653394719
 fingerprint: null
 payload:
   for: PR2_autofill_and_copilot_read_first
@@ -23,7 +23,7 @@ payload:
   crossings: []
   ready: false
   dag:
-    dagHash: 34f3ae8f0ecbc7b5
+    dagHash: 4470939bf8678599
     layer: 1
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::PR1_page_reader
@@ -37,6 +37,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 34f3ae8f0ecbc7b5 · layer 1 · blocked by PR1_page_reader
+      - DAG 4470939bf8678599 · layer 1 · blocked by PR1_page_reader
       - 'depends on (1): PR1_page_reader'
       - 'needed by (0): —'

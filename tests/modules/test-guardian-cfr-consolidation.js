@@ -24,20 +24,22 @@ function test(id, desc, fn) {
 }
 
 const ROOT = path.join(__dirname, '../..');
-const NEW_DIR = path.join(ROOT, 'data/guardian/ledger/cfr');
+// 0.60.208 DL3 — guardian/data/ledger/cfr once guardian brought its data home; data/guardian/ledger/cfr until then
+const NEW_DIR = fs.existsSync(path.join(ROOT, 'guardian/data/ledger/cfr')) ? path.join(ROOT, 'guardian/data/ledger/cfr') : path.join(ROOT, 'data/guardian/ledger/cfr');
 const SRC = fs.readFileSync(path.join(ROOT, 'guardian/server.js'), 'utf8');
 
 test('GCC-001', "guardian/server.js's CFR ledgerDir points INSIDE the data root, not the source tree", () => {
   // §0.39.282 — <data root>/guardian/ledger/cfr, where the data root is NEXUS_DATA_ROOT (sandbox) or <repo>/data.
-  assert.ok(/ledgerDir:\s*require\('path'\)\.join\(\(process\.env\.NEXUS_DATA_ROOT \|\| require\('path'\)\.join\(__dirname, '\.\.', 'data'\)\), 'guardian', 'ledger', 'cfr'\)/.test(SRC),
-    'ledgerDir must be data/guardian/ledger/cfr');
+  // 0.60.208 DL3 — guardian's data is guardian/data (lib/data-home.js): the CFR ledger is guardian/data/ledger/cfr
+  assert.ok(/ledgerDir:\s*_DH\.home\('guardian', 'ledger', 'cfr'\)/.test(SRC),
+    'ledgerDir must be guardian/data/ledger/cfr (through data-home)');
   assert.ok(!/ledgerDir:\s*require\('path'\)\.join\(__dirname,\s*'memory_store'\)/.test(SRC),
     'the old source-tree ledgerDir must be gone');
 });
 
 test('GCC-002', 'the migrated CFR files exist at the new home', () => {
   for (const f of ['cfr_state.json', 'event_stats.json', 'event_log.jsonl']) {
-    assert.ok(fs.existsSync(path.join(NEW_DIR, f)), `${f} missing from data/guardian/ledger/cfr`);
+    assert.ok(fs.existsSync(path.join(NEW_DIR, f)), `${f} missing from ${path.relative(ROOT, NEW_DIR)}`);
   }
 });
 

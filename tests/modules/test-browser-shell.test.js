@@ -359,6 +359,23 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       assert.deepStrictEqual(errors, []); await page.close();
     });
 
+    await test('BST-09b', '0.60.206 a closed Co-pilot takes no width: the page fills the window to its right edge', async () => {
+      // James, 2026-10-22: "the ui for clearglass is cut off" — his page stopped ~340 px short of a 1920 px window
+      const page = await browser.newPage({ viewport: { width: 1920, height: 1000 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'providers.list': [], 'toolbar.commands': [], 'bookmarks.list': [], 'plugins.list': [], 'options.get': {} } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#btn-back svg');
+      await page.evaluate(() => document.getElementById('copilot-pane').classList.add('hidden'));
+      await page.waitForTimeout(300);   // the width transition
+      const g = await page.evaluate(() => ({ pane: document.getElementById('copilot-pane').getBoundingClientRect().width, wrap: document.getElementById('webview-wrap').getBoundingClientRect().right, win: window.innerWidth }));
+      assert.strictEqual(g.pane, 0, `closed pane width ${g.pane}`);
+      assert.ok(g.win - g.wrap < 2, `the page reaches the right edge (${g.wrap} of ${g.win})`);
+      await page.evaluate(() => document.getElementById('copilot-pane').classList.remove('hidden'));
+      await page.waitForTimeout(300);
+      assert.ok(await page.$eval('#copilot-pane', e => e.getBoundingClientRect().width) > 300, 'open, it has its width');
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
     await test('BST-10', 'Guardian hub: running agents show Open and Stop, the rest Start; the badge counts running; the old panel reads running', async () => {
       const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
       await page.addInitScript(initScript({ answers: { 'providers.list': [{ id: 'claude', name: 'Claude', color: '#cc785c', running: true, status: 'injected', health: 100 }, { id: 'gemini', name: 'Gemini', color: '#4285f4', running: false }, { id: 'deepseek', name: 'DeepSeek', color: '#4d6bfe', running: false, status: 'crashed' }],

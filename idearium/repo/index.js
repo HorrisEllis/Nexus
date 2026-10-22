@@ -409,6 +409,33 @@ export class RepoLayer {
     return { ok: true, path: clean, via: via ? (c.error ? 'source' : 'source+chunk') : 'chunk' };
   }
 
+  /**
+   * moveFile(repoUuid, from, to, { defer }) — 0.60.206 SD22: one file to a new path, whichever layer owns it. An imported file's real
+   * bytes move (and its chunk with them, for text); a chunk-only file moves through the chunk store. Byte-exact. The caller decides
+   * what happens to a file already at `to` (lift-root archives it first) — here an existing `to` is refused, never overwritten.
+   */
+  moveFile(repoUuid, from, to, opts = {}) {
+    { const im = this._immutableError(repoUuid); if (im) return { error: im, code: 'IMMUTABLE' }; }
+    const a = String(from || '').replace(/^\/+/, ''), b = String(to || '').replace(/^\/+/, '');
+    if (!a || !b || a === b) return { error: 'from and to must be two different paths' };
+    if (this.isSourceOwned(repoUuid, b) || !this.readFile(repoUuid, b).error) return { error: `${b} already exists — not overwritten` };
+    if (this.isSourceOwned(repoUuid, a)) {
+      const dir = this._sourceDir(repoUuid); if (!dir) return { error: 'repo not found' };
+      const abs = path.resolve(dir, a);
+      if (!abs.startsWith(path.resolve(dir) + path.sep)) return { error: `path escapes the repo: ${a}` };
+      let buf; try { buf = fs.readFileSync(abs); } catch (e) { return { error: `source file unreadable: ${e.message}` } }
+      const w = this.writeSourceBytes(repoUuid, b, buf); if (w.error) return { error: w.error };
+      if (!buf.subarray(0, 8000).includes(0)) this.writeFile(repoUuid, b, buf.toString('utf8'), { defer: true, preserveWhitespace: true });
+      this.deleteSourceFile(repoUuid, a); this.deleteFile(repoUuid, a, { defer: true });
+    } else {
+      const r = this.readFile(repoUuid, a); if (r.error) return { error: r.error };
+      const w = this.writeFile(repoUuid, b, r.content, { defer: true, preserveWhitespace: true }); if (w.error) return { error: w.error };
+      this.deleteFile(repoUuid, a, { defer: true });
+    }
+    if (!opts.defer) this.refresh(repoUuid);
+    return { ok: true, from: a, to: b };
+  }
+
   deleteSourceFile(repoUuid, relPath) {
     { const im = this._immutableError(repoUuid); if (im) return { error: im, code: 'IMMUTABLE' }; }
     const dir = this._sourceDir(repoUuid); if (!dir) return { error: 'repo not found' };

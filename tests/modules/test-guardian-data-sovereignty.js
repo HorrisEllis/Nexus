@@ -10,6 +10,8 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+// 0.60.208 DL3 — guardian/data/memory once guardian brought its data home; data/guardian/memory until then
+const MEM = require('fs').existsSync(require('path').join(__dirname, '../../guardian/data/memory/ledger.json')) ? 'guardian/data/memory' : 'data/guardian/memory';
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) {
@@ -28,16 +30,17 @@ function run() {
   });
 
   test('DF1-002', 'GUARDIAN_DATA_DIR points at guardian\'s own real folder, not cortex\'s', () => {
-    assert.ok(config.GUARDIAN_DATA_DIR.includes(path.join('data', 'guardian', 'memory')));
+    // 0.60.208 DL3 — guardian/data/memory through lib/data-home.js (the sandbox's systems/guardian/memory in a test)
+    assert.strictEqual(config.GUARDIAN_DATA_DIR, require('../../lib/data-home.js').home('guardian', 'memory'));
     assert.ok(!config.GUARDIAN_DATA_DIR.includes(path.join('data', 'cortex')));
   });
 
   test('DF1-003', 'the real migrated ledger.json exists at the new sovereign location', () => {
-    assert.ok(fs.existsSync(path.join(ROOT, 'data/guardian/memory/ledger.json')));
+    assert.ok(fs.existsSync(path.join(ROOT, MEM, 'ledger.json')));
   });
 
   test('DF1-004', 'the real migrated settings.json exists at the new sovereign location', () => {
-    assert.ok(fs.existsSync(path.join(ROOT, 'data/guardian/memory/settings.json')));
+    assert.ok(fs.existsSync(path.join(ROOT, MEM, 'settings.json')));
   });
 
   test('DF1-005', 'IF an old, vestigial file exists under cortex\'s directory, it was not deleted — §0.3 (honestly conditional: which real snapshot this data came from determines whether one ever existed here)', () => {
@@ -68,10 +71,10 @@ function run() {
     // in every real tree (see DF1-005) — compare against the new
     // sovereign copy's own row counts, not a second copy that might be
     // real-tree-specific and absent.
-    const newLedger = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/guardian/memory/ledger.json'), 'utf8'));
+    const newLedger = JSON.parse(fs.readFileSync(path.join(ROOT, MEM, 'ledger.json'), 'utf8'));
     assert.ok(newLedger.length >= 60, `expected at least the 60 rows confirmed present at migration time, got ${newLedger.length}`);
 
-    const newSettings = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/guardian/memory/settings.json'), 'utf8'));
+    const newSettings = JSON.parse(fs.readFileSync(path.join(ROOT, MEM, 'settings.json'), 'utf8'));
     assert.ok(newSettings.length >= 19, `expected at least the 19 rows confirmed present at migration time, got ${newSettings.length}`);
   });
 

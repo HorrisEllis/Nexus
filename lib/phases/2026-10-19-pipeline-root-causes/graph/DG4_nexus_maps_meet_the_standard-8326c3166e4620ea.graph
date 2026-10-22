@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792587384304
+exported_at: 1792653394713
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792587384304
-lastSeenAt: 1792587384304
+firstSeenAt: 1792653394713
+lastSeenAt: 1792653394713
 fingerprint: null
 payload:
   for: DG4_nexus_maps_meet_the_standard
@@ -23,7 +23,7 @@ payload:
   crossings: []
   ready: false
   dag:
-    dagHash: 34f3ae8f0ecbc7b5
+    dagHash: 4470939bf8678599
     layer: 1
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG3_the_whole_dag
@@ -36,6 +36,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 34f3ae8f0ecbc7b5 · layer 1 · ready
+      - DAG 4470939bf8678599 · layer 1 · ready
       - 'depends on (1): DG3_the_whole_dag'
       - 'needed by (0): —'

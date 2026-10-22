@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+type: phase
+id: docs_2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+context: >-
+  pipeline phase ND5_every_agent_reaches_every_system of
+  docs/2026-10-22-system-node-db-phasemap.spec
+intent: null
+summary: ND5_every_agent_reaches_every_system (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792650734508
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792650734508
+lastSeenAt: 1792650734508
+fingerprint: null
+payload:
+  id: ND5_every_agent_reaches_every_system
+  map: docs/2026-10-22-system-node-db-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+    - copilot/server.js
+    - lib/agent-tools/tools/nexus/command.js
+  depends_on:
+    - ND4_commands_and_capabilities_from_the_schemas
+    - P35_copilot_reads_edits_creates_nodes
+  blocks:
+    - MOD-ND-CLI
+    - MOD-ND-COPILOT
+  spec: docs/system-node-db.spec
+  graph: f07c86902defd601

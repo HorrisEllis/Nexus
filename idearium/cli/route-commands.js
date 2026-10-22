@@ -449,6 +449,27 @@ export const SPEC = [
       console.log(h.c.dim(`  ${(d.sovereign || []).length} sovereign: ${(d.sovereign || []).join(', ') || '—'}`));
     } },
   // 0.60.130 P33a — a system's own node database: each index with all its history
+  // 0.60.207 DL2 — James: "start the data migration … make each system responsible for it's own data." Where each system's data
+  // lives, what still waits in the root data/ (code still naming the path, or his call), and bringing it home (rollback-able).
+  { key: 'data.home', repo: false, usage: 'data home [<system>] [--apply]', about: 'each system\'s own data: where it lives and what of it still waits in the root data/ (and why); with a system, each file\'s plan; --apply brings it home now (manifest, hashes, rollback-able)',
+    req: (a) => (!a.args[0] ? { method: 'GET', path: '/api/data/home', timeoutMs: 120000 }
+      : a.flags.apply ? { method: 'POST', path: `/api/data/home/${encodeURIComponent(a.args[0])}`, timeoutMs: 300000, body: {} }
+      : { method: 'GET', path: `/api/data/home/${encodeURIComponent(a.args[0])}`, timeoutMs: 120000 }),
+    print: (d, a, h) => {
+      if (d.systems) {
+        console.log(`  root data/: ${d.present ? `${d.files} file(s), ${d.unowned} with no owner or his call` : h.c.mint('gone')}`);
+        for (const s of d.systems) { const p = s.pending || {}; const n = (k) => p[k] || 0;
+          console.log(`  ${String(s.system).padEnd(14)} ${String(s.dir || '').padEnd(24)} ${n('planned') ? h.c.amber(`${n('planned')} ready`) : ''} ${n('skipped-refs') ? `${n('skipped-refs')} wait for rewiring` : ''} ${n('ask') ? `${n('ask')} his call` : ''}${s.last ? h.c.dim(` · last ${new Date(s.last.at).toLocaleString()}: moved ${s.last.moved}`) : ''}`); }
+        const refs = Object.entries(d.refs || {}); if (refs.length) { console.log(h.c.dim('  code still naming root data/ paths:')); for (const [k, v] of refs) console.log(h.c.dim(`    data/${k} — ${v.length}: ${v.slice(0, 4).join(', ')}${v.length > 4 ? ' …' : ''}`)); }
+        return;
+      }
+      if (d.moves) { console.log(`  ${d.system} → ${d.dir}${d.last ? h.c.dim(` · last: ${d.last.said}`) : ''}`); for (const m of d.moves) console.log(`  ${m.status.padEnd(12)} ${m.from}${m.to ? ` → ${m.to}` : ''}${m.status !== 'planned' ? h.c.dim(`  (${m.why})`) : ''}`); if (!d.moves.length) console.log(h.c.mint('  nothing of it in the root data/')); return; }
+      console.log(`  ${d.said}`); if (d.manifest) console.log(h.c.dim(`  manifest ${d.manifest} — undo: data rollback ${d.manifest}`));
+      for (const c of d.conflicts || []) console.log(h.c.amber(`  conflict ${c.from} → ${c.to}: ${c.why}`)); for (const f of d.failed || []) console.log(h.c.coral(`  failed ${f.from}: ${f.why}`));
+    } },
+  { key: 'data.rollback', repo: false, usage: 'data rollback <manifest>', about: 'put a bring-home\'s files back where they were, from the manifest it printed',
+    req: (a) => ({ method: 'POST', path: '/api/data/rollback', body: { manifest: a.args[0] || '' } }),
+    print: (d, a, h) => { console.log(`  ${d.restored} file(s) back from ${d.manifest}`); for (const f of d.failed || []) console.log(h.c.coral(`  ${f.from || f.to}: ${f.why}`)); } },
   { key: 'system.nodes', repo: false, usage: 'system nodes <system> [<type> [<id>]]', about: 'a system\'s own node database (<system>/data/node-index): each node type with its files, its index and its history; with a type, its nodes; with an id, that node and every change it went through',
     req: (a) => ({ method: 'GET', path: `/api/system/nodes/${encodeURIComponent(a.args[0] || '')}${a.args[1] ? `?type=${encodeURIComponent(a.args[1])}${a.args[2] ? `&id=${encodeURIComponent(a.args[2])}` : ''}` : ''}` }),
     print: (d, a, h) => {
@@ -679,6 +700,9 @@ export const SPEC = [
   { key: 'repo.roadmaps', repo: true, usage: 'repo roadmaps <repo>', about: 'the roadmaps a project brought with it (phases.json, roadmap.json, PHASEMAP.md, ROADMAP.md), and whether each is imported as a phasemap yet',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/roadmaps` }),
     print: (d, a, h) => { h.header(`${a.repo.name} — its own roadmaps`); if (!(d.roadmaps || []).length) console.log(h.c.dim('  none (phases.json, roadmap.json, PHASEMAP.md or ROADMAP.md)')); for (const r of d.roadmaps || []) console.log(`  ${r.imported ? h.c.mint('✓ imported') : h.c.amber('· not yet ')}  ${[r.json, r.md].filter(Boolean).join(' + ')}  ${h.c.dim(`→ ${r.target}`)}`); console.log(''); } },
+  { key: 'repo.lift-root', repo: true, usage: 'repo lift-root <repo> [--apply]', about: 'a project imported inside its own folder (before 0.60.200) lifted to the repo\'s root, so a phase\'s paths (lib/title.js) are where the build looks; without --apply it only says what would move; a root copy at a taken path is archived first, nothing deleted',
+    req: (a) => ({ method: a.flags.apply ? 'POST' : 'GET', path: `/api/repos/${a.repo.uuid}/lift-root` }),
+    print: (j, a, h) => console.log('  ' + (j.wrapper ? `${j.applied ? 'lifted' : 'would lift'} ${j.wrapper}/ to the root — ${j.applied ? `${j.moved} moved, ${(j.archived || []).length} root copies archived${(j.failed || []).length ? `, ${j.failed.length} failed: ${j.failed.map(f => `${f.path} (${f.error})`).join('; ')}` : ''}` : `${j.moves} file(s); ${(j.collisions || []).length} root copies would be archived (${(j.collisions || []).map(c => c.path).join(', ') || 'none'}) — run with --apply`}` : `nothing to lift — ${j.why}`)) },
   { key: 'repo.roadmap-import', repo: true, usage: 'repo roadmap-import <repo> [<dir>] [--replace]', about: 'import a project\'s own roadmap as a Nexus phasemap beside it: its ids, states, percent, what blocks what (each edge says which file it came from), exit criteria as proof — so the project continues from where it is',
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/roadmaps/import`, body: { ...(a.args[0] != null ? { dir: a.args[0] === '.' ? '' : a.args[0] } : {}), ...(a.flags.replace ? { replace: true } : {}) } }),
     print: (d, a, h) => { console.log(`${h.c.mint('✓')} ${d.map}: ${d.phases} phases (${d.done} done) from ${(d.from || []).join(' + ')}`); for (const n of d.next || []) console.log(`  next  ${n.id}${n.waiting ? h.c.dim(`  · ${n.waiting} wait on it`) : ''}`); for (const w of d.said || []) console.log(h.c.dim(`  said: ${w}`)); console.log(''); } },

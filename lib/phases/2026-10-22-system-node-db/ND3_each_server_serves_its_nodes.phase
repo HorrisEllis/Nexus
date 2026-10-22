@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+type: phase
+id: docs_2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+context: pipeline phase ND3_each_server_serves_its_nodes of docs/2026-10-22-system-node-db-phasemap.spec
+intent: null
+summary: ND3_each_server_serves_its_nodes (integration) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792650734506
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792650734506
+lastSeenAt: 1792650734506
+fingerprint: null
+payload:
+  id: ND3_each_server_serves_its_nodes
+  map: docs/2026-10-22-system-node-db-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/node-registry.js
+    - guardian/server.js
+    - copilot/server.js
+    - ollama/server.js
+    - loom/server.js
+    - versionium/server.js
+    - intelligence/server.js
+    - architect/service.js
+    - cortex/boot.js
+    - orchestrator/orchestrator.js
+    - diagnostic/nexus-diagnostic.js
+    - clear-glass/src/main/index.js
+    - idearium/api/index.js
+  depends_on:
+    - ND2_one_node_route_for_every_system
+    - ND_D2_the_owner_writes
+  blocks:
+    - MOD-ND-MOUNT
+    - MOD-ND-PROXY
+  spec: docs/system-node-db.spec
+  graph: ea22d024a9a37bb4

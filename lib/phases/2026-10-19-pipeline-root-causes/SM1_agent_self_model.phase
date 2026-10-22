@@ -7,11 +7,11 @@ intent: null
 summary: SM1_agent_self_model (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792587384301
+exported_at: 1792653394711
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792587384301
-lastSeenAt: 1792587384301
+firstSeenAt: 1792653394711
+lastSeenAt: 1792653394711
 fingerprint: null
 payload:
   id: SM1_agent_self_model

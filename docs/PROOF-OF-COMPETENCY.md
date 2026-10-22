@@ -949,3 +949,26 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   auto-applied spec.
 - **Checkable:** `CHANGELOG-0.60.203.md` (the log lines it quotes); `tests/modules/test-starved-machine.test.js` SM-01..05, each built on
   his run (the 7b, spec/title.spec, the SP5_title goal); docs/2026-10-10-idearium-solid-phasemap.spec SD20.
+
+### 2026-10-22 — 0.60.206: "the file is in the directory already… so what is broken?"
+- **His words:** "im so sick of this phase, been stuck on 2 days. the file is in  the directory already for the phase, so what is broken?",
+  with five screenshots of SP5.
+- **Context:** He had already seen that the file the phase needs was in the repo, and asked why the build could not find it. That question
+  was the right one. The answer was a path mismatch, not a bad file: the project sat inside the folder its zip was wrapped in (imported
+  before 0.60.200 stripped wrappers), and every build looked at the root. The diagnosis from his screenshots was the coder's.
+- **What it shows:** debugging by questioning the premise, not only the symptom. Two days of agent retries could not fix a file that was
+  never at the path they were looking at.
+- **Checkable:** `CHANGELOG-0.60.206.md`; `tests/modules/test-lift-root.test.js` LR-01 (his repo's shape), LR-03 (through the real layer);
+  docs/2026-10-10-idearium-solid-phasemap.spec SD22.
+
+### 2026-10-22 — 0.60.207: "make each system responsible for it's own data"
+- **His words:** "start the data migration. look at the phases, any migrating data to the respective systems, and make each system
+  responsible for it's own data."
+- **Context:** The plan was already his: the data-layout map (2026-10-21: "no data folder in the root") and the system-store track
+  (2026-10-10: "all data is the relative systems job to create, read, manage"). He pointed at the phases, not at a fix. The coder found
+  that each system had to be the one to move its own files, at its own boot, or a pull would leave his data stranded in the root
+  folder.
+- **What it shows:** systems design by ownership. Each system holds its own data, and moving it is that system's job, reversible and
+  recorded. It is the same principle as his sovereign-system work since September.
+- **Checkable:** `CHANGELOG-0.60.207.md`; `tests/modules/test-data-home.test.js` DH-02 (a move and its rollback, byte for byte);
+  docs/2026-10-21-data-layout-phasemap.spec DL2.

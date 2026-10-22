@@ -89,6 +89,7 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  ['lib/data-home.js', I('lib/data-home.js'), [I('lib/system-registry.js'), I('lib/data-clearup.js'), I('lib/test-sandbox.js'), I('lib/version.js')]],   // §0.60.207 DL2 one resolver; each system brings its own data home at boot
   ['lib/data-clearup.js', I('lib/data-clearup.js'), []],   // §0.60.177 DL0/DL1 census + clear-up tool; its rules are docs/data-layout.spec ownership: (read at run time, not a require)
   ['emerge/compiler/phase-specs.js', I('emerge/compiler/phase-specs.js'), [I('emerge/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
   ['lib/upload-placement.js', I('lib/upload-placement.js'), []],   // §0.60.173 UP1/UP2 a zip's files placed against a repo (strip, exists, same bytes, folders, intent, his learned rules); requires/requiredBy
@@ -277,6 +278,35 @@ const CONSUMERS = [
   [I('clear-glass/src/main/index.js'),              I('clear-glass/src/passwords/service.js'), '§0.60.186 PW1 service({ vault: passwordVault }) at boot; onCaptured → linkPending'],
   [I('clear-glass/src/main/index.js'),              I('clear-glass/src/main/passwords-wiring.js'), '§0.60.186 PW3 attach() — the page script on every session, the IPC'],
   [I('clear-glass/src/main/passwords-wiring.js'),   I('clear-glass/src/preload/passwords.js'), '§0.60.186 PW3 registerPreloadScript(preloadPath); pw:form / pw:capture / pw:fill (IPC, not a require)'],
+  [I('architect/service.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('clear-glass/src/main/index.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('copilot/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('cortex/boot.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('diagnostic/nexus-diagnostic.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('guardian/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('intelligence/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('loom/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('ollama/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('orchestrator/orchestrator.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('versionium/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('idearium/api/index.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
+  [I('idearium/api/index.js'), I('lib/data-clearup.js'), '§0.60.207 DL2 data.home.*: census, plan per owner, rollback'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '§0.60.207 DL2 data home [<system>] [--apply], data rollback <manifest>'],
+  [I('idearium/ui/settings.html'), I('idearium/api/index.js'), '§0.60.207 DL2 Settings console → Data: GET/POST /api/data/home[/:system]'],
+  [I('guardian/agents/index.js'), I('lib/system-store.js'), '§0.60.208 SS1 callto: agent_calls, guardian_health, artifacts, toasts in guardian\'s own store (agent_calls brought from cortex once)'],
+  [I('guardian/agents/index.js'), I('lib/nexus-client.js'), '§0.60.208 SS1 event_log → cortex POST /api/event, cortex_memory → POST /api/memory/insert (postDurable)'],
+  [I('guardian/ask.js'), I('lib/nexus-client.js'), '§0.60.208 SS1 bridge turns → cortex POST /api/event'],
+  [I('guardian/lib/ncp.js'), I('lib/nexus-client.js'), '§0.60.208 SS1 ncp.flap → cortex POST /api/event (queue_uuid top-level); a flapping gap → POST /api/gaps'],
+  [I('guardian/config.js'), I('lib/data-home.js'), '§0.60.208 DL3 GUARDIAN_DATA_DIR = guardian/data/memory'],
+  [I('guardian/lib/jobs.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/jobs'],
+  [I('guardian/lib/account-routing.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/accounts'],
+  [I('guardian/lib/agent-registry.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/agents'],
+  [I('guardian/artifact-upload.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/input'],
+  [I('lib/seam/queue.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/seam-artifacts'],
+  [I('service/guardian-service.js'), I('lib/data-home.js'), '§0.60.208 DL3 atBoot before it creates any folder; pid, ledger, queue under guardian/data'],
+  [I('cli/clear-idearium.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/jobs'],
+  [I('lib/ledger-writer.js'), I('lib/data-home.js'), '§0.60.208 DL3 a rewired system (REWIRED) writes in its own folder'],
+  [I('lib/cortex-write.js'), I('lib/data-home.js'), '§0.60.208 DL3 a rewired system buffers in its own folder; the drain reads both'],
   [I('clear-glass/src/passwords/service.js'),       I('clear-glass/src/passwords/vault.js'), '§0.60.186 PW1 the PasswordVault passed in: save(…, { accountId }), get'],
   [I('clear-glass/src/providers/account-switch.js'), I('clear-glass/src/passwords/service.js'), '§0.60.186 PW3 capture() → onCaptured (injected by main) → linkPending'],
   [I('clear-glass/renderer/shell/passwords.js'),    I('clear-glass/src/preload/index.js'), '§0.60.186 PW4 ClearGlass.passwords.save|dismiss|forPage|fillPage|onOffer|onAvailable (IPC)'],

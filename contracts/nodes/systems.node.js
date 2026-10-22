@@ -37,7 +37,7 @@ module.exports = Object.freeze({
     healthPath:  '/health',
     role:        'AI orchestration. Job queue. SEAM delivery. Provider management.',
     bootFile:    'guardian/server.js',
-    ledger:      'data/guardian/',
+    ledger:      'guardian/data/',   // 0.60.208 DL3
     secret:      'nexus-guardian-internal-v1',
     bootOrder:   3,
   },

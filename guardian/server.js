@@ -1,4 +1,6 @@
 'use strict';
+// 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come home first (lib/data-home.js).
+const _DH = require('../lib/data-home.js'); _DH.atBoot('guardian');   // 0.60.208 DL3: every guardian path below resolves through it
 
 // §CONFIG 2026-08-23 — real, centralized config, not scattered inline
 // constants. See guardian/config.js's own header for the full real
@@ -68,9 +70,9 @@ const { wireGuardianCore } = require('./lib');
 // Sigma deviations → gap.found in JAA
 const _baseline = createBaseline({
   name:           'guardian',
-  ledgerDir:      require('path').join((process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data')), 'guardian', 'ledger'),
-  failuresDir:    require('path').join(__dirname, '../data/guardian/failures'),
-  invariantDir:   require('path').join(__dirname, '../data/guardian/invariant'),
+  ledgerDir:      _DH.home('guardian', 'ledger'),
+  failuresDir:    _DH.home('guardian', 'failures'),
+  invariantDir:   _DH.home('guardian', 'invariant'),
   baselineN:      20,
   sigmaThreshold: 0.3,
   onGap: (gap) => {
@@ -90,11 +92,11 @@ const _baseline = createBaseline({
 
 // Guardian's physical queue — survives restarts
 const _physQueue = createQueue({
-  inputDir:    require('path').join(__dirname, '../data/guardian/input'),
-  outputDir:   require('path').join(__dirname, '../data/guardian/output'),
-  failuresDir: require('path').join(__dirname, '../data/guardian/failures'),
-  logsDir:     require('path').join(__dirname, '../data/guardian/conversations'),
-  queueDir:    require('path').join(__dirname, '../data/guardian/queue'),
+  inputDir:    _DH.home('guardian', 'input'),
+  outputDir:   _DH.home('guardian', 'output'),
+  failuresDir: _DH.home('guardian', 'failures'),
+  logsDir:     _DH.home('guardian', 'conversations'),
+  queueDir:    _DH.home('guardian', 'queue'),
 });
 
 // Replay any pending items from before restart (§LAW II physical redundancy)
@@ -104,7 +106,7 @@ if (_replayed.length) {
 }
 
 // ── Shared SEAM queue builder ────────────────────────────────────────────────
-// Both the file-drop watcher below (.spec files landing in data/guardian/input/)
+// Both the file-drop watcher below (.spec files landing in guardian/data/input/)
 // and POST /command build a SEAMQueue from spec text. These were two separate
 // call sites that drifted apart — the file-watcher one rotted into a
 // constructor call that always threw (3 positional args against a constructor
@@ -537,6 +539,27 @@ async function writeToNexus(job) {
 // down, right after `jaa` exists — see that call site's comment for why.
 
 const _wallSaid = new Map();
+// 0.60.205 L2 — James: "the log fixes also. start them". His 0.60.201 log: SP5's build climbed to claude, the claude tab opened
+// on a sign-in page, and the job was held there 295 s ("cancelled — the caller stopped waiting") before the build moved on to
+// deepseek, which wrote the file in 8 s. Behind a sign-in wall a job a person is waiting on (anything not a build) still waits
+// for the person to sign in; a build or background job (normal / low) has another agent to go to, so it fails now with the
+// wall as its reason and the build's ladder climbs (ME5: a failed agent hands the job on). Said once per wall.
+function _releaseBehindWall(provider, why) {
+  const queued = pendingQueue.get(provider) || [];
+  const keep = [], released = [];
+  for (const q of queued) {
+    const job = jobs.get(q.id) || q;
+    // a build's job (its session is repo-agent-<repo>-phrun-…: a phase run with a ladder) or background work (normal / low)
+    if (q._seamQueue || !require('./lib/provider-login.js').releasableBehindWall(job)) { keep.push(q); continue; }
+    const error = `${provider} needs a sign-in in its Clear Glass tab (${why || 'sign-in page'}) — not waited on: this job has other agents to go to`;
+    try { updateJob(job.id, { status: 'error', error, failedAt: Date.now(), gate: 'signin' }); } catch (_) {}
+    try { bus.emit('guardian.job.error', { jobId: job.id, error, provider }); } catch (_) {}
+    released.push(job.id);
+  }
+  if (keep.length) pendingQueue.set(provider, keep); else pendingQueue.delete(provider);
+  if (released.length) console.warn(`[guardian] ${released.length} build job(s) for ${provider} sent back — ${provider} is behind a sign-in page; a job a person waits on stays`);
+  return released;
+}
 function flushQueuedJobs(provider) {
   const queued = pendingQueue.get(provider) || [];
   if (!queued.length) return;
@@ -548,7 +571,9 @@ function flushQueuedJobs(provider) {
   try {
     const rec = require('./lib/provider-login.js').holdsJobs(provider);
     if (rec) {
-      if (_wallSaid.get(provider) !== rec.at) { _wallSaid.set(provider, rec.at); console.warn(`[guardian] ${queued.length} queued job(s) for ${provider} held — its tab is at a sign-in page; they go when it reports signed in`); }
+      _releaseBehindWall(provider, rec.text || rec.url);
+      const left = (pendingQueue.get(provider) || []).length;
+      if (left && _wallSaid.get(provider) !== rec.at) { _wallSaid.set(provider, rec.at); console.warn(`[guardian] ${left} queued job(s) for ${provider} held — its tab is at a sign-in page; they go when it reports signed in`); }
       return;
     }
   } catch (_) {}
@@ -1005,12 +1030,12 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
 
   // ── PHASE 5: Physical queue writable ─────────────────────────────────────
   seq.phase({ name:'queue.writable', type:'HARD',
-    label:'Physical queue dirs writable (data/guardian/)',
+    label:'Physical queue dirs writable (guardian/data/)',
     fn: async () => {
       const fs   = require('fs');
       const rp   = require('path');
       const dirs = ['input','output','queue','failures','conversations']
-        .map(d => rp.join(__dirname,'..','data','guardian',d));
+        .map(d => _DH.home('guardian',d));
       for (const d of dirs) {
         try { fs.mkdirSync(d,{recursive:true}); } catch(e) { return { ok:false, msg:d.split('/').pop()+' not writable: '+e.message }; }
       }
@@ -1049,7 +1074,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
     fn: async () => {
       const fs  = require('fs');
       const rp  = require('path');
-      const dir = rp.join(__dirname,'..','data','guardian','output');
+      const dir = _DH.home('guardian','output');
       try { fs.mkdirSync(dir,{recursive:true}); const t=rp.join(dir,'_boot.tmp'); fs.writeFileSync(t,'ok'); fs.unlinkSync(t); }
       catch(e) { return { ok:false, msg:'output dir: '+e.message }; }
       return { ok: true };
@@ -1156,7 +1181,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
     fn: async () => {
       try {
         const fs  = require('fs'), rp = require('path');
-        const dir = rp.join(process.env.NEXUS_DATA_ROOT || rp.join(__dirname,'..','data'),'guardian','ledger','boot');
+        const dir = _DH.home('guardian','ledger','boot');
         fs.mkdirSync(dir,{recursive:true});
         fs.appendFileSync(rp.join(dir,'events.ndjson'),
           JSON.stringify({type:'guardian.boot',version:'3.6.1',pid:process.pid,ts:Date.now()})+'\n');
@@ -1178,7 +1203,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
 // guardian/artifact-upload.js header for what this replaced and why.
 const { createAutoUploader } = require('./artifact-upload');
 const dropzone = createAutoUploader({
-  uploadDir: require('path').join(__dirname, '..', 'data', 'guardian', 'input'),
+  uploadDir: _DH.home('guardian', 'input'),
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1242,7 +1267,7 @@ function _kernelEmit(type, data, ts) {
 // ~60 lines above that comment, the whole time. ledgerDir pointed at
 // guardian/memory_store/ — the legacy SOURCE-TREE folder, holding an
 // 8.7MB live event_log.jsonl entirely outside the data/ root. Moved to
-// data/guardian/ledger/cfr — the exact pattern bridge already uses
+// guardian/data/ledger/cfr — the exact pattern bridge already uses
 // (data/bridge/ledger/cfr, bridge/index.js:73). CFR stream/state files
 // are append-only jsonl + single-object JSON snapshots, NOT row-based
 // tables, so they belong under the cortex-governed data root as files —
@@ -1250,7 +1275,7 @@ function _kernelEmit(type, data, ts) {
 // point was correct and stands). Existing memory_store files migrated
 // once by copy; originals left untouched (§7.4 archived, not discarded).
 const _evLedger = createCFRLedger({
-  ledgerDir: require('path').join((process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data')), 'guardian', 'ledger', 'cfr'),
+  ledgerDir: _DH.home('guardian', 'ledger', 'cfr'),
   systemId:  'guardian',
   onEvent:   null, // downstream consumers can add onEvent hooks here
   onGap: (gap) => {
@@ -1290,7 +1315,7 @@ _evLedger.startAutoSave(60000);
 // than needing a separate archive/reference scheme.
 try {
   const snap = require('../cortex/snapshot/index.js');
-  const _ledgerCfrDir = require('path').join((process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data')), 'guardian', 'ledger', 'cfr');
+  const _ledgerCfrDir = _DH.home('guardian', 'ledger', 'cfr');
   snap.registerStateProvider('guardian', {
     capture: () => {
       const read = (f) => { try { return JSON.parse(fs.readFileSync(require('path').join(_ledgerCfrDir, f), 'utf8')); } catch (_) { return null; } };
@@ -1798,7 +1823,7 @@ function handleExtendedRoutes(req, res, url, method) {
 
   // ── GET /queue — physical file queue state ─────────────────────────────────
   if (method==='GET' && url.pathname==='/queue') {
-    const qDir = require('path').join(__dirname, '..', 'data', 'guardian');
+    const qDir = _DH.dir('guardian');
     const fs2  = require('fs');
     function listDir(sub) {
       try {
@@ -1952,7 +1977,7 @@ function handleExtendedRoutes(req, res, url, method) {
     const state = _physQueue._readState(uuid);
     if (!state) { pRes(res, 404, { ok:false, error:'item not found' }); return; }
     // Find failed file and rename back to pending
-    const inputDir = require('path').join(__dirname, '..', 'data', 'guardian', 'input');
+    const inputDir = _DH.home('guardian', 'input');
     const files    = require('fs').readdirSync(inputDir).filter(f => f.startsWith(uuid) && f.includes('.failed.'));
     if (files.length) {
       const fp = require('path').join(inputDir, files[0]);
@@ -1976,7 +2001,7 @@ function handleExtendedRoutes(req, res, url, method) {
   // ── GET /queue/conversation/:uuid — conversation log for completed item ──
   if (method==='GET' && /^\/queue\/conversation\//.test(url.pathname)) {
     const uuid  = url.pathname.split('/').pop();
-    const convDir = require('path').join(__dirname,'..','data','guardian','conversations',uuid.slice(0,40));
+    const convDir = _DH.home('guardian','conversations',uuid.slice(0,40));
     const convFile = require('path').join(convDir,'conversation.jsonl');
     if (!require('fs').existsSync(convFile)) { pRes(res, 200, { ok:true, messages:[] }); return true; }
     const messages = require('fs').readFileSync(convFile,'utf8').trim().split('\n').filter(Boolean)
@@ -2093,7 +2118,7 @@ function handleExtendedRoutes(req, res, url, method) {
     const baselineStats = _baseline ? _baseline.stats() : null;
     const queueStats    = (() => {
       try {
-        const qDir = require('path').join(__dirname,'..','data','guardian','input');
+        const qDir = _DH.home('guardian','input');
         const files = require('fs').readdirSync(qDir);
         return {
           pending:    files.filter(f=>f.includes('.pending.')).length,
@@ -3164,6 +3189,7 @@ function handleExtendedRoutes(req, res, url, method) {
       else bus.emit('guardian.provider.login_state', rec);
       // §0.60.0 GA1 — a wall (or signed out) is shown to the person; ok clears it
       if (state === 'wall' || state === 'signed-out') _providerAttention().raise({ provider, reason: 'signin', url: rec.url, note: rec.text || `${provider} is signed out` }).catch(() => {});
+      if (state === 'wall') { try { _releaseBehindWall(provider, rec.text || rec.url); } catch (_) {} }   // 0.60.205 L2
       else if (state === 'ok') { _providerAttention().clear(provider); try { flushQueuedJobs(provider); } catch (_) {} }   // §0.60.124 SW2 — signed in: what waited goes now
       return json(res, 200, { ok: true, ...rec });
     }).catch(e => json(res, 400, { ok: false, error: e.message }));

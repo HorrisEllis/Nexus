@@ -1,0 +1,223 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RC3_windows_safe_node_names:abac5983cc545d58
+type: graph
+id: phase:RC3_windows_safe_node_names:abac5983cc545d58
+context: dependency graph of phase RC3_windows_safe_node_names
+intent: null
+summary: 28 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792653394692
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792653394692
+lastSeenAt: 1792653394692
+fingerprint: null
+payload:
+  for: RC3_windows_safe_node_names
+  kind: phase
+  repo: null
+  hash: abac5983cc545d58
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/node-export.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pipeline-nodes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/schemas/index.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/schemas/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/nodes.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/schemas/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/schemas/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-mode-forensics.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/schemas/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-schemas.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/safe-watch.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/node-registry.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-index.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/safe-watch.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: clear-glass/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: clear-glass/src/automation/nodes.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/node-export.js
+      kind: requires
+    - from: diagnostic/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/node-export.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 4470939bf8678599
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 4470939bf8678599 · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

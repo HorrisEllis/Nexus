@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_system
+type: phase
+id: docs_2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_system
+context: pipeline phase ND2_one_node_route_for_every_system of docs/2026-10-22-system-node-db-phasemap.spec
+intent: null
+summary: ND2_one_node_route_for_every_system (backend) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792650734504
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792650734504
+lastSeenAt: 1792650734504
+fingerprint: null
+payload:
+  id: ND2_one_node_route_for_every_system
+  map: docs/2026-10-22-system-node-db-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - lib/node-routes.js
+    - lib/node-registry.js
+  depends_on:
+    - ND1_every_system_has_its_database
+    - ND_D1_the_file_is_the_node
+    - ND_D3_generated_types_are_not_agents_to_write
+  blocks:
+    - MOD-ND-ROUTES
+  spec: docs/system-node-db.spec
+  graph: 15ec1ac071c27e69

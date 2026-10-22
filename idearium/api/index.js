@@ -23,6 +23,9 @@ import { spawnSync, spawn as spawnProc } from 'child_process';
 import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
+// 0.60.207 DL2 — James: "make each system responsible for it's own data". Idearium's files in the root data/ come home (lib/data-home.js).
+// ESM: the imports above this line ran first; Idearium's own refs still name data/idearium (DL3 rewires them before any of it moves).
+_require('../../lib/data-home.js').atBoot('idearium');
 const WR = _require('../../lib/warp-rung.js');   // §WB1 0.60.73 — WARP around the agent the ladder and RAID chose (James: "Option 1")
 const _access = _require('../lib/access.cjs');   // §0.58.0 IA0 — who may act on Idearium
 // 0.60.27 AG1a — an agent call's tokens, estimated where it happens (lib/economy/tokens.js estimate-v1; no vendor tokenizer)
@@ -3054,6 +3057,7 @@ const ROUTE_CAP = {
   'repo.phases.graph': CAPS.READ_IDEAS,
   'repo.uploads.list': CAPS.READ_IDEAS, 'repo.uploads.get': CAPS.READ_IDEAS, 'repo.uploads.create': CAPS.WRITE_IDEAS, 'repo.uploads.answer': CAPS.WRITE_IDEAS,   // §0.60.173 UP3
   'repo.roadmaps': CAPS.READ_IDEAS, 'repo.roadmaps.import': CAPS.WRITE_IDEAS,   // 0.60.199 SD17 — a project's own roadmap, imported
+  'repo.lift-root': CAPS.READ_IDEAS, 'repo.lift-root.apply': CAPS.WRITE_IDEAS,   // 0.60.206 SD22 — a project imported inside its own folder, lifted to the root
   'repo.phases.dag': CAPS.READ_IDEAS,   // §0.60.172 DG3 — reads only   // §0.60.147 DG2 — reads only
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
@@ -3173,6 +3177,7 @@ const ROUTE_CAP = {
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
+  'data.home.list': CAPS.READ_IDEAS, 'data.home.get': CAPS.READ_IDEAS, 'data.home.bring': CAPS.WRITE_IDEAS, 'data.home.rollback': CAPS.WRITE_IDEAS,   // 0.60.207 DL2 — each system's own data
   'context.find': CAPS.READ_IDEAS, 'repo.context.find': CAPS.READ_IDEAS, 'context.sources': CAPS.READ_IDEAS,   // 0.60.156 GM5 — reads only
   'lattice.neighbours': CAPS.READ_IDEAS,   // 0.60.157 GM4 — reads only
   'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
@@ -3467,6 +3472,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','homes'], 'system.homes'],
     ['GET',    ['api','system','sovereign'], 'system.sovereign'],
     ['GET',    ['api','system','shape'], 'system.shape'],   // 0.60.138 — does each system match genesis: every role, its own file, the kernel, or missing (?system=)   // 0.60.133 IM1 — which systems are sovereign, and what stands in each one's way (?system=)
+    ['GET',    ['api','data','home'], 'data.home.list'],                 // 0.60.207 DL2 — every system: where its data lives, what still waits in the root data/
+    ['GET',    ['api','data','home',':system'], 'data.home.get'],        // 0.60.207 DL2 — one system: its record and each file's plan
+    ['POST',   ['api','data','home',':system'], 'data.home.bring'],      // 0.60.207 DL2 — bring its data home now (manifest, hashes; rollback-able)
+    ['POST',   ['api','data','rollback'], 'data.home.rollback'],         // 0.60.207 DL2 — put a manifest's files back
     ['GET',    ['api','system','nodes'], 'system.nodes.list'],   // 0.60.157 GM4 — every system that keeps nodes (a data/nodes folder), for the node lattice
     ['GET',    ['api','system','nodes',':system'], 'system.nodes'],   // 0.60.130 P33a — a system's own node database: per type, its files, its index, its history; ?type= lists, &id= one node's history   // 0.60.129 DB17 — files in shared folders that belong to one system (a census: nothing moves)
     ['GET',    ['api','system','tunnel'], 'system.tunnel'],   // 0.60.128 DB13 — every system's tunnel: where it runs, its routes, the commands that reach it, its toasts
@@ -3557,6 +3566,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
     ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
+    ['GET',    ['api','repos',    ':uuid','lift-root'],             'repo.lift-root'],         // 0.60.206 SD22 — is the project inside one folder? the plan
+    ['POST',   ['api','repos',    ':uuid','lift-root'],             'repo.lift-root.apply'],   // 0.60.206 SD22 — lift it to the root (root copies archived)
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
     ['POST',   ['api','repos',    ':uuid','expand'],                'repo.expand'],   // §0.39.360 SB42–SB44
     // §0.39.280 — the build surface (docs/2026-09-29-build-surface-phasemap.spec BS7; logic in api/build-surface.js)
@@ -5743,6 +5754,39 @@ async function handle(req, res, route, query, body) {
       const cur = R.current();
       return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
         modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
+    }
+    // 0.60.207 DL2 — James: "start the data migration … make each system responsible for it's own data." lib/data-home.js: where each
+    // system's data lives, what of it still waits in the root data/ (and why: code still naming the path, or his call), and bringing it
+    // home through the clear-up tool (manifest first, copy, sha256, then the source; rollback puts it back).
+    case 'data.home.list': case 'data.home.get': case 'data.home.bring': case 'data.home.rollback': {
+      const DH = _require('../../lib/data-home.js'), DC = _require('../../lib/data-clearup.js');
+      const root = path.dirname(_require.resolve('../../package.json'));
+      if (action === 'data.home.rollback') {
+        const mf = String((body && body.manifest) || '');
+        if (!/^_archive\/clearup\/clearup-[^/]+\/manifest\.json$/.test(mf)) return err(res, 400, 'manifest: the path a bring-home printed (_archive/clearup/clearup-<stamp>/manifest.json)');
+        if (!fs.existsSync(path.join(root, mf))) return err(res, 404, `no manifest at ${mf}`);
+        const r = DC.rollback(mf, { root });
+        getIdeaOS().emit('idearium.data.rolledback', { manifest: mf, restored: r.restored.length, failed: r.failed.length });
+        return ok(res, { manifest: mf, restored: r.restored.length, failed: r.failed });
+      }
+      let census = null;
+      const dataDir = path.join(root, 'data');
+      if (action !== 'data.home.bring' && fs.existsSync(dataDir)) { try { census = DC.census({ root, dataDir }); } catch (e) { return err(res, 500, `the root data/ could not be read: ${e.message}`); } }
+      if (action === 'data.home.list') {
+        const systems = DH.SYSTEMS({ root }).map(sys => { try { return DH.status(sys, { root, census }); } catch (e) { return { system: sys, error: e.message }; } });
+        const unowned = census ? census.entries.filter(e => !e.owner || e.owner === 'none' || e.status === 'ask').length : 0;
+        return ok(res, { root: 'data', present: !!census, files: census ? census.entries.length : 0, unowned, systems, refs: census ? Object.fromEntries(Object.entries(census.refs).filter(([, v]) => v.length)) : {} });
+      }
+      const sys = String(params.system || '');
+      try { DH.folder(sys, { root }); } catch (e) { return err(res, 404, e.message); }
+      if (action === 'data.home.get') {
+        const moves = census ? DC.plan(census, { onlyOwner: sys }).map(m => ({ from: m.from, to: m.to, status: m.status, why: m.why, bytes: m.bytes })) : [];
+        return ok(res, { ...DH.status(sys, { root, census }), moves });
+      }
+      const st = _starter(req, body);
+      const r = DH.bringHome(sys, { root, by: st.who === 'unknown' ? 'person:ui' : st.who, fresh: true });
+      getIdeaOS().emit('idearium.data.home', { system: sys, moved: r.moved, waiting: r.waiting.length, conflicts: r.conflicts.length, failed: r.failed.length, manifest: r.manifest });
+      return ok(res, r);
     }
     case 'system.nodes.list': {   // 0.60.157 GM4 — the systems that keep nodes, by folder, read from disk now
       const root = path.dirname(_require.resolve('../../package.json'));
@@ -8967,6 +9011,22 @@ async function handle(req, res, route, query, body) {
       return ok(res, { repoUuid: params.uuid, map: pick.target, from: [pick.json, pick.md].filter(Boolean), phases: im.phases.length,
         done: im.phases.filter(p => p.status === 'done').length, next: im.next.slice(0, 5), said: im.said, via: w.via });
     }
+    // 0.60.206 SD22 — James: "im so sick of this phase, been stuck on 2 days. the file is in the directory already for the phase, so
+    // what is broken?" Looking Glass was imported before 0.60.200 stripped wrapper folders: the project is under
+    // looking-glass-bundle-v0_4/, the phase names lib/title.js at the root. GET says whether a repo is wrapped and what a lift would
+    // do; POST lifts it (idearium/repo/lift-root.js): root copies at a taken path are archived first, nothing deleted.
+    case 'repo.lift-root': case 'repo.lift-root.apply': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (repo.nexusSelf) return err(res, 400, 'a Nexus system repo mirrors the tree; it is never lifted');
+      const LR = await import('../repo/lift-root.js');
+      const r = LR.liftRoot(getRepoLayer(), params.uuid, { apply: action === 'repo.lift-root.apply' });
+      if (action === 'repo.lift-root.apply') {
+        if (!r.wrapper) return err(res, 409, `nothing to lift: ${r.why}`, { code: 'NOT_WRAPPED' });
+        getIdeaOS().emit('idearium.repo.lifted', { repoUuid: params.uuid, wrapper: r.wrapper, moved: r.moved.length, archived: r.archived.length, failed: r.failed.length });
+      }
+      return ok(res, { repoUuid: params.uuid, ...r, moves: (r.moves || []).length, ...(r.moved ? { moved: r.moved.length } : {}) });
+    }
     // §0.39.281 EC8 — the economy, from guardian (the one owner)
     case 'economy.get': case 'economy.set': case 'economy.view': {
       const what = action === 'economy.view' ? String(params.what || '') : '';
@@ -10359,7 +10419,7 @@ function _startBuildQueuePoller(port) {
 
 // §0.39.261 — one Nexus-repo sync at a time; later callers share the running one.
 let _nexusSelfSyncing = null, _nexusSelfLast = null, _nexusSelfStartedNow = null;
-function _nexusSelfSync({ only = null, force = false } = {}) {
+function _nexusSelfSync({ only = null, force = false, shouldPause = null } = {}) {
   if (_nexusSelfSyncing) { _nexusSelfStartedNow = null; return _nexusSelfSyncing; }
   _nexusSelfSyncing = (async () => {
     try {
@@ -10368,7 +10428,7 @@ function _nexusSelfSync({ only = null, force = false } = {}) {
       const NS = await import('../repo/nexus-self.js');
       const os = getIdeaOS();
       const r = await NS.sync(getRepoLayer(), se, {
-        only, force, log: (m) => console.log(m),
+        only, force, shouldPause, log: (m) => console.log(m),
         onSystem: (x) => { try { os.broadcast('idearium.nexus-self.sync', { system: x.system, status: x.status, error: x.error || null }); } catch (_) {} },
         // 0.39.263 — each repo's history lives in versionium (branch repo-<uuid>), not in a .git
         commitVersion: async ({ repo, system, snapshot }) => {
@@ -10893,13 +10953,14 @@ export function startAPI() {
         if (_lowMem()) { console.log('[idearium/nexus-self] sync skipped — free memory is under 20%; it runs on the next round'); return; }
         const h = _require('../../lib/prevention.js').heavyAllowedHere('idearium');
         if (!h.ok) { console.log(`[idearium/nexus-self] sync waits — ${h.why}; it runs on the next round`); return; }
-        _nexusSelfSync({});
+        // 0.60.205 L6 — and between systems: a sync that starts with headroom stops when memory goes, the rest next round
+        _nexusSelfSync({ shouldPause: () => { if (_lowMem()) return 'free memory is under 20%'; const hh = _require('../../lib/prevention.js').heavyAllowedHere('idearium'); return hh.ok ? null : hh.why; } });
       };
       const first = setTimeout(_guardedSync, parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 60000);
       const t = setInterval(_guardedSync, every);
       if (first.unref) first.unref();
       if (t.unref) t.unref();
-      console.log(`[idearium/nexus-self] Nexus repo sync scheduled — first in ${Math.round((parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 20000) / 1000)}s, then every ${Math.round(every / 60000)} min`);
+      console.log(`[idearium/nexus-self] Nexus repo sync scheduled — first in ${Math.round((parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 60000) / 1000)}s, then every ${Math.round(every / 60000)} min`);
     }
   });
 

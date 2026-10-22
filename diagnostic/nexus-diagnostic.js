@@ -1,4 +1,6 @@
 'use strict';
+// 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come home first (lib/data-home.js).
+require('../lib/data-home.js').atBoot('diagnostic');
 const _bootedAt = Date.now();   // §health — real uptime, not a guess
 let _tensionWarned = false;   // §1.2 warn-once for the missing cortex/healer canonical scorer
 // diagnostic/nexus-diagnostic.js — System Auditing + Monitoring Service
@@ -115,7 +117,7 @@ function uid() { return crypto.randomUUID(); }
 
 const SYSTEMS = {
   // §LEDGER-FIX: paths now match flat JSONL written by ledger-writer + jaaDB
-  guardian:    { port: 7820, dataDir: 'data/guardian',    healthPath: '/health',   label: 'Guardian' },
+  guardian:    { port: 7820, dataDir: 'guardian/data',    healthPath: '/health',   label: 'Guardian' },   // 0.60.208 DL3: guardian's own folder
   cortex:      { port: 3748, dataDir: 'cortex/data',      healthPath: '/health', label: 'Cortex' },
   idearium:    { port: 4800, dataDir: 'data/idearium',    healthPath: '/health', label: 'Idearium' },
   orchestrator:{ port: 9000, dataDir: 'data/orchestrator',healthPath: '/health',   label: 'Orchestrator' },

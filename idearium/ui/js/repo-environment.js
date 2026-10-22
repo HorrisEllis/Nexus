@@ -25,7 +25,18 @@ async function renderRepoEnvironment(repo) {
   try { d = await api(`/api/repos/${repo.uuid}/environment`, {}, 60000); }
   catch (e) { el.innerHTML = `<div class="ds"><div class="ds-label">environment</div><div class="ds-mono">could not check: ${escapeHtml(e.message)}</div></div>`; return; }
   if (CURRENT_API_REPO?.uuid !== repo.uuid) return;
+  // 0.60.206 SD22 — files "missing" because the project sits inside one folder: offered beside the missing line
+  try { const L = await api(`/api/repos/${repo.uuid}/lift-root`, {}, 30000); d.lift = L && L.wrapper ? L : null; } catch (_) { d.lift = null; }
+  if (CURRENT_API_REPO?.uuid !== repo.uuid) return;
   REPOENV.data = d; _envPaint();
+}
+async function envLiftRoot() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try {
+    const r = await api(`/api/repos/${repo.uuid}/lift-root`, { method: 'POST', body: '{}' }, 120000);
+    toast(`lifted ${r.wrapper}/ to the root: ${r.moved} moved, ${(r.archived || []).length} archived${(r.failed || []).length ? `, ${r.failed.length} failed` : ''}`, (r.failed || []).length ? 'err' : 'ok');
+    renderRepoEnvironment(repo);
+  } catch (e) { toast(`not lifted: ${e.message}`, 'err'); }
 }
 
 function _envMark(v) { return v === true ? '<span style="color:var(--mint)">✓</span>' : v === false ? '<span style="color:var(--coral)">✗</span>' : '<span style="color:var(--text3)">?</span>'; }
@@ -55,6 +66,7 @@ function _envPaint() {
       <div class="ds-mono">${_envMark(dl.ok)} downloaded   ${dl.ok === null ? escapeHtml(dl.reason || '') : `${dl.files || 0} files${dl.missingCount ? ` · ${dl.missingCount} missing: ${escapeHtml((dl.missing || []).slice(0, 5).join(', '))}` : ''}${dl.differentCount ? ` · ${dl.differentCount} different` : ''}`}
 ${_envMark(cf.ok)} configured   ${cf.reason ? escapeHtml(cf.reason) : (cf.stacks || []).map(s => `${s.stack}: ${escapeHtml(s.detail)}`).join('\n               ')}
 ${_envMark(vm.available === false ? false : vm.missing && vm.missing.length ? false : vm.available)} VM           ${vm.available === false ? escapeHtml(vm.reason || 'unavailable') : `base image ${escapeHtml(vm.baseImage || '—')}${vm.runtimes ? ` · has ${escapeHtml(vm.runtimes.join(', '))}` : ''}${vm.missing && vm.missing.length ? ` · lacks ${escapeHtml(vm.missing.join(', '))}` : ''}`}${vm.extras && vm.extras.length ? ` · needs extras ${escapeHtml(vm.extras.join(', '))}` : ''}</div>
+      ${d.lift ? `<div class="ds-mono" style="color:var(--amber);margin-top:6px">the project is inside ${escapeHtml(d.lift.wrapper)}/ (${d.lift.moves} files) while its phases name root paths${(d.lift.collisions || []).length ? ` · ${d.lift.collisions.length} root copy(ies) archived first` : ''}</div><div class="action-row"><button class="action-btn" onclick="envLiftRoot()">⇡ lift to the root</button></div>` : ''}
       ${(c.todo || []).length ? `<div class="ds-mono" style="color:var(--amber);margin-top:6px">to do:\n${c.todo.map(x => `  · ${escapeHtml(x)}`).join('\n')}</div>` : ''}
       <div class="ds-mono" style="margin-top:6px">relative to the codebase: ${escapeHtml(pl.describe || 'nothing detected')}
 install  ${(pl.install || []).map(i => `${escapeHtml(i.command)}   <span style="opacity:.55"># ${escapeHtml(i.why)}</span>`).join('\n         ') || '—'}

@@ -18,4 +18,11 @@ function blockedReason(provider) {
  */
 const HOLD_MS = 5 * 60 * 1000;
 function holdsJobs(provider, now = Date.now()) { const r = get(provider); return r && r.state === 'wall' && now - (r.at || 0) < HOLD_MS ? r : null; }
-module.exports = { set, get, all, blockedReason, holdsJobs, HOLD_MS };
+/** releasableBehindWall(job) — 0.60.205 L2: a build's job (session …-phrun-…) or background work (normal / low) is not held at a
+ *  sign-in wall: it has other agents to go to. Anything else (a person waiting, priority high by default) waits for the sign-in. */
+function releasableBehindWall(job = {}) {
+  if (!job || job.status !== 'queued') return false;
+  return /(^|-)phrun-/.test(String(job.sessionId || '')) || ['normal', 'low'].includes(job.priority);
+}
+
+module.exports = { releasableBehindWall, set, get, all, blockedReason, holdsJobs, HOLD_MS };

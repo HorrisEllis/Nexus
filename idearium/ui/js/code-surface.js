@@ -290,6 +290,7 @@ function _csCode() {
 function csPickLine(ev, n) {
   if (ev.shiftKey && CS.sel) CS.sel = { from: Math.min(CS.sel.from, n), to: Math.max(CS.sel.to || CS.sel.from, n) };
   else CS.sel = CS.sel && CS.sel.from === n && CS.sel.to === n ? null : { from: n, to: n };
+  if (CS.sel) CS.agentHidden = false;
   csPaint();
 }
 
@@ -425,6 +426,11 @@ function _csActivity() {
 }
 
 // ── paint ────────────────────────────────────────────────────────────────────────────────────────────
+function csAgentToggle() {
+  const on = !CS.agentHidden && !!(CS.agentOpen || CS.agent.busy || CS.sel);
+  CS.agentOpen = !on; CS.agentHidden = on;
+  csPaint();
+}
 function csPaint() {
   const el = document.getElementById('repo-subtab-code'); const repo = CURRENT_API_REPO;
   if (!el || !repo || CS.uuid !== repo.uuid) return;
@@ -457,16 +463,20 @@ function csPaint() {
         ${wsErr ? `<div class="cs-empty cs-bad">could not read the changes: ${escapeHtml(wsErr)}</div>` : ''}
         ${_csChanges().length ? `<div class="cs-diffs">${_csChanges().map(_wsCard).join('')}</div>` : `<div class="cs-empty">${CS.loadingChanges ? 'reading the changes…' : 'no changes yet — what the agent writes shows here as a diff, and greyed in the files, until you apply it'}</div>`}`;
   const tabs = _csTabsHtml();
-  const agentOn = !!(CS.agentOpen || CS.agent.busy || CS.sel);   // picked lines open the agent: that is where their actions are
-  const agentBtn = `<button class="cs-chip-btn${agentOn ? ' on' : ''}" onclick="CS.agentOpen=!CS.agentOpen;csPaint()" title="talk to the repo agent about the open file">agent${CS.agent.busy ? ' ◌' : ''}</button>`;
-  const body = CS.view === 'changes' ? `<div class="cs-one">${changesHtml}</div>`
+  // 0.60.206 — James: "the agent button does nothing in the code tab". It showed on the changes view, which never drew the panel,
+  // and on files a picked line or a busy agent held the panel open, so a press changed nothing. Now the panel is drawn beside the
+  // changes too, and a press always shows or hides it (picking lines opens it again).
+  const agentOn = !CS.agentHidden && !!(CS.agentOpen || CS.agent.busy || CS.sel);   // picked lines open the agent: that is where their actions are
+  const agentBtn = `<button class="cs-chip-btn${agentOn ? ' on' : ''}" onclick="csAgentToggle()" title="talk to the repo agent about the open file">agent${CS.agent.busy ? ' ◌' : ''}</button>`;
+  const agentSide = `<div class="cs-right"><div class="cs-card">${_csCardHtml()}</div><div class="cs-agent">${_csAgentHtml()}</div></div>`;
+  const body = CS.view === 'changes' ? (agentOn ? `<div class="cs-grid cs-side"><div class="cs-mid cs-one">${changesHtml}</div>${agentSide}</div>` : `<div class="cs-one">${changesHtml}</div>`)
     : CS.view === 'plans' ? `<div class="cs-one">${_csPlanStrip()}<div class="cs-sec">the work for the open file</div>${typeof _cxWork === 'function' ? _cxWork() : ''}<div class="al cs-live" data-al="${escapeHtml(repo.uuid)}">${typeof agentLiveHtml === 'function' ? agentLiveHtml(repo.uuid) : ''}</div></div>`
     : CS.view === 'runs' ? `<div class="cs-one">${typeof cxPanelsHtml === 'function' ? cxPanelsHtml(`<div class="cs-activity" id="cs-activity">${_csActivity()}</div>`) : `<div class="cs-activity" id="cs-activity">${_csActivity()}</div>`}</div>`
     : CS.view === 'cos' ? `<div class="cs-one"><div class="cs-sec">COS — the test environment</div><div class="cs-empty">The proposal is tested here before it reaches you. From a terminal: <code>node cos/cli/index.js vm shell &lt;name&gt;</code>. The screen for it is not built yet (to confirm what you want here: see the rebuild phasemap, TB0).</div></div>`
     : `<div class="cs-grid${agentOn ? '' : ' cs-noagent'}">
         <div class="cs-left" id="cs-left">${_csTree(repo)}</div>
         <div class="cs-mid">${middle}</div>
-        ${agentOn ? `<div class="cs-right"><div class="cs-card">${_csCardHtml()}</div><div class="cs-agent">${_csAgentHtml()}</div></div>` : ''}
+        ${agentOn ? agentSide : ''}
       </div>`;
   el.innerHTML = `<div class="cs">
     <div class="cs-top"><div class="cs-vtabs" id="cs-vtabs">${tabs}</div><span class="cs-dim cs-head">${head}</span><span class="cs-grow"></span>

@@ -50,11 +50,12 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   if (!PHASES.data) el.innerHTML = `<div class="detail-empty">reading phasemaps…</div>`;
   let d;
   // the phases (every map), the thread's specs, the plan's gates — read together; only the first is required
-  const [pr, sr, gr, rr] = await Promise.allSettled([
+  const [pr, sr, gr, rr, lr] = await Promise.allSettled([
     api(`/api/repos/${forUuid}/phases`, {}, 30000),
     api(`/api/repos/${forUuid}/thread`, {}, 30000),
     api(`/api/repos/${forUuid}/plan`, {}, 30000),
     api(`/api/repos/${forUuid}/roadmaps`, {}, 30000),   // 0.60.199 SD17 — the project's own roadmaps
+    api(`/api/repos/${forUuid}/lift-root`, {}, 30000),  // 0.60.206 SD22 — is the project inside one folder?
   ]);
   if (CURRENT_API_REPO?.uuid !== forUuid || CURRENT_REPO_SUBTAB !== 'phases') return;
   if (pr.status !== 'fulfilled') {
@@ -66,6 +67,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   PHASES.specs = sr.status === 'fulfilled' ? (sr.value.specs || []) : null;
   PHASES.plan = gr.status === 'fulfilled' ? gr.value : null;
   PHASES.roadmaps = rr.status === 'fulfilled' ? (rr.value.roadmaps || []) : [];
+  PHASES.lift = lr.status === 'fulfilled' && lr.value.wrapper ? lr.value : null;
   if (PHASES.spec) await _phLoadThread(PHASES.spec, { paint: false });
   // §RS11 — opened from a workshop section: its phase opened
   if (PHASES.wantKey) { const w = d.phases.find(p => p.phase_key === PHASES.wantKey); if (w) PHASES.open = w.uuid; PHASES.wantKey = null; }
@@ -192,7 +194,7 @@ function _phPaint() {
       ${PHASES.expanding ? _phExpandForm() : ''}
       <div class="ph2 ${PHASES.open ? 'with-detail' : ''}">
         <nav class="ph2-rail">${_phRail(d)}</nav>
-        <div class="ph2-mid">${threadNote}${body}<div class="ph-count">${list.length} of ${d.phases.length} shown</div>${notes}</div>
+        <div class="ph2-mid">${_phLiftOffer()}${threadNote}${body}<div class="ph-count">${list.length} of ${d.phases.length} shown</div>${notes}</div>
         ${PHASES.open ? `<aside class="ph-detail ph2-detail" id="ph-detail">${_phDetail(d, PHASES.open)}</aside>` : ''}
       </div></div>`;
   setTimeout(phasesMapLoad, 0);   // 0.60.29 PM — the mapping's line
@@ -469,6 +471,22 @@ async function phPlanDerive(specPath) {
     toast(`${r.mapPath}: ${r.phases} phases`, 'ok');
     renderPhasesRefresh();
   } catch (e) { toast(`not planned: ${e.message}`, 'err'); }
+}
+// 0.60.206 SD22 — the project sits inside one folder (imported before 0.60.200 stripped a zip's wrapper) while its phases name
+// root paths: the build, the proof and the agent look at the root and never find its files. One button lifts it.
+function _phLiftOffer() {
+  const L = PHASES.lift; if (!L) return '';
+  const col = (L.collisions || []).map(c => c.path);
+  return `<div class="ds"><div class="ds-label">this project is inside ${escapeHtml(L.wrapper)}/</div><div class="ds-mono">Its ${L.moves} file(s) sit under ${escapeHtml(L.wrapper)}/, but its phases name paths at the root, so a build, a proof and the agent look where its files are not.${col.length ? ` ${col.length} file(s) at the root already take a path it needs (${escapeHtml(col.slice(0, 4).join(', '))}${col.length > 4 ? ' …' : ''}): they are archived under .nexus/archive/lift-root/ first, never deleted.` : ''}</div><button class="action-btn" onclick="phLiftRoot()">⇡ lift to the root</button></div>`;
+}
+async function phLiftRoot() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try {
+    const r = await api(`/api/repos/${repo.uuid}/lift-root`, { method: 'POST', body: '{}' }, 120000);
+    toast(`lifted ${r.wrapper}/ to the root: ${r.moved} moved, ${(r.archived || []).length} archived${(r.failed || []).length ? `, ${r.failed.length} failed (${r.failed[0].path}: ${r.failed[0].error})` : ''}`, (r.failed || []).length ? 'err' : 'ok');
+    PHASES.lift = null;
+    renderPhasesRefresh();
+  } catch (e) { toast(`not lifted: ${e.message}`, 'err'); }
 }
 // 0.60.199 SD17 — a project's own roadmap imported as a phasemap (POST …/roadmaps/import); an existing import is asked about first
 async function phImportRoadmap(dir, replace = false) {

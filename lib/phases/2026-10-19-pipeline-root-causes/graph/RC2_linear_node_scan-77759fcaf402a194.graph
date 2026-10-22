@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792587384278
+exported_at: 1792653394690
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792587384278
-lastSeenAt: 1792587384278
+firstSeenAt: 1792653394690
+lastSeenAt: 1792653394690
 fingerprint: null
 payload:
   for: RC2_linear_node_scan
@@ -160,7 +160,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 34f3ae8f0ecbc7b5
+    dagHash: 4470939bf8678599
     layer: 0
     deps: []
     dependents: []
@@ -171,6 +171,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 34f3ae8f0ecbc7b5 · layer 0
+      - DAG 4470939bf8678599 · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'

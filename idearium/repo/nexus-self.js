@@ -229,7 +229,7 @@ async function _syncSystem(rl, se, { system, snap, compartment = null, parentRep
  * Yields to the event loop between systems so a boot-time sync never holds
  * idearium's /health (the 0.39.260 lesson).
  */
-export async function sync(rl, se, { only = null, force = false, log = () => {}, onSystem = null, commitVersion = null, liveRoot = undefined } = {}) {
+export async function sync(rl, se, { only = null, force = false, log = () => {}, onSystem = null, commitVersion = null, liveRoot = undefined, shouldPause = null } = {}) {
   const t0 = Date.now();
   // §0.39.266 — James's machine: idearium OFFLINE ~30 s every 10 min, on syncs that changed nothing (an
   // unchanged sync is 236 ms here). Each step is timed so a slow sync names its own slow step.
@@ -276,8 +276,14 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
   let parent = _findRepo(rl, r => r.nexusSelf && r.nexusSelf.role === 'parent');
   const results = [];
   const want = only ? systems.names().filter(n => only.includes(n)) : systems.names();
+  const deferred = [];
   for (const name of want) {
     await new Promise(r => setImmediate(r));
+    // 0.60.205 L6 — James: "the log fixes also. start them". His first sync on a fresh folder re-wrote all 4,609 files (141 s, about
+    // 30 MB of repo copies) and memory went to pressure partway through: the guard was read once, before the first system. It is
+    // read before each system now; what is left waits for the next round (an unchanged system there costs one hash pass).
+    const why = typeof shouldPause === 'function' ? (() => { try { return shouldPause(); } catch (_) { return null; } })() : null;
+    if (why) { deferred.push(...want.slice(want.indexOf(name))); log(`[${MODULE_ID}] sync paused before ${name} — ${why}; ${deferred.length} system(s) wait for the next round`); break; }
     let res;
     try { res = await syncSystem(rl, se, { system: name, snap, compartment: comps.children[name], parentRepoUuid: parent ? parent.uuid : null, force }); }
     catch (e) { res = { system: name, status: 'failed', error: e.message }; }

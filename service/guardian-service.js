@@ -3,7 +3,7 @@
 // UUID: nexus-guardian-service-v1-0000-4000-0000-000000000001
 //
 // Boots the guardian HTTP server as an ICO kernel instance.
-// Every lifecycle event written to data/guardian/ledger/.
+// Every lifecycle event written to guardian/data/ledger/ (lib/data-home.js, 0.60.208 DL3).
 // Exposes clean start/stop/health/status.
 //
 // Usage:
@@ -19,7 +19,9 @@ const { createBaseline } = require('../intelligence/baseline');
 const { createQueue }    = require('../lib/queue');
 
 const ROOT    = path.join(__dirname, '..');
-const PID_FILE = path.join(ROOT, 'data/guardian/guardian.pid');
+const _DH = require(path.join(ROOT, 'lib', 'data-home.js'));   // 0.60.208 DL3 — guardian's data is guardian/data (James: "make each system responsible for it's own data")
+_DH.atBoot('guardian');   // before this service creates any of guardian's folders, his files come home (a conflict is never created here)
+const PID_FILE = _DH.home('guardian', 'guardian.pid');
 
 // ── CLI dispatch ──────────────────────────────────────────────────────────────
 
@@ -93,13 +95,13 @@ function stopService() {
 
 function startService() {
   // Write PID file
-  fs.mkdirSync(path.join(ROOT, 'data/guardian'), { recursive: true });
+  fs.mkdirSync(_DH.dir('guardian'), { recursive: true });
   fs.writeFileSync(PID_FILE, String(process.pid));
 
   // Boot the ICO kernel for guardian
   const ico = createICO({
     name:        'guardian',
-    root:        path.join(ROOT, 'data/guardian'),
+    root:        _DH.dir('guardian'),
     compartment: path.join(__dirname, '../guardian/compartment.js'),
   });
 
@@ -113,20 +115,20 @@ function startService() {
   // Bootstrap the baseline monitor on the ICO instance
   const baseline = createBaseline({
     name:           'guardian',
-    ledgerDir:      path.join(ROOT, 'data/guardian/ledger'),
-    failuresDir:    path.join(ROOT, 'data/guardian/failures'),
-    invariantDir:   path.join(ROOT, 'data/guardian/invariant'),
+    ledgerDir:      _DH.home('guardian', 'ledger'),
+    failuresDir:    _DH.home('guardian', 'failures'),
+    invariantDir:   _DH.home('guardian', 'invariant'),
     baselineN:      20,
     sigmaThreshold: 0.3,
   });
 
   // Physical queue
   const queue = createQueue({
-    inputDir:    path.join(ROOT, 'data/guardian/input'),
-    outputDir:   path.join(ROOT, 'data/guardian/output'),
-    failuresDir: path.join(ROOT, 'data/guardian/failures'),
-    logsDir:     path.join(ROOT, 'data/guardian/conversations'),
-    queueDir:    path.join(ROOT, 'data/guardian/queue'),
+    inputDir:    _DH.home('guardian', 'input'),
+    outputDir:   _DH.home('guardian', 'output'),
+    failuresDir: _DH.home('guardian', 'failures'),
+    logsDir:     _DH.home('guardian', 'conversations'),
+    queueDir:    _DH.home('guardian', 'queue'),
   });
 
   // Replay any interrupted queue items from before restart
@@ -146,7 +148,7 @@ function startService() {
 
   // Now boot the guardian HTTP server
   // We pass the ICO instance, baseline, and queue to the server
-  process.env.GUARDIAN_ICO_ROOT   = path.join(ROOT, 'data/guardian');
+  process.env.GUARDIAN_ICO_ROOT   = _DH.dir('guardian');
   process.env.GUARDIAN_SERVICE    = '1';
 
   // Boot guardian server (it handles its own http.createServer)
@@ -193,6 +195,6 @@ function startService() {
   }, 30000).unref();
 
   console.log(`[guardian-service] started pid=${process.pid}`);
-  console.log(`[guardian-service] ICO kernel: data/guardian/`);
+  console.log(`[guardian-service] ICO kernel: ${path.relative(ROOT, _DH.dir('guardian'))}/`);
   console.log(`[guardian-service] HTTP: :7820`);
 }

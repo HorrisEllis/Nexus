@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
 context: pipeline phase SS1_system_store_adoption of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
-summary: SS1_system_store_adoption (library) — 2 file(s)
+summary: SS1_system_store_adoption (library) — 20 file(s)
 system: idearium
 tags: []
-exported_at: 1792587384292
+exported_at: 1792653394702
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792587384292
-lastSeenAt: 1792587384292
+firstSeenAt: 1792653394702
+lastSeenAt: 1792653394702
 fingerprint: null
 payload:
   id: SS1_system_store_adoption
@@ -21,9 +21,27 @@ payload:
   status: OPEN
   files:
     - lib/system-store.js
+    - lib/data-home.js
+    - guardian/agents/index.js
+    - guardian/ask.js
+    - guardian/lib/ncp.js
+    - cortex/boot.js
+    - guardian/config.js
     - guardian/server.js
+    - guardian/lib/jobs.js
+    - guardian/lib/account-routing.js
+    - guardian/lib/agent-registry.js
+    - guardian/artifact-upload.js
+    - lib/seam/queue.js
+    - service/guardian-service.js
+    - cli/clear-idearium.js
+    - cli/diagnose.js
+    - cli/session.js
+    - contracts/nodes/ledgers.node.js
+    - contracts/nodes/systems.node.js
+    - diagnostic/nexus-diagnostic.js
   depends_on:
     - RC1_watchers_never_kill_a_kernel
   blocks: []
   spec: null
-  graph: ad8ef05a560160bc
+  graph: f5e49c04fe5a9255

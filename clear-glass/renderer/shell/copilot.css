@@ -3,6 +3,9 @@
  * CSS only, over the ids and classes browser.js and copilot-cli.js already use; nothing here changes what an element does.
  */
 body.cg-shell #copilot-pane { width: var(--copilot-w, 360px); background: var(--surface); border-left: 1px solid var(--edge); display: flex; flex-direction: column; }
+/* 0.60.206 — James: "the ui for clearglass is cut off". The rule above outranks browser.css's #copilot-pane.hidden (width 0), so a
+ * closed Co-pilot went invisible and kept its 360 px: a black strip down the right of every page. Closed means no width. */
+body.cg-shell #copilot-pane.hidden { width: 0; opacity: 0; border-left: none; }
 body.cg-shell #copilot-header { height: 48px; padding: 0 10px 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--edge); background: transparent; }
 body.cg-shell #copilot-header h2 { font: 600 var(--t-m) var(--sans); letter-spacing: 0; text-transform: none; color: var(--ink-hi); margin: 0; flex: 1; }
 body.cg-shell #copilot-model { font: 500 var(--t-xs) var(--mono); color: var(--ink-dim); padding: 3px 8px; border-radius: 10px; background: var(--hover); }

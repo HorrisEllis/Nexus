@@ -111,7 +111,7 @@ gaps:
 - file: tests/modules/test-guardian-data-sovereignty.js
   failing: 3
   kind: needs-live-data
-  reason: DF1-003/006/007 read the migrated data/guardian/memory/ledger.json (≥60 rows); data/ is never committed. The structural
+  reason: DF1-003/006/007 read the migrated guardian memory ledger.json (data/guardian/memory, or guardian/data/memory once guardian brought its data home, 0.60.208) (≥60 rows); data/ is never committed. The structural
     cases pass.
 - file: tests/modules/test-map3d.js
   failing: 1

@@ -1080,3 +1080,10 @@ spec:
         causal graph's traceToRoot has no route at all. One verb set for every graph — get, traverse, cone (what depends
         on this), trace (what caused this), as views of one relational field when RF1 lands — each system answering for
         its own.
+
+# ── ADDENDUM 2026-10-22 — P33 (serving half) and P35 specced and mapped ──
+# James, 2026-10-22: "Need each database for each system, for all the dyamic node index, then the server.js uses that for managing data,
+# history, and also copilot can access all of them expand the cli and capability from the schemas also."
+# Spec docs/system-node-db.spec; map docs/2026-10-22-system-node-db-phasemap.spec (ND1–ND6, DAG clean). ND1 and ND3 build the serving
+# half of P33 (every system answers for its own nodes from its own store; sentinel and emerge get stores). ND5 builds P35 (Copilot
+# reads, edits and creates nodes through each owning system's route, ledgered with who and why). P33 and P35 stay here as written (§0.3).

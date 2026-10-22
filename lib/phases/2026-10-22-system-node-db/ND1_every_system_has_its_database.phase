@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
+type: phase
+id: docs_2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
+context: pipeline phase ND1_every_system_has_its_database of docs/2026-10-22-system-node-db-phasemap.spec
+intent: null
+summary: ND1_every_system_has_its_database (foundation) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792650734502
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792650734502
+lastSeenAt: 1792650734502
+fingerprint: null
+payload:
+  id: ND1_every_system_has_its_database
+  map: docs/2026-10-22-system-node-db-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/node-registry.js
+    - lib/system-nodes.js
+    - orchestrator/orchestrator.js
+  depends_on:
+    - P33b_each_system_runs_its_listener
+  blocks:
+    - MOD-ND-CENSUS
+  spec: docs/system-node-db.spec
+  graph: 87dd2ec53f3067a4

@@ -187,7 +187,7 @@ ${orchTail.filter(e => e.type?.includes('booted') || e.type?.includes('started')
 - Orchestrator ledger: \`data/ledger/orchestrator.jsonl\`
 - Cortex JAA tables: \`cortex/data/\` (28 tables, JSONL per table)
 - Cortex FileStore: \`cortex/store/\` (SHA-256 content-addressed)
-- Guardian queue: \`data/guardian/input|output|queue|failures\`
+- Guardian queue: \`guardian/data/input|output|queue|failures\`
 - Idearium: \`data/idearium/\`
 
 **Hash identity:** SHA-256 via Cortex FileStore. Userscript simpleHash() is a known gap — not content-addressed. Replacement pending in userscript kernel rebuild.

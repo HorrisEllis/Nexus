@@ -41,7 +41,7 @@ module.exports = Object.freeze({
 
   GUARDIAN_QUEUE: {
     id:        'guardian_queue',
-    file:      'data/guardian/queue/',
+    file:      'guardian/data/queue/',   // 0.60.208 DL3
     authority: 'guardian',
     write_rule: 'Guardian _physQueue only. §BRIDGE-GATE notification sent before write.',
     type:      'filesystem_queue',

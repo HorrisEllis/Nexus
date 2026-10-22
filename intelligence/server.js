@@ -1,4 +1,6 @@
 'use strict';
+// 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come home first (lib/data-home.js).
+require('../lib/data-home.js').atBoot('intelligence');
 /**
  * intelligence/server.js — NEXUS Intelligence Service v1.0.0
  * UUID: nexus-intelligence-server-v1-0000-2026-0822-jamesbrooks-001
