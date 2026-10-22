@@ -80,6 +80,27 @@ function fakeWin(id, url) {
     assert.deepStrictEqual(w2.loaded, ['https://chatgpt.com'], 'not focused and untouched: back to the chat, as before');
   });
 
+  await test('AF-02c', 'a ChatGPT window with its own sign-in popup open is his: not bounced, not hidden (0.60.204)', async () => {
+    // James, 2026-10-22: "i click login and it pops up for a second and dissapears". "Continue with Google" opens a popup that
+    // takes focus; the ChatGPT window behind it is visible but not focused — AF-02b's second case — and was sent back to the chat.
+    const def = { name: 'ChatGPT', url: 'https://chatgpt.com', loginOptional: true };
+    const w = fakeWin(9, 'https://auth.openai.com/log-in'); w.visible = true; w.isFocused = () => false;
+    w.webContents.mainFrame = { processId: 4, routingId: 1 };
+    const popup = { isDestroyed: () => false, webContents: { opener: { processId: 4, routingId: 1 } } };   // accounts.google.com, opened by it
+    const H = CA.createAttentionHandler({ providerHost: { windows: new Map([['chatgpt', w]]), agentTabs: new Map() }, assign: async () => ({ ok: true }), checkerSource: null, getProvider: () => def, signedOutWaitMs: 5, allWindows: () => [w, popup] });
+    await H.attend('chatgpt', { reason: 'signin' });
+    assert.deepStrictEqual(w.loaded, [], 'his sign-in is left alone while its popup is up');
+    assert.strictEqual(w.focused, 0, 'and focus stays on the popup');
+    // the popup closed (signed in, or given up): the old rule holds again
+    const w2 = fakeWin(10, 'https://auth.openai.com/log-in'); w2.visible = true; w2.isFocused = () => false; w2.webContents.mainFrame = { processId: 4, routingId: 1 };
+    const other = { isDestroyed: () => false, webContents: { opener: { processId: 9, routingId: 3 } } };   // some other window's popup
+    const H2 = CA.createAttentionHandler({ providerHost: { windows: new Map([['chatgpt', w2]]), agentTabs: new Map() }, assign: async () => ({ ok: true }), checkerSource: null, getProvider: () => def, signedOutWaitMs: 5, allWindows: () => [w2, other] });
+    await H2.attend('chatgpt', { reason: 'signin' });
+    assert.deepStrictEqual(w2.loaded, ['https://chatgpt.com'], 'no popup of its own, unfocused, untouched: back to the chat, as before');
+    const src = fs.readFileSync(path.join(ROOT, 'clear-glass/src/providers/attention.js'), 'utf8');
+    assert.ok(/!_onSignin\(win\.webContents\.getURL\(\)\) && !_openedPopup\(win\)/.test(src), 'the panel loop does not hide the tab while its popup is up');
+  });
+
   await test('AF-03', 'the vault refuses a signed-out tab and saves a signed-in one', async () => {
     let jar = [{ name: '__cf_bm', value: 'x', domain: '.chatgpt.com' }, { name: 'oai-did', value: 'y', domain: 'chatgpt.com' }];
     const ses = { cookies: { get: async () => jar.map(c => ({ ...c })) } };

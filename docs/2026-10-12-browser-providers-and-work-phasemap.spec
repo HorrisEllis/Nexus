@@ -642,3 +642,18 @@ spec:
 # mode is unchanged (it starts unless the host sets __gPickerNoAutostart). Fixed with it: the highlight added the scroll
 # offset to a fixed-position box. test-guardian-field-pick 5/5 (jsdom; a live walk awaits his run).
 
+
+## ADDENDUM 2026-10-22 — a sign-in popup keeps its window (0.60.204)
+
+# James: "also fix chatgpt. i can't login. i click login and it pops up for a second and dissapears". The third report of this
+# (0.60.45: "i click login and it closes the login"; 0.60.52: "i cant click the login on the popup for chatgpt"). Read from the code
+# (the coder's reading; his run confirms it): "Continue with Google / Microsoft / Apple" opens a popup that takes focus, so the
+# ChatGPT window behind it is visible but not focused. AF-02b (0.60.52) read that as the hidden NCP tab, and ChatGPT is
+# loginOptional, so the next sign-in attention sent it back to chatgpt.com; the popup, its opener gone, closed. Fixed in
+# clear-glass/src/providers/attention.js 1.4.0: a window with a popup of its own open (webContents.opener is its main frame) is the
+# person's: not sent back, not focused, and the panel loop does not hide it on an in-between page while that popup is up. The
+# sign-in hosts gain login.live.com, auth0.openai.com and challenges.cloudflare.com. Decided by his axioms: USER_AUTONOMY (a sign-in
+# he started is his), §1.2 (the bounce and the hide are still logged when they happen). AF-02b's earlier rule is kept for a window
+# with no popup of its own (§0.3). Proof: test-cg-attention-focus AF-02c (7/7). If it still closes, his Clear Glass log shows one of
+# "[attention] chatgpt — on a sign-in page, but ChatGPT works signed out" or "left the sign-in page"; neither means it was not
+# this path (a normal tab), and that is the next thing to read.
