@@ -37,12 +37,13 @@ const hatForge = require('../../../lib/hat-forge.js');
 const { submitContract } = require('./contract-intake.js');
 
 const MODULE_ID = 'raid-officiator';
-const VERSION   = '1.1.0';
+const VERSION   = '1.2.0';
 const INTERVAL_MS = parseInt(process.env.OFFICIATOR_INTERVAL_MS || '20000', 10);
 
 let _timer = null;
 let _running = false;
 let _heldSaid = false;
+let _streakSaid = null;   // SD20 — the streak hold is said once per streak
 // §HONEST, IN-MEMORY DEDUP — a drop this process has already turned
 // into a contract (or tried and gave up on) is never reconsidered
 // within this process's own lifetime. Not persisted: a restart re-
@@ -91,6 +92,46 @@ function due(rec, now = Date.now()) {
   // §RT1 0.60.78 — parked is not forever: a parked drop gets one more try a day (said), so nothing waits on a hand edit
   if (rec.n >= MAX_ATTEMPTS) return now - (rec.at || 0) >= PARKED_RETRY_MS;
   return now - (rec.at || 0) >= Math.min(BACKOFF_MS * 2 ** (rec.n - 1), 24 * 3600 * 1000);
+}
+
+// SD20 0.60.203 — James: "yes" (2026-10-22) to "Stop the loop. When a lifeline answer turns into a contract with no repo behind
+// it, it should fail once and say so, not be re-created every 30 seconds." His SP5 log: each new drop (a reply of the build)
+// synthesized to the same goal ("Build phase SP5_title by ensuring lib/title.js…"), about every 30 s, each contract
+// blocked_at_handshake or failed — on qwen2.5-coder:7b running on the CPU at 2-9 % free memory. Drops differ, so the drop
+// dedup above never saw it. Two guards, read from RAID's own queue (listQueue), nothing new stored:
+//   1. sameGoal: a synthesized goal that already has an officiator contract queued or running, or one that failed or was
+//      blocked within GOAL_WINDOW_MS, is not submitted again: the drop is marked officiated with duplicateOf (said once).
+//   2. failStreak: when the officiator's last FAIL_STREAK contracts all failed or were blocked, the newest within
+//      GOAL_WINDOW_MS, it stops synthesizing (each try is a model call) until the window passes or unpark clears it.
+const GOAL_WINDOW_MS = parseInt(process.env.OFFICIATOR_GOAL_WINDOW_MS || String(3600 * 1000), 10);
+const FAIL_STREAK = parseInt(process.env.OFFICIATOR_FAIL_STREAK || '3', 10);
+const STREAK_KEY = '__streakClearedAt';   // the attempts file's record of a person clearing the streak (unpark)
+const _TERMINAL_BAD = new Set(['fail', 'blocked']);
+// the goal is what it is for and where it lands: intention + the file it names (a bare verb like 'build' alone would make
+// every artifact one goal). rows carry the same fields: row.intention, row.contract.fileDirectory / fileName.
+function goalKey(intention, { fileDirectory = null, fileName = null } = {}) {
+  const n = (x) => String(x || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const i = n(intention).slice(0, 200); if (!i) return '';
+  // a bare verb with no file says too little to call two contracts one goal: no key, never deduped (unknown stays unknown)
+  if (!fileName && i.split(' ').length < 3) return '';
+  return `${i}|${n(fileDirectory).replace(/\/+$/, '')}/${n(fileName)}`;
+}
+const _rowGoal = (r) => goalKey(r.intention, (r && r.contract) || {});
+function _officiatorRows() { try { return require('./contract-intake.js').listQueue().filter(r => r && r.source === 'officiator'); } catch (_) { return []; } }
+/** sameGoal(intention, where, rows, now) → the officiator contract this goal repeats (queued/running, or failed/blocked in the window), or null */
+function sameGoal(intention, where = {}, rows = _officiatorRows(), now = Date.now()) {
+  const k = goalKey(intention, where); if (!k) return null;
+  const hits = rows.filter(r => _rowGoal(r) === k).sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0));
+  return hits.find(r => r.status === 'queued' || r.status === 'running' || (_TERMINAL_BAD.has(r.status) && now - (r.updatedAt || r.createdAt || 0) < GOAL_WINDOW_MS)) || null;
+}
+/** failStreak(rows, { now, clearedAt }) → { held, n, until, last } — the officiator's newest finished contracts all bad, the newest in the window */
+function failStreak(rows = _officiatorRows(), { now = Date.now(), clearedAt = 0 } = {}) {
+  const done = rows.filter(r => r.status && r.status !== 'queued' && r.status !== 'running' && (r.updatedAt || r.createdAt || 0) > clearedAt)
+    .sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0));
+  let n = 0; for (const r of done) { if (_TERMINAL_BAD.has(r.status)) n++; else break; }
+  const last = done[0] || null; const at = last ? (last.updatedAt || last.createdAt || 0) : 0;
+  const held = n >= FAIL_STREAK && now - at < GOAL_WINDOW_MS;
+  return { held, n, until: held ? at + GOAL_WINDOW_MS : null, last: last ? { queueId: last.uuid, status: last.status, intention: last.intention || null, reason: last.blockReason || last.error || null } : null };
 }
 
 // §FIXED 2026-09-02 — checked lib/intake.js's real stage()/read() shape
@@ -304,6 +345,12 @@ async function officiate(drop, opts = {}) {
   const forAgent = opts.forAgent || core.agent || null;
   const synthesized = core.synthesized;
 
+  // SD20 0.60.203 — the same goal is never queued twice while one is waiting, running, or just failed
+  const prior = sameGoal(synthesized.intent || 'build', { fileDirectory: synthesized.fileDirectory, fileName: synthesized.fileName });
+  if (prior) {
+    try { intake.markOfficiated(drop.dropId, { queueId: prior.uuid, duplicateOf: prior.uuid }); } catch (_) {}
+    return { ok: true, duplicate: true, queueId: prior.uuid, status: prior.status, synthesized };
+  }
   const s = drop.summary || {};
   const { queueId } = submitContract(
     {
@@ -362,18 +409,31 @@ async function tick() {
     const attempts = _readAttempts();
     let synthesized = 0, failed = 0, waiting = 0, parked = 0, released = 0;
     // §RT1 — records written before 0.60.78 charged an agent's silence to the drop: released (said), they were never the drop's
-    for (const [k, r] of Object.entries(attempts)) if (k !== AGENTS_KEY && r && AGENT_FAILURE.test(r.reason || '') && r.cls !== 'content') { delete attempts[k]; released++; }
+    for (const [k, r] of Object.entries(attempts)) if (k !== AGENTS_KEY && k !== STREAK_KEY && r && AGENT_FAILURE.test(r.reason || '') && r.cls !== 'content') { delete attempts[k]; released++; }
     if (released) { _writeAttempts(attempts); console.log(`[${MODULE_ID}] released ${released} drop(s) parked or waiting only because no agent answered — they are tried again`); }
     // §RT1 — the agents' own wait: when none answered, nobody is asked again before it passes
     const ag = attempts[AGENTS_KEY];
     if (ag && ag.until && Date.now() < ag.until) return { ok: true, checked: drops.length, synthesized, failed, waiting: drops.length, parked, released, agentsWait: { until: ag.until, reason: ag.reason } };
+    // SD20 0.60.203 — its own contracts keep failing: no more model calls until the window passes (said once per streak)
+    const st = drops.length ? failStreak(_officiatorRows(), { clearedAt: attempts[STREAK_KEY] || 0 }) : { held: false };
+    if (st.held) {
+      if (_streakSaid !== st.until) { _streakSaid = st.until; console.warn(`[${MODULE_ID}] holding — its last ${st.n} contracts all failed or were blocked (latest ${st.last.queueId.slice(0, 8)}: ${st.last.status}${st.last.reason ? ` — ${String(st.last.reason).slice(0, 160)}` : ''}); ${drops.length} drop(s) wait until ${new Date(st.until).toISOString()}, or \`idearium raid unpark all\``); }
+      return { ok: true, checked: drops.length, synthesized, failed, waiting: drops.length, parked, released, failStreak: st };
+    }
     for (const drop of drops) {
       const id = drop.dropId || drop.id;
       if (!id || _seen.has(id)) continue;
+      // SD20 0.60.203 — memory is read before each synthesis, not only at the tick's start (one drop can take minutes)
+      if (!process.env.NEXUS_TEST_SANDBOX) { const h = require('../../../lib/prevention.js').heavyAllowedHere('officiator'); if (!h.ok) { console.log(`[${MODULE_ID}] waiting — ${h.why}`); break; } }
       const rec = attempts[id];
       if (!due(rec)) { if (rec.n >= MAX_ATTEMPTS) parked++; else waiting++; continue; }
       if (rec && rec.n >= MAX_ATTEMPTS) console.log(`[${MODULE_ID}] parked drop ${id.slice(0, 8)}: its daily try (${rec.reason || 'no reason kept'})`);
       const result = await officiate(drop);
+      if (result.ok && result.duplicate) {
+        _seen.add(id);
+        console.log(`[${MODULE_ID}] drop ${id.slice(0, 8)} repeats the goal of contract ${String(result.queueId).slice(0, 8)} (${result.status}) — marked, not queued again`);
+        continue;
+      }
       if (result.ok) {
         _seen.add(id); synthesized++;
         if (rec || attempts[AGENTS_KEY]) { delete attempts[id]; delete attempts[AGENTS_KEY]; _writeAttempts(attempts); }
@@ -417,18 +477,21 @@ function start(opts = {}) {
 /** parked() → { drops: [{ id, n, parked, at, reason, tried, nextTry }], agents: the agents' wait or null } — what waits, and why */
 function parked() {
   const a = _readAttempts();
-  const drops = Object.entries(a).filter(([k]) => k !== AGENTS_KEY).map(([id, r]) => ({ id, n: r.n || 0, parked: (r.n || 0) >= MAX_ATTEMPTS, at: r.at || null,
+  const drops = Object.entries(a).filter(([k]) => k !== AGENTS_KEY && k !== STREAK_KEY).map(([id, r]) => ({ id, n: r.n || 0, parked: (r.n || 0) >= MAX_ATTEMPTS, at: r.at || null,
     reason: r.reason || null, tried: r.tried || [], nextTry: (r.at || 0) + ((r.n || 0) >= MAX_ATTEMPTS ? PARKED_RETRY_MS : Math.min(BACKOFF_MS * 2 ** Math.max(0, (r.n || 1) - 1), 864e5)) }));
   const ag = a[AGENTS_KEY];
-  return { file: _attemptsFile(), maxAttempts: MAX_ATTEMPTS, drops, agents: ag && ag.until && ag.until > Date.now() ? ag : null };
+  const st = failStreak(_officiatorRows(), { clearedAt: a[STREAK_KEY] || 0 });
+  return { file: _attemptsFile(), maxAttempts: MAX_ATTEMPTS, drops, agents: ag && ag.until && ag.until > Date.now() ? ag : null, failStreak: st.held ? st : null };
 }
 
 /** unpark(id | 'all') → { cleared: [...] } — a person or agent clears what waits; no hand edit of the attempts file */
 function unpark(which = 'all') {
   const a = _readAttempts(); const cleared = [];
   for (const k of Object.keys(a)) {
+    if (k === STREAK_KEY) continue;
     if (which === 'all' || k === which || (k !== AGENTS_KEY && which && k.startsWith(which))) { delete a[k]; cleared.push(k); _seen.delete(k); }
   }
+  if (which === 'all') { a[STREAK_KEY] = Date.now(); cleared.push('fail streak'); _streakSaid = null; }   // SD20 — the streak counts only contracts after this
   _writeAttempts(a);
   return { cleared };
 }
@@ -437,4 +500,4 @@ function stop() {
   if (_timer) { clearInterval(_timer); _timer = null; }
 }
 
-module.exports = { start, stop, tick, officiate, synthesizeFromContext, due, parked, unpark, MAX_ATTEMPTS, AGENTS_KEY, MODULE_ID, VERSION };
+module.exports = { start, stop, tick, officiate, synthesizeFromContext, due, parked, unpark, goalKey, sameGoal, failStreak, MAX_ATTEMPTS, FAIL_STREAK, GOAL_WINDOW_MS, AGENTS_KEY, MODULE_ID, VERSION };

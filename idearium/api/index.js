@@ -1053,6 +1053,22 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       }
     }
   }
+  // SD20 0.60.203 — James: "yes" (2026-10-22) to "When the route is pinned to Ollama but free memory is critical or the model
+  // can't load on the GPU, the build should go to the browser agents (Gemini or ChatGPT) and say why." With no ladder and
+  // Settings pinning Ollama, the pin is the first rung and the chain's agents follow: present (below) and the fit check in the
+  // readiness block leave it off when it is missing or will not load, critical memory moves it last, all said on the route.
+  if (!rungs.length && !backend && !agent && !provider) {
+    let pin = null; try { pin = RA.getProvider(target.uuid); } catch (_) {}
+    if (pin === 'ollama') {
+      const om = await _ollamaModels();
+      let memoryLevel = null; try { memoryLevel = _require('../../lib/resource-monitor.js').shared('idearium').level(); } catch (_) {}
+      const P = PRt.pinnedLadder(policy, { model: RA.getOllamaModel(target.uuid) || om.active || null, memoryLevel });
+      rungs = P.rungs; ladderFrom = P.from;
+      if (P.moved.length) ladderFrom = `${ladderFrom} — moved later: ${P.moved.map(m => `${m.provider} (${m.why})`).join('; ')}`;
+      const pr = PRt.present(rungs, { reachable: om.ok, installed: om.models, error: om.error });
+      if (pr.skipped.length) { rungsSkipped = pr.skipped; rungs = pr.rungs; ladderFrom = `${ladderFrom} — left off: ${pr.skipped.map(s => `${s.provider} (${s.why})`).join('; ')}`; }
+    }
+  }
   // §0.39.361 AR1 — James: "needs to learn from this: routing and adapting". The ladder is ordered by what every phase
   // build so far says about each agent (lib/agent-record.js — a projection of idearium_phase_runs and the injects):
   // what lands, what is proven, what the person undid, and the request size each one keeps failing at. Nothing
@@ -1263,6 +1279,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       from: rung.provider, to: next.rung.provider, error: next.how === 'escalating' ? `${rung.provider} ${why} → climbing to ${next.rung.provider} (rung ${next.index + 1} of ${rungs.length}; ${ladderFrom})` : `${rung.provider} ${why} → attempt ${next.tryNo} of ${policy.retriesPerRung} on the same rung`, ts: Date.now() });
     getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: next.how, snapshot: commitId, from: rung.provider, to: next.rung.provider });
   };
+  // SD20 0.60.203 — while this phase builds, an agent's file outside its files is held as a proposal (lib/repo-inject outOfPhase)
+  const _releaseExpect = (() => { try { return _require('../../lib/repo-inject.js').expectPhase(target.uuid, { phase: `${map}::${phase}`, files: expectFiles }); } catch (_) { return () => {}; } })();
   // the whole phase in one request, or — chunked — one climb per file, in order, each seeing what the earlier ones wrote
   const runWhole = () => PRt.climb({ rungs, policy, attempt: makeAttempt({ msg: message, files: expectFiles }), onOutcome: makeOnOutcome() });
   const runChunked = async () => {
@@ -1759,7 +1777,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     .catch((e) => {
       appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, ...base, state: 'failed', snapshot: commitId, error: e.message, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'failed', snapshot: commitId });
-    });
+    })
+    .finally(() => { try { _releaseExpect(); } catch (_) {} });
   const shadow = expectFiles.length ? { expects: { files: expectFiles } } : null;
   return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length,
     chunking: { chunk: chunking.chunk, why: chunking.why, ...(chunking.chunk ? { chunks: expectFiles.length } : {}) },

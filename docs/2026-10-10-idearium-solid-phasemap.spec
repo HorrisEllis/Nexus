@@ -416,6 +416,29 @@ spec:
         proposal is rejected, not deleted, and stays in history; the retries are bounded by the existing daily cap. USER_AUTONOMY: a
         switch turns it off, and a person's own change is never sent anywhere.
       proof: "RS-01 through the real API (refused → rejected with the failing test → sent back; a second click sends nothing); RS-02, RS-02b; RS-03 in Clear Glass"
+    SD20_a_starved_machine_does_not_spin:
+      layer: backend
+      systems: [idearium, cortex, lib]
+      status: "DONE 0.60.203 — test-starved-machine SM-01..05"
+      james: '"yes" (2026-10-22), to the coder''s three fixes after his SP5 run log: stop the loop; a pinned local model that won''t fit goes to the browser agents and says why; a build step never auto-applies a non-code file'
+      depends_on: [SD19_a_refusal_goes_back_to_its_agent]
+      files: [idearium/api/index.js, lib/pipeline-routing.js, lib/repo-inject.js, lib/code-edit.js, lib/intake.js, cortex/core/raid/officiator.js, cortex/core/raid/worker.js]
+      does: >-
+        His SP5 run, at 1-9 % free memory: (1) the officiator turned copilot's lifeline answer into the same failing contract about
+        every 30 s (about 20 in ten minutes, each blocked_at_handshake or "no real repo provisioned"); (2) Settings pinned Ollama, so
+        the build went to qwen2.5-coder:7b, which did not fit the GPU and ran on the CPU; (3) the repo's inject mode 'auto' applied a
+        spec/title.spec the code step was never asked for. Now (1) a drop whose goal already has a contract queued, running, or failed
+        within the hour is marked officiated with a pointer to that contract, never synthesized again, and the officiator yields
+        between drops when heavy work is not allowed here; (2) a build with no ladder whose repo Settings pins Ollama climbs
+        ollama:<model> then the chain's browser agents, so the existing fit check leaves the model off when it will not load, and
+        critical memory moves it after the agents, said on the run's route; (3) a phase build's file that is not one of the phase's
+        files, or is a spec/doc/phasemap while the phase's files are code, stays proposed with the reason, whatever the inject mode.
+      decided_by_the_axioms: >-
+        §8.6 reuse: the ladder, present/byFit and RR.apply, the officiator's attempts store and land()'s propose path already existed;
+        each fix routes into them. §1.2: every hold, skip and move is said on the run, the proposal, or the officiated record.
+        USER_AUTONOMY: the off-phase file is his call (a proposal), never applied or dropped for him. REVERSIBILITY / §0.3: nothing is
+        deleted; a duplicate drop is kept, marked, and points at the contract it repeats.
+      proof: "SM-01..05: pinned-Ollama ladder (fits / won't fit / critical), off-phase hold in land(), officiator dedup over real drops"
   # ── SD18 addendum 2026-10-21 (0.60.201) — for any project, not only his ──
   # James, with a screenshot of the upload dialog ("could not start: signal is aborted without reason") and his boot log: "okay, remember
   # this is for any project. not just mmine". Two things, each for every project:

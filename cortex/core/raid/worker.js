@@ -50,8 +50,16 @@ let _running = false; // real, simple reentrancy guard — see tick() below
  * one 15s later picks up the same still-queued contract, which is
  * correct, not lossy.
  */
+let _heldSaid = false;
 async function tick() {
   if (_running) return { skipped: true, reason: 'previous tick still in flight' };
+  // SD20 0.60.203 — a contract asks an agent: it waits while memory is not ok, like the officiator (§0.60.123 MP). His SP5
+  // run drained failing contracts every 15 s at 2-9 % free memory. A queued contract waits; nothing is failed for it.
+  if (!process.env.NEXUS_TEST_SANDBOX) {
+    const h = require('../../../lib/prevention.js').heavyAllowedHere('raid-worker');
+    if (!h.ok) { if (!_heldSaid) { _heldSaid = true; console.log(`[${MODULE_ID}] waiting — ${h.why}`); } return { skipped: true, reason: h.why }; }
+    _heldSaid = false;
+  }
   _running = true;
   try {
     const intake = require('./contract-intake.js');
