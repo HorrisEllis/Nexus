@@ -157,3 +157,11 @@ phases:
 #   spec wizard, map scan, translate, compile, SNR, gaps); Idearium's compiler bridge calls its /api/map/scan and degrades without it. Removing
 #   it is his call with that cost named — asked, not done (USER_AUTONOMY; §0.3 would archive it, never delete). Its one cortex data blocker
 #   (SS2) waits on his answer.
+
+# ── DECISION 2026-10-22 — Architect stays (his) ──
+# Asked: "do you want it archived and taken out of startup?" — after the coder found architect/service.js is a running system (port 3747,
+# 14 routes) whose /api/map/scan Idearium's compiler bridge calls (that step degrades without it).
+# James, 2026-10-22: "not if it limits idearium"
+# Decided: Architect is kept and stays in startup — removing it would take the map scan away from Idearium's compiler. His earlier "Architect
+# 1 isn't a system i don't believe and can be deleted." (same day) is superseded by this answer and kept here (§0.3). Its one write into
+# cortex's store (SS2) is migrated like any other system's.
