@@ -1,6 +1,6 @@
 'use strict';
 // 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come home first (lib/data-home.js).
-require('../lib/data-home.js').atBoot('diagnostic');
+const _DH = require('../lib/data-home.js'); _DH.atBoot('diagnostic');   // 0.60.209 DL3: diagnostic's paths below resolve through it
 const _bootedAt = Date.now();   // §health — real uptime, not a guess
 let _tensionWarned = false;   // §1.2 warn-once for the missing cortex/healer canonical scorer
 // diagnostic/nexus-diagnostic.js — System Auditing + Monitoring Service
@@ -109,7 +109,7 @@ function _getDiagEngines() {
 const ROOT    = path.join(__dirname, '..');
 
 const PORT    = require('./config.js').load().port;   // §0.60.138 genesis: diagnostic.config.json, DIAGNOSTIC_PORT over it (was the literal 7825)
-const PID_FILE = path.join(ROOT, 'data/diagnostic/diagnostic.pid');
+const PID_FILE = _DH.home('diagnostic', 'diagnostic.pid');
 
 function uid() { return crypto.randomUUID(); }
 
@@ -120,7 +120,7 @@ const SYSTEMS = {
   guardian:    { port: 7820, dataDir: 'guardian/data',    healthPath: '/health',   label: 'Guardian' },   // 0.60.208 DL3: guardian's own folder
   cortex:      { port: 3748, dataDir: 'cortex/data',      healthPath: '/health', label: 'Cortex' },
   idearium:    { port: 4800, dataDir: 'data/idearium',    healthPath: '/health', label: 'Idearium' },
-  orchestrator:{ port: 9000, dataDir: 'data/orchestrator',healthPath: '/health',   label: 'Orchestrator' },
+  orchestrator:{ port: 9000, dataDir: 'orchestrator/data',healthPath: '/health',   label: 'Orchestrator' },
   // §RETIRED 2026-09-06 — emerge is no longer a standalone process
   // (see PULSE_ALL_2026-09-06 in the phasemap): copilot/module-
   // builder.js now calls emerge/compiler/pipeline.js's compile()
@@ -130,8 +130,8 @@ const SYSTEMS = {
   // emerge/registry-components.js (a few lines below, _REGISTRY_PATHS)
   // is untouched — that's about the still-real compiler's components,
   // not this retired service entry.
-  architect:   { port: 3747, dataDir: 'data/architect',   healthPath: '/health', label: 'Architect' },
-  diagnostic:  { port: 7825, dataDir: 'data/diagnostic',  healthPath: '/status',   label: 'Diagnostic' },
+  architect:   { port: 3747, dataDir: 'architect/data',   healthPath: '/health', label: 'Architect' },
+  diagnostic:  { port: 7825, dataDir: 'diagnostic/data',  healthPath: '/status',   label: 'Diagnostic' },
   // §DIAGNOSTIC-AWARE 2026-08-28 — James: "ClearGlass-aware diagnostics
   // (expected runtime behavior, deviation detection)... need those."
   // Real gap, confirmed directly: Clear Glass was not in this registry
@@ -169,9 +169,9 @@ const SYSTEMS = {
   // entirely and trusts orchestrator's real registry first, exactly as
   // asked — the probe is a fallback only if the registry itself has
   // nothing recent.
-  'clear-glass':{ port: 7704, dataDir: 'data/clear-glass', healthPath: '/status',  label: 'Clear Glass', optional: true, preferHeartbeat: true, pulseAs: 'nexus-wire' },
+  'clear-glass':{ port: 7704, dataDir: 'clear-glass/data', healthPath: '/status',  label: 'Clear Glass', optional: true, preferHeartbeat: true, pulseAs: 'nexus-wire' },
   // §MONITOR-03: UI surfaces — probed as virtual systems, no dataDir
-  'forge-shell':{ port: 9000, dataDir: 'data/orchestrator', healthPath: '/ui/forge-shell/forge-shell.html',
+  'forge-shell':{ port: 9000, dataDir: 'orchestrator/data', healthPath: '/ui/forge-shell/forge-shell.html',
     label: 'Forge Shell', virtual: true, optional: true, pulseAs: 'orchestrator',
     // Forge shell is served by orchestrator — it's healthy when orch is healthy
     // We track it separately to surface in the diagnostic tile
@@ -189,7 +189,7 @@ const SYSTEMS = {
   // started one doesn't trip a false alarm the same way clear-glass's
   // own optional:true already prevents above.
   intelligence:{ port: 3753, dataDir: 'data/intelligence', healthPath: '/health', label: 'Intelligence' },
-  'ollama-bridge':{ port: 3749, dataDir: 'data/ollama',    healthPath: '/health', label: 'Ollama Bridge', optional: true },
+  'ollama-bridge':{ port: 3749, dataDir: 'ollama/data',    healthPath: '/health', label: 'Ollama Bridge', optional: true },
   copilot:     { port: 3750, dataDir: 'data/copilot',      healthPath: '/health', label: 'Co-pilot', optional: true },
   loom:        { port: 3752, dataDir: 'data/loom',         healthPath: '/health', label: 'Loom', optional: true },
   // §HONEST LIMIT — intelligence-consumer (autopilot.js: { name:
@@ -266,16 +266,16 @@ async function printGaps() {
 // ── Start service ─────────────────────────────────────────────────────────────
 
 function startService() {
-  fs.mkdirSync(path.join(ROOT, 'data/diagnostic/ledger'),   { recursive: true });
-  fs.mkdirSync(path.join(ROOT, 'data/diagnostic/gaps'),     { recursive: true });
-  fs.mkdirSync(path.join(ROOT, 'data/diagnostic/friction'), { recursive: true });
-  fs.mkdirSync(path.join(ROOT, 'data/diagnostic/invariant'),{ recursive: true });
+  fs.mkdirSync(_DH.home('diagnostic', 'ledger'),   { recursive: true });
+  fs.mkdirSync(_DH.home('diagnostic', 'gaps'),     { recursive: true });
+  fs.mkdirSync(_DH.home('diagnostic', 'friction'), { recursive: true });
+  fs.mkdirSync(_DH.home('diagnostic', 'invariant'),{ recursive: true });
   fs.writeFileSync(PID_FILE, String(process.pid));
 
   // Diagnostic ICO kernel
   const ico = createICO({
     name: 'diagnostic',
-    root: path.join(ROOT, 'data/diagnostic'),
+    root: _DH.dir('diagnostic'),
   });
 
   // Per-system baseline monitors
@@ -766,13 +766,13 @@ function startService() {
   // Does NOT restart processes (that's orchestrator's job) but fires HEAL_REQUESTED
   // on the bus so self-heal can attempt forge patching.
 
-  const _remediationLog = path.join(ROOT, 'data/diagnostic/remediation.jsonl');
+  const _remediationLog = _DH.home('diagnostic', 'remediation.jsonl');
   const _offlineSince   = {}; // track how long each system has been offline
   const _remediatedGaps = new Set(); // don't spam the same gap
 
   function _logRemediation(entry) {
     try {
-      fs.mkdirSync(path.join(ROOT, 'data/diagnostic'), { recursive: true });
+      fs.mkdirSync(_DH.dir('diagnostic'), { recursive: true });
       fs.appendFileSync(_remediationLog, JSON.stringify({ ...entry, ts: Date.now() }) + '\n');
     } catch(_) {}
     // Also write to cortex
@@ -1116,7 +1116,7 @@ function startService() {
   // RC6 (0.60.187): the cooldown is kept on disk (a restart used to forget it and send every open gap again) and is six hours,
   // not five minutes; the gap's status goes through cortex (POST /api/gaps/status), which owns the gaps table.
   const ESC_COOLDOWN_MS = 6 * 3600 * 1000;
-  const _escFile = require('path').join(process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data'), 'diagnostic', 'escalated.json');
+  const _escFile = _DH.home('diagnostic', 'escalated.json');
   const _escalationCooldown = new Map((() => { try { return Object.entries(JSON.parse(require('fs').readFileSync(_escFile, 'utf8'))); } catch (_) { return []; } })());
   const _saveEscalated = () => { try { const now = Date.now(); const keep = [..._escalationCooldown].filter(([, t]) => now - t < ESC_COOLDOWN_MS); require('fs').mkdirSync(require('path').dirname(_escFile), { recursive: true }); require('fs').writeFileSync(_escFile, JSON.stringify(Object.fromEntries(keep))); } catch (_) {} };
   const _gapStatusViaCortex = (gap, status) => new Promise(resolve => {

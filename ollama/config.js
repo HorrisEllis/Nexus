@@ -34,7 +34,7 @@ module.exports = {
   CX_URL:   process.env.CORTEX_URL || 'http://127.0.0.1:3748',
 
   // ── Storage ────────────────────────────────────────────────────────────
-  DATA_DIR: path.join(__dirname, '..', 'data', 'ollama'),
+  DATA_DIR: require('../lib/data-home.js').dir('ollama-bridge'),   // 0.60.209 DL3: ollama/data
 
   // ── Models — the one real place this codebase's model tags live ──────────
   // James, 2026-08-23: "now using huihui_ai/qwen2.5-coder-abliterate:3b for

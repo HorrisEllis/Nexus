@@ -894,7 +894,7 @@ class IpcBridge {
       // the sandbox is asked first, and NEXUS_DATA_ROOT (set by it in a test
       // process) wins. In production nothing changes: the default is the same path.
       try { require('../../../lib/test-sandbox.js').ensure(); } catch (_) {}
-      const dir = path.join(process.env.NEXUS_DATA_ROOT || path.join(__dirname, '..', '..', '..', 'data'), 'clear-glass');
+      const dir = require('../../../lib/data-home.js').dir('clear-glass');   // 0.60.209 DL3
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(path.join(dir, 'command-index.json'), JSON.stringify(index, null, 2));
       console.log(`[IPC] real command index written — ${index.commandCount} real commands`);

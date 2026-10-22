@@ -94,7 +94,7 @@ function autoBootList(envValue, autoStartOnBoot = {}) {
   return on.length ? on.join(',') : 'none';
 }
 
-function _cacheFile() { return path.join(process.env.NEXUS_DATA_ROOT || path.join(__dirname, '..', '..', '..', 'data'), 'clear-glass', 'providers-cache.json'); }
+function _cacheFile() { return path.join(require('../../../lib/data-home.js').dir('clear-glass'), 'providers-cache.json'); }   // 0.60.209 DL3
 
 // the live table — one object, rebuilt in place, so every module that imported NCP_PROVIDERS sees a refresh
 const NCP_PROVIDERS = {};

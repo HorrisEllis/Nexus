@@ -86,6 +86,7 @@ const SUITES = [
   'test-lift-root.test.js', // 0.60.206 SD22 — a project imported inside its own folder lifted to the root (root copies archived)
   'test-data-home.test.js', // 0.60.207 DL2 — one resolver for each system's data; each brings its own home at boot (manifest, rollback); route, commands, the Data screen in Clear Glass
   'test-guardian-own-data.test.js', // 0.60.208 SS1 + DL3 guardian — its own store, cortex's tables through cortex's routes, its paths through data-home
+  'test-data-rewired.test.js', // 0.60.209 DL3 — every rewired system: no code names its old path, Diagnostic's table points home, shared writers resolve it
   'test-cos-mount-idempotent.test.js',   // 0.39.282 N28 — one COS host per process; an identical remount is a no-op (idearium OFFLINE every 10 min: 34 s → 2 ms)
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272

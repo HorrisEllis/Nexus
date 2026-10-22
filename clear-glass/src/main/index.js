@@ -966,7 +966,7 @@ async function _startWire() {
       if (u === '/commands' && req.method === 'GET') {
         try {
           const fs = require('fs'), path = require('path');
-          const indexPath = path.join(__dirname, '..', '..', '..', 'data', 'clear-glass', 'command-index.json');
+          const indexPath = path.join(require('../../../lib/data-home.js').dir('clear-glass'), 'command-index.json');
           const raw = fs.readFileSync(indexPath, 'utf8');
           res.writeHead(200);
           return res.end(raw);
