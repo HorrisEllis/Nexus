@@ -27,6 +27,7 @@
 <link rel="stylesheet" href="cos-theme.css"><!-- 0.60.5 — the Compartment-OS palette, the one Settings loads too -->
 <link rel="stylesheet" href="selector-assign/selector-assign.css">
 <link rel="stylesheet" href="shell/shell.css">
+<link rel="stylesheet" href="shell/toolbar.css">   <!-- 0.60.210 the ☰ menu's Tools rows and Customize toolbar -->
 <link rel="stylesheet" href="shell/copilot.css"><!-- BS11 the co-pilot pane on the same system -->
 </head>
 <body class="cg-shell">
@@ -388,51 +389,51 @@
 
 <!-- tools that live in the ☰ menu until pinned (applyToolbarPins in browser.js moves the same nodes onto the bar) -->
 <div id="toolbar-overflow-slot" style="display:none;">
-  <button class="nav-btn" id="btn-rewind" data-tool-id="rewind" data-tool-label="Rewind Session" data-tool-icon="⏮" title="Rewind session">⏮</button>
-  <button class="nav-btn" id="btn-providers" data-tool-id="providers" data-tool-label="NCP Providers" data-tool-icon="⟳" title="NCP Providers">⟳</button>
+  <button class="nav-btn" id="btn-rewind" data-icon="undo" data-tool-id="rewind" data-tool-label="Rewind Session" data-tool-icon="⏮" title="Rewind session">⏮</button>
+  <button class="nav-btn" id="btn-providers" data-icon="link" data-tool-id="providers" data-tool-label="NCP Providers" data-tool-icon="⟳" title="NCP Providers">⟳</button>
   <button class="nav-btn" id="btn-userscripts" data-tool-id="userscripts" data-tool-label="Userscripts" data-tool-icon="✎" title="Userscripts">✎</button>
-  <button class="nav-btn" id="btn-dom" data-tool-id="dom" data-tool-label="DOM Archaeology" data-tool-icon="⛏" title="DOM Archaeology">⛏</button>
+  <button class="nav-btn" id="btn-dom" data-icon="code" data-tool-id="dom" data-tool-label="DOM Archaeology" data-tool-icon="⛏" title="DOM Archaeology">⛏</button>
   <span class="chrome-group" id="tool-picker-group" data-tool-id="picker" data-tool-label="Element Picker" data-tool-icon="◎">
-    <button id="picker-btn" title="Element Picker">◎</button>
+    <button id="picker-btn" data-icon="target" title="Element Picker">◎</button>
     <select id="picker-route" title="Route picks to" class="sh-mini">
       <option value="sse">→ SSE</option>
       <option value="api">→ API</option>
     </select>
     <input id="picker-api-url" type="text" placeholder="https://..." class="sh-mini" style="display:none;">
   </span>
-  <button class="nav-btn" id="mesh-picker-btn" data-tool-id="mesh-picker" data-tool-label="Agent Mesh" data-tool-icon="◈" title="Agent Mesh">◈</button>
-  <button class="nav-btn" id="btn-mesh" data-tool-id="mesh" data-tool-label="Agent Mesh" data-tool-icon="⬡" title="Agent Mesh">⬡</button>
+  <button class="nav-btn" id="mesh-picker-btn" data-icon="radar" data-tool-id="mesh-picker" data-tool-label="Agent Mesh" data-tool-icon="◈" title="Agent Mesh">◈</button>
+  <button class="nav-btn" id="btn-mesh" data-icon="mesh" data-tool-id="mesh" data-tool-label="Agent Mesh" data-tool-icon="⬡" title="Agent Mesh">⬡</button>
   <button class="nav-btn" id="btn-page-map" data-tool-id="page-map" data-tool-label="Page map" data-tool-icon="▦" title="Page map — the page as blocks and a map that learns">▦</button>
-  <button class="nav-btn" id="btn-gig" data-tool-id="gig" data-tool-label="Fiverr gigs" data-tool-icon="✦" title="Fiverr — write a gig, fill the page, turn an order into a build">✦</button>
+  <button class="nav-btn" id="btn-gig" data-icon="briefcase" data-tool-id="gig" data-tool-label="Fiverr gigs" data-tool-icon="✦" title="Fiverr — write a gig, fill the page, turn an order into a build">✦</button>
   <button class="nav-btn" id="btn-diag" data-tool-id="diag" data-tool-label="Diagnostics" data-tool-icon="⚕" title="Diagnostics">⚕</button>
-  <button class="nav-btn" id="btn-settings" data-tool-id="settings" data-tool-label="Settings" data-tool-icon="⚙" title="Settings">⚙</button>
+  <button class="nav-btn" id="btn-settings" data-icon="settings" data-tool-id="settings" data-tool-label="Settings" data-tool-icon="⚙" title="Settings">⚙</button>
 </div>
 
-<div id="toolbar-editor-overlay">
-  <div id="toolbar-editor-panel">
-    <div id="toolbar-editor-header">
-      <h3>Customize Toolbar</h3>
-      <button id="toolbar-editor-close" title="Close">✕</button>
+<!-- 0.60.210 — James: "customize toolbar and those toolbar links, and customize toolbar need to be rebuilt for  the new ui, they are cheap and
+     crappy, and look bad." Rebuilt on the shell's system (shell/toolbar.css): a live preview, two labelled lists with drawn icons and what each
+     tool does, a pin / unpin button on every row (dragging still works), the run-once actions as buttons. Every id the code reads is kept. -->
+<div id="toolbar-editor-overlay" role="dialog" aria-modal="true" aria-labelledby="te-title">
+  <div id="toolbar-editor-panel" class="te">
+    <header class="te-head" id="toolbar-editor-header">
+      <span class="te-head-ico" data-icon="pin" data-icon-size="18"></span>
+      <div class="te-head-txt"><h3 id="te-title">Customize toolbar</h3><p>Choose what sits on the toolbar. Everything else stays one click away in the ☰ menu.</p></div>
+      <button id="toolbar-editor-close" class="te-x" title="Close" aria-label="Close" data-icon="close" data-icon-size="16"></button>
+    </header>
+    <div class="te-preview" aria-label="How the toolbar will look">
+      <span class="te-preview-url"><span data-icon="lock" data-icon-size="13"></span>Search or enter address</span>
+      <div id="te-preview-icons" class="te-preview-icons"></div>
+      <span class="te-preview-fixed" data-icon="menu" data-icon-size="16"></span>
     </div>
-    <p id="toolbar-editor-hint">Drag tools between the toolbar and the ☰ menu.</p>
-    <div id="toolbar-editor-zones">
-      <div class="te-zone" id="te-zone-toolbar" data-zone="toolbar">
-        <div class="te-zone-label">Toolbar</div>
-        <div class="te-zone-drop" id="te-drop-toolbar"></div>
-      </div>
-      <div class="te-zone" id="te-zone-menu" data-zone="menu">
-        <div class="te-zone-label">☰ Menu</div>
-        <div class="te-zone-drop" id="te-drop-menu"></div>
-      </div>
+    <div class="te-cols" id="toolbar-editor-zones">
+      <section class="te-col" id="te-zone-toolbar"><div class="te-col-head"><span>On the toolbar</span><span class="te-count" id="te-count-toolbar">0</span></div><div class="te-list" id="te-drop-toolbar" data-zone="toolbar" data-empty="Nothing pinned. Pin a tool to keep it one click away."></div></section>
+      <section class="te-col" id="te-zone-menu"><div class="te-col-head"><span>In the ☰ menu</span><span class="te-count" id="te-count-menu">0</span></div><div class="te-list" id="te-drop-menu" data-zone="menu" data-empty="Every tool is on the toolbar."></div></section>
     </div>
-    <div id="toolbar-editor-actions">
-      <div class="te-zone-label">Actions</div>
-      <div id="te-actions-list"></div>
-    </div>
-    <div id="toolbar-editor-footer">
-      <button class="opt-link-btn" id="toolbar-editor-restore">Restore Defaults</button>
-      <button class="opt-link-btn sh-primary" id="toolbar-editor-done">Done</button>
-    </div>
+    <section class="te-actions" id="toolbar-editor-actions"><div class="te-col-head"><span>Run once</span><span class="te-col-sub">actions with no button of their own</span></div><div id="te-actions-list" class="te-action-btns"></div></section>
+    <footer class="te-foot" id="toolbar-editor-footer">
+      <button id="toolbar-editor-restore" class="te-btn ghost"><span data-icon="undo" data-icon-size="14"></span>Restore defaults</button>
+      <span class="te-foot-hint" id="toolbar-editor-hint">Drag a row between the lists, or use its button.</span>
+      <button id="toolbar-editor-done" class="te-btn primary">Done</button>
+    </footer>
   </div>
 </div>
 

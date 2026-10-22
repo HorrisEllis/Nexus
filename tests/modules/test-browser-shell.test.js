@@ -359,6 +359,45 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       assert.deepStrictEqual(errors, []); await page.close();
     });
 
+    await test('BST-21', '0.60.210 the ☰ menu\'s Tools and Customize toolbar, rebuilt: drawn icons, descriptions, pin / unpin, preview, saved on Done', async () => {
+      // James, 2026-10-22: "customize toolbar and those toolbar links, and customize toolbar need to be rebuilt for  the new ui, they are cheap and crappy, and look bad."
+      const { TOOLBAR_COMMANDS } = require(CG('src/toolbar/commands.js'));
+      assert.ok(TOOLBAR_COMMANDS.filter(c => !c.pluginId).every(c => c.glyph && c.desc), 'every built-in command has a drawn icon and a line on what it does (a plugin\'s shows its own glyph)');
+      const pins = ['btn-gig', 'copilot-toggle', 'btn-bookmark'];
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'toolbar.commands': TOOLBAR_COMMANDS, 'options.get': { pinnedToolbarButtons: pins }, 'providers.list': [], 'bookmarks.list': [], 'plugins.list': [] } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#btn-back svg'); await page.waitForTimeout(300);
+      for (const id of ['btn-gig', 'btn-dom', 'btn-mesh', 'btn-rewind', 'btn-providers', 'btn-settings', 'picker-btn']) assert.ok(await page.$eval(`#${id}`, b => !!b.querySelector('svg')), `#${id} draws its icon, not a glyph`);
+      await page.click('#bookmark-mgr-btn'); await page.waitForSelector('#bookmark-mgr-panel [data-tool-menu-id="btn-dom"] svg');
+      const tools = await page.$$eval('#bookmark-mgr-panel [data-tool-menu-id]', rows => rows.map(r => [r.dataset.toolMenuId, !!r.querySelector('.mb-ico svg')]));
+      assert.ok(tools.length >= 5 && tools.every(t => t[1]), `drawn icons: ${JSON.stringify(tools)}`);
+      assert.ok(!tools.some(t => t[0] === 'btn-settings'), 'Settings is not listed twice (the menu has its own row)');
+      await page.evaluate(() => document.querySelector('#bookmark-mgr-panel [data-tool-pin="btn-dom"]').click());
+      await page.waitForFunction(() => !document.querySelector('#bookmark-mgr-panel [data-tool-menu-id="btn-dom"]'));
+      let sets = await page.evaluate(() => window.__cgCalls.filter(c => c.key === 'options.set').map(c => c.args[0].pinnedToolbarButtons));
+      assert.deepStrictEqual(sets[sets.length - 1], [...pins, 'btn-dom'], 'the pin button pins it, after the others');
+      assert.strictEqual(await page.$eval('#toolbar-pinned-tools', el => [...el.children].some(c => c.id === 'btn-dom')), true, 'on the toolbar at once');
+      await page.evaluate(() => { document.getElementById('bookmark-mgr-panel').style.display = 'none'; window.CGShell.customize(); });
+      await page.waitForSelector('#te-drop-toolbar .te-row[data-tool-id="btn-dom"] svg');
+      const rows = await page.$$eval('#toolbar-editor-panel .te-row', rs => rs.map(r => ({ id: r.dataset.toolId, svg: !!r.querySelector('.te-ico svg'), desc: r.querySelector('.te-desc').textContent })));
+      const nTools = TOOLBAR_COMMANDS.filter(c => c.id && c.pinnable && !c.pluginId).length;   // a plugin command with no button of its own runs once instead
+      assert.ok(rows.length === nTools && rows.every(r => r.svg && r.desc.length > 8), JSON.stringify(rows));
+      assert.strictEqual(await page.textContent('#te-count-toolbar'), '4');
+      assert.strictEqual(await page.$$eval('#te-preview-icons .te-pv svg', e => e.length), 4, 'the preview shows the four pinned');
+      await page.evaluate(() => document.querySelector('#te-drop-menu .te-row[data-tool-id="btn-mesh"] [data-te-move]').click());
+      await page.evaluate(() => document.querySelector('#te-drop-toolbar .te-row[data-tool-id="btn-gig"] [data-te-move]').click());
+      assert.deepStrictEqual(await page.$$eval('#te-drop-toolbar .te-row', rs => rs.map(r => r.dataset.toolId)), ['copilot-toggle', 'btn-bookmark', 'btn-dom', 'btn-mesh']);
+      assert.strictEqual(await page.textContent('#te-count-menu'), String(nTools - 4));
+      const nActions = TOOLBAR_COMMANDS.filter(c => !c.id || c.pluginId).length;
+      assert.ok(await page.$$eval('#te-actions-list .te-act', (b, n) => b.length === n && b.every(x => !!x.querySelector('svg')), nActions), 'each run-once action is a button with its drawn icon');
+      await page.click('#toolbar-editor-done');
+      sets = await page.evaluate(() => window.__cgCalls.filter(c => c.key === 'options.set').map(c => c.args[0].pinnedToolbarButtons));
+      assert.deepStrictEqual(sets[sets.length - 1], ['copilot-toggle', 'btn-bookmark', 'btn-dom', 'btn-mesh'], 'Done saves the toolbar list, in order');
+      if (process.env.BST_SHOT) await page.screenshot({ path: process.env.BST_SHOT });
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
     await test('BST-09b', '0.60.206 a closed Co-pilot takes no width: the page fills the window to its right edge', async () => {
       // James, 2026-10-22: "the ui for clearglass is cut off" — his page stopped ~340 px short of a 1920 px window
       const page = await browser.newPage({ viewport: { width: 1920, height: 1000 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));

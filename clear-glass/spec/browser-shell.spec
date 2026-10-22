@@ -583,3 +583,16 @@ spec:
   # - Fix: `body.cg-shell #copilot-pane.hidden { width: 0; opacity: 0; border-left: none; }`. Nothing else changes.
   # - Proof: tests/modules/test-browser-shell.test.js BST-09b, run in Clear Glass at 1920 px. It measured 340 px before the fix and 0 after,
   #   and checks the page reaches the right edge.
+  # ## ADDENDUM 2026-10-22 (0.60.210) — MOD-BSH-DESIGN: the ☰ menu's Tools and Customize toolbar, rebuilt
+  # James, 2026-10-22, with a screenshot of the ☰ menu: "customize toolbar and those toolbar links, and customize toolbar need to be rebuilt for  the new ui, they are cheap and crappy, and look bad."
+  # - The tool rows drew each command's text glyph (✦ ⛏ ◎ ⬡ ⏮ ⟳ ⚙) beside rows with drawn icons, and the pinned tool buttons on the toolbar did
+  #   too. Each command now carries glyph (a drawn icon, renderer/shell/icons.js; a briefcase added for Fiverr gigs) and desc (one line) in
+  #   src/toolbar/commands.js, the one place commands are defined; every tool button draws it; a plugin's command draws its plugin's icon.
+  # - ☰ menu → Tools: the menu's own rows, a pin button on each (it pins at once), "Edit" opens Customize toolbar; Settings, which the menu has
+  #   its own row for, is not listed twice; a command with no toolbar button of its own (a plugin's zoom commands) runs from the row, unpinned.
+  # - Customize toolbar (renderer/shell/toolbar.css): a live preview of the toolbar, "On the toolbar" and "In the ☰ menu" lists with each
+  #   tool's icon and what it does, Pin / Unpin on every row (dragging still works), counts, run-once actions as buttons, Restore defaults and
+  #   Done. Every 0.60.178 id is kept; the superseded rules left browser.css (git history, §0.3). The movable tools now follow the pinned order.
+  # - Proof: tests/modules/test-browser-shell.test.js BST-21 in Clear Glass (drawn icons in the bar, the menu and the editor; the menu's pin;
+  #   Pin / Unpin, counts, preview; Done saves the list in order). 26/26.
+

@@ -35,6 +35,9 @@
  *   icon       — glyph shown in the toolbar button and the palette row.
  *   label      — human-readable name, shown in the command palette.
  *   group      — palette section heading.
+ *   glyph      — the drawn icon (renderer/shell/icons.js) the toolbar, the ☰ menu and Customize Toolbar show (0.60.210; icon stays the
+ *                text fallback)
+ *   desc       — one line on what it does, shown in Customize Toolbar (0.60.210)
  *   pinnable   — whether this command's toolbar button can be individually
  *                shown/hidden via the pin system. Palette-only actions
  *                (no `id`) are never pinnable — there's no button to pin.
@@ -47,8 +50,8 @@
  */
 
 const TOOLBAR_COMMANDS = [
-  { id: 'btn-gig',         icon: '✦', label: 'Fiverr gigs',            group: 'Tools',   pinnable: true, defaultPinned: true },   // §0.59.3 James: "fiverr … this is my only chance"
-  { id: 'btn-dom',         icon: '⛏', label: 'DOM Archaeology',        group: 'Tools',   pinnable: true, defaultPinned: false },
+  { id: 'btn-gig',         icon: '✦', label: 'Fiverr gigs', glyph: 'briefcase', desc: 'Write a gig, fill the page, turn an order into a build',            group: 'Tools',   pinnable: true, defaultPinned: true },   // §0.59.3 James: "fiverr … this is my only chance"
+  { id: 'btn-dom',         icon: '⛏', label: 'DOM Archaeology', glyph: 'code', desc: 'Dig through this page\'s structure and its changes',        group: 'Tools',   pinnable: true, defaultPinned: false },
   // §BUGFIX 2026-08-24 — picker-route (the "→ SSE / → API" select) and
   // picker-api-url (the endpoint input, shown only when "→ API" is chosen)
   // were separate DOM elements with NO entry in the old inline
@@ -57,12 +60,12 @@ const TOOLBAR_COMMANDS = [
   // whether Element Picker itself was pinned. A route selector for a
   // feature whose activator button is hidden is dead UI. pairsWith fixes
   // this at the source: unpinning picker-btn now hides its selector too.
-  { id: 'picker-btn',      icon: '◎', label: 'Element Picker',         group: 'Tools',   pinnable: true, defaultPinned: false, pairsWith: ['picker-route', 'picker-api-url'] },
-  { id: 'btn-mesh',        icon: '⬡', label: 'Agent Mesh',             group: 'Tools',   pinnable: true, defaultPinned: false },
-  { id: 'copilot-toggle',  icon: '✦', label: 'Toggle Co-pilot',        group: 'Session', pinnable: true, defaultPinned: true  },
-  { id: 'btn-bookmark',    icon: '★', label: 'Bookmark this page',     group: 'Session', pinnable: true, defaultPinned: true  },
-  { id: 'btn-rewind',      icon: '⏮', label: 'Rewind session',         group: 'Session', pinnable: true, defaultPinned: false },
-  { id: 'btn-providers',   icon: '⟳', label: 'NCP Providers',          group: 'Session', pinnable: true, defaultPinned: false },
+  { id: 'picker-btn',      icon: '◎', label: 'Element Picker', glyph: 'target', desc: 'Point at an element to read it or assign a selector',         group: 'Tools',   pinnable: true, defaultPinned: false, pairsWith: ['picker-route', 'picker-api-url'] },
+  { id: 'btn-mesh',        icon: '⬡', label: 'Agent Mesh', glyph: 'mesh', desc: 'Which agent answers Co-pilot, and its queue',             group: 'Tools',   pinnable: true, defaultPinned: false },
+  { id: 'copilot-toggle',  icon: '✦', label: 'Toggle Co-pilot', glyph: 'sparkle', desc: 'Show or hide the Co-pilot pane',        group: 'Session', pinnable: true, defaultPinned: true  },
+  { id: 'btn-bookmark',    icon: '★', label: 'Bookmark this page', glyph: 'star', desc: 'Save this page to your bookmarks',     group: 'Session', pinnable: true, defaultPinned: true  },
+  { id: 'btn-rewind',      icon: '⏮', label: 'Rewind session', glyph: 'undo', desc: 'Step back through this session\'s pages and actions',         group: 'Session', pinnable: true, defaultPinned: false },
+  { id: 'btn-providers',   icon: '⟳', label: 'NCP Providers', glyph: 'link', desc: 'The agent tabs connected to Guardian, and their state',          group: 'Session', pinnable: true, defaultPinned: false },
   // §FIXED 2026-09-25 — James, pointing at the real "Customize Toolbar"
   // dialog (screenshot): "WHERE IS IT? anything outside of this, is
   // wrong." Root cause, found by reading this file plus browser.js's
@@ -85,7 +88,7 @@ const TOOLBAR_COMMANDS = [
   // ⋯ menu's "Tools" section the moment it's unpinned — the actual gap
   // James is describing, closed at its structural cause instead of
   // papered over with a new label on the same invisible action.
-  { id: 'btn-settings',    icon: '⚙', label: 'Settings',               group: 'Session', pinnable: true, defaultPinned: false },
+  { id: 'btn-settings',    icon: '⚙', label: 'Settings', glyph: 'settings', desc: 'Clear Glass\'s settings',               group: 'Session', pinnable: true, defaultPinned: false },
   // §0.39.265 — James: "remove the old" — Diagnostics, Userscripts and Nexus
   // Options left the toolbar (each has a Settings section: Diagnostics, Agent
   // suite › Userscripts, General / Privacy & data), and the Window actions
@@ -95,7 +98,7 @@ const TOOLBAR_COMMANDS = [
   // 0.39.272 — the page James is looking at (a job post, an Upwork gig, a Fiverr buyer message) into the opportunity
   // pipeline: copilot :3750 POST /api/opportunity/capture reads this tab through /cli/page/read, scores it, and says
   // where it landed. A palette action (no toolbar button), in the Tools group.
-  { action: 'capture-opportunity', icon: '✚', label: 'Capture job / gig / lead to NEXUS', group: 'Tools' },
+  { action: 'capture-opportunity', icon: '✚', label: 'Capture job / gig / lead to NEXUS', glyph: 'plus', desc: 'Read this page as a job, gig or lead and track it in Nexus', group: 'Tools' },
 ];
 
 function defaultPinnedIds() {

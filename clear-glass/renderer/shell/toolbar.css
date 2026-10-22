@@ -1,0 +1,93 @@
+/* renderer/shell/toolbar.css — the ☰ menu's Tools rows and Customize toolbar, on the shell's system (0.60.210).
+ * Spec: clear-glass/spec/browser-shell.spec MOD-BSH-DESIGN (addendum 2026-10-22).
+ * James, 2026-10-22: "customize toolbar and those toolbar links, and customize toolbar need to be rebuilt for  the new ui, they are cheap and
+ * crappy, and look bad."
+ * The tokens are the shell's own (cos-theme.css, shell.css): --raised, --surface, --pane, --edge, --ink*, --cyan, --r-*, --t-*.
+ */
+
+/* ── the ☰ menu: Tools ─────────────────────────────────────────────────── */
+body.cg-shell .am-tools-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px 2px; }
+body.cg-shell .am-tools-head .menu-section-label { padding: 0; }
+body.cg-shell .am-tools-edit { border: 0; background: transparent; color: var(--ink-faint); font: 500 11px var(--sans); padding: 2px 4px; border-radius: var(--r-s); cursor: pointer; }
+body.cg-shell .am-tools-edit:hover { color: var(--cyan); background: var(--hover); }
+body.cg-shell .menu-item.am-tool .mb-ico { color: var(--ink-dim); }
+body.cg-shell .menu-item.am-tool:hover .mb-ico { color: var(--cyan); }
+body.cg-shell .am-pin { margin: -4px -4px -4px auto; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: var(--r-s);
+  background: transparent; color: var(--ink-faint); opacity: 0; transition: opacity .12s, background .12s, color .12s; cursor: pointer; }
+body.cg-shell .menu-item.am-tool:hover .am-pin, body.cg-shell .am-pin:focus-visible { opacity: 1; }
+body.cg-shell .am-pin:hover { background: color-mix(in srgb, var(--cyan) 16%, transparent); color: var(--cyan); }
+
+/* ── Customize toolbar ─────────────────────────────────────────────────── */
+body.cg-shell #toolbar-editor-overlay { background: color-mix(in srgb, #000 55%, transparent); backdrop-filter: blur(3px); align-items: center; justify-content: center; }
+body.cg-shell #toolbar-editor-panel.te { width: min(760px, calc(100vw - 48px)); max-height: calc(100vh - 64px); display: flex; flex-direction: column; padding: 0; overflow: hidden;
+  border-radius: var(--r-xl, 14px); border: 1px solid var(--edge-hi, var(--edge)); background: var(--raised); box-shadow: var(--e3, var(--shadow)); color: var(--ink); font-family: var(--sans); }
+
+.te-head { display: flex; align-items: flex-start; gap: 12px; padding: 18px 18px 14px; }
+.te-head-ico { width: 34px; height: 34px; flex: 0 0 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px;
+  background: color-mix(in srgb, var(--cyan) 14%, transparent); color: var(--cyan); }
+.te-head-txt { flex: 1; min-width: 0; }
+.te-head-txt h3 { margin: 0; font: 600 15px/1.3 var(--sans); color: var(--ink-hi); letter-spacing: 0; text-transform: none; }
+.te-head-txt p { margin: 3px 0 0; font-size: 12.5px; line-height: 1.45; color: var(--ink-dim); }
+.te-x { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: var(--r-s); background: transparent; color: var(--ink-dim); cursor: pointer; }
+.te-x:hover { background: var(--hover); color: var(--ink-hi); }
+
+/* the preview: the toolbar's right end as it will be */
+.te-preview { margin: 0 18px 14px; height: 42px; display: flex; align-items: center; gap: 10px; padding: 0 8px 0 12px; border-radius: var(--r-m);
+  border: 1px solid var(--edge); background: var(--surface); }
+.te-preview-url { flex: 1; min-width: 0; display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border-radius: 8px;
+  background: color-mix(in srgb, var(--ink) 5%, transparent); color: var(--ink-faint); font-size: 12px; white-space: nowrap; overflow: hidden; }
+.te-preview-url [data-icon] { color: var(--ink-faint); display: inline-flex; }
+.te-preview-icons { display: flex; align-items: center; gap: 2px; padding-left: 8px; border-left: 1px solid var(--edge); min-height: 24px; }
+.te-preview-icons .te-pv { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-s); color: var(--ink); animation: te-in .16s ease-out; }
+.te-preview-icons:empty::before { content: 'no tools pinned'; font-size: 11px; color: var(--ink-faint); padding: 0 4px; }
+.te-preview-fixed { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-dim); border-left: 1px solid var(--edge); padding-left: 6px; }
+@keyframes te-in { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* the two lists */
+.te-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 18px; min-height: 0; overflow: auto; }
+.te-col { display: flex; flex-direction: column; min-width: 0; }
+.te-col-head { display: flex; align-items: baseline; gap: 8px; padding: 0 2px 8px; font: 600 11px var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); }
+.te-col-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-faint); font-size: 11.5px; }
+.te-count { margin-left: auto; min-width: 20px; height: 18px; padding: 0 6px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--ink-dim); font: 600 10.5px var(--sans); letter-spacing: 0; }
+.te-list { flex: 1; min-height: 132px; display: flex; flex-direction: column; gap: 4px; padding: 6px; border-radius: var(--r-m);
+  border: 1px solid var(--edge); background: color-mix(in srgb, var(--surface) 70%, transparent); transition: border-color .12s, background .12s; }
+.te-list.drag-over { border-color: color-mix(in srgb, var(--cyan) 70%, transparent); background: color-mix(in srgb, var(--cyan) 6%, var(--surface)); }
+.te-list:empty { align-items: center; justify-content: center; }
+.te-list:empty::after { content: attr(data-empty); font-size: 12px; color: var(--ink-faint); text-align: center; padding: 0 18px; line-height: 1.5; }
+
+.te-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 9px;
+  border: 1px solid transparent; background: transparent; cursor: grab; transition: background .12s, border-color .12s; }
+.te-row:hover { background: var(--hover); border-color: var(--edge); }
+.te-row.dragging { opacity: .4; }
+.te-row .te-ico { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px;
+  background: color-mix(in srgb, var(--ink) 6%, transparent); color: var(--ink); }
+.te-list[data-zone="toolbar"] .te-row .te-ico { background: color-mix(in srgb, var(--cyan) 14%, transparent); color: var(--cyan); }
+.te-row .te-txt { display: flex; flex-direction: column; min-width: 0; }
+.te-row .te-lbl { font-size: 13px; font-weight: 500; color: var(--ink-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.te-row .te-desc { font-size: 11.5px; color: var(--ink-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.te-move { height: 26px; display: inline-flex; align-items: center; gap: 5px; padding: 0 9px; border-radius: 7px; border: 1px solid var(--edge);
+  background: transparent; color: var(--ink-dim); font: 500 11.5px var(--sans); cursor: pointer; white-space: nowrap; }
+.te-move:hover { border-color: color-mix(in srgb, var(--cyan) 60%, transparent); color: var(--cyan); background: color-mix(in srgb, var(--cyan) 8%, transparent); }
+.te-move [data-icon] { display: inline-flex; }
+
+/* run once */
+.te-actions { padding: 14px 18px 0; }
+body.cg-shell #te-actions-list.te-action-btns { display: flex; flex-direction: row; flex-wrap: wrap; gap: 8px; padding: 0; border: 0; background: none; max-height: none; }
+.te-act { flex: 0 0 auto; width: auto; }
+.te-action-btns:empty::after { content: 'none'; font-size: 12px; color: var(--ink-faint); }
+.te-act { height: 32px; display: inline-flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--edge);
+  background: var(--surface); color: var(--ink); font: 500 12.5px var(--sans); cursor: pointer; }
+.te-act:hover { border-color: color-mix(in srgb, var(--cyan) 60%, transparent); color: var(--ink-hi); }
+.te-act [data-icon] { color: var(--cyan); display: inline-flex; }
+
+/* footer */
+.te-foot { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 12px 18px; border-top: 1px solid var(--edge); background: color-mix(in srgb, var(--surface) 60%, transparent); }
+.te-foot-hint { flex: 1; text-align: center; font-size: 11.5px; color: var(--ink-faint); }
+.te-btn { height: 32px; display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; border-radius: 8px; font: 500 12.5px var(--sans); cursor: pointer; border: 1px solid var(--edge); }
+.te-btn.ghost { background: transparent; color: var(--ink-dim); }
+.te-btn.ghost:hover { color: var(--ink-hi); background: var(--hover); }
+.te-btn.primary { min-width: 96px; justify-content: center; background: var(--cyan); border-color: var(--cyan); color: var(--void, #06070b); font-weight: 600; }
+.te-btn.primary:hover { filter: brightness(1.08); }
+
+@media (max-width: 620px) { .te-cols { grid-template-columns: 1fr; } .te-foot-hint { display: none; } }

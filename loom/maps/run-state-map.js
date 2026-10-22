@@ -315,6 +315,8 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('lib/data-home.js'), '§0.60.209 DL3 clear-glass/data'],
   [I('lib/agent-tools/tools/clear-glass/command-index.js'), I('lib/data-home.js'), '§0.60.209 DL3 command-index.json under clear-glass/data'],
   [I('orchestrator/lib/changelog.js'), I('lib/data-home.js'), '§0.60.209 DL3 changelog-snapshot.json under orchestrator/data'],
+  [I('clear-glass/renderer/browser.js'), I('clear-glass/renderer/shell/icons.js'), '§0.60.210 the ☰ menu Tools rows and Customize toolbar draw each command\'s glyph (CGIcons.apply, CGIcons.PLUGIN for a plugin\'s command)'],
+  [I('clear-glass/src/plugins/host.js'), I('clear-glass/src/toolbar/commands.js'), '§0.60.210 a plugin\'s command carries pluginName and desc (its icon drawn by name)'],
   [I('clear-glass/src/passwords/service.js'),       I('clear-glass/src/passwords/vault.js'), '§0.60.186 PW1 the PasswordVault passed in: save(…, { accountId }), get'],
   [I('clear-glass/src/providers/account-switch.js'), I('clear-glass/src/passwords/service.js'), '§0.60.186 PW3 capture() → onCaptured (injected by main) → linkPending'],
   [I('clear-glass/renderer/shell/passwords.js'),    I('clear-glass/src/preload/index.js'), '§0.60.186 PW4 ClearGlass.passwords.save|dismiss|forPage|fillPage|onOffer|onAvailable (IPC)'],
