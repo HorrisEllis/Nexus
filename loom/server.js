@@ -606,7 +606,7 @@ const server = http.createServer(async (req, res) => {
       catch (e) { return json(res, 413, { ok: false, error: e.message }); }
       if (!buf.length) return json(res, 400, { ok: false, error: 'empty upload' });
 
-      const uploadDir = path.join(__dirname, '..', 'data', 'loom', 'uploads');
+      const uploadDir = require('../lib/data-home.js').home('loom', 'uploads');
       fs.mkdirSync(uploadDir, { recursive: true });
       const savedPath = path.join(uploadDir, `${Date.now()}__${filename}`);
       fs.writeFileSync(savedPath, buf);
@@ -628,7 +628,7 @@ const server = http.createServer(async (req, res) => {
       try {
         const result = scaffoldSystem(name, {
           port, purpose, operations,
-          outDir: path.join(__dirname, '..', 'data', 'loom', 'scaffolded'),
+          outDir: require('../lib/data-home.js').home('loom', 'scaffolded'),
           // no dataDir override — same loom/data/registry.json the live
           // `driver` above already reads, so a scaffolded component shows
           // up in /api/registry and /api/graph immediately, not in a

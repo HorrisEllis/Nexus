@@ -125,7 +125,7 @@ if (require.main === module) {
   let declareConcern = null;
   try {
     const { LoomDriver } = require('../loom/schema/index.js');
-    const driver = new LoomDriver({ dataDir: path.join(__dirname, '..', 'data', 'loom') });
+    const driver = new LoomDriver({ dataDir: require('../lib/data-home.js').dir('loom') });
     declareConcern = (kind, payload) => driver.declare(kind, payload);
   } catch (e) {
     console.warn(`[${MODULE_ID}] LOOM unavailable — failures will be reported but not declared as concerns: ${e.message}`);

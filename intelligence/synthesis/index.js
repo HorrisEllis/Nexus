@@ -23,7 +23,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const KEEP_RUNS = 50;
 
 function dataDir(dir) {
-  const d = dir || process.env.INTELLIGENCE_SYNTHESIS_DIR || path.join(process.env.INTELLIGENCE_DATA_DIR || path.join(ROOT, 'data', 'intelligence'), 'synthesis');
+  const d = dir || process.env.INTELLIGENCE_SYNTHESIS_DIR || path.join(process.env.INTELLIGENCE_DATA_DIR || require('../../lib/data-home.js').dir('intelligence'), 'synthesis');
   fs.mkdirSync(d, { recursive: true });
   return d;
 }

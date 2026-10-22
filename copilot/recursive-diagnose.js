@@ -20,7 +20,7 @@ const crypto = require('crypto');
 const http   = require('http');
 
 const ROOT       = path.join(__dirname, '..');
-const OUT_DIR    = path.join(ROOT, 'data', 'copilot', 'diagnose');
+const OUT_DIR    = require('../lib/data-home.js').home('copilot', 'diagnose');   // 0.60.212 DL3: copilot/data/diagnose
 const CX_URL     = process.env.CORTEX_URL   || 'http://127.0.0.1:3748';
 const INTEL_URL = process.env.INTELLIGENCE_URL || 'http://127.0.0.1:3753'; // intelligence is sovereign (moved out of cortex 2026-09-19)
 const ORCH_URL  = process.env.ORCHESTRATOR_URL || 'http://127.0.0.1:9000'; // the CFR field/ledger authority

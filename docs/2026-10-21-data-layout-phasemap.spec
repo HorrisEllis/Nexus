@@ -75,7 +75,7 @@ phases:
 
   DL3_rewire_writers:
     layer: integration
-    status: "IN PROGRESS — rewired: guardian 0.60.208; versionium, ollama-bridge, architect, clear-glass, diagnostic, orchestrator 0.60.209 (lib/data-home.js REWIRED; test-data-rewired). Left: copilot, intelligence, loom, idearium, cortex, and the shared data/ledger/"
+    status: "IN PROGRESS — rewired: guardian 0.60.208; versionium, ollama-bridge, architect, clear-glass, diagnostic, orchestrator 0.60.209; loom, copilot, intelligence 0.60.212 (lib/data-home.js REWIRED; test-data-rewired). Left: idearium, cortex, and the shared data/ledger/"
     depends_on: [DL2_one_resolver, SS1_system_store_adoption]
     files: [lib/data-home.js, diagnostic/nexus-diagnostic.js, guardian/, lib/ledger-writer.js, lib/ledger-store.js, lib/vector-memory.js]
     spec: docs/data-layout.spec
@@ -147,3 +147,13 @@ phases:
 #   §0.3): files first for owners whose files only need a path, because a path change is checked by the census alone; each one's
 #   tables in cortex's store (SS2: versionium 5, orchestrator 4, diagnostic 2, architect 1 data blockers) follow per system, since
 #   each needs routes like Guardian's did. Decided by his axioms: §3.3 (smallest proven step), §8.6 (the census already proves a path).
+
+# ── ADDENDUM 2026-10-22 (0.60.212) — loom, copilot, intelligence rewired; Architect is his question ──
+# James, 2026-10-22: "then resume data migratino" · "Architect 1 isn't a system i don't believe and can be deleted."
+# - Rewired: loom (its cortex-sync buffer, uploads, scaffolds; nexus-status's LoomDriver no longer points at the root data/loom shadow the
+#   2026-08-14 nexus-map fix named), copilot (recursive-diagnose output), intelligence (its DATA_DIR, synthesis). Diagnostic's table points
+#   each at <folder>/data. Their files come home at each one's boot.
+# - Architect: read before acting. It is a running system (architect/service.js, port 3747, started by the orchestrator, 14 routes: blueprints,
+#   spec wizard, map scan, translate, compile, SNR, gaps); Idearium's compiler bridge calls its /api/map/scan and degrades without it. Removing
+#   it is his call with that cost named — asked, not done (USER_AUTONOMY; §0.3 would archive it, never delete). Its one cortex data blocker
+#   (SS2) waits on his answer.
