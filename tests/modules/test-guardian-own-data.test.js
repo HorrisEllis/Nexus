@@ -38,7 +38,8 @@ const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
     const C = require(path.join(ROOT, 'lib/data-clearup.js'));
     assert.deepStrictEqual(C.refsTo(ROOT, 'guardian'), []);
     const DH = require(path.join(ROOT, 'lib/data-home.js'));
-    assert.ok(DH.rewired('guardian') && !DH.rewired('loom'));
+    const notYet = DH.SYSTEMS().find(x => !DH.rewired(x));   // whichever system is not rewired yet (loom was, until 0.60.212)
+    assert.ok(DH.rewired('guardian') && (!notYet || !DH.rewired(notYet)));
   });
 
   await test('GD-03', 'callto: own tables in guardian\'s store (agent_calls brought from cortex once); cortex\'s tables to cortex\'s routes', async () => {
@@ -76,7 +77,8 @@ const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
     const LW = require(path.join(ROOT, 'lib/ledger-writer.js'));
     const DH = require(path.join(ROOT, 'lib/data-home.js'));
     assert.strictEqual(LW.dataDir('guardian'), DH.dir('guardian'));
-    assert.strictEqual(LW.dataDir('loom'), path.join(LW.DATA_ROOT, 'loom'));
+    const notYet = DH.SYSTEMS().find(x => !DH.rewired(x));
+    if (notYet) assert.strictEqual(LW.dataDir(notYet), path.join(LW.DATA_ROOT, notYet), `${notYet}, not yet rewired, stays put`);
     assert.strictEqual(LW.filePath('guardian', 'event_log'), path.join(DH.dir('guardian'), 'event_log.jsonl'));
     const cw = read('lib/cortex-write.js');
     assert.ok(/function _sysDir\(systemId\)/.test(cw) && /DH\.REWIRED/.test(cw), 'cortex-write buffers and drains a rewired system in its own folder');
