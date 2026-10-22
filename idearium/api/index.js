@@ -3054,6 +3054,7 @@ const ROUTE_CAP = {
   'repo.phases.graph': CAPS.READ_IDEAS,
   'repo.uploads.list': CAPS.READ_IDEAS, 'repo.uploads.get': CAPS.READ_IDEAS, 'repo.uploads.create': CAPS.WRITE_IDEAS, 'repo.uploads.answer': CAPS.WRITE_IDEAS,   // §0.60.173 UP3
   'repo.roadmaps': CAPS.READ_IDEAS, 'repo.roadmaps.import': CAPS.WRITE_IDEAS,   // 0.60.199 SD17 — a project's own roadmap, imported
+  'repo.lift-root': CAPS.READ_IDEAS, 'repo.lift-root.apply': CAPS.WRITE_IDEAS,   // 0.60.206 SD22 — a project imported inside its own folder, lifted to the root
   'repo.phases.dag': CAPS.READ_IDEAS,   // §0.60.172 DG3 — reads only   // §0.60.147 DG2 — reads only
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
@@ -3557,6 +3558,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
     ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
+    ['GET',    ['api','repos',    ':uuid','lift-root'],             'repo.lift-root'],         // 0.60.206 SD22 — is the project inside one folder? the plan
+    ['POST',   ['api','repos',    ':uuid','lift-root'],             'repo.lift-root.apply'],   // 0.60.206 SD22 — lift it to the root (root copies archived)
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
     ['POST',   ['api','repos',    ':uuid','expand'],                'repo.expand'],   // §0.39.360 SB42–SB44
     // §0.39.280 — the build surface (docs/2026-09-29-build-surface-phasemap.spec BS7; logic in api/build-surface.js)
@@ -8966,6 +8969,22 @@ async function handle(req, res, route, query, body) {
       getIdeaOS().emit('idearium.repo.roadmap.updated', { repoUuid: params.uuid, map: pick.target, imported: im.phases.length, from: [pick.json, pick.md].filter(Boolean), via: w.via });
       return ok(res, { repoUuid: params.uuid, map: pick.target, from: [pick.json, pick.md].filter(Boolean), phases: im.phases.length,
         done: im.phases.filter(p => p.status === 'done').length, next: im.next.slice(0, 5), said: im.said, via: w.via });
+    }
+    // 0.60.206 SD22 — James: "im so sick of this phase, been stuck on 2 days. the file is in the directory already for the phase, so
+    // what is broken?" Looking Glass was imported before 0.60.200 stripped wrapper folders: the project is under
+    // looking-glass-bundle-v0_4/, the phase names lib/title.js at the root. GET says whether a repo is wrapped and what a lift would
+    // do; POST lifts it (idearium/repo/lift-root.js): root copies at a taken path are archived first, nothing deleted.
+    case 'repo.lift-root': case 'repo.lift-root.apply': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (repo.nexusSelf) return err(res, 400, 'a Nexus system repo mirrors the tree; it is never lifted');
+      const LR = await import('../repo/lift-root.js');
+      const r = LR.liftRoot(getRepoLayer(), params.uuid, { apply: action === 'repo.lift-root.apply' });
+      if (action === 'repo.lift-root.apply') {
+        if (!r.wrapper) return err(res, 409, `nothing to lift: ${r.why}`, { code: 'NOT_WRAPPED' });
+        getIdeaOS().emit('idearium.repo.lifted', { repoUuid: params.uuid, wrapper: r.wrapper, moved: r.moved.length, archived: r.archived.length, failed: r.failed.length });
+      }
+      return ok(res, { repoUuid: params.uuid, ...r, moves: (r.moves || []).length, ...(r.moved ? { moved: r.moved.length } : {}) });
     }
     // §0.39.281 EC8 — the economy, from guardian (the one owner)
     case 'economy.get': case 'economy.set': case 'economy.view': {

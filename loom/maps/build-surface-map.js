@@ -368,6 +368,12 @@ const CONSUMERS = [
   [I('copilot/adversarial.js'), I('lib/nexus-client.js'), 'SD21 0.60.205 L1 _probeModelFits: GET ollama /api/models (active, sizes, loaded)'],
   [I('copilot/adversarial.js'), I('lib/resource-monitor.js'), 'SD21 0.60.205 L1 fitsModel before the probe loads its model'],
   [I('guardian/server.js'), I('guardian/lib/provider-login.js'), 'SD21 0.60.205 L2 _releaseBehindWall: releasableBehindWall(job) — a build job leaves a sign-in wall'],
+  // SD22 0.60.206 — a wrapped repo lifts to its root
+  [I('idearium/api/index.js'), I('idearium/repo/lift-root.js'), 'SD22 0.60.206 GET/POST /api/repos/:uuid/lift-root → liftRoot(layer, uuid, { apply })'],
+  [I('idearium/repo/lift-root.js'), I('idearium/repo/index.js'), 'SD22 0.60.206 layer.moveFile (root copies to .nexus/archive/lift-root first) + one refresh'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), 'SD22 0.60.206 repo lift-root <repo> [--apply]'],
+  [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), 'SD22 0.60.206 _phLiftOffer / phLiftRoot: the offer above the phases'],
+  [I('idearium/ui/js/repo-environment.js'), I('idearium/api/index.js'), 'SD22 0.60.206 envLiftRoot beside the missing-files line'],
   [I('ollama/server.js'), I('ollama/lib/idle-unload.js'), '0.60.123 MP startIdleUnload after listen (keep_alive:0 on idle)'],
   [I('idearium/repo/import-pipeline.js'), I('idearium/repo/import-pipeline-worker.js'), '0.60.124 SW1 runImportPipelineOffThread — new Worker(new URL(./import-pipeline-worker.js))'],
   [I('idearium/repo/nexus-self.js'), I('idearium/repo/import-pipeline.js'), '0.60.124 SW1 _syncSystem + parent: await runImportPipelineOffThread'],

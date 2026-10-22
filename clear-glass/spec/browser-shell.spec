@@ -574,3 +574,12 @@ spec:
       - { id: GATE-BSH-PERSON, name: person-imports, severity: fatal, check: "import personOnly; agent tool lists only", on_failure: "build failure" }
       - { id: GATE-BSH-ISOLATED, name: cli-isolated, severity: fatal, check: "separate window, setContentProtection(true) before show", on_failure: "build failure" }
       - { id: GATE-BSH-PLUGINS, name: plugin-state-kept, severity: high, check: "disabledPlugins applied at boot", on_failure: "build failure" }
+
+## ADDENDUM 2026-10-22 (0.60.206) — MOD-BSH-COPILOT-SKIN: a closed Co-pilot takes no width
+James, 2026-10-22, with screenshots of Idearium in Clear Glass: "aloso the ui for clearglass is cut off."
+- Cause: renderer/shell/copilot.css (0.60.180) gave `body.cg-shell #copilot-pane` its width. That selector outranks browser.css's
+  `#copilot-pane.hidden { width: 0 }`, so a closed pane went transparent and kept 340 px: a black strip down the right of every page
+  (his page ended at about 1580 of 1920 px).
+- Fix: `body.cg-shell #copilot-pane.hidden { width: 0; opacity: 0; border-left: none; }`. Nothing else changes.
+- Proof: tests/modules/test-browser-shell.test.js BST-09b, run in Clear Glass at 1920 px. It measured 340 px before the fix and 0 after,
+  and checks the page reaches the right edge.

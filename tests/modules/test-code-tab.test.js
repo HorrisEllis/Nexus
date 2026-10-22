@@ -159,10 +159,10 @@ function harness() {
   // ── CT-1x the tab in Clear Glass ──
   const glass = require('../../clear-glass/src/driver/glass.js');
   const eng = glass.engine();
-  if (!eng) { console.log('  - CT-10…CT-15 SKIPPED: Clear Glass has no engine here (no Electron binary, no Chromium) — the browser checks did not run'); skipped += 6; return done(); }
+  if (!eng) { console.log('  - CT-10…CT-15 SKIPPED: Clear Glass has no engine here (no Electron binary, no Chromium) — the browser checks did not run'); skipped += 7; return done(); }
   let browser;
   try { browser = await glass.chromium.launch(); }
-  catch (e) { console.log(`  - CT-10…CT-15 SKIPPED: Clear Glass's engine (${eng.kind}) could not start (${e.message.split('\n')[0]})`); skipped += 6; return done(); }
+  catch (e) { console.log(`  - CT-10…CT-15 SKIPPED: Clear Glass's engine (${eng.kind}) could not start (${e.message.split('\n')[0]})`); skipped += 7; return done(); }
   console.log(`  · driven by Clear Glass (clear-glass/src/driver/glass.js), engine: ${eng.kind}`);
   try {
     const page = await browser.newPage();
@@ -192,6 +192,20 @@ function harness() {
       assert.deepStrictEqual(await page.$$eval('.cs-one .ws-card', els => els.map(e => e.dataset.path)), ['src/a.js', 'src/new.js']);
       assert.strictEqual(await page.$$eval('.cs-one .ws-head .ws-act-apply', e => e.length), 2);
       assert.strictEqual(await page.$$eval('.cs-one .ws-head .ws-act-reject', e => e.length), 2);
+    });
+
+    await test('CT-11b', '0.60.206 the agent button on the changes view shows the agent beside them, and a press always hides or shows it', async () => {
+      // James, 2026-10-22: "the agent button does nothing in the code tab". The changes view never drew the panel; a picked line held it open.
+      const agentBtn = '.cs-top .cs-chip-btn:has-text("agent")';
+      assert.strictEqual(await page.$$eval('.cs-right .cs-agent', e => e.length), 1, 'open: the agent beside the changes');
+      await page.click(agentBtn);
+      assert.strictEqual(await page.$$eval('.cs-right', e => e.length), 0, 'a press hides it');
+      await page.click(agentBtn);
+      assert.strictEqual(await page.$$eval('.cs-right .cs-agent', e => e.length), 1, 'a press shows it');
+      await page.evaluate(() => { CS.sel = { from: 1, to: 1 }; csPaint(); });
+      await page.click(agentBtn);
+      assert.strictEqual(await page.$$eval('.cs-right', e => e.length), 0, 'a picked line no longer holds it open');
+      await page.evaluate(() => { CS.sel = null; CS.agentHidden = false; CS.agentOpen = true; csPaint(); });
     });
 
     await test('CT-12', 'a file open: its lines, its chunk marked where it starts, its diff above; the chunk → its card', async () => {

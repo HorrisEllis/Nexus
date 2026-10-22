@@ -462,6 +462,35 @@ spec:
         an unmet condition, and the fix is the label, said here. §1.2: every deferral, send-back and pause is logged with why.
         USER_AUTONOMY: a job a person is waiting on is never sent away from a sign-in.
       proof: "LF-01..06; test-proof-run 7/7; shadow, starved-machine, refusal-sendback, nexus-self suites unchanged"
+    SD22_a_wrapped_repo_lifts_to_its_root:
+      layer: backend
+      systems: [idearium]
+      status: "DONE 0.60.206 — test-lift-root LR-01..03"
+      james: '"im so sick of this phase, been stuck on 2 days. the file is in  the directory already for the phase, so what is broken?" (2026-10-22, five screenshots of SP5)'
+      depends_on: [SD18_mastermind_ready, SD21_what_his_run_log_showed]
+      files: [idearium/repo/lift-root.js, idearium/repo/index.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, idearium/ui/js/repo-environment.js]
+      does: >-
+        Looking Glass was imported before 0.60.200 stripped a zip's wrapper folder, so the whole project (lib/title.js,
+        tests/sp5-title.test.js, its phasemap) sits under looking-glass-bundle-v0_4/ while SP5 names lib/title.js at the root. The
+        build, the proof and the agent all work at the root; each attempt wrote a second lib/title.js there, never the one he sees.
+        lift-root.js plans the lift (the one top folder holding most files with a project marker at its top, no marker at the root)
+        and applies it through a new layer.moveFile (source-owned bytes and the chunk store alike): a root file at a path the project
+        needs is archived under .nexus/archive/lift-root/<time>/ first, never deleted, and the project's original takes the path.
+        GET/POST /api/repos/:uuid/lift-root, `repo lift-root <repo> [--apply]`, the offer in the Phases tab and in Environment.
+      decided_by_the_axioms: >-
+        §0.3: the agent's root copies are archived, not deleted; the original wins because it is the project's own file. §8.6: the
+        same wrapper rule 0.60.200 applies on import (stripWrapper), now for a repo already imported; moves go through the repo
+        layer's own write/delete paths. USER_AUTONOMY: the lift is offered, never run on its own — it moves every file of his repo.
+        Nexus system repos mirror the tree and are refused.
+      proof: "LR-01 his shape (the bundle folder, two root collisions); LR-02 refusals; LR-03 real layer + route: root copy archived, original at lib/title.js, wrapper emptied, second apply 409"
+  # ── SD22 addendum 2026-10-22 (0.60.206) — two screen faults from the same five screenshots ──
+  # James: "the agent button does nothing in the code tab.. aloso the ui for clearglass is cut off."
+  # - The Code tab's agent button was shown on the changes view, which never drew the agent panel (his screenshot: the button lit, no
+  #   panel); on files, a picked line or a busy agent held the panel open, so a press changed nothing. The changes view now draws the
+  #   agent beside them, and a press always shows or hides it (csAgentToggle; a new picked line opens it again). idearium/ui/js/
+  #   code-surface.js, idearium/ui/css/code-surface.css. test-code-tab CT-11b in Clear Glass (fails on the old file, passes now).
+  # - The cut-off was Clear Glass's own window: a closed Co-pilot kept its 340 px (a CSS specificity fault since 0.60.180). Owned by
+  #   clear-glass/spec/browser-shell.spec MOD-BSH-COPILOT-SKIN, addendum 2026-10-22; test-browser-shell BST-09b.
   # ── SD18 addendum 2026-10-21 (0.60.201) — for any project, not only his ──
   # James, with a screenshot of the upload dialog ("could not start: signal is aborted without reason") and his boot log: "okay, remember
   # this is for any project. not just mmine". Two things, each for every project:
