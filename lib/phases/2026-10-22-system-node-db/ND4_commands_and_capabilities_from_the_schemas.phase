@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-22-system-node-db-phasemap.spec::ND4_commands_and_capabilities_from_the_schemas
+type: phase
+id: docs_2026-10-22-system-node-db-phasemap.spec::ND4_commands_and_capabilities_from_the_schemas
+context: >-
+  pipeline phase ND4_commands_and_capabilities_from_the_schemas of
+  docs/2026-10-22-system-node-db-phasemap.spec
+intent: null
+summary: ND4_commands_and_capabilities_from_the_schemas (backend) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792650734507
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792650734507
+lastSeenAt: 1792650734507
+fingerprint: null
+payload:
+  id: ND4_commands_and_capabilities_from_the_schemas
+  map: docs/2026-10-22-system-node-db-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - lib/node-surface.js
+    - lib/system-nodes.js
+    - lib/node-schemas.js
+  depends_on:
+    - ND3_each_server_serves_its_nodes
+    - ND_D4_schema_driven_commands
+  blocks:
+    - MOD-ND-SURFACE
+  spec: docs/system-node-db.spec
+  graph: ae691a15e3aa12bb

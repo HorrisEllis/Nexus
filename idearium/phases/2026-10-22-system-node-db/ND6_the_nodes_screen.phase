@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-22-system-node-db-phasemap.spec::ND6_the_nodes_screen
+type: phase
+id: docs_2026-10-22-system-node-db-phasemap.spec::ND6_the_nodes_screen
+context: pipeline phase ND6_the_nodes_screen of docs/2026-10-22-system-node-db-phasemap.spec
+intent: null
+summary: ND6_the_nodes_screen (ui) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792650734509
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792650734509
+lastSeenAt: 1792650734509
+fingerprint: null
+payload:
+  id: ND6_the_nodes_screen
+  map: docs/2026-10-22-system-node-db-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - idearium/ui/js/system-nodes.js
+    - idearium/ui/index.html
+  depends_on:
+    - ND5_every_agent_reaches_every_system
+  blocks:
+    - MOD-ND-UI
+  spec: docs/system-node-db.spec
+  graph: 84631efc91474720
