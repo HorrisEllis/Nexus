@@ -46,6 +46,11 @@ module.exports = Object.freeze({
   // §0.60.157 — emitted and never declared (test-event-contracts EC-05, red on main); payloads read at the emit sites
   IDEARIUM_PHASE_MAPPED: { description: "A phase's files were mapped (lib/phase-map-auto.js): which files it changes and where that came from.", payloadShape: ['repoUuid', 'map', 'phase', 'source', 'files'], severity: 'info' },
   IDEARIUM_REPO_CARVED: { description: 'A repo was carved out of another (CV1): its name, how many files, and the repo it came from.', payloadShape: ['repoUuid', 'name', 'files', 'parent'], severity: 'notable' },
+  // ── 0.60.206 — events emitted without an entry (EC-05 named them); payloads read from their emit sites ──
+  IDEARIUM_REPO_LIFTED: { description: "A project imported inside its own folder was lifted to the repo's root (SD22, idearium/repo/lift-root.js): the folder, how many files moved, how many root copies were archived, how many failed.", payloadShape: ['repoUuid', 'wrapper', 'moved', 'archived', 'failed'], severity: 'notable' },
+  IDEARIUM_REPO_INJECT_SENT_BACK: { description: "An agent's refused proposal went back to its agent with the failing test as the reason (SD19).", payloadShape: ['repoUuid', 'inject', 'path', 'agent'], severity: 'info' },
+  IDEARIUM_UPLOAD_STAGED: { description: 'An upload was staged with its intent, waiting on his answer (UP1).', payloadShape: ['repoUuid', 'upload', 'files', 'intent'], severity: 'info' },
+  IDEARIUM_UPLOAD_ANSWERED: { description: 'His answer to a staged upload was applied: what was written (UP3).', payloadShape: ['repoUuid', 'upload', 'written', 'skipped', 'errors'], severity: 'info' },
   IDEARIUM_REPO_RELEASED: { description: 'A repo released a version: its tag and the commit it points at.', payloadShape: ['repoUuid', 'version', 'tag', 'commitId'], severity: 'notable' },
   IDEARIUM_REPO_ACTIVITY: { description: "A row was written to a repo's activity log (lib/activity-log.js): a task, a phase-run row, a proposal's event, a fault.", payloadShape: ['repoUuid', 'row'], severity: 'info' },
   // ── EV0: every other event idearium emits ──────────────────────────────────────────────────────────────────────
