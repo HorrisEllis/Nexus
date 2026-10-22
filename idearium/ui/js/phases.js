@@ -27,7 +27,7 @@
 // (open in Code), and build · status · open in the Plan · open its spec. Table and Maps stay; Board became Lanes.
 const PHASES = { uuid: null, data: null, view: 'lanes', open: null, sort: { k: 'order', dir: 1 },
   filter: { q: '', status: 'all', map: 'all', mine: true, ready: false, files: false }, busy: false, adding: false,
-  specs: null, spec: null, thread: null, threadErr: null, plan: null, showDone: _phShowDoneSaved() };
+  specs: null, spec: null, thread: null, threadErr: null, plan: null, roadmaps: [], showDone: _phShowDoneSaved() };
 const _PH_STATUS_COLOR = { complete: 'var(--mint)', active: 'var(--sky)', planned: 'var(--text2)' };
 const _PH_RUN_COLOR = { building: 'var(--sky)', replied: 'var(--mint)', failed: 'var(--coral)', refused: 'var(--coral)', escalating: 'var(--amber)', retrying: 'var(--amber)', proven: 'var(--mint)', unproven: 'var(--coral)', interrupted: 'var(--amber)' };   // §HP2 interrupted: idearium restarted mid-run
 const _phShortMap = (p) => String(p || '').split('/').pop().replace(/-phasemap\.spec$|\.spec$/, '');
@@ -40,7 +40,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   if (!el || !repo) return;
   const forUuid = repo.uuid;
   if (PHASES.uuid !== forUuid) {
-    Object.assign(PHASES, { uuid: forUuid, data: null, open: null, adding: false, specs: null, spec: null, thread: null, threadErr: null, plan: null });
+    Object.assign(PHASES, { uuid: forUuid, data: null, open: null, adding: false, specs: null, spec: null, thread: null, threadErr: null, plan: null, roadmaps: [] });
     PHASES.filter = { q: '', status: 'all', map: 'all', mine: true, ready: false };
   }
   // §RS11 — handed a spec (and a phase) from a workshop section: applied after any reset for a new repo, not wiped by it
@@ -50,10 +50,11 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   if (!PHASES.data) el.innerHTML = `<div class="detail-empty">reading phasemaps…</div>`;
   let d;
   // the phases (every map), the thread's specs, the plan's gates — read together; only the first is required
-  const [pr, sr, gr] = await Promise.allSettled([
+  const [pr, sr, gr, rr] = await Promise.allSettled([
     api(`/api/repos/${forUuid}/phases`, {}, 30000),
     api(`/api/repos/${forUuid}/thread`, {}, 30000),
     api(`/api/repos/${forUuid}/plan`, {}, 30000),
+    api(`/api/repos/${forUuid}/roadmaps`, {}, 30000),   // 0.60.199 SD17 — the project's own roadmaps
   ]);
   if (CURRENT_API_REPO?.uuid !== forUuid || CURRENT_REPO_SUBTAB !== 'phases') return;
   if (pr.status !== 'fulfilled') {
@@ -64,6 +65,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   PHASES.data = d;
   PHASES.specs = sr.status === 'fulfilled' ? (sr.value.specs || []) : null;
   PHASES.plan = gr.status === 'fulfilled' ? gr.value : null;
+  PHASES.roadmaps = rr.status === 'fulfilled' ? (rr.value.roadmaps || []) : [];
   if (PHASES.spec) await _phLoadThread(PHASES.spec, { paint: false });
   // §RS11 — opened from a workshop section: its phase opened
   if (PHASES.wantKey) { const w = d.phases.find(p => p.phase_key === PHASES.wantKey); if (w) PHASES.open = w.uuid; PHASES.wantKey = null; }
@@ -122,6 +124,7 @@ function _phRail(d) {
         <span class="ph2-spec-name">${escapeHtml(s.path.split('/').pop())}</span><span class="ph2-dim">${x.done}/${x.n}</span>${bar(x)}
         ${PHASES.spec === s.path && t ? `<div class="ph2-spec-sub">${t.summary.blocks} blocks · ${t.summary.planned} planned${t.summary.unplanned ? ` · <span class="ph2-warn">${t.summary.unplanned} unplanned</span>` : ''}${t.summary.staleBlocks ? ` · <span class="ph2-warn">${t.summary.staleBlocks} moved</span>` : ''}${t.summary.unlinked ? ` · ${t.summary.unlinked} unlinked` : ''}</div>` : ''}</div>`; }).join('')}
     ${specs && specs.filter(s => !(s.maps || []).length).length ? `<div class="ph2-rail-head">specs not planned yet</div>${specs.filter(s => !(s.maps || []).length).slice(0, 20).map(s => `<div class="ph2-spec dim" title="${escapeHtml(s.path)}"><span class="ph2-spec-name">${escapeHtml(s.path.split('/').pop())}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phPlanDerive('${_phq(s.path)}')" title="one phase per block, bottom-up — no agent">⚡ plan</button></div>`).join('')}` : ''}
+    ${(PHASES.roadmaps || []).filter(r => !r.imported).length ? `<div class="ph2-rail-head">roadmap not imported yet</div>${PHASES.roadmaps.filter(r => !r.imported).map(r => `<div class="ph2-spec dim" title="${escapeHtml([r.json, r.md].filter(Boolean).join(' + '))} → ${escapeHtml(r.target)}"><span class="ph2-spec-name">${escapeHtml((r.json || r.md).split('/').pop())}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phImportRoadmap('${_phq(r.dir)}')" title="the project's own phases as a phasemap: its ids, states, percent, what blocks what, exit criteria — so it continues from where it is">⇣ import</button></div>`).join('')}` : ''}
     ${other.length ? `<div class="ph2-rail-head">maps not from a spec</div>${other.map(m => { const x = sumOf([m.path]); return `<div class="ph2-spec ${PHASES.filter.map === m.path ? 'on' : ''}" onclick="PHASES.spec=null;PHASES.thread=null;phasesFilter('map','${_phq(m.path)}')" title="${escapeHtml(m.path)}"><span class="ph2-spec-name">${escapeHtml(_phShortMap(m.path))}</span><span class="ph2-dim">${x.done}/${x.n}</span>${bar(x)}</div>`; }).join('')}` : ''}`;
 }
 
@@ -164,8 +167,10 @@ function _phPaint() {
     </div>`;
 
   let body;
+  // 0.60.199 SD17 — James: "so i can import a project and have it continue?" A roadmap it brought, offered first
+  const roadmapOffer = (PHASES.roadmaps || []).filter(r => !r.imported).map(r => `<div class="ds"><div class="ds-label">this project brought its own roadmap</div><div class="ds-mono">${escapeHtml([r.json, r.md].filter(Boolean).join(' + '))} — its phases, states and what blocks what, imported as ${escapeHtml(r.target)} so it continues from where it is.</div><button class="action-btn" onclick="phImportRoadmap('${_phq(r.dir)}')">⇣ import its roadmap</button></div>`).join('');
   if (!d.phases.length) {
-    body = `<div class="ds"><div class="ds-label">no phases</div><div class="ds-mono">${d.scope.source === 'nexus'
+    body = `${roadmapOffer}<div class="ds"><div class="ds-label">no phases</div><div class="ds-mono">${d.scope.source === 'nexus'
       ? 'No phasemap in the NEXUS snapshot tags this system. Phasemaps are docs/*phasemap*.spec.'
       : 'This repo has no *phasemap*.spec file yet. Plan a spec below (its phases land here), "+ phase" starts roadmap-phasemap.spec, or add an idea iteration from the Idea tab.'}${(d.skipped || []).length ? `\n\nnot read:\n${d.skipped.map(x => `${x.path} — ${x.reason}`).join('\n')}` : ''}</div></div>
       ${d.scope.source === 'nexus' ? '' : '<div class="ds" id="ph-plan-specs"><div class="ds-label">plan a spec</div><div class="ds-mono">reading the specs…</div></div>'}`;
@@ -464,6 +469,19 @@ async function phPlanDerive(specPath) {
     toast(`${r.mapPath}: ${r.phases} phases`, 'ok');
     renderPhasesRefresh();
   } catch (e) { toast(`not planned: ${e.message}`, 'err'); }
+}
+// 0.60.199 SD17 — a project's own roadmap imported as a phasemap (POST …/roadmaps/import); an existing import is asked about first
+async function phImportRoadmap(dir, replace = false) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try {
+    const r = await api(`/api/repos/${repo.uuid}/roadmaps/import`, { method: 'POST', body: JSON.stringify({ dir, ...(replace ? { replace: true } : {}) }) }, 60000);
+    const next = (r.next || [])[0];
+    toast(`${r.map}: ${r.phases} phases, ${r.done} done${next ? ` · next ${next.id.split('_')[0]}${next.waiting ? ` (${next.waiting} wait on it)` : ''}` : ''}${(r.said || []).length ? ` · ${r.said.length} note(s) in the map` : ''}`, 'ok');
+    renderPhasesRefresh();
+  } catch (e) {
+    if (e.detail && e.detail.code === 'EXISTS' && !replace) { if (confirm(`${e.message}\n\nImport it again over it?`)) return phImportRoadmap(dir, true); return; }
+    toast(`not imported: ${e.message}`, 'err');
+  }
 }
 async function phPlanAgent(specPath) {
   setRepoSubtab('spec');

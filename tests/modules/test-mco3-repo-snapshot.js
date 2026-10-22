@@ -255,8 +255,8 @@ function writeFiles(repoDir, files) {
     assert.strictEqual(snap.buildSnapshotRecord({ repoDir: tmpRoot }).code, 'NO_REPO');
   });
   await t('verifyMustRecord rejects a bare null, an empty object, and a missing key', () => {
-    assert.deepStrictEqual(snap.verifyMustRecord(null).missing.length, 9);
-    assert.deepStrictEqual(snap.verifyMustRecord({ mustRecord: {} }).missing.length, 9);
+    assert.deepStrictEqual(snap.verifyMustRecord(null).missing.length, snap.MUST_RECORD.length);
+    assert.deepStrictEqual(snap.verifyMustRecord({ mustRecord: {} }).missing.length, snap.MUST_RECORD.length);
     const partial = JSON.parse(JSON.stringify(R)); partial.mustRecord.versionCommit = null; delete partial.mustRecord.testState;
     assert.deepStrictEqual(snap.verifyMustRecord(partial).missing.sort(), ['testState', 'versionCommit']);
   });

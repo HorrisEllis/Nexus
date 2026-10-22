@@ -815,6 +815,24 @@ function _emitLedger(type, payload = {}) {
     .then((r) => { if (r && r.buffered) _ledgerOut.buffered++; else if (r && r.ok) _ledgerOut.sent++; else { _ledgerOut.failed++; _ledgerOut.lastError = (r && r.error) || 'not written'; } })
     .catch((e) => { _ledgerOut.failed++; _ledgerOut.lastError = e.message; });
 }
+// 0.60.195 — James, of SP5: "did it not capture response from chatgtp." · "looking glaass is a test spec. rral spec test caser". His log:
+// "[shadow] phase.build: 1 expected thing(s) absent — lib/title.js" right after Gemini's reply landed looking-glass-bundle-v0_4/lib/title.js.
+// An imported bundle keeps its files under its own folder, and its map names them from that folder: the map's lib/title.js IS the repo's
+// looking-glass-bundle-v0_4/lib/title.js. The exact match called Gemini's delivered file absent, so every working attempt climbed the
+// ladder and was thrown away. A delivered path counts as the expected one when it is the expected path under the map's own root folder
+// (the first segment of a nested map's path), or under exactly one top-level folder when the expected path has a folder of its own —
+// never a bare file-name match, so a stray index.js elsewhere is still not the file.
+function _underMapRoot(mapPath, expected, delivered) {
+  const want = new Set(expected || []);
+  const root = String(mapPath || '').includes('/') ? `${String(mapPath).split('/')[0]}/` : null;
+  return (delivered || []).map((p) => {
+    if (want.has(p)) return p;
+    const cut = p.indexOf('/'); if (cut <= 0) return p;
+    const rest = p.slice(cut + 1);
+    // under the map's own root folder, or under one top-level folder when the expected path has a folder of its own (lib/title.js)
+    return want.has(rest) && (p.startsWith(root || '\0') || rest.includes('/')) ? rest : p;
+  });
+}
 async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, startedBy = null }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
@@ -907,12 +925,49 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   _emitLedger('idearium.phase.run.started', { runId, repoUuid: repo.uuid, map, phase, title: node.title || null, startedBy: base.startedBy, causedBy: base.startedBy.who });   // 0.60.190 APV4
 
   // (1) snapshot first — never write without one
-  const snap = await _commitRepoSnapshotFor(target.uuid, { message: `before phase ${phase} (${map.split('/').pop()})`, causedBy: `idearium.phases.build:${runId}` });
+  const snapBody = { message: `before phase ${phase} (${map.split('/').pop()})`, causedBy: `idearium.phases.build:${runId}` };
+  let snap = await _commitRepoSnapshotFor(target.uuid, snapBody);
+  // 0.60.196 — James, of looking-glass-bundle-v0_4: "what does it need an atlas for?" The snapshot pins the atlas, chunk index and
+  // graph the build reads, so a repo with files and no index cannot be snapshotted. His upload timed out in the browser after the
+  // files landed, so the indexing the dialog starts afterwards never ran. The repo's files are on disk: the build runs the same
+  // import pipeline POST /api/repos/:uuid/chunk runs, says so on the run, and tries the snapshot once more.
+  // 0.60.198 — his decision: "yes, the registry should be the spine, event bus, interaction contract, and component registry." What a build
+  // stands on is that registry (the snapshot's registryVersion: the Architect tab's components, wires, events, routes and CLI — what the
+  // planner reads), not atlas.json, which nothing in the build reads (IN3a, docs/2026-10-19-infrastructure-spine-phasemap.spec).
+  const _noRegistry = (s) => s.ok ? !(s.data.record && s.data.record.mustRecord && s.data.record.mustRecord.registryVersion && s.data.record.mustRecord.registryVersion.available)
+    : !!(s.extra && s.extra.code === 'NOT_INDEXED');
+  if (_noRegistry(snap)) {
+    const dir = _repoDiskDir(target.uuid);
+    let state = null, why = null;
+    try {
+      const os = getIdeaOS();
+      const pipeline = dir ? runImportPipeline(getRepoLayer().get(target.uuid), dir, { onEvent: makeBusForwarder((type, payload) => os.emit(type, payload)) }) : null;
+      state = pipeline ? pipeline.state : null; why = pipeline ? (pipeline.error || null) : 'could not resolve the repo directory';
+      if (pipeline && pipeline.state !== 'FAULT') os.emit('idearium.repo.chunk.done', { repoUuid: target.uuid, name: target.name, state, fileCount: (target.files || []).length, chunkCount: null });
+    } catch (e) { why = e.message; }
+    appendRow('idearium_phase_runs', { uuid: `${runId}-indexed`, ...base, state: 'indexed', error: why, pipeline: state,
+      reason: snap.ok ? `no registry: ${(snap.data.record.mustRecord.registryVersion || {}).reason || 'not recorded'}` : 'not indexed', ts: Date.now() });
+    snap = await _commitRepoSnapshotFor(target.uuid, snapBody);
+    if (snap.ok && _noRegistry(snap)) {
+      const reason = (snap.data.record.mustRecord.registryVersion || {}).reason || 'not recorded';
+      appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', snapshot: snap.data.commitId, error: `no registry: ${reason}`, ts: Date.now() });
+      return { ok: false, status: 409, error: `not built: the repo has no component registry to build on (spine, event bus, interaction contract, components) — ${reason}`, extra: { code: 'NO_REGISTRY', snapshot: snap.data.commitId } };
+    }
+  }
   if (!snap.ok) {
     appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', error: `no snapshot: ${snap.error}`, ts: Date.now() });
     return { ok: false, status: snap.status === 409 ? 409 : 502, error: `not built: the Versionium snapshot before it failed — ${snap.error}`, extra: { code: 'NO_SNAPSHOT', snapshotCode: snap.extra?.code || null } };
   }
   const commitId = snap.data.commitId;
+  // 0.60.194 — James, of SP5: "its having so much issue with the title.js. nothing has fixed it." RC4b promised repairTree() at the start of
+  // a phase build, but it ran only inside the test-first branch, and a build that resumes its saved plan skips that branch: SP5's
+  // "Gemini said tests/sp5-title.test.js" (written before RC5) stayed in the tree and became one of the two tests blocking his Apply.
+  // Every build now repairs first, after the snapshot (the names are archived under .nexus/archive and kept in the snapshot, §0.3).
+  try {
+    const rep = _require('../../lib/path-guard.js').repairTree(_repoDiskDir(target.uuid));
+    if (rep.moved.length) appendRow('idearium_phase_runs', { uuid: `${runId}-repaired-${Date.now().toString(36)}`, ...base, state: 'repaired', snapshot: commitId, error: null,
+      note: `${rep.moved.length} file(s) with a chat label or a cut-short name moved out of the tree before building: ${rep.moved.map(m => m.from).slice(0, 5).join(', ')}`, moved: rep.moved, ts: Date.now() });
+  } catch (_) { /* a repair that cannot run never stops the build; the guard at the write door still holds */ }
 
   // (2) active (a map that will not take the edit is reported, not fatal)
   let statusNote = null;
@@ -1167,7 +1222,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     let absent = null, unchanged = false;
     if (shadow) {
       if (state !== 'replied') SH.drop(shadow);
-      else { const got = SH.settle(shadow, { files: ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
+      else { const got = SH.settle(shadow, { files: _underMapRoot(map, files, ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean)) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
     }
     // §0.39.355 PB2 — James: "it needs to actually build it". A build whose reply changed no file (nothing written,
     // staged or proposed, by a fenced block or a code_edit / code_write / code_batch call) did not build: incomplete,
@@ -2979,6 +3034,7 @@ const ROUTE_CAP = {
   'repo.phases.map': CAPS.WRITE_IDEAS, 'repo.phases.map.status': CAPS.READ_IDEAS,   // 0.60.29 PM
   'repo.phases.graph': CAPS.READ_IDEAS,
   'repo.uploads.list': CAPS.READ_IDEAS, 'repo.uploads.get': CAPS.READ_IDEAS, 'repo.uploads.create': CAPS.WRITE_IDEAS, 'repo.uploads.answer': CAPS.WRITE_IDEAS,   // §0.60.173 UP3
+  'repo.roadmaps': CAPS.READ_IDEAS, 'repo.roadmaps.import': CAPS.WRITE_IDEAS,   // 0.60.199 SD17 — a project's own roadmap, imported
   'repo.phases.dag': CAPS.READ_IDEAS,   // §0.60.172 DG3 — reads only   // §0.60.147 DG2 — reads only
   'repo.specs.compile': CAPS.WRITE_IDEAS,   // 0.60.67 SF4 — proposals only; nothing is written until applied
   'repo.architecture.write': CAPS.WRITE_IDEAS,
@@ -3480,6 +3536,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','phases','map'],          'repo.phases.map.status'],
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
+    ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
+    ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
     ['POST',   ['api','repos',    ':uuid','expand'],                'repo.expand'],   // §0.39.360 SB42–SB44
     // §0.39.280 — the build surface (docs/2026-09-29-build-surface-phasemap.spec BS7; logic in api/build-surface.js)
@@ -4869,6 +4927,7 @@ async function handle(req, res, route, query, body) {
       // COS-container work, restored here rather than left silently
       // dropped.
       const extraction = extractZipToFiles({
+        stripWrapper:     true,   // 0.60.200 — a project zipped inside one folder (MASTERMIND's mm9/) lands at the repo's root
         buf,
         maxFiles:         cfg.ZIP.maxFiles,
         maxBytesPerFile:  cfg.ZIP.maxBytesPerFile,
@@ -5021,6 +5080,7 @@ async function handle(req, res, route, query, body) {
       // extraction with no realFiles/writeSources call, found while
       // merging forward.
       const extraction = extractZipToFiles({
+        stripWrapper:     true,   // 0.60.200 — a project zipped inside one folder (MASTERMIND's mm9/) lands at the repo's root
         buf,
         maxFiles:         cfg.ZIP.maxFiles,
         maxBytesPerFile:  cfg.ZIP.maxBytesPerFile,
@@ -5183,6 +5243,7 @@ async function handle(req, res, route, query, body) {
         sourceFailed: sources ? sources.failed : [],
         files: checklist2.files, graph: checklist2.graph,
         omittedCount: omitted.length, omitted: omitted.slice(0, 50),
+        wrapper: extraction.wrapper || null,   // 0.60.200 — the one top folder dropped from every path
         containerFileCount: ingested.fileCount, containerRoot: ingested.root,
         stats, pipeline,
       });
@@ -7332,7 +7393,7 @@ async function handle(req, res, route, query, body) {
       // action on the wrong compartment.
       const owned = () => { const n = RI.get(params.id); return n && n.repoUuid === params.uuid ? n : null; };
       const done = (r, okExtra = {}) => r.ok ? ok(res, { ...r, ...okExtra })
-        : err(res, r.conflict ? 409 : 400, (r.errors || ['failed']).join('; '), { conflict: !!r.conflict, ...(r.merge ? { merge: r.merge } : {}) });
+        : err(res, r.conflict ? 409 : 400, (r.errors || ['failed']).join('; '), { conflict: !!r.conflict, ...(r.merge ? { merge: r.merge } : {}), ...(r.sentBack ? { sentBack: true } : {}), ...(r.regressed ? { regressed: true } : {}) });
       switch (action) {
         case 'repo.inject.list':
           return ok(res, { repoUuid: params.uuid, mode: RI.modeFor(repo), approval: !!repo.nexusSelf, injects: RI.list(params.uuid, { status: query.status || null }) });
@@ -7363,6 +7424,24 @@ async function handle(req, res, route, query, body) {
         case 'repo.inject.apply': {
           if (!owned()) return err(res, 404, `inject not found in this repo: ${params.id}`);
           const r = RI.apply(params.id, { layer, force: !!body.force, approvedBy: body.approvedBy || 'idearium' });
+          // 0.60.202 — James, after three refusals of SP5's title.js: "need a retry or automatically ask for the fix if possible". The
+          // gate refused an agent's proposal because tests that pass on the current file fail on it; the agent never saw which, so
+          // each attempt rewrote the line again. The proposal goes back to its agent the way his Reject does (_learnFromRejection:
+          // told, the lesson kept, the phase built again within repos.reject_retries), with the failing tests, expected and actual,
+          // as the reason. Said in the answer; repos.retry_on_refusal:false leaves it to him; the rejected proposal stays in history.
+          if (!r.ok && r.regressed && body.sendBack !== false && _cfg('repos.retry_on_refusal', true) !== false) {
+            const inj = RI.get ? RI.get(params.id) : null;
+            if (inj && inj.source && inj.source.kind === 'agent' && inj.status === 'proposed') {
+              const why = `Apply was refused: ${String((r.errors || [])[0] || '').split('\n')[0]}\nThe failing test(s), with what they expect and what your version gave:\n${(r.evidence && r.evidence.summary) || ''}\nKeep the behaviour these tests check exactly (their messages and values); change only what the phase asks.`;
+              const rj = RI.reject(params.id, { reason: why });
+              if (rj.ok) {
+                _learnFromRejection(repo, rj.inject || inj, why, { tell: true, retry: true }).catch(() => {});
+                os.emit('idearium.repo.inject.sent-back', { repoUuid: params.uuid, inject: params.id, path: inj.path, agent: inj.hatName || null });
+                r.errors = [`${(r.errors || [])[0] || 'refused'}`.replace(/ Reject it, or apply with force if you accept the break\./, ''), `Sent back to ${inj.hatName || 'its agent'} with the failing test(s): the proposal is rejected and the phase is being built again (repos.retry_on_refusal).`];
+                r.sentBack = true;
+              }
+            }
+          }
           if (r.ok) os.emit('idearium.repo.inject.applied', { repoUuid: params.uuid, inject: params.id, path: r.inject.path });
           if (r.ok) { let ce = null; try { ce = RI.changeEntry(r.inject); } catch (_) {} _emitLedger('idearium.change.approved', { repoUuid: params.uuid, inject: params.id, path: r.inject.path, entry: ce, causedBy: ce && ce.run }); }   // 0.60.190 APV4
           if (r.ok) _deviationAfter(params.uuid, 'files');
@@ -8840,6 +8919,34 @@ async function handle(req, res, route, query, body) {
       if (!w.ok) return err(res, w.status || 500, w.error, { code: w.code || 'WRITE_FAILED' });
       getIdeaOS().emit('idearium.repo.roadmap.updated', { repoUuid: params.uuid, map: mapPath, phase: add.id, added: true, via: w.via });
       return ok(res, { repoUuid: params.uuid, map: mapPath, id: add.id, via: w.via, applyId: w.applyId || null });
+    }
+    // 0.60.199 SD17 — James: "so i can import a project and have it continue? Like the one uploaded". A project's own roadmap
+    // (phases.json / PHASEMAP.md / ROADMAP.md) read into a Nexus phasemap beside it (idearium/repo/roadmap-import.js), written through
+    // the same writer as an added phase. An imported map is never replaced without replace:true (§0.3).
+    case 'repo.roadmaps': case 'repo.roadmaps.import': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      const PH = await import('../repo/phases.js');
+      const RIm = await import('../repo/roadmap-import.js');
+      const { maps, scope, snapshot } = PH.mapsFor({ repo, repoDir: dir });
+      const readOf = (p) => { if (!p) return null; const r = getRepoLayer().readTextFile(params.uuid, p); return r && !r.error && typeof r.content === 'string' ? r.content : null; };
+      // 0.60.200 — every candidate parsed and counted: one naming no phase is left out (said); the primary is taken when none is named
+      const ranked = RIm.rankRoadmaps(RIm.findRoadmaps((repo.files || []).map(f => f.path)), readOf);
+      const found = ranked.roadmaps.map(r => ({ ...r, imported: maps.some(m => m.path === r.target) }));
+      if (action === 'repo.roadmaps') return ok(res, { repoUuid: params.uuid, roadmaps: found, ignored: ranked.ignored });
+      if (scope.source === 'nexus') return err(res, 400, 'Nexus\'s own phases are already phasemaps; the import is for a project\'s roadmap');
+      const pick = body.dir != null ? found.find(r => r.dir === String(body.dir)) : (found.find(r => r.primary) || null);
+      if (!pick) return err(res, found.length ? 400 : 404, found.length ? `this repo has ${found.length} roadmaps — name one (dir): ${found.map(r => r.dir || '.').join(', ')}` : 'no roadmap in this repo (phases.json, roadmap.json, PHASEMAP.md or ROADMAP.md)', { code: found.length ? 'WHICH_ROADMAP' : 'NO_ROADMAP' });
+      if (pick.imported && body.replace !== true) return err(res, 409, `${pick.target} already exists — imported before; replace:true imports it again over it (the old one stays in the repo's versions)`, { code: 'EXISTS', map: pick.target });
+      let im;
+      try { im = RIm.importRoadmap({ json: readOf(pick.json), md: readOf(pick.md), name: pick.target.split('/').pop().replace(/\.spec$/, ''), source: { json: pick.json, md: pick.md } }); }
+      catch (e) { if (e instanceof RIm.RoadmapImportError) return err(res, 400, e.message, { code: e.code }); throw e; }
+      const w = await _phaseWrite(repo, scope, pick.target, im.text, snapshot, `import roadmap ${[pick.json, pick.md].filter(Boolean).join(' + ')}`);
+      if (!w.ok) return err(res, w.status || 500, w.error, { code: w.code || 'WRITE_FAILED' });
+      getIdeaOS().emit('idearium.repo.roadmap.updated', { repoUuid: params.uuid, map: pick.target, imported: im.phases.length, from: [pick.json, pick.md].filter(Boolean), via: w.via });
+      return ok(res, { repoUuid: params.uuid, map: pick.target, from: [pick.json, pick.md].filter(Boolean), phases: im.phases.length,
+        done: im.phases.filter(p => p.status === 'done').length, next: im.next.slice(0, 5), said: im.said, via: w.via });
     }
     // §0.39.281 EC8 — the economy, from guardian (the one owner)
     case 'economy.get': case 'economy.set': case 'economy.view': {

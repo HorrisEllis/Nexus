@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — ChatGPT v10.0
 // @namespace    nexus.guardian.chatgpt
-// @version      10.12.4
+// @version      10.12.5
 // @description  Guardian v10 — ChatGPT: full feature parity with Claude v10. IndexedDB
 //               kernel, SHA-256 dedup, intelligence injection, SEAM, NEXUS module,
 //               memory/RAID/self-heal hooks, structured output detection, tool intercept.
@@ -27,7 +27,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'chatgpt';
-const VERSION    = '10.12.4';
+const VERSION    = '10.12.5';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
@@ -195,7 +195,9 @@ function estimateTokens(s) { return Math.max(1, Math.round((s||'').length / 4));
 function chatId() {
   // §0.39.254 — ChatGPT's chat paths are now /c/WEB:<uuid>; the old
   // [a-zA-Z0-9_-]+ stopped at the colon, so every chat read as "WEB".
-  const m = location.pathname.match(/\/c\/([^/?#]+)/);
+  // 0.60.194 — ChatGPT now opens chats at /uc/<id> as well as /c/<id>: read as 'home', every chat at /uc/ was dropped by the
+  // chat stream (its ledger), the transcript reader and the reply recovery — "all of a sudden" (James, 2026-10-21)
+  const m = location.pathname.match(/\/u?c\/([^/?#]+)/);
   return m ? decodeURIComponent(m[1]) : 'home';
 }
 function getAccount() {
@@ -1423,7 +1425,7 @@ setInterval(() => {
     // 0.39.259 — a new chat getting its URL (home → temporary id → real id) is the SAME conversation
     // the running job was typed into; stopping the watch there left every first job of a new chat
     // to the transcript path alone. Only leaving a real chat for another one ends the watch.
-    const _forming = _prev === '/' || /\/c\/WEB(:|%3A)/i.test(_prev);
+    const _forming = _prev === '/' || /\/u?c\/WEB(:|%3A)/i.test(_prev);
     if (currentJobId && !_forming) stopWatch();
     _log('sys', `Nav → ${chatId()}`);
     setTimeout(() => sendDOMMap(), 1000);

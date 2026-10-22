@@ -372,3 +372,45 @@ spec:
   # interaction contract with handshake verification." Mapped in docs/2026-10-18-compartment-environment-phasemap.spec: CE3
   # builds DB3's cross() and DB5's handshake for one capability (a compartment's shell), end to end; COS gets its own route
   # (CE1a, DB11's sovereignty applied to COS). DB3/DB5 stay open for every other system.
+
+  # ── ADDENDUM 2026-10-21 (f) — a fork of genesis: sealed in a sandbox, the registry the drawbridge, three tunnels ───────
+  # Context: he asked "how does genisis work? is it valuable?"; the coder answered from the code (genesis is the template every
+  # new system spec starts from and the shape `system shape` checks; 1 of 12 systems matches it). Then, James, 2026-10-21:
+  # "can you add to a fork of genesis spec, its contained in a isolated sandbox using the component registry as a drawbridge, and
+  # tunnel into the compartment, the bridge, and interaction contract."
+  addendum_f:
+    decided:
+      - "His: a fork of genesis (genesis itself unchanged) for a system contained in an isolated sandbox, the component registry
+        its drawbridge, and tunnels into three places: the compartment, the bridge, and the interaction contract."
+      - "Decided by his axioms (§8.6 reuse, §0.3, and the working agreement's 'divergent copies of a spec are two contracts'): the
+        fork is a delta file, fork_of genesis 1.5.0, holding only what it adds; idearium/spec-engine/templates.js readSeed gives
+        a fork its base first, so a spec started from it carries both. A test fails when genesis moves past the named version."
+    reading_to_confirm: >-
+      "the bridge" is read as the system-to-system bridge: genesis's lib/handoff.js and the Bridge's request lifecycle
+      (handshake, created → accepted → complete | rejected | expired). The other reading, lib/cos-bridge.js (the bridge into
+      COS), is the far end of the compartment tunnel, so it is covered either way.
+    stands_on:
+      - "DB13/DB14 tunnel(name) and heartbeat(name), lib/system-registry.js: the tunnel's outside end."
+      - "genesis 1.5.0 REGISTRY_IS_THE_DRAWBRIDGE, SOVEREIGN_FOLDER; lib/drawbridge-registry.js (declared vs source; 'extra' is a way past the drawbridge)."
+      - "lib/cos-bridge.js (the one entry into COS); cos/compartment/qemu-runtime.js ephemeral 'windows-sandbox'."
+      - "genesis's lib/handoff.js, contracts/handshake.js, interaction-contract.json + GET /contract, lib/commands.js."
+  phases_added_f:
+    DB19_genesis_sandboxed_fork:
+      status: "PARKED — built 2026-10-21 as a delta (fork_of genesis 1.5.0), test-genesis-sandboxed GSB-01..04 passing; he then said \"i asked for a fork\": a full copy or this delta is his to confirm, and he turned to Idearium building any project"
+      depends_on: [DB13_the_tunnel]
+      files: [idearium/spec-engine/templates/genesis-sandboxed.spec, idearium/spec-engine/templates.js]
+      does: >-
+        The fork: six axioms (SEALED_SANDBOX, DRAWBRIDGE_IS_THE_ONLY_CROSSING, THREE_TUNNELS, TUNNEL_IS_DECLARED,
+        HANDSHAKE_AT_THE_GATE, SANDBOX_IS_DISPOSABLE), domains sandbox / drawbridge / tunnel, three spine bindings, and a
+        six-file catalog (sandbox.json, lib/drawbridge.js, lib/tunnel.js, their two component nodes, tests/sandbox.test.js).
+        Registered as template 'genesis-sandboxed'; seeded as genesis + fork.
+      proof: "manifest check clean (6 files, 5 layers); GSB-01..04"
+    DB20_sealed_archetype:
+      status: OPEN
+      depends_on: [DB19_genesis_sandboxed_fork]
+      files: [cos/archetype/nexus-system.js, cos/archetype/genesis-catalog.js]
+      does: >-
+        The six files as a sealed COS archetype (nexus-system-sealed), so a system scaffolded from the fork gets them, not only
+        the spec: lib/drawbridge.js over the system's own registry-components.js and contracts/handshake.js, lib/tunnel.js with
+        the three tunnels, sandbox.json read by COS at create. The catalog regenerated from it, as genesis's is.
+      proof: "a system scaffolded from the fork refuses an undeclared crossing with a receipt and crosses each tunnel after the handshake (tests/sandbox.test.js in the skeleton passes)"

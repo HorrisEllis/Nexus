@@ -181,7 +181,11 @@ async function wsAct(id, action) {
     if (action === 'promote') await api(`/api/repos/${repo.uuid}/code/promote`, { method: 'POST', body: JSON.stringify({ injects: [id] }) }, 60000);
     else await api(`/api/repos/${repo.uuid}/injects/${encodeURIComponent(id)}/${action}`, { method: 'POST', body: '{}' }, 60000);
     toast(`${action}: done`, 'ok');
-  } catch (e) { toast(`${action} failed: ${e.message}`, 'err'); }
+  } catch (e) {
+    // 0.60.202 — refused because tests that pass now would fail: the proposal went back to its agent with them (repos.retry_on_refusal)
+    if (e.detail && e.detail.sentBack) toast(`not applied — it breaks a test that passes now; sent back to the agent with that test, and it is building again`, 'warn');
+    else toast(`${action} failed: ${e.message}`, 'err');
+  }
   wsLoad(_wsHosts()[0]);
   if (typeof csAfterChange === 'function') csAfterChange();   // §CT3 — the Code tab's tree, diffs and file follow
 }

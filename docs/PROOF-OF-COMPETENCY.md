@@ -907,6 +907,37 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `tests/modules/test-stream-fallback.test.js` SF-01..04;
   - `git diff 0e922f29 -- guardian/lib/response-sink.js` is empty: the duplicate is fully removed.
 
+### 2026-10-21 — 0.60.198: "what does it need an atlas for?" — a question that removed a false requirement
+- **His words:** "what does it need an atlas for?" · "shouldn't that be the component registry. architecture tab" · "yes, the registry
+  should be the spine, event bus, interaction contract, and component registry."
+- **Context:** a build of his real test case (looking-glass-bundle-v0_4) was refused because the repo had no atlas.json. The coder's first
+  fix made the build index the repo itself. He asked the deeper question instead: why that file at all? Read from the code, nothing in a
+  build used atlas.json. What the planner reads is the component registry the Architect tab shows. He then defined what the registry is,
+  in four parts.
+- **What it shows:** systems design. He questioned a requirement instead of satisfying it, pointed to the structure that actually carries
+  the system (the registry the planner reads), and named its parts (components, spine, event bus, interaction contract). Each part
+  already existed in the code, so his definition matched the system as built.
+- **Checkable:**
+  - `CHANGELOG-0.60.198.md`;
+  - `tests/modules/test-pipeline-root-causes.test.js` RC-16 (all four parts hashed on a real indexed repo) and RC-18 (the build's gate
+    reads the registry, not atlas.json);
+  - `docs/2026-10-19-infrastructure-spine-phasemap.spec` IN3a, with his decision quoted.
+
+### 2026-10-21 — 0.60.199: a roadmap that imported itself
+- **His words:** "so i can import a project and have it continue? Like the one uploaded"
+- **Context:** MASTERMIND, his Electron app (v0.1.50), came with a roadmap he had kept before Nexus could read one:
+  - `phases.json`: 16 phases with state, percent and what blocks what;
+  - `PHASEMAP.md`: an exit criterion per phase ("P1 exit: a node of every registered type round-trips through the vault with
+    provenance intact"), a critical-path tree, and dated follow-ups that were "stopped deliberately, not forgotten".
+- **What it shows:** specification and dependency thinking in his own project, months earlier. The roadmap was precise enough that a
+  program could turn it into a dependency graph with no guessing:
+  - 16 phases, no cycles, no dangling references;
+  - the critical path agreed with the JSON;
+  - the one place the tree and the prose differ (P3-UI "unblocked by anything") was marked in his own words.
+- **Checkable:**
+  - `CHANGELOG-0.60.199.md` (the real run's numbers);
+  - `tests/modules/test-roadmap-import.test.js` RI-01 (built on MASTERMIND's shape).
+
 ### 2026-10-21 — ERAVOS 3.48: he caught the coder reaching for the tool he had already replaced
 - **His words:** "not playright. isn't clearglass in this project" — and the ask it interrupted: "like how there is 4 wub tools, but
   no primay system. like i want each tool to have its components as tools, then they all connect to the suite, but can be mixed
@@ -919,7 +950,7 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   Playwright. The suite request is systems design in his own words: parts stay tools, the suite is the system they connect to,
   and mixing is allowed. The coder built it so membership is read from the wires, never stored, which is his "everything is a node,
   every connection is an edge".
-- **Checkable (HorrisEllis/Eravos-Canvas, branch claude/sharp-hypatia-9q2vyc, commit 1f584d0):**
+- **Checkable (HorrisEllis/Eravos-Canvas, branch claude/sharp-hypatia-9q2vyc, commit 1f584d0, merged to main in PR #23):**
   - `node tests/no-playwright.mjs`;
   - `node tests/run.mjs P48` (9 tests: keyboards that grow to 88 keys; suites built whole, part by part, scenes, mixed in);
   - `node tests/host.test.mjs` (15, including the suite commands an agent drives);

@@ -156,7 +156,17 @@ function setConnUI(state, base) {
 
 async function api(path, opts={}, timeoutMs=6000) {
   if (!API_BASE) throw new Error('not connected to nexus');
-  const r = await fetchTimeout(API_BASE + path, { headers:{'Content-Type':'application/json'}, ...opts }, timeoutMs);
+  let r;
+  try { r = await fetchTimeout(API_BASE + path, { headers:{'Content-Type':'application/json'}, ...opts }, timeoutMs); }
+  catch (e) {
+    // 0.60.201 — James's screenshot: "could not start: signal is aborted without reason". The browser's words for a wait that ran out
+    // say nothing; the wait, the call and the likely cause are said instead (the error keeps name AbortError for callers that check it).
+    if (e && (e.name === 'AbortError' || /abort/i.test(e.message || ''))) {
+      const x = new Error(`Idearium did not answer ${(opts.method || 'GET').toUpperCase()} ${path.split('?')[0]} within ${Math.round(timeoutMs / 1000)}s — it may be busy (a sync, an import, or low memory); try again in a moment`);
+      x.name = 'AbortError'; x.timedOut = true; throw x;
+    }
+    throw e;
+  }
   let data = {};
   try { data = await r.json(); } catch(_) {}
   if (!r.ok || data.ok === false) {
@@ -1425,6 +1435,7 @@ function closeNewSpecModal() { document.getElementById('new-spec-modal').classLi
 // ════════════════════════════════════════════════════
 let UP_CONTAINER_UUID = null;
 let UP_STAGED_FILE = null;
+let UP_COMPARTMENT_ID = null;   // 0.60.196 — the repo the import makes carries it; how a finished import is found after a timeout
 
 async function openUploadProjectModal() {
   if (!CONNECTED) { toast('not connected to nexus', 'err'); return; }
@@ -1497,8 +1508,11 @@ async function submitUploadProjectStart() {
   if (!goal) return toast('a goal is required — it becomes the end-state', 'err');
 
   try {
-    const res = await api('/api/project-import/start', { method: 'POST', body: JSON.stringify({ name, goal }) });
+    // 0.60.201 — the compartment is created here (COS: a directory, a manifest, the state store); 6 s was not enough while Idearium
+    // synced Nexus at boot (118 s on his machine) under memory pressure
+    const res = await api('/api/project-import/start', { method: 'POST', body: JSON.stringify({ name, goal }) }, 60000);
     UP_CONTAINER_UUID = res.containerUuid;
+    UP_COMPARTMENT_ID = res.compartmentId || null;
     document.getElementById('up-container-note').textContent =
       `compartment ${res.compartmentId ? res.compartmentId.slice(0, 8) : '—'} open · intent: ${res.intent?.domain || '?'}.${res.intent?.verb || '?'}`;
     document.getElementById('up-step-prompt').style.display = 'none';
@@ -1537,7 +1551,7 @@ async function submitUploadProjectImport() {
   }
 
   document.getElementById('up-drop-text').textContent = 'unzipping into the compartment…';
-  let res;
+  let res, failure = null;
   try {
     // §RESEQUENCED 2026-09-20 — deferChunking:true. finalize now returns as
     // soon as the files are really on disk; chunking happens after you are
@@ -1545,11 +1559,27 @@ async function submitUploadProjectImport() {
     // the server default — this flag is what opts in.
     res = await api(`/api/project-import/${UP_CONTAINER_UUID}/finalize`, {
       method: 'POST', body: JSON.stringify({ filename: UP_STAGED_FILE.name, contentBase64, deferChunking: true }),
-    }, 30000);
+    }, 120000);
   } catch (e) {
+    failure = e.message;
+    // 0.60.196 — James: "the import project ui needs to close when it's complete." The browser stopped waiting at 30s while the
+    // server went on and made the repo; the dialog reset to "ready" and the indexing below never ran. A wait that ran out is not a
+    // failure until the repo list says so: the repo carrying this compartment is the import, finished.
+    if (e.name === 'AbortError' || /abort/i.test(e.message || '')) {
+      document.getElementById('up-drop-text').textContent = 'still working on the server — looking for the repo…';
+      let landed = null;
+      for (let i = 0; i < 20 && !landed && UP_COMPARTMENT_ID; i++) {
+        await new Promise(r => setTimeout(r, 3000));
+        try { landed = ((await api('/api/repos')).repos || []).find(r => r.compartmentId === UP_COMPARTMENT_ID) || null; } catch (_) {}
+      }
+      if (landed) res = { repo: landed, fileCount: (landed.files || []).length, git: {}, late: true };
+    }
+  }
+  if (!res) {
+    const e = { message: failure && !/abort/i.test(failure) ? failure : 'the server did not answer and no repo from this upload appeared' };
     toast(`import did not reach the declared end-state: ${e.message}`, 'err');
     btn.disabled = false; if (zone) zone.classList.remove('drag');
-    document.getElementById('up-drop-text').textContent = `${UP_STAGED_FILE.name} — ready`;
+    document.getElementById('up-drop-text').textContent = `${UP_STAGED_FILE.name} — not imported: ${e.message}`;
     return;
   }
 
@@ -1561,7 +1591,7 @@ async function submitUploadProjectImport() {
 
   closeUploadProjectModal();
   const repo = res.repo;
-  UP_CONTAINER_UUID = null; UP_STAGED_FILE = null;
+  UP_CONTAINER_UUID = null; UP_STAGED_FILE = null; UP_COMPARTMENT_ID = null;
   document.getElementById('up-file-input').value = '';
 
   // The new repo was created after this session's last API_REPOS load —
@@ -2955,6 +2985,9 @@ async function renderRepoVersionium(repo) {
         ${s.gitCommit ? badge('git ' + _short(s.gitCommit, 7), 'var(--text3)') : ''}
         ${s.verification ? badge('verify ' + s.verification, s.verification === 'passed' ? 'var(--mint)' : 'var(--coral)') : ''}
         ${s.files ? badge(s.files.count + ' files kept', 'var(--text3)') : ''}
+        ${s.registry ? badge(s.registry.parts
+          ? `registry ${_short(s.registry.sha256, 8)}: ${s.registry.parts.components.count} components · spine ${s.registry.parts.spine.wires} · bus ${s.registry.parts.eventBus.events} events · contract ${s.registry.parts.contract.routes} routes, ${s.registry.parts.contract.cli} cli`
+          : `registry ${s.registry.components} · ${s.registry.wires} wires · ${_short(s.registry.sha256, 8)}`, 'var(--text3)') : ''}
         ${s.tests ? badge('tests ' + s.tests, s.tests === 'passed' ? 'var(--mint)' : s.tests === 'failed' ? 'var(--coral)' : 'var(--text3)') : ''}
       </div></div>`;
   };
@@ -5619,11 +5652,25 @@ async function diffWithPrevious(uuid) {
 function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function toast(msg, type='ok') {
   const area = document.getElementById('toast-area');
+  // 0.60.202 — James, with five copies of one refusal over his screen: "that error needs to be fixed." A message already showing is
+  // counted (×N) instead of stacked again; a long one shows its first line, the whole of it on hover (title).
+  const full = String(msg == null ? '' : msg);
+  const first = full.split('\n')[0];
+  const shown = first.length > 260 ? `${first.slice(0, 259)}…` : (full.includes('\n') ? `${first} …` : first);
+  const same = [...area.children].find(d => d.dataset && d.dataset.full === full && d.classList.contains(type));
+  if (same) {
+    const n = Number(same.dataset.n || 1) + 1; same.dataset.n = String(n);
+    same.textContent = `${shown}  ×${n}`;
+    clearTimeout(same._t); same._t = setTimeout(() => same.remove(), 2800);
+    return;
+  }
   const div = document.createElement('div');
   div.className = `toast ${type}`;
-  div.textContent = msg;
+  div.dataset.full = full; div.dataset.n = '1';
+  div.textContent = shown;
+  if (shown !== full) div.title = full;
   area.appendChild(div);
-  setTimeout(()=>div.remove(), 2800);
+  div._t = setTimeout(()=>div.remove(), 2800);
 }
 
 // §BUILT 2026-09-20 — James: "the ui needs to use a toast to show progress

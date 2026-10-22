@@ -675,6 +675,13 @@ export const SPEC = [
       console.log(h.c.dim('\n  build one: idearium repo phase <repo> <phase> build'));
     } },
   // §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing."
+  // 0.60.199 SD17 — James: "so i can import a project and have it continue?" A project's own roadmap, imported as a Nexus phasemap
+  { key: 'repo.roadmaps', repo: true, usage: 'repo roadmaps <repo>', about: 'the roadmaps a project brought with it (phases.json, roadmap.json, PHASEMAP.md, ROADMAP.md), and whether each is imported as a phasemap yet',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/roadmaps` }),
+    print: (d, a, h) => { h.header(`${a.repo.name} — its own roadmaps`); if (!(d.roadmaps || []).length) console.log(h.c.dim('  none (phases.json, roadmap.json, PHASEMAP.md or ROADMAP.md)')); for (const r of d.roadmaps || []) console.log(`  ${r.imported ? h.c.mint('✓ imported') : h.c.amber('· not yet ')}  ${[r.json, r.md].filter(Boolean).join(' + ')}  ${h.c.dim(`→ ${r.target}`)}`); console.log(''); } },
+  { key: 'repo.roadmap-import', repo: true, usage: 'repo roadmap-import <repo> [<dir>] [--replace]', about: 'import a project\'s own roadmap as a Nexus phasemap beside it: its ids, states, percent, what blocks what (each edge says which file it came from), exit criteria as proof — so the project continues from where it is',
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/roadmaps/import`, body: { ...(a.args[0] != null ? { dir: a.args[0] === '.' ? '' : a.args[0] } : {}), ...(a.flags.replace ? { replace: true } : {}) } }),
+    print: (d, a, h) => { console.log(`${h.c.mint('✓')} ${d.map}: ${d.phases} phases (${d.done} done) from ${(d.from || []).join(' + ')}`); for (const n of d.next || []) console.log(`  next  ${n.id}${n.waiting ? h.c.dim(`  · ${n.waiting} wait on it`) : ''}`); for (const w of d.said || []) console.log(h.c.dim(`  said: ${w}`)); console.log(''); } },
   { key: 'repo.phase-graph', repo: true, usage: 'repo phase-graph <repo> <phase> [--map name]', about: 'a phase\'s dependency graph, the one a build is refused without: the files it changes, what they use, who uses them (what a change can break), the systems, any crossing between systems, what it waits on, its specs',
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/graph?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(String(a.flags.map))}` : ''}` }),

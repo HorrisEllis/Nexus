@@ -66,7 +66,7 @@ function ensureWorkflows(engine, { accountKey, provider, partition, cfg = {} }) 
 }
 
 
-const _chatId = (url) => { const m = String(url).match(/\/c\/([\w-]{8,})/); return m ? m[1] : null; };
+const _chatId = (url) => { const m = String(url).match(/\/u?c\/([\w-]{8,})/); return m ? m[1] : null; };   // 0.60.194 — ChatGPT's /uc/<id> too
 /** writeChat({ ledger, root, provider, url, messages }) — files each turn into the chat ledger, skipping any turn the ledger already holds word for word (novel only). */
 function writeChat({ ledger, root = null, provider, url, messages }) {
   const chatId = _chatId(url); if (!chatId) return { error: `not a chat address: ${url}` };
@@ -103,7 +103,7 @@ function makePorts({ engine, accountKey, provider = 'chatgpt', partition, cfg = 
       const r = await run(ids.listId, { rounds: String((cfg.listScrollRounds || 20) * (more ? 3 : 1)) });
       if (!r || r.ok === false) return { ok: false, kind: 'error', error: (r && r.error) || 'the list workflow did not run' };
       const page = _obj(r.vars.page) || {}; const chats = _obj(r.vars.chats); const scroll = _obj(r.vars.scroll) || {};
-      const list = (Array.isArray(chats) ? chats : []).filter(c => c && c.url && /\/c\//.test(c.url)).map(c => ({ url: baseOf(c.url), title: String(c.title || '').trim() || null }));
+      const list = (Array.isArray(chats) ? chats : []).filter(c => c && c.url && /\/u?c\//.test(c.url)).map(c => ({ url: baseOf(c.url), title: String(c.title || '').trim() || null }));
       const wall = classifyPage(page, list.length); if (wall) return { ok: false, kind: wall };
       if (!list.length) return { ok: false, kind: 'error', error: 'no chats found in the sidebar (signed out, or the page changed: check the selector in Settings)' };
       const rounds = Number(scroll.rounds), cap = (cfg.listScrollRounds || 20) * (more ? 3 : 1);

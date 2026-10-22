@@ -440,3 +440,68 @@ James, 2026-10-21: "It built 5 phases in a row. I think I see what you mean but 
 - **Open, his to judge (USER_AUTONOMY).** Whether a build may start from text a listener hears in a chat. Today it may, by his
   0.59.4 design. The record now says when it did; it does not change the rule.
 - This map's phases are now each specced (emerge/compiler/phase-specs.js): 58 files beside their owners, written for the first time.
+
+## ADDENDUM 2026-10-21 (0.60.194) — SP5 "title.js": why it kept failing, all of a sudden
+
+James, 2026-10-21, with three screenshots of SP5 (LOOKING-GLASS-BUNDLE-V0_4) and his boot log: "its having so much issue with the title.js.
+nothing has fixed it. sp_5." · "why all of a sudden? with the clearglass?"
+
+Four causes, traced from his log and screenshots:
+1. **ChatGPT moved its chats to /uc/<id>** (his log: chatgpt.com/uc/6ad8ebba-…). Every reader keyed on /c/:
+   - the userscript's chatId() read 'home', so the chat stream (the download manager's chat ledger) dropped the chat;
+   - the transcript reader's resumable URL and Clear Glass's chat ports did not match it either.
+
+   ChatGPT's reply was then found nowhere: "no-reply-element", then "needs-you". This is the "all of a sudden".
+   **Fixed:** /c/ or /uc/ in all three places; userscript 10.12.5 (RC-13).
+2. **A junk test from before RC5 blocked the Apply.** `looking-glass-bundle-v0_4/Gemini said tests/sp5-title.test.js` stayed in the tree.
+   RC4b's repairTree ran only inside the test-first branch, and a build that resumes its saved plan never enters it.
+   **Fixed:** every phase build repairs the tree after its snapshot. The names are archived, never deleted (RC-12).
+3. **The proposal is genuinely wrong, and the gate was right to refuse it.**
+   - ChatGPT's title.js lowercases, splits on whitespace and capitalises, but never trims.
+   - ' looking glass ' becomes ' Looking Glass ', and both tests expect 'Looking Glass'.
+   - The regression gate refused it ("2 linked tests that pass on the current file fail on this proposal"). That is the system working.
+4. **Claude's tab was signed out by claude.ai itself** (logout?involuntary=1). No account-switch line appears in his log, and that module
+   logs every switch and sign-out, so Clear Glass did not clear it. The fix is signing in once in the Claude tab.
+
+Also in his log, said and not changed: free memory at 16–18%, so the Ollama rungs were left off ("won't fit memory") and the ladder used
+browser agents only.
+
+## ADDENDUM 2026-10-21 (0.60.195) — Looking Glass is the pipeline's real test case; two more causes in SP5
+
+James, 2026-10-21: "okay bvut did it not capture response from chatgtp." · "looking glaass is a test spec. rral spec test caser"
+- **His framing, recorded as his.** looking-glass-bundle-v0_4 is the real test case for the pipeline. When it fails, the pipeline is what is
+  being tested; the spec is not at fault.
+- **No, ChatGPT's reply was not captured.** The Code tab's job bar showed `chatgpt job b833e855 … 0ch · no-reply-element`, and Guardian ended
+  the job at needs-you. The /uc/ fix (0.60.194) lets the chat stream and the transcript record ChatGPT chats again. A needs-you job stays
+  a transcript candidate (chat-transcripts _candidates takes any job not complete), so its transcript now completes it.
+- **The proposal "by chatgpt" was Gemini's.** It is stamped 9:43:34, before the ChatGPT job existed (16:43:34.976 UTC). The work surface
+  took a run's provider from its last row, and the 'escalating' row names the next rung. Fixed: each path is credited to the agent whose
+  reply brought it (RC-15).
+- **Why nothing fixed SP5.** His log: "[shadow] phase.build: 1 expected thing(s) absent — lib/title.js". Gemini's reply landed
+  looking-glass-bundle-v0_4/lib/title.js; an imported bundle keeps its files under its own folder, and the map names them from there. The
+  shadow's exact match called the delivered file absent, so every attempt that worked climbed the ladder and was discarded.
+  Fixed: `_underMapRoot` counts the delivered path as the expected one in two cases:
+  - it is under the map's root folder;
+  - it is under exactly one top-level folder, and the expected path has a folder of its own.
+
+  A bare file name never matches (RC-14).
+
+## ADDENDUM 2026-10-21 (0.60.196) — the upload that outran its wait; a build no longer refuses a repo for having no index
+
+James, 2026-10-21, with screenshots of the upload dialog left on "looking-glass-bundle-v0_4.zip — ready" and SP5's build refused:
+"now its not working, i clicked the phases to build it and got: ... the import project ui needs to close when it's complete. "10:57
+AMrefused no snapshot: repo has not been through the import pipeline (no atlas.json) — run POST /api/repos/:uuid/chunk first" what does
+it need an atlas for?"
+- **What the atlas is for.** The Versionium snapshot taken before every build (never write without one) records which atlas, chunk index
+  and graph the build reads its context from (idearium/repo/snapshot.js buildSnapshotRecord, mustRecord). A repo with files and no index
+  has nothing to pin, so the snapshot refused, and the build with it.
+- **Why the repo had no index.** "— ready" without a size is the text the dialog resets to when finalize throws. Its wait was 30 s; the
+  server finished the import after the browser stopped waiting (the repo is in his list, 55 files). The indexing the dialog starts after a
+  finished import (POST /api/repos/:uuid/chunk) never ran.
+- **Fixed, both ends.**
+  - The build: on NOT_INDEXED it runs the same import pipeline POST /chunk runs, in the repo's own directory, writes an `indexed` row on
+    the run (§1.2, said, with the pipeline's state), and takes the snapshot again. Any other snapshot failure still refuses.
+  - The dialog: waits 120 s. If that runs out, it looks for the repo carrying the compartment the upload opened (every 3 s, one minute);
+    found, it closes, opens the repo and indexes it. A real failure shows its reason in the drop zone, never "ready".
+- Proof: test-pipeline-root-causes RC-16 (an unindexed repo is refused, the pipeline runs, the snapshot record builds) and RC-17 (a source
+  check of the dialog; not driven in Clear Glass, said).

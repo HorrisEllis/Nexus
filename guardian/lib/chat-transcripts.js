@@ -57,7 +57,7 @@ const _norm = (t) => String(t || '').replace(/\s+/g, ' ').trim();
  * verified here, so they keep today's behaviour: the job runs where the tab is).
  */
 const RESUMABLE = {
-  chatgpt: { host: /(^|\.)chatgpt\.com$|(^|\.)chat\.openai\.com$/, path: /^\/c\/[A-Za-z0-9-]+$/ },
+  chatgpt: { host: /(^|\.)chatgpt\.com$|(^|\.)chat\.openai\.com$/, path: /^\/u?c\/[A-Za-z0-9-]+$/ },   // 0.60.194 — /uc/<id> too
   claude:  { host: /(^|\.)claude\.ai$/,                             path: /^\/chat\/[A-Za-z0-9-]+$/ },
 };
 // §0.39.266 — where a provider starts a NEW conversation. James's log: the nexus agent and the nexus/core agent

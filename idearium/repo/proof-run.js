@@ -30,7 +30,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { spawn } from 'child_process';
+import { spawn, execSync } from 'child_process';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
@@ -39,6 +39,27 @@ export const MODULE_ID = 'nexus-idearium-repo-proof-run-v1-0000-2026-1002-jamesb
 export const KINDS = Object.freeze(['file', 'command', 'tests', 'page']);
 export const REPORT_FILE = 'proof/PROOF-REPORT.md';
 export const RUNS_DIR = '.nexus/proof-runs';
+const RUNNER_FILES = ['tests/run-all.js', 'test/run-all.js', 'tests/run.js', 'test/run.js', 'tests/index.js', 'test/index.js'];   // 0.60.200 — a project's own runner, when package.json has no test script
+// 0.60.201 — James: "okay, remember this is for any project. not just mmine". How a project's tests run, read from what it holds, in
+// order: the first row whose files are there is the project's way. Each names the tool it needs; a tool that is not installed is said.
+const TEST_WAYS = [
+  { why: 'package.json test script', has: (d, pkg) => !!(pkg && pkg.scripts && pkg.scripts.test && !/no test specified/.test(pkg.scripts.test)), cmd: () => 'npm test --silent', tool: 'npm' },
+  { why: 'its own test runner', has: (d) => RUNNER_FILES.some(f => fs.existsSync(path.join(d, f))), cmd: (d) => `node ${RUNNER_FILES.find(f => fs.existsSync(path.join(d, f)))}`, tool: 'node' },
+  { why: 'Gradle wrapper', has: (d) => fs.existsSync(path.join(d, 'gradlew')) || fs.existsSync(path.join(d, 'gradlew.bat')), cmd: () => (process.platform === 'win32' ? 'gradlew.bat test' : './gradlew test'), tool: null },
+  { why: 'Gradle build', has: (d) => ['build.gradle', 'build.gradle.kts'].some(f => fs.existsSync(path.join(d, f))), cmd: () => 'gradle test', tool: 'gradle' },
+  { why: 'Maven pom.xml', has: (d) => fs.existsSync(path.join(d, 'pom.xml')), cmd: () => 'mvn -q test', tool: 'mvn' },
+  { why: 'Python (pytest)', has: (d) => ['pytest.ini', 'pyproject.toml', 'setup.cfg', 'tox.ini', 'conftest.py'].some(f => fs.existsSync(path.join(d, f))) || ['tests', 'test'].some(t => { try { return fs.readdirSync(path.join(d, t)).some(f => /^test_.*\.py$|_test\.py$/.test(f)); } catch (_) { return false; } }), cmd: () => 'python3 -m pytest -q', tool: 'python3' },
+  { why: 'Cargo.toml', has: (d) => fs.existsSync(path.join(d, 'Cargo.toml')), cmd: () => 'cargo test --quiet', tool: 'cargo' },
+  { why: 'go.mod', has: (d) => fs.existsSync(path.join(d, 'go.mod')), cmd: () => 'go test ./...', tool: 'go' },
+  { why: 'Makefile test target', has: (d) => { try { return /^test\s*:/m.test(fs.readFileSync(path.join(d, 'Makefile'), 'utf8')); } catch (_) { return false; } }, cmd: () => 'make test', tool: 'make' },
+];
+function _hasTool(t) { if (!t) return true; try { execSync(process.platform === 'win32' ? `where ${t}` : `command -v ${t}`, { stdio: 'ignore' }); return true; } catch (_) { return false; } }
+/** testWayOf(repoDir) → { cmd, why, tool, installed } | null — how this project's tests run, read from what it holds */
+export function testWayOf(repoDir) {
+  let pkg = null; try { pkg = JSON.parse(fs.readFileSync(path.join(repoDir, 'package.json'), 'utf8')); } catch (_) {}
+  const w = TEST_WAYS.find(x => { try { return x.has(repoDir, pkg); } catch (_) { return false; } });
+  return w ? { cmd: w.cmd(repoDir), why: w.why, tool: w.tool, installed: _hasTool(w.tool) } : null;
+}
 export const LIMITS = Object.freeze({ conditions: 60, says: 300, output: 4000, commandMs: 120000, startMs: 60000 });
 
 const CAUSE = {
@@ -147,11 +168,12 @@ async function _check(repoDir, c, app) {
   }
   if (k.kind === 'command' || k.kind === 'tests') {
     let cmd = k.run;
+    let way = null;
     if (k.kind === 'tests' && !cmd) {
-      let pkg = null; try { pkg = JSON.parse(fs.readFileSync(path.join(repoDir, 'package.json'), 'utf8')); } catch (_) {}
-      const script = pkg && pkg.scripts && pkg.scripts.test;
-      if (!script || /no test specified/.test(script)) return unmet('no_tests', 'package.json has no test script.');
-      cmd = 'npm test --silent';
+      way = testWayOf(repoDir);
+      if (!way) return unmet('no_tests', `no way to run this project's tests was found (a package.json test script, ${RUNNER_FILES[0]}, Gradle, Maven, pytest, Cargo, go.mod, or a Makefile test target).`);
+      if (!way.installed) return unmet('tool_missing', `this project's tests run with \`${way.cmd}\` (${way.why}), and ${way.tool} is not installed here.`);
+      cmd = way.cmd;
     }
     const r = await _sh(cmd, { cwd: repoDir, timeoutMs: Math.min(Number(k.timeoutMs) || LIMITS.commandMs, LIMITS.commandMs) });
     const shown = `\`${cmd}\` → ${r.timedOut ? 'timed out' : `exit ${r.code}`} in ${(r.ms / 1000).toFixed(1)}s`;
