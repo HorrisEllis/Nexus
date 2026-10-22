@@ -188,10 +188,10 @@ const SYSTEMS = {
   // autopilot's own real optional flag for each, so a dormant/not-yet-
   // started one doesn't trip a false alarm the same way clear-glass's
   // own optional:true already prevents above.
-  intelligence:{ port: 3753, dataDir: 'data/intelligence', healthPath: '/health', label: 'Intelligence' },
+  intelligence:{ port: 3753, dataDir: 'intelligence/data', healthPath: '/health', label: 'Intelligence' },
   'ollama-bridge':{ port: 3749, dataDir: 'ollama/data',    healthPath: '/health', label: 'Ollama Bridge', optional: true },
-  copilot:     { port: 3750, dataDir: 'data/copilot',      healthPath: '/health', label: 'Co-pilot', optional: true },
-  loom:        { port: 3752, dataDir: 'data/loom',         healthPath: '/health', label: 'Loom', optional: true },
+  copilot:     { port: 3750, dataDir: 'copilot/data',      healthPath: '/health', label: 'Co-pilot', optional: true },
+  loom:        { port: 3752, dataDir: 'loom/data',         healthPath: '/health', label: 'Loom', optional: true },
   // §HONEST LIMIT — intelligence-consumer (autopilot.js: { name:
   // 'intelligence-consumer', cmd: 'node', args: ['intelligence/
   // consumer.js'], optional: true, phase: 4 }) deliberately NOT added

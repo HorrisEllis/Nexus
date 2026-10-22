@@ -398,6 +398,44 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       assert.deepStrictEqual(errors, []); await page.close();
     });
 
+    await test('BST-22', '0.60.211 the start page\'s agents: an empty or failed list says so and is read again until the agents are there', async () => {
+      // James, 2026-10-22: "why remove the agents from new tab?" — nothing removed them; the page read the list once and kept a failed read
+      const page = await browser.newPage({ viewport: { width: 1280, height: 800 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'providers.list': [], 'toolbar.commands': [], 'bookmarks.list': [], 'plugins.list': [], 'options.get': {} } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#sh-newtab .nt-agents .sh-empty');
+      assert.match(await page.textContent('#sh-newtab .nt-agents'), /trying again/);
+      assert.ok(!/Guardian's provider host/.test(await page.textContent('#sh-newtab')), 'the message names what failed, not Guardian');
+      await page.evaluate(() => { window.ClearGlass.providers.list = async () => [{ id: 'claude', name: 'Claude', color: '#d97757', running: false }, { id: 'chatgpt', name: 'ChatGPT', running: true }]; });
+      await page.waitForSelector('#sh-newtab .nt-agent[data-id="chatgpt"]', { timeout: 8000 });
+      assert.strictEqual(await page.$$eval('#sh-newtab .nt-agent', e => e.length), 2, 'the agents appear without opening another tab');
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
+    await test('BST-23', '0.60.211 zoom controls on the toolbar: pinned from Customize, − / + step the core zoom, the level resets; the menu keeps its own row', async () => {
+      // James, 2026-10-22: "can you integrate that into clearglass, its a basic funcaiton of any browser."
+      const { TOOLBAR_COMMANDS } = require(CG('src/toolbar/commands.js'));
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.addInitScript(initScript({ answers: { 'toolbar.commands': TOOLBAR_COMMANDS.filter(c => !c.pluginId), 'options.get': { pinnedToolbarButtons: ['copilot-toggle', 'zoom-controls'] }, 'providers.list': [], 'bookmarks.list': [], 'plugins.list': [] } }));
+      await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+      await page.waitForSelector('#toolbar-pinned-tools #zoom-controls');
+      assert.strictEqual(await page.$$eval('#zoom-controls [data-tz] svg', e => e.length), 2, '− and + are drawn');
+      assert.strictEqual((await page.textContent('#tz-pct')).trim(), '100%');
+      await page.click('#zoom-controls [data-tz="in"]');
+      await page.waitForFunction(() => document.getElementById('tz-pct').textContent.trim() !== '100%');
+      const up = (await page.textContent('#tz-pct')).trim();
+      assert.ok(/^1[1-9]\d%$/.test(up), `zoomed in: ${up}`);
+      assert.strictEqual(await page.$eval('#btn-zoom', b => b.style.display), 'flex', 'the address bar shows the level too');
+      await page.click('#tz-pct');
+      await page.waitForFunction(() => document.getElementById('tz-pct').textContent.trim() === '100%');
+      await page.click('#bookmark-mgr-btn'); await page.waitForSelector('#bookmark-mgr-panel [data-am="New Tab"]');
+      assert.strictEqual(await page.$$eval('#bookmark-mgr-panel [data-tool-menu-id="zoom-controls"]', e => e.length), 0, 'not under Tools: the menu has its own Zoom row');
+      assert.strictEqual(await page.$$eval('#bookmark-mgr-panel .am-zoom', e => e.length), 1);
+      await page.evaluate(() => { document.getElementById('bookmark-mgr-panel').style.display = 'none'; window.CGShell.customize(); });
+      await page.waitForSelector('#te-drop-toolbar .te-row[data-tool-id="zoom-controls"] svg');
+      assert.deepStrictEqual(errors, []); await page.close();
+    });
+
     await test('BST-09b', '0.60.206 a closed Co-pilot takes no width: the page fills the window to its right edge', async () => {
       // James, 2026-10-22: "the ui for clearglass is cut off" — his page stopped ~340 px short of a 1920 px window
       const page = await browser.newPage({ viewport: { width: 1920, height: 1000 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));

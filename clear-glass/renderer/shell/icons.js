@@ -27,6 +27,7 @@
     menu:     P(['M4 7h16', 'M4 12h16', 'M4 17h16']),
     agents:   P(['<rect x="5" y="8" width="14" height="11" rx="3"/>', 'M12 4.5V8', '<circle cx="12" cy="3.6" r="1"/>', 'M9.5 13v1', 'M14.5 13v1', 'M2.5 12.5v3', 'M21.5 12.5v3']),
     plus:     P(['M12 5v14', 'M5 12h14']),
+    minus:    P(['M5 12h14']),   // 0.60.211 zoom out
     close:    P(['M6.5 6.5l11 11', 'M17.5 6.5l-11 11']),
     minimize: P(['M6 12h12']),
     maximize: P(['<rect x="6" y="6" width="12" height="12" rx="1.5"/>']),
@@ -63,6 +64,7 @@
     print:    P(['M7 9V4.5h10V9', '<rect x="4.5" y="9" width="15" height="7" rx="1.5"/>', 'M7 14h10v5.5H7z']),
     window:   P(['<rect x="4" y="5" width="16" height="14" rx="2"/>', 'M4 9h16']),
     layers:   P(['M12 4 3.5 8.5 12 13l8.5-4.5z', 'M3.5 12.5 12 17l8.5-4.5', 'M3.5 16.5 12 21l8.5-4.5']),
+    zoom:     P(['<circle cx="11" cy="11" r="6.5"/>', 'M20 20l-4.4-4.4', 'M8.5 11h5', 'M11 8.5v5']),   // 0.60.211 zoom controls
     briefcase: P(['<rect x="3.5" y="7.5" width="17" height="12" rx="2.2"/>', 'M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5', 'M3.5 12.5h17']),   // 0.60.210 Fiverr gigs
     check:    P(['M5 12.5l4.5 4.5L19 7.5']),   // BS18 (0.60.185) a checked menu row
     token:    P(['<circle cx="12" cy="12" r="7.5"/>', 'M9.5 9.5h5', 'M12 9.5v6']),

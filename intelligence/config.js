@@ -18,7 +18,7 @@ const path = require('path');
 
 module.exports = {
   PORT: parseInt(process.env.INTELLIGENCE_PORT || '3753', 10),
-  DATA_DIR: process.env.INTELLIGENCE_DATA_DIR || path.join(__dirname, '..', 'data', 'intelligence'),
+  DATA_DIR: process.env.INTELLIGENCE_DATA_DIR || require('../lib/data-home.js').dir('intelligence'),   // 0.60.212 DL3: intelligence/data
 
   // §BUILT 2026-09-19 — cortex->intelligence route consolidation (docs/
   // 2026-09-19-cortex-to-intelligence-and-versionium-consolidation-

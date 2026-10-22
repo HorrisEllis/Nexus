@@ -88,6 +88,9 @@ const TOOLBAR_COMMANDS = [
   // ⋯ menu's "Tools" section the moment it's unpinned — the actual gap
   // James is describing, closed at its structural cause instead of
   // papered over with a new label on the same invisible action.
+  // 0.60.211 — James: "can you integrate that into clearglass, its a basic funcaiton of any browser." Zoom is core (src/core/zoom.js, BS14);
+  // this puts its controls on the toolbar when pinned, as Firefox's Customize offers them. The ☰ menu keeps its own Zoom row.
+  { id: 'zoom-controls',   icon: '⌕', label: 'Zoom controls',          group: 'Page',    pinnable: true, defaultPinned: false, glyph: 'zoom', desc: 'Zoom out, the level (click it for 100%), zoom in — kept per site' },
   { id: 'btn-settings',    icon: '⚙', label: 'Settings', glyph: 'settings', desc: 'Clear Glass\'s settings',               group: 'Session', pinnable: true, defaultPinned: false },
   // §0.39.265 — James: "remove the old" — Diagnostics, Userscripts and Nexus
   // Options left the toolbar (each has a Settings section: Diagnostics, Agent

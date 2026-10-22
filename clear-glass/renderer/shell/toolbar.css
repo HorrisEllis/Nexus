@@ -91,3 +91,10 @@ body.cg-shell #te-actions-list.te-action-btns { display: flex; flex-direction: r
 .te-btn.primary:hover { filter: brightness(1.08); }
 
 @media (max-width: 620px) { .te-cols { grid-template-columns: 1fr; } .te-foot-hint { display: none; } }
+
+/* 0.60.211 — the toolbar's zoom controls (− 100% +), pinned from Customize toolbar */
+body.cg-shell .tb-zoom { display: inline-flex; align-items: center; height: 30px; border-radius: 8px; border: 1px solid var(--edge); background: color-mix(in srgb, var(--ink) 4%, transparent); overflow: hidden; }
+body.cg-shell .tb-zoom .nav-btn { width: 28px; height: 28px; border-radius: 0; }
+body.cg-shell .tb-zoom-pct { min-width: 48px; height: 28px; border: 0; border-left: 1px solid var(--edge); border-right: 1px solid var(--edge); background: transparent;
+  color: var(--ink); font: 500 11.5px var(--mono); cursor: pointer; }
+body.cg-shell .tb-zoom-pct:hover { color: var(--cyan); background: var(--hover); }

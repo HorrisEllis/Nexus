@@ -37,7 +37,7 @@ const _writer = createCortexWriter('loom');
 const CX_URL = process.env.CORTEX_URL || 'http://127.0.0.1:3748';
 // Same path lib/cortex-write.js buffers to when Cortex is offline —
 // reused here as the offline fallback source for session context too.
-const BUFFER_FILE = path.join(__dirname, '..', '..', 'data', 'loom', 'loom_events.buffer.jsonl');
+const BUFFER_FILE = path.join(require('../../lib/data-home.js').dir('loom'), 'loom_events.buffer.jsonl');   // 0.60.212 DL3: loom/data
 
 /**
  * record — call this after every registry mutation. Fire-and-forget,
