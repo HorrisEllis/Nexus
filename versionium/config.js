@@ -26,7 +26,7 @@ module.exports = {
   // codebase's own established JAA_DATA_DIR convention (cortex/memory/
   // jaa-db.js), so tests can isolate against a real temp dir instead of
   // production data. ──────────────────────────────────────────────────
-  DATA_DIR: process.env.VERSIONIUM_DATA_DIR || path.join(__dirname, '..', 'data', 'versionium'),
+  DATA_DIR: process.env.VERSIONIUM_DATA_DIR || require('../lib/data-home.js').dir('versionium'),   // 0.60.209 DL3: versionium/data
 
   // ── Causal field / ring buffer ────────────────────────────────────────
   // §VS2 (same phasemap) — same real ring size cortex/versionium/index.js
@@ -43,7 +43,7 @@ module.exports = {
   FILE_KEYFRAME_INTERVAL: parseInt(process.env.VERSIONIUM_FILE_KEYFRAME_INTERVAL || '20', 10),
   FILE_DELTA_MAX_RATIO: parseFloat(process.env.VERSIONIUM_FILE_DELTA_MAX_RATIO || '0.9'),
   FILE_MAX_RECORD_BYTES: parseInt(process.env.VERSIONIUM_FILE_MAX_RECORD_BYTES || String(32 * 1024 * 1024), 10),
-  FILE_BLOB_DIR: process.env.VERSIONIUM_FILE_BLOB_DIR || path.join(process.env.VERSIONIUM_DATA_DIR || path.join(__dirname, '..', 'data', 'versionium'), 'file-blobs'),
+  FILE_BLOB_DIR: process.env.VERSIONIUM_FILE_BLOB_DIR || path.join(process.env.VERSIONIUM_DATA_DIR || require('../lib/data-home.js').dir('versionium'), 'file-blobs'),
 
   // ── Identity (not tunable) ─────────────────────────────────────────────
   SYSTEM_ID: 'versionium',

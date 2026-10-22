@@ -67,7 +67,7 @@ const PORT = config.PORT;
 const CORTEX_PORT = config.CORTEX_PORT;
 const ROOT        = path.join(__dirname, '..');
 const DATA_DIR    = path.join(__dirname, 'data');
-const LEDGER_DIR  = path.join(ROOT, 'data', 'architect');
+const LEDGER_DIR  = require('../lib/data-home.js').dir('architect');   // 0.60.209 DL3: architect/data
 
 // ── JAA adapter ─────────────────────────────────────────────────────────────
 // Architect uses a flat-file JSONL store (same pattern as cortex)

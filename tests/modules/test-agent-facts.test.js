@@ -79,7 +79,7 @@ function guardian() {
       assert.ok(R.listProviders().some(p => p.id === 'mistralchat'));
       assert.strictEqual(live.mistralchat.url, 'https://chat.mistral.ai', 'the live table, updated in place');
       assert.strictEqual(R.getProvider('mistralchat').name, 'Le Chat');
-      assert.ok(fs.existsSync(R._cacheFile()), 'written to the cache'); assert.ok(R._cacheFile().startsWith(tmp));
+      assert.ok(fs.existsSync(R._cacheFile()), 'written to the cache'); assert.ok(!R._cacheFile().startsWith(ROOT + path.sep), `never in the repo (0.60.209: clear-glass/data through lib/data-home.js, the sandbox in a test): ${R._cacheFile()}`);
       const same = await R.refresh({ guardianUrl: g.url });
       assert.deepStrictEqual([same.ok, same.changed], [true, false], 'unchanged facts → no rewrite');
     } finally { await g.close(); }

@@ -32,7 +32,7 @@ const VERSION   = '1.0.0';
 // while repointing CHANGELOG_PATH for the root .md cleanup — same file,
 // same class of bug, fixed together rather than leaving 2 of 3 broken.
 const DOCS_DIR        = path.join(__dirname, '..', '..', 'docs');
-const SNAPSHOT_PATH   = path.join(__dirname, '..', '..', 'data', 'changelog-snapshot.json');
+const SNAPSHOT_PATH   = path.join(require('../../lib/data-home.js').dir('orchestrator'), 'changelog-snapshot.json');   // 0.60.209 DL3: orchestrator/data (the ownership table's rule)
 const CHANGELOG_PATH  = path.join(__dirname, '..', '..', 'docs', 'CHANGELOG.md');
 
 function _specVersion(content) {

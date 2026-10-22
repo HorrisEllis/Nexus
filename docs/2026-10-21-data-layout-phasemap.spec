@@ -75,7 +75,7 @@ phases:
 
   DL3_rewire_writers:
     layer: integration
-    status: "IN PROGRESS — guardian rewired 0.60.208 (lib/data-home.js REWIRED); next versionium, ollama, architect, loom, clear-glass …; the shared data/ledger/ (15 refs) is its own step"
+    status: "IN PROGRESS — rewired: guardian 0.60.208; versionium, ollama-bridge, architect, clear-glass, diagnostic, orchestrator 0.60.209 (lib/data-home.js REWIRED; test-data-rewired). Left: copilot, intelligence, loom, idearium, cortex, and the shared data/ledger/"
     depends_on: [DL2_one_resolver, SS1_system_store_adoption]
     files: [lib/data-home.js, diagnostic/nexus-diagnostic.js, guardian/, lib/ledger-writer.js, lib/ledger-store.js, lib/vector-memory.js]
     spec: docs/data-layout.spec
@@ -138,3 +138,12 @@ phases:
 # - Order from here, decided by his axioms (§5.9 the owner holds its data, §3.3 one system end to end before breadth): SS1 (Guardian:
 #   its tables out of cortex's store into its own, docs/2026-10-19-pipeline-root-causes-phasemap.spec) then DL3 per owner, each owner's
 #   tables (SS2) and files (DL3) in one step, ordered by fewest refs: versionium, ollama, architect, loom, clear-glass, …
+
+# ── ADDENDUM 2026-10-22 (0.60.209) — six owners' files rewired; the order corrected ──
+# James, 2026-10-22: "continue" (after 0.60.208, Guardian end to end).
+# - Rewired: versionium, ollama-bridge, architect, clear-glass, diagnostic, orchestrator. No code names their root paths (RW-01);
+#   Diagnostic's table — the registry's dataDir — points each at <folder>/data (RW-02). At each one's boot its files come home.
+# - The 0.60.207 addendum said each owner's tables (SS2) and files (DL3) would move in one step. Corrected here (that addendum stays,
+#   §0.3): files first for owners whose files only need a path, because a path change is checked by the census alone; each one's
+#   tables in cortex's store (SS2: versionium 5, orchestrator 4, diagnostic 2, architect 1 data blockers) follow per system, since
+#   each needs routes like Guardian's did. Decided by his axioms: §3.3 (smallest proven step), §8.6 (the census already proves a path).

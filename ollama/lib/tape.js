@@ -30,7 +30,7 @@ const crypto = require('crypto');
 const MODULE_ID = 'nexus.ollama.lib.tape';
 const sha = (s) => crypto.createHash('sha256').update(String(s)).digest('hex');
 
-function _root() { return path.join(process.env.NEXUS_DATA_ROOT || path.resolve(__dirname, '..', '..', 'data'), 'ollama'); }
+function _root() { return require('../../lib/data-home.js').dir('ollama-bridge'); }   // 0.60.209 DL3: ollama/data (the sandbox in a test)
 function _blobFile(h) { return path.join(_root(), 'blobs', h.slice(0, 2), `${h}.txt`); }
 function _task() { try { return require('../../lib/repo-activity.js').current(); } catch (_) { return null; } }
 
