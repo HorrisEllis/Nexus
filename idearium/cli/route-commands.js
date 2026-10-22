@@ -449,6 +449,27 @@ export const SPEC = [
       console.log(h.c.dim(`  ${(d.sovereign || []).length} sovereign: ${(d.sovereign || []).join(', ') || '—'}`));
     } },
   // 0.60.130 P33a — a system's own node database: each index with all its history
+  // 0.60.207 DL2 — James: "start the data migration … make each system responsible for it's own data." Where each system's data
+  // lives, what still waits in the root data/ (code still naming the path, or his call), and bringing it home (rollback-able).
+  { key: 'data.home', repo: false, usage: 'data home [<system>] [--apply]', about: 'each system\'s own data: where it lives and what of it still waits in the root data/ (and why); with a system, each file\'s plan; --apply brings it home now (manifest, hashes, rollback-able)',
+    req: (a) => (!a.args[0] ? { method: 'GET', path: '/api/data/home', timeoutMs: 120000 }
+      : a.flags.apply ? { method: 'POST', path: `/api/data/home/${encodeURIComponent(a.args[0])}`, timeoutMs: 300000, body: {} }
+      : { method: 'GET', path: `/api/data/home/${encodeURIComponent(a.args[0])}`, timeoutMs: 120000 }),
+    print: (d, a, h) => {
+      if (d.systems) {
+        console.log(`  root data/: ${d.present ? `${d.files} file(s), ${d.unowned} with no owner or his call` : h.c.mint('gone')}`);
+        for (const s of d.systems) { const p = s.pending || {}; const n = (k) => p[k] || 0;
+          console.log(`  ${String(s.system).padEnd(14)} ${String(s.dir || '').padEnd(24)} ${n('planned') ? h.c.amber(`${n('planned')} ready`) : ''} ${n('skipped-refs') ? `${n('skipped-refs')} wait for rewiring` : ''} ${n('ask') ? `${n('ask')} his call` : ''}${s.last ? h.c.dim(` · last ${new Date(s.last.at).toLocaleString()}: moved ${s.last.moved}`) : ''}`); }
+        const refs = Object.entries(d.refs || {}); if (refs.length) { console.log(h.c.dim('  code still naming root data/ paths:')); for (const [k, v] of refs) console.log(h.c.dim(`    data/${k} — ${v.length}: ${v.slice(0, 4).join(', ')}${v.length > 4 ? ' …' : ''}`)); }
+        return;
+      }
+      if (d.moves) { console.log(`  ${d.system} → ${d.dir}${d.last ? h.c.dim(` · last: ${d.last.said}`) : ''}`); for (const m of d.moves) console.log(`  ${m.status.padEnd(12)} ${m.from}${m.to ? ` → ${m.to}` : ''}${m.status !== 'planned' ? h.c.dim(`  (${m.why})`) : ''}`); if (!d.moves.length) console.log(h.c.mint('  nothing of it in the root data/')); return; }
+      console.log(`  ${d.said}`); if (d.manifest) console.log(h.c.dim(`  manifest ${d.manifest} — undo: data rollback ${d.manifest}`));
+      for (const c of d.conflicts || []) console.log(h.c.amber(`  conflict ${c.from} → ${c.to}: ${c.why}`)); for (const f of d.failed || []) console.log(h.c.coral(`  failed ${f.from}: ${f.why}`));
+    } },
+  { key: 'data.rollback', repo: false, usage: 'data rollback <manifest>', about: 'put a bring-home\'s files back where they were, from the manifest it printed',
+    req: (a) => ({ method: 'POST', path: '/api/data/rollback', body: { manifest: a.args[0] || '' } }),
+    print: (d, a, h) => { console.log(`  ${d.restored} file(s) back from ${d.manifest}`); for (const f of d.failed || []) console.log(h.c.coral(`  ${f.from || f.to}: ${f.why}`)); } },
   { key: 'system.nodes', repo: false, usage: 'system nodes <system> [<type> [<id>]]', about: 'a system\'s own node database (<system>/data/node-index): each node type with its files, its index and its history; with a type, its nodes; with an id, that node and every change it went through',
     req: (a) => ({ method: 'GET', path: `/api/system/nodes/${encodeURIComponent(a.args[0] || '')}${a.args[1] ? `?type=${encodeURIComponent(a.args[1])}${a.args[2] ? `&id=${encodeURIComponent(a.args[2])}` : ''}` : ''}` }),
     print: (d, a, h) => {

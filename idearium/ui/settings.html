@@ -168,6 +168,7 @@ function renderNav() {
     + item(CUR.kind === 'routing', 'data-routing="1"', 'Routing & fallback', '<span class="tag acc">pipeline</span>')
     + item(CUR.kind === 'access', 'data-access="1"', 'Access', '<span class="tag acc">app passwords</span>')
     + item(CUR.kind === 'checks', 'data-checks="1"', 'Checks', '<span class="tag acc">gates · regressions</span>')   // 0.60.33 QA1
+    + item(CUR.kind === 'datahome', 'data-datahome="1"', 'Data', '<span class="tag acc">each system\'s own</span>')   // 0.60.207 DL2
     + item(CUR.kind === 'appearance', 'data-appearance="1"', 'Appearance', `<span class="tag">${esc((window.IdeariumTheme && IdeariumTheme.current().theme) || 'nexus')}</span>`)
     + `<div class="navgroup">Repos · compartments (${originals.length})</div>` + (originals.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') || '<div class="kv">none match</div>')
     + (branches.length ? `<div class="navgroup">Branches (${branches.length})</div>` + branches.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') : '');
@@ -178,6 +179,7 @@ function renderNav() {
   const rt = $('nav').querySelector('[data-routing]'); if (rt) rt.onclick = () => go('routing');
   const ax = $('nav').querySelector('[data-access]'); if (ax) ax.onclick = () => go('access');
   const ck = $('nav').querySelector('[data-checks]'); if (ck) ck.onclick = () => go('checks');
+  const dh = $('nav').querySelector('[data-datahome]'); if (dh) dh.onclick = () => go('datahome');
 }
 $('q').oninput = () => { renderNav(); if (CUR.kind === 'global') render(); };
 
@@ -225,6 +227,7 @@ function render() {
   if (CUR.kind === 'access') return renderAccess();
   if (CUR.kind === 'routing') return renderRouting();
   if (CUR.kind === 'checks') return renderChecks();   // 0.60.33 QA1
+  if (CUR.kind === 'datahome') return renderDataHome();   // 0.60.207 DL2
   if (CUR.kind === 'global' || !DETAIL) return renderGlobal();
   return renderRepo();
 }
@@ -391,6 +394,39 @@ async function renderChecks() {
       out.innerHTML = `<span class="tag ${r.ok ? 'ok' : 'warn'}">${r.ok ? 'passed' : r.verifiable === false ? 'could not check' : 'failed'}</span> <span class="d">${esc(r.reason || '')}${r.ms != null ? ` · ${r.ms} ms` : ''}</span>${items ? `<div class="d">${items}</div>` : ''}`;
     } catch (e) { out.innerHTML = `<span class="tag warn">${esc(e.message)}</span>`; }
   };
+}
+
+// 0.60.207 DL2 — James: "start the data migration … make each system responsible for it's own data." Each system: where its data lives,
+// what of it still waits in the root data/ and why (code still naming the old path, or his call), and bringing it home (rollback-able).
+async function renderDataHome(open = null) {
+  $('title').textContent = 'Data';
+  $('sub').innerHTML = 'Each system keeps its own data in <code>&lt;system&gt;/data/</code> (<code>lib/data-home.js</code>). Each one brings its files home from the root <code>data/</code> at its own boot; a file whose old path code still names waits until that code is rewired. Also <code>idearium data home</code>.';
+  $('tabs').innerHTML = '';
+  let d; try { d = await api('/api/data/home'); d = d.data || d; } catch (e) { $('body').innerHTML = `<div class="empty">Could not read where the data is: ${esc(e.message)}</div>`; return; }
+  const n = (s, k) => (s.pending && s.pending[k]) || 0;
+  const row = (s) => `<div class="row"><div><div class="k">${esc(s.system)} <span class="d">→ ${esc(s.dir || '')}</span></div><div class="d">${s.error ? esc(s.error) : s.last ? `last: ${esc(s.last.said || '')} · ${new Date(s.last.at).toLocaleString()}` : 'not brought home yet'}</div></div>
+      <div class="ctl">${n(s, 'planned') ? `<span class="tag warn">${n(s, 'planned')} ready</span>` : ''}${n(s, 'skipped-refs') ? `<span class="tag">${n(s, 'skipped-refs')} wait for rewiring</span>` : ''}${n(s, 'ask') ? `<span class="tag">${n(s, 'ask')} his call</span>` : ''}${!s.pending || !Object.keys(s.pending).length ? '<span class="tag ok">home</span>' : ''}</div>
+      <div class="ctl"><button class="btn" data-dh-open="${esc(s.system)}">files</button>${n(s, 'planned') ? ` <button class="btn primary" data-dh-bring="${esc(s.system)}">bring home</button>` : ''}</div></div>
+      ${open === s.system ? `<div class="kv" id="dh-files">reading…</div>` : ''}`;
+  const refs = Object.entries(d.refs || {});
+  $('body').innerHTML = `<div class="card"><h3><span class="grow">The root data/</span>${d.present ? `<span class="tag">${d.files} files</span><span class="tag">${d.unowned} no owner / his call</span>` : '<span class="tag ok">gone</span>'}</h3>
+      ${(d.systems || []).map(row).join('')}</div>`
+    + (refs.length ? `<div class="card"><h3><span class="grow">Code still naming root data/ paths</span><span class="tag">${refs.length}</span></h3><div class="kv">${refs.map(([k, v]) => `data/${esc(k)} — ${v.length}: ${v.map(esc).join(', ')}`).join('\n')}</div></div>` : '');
+  for (const b of $('body').querySelectorAll('[data-dh-open]')) b.onclick = () => renderDataHome(open === b.dataset.dhOpen ? null : b.dataset.dhOpen);
+  for (const b of $('body').querySelectorAll('[data-dh-bring]')) b.onclick = async () => {
+    b.disabled = true; b.textContent = 'moving…';
+    try { let r = await post(`/api/data/home/${encodeURIComponent(b.dataset.dhBring)}`); r = r.data || r; toast(`${r.said}${r.manifest ? ` — undo: data rollback ${r.manifest}` : ''}`, r.failed && r.failed.length ? 'bad' : 'ok'); }
+    catch (e) { toast(`not moved: ${e.message}`, 'bad'); }
+    renderDataHome(b.dataset.dhBring);
+  };
+  if (open) {
+    try { let f = await api(`/api/data/home/${encodeURIComponent(open)}`); f = f.data || f;
+      // grouped by what holds them: one reason (the code to rewire, or his call), then the files it holds
+      const groups = new Map(); for (const m of f.moves || []) { const k = m.status === 'planned' ? 'ready to come home' : m.why; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(m); }
+      const el = document.getElementById('dh-files');
+      if (el) el.textContent = [...groups].map(([why, ms]) => `${ms.length} file(s) — ${why}\n${ms.map(m => `    ${m.from}${m.to ? `  →  ${m.to}` : ''}`).join('\n')}`).join('\n\n') || 'nothing of it in the root data/';
+    } catch (e) { const el = document.getElementById('dh-files'); if (el) el.textContent = `could not read: ${e.message}`; }
+  }
 }
 
 async function renderRouting() {

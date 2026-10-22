@@ -367,3 +367,10 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at full depth"
     - "tests/modules/test-data-clearup.test.js — census, plan, apply, conflict, duplicate, ask, rollback, verify on a temp tree"
+  # ── ADDENDUM 2026-10-22 (0.60.207) — MOD-DATA-HOME built, and each system brings its own data home ──
+  # James, 2026-10-22: "start the data migration. look at the phases, any migrating data to the respective systems, and make each system responsible for it's own data."
+  # - lib/data-home.js exports home, ledger, nodes, memory, dir, folder, SYSTEMS as specced, plus bringHome(system), status(system) and
+  #   atBoot(system). bringHome is MOD-REWIRE's GATE-RW-004 run by the owner itself at boot, through MOD-CLEARUP: no owner's file moves
+  #   while code names its path (the census's refs), his calls never move, every move is in a manifest.
+  # - lib/data-clearup.js census() takes only: [paths] so an owner reads its own paths, not all of data/.
+  # - The spec named a Toolbox section; none exists. The Data view went into the settings console (idearium/ui/settings.html).

@@ -1,4 +1,6 @@
 'use strict';
+// 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come home first (lib/data-home.js).
+require('../lib/data-home.js').atBoot('diagnostic');
 const _bootedAt = Date.now();   // §health — real uptime, not a guess
 let _tensionWarned = false;   // §1.2 warn-once for the missing cortex/healer canonical scorer
 // diagnostic/nexus-diagnostic.js — System Auditing + Monitoring Service

@@ -23,6 +23,9 @@ import { spawnSync, spawn as spawnProc } from 'child_process';
 import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
+// 0.60.207 DL2 — James: "make each system responsible for it's own data". Idearium's files in the root data/ come home (lib/data-home.js).
+// ESM: the imports above this line ran first; Idearium's own refs still name data/idearium (DL3 rewires them before any of it moves).
+_require('../../lib/data-home.js').atBoot('idearium');
 const WR = _require('../../lib/warp-rung.js');   // §WB1 0.60.73 — WARP around the agent the ladder and RAID chose (James: "Option 1")
 const _access = _require('../lib/access.cjs');   // §0.58.0 IA0 — who may act on Idearium
 // 0.60.27 AG1a — an agent call's tokens, estimated where it happens (lib/economy/tokens.js estimate-v1; no vendor tokenizer)
@@ -3174,6 +3177,7 @@ const ROUTE_CAP = {
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
+  'data.home.list': CAPS.READ_IDEAS, 'data.home.get': CAPS.READ_IDEAS, 'data.home.bring': CAPS.WRITE_IDEAS, 'data.home.rollback': CAPS.WRITE_IDEAS,   // 0.60.207 DL2 — each system's own data
   'context.find': CAPS.READ_IDEAS, 'repo.context.find': CAPS.READ_IDEAS, 'context.sources': CAPS.READ_IDEAS,   // 0.60.156 GM5 — reads only
   'lattice.neighbours': CAPS.READ_IDEAS,   // 0.60.157 GM4 — reads only
   'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
@@ -3468,6 +3472,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','homes'], 'system.homes'],
     ['GET',    ['api','system','sovereign'], 'system.sovereign'],
     ['GET',    ['api','system','shape'], 'system.shape'],   // 0.60.138 — does each system match genesis: every role, its own file, the kernel, or missing (?system=)   // 0.60.133 IM1 — which systems are sovereign, and what stands in each one's way (?system=)
+    ['GET',    ['api','data','home'], 'data.home.list'],                 // 0.60.207 DL2 — every system: where its data lives, what still waits in the root data/
+    ['GET',    ['api','data','home',':system'], 'data.home.get'],        // 0.60.207 DL2 — one system: its record and each file's plan
+    ['POST',   ['api','data','home',':system'], 'data.home.bring'],      // 0.60.207 DL2 — bring its data home now (manifest, hashes; rollback-able)
+    ['POST',   ['api','data','rollback'], 'data.home.rollback'],         // 0.60.207 DL2 — put a manifest's files back
     ['GET',    ['api','system','nodes'], 'system.nodes.list'],   // 0.60.157 GM4 — every system that keeps nodes (a data/nodes folder), for the node lattice
     ['GET',    ['api','system','nodes',':system'], 'system.nodes'],   // 0.60.130 P33a — a system's own node database: per type, its files, its index, its history; ?type= lists, &id= one node's history   // 0.60.129 DB17 — files in shared folders that belong to one system (a census: nothing moves)
     ['GET',    ['api','system','tunnel'], 'system.tunnel'],   // 0.60.128 DB13 — every system's tunnel: where it runs, its routes, the commands that reach it, its toasts
@@ -5746,6 +5754,39 @@ async function handle(req, res, route, query, body) {
       const cur = R.current();
       return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
         modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
+    }
+    // 0.60.207 DL2 — James: "start the data migration … make each system responsible for it's own data." lib/data-home.js: where each
+    // system's data lives, what of it still waits in the root data/ (and why: code still naming the path, or his call), and bringing it
+    // home through the clear-up tool (manifest first, copy, sha256, then the source; rollback puts it back).
+    case 'data.home.list': case 'data.home.get': case 'data.home.bring': case 'data.home.rollback': {
+      const DH = _require('../../lib/data-home.js'), DC = _require('../../lib/data-clearup.js');
+      const root = path.dirname(_require.resolve('../../package.json'));
+      if (action === 'data.home.rollback') {
+        const mf = String((body && body.manifest) || '');
+        if (!/^_archive\/clearup\/clearup-[^/]+\/manifest\.json$/.test(mf)) return err(res, 400, 'manifest: the path a bring-home printed (_archive/clearup/clearup-<stamp>/manifest.json)');
+        if (!fs.existsSync(path.join(root, mf))) return err(res, 404, `no manifest at ${mf}`);
+        const r = DC.rollback(mf, { root });
+        getIdeaOS().emit('idearium.data.rolledback', { manifest: mf, restored: r.restored.length, failed: r.failed.length });
+        return ok(res, { manifest: mf, restored: r.restored.length, failed: r.failed });
+      }
+      let census = null;
+      const dataDir = path.join(root, 'data');
+      if (action !== 'data.home.bring' && fs.existsSync(dataDir)) { try { census = DC.census({ root, dataDir }); } catch (e) { return err(res, 500, `the root data/ could not be read: ${e.message}`); } }
+      if (action === 'data.home.list') {
+        const systems = DH.SYSTEMS({ root }).map(sys => { try { return DH.status(sys, { root, census }); } catch (e) { return { system: sys, error: e.message }; } });
+        const unowned = census ? census.entries.filter(e => !e.owner || e.owner === 'none' || e.status === 'ask').length : 0;
+        return ok(res, { root: 'data', present: !!census, files: census ? census.entries.length : 0, unowned, systems, refs: census ? Object.fromEntries(Object.entries(census.refs).filter(([, v]) => v.length)) : {} });
+      }
+      const sys = String(params.system || '');
+      try { DH.folder(sys, { root }); } catch (e) { return err(res, 404, e.message); }
+      if (action === 'data.home.get') {
+        const moves = census ? DC.plan(census, { onlyOwner: sys }).map(m => ({ from: m.from, to: m.to, status: m.status, why: m.why, bytes: m.bytes })) : [];
+        return ok(res, { ...DH.status(sys, { root, census }), moves });
+      }
+      const st = _starter(req, body);
+      const r = DH.bringHome(sys, { root, by: st.who === 'unknown' ? 'person:ui' : st.who, fresh: true });
+      getIdeaOS().emit('idearium.data.home', { system: sys, moved: r.moved, waiting: r.waiting.length, conflicts: r.conflicts.length, failed: r.failed.length, manifest: r.manifest });
+      return ok(res, r);
     }
     case 'system.nodes.list': {   // 0.60.157 GM4 — the systems that keep nodes, by folder, read from disk now
       const root = path.dirname(_require.resolve('../../package.json'));
