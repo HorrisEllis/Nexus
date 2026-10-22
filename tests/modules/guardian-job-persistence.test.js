@@ -16,7 +16,8 @@ const t = (id, desc, cond) => { if (cond) { passed++; console.log(`  ✓ ${id} $
 // simplest real isolation: run against the real data/guardian/jobs/ dir
 // and clean up afterward, same as this session's other non-isolated
 // real-fs tests where a dedicated env var isn't worth adding for one file.
-const JOBS_DIR = path.join(__dirname, '..', '..', 'data', 'guardian', 'jobs');
+// 0.60.208 DL3 — jobs.js resolves through lib/data-home.js (guardian/data/jobs; the sandbox in a test); the test asks it, not a hard-coded root path
+const { JOBS_DIR } = require('../../guardian/lib/jobs.js');
 const before = fs.existsSync(JOBS_DIR) ? new Set(fs.readdirSync(JOBS_DIR)) : new Set();
 
 function main() {
