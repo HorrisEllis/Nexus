@@ -1,0 +1,241 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RC4_agent_file_names_guarded:f7f24c9b4b5b26d9
+type: graph
+id: phase:RC4_agent_file_names_guarded:f7f24c9b4b5b26d9
+context: dependency graph of phase RC4_agent_file_names_guarded
+intent: null
+summary: 25 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792653394693
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792653394693
+lastSeenAt: 1792653394693
+fingerprint: null
+payload:
+  for: RC4_agent_file_names_guarded
+  kind: phase
+  repo: null
+  hash: f7f24c9b4b5b26d9
+  nodes:
+    - path: lib/path-guard.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/lib/chat-transcripts.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-inject-screen.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-pipeline-root-causes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-proposal-evidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/change-entry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/lib/merge3.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: lib/repo-inject.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/nexus-self/inject-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/change-entry.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: versionium/lib/merge3.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/phase-faults.js
+      kind: requires
+    - from: guardian/lib/chat-transcripts.js
+      to: lib/path-guard.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/path-guard.js
+      kind: requires
+    - from: tests/modules/test-pipeline-root-causes.test.js
+      to: lib/path-guard.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-inject-screen.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-proposal-evidence.test.js
+      to: lib/repo-inject.js
+      kind: requires
+  crossings:
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: versionium/lib/merge3.js
+      fromSystem: lib
+      toSystem: versionium
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 4470939bf8678599
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC5_find_where_the_label_enters
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+    upstream: []
+    downstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::CB1_coder_brief
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::ID1_ideas_wired_through
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC5_find_where_the_label_enters
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::UI3_ideas_and_notes_as_one
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF2_one_response_bundle
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF3_mutation_check
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF4_second_opinion_on_need
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF5_verdict_cache
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC5_find_where_the_label_enters
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 4470939bf8678599 · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): RC5_find_where_the_label_enters, VF1_verify_first · all downstream 9 ·
+        finishing it unlocks RC5_find_where_the_label_enters, VF1_verify_first

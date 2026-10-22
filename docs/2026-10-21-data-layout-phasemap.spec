@@ -75,7 +75,7 @@ phases:
 
   DL3_rewire_writers:
     layer: integration
-    status: OPEN
+    status: "IN PROGRESS — guardian rewired 0.60.208 (lib/data-home.js REWIRED); next versionium, ollama, architect, loom, clear-glass …; the shared data/ledger/ (15 refs) is its own step"
     depends_on: [DL2_one_resolver, SS1_system_store_adoption]
     files: [lib/data-home.js, diagnostic/nexus-diagnostic.js, guardian/, lib/ledger-writer.js, lib/ledger-store.js, lib/vector-memory.js]
     spec: docs/data-layout.spec

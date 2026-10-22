@@ -222,23 +222,25 @@ function createNCPServer({ onMessage, onConnect, onDisconnect, busEmit } = {}) {
     // in lib/gap-predicate.js's ncp_connection_flapping entry actually
     // checks (recent rows here, scoped by queue_uuid===key), not just a
     // counter in memory that resets on restart.
+    // 0.60.208 SS1 — through cortex's own route, not into cortex's store (§9.1); queue_uuid kept top-level, where the gap
+    // engine's scope matches it (intelligence/gap/predicate.js ncp_connection_flapping). James: "make each system responsible for it's own data."
     try {
-      const { jaaDB, uid } = require('../../cortex/memory/jaa-db');
-      jaaDB.insert('event_log', { uuid: uid(), type: 'ncp.flap', queue_uuid: key, source: 'lib/ncp.js', ts: now });
+      const NC = require('../../lib/nexus-client.js');
+      Promise.resolve(NC.postDurable('cortex', '/api/event', { type: 'ncp.flap', payload: { queue_uuid: key }, queue_uuid: key, source: 'lib/ncp.js', ts: now })).catch(() => {});
     } catch (_) {}
 
     if (hist.length >= FLAP_THRESHOLD) {
       _flapHistory.set(key, []); // reset so this doesn't re-fire every single disconnect once over threshold
       try {
         const gp = require('../../intelligence/gap/predicate');
-        const { jaaDB, uid } = require('../../cortex/memory/jaa-db');
         const { enriched_gap, existing_uuid } = gp.enrichGap({
           type: 'ncp_connection_flapping', path: key, severity: 'high',
           body: `${hist.length} disconnects for ${key} within ${FLAP_WINDOW_MS/1000}s`,
           source: 'lib/ncp.js', createdAt: now,
         });
-        if (!existing_uuid && enriched_gap) {
-          jaaDB.insert('gaps', { uuid: uid(), ...enriched_gap, status: 'open', detectedAt: now });
+        if (!existing_uuid && enriched_gap) {   // 0.60.208 SS1 — opened through cortex's POST /api/gaps, not its store
+          const NC = require('../../lib/nexus-client.js');
+          Promise.resolve(NC.postDurable('cortex', '/api/gaps', { uuid: require('crypto').randomUUID(), ...enriched_gap, status: 'open', detectedAt: now })).catch(() => {});
         }
         // existing_uuid case: enrichGap() already incremented recurrence_count
         // and appended evidence on the existing open gap internally — nothing

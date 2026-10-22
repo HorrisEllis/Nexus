@@ -85,6 +85,7 @@ const SUITES = [
   'test-log-fixes.test.js', // 0.60.205 SD21 — his run log: probe fits, build job off a sign-in wall, labelled absent line, proof history off the store, one-file phase answers "which file?", sync pauses
   'test-lift-root.test.js', // 0.60.206 SD22 — a project imported inside its own folder lifted to the root (root copies archived)
   'test-data-home.test.js', // 0.60.207 DL2 — one resolver for each system's data; each brings its own home at boot (manifest, rollback); route, commands, the Data screen in Clear Glass
+  'test-guardian-own-data.test.js', // 0.60.208 SS1 + DL3 guardian — its own store, cortex's tables through cortex's routes, its paths through data-home
   'test-cos-mount-idempotent.test.js',   // 0.39.282 N28 — one COS host per process; an identical remount is a no-op (idearium OFFLINE every 10 min: 34 s → 2 ms)
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272

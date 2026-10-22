@@ -446,6 +446,9 @@ const server = http.createServer(async (req, res) => {
       payload: JSON.stringify(body.payload || {}),
       source: body.source || 'unknown', ts: body.ts || Date.now(),
       causedBy: body.causedBy || null }; // §sensation 2026-06-29 — was missing
+    // 0.60.208 SS1 — the scope fields the gap engine matches on (intelligence/gap/predicate.js: uuid, id, queue_uuid, comp_id) stay
+    // top-level, so a system that sends its events here instead of writing cortex's store directly is still found by its gaps.
+    for (const k of ['queue_uuid', 'comp_id']) if (typeof body[k] === 'string' && body[k]) row[k] = body[k].slice(0, 200);
     jaaDB.insert('event_log', row);
     // §GAP CLOSED 2026-07-19 — this endpoint is how guardian/orchestrator
     // already push events into cortex, but it only ever wrote to

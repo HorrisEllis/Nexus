@@ -9,11 +9,11 @@ intent: null
 summary: RC7_every_run_names_its_starter (foundation) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792587384306
+exported_at: 1792653394716
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792587384306
-lastSeenAt: 1792587384306
+firstSeenAt: 1792653394716
+lastSeenAt: 1792653394716
 fingerprint: null
 payload:
   id: RC7_every_run_names_its_starter
@@ -34,4 +34,4 @@ payload:
     - RC6_unowned_ollama_load
   blocks: []
   spec: null
-  graph: e71ac0a4e3f549ec
+  graph: 4b99cd95537cb85c

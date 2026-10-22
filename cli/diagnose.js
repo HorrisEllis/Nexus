@@ -341,7 +341,7 @@ async function diagGuardian() {
     ['guardian/lab/lab.js',             'LLM testing lab'],
     ['guardian/interaction-contract.json', 'API contract declaration'],
     ['lib/ncp.js',                      'NCP — _write() must be inside createNCPServer'],
-    ['data/guardian/ledger/cfr',        'guardian CFR ledger (moved from guardian/memory_store 2026-07-24)'],
+    ['guardian/data/ledger/cfr',        'guardian CFR ledger (moved from guardian/memory_store 2026-07-24; guardian/data since 0.60.208)'],
   ];
   const SOFT_FILES = [
     ['guardian/ui/index.html',          'Forge IDE UI'],
@@ -557,7 +557,7 @@ async function diagGuardian() {
         for (const g of (b.gaps||[]).slice(0,3)) {
           detail_error('guardian', 'baseline-gap',
             `sigma deviation: ${g.sigma} on ${g.frictions?.map(f=>f.axis).join(',') || '?'}`,
-            'Check data/guardian/ledger/ for recent anomalies', null);
+            'Check guardian/data/ledger/ for recent anomalies', null);
         }
       }
       await ledger('live.baseline', b.friction < 0.5 ? 'PASS' : 'WARN');

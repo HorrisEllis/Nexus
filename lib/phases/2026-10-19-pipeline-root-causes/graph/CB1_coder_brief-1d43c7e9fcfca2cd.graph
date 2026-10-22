@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792587384300
+exported_at: 1792653394709
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792587384300
-lastSeenAt: 1792587384300
+firstSeenAt: 1792653394709
+lastSeenAt: 1792653394709
 fingerprint: null
 payload:
   for: CB1_coder_brief
@@ -41,7 +41,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 34f3ae8f0ecbc7b5
+    dagHash: 4470939bf8678599
     layer: 2
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
@@ -55,6 +55,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 34f3ae8f0ecbc7b5 · layer 2
+      - DAG 4470939bf8678599 · layer 2
       - 'depends on (1): VF1_verify_first · all upstream 2'
       - 'needed by (0): —'

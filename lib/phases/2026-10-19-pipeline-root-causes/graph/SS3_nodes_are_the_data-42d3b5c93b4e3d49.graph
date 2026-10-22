@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792587384295
+exported_at: 1792653394705
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792587384295
-lastSeenAt: 1792587384295
+firstSeenAt: 1792653394705
+lastSeenAt: 1792653394705
 fingerprint: null
 payload:
   for: SS3_nodes_are_the_data
@@ -157,7 +157,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 34f3ae8f0ecbc7b5
+    dagHash: 4470939bf8678599
     layer: 3
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS2_every_system_home
@@ -176,6 +176,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 34f3ae8f0ecbc7b5 · layer 3 · blocked by SS2_every_system_home
+      - DAG 4470939bf8678599 · layer 3 · blocked by SS2_every_system_home
       - 'depends on (1): SS2_every_system_home · all upstream 3'
       - 'needed by (1): SS4_seal_into_compartments · finishing it unlocks SS4_seal_into_compartments'

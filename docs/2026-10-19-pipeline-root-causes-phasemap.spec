@@ -160,16 +160,26 @@ phases:
 
   SS1_system_store_adoption:
     layer: library
-    status: OPEN
+    status: "BUILT 0.60.208 — test-guardian-own-data GD-01..05: data blockers 3 → 0; no code names data/guardian"
     depends_on: [RC1_watchers_never_kill_a_kernel]
     axioms: [§5.9, §5.10, "ONE_WRITER_PER_STORE"]
-    files: [lib/system-store.js, guardian/server.js]
+    files: [lib/system-store.js, lib/data-home.js, guardian/agents/index.js, guardian/ask.js, guardian/lib/ncp.js, cortex/boot.js, guardian/config.js, guardian/server.js, guardian/lib/jobs.js, guardian/lib/account-routing.js, guardian/lib/agent-registry.js, guardian/artifact-upload.js, lib/seam/queue.js, service/guardian-service.js, cli/clear-idearium.js, cli/diagnose.js, cli/session.js, contracts/nodes/ledgers.node.js, contracts/nodes/systems.node.js, diagnostic/nexus-diagnostic.js]
     does: >-
       His: "each system has a jaa database … the server.js uses it to manage data". lib/system-store.js already exists (0.60.133)
       and is used by one module. Move one system home end to end first — Guardian, since he named it as the model and it already
       keeps its own JAA (data/guardian/memory): its 4 cortex jaa-db requires switch to its own store, tables migrated once and
       recorded; then census its data blockers to 0.
     proof: guardian's data blockers 3 → 0 in lib/system-boundary.js sovereignty(); its tables read the same rows after the move
+    plan_2026_10_22: >-
+      James, 2026-10-22: "start the data migration. look at the phases, any migrating data to the respective systems, and make each
+      system responsible for it's own data." Read in the tree: Guardian already left cortex's store once (DF1, 2026-09-06) — into
+      data/guardian/memory, still under the root data/; its three data blockers are (1) guardian/agents/index.js, the callto poller,
+      which nothing loads (no require, no spawn; cortex-v2's `callto` reads its table) — archived (§0.3); (2) guardian/ask.js bridge
+      turns and (3) guardian/lib/ncp.js flap events and gaps, written straight into cortex's event_log and gaps — sent through
+      cortex's own routes (POST /api/event, POST /api/gaps, postDurable), and cortex's /api/event keeps the scope fields (queue_uuid,
+      comp_id) the gap engine matches on. With DL3 for Guardian in the same step: its 14 files that name data/guardian resolve through
+      lib/data-home.js, so its store is guardian/data/memory and atBoot brings his files home at Guardian's next boot. Decided by
+      his axioms: §5.9 (the owner holds its data), §9.1 (no side door into another system's store), §0.3 (archive, not delete).
 
   SS2_every_system_home:
     layer: library

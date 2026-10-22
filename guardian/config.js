@@ -40,7 +40,7 @@ module.exports = {
   // guardian/): zero remaining real consumers anywhere, genuinely dead,
   // not left as clutter.
   GUARDIAN_DATA_DIR: process.env.GUARDIAN_DATA_DIR ||
-    require('path').join(__dirname, '..', 'data', 'guardian', 'memory'),
+    require('../lib/data-home.js').home('guardian', 'memory'),   // 0.60.208 DL3: guardian/data/memory (his files come home at boot)
 
   // ── In-memory buffer caps — real, distinct purposes, kept explicitly
   // separate and clearly named (the original code had both `_LOG_MAX`

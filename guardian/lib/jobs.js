@@ -54,7 +54,7 @@ const nodeExport = require('../../lib/node-export.js');
 // one, and the handoff's item 5 makes this directory the source of truth —
 // something that is the source of truth should be nameable. Default is
 // unchanged; GUARDIAN_JOBS_DIR overrides it.
-const JOBS_DIR = process.env.GUARDIAN_JOBS_DIR || path.join(__dirname, '..', '..', 'data', 'guardian', 'jobs');
+const JOBS_DIR = process.env.GUARDIAN_JOBS_DIR || require('../../lib/data-home.js').home('guardian', 'jobs');
 /**
  * _persistJob(job, { required }) — write the .job envelope.
  *

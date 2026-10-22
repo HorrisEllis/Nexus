@@ -39,7 +39,31 @@
 const http   = require('http');
 const https  = require('https');
 const path   = require('path');
-const { jaaDB, uid } = require('../../cortex/memory/jaa-db');
+// 0.60.208 SS1 — James: "make each system responsible for it's own data." Guardian's own tables (agent_calls, guardian_health,
+// artifacts, toasts) live in Guardian's own store (lib/system-store.js → guardian/data/jaa; agent_calls brought from cortex once,
+// recorded). Cortex's tables are cortex's: event_log and cortex_memory go through cortex's own routes (POST /api/event,
+// /api/memory/insert), buffered when cortex is down (nexus-client postDurable) — never written into cortex's store from here (§9.1).
+// The calls below keep their jaaDB shapes; this maps each onto its owner.
+const uid = () => require('crypto').randomUUID();
+let _own = null;
+const _store = () => _own || (_own = require('../../lib/system-store.js').openStore('guardian', {
+  tables: ['agent_calls', 'guardian_health', 'artifacts', 'toasts'], migrate: [{ table: 'agent_calls' }, { table: 'guardian_health' }] }));
+const _toCortex = (table, row) => {
+  const NC = require('../../lib/nexus-client.js');
+  const send = table === 'event_log'
+    ? NC.postDurable('cortex', '/api/event', { type: row.type, payload: row.payload || {}, source: row.source || MODULE_ID, causedBy: row.causedBy || null, ts: row.ts || Date.now() })
+    : NC.postDurable('cortex', '/api/memory/insert', { table, row });
+  Promise.resolve(send).catch(e => console.warn(`[${MODULE_ID}] cortex ${table}: ${e.message}`));
+  return row;
+};
+const CORTEX_TABLES = new Set(['event_log', 'cortex_memory']);
+const jaaDB = {
+  insert: (t, row) => (CORTEX_TABLES.has(t) ? _toCortex(t, row) : _store().insert(t, row)),
+  query: (t, where, limit) => (typeof where === 'function' ? _store().all(t, {}).filter(where).slice(0, limit || undefined) : _store().all(t, where || {}, typeof limit === 'number' ? { limit } : (limit || {}))),
+  get: (t, key) => _store().get(t, typeof key === 'object' ? key : { uuid: key }),
+  update: (t, key, vals) => _store().update(t, typeof key === 'object' ? key : { uuid: key }, vals),
+  tail: (t, n = 10) => _store().all(t, {}).slice(-n).reverse(),
+};
 
 const MODULE_ID = 'agents.callto';
 const VERSION   = '5.2.0';
@@ -511,4 +535,4 @@ function status() {
   ].join('\n');
 }
 
-module.exports = { init, stop, status, dispatch };
+module.exports = { init, stop, status, dispatch, _jaaDB: jaaDB, _ownStore: () => _store() };   // 0.60.208 SS1: the owner shim, for its test

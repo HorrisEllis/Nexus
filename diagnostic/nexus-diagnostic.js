@@ -117,7 +117,7 @@ function uid() { return crypto.randomUUID(); }
 
 const SYSTEMS = {
   // §LEDGER-FIX: paths now match flat JSONL written by ledger-writer + jaaDB
-  guardian:    { port: 7820, dataDir: 'data/guardian',    healthPath: '/health',   label: 'Guardian' },
+  guardian:    { port: 7820, dataDir: 'guardian/data',    healthPath: '/health',   label: 'Guardian' },   // 0.60.208 DL3: guardian's own folder
   cortex:      { port: 3748, dataDir: 'cortex/data',      healthPath: '/health', label: 'Cortex' },
   idearium:    { port: 4800, dataDir: 'data/idearium',    healthPath: '/health', label: 'Idearium' },
   orchestrator:{ port: 9000, dataDir: 'data/orchestrator',healthPath: '/health',   label: 'Orchestrator' },

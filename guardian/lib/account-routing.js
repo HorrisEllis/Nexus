@@ -20,7 +20,7 @@
  * account's restored) BEFORE the job is typed; a switch that fails fails the job with the reason — a job never runs
  * as an identity it was not routed to.
  *
- * Storage: a JaaStore (guardian/jaa-store.js) under data/guardian/accounts/jaa — tables account_rules and
+ * Storage: a JaaStore (guardian/jaa-store.js) under guardian/data/accounts/jaa — tables account_rules and
  * account_route_log. No cookie or secret is ever stored here: only which account, and why.
  */
 const path = require('path');
@@ -70,7 +70,7 @@ function pick(rules, job) {
   return best ? best.rule : null;
 }
 
-function createAccountRouting({ dir = process.env.GUARDIAN_ACCOUNTS_DIR || path.join(__dirname, '../../data/guardian/accounts'), store = null, now = Date.now } = {}) {
+function createAccountRouting({ dir = process.env.GUARDIAN_ACCOUNTS_DIR || require('../../lib/data-home.js').home('guardian', 'accounts'), store = null, now = Date.now } = {}) {
   let _st = store;
   const st = () => {
     if (_st) return _st;

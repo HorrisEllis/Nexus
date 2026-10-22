@@ -380,13 +380,14 @@ async function bridgeConversation({ initialPrompt, provider, maxRounds = 3, sess
   const MAX_ROUNDS_HARD_CAP = 8; // §1.1 — a real, stated bound regardless of what a caller requests, never an unbounded loop
   const rounds = Math.min(maxRounds, MAX_ROUNDS_HARD_CAP);
   const transcript = [];
-  let jaaDB, uid;
-  try { ({ jaaDB, uid } = require('../cortex/memory/jaa-db.js')); } catch (_) { /* logging optional, the real conversation still runs without it */ }
-
+  // 0.60.208 SS1 — each turn goes to cortex's event_log through cortex's own route (POST /api/event, buffered when cortex is down),
+  // not written into cortex's store from guardian (§9.1). James: "make each system responsible for it's own data."
   function _logTurn(from, to, text) {
-    if (!jaaDB) return;
-    try { jaaDB.insert('event_log', { uuid: uid(), type: 'guardian.ollama.bridge.turn', payload: { from, to, textPreview: (text || '').slice(0, 300), round: transcript.length }, source: 'guardian-ollama-bridge', causedBy: null, ts: Date.now() }); }
-    catch (_) { /* real logging failure never breaks the real conversation */ }
+    try {
+      const NC = require('../lib/nexus-client.js');
+      Promise.resolve(NC.postDurable('cortex', '/api/event', { type: 'guardian.ollama.bridge.turn', payload: { from, to, textPreview: (text || '').slice(0, 300), round: transcript.length }, source: 'guardian-ollama-bridge', causedBy: null, ts: Date.now() }))
+        .catch(() => { /* real logging failure never breaks the real conversation */ });
+    } catch (_) { /* real logging failure never breaks the real conversation */ }
   }
 
   let currentPrompt = initialPrompt;
