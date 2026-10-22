@@ -334,7 +334,8 @@ await test('OFF-RT1c', 'parked() says what waits and why; unpark(id|all) clears 
   assert.deepStrictEqual(o.unpark('drop-aaaa').cleared, ['drop-aaaa1111'], 'by id prefix');
   assert.ok(!readA()['drop-aaaa1111'] && readA()['drop-bbbb2222']);
   o.unpark('all');
-  assert.deepStrictEqual(Object.keys(readA()), []);
+  // SD20 0.60.203 — 'all' also clears the fail streak, kept as the time it was cleared ('__streakClearedAt'), not a drop
+  assert.deepStrictEqual(Object.keys(readA()).filter(k => !k.startsWith('__')), []);
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);

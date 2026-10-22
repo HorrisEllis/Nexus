@@ -938,20 +938,14 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `CHANGELOG-0.60.199.md` (the real run's numbers);
   - `tests/modules/test-roadmap-import.test.js` RI-01 (built on MASTERMIND's shape).
 
-### 2026-10-21 — ERAVOS 3.48: he caught the coder reaching for the tool he had already replaced
-- **His words:** "not playright. isn't clearglass in this project" — and the ask it interrupted: "like how there is 4 wub tools, but
-  no primay system. like i want each tool to have its components as tools, then they all connect to the suite, but can be mixed
-  and matched."
-- **Context:** the coder had started ERAVOS's test run on Playwright. He had already ruled Playwright out in Nexus (§0.39.263,
-  "litterally have clearglas"). ERAVOS's host layer was ported from Nexus without the Clear Glass page driver, so 18 scripts still
-  loaded Playwright. Nobody had seen the gap until he did.
-- **What it shows:** he holds his own decisions across repos and weeks. Following his correction brought the driver into ERAVOS
-  (`host/driver/`). The whole browser suite ran on it, 1007/1007, with Playwright uninstalled. A guard now fails any script that loads
-  Playwright. The suite request is systems design in his own words: parts stay tools, the suite is the system they connect to,
-  and mixing is allowed. The coder built it so membership is read from the wires, never stored, which is his "everything is a node,
-  every connection is an edge".
-- **Checkable (HorrisEllis/Eravos-Canvas, branch claude/sharp-hypatia-9q2vyc, commit 1f584d0, merged to main in PR #23):**
-  - `node tests/no-playwright.mjs`;
-  - `node tests/run.mjs P48` (9 tests: keyboards that grow to 88 keys; suites built whole, part by part, scenes, mixed in);
-  - `node tests/host.test.mjs` (15, including the suite commands an agent drives);
-  - `specs/eravos.phase48-map.spec`, ADDENDUM 2026-10-21.
+### 2026-10-22 — 0.60.203: a real run on real hardware, handed over whole
+- **His words:** four screenshots and his full boot-to-failure log, with no comment; then "yes" to the three fixes.
+- **Context:** SP5 had failed with "copilot :3750 unreachable". He did not report only the error. He sent everything the run produced: the
+  phase card, the runs screen ("route: Settings pins ollama"), the stray applied spec, and a log covering memory, Ollama, the officiator
+  and the RAID worker. The diagnosis (memory starvation, a pinned 7b that did not fit his GTX 1650, a synthesis loop, an auto-applied
+  off-phase file) was the coder's, read from that log. The choice of which fixes to make was his.
+- **What it shows:** testing on the machine the system is meant for (a 3700X with 16 GB and a GTX 1650), and handing over complete evidence
+  instead of a summary. Three faults no test fixture had shown came from one run of his: the loop, the pin with no fallback, and the
+  auto-applied spec.
+- **Checkable:** `CHANGELOG-0.60.203.md` (the log lines it quotes); `tests/modules/test-starved-machine.test.js` SM-01..05, each built on
+  his run (the 7b, spec/title.spec, the SP5_title goal); docs/2026-10-10-idearium-solid-phasemap.spec SD20.

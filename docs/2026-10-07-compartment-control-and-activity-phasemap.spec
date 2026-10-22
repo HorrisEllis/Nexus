@@ -211,3 +211,17 @@ spec:
   ordering_next: "UN1 → SP1 → DC1 → DX1. UN1 is copilot navigating; SP1 is it showing James; DC1 noticing; DX1 explaining."
 
   ordering: "CC1 → AL1 → AL2 → DT1 → VM1 → NC2 → BO1. Each is usable on its own; each later one makes the earlier ones worth more."
+
+## ADDENDUM 2026-10-22 (0.60.203, SD20) — a starved machine does not spin
+James, 2026-10-22: "yes" — to the coder's three fixes after his SP5 run at 1–9% free memory (map: docs/2026-10-10-idearium-solid-phasemap.spec
+SD20_a_starved_machine_does_not_spin; CHANGELOG-0.60.203.md). What changes for the behaviour this map owns:
+- Routing (MF1 here): a build with no ladder whose repo Settings pins Ollama climbs the pin, then the chain's agents
+  (lib/pipeline-routing.js pinnedLadder). present and the MF1 fit check now apply to the pin: missing or too big for free memory → left off;
+  critical memory → moved after the agents. Said on the run's route. The pin is never dropped by minBuildB.
+- The officiator (RT1): a synthesized goal (intention + file) already queued, running, or failed/blocked within the hour is not queued again
+  (the drop is marked duplicateOf); three of its own contracts failing in a row hold synthesis for an hour (unpark all clears it); memory is
+  read before each synthesis, and the RAID worker waits on memory too.
+- Landing an agent's files (CC1): while a phase builds, a file outside the phase's files, or a spec/doc while it asked for code, stays a
+  proposal with why, whatever the inject mode (lib/repo-inject.js expectPhase/outOfPhase; land(); lib/code-edit.js commit).
+Decided by his axioms: §8.6 (each fix routes into what existed: present, byFit, the attempts store, land's propose), §1.2 (every hold and
+skip is said), USER_AUTONOMY (an off-phase file is his call), §0.3 (nothing deleted; a duplicate drop is kept and points at its contract).

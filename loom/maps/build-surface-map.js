@@ -357,6 +357,13 @@ const CONSUMERS = [
   [I('clear-glass/src/main/index.js'), I('lib/prevention.js'), '0.60.123 MP Eros and the NCP prewarm held under prevention'],
   [I('cortex/core/raid/officiator.js'), I('lib/prevention.js'), '0.60.123 MP the tick asks heavyAllowedHere'],
   [I('nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],
+  // SD20 0.60.203 — a starved machine does not spin (docs/2026-10-10-idearium-solid-phasemap.spec)
+  [I('cortex/core/raid/worker.js'), I('lib/prevention.js'), 'SD20 0.60.203 the drain waits on heavyAllowedHere(raid-worker)'],
+  [I('cortex/core/raid/officiator.js'), I('cortex/core/raid/contract-intake.js'), 'SD20 0.60.203 listQueue: sameGoal (no second contract for one goal) and failStreak (its own failing contracts hold synthesis)'],
+  [I('cortex/core/raid/officiator.js'), I('lib/intake.js'), 'SD20 0.60.203 markOfficiated(dropId, { duplicateOf })'],
+  [I('idearium/api/index.js'), I('lib/pipeline-routing.js'), 'SD20 0.60.203 _phaseBuild pinnedLadder: Settings pins Ollama → the pin, then the chain\'s agents'],
+  [I('idearium/api/index.js'), I('lib/repo-inject.js'), 'SD20 0.60.203 _phaseBuild expectPhase(target, { phase, files }) — released when the run ends'],
+  [I('lib/code-edit.js'), I('lib/repo-inject.js'), 'SD20 0.60.203 commit: RI.outOfPhase holds an agent\'s off-phase file as a proposal'],
   [I('ollama/server.js'), I('ollama/lib/idle-unload.js'), '0.60.123 MP startIdleUnload after listen (keep_alive:0 on idle)'],
   [I('idearium/repo/import-pipeline.js'), I('idearium/repo/import-pipeline-worker.js'), '0.60.124 SW1 runImportPipelineOffThread — new Worker(new URL(./import-pipeline-worker.js))'],
   [I('idearium/repo/nexus-self.js'), I('idearium/repo/import-pipeline.js'), '0.60.124 SW1 _syncSystem + parent: await runImportPipelineOffThread'],

@@ -24,7 +24,7 @@
  */
 
 const MODULE_ID = 'clear-glass.provider-attention';
-const VERSION = '1.3.0';   // 1.3.0 (0.60.71): picks use the Guardian picker (traverse one element at a time) · 1.2.0 (0.60.50, SP2): a pick records its semantic address and its role must fit the field · 1.1.0 (0.60.2): the COS window, Clear Glass's selector check, x/y/z anchors, accounts
+const VERSION = '1.4.0';   // 1.4.0 (0.60.204): a window with its own sign-in popup open is the person's · 1.3.0 (0.60.71): picks use the Guardian picker (traverse one element at a time) · 1.2.0 (0.60.50, SP2): a pick records its semantic address and its role must fit the field · 1.1.0 (0.60.2): the COS window, Clear Glass's selector check, x/y/z anchors, accounts
 const ST = require('../page/semantic-tree.js');
 const SIGNIN_RE = /\/(login|log-in|signin|sign-in|sign_in|auth|authenticate|oauth|sso|u\/login)(\/|$|\?|#)/i;
 
@@ -268,7 +268,10 @@ function _defaultChecker() {
   try { return require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'renderer', 'selector-check.js'), 'utf8'); } catch (_) { return null; }
 }
 
-function createAttentionHandler({ providerHost, assign, getProvider = null, accounts = () => null, checkerSource, pickerSource, signedOutWaitMs = 2500, log = () => {} } = {}) {
+// every live window (electron's), for the popup check; a test passes its own
+function _allWindows() { try { return require('electron').BrowserWindow.getAllWindows(); } catch (_) { return []; } }
+
+function createAttentionHandler({ providerHost, assign, getProvider = null, accounts = () => null, checkerSource, pickerSource, signedOutWaitMs = 2500, log = () => {}, allWindows = _allWindows } = {}) {
   const guardianPicker = () => (pickerSource === undefined ? _guardianPicker() : pickerSource);
   const _active = new Map();   // window id -> { providerId, rec }
   const checker = checkerSource === undefined ? _defaultChecker() : checkerSource;
@@ -298,12 +301,28 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
   // only stamped from the first attention request on: a window he opened and clicked "Log in" in BEFORE that had no stamp, so the
   // sign-in page he had just reached was bounced back to the chat 2.5 s later. A window that is visible and has focus is his:
   // that needs no stamp (the hidden NCP tab is neither).
+  // 0.60.204 — James, 2026-10-22: "also fix chatgpt. i can't login. i click login and it pops up for a second and dissapears".
+  // "Continue with Google / Microsoft / Apple" opens a popup that takes focus, so the ChatGPT window behind it is visible but not
+  // focused, which AF-02b read as the NCP tab: it was sent back to the chat, and the popup, its opener gone, closed. A window with
+  // a sign-in popup of its own open is the person's too, and so is a window he can see that is on a sign-in page.
+  const _openedPopup = (win) => {
+    try {
+      const mine = win.webContents && win.webContents.mainFrame;
+      if (!mine) return false;
+      return (allWindows() || []).some(o => {
+        if (!o || o === win || (o.isDestroyed && o.isDestroyed())) return false;
+        const op = o.webContents && o.webContents.opener;
+        return !!(op && (op === mine || (op.processId === mine.processId && op.routingId === mine.routingId)));
+      });
+    } catch (_) { return false; }
+  };
   const _personUsing = (win) => {
     const t = _input.get(win);
     if (t && Date.now() - t < PERSON_MS) return true;
+    if (_openedPopup(win)) return true;
     try { return !!(win && typeof win.isVisible === 'function' && win.isVisible() && typeof win.isFocused === 'function' && win.isFocused()); } catch (_) { return false; }
   };
-  const _onSignin = (url) => SIGNIN_RE.test(String(url || '')) || /accounts\.google\.com|login\.microsoftonline\.com|auth\.openai\.com|appleid\.apple\.com/.test(String(url || ''));
+  const _onSignin = (url) => SIGNIN_RE.test(String(url || '')) || /accounts\.google\.com|login\.microsoftonline\.com|login\.live\.com|auth\.openai\.com|auth0\.openai\.com|appleid\.apple\.com|challenges\.cloudflare\.com/.test(String(url || ''));
   const _def = (id) => { try { return getProvider ? getProvider(id) : null; } catch (_) { return null; } };
   function _accountInfo(providerId) {
     const sw = accounts && accounts();
@@ -321,7 +340,8 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
         catch (_) {   // the page navigated under the panel (a sign-in moving on): look where it is now
           await new Promise(r => setTimeout(r, 2500));
           if (win.isDestroyed()) break;
-          if (rec.reason === 'signin' && !_onSignin(win.webContents.getURL())) { log(`[attention] ${providerId} — left the sign-in page (${win.webContents.getURL()}); hiding the tab, the userscript connects`); win.hide(); break; }
+          // 0.60.204 — not while a sign-in popup it opened is still up: the page between steps is not the end of the sign-in
+          if (rec.reason === 'signin' && !_onSignin(win.webContents.getURL()) && !_openedPopup(win)) { log(`[attention] ${providerId} — left the sign-in page (${win.webContents.getURL()}); hiding the tab, the userscript connects`); win.hide(); break; }
           continue;
         }
         if (!act || act.action === 'hide') { win.hide(); break; }
