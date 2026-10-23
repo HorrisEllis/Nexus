@@ -135,6 +135,10 @@ function parsePhasemapText(text, name) {
       const m = lines[i].match(PHASE_RE);
       if (!m) continue;
       const isDecision = section === 'open_decisions' || section === 'decisions';
+      // §0.60.225 NF1 — an entry under `root_findings:` is a FINDING the phases cite, not a phase (the 09-05 map says so: "Not
+      // phases"). RF2 was offered as a phase and sent to Gemini, which had nothing to build and wrote a spec instead. Still
+      // returned (no count changes), marked kind: 'finding'; the build refuses it (idearium _phaseBuild NOT_A_PHASE).
+      const isFinding = section === 'root_findings';
       const id = m[1];
       const rest = m[2] || '';
       // §FIXED 2026-09-19 (same pass as the two inversions below) — `near`
@@ -241,7 +245,7 @@ function parsePhasemapText(text, name) {
       const f = _fields(phaseLines.slice(1), _indent(lines[i]) + 2);
       const sys = _systemsOf(f, body);
       out.push({
-        id, map: name, ...(isDecision ? { kind: 'decision' } : {}),
+        id, map: name, ...(isDecision ? { kind: 'decision' } : isFinding ? { kind: 'finding' } : {}),
         title: id.replace(/_/g, ' '),
         status, ...(ans && ans.closedAs ? { closedAs: ans.closedAs } : {}), ...(ans && ans.shelf ? { shelf: true } : {}),
         systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom, ...(sys.systemsFromFiles ? { systemsFromFiles: sys.systemsFromFiles } : {}),

@@ -894,6 +894,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const node = view.phases.find(p => p.map === map && p.phase_key === phase);
   if (!node) return { ok: false, status: 404, error: `no phase ${phase} in ${map}` };
   if (node.status === 'complete') return { ok: false, status: 409, error: `${phase} is already complete`, extra: { code: 'ALREADY_COMPLETE' } };
+  // §0.60.225 NF1 — his run, 2026-10-23: RF2 (a root finding, "Not phases" in its own map) was sent to Gemini as a phase; it
+  // read guardian/config.js and lib/data-home.js (already fixed by DF1/DL3), changed nothing, and wrote a spec. A decision or a
+  // finding has nothing to build; anyway does not override this (it overrides an open dependency, not what the entry is).
+  if (node.kind === 'decision' || node.kind === 'finding') return { ok: false, status: 409, error: `not built: ${phase} is a ${node.kind} recorded in ${map}, not a phase to build`, extra: { code: 'NOT_A_PHASE', kind: node.kind } };
   const { maps, scope } = PH.mapsFor({ repo, repoDir: dir });
   const mapText = (maps.find(m => m.path === map) || {}).text || '';
   // §0.60.125 DG1 — James chose "Refuse, say why": a phase whose depends_on are still open (a decision not taken, a phase
