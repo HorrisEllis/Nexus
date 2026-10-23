@@ -50,12 +50,13 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   if (!PHASES.data) el.innerHTML = `<div class="detail-empty">reading phasemaps…</div>`;
   let d;
   // the phases (every map), the thread's specs, the plan's gates — read together; only the first is required
-  const [pr, sr, gr, rr, lr] = await Promise.allSettled([
+  const [pr, sr, gr, rr, lr, nr] = await Promise.allSettled([
     api(`/api/repos/${forUuid}/phases`, {}, 30000),
     api(`/api/repos/${forUuid}/thread`, {}, 30000),
     api(`/api/repos/${forUuid}/plan`, {}, 30000),
     api(`/api/repos/${forUuid}/roadmaps`, {}, 30000),   // 0.60.199 SD17 — the project's own roadmaps
     api(`/api/repos/${forUuid}/lift-root`, {}, 30000),  // 0.60.206 SD22 — is the project inside one folder?
+    api(`/api/repos/${forUuid}/phases/next?limit=8`, {}, 30000),   // 0.60.222 SL0 — what can be built now, and why the rest cannot
   ]);
   if (CURRENT_API_REPO?.uuid !== forUuid || CURRENT_REPO_SUBTAB !== 'phases') return;
   if (pr.status !== 'fulfilled') {
@@ -68,6 +69,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   PHASES.plan = gr.status === 'fulfilled' ? gr.value : null;
   PHASES.roadmaps = rr.status === 'fulfilled' ? (rr.value.roadmaps || []) : [];
   PHASES.lift = lr.status === 'fulfilled' && lr.value.wrapper ? lr.value : null;
+  PHASES.next = nr && nr.status === 'fulfilled' ? nr.value : null;
   if (PHASES.spec) await _phLoadThread(PHASES.spec, { paint: false });
   // §RS11 — opened from a workshop section: its phase opened
   if (PHASES.wantKey) { const w = d.phases.find(p => p.phase_key === PHASES.wantKey); if (w) PHASES.open = w.uuid; PHASES.wantKey = null; }
@@ -126,8 +128,20 @@ function _phRail(d) {
         <span class="ph2-spec-name">${escapeHtml(s.path.split('/').pop())}</span><span class="ph2-dim">${x.done}/${x.n}</span>${bar(x)}
         ${PHASES.spec === s.path && t ? `<div class="ph2-spec-sub">${t.summary.blocks} blocks · ${t.summary.planned} planned${t.summary.unplanned ? ` · <span class="ph2-warn">${t.summary.unplanned} unplanned</span>` : ''}${t.summary.staleBlocks ? ` · <span class="ph2-warn">${t.summary.staleBlocks} moved</span>` : ''}${t.summary.unlinked ? ` · ${t.summary.unlinked} unlinked` : ''}</div>` : ''}</div>`; }).join('')}
     ${specs && specs.filter(s => !(s.maps || []).length).length ? `<div class="ph2-rail-head">specs not planned yet</div>${specs.filter(s => !(s.maps || []).length).slice(0, 20).map(s => `<div class="ph2-spec dim" title="${escapeHtml(s.path)}"><span class="ph2-spec-name">${escapeHtml(s.path.split('/').pop())}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phPlanDerive('${_phq(s.path)}')" title="one phase per block, bottom-up — no agent">⚡ plan</button></div>`).join('')}` : ''}
+    ${_phNextRail()}
     ${(PHASES.roadmaps || []).filter(r => !r.imported).length ? `<div class="ph2-rail-head">roadmap not imported yet</div>${PHASES.roadmaps.filter(r => !r.imported).map(r => `<div class="ph2-spec dim" title="${escapeHtml([r.json, r.md].filter(Boolean).join(' + '))} → ${escapeHtml(r.target)}"><span class="ph2-spec-name">${escapeHtml((r.json || r.md).split('/').pop())}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phImportRoadmap('${_phq(r.dir)}')" title="the project's own phases as a phasemap: its ids, states, percent, what blocks what, exit criteria — so it continues from where it is">⇣ import</button></div>`).join('')}` : ''}
     ${other.length ? `<div class="ph2-rail-head">maps not from a spec</div>${other.map(m => { const x = sumOf([m.path]); return `<div class="ph2-spec ${PHASES.filter.map === m.path ? 'on' : ''}" onclick="PHASES.spec=null;PHASES.thread=null;phasesFilter('map','${_phq(m.path)}')" title="${escapeHtml(m.path)}"><span class="ph2-spec-name">${escapeHtml(_phShortMap(m.path))}</span><span class="ph2-dim">${x.done}/${x.n}</span>${bar(x)}</div>`; }).join('')}` : ''}`;
+}
+
+// 0.60.222 SL0 — the rail's "can be built now": lib/build-queue.js through GET …/phases/next; each one builds through the same route
+// as the phase's own button, and the blocked counts say why the rest wait (docs/self-building-loop.spec MOD-SL-QUEUE)
+function _phNextRail() {
+  const n = PHASES.next; if (!n || !n.counts) return '';
+  const g = n.counts.byGroup || {};
+  const why = Object.keys(g).filter(k => g[k]).map(k => `${g[k]} ${k}`).join(' · ');
+  return `<div class="ph2-rail-head">can be built now · ${n.counts.queue} of ${n.counts.open} open</div>
+    ${(n.queue || []).map(q => `<div class="ph2-spec" title="${escapeHtml(q.why)} — ${escapeHtml(q.map)}"><span class="ph2-spec-name">${escapeHtml(q.id)}</span><span class="ph2-dim">unlocks ${q.unlocks}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phasesBuild('${_phq(q.map)}','${_phq(q.id)}')" title="build it now (the same route as its own Build button)">▶ build</button></div>`).join('') || '<div class="ph2-dim ph2-pad">nothing can be built now</div>'}
+    ${why ? `<div class="ph2-dim ph2-pad" title="every other open phase is in one group, with what would unblock it (phases next --group …)">waiting: ${escapeHtml(why)}</div>` : ''}`;
 }
 
 function _phPaint() {

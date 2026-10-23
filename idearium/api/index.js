@@ -3158,6 +3158,7 @@ const ROUTE_CAP = {
   'repo.agent.feed': CAPS.READ_IDEAS,   // §0.60.143 TL1b
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
+  'phases.next': CAPS.READ_IDEAS, 'repo.phases.next': CAPS.READ_IDEAS,   // §SL0 — reads only
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
   'repo.flight': CAPS.READ_IDEAS, 'repo.flight.get': CAPS.READ_IDEAS, 'repo.failures': CAPS.READ_IDEAS, 'repo.failure.get': CAPS.READ_IDEAS,   // §FMR3 0.60.146 reads only
@@ -3526,7 +3527,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','ledger','out'],                                 'ledger.out'],            // 0.60.190 APV4 what Idearium sent to the orchestrator's ledger
     ['GET',    ['api','repos',    ':uuid','releases'],                 'repo.releases.list'],
     ['POST',   ['api','repos',    ':uuid','releases'],                 'repo.releases.create'],     // { version?, quote?, notes? }
-    ['GET',    ['api','phases','census'],                              'phases.census'],            // 0.60.188 CNS1 ?system=idearium — every phase judged against its evidence
+    ['GET',    ['api','phases','census'],                              'phases.census'],
+    ['GET',    ['api','phases','next'],                                'phases.next'],              // §SL0 0.60.222 what can be built now, and why the rest cannot (lib/build-queue.js)
+    ['GET',    ['api','repos',':uuid','phases','next'],                'repo.phases.next'],            // §SL0 0.60.222 the same, over one repo's maps
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
     ['POST',   ['api','releases','sync'],                              'releases.sync'],             // { all: true } → every release's commits
     ['GET',    ['api','releases','changes'],                           'releases.changes'],          // §0.60.72 RN2 ?since=0.60.47 · &write=1
@@ -5733,6 +5736,36 @@ async function handle(req, res, route, query, body) {
     }
     case 'ledger.out':   // 0.60.190 APV4 — sent, buffered (orchestrator down), failed, drained, the last error
       return ok(res, { ..._ledgerOut, target: 'orchestrator POST /api/ledger' });
+    // §SL0 0.60.222 — James, 2026-10-23: "we need this to work so it can start building itself." What can be built now, in order, and
+    // why every other open phase cannot (lib/build-queue.js over the DAG, the census and the flights). Nexus's own maps, or a repo's.
+    case 'phases.next':
+    case 'repo.phases.next': {
+      const BQ = _require('../../lib/build-queue.js'), C = _require('../../lib/phase-census.js'), FD = _require('../../lib/flight-data.js');
+      let maps, root, repos;
+      if (action === 'phases.next') {
+        root = _require('../../lib/nexus-self/systems.js').ROOT;
+        maps = fs.readdirSync(path.join(root, 'docs')).filter(f => f.endsWith('-phasemap.spec')).map(f => ({ path: `docs/${f}`, text: fs.readFileSync(path.join(root, 'docs', f), 'utf8') }));
+        repos = getRepoLayer().list({}).filter(r => r.nexusSelf);
+      } else {
+        const repo = getRepoLayer().get(params.uuid);
+        if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+        const PH = await import('../repo/phases.js');
+        const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+        root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);   // a Nexus system's phases are judged in Nexus's tree
+        maps = (m.maps || []).map(x => ({ path: x.path, text: x.text || '' }));
+        repos = [repo];
+      }
+      let census = null, censusWhy = null;
+      try { census = C.census({ root, system: null, maps }); } catch (e) { censusWhy = e.message; }
+      const flights = [];
+      for (const r of repos) { try { for (const f of FD.summary(_phaseRows(r.uuid)).flights || []) if (f.map && f.phase) flights.push({ key: `${f.map}::${f.phase}`, verdict: f.verdict, landed: !!f.landed, ended: f.ended || 0 }); } catch (_) {} }
+      flights.sort((a, b) => (a.ended || 0) - (b.ended || 0));
+      const r = BQ.queue({ maps, census, flights });
+      if (censusWhy) (r.said = r.said || []).push(`census failed: ${censusWhy}`);
+      const limit = Math.max(1, Math.min(2000, parseInt(query.limit, 10) || 50));
+      const group = query.group ? String(query.group) : null;
+      return ok(res, { ...r, queue: r.queue.slice(0, limit), blocked: (group ? r.blocked.filter(b => b.group === group) : r.blocked).slice(0, group ? 2000 : limit), lines: BQ.lines(r) });
+    }
     case 'phases.census': {
       // 0.60.188 CNS1 — every phase of Nexus's maps judged against commits, releases, files and proof (lib/phase-census.js); the
       // per-phase evidence stays in the answer so the UI and agents can show why a verdict was given

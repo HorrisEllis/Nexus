@@ -2,7 +2,7 @@
 # Idearium builds its phases on its own: pick the next buildable phase, build it, prove it, land it, close it, pick the next.
 # Phase ids SL0–SL6 (SB0–SB39 are the build-from-the-spec map's, 2026-10-05).
 # MAPPED 2026-10-23, before building (docs/CLAUDE.md rule 1). Registered in docs/SPEC-REGISTRY.spec. The full spec (his 2026-10-20
-# rule: spec, then phases, then each phase specced again) is written before the first phase's code: docs/self-building-loop.spec.
+# rule: spec, then phases, then each phase specced again) is docs/self-building-loop.spec (written 2026-10-23, compiles at full depth).
 # Touches: docs/2026-10-19-solid-build-foundation-phasemap.spec (AB1 economy-resume, SET1/SET2), docs/2026-10-21-brainos-into-
 # idearium-phasemap.spec (CNS1 census, BX7 automation), docs/2026-10-16-repo-carve-phasemap.spec (FR6 flight data, FR10 stop the
 # ladder), docs/2026-10-19-pipeline-root-causes-phasemap.spec (DG3 the whole DAG, DG4, VF1 verify-first), lib/phase-dag.js.
@@ -38,10 +38,12 @@ found:
 
 phases:
   SL0_what_can_be_built_now:
-    status: OPEN
+    status: DONE 0.60.222 — test-build-queue 6/6 (BQ-05 in Clear Glass); over Nexus 1183 open, 170 can be built now
     layer: library
     depends_on: []
-    files: [lib/build-queue.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/plan-panel.js]
+    files: [lib/build-queue.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, tests/modules/test-build-queue.test.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-QUEUE]
     does: >-
       One deterministic answer to "what can be built now", in order, with the reason for every phase that cannot. A phase is
       buildable when: the DAG has it ready (lib/phase-dag.js: no open depends_on, not in a cycle, no dangling reference); it names
@@ -56,6 +58,8 @@ phases:
     layer: integration
     depends_on: [SL0_what_can_be_built_now]
     files: [lib/phase-close.js, idearium/api/index.js, lib/repo-inject.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-CLOSE]
     does: >-
       The loop's missing write. When a run's phase gate is proven AND its changes are on disk (in auto mode at once; in review mode
       when the last change of that run is applied), the phase's status in its map becomes "DONE <version> — proven by run <id>,
@@ -68,6 +72,8 @@ phases:
     layer: library
     depends_on: [SL0_what_can_be_built_now]
     files: [lib/phase-close.js, lib/phase-census.js, lib/verify-first.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-EVIDENCE-CLOSE]
     does: >-
       The stale backlog cleared by evidence, not by guessing. For an open phase whose files all exist: run its own test (TF2's
       test file when there is one, else the tests linked to its files, lib/test-map.js) and verify-first's already-done check. All
@@ -80,6 +86,8 @@ phases:
     layer: library
     depends_on: [SL0_what_can_be_built_now]
     files: [lib/phase-groom.js, lib/phase-map-auto.js, lib/phase-dag.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-GROOM]
     does: >-
       The 514 phases with no files and the 535 with no depends_on made buildable: MP1 already infers a phase's files and its
       inferred dependencies from its own words; this writes them into the map as a proposal (a change to the map file, through
@@ -92,6 +100,8 @@ phases:
     layer: integration
     depends_on: [SL1_a_proven_phase_closes_itself, SL0_what_can_be_built_now, AB1_autobuild_loop_and_resume, FR10_stop_the_ladder]
     files: [idearium/lib/autobuild.js, idearium/api/index.js, idearium/cli/route-commands.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-LOOP]
     does: >-
       Build the next phase when the last one closed, from SL0's queue, until a limit: a budget (calls, minutes, per day: AB1's
       economy and SET1/SET2's settings), a stop rule (FR10: the same failure from different agents stops the climb and opens a
@@ -104,6 +114,8 @@ phases:
     status: OPEN-DECISION
     depends_on: [SL1_a_proven_phase_closes_itself]
     files: [lib/repo-inject.js, lib/trust-rule.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-TRUST]
     does: >-
       HIS decision (USER_AUTONOMY: what Nexus may change without him). Today every change waits for him, so the loop stops at every
       phase. The coder's options: (A) always review (today; the loop builds and proves, he applies, SL1 closes on apply); (B) a
@@ -118,6 +130,8 @@ phases:
     layer: library
     depends_on: [SL0_what_can_be_built_now]
     files: [lib/flight-data.js, lib/build-queue.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-STATS]
     does: >-
       The numbers that say whether it is working: phases closed per day without him, the land rate per phase kind and per agent,
       minutes and calls per closed phase, what stopped the loop and how often. From the flights and the closes, nothing new
@@ -128,3 +142,13 @@ order: >-
   SL0 → SL1 → SL2 (closes the stale backlog) → SL4 (needs SL5 to run unattended; with A it builds and proves, and he applies) ;
   SL3 and SL6 alongside. SL0, SL2 and SL3 are deterministic (no model); SL1 is one writer; SL4 composes what exists (AB1, FR10,
   BX7, the watchdog).
+
+## ADDENDUM 2026-10-23 (0.60.222) — SL0 built
+James, 2026-10-23: "contiue getting idearium building phases"
+- lib/build-queue.js 1.0.0, GET /api/phases/next and /api/repos/:uuid/phases/next, `phases next` and `repo next`, the Phases tab's rail
+  "can be built now" (each with a ▶ build through the phase's own build route). The UI went in idearium/ui/js/phases.js, not plan-panel.js
+  as first mapped: the Phases tab is where a phase is built, and its rail already lists what each map holds (files: corrected above).
+- A same-file pair with no order: the phase on the lower DAG layer goes first (then key), as the spec says. Read by the axioms (§0.1, the
+  spec decides): so on the real maps a phase many wait on can wait behind a lower-layer one; SL3 proposes an order for those pairs.
+- The run over Nexus's 166 maps: 1183 open, 170 queued (IN0_baseline first, 58 wait on it); decision 18, deps-open 579, dangling 2, no-files
+  391, done-by-evidence 1, conflict 22, held 0. open = queue + every group (1183).

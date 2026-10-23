@@ -100,6 +100,15 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-23: "whats the most important? can you help me build, invent, innovate, ways for idearium to build phases, all of them, we
+  need this to work so it can start building itself."** (0.60.222)
+  - **Context:** 2077 phases across 166 maps, 1183 of them open. No way existed to ask which could be built now. Asked for the most
+    important thing, he chose the self-building loop over more features.
+  - **What it shows:** directing toward leverage. A system that knows what it can build next is the precondition for building itself.
+    His spec-first rule (2026-10-20) held here: the spec compiled before any code, and the code was checked against it.
+  - **Evidence:** `CHANGELOG-0.60.222.md`; `docs/self-building-loop.spec`; `tests/modules/test-build-queue.test.js` 6/6; the run over
+    Nexus's own maps: 170 of 1183 open phases buildable now, every other one with its reason.
+
 - **2026-10-23: "some work for my mentor. need a way to real the data. the phases, convert md to spec. just get nexus building itself"**
   - **Context:** two real projects from his mentor, in PHP/JS and in four languages, each keeping its plan in its own
     markdown shape. Idearium read neither.

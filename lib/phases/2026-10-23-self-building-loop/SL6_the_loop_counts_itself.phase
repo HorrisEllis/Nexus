@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL6_the_loop_counts_itself
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL6_the_loop_counts_itself
+context: pipeline phase SL6_the_loop_counts_itself of docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL6_the_loop_counts_itself (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792774834395
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792774834395
+lastSeenAt: 1792774834395
+fingerprint: null
+payload:
+  id: SL6_the_loop_counts_itself
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/flight-data.js
+    - lib/build-queue.js
+  depends_on:
+    - SL0_what_can_be_built_now
+  blocks:
+    - MOD-SL-STATS
+  spec: docs/self-building-loop.spec
+  graph: 596269867e9d3b8f
