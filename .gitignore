@@ -11,7 +11,8 @@ data/economy/
 # 0.60.143 TL1b — lib/work-journal.js: each agent reply as it streams (state, never code)
 data/work/
 idearium/data/projects/
-idearium/data/.home.json   # runtime state (the data-home move report), written by idearium at start; never committed
+# runtime state (the data-home move report), written by idearium at start; never committed
+idearium/data/.home.json
 idearium/data/specs/
 idearium/data/nodes/
 idearium/data/node-index/
