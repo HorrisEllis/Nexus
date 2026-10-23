@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792756162293
+exported_at: 1792756452074
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756162293
-lastSeenAt: 1792756162293
+firstSeenAt: 1792756452074
+lastSeenAt: 1792756452074
 fingerprint: null
 payload:
   for: CS4_every_system_a_compartment
@@ -164,7 +164,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 1d44ab193dba1584
+    dagHash: fd256b3fd638b817
     layer: 5
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
@@ -172,6 +172,7 @@ payload:
     dependents:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
@@ -185,16 +186,20 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
     downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - DAG 1d44ab193dba1584 · layer 5 · blocked by CS3_the_registry_is_the_bridge
+      - DAG fd256b3fd638b817 · layer 5 · blocked by CS3_the_registry_is_the_bridge
       - 'depends on (2): CS3_the_registry_is_the_bridge, COSA3_run_and_supervise · all upstream 11'
-      - 'needed by (2): CS5_caps_per_compartment, CS6_rebuild_from_the_spec · all downstream 4'
+      - >-
+        needed by (3): CS5_caps_per_compartment, CS6_rebuild_from_the_spec,
+        CS9_every_project_a_compartment · all downstream 6

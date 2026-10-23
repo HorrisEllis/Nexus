@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792756162298
+exported_at: 1792756452081
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756162298
-lastSeenAt: 1792756162298
+firstSeenAt: 1792756452081
+lastSeenAt: 1792756452081
 fingerprint: null
 payload:
   for: CS8_the_cos_screen
@@ -105,7 +105,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 1d44ab193dba1584
+    dagHash: fd256b3fd638b817
     layer: 8
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
@@ -143,7 +143,7 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 1d44ab193dba1584 · layer 8 · blocked by CS2_test_every_version,
+        DAG fd256b3fd638b817 · layer 8 · blocked by CS2_test_every_version,
         CS5_caps_per_compartment, CS7_spawn_despawn_and_balance
       - >-
         depends on (3): CS2_test_every_version, CS5_caps_per_compartment,

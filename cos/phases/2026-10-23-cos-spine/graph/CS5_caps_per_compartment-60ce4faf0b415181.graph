@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792756162294
+exported_at: 1792756452075
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756162294
-lastSeenAt: 1792756162294
+firstSeenAt: 1792756452075
+lastSeenAt: 1792756452075
 fingerprint: null
 payload:
   for: CS5_caps_per_compartment
@@ -101,13 +101,14 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 1d44ab193dba1584
+    dagHash: fd256b3fd638b817
     layer: 6
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
     dependents:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
@@ -124,6 +125,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
     downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
     blockedBy:
@@ -138,12 +140,12 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 1d44ab193dba1584 · layer 6 · blocked by CS4_every_system_a_compartment,
+        DAG fd256b3fd638b817 · layer 6 · blocked by CS4_every_system_a_compartment,
         CS_D4_caps_by_the_os
       - 'depends on (2): CS4_every_system_a_compartment, CS_D4_caps_by_the_os · all upstream 13'
       - >-
-        needed by (2): CS7_spawn_despawn_and_balance, CS8_the_cos_screen · finishing it unlocks
-        CS7_spawn_despawn_and_balance
+        needed by (3): CS7_spawn_despawn_and_balance, CS10_hats_bound_to_the_compartment,
+        CS8_the_cos_screen · finishing it unlocks CS7_spawn_despawn_and_balance
       - >-
         same files as CS1_a_version_is_a_system_state with no order between them:
         cos/compartment/qemu-runtime.js

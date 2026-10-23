@@ -364,6 +364,41 @@ spec:
       error_paths: ["COS not answering → said"]
       acceptance: ["tested in Clear Glass: a version taken and restored from the screen"]
 
+    - id: MOD-CS-PROJECTS
+      name: every-project-a-compartment
+      uuid: nexus-cos-spine-projects-v1-0000-2026-1023-001
+      path: cos/spine/projects.js
+      phase: CS9_every_project_a_compartment
+      description: >-
+        His decision, 2026-10-23: anything imported, and any new project that has been specced and phased, is a new compartment that gets
+        built. On Idearium's repo ingest (an import, a spec promoted to a repo, a new phased project) COS creates the compartment under the
+        repo's id, declared by the repo's .spec; its first version is taken when the import or the first build lands. Existing repos without
+        one get one on first open.
+      deps: [{ name: systems-as-compartments }, { name: compartment-version }]
+      schema_refs: [CompartmentVersion]
+      exports: ["ensure(repoUuid, { by }) → { compartmentId, created }", "forRepo(repoUuid) → compartmentId|null"]
+      gate_pipeline: ["GATE-CS9-001: the repo's spec", "GATE-CS9-002: one compartment per repo id", "GATE-CS9-003: first version"]
+      behavioral_contracts: ["one repo, one compartment, one id", "an imported project's first version is its import"]
+      error_paths: ["COS unavailable at import → the import lands, the compartment is created on first open, said"]
+      acceptance: ["importing a zip makes a repo, its compartment and its first version under one id"]
+
+    - id: MOD-CS-HAT
+      name: hats-bound-to-the-compartment
+      uuid: nexus-cos-spine-hat-v1-0000-2026-1023-001
+      path: cos/spine/hat-bind.js
+      phase: CS10_hats_bound_to_the_compartment
+      description: >-
+        His decision, 2026-10-23: each hat binds its agent to the compartment, not only to the repo. A hat's tools that touch files or run
+        commands execute inside the hat's compartment (its directory, its caps, or its machine through the guest agent), so the boundary
+        lib/repo-hat.js states it does not have ("a capability boundary, not a filesystem jail") becomes an enforced one.
+      deps: [{ name: every-project-a-compartment }, { name: compartment-caps }, { name: registry-bridge }]
+      schema_refs: [CompartmentCaps, CompartmentLink]
+      exports: ["bind(hat, compartmentId)", "exec(hat, tool, args) → result run inside the compartment", "scopeOf(hat) → { compartmentId, root, caps }"]
+      gate_pipeline: ["GATE-CS10-001: the hat's compartment", "GATE-CS10-002: the tool's effect resolved inside it", "GATE-CS10-003: refused outside"]
+      behavioral_contracts: ["a hat's run_command cannot touch a path outside its compartment", "a hat reaches another compartment only through the registry bridge"]
+      error_paths: ["a tool that cannot be confined → refused for that hat, said, never run unconfined"]
+      acceptance: ["a repo hat's run_command writing ../outside.txt is refused or lands inside the compartment, never outside"]
+
   events:
     cos:
       - "cos.version.taken { id, compartment, machine.kind, by }"

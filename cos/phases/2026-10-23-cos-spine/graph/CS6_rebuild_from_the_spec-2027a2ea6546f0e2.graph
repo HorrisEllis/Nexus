@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792756162296
+exported_at: 1792756452077
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756162296
-lastSeenAt: 1792756162296
+firstSeenAt: 1792756452077
+lastSeenAt: 1792756452077
 fingerprint: null
 payload:
   for: CS6_rebuild_from_the_spec
@@ -209,7 +209,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 1d44ab193dba1584
+    dagHash: fd256b3fd638b817
     layer: 6
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
@@ -245,7 +245,7 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 1d44ab193dba1584 · layer 6 · blocked by CS1_a_version_is_a_system_state,
+        DAG fd256b3fd638b817 · layer 6 · blocked by CS1_a_version_is_a_system_state,
         CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system
       - >-
         depends on (3): CS1_a_version_is_a_system_state, CS4_every_system_a_compartment,

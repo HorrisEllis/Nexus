@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792756162288
+exported_at: 1792756452070
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756162288
-lastSeenAt: 1792756162288
+firstSeenAt: 1792756452070
+lastSeenAt: 1792756452070
 fingerprint: null
 payload:
   for: CS1_a_version_is_a_system_state
@@ -196,19 +196,22 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 1d44ab193dba1584
+    dagHash: fd256b3fd638b817
     layer: 1
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
     dependents:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
       - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
     upstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
     downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
       - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
     unlocks: []
@@ -221,9 +224,11 @@ payload:
           - cos/compartment/qemu-runtime.js
     dangling: []
     lines:
-      - DAG 1d44ab193dba1584 · layer 1 · blocked by CS_D2_a_version_is_the_whole_state
+      - DAG fd256b3fd638b817 · layer 1 · blocked by CS_D2_a_version_is_the_whole_state
       - 'depends on (1): CS_D2_a_version_is_the_whole_state'
-      - 'needed by (2): CS2_test_every_version, CS6_rebuild_from_the_spec · all downstream 3'
+      - >-
+        needed by (3): CS2_test_every_version, CS6_rebuild_from_the_spec,
+        CS9_every_project_a_compartment · all downstream 5
       - >-
         same files as CS3_the_registry_is_the_bridge with no order between them:
         idearium/repo/snapshot.js

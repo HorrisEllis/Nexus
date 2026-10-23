@@ -41,6 +41,9 @@ decisions:
   CS_D3_the_spec_rebuilds_the_system:
     chosen: "a rebuild compiles the system's spec and builds it into a new compartment, then compares registries; drift is listed"
     by: "his, 2026-10-20 (the spec is the rebuild contract) and 2026-10-23; REVERSIBILITY: never over the running system"
+  CS_D6_every_project_a_compartment:
+    chosen: "every imported project and every new specced-and-phased project is a new compartment that gets built; versions are snapshots of each project's or system's states; each hat binds its agent to the compartment"
+    by: "his, 2026-10-23 (addendum below)"
   CS_D4_caps_by_the_os:
     chosen: "caps are applied by the OS or the hypervisor and read back; what cannot be enforced is said"
     by: "his axioms §1.2, §0.1; the 'hook in' reading above is to confirm"
@@ -137,6 +140,30 @@ phases:
       despawned by his rule; a system whose data cannot be shared is refused replication, said.
     proof: two replicas of a stateless system share load; one stopped, traffic goes to the other
 
+  CS9_every_project_a_compartment:
+    layer: integration
+    status: OPEN
+    depends_on: [CS4_every_system_a_compartment, CS1_a_version_is_a_system_state, CS_D6_every_project_a_compartment]
+    files: [cos/spine/projects.js, idearium/repo/index.js, lib/cos-bridge.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-PROJECTS]
+    does: >-
+      Every import and every new specced-and-phased project gets its compartment under its repo's id, declared by its .spec, with its first
+      version; existing repos get one on first open. Idearium reaches COS through lib/cos-bridge.js, as it does today.
+    proof: importing a zip makes a repo, its compartment and its first version under one id
+
+  CS10_hats_bound_to_the_compartment:
+    layer: integration
+    status: OPEN
+    depends_on: [CS9_every_project_a_compartment, CS5_caps_per_compartment, CS3_the_registry_is_the_bridge]
+    files: [cos/spine/hat-bind.js, lib/repo-hat.js, lib/hat-forge.js, lib/repo-agent.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-HAT]
+    does: >-
+      A hat's file and command tools run inside its compartment (directory, caps, or machine), so the hat's stated "capability boundary, not a
+      filesystem jail" becomes an enforced one; another compartment is reached only through the registry bridge.
+    proof: a repo hat's run_command writing outside its compartment is refused or lands inside it, never outside
+
   CS8_the_cos_screen:
     layer: ui
     status: OPEN
@@ -190,3 +217,19 @@ phases:
 #   - CS7: "despawn when idle" becomes the normal life of every system, not only of replicas.
 # Still open, his: (a) one id across spec, repo, compartment and miniworld; (b) Versionium owning every version with QEMU as its machine
 # part; (c) the miniworld as the .cos archive.
+
+# ── ADDENDUM 2026-10-23 — every project a compartment; versions are its states; hats bind to the compartment (his decision) ──────────
+# Context: still open from the coder's questions: one id across spec, repo, compartment and miniworld; Versionium owning every version.
+# James, 2026-10-23: "Yeah, then versioning could also be the snapshotting of system states of different versions of each project or
+# system. This is also for new. Anything imported, any projects imported, any new projects that have been spec'd and phased, get, like I
+# said, any new Ethereum project would be a new compartment that gets built. Each hat for the agent, you know, how it binds them to the
+# repo, would bind them to the compartment."
+# Read as (the coder's): "Ethereum project" is the voice transcription of "Idearium project" — to confirm.
+# Decided (his):
+#   - versions are snapshots of the system states of every project and system, not only Nexus's own;
+#   - every import and every new specced-and-phased project is a new compartment, built (CS9);
+#   - each hat binds its agent to the compartment (CS10).
+# This also answers open question (a) in practice: one repo, one compartment, one id.
+# Found in the code (lib/repo-hat.js, its own header): a hat today is "a capability boundary, not a filesystem jail" — a scoped-in
+# run_command can reach outside the repo. Binding the hat to the compartment makes that boundary real. That is the coder's observation;
+# the decision is his.
