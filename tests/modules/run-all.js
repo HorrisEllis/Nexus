@@ -397,6 +397,7 @@ const SUITES = [
   'test-site-readers.test.js',           // 0.60.216 SP2 — each feature reads its site value: driver, passwords, autofill, resume, Guardian, workflows, macros, Co-pilot
   'test-site-settings-ui.test.js',       // 0.60.217 SP3 — the Site Settings popup and Settings › Sites by feature (in Clear Glass, the real resolver)
   'test-global-settings.test.js',        // 0.60.218 SP4 — ClearDriver, Agent Mesh and Guardian settings (GS-05 in Clear Glass)
+  'test-processes.test.js',              // 0.60.219 SP5 — processes with their pages, end (his only), the activity ring, the doors
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
   'test-cos-app-ui.test.js',          // 0.60.89 COSA6 — COS window (jsdom) and controller

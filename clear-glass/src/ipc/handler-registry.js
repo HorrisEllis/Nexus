@@ -33,6 +33,9 @@ let _installed = false;
 
 const DENIED = Object.freeze({
   'accounts:portal:credentials': 'saves a login secret — James enters credentials himself in the Accounts window',
+  'site-profile:set': 'writes a site setting as the person (some limit what agents may do) — agents use /cli/site-profile, which never writes as him',
+  'site-profile:clear': 'clears a site setting as the person — agents use /cli/site-profile',
+  'processes:end': 'ends a page\'s process or closes a background tab — his action in the Processes window (SP_D3, 0.60.219)',
 });
 
 // Grouping for the listing: the prefix before the first ':' (or the whole name).

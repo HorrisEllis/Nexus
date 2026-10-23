@@ -345,3 +345,15 @@ spec:
   #     tries each strategy gets (mesh.retriesPerStrategy) and the wait before each (mesh.backoffMs). A bad value is not used; the constant is.
   #   - Guardian's section also controls listener decay (listenerDecay existed since 0.39.265 with no control). "the provider host" is not in it:
   #     the provider host's controls are the agents hub and Providers & accounts, already.
+
+  # ── ADDENDUM 2026-10-23 (0.60.219, SP5 built) ──────────────────────────────────────────────────────────────────────
+  # James, 2026-10-23: "Also need a processes screen for background tabs and activity."
+  # Built: src/processes/index.js — list() joins app.getAppMetrics to every webContents by OS pid (a window's own page is the window, the sites
+  # in it its tabs, a background tab named with its agentId and memory, the GPU and browser processes with no page); end(wcId, { by }) — the
+  # person only (SP_D3): a background tab closed (closeBackgroundTab now says by whom), a site's renderer ended, a Clear Glass window refused
+  # (409), a page gone 404; the activity ring (500, memory only) fed by one bus.on('*') — driver actions (not its reads), background tabs,
+  # downloads, workflow runs, captured errors — and by a site page's load and his macro runs. IPC processes:list/end, activity:recent;
+  # GET /cli/processes, /cli/activity; POST /cli/processes/end answers 403; commands `glass processes`, `glass activity` and (SP1's missing row) `site`.
+  # Found on the way and closed by his axioms (USER_AUTONOMY, §5.2 no side door): /cli/site-profile and /cli/invoke reached the keys that
+  # limit agents (driver.allowed, mesh.enabled, guardian.listen/capture, network.via), so an agent could lift a limit he set on it. Those
+  # keys are now the person's alone (profile.js PERSON_ONLY; site-profile:set/clear denied to /cli/invoke; the command row's personOnly).

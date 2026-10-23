@@ -1172,6 +1172,9 @@ async function bootstrap() {
   // §0.60.175 PM7 — the DOM observer injected into every page (dom/archaeology.js) reports dom.mutations; a window whose page map is
   // live is mapped again once it settles (src/page/page-session.js poke), so the map — and Nerve, and Ollama — follow the page.
   bus.on('*', (ev) => { try { if (ev.type === 'dom.mutations' && ev.data && ev.data.agentId && driver && driver.pageMutated) driver.pageMutated(ev.data.agentId); } catch (_) {} });
+  // §0.60.219 SP5 — James, 2026-10-23: "Also need a processes screen for background tabs and activity." The activity ring (src/processes)
+  // reads what every system already says on this bus: the driver's actions, background tabs, downloads, workflow runs, captured errors.
+  { const act = require('../processes').activity(); bus.on('*', (ev) => { try { act.fromEvent(ev.type, ev.data); } catch (_) {} }); }
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." Clear Glass's node registry: its listener over
   // clear-glass/data/nodes, indexed into clear-glass/data/node-index with every change, its node events on this SISO bus.
   try { require('../../../lib/node-registry.js').startForSystem('clear-glass', { bus: { emit: (e, d) => emit(e, d) } }); } catch (e) { console.warn(`[ClearGlass] node registry: ${e.message}`); }
@@ -2653,11 +2656,22 @@ async function openBackgroundTab({ agentId, url = 'about:blank', partition, webv
   return { agentId, url, session: win.webContents.session };
 }
 
-function closeBackgroundTab(agentId) {
+function closeBackgroundTab(agentId, { by = 'system' } = {}) {
   const win = bgTabs.get(agentId);
   if (win) { win.destroy(); bgTabs.delete(agentId); bgTabUrls.delete(agentId); }
-  emit('bgtab.closed', { agentId });
+  emit('bgtab.closed', { agentId, by });   // SP5 (0.60.219): who closed it, for the activity
   return { agentId, closed: !!win };
+}
+
+// SP5 (0.60.219) — the Processes screen's backend over this file's own windows and background tabs
+let _processes = null;
+function processes() {
+  if (!_processes) {
+    let ids = []; try { ids = require('../providers/registry').listProviders().map(p => p.id); } catch (_) {}
+    _processes = require('../processes').createProcesses({ bgTabs: () => bgTabs, windows: () => windows, providerIds: () => ids,
+      closeBackgroundTab, activity: require('../processes').activity() });
+  }
+  return _processes;
 }
 
 function listBackgroundTabs() {
@@ -2798,7 +2812,7 @@ function _siteOnLoad(contents, url) {
     const key = `${contents.id}|${origin}|${name}`;
     if (_siteLoadRuns.has(key)) continue;
     _siteLoadRuns.set(key, now);
-    Promise.resolve(ipcBridge.runMacroAsPerson({ name, agentId: `wc:${contents.id}`, url }))
+    Promise.resolve(ipcBridge.runMacroAsPerson({ name, agentId: `wc:${contents.id}`, url, by: 'site settings (on load)' }))
       .then(r => { if (r && r.error) console.warn(`[site-settings] macro "${name}" on load at ${origin} did not run: ${r.error}`); })
       .catch(e => console.warn(`[site-settings] macro "${name}" on load at ${origin} failed: ${e.message}`));
   }
@@ -2834,6 +2848,8 @@ function _automationEvents(contents) {
 }
 app.on('web-contents-created', (_e, contents) => {
   try { _automationEvents(contents); } catch (_) {}
+  // SP5 (0.60.219) — a page that loaded is a line in the activity (sites only; the app's own pages are not)
+  contents.on('did-finish-load', () => { try { const u = contents.getURL(); if (/^https?:/i.test(u) && (contents.hostWebContents || contents.getType() === 'webview')) require('../processes').activity().push({ kind: 'nav', what: contents.getTitle() || u, url: u, wcId: contents.id, by: 'page' }); } catch (_) {} });
   try { GoogleSignin.attach(contents); } catch (e) { console.warn(`[google-signin] page not covered: ${e.message}`); }
   contents.on('before-input-event', (event, input) => {
     if (!input || input.type !== 'keyDown' || input.isAutoRepeat) return;
@@ -2907,7 +2923,7 @@ async function shutdown() {
 module.exports = {
   openAgentWindow, openOrFocus, closeAgentWindow, minimizeAgentWindow, hideAgentWindow, maximizeAgentWindow,
   focusAgentWindow, listOpenAgents,
-  openBackgroundTab, closeBackgroundTab, listBackgroundTabs,
+  openBackgroundTab, closeBackgroundTab, listBackgroundTabs, processes,   // processes: SP5 (0.60.219)
   closeSettingsWindow, openLibraryWindow, closeLibraryWindow, windows, bgTabs,
   freezeAgentWindow, thawAgentWindow,
 };

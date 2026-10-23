@@ -21,6 +21,10 @@
 const K = require('./keys.js');
 
 const ROUTES = Object.freeze(['default', 'direct', 'transport', 'block']);
+// §0.60.219 — keys that limit what agents may do on a site: only the person changes them (from the window, by 'person'). By his axioms
+// (USER_AUTONOMY; §5.2 no side door): an agent reaching /cli/site-profile or the command table must not lift a limit he set on agents.
+const PERSON_ONLY = Object.freeze(['driver.allowed', 'mesh.enabled', 'guardian.listen', 'guardian.capture', 'network.via']);
+const personOnly = (key, by) => (PERSON_ONLY.includes(key) && by !== 'person' ? { ok: false, why: `${key} limits what agents may do on a site — he changes it, from Site settings in Clear Glass (asked by ${by})` } : null);
 function originOf(url) { try { const u = new URL(url); return /^https?:$/.test(u.protocol) ? `${u.protocol}//${u.host}` : null; } catch (_) { return null; } }
 function hostOf(url) { try { return new URL(url).hostname.toLowerCase(); } catch (_) { return null; } }
 const ruleId = (host) => `site.${host}`.replace(/[^\w.-]/g, '-').slice(0, 60);
@@ -56,6 +60,7 @@ function createSiteProfile({ store = null, options = null, net = null, emit = nu
   }
 
   function setSite(url, key, value, { by = 'person' } = {}) {
+    const refused = personOnly(key, by); if (refused) return refused;
     if (key === 'network.via') return setNetRoute(url, value, { by });
     const origin = originOf(url);
     if (!origin) return { ok: false, why: `no site to set: ${JSON.stringify(url)} is not an http(s) page` };
@@ -67,7 +72,8 @@ function createSiteProfile({ store = null, options = null, net = null, emit = nu
     return { ok: true, origin, key, value: v.value };
   }
 
-  function clearSite(url, key) {
+  function clearSite(url, key, { by = 'person' } = {}) {
+    const refused = personOnly(key, by); if (refused) return refused;
     if (key === 'network.via') return setNetRoute(url, 'default');
     const origin = originOf(url);
     if (!origin || !store) return { ok: false, why: !origin ? 'not an http(s) page' : 'the site-settings store is not available' };
@@ -102,4 +108,4 @@ function createSiteProfile({ store = null, options = null, net = null, emit = nu
   return { siteProfile, setSite, clearSite, netRoute, setNetRoute, KEYS: K.KEYS, FEATURES: K.FEATURES };
 }
 
-module.exports = { createSiteProfile, originOf, ruleId, ROUTES };
+module.exports = { createSiteProfile, originOf, ruleId, ROUTES, PERSON_ONLY };

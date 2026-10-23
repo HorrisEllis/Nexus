@@ -67,6 +67,7 @@ const FILES = [
   ['clear-glass/src/site-settings/store.js', I('clear-glass/src/site-settings/store.js'), []],   // the per-origin store (JAA KV cg_site_settings); declared with SP1, 0.60.215
   ['clear-glass/src/site-settings/keys.js', I('clear-glass/src/site-settings/keys.js'), []],   // §0.60.215 SP1 the per-site keys every feature reads (one table)
   ['clear-glass/src/site-settings/profile.js', I('clear-glass/src/site-settings/profile.js'), [I('clear-glass/src/site-settings/keys.js'), I('clear-glass/src/net/policy.js')]],   // §0.60.215 SP1 siteProfile(url): site, else global, else default; the route a netPolicy rule   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
+  ['clear-glass/src/processes/index.js', I('clear-glass/src/processes/index.js'), []],   // §0.60.219 SP5 what is running (metrics joined to pages) and the activity ring
   ['clear-glass/renderer/settings/sections/driver.js', I('clear-glass/renderer/settings/sections/driver.js'), []],   // §0.60.218 SP4 Settings › ClearDriver (options driver.*)
   ['clear-glass/renderer/settings/sections/guardian.js', I('clear-glass/renderer/settings/sections/guardian.js'), []],   // §0.60.218 SP4 Settings › Guardian (options guardian.*, listenerDecay)
   ['clear-glass/renderer/site-profile-groups.js', I('clear-glass/renderer/site-profile-groups.js'), []],   // §0.60.217 SP3 one site's settings by feature, drawn from the key table (popup + Settings › Sites)
@@ -307,6 +308,10 @@ const CONSUMERS = [
   [I('clear-glass/renderer/settings/sections/guardian.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 options.set({ guardian | listenerDecay }) via IPC options:set'],
   [I('clear-glass/renderer/settings/sections/mesh.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 "When a task fails": options.set({ mesh: { retriesPerStrategy | backoffMs } })'],
   [I('clear-glass/src/mesh/agent-mesh.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 drainSettings(this.accounts) at each failure: mesh.retriesPerStrategy, mesh.backoffMs'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/processes/index.js'), '§0.60.219 SP5 processes() over windows / bgTabs / closeBackgroundTab; bus.on('*') feeds activity(); a site page's load is a nav line'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/processes/index.js'), '§0.60.219 SP5 processes:list/end, activity:recent; GET /cli/processes, /cli/activity; POST /cli/processes/end 403; macro runs into the activity'],
+  [I('clear-glass/src/ipc/handler-registry.js'), I('clear-glass/src/ipc/bridge.js'), '§0.60.219 DENIED processes:end, site-profile:set/clear (his, not an agent's through /cli/invoke)'],
+  [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '§0.60.219 site, glass processes, glass activity → /cli/site-profile, /cli/processes, /cli/activity (HTTP)'],
   [I('architect/service.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('clear-glass/src/main/index.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('copilot/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],

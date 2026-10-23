@@ -202,6 +202,12 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     clearAll:     ()         => ipcRenderer.invoke('site-settings:clearAll'),
     listOrigins:  ()         => ipcRenderer.invoke('site-settings:listOrigins'),
   },
+  // SP5 (0.60.219) — what is running and what just happened (src/processes)
+  processes: {
+    list:     ()        => ipcRenderer.invoke('processes:list'),
+    end:      (wcId)    => ipcRenderer.invoke('processes:end', { wcId }),
+    activity: (filter)  => ipcRenderer.invoke('activity:recent', filter || {}),
+  },
   // SP1 (0.60.215) — every feature's settings for one site (src/site-settings/profile.js)
   siteProfile: {
     get:   (url)             => ipcRenderer.invoke('site-profile:get', { url }),

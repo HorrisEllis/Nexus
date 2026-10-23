@@ -676,6 +676,10 @@ class IpcBridge {
       try { const r = await require('../main/index').openOrFocus(req.body || {}); res.status(r.ok ? 200 : 400).json(r); }
       catch (e) { res.status(500).json({ ok: false, error: e.message }); }
     });
+    // SP5 (0.60.219) — agents read what is running and what happened; ending a process is not offered here (SP_D3)
+    this.app.get('/cli/processes', (req, res) => { try { res.json(require('../main/index').processes().list()); } catch (e) { res.status(500).json({ ok: false, error: e.message }); } });
+    this.app.get('/cli/activity', (req, res) => res.json({ events: require('../processes').activity().recent({ limit: Math.min(+req.query.limit || 100, 500), kind: req.query.kind || null, origin: req.query.origin || null }) }));
+    this.app.post('/cli/processes/end', (req, res) => res.status(403).json({ ok: false, why: 'ending a process is a person\'s action: the Processes window (Shift+Esc), not an agent route' }));
     this.app.post('/cli/bgtab', async (req, res) => {
       try { res.json(await require('../main/index').openBackgroundTab(req.body)); }
       catch (e) { res.status(500).json({ error: e.message }); }
@@ -725,8 +729,10 @@ class IpcBridge {
     this.app.delete('/cli/site-settings', (req, res) => res.json(this.siteSettings?.clear(req.query.url) || { error: 'siteSettings unavailable' }));
     // SP1 (0.60.215) — the site profile for agents and the CLI: read, set (by is the caller's), clear
     this.app.get('/cli/site-profile', (req, res) => res.json(req.query.url ? this._siteProfile().siteProfile(req.query.url) : { keys: this._siteProfile().KEYS }));
-    this.app.put('/cli/site-profile', (req, res) => { const b = req.body || {}; const r = this._siteProfile().setSite(b.url, b.key, b.value, { by: String(b.by || req.get('x-cg-caller') || 'cli') }); res.status(r.ok ? 200 : 400).json(r); });
-    this.app.delete('/cli/site-profile', (req, res) => { const r = this._siteProfile().clearSite(req.query.url, req.query.key); res.status(r.ok ? 200 : 400).json(r); });
+    // 0.60.219 — this door never writes as the person (a body's by: 'person' is not taken): the keys that limit agents are refused here
+    const cliBy = (req) => { const b = String((req.body && req.body.by) || req.get('x-cg-caller') || 'cli'); return b === 'person' ? 'cli' : b; };
+    this.app.put('/cli/site-profile', (req, res) => { const b = req.body || {}; const r = this._siteProfile().setSite(b.url, b.key, b.value, { by: cliBy(req) }); res.status(r.ok ? 200 : 400).json(r); });
+    this.app.delete('/cli/site-profile', (req, res) => { const r = this._siteProfile().clearSite(req.query.url, req.query.key, { by: cliBy(req) }); res.status(r.ok ? 200 : 400).json(r); });
     this.app.get('/cli/site-settings/origins', (req, res) => res.json({ origins: this.siteSettings?.listOrigins() || [] }));
 
     // ── history — the real, freshly-built store, first-ever CLI reach ──
@@ -946,7 +952,9 @@ class IpcBridge {
       if (!this.driver) return { error: 'driver not wired' };
       try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call, by: 'person' }) }; } catch (err) { return { error: err.message }; }
     };
-    return this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
+    const r = await this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
+    try { require('../processes').activity().push({ kind: 'macro', what: `macro "${d.name}" ${r && r.error ? `did not run: ${r.error}` : 'ran'}`, url, by: d.by || 'person', level: r && r.error ? 'warn' : 'info', ref: d.name }); } catch (_) {}   // SP5
+    return r;
   }
 
   _bindRendererHandlers() {
@@ -1159,8 +1167,14 @@ class IpcBridge {
     // the network route is the netPolicy origin rule. by: the person (the window) — an agent's write comes through /cli/site-profile.
     ipcMain.handle('site-profile:get',   async (e, d) => this._siteProfile().siteProfile(d && d.url));
     ipcMain.handle('site-profile:set',   async (e, d) => this._siteProfile().setSite(d && d.url, d && d.key, d && d.value, { by: 'person' }));
-    ipcMain.handle('site-profile:clear', async (e, d) => this._siteProfile().clearSite(d && d.url, d && d.key));
+    ipcMain.handle('site-profile:clear', async (e, d) => this._siteProfile().clearSite(d && d.url, d && d.key, { by: 'person' }));
     ipcMain.handle('site-profile:keys',  async () => ({ keys: this._siteProfile().KEYS, features: this._siteProfile().FEATURES }));
+
+    // SP5 (0.60.219) — James, 2026-10-23: "Also need a processes screen for background tabs and activity." What is running (every process
+    // with its pages, memory and CPU) and what just happened. Ending one is his: this channel is denied to agents in handler-registry.js.
+    ipcMain.handle('processes:list',  async () => require('../main/index').processes().list());
+    ipcMain.handle('processes:end',   async (e, d) => require('../main/index').processes().end(d && d.wcId, { by: 'person' }));
+    ipcMain.handle('activity:recent', async (e, d) => ({ events: require('../processes').activity().recent(d || {}), dropped: require('../processes').activity().dropped() }));
 
     // §GAP CLOSED 2026-08-30 — real IPC handlers for the freshly-built
     // HistoryStore, the same real gap this session found (registry

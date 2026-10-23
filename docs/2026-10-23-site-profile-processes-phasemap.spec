@@ -87,9 +87,10 @@ phases:
 
   SP5_processes_and_activity:
     layer: backend
-    status: OPEN
+    status: BUILT 0.60.219 — src/processes (list, end, the activity ring fed from the bus), IPC, /cli/processes and /cli/activity, commands site / processes / activity; test-processes 4/4
     depends_on: [SP_D3_person_ends_processes]
-    files: [clear-glass/src/processes/index.js, clear-glass/src/diagnostic/process-metrics.js, clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js]
+    # files as built: process-metrics.js is read, not changed (the same getAppMetrics); handler-registry.js and route-commands.js added
+    files: [clear-glass/src/processes/index.js, clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/ipc/handler-registry.js, clear-glass/src/preload/index.js, clear-glass/src/site-settings/profile.js, idearium/cli/route-commands.js]
     spec: clear-glass/spec/site-profile.spec
     blocks: [MOD-SP-PROCESSES]
     does: >-
