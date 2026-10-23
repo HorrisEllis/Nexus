@@ -1,5 +1,6 @@
 # docs/2026-10-23-self-building-loop-phasemap.spec
 # Idearium builds its phases on its own: pick the next buildable phase, build it, prove it, land it, close it, pick the next.
+# Phase ids SL0–SL6 (SB0–SB39 are the build-from-the-spec map's, 2026-10-05).
 # MAPPED 2026-10-23, before building (docs/CLAUDE.md rule 1). Registered in docs/SPEC-REGISTRY.spec. The full spec (his 2026-10-20
 # rule: spec, then phases, then each phase specced again) is written before the first phase's code: docs/self-building-loop.spec.
 # Touches: docs/2026-10-19-solid-build-foundation-phasemap.spec (AB1 economy-resume, SET1/SET2), docs/2026-10-21-brainos-into-
@@ -13,7 +14,13 @@ origin:
     Asked right after main reached 0.60.220. The coder traced the build path end to end (idearium/api/index.js _phaseBuild and
     runContract, lib/repo-inject.js land, the watchdog) and measured the backlog over every docs/*-phasemap.spec with
     lib/phase-dag.js. The coder's reading (to confirm): "building itself" means the loop runs without him between phases, and he
-    is asked only what is his (USER_AUTONOMY): his decisions, and whatever the trust rule (SB5) keeps for him.
+    is asked only what is his (USER_AUTONOMY): his decisions, and whatever the trust rule (SL5) keeps for him.
+  his_earlier_decision: >-
+    2026-10-21 (docs/2026-10-10-idearium-solid-phasemap.spec addendum): "need to stop adding more phases and get idearium solid,
+    actually thats priority, once we do that, we have have the system build itself". This map adds seven phases. The coder's
+    reading (to confirm): his 2026-10-23 words ask for the "then" of that order, and these phases close the loop the SD phases
+    built rather than adding scope beside them; SL0-SL2 are what makes "solid" checkable (what is done, by evidence). If he meant
+    no new phases at all, SL0-SL2 fold into SD as addenda instead.
 
 found:
   # measured 2026-10-23 on main 0.60.220 (lib/phase-dag.js build over 165 maps)
@@ -30,7 +37,7 @@ found:
     - "lib/version.js has no version lines for 0.60.187–0.60.219 (it jumps from 0.60.186 to 0.60.220): the releases happened (their CHANGELOGs exist) but the version record lost them in a merge. Not this map's to fix; reported."
 
 phases:
-  SB0_what_can_be_built_now:
+  SL0_what_can_be_built_now:
     status: OPEN
     layer: library
     depends_on: []
@@ -38,16 +45,16 @@ phases:
     does: >-
       One deterministic answer to "what can be built now", in order, with the reason for every phase that cannot. A phase is
       buildable when: the DAG has it ready (lib/phase-dag.js: no open depends_on, not in a cycle, no dangling reference); it names
-      files (DG2 will accept it); no decision it depends on is open; it is not evidently done (SB2's check); no open phase
+      files (DG2 will accept it); no decision it depends on is open; it is not evidently done (SL2's check); no open phase
       upstream of it changes the same file. The rest are grouped by what would unblock them: his decision, files to name, a cycle
       to break, already done. Reuses phase-dag build/slice, phase-census, flight-data summary (a phase that failed the same way
       three times is held, not queued). `phases next [--repo] [--why]`, GET /api/phases/next, the Plan panel's "next" list.
     proof: "over Nexus's 165 maps: the queue, and every open phase in exactly one group with its reason; the counts match phase-dag's"
 
-  SB1_a_proven_phase_closes_itself:
+  SL1_a_proven_phase_closes_itself:
     status: OPEN
     layer: integration
-    depends_on: [SB0_what_can_be_built_now]
+    depends_on: [SL0_what_can_be_built_now]
     files: [lib/phase-close.js, idearium/api/index.js, lib/repo-inject.js]
     does: >-
       The loop's missing write. When a run's phase gate is proven AND its changes are on disk (in auto mode at once; in review mode
@@ -56,68 +63,68 @@ phases:
       log. Reversible: undoing any change of the run (FR3) reopens the phase, said. A proof met only by overlays never closes it.
     proof: "a fixture phase built, proven, applied: its map says DONE with the run and version; downstream DG1 lets the next phase build; undoing the change reopens it"
 
-  SB2_done_by_evidence:
+  SL2_done_by_evidence:
     status: OPEN
     layer: library
-    depends_on: [SB0_what_can_be_built_now]
+    depends_on: [SL0_what_can_be_built_now]
     files: [lib/phase-close.js, lib/phase-census.js, lib/verify-first.js]
     does: >-
       The stale backlog cleared by evidence, not by guessing. For an open phase whose files all exist: run its own test (TF2's
       test file when there is one, else the tests linked to its files, lib/test-map.js) and verify-first's already-done check. All
-      green → it closes as "DONE by evidence <date> — <tests>", the same reversible write as SB1; anything less → it stays open
+      green → it closes as "DONE by evidence <date> — <tests>", the same reversible write as SL1; anything less → it stays open
       with what is missing. A dry run first lists every phase it would close; nothing is closed without a passing test.
     proof: "the dry run over Nexus's 306 open phases whose files exist: how many close, how many stay, each with its test; one closed phase reopens when its test is made to fail"
 
-  SB3_the_backlog_groomed:
+  SL3_the_backlog_groomed:
     status: OPEN
     layer: library
-    depends_on: [SB0_what_can_be_built_now]
+    depends_on: [SL0_what_can_be_built_now]
     files: [lib/phase-groom.js, lib/phase-map-auto.js, lib/phase-dag.js]
     does: >-
       The 514 phases with no files and the 535 with no depends_on made buildable: MP1 already infers a phase's files and its
       inferred dependencies from its own words; this writes them into the map as a proposal (a change to the map file, through
       repo-inject, with what each came from), never silently. Same-file pairs with no order (251) get a proposed order from the
       DAG's layers. Cycles and dangling references are listed for a person (they need a choice).
-    proof: "proposals for the map edits, each with its evidence; applied, SB0's queue grows by that many and DG2 accepts them"
+    proof: "proposals for the map edits, each with its evidence; applied, SL0's queue grows by that many and DG2 accepts them"
 
-  SB4_the_loop:
+  SL4_the_loop:
     status: OPEN
     layer: integration
-    depends_on: [SB1_a_proven_phase_closes_itself, SB0_what_can_be_built_now, AB1_autobuild_loop_and_resume, FR10_stop_the_ladder]
+    depends_on: [SL1_a_proven_phase_closes_itself, SL0_what_can_be_built_now, AB1_autobuild_loop_and_resume, FR10_stop_the_ladder]
     files: [idearium/lib/autobuild.js, idearium/api/index.js, idearium/cli/route-commands.js]
     does: >-
-      Build the next phase when the last one closed, from SB0's queue, until a limit: a budget (calls, minutes, per day: AB1's
+      Build the next phase when the last one closed, from SL0's queue, until a limit: a budget (calls, minutes, per day: AB1's
       economy and SET1/SET2's settings), a stop rule (FR10: the same failure from different agents stops the climb and opens a
       case), and his queue (a phase needing his decision, or a change the trust rule keeps for him, is skipped and listed, the loop
       moves on). One loop per repo, started and stopped by a person or an automation (BX7); every step is a flight (FR6). Also
       fixes the watchdog that calls a 15-minute Claude attempt stalled at 10.
     proof: "a fixture repo with three chained phases: started once, all three build, prove, land and close in order; a fourth that needs a decision is skipped and listed; a stuck one stops at the rule"
 
-  SB5_when_a_proven_change_lands_alone:
+  SL5_when_a_proven_change_lands_alone:
     status: OPEN-DECISION
-    depends_on: [SB1_a_proven_phase_closes_itself]
+    depends_on: [SL1_a_proven_phase_closes_itself]
     files: [lib/repo-inject.js, lib/trust-rule.js]
     does: >-
       HIS decision (USER_AUTONOMY: what Nexus may change without him). Today every change waits for him, so the loop stops at every
-      phase. The coder's options: (A) always review (today; the loop builds and proves, he applies, SB1 closes on apply); (B) a
+      phase. The coder's options: (A) always review (today; the loop builds and proves, he applies, SL1 closes on apply); (B) a
       proven change lands by itself in his project repos when every deterministic gate passed (test first seen failing then
       passing, the batch test FR2, the regression and export screens), with undo (FR3) one click away, while Nexus's own repos stay
-      review; (C) as B, and Nexus too, except a list of core files he keeps. The coder recommends B now, and C only after SB6 shows
-      the land rate on his runs. To confirm with him before SB4 runs unattended.
+      review; (C) as B, and Nexus too, except a list of core files he keeps. The coder recommends B now, and C only after SL6 shows
+      the land rate on his runs. To confirm with him before SL4 runs unattended.
     proof: "his choice recorded with his words; the rule is one setting per repo, said on every change it lands"
 
-  SB6_the_loop_counts_itself:
+  SL6_the_loop_counts_itself:
     status: OPEN
     layer: library
-    depends_on: [SB0_what_can_be_built_now]
+    depends_on: [SL0_what_can_be_built_now]
     files: [lib/flight-data.js, lib/build-queue.js]
     does: >-
       The numbers that say whether it is working: phases closed per day without him, the land rate per phase kind and per agent,
       minutes and calls per closed phase, what stopped the loop and how often. From the flights and the closes, nothing new
       recorded beside them. Shown in the Plan panel and `phases loop stats`.
-    proof: "after the SB4 fixture: phases closed 3, stopped 1 (decision), calls and minutes per phase, matching the flights"
+    proof: "after the SL4 fixture: phases closed 3, stopped 1 (decision), calls and minutes per phase, matching the flights"
 
 order: >-
-  SB0 → SB1 → SB2 (closes the stale backlog) → SB4 (needs SB5 to run unattended; with A it builds and proves, and he applies) ;
-  SB3 and SB6 alongside. SB0, SB2 and SB3 are deterministic (no model); SB1 is one writer; SB4 composes what exists (AB1, FR10,
+  SL0 → SL1 → SL2 (closes the stale backlog) → SL4 (needs SL5 to run unattended; with A it builds and proves, and he applies) ;
+  SL3 and SL6 alongside. SL0, SL2 and SL3 are deterministic (no model); SL1 is one writer; SL4 composes what exists (AB1, FR10,
   BX7, the watchdog).

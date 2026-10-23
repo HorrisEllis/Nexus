@@ -9003,7 +9003,12 @@ async function handle(req, res, route, query, body) {
       if (!pick) return err(res, found.length ? 400 : 404, found.length ? `this repo has ${found.length} roadmaps — name one (dir): ${found.map(r => r.dir || '.').join(', ')}` : 'no roadmap in this repo (phases.json, roadmap.json, PHASEMAP.md or ROADMAP.md)', { code: found.length ? 'WHICH_ROADMAP' : 'NO_ROADMAP' });
       if (pick.imported && body.replace !== true) return err(res, 409, `${pick.target} already exists — imported before; replace:true imports it again over it (the old one stays in the repo's versions)`, { code: 'EXISTS', map: pick.target });
       let im;
-      try { im = RIm.importRoadmap({ json: readOf(pick.json), md: readOf(pick.md), name: pick.target.split('/').pop().replace(/\.spec$/, ''), source: { json: pick.json, md: pick.md } }); }
+      // §SD17b 0.60.221 — the evidence a phased spec is read with: the repo's own files (a phase whose changelog's added files all exist is
+      // done) and the README beside it or at the root (its "Project status" table is the project's own record of what is done)
+      const fileSet = new Set((repo.files || []).map(f => String(f.path).replace(/\\/g, '/')));
+      const readmes = [...new Set([`${pick.dir ? `${pick.dir}/` : ''}README.md`, 'README.md'])].map(p => ({ path: p, text: readOf(p) })).filter(t => t.text);
+      try { im = RIm.importRoadmap({ json: readOf(pick.json), md: readOf(pick.md), name: pick.target.split('/').pop().replace(/\.spec$/, ''), source: { json: pick.json, md: pick.md },
+        exists: (p) => fileSet.has(`${pick.dir ? `${pick.dir}/` : ''}${p}`) || fileSet.has(p), statusTables: readmes }); }
       catch (e) { if (e instanceof RIm.RoadmapImportError) return err(res, 400, e.message, { code: e.code }); throw e; }
       const w = await _phaseWrite(repo, scope, pick.target, im.text, snapshot, `import roadmap ${[pick.json, pick.md].filter(Boolean).join(' + ')}`);
       if (!w.ok) return err(res, w.status || 500, w.error, { code: w.code || 'WRITE_FAILED' });

@@ -100,6 +100,14 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-23: "some work for my mentor. need a way to real the data. the phases, convert md to spec. just get nexus building itself"**
+  - **Context:** two real projects from his mentor, in PHP/JS and in four languages, each keeping its plan in its own
+    markdown shape. Idearium read neither.
+  - **What it shows:** using his own system on outside work. A tool built for one project (MASTERMIND's roadmap import)
+    now reads two more, from their own records, without a model: worker_clean's plan with its next phase found, and core13's
+    open issues.
+  - **Evidence:** `CHANGELOG-0.60.221.md`; `tests/modules/test-roadmap-import.test.js` RI-06..08.
+
 - **2026-10-21: "can you make a full adblocker ... migrate page zoom to the core of clearglass. moright click menu needs to be redone ... in
   relation to the mouse"** (0.60.183)
   - **Context:** the blocker was 16 hard-coded domains. Zoom lived in two places with different rules. The right-click menu had been

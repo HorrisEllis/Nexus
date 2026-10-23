@@ -400,7 +400,7 @@ spec:
       layer: backend
       systems: [idearium]
       status: "DONE 0.60.202 — test-refusal-sendback RS-01..03 (RS-03 in Clear Glass)"
-      james: '"need a retry or automatically ask for the fix if possible, or a tool or something" · "still didn\'t work." · "that error needs to be fixed." (2026-10-21, SP5 title.js)'
+      james: '"need a retry or automatically ask for the fix if possible, or a tool or something" · "still didn''t work." · "that error needs to be fixed." (2026-10-21, SP5 title.js)'
       depends_on: [SD18_mastermind_ready]
       files: [idearium/api/index.js, idearium/ui/js/app.js, idearium/ui/js/work-surface.js, idearium/ui/index.html]
       does: >-
@@ -562,3 +562,17 @@ whats being said from the agents in real time."
 James, 2026-10-21: "look in clearglass download manager". Addendum (b)'s second store is superseded and removed: the stream was already kept
 by his 0.39.278 chat ledger. The fallback reads it now (docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec, addendum
 0.60.192).
+
+# ## ADDENDUM 2026-10-23 — SD17b: the roadmap import reads phased specs and issue lists
+# James, 2026-10-23, uploading worker_clean-5.2.0.zip and core13.2.1.zip: "some work for my mentor. need a way to real the data. the
+# phases, convert md to spec. just get nexus building itself"
+# Found: roadmap-import read only MASTERMIND's shape (`## P1 — TITLE`, PHASEMAP.md / ROADMAP.md / phases.json). Both projects read as
+# 0 phases. worker_clean (AI Game Master, PHP + JS on SISO core 13.1) keeps its plan in SPEC.md as `## Phase 6 — Title` sections with
+# **Goal:**, `### Changelog.6` ([ADDED]/[CHANGED] paths) and a "Completed Phases" table; core13.2.1 (SISO core in js/php/py/lua) has
+# no phase plan: its SPEC.md is a contract spec, and its open work is doc/ISSUES.md (bullets under groups).
+# SD17b (built 0.60.221): parseRoadmapMd detects the shape. Phased spec: each Phase heading a phase, its Goal what it does, its
+# changelog's files its files (named_in_source, so the file mapper and DG2 have them), the numbering its order (each phase after the
+# one before, said as from the numbering), the Completed table done; with the repo's files, a phase whose changelog's added files all
+# exist is done by that evidence. Issue list: each bullet an open phase (its group kept), with the paths it names; a group that says
+# it is other projects' work ("not this project's work") is not imported and is listed; "Deferred" and "named, not fixed" are kept as
+# the source state. SPEC.md and ISSUES.md join the names findRoadmaps looks for; one that names no phase is left out, said (rankRoadmaps).
