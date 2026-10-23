@@ -726,10 +726,10 @@ export const SPEC = [
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/graph?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(String(a.flags.map))}` : ''}` }),
     print: (d, a, h) => { for (const l of d.lines || []) console.log(/^(NEW CROSSING|  missing)|NO DEPENDENCY GRAPH/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); } },
-  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again)',
+  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway] [--rebuild]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again; --rebuild builds a complete phase again)',
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => (a.args[1] === 'build'
-      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { startedBy: 'person:cli', phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}), ...(a.flags.anyway ? { anyway: true } : {}) }, timeoutMs: 120000 }
+      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { startedBy: 'person:cli', phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}), ...(a.flags.anyway ? { anyway: true } : {}), ...(a.flags.rebuild ? { rebuild: true } : {}) }, timeoutMs: 120000 }
       : { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/runs?phase=${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => {
       if (a.args[1] === 'build') {

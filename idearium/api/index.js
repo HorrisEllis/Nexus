@@ -888,12 +888,15 @@ function _underMapRoot(mapPath, expected, delivered) {
     return want.has(rest) && (p.startsWith(root || '\0') || rest.includes('/')) ? rest : p;
   });
 }
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, startedBy = null }) {
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
   const node = view.phases.find(p => p.map === map && p.phase_key === phase);
   if (!node) return { ok: false, status: 404, error: `no phase ${phase} in ${map}` };
-  if (node.status === 'complete') return { ok: false, status: 409, error: `${phase} is already complete`, extra: { code: 'ALREADY_COMPLETE' } };
+  // §0.60.226 SL7 — SL1 closes a proven phase, so every later build of it (resume, replan, retry) was refused here and the pipeline's own
+  // suites went red. Building a complete phase again is allowed only when asked for (rebuild: true), said on every row of the run.
+  const rebuilding = node.status === 'complete' && rebuild === true;
+  if (node.status === 'complete' && !rebuilding) return { ok: false, status: 409, error: `${phase} is already complete — to build it again, ask for it (rebuild: true, \`--rebuild\`)`, extra: { code: 'ALREADY_COMPLETE', remedy: 'rebuild: true' } };
   // §0.60.225 NF1 — his run, 2026-10-23: RF2 (a root finding, "Not phases" in its own map) was sent to Gemini as a phase; it
   // read guardian/config.js and lib/data-home.js (already fixed by DF1/DL3), changed nothing, and wrote a spec. A decision or a
   // finding has nothing to build; anyway does not override this (it overrides an open dependency, not what the entry is).
@@ -978,6 +981,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const runStartTs = Date.now();
   const runId = `phrun-${runStartTs.toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title,
+    ...(rebuilding ? { rebuild: true } : {}),   // §0.60.226 SL7 — a complete phase built again, on request
     startedBy: startedBy || { who: 'unknown', whence: 'unknown' },   // 0.60.188 RC7 — who started this run, on every row
     ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}),   // §0.60.125 DG1 — built anyway: what was still open, on every row
     graphHash: phaseGraph.hash, graphFile: phaseGraphFile ? path.relative(IDEARIUM_DATA_DIR, phaseGraphFile).replace(/\\/g, '/') : null };   // §0.60.147 DG2 — the graph it was built against
@@ -1031,7 +1035,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // (2) active (a map that will not take the edit is reported, not fatal)
   let statusNote = null;
   if (node.status !== 'active') {
-    const st = await _phaseSetStatus(repo, { map, phase, status: 'active', force: true, reason: `phase ${phase} build started (${runId})` });
+    const st = await _phaseSetStatus(repo, { map, phase, status: 'active', force: true, reason: `phase ${phase} build started (${runId})${rebuilding ? ' — built again on request' : ''}` });
     if (!st.ok) statusNote = st.error;
   }
   const depsDone = view.phases.filter(p => node.depends_on.includes(p.uuid) && p.status === 'complete').map(p => p.phase_key);
@@ -1616,7 +1620,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const mapBase = map.split('/').pop().replace(/\.spec$/, '');
     const file = contractFile;
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    const inputs = root && fs.existsSync(path.join(root, map)) ? [{ id: 'phasemap', path: map, note: 'the phase as its map writes it' }] : [];
+    const inputs = root && fs.existsSync(path.join(root, map)) ? [{ id: 'phasemap', path: map, phase, note: 'the phase as its map writes it (its own block, its status lines left out: SL7)' }] : [];
     let onDisk = false; try { onDisk = _require('../../lib/repo-inject.js').getMode(target.uuid) !== 'review'; } catch (_) {}
     const built = whole ? CA.fromWholePhase({ id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || '', inputs, message })   // §BR1 — no file named: the whole phase, one brick
       : CA.fromPhasePlan(plan, { id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || plan.intent || '', inputs, onDisk, root, phaseHash });
@@ -9336,7 +9340,7 @@ async function handle(req, res, route, query, body) {
         if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
         map = hits[0].map;
       }
-      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true });
+      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true, rebuild: body.rebuild === true });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
     }

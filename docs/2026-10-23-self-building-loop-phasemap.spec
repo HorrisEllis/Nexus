@@ -187,3 +187,95 @@ James, 2026-10-23: "next"
 - Found: the first dry run spawned tests without a sandbox and they wrote ledgers into data/ and cortex/data/; fixed (each test in its own
   sandbox and process group). Even sandboxed, some test still writes failure_mode nodes into cortex/data/nodes/failure_mode (that folder
   is not one of the sandbox's stores). The files were moved out of the tree, kept; the writer is not traced yet (reported, not fixed here).
+
+## ADDENDUM 2026-10-23 (0.60.226 →) — every phase a node with its graph; the DAG made whole; the agent maps what Nexus cannot; the pipeline simulated
+# James, 2026-10-23, after 0.60.225 (RF2 was a finding sent to Gemini as a phase):
+#   "can you decompose the phases into .phase with the dependancy graph per phase node. then move them into the repsective systems, or
+#   sort them at least. need to do something about the dependancy graph. in the idearium pipeline, building phases, extending, building
+#   from scratch. run deep and recursive simulations, of every possible failure mode, loop until we get a solid pipeline. using all
+#   phases, specs, everything you can to get idearium coding any project, any phase. agent needs to map dependancies if nexus cant map one."
+# Measured before mapping (lib/phase-dag.js over Nexus's 166 maps, 0.60.225): 1971 phases, 1172 open; 535 with no depends_on line; 565
+# open with no files (DG2 refuses them, NO_GRAPH); of the open ones, MP1 (lib/phase-map-auto.js) places 596 by their declared files, 343
+# by evidence in their words, and 244 not at all. 3 cycles; 17 dangling references, nearly all prose read as phase names ("each",
+# "phase's", "(snapshot-compartments)"). 251 same-file pairs with no order. 175 .phase nodes written (PS1), for a handful of maps.
+# The pipeline's own suites were red on main before this: test-contract-phase-build 9 of 14, test-chunked-phase-build 5 of 16. Traced:
+# SL1 closes a proven phase, and every later build of it (resume, replan, retry, a second scenario) is refused ALREADY_COMPLETE.
+# Reuse (§8.6): SL3 (open) already owns the grooming, and PS1 (emerge/compiler/phase-specs.js) already writes a .phase and its .graph
+# beside the owning system. MP4 (idearium/repo/phase-mapping.js, 0.60.29) already asks an agent to map phases, as a batch job only.
+# These phases finish those; nothing is built beside them.
+# The coder's reading (to confirm where it matters): "move them into the respective systems" = each .phase lives under the system that
+# owns its files (PS1's rule), and a phase that names no files goes to the system its map is tagged with, else to lib/ (core). The
+# phasemaps stay the authored source (his 2026-10-20 order: spec, then phases, then each phase specced again); the .phase is derived and
+# checked for drift. Nothing is moved out of docs/.
+
+phases_added_2026_10_23:
+  SL7_build_again_is_asked_for:
+    status: DONE 0.60.226 — test-contract-phase-build 14/14 (was 5/14), test-chunked-phase-build 16/16 (was 11/16)
+    layer: integration
+    depends_on: [SL1_a_proven_phase_closes_itself]
+    files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/plan-panel.js, idearium/ui/js/repo-tasks.js, cortex/core/raid/contract-gates.js, cortex/core/raid/contract-adapters.js, tests/modules/test-contract-phase-build.test.js, tests/modules/test-chunked-phase-build.test.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-REBUILD]
+    does: >-
+      A complete phase is built again only when asked for (`rebuild: true`, `--rebuild`), and the ask is said on the run and in the
+      status note. Without it the refusal stays (ALREADY_COMPLETE), and now names how to ask. The pipeline suites build the same phase
+      several times on purpose (resume, replan, retry), so they ask for it.
+    proof: "test-contract-phase-build and test-chunked-phase-build green again; a plain build of a complete phase still 409s and names --rebuild"
+
+  SL8_the_agent_maps_what_nexus_cannot:
+    status: OPEN
+    layer: integration
+    depends_on: [SL3_the_backlog_groomed, SL7_build_again_is_asked_for]
+    files: [idearium/repo/phase-mapping.js, idearium/api/index.js, lib/phase-graph.js, tests/modules/test-agent-maps-phase.test.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-AGENTMAP]
+    does: >-
+      When a build reaches a phase Nexus cannot place (DG2 would refuse NO_GRAPH: no declared files, nothing in its words), the build
+      asks the repo's agent to map that one phase, through MP4's own brief and answer checker (lib/phase-files.js brief/parseAnswer):
+      its files (existing, or new under a folder that exists) and its depends_on (each must resolve in the DAG and add no cycle). The
+      answer is checked by code, kept as a mapping (source agent:<by>, NC0's evidence rule), and the graph is built from it; the map
+      edit is proposed, not written. A mapping that fails the checks is refused and said (NO_GRAPH, with what the agent answered), so a
+      bad guess never builds. A second build reuses the kept mapping and asks nothing.
+    proof: "a fixture phase with no files and no evidence: the build asks once, the graph's source is agent, the run starts; a nonsense answer is refused; the second build asks nothing"
+
+  SL9_every_phase_a_node:
+    status: OPEN
+    layer: library
+    depends_on: [SL3_the_backlog_groomed, PS1_phase_specs]
+    files: [emerge/compiler/phase-specs.js, tests/modules/test-phase-nodes-all.test.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-NODES]
+    does: >-
+      Every phase of every phasemap written as a .phase with its .graph, beside its owning system, in one pass: the whole DAG built
+      once (not once per map), MP1's mapping and SL3's inferred edges in it, SL8's kept agent mappings used where MP1 found nothing.
+      A phase with no files goes to the system its map is tagged with, else lib/. Findings and decisions are not written as phases.
+      Each system's phases/ gets an INDEX.md: its phases by map, layer and status, what is ready, what waits and on what. `--check`
+      reports drift for all of them; an old .graph of a changed hash is archived, not deleted (§0.3).
+    proof: "node emerge/compiler/phase-specs.js --all writes one .phase per phase (counts match the DAG's), --check clean right after"
+
+  SL10_the_pipeline_simulated:
+    status: OPEN
+    layer: integration
+    depends_on: [SL7_build_again_is_asked_for, SL8_the_agent_maps_what_nexus_cannot]
+    files: [tests/modules/test-pipeline-sim.test.js, tests/modules/run-all.js]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-SIM]
+    does: >-
+      The build pipeline run through every failure mode it can meet, on the real route, the real repo layer and the real inject path,
+      with a scripted agent: for a phase built from scratch (a new project), a phase that extends existing code, and a phase in a repo
+      with nothing on disk. Modes: no reply, a timeout, prose with no code, a spec instead of code, the wrong path, a path outside the
+      repo, a partial file, a syntax error, a file that breaks an existing test, the right file twice, a finding or a decision sent to
+      build, a cycle, a dangling depends_on, no graph with an agent that maps it, no graph with an agent that cannot, a complete phase
+      built again with and without asking, an agent that answers a different phase. Each mode names what the pipeline must do (refuse,
+      retry, stop, land) and the test checks it did. Recursive: a mode found failing is fixed at its root and the whole matrix runs
+      again, until it is green. Every mode that needed a fix is listed in the CHANGELOG with its root cause.
+    proof: "the matrix green; every mode's expected outcome asserted on the run rows, the files on disk and the run's final state"
+
+## ADDENDUM 2026-10-23 (0.60.226) — SL7 built; a second root cause found under it
+- As mapped: rebuild: true (route, `--rebuild`, the UI asks first; the Tasks panel's retry now goes through the same door as ▶ build,
+  so it answers NOT_A_PHASE, NO_GRAPH, DEPS_OPEN and a complete phase the same way).
+- Found once the builds ran again (§0.1): a resumed build re-sent every file. The contract's input was the whole phasemap, so the pipeline's
+  own status writes (DONE, active, status_previous, the `# roadmap edit` comment), and any edit to another phase of the same map, STALEd
+  every brick. Decided by the axioms (§0.1 what changed is what the phase says; §10.3 one cause, one fix): cortex/core/raid/contract-gates.js
+  phaseBlock — an input { path, phase } hashes the phase's own block without its status lines. A change to what the phase says still
+  STALEs it. Files added above (the UI door and the two cortex files).

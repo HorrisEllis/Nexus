@@ -125,6 +125,20 @@ spec:
       behavioral_contracts: ["default A until he sets it", "said on every change it lands"]
       error_paths: ["set without his words → refused"]
 
+    - id: AgentMapping
+      name: AgentMapping
+      description: "SL8 — one phase mapped by an agent because Nexus could not place it; kept, so the next build asks nothing."
+      fields:
+        key:       "string — '<map>::<phase id>'"
+        files:     "object[] — { path, exists, why } each checked by code (an existing file, or a new one under a folder that exists)"
+        dependsOn: "string[] — phase keys, each resolved in the DAG and adding no cycle"
+        refused:   "object[] — { what, why } the parts of the answer that failed the checks"
+        by:        "string — the agent that answered (agent:<name>), NC0's evidence"
+        bodyHash:  "string — the phase's text it was asked about; a changed phase is asked again"
+        at:        "number — epoch ms"
+      behavioral_contracts: ["usable only when at least one file passed the checks", "never written into the map; proposed"]
+      error_paths: ["no answer, or nothing passed → no mapping kept; the build refuses NO_GRAPH with what was answered"]
+
   interfaces:
 
     - id: IF-PHASE-DAG
@@ -190,6 +204,38 @@ spec:
       exports: ["_autoRetry(run) on a stall or economy hold"]
       behavioral_contracts: ["re-runs the same phase only"]
       error_paths: ["the stall timeout (10 min) is shorter than a claude-code attempt (15 min)"]
+
+    - id: IF-PHASE-MAP-AUTO
+      name: phase-map-auto
+      path: lib/phase-map-auto.js
+      description: "MP1 — a phase mapped to its files and dependencies by Nexus, with no model."
+      exports: ["mapPhase(phase, env) → { files, requires, consumers, specs, source }", "envFromTree(root)"]
+      behavioral_contracts: ["source none is the only case a model may be asked"]
+      error_paths: ["nothing found → source none, files []"]
+
+    - id: IF-PHASE-MAPPING
+      name: phase-mapping
+      path: idearium/repo/phase-mapping.js
+      description: "MP4 (0.60.29) — the agent maps phases Nexus cannot; answers checked by lib/phase-files.js parseAnswer."
+      exports: ["runMapping({ maps, ask, write, exists, dirExists }) → report", "PF.brief(phases, { repoName, folders })", "PF.parseAnswer(text, phases, { exists, dirExists })"]
+      behavioral_contracts: ["answers are checked by code, never trusted as given"]
+      error_paths: ["no answer → counted failed, said"]
+
+    - id: IF-PHASE-GRAPH
+      name: phase-graph
+      path: lib/phase-graph.js
+      description: "DG2 — a phase's dependency graph from its mapping; ready only when it changes a file it can place."
+      exports: ["graphFor({ phase, map, mapped, mapText, depsGate, systemOf, baselineEdges }) → { ready, missing, remedy, hash, … }"]
+      behavioral_contracts: ["ready = at least one file it changes"]
+      error_paths: ["no mapping → not ready, missing said"]
+
+    - id: IF-PHASE-SPECS
+      name: phase-specs
+      path: emerge/compiler/phase-specs.js
+      description: "PS1 — each phase specced again as a .phase with its .graph beside the owning system."
+      exports: ["derive({ root, map }) → rows", "write(opts)", "check(opts)"]
+      behavioral_contracts: ["the .phase holds what is authored; the .graph is derived and keyed by its hash"]
+      error_paths: ["a spec that does not build → blocks missing, said"]
 
   modules:
 
@@ -336,6 +382,85 @@ spec:
       behavioral_contracts: ["read only; nothing stored beside the flights and closes"]
       error_paths: ["no flights → zeros, said"]
       acceptance: ["after the loop fixture: closed 3, stopped 1 (decision), calls and minutes per phase match the flights"]
+
+    - id: MOD-SL-REBUILD
+      name: build-again
+      uuid: nexus-sl-build-again-v1-0000-2026-1023-001
+      path: idearium/api/index.js
+      phase: SL7_build_again_is_asked_for
+      description: >-
+        _phaseBuild refuses a complete phase (ALREADY_COMPLETE) unless the caller asks to build it again (rebuild: true). The ask goes
+        on the run's first row (rebuild: true, with who started it) and the status the build writes ('active') says "built again on
+        request". The refusal names the ask. The command row passes --rebuild.
+      deps: [{ name: phase-build }, { name: phase-status }]
+      exports: ["POST /api/repos/:uuid/phases/build { map, phase, rebuild } → run | 409 ALREADY_COMPLETE { remedy }"]
+      gate_pipeline:
+        - "GATE-SL7-001: status complete and not rebuild → 409 ALREADY_COMPLETE naming rebuild"
+        - "GATE-SL7-002: rebuild → the run row carries rebuild: true; every other gate still applies"
+      behavioral_contracts: ["rebuild does not pass any other gate (DEPS_OPEN, DAG_INVALID, NO_GRAPH, NOT_A_PHASE)"]
+      error_paths: ["rebuild on a phase that is not complete → ignored, the build runs as usual"]
+      acceptance: ["a complete phase: plain build 409 naming rebuild; rebuild: true starts a run whose first row says rebuild"]
+
+    - id: MOD-SL-AGENTMAP
+      name: agent-maps-phase
+      uuid: nexus-sl-agent-maps-phase-v1-0000-2026-1023-001
+      path: idearium/repo/phase-mapping.js
+      phase: SL8_the_agent_maps_what_nexus_cannot
+      description: >-
+        mapOne asks the repo's agent to map ONE phase that MP1 could not place, with MP4's brief, checks the answer by code (files:
+        existing, or new under an existing folder, inside the repo; depends_on: each resolves to a phase in the DAG, none closes a
+        cycle), and keeps the result (AgentMapping) keyed by the phase and the hash of its text. _phaseBuild calls it when DG2 would
+        refuse NO_GRAPH, builds the graph from the mapping (source agent:<by>), and says so on the run. A kept mapping for the same
+        text is reused without asking.
+      deps: [{ name: phase-mapping }, { name: phase-map-auto }, { name: phase-graph }, { name: phase-dag }, { name: phase-build }]
+      schema_refs: [AgentMapping]
+      exports: ["mapOne({ phase, ask, exists, dirExists, resolveDep, wouldCycle, store, repoName, folders }) → { ok, mapping, asked, why }",
+        "mapped(mapping) → { files, requires, consumers, specs, source: 'agent', dependsOnInferred }"]
+      gate_pipeline:
+        - "GATE-SL8-001: MP1 placed the phase → no agent asked"
+        - "GATE-SL8-002: a kept mapping for this text → used, nothing asked"
+        - "GATE-SL8-003: the answer checked: every file inside the repo and existing or under an existing folder; every dep resolved, no cycle"
+        - "GATE-SL8-004: nothing passed → NO_GRAPH with what the agent answered and why each part failed"
+      behavioral_contracts: ["one ask per phase text", "the map is never edited by it", "every file and edge names agent:<by>"]
+      error_paths: ["no agent answer → NO_GRAPH, said with the agent's error", "an answer naming another phase id → refused"]
+      acceptance: ["a phase with no files and no evidence: asked once, graph source agent, the run starts; a nonsense answer is refused; asked again only when the phase's text changes"]
+
+    - id: MOD-SL-NODES
+      name: phase-nodes-all
+      uuid: nexus-sl-phase-nodes-all-v1-0000-2026-1023-001
+      path: emerge/compiler/phase-specs.js
+      phase: SL9_every_phase_a_node
+      description: >-
+        writeAll writes a .phase and its .graph for every phase of every phasemap, the DAG built once with MP1's mapping in it, and
+        kept agent mappings used where MP1 found none. Owner: the system of the phase's files; else the system its map is tagged
+        with; else lib/. Findings and decisions are not phases and are not written. Each system's phases/INDEX.md lists its phases
+        by map, layer and status, and what each waits on. An older .graph of the same phase is moved to the system's
+        phases/<map>/graph/_superseded/, not deleted.
+      deps: [{ name: phase-specs }, { name: phase-dag }, { name: phase-map-auto }, { name: phase-graph }]
+      exports: ["writeAll({ root, out, mapsDir, mappings }) → { written, bySystem, skipped, superseded }", "checkAll(opts) → [{ key, drift }]", "cli: --all [--check]"]
+      gate_pipeline:
+        - "GATE-SL9-001: the DAG once; every phase key in it written exactly once"
+        - "GATE-SL9-002: kind finding/decision → not written, counted"
+      behavioral_contracts: ["deterministic: the same tree writes the same files", "nothing deleted"]
+      error_paths: ["a map that does not parse → counted in skipped with why"]
+      acceptance: ["--all writes as many .phase as the DAG has phases; --check clean right after; a second --all changes nothing"]
+
+    - id: MOD-SL-SIM
+      name: pipeline-simulation
+      uuid: nexus-sl-pipeline-simulation-v1-0000-2026-1023-001
+      path: tests/modules/test-pipeline-sim.test.js
+      phase: SL10_the_pipeline_simulated
+      description: >-
+        The phase build on the real route against a scripted agent (a fake guardian answering per scenario), in three repos: a new
+        project built from scratch, an existing project extended, and a repo with nothing on disk. One row per failure mode: what the
+        agent does, and what the pipeline must do (refuse with a code, retry, stop, land, prove). Asserted on the run rows, the files on
+        disk and the final state.
+      deps: [{ name: phase-build }, { name: repo-inject }, { name: phase-mapping }]
+      exports: ["SCENARIOS: [{ id, repo, agent, expect }]"]
+      gate_pipeline: ["GATE-SL10-001: every scenario's expect met, or the suite is red with the scenario named"]
+      behavioral_contracts: ["no real model is called", "every scenario runs in the test sandbox"]
+      error_paths: ["a scenario that hangs → its own timeout, failed with its last run row"]
+      acceptance: ["the matrix green"]
 
   events:
     loop:

@@ -464,12 +464,17 @@ function planToggle(key) { if (PLANP.open.has(key)) PLANP.open.delete(key); else
 // §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing." A build refused for having no
 // dependency graph is never offered "build anyway" (his "has to have"); the message says how to give the phase one.
 function _noGraphHeld(e) { const x = new Error(`no dependency graph — ${(e.detail.missing || []).join('; ')}${e.detail.remedy ? `. ${e.detail.remedy}` : ''}`); x.held = true; return x; }
+// §0.60.226 SL7 — a complete phase is built again only when asked: ask, and the run says it was on request
+async function _rebuildAsk(body, go) {
+  if (!confirm(`${body.phase} is already complete.\n\nBuild it again? The run records that it was built again on request.`)) { const x = new Error(`${body.phase} is complete — not built again`); x.held = true; throw x; }
+  return await go({ ...body, rebuild: true });
+}
 async function phaseBuildPost(uuid, body) {
   const go = (b) => api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ startedBy: 'person:ui', ...b }) }, 120000);   // 0.60.188 RC7
   try { return await go(body); }
   catch (e) {
     if (e.detail && e.detail.code === 'NO_GRAPH') throw _noGraphHeld(e);   // §0.60.147 DG2
-    if (!(e.detail && e.detail.code === 'DEPS_OPEN')) throw e;
+    if (!(e.detail && e.detail.code === 'DEPS_OPEN')) { if (e.detail && e.detail.code === 'ALREADY_COMPLETE') return _rebuildAsk(body, go); throw e; }   // §0.60.226 SL7
     const open = e.detail.open || [];
     const list = open.map(o => `• ${o.key} — ${o.kind === 'decision' ? `your decision, still ${o.status}${o.asked ? `: "${o.asked}"` : ''}` : `a phase not done yet (${o.status})`}`).join('\n');
     if (!confirm(`${body.phase} depends on what is still open:\n\n${list}\n\nBuild it anyway? The run records that it was built with these open.`)) {
