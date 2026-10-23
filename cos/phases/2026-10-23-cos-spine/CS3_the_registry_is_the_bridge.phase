@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+context: pipeline phase CS3_the_registry_is_the_bridge of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS3_the_registry_is_the_bridge (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792757382210
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382210
+lastSeenAt: 1792757382210
+fingerprint: null
+payload:
+  id: CS3_the_registry_is_the_bridge
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/spine/bridge.js
+    - orchestrator/lib/contract-handshake.js
+    - idearium/repo/snapshot.js
+  depends_on:
+    - CS_D1_registry_is_the_bridge
+    - IN3_registry_is_the_spine
+    - CE3_the_handshake
+    - DB16_a_registry_for_each_system
+  blocks:
+    - MOD-CS-BRIDGE
+  spec: cos/spec/cos-spine.spec
+  graph: 269cc4b7c5c5f55b

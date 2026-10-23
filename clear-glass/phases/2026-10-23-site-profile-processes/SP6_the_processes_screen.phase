@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-site-profile-processes-phasemap.spec::SP6_the_processes_screen
+type: phase
+id: docs_2026-10-23-site-profile-processes-phasemap.spec::SP6_the_processes_screen
+context: pipeline phase SP6_the_processes_screen of docs/2026-10-23-site-profile-processes-phasemap.spec
+intent: null
+summary: SP6_the_processes_screen (ui) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792754193317
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792754193317
+lastSeenAt: 1792754193317
+fingerprint: null
+payload:
+  id: SP6_the_processes_screen
+  map: docs/2026-10-23-site-profile-processes-phasemap.spec
+  repo: null
+  layer: ui
+  status: >-
+    BUILT 0.60.220 — renderer/processes.html/.js/.css, Shift+Esc, ☰ and Tools rows;
+    test-processes-ui 4/4 in Clear Glass
+  files:
+    - clear-glass/renderer/processes.html
+    - clear-glass/renderer/processes.js
+    - clear-glass/renderer/processes.css
+    - clear-glass/renderer/shell/menus.js
+    - clear-glass/renderer/shell/icons.js
+    - clear-glass/renderer/browser.js
+    - clear-glass/src/main/index.js
+    - clear-glass/src/shortcuts/registry.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+  depends_on:
+    - SP5_processes_and_activity
+  blocks:
+    - MOD-SP-PROCESSES-UI
+  spec: clear-glass/spec/site-profile.spec
+  graph: ba0b54480cfed70e

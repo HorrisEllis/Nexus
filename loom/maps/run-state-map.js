@@ -63,7 +63,17 @@ const FILES = [
   ['clear-glass/src/preload/passwords.js', I('clear-glass/src/preload/passwords.js'), []],   // §0.60.186 PW2 the page script on every session
   ['clear-glass/src/main/passwords-wiring.js', I('clear-glass/src/main/passwords-wiring.js'), []],   // §0.60.186 PW3 pages ↔ service ↔ window
   ['clear-glass/renderer/shell/passwords.js', I('clear-glass/renderer/shell/passwords.js'), []],   // §0.60.186 PW4 the key and its panel
-  ['clear-glass/src/core/zoom.js', I('clear-glass/src/core/zoom.js'), []],   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
+  ['clear-glass/src/core/zoom.js', I('clear-glass/src/core/zoom.js'), []],
+  ['clear-glass/src/site-settings/store.js', I('clear-glass/src/site-settings/store.js'), []],   // the per-origin store (JAA KV cg_site_settings); declared with SP1, 0.60.215
+  ['clear-glass/src/site-settings/keys.js', I('clear-glass/src/site-settings/keys.js'), []],   // §0.60.215 SP1 the per-site keys every feature reads (one table)
+  ['clear-glass/src/site-settings/profile.js', I('clear-glass/src/site-settings/profile.js'), [I('clear-glass/src/site-settings/keys.js'), I('clear-glass/src/net/policy.js')]],   // §0.60.215 SP1 siteProfile(url): site, else global, else default; the route a netPolicy rule   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
+  ['clear-glass/renderer/processes.js', I('clear-glass/renderer/processes.js'), []],   // §0.60.220 SP6 the Processes window (Shift+Esc, ☰, Tools)
+  ['clear-glass/src/processes/index.js', I('clear-glass/src/processes/index.js'), []],   // §0.60.219 SP5 what is running (metrics joined to pages) and the activity ring
+  ['clear-glass/renderer/settings/sections/driver.js', I('clear-glass/renderer/settings/sections/driver.js'), []],   // §0.60.218 SP4 Settings › ClearDriver (options driver.*)
+  ['clear-glass/renderer/settings/sections/guardian.js', I('clear-glass/renderer/settings/sections/guardian.js'), []],   // §0.60.218 SP4 Settings › Guardian (options guardian.*, listenerDecay)
+  ['clear-glass/renderer/site-profile-groups.js', I('clear-glass/renderer/site-profile-groups.js'), []],   // §0.60.217 SP3 one site's settings by feature, drawn from the key table (popup + Settings › Sites)
+  ['clear-glass/src/site-settings/readers.js', I('clear-glass/src/site-settings/readers.js'), []],   // §0.60.216 SP2 each feature's hook onto the one resolver (installed by main)
+  ['clear-glass/src/rewind/resume.js', I('clear-glass/src/rewind/resume.js'), [I('clear-glass/src/rewind/engine.js')]],   // §0.60.216 SP2 a site's resume state: kept by the page, put back on the revisit
   ['clear-glass/renderer/shell/ctxmenu.js', I('clear-glass/renderer/shell/ctxmenu.js'), []],   // §0.60.183 BS15 the right-click menu: rows by what was clicked, placed at the pointer
   ['clear-glass/src/copilot/context-need.js', I('clear-glass/src/copilot/context-need.js'), []],   // §0.60.182 BS12 what a message needs from the page (wired late, 0.60.183)
   ['lib/agent-tools/tools/clear-glass/adblock.js', I('lib/agent-tools/tools/clear-glass/adblock.js'), [I('lib/agent-tools/tools/clear-glass/net.js')]],   // §0.60.183 AB4 the blocker for agents   // §0.60.179 BS6 the floating CLI's own content-protected window
@@ -278,6 +288,35 @@ const CONSUMERS = [
   [I('clear-glass/src/main/index.js'),              I('clear-glass/src/passwords/service.js'), '§0.60.186 PW1 service({ vault: passwordVault }) at boot; onCaptured → linkPending'],
   [I('clear-glass/src/main/index.js'),              I('clear-glass/src/main/passwords-wiring.js'), '§0.60.186 PW3 attach() — the page script on every session, the IPC'],
   [I('clear-glass/src/main/passwords-wiring.js'),   I('clear-glass/src/preload/passwords.js'), '§0.60.186 PW3 registerPreloadScript(preloadPath); pw:form / pw:capture / pw:fill (IPC, not a require)'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/site-settings/profile.js'), '§0.60.215 SP1 site-profile:* IPC and /cli/site-profile over siteSettings, options and the net service (lazy)'],
+  [I('clear-glass/src/site-settings/profile.js'), I('clear-glass/src/site-settings/store.js'), '§0.60.215 SP1 the store is passed in: get/set/deleteKey by url'],
+  [I('clear-glass/src/site-settings/profile.js'), I('clear-glass/src/net/service.js'), '§0.60.215 SP1 the net service is passed in: policy(), addRoute, removeRoute'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 installSiteReaders(): the resolver the features read; runMacroAsPerson refuses a site whose macros are off'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 on a page load: workflowsAllowed (page.visited), macrosOnLoad (autoRun), resumeMode'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/rewind/resume.js'), '§0.60.216 SP2 resumeScript(mode) run on did-finish-load where the site keeps its place'],
+  [I('clear-glass/src/driver/index.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 driverPolicy: an agent refused a site that says no; the site's navigate / wait timeouts'],
+  [I('clear-glass/src/passwords/service.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 passwordPolicy: offer never, autofill, the account that signs in'],
+  [I('clear-glass/src/autofill/matcher.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 autofillFor: off for the site, or the site's profile'],
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 meshAgent: the site's Co-pilot agent; mesh off → no page read'],
+  [I('clear-glass/src/options/store.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 guardianPolicy: findListenersForUrl empty where Guardian does not listen'],
+  [I('clear-glass/src/downloads/chat-ledger.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 guardianPolicy: no ledger where chat capture is off'],
+  [I('clear-glass/src/main/passwords-wiring.js'), I('clear-glass/src/passwords/service.js'), '§0.60.216 SP2 autofillLogin(origin): the one login to fill without asking'],
+  [I('clear-glass/src/ipc/agent-routes.js'), I('clear-glass/src/driver/index.js'), '§0.60.216 SP2 POST /cli/driver marks its calls by: 'agent''],
+  [I('clear-glass/renderer/browser.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 the toolbar's Site Settings popup: this tab's site, each change written at once'],
+  [I('clear-glass/renderer/settings/sections/sites.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 Settings › Sites: the Edit dialog's Features, written on Save'],
+  [I('clear-glass/renderer/site-profile-groups.js'), I('clear-glass/src/preload/index.js'), '§0.60.217 SP3 ClearGlass.siteProfile get/set/clear/keys → site-profile:* (IPC, not a require)'],
+  [I('clear-glass/renderer/settings/sections/driver.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 options.set({ driver }) via IPC options:set; bounds from siteProfile.keys()'],
+  [I('clear-glass/renderer/settings/sections/guardian.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 options.set({ guardian | listenerDecay }) via IPC options:set'],
+  [I('clear-glass/renderer/settings/sections/mesh.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 "When a task fails": options.set({ mesh: { retriesPerStrategy | backoffMs } })'],
+  [I('clear-glass/src/mesh/agent-mesh.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 drainSettings(this.accounts) at each failure: mesh.retriesPerStrategy, mesh.backoffMs'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/processes/index.js'), '§0.60.219 SP5 processes() over windows / bgTabs / closeBackgroundTab; bus.on('*') feeds activity(); a site page's load is a nav line'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/processes/index.js'), '§0.60.219 SP5 processes:list/end, activity:recent; GET /cli/processes, /cli/activity; POST /cli/processes/end 403; macro runs into the activity'],
+  [I('clear-glass/src/ipc/handler-registry.js'), I('clear-glass/src/ipc/bridge.js'), '§0.60.219 DENIED processes:end, site-profile:set/clear (his, not an agent's through /cli/invoke)'],
+  [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '§0.60.219 site, glass processes, glass activity → /cli/site-profile, /cli/processes, /cli/activity (HTTP)'],
+  [I('clear-glass/renderer/processes.js'), I('clear-glass/src/preload/index.js'), '§0.60.220 SP6 ClearGlass.processes list/end/activity, window.closeProcesses (IPC)'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/renderer/processes.js'), '§0.60.220 SP6 openProcessesWindow() loads processes.html; cg.processes (Shift+Esc) opens it'],
+  [I('clear-glass/renderer/shell/menus.js'), I('clear-glass/renderer/browser.js'), '§0.60.220 SP6 ☰ and Tools → Processes run CGShell.processes → window:openProcesses'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/shortcuts/registry.js'), '§0.60.220 SP6 cg.processes bound to Shift+Esc (Esc with a modifier passes isSafe)'],
   [I('architect/service.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('clear-glass/src/main/index.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('copilot/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],

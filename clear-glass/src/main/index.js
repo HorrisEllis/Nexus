@@ -1172,6 +1172,9 @@ async function bootstrap() {
   // §0.60.175 PM7 — the DOM observer injected into every page (dom/archaeology.js) reports dom.mutations; a window whose page map is
   // live is mapped again once it settles (src/page/page-session.js poke), so the map — and Nerve, and Ollama — follow the page.
   bus.on('*', (ev) => { try { if (ev.type === 'dom.mutations' && ev.data && ev.data.agentId && driver && driver.pageMutated) driver.pageMutated(ev.data.agentId); } catch (_) {} });
+  // §0.60.219 SP5 — James, 2026-10-23: "Also need a processes screen for background tabs and activity." The activity ring (src/processes)
+  // reads what every system already says on this bus: the driver's actions, background tabs, downloads, workflow runs, captured errors.
+  { const act = require('../processes').activity(); bus.on('*', (ev) => { try { act.fromEvent(ev.type, ev.data); } catch (_) {} }); }
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." Clear Glass's node registry: its listener over
   // clear-glass/data/nodes, indexed into clear-glass/data/node-index with every change, its node events on this SISO bus.
   try { require('../../../lib/node-registry.js').startForSystem('clear-glass', { bus: { emit: (e, d) => emit(e, d) } }); } catch (e) { console.warn(`[ClearGlass] node registry: ${e.message}`); }
@@ -1742,6 +1745,7 @@ async function bootstrap() {
     loginPortal,
   });
   await ipcBridge.start();
+  try { ipcBridge.installSiteReaders(); } catch (e) { console.warn(`[site-settings] the features read no site values (${e.message}); they behave as before`); }   // SP2 (0.60.216)
   // §5.2 Contract IS the bridge — serve /contract so orchestrator can verify us
   if (ipcBridge.app) {
     ipcBridge.app.get('/contract', (req, res) => res.json(CONTRACT));
@@ -2652,11 +2656,22 @@ async function openBackgroundTab({ agentId, url = 'about:blank', partition, webv
   return { agentId, url, session: win.webContents.session };
 }
 
-function closeBackgroundTab(agentId) {
+function closeBackgroundTab(agentId, { by = 'system' } = {}) {
   const win = bgTabs.get(agentId);
   if (win) { win.destroy(); bgTabs.delete(agentId); bgTabUrls.delete(agentId); }
-  emit('bgtab.closed', { agentId });
+  emit('bgtab.closed', { agentId, by });   // SP5 (0.60.219): who closed it, for the activity
   return { agentId, closed: !!win };
+}
+
+// SP5 (0.60.219) — the Processes screen's backend over this file's own windows and background tabs
+let _processes = null;
+function processes() {
+  if (!_processes) {
+    let ids = []; try { ids = require('../providers/registry').listProviders().map(p => p.id); } catch (_) {}
+    _processes = require('../processes').createProcesses({ bgTabs: () => bgTabs, windows: () => windows, providerIds: () => ids,
+      closeBackgroundTab, activity: require('../processes').activity() });
+  }
+  return _processes;
 }
 
 function listBackgroundTabs() {
@@ -2739,6 +2754,21 @@ function openLibraryWindow(area) {
   return { ok: true, reused: false, area: hash || null };
 }
 
+// SP6 (0.60.220) — James, 2026-10-23: "Also need a processes screen for background tabs and activity." One window, reused, like the Library.
+let processesWin = null;
+function openProcessesWindow() {
+  if (processesWin && !processesWin.isDestroyed()) { if (processesWin.isMinimized()) processesWin.restore(); processesWin.show(); processesWin.focus(); return { ok: true, reused: true }; }
+  processesWin = new BrowserWindow({
+    width: 1100, height: 720, minWidth: 640, minHeight: 420, backgroundColor: '#08080d', frame: false,
+    webPreferences: { preload: path.join(__dirname, '../preload/index.js'), contextIsolation: true, nodeIntegration: false },
+    title: 'Clear Glass — Processes',
+  });
+  processesWin.loadFile(path.join(__dirname, '../../renderer/processes.html'));
+  processesWin.on('closed', () => { processesWin = null; });
+  return { ok: true, reused: false };
+}
+function closeProcessesWindow() { if (processesWin && !processesWin.isDestroyed()) processesWin.close(); }
+
 function closeLibraryWindow() {
   if (libraryWin && !libraryWin.isDestroyed()) libraryWin.close();
 }
@@ -2765,6 +2795,7 @@ function _runShortcut(action, accel, owner) {
   const tell = (result) => { if (owner && !owner.win.isDestroyed()) owner.win.webContents.send('shortcut:action', { action, accel, result }); };
   if (action === 'cg.library') return openLibraryWindow('downloads');
   if (action === 'cg.settings') return openSettingsWindow();
+  if (action === 'cg.processes') return openProcessesWindow();   // SP6 (0.60.220)
   if (action.startsWith('macro:')) {
     const name = action.slice(6);
     return Promise.resolve(macroTool.execute({ action: 'run', name, agentId: owner ? owner.agentId : 'default' }))
@@ -2779,6 +2810,29 @@ function _runShortcut(action, accel, owner) {
   }
   if (owner) owner.win.webContents.send('shortcut:action', { action, accel });
 }
+// §0.60.216 SP2 — James: "I need site specific settings for the autofill, macros, workflows …". A site's autoRun macros run when one of
+// its pages loads, as his own run (bridge.runMacroAsPerson), on that page (wc:<id>); once per page and minute, so a macro that reloads
+// the page does not run itself again. A failure is said in the log with the macro and the site.
+const _siteLoadRuns = new Map();   // `${wcId}|${origin}|${name}` → at
+function _siteOnLoad(contents, url) {
+  const mode = require('../site-settings/readers').resumeMode(url);
+  if (mode && mode !== 'off') {
+    const js = require('../rewind/resume.js').resumeScript(mode);
+    if (js) contents.executeJavaScript(js, true).catch(e => console.warn(`[site-settings] resume at ${new URL(url).origin} not kept: ${e.message}`));
+  }
+  const m = require('../site-settings/readers').macrosOnLoad(url);
+  if (!m || !m.enabled || !m.autoRun.length || !ipcBridge) return;
+  const origin = new URL(url).origin; const now = Date.now();
+  for (const [k, at] of _siteLoadRuns) if (now - at > 60000) _siteLoadRuns.delete(k);
+  for (const name of m.autoRun) {
+    const key = `${contents.id}|${origin}|${name}`;
+    if (_siteLoadRuns.has(key)) continue;
+    _siteLoadRuns.set(key, now);
+    Promise.resolve(ipcBridge.runMacroAsPerson({ name, agentId: `wc:${contents.id}`, url, by: 'site settings (on load)' }))
+      .then(r => { if (r && r.error) console.warn(`[site-settings] macro "${name}" on load at ${origin} did not run: ${r.error}`); })
+      .catch(e => console.warn(`[site-settings] macro "${name}" on load at ${origin} failed: ${e.message}`));
+  }
+}
 // §0.39.265 — workflow event triggers: "I open a page" and "a download finishes".
 // Pages a workflow drives itself (auto-* windows) never fire page.visited.
 const _automationSessions = new WeakSet();
@@ -2792,6 +2846,8 @@ function _automationEvents(contents) {
       const hostWin = host ? BrowserWindow.fromWebContents(host) : BrowserWindow.fromWebContents(contents);
       if (hostWin && /\bauto-/.test(hostWin.getTitle())) return;
       if (!host && contents.getType() !== 'webview') return;   // only page content, not the app's own windows
+      _siteOnLoad(contents, url);   // SP2 (0.60.216): the site's macros on load, its resume state
+      if (require('../site-settings/readers').workflowsAllowed(url) === false) return;   // SP2: the site's workflows are off
       mesh._automation.emitEvent('page.visited', { url, title: contents.getTitle() });
     } catch (_) {}
   });
@@ -2808,6 +2864,8 @@ function _automationEvents(contents) {
 }
 app.on('web-contents-created', (_e, contents) => {
   try { _automationEvents(contents); } catch (_) {}
+  // SP5 (0.60.219) — a page that loaded is a line in the activity (sites only; the app's own pages are not)
+  contents.on('did-finish-load', () => { try { const u = contents.getURL(); if (/^https?:/i.test(u) && (contents.hostWebContents || contents.getType() === 'webview')) require('../processes').activity().push({ kind: 'nav', what: contents.getTitle() || u, url: u, wcId: contents.id, by: 'page' }); } catch (_) {} });
   try { GoogleSignin.attach(contents); } catch (e) { console.warn(`[google-signin] page not covered: ${e.message}`); }
   contents.on('before-input-event', (event, input) => {
     if (!input || input.type !== 'keyDown' || input.isAutoRepeat) return;
@@ -2821,7 +2879,7 @@ app.on('web-contents-created', (_e, contents) => {
     if (!action) return;
     const owner = _agentWindowFor(contents);
     // outside an agent window (the Library) only the window-opening shortcuts apply
-    if (!owner && action !== 'cg.library' && action !== 'cg.settings') return;
+    if (!owner && action !== 'cg.library' && action !== 'cg.settings' && action !== 'cg.processes') return;
     event.preventDefault();
     try { _runShortcut(action, accel, owner); } catch (e) { console.warn(`[shortcuts] ${accel} → ${action} failed: ${e.message}`); }
   });
@@ -2881,7 +2939,8 @@ async function shutdown() {
 module.exports = {
   openAgentWindow, openOrFocus, closeAgentWindow, minimizeAgentWindow, hideAgentWindow, maximizeAgentWindow,
   focusAgentWindow, listOpenAgents,
-  openBackgroundTab, closeBackgroundTab, listBackgroundTabs,
+  openBackgroundTab, closeBackgroundTab, listBackgroundTabs, processes,   // processes: SP5 (0.60.219)
+  openProcessesWindow, closeProcessesWindow,   // SP6 (0.60.220)
   closeSettingsWindow, openLibraryWindow, closeLibraryWindow, windows, bgTabs,
   freezeAgentWindow, thawAgentWindow,
 };

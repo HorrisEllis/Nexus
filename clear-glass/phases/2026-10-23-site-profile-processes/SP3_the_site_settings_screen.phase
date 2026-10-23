@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-site-profile-processes-phasemap.spec::SP3_the_site_settings_screen
+type: phase
+id: docs_2026-10-23-site-profile-processes-phasemap.spec::SP3_the_site_settings_screen
+context: >-
+  pipeline phase SP3_the_site_settings_screen of
+  docs/2026-10-23-site-profile-processes-phasemap.spec
+intent: null
+summary: SP3_the_site_settings_screen (ui) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792754193313
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792754193313
+lastSeenAt: 1792754193313
+fingerprint: null
+payload:
+  id: SP3_the_site_settings_screen
+  map: docs/2026-10-23-site-profile-processes-phasemap.spec
+  repo: null
+  layer: ui
+  status: >-
+    BUILT 0.60.217 — site-profile-groups.js/.css, the toolbar popup, Settings › Sites' Features;
+    test-site-settings-ui 3/3 in Clear Glass
+  files:
+    - clear-glass/renderer/site-profile-groups.js
+    - clear-glass/renderer/site-profile-groups.css
+    - clear-glass/renderer/settings/sections/sites.js
+    - clear-glass/renderer/settings.html
+    - clear-glass/renderer/browser.js
+    - clear-glass/renderer/browser.html
+  depends_on:
+    - SP2_each_feature_reads_its_site_value
+  blocks:
+    - MOD-SP-UI
+  spec: clear-glass/spec/site-profile.spec
+  graph: 344ad9a833e51ca5

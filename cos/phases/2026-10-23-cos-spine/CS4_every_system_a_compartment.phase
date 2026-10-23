@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+context: pipeline phase CS4_every_system_a_compartment of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS4_every_system_a_compartment (backend) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792757382212
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382212
+lastSeenAt: 1792757382212
+fingerprint: null
+payload:
+  id: CS4_every_system_a_compartment
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - cos/spine/systems.js
+    - cos/compartment/process-runner.js
+    - cos/watchdog/monitor.js
+    - cos/app/runtime.js
+  depends_on:
+    - CS4a_cos_boots_alone
+    - CS3_the_registry_is_the_bridge
+    - CS_D7_sovereign_first
+    - DB6_move_the_crossings
+    - DB16_a_registry_for_each_system
+    - DB4_one_bus_per_system
+    - DB5_the_handshake_for_every_system
+    - DB11_cos_compartment_per_system
+  blocks:
+    - MOD-CS-SUPERVISE
+  spec: cos/spec/cos-spine.spec
+  graph: 8dfe260df6e33a3d

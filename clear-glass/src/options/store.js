@@ -63,6 +63,12 @@ const DEFAULT_START_URL = 'http://127.0.0.1:9000/';
 const OPTIONS_SCHEMA_VERSION = 2;   // v2 (0.39.265): autoStartOnBoot reset once — see load()
 
 const DEFAULTS = {
+  // §0.60.218 SP4 — James, 2026-10-23: "Cleardriver, agentmesh and guardian setting." Global settings for what had none; each default is
+  // today's constant (decision SP_D2), so nothing changes until he changes it. A site's own value (Site settings) wins over these.
+  driver:   { navTimeoutMs: 30000, waitTimeoutMs: 10000, agentsMayDrive: true },   // src/driver/index.js (through the site resolver)
+  mesh:     { retriesPerStrategy: 2, backoffMs: [1000, 3000, 8000, 15000] },       // src/mesh/agent-mesh.js drain: retries per strategy, backoff per tier
+  guardian: { listen: true, capture: true },                                        // options.findListenersForUrl, downloads/chat-ledger.js
+
   // Window behavior
   hideToTrayOnClose:    true,   // close (✕) button / OS close → hide to tray instead of destroying
   defaultStartUrl:       DEFAULT_START_URL,
@@ -849,6 +855,9 @@ class NexusOptions {
 
   findListenersForUrl(url) {
     if (!url) return [];
+    // §0.60.216 SP2 — a site where Guardian does not listen gets no listeners (its site settings, guardian.listen)
+    const site = require('../site-settings/readers').guardianPolicy(url);
+    if (site && !site.listen) return [];
     return this.listListeners().filter(l => {
       if (!l.enabled) return false;
       const re = new RegExp('^' + l.urlPattern.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$');

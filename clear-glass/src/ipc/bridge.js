@@ -676,6 +676,10 @@ class IpcBridge {
       try { const r = await require('../main/index').openOrFocus(req.body || {}); res.status(r.ok ? 200 : 400).json(r); }
       catch (e) { res.status(500).json({ ok: false, error: e.message }); }
     });
+    // SP5 (0.60.219) — agents read what is running and what happened; ending a process is not offered here (SP_D3)
+    this.app.get('/cli/processes', (req, res) => { try { res.json(require('../main/index').processes().list()); } catch (e) { res.status(500).json({ ok: false, error: e.message }); } });
+    this.app.get('/cli/activity', (req, res) => res.json({ events: require('../processes').activity().recent({ limit: Math.min(+req.query.limit || 100, 500), kind: req.query.kind || null, origin: req.query.origin || null }) }));
+    this.app.post('/cli/processes/end', (req, res) => res.status(403).json({ ok: false, why: 'ending a process is a person\'s action: the Processes window (Shift+Esc), not an agent route' }));
     this.app.post('/cli/bgtab', async (req, res) => {
       try { res.json(await require('../main/index').openBackgroundTab(req.body)); }
       catch (e) { res.status(500).json({ error: e.message }); }
@@ -723,6 +727,12 @@ class IpcBridge {
     this.app.put('/cli/site-settings/key', (req, res) => res.json(this.siteSettings?.set(req.body?.url, req.body?.key, req.body?.value) || { error: 'siteSettings unavailable' }));
     this.app.delete('/cli/site-settings/key', (req, res) => res.json(this.siteSettings?.deleteKey(req.query.url, req.query.key) || { error: 'siteSettings unavailable' }));
     this.app.delete('/cli/site-settings', (req, res) => res.json(this.siteSettings?.clear(req.query.url) || { error: 'siteSettings unavailable' }));
+    // SP1 (0.60.215) — the site profile for agents and the CLI: read, set (by is the caller's), clear
+    this.app.get('/cli/site-profile', (req, res) => res.json(req.query.url ? this._siteProfile().siteProfile(req.query.url) : { keys: this._siteProfile().KEYS }));
+    // 0.60.219 — this door never writes as the person (a body's by: 'person' is not taken): the keys that limit agents are refused here
+    const cliBy = (req) => { const b = String((req.body && req.body.by) || req.get('x-cg-caller') || 'cli'); return b === 'person' ? 'cli' : b; };
+    this.app.put('/cli/site-profile', (req, res) => { const b = req.body || {}; const r = this._siteProfile().setSite(b.url, b.key, b.value, { by: cliBy(req) }); res.status(r.ok ? 200 : 400).json(r); });
+    this.app.delete('/cli/site-profile', (req, res) => { const r = this._siteProfile().clearSite(req.query.url, req.query.key, { by: cliBy(req) }); res.status(r.ok ? 200 : 400).json(r); });
     this.app.get('/cli/site-settings/origins', (req, res) => res.json({ origins: this.siteSettings?.listOrigins() || [] }));
 
     // ── history — the real, freshly-built store, first-ever CLI reach ──
@@ -913,6 +923,40 @@ class IpcBridge {
   }
 
   // ── Renderer → Main IPC (via preload contextBridge) ───────────────────
+  // SP1 (0.60.215) — one resolver over the site store, the options and the network policy (created on first use)
+  _siteProfile() {
+    if (!this.__siteProfile) {
+      let net = null; try { net = require('../net/service').service(); } catch (_) {}
+      this.__siteProfile = require('../site-settings/profile.js').createSiteProfile({ store: this.siteSettings || null, options: this.options || null, net,
+        emit: (ev, data) => { try { this.sse && this.sse.emit && this.sse.emit(ev, data); } catch (_) {} } });
+    }
+    return this.__siteProfile;
+  }
+  /** SP2 — the features read their site values through readers.js; main installs this once the bridge holds its stores */
+  installSiteReaders() {
+    require('../site-settings/readers').install((url) => this._siteProfile().siteProfile(url), { log: (m) => console.warn(m) });
+  }
+
+  // §0.60.69 — James, 2026-10-15: "should not rely on raid." His run drives the driver in this process: no Guardian, no RAID.
+  // A step that is not a driver action (dom_query, url_listen) still takes the Guardian path, and says so if that fails.
+  // §0.60.216 SP2 — one helper for his Run button and for a site's macros run on load; a site whose macros are off refuses both.
+  async runMacroAsPerson(d = {}) {
+    if (!this.macroTool) return { error: 'macro tool not available' };
+    const agentId = d.agentId || 'default';
+    let url = d.url || null; if (!url && this.driver) { try { const wc = this.driver._getWebContents(agentId); url = wc && wc.getURL(); } catch (_) {} }
+    const site = url ? require('../site-settings/readers').macrosOnLoad(url) : null;
+    if (site && !site.enabled) return { error: `macros are off for ${new URL(url).origin} (its site settings, macros.enabled)` };
+    const BA = require('../../../lib/agent-tools/tools/browser/browser-action.js');
+    const runStep = async ({ action, data = {} }) => {
+      const call = BA.driverCall(action, data); if (!call) return BA.execute({ action, data });
+      if (!this.driver) return { error: 'driver not wired' };
+      try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call, by: 'person' }) }; } catch (err) { return { error: err.message }; }
+    };
+    const r = await this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
+    try { require('../processes').activity().push({ kind: 'macro', what: `macro "${d.name}" ${r && r.error ? `did not run: ${r.error}` : 'ran'}`, url, by: d.by || 'person', level: r && r.error ? 'warn' : 'info', ref: d.name }); } catch (_) {}   // SP5
+    return r;
+  }
+
   _bindRendererHandlers() {
     // All renderer calls become bus events
     const rendererEmit = (eventType, data) => {
@@ -1118,6 +1162,21 @@ class IpcBridge {
     ipcMain.handle('site-settings:clear',  async (e, d) => this.siteSettings?.clear(d.url));
     ipcMain.handle('site-settings:listOrigins', async () => this.siteSettings?.listOrigins());
     ipcMain.handle('site-settings:clearAll', async () => this.siteSettings?.clearAll());
+    // SP1 (0.60.215) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state.
+    // Cleardriver, agentmesh and guardian setting." One site's settings for every feature through one resolver (src/site-settings/profile.js);
+    // the network route is the netPolicy origin rule. by: the person (the window) — an agent's write comes through /cli/site-profile.
+    ipcMain.handle('site-profile:get',   async (e, d) => this._siteProfile().siteProfile(d && d.url));
+    ipcMain.handle('site-profile:set',   async (e, d) => this._siteProfile().setSite(d && d.url, d && d.key, d && d.value, { by: 'person' }));
+    ipcMain.handle('site-profile:clear', async (e, d) => this._siteProfile().clearSite(d && d.url, d && d.key, { by: 'person' }));
+    ipcMain.handle('site-profile:keys',  async () => ({ keys: this._siteProfile().KEYS, features: this._siteProfile().FEATURES }));
+
+    // SP5 (0.60.219) — James, 2026-10-23: "Also need a processes screen for background tabs and activity." What is running (every process
+    // with its pages, memory and CPU) and what just happened. Ending one is his: this channel is denied to agents in handler-registry.js.
+    ipcMain.handle('processes:list',  async () => require('../main/index').processes().list());
+    ipcMain.handle('processes:end',   async (e, d) => require('../main/index').processes().end(d && d.wcId, { by: 'person' }));
+    ipcMain.handle('window:openProcesses',  async () => require('../main/index').openProcessesWindow());   // SP6 (0.60.220)
+    ipcMain.handle('window:closeProcesses', async () => { require('../main/index').closeProcessesWindow(); return { ok: true }; });
+    ipcMain.handle('activity:recent', async (e, d) => ({ events: require('../processes').activity().recent(d || {}), dropped: require('../processes').activity().dropped() }));
 
     // §GAP CLOSED 2026-08-30 — real IPC handlers for the freshly-built
     // HistoryStore, the same real gap this session found (registry
@@ -1207,18 +1266,7 @@ class IpcBridge {
       if (!this.macroTool) return { error: 'macro tool not available' };
       return this.macroTool.execute({ action: 'get', name: d.name });
     });
-    ipcMain.handle('macros:run', async (e, d) => {
-      if (!this.macroTool) return { error: 'macro tool not available' };
-      // §0.60.69 — James, 2026-10-15: "should not rely on raid." His run drives the driver in this process: no Guardian, no RAID.
-      // A step that is not a driver action (dom_query, url_listen) still takes the Guardian path, and says so if that fails.
-      const BA = require('../../../lib/agent-tools/tools/browser/browser-action.js'); const agentId = d.agentId || 'default';
-      const runStep = async ({ action, data = {} }) => {
-        const call = BA.driverCall(action, data); if (!call) return BA.execute({ action, data });
-        if (!this.driver) return { error: 'driver not wired' };
-        try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call }) }; } catch (err) { return { error: err.message }; }
-      };
-      return this.macroTool.execute({ action: 'run', name: d.name, agentId: d.agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
-    });
+    ipcMain.handle('macros:run', async (e, d) => this.runMacroAsPerson(d));
     // §BUILT 2026-09-23 — the step builder the 2026-08-29 note above named as
     // "a separate, larger piece" rather than a bare JSON textarea. create/
     // delete go through macro.js's OWN validation (real browser_action enum,

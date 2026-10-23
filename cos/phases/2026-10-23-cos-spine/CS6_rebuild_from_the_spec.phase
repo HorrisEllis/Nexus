@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+context: pipeline phase CS6_rebuild_from_the_spec of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS6_rebuild_from_the_spec (integration) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792757382217
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382217
+lastSeenAt: 1792757382217
+fingerprint: null
+payload:
+  id: CS6_rebuild_from_the_spec
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/spine/rebuild.js
+    - cos/spine/version.js
+    - cos/workspace/index.js
+    - emerge/compiler/kg-builder.js
+    - emerge/compiler/phase-specs.js
+  depends_on:
+    - CS1_a_version_is_a_system_state
+    - CS4_every_system_a_compartment
+    - CS_D3_the_spec_rebuilds_the_system
+  blocks:
+    - MOD-CS-REBUILD
+  spec: cos/spec/cos-spine.spec
+  graph: 2027a2ea6546f0e2

@@ -1,0 +1,237 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS1_a_version_is_a_system_state:523fbc38e04e24be
+type: graph
+id: phase:CS1_a_version_is_a_system_state:523fbc38e04e24be
+context: dependency graph of phase CS1_a_version_is_a_system_state
+intent: null
+summary: 26 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792757382207
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382207
+lastSeenAt: 1792757382207
+fingerprint: null
+payload:
+  for: CS1_a_version_is_a_system_state
+  kind: phase
+  repo: null
+  hash: 523fbc38e04e24be
+  nodes:
+    - path: cos/compartment/qemu-runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spine/version.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/repo/snapshot.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: versionium/lib/files.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/helpers/cos-mini-guest.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/repo/architecture.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/config.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/text-diff.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/verify-lazy.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/snapshot-files.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/architecture.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: cos/compartment/qemu-runtime.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/config.js
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/lib/text-diff.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/index.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/workspace/vm-control.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/helpers/cos-mini-guest.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+  crossings:
+    - from: lib/cos-bridge.js
+      to: cos/workspace/vm-control.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 3351ce8a7e938b5b
+    layer: 1
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
+    dependents:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
+    downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+        files:
+          - idearium/repo/snapshot.js
+      - with: docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+        files:
+          - cos/compartment/qemu-runtime.js
+    dangling: []
+    lines:
+      - DAG 3351ce8a7e938b5b · layer 1 · blocked by CS_D2_a_version_is_the_whole_state
+      - 'depends on (1): CS_D2_a_version_is_the_whole_state'
+      - >-
+        needed by (3): CS2_test_every_version, CS6_rebuild_from_the_spec,
+        CS9_every_project_a_compartment · all downstream 5
+      - >-
+        same files as CS3_the_registry_is_the_bridge with no order between them:
+        idearium/repo/snapshot.js
+      - >-
+        same files as CS5_caps_per_compartment with no order between them:
+        cos/compartment/qemu-runtime.js

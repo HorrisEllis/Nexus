@@ -12,6 +12,10 @@
 const { BrowserWindow, webContents } = require('electron');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
 
+// actions that change a page: refused where the site says agents may not drive it (navigate checks its target instead)
+const DRIVING = new Set(['click', 'type', 'scroll', 'hover', 'eval', 'select', 'check', 'setValue', 'pressKey', 'upload', 'pointer', 'inject', 'cookies.set', 'cookies.clear', 'storage.set', 'back', 'forward', 'reload']);
+const AGENT_PAGE = /^(mesh|ncp|auto)-/;
+
 class ClearDriver {
   constructor({ ctxMgr, dom, vault, sse }) {
     this.ctxMgr = ctxMgr;
@@ -23,8 +27,11 @@ class ClearDriver {
 
   // ── Primary dispatch ──────────────────────────────────────────────────
   async exec(payload) {
-    const { action, agentId = 'default', ...args } = payload;
+    const { action, agentId = 'default', by = null, ...args } = payload;
     const execId = uuidv4();
+    // §0.60.216 SP2 — an agent's call: a door marks it (POST /cli/driver) or its page is an agent's (mesh-, ncp-, auto-). A person's own
+    // runs (his macros, userscripts, rewind, the window's buttons) are never refused by a site's "agents may not drive".
+    args._agentCall = by === 'agent' || (by !== 'person' && AGENT_PAGE.test(String(agentId)));
 
     this.sse.emit('driver.start', { execId, action, agentId, ts: Date.now() });
 
@@ -41,8 +48,10 @@ class ClearDriver {
   }
 
   async _dispatch(action, agentId, args, execId) {
+    const agentCall = args._agentCall; delete args._agentCall;
+    if (agentCall && DRIVING.has(action)) this._siteAllows(agentId);
     switch (action) {
-      case 'navigate':       return this._navigate(agentId, args);
+      case 'navigate':       return this._navigate(agentId, { ...args, agentCall });
       case 'click':          return this._click(agentId, args);
       case 'type':           return this._type(agentId, args);
       case 'scroll':         return this._scroll(agentId, args);
@@ -99,13 +108,24 @@ class ClearDriver {
     }
   }
 
+  // §0.60.216 SP2 — acting on a page whose site says agents may not drive it is refused, with the site and the setting
+  _siteAllows(agentId) {
+    let url = null; try { const wc = this._getWebContents(agentId); url = wc && wc.getURL(); } catch (_) {}
+    const site = url ? require('../site-settings/readers').driverPolicy(url) : null;
+    if (site && !site.allowed) throw new Error(`ClearDriver may not drive ${site.origin}: its site settings say agents may not drive it (driver.allowed, ${site.from.allowed})`);
+  }
+
   // ── Navigation ────────────────────────────────────────────────────────
-  async _navigate(agentId, { url, waitUntil = 'domcontentloaded' }) {
+  async _navigate(agentId, { url, waitUntil = 'domcontentloaded', agentCall = false }) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    // §0.60.216 SP2 — the site's own setting: agents may not drive it, or it has its own timeout (unset: 30 s, as before)
+    const site = require('../site-settings/readers').driverPolicy(url);
+    if (agentCall && site && !site.allowed) throw new Error(`ClearDriver may not drive ${site.origin}: its site settings say agents may not drive it (driver.allowed, ${site.from.allowed})`);
+    const navMs = (site && site.navTimeoutMs) || 30000;
 
     return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new Error('Navigate timeout')), 30000);
+      const timeout = setTimeout(() => reject(new Error(`Navigate timeout (${navMs} ms)`)), navMs);
 
       wc.once('did-finish-load', () => {
         clearTimeout(timeout);
@@ -212,9 +232,10 @@ class ClearDriver {
     return { waited: ms };
   }
 
-  async _waitFor(agentId, { selector, timeout = 10000 }) {
+  async _waitFor(agentId, { selector, timeout }) {
     const wc  = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (timeout == null) { const site = require('../site-settings/readers').driverPolicy(wc.getURL()); timeout = (site && site.waitTimeoutMs) || 10000; }   // §0.60.216 SP2
 
     const start = Date.now();
     while (Date.now() - start < timeout) {
@@ -766,6 +787,8 @@ class ClearDriver {
     // 2026-09-19: agent ids (mesh-*, ncp-*: the pages that receive whole code bases; §0.39.265 auto-*: workflow pages) resolve through the ONE shared
     // page-resolver and are NEVER allowed to fall back to the focused window (that typed into whatever page was
     // focused). Non-agent ids keep the legacy fallback: the interactive browser tabs may rely on it.
+    // §0.60.216 SP2 — `wc:<id>` names one page exactly (a site's macros on load run on the page that loaded)
+    { const m = /^wc:(\d+)$/.exec(String(agentId)); if (m) { const wc = webContents.fromId(Number(m[1])); return wc && !wc.isDestroyed() ? wc : null; } }
     try { return this._pageResolver().resolve(agentId); }
     catch (e) { if (/^(mesh|ncp|auto)-/.test(String(agentId))) return null; }
     // 0.60.7 — James, recording a macro: "the record button doesn't work". Picking "default (window)" and pressing Start

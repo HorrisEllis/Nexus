@@ -41,6 +41,17 @@ const ROOT = path.join(__dirname, '../..');
 const CG = (p) => path.join(ROOT, 'clear-glass', p);
 const FX = require(CG('src/import/firefox.js'));
 
+// 0.60.214 — the ☰ menu opened the way a person opens it; when it does not appear, the failure says why (the page's errors, the panel's state,
+// what is under the button) instead of a bare 30 s timeout — BST-07, BST-17 and BST-23 each missed it once in a run.
+async function openAppMenu(page, errors = []) {
+  await page.click('#bookmark-mgr-btn');
+  try { await page.waitForSelector('#bookmark-mgr-panel [data-am="New Tab"]', { timeout: 8000 }); }
+  catch (e) {
+    const st = await page.evaluate(() => { const p = document.getElementById('bookmark-mgr-panel'), b = document.getElementById('bookmark-mgr-btn').getBoundingClientRect();
+      const at = document.elementFromPoint(b.x + b.width / 2, b.y + b.height / 2); return { display: p.style.display, rows: p.querySelectorAll('[data-am]').length, html: p.innerHTML.length, atButton: at ? (at.id || at.className || at.tagName) : null }; });
+    throw new Error(`the ☰ menu did not open — ${JSON.stringify(st)}; page errors: ${JSON.stringify(errors)}`);
+  }
+}
 let passed = 0, failed = 0;
 async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} ${desc}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.stack.split('\n').slice(0, 5).join('\n    ')}`); failed++; } }
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'bst-'));
@@ -317,7 +328,7 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       await page.waitForSelector('#sh-ext-pinned button');
       assert.strictEqual(await page.$eval('#chrome', e => Math.round(e.getBoundingClientRect().height)), 48, 'one toolbar row (48px, BS8)');
       assert.strictEqual(await page.$eval('#sh-ext-pinned button', b => !!b.querySelector('svg') && b.title), 'Zoom', 'the pinned plugin, as its drawn icon (0.60.180)');
-      await page.click('#bookmark-mgr-btn'); await page.waitForSelector('#bookmark-mgr-panel [data-am="New Tab"]');
+      await openAppMenu(page, errors);
       const order = await page.$$eval('#bookmark-mgr-panel .menu-item', els => els.map(e => e.textContent.replace(/\s+/g, ' ').trim()));
       const at = (t) => order.findIndex(x => x.replace(/^[^A-Za-z]+/, '').startsWith(t));
       assert.ok(at('New Tab') === 0 && at('Downloads') > at('New Window') && at('Plugins and Add-ons') > at('History') && at('Settings') === order.length - 1 && at('Customize Toolbar') === order.length - 2, order.join(' | '));
@@ -369,9 +380,11 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
       await page.waitForSelector('#btn-back svg'); await page.waitForTimeout(300);
       for (const id of ['btn-gig', 'btn-dom', 'btn-mesh', 'btn-rewind', 'btn-providers', 'btn-settings', 'picker-btn']) assert.ok(await page.$eval(`#${id}`, b => !!b.querySelector('svg')), `#${id} draws its icon, not a glyph`);
-      await page.click('#bookmark-mgr-btn'); await page.waitForSelector('#bookmark-mgr-panel [data-tool-menu-id="btn-dom"] svg');
+      await openAppMenu(page, errors); await page.waitForSelector('#bookmark-mgr-panel [data-tool-menu-id="btn-dom"] svg');
       const tools = await page.$$eval('#bookmark-mgr-panel [data-tool-menu-id]', rows => rows.map(r => [r.dataset.toolMenuId, !!r.querySelector('.mb-ico svg')]));
-      assert.ok(tools.length >= 5 && tools.every(t => t[1]), `drawn icons: ${JSON.stringify(tools)}`);
+      assert.ok(tools.length >= 2 && tools.every(t => t[1]), `drawn icons: ${JSON.stringify(tools)}`);
+      // 0.60.214 — James: "also still here? why? supposed to be migrated": the agents hub's tools are not in the ☰ menu
+      for (const hub of ['btn-mesh', 'picker-btn', 'btn-providers']) assert.ok(!tools.some(t => t[0] === hub), `${hub} lives in the agents hub, not the ☰ menu`);
       assert.ok(!tools.some(t => t[0] === 'btn-settings'), 'Settings is not listed twice (the menu has its own row)');
       await page.evaluate(() => document.querySelector('#bookmark-mgr-panel [data-tool-pin="btn-dom"]').click());
       await page.waitForFunction(() => !document.querySelector('#bookmark-mgr-panel [data-tool-menu-id="btn-dom"]'));
@@ -383,6 +396,7 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       const rows = await page.$$eval('#toolbar-editor-panel .te-row', rs => rs.map(r => ({ id: r.dataset.toolId, svg: !!r.querySelector('.te-ico svg'), desc: r.querySelector('.te-desc').textContent })));
       const nTools = TOOLBAR_COMMANDS.filter(c => c.id && c.pinnable && !c.pluginId).length;   // a plugin command with no button of its own runs once instead
       assert.ok(rows.length === nTools && rows.every(r => r.svg && r.desc.length > 8), JSON.stringify(rows));
+      assert.ok(/^In the agents hub · /.test(rows.find(r => r.id === 'btn-providers').desc), 'Customize toolbar says where a hub tool lives');
       assert.strictEqual(await page.textContent('#te-count-toolbar'), '4');
       assert.strictEqual(await page.$$eval('#te-preview-icons .te-pv svg', e => e.length), 4, 'the preview shows the four pinned');
       await page.evaluate(() => document.querySelector('#te-drop-menu .te-row[data-tool-id="btn-mesh"] [data-te-move]').click());
@@ -405,6 +419,13 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
       await page.waitForSelector('#sh-newtab .nt-agents .sh-empty');
       assert.match(await page.textContent('#sh-newtab .nt-agents'), /trying again/);
+      // 0.60.213 — James: "get rid of that border in the search": focused, the input draws no ring of its own; the field's glow shows focus
+      await page.evaluate(() => { const q = document.getElementById('nt-q'); q.focus(); });
+      await page.keyboard.press('a');
+      const ring = await page.evaluate(() => { const q = document.getElementById('nt-q'); const f = q.closest('.nt-search'); return { input: getComputedStyle(q).outlineStyle, field: getComputedStyle(f).boxShadow }; });
+      assert.strictEqual(ring.input, 'none', 'no ring inside the search field');
+      assert.ok(ring.field && ring.field !== 'none', 'the field itself still shows focus');
+      if (process.env.BST_SHOT) await page.screenshot({ path: process.env.BST_SHOT });
       assert.ok(!/Guardian's provider host/.test(await page.textContent('#sh-newtab')), 'the message names what failed, not Guardian');
       await page.evaluate(() => { window.ClearGlass.providers.list = async () => [{ id: 'claude', name: 'Claude', color: '#d97757', running: false }, { id: 'chatgpt', name: 'ChatGPT', running: true }]; });
       await page.waitForSelector('#sh-newtab .nt-agent[data-id="chatgpt"]', { timeout: 8000 });
@@ -428,7 +449,7 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       assert.strictEqual(await page.$eval('#btn-zoom', b => b.style.display), 'flex', 'the address bar shows the level too');
       await page.click('#tz-pct');
       await page.waitForFunction(() => document.getElementById('tz-pct').textContent.trim() === '100%');
-      await page.click('#bookmark-mgr-btn'); await page.waitForSelector('#bookmark-mgr-panel [data-am="New Tab"]');
+      await openAppMenu(page, errors);
       assert.strictEqual(await page.$$eval('#bookmark-mgr-panel [data-tool-menu-id="zoom-controls"]', e => e.length), 0, 'not under Tools: the menu has its own Zoom row');
       assert.strictEqual(await page.$$eval('#bookmark-mgr-panel .am-zoom', e => e.length), 1);
       await page.evaluate(() => { document.getElementById('bookmark-mgr-panel').style.display = 'none'; window.CGShell.customize(); });
@@ -510,10 +531,10 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       await page.addInitScript(initScript({ answers: { 'plugins.list': [], 'options.get': {}, 'toolbar.commands': [], 'bookmarks.list': [{ id: 'b1', url: 'https://news.com/', title: 'News', agentId: 't' }], 'webext.list': { extensions: [] }, 'history.list': [], 'bgTabs.list': [] } }));
       await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
       await page.waitForSelector('#btn-back svg');
-      const open = async () => { await page.evaluate(() => { const p = document.getElementById('bookmark-mgr-panel'); p.style.display = 'none'; }); await page.click('#bookmark-mgr-btn'); await page.waitForSelector('#bookmark-mgr-panel [data-am="New Tab"]'); };
+      const open = async () => { await page.evaluate(() => { const p = document.getElementById('bookmark-mgr-panel'); p.style.display = 'none'; }); await openAppMenu(page, errors); };
       await open();
       const labels = await page.$$eval('#bookmark-mgr-panel [data-am]', els => els.map(e => e.dataset.am));
-      assert.deepStrictEqual(labels, ['New Tab', 'New Window', 'Open Page with Snowflake', 'Bookmarks', 'History', 'Downloads', 'Library', 'Plugins and Add-ons', 'Site Settings', 'Background Tabs', 'Import from Firefox…', 'Print…', 'Find in Page…', 'Customize Toolbar…', 'Settings']);
+      assert.deepStrictEqual(labels, ['New Tab', 'New Window', 'Open Page with Snowflake', 'Bookmarks', 'History', 'Downloads', 'Library', 'Plugins and Add-ons', 'Site Settings', 'Background Tabs', 'Processes', 'Import from Firefox…', 'Print…', 'Find in Page…', 'Customize Toolbar…', 'Settings']);
       assert.strictEqual(await page.$('#menu-bookmarks-list'), null, 'no bookmarks list in the menu (the Library has them)');
       assert.ok(await page.$eval('#bookmark-mgr-panel', p => [...p.querySelectorAll('[data-am] .mb-ico')].every(i => i.querySelector('svg'))), 'drawn icons');
       const calls = (key) => page.evaluate((k) => window.__cgCalls.filter(c => c.key === k).map(c => c.args), key);
@@ -529,6 +550,7 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
         'Plugins and Add-ons': async () => page.$eval('#sh-extensions-panel', e => e.style.display === 'block'),
         'Site Settings': async () => shown('#site-settings-panel'),
         'Background Tabs': async () => shown('#bgtabs-panel'),
+        'Processes': async () => (await calls('window.openProcesses')).length > 0,   // SP6 (0.60.220)
         'Import from Firefox…': async () => (await calls('window.openSettings')).some(a => a[0] === 'import'),
         'Print…': async () => (await calls('driver.exec')).some(a => a[0] && a[0].action === 'print'),
         'Find in Page…': async () => shown('#find-bar'),

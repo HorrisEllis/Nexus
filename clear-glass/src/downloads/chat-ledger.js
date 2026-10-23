@@ -124,6 +124,9 @@ function applyDelta(d = {}, { root = null } = {}) {
   if (!chatId || chatId.length > 200 || chatId === 'home') return { ok: false, error: 'chatId required' };
   if (!Array.isArray(d.turns)) return { ok: false, error: 'turns[] required' };
   if (d.turns.length > MAX_TURNS_PER_DELTA) return { ok: false, error: `at most ${MAX_TURNS_PER_DELTA} turns per delta` };
+  // §0.60.216 SP2 — a site whose chat capture is off keeps no ledger (its site settings, guardian.capture); said, not silent
+  const site = d.url ? require('../site-settings/readers').guardianPolicy(d.url) : null;
+  if (site && !site.capture) return { ok: false, skipped: true, error: `chat capture is off for ${new URL(d.url).origin} (its site settings, guardian.capture)` };
   const r = _root(root);
   const chatKey = chatKeyOf(provider, chatId);
   fs.mkdirSync(_dir(r), { recursive: true });

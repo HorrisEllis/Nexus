@@ -392,3 +392,23 @@ phases:
       overall hash. A phase build requires it: no registry → the import pipeline runs once (0.60.196), the snapshot is taken again;
       still none → refused NO_REGISTRY, said on the run. The Versionium list shows the four counts.
     proof: RC-16 (an unindexed repo gets a registry with all four parts), RC-18 (the build gate reads registryVersion, not atlas.json)
+
+# ── ADDENDUM 2026-10-23 — the spine is also the bridge between compartments (his decision) ─────────────────────────────────────
+# Context: he described COS as the orchestrator, where each Nexus system is a compartment. A compartment's front end is its HTML, or a
+# simulated OS (the QEMU/Debian machine COS already boots). The component registry is the event bus and the bridge to the compartment's
+# back end, whether that is an OS's SSH connection or a system's server.js, and an interaction contract governs how systems interact.
+# On top of that: snapshots and rewind per compartment, performance monitoring and load balancing, deploying from templates,
+# spawn/despawn, per-compartment resource caps, and benchmark branches run in parallel. The coder answered with a census of what
+# exists (cos/kernel.js, manager.js, compartment/qemu-runtime.js, watchdog/monitor.js, foundation/snapshot.js, archetype/nexus-system.js;
+# testenv T1–T7 done; SN, CE and IN not built).
+# James, 2026-10-23: "Yeah, this is the, it's, so, oh God. Some shit just like slotted together in my head. ... that's very elegant.
+# Because the component registry is the spine for each system, then it would also be the bridge for each compartment."
+# Decided (his): one registry, read from inside a system as its spine and from outside as the bridge to that system's compartment.
+# There is no second protocol between compartments. Its four parts, recorded since 0.60.198 (components, spine, event bus, interaction
+# contract), are what one compartment knows of another; COS checks a compartment's registry before connecting (CE0c's handshake,
+# 2026-10-18, already reads it that way for the Debian terminal).
+# What it changes: the COS spine map, to be written, builds on IN3/IN6 (the systems onto the spine) and on CE (the handshake) rather
+# than adding a separate bridge layer.
+# To confirm: (1) which slice comes first; (2) the coder's reading of "hook into the actual threads, PID or IO" is that COS owns each
+# compartment's process tree so it can measure and cap it (Windows Job Objects on his PC; QEMU limits for machines), not that it
+# reaches inside a running program's threads.

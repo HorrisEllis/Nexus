@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+context: pipeline phase CS5_caps_per_compartment of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS5_caps_per_compartment (backend) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792757382216
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382216
+lastSeenAt: 1792757382216
+fingerprint: null
+payload:
+  id: CS5_caps_per_compartment
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - cos/spine/caps.js
+    - cos/compartment/qemu-runtime.js
+  depends_on:
+    - CS4_every_system_a_compartment
+    - CS_D4_caps_by_the_os
+  blocks:
+    - MOD-CS-CAPS
+  spec: cos/spec/cos-spine.spec
+  graph: 60ce4faf0b415181

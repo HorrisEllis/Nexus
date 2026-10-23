@@ -64,6 +64,7 @@
     print:    P(['M7 9V4.5h10V9', '<rect x="4.5" y="9" width="15" height="7" rx="1.5"/>', 'M7 14h10v5.5H7z']),
     window:   P(['<rect x="4" y="5" width="16" height="14" rx="2"/>', 'M4 9h16']),
     layers:   P(['M12 4 3.5 8.5 12 13l8.5-4.5z', 'M3.5 12.5 12 17l8.5-4.5', 'M3.5 16.5 12 21l8.5-4.5']),
+    pulse:    P(['M3 12h4l2.5-6 4 12 2.5-6H21']),   // 0.60.220 SP6 Processes
     zoom:     P(['<circle cx="11" cy="11" r="6.5"/>', 'M20 20l-4.4-4.4', 'M8.5 11h5', 'M11 8.5v5']),   // 0.60.211 zoom controls
     briefcase: P(['<rect x="3.5" y="7.5" width="17" height="12" rx="2.2"/>', 'M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5', 'M3.5 12.5h17']),   // 0.60.210 Fiverr gigs
     check:    P(['M5 12.5l4.5 4.5L19 7.5']),   // BS18 (0.60.185) a checked menu row

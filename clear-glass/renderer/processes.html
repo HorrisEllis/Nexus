@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- §0.60.220 SP6 — James, 2026-10-23: "Also need a processes screen for background tabs and activity."
+     The Processes window: every Clear Glass process with its tabs and background tabs (memory, CPU, refreshed every 2 s, sortable), Close or
+     End on a row (his, confirmed), and what just happened beside it. Opened by openProcessesWindow() in src/main/index.js: Shift+Esc (as
+     Firefox and Chrome), ☰ → Processes, Tools → Processes. Reads ClearGlass.processes (src/processes, SP5). The window style is Settings'
+     (settings/settings.css, cos-theme.css); its own layout is processes.css. CSP: as settings.html. -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self';
+               style-src 'self' 'unsafe-inline';
+               connect-src 'self' http://127.0.0.1:*;
+               img-src 'self' data:;
+               frame-src 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clear Glass Processes</title>
+<link rel="stylesheet" href="settings/settings.css">
+<link rel="stylesheet" href="cos-theme.css">
+<link rel="stylesheet" href="processes.css">
+</head>
+<body class="pr-body">
+<div id="titlebar">
+  <span class="mark" aria-hidden="true"></span>
+  <span class="title"><b>Clear Glass</b> processes</span>
+  <button id="close" title="Close processes" aria-label="Close processes">&#x2715;</button>
+</div>
+<div id="pr-banner" class="pr-banner" role="alert" hidden></div>
+<div id="pr-shell">
+  <section id="pr-procs" aria-label="Processes">
+    <div class="pr-head">
+      <div id="pr-totals" class="pr-totals"></div>
+      <label class="pr-check"><input type="checkbox" id="pr-pages-only"> Pages only</label>
+    </div>
+    <div class="pr-table-wrap">
+      <table id="pr-table">
+        <thead><tr>
+          <th data-sort="name">Name</th><th data-sort="kind">Kind</th><th data-sort="memoryMB" class="num">Memory</th>
+          <th data-sort="cpu" class="num">CPU</th><th data-sort="pid" class="num">PID</th><th class="act"></th>
+        </tr></thead>
+        <tbody id="pr-rows"></tbody>
+      </table>
+    </div>
+  </section>
+  <aside id="pr-activity" aria-label="Activity">
+    <div class="pr-head">
+      <h2>Activity</h2>
+      <select id="pr-kind" aria-label="Kind">
+        <option value="">Everything</option><option value="nav">Pages loaded</option><option value="bgtab">Background tabs</option>
+        <option value="driver">ClearDriver</option><option value="macro">Macros</option><option value="workflow">Workflows</option>
+        <option value="download">Downloads</option><option value="error">Errors</option><option value="process">Ended by you</option>
+      </select>
+      <input id="pr-site" type="search" placeholder="Site" aria-label="Site">
+    </div>
+    <ol id="pr-feed" class="pr-feed"></ol>
+  </aside>
+</div>
+<div id="pr-confirm" class="pr-confirm" role="dialog" aria-modal="true" hidden>
+  <div class="pr-box"><h3 id="pr-confirm-title"></h3><p id="pr-confirm-text"></p>
+    <div class="pr-acts"><button id="pr-cancel" class="btn ghost">Cancel</button><button id="pr-ok" class="btn danger"></button></div></div>
+</div>
+<script src="processes.js"></script>
+</body>
+</html>

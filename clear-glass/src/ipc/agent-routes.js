@@ -98,7 +98,7 @@ function install(app, deps) {
     if (!body.action) return res.status(400).json({ ok: false, error: 'action required (navigate, click, type, setValue, select, check, upload, pressKey, readPage, screenshot, eval, waitFor, getUrl, getTitle, ...)' });
     const { timeoutMs, ...payload } = body;
     try {
-      const result = await _withTimeout(deps.driver.exec({ agentId: 'default', ...payload }), +timeoutMs || DEFAULT_TIMEOUT_MS, `driver ${body.action}`);
+      const result = await _withTimeout(deps.driver.exec({ agentId: 'default', ...payload, by: 'agent' }), +timeoutMs || DEFAULT_TIMEOUT_MS, `driver ${body.action}`);
       res.json({ ok: true, action: body.action, agentId: payload.agentId || 'default', result });
     } catch (e) {
       res.status(502).json({ ok: false, action: body.action, agentId: payload.agentId || 'default', error: e.message });

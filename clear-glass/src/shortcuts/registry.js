@@ -44,6 +44,7 @@ const ACTIONS = [
   { id: 'cg.history',       group: 'Clear Glass', label: 'History',                keys: 'Ctrl+H' },
   { id: 'cg.library',       group: 'Clear Glass', label: 'Library',                keys: 'Ctrl+J' },
   { id: 'cg.settings',      group: 'Clear Glass', label: 'Settings',               keys: 'Ctrl+,' },
+  { id: 'cg.processes',     group: 'Clear Glass', label: 'Processes',              keys: 'Shift+Esc' },   // 0.60.220 SP6, as Firefox and Chrome
   // Alt+Shift, not Ctrl+Shift: pages use Ctrl+Shift+Z (redo), Ctrl+Shift+F, … themselves
   { id: 'cg.copilot',       group: 'Clear Glass', label: 'Show or hide co-pilot',  keys: 'Alt+Shift+C' },
   { id: 'cg.rewind',        group: 'Clear Glass', label: 'Rewind this page',       keys: 'Alt+Shift+Z' },
@@ -106,6 +107,7 @@ function isSafe(accel) {
   if (!a) return false;
   const parts = a.split('+'), key = parts[parts.length - 1];
   if (/^F([1-9]|1\d|2[0-4])$/.test(key)) return true;
+  if (key === 'Esc' && parts.length > 1) return true;   // 0.60.220 — Esc with a modifier is not typing (Shift+Esc: Processes)
   return parts.some(p => p === 'Ctrl' || p === 'Alt' || p === 'Meta');
 }
 

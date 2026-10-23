@@ -1,0 +1,233 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS11_raid_in_the_exe:3899474125085d16
+type: graph
+id: phase:CS11_raid_in_the_exe:3899474125085d16
+context: dependency graph of phase CS11_raid_in_the_exe
+intent: null
+summary: 23 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792757382224
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382224
+lastSeenAt: 1792757382224
+fingerprint: null
+payload:
+  for: CS11_raid_in_the_exe
+  kind: phase
+  repo: null
+  hash: 3899474125085d16
+  nodes:
+    - path: cortex/core/raid/officiator.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/router.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/worker.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/app/desktop/main.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/raid/index.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/raid/routes.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/raid/store.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/chunk-service.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-raid-router.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/envelope.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/app/controller.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/settings.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intake.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/prevention.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/app/desktop/main.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/store.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/settings.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/shell.js
+      kind: requires
+    - from: cortex/core/raid/router.js
+      to: cortex/core/raid/envelope.js
+      kind: requires
+    - from: cortex/core/raid/router.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: lib/prevention.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/router.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: cortex/core/raid/router.js
+      kind: requires
+    - from: tests/modules/test-raid-router.js
+      to: cortex/core/raid/router.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cortex/core/raid/worker.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      fromSystem: cortex
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: lib/chunk-service.js
+      to: cortex/core/raid/router.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: cortex/core/raid/worker.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 3351ce8a7e938b5b
+    layer: 6
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM6_cortex_unclumped
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D8_raid_home
+    dependents:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM6_cortex_unclumped
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D8_raid_home
+    downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM6_cortex_unclumped
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D8_raid_home
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 3351ce8a7e938b5b · layer 6 · blocked by CS4_every_system_a_compartment,
+        DB6_move_the_crossings, IM6_cortex_unclumped, CS_D8_raid_home
+      - >-
+        depends on (4): CS4_every_system_a_compartment, DB6_move_the_crossings,
+        IM6_cortex_unclumped, CS_D8_raid_home · all upstream 21
+      - 'needed by (1): CS7_spawn_despawn_and_balance · all downstream 2'

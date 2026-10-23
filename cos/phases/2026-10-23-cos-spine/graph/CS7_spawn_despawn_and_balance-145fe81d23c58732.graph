@@ -1,0 +1,81 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS7_spawn_despawn_and_balance:145fe81d23c58732
+type: graph
+id: phase:CS7_spawn_despawn_and_balance:145fe81d23c58732
+context: dependency graph of phase CS7_spawn_despawn_and_balance
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792757382219
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382219
+lastSeenAt: 1792757382219
+fingerprint: null
+payload:
+  for: CS7_spawn_despawn_and_balance
+  kind: phase
+  repo: null
+  hash: 145fe81d23c58732
+  nodes:
+    - path: cos/spine/bridge.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/spine/scale.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/spine/systems.js
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 3351ce8a7e938b5b
+    layer: 7
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+    dependents:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM6_cortex_unclumped
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D8_raid_home
+    downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 3351ce8a7e938b5b · layer 7 · blocked by CS5_caps_per_compartment, CS11_raid_in_the_exe
+      - 'depends on (2): CS5_caps_per_compartment, CS11_raid_in_the_exe · all upstream 24'
+      - 'needed by (1): CS8_the_cos_screen'

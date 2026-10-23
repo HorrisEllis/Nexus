@@ -202,6 +202,19 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     clearAll:     ()         => ipcRenderer.invoke('site-settings:clearAll'),
     listOrigins:  ()         => ipcRenderer.invoke('site-settings:listOrigins'),
   },
+  // SP5 (0.60.219) — what is running and what just happened (src/processes)
+  processes: {
+    list:     ()        => ipcRenderer.invoke('processes:list'),
+    end:      (wcId)    => ipcRenderer.invoke('processes:end', { wcId }),
+    activity: (filter)  => ipcRenderer.invoke('activity:recent', filter || {}),
+  },
+  // SP1 (0.60.215) — every feature's settings for one site (src/site-settings/profile.js)
+  siteProfile: {
+    get:   (url)             => ipcRenderer.invoke('site-profile:get', { url }),
+    set:   (url, key, value) => ipcRenderer.invoke('site-profile:set', { url, key, value }),
+    clear: (url, key)        => ipcRenderer.invoke('site-profile:clear', { url, key }),
+    keys:  ()                => ipcRenderer.invoke('site-profile:keys'),
+  },
 
   // ── Accounts (real, per-agentKey identity — §PHASE-3 2026-08-23) ──────
   accounts: {
@@ -295,7 +308,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     open:         (payload) => ipcRenderer.invoke('window:open',     payload),
     openSettings: (area)    => ipcRenderer.invoke('window:openSettings', { area }),   // BS3 (0.60.179): settings.html#<area>
     closeSettings:()        => ipcRenderer.invoke('window:closeSettings'),
-    openLibrary:  (area)    => ipcRenderer.invoke('window:openLibrary', { area }),   // §LIBRARY 0.39.241 — renderer/library.html
+    openLibrary:  (area)    => ipcRenderer.invoke('window:openLibrary', { area }),
+    openProcesses:  ()      => ipcRenderer.invoke('window:openProcesses'),    // SP6 (0.60.220) — renderer/processes.html
+    closeProcesses: ()      => ipcRenderer.invoke('window:closeProcesses'),   // §LIBRARY 0.39.241 — renderer/library.html
     closeLibrary: ()        => ipcRenderer.invoke('window:closeLibrary'),
     list:         ()        => ipcRenderer.invoke('window:list'),
     focus:        (agentId) => ipcRenderer.invoke('window:focus', { agentId }),

@@ -258,6 +258,9 @@ body.cg-shell #toolbar-editor-panel, body.cg-shell #options-panel, body.cg-shell
   background: color-mix(in srgb, var(--bg-1) 90%, transparent); box-shadow: var(--e2); color: var(--ink-dim); transition: border-color .14s, box-shadow .14s; }
 .nt-search:focus-within { border-color: var(--cyan); box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 14%, transparent), var(--e3); }
 .nt-search input { flex: 1; border: 0; outline: 0; background: transparent; color: var(--ink-hi); font: var(--t-l) var(--sans); }
+/* 0.60.213 — James: "get rid of that border in the search". The shell's :focus-visible ring (line 30) outranks the input's outline: 0 and drew a
+   second box inside the field; the field's own :focus-within glow already shows focus, so the input draws none. */
+body.cg-shell .nt-search input:focus, body.cg-shell .nt-search input:focus-visible { outline: 0; box-shadow: none; border-radius: 0; }
 .nt-search input::placeholder { color: var(--ink-faint); }
 .nt-search kbd { font: 500 var(--t-xs) var(--mono); color: var(--ink-faint); border: 1px solid var(--edge); border-radius: 6px; padding: 2px 6px; }
 .nt-sec h2 { font: 600 var(--t-xs) var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 10px; }

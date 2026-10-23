@@ -1,0 +1,261 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS6_rebuild_from_the_spec:2027a2ea6546f0e2
+type: graph
+id: phase:CS6_rebuild_from_the_spec:2027a2ea6546f0e2
+context: dependency graph of phase CS6_rebuild_from_the_spec
+intent: null
+summary: 27 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792757382217
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382217
+lastSeenAt: 1792757382217
+fingerprint: null
+payload:
+  for: CS6_rebuild_from_the_spec
+  kind: phase
+  repo: null
+  hash: 2027a2ea6546f0e2
+  nodes:
+    - path: cos/spine/rebuild.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/spine/version.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/workspace/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: emerge/compiler/kg-builder.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/compiler/phase-specs.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: cos/workspace/vm-control.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: emerge/compiler/pipeline.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/test/gap-field.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/test/invariants.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/test/kg.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/test/propagation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/test/reply-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/test/tier-contract.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/cos-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/shadow-space.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/tar.js
+      role: uses
+      exists: true
+      system: cos
+    - path: emerge/chunk/index.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/siso/index.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-nodes.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/workspace/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: emerge/compiler/kg-builder.js
+      to: emerge/siso/index.js
+      kind: requires
+    - from: emerge/compiler/kg-builder.js
+      to: emerge/chunk/index.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-graph.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/pipeline-nodes.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: emerge/compiler/pipeline.js
+      to: emerge/compiler/kg-builder.js
+      kind: requires
+    - from: emerge/test/gap-field.test.js
+      to: emerge/compiler/kg-builder.js
+      kind: requires
+    - from: emerge/test/invariants.test.js
+      to: emerge/compiler/kg-builder.js
+      kind: requires
+    - from: emerge/test/kg.test.js
+      to: emerge/compiler/kg-builder.js
+      kind: requires
+    - from: emerge/test/propagation.test.js
+      to: emerge/compiler/kg-builder.js
+      kind: requires
+    - from: emerge/test/reply-engine.test.js
+      to: emerge/compiler/kg-builder.js
+      kind: requires
+    - from: emerge/test/tier-contract.test.js
+      to: emerge/compiler/kg-builder.js
+      kind: requires
+  crossings:
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 3351ce8a7e938b5b
+    layer: 6
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D3_the_spec_rebuilds_the_system
+    dependents: []
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D3_the_spec_rebuilds_the_system
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+    downstream: []
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D3_the_spec_rebuilds_the_system
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
+        files:
+          - cos/workspace/index.js
+    dangling: []
+    lines:
+      - >-
+        DAG 3351ce8a7e938b5b · layer 6 · blocked by CS1_a_version_is_a_system_state,
+        CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system
+      - >-
+        depends on (3): CS1_a_version_is_a_system_state, CS4_every_system_a_compartment,
+        CS_D3_the_spec_rebuilds_the_system · all upstream 22
+      - 'needed by (0): —'
+      - 'same files as CS2_test_every_version with no order between them: cos/workspace/index.js'

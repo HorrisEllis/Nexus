@@ -120,7 +120,25 @@
           chip(x.status || '?', x.status === 'done' ? 'ok' : x.status === 'error' ? 'bad' : 'warn'),
           btn('Status', async (e) => busy(e.currentTarget, async () => { const st = await wire(`/agent-mesh/job?jobId=${encodeURIComponent(x.jobId)}`); modal({ title: `Job ${x.jobId}`, wide: true, body: [h('pre', { class: 'out', text: JSON.stringify(st, null, 2) })] }); }), 'sm'))) : empty('No jobs yet.') });
       });
-      return [live, tryIt, routes, jobs, nodes];
+      // §0.60.218 SP4 — James, 2026-10-23: "Cleardriver, agentmesh and guardian setting." The drain's retries and waits were constants in
+      // agent-mesh.js (2 tries per strategy; 1, 3, 8, 15 s); they are options now, read at each failure.
+      const o = await cg.options.get().catch(() => ({}));
+      const md = { retriesPerStrategy: 2, backoffMs: [1000, 3000, 8000, 15000], ...(o.mesh || {}) };
+      const tries = h('input', { type: 'number', min: '1', max: '10', value: String(md.retriesPerStrategy) }); tries.dataset.opt = 'mesh.retriesPerStrategy';
+      const waits = h('input', { type: 'text', class: 'mono', value: md.backoffMs.join(', ') }); waits.dataset.opt = 'mesh.backoffMs';
+      tries.addEventListener('change', async () => {
+        const n = Number(tries.value);
+        if (!Number.isInteger(n) || n < 1 || n > 10) { toast(`Tries per strategy are 1 to 10 (got ${tries.value})`, 'bad'); tries.value = String(md.retriesPerStrategy); return; }
+        await call(() => cg.options.set({ mesh: { retriesPerStrategy: n } }), 'save'); md.retriesPerStrategy = n; toast(`${n} tries per strategy`);
+      });
+      waits.addEventListener('change', async () => {
+        const b = waits.value.split(/[\s,]+/).filter(Boolean).map(Number);
+        if (b.length !== 4 || !b.every(x => Number.isInteger(x) && x >= 100 && x <= 600000)) { toast('Four waits in ms, 100 to 600000 each: retry, respawn, fallback, diagnostic', 'bad'); waits.value = md.backoffMs.join(', '); return; }
+        await call(() => cg.options.set({ mesh: { backoffMs: b } }), 'save'); md.backoffMs = b; toast('Waits saved');
+      });
+      const drain = pane({ title: 'When a task fails', sub: 'The queue retries, then respawns the tab, then tries another agent, then runs a diagnostic, before it gives up.',
+        body: h('div', { class: 'grid' }, field('Tries per strategy', tries, 'Was 2'), field('Wait before each strategy (ms)', waits, 'Retry, respawn, fallback, diagnostic. Was 1000, 3000, 8000, 15000')) });
+      return [live, tryIt, drain, routes, jobs, nodes];
     },
   });
 })();

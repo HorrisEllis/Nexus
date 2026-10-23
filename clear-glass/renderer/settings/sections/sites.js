@@ -14,6 +14,12 @@
  *                      skips content filters (adblocker…) for pages on it
  * Any other key someone stored (the CLI's /site, a plugin) is listed as-is
  * and can be deleted or edited, never silently dropped.
+ *
+ * §0.60.217 SP3 — James, 2026-10-23: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake,
+ * resume state. Cleardriver, agentmesh and guardian setting." The dialog also shows every feature's settings for the site, grouped and
+ * drawn from the key table (renderer/site-profile-groups.js, the toolbar popup's same builder); they are written on Save through
+ * ClearGlass.siteProfile, which validates each one — a refused value keeps the dialog open with its why. Those keys are not repeated
+ * under "Other stored values".
  */
 (function () {
   const { cg, h, call, toast, busy, modal, confirmDo, field, pane, row, btn, chip, empty, select, section } = window.CGS;
@@ -30,6 +36,7 @@
   ];
   const ZOOMS = [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
   const KNOWN = new Set(['zoomFactor', 'contentFilter', ...PERMS.map(([p]) => `permission:${p}`)]);
+  const PROFILE_KEYS = new Set();   // SP3: the feature keys, from the key table (filled on first use)
   const label = Object.fromEntries(PERMS);
 
   function summary(all) {
@@ -38,6 +45,7 @@
       if (k.startsWith('permission:')) out.push(chip(`${label[k.slice(11)] || k.slice(11)}: ${v === 'allow' ? 'allowed' : 'blocked'}`, v === 'allow' ? 'ok' : 'bad'));
       else if (k === 'zoomFactor') out.push(chip(`Zoom ${Math.round(Number(v) * 100)}%`, 'plain'));
       else if (k === 'contentFilter' && v === 'off') out.push(chip('Blocking off', 'warn'));
+      else if (/^(autofill|macros|workflows|passwords|resume|driver|mesh|guardian)\./.test(k)) out.push(chip(`${k}: ${v === true ? 'on' : v === false ? 'off' : Array.isArray(v) ? v.join(', ') : v}`, v === false ? 'warn' : 'plain'));
       else out.push(chip(`${k}`, 'plain'));
     }
     return out;
@@ -52,6 +60,9 @@
 
   async function editor(origin, rerender) {
     const all = await call(() => cg.siteSettings.getAll(origin), 'site settings');
+    let groups = null;
+    try { if (cg.siteProfile && window.CGSiteGroups) { const d = await window.CGSiteGroups.load(cg, origin + '/'); groups = window.CGSiteGroups.build({ url: origin + '/', profile: d.profile, keys: d.keys, lists: d.lists }); d.keys.forEach(k => PROFILE_KEYS.add(k.key)); } }
+    catch (e) { groups = { el: h('p', { class: 'blurb', text: `Feature settings are not available here: ${e.message}` }), pending: () => new Map() }; }
     const permSel = Object.fromEntries(PERMS.map(([p]) => {
       const cur = all[`permission:${p}`];
       return [p, select([{ value: '', label: `Default (${HIGH_RISK.has(p) ? 'block' : 'allow'})` }, { value: 'allow', label: 'Allow' }, { value: 'deny', label: 'Block' }], cur === 'allow' || cur === 'deny' ? cur : '')];
@@ -59,7 +70,7 @@
     const zoom = select([{ value: '', label: 'Default (100%)' }, ...ZOOMS.map(z => ({ value: String(z), label: `${Math.round(z * 100)}%` }))], all.zoomFactor ? String(all.zoomFactor) : '');
     if (all.zoomFactor && !ZOOMS.includes(Number(all.zoomFactor))) zoom.append(h('option', { value: String(all.zoomFactor), text: `${Math.round(all.zoomFactor * 100)}% (current)`, selected: 'selected' }));
     const filter = select([{ value: '', label: 'On (default)' }, { value: 'off', label: 'Off for this site' }], all.contentFilter === 'off' ? 'off' : '');
-    const others = Object.entries(all).filter(([k]) => !KNOWN.has(k));
+    const others = Object.entries(all).filter(([k]) => !KNOWN.has(k) && !PROFILE_KEYS.has(k));
     const otherRows = others.map(([k, v]) => {
       const inp = h('input', { type: 'text', class: 'mono', value: typeof v === 'string' ? v : JSON.stringify(v) });
       const del = h('input', { type: 'checkbox' });
@@ -68,6 +79,8 @@
     const newKey = h('input', { type: 'text', class: 'mono', placeholder: 'key' });
     const newVal = h('input', { type: 'text', class: 'mono', placeholder: 'value (text, number, true/false)' });
     const r = await modal({ title: origin, wide: true, body: [
+      h('h3', { class: 'sub-h', text: 'Features' }),
+      groups.el,
       h('h3', { class: 'sub-h', text: 'Permissions' }),
       h('div', { class: 'perm-grid' }, PERMS.map(([p, l]) => field(l, permSel[p]))),
       h('h3', { class: 'sub-h', text: 'Page' }),
@@ -77,6 +90,10 @@
       h('div', { class: 'kv' }, newKey, newVal),
     ], actions: [{ label: 'Save', primary: true, run: async () => {
       const ops = [];
+      for (const [k, v] of groups.pending()) ops.push(async () => {
+        const res = v === null ? await cg.siteProfile.clear(origin + '/', k) : await cg.siteProfile.set(origin + '/', k, v);
+        if (res && res.ok === false) throw new Error(res.why || res.error || `${k} was not saved`);
+      });
       for (const [p] of PERMS) {
         const k = `permission:${p}`, v = permSel[p].value;
         if (!v && all[k] !== undefined) ops.push(() => cg.siteSettings.deleteKey(origin, k));
@@ -118,8 +135,8 @@
 
   section({
     id: 'sites', into: 'privacy', group: 'Browser', icon: '◎', label: 'Site settings',
-    keywords: 'site settings per site origin permissions camera microphone location notifications clipboard zoom adblock content blocking exceptions',
-    blurb: 'Choices Clear Glass remembers per site: permissions, zoom, and whether ad and tracker blocking runs there. Sites with no choice follow the defaults below.',
+    keywords: 'site settings per site origin autofill macros workflows passwords account snowflake route resume cleardriver driver agent mesh copilot guardian capture permissions camera microphone location notifications clipboard zoom adblock content blocking exceptions',
+    blurb: 'Choices Clear Glass remembers per site: what each feature does there (autofill, macros, workflows, passwords, network, resume, ClearDriver, Co-pilot, Guardian), permissions, zoom, and ad and tracker blocking. Sites with no choice follow the defaults below.',
     async render({ tools, rerender, query }) {
       const origins = await call(() => cg.siteSettings.listOrigins(), 'sites');
       const q = (query || '').toLowerCase();

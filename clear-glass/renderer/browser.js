@@ -1771,11 +1771,16 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // a plugin's command draws its plugin's icon (renderer/shell/icons.js PLUGIN), else the plugin drawing; a glyph only when nothing is drawn
   const _glyphOf = (c) => c.glyph || (c.pluginId ? ((window.CGIcons && window.CGIcons.PLUGIN && window.CGIcons.PLUGIN[c.pluginName]) || 'plugins') : null);
   // a command with no toolbar button of its own (a pure action, or a plugin command with no element) runs once; it is never pinned
+  // 0.60.214 — James, of the ☰ menu's Tools: "also still here? why? supposed to be migrated". These moved into Guardian's agents hub in 0.60.180
+  // (shell/agents.js: Agent mesh, Pick an element, Guardian scripts, Mesh HUD, and every NCP agent with Start / Show / Stop — the NCP Providers
+  // panel's calls); 0.60.210's Tools rows listed every unpinned tool and brought them back. The ☰ menu leaves them to the hub; Customize toolbar
+  // can still pin them, and says where they live.
+  const HUB_TOOLS = ['btn-mesh', 'picker-btn', 'btn-providers', 'btn-userscripts', 'mesh-picker-btn'];
   const _isAction = (c) => !c.id || (!!c.pluginId && !document.getElementById(c.id));
   const _tIco = (c, size = 16) => (_glyphOf(c) ? `<span class="mb-ico" data-icon="${_tEsc(_glyphOf(c))}" data-icon-size="${size}"></span>` : `<span class="mb-ico">${_tEsc(c.icon || '')}</span>`);
   function _renderToolMenuRows() {
     // a tool the menu already has a row for (Settings) is not listed twice
-    const inMenu = new Set(['btn-settings', 'zoom-controls']);   // the menu has its own Settings and Zoom rows
+    const inMenu = new Set(['btn-settings', 'zoom-controls', ...HUB_TOOLS]);   // the menu has its own Settings and Zoom rows; the hub has its tools
     const unpinned = TOOLBAR_COMMANDS.filter(c => c.id && (c.pinnable || c.pluginId) && !currentPinned.includes(c.id) && !inMenu.has(c.id));
     if (!unpinned.length) return '';
     const rows = unpinned.map(c => `<div class="menu-item am-tool" role="menuitem" data-tool-menu-id="${_tEsc(c.id)}" title="${_tEsc(c.desc || c.label)}">${_tIco(c)}<span class="menu-lbl">${_tEsc(c.label)}</span>${_isAction(c) ? '' : `<button class="am-pin" data-tool-pin="${_tEsc(c.id)}" title="Pin to the toolbar" aria-label="Pin ${_tEsc(c.label)} to the toolbar" data-icon="pin" data-icon-size="14"></button>`}</div>`).join('');
@@ -1811,7 +1816,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     const row = document.createElement('div');
     row.className = 'te-row'; row.draggable = true; row.dataset.toolId = cmd.id;
     row.innerHTML = `<span class="te-ico">${_glyphOf(cmd) ? `<span data-icon="${_tEsc(_glyphOf(cmd))}" data-icon-size="18"></span>` : _tEsc(cmd.icon || '')}</span>
-      <span class="te-txt"><span class="te-lbl">${_tEsc(cmd.label)}</span><span class="te-desc">${_tEsc(cmd.desc || cmd.group || '')}</span></span>
+      <span class="te-txt"><span class="te-lbl">${_tEsc(cmd.label)}</span><span class="te-desc">${HUB_TOOLS.includes(cmd.id) && !onBar ? 'In the agents hub · ' : ''}${_tEsc(cmd.desc || cmd.group || '')}</span></span>
       <button class="te-move" data-te-move title="${onBar ? 'Move it to the ☰ menu' : 'Pin it to the toolbar'}" aria-label="${onBar ? `Move ${_tEsc(cmd.label)} to the menu` : `Pin ${_tEsc(cmd.label)} to the toolbar`}"><span data-icon="${onBar ? 'menu' : 'pin'}" data-icon-size="13"></span>${onBar ? 'Unpin' : 'Pin'}</button>`;
     row.querySelector('[data-te-move]').addEventListener('click', (e) => { e.stopPropagation(); _teMove(cmd.id, onBar ? 'menu' : 'toolbar'); });
     return row;
@@ -2071,6 +2076,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   }
   const SHORTCUT_ACTIONS = {
     'tab.new':        () => _tabs.newTab(),
+    'cg.processes':   () => cg.window.openProcesses(),   // SP6 (0.60.220) — main opens it first; this is the window's own path
     'tab.close':      () => _tabs.closeTab(_tabs.activeId),
     'tab.reopen':     () => _tabs.reopenClosed(),
     'tab.next':       () => { const ids = _tabs.tabs.map(t => t.id); _tabs.switchTo(ids[(ids.indexOf(_tabs.activeId) + 1) % ids.length]); },
@@ -2134,39 +2140,34 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     if (key.startsWith('permission:')) return `Permission: ${key.slice('permission:'.length)}`;
     return key;
   }
+  // §0.60.217 SP3 — James, 2026-10-23: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake,
+  // resume state. Cleardriver, agentmesh and guardian setting." The popup is this tab's site, every feature's settings grouped and drawn from
+  // the key table (renderer/site-profile-groups.js), each change written at once. The list of every site's stored values it used to show
+  // (0.39.x) is Settings › Sites, one click away ("All sites…"), where nothing of it was lost.
   async function _renderSiteSettingsPanel() {
     const panel = document.getElementById('site-settings-panel');
-    panel.innerHTML = '<div style="padding:8px;color:var(--text-dim,#999);font-size:11px">loading…</div>';
+    panel.classList.add('sp-pop');
+    panel.innerHTML = '<div class="sp-empty">loading…</div>';
+    let url = '';
+    try { url = wv.getURL() || ''; } catch (_) {}
+    const head = document.createElement('div'); head.className = 'sp-head';
+    head.innerHTML = (window.CGIcons && window.CGIcons.svg('shield', { size: 16 })) || '';
+    const host = document.createElement('span'); host.className = 'sp-host';
+    try { host.textContent = /^https?:/.test(url) ? new URL(url).host : 'Site settings'; } catch (_) { host.textContent = 'Site settings'; }
+    const more = document.createElement('button'); more.className = 'sp-more'; more.type = 'button'; more.textContent = 'All sites…';
+    more.addEventListener('click', (e) => { e.stopPropagation(); panel.style.display = 'none'; cg.window.openSettings('sites'); });
+    head.append(host, more);
     try {
-      const origins = await cg.siteSettings.listOrigins();
-      if (!origins || !origins.length) {
-        panel.innerHTML = '<div style="padding:8px;color:var(--text-dim,#999);font-size:11px">No site settings saved yet.</div>';
-        return;
-      }
-      const perOrigin = await Promise.all(origins.map(async (origin) => ({ origin, settings: await cg.siteSettings.getAll(origin) })));
-      panel.innerHTML = perOrigin.map(({ origin, settings }) => `
-        <div style="padding:6px 4px;border-bottom:1px solid var(--border,#333)">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:11px;color:var(--text,#ccc);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${origin.replace(/</g, '&lt;')}</span>
-            <span data-clear-origin="${origin}" style="cursor:pointer;font-size:10px;color:var(--text-dim,#999)">clear all</span>
-          </div>
-          ${Object.entries(settings).map(([k, v]) => `
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;font-size:10px;color:var(--text-dim,#999)">
-              <span>${_humanizeSettingKey(k)}: <b style="color:${v === 'allow' ? '#6bcf6b' : '#ff6b6b'}">${v}</b></span>
-              <span data-clear-key="${origin}|||${k}" style="cursor:pointer;opacity:.6">✕</span>
-            </div>`).join('')}
-        </div>`).join('');
-      panel.querySelectorAll('[data-clear-origin]').forEach(el => el.addEventListener('click', async () => {
-        await cg.siteSettings.clear(el.dataset.clearOrigin);
-        _renderSiteSettingsPanel();
-      }));
-      panel.querySelectorAll('[data-clear-key]').forEach(el => el.addEventListener('click', async () => {
-        const [origin, key] = el.dataset.clearKey.split('|||');
-        await cg.siteSettings.deleteKey(origin, key);
-        _renderSiteSettingsPanel();
-      }));
+      if (!cg.siteProfile || !window.CGSiteGroups) throw new Error('site settings are not available in this window');
+      const { profile, keys, lists } = await window.CGSiteGroups.load(cg, url);
+      const g = window.CGSiteGroups.build({ url, profile, keys, lists,
+        live: () => cg.siteProfile.get(url),
+        onSet: (key, value) => cg.siteProfile.set(url, key, value),
+        onClear: (key) => cg.siteProfile.clear(url, key) });
+      panel.replaceChildren(head, g.el);
     } catch (err) {
-      panel.innerHTML = `<div style="padding:8px;color:#ff6b6b;font-size:11px">Error: ${err.message}</div>`;
+      const e = document.createElement('div'); e.className = 'sp-note'; e.textContent = `Site settings: ${err.message}`;
+      panel.replaceChildren(head, e);
     }
   }
   document.addEventListener('click', (e) => {
@@ -3642,6 +3643,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     history: () => _openPanelFromMenu('history-panel', () => _renderHistoryPanel('')),
     siteSettings: () => _openPanelFromMenu('site-settings-panel', _renderSiteSettingsPanel),
     bgTabs: () => _openPanelFromMenu('bgtabs-panel', _renderBgTabsPanel),
+    processes: () => cg.window.openProcesses(),   // SP6 (0.60.220) — the Processes window (Shift+Esc)
     library: (area) => _openLibrary(area), customize: () => _openToolbarEditor(),
     bookmarksBar: (mode) => { if (mode) setBookmarksBar(mode); return _barMode; },   // BS18 (0.60.185)
   };

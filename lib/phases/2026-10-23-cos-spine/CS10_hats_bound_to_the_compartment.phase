@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+context: pipeline phase CS10_hats_bound_to_the_compartment of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS10_hats_bound_to_the_compartment (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792756452080
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792756452080
+lastSeenAt: 1792756452080
+fingerprint: null
+payload:
+  id: CS10_hats_bound_to_the_compartment
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/spine/hat-bind.js
+    - lib/repo-hat.js
+    - lib/hat-forge.js
+    - lib/repo-agent.js
+  depends_on:
+    - CS9_every_project_a_compartment
+    - CS5_caps_per_compartment
+    - CS3_the_registry_is_the_bridge
+  blocks:
+    - MOD-CS-HAT
+  spec: cos/spec/cos-spine.spec
+  graph: 9593a2c519f5f235

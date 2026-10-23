@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+context: pipeline phase CS4a_cos_boots_alone of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS4a_cos_boots_alone (foundation) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792757382214
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382214
+lastSeenAt: 1792757382214
+fingerprint: null
+payload:
+  id: CS4a_cos_boots_alone
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - cos/spine/boot.js
+    - cos/app/runtime.js
+    - nexus/autopilot.js
+    - cos/compartment/process-runner.js
+  depends_on:
+    - CS_D7_sovereign_first
+    - COSA3_run_and_supervise
+  blocks:
+    - MOD-CS-BOOT
+  spec: cos/spec/cos-spine.spec
+  graph: 5a7d46b9d98781db

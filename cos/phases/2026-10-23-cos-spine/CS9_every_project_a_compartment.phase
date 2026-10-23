@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+context: pipeline phase CS9_every_project_a_compartment of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS9_every_project_a_compartment (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792757382221
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382221
+lastSeenAt: 1792757382221
+fingerprint: null
+payload:
+  id: CS9_every_project_a_compartment
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/spine/projects.js
+    - idearium/repo/index.js
+    - lib/cos-bridge.js
+  depends_on:
+    - CS4_every_system_a_compartment
+    - CS1_a_version_is_a_system_state
+    - CS_D6_every_project_a_compartment
+  blocks:
+    - MOD-CS-PROJECTS
+  spec: cos/spec/cos-spine.spec
+  graph: 4ceb779c4ef8413d

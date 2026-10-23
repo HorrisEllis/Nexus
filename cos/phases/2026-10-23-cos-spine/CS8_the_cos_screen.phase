@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+context: pipeline phase CS8_the_cos_screen of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS8_the_cos_screen (ui) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792757382225
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382225
+lastSeenAt: 1792757382225
+fingerprint: null
+payload:
+  id: CS8_the_cos_screen
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - cos/app/desktop/spine.html
+    - cos/app/desktop/spine.js
+    - cos/app/controller.js
+  depends_on:
+    - CS2_test_every_version
+    - CS5_caps_per_compartment
+    - CS7_spawn_despawn_and_balance
+  blocks:
+    - MOD-CS-UI
+  spec: cos/spec/cos-spine.spec
+  graph: 75756ab60cc23333

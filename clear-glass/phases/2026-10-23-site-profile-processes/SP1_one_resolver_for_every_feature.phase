@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+type: phase
+id: docs_2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+context: >-
+  pipeline phase SP1_one_resolver_for_every_feature of
+  docs/2026-10-23-site-profile-processes-phasemap.spec
+intent: null
+summary: SP1_one_resolver_for_every_feature (foundation) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792754193309
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792754193309
+lastSeenAt: 1792754193309
+fingerprint: null
+payload:
+  id: SP1_one_resolver_for_every_feature
+  map: docs/2026-10-23-site-profile-processes-phasemap.spec
+  repo: null
+  layer: foundation
+  status: >-
+    BUILT 0.60.215 — keys.js, profile.js, bridge site-profile:* and /cli/site-profile,
+    cg.siteProfile; test-site-profile 3/3
+  files:
+    - clear-glass/src/site-settings/keys.js
+    - clear-glass/src/site-settings/profile.js
+    - clear-glass/src/site-settings/store.js
+    - clear-glass/src/net/policy.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+  depends_on:
+    - SP_D1_one_store_one_resolver
+    - SP_D2_defaults_are_todays_behaviour
+  blocks:
+    - MOD-SP-KEYS
+    - MOD-SP-RESOLVER
+  spec: clear-glass/spec/site-profile.spec
+  graph: 603b7985ce8f9b73

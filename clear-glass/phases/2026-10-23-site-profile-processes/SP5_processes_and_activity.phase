@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-site-profile-processes-phasemap.spec::SP5_processes_and_activity
+type: phase
+id: docs_2026-10-23-site-profile-processes-phasemap.spec::SP5_processes_and_activity
+context: pipeline phase SP5_processes_and_activity of docs/2026-10-23-site-profile-processes-phasemap.spec
+intent: null
+summary: SP5_processes_and_activity (backend) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792754193315
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792754193315
+lastSeenAt: 1792754193315
+fingerprint: null
+payload:
+  id: SP5_processes_and_activity
+  map: docs/2026-10-23-site-profile-processes-phasemap.spec
+  repo: null
+  layer: backend
+  status: >-
+    BUILT 0.60.219 — src/processes (list, end, the activity ring fed from the bus), IPC,
+    /cli/processes and /cli/activity, commands site / processes / activity; test-processes 4/4
+  files:
+    - clear-glass/src/processes/index.js
+    - clear-glass/src/main/index.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/ipc/handler-registry.js
+    - clear-glass/src/preload/index.js
+    - clear-glass/src/site-settings/profile.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - SP_D3_person_ends_processes
+  blocks:
+    - MOD-SP-PROCESSES
+  spec: clear-glass/spec/site-profile.spec
+  graph: d43cecd51dde3c80

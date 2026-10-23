@@ -930,6 +930,38 @@ export const SPEC = [
   { key: 'field.windows', repo: false, usage: 'field windows', about: 'what the field is doing in each Clear Glass window: its last map, spotlight and pointer, and how lately the page changed',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/attention' }),
     print: (d, a, h) => _printWindows(d.windows || [], h) },
+  // §0.60.219 SP1/SP5 — James, 2026-10-23: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake,
+  // resume state. Cleardriver, agentmesh and guardian setting. Also need a processes screen for background tabs and activity."
+  { key: 'site', repo: false, usage: 'site <url> [set <key> <value> | clear <key> | keys]', about: 'one site\'s settings for every Clear Glass feature (autofill, macros, workflows, passwords, network, resume, ClearDriver, Co-pilot, Guardian): each value and where it comes from',
+    need: (a) => (!a.args[0] ? '<url> (or keys)' : a.args[1] === 'set' && a.args.length < 4 ? '<url> set <key> <value>' : a.args[1] === 'clear' && !a.args[2] ? '<url> clear <key>' : null),
+    personOnly: (a) => (['set', 'clear'].includes(a.args[1]) && ['driver.allowed', 'mesh.enabled', 'guardian.listen', 'guardian.capture', 'network.via'].includes(a.args[2]) ? `${a.args[2]} limits what agents may do on a site: he changes it in Clear Glass (Site settings).` : null),
+    req: (a) => {
+      const cg = (method, path, body) => ({ system: 'clear-glass', method, path, ...(body ? { body } : {}) });
+      if (a.args[0] === 'keys') return cg('GET', '/cli/site-profile');
+      const url = /^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}/`;
+      if (a.args[1] === 'set') { const raw = a.args.slice(3).join(' '); let value = raw; try { value = JSON.parse(raw); } catch (_) {} return cg('PUT', '/cli/site-profile', { url, key: a.args[2], value }); }
+      if (a.args[1] === 'clear') return cg('DELETE', `/cli/site-profile?url=${encodeURIComponent(url)}&key=${encodeURIComponent(a.args[2])}`);
+      return cg('GET', `/cli/site-profile?url=${encodeURIComponent(url)}`);
+    },
+    print: (d, a, h) => {
+      if (d.ok === false) return console.log(h.c.amber(`  ${d.why || d.error}`));
+      if (d.keys && !d.origin) { for (const k of d.keys) console.log(`  ${h.c.bold(k.key.padEnd(22))} ${k.type}${k.values ? ` (${k.values.join('|')})` : ''}  ${h.c.dim(k.does)}`); return; }
+      if (d.key) return console.log(h.c.mint(`  ${d.origin || d.host}: ${d.key} = ${JSON.stringify(d.value === undefined ? null : d.value)}`));
+      if (d.via) return console.log(h.c.mint(`  ${d.host}: network ${d.via}`));
+      if (!d.origin) return console.log(h.c.dim('  not a website: no site settings'));
+      console.log(h.c.bold(`  ${d.origin}`));
+      for (const f of ['autofill', 'macros', 'workflows', 'passwords', 'resume', 'driver', 'mesh', 'guardian']) for (const [k, v] of Object.entries(d[f] || {})) { const from = (d.from || {})[`${f}.${k}`]; console.log(`  ${`${f}.${k}`.padEnd(22)} ${JSON.stringify(v)}  ${from === 'site' ? h.c.mint('this site') : h.c.dim(from)}`); }
+      console.log(`  ${'network.via'.padEnd(22)} ${(d.network || {}).via}  ${(d.network || {}).rule ? h.c.mint('this site') : h.c.dim('default')}`);
+    } },
+  { key: 'glass.processes', repo: false, usage: 'glass processes', about: 'what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/processes' }),
+    print: (d, a, h) => {
+      const t = d.totals || {}; console.log(h.c.bold(`  ${t.processes || 0} processes · ${t.memoryMB || 0} MB · ${t.cpu || 0}% CPU · ${t.backgroundTabs || 0} background tabs`)); if (d.why) console.log(h.c.amber(`  ${d.why}`));
+      for (const r of d.rows || []) { console.log(`  ${String(r.pid).padStart(6)} ${r.kind.padEnd(15)} ${String(r.memoryMB == null ? '?' : r.memoryMB).padStart(7)} MB ${String(r.cpu == null ? '?' : r.cpu).padStart(5)}%  ${h.c.dim(r.title || r.url || '')}`); for (const tb of (r.tabs || []).slice(1)) console.log(h.c.dim(`         └ ${tb.kind} ${tb.title || tb.url || ''} (page ${tb.webContentsId})`)); }
+    } },
+  { key: 'glass.activity', repo: false, usage: 'glass activity [--kind nav|bgtab|driver|macro|workflow|download|error|process] [--origin https://site] [--limit n]', about: 'what just happened in Clear Glass, newest first: pages loaded, background tabs, the driver, macros, workflows, downloads, errors',
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/cli/activity?limit=${+a.flags.limit || 50}${a.flags.kind ? `&kind=${encodeURIComponent(a.flags.kind)}` : ''}${a.flags.origin ? `&origin=${encodeURIComponent(a.flags.origin)}` : ''}` }),
+    print: (d, a, h) => { for (const e of d.events || []) console.log(`  ${new Date(e.ts).toLocaleTimeString()} ${(e.level === 'error' ? h.c.amber : (x) => x)(e.kind.padEnd(13))} ${e.what}  ${h.c.dim(e.by)}`); if (!(d.events || []).length) console.log(h.c.dim('  (nothing yet)')); } },
   // §FN2 0.59.0 — Nexus Nerve, the attention layer (lib/nerve, served by cortex): the field's regime, which systems are
   // present, and each Clear Glass window's focus. Read-only — Nerve shows, it never acts.
   { key: 'nerve', repo: false, usage: 'nerve', about: 'Nexus Nerve: the field\'s regime, which systems are present, and where each window\'s attention is',

@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+context: pipeline phase CS11_raid_in_the_exe of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS11_raid_in_the_exe (backend) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792757382224
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792757382224
+lastSeenAt: 1792757382224
+fingerprint: null
+payload:
+  id: CS11_raid_in_the_exe
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - cos/raid/index.js
+    - cos/raid/store.js
+    - cos/raid/routes.js
+    - cos/app/desktop/main.js
+    - cortex/core/raid/router.js
+    - cortex/core/raid/worker.js
+    - cortex/core/raid/officiator.js
+  depends_on:
+    - CS4_every_system_a_compartment
+    - DB6_move_the_crossings
+    - IM6_cortex_unclumped
+    - CS_D8_raid_home
+  blocks:
+    - MOD-CS-RAID
+  spec: cos/spec/cos-spine.spec
+  graph: 3899474125085d16
