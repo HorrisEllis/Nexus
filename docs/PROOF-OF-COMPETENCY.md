@@ -100,6 +100,15 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-23: "next"** (0.60.224)
+  - **Context:** the self-building loop's third phase. The out-of-date backlog gets closed by evidence: a phase is done when its own
+    tests pass, with a dry run first.
+  - **What it shows:** a guard against coherent-looking false progress. The first rule, "any linked test", would have marked over a
+    hundred phases done on passes that prove nothing about them. The rule was narrowed by his axiom (truth over coherence) before
+    anything was written. The dry run now shows how much of "done" rests on a phase's own test (2 of 107) and how much on a test of its
+    files, and the choice to apply stays his.
+  - **Evidence:** `CHANGELOG-0.60.224.md`; `docs/2026-10-23-evidence-dry-run.md`; `tests/modules/test-evidence-close.test.js` 5/5.
+
 - **2026-10-23: "contiue getting idearium building phases"** (0.60.223)
   - **Context:** the trace behind his "can it build itself" question found that nothing ever marked a phase done. A proven run left
     its phase open, and everything after it stayed refused until he marked it by hand.

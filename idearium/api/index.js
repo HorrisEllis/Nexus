@@ -3622,6 +3622,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['GET',    ['api','repos',    ':uuid','phases','closes'],       'repo.phases.closes'],   // §SL1 0.60.223 the phases its runs closed (and reopened)
     ['POST',   ['api','repos',    ':uuid','phases','close'],        'repo.phases.close'],    // §SL1 0.60.223 check one run again: closes its phase if proven and landed
+    ['POST',   ['api','repos',    ':uuid','phases','evidence'],     'repo.phases.evidence'], // §SL2 0.60.224 done by evidence: its own tests run; dry run unless apply
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
     ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
@@ -9052,6 +9053,27 @@ async function handle(req, res, route, query, body) {
       for (const c of loadTable('idearium_phase_closes')) if (c && c.repoUuid === repo.uuid) { const k = PC.baseRun(c.runId); const t = c.reopenedAt || c.at || 0; if (!last.has(k) || t >= (last.get(k).reopenedAt || last.get(k).at || 0)) last.set(k, c); }
       const closes = [...last.values()].sort((a, b) => (b.reopenedAt || b.at || 0) - (a.reopenedAt || a.at || 0));
       return ok(res, { closes, open: closes.filter(c => !c.reopenedAt).length, reopened: closes.filter(c => c.reopenedAt).length });
+    }
+    case 'repo.phases.evidence': {
+      // 0.60.224 SL2 — the open phases whose every file exists, judged by their own tests (lib/phase-close.js byEvidence). A dry run
+      // unless { apply: true }; each close goes through the one status writer and is kept beside SL1's (kind 'evidence').
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const PC = _require('../../lib/phase-close.js'), DAG = _require('../../lib/phase-dag.js');
+      const PH = await import('../repo/phases.js');
+      const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+      const root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);
+      const b = body || {};
+      const maps = (m.maps || []).filter(x => !b.map || x.path === b.map).map(x => ({ path: x.path, text: x.text || '' }));
+      const phases = Object.values(DAG.build(maps, {}).nodes).filter(n => !n.done && !n.decision).map(n => ({ key: n.key, map: n.map, id: n.id, files: n.files }));
+      const apply = b.apply === true;
+      const r = await PC.byEvidence({ phases, root, repo, dryRun: !apply, setStatus: apply ? _phaseSetStatus : null, limit: Math.max(1, Math.min(500, parseInt(b.limit, 10) || 10)) });
+      for (const c of r.closed) {
+        appendRow('idearium_phase_closes', { uuid: `close-${c.runId}-${c.at}`, ...c, trigger: 'evidence' });
+        getIdeaOS().emit('idearium.phase.closed', { ...c, trigger: 'evidence' });
+        _closeLog(repo.uuid, 'phase.closed', `${c.phase} closed — ${c.note}`, c.why);
+      }
+      return ok(res, { ...r, ran: r.ran.map(x => ({ file: x.file, passed: x.passed, timedOut: !!x.timedOut, ms: x.ms, tail: x.passed ? undefined : x.tail })) });
     }
     case 'repo.phases.close': {
       const repo = getRepoLayer().get(params.uuid);
