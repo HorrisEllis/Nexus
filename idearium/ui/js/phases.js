@@ -144,7 +144,8 @@ function _phNextRail() {
   return `<div class="ph2-rail-head">can be built now · ${n.counts.queue} of ${n.counts.open} open</div>
     ${(n.queue || []).map(q => `<div class="ph2-spec" title="${escapeHtml(q.why)} — ${escapeHtml(q.map)}"><span class="ph2-spec-name">${escapeHtml(q.id)}</span><span class="ph2-dim">unlocks ${q.unlocks}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phasesBuild('${_phq(q.map)}','${_phq(q.id)}')" title="build it now (the same route as its own Build button)">▶ build</button></div>`).join('') || '<div class="ph2-dim ph2-pad">nothing can be built now</div>'}
     ${why ? `<div class="ph2-dim ph2-pad" title="every other open phase is in one group, with what would unblock it (phases next --group …)">waiting: ${escapeHtml(why)}</div>` : ''}
-    ${_phEvidenceRail()}`;
+    ${_phEvidenceRail()}
+    ${_phGroomRail()}`;
 }
 
 // 0.60.224 SL2 — done by evidence: a dry run first (its own tests run, nothing written); Close them asks, then writes through the writer
@@ -169,6 +170,32 @@ async function phEvidence(apply) {
     toast(r.dryRun ? `${r.wouldClose.length} of ${r.checked} would close by their tests` : `${r.closed.length} closed by their tests`, 'ok');
     if (!r.dryRun && typeof renderPhasesRefresh === 'function') renderPhasesRefresh();
   } catch (e) { PHASES.evidence = null; toast(`done by evidence: ${e.message}`, 'err'); }
+  _phPaint();
+}
+
+// 0.60.227 SL3 — James: "need to do something about the dependancy graph." The DAG groomed: a dry run lists what would be added to the
+// maps (files from each phase's own words, depends_on from shared files and same-file order) and what a person must answer; apply asks.
+function _phGroomRail() {
+  const g = PHASES.groom;
+  const btn = `<button class="ph2-mini-btn" ${g && g.busy ? 'disabled' : ''} onclick="phGroom(false)" title="files from each phase's own words, depends_on from shared files and same-file order, never closing a cycle — a dry run: nothing is written">${g && g.busy ? 'grooming…' : '⛓ groom the graph'}</button>`;
+  if (!g || !g.result) return `<div class="ph2-pad">${btn}</div>`;
+  const r = g.result, st = r.stats;
+  const ask = (r.forAPerson || []).filter(x => x.kind !== 'order');
+  return `<div class="ph2-rail-head">the graph · ${st.proposals} proposal${st.proposals === 1 ? '' : 's'}${r.written ? ' written' : ''}</div>
+    ${(r.lines || []).map(l => `<div class="ph2-dim ph2-pad">${escapeHtml(l)}</div>`).join('')}
+    ${ask.slice(0, 8).map(x => `<div class="ph2-spec" title="${escapeHtml(x.why)}"><span class="ph2-spec-name">${escapeHtml(x.key.split('::').pop())}</span><span class="ph2-dim">${escapeHtml(x.kind)}</span></div>`).join('')}
+    <div class="ph2-pad">${btn}${r.dryRun && r.pending && r.pending.maps ? ` <button class="ph2-mini-btn" onclick="phGroom(true)" title="write the additions into ${r.pending.maps} map(s): only keys a phase lacks; through the apply gate">write to ${r.pending.maps} map${r.pending.maps === 1 ? '' : 's'}</button>` : ''}</div>`;
+}
+async function phGroom(apply) {
+  const uuid = PHASES.uuid || (CURRENT_API_REPO && CURRENT_API_REPO.uuid);
+  if (apply && !confirm('Write the proposed files and depends_on into the maps? Only keys a phase lacks are added; the write goes through the apply gate and can be undone.')) return;
+  PHASES.groom = { ...(PHASES.groom || {}), busy: true }; _phPaint();
+  try {
+    const r = await api(`/api/repos/${uuid}/phases/groom`, { method: 'POST', body: JSON.stringify({ apply: !!apply }) }, 300000);
+    PHASES.groom = { result: r };
+    toast(r.written ? `the graph: ${r.written.files} files, ${r.written.deps} depends_on written` : `the graph: ${r.stats.proposals} proposals, ${r.stats.forAPerson} for you`, 'ok');
+    if (r.written && typeof renderPhasesRefresh === 'function') renderPhasesRefresh();
+  } catch (e) { PHASES.groom = null; toast(`groom: ${e.message}`, 'err'); }
   _phPaint();
 }
 

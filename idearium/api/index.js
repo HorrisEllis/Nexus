@@ -3631,6 +3631,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','phases','closes'],       'repo.phases.closes'],   // §SL1 0.60.223 the phases its runs closed (and reopened)
     ['POST',   ['api','repos',    ':uuid','phases','close'],        'repo.phases.close'],    // §SL1 0.60.223 check one run again: closes its phase if proven and landed
     ['POST',   ['api','repos',    ':uuid','phases','evidence'],     'repo.phases.evidence'], // §SL2 0.60.224 done by evidence: its own tests run; dry run unless apply
+    ['POST',   ['api','repos',    ':uuid','phases','groom'],        'repo.phases.groom'],    // §SL3 0.60.227 the DAG groomed: proposals from MP1 + DG3; dry run unless apply
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
     ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
@@ -9082,6 +9083,32 @@ async function handle(req, res, route, query, body) {
         _closeLog(repo.uuid, 'phase.closed', `${c.phase} closed — ${c.note}`, c.why);
       }
       return ok(res, { ...r, ran: r.ran.map(x => ({ file: x.file, passed: x.passed, timedOut: !!x.timedOut, ms: x.ms, tail: x.passed ? undefined : x.tail })) });
+    }
+    case 'repo.phases.groom': {
+      // 0.60.227 SL3 — James, 2026-10-23: "need to do something about the dependancy graph." lib/phase-groom.js: files from a phase's own
+      // words, depends_on from shared files and same-file order (never closing a cycle), and what needs a person. A dry run unless
+      // { apply: true }; applied, the map edits go through the one map writer (_phaseWriteMany: the apply gate for Nexus, a repo version
+      // for a project), only keys a phase lacks are added (lib/phase-files.js applyTo).
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const G = _require('../../lib/phase-groom.js');
+      const PH = await import('../repo/phases.js');
+      const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+      const root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);
+      const b = body || {};
+      const maps = (m.maps || []).filter(x => !b.map || x.path === b.map).map(x => ({ path: x.path, text: x.text || '' }));
+      if (!maps.length) return err(res, 404, 'this repo has no phasemaps');
+      const r = G.groom({ maps, root });
+      const a = G.apply({ maps, proposals: r.proposals });
+      let written = null;
+      if (b.apply === true && a.changes.length) {
+        const w = await _phaseWriteMany(repo, m.scope, a.changes.map(c => ({ path: c.path, content: c.content })), m.snapshot, `phases groomed (SL3): ${r.stats.files} given files from their own words, ${r.stats.deps} a depends_on`);
+        if (!w || !w.ok) return err(res, (w && w.status) || 500, `not written: ${(w && w.error) || 'the write failed'}`);
+        written = { maps: a.changes.length, files: a.changes.reduce((x, c) => x + c.files, 0), deps: a.changes.reduce((x, c) => x + c.deps, 0), via: w.via || null };
+        getIdeaOS().emit('idearium.repo.phases.groomed', { repoUuid: repo.uuid, ...written });
+      }
+      return ok(res, { dryRun: !written, stats: r.stats, lines: G.lines(r), proposals: r.proposals.slice(0, parseInt(b.limit, 10) || 200),
+        forAPerson: r.forAPerson.filter(x => b.all || x.kind !== 'unplaced').slice(0, 300), pending: { maps: a.changes.length }, refused: a.refused, written });
     }
     case 'repo.phases.close': {
       const repo = getRepoLayer().get(params.uuid);

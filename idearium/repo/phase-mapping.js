@@ -95,6 +95,15 @@ export async function runMapping({ repoName = 'the repo', maps = [], stateFile, 
   report.hubs = [...hubs];
   const changes = [];
   const proposalsTrusted = report.trusted || o.applyUntrusted === true;
+  // §0.60.227 SL3 — two of the three cycles in Nexus's maps were written here (0.60.29): an edge inferred from a shared file pointed back
+  // at a phase whose authored depends_on already named this one. An inferred edge that would close a cycle is now skipped and said.
+  let dag = null; try { dag = require('../../lib/phase-dag.js').build(maps); } catch (_) { dag = null; }
+  const PDg = require('../../lib/phase-dag.js');
+  const cycleFree = (map, id, ds) => (ds || []).filter(x => {
+    const ok = !(dag && PDg.reaches(dag, `${map}::${id}`, `${map}::${x.on}`));
+    if (!ok) report.skipped.push(`${id} → ${x.on} not written: ${id} is already upstream of ${x.on} (it would close a cycle)`);
+    return ok;
+  });
   for (const m of maps) {
     const ps = byMap.get(m.path) || [];
     const withFiles = ps.map(p => { const pr = st.proposals[_key(p)]; return { ...p, files: p.files.length ? p.files : pr && proposalsTrusted ? pr.files.map(f => f.path) : [] }; });
@@ -103,7 +112,8 @@ export async function runMapping({ repoName = 'the repo', maps = [], stateFile, 
     for (const p of [...withFiles].sort((a, b) => b.line - a.line)) {
       const pr = st.proposals[_key(p)];
       const files = !p.hasFiles && pr && proposalsTrusted && pr.files.length ? pr.files.map(f => f.path) : null;
-      const d = !p.hasDeps && (o.includeDone || p.status !== 'done') ? deps[p.id] || null : null;
+      const d0 = !p.hasDeps && (o.includeDone || p.status !== 'done') ? cycleFree(m.path, p.id, deps[p.id]) : null;
+      const d = d0 && d0.length ? d0 : null;
       if (!files && !d) continue;
       const r = PF.applyTo(text, p, { files, deps: d, note: files ? `mapped by ${pr.by || 'an agent'}, ${report.scored.precision} precision on ${report.scored.n} known phases` : '' });
       if (r.error) { report.skipped.push(r.error); continue; }

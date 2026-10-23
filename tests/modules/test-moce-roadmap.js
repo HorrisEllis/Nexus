@@ -59,7 +59,7 @@ function docsDir(files) {
   await t('parsePhasemapText gives exactly what loadAll gives for the same file (one parser, not two)', () => {
     const d = docsDir({ 'x-phasemap.spec': real });
     const viaLoadAll = loomReads(d);
-    const viaParse = loom.parsePhasemapText(real, 'x-phasemap').map(p => ({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, tags: p.tags, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn }));   // §EV0 (4) systemsFrom · §0.39.314 SY1 tags
+    const viaParse = loom.parsePhasemapText(real, 'x-phasemap').map(p => ({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, tags: p.tags, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn, ...(p.shelf ? { shelf: true } : {}), ...(p.closedAs ? { closedAs: p.closedAs } : {}), ...(p.foldedInto ? { foldedInto: p.foldedInto } : {}), ...(p.kind ? { kind: p.kind } : {}) }));   // §EV0 (4) systemsFrom · §0.39.314 SY1 tags · §OR1 shelf/closedAs/foldedInto and kind (0.60.227: loadAll carried them, this projection did not)
     assert.deepStrictEqual(viaLoadAll, viaParse);
   });
   await t('a hyphenated id (MCO-A_schemas) is a phase; a bare `MCO-A:` dictionary key is not', () => {
@@ -247,8 +247,12 @@ function docsDir(files) {
     assert.ok(rm.setPhaseStatus({ text, mapName: 'm', phaseId: 'P2_b', status: 'active' }).text);
   });
   await t('an edit loom cannot read back is REFUSED, and nothing is returned to write', () => {
-    // the line under status: says NOT STARTED, inside loom\'s window: DONE would read as pending
-    const text = mk('  P1_a:\n    status: "NOT STARTED"\n    does: "NOT STARTED yet"\n');
+    // 0.60.227 SL3: this case was "the line under status: says NOT STARTED, inside loom's window" — a sibling key read as the status.
+    // loom now reads the status VALUE only, so that edit is correct and accepted (the bug it pinned is fixed, not the guard). The guard
+    // is kept, on a case loom genuinely cannot keep: a line inside the status value shaped like a phase header is read as a phase,
+    // and replacing the value would drop it.
+    assert.strictEqual(rm.setPhaseStatus({ text: mk('  P1_a:\n    status: "NOT STARTED"\n    does: "NOT STARTED yet"\n'), mapName: 'm', phaseId: 'P1_a', status: 'complete' }).text.includes('status: "DONE'), true);
+    const text = mk('  P1_a:\n    status: >\n      NOT STARTED\n      P9_x: a line inside the status that looks like a phase\n');
     assert.throws(() => rm.setPhaseStatus({ text, mapName: 'm', phaseId: 'P1_a', status: 'complete' }), (e) => e.code === 'ROUNDTRIP_FAILED' && /nothing was changed/.test(e.message));
   });
   await t('a file that was valid YAML is still valid after an edit (the guard for the opposite case is in setPhaseStatus, exercised only by this sane path)', () => {

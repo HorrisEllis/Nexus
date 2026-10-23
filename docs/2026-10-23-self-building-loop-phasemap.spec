@@ -82,10 +82,10 @@ phases:
     proof: "the dry run over Nexus's 306 open phases whose files exist: how many close, how many stay, each with its test; one closed phase reopens when its test is made to fail"
 
   SL3_the_backlog_groomed:
-    status: OPEN
+    status: DONE 0.60.227 — test-phase-groom 6/6; over Nexus 0 cycles, 2 dangling (both real), DG1 checks 1156 of 1156 open phases
     layer: library
     depends_on: [SL0_what_can_be_built_now]
-    files: [lib/phase-groom.js, lib/phase-map-auto.js, lib/phase-dag.js]
+    files: [lib/phase-groom.js, lib/phase-map-auto.js, lib/phase-dag.js, lib/phase-deps-gate.js, lib/phase-graph.js, loom/scanners/phasemap-map.js, idearium/repo/phase-mapping.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, tests/modules/test-phase-groom.test.js]
     spec: docs/self-building-loop.spec
     blocks: [MOD-SL-GROOM]
     does: >-
@@ -279,3 +279,28 @@ phases_added_2026_10_23:
   every brick. Decided by the axioms (§0.1 what changed is what the phase says; §10.3 one cause, one fix): cortex/core/raid/contract-gates.js
   phaseBlock — an input { path, phase } hashes the phase's own block without its status lines. A change to what the phase says still
   STALEs it. Files added above (the UI door and the two cortex files).
+
+## ADDENDUM 2026-10-23 (0.60.227) — SL3 built; six root causes under "the dependency graph"
+James, 2026-10-23: "need to do something about the dependancy graph."
+- Measured before each fix (lib/phase-dag.js, lib/phase-deps-gate.js over Nexus's 166 maps), each traced to its root:
+  1. DG1 read a phase only under a top-level `phases:` key of strict YAML: 1073 of 1176 open phases were never gated (797 under spec:,
+     phases_added_… or other sections; 276 in maps loom reads and js-yaml does not). Now the YAML read where it finds the phase, loom's
+     reader everywhere else: 1156 of 1156 checked.
+  2. A depends_on item with a note after its id, or prose, was split into words: 16 of 17 dangling refs. One reader (phase-dag refKey),
+     used by the DAG, DG1 and DG2; prose is said as prose, never an edge, never dangling.
+  3. MP1's inferred dependencies are { on, file }; the DAG String()ed them to '[object Object]', so none ever joined a build's DAG. Read
+     now: 201 inferred edges on Nexus. An inferred edge never closes a cycle: left out and listed (inferredSkipped).
+  4. Cycles 3 → 0. Two were written into the maps by MP4 (0.60.29) from shared files, against the other phase's authored depends_on; by the
+     axioms (§0.1 an inferred edge never overrides an authored one) those two lines became `depends_on: []` with the old edge kept in a
+     dated comment (§0.3), and MP4 now checks for a cycle before it writes. GA6↔GA9 were both authored: GA6's own words use GA9's work, so
+     GA9's `[GA6]` was the one left out, kept as a comment. Maps edited: 2026-10-12-browser-providers-and-work (PV1),
+     2026-10-13-projects-raid-and-gates (PL6), copilot-guardian-cos-expansion (GA9).
+  5. 28 decisions in sections named decisions_needed:, decisions_recorded:, open_decision: … were open phases to the DAG and the queue.
+     Any section whose name says decision holds decisions (loom), and the DAG keeps loom's kind.
+  6. loom read a status from its key line and the 3 lines after it: MCO4's sibling `status_before: "NOT STARTED"` made the build's 'active'
+     read back pending, and the one writer refused it (test-moce-roadmap, red on main). The status value is read alone now.
+- lib/phase-groom.js as MOD-SL-GROOM; POST /api/repos/:uuid/phases/groom, `repo groom`, the rail's "groom the graph" (a dry run; writing asks).
+- Not applied to Nexus's maps: the dry run proposes files for 295 phases and a depends_on for 31, in 57 maps. Writing 57 of his maps at once
+  is the kind of cost he wants to see first (2026-10-17: "come to me for problems"); the build already uses the same mapping in memory
+  (MP1 through managerView), so nothing waits on the write. To confirm with him: write them (one click on the rail, or `repo groom --apply`).
+- 233 open phases cannot be placed by anything deterministic: SL8 (the agent maps them at build time) is next.
