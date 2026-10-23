@@ -14,7 +14,9 @@ const path = require('path');
 const TTL = 10 * 60 * 1000;
 const originOf = (u) => { try { const x = new URL(String(u)); return /^https?:$/.test(x.protocol) ? x.origin : null; } catch (_) { return null; } };
 
-function createPasswordService({ vault, dir = null, now = () => Date.now(), ttlMs = TTL, log = () => {} } = {}) {
+function createPasswordService({ vault, dir = null, now = () => Date.now(), ttlMs = TTL, log = () => {}, site = (o) => require('../site-settings/readers').passwordPolicy(o) } = {}) {
+  // §0.60.216 SP2 — the site's own setting (offer never, autofill off, the account that signs in); null = unset, the global prefs decide
+  const siteOf = (o) => { try { return site ? site(o) : null; } catch (_) { return null; } };
   if (!vault) throw new Error('passwords: a vault is required');
   const pending = new Map();   // `${wcId}|${origin}` → { origin, username, password, at }
   const file = dir ? path.join(dir, 'passwords-prefs.json') : null;
@@ -30,6 +32,7 @@ function createPasswordService({ vault, dir = null, now = () => Date.now(), ttlM
     const o = originOf(origin); if (!o || !password) return { offer: null, why: !o ? 'not a web page' : 'no password' };
     if (!prefs.offer) return { offer: null, why: 'offer to save is off' };
     if (prefs.never.includes(o)) return { offer: null, why: 'never for this site' };
+    if ((siteOf(o) || {}).offer === 'never') return { offer: null, why: 'never for this site (its site settings, passwords.offer)' };
     const user = String(username || '').trim();
     const same = saved(o).find(e => e.username === user);
     if (same && same.password === password) return { offer: null, why: 'already saved' };
@@ -44,7 +47,7 @@ function createPasswordService({ vault, dir = null, now = () => Date.now(), ttlM
     if (!p) return { ok: false, error: 'nothing to save (the login was not kept, or ten minutes passed)' };
     const user = String(username != null ? username : p.username).trim();
     if (!user) return { ok: false, error: 'a login needs a username' };
-    const rec = vault.save(o, user, p.password, { accountId: accountId || null });
+    const rec = vault.save(o, user, p.password, { accountId: accountId || (siteOf(o) || {}).accountId || null });
     pending.delete(k);
     return { ok: true, login: rec };
   }
@@ -91,7 +94,17 @@ function createPasswordService({ vault, dir = null, now = () => Date.now(), ttlM
     savePrefs(); return { ok: true, prefs: { ...prefs } };
   }
 
-  return { capture, save, dismiss, logins, fill, linkPending, setPref, prefs: () => ({ ...prefs, never: [...prefs.never] }), pendingCount: () => (sweep(), pending.size), originOf };
+  /** autofillLogin(origin) → the one login to fill without asking, or null: the site's autofill and the global pref both on; the
+   *  site's account picks among several (SP2); otherwise only a lone login is filled, as before */
+  function autofillLogin(origin) {
+    const o = originOf(origin); if (!o || !prefs.autofill) return null;
+    const st = siteOf(o); if (st && st.autofill === false) return null;
+    const list = saved(o);
+    if (st && st.accountId) { const mine = list.filter(e => e.accountId === st.accountId); if (mine.length === 1) return { id: mine[0].id, username: mine[0].username }; }
+    return list.length === 1 ? { id: list[0].id, username: list[0].username } : null;
+  }
+
+  return { capture, save, autofillLogin, dismiss, logins, fill, linkPending, setPref, prefs: () => ({ ...prefs, never: [...prefs.never] }), pendingCount: () => (sweep(), pending.size), originOf };
 }
 
 let _one = null;

@@ -849,6 +849,9 @@ class NexusOptions {
 
   findListenersForUrl(url) {
     if (!url) return [];
+    // §0.60.216 SP2 — a site where Guardian does not listen gets no listeners (its site settings, guardian.listen)
+    const site = require('../site-settings/readers').guardianPolicy(url);
+    if (site && !site.listen) return [];
     return this.listListeners().filter(l => {
       if (!l.enabled) return false;
       const re = new RegExp('^' + l.urlPattern.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$');

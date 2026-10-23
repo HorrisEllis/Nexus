@@ -1742,6 +1742,7 @@ async function bootstrap() {
     loginPortal,
   });
   await ipcBridge.start();
+  try { ipcBridge.installSiteReaders(); } catch (e) { console.warn(`[site-settings] the features read no site values (${e.message}); they behave as before`); }   // SP2 (0.60.216)
   // §5.2 Contract IS the bridge — serve /contract so orchestrator can verify us
   if (ipcBridge.app) {
     ipcBridge.app.get('/contract', (req, res) => res.json(CONTRACT));
@@ -2779,6 +2780,29 @@ function _runShortcut(action, accel, owner) {
   }
   if (owner) owner.win.webContents.send('shortcut:action', { action, accel });
 }
+// §0.60.216 SP2 — James: "I need site specific settings for the autofill, macros, workflows …". A site's autoRun macros run when one of
+// its pages loads, as his own run (bridge.runMacroAsPerson), on that page (wc:<id>); once per page and minute, so a macro that reloads
+// the page does not run itself again. A failure is said in the log with the macro and the site.
+const _siteLoadRuns = new Map();   // `${wcId}|${origin}|${name}` → at
+function _siteOnLoad(contents, url) {
+  const mode = require('../site-settings/readers').resumeMode(url);
+  if (mode && mode !== 'off') {
+    const js = require('../rewind/resume.js').resumeScript(mode);
+    if (js) contents.executeJavaScript(js, true).catch(e => console.warn(`[site-settings] resume at ${new URL(url).origin} not kept: ${e.message}`));
+  }
+  const m = require('../site-settings/readers').macrosOnLoad(url);
+  if (!m || !m.enabled || !m.autoRun.length || !ipcBridge) return;
+  const origin = new URL(url).origin; const now = Date.now();
+  for (const [k, at] of _siteLoadRuns) if (now - at > 60000) _siteLoadRuns.delete(k);
+  for (const name of m.autoRun) {
+    const key = `${contents.id}|${origin}|${name}`;
+    if (_siteLoadRuns.has(key)) continue;
+    _siteLoadRuns.set(key, now);
+    Promise.resolve(ipcBridge.runMacroAsPerson({ name, agentId: `wc:${contents.id}`, url }))
+      .then(r => { if (r && r.error) console.warn(`[site-settings] macro "${name}" on load at ${origin} did not run: ${r.error}`); })
+      .catch(e => console.warn(`[site-settings] macro "${name}" on load at ${origin} failed: ${e.message}`));
+  }
+}
 // §0.39.265 — workflow event triggers: "I open a page" and "a download finishes".
 // Pages a workflow drives itself (auto-* windows) never fire page.visited.
 const _automationSessions = new WeakSet();
@@ -2792,6 +2816,8 @@ function _automationEvents(contents) {
       const hostWin = host ? BrowserWindow.fromWebContents(host) : BrowserWindow.fromWebContents(contents);
       if (hostWin && /\bauto-/.test(hostWin.getTitle())) return;
       if (!host && contents.getType() !== 'webview') return;   // only page content, not the app's own windows
+      _siteOnLoad(contents, url);   // SP2 (0.60.216): the site's macros on load, its resume state
+      if (require('../site-settings/readers').workflowsAllowed(url) === false) return;   // SP2: the site's workflows are off
       mesh._automation.emitEvent('page.visited', { url, title: contents.getTitle() });
     } catch (_) {}
   });

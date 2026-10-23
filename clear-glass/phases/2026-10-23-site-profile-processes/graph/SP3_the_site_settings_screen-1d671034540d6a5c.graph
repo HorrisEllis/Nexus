@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792750494885
+exported_at: 1792751209772
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792750494885
-lastSeenAt: 1792750494885
+firstSeenAt: 1792751209772
+lastSeenAt: 1792751209772
 fingerprint: null
 payload:
   for: SP3_the_site_settings_screen
@@ -42,12 +42,11 @@ payload:
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D2_defaults_are_todays_behaviour
     downstream: []
-    blockedBy:
-      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - DAG dbdd2256c2bfe7c4 · layer 3 · blocked by SP2_each_feature_reads_its_site_value
+      - DAG dbdd2256c2bfe7c4 · layer 3 · ready
       - 'depends on (1): SP2_each_feature_reads_its_site_value · all upstream 4'
       - 'needed by (0): —'

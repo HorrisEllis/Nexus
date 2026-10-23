@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792750494890
+exported_at: 1792751209775
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792750494890
-lastSeenAt: 1792750494890
+firstSeenAt: 1792751209775
+lastSeenAt: 1792751209775
 fingerprint: null
 payload:
   for: SP6_the_processes_screen
@@ -152,15 +152,9 @@ payload:
     blockedBy:
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP5_processes_and_activity
     unlocks: []
-    conflicts:
-      - with: docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
-        files:
-          - clear-glass/src/main/index.js
+    conflicts: []
     dangling: []
     lines:
       - DAG dbdd2256c2bfe7c4 · layer 2 · blocked by SP5_processes_and_activity
       - 'depends on (1): SP5_processes_and_activity · all upstream 2'
       - 'needed by (0): —'
-      - >-
-        same files as SP2_each_feature_reads_its_site_value with no order between them:
-        clear-glass/src/main/index.js

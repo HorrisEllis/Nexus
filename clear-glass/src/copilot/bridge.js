@@ -108,6 +108,11 @@ class CoPilotBridge {
 
   async send({ message, agentId = 'default', domContext, systemExtra, requestId, backend, agent, hat, noDom, autoContext = false, picks = [], pickedAt = 0, force = {}, pageUrl = '', partition = '' }) {
     const msgId = requestId || randomUUID();
+    // §0.60.216 SP2 — the page's site: its own Co-pilot agent when none was picked; mesh off there → Co-pilot answers without the page
+    let siteNote = null;
+    const site = pageUrl ? require('../site-settings/readers').meshAgent(pageUrl) : null;
+    if (site && !site.enabled) { noDom = true; autoContext = false; domContext = null; picks = []; siteNote = `Co-pilot does not read ${new URL(pageUrl).origin}: its site settings turn the agent mesh off there (mesh.enabled)`; }
+    else if (site && site.agent && !agent && !backend) agent = site.agent;
     const route = this._route({ backend, agent, hat });
     this.sse.emit('copilot.thinking', { msgId, agentId, route, ts: Date.now() });
 
@@ -275,7 +280,7 @@ class CoPilotBridge {
     this._ingestToNexus({ type: 'clear-glass.copilot.exchange',
       agentId, msgId, prompt: message.slice(0, 100), ts: Date.now() });
 
-    return { text, commands: allCommands, results, executed: autoRun, msgId, route: { ...route, modelUsed: result.modelUsed || null }, ...(attached ? { attached } : {}) };
+    return { text, commands: allCommands, results, executed: autoRun, msgId, route: { ...route, modelUsed: result.modelUsed || null }, ...(attached ? { attached } : {}), ...(siteNote ? { site: siteNote } : {}) };
   }
 
   // §0.39.280 BS17 — navigate, then read what is there (title, url, the interaction field's targets as text)

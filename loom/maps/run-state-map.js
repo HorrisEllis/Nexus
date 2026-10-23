@@ -67,6 +67,8 @@ const FILES = [
   ['clear-glass/src/site-settings/store.js', I('clear-glass/src/site-settings/store.js'), []],   // the per-origin store (JAA KV cg_site_settings); declared with SP1, 0.60.215
   ['clear-glass/src/site-settings/keys.js', I('clear-glass/src/site-settings/keys.js'), []],   // §0.60.215 SP1 the per-site keys every feature reads (one table)
   ['clear-glass/src/site-settings/profile.js', I('clear-glass/src/site-settings/profile.js'), [I('clear-glass/src/site-settings/keys.js'), I('clear-glass/src/net/policy.js')]],   // §0.60.215 SP1 siteProfile(url): site, else global, else default; the route a netPolicy rule   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
+  ['clear-glass/src/site-settings/readers.js', I('clear-glass/src/site-settings/readers.js'), []],   // §0.60.216 SP2 each feature's hook onto the one resolver (installed by main)
+  ['clear-glass/src/rewind/resume.js', I('clear-glass/src/rewind/resume.js'), [I('clear-glass/src/rewind/engine.js')]],   // §0.60.216 SP2 a site's resume state: kept by the page, put back on the revisit
   ['clear-glass/renderer/shell/ctxmenu.js', I('clear-glass/renderer/shell/ctxmenu.js'), []],   // §0.60.183 BS15 the right-click menu: rows by what was clicked, placed at the pointer
   ['clear-glass/src/copilot/context-need.js', I('clear-glass/src/copilot/context-need.js'), []],   // §0.60.182 BS12 what a message needs from the page (wired late, 0.60.183)
   ['lib/agent-tools/tools/clear-glass/adblock.js', I('lib/agent-tools/tools/clear-glass/adblock.js'), [I('lib/agent-tools/tools/clear-glass/net.js')]],   // §0.60.183 AB4 the blocker for agents   // §0.60.179 BS6 the floating CLI's own content-protected window
@@ -284,6 +286,17 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/site-settings/profile.js'), '§0.60.215 SP1 site-profile:* IPC and /cli/site-profile over siteSettings, options and the net service (lazy)'],
   [I('clear-glass/src/site-settings/profile.js'), I('clear-glass/src/site-settings/store.js'), '§0.60.215 SP1 the store is passed in: get/set/deleteKey by url'],
   [I('clear-glass/src/site-settings/profile.js'), I('clear-glass/src/net/service.js'), '§0.60.215 SP1 the net service is passed in: policy(), addRoute, removeRoute'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 installSiteReaders(): the resolver the features read; runMacroAsPerson refuses a site whose macros are off'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 on a page load: workflowsAllowed (page.visited), macrosOnLoad (autoRun), resumeMode'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/rewind/resume.js'), '§0.60.216 SP2 resumeScript(mode) run on did-finish-load where the site keeps its place'],
+  [I('clear-glass/src/driver/index.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 driverPolicy: an agent refused a site that says no; the site's navigate / wait timeouts'],
+  [I('clear-glass/src/passwords/service.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 passwordPolicy: offer never, autofill, the account that signs in'],
+  [I('clear-glass/src/autofill/matcher.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 autofillFor: off for the site, or the site's profile'],
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 meshAgent: the site's Co-pilot agent; mesh off → no page read'],
+  [I('clear-glass/src/options/store.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 guardianPolicy: findListenersForUrl empty where Guardian does not listen'],
+  [I('clear-glass/src/downloads/chat-ledger.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 guardianPolicy: no ledger where chat capture is off'],
+  [I('clear-glass/src/main/passwords-wiring.js'), I('clear-glass/src/passwords/service.js'), '§0.60.216 SP2 autofillLogin(origin): the one login to fill without asking'],
+  [I('clear-glass/src/ipc/agent-routes.js'), I('clear-glass/src/driver/index.js'), '§0.60.216 SP2 POST /cli/driver marks its calls by: 'agent''],
   [I('architect/service.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('clear-glass/src/main/index.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('copilot/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],

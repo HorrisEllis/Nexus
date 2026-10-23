@@ -926,6 +926,28 @@ class IpcBridge {
     }
     return this.__siteProfile;
   }
+  /** SP2 — the features read their site values through readers.js; main installs this once the bridge holds its stores */
+  installSiteReaders() {
+    require('../site-settings/readers').install((url) => this._siteProfile().siteProfile(url), { log: (m) => console.warn(m) });
+  }
+
+  // §0.60.69 — James, 2026-10-15: "should not rely on raid." His run drives the driver in this process: no Guardian, no RAID.
+  // A step that is not a driver action (dom_query, url_listen) still takes the Guardian path, and says so if that fails.
+  // §0.60.216 SP2 — one helper for his Run button and for a site's macros run on load; a site whose macros are off refuses both.
+  async runMacroAsPerson(d = {}) {
+    if (!this.macroTool) return { error: 'macro tool not available' };
+    const agentId = d.agentId || 'default';
+    let url = d.url || null; if (!url && this.driver) { try { const wc = this.driver._getWebContents(agentId); url = wc && wc.getURL(); } catch (_) {} }
+    const site = url ? require('../site-settings/readers').macrosOnLoad(url) : null;
+    if (site && !site.enabled) return { error: `macros are off for ${new URL(url).origin} (its site settings, macros.enabled)` };
+    const BA = require('../../../lib/agent-tools/tools/browser/browser-action.js');
+    const runStep = async ({ action, data = {} }) => {
+      const call = BA.driverCall(action, data); if (!call) return BA.execute({ action, data });
+      if (!this.driver) return { error: 'driver not wired' };
+      try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call, by: 'person' }) }; } catch (err) { return { error: err.message }; }
+    };
+    return this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
+  }
 
   _bindRendererHandlers() {
     // All renderer calls become bus events
@@ -1228,18 +1250,7 @@ class IpcBridge {
       if (!this.macroTool) return { error: 'macro tool not available' };
       return this.macroTool.execute({ action: 'get', name: d.name });
     });
-    ipcMain.handle('macros:run', async (e, d) => {
-      if (!this.macroTool) return { error: 'macro tool not available' };
-      // §0.60.69 — James, 2026-10-15: "should not rely on raid." His run drives the driver in this process: no Guardian, no RAID.
-      // A step that is not a driver action (dom_query, url_listen) still takes the Guardian path, and says so if that fails.
-      const BA = require('../../../lib/agent-tools/tools/browser/browser-action.js'); const agentId = d.agentId || 'default';
-      const runStep = async ({ action, data = {} }) => {
-        const call = BA.driverCall(action, data); if (!call) return BA.execute({ action, data });
-        if (!this.driver) return { error: 'driver not wired' };
-        try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call }) }; } catch (err) { return { error: err.message }; }
-      };
-      return this.macroTool.execute({ action: 'run', name: d.name, agentId: d.agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
-    });
+    ipcMain.handle('macros:run', async (e, d) => this.runMacroAsPerson(d));
     // §BUILT 2026-09-23 — the step builder the 2026-08-29 note above named as
     // "a separate, larger piece" rather than a bare JSON textarea. create/
     // delete go through macro.js's OWN validation (real browser_action enum,

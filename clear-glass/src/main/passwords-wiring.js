@@ -37,7 +37,8 @@ function attach({ app, ipcMain, service, isActive = () => true, isCompartment = 
     const origin = originOf(wc); if (!origin) return;
     const list = svc().logins(origin); const host = hostOf(wc);
     if (host) host.send('passwords:available', { wcId: wc.id, origin, count: list.length, usernames: list.map(l => l.username) });
-    if (list.length === 1 && svc().prefs().autofill) { const f = svc().fill(origin, list[0].id); if (f.ok) wc.send('pw:fill', { username: f.username, password: f.password, force: false }); }
+    const one = typeof svc().autofillLogin === 'function' ? svc().autofillLogin(origin) : (list.length === 1 && svc().prefs().autofill ? list[0] : null);   // SP2: the site's autofill and account
+    if (one) { const f = svc().fill(origin, one.id); if (f.ok) wc.send('pw:fill', { username: f.username, password: f.password, force: false }); }
   });
 
   const wcOf = (id) => { const wc = webContents.fromId(Number(id)); if (!wc || wc.isDestroyed()) throw new Error('that page is gone'); return wc; };

@@ -1,0 +1,214 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SP1_one_resolver_for_every_feature:603b7985ce8f9b73
+type: graph
+id: phase:SP1_one_resolver_for_every_feature:603b7985ce8f9b73
+context: dependency graph of phase SP1_one_resolver_for_every_feature
+intent: null
+summary: 25 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792751209768
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792751209768
+lastSeenAt: 1792751209768
+fingerprint: null
+payload:
+  for: SP1_one_resolver_for_every_feature
+  kind: phase
+  repo: null
+  hash: 603b7985ce8f9b73
+  nodes:
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/policy.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/preload/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/keys.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/profile.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/passwords/vault.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/google-signin.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/storage-jaa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/kill-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/site-settings/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/site-settings/store.js
+      kind: requires
+    - from: clear-glass/src/passwords/vault.js
+      to: clear-glass/src/site-settings/store.js
+      kind: requires
+    - from: clear-glass/test/storage-jaa.test.js
+      to: clear-glass/src/site-settings/store.js
+      kind: requires
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/policy.js
+      kind: requires
+    - from: clear-glass/test/google-signin.test.js
+      to: clear-glass/src/net/policy.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: dbdd2256c2bfe7c4
+    layer: 1
+    deps:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D2_defaults_are_todays_behaviour
+    dependents:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP4_cleardriver_mesh_guardian_settings
+    upstream:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D2_defaults_are_todays_behaviour
+    downstream:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP3_the_site_settings_screen
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP4_cleardriver_mesh_guardian_settings
+    blockedBy:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D2_defaults_are_todays_behaviour
+    unlocks:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP4_cleardriver_mesh_guardian_settings
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG dbdd2256c2bfe7c4 · layer 1 · blocked by SP_D1_one_store_one_resolver,
+        SP_D2_defaults_are_todays_behaviour
+      - 'depends on (2): SP_D1_one_store_one_resolver, SP_D2_defaults_are_todays_behaviour'
+      - >-
+        needed by (2): SP2_each_feature_reads_its_site_value, SP4_cleardriver_mesh_guardian_settings
+        · all downstream 3 · finishing it unlocks SP2_each_feature_reads_its_site_value,
+        SP4_cleardriver_mesh_guardian_settings

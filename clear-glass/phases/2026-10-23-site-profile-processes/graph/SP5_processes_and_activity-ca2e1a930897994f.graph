@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792750494889
+exported_at: 1792751209774
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792750494889
-lastSeenAt: 1792750494889
+firstSeenAt: 1792751209774
+lastSeenAt: 1792751209774
 fingerprint: null
 payload:
   for: SP5_processes_and_activity
@@ -169,22 +169,9 @@ payload:
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D3_person_ends_processes
     unlocks:
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP6_the_processes_screen
-    conflicts:
-      - with: docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
-        files:
-          - clear-glass/src/ipc/bridge.js
-          - clear-glass/src/preload/index.js
-      - with: docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
-        files:
-          - clear-glass/src/main/index.js
+    conflicts: []
     dangling: []
     lines:
       - DAG dbdd2256c2bfe7c4 · layer 1 · blocked by SP_D3_person_ends_processes
       - 'depends on (1): SP_D3_person_ends_processes'
       - 'needed by (1): SP6_the_processes_screen · finishing it unlocks SP6_the_processes_screen'
-      - >-
-        same files as SP1_one_resolver_for_every_feature with no order between them:
-        clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js
-      - >-
-        same files as SP2_each_feature_reads_its_site_value with no order between them:
-        clear-glass/src/main/index.js

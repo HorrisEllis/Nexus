@@ -143,7 +143,7 @@ async function run() {
     const r = await req(IPC, 'POST', '/cli/driver', { action: 'click', agentId: 'default', selector: '#go' });
     assert.strictEqual(r.status, 200);
     assert.strictEqual(r.json.ok, true);
-    assert.deepStrictEqual(r.json.result.echo, { agentId: 'default', action: 'click', selector: '#go' });
+    assert.deepStrictEqual(r.json.result.echo, { agentId: 'default', action: 'click', selector: '#go', by: 'agent' });
   });
 
   await t('CG-102', 'POST /cli/driver: a driver error is a 502 carrying the real message; a hang is a timeout, not a hang', async () => {

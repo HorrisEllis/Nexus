@@ -9,18 +9,20 @@ intent: null
 summary: SP1_one_resolver_for_every_feature (foundation) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792750494880
+exported_at: 1792751209769
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792750494880
-lastSeenAt: 1792750494880
+firstSeenAt: 1792751209769
+lastSeenAt: 1792751209769
 fingerprint: null
 payload:
   id: SP1_one_resolver_for_every_feature
   map: docs/2026-10-23-site-profile-processes-phasemap.spec
   repo: null
   layer: foundation
-  status: OPEN
+  status: >-
+    BUILT 0.60.215 — keys.js, profile.js, bridge site-profile:* and /cli/site-profile,
+    cg.siteProfile; test-site-profile 3/3
   files:
     - clear-glass/src/site-settings/keys.js
     - clear-glass/src/site-settings/profile.js
@@ -35,4 +37,4 @@ payload:
     - MOD-SP-KEYS
     - MOD-SP-RESOLVER
   spec: clear-glass/spec/site-profile.spec
-  graph: 7eae9a633ce4b434
+  graph: 603b7985ce8f9b73

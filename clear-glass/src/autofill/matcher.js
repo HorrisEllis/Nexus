@@ -212,8 +212,19 @@ module.exports = { matchFields, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, d
 
 const CONFIDENCE_RANK = { high: 3, medium: 2, low: 1 };
 
+// §0.60.216 SP2 — the page's site decides first: autofill off there → refused with the site; no profile asked → the site's profile.
+// Unset sites, or no page URL to read, behave as before.
+function _siteChoice(dom, agentId, profileId) {
+  let url = null; try { const wc = dom && typeof dom._getWebContents === 'function' ? dom._getWebContents(agentId) : null; url = wc && wc.getURL(); } catch (_) {}
+  const site = url ? require('../site-settings/readers').autofillFor(url) : null;
+  if (!site) return { profileId };
+  if (!site.enabled) return { error: `autofill is off for ${new URL(url).origin} (its site settings, autofill.enabled)` };
+  return { profileId: profileId || site.profileId || profileId, site: true };
+}
+
 /** detectFields(dom, autofillStore, {agentId, profileId}) — real preview, no fill. */
 async function detectFields(dom, autofillStore, { agentId = 'default', profileId, vars } = {}) {
+  const sc = _siteChoice(dom, agentId, profileId); if (sc.error) return { error: sc.error }; profileId = sc.profileId;
   const profile = autofillStore.getProfile(profileId);
   if (!profile) return { error: `no autofill profile "${profileId}"` };
   const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });
@@ -223,6 +234,7 @@ async function detectFields(dom, autofillStore, { agentId = 'default', profileId
 
 /** fillFields(dom, autofillStore, {agentId, profileId, minConfidence}) — real fill, real per-field report. */
 async function fillFields(dom, autofillStore, { agentId = 'default', profileId, minConfidence = 'medium', vars } = {}) {
+  const sc = _siteChoice(dom, agentId, profileId); if (sc.error) return { error: sc.error }; profileId = sc.profileId;
   const profile = autofillStore.getProfile(profileId);
   if (!profile) return { error: `no autofill profile "${profileId}"` };
   const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });

@@ -46,9 +46,13 @@ phases:
 
   SP2_each_feature_reads_its_site_value:
     layer: integration
-    status: OPEN
+    status: BUILT 0.60.216 — readers.js and the eight decision points, resume.js; test-site-readers 7/7 (drift in the spec's addendum)
     depends_on: [SP1_one_resolver_for_every_feature]
-    files: [clear-glass/src/site-settings/readers.js, clear-glass/src/autofill/store.js, lib/agent-tools/tools/clear-glass/macro.js, clear-glass/src/mesh/automation-engine.js, clear-glass/src/passwords/service.js, clear-glass/src/rewind/engine.js, clear-glass/src/driver/index.js, clear-glass/src/mesh/agent-mesh.js, clear-glass/src/main/index.js]
+    # files as built (0.60.216): the decision points were found in matcher.js (not autofill/store.js), copilot/bridge.js (not agent-mesh.js),
+    # main's page.visited (not automation-engine.js) and bridge.runMacroAsPerson (not lib/…/macro.js, which would cross into lib/); Guardian's
+    # listeners and capture in options/store.js and downloads/chat-ledger.js. The first list is kept here: autofill/store.js, macro.js,
+    # automation-engine.js, agent-mesh.js.
+    files: [clear-glass/src/site-settings/readers.js, clear-glass/src/autofill/matcher.js, clear-glass/src/passwords/service.js, clear-glass/src/main/passwords-wiring.js, clear-glass/src/rewind/engine.js, clear-glass/src/rewind/resume.js, clear-glass/src/driver/index.js, clear-glass/src/ipc/agent-routes.js, clear-glass/src/ipc/bridge.js, clear-glass/src/copilot/bridge.js, clear-glass/src/options/store.js, clear-glass/src/downloads/chat-ledger.js, clear-glass/src/main/index.js]
     spec: clear-glass/spec/site-profile.spec
     blocks: [MOD-SP-READERS]
     does: >-

@@ -394,6 +394,7 @@ const SUITES = [
   'test-adblock.test.js',                // 0.60.183 AB1–AB4 — a full content blocker: real lists, exceptions, options, element hiding, per-site allow, its page
   'test-passwords.test.js',              // 0.60.186 PW1–PW4 — websites use the password manager; a login belongs to the account the cookie vault keeps
   'test-site-profile.test.js',           // 0.60.215 SP1 — one site's settings for every feature: keys, the resolver, the route as a netPolicy rule
+  'test-site-readers.test.js',           // 0.60.216 SP2 — each feature reads its site value: driver, passwords, autofill, resume, Guardian, workflows, macros, Co-pilot
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
   'test-cos-app-ui.test.js',          // 0.60.89 COSA6 — COS window (jsdom) and controller

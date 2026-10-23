@@ -308,3 +308,19 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node"
     - "per module: its acceptance lines, the UI ones in Clear Glass"
+
+  # ── ADDENDUM 2026-10-23 (0.60.216, SP2 built) ──────────────────────────────────────────────────────────────────────
+  # James, 2026-10-23: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state.
+  # Cleardriver, agentmesh and guardian setting."
+  # Built: readers.js (the eight hooks; main installs the resolver once the bridge holds its stores). The decision points:
+  #   driver/index.js _navigate and the page-changing actions; passwords/service.js capture / save / autofillLogin (passwords-wiring.js asks it);
+  #   autofill/matcher.js detectFields / fillFields; main page.visited and the macros on load (bridge.runMacroAsPerson, page wc:<id>);
+  #   copilot/bridge.js send; options/store.js findListenersForUrl; downloads/chat-ledger.js applyDelta.
+  # Drift from MOD-SP-READERS, said:
+  #   - "rewind restores scroll / forms on a revisit": rewind's snapshots are taken on the driver's navigations at load (scroll 0), so his own
+  #     browsing has none. src/rewind/resume.js keeps the place in the page's own origin storage as he leaves it and puts it back on the revisit,
+  #     with rewind's own FORM_FIELDS_CAPTURE_JS / RESTORE_JS (never a password field). Reading of "resume state" still to confirm.
+  #   - "ClearDriver refuses a site where driving is not allowed": the key reads "agents may drive", so only an agent's call is refused — one
+  #     marked by its door (POST /cli/driver, by: 'agent') or on an agent's page (mesh-, ncp-, auto-). His own macros, userscripts and rewind
+  #     drive the driver too and are never refused by it.
+  #   - mesh.enabled off: Co-pilot still answers, without the page (no DOM, picks or cookies) and says why in the reply's `site`.
