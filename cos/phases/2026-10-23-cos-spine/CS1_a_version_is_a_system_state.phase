@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
+context: pipeline phase CS1_a_version_is_a_system_state of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS1_a_version_is_a_system_state (foundation) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792755875497
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792755875497
+lastSeenAt: 1792755875497
+fingerprint: null
+payload:
+  id: CS1_a_version_is_a_system_state
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - cos/spine/version.js
+    - idearium/repo/snapshot.js
+    - cos/workspace/vm-control.js
+    - cos/compartment/qemu-runtime.js
+    - versionium/lib/files.js
+  depends_on:
+    - CS_D2_a_version_is_the_whole_state
+  blocks:
+    - MOD-CS-VERSION
+  spec: cos/spec/cos-spine.spec
+  graph: 523fbc38e04e24be

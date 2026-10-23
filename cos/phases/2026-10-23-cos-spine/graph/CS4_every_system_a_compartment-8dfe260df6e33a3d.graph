@@ -1,0 +1,200 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS4_every_system_a_compartment:8dfe260df6e33a3d
+type: graph
+id: phase:CS4_every_system_a_compartment:8dfe260df6e33a3d
+context: dependency graph of phase CS4_every_system_a_compartment
+intent: null
+summary: 21 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792755875503
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792755875503
+lastSeenAt: 1792755875503
+fingerprint: null
+payload:
+  for: CS4_every_system_a_compartment
+  kind: phase
+  repo: null
+  hash: 8dfe260df6e33a3d
+  nodes:
+    - path: cos/app/runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spine/systems.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/watchdog/monitor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/run.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/status.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/foundation/snapshot.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/process.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/agent-tools/tools/diagnostic/resource-monitor.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-app-runtime.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Event.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/watchdog/actions.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/watchdog/proc-stats.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/compartment/process-runner.js
+      to: cos/siso/Event.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/watchdog/monitor.js
+      to: cos/watchdog/proc-stats.js
+      kind: requires
+    - from: cos/watchdog/monitor.js
+      to: cos/watchdog/actions.js
+      kind: requires
+    - from: cos/cli/commands/run.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/cli/commands/status.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/host/gates/process.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/test/test.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/resource-monitor.js
+      to: cos/watchdog/monitor.js
+      kind: requires
+    - from: cos/app/cli.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/shell.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/switch.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-runtime.test.js
+      to: cos/app/runtime.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/diagnostic/resource-monitor.js
+      to: cos/watchdog/monitor.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 1d44ab193dba1584
+    layer: 5
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+    dependents:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
+    downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 1d44ab193dba1584 · layer 5 · blocked by CS3_the_registry_is_the_bridge
+      - 'depends on (2): CS3_the_registry_is_the_bridge, COSA3_run_and_supervise · all upstream 11'
+      - 'needed by (2): CS5_caps_per_compartment, CS6_rebuild_from_the_spec · all downstream 4'

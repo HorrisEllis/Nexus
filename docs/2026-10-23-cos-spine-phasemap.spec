@@ -1,0 +1,150 @@
+# COS is the spine: every system a compartment, a version is the whole system state, the registry is the bridge, rebuild from the spec (2026-10-23)
+
+origin: >-
+  James, 2026-10-23: "Okay, so COS would be the spine, right? It would be the orchestrator, right? Each system, a compartment ... use the
+  component registry as an event bus and bridge to the back end of the compartment, whether it's an operating system's SSH connection or the
+  server.js of one of the systems ... each compartment as the rewind engine, right? The snapshot system ... a load balancer ... spawn and
+  despawn systems ... individual performance throttling ... compartments can branch to benchmark versions of systems. They could run in
+  parallel." · "Because the component registry is the spine for each system, then it would also be the bridge for each compartment." ·
+  "Versioning could be actual system states. And then that means testing new versions each new version, right? This would make the testing
+  environments fucking immensely easier ... we can use the spec, the .spec, as a template to rebuild a system. Since that's what it's for."
+  The design is his; the census, the join over what exists, and the phase cut are the coder's.
+
+status: MAPPED 2026-10-23 — spec cos/spec/cos-spine.spec (compiles at full depth). Nothing built.
+
+## Ground truth (the spec's `census:`, read 2026-10-23)
+- Ten systems already declare themselves as compartments (<system>/compartment.json, nexus.compartment/1: compartmentId, entry, port,
+  healthUrl, data, spec, dependsOn).
+- Files: idearium/repo/snapshot.js commits a repo's state to Versionium (full copy then verified deltas) with the registry's four parts.
+- Machines: QEMU overlays (base image then changed blocks), qemu-img disk snapshots, live checkpoints (savevm) with rewind (vm-control.js).
+- Running: process-runner, the watchdog (alerts, not caps), COS app runtime (COSA3 built); the Debian machine provisioned (testenv T1–T7).
+- Contracts: the orchestrator's handshake verifies each system's /api/contract and keeps a trust map.
+- Mapped elsewhere, built on here, not repeated: snapshot-compartments SN0–SN4 (one branch mechanism, open a snapshot as a compartment, run
+  in parallel, RFR2 benchmarks); compartment-environment CE1–CE7 (the Debian machine, the handshake, the terminal); infrastructure-spine
+  IN3/IN6 (the registry as the spine, the systems onto it).
+
+## Readings, the coder's (to confirm where marked)
+- "Versioning could be actual system states": a version is one record over the Versionium commit (files) and the QEMU snapshot (machine),
+  with the registry and the spec it stands on. His answer to the coder's question, taken as confirmed.
+- "hook into the actual threads ... a PID instance or into the actual IO": COS owns each compartment's process tree, to measure and cap it
+  (Job Objects on his Windows PC, cgroups on Linux, QEMU -m/-smp for machines), not reaching inside a running program's threads. To confirm.
+- "It would be the orchestrator": COS uses the orchestrator's contract handshake through its route (§8.6); whether the orchestrator system
+  itself moves into COS is his call. To confirm.
+
+decisions:
+  CS_D1_registry_is_the_bridge:
+    chosen: "one registry: read from inside a system as its spine, from outside as the bridge to its compartment; no second protocol"
+    by: "his, 2026-10-23 (quoted in origin); recorded first in the infrastructure-spine map's addendum"
+  CS_D2_a_version_is_the_whole_state:
+    chosen: "a CompartmentVersion joins the existing Versionium commit and the existing QEMU snapshot under one id; neither copied into the other"
+    by: "his, 2026-10-23: \"Versioning could be actual system states\"; the join is the coder's, by his axioms §8.6, §10.3"
+  CS_D3_the_spec_rebuilds_the_system:
+    chosen: "a rebuild compiles the system's spec and builds it into a new compartment, then compares registries; drift is listed"
+    by: "his, 2026-10-20 (the spec is the rebuild contract) and 2026-10-23; REVERSIBILITY: never over the running system"
+  CS_D4_caps_by_the_os:
+    chosen: "caps are applied by the OS or the hypervisor and read back; what cannot be enforced is said"
+    by: "his axioms §1.2, §0.1; the 'hook in' reading above is to confirm"
+
+phases:
+
+  CS1_a_version_is_a_system_state:
+    layer: foundation
+    status: OPEN
+    depends_on: [CS_D2_a_version_is_the_whole_state]
+    files: [cos/spine/version.js, idearium/repo/snapshot.js, cos/workspace/vm-control.js, cos/compartment/qemu-runtime.js, versionium/lib/files.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-VERSION]
+    does: >-
+      (Graphed 2026-10-23: no new crossing. COS reaches the files part through Idearium's POST /api/repos/:uuid/snapshot, never by requiring
+      idearium/repo/snapshot.js — designed out before code, per DG2.)
+      take / list / get / restore a CompartmentVersion: files through the existing repo snapshot, the machine through the existing checkpoint
+      or disk snapshot (or none, said), the registry and spec hashes; restore takes a version of now first. Route /api/cos/versions, command
+      `cos version`.
+    proof: a process compartment's version restored byte for byte; a machine compartment's files and machine back to the same tag (where QEMU runs)
+
+  CS2_test_every_version:
+    layer: integration
+    status: OPEN
+    depends_on: [CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment]
+    files: [cos/spine/test-version.js, cos/testenv/index.js, cos/workspace/index.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-TEST]
+    does: >-
+      Each new version opened as its own compartment (SN1's lazy branch), its own tests run there, the result recorded on the version, the
+      branch closed. Branches in parallel and their benchmarks are SN2–SN4's, run over these versions.
+    proof: yesterday's version tested in its branch while today's keeps running; nothing left behind
+
+  CS3_the_registry_is_the_bridge:
+    layer: integration
+    status: OPEN
+    depends_on: [CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake]
+    files: [cos/spine/bridge.js, orchestrator/lib/contract-handshake.js, idearium/repo/snapshot.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-BRIDGE]
+    does: >-
+      link(from, to) reads the target's registry contract and verifies it through the orchestrator's handshake; call() sends only what the
+      contract declares; a server.js system and a Debian machine are bridged the same way.
+    proof: a declared route passes, an undeclared one is refused before sending, naming the contract and its hash
+
+  CS4_every_system_a_compartment:
+    layer: backend
+    status: OPEN
+    depends_on: [CS3_the_registry_is_the_bridge, COSA3_run_and_supervise]
+    files: [cos/spine/systems.js, cos/compartment/process-runner.js, cos/watchdog/monitor.js, cos/app/runtime.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-SUPERVISE]
+    does: >-
+      Every <system>/compartment.json read; each system started, stopped and watched by COS in dependsOn order, health from its healthUrl, a
+      system already running adopted by its port. Route /api/cos/systems, command `cos systems`.
+    proof: all ten listed with their state; versionium stopped and started, its health back
+
+  CS5_caps_per_compartment:
+    layer: backend
+    status: OPEN
+    depends_on: [CS4_every_system_a_compartment, CS_D4_caps_by_the_os]
+    files: [cos/spine/caps.js, cos/compartment/qemu-runtime.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-CAPS]
+    does: >-
+      CPU, cores and memory per compartment: a Job Object on Windows, a cgroup v2 slice (or prlimit) on Linux, -m/-smp for a machine; read back
+      from the OS. Disk (a machine's image size) and network said as not enforced until a later phase.
+    proof: a capped process compartment is held to its memory by the OS on the platform the test runs on; the read-back matches
+
+  CS6_rebuild_from_the_spec:
+    layer: integration
+    status: OPEN
+    depends_on: [CS1_a_version_is_a_system_state, CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system]
+    files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, emerge/compiler/kg-builder.js, emerge/compiler/phase-specs.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-REBUILD]
+    does: >-
+      (Graphed 2026-10-23: COS asks Idearium to compile and build through its routes — the repo phase build and POST /api/repos/:uuid/chunk —
+      and reads the rebuilt registry from the snapshot it takes; it does not require emerge. Designed out before code, per DG2.)
+      A system's spec compiled (refused below depth 1.0, with its gaps) and built into a new compartment, indexed, its registry's four hashes
+      compared with the version's; each differing part listed as the drift between the spec and the system.
+    proof: a small system rebuilt from its spec matches its version's registry, or names each difference
+
+  CS7_spawn_despawn_and_balance:
+    layer: backend
+    status: OPEN
+    depends_on: [CS5_caps_per_compartment]
+    files: [cos/spine/scale.js, cos/spine/systems.js, cos/spine/bridge.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-SCALE]
+    does: >-
+      Replicas of a system from the same version on their own ports, a request to its name sent to the least loaded healthy one, idle replicas
+      despawned by his rule; a system whose data cannot be shared is refused replication, said.
+    proof: two replicas of a stateless system share load; one stopped, traffic goes to the other
+
+  CS8_the_cos_screen:
+    layer: ui
+    status: OPEN
+    depends_on: [CS2_test_every_version, CS5_caps_per_compartment, CS7_spawn_despawn_and_balance]
+    files: [cos/app/desktop/spine.html, cos/app/desktop/spine.js, cos/app/controller.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-UI]
+    does: >-
+      The COS window's Systems, Versions and Links: each compartment's state, process, memory, CPU and caps; take, test, restore and branch a
+      version; replicas. Co-pilot in it through the same `cos` commands. (Each phase above ships its route and command; the screen gathers
+      them here — said, per the order of delivery.)
+    proof: in Clear Glass, a version taken and restored from the screen
