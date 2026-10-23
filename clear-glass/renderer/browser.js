@@ -2139,39 +2139,34 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     if (key.startsWith('permission:')) return `Permission: ${key.slice('permission:'.length)}`;
     return key;
   }
+  // §0.60.217 SP3 — James, 2026-10-23: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake,
+  // resume state. Cleardriver, agentmesh and guardian setting." The popup is this tab's site, every feature's settings grouped and drawn from
+  // the key table (renderer/site-profile-groups.js), each change written at once. The list of every site's stored values it used to show
+  // (0.39.x) is Settings › Sites, one click away ("All sites…"), where nothing of it was lost.
   async function _renderSiteSettingsPanel() {
     const panel = document.getElementById('site-settings-panel');
-    panel.innerHTML = '<div style="padding:8px;color:var(--text-dim,#999);font-size:11px">loading…</div>';
+    panel.classList.add('sp-pop');
+    panel.innerHTML = '<div class="sp-empty">loading…</div>';
+    let url = '';
+    try { url = wv.getURL() || ''; } catch (_) {}
+    const head = document.createElement('div'); head.className = 'sp-head';
+    head.innerHTML = (window.CGIcons && window.CGIcons.svg('shield', { size: 16 })) || '';
+    const host = document.createElement('span'); host.className = 'sp-host';
+    try { host.textContent = /^https?:/.test(url) ? new URL(url).host : 'Site settings'; } catch (_) { host.textContent = 'Site settings'; }
+    const more = document.createElement('button'); more.className = 'sp-more'; more.type = 'button'; more.textContent = 'All sites…';
+    more.addEventListener('click', (e) => { e.stopPropagation(); panel.style.display = 'none'; cg.window.openSettings('sites'); });
+    head.append(host, more);
     try {
-      const origins = await cg.siteSettings.listOrigins();
-      if (!origins || !origins.length) {
-        panel.innerHTML = '<div style="padding:8px;color:var(--text-dim,#999);font-size:11px">No site settings saved yet.</div>';
-        return;
-      }
-      const perOrigin = await Promise.all(origins.map(async (origin) => ({ origin, settings: await cg.siteSettings.getAll(origin) })));
-      panel.innerHTML = perOrigin.map(({ origin, settings }) => `
-        <div style="padding:6px 4px;border-bottom:1px solid var(--border,#333)">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:11px;color:var(--text,#ccc);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${origin.replace(/</g, '&lt;')}</span>
-            <span data-clear-origin="${origin}" style="cursor:pointer;font-size:10px;color:var(--text-dim,#999)">clear all</span>
-          </div>
-          ${Object.entries(settings).map(([k, v]) => `
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;font-size:10px;color:var(--text-dim,#999)">
-              <span>${_humanizeSettingKey(k)}: <b style="color:${v === 'allow' ? '#6bcf6b' : '#ff6b6b'}">${v}</b></span>
-              <span data-clear-key="${origin}|||${k}" style="cursor:pointer;opacity:.6">✕</span>
-            </div>`).join('')}
-        </div>`).join('');
-      panel.querySelectorAll('[data-clear-origin]').forEach(el => el.addEventListener('click', async () => {
-        await cg.siteSettings.clear(el.dataset.clearOrigin);
-        _renderSiteSettingsPanel();
-      }));
-      panel.querySelectorAll('[data-clear-key]').forEach(el => el.addEventListener('click', async () => {
-        const [origin, key] = el.dataset.clearKey.split('|||');
-        await cg.siteSettings.deleteKey(origin, key);
-        _renderSiteSettingsPanel();
-      }));
+      if (!cg.siteProfile || !window.CGSiteGroups) throw new Error('site settings are not available in this window');
+      const { profile, keys, lists } = await window.CGSiteGroups.load(cg, url);
+      const g = window.CGSiteGroups.build({ url, profile, keys, lists,
+        live: () => cg.siteProfile.get(url),
+        onSet: (key, value) => cg.siteProfile.set(url, key, value),
+        onClear: (key) => cg.siteProfile.clear(url, key) });
+      panel.replaceChildren(head, g.el);
     } catch (err) {
-      panel.innerHTML = `<div style="padding:8px;color:#ff6b6b;font-size:11px">Error: ${err.message}</div>`;
+      const e = document.createElement('div'); e.className = 'sp-note'; e.textContent = `Site settings: ${err.message}`;
+      panel.replaceChildren(head, e);
     }
   }
   document.addEventListener('click', (e) => {

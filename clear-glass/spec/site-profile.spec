@@ -324,3 +324,13 @@ spec:
   #     marked by its door (POST /cli/driver, by: 'agent') or on an agent's page (mesh-, ncp-, auto-). His own macros, userscripts and rewind
   #     drive the driver too and are never refused by it.
   #   - mesh.enabled off: Co-pilot still answers, without the page (no DOM, picks or cookies) and says why in the reply's `site`.
+
+  # ── ADDENDUM 2026-10-23 (0.60.217, SP3 built) ──────────────────────────────────────────────────────────────────────
+  # James, 2026-10-23: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state.
+  # Cleardriver, agentmesh and guardian setting."
+  # Built: renderer/site-profile-groups.js (+ .css), one builder for both screens, its controls from the key table (nothing hand-listed).
+  #   - The toolbar's Site Settings popup is now this tab's site: nine groups, each change written at once, a refused value's why on its row,
+  #     "All sites…" opens Settings › Sites. It used to list every site's raw stored values; that list is Settings › Sites, nothing lost.
+  #   - Settings › Sites: the Edit dialog's Features section, written on Save through ClearGlass.siteProfile (a refusal keeps the dialog open
+  #     with its why); feature keys are no longer repeated under "Other stored values".
+  #   - Each row: "this site" with ↺, "Settings" (follows the global option) or "default".

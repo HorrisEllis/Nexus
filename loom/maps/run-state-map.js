@@ -67,6 +67,7 @@ const FILES = [
   ['clear-glass/src/site-settings/store.js', I('clear-glass/src/site-settings/store.js'), []],   // the per-origin store (JAA KV cg_site_settings); declared with SP1, 0.60.215
   ['clear-glass/src/site-settings/keys.js', I('clear-glass/src/site-settings/keys.js'), []],   // §0.60.215 SP1 the per-site keys every feature reads (one table)
   ['clear-glass/src/site-settings/profile.js', I('clear-glass/src/site-settings/profile.js'), [I('clear-glass/src/site-settings/keys.js'), I('clear-glass/src/net/policy.js')]],   // §0.60.215 SP1 siteProfile(url): site, else global, else default; the route a netPolicy rule   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
+  ['clear-glass/renderer/site-profile-groups.js', I('clear-glass/renderer/site-profile-groups.js'), []],   // §0.60.217 SP3 one site's settings by feature, drawn from the key table (popup + Settings › Sites)
   ['clear-glass/src/site-settings/readers.js', I('clear-glass/src/site-settings/readers.js'), []],   // §0.60.216 SP2 each feature's hook onto the one resolver (installed by main)
   ['clear-glass/src/rewind/resume.js', I('clear-glass/src/rewind/resume.js'), [I('clear-glass/src/rewind/engine.js')]],   // §0.60.216 SP2 a site's resume state: kept by the page, put back on the revisit
   ['clear-glass/renderer/shell/ctxmenu.js', I('clear-glass/renderer/shell/ctxmenu.js'), []],   // §0.60.183 BS15 the right-click menu: rows by what was clicked, placed at the pointer
@@ -297,6 +298,9 @@ const CONSUMERS = [
   [I('clear-glass/src/downloads/chat-ledger.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 guardianPolicy: no ledger where chat capture is off'],
   [I('clear-glass/src/main/passwords-wiring.js'), I('clear-glass/src/passwords/service.js'), '§0.60.216 SP2 autofillLogin(origin): the one login to fill without asking'],
   [I('clear-glass/src/ipc/agent-routes.js'), I('clear-glass/src/driver/index.js'), '§0.60.216 SP2 POST /cli/driver marks its calls by: 'agent''],
+  [I('clear-glass/renderer/browser.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 the toolbar's Site Settings popup: this tab's site, each change written at once'],
+  [I('clear-glass/renderer/settings/sections/sites.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 Settings › Sites: the Edit dialog's Features, written on Save'],
+  [I('clear-glass/renderer/site-profile-groups.js'), I('clear-glass/src/preload/index.js'), '§0.60.217 SP3 ClearGlass.siteProfile get/set/clear/keys → site-profile:* (IPC, not a require)'],
   [I('architect/service.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('clear-glass/src/main/index.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('copilot/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],

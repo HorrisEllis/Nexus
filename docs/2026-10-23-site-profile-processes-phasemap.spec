@@ -62,9 +62,9 @@ phases:
 
   SP3_the_site_settings_screen:
     layer: ui
-    status: OPEN
+    status: BUILT 0.60.217 — site-profile-groups.js/.css, the toolbar popup, Settings › Sites' Features; test-site-settings-ui 3/3 in Clear Glass
     depends_on: [SP2_each_feature_reads_its_site_value]
-    files: [clear-glass/renderer/settings/sections/sites.js, clear-glass/renderer/browser.js]
+    files: [clear-glass/renderer/site-profile-groups.js, clear-glass/renderer/site-profile-groups.css, clear-glass/renderer/settings/sections/sites.js, clear-glass/renderer/settings.html, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html]
     spec: clear-glass/spec/site-profile.spec
     blocks: [MOD-SP-UI]
     does: >-
