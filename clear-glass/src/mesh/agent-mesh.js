@@ -154,6 +154,20 @@ const MAX_RETRIES_PER_DRAIN_STRATEGY = 2; // 4 strategies × 2 = 8 retries befor
 // synchronously (that's exactly the tight-retry-loop risk flagged in this
 // session's own DOM-sync design discussion). Index matches DRAIN_STRATEGY_ORDER.
 const DRAIN_BACKOFF_MS = [1000, 3000, 8000, 15000];
+// §0.60.218 SP4 — the two above are now the defaults of Settings › Agent mesh (options mesh.retriesPerStrategy, mesh.backoffMs); a value
+// outside these bounds is not used (the constant is, and the reason is in drainSettings().why).
+function drainSettings(opts) {
+  const m = (opts && typeof opts.get === 'function' && (opts.get() || {}).mesh) || {};
+  const why = [];
+  let retries = MAX_RETRIES_PER_DRAIN_STRATEGY, backoff = DRAIN_BACKOFF_MS;
+  if (m.retriesPerStrategy !== undefined) { const n = Number(m.retriesPerStrategy); if (Number.isInteger(n) && n >= 1 && n <= 10) retries = n; else why.push(`retriesPerStrategy ${JSON.stringify(m.retriesPerStrategy)} is not 1–10`); }
+  if (m.backoffMs !== undefined) {
+    const b = Array.isArray(m.backoffMs) ? m.backoffMs.map(Number) : null;
+    if (b && b.length === DRAIN_STRATEGY_ORDER.length && b.every(x => Number.isInteger(x) && x >= 100 && x <= 600000)) backoff = b;
+    else why.push(`backoffMs needs ${DRAIN_STRATEGY_ORDER.length} waits of 100–600000 ms`);
+  }
+  return { retriesPerStrategy: retries, backoffMs: backoff, why };
+}
 
 class AgentMesh {
   // §PHASE-3 2026-08-23 — CLEAR-GLASS-EXPANSION-PLAN-2026-08-23.md item 6:
@@ -915,7 +929,8 @@ class AgentMesh {
       strategy: DRAIN_STRATEGY_ORDER[task.strategyIdx], ts: Date.now(),
     });
 
-    if (task.strategyRetries >= MAX_RETRIES_PER_DRAIN_STRATEGY) {
+    const drain = drainSettings(this.accounts);   // §0.60.218 SP4 — read each time, so a change in Settings applies to the next failure
+    if (task.strategyRetries >= drain.retriesPerStrategy) {
       task.strategyIdx++;
       task.strategyRetries = 0;
     }
@@ -926,7 +941,7 @@ class AgentMesh {
     }
 
     const strategy = DRAIN_STRATEGY_ORDER[task.strategyIdx];
-    const backoffMs = DRAIN_BACKOFF_MS[task.strategyIdx] ?? DRAIN_BACKOFF_MS[DRAIN_BACKOFF_MS.length - 1];
+    const backoffMs = drain.backoffMs[task.strategyIdx] ?? drain.backoffMs[drain.backoffMs.length - 1];
 
     // Diagnostic side effect happens now, BEFORE the delayed requeue —
     // e.g. RESPAWN needs the stale agent state gone before the next
@@ -1175,3 +1190,4 @@ class AgentMesh {
 }
 
 module.exports = AgentMesh;
+module.exports.drainSettings = drainSettings;   // §0.60.218 SP4 (tests)

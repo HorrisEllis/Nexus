@@ -334,3 +334,14 @@ spec:
   #   - Settings › Sites: the Edit dialog's Features section, written on Save through ClearGlass.siteProfile (a refusal keeps the dialog open
   #     with its why); feature keys are no longer repeated under "Other stored values".
   #   - Each row: "this site" with ↺, "Settings" (follows the global option) or "default".
+
+  # ── ADDENDUM 2026-10-23 (0.60.218, SP4 built) ──────────────────────────────────────────────────────────────────────
+  # James, 2026-10-23: "Cleardriver, agentmesh and guardian setting."
+  # Built: options driver { navTimeoutMs 30000, waitTimeoutMs 10000, agentsMayDrive true }, mesh { retriesPerStrategy 2, backoffMs
+  # [1000, 3000, 8000, 15000] }, guardian { listen true, capture true } — each default today's constant (SP_D2). Settings › ClearDriver and
+  # Settings › Guardian are new; the mesh part of Providers & accounts has "When a task fails". agent-mesh.js reads its drain at each failure.
+  # Drift from MOD-SP-GLOBAL, said:
+  #   - "mesh.drain, mesh.backoffMs": the drain's strategy order (retry → respawn → fallback → diagnostic) stays fixed; what is set is how many
+  #     tries each strategy gets (mesh.retriesPerStrategy) and the wait before each (mesh.backoffMs). A bad value is not used; the constant is.
+  #   - Guardian's section also controls listener decay (listenerDecay existed since 0.39.265 with no control). "the provider host" is not in it:
+  #     the provider host's controls are the agents hub and Providers & accounts, already.

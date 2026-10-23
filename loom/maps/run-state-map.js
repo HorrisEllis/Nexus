@@ -67,6 +67,8 @@ const FILES = [
   ['clear-glass/src/site-settings/store.js', I('clear-glass/src/site-settings/store.js'), []],   // the per-origin store (JAA KV cg_site_settings); declared with SP1, 0.60.215
   ['clear-glass/src/site-settings/keys.js', I('clear-glass/src/site-settings/keys.js'), []],   // §0.60.215 SP1 the per-site keys every feature reads (one table)
   ['clear-glass/src/site-settings/profile.js', I('clear-glass/src/site-settings/profile.js'), [I('clear-glass/src/site-settings/keys.js'), I('clear-glass/src/net/policy.js')]],   // §0.60.215 SP1 siteProfile(url): site, else global, else default; the route a netPolicy rule   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
+  ['clear-glass/renderer/settings/sections/driver.js', I('clear-glass/renderer/settings/sections/driver.js'), []],   // §0.60.218 SP4 Settings › ClearDriver (options driver.*)
+  ['clear-glass/renderer/settings/sections/guardian.js', I('clear-glass/renderer/settings/sections/guardian.js'), []],   // §0.60.218 SP4 Settings › Guardian (options guardian.*, listenerDecay)
   ['clear-glass/renderer/site-profile-groups.js', I('clear-glass/renderer/site-profile-groups.js'), []],   // §0.60.217 SP3 one site's settings by feature, drawn from the key table (popup + Settings › Sites)
   ['clear-glass/src/site-settings/readers.js', I('clear-glass/src/site-settings/readers.js'), []],   // §0.60.216 SP2 each feature's hook onto the one resolver (installed by main)
   ['clear-glass/src/rewind/resume.js', I('clear-glass/src/rewind/resume.js'), [I('clear-glass/src/rewind/engine.js')]],   // §0.60.216 SP2 a site's resume state: kept by the page, put back on the revisit
@@ -301,6 +303,10 @@ const CONSUMERS = [
   [I('clear-glass/renderer/browser.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 the toolbar's Site Settings popup: this tab's site, each change written at once'],
   [I('clear-glass/renderer/settings/sections/sites.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 Settings › Sites: the Edit dialog's Features, written on Save'],
   [I('clear-glass/renderer/site-profile-groups.js'), I('clear-glass/src/preload/index.js'), '§0.60.217 SP3 ClearGlass.siteProfile get/set/clear/keys → site-profile:* (IPC, not a require)'],
+  [I('clear-glass/renderer/settings/sections/driver.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 options.set({ driver }) via IPC options:set; bounds from siteProfile.keys()'],
+  [I('clear-glass/renderer/settings/sections/guardian.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 options.set({ guardian | listenerDecay }) via IPC options:set'],
+  [I('clear-glass/renderer/settings/sections/mesh.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 "When a task fails": options.set({ mesh: { retriesPerStrategy | backoffMs } })'],
+  [I('clear-glass/src/mesh/agent-mesh.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 drainSettings(this.accounts) at each failure: mesh.retriesPerStrategy, mesh.backoffMs'],
   [I('architect/service.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('clear-glass/src/main/index.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('copilot/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],

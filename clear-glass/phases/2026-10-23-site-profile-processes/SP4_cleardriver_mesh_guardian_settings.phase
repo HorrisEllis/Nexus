@@ -6,31 +6,35 @@ context: >-
   pipeline phase SP4_cleardriver_mesh_guardian_settings of
   docs/2026-10-23-site-profile-processes-phasemap.spec
 intent: null
-summary: SP4_cleardriver_mesh_guardian_settings (backend) — 6 file(s)
+summary: SP4_cleardriver_mesh_guardian_settings (backend) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792752003330
+exported_at: 1792752301664
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792752003330
-lastSeenAt: 1792752003330
+firstSeenAt: 1792752301664
+lastSeenAt: 1792752301664
 fingerprint: null
 payload:
   id: SP4_cleardriver_mesh_guardian_settings
   map: docs/2026-10-23-site-profile-processes-phasemap.spec
   repo: null
   layer: backend
-  status: OPEN
+  status: >-
+    BUILT 0.60.218 — options driver/mesh/guardian, the mesh's drain reads them, Settings ›
+    ClearDriver, Guardian, the mesh's "When a task fails"; test-global-settings 5/5
   files:
     - clear-glass/src/options/store.js
-    - clear-glass/src/driver/index.js
     - clear-glass/src/mesh/agent-mesh.js
     - clear-glass/renderer/settings/sections/guardian.js
+    - clear-glass/renderer/settings/sections/guardian.css
     - clear-glass/renderer/settings/sections/driver.js
+    - clear-glass/renderer/settings/sections/driver.css
+    - clear-glass/renderer/settings/sections/mesh.js
     - clear-glass/renderer/settings.html
   depends_on:
     - SP1_one_resolver_for_every_feature
   blocks:
     - MOD-SP-GLOBAL
   spec: clear-glass/spec/site-profile.spec
-  graph: daaaec093ead2831
+  graph: fb57cef4503dcfda

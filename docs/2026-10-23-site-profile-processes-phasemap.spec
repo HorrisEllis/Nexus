@@ -74,9 +74,10 @@ phases:
 
   SP4_cleardriver_mesh_guardian_settings:
     layer: backend
-    status: OPEN
+    status: BUILT 0.60.218 — options driver/mesh/guardian, the mesh's drain reads them, Settings › ClearDriver, Guardian, the mesh's "When a task fails"; test-global-settings 5/5
     depends_on: [SP1_one_resolver_for_every_feature]
-    files: [clear-glass/src/options/store.js, clear-glass/src/driver/index.js, clear-glass/src/mesh/agent-mesh.js, clear-glass/renderer/settings/sections/guardian.js, clear-glass/renderer/settings/sections/driver.js, clear-glass/renderer/settings.html]
+    # files as built: driver/index.js needed no change (it reads the globals through the site resolver since 0.60.216); mesh.js gained the pane
+    files: [clear-glass/src/options/store.js, clear-glass/src/mesh/agent-mesh.js, clear-glass/renderer/settings/sections/guardian.js, clear-glass/renderer/settings/sections/guardian.css, clear-glass/renderer/settings/sections/driver.js, clear-glass/renderer/settings/sections/driver.css, clear-glass/renderer/settings/sections/mesh.js, clear-glass/renderer/settings.html]
     spec: clear-glass/spec/site-profile.spec
     blocks: [MOD-SP-GLOBAL]
     does: >-
