@@ -94,9 +94,10 @@ phases:
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-SUPERVISE]
     does: >-
-      Every <system>/compartment.json read; each system started, stopped and watched by COS in dependsOn order, health from its healthUrl, a
-      system already running adopted by its port. Route /api/cos/systems, command `cos systems`.
-    proof: all ten listed with their state; versionium stopped and started, its health back
+      COS starts alone (his decision, addendum below). Each system is opened when something needs it: read from its .spec (compartment.json is the
+      derived cache), its dependsOn opened first, health from its healthUrl, watched; closed when idle by his rule. A system already running is
+      adopted by its port. Route /api/cos/systems, command `cos systems`.
+    proof: COS boots with no system running; asking Idearium for work opens Idearium and what it depends on, and nothing else
 
   CS5_caps_per_compartment:
     layer: backend
@@ -171,3 +172,21 @@ phases:
 # Proposed (to confirm): a miniworld is the .cos archive. Its spec declares it; its code/ holds the files; history/*.nex.gz holds its
 # versions; for an OS-based miniworld, machine/ holds the qcow2 overlay chain, naming its base image by hash. Boot opens it as a
 # compartment; fork is a new overlay or a copy-on-write copy; snapshot is a CompartmentVersion; discard drops the overlay.
+
+# ── ADDENDUM 2026-10-23 — start with just COS; open systems as needed (his decision) ─────────────────────────────────────────────
+# Context: the coder asked whether Idearium and COS should merge, whether Idearium becomes the orchestrator, whether specs are the repos
+# and each repo a compartment and a system or project, and whether Versionium and QEMU should merge. The coder recommended: separate roles
+# (Idearium orchestrates the work, COS runs it), one id across spec, repo, compartment and miniworld, and Versionium owning every version
+# with QEMU as its machine part.
+# James, 2026-10-23: "The point is that you start with just cos. Then open systems as needed."
+# Decided (his): COS is the only thing that starts. Every other system (Idearium, Guardian, Clear Glass, Versionium, …) is a compartment
+# COS opens when something needs it, its dependencies opened first, and closes when it is idle. Nothing merges: each system stays its own,
+# and the question of who orchestrates is answered by who is running: COS. Idearium is the first compartment opened when there is work.
+# Today's opposite, read in the code: cos/app/runtime.js (COSA3) starts nexus/autopilot.js, and autopilot spawns every system at boot.
+# His runs on 2026-10-21 and 2026-10-22 hit critical memory, at 1–9% free (0.60.203, 0.60.205 in lib/version.js).
+# What it changes in this map:
+#   - CS4: each system is opened on demand from its .spec (the spec declares it; earlier addendum), not all at once; autopilot stays as
+#     the supervisor of an opened set (§0.3), no longer the boot path.
+#   - CS7: "despawn when idle" becomes the normal life of every system, not only of replicas.
+# Still open, his: (a) one id across spec, repo, compartment and miniworld; (b) Versionium owning every version with QEMU as its machine
+# part; (c) the miniworld as the .cos archive.

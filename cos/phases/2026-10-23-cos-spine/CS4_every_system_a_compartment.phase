@@ -7,11 +7,11 @@ intent: null
 summary: CS4_every_system_a_compartment (backend) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792755875503
+exported_at: 1792756162293
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792755875503
-lastSeenAt: 1792755875503
+firstSeenAt: 1792756162293
+lastSeenAt: 1792756162293
 fingerprint: null
 payload:
   id: CS4_every_system_a_compartment

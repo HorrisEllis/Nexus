@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792755875506
+exported_at: 1792756162296
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792755875506
-lastSeenAt: 1792755875506
+firstSeenAt: 1792756162296
+lastSeenAt: 1792756162296
 fingerprint: null
 payload:
   for: CS6_rebuild_from_the_spec

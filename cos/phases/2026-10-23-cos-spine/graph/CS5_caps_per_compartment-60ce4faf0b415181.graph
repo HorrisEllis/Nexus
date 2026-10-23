@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792755875504
+exported_at: 1792756162294
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792755875504
-lastSeenAt: 1792755875504
+firstSeenAt: 1792756162294
+lastSeenAt: 1792756162294
 fingerprint: null
 payload:
   for: CS5_caps_per_compartment

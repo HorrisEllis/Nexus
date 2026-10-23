@@ -285,16 +285,17 @@ spec:
       path: cos/spine/systems.js
       phase: CS4_every_system_a_compartment
       description: >-
-        Reads every <system>/compartment.json; start(system), stop(system), status() through process-runner and the watchdog, health through
-        runtime.healthUrl, the dependsOn order respected at start. One list of what runs, its process tree, memory and CPU. Stands on COS app
-        runtime (COSA3) rather than a second supervisor.
+        COS starts alone (his decision, 2026-10-23: "you start with just cos. Then open systems as needed"). open(system) reads the system's
+        .spec (its declaration; compartment.json is a derived cache), opens its dependsOn first, spawns it through process-runner, watches it
+        with the watchdog and waits on its healthUrl; close(system) when idle by his rule. One list of what runs, its process tree, memory
+        and CPU. Autopilot stays as a supervisor of an opened set, no longer the boot path.
       deps: [{ name: compartment-json }, { name: process-runner }, { name: watchdog }]
       schema_refs: [CompartmentCaps]
-      exports: ["systems() → [{ system, compartmentId, running, pid, health, memoryMB, cpu }]", "start(system, { by })", "stop(system, { by })"]
+      exports: ["systems() → [{ system, compartmentId, running, pid, health, memoryMB, cpu }]", "open(system, { by, why })", "close(system, { by })"]
       gate_pipeline: ["GATE-CS4-001: read declarations", "GATE-CS4-002: order by dependsOn", "GATE-CS4-003: spawn and watch", "GATE-CS4-004: health"]
       behavioral_contracts: ["a system already running (started outside COS) is adopted by its port, not started twice"]
       error_paths: ["a port held by another program → said, naming it"]
-      acceptance: ["cos systems lists all ten with their state; stop then start versionium, its health returns"]
+      acceptance: ["COS boots with no system running; open(idearium) opens it and its dependencies only; idle close returns the memory"]
 
     - id: MOD-CS-CAPS
       name: compartment-caps

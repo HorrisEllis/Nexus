@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792755875511
+exported_at: 1792756162298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792755875511
-lastSeenAt: 1792755875511
+firstSeenAt: 1792756162298
+lastSeenAt: 1792756162298
 fingerprint: null
 payload:
   for: CS8_the_cos_screen
