@@ -5,7 +5,7 @@ origin: >-
   Cleardriver, agentmesh and guardian setting. Also need a processes screen for background tabs and activity." · "Then I want to start working
   on a plugin for something huge." The features are his; the census, the one-store design and the phase cut are the coder's.
 
-status: MAPPED 2026-10-23 — spec clear-glass/spec/site-profile.spec (compiles at full depth).
+status: BUILT 2026-10-23 — SP1–SP6 in 0.60.215–0.60.220 (each phase's status below). Mapped the same day; spec clear-glass/spec/site-profile.spec.
 
 ## Ground truth (census 2026-10-23, in the spec's `census:`)
 - One per-origin store exists (src/site-settings/store.js); per site today: zoom, content filtering, permissions, the password never-list,
@@ -100,9 +100,9 @@ phases:
 
   SP6_the_processes_screen:
     layer: ui
-    status: OPEN
+    status: BUILT 0.60.220 — renderer/processes.html/.js/.css, Shift+Esc, ☰ and Tools rows; test-processes-ui 4/4 in Clear Glass
     depends_on: [SP5_processes_and_activity]
-    files: [clear-glass/renderer/processes.html, clear-glass/renderer/shell/menus.js, clear-glass/src/main/index.js]
+    files: [clear-glass/renderer/processes.html, clear-glass/renderer/processes.js, clear-glass/renderer/processes.css, clear-glass/renderer/shell/menus.js, clear-glass/renderer/shell/icons.js, clear-glass/renderer/browser.js, clear-glass/src/main/index.js, clear-glass/src/shortcuts/registry.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js]
     spec: clear-glass/spec/site-profile.spec
     blocks: [MOD-SP-PROCESSES-UI]
     does: >-

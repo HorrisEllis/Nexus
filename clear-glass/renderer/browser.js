@@ -2076,6 +2076,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   }
   const SHORTCUT_ACTIONS = {
     'tab.new':        () => _tabs.newTab(),
+    'cg.processes':   () => cg.window.openProcesses(),   // SP6 (0.60.220) — main opens it first; this is the window's own path
     'tab.close':      () => _tabs.closeTab(_tabs.activeId),
     'tab.reopen':     () => _tabs.reopenClosed(),
     'tab.next':       () => { const ids = _tabs.tabs.map(t => t.id); _tabs.switchTo(ids[(ids.indexOf(_tabs.activeId) + 1) % ids.length]); },
@@ -3642,6 +3643,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     history: () => _openPanelFromMenu('history-panel', () => _renderHistoryPanel('')),
     siteSettings: () => _openPanelFromMenu('site-settings-panel', _renderSiteSettingsPanel),
     bgTabs: () => _openPanelFromMenu('bgtabs-panel', _renderBgTabsPanel),
+    processes: () => cg.window.openProcesses(),   // SP6 (0.60.220) — the Processes window (Shift+Esc)
     library: (area) => _openLibrary(area), customize: () => _openToolbarEditor(),
     bookmarksBar: (mode) => { if (mode) setBookmarksBar(mode); return _barMode; },   // BS18 (0.60.185)
   };

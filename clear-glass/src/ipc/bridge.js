@@ -1174,6 +1174,8 @@ class IpcBridge {
     // with its pages, memory and CPU) and what just happened. Ending one is his: this channel is denied to agents in handler-registry.js.
     ipcMain.handle('processes:list',  async () => require('../main/index').processes().list());
     ipcMain.handle('processes:end',   async (e, d) => require('../main/index').processes().end(d && d.wcId, { by: 'person' }));
+    ipcMain.handle('window:openProcesses',  async () => require('../main/index').openProcessesWindow());   // SP6 (0.60.220)
+    ipcMain.handle('window:closeProcesses', async () => { require('../main/index').closeProcessesWindow(); return { ok: true }; });
     ipcMain.handle('activity:recent', async (e, d) => ({ events: require('../processes').activity().recent(d || {}), dropped: require('../processes').activity().dropped() }));
 
     // §GAP CLOSED 2026-08-30 — real IPC handlers for the freshly-built

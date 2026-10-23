@@ -67,6 +67,7 @@ const FILES = [
   ['clear-glass/src/site-settings/store.js', I('clear-glass/src/site-settings/store.js'), []],   // the per-origin store (JAA KV cg_site_settings); declared with SP1, 0.60.215
   ['clear-glass/src/site-settings/keys.js', I('clear-glass/src/site-settings/keys.js'), []],   // §0.60.215 SP1 the per-site keys every feature reads (one table)
   ['clear-glass/src/site-settings/profile.js', I('clear-glass/src/site-settings/profile.js'), [I('clear-glass/src/site-settings/keys.js'), I('clear-glass/src/net/policy.js')]],   // §0.60.215 SP1 siteProfile(url): site, else global, else default; the route a netPolicy rule   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
+  ['clear-glass/renderer/processes.js', I('clear-glass/renderer/processes.js'), []],   // §0.60.220 SP6 the Processes window (Shift+Esc, ☰, Tools)
   ['clear-glass/src/processes/index.js', I('clear-glass/src/processes/index.js'), []],   // §0.60.219 SP5 what is running (metrics joined to pages) and the activity ring
   ['clear-glass/renderer/settings/sections/driver.js', I('clear-glass/renderer/settings/sections/driver.js'), []],   // §0.60.218 SP4 Settings › ClearDriver (options driver.*)
   ['clear-glass/renderer/settings/sections/guardian.js', I('clear-glass/renderer/settings/sections/guardian.js'), []],   // §0.60.218 SP4 Settings › Guardian (options guardian.*, listenerDecay)
@@ -312,6 +313,10 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/processes/index.js'), '§0.60.219 SP5 processes:list/end, activity:recent; GET /cli/processes, /cli/activity; POST /cli/processes/end 403; macro runs into the activity'],
   [I('clear-glass/src/ipc/handler-registry.js'), I('clear-glass/src/ipc/bridge.js'), '§0.60.219 DENIED processes:end, site-profile:set/clear (his, not an agent's through /cli/invoke)'],
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '§0.60.219 site, glass processes, glass activity → /cli/site-profile, /cli/processes, /cli/activity (HTTP)'],
+  [I('clear-glass/renderer/processes.js'), I('clear-glass/src/preload/index.js'), '§0.60.220 SP6 ClearGlass.processes list/end/activity, window.closeProcesses (IPC)'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/renderer/processes.js'), '§0.60.220 SP6 openProcessesWindow() loads processes.html; cg.processes (Shift+Esc) opens it'],
+  [I('clear-glass/renderer/shell/menus.js'), I('clear-glass/renderer/browser.js'), '§0.60.220 SP6 ☰ and Tools → Processes run CGShell.processes → window:openProcesses'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/shortcuts/registry.js'), '§0.60.220 SP6 cg.processes bound to Shift+Esc (Esc with a modifier passes isSafe)'],
   [I('architect/service.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('clear-glass/src/main/index.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('copilot/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],

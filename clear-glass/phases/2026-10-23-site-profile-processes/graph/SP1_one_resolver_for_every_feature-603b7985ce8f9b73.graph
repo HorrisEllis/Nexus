@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792753116126
+exported_at: 1792754193309
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792753116126
-lastSeenAt: 1792753116126
+firstSeenAt: 1792754193309
+lastSeenAt: 1792754193309
 fingerprint: null
 payload:
   for: SP1_one_resolver_for_every_feature

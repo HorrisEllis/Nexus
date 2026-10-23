@@ -308,7 +308,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     open:         (payload) => ipcRenderer.invoke('window:open',     payload),
     openSettings: (area)    => ipcRenderer.invoke('window:openSettings', { area }),   // BS3 (0.60.179): settings.html#<area>
     closeSettings:()        => ipcRenderer.invoke('window:closeSettings'),
-    openLibrary:  (area)    => ipcRenderer.invoke('window:openLibrary', { area }),   // §LIBRARY 0.39.241 — renderer/library.html
+    openLibrary:  (area)    => ipcRenderer.invoke('window:openLibrary', { area }),
+    openProcesses:  ()      => ipcRenderer.invoke('window:openProcesses'),    // SP6 (0.60.220) — renderer/processes.html
+    closeProcesses: ()      => ipcRenderer.invoke('window:closeProcesses'),   // §LIBRARY 0.39.241 — renderer/library.html
     closeLibrary: ()        => ipcRenderer.invoke('window:closeLibrary'),
     list:         ()        => ipcRenderer.invoke('window:list'),
     focus:        (agentId) => ipcRenderer.invoke('window:focus', { agentId }),

@@ -972,3 +972,29 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   recorded. It is the same principle as his sovereign-system work since September.
 - **Checkable:** `CHANGELOG-0.60.207.md`; `tests/modules/test-data-home.test.js` DH-02 (a move and its rollback, byte for byte);
   docs/2026-10-21-data-layout-phasemap.spec DL2.
+
+### 2026-10-23 — 0.60.215–0.60.220: one request, nine features, each a real gap
+- **His words:** "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state.
+  Cleardriver, agentmesh and guardian setting. Also need a processes screen for background tabs and activity."
+- **Context:** The coder's census before any code (clear-glass/spec/site-profile.spec `census:`) checked each item he named against the
+  code:
+  - autofill, rewind, ClearDriver and the mesh had no per-site setting;
+  - macros and workflows matched URLs only;
+  - ClearDriver and Guardian had no settings section at all;
+  - ClearDriver's timeouts were fixed constants;
+  - no Processes screen existed.
+
+  Every item he named was a real gap, and none was already built. The design was the coder's:
+  - one store and one resolver over the per-origin store Clear Glass already had;
+  - the Snowflake route as the network policy's own rule;
+  - every default equal to today's behaviour.
+
+  So were the six phases. Two readings are marked "to confirm": "resume state" and "snowflake" per site.
+- **What it shows:** product scoping. A one-line list that maps onto real decision points in the code, each one testable, with nothing
+  invented and nothing already built. The finished work also showed why "agents may drive" belongs to him: an agent could have lifted it
+  through a side door. That door was found and closed under his own axioms (USER_AUTONOMY, §5.2).
+- **Checkable:**
+  - `CHANGELOG-0.60.215.md` to `CHANGELOG-0.60.220.md`;
+  - `tests/modules/test-site-profile`, `test-site-readers` (7, each feature's own code), `test-site-settings-ui`, `test-global-settings`,
+    `test-processes` and `test-processes-ui`. The screens are driven in Clear Glass;
+  - docs/2026-10-23-site-profile-processes-phasemap.spec SP1–SP6.

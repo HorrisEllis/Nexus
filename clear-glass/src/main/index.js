@@ -2754,6 +2754,21 @@ function openLibraryWindow(area) {
   return { ok: true, reused: false, area: hash || null };
 }
 
+// SP6 (0.60.220) — James, 2026-10-23: "Also need a processes screen for background tabs and activity." One window, reused, like the Library.
+let processesWin = null;
+function openProcessesWindow() {
+  if (processesWin && !processesWin.isDestroyed()) { if (processesWin.isMinimized()) processesWin.restore(); processesWin.show(); processesWin.focus(); return { ok: true, reused: true }; }
+  processesWin = new BrowserWindow({
+    width: 1100, height: 720, minWidth: 640, minHeight: 420, backgroundColor: '#08080d', frame: false,
+    webPreferences: { preload: path.join(__dirname, '../preload/index.js'), contextIsolation: true, nodeIntegration: false },
+    title: 'Clear Glass — Processes',
+  });
+  processesWin.loadFile(path.join(__dirname, '../../renderer/processes.html'));
+  processesWin.on('closed', () => { processesWin = null; });
+  return { ok: true, reused: false };
+}
+function closeProcessesWindow() { if (processesWin && !processesWin.isDestroyed()) processesWin.close(); }
+
 function closeLibraryWindow() {
   if (libraryWin && !libraryWin.isDestroyed()) libraryWin.close();
 }
@@ -2780,6 +2795,7 @@ function _runShortcut(action, accel, owner) {
   const tell = (result) => { if (owner && !owner.win.isDestroyed()) owner.win.webContents.send('shortcut:action', { action, accel, result }); };
   if (action === 'cg.library') return openLibraryWindow('downloads');
   if (action === 'cg.settings') return openSettingsWindow();
+  if (action === 'cg.processes') return openProcessesWindow();   // SP6 (0.60.220)
   if (action.startsWith('macro:')) {
     const name = action.slice(6);
     return Promise.resolve(macroTool.execute({ action: 'run', name, agentId: owner ? owner.agentId : 'default' }))
@@ -2863,7 +2879,7 @@ app.on('web-contents-created', (_e, contents) => {
     if (!action) return;
     const owner = _agentWindowFor(contents);
     // outside an agent window (the Library) only the window-opening shortcuts apply
-    if (!owner && action !== 'cg.library' && action !== 'cg.settings') return;
+    if (!owner && action !== 'cg.library' && action !== 'cg.settings' && action !== 'cg.processes') return;
     event.preventDefault();
     try { _runShortcut(action, accel, owner); } catch (e) { console.warn(`[shortcuts] ${accel} → ${action} failed: ${e.message}`); }
   });
@@ -2924,6 +2940,7 @@ module.exports = {
   openAgentWindow, openOrFocus, closeAgentWindow, minimizeAgentWindow, hideAgentWindow, maximizeAgentWindow,
   focusAgentWindow, listOpenAgents,
   openBackgroundTab, closeBackgroundTab, listBackgroundTabs, processes,   // processes: SP5 (0.60.219)
+  openProcessesWindow, closeProcessesWindow,   // SP6 (0.60.220)
   closeSettingsWindow, openLibraryWindow, closeLibraryWindow, windows, bgTabs,
   freezeAgentWindow, thawAgentWindow,
 };

@@ -534,7 +534,7 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       const open = async () => { await page.evaluate(() => { const p = document.getElementById('bookmark-mgr-panel'); p.style.display = 'none'; }); await openAppMenu(page, errors); };
       await open();
       const labels = await page.$$eval('#bookmark-mgr-panel [data-am]', els => els.map(e => e.dataset.am));
-      assert.deepStrictEqual(labels, ['New Tab', 'New Window', 'Open Page with Snowflake', 'Bookmarks', 'History', 'Downloads', 'Library', 'Plugins and Add-ons', 'Site Settings', 'Background Tabs', 'Import from Firefox…', 'Print…', 'Find in Page…', 'Customize Toolbar…', 'Settings']);
+      assert.deepStrictEqual(labels, ['New Tab', 'New Window', 'Open Page with Snowflake', 'Bookmarks', 'History', 'Downloads', 'Library', 'Plugins and Add-ons', 'Site Settings', 'Background Tabs', 'Processes', 'Import from Firefox…', 'Print…', 'Find in Page…', 'Customize Toolbar…', 'Settings']);
       assert.strictEqual(await page.$('#menu-bookmarks-list'), null, 'no bookmarks list in the menu (the Library has them)');
       assert.ok(await page.$eval('#bookmark-mgr-panel', p => [...p.querySelectorAll('[data-am] .mb-ico')].every(i => i.querySelector('svg'))), 'drawn icons');
       const calls = (key) => page.evaluate((k) => window.__cgCalls.filter(c => c.key === k).map(c => c.args), key);
@@ -550,6 +550,7 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
         'Plugins and Add-ons': async () => page.$eval('#sh-extensions-panel', e => e.style.display === 'block'),
         'Site Settings': async () => shown('#site-settings-panel'),
         'Background Tabs': async () => shown('#bgtabs-panel'),
+        'Processes': async () => (await calls('window.openProcesses')).length > 0,   // SP6 (0.60.220)
         'Import from Firefox…': async () => (await calls('window.openSettings')).some(a => a[0] === 'import'),
         'Print…': async () => (await calls('driver.exec')).some(a => a[0] && a[0].action === 'print'),
         'Find in Page…': async () => shown('#find-bar'),

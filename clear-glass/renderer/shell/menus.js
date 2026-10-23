@@ -87,6 +87,7 @@
       { label: 'Userscripts', ico: '✎', click: 'btn-userscripts' }, { label: 'Element Picker', ico: '◎', click: 'picker-btn' },
       { label: 'Agent Mesh', ico: '⬡', click: 'btn-mesh' }, { label: 'NCP Providers', ico: '⟳', click: 'btn-providers' },
       { label: 'Site Settings', ico: '🛡', run: 'siteSettings' }, { label: 'Network and Snowflake', ico: '❄', act: ['settings', 'network'] },
+      { label: 'Processes', kbd: 'Shift+Esc', ico: '≋', run: 'processes' },   // SP6 (0.60.220)
       { label: 'Diagnostics', ico: '⚕', click: 'btn-diag' },
       '-',
       { label: 'Customize Toolbar…', ico: '🧰', run: 'customize' },
@@ -115,6 +116,7 @@
     { label: 'Plugins and Add-ons', kbd: 'Ctrl+Shift+A', icon: 'plugins', act: ['extensions'] },
     { label: 'Site Settings', icon: 'shield', run: 'siteSettings', da: 'site-settings' },
     { label: 'Background Tabs', icon: 'layers', run: 'bgTabs', da: 'bgtabs' },
+    { label: 'Processes', kbd: 'Shift+Esc', icon: 'pulse', run: 'processes', da: 'processes' },   // SP6 (0.60.220)
     { label: 'Import from Firefox…', icon: 'external', act: ['settings', 'import'] },
     '-',
     { label: 'Print…', kbd: 'Ctrl+P', icon: 'print', run: 'print' },

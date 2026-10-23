@@ -357,3 +357,10 @@ spec:
   # Found on the way and closed by his axioms (USER_AUTONOMY, §5.2 no side door): /cli/site-profile and /cli/invoke reached the keys that
   # limit agents (driver.allowed, mesh.enabled, guardian.listen/capture, network.via), so an agent could lift a limit he set on it. Those
   # keys are now the person's alone (profile.js PERSON_ONLY; site-profile:set/clear denied to /cli/invoke; the command row's personOnly).
+
+  # ── ADDENDUM 2026-10-23 (0.60.220, SP6 built) ──────────────────────────────────────────────────────────────────────
+  # James, 2026-10-23: "Also need a processes screen for background tabs and activity."
+  # Built: renderer/processes.html (+ .js, .css), Settings' window style; the process table (kind, site, memory, CPU, PID; sortable; the sort
+  # and the selected row kept across the 2 s refresh; "Pages only"), Close on a background tab and End on a site's tab, each confirmed, a
+  # refusal shown; the activity beside it, filtered by kind and site; a banner when Clear Glass does not answer. Opened by Shift+Esc (a new
+  # default: cg.processes; isSafe now lets Esc with a modifier through, Shift+letter is still typing), ☰ → Processes and Tools → Processes.
