@@ -1,0 +1,168 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FM1_every_ledger_into_rfr2:3f69872ecac3e79c
+type: graph
+id: phase:FM1_every_ledger_into_rfr2:3f69872ecac3e79c
+context: dependency graph of phase FM1_every_ledger_into_rfr2
+intent: null
+summary: 17 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677027
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677027
+lastSeenAt: 1792787677027
+fingerprint: null
+payload:
+  for: FM1_every_ledger_into_rfr2
+  kind: phase
+  repo: null
+  hash: 3f69872ecac3e79c
+  nodes:
+    - path: intelligence/rfr2/causality/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/rfr2-bridge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/adapter/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/clip/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/compress/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/diagnostic-report.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-rfr2-cjs.js
+      role: used-by
+      exists: true
+      system: null
+    - path: versionium/lib/engine.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: intelligence/rfr2/identity/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/time/index.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/rfr2/kernel/index.js
+      to: intelligence/rfr2/identity/index.js
+      kind: requires
+    - from: intelligence/rfr2/kernel/index.js
+      to: intelligence/rfr2/time/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: intelligence/rfr2/compress/index.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: intelligence/rfr2/context/index.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: tests/modules/test-rfr2-cjs.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/rfr2/adapter/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: lib/diagnostic-report.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/rfr2-bridge.js
+      kind: requires
+    - from: intelligence/mastermind.js
+      to: lib/rfr2-bridge.js
+      kind: requires
+  crossings:
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/diagnostic-report.js
+      to: intelligence/rfr2/causality/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM2_a_failure_is_a_clip
+    upstream: []
+    downstream:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM2_a_failure_is_a_clip
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM3_run_it_in_cos
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM4_the_report
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM2_a_failure_is_a_clip
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): FM2_a_failure_is_a_clip · all downstream 3 · finishing it unlocks
+        FM2_a_failure_is_a_clip
+    edges: []

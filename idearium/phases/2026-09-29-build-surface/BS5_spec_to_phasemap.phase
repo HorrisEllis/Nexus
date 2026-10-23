@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
+context: pipeline phase BS5_spec_to_phasemap of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS5_spec_to_phasemap (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676198
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676198
+lastSeenAt: 1792787676198
+fingerprint: null
+payload:
+  id: BS5_spec_to_phasemap
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/spec-plan.js
+    - tests/modules/test-build-surface.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3d49ffccdcc03a7d

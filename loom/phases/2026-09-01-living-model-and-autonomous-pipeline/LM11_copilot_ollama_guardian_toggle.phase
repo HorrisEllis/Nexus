@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM11_copilot_ollama_guardian_toggle
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM11_copilot_ollama_guardian_toggle
+context: >-
+  pipeline phase LM11_copilot_ollama_guardian_toggle of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM11_copilot_ollama_guardian_toggle (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675546
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675546
+lastSeenAt: 1792787675546
+fingerprint: null
+payload:
+  id: LM11_copilot_ollama_guardian_toggle
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - LM9_deterministic_agent_switch_cli
+  blocks: []
+  spec: null
+  graph: 209243b79f19c6f8

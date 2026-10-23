@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IC4_idearium_system_template_update:9f874130772add91
+type: graph
+id: phase:IC4_idearium_system_template_update:9f874130772add91
+context: dependency graph of phase IC4_idearium_system_template_update
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675496
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675496
+lastSeenAt: 1792787675496
+fingerprint: null
+payload:
+  for: IC4_idearium_system_template_update
+  kind: phase
+  repo: null
+  hash: 9f874130772add91
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 4
+    deps:
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+    dependents: []
+    upstream:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+      - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+      - docs/raid-routing-fidelity-phasemap.spec::RR2_contract_based_chunking
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+    downstream: []
+    blockedBy:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by IC1_context_by_uuid_injection, IC2_raid_test_env_hook
+      - >-
+        depends on (3): RR4_governed_handshake_on_handoff, IC1_context_by_uuid_injection,
+        IC2_raid_test_env_hook · all upstream 5
+      - 'needed by (0): —'
+    edges:
+      - from: docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+        kind: declared
+      - from: docs/2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+        kind: declared
+      - from: docs/2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+        kind: declared

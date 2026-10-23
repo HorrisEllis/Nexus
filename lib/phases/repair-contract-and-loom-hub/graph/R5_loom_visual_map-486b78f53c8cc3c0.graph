@@ -1,0 +1,195 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R5_loom_visual_map:486b78f53c8cc3c0
+type: graph
+id: phase:R5_loom_visual_map:486b78f53c8cc3c0
+context: dependency graph of phase R5_loom_visual_map
+intent: null
+summary: 21 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678338
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678338
+lastSeenAt: 1792787678338
+fingerprint: null
+payload:
+  for: R5_loom_visual_map
+  kind: phase
+  repo: null
+  hash: 486b78f53c8cc3c0
+  nodes:
+    - path: emergence/components/idea-store/index.js
+      role: changes
+      exists: true
+      system: emergence
+    - path: hooks/architect.hooks.js
+      role: changes
+      exists: true
+      system: hooks
+    - path: lib/consumer-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/drawbridge-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/ui/index.html
+      role: changes
+      exists: true
+      system: loom
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: emergence/components/idea-store/test/idea-store.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emergence/loop.js
+      role: used-by
+      exists: true
+      system: emergence
+    - path: emergence/schemas/test/schemas.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: hooks/index.js
+      role: used-by
+      exists: true
+      system: hooks
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-bus-subscriptions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-consumer-registry.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emergence/vendor/jaa/FileRefs.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: emergence/vendor/jaa/FileStore.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: lib/bus-subscriptions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/capability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: warp/index.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: emergence/components/idea-store/index.js
+      to: warp/index.js
+      kind: requires
+    - from: emergence/components/idea-store/index.js
+      to: emergence/vendor/jaa/FileStore.js
+      kind: requires
+    - from: emergence/components/idea-store/index.js
+      to: emergence/vendor/jaa/FileRefs.js
+      kind: requires
+    - from: lib/consumer-registry.js
+      to: lib/bus-subscriptions.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/shadow.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/architect.hooks.js
+      kind: requires
+    - from: emergence/components/idea-store/test/idea-store.test.js
+      to: emergence/components/idea-store/index.js
+      kind: requires
+    - from: emergence/loop.js
+      to: emergence/components/idea-store/index.js
+      kind: requires
+    - from: emergence/schemas/test/schemas.test.js
+      to: emergence/components/idea-store/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/consumer-registry.js
+      kind: requires
+    - from: tests/modules/test-bus-subscriptions.js
+      to: lib/consumer-registry.js
+      kind: requires
+    - from: tests/modules/test-consumer-registry.js
+      to: lib/consumer-registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/drawbridge-registry.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: lib/drawbridge-registry.js
+      kind: requires
+  crossings:
+    - from: emergence/components/idea-store/index.js
+      to: warp/index.js
+      fromSystem: emergence
+      toSystem: warp
+      kind: system
+      known: true
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+    dependents:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+    upstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+    downstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+    blockedBy: []
+    unlocks:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): R4_loom_ledger_awareness · all upstream 2'
+      - >-
+        needed by (2): R6_living_documentation, R10_relational_context_and_reuse · finishing it
+        unlocks R6_living_documentation
+    edges:
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+        kind: declared

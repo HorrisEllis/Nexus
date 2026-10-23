@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME2_caller_policy
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME2_caller_policy
+context: pipeline phase ME2_caller_policy of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME2_caller_policy (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677161
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677161
+lastSeenAt: 1792787677161
+fingerprint: null
+payload:
+  id: ME2_caller_policy
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+  depends_on:
+    - ME1_one_failure_list
+  blocks: []
+  spec: null
+  graph: 9ddb1c53e714496d

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG2_token_budget_chunking
+type: phase
+id: docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG2_token_budget_chunking
+context: >-
+  pipeline phase FG2_token_budget_chunking of
+  docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+intent: null
+summary: FG2_token_budget_chunking (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676737
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676737
+lastSeenAt: 1792787676737
+fingerprint: null
+payload:
+  id: FG2_token_budget_chunking
+  map: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/code-intel/chunker.js
+    - lib/chunk-service.js
+  depends_on:
+    - FG1_containment_tree
+  blocks: []
+  spec: null
+  graph: 869f29022b91a647

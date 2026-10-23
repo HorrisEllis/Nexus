@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-debugging-product-phasemap.spec::DBG5_rewind_from_a_case
+type: phase
+id: docs_2026-10-18-debugging-product-phasemap.spec::DBG5_rewind_from_a_case
+context: pipeline phase DBG5_rewind_from_a_case of docs/2026-10-18-debugging-product-phasemap.spec
+intent: null
+summary: DBG5_rewind_from_a_case (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677860
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677860
+lastSeenAt: 1792787677860
+fingerprint: null
+payload:
+  id: DBG5_rewind_from_a_case
+  map: docs/2026-10-18-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - DBG2_the_case
+    - TL4_rewind_to_a_gate
+  blocks: []
+  spec: null
+  graph: cfffc4ab781d68ec

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB29_the_build_flow_in_his_order
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB29_the_build_flow_in_his_order
+context: >-
+  pipeline phase SB29_the_build_flow_in_his_order of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB29_the_build_flow_in_his_order (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676896
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676896
+lastSeenAt: 1792787676896
+fingerprint: null
+payload:
+  id: SB29_the_build_flow_in_his_order
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/api/build-surface.js
+    - idearium/repo/file-state.js
+    - idearium/repo/build-plan.js
+    - lib/cos-bridge.js
+  depends_on:
+    - SB26_an_imported_project_shows_its_progress
+    - SB12_the_registry_is_the_component_list
+  blocks: []
+  spec: null
+  graph: 7a9f4dc3ffde4f9b

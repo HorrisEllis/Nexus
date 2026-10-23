@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP4_webrtc
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP4_webrtc
+context: pipeline phase NP4_webrtc of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP4_webrtc (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677479
+lastSeenAt: 1792787677479
+fingerprint: null
+payload:
+  id: NP4_webrtc
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e1c386e4367500af

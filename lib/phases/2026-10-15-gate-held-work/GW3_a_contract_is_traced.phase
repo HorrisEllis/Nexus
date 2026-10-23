@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+context: pipeline phase GW3_a_contract_is_traced of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW3_a_contract_is_traced (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677549
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677549
+lastSeenAt: 1792787677549
+fingerprint: null
+payload:
+  id: GW3_a_contract_is_traced
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "PARTLY BUILT 0.60.75 — the trace (cortex/core/raid/contract-trace.js, ?trace=1, repo contract
+    --trace, the Plan panel). Open: contract:<id>/gate:<id> on ledger rows, bus events and file
+    writes with before/after hashes"
+  files:
+    - lib/component-ledger.js
+    - cortex/core/raid/contract-gates.js
+    - lib/run-state.js
+    - guardian/lib/response-sink.js
+    - lib/repo-versions.js
+  depends_on:
+    - GW2_the_run_follows_the_gate
+  blocks: []
+  spec: null
+  graph: 7ee6767772d2310d

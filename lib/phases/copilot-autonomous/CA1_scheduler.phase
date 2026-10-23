@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-autonomous-phasemap.spec::CA1_scheduler
+type: phase
+id: docs_copilot-autonomous-phasemap.spec::CA1_scheduler
+context: pipeline phase CA1_scheduler of docs/copilot-autonomous-phasemap.spec
+intent: null
+summary: CA1_scheduler (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678141
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678141
+lastSeenAt: 1792787678141
+fingerprint: null
+payload:
+  id: CA1_scheduler
+  map: docs/copilot-autonomous-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/scheduler.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f646093248081abd

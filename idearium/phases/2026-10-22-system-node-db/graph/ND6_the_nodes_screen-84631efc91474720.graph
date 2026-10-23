@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792650734509
+exported_at: 1792787678062
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792650734509
-lastSeenAt: 1792650734509
+firstSeenAt: 1792787678062
+lastSeenAt: 1792787678062
 fingerprint: null
 payload:
   for: ND6_the_nodes_screen
@@ -31,8 +31,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 4470939bf8678599
-    layer: 6
+    layer: 14
     deps:
       - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
     dependents: []
@@ -41,6 +40,18 @@ payload:
       - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P35_copilot_reads_edits_creates_nodes
       - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
       - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P5_data_folder_completion
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB18_nodes_in_relation_to_their_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB3_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
       - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
       - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
       - docs/2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_system
@@ -58,6 +69,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 4470939bf8678599 · layer 6 · blocked by ND5_every_agent_reaches_every_system
-      - 'depends on (1): ND5_every_agent_reaches_every_system · all upstream 14'
+      - layer 14 · ON THE CRITICAL PATH · blocked by ND5_every_agent_reaches_every_system
+      - 'depends on (1): ND5_every_agent_reaches_every_system · all upstream 26'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+        kind: declared

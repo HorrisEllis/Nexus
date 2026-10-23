@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P30_provider_ping_delta
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P30_provider_ping_delta
+context: >-
+  pipeline phase P30_provider_ping_delta of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P30_provider_ping_delta (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675929
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675929
+lastSeenAt: 1792787675929
+fingerprint: null
+payload:
+  id: P30_provider_ping_delta
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+    - guardian/api-dispatch.js
+    - lib/node-schemas.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 81b879ff6f24b8b2

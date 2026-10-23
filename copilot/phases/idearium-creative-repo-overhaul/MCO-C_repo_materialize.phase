@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-creative-repo-overhaul-phasemap.spec::MCO-C_repo_materialize
+type: phase
+id: docs_idearium-creative-repo-overhaul-phasemap.spec::MCO-C_repo_materialize
+context: pipeline phase MCO-C_repo_materialize of docs/idearium-creative-repo-overhaul-phasemap.spec
+intent: null
+summary: MCO-C_repo_materialize (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678203
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678203
+lastSeenAt: 1792787678203
+fingerprint: null
+payload:
+  id: MCO-C_repo_materialize
+  map: docs/idearium-creative-repo-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '"NOT STARTED"'
+  files: []
+  depends_on:
+    - MCO-B_versionium_bridge
+  blocks: []
+  spec: null
+  graph: 39f84f1824ac58fb

@@ -1,0 +1,237 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR10_iterative_prompt_optimization_loop:cb5c36dca66dacba
+type: graph
+id: phase:SR10_iterative_prompt_optimization_loop:cb5c36dca66dacba
+context: dependency graph of phase SR10_iterative_prompt_optimization_loop
+intent: null
+summary: 25 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675724
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675724
+lastSeenAt: 1792787675724
+fingerprint: null
+payload:
+  for: SR10_iterative_prompt_optimization_loop
+  kind: phase
+  repo: null
+  hash: cb5c36dca66dacba
+  nodes:
+    - path: clear-glass/src/page/page-memory.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-session.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/introspect.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/reflection.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/reflection.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/page/blocks.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-map.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/bda/kernel.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reasoning-route.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/route-eligibility.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/reflection.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/reflection.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/reflection.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: lib/reflection.js
+      to: intelligence/bda/kernel.js
+      kind: requires
+    - from: lib/reflection.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: lib/reflection.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: clear-glass/src/page/page-session.js
+      to: clear-glass/src/page/blocks.js
+      kind: requires
+    - from: clear-glass/src/page/page-session.js
+      to: clear-glass/src/page/page-map.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/reasoning-route.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/route-eligibility.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/reflection.js
+      kind: requires
+    - from: tests/modules/reflection.test.js
+      to: lib/reflection.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/model-door.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/model-door.js
+      kind: requires
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/introspect.js
+      kind: requires
+  crossings:
+    - from: lib/reflection.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/reflection.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: lib/reflection.js
+      to: intelligence/bda/kernel.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/reflection.js
+      to: intelligence/gap/predicate.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: cli
+      toSystem: orchestrator
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - >-
+        depends on (2): SR3_artifact_extraction_introspect_bridge, B1_full_build_contract_schema ·
+        all upstream 3
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
+        kind: declared
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+        kind: declared

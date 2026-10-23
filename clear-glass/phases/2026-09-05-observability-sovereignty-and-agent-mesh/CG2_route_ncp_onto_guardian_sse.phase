@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
+context: >-
+  pipeline phase CG2_route_ncp_onto_guardian_sse of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: CG2_route_ncp_onto_guardian_sse (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675755
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675755
+lastSeenAt: 1792787675755
+fingerprint: null
+payload:
+  id: CG2_route_ncp_onto_guardian_sse
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/guardian-picker.js
+    - clear-glass/src/core/bus.js
+    - clear-glass/test/session-hub.test.js
+    - guardian/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5a0bf626fc918b86

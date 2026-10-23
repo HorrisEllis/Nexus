@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::OS8_settings_agents_holds_every_agent_option
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::OS8_settings_agents_holds_every_agent_option
+context: >-
+  pipeline phase OS8_settings_agents_holds_every_agent_option of
+  docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: OS8_settings_agents_holds_every_agent_option (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677095
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677095
+lastSeenAt: 1792787677095
+fingerprint: null
+payload:
+  id: OS8_settings_agents_holds_every_agent_option
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/agent-options.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b98ee2ed7bced97d

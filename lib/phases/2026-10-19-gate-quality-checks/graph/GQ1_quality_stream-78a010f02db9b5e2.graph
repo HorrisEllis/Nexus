@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GQ1_quality_stream:78a010f02db9b5e2
+type: graph
+id: phase:GQ1_quality_stream:78a010f02db9b5e2
+context: dependency graph of phase GQ1_quality_stream
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677879
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677879
+lastSeenAt: 1792787677879
+fingerprint: null
+payload:
+  for: GQ1_quality_stream
+  kind: phase
+  repo: null
+  hash: 78a010f02db9b5e2
+  nodes:
+    - path: lib/quality-stream.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ4_phase_gate_keeps_the_test
+    upstream: []
+    downstream:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ4_phase_gate_keeps_the_test
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ5_command
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ6_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ4_phase_gate_keeps_the_test
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (3): GQ2_brick_gate_runs_the_test, GQ3_brick_tests, GQ4_phase_gate_keeps_the_test
+        · all downstream 5 · finishing it unlocks GQ3_brick_tests, GQ4_phase_gate_keeps_the_test
+    edges: []

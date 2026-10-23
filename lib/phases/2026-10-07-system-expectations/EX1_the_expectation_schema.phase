@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-system-expectations-phasemap.spec::EX1_the_expectation_schema
+type: phase
+id: docs_2026-10-07-system-expectations-phasemap.spec::EX1_the_expectation_schema
+context: pipeline phase EX1_the_expectation_schema of docs/2026-10-07-system-expectations-phasemap.spec
+intent: null
+summary: EX1_the_expectation_schema (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677108
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677108
+lastSeenAt: 1792787677108
+fingerprint: null
+payload:
+  id: EX1_the_expectation_schema
+  map: docs/2026-10-07-system-expectations-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/node-schemas.js
+    - lib/route-contract-check.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 19589d1a025b2723

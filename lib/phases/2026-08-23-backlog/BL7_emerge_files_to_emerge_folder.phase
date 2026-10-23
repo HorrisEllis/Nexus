@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL7_emerge_files_to_emerge_folder
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL7_emerge_files_to_emerge_folder
+context: pipeline phase BL7_emerge_files_to_emerge_folder of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL7_emerge_files_to_emerge_folder (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675406
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675406
+lastSeenAt: 1792787675406
+fingerprint: null
+payload:
+  id: BL7_emerge_files_to_emerge_folder
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cli/boot-systems.js
+    - contracts/SYSTEM-CONTRACTS.js
+    - tests/kernel.test.js
+    - cli/diagnose.js
+    - emerge/emerge-ide.js
+    - ollama/ollama-runtime.js
+    - emerge/emerge-kernel.js
+    - emerge/emerge-codegen-v2.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3ab7a1f57237920a

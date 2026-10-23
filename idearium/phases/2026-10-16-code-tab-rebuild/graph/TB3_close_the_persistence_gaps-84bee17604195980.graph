@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB3_close_the_persistence_gaps:84bee17604195980
+type: graph
+id: phase:TB3_close_the_persistence_gaps:84bee17604195980
+context: dependency graph of phase TB3_close_the_persistence_gaps
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677661
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677661
+lastSeenAt: 1792787677661
+fingerprint: null
+payload:
+  for: TB3_close_the_persistence_gaps
+  kind: phase
+  repo: null
+  hash: 84bee17604195980
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+    dependents:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4_reuse_responses
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7_runs_tab
+    upstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+    downstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4_reuse_responses
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7_runs_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB8_proof_and_wiring
+    blockedBy:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+    unlocks:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4_reuse_responses
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by TB2_persistence_audit
+      - 'depends on (1): TB2_persistence_audit · all upstream 3'
+      - >-
+        needed by (2): TB4_reuse_responses, TB7_runs_tab · all downstream 3 · finishing it unlocks
+        TB4_reuse_responses
+    edges:
+      - from: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+        kind: declared

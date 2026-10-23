@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+context: pipeline phase COSA11_nested_tree of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA11_nested_tree (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677533
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677533
+lastSeenAt: 1792787677533
+fingerprint: null
+payload:
+  id: COSA11_nested_tree
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/desktop/main.js
+    - versionium/server.js
+    - cos/workspace/vm-control.js
+  depends_on:
+    - COSA9_idearium_sync
+    - COSA10_compartment_window
+  blocks: []
+  spec: null
+  graph: 38fee2523eb2eed8

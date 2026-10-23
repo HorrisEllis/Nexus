@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P26_unify_conversation_logging
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P26_unify_conversation_logging
+context: >-
+  pipeline phase P26_unify_conversation_logging of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P26_unify_conversation_logging (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675918
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675918
+lastSeenAt: 1792787675918
+fingerprint: null
+payload:
+  id: P26_unify_conversation_logging
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/ncp-handler.js
+    - guardian/api-dispatch.js
+    - clear-glass/src/page/nexus-chat.js
+    - cli/diagnose.js
+    - cos/plugin/host-api.js
+    - lib/chat-logger.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 77d4192f746b7566

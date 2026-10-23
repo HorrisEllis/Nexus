@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF4_manifest_meta_sidecar
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF4_manifest_meta_sidecar
+context: >-
+  pipeline phase PF4_manifest_meta_sidecar of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PF4_manifest_meta_sidecar (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676367
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676367
+lastSeenAt: 1792787676367
+fingerprint: null
+payload:
+  id: PF4_manifest_meta_sidecar
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 406969092594bed8

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-agent-work-funnel-phasemap.spec::FN1_every_door_goes_through_it
+type: phase
+id: docs_2026-10-16-agent-work-funnel-phasemap.spec::FN1_every_door_goes_through_it
+context: pipeline phase FN1_every_door_goes_through_it of docs/2026-10-16-agent-work-funnel-phasemap.spec
+intent: null
+summary: FN1_every_door_goes_through_it (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677644
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677644
+lastSeenAt: 1792787677644
+fingerprint: null
+payload:
+  id: FN1_every_door_goes_through_it
+  map: docs/2026-10-16-agent-work-funnel-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "PARTLY BUILT 0.60.95 — the Code tab's range edit (repo.code.assist) runs the funnel first; the
+    Agent tab, copilot, the officiator and phase builds remain"
+  files:
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - copilot/server.js
+    - cortex/core/raid/officiator.js
+    - lib/build-paths.js
+  depends_on:
+    - FN0_the_funnel_as_data
+  blocks: []
+  spec: null
+  graph: 1841c94aa41f3eef

@@ -1,0 +1,196 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PI3_the_intelligence_pass:081c0303b5cee64e
+type: graph
+id: phase:PI3_the_intelligence_pass:081c0303b5cee64e
+context: dependency graph of phase PI3_the_intelligence_pass
+intent: null
+summary: 20 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677617
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677617
+lastSeenAt: 1792787677617
+fingerprint: null
+payload:
+  for: PI3_the_intelligence_pass
+  kind: phase
+  repo: null
+  hash: 081c0303b5cee64e
+  nodes:
+    - path: copilot/lib/person-model/index.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: intelligence/routes.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/chat-import/extract.js
+      role: changes
+      exists: false
+      system: lib
+    - path: copilot/routes/person-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: tests/modules/intuition-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/person-model/lattice.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/anomaly.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/lib/person-model/index.js
+      to: copilot/lib/person-model/lattice.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/intuition.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/gap/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/anomaly.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: copilot/routes/person-model.js
+      to: copilot/lib/person-model/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/intuition-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/mastermind-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/routes.js
+      kind: requires
+  crossings:
+    - from: copilot/lib/person-model/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI0b_what_a_chat_may_become
+    dependents:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI4_the_review_screen
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
+    upstream:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI0_where_it_is_read
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI0b_what_a_chat_may_become
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+    downstream:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI4_the_review_screen
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI7_the_links
+    blockedBy:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI0b_what_a_chat_may_become
+    unlocks:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI4_the_review_screen
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by PI1_the_importer, PI0b_what_a_chat_may_become
+      - 'depends on (2): PI1_the_importer, PI0b_what_a_chat_may_become · all upstream 3'
+      - >-
+        needed by (2): PI4_the_review_screen, PI3b_the_measured_patterns · all downstream 3 ·
+        finishing it unlocks PI4_the_review_screen, PI3b_the_measured_patterns
+    edges:
+      - from: docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+        kind: declared
+      - from: docs/2026-10-15-personal-chat-import-phasemap.spec::PI0b_what_a_chat_may_become
+        kind: declared

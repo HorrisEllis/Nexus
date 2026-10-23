@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+context: pipeline phase ME3_one_engine_one_budget of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME3_one_engine_one_budget (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677162
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677162
+lastSeenAt: 1792787677162
+fingerprint: null
+payload:
+  id: ME3_one_engine_one_budget
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/index.js
+    - lib/pipeline-routing.js
+    - lib/model-door.js
+    - copilot/server.js
+  depends_on:
+    - ME2_caller_policy
+  blocks: []
+  spec: null
+  graph: 82b28a68e6a7adbb

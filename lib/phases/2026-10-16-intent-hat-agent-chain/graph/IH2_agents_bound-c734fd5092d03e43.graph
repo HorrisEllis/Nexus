@@ -1,0 +1,109 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IH2_agents_bound:c734fd5092d03e43
+type: graph
+id: phase:IH2_agents_bound:c734fd5092d03e43
+context: dependency graph of phase IH2_agents_bound
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677712
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677712
+lastSeenAt: 1792787677712
+fingerprint: null
+payload:
+  for: IH2_agents_bound
+  kind: phase
+  repo: null
+  hash: c734fd5092d03e43
+  nodes:
+    - path: lib/intent-chain.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/repo-hat.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-hat.smoke.cjs
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-prompt-blocks.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-hat.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-hat.smoke.cjs
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-prompt-blocks.js
+      to: lib/repo-hat.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+    dependents: []
+    upstream:
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+    downstream: []
+    blockedBy:
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by IH1_intent_nodes_point_at_hats
+      - 'depends on (1): IH1_intent_nodes_point_at_hats · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+        kind: declared

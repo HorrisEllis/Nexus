@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BO1_brainos_reads_the_log:8567a373d208f9e7
+type: graph
+id: phase:BO1_brainos_reads_the_log:8567a373d208f9e7
+context: dependency graph of phase BO1_brainos_reads_the_log
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677069
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677069
+lastSeenAt: 1792787677069
+fingerprint: null
+payload:
+  for: BO1_brainos_reads_the_log
+  kind: phase
+  repo: null
+  hash: 8567a373d208f9e7
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
+    dependents: []
+    upstream:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CC1_claude_code_lands_like_every_agent
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): AL1_activity_log · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
+        kind: declared

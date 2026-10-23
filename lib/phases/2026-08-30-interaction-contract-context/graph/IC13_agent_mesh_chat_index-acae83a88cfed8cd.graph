@@ -1,0 +1,191 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IC13_agent_mesh_chat_index:acae83a88cfed8cd
+type: graph
+id: phase:IC13_agent_mesh_chat_index:acae83a88cfed8cd
+context: dependency graph of phase IC13_agent_mesh_chat_index
+intent: null
+summary: 22 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675508
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675508
+lastSeenAt: 1792787675508
+fingerprint: null
+payload:
+  for: IC13_agent_mesh_chat_index
+  kind: phase
+  repo: null
+  hash: acae83a88cfed8cd
+  nodes:
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/download-capture.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/agent-tools/tools/execution/move-data.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/query-recall.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/host.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/context-synthesis.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/ambiguity-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/agent-mesh-drainer.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/agent-mesh-hostile.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/dom-transport.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/route-graph.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/network/install.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/providers/download-capture.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/automation-engine.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/network/install.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/query/query-recall.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/query/query-recall.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: lib/agent-tools/tools/query/query-recall.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/providers/download-capture.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-drainer.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-hostile.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC11_agent_truth_fragmentation
+    dependents: []
+    upstream:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC11_agent_truth_fragmentation
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): IC11_agent_truth_fragmentation'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-08-30-interaction-contract-context-phasemap.spec::IC11_agent_truth_fragmentation
+        kind: declared

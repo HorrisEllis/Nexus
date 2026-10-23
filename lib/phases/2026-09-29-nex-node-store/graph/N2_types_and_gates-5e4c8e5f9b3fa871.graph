@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N2_types_and_gates:5e4c8e5f9b3fa871
+type: graph
+id: phase:N2_types_and_gates:5e4c8e5f9b3fa871
+context: dependency graph of phase N2_types_and_gates
+intent: null
+summary: 2 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676236
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676236
+lastSeenAt: 1792787676236
+fingerprint: null
+payload:
+  for: N2_types_and_gates
+  kind: phase
+  repo: null
+  hash: 5e4c8e5f9b3fa871
+  nodes:
+    - path: lib/nexstore/types.js
+      role: changes
+      exists: true
+      system: lib
+    - path: warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: lib/nexstore/types.js
+      to: warp/core/Axiom.js
+      kind: requires
+  crossings:
+    - from: lib/nexstore/types.js
+      to: warp/core/Axiom.js
+      fromSystem: lib
+      toSystem: warp
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
+    dependents: []
+    upstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): N0_census'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
+        kind: declared

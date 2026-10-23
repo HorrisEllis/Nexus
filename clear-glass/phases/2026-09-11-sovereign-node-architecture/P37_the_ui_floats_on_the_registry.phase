@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P37_the_ui_floats_on_the_registry
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P37_the_ui_floats_on_the_registry
+context: >-
+  pipeline phase P37_the_ui_floats_on_the_registry of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P37_the_ui_floats_on_the_registry (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675937
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675937
+lastSeenAt: 1792787675937
+fingerprint: null
+payload:
+  id: P37_the_ui_floats_on_the_registry
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P8_per_system_component_registry
+    - P36_an_event_ledger_per_registry
+  blocks: []
+  spec: null
+  graph: c73e397fa682657f

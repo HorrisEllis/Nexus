@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-repository-overhaul-phasemap.spec::MCO-A_schemas
+type: phase
+id: docs_idearium-repository-overhaul-phasemap.spec::MCO-A_schemas
+context: pipeline phase MCO-A_schemas of docs/idearium-repository-overhaul-phasemap.spec
+intent: null
+summary: MCO-A_schemas (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678215
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678215
+lastSeenAt: 1792787678215
+fingerprint: null
+payload:
+  id: MCO-A_schemas
+  map: docs/idearium-repository-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 2026-09-15."'
+  files:
+    - tests/modules/test-mco-a-file-delta-schema.js
+    - idearium/test/test-mco-a-phase-node-schema.js
+    - versionium/lib/store.js
+    - idearium/lib/db.js
+    - cortex/memory/jaa-db.js
+    - docs/2026-09-15-versionium-cortex-snapshot-migration-decision.md
+    - architect/schemas/index.js
+    - clear-glass/renderer/settings/sections/mesh.js
+    - clear-glass/renderer/shell/agents.js
+  depends_on:
+    - MCO0_audit_real_coverage
+  blocks: []
+  spec: null
+  graph: 912297af517ed265

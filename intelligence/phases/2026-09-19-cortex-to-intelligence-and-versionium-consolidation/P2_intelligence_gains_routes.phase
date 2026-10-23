@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
+context: >-
+  pipeline phase P2_intelligence_gains_routes of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: P2_intelligence_gains_routes (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675964
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675964
+lastSeenAt: 1792787675964
+fingerprint: null
+payload:
+  id: P2_intelligence_gains_routes
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/server.js
+  depends_on:
+    - P1_characterization
+    - D1
+    - D4_names
+  blocks: []
+  spec: null
+  graph: 2f2eff88a31edf66

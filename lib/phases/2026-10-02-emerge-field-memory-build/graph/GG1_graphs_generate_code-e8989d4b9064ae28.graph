@@ -1,0 +1,202 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GG1_graphs_generate_code:e8989d4b9064ae28
+type: graph
+id: phase:GG1_graphs_generate_code:e8989d4b9064ae28
+context: dependency graph of phase GG1_graphs_generate_code
+intent: null
+summary: 20 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676729
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676729
+lastSeenAt: 1792787676729
+fingerprint: null
+payload:
+  for: GG1_graphs_generate_code
+  kind: phase
+  repo: null
+  hash: e8989d4b9064ae28
+  nodes:
+    - path: emerge/compiler/emit.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/compiler/index.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: idearium/lib/wiring-gen.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/repo/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: emerge/compiler/pipeline.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/test/gap-field.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/test/invariants.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/test/reply-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/verify.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/compiler-bridge.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/scan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/spec-collect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: emerge/compiler/tier-contract.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/cortex-query/index.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/cortex-query/writeback.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/version.js
+      role: uses
+      exists: true
+      system: emerge
+  edges:
+    - from: emerge/compiler/index.js
+      to: emerge/cortex-query/index.js
+      kind: requires
+    - from: emerge/compiler/index.js
+      to: emerge/cortex-query/writeback.js
+      kind: requires
+    - from: emerge/compiler/index.js
+      to: emerge/version.js
+      kind: requires
+    - from: emerge/compiler/emit.js
+      to: emerge/compiler/tier-contract.js
+      kind: requires
+    - from: emerge/verify.js
+      to: emerge/compiler/index.js
+      kind: requires
+    - from: idearium/compiler-bridge.js
+      to: emerge/compiler/index.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: emerge/compiler/index.js
+      kind: requires
+    - from: emerge/compiler/pipeline.js
+      to: emerge/compiler/emit.js
+      kind: requires
+    - from: emerge/test/gap-field.test.js
+      to: emerge/compiler/emit.js
+      kind: requires
+    - from: emerge/test/invariants.test.js
+      to: emerge/compiler/emit.js
+      kind: requires
+    - from: emerge/test/reply-engine.test.js
+      to: emerge/compiler/emit.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/scan.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/verify-lazy.js
+      to: idearium/repo/graph.js
+      kind: requires
+  crossings:
+    - from: idearium/compiler-bridge.js
+      to: emerge/compiler/index.js
+      fromSystem: idearium
+      toSystem: emerge
+      kind: system
+      known: true
+    - from: lib/spec-collect.js
+      to: emerge/compiler/index.js
+      fromSystem: lib
+      toSystem: emerge
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        files:
+          - idearium/repo/graph.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+        files:
+          - emerge/compiler/index.js
+          - emerge/compiler/emit.js
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (2): PH1_phase_runs_end_in_proof, EV0_contracts_for_every_system · all upstream 4'
+      - 'needed by (1): CL1_the_component_lab'
+      - 'same files as RF1_relational_field with no order between them: idearium/repo/graph.js'
+      - >-
+        same files as CB3_the_causal_spec_block with no order between them:
+        emerge/compiler/index.js, emerge/compiler/emit.js
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        kind: declared

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P6_per_system_contract_schemas
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P6_per_system_contract_schemas
+context: >-
+  pipeline phase P6_per_system_contract_schemas of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P6_per_system_contract_schemas (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675881
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675881
+lastSeenAt: 1792787675881
+fingerprint: null
+payload:
+  id: P6_per_system_contract_schemas
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 238173594117490a

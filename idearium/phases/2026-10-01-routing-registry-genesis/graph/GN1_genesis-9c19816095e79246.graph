@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GN1_genesis:9c19816095e79246
+type: graph
+id: phase:GN1_genesis:9c19816095e79246
+context: dependency graph of phase GN1_genesis
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676545
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676545
+lastSeenAt: 1792787676545
+fingerprint: null
+payload:
+  for: GN1_genesis
+  kind: phase
+  repo: null
+  hash: 9c19816095e79246
+  nodes:
+    - path: idearium/spec-engine/templates.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/templates/genesis.spec
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/spec-engine/templates.js
+      to: lib/agent-tools/tools/sandbox/cos-compartment.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/templates.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/spec-engine/templates.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC2_registry_as_nodes
+    dependents:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::AR1_architecture_spec
+    upstream:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC1_registry_block
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC2_registry_as_nodes
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG0_map
+    downstream:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::AR1_architecture_spec
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG9_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::AR1_architecture_spec
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): RC2_registry_as_nodes · all upstream 3'
+      - >-
+        needed by (1): AR1_architecture_spec · all downstream 2 · finishing it unlocks
+        AR1_architecture_spec
+    edges:
+      - from: docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC2_registry_as_nodes
+        kind: declared

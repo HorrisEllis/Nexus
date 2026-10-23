@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-personal-chat-import-phasemap.spec::PI6_the_firefox_script
+type: phase
+id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI6_the_firefox_script
+context: pipeline phase PI6_the_firefox_script of docs/2026-10-15-personal-chat-import-phasemap.spec
+intent: null
+summary: PI6_the_firefox_script (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677619
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677619
+lastSeenAt: 1792787677619
+fingerprint: null
+payload:
+  id: PI6_the_firefox_script
+  map: docs/2026-10-15-personal-chat-import-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - PI2_the_listener
+  blocks: []
+  spec: null
+  graph: bf5f6880f62879e2

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-google-signin-phasemap.spec::GS1_present_as_firefox_on_google_signin
+type: phase
+id: docs_2026-10-16-google-signin-phasemap.spec::GS1_present_as_firefox_on_google_signin
+context: >-
+  pipeline phase GS1_present_as_firefox_on_google_signin of
+  docs/2026-10-16-google-signin-phasemap.spec
+intent: null
+summary: GS1_present_as_firefox_on_google_signin (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677702
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677702
+lastSeenAt: 1792787677702
+fingerprint: null
+payload:
+  id: GS1_present_as_firefox_on_google_signin
+  map: docs/2026-10-16-google-signin-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.106
+  files:
+    - clear-glass/src/contexts/google-signin.js
+    - clear-glass/src/main/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0c6919648171727e

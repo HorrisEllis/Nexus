@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P14_emergence_axioms_endstate
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P14_emergence_axioms_endstate
+context: pipeline phase P14_emergence_axioms_endstate of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P14_emergence_axioms_endstate (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678249
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678249
+lastSeenAt: 1792787678249
+fingerprint: null
+payload:
+  id: P14_emergence_axioms_endstate
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/emergence.js
+    - copilot/tool-runtime.js
+    - lib/end-state.js
+    - lib/agent-tools/tools/execution/safe-apply.js
+    - lib/safe-apply.js
+    - lib/agent-tools/tools/query/fault-log.js
+    - lib/fault-log.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7c968ba80520bc34

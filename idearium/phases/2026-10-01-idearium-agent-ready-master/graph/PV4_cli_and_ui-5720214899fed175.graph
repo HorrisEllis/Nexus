@@ -1,0 +1,130 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PV4_cli_and_ui:5720214899fed175
+type: graph
+id: phase:PV4_cli_and_ui:5720214899fed175
+context: dependency graph of phase PV4_cli_and_ui
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676509
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676509
+lastSeenAt: 1792787676509
+fingerprint: null
+payload:
+  for: PV4_cli_and_ui
+  kind: phase
+  repo: null
+  hash: 5720214899fed175
+  nodes:
+    - path: idearium/cli/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/cli/store-chatter.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/core/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/spec-library-import.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/manifest/commands.js
+      role: uses
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/cli/index.js
+      to: idearium/cli/store-chatter.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/core/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/spec-engine/manifest/commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/lib/spec-library-import.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::GL1_gate_verify_fix_loop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV1_verify
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 8
+      - 'depends on (1): PV3_prove_loop · all upstream 8'
+      - 'needed by (1): CP1_copilot_drives_idearium_and_talks_to_its_agents'
+    edges:
+      - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+        kind: declared

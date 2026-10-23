@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P8_hat_forge_command
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P8_hat_forge_command
+context: pipeline phase P8_hat_forge_command of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P8_hat_forge_command (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678242
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678242
+lastSeenAt: 1792787678242
+fingerprint: null
+payload:
+  id: P8_hat_forge_command
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/tool-forge.js
+    - lib/hat-forge.js
+    - lib/scheduler.js
+    - lib/gap-field.js
+    - copilot/adversarial.js
+    - lib/agent-tools/index.js
+    - copilot/lifeline.js
+    - lib/agent-tools/tools/identity/hat-forge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: dfd13349bbd7e4e9

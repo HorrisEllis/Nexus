@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::PC6_assembled_and_checked_whole
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::PC6_assembled_and_checked_whole
+context: pipeline phase PC6_assembled_and_checked_whole of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: PC6_assembled_and_checked_whole (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677802
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677802
+lastSeenAt: 1792787677802
+fingerprint: null
+payload:
+  id: PC6_assembled_and_checked_whole
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-gates.js
+  depends_on:
+    - PC2_any_order
+    - PC3_verified_alone_resumed_by_recheck
+  blocks: []
+  spec: null
+  graph: 02773cb04a5358ed

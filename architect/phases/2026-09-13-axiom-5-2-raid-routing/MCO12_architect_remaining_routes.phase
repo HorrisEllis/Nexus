@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO12_architect_remaining_routes
+type: phase
+id: docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO12_architect_remaining_routes
+context: >-
+  pipeline phase MCO12_architect_remaining_routes of
+  docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+intent: null
+summary: MCO12_architect_remaining_routes (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675941
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675941
+lastSeenAt: 1792787675941
+fingerprint: null
+payload:
+  id: MCO12_architect_remaining_routes
+  map: docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 2026-09-13. All 5 architect candidates MCO7 named checked'
+  files:
+    - architect/service.js
+  depends_on:
+    - MCO8_wire_the_honest_subset
+  blocks: []
+  spec: null
+  graph: 3f4e0875f3387d46

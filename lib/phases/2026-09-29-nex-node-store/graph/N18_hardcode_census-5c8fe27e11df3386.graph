@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N18_hardcode_census:5c8fe27e11df3386
+type: graph
+id: phase:N18_hardcode_census:5c8fe27e11df3386
+context: dependency graph of phase N18_hardcode_census
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676274
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676274
+lastSeenAt: 1792787676274
+fingerprint: null
+payload:
+  for: N18_hardcode_census
+  kind: phase
+  repo: null
+  hash: 5c8fe27e11df3386
+  nodes:
+    - path: lib/nexstore/census.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexstore/writers.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexstore/census.js
+      to: lib/nexstore/writers.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
+    dependents:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N24_no_json_yaml_node_types_only
+    upstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
+    downstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N24_no_json_yaml_node_types_only
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): N0_census'
+      - 'needed by (1): N24_no_json_yaml_node_types_only'
+    edges:
+      - from: docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
+        kind: declared

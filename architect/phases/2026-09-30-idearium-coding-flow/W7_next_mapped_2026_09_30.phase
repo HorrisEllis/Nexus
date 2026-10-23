@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-30-idearium-coding-flow-phasemap.spec::W7_next_mapped_2026_09_30
+type: phase
+id: docs_2026-09-30-idearium-coding-flow-phasemap.spec::W7_next_mapped_2026_09_30
+context: pipeline phase W7_next_mapped_2026_09_30 of docs/2026-09-30-idearium-coding-flow-phasemap.spec
+intent: null
+summary: W7_next_mapped_2026_09_30 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676336
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676336
+lastSeenAt: 1792787676336
+fingerprint: null
+payload:
+  id: W7_next_mapped_2026_09_30
+  map: docs/2026-09-30-idearium-coding-flow-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - architect/src/ui/spec-builder.html
+    - idearium/ui/js/app.js
+    - lib/component-registry.js
+  depends_on:
+    - W5_theme_and_css
+  blocks: []
+  spec: null
+  graph: 79c974c5ac8dc850

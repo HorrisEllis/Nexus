@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT0_the_contract_is_a_reference
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT0_the_contract_is_a_reference
+context: >-
+  pipeline phase CT0_the_contract_is_a_reference of
+  docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: CT0_the_contract_is_a_reference (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677418
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677418
+lastSeenAt: 1792787677418
+fingerprint: null
+payload:
+  id: CT0_the_contract_is_a_reference
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-gates.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-contract-gates.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 78068c3fef97cff2

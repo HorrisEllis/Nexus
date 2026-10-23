@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RC6_unowned_ollama_load:67b8e7d0ffd6cf9d
+type: graph
+id: phase:RC6_unowned_ollama_load:67b8e7d0ffd6cf9d
+context: dependency graph of phase RC6_unowned_ollama_load
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677935
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677935
+lastSeenAt: 1792787677935
+fingerprint: null
+payload:
+  for: RC6_unowned_ollama_load
+  kind: phase
+  repo: null
+  hash: 67b8e7d0ffd6cf9d
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC7_every_run_names_its_starter
+    upstream: []
+    downstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC7_every_run_names_its_starter
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV3_changelog_read
+      - docs/2026-10-21-approval-chain-phasemap.spec::APV4_emit_on_the_ledger
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC7_every_run_names_its_starter
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): RC7_every_run_names_its_starter · all downstream 4 · finishing it unlocks
+        RC7_every_run_names_its_starter
+    edges: []

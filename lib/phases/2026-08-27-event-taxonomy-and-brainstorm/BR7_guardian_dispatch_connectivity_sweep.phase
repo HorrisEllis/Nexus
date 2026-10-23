@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR7_guardian_dispatch_connectivity_sweep
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR7_guardian_dispatch_connectivity_sweep
+context: >-
+  pipeline phase BR7_guardian_dispatch_connectivity_sweep of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: BR7_guardian_dispatch_connectivity_sweep (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675463
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675463
+lastSeenAt: 1792787675463
+fingerprint: null
+payload:
+  id: BR7_guardian_dispatch_connectivity_sweep
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-chat.js
+    - copilot/lifeline.js
+    - lib/agent-system/contracts.js
+    - lib/gemini-toolbox/agent-contracts.js
+    - lib/agent-tools/tools/coordination/agent-chat.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e8d5cbb04e0fb190

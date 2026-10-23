@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-reject-learn-retry-phasemap.spec::RL4_the_lessons_on_the_door
+type: phase
+id: docs_2026-10-16-reject-learn-retry-phasemap.spec::RL4_the_lessons_on_the_door
+context: pipeline phase RL4_the_lessons_on_the_door of docs/2026-10-16-reject-learn-retry-phasemap.spec
+intent: null
+summary: RL4_the_lessons_on_the_door (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677737
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677737
+lastSeenAt: 1792787677737
+fingerprint: null
+payload:
+  id: RL4_the_lessons_on_the_door
+  map: docs/2026-10-16-reject-learn-retry-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.105
+  files:
+    - idearium/cli/route-commands.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: bbafadd375cd2657

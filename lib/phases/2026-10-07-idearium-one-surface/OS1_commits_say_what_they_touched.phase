@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::OS1_commits_say_what_they_touched
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::OS1_commits_say_what_they_touched
+context: >-
+  pipeline phase OS1_commits_say_what_they_touched of
+  docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: OS1_commits_say_what_they_touched (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677088
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677088
+lastSeenAt: 1792787677088
+fingerprint: null
+payload:
+  id: OS1_commits_say_what_they_touched
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cd4a72feed007e70

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS3_agent_chat_log_query
+type: phase
+id: docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS3_agent_chat_log_query
+context: >-
+  pipeline phase VS3_agent_chat_log_query of
+  docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+intent: null
+summary: VS3_agent_chat_log_query (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675735
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675735
+lastSeenAt: 1792787675735
+fingerprint: null
+payload:
+  id: VS3_agent_chat_log_query
+  map: docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chat-index.js
+  depends_on:
+    - VS1_sovereign_folder_and_foundation
+  blocks: []
+  spec: null
+  graph: c1653dec5e1a00a7

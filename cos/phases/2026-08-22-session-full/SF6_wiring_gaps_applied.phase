@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF6_wiring_gaps_applied
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF6_wiring_gaps_applied
+context: pipeline phase SF6_wiring_gaps_applied of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF6_wiring_gaps_applied (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675356
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675356
+lastSeenAt: 1792787675356
+fingerprint: null
+payload:
+  id: SF6_wiring_gaps_applied
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/test.js
+    - loom/scanners/source-map.js
+  depends_on:
+    - SF5_wiring_gap_bridge
+  blocks: []
+  spec: null
+  graph: 2514d77da46a8488

@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GQ6_ui:60394e9276084fea
+type: graph
+id: phase:GQ6_ui:60394e9276084fea
+context: dependency graph of phase GQ6_ui
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677882
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677882
+lastSeenAt: 1792787677882
+fingerprint: null
+payload:
+  for: GQ6_ui
+  kind: phase
+  repo: null
+  hash: 60394e9276084fea
+  nodes:
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ5_command
+    dependents: []
+    upstream:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ1_quality_stream
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ4_phase_gate_keeps_the_test
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ5_command
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ5_command
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by GQ5_command
+      - 'depends on (1): GQ5_command · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ5_command
+        kind: declared

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::SY2_cos_its_own_system
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::SY2_cos_its_own_system
+context: pipeline phase SY2_cos_its_own_system of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: SY2_cos_its_own_system (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676992
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676992
+lastSeenAt: 1792787676992
+fingerprint: null
+payload:
+  id: SY2_cos_its_own_system
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-self/systems.js
+    - tests/modules/test-loom-phasemap.js
+    - docs/2026-10-05-cos-machines-phasemap.spec
+  depends_on:
+    - SY1_fifteen_systems
+  blocks: []
+  spec: null
+  graph: 5140e15f0bab147d

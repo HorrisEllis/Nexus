@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP3_wire_contract_intake_through_routing_ir
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP3_wire_contract_intake_through_routing_ir
+context: >-
+  pipeline phase SBP3_wire_contract_intake_through_routing_ir of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP3_wire_contract_intake_through_routing_ir (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675485
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675485
+lastSeenAt: 1792787675485
+fingerprint: null
+payload:
+  id: SBP3_wire_contract_intake_through_routing_ir
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/routing-ir.js
+    - cortex/core/raid/contract-intake.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cd59baa39d390724

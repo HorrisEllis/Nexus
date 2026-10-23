@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456416773
+exported_at: 1792787677992
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416773
-lastSeenAt: 1792456416773
+firstSeenAt: 1792787677992
+lastSeenAt: 1792787677992
 fingerprint: null
 payload:
   for: GW1_gate_primitive
@@ -27,7 +27,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 4
     deps:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
@@ -68,10 +67,15 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - >-
-        DAG 7583ffef0c495b95 · layer 4 · ON THE CRITICAL PATH · blocked by GW0_gate_census,
-        GR1_graph_primitive, GQ1_quality_stream
+      - layer 4 · blocked by GW0_gate_census, GR1_graph_primitive, GQ1_quality_stream
       - 'depends on (3): GW0_gate_census, GR1_graph_primitive, GQ1_quality_stream · all upstream 9'
       - >-
         needed by (3): EW1_evidence_record_and_weights, AV1_adversarial_review,
         GW2_gates_at_every_level · all downstream 12
+    edges:
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
+        kind: declared
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+        kind: declared
+      - from: docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+        kind: declared

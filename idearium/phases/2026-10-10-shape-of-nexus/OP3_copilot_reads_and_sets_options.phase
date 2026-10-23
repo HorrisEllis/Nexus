@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::OP3_copilot_reads_and_sets_options
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::OP3_copilot_reads_and_sets_options
+context: pipeline phase OP3_copilot_reads_and_sets_options of docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: OP3_copilot_reads_and_sets_options (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677264
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677264
+lastSeenAt: 1792787677264
+fingerprint: null
+payload:
+  id: OP3_copilot_reads_and_sets_options
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+  depends_on:
+    - OP2_the_system_settings_in_its_repo
+  blocks: []
+  spec: null
+  graph: 32a68d26ad74f22e

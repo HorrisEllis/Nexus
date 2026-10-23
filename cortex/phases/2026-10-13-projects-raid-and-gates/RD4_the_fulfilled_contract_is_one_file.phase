@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD4_the_fulfilled_contract_is_one_file
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD4_the_fulfilled_contract_is_one_file
+context: >-
+  pipeline phase RD4_the_fulfilled_contract_is_one_file of
+  docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: RD4_the_fulfilled_contract_is_one_file (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677449
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677449
+lastSeenAt: 1792787677449
+fingerprint: null
+payload:
+  id: RD4_the_fulfilled_contract_is_one_file
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+    - lib/node-export.js
+  depends_on:
+    - RD2_idearium_routes_through_raid
+  blocks: []
+  spec: null
+  graph: 757df4a3809c380a

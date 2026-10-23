@@ -1,0 +1,140 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CN2_tool_archetypes:9e4df65ef5b2a643
+type: graph
+id: phase:CN2_tool_archetypes:9e4df65ef5b2a643
+context: dependency graph of phase CN2_tool_archetypes
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677650
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677650
+lastSeenAt: 1792787677650
+fingerprint: null
+payload:
+  for: CN2_tool_archetypes
+  kind: phase
+  repo: null
+  hash: 9e4df65ef5b2a643
+  nodes:
+    - path: cos/archetype/eravos-tool.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/archetype/registry.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/file-tree-plan.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cos/archetype/detector.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/blueprint/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/blueprint/registry.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/blueprint.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/canvas-compartments.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-expand.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/archetype/eravos.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/archetype/schema.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/archetype/registry.js
+      to: cos/archetype/schema.js
+      kind: requires
+    - from: cos/archetype/registry.js
+      to: cos/archetype/nexus-system.js
+      kind: requires
+    - from: cos/archetype/registry.js
+      to: cos/archetype/eravos.js
+      kind: requires
+    - from: cos/archetype/detector.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/archetype/index.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/blueprint/index.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/blueprint/registry.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/cli/commands/blueprint.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/file-tree-plan.js
+      kind: requires
+    - from: lib/canvas-compartments.js
+      to: lib/file-tree-plan.js
+      kind: requires
+    - from: lib/repo-expand.js
+      to: lib/file-tree-plan.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/file-tree-plan.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-16-canvas-compartments-phasemap.spec::CN1_canvas_archetype
+    dependents: []
+    upstream:
+      - docs/2026-10-16-canvas-compartments-phasemap.spec::CN1_canvas_archetype
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): CN1_canvas_archetype'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-16-canvas-compartments-phasemap.spec::CN1_canvas_archetype
+        kind: inferred

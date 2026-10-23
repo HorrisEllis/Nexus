@@ -6,14 +6,14 @@ context: >-
   pipeline phase GW1_gate_primitive of
   docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
 intent: null
-summary: GW1_gate_primitive (foundation) — 2 file(s)
+summary: GW1_gate_primitive (foundation) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792456416773
+exported_at: 1792787677992
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416773
-lastSeenAt: 1792456416773
+firstSeenAt: 1792787677992
+lastSeenAt: 1792787677992
 fingerprint: null
 payload:
   id: GW1_gate_primitive
@@ -23,7 +23,6 @@ payload:
   status: OPEN
   files:
     - lib/core/gate.js
-    - lib/node-schemas/schema.verdict
   depends_on:
     - GW0_gate_census
     - GR1_graph_primitive

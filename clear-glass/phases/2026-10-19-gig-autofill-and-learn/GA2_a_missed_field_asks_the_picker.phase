@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA2_a_missed_field_asks_the_picker
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA2_a_missed_field_asks_the_picker
+context: >-
+  pipeline phase GA2_a_missed_field_asks_the_picker of
+  docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: GA2_a_missed_field_asks_the_picker (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677885
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677885
+lastSeenAt: 1792787677885
+fingerprint: null
+payload:
+  id: GA2_a_missed_field_asks_the_picker
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/gig.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/renderer/selector-check.js
+  depends_on:
+    - GA1_copilot_fills_the_gig
+  blocks: []
+  spec: null
+  graph: 99874dafdee9dee9

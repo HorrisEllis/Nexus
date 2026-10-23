@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-failure-mode-report-phasemap.spec::FMR1_every_ledger_into_rfr2
+type: phase
+id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR1_every_ledger_into_rfr2
+context: pipeline phase FMR1_every_ledger_into_rfr2 of docs/2026-10-17-failure-mode-report-phasemap.spec
+intent: null
+summary: FMR1_every_ledger_into_rfr2 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677777
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677777
+lastSeenAt: 1792787677777
+fingerprint: null
+payload:
+  id: FMR1_every_ledger_into_rfr2
+  map: docs/2026-10-17-failure-mode-report-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-05-failure-reproduction-phasemap.spec
+    - cortex/self-heal/failure-mode-forensics.js
+    - intelligence/relational-field.js
+  depends_on:
+    - FMR0_causality_measured
+  blocks: []
+  spec: null
+  graph: d672a060fcb71369

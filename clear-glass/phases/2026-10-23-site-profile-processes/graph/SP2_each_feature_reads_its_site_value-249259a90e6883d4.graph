@@ -7,11 +7,11 @@ intent: null
 summary: 37 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792754193311
+exported_at: 1792787678092
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792754193311
-lastSeenAt: 1792754193311
+firstSeenAt: 1792787678092
+lastSeenAt: 1792787678092
 fingerprint: null
 payload:
   for: SP2_each_feature_reads_its_site_value
@@ -243,7 +243,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: dbdd2256c2bfe7c4
     layer: 2
     deps:
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
@@ -261,8 +260,11 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG dbdd2256c2bfe7c4 · layer 2
+      - layer 2
       - 'depends on (1): SP1_one_resolver_for_every_feature · all upstream 3'
       - >-
         needed by (1): SP3_the_site_settings_screen · finishing it unlocks
         SP3_the_site_settings_screen
+    edges:
+      - from: docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+        kind: declared

@@ -1,0 +1,131 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FG2_token_budget_chunking:869f29022b91a647
+type: graph
+id: phase:FG2_token_budget_chunking:869f29022b91a647
+context: dependency graph of phase FG2_token_budget_chunking
+intent: null
+summary: 11 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676737
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676737
+lastSeenAt: 1792787676737
+fingerprint: null
+payload:
+  for: FG2_token_budget_chunking
+  kind: phase
+  repo: null
+  hash: 869f29022b91a647
+  nodes:
+    - path: lib/chunk-service.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/code-intel/chunker.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/code-intel/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/router.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/chunker/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/decls.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/structure.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/code-intel/chunker.js
+      to: lib/code-intel/structure.js
+      kind: requires
+    - from: lib/code-intel/chunker.js
+      to: lib/code-intel/decls.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: lib/chunker/index.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: lib/event-types.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: cortex/core/raid/router.js
+      kind: requires
+    - from: lib/code-intel/index.js
+      to: lib/code-intel/chunker.js
+      kind: requires
+    - from: lib/phase-map-auto.js
+      to: lib/code-intel/chunker.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/chunk-service.js
+      kind: requires
+  crossings:
+    - from: lib/chunk-service.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/chunk-service.js
+      to: cortex/core/raid/router.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+    dependents:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+    upstream:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+    downstream:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG5_recursive_build
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::WS5_the_whole_workshop
+    blockedBy:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by FG1_containment_tree
+      - 'depends on (1): FG1_containment_tree'
+      - 'needed by (1): FG4_context_for_any_agent · all downstream 3'
+    edges:
+      - from: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+        kind: declared

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+context: >-
+  pipeline phase MR1_recall_triad_and_context_table of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR1_recall_triad_and_context_table (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676616
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676616
+lastSeenAt: 1792787676616
+fingerprint: null
+payload:
+  id: MR1_recall_triad_and_context_table
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-context.js
+    - lib/vector-memory.js
+    - lib/recall-triad.js
+    - lib/context-table.js
+  depends_on:
+    - EM0_ground
+    - EV0_contracts_for_every_system
+  blocks: []
+  spec: null
+  graph: 8d98f6c45ce31135

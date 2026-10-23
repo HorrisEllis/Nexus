@@ -1,0 +1,112 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AT1_atlases_and_specs_from_releases:dc5b8827fb668ce2
+type: graph
+id: phase:AT1_atlases_and_specs_from_releases:dc5b8827fb668ce2
+context: dependency graph of phase AT1_atlases_and_specs_from_releases
+intent: null
+summary: 9 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677609
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677609
+lastSeenAt: 1792787677609
+fingerprint: null
+payload:
+  for: AT1_atlases_and_specs_from_releases
+  kind: phase
+  repo: null
+  hash: dc5b8827fb668ce2
+  nodes:
+    - path: lib/atlas-generate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: scripts/generate-atlases.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/readme-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/readme-generate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/component-store.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: lib/readme-generate.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/readme-generate.js
+      to: lib/atlas-generate.js
+      kind: requires
+  crossings:
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN2_changelog_from_the_commits
+    dependents: []
+    upstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::BR1_bricks_on_every_path
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GS1_a_snapshot_per_gate_rewind_and_compare
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD0_raid_runs_the_contract
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD1_every_build_goes_through_raid
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN2_changelog_from_the_commits
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · ready
+      - 'depends on (1): RN2_changelog_from_the_commits · all upstream 7'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN2_changelog_from_the_commits
+        kind: declared

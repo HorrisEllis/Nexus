@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT1_one_door_for_models
+type: phase
+id: docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT1_one_door_for_models
+context: pipeline phase CT1_one_door_for_models of docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+intent: null
+summary: CT1_one_door_for_models (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677007
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677007
+lastSeenAt: 1792787677007
+fingerprint: null
+payload:
+  id: CT1_one_door_for_models
+  map: docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/server.js
+    - lib/pipeline-routing.js
+    - lib/repo-agent.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 73db225aab49ebc2

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::G1_guardian_agents_folder
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::G1_guardian_agents_folder
+context: pipeline phase G1_guardian_agents_folder of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: G1_guardian_agents_folder (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675660
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675660
+lastSeenAt: 1792787675660
+fingerprint: null
+payload:
+  id: G1_guardian_agents_folder
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/userscript-chatgpt.js
+    - clear-glass/src/mesh/agent-mesh.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6b3bc0c422f31286

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::NV2_tell_clear_glass_what_to_do
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::NV2_tell_clear_glass_what_to_do
+context: >-
+  pipeline phase NV2_tell_clear_glass_what_to_do of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: NV2_tell_clear_glass_what_to_do (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677411
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677411
+lastSeenAt: 1792787677411
+fingerprint: null
+payload:
+  id: NV2_tell_clear_glass_what_to_do
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - NV1_words_to_elements
+  blocks: []
+  spec: null
+  graph: c31060359b5f7fc4

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC10_eros_workbench
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC10_eros_workbench
+context: pipeline phase EC10_eros_workbench of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC10_eros_workbench (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676321
+lastSeenAt: 1792787676321
+fingerprint: null
+payload:
+  id: EC10_eros_workbench
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/settings/sections/eros.js
+    - clear-glass/renderer/settings/sections/eros.css
+    - erosmancer/erosmancer-os/src/replay/index.ts
+    - erosmancer/erosmancer-os/src/api/server.ts
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 27a839ee0a545a60

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
+context: pipeline phase CE7_ai_assisted_editing of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CE7_ai_assisted_editing (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677507
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677507
+lastSeenAt: 1792787677507
+fingerprint: null
+payload:
+  id: CE7_ai_assisted_editing
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.81 backend (test-code-tab-expand CX-01..03), 0.60.82 UI (test-code-tab-merge MG-13)
+  files:
+    - idearium/ui/js/code-surface.js
+    - lib/line-edit.js
+    - idearium/api/index.js
+  depends_on:
+    - CE1_the_run_state
+    - CE5_events
+  blocks: []
+  spec: null
+  graph: 78ed53aff1a36f1d

@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792757382217
+exported_at: 1792787678070
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382217
-lastSeenAt: 1792757382217
+firstSeenAt: 1792787678070
+lastSeenAt: 1792787678070
 fingerprint: null
 payload:
   for: CS6_rebuild_from_the_spec
@@ -209,8 +209,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 3351ce8a7e938b5b
-    layer: 6
+    layer: 9
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
@@ -220,11 +219,18 @@ payload:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
       - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
@@ -252,10 +258,17 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 3351ce8a7e938b5b · layer 6 · blocked by CS1_a_version_is_a_system_state,
-        CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system
+        layer 9 · blocked by CS1_a_version_is_a_system_state, CS4_every_system_a_compartment,
+        CS_D3_the_spec_rebuilds_the_system
       - >-
         depends on (3): CS1_a_version_is_a_system_state, CS4_every_system_a_compartment,
-        CS_D3_the_spec_rebuilds_the_system · all upstream 22
+        CS_D3_the_spec_rebuilds_the_system · all upstream 29
       - 'needed by (0): —'
       - 'same files as CS2_test_every_version with no order between them: cos/workspace/index.js'
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D3_the_spec_rebuilds_the_system
+        kind: declared

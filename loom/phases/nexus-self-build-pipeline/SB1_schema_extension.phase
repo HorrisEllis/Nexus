@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+context: pipeline phase SB1_schema_extension of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB1_schema_extension (?) — 19 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678293
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678293
+lastSeenAt: 1792787678293
+fingerprint: null
+payload:
+  id: SB1_schema_extension
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/test/schema.test.js
+    - warp/core/Gate.js
+    - lib/loom-map.js
+    - loom/scanners/source-map.js
+    - loom/bootstrap.js
+    - loom/data/registry.json
+    - loom/server.js
+    - loom/schema/registry.js
+    - lib/component-ledger.js
+    - lib/gap-field.js
+    - clear-glass/src/plugins/webextensions.js
+    - copilot/lib/workset.js
+    - guardian/lib/agent-facts.js
+    - lib/uid/normalize.js
+    - clear-glass/src/autofill/matcher.js
+    - guardian/lib/eros-typist.js
+    - guardian/userscript-field-map.js
+    - copilot/diagnostics.js
+    - loom/scanners/capability-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 72f0c5f1efbfffb5

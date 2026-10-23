@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB4_resume_import
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB4_resume_import
+context: pipeline phase JB4_resume_import of docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: JB4_resume_import (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677316
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677316
+lastSeenAt: 1792787677316
+fingerprint: null
+payload:
+  id: JB4_resume_import
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/store.js
+    - clear-glass/renderer/settings/sections/autofill.js
+  depends_on:
+    - JB0_gig_files
+  blocks: []
+  spec: null
+  graph: 5f5bfc35c620b31f

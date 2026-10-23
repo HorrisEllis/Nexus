@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-durable-work-timeline-phasemap.spec::TL6_proof_and_wiring
+type: phase
+id: docs_2026-10-16-durable-work-timeline-phasemap.spec::TL6_proof_and_wiring
+context: pipeline phase TL6_proof_and_wiring of docs/2026-10-16-durable-work-timeline-phasemap.spec
+intent: null
+summary: TL6_proof_and_wiring (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677696
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677696
+lastSeenAt: 1792787677696
+fingerprint: null
+payload:
+  id: TL6_proof_and_wiring
+  map: docs/2026-10-16-durable-work-timeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/modules/test-work-journal.test.js
+    - tests/modules/run-all.js
+    - loom/maps/observability-map.js
+    - idearium/event-taxonomy.cjs
+    - docs/atlases/idearium-atlas.md
+    - lib/version.js
+    - docs/PROOF-OF-COMPETENCY.md
+  depends_on:
+    - TL1_chunks_land_as_they_arrive
+  blocks: []
+  spec: null
+  graph: 2b6b52d3b29be7d3

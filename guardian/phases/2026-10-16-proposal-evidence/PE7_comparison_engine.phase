@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-proposal-evidence-phasemap.spec::PE7_comparison_engine
+type: phase
+id: docs_2026-10-16-proposal-evidence-phasemap.spec::PE7_comparison_engine
+context: pipeline phase PE7_comparison_engine of docs/2026-10-16-proposal-evidence-phasemap.spec
+intent: null
+summary: PE7_comparison_engine (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677733
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677733
+lastSeenAt: 1792787677733
+fingerprint: null
+payload:
+  id: PE7_comparison_engine
+  map: docs/2026-10-16-proposal-evidence-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 97b6ca5d0f989aea

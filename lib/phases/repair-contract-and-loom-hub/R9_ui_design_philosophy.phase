@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R9_ui_design_philosophy
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R9_ui_design_philosophy
+context: pipeline phase R9_ui_design_philosophy of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R9_ui_design_philosophy (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678343
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678343
+lastSeenAt: 1792787678343
+fingerprint: null
+payload:
+  id: R9_ui_design_philosophy
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/UI-DESIGN-PHILOSOPHY.md
+    - copilot/lib/autonomy-router.js
+    - clear-glass/src/diagnostic/error-capture.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: bb1f4bfdb151ae73

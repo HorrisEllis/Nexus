@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792754193309
+exported_at: 1792787678092
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792754193309
-lastSeenAt: 1792754193309
+firstSeenAt: 1792787678092
+lastSeenAt: 1792787678092
 fingerprint: null
 payload:
   for: SP1_one_resolver_for_every_feature
@@ -180,7 +180,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: dbdd2256c2bfe7c4
     layer: 1
     deps:
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
@@ -204,11 +203,14 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - >-
-        DAG dbdd2256c2bfe7c4 · layer 1 · blocked by SP_D1_one_store_one_resolver,
-        SP_D2_defaults_are_todays_behaviour
+      - layer 1 · blocked by SP_D1_one_store_one_resolver, SP_D2_defaults_are_todays_behaviour
       - 'depends on (2): SP_D1_one_store_one_resolver, SP_D2_defaults_are_todays_behaviour'
       - >-
         needed by (2): SP2_each_feature_reads_its_site_value, SP4_cleardriver_mesh_guardian_settings
         · all downstream 3 · finishing it unlocks SP2_each_feature_reads_its_site_value,
         SP4_cleardriver_mesh_guardian_settings
+    edges:
+      - from: docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
+        kind: declared
+      - from: docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D2_defaults_are_todays_behaviour
+        kind: declared

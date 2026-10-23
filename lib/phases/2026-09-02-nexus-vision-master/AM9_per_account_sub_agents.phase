@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::AM9_per_account_sub_agents
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::AM9_per_account_sub_agents
+context: pipeline phase AM9_per_account_sub_agents of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: AM9_per_account_sub_agents (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675642
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675642
+lastSeenAt: 1792787675642
+fingerprint: null
+payload:
+  id: AM9_per_account_sub_agents
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/account-registry.js
+    - lib/agent-tools/tools/identity/hat-forge.js
+    - lib/hat-forge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 20952744b4aa19cf

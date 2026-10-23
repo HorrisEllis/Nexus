@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-warp-verification-phasemap.spec::P7_one_raid_verify_spine
+type: phase
+id: docs_raid-warp-verification-phasemap.spec::P7_one_raid_verify_spine
+context: pipeline phase P7_one_raid_verify_spine of docs/raid-warp-verification-phasemap.spec
+intent: null
+summary: P7_one_raid_verify_spine (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678327
+lastSeenAt: 1792787678327
+fingerprint: null
+payload:
+  id: P7_one_raid_verify_spine
+  map: docs/raid-warp-verification-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/net/qbittorrent.js
+    - clear-glass/src/providers/registry.js
+    - cortex/core/raid/index.js
+    - lib/execution-pipeline.js
+    - copilot/recursive-diagnose.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d51684d9b6de9d1f

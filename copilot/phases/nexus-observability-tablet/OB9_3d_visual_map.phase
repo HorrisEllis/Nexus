@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-observability-tablet-phasemap.spec::OB9_3d_visual_map
+type: phase
+id: docs_nexus-observability-tablet-phasemap.spec::OB9_3d_visual_map
+context: pipeline phase OB9_3d_visual_map of docs/nexus-observability-tablet-phasemap.spec
+intent: null
+summary: OB9_3d_visual_map (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678273
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678273
+lastSeenAt: 1792787678273
+fingerprint: null
+payload:
+  id: OB9_3d_visual_map
+  map: docs/nexus-observability-tablet-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7aca0f52f9a1f8aa

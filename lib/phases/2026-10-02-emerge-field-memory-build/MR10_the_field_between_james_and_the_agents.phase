@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+context: >-
+  pipeline phase MR10_the_field_between_james_and_the_agents of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR10_the_field_between_james_and_the_agents (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676645
+lastSeenAt: 1792787676645
+fingerprint: null
+payload:
+  id: MR10_the_field_between_james_and_the_agents
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emergence/vendor/rfr2/field/relational.js
+    - lib/repo-hat-memory.js
+  depends_on:
+    - MR9_liminal_on_the_agents
+  blocks: []
+  spec: null
+  graph: 26426e0877de2189

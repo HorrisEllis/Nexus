@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+context: pipeline phase AD2_javascript_adapter of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: AD2_javascript_adapter (library) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677908
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677908
+lastSeenAt: 1792787677908
+fingerprint: null
+payload:
+  id: AD2_javascript_adapter
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/adapters/javascript.js
+    - lib/verify-first.js
+    - lib/coder-brief.js
+    - lib/phase-plan.js
+    - loom/scanners/source-map.js
+  depends_on:
+    - AD1_adapter_contract
+  blocks: []
+  spec: null
+  graph: 1421bce99f6b0fd1

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-awareness-routing-phasemap.spec::CA6_routing_config
+type: phase
+id: docs_copilot-awareness-routing-phasemap.spec::CA6_routing_config
+context: pipeline phase CA6_routing_config of docs/copilot-awareness-routing-phasemap.spec
+intent: null
+summary: CA6_routing_config (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678152
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678152
+lastSeenAt: 1792787678152
+fingerprint: null
+payload:
+  id: CA6_routing_config
+  map: docs/copilot-awareness-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/schema-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c8ec964b0b80f7cb

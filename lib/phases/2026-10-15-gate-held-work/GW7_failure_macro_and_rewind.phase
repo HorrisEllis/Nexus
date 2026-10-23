@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+context: pipeline phase GW7_failure_macro_and_rewind of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW7_failure_macro_and_rewind (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677556
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677556
+lastSeenAt: 1792787677556
+fingerprint: null
+payload:
+  id: GW7_failure_macro_and_rewind
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    OPEN (owns FM1-FM4 of docs/2026-10-05-failure-reproduction-phasemap.spec; this phase adds the
+    gate as the replay unit)
+  files:
+    - lib/failure-macro.js
+    - lib/rfr2-bridge.js
+    - intelligence/rfr2/clip/index.js
+    - lib/replay-engine.js
+    - lib/shadow-space.js
+    - cos/testenv/index.js
+    - cortex/core/raid/contract-gates.js
+  depends_on:
+    - GW3_a_contract_is_traced
+    - GW0c_replay_mode
+  blocks: []
+  spec: null
+  graph: 9ea220d322030fc4

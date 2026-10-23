@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::MC2_hotkeys_for_macros
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::MC2_hotkeys_for_macros
+context: >-
+  pipeline phase MC2_hotkeys_for_macros of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: MC2_hotkeys_for_macros (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677414
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677414
+lastSeenAt: 1792787677414
+fingerprint: null
+payload:
+  id: MC2_hotkeys_for_macros
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/shortcuts/registry.js
+    - clear-glass/renderer/settings/sections/macros.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a0d99d8f06fb8ca4

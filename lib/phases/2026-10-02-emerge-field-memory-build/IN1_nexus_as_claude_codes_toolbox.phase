@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::IN1_nexus_as_claude_codes_toolbox
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::IN1_nexus_as_claude_codes_toolbox
+context: >-
+  pipeline phase IN1_nexus_as_claude_codes_toolbox of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: IN1_nexus_as_claude_codes_toolbox (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676691
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676691
+lastSeenAt: 1792787676691
+fingerprint: null
+payload:
+  id: IN1_nexus_as_claude_codes_toolbox
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - .mcp.json
+    - orchestrator/lib/mcp-server.js
+    - orchestrator/lib/mcp-stdio.js
+    - lib/introspect.js
+    - lib/reflection.js
+  depends_on:
+    - EM0_ground
+    - GA1_guardian_source_of_truth
+    - EV0_contracts_for_every_system
+  blocks: []
+  spec: null
+  graph: ea1bc06a4bc07a29

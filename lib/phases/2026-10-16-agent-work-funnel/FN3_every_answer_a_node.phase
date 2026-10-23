@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-agent-work-funnel-phasemap.spec::FN3_every_answer_a_node
+type: phase
+id: docs_2026-10-16-agent-work-funnel-phasemap.spec::FN3_every_answer_a_node
+context: pipeline phase FN3_every_answer_a_node of docs/2026-10-16-agent-work-funnel-phasemap.spec
+intent: null
+summary: FN3_every_answer_a_node (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677646
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677646
+lastSeenAt: 1792787677646
+fingerprint: null
+payload:
+  id: FN3_every_answer_a_node
+  map: docs/2026-10-16-agent-work-funnel-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/work-funnel.js
+    - lib/node-export.js
+  depends_on:
+    - FN0_the_funnel_as_data
+  blocks: []
+  spec: null
+  graph: f0fd6a276c7d1d69

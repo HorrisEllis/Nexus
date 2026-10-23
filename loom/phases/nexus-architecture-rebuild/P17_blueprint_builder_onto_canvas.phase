@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P17_blueprint_builder_onto_canvas
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P17_blueprint_builder_onto_canvas
+context: pipeline phase P17_blueprint_builder_onto_canvas of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P17_blueprint_builder_onto_canvas (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678252
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678252
+lastSeenAt: 1792787678252
+fingerprint: null
+payload:
+  id: P17_blueprint_builder_onto_canvas
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c9dc8279be53da93

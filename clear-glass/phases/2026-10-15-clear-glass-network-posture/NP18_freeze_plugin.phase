@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP18_freeze_plugin
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP18_freeze_plugin
+context: pipeline phase NP18_freeze_plugin of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP18_freeze_plugin (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677492
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677492
+lastSeenAt: 1792787677492
+fingerprint: null
+payload:
+  id: NP18_freeze_plugin
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/net/policy.js
+    - clear-glass/src/net/transport-host.js
+    - clear-glass/src/net/service.js
+    - lib/agent-tools/tools/clear-glass/net.js
+    - clear-glass/plugins/snowflake/index.js
+    - clear-glass/renderer/shell/downloads.js
+  depends_on:
+    - NP17_hold_primitive
+    - NP12_plugin_split
+  blocks: []
+  spec: null
+  graph: 53c52b561aea759a

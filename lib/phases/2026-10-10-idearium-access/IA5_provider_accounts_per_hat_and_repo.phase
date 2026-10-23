@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-access-phasemap.spec::IA5_provider_accounts_per_hat_and_repo
+type: phase
+id: docs_2026-10-10-idearium-access-phasemap.spec::IA5_provider_accounts_per_hat_and_repo
+context: >-
+  pipeline phase IA5_provider_accounts_per_hat_and_repo of
+  docs/2026-10-10-idearium-access-phasemap.spec
+intent: null
+summary: IA5_provider_accounts_per_hat_and_repo (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677209
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677209
+lastSeenAt: 1792787677209
+fingerprint: null
+payload:
+  id: IA5_provider_accounts_per_hat_and_repo
+  map: docs/2026-10-10-idearium-access-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/account-registry.js
+    - lib/agent-router.js
+    - lib/pipeline-routing.js
+  depends_on:
+    - IA0_the_door_checks_who_is_asking
+  blocks: []
+  spec: null
+  graph: fd55efa3a8901e7f

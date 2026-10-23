@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ25_progress_is_evidence_not_activity
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ25_progress_is_evidence_not_activity
+context: >-
+  pipeline phase RQ25_progress_is_evidence_not_activity of
+  docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ25_progress_is_evidence_not_activity (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677386
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677386
+lastSeenAt: 1792787677386
+fingerprint: null
+payload:
+  id: RQ25_progress_is_evidence_not_activity
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - lib/charter.js
+    - cortex/core/raid/event-taxonomy.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - RQ21_the_contract_file_is_its_record
+    - RQ23_acceptance_conditions_that_cannot_be_moved
+  blocks: []
+  spec: null
+  graph: 20b27d207cb31ec8

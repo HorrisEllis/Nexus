@@ -1,0 +1,177 @@
+envelope: 1
+uuid: nexus-export-graph-phase:S0:737ffe340934da47
+type: graph
+id: phase:S0:737ffe340934da47
+context: dependency graph of phase S0
+intent: null
+summary: 15 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676159
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676159
+lastSeenAt: 1792787676159
+fingerprint: null
+payload:
+  for: S0
+  kind: phase
+  repo: null
+  hash: 737ffe340934da47
+  nodes:
+    - path: versionium/lib/engine.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: versionium/routes/versionium.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: versionium/spec/versionium.spec
+      role: changes
+      exists: true
+      system: versionium
+    - path: products/flight-recorder/lib/versions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-migration.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: versionium/server.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/rfr2/compress/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: versionium/config.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/http-utils.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/releases.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: versionium/lib/engine.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/compress/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: versionium/config.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: versionium/routes/versionium.js
+      to: versionium/lib/releases.js
+      kind: requires
+    - from: versionium/routes/versionium.js
+      to: versionium/lib/http-utils.js
+      kind: requires
+    - from: products/flight-recorder/lib/versions.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: tests/modules/test-versionium-migration.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/lib/engine.js
+      kind: requires
+  crossings:
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/compress/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: versionium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    upstream: []
+    downstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S2
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (5): B1, S1, L1, A1, X1 · all downstream 11 · finishing it unlocks S1'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

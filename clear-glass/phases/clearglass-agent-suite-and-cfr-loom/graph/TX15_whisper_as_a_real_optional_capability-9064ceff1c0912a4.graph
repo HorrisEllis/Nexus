@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TX15_whisper_as_a_real_optional_capability:9064ceff1c0912a4
+type: graph
+id: phase:TX15_whisper_as_a_real_optional_capability:9064ceff1c0912a4
+context: dependency graph of phase TX15_whisper_as_a_real_optional_capability
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787678138
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678138
+lastSeenAt: 1792787678138
+fingerprint: null
+payload:
+  for: TX15_whisper_as_a_real_optional_capability
+  kind: phase
+  repo: null
+  hash: 9064ceff1c0912a4
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 4
+    deps:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+    dependents: []
+    upstream:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX11_plugin_architecture_decision
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX3_talk_to_agent_launcher
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX4_provider_tab_tool_loop
+    downstream: []
+    blockedBy:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by TX14_plugin_system_v1_build
+      - 'depends on (1): TX14_plugin_system_v1_build · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+        kind: declared

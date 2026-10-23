@@ -1,0 +1,195 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF1_the_sources:e60ed3365a0a2cec
+type: graph
+id: phase:PF1_the_sources:e60ed3365a0a2cec
+context: dependency graph of phase PF1_the_sources
+intent: null
+summary: 20 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677538
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677538
+lastSeenAt: 1792787677538
+fingerprint: null
+payload:
+  for: PF1_the_sources
+  kind: phase
+  repo: null
+  hash: e60ed3365a0a2cec
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/gig-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/gig-ledger-listener.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-gig-ledger.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-shape.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: lib/gig-ledger-listener.js
+      to: lib/gig-ledger.js
+      kind: requires
+    - from: tests/modules/test-gig-ledger.test.js
+      to: lib/gig-ledger.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-shape.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF0_the_ledger
+    dependents:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF2_the_slots_into_a_gig
+    upstream:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF0_the_ledger
+    downstream:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF2_the_slots_into_a_gig
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF3_the_screen
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF2_the_slots_into_a_gig
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): PF0_the_ledger'
+      - >-
+        needed by (1): PF2_the_slots_into_a_gig · all downstream 2 · finishing it unlocks
+        PF2_the_slots_into_a_gig
+    edges:
+      - from: docs/2026-10-15-fiverr-ledger-phasemap.spec::PF0_the_ledger
+        kind: declared

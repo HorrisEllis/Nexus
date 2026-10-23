@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::PL1_many_projects_at_once
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::PL1_many_projects_at_once
+context: pipeline phase PL1_many_projects_at_once of docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: PL1_many_projects_at_once (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677431
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677431
+lastSeenAt: 1792787677431
+fingerprint: null
+payload:
+  id: PL1_many_projects_at_once
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - idearium/ui/index.html
+    - lib/project-container.js
+    - lib/project-decompose.js
+  depends_on:
+    - PL0_his_projects_imported_for_real
+  blocks: []
+  spec: null
+  graph: 1adf76c32de48afd

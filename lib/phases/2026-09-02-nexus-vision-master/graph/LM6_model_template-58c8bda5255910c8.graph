@@ -1,0 +1,177 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM6_model_template:58c8bda5255910c8
+type: graph
+id: phase:LM6_model_template:58c8bda5255910c8
+context: dependency graph of phase LM6_model_template
+intent: null
+summary: 16 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675698
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675698
+lastSeenAt: 1792787675698
+fingerprint: null
+payload:
+  for: LM6_model_template
+  kind: phase
+  repo: null
+  hash: 58c8bda5255910c8
+  nodes:
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/copilot/hat.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-intent-contract.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed-ollama-personalities.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/hat-forge.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/identity/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/copilot/hat.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/agent-intent-contract.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/hat-seed-ollama-personalities.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: lib/hat-forge.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM2_per_system_living_model_completion
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM2_per_system_living_model_completion
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM2_per_system_living_model_completion
+    unlocks: []
+    conflicts:
+      - with: docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+        files:
+          - lib/hat-forge.js
+          - lib/agent-tools/tools/identity/hat-forge.js
+      - with: docs/2026-09-02-nexus-vision-master-phasemap.spec::AM7_agent_suite_welcome_ui
+        files:
+          - lib/agent-tools/tools/identity/hat-forge.js
+          - lib/hat-forge.js
+      - with: docs/2026-09-02-nexus-vision-master-phasemap.spec::AM9_per_account_sub_agents
+        files:
+          - lib/agent-tools/tools/identity/hat-forge.js
+          - lib/hat-forge.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by LM2_per_system_living_model_completion
+      - 'depends on (1): LM2_per_system_living_model_completion'
+      - 'needed by (0): —'
+      - >-
+        same files as T1_tool_listing_command with no order between them: lib/hat-forge.js,
+        lib/agent-tools/tools/identity/hat-forge.js
+      - >-
+        same files as AM7_agent_suite_welcome_ui with no order between them:
+        lib/agent-tools/tools/identity/hat-forge.js, lib/hat-forge.js
+      - >-
+        same files as AM9_per_account_sub_agents with no order between them:
+        lib/agent-tools/tools/identity/hat-forge.js, lib/hat-forge.js
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::LM2_per_system_living_model_completion
+        kind: declared

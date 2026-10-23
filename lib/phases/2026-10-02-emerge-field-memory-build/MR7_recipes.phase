@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+context: pipeline phase MR7_recipes of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR7_recipes (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676635
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676635
+lastSeenAt: 1792787676635
+fingerprint: null
+payload:
+  id: MR7_recipes
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/case-library.js
+    - lib/repo-hat-memory.js
+    - meta/crystal-lattice.js
+  depends_on:
+    - CF1_cfr_improved_with_rfr2
+    - CB1_cfr_build_logic
+  blocks: []
+  spec: null
+  graph: dba6a7b218cea00c

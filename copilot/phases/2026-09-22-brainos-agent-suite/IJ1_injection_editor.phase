@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-brainos-agent-suite-phasemap.spec::IJ1_injection_editor
+type: phase
+id: docs_2026-09-22-brainos-agent-suite-phasemap.spec::IJ1_injection_editor
+context: pipeline phase IJ1_injection_editor of docs/2026-09-22-brainos-agent-suite-phasemap.spec
+intent: null
+summary: IJ1_injection_editor (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675985
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675985
+lastSeenAt: 1792787675985
+fingerprint: null
+payload:
+  id: IJ1_injection_editor
+  map: docs/2026-09-22-brainos-agent-suite-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/inject-config.js
+    - copilot/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e4b57f2548044110

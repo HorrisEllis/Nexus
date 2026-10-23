@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB1_the_agent_writes_the_gig_file
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB1_the_agent_writes_the_gig_file
+context: >-
+  pipeline phase JB1_the_agent_writes_the_gig_file of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: JB1_the_agent_writes_the_gig_file (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677312
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677312
+lastSeenAt: 1792787677312
+fingerprint: null
+payload:
+  id: JB1_the_agent_writes_the_gig_file
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/gig.js
+    - clear-glass/src/copilot/verbs.js
+  depends_on:
+    - JB0_gig_files
+    - JB2_the_copilot_hat_agent_and_account
+  blocks: []
+  spec: null
+  graph: 897ac09840418686

@@ -1,0 +1,223 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB5_nexus_rebuilds_a_system_from_its_spec:17dc36ec94b3a10e
+type: graph
+id: phase:SB5_nexus_rebuilds_a_system_from_its_spec:17dc36ec94b3a10e
+context: dependency graph of phase SB5_nexus_rebuilds_a_system_from_its_spec
+intent: null
+summary: 19 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676808
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676808
+lastSeenAt: 1792787676808
+fingerprint: null
+payload:
+  for: SB5_nexus_rebuilds_a_system_from_its_spec
+  kind: phase
+  repo: null
+  hash: 17dc36ec94b3a10e
+  nodes:
+    - path: idearium/repo/proof-run.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/cos-run.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-verify.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/branch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/runtime/run.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/detect.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/installer.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/cos-debug-report.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/failure-post.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/cos-debug-report.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/failure-post.js
+      kind: requires
+    - from: idearium/repo/proof-run.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-self/branch.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: lib/nexus-self/branch.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: lib/build-verify.js
+      to: lib/cos-run.js
+      kind: requires
+  crossings:
+    - from: lib/nexus-self/branch.js
+      to: cos/playground/branch.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/nexus-self/branch.js
+      to: cos/foundation/constants.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB6_hundreds_of_specs
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB14_reuse_compounds
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB6_hundreds_of_specs
+    blockedBy:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
+    unlocks:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB6_hundreds_of_specs
+    conflicts:
+      - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB26_an_imported_project_shows_its_progress
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB47_built_and_run_in_cos
+        files:
+          - lib/cos-run.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by SB4_template_fidelity
+      - 'depends on (1): SB4_template_fidelity · all upstream 4'
+      - >-
+        needed by (1): SB6_hundreds_of_specs · all downstream 2 · finishing it unlocks
+        SB6_hundreds_of_specs
+      - >-
+        same files as SB26_an_imported_project_shows_its_progress with no order between them:
+        idearium/repo/proof-run.js
+      - 'same files as SB47_built_and_run_in_cos with no order between them: lib/cos-run.js'
+    edges:
+      - from: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
+        kind: declared

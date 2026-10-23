@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H3
+type: phase
+id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H3
+context: pipeline phase H3 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+intent: null
+summary: H3 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676026
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676026
+lastSeenAt: 1792787676026
+fingerprint: null
+payload:
+  id: H3
+  map: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/agent-suite/index.js
+    - idearium/api/index.js
+    - idearium/spec-engine/warp-build-dispatch.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0ab7eb9f0c2f66ba

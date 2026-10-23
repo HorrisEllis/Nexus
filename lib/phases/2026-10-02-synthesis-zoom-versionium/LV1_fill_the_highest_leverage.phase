@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::LV1_fill_the_highest_leverage
+type: phase
+id: docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::LV1_fill_the_highest_leverage
+context: >-
+  pipeline phase LV1_fill_the_highest_leverage of
+  docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+intent: null
+summary: LV1_fill_the_highest_leverage (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676753
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676753
+lastSeenAt: 1792787676753
+fingerprint: null
+payload:
+  id: LV1_fill_the_highest_leverage
+  map: docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - scripts/fix-phasemap-yaml.js
+    - lib/nexstore/census.js
+    - docs/nexstore-type-catalogue.yaml
+    - tests/modules/test-nexstore-census.test.js
+    - lib/nexstore/record.js
+    - tests/modules/test-nexstore-log.test.js
+    - lib/nexstore/types.js
+    - tests/modules/test-nexstore-types.test.js
+    - lib/nexstore/writers.js
+    - docs/nexstore-writers.yaml
+    - tests/modules/test-nexstore-writers.test.js
+  depends_on:
+    - SY1_gap_synthesis_engine
+  blocks: []
+  spec: null
+  graph: cb833cd372794400

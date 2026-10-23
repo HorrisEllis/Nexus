@@ -1,0 +1,207 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM3_open_ended_grounded_conversation:487ff1e8c712e962
+type: graph
+id: phase:AM3_open_ended_grounded_conversation:487ff1e8c712e962
+context: dependency graph of phase AM3_open_ended_grounded_conversation
+intent: null
+summary: 21 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678106
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678106
+lastSeenAt: 1792787678106
+fingerprint: null
+payload:
+  for: AM3_open_ended_grounded_conversation
+  kind: phase
+  repo: null
+  hash: 487ff1e8c712e962
+  nodes:
+    - path: cortex/personas.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/agent-router.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/lifeline-contracts.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-build-learning.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-system/contracts.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/routing-config.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/account-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-router.js
+      to: lib/account-registry.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/agent-build-learning.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/agent-system/contracts.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/routing-config.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/seam/spec-parser.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/personas.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      kind: requires
+    - from: copilot/lib/lifeline-contracts.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+  crossings:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+    dependents:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM10_thinking_partner_rename_and_ui_builder
+    upstream:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+    downstream:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM10_thinking_partner_rename_and_ui_builder
+    blockedBy:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+    unlocks: []
+    conflicts:
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+        files:
+          - lib/gap-field.js
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM9_get_to_know_you_and_idea_capture
+        files:
+          - cortex/personas.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by AM2_incident_debrief
+      - 'depends on (1): AM2_incident_debrief · all upstream 2'
+      - 'needed by (1): AM10_thinking_partner_rename_and_ui_builder'
+      - 'same files as AM6_perplexity_confidence_loop with no order between them: lib/gap-field.js'
+      - >-
+        same files as AM9_get_to_know_you_and_idea_capture with no order between them:
+        cortex/personas.js
+    edges:
+      - from: docs/agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+        kind: inferred

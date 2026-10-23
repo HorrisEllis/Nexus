@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF8_meta_shim_cleanup:dfd2bf6c9c55ba77
+type: graph
+id: phase:SF8_meta_shim_cleanup:dfd2bf6c9c55ba77
+context: dependency graph of phase SF8_meta_shim_cleanup
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675360
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675360
+lastSeenAt: 1792787675360
+fingerprint: null
+payload:
+  for: SF8_meta_shim_cleanup
+  kind: phase
+  repo: null
+  hash: dfd2bf6c9c55ba77
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

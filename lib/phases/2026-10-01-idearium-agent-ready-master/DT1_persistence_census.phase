@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+context: pipeline phase DT1_persistence_census of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DT1_persistence_census (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676388
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676388
+lastSeenAt: 1792787676388
+fingerprint: null
+payload:
+  id: DT1_persistence_census
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/node-schemas/
+    - tests/modules/ (a census test)
+    - lib/nexstore/writers.js
+    - docs/nexstore-writers.yaml
+    - tests/modules/test-nexstore-writers.test.js
+    - lib/node-schemas.js
+  depends_on:
+    - M0_map
+  blocks: []
+  spec: null
+  graph: a397051c2ba83059

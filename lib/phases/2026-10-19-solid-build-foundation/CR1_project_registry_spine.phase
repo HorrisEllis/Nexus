@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-solid-build-foundation-phasemap.spec::CR1_project_registry_spine
+type: phase
+id: docs_2026-10-19-solid-build-foundation-phasemap.spec::CR1_project_registry_spine
+context: pipeline phase CR1_project_registry_spine of docs/2026-10-19-solid-build-foundation-phasemap.spec
+intent: null
+summary: CR1_project_registry_spine (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677944
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677944
+lastSeenAt: 1792787677944
+fingerprint: null
+payload:
+  id: CR1_project_registry_spine
+  map: docs/2026-10-19-solid-build-foundation-phasemap.spec
+  repo: null
+  layer: library
+  status: BUILT 2026-10-19 (0.60.164)
+  files:
+    - lib/project-registry.js
+  depends_on: []
+  blocks:
+    - '"project_registry"'
+  spec: null
+  graph: ad00a0602536365c

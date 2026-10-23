@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA4_the_matcher_learns
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA4_the_matcher_learns
+context: pipeline phase GA4_the_matcher_learns of docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: GA4_the_matcher_learns (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677887
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677887
+lastSeenAt: 1792787677887
+fingerprint: null
+payload:
+  id: GA4_the_matcher_learns
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/gig.js
+  depends_on:
+    - GA3_the_pick_is_saved_three_ways
+  blocks: []
+  spec: null
+  graph: a4442f1b8c96933e

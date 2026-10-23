@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::LA1_one_self_model
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::LA1_one_self_model
+context: pipeline phase LA1_one_self_model of docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: LA1_one_self_model (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677466
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677466
+lastSeenAt: 1792787677466
+fingerprint: null
+payload:
+  id: LA1_one_self_model
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN (LA0 decided 2026-10-15)
+  files:
+    - loom/bootstrap.js
+    - architect/service.js
+    - docs/hooks-migration.spec
+    - lib/component-registry.js
+    - lib/component-store.js
+    - copilot/lib/self-model.js
+    - lib/agent-build-learning.js
+    - lib/plan-learning.js
+    - lib/vector-memory.js
+    - cortex/core/raid/contract-intake.js
+    - cortex/core/raid/contract-gates.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d1166e769184d12d

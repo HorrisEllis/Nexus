@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+context: >-
+  pipeline phase VC1_a_change_entry_for_every_event of
+  docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: VC1_a_change_entry_for_every_event (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677914
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677914
+lastSeenAt: 1792787677914
+fingerprint: null
+payload:
+  id: VC1_a_change_entry_for_every_event
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/change-entry.js
+    - lib/repo-versions.js
+    - cortex/core/raid/contract-gates.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2d6d84c716d3eda0

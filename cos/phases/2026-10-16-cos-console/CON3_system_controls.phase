@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-cos-console-phasemap.spec::CON3_system_controls
+type: phase
+id: docs_2026-10-16-cos-console-phasemap.spec::CON3_system_controls
+context: pipeline phase CON3_system_controls of docs/2026-10-16-cos-console-phasemap.spec
+intent: null
+summary: CON3_system_controls (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677681
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677681
+lastSeenAt: 1792787677681
+fingerprint: null
+payload:
+  id: CON3_system_controls
+  map: docs/2026-10-16-cos-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - CON1_one_door_client
+    - COSA11_nested_tree
+  blocks: []
+  spec: null
+  graph: 9bea20876814d6b2

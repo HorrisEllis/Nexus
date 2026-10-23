@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::GL1_gate_verify_fix_loop
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::GL1_gate_verify_fix_loop
+context: >-
+  pipeline phase GL1_gate_verify_fix_loop of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: GL1_gate_verify_fix_loop (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676496
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676496
+lastSeenAt: 1792787676496
+fingerprint: null
+payload:
+  id: GL1_gate_verify_fix_loop
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/step-gate.js
+    - lib/shadow.js
+    - lib/seam/queue.js
+    - idearium/spec-engine/chunk-dispatch.js
+    - lib/reply-continuation.js
+  depends_on:
+    - DT2_failure_mode_field
+    - CI1_compounding_iterate
+  blocks: []
+  spec: null
+  graph: c375ed7a6843eff0

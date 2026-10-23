@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF5_hat_intent_injection:10e5a79bbc7cf1e9
+type: graph
+id: phase:SF5_hat_intent_injection:10e5a79bbc7cf1e9
+context: dependency graph of phase SF5_hat_intent_injection
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677625
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677625
+lastSeenAt: 1792787677625
+fingerprint: null
+payload:
+  for: SF5_hat_intent_injection
+  kind: phase
+  repo: null
+  hash: 10e5a79bbc7cf1e9
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+    dependents: []
+    upstream:
+      - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+      - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF2_state_and_gate
+      - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by SF4_the_listener
+      - 'depends on (1): SF4_the_listener · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+        kind: declared

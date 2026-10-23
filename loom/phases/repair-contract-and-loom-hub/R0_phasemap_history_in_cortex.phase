@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+context: pipeline phase R0_phasemap_history_in_cortex of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R0_phasemap_history_in_cortex (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787921337
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787921337
+lastSeenAt: 1792787921337
+fingerprint: null
+payload:
+  id: R0_phasemap_history_in_cortex
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+    - loom/ingest/index.js
+    - loom/ui/index.html
+    - lib/component-ledger.js
+    - lib/gap-field.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9f7fec7fb67eb3bf

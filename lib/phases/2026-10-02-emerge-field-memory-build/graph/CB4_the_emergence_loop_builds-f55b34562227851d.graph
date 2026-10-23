@@ -1,0 +1,168 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CB4_the_emergence_loop_builds:f55b34562227851d
+type: graph
+id: phase:CB4_the_emergence_loop_builds:f55b34562227851d
+context: dependency graph of phase CB4_the_emergence_loop_builds
+intent: null
+summary: 14 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676660
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676660
+lastSeenAt: 1792787676660
+fingerprint: null
+payload:
+  for: CB4_the_emergence_loop_builds
+  kind: phase
+  repo: null
+  hash: f55b34562227851d
+  nodes:
+    - path: emergence/loop.js
+      role: changes
+      exists: true
+      system: emergence
+    - path: emergence/cli.js
+      role: used-by
+      exists: true
+      system: emergence
+    - path: emergence/schemas/test/schemas.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emergence/server.js
+      role: used-by
+      exists: true
+      system: emergence
+    - path: emergence/test/loop.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emergence/components/associative-lattice/index.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: emergence/components/causal-graph/index.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: emergence/components/cfr-creator/index.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: emergence/components/event-ledger/index.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: emergence/components/feedback-loop-buffer/index.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: emergence/components/idea-store/index.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: emergence/components/pattern-engine/index.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: emergence/components/rfr2-observer/index.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: warp/index.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: emergence/loop.js
+      to: warp/index.js
+      kind: requires
+    - from: emergence/loop.js
+      to: emergence/components/rfr2-observer/index.js
+      kind: requires
+    - from: emergence/loop.js
+      to: emergence/components/cfr-creator/index.js
+      kind: requires
+    - from: emergence/loop.js
+      to: emergence/components/associative-lattice/index.js
+      kind: requires
+    - from: emergence/loop.js
+      to: emergence/components/causal-graph/index.js
+      kind: requires
+    - from: emergence/loop.js
+      to: emergence/components/event-ledger/index.js
+      kind: requires
+    - from: emergence/loop.js
+      to: emergence/components/feedback-loop-buffer/index.js
+      kind: requires
+    - from: emergence/loop.js
+      to: emergence/components/idea-store/index.js
+      kind: requires
+    - from: emergence/loop.js
+      to: emergence/components/pattern-engine/index.js
+      kind: requires
+    - from: emergence/cli.js
+      to: emergence/loop.js
+      kind: requires
+    - from: emergence/schemas/test/schemas.test.js
+      to: emergence/loop.js
+      kind: requires
+    - from: emergence/server.js
+      to: emergence/loop.js
+      kind: requires
+    - from: emergence/test/loop.test.js
+      to: emergence/loop.js
+      kind: requires
+  crossings:
+    - from: emergence/loop.js
+      to: warp/index.js
+      fromSystem: emergence
+      toSystem: warp
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 8 · blocked by CB1_cfr_build_logic, CB2_analysis_then_synthesis,
+        MR2_vector_space_for_the_field
+      - >-
+        depends on (3): CB1_cfr_build_logic, CB2_analysis_then_synthesis,
+        MR2_vector_space_for_the_field · all upstream 12
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+        kind: declared

@@ -1,0 +1,116 @@
+envelope: 1
+uuid: nexus-export-graph-phase:X1:7a889bbcd135db9f
+type: graph
+id: phase:X1:7a889bbcd135db9f
+context: dependency graph of phase X1
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676017
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676017
+lastSeenAt: 1792787676017
+fingerprint: null
+payload:
+  for: X1
+  kind: phase
+  repo: null
+  hash: 7a889bbcd135db9f
+  nodes:
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+  edges:
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+    dependents: []
+    upstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::E1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::I1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::R1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+    downstream: []
+    blockedBy:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by T1
+      - 'depends on (1): T1 · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+        kind: declared

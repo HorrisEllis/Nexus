@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303335
+exported_at: 1792787677968
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303335
-lastSeenAt: 1792456303335
+firstSeenAt: 1792787677968
+lastSeenAt: 1792787677968
 fingerprint: null
 payload:
   for: RA0_rca_says_what_it_does
@@ -177,7 +177,6 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 0
     deps: []
     dependents:
@@ -192,6 +191,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 7583ffef0c495b95 · layer 0 · ready
+      - layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): RA1_root_cause_through_provenance · all downstream 3'
+    edges: []

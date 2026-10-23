@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-google-signin-phasemap.spec::GS7_no_debugger_on_signin
+type: phase
+id: docs_2026-10-16-google-signin-phasemap.spec::GS7_no_debugger_on_signin
+context: pipeline phase GS7_no_debugger_on_signin of docs/2026-10-16-google-signin-phasemap.spec
+intent: null
+summary: GS7_no_debugger_on_signin (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677709
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677709
+lastSeenAt: 1792787677709
+fingerprint: null
+payload:
+  id: GS7_no_debugger_on_signin
+  map: docs/2026-10-16-google-signin-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.108
+  files:
+    - erosmancer/erosmancer-os/src/bridge/index.ts
+    - clear-glass/src/page/semantic-tree.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 69372ec12b6080c9

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS13_provider_sovereignty
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS13_provider_sovereignty
+context: pipeline phase BS13_provider_sovereignty of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS13_provider_sovereignty (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676209
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676209
+lastSeenAt: 1792787676209
+fingerprint: null
+payload:
+  id: BS13_provider_sovereignty
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/seam/adapters/warp-cascade.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a2118e304b33e3d9

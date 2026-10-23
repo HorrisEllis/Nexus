@@ -1,0 +1,232 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MP4_a_model_only_where_nothing_maps:caa26af1fd162af7
+type: graph
+id: phase:MP4_a_model_only_where_nothing_maps:caa26af1fd162af7
+context: dependency graph of phase MP4_a_model_only_where_nothing_maps
+intent: null
+summary: 26 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677642
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677642
+lastSeenAt: 1792787677642
+fingerprint: null
+payload:
+  for: MP4_a_model_only_where_nothing_maps
+  kind: phase
+  repo: null
+  hash: caa26af1fd162af7
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/phase-mapping.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-undo-any-change.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/repo/phase-mapping.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: idearium/repo/phase-mapping.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/repo/phase-mapping.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-undo-any-change.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      fromSystem: service
+      toSystem: idearium
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP2_automatic_in_every_repo
+    dependents: []
+    upstream:
+      - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP1_nexus_maps_every_phase
+      - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP2_automatic_in_every_repo
+      - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::PT1_specs_tagged_per_phase
+      - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::PT2_phases_tagged_by_system_repo
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::IS1_intent_settings_per_repo
+        files:
+          - idearium/api/index.js
+    dangling: []
+    lines:
+      - layer 4 · ready
+      - 'depends on (1): MP2_automatic_in_every_repo · all upstream 4'
+      - 'needed by (0): —'
+      - 'same files as IS1_intent_settings_per_repo with no order between them: idearium/api/index.js'
+    edges:
+      - from: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP2_automatic_in_every_repo
+        kind: declared

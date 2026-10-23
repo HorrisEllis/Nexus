@@ -1,0 +1,195 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RT1_eligibility_then_preference:db32153ad00baf8c
+type: graph
+id: phase:RT1_eligibility_then_preference:db32153ad00baf8c
+context: dependency graph of phase RT1_eligibility_then_preference
+intent: null
+summary: 22 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677395
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677395
+lastSeenAt: 1792787677395
+fingerprint: null
+payload:
+  for: RT1_eligibility_then_preference
+  kind: phase
+  repo: null
+  hash: db32153ad00baf8c
+  nodes:
+    - path: cortex/core/raid/contract-adapters.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/agent-capability-profile.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/route-eligibility.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/coordination/agent-capability.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ollama-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reasoning-route.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/route-eligibility.js
+      to: lib/ollama-activity.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/reasoning-route.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/model-door.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/model-door.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/agent-record.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/agent-capability.js
+      to: lib/agent-capability-profile.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+  crossings:
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec::GT1_gates_route_diagnose_retry
+    dependents: []
+    upstream:
+      - docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec::GT1_gates_route_diagnose_retry
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): GT1_gates_route_diagnose_retry'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec::GT1_gates_route_diagnose_retry
+        kind: inferred

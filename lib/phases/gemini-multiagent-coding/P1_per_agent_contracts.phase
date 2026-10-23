@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
+type: phase
+id: docs_gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
+context: pipeline phase P1_per_agent_contracts of docs/gemini-multiagent-coding-phasemap.spec
+intent: null
+summary: P1_per_agent_contracts (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678196
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678196
+lastSeenAt: 1792787678196
+fingerprint: null
+payload:
+  id: P1_per_agent_contracts
+  map: docs/gemini-multiagent-coding-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/gemini-toolbox/agent-contracts.js
+    - lib/chunk-service.js
+    - contracts/nexus-interaction-contract.js
+    - copilot/lib/lifeline-contracts.js
+    - lib/agent-system/contracts.js
+    - lib/agent-router.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0f2fd9ee83912663

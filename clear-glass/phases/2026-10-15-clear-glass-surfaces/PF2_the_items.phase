@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-surfaces-phasemap.spec::PF2_the_items
+type: phase
+id: docs_2026-10-15-clear-glass-surfaces-phasemap.spec::PF2_the_items
+context: pipeline phase PF2_the_items of docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+intent: null
+summary: PF2_the_items (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677496
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677496
+lastSeenAt: 1792787677496
+fingerprint: null
+payload:
+  id: PF2_the_items
+  map: docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/portfolio/store.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - PF1_read_the_log
+    - PF0_internal_vs_client_facing
+  blocks: []
+  spec: null
+  graph: 63bc80b6b271a79e

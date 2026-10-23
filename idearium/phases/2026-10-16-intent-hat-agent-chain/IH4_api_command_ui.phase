@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-intent-hat-agent-chain-phasemap.spec::IH4_api_command_ui
+type: phase
+id: docs_2026-10-16-intent-hat-agent-chain-phasemap.spec::IH4_api_command_ui
+context: pipeline phase IH4_api_command_ui of docs/2026-10-16-intent-hat-agent-chain-phasemap.spec
+intent: null
+summary: IH4_api_command_ui (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677715
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677715
+lastSeenAt: 1792787677715
+fingerprint: null
+payload:
+  id: IH4_api_command_ui
+  map: docs/2026-10-16-intent-hat-agent-chain-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/settings.html
+  depends_on:
+    - IH1_intent_nodes_point_at_hats
+  blocks: []
+  spec: null
+  graph: 491e5bd186c25940

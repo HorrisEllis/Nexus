@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK5_lanes_feed_gaps_and_phases
+type: phase
+id: docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK5_lanes_feed_gaps_and_phases
+context: >-
+  pipeline phase WK5_lanes_feed_gaps_and_phases of
+  docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+intent: null
+summary: WK5_lanes_feed_gaps_and_phases (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677038
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677038
+lastSeenAt: 1792787677038
+fingerprint: null
+payload:
+  id: WK5_lanes_feed_gaps_and_phases
+  map: docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - idearium/api/index.js
+  depends_on:
+    - WK1_the_workshop_is_blocks_from_the_templates
+  blocks: []
+  spec: null
+  graph: 600c57b241fdd5b2

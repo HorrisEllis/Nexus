@@ -1,0 +1,168 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP4_signals_weighted:036df943c960cf97
+type: graph
+id: phase:HP4_signals_weighted:036df943c960cf97
+context: dependency graph of phase HP4_signals_weighted
+intent: null
+summary: 18 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677127
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677127
+lastSeenAt: 1792787677127
+fingerprint: null
+payload:
+  for: HP4_signals_weighted
+  kind: phase
+  repo: null
+  hash: 036df943c960cf97
+  nodes:
+    - path: idearium/lib/config-core.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/economy/router.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/chunk-nodes.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-import.config.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/adapters/warp-cascade.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/agent-record.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: idearium/lib/chunk-nodes.js
+      to: idearium/lib/config-core.cjs
+      kind: requires
+    - from: idearium/lib/config.js
+      to: idearium/lib/config-core.cjs
+      kind: requires
+    - from: lib/project-import.config.js
+      to: idearium/lib/config-core.cjs
+      kind: requires
+  crossings:
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/project-import.config.js
+      to: idearium/lib/config-core.cjs
+      fromSystem: lib
+      toSystem: idearium
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

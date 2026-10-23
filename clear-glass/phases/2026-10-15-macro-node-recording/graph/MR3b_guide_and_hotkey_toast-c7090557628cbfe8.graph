@@ -1,0 +1,112 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR3b_guide_and_hotkey_toast:c7090557628cbfe8
+type: graph
+id: phase:MR3b_guide_and_hotkey_toast:c7090557628cbfe8
+context: dependency graph of phase MR3b_guide_and_hotkey_toast
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677589
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677589
+lastSeenAt: 1792787677589
+fingerprint: null
+payload:
+  for: MR3b_guide_and_hotkey_toast
+  kind: phase
+  repo: null
+  hash: c7090557628cbfe8
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings/sections/macros.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/nexus-options-autoboot.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/shortcuts/registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/toolbar/commands.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/toolbar/commands.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/shortcuts/registry.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/nexus-options-autoboot.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-macro-node-recording-phasemap.spec::MR3_dialog
+    dependents: []
+    upstream:
+      - docs/2026-10-15-macro-node-recording-phasemap.spec::MR3_dialog
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): MR3_dialog'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-15-macro-node-recording-phasemap.spec::MR3_dialog
+        kind: inferred

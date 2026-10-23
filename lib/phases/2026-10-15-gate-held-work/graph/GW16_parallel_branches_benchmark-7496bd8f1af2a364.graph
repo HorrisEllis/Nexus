@@ -1,0 +1,192 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW16_parallel_branches_benchmark:7496bd8f1af2a364
+type: graph
+id: phase:GW16_parallel_branches_benchmark:7496bd8f1af2a364
+context: dependency graph of phase GW16_parallel_branches_benchmark
+intent: null
+summary: 15 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677573
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677573
+lastSeenAt: 1792787677573
+fingerprint: null
+payload:
+  for: GW16_parallel_branches_benchmark
+  kind: phase
+  repo: null
+  hash: 7496bd8f1af2a364
+  nodes:
+    - path: cortex/core/raid/contract-adapters.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/model-door.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/shadow-space.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-shadow-space.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/workspace/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/pipeline-routing.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reasoning-route.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/route-eligibility.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: lib/shadow-space.js
+      to: lib/shadow.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/reasoning-route.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/route-eligibility.js
+      kind: requires
+    - from: tests/modules/test-shadow-space.test.js
+      to: lib/shadow-space.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/model-door.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/model-door.js
+      kind: requires
+  crossings:
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW15_every_file_tested
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0g_parallel_limit
+    dependents: []
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0e_sandbox_egress
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0f_mutation_testing
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0g_parallel_limit
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW15_every_file_tested
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW15_every_file_tested
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+        files:
+          - lib/shadow-space.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW25_the_systems_at_the_gate_moments
+        files:
+          - cortex/core/raid/contract-adapters.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW26_everything_declares_what_it_needs
+        files:
+          - cortex/core/raid/contract-adapters.js
+    dangling: []
+    lines:
+      - layer 5 · blocked by GW14_copy_in_diff_out, GW15_every_file_tested
+      - >-
+        depends on (3): GW14_copy_in_diff_out, GW15_every_file_tested, GW0g_parallel_limit · all
+        upstream 10
+      - 'needed by (0): —'
+      - 'same files as GW7_failure_macro_and_rewind with no order between them: lib/shadow-space.js'
+      - >-
+        same files as GW25_the_systems_at_the_gate_moments with no order between them:
+        cortex/core/raid/contract-adapters.js
+      - >-
+        same files as GW26_everything_declares_what_it_needs with no order between them:
+        cortex/core/raid/contract-adapters.js
+    edges:
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+        kind: declared
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW15_every_file_tested
+        kind: declared
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW0g_parallel_limit
+        kind: declared

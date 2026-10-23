@@ -1,0 +1,79 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE9_the_panels:e21c35e06e99c19e
+type: graph
+id: phase:CE9_the_panels:e21c35e06e99c19e
+context: dependency graph of phase CE9_the_panels
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677510
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677510
+lastSeenAt: 1792787677510
+fingerprint: null
+payload:
+  for: CE9_the_panels
+  kind: phase
+  repo: null
+  hash: e21c35e06e99c19e
+  nodes:
+    - path: clear-glass/src/mesh/route-graph.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: idearium/ui/js/code-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/repo-drawer-views.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/repo-tasks.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/route-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+    - from: tests/modules/route-graph.test.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE4_reply_kind_and_tags
+    dependents: []
+    upstream:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE3_reply_on_task_gate
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE4_reply_kind_and_tags
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (2): CE5_events, CE4_reply_kind_and_tags · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
+        kind: declared
+      - from: docs/2026-10-15-code-tab-run-state-phasemap.spec::CE4_reply_kind_and_tags
+        kind: declared

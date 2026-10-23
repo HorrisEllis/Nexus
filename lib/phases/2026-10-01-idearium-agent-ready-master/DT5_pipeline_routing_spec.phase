@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT5_pipeline_routing_spec
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT5_pipeline_routing_spec
+context: >-
+  pipeline phase DT5_pipeline_routing_spec of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DT5_pipeline_routing_spec (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676400
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676400
+lastSeenAt: 1792787676400
+fingerprint: null
+payload:
+  id: DT5_pipeline_routing_spec
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4d9d36b0f640099b

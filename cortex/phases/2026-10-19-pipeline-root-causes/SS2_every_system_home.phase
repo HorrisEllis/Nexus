@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::SS2_every_system_home
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::SS2_every_system_home
+context: pipeline phase SS2_every_system_home of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: SS2_every_system_home (library) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677928
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677928
+lastSeenAt: 1792787677928
+fingerprint: null
+payload:
+  id: SS2_every_system_home
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - copilot/
+    - intelligence/
+    - loom/
+    - versionium/
+    - orchestrator/
+    - idearium/
+    - diagnostic/
+    - architect/
+    - cortex/
+    - cortex/memory/jaa-db.js
+  depends_on:
+    - SS1_system_store_adoption
+  blocks: []
+  spec: null
+  graph: 8abdeb8d18ad7e5d

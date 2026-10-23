@@ -1,0 +1,122 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CA4_connections:fd002fc2bc10c045
+type: graph
+id: phase:CA4_connections:fd002fc2bc10c045
+context: dependency graph of phase CA4_connections
+intent: null
+summary: 11 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678143
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678143
+lastSeenAt: 1792787678143
+fingerprint: null
+payload:
+  for: CA4_connections
+  kind: phase
+  repo: null
+  hash: fd002fc2bc10c045
+  nodes:
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/connections.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/contract-queue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: intelligence/consumer.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/contract-poller.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-adversarial-sim.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-contract-queue-hardening.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/connections.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/contract-queue.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/connections.js
+      kind: requires
+    - from: intelligence/consumer.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: orchestrator/lib/contract-poller.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: tests/modules/test-adversarial-sim.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: tests/modules/test-contract-queue-hardening.js
+      to: lib/contract-queue.js
+      kind: requires
+  crossings:
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
+    dependents:
+      - docs/copilot-autonomous-phasemap.spec::CA5_system_control_and_clearglass
+    upstream:
+      - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
+    downstream:
+      - docs/copilot-autonomous-phasemap.spec::CA5_system_control_and_clearglass
+    blockedBy: []
+    unlocks:
+      - docs/copilot-autonomous-phasemap.spec::CA5_system_control_and_clearglass
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): CA1_scheduler'
+      - >-
+        needed by (1): CA5_system_control_and_clearglass · finishing it unlocks
+        CA5_system_control_and_clearglass
+    edges:
+      - from: docs/copilot-autonomous-phasemap.spec::CA1_scheduler
+        kind: declared

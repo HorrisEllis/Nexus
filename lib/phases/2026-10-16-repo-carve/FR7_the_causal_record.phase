@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::FR7_the_causal_record
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::FR7_the_causal_record
+context: pipeline phase FR7_the_causal_record of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: FR7_the_causal_record (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677751
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677751
+lastSeenAt: 1792787677751
+fingerprint: null
+payload:
+  id: FR7_the_causal_record
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-05-failure-reproduction-phasemap.spec
+    - docs/2026-10-17-debugging-product-phasemap.spec
+    - cortex/core/raid/contract-trace.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8bee8dc012336255

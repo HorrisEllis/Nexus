@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
+context: pipeline phase COSA13_auto_update of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA13_auto_update (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677535
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677535
+lastSeenAt: 1792787677535
+fingerprint: null
+payload:
+  id: COSA13_auto_update
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - COSA1_version_store_and_import
+    - COSA4_switch_and_rollback
+  blocks: []
+  spec: null
+  graph: 5d782bdcac57ed2b

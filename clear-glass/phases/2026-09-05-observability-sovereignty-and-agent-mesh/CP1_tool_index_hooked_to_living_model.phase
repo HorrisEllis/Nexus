@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CP1_tool_index_hooked_to_living_model
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CP1_tool_index_hooked_to_living_model
+context: >-
+  pipeline phase CP1_tool_index_hooked_to_living_model of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: CP1_tool_index_hooked_to_living_model (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675799
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675799
+lastSeenAt: 1792787675799
+fingerprint: null
+payload:
+  id: CP1_tool_index_hooked_to_living_model
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - EVT1_commands_and_tools_emit_events
+    - TC1_tools_get_real_contracts
+  blocks: []
+  spec: null
+  graph: ce14ab9b2c29744b

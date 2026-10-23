@@ -1,0 +1,86 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP4_copilot_cli_deterministic_toggle:3e9bf786171d55b3
+type: graph
+id: phase:CP4_copilot_cli_deterministic_toggle:3e9bf786171d55b3
+context: dependency graph of phase CP4_copilot_cli_deterministic_toggle
+intent: null
+summary: 4 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675705
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675705
+lastSeenAt: 1792787675705
+fingerprint: null
+payload:
+  for: CP4_copilot_cli_deterministic_toggle
+  kind: phase
+  repo: null
+  hash: 3e9bf786171d55b3
+  nodes:
+    - path: lib/end-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-container.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: lib/end-state.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/end-state.js
+      kind: requires
+    - from: lib/project-container.js
+      to: lib/end-state.js
+      kind: requires
+  crossings:
+    - from: lib/end-state.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C4_build_wizard_two_modes
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C1_copilot_spec_wizard
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C4_build_wizard_two_modes
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C4_build_wizard_two_modes
+    unlocks: []
+    conflicts:
+      - with: docs/2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+        files:
+          - lib/end-state.js
+      - with: docs/2026-09-02-nexus-vision-master-phasemap.spec::SR9_autonomous_self_build_end_state
+        files:
+          - lib/end-state.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by C4_build_wizard_two_modes
+      - 'depends on (1): C4_build_wizard_two_modes · all upstream 2'
+      - 'needed by (0): —'
+      - 'same files as B2_chunk_contract_chaining with no order between them: lib/end-state.js'
+      - >-
+        same files as SR9_autonomous_self_build_end_state with no order between them:
+        lib/end-state.js
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::C4_build_wizard_two_modes
+        kind: inferred

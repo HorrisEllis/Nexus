@@ -1,0 +1,164 @@
+envelope: 1
+uuid: nexus-export-graph-phase:G1_guardian_agents_folder:6b3bc0c422f31286
+type: graph
+id: phase:G1_guardian_agents_folder:6b3bc0c422f31286
+context: dependency graph of phase G1_guardian_agents_folder
+intent: null
+summary: 15 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675660
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675660
+lastSeenAt: 1792787675660
+fingerprint: null
+payload:
+  for: G1_guardian_agents_folder
+  kind: phase
+  repo: null
+  hash: 6b3bc0c422f31286
+  nodes:
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/userscript-chatgpt.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/agent-mesh-drainer.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/agent-mesh-hostile.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/dom-transport.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/route-graph.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/network/install.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/automation-engine.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/network/install.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-drainer.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-hostile.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+    dependents:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CP2_copilot_learning_memory
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM7_agent_suite_welcome_ui
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T5_raid_full_cli
+    downstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CP2_copilot_learning_memory
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+    unlocks:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CP2_copilot_learning_memory
+    conflicts:
+      - with: docs/2026-09-02-nexus-vision-master-phasemap.spec::AM10_ollama_models_in_mesh
+        files:
+          - clear-glass/src/mesh/agent-mesh.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by AM11_per_agent_tasks_automation
+      - 'depends on (1): AM11_per_agent_tasks_automation · all upstream 5'
+      - >-
+        needed by (1): CP2_copilot_learning_memory · finishing it unlocks
+        CP2_copilot_learning_memory
+      - >-
+        same files as AM10_ollama_models_in_mesh with no order between them:
+        clear-glass/src/mesh/agent-mesh.js
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+        kind: inferred

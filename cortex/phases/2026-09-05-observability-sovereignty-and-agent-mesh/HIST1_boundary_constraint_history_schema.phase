@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::HIST1_boundary_constraint_history_schema
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::HIST1_boundary_constraint_history_schema
+context: >-
+  pipeline phase HIST1_boundary_constraint_history_schema of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: HIST1_boundary_constraint_history_schema (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675806
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675806
+lastSeenAt: 1792787675806
+fingerprint: null
+payload:
+  id: HIST1_boundary_constraint_history_schema
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/context-gate.js
+    - cortex/core/raid/contract-boundary.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7a9b8b7a2b2c78de

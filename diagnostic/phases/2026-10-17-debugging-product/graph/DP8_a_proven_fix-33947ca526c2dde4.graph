@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DP8_a_proven_fix:33947ca526c2dde4
+type: graph
+id: phase:DP8_a_proven_fix:33947ca526c2dde4
+context: dependency graph of phase DP8_a_proven_fix
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677769
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677769
+lastSeenAt: 1792787677769
+fingerprint: null
+payload:
+  for: DP8_a_proven_fix
+  kind: phase
+  repo: null
+  hash: 33947ca526c2dde4
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+    dependents:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP9_crystallize_the_fix
+    upstream:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP0d_one_gap_door
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP2_one_gap_door
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+    downstream:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP9_crystallize_the_fix
+    blockedBy:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+    unlocks:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP9_crystallize_the_fix
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by DP6_reproduce_in_cos
+      - 'depends on (1): DP6_reproduce_in_cos · all upstream 5'
+      - 'needed by (1): DP9_crystallize_the_fix · finishing it unlocks DP9_crystallize_the_fix'
+    edges:
+      - from: docs/2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+        kind: declared

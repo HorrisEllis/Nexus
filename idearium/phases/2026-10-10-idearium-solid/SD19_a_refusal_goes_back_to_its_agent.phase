@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD19_a_refusal_goes_back_to_its_agent
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD19_a_refusal_goes_back_to_its_agent
+context: >-
+  pipeline phase SD19_a_refusal_goes_back_to_its_agent of
+  docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD19_a_refusal_goes_back_to_its_agent (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677248
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677248
+lastSeenAt: 1792787677248
+fingerprint: null
+payload:
+  id: SD19_a_refusal_goes_back_to_its_agent
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/ui/js/app.js
+    - idearium/ui/js/work-surface.js
+    - idearium/ui/index.html
+  depends_on:
+    - SD18_mastermind_ready
+  blocks: []
+  spec: null
+  graph: 5ef0ac81785ee32f

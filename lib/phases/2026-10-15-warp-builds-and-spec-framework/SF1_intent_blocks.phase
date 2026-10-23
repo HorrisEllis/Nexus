@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF1_intent_blocks
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF1_intent_blocks
+context: pipeline phase SF1_intent_blocks of docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: SF1_intent_blocks (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677631
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677631
+lastSeenAt: 1792787677631
+fingerprint: null
+payload:
+  id: SF1_intent_blocks
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.66)
+  files:
+    - lib/repo-prompt-blocks.js
+    - lib/context-prereqs.js
+    - lib/repo-agent.js
+    - idearium/ui/js/agent-blocks.js
+    - idearium/ui/settings.html
+    - tests/modules/test-spec-pipeline.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a8afa92a489433cd

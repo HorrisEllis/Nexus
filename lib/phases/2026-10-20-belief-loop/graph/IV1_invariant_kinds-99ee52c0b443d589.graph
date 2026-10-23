@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303345
+exported_at: 1792787677970
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303345
-lastSeenAt: 1792456303345
+firstSeenAt: 1792787677970
+lastSeenAt: 1792787677970
 fingerprint: null
 payload:
   for: IV1_invariant_kinds
@@ -27,7 +27,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 4
     deps:
       - docs/2026-10-20-belief-loop-phasemap.spec::IV0_belief_census
@@ -54,6 +53,11 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 7583ffef0c495b95 · layer 4 · blocked by IV0_belief_census, GR1_graph_primitive
+      - layer 4 · blocked by IV0_belief_census, GR1_graph_primitive
       - 'depends on (2): IV0_belief_census, GR1_graph_primitive · all upstream 7'
       - 'needed by (1): IV2_invariant_miner · all downstream 4'
+    edges:
+      - from: docs/2026-10-20-belief-loop-phasemap.spec::IV0_belief_census
+        kind: declared
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+        kind: declared

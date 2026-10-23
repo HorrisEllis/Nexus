@@ -145,7 +145,8 @@ function _phNextRail() {
     ${(n.queue || []).map(q => `<div class="ph2-spec" title="${escapeHtml(q.why)} — ${escapeHtml(q.map)}"><span class="ph2-spec-name">${escapeHtml(q.id)}</span><span class="ph2-dim">unlocks ${q.unlocks}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phasesBuild('${_phq(q.map)}','${_phq(q.id)}')" title="build it now (the same route as its own Build button)">▶ build</button></div>`).join('') || '<div class="ph2-dim ph2-pad">nothing can be built now</div>'}
     ${why ? `<div class="ph2-dim ph2-pad" title="every other open phase is in one group, with what would unblock it (phases next --group …)">waiting: ${escapeHtml(why)}</div>` : ''}
     ${_phEvidenceRail()}
-    ${_phGroomRail()}`;
+    ${_phGroomRail()}
+    ${_phNodesRail()}`;
 }
 
 // 0.60.224 SL2 — done by evidence: a dry run first (its own tests run, nothing written); Close them asks, then writes through the writer
@@ -185,6 +186,22 @@ function _phGroomRail() {
     ${(r.lines || []).map(l => `<div class="ph2-dim ph2-pad">${escapeHtml(l)}</div>`).join('')}
     ${ask.slice(0, 8).map(x => `<div class="ph2-spec" title="${escapeHtml(x.why)}"><span class="ph2-spec-name">${escapeHtml(x.key.split('::').pop())}</span><span class="ph2-dim">${escapeHtml(x.kind)}</span></div>`).join('')}
     <div class="ph2-pad">${btn}${r.dryRun && r.pending && r.pending.maps ? ` <button class="ph2-mini-btn" onclick="phGroom(true)" title="write the additions into ${r.pending.maps} map(s): only keys a phase lacks; through the apply gate">write to ${r.pending.maps} map${r.pending.maps === 1 ? '' : 's'}</button>` : ''}</div>`;
+}
+// 0.60.229 SL9 — every phase a .phase node with its graph, beside its owner system: how many, where, and what is missing or stale
+function _phNodesRail() {
+  const n = PHASES.nodes;
+  const btn = `<button class="ph2-mini-btn" onclick="phNodes()" title="every phase's .phase node and its dependency graph, per owner system — read only; they are written by node emerge/compiler/phase-specs.js --all">◇ phase nodes</button>`;
+  if (!n) return `<div class="ph2-pad">${btn}</div>`;
+  return `<div class="ph2-rail-head">phase nodes · ${n.nodes} for ${n.phases} phases</div>
+    <div class="ph2-dim ph2-pad">${escapeHtml(Object.entries(n.bySystem || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(' · '))}</div>
+    ${n.missingCount ? `<div class="ph2-dim ph2-pad" style="color:var(--amber)">${n.missingCount} phase(s) with no node yet</div>` : ''}
+    ${n.staleCount ? `<div class="ph2-dim ph2-pad" style="color:var(--amber)">${n.staleCount} node(s) whose phase is in no map</div>` : ''}
+    ${n.remedy ? `<div class="ph2-dim ph2-pad">${escapeHtml(n.remedy)}</div>` : ''}<div class="ph2-pad">${btn}</div>`;
+}
+async function phNodes() {
+  const uuid = PHASES.uuid || (CURRENT_API_REPO && CURRENT_API_REPO.uuid);
+  try { PHASES.nodes = await api(`/api/repos/${uuid}/phases/nodes`); } catch (e) { toast(`phase nodes: ${e.message}`, 'err'); }
+  _phPaint();
 }
 async function phGroom(apply) {
   const uuid = PHASES.uuid || (CURRENT_API_REPO && CURRENT_API_REPO.uuid);

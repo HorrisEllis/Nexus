@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-registry-harness-and-stability-phasemap.spec::S1
+type: phase
+id: docs_2026-09-27-registry-harness-and-stability-phasemap.spec::S1
+context: pipeline phase S1 of docs/2026-09-27-registry-harness-and-stability-phasemap.spec
+intent: null
+summary: S1 (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676069
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676069
+lastSeenAt: 1792787676069
+fingerprint: null
+payload:
+  id: S1
+  map: docs/2026-09-27-registry-harness-and-stability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/jaa-store.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e58044a67741c0ac

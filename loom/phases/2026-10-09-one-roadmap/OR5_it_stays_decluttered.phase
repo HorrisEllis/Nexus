@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-roadmap-phasemap.spec::OR5_it_stays_decluttered
+type: phase
+id: docs_2026-10-09-one-roadmap-phasemap.spec::OR5_it_stays_decluttered
+context: pipeline phase OR5_it_stays_decluttered of docs/2026-10-09-one-roadmap-phasemap.spec
+intent: null
+summary: OR5_it_stays_decluttered (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787920148
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787920148
+lastSeenAt: 1792787920148
+fingerprint: null
+payload:
+  id: OR5_it_stays_decluttered
+  map: docs/2026-10-09-one-roadmap-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+    - loom/bootstrap.js
+  depends_on:
+    - OR1_five_answers_for_an_open_phase
+    - OR4_one_roadmap_in_idearium
+  blocks: []
+  spec: null
+  graph: 9060a707b377db33

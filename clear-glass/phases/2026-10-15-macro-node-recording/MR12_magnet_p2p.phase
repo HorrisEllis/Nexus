@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR12_magnet_p2p
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR12_magnet_p2p
+context: pipeline phase MR12_magnet_p2p of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR12_magnet_p2p (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677596
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677596
+lastSeenAt: 1792787677596
+fingerprint: null
+payload:
+  id: MR12_magnet_p2p
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: BLOCKED-ON-MR12_p2p_scope
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2f67b50f8b6c45db

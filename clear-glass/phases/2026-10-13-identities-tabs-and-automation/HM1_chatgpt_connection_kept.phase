@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::HM1_chatgpt_connection_kept
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::HM1_chatgpt_connection_kept
+context: >-
+  pipeline phase HM1_chatgpt_connection_kept of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: HM1_chatgpt_connection_kept (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677407
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677407
+lastSeenAt: 1792787677407
+fingerprint: null
+payload:
+  id: HM1_chatgpt_connection_kept
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c58eb03d6c919db7

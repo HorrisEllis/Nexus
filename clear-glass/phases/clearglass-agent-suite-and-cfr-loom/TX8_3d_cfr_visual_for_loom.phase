@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX8_3d_cfr_visual_for_loom
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX8_3d_cfr_visual_for_loom
+context: >-
+  pipeline phase TX8_3d_cfr_visual_for_loom of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX8_3d_cfr_visual_for_loom (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678130
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678130
+lastSeenAt: 1792787678130
+fingerprint: null
+payload:
+  id: TX8_3d_cfr_visual_for_loom
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TX7_cfr_diagnostic_for_loom
+  blocks: []
+  spec: null
+  graph: ebbf61ff54a94603

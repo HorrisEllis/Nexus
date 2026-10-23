@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TX8_3d_cfr_visual_for_loom:ebbf61ff54a94603
+type: graph
+id: phase:TX8_3d_cfr_visual_for_loom:ebbf61ff54a94603
+context: dependency graph of phase TX8_3d_cfr_visual_for_loom
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787678130
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678130
+lastSeenAt: 1792787678130
+fingerprint: null
+payload:
+  for: TX8_3d_cfr_visual_for_loom
+  kind: phase
+  repo: null
+  hash: ebbf61ff54a94603
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX7_cfr_diagnostic_for_loom
+    dependents: []
+    upstream:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX7_cfr_diagnostic_for_loom
+    downstream: []
+    blockedBy:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX7_cfr_diagnostic_for_loom
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by TX7_cfr_diagnostic_for_loom
+      - 'depends on (1): TX7_cfr_diagnostic_for_loom'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX7_cfr_diagnostic_for_loom
+        kind: declared

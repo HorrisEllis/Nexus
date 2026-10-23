@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-debugging-product-phasemap.spec::GD1_gaps_from_the_graph_for_any_repo
+type: phase
+id: docs_2026-10-17-debugging-product-phasemap.spec::GD1_gaps_from_the_graph_for_any_repo
+context: >-
+  pipeline phase GD1_gaps_from_the_graph_for_any_repo of
+  docs/2026-10-17-debugging-product-phasemap.spec
+intent: null
+summary: GD1_gaps_from_the_graph_for_any_repo (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677773
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677773
+lastSeenAt: 1792787677773
+fingerprint: null
+payload:
+  id: GD1_gaps_from_the_graph_for_any_repo
+  map: docs/2026-10-17-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-17-failure-mode-report-phasemap.spec
+    - cortex/self-heal/index.js
+    - docs/2026-10-18-debugging-product-phasemap.spec
+    - lib/gap-field.js
+    - cortex/core/raid/contract-gates.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0fec63ba9c0f26c8

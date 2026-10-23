@@ -1,0 +1,260 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CC1_claude_code_lands_like_every_agent:bab5260f8cf63874
+type: graph
+id: phase:CC1_claude_code_lands_like_every_agent:bab5260f8cf63874
+context: dependency graph of phase CC1_claude_code_lands_like_every_agent
+intent: null
+summary: 28 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677062
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677062
+lastSeenAt: 1792787677062
+fingerprint: null
+payload:
+  for: CC1_claude_code_lands_like_every_agent
+  kind: phase
+  repo: null
+  hash: bab5260f8cf63874
+  nodes:
+    - path: idearium/ui/settings.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/claude-code-backend.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-inject-screen.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-proposal-evidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/change-entry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/path-guard.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/lib/merge3.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: lib/repo-inject.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/nexus-self/inject-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/change-entry.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/path-guard.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: versionium/lib/merge3.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-inject-screen.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-proposal-evidence.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+  crossings:
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: versionium/lib/merge3.js
+      fromSystem: lib
+      toSystem: versionium
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CM2_every_command_for_every_agent
+    upstream: []
+    downstream:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL2_log_tab
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::BO1_brainos_reads_the_log
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CM2_every_command_for_every_agent
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DC1_a_click_that_did_nothing
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DT1_desktop_into_the_log
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DX1_diagnose_it
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::NC2_nexus_systems_as_compartments
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::SP1_one_spotlight
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::UI1_the_screens_for_cm3
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::UN1_nexus_surfaces_in_the_field
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::VM1_checkpoints_on_the_log
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CM2_every_command_for_every_agent
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): AL1_activity_log, CM2_every_command_for_every_agent · all downstream 12 ·
+        finishing it unlocks AL1_activity_log, CM2_every_command_for_every_agent
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

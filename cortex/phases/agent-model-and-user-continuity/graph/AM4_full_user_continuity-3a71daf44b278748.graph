@@ -1,0 +1,82 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM4_full_user_continuity:3a71daf44b278748
+type: graph
+id: phase:AM4_full_user_continuity:3a71daf44b278748
+context: dependency graph of phase AM4_full_user_continuity
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678107
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678107
+lastSeenAt: 1792787678107
+fingerprint: null
+payload:
+  for: AM4_full_user_continuity
+  kind: phase
+  repo: null
+  hash: 3a71daf44b278748
+  nodes:
+    - path: cortex/push-recall.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/bep-lookup.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/causal-lookup.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/fix-map.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: cortex/push-recall.js
+      to: cortex/memory/fix-map.js
+      kind: requires
+    - from: cortex/push-recall.js
+      to: cortex/memory/bep-lookup.js
+      kind: requires
+    - from: cortex/push-recall.js
+      to: cortex/memory/causal-lookup.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM9_get_to_know_you_and_idea_capture
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+    upstream: []
+    downstream:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM10_thinking_partner_rename_and_ui_builder
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM8_lifeline_as_general_channel_and_reasoning_upgrade
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM9_get_to_know_you_and_idea_capture
+    blockedBy: []
+    unlocks:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM9_get_to_know_you_and_idea_capture
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): AM9_get_to_know_you_and_idea_capture, AM5_ambiguity_triggered_pull · all
+        downstream 6 · finishing it unlocks AM9_get_to_know_you_and_idea_capture
+    edges: []

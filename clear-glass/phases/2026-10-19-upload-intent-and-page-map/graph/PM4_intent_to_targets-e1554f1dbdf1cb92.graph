@@ -1,0 +1,75 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PM4_intent_to_targets:e1554f1dbdf1cb92
+type: graph
+id: phase:PM4_intent_to_targets:e1554f1dbdf1cb92
+context: dependency graph of phase PM4_intent_to_targets
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677957
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677957
+lastSeenAt: 1792787677957
+fingerprint: null
+payload:
+  for: PM4_intent_to_targets
+  kind: phase
+  repo: null
+  hash: e1554f1dbdf1cb92
+  nodes:
+    - path: clear-glass/src/page/page-map.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-memory.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-session.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/page/page-session.js
+      to: clear-glass/src/page/page-map.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM3_synthesized_map_that_learns
+    dependents:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+    upstream:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM1_blocks
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM2_index_and_chunks
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM3_synthesized_map_that_learns
+    downstream:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM6_nerve_feel
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM7_live_injected_map
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM8_page_map_panel
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): PM3_synthesized_map_that_learns · all upstream 3'
+      - >-
+        needed by (1): PM5_tools_routes_commands · all downstream 4 · finishing it unlocks
+        PM5_tools_routes_commands
+    edges:
+      - from: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM3_synthesized_map_that_learns
+        kind: declared

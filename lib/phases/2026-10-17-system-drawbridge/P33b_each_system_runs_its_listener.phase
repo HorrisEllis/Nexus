@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
+context: >-
+  pipeline phase P33b_each_system_runs_its_listener of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: P33b_each_system_runs_its_listener (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677841
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677841
+lastSeenAt: 1792787677841
+fingerprint: null
+payload:
+  id: P33b_each_system_runs_its_listener
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-18-compartment-environment-phasemap.spec
+    - idearium/spec-engine/templates.js
+    - lib/handoff.js
+    - lib/cos-bridge.js
+    - lib/system-registry.js
+    - lib/drawbridge-registry.js
+    - cos/compartment/qemu-runtime.js
+    - contracts/handshake.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 62329d11d3def412

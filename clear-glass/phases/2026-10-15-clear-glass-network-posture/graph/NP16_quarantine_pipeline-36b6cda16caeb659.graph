@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NP16_quarantine_pipeline:36b6cda16caeb659
+type: graph
+id: phase:NP16_quarantine_pipeline:36b6cda16caeb659
+context: dependency graph of phase NP16_quarantine_pipeline
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677490
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677490
+lastSeenAt: 1792787677490
+fingerprint: null
+payload:
+  for: NP16_quarantine_pipeline
+  kind: phase
+  repo: null
+  hash: 36b6cda16caeb659
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+    dependents: []
+    upstream:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP3_apply_to_electron
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP5_leak_test
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by NP1_compartment, NP9_cli_first, NP15_kill_switch
+      - 'depends on (3): NP1_compartment, NP9_cli_first, NP15_kill_switch · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+        kind: declared
+      - from: docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+        kind: declared
+      - from: docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+        kind: inferred

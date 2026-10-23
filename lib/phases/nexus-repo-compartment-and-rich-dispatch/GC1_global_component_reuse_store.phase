@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::GC1_global_component_reuse_store
+type: phase
+id: docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::GC1_global_component_reuse_store
+context: >-
+  pipeline phase GC1_global_component_reuse_store of
+  docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+intent: null
+summary: GC1_global_component_reuse_store (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678279
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678279
+lastSeenAt: 1792787678279
+fingerprint: null
+payload:
+  id: GC1_global_component_reuse_store
+  map: docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+    - lib/nexus-self/inject-gate.js
+    - idearium/repo/nexus-self.js
+    - nexus/autopilot.js
+    - tests/modules/test-system-control.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7caeeeea63576bfe

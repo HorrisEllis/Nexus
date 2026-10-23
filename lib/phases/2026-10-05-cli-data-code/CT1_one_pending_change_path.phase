@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::CT1_one_pending_change_path
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::CT1_one_pending_change_path
+context: pipeline phase CT1_one_pending_change_path of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: CT1_one_pending_change_path (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676974
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676974
+lastSeenAt: 1792787676974
+fingerprint: null
+payload:
+  id: CT1_one_pending_change_path
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-inject.js
+    - lib/code-edit.js
+    - idearium/repo/work-surface.js
+    - lib/repo-git.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e9d4a2ab8a870183

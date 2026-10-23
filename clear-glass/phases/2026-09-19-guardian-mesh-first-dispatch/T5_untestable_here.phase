@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::T5_untestable_here
+type: phase
+id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::T5_untestable_here
+context: pipeline phase T5_untestable_here of docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+intent: null
+summary: T5_untestable_here (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675978
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675978
+lastSeenAt: 1792787675978
+fingerprint: null
+payload:
+  id: T5_untestable_here
+  map: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3ec3c1ec8bf6950c

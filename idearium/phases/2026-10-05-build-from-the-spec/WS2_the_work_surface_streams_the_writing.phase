@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::WS2_the_work_surface_streams_the_writing
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::WS2_the_work_surface_streams_the_writing
+context: >-
+  pipeline phase WS2_the_work_surface_streams_the_writing of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: WS2_the_work_surface_streams_the_writing (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676965
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676965
+lastSeenAt: 1792787676965
+fingerprint: null
+payload:
+  id: WS2_the_work_surface_streams_the_writing
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/work-surface.js
+    - idearium/ui/js/app.js
+    - idearium/ui/css/work-surface.css
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6b554fb740867279

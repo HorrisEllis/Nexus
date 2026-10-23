@@ -1,0 +1,334 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ13_the_work_surface_and_provenance:26d29fe3a64d548b
+type: graph
+id: phase:RQ13_the_work_surface_and_provenance:26d29fe3a64d548b
+context: dependency graph of phase RQ13_the_work_surface_and_provenance
+intent: null
+summary: 29 node(s), 9 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677365
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677365
+lastSeenAt: 1792787677365
+fingerprint: null
+payload:
+  for: RQ13_the_work_surface_and_provenance
+  kind: phase
+  repo: null
+  hash: 26d29fe3a64d548b
+  nodes:
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/work-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/command.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/provenance-query.js
+      role: changes
+      exists: false
+      system: lib
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/worker.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: scripts/mco5-one-real-job.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/mco6-ic9-kill-and-restart.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-dependency-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-tangible-file.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-boundary.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/event-taxonomy.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-intent-contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contract-repo-provision.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: meta
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/contract-repo-provision.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/event-taxonomy.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: meta/adversary-suite.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-boundary.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/agent-intent-contract.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: guardian/server.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco5-one-real-job.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco6-ic9-kill-and-restart.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-dependency-graph.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-tangible-file.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: meta/adversary-suite.js
+      fromSystem: cortex
+      toSystem: meta
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+    dependents:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+    downstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ17_observe_by_request
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ21_the_contract_file_is_its_record
+        files:
+          - cortex/core/raid/contract-intake.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+        files:
+          - cortex/core/raid/contract-intake.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ25_progress_is_evidence_not_activity
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ27_the_reasoning_half_gets_its_home
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 5 · blocked by RQ9_the_chunked_contract, RQ10_anchors_and_the_diff_reconciled
+      - >-
+        depends on (2): RQ9_the_chunked_contract, RQ10_anchors_and_the_diff_reconciled · all
+        upstream 6
+      - 'needed by (1): RQ14_the_spine_end_to_end · all downstream 6'
+      - >-
+        same files as RQ17_observe_by_request with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as RQ21_the_contract_file_is_its_record with no order between them:
+        cortex/core/raid/contract-intake.js
+      - >-
+        same files as RQ23_acceptance_conditions_that_cannot_be_moved with no order between them:
+        cortex/core/raid/contract-intake.js
+      - >-
+        same files as RQ25_progress_is_evidence_not_activity with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as RQ27_the_reasoning_half_gets_its_home with no order between them:
+        idearium/cli/route-commands.js
+    edges:
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+        kind: declared

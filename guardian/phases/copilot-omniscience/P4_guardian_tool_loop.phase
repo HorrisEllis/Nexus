@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-omniscience-phasemap.spec::P4_guardian_tool_loop
+type: phase
+id: docs_copilot-omniscience-phasemap.spec::P4_guardian_tool_loop
+context: pipeline phase P4_guardian_tool_loop of docs/copilot-omniscience-phasemap.spec
+intent: null
+summary: P4_guardian_tool_loop (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678184
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678184
+lastSeenAt: 1792787678184
+fingerprint: null
+payload:
+  id: P4_guardian_tool_loop
+  map: docs/copilot-omniscience-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c8dd2f30f0b16d44

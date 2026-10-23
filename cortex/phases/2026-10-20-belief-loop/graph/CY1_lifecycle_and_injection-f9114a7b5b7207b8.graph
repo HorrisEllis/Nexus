@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303341
+exported_at: 1792787677969
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303341
-lastSeenAt: 1792456303341
+firstSeenAt: 1792787677969
+lastSeenAt: 1792787677969
 fingerprint: null
 payload:
   for: CY1_lifecycle_and_injection
@@ -109,7 +109,6 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 7
     deps:
       - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
@@ -143,8 +142,11 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - >-
-        DAG 7583ffef0c495b95 · layer 7 · ON THE CRITICAL PATH · blocked by CY0_one_crystal_schema,
-        CF1_confidence_from_evidence
+      - layer 7 · blocked by CY0_one_crystal_schema, CF1_confidence_from_evidence
       - 'depends on (2): CY0_one_crystal_schema, CF1_confidence_from_evidence · all upstream 14'
       - 'needed by (2): CY2_invariants_are_crystals, CY3_belief_panel · all downstream 3'
+    edges:
+      - from: docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
+        kind: declared
+      - from: docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+        kind: declared

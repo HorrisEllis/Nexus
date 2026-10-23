@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::PL3_versions_become_history
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::PL3_versions_become_history
+context: >-
+  pipeline phase PL3_versions_become_history of
+  docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: PL3_versions_become_history (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677435
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677435
+lastSeenAt: 1792787677435
+fingerprint: null
+payload:
+  id: PL3_versions_become_history
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/history-import-job.js
+    - cli/import-history.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0044abaf283377f6

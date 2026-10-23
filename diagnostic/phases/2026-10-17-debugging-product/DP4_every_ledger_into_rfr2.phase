@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
+type: phase
+id: docs_2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
+context: pipeline phase DP4_every_ledger_into_rfr2 of docs/2026-10-17-debugging-product-phasemap.spec
+intent: null
+summary: DP4_every_ledger_into_rfr2 (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677766
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677766
+lastSeenAt: 1792787677766
+fingerprint: null
+payload:
+  id: DP4_every_ledger_into_rfr2
+  map: docs/2026-10-17-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 51d10e03bd0afe5c

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-personal-chat-import-phasemap.spec::PI4_the_review_screen
+type: phase
+id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI4_the_review_screen
+context: pipeline phase PI4_the_review_screen of docs/2026-10-15-personal-chat-import-phasemap.spec
+intent: null
+summary: PI4_the_review_screen (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677618
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677618
+lastSeenAt: 1792787677618
+fingerprint: null
+payload:
+  id: PI4_the_review_screen
+  map: docs/2026-10-15-personal-chat-import-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - PI3_the_intelligence_pass
+  blocks: []
+  spec: null
+  graph: 3419972235b0c3d4

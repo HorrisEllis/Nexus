@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MC2_hotkeys_for_macros:a0d99d8f06fb8ca4
+type: graph
+id: phase:MC2_hotkeys_for_macros:a0d99d8f06fb8ca4
+context: dependency graph of phase MC2_hotkeys_for_macros
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677414
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677414
+lastSeenAt: 1792787677414
+fingerprint: null
+payload:
+  for: MC2_hotkeys_for_macros
+  kind: phase
+  repo: null
+  hash: a0d99d8f06fb8ca4
+  nodes:
+    - path: clear-glass/renderer/settings/sections/macros.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/shortcuts/registry.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/shortcuts/registry.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/shortcuts/registry.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/shortcuts/registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

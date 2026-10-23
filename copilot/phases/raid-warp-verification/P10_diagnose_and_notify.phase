@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-warp-verification-phasemap.spec::P10_diagnose_and_notify
+type: phase
+id: docs_raid-warp-verification-phasemap.spec::P10_diagnose_and_notify
+context: pipeline phase P10_diagnose_and_notify of docs/raid-warp-verification-phasemap.spec
+intent: null
+summary: P10_diagnose_and_notify (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678329
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678329
+lastSeenAt: 1792787678329
+fingerprint: null
+payload:
+  id: P10_diagnose_and_notify
+  map: docs/raid-warp-verification-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/cli.js
+    - copilot/recursive-diagnose.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 40f9f0bd5ff91845

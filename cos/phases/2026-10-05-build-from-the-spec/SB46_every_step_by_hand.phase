@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB46_every_step_by_hand
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB46_every_step_by_hand
+context: pipeline phase SB46_every_step_by_hand of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB46_every_step_by_hand (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676939
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676939
+lastSeenAt: 1792787676939
+fingerprint: null
+payload:
+  id: SB46_every_step_by_hand
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/archetype/nexus-system/cli.js
+    - cos/archetype/nexus-system/lib/scaffold.js
+    - idearium/ui/js/phases.js
+    - cli/idearium.js
+  depends_on:
+    - SB42_a_repo_expands_from_its_spec
+  blocks: []
+  spec: null
+  graph: 357aee72b6d95aa7

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::WF2_canvas_visual_pipeline
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::WF2_canvas_visual_pipeline
+context: pipeline phase WF2_canvas_visual_pipeline of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: WF2_canvas_visual_pipeline (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675654
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675654
+lastSeenAt: 1792787675654
+fingerprint: null
+payload:
+  id: WF2_canvas_visual_pipeline
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9d8971d7af662125

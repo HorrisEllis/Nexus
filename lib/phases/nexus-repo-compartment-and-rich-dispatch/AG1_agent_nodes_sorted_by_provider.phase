@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::AG1_agent_nodes_sorted_by_provider
+type: phase
+id: docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::AG1_agent_nodes_sorted_by_provider
+context: >-
+  pipeline phase AG1_agent_nodes_sorted_by_provider of
+  docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+intent: null
+summary: AG1_agent_nodes_sorted_by_provider (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678278
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678278
+lastSeenAt: 1792787678278
+fingerprint: null
+payload:
+  id: AG1_agent_nodes_sorted_by_provider
+  map: docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent-node.js
+    - guardian/lib/node-registry.js
+    - copilot/server.js
+    - lib/node-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 244704b3a3825cc8

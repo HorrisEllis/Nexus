@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P1_cross_agent_recall
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P1_cross_agent_recall
+context: pipeline phase P1_cross_agent_recall of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P1_cross_agent_recall (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678157
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678157
+lastSeenAt: 1792787678157
+fingerprint: null
+payload:
+  id: P1_cross_agent_recall
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/push-recall.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a040d6583f3e1e8b

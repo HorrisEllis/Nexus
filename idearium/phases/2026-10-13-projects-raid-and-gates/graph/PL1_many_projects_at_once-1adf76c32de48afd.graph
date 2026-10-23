@@ -1,0 +1,173 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PL1_many_projects_at_once:1adf76c32de48afd
+type: graph
+id: phase:PL1_many_projects_at_once:1adf76c32de48afd
+context: dependency graph of phase PL1_many_projects_at_once
+intent: null
+summary: 15 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677431
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677431
+lastSeenAt: 1792787677431
+fingerprint: null
+payload:
+  for: PL1_many_projects_at_once
+  kind: phase
+  repo: null
+  hash: 1adf76c32de48afd
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/project-container.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/project-decompose.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/destroy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/end-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intent-classifier.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/project-import.config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip-ingest.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip-writer.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/project-container.js
+      to: lib/project-import.config.js
+      kind: requires
+    - from: lib/project-container.js
+      to: lib/end-state.js
+      kind: requires
+    - from: lib/project-container.js
+      to: lib/intent-classifier.js
+      kind: requires
+    - from: lib/project-container.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/project-container.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/project-container.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: lib/project-container.js
+      to: cos/cli/commands/destroy.js
+      kind: requires
+    - from: lib/project-decompose.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/project-decompose.js
+      to: lib/zip-ingest.js
+      kind: requires
+    - from: lib/project-decompose.js
+      to: lib/zip-writer.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/project-container.js
+      kind: requires
+  crossings:
+    - from: lib/project-container.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/project-container.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/project-container.js
+      to: cos/cli/commands/create.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/project-container.js
+      to: cos/cli/commands/destroy.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL0_his_projects_imported_for_real
+    dependents:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::VM0_versionium_managed_per_repo
+    upstream:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL0_his_projects_imported_for_real
+    downstream:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL5_specs_become_the_roadmap
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF0_architecture_read
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF1_migration_proposed_as_phases
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF2_applied_one_phase_at_a_time
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::VM0_versionium_managed_per_repo
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::VM0_versionium_managed_per_repo
+    conflicts:
+      - with: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL6_global_links_seen
+        files:
+          - lib/project-decompose.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): PL0_his_projects_imported_for_real'
+      - >-
+        needed by (1): VM0_versionium_managed_per_repo · all downstream 5 · finishing it unlocks
+        VM0_versionium_managed_per_repo
+      - 'same files as PL6_global_links_seen with no order between them: lib/project-decompose.js'
+    edges:
+      - from: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL0_his_projects_imported_for_real
+        kind: declared

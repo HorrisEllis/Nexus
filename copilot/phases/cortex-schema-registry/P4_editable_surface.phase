@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_cortex-schema-registry-phasemap.spec::P4_editable_surface
+type: phase
+id: docs_cortex-schema-registry-phasemap.spec::P4_editable_surface
+context: pipeline phase P4_editable_surface of docs/cortex-schema-registry-phasemap.spec
+intent: null
+summary: P4_editable_surface (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678191
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678191
+lastSeenAt: 1792787678191
+fingerprint: null
+payload:
+  id: P4_editable_surface
+  map: docs/cortex-schema-registry-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9c61c4aa8a24d3ff

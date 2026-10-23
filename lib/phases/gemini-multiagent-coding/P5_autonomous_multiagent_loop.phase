@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-phase-docs_gemini-multiagent-coding-phasemap.spec::P5_autonomous_multiagent_loop
+type: phase
+id: docs_gemini-multiagent-coding-phasemap.spec::P5_autonomous_multiagent_loop
+context: pipeline phase P5_autonomous_multiagent_loop of docs/gemini-multiagent-coding-phasemap.spec
+intent: null
+summary: P5_autonomous_multiagent_loop (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678200
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678200
+lastSeenAt: 1792787678200
+fingerprint: null
+payload:
+  id: P5_autonomous_multiagent_loop
+  map: docs/gemini-multiagent-coding-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/gemini-toolbox/agent-contracts.js
+    - lib/chunk-service.js
+    - lib/gemini-toolbox/injection.js
+    - copilot/lib/self-model.js
+    - contracts/nexus-interaction-contract.js
+    - copilot/lib/lifeline-contracts.js
+    - lib/agent-system/contracts.js
+    - lib/agent-router.js
+    - idearium/spec-engine/chunk-dispatch.js
+    - lib/seam/chunk-lifecycle.js
+    - lib/consumer-registry.js
+    - lib/agent-tools/tools/query/query-recall.js
+    - lib/agent-tools/tools/query/read-file.js
+  depends_on:
+    - P1_per_agent_contracts
+    - P2_tree_parse_recall_injection
+    - P3_line_block_seam_sync
+    - P4_structured_agent_to_agent
+  blocks: []
+  spec: null
+  graph: 7a74916704cceb5b

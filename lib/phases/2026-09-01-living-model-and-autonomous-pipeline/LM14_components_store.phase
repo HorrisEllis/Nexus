@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM14_components_store
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM14_components_store
+context: >-
+  pipeline phase LM14_components_store of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM14_components_store (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675550
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675550
+lastSeenAt: 1792787675550
+fingerprint: null
+payload:
+  id: LM14_components_store
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/index.js
+  depends_on:
+    - LM2_registry_as_hub_with_watchdog
+    - LM4_per_system_tool_index
+  blocks: []
+  spec: null
+  graph: c5ab3492fddbea5d

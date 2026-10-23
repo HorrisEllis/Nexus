@@ -1,0 +1,228 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF4_hold_only_what_you_read:e035361560d2d6d0
+type: graph
+id: phase:PF4_hold_only_what_you_read:e035361560d2d6d0
+context: dependency graph of phase PF4_hold_only_what_you_read
+intent: null
+summary: 25 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677106
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677106
+lastSeenAt: 1792787677106
+fingerprint: null
+payload:
+  for: PF4_hold_only_what_you_read
+  kind: phase
+  repo: null
+  hash: e035361560d2d6d0
+  nodes:
+    - path: copilot/lib/grammar-router.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: guardian/jaa-store.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/component-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/account-routing.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/grammar-router-closed-loop.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-adversarial-sim.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-bus-subscriptions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-hook-ownership.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-deletes-stick.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-flush-lock.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-selective-load.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sigma-compaction.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/capabilities.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/grammar-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: orchestrator/lib/grammar-misfire-tracker.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: guardian/jaa-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: copilot/lib/grammar-router.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/grammar-router.js
+      to: orchestrator/lib/grammar-misfire-tracker.js
+      kind: requires
+    - from: copilot/lib/grammar-router.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: copilot/lib/grammar-router.js
+      to: copilot/lib/capabilities.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-store.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: guardian/lib/account-routing.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-adversarial-sim.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-bus-subscriptions.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-hook-ownership.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-deletes-stick.test.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-flush-lock.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-selective-load.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-sigma-compaction.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/grammar-router.js
+      kind: requires
+    - from: tests/modules/grammar-router-closed-loop.test.js
+      to: copilot/lib/grammar-router.js
+      kind: requires
+  crossings:
+    - from: copilot/lib/grammar-router.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/grammar-router.js
+      to: orchestrator/lib/grammar-misfire-tracker.js
+      fromSystem: copilot
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-07-runtime-load-phasemap.spec::PF3_append_not_rewrite
+    dependents: []
+    upstream:
+      - docs/2026-10-07-runtime-load-phasemap.spec::PF3_append_not_rewrite
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): PF3_append_not_rewrite'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-07-runtime-load-phasemap.spec::PF3_append_not_rewrite
+        kind: inferred

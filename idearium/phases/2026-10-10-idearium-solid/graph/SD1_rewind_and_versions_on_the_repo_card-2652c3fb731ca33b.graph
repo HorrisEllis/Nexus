@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SD1_rewind_and_versions_on_the_repo_card:2652c3fb731ca33b
+type: graph
+id: phase:SD1_rewind_and_versions_on_the_repo_card:2652c3fb731ca33b
+context: dependency graph of phase SD1_rewind_and_versions_on_the_repo_card
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677218
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677218
+lastSeenAt: 1792787677218
+fingerprint: null
+payload:
+  for: SD1_rewind_and_versions_on_the_repo_card
+  kind: phase
+  repo: null
+  hash: 2652c3fb731ca33b
+  nodes:
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/repo-drawer-views.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/repo-tasks.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

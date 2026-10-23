@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-guardian-cos-expansion-phasemap.spec::GA9_cos_expansion_via_copilot
+type: phase
+id: docs_copilot-guardian-cos-expansion-phasemap.spec::GA9_cos_expansion_via_copilot
+context: pipeline phase GA9_cos_expansion_via_copilot of docs/copilot-guardian-cos-expansion-phasemap.spec
+intent: null
+summary: GA9_cos_expansion_via_copilot (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678179
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678179
+lastSeenAt: 1792787678179
+fingerprint: null
+payload:
+  id: GA9_cos_expansion_via_copilot
+  map: docs/copilot-guardian-cos-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/server.js
+    - lib/agent-tools/tools/sandbox/cos-compartment.js
+    - loom/templates/cos-compartment.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a05b29515f65294a

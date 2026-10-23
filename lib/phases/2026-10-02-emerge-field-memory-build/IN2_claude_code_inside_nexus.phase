@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+context: >-
+  pipeline phase IN2_claude_code_inside_nexus of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: IN2_claude_code_inside_nexus (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676696
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676696
+lastSeenAt: 1792787676696
+fingerprint: null
+payload:
+  id: IN2_claude_code_inside_nexus
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/providers/claude-code.js
+    - lib/economy/policy.js
+    - lib/repo-agent.js
+    - idearium/repo/work-surface.js
+  depends_on:
+    - GA1_guardian_source_of_truth
+    - AC1_accounts_into_agents
+    - SH1_shadow_space
+  blocks: []
+  spec: null
+  graph: 26136e2c5eed6fe6

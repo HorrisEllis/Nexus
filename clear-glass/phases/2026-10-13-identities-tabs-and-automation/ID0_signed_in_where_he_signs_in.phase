@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::ID0_signed_in_where_he_signs_in
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::ID0_signed_in_where_he_signs_in
+context: >-
+  pipeline phase ID0_signed_in_where_he_signs_in of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: ID0_signed_in_where_he_signs_in (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677400
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677400
+lastSeenAt: 1792787677400
+fingerprint: null
+payload:
+  id: ID0_signed_in_where_he_signs_in
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/accounts/login-portal.js
+    - clear-glass/renderer/settings/sections/accounts.js
+    - clear-glass/src/preload/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8b26dcbb3d411c99

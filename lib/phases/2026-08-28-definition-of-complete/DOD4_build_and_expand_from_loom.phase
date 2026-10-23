@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-definition-of-complete-phasemap.spec::DOD4_build_and_expand_from_loom
+type: phase
+id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD4_build_and_expand_from_loom
+context: >-
+  pipeline phase DOD4_build_and_expand_from_loom of
+  docs/2026-08-28-definition-of-complete-phasemap.spec
+intent: null
+summary: DOD4_build_and_expand_from_loom (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675472
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675472
+lastSeenAt: 1792787675472
+fingerprint: null
+payload:
+  id: DOD4_build_and_expand_from_loom
+  map: docs/2026-08-28-definition-of-complete-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-08-28-self-building-pipeline-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8ee63f9d1b09068e

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+type: phase
+id: docs_2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+context: pipeline phase DBG2_the_case of docs/2026-10-18-debugging-product-phasemap.spec
+intent: null
+summary: DBG2_the_case (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677857
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677857
+lastSeenAt: 1792787677857
+fingerprint: null
+payload:
+  id: DBG2_the_case
+  map: docs/2026-10-18-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/debug-case.js
+    - lib/change-record.js
+    - lib/work-journal.js
+    - lib/run-state.js
+    - cortex/core/raid/contract-gates.js
+    - versionium/lib/causality.js
+    - lib/fault-log.js
+    - lib/seam/detector.js
+    - lib/gap-field.js
+    - lib/diagnostic-report.js
+  depends_on:
+    - DBG1_the_key
+  blocks: []
+  spec: null
+  graph: 1fa8c76c4772fdd9

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF11_phasemap_backfill
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF11_phasemap_backfill
+context: pipeline phase SF11_phasemap_backfill of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF11_phasemap_backfill (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787918345
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787918345
+lastSeenAt: 1792787918345
+fingerprint: null
+payload:
+  id: SF11_phasemap_backfill
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: bf4299e5982fba6c

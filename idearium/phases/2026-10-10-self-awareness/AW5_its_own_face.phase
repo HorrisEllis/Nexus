@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-self-awareness-phasemap.spec::AW5_its_own_face
+type: phase
+id: docs_2026-10-10-self-awareness-phasemap.spec::AW5_its_own_face
+context: pipeline phase AW5_its_own_face of docs/2026-10-10-self-awareness-phasemap.spec
+intent: null
+summary: AW5_its_own_face (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677258
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677258
+lastSeenAt: 1792787677258
+fingerprint: null
+payload:
+  id: AW5_its_own_face
+  map: docs/2026-10-10-self-awareness-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - AW1_guardian_reflected_in_nodes
+    - AW4_the_door_reads_the_lattice
+  blocks: []
+  spec: null
+  graph: e328b4fcf66e26af

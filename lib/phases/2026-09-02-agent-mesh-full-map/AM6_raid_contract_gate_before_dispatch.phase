@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM6_raid_contract_gate_before_dispatch
+type: phase
+id: docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM6_raid_contract_gate_before_dispatch
+context: >-
+  pipeline phase AM6_raid_contract_gate_before_dispatch of
+  docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+intent: null
+summary: AM6_raid_contract_gate_before_dispatch (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675577
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675577
+lastSeenAt: 1792787675577
+fingerprint: null
+payload:
+  id: AM6_raid_contract_gate_before_dispatch
+  map: docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-18-gating-census-phasemap.spec
+    - cortex/core/raid/contract-intake.js
+    - guardian/lib/jobs.js
+    - tests/create-job-meta.test.js
+    - guardian/lib/dispatcher.js
+    - ollama/lib/dispatch.js
+    - ui/api.js
+    - lib/tool-forge.js
+  depends_on:
+    - AM1_raid_intent_contracts_per_agent
+  blocks: []
+  spec: null
+  graph: 95e22ab925e053e4

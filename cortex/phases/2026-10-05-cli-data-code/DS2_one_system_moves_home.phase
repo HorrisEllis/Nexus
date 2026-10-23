@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::DS2_one_system_moves_home
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::DS2_one_system_moves_home
+context: pipeline phase DS2_one_system_moves_home of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: DS2_one_system_moves_home (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676973
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676973
+lastSeenAt: 1792787676973
+fingerprint: null
+payload:
+  id: DS2_one_system_moves_home
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/memory/jaa-db.js
+  depends_on:
+    - DS1_cortex_the_catalog
+  blocks: []
+  spec: null
+  graph: 96e381a353f57785

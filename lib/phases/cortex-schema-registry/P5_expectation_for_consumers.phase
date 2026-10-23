@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_cortex-schema-registry-phasemap.spec::P5_expectation_for_consumers
+type: phase
+id: docs_cortex-schema-registry-phasemap.spec::P5_expectation_for_consumers
+context: pipeline phase P5_expectation_for_consumers of docs/cortex-schema-registry-phasemap.spec
+intent: null
+summary: P5_expectation_for_consumers (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678191
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678191
+lastSeenAt: 1792787678191
+fingerprint: null
+payload:
+  id: P5_expectation_for_consumers
+  map: docs/cortex-schema-registry-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/raid-warp-verification-phasemap.spec
+    - copilot/lib/user-model.js
+    - lib/schema-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: eda9550483f4ed1c

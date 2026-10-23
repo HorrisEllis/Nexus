@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P21_loom_boundary_import_hooks
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P21_loom_boundary_import_hooks
+context: pipeline phase P21_loom_boundary_import_hooks of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P21_loom_boundary_import_hooks (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678257
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678257
+lastSeenAt: 1792787678257
+fingerprint: null
+payload:
+  id: P21_loom_boundary_import_hooks
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 907e46438b65288f

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+context: pipeline phase RS4_the_pipeline_on_warp2 of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS4_the_pipeline_on_warp2 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677044
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677044
+lastSeenAt: 1792787677044
+fingerprint: null
+payload:
+  id: RS4_the_pipeline_on_warp2
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/workshop.js
+    - idearium/api/index.js
+    - warp/adapters/emerge-field.js
+  depends_on:
+    - RS1_the_generation_recorder
+    - RS3_the_spec_document
+  blocks: []
+  spec: null
+  graph: 1b500110a3a75d95

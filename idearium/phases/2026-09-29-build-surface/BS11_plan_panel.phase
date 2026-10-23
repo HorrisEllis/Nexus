@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+context: pipeline phase BS11_plan_panel of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS11_plan_panel (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676207
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676207
+lastSeenAt: 1792787676207
+fingerprint: null
+payload:
+  id: BS11_plan_panel
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/plan-panel.js
+    - idearium/ui/index.html
+    - idearium/ui/js/app.js
+  depends_on:
+    - BS7_api
+    - BS9_spec_and_phase_build_ui
+  blocks: []
+  spec: null
+  graph: 90c293ef2576305c

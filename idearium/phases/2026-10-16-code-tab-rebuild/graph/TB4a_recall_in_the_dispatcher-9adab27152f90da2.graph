@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB4a_recall_in_the_dispatcher:9adab27152f90da2
+type: graph
+id: phase:TB4a_recall_in_the_dispatcher:9adab27152f90da2
+context: dependency graph of phase TB4a_recall_in_the_dispatcher
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677671
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677671
+lastSeenAt: 1792787677671
+fingerprint: null
+payload:
+  for: TB4a_recall_in_the_dispatcher
+  kind: phase
+  repo: null
+  hash: 9adab27152f90da2
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+    dependents:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4c_measure
+    upstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+    downstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4c_measure
+    blockedBy:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+    unlocks:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4c_measure
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by TB3a_tool_calls_saved
+      - 'depends on (1): TB3a_tool_calls_saved · all upstream 4'
+      - 'needed by (1): TB4c_measure · finishing it unlocks TB4c_measure'
+    edges:
+      - from: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+        kind: declared

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P27_guardian_picker_userscript_manager
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P27_guardian_picker_userscript_manager
+context: >-
+  pipeline phase P27_guardian_picker_userscript_manager of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P27_guardian_picker_userscript_manager (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675920
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675920
+lastSeenAt: 1792787675920
+fingerprint: null
+payload:
+  id: P27_guardian_picker_userscript_manager
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/browser.js
+    - clear-glass/src/bookmarks/browser.js
+    - clear-glass/renderer/guardian-picker.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 44ddc6e72cdb237e

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
+context: >-
+  pipeline phase PF5_in_place_spec_update of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PF5_in_place_spec_update (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676370
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676370
+lastSeenAt: 1792787676370
+fingerprint: null
+payload:
+  id: PF5_in_place_spec_update
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - idearium/repo/index.js
+    - idearium/repo/nexus-self.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ffc0ff73206feef3

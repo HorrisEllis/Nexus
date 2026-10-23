@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-verification-spine-phasemap.spec::P2_constitution_on_the_approve_path
+type: phase
+id: docs_raid-verification-spine-phasemap.spec::P2_constitution_on_the_approve_path
+context: pipeline phase P2_constitution_on_the_approve_path of docs/raid-verification-spine-phasemap.spec
+intent: null
+summary: P2_constitution_on_the_approve_path (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678318
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678318
+lastSeenAt: 1792787678318
+fingerprint: null
+payload:
+  id: P2_constitution_on_the_approve_path
+  map: docs/raid-verification-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/selector-check.js
+    - clear-glass/src/automation/dom.js
+    - clear-glass/src/releases/deliver.js
+    - lib/constitutional-ai.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f38f5f3bd87e3832

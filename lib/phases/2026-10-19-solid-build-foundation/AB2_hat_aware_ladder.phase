@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-solid-build-foundation-phasemap.spec::AB2_hat_aware_ladder
+type: phase
+id: docs_2026-10-19-solid-build-foundation-phasemap.spec::AB2_hat_aware_ladder
+context: pipeline phase AB2_hat_aware_ladder of docs/2026-10-19-solid-build-foundation-phasemap.spec
+intent: null
+summary: AB2_hat_aware_ladder (automation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677948
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677948
+lastSeenAt: 1792787677948
+fingerprint: null
+payload:
+  id: AB2_hat_aware_ladder
+  map: docs/2026-10-19-solid-build-foundation-phasemap.spec
+  repo: null
+  layer: automation
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - lib/hat-forge.js
+  depends_on:
+    - MF1_model_fit_routing
+  blocks:
+    - '"hat_routing"'
+  spec: null
+  graph: ad9fe7f865a988d6

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::UI2_downloads_manager_chat_view
+type: phase
+id: docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::UI2_downloads_manager_chat_view
+context: >-
+  pipeline phase UI2_downloads_manager_chat_view of
+  docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+intent: null
+summary: UI2_downloads_manager_chat_view (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675996
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675996
+lastSeenAt: 1792787675996
+fingerprint: null
+payload:
+  id: UI2_downloads_manager_chat_view
+  map: docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/response-sink.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a1b9b83ad247406b

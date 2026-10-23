@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+context: pipeline phase BS6_build_plan of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS6_build_plan (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676199
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676199
+lastSeenAt: 1792787676199
+fingerprint: null
+payload:
+  id: BS6_build_plan
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/build-plan.js
+    - tests/modules/test-build-surface.test.js
+  depends_on:
+    - BS5_spec_to_phasemap
+  blocks: []
+  spec: null
+  graph: d849379e83770f3b

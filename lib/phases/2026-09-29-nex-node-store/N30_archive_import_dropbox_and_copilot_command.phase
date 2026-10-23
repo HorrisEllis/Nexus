@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+context: >-
+  pipeline phase N30_archive_import_dropbox_and_copilot_command of
+  docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N30_archive_import_dropbox_and_copilot_command (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676304
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676304
+lastSeenAt: 1792787676304
+fingerprint: null
+payload:
+  id: N30_archive_import_dropbox_and_copilot_command
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cli/import-history.js
+    - lib/history-import-job.js
+    - cos/testenv/setup-job.js
+    - idearium/api/index.js
+    - idearium/ui/archive-import.html
+    - idearium/ui/js/app.js
+    - clear-glass/src/copilot/verbs.js
+    - clear-glass/src/copilot/bridge.js
+    - loom/maps/one-idearium-map.js
+    - tests/modules/test-history-import-job.test.js
+    - tests/probe/archive-import-chromium.js
+  depends_on:
+    - N27_history_import_from_700_zips
+  blocks: []
+  spec: null
+  graph: dedd8b0e675c778d

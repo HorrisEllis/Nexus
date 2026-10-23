@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC4_learning_router
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC4_learning_router
+context: pipeline phase EC4_learning_router of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC4_learning_router (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676312
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676312
+lastSeenAt: 1792787676312
+fingerprint: null
+payload:
+  id: EC4_learning_router
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/economy/router.js
+  depends_on:
+    - EC0_policy_model
+    - EC1_usage_ledger
+    - EC3_token_constraints
+  blocks: []
+  spec: null
+  graph: 5ea981995e6aa2aa

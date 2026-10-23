@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-runtime-load-phasemap.spec::PF4_hold_only_what_you_read
+type: phase
+id: docs_2026-10-07-runtime-load-phasemap.spec::PF4_hold_only_what_you_read
+context: pipeline phase PF4_hold_only_what_you_read of docs/2026-10-07-runtime-load-phasemap.spec
+intent: null
+summary: PF4_hold_only_what_you_read (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677106
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677106
+lastSeenAt: 1792787677106
+fingerprint: null
+payload:
+  id: PF4_hold_only_what_you_read
+  map: docs/2026-10-07-runtime-load-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/jaa-store.js
+    - copilot/lib/grammar-router.js
+    - lib/component-ledger.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e035361560d2d6d0

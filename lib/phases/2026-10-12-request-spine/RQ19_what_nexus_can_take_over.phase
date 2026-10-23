@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
+context: pipeline phase RQ19_what_nexus_can_take_over of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ19_what_nexus_can_take_over (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677375
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677375
+lastSeenAt: 1792787677375
+fingerprint: null
+payload:
+  id: RQ19_what_nexus_can_take_over
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/tool-index.js
+    - lib/tool-forge.js
+    - lib/case-library.js
+    - lib/component-store.js
+    - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+  depends_on:
+    - RQ14_the_spine_end_to_end
+  blocks: []
+  spec: null
+  graph: 18b7aa141588697b

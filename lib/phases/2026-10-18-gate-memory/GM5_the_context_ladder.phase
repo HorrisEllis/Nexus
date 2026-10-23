@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gate-memory-phasemap.spec::GM5_the_context_ladder
+type: phase
+id: docs_2026-10-18-gate-memory-phasemap.spec::GM5_the_context_ladder
+context: pipeline phase GM5_the_context_ladder of docs/2026-10-18-gate-memory-phasemap.spec
+intent: null
+summary: GM5_the_context_ladder (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677870
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677870
+lastSeenAt: 1792787677870
+fingerprint: null
+payload:
+  id: GM5_the_context_ladder
+  map: docs/2026-10-18-gate-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/context-stream.js
+    - lib/context-sources.js
+    - lib/context-atlas.js
+    - lib/vector-memory.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d71138f7d24e34f1

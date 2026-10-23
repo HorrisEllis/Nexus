@@ -3664,6 +3664,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','close'],        'repo.phases.close'],    // §SL1 0.60.223 check one run again: closes its phase if proven and landed
     ['POST',   ['api','repos',    ':uuid','phases','evidence'],     'repo.phases.evidence'], // §SL2 0.60.224 done by evidence: its own tests run; dry run unless apply
     ['POST',   ['api','repos',    ':uuid','phases','groom'],        'repo.phases.groom'],    // §SL3 0.60.227 the DAG groomed: proposals from MP1 + DG3; dry run unless apply
+    ['GET',    ['api','repos',    ':uuid','phases','nodes'],        'repo.phases.nodes'],    // §SL9 0.60.229 every phase's .phase node, per owner system: written, missing, stale
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
     ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
@@ -9115,6 +9116,35 @@ async function handle(req, res, route, query, body) {
         _closeLog(repo.uuid, 'phase.closed', `${c.phase} closed — ${c.note}`, c.why);
       }
       return ok(res, { ...r, ran: r.ran.map(x => ({ file: x.file, passed: x.passed, timedOut: !!x.timedOut, ms: x.ms, tail: x.passed ? undefined : x.tail })) });
+    }
+    case 'repo.phases.nodes': {
+      // 0.60.229 SL9 — James, 2026-10-23: "decompose the phases into .phase with the dependancy graph per phase node. then move them into the
+      // repsective systems". The nodes are written by the compile step (node emerge/compiler/phase-specs.js --all), committed with the code;
+      // this reads what is written, through lib only (idearium → emerge would be a new crossing, DG2): the nodes per owner system, the
+      // phases of the maps with no node yet, and nodes whose phase is in no map any more.
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const PH = await import('../repo/phases.js');
+      const NEx = _require('../../lib/node-export.js'), PDx = _require('../../lib/phase-dag.js');
+      const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+      const root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);
+      const want = new Set(); const dag = PDx.build((m.maps || []).map(x => ({ path: x.path, text: x.text || '' })));
+      for (const n of Object.values(dag.nodes)) if (!n.decision && !n.finding) want.add(n.key);
+      const have = new Map(), bySystem = {};
+      let tops = []; try { tops = fs.readdirSync(root, { withFileTypes: true }).filter(d => d.isDirectory() && !/^(\.|node_modules$|_archive$|data$)/.test(d.name)).map(d => d.name); } catch (_) {}
+      for (const t of tops) {
+        const pd = path.join(root, t, 'phases'); if (!fs.existsSync(pd)) continue;
+        for (const md of fs.readdirSync(pd, { withFileTypes: true })) {
+          if (!md.isDirectory() || md.name.startsWith('_')) continue;
+          for (const f of fs.readdirSync(path.join(pd, md.name)).filter(x => x.endsWith('.phase'))) {
+            let pl = null; try { pl = NEx.fromYaml(fs.readFileSync(path.join(pd, md.name, f), 'utf8')).payload; } catch (_) { continue; }
+            have.set(`${pl.map}::${pl.id}`, `${t}/phases/${md.name}/${f}`); bySystem[t] = (bySystem[t] || 0) + 1;
+          }
+        }
+      }
+      const missing = [...want].filter(k => !have.has(k)).sort(), stale = [...have.keys()].filter(k => !want.has(k)).sort();
+      return ok(res, { nodes: have.size, phases: want.size, bySystem, missing: missing.slice(0, 200), missingCount: missing.length, stale: stale.map(k => ({ key: k, file: have.get(k) })).slice(0, 200), staleCount: stale.length,
+        remedy: missing.length || stale.length ? 'write them: node emerge/compiler/phase-specs.js --all (the compile step; the nodes are committed with the code)' : null });
     }
     case 'repo.phases.groom': {
       // 0.60.227 SL3 — James, 2026-10-23: "need to do something about the dependancy graph." lib/phase-groom.js: files from a phase's own

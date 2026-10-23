@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N29_full_run_only_failures
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N29_full_run_only_failures
+context: pipeline phase N29_full_run_only_failures of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N29_full_run_only_failures (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676301
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676301
+lastSeenAt: 1792787676301
+fingerprint: null
+payload:
+  id: N29_full_run_only_failures
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/queue.js
+    - run-all.js
+  depends_on:
+    - N19_suite_triage_and_known_gaps
+  blocks: []
+  spec: null
+  graph: 3ccc80b708b1184e

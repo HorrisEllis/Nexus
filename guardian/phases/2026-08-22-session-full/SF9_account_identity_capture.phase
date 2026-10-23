@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF9_account_identity_capture
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF9_account_identity_capture
+context: pipeline phase SF9_account_identity_capture of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF9_account_identity_capture (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675362
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675362
+lastSeenAt: 1792787675362
+fingerprint: null
+payload:
+  id: SF9_account_identity_capture
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/ncp.js
+    - guardian/userscript-nexus-wake.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3eb75500093ff04c

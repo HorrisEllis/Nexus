@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::CS1_drop_zips_to_decompose
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::CS1_drop_zips_to_decompose
+context: >-
+  pipeline phase CS1_drop_zips_to_decompose of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: CS1_drop_zips_to_decompose (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677330
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677330
+lastSeenAt: 1792787677330
+fingerprint: null
+payload:
+  id: CS1_drop_zips_to_decompose
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/components-panel.js
+    - idearium/ui/index.html
+  depends_on:
+    - CS0_projects_decomposed_into_components
+  blocks: []
+  spec: null
+  graph: 122d522bc936da0d

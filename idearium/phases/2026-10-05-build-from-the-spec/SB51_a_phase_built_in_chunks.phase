@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB51_a_phase_built_in_chunks
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB51_a_phase_built_in_chunks
+context: pipeline phase SB51_a_phase_built_in_chunks of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB51_a_phase_built_in_chunks (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676955
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676955
+lastSeenAt: 1792787676955
+fingerprint: null
+payload:
+  id: SB51_a_phase_built_in_chunks
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/phases.js
+    - idearium/api/index.js
+    - lib/pipeline-routing.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d52a77216aaefbe3

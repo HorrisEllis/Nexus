@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+context: pipeline phase GG1_graphs_generate_code of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: GG1_graphs_generate_code (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676729
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676729
+lastSeenAt: 1792787676729
+fingerprint: null
+payload:
+  id: GG1_graphs_generate_code
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/compiler/index.js
+    - emerge/compiler/emit.js
+    - idearium/repo/graph.js
+    - idearium/lib/wiring-gen.js
+  depends_on:
+    - PH1_phase_runs_end_in_proof
+    - EV0_contracts_for_every_system
+  blocks: []
+  spec: null
+  graph: e8989d4b9064ae28

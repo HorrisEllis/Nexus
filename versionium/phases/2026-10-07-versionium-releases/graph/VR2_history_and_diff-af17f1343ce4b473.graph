@@ -1,0 +1,117 @@
+envelope: 1
+uuid: nexus-export-graph-phase:VR2_history_and_diff:af17f1343ce4b473
+type: graph
+id: phase:VR2_history_and_diff:af17f1343ce4b473
+context: dependency graph of phase VR2_history_and_diff
+intent: null
+summary: 10 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677114
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677114
+lastSeenAt: 1792787677114
+fingerprint: null
+payload:
+  for: VR2_history_and_diff
+  kind: phase
+  repo: null
+  hash: af17f1343ce4b473
+  nodes:
+    - path: idearium/ui/js/repo-tasks.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: versionium/lib/files.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: versionium/lib/text-diff.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: lib/change-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/versions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: versionium/lib/merge3.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: versionium/routes/files.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: versionium/config.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: versionium/lib/files.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/config.js
+      kind: requires
+    - from: products/flight-recorder/lib/versions.js
+      to: versionium/lib/files.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: versionium/lib/files.js
+      kind: requires
+    - from: versionium/routes/files.js
+      to: versionium/lib/files.js
+      kind: requires
+    - from: lib/change-record.js
+      to: versionium/lib/text-diff.js
+      kind: requires
+    - from: versionium/lib/merge3.js
+      to: versionium/lib/text-diff.js
+      kind: requires
+  crossings:
+    - from: lib/change-record.js
+      to: versionium/lib/text-diff.js
+      fromSystem: lib
+      toSystem: versionium
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+    dependents:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN3_releases_section
+      - docs/2026-10-07-versionium-releases-phasemap.spec::GH1_the_git_bridge
+    upstream:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+    downstream:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::GH1_the_git_bridge
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN3_releases_section
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::GH1_the_git_bridge
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): VR1_every_change_a_commit'
+      - >-
+        needed by (2): RN3_releases_section, GH1_the_git_bridge · finishing it unlocks
+        GH1_the_git_bridge
+    edges:
+      - from: docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+        kind: declared

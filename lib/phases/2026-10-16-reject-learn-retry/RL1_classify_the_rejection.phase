@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-reject-learn-retry-phasemap.spec::RL1_classify_the_rejection
+type: phase
+id: docs_2026-10-16-reject-learn-retry-phasemap.spec::RL1_classify_the_rejection
+context: pipeline phase RL1_classify_the_rejection of docs/2026-10-16-reject-learn-retry-phasemap.spec
+intent: null
+summary: RL1_classify_the_rejection (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677735
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677735
+lastSeenAt: 1792787677735
+fingerprint: null
+payload:
+  id: RL1_classify_the_rejection
+  map: docs/2026-10-16-reject-learn-retry-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.105
+  files:
+    - lib/phase-faults.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: bdf4c489a42b7497

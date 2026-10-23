@@ -1,0 +1,111 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM5_tool_forge_real_usage_audit:28fa7d9090fb0f06
+type: graph
+id: phase:AM5_tool_forge_real_usage_audit:28fa7d9090fb0f06
+context: dependency graph of phase AM5_tool_forge_real_usage_audit
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675576
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675576
+lastSeenAt: 1792787675576
+fingerprint: null
+payload:
+  for: AM5_tool_forge_real_usage_audit
+  kind: phase
+  repo: null
+  hash: 28fa7d9090fb0f06
+  nodes:
+    - path: lib/agent-tools/tools/execution/forge-tool.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/loop-topology.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/schema/cortex-sync.js
+      role: changes
+      exists: true
+      system: loom
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/schema/registry.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-engines.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/loop-topology.js
+      to: lib/diagnostic-engines.js
+      kind: requires
+    - from: lib/loop-topology.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: loom/schema/cortex-sync.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: loom/schema/cortex-sync.js
+      to: lib/data-home.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-forge.js
+      kind: requires
+    - from: loom/schema/registry.js
+      to: loom/schema/cortex-sync.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/schema/cortex-sync.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-02-agent-mesh-full-map-phasemap.spec::AM3_agent_mesh_folder_consolidation
+    dependents: []
+    upstream:
+      - docs/2026-09-02-agent-mesh-full-map-phasemap.spec::AM1_raid_intent_contracts_per_agent
+      - docs/2026-09-02-agent-mesh-full-map-phasemap.spec::AM2_first_principles_hat_or_modifier
+      - docs/2026-09-02-agent-mesh-full-map-phasemap.spec::AM3_agent_mesh_folder_consolidation
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-agent-mesh-full-map-phasemap.spec::AM3_agent_mesh_folder_consolidation
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by AM3_agent_mesh_folder_consolidation
+      - 'depends on (1): AM3_agent_mesh_folder_consolidation · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-agent-mesh-full-map-phasemap.spec::AM3_agent_mesh_folder_consolidation
+        kind: inferred

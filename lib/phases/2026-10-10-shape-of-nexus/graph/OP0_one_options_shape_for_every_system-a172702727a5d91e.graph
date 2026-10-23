@@ -1,0 +1,96 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OP0_one_options_shape_for_every_system:a172702727a5d91e
+type: graph
+id: phase:OP0_one_options_shape_for_every_system:a172702727a5d91e
+context: dependency graph of phase OP0_one_options_shape_for_every_system
+intent: null
+summary: 7 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677261
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677261
+lastSeenAt: 1792787677261
+fingerprint: null
+payload:
+  for: OP0_one_options_shape_for_every_system
+  kind: phase
+  repo: null
+  hash: a172702727a5d91e
+  nodes:
+    - path: idearium/lib/config-core.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/options.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/options.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/lib/chunk-nodes.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/project-import.config.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-repo-agent-provider.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: guardian/options.js
+      to: lib/options.js
+      kind: requires
+    - from: idearium/lib/chunk-nodes.js
+      to: idearium/lib/config-core.cjs
+      kind: requires
+    - from: idearium/lib/config.js
+      to: idearium/lib/config-core.cjs
+      kind: requires
+    - from: lib/project-import.config.js
+      to: idearium/lib/config-core.cjs
+      kind: requires
+    - from: tests/modules/test-repo-agent-provider.js
+      to: idearium/lib/config-core.cjs
+      kind: requires
+  crossings:
+    - from: lib/project-import.config.js
+      to: idearium/lib/config-core.cjs
+      fromSystem: lib
+      toSystem: idearium
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP1_every_system_declares_its_options
+    upstream: []
+    downstream:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP1_every_system_declares_its_options
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP2_the_system_settings_in_its_repo
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP3_copilot_reads_and_sets_options
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::SH2_explain_this_anywhere
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP1_every_system_declares_its_options
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): OP1_every_system_declares_its_options · all downstream 4 · finishing it
+        unlocks OP1_every_system_declares_its_options
+    edges: []

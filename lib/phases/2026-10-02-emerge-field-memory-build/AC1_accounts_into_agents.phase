@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+context: pipeline phase AC1_accounts_into_agents of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: AC1_accounts_into_agents (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676699
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676699
+lastSeenAt: 1792787676699
+fingerprint: null
+payload:
+  id: AC1_accounts_into_agents
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/cg-account-authority.js
+    - lib/economy/policy.js
+    - lib/economy/ledger.js
+    - lib/economy/router.js
+    - lib/economy/gate.js
+    - lib/repo-agent.js
+    - idearium/ui/settings.html
+  depends_on:
+    - GA1_guardian_source_of_truth
+    - EC6_economy_and_the_tokenizer
+    - ST1_settings
+  blocks: []
+  spec: null
+  graph: b0a53df2fc8f1dea

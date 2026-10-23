@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP15_a_typed_prompt_is_never_sent_again
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP15_a_typed_prompt_is_never_sent_again
+context: >-
+  pipeline phase HP15_a_typed_prompt_is_never_sent_again of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP15_a_typed_prompt_is_never_sent_again (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677145
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677145
+lastSeenAt: 1792787677145
+fingerprint: null
+payload:
+  id: HP15_a_typed_prompt_is_never_sent_again
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/dispatcher.js
+  depends_on:
+    - HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+  blocks: []
+  spec: null
+  graph: 5c7b24fc42656fde

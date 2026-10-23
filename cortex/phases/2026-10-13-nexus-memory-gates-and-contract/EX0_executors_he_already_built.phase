@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::EX0_executors_he_already_built
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::EX0_executors_he_already_built
+context: >-
+  pipeline phase EX0_executors_he_already_built of
+  docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: EX0_executors_he_already_built (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677425
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677425
+lastSeenAt: 1792787677425
+fingerprint: null
+payload:
+  id: EX0_executors_he_already_built
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-gates.js
+  depends_on:
+    - SC0_scheduler
+  blocks: []
+  spec: null
+  graph: d7ad680fcecf9144

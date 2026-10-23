@@ -1,0 +1,192 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MF1_model_fit_routing:933ae7ea59a963fb
+type: graph
+id: phase:MF1_model_fit_routing:933ae7ea59a963fb
+context: dependency graph of phase MF1_model_fit_routing
+intent: null
+summary: 19 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677942
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677942
+lastSeenAt: 1792787677942
+fingerprint: null
+payload:
+  for: MF1_model_fit_routing
+  kind: phase
+  repo: null
+  hash: 933ae7ea59a963fb
+  nodes:
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/adversarial.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/prevention.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: nexus/autopilot.js
+      role: used-by
+      exists: true
+      system: nexus
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/prevention.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: lib/resource-monitor.js
+      to: lib/prevention.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/agent-record.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/prevention.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/resource-monitor.js
+      kind: requires
+  crossings:
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::DC1_dynamic_chunk_at_plan
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB2_hat_aware_ladder
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+    upstream: []
+    downstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB2_hat_aware_ladder
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::DC1_dynamic_chunk_at_plan
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET2_autobuild_settings_ui
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK2_learned_granularity
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::DC1_dynamic_chunk_at_plan
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB2_hat_aware_ladder
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (4): DC1_dynamic_chunk_at_plan, AB1_autobuild_loop_and_resume,
+        AB2_hat_aware_ladder, DK1_dynamic_chunking · all downstream 11 · finishing it unlocks
+        DC1_dynamic_chunk_at_plan, AB2_hat_aware_ladder
+    edges: []

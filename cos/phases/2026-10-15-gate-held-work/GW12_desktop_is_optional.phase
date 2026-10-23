@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW12_desktop_is_optional
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW12_desktop_is_optional
+context: pipeline phase GW12_desktop_is_optional of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW12_desktop_is_optional (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677566
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677566
+lastSeenAt: 1792787677566
+fingerprint: null
+payload:
+  id: GW12_desktop_is_optional
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/detect.js
+    - cos/testenv/environment.js
+    - cos/testenv/provision.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 382b3d3a9de3de0f

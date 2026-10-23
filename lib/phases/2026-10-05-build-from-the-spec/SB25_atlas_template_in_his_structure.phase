@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB25_atlas_template_in_his_structure
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB25_atlas_template_in_his_structure
+context: >-
+  pipeline phase SB25_atlas_template_in_his_structure of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB25_atlas_template_in_his_structure (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676885
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676885
+lastSeenAt: 1792787676885
+fingerprint: null
+payload:
+  id: SB25_atlas_template_in_his_structure
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/atlas-template.md
+    - architecture-spec/registry/create-atlas.js
+    - lib/atlas-generate.js
+  depends_on:
+    - SB17_the_system_template_is_complete
+  blocks: []
+  spec: null
+  graph: 8782436b6f63495b

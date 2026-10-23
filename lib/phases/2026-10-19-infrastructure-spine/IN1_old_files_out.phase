@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::IN1_old_files_out
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN1_old_files_out
+context: pipeline phase IN1_old_files_out of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: IN1_old_files_out (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677900
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677900
+lastSeenAt: 1792787677900
+fingerprint: null
+payload:
+  id: IN1_old_files_out
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - scripts/tree-census.js
+  depends_on:
+    - IN0_baseline
+  blocks: []
+  spec: null
+  graph: 84d149d952b4e723

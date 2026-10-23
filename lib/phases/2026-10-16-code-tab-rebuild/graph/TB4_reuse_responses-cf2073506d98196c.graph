@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB4_reuse_responses:cf2073506d98196c
+type: graph
+id: phase:TB4_reuse_responses:cf2073506d98196c
+context: dependency graph of phase TB4_reuse_responses
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677662
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677662
+lastSeenAt: 1792787677662
+fingerprint: null
+payload:
+  for: TB4_reuse_responses
+  kind: phase
+  repo: null
+  hash: cf2073506d98196c
+  nodes:
+    - path: docs/CLAUDE.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3_close_the_persistence_gaps
+    dependents:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB8_proof_and_wiring
+    upstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3_close_the_persistence_gaps
+    downstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB8_proof_and_wiring
+    blockedBy:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3_close_the_persistence_gaps
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4c_measure
+        files:
+          - docs/CLAUDE.md
+    dangling: []
+    lines:
+      - layer 4 · blocked by TB3_close_the_persistence_gaps
+      - 'depends on (1): TB3_close_the_persistence_gaps · all upstream 4'
+      - 'needed by (1): TB8_proof_and_wiring'
+      - 'same files as TB4c_measure with no order between them: docs/CLAUDE.md'
+    edges:
+      - from: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3_close_the_persistence_gaps
+        kind: declared

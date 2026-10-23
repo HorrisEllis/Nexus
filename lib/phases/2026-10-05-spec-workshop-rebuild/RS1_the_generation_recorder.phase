@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
+context: pipeline phase RS1_the_generation_recorder of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS1_the_generation_recorder (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677041
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677041
+lastSeenAt: 1792787677041
+fingerprint: null
+payload:
+  id: RS1_the_generation_recorder
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/generation-recorder.js
+    - warp/core/Engine.js
+    - intelligence/rfr2/clip/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fb8844b445a656ad

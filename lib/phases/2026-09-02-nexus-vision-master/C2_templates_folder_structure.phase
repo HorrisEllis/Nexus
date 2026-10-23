@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::C2_templates_folder_structure
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::C2_templates_folder_structure
+context: pipeline phase C2_templates_folder_structure of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: C2_templates_folder_structure (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675616
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675616
+lastSeenAt: 1792787675616
+fingerprint: null
+payload:
+  id: C2_templates_folder_structure
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4b30f66e40536e56

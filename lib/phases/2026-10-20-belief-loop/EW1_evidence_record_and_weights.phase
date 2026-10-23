@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
 context: pipeline phase EW1_evidence_record_and_weights of docs/2026-10-20-belief-loop-phasemap.spec
 intent: null
-summary: EW1_evidence_record_and_weights (library) — 2 file(s)
+summary: EW1_evidence_record_and_weights (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792456303350
+exported_at: 1792787677972
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303350
-lastSeenAt: 1792456303350
+firstSeenAt: 1792787677972
+lastSeenAt: 1792787677972
 fingerprint: null
 payload:
   id: EW1_evidence_record_and_weights
@@ -21,7 +21,6 @@ payload:
   status: OPEN
   files:
     - lib/evidence.js
-    - lib/node-schemas/schema.evidence
   depends_on:
     - GW1_gate_primitive
     - PV1_provenance_on_every_claim

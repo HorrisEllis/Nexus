@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P0_map:270831fdfdc19271
+type: graph
+id: phase:P0_map:270831fdfdc19271
+context: dependency graph of phase P0_map
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675962
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675962
+lastSeenAt: 1792787675962
+fingerprint: null
+payload:
+  for: P0_map
+  kind: phase
+  repo: null
+  hash: 270831fdfdc19271
+  nodes:
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P6_versionium_residue
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D3_snapshot
+    upstream: []
+    downstream:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D3_snapshot
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D5_new
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P6_versionium_residue
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P6_versionium_residue
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (3): P1_characterization, P6_versionium_residue, D3_snapshot · all downstream 9 ·
+        finishing it unlocks P1_characterization, P6_versionium_residue
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

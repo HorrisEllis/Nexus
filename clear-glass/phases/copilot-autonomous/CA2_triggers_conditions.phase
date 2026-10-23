@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-autonomous-phasemap.spec::CA2_triggers_conditions
+type: phase
+id: docs_copilot-autonomous-phasemap.spec::CA2_triggers_conditions
+context: pipeline phase CA2_triggers_conditions of docs/copilot-autonomous-phasemap.spec
+intent: null
+summary: CA2_triggers_conditions (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678142
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678142
+lastSeenAt: 1792787678142
+fingerprint: null
+payload:
+  id: CA2_triggers_conditions
+  map: docs/copilot-autonomous-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/triggers.js
+    - clear-glass/renderer/guardian-picker.js
+    - clear-glass/src/core/bus.js
+    - clear-glass/test/session-hub.test.js
+    - intelligence/relational-field.js
+  depends_on:
+    - CA1_scheduler
+  blocks: []
+  spec: null
+  graph: 92729b5ec5388a88

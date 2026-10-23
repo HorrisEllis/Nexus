@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::R1_release_per_phase
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::R1_release_per_phase
+context: pipeline phase R1_release_per_phase of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: R1_release_per_phase (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676452
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676452
+lastSeenAt: 1792787676452
+fingerprint: null
+payload:
+  id: R1_release_per_phase
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/CLAUDE.md
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 46c6115b0a540652

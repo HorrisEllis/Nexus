@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+context: >-
+  pipeline phase IL1_spec_library_as_ideas of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: IL1_spec_library_as_ideas (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676515
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676515
+lastSeenAt: 1792787676515
+fingerprint: null
+payload:
+  id: IL1_spec_library_as_ideas
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - lib/zip-ingest.js
+    - idearium/spec-engine/index.js
+  depends_on:
+    - FT1_file_tools_merge_patch_drop
+    - DI1_chunking_for_data_ingestion
+  blocks: []
+  spec: null
+  graph: 562cd46bda388a55

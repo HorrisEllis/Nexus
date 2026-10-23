@@ -239,10 +239,10 @@ phases_added_2026_10_23:
     proof: "a fixture phase with no files and no evidence: the build asks once, the graph's source is agent, the run starts; a nonsense answer is refused; the second build asks nothing"
 
   SL9_every_phase_a_node:
-    status: OPEN
+    status: DONE 0.60.229 — test-phase-nodes-all 5/5; 1939 phases written beside 14 owner systems, a second pass writes nothing
     layer: library
     depends_on: [SL3_the_backlog_groomed, PS1_phase_specs]
-    files: [emerge/compiler/phase-specs.js, tests/modules/test-phase-nodes-all.test.js]
+    files: [emerge/compiler/phase-specs.js, lib/phase-dag.js, lib/phase-deps-gate.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, tests/modules/test-phase-nodes-all.test.js]
     spec: docs/self-building-loop.spec
     blocks: [MOD-SL-NODES]
     does: >-
@@ -317,3 +317,28 @@ James, 2026-10-23: "agent needs to map dependancies if nexus cant map one."
   different content. If that is not intended it belongs to the repo layer's own map.
 - Found while checking the plan suites (red on main too, not this phase's): test-plan-lands PL-31, `idearium repo plan --dry --file <spec>`
   prints its usage instead of the derived phases. Listed for SL10.
+
+## ADDENDUM 2026-10-23 (0.60.229) — SL9 built; every phase is a node beside its system
+James, 2026-10-23: "can you decompose the phases into .phase with the dependancy graph per phase node. then move them into the repsective
+systems, or sort them at least."
+- `node emerge/compiler/phase-specs.js --all` (writeAll/checkAll): one DAG over every map, MP1's mapping and SL8's kept agent mappings in it.
+  1939 phases → core (lib/) 785 · idearium 378 · clear-glass 280 · cortex 106 · guardian 94 · cos 83 · loom 71 · copilot 62 · intelligence 30
+  · orchestrator 19 · diagnostic 12 · ollama-bridge 8 · versionium 7 · architect 4. Each owner has phases/INDEX.md (by map, in DAG order:
+  status, layer, how its graph was placed, what it waits on). Findings and decisions are not written. A second pass writes nothing.
+- The .phase keeps what the map authors (its declared depends_on); the .graph is derived: files with roles, crossings, and its slice of the
+  DAG with each edge's kind (declared, inferred from a shared file, agent:<by>).
+- Decided by the axioms, each from what the run showed (§0.1):
+  - The whole DAG's hash is not stored per phase: with it every .graph changed on any map edit anywhere (measured: 1940 of 1940). Without
+    it, adding a phase changes that phase and the phases whose slice it enters. The hash is in each INDEX.md.
+  - A phase id repeated lower in a map (a key under changes_here:, changes:, built_…:) overwrote the real phase in the DAG (10 on Nexus,
+    e.g. NP1, CON1); the first is the phase now, as the roadmap already read it. 8 authored edges came back with it.
+  - A .phase from the older per-map pass at another place (owner changed) moves to _archive/phases-moved/ with its graphs; 11 that are now
+    decisions (AB0, BX0a–e, PW0 …) were archived the same way, said. Nothing deleted (§0.3).
+  - "Move them into the respective systems": the maps stay in docs/ as the authored source (his 2026-10-20 order: spec, then phases, then
+    each phase specced again); the nodes are what moves. 785 land in lib/ because neither their files nor their map name a system: the
+    honest owner is unknown, not guessed. To confirm with him: whether a phase with no system should go to its map's dominant system instead.
+- Two crossings designed out (DG2's rule, which SL3 broke): lib/phase-deps-gate.js and emerge/compiler/phase-specs.js read loom's parser
+  through lib/phase-dag.js parsePhasemap. The boundary ratchet (test-system-boundary SB-06) now shows only the 3 crossings it showed on
+  main (roadmap-import → loom, phase-dag → loom, verify-first → cos), which predate this map and are not fixed here.
+- The route reads what is written, through lib (idearium → emerge would be a new crossing): GET /api/repos/:uuid/phases/nodes, `repo nodes`,
+  the rail's "phase nodes". Writing stays the compile step, committed with the code.

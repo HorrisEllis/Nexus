@@ -1,0 +1,97 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SS7_decoupling_audit:3a4d6d0780b5923e
+type: graph
+id: phase:SS7_decoupling_audit:3a4d6d0780b5923e
+context: dependency graph of phase SS7_decoupling_audit
+intent: null
+summary: 4 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678309
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678309
+lastSeenAt: 1792787678309
+fingerprint: null
+payload:
+  for: SS7_decoupling_audit
+  kind: phase
+  repo: null
+  hash: 3a4d6d0780b5923e
+  nodes:
+    - path: loom/scanners/closed-door.js
+      role: changes
+      exists: true
+      system: loom
+    - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/scanners/mock-data-finder.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/scanners/stub-finder.js
+      role: used-by
+      exists: true
+      system: loom
+  edges:
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/closed-door.js
+      kind: requires
+    - from: loom/scanners/mock-data-finder.js
+      to: loom/scanners/closed-door.js
+      kind: requires
+    - from: loom/scanners/stub-finder.js
+      to: loom/scanners/closed-door.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/closed-door.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/nexus-system-standardization-phasemap.spec::SS3_event_driven_handshake_contracts
+      - docs/nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+      - docs/nexus-system-standardization-phasemap.spec::SS5_diagnostics_reads_and_fixes
+      - docs/nexus-system-standardization-phasemap.spec::SS6_dynamic_commands_and_cortex_data
+    dependents: []
+    upstream:
+      - docs/nexus-system-standardization-phasemap.spec::SS0_clear_clutter
+      - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
+      - docs/nexus-system-standardization-phasemap.spec::SS2_config_per_system
+      - docs/nexus-system-standardization-phasemap.spec::SS3_event_driven_handshake_contracts
+      - docs/nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+      - docs/nexus-system-standardization-phasemap.spec::SS5_diagnostics_reads_and_fixes
+      - docs/nexus-system-standardization-phasemap.spec::SS6_dynamic_commands_and_cortex_data
+    downstream: []
+    blockedBy:
+      - docs/nexus-system-standardization-phasemap.spec::SS3_event_driven_handshake_contracts
+      - docs/nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+      - docs/nexus-system-standardization-phasemap.spec::SS5_diagnostics_reads_and_fixes
+      - docs/nexus-system-standardization-phasemap.spec::SS6_dynamic_commands_and_cortex_data
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 5 · blocked by SS3_event_driven_handshake_contracts, SS4_full_logging_per_system,
+        SS5_diagnostics_reads_and_fixes, SS6_dynamic_commands_and_cortex_data
+      - >-
+        depends on (4): SS3_event_driven_handshake_contracts, SS4_full_logging_per_system,
+        SS5_diagnostics_reads_and_fixes, SS6_dynamic_commands_and_cortex_data · all upstream 7
+      - 'needed by (0): —'
+    edges:
+      - from: docs/nexus-system-standardization-phasemap.spec::SS3_event_driven_handshake_contracts
+        kind: declared
+      - from: docs/nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+        kind: declared
+      - from: docs/nexus-system-standardization-phasemap.spec::SS5_diagnostics_reads_and_fixes
+        kind: declared
+      - from: docs/nexus-system-standardization-phasemap.spec::SS6_dynamic_commands_and_cortex_data
+        kind: declared

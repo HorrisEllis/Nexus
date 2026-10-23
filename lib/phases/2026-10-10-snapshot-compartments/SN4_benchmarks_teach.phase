@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-snapshot-compartments-phasemap.spec::SN4_benchmarks_teach
+type: phase
+id: docs_2026-10-10-snapshot-compartments-phasemap.spec::SN4_benchmarks_teach
+context: pipeline phase SN4_benchmarks_teach of docs/2026-10-10-snapshot-compartments-phasemap.spec
+intent: null
+summary: SN4_benchmarks_teach (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677282
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677282
+lastSeenAt: 1792787677282
+fingerprint: null
+payload:
+  id: SN4_benchmarks_teach
+  map: docs/2026-10-10-snapshot-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - lib/economy/ledger.js
+  depends_on:
+    - SN3_measured_by_rfr2
+  blocks: []
+  spec: null
+  graph: c23057ec2723dd8b

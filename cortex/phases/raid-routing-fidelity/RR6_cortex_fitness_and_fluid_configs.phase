@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-routing-fidelity-phasemap.spec::RR6_cortex_fitness_and_fluid_configs
+type: phase
+id: docs_raid-routing-fidelity-phasemap.spec::RR6_cortex_fitness_and_fluid_configs
+context: pipeline phase RR6_cortex_fitness_and_fluid_configs of docs/raid-routing-fidelity-phasemap.spec
+intent: null
+summary: RR6_cortex_fitness_and_fluid_configs (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678315
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678315
+lastSeenAt: 1792787678315
+fingerprint: null
+payload:
+  id: RR6_cortex_fitness_and_fluid_configs
+  map: docs/raid-routing-fidelity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - RR3_per_agent_config_in_cortex
+    - RR4_governed_handshake_on_handoff
+  blocks: []
+  spec: null
+  graph: 6e58e5b8e1945e9b

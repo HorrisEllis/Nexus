@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR9_page_event_record:a54df1454c00eb90
+type: graph
+id: phase:MR9_page_event_record:a54df1454c00eb90
+context: dependency graph of phase MR9_page_event_record
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677594
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677594
+lastSeenAt: 1792787677594
+fingerprint: null
+payload:
+  for: MR9_page_event_record
+  kind: phase
+  repo: null
+  hash: a54df1454c00eb90
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

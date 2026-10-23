@@ -1,0 +1,169 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS12_release:8f67d5e56dcc7344
+type: graph
+id: phase:BS12_release:8f67d5e56dcc7344
+context: dependency graph of phase BS12_release
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676222
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676222
+lastSeenAt: 1792787676222
+fingerprint: null
+payload:
+  for: BS12_release
+  kind: phase
+  repo: null
+  hash: 8f67d5e56dcc7344
+  nodes:
+    - path: CHANGELOG-0.39.280.md
+      role: changes
+      exists: true
+      system: null
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/run-all.js
+      role: changes
+      exists: false
+      system: null
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+  edges:
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 9
+    deps:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS13_provider_sovereignty
+      - docs/2026-09-29-build-surface-phasemap.spec::BS14_branch_git_honest
+      - docs/2026-09-29-build-surface-phasemap.spec::BS15_code_repo_delete
+      - docs/2026-09-29-build-surface-phasemap.spec::BS16_provider_login_wall
+      - docs/2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+      - docs/2026-09-29-build-surface-phasemap.spec::BS18_sync_ci_theme
+      - docs/2026-09-29-build-surface-phasemap.spec::BS19_copilot_atlas_guide
+    dependents: []
+    upstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS0_compartment_windows
+      - docs/2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS13_provider_sovereignty
+      - docs/2026-09-29-build-surface-phasemap.spec::BS14_branch_git_honest
+      - docs/2026-09-29-build-surface-phasemap.spec::BS15_code_repo_delete
+      - docs/2026-09-29-build-surface-phasemap.spec::BS16_provider_login_wall
+      - docs/2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+      - docs/2026-09-29-build-surface-phasemap.spec::BS18_sync_ci_theme
+      - docs/2026-09-29-build-surface-phasemap.spec::BS19_copilot_atlas_guide
+      - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+      - docs/2026-09-29-build-surface-phasemap.spec::BS3_baseline_deviation
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+      - docs/2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
+      - docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+      - docs/2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 9
+      - >-
+        depends on (11): BS8_files_ui, BS9_spec_and_phase_build_ui,
+        BS10_settings_and_environment_ui, BS11_plan_panel, BS13_provider_sovereignty,
+        BS14_branch_git_honest, BS15_code_repo_delete, BS16_provider_login_wall,
+        BS17_copilot_browser_verbs, BS18_sync_ci_theme, BS19_copilot_atlas_guide · all upstream 18
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS13_provider_sovereignty
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS14_branch_git_honest
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS15_code_repo_delete
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS16_provider_login_wall
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS18_sync_ci_theme
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS19_copilot_atlas_guide
+        kind: declared

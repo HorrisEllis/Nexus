@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+context: >-
+  pipeline phase CS0_projects_decomposed_into_components of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: CS0_projects_decomposed_into_components (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677329
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677329
+lastSeenAt: 1792787677329
+fingerprint: null
+payload:
+  id: CS0_projects_decomposed_into_components
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/project-decompose.js
+    - lib/component-store.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - loom/maps/component-intake-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c12a1ca2cc3030ee

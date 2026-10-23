@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP10_the_work_surface_in_view
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP10_the_work_surface_in_view
+context: pipeline phase HP10_the_work_surface_in_view of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP10_the_work_surface_in_view (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677138
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677138
+lastSeenAt: 1792787677138
+fingerprint: null
+payload:
+  id: HP10_the_work_surface_in_view
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - HP9_the_plan_is_current_work
+  blocks: []
+  spec: null
+  graph: f1241943f37108b2

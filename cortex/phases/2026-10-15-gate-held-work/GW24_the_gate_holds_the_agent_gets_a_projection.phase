@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+context: >-
+  pipeline phase GW24_the_gate_holds_the_agent_gets_a_projection of
+  docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW24_the_gate_holds_the_agent_gets_a_projection (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677581
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677581
+lastSeenAt: 1792787677581
+fingerprint: null
+payload:
+  id: GW24_the_gate_holds_the_agent_gets_a_projection
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "PARTLY BUILT 0.60.76 — GA1's dependency code ranked and cut to the learned budget
+    (lib/phase-plan.js contextNote), the cut recorded on the gate; the whole-phase brick lean on an
+    Ollama rung. Open: the brief and intelligence verdicts sharing the one budget; proof on a real
+    small model"
+  files:
+    - cortex/core/raid/contract-gates.js
+    - idearium/api/index.js
+    - lib/phase-plan.js
+  depends_on:
+    - GW1_the_baton
+  blocks: []
+  spec: null
+  graph: 80b3bd80f12d4cc4

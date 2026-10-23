@@ -1,0 +1,129 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE12_proof_and_wiring:dc6801d7a1de9fef
+type: graph
+id: phase:CE12_proof_and_wiring:dc6801d7a1de9fef
+context: dependency graph of phase CE12_proof_and_wiring
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677513
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677513
+lastSeenAt: 1792787677513
+fingerprint: null
+payload:
+  for: CE12_proof_and_wiring
+  kind: phase
+  repo: null
+  hash: dc6801d7a1de9fef
+  nodes:
+    - path: docs/atlases/idearium-atlas.md
+      role: changes
+      exists: true
+      system: null
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/run-all.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+    dependents: []
+    upstream:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): CE1_the_run_state'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+        kind: declared

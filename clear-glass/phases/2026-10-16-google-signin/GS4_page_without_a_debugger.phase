@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-google-signin-phasemap.spec::GS4_page_without_a_debugger
+type: phase
+id: docs_2026-10-16-google-signin-phasemap.spec::GS4_page_without_a_debugger
+context: pipeline phase GS4_page_without_a_debugger of docs/2026-10-16-google-signin-phasemap.spec
+intent: null
+summary: GS4_page_without_a_debugger (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677705
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677705
+lastSeenAt: 1792787677705
+fingerprint: null
+payload:
+  id: GS4_page_without_a_debugger
+  map: docs/2026-10-16-google-signin-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.108
+  files:
+    - clear-glass/src/preload/google-signin.js
+    - clear-glass/src/contexts/google-signin.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b89e3f9a2ae563ec

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF18_intelligence_becomes_a_real_system
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF18_intelligence_becomes_a_real_system
+context: >-
+  pipeline phase SF18_intelligence_becomes_a_real_system of
+  docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF18_intelligence_becomes_a_real_system (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675380
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675380
+lastSeenAt: 1792787675380
+fingerprint: null
+payload:
+  id: SF18_intelligence_becomes_a_real_system
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/server.js
+    - intelligence/consumer.js
+    - emerge/consumer.js
+    - cortex/boot.js
+  depends_on:
+    - SF17_intelligence_system_all_4_phases
+  blocks: []
+  spec: null
+  graph: 9ed23465f0df57af

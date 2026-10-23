@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+context: >-
+  pipeline phase P4_repoint_callers of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: P4_repoint_callers (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675967
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675967
+lastSeenAt: 1792787675967
+fingerprint: null
+payload:
+  id: P4_repoint_callers
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/lib/mcp-server.js
+    - lib/agent-tools/tools/query/query-intelligence.js
+  depends_on:
+    - P3_cortex_becomes_forwarder
+  blocks: []
+  spec: null
+  graph: 052187ecb12107d5

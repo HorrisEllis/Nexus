@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+context: pipeline phase PN1_phases_to_nodes of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: PN1_phases_to_nodes (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677911
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677911
+lastSeenAt: 1792787677911
+fingerprint: null
+payload:
+  id: PN1_phases_to_nodes
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - scripts/phasemaps-to-nodes.js
+  depends_on:
+    - ST1_schema_for_everything_reusable
+  blocks: []
+  spec: null
+  graph: d373bee50a742ff2

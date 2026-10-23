@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-guardian-cos-expansion-phasemap.spec::GA10_copilot_capability_self_awareness
+type: phase
+id: docs_copilot-guardian-cos-expansion-phasemap.spec::GA10_copilot_capability_self_awareness
+context: >-
+  pipeline phase GA10_copilot_capability_self_awareness of
+  docs/copilot-guardian-cos-expansion-phasemap.spec
+intent: null
+summary: GA10_copilot_capability_self_awareness (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678180
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678180
+lastSeenAt: 1792787678180
+fingerprint: null
+payload:
+  id: GA10_copilot_capability_self_awareness
+  map: docs/copilot-guardian-cos-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/nexus-awareness.js
+    - copilot/lib/capabilities.js
+    - lib/tool-index.js
+    - lib/component-registry.js
+  depends_on:
+    - GA4_lib_meta_as_cortex_tools
+  blocks: []
+  spec: null
+  graph: a85de0a884ce625f

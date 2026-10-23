@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
+context: >-
+  pipeline phase CT1_cut_replies_are_finished of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: CT1_cut_replies_are_finished (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676455
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676455
+lastSeenAt: 1792787676455
+fingerprint: null
+payload:
+  id: CT1_cut_replies_are_finished
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/reply-continuation.js
+    - ollama/lib/ollama-client.js
+    - ollama/config.js
+    - idearium/spec-engine/chunk-dispatch.js
+    - copilot/server.js
+    - lib/repo-agent.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 44a5ea9533f0d015

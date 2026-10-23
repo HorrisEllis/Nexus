@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-system-standardization-phasemap.spec::SS5_diagnostics_reads_and_fixes
+type: phase
+id: docs_nexus-system-standardization-phasemap.spec::SS5_diagnostics_reads_and_fixes
+context: pipeline phase SS5_diagnostics_reads_and_fixes of docs/nexus-system-standardization-phasemap.spec
+intent: null
+summary: SS5_diagnostics_reads_and_fixes (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678308
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678308
+lastSeenAt: 1792787678308
+fingerprint: null
+payload:
+  id: SS5_diagnostics_reads_and_fixes
+  map: docs/nexus-system-standardization-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/diagnostic-causal.js
+    - lib/integrity-revert.js
+  depends_on:
+    - SS4_full_logging_per_system
+  blocks: []
+  spec: null
+  graph: bbc697df4c8f8e23

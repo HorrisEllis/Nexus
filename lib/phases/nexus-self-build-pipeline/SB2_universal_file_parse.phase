@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+context: pipeline phase SB2_universal_file_parse of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB2_universal_file_parse (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678294
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678294
+lastSeenAt: 1792787678294
+fingerprint: null
+payload:
+  id: SB2_universal_file_parse
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/read-file.js
+    - lib/loom-map.js
+    - clear-glass/src/plugins/webextensions.js
+    - copilot/lib/workset.js
+    - guardian/lib/agent-facts.js
+    - lib/tool-index.js
+    - lib/agent-tools/tools/query/read-file.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2f06c0672e301ca7

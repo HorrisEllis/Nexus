@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC3_token_constraints
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC3_token_constraints
+context: pipeline phase EC3_token_constraints of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC3_token_constraints (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676311
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676311
+lastSeenAt: 1792787676311
+fingerprint: null
+payload:
+  id: EC3_token_constraints
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/economy/tokens.js
+  depends_on:
+    - EC1_usage_ledger
+  blocks: []
+  spec: null
+  graph: '3231820165317198'

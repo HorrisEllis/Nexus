@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT9_the_plan_pull_tab
+type: phase
+id: docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT9_the_plan_pull_tab
+context: pipeline phase CT9_the_plan_pull_tab of docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+intent: null
+summary: CT9_the_plan_pull_tab (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677015
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677015
+lastSeenAt: 1792787677015
+fingerprint: null
+payload:
+  id: CT9_the_plan_pull_tab
+  map: docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/plan-panel.js
+    - idearium/ui/js/app.js
+    - idearium/ui/index.html
+  depends_on:
+    - CT7_the_plan_shows_current_work
+  blocks: []
+  spec: null
+  graph: c7ffc8d1f1c7dacb

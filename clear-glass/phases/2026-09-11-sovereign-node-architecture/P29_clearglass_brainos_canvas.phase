@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P29_clearglass_brainos_canvas
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P29_clearglass_brainos_canvas
+context: >-
+  pipeline phase P29_clearglass_brainos_canvas of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P29_clearglass_brainos_canvas (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675926
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675926
+lastSeenAt: 1792787675926
+fingerprint: null
+payload:
+  id: P29_clearglass_brainos_canvas
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: bb6cf64c44552e5c

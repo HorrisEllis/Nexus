@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+context: >-
+  pipeline phase LM6_who_creates_contracts of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM6_who_creates_contracts (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675539
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675539
+lastSeenAt: 1792787675539
+fingerprint: null
+payload:
+  id: LM6_who_creates_contracts
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/seam/spec-parser.js
+    - cortex/core/raid/contract-intake.js
+  depends_on:
+    - LM3_interaction_contract_wired_to_registry
+  blocks: []
+  spec: null
+  graph: 916424c3f4eeec02

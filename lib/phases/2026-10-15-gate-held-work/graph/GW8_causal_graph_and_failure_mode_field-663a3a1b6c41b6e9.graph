@@ -1,0 +1,226 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW8_causal_graph_and_failure_mode_field:663a3a1b6c41b6e9
+type: graph
+id: phase:GW8_causal_graph_and_failure_mode_field:663a3a1b6c41b6e9
+context: dependency graph of phase GW8_causal_graph_and_failure_mode_field
+intent: null
+summary: 22 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677558
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677558
+lastSeenAt: 1792787677558
+fingerprint: null
+payload:
+  for: GW8_causal_graph_and_failure_mode_field
+  kind: phase
+  repo: null
+  hash: 663a3a1b6c41b6e9
+  nodes:
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/rfr2/causality/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/diagnostic-causal.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/adapter/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/clip/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-model.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/fault-log.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/diagnostic-report.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: intelligence/relational-field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/snapshot-trigger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/capability-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/diagnostic-causal.js
+      to: intelligence/relational-field.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: intelligence/snapshot-trigger.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/fault-log.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/rfr2/adapter/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/rfr2/kernel/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: lib/diagnostic-report.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/fault-log.js
+      to: lib/fault-log.js
+      kind: requires
+  crossings:
+    - from: lib/diagnostic-causal.js
+      to: intelligence/relational-field.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/diagnostic-causal.js
+      to: intelligence/snapshot-trigger.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/diagnostic-causal.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/diagnostic-report.js
+      to: intelligence/rfr2/causality/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+    dependents: []
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW17_friction_and_tension_per_file
+        files:
+          - lib/fault-log.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by GW3_a_contract_is_traced, GW6_the_intelligence_system_on_every_gate
+      - >-
+        depends on (2): GW3_a_contract_is_traced, GW6_the_intelligence_system_on_every_gate · all
+        upstream 5
+      - 'needed by (0): —'
+      - >-
+        same files as GW17_friction_and_tension_per_file with no order between them:
+        lib/fault-log.js
+    edges:
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+        kind: declared
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+        kind: declared

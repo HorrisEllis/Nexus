@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_rich-atlas-phasemap.spec::AT2_atlas_editor
+type: phase
+id: docs_rich-atlas-phasemap.spec::AT2_atlas_editor
+context: pipeline phase AT2_atlas_editor of docs/rich-atlas-phasemap.spec
+intent: null
+summary: AT2_atlas_editor (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678345
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678345
+lastSeenAt: 1792787678345
+fingerprint: null
+payload:
+  id: AT2_atlas_editor
+  map: docs/rich-atlas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - architecture-spec/registry/edit-atlas.js
+    - architecture-spec/registry/create-atlas.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a1b09cdf79d9b614

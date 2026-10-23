@@ -1,0 +1,239 @@
+envelope: 1
+uuid: nexus-export-graph-phase:VP6_debug_and_intelligence_in_the_desktop:cb17f73919611193
+type: graph
+id: phase:VP6_debug_and_intelligence_in_the_desktop:cb17f73919611193
+context: dependency graph of phase VP6_debug_and_intelligence_in_the_desktop
+intent: null
+summary: 26 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677058
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677058
+lastSeenAt: 1792787677058
+fingerprint: null
+payload:
+  for: VP6_debug_and_intelligence_in_the_desktop
+  kind: phase
+  repo: null
+  hash: cb17f73919611193
+  nodes:
+    - path: cos/testenv/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/ui/desktop.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/cos-debug-report.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/lifeline-contracts.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/gap-finder/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/run-target.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/sandbox.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/tar.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/diagnostic-causal.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/run-target.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: copilot/lib/lifeline-contracts.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/gap-finder/index.js
+      to: lib/gap-field.js
+      kind: requires
+  crossings:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
+    dependents: []
+    upstream:
+      - docs/2026-10-05-verified-primitives-phasemap.spec::VP0_map_and_atlas
+      - docs/2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
+    downstream: []
+    blockedBy:
+      - docs/2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by VP1_confidence_from_evidence
+      - 'depends on (1): VP1_confidence_from_evidence · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
+        kind: declared

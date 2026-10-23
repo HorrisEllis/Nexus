@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-observability-tablet-phasemap.spec::OB8_pattern_leverage_ratio
+type: phase
+id: docs_nexus-observability-tablet-phasemap.spec::OB8_pattern_leverage_ratio
+context: pipeline phase OB8_pattern_leverage_ratio of docs/nexus-observability-tablet-phasemap.spec
+intent: null
+summary: OB8_pattern_leverage_ratio (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678270
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678270
+lastSeenAt: 1792787678270
+fingerprint: null
+payload:
+  id: OB8_pattern_leverage_ratio
+  map: docs/nexus-observability-tablet-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0c003c79fea3e208

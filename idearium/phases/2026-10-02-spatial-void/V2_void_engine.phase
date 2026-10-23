@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-spatial-void-phasemap.spec::V2_void_engine
+type: phase
+id: docs_2026-10-02-spatial-void-phasemap.spec::V2_void_engine
+context: pipeline phase V2_void_engine of docs/2026-10-02-spatial-void-phasemap.spec
+intent: null
+summary: V2_void_engine (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676744
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676744
+lastSeenAt: 1792787676744
+fingerprint: null
+payload:
+  id: V2_void_engine
+  map: docs/2026-10-02-spatial-void-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/void.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 92fad98a05ccf78f

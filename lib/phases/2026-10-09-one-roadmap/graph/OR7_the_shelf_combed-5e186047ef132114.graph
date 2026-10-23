@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OR7_the_shelf_combed:5e186047ef132114
+type: graph
+id: phase:OR7_the_shelf_combed:5e186047ef132114
+context: dependency graph of phase OR7_the_shelf_combed
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677185
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677185
+lastSeenAt: 1792787677185
+fingerprint: null
+payload:
+  for: OR7_the_shelf_combed
+  kind: phase
+  repo: null
+  hash: 5e186047ef132114
+  nodes:
+    - path: docs/the-path.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR3_his_decisions_applied
+    dependents: []
+    upstream:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR3_his_decisions_applied
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): OR3_his_decisions_applied'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-09-one-roadmap-phasemap.spec::OR3_his_decisions_applied
+        kind: declared

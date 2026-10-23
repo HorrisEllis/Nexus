@@ -1,0 +1,89 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UM1_schema_for_user_model:d62896550a607452
+type: graph
+id: phase:UM1_schema_for_user_model:d62896550a607452
+context: dependency graph of phase UM1_schema_for_user_model
+intent: null
+summary: 5 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678192
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678192
+lastSeenAt: 1792787678192
+fingerprint: null
+payload:
+  for: UM1_schema_for_user_model
+  kind: phase
+  repo: null
+  hash: d62896550a607452
+  nodes:
+    - path: lib/schema-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: lib/schema-registry.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/schema-registry.js
+      kind: requires
+  crossings:
+    - from: lib/schema-registry.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/cortex-schema-registry-phasemap.spec::P5_expectation_for_consumers
+    dependents:
+      - docs/cortex-schema-registry-phasemap.spec::UM4_editable_self_optimizing_surface
+    upstream:
+      - docs/cortex-schema-registry-phasemap.spec::P2_conformance_check_lib
+      - docs/cortex-schema-registry-phasemap.spec::P5_expectation_for_consumers
+    downstream:
+      - docs/cortex-schema-registry-phasemap.spec::UM4_editable_self_optimizing_surface
+    blockedBy:
+      - docs/cortex-schema-registry-phasemap.spec::P5_expectation_for_consumers
+    unlocks:
+      - docs/cortex-schema-registry-phasemap.spec::UM4_editable_self_optimizing_surface
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by P5_expectation_for_consumers
+      - 'depends on (1): P5_expectation_for_consumers · all upstream 2'
+      - >-
+        needed by (1): UM4_editable_self_optimizing_surface · finishing it unlocks
+        UM4_editable_self_optimizing_surface
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/cortex-schema-registry-phasemap.spec::P5_expectation_for_consumers
+        kind: inferred

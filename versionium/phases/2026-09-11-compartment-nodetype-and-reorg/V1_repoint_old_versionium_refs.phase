@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::V1_repoint_old_versionium_refs
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::V1_repoint_old_versionium_refs
+context: >-
+  pipeline phase V1_repoint_old_versionium_refs of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: V1_repoint_old_versionium_refs (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675826
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675826
+lastSeenAt: 1792787675826
+fingerprint: null
+payload:
+  id: V1_repoint_old_versionium_refs
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - versionium/lib/engine.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 18f7f308b8d3dab0

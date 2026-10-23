@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB8_promote_with_full_block_options
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB8_promote_with_full_block_options
+context: >-
+  pipeline phase SB8_promote_with_full_block_options of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB8_promote_with_full_block_options (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676822
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676822
+lastSeenAt: 1792787676822
+fingerprint: null
+payload:
+  id: SB8_promote_with_full_block_options
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/spec-engine/index.js
+    - idearium/spec-engine/blocks.yaml
+    - idearium/cli/index.js
+    - idearium/ui/workshop.html
+  depends_on:
+    - SB2_his_words_seed_the_spec
+    - SB9_the_spec_is_a_spec_file
+    - SB10_reuse_first_keyed_on_the_contract
+    - SB11_each_block_chunked
+  blocks: []
+  spec: null
+  graph: 59a2cc99ce55bb7c

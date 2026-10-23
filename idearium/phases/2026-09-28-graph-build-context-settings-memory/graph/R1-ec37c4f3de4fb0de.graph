@@ -1,0 +1,73 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R1:ec37c4f3de4fb0de
+type: graph
+id: phase:R1:ec37c4f3de4fb0de
+context: dependency graph of phase R1
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676103
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676103
+lastSeenAt: 1792787676103
+fingerprint: null
+payload:
+  for: R1
+  kind: phase
+  repo: null
+  hash: ec37c4f3de4fb0de
+  nodes:
+    - path: idearium/repo/living-spec.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/repo-settings.js
+      role: changes
+      exists: false
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/repo/living-spec.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/living-spec.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+    dependents: []
+    upstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+    downstream: []
+    blockedBy:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by R0
+      - 'depends on (1): R0'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+        kind: declared

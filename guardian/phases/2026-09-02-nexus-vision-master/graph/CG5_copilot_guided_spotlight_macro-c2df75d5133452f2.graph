@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG5_copilot_guided_spotlight_macro:c2df75d5133452f2
+type: graph
+id: phase:CG5_copilot_guided_spotlight_macro:c2df75d5133452f2
+context: dependency graph of phase CG5_copilot_guided_spotlight_macro
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675664
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675664
+lastSeenAt: 1792787675664
+fingerprint: null
+payload:
+  for: CG5_copilot_guided_spotlight_macro
+  kind: phase
+  repo: null
+  hash: c2df75d5133452f2
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG4_macros_plugin_autofill
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG4_macros_plugin_autofill
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG4_macros_plugin_autofill
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CG4_macros_plugin_autofill
+      - 'depends on (1): CG4_macros_plugin_autofill'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::CG4_macros_plugin_autofill
+        kind: declared

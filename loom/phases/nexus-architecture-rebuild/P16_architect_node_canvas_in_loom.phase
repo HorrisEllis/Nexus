@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P16_architect_node_canvas_in_loom
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P16_architect_node_canvas_in_loom
+context: pipeline phase P16_architect_node_canvas_in_loom of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P16_architect_node_canvas_in_loom (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678251
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678251
+lastSeenAt: 1792787678251
+fingerprint: null
+payload:
+  id: P16_architect_node_canvas_in_loom
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e1fe4417843573a5

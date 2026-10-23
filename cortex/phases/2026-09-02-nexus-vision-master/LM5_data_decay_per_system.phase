@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::LM5_data_decay_per_system
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::LM5_data_decay_per_system
+context: pipeline phase LM5_data_decay_per_system of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: LM5_data_decay_per_system (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675696
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675696
+lastSeenAt: 1792787675696
+fingerprint: null
+payload:
+  id: LM5_data_decay_per_system
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/memory/decay.js
+    - cortex/boot.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 968c129f68946726

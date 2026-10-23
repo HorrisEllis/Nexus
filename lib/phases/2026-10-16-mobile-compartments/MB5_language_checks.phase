@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-mobile-compartments-phasemap.spec::MB5_language_checks
+type: phase
+id: docs_2026-10-16-mobile-compartments-phasemap.spec::MB5_language_checks
+context: pipeline phase MB5_language_checks of docs/2026-10-16-mobile-compartments-phasemap.spec
+intent: null
+summary: MB5_language_checks (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677720
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677720
+lastSeenAt: 1792787677720
+fingerprint: null
+payload:
+  id: MB5_language_checks
+  map: docs/2026-10-16-mobile-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/checks/ck-248-toolchain.js
+    - lib/step-gate.js
+    - idearium/lib/void.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a070742238698d85
