@@ -170,3 +170,20 @@ James, 2026-10-23: "contiue getting idearium building phases"
   - A proven run that changed nothing closes too, said: "the run changed nothing (its phase was already true on disk)". The proof ran on
     the disk itself, so there is no overlay to doubt (§0.1).
   - A rejected change in the run blocks the close, as a revert does: part of the run did not land.
+
+## ADDENDUM 2026-10-23 (0.60.224) — SL2 built; the first dry run; nothing closed yet
+James, 2026-10-23: "next"
+- lib/phase-close.js 1.1.0 evidenceTests / byEvidence; POST /api/repos/:uuid/phases/evidence (dry run unless apply: true), `repo evidence`,
+  the Phases rail's "done by evidence?" with "close N" (asks first). Each close is a CloseRecord of kind 'evidence' beside SL1's.
+- Decided by the axioms (TRUTH_OVER_COHERENCE, §0.1): what may judge a phase is narrower than the spec's "the tests linked to its files".
+  The first count with every linked test gave 158 checkable; tests that merely require a store most code uses (guardian/jaa-store.js)
+  would have closed phases on dozens of unrelated passes. Evidence is a test the phase names ('own'), or one specific to one of its
+  files ('linked': named for it, or one of at most 3 reaching it) on a file at most 3 open phases share.
+- The dry run over Nexus (docs/2026-10-23-evidence-dry-run.md, every phase listed with its tests): 137 checkable, 202 tests in 13 minutes,
+  180 passed, 1 timed out; 107 would close, 30 stay open on a failing test. Only 2 of the 107 close on their own test. A linked pass says the
+  file works, not that the phase's whole intent was built, so nothing was applied to Nexus's maps: closing 107 phases at once is a cost he
+  would want to see first (his rule, 2026-10-17: "come to me for problems"). To confirm with him: apply the 2 'own' ones, all 107, or a
+  reviewed subset.
+- Found: the first dry run spawned tests without a sandbox and they wrote ledgers into data/ and cortex/data/; fixed (each test in its own
+  sandbox and process group). Even sandboxed, some test still writes failure_mode nodes into cortex/data/nodes/failure_mode (that folder
+  is not one of the sandbox's stores). The files were moved out of the tree, kept; the writer is not traced yet (reported, not fixed here).

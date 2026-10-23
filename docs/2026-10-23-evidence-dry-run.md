@@ -1,0 +1,153 @@
+# Done by evidence — the first dry run over Nexus (2026-10-23, 0.60.224)
+
+James, 2026-10-23: "next" (SL2, docs/2026-10-23-self-building-loop-phasemap.spec). Nothing here was written to a map: this is the dry run, for him to read.
+
+- 137 open phases had every file and a test that may judge them; 202 distinct tests ran (180 passed, 1 timed out), each in its own sandbox.
+- **107 would close.** Only 2 on a test the phase names itself ("its own"); the rest on a test specific to one of its files ("linked"). A linked pass says the file works, not that the phase's whole intent was built: read before applying.
+- 30 stay open because a test failed.
+
+## Would close: its own test
+
+- G0 (2026-09-28-graph-build-context-settings-memory) — test-repo-graph.js (its own)
+- PS1_phase_specs (2026-10-20-substrate-graph-traversal-chunking-gating) — test-phase-specs.test.js (its own), test-pipeline-nodes.test.js (linked), test-pipeline-root-causes.test.js (linked)
+
+## Would close: linked tests (read before applying)
+
+- R1 (2026-09-26-guardian-retry-novelty-and-installs) — test-reply-not-found-attention.test.js (linked), test-ncp-handler-sr3.js (linked), test-chat-transcripts.test.js (linked)
+- A3 (2026-09-27-components-store-and-atlases) — test-nexus-self-incremental.test.js (linked), test-nexus-self-visible.test.js (linked)
+- M2 (2026-09-28-graph-build-context-settings-memory) — jaa-store-multiprocess.test.js (linked)
+- M3 (2026-09-28-graph-build-context-settings-memory) — jaa-store-multiprocess.test.js (linked)
+- UI3_settings_tab_retheme_collapse (2026-10-01-idearium-agent-ready-master) — test-setup-job-settles.test.js (linked)
+- J1 (2026-10-01-work-visibility-job-reuse) — test-reply-not-found-attention.test.js (linked)
+- J5 (2026-10-01-work-visibility-job-reuse) — test-copilot-claude-code.test.js (linked), test-tool-layers-and-pane-memory.test.js (linked), test-cg-copilot-no-api.test.js (linked)
+- EM2_warp_his_own (2026-10-02-emerge-field-memory-build) — test-nexstore-types.test.js (linked), test-warp2.test.js (linked)
+- MR4_field_memory (2026-10-02-emerge-field-memory-build) — relevance.test.js (linked), read-time-expiry.test.js (linked), test-sigma-compaction.js (linked), test-table-compactor.js (linked)
+- CB4_the_emergence_loop_builds (2026-10-02-emerge-field-memory-build) — schemas.test.js (linked), loop.test.js (linked)
+- IN1_nexus_as_claude_codes_toolbox (2026-10-02-emerge-field-memory-build) — test-nexus-command-tool.test.js (linked), test-nexus-mcp.test.js (linked), reflection.test.js (linked)
+- LB1_the_end_state_lab (2026-10-02-emerge-field-memory-build) — test-capability-extend.js (linked)
+- FM1_mining_failure_modes (2026-10-02-emerge-field-memory-build) — test-fault-taxonomy.js (linked)
+- RD1_raid_complete_or_build (2026-10-02-emerge-field-memory-build) — test-capability-extend.js (linked)
+- FG2_token_budget_chunking (2026-10-02-fractal-graph-any-size-agent) — test-code-intel.test.js (linked), test-p1-agent-contracts.js (linked)
+- SB5_nexus_rebuilds_a_system_from_its_spec (2026-10-05-build-from-the-spec) — test-nexus-self-and-cos-run.test.js (linked)
+- SB9_the_spec_is_a_spec_file (2026-10-05-build-from-the-spec) — test-spec-library.test.js (linked), test-spec-workshop.test.js (linked)
+- SB11_each_block_chunked (2026-10-05-build-from-the-spec) — test-spec-library.test.js (linked)
+- SB14_reuse_compounds (2026-10-05-build-from-the-spec) — test-architect.test.js (linked)
+- SB15_empty_is_not_built (2026-10-05-build-from-the-spec) — test-build-verify.test.js (linked), test-phase-actually-builds.test.js (linked)
+- SB21_deterministic_parts_grow_with_the_system (2026-10-05-build-from-the-spec) — system-scaffold.test.js (linked)
+- SB22_every_component_capability_command_events_as_nodes (2026-10-05-build-from-the-spec) — test-node-registry-system.test.js (linked), test-system-node-relations.test.js (linked), test-one-idearium-phases-nodes.test.js (linked)
+- SB23_a_new_system_slots_in (2026-10-05-build-from-the-spec) — test-autopilot-boot-gates.js (linked), test-autopilot-idle.test.js (linked), test-autopilot-warp-spine.js (linked), test-intelligence-organs-move.js (linked), system-scaffold.test.js (linked)
+- SB26_an_imported_project_shows_its_progress (2026-10-05-build-from-the-spec) — test-one-idearium-phases-nodes.test.js (linked)
+- SB27_expanding_a_repo_keeps_its_spec_and_phases_current (2026-10-05-build-from-the-spec) — test-one-idearium-phases-nodes.test.js (linked)
+- SB48_proof_in_cos_closes_the_phase (2026-10-05-build-from-the-spec) — test-registry-drives-build.test.js (linked), test-repo-expand.test.js (linked)
+- HG5_bootstrap_keeps_registration_times (2026-10-05-cli-data-code) — contracts.test.js (linked), schema.test.js (linked), test-loom-map.js (linked)
+- WK4_the_void_feeds_the_workshop (2026-10-05-idea-to-spec-workshop) — test-spatial-void.test.js (linked)
+- WK6_enterprise_grade (2026-10-05-idea-to-spec-workshop) — test-spatial-void.test.js (linked), test-spec-workshop.test.js (linked)
+- RS4_the_pipeline_on_warp2 (2026-10-05-spec-workshop-rebuild) — test-warp2.test.js (linked)
+- VP2_adversarial_review (2026-10-05-verified-primitives) — adversary-suite.test.js (linked)
+- VP3_the_repo_model_of_the_user (2026-10-05-verified-primitives) — test-user-model-radiate.js (linked), user-model.test.js (linked), test-user-model-capture.js (linked), test-user-model-editable.js (linked), test-user-model-everywhere.js (linked), test-user-model-schema.js (linked)
+- UN1_nexus_surfaces_in_the_field (2026-10-07-compartment-control-and-activity) — clear-glass-agent-surface.test.js (linked), test-cg-field.test.js (linked), test-semantic-page-tree.test.js (linked)
+- DC1_a_click_that_did_nothing (2026-10-07-compartment-control-and-activity) — error-capture.test.js (linked), test-compartment-activity-log.test.js (linked)
+- VR2_history_and_diff (2026-10-07-versionium-releases) — test-mcob-file-versioning.js (linked), test-pipeline-root-causes.test.js (linked), test-vm-control.test.js (linked)
+- LT1_provenance_lattice (2026-10-07-versionium-releases) — test-nexstore-log.test.js (linked), intuition-upgrade.test.js (linked), system-lattice.test.js (linked)
+- ME5_one_chooser (2026-10-09-one-model-engine) — test-snr-filter.js (linked), test-account-registry.js (linked), test-agent-build-learning.js (linked), test-agent-routing.js (linked), test-warp-cascade-provider-fallback.js (linked), test-dispatcher-deepseek-ncp.js (linked)
+- ME6_one_learner (2026-10-09-one-model-engine) — test-economy.test.js (linked), test-hardening-pass.test.js (linked), test-agent-build-learning.js (linked), test-guardian-raid-feedback.js (linked)
+- ME8_the_drainers_run_the_engine (2026-10-09-one-model-engine) — test-starved-machine.test.js (linked)
+- ME9_the_layers_below_report (2026-10-09-one-model-engine) — dispatcher-ping-gate.test.js (linked), dispatcher-stale-socket.test.js (linked), test-dispatcher-deepseek-ncp.js (linked), test-guardian-dispatch-ladder.js (linked), test-reply-not-found-attention.test.js (linked), test-economy-guardian.test.js (linked)
+- ME10_nested_ladders_folded (2026-10-09-one-model-engine) — test-warp-cascade-provider-fallback.js (linked), cos-seam-artifact-staging.test.js (linked), test-agent-hat-agnostic.test.js (linked), test-chunk-build-orchestrator.js (linked)
+- DS2_pick_and_edit_any_page (2026-10-10-design-surface) — test-selector-map.test.js (linked)
+- SD4_agents_live_in_guardian (2026-10-10-idearium-solid) — test-selector-map.test.js (linked), test-account-registry.js (linked), test-economy-guardian.test.js (linked), test-economy.test.js (linked)
+- SD5_account_fallback (2026-10-10-idearium-solid) — test-economy.test.js (linked), test-economy-guardian.test.js (linked), test-account-registry.js (linked), test-guardian-dispatch-ladder.js (linked)
+- SD6_an_idea_logged_asked_expanded (2026-10-10-idearium-solid) — test-spatial-void.test.js (linked)
+- SD7_blocks_that_generate_themselves (2026-10-10-idearium-solid) — test-spec-document.test.js (linked), test-thread.test.js (linked), test-workshop-thread.test.js (linked)
+- SD10_the_adversarial_gate (2026-10-10-idearium-solid) — test-draft-review.test.js (linked), autonomous-loop.test.js (linked), compartment-engine.test.js (linked), idearium-phase-compartment.test.mjs (linked)
+- SD11_the_desktop_inside_idearium (2026-10-10-idearium-solid) — test-nexus-self-visible.test.js (linked)
+- SD12_a_spec_starts_from_its_primitives (2026-10-10-idearium-solid) — test-spec-document.test.js (linked), test-thread.test.js (linked), test-workshop-thread.test.js (linked)
+- SD13_the_machine_is_cos (2026-10-10-idearium-solid) — test-cos-vm-shell.test.js (linked)
+- SD14_chunks_cut_at_primitives (2026-10-10-idearium-solid) — test-spec-library.test.js (linked)
+- SD15_no_website_can_drive_nexus (2026-10-10-idearium-solid) — test-node-registry-system.test.js (linked), test-repo-carve.test.js (linked), test-synthesis-zoom-versionium.test.js (linked)
+- AW0_no_guessed_causes (2026-10-10-self-awareness) — cfr-graph-component-distance.test.js (linked)
+- LR0_the_shared_primitives_are_the_glyph (2026-10-10-shape-of-nexus) — test-nexus-self-and-cos-run.test.js (linked), test-build-context.test.js (linked), test-languages.js (linked), test-code-intel.test.js (linked)
+- LR1_each_component_in_the_language_that_fits (2026-10-10-shape-of-nexus) — test-cos-testenv-any-repo.js (linked)
+- SN0_one_branch (2026-10-10-snapshot-compartments) — test-nexus-self-and-cos-run.test.js (linked)
+- SN3_measured_by_rfr2 (2026-10-10-snapshot-compartments) — test-rfr2-cjs.js (linked)
+- TB3_tabs_are_compartments (2026-10-12-browser-providers-and-work) — test-compartment-activity-log.test.js (linked)
+- TB4_bookmark_checklists (2026-10-12-browser-providers-and-work) — phase2.test.js (linked)
+- PV1_providers_read_from_nodes (2026-10-12-browser-providers-and-work) — test-agent-facts.test.js (linked), test-route-eligibility.test.js (linked), test-dispatcher-deepseek-ncp.js (linked), test-code-artifact.js (linked), test-account-registry.js (linked), test-agent-build-learning.js (linked)
+- PV3_input_nodes (2026-10-12-browser-providers-and-work) — nexus-cli-switch.test.js (linked), test-cli-consolidation.js (linked), test-copilot-window.js (linked)
+- JB4_resume_import (2026-10-12-browser-providers-and-work) — clear-glass-autofill.test.js (linked), clear-glass-screen-qa.test.js (linked), clear-glass-gig.test.js (linked)
+- JB7_the_follow_up (2026-10-12-browser-providers-and-work) — automation-v2.test.js (linked)
+- MX1_nothing_built_unmapped (2026-10-12-browser-providers-and-work) — test-one-idearium-phases-nodes.test.js (linked)
+- MX4_one_system_digest (2026-10-12-browser-providers-and-work) — test-data-rewired.test.js (linked), test-guardian-own-data.test.js (linked), test-compartment-activity-log.test.js (linked)
+- ID3_bookmarks_carry_the_identity (2026-10-13-identities-tabs-and-automation) — phase2.test.js (linked)
+- PL1_many_projects_at_once (2026-10-13-projects-raid-and-gates) — test-project-decompose.test.js (linked)
+- RF0_architecture_read (2026-10-13-projects-raid-and-gates) — test-project-decompose.test.js (linked), test-mastermind-ready.test.js (linked), test-repo-history.test.js (linked)
+- RF2_applied_one_phase_at_a_time (2026-10-13-projects-raid-and-gates) — test-repo-history.test.js (linked)
+- PL6_global_links_seen (2026-10-13-projects-raid-and-gates) — test-project-decompose.test.js (linked)
+- WF0_workflows (2026-10-13-projects-raid-and-gates) — automation-nodes.test.js (linked), automation-settings-ui.test.js (linked), test-live-recording.test.js (linked)
+- NP6_settings (2026-10-15-clear-glass-network-posture) — test-cg-network-ui.test.js (linked)
+- GW4_copilot_on_the_gates (2026-10-15-gate-held-work) — test-copilot-tool-runtime.js (linked)
+- GW11_a_snapshot_per_gate (2026-10-15-gate-held-work) — test-qa2-real-run.test.js (linked), test-release-notes.test.js (linked), test-releases.test.js (linked)
+- GW14_copy_in_diff_out (2026-10-15-gate-held-work) — test-cos-testenv-any-repo.js (linked), test-one-idearium-phases-nodes.test.js (linked)
+- GW26_everything_declares_what_it_needs (2026-10-15-gate-held-work) — test-phase-graph.test.js (linked), test-phase-map-auto.test.js (linked), test-work-funnel.test.js (linked), test-capability-spec.test.js (linked), test-semantic-field-map.test.js (linked), test-spec-gaps-intelligence.test.js (linked)
+- PI5_the_crawler (2026-10-15-personal-chat-import) — test-chat-crawler.test.js (linked), test-chat-ports.test.js (linked), test-chat-crawl-plan.test.js (linked)
+- MP4_a_model_only_where_nothing_maps (2026-10-15-warp-builds-and-spec-framework) — test-phase-mapping.test.js (linked)
+- FN1_every_door_goes_through_it (2026-10-16-agent-work-funnel) — test-prevention.test.js (linked), test-raid-officiator.js (linked), test-starved-machine.test.js (linked), test-build-paths.test.js (linked)
+- FN2_what_is_missing_is_made_first (2026-10-16-agent-work-funnel) — test-spec-pipeline.test.js (linked)
+- TL2_resume_at_boot (2026-10-16-durable-work-timeline) — test-gate-context.test.js (linked), test-stream-fallback.test.js (linked), test-work-journal.test.js (linked)
+- IH3_routers_read_the_chain (2026-10-16-intent-hat-agent-chain) — test-ack-injection-fix.js (linked), test-hat-forge.js (linked)
+- FMR4_the_macro_bundle (2026-10-17-failure-mode-report) — automation-nodes.test.js (linked), automation-settings-ui.test.js (linked), test-live-recording.test.js (linked)
+- DB20_sealed_archetype (2026-10-17-system-drawbridge) — test-system-shape.test.js (linked), test-system-skeleton.test.js (linked)
+- DBG8_in_the_product (2026-10-18-debugging-product) — test-flight-recorder-standalone.test.js (linked)
+- GC1_layer_one (2026-10-18-gating-census) — test-context-stream.test.js (linked), test-node-lattice.test.js (linked), test-check-catalogue.test.js (linked)
+- GA1_copilot_fills_the_gig (2026-10-19-gig-autofill-and-learn) — copilot-cli.test.js (linked), test-cg-gig-autofill.test.js (linked)
+- GA1a_a_written_gig_is_remembered (2026-10-19-gig-autofill-and-learn) — clear-glass-autofill.test.js (linked), clear-glass-screen-qa.test.js (linked)
+- GA2_a_missed_field_asks_the_picker (2026-10-19-gig-autofill-and-learn) — test-cg-selector-assign.test.js (linked), selector-check-chromium.js (linked)
+- GA5_commands_and_the_panel (2026-10-19-gig-autofill-and-learn) — clear-glass-gig.test.js (linked)
+- VS1_versions_in_the_surface (2026-10-19-idearium-control) — test-repo-history.test.js (linked)
+- IM1_ideas_and_notes_as_one (2026-10-19-idearium-control) — test-repo-notes.test.js (linked)
+- IM3_ideas_mapped_to_nexus (2026-10-19-idearium-control) — test-phase-graph.test.js (linked), test-phase-map-auto.test.js (linked), test-work-funnel.test.js (linked)
+- IN3_registry_is_the_spine (2026-10-19-infrastructure-spine) — test-component-registry.js (linked)
+- IN8_any_size (2026-10-19-infrastructure-spine) — test-nexus-self-incremental.test.js (linked), test-nexus-self-visible.test.js (linked), test-node-registry-system.test.js (linked), test-sovereign-systems.test.js (linked), test-guardian-own-data.test.js (linked)
+- SC1_scaling_limits_named (2026-10-19-infrastructure-spine) — test-node-registry-system.test.js (linked), test-sovereign-systems.test.js (linked), test-guardian-own-data.test.js (linked), test-nexus-self-incremental.test.js (linked), test-nexus-self-visible.test.js (linked)
+- UI2_version_in_code (2026-10-19-pipeline-root-causes) — test-repo-history.test.js (linked)
+- UI3_ideas_and_notes_as_one (2026-10-19-pipeline-root-causes) — test-repo-notes.test.js (linked)
+- UP5_registry_wires_on_apply (2026-10-19-upload-intent-and-page-map) — test-upload-placement.test.js (linked)
+- UP6_model_for_the_unplaced (2026-10-19-upload-intent-and-page-map) — test-upload-placement.test.js (linked)
+- RA0_rca_says_what_it_does (2026-10-20-belief-loop) — test-nexus-command-tool.test.js (linked)
+- BX9_retire (2026-10-21-brainos-into-idearium) — brainos-panel-wiring.test.js (linked), test-brainos-v2-rebuild.js (linked), test-compartment-activity-log.test.js (linked)
+- DL7_cortex_snapshot_out (2026-10-21-data-layout) — autonomous-loop.test.js (linked), test-intelligence-organs-move.js (linked), nexus-repl-descriptors.test.js (linked)
+- ND1_every_system_has_its_database (2026-10-22-system-node-db) — test-node-registry-system.test.js (linked), test-system-node-relations.test.js (linked), test-one-idearium-phases-nodes.test.js (linked)
+- ND3_each_server_serves_its_nodes (2026-10-22-system-node-db) — test-node-registry-system.test.js (linked), test-repo-carve.test.js (linked), test-synthesis-zoom-versionium.test.js (linked)
+
+## Stay open: a test failed
+
+- S4 (2026-09-28-staging-self-heal) — brutal.test.js, test-flight-data.test.js
+- AC1_accounts_into_agents (2026-10-02-emerge-field-memory-build) — test-cg-accounts-portal-settings.test.js
+- SB18_the_system_template_is_used (2026-10-05-build-from-the-spec) — test-template-picker.test.js
+- SB24_loom_builds_a_new_system (2026-10-05-build-from-the-spec) — test-cos-compartment-template.test.js
+- SB29_the_build_flow_in_his_order (2026-10-05-build-from-the-spec) — test-build-surface.test.js
+- CT1_one_pending_change_path (2026-10-05-cli-data-code) — test-work-surface.test.js
+- HG9_persist_history_diff (2026-10-05-cli-data-code) — phasemap-map.test.js
+- AP1_android_build_compartment (2026-10-05-cos-machines) — test-build-surface.test.js, build-surface-ui-chromium.js
+- AP3_release_like_an_enterprise (2026-10-05-cos-machines) — test-build-surface.test.js, build-surface-ui-chromium.js
+- VP6_debug_and_intelligence_in_the_desktop (2026-10-05-verified-primitives) — test-failure-modes.test.js
+- ME15_the_docs_tell_the_truth (2026-10-09-one-model-engine) — test-readme-atlas.test.js, test-readme-generate.test.js
+- SD9_claude_code_inside_idearium (2026-10-10-idearium-solid) — test-claude-code-backend.test.js
+- AW3_the_field_hears_the_lifecycle (2026-10-10-self-awareness) — brutal.test.js
+- TB2_a_tab_runs_as_an_account (2026-10-12-browser-providers-and-work) — test-accounts-picker-cos.test.js
+- TB6_element_endpoints (2026-10-12-browser-providers-and-work) — test-accounts-picker-cos.test.js
+- TB7_human_tabs_never_spoofed (2026-10-12-browser-providers-and-work) — test-tls-layer.test.js
+- JB2_the_copilot_hat_agent_and_account (2026-10-12-browser-providers-and-work) — test-accounts-picker-cos.test.js
+- JB3_autofill_fields_mapped_by_pick (2026-10-12-browser-providers-and-work) — guardian-picker-glass.js
+- MC2_hotkeys_for_macros (2026-10-13-identities-tabs-and-automation) — clear-glass-library-ui.test.js
+- RD0_raid_has_its_own_contract (2026-10-13-projects-raid-and-gates) — test-failure-modes.test.js
+- RD3_the_registry_carries_events (2026-10-13-projects-raid-and-gates) — test-tablet-graph-api.js
+- CS1_one_popup_frame (2026-10-15-clear-glass-surfaces) — window-frame.test.js, test-compartment-window.test.js
+- GW12_desktop_is_optional (2026-10-15-gate-held-work) — test-build-surface.test.js, build-surface-ui-chromium.js
+- GW17_friction_and_tension_per_file (2026-10-15-gate-held-work) — brutal.test.js
+- DB19_genesis_sandboxed_fork (2026-10-17-system-drawbridge) — test-template-picker.test.js
+- CE7_agents_and_commands (2026-10-18-compartment-environment) — test-agent-tools-and-graph.test.js
+- GM8_agents_have_it (2026-10-18-gate-memory) — test-agent-tools-and-graph.test.js
+- CT1_fewer_wider_tabs (2026-10-19-idearium-control) — test-work-surface.test.js
+- SS4_seal_into_compartments (2026-10-19-pipeline-root-causes) — test-cos-compartment-template.test.js, test-system-boundary.test.js
+- SL6_the_loop_counts_itself (2026-10-23-self-building-loop) — test-flight-data.test.js
