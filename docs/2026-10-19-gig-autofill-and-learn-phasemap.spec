@@ -96,3 +96,17 @@ spec:
 
   build_order: "GA1 + GA1a first (the 'yes', makes 'fill this in for me' work); then GA2 → GA3 → GA4 (the picker-learn loop); GA5 last (surfaces it)."
   verification_here: "No real Fiverr page or browser in this container: every phase is proven with a fake dom bridge, fake page fields and a fake picker in Clear-Glass-driven tests; the real fill is his machine's (said, not faked)."
+
+## ADDENDUM 2026-10-23 (JA1, 0.60.225) — the learn-loop extended off Fiverr to general job applications
+James, 2026-10-23 (the gig-work email): "for clearglass, job applications/autofill. look clearglass" · "make sure it works for these"
+(micro1, AfterQuery, RemoExperts, Turing, Mercor; boards OpenTrain / aitraining.jobs / aitrainer.work).
+GA0c made the GIG matcher (matchGigFields) consult a per-site learned map. JA1 does the same for the GENERAL application matcher
+(clear-glass/src/autofill/matcher.js matchFields), so the same "pick it once, it's remembered per-site" loop works for any job
+application, not just the Fiverr gig editor. Decided by his axioms (§8.6 reuse): same site-settings store, same picker/selector-assign
+pattern GA2–GA5 name; no new store.
+- **Built:** matchFields consults opts.learned ({fieldKey→fieldType}) before its patterns (a human pick is highest authority,
+  source 'learned'); fieldKeysOf(field) gives the identities the picker and matcher share; detectFields/fillFields forward learned.
+  Test tests/modules/test-autofill-learned.test.js JA 4/4.
+- **Open (the rest of the loop, general form of GA2–GA5):** JA2 save a pick to site-settings (autofill.field.<key>) under the
+  application's origin; JA3 the element picker on a missed field; JA4 the UI + the IPC loading learned from site-settings on fill;
+  and a real Clear Glass fill on one live listing (his login).
