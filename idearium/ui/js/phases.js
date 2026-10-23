@@ -40,7 +40,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   if (!el || !repo) return;
   const forUuid = repo.uuid;
   if (PHASES.uuid !== forUuid) {
-    Object.assign(PHASES, { uuid: forUuid, data: null, open: null, adding: false, specs: null, spec: null, thread: null, threadErr: null, plan: null, roadmaps: [] });
+    Object.assign(PHASES, { uuid: forUuid, data: null, open: null, adding: false, specs: null, spec: null, thread: null, threadErr: null, plan: null, roadmaps: [], evidence: null });
     PHASES.filter = { q: '', status: 'all', map: 'all', mine: true, ready: false };
   }
   // §RS11 — handed a spec (and a phase) from a workshop section: applied after any reset for a new repo, not wiped by it
@@ -143,7 +143,33 @@ function _phNextRail() {
   const why = Object.keys(g).filter(k => g[k]).map(k => `${g[k]} ${k}`).join(' · ');
   return `<div class="ph2-rail-head">can be built now · ${n.counts.queue} of ${n.counts.open} open</div>
     ${(n.queue || []).map(q => `<div class="ph2-spec" title="${escapeHtml(q.why)} — ${escapeHtml(q.map)}"><span class="ph2-spec-name">${escapeHtml(q.id)}</span><span class="ph2-dim">unlocks ${q.unlocks}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phasesBuild('${_phq(q.map)}','${_phq(q.id)}')" title="build it now (the same route as its own Build button)">▶ build</button></div>`).join('') || '<div class="ph2-dim ph2-pad">nothing can be built now</div>'}
-    ${why ? `<div class="ph2-dim ph2-pad" title="every other open phase is in one group, with what would unblock it (phases next --group …)">waiting: ${escapeHtml(why)}</div>` : ''}`;
+    ${why ? `<div class="ph2-dim ph2-pad" title="every other open phase is in one group, with what would unblock it (phases next --group …)">waiting: ${escapeHtml(why)}</div>` : ''}
+    ${_phEvidenceRail()}`;
+}
+
+// 0.60.224 SL2 — done by evidence: a dry run first (its own tests run, nothing written); Close them asks, then writes through the writer
+function _phEvidenceRail() {
+  const e = PHASES.evidence;
+  const btn = `<button class="ph2-mini-btn" ${e && e.busy ? 'disabled' : ''} onclick="phEvidence(false)" title="the open phases whose every file exists, judged by their own tests — a dry run: nothing is written">${e && e.busy ? 'running their tests…' : '⚖ done by evidence?'}</button>`;
+  if (!e || !e.result) return `<div class="ph2-pad">${btn}</div>`;
+  const r = e.result, list = r.dryRun ? r.wouldClose : r.closed;
+  const failed = (r.open || []).filter(o => o.failed);
+  return `<div class="ph2-rail-head">done by evidence · ${list.length} ${r.dryRun ? 'would close' : 'closed'} of ${r.checked} checked</div>
+    ${list.map(c => `<div class="ph2-spec" title="${escapeHtml(c.why)}"><span class="ph2-spec-name">${escapeHtml(c.phase)}</span><span class="ph2-dim">${escapeHtml(c.tests.map(t => t.file.split('/').pop()).join(', '))}</span></div>`).join('')}
+    ${failed.length ? `<div class="ph2-dim ph2-pad">${failed.length} stay open: a test failed (${escapeHtml(failed.slice(0, 3).map(o => o.id).join(', '))}${failed.length > 3 ? ', …' : ''})</div>` : ''}
+    <div class="ph2-pad">${btn}${r.dryRun && list.length ? ` <button class="ph2-mini-btn" onclick="phEvidence(true)" title="close these through the status writer (each one reversible)">close ${list.length}</button>` : ''}</div>`;
+}
+async function phEvidence(apply) {
+  const uuid = PHASES.uuid || (CURRENT_API_REPO && CURRENT_API_REPO.uuid);
+  if (apply && !confirm('Close the phases whose own tests passed? Each one is written through the status writer and can be set back.')) return;
+  PHASES.evidence = { ...(PHASES.evidence || {}), busy: true }; _phPaint();
+  try {
+    const r = await api(`/api/repos/${uuid}/phases/evidence`, { method: 'POST', body: JSON.stringify({ apply: !!apply, limit: 20 }) }, 900000);
+    PHASES.evidence = { result: r };
+    toast(r.dryRun ? `${r.wouldClose.length} of ${r.checked} would close by their tests` : `${r.closed.length} closed by their tests`, 'ok');
+    if (!r.dryRun && typeof renderPhasesRefresh === 'function') renderPhasesRefresh();
+  } catch (e) { PHASES.evidence = null; toast(`done by evidence: ${e.message}`, 'err'); }
+  _phPaint();
 }
 
 // 0.60.223 SL1 — the run that closed this phase by itself (proven, every change applied), or the change whose undo reopened it

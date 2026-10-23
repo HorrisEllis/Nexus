@@ -1,0 +1,104 @@
+envelope: 1
+uuid: nexus-export-failure_mode-aae221de-cb9b-4041-a7ab-78b40214abcc
+type: failure_mode
+id: aae221de-cb9b-4041-a7ab-78b40214abcc
+context: real failure_modes row, enriched with real causal chain + sigma delta by failure-mode-forensics.js
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1792778526456
+source: cortex.self-heal.failure-mode-forensics
+occurrences: 1
+firstSeenAt: 1792778526456
+lastSeenAt: 1792778526456
+fingerprint: null
+payload:
+  uuid: aae221de-cb9b-4041-a7ab-78b40214abcc
+  faultClass: timeout
+  gapUuid: null
+  friction: null
+  enteredAt: 1792778526456
+  source: idearium/api (phase build)
+  signature: timeout::docs/2026-10-17-infrastructure-migration-phasemap.spec#IM1_the_shape_census_as_a_command
+  where: docs/2026-10-17-infrastructure-migration-phasemap.spec#IM1_the_shape_census_as_a_command
+  system: idearium
+  summary: >-
+    stuck: the same failure (timeout) came back from 3 different agents — the brief or the phase is
+    the likely cause, not the agent; another rung spends more for the same result (§17.7)
+  anchor: null
+  evidence:
+    mode: timeout
+    runId: phrun-im1-fm
+    repoUuid: r-im1
+    state: contract-incomplete
+    error: gate work.1 is FAILED
+    flight:
+      verdict: stuck
+      why: >-
+        the same failure (timeout) came back from 3 different agents — the brief or the phase is the
+        likely cause, not the agent; another rung spends more for the same result (§17.7)
+      ladder:
+        - agent: gemini
+          local: false
+          calls: 1
+          faults:
+            timeout: 1
+        - agent: chatgpt
+          local: false
+          calls: 1
+          faults:
+            timeout: 1
+        - agent: claude
+          local: false
+          calls: 1
+          faults:
+            timeout: 1
+      faults:
+        timeout: 3
+      wasted:
+        calls: 3
+        tokensIn: 0
+        tokensOut: 0
+        ms: 3726000
+      friction: 1
+      attempts: 10
+  occurrences: 1
+  firstSeenAt: 1792778526456
+  lastSeenAt: 1792778526456
+  status: open
+  via: intake
+  cfrAtEntry:
+    coherence: 0.6
+    friction: 0.2
+    resonance: 0.3
+    entropy: 0.2
+    regime: stable
+    updatedAt: 1792778526273
+    at: 1792778526456
+  viewAtEntry:
+    label: view — what was on screen (Nerve); never evidence of a cause
+    regime: null
+    windows: []
+  env:
+    nexus: 0.60.223
+    node: v22.22.0
+    platform: linux
+  id: 80f6e375-4b17-4189-b4e8-aaddff79c105
+  root: null
+  conditions: []
+  siblingDanglingHooks: []
+  sigmaBefore: null
+  sigmaAtEntry: null
+  sigmaDelta: null
+  compound:
+    status: unavailable
+    reason: 'no anchor: gap carries no (ledgerSystem, entryUuid) pair'
+    class: null
+    factors: null
+    sigmaProgression: null
+    deltaProgression: null
+    peakSigma: null
+    rootUuid: null
+    anchor: null
+  enrichedAt: 1792778526456

@@ -68,10 +68,10 @@ phases:
     proof: "a fixture phase built, proven, applied: its map says DONE with the run and version; downstream DG1 lets the next phase build; undoing the change reopens it"
 
   SL2_done_by_evidence:
-    status: OPEN
+    status: DONE 0.60.224 — test-evidence-close 5/5 (EC-04 the real API, EC-05 in Clear Glass); the Nexus dry run in CHANGELOG-0.60.224.md
     layer: library
     depends_on: [SL0_what_can_be_built_now]
-    files: [lib/phase-close.js, lib/phase-census.js, lib/verify-first.js]
+    files: [lib/phase-close.js, lib/test-map.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, tests/modules/test-evidence-close.test.js]
     spec: docs/self-building-loop.spec
     blocks: [MOD-SL-EVIDENCE-CLOSE]
     does: >-
