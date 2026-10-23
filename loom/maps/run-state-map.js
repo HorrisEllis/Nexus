@@ -63,7 +63,10 @@ const FILES = [
   ['clear-glass/src/preload/passwords.js', I('clear-glass/src/preload/passwords.js'), []],   // §0.60.186 PW2 the page script on every session
   ['clear-glass/src/main/passwords-wiring.js', I('clear-glass/src/main/passwords-wiring.js'), []],   // §0.60.186 PW3 pages ↔ service ↔ window
   ['clear-glass/renderer/shell/passwords.js', I('clear-glass/renderer/shell/passwords.js'), []],   // §0.60.186 PW4 the key and its panel
-  ['clear-glass/src/core/zoom.js', I('clear-glass/src/core/zoom.js'), []],   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
+  ['clear-glass/src/core/zoom.js', I('clear-glass/src/core/zoom.js'), []],
+  ['clear-glass/src/site-settings/store.js', I('clear-glass/src/site-settings/store.js'), []],   // the per-origin store (JAA KV cg_site_settings); declared with SP1, 0.60.215
+  ['clear-glass/src/site-settings/keys.js', I('clear-glass/src/site-settings/keys.js'), []],   // §0.60.215 SP1 the per-site keys every feature reads (one table)
+  ['clear-glass/src/site-settings/profile.js', I('clear-glass/src/site-settings/profile.js'), [I('clear-glass/src/site-settings/keys.js'), I('clear-glass/src/net/policy.js')]],   // §0.60.215 SP1 siteProfile(url): site, else global, else default; the route a netPolicy rule   // §0.60.183 BS14 page zoom in the core: Firefox's ladder, saved per site
   ['clear-glass/renderer/shell/ctxmenu.js', I('clear-glass/renderer/shell/ctxmenu.js'), []],   // §0.60.183 BS15 the right-click menu: rows by what was clicked, placed at the pointer
   ['clear-glass/src/copilot/context-need.js', I('clear-glass/src/copilot/context-need.js'), []],   // §0.60.182 BS12 what a message needs from the page (wired late, 0.60.183)
   ['lib/agent-tools/tools/clear-glass/adblock.js', I('lib/agent-tools/tools/clear-glass/adblock.js'), [I('lib/agent-tools/tools/clear-glass/net.js')]],   // §0.60.183 AB4 the blocker for agents   // §0.60.179 BS6 the floating CLI's own content-protected window
@@ -278,6 +281,9 @@ const CONSUMERS = [
   [I('clear-glass/src/main/index.js'),              I('clear-glass/src/passwords/service.js'), '§0.60.186 PW1 service({ vault: passwordVault }) at boot; onCaptured → linkPending'],
   [I('clear-glass/src/main/index.js'),              I('clear-glass/src/main/passwords-wiring.js'), '§0.60.186 PW3 attach() — the page script on every session, the IPC'],
   [I('clear-glass/src/main/passwords-wiring.js'),   I('clear-glass/src/preload/passwords.js'), '§0.60.186 PW3 registerPreloadScript(preloadPath); pw:form / pw:capture / pw:fill (IPC, not a require)'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/site-settings/profile.js'), '§0.60.215 SP1 site-profile:* IPC and /cli/site-profile over siteSettings, options and the net service (lazy)'],
+  [I('clear-glass/src/site-settings/profile.js'), I('clear-glass/src/site-settings/store.js'), '§0.60.215 SP1 the store is passed in: get/set/deleteKey by url'],
+  [I('clear-glass/src/site-settings/profile.js'), I('clear-glass/src/net/service.js'), '§0.60.215 SP1 the net service is passed in: policy(), addRoute, removeRoute'],
   [I('architect/service.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('clear-glass/src/main/index.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],
   [I('copilot/server.js'), I('lib/data-home.js'), '§0.60.207 DL2 atBoot: its files in the root data/ come home before anything opens them'],

@@ -202,6 +202,13 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     clearAll:     ()         => ipcRenderer.invoke('site-settings:clearAll'),
     listOrigins:  ()         => ipcRenderer.invoke('site-settings:listOrigins'),
   },
+  // SP1 (0.60.215) — every feature's settings for one site (src/site-settings/profile.js)
+  siteProfile: {
+    get:   (url)             => ipcRenderer.invoke('site-profile:get', { url }),
+    set:   (url, key, value) => ipcRenderer.invoke('site-profile:set', { url, key, value }),
+    clear: (url, key)        => ipcRenderer.invoke('site-profile:clear', { url, key }),
+    keys:  ()                => ipcRenderer.invoke('site-profile:keys'),
+  },
 
   // ── Accounts (real, per-agentKey identity — §PHASE-3 2026-08-23) ──────
   accounts: {

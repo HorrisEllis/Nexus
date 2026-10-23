@@ -723,6 +723,10 @@ class IpcBridge {
     this.app.put('/cli/site-settings/key', (req, res) => res.json(this.siteSettings?.set(req.body?.url, req.body?.key, req.body?.value) || { error: 'siteSettings unavailable' }));
     this.app.delete('/cli/site-settings/key', (req, res) => res.json(this.siteSettings?.deleteKey(req.query.url, req.query.key) || { error: 'siteSettings unavailable' }));
     this.app.delete('/cli/site-settings', (req, res) => res.json(this.siteSettings?.clear(req.query.url) || { error: 'siteSettings unavailable' }));
+    // SP1 (0.60.215) — the site profile for agents and the CLI: read, set (by is the caller's), clear
+    this.app.get('/cli/site-profile', (req, res) => res.json(req.query.url ? this._siteProfile().siteProfile(req.query.url) : { keys: this._siteProfile().KEYS }));
+    this.app.put('/cli/site-profile', (req, res) => { const b = req.body || {}; const r = this._siteProfile().setSite(b.url, b.key, b.value, { by: String(b.by || req.get('x-cg-caller') || 'cli') }); res.status(r.ok ? 200 : 400).json(r); });
+    this.app.delete('/cli/site-profile', (req, res) => { const r = this._siteProfile().clearSite(req.query.url, req.query.key); res.status(r.ok ? 200 : 400).json(r); });
     this.app.get('/cli/site-settings/origins', (req, res) => res.json({ origins: this.siteSettings?.listOrigins() || [] }));
 
     // ── history — the real, freshly-built store, first-ever CLI reach ──
@@ -913,6 +917,16 @@ class IpcBridge {
   }
 
   // ── Renderer → Main IPC (via preload contextBridge) ───────────────────
+  // SP1 (0.60.215) — one resolver over the site store, the options and the network policy (created on first use)
+  _siteProfile() {
+    if (!this.__siteProfile) {
+      let net = null; try { net = require('../net/service').service(); } catch (_) {}
+      this.__siteProfile = require('../site-settings/profile.js').createSiteProfile({ store: this.siteSettings || null, options: this.options || null, net,
+        emit: (ev, data) => { try { this.sse && this.sse.emit && this.sse.emit(ev, data); } catch (_) {} } });
+    }
+    return this.__siteProfile;
+  }
+
   _bindRendererHandlers() {
     // All renderer calls become bus events
     const rendererEmit = (eventType, data) => {
@@ -1118,6 +1132,13 @@ class IpcBridge {
     ipcMain.handle('site-settings:clear',  async (e, d) => this.siteSettings?.clear(d.url));
     ipcMain.handle('site-settings:listOrigins', async () => this.siteSettings?.listOrigins());
     ipcMain.handle('site-settings:clearAll', async () => this.siteSettings?.clearAll());
+    // SP1 (0.60.215) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state.
+    // Cleardriver, agentmesh and guardian setting." One site's settings for every feature through one resolver (src/site-settings/profile.js);
+    // the network route is the netPolicy origin rule. by: the person (the window) — an agent's write comes through /cli/site-profile.
+    ipcMain.handle('site-profile:get',   async (e, d) => this._siteProfile().siteProfile(d && d.url));
+    ipcMain.handle('site-profile:set',   async (e, d) => this._siteProfile().setSite(d && d.url, d && d.key, d && d.value, { by: 'person' }));
+    ipcMain.handle('site-profile:clear', async (e, d) => this._siteProfile().clearSite(d && d.url, d && d.key));
+    ipcMain.handle('site-profile:keys',  async () => ({ keys: this._siteProfile().KEYS, features: this._siteProfile().FEATURES }));
 
     // §GAP CLOSED 2026-08-30 — real IPC handlers for the freshly-built
     // HistoryStore, the same real gap this session found (registry

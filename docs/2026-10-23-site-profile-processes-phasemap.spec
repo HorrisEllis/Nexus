@@ -34,7 +34,7 @@ phases:
 
   SP1_one_resolver_for_every_feature:
     layer: foundation
-    status: OPEN
+    status: BUILT 0.60.215 — keys.js, profile.js, bridge site-profile:* and /cli/site-profile, cg.siteProfile; test-site-profile 3/3
     depends_on: [SP_D1_one_store_one_resolver, SP_D2_defaults_are_todays_behaviour]
     files: [clear-glass/src/site-settings/keys.js, clear-glass/src/site-settings/profile.js, clear-glass/src/site-settings/store.js, clear-glass/src/net/policy.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js]
     spec: clear-glass/spec/site-profile.spec
