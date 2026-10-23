@@ -928,6 +928,36 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // is assembled from the phase's mapping (MP1), DG1's view of its depends_on and the boundary census's systems; with none, the
   // phase is not built (no override: his "has to have"), and the refusal says how to give it one. With one, it is written as a
   // file before anything runs, and its hash goes on every row of the run.
+  // §0.60.228 SL8 — James, 2026-10-23: "agent needs to map dependancies if nexus cant map one." A phase MP1 could not place (no declared
+  // files, nothing in its words) is mapped by the repo's agent before DG2 would refuse it: one phase, MP4's brief, every file and edge
+  // checked by code (inside the repo, existing or in an existing folder; a depends_on that resolves and closes no cycle), kept per phase
+  // text so the next build asks nothing. Its depends_on are claims (agent:<by>, NC0): on the graph and the run, not a refusal (DG1 gates
+  // what the map declares). Nothing that fails the checks is used: then DG2 refuses NO_GRAPH, with what the agent answered.
+  let agentMap = null;
+  if (!(node.mapped && (node.mapped.files || []).length)) {
+    try {
+      const PMx = await import('../repo/phase-mapping.js');
+      const PFx = _require('../../lib/phase-files.js'), PDx = _require('../../lib/phase-dag.js');
+      const nexusScope = scope.source === 'nexus';
+      const aroot = nexusScope ? _require('../../lib/nexus-self/systems.js').ROOT : dir;
+      const isFile = (p) => { try { return !!aroot && fs.statSync(path.join(aroot, p)).isFile(); } catch (_) { return false; } };
+      const isDir = (p) => { try { return !!aroot && fs.statSync(path.join(aroot, p)).isDirectory(); } catch (_) { return false; } };
+      const ph = PFx.phasesOf(mapText, map).find(p => p.id === phase);
+      const ids = new Map(); for (const p of view.phases) { const k = `${p.map}::${p.phase_key}`; if (!ids.has(p.phase_key)) ids.set(p.phase_key, []); ids.get(p.phase_key).push(k); }
+      const resolveDep = (d) => { const id = PDx.refKey(d, (t) => ids.has(t)); const ks = id ? ids.get(id) || [] : []; return ks.find(k => k.startsWith(`${map}::`)) || (ks.length === 1 ? ks[0] : null); };
+      const down = new Set((dagSlice && dagSlice.downstream) || []);
+      const depChoices = view.phases.filter(p => p.map === map && p.phase_key !== phase && !p.kind).map(p => ({ id: p.phase_key, does: p.name || p.title })).slice(0, 60);
+      let folders = []; try { folders = fs.readdirSync(aroot, { withFileTypes: true }).filter(d => d.isDirectory() && !/^(\.|node_modules$|data$)/.test(d.name)).map(d => d.name); } catch (_) {}
+      const store = PMx.fileStore(path.join(IDEARIUM_DATA_DIR, 'phase-mapping', `${repo.uuid}.agent-maps.json`));
+      const r = ph ? await PMx.mapOne({ phase: ph, store, repoName: repo.name, folders, depChoices, exists: isFile, dirExists: isDir, resolveDep, wouldCycle: (k) => down.has(k),
+        ask: (prompt) => _agentAsk(prompt, { channel: 'idearium-phase-map', sessionId: `phase-map-${repo.uuid}`, kind: 'map:phase-files' }) }) : { ok: false, why: `${phase} not found in its map text` };
+      agentMap = { ok: !!r.ok, asked: !!r.asked, why: r.why, by: r.mapping ? r.mapping.by : null, files: r.mapping ? r.mapping.files.map(f => f.path) : [], dependsOn: r.mapping ? r.mapping.dependsOn : [], refused: r.mapping ? r.mapping.refused : [] };
+      if (r.ok) {
+        let env = null; try { if (aroot) env = _require('../../lib/phase-map-auto.js').envFromTree(aroot); } catch (_) { env = null; }
+        node.mapped = PMx.mapped(r.mapping, { phase: ph, env });
+      }
+    } catch (e) { agentMap = { ok: false, asked: false, why: `the agent mapping could not run: ${e.message}` }; }
+  }
   let phaseGraph = null;
   try {
     const PG = _require('../../lib/phase-graph.js');
@@ -937,7 +967,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   } catch (e) { phaseGraph = { ready: false, missing: [`the graph could not be built: ${e.message}`], remedy: null }; }
   if (phaseGraph && dagSlice) phaseGraph.dag = dagSlice;   // §0.60.172 DG3 — the phase's place in the whole
   if (!phaseGraph.ready) {
-    return { ok: false, status: 409, error: `not built: ${phase} has no dependency graph — ${phaseGraph.missing.join('; ')}${phaseGraph.remedy ? `. ${phaseGraph.remedy}` : ''}`, extra: { code: 'NO_GRAPH', missing: phaseGraph.missing, remedy: phaseGraph.remedy } };
+    const am = agentMap && !agentMap.ok ? [`the agent could not map it: ${agentMap.why}`] : [];   // §0.60.228 SL8 — what the agent answered, said
+    return { ok: false, status: 409, error: `not built: ${phase} has no dependency graph — ${[...phaseGraph.missing, ...am].join('; ')}${phaseGraph.remedy ? `. ${phaseGraph.remedy}` : ''}`, extra: { code: 'NO_GRAPH', missing: [...phaseGraph.missing, ...am], remedy: phaseGraph.remedy, ...(agentMap ? { agentMap } : {}) } };
   }
   let phaseGraphFile = null;
   try {
@@ -982,6 +1013,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const runId = `phrun-${runStartTs.toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title,
     ...(rebuilding ? { rebuild: true } : {}),   // §0.60.226 SL7 — a complete phase built again, on request
+    ...(agentMap && agentMap.ok ? { mappedBy: { by: agentMap.by, asked: agentMap.asked, files: agentMap.files, dependsOn: agentMap.dependsOn } } : {}),   // §0.60.228 SL8 — the graph came from the agent's checked mapping
     startedBy: startedBy || { who: 'unknown', whence: 'unknown' },   // 0.60.188 RC7 — who started this run, on every row
     ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}),   // §0.60.125 DG1 — built anyway: what was still open, on every row
     graphHash: phaseGraph.hash, graphFile: phaseGraphFile ? path.relative(IDEARIUM_DATA_DIR, phaseGraphFile).replace(/\\/g, '/') : null };   // §0.60.147 DG2 — the graph it was built against

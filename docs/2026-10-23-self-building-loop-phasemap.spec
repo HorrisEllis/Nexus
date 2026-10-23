@@ -223,10 +223,10 @@ phases_added_2026_10_23:
     proof: "test-contract-phase-build and test-chunked-phase-build green again; a plain build of a complete phase still 409s and names --rebuild"
 
   SL8_the_agent_maps_what_nexus_cannot:
-    status: OPEN
+    status: DONE 0.60.228 — test-agent-maps-phase 4/4 (AM-03 the real router with a scripted agent)
     layer: integration
     depends_on: [SL3_the_backlog_groomed, SL7_build_again_is_asked_for]
-    files: [idearium/repo/phase-mapping.js, idearium/api/index.js, lib/phase-graph.js, tests/modules/test-agent-maps-phase.test.js]
+    files: [idearium/repo/phase-mapping.js, lib/phase-files.js, idearium/api/index.js, idearium/repo/build-plan.js, idearium/ui/js/plan-panel.js, tests/modules/test-agent-maps-phase.test.js]
     spec: docs/self-building-loop.spec
     blocks: [MOD-SL-AGENTMAP]
     does: >-
@@ -304,3 +304,16 @@ James, 2026-10-23: "need to do something about the dependancy graph."
   is the kind of cost he wants to see first (2026-10-17: "come to me for problems"); the build already uses the same mapping in memory
   (MP1 through managerView), so nothing waits on the write. To confirm with him: write them (one click on the rail, or `repo groom --apply`).
 - 233 open phases cannot be placed by anything deterministic: SL8 (the agent maps them at build time) is next.
+
+## ADDENDUM 2026-10-23 (0.60.228) — SL8 built
+James, 2026-10-23: "agent needs to map dependancies if nexus cant map one."
+- idearium/repo/phase-mapping.js mapOne / mapped / fileStore; lib/phase-files.js brief({ deps }) and parseAnswer's depends_on; _phaseBuild calls
+  it when MP1 placed nothing, before DG2. lib/phase-graph.js was not changed (files: corrected above): an agent mapping is the same shape as
+  MP1's, so DG2 reads it as it is.
+- Decided by the axioms (TRUTH_OVER_COHERENCE; NC0's evidence rule): the agent's depends_on are claims, on the graph and the run as
+  agent:<by>, never a refusal. A refusal on an unchecked guess could hold real work; DG1 still gates every depends_on the map declares.
+- The UI: the Plan panel's run says "mapped by agent:<x>: <files> · depends on …" (and "kept from an earlier answer" when nothing was asked).
+- Found while testing (said, not changed): ingesting a second project with byte-identical files returns the first repo; the test now uses
+  different content. If that is not intended it belongs to the repo layer's own map.
+- Found while checking the plan suites (red on main too, not this phase's): test-plan-lands PL-31, `idearium repo plan --dry --file <spec>`
+  prints its usage instead of the derived phases. Listed for SL10.
