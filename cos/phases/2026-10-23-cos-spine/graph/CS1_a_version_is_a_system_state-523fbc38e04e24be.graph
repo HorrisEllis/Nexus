@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792756452070
+exported_at: 1792757382207
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756452070
-lastSeenAt: 1792756452070
+firstSeenAt: 1792757382207
+lastSeenAt: 1792757382207
 fingerprint: null
 payload:
   for: CS1_a_version_is_a_system_state
@@ -196,7 +196,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: fd256b3fd638b817
+    dagHash: 3351ce8a7e938b5b
     layer: 1
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
@@ -224,7 +224,7 @@ payload:
           - cos/compartment/qemu-runtime.js
     dangling: []
     lines:
-      - DAG fd256b3fd638b817 · layer 1 · blocked by CS_D2_a_version_is_the_whole_state
+      - DAG 3351ce8a7e938b5b · layer 1 · blocked by CS_D2_a_version_is_the_whole_state
       - 'depends on (1): CS_D2_a_version_is_the_whole_state'
       - >-
         needed by (3): CS2_test_every_version, CS6_rebuild_from_the_spec,

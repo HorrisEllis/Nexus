@@ -399,6 +399,42 @@ spec:
       error_paths: ["a tool that cannot be confined → refused for that hat, said, never run unconfined"]
       acceptance: ["a repo hat's run_command writing ../outside.txt is refused or lands inside the compartment, never outside"]
 
+    - id: MOD-CS-BOOT
+      name: cos-boots-alone
+      uuid: nexus-cos-spine-boot-v1-0000-2026-1023-001
+      path: cos/spine/boot.js
+      phase: CS4a_cos_boots_alone
+      description: >-
+        His order, 2026-10-23 (lowest friction first): COS starts alone and opens Cortex — RAID inside it, unchanged — as the one always-open
+        core compartment, instead of nexus/autopilot.js spawning every system at boot. Every other system is opened when asked for (by a
+        request, a route or him) and only once it is sovereign (CS4's precondition); until then it opens with the core set, said.
+      deps: [{ name: process-runner }, { name: watchdog }, { name: compartment-json }]
+      schema_refs: [CompartmentCaps]
+      exports: ["boot({ core: ['cortex'] }) → { opened, deferred }", "coreSet() → string[]", "opensOnDemand(system) → { ok, why }"]
+      gate_pipeline: ["GATE-CS4a-001: COS up", "GATE-CS4a-002: the core compartment open and healthy", "GATE-CS4a-003: each other system: sovereign? deferred : with the core set"]
+      behavioral_contracts: ["nothing that worked at boot before stops working: a system not yet sovereign opens with the core set, said"]
+      error_paths: ["the core compartment fails health → COS says so and offers the old all-at-once start"]
+      acceptance: ["COS boots, Cortex opens, nothing else opens until asked; a request for Idearium opens it"]
+
+    - id: MOD-CS-RAID
+      name: raid-in-the-exe
+      uuid: nexus-cos-spine-raid-v1-0000-2026-1023-001
+      path: cos/raid/index.js
+      phase: CS11_raid_in_the_exe
+      description: >-
+        RAID's always-on half — the queue, the contract files, the gates' enforcement, the revert, and routing — moves from cortex/core/raid
+        into the COS app's process with its own store (its raid_* tables and data/raid), serving the same /api/raid/* routes; it stays the
+        one write authority (§5.2, §9.1). The reasoning half (decompose, analyse, recall, synthesize: request-spine RQ27) is a module opened
+        on demand. RAID then weighs live compartment load (which compartments are open, their memory, CPU, caps, replicas) beside the agent
+        ladder and free memory, so its routing is the load balancer. Moved, not copied: cortex/core/raid archived (§0.3).
+      deps: [{ name: systems-as-compartments }, { name: compartment-caps }, { name: watchdog }]
+      schema_refs: [CompartmentCaps]
+      exports: ["the same RAID routes (/api/raid/decide, /feedback, /status, /queue, /officiator)", "decide(request) → { route, why, load }"]
+      gate_pipeline: ["GATE-CS11-001: every caller on the route (no require of RAID left)", "GATE-CS11-002: RAID's tables in its own store", "GATE-CS11-003: served from COS", "GATE-CS11-004: load in the decision"]
+      behavioral_contracts: ["one RAID, never two running", "a decision names the load it weighed"]
+      error_paths: ["a caller still loading RAID in-process → the move refused, naming the file"]
+      acceptance: ["with Cortex closed, a routing decision is still made, from COS", "of two agents fit for a job, the less loaded is chosen and the decision says so"]
+
   events:
     cos:
       - "cos.version.taken { id, compartment, machine.kind, by }"

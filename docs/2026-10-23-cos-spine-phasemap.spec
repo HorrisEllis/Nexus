@@ -44,6 +44,12 @@ decisions:
   CS_D6_every_project_a_compartment:
     chosen: "every imported project and every new specced-and-phased project is a new compartment that gets built; versions are snapshots of each project's or system's states; each hat binds its agent to the compartment"
     by: "his, 2026-10-23 (addendum below)"
+  CS_D7_sovereign_first:
+    chosen: "a system is opened and closed by COS only after it is sovereign (its own data, no other system loading its code: DB6), on its own registry with its event bus and interaction contract (DB16, DB4, DB5), in its own compartment (DB11); the lowest-friction systems first"
+    by: "his, 2026-10-23: \"Dont they need to be sovereign first? Then hooked into their own component registry for the event bus, and interaction contract\" — the same precondition DB11 states"
+  CS_D8_raid_home:
+    chosen: "RAID's always-on half (queue, contracts, gates, revert, routing) lives in the COS exe, moved last when its callers are on its route; its reasoning half (RQ27) is opened on demand; RAID's routing becomes the load balancer"
+    by: "his, 2026-10-23 (\"Then what if we moved RAID to the primary application ... the actual exe ... a load balancer as well\"; \"Yes do it\" to the order). Answers request-spine decision_raid_home (2026-10-12, open) with a fifth choice"
   CS_D4_caps_by_the_os:
     chosen: "caps are applied by the OS or the hypervisor and read back; what cannot be enforced is said"
     by: "his axioms §1.2, §0.1; the 'hook in' reading above is to confirm"
@@ -80,7 +86,7 @@ phases:
   CS3_the_registry_is_the_bridge:
     layer: integration
     status: OPEN
-    depends_on: [CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake]
+    depends_on: [CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system]
     files: [cos/spine/bridge.js, orchestrator/lib/contract-handshake.js, idearium/repo/snapshot.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-BRIDGE]
@@ -92,7 +98,7 @@ phases:
   CS4_every_system_a_compartment:
     layer: backend
     status: OPEN
-    depends_on: [CS3_the_registry_is_the_bridge, COSA3_run_and_supervise]
+    depends_on: [CS4a_cos_boots_alone, CS3_the_registry_is_the_bridge, CS_D7_sovereign_first, DB6_move_the_crossings, DB16_a_registry_for_each_system, DB4_one_bus_per_system, DB5_the_handshake_for_every_system, DB11_cos_compartment_per_system]
     files: [cos/spine/systems.js, cos/compartment/process-runner.js, cos/watchdog/monitor.js, cos/app/runtime.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-SUPERVISE]
@@ -101,6 +107,19 @@ phases:
       derived cache), its dependsOn opened first, health from its healthUrl, watched; closed when idle by his rule. A system already running is
       adopted by its port. Route /api/cos/systems, command `cos systems`.
     proof: COS boots with no system running; asking Idearium for work opens Idearium and what it depends on, and nothing else
+
+  CS4a_cos_boots_alone:
+    layer: foundation
+    status: OPEN
+    depends_on: [CS_D7_sovereign_first, COSA3_run_and_supervise]
+    files: [cos/spine/boot.js, cos/app/runtime.js, nexus/autopilot.js, cos/compartment/process-runner.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-BOOT]
+    does: >-
+      The first step of his order (lowest friction): COS starts alone; Cortex, with RAID inside it unchanged, is opened as the one
+      always-open core compartment; every other system opens when asked for once it is sovereign, and until then with the core set (said).
+      All-at-once spawning at boot stops. No code moves.
+    proof: COS boots; Cortex opens; nothing else opens until asked; a request for Idearium opens it
 
   CS5_caps_per_compartment:
     layer: backend
@@ -131,7 +150,7 @@ phases:
   CS7_spawn_despawn_and_balance:
     layer: backend
     status: OPEN
-    depends_on: [CS5_caps_per_compartment]
+    depends_on: [CS5_caps_per_compartment, CS11_raid_in_the_exe]
     files: [cos/spine/scale.js, cos/spine/systems.js, cos/spine/bridge.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-SCALE]
@@ -163,6 +182,20 @@ phases:
       A hat's file and command tools run inside its compartment (directory, caps, or machine), so the hat's stated "capability boundary, not a
       filesystem jail" becomes an enforced one; another compartment is reached only through the registry bridge.
     proof: a repo hat's run_command writing outside its compartment is refused or lands inside it, never outside
+
+  CS11_raid_in_the_exe:
+    layer: backend
+    status: OPEN
+    depends_on: [CS4_every_system_a_compartment, DB6_move_the_crossings, IM6_cortex_unclumped, CS_D8_raid_home]
+    files: [cos/raid/index.js, cos/raid/store.js, cos/raid/routes.js, cos/app/desktop/main.js, cortex/core/raid/router.js, cortex/core/raid/worker.js, cortex/core/raid/officiator.js]
+    spec: cos/spec/cos-spine.spec
+    blocks: [MOD-CS-RAID]
+    does: >-
+      The last step of his order: once every caller reaches RAID by its route (DB6; 25 files load it in-process today, 50 tests) and its
+      tables are its own (IM6; data/raid 168 files), RAID's always-on half moves into the COS app's process and serves the same /api/raid/*
+      routes; the reasoning half (RQ27) is opened on demand. RAID weighs live compartment load, so it is the load balancer (CS7 rides on it).
+      cortex/core/raid archived (§0.3).
+    proof: with Cortex closed a routing decision is still made from COS; of two fit agents the less loaded is chosen and said
 
   CS8_the_cos_screen:
     layer: ui
@@ -233,3 +266,25 @@ phases:
 # Found in the code (lib/repo-hat.js, its own header): a hat today is "a capability boundary, not a filesystem jail" — a scoped-in
 # run_command can reach outside the repo. Binding the hat to the compartment makes that boundary real. That is the coder's observation;
 # the decision is his.
+
+# ── ADDENDUM 2026-10-23 — the order: sovereign first, then the registry, then the compartment; RAID in the exe last (his decision) ──────
+# Context: he proposed moving RAID into the COS exe as the decision engine and load balancer. The coder read every related phasemap:
+#   - request-spine decision_raid_home (2026-10-12): his "what if we move raid to a copilot module or intelligence system?", choices A–D,
+#     never chosen; RQ27 blocked on it.
+#   - drawbridge DB6 (move the crossings), DB11 (a COS compartment per system, partly built 0.60.134, loom/templates/cos-compartment.js,
+#     with its stated precondition "a system cannot be isolated while other systems still require() its files"), DB16 (a registry for each
+#     system), DB4 (one bus per system) and DB5 (the handshake for every system).
+#   - infrastructure-migration IM5 and IM6 (Cortex's store unclumped); infrastructure-spine IN3 and IN6; projects-RAID RD0–RD4;
+#     cortex-to-intelligence B3 (/context is called on every prompt).
+# Measured in the tree (lib/system-boundary.js census): direct code links into each system from other systems: cortex 151, intelligence
+# 88, copilot 35, ollama 12, clear-glass 10, idearium 8, guardian 6, versionium 3, diagnostic 1. RAID: 25 files outside Cortex load it
+# in-process, 24 reach it over HTTP, 50 tests load it.
+# The coder answered his "This will be minimal friction right?" with no: the leaf systems are cheap, Cortex and RAID are not. It proposed
+# the order: COS boots alone with Cortex as the always-open core; the leaf systems open on demand; RAID moves into the exe last.
+# James, 2026-10-23: "Yes do it. Dont they need to be sovereign first? Then hooked into their own component registry for the event bus, and
+# interaction contract"
+# Decided (his): CS_D7 (sovereign first: own data and no inbound code links, then its own registry with its event bus and contract, then its
+# compartment, then opened on demand) and CS_D8 (RAID's always-on half in the exe, last; the reasoning half on demand; its routing is the
+# load balancer).
+# The order in this map is now: CS4a (COS boots alone, Cortex core; no code moves) → per system, lowest friction first: DB6 → DB16/DB4/DB5 →
+# DB11 → CS4 (open on demand) → IM6 → CS11 (RAID in the exe) → CS7 (balance through RAID).

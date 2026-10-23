@@ -7,11 +7,11 @@ intent: null
 summary: CS4_every_system_a_compartment (backend) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792756452074
+exported_at: 1792757382212
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756452074
-lastSeenAt: 1792756452074
+firstSeenAt: 1792757382212
+lastSeenAt: 1792757382212
 fingerprint: null
 payload:
   id: CS4_every_system_a_compartment
@@ -25,8 +25,14 @@ payload:
     - cos/watchdog/monitor.js
     - cos/app/runtime.js
   depends_on:
+    - CS4a_cos_boots_alone
     - CS3_the_registry_is_the_bridge
-    - COSA3_run_and_supervise
+    - CS_D7_sovereign_first
+    - DB6_move_the_crossings
+    - DB16_a_registry_for_each_system
+    - DB4_one_bus_per_system
+    - DB5_the_handshake_for_every_system
+    - DB11_cos_compartment_per_system
   blocks:
     - MOD-CS-SUPERVISE
   spec: cos/spec/cos-spine.spec

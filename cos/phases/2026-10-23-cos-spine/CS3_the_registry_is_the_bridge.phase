@@ -7,11 +7,11 @@ intent: null
 summary: CS3_the_registry_is_the_bridge (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792756452073
+exported_at: 1792757382210
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756452073
-lastSeenAt: 1792756452073
+firstSeenAt: 1792757382210
+lastSeenAt: 1792757382210
 fingerprint: null
 payload:
   id: CS3_the_registry_is_the_bridge
@@ -27,6 +27,7 @@ payload:
     - CS_D1_registry_is_the_bridge
     - IN3_registry_is_the_spine
     - CE3_the_handshake
+    - DB16_a_registry_for_each_system
   blocks:
     - MOD-CS-BRIDGE
   spec: cos/spec/cos-spine.spec

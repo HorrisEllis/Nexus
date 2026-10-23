@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792756452073
+exported_at: 1792757382210
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756452073
-lastSeenAt: 1792756452073
+firstSeenAt: 1792757382210
+lastSeenAt: 1792757382210
 fingerprint: null
 payload:
   for: CS3_the_registry_is_the_bridge
@@ -105,16 +105,18 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: fd256b3fd638b817
+    dagHash: 3351ce8a7e938b5b
     layer: 4
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
     dependents:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
     upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
@@ -124,6 +126,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
@@ -134,8 +137,8 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
-    unlocks:
-      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+    unlocks: []
     conflicts:
       - with: docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
         files:
@@ -143,14 +146,14 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG fd256b3fd638b817 · layer 4 · blocked by CS_D1_registry_is_the_bridge,
-        IN3_registry_is_the_spine, CE3_the_handshake
+        DAG 3351ce8a7e938b5b · layer 4 · blocked by CS_D1_registry_is_the_bridge,
+        IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system
       - >-
-        depends on (3): CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake ·
-        all upstream 7
+        depends on (4): CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake,
+        DB16_a_registry_for_each_system · all upstream 8
       - >-
         needed by (2): CS4_every_system_a_compartment, CS10_hats_bound_to_the_compartment · all
-        downstream 7 · finishing it unlocks CS4_every_system_a_compartment
+        downstream 8
       - >-
         same files as CS1_a_version_is_a_system_state with no order between them:
         idearium/repo/snapshot.js

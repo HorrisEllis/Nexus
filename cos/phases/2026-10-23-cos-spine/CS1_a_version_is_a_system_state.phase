@@ -7,11 +7,11 @@ intent: null
 summary: CS1_a_version_is_a_system_state (foundation) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792756452070
+exported_at: 1792757382207
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792756452070
-lastSeenAt: 1792756452070
+firstSeenAt: 1792757382207
+lastSeenAt: 1792757382207
 fingerprint: null
 payload:
   id: CS1_a_version_is_a_system_state
