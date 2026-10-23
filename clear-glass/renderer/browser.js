@@ -1771,11 +1771,16 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // a plugin's command draws its plugin's icon (renderer/shell/icons.js PLUGIN), else the plugin drawing; a glyph only when nothing is drawn
   const _glyphOf = (c) => c.glyph || (c.pluginId ? ((window.CGIcons && window.CGIcons.PLUGIN && window.CGIcons.PLUGIN[c.pluginName]) || 'plugins') : null);
   // a command with no toolbar button of its own (a pure action, or a plugin command with no element) runs once; it is never pinned
+  // 0.60.214 — James, of the ☰ menu's Tools: "also still here? why? supposed to be migrated". These moved into Guardian's agents hub in 0.60.180
+  // (shell/agents.js: Agent mesh, Pick an element, Guardian scripts, Mesh HUD, and every NCP agent with Start / Show / Stop — the NCP Providers
+  // panel's calls); 0.60.210's Tools rows listed every unpinned tool and brought them back. The ☰ menu leaves them to the hub; Customize toolbar
+  // can still pin them, and says where they live.
+  const HUB_TOOLS = ['btn-mesh', 'picker-btn', 'btn-providers', 'btn-userscripts', 'mesh-picker-btn'];
   const _isAction = (c) => !c.id || (!!c.pluginId && !document.getElementById(c.id));
   const _tIco = (c, size = 16) => (_glyphOf(c) ? `<span class="mb-ico" data-icon="${_tEsc(_glyphOf(c))}" data-icon-size="${size}"></span>` : `<span class="mb-ico">${_tEsc(c.icon || '')}</span>`);
   function _renderToolMenuRows() {
     // a tool the menu already has a row for (Settings) is not listed twice
-    const inMenu = new Set(['btn-settings', 'zoom-controls']);   // the menu has its own Settings and Zoom rows
+    const inMenu = new Set(['btn-settings', 'zoom-controls', ...HUB_TOOLS]);   // the menu has its own Settings and Zoom rows; the hub has its tools
     const unpinned = TOOLBAR_COMMANDS.filter(c => c.id && (c.pinnable || c.pluginId) && !currentPinned.includes(c.id) && !inMenu.has(c.id));
     if (!unpinned.length) return '';
     const rows = unpinned.map(c => `<div class="menu-item am-tool" role="menuitem" data-tool-menu-id="${_tEsc(c.id)}" title="${_tEsc(c.desc || c.label)}">${_tIco(c)}<span class="menu-lbl">${_tEsc(c.label)}</span>${_isAction(c) ? '' : `<button class="am-pin" data-tool-pin="${_tEsc(c.id)}" title="Pin to the toolbar" aria-label="Pin ${_tEsc(c.label)} to the toolbar" data-icon="pin" data-icon-size="14"></button>`}</div>`).join('');
@@ -1811,7 +1816,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     const row = document.createElement('div');
     row.className = 'te-row'; row.draggable = true; row.dataset.toolId = cmd.id;
     row.innerHTML = `<span class="te-ico">${_glyphOf(cmd) ? `<span data-icon="${_tEsc(_glyphOf(cmd))}" data-icon-size="18"></span>` : _tEsc(cmd.icon || '')}</span>
-      <span class="te-txt"><span class="te-lbl">${_tEsc(cmd.label)}</span><span class="te-desc">${_tEsc(cmd.desc || cmd.group || '')}</span></span>
+      <span class="te-txt"><span class="te-lbl">${_tEsc(cmd.label)}</span><span class="te-desc">${HUB_TOOLS.includes(cmd.id) && !onBar ? 'In the agents hub · ' : ''}${_tEsc(cmd.desc || cmd.group || '')}</span></span>
       <button class="te-move" data-te-move title="${onBar ? 'Move it to the ☰ menu' : 'Pin it to the toolbar'}" aria-label="${onBar ? `Move ${_tEsc(cmd.label)} to the menu` : `Pin ${_tEsc(cmd.label)} to the toolbar`}"><span data-icon="${onBar ? 'menu' : 'pin'}" data-icon-size="13"></span>${onBar ? 'Unpin' : 'Pin'}</button>`;
     row.querySelector('[data-te-move]').addEventListener('click', (e) => { e.stopPropagation(); _teMove(cmd.id, onBar ? 'menu' : 'toolbar'); });
     return row;
