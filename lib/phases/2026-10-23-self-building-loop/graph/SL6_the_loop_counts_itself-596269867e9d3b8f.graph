@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792774834395
+exported_at: 1792775550209
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792774834395
-lastSeenAt: 1792774834395
+firstSeenAt: 1792775550209
+lastSeenAt: 1792775550209
 fingerprint: null
 payload:
   for: SL6_the_loop_counts_itself

@@ -7,11 +7,11 @@ intent: null
 summary: SL0_what_can_be_built_now (library) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792774834387
+exported_at: 1792775550200
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792774834387
-lastSeenAt: 1792774834387
+firstSeenAt: 1792775550200
+lastSeenAt: 1792775550200
 fingerprint: null
 payload:
   id: SL0_what_can_be_built_now

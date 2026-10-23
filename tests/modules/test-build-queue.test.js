@@ -142,6 +142,7 @@ const FLIGHTS = [1, 2, 3].map(i => ({ key: K('A10_held'), verdict: 'timeout', la
 
   const quiet = async (fn) => { const l = console.log, w = console.warn, e = console.error; console.log = () => {}; console.warn = () => {}; console.error = () => {}; try { return await fn(); } finally { console.log = l; console.warn = w; console.error = e; } };
   await test('BQ-06', "through the real API: GET /api/phases/next over Nexus's maps, with the census; ?group= filters", async () => {
+    { const l = console.log; console.log = (...a) => { if (!/^\[[\w./-]+\]/.test(String(a[0]))) l(...a); }; }   // the API's own background logs ([idearium.spec-engine] …) would miscount the runner
     const api = await quiet(() => import(pathToFileURL(path.join(ROOT, 'idearium/api/index.js')).href));
     const r = await quiet(() => api._route('GET', '/api/phases/next?limit=5'));
     assert.strictEqual(r.status, 200, JSON.stringify(r.json).slice(0, 300));

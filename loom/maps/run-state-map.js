@@ -110,7 +110,8 @@ const FILES = [
   ['lib/agent-self-model.js', I('lib/agent-self-model.js'), []],   // §0.60.171 SM1 each agent's model of itself; interrogation → proposals
   ['lib/safe-watch.js', I('lib/safe-watch.js'), []],   // §0.60.170 RC1: an fs.watch whose async EPERM cannot take the process down; re-arms
   ['lib/phase-census.js', I('lib/phase-census.js'), [I('lib/phase-dag.js')]],
-  ['lib/build-queue.js', I('lib/build-queue.js'), [I('lib/phase-dag.js')]],   // 0.60.222 SL0 what can be built now, and why every other open phase cannot
+  ['lib/build-queue.js', I('lib/build-queue.js'), [I('lib/phase-dag.js')]],
+  ['lib/phase-close.js', I('lib/phase-close.js'), []],   // 0.60.223 SL1 a proven, landed phase closes itself; a revert reopens it (the writer is passed in)   // 0.60.222 SL0 what can be built now, and why every other open phase cannot
   ['lib/change-entry.js', I('lib/change-entry.js'), [I('lib/nexus-self/inject-gate.js')]],
   ['lib/chat-ledger-client.js', I('lib/chat-ledger-client.js'), []],   // 0.60.192 Clear Glass's live chat ledgers read through its routes (:7702), never its code   // 0.60.190 APV1 an approved change's change-log entry (it rides on its Versionium commit)   // 0.60.188 CNS1 every phase judged against its evidence (commits, releases, files, proof)
   ['lib/path-guard.js', I('lib/path-guard.js'), []],   // §0.60.170 RC4: a file name from an agent's reply is checked (chat label, cut short, prose) before it is written
@@ -145,6 +146,11 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/build-queue.js'), '0.60.222 SL0 GET /api/phases/next and /api/repos/:uuid/phases/next (with the census and the flights)'],
   [I('idearium/api/index.js'), I('lib/flight-data.js'), '0.60.222 SL0 the flights a held phase is judged by'],
   [I('idearium/cli/route-commands.js'), I('lib/build-queue.js'), '0.60.222 SL0 `phases next` and `repo next` through the route'],
+  [I('idearium/api/index.js'), I('lib/phase-close.js'), '0.60.223 SL1 _closeRun (on the proof row and on each applied change) and _reopenFor (on a revert), through _phaseSetStatus; repo.phases.close / closes'],
+  [I('lib/repo-inject.js'), I('idearium/api/index.js'), '0.60.223 SL1 setOnSettled: each applied or reverted change is told to the closer (registered by idearium, called on the next tick)'],
+  [I('idearium/api/index.js'), I('idearium/repo/roadmap.js'), '0.60.223 SL1 setPhaseStatus note: "DONE <date>. <version> — proven by run <id>, on snapshot <s>"'],
+  [I('idearium/cli/route-commands.js'), I('lib/phase-close.js'), '0.60.223 SL1 `repo close <repo> <runId>` and `repo closes <repo>` through the route'],
+  [I('idearium/ui/js/phases.js'), I('lib/phase-close.js'), '0.60.223 SL1 the phase panel\'s "closed by" / "reopened" through GET …/phases/closes'],
   [I('idearium/ui/js/phases.js'), I('lib/build-queue.js'), '0.60.222 SL0 the rail\'s "can be built now" through GET …/phases/next'],
   [I('lib/work-journal.js'), I('lib/chat-ledger-client.js'), '0.60.192 _chat(): the contract ledger\'s reply text from the chat ledger (it pointed at :7701, the SSE port)'],
   [I('guardian/lib/chat-transcripts.js'), I('lib/chat-ledger-client.js'), '0.60.192 ledgerReplyFor(): the reply recovery\'s last source — his download manager\'s live chat ledger'],

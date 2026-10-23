@@ -50,13 +50,14 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   if (!PHASES.data) el.innerHTML = `<div class="detail-empty">reading phasemaps…</div>`;
   let d;
   // the phases (every map), the thread's specs, the plan's gates — read together; only the first is required
-  const [pr, sr, gr, rr, lr, nr] = await Promise.allSettled([
+  const [pr, sr, gr, rr, lr, nr, cr] = await Promise.allSettled([
     api(`/api/repos/${forUuid}/phases`, {}, 30000),
     api(`/api/repos/${forUuid}/thread`, {}, 30000),
     api(`/api/repos/${forUuid}/plan`, {}, 30000),
     api(`/api/repos/${forUuid}/roadmaps`, {}, 30000),   // 0.60.199 SD17 — the project's own roadmaps
     api(`/api/repos/${forUuid}/lift-root`, {}, 30000),  // 0.60.206 SD22 — is the project inside one folder?
     api(`/api/repos/${forUuid}/phases/next?limit=8`, {}, 30000),   // 0.60.222 SL0 — what can be built now, and why the rest cannot
+    api(`/api/repos/${forUuid}/phases/closes`, {}, 30000),          // 0.60.223 SL1 — the phases its runs closed by themselves
   ]);
   if (CURRENT_API_REPO?.uuid !== forUuid || CURRENT_REPO_SUBTAB !== 'phases') return;
   if (pr.status !== 'fulfilled') {
@@ -70,6 +71,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   PHASES.roadmaps = rr.status === 'fulfilled' ? (rr.value.roadmaps || []) : [];
   PHASES.lift = lr.status === 'fulfilled' && lr.value.wrapper ? lr.value : null;
   PHASES.next = nr && nr.status === 'fulfilled' ? nr.value : null;
+  PHASES.closes = cr && cr.status === 'fulfilled' ? (cr.value.closes || []) : [];
   if (PHASES.spec) await _phLoadThread(PHASES.spec, { paint: false });
   // §RS11 — opened from a workshop section: its phase opened
   if (PHASES.wantKey) { const w = d.phases.find(p => p.phase_key === PHASES.wantKey); if (w) PHASES.open = w.uuid; PHASES.wantKey = null; }
@@ -142,6 +144,15 @@ function _phNextRail() {
   return `<div class="ph2-rail-head">can be built now · ${n.counts.queue} of ${n.counts.open} open</div>
     ${(n.queue || []).map(q => `<div class="ph2-spec" title="${escapeHtml(q.why)} — ${escapeHtml(q.map)}"><span class="ph2-spec-name">${escapeHtml(q.id)}</span><span class="ph2-dim">unlocks ${q.unlocks}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phasesBuild('${_phq(q.map)}','${_phq(q.id)}')" title="build it now (the same route as its own Build button)">▶ build</button></div>`).join('') || '<div class="ph2-dim ph2-pad">nothing can be built now</div>'}
     ${why ? `<div class="ph2-dim ph2-pad" title="every other open phase is in one group, with what would unblock it (phases next --group …)">waiting: ${escapeHtml(why)}</div>` : ''}`;
+}
+
+// 0.60.223 SL1 — the run that closed this phase by itself (proven, every change applied), or the change whose undo reopened it
+function _phCloseRow(p) {
+  const c = (PHASES.closes || []).find(x => x.map === p.map && x.phase === p.phase_key);
+  if (!c) return '';
+  return c.reopenedAt
+    ? `<div class="ph-d-row"><label>reopened</label><span style="color:var(--amber)">${escapeHtml(c.reopenNote || 'a change of its run was undone')}</span></div>`
+    : `<div class="ph-d-row"><label>closed by</label><span style="color:var(--mint)" title="${escapeHtml(c.why || '')}">run ${escapeHtml(c.runId)}${c.version ? ` · ${escapeHtml(c.version)}` : ''} · ${escapeHtml(new Date(c.at).toISOString().slice(0, 10))}</span></div>`;
 }
 
 function _phPaint() {
@@ -313,6 +324,7 @@ function _phDetail(d, uuid) {
       <select onchange="phasesSetStatus('${_phq(p.map)}','${_phq(p.phase_key)}',this.value)" ${PHASES.busy ? 'disabled' : ''}>
         ${['planned', 'active', 'complete'].map(s => `<option ${s === p.status ? 'selected' : ''}>${s}</option>`).join('')}</select>
       ${p.status !== 'complete' ? (p.blocked_by.length ? `<span style="color:var(--amber)">blocked by ${p.blocked_by.map(link).join(' ')}</span>` : '<span style="color:var(--mint)">ready</span>') : ''}</div>
+    ${_phCloseRow(p)}
     <div class="ph-d-sec">from the spec</div>
     ${blocksHtml}
     ${th && th.staleVia ? `<div class="ph2-note warn">stale through ${escapeHtml(th.staleVia)} — it depends on a phase whose block moved since it was planned (§HP1)</div>` : ''}

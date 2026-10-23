@@ -54,10 +54,10 @@ phases:
     proof: "over Nexus's 165 maps: the queue, and every open phase in exactly one group with its reason; the counts match phase-dag's"
 
   SL1_a_proven_phase_closes_itself:
-    status: OPEN
+    status: DONE 0.60.223 — test-phase-close 6/6 (PC-04 the real path, PC-06 in Clear Glass)
     layer: integration
     depends_on: [SL0_what_can_be_built_now]
-    files: [lib/phase-close.js, idearium/api/index.js, lib/repo-inject.js]
+    files: [lib/phase-close.js, idearium/api/index.js, lib/repo-inject.js, idearium/repo/roadmap.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, tests/modules/test-phase-close.test.js]
     spec: docs/self-building-loop.spec
     blocks: [MOD-SL-CLOSE]
     does: >-
@@ -152,3 +152,21 @@ James, 2026-10-23: "contiue getting idearium building phases"
   spec decides): so on the real maps a phase many wait on can wait behind a lower-layer one; SL3 proposes an order for those pairs.
 - The run over Nexus's 166 maps: 1183 open, 170 queued (IN0_baseline first, 58 wait on it); decision 18, deps-open 579, dangling 2, no-files
   391, done-by-evidence 1, conflict 22, held 0. open = queue + every group (1183).
+
+## ADDENDUM 2026-10-23 (0.60.223) — SL1 built
+James, 2026-10-23: "contiue getting idearium building phases"
+- lib/phase-close.js 1.0.0: landed / closeIfLanded / reopenIfUndone, as the spec's MOD-SL-CLOSE. Two triggers in idearium/api: the proof
+  row 'proven' (auto mode: the changes are already on disk) and each applied change (lib/repo-inject.js setOnSettled, review mode: the last
+  apply closes it). A revert of a closing run's change reopens the phase. Catch-up by hand: POST /api/repos/:uuid/phases/close {runId},
+  `repo close <repo> <runId>`; the list: GET …/phases/closes, `repo closes <repo>`; the phase panel's "closed by" / "reopened" row.
+- Drift from the spec, decided by the axioms:
+  - The status value is "DONE <date>. <version> — proven by run <id>, on snapshot <s>", not "DONE <version> — …". The one writer
+    (roadmap.js setPhaseStatus) already writes "DONE <date>." and proves loom reads it back; a `note` after the date keeps that proof
+    (§8.6 reuse; §0.1 the round trip is the evidence). The version is the release version; the commit is the run's snapshot.
+  - The close is kept in its own append-only table (idearium_phase_closes; a reopen is a newer row), not as a run state. A run row's
+    state is read as the run's own by the watchdog, the flights and the queue's held rule; a 'closed' state there would change what they
+    see (§1.2 no hidden side effects; §0.3 nothing rewritten). It is on the activity log and the orchestrator's ledger (phase.closed /
+    phase.reopened).
+  - A proven run that changed nothing closes too, said: "the run changed nothing (its phase was already true on disk)". The proof ran on
+    the disk itself, so there is no overlay to doubt (§0.1).
+  - A rejected change in the run blocks the close, as a revert does: part of the run did not land.

@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792774834394
+exported_at: 1792775550208
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792774834394
-lastSeenAt: 1792774834394
+firstSeenAt: 1792775550208
+lastSeenAt: 1792775550208
 fingerprint: null
 payload:
   for: SL5_when_a_proven_change_lands_alone
@@ -205,12 +205,11 @@ payload:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
     downstream: []
-    blockedBy:
-      - docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - DAG 6577681f08a50367 · layer 2 · blocked by SL1_a_proven_phase_closes_itself
+      - DAG 6577681f08a50367 · layer 2 · ready
       - 'depends on (1): SL1_a_proven_phase_closes_itself · all upstream 2'
       - 'needed by (0): —'

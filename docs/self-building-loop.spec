@@ -357,3 +357,11 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles in emerge's kg-builder at specDepth 1.0, no BLACK node, invariants valid"
     - "per module: its acceptance lines, each a named test in the phase that builds it"
+
+# ADDENDUM 2026-10-23 (0.60.223) — MOD-SL-CLOSE as built (SL1)
+# James, 2026-10-23: "contiue getting idearium building phases"
+# - The status value is "DONE <date>. <version> — proven by run <id>, on snapshot <s>": the one writer's own "DONE <date>." with a note
+#   after it, so its round-trip proof stays (the spec said "DONE <version> — proven by run <id>, version <commit>").
+# - The CloseRecord lives in idearium_phase_closes (append-only; a reopen is a newer row with reopenedAt), not as a run state.
+# - closeIfLanded also takes `closes` (the records, for "closing twice is a no-op"); a run that changed nothing closes, said; a rejected
+#   change blocks the close as a revert does. Details and the axioms: docs/2026-10-23-self-building-loop-phasemap.spec, its SL1 addendum.

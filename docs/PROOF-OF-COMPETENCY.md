@@ -100,6 +100,14 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-23: "contiue getting idearium building phases"** (0.60.223)
+  - **Context:** the trace behind his "can it build itself" question found that nothing ever marked a phase done. A proven run left
+    its phase open, and everything after it stayed refused until he marked it by hand.
+  - **What it shows:** persistence on the hard part. He kept the work on the loop itself, not on features beside it, and the one
+    missing write is now there. It is guarded the way his rules ask: no close without the change on disk, and an undo reopens it.
+  - **Evidence:** `CHANGELOG-0.60.223.md`; `tests/modules/test-phase-close.test.js` 6/6. In PC-04 a proposed change waits, the same
+    change applied closes the map's phase with the run named, and reverting it reopens the phase.
+
 - **2026-10-23: "whats the most important? can you help me build, invent, innovate, ways for idearium to build phases, all of them, we
   need this to work so it can start building itself."** (0.60.222)
   - **Context:** 2077 phases across 166 maps, 1183 of them open. No way existed to ask which could be built now. Asked for the most

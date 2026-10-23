@@ -7,11 +7,11 @@ intent: null
 summary: SL4_the_loop (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792774834393
+exported_at: 1792775550207
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792774834393
-lastSeenAt: 1792774834393
+firstSeenAt: 1792775550207
+lastSeenAt: 1792775550207
 fingerprint: null
 payload:
   id: SL4_the_loop

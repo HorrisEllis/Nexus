@@ -77,6 +77,7 @@ const SUITES = [
   'test-pipeline-routing.test.js', // 0.39.286 RG — routing and fallback: modes, chains, failure classes, breaker, the route walked and kept on the chunk, /api/routing, the settings page
   'test-genesis-and-architecture-spec.test.js', // 0.39.286 GN1/AR1 — genesis 1.1.0 (registry doorway, routing) the default system template; the architecture spec cut to what exists
   'test-genesis-sandboxed.test.js', // DB19 (parked) — a fork of genesis: sealed sandbox, the registry the drawbridge, three tunnels (compartment, bridge, contract)
+  'test-phase-close.test.js', // 0.60.223 SL1 — a proven, landed phase closes itself; undoing its change reopens it (lib/phase-close.js); PC-06 in Clear Glass
   'test-build-queue.test.js', // 0.60.222 SL0 — what can be built now, and why every other open phase cannot (lib/build-queue.js); BQ-05 in Clear Glass
   'test-roadmap-import.test.js', // 0.60.199 SD17 — a project's own roadmap (phases.json / PHASEMAP.md) imported as a phasemap, so it continues; RI-05 in Clear Glass
   'test-mastermind-ready.test.js', // 0.60.200 SD18 — what Idearium needed to work on MASTERMIND: wrapper folder, primary roadmap, the project's own test runner, integrity notes that fit

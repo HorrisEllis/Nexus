@@ -317,6 +317,9 @@ try {
     const first = rows.find(r => r.startedBy) || rows[0];
     return first ? { phase: first.phase || null, map: first.map || null, title: first.title || null, startedBy: first.startedBy || null } : null;
   });
+  // 0.60.223 SL1 — a change that lands may close its run's phase; one that is undone reopens it (lib/phase-close.js)
+  _require('../../lib/repo-inject.js').setOnSettled((n) => (n.status === 'reverted' ? _reopenFor(n) : _closeRun(_require('../../lib/phase-close.js').runOfInject(n), { trigger: `applied ${n.path}` }))
+    .catch((e) => _closeLog(n.repoUuid, 'phase.close-failed', `${n.path}: the close check failed`, e.message)));   // §1.2 said, never silent
   RV.setOnCommit(({ repoUuid, commitId, message, provenance }) => _emitLedger('idearium.version.commit', { repoUuid, commitId, message, by: provenance.by, changelog: provenance.changelog || [], causedBy: (provenance.refs || [])[0] || null }));
   if (!process.env.NEXUS_TEST_SANDBOX) {   // APV4 — what postDurable buffered while a system was down (failure modes too) goes when it answers
     const t = setInterval(() => { _nexusClient.drainBuffer().then(r => { if (r && r.drained) _ledgerOut.drained += r.drained; }).catch(() => {}); }, 60000);
@@ -771,14 +774,63 @@ async function _phaseMapStart(repo, opts = {}) {
   return { ok: true, job: { running: true, startedAt: job.startedAt, maps: maps.length } };
 }
 
-async function _phaseSetStatus(repo, { map, phase, status, force = false, reason = '' }) {
+// 0.60.223 SL1 — James, 2026-10-23: "contiue getting idearium building phases". Nothing marked a phase done, so a proven run left its
+// phase open and DG1 refused everything after it. _closeRun is called when a run's proof row says proven and whenever one of its changes
+// is applied; it closes the phase only when the run is proven AND every change of it is applied (lib/phase-close.js landed). The close
+// goes through the one status writer and is kept in idearium_phase_closes (append-only; a reopen is a newer row), never as a run state:
+// a run row's state is the run's own (the watchdog and the flights read it). Each close and reopen is on the activity log and the ledger.
+function _runOf(runId) {
+  const PC = _require('../../lib/phase-close.js'); const b = PC.baseRun(runId);
+  const rows = loadTable('idearium_phase_runs').filter(r => r && PC.baseRun(r.runId) === b);
+  if (!rows.length) return null;
+  const first = rows.find(r => r.map && r.phase) || rows[0];
+  const proof = [...rows].reverse().find(r => r.state === 'proven');
+  const last = rows.reduce((x, y) => ((y.ts || 0) >= (x.ts || 0) ? y : x), rows[0]);
+  return { runId: b, repoUuid: first.repoUuid, map: first.map, phase: first.phase, proven: !!proof, state: last.state, snapshot: (proof || first).snapshot || null };
+}
+function _closeLog(repoUuid, kind, title, detail) {
+  try { _require('../../lib/activity-log/compartment.js').record({ compartment: repoUuid, kind, status: kind.split('.').pop(), actor: 'idearium', ts: Date.now(), title, detail: detail || null }); } catch (_) {}
+}
+async function _closeRun(runId, { trigger = '' } = {}) {
+  const PC = _require('../../lib/phase-close.js');
+  const run = runId ? _runOf(runId) : null;
+  if (!run || !run.map || !run.phase) return { closed: false, why: 'no phase run' };
+  const repo = getRepoLayer().get(run.repoUuid);
+  if (!repo) return { closed: false, why: `repo ${run.repoUuid} not found` };
+  let version = null; try { version = _require('../../lib/release-version.js').current().version; } catch (_) {}
+  const r = await PC.closeIfLanded({ repo, run, injects: _require('../../lib/repo-inject.js').list(null, { limit: 100000 }), setStatus: _phaseSetStatus, version, closes: loadTable('idearium_phase_closes') });
+  if (r.closed) {
+    appendRow('idearium_phase_closes', { uuid: `close-${run.runId}-${r.record.at}`, ...r.record, trigger });
+    getIdeaOS().emit('idearium.phase.closed', { ...r.record, trigger });
+    _emitLedger('idearium.phase.closed', { repoUuid: run.repoUuid, map: run.map, phase: run.phase, runId: run.runId, version });
+    _closeLog(run.repoUuid, 'phase.closed', `${run.phase} closed — ${r.record.note}`, `${r.why} (${trigger})`);
+  } else if (r.refused || /refused/.test(r.why || '')) _closeLog(run.repoUuid, 'phase.close-refused', `${run.phase} not closed`, r.why);   // §1.2 said
+  return r;
+}
+async function _reopenFor(n) {
+  const PC = _require('../../lib/phase-close.js');
+  const closes = loadTable('idearium_phase_closes');
+  const c = closes.filter(x => x && PC.baseRun(x.runId) === PC.runOfInject(n)).pop();
+  const repo = c ? getRepoLayer().get(c.repoUuid) : null;
+  if (!repo) return { reopened: false, why: 'no close for this change' };
+  const r = await PC.reopenIfUndone({ repo, inject: n, setStatus: _phaseSetStatus, closes });
+  if (r.reopened) {
+    appendRow('idearium_phase_closes', { uuid: `reopen-${r.record.runId}-${r.record.reopenedAt}`, ...r.record });
+    getIdeaOS().emit('idearium.phase.reopened', r.record);
+    _emitLedger('idearium.phase.reopened', { repoUuid: r.record.repoUuid, map: r.record.map, phase: r.record.phase, runId: r.record.runId, inject: n.uuid });
+    _closeLog(r.record.repoUuid, 'phase.reopened', `${r.record.phase} reopened`, r.why);
+  } else if (/refused/.test(r.why || '')) _closeLog(repo.uuid, 'phase.reopen-refused', `${c.phase} not reopened`, r.why);
+  return r;
+}
+
+async function _phaseSetStatus(repo, { map, phase, status, force = false, reason = '', note = '' }) {
   const PH = await import('../repo/phases.js');
   const { setPhaseStatus, RoadmapError } = await import('../repo/roadmap.js');
   const { maps, scope, snapshot } = PH.mapsFor({ repo, repoDir: _repoDiskDir(repo.uuid) });
   const found = maps.find(m => m.path === map);
   if (!found) return { ok: false, status: 404, error: `no phasemap ${map} in this repo` };
   let edit;
-  try { edit = setPhaseStatus({ text: found.text, mapName: map.split('/').pop().replace(/\.spec$/, ''), phaseId: phase, status, force }); }
+  try { edit = setPhaseStatus({ text: found.text, mapName: map.split('/').pop().replace(/\.spec$/, ''), phaseId: phase, status, force, note }); }
   catch (e) {
     if (e instanceof RoadmapError) {
       const code = e.code === 'NOT_FOUND' ? 404 : e.code === 'DEPS_INCOMPLETE' ? 409 : e.code === 'ROUNDTRIP_FAILED' ? 422 : 400;
@@ -2019,6 +2071,7 @@ ${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}`
       appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...run.against, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.proven', { ...pbase, attempt, met: run.met, total: run.total, report: run.files && run.files.report });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'proven' });
+      _closeRun(base.runId, { trigger: 'proven' }).catch((e) => _closeLog(base.repoUuid, 'phase.close-failed', `${phase}: the close check failed`, e.message));   // §SL1 0.60.223 — closes now if its changes are already on disk (auto mode)
       // §0.39.362 CH5 — a proven phase moves the compartment: its end state is checked again (with what is proposed)
       if (charter.endState.length) _charterCheck(target.uuid, { cause: base.runId }).catch(e => console.warn(`[idearium] end-state check after ${base.runId}: ${e.message}`));
       return { state: 'proven', attempt, run };
@@ -3159,6 +3212,7 @@ const ROUTE_CAP = {
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
   'phases.next': CAPS.READ_IDEAS, 'repo.phases.next': CAPS.READ_IDEAS,   // §SL0 — reads only
+  'repo.phases.closes': CAPS.READ_IDEAS,   // §SL1 — reads only
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
   'repo.flight': CAPS.READ_IDEAS, 'repo.flight.get': CAPS.READ_IDEAS, 'repo.failures': CAPS.READ_IDEAS, 'repo.failure.get': CAPS.READ_IDEAS,   // §FMR3 0.60.146 reads only
@@ -3566,6 +3620,8 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','specs','compile'],       'repo.specs.compile'],     // 0.60.67 SF4 — a spec's T0/T1 files as proposed .inject nodes
     ['GET',    ['api','repos',    ':uuid','phases','map'],          'repo.phases.map.status'],
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
+    ['GET',    ['api','repos',    ':uuid','phases','closes'],       'repo.phases.closes'],   // §SL1 0.60.223 the phases its runs closed (and reopened)
+    ['POST',   ['api','repos',    ':uuid','phases','close'],        'repo.phases.close'],    // §SL1 0.60.223 check one run again: closes its phase if proven and landed
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
     ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
@@ -8987,6 +9043,24 @@ async function handle(req, res, route, query, body) {
       if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
       const runs = _phaseRuns(params.uuid);
       return ok(res, { repoUuid: params.uuid, runs: query.phase ? runs.filter(r => r.phase === query.phase) : runs });
+    }
+    case 'repo.phases.closes': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const PC = _require('../../lib/phase-close.js');
+      const last = new Map();   // the newest row per run: a reopen is a newer row (append-only)
+      for (const c of loadTable('idearium_phase_closes')) if (c && c.repoUuid === repo.uuid) { const k = PC.baseRun(c.runId); const t = c.reopenedAt || c.at || 0; if (!last.has(k) || t >= (last.get(k).reopenedAt || last.get(k).at || 0)) last.set(k, c); }
+      const closes = [...last.values()].sort((a, b) => (b.reopenedAt || b.at || 0) - (a.reopenedAt || a.at || 0));
+      return ok(res, { closes, open: closes.filter(c => !c.reopenedAt).length, reopened: closes.filter(c => c.reopenedAt).length });
+    }
+    case 'repo.phases.close': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const runId = body && String(body.runId || '').trim();
+      if (!runId) return err(res, 400, 'runId is required');
+      const run = _runOf(runId);
+      if (!run || run.repoUuid !== repo.uuid) return err(res, 404, `no run ${runId} in this repo`);
+      return ok(res, await _closeRun(runId, { trigger: 'asked' }));
     }
     case 'repo.phases.status': {
       const repo = getRepoLayer().get(params.uuid);
