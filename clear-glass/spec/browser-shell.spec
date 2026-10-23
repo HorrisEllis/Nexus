@@ -605,4 +605,9 @@ spec:
   #   back empty, said "Guardian's provider host is not answering" — wrong too, the list is Clear Glass's own — until another new tab. It now
   #   says what failed and reads the agents again every 3 s while open, that section only (the search box and open panels are left alone).
   # - Proof: test-browser-shell BST-22 and BST-23 in Clear Glass; 28/28.
+  # ## ADDENDUM 2026-10-23 (0.60.214) — the agents hub's tools are not repeated in the ☰ menu
+  # James, 2026-10-22, with a screenshot of the ☰ menu: "also still here? why? supposed to be migrated"
+  # - Agent Mesh, Element Picker and NCP Providers (and Guardian scripts, Mesh HUD) live in the agents hub since BS9 (0.60.180). 0.60.210's
+  #   Tools rows listed every unpinned tool and brought three back. browser.js HUB_TOOLS: the ☰ menu leaves them to the hub; Customize toolbar
+  #   can still pin them and names where they live. BST-21 checks both.
 
