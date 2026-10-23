@@ -148,3 +148,26 @@ phases:
       version; replicas. Co-pilot in it through the same `cos` commands. (Each phase above ships its route and command; the screen gathers
       them here — said, per the order of delivery.)
     proof: in Clear Glass, a version taken and restored from the screen
+
+# ── ADDENDUM 2026-10-23 — the .spec is how a compartment declares; the virtual disk and miniworlds (his correction) ───────────────
+# Context: the map above had CS4 read each system's compartment.json as its declaration. James, 2026-10-23: "No .spec is how it declares.
+# Also what we can use as a virtual disk for os based? Or miniworlds? Look at the specs."
+# Decided (his): a compartment declares itself through its .spec. guardian/spec/guardian.spec already declares core, events, routes,
+# command_index and handshake. compartment.json (10 systems, lib/system-shape.js role 'compartment') becomes a derived cache, kept (§0.3)
+# and checked against the spec. versionium/spec/versionium.spec has no routes or events sections yet, so not every system's spec declares
+# enough today; CS4 lists which do.
+# The coder's reading, by his NC0 evidence rule: the spec is what is declared and the component registry is what is discovered. The bridge
+# (CS3) passes a call only where both agree. Rebuild (CS6) and drift compare the same two.
+# Found in the specs, not built in code:
+#   - docs/specs/IDEARIUM.spec.md, Miniworld Manager: "Each miniworld is a .nex file opened as a COS compartment sandbox" — nexus miniworld
+#     list | boot | fork | snapshot | discard. No code names a miniworld.
+#   - docs/cos.spec §GAP 2026-08-14: the ".cos portable archive" — a tar.gz of manifest.json, spec/compartment.spec, code/ and
+#     history/*.nex.gz, "a blueprint's SOURCE artifact". Mapped, not built.
+#   - docs/2026-09-02-nexus-vision-master-phasemap.spec D2: "Maybe we call it an idearium compartment... or miniworld." — naming left open.
+#   - cos/playgrounds/cow-fs.js: copy-on-write is an eager full copy today. Lazy copy-on-write needs reflinks (Btrfs/XFS, or ReFS block
+#     cloning on a Windows Dev Drive).
+#   - The machine disk in use: qcow2 (cos/compartment/qemu-runtime.js) — a read-only base image, overlays of changed blocks, internal
+#     snapshots.
+# Proposed (to confirm): a miniworld is the .cos archive. Its spec declares it; its code/ holds the files; history/*.nex.gz holds its
+# versions; for an OS-based miniworld, machine/ holds the qcow2 overlay chain, naming its base image by hash. Boot opens it as a
+# compartment; fork is a new overlay or a copy-on-write copy; snapshot is a CompartmentVersion; discard drops the overlay.
