@@ -38,7 +38,8 @@ const SPECS = [
   { spec: 'clear-glass/spec/passwords.spec', map: 'docs/2026-10-21-passwords-phasemap.spec' },   // 0.60.186
   { spec: 'clear-glass/spec/adblock.spec', map: 'docs/2026-10-21-adblock-phasemap.spec' },   // 0.60.183
   { spec: 'clear-glass/spec/browser-shell.spec', map: 'docs/2026-10-21-browser-shell-phasemap.spec' },
-  { spec: 'docs/system-node-db.spec', map: 'docs/2026-10-22-system-node-db-phasemap.spec' },   // 2026-10-22 ND — his "each database for each system"   // 0.60.179   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
+  { spec: 'docs/system-node-db.spec', map: 'docs/2026-10-22-system-node-db-phasemap.spec' },
+  { spec: 'clear-glass/spec/site-profile.spec', map: 'docs/2026-10-23-site-profile-processes-phasemap.spec' },   // 2026-10-23 SP — per-site settings, Processes   // 2026-10-22 ND — his "each database for each system"   // 0.60.179   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
 ];
 
 console.log('\ntest-substrate-spec — full specs compile at full depth and stay tied to their phases');

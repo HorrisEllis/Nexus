@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-site-profile-processes-phasemap.spec::SP6_the_processes_screen
+type: phase
+id: docs_2026-10-23-site-profile-processes-phasemap.spec::SP6_the_processes_screen
+context: pipeline phase SP6_the_processes_screen of docs/2026-10-23-site-profile-processes-phasemap.spec
+intent: null
+summary: SP6_the_processes_screen (ui) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792750494890
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792750494890
+lastSeenAt: 1792750494890
+fingerprint: null
+payload:
+  id: SP6_the_processes_screen
+  map: docs/2026-10-23-site-profile-processes-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - clear-glass/renderer/processes.html
+    - clear-glass/renderer/shell/menus.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - SP5_processes_and_activity
+  blocks:
+    - MOD-SP-PROCESSES-UI
+  spec: clear-glass/spec/site-profile.spec
+  graph: d170b15d089baaf0

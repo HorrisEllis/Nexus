@@ -1,0 +1,284 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SP2_each_feature_reads_its_site_value:817ef2353afca489
+type: graph
+id: phase:SP2_each_feature_reads_its_site_value:817ef2353afca489
+context: dependency graph of phase SP2_each_feature_reads_its_site_value
+intent: null
+summary: 33 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792750494883
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792750494883
+lastSeenAt: 1792750494883
+fingerprint: null
+payload:
+  for: SP2_each_feature_reads_its_site_value
+  kind: phase
+  repo: null
+  hash: 817ef2353afca489
+  nodes:
+    - path: clear-glass/src/autofill/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/passwords/service.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/rewind/engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: lib/agent-tools/tools/clear-glass/macro.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/plugins/passwords/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/routes.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/phase2.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cli/nexus.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/learned.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/automation-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-screen-qa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-macro.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/automation/cron.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/dom.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/nodes.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/steps.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/template.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/zoom.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/reader.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/rewind-replay.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/autofill/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: clear-glass/src/automation/nodes.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: lib/agent-tools/tools/sandbox/rewind-replay.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: clear-glass/src/automation/template.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: clear-glass/src/automation/cron.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: clear-glass/src/automation/dom.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: clear-glass/src/automation/steps.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/core/zoom.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/reader.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-autofill.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-screen-qa.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: cli/nexus.js
+      to: lib/agent-tools/tools/clear-glass/macro.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/clear-glass/macro.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/learned.js
+      to: lib/agent-tools/tools/clear-glass/macro.js
+      kind: requires
+    - from: tests/modules/test-macro.js
+      to: lib/agent-tools/tools/clear-glass/macro.js
+      kind: requires
+    - from: clear-glass/src/automation/routes.js
+      to: clear-glass/src/mesh/automation-engine.js
+      kind: requires
+    - from: tests/modules/automation-engine.test.js
+      to: clear-glass/src/mesh/automation-engine.js
+      kind: requires
+    - from: clear-glass/plugins/passwords/index.js
+      to: clear-glass/src/passwords/service.js
+      kind: requires
+    - from: clear-glass/test/phase2.test.js
+      to: clear-glass/src/rewind/engine.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: clear-glass/src/automation/nodes.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: dbdd2256c2bfe7c4
+    layer: 2
+    deps:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+    dependents:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP3_the_site_settings_screen
+    upstream:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D2_defaults_are_todays_behaviour
+    downstream:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP3_the_site_settings_screen
+    blockedBy:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+    unlocks:
+      - docs/2026-10-23-site-profile-processes-phasemap.spec::SP3_the_site_settings_screen
+    conflicts:
+      - with: docs/2026-10-23-site-profile-processes-phasemap.spec::SP4_cleardriver_mesh_guardian_settings
+        files:
+          - clear-glass/src/driver/index.js
+          - clear-glass/src/mesh/agent-mesh.js
+      - with: docs/2026-10-23-site-profile-processes-phasemap.spec::SP5_processes_and_activity
+        files:
+          - clear-glass/src/main/index.js
+      - with: docs/2026-10-23-site-profile-processes-phasemap.spec::SP6_the_processes_screen
+        files:
+          - clear-glass/src/main/index.js
+    dangling: []
+    lines:
+      - DAG dbdd2256c2bfe7c4 · layer 2 · blocked by SP1_one_resolver_for_every_feature
+      - 'depends on (1): SP1_one_resolver_for_every_feature · all upstream 3'
+      - >-
+        needed by (1): SP3_the_site_settings_screen · finishing it unlocks
+        SP3_the_site_settings_screen
+      - >-
+        same files as SP4_cleardriver_mesh_guardian_settings with no order between them:
+        clear-glass/src/driver/index.js, clear-glass/src/mesh/agent-mesh.js
+      - >-
+        same files as SP5_processes_and_activity with no order between them:
+        clear-glass/src/main/index.js
+      - >-
+        same files as SP6_the_processes_screen with no order between them:
+        clear-glass/src/main/index.js

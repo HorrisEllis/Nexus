@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
+type: phase
+id: docs_2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
+context: >-
+  pipeline phase SP2_each_feature_reads_its_site_value of
+  docs/2026-10-23-site-profile-processes-phasemap.spec
+intent: null
+summary: SP2_each_feature_reads_its_site_value (integration) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792750494884
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792750494884
+lastSeenAt: 1792750494884
+fingerprint: null
+payload:
+  id: SP2_each_feature_reads_its_site_value
+  map: docs/2026-10-23-site-profile-processes-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - clear-glass/src/site-settings/readers.js
+    - clear-glass/src/autofill/store.js
+    - lib/agent-tools/tools/clear-glass/macro.js
+    - clear-glass/src/mesh/automation-engine.js
+    - clear-glass/src/passwords/service.js
+    - clear-glass/src/rewind/engine.js
+    - clear-glass/src/driver/index.js
+    - clear-glass/src/mesh/agent-mesh.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - SP1_one_resolver_for_every_feature
+  blocks:
+    - MOD-SP-READERS
+  spec: clear-glass/spec/site-profile.spec
+  graph: 817ef2353afca489
