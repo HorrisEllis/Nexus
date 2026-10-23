@@ -51,6 +51,11 @@ route, the command and the Phases tab are all unchanged.
 - `docs/2026-10-10-idearium-solid-phasemap.spec`: a `\'` inside a single-quoted string had made it invalid YAML since
   0.60.202. It is fixed to `''`, and loom read it either way.
 
+- The tracked root `VERSION` file (kept since 0.60.218) still said 0.60.220, and nothing compared it. The release zip then
+  carried two root `VERSION` files saying two versions, and RV-03 failed. `VERSION` now follows the release.
+  `lib/release-version.js` `agreement()` compares it, and `scripts/release-zip.js` adds no second one when the commit
+  already tracks it.
+
 ## Proof
 
 `tests/modules/test-roadmap-import.test.js`: 8/8.
@@ -59,4 +64,4 @@ route, the command and the Phases tab are all unchanged.
 - RI-07: an issue list in core13's shape, plus `findRoadmaps` and the contract `SPEC.md` left out.
 - RI-08: the real API importing a phased spec with the repo's own files and README as evidence.
 
-test-moce-roadmap-ui 17/17 and test-phase-census 6/6. test-moce-roadmap's 3 failures were red on main before this change.
+test-release-version 5/5 (RV-03 green again), test-moce-roadmap-ui 17/17 and test-phase-census 6/6. test-moce-roadmap's 3 failures were red on main before this change.
