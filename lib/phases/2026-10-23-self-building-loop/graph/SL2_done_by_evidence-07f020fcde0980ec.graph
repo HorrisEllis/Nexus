@@ -1,0 +1,101 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SL2_done_by_evidence:07f020fcde0980ec
+type: graph
+id: phase:SL2_done_by_evidence:07f020fcde0980ec
+context: dependency graph of phase SL2_done_by_evidence
+intent: null
+summary: 8 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792774371707
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792774371707
+lastSeenAt: 1792774371707
+fingerprint: null
+payload:
+  for: SL2_done_by_evidence
+  kind: phase
+  repo: null
+  hash: 07f020fcde0980ec
+  nodes:
+    - path: lib/phase-census.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-close.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/verify-first.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/coder-brief.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/testenv/run-target.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/phase-census.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/verify-first.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/verify-first.js
+      to: cos/testenv/run-target.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/phase-census.js
+      kind: requires
+    - from: lib/coder-brief.js
+      to: lib/verify-first.js
+      kind: requires
+  crossings:
+    - from: lib/verify-first.js
+      to: cos/testenv/run-target.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    dagHash: 6577681f08a50367
+    layer: 1
+    deps:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+    dependents: []
+    upstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+    downstream: []
+    blockedBy:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
+        files:
+          - lib/phase-close.js
+    dangling: []
+    lines:
+      - DAG 6577681f08a50367 · layer 1 · blocked by SL0_what_can_be_built_now
+      - 'depends on (1): SL0_what_can_be_built_now'
+      - 'needed by (0): —'
+      - >-
+        same files as SL1_a_proven_phase_closes_itself with no order between them:
+        lib/phase-close.js

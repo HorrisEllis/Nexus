@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+context: pipeline phase SL3_the_backlog_groomed of docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL3_the_backlog_groomed (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792775550205
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792775550205
+lastSeenAt: 1792775550205
+fingerprint: null
+payload:
+  id: SL3_the_backlog_groomed
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/phase-groom.js
+    - lib/phase-map-auto.js
+    - lib/phase-dag.js
+  depends_on:
+    - SL0_what_can_be_built_now
+  blocks:
+    - MOD-SL-GROOM
+  spec: docs/self-building-loop.spec
+  graph: 9fd399bb539845a2

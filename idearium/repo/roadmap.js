@@ -214,7 +214,9 @@ const oneLine = (s, n = 70) => String(s).replace(/\s+/g, ' ').trim().slice(0, n)
  * setPhaseStatus({ text, mapName, phaseId, status, date, force })
  * -> { text, before, after }   (throws RoadmapError; returns text only if proven)
  */
-export function setPhaseStatus({ text, mapName, phaseId, status, date = new Date().toISOString().slice(0, 10), force = false } = {}) {
+// note: what the value says after its date (0.60.223 SL1: "DONE 2026-10-23. 0.60.223 — proven by run …"); one line, quotes stripped,
+// and still proven below to read back as the same status
+export function setPhaseStatus({ text, mapName, phaseId, status, date = new Date().toISOString().slice(0, 10), force = false, note = '' } = {}) {
   if (!EDITABLE_STATUSES.includes(status)) {
     throw new RoadmapError('BAD_STATUS', status === 'blocked'
       ? "'blocked' is not a stored status: loom's scanner has no such value. A phase is blocked when a dependency is not complete, and that is shown, not written."
@@ -233,7 +235,8 @@ export function setPhaseStatus({ text, mapName, phaseId, status, date = new Date
 
   const lines = String(text).split('\n');
   const hdr = target.line;
-  const newValue = NEW_VALUE[status](date);
+  const n = String(note || '').replace(/["\\\n\r]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 240);
+  const newValue = NEW_VALUE[status](date) + (n ? ` ${n}` : '');
   let out;
 
   if (target.statusLine === -1) {

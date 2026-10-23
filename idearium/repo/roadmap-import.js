@@ -27,7 +27,7 @@ const _require = createRequire(import.meta.url);
 const loom = _require('../../loom/scanners/phasemap-map.js');
 
 export const MODULE_ID = 'nexus.idearium.repo.roadmap-import';
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';   // 1.1.0 (0.60.221 SD17b): phased specs (SPEC.md), issue lists (ISSUES.md), done by evidence
 
 export class RoadmapImportError extends Error {
   constructor(code, message) { super(message); this.code = code; }
@@ -35,23 +35,30 @@ export class RoadmapImportError extends Error {
 
 const JSON_NAMES = /^(phases|roadmap)\.json$/i;
 const MD_NAMES = /^(phasemap|phase-map|roadmap)\.md$/i;
+// §SD17b 0.60.221 — a phased SPEC.md (worker_clean's `## Phase 6 — …`) and an ISSUES.md (core13's open issues); a roadmap name in the
+// same folder wins over SPEC.md, and an ISSUES.md is its own map (issues-phasemap.spec). One that names no phase is left out (rankRoadmaps).
+const SPEC_NAMES = /^spec\.md$/i;
+const ISSUE_NAMES = /^(issues|open-issues|known-issues)\.md$/i;
 const SRC_ID = /^[A-Z]{1,5}\d+(?:-[A-Z0-9]+)?$/;            // P0, P3-UI, SB12, AP3-X
 const NEXUS_ID = /^[A-Z]{1,5}(?:\d+[a-z]?|-[A-Z0-9]+)$/;      // what loom's PHASE_RE takes before the underscore
 
 /** findRoadmaps(paths) — the folders holding a roadmap Idearium cannot read yet; target is the phasemap it would become */
 export function findRoadmaps(paths = []) {
-  const byDir = new Map();
+  const byDir = new Map(), issues = [];
   for (const p of paths) {
     const s = String(p).replace(/\\/g, '/');
-    if (/(^|\/)(node_modules|\.git|_archive|dist|build)\//.test(s)) continue;
+    if (/(^|\/)(node_modules|\.git|_archive|dist|build|vendor)\//.test(s)) continue;
     const base = s.split('/').pop(); const dir = s.includes('/') ? s.slice(0, s.lastIndexOf('/')) : '';
-    const kind = JSON_NAMES.test(base) ? 'json' : MD_NAMES.test(base) ? 'md' : null;
+    if (ISSUE_NAMES.test(base)) { issues.push({ dir, json: null, md: s, kind: 'issues', target: `${dir ? `${dir}/` : ''}issues-phasemap.spec` }); continue; }
+    const kind = JSON_NAMES.test(base) ? 'json' : MD_NAMES.test(base) ? 'md' : SPEC_NAMES.test(base) ? 'spec' : null;
     if (!kind) continue;
-    const e = byDir.get(dir) || { dir, json: null, md: null };
-    e[kind] = s; byDir.set(dir, e);
+    const e = byDir.get(dir) || { dir, json: null, md: null, specMd: null };
+    if (kind === 'spec') e.specMd = s; else e[kind] = s;
+    byDir.set(dir, e);
   }
-  return [...byDir.values()].map(e => ({ ...e, target: `${e.dir ? `${e.dir}/` : ''}roadmap-phasemap.spec` }))
-    .sort((a, b) => a.dir.localeCompare(b.dir));
+  const maps = [...byDir.values()].map(e => ({ dir: e.dir, json: e.json, md: e.md || e.specMd, ...(e.md ? {} : e.specMd ? { kind: 'spec' } : {}),
+    target: `${e.dir ? `${e.dir}/` : ''}roadmap-phasemap.spec` }));
+  return [...maps, ...issues].sort((a, b) => a.dir.localeCompare(b.dir) || String(a.kind || '').localeCompare(String(b.kind || '')));
 }
 
 /**
@@ -67,7 +74,7 @@ export function rankRoadmaps(found = [], read = () => null) {
     try { const J = r.json ? parsePhasesJson(read(r.json) || '') : null; const M = r.md ? parseRoadmapMd(read(r.md) || '') : null;
       n = new Set([...(J ? J.items : []), ...(M ? M.items : [])].map(i => i.srcId)).size; }
     catch (e) { why = e.message; }
-    if (n) kept.push({ ...r, phases: n }); else ignored.push({ dir: r.dir, files: [r.json, r.md].filter(Boolean), why: why || 'names no phase' });
+    if (n) kept.push({ ...r, phases: n }); else ignored.push({ dir: r.dir, files: [r.json, r.md].filter(Boolean), why: why || 'names no phase' });   // a contract SPEC.md (core13's) names none: left out, said
   }
   const depth = (d) => (d ? d.split('/').length : 0);
   kept.sort((a, b) => (!!b.json - !!a.json) || (b.phases - a.phases) || (depth(a.dir) - depth(b.dir)) || a.dir.localeCompare(b.dir));
@@ -92,7 +99,9 @@ export function parsePhasesJson(text) {
 }
 
 /** parseRoadmapMd(text) — one item per `## <ID> — TITLE …` heading; the "Critical path" tree's chains */
-export function parseRoadmapMd(text) {
+export function parseRoadmapMd(text, opts = {}) {
+  if (/^##\s+Phase\s+\d+(?:\.\d+)?\s*[—–-]/m.test(String(text))) return parsePhasedSpecMd(text, opts);
+  if (/^#\s+(open\s+issues|issues|known\s+issues)\b/im.test(String(text))) return parseIssuesMd(text);
   const lines = String(text).split(/\r?\n/);
   const items = []; let cur = null;
   for (const l of lines) {
@@ -133,6 +142,87 @@ export function parseRoadmapMd(text) {
   return { items, chains };
 }
 
+
+// a path a source names: `lib/x.js`, `index.php`, public/js/ui/map.js — its last part has an extension; a sentence word does not
+const PATH_RE = /(?:^|[\s`(\[])((?:[A-Za-z0-9_.\-]+\/)*[A-Za-z0-9_\-][A-Za-z0-9_.\-]*\.[A-Za-z][A-Za-z0-9]{0,5})(?=[\s`),:;\]]|$)/g;
+const _pathsIn = (line) => [...String(line).matchAll(PATH_RE)].map(m => m[1]).filter(p => !/^\d+(\.\d+)+$/.test(p) && !/^(e\.g|i\.e|v\d)/i.test(p));
+
+/**
+ * parsePhasedSpecMd(text) — §SD17b: a phased development spec (worker_clean's SPEC.md). `## Phase 6 — Title` is a phase; its
+ * **Goal:** is what it does; the files its `### Changelog.N` adds or changes ([ADDED]/[CHANGED] path) and its "What to build"
+ * bullets name are its files; `added` keeps the [ADDED] ones (done-by-evidence when they all exist). A "Completed Phases" table's
+ * rows (`| 4 | Summary |`) are phases already done. The numbering is the order: each phase after the one before (said so).
+ */
+export function parsePhasedSpecMd(text, { statusTables = [] } = {}) {
+  const lines = String(text).split(/\r?\n/);
+  const items = []; let cur = null, sect = null, inTable = false, goal = false;
+  const idOf = (n) => `P${String(n).replace('.', '-')}`;
+  for (const l of lines) {
+    if (/^##\s+completed phases/i.test(l)) { inTable = true; cur = null; continue; }
+    const h = l.match(/^##\s+Phase\s+(\d+(?:\.\d+)?)\s*[—–-]\s*(.+)$/);
+    if (h) { inTable = false; cur = { srcId: idOf(h[1]), name: h[2].replace(/\*\*/g, '').trim(), subtitle: null, stateText: null, exit: null, goal: '', paths: [], added: [], order: Number(h[1]) }; items.push(cur); sect = null; goal = false; continue; }
+    if (/^##\s/.test(l)) { cur = null; inTable = false; continue; }
+    if (inTable) { const r = l.match(/^\|\s*(\d+(?:\.\d+)?)\s*\|\s*(.+?)\s*\|\s*$/); if (r) items.push({ srcId: idOf(r[1]), name: r[2].split('—')[0].trim(), subtitle: r[2].includes('—') ? r[2].split('—').slice(1).join('—').trim() : null, stateText: 'done (Completed Phases table)', exit: null, goal: r[2], paths: [], added: [], order: Number(r[1]) }); continue; }
+    if (!cur) continue;
+    const g = l.match(/^\*\*Goal:\*\*\s*(.*)$/); if (g) { cur.goal = g[1].trim(); goal = true; continue; }
+    if (goal) { if (l.trim() && !/^#/.test(l)) { cur.goal += ' ' + l.trim(); continue; } goal = false; }
+    const sh = l.match(/^###\s+(.+)$/); if (sh) { sect = /changelog/i.test(sh[1]) ? 'changelog' : /manifest/i.test(sh[1]) ? 'manifest' : /what to build/i.test(sh[1]) ? 'build' : 'other'; continue; }
+    const add = (p, isAdded) => { if (!p || cur.paths.includes(p)) { if (isAdded && p && !cur.added.includes(p)) cur.added.push(p); return; } if (cur.paths.length < 40) cur.paths.push(p); if (isAdded && !cur.added.includes(p)) cur.added.push(p); };
+    if (sect === 'changelog') { const c = l.match(/^\[(ADDED|CHANGED)\]\s+(\S+)/); if (c) add(c[2].replace(/[`,]+$/, ''), c[1] === 'ADDED'); continue; }
+    if (sect === 'build' && /^\s*[-*]\s+`/.test(l)) { const m = l.match(/`([^`]+\.[A-Za-z0-9]+)`/); if (m && !/\s/.test(m[1])) add(m[1], false); }
+  }
+  // one id per phase: a phase both in the table and described below keeps the description, with the table's done state
+  const byId = new Map();
+  for (const it of items) { const had = byId.get(it.srcId); if (!had) byId.set(it.srcId, it); else { if (it.stateText && !had.stateText) had.stateText = it.stateText; if (it.paths.length) Object.assign(had, { paths: it.paths, added: it.added, goal: it.goal || had.goal }); } }
+  // the project's own status table beside the spec (README.md "Project status": `| 5.1 | … |`) — what it says is done is done, by
+  // its own record; a phase it names that the spec does not (5.1, 5.2: ports between phases) joins in its place in the order
+  for (const t of statusTables) {
+    const tl = String(t.text || '').split(/\r?\n/); let on = false;
+    for (const l of tl) {
+      if (/^\|\s*phase\s*\|/i.test(l)) { on = true; continue; }
+      if (on && /^\|\s*-/.test(l)) continue;
+      const r = on && l.replace(/\*\*/g, '').match(/^\|\s*(\d+(?:\.\d+)?)\s*\|\s*(.+?)\s*\|\s*$/);
+      if (!r) { if (on && !/^\|/.test(l)) on = false; continue; }
+      const id = idOf(r[1]), why = `done (${t.path || 'the project status table'})`;
+      const had = byId.get(id);
+      if (had) { if (!/done/i.test(had.stateText || '')) had.stateText = why; }
+      else byId.set(id, { srcId: id, name: r[2].split(/[—;(]/)[0].trim(), subtitle: null, stateText: why, exit: null, goal: r[2], paths: [], added: [], order: Number(r[1]) });
+    }
+  }
+  const list = [...byId.values()].sort((a, b) => a.order - b.order);
+  const chains = []; for (let i = 1; i < list.length; i++) chains.push([list[i - 1].srcId, list[i].srcId]);
+  return { items: list.map(({ order, ...x }) => ({ ...x, subtitle: x.subtitle || null })), chains, chainWhy: 'the phases are numbered in order' , shape: 'phased-spec' };
+}
+
+/**
+ * parseIssuesMd(text) — §SD17b: an open-issues list (core13's doc/ISSUES.md). Each top-level bullet under a `## group` is an open
+ * item (IS1, IS2 …), its group kept; a group that says it is other projects' work is not imported (said in `skipped`); "Deferred"
+ * and "named, not fixed" groups keep those words as the item's state. Issues have no order between them: no chains.
+ */
+export function parseIssuesMd(text) {
+  const lines = String(text).split(/\r?\n/);
+  const items = [], skipped = []; let group = null, cur = null, n = 0;
+  const foreign = (g) => /not this project|cross-project|for consumers/i.test(g);
+  const close = () => { if (cur) { cur.text = cur.text.replace(/\s+/g, ' ').trim(); for (const p of _pathsIn(cur.text)) if (!cur.paths.includes(p) && cur.paths.length < 12) cur.paths.push(p); cur.name = (cur.text.match(/^(.{8,90}?[.:;])(\s|$)/) || [null, cur.text.slice(0, 90)])[1]; cur.goal = cur.text; cur = null; } };
+  for (const l of lines) {
+    const h = l.match(/^##\s+(.+)$/);
+    if (h) { close(); group = h[1].trim(); continue; }
+    if (!group) continue;
+    const b = l.match(/^[-*]\s+(.*)$/);
+    if (b) {
+      close();
+      if (foreign(group)) { skipped.push({ group, text: b[1].slice(0, 120) }); cur = null; continue; }
+      const st = /deferred/i.test(group) ? 'deferred' : /named,?\s+not\s+fixed/i.test(group) ? 'named, not fixed (an accepted risk)' : 'open';
+      cur = { srcId: `IS${++n}`, name: '', subtitle: group, stateText: st, exit: null, goal: '', text: b[1], paths: [], added: [] }; items.push(cur); continue;
+    }
+    if (cur && /^\s{2,}\S/.test(l)) { cur.text += ' ' + l.trim(); continue; }
+    if (cur && !l.trim()) continue;
+    if (cur && /^\S/.test(l)) close();
+  }
+  close();
+  return { items, chains: [], skipped, shape: 'issues' };
+}
+
 const _slug = (s) => String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 48) || 'phase';
 const _esc = (s) => String(s || '').replace(/\s+/g, ' ').trim();
 const _yamlStr = (s) => `"${_esc(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
@@ -160,14 +250,18 @@ function _status(state, pct, stateText) {
  * be null); source names them ({ json: path, md: path }) for the evidence. Refuses when neither yields a phase, or when the result
  * would not parse back the same.
  */
-export function importRoadmap({ json = null, md = null, name = 'roadmap', source = {}, date = new Date().toISOString().slice(0, 10) } = {}) {
+export function importRoadmap({ json = null, md = null, name = 'roadmap', source = {}, date = new Date().toISOString().slice(0, 10), exists = null, statusTables = [] } = {}) {
   const J = json != null ? parsePhasesJson(json) : null;
-  const M = md != null ? parseRoadmapMd(md) : null;
+  const M = md != null ? parseRoadmapMd(md, { statusTables }) : null;
   const said = [];
   const order = []; const byId = new Map();
   const touch = (srcId) => { if (!byId.has(srcId)) { byId.set(srcId, { srcId, deps: new Map() }); order.push(srcId); } return byId.get(srcId); };
   for (const it of (J ? J.items : [])) Object.assign(touch(it.srcId), { name: it.name, note: it.note, state: it.state, pct: it.pct, fromJson: true, jsonDeps: it.dependsOn, blocks: it.blocks });
-  for (const it of (M ? M.items : [])) { const e = touch(it.srcId); e.mdName = it.name; e.subtitle = it.subtitle; e.stateText = it.stateText; e.exit = it.exit; e.paths = it.paths || []; e.fromMd = true; }
+  for (const it of (M ? M.items : [])) { const e = touch(it.srcId); e.mdName = it.name; e.subtitle = it.subtitle; e.stateText = it.stateText; e.exit = it.exit; e.paths = it.paths || []; e.fromMd = true;
+    if (it.goal && !e.note) e.note = it.goal;
+    // §SD17b — done by evidence: every file its changelog adds is already in the repo (the caller's exists(), the repo's own files)
+    if (typeof exists === 'function' && (it.added || []).length && !/done/i.test(e.stateText || '') && it.added.every(p => exists(p))) e.stateText = `done (every file its changelog adds exists: ${it.added.length})`; }
+  if (M && M.skipped && M.skipped.length) said.push(`not imported, the source says they are other projects' work: ${M.skipped.length} item(s) under ${[...new Set(M.skipped.map(x => `"${x.group}"`))].join(', ')}`);
   if (!order.length) throw new RoadmapImportError('NO_PHASES', 'neither file names a phase');
   // an edge names its file by its bare name: a path in a phase's text is read as a file the phase changes (lib/phase-files.js
   // candidates), and the roadmap is not what a phase builds (0.60.200 — MASTERMIND's P1 was mapped to phasemap/phases.json).
@@ -179,7 +273,7 @@ export function importRoadmap({ json = null, md = null, name = 'roadmap', source
     for (const t of e.blocks || []) if (!add(t, e.srcId, `${jsonFile}: ${e.srcId} blocks ${t}`)) said.push(`${jsonFile}: ${e.srcId} blocks ${t}, which is not a phase — not an edge`);
     for (const d of e.jsonDeps || []) if (!add(e.srcId, d, `${jsonFile}: ${e.srcId} depends on ${d}`)) said.push(`${jsonFile}: ${e.srcId} depends on ${d}, which is not a phase — not an edge`);
   }
-  for (const [from, to] of (M ? M.chains : [])) add(to, from, `${mdFile} critical path: ${from} → ${to}`);
+  for (const [from, to] of (M ? M.chains : [])) add(to, from, `${mdFile} ${M.chainWhy || 'critical path'}: ${from} → ${to}`);
   if (J && J.skipped) said.push(`${jsonFile}: ${J.skipped} item(s) without an id were not imported`);
   if (J && M) { const onlyMd = M.items.filter(i => !J.items.some(j => j.srcId === i.srcId)).map(i => i.srcId); if (onlyMd.length) said.push(`only in ${mdFile}: ${onlyMd.join(', ')}`); }
 
@@ -227,7 +321,9 @@ export function importRoadmap({ json = null, md = null, name = 'roadmap', source
     `    status:  ${_yamlStr(`IMPORTED ${date} from ${sources.join(' + ') || 'the project\'s roadmap'} by Idearium (roadmap-import ${VERSION}); the source files are kept and stay the project's own words`)}`,
     ...(J && J.meta.thesis ? [`    thesis:  ${_yamlStr(J.meta.thesis)}`] : []),
     ...(J && (J.meta.version != null || J.meta.updated) ? [`    source_version: ${_yamlStr([J.meta.version != null ? `v${J.meta.version}` : null, J.meta.updated].filter(Boolean).join(' · '))}`] : []),
-    '    files:   "not named by the source: unknown until mapped (Phases → ⇄ map files & dependencies)"',
+    (phases.some(p => (byId.get(p.srcId).paths || []).length) ? '    files:   "named by the source per phase (named_in_source: its changelog and build list, or the paths an issue names); the rest unknown until mapped"'
+      : '    files:   "not named by the source: unknown until mapped (Phases → ⇄ map files & dependencies)"'),
+    ...(M && M.shape ? [`    source_shape: ${M.shape}`] : []),
     ...(said.length ? ['    said:', ...said.map(w => `      - ${_yamlStr(w)}`)] : []),
     '', '  phases:', '',
   ].join('\n');

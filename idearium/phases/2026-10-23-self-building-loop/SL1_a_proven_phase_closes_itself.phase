@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
+context: >-
+  pipeline phase SL1_a_proven_phase_closes_itself of
+  docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL1_a_proven_phase_closes_itself (integration) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792775550202
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792775550202
+lastSeenAt: 1792775550202
+fingerprint: null
+payload:
+  id: SL1_a_proven_phase_closes_itself
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.223 — test-phase-close 6/6 (PC-04 the real path, PC-06 in Clear Glass)
+  files:
+    - lib/phase-close.js
+    - idearium/api/index.js
+    - lib/repo-inject.js
+    - idearium/repo/roadmap.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - tests/modules/test-phase-close.test.js
+  depends_on:
+    - SL0_what_can_be_built_now
+  blocks:
+    - MOD-SL-CLOSE
+  spec: docs/self-building-loop.spec
+  graph: 6bccee108a7faf2e
