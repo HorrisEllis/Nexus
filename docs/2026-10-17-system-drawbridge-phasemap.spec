@@ -617,3 +617,39 @@ James, 2026-10-24: "We need the systems sovereign."
   1 capability — ollama-client), architect 6, clear-glass 9. The two files most systems still reach for: cortex/memory/jaa-db.js (data) and
   nexus/nexus-connect.js (it is not a pure primitive: it lazily requires intelligence/lattice; moving it into the kernel as it stands would
   be an upward crossing, so it needs its lattice use cut first).
+
+## ADDENDUM 2026-10-24 — emerge, read in depth: a language whose modules are sovereign by construction
+James, 2026-10-24, after the coder proposed splitting the shared store (cortex/memory/jaa-db.js) by a table → owner map: "Look at emerge.
+Deeply Custom"
+- **What emerge is (read, §0.1).** Two things.
+  - The Emergence language. emerge/emerge.spec is its grammar: 6 root types, 7 axioms (NO_SILENT_DROP, RECORD_IS_TRUTH,
+    GRAMMAR_APPLIES_TO_ITSELF …), 45 domains covering nearly all of Nexus (jaa: table, schema, migrate, ledger; identity: systemid,
+    componentid; persistence; network; agent; contract; raid; cortex …). emerge-kernel.js reads the grammar, gates tokens by signal/noise
+    (SNR), parses compartment / invariant / signal / gap / law / loop / whatif / ledger / output, and boots compartments (Co → I → In → O →
+    Co). emerge-codegen-v2.js compiles a .eg program into a CommonJS module.
+  - The spec compiler (emerge/compiler/: kg-builder, invariants, T0/T1 scaffolding with no model, T2, pipeline) — what every .spec in Nexus
+    is compiled with.
+- **The finding.** A module compiled from Emergence is sovereign by construction: it requires only the SISO primitive and crypto; its
+  store and bus are given to it (init({ bus, jaa })); it declares the tables it owns (JAA_TABLES) and writes its own event_log; its routes,
+  handlers and intervals are declared. That is the shape the store split needs, written in his language instead of a JS map.
+- **Gaps, said.** No .eg program exists in the tree (0 files). The kernel's parser is indent-and-token based and the codegen is
+  pattern-based (v2 lists its own fixes). emerge is not on Idearium's list of 15 (it is unhomed), and 0.60.231's list put it among the
+  folders that "can be archived"; his "Deeply Custom" is read by the coder as: keep it, it is his (to confirm).
+- **Proposed (to confirm):** the store split is declared in Emergence. Each system gets <system>/<system>.eg declaring its compartment, the
+  tables it owns, its ledger and its routes; the codegen emits its store module; the table → owner map is compiled from those
+  declarations (one truth), and a table another system writes is reached through the owner's declared route. Pilot: loom (its last three
+  ways out are all data).
+
+## ADDENDUM 2026-10-24 (0.60.237) — emerge is a system, warp folded into it; the language is not a crossing
+James, 2026-10-24: "okay warp and emerge. / spec compiler, ide, and idearium". Supersedes 0.60.236's FOLDED warp → lib (kept above, §0.3).
+lib/nexus-self/systems.js gains emerge (dirs emerge, warp); lib/system-boundary.js FOLDED warp → emerge, and LANGUAGE (warp/core, dispatch,
+plugins, index.js; emerge/core) makes a use of the runtime kind 'language': not ratcheted, not a sovereignty blocker (EW_D2, by his axioms).
+Map: docs/2026-10-24-emerge-warp-system-phasemap.spec.
+
+## ADDENDUM 2026-10-24 (0.60.242) — the census has two blind spots; the wall covers them
+Found when Loom ran in its compartment behind cos/compartment/boundary.js (docs/2026-10-24-loom-into-cos-phasemap.spec LM4):
+1. A system's use of lib/ is never a crossing, but lib/ itself reaches into systems (241 upward edges). A system that loads lib/gap-field.js
+   loaded Cortex's store with it.
+2. A require whose path is built at run time (``require(`../hooks/${system}.hooks.js`)``) is not read by the scanner.
+The wall sees both, because it judges every require as Node resolves it. So a compartment move runs audit first, then enforce. The census
+stays the ratchet; the wall is the proof.

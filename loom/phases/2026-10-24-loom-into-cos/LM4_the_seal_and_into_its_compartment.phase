@@ -9,11 +9,11 @@ intent: null
 summary: LM4_the_seal_and_into_its_compartment (integration) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1792877325053
+exported_at: 1792879719187
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877325053
-lastSeenAt: 1792877325053
+firstSeenAt: 1792879719187
+lastSeenAt: 1792879719187
 fingerprint: null
 payload:
   id: LM4_the_seal_and_into_its_compartment
@@ -39,4 +39,4 @@ payload:
     - LM3_readers_through_its_routes
   blocks: []
   spec: null
-  graph: 5320977700a26e66
+  graph: 62027a678e4f6d16

@@ -9,11 +9,11 @@ intent: null
 summary: SR3_artifact_extraction_introspect_bridge (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792822476100
+exported_at: 1792879715946
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822476100
-lastSeenAt: 1792822476100
+firstSeenAt: 1792879715946
+lastSeenAt: 1792879715946
 fingerprint: null
 payload:
   id: SR3_artifact_extraction_introspect_bridge
@@ -29,4 +29,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 42f0ba52c3fe0714
+  graph: f570617117926981

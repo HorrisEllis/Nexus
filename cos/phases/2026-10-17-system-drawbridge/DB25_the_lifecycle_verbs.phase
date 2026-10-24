@@ -7,11 +7,11 @@ intent: null
 summary: DB25_the_lifecycle_verbs (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792878423247
+exported_at: 1792879718676
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792878423247
-lastSeenAt: 1792878423247
+firstSeenAt: 1792879718676
+lastSeenAt: 1792879718676
 fingerprint: null
 payload:
   id: DB25_the_lifecycle_verbs
@@ -28,4 +28,4 @@ payload:
     - DB24_cos_reads_only_the_registry
   blocks: []
   spec: null
-  graph: 508d7e0ea84ab420
+  graph: 63526244516a7aba

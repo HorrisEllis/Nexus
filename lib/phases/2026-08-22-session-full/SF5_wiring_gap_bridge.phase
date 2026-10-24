@@ -7,11 +7,11 @@ intent: null
 summary: SF5_wiring_gap_bridge (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792841753281
+exported_at: 1792879715526
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841753281
-lastSeenAt: 1792841753281
+firstSeenAt: 1792879715526
+lastSeenAt: 1792879715526
 fingerprint: null
 payload:
   id: SF5_wiring_gap_bridge
@@ -28,4 +28,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6f1b4c7974ce3a8c
+  graph: dccc36c0aa62a1b1

@@ -587,6 +587,21 @@ const server = http.createServer(async (req, res) => {
     json(res, 200, { ok: true, uuid: row.uuid || row.id, status });
     return;
   }
+  // 0.60.242 LM4 — the gap field's own report() and openGaps(), for a system that is not Cortex (lib/gap-field.js reportAsync /
+  // openGapsAsync): the same dedup, occurrences and priority as in-process, without that system loading Cortex's store
+  if (p === '/api/gap-field/report' && method === 'POST') {
+    const body = await readBody(req);
+    try { json(res, 200, { ok: true, ...require('../lib/gap-field.js').report(body || {}) }); }
+    catch (e) { json(res, 500, { ok: false, error: `gap-field report: ${e.message}` }); }
+    return;
+  }
+  if (p === '/api/gap-field/open') {
+    const limit = parseInt(url.searchParams.get('limit') || '100', 10) || 100;
+    try { json(res, 200, { ok: true, gaps: require('../lib/gap-field.js').openGaps({ domain: url.searchParams.get('domain') || undefined, limit }) }); }
+    catch (e) { json(res, 500, { ok: false, error: `gap-field open: ${e.message}` }); }
+    return;
+  }
+
   if (p === '/api/gaps') {
     if (method === 'POST') {
       const body = await readBody(req);
@@ -1394,6 +1409,8 @@ function _pollOrchestrator() {
   req.end();
 }
 
+// 0.60.249 LM4 (from brave-cori) — the gap field is Cortex's: here its async API is its sync one (lib/gap-field.js provideLocal)
+require('../lib/gap-field.js').provideLocal(true);
 server.listen(PORT, '127.0.0.1', () => {
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
   // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.

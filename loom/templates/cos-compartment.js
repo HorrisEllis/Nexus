@@ -96,6 +96,10 @@ function compartmentFor(system, { root = ROOT } = {}) {
       { path: `${folder}/`, mode: sealed ? 'rw' : 'ro', why: sealed ? 'its own folder: it runs here' : 'its own folder, mirrored read-only until it is sovereign' },
       { path: 'lib/', mode: 'ro', why: 'the kernel every system uses (DB0a: the coder\'s recommendation, his to confirm)' },
       { path: 'node_modules/', mode: 'ro', why: 'its dependencies' },
+      // 0.60.242 LM4 — the kernel's folded parts and the language (lib/system-boundary.js FOLDED → lib, LANGUAGE_PATHS): what every system
+      // may use without crossing, so the wall allows exactly what the census allows
+      ...Object.entries(SB.FOLDED).filter(([, home]) => home === SB.KERNEL).map(([f]) => ({ path: `${f}/`, mode: 'ro', why: `folded into the kernel (${f})` })),
+      ...SB.LANGUAGE_PATHS.map(p => ({ path: p, mode: 'ro', why: 'the language (emerge + warp): using it is not a crossing' })),
     ],
     drawbridge: {
       registry: _exists(root, reg) ? reg : null,
@@ -111,10 +115,56 @@ function compartmentFor(system, { root = ROOT } = {}) {
     },
     seal: {
       ready: sealed,
-      why: sealed ? 'sovereign: it can run in its compartment' : `not yet sovereign: ${sov ? sov.out : '?'} crossing(s) to close first`,
+      why: sealed ? 'sovereign: it can run in its compartment' : `not yet sovereign: ${sov ? sov.out : '?'} way(s) out and ${sov ? sov.in : '?'} way(s) in to close first (its code loaded by ${sov && sov.inFrom ? sov.inFrom.systems : '?'} system file(s) and ${sov && sov.inFrom ? sov.inFrom.core : '?'} core file(s))`,   // 0.60.249: both halves said
       ...(blockers ? { blockers } : {}),
     },
   };
+}
+
+/**
+ * boundaryFor(system) → { name, allow: [absolute], mode } — 0.60.242 LM4: the wall cos/compartment/boundary.js puts up, from the manifest's
+ * mounts (its own folders, the kernel, the language, node_modules) and nothing else. Its own folders are every dir the system owns
+ * (lib/nexus-self/systems.js dirs: emerge owns emerge/ and warp/).
+ */
+function boundaryFor(system, { root = ROOT, mode = 'enforce' } = {}) {
+  root = path.resolve(root);
+  const m = compartmentFor(system, { root });
+  if (!m.ok) return m;
+  const S = require('../../lib/nexus-self/systems.js');
+  const own = (S.SYSTEMS.find(s => (s.dirs || [])[0] === m.system) || {}).dirs || [m.system];
+  const rels = [...new Set([...own.map(d => `${d}/`), ...m.mounts.map(x => x.path)])];
+  return { ok: true, name: m.cos.name, mode, allow: rels.map(r => path.join(root, r)), entry: (S.SYSTEMS.find(s => (s.dirs || [])[0] === m.system) || {}).entry || null };
+}
+
+/**
+ * moveIn({ system, root, cos, mode, env }) → { ok, compartment, boundary, pid } — 0.60.242 LM4: the seal moves a system in, never before.
+ * Its compartment (made under nexus-self when missing, as ensureCompartments would) gets its entry as its runtime and the wall in its env;
+ * then COS starts it, and COS's process runner spawns it behind the wall. Refused, with the blockers, while it is not sovereign.
+ */
+function moveIn({ system, root = ROOT, cos = null, mode = 'enforce', env = {} } = {}) {
+  const cb = _cos(cos);
+  if (!cb) return { ok: false, error: 'COS bridge unavailable' };
+  const m = compartmentFor(system, { root });
+  if (!m.ok) return m;
+  if (!m.seal.ready) return { ok: false, error: `the seal is not ready: ${m.seal.why}`, blockers: m.seal.blockers || null };
+  const b = boundaryFor(system, { root, mode });
+  if (!b.entry) return { ok: false, error: `${m.system} has no entry in lib/nexus-self/systems.js: nothing to run` };
+  let c = cb.getCompartment(m.cos.name);
+  if (!c) {
+    let parent = cb.getCompartment(PARENT);
+    if (!parent) { const p = cb.createCompartment({ name: PARENT, purpose: 'Nexus itself — the immutable base; one child compartment per system', networkIsolated: true }); if (!p.ok) return { ok: false, error: `parent compartment: ${p.error}` }; parent = p.compartment; }
+    const r = cb.createCompartment({ name: m.cos.name, purpose: m.cos.purpose, runtimeId: 'node', networkIsolated: true, parentId: parent.id });
+    if (!r.ok) return { ok: false, error: `compartment: ${r.error}` };
+    c = r.compartment;
+  }
+  const envVars = { ...Object.fromEntries(Object.entries(env).map(([k, v]) => [k, String(v)])), COS_BOUNDARY: JSON.stringify({ name: b.name, allow: b.allow, mode: b.mode }) };
+  const rt = cb.setRuntime(c.id, { runtimeId: 'node', entryFile: path.join(path.resolve(root), b.entry), envVars });
+  if (!rt.ok) return { ok: false, error: `runtime: ${rt.error}` };
+  const st = cb.start(c.id);
+  if (!st.ok) return { ok: false, error: `start: ${st.error}` };
+  const pr = typeof cb.processOf === 'function' ? cb.processOf(c.id) : null;   // through the kernel's bridge into COS, not COS's files
+  const pid = pr ? pr.pid : null;
+  return { ok: true, system: m.system, compartment: { id: c.id, name: c.name }, boundary: { mode: b.mode, allow: b.allow.map(a => _rel(path.resolve(root), a) || '.') }, entry: b.entry, pid };
 }
 
 function compartments({ root = ROOT } = {}) {
@@ -150,4 +200,4 @@ function state(system, { root = ROOT, cos = null } = {}) {
   return { ...m, live: c ? { exists: true, id: c.id, parentId: c.parentId || null, intent: cb.intentOf(c.id) } : { exists: false, said: cb ? 'not created yet (ensureCompartments)' : 'COS bridge unavailable' } };
 }
 
-module.exports = { MODULE_ID, VERSION, SCHEMA, PARENT, AXIOMS, compartmentFor, compartments, apply, state };
+module.exports = { MODULE_ID, VERSION, SCHEMA, PARENT, AXIOMS, compartmentFor, compartments, apply, state, boundaryFor, moveIn };

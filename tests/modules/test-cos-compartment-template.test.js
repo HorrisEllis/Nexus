@@ -37,7 +37,12 @@ test('CT-04 the seal: ready only when sovereign; until then the blockers are nam
   const h = T.compartmentFor('components'), c = T.compartmentFor('cortex');
   assert.ok(h.seal.ready && h.mounts[0].mode === 'rw');
   assert.ok(!c.seal.ready && c.mounts[0].mode === 'ro' && c.seal.blockers && (c.seal.blockers.data + c.seal.blockers.primitive + c.seal.blockers.capability) > 0);
-  for (const m of [h, c]) assert.deepStrictEqual(m.mounts.map(x => x.path), [`${m.system}/`, 'lib/', 'node_modules/'], 'its folder and the kernel, nothing of another system');
+  // 0.60.242 LM4 (docs/2026-10-24-loom-into-cos-phasemap.spec) — James, 2026-10-24: "Do it." The mounts are the wall's allow-list now, so they
+  // carry what the census allows every system: the kernel's folded parts and the language (lib/system-boundary.js FOLDED, LANGUAGE_PATHS).
+  // 0.60.249 on main: RF2 moved both into lib/ (siso is lib/siso), so they are empty here and lib/ covers them.
+  // Still nothing of another system's own (was [folder, lib/, node_modules/], kept in this note).
+  const SBx = require(path.join(REPO, 'lib/system-boundary.js'));
+  for (const m of [h, c]) assert.deepStrictEqual(m.mounts.map(x => x.path), [`${m.system}/`, 'lib/', 'node_modules/', ...SBx.LANGUAGE_PATHS], 'its folder, the kernel and the language, nothing of another system');
 });
 test('CT-05 apply writes each intent onto the compartment COS holds, creates none, and says which are missing', () => {
   const calls = [];
