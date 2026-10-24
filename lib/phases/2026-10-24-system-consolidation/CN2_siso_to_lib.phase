@@ -7,11 +7,11 @@ intent: null
 summary: CN2_siso_to_lib (integration) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371403
+exported_at: 1792877325058
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371403
-lastSeenAt: 1792874371403
+firstSeenAt: 1792877325058
+lastSeenAt: 1792877325058
 fingerprint: null
 payload:
   id: CN2_siso_to_lib
@@ -25,4 +25,4 @@ payload:
     - CN0_the_rule_in_force
   blocks: []
   spec: null
-  graph: b5eba7622168fd3b
+  graph: 128bd306c74618f2

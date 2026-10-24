@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+context: pipeline phase LM2_loom_owns_its_tables of docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM2_loom_owns_its_tables (backend) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325051
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325051
+lastSeenAt: 1792877325051
+fingerprint: null
+payload:
+  id: LM2_loom_owns_its_tables
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: DONE 0.60.241 — loom/lib/store.js; LI-03 (every row brought home, Cortex's kept)
+  files:
+    - loom/server.js
+    - loom/lib/changelog.js
+    - loom/scanners/phasemap-map.js
+    - loom/lib/store.js
+    - tests/modules/test-loom-into-cos.test.js
+    - tests/modules/test-hook-ownership.js
+  depends_on:
+    - LM_D2_loom_owns_its_tables
+  blocks: []
+  spec: null
+  graph: 9dbb63aa4426b151

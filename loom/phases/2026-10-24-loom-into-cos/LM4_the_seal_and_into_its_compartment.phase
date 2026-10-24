@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+context: >-
+  pipeline phase LM4_the_seal_and_into_its_compartment of
+  docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM4_the_seal_and_into_its_compartment (integration) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325053
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325053
+lastSeenAt: 1792877325053
+fingerprint: null
+payload:
+  id: LM4_the_seal_and_into_its_compartment
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: integration
+  status: >-
+    DONE 0.60.242 — Loom runs in nexus-self-loom behind the enforced wall; test-loom-into-cos
+    LI-05..LI-08
+  files:
+    - loom/templates/cos-compartment.js
+    - cos/compartment/process-runner.js
+    - cos/compartment/boundary.js
+    - lib/cos-bridge.js
+    - lib/system-boundary.js
+    - lib/gap-field.js
+    - cortex/boot.js
+    - loom/server.js
+    - loom/scanners/wiring-gaps.js
+  depends_on:
+    - LM0_the_heartbeat
+    - LM1_ollama_through_its_bridge
+    - LM3_readers_through_its_routes
+  blocks: []
+  spec: null
+  graph: 5320977700a26e66

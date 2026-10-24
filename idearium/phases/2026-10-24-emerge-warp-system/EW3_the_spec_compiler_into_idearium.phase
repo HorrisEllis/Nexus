@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+type: phase
+id: docs_2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+context: >-
+  pipeline phase EW3_the_spec_compiler_into_idearium of
+  docs/2026-10-24-emerge-warp-system-phasemap.spec
+intent: null
+summary: EW3_the_spec_compiler_into_idearium (backend) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792877324979
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877324979
+lastSeenAt: 1792877324979
+fingerprint: null
+payload:
+  id: EW3_the_spec_compiler_into_idearium
+  map: docs/2026-10-24-emerge-warp-system-phasemap.spec
+  repo: null
+  layer: backend
+  status: DONE 0.60.239 — moved whole to idearium/spec-compiler; no crossing into it; emerge has 0 ways in
+  files:
+    - idearium/spec-compiler/compiler/index.js
+    - idearium/spec-compiler/compiler/pipeline.js
+    - idearium/spec-compiler/compiler/kg-builder.js
+    - idearium/spec-compiler/compiler/invariants-engine.js
+    - idearium/spec-compiler/compiler/t2-gate.js
+    - idearium/spec-compiler/compiler/phase-specs.js
+    - idearium/spec-compiler/idearium/client.js
+    - idearium/compiler-bridge.js
+    - tests/modules/test-phase-specs.test.js
+    - tests/modules/test-substrate-spec.test.js
+    - emerge/idearium/client.js
+  depends_on:
+    - EW2_the_callers_outside_idearium
+  blocks: []
+  spec: emerge/SPEC_COMPILER.spec
+  graph: ffc17897026a22ad

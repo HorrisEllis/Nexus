@@ -1,0 +1,316 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GD2_primitives_to_the_kernel:5140fb28b4f6c60b
+type: graph
+id: phase:GD2_primitives_to_the_kernel:5140fb28b4f6c60b
+context: dependency graph of phase GD2_primitives_to_the_kernel
+intent: null
+summary: 34 node(s), 9 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877325040
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325040
+lastSeenAt: 1792877325040
+fingerprint: null
+payload:
+  for: GD2_primitives_to_the_kernel
+  kind: phase
+  repo: null
+  hash: 5140fb28b4f6c60b
+  nodes:
+    - path: guardian/api-dispatch.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/gap-hunter.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp-handler.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: intelligence/baseline.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/baseline.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/gap-hunter.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/liminal.js
+      role: changes
+      exists: false
+      system: lib
+    - path: copilot/diagnostic-sweep.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/gap/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/query/meta-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/meta/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-identity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-model.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/introspect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/meta/confidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/gap/hunter.js
+      to: lib/meta/confidence.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/introspect.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-identity.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-model.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/meta-query.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: lib/meta/index.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: copilot/diagnostic-sweep.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: intelligence/gap/index.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: guardian/api-dispatch.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/query/meta-query.js
+      to: intelligence/liminal/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/chat-logger.js
+      to: intelligence/liminal/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/meta/index.js
+      to: intelligence/liminal/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: copilot/diagnostic-sweep.js
+      to: intelligence/gap/hunter.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/cortex-service.js
+      to: intelligence/baseline.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/guardian-service.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: idearium/idearium-service.js
+      to: intelligence/baseline.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: guardian/api-dispatch.js
+      fromSystem: orchestrator
+      toSystem: guardian
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D1_pure_primitives_to_the_kernel
+    dependents:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD3_intelligence_by_route
+    upstream:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D1_pure_primitives_to_the_kernel
+    downstream:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD3_intelligence_by_route
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD3_intelligence_by_route
+    conflicts:
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
+        files:
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
+        files:
+          - guardian/server.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): GD_D1_pure_primitives_to_the_kernel'
+      - 'needed by (1): GD3_intelligence_by_route · finishing it unlocks GD3_intelligence_by_route'
+      - 'same files as GD4_the_other_systems_by_route with no order between them: guardian/server.js'
+      - 'same files as GD7_the_bus_and_connect with no order between them: guardian/server.js'
+    edges:
+      - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D1_pure_primitives_to_the_kernel
+        kind: declared

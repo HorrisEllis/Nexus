@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
+context: pipeline phase GD7_the_bus_and_connect of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD7_the_bus_and_connect (foundation) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325045
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325045
+lastSeenAt: 1792877325045
+fingerprint: null
+payload:
+  id: GD7_the_bus_and_connect
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - guardian/server.js
+    - nexus/nexus-bus.js
+    - nexus/nexus-connect.js
+  depends_on:
+    - GD6_the_ways_in
+  blocks: []
+  spec: null
+  graph: c9cd102139cf648e

@@ -1,0 +1,191 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EW1_emerge_and_warp_one_system:73da1057bae6d4f4
+type: graph
+id: phase:EW1_emerge_and_warp_one_system:73da1057bae6d4f4
+context: dependency graph of phase EW1_emerge_and_warp_one_system
+intent: null
+summary: 22 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877324974
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877324974
+lastSeenAt: 1792877324974
+fingerprint: null
+payload:
+  for: EW1_emerge_and_warp_one_system
+  kind: phase
+  repo: null
+  hash: 73da1057bae6d4f4
+  nodes:
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-loom-phasemap.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-readme-generate.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-draft.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: clear-glass/src/driver/glass.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: idearium/cli/route-commands.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/system-boundary.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-readme-generate.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: tests/modules/test-readme-generate.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/inject-gate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/store.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+    dependents:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+    upstream:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+    downstream:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW5_the_registry_with_wires
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (2): EW_D0_emerge_and_warp_one_system, EW_D2_the_runtime_is_not_a_crossing'
+      - >-
+        needed by (1): EW2_the_callers_outside_idearium · all downstream 4 · finishing it unlocks
+        EW2_the_callers_outside_idearium
+    edges:
+      - from: docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+        kind: declared
+      - from: docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+        kind: declared

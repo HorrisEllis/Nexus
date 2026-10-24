@@ -211,11 +211,9 @@ async function dispatch(provider, prompt, opts = {}) {
   } catch(e) {
     const ms = Date.now() - t0;
 
-    // Update RAID weights on failure
-    try {
-      const raid = require('../cortex/core/raid');
-      raid.recordOutcome?.(jobId, false, ms);
-    } catch(_) {}
+    // Update RAID weights on failure. 0.60.240 GD1: through RAID's port (Cortex's RAID, not a copy loaded here), and with the agent:
+    // it passed jobId where recordOutcome takes the agent, so RAID never learned from these
+    require('../lib/raid-port.js').outcome({ agent: provider, ok: false, ms, transport: 'api' }).catch(() => {});
 
     // Log failure
     try {
@@ -243,11 +241,8 @@ async function dispatch(provider, prompt, opts = {}) {
     gapScore   = gaps.length ? gaps[0].criticality : 0;
   } catch(_) {}
 
-  // Update RAID weights on success
-  try {
-    const raid = require('../cortex/core/raid');
-    raid.recordOutcome?.(jobId, true, ms);
-  } catch(_) {}
+  // Update RAID weights on success (0.60.240 GD1: through RAID's port, with the agent)
+  require('../lib/raid-port.js').outcome({ agent: provider, ok: true, ms, transport: 'api' }).catch(() => {});
 
   return {
     ok:         true,

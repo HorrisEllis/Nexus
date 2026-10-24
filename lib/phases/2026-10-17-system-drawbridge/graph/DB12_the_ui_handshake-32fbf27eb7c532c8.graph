@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877163419
+exported_at: 1792877324519
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163419
-lastSeenAt: 1792877163419
+firstSeenAt: 1792877324519
+lastSeenAt: 1792877324519
 fingerprint: null
 payload:
   for: DB12_the_ui_handshake
@@ -310,6 +310,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
@@ -328,7 +329,7 @@ payload:
         DB11_cos_compartment_per_system · all upstream 7
       - >-
         needed by (4): DB26_the_ui_floats_on_the_registry, DB13_the_tunnel,
-        DB14_heartbeat_over_routes, P33b_each_system_runs_its_listener · all downstream 28 ·
+        DB14_heartbeat_over_routes, P33b_each_system_runs_its_listener · all downstream 29 ·
         finishing it unlocks DB13_the_tunnel, DB14_heartbeat_over_routes
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges:

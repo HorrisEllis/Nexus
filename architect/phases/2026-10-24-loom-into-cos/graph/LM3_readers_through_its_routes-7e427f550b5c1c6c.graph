@@ -1,0 +1,170 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM3_readers_through_its_routes:7e427f550b5c1c6c
+type: graph
+id: phase:LM3_readers_through_its_routes:7e427f550b5c1c6c
+context: dependency graph of phase LM3_readers_through_its_routes
+intent: null
+summary: 15 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877325052
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325052
+lastSeenAt: 1792877325052
+fingerprint: null
+payload:
+  for: LM3_readers_through_its_routes
+  kind: phase
+  repo: null
+  hash: 7e427f550b5c1c6c
+  nodes:
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: lib/agent-build-loop.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: changes
+      exists: true
+      system: loom
+    - path: architect/compile-route.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/config.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/registry-components.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/src/spec/Blueprint.js
+      role: uses
+      exists: true
+      system: architect
+    - path: cortex/core/raid/contract-intake.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hook-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: architect/service.js
+      to: lib/data-home.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/hook-registry.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/src/spec/Blueprint.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/compile-route.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/config.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/registry-components.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      kind: requires
+  crossings:
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+    dependents:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+    downstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): LM2_loom_owns_its_tables · all upstream 2'
+      - >-
+        needed by (1): LM4_the_seal_and_into_its_compartment · all downstream 2 · finishing it
+        unlocks LM4_the_seal_and_into_its_compartment
+    edges:
+      - from: docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+        kind: declared

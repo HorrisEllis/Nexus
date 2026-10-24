@@ -7,11 +7,11 @@ intent: null
 summary: SV0_the_census_tells_the_truth (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792877163822
+exported_at: 1792877324896
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163822
-lastSeenAt: 1792877163822
+firstSeenAt: 1792877324896
+lastSeenAt: 1792877324896
 fingerprint: null
 payload:
   id: SV0_the_census_tells_the_truth
@@ -19,7 +19,7 @@ payload:
   repo: null
   layer: null
   status: >-
-    "DONE 0.60.242 — comments skipped; sovereign both ways (inFrom, registry, compartment, step);
+    "DONE 0.60.244 — comments skipped; sovereign both ways (inFrom, registry, compartment, step);
     the Sovereignty card; the ratchet green (3 crossings designed out: lib/phasemap-parse.js, COS's
     runTarget handed over). Only components is sovereign both ways."
   files:

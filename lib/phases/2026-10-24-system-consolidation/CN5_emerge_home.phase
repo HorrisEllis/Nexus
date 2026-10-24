@@ -7,11 +7,11 @@ intent: null
 summary: CN5_emerge_home (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371408
+exported_at: 1792877325064
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371408
-lastSeenAt: 1792874371408
+firstSeenAt: 1792877325064
+lastSeenAt: 1792877325064
 fingerprint: null
 payload:
   id: CN5_emerge_home
@@ -27,4 +27,4 @@ payload:
     - CN_D3_emerge_home
   blocks: []
   spec: null
-  graph: 4c15b70cf461a9df
+  graph: 9bf48b02a938eb34

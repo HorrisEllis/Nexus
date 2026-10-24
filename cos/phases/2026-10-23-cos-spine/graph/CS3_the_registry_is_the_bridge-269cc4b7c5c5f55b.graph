@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787678067
+exported_at: 1792877324876
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678067
-lastSeenAt: 1792787678067
+firstSeenAt: 1792877324876
+lastSeenAt: 1792877324876
 fingerprint: null
 payload:
   for: CS3_the_registry_is_the_bridge
@@ -114,6 +114,7 @@ payload:
     dependents:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     upstream:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
@@ -142,6 +143,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
@@ -161,8 +163,8 @@ payload:
         depends on (4): CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake,
         DB16_a_registry_for_each_system · all upstream 18
       - >-
-        needed by (2): CS4_every_system_a_compartment, CS10_hats_bound_to_the_compartment · all
-        downstream 8
+        needed by (3): CS4_every_system_a_compartment, CS10_hats_bound_to_the_compartment,
+        GD8_guardian_in_its_compartment · all downstream 9
       - >-
         same files as CS1_a_version_is_a_system_state with no order between them:
         idearium/repo/snapshot.js

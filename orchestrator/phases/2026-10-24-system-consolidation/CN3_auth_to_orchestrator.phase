@@ -7,11 +7,11 @@ intent: null
 summary: CN3_auth_to_orchestrator (integration) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371405
+exported_at: 1792877325059
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371405
-lastSeenAt: 1792874371405
+firstSeenAt: 1792877325059
+lastSeenAt: 1792877325059
 fingerprint: null
 payload:
   id: CN3_auth_to_orchestrator
@@ -25,4 +25,4 @@ payload:
     - CN0_the_rule_in_force
   blocks: []
   spec: null
-  graph: 7cb8c45400aafd69
+  graph: 1d74a76a9199aa1e

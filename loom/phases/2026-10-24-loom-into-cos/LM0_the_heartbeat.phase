@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+context: pipeline phase LM0_the_heartbeat of docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM0_the_heartbeat (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325049
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325049
+lastSeenAt: 1792877325049
+fingerprint: null
+payload:
+  id: LM0_the_heartbeat
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: foundation
+  status: DONE 0.60.241 — the kernel's pulse
+  files:
+    - loom/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6ad11848a4c45b04

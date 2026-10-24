@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CN8_erosmancer_to_clear_glass:1e062cdf45b52378
+type: graph
+id: phase:CN8_erosmancer_to_clear_glass:1e062cdf45b52378
+context: dependency graph of phase CN8_erosmancer_to_clear_glass
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792877325067
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325067
+lastSeenAt: 1792877325067
+fingerprint: null
+payload:
+  for: CN8_erosmancer_to_clear_glass
+  kind: phase
+  repo: null
+  hash: 1e062cdf45b52378
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D4_erosmancer
+    dependents:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    upstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D1_what_is_a_system
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D4_erosmancer
+    downstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    blockedBy:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by CN0_the_rule_in_force
+      - 'depends on (2): CN0_the_rule_in_force, CN_D4_erosmancer · all upstream 3'
+      - 'needed by (1): CN11_version_and_record'
+    edges:
+      - from: docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+        kind: declared
+      - from: docs/2026-10-24-system-consolidation-phasemap.spec::CN_D4_erosmancer
+        kind: declared

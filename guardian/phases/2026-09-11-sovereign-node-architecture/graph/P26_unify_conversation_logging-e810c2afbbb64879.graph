@@ -1,0 +1,215 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P26_unify_conversation_logging:e810c2afbbb64879
+type: graph
+id: phase:P26_unify_conversation_logging:e810c2afbbb64879
+context: dependency graph of phase P26_unify_conversation_logging
+intent: null
+summary: 24 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877321983
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877321983
+lastSeenAt: 1792877321983
+fingerprint: null
+payload:
+  for: P26_unify_conversation_logging
+  kind: phase
+  repo: null
+  hash: e810c2afbbb64879
+  nodes:
+    - path: clear-glass/src/page/nexus-chat.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cos/plugin/host-api.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/remote-desktop/tests/test-input-auth.js
+      role: changes
+      exists: true
+      system: cos
+    - path: guardian/api-dispatch.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp-handler.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/chat-logger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cos/plugin/installer.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-identity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-model.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/introspect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/listener-commands.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/introspect.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-identity.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-model.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: clear-glass/src/page/nexus-chat.js
+      to: lib/listener-commands.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp-handler.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: guardian/api-dispatch.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/page/nexus-chat.js
+      kind: requires
+    - from: cos/plugin/installer.js
+      to: cos/plugin/host-api.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: lib/chat-logger.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/api-dispatch.js
+      to: intelligence/liminal/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: guardian/api-dispatch.js
+      fromSystem: orchestrator
+      toSystem: guardian
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P23_guardian_job_durability
+    dependents:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P30_provider_ping_delta
+    upstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P23_guardian_job_durability
+    downstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P30_provider_ping_delta
+    blockedBy:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P23_guardian_job_durability
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by P23_guardian_job_durability
+      - 'depends on (1): P23_guardian_job_durability'
+      - 'needed by (1): P30_provider_ping_delta'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P23_guardian_job_durability
+        kind: inferred
